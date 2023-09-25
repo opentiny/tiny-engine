@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>操作/下载</title>
+    <g id="操作/下载" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
+        <g id="编组" transform="translate(5.171573, 2.000000)" stroke="currentColor">
+            <line x1="-1.50433655" y1="5.02" x2="7.03334564" y2="5.02" id="直线-12"
+                transform="translate(2.893346, 5.000000) rotate(90.000000) translate(-2.893346, -5.000000) "></line>
+            <polyline id="路径" stroke-linejoin="round"
+                transform="translate(2.828427, 7.304590) rotate(45.000000) translate(-2.828427, -7.304590) "
+                points="4.82842712 5.30458976 4.82842712 9.30458976 0.828427125 9.30458976"></polyline>
+        </g>
+        <path
+            d="M14,11 L14,11 L14,12.2836673 C14,13.2315717 13.2315717,14 12.2836673,14 L3.71633267,14 C2.76842831,14 2,13.2315717 2,12.2836673 L2,11 L2,11"
+            id="路径" stroke="currentColor"></path>
+    </g>
+</svg>

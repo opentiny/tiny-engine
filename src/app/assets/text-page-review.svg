@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="14px" height="12px" viewBox="0 0 14 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>全局/隐藏</title>
+    <defs>
+        <path d="M0,2.5 C0,3.88 1.12,5 2.5,5 L2.5,5 C3.881,5 5,3.88 5,2.5 L5,2.5 C5,1.119 3.881,0 2.5,0 L2.5,0 C1.12,0 0,1.119 0,2.5 L0,2.5 Z" id="path-1"></path>
+    </defs>
+    <g id="4.0icon" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="编组" transform="translate(-1.000000, -2.000000)">
+            <polygon id="Fill-1" points="0 16 16 16 16 0 0 0"></polygon>
+            <path d="M8,13.0674 C10.853,13.0674 12.988,11.5154 14.408,8.4104 C14.525,8.1544 14.531,7.8434 14.423,7.5834 C13.134,4.4834 10.993,2.9324 8,2.9324 C5.007,2.9324 2.866,4.4834 1.577,7.5834 C1.469,7.8434 1.475,8.1544 1.592,8.4104 C3.012,11.5154 5.147,13.0674 8,13.0674 Z" id="Stroke-2" stroke="#191919"></path>
+            <g transform="translate(5.500000, 5.500000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <g id="Clip-5"></g>
+                <path d="M2.5,5 C3.881,5 5,3.881 5,2.5 C5,1.119 3.881,0 2.5,0 C1.119,0 0,1.119 0,2.5 C0,3.881 1.119,5 2.5,5 Z" id="Stroke-4" stroke="#191919" stroke-width="2" mask="url(#mask-2)"></path>
+            </g>
+        </g>
+    </g>
+</svg>

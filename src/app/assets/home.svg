@@ -1,0 +1,11 @@
+<svg
+  data-icon="HomeMedium"
+  aria-hidden="true"
+  focusable="false"
+  viewBox="0 0 16 15"
+  version="1.1"
+  xmlns="http://www.w3.org/2000/svg"
+  style="display: inline-block;"
+>
+  <path d="M8 1L1 7v1h2v6h3v-3c.216-1.14.87-2 2-2s1.784.86 2 2v3h3V8h2V7L8 1z"></path>
+</svg>

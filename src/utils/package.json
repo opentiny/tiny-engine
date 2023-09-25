@@ -1,0 +1,20 @@
+{
+  "name": "@opentiny/tiny-engine-utils",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build"
+  },
+  "keywords": [],
+  "devDependencies": {
+    "vite": "^4.3.7"
+  },
+  "dependencies": {
+    "@opentiny/vue-renderless": "^3.8.0"
+  }
+}

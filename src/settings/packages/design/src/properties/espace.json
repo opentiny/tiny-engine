@@ -1,0 +1,31 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "data": {
+        "title": "设置组件数据，数组对象中包含选项有 type、value、icon。type 的可选择值有：im、sip、mailto",
+        "type": "array",
+        "default": "",
+        "items": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "title": "Espace 消息弹窗的类型",
+              "type": "string",
+              "enum": ["im", "sip", "mailto"],
+              "enumNames": ["即时消息", "呼叫", "邮件"]
+            },
+            "value": {
+              "title": "用户信息",
+              "type": "string"
+            },
+            "icon": {
+              "title": "显示的图标",
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

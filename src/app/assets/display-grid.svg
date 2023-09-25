@@ -1,0 +1,18 @@
+<svg
+  data-icon="DisplayGrid"
+  aria-hidden="true"
+  focusable="false"
+  width="16"
+  height="16"
+  viewBox="0 0 16 16"
+  version="1.1"
+  xmlns="http://www.w3.org/2000/svg"
+  style="display: block"
+>
+  <path opacity=".6" fill-rule="evenodd" clip-rule="evenodd" d="M1 1h14v14H1V1zm13 1H2v12h12V2z"></path>
+  <path
+    fill-rule="evenodd"
+    clip-rule="evenodd"
+    d="M4 4h3v3H4V4zm5 0h3v3H9V4zM5 9H4v3h3V9H5zm4 0h3v3H9V9z"
+  ></path>
+</svg>

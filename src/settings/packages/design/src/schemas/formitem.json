@@ -1,0 +1,93 @@
+{
+  "icon": "formitem",
+  "name": {
+    "zh_CN": "表单项"
+  },
+  "component": "tiny-form-item",
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "collapse": {
+          "number": 6,
+          "text": {
+            "zh_CN": "显示更多"
+          }
+        },
+        "content": [
+          {
+            "property": "label",
+            "label": {
+              "text": {
+                "zh_CN": "标签文本"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "标签文本"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "prop",
+            "label": {
+              "text": {
+                "zh_CN": "校验字段"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "表单域 model 字段，在使用 validate、resetFields 方法的情况下，该属性是必填的"
+            }
+          },
+          {
+            "property": "required",
+            "label": {
+              "text": {
+                "zh_CN": "必填"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否必填"
+            },
+            "labelPosition": "left"
+          }
+        ]
+      }
+    ],
+    "events": {},
+    "shortcuts": {
+      "properties": ["label-width", "disabled"]
+    },
+    "contentMenu": {
+      "actions": ["create symbol"]
+    }
+  }
+}

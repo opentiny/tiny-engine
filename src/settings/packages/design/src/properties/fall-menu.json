@@ -1,0 +1,66 @@
+{
+  "$$schema": {
+    "type": "object",
+    "properties": {
+      "$$data": {
+        "title": "设置瀑布菜单的数据",
+        "type": "array",
+        "default": [],
+        "items": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "title": "菜单名称",
+              "type": "string"
+            },
+            "url": {
+              "title": "点击菜单跳转的 URL",
+              "type": "string"
+            },
+            "children": {
+              "title": "菜单下的子菜单",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "title": "菜单名称",
+                    "type": "string"
+                  },
+                  "url": {
+                    "title": "点击菜单跳转的 URL",
+                    "type": "string"
+                  },
+                  "children": {
+                    "title": "菜单下的子菜单",
+                    "type": "array"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "#left": {
+        "title": "自定义左侧切换图标插槽",
+        "type": "string"
+      },
+      "#level1": {
+        "title": "自定义一级菜单插槽",
+        "type": "string"
+      },
+      "#level2": {
+        "title": "自定义二级菜单插槽",
+        "type": "string"
+      },
+      "#level3": {
+        "title": "自定义三级菜单插槽",
+        "type": "string"
+      },
+      "#right": {
+        "title": "自定义右侧切换图标插槽",
+        "type": "string"
+      }
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "cache": {
+        "title": "是否开启用户数据缓存",
+        "type": "boolean",
+        "default": true
+      },
+      "$$cache-fields": {
+        "title": "自定义缓存的字段",
+        "type": "array",
+        "default": []
+      },
+      "cache-key": {
+        "title": "自定义缓存 key",
+        "type": "string",
+        "default": "aurora-user"
+      },
+      "text-field": {
+        "title": "设置下拉框的文本对应的数据源的字段名称",
+        "type": "string",
+        "default": "userCN"
+      },
+      "text-split": {
+        "title": "在多选的情况下，设置输入框显示多个文本时的分隔符",
+        "type": "string",
+        "default": ","
+      },
+      "value": {
+        "title": "配置默认值",
+        "type": "string",
+        "default": ""
+      },
+      "value-field": {
+        "title": "设置下拉框的值所对应数据源的字段名称",
+        "type": "string",
+        "default": "userId"
+      },
+      "value-split": {
+        "title": "在多选的情况下，设置输入框显示多个文本时的分隔符",
+        "type": "string",
+        "default": ","
+      }
+    }
+  }
+}

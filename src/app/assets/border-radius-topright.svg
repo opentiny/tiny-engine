@@ -1,0 +1,19 @@
+<svg
+  data-icon="BorderRadiusTopright"
+  aria-hidden="true"
+  focusable="false"
+  width="16"
+  height="16"
+  viewBox="0 0 16 16"
+  version="1.1"
+  xmlns="http://www.w3.org/2000/svg"
+  style="display: block"
+>
+  <path
+    opacity=".4"
+    fill-rule="evenodd"
+    clip-rule="evenodd"
+    d="M14 9v5H9v-2h3V9h2zm-7 3v2H2V9h2v3h3zM2 2h5v2H4v3H2V2z"
+  ></path>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M14 5a3 3 0 00-3-3H9v2h2a1 1 0 011 1v2h2V5z"></path>
+</svg>

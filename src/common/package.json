@@ -1,0 +1,34 @@
+{
+  "name": "@opentiny/tiny-engine-common",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "vite build"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "files": [
+    "dist",
+    "js"
+  ],
+  "dependencies": {
+    "@babel/generator": "7.18.13",
+    "@babel/parser": "7.18.13",
+    "@babel/traverse": "7.18.13",
+    "@opentiny/tiny-engine-canvas": "^1.0.0",
+    "@opentiny/tiny-engine-controller": "^1.0.0",
+    "@opentiny/tiny-engine-http": "^1.0.0",
+    "@opentiny/tiny-engine-i18n-host": "^1.0.0",
+    "@opentiny/vue": "^3.8.0",
+    "@opentiny/vue-locale": "^3.8.0",
+    "css-tree": "^2.3.1",
+    "monaco-editor": "0.33.0",
+    "prettier": "2.7.1",
+    "vue": "3.2.45",
+    "vue-i18n": "9.2.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.2.3",
+    "@vitejs/plugin-vue-jsx": "^1.3.10",
+    "vite": "^4.3.7"
+  }
+}

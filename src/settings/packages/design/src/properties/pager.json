@@ -1,0 +1,86 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "current-page": {
+        "title": "当前页数，支持 .sync 修饰符",
+        "type": "number",
+        "default": 1
+      },
+      "hide-on-single-page": {
+        "title": "只有一页时是否隐藏",
+        "type": "boolean"
+      },
+      "is-before-page-change": {
+        "title": "是否打开页面改变时的前置处理特性。在值为true时，翻页操作或者改变页大小操作不会立即生效，留给用户处理业务逻辑，之后通过调用预留的callback或者rollback使之生效或者失效，详看事件before-page-change",
+        "type": "boolean"
+      },
+      "$$layout": {
+        "title": "组件布局，子组件名用逗号分隔",
+        "type": "string",
+        "enum": ["sizes", "prev", "pager", "next", "jumper", "->", "total", "slot"],
+        "enumNames": ["初始加载页码数", "上一页", "页码", "下一页", "跳转", "总条数展示位置", "总条数", "插槽"],
+        "$$default": "prev, pager, next, jumper, ->, total"
+      },
+      "mode": {
+        "title": "设置分页显示模式",
+        "type": "string",
+        "enum": ["number", "simple", "complete", "fixed"],
+        "enumNames": ["数字模式", "简单模式", "完成模式", "固定模式"],
+        "default": ""
+      },
+      "next-text": {
+        "title": "替代图标显示的下一页文字",
+        "type": "string",
+        "default": ""
+      },
+      "page-count": {
+        "title": "总页数，total 和 page-count 设置任意一个就可以达到显示页码的功能；如果要支持 page-sizes 的更改，则需要使用 total 属性",
+        "type": "number"
+      },
+      "page-size": {
+        "title": "每页显示条目个数，支持 .sync 修饰符",
+        "type": "number",
+        "default": 10
+      },
+      "page-sizes": {
+        "title": "每页显示个数选择器的选项设置",
+        "type": "array",
+        "items": {
+          "type": "number"
+        },
+        "default": [10, 20, 30, 40, 50, 100]
+      },
+      "pager-count": {
+        "title": "页码按钮的数量，当总页数超过该值时会折叠",
+        "type": "number",
+        "enum": [5, 7, 9, 11, 13, 15, 17, 19, 21],
+        "enumNames": [5, 7, 9, 11, 13, 15, 17, 19, 21],
+        "default": 7
+      },
+      "popper-append-to-body": {
+        "title": "是否将弹出框插入至 body 元素。在弹出框的定位出现问题时，可将该属性设置为 false (可参考 select 组件)",
+        "type": "boolean",
+        "default": true
+      },
+      "$$popper-class": {
+        "title": "为 popper 添加类名(可参考 popover 组件)",
+        "type": "string",
+        "default": ""
+      },
+      "prev-text": {
+        "title": "替代图标显示的上一页文字",
+        "type": "string",
+        "default": ""
+      },
+      "total": {
+        "title": "总条目数",
+        "type": "number"
+      },
+      "#default": {
+        "title": "自定义内容插槽，需要在 layout 中列出 slot",
+        "type": "string"
+      }
+    }
+  }
+}

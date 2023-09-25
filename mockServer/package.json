@@ -1,0 +1,57 @@
+{
+  "name": "koa2-mock",
+  "version": "1.0.0",
+  "description": "mock服务",
+  "author": "opentiny",
+  "license": "WTFPL",
+  "scripts": {
+    "start": "gulp nodemon",
+    "dev": "gulp",
+    "build": "babel src -d dist",
+    "production": "node dist/app.js",
+    "test": "jest",
+    "lint": "eslint --fix ."
+  },
+  "dependencies": {
+    "@opentiny/lowcode-dsl-vue": "0.4.0",
+    "@seald-io/nedb": "^4.0.2",
+    "fs-extra": "^11.1.1",
+    "glob": "^10.3.4",
+    "koa": "^2.11.0",
+    "koa-body": "^4.1.1",
+    "koa-compose": "^4.1.0",
+    "koa-jwt": "^3.6.0",
+    "koa-router": "^8.0.8",
+    "koa-static2": "^0.1.8"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-external-helpers": "^7.8.3",
+    "@babel/plugin-transform-runtime": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
+    "@babel/register": "^7.9.0",
+    "@babel/runtime": "^7.9.2",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-eslint": "^10.1.0",
+    "babel-jest": "^25.3.0",
+    "eslint": "^6.8.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-friendly-formatter": "^4.0.1",
+    "eslint-plugin-html": "^6.0.1",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-jest": "^23.8.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "gulp": "^4.0.2",
+    "gulp-eslint": "^6.0.0",
+    "gulp-nodemon": "^2.5.0",
+    "jest": "^25.3.0",
+    "koa-logger": "^3.2.1"
+  },
+  "engines": {
+    "node": ">= 7.8.0",
+    "npm": ">= 4.2.0"
+  }
+}

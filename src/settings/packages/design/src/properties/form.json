@@ -1,0 +1,81 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "disabled": {
+        "title": "是否禁用该表单内的所有组件。若设置为 true，则表单内组件上的 disabled 属性不再生效",
+        "type": "boolean",
+        "default": false
+      },
+      "hide-required-asterisk": {
+        "title": "是否隐藏必填字段的标签旁边的红色星号",
+        "type": "boolean",
+        "default": false
+      },
+      "inline": {
+        "title": "行内布局模式",
+        "type": "boolean",
+        "default": false
+      },
+      "inline-message": {
+        "title": "是否以行内形式展示校验信息",
+        "type": "boolean",
+        "default": false
+      },
+      "label-position": {
+        "title": "表单中标签的布局位置",
+        "type": "string",
+        "enum": ["right", "left", "top"],
+        "enumNames": ["右对齐", "左对齐", "顶部对齐"],
+        "default": "right"
+      },
+      "label-suffix": {
+        "title": "表单中标签后缀 ",
+        "type": "string",
+        "default": ""
+      },
+      "label-width": {
+        "title": "表单中标签占位宽度，默认为 80px ",
+        "type": "string",
+        "default": "80px"
+      },
+      "$$model": {
+        "title": "表单数据对象",
+        "type": "object"
+      },
+      "$$rules": {
+        "title": "表单验证规则",
+        "type": "object"
+      },
+      "show-message": {
+        "title": "是否显示校验错误信息",
+        "type": "boolean",
+        "default": true
+      },
+      "size": {
+        "title": "用于控制该表单内组件的尺寸",
+        "type": "string",
+        "enum": ["medium", "small", "mini"],
+        "enumNames": ["中等尺寸", "较小尺寸", "迷你尺寸"],
+        "default": ""
+      },
+      "validate-on-rule-change": {
+        "title": "是否在 rules 属性改变后立即触发一次验证",
+        "type": "boolean",
+        "default": true
+      },
+      "$$validate-position": {
+        "title": "自定义校验提示出现的位置",
+        "type": "string"
+      },
+      "#default": {
+        "title": "默认插槽",
+        "type": "string"
+      },
+      "#label": {
+        "title": "标签文本插槽",
+        "type": "string"
+      }
+    }
+  }
+}

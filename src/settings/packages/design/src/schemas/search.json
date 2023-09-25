@@ -1,0 +1,228 @@
+{
+  "icon": "search",
+  "name": {
+    "zh_CN": "搜索"
+  },
+  "component": "tiny-search",
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "collapse": {
+          "number": 6,
+          "text": {
+            "zh_CN": "显示更多"
+          }
+        },
+        "content": [
+          {
+            "property": "modelValue",
+            "label": {
+              "text": {
+                "zh_CN": "默认值"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "输入框内的默认搜索值"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "disabled",
+            "label": {
+              "text": {
+                "zh_CN": "禁用"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否被禁用"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "placeholder",
+            "label": {
+              "text": {
+                "zh_CN": "占位文本 "
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "输入框内的提示占位文本"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "clearable",
+            "label": {
+              "text": {
+                "zh_CN": "清空按钮"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "设置显示清空图标按钮"
+            },
+            "labelPosition": "left"
+          }
+        ]
+      },
+      {
+        "name": "1",
+        "label": {
+          "zh_CN": "其他配置"
+        },
+        "content": [
+          {
+            "property": "mini",
+            "label": {
+              "text": {
+                "zh_CN": "迷你尺寸"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "迷你模式，配置为true时，搜索默认显示为一个带图标的圆形按钮，点击后展开"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "transparent",
+            "label": {
+              "text": {
+                "zh_CN": "透明模式"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "配置为true时，边框变为透明且收缩后半透明显示，一般用在带有背景的场景，默认 false"
+            },
+            "labelPosition": "left"
+          }
+        ],
+        "description": {
+          "zh_CN": ""
+        }
+      }
+    ],
+    "events": {
+      "onChange": {
+        "label": {
+          "zh_CN": "输入完成时触发"
+        },
+        "description": {
+          "zh_CN": "在 input 框中输入完成时触发的回调函数"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "type",
+              "type": "string",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "搜索类型,默认值为 {} "
+              }
+            },
+            {
+              "name": "value",
+              "type": "string",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "当前input框中值"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      },
+      "onSearch": {
+        "label": {
+          "zh_CN": "点击搜索按钮时触发"
+        },
+        "description": {
+          "zh_CN": "展开状态点击搜索按钮时触发的回调函数"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "type",
+              "type": "string",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "搜索类型,默认值为 {} "
+              }
+            },
+            {
+              "name": "value",
+              "type": "string",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "当前input框中值"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      }
+    },
+    "shortcuts": {
+      "properties": ["disabled", "mini"]
+    },
+    "contentMenu": {
+      "actions": ["create symbol"]
+    }
+  }
+}

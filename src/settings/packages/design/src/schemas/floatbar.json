@@ -1,0 +1,20 @@
+{
+  "icon": "floatbar",
+  "name": {
+    "zh_CN": "浮动块"
+  },
+  "component": "tiny-floatbar",
+  "schema": {
+    "properties": [],
+    "slots": {
+      "default": {}
+    },
+    "events": {},
+    "shortcuts": {
+      "properties": ["disabled", "mini"]
+    },
+    "contentMenu": {
+      "actions": ["create symbol"]
+    }
+  }
+}

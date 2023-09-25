@@ -1,0 +1,39 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "active": {
+        "title": "设置步骤条的选中步骤",
+        "type": "number",
+        "default": -1
+      },
+      "count-field": {
+        "title": "设置高级向导里徽标计数对应的字段名",
+        "type": "string",
+        "default": "count"
+      },
+      "$$data": {
+        "title": "设置步骤条的数据 ",
+        "type": ["object", "array"]
+      },
+      "name-field": {
+        "title": "设置节点信息中名称对应的字段名",
+        "type": "string",
+        "default": "name"
+      },
+      "space": {
+        "title": "设置步骤条的宽度",
+        "type": "number"
+      },
+      "status-field": {
+        "title": "设置数据状态对应的字段名",
+        "type": "string",
+        "default": "status"
+      },
+      "#item": {
+        "title": "步骤条数据项插槽",
+        "type": "string"
+      }
+    }
+  }
+}

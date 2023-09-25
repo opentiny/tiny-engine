@@ -1,0 +1,28 @@
+{
+  "$$schema": {
+    "type": "object",
+    "properties": {
+      "fill": {
+        "title": "颜色",
+        "type": "string",
+        "default": ""
+      },
+      "height": {
+        "title": "高度",
+        "type": "string",
+        "default": ""
+      },
+      "src": {
+        "title": "",
+        "type": "string",
+        "default": ""
+      },
+      "width": {
+        "title": "宽度",
+        "type": "string",
+        "default": ""
+      }
+    },
+    "required": ["src"]
+  }
+}

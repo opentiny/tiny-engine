@@ -1,0 +1,19 @@
+<svg
+  data-icon="TextDecorationStrike"
+  aria-hidden="true"
+  focusable="false"
+  width="16"
+  height="16"
+  viewBox="0 0 16 16"
+  version="1.1"
+  xmlns="http://www.w3.org/2000/svg"
+  style="display: block"
+>
+  <path
+    fill-rule="evenodd"
+    clip-rule="evenodd"
+    d="M4 3h8v2H9v2H7V5H4V3zm3 6v4h2V9H7z"
+    fill="currentColor"
+  ></path>
+  <path fill="currentColor" d="M1 8h14v1H1z"></path>
+</svg>

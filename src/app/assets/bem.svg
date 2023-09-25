@@ -1,0 +1,13 @@
+<svg
+  data-icon="index"
+  aria-hidden="true"
+  focusable="false"
+  viewBox="0 0 64 64"
+  version="1.1"
+  xmlns="http://www.w3.org/2000/svg"
+  style="display: block"
+  >
+  <path d="M34 23h24v4H34z"></path>
+  <path opacity=".5" d="M34 31h20v2H34zm0 4h20v2H34zm0 4h12v2H34z"></path>
+  <path d="M6 20h24v24H6V20z"></path>
+</svg>

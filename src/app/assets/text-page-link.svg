@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="10px" viewBox="0 0 16 10" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>类型/图表/链接到</title>
+    <g id="4.0icon" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="类型/图表/链接到" transform="translate(1.250000, 0.500000)" stroke="currentColor">
+            <path d="M9,4 C9,5.1045695 8.1045695,6 7,6 L2,6 C0.8954305,6 0,5.1045695 0,4 L0,2 C0,0.8954305 0.8954305,0 2,0 L7,0 C8.1045695,0 9,0.8954305 9,2" id="路径"></path>
+            <path d="M4.5,5 C4.5,3.8954305 5.3954305,3 6.5,3 L11.5,3 C12.6045695,3 13.5,3.8954305 13.5,5 L13.5,7 C13.5,8.1045695 12.6045695,9 11.5,9 L6.5,9 C5.3954305,9 4.5,8.1045695 4.5,7" id="路径"></path>
+        </g>
+    </g>
+</svg>

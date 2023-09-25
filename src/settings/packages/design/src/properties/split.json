@@ -1,0 +1,49 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "left-top-min": {
+        "title": "左面板 / 上面板最小阈值",
+        "type": ["string", "number"],
+        "default": "40px"
+      },
+      "mode": {
+        "title": "分割类型",
+        "type": "string",
+        "default": "horizontal",
+        "enum": ["horizontal", "vertical"],
+        "enumNames": ["横向分割", "纵向分割"]
+      },
+      "right-bottom-min": {
+        "title": "右面板 / 下面板最小阈值",
+        "type": ["string", "number"],
+        "default": "40px"
+      },
+      "value": {
+        "title": "分割面板的位置",
+        "type": ["number", "string"],
+        "default": 0.5
+      },
+      "#bottom": {
+        "title": "下面板插槽",
+        "type": "string"
+      },
+      "#left": {
+        "title": "左面板插槽",
+        "type": "string"
+      },
+      "#right": {
+        "title": "右面板插槽",
+        "type": "string"
+      },
+      "#top": {
+        "title": "上面板插槽",
+        "type": "string"
+      },
+      "#trigger": {
+        "title": "拖拽插槽",
+        "type": "string"
+      }
+    }
+  }
+}

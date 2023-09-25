@@ -1,0 +1,67 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "active": {
+        "title": "设置步骤条的选中步骤",
+        "type": "number",
+        "default": -1
+      },
+      "$$data": {
+        "title": "设置时间线步骤条数据",
+        "type": "array",
+        "default": ""
+      },
+      "name-field": {
+        "title": "设置节点信息中名称对应的字段名",
+        "type": "string",
+        "default": "name"
+      },
+      "reverse": {
+        "title": "是否设置竖向步骤条反方向",
+        "type": "boolean",
+        "default": false
+      },
+      "show-number": {
+        "title": "设置未完成的状态是否显示序号",
+        "type": "boolean",
+        "default": true
+      },
+      "space": {
+        "title": "设置步骤条的宽度",
+        "type": "number"
+      },
+      "start": {
+        "title": "设置步骤条序号起始值",
+        "type": "number",
+        "default": 1
+      },
+      "time-field": {
+        "title": "设置节点时间信息对应的字段名",
+        "type": "string",
+        "default": "time"
+      },
+      "vertical": {
+        "title": "竖式步骤条",
+        "type": "boolean",
+        "default": false
+      },
+      "#bottom": {
+        "title": "定义步骤条底部插槽",
+        "type": "string"
+      },
+      "#left": {
+        "title": "定义步骤条左侧内容插槽",
+        "type": "string"
+      },
+      "#right": {
+        "title": "定义步骤条右侧内容插槽",
+        "type": "string"
+      },
+      "#top": {
+        "title": "定义步骤条顶部插槽",
+        "type": "string"
+      }
+    }
+  }
+}

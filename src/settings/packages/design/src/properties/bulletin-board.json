@@ -1,0 +1,102 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "active-name": {
+        "title": "设置默认激活的选项卡，从 1 开始计算。默认显示第1栏，可选'1' '2' '3'等",
+        "type": "string",
+        "default": "1"
+      },
+      "data": {
+        "title": "tab-item 数据",
+        "type": "array",
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "title": "文本内容",
+                "type": "string",
+                "default": ""
+              },
+              "date": {
+                "title": "日期",
+                "type": "string",
+                "format": "date",
+                "default": ""
+              },
+              "url": {
+                "title": "跳转地址",
+                "type": "string",
+                "default": ""
+              },
+              "target": {
+                "title": "跳转方式",
+                "type": "string",
+                "enum": ["_self", "_blank"],
+                "enumNames": ["当前页面跳转", "另起一页跳转"],
+                "default": "_self"
+              }
+            }
+          }
+        }
+      },
+      "$$icon": {
+        "title": "tab-item中第一条信息的字体图标",
+        "type": ["string", "object"],
+        "default": ""
+      },
+      "more-link": {
+        "title": "更多按钮跳转地址，show-more 为true 的时候生效",
+        "type": "object",
+        "properties": {
+          "url": {
+            "title": "跳转地址",
+            "description": "跳转地址和跳转路由二选一，跳转地址优先级高",
+            "type": "string",
+            "default": ""
+          },
+          "route": {
+            "title": "跳转路由",
+            "description": "跳转地址和跳转路由二选一，跳转地址优先级高",
+            "type": "string",
+            "default": ""
+          },
+          "target": {
+            "title": "跳转方式",
+            "type": "string",
+            "enum": ["_self", "_blank"],
+            "enumNames": ["当前页面跳转", "另起一页跳转"],
+            "default": "_self"
+          },
+          "text": {
+            "title": "链接文本",
+            "type": "string",
+            "default": "更多"
+          }
+        }
+      },
+      "show-more": {
+        "title": "是否显示更多按钮，默认显示,需要与 更多按钮跳转地址 more-link 同时使用",
+        "type": "boolean",
+        "default": true
+      },
+      "tab-title": {
+        "title": "自定义选项卡标题",
+        "type": "array",
+        "items": {
+          "title": "选项卡标题",
+          "type": "string"
+        },
+        "minItems": 1
+      },
+      "title": {
+        "title": "公告牌的标题",
+        "type": "string",
+        "default": ""
+      }
+    },
+    "required": ["data", "tab-title"]
+  }
+}

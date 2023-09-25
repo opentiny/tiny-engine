@@ -1,0 +1,16 @@
+<svg
+  data-icon="BorderRadiusMultiple"
+  aria-hidden="true"
+  focusable="false"
+  width="16"
+  height="16"
+  version="1.1"
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 16 16"
+>
+  <path
+    fill-rule="evenodd"
+    clip-rule="evenodd"
+    d="M5 2a3 3 0 00-3 3v2h2V5a1 1 0 011-1h2V2H5zm6 0a3 3 0 013 3v2h-2V5a1 1 0 00-1-1H9V2h2zM5 14a3 3 0 01-3-3V9h2v2a1 1 0 001 1h2v2H5zm6 0a3 3 0 003-3V9h-2v2a1 1 0 01-1 1H9v2h2z"
+  ></path>
+</svg>

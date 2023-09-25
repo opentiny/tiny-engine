@@ -1,0 +1,24 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "condition": {
+        "title": "是否渲染",
+        "type": "boolean",
+        "default": true
+      },
+      "id": {
+        "title": "绑定id",
+        "type": "string"
+      },
+      "class": {
+        "title": "绑定class",
+        "type": "string"
+      },
+      "src": {
+        "title": "src",
+        "type": "string"
+      }
+    }
+  }
+}

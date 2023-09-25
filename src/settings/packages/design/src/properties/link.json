@@ -1,0 +1,47 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "disabled": {
+        "title": "是否禁用状态",
+        "type": "boolean",
+        "default": false
+      },
+      "href": {
+        "title": "原生 href 属性",
+        "type": "string",
+        "default": ""
+      },
+      "icon": {
+        "title": "图标类名",
+        "type": "string",
+        "default": ""
+      },
+      "$$icon": {
+        "title": "图标类名",
+        "type": "object",
+        "default": ""
+      },
+      "type": {
+        "title": "类型",
+        "type": "string",
+        "enum": ["primary", "success", "warning", "danger", "info"],
+        "enumNames": ["主要类型", "成功类型", "警告类型", "危险类型", "信息类型"],
+        "default": "default"
+      },
+      "underline": {
+        "title": "是否下划线",
+        "type": "boolean",
+        "default": true
+      },
+      "#default": {
+        "title": "默认插槽",
+        "type": "string"
+      },
+      "#icon": {
+        "title": "图标插槽",
+        "type": "string"
+      }
+    }
+  }
+}

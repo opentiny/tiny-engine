@@ -1,0 +1,325 @@
+{
+  "icon": "form",
+  "name": {
+    "zh_CN": "表单"
+  },
+  "component": "tiny-form",
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "collapse": {
+          "number": 6,
+          "text": {
+            "zh_CN": "显示更多"
+          }
+        },
+        "content": [
+          {
+            "property": "disabled",
+            "label": {
+              "text": {
+                "zh_CN": "是否禁用"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": ""
+            }
+          },
+          {
+            "property": "label-width",
+            "label": {
+              "text": {
+                "zh_CN": "标签宽度"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "表单中标签占位宽度，默认为 80px"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "inline",
+            "label": {
+              "text": {
+                "zh_CN": "行内布局"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "行内布局模式，默认为 false"
+            }
+          },
+          {
+            "property": "label-align",
+            "label": {
+              "text": {
+                "zh_CN": "必填标识是否占位"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "必填标识 * 是否占位"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "label-suffix",
+            "label": {
+              "text": {
+                "zh_CN": "标签后缀"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "表单中标签后缀"
+            }
+          },
+          {
+            "property": "label-position",
+            "label": {
+              "text": {
+                "zh_CN": "标签位置"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSelect",
+              "props": {
+                "options": [
+                  {
+                    "label": "right",
+                    "value": "right"
+                  },
+                  {
+                    "label": "left ",
+                    "value": "left "
+                  },
+                  {
+                    "label": "top",
+                    "value": "top"
+                  }
+                ]
+              }
+            },
+            "description": {
+              "zh_CN": "表单中标签的布局位置"
+            }
+          }
+        ]
+      },
+      {
+        "name": "1",
+        "label": {
+          "zh_CN": "校验属性"
+        },
+        "content": [
+          {
+            "property": "model",
+            "label": {
+              "text": {
+                "zh_CN": "表单校验对象"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaCodeEditor",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "表单数据对象"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "rules",
+            "label": {
+              "text": {
+                "zh_CN": "校验规则"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaCodeEditor",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "表单验证规则"
+            }
+          }
+        ],
+        "description": {
+          "zh_CN": ""
+        }
+      }
+    ],
+    "slots": {
+      "default": {}
+    },
+    "events": {
+      "onValidate": {
+        "label": {
+          "zh_CN": "表单项被校验后触发"
+        },
+        "description": {
+          "zh_CN": "表单项被校验后触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "function",
+              "type": "Function",
+              "defaultValue": "(valid) => {}",
+              "description": {
+                "zh_CN": "校验回调函数"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      },
+      "onInput": {
+        "label": {
+          "zh_CN": "输入值改变时触发"
+        },
+        "description": {
+          "zh_CN": "在 Input 输入值改变时触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "value",
+              "type": "string",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "输入框输入的值"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      },
+      "onBlur": {
+        "label": {
+          "zh_CN": "失去焦点时触发"
+        },
+        "description": {
+          "zh_CN": "在 Input 失去焦点时触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "event",
+              "type": "Object",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "原生 event"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      },
+      "onFocus": {
+        "label": {
+          "zh_CN": "获取焦点时触发"
+        },
+        "description": {
+          "zh_CN": "在 Input 获取焦点时触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "event",
+              "type": "Object",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "原生 event"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      },
+      "onClear": {
+        "label": {
+          "zh_CN": "点击清空按钮时触发"
+        },
+        "description": {
+          "zh_CN": "点击清空按钮时触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [],
+          "returns": {}
+        },
+        "defaultValue": ""
+      }
+    },
+    "shortcuts": {
+      "properties": ["label-width", "disabled"]
+    },
+    "contentMenu": {
+      "actions": ["create symbol"]
+    }
+  }
+}

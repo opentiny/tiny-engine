@@ -1,0 +1,69 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "arrow": {
+        "title": "切换箭头的显示时机",
+        "type": "string",
+        "enum": ["always", "hover", "never"],
+        "enumNames": ["总是显示", "鼠标悬停时显示", "从不显示"],
+        "default": "hover"
+      },
+      "autoplay": {
+        "title": "是否自动切换",
+        "type": "boolean",
+        "default": false
+      },
+      "height": {
+        "title": "走马灯的高度",
+        "type": "string",
+        "default": ""
+      },
+      "indicator-position": {
+        "title": "指示器的位置",
+        "type": "string",
+        "enum": ["outside", "none"],
+        "enumNames": ["走马灯外部", "不显示"],
+        "default": ""
+      },
+      "initial-index": {
+        "title": "初始状态激活的幻灯片的索引，从 0 开始 ",
+        "type": "number",
+        "default": 0
+      },
+      "interval": {
+        "title": "自动切换的时间间隔，单位为毫秒",
+        "type": "number",
+        "default": 3000
+      },
+      "loop": {
+        "title": "是否循环显示",
+        "type": "boolean",
+        "default": true
+      },
+      "show-title": {
+        "title": "是否显示标题",
+        "type": "boolean",
+        "default": false
+      },
+      "trigger": {
+        "title": "指示器的触发方式，默认为 hover",
+        "type": "string",
+        "enum": ["click", "hover"],
+        "enumNames": ["点击", "悬停"],
+        "default": "hover"
+      },
+      "type": {
+        "title": "走马灯的类型",
+        "type": "string",
+        "enum": ["horizontal", "vertical", "card"],
+        "enumNames": ["水平", "垂直", "卡片"],
+        "default": "horizontal"
+      },
+      "#default": {
+        "title": "默认插槽",
+        "type": "string"
+      }
+    }
+  }
+}

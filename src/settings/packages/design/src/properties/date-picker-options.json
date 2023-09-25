@@ -1,0 +1,18 @@
+{
+  "$$schema": {
+    "type": "object",
+    "properties": {
+      "firstDayOfWeek": {
+        "title": "周起始日",
+        "type": "number",
+        "enum": [1, 2, 3, 4, 5, 6, 7],
+        "enumNames": ["周一", "周二", "周三", "周四", "周五", "周六", "周日"],
+        "default": 7
+      },
+      "shortcuts": {
+        "title": "设置快捷选项，需要传入 { text, onClick } 对象用法参考 demo 或下表",
+        "type": "object"
+      }
+    }
+  }
+}

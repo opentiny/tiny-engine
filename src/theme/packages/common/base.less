@@ -1,0 +1,116 @@
+html {
+  font-size: 14px;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  font-family: Microsoft YaHei, Microsoft YaHei-Normal;
+}
+
+body {
+  --base-left-panel-width: 268px;
+  --base-right-panel-width: 240px;
+  --base-top-panel-height: 48px;
+  --base-bottom-panel-height: 30px;
+  --base-nav-panel-width: 40px;
+  --base-collection-panel-width: calc(
+    (100vw - (var(--base-left-panel-width) + var(--base-right-panel-width) + var(--base-nav-panel-width) - 1px)) / 2
+  );
+  --base-collection-panel-full-screen-width: calc(
+    (100vw - (var(--base-left-panel-width) + var(--base-right-panel-width) + var(--base-nav-panel-width) - 1px))
+  );
+  -webkit-font-smoothing: subpixel-antialiased;
+  background: #f9f9f9;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+a {
+  cursor: pointer;
+  background-image: none;
+  text-decoration: none;
+  outline: none;
+
+  &:focus,
+  &:active,
+  &:hover {
+    outline: none;
+    text-decoration: none;
+  }
+}
+
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+th,
+td {
+  margin: 0;
+  padding: 0;
+}
+
+@media (min-width: 576px) {
+  body {
+    --base-left-panel-width: 25vw;
+    --base-right-panel-width: 25vw;
+  }
+}
+
+@media (min-width: 768px) {
+  body {
+    --base-left-panel-width: 25vw;
+    --base-right-panel-width: 25vw;
+  }
+}
+
+@media (min-width: 992px) {
+  body {
+    --base-left-panel-width: 202px;
+    --base-right-panel-width: 208px;
+  }
+}
+
+@media (min-width: 1200px) {
+  body {
+    --base-left-panel-width: 236px;
+    --base-right-panel-width: 240px;
+  }
+}
+
+@media (min-width: 1600px) {
+  body {
+    --base-left-panel-width: 268px;
+    --base-right-panel-width: 272px;
+  }
+}
+
+@media (min-width: 2000px) {
+  body {
+    --base-left-panel-width: 300px;
+    --base-right-panel-width: 308px;
+  }
+}
+
+#tiny-engine * {
+  box-sizing: border-box;
+}
+
+.tiny-svg,
+#tiny-engine .tiny-svg {
+  fill: currentColor !important;
+  outline: none;
+}
+
+.text-ellipsis-multiple {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: var(--ellipsis-line, 2);
+  -webkit-box-orient: vertical;
+}

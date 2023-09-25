@@ -1,0 +1,427 @@
+{
+  "componentName": "Block",
+  "fileName": "CrmConsumeVoucherGrid",
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "collapse": {
+          "number": 6,
+          "text": {
+            "zh_CN": "显示更多"
+          }
+        },
+        "content": [
+          {
+            "property": "isEdit",
+            "type": "Boolean",
+            "defaultValue": true,
+            "label": {
+              "text": {
+                "zh_CN": "是否编辑"
+              }
+            },
+            "description": {
+              "zh_CN": "是否编辑配置项"
+            },
+            "widget": {
+              "component": "MetaCodeEditor"
+            },
+            "cols": 12,
+            "rules": [],
+            "required": true,
+            "handle": {}
+          },
+          {
+            "property": "tableData",
+            "type": "Array",
+            "defaultValue": [
+              {
+                "way": "test",
+                "_RID": "row_1"
+              }
+            ],
+            "label": {
+              "text": {
+                "zh_CN": "表格数据"
+              }
+            },
+            "description": {
+              "zh_CN": "表格数据配置项"
+            },
+            "widget": {
+              "component": "MetaCodeEditor"
+            },
+            "cols": 12,
+            "rules": [],
+            "required": true,
+            "handle": {}
+          },
+          {
+            "property": "options",
+            "type": "Array",
+            "defaultValue": [
+              {
+                "value": "test"
+              }
+            ],
+            "label": {
+              "text": {
+                "zh_CN": "下拉框数据"
+              }
+            },
+            "description": {
+              "zh_CN": "下拉框数据配置项"
+            },
+            "widget": {
+              "component": "MetaCodeEditor"
+            },
+            "cols": 12,
+            "rules": [],
+            "required": true,
+            "handle": {}
+          }
+        ]
+      }
+    ],
+    "lifeCycles": {
+      "setup": {
+        "type": "JSFunction",
+        "value": "function( props, context, vue, state ) {\r\n    watch(()=>props.tableData, (value) => {state.tableData = value })\r\n}"
+      }
+    }
+  },
+  "methods": {
+    "deleteData": {
+      "type": "JSFunction",
+      "value": "function deleteData(row) {\n  this.utils.Modal.confirm({\n    title: '提示',\n    message: '您确定要删除吗？'\n  }).then(res => {\n    if (res === 'confirm') {\n      this.$('gridRef').remove(row);\n    }\n  });\n}"
+    },
+    "activeMethod": {
+      "type": "JSFunction",
+      "value": "function activeMethod() {\n  return this.props.isEdit;\n}"
+    },
+    "stepsChange": {
+      "type": "JSFunction",
+      "value": "function stepsChange(data) {\n  console.log(data);\n  this.emit('change', data);\n}"
+    },
+    "strategySubTypeChange": {
+      "type": "JSFunction",
+      "value": "function strategySubTypeChange(row) {\n  console.log(row);\n}"
+    }
+  },
+  "children": [
+    {
+      "componentName": "TinyGrid",
+      "props": {
+        "ref": "gridRef",
+        "className": "crm-consume-voucher-grid",
+        "edit-config": {
+          "type": "JSExpression",
+          "value": "this.{ trigger: 'click', mode: 'cell', showStatus: false, activeMethod }"
+        },
+        "edit-rules": {
+          "type": "JSExpression",
+          "value": "this.state.validRules"
+        },
+        "data": {
+          "type": "JSExpression",
+          "value": "this.state.tableData"
+        },
+        "columns": {
+          "type": "JSExpression",
+          "value": "this.state.columns"
+        },
+        "auto-resize": true
+      },
+      "id": "ab110672"
+    }
+  ],
+  "blockName": "CrmConsumeVoucherGrid",
+  "state": {
+    "validRules": {
+      "interval": {
+        "required": true
+      },
+      "way": {
+        "required": true
+      },
+      "percent": {
+        "required": true
+      },
+      "deadline": {
+        "required": true
+      }
+    },
+    "tableData": {
+      "type": "JSExpression",
+      "value": "this.props.tableData"
+    },
+    "columns": [
+      {
+        "type": "index",
+        "title": {
+          "type": "i18n",
+          "key": "quotes.voucher.tier"
+        },
+        "width": 80
+      },
+      {
+        "title": {
+          "type": "i18n",
+          "key": "quotes.voucher.consumption_interval"
+        },
+        "field": "interval",
+        "slots": {
+          "default": {
+            "type": "JSSlot",
+            "params": ["row", "data", "seq", "rowIndex"],
+            "value": [
+              {
+                "componentName": "ConsumptionRangeGrid",
+                "fileName": "ConsumptionRangeGrid",
+                "props": {
+                  "isEdit": {
+                    "type": "JSExpression",
+                    "value": "this.props.isEdit"
+                  },
+                  "tableData": {
+                    "type": "JSExpression",
+                    "value": "data"
+                  },
+                  "seq": {
+                    "type": "JSExpression",
+                    "value": "seq"
+                  },
+                  "rowIndex": {
+                    "type": "JSExpression",
+                    "value": "rowIndex"
+                  },
+                  "rowData": {
+                    "type": "JSExpression",
+                    "value": "row"
+                  },
+                  "onChange": {
+                    "type": "JSExpression",
+                    "value": "this.stepsChange"
+                  }
+                },
+                "id": "da20dae5"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "field": "strategySubType",
+        "title": {
+          "type": "i18n",
+          "key": "quotes.voucher.vouchertype"
+        },
+        "showIcon": false,
+        "editor": {
+          "component": {
+            "type": "JSResource",
+            "value": "this.utils.Select"
+          },
+          "type": {
+            "type": "JSExpression",
+            "value": "this.props.isEdit ? 'visible' : ''"
+          },
+          "events": {
+            "change": {
+              "type": "JSExpression",
+              "value": "this.strategySubTypeChange"
+            }
+          },
+          "attrs": {
+            "type": "JSExpression",
+            "value": "{ options: props.options, textField: 'name', valueField: 'valueId' }"
+          }
+        },
+        "formatConfig": {
+          "data": {
+            "type": "JSExpression",
+            "value": "this.props.options"
+          },
+          "label": "name",
+          "value": "valueId"
+        },
+        "formatText": "enum"
+      },
+      {
+        "title": {
+          "type": "i18n",
+          "key": "quotes.voucher.giveamount"
+        },
+        "slots": {
+          "default": {
+            "type": "JSSlot",
+            "params": ["row"],
+            "value": [
+              {
+                "componentName": "div",
+                "children": [
+                  {
+                    "componentName": "TinyInput",
+                    "props": {
+                      "style": {
+                        "type": "JSExpression",
+                        "value": "props.isEdit ? 'display:inline-block' : 'display:none'"
+                      },
+                      "value": {
+                        "type": "JSExpression",
+                        "value": "row.voucherSpec.amount",
+                        "model": {
+                          "prop": ""
+                        }
+                      },
+                      "disabled": {
+                        "type": "JSExpression",
+                        "value": "row.strategySubType === 1"
+                      }
+                    },
+                    "id": "d1c37157"
+                  },
+                  {
+                    "componentName": "span",
+                    "props": {
+                      "style": {
+                        "type": "JSExpression",
+                        "value": "props.isEdit ? 'display:none' : 'display:inline-block'"
+                      }
+                    },
+                    "children": {
+                      "type": "JSExpression",
+                      "value": "row.voucherSpec.amount"
+                    },
+                    "id": "f4686ebb"
+                  }
+                ],
+                "id": "7b588b12"
+              }
+            ]
+          }
+        },
+        "field": "voucherSpec.amount",
+        "width": 120
+      },
+      {
+        "field": "percvoucherSpec.ratioent",
+        "title": {
+          "type": "i18n",
+          "key": "quotes.voucher.ratio"
+        },
+        "showIcon": false,
+        "slots": {
+          "default": {
+            "type": "JSSlot",
+            "params": ["row"],
+            "value": [
+              {
+                "componentName": "div",
+                "children": [
+                  {
+                    "componentName": "TinyInput",
+                    "props": {
+                      "style": {
+                        "type": "JSExpression",
+                        "value": "props.isEdit ? 'display:inline-block' : 'display:none'"
+                      },
+                      "value": {
+                        "type": "JSExpression",
+                        "value": "row.voucherSpec.ratio",
+                        "model": {
+                          "prop": ""
+                        }
+                      },
+                      "disabled": {
+                        "type": "JSExpression",
+                        "value": "row.strategySubType === 2"
+                      },
+                      "size": "medium"
+                    },
+                    "id": "d1c37157"
+                  },
+                  {
+                    "componentName": "span",
+                    "props": {
+                      "style": {
+                        "type": "JSExpression",
+                        "value": "props.isEdit ? 'display:none' : 'display:inline-block'"
+                      }
+                    },
+                    "children": {
+                      "type": "JSExpression",
+                      "value": "row.voucherSpec.ratio"
+                    },
+                    "id": "f4686ebb"
+                  }
+                ],
+                "id": "7b588b12"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "title": {
+          "type": "i18n",
+          "key": "quotes.voucher.validity_period_month"
+        },
+        "field": "voucherSpec.validationPeriod",
+        "showIcon": false,
+        "editor": {
+          "component": "input",
+          "attrs": {
+            "disabled": true
+          },
+          "type": {
+            "type": "JSExpression",
+            "value": "this.props.isEdit ? 'visible' : ''"
+          }
+        }
+      },
+      {
+        "title": {
+          "type": "i18n",
+          "key": "quotes.quoteconfig.operate"
+        },
+        "width": 100,
+        "slots": {
+          "default": {
+            "type": "JSSlot",
+            "params": ["row"],
+            "value": [
+              {
+                "componentName": "span",
+                "props": {
+                  "style": "color: #5285db,cursor: pointer",
+                  "onClick": {
+                    "type": "JSFunction",
+                    "value": " ()=>{this.deleteData(row)}"
+                  }
+                },
+                "children": {
+                  "type": "i18n",
+                  "key": "quotes.voucher.voucher_modal_tip4"
+                },
+                "id": "6d81ff9d"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "lifeCycles": {
+    "setup": {
+      "type": "JSFunction",
+      "value": "function setup({ props, state, watchEffect }) {\r\n  \r\n  watchEffect(\r\n    () => {\r\n      this.state.tableData = props.tableData\r\n      this.state.columns[2].editor.attrs.options = props.options;\r\n    }\r\n  )\r\n}"
+    }
+  }
+}

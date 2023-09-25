@@ -1,0 +1,54 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "condition": {
+        "title": "是否渲染",
+        "type": "boolean",
+        "default": true
+      },
+      "items": {
+        "title": "选项",
+        "type": "array",
+        "default": [
+          {
+            "label": {
+              "type": "i18n",
+              "zh_CN": "黄金糕",
+              "key": ""
+            },
+            "text": "cake"
+          },
+          {
+            "label": {
+              "type": "i18n",
+              "zh_CN": "双皮奶",
+              "key": ""
+            },
+            "text": "milk"
+          },
+          {
+            "label": {
+              "type": "i18n",
+              "zh_CN": "鸡蛋",
+              "key": ""
+            },
+            "text": "egg"
+          }
+        ]
+      },
+      "selected": {
+        "title": "选中项",
+        "type": "object",
+        "default": {
+          "label": {
+            "type": "i18n",
+            "zh_CN": "黄金糕",
+            "key": ""
+          },
+          "text": "cake"
+        }
+      }
+    }
+  }
+}

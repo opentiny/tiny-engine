@@ -1,0 +1,75 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "active-name": {
+        "title": "激活当前页面",
+        "type": "string",
+        "default": ""
+      },
+      "editable": {
+        "title": "标签是否同时可增加和关闭",
+        "type": "boolean",
+        "default": false
+      },
+      "popper-append-to-body": {
+        "title": "是否将弹出框插入至 body 元素。在弹出框的定位出现问题时，可将该属性设置为 false (可参考 select 组件)",
+        "type": "boolean",
+        "default": true
+      },
+      "$$popper-class": {
+        "title": "为 popper 添加类名(可参考 popover 组件)",
+        "type": "string",
+        "default": ""
+      },
+      "position": {
+        "title": "选项卡所在位置",
+        "type": "string",
+        "enum": ["top", "right", "bottom", "left"],
+        "enumNames": ["上边", "右边", "下边", "左边"],
+        "default": "top"
+      },
+      "show-more-tabs": {
+        "title": "当标签页超过一定宽度时将显示 更多 ，鼠标悬停到 更多 时，将显示超出宽度的标签页",
+        "type": "boolean",
+        "default": false
+      },
+      "size": {
+        "title": "设置 tabs 标签页尺寸,当与 tabStyle 为 card 或者 border-card 时生效, 该属性可选值为 small",
+        "type": "string",
+        "default": ""
+      },
+      "stretch": {
+        "title": "标签的宽度是否自撑开",
+        "type": "boolean",
+        "default": false
+      },
+      "tab-style": {
+        "title": "标签页样式",
+        "type": "string",
+        "enum": ["card", "border-card"],
+        "enumNames": ["卡片类型", "带边框卡片类型"],
+        "default": ""
+      },
+      "$$value": {
+        "title": "绑定值，选中选项卡的 name",
+        "type": "string",
+        "default": ""
+      },
+      "with-add": {
+        "title": "标签是否可增加",
+        "type": "boolean",
+        "default": false
+      },
+      "with-close": {
+        "title": "标签是否可关闭",
+        "type": "boolean",
+        "default": false
+      },
+      "#title": {
+        "title": "自定义title内容插槽",
+        "type": "string"
+      }
+    }
+  }
+}

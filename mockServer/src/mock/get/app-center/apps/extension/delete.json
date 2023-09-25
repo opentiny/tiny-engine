@@ -1,0 +1,20 @@
+{
+  "data": {
+    "id": 245824,
+    "name": "Input",
+    "type": "npm",
+    "content": {
+      "package": "@opentiny/vue",
+      "version": "",
+      "exportName": "Input",
+      "subName": "",
+      "destructuring": true,
+      "main": ""
+    },
+    "app": 918,
+    "category": "utils",
+    "created_at": "2023-09-04T08:32:38.000Z",
+    "updated_at": "2023-09-04T08:32:38.000Z"
+  },
+  "locale": "zh-cn"
+}

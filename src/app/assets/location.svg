@@ -1,0 +1,9 @@
+<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="132px" height="132px" viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+<g>
+	<path fill="#787777" d="M8,0C3.581,0,0,3.581,0,8c0,4.419,3.581,8,8,8c4.418,0,8-3.581,8-8C16,3.581,12.418,0,8,0z M8,14&#10;&#9;&#9;c-3.308,0-6-2.692-6-6c0-3.308,2.692-6,6-6s6,2.692,6,6C14,11.308,11.308,14,8,14z"/>
+	<rect x="7" y="3" fill="#787777" width="2" height="2"/>
+	<rect x="7" y="11" fill="#787777" width="2" height="2"/>
+	<rect x="11" y="7" fill="#787777" width="2" height="2"/>
+	<rect x="3" y="7" fill="#787777" width="2" height="2"/>
+</g>
+</svg>

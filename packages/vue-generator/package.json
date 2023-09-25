@@ -1,0 +1,29 @@
+{
+  "name": "@opentiny/lowcode-dsl-vue",
+  "version": "0.3.29",
+  "main": "dist/lowcode-dsl-vue.cjs.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "test": "npx nyc@latest --reporter=lcov node test/test_generator.js",
+    "test:latest": "npm run build && node test/testcases/full/index.js",
+    "publish:npm": "npm publish --verbose"
+  },
+  "dependencies": {
+    "vue": "3.2.33",
+    "vue-eslint-parser": "8.3.0"
+  },
+  "devDependencies": {
+    "@cloud/eslint-config-cbc": "^1.7.3",
+    "@rushstack/eslint-patch": "^1.1.1",
+    "@vue/eslint-config-prettier": "^7.0.0",
+    "eslint": "^8.12.0",
+    "eslint-plugin-vue": "^8.6.0",
+    "fs-extra": "^10.0.1",
+    "prettier": "^2.6.1",
+    "vite": "^2.8.6",
+    "winston": "^3.10.0"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "condition": {
+        "title": "是否渲染",
+        "type": "boolean",
+        "default": true
+      },
+      "items": {
+        "title": "轮播项",
+        "type": "array",
+        "default": [
+          {
+            "src": "img/rocket.jpg"
+          },
+          {
+            "src": ""
+          }
+        ]
+      },
+      "autoplay": {
+        "title": "是否自动播放",
+        "type": "boolean",
+        "default": false
+      },
+      "autoplaySpeed": {
+        "title": "自动播放速度",
+        "type": "number",
+        "default": 3000
+      },
+      "heigth": {
+        "title": "高度",
+        "type": "number",
+        "default": 200
+      }
+    }
+  }
+}

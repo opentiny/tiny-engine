@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="133px" height="115px" viewBox="0 0 133 115" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>alarm</title>
+    <desc>Created with Sketch.</desc>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="alarm" fill-rule="nonzero">
+            <path d="M131.319375,103.3725 C128.679375,99.0825 77.199375,10.9725 72.579375,3.7125 C69.609375,-1.2375 62.679375,-1.2375 59.709375,3.7125 C56.409375,8.9925 4.599375,97.4325 0.969375,103.7025 C-1.670625,108.3225 1.299375,114.5925 7.239375,114.5925 C13.179375,114.5925 120.429375,114.5925 124.389375,114.5925 C130.329375,114.2625 134.289375,108.9825 131.319375,103.3725 Z" id="XMLID_827_-path" fill="#FA9841"></path>
+            <path d="M71.22,99.02 L61.32,99.02 L61.32,89.12 L71.22,89.12 L71.22,99.02 Z M71.22,81.2 L61.32,81.2 L60,35 L72.54,35 L71.22,81.2 Z" id="XMLID_827_" fill="#FFFFFF"></path>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,43 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "$$data": {
+        "title": "设置流程图的数据",
+        "type": "array",
+        "default": []
+      },
+      "page-guide": {
+        "title": "设置流程图为页向导流程图",
+        "type": "boolean",
+        "default": false
+      },
+      "time-line-flow": {
+        "title": "设置流程图为时间线流程图",
+        "type": "boolean",
+        "default": false
+      },
+      "vertical": {
+        "title": "设置流程图为垂直流程图",
+        "type": "boolean",
+        "default": false
+      },
+      "#base": {
+        "title": "基本流程图插槽",
+        "type": "string"
+      },
+      "#card": {
+        "title": "卡片插槽",
+        "type": "string"
+      },
+      "#stepbutton": {
+        "title": "页向导流程图按钮插槽",
+        "type": "string"
+      },
+      "#vertical": {
+        "title": "垂直流程图插槽",
+        "type": "string"
+      }
+    }
+  }
+}

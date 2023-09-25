@@ -1,0 +1,62 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "disabled": {
+        "title": "是否禁用",
+        "type": "boolean",
+        "default": false
+      },
+      "height": {
+        "title": "Slider 高度",
+        "type": "string",
+        "default": "300px"
+      },
+      "max": {
+        "title": "设置最大值。必需是整数，可以负数。必需大于所设置的最小值",
+        "type": "number",
+        "default": 100
+      },
+      "min": {
+        "title": "设置最小值",
+        "type": "number",
+        "default": 0
+      },
+      "num-pages": {
+        "title": "设置总步数，即按快捷键 PageDown/PageUp 时，每次移动的距离是(最大值-最小值)/分页数",
+        "type": "number",
+        "default": 1
+      },
+      "show-input": {
+        "title": "是否显示输入框，仅在非范围选择时有效",
+        "type": "boolean",
+        "default": false
+      },
+      "show-tip": {
+        "title": "是否显示 tooltip",
+        "type": "boolean",
+        "default": true
+      },
+      "step": {
+        "title": "设置滑块移动时，每步位移距离，必需是大于0的正整数",
+        "type": "number",
+        "minimum": 1,
+        "default": 1
+      },
+      "value": {
+        "title": "绑定值",
+        "type": "number",
+        "default": 0
+      },
+      "vertical": {
+        "title": "是否竖向模式",
+        "type": "boolean",
+        "default": false
+      },
+      "#default": {
+        "title": "默认插槽",
+        "type": "string"
+      }
+    }
+  }
+}

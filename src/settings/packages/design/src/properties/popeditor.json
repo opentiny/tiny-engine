@@ -1,0 +1,147 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "$$conditions": {
+        "title": "当弹出面板配置的是表格时，设置弹出面板中的表单查询项",
+        "type": "array",
+        "default": ""
+      },
+      "dialog-class": {
+        "title": "自定义配置弹窗类名",
+        "type": "string",
+        "default": ""
+      },
+      "disabled": {
+        "title": "设置组件是否为禁用状态",
+        "type": "boolean",
+        "default": false
+      },
+      "draggable": {
+        "title": "设置弹出窗口是否可拖动",
+        "type": "boolean",
+        "default": true
+      },
+      "$$grid-op": {
+        "title": "设置弹出面板中表格组件的配置信息",
+        "type": "object",
+        "default": ""
+      },
+      "height": {
+        "title": "设置弹出面板的高度（单位像素）",
+        "type": ["string", "number"],
+        "default": ""
+      },
+      "$$icon": {
+        "title": "Popeditor 组件的 Icon 图标设置。默认为 svg 组件",
+        "type": "object",
+        "default": ""
+      },
+      "multi": {
+        "title": "设置弹出面板中的数据是否可多选",
+        "type": "boolean",
+        "default": false
+      },
+      "$$pager-op": {
+        "title": "设置分页配置",
+        "type": "object",
+        "default": ""
+      },
+      "placeholder": {
+        "title": "占位符",
+        "type": "string",
+        "default": ""
+      },
+      "popseletor": {
+        "title": "设置弹出面板中可显示的树或者表格组件",
+        "type": "string",
+        "enum": ["grid", "tree"],
+        "enumNames": ["表格组件", "树组件"],
+        "default": "grid"
+      },
+      "readonly": {
+        "title": "设置是否只读，设置为 false 后点击 Ipunt 框可以弹出选择框",
+        "type": "boolean",
+        "default": true
+      },
+      "resize": {
+        "title": "是否显示弹框全屏按钮",
+        "type": "boolean",
+        "default": false
+      },
+      "show-clear-btn": {
+        "title": "设置输入框中右侧是否显示清除按钮",
+        "type": "boolean",
+        "default": true
+      },
+      "show-history": {
+        "title": "当弹出面板配置的是表格时，设置历史记录标签页是否显示表格",
+        "type": "boolean",
+        "default": false
+      },
+      "show-pager": {
+        "title": "展示分页",
+        "type": "boolean",
+        "default": false
+      },
+      "size": {
+        "title": "设置组件的size大小，三种类型可以选择：medium，small，mini",
+        "type": "string",
+        "enum": ["medium", "small", "mini"],
+        "enumNames": ["中等尺寸", "较小尺寸", "迷你尺寸"],
+        "default": ""
+      },
+      "tabindex": {
+        "title": "设置是否可通过 Tab 键获焦及获焦顺序（readonly 属性设置为 false 时有效）",
+        "type": "string",
+        "default": "1"
+      },
+      "text-field": {
+        "title": "设置输入框中显示文本的字段，提交数据时，不提交该显示文本",
+        "type": "string",
+        "default": "label"
+      },
+      "text-split": {
+        "title": "在多选的情况下，设置输入框中要显示多个数据时的分隔符",
+        "type": "string",
+        "default": "/"
+      },
+      "title": {
+        "title": "设置弹出面板的标题，并且支持国际化",
+        "type": "string",
+        "default": ""
+      },
+      "trigger": {
+        "title": "弹框表格中为单选时radio的选中配置，可配置：default（默认）, cell（点击单元格触发）, row（点击行触发）",
+        "type": "string",
+        "enum": ["cell", "row", "default"],
+        "enumNames": ["点击单元格触发", "点击行触发", "默认"],
+        "default": "default"
+      },
+      "value": {
+        "title": "绑定值",
+        "type": "string",
+        "default": ""
+      },
+      "value-field": {
+        "title": "设置输入框要提交数据的字段",
+        "type": "string",
+        "default": "id"
+      },
+      "value-split": {
+        "title": "在多选的情况下，设置输入框要提交多个数据时的分隔符",
+        "type": "string",
+        "default": ";"
+      },
+      "width": {
+        "title": "设置弹出面板的宽度（单位像素）",
+        "type": ["string", "number"],
+        "default": ""
+      },
+      "#search": {
+        "title": "查询条件插槽",
+        "type": "string"
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "title": "幻灯片的名字，可用作 setActiveItem 的参数",
+        "type": "string",
+        "default": ""
+      },
+      "title": {
+        "title": "幻灯片的标题",
+        "type": "string",
+        "default": ""
+      },
+      "#default": {
+        "title": "默认插槽",
+        "type": "string"
+      }
+    }
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "$$schema": {
+    "type": "object",
+    "properties": {
+      "checkStrictly": {
+        "title": "是否严格的遵守父子节点不互相关联",
+        "type": "boolean",
+        "default": false
+      },
+      "children": {
+        "title": "指定选项的子选项为选项对象的某个属性值",
+        "type": "string",
+        "default": "children"
+      },
+      "disabled": {
+        "title": "指定选项的禁用为选项对象的某个属性值",
+        "type": "string",
+        "default": "disabled"
+      },
+      "emitPath": {
+        "title": "在选中节点改变时，是否返回由该节点所在的各级菜单的值所组成的数组，若设置 false，则只返回该节点的值",
+        "type": "boolean",
+        "default": true
+      },
+      "expandTrigger": {
+        "title": "次级菜单的展开方式",
+        "type": "string",
+        "enum": ["click", "hover"],
+        "enumNames": ["点击时触发", "滑过时触发"],
+        "default": "click"
+      },
+      "label": {
+        "title": "指定选项标签为选项对象的某个属性值",
+        "type": "string",
+        "default": "label"
+      },
+      "lazy": {
+        "title": "是否动态加载子节点，需与 lazyLoad 方法结合使用",
+        "type": "boolean",
+        "default": false
+      },
+      "leaf": {
+        "title": "指定选项的叶子节点的标志位为选项对象的某个属性值",
+        "type": "string",
+        "default": "leaf"
+      },
+      "multiple": {
+        "title": "是否多选",
+        "type": "boolean",
+        "default": false
+      },
+      "value": {
+        "title": "指定选项的值为选项对象的某个属性值",
+        "type": "string",
+        "default": "value"
+      }
+    }
+  }
+}

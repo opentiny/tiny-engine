@@ -1,0 +1,153 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "condition": {
+        "title": "是否渲染",
+        "type": "boolean",
+        "default": true
+      },
+      "columns": {
+        "title": "列配置",
+        "type": "array",
+        "default": [
+          {
+            "title": {
+              "type": "i18n",
+              "zh_CN": "序号",
+              "en_US": "serial number",
+              "key": ""
+            },
+            "sorter": true,
+            "dataKey": "testNo",
+            "width": "150px"
+          },
+          {
+            "title": {
+              "type": "i18n",
+              "zh_CN": "详情",
+              "en_US": "detail",
+              "key": ""
+            },
+            "sorter": true,
+            "dataKey": "testData"
+          }
+        ],
+        "items": {
+          "properties": {
+            "title": {},
+            "sorter": {},
+            "dataKey": {},
+            "width": {}
+          }
+        }
+      },
+      "showToolbar": {
+        "title": "是否显示列显示隐藏配置",
+        "type": "boolean",
+        "default": true
+      },
+      "showBottom": {
+        "title": "翻页是否显示在屏幕最底部",
+        "type": "boolean",
+        "default": true
+      },
+      "contentMaxHeight": {
+        "title": "表格内容区域最大高度",
+        "type": "string",
+        "default": "auto"
+      },
+      "tableData": {
+        "title": "数据源",
+        "type": "object",
+        "default": {
+          "data": [
+            {
+              "testNo": "1",
+              "testData": "测试数据1"
+            },
+            {
+              "testNo": "2",
+              "testData": "测试数据2"
+            }
+          ],
+          "state": {
+            "searched": true,
+            "sorted": true,
+            "paginated": true
+          }
+        }
+      },
+      "remoteTableData": {
+        "title": "远程数据源",
+        "type": "object",
+        "default": {
+          "options": {
+            "method": "GET",
+            "url": "http://exapmle.com/crm-list.json",
+            "params": [
+              {
+                "name": "pageNo",
+                "value": "1"
+              },
+              {
+                "name": "pageSize",
+                "value": "10"
+              }
+            ],
+            "isSync": true
+          }
+        }
+      },
+      "fit": {
+        "title": "远程数据源fit方法",
+        "type": "jsstring",
+        "default": "function fit(response, setState) {  return response; }"
+      },
+      "didFetch": {
+        "title": "远程数据源didFetch方法",
+        "type": "jsstring",
+        "default": "function didFetch(response, setState) { return response; }"
+      },
+      "pagination": {
+        "title": "翻页配置",
+        "type": "object",
+        "default": {
+          "currentPage": 1,
+          "pageSize": {
+            "options": [10, 20, 50, 100],
+            "size": 10
+          },
+          "totalNumber": 2
+        }
+      },
+      "storageId": {
+        "title": "持久化Id",
+        "type": "string"
+      },
+      "ref": {
+        "title": "表格引用",
+        "type": "string"
+      },
+      "storageConfig": {
+        "title": "持久化配置",
+        "type": "object",
+        "default": {
+          "colsWidth": true,
+          "headerFilter": false,
+          "columnsDisplay": true
+        }
+      },
+      "onStateChange": {
+        "title": "表格状态变化事件",
+        "type": "function",
+        "default": "function handleOnStateChange(event) {}"
+      },
+      "onPageToDetail": {
+        "title": "列表跳详情事件",
+        "type": "function",
+        "default": "function handleOnPageToDetail(row) {this.onPageToDetail && this.onPageToDetail.emit(row);}"
+      }
+    }
+  }
+}

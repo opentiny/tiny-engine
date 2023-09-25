@@ -1,0 +1,86 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "allString": {
+        "dialog-title": {
+          "title": "设置文件上传弹框的标题",
+          "type": "string",
+          "default": "文件上传"
+        },
+        "size": {
+          "title": "设置组件大小",
+          "type": "string",
+          "default": ""
+        },
+        "submit-button-text": {
+          "title": "设置文件上传弹框中提交按钮的文本",
+          "type": "string",
+          "default": "开始上传"
+        },
+        "cancel-button-text": {
+          "title": "设置文件上传弹框中取消按钮的文本",
+          "type": "string",
+          "default": "取消"
+        },
+        "action": {
+          "title": "必选参数，设置上传的地址",
+          "type": "string",
+          "default": ""
+        },
+        "accept": {
+          "title": "接受上传的文件类型",
+          "type": "string",
+          "default": ""
+        },
+        "upload-name": {
+          "title": "上传的文件字段名",
+          "type": "string",
+          "default": "file"
+        },
+        "upload-button-text": {
+          "title": "打开弹出框的按钮的文本配置属性",
+          "type": "string",
+          "default": "选择文件"
+        },
+        "limit": {
+          "title": "最大允许上传个数",
+          "type": "number"
+        },
+        "max-upload-file-size": {
+          "title": "最大上传文件大小",
+          "type": "number"
+        },
+        "multiple": {
+          "title": "是否支持多选文件",
+          "type": "boolean"
+        },
+        "disabled": {
+          "title": "是否禁用",
+          "type": "boolean",
+          "default": false
+        },
+        "with-credentials": {
+          "title": "支持发送 cookie 凭证信息",
+          "type": "boolean",
+          "default": false
+        },
+        "$$data": {
+          "title": "上传时附带的额外参数",
+          "type": "object",
+          "default": ""
+        },
+        "$$headers": {
+          "title": "设置上传的请求头部",
+          "type": "object",
+          "default": ""
+        },
+        "$$upload-file-type": {
+          "title": "对上传文件进行校验的类型，比如 ['.png', '.jpg']",
+          "type": "array",
+          "default": ""
+        }
+      }
+    }
+  }
+}

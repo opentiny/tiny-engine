@@ -1,0 +1,15 @@
+{
+  "name": "@opentiny/tiny-engine-theme-light",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "vite build && rimraf dist/index.js"
+  },
+  "main": "dist/style.css",
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "rimraf": "^3.0.2",
+    "vite": "^4.3.7"
+  }
+}

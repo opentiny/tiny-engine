@@ -1,0 +1,23 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "size": {
+        "title": "大小",
+        "type": "string",
+        "enum": ["medium", "small", "mini"],
+        "enumNames": ["中等尺寸", "较小尺寸", "迷你尺寸"],
+        "default": "medium"
+      },
+      "tag": {
+        "title": "标签",
+        "type": "string",
+        "default": "div"
+      },
+      "#default": {
+        "title": "默认插槽",
+        "type": "string"
+      }
+    }
+  }
+}
