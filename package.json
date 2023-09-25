@@ -1,6 +1,9 @@
 {
   "name": "@opentiny/tiny-engine",
   "version": "1.0.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "TinyEngine enables developers to customize low-code platforms, build low-bit platforms online in real time, and support secondary development or integration of low-bit platform capabilities.",
   "homepage": "https://opentiny.design/tiny-engine",
   "keywords": [
@@ -21,7 +24,6 @@
     "preview": "vite preview",
     "lint": "eslint . --ext .js,.vue,.jsx --fix",
     "format": "prettier --write **/*{.vue,.js,.ts,.html,.json}",
-    "auto:publish": "node autoPublish",
     "publish:core": "npm publish",
     "publish:plugin": "lerna exec npm publish --scope @opentiny/tiny-engine-*",
     "version": "lerna exec npm version ${version}",

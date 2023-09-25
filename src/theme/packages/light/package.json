@@ -1,6 +1,9 @@
 {
   "name": "@opentiny/tiny-engine-theme-light",
-  "version": "1.0.0",
+  "version": "1.0.2",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "vite build && rimraf dist/index.js"
   },

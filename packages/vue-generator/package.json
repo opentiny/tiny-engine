@@ -1,7 +1,10 @@
 {
-  "name": "@opentiny/lowcode-dsl-vue",
-  "version": "0.3.29",
-  "main": "dist/lowcode-dsl-vue.cjs.js",
+  "name": "@opentiny/tiny-engine-dsl-vue",
+  "version": "1.0.1",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "dist/tiny-engine-dsl-vue.cjs.js",
   "files": [
     "dist"
   ],
@@ -16,7 +19,6 @@
     "vue-eslint-parser": "8.3.0"
   },
   "devDependencies": {
-    "@cloud/eslint-config-cbc": "^1.7.3",
     "@rushstack/eslint-patch": "^1.1.1",
     "@vue/eslint-config-prettier": "^7.0.0",
     "eslint": "^8.12.0",

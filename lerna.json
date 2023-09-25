@@ -1,11 +1,5 @@
 {
-  "packages": [
-    "src/*",
-    "src/plugins/packages/*",
-    "src/settings/packages/*",
-    "src/theme/packages/*",
-    "src/toolbars/packages/*"
-  ],
+  "packages": ["src/**", "packages/**"],
   "useNx": false,
   "version": "independent"
 }
