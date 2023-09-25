@@ -15,7 +15,7 @@
     "publish:npm": "npm publish --verbose"
   },
   "dependencies": {
-    "vue": "3.2.33",
+    "vue": "3.2.45",
     "vue-eslint-parser": "8.3.0"
   },
   "devDependencies": {
