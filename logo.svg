@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="189px" height="38px" viewBox="0 0 189 38" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>logo-top</title>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#FFCC00" offset="0%"></stop>
+            <stop stop-color="#FF9D00" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="41.5583977%" y1="684.931472%" x2="57.6489702%" y2="214.83809%" id="linearGradient-2">
+            <stop stop-color="#5073E5" offset="0%"></stop>
+            <stop stop-color="#5E7CE0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="44.74774%" y1="89.3284133%" x2="67.1281333%" y2="0%" id="linearGradient-3">
+            <stop stop-color="#5073E5" offset="0%"></stop>
+            <stop stop-color="#5E7CE0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="42.185134%" y1="684.931472%" x2="57.0810819%" y2="214.83809%" id="linearGradient-4">
+            <stop stop-color="#5073E5" offset="0%"></stop>
+            <stop stop-color="#5E7CE0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="24.3954947%" y1="56.7227863%" x2="68.844278%" y2="32.8834171%" id="linearGradient-5">
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#566DB8" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Tiny-Design-首页" transform="translate(-106.000000, -20.000000)">
+            <g id="导航" transform="translate(0.000000, 1.000000)">
+                <g id="logo-top" transform="translate(106.000000, 19.000000)">
+                    <text id="OpenTiny" font-family="HiraginoSans-W7, Hiragino Sans" font-size="21" font-weight="bold" fill="#242424">
+                        <tspan x="76.2305" y="24">OpenTiny</tspan>
+                    </text>
+                    <g id="编组-21">
+                        <polygon id="路径" fill="url(#linearGradient-1)" points="61 1.99723278 44.8967008 0 20.1759284 1.37793579 32.933574 3.7061054"></polygon>
+                        <polygon id="路径" fill="url(#linearGradient-2)" points="50.0936029 6.53938911 50.0817739 30.0300979 61 27.7599874 60.9645128 5.58721999"></polygon>
+                        <polygon id="路径" fill="url(#linearGradient-3)" points="32.9710327 33.587185 45.3264901 31.154509 45.3304331 6.99805594 32.9197734 7.92893672"></polygon>
+                        <polygon id="路径" fill="url(#linearGradient-4)" points="20.1759284 4.76471618 20.2212732 25.8982258 32.4801266 33.3936547 32.4584399 7.93"></polygon>
+                        <polygon id="路径" fill="url(#linearGradient-5)" points="20.1759284 25.9101141 9.22524348e-13 29.863332 11.645719 38 32.9710327 33.587185"></polygon>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
