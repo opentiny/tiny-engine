@@ -1,6 +1,9 @@
 {
   "name": "@opentiny/tiny-engine-utils",
-  "version": "1.0.0",
+  "version": "1.0.1",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.js",
