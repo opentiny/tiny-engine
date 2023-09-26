@@ -1,6 +1,9 @@
 {
   "name": "@opentiny/tiny-engine-i18n-host",
   "version": "1.0.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "webcomponent vue i18n host",
   "author": "tinybuilder",
   "scripts": {
