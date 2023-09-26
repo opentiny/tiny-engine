@@ -1,6 +1,9 @@
 {
   "name": "@opentiny/tiny-engine-webcomponent-core",
-  "version": "1.0.0",
+  "version": "1.0.1",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "webcomponent vue core",
   "author": "tinybuilder",
   "scripts": {
