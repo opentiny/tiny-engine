@@ -93,6 +93,6 @@ Please read the [Contribution Guide](CONTRIBUTING.md) before participating in th
 - Add official assistant WeChat opentiny-official and join the technical exchange group
 - Join the mailing list opentiny@googlegroups.com
 
-## Open source protocol
+## License
 
 [MIT](LICENSE)
