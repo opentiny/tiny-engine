@@ -3,6 +3,8 @@ node_modules
 dist/
 package-lock.json
 yarn.lock
+pnpm-lock.yaml
+lerna-debug.log
 
 # local env files
 .env.local
