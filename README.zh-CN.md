@@ -22,21 +22,13 @@
 ### 安装所需的依赖
 
 ```sh
-$ npm install
-$ pushd mockServer
-$ npm install
-$ popd
+$ pnpm install
 ```
 
 ### 本地开发，启动本地 mock 服务器，使用本地 mock 服务器的 mock 数据
 
 ```sh
-$ npm run serve
-
-# 另起一个终端
-$ cd mockServer
-$ npm run dev
-
+$ pnpm dev
 ```
 
 浏览器打开：`http://localhost:8080/?type=app&id=918&tenant=1&pageid=NTJ4MjvqoVj8OVsc`  
@@ -45,42 +37,18 @@ $ npm run dev
 - `type=app` 应用类型
 - `id=xxx` 应用 ID
 - `tenant=xxx` 组织 ID
-- `pagdId=xxx` 页面 ID
+- `pageid=xxx` 页面 ID
 
 ## 构建
 
 ```sh
 # 先构建所有插件
-npm run build:plugin
+pnpm run build:plugin
 
 # 构建设计器
-npm run build:alpha  或 build:prod
-
-# 发布所有插件
-npm run publish:plugin
-
-# 发布设计器
-npm run publish:core
+pnpm run build:alpha  或 build:prod
 
 ```
-
-## 常规发包流程
-
-1. 发布插件
-   npm run build:plugin && npm run publish:plugin
-
-2. 发布设计器
-
-a) 修改包名和版本号:
-包名：@opentiny/tinybuilder-design-core-test
-版本号：末位每次+1, 例如：
-
-```
-  "name": "@opentiny/tinybuilder-design-core-test",
-  "version": "1.0.87",
-```
-
-b) npm publish
 
 ## 🤝 参与贡献
 
