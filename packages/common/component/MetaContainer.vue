@@ -33,6 +33,7 @@ export default {
   },
   setup() {
     const schemaChildren = useProperties().getSchema().children
+    const componentName = schemaChildren?.[0]?.componentName
 
     schemaChildren.forEach((item) => {
       if (!item.props) {
@@ -48,7 +49,7 @@ export default {
       const name = utils.guid()
 
       schemaChildren.push({
-        componentName: schemaChildren?.[0]?.componentName,
+        componentName,
         props: {
           title: '选项卡',
           name
