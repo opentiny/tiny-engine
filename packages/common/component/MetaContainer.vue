@@ -22,7 +22,7 @@
 <script>
 import { ref } from 'vue'
 import MetaListItems from './MetaListItems.vue'
-import { useProperties, useHistory } from '@opentiny/tiny-engine-controller'
+import { useProperties, useResource, useHistory } from '@opentiny/tiny-engine-controller'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { iconDel } from '@opentiny/vue-icon'
 
@@ -32,8 +32,10 @@ export default {
     IconDel: iconDel()
   },
   setup() {
-    const schemaChildren = useProperties().getSchema().children
-    const componentName = schemaChildren?.[0]?.componentName
+    const { children: schemaChildren, componentName } = useProperties().getSchema()
+    const configureMap = useResource().getConfigureMap()
+    const childComponentName =
+      configureMap[componentName]?.nestingRule?.childWhitelist?.[0] || schemaChildren?.[0]?.componentName
 
     schemaChildren.forEach((item) => {
       if (!item.props) {
@@ -49,7 +51,7 @@ export default {
       const name = utils.guid()
 
       schemaChildren.push({
-        componentName,
+        componentName: childComponentName,
         props: {
           title: '选项卡',
           name
