@@ -22,20 +22,13 @@ English | [简体中文](README.zh-CN.md)
 ### Dependencies required for installation
 
 ```sh
-$ npm install
-$ pushd mockServer
-$ npm install
-$ popd
+$ pnpm install
 ```
 
 ### Local development: Start the local mock server and use the mock data of the local mock server.
 
 ```sh
-$ npm run serve
-
-# start another terminal
-$ cd mockServer
-$ npm run dev
+$ pnpm dev
 ```
 
 Open a browser: `http://localhost:8080/?type=app&id=918&tenant=1&pageid=NTJ4MjvqoVj8OVsc`
@@ -44,45 +37,18 @@ Open a browser: `http://localhost:8080/?type=app&id=918&tenant=1&pageid=NTJ4Mjvq
 - `type=app` Application type
 - `id=xxx` Application ID
 - `tenant=xxx` Organization ID
-- `pagdId=xxx` Page ID
+- `pageid=xxx` Page ID
 
 ## Build
 
 ```sh
 # Build all plug-ins first
-npm run build:plugin
+pnpm build:plugin
 
 # Build Designer
-npm run build:alpha or build:prod
-
-# Release all plug-ins.
-npm run publish:plugin
-
-# Publish the designer.
-npm run publish:core
+pnpm build:alpha or build:prod
 
 ```
-
-## Common Packet Sending Process
-
-1. Release the plug-in.
-
-```sh
-npm run build:plugin && npm run publish:plugin
-```
-
-2. Publish Designer
-
-a) Change the package name and version number.
-Package name: @opentiny/tinybuilder-design-core-test
-Version number: The last digit plus 1 each time. For example:
-
-```
-"name": "@opentiny/tinybuilder-design-core-test",
-"version": "1.0.87",
-```
-
-b) npm publish
 
 ## 🤝 Participation and Contribution
 
@@ -93,10 +59,6 @@ Please read the [Contribution Guide](CONTRIBUTING.md) before participating in th
 - Add official assistant WeChat opentiny-official and join the technical exchange group
 - Join the mailing list opentiny@googlegroups.com
 
-## Open source protocol
+## License
 
 [MIT](LICENSE)
-
-```
-
-```

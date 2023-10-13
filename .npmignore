@@ -18,7 +18,6 @@ package-lock.json
 # 忽略可能存在的其它编辑器文件夹
 .idea
 
-/src/app/public/mock/*
-!/src/app/public/mock/graph-bundle.json
-tmp
-temp
+/packages/design-core/public/mock/*
+**/**/tmp
+**/**/temp
