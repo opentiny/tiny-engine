@@ -339,7 +339,6 @@ export default {
     })
 
     const { getProperty, getSettingFlag, getPropertyValue } = useProperties({
-      props,
       names: Object.values(SIZE_PROPERTY),
       parseNumber: true
     })

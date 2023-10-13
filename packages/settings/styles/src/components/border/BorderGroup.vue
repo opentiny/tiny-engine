@@ -235,7 +235,6 @@ import useEvent from '../../js/useEvent'
 import { useProperties } from '../../js/useStyle'
 import { RADIUS_SETTING, BORDER_SETTING, BORDER_STYLE_TYPE } from '../../js/cssType'
 import { BORDER_PROPERTY, BORDER_RADIUS_PROPERTY } from '../../js/styleProperty'
-// import { hyphenate } from '@opentiny/tiny-engine-controller/utils'
 
 const BORDER_STYLE = {
   [BORDER_SETTING.All]: BORDER_PROPERTY.BorderStyle,
@@ -299,7 +298,6 @@ export default {
     const { setPosition } = useModal()
 
     const { getProperty, getSettingFlag, getPropertyValue } = useProperties({
-      props,
       names: Object.values({ ...BORDER_RADIUS_PROPERTY, ...BORDER_PROPERTY }),
       parseNumber: true
     })

@@ -361,7 +361,6 @@ export default {
     })
 
     const { getProperty, getSettingFlag } = useProperties({
-      props,
       names: Object.values(GRID_PROPERTY),
       parseNumber: true
     })
