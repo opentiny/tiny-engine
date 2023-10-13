@@ -76,7 +76,7 @@
             <tiny-tooltip
               class="item"
               effect="dark"
-              content="是否需要生成工程的默认配置，如package.json等文件。如果选择的为否，只会生成页面对应的代码。不会生成一些配置文件。"
+              content="是否生成工程默认配置，如package.json等文件。如选择为否，只生成页面对应代码，不生成配置文件。"
               placement="top"
               popper-class="help-tooltip"
             >
