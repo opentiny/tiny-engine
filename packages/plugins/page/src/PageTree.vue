@@ -173,7 +173,12 @@ export default {
     const switchPage = (data) => {
       pageState.hoverVm = null
       state.currentNodeData = data
-      setBreadcrumbPage([data?.name || 'untitle'])
+
+      let pageName = 'untitle'
+      if (data.isPage) {
+        pageName = data?.name || 'untitle'
+      }
+      setBreadcrumbPage([pageName])
 
       // 切换页面时清空 选中节点信息状态
       clearCurrentState()
