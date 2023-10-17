@@ -48,7 +48,7 @@
                 <tiny-input v-model="state.formData.methodDescription"></tiny-input>
               </tiny-form-item>
               <footer>
-                <tiny-button @click="addMethod"> 确定</tiny-button>
+                <tiny-button type="primary" @click="addMethod"> 确定</tiny-button>
                 <tiny-button @click="state.showEventAdditive = !state.showEventAdditive"> 取消</tiny-button>
               </footer>
             </tiny-form>
@@ -260,34 +260,38 @@ export default {
     }
 
     const addMethod = () => {
-      if (state.componentEvents[state.formData.methodName]) {
-        useNotify({
-          type: 'error',
-          message: `${state.formData.methodName}事件函数名已存在`
-        })
-        return false
-      }
-      if (checkEvent(state.formData.methodName)) {
-        Object.assign(state.componentEvents, {
-          [state.formData.methodName]: {
-            label: {
-              zh_CN: state.formData.methodDescription
-            },
-            description: {
-              zh_CN: `${state.formData.methodDescription}的回调函数`
-            },
-            type: 'event',
-            functionInfo: {
-              params: [],
-              returns: {}
-            },
-            defaultValue: ''
+      ruleForm.value.validate((valid) => {
+        if (valid) {
+          if (state.componentEvents[state.formData.methodName]) {
+            useNotify({
+              type: 'error',
+              message: `${state.formData.methodName}事件函数名已存在`
+            })
+            return false
           }
-        })
-        state.showEventAdditive = !state.showEventAdditive
-      }
+          if (checkEvent(state.formData.methodName)) {
+            Object.assign(state.componentEvents, {
+              [state.formData.methodName]: {
+                label: {
+                  zh_CN: state.formData.methodDescription
+                },
+                description: {
+                  zh_CN: `${state.formData.methodDescription}的回调函数`
+                },
+                type: 'event',
+                functionInfo: {
+                  params: [],
+                  returns: {}
+                },
+                defaultValue: ''
+              }
+            })
+            state.showEventAdditive = !state.showEventAdditive
+          }
 
-      return undefined
+          return undefined
+        }
+      })
     }
 
     const clearFromData = () => {
@@ -328,27 +332,34 @@ export default {
 <style lang="less" scoped>
 .custom-event {
   padding: 10px 20px 10px 10px;
+
   footer {
     text-align: center;
   }
 }
+
 .bind-action-list {
   .bind-actions {
     margin-top: 20px;
+
     .binding-name {
       word-break: break-all;
     }
+
     .action-buttons {
       display: flex;
       align-items: center;
       justify-content: center;
+
       .item {
         margin-right: 10px;
       }
     }
+
     .event-bind {
       color: var(--ti-lowcode-events-event-bind-color);
     }
+
     .bind-action-item {
       display: flex;
       justify-content: space-between;
@@ -356,9 +367,11 @@ export default {
       cursor: pointer;
       color: var(--ti-lowcode-events-bind-action-item-color);
       border-bottom: 1px solid var(--ti-lowcode-events-bind-action-item-border-color);
+
       &:first-child {
         border-top: 1px solid var(--ti-lowcode-events-bind-action-item-border-color);
       }
+
       &:hover {
         background: var(--ti-lowcode-events-bind-action-item-hover-bg-color);
       }
@@ -369,41 +382,51 @@ export default {
       }
     }
   }
+
   .popover-head {
     display: flex;
     justify-content: space-between;
     margin-top: 12px;
+
     .head-left {
       margin-right: 8px;
+
       .add-custom-event-button {
         padding: 0 16px;
         font-size: 12px;
+
         .custom-event-button-text {
           margin-right: 4px;
         }
       }
     }
+
     .bind-event-btn {
       padding: 0 16px;
       font-size: 12px;
     }
   }
+
   .empty-action {
     display: flex;
     flex-direction: column;
     align-items: center;
     color: var(--ti-lowcode-events-empty-action-color);
+
     .empty-action-icon {
       margin-top: 20px;
       font-size: 48px;
     }
+
     .icon {
       text-align: center;
       opacity: 0.4;
     }
+
     .center {
       margin-top: 4px;
     }
+
     .text {
       margin-top: 12px;
     }
@@ -413,14 +436,17 @@ export default {
     }
   }
 }
+
 .bind-event-list {
   color: var(--ti-lowcode-events-bind-event-list-color);
 }
+
 .bind-event-list-item-notallow {
   cursor: not-allowed;
   pointer-events: none;
   color: var(--ti-lowcode-events-bind-event-list-item-disabled-color);
 }
+
 .bind-event-list-item {
   padding: 8px 12px;
 
@@ -432,6 +458,7 @@ export default {
 
 .add-custom-event-tip {
   color: var(--ti-lowcode-events-add-custom-event-tips-color);
+
   .event-tip-highlight {
     color: var(--ti-lowcode-event-add-custom-event-tips-highlight-color);
   }
