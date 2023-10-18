@@ -12,7 +12,7 @@
       </div>
     </span>
     <div class="section">
-      <div class="field-list" v-if="state.fields.length">
+      <div class="field-list">
         <!-- 字段列表 -->
         <data-source-field-list
           ref="fieldList"
