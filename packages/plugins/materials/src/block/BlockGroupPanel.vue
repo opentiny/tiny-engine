@@ -21,7 +21,7 @@
 </template>
 <script>
 import { nextTick, reactive, watch, inject } from 'vue'
-import { Search } from '@opentiny/vue'
+import { Search, Loading } from '@opentiny/vue'
 import { iconSearch } from '@opentiny/vue-icon'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
 import { useApp, useBlock, useModal, useResource } from '@opentiny/tiny-engine-controller'
@@ -89,6 +89,11 @@ export default {
     })
 
     const addBlocks = () => {
+      let loadingInstance = Loading.service({
+        lock: true,
+        text: '区块分组保存中',
+        background: 'rgba(0, 0, 0, 0.6)'
+      })
       const groupId = selectedGroup.value.groupId
       fetchGroupBlocksById({ groupId })
         .then((data) => {
@@ -127,8 +132,8 @@ export default {
             status: 'error'
           })
         })
+      loadingInstance.close()
       panelState.isBlockGroupPanel = false
-      closePanel()
     }
 
     const closeGroupPanel = () => {
