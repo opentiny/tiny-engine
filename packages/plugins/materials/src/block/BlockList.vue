@@ -17,6 +17,7 @@
 
 <script lang="jsx">
 import { computed, inject, reactive, ref } from 'vue'
+import { Notify } from '@opentiny/vue'
 import { useBlock, useResource, useModal, useApp } from '@opentiny/tiny-engine-controller'
 import { PluginBlockList } from '@opentiny/tiny-engine-common'
 import { dragStart, addComponent } from '@opentiny/tiny-engine-canvas'
@@ -141,6 +142,7 @@ export default {
       const groupName = name || selectedGroup.value.groupName
 
       const title = `删除区块${label}`
+      const titleSuccess = `删除区块${label}成功`
       const status = 'error'
       const messageRender = {
         render: () => (
@@ -161,6 +163,11 @@ export default {
 
             requestUpdateGroup({ id: groupId, blocks, app: appId }).then(() => {
               isRefresh.value = true
+            })
+            Notify({
+              type: 'success',
+              message: titleSuccess,
+              position: 'top-right'
             })
           })
           .catch((error) => {
