@@ -14,8 +14,13 @@
         :modelValue="query"
         class="left-filter"
         placeholder="请输入搜索条件"
+        clearable
         @update:modelValue="search"
-      ></tiny-search>
+      >
+        <template #prefix>
+          <tiny-icon-search />
+        </template>
+      </tiny-search>
       <div class="add-btn">
         <tiny-button @click="openPanel(OPTION_TYPE.ADD)">{{
           activeName === STATE.CURRENT_STATE ? '添加变量' : '添加全局变量'
@@ -63,6 +68,7 @@
 <script>
 import { reactive, ref, computed, onActivated } from 'vue'
 import { Button, Search, Tabs, TabItem } from '@opentiny/vue'
+import { iconSearch } from '@opentiny/vue-icon'
 import {
   useCanvas,
   useHistory,
@@ -85,6 +91,7 @@ export default {
   components: {
     TinySearch: Search,
     TinyButton: Button,
+    TinyIconSearch: iconSearch(),
     DataSourceList,
     CreateVariable,
     CloseIcon,

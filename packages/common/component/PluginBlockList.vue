@@ -1,5 +1,6 @@
 <template>
   <ul
+    v-if="state.data.length"
     :class="[
       'block-list',
       'lowcode-scrollbar',
@@ -129,6 +130,10 @@
       </div>
     </div>
   </ul>
+  <div v-else class="empty-wrap">
+    <svg-icon class="empty-icon" name="empty"></svg-icon>
+    <p class="empty-text">暂无数据</p>
+  </div>
 </template>
 
 <script>

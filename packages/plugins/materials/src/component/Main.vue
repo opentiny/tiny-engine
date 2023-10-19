@@ -1,6 +1,6 @@
 <template>
   <div class="components-wrap">
-    <tiny-search v-model="state.searchValue" placeholder="请输入关键字搜索" @update:modelValue="change">
+    <tiny-search v-model="state.searchValue" placeholder="请输入关键字搜索" clearable @update:modelValue="change">
       <template #prefix> <icon-search /> </template>
     </tiny-search>
     <tiny-collapse v-model="state.activeName" class="lowcode-scrollbar">
@@ -24,6 +24,10 @@
           </template>
         </ul>
       </tiny-collapse-item>
+      <div v-if="!state.components.length" class="empty-wrap">
+        <svg-icon class="empty-icon" name="empty"></svg-icon>
+        <p class="empty-text">暂无数据</p>
+      </div>
     </tiny-collapse>
   </div>
 </template>
@@ -178,7 +182,6 @@ export default {
   }
 
   :deep(.tiny-svg, #tiny-engine .tiny-svg) {
-    transform: rotate(270deg);
     &.is-active {
       transform: rotate(180deg);
     }
