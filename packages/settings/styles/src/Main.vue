@@ -73,12 +73,11 @@ import {
   BackgroundGroup,
   EffectGroup,
   TypographyGroup,
-  ClassNameContainer
+  ClassNamesContainer
 } from './components'
 import { CSS_TYPE } from './js/cssType'
 import useStyle from './js/useStyle'
 import { styleStrRemoveRoot } from './js/cssConvert'
-
 
 export default {
   components: {
@@ -93,7 +92,7 @@ export default {
     BackgroundGroup,
     TypographyGroup,
     EffectGroup,
-    ClassNameContainer,
+    ClassNamesContainer,
     TinyCollapse: Collapse,
     TinyCollapseItem: CollapseItem
   },
@@ -138,7 +137,7 @@ export default {
 
         addHistory()
       } else if (type === CSS_TYPE.Css) {
-        const cssString = formatString(content.replace(/"/g, "'"), 'css') 
+        const cssString = formatString(content.replace(/"/g, "'"), 'css')
         getPageSchema().css = cssString
         getCanvasPageSchema().css = cssString
         setPageCss(cssString)
