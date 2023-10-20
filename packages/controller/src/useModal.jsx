@@ -28,6 +28,7 @@ const message = ({ title, status, message, exec }) => {
   Modal.alert({
     title,
     status,
+    'confirm-btn-props': { text: '确定' },
     message() {
       return (
         <div div class="modal-content" >

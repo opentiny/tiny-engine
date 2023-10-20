@@ -534,16 +534,13 @@ export const getDeployProgress = (taskId, block) => {
         getDeployProgress(taskId, block)
       }, INTERVAL_PROGRESS)
     } else if (block.deployStatus === DEPLOY_STATUS.Stopped) {
-      const title = '异常提示'
-      const status = 'error'
-      const messagePub = {
-        render: () => <span style="max-height:540px;overflow:auto;">{`区块发布失败: ${block.taskResult}`}</span>
-      }
-      const exec = () => {
-        getDeployProgress(taskId, block)
-      }
-
-      confirm({ title, status, messagePub, exec })
+      message({
+        title: '异常提示',
+        status: 'error',
+        message: {
+          render: () => <span style="max-height:540px;overflow:auto;">{`区块发布失败: ${block.taskResult}`}</span>
+        }
+      })
       setDeployFailed(block)
     } else {
       setDeployFinished(block)
