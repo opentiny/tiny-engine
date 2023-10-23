@@ -538,8 +538,9 @@ export const getDeployProgress = (taskId, block) => {
         title: '异常提示',
         status: 'error',
         message: {
-          render: () => <span style="max-height:540px;overflow:auto;">{`区块发布失败: ${block.taskResult}`}</span>
-        }
+          render: () => <span style="max-height:276px;overflow:auto;">{`区块发布失败: ${block.taskResult}`}</span>
+        },
+        width: '550'
       })
       setDeployFailed(block)
     } else {
