@@ -58,8 +58,8 @@
                   <span>{{ data.row.componentName }}</span>
                 </span>
                 <span v-show="!data.row.show" class="tree-handle" @mouseup="showNode(data.row)">
-                  <icon-eyeopen v-show="!data.row.show"></icon-eyeopen>
-                  <icon-eyeclose v-show="data.row.show"></icon-eyeclose>
+                  <icon-eyeopen v-show="data.row.show"></icon-eyeopen>
+                  <icon-eyeclose v-show="!data.row.show"></icon-eyeclose>
                 </span>
               </span>
             </template>
