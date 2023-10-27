@@ -610,7 +610,10 @@ const createBlock = (block = {}) => {
       setSaved(true)
       // 新建区块成功后需要同步更新画布上的区块数据ctx上下文环境
       useBlock().initBlock(data, {}, true)
-      message({ message: '新建区块成功！', status: 'success' })
+      useNotify({
+        type: 'success',
+        message: '新建区块成功！'
+      })
       // 本地生成区块服务
       if (isVsCodeEnv) {
         generateBlock({ schema: data.content, blockPath: data.path })
