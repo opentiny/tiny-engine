@@ -213,7 +213,7 @@ const importMapStyles = [`https://unpkg.com/@opentiny/vue-theme@${importMapVersi
 export default defineConfig(({ command, mode }) => {
   const monacoPublicPath = {
     local: 'editor/monaco-workers',
-    alpha: '', // 需要填写openTiny的cdn地址
+    alpha: '//', // 需要填写openTiny的cdn地址
     prod: '' // 需要填写openTiny的cdn地址
   }
 
