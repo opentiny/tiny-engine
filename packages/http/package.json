@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-http",
-  "version": "1.0.0",
+  "version": "1.0.1-beta.0",
   "publishConfig": {
     "access": "public"
   },
@@ -13,8 +13,8 @@
     "dist"
   ],
   "dependencies": {
-    "@opentiny/tiny-engine-common": "workspace:^1.0.0",
-    "@opentiny/tiny-engine-utils": "workspace:^1.0.0",
+    "@opentiny/tiny-engine-common": "workspace:^1.0.1-beta.0",
+    "@opentiny/tiny-engine-utils": "workspace:^1.0.2-beta.0",
     "@opentiny/vue": "~3.10.0",
     "@vueuse/core": "^9.6.0",
     "axios": "^0.27.2",

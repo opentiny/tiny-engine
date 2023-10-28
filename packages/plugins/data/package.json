@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-plugin-data",
-  "version": "1.0.1",
+  "version": "1.0.2-beta.0",
   "publishConfig": {
     "access": "public"
   },
@@ -13,11 +13,11 @@
     "dist"
   ],
   "dependencies": {
-    "@opentiny/tiny-engine-canvas": "workspace:^1.0.0",
-    "@opentiny/tiny-engine-common": "workspace:^1.0.0",
-    "@opentiny/tiny-engine-controller": "workspace:^1.0.0",
-    "@opentiny/tiny-engine-http": "workspace:^1.0.0",
-    "@opentiny/tiny-engine-utils": "workspace:^1.0.0",
+    "@opentiny/tiny-engine-canvas": "workspace:^1.0.3-beta.0",
+    "@opentiny/tiny-engine-common": "workspace:^1.0.1-beta.0",
+    "@opentiny/tiny-engine-controller": "workspace:^1.0.1-beta.0",
+    "@opentiny/tiny-engine-http": "workspace:^1.0.1-beta.0",
+    "@opentiny/tiny-engine-utils": "workspace:^1.0.2-beta.0",
     "@opentiny/vue": "~3.10.0",
     "@opentiny/vue-icon": "~3.10.0",
     "monaco-editor": "0.33.0",

@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-plugin-help",
-  "version": "1.0.1",
+  "version": "1.0.2-beta.0",
   "publishConfig": {
     "access": "public"
   },
@@ -13,9 +13,9 @@
     "dist"
   ],
   "dependencies": {
-    "@opentiny/tiny-engine-common": "workspace:^1.0.0",
-    "@opentiny/tiny-engine-controller": "workspace:^1.0.0",
-    "@opentiny/tiny-engine-http": "workspace:^1.0.0",
+    "@opentiny/tiny-engine-common": "workspace:^1.0.1-beta.0",
+    "@opentiny/tiny-engine-controller": "workspace:^1.0.1-beta.0",
+    "@opentiny/tiny-engine-http": "workspace:^1.0.1-beta.0",
     "@opentiny/vue": "~3.10.0",
     "vue": "3.2.45"
   },

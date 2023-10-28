@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-controller",
-  "version": "1.0.0",
+  "version": "1.0.1-beta.0",
   "publishConfig": {
     "access": "public"
   },
@@ -18,10 +18,10 @@
     "./adapter": "./dist/adapter.js"
   },
   "dependencies": {
-    "@opentiny/tiny-engine-canvas": "workspace:^1.0.0",
-    "@opentiny/tiny-engine-common": "workspace:^1.0.0",
-    "@opentiny/tiny-engine-http": "workspace:^1.0.0",
-    "@opentiny/tiny-engine-utils": "workspace:^1.0.0",
+    "@opentiny/tiny-engine-canvas": "workspace:^1.0.3-beta.0",
+    "@opentiny/tiny-engine-common": "workspace:^1.0.1-beta.0",
+    "@opentiny/tiny-engine-http": "workspace:^1.0.1-beta.0",
+    "@opentiny/tiny-engine-utils": "workspace:^1.0.2-beta.0",
     "@opentiny/vue": "~3.10.0",
     "@opentiny/vue-renderless": "~3.10.0",
     "@vue/shared": "^3.3.4",

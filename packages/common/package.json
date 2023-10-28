@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-common",
-  "version": "1.0.0",
+  "version": "1.0.1-beta.0",
   "publishConfig": {
     "access": "public"
   },
@@ -21,11 +21,11 @@
     "@babel/generator": "7.18.13",
     "@babel/parser": "7.18.13",
     "@babel/traverse": "7.18.13",
-    "@opentiny/tiny-engine-canvas": "workspace:^1.0.0",
-    "@opentiny/tiny-engine-controller": "workspace:^1.0.0",
-    "@opentiny/tiny-engine-http": "workspace:^1.0.0",
-    "@opentiny/tiny-engine-i18n-host": "workspace:^1.0.0",
-    "@opentiny/tiny-engine-utils": "workspace:^1.0.0",
+    "@opentiny/tiny-engine-canvas": "workspace:^1.0.3-beta.0",
+    "@opentiny/tiny-engine-controller": "workspace:^1.0.1-beta.0",
+    "@opentiny/tiny-engine-http": "workspace:^1.0.1-beta.0",
+    "@opentiny/tiny-engine-i18n-host": "workspace:^1.0.1-beta.0",
+    "@opentiny/tiny-engine-utils": "workspace:^1.0.2-beta.0",
     "@opentiny/vue": "~3.10.0",
     "@opentiny/vue-icon": "~3.10.0",
     "@opentiny/vue-locale": "~3.10.0",

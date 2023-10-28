@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-i18n-host",
-  "version": "1.0.0",
+  "version": "1.0.1-beta.0",
   "publishConfig": {
     "access": "public"
   },
@@ -19,7 +19,7 @@
   "main": "dist/lowcode-design-i18n-host.umd.js",
   "module": "dist/lowcode-design-i18n-host.es.js",
   "dependencies": {
-    "@opentiny/tiny-engine-webcomponent-core": "workspace:^1.0.0",
+    "@opentiny/tiny-engine-webcomponent-core": "workspace:^1.0.2-beta.0",
     "vue": "^3.2.1",
     "vue-i18n": "^9.2.0-beta.32"
   },
