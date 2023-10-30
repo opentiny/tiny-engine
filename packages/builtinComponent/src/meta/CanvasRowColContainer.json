@@ -1,0 +1,96 @@
+{
+  "components": {
+    "icon": "Box",
+    "name": {
+      "zh_CN": "行列容器"
+    },
+    "component": "CanvasRowColContainer",
+    "schema": {
+      "slots": {},
+      "properties": [
+        {
+          "label": {
+            "zh_CN": "基础信息"
+          },
+          "description": {
+            "zh_CN": "基础信息"
+          },
+          "collapse": {
+            "number": 6,
+            "text": {
+              "zh_CN": "显示更多"
+            }
+          },
+          "content": [
+            {
+              "property": "rowGap",
+              "type": "String",
+              "defaultValue": "",
+              "label": {
+                "text": {
+                  "zh_CN": "行间距"
+                }
+              },
+              "cols": 12,
+              "rules": [],
+              "widget": {
+                "component": "MetaInput",
+                "props": {}
+              }
+            }
+          ]
+        }
+      ],
+      "events": {},
+      "shortcuts": {
+        "properties": []
+      },
+      "contentMenu": {
+        "actions": []
+      }
+    },
+    "configure": {
+      "loop": true,
+      "isContainer": true,
+      "nestingRule": {
+        "childWhitelist": [],
+        "descendantBlacklist": []
+      }
+    }
+  },
+  "snippets": {
+    "name": {
+      "zh_CN": "行列容器"
+    },
+    "screenshot": "",
+    "snippetName": "CanvasRowColContainer",
+    "icon": "Box",
+    "schema": {
+      "componentName": "CanvasRowColContainer",
+      "props": {
+        "rowGap": "20px"
+      },
+      "children": [
+        {
+          "componentName": "CanvasRow",
+          "props": {
+            "rowGap": "20px",
+            "colGap": "20px"
+          },
+          "children": [
+            {
+              "componentName": "CanvasCol",
+              "props": {
+                "rowGap": "20px",
+                "colGap": "20px",
+                "grow": true,
+                "shrink": true,
+                "widthType": "auto"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
