@@ -14,6 +14,16 @@
     "test:latest": "npm run build && node test/testcases/full/index.js",
     "publish:npm": "npm publish --verbose"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/opentiny/tiny-engine",
+    "directory": "packages/vue-generator"
+  },
+  "bugs": {
+    "url": "https://github.com/opentiny/tiny-engine/issues"
+  },
+  "author": "OpenTiny Team",
+  "license": "MIT",
   "dependencies": {
     "@vue/compiler-sfc": "3.2.45",
     "@vue/shared": "^3.3.4",

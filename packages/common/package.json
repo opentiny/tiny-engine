@@ -17,6 +17,16 @@
     "dist",
     "js"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/opentiny/tiny-engine",
+    "directory": "packages/common"
+  },
+  "bugs": {
+    "url": "https://github.com/opentiny/tiny-engine/issues"
+  },
+  "author": "OpenTiny Team",
+  "license": "MIT",
   "dependencies": {
     "@babel/generator": "7.18.13",
     "@babel/parser": "7.18.13",

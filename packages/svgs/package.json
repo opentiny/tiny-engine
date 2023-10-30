@@ -12,6 +12,16 @@
   "files": [
     "dist"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/opentiny/tiny-engine",
+    "directory": "packages/svgs"
+  },
+  "bugs": {
+    "url": "https://github.com/opentiny/tiny-engine/issues"
+  },
+  "author": "OpenTiny Team",
+  "license": "MIT",
   "dependencies": {
     "@opentiny/vue": "~3.10.0",
     "@opentiny/vue-icon": "~3.10.0",

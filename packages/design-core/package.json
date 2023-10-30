@@ -19,6 +19,16 @@
     "preview": "vite preview",
     "lint": "eslint . --ext .js,.vue,.jsx --fix"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/opentiny/tiny-engine",
+    "directory": "packages/design-core"
+  },
+  "bugs": {
+    "url": "https://github.com/opentiny/tiny-engine/issues"
+  },
+  "author": "OpenTiny Team",
+  "license": "MIT",
   "dependencies": {
     "@babel/core": "7.18.13",
     "@babel/generator": "7.18.13",

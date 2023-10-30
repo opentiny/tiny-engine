@@ -12,6 +12,16 @@
   "files": [
     "dist"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/opentiny/tiny-engine",
+    "directory": "packages/plugins/tree"
+  },
+  "bugs": {
+    "url": "https://github.com/opentiny/tiny-engine/issues"
+  },
+  "author": "OpenTiny Team",
+  "license": "MIT",
   "dependencies": {
     "@opentiny/tiny-engine-canvas": "workspace:^1.0.0",
     "@opentiny/tiny-engine-common": "workspace:^1.0.0",
