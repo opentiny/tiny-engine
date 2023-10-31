@@ -86,14 +86,19 @@
           </div>
           <div class="action-buttons">
             <block-link-event v-if="isBlock" :data="action"></block-link-event>
-            <svg-button name="icon-code" tips="定位到代码" placement="top" @click="openCodePanel(action)"></svg-button>
             <svg-button
-              name="icon-setting"
+              name="plugin-icon-page-schema"
+              tips="定位到代码"
+              placement="top"
+              @click="openCodePanel(action)"
+            ></svg-button>
+            <svg-button
+              name="setting"
               tips="设置"
               placement="top"
               @click="openActionDialog(action, false)"
             ></svg-button>
-            <svg-button name="icon-del" tips="删除" placement="top" @click="delEvent(action)"></svg-button>
+            <svg-button name="delete" tips="删除" placement="top" @click="delEvent(action)"></svg-button>
           </div>
         </div>
       </li>

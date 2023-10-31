@@ -1915,7 +1915,9 @@
                     "cols": 12,
                     "widget": {
                       "component": "MetaCodeEditor",
-                      "props": {}
+                      "props": {
+                        "language": "json"
+                      }
                     },
                     "description": {
                       "zh_CN": ""

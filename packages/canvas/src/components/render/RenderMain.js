@@ -162,7 +162,7 @@ const setState = (data, clear) => {
   Object.assign(state, parseData(data, {}, getContext()) || {})
 
   // 在状态变量合并之后，执行访问器中watchEffect，为了可以在访问器函数中可以访问其他state变量
-  Object.entries(data)?.forEach(([key, stateData]) => {
+  Object.entries(data || {})?.forEach(([key, stateData]) => {
     if (isStateAccessor(stateData)) {
       const accessor = stateData.accessor
       if (accessor?.getter?.value) {
