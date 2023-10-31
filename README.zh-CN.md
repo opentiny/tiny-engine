@@ -17,6 +17,12 @@
 - 支持高代码与低代码，混合开发部署应用
 - 平台接入 AI 大模型能力，辅助开发者构建应用
 
+## 文档
+
+- 介绍：https://opentiny.design/tiny-engine#/home
+- 使用文档：https://opentiny.design/tiny-engine#/help-center/course/engine
+- 演示应用：https://opentiny.design/tiny-engine#/tiny-engine-editor
+
 ## 开发
 
 ### 安装所需的依赖
