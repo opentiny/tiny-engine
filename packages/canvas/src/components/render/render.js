@@ -41,7 +41,7 @@ const transformJSX = (code) =>
         babelPluginJSX,
         {
           pragma: 'h',
-          isCustomElement: (name) => custElements[name]
+          isCustomElement: (name) => customElements[name]
         }
       ]
     ]
@@ -408,7 +408,7 @@ const getPlainProps = (object = {}) => {
   return props
 }
 
-const custElements = {}
+const customElements = {}
 
 const generateCollection = (schema) => {
   if (schema.componentName === 'Collection' && schema.props?.dataSource && schema.children) {
@@ -461,7 +461,7 @@ export const wrapCustomElement = (componentName) => {
     registerBlock(componentName)
   }
 
-  custElements[componentName] = {
+  customElements[componentName] = {
     name: componentName + '.ce',
     render() {
       return h(
@@ -472,34 +472,35 @@ export const wrapCustomElement = (componentName) => {
     }
   }
 
-  return custElements[componentName]
+  return customElements[componentName]
 }
 
-const goupSlot = (children, isCustElm) => {
-  const slotGrup = {}
+const generateSlotGroup = (children, isCustomElm) => {
+  const slotGroup = {}
 
   children.forEach((child) => {
     const { componentName, children, params = [], props } = child
-    const slot = child.slot || props?.slot || 'default'
+    const slot = child.slot || props?.slot?.name || props?.slot || 'default'
 
-    isCustElm && (child.props.slot = 'slot') // CE下需要给子节点加上slot标识
-    slotGrup[slot] = slotGrup[slot] || {
+    isCustomElm && (child.props.slot = 'slot') // CE下需要给子节点加上slot标识
+    slotGroup[slot] = slotGroup[slot] || {
       value: [],
       params
     }
-    slotGrup[slot].value.push(...(componentName === 'Template' ? children : [child])) // template 标签直接过滤掉
+
+    slotGroup[slot].value.push(...(componentName === 'Template' && children.length ? children : [child])) // template 标签直接过滤掉
   })
 
-  return slotGrup
+  return slotGroup
 }
 
-const renderSlot = (children, scope, schema, isCustElm) => {
+const renderSlot = (children, scope, schema, isCustomElm) => {
   if (children.some((a) => a.componentName === 'Template')) {
-    const slotGrup = goupSlot(children, isCustElm)
+    const slotGroup = generateSlotGroup(children, isCustomElm)
     const slots = {}
 
-    Object.keys(slotGrup).forEach((slotName) => {
-      slots[slotName] = ($scope) => renderDefault(slotGrup[slotName].value, { ...scope, ...$scope }, schema)
+    Object.keys(slotGroup).forEach((slotName) => {
+      slots[slotName] = ($scope) => renderDefault(slotGroup[slotName].value, { ...scope, ...$scope }, schema)
     })
 
     return slots
@@ -513,7 +514,7 @@ export const getComponent = (name) => {
     Mapper[name] ||
     getNative(name) ||
     getBlock(name) ||
-    custElements[name] ||
+    customElements[name] ||
     (isHTMLTag(name) ? name : wrapCustomElement(name))
   )
 }
@@ -615,14 +616,14 @@ const getChildren = (schema, mergeScope) => {
   const { componentName, children } = schema
 
   const isNative = typeof component === 'string'
-  const isCustElm = custElements[componentName]
+  const isCustomElm = customElements[componentName]
   const isGroup = checkGroup(componentName)
 
   if (Array.isArray(children)) {
-    if (isNative || isCustElm) {
+    if (isNative || isCustomElm) {
       return renderDefault(children, mergeScope, schema)
     } else {
-      return isGroup ? renderGroup(children, mergeScope, schema) : renderSlot(children, mergeScope, schema, isCustElm)
+      return isGroup ? renderGroup(children, mergeScope, schema) : renderSlot(children, mergeScope, schema, isCustomElm)
     }
   } else {
     return parseData(children, mergeScope)
