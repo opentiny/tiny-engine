@@ -5,7 +5,13 @@
       <close-icon class="close-icon" @click="closePanel"></close-icon>
     </template>
     <template #content>
-      <tiny-grid ref="versionGrid" :data="state.backupList" :show-header="false" class="stripe-tiny-grid">
+      <tiny-grid
+        ref="versionGrid"
+        :data="state.backupList"
+        :radio-config="state"
+        :show-header="false"
+        class="stripe-tiny-grid"
+      >
         <tiny-grid-column type="radio" width="60"></tiny-grid-column>
         <tiny-grid-column show-overflow>
           <template v-slot="{ row }">
@@ -28,7 +34,7 @@
 </template>
 
 <script>
-import { reactive, watch, ref } from 'vue'
+import { reactive, watch, ref, nextTick } from 'vue'
 import { Grid, GridColumn, Button } from '@opentiny/vue'
 import { PluginSetting, CloseIcon, BlockHistoryTemplate } from '@opentiny/tiny-engine-common'
 import { useBlock, useModal } from '@opentiny/tiny-engine-controller'
@@ -52,7 +58,8 @@ export default {
 
     const state = reactive({
       backupList: [],
-      title: ''
+      title: '',
+      checkRowKey: ''
     })
     const versionGrid = ref(null)
 
@@ -60,6 +67,13 @@ export default {
       fetchBlockById(selectedBlock.value.id)
         .then((data) => {
           state.backupList = data.histories?.reverse?.() || []
+          nextTick(() => {
+            versionGrid.value.getData().forEach((item) => {
+              if (item.version === selectedBlock.value.current_version) {
+                state.checkRowKey = item._RID
+              }
+            })
+          })
         })
         .catch((error) => {
           message({ message: `获取区块版本失败: ${error.message || error}`, status: 'error' })
