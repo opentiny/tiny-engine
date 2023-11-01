@@ -66,7 +66,7 @@ export default {
       disabled: false
     })
 
-    const iconName = computed(() => (state.status === PAGE_STATUS.Occupy ? 'unlocked' : 'locked'))
+    const iconName = computed(() => (state.status === PAGE_STATUS.Occupy ? 'locked' : 'unlocked'))
 
     const lockPage = (id, type, newState) => {
       requestBlockPage(`id=${id}&state=${newState}&type=${type}`)
