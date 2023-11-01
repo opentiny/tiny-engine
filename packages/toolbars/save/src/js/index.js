@@ -13,8 +13,7 @@
 import { useBlock, useCanvas, useLayout, useNotify, usePage } from '@opentiny/tiny-engine-controller'
 import { getSchema, setSchema } from '@opentiny/tiny-engine-canvas'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { reactive, ref, watch } from 'vue'
-import { Loading } from '@opentiny/vue'
+import { reactive, ref } from 'vue'
 const { pageState, isSaved, isBlock } = useCanvas()
 import { handlePageUpdate } from '@opentiny/tiny-engine-common/js/http'
 const { PLUGIN_NAME, getPluginApi } = useLayout()
@@ -96,11 +95,6 @@ export const openCommon = async () => {
   }
 
   state.disabled = true
-  let loadingInstance = Loading.service({
-    lock: true,
-    text: '保存中',
-    background: 'rgba(0, 0, 0, 0.5)'
-  })
 
   const pageSchema = getSchema()
   state.code = JSON.stringify(pageSchema || {}, null, 2)
@@ -124,12 +118,4 @@ export const openCommon = async () => {
   if (isLoading.value) {
     state.disabled = false
   }
-  watch(
-    () => pageState.isSaved,
-    (value) => {
-      if (value) {
-        loadingInstance.close()
-      }
-    }
-  )
 }
