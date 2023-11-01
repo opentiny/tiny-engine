@@ -223,7 +223,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .insert-panel {
-  z-index: 1;
+  z-index: 10;
   position: fixed;
   top: 200px;
   left: 400px;
