@@ -156,10 +156,6 @@ export const getSelectorArr = (selector) => {
   const separator = ['.', '#']
 
   for (let i = 0; i < selector.length; i++) {
-    if (!separator.includes(selector[i])) {
-      continue
-    }
-
     let str = selector[i]
 
     i++
