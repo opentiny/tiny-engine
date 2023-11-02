@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "dev": "concurrently 'pnpm:serve:backend' 'pnpm:serve:frontend'",
+    "dev": "concurrently 'pnpm:serve:backend' 'pnpm:serve:frontend' 'pnpm:build:dsl'",
     "dev:mock": "pnpm --filter @opentiny/tiny-engine dev",
     "serve:frontend": "pnpm --filter @opentiny/tiny-engine serve",
     "serve:backend": "pnpm --filter @opentiny/tiny-engine-mock dev",
@@ -11,6 +11,7 @@
     "build:alpha": "pnpm --filter @opentiny/tiny-engine build:alpha",
     "build:prod": "pnpm --filter @opentiny/tiny-engine build:prod",
     "buildComponentSchemas": "node scripts/buildComponentSchemas.js",
+    "build:dsl": "pnpm -F @opentiny/tiny-engine-dsl-vue build",
     "preview": "pnpm --filter @opentiny/tiny-engine preview",
     "lint": "eslint . --ext .js,.vue,.jsx --fix",
     "format": "prettier --write **/*{.vue,.js,.ts,.html,.json}",
