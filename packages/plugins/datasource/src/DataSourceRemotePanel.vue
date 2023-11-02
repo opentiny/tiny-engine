@@ -111,7 +111,7 @@ export default {
       (value) => {
         const { willFetch, dataHandler, shouldFetch, errorHandler, columns } = value
         state.remoteData.options = { ...value?.options } || {}
-        state.remoteData.options.medthod = value.medthod || 'JSONP'
+        state.remoteData.options.method = value.method || 'JSONP'
         state.remoteData.options.params = obj2String(value?.options?.params)
         state.responseData.willFetch = willFetch?.value || ''
         state.responseData.dataHandler = dataHandler?.value || ''

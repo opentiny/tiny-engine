@@ -12,7 +12,7 @@
       <div class="textarea-warp">
         <tiny-input class="border-input" v-model="state.serviceForm.uri" resize="none" placeholder="请输入">
           <template #prepend>
-            <tiny-select class="selectResType" v-model="state.serviceForm.medthod" placeholder="请选择">
+            <tiny-select class="selectResType" v-model="state.serviceForm.method" placeholder="请选择">
               <tiny-option v-for="item in state.requestData" :key="item.value" :label="item.value" :value="item.value">
               </tiny-option>
             </tiny-select>
