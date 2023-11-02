@@ -261,36 +261,37 @@ export default {
 
     const addMethod = () => {
       ruleForm.value.validate((valid) => {
-        if (valid) {
-          if (state.componentEvents[state.formData.methodName]) {
-            useNotify({
-              type: 'error',
-              message: `${state.formData.methodName}事件函数名已存在`
-            })
-            return false
-          }
-          if (checkEvent(state.formData.methodName)) {
-            Object.assign(state.componentEvents, {
-              [state.formData.methodName]: {
-                label: {
-                  zh_CN: state.formData.methodDescription
-                },
-                description: {
-                  zh_CN: `${state.formData.methodDescription}的回调函数`
-                },
-                type: 'event',
-                functionInfo: {
-                  params: [],
-                  returns: {}
-                },
-                defaultValue: ''
-              }
-            })
-            state.showEventAdditive = !state.showEventAdditive
-          }
-
-          return undefined
+        if (!valid) {
+          return
         }
+        if (state.componentEvents[state.formData.methodName]) {
+          useNotify({
+            type: 'error',
+            message: `${state.formData.methodName}事件函数名已存在`
+          })
+          return false
+        }
+        if (checkEvent(state.formData.methodName)) {
+          Object.assign(state.componentEvents, {
+            [state.formData.methodName]: {
+              label: {
+                zh_CN: state.formData.methodDescription
+              },
+              description: {
+                zh_CN: `${state.formData.methodDescription}的回调函数`
+              },
+              type: 'event',
+              functionInfo: {
+                params: [],
+                returns: {}
+              },
+              defaultValue: ''
+            }
+          })
+          state.showEventAdditive = !state.showEventAdditive
+        }
+
+        return undefined
       })
     }
 
