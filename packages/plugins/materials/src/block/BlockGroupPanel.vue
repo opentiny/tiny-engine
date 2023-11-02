@@ -134,6 +134,7 @@ export default {
         })
       loadingInstance.close()
       panelState.isBlockGroupPanel = false
+      closePanel()
     }
 
     const closeGroupPanel = () => {
