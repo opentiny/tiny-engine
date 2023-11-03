@@ -115,11 +115,14 @@ export default {
     const openSettingPanel = async (node) => {
       state.isFolder = !node.data.isPage
       pageSettingState.isNew = false
+
+      const isPageChange = node.data.id !== pageSettingState.currentPageData.id
+
       if (state.isFolder) {
-        closePageSettingPanel()
+        isPageChange && closePageSettingPanel()
         openFolderSettingPanel()
       } else {
-        closeFolderSettingPanel()
+        isPageChange && closeFolderSettingPanel()
         openPageSettingPanel()
       }
       const pageDetail = await fetchPageDetail(node.data?.id)
