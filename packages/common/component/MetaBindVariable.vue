@@ -538,7 +538,7 @@ export default {
 
 <style lang="less" scoped>
 .icon {
-  margin-left: 6px;
+  margin-left: 8px;
 }
 
 .meta-bind-variable-dialog-box {
