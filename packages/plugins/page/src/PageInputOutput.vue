@@ -13,7 +13,7 @@
           title="输入配置"
           button-text="输入配置"
           language="json"
-          :buttonShowContent="isExitValue(inputValue)"
+          :buttonShowContent="hasContent(inputValue)"
           single
           @save="saveInputValue"
         ></meta-code-editor>
@@ -24,7 +24,7 @@
           title="输出配置"
           button-text="输出配置"
           language="json"
-          :buttonShowContent="isExitValue(outputValue)"
+          :buttonShowContent="hasContent(outputValue)"
           single
           @save="saveOutputValue"
         ></meta-code-editor>
@@ -88,7 +88,7 @@ export default {
       }
     }
 
-    const isExitValue = (value) =>
+    const hasContent = (value) =>
       (Array.isArray(value) && value.length > 0) || (typeof value === 'object' && Object.keys(value).length > 0)
 
     return {
@@ -97,7 +97,7 @@ export default {
       saveInputValue,
       saveOutputValue,
       pageSettingState,
-      isExitValue
+      hasContent
     }
   }
 }
