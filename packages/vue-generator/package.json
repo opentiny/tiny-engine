@@ -24,6 +24,7 @@
   },
   "author": "OpenTiny Team",
   "license": "MIT",
+  "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
     "@vue/compiler-sfc": "3.2.45",
     "@vue/shared": "^3.3.4",

@@ -21,6 +21,7 @@
   },
   "author": "OpenTiny Team",
   "license": "MIT",
+  "homepage": "https://opentiny.design/tiny-engine",
   "devDependencies": {
     "rimraf": "^3.0.2",
     "vite": "^4.3.7"

@@ -27,6 +27,7 @@
   },
   "author": "OpenTiny Team",
   "license": "MIT",
+  "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
     "@opentiny/tiny-engine-webcomponent-core": "workspace:^1.0.0",
     "vue": "^3.2.1",

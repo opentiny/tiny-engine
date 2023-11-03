@@ -27,6 +27,7 @@
   },
   "author": "OpenTiny Team",
   "license": "MIT",
+  "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
     "@babel/generator": "7.18.13",
     "@babel/parser": "7.18.13",
