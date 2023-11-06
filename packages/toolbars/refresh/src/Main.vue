@@ -32,7 +32,7 @@ export default {
   setup() {
     const { confirm } = useModal()
     const { isBlock, isSaved, pageState, initData } = useCanvas()
-    const { PLUGIN_NAME, activePlugin } = useLayout()
+    const { PLUGIN_NAME, activePlugin, isEmptyPage } = useLayout()
     const { getCurrentBlock, initBlock } = useBlock()
 
     const refreshResouce = () => {
@@ -52,6 +52,10 @@ export default {
     }
 
     const refreshPage = async () => {
+      if (isEmptyPage()) {
+        return
+      }
+
       const { currentPage } = pageState
       const api = await activePlugin(PLUGIN_NAME.AppManage, true)
       const page = await api.getPageById(currentPage.id)
