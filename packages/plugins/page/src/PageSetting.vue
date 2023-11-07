@@ -288,6 +288,28 @@ export default {
       pageGeneralRef.value.validGeneralForm().then(createHistoryMessage)
     }
 
+    const collectAllPage = (staticPageList = []) => {
+      const pageList = []
+
+      if (!Array.isArray(staticPageList)) {
+        return pageList
+      }
+
+      staticPageList.forEach((pageItem) => {
+        if (pageItem?.isPage) {
+          pageList.push(pageItem)
+
+          return
+        }
+
+        if (!pageItem?.isPage && pageItem?.children?.length) {
+          pageList.push(...collectAllPage(pageItem.children))
+        }
+      })
+
+      return pageList
+    }
+
     const deletePage = () => {
       confirm({
         title: '提示',
@@ -297,12 +319,20 @@ export default {
           requestDeletePage(id)
             .then(() => {
               pageSettingState.updateTreeData().then((pages) => {
-                const pageInfo = pages?.[0]?.data?.[0] || {
+                if (pageState?.currentPage?.id !== id) {
+                  return
+                }
+
+                const staticPageList = (pages || []).find(({ groupId }) => groupId === 0)?.data || []
+                const pageList = collectAllPage(staticPageList)
+
+                const pageHome = pageList.find((page) => page?.isHome)
+                const firstPage = pageList?.[0]
+                const defaultPage = {
                   componentName: COMPONENT_NAME.Page
                 }
-                if (pageState?.currentPage?.id === id) {
-                  emit('openNewPage', pageInfo)
-                }
+
+                emit('openNewPage', pageHome || firstPage || defaultPage)
               })
 
               closePageSettingPanel()

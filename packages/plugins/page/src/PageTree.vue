@@ -47,7 +47,7 @@ import { closePageSettingPanel } from './PageSetting.vue'
 import { closeFolderSettingPanel } from './PageFolderSetting.vue'
 import http from './http.js'
 
-const { ELEMENT_TAG, PAGE_STATUS } = constants
+const { ELEMENT_TAG, PAGE_STATUS, COMPONENT_NAME } = constants
 
 export default {
   components: {
@@ -160,6 +160,17 @@ export default {
     }
 
     const getPageDetail = (pageId) => {
+      if (!`${pageId ?? ''}`) {
+        updateUrlPageId('')
+        initData({ componentName: COMPONENT_NAME.Page }, {})
+        useLayout().layoutState.pageStatus = {
+          state: 'empty',
+          data: {}
+        }
+
+        return
+      }
+
       fetchPageDetail(pageId).then((data) => {
         updateUrlPageId(pageId)
         closePageSettingPanel()
@@ -174,9 +185,9 @@ export default {
       pageState.hoverVm = null
       state.currentNodeData = data
 
-      let pageName = 'untitle'
+      let pageName = ''
       if (data.isPage) {
-        pageName = data?.name || 'untitle'
+        pageName = data?.name || ''
       }
       setBreadcrumbPage([pageName])
 
