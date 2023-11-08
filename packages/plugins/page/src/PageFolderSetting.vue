@@ -8,6 +8,7 @@
           name="delete"
           placement="bottom"
           tips="删除"
+          :class="[{ 'disable-delete': state.disableDeleteBtn }]"
           @click="deleteFolder"
         ></svg-button>
         <svg-button class="close-plugin-setting-icon" name="close" @click="closeFolderSetting"></svg-button>
@@ -67,7 +68,8 @@ export default {
   setup() {
     const state = reactive({
       activeName: ['folderGeneralRef'],
-      title: '文件夹设置'
+      title: '文件夹设置',
+      disableDeleteBtn: false
     })
     const folderGeneralRef = ref(null)
     const { requestCreatePage, requestUpdatePage, requestDeletePage } = http
@@ -153,40 +155,48 @@ export default {
     }
 
     const deleteFolder = () => {
+      if (state.disableDeleteBtn) {
+        return
+      }
+
       if (pageSettingState.treeDataMapping[pageSettingState.currentPageData.id]?.children?.length) {
         useNotify({
           type: 'error',
           message: '此文件夹不是空文件夹，不能删除！'
         })
-        return false
-      } else {
-        confirm({
-          title: '提示',
-          message: '您是否要删除文件夹?',
-          exec: () => {
-            const id = pageSettingState.currentPageData?.id || ''
 
-            requestDeletePage(id)
-              .then(() => {
-                pageSettingState.updateTreeData()
-                closeFolderSettingPanel()
-                useNotify({
-                  type: 'success',
-                  message: '删除文件夹成功！'
-                })
-              })
-              .catch((error) => {
-                useNotify({
-                  type: 'success',
-                  title: '删除文件夹失败！',
-                  message: JSON.stringify(error?.message || error)
-                })
-              })
-          }
-        })
+        state.disableDeleteBtn = true
+        setTimeout(() => {
+          state.disableDeleteBtn = false
+        }, 5000)
+
+        return
       }
 
-      return undefined
+      confirm({
+        title: '提示',
+        message: '您是否要删除文件夹?',
+        exec: () => {
+          const id = pageSettingState.currentPageData?.id || ''
+
+          requestDeletePage(id)
+            .then(() => {
+              pageSettingState.updateTreeData()
+              closeFolderSettingPanel()
+              useNotify({
+                type: 'success',
+                message: '删除文件夹成功！'
+              })
+            })
+            .catch((error) => {
+              useNotify({
+                type: 'success',
+                title: '删除文件夹失败！',
+                message: JSON.stringify(error?.message || error)
+              })
+            })
+        }
+      })
     }
 
     return {
@@ -209,6 +219,9 @@ export default {
     .close-plugin-setting-icon {
       margin-left: 8px;
     }
+  }
+  .disable-delete {
+    cursor: not-allowed;
   }
 }
 </style>
