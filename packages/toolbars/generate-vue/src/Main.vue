@@ -23,7 +23,7 @@
 <script>
 import { reactive } from 'vue'
 import { Popover } from '@opentiny/vue'
-import { getGlobalConfig, useBlock, useCanvas, useNotify } from '@opentiny/tiny-engine-controller'
+import { getGlobalConfig, useBlock, useCanvas, useNotify, useLayout } from '@opentiny/tiny-engine-controller'
 import { fs } from '@opentiny/tiny-engine-utils'
 import { getSchema } from '@opentiny/tiny-engine-canvas'
 import { generateVuePage, generateVueBlock } from './generateCode'
@@ -115,6 +115,14 @@ export default {
     }
 
     const generate = async () => {
+      const { isEmptyPage } = useLayout()
+
+      if (isEmptyPage()) {
+        useNotify({ type: 'warning', message: '请先创建页面' })
+
+        return
+      }
+
       if (state.generating) {
         useNotify({ type: 'info', title: '代码生成中, 请稍后...' })
         return

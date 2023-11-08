@@ -18,7 +18,7 @@
 
 <script lang="jsx">
 import { Popover } from '@opentiny/vue'
-import { useCanvas, useLayout, useBlock, usePage, useModal } from '@opentiny/tiny-engine-controller'
+import { useCanvas, useLayout, useBlock, usePage, useModal, useNotify } from '@opentiny/tiny-engine-controller'
 import { constants } from '@opentiny/tiny-engine-utils'
 
 const { PAGE_STATUS } = constants
@@ -36,7 +36,7 @@ export default {
     const { pageState, isBlock } = useCanvas()
     const { getCurrentBlock } = useBlock()
     const { initCurrentPageData, isChangePageData } = usePage()
-    const { PLUGIN_NAME, activePlugin, layoutState } = useLayout()
+    const { PLUGIN_NAME, activePlugin, layoutState, isEmptyPage } = useLayout()
     const { confirm, message } = useModal()
 
     const openBlockSetting = () => {
@@ -79,7 +79,20 @@ export default {
       })
     }
 
-    const openSetting = () => (isBlock() ? openBlockSetting() : openPageSetting())
+    const openSetting = () => {
+      if (isEmptyPage()) {
+        useNotify({ type: 'warning', message: '请先创建页面' })
+
+        return
+      }
+
+      if (isBlock()) {
+        openBlockSetting()
+        return
+      }
+
+      openPageSetting()
+    }
 
     return {
       openSetting,
