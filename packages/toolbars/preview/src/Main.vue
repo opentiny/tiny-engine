@@ -40,6 +40,8 @@ export default {
           type: 'warning',
           message: '请先创建页面'
         })
+
+        return
       }
 
       const params = {
