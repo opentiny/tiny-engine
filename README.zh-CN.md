@@ -6,7 +6,7 @@
 
 <p align="center">TinyEngine低代码引擎使能开发者定制低代码平台，支持在线实时构建低码平台，支持二次开发或集成低码平台能力</p>
 
-[English](README.md) | 简体中文
+[English](README.md) | 简体中文 | [日本語](README.ja-JP.md)
 
 🌈 特性：
 
@@ -37,7 +37,7 @@ $ pnpm install
 $ pnpm dev
 ```
 
-浏览器打开：`http://localhost:8080/?type=app&id=918&tenant=1&pageid=NTJ4MjvqoVj8OVsc`  
+浏览器打开：`http://localhost:8080/?type=app&id=918&tenant=1&pageid=NTJ4MjvqoVj8OVsc`
 `url search`参数：
 
 - `type=app` 应用类型
