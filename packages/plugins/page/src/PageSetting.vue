@@ -326,7 +326,7 @@ export default {
                 const staticPageList = (pages || []).find(({ groupId }) => groupId === 0)?.data || []
                 const pageList = collectAllPage(staticPageList)
 
-                const pageHome = pageList.find((page) => page?.isHome)
+                const pageHome = pageList.find((page) => page.isHome)
                 const firstPage = pageList?.[0]
                 const defaultPage = {
                   componentName: COMPONENT_NAME.Page
