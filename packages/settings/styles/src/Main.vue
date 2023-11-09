@@ -160,7 +160,7 @@ export default {
 .style-editor {
   display: flex;
   justify-content: space-around;
-  padding: 0 16px 20px;
+  padding: 8px 16px 12px;
   column-gap: 8px;
   :deep(.editor-wrap) {
     .tiny-button {
