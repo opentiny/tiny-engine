@@ -17,6 +17,12 @@ English | [简体中文](README.zh-CN.md)
 - Supports high-code and low-code, and hybrid development and deployment of applications.
 - The platform accesses AI big model capabilities to help developers build applications.
 
+## Documentation
+
+- intro：https://opentiny.design/tiny-engine#/home
+- tutorial：https://opentiny.design/tiny-engine#/help-center/course/engine
+- playground：https://opentiny.design/tiny-engine#/tiny-engine-editor
+
 ## Development
 
 ### Dependencies required for installation
