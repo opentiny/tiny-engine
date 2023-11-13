@@ -5,7 +5,11 @@
 </template>
 
 <script>
+import { utils } from '@opentiny/tiny-engine-utils'
 import { dragStart } from './container'
+
+const { deepClone } = utils
+
 export default {
   props: {
     data: Object
@@ -14,7 +18,7 @@ export default {
   setup(props, { emit }) {
     const dragstart = (e) => {
       if (props.data) {
-        const data = JSON.parse(JSON.stringify(props.data))
+        const data = deepClone(props.data)
         dragStart(data)
 
         // 设置拖拽鼠标样式和设置拖拽预览图
@@ -26,7 +30,7 @@ export default {
 
     const handleClick = () => {
       if (props.data) {
-        const data = JSON.parse(JSON.stringify(props.data))
+        const data = deepClone(props.data)
 
         emit('click', data)
       }
