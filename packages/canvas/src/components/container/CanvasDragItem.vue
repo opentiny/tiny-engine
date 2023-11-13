@@ -1,5 +1,5 @@
 <template>
-  <div draggable="true" class="drag-item" @dragstart="dragstart">
+  <div draggable="true" class="drag-item" @dragstart="dragstart" @click="handleClick">
     <slot></slot>
   </div>
 </template>
@@ -13,9 +13,8 @@ export default {
   emits: ['click'],
   setup(props, { emit }) {
     const dragstart = (e) => {
-      if (props.data && e.button === 0) {
+      if (props.data) {
         const data = JSON.parse(JSON.stringify(props.data))
-        emit('click', data)
         dragStart(data)
 
         // 设置拖拽鼠标样式和设置拖拽预览图
@@ -24,8 +23,18 @@ export default {
         e.dataTransfer.setDragImage(target, 10, 10)
       }
     }
+
+    const handleClick = () => {
+      if (props.data) {
+        const data = JSON.parse(JSON.stringify(props.data))
+
+        emit('click', data)
+      }
+    }
+
     return {
-      dragstart
+      dragstart,
+      handleClick
     }
   }
 }
