@@ -7,22 +7,24 @@
       class="life-cycle-alert"
     ></tiny-alert>
     <tiny-form label-position="left" class="input-output-form">
-      <tiny-form-item label="输入配置">
+      <tiny-form-item label="输入配置" class="item-wrap">
         <meta-code-editor
           :modelValue="inputValue"
           title="输入配置"
           button-text="输入配置"
           language="json"
+          :buttonShowContent="hasContent(inputValue)"
           single
           @save="saveInputValue"
         ></meta-code-editor>
       </tiny-form-item>
-      <tiny-form-item label="输出配置">
+      <tiny-form-item label="输出配置" class="item-wrap">
         <meta-code-editor
           :modelValue="outputValue"
           title="输出配置"
           button-text="输出配置"
           language="json"
+          :buttonShowContent="hasContent(outputValue)"
           single
           @save="saveOutputValue"
         ></meta-code-editor>
@@ -86,12 +88,16 @@ export default {
       }
     }
 
+    const hasContent = (value) =>
+      (Array.isArray(value) && value.length > 0) || (typeof value === 'object' && Object.keys(value).length > 0)
+
     return {
       inputValue,
       outputValue,
       saveInputValue,
       saveOutputValue,
-      pageSettingState
+      pageSettingState,
+      hasContent
     }
   }
 }
@@ -120,6 +126,9 @@ export default {
   .input-output-form {
     margin-top: 16px;
     margin-left: 28px;
+    .item-wrap {
+      width: 348px;
+    }
     :deep(.tiny-form-item) {
       .tiny-form-item__label {
         font-size: 14px;
