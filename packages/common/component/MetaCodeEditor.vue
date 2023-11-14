@@ -10,19 +10,19 @@
       </tiny-button>
     </slot>
     <tiny-dialog-box
-        v-model:visible="editorState.show"
-        :title="titleLabel"
-        width="50vw"
-        class="meta-code-editor-dialog-box"
-        append-to-body
+      v-model:visible="editorState.show"
+      :title="titleLabel"
+      width="50vw"
+      class="meta-code-editor-dialog-box"
+      append-to-body
     >
       <div class="source-code">
         <div v-if="editorTipsTitle" class="header-tips-container">
           <span class="header-tips-title" :title="editorTipsTitle">{{ editorTipsTitle }}</span>
           <div
-              v-if="editorTipsDemo"
-              class="header-tips-showdemo"
-              @click="editorState.showEditorDemo = !editorState.showEditorDemo"
+            v-if="editorTipsDemo"
+            class="header-tips-showdemo"
+            @click="editorState.showEditorDemo = !editorState.showEditorDemo"
           >
             <span>{{ editorState.showEditorDemo ? $t('common.collapseExample') : $t('common.expandExample') }}</span>
             <icon-chevron-up v-if="editorState.showEditorDemo" class="collapse-icon"></icon-chevron-up>
@@ -35,11 +35,11 @@
           </div>
         </div>
         <monaco-editor
-            ref="editor"
-            class="source-code-content"
-            :value="value"
-            :options="options"
-            @editorDidMount="editorDidMount"
+          ref="editor"
+          class="source-code-content"
+          :value="value"
+          :options="options"
+          @editorDidMount="editorDidMount"
         ></monaco-editor>
         <div v-if="showErrorMsg" class="error-msg">{{ editorState.errorMsg }}</div>
       </div>
@@ -273,8 +273,9 @@ export default {
 }
 .full-width {
   border: 1px solid #adb0b8;
-  border-radius: 2px;
+  border-radius: 6px;
   padding: 4px 8px;
+  height: 32px;
   display: flex;
   justify-content: space-between;
   align-items: center;
