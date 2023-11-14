@@ -1,6 +1,7 @@
 <template>
   <plugin-panel :title="title" @close="pluginPanelClosed">
     <template #header>
+      <svg-button class="help-icon" name="plugin-icon-plugin-help" tips="帮助" @click="onOpen"></svg-button>
       <svg-button
         class="add-folder-icon"
         name="add-folder"

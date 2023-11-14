@@ -6,8 +6,26 @@
         <svg-icon name="close" class="help-plugin-tooltip-close" @click="closeToolTip"></svg-icon>
       </div>
     </template>
-    <div id="help-plugin" @click.stop="onOpen">
-      <svg-icon name="plugin-icon-plugin-help"></svg-icon>
+    <div id="help-plugin">
+      <svg-icon name="plugin-icon-plugin-help" @click="onOpen"></svg-icon>
+      <div v-if="state.helpBox" class="help-plugin-box">
+        <div class="help-plugin-box-top">
+          <svg-icon name="close" class="help-plugin-tooltip-close" @click="onOpen"></svg-icon>
+        </div>
+        <div class="help-plugin-box-title">
+          {{ helpTitle }}
+        </div>
+        <div class="help-plugin-box-body">
+          <a class="help-plugin-box-body-item" :href="courseUrl" target="_blank">使用手册</a>
+          <div class="help-plugin-box-body-item">新手引导</div>
+        </div>
+        <div class="help-plugin-box-ques">
+          <div class="help-plugin-box-ques-title">{{ questionTitle }}</div>
+          <div class="help-plugin-box-ques-item" v-for="(item, idx) in questionList" :key="idx">
+            {{ idx + 1 }}.{{ item.label }}
+          </div>
+        </div>
+      </div>
       <tiny-guide
         ref="tinyGuideRef"
         :show-step="state.showStep"
@@ -34,13 +52,32 @@ export default {
   },
   setup() {
     const { activePlugin, PLUGIN_NAME, pluginState } = useLayout()
-    const toolTipContent = '点击这里，再次查看新手指引'
     const tinyGuideRef = ref()
+    const toolTipContent = '点击这里，再次查看新手指引'
+    const helpTitle = '帮助'
+    const questionTitle = '常见问题'
+    const courseUrl = 'https://opentiny.design/tiny-engine#/help-center/course/engine'
+    const questionList = [
+      {
+        label: '如何引入第三方组件库',
+        url: ''
+      },
+      {
+        label: '如何使用AI功能创建页面',
+        url: ''
+      },
+      {
+        label: '答疑视频回放',
+        url: ''
+      }
+    ]
 
     const state = reactive({
       showStep: false,
       guideWidth: 360,
-      showTooltip: false
+      showTooltip: false,
+      showHelpDialog: false,
+      helpBox: false
     })
 
     let toolTipTimer
@@ -154,9 +191,13 @@ export default {
       }
     ]
 
+    const closeHelpBox = () => {
+      state.helpBox = false
+    }
+
     const onOpen = () => {
       if (!tinyGuideRef.value?.state?.tour?.isActive()) {
-        state.showStep = !state.showStep
+        state.helpBox = !state.helpBox
       }
     }
 
@@ -173,9 +214,14 @@ export default {
       tinyGuideRef,
       IconClose: IconClose(),
       toolTipContent,
+      helpTitle,
+      questionTitle,
+      questionList,
+      courseUrl,
       domData,
       state,
       closeToolTip,
+      closeHelpBox,
       onOpen
     }
   }
@@ -254,5 +300,58 @@ div.tiny-guide.shepherd-element {
 // 引导遮罩层
 .shepherd-modal-overlay-container.shepherd-modal-is-visible {
   fill: var(--ti-lowcode-help-guide-mask-bg-color);
+}
+
+.help-plugin-box {
+  cursor: auto;
+  position: absolute;
+  left: calc(var(--base-nav-panel-width) + 10px);
+  bottom: 20px;
+  width: 260px;
+  height: 385px;
+  background-color: #fff;
+  border-radius: 6px;
+  box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.2);
+  padding: 32px;
+  &-top {
+    text-align: right;
+  }
+  &-title {
+    color: #191919;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+  &-body {
+    margin-left: 4px;
+    margin-bottom: 20px;
+    &-item {
+      cursor: pointer;
+      width: 60px;
+      height: 32px;
+      line-height: 32px;
+      font-size: 14px;
+      color: #191919;
+    }
+  }
+
+  &-ques {
+    border-top: 1px solid #ebebeb;
+    padding-top: 18px;
+    &-title {
+      color: #191919;
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+    &-item {
+      display: inline-block;
+      height: 32px;
+      line-height: 32px;
+      color: #1476ff;
+      cursor: pointer;
+      font-size: 14px;
+    }
+  }
 }
 </style>
