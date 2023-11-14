@@ -10,8 +10,8 @@
  *
  */
 
+import { isRef, isProxy, unRef, toRaw } from 'vue'
 import { isObject, isArray } from '@opentiny/vue-renderless/grid/static'
-import { extend, copyArray } from '@opentiny/vue-renderless/common/object'
 
 export const fun_ctor = Function
 
@@ -179,21 +179,122 @@ export function generateRandomLetters(length = 1) {
   return result
 }
 
-export function deepClone(target) {
-  try {
-    return structuredClone(target)
-  } catch (error) {
-    // target is not serializable
+export function getRawValue(target) {
+  if (isRef(target)) {
+    return unRef(target)
   }
 
-  // 走到这里说明目标对象，不可以使用原生方法深克隆
-  if (Array.isArray(target)) {
-    return copyArray(target)
-  }
-
-  if (Object.prototype.toString.call(target) === '[object Object]') {
-    return extend(true, {}, target)
+  if (isProxy(target)) {
+    return toRaw(target)
   }
 
   return target
+}
+
+export function getType(val) {
+  let type = typeof val
+
+  if (type !== 'object') {
+    return type
+  }
+
+  return Object.prototype.toString.call(val).replace(/\[object (.*)\]/, '$1')
+}
+
+function copyArray(target, map, _deepClone) {
+  let res = []
+
+  map.set(target, res)
+
+  target.forEach((item, index) => {
+    res[index] = _deepClone(item, map)
+  })
+
+  return res
+}
+
+function copyMap(target, map, _deepClone) {
+  let res = new Map()
+
+  map.set(target, res)
+
+  target.forEach((value, key) => {
+    res.set(key, _deepClone(value, map))
+  })
+
+  return res
+}
+
+function copySet(target, map, _deepClone) {
+  let res = new Set()
+
+  map.set(target, res)
+
+  target.forEach((value) => {
+    res.add(_deepClone(value, map))
+  })
+
+  return res
+}
+
+function copyObject(target, map, _deepClone) {
+  const res = {}
+
+  map.set(target, res)
+
+  Object.entries(target).forEach(([key, value]) => {
+    res[key] = _deepClone(value, map)
+  })
+
+  return res
+}
+
+export function naiveDeepClone(target) {
+  try {
+    return structuredClone(target)
+  } catch (error) {
+    // target is no serializable
+  }
+}
+
+const copyMethodMap = {
+  Array: copyArray,
+  Map: copyMap,
+  Set: copySet,
+  Object: copyObject
+}
+
+export function _deepClone(target, map) {
+  if (map.has(target)) {
+    return map.get(target)
+  }
+
+  const copyTarget = getRawValue(target)
+  const basicType = ['undefined', 'number', 'string', 'boolean', 'function', 'bigint', 'symbol', 'Null']
+
+  let type = getType(copyTarget)
+
+  if (basicType.includes(type)) {
+    return target
+  }
+
+  let res = naiveDeepClone(copyTarget)
+
+  if (res) {
+    map.set(target, res)
+
+    return res
+  }
+
+  if (copyMethodMap[type]) {
+    res = copyMethodMap[type](target, map, _deepClone)
+
+    return res
+  }
+
+  return copyTarget
+}
+
+export function deepClone(target) {
+  return _deepClone(target, new WeakMap())
 }
