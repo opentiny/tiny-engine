@@ -8622,9 +8622,7 @@
                     "cols": 12,
                     "widget": {
                       "component": "MetaCodeEditor",
-                      "props": {
-                        "language": "json"
-                      }
+                      "props": {}
                     },
                     "description": {
                       "zh_CN": "时间线步骤条数据"
