@@ -8,7 +8,6 @@
           name="delete"
           placement="bottom"
           tips="删除"
-          :class="[{ 'disable-delete': state.disableDeleteBtn }]"
           @click="deleteFolder"
         ></svg-button>
         <svg-button class="close-plugin-setting-icon" name="close" @click="closeFolderSetting"></svg-button>
@@ -33,6 +32,7 @@ import { Button, Collapse, CollapseItem } from '@opentiny/vue'
 import { PluginSetting, SvgButton, ButtonGroup } from '@opentiny/tiny-engine-common'
 import { usePage, useModal, useApp, useNotify } from '@opentiny/tiny-engine-controller'
 import { isEqual } from '@opentiny/vue-renderless/common/object'
+import throttle from '@opentiny/vue-renderless/common/deps/throttle'
 import PageGeneral from './PageGeneral.vue'
 import http from './http.js'
 
@@ -68,8 +68,7 @@ export default {
   setup() {
     const state = reactive({
       activeName: ['folderGeneralRef'],
-      title: '文件夹设置',
-      disableDeleteBtn: false
+      title: '文件夹设置'
     })
     const folderGeneralRef = ref(null)
     const { requestCreatePage, requestUpdatePage, requestDeletePage } = http
@@ -155,20 +154,11 @@ export default {
     }
 
     const deleteFolder = () => {
-      if (state.disableDeleteBtn) {
-        return
-      }
-
       if (pageSettingState.treeDataMapping[pageSettingState.currentPageData.id]?.children?.length) {
         useNotify({
           type: 'error',
           message: '此文件夹不是空文件夹，不能删除！'
         })
-
-        state.disableDeleteBtn = true
-        setTimeout(() => {
-          state.disableDeleteBtn = false
-        }, 5000)
 
         return
       }
@@ -201,7 +191,7 @@ export default {
 
     return {
       saveFolderSetting,
-      deleteFolder,
+      deleteFolder: throttle(5000, true, deleteFolder),
       folderGeneralRef,
       closeFolderSettingPanel,
       isShow,
@@ -219,9 +209,6 @@ export default {
     .close-plugin-setting-icon {
       margin-left: 8px;
     }
-  }
-  .disable-delete {
-    cursor: not-allowed;
   }
 }
 </style>
