@@ -10,7 +10,7 @@
  *
  */
 
-import { isRef, isProxy, unRef, toRaw } from 'vue'
+import { isRef, isProxy, unref, toRaw } from 'vue'
 import { isObject, isArray } from '@opentiny/vue-renderless/grid/static'
 
 export const fun_ctor = Function
@@ -180,15 +180,17 @@ export function generateRandomLetters(length = 1) {
 }
 
 export function getRawValue(target) {
-  if (isRef(target)) {
-    return unRef(target)
+  let res = target
+
+  if (isRef(res)) {
+    res = unref(res)
   }
 
-  if (isProxy(target)) {
-    return toRaw(target)
+  if (isProxy(res)) {
+    return toRaw(res)
   }
 
-  return target
+  return res
 }
 
 export function getType(val) {
@@ -201,7 +203,7 @@ export function getType(val) {
   return Object.prototype.toString.call(val).replace(/\[object (.*)\]/, '$1')
 }
 
-function copyArray(target, map, _deepClone) {
+function cloneArray(target, map, _deepClone) {
   let res = []
 
   map.set(target, res)
@@ -213,7 +215,7 @@ function copyArray(target, map, _deepClone) {
   return res
 }
 
-function copyMap(target, map, _deepClone) {
+function cloneMap(target, map, _deepClone) {
   let res = new Map()
 
   map.set(target, res)
@@ -225,7 +227,7 @@ function copyMap(target, map, _deepClone) {
   return res
 }
 
-function copySet(target, map, _deepClone) {
+function cloneSet(target, map, _deepClone) {
   let res = new Set()
 
   map.set(target, res)
@@ -237,7 +239,7 @@ function copySet(target, map, _deepClone) {
   return res
 }
 
-function copyObject(target, map, _deepClone) {
+function cloneObject(target, map, _deepClone) {
   const res = {}
 
   map.set(target, res)
@@ -257,14 +259,31 @@ export function naiveDeepClone(target) {
   }
 }
 
-const copyMethodMap = {
-  Array: copyArray,
-  Map: copyMap,
-  Set: copySet,
-  Object: copyObject
+/**
+ * 使用 JSON.stringify 进行 deep clone
+ * 不支持 Map、Set、Date、RegExp、ArrayBuffer 等变量类型
+ * 不支持循环引用
+ * @param {*} target target to be copy
+ * @param {*} callback target copyed
+ */
+export function jsonDeepClone(target, callback) {
+  try {
+    JSON.parse(JSON.stringify(target))
+  } catch (error) {
+    if (typeof callback === 'function') {
+      callback()
+    }
+  }
 }
 
-export function _deepClone(target, map) {
+const copyMethodMap = {
+  Array: cloneArray,
+  Map: cloneMap,
+  Set: cloneSet,
+  Object: cloneObject
+}
+
+function _deepClone(target, map) {
   if (map.has(target)) {
     return map.get(target)
   }
@@ -295,6 +314,13 @@ export function _deepClone(target, map) {
   return copyTarget
 }
 
+/**
+ * 优先使用 structuredClone 的深拷贝方法
+ * 不支持 拷贝 prototype、function、DOM nodes、proxy(getter、setter)
+ * 如果是 vue 的 ref 或者 reactive，会尝试拿到 raw value 然后进行深拷贝
+ * @param {*} target value to be deep clone
+ * @returns * deepCloned target
+ */
 export function deepClone(target) {
   return _deepClone(target, new WeakMap())
 }
