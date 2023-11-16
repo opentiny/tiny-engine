@@ -113,7 +113,7 @@ const saveMethods = () => {
 
     saveMethod({ name, content })
   })
-  useCanvas().pageState.isSaved = false
+  useCanvas().setSaved(false)
   state.isChanged = false
   useNotify({
     type: 'success',

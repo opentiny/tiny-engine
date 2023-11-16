@@ -189,7 +189,7 @@ export default {
         // 保存数据
         add(name, variable)
         isPanelShow.value = false
-        useCanvas().pageState.isSaved = false
+        setSaved(false)
 
         // 触发画布渲染
         setState({ [name]: variable })

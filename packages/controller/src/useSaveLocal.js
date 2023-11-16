@@ -20,7 +20,7 @@ import { getGlobalConfig } from './globalConfig'
 const bridge = window.vscodeBridge
 
 const confirmSaveLocal = async () => {
-  const { pageState } = useCanvas()
+  const { pageState, setSaved } = useCanvas()
   const currentPageId = pageState.currentPageId || pageState.currentPage.id
   const currentPageName = pageState.currentPageName || pageState.currentPage.name
 
@@ -42,7 +42,7 @@ const confirmSaveLocal = async () => {
 
   const message = savePage.data.isSuccess ? '保存文件到本地成功' : errorMsg
 
-  savePage.data.isSuccess && (pageState.isSaved = true)
+  savePage.data.isSuccess && setSaved(true)
 
   Modal.message({ message, status: 'error', duration: '5000', top: 60 })
 }
