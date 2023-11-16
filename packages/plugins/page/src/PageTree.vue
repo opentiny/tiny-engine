@@ -160,7 +160,7 @@ export default {
     }
 
     const getPageDetail = (pageId) => {
-      if (!`${pageId ?? ''}`) {
+      if (pageId !== 0 && !pageId) {
         updateUrlPageId('')
         initData({ componentName: COMPONENT_NAME.Page }, {})
         useLayout().layoutState.pageStatus = {
