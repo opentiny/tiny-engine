@@ -223,15 +223,18 @@ export default {
 </script>
 <style lang="less" scoped>
 .insert-panel {
-  z-index: 10;
+  z-index: 4;
   position: fixed;
   top: 200px;
   left: 400px;
   width: 480px;
   :deep(.components-wrap) {
     & > .tiny-collapse {
-      height: 300px;
+      max-height: 300px;
     }
+  }
+  :deep(#pane-blocks) {
+    max-height: 400px;
   }
 }
 .datainit-tip {
