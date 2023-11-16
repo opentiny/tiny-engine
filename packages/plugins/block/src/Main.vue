@@ -222,13 +222,8 @@ export default {
           svgName: 'grid'
         },
         {
-          id: 'list',
-          name: '列表',
-          svgName: 'list'
-        },
-        {
           id: 'mini',
-          name: '小列表',
+          name: '列表',
           svgName: 'small-list'
         }
       ],

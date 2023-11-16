@@ -17,6 +17,12 @@
 - 支持高代码与低代码，混合开发部署应用
 - 平台接入 AI 大模型能力，辅助开发者构建应用
 
+## 文档
+
+- 介绍：https://opentiny.design/tiny-engine#/home
+- 使用文档：https://opentiny.design/tiny-engine#/help-center/course/engine
+- 演示应用：https://opentiny.design/tiny-engine#/tiny-engine-editor
+
 ## 开发
 
 ### 安装所需的依赖
@@ -47,6 +53,19 @@ pnpm run build:plugin
 
 # 构建设计器
 pnpm run build:alpha  或 build:prod
+
+```
+
+## 里程碑
+
+```mermaid
+gantt 
+dateFormat YYYY-MM-DD
+axisFormat %Y-%m-%d
+
+	1.0.0-beta.x version	:active,2023-09-25, 2024-03-31
+	1.0.0-rc	version    :       2024-04-01, 2024-06-30
+	1.0.0 version   :          2024-07-01, 2024-07-31
 
 ```
 
