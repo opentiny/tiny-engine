@@ -88,5 +88,5 @@ export default () => {
 
   const stores = useStores()
 
-  return { t: i18n.global.t, stores, lowcodeWrap }
+  return { t: i18n.global.t, stores, lowcodeWrap, utils }
 }
