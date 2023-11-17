@@ -111,8 +111,15 @@ export default {
   setup(props, { emit }) {
     const { requestCreatePage, requestDeletePage } = http
     const { appInfoState } = useApp()
-    const { DEFAULT_PAGE, pageSettingState, changeTreeData, isCurrentDataSame, initCurrentPageData, isTemporaryPage } =
-      usePage()
+    const {
+      DEFAULT_PAGE,
+      pageSettingState,
+      changeTreeData,
+      isCurrentDataSame,
+      initCurrentPageData,
+      isTemporaryPage,
+      STATIC_PAGE_GROUP_ID
+    } = usePage()
     const { pageState, initData } = useCanvas()
     const { confirm } = useModal()
     const pageGeneralRef = ref(null)
@@ -289,11 +296,11 @@ export default {
     }
 
     const collectAllPage = (staticPageList = []) => {
-      const pageList = []
-
       if (!Array.isArray(staticPageList)) {
-        return pageList
+        return []
       }
+
+      const pageList = []
 
       staticPageList.forEach((pageItem) => {
         if (pageItem?.isPage) {
@@ -323,7 +330,7 @@ export default {
                   return
                 }
 
-                const staticPageList = (pages || []).find(({ groupId }) => groupId === 0)?.data || []
+                const staticPageList = (pages || []).find(({ groupId }) => groupId === STATIC_PAGE_GROUP_ID)?.data || []
                 const pageList = collectAllPage(staticPageList)
 
                 const pageHome = pageList.find((page) => page.isHome)

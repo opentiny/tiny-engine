@@ -92,7 +92,7 @@ export default {
     }
   },
   setup() {
-    const { pageSettingState, changeTreeData } = usePage()
+    const { pageSettingState, changeTreeData, STATIC_PAGE_GROUP_ID } = usePage()
     const ROOT_ID = pageSettingState.ROOT_ID
     const oldParentId = ref(pageSettingState.currentPageData.parentId)
 
@@ -182,7 +182,7 @@ export default {
     const treeFolderOp = computed(() => {
       const expandIcon = <SvgIcon name="text-page-folder-closed" class="folder-icon"></SvgIcon>
       const shrinkIcon = <SvgIcon name="text-page-folder" class="folder-icon"></SvgIcon>
-      const staticPages = pageSettingState.pages[0]?.data || []
+      const staticPages = pageSettingState.pages[STATIC_PAGE_GROUP_ID]?.data || []
       const data = [{ name: '无', id: ROOT_ID }, ...getFolders(JSON.parse(JSON.stringify(staticPages)))]
       const options = {
         data: data,

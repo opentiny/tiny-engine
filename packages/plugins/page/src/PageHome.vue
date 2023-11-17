@@ -27,7 +27,7 @@ export default {
     TinyCheckbox: Checkbox
   },
   setup() {
-    const { pageSettingState } = usePage()
+    const { pageSettingState, STATIC_PAGE_GROUP_ID } = usePage()
     const { handleRouteHomeUpdate } = http
     const { confirm } = useModal()
     const state = reactive({
@@ -41,8 +41,8 @@ export default {
     })
     const homePage = computed(() => {
       let home = '暂无主页'
-      if (pageSettingState.pages[0]) {
-        const data = pageSettingState.pages[0].data
+      if (pageSettingState.pages[STATIC_PAGE_GROUP_ID]) {
+        const data = pageSettingState.pages[STATIC_PAGE_GROUP_ID].data
         const homeData = data.filter((item) => item.isHome)
 
         if (homeData[0]) {
