@@ -118,8 +118,8 @@ export default {
       emit('deleteItem', params)
     }
 
-    const dragEnd = () => {
-      emit('changeItem')
+    const dragEnd = (value) => {
+      emit('dragEnd', value)
     }
 
     const editItem = (params) => {
