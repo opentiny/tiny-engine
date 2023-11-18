@@ -1,4 +1,4 @@
-name: ESLint Check
+name: Push Check
 
 on: [push]
 
@@ -16,4 +16,6 @@ jobs:
       - name: Install dependencies
         run: pnpm i
       - name: Run ESLint
-        run: npm run lint
+        run: npm run checkLint
+      - name: Run Build
+        run: pnpm run build:plugin
