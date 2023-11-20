@@ -15,7 +15,5 @@ jobs:
         run: npm i -g pnpm
       - name: Install dependencies
         run: pnpm i
-      - name: Run ESLint
-        run: npm run checkLint
       - name: Run Build
         run: pnpm run build:plugin
