@@ -1,13 +1,19 @@
 name: Push Check
 
-on: [push]
+on:
+push:
+    branches:
+      - "**"
   pull_request:
+    branches:
     branches: [develop,main]
 jobs:
   eslint-check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
       - name: Use Node.js
         uses: actions/setup-node@v2
         with:
@@ -16,6 +22,11 @@ jobs:
         id: get_changed_files
         uses: tj-actions/changed-files@v40
         with:
+        files: |
+             **.md
+             **.js
+             **.vue
+             **.jsx
           output: all_changed_files
       - name: Install pnpm
         run: npm i -g pnpm
