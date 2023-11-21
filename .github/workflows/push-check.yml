@@ -1,7 +1,7 @@
 name: Push Check
 
 on:
-push:
+  push:
     branches: []
   pull_request:
     branches: [develop,main]
