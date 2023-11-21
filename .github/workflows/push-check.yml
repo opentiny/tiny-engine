@@ -1,33 +1,32 @@
-name: Push Check
+name: CI
 
 on:
-  push:
-    branches: []
   pull_request:
-    branches: [develop,main]
+    branches:
+      - main
+
 jobs:
-  eslint-check:
-    runs-on: ubuntu-latest
+  # -------------------------------------------------------------
+  # Event `pull_request`: Returns all changed pull request files.
+  # --------------------------------------------------------------
+  changed_files:
+    # NOTE:
+    # - This is limited to pull_request* events and would raise an error for other events.
+    # - A maximum of 3000 files can be returned.
+    # - For more flexibility and no limitations see "Using local .git history" above.
+
+    runs-on: ubuntu-latest  # windows-latest || macos-latest
+    name: Test changed-files
+    permissions:
+      pull-requests: read
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 16
       - name: Get changed files
-        id: get_changed_files
+        id: changed-files
         uses: tj-actions/changed-files@v40
-        with:
-        files: |
-              **.md
-              **.js
-              **.vue
-              **.jsx
-          output: all_changed_files
-      - name: Install pnpm
-        run: npm i -g pnpm
-      - name: Install dependencies
-        run: pnpm i
-      - name: Run ESLint
-        run: npx eslint ${{steps.get_changed_files.outputs.all_changed_files}} --ext .js,.vue,.jsx
-      - name: Run Build
-        run: pnpm run build:plugin
+
+      - name: List all changed files
+        run: |
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            echo "$file was changed"
+          done
