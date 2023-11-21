@@ -4,12 +4,9 @@
       <div class="title">
         <span>状态管理</span>
         <div>
-          <svg-button
-            id="help-icon"
-            name="plugin-icon-plugin-help"
-            tips="帮助"
-            @click="utils.openDocs(docsUrl)"
-          ></svg-button>
+          <a class="help-box" :href="docsUrl" target="_blank">
+            <svg-button id="help-icon" name="plugin-icon-plugin-help" tips="帮助"></svg-button>
+          </a>
           <close-icon @close="closePanel"></close-icon>
         </div>
       </div>
@@ -80,7 +77,6 @@ import {
   useData,
   useLayout
 } from '@opentiny/tiny-engine-controller'
-import { utils } from '@opentiny/tiny-engine-utils'
 import { setState, getSchema, deleteState, setGlobalState, getGlobalState } from '@opentiny/tiny-engine-canvas'
 import { CloseIcon, SvgButton } from '@opentiny/tiny-engine-common'
 import DataSourceList from './DataSourceList.vue'
@@ -358,8 +354,7 @@ export default {
       storeRef,
       OPTION_TYPE,
       open,
-      docsUrl,
-      utils
+      docsUrl
     }
   }
 }
@@ -480,6 +475,10 @@ export default {
       height: 100%;
     }
   }
+}
+.help-box {
+  width: 24px;
+  height: 42px;
 }
 #help-icon {
   :deep(.svg-icon.icon-plugin-icon-plugin-help) {

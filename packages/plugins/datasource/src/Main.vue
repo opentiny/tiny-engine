@@ -1,12 +1,9 @@
 <template>
   <plugin-panel title="数据源">
     <template #header>
-      <svg-button
-        id="help-icon"
-        name="plugin-icon-plugin-help"
-        tips="帮助"
-        @click="utils.openDocs(docsUrl)"
-      ></svg-button>
+      <a class="help-box" :href="docsUrl" target="_blank">
+        <svg-button id="help-icon" name="plugin-icon-plugin-help" tips="帮助"></svg-button>
+      </a>
       <svg-button
         class="add-page"
         tips="新建数据源"
@@ -57,7 +54,6 @@ import DataSourceRemotePanel, {
   close as closeRemotePanel,
   isOpen as isOpenRemotePanel
 } from './DataSourceRemotePanel.vue'
-import { utils } from '@opentiny/tiny-engine-utils'
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
 import DataSourceForm, { open as openDataSourceForm, close as closeDataSourceForm } from './DataSourceForm.vue'
 import { close as closeRecordList } from './DataSourceRecordList.vue'
@@ -147,8 +143,7 @@ export default {
       getRomoteReponseData,
       refreshDataSource,
       openGlobalDataHanderPanel,
-      docsUrl,
-      utils
+      docsUrl
     }
   }
 }
@@ -163,6 +158,10 @@ export default {
 }
 .refresh-page {
   color: var(--ti-lowcode-datasource-btn-click-color);
+}
+.help-box {
+  width: 24px;
+  height: 42px;
 }
 #help-icon {
   :deep(.svg-icon.icon-plugin-icon-plugin-help) {

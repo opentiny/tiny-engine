@@ -177,7 +177,3 @@ export function generateRandomLetters(length = 1) {
   }
   return result
 }
-
-export const openDocs = (url) => {
-  window.open(url, '_blank')
-}

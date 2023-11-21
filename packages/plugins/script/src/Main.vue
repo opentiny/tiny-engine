@@ -3,12 +3,9 @@
     <div class="code-edit-head">
       <div class="head-left">
         <span class="title">页面 JS</span>
-        <svg-button
-          id="help-icon"
-          name="plugin-icon-plugin-help"
-          tips="帮助"
-          @click="utils.openDocs(docsUrl)"
-        ></svg-button>
+        <a class="help-box" :href="docsUrl" target="_blank">
+          <svg-button id="help-icon" name="plugin-icon-plugin-help" tips="帮助"></svg-button>
+        </a>
       </div>
       <div class="head-right">
         <tiny-button type="primary" class="save-btn" @click="saveMethods">
@@ -37,7 +34,6 @@ import { VueMonaco, CloseIcon, SvgButton } from '@opentiny/tiny-engine-common'
 import { initCompletion } from '@opentiny/tiny-engine-common/js/completion'
 import { initLinter } from '@opentiny/tiny-engine-common/js/linter'
 import { theme } from '@opentiny/tiny-engine-controller/adapter'
-import { utils } from '@opentiny/tiny-engine-utils'
 import useMethod, { saveMethod, highlightMethod, getMethodNameList, getMethods } from './js/method'
 
 export const api = {
@@ -100,8 +96,7 @@ export default {
       change,
       saveMethods,
       editorDidMount,
-      docsUrl,
-      utils
+      docsUrl
     }
   }
 }
@@ -178,6 +173,9 @@ export default {
       height: 100%;
     }
   }
+}
+.help-box {
+  width: 24px;
 }
 #help-icon {
   margin-left: 4px;

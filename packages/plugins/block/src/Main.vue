@@ -1,12 +1,9 @@
 <template>
   <plugin-panel class="block-manage" title="区块管理" :isCloseLeft="false" @close="closePanel">
     <template #header>
-      <svg-button
-        id="help-icon"
-        name="plugin-icon-plugin-help"
-        tips="帮助"
-        @click="utils.openDocs(docsUrl)"
-      ></svg-button>
+      <a class="help-box" :href="docsUrl" target="_blank">
+        <svg-button id="help-icon" name="plugin-icon-plugin-help" tips="帮助"></svg-button>
+      </a>
       <svg-button name="add-page" placement="bottom" tips="新建区块" style="cursor: not-allowed"></svg-button>
     </template>
     <template #content>
@@ -120,7 +117,7 @@ import {
 } from '@opentiny/vue'
 import { PluginPanel, PluginBlockList, SvgButton, SaveNewBlock } from '@opentiny/tiny-engine-common'
 import { useBlock, useModal, useLayout, useCanvas } from '@opentiny/tiny-engine-controller'
-import { constants, utils } from '@opentiny/tiny-engine-utils'
+import { constants } from '@opentiny/tiny-engine-utils'
 import { iconChevronDown } from '@opentiny/vue-icon'
 import BlockSetting, { openPanel, closePanel } from './BlockSetting.vue'
 import BlockGroupArrange from './BlockGroupArrange.vue'
@@ -414,8 +411,7 @@ export default {
       handleChangeDeletePopoverVisible,
       handleSelectVisibleChange,
       externalBlock,
-      docsUrl,
-      utils
+      docsUrl
     }
   }
 }
@@ -491,6 +487,11 @@ export default {
   .ml8 {
     margin-left: 8px;
   }
+}
+
+.help-box {
+  width: 24px;
+  height: 42px;
 }
 
 #help-icon {

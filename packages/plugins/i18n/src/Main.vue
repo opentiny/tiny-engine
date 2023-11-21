@@ -1,12 +1,9 @@
 <template>
   <plugin-panel title="国际化资源" :isCloseLeft="false" class="plugin-panel-i18n">
     <template #header>
-      <svg-button
-        id="help-icon"
-        name="plugin-icon-plugin-help"
-        tips="帮助"
-        @click="utils.openDocs(docsUrl)"
-      ></svg-button>
+      <a class="help-box" :href="docsUrl" target="_blank">
+        <svg-button id="help-icon" name="plugin-icon-plugin-help" tips="帮助"></svg-button>
+      </a>
     </template>
     <template #content>
       <div class="btn-box">
@@ -429,7 +426,6 @@ export default {
       isEditMode,
       editingRow,
       batchDelete,
-      utils,
       docsUrl
     }
   }
@@ -645,6 +641,10 @@ export default {
   .tiny-button.tiny-button--text {
     color: var(--ti-lowcode-base-text-color);
   }
+}
+.help-box {
+  width: 24px;
+  height: 42px;
 }
 
 #help-icon {

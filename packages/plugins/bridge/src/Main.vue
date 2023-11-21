@@ -1,12 +1,9 @@
 <template>
   <plugin-panel title="资源管理" :isCloseLeft="false" @close="closePanel">
     <template #header>
-      <svg-button
-        id="help-icon"
-        name="plugin-icon-plugin-help"
-        tips="帮助"
-        @click="utils.openDocs(docsUrl)"
-      ></svg-button>
+      <a class="help-box" :href="docsUrl" target="_blank">
+        <svg-button id="help-icon" name="plugin-icon-plugin-help" tips="帮助"></svg-button>
+      </a>
       <svg-button name="add-utils" placement="left" :tips="tips" @click="addResource('npm')"></svg-button>
     </template>
     <template #content>
@@ -27,7 +24,6 @@
 import { ref, computed } from 'vue'
 import { Tabs, TabItem } from '@opentiny/vue'
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
-import { utils } from '@opentiny/tiny-engine-utils'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import { RESOURCE_TYPE } from './js/resource'
 import BridgeManage from './BridgeManage.vue'
@@ -81,7 +77,6 @@ export default {
       openUtilPanel,
       refreshList,
       bridge,
-      utils,
       docsUrl,
       utilsRef,
       tips,
@@ -107,6 +102,10 @@ export default {
   & > div {
     height: 100%;
   }
+}
+.help-box {
+  width: 24px;
+  height: 42px;
 }
 #help-icon {
   :deep(.svg-icon.icon-plugin-icon-plugin-help) {
