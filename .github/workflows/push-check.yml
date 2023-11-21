@@ -33,4 +33,3 @@ jobs:
       run: npx eslint ${{steps.get_changed_files.outputs.all_changed_files}} --ext .js,.vue,.jsx
     - name: Run Build
       run: pnpm run build:plugin
-      done
