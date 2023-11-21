@@ -16,18 +16,17 @@ jobs:
       with:
         node-version: 16
     - name: Get changed files
-      id: get_changed_files
-      uses: tj-actions/changed-files@v40
+    - name: Run eslint on changed files
+      uses: tj-actions/eslint-changed-files@v21
       with:
-        files: |
-              **.js
-              **.vue
-              **.jsx
-    - name: Install pnpm
-      run: npm i -g pnpm
-    - name: Install dependencies
-      run: pnpm i
-    - name: Run ESLint
-      run: npx eslint ${{steps.get_changed_files.outputs.all_changed_files}}
+        config_path: "/path/to/.eslintrc"
+        ignore_path: "/path/to/.eslintignore"
+        extra_args: "--max-warnings=0"
+        file_extensions: |
+          **/*.ts
+          **/*.tsx
+          **/*.vue
+          **/*.js
+          **/*.jsx
     - name: Run Build
       run: pnpm run build:plugin
