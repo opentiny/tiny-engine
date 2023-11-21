@@ -9,7 +9,10 @@ on:
 jobs:
   push-check:
     runs-on: ubuntu-latest  # windows-latest || macos-latest
-    
+    permissions:
+      contents: read
+      pull-requests: write
+      
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
