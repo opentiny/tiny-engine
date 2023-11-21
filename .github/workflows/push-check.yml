@@ -2,10 +2,8 @@ name: Push Check
 
 on:
 push:
-    branches:
-      - "**"
+    branches: []
   pull_request:
-    branches:
     branches: [develop,main]
 jobs:
   eslint-check:
