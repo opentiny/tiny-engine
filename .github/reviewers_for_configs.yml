@@ -22,7 +22,7 @@ reviewers:
 
 # A number of reviewers added to the pull request
 # Set 0 to add all the reviewers (default: 0)
-numberOfReviewers: 2
+numberOfReviewers: 0
 # A list of assignees, overrides reviewers if set
 assignees:
   - kagol
@@ -35,7 +35,7 @@ assignees:
 # A number of assignees to add to the pull request
 # Set to 0 to add all of the assignees.
 # Uses numberOfReviewers if unset.
-numberOfAssignees: 1
+numberOfAssignees: 0
 
 # A list of keywords to be skipped the process that add reviewers if pull requests include it
 skipKeywords:
