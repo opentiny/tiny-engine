@@ -1,39 +1,39 @@
 <template>
-  <tiny-tooltip v-model="state.showTooltip" :manual="true" effect="light" placement="right-end">
-    <template #content>
-      <div>
-        <span>{{ toolTipContent }}</span>
-        <svg-icon name="close" class="help-plugin-tooltip-close" @click="closeToolTip"></svg-icon>
+  <div id="help-plugin">
+    <svg-icon name="plugin-icon-plugin-help" @click.stop="openHelpBox"></svg-icon>
+    <div v-if="state.helpBox" class="help-plugin-box">
+      <div class="help-plugin-box-top">
+        <svg-icon name="close" class="help-plugin-tooltip-close" @click.stop="closeHelpBox"></svg-icon>
       </div>
-    </template>
-    <div id="help-plugin">
-      <svg-icon name="plugin-icon-plugin-help" @click="onOpen"></svg-icon>
-      <div v-if="state.helpBox" class="help-plugin-box">
-        <div class="help-plugin-box-top">
-          <svg-icon name="close" class="help-plugin-tooltip-close" @click="onOpen"></svg-icon>
-        </div>
-        <div class="help-plugin-box-title">
-          {{ helpTitle }}
-        </div>
-        <div class="help-plugin-box-body">
-          <a class="help-plugin-box-body-item" :href="courseUrl" target="_blank">使用手册</a>
-          <div class="help-plugin-box-body-item">新手引导</div>
-        </div>
-        <div class="help-plugin-box-ques">
-          <div class="help-plugin-box-ques-title">{{ questionTitle }}</div>
-          <div class="help-plugin-box-ques-item" v-for="(item, idx) in questionList" :key="idx">
-            {{ idx + 1 }}.{{ item.label }}
-          </div>
+      <div class="help-plugin-box-title">
+        {{ helpTitle }}
+      </div>
+      <div class="help-plugin-box-body">
+        <a class="help-plugin-box-body-item" :href="courseUrl" target="_blank">使用手册</a>
+        <tiny-tooltip v-model="state.showTooltip" :manual="true" effect="light" placement="right-end">
+          <template #content>
+            <div>
+              <span>{{ toolTipContent }}</span>
+              <svg-icon name="close" class="help-plugin-tooltip-close" @click="closeToolTip"></svg-icon>
+            </div>
+          </template>
+          <div class="help-plugin-box-body-item" @click="toShowStep">新手引导</div>
+        </tiny-tooltip>
+      </div>
+      <div class="help-plugin-box-ques">
+        <div class="help-plugin-box-ques-title">{{ questionTitle }}</div>
+        <div class="help-plugin-box-ques-item" v-for="(item, idx) in questionList" :key="idx">
+          {{ idx + 1 }}.{{ item.label }}
         </div>
       </div>
-      <tiny-guide
-        ref="tinyGuideRef"
-        :show-step="state.showStep"
-        :dom-data="domData"
-        :width="state.guideWidth"
-      ></tiny-guide>
     </div>
-  </tiny-tooltip>
+    <tiny-guide
+      ref="tinyGuideRef"
+      :show-step="state.showStep"
+      :dom-data="domData"
+      :width="state.guideWidth"
+    ></tiny-guide>
+  </div>
 </template>
 
 <script>
@@ -95,6 +95,20 @@ export default {
         closeToolTip()
       }, 8000)
     }
+    const closeHelpBox = () => {
+      state.helpBox = false
+    }
+
+    const openHelpBox = () => {
+      state.helpBox = !state.helpBox
+    }
+
+    const toShowStep = () => {
+      if (!tinyGuideRef.value?.state?.tour?.isActive()) {
+        state.showStep = !state.showStep
+        state.helpBox = false
+      }
+    }
 
     const domData = [
       {
@@ -110,6 +124,7 @@ export default {
           }
         ],
         beforeShow: () => {
+          closeHelpBox()
           activePlugin(PLUGIN_NAME.Materials)
           closeToolTip()
           pluginState.pluginEvent = 'none'
@@ -191,22 +206,12 @@ export default {
       }
     ]
 
-    const closeHelpBox = () => {
-      state.helpBox = false
-    }
-
-    const onOpen = () => {
-      if (!tinyGuideRef.value?.state?.tour?.isActive()) {
-        state.helpBox = !state.helpBox
-      }
-    }
-
     onMounted(() => {
       // 需要注意，同一个平台，有可能会同时出现多个不同版本的设计器。
       const localStorageVersion = window.localStorage.getItem(GUIDE_STORAGE_KEY)
 
       if (!localStorageVersion || localStorageVersion < GUIDE_VERSION) {
-        onOpen()
+        toShowStep()
       }
     })
 
@@ -222,7 +227,8 @@ export default {
       state,
       closeToolTip,
       closeHelpBox,
-      onOpen
+      openHelpBox,
+      toShowStep
     }
   }
 }

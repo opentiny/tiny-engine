@@ -152,6 +152,7 @@ export default {
     }
 
     const clickMenu = ({ item, index }) => {
+      if (item.id === 'EditorHelp') return
       state.prevIdex = index
 
       // 切换插件与关闭插件时确认
