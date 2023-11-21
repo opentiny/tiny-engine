@@ -13,9 +13,9 @@ jobs:
         with:
           fetch-depth: 2
       - name: Use Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: '16.x'
+          node-version: '16'
       - name: Get changed files
         id: get_changed_files
         uses: tj-actions/changed-files@v40
