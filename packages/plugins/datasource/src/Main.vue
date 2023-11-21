@@ -2,6 +2,12 @@
   <plugin-panel title="数据源">
     <template #header>
       <svg-button
+        id="help-icon"
+        name="plugin-icon-plugin-help"
+        tips="帮助"
+        @click="utils.openDocs(docsUrl)"
+      ></svg-button>
+      <svg-button
         class="add-page"
         tips="新建数据源"
         name="text-source-list-add"
@@ -51,6 +57,7 @@ import DataSourceRemotePanel, {
   close as closeRemotePanel,
   isOpen as isOpenRemotePanel
 } from './DataSourceRemotePanel.vue'
+import { utils } from '@opentiny/tiny-engine-utils'
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
 import DataSourceForm, { open as openDataSourceForm, close as closeDataSourceForm } from './DataSourceForm.vue'
 import { close as closeRecordList } from './DataSourceRecordList.vue'
@@ -74,6 +81,7 @@ export default {
     SvgButton
   },
   setup() {
+    const docsUrl = 'https://opentiny.design/tiny-engine#/help-center/course/engine/11'
     const state = reactive({
       editable: true,
       currentDataSource: { name: 'untitled', data: { type: 'array', columns: [] } },
@@ -138,7 +146,9 @@ export default {
       openDataSourceFormPanel,
       getRomoteReponseData,
       refreshDataSource,
-      openGlobalDataHanderPanel
+      openGlobalDataHanderPanel,
+      docsUrl,
+      utils
     }
   }
 }
@@ -153,5 +163,10 @@ export default {
 }
 .refresh-page {
   color: var(--ti-lowcode-datasource-btn-click-color);
+}
+#help-icon {
+  :deep(.svg-icon.icon-plugin-icon-plugin-help) {
+    font-size: 16px;
+  }
 }
 </style>

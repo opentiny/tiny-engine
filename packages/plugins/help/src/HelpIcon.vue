@@ -22,9 +22,15 @@
       </div>
       <div class="help-plugin-box-ques">
         <div class="help-plugin-box-ques-title">{{ questionTitle }}</div>
-        <div class="help-plugin-box-ques-item" v-for="(item, idx) in questionList" :key="idx">
+        <a
+          :href="item.url"
+          target="_blank"
+          class="help-plugin-box-ques-item"
+          v-for="(item, idx) in questionList"
+          :key="idx"
+        >
           {{ idx + 1 }}.{{ item.label }}
-        </div>
+        </a>
       </div>
     </div>
     <tiny-guide
@@ -60,15 +66,15 @@ export default {
     const questionList = [
       {
         label: '如何引入第三方组件库',
-        url: ''
+        url: 'https://opentiny.design/tiny-engine#/help-center/course/engine/15'
       },
       {
         label: '如何使用AI功能创建页面',
-        url: ''
+        url: 'https://opentiny.design/tiny-engine#/help-center/course/engine/16'
       },
       {
         label: '答疑视频回放',
-        url: ''
+        url: 'https://opentiny.design/tiny-engine#/help-center/course/video/38'
       }
     ]
 

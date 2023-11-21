@@ -1,5 +1,13 @@
 <template>
   <plugin-panel title="国际化资源" :isCloseLeft="false" class="plugin-panel-i18n">
+    <template #header>
+      <svg-button
+        id="help-icon"
+        name="plugin-icon-plugin-help"
+        tips="帮助"
+        @click="utils.openDocs(docsUrl)"
+      ></svg-button>
+    </template>
     <template #content>
       <div class="btn-box">
         <tiny-button @click="openEditor($event, {})">新增词条</tiny-button>
@@ -123,7 +131,7 @@ import { computed, ref, watchEffect, reactive, onMounted, nextTick, resolveCompo
 import useClipboard from 'vue-clipboard3'
 import { Grid, GridColumn, Input, Popover, Button, FileUpload, Loading, Tooltip, Select } from '@opentiny/vue'
 import { iconLoadingShadow } from '@opentiny/vue-icon'
-import { PluginPanel } from '@opentiny/tiny-engine-common'
+import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
 import { useTranslate, useApp, useModal, getGlobalConfig } from '@opentiny/tiny-engine-controller'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { useHttp } from '@opentiny/tiny-engine-http'
@@ -138,6 +146,7 @@ export default {
     TinyGrid: Grid,
     TinyGridColumn: GridColumn,
     PluginPanel,
+    SvgButton,
     TinySelect: Select,
     TinyFileUpload: FileUpload
   },
@@ -174,6 +183,7 @@ export default {
         label: '按英文排序'
       }
     ]
+    const docsUrl = 'https://opentiny.design/tiny-engine#/help-center/course/engine/12'
     const currentSearchType = ref('')
     const copyTipContent = ref('')
     const searchKey = ref('')
@@ -418,7 +428,9 @@ export default {
       downloadFile,
       isEditMode,
       editingRow,
-      batchDelete
+      batchDelete,
+      utils,
+      docsUrl
     }
   }
 }
@@ -632,6 +644,12 @@ export default {
   }
   .tiny-button.tiny-button--text {
     color: var(--ti-lowcode-base-text-color);
+  }
+}
+
+#help-icon {
+  :deep(.svg-icon.icon-plugin-icon-plugin-help) {
+    font-size: 16px;
   }
 }
 </style>

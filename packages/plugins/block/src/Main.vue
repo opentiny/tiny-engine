@@ -1,6 +1,12 @@
 <template>
   <plugin-panel class="block-manage" title="区块管理" :isCloseLeft="false" @close="closePanel">
     <template #header>
+      <svg-button
+        id="help-icon"
+        name="plugin-icon-plugin-help"
+        tips="帮助"
+        @click="utils.openDocs(docsUrl)"
+      ></svg-button>
       <svg-button name="add-page" placement="bottom" tips="新建区块" style="cursor: not-allowed"></svg-button>
     </template>
     <template #content>
@@ -114,7 +120,7 @@ import {
 } from '@opentiny/vue'
 import { PluginPanel, PluginBlockList, SvgButton, SaveNewBlock } from '@opentiny/tiny-engine-common'
 import { useBlock, useModal, useLayout, useCanvas } from '@opentiny/tiny-engine-controller'
-import { constants } from '@opentiny/tiny-engine-utils'
+import { constants, utils } from '@opentiny/tiny-engine-utils'
 import { iconChevronDown } from '@opentiny/vue-icon'
 import BlockSetting, { openPanel, closePanel } from './BlockSetting.vue'
 import BlockGroupArrange from './BlockGroupArrange.vue'
@@ -134,6 +140,7 @@ import {
 } from './js/blockSetting'
 import { fetchBlockList, requestBlocks, requestInitBlocks, fetchBlockContent } from './js/http'
 
+const docsUrl = 'https://opentiny.design/tiny-engine#/help-center/course/engine/3'
 const { SORT_TYPE } = constants
 const externalBlock = ref(null) // 外部区块信息，用作激活外部传入的区块样式
 
@@ -406,7 +413,9 @@ export default {
       delCategory,
       handleChangeDeletePopoverVisible,
       handleSelectVisibleChange,
-      externalBlock
+      externalBlock,
+      docsUrl,
+      utils
     }
   }
 }
@@ -481,6 +490,12 @@ export default {
   }
   .ml8 {
     margin-left: 8px;
+  }
+}
+
+#help-icon {
+  :deep(.svg-icon.icon-plugin-icon-plugin-help) {
+    font-size: 16px;
   }
 }
 </style>

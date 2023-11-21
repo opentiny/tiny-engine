@@ -1,6 +1,12 @@
 <template>
   <plugin-panel title="资源管理" :isCloseLeft="false" @close="closePanel">
     <template #header>
+      <svg-button
+        id="help-icon"
+        name="plugin-icon-plugin-help"
+        tips="帮助"
+        @click="utilsFun.openDocs(docsUrl)"
+      ></svg-button>
       <svg-button name="add-utils" placement="left" :tips="tips" @click="addResource('npm')"></svg-button>
     </template>
     <template #content>
@@ -21,6 +27,7 @@
 import { ref, computed } from 'vue'
 import { Tabs, TabItem } from '@opentiny/vue'
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
+import { utils as utilsFun } from '@opentiny/tiny-engine-utils'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import { RESOURCE_TYPE } from './js/resource'
 import BridgeManage from './BridgeManage.vue'
@@ -41,6 +48,7 @@ export default {
     const bridge = ref(null)
     const utils = ref(null)
     const tips = computed(() => RESOURCE_TIP[activedName.value])
+    const docsUrl = 'https://opentiny.design/tiny-engine#/help-center/course/engine/13'
 
     const switchTab = (tab) => {
       closePanel()
@@ -73,6 +81,8 @@ export default {
       openUtilPanel,
       refreshList,
       bridge,
+      utilsFun,
+      docsUrl,
       utils,
       tips,
       isVsCodeEnv
@@ -96,6 +106,11 @@ export default {
   padding: 0;
   & > div {
     height: 100%;
+  }
+}
+#help-icon {
+  :deep(.svg-icon.icon-plugin-icon-plugin-help) {
+    font-size: 16px;
   }
 }
 </style>

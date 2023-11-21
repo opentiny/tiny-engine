@@ -3,7 +3,15 @@
     <div class="data-source-left-panel">
       <div class="title">
         <span>状态管理</span>
-        <close-icon @close="closePanel"></close-icon>
+        <div>
+          <svg-button
+            id="help-icon"
+            name="plugin-icon-plugin-help"
+            tips="帮助"
+            @click="utils.openDocs(docsUrl)"
+          ></svg-button>
+          <close-icon @close="closePanel"></close-icon>
+        </div>
       </div>
       <tiny-tabs v-model="activeName" @click="tabClick" tab-style="button-card">
         <tiny-tab-item v-if="isBlock" :name="STATE.CURRENT_STATE" title="区块状态"></tiny-tab-item>
@@ -72,8 +80,9 @@ import {
   useData,
   useLayout
 } from '@opentiny/tiny-engine-controller'
+import { utils } from '@opentiny/tiny-engine-utils'
 import { setState, getSchema, deleteState, setGlobalState, getGlobalState } from '@opentiny/tiny-engine-canvas'
-import { CloseIcon } from '@opentiny/tiny-engine-common'
+import { CloseIcon, SvgButton } from '@opentiny/tiny-engine-common'
 import DataSourceList from './DataSourceList.vue'
 import CreateVariable from './CreateVariable.vue'
 import CreateStore from './CreateStore.vue'
@@ -90,7 +99,8 @@ export default {
     CloseIcon,
     TinyTabs: Tabs,
     TinyTabItem: TabItem,
-    CreateStore
+    CreateStore,
+    SvgButton
   },
   setup(props, { emit }) {
     const variableRef = ref(null)
@@ -106,6 +116,7 @@ export default {
     const { setSaved } = useCanvas()
     const { PLUGIN_NAME, getPluginApi } = useLayout()
     const { openCommon } = getPluginApi(PLUGIN_NAME.save)
+    const docsUrl = 'https://opentiny.design/tiny-engine#/help-center/course/engine/7'
     const state = reactive({
       dataSource: {},
       createData: {
@@ -346,7 +357,9 @@ export default {
       removeStore,
       storeRef,
       OPTION_TYPE,
-      open
+      open,
+      docsUrl,
+      utils
     }
   }
 }
@@ -466,6 +479,11 @@ export default {
     & > div {
       height: 100%;
     }
+  }
+}
+#help-icon {
+  :deep(.svg-icon.icon-plugin-icon-plugin-help) {
+    font-size: 16px;
   }
 }
 </style>

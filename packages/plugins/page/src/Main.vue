@@ -1,7 +1,12 @@
 <template>
   <plugin-panel :title="title" @close="pluginPanelClosed">
     <template #header>
-      <svg-button class="help-icon" name="plugin-icon-plugin-help" tips="帮助" @click="onOpen"></svg-button>
+      <svg-button
+        id="help-icon"
+        name="plugin-icon-plugin-help"
+        tips="帮助"
+        @click="utils.openDocs(docsUrl)"
+      ></svg-button>
       <svg-button
         class="add-folder-icon"
         name="add-folder"
@@ -36,6 +41,7 @@
 <script lang="jsx">
 import { reactive, ref, watchEffect } from 'vue'
 import { useCanvas, useApp, useResource, usePage } from '@opentiny/tiny-engine-controller'
+import { utils } from '@opentiny/tiny-engine-utils'
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import PageSetting, { openPageSettingPanel, closePageSettingPanel } from './PageSetting.vue'
@@ -75,6 +81,7 @@ export default {
     const { resState } = useResource()
     const pageTreeRef = ref(null)
     const ROOT_ID = pageSettingState.ROOT_ID
+    const docsUrl = 'https://opentiny.design/tiny-engine#/help-center/course/engine/2'
 
     const state = reactive({
       isFolder: false
@@ -149,8 +156,18 @@ export default {
       pluginPanelClosed,
       openSettingPanel,
       createNewFolder,
-      createNewPage
+      createNewPage,
+      docsUrl,
+      utils
     }
   }
 }
 </script>
+
+<style scoped lang="less">
+#help-icon {
+  :deep(.svg-icon.icon-plugin-icon-plugin-help) {
+    font-size: 16px;
+  }
+}
+</style>

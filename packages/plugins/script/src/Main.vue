@@ -3,6 +3,12 @@
     <div class="code-edit-head">
       <div class="head-left">
         <span class="title">页面 JS</span>
+        <svg-button
+          id="help-icon"
+          name="plugin-icon-plugin-help"
+          tips="帮助"
+          @click="utils.openDocs(docsUrl)"
+        ></svg-button>
       </div>
       <div class="head-right">
         <tiny-button type="primary" class="save-btn" @click="saveMethods">
@@ -27,10 +33,11 @@
 <script>
 import { onBeforeUnmount } from 'vue'
 import { Button } from '@opentiny/vue'
-import { VueMonaco, CloseIcon } from '@opentiny/tiny-engine-common'
+import { VueMonaco, CloseIcon, SvgButton } from '@opentiny/tiny-engine-common'
 import { initCompletion } from '@opentiny/tiny-engine-common/js/completion'
 import { initLinter } from '@opentiny/tiny-engine-common/js/linter'
 import { theme } from '@opentiny/tiny-engine-controller/adapter'
+import { utils } from '@opentiny/tiny-engine-utils'
 import useMethod, { saveMethod, highlightMethod, getMethodNameList, getMethods } from './js/method'
 
 export const api = {
@@ -44,10 +51,12 @@ export default {
   components: {
     MonacoEditor: VueMonaco,
     TinyButton: Button,
-    CloseIcon
+    CloseIcon,
+    SvgButton
   },
   emits: ['close'],
   setup(props, { emit }) {
+    const docsUrl = 'https://opentiny.design/tiny-engine#/help-center/course/engine/8'
     const { state, monaco, change, close, saveMethods } = useMethod({ emit })
 
     const options = {
@@ -90,7 +99,9 @@ export default {
       close,
       change,
       saveMethods,
-      editorDidMount
+      editorDidMount,
+      docsUrl,
+      utils
     }
   }
 }
@@ -117,6 +128,9 @@ export default {
 
     .head-left {
       padding-left: 15px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
       .title {
         color: var(--ti-lowcode-plugin-panel-title-color);
         font-weight: var(--ti-lowcode-plugin-panel-title-font-weight);
@@ -163,6 +177,12 @@ export default {
       border: 1px solid var(--ti-lowcode-code-edit-content-border-color);
       height: 100%;
     }
+  }
+}
+#help-icon {
+  margin-left: 4px;
+  :deep(.svg-icon.icon-plugin-icon-plugin-help) {
+    font-size: 16px;
   }
 }
 </style>
