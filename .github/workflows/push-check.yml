@@ -27,5 +27,9 @@ jobs:
           **/*.vue
           **/*.js
           **/*.jsx
+    - name: Install pnpm
+      run: npm i -g pnpm
+    - name: Install dependencies
+      run: pnpm i
     - name: Run Build
       run: pnpm run build:plugin
