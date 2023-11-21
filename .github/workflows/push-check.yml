@@ -19,8 +19,7 @@ jobs:
       id: get_changed_files
       uses: tj-actions/changed-files@v40
       with:
-        files_yaml: |
-              **.md
+        files: |
               **.js
               **.vue
               **.jsx
