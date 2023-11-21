@@ -40,6 +40,10 @@ function recurseChildren(children, state, description, result) {
     result.push(subTemplate)
   } else if (children?.type === 'JSExpression') {
     result.push(`{{ ${children.value.replace(/this\.(props\.)?/g, '')} }}`)
+
+    for (const key in description.jsResource) {
+      description.jsResource[key] = description.jsResource[key] || children.value.includes(`.${key}.`)
+    }
   } else if (children?.type === 'i18n') {
     result.push(`{{ t('${children.key}') }}`)
   } else {
@@ -397,7 +401,7 @@ ${imports.join('\n')}
 const props = defineProps({${propsArr.join(',\n')}})
 const emit = defineEmits(${JSON.stringify(emitsArr)})
 
-const { t, lowcodeWrap, stores, utils } = vue.inject(I18nInjectionKey).lowcode()
+const { t, lowcodeWrap, stores } = vue.inject(I18nInjectionKey).lowcode()
 const wrap = lowcodeWrap(props, { emit }, t)
 
 ${iconStatement}
