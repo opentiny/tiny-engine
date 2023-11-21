@@ -15,7 +15,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version: 16
       - name: Get changed files
         id: get_changed_files
         uses: tj-actions/changed-files@v40
