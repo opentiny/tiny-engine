@@ -6,15 +6,20 @@ jobs:
   eslint-check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Use Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: '16.x'
       - name: Get changed files
         id: get_changed_files
-        uses: actions/changed-files@v1
+        uses: tj-actions/changed-files@v40
         with:
+        files: |
+             **.md
+             **.js
+             **.vue
+             **.jsx
           output: all_changed_files
       - name: Install pnpm
         run: npm i -g pnpm
