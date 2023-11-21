@@ -16,11 +16,21 @@ jobs:
       with:
         node-version: 16
     - name: Get changed files
-      id: changed-files
+      id: get_changed_files
       uses: tj-actions/changed-files@v40
-
-    - name: List all changed files
-      run: |
-        for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-          echo "$file was changed"
-        done
+      with:
+        files_yaml: |
+              **.md
+              **.js
+              **.vue
+              **.jsx
+        output: all_changed_files
+    - name: Install pnpm
+      run: npm i -g pnpm
+    - name: Install dependencies
+      run: pnpm i
+    - name: Run ESLint
+      run: npx eslint ${{steps.get_changed_files.outputs.all_changed_files}} --ext .js,.vue,.jsx
+    - name: Run Build
+      run: pnpm run build:plugin
+      done
