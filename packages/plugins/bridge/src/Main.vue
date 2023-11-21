@@ -5,14 +5,14 @@
         id="help-icon"
         name="plugin-icon-plugin-help"
         tips="帮助"
-        @click="utilsFun.openDocs(docsUrl)"
+        @click="utils.openDocs(docsUrl)"
       ></svg-button>
       <svg-button name="add-utils" placement="left" :tips="tips" @click="addResource('npm')"></svg-button>
     </template>
     <template #content>
       <tiny-tabs v-model="activedName" class="tabs full-width-tabs" tab-style="button-card" @click="switchTab">
         <tiny-tab-item :name="RESOURCE_TYPE.Util" title="工具类">
-          <bridge-manage ref="utils" :name="RESOURCE_TYPE.Util" @open="openBridgePanel"></bridge-manage>
+          <bridge-manage ref="utilsRef" :name="RESOURCE_TYPE.Util" @open="openBridgePanel"></bridge-manage>
         </tiny-tab-item>
         <tiny-tab-item v-if="isVsCodeEnv" :name="RESOURCE_TYPE.Bridge" title="桥接源">
           <bridge-manage ref="bridge" :name="RESOURCE_TYPE.Bridge" @open="openBridgePanel"></bridge-manage>
@@ -27,7 +27,7 @@
 import { ref, computed } from 'vue'
 import { Tabs, TabItem } from '@opentiny/vue'
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
-import { utils as utilsFun } from '@opentiny/tiny-engine-utils'
+import { utils } from '@opentiny/tiny-engine-utils'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import { RESOURCE_TYPE } from './js/resource'
 import BridgeManage from './BridgeManage.vue'
@@ -46,7 +46,7 @@ export default {
   setup() {
     const activedName = ref(RESOURCE_TYPE.Util)
     const bridge = ref(null)
-    const utils = ref(null)
+    const utilsRef = ref(null)
     const tips = computed(() => RESOURCE_TIP[activedName.value])
     const docsUrl = 'https://opentiny.design/tiny-engine#/help-center/course/engine/13'
 
@@ -64,11 +64,11 @@ export default {
     }
 
     const refreshList = (type) => {
-      type === RESOURCE_TYPE.Util ? utils.value.refresh(type) : bridge.value.refresh(type)
+      type === RESOURCE_TYPE.Util ? utilsRef.value.refresh(type) : bridge.value.refresh(type)
     }
 
     const addResource = (type) => {
-      activedName.value === RESOURCE_TYPE.Util ? utils.value.add(type) : bridge.value.add(type)
+      activedName.value === RESOURCE_TYPE.Util ? utilsRef.value.add(type) : bridge.value.add(type)
     }
 
     return {
@@ -81,9 +81,9 @@ export default {
       openUtilPanel,
       refreshList,
       bridge,
-      utilsFun,
-      docsUrl,
       utils,
+      docsUrl,
+      utilsRef,
       tips,
       isVsCodeEnv
     }
