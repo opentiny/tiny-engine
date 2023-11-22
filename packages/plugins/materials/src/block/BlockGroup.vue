@@ -321,8 +321,7 @@ export default {
     }
 
     const handleConfirmDeleteGroup = (group) => {
-      const groupId = group.groupId
-      const groupName = group.groupName
+      const { groupId, groupName } = group
       const messageSuccess = `${groupName}分组删除成功!`
       requestDeleteGroup(groupId)
         .then(() => {
