@@ -24,7 +24,7 @@ const confirm = ({ title, status, message, exec, cancel, showFooter = true }) =>
   })
 }
 
-const message = ({ title, status, message, exec, width = '400'}) => {
+const message = ({ title, status, message, exec, width = '400' }) => {
   Modal.alert({
     title,
     status,
