@@ -345,7 +345,7 @@ const state = vue.reactive({
     {
       title: '产品',
       slots: {
-        default: ({ row }, h) => (
+        default: () => (
           <div>
             <TinySwitch modelValue=""></TinySwitch>
           </div>
