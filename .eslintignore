@@ -6,3 +6,4 @@ package-lock.json
 tmp
 temp
 mockServer
+packages/vue-generator/**/output/**
