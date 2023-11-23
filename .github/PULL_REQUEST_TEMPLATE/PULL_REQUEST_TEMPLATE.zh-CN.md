@@ -6,9 +6,9 @@
 
 请检查您的 PR 是否满足以下要求：
 
-- [ ] 提交消息遵循我们的[提交消息指南](https://github.com/opentiny/tiny-engine/blob/develop/CONTRIBUTING.md)
-- [ ] 添加了更改测试（用于错误修复/功能）
-- [ ] 文档已添加/更新（用于错误修复/功能）
+- [ ] commit message遵循我们的[提交贡献指南](https://github.com/opentiny/tiny-engine/blob/develop/CONTRIBUTING.md)
+- [ ] 添加了更改内容的测试用例（用于bugfix/功能）
+- [ ] 文档已添加/更新（用于bugfix/功能）
 - [ ] 是否构建了自己的设计器，经过了充分的自验证
 
 ## PR 类型
