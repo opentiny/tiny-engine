@@ -171,7 +171,8 @@ const devAlias = {
   '@opentiny/tiny-engine-theme': path.resolve(__dirname, `../theme/${lowcodeConfig.theme}/index.less`),
   '@opentiny/tiny-engine-utils': path.resolve(__dirname, '../utils/src/index.js'),
   '@opentiny/tiny-engine-webcomponent-core': path.resolve(__dirname, '../webcomponent/src/lib.js'),
-  '@opentiny/tiny-engine-i18n-host': path.resolve(__dirname, '../i18n/src/lib.js')
+  '@opentiny/tiny-engine-i18n-host': path.resolve(__dirname, '../i18n/src/lib.js'),
+  '@opentiny/tiny-engine-builtin-component': path.resolve(__dirname, '../builtinComponent/index.js')
 }
 
 const devVueAlias = {
@@ -204,7 +205,9 @@ const importmap = {
     '@opentiny/vue-icon': `https://unpkg.com/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue-icon.mjs`,
     '@opentiny/vue-common': `https://unpkg.com/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue-common.mjs`,
     '@opentiny/vue-locale': `https://unpkg.com/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue-locale.mjs`,
-    '@opentiny/vue-design-smb': `https://unpkg.com/@opentiny/vue-design-smb@${importMapVersions.tinyVue}/index.js`
+    '@opentiny/vue-design-smb': `https://unpkg.com/@opentiny/vue-design-smb@${importMapVersions.tinyVue}/index.js`,
+    '@opentiny/vue-theme/theme-tool': `https://unpkg.com/@opentiny/vue-theme@${importMapVersions.tinyVue}/theme-tool`,
+    '@opentiny/vue-theme/theme': `https://unpkg.com/@opentiny/vue-theme@${importMapVersions.tinyVue}/theme`
   }
 }
 

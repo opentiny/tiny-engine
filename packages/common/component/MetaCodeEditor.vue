@@ -45,12 +45,12 @@
       </div>
       <template #footer>
         <div class="btn-box">
-          <tiny-button type="danger" v-if="language === 'json' && showFormatBtn" @click="formatCode">
+          <tiny-button plain type="danger" v-if="language === 'json' && showFormatBtn" @click="formatCode">
             {{ $t('common.format') }}
           </tiny-button>
           <div>
+            <tiny-button @click="close">{{ $t('common.cancel') }}</tiny-button>
             <tiny-button type="primary" @click="save">{{ $t('common.save') }}</tiny-button>
-            <tiny-button @click="close">{{ $t('common.close') }}</tiny-button>
           </div>
         </div>
       </template>

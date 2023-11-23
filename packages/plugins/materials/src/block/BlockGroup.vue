@@ -85,7 +85,7 @@
                     class="confirm-btn"
                     size="small"
                     type="primary"
-                    @click="handleConfirmDeleteGroup(item.value.groupId)"
+                    @click="handleConfirmDeleteGroup(item.value)"
                   >
                     确定
                   </tiny-button>
@@ -145,6 +145,7 @@ import {
   DialogBox,
   Button,
   Tooltip,
+  Notify,
   Popover
 } from '@opentiny/vue'
 import { iconYes, iconClose, iconError } from '@opentiny/vue-icon'
@@ -319,7 +320,9 @@ export default {
       })
     }
 
-    const handleConfirmDeleteGroup = (groupId) => {
+    const handleConfirmDeleteGroup = (group) => {
+      const { groupId, groupName } = group
+      const messageSuccess = `${groupName}分组删除成功!`
       requestDeleteGroup(groupId)
         .then(() => {
           state.currentDeleteGroupId = null
@@ -329,6 +332,11 @@ export default {
               groupChange(state.groups[0].value)
               setBlockPanelVisible(false)
             }
+          })
+          Notify({
+            type: 'success',
+            message: messageSuccess,
+            position: 'top-right'
           })
         })
         .catch((error) => {

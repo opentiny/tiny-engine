@@ -1,0 +1,26 @@
+{
+  "name": "@opentiny/tiny-engine-builtin-component",
+  "version": "0.1.0",
+  "description": "",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/opentiny/tiny-engine",
+    "directory": "packages/builtinComponent"
+  },
+  "scripts": {
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@opentiny/vue": "~3.10.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.2.3",
+    "@vitejs/plugin-vue-jsx": "^3.0.2",
+    "vite": "^4.5.0"
+  }
+}
