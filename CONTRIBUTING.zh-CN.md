@@ -42,23 +42,18 @@
 
 - 点击 [TinyEngine](https://github.com/opentiny/tiny-engine) 代码仓库右上角的 Fork 按钮，将上游仓库 Fork 到个人仓库
 - Clone 个人仓库到本地
-- 在 TinyEngine 根目录下运行 `npm install`, 安装依赖
-- 在 TinyEngine mockServer 运行 `npm install`, 安装依赖
-- 在 TinyEngine 根目录下运行 `npm run serve`，再到 mockServer 目录下运行 `npm run dev`，启动本地开发
+- 在 TinyEngine 根目录下运行 `pnpm i`, 安装依赖
+- 在 TinyEngine 根目录下运行 `pnpm dev`，启动本地开发
 
 ```shell
 # username 为用户名，执行前请替换
 git clone git@github.com:username/tiny-engine.git
 cd tiny-engine
 git remote add upstream git@github.com:opentiny/tiny-engine.git
-npm i
+pnpm i
 
 # 启动项目
-$ npm run serve
-
-# start another terminal
-$ cd mockServer
-$ npm run dev
+$ pnpm dev
 
 ```
 
@@ -68,7 +63,7 @@ $ npm run dev
 - 本地编码
 - 遵循 Commit Message Format 规范进行提交，不符合提交规范的 PR 将不会被合并
 - 提交到远程仓库：git push origin branchName
-- (可选)同步上游仓库 dev 分支最新代码：git pull upstream dev
+- (可选)同步上游仓库 develop 分支最新代码：git pull upstream develop
 - 打开 TinyEngine 代码仓库的 [Pull requests](https://github.com/opentiny/tiny-engine/pulls) 链接，点击 New pull request 按钮提交 PR
 - 项目 Committer 进行 Code Review，并提出意见
 - PR 作者根据意见调整代码，请注意一个分支发起了 PR 后，后续的 commit 会自动同步，无需重新提交 PR
