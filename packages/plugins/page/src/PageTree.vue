@@ -386,12 +386,19 @@ export default {
     color: var(--ti-lowcode-page-manage-tree-color);
 
     .tiny-tree-node {
-      &.is-current {
-        .tiny-tree-node__content {
-          background-color: var(--ti-lowcode-page-manage-page-tree-background-color);
-          &:hover {
-            background-color: var(--ti-lowcode-page-manage-page-tree-background-hover-color);
-          }
+      &:hover {
+        background-color: var(--ti-lowcode-page-manage-page-tree-background-hover-color);
+      }
+      &.is-current,
+      &.is-current .tiny-tree-node__content,
+      &.is-current .tiny-tree-node__content-box {
+        color: var(--ti-lowcode-page-manage-tree-color);
+        background-color: var(--ti-lowcode-page-manage-page-tree-background-active-color);
+        &:hover {
+          background-color: var(--ti-lowcode-page-manage-page-tree-background-hover-color);
+        }
+        & > .tiny-tree-node__content-left {
+          font-weight: 700;
         }
       }
     }
@@ -421,7 +428,6 @@ export default {
         visibility: hidden;
       }
       &:hover {
-        background-color: var(--ti-lowcode-page-manage-page-tree-background-color) !important;
         border-radius: 0;
         .icons {
           .setting {
