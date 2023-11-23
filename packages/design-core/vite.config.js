@@ -204,7 +204,9 @@ const importmap = {
     '@opentiny/vue-icon': `https://unpkg.com/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue-icon.mjs`,
     '@opentiny/vue-common': `https://unpkg.com/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue-common.mjs`,
     '@opentiny/vue-locale': `https://unpkg.com/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue-locale.mjs`,
-    '@opentiny/vue-design-smb': `https://unpkg.com/@opentiny/vue-design-smb@${importMapVersions.tinyVue}/index.js`
+    '@opentiny/vue-design-smb': `https://unpkg.com/@opentiny/vue-design-smb@${importMapVersions.tinyVue}/index.js`,
+    '@opentiny/vue-theme/theme-tool': `https://unpkg.com/@opentiny/vue-theme@${importMapVersions.tinyVue}/theme-tool`,
+    '@opentiny/vue-theme/theme': `https://unpkg.com/@opentiny/vue-theme@${importMapVersions.tinyVue}/theme`
   }
 }
 
