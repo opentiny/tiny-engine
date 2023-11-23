@@ -108,15 +108,15 @@ export default {
 
     const operations = {
       del() {
-        const curSchemaId = getCurrent().schema?.id
-        if (curSchemaId) {
-          removeNodeById(curSchemaId)
+        const currentSchemaId = getCurrent().schema?.id
+        if (currentSchemaId) {
+          removeNodeById(currentSchemaId)
         }
       },
       copy() {
-        const curSchemaId = getCurrent().schema?.id
-        if (curSchemaId) {
-          copyNode(curSchemaId)
+        const currentSchemaId = getCurrent().schema?.id
+        if (currentSchemaId) {
+          copyNode(currentSchemaId)
         }
       },
       config() {
@@ -131,17 +131,19 @@ export default {
       wrap({ value, name }) {
         const componentName = value || name
         const { schema, parent } = getCurrent()
-        const index = parent.children.indexOf(schema)
-        const wrapSchema = {
-          componentName,
-          id: null,
-          props: {},
-          children: [schema]
+        if (schema && parent) {
+          const index = parent.children.indexOf(schema)
+          const wrapSchema = {
+            componentName,
+            id: null,
+            props: {},
+            children: [schema]
+          }
+
+          parent.children.splice(index, 1, wrapSchema)
+
+          getController().addHistory()
         }
-
-        parent.children.splice(index, 1, wrapSchema)
-
-        getController().addHistory()
       },
       createBlock() {
         if (useCanvas().isSaved()) {
