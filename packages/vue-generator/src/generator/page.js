@@ -31,7 +31,8 @@ import {
   JS_FUNCTION,
   JS_RESOURCE,
   JS_SLOT,
-  TINY_ICON
+  TINY_ICON,
+  BUILTIN_COMPONENTS_MAP
 } from '../constant'
 
 function recurseChildren(children, state, description, result) {
@@ -269,7 +270,7 @@ const generateImports = (description, moduleName, type, componentsMap) => {
         return exportName
       }
 
-      return exportName ? `${exportName} as ${componentName}` : `${componentName}`
+      return exportName && exportName !== componentName ? `${exportName} as ${componentName}` : `${componentName}`
     })
 
     imports.push(`import { ${items.join(',')} } from '${pkgName}'`)
@@ -496,7 +497,7 @@ const generateCode = ({ pageInfo, componentsMap = [], blocksData = [] }) => {
   const validComponents = componentsMap.filter(
     ({ componentName, package: pkg, main }) => componentName && (pkg || typeof main === 'string')
   )
-  const allComponents = [...validComponents, ...DEFAULT_COMPONENTS_MAP]
+  const allComponents = [...validComponents, ...DEFAULT_COMPONENTS_MAP, ...BUILTIN_COMPONENTS_MAP]
 
   // 对象数组，去重
   const allComponentsMap = new Map()

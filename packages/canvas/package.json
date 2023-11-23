@@ -32,6 +32,7 @@
     "@opentiny/tiny-engine-i18n-host": "workspace:^1.0.0",
     "@opentiny/tiny-engine-utils": "workspace:^1.0.0",
     "@opentiny/tiny-engine-webcomponent-core": "workspace:^1.0.0",
+    "@opentiny/tiny-engine-builtin-component": "workspace:*",
     "@opentiny/vue": "~3.10.0",
     "@opentiny/vue-icon": "~3.10.0",
     "@opentiny/vue-renderless": "~3.10.0",
