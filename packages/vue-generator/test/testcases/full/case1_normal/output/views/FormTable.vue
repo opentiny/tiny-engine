@@ -199,7 +199,7 @@ const state = vue.reactive({
         ]
       },
       slots: {
-        default: ({ row }) => (
+        default: ({ row }, h) => (
           <div>
             <TinyIconEdit></TinyIconEdit>
             {props.isEdit && (
@@ -232,7 +232,7 @@ const state = vue.reactive({
     {
       title: '操作',
       slots: {
-        default: ({ row }) => (
+        default: ({ row }, h) => (
           <div
             style="color: rgb(94,124, 224);cursor:pointer;"
             text={t('operation.delete')}
@@ -335,7 +335,7 @@ const state = vue.reactive({
       field: 'employees',
       title: '员工数',
       slots: {
-        default: () => <TinyInput></TinyInput>
+        default: ({ row, rowIndex }, h) => <TinyInput></TinyInput>
       }
     },
     {
@@ -345,7 +345,7 @@ const state = vue.reactive({
     {
       title: '产品',
       slots: {
-        default: () => (
+        default: ({ row }, h) => (
           <div>
             <TinySwitch modelValue=""></TinySwitch>
           </div>
@@ -355,7 +355,7 @@ const state = vue.reactive({
     {
       title: '操作',
       slots: {
-        default: ({ row }) => (
+        default: ({ row }, h) => (
           <TinyButton text="删除" icon={TinyIconDel} onClick={(...eventArgs) => emit(eventArgs, row)}></TinyButton>
         )
       }
