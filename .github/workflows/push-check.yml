@@ -1,4 +1,4 @@
-name: CI
+name: Push And Create PR Check
 
 on:
   push:
@@ -33,4 +33,4 @@ jobs:
     - name: Run ESLint
       run: npx eslint ${{steps.get_changed_files.outputs.all_changed_files}}
     - name: Run Build
-      run: pnpm run build:plugin
+      run: pnpm run build:plugin && pnpm run build:alpha
