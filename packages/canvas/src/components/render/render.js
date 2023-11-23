@@ -17,6 +17,7 @@ import { constants, utils } from '@opentiny/tiny-engine-utils'
 import babelPluginJSX from '@vue/babel-plugin-jsx'
 import { transformSync } from '@babel/core'
 import i18nHost from '@opentiny/tiny-engine-i18n-host'
+import { CanvasRow, CanvasCol, CanvasRowColContainer } from '@opentiny/tiny-engine-builtin-component'
 import { context, conditions, setNode } from './context'
 import {
   CanvasBox,
@@ -25,9 +26,7 @@ import {
   CanvasText,
   CanvasSlot,
   CanvasImg,
-  CanvasRow,
-  CanvasCol,
-  CanvasRowColContainer
+  CanvasPlaceholder
 } from '../builtin'
 import { NODE_UID as DESIGN_UIDKEY, NODE_TAG as DESIGN_TAGKEY, NODE_LOOP as DESIGN_LOOPID } from '../common'
 
@@ -61,7 +60,8 @@ const Mapper = {
   Img: CanvasImg,
   CanvasRow,
   CanvasCol,
-  CanvasRowColContainer
+  CanvasRowColContainer,
+  CanvasPlaceholder
 }
 
 const { post } = useBroadcastChannel({ name: BROADCAST_CHANNEL.Notify })
@@ -495,7 +495,6 @@ const stopEvent = (event) => {
   return false
 }
 
-
 const generateSlotGroup = (children, isCustomElm) => {
   const slotGroup = {}
 
@@ -537,6 +536,10 @@ const clickCapture = (componentName) => configure[componentName]?.clickCapture !
 const getBindProps = (schema, scope) => {
   const { id, componentName } = schema
   const invalidity = configure[componentName]?.invalidity || []
+
+  if (componentName === 'CanvasPlaceholder') {
+    return {}
+  }
 
   const bindProps = {
     ...parseData(schema.props, scope),
@@ -612,21 +615,34 @@ const renderGroup = (children, scope, parent) => {
   })
 }
 
+const ContainerComponent = ['CanvasCol', 'CanvasRow', 'CanvasRowColContainer']
+
 const getChildren = (schema, mergeScope) => {
   const { componentName, children } = schema
+  let renderChildren = children
+
+  if (ContainerComponent.includes(componentName) && !renderChildren?.length) {
+    renderChildren = [
+      {
+        componentName: 'CanvasPlaceholder'
+      }
+    ]
+  }
 
   const isNative = typeof component === 'string'
   const isCustomElm = customElements[componentName]
   const isGroup = checkGroup(componentName)
 
-  if (Array.isArray(children)) {
+  if (Array.isArray(renderChildren)) {
     if (isNative || isCustomElm) {
-      return renderDefault(children, mergeScope, schema)
+      return renderDefault(renderChildren, mergeScope, schema)
     } else {
-      return isGroup ? renderGroup(children, mergeScope, schema) : renderSlot(children, mergeScope, schema, isCustomElm)
+      return isGroup
+        ? renderGroup(renderChildren, mergeScope, schema)
+        : renderSlot(renderChildren, mergeScope, schema, isCustomElm)
     }
   } else {
-    return parseData(children, mergeScope)
+    return parseData(renderChildren, mergeScope)
   }
 }
 
