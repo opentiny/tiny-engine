@@ -249,9 +249,6 @@ export const addComponent = (data, position) => {
 }
 
 export const copyNode = (id) => {
-  if (!id) {
-    return
-  }
   const { node, parent } = getNode(id, true)
 
   inserAfter({ parent, node, data: copyObject(node) })
