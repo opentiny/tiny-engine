@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "dev": "concurrently 'pnpm:serve:backend' 'pnpm:serve:frontend'",
+    "dev": "pnpm run setup && concurrently 'pnpm:serve:backend' 'pnpm:serve:frontend'",
     "dev:mock": "pnpm --filter @opentiny/tiny-engine dev",
     "serve:frontend": "pnpm --filter @opentiny/tiny-engine serve",
     "serve:backend": "pnpm --filter @opentiny/tiny-engine-mock dev",
@@ -18,7 +18,8 @@
     "pub:premajor": "pnpm run build:plugin && pnpm run build:alpha && pnpm lerna version premajor --preid beta --no-push --yes && lerna publish from-package --pre-dist-tag beta --yes",
     "pub:preminor": "pnpm run build:plugin && pnpm run build:alpha && pnpm lerna version preminor --preid beta --no-push --yes && lerna publish from-package --pre-dist-tag beta --yes",
     "pub:prepatch": "pnpm run build:plugin && pnpm run build:alpha && pnpm lerna version prepatch --preid beta --no-push --yes && lerna publish from-package --pre-dist-tag beta --yes",
-    "pub:prerelease": "pnpm run build:plugin && pnpm run build:alpha && pnpm lerna version prerelease --preid beta --no-push --yes && lerna publish from-package --pre-dist-tag beta --yes"
+    "pub:prerelease": "pnpm run build:plugin && pnpm run build:alpha && pnpm lerna version prerelease --preid beta --no-push --yes && lerna publish from-package --pre-dist-tag beta --yes",
+    "setup": "node ./scripts/setup.js"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.21.3",

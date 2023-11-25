@@ -17,14 +17,12 @@
 <script>
 import { Popover } from '@opentiny/vue'
 import { previewPage, previewBlock } from '@opentiny/tiny-engine-common/js/preview'
-import { getGlobalConfig, useBlock, useCanvas } from '@opentiny/tiny-engine-controller'
+import { getGlobalConfig, useBlock, useCanvas, useLayout, useNotify } from '@opentiny/tiny-engine-controller'
 import { getSchema } from '@opentiny/tiny-engine-canvas'
-import { PublicIcon } from '@opentiny/tiny-engine-common'
 
 export default {
   components: {
-    TinyPopover: Popover,
-    PublicIcon
+    TinyPopover: Popover
   },
   props: {
     icon: {
@@ -37,6 +35,15 @@ export default {
     const { getCurrentBlock } = useBlock()
 
     const preview = () => {
+      if (useLayout().isEmptyPage()) {
+        useNotify({
+          type: 'warning',
+          message: '请先创建页面'
+        })
+
+        return
+      }
+
       const params = {
         framework: getGlobalConfig()?.dslMode,
         platform: getGlobalConfig()?.platformId,

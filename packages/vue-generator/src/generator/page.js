@@ -1,14 +1,14 @@
 /**
-* Copyright (c) 2023 - present TinyEngine Authors.
-* Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
-*
-* Use of this source code is governed by an MIT-style license.
-*
-* THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
-* BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
-* A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
-*
-*/
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
+ *
+ * Use of this source code is governed by an MIT-style license.
+ *
+ * THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
+ * BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
+ * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
+ *
+ */
 
 import { capitalize, hyphenate } from '@vue/shared'
 import {
@@ -31,7 +31,8 @@ import {
   JS_FUNCTION,
   JS_RESOURCE,
   JS_SLOT,
-  TINY_ICON
+  TINY_ICON,
+  BUILTIN_COMPONENTS_MAP
 } from '../constant'
 
 function recurseChildren(children, state, description, result) {
@@ -269,7 +270,7 @@ const generateImports = (description, moduleName, type, componentsMap) => {
         return exportName
       }
 
-      return exportName ? `${exportName} as ${componentName}` : `${componentName}`
+      return exportName && exportName !== componentName ? `${exportName} as ${componentName}` : `${componentName}`
     })
 
     imports.push(`import { ${items.join(',')} } from '${pkgName}'`)
@@ -397,7 +398,7 @@ ${imports.join('\n')}
 const props = defineProps({${propsArr.join(',\n')}})
 const emit = defineEmits(${JSON.stringify(emitsArr)})
 
-const { t, lowcodeWrap, stores } = vue.inject(I18nInjectionKey).lowcode()
+const { t, lowcodeWrap, stores, utils } = vue.inject(I18nInjectionKey).lowcode()
 const wrap = lowcodeWrap(props, { emit }, t)
 
 ${iconStatement}
@@ -496,7 +497,7 @@ const generateCode = ({ pageInfo, componentsMap = [], blocksData = [] }) => {
   const validComponents = componentsMap.filter(
     ({ componentName, package: pkg, main }) => componentName && (pkg || typeof main === 'string')
   )
-  const allComponents = [...validComponents, ...DEFAULT_COMPONENTS_MAP]
+  const allComponents = [...validComponents, ...DEFAULT_COMPONENTS_MAP, ...BUILTIN_COMPONENTS_MAP]
 
   // 对象数组，去重
   const allComponentsMap = new Map()

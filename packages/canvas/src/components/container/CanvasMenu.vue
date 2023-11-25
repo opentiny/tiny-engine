@@ -14,7 +14,10 @@
         </div>
         <ul v-if="item.items && current === item" class="sub-menu menu-item">
           <template v-for="(subItem, subIndex) in item.items" :key="subIndex">
-            <li v-if="subItem?.check?.() !== false" @click.stop="doOperation(subItem)">
+            <li
+              :class="[{ 'menu-item-disabled': subItem.check && !subItem.check?.() }]"
+              @click.stop="doOperation(subItem)"
+            >
               {{ subItem.name }}
             </li>
           </template>
@@ -155,6 +158,10 @@ export default {
       boxVisibility.value = false
     }
     const doOperation = (item) => {
+      if (item.check && !item.check?.()) {
+        return
+      }
+
       if (item?.code) {
         operations[item.code](item)
         closeMenu()
@@ -198,13 +205,17 @@ export default {
       justify-content: space-between;
     }
     font-size: 12px;
-    color: var(--ti-lowcode-toolbar-breadcrumb-color);
+    color: var(--ti-lowcode-canvas-menu-item-color);
     padding: 6px 15px;
-    &:hover {
-      color: var(--ti-lowcode-toolbar-icon-color);
-      background: var(--ti-lowcode-canvas-menu-hover-color);
+    &:not(.menu-item-disabled):hover {
+      background: var(--ti-lowcode-canvas-menu-item-hover-bg-color);
     }
     position: relative;
+
+    &.menu-item-disabled {
+      cursor: not-allowed;
+      color: var(--ti-lowcode-canvas-menu-item-disabled-color);
+    }
   }
   &.sub-menu {
     width: 100px;

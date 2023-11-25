@@ -1,14 +1,14 @@
 /**
-* Copyright (c) 2023 - present TinyEngine Authors.
-* Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
-*
-* Use of this source code is governed by an MIT-style license.
-*
-* THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
-* BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
-* A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
-*
-*/
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
+ *
+ * Use of this source code is governed by an MIT-style license.
+ *
+ * THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
+ * BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
+ * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
+ *
+ */
 
 import { reactive } from 'vue'
 import { extend, isEqual } from '@opentiny/vue-renderless/common/object'
@@ -127,6 +127,9 @@ const resetPageData = () => {
 // 判断当前页面内容是否有修改
 const isChangePageData = () => !isEqual(pageSettingState.currentPageData, pageSettingState.currentPageDataCopy)
 
+const STATIC_PAGE_GROUP_ID = 0
+const COMMON_PAGE_GROUP_ID = 1
+
 export default () => {
   return {
     DEFAULT_PAGE,
@@ -137,6 +140,8 @@ export default () => {
     getPageContent,
     resetPageData,
     initCurrentPageData,
-    isChangePageData
+    isChangePageData,
+    STATIC_PAGE_GROUP_ID,
+    COMMON_PAGE_GROUP_ID
   }
 }

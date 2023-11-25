@@ -65,7 +65,6 @@ export default {
   :deep(.block-list) {
     border: none;
     max-height: none;
-    &.is-list,
     &.is-small-list {
       .block-detail {
         top: 50%;
