@@ -108,16 +108,10 @@ export default {
 
     const operations = {
       del() {
-        const currentSchemaId = getCurrent().schema?.id
-        if (currentSchemaId) {
-          removeNodeById(currentSchemaId)
-        }
+        removeNodeById(getCurrent().schema?.id)
       },
       copy() {
-        const currentSchemaId = getCurrent().schema?.id
-        if (currentSchemaId) {
-          copyNode(currentSchemaId)
-        }
+        copyNode(getCurrent().schema?.id)
       },
       config() {
         useLayout().activeSetting('props')
