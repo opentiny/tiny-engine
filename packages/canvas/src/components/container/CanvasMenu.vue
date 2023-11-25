@@ -114,7 +114,10 @@ export default {
         removeNodeById(getCurrent().schema?.id)
       },
       copy() {
-        copyNode(getCurrent().schema?.id)
+        const currentSchemaId = getCurrent().schema?.id
+        if (currentSchemaId) {
+          copyNode(getCurrent().schema?.id)
+        }
       },
       config() {
         useLayout().activeSetting('props')
