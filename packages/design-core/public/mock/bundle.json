@@ -3194,6 +3194,7 @@
           "devMode": "proCode",
           "group": "component",
           "priority": 7,
+          "npm": {},
           "schema": {
             "properties": [
               {
