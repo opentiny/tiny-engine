@@ -3,32 +3,31 @@
 </template>
 
 <script setup>
-import { defineProps, computed } from 'vue'
+import { nextTick } from 'vue'
 import MetaArrayItem from './MetaArrayItem'
 import { useProperties, useResource } from '@opentiny/tiny-engine-controller'
+import { updateRect } from '@opentiny/tiny-engine-canvas'
 
-const props = defineProps({
-  meta: {
-    type: Object,
-    default: () => {}
-  }
-})
-
-const { children: schemaChildren, componentName } = useProperties().getSchema()
-const defaultValue = computed(() => props.meta.defaultValue || [])
+const { children: schemaChildren, componentName, props } = useProperties().getSchema()
 const configureMap = useResource().getConfigureMap()
 const childComponentName =
   configureMap[componentName]?.nestingRule?.childWhitelist?.[0] || schemaChildren?.[0]?.componentName
 
 const updateColumns = (columns) => {
+  if (!columns?.length) {
+    return
+  }
+
   const children = columns.map((item) => {
     return {
       componentName: childComponentName,
       props: { ...item }
     }
   })
+
   useProperties().getSchema().children = children
+  nextTick(updateRect)
 }
 
-updateColumns(defaultValue.value)
+updateColumns(props?.columns)
 </script>

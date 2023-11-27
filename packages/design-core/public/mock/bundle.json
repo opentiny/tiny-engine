@@ -1433,7 +1433,7 @@
             "dependencies": null,
             "exportName": "ElTable"
           },
-          "group": "表单组件",
+          "group": "数据展示",
           "category": "element-plus",
           "configure": {
             "loop": true,
@@ -1486,28 +1486,6 @@
                     "cols": 12,
                     "labelPosition": "top",
                     "type": "array",
-                    "defaultValue": [
-                      {
-                        "date": "2016-05-03",
-                        "name": "Tom",
-                        "address": "No. 189, Grove St, Los Angeles"
-                      },
-                      {
-                        "date": "2016-05-02",
-                        "name": "Tom",
-                        "address": "No. 189, Grove St, Los Angeles"
-                      },
-                      {
-                        "date": "2016-05-04",
-                        "name": "Tom",
-                        "address": "No. 189, Grove St, Los Angeles"
-                      },
-                      {
-                        "date": "2016-05-01",
-                        "name": "Tom",
-                        "address": "No. 189, Grove St, Los Angeles"
-                      }
-                    ],
                     "widget": {
                       "component": "MetaCodeEditor",
                       "props": {
@@ -2106,23 +2084,11 @@
                         ]
                       }
                     ],
-                    "defaultValue": [
-                      {
-                        "type": "date",
-                        "width": 60
-                      },
-                      {
-                        "type": "name"
-                      },
-                      {
-                        "type": "address"
-                      }
-                    ],
                     "widget": {
                       "component": "MetaTableColumns",
                       "props": {
                         "type": "object",
-                        "textField": "title",
+                        "textField": "label",
                         "language": "json",
                         "buttonText": "编辑列配置",
                         "title": "编辑列配置",
@@ -12244,7 +12210,49 @@
               "icon": "grid",
               "screenshot": "",
               "snippetName": "ElTable",
-              "schema": {}
+              "schema": {
+                "props": {
+                  "data": [
+                    {
+                      "date": "2016-05-03",
+                      "name": "Tom",
+                      "address": "No. 189, Grove St, Los Angeles"
+                    },
+                    {
+                      "date": "2016-05-02",
+                      "name": "Tom",
+                      "address": "No. 189, Grove St, Los Angeles"
+                    },
+                    {
+                      "date": "2016-05-04",
+                      "name": "Tom",
+                      "address": "No. 189, Grove St, Los Angeles"
+                    },
+                    {
+                      "date": "2016-05-01",
+                      "name": "Tom",
+                      "address": "No. 189, Grove St, Los Angeles"
+                    }
+                  ],
+                  "columns": [
+                    {
+                      "type": "index"
+                    },
+                    {
+                      "label": "Date",
+                      "prop": "date"
+                    },
+                    {
+                      "label": "Name",
+                      "prop": "name"
+                    },
+                    {
+                      "label": "Address",
+                      "prop": "address"
+                    }
+                  ]
+                }
+              }
             }
           ]
         },
