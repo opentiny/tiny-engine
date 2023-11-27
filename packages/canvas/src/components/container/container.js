@@ -205,6 +205,10 @@ export const removeNode = ({ parent, node }) => {
 }
 
 export const removeNodeById = (id) => {
+  if (!id) {
+    return
+  }
+
   removeNode(getNode(id, true))
   clearSelect()
   getController().addHistory()

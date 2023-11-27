@@ -17,6 +17,12 @@ English | [简体中文](README.zh-CN.md)
 - Supports high-code and low-code, and hybrid development and deployment of applications.
 - The platform accesses AI big model capabilities to help developers build applications.
 
+## Documentation
+
+- intro：https://opentiny.design/tiny-engine#/home
+- tutorial：https://opentiny.design/tiny-engine#/help-center/course/engine
+- playground：https://opentiny.design/tiny-engine#/tiny-engine-editor
+
 ## Development
 
 ### Dependencies required for installation
@@ -47,6 +53,19 @@ pnpm build:plugin
 
 # Build Designer
 pnpm build:alpha or build:prod
+
+```
+
+## Milestones
+
+```mermaid
+gantt 
+dateFormat YYYY-MM-DD
+axisFormat %Y-%m-%d
+
+	1.0.0-beta.x version	:active,2023-09-25, 2024-03-31
+	1.0.0-rc	version    :       2024-04-01, 2024-06-30
+	1.0.0 version   :          2024-07-01, 2024-07-31
 
 ```
 
