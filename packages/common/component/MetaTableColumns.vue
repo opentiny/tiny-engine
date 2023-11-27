@@ -4,7 +4,7 @@
 
 <script setup>
 import { nextTick } from 'vue'
-import MetaArrayItem from './MetaArrayItem'
+import MetaArrayItem from './MetaArrayItem.vue'
 import { useProperties, useResource } from '@opentiny/tiny-engine-controller'
 import { updateRect } from '@opentiny/tiny-engine-canvas'
 
