@@ -111,15 +111,6 @@ export default {
 
     const boxVisibility = ref(false)
 
-    const actionDisabled = (actionItem) => {
-      const actions = ['del', 'copy', 'addParent']
-      return actions.includes(actionItem.code) && !getCurrent().schema?.id
-    }
-
-    const onShowChildrenMenu = (menuItem) => {
-      current.value = !actionDisabled(menuItem) ? menuItem : null
-    }
-
     // 计算上下文菜单位置，右键时显示，否则关闭
 
     const operations = {
@@ -167,11 +158,20 @@ export default {
       }
     }
 
+    const actionDisabled = (actionItem) => {
+      const actions = ['del', 'copy', 'addParent']
+      return actions.includes(actionItem.code) && !getCurrent().schema?.id
+    }
+
+    const onShowChildrenMenu = (menuItem) => {
+      current.value = !actionDisabled(menuItem) ? menuItem : null
+    }
+
     const close = () => {
       boxVisibility.value = false
     }
     const doOperation = (item) => {
-      if (item.check && !item.check?.()) {
+      if ((item.check && !item.check?.()) || actionDisabled(item)) {
         return
       }
 
