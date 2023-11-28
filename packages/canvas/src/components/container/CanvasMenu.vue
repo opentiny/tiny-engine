@@ -4,9 +4,12 @@
       <li
         v-for="(item, index) in menus"
         :key="index"
-        :class="item.items ? 'li-item' : ''"
+        :class="{
+          'li-item': item.items,
+          'li-item-disabled': actionDisabled(item)
+        }"
         @click="doOperation(item)"
-        @mouseover="current = item"
+        @mouseover="onShowChildrenMenu(item)"
       >
         <div>
           <span>{{ item.name }}</span>
@@ -98,7 +101,8 @@ export default {
         items: [
           { name: '文字提示', code: 'wrap', value: 'TinyTooltip' },
           { name: '弹出框', code: 'wrap', value: 'TinyPopover' }
-        ]
+        ],
+        code: 'addParent'
       },
       { name: '删除', code: 'del' },
       { name: '复制', code: 'copy' },
@@ -106,6 +110,15 @@ export default {
     ])
 
     const boxVisibility = ref(false)
+
+    const actionDisabled = (actionItem) => {
+      const actions = ['del', 'copy', 'addParent']
+      return actions.includes(actionItem.code) && !getCurrent().schema?.id
+    }
+
+    const onShowChildrenMenu = (menuItem) => {
+      current.value = !actionDisabled(menuItem) ? menuItem : null
+    }
 
     // 计算上下文菜单位置，右键时显示，否则关闭
 
@@ -163,7 +176,7 @@ export default {
       }
 
       if (item?.code) {
-        operations[item.code](item)
+        operations[item.code]?.(item)
         closeMenu()
       }
     }
@@ -175,7 +188,9 @@ export default {
       boxVisibility,
       close,
       current,
-      menuDom
+      menuDom,
+      actionDisabled,
+      onShowChildrenMenu
     }
   }
 }
@@ -197,6 +212,10 @@ export default {
   flex-direction: column;
   .li-item {
     border-bottom: 1px solid var(--ti-lowcode-canvas-menu-border-color);
+  }
+  .li-item-disabled {
+    cursor: not-allowed;
+    color: var(--ti-lowcode-canvas-menu-item-disabled-color);
   }
   li {
     & > div {
