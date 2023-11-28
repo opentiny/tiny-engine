@@ -160,7 +160,7 @@ const parseI18n = (i18n, scope, ctx) => {
   return parseExpression(
     {
       type: 'JSExpression',
-      value: `this.i18n('${i18n.key}')`
+      value: `this.i18n('${i18n.key}', ${JSON.stringify(i18n.params)})`
     },
     scope,
     { i18n: i18nHost.global.t, ...ctx }
@@ -169,6 +169,7 @@ const parseI18n = (i18n, scope, ctx) => {
 
 const renderDefault = (children, scope, parent) =>
   children.map?.((child) =>
+    // eslint-disable-next-line no-use-before-define
     h(renderer, {
       schema: child,
       scope,
