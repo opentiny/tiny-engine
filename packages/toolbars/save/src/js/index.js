@@ -12,7 +12,7 @@
 
 import { reactive, ref } from 'vue'
 import { useBlock, useCanvas, useLayout, useNotify, usePage } from '@opentiny/tiny-engine-controller'
-import { getSchema, setSchema } from '@opentiny/tiny-engine-canvas'
+import { getSchema, setSchema, selectNode } from '@opentiny/tiny-engine-canvas'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { handlePageUpdate } from '@opentiny/tiny-engine-common/js/http'
 
@@ -76,6 +76,9 @@ export const saveCommon = (value) => {
 
     return
   }
+
+  // 选中画布中的页面，关闭插件、属性配置
+  selectNode(null)
 
   return isBlock() ? saveBlock(pageSchema) : savePage(pageSchema)
 }
