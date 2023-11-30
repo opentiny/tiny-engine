@@ -395,8 +395,9 @@ export default {
 
       // 如果新旧值不一样就显示未保存状态
       if (oldValue !== variableContent) {
-        const { pageState } = useCanvas()
-        pageState.isSaved = false
+        const { setSaved } = useCanvas()
+
+        setSaved(false)
         variableContent = formatString(variableContent, 'javascript')
       }
 
@@ -538,7 +539,7 @@ export default {
 
 <style lang="less" scoped>
 .icon {
-  margin-left: 6px;
+  margin-left: 8px;
 }
 
 .meta-bind-variable-dialog-box {

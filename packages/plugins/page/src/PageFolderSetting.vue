@@ -32,6 +32,7 @@ import { Button, Collapse, CollapseItem } from '@opentiny/vue'
 import { PluginSetting, SvgButton, ButtonGroup } from '@opentiny/tiny-engine-common'
 import { usePage, useModal, useApp, useNotify } from '@opentiny/tiny-engine-controller'
 import { isEqual } from '@opentiny/vue-renderless/common/object'
+import throttle from '@opentiny/vue-renderless/common/deps/throttle'
 import PageGeneral from './PageGeneral.vue'
 import http from './http.js'
 
@@ -158,40 +159,39 @@ export default {
           type: 'error',
           message: '此文件夹不是空文件夹，不能删除！'
         })
-        return false
-      } else {
-        confirm({
-          title: '提示',
-          message: '您是否要删除文件夹?',
-          exec: () => {
-            const id = pageSettingState.currentPageData?.id || ''
 
-            requestDeletePage(id)
-              .then(() => {
-                pageSettingState.updateTreeData()
-                closeFolderSettingPanel()
-                useNotify({
-                  type: 'success',
-                  message: '删除文件夹成功！'
-                })
-              })
-              .catch((error) => {
-                useNotify({
-                  type: 'success',
-                  title: '删除文件夹失败！',
-                  message: JSON.stringify(error?.message || error)
-                })
-              })
-          }
-        })
+        return
       }
 
-      return undefined
+      confirm({
+        title: '提示',
+        message: '您是否要删除文件夹?',
+        exec: () => {
+          const id = pageSettingState.currentPageData?.id || ''
+
+          requestDeletePage(id)
+            .then(() => {
+              pageSettingState.updateTreeData()
+              closeFolderSettingPanel()
+              useNotify({
+                type: 'success',
+                message: '删除文件夹成功！'
+              })
+            })
+            .catch((error) => {
+              useNotify({
+                type: 'success',
+                title: '删除文件夹失败！',
+                message: JSON.stringify(error?.message || error)
+              })
+            })
+        }
+      })
     }
 
     return {
       saveFolderSetting,
-      deleteFolder,
+      deleteFolder: throttle(5000, true, deleteFolder),
       folderGeneralRef,
       closeFolderSettingPanel,
       isShow,

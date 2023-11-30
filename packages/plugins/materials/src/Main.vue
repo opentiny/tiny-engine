@@ -90,7 +90,10 @@ export default {
 
 <style lang="less" scoped>
 .tiny-tabs {
-  height: calc(100% - 48px);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
 }
 
 :deep(.tiny-tabs__header) {
@@ -98,7 +101,8 @@ export default {
 }
 
 :deep(.tiny-tabs__content) {
-  height: calc(100% - 48px);
+  flex: 1;
+  overflow-y: scroll;
   padding: 0;
   & > div {
     height: 100%;
@@ -106,7 +110,7 @@ export default {
 }
 
 .tiny-collapse {
-  height: calc(100% - 56px);
+  flex: 1;
   overflow-y: scroll;
 }
 </style>

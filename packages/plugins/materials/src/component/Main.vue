@@ -117,6 +117,8 @@ export default {
 <style lang="less" scoped>
 .components-wrap {
   height: 100%;
+  display: flex;
+  flex-direction: column;
 
   .tiny-search {
     padding: 12px 8px;
@@ -164,7 +166,7 @@ export default {
   }
 
   .tiny-collapse {
-    height: calc(100% - 56px);
+    flex: 1;
     overflow-y: scroll;
     .tiny-collapse-item.is-active + .tiny-collapse-item {
       margin-top: 0;

@@ -15,13 +15,14 @@ import { getGlobalConfig } from './globalConfig'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { utils, constants } from '@opentiny/tiny-engine-utils'
 import { Builtin, addScript, addStyle, canvasDispatch } from '@opentiny/tiny-engine-canvas'
+import { getCanvasStatus } from '@opentiny/tiny-engine-common/js/index'
+import { meta as BuiltinComponentMaterials } from '@opentiny/tiny-engine-builtin-component'
 import useApp from './useApp'
 import useCanvas from './useCanvas'
 import useTranslate from './useTranslate'
 import useEditorInfo from './useEditorInfo'
 import useBreadcrumb from './useBreadcrumb'
 import useLayout from './useLayout'
-import { getCanvasStatus } from '@opentiny/tiny-engine-common/js/index'
 import useBlock from './useBlock'
 import useNotify from './useNotify'
 
@@ -371,8 +372,15 @@ const fetchResource = async ({ isInit = true } = {}) => {
   const { id, type } = useEditorInfo().useInfo()
   useApp().appInfoState.selectedId = id
 
-  Builtin.data.materials.components[0]?.children.map(registerComponent)
-  resState.components.push(...Builtin.data.materials.snippets)
+  Builtin.data.materials.components[0].children.map(registerComponent)
+  BuiltinComponentMaterials.components[0].children.map(registerComponent)
+
+  const builtinSnippets = {
+    group: '内置组件',
+    children: [...Builtin.data.materials.snippets[0].children, ...BuiltinComponentMaterials.snippets[0].children]
+  }
+
+  resState.components.push(builtinSnippets)
 
   const appData = await useHttp().get(`/app-center/v1/api/apps/schema/${id}`)
   resState.pageTree = appData.componentsTree
