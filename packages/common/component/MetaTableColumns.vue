@@ -4,9 +4,9 @@
 
 <script setup>
 import { nextTick } from 'vue'
-import MetaArrayItem from './MetaArrayItem.vue'
-import { useProperties, useResource } from '@opentiny/tiny-engine-controller'
 import { updateRect } from '@opentiny/tiny-engine-canvas'
+import { useProperties, useResource } from '@opentiny/tiny-engine-controller'
+import MetaArrayItem from './MetaArrayItem.vue'
 
 const { children: schemaChildren, componentName, props } = useProperties().getSchema()
 const configureMap = useResource().getConfigureMap()
