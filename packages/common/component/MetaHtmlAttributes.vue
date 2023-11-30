@@ -32,7 +32,7 @@
       </template>
     </tiny-popover>
   </div>
-  <div class="attr-list" v-bind="$attrs">
+  <div class="attr-list">
     <div v-for="item in attrs" :key="item" class="list-item">
       <div class="item-content">{{ item.text }}</div>
       <div class="item-controller">
@@ -54,6 +54,7 @@ import { Form, FormItem, Input, Button, Popover, Tooltip } from '@opentiny/vue'
 import { utils } from '@opentiny/tiny-engine-utils'
 
 export default {
+  inheritAttrs: false,
   components: {
     TinyForm: Form,
     TinyFormItem: FormItem,
