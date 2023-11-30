@@ -329,15 +329,15 @@ div.tiny-guide.shepherd-element {
   left: calc(var(--base-nav-panel-width));
   bottom: 20px;
   width: 260px;
-  background-color: #fff;
+  background-color: var(--ti-lowcode-help-box-bg-color);
   border-radius: 6px;
-  box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--ti-lowcode-help-box-shadow);
   padding: 28px 32px;
   &-top {
     text-align: right;
   }
   &-title {
-    color: #191919;
+    color: var(--ti-lowcode-help-box-title-text-color);
     font-size: 20px;
     font-weight: 600;
     margin-bottom: 16px;
@@ -348,7 +348,7 @@ div.tiny-guide.shepherd-element {
       cursor: pointer;
       width: 60px;
       font-size: 14px;
-      color: #191919;
+      color: var(--ti-lowcode-help-box-item-text-color);
       margin-bottom: 12px;
     }
     &-item:hover {
@@ -357,17 +357,17 @@ div.tiny-guide.shepherd-element {
   }
 
   &-ques {
-    border-top: 1px solid #ebebeb;
+    border-top: 1px solid var(--ti-lowcode-help-box-question-border-top);
     padding-top: 12px;
     &-title {
-      color: #191919;
+      color: var(--ti-lowcode-help-box-title-text-color);
       font-size: 20px;
       font-weight: 600;
       margin-bottom: 16px;
     }
     &-item {
       display: inline-block;
-      color: #1476ff;
+      color: var(--ti-lowcode-help-box-question-item-text-color);
       cursor: pointer;
       font-size: 14px;
       margin-bottom: 12px;
