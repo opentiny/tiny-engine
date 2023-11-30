@@ -37,6 +37,7 @@
     "@opentiny/tiny-engine-http": "workspace:^1.0.0",
     "@opentiny/tiny-engine-i18n-host": "workspace:^1.0.0",
     "@opentiny/tiny-engine-utils": "workspace:^1.0.0",
+    "@opentiny/tiny-engine-common": "workspace:^1.0.0",
     "@opentiny/vue": "~3.10.0",
     "@opentiny/vue-icon": "~3.10.0",
     "@opentiny/vue-locale": "~3.10.0",
