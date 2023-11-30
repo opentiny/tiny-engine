@@ -3,9 +3,7 @@
     <div class="code-edit-head">
       <div class="head-left">
         <span class="title">页面 JS</span>
-        <a class="help-box" :href="docsUrl" target="_blank">
-          <svg-button id="help-icon" name="plugin-icon-plugin-help" tips="帮助"></svg-button>
-        </a>
+        <link-button :href="docsUrl"></link-button>
       </div>
       <div class="head-right">
         <tiny-button type="primary" class="save-btn" @click="saveMethods">
@@ -30,7 +28,7 @@
 <script>
 import { onBeforeUnmount } from 'vue'
 import { Button } from '@opentiny/vue'
-import { VueMonaco, CloseIcon, SvgButton } from '@opentiny/tiny-engine-common'
+import { VueMonaco, CloseIcon, LinkButton } from '@opentiny/tiny-engine-common'
 import { initCompletion } from '@opentiny/tiny-engine-common/js/completion'
 import { initLinter } from '@opentiny/tiny-engine-common/js/linter'
 import { theme } from '@opentiny/tiny-engine-controller/adapter'
@@ -48,7 +46,7 @@ export default {
     MonacoEditor: VueMonaco,
     TinyButton: Button,
     CloseIcon,
-    SvgButton
+    LinkButton
   },
   emits: ['close'],
   setup(props, { emit }) {
@@ -174,13 +172,10 @@ export default {
     }
   }
 }
-.help-box {
-  width: 24px;
-}
-#help-icon {
-  margin-left: 4px;
-  :deep(.svg-icon.icon-plugin-icon-plugin-help) {
-    font-size: 16px;
+:deep(.help-box) {
+  height: auto;
+  #help-icon {
+    margin-left: 4px;
   }
 }
 </style>

@@ -1,9 +1,7 @@
 <template>
   <plugin-panel title="国际化资源" :isCloseLeft="false" class="plugin-panel-i18n">
     <template #header>
-      <a class="help-box" :href="docsUrl" target="_blank">
-        <svg-button id="help-icon" name="plugin-icon-plugin-help" tips="帮助"></svg-button>
-      </a>
+      <link-button :href="docsUrl"></link-button>
     </template>
     <template #content>
       <div class="btn-box">
@@ -128,7 +126,7 @@ import { computed, ref, watchEffect, reactive, onMounted, nextTick, resolveCompo
 import useClipboard from 'vue-clipboard3'
 import { Grid, GridColumn, Input, Popover, Button, FileUpload, Loading, Tooltip, Select } from '@opentiny/vue'
 import { iconLoadingShadow } from '@opentiny/vue-icon'
-import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
+import { PluginPanel, LinkButton } from '@opentiny/tiny-engine-common'
 import { useTranslate, useApp, useModal, getGlobalConfig } from '@opentiny/tiny-engine-controller'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { useHttp } from '@opentiny/tiny-engine-http'
@@ -143,7 +141,7 @@ export default {
     TinyGrid: Grid,
     TinyGridColumn: GridColumn,
     PluginPanel,
-    SvgButton,
+    LinkButton,
     TinySelect: Select,
     TinyFileUpload: FileUpload
   },
@@ -640,16 +638,6 @@ export default {
   }
   .tiny-button.tiny-button--text {
     color: var(--ti-lowcode-base-text-color);
-  }
-}
-.help-box {
-  width: 24px;
-  height: 42px;
-}
-
-#help-icon {
-  :deep(.svg-icon.icon-plugin-icon-plugin-help) {
-    font-size: 16px;
   }
 }
 </style>

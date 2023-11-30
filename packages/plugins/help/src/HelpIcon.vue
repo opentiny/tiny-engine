@@ -3,7 +3,7 @@
     <svg-icon name="plugin-icon-plugin-help" @click.stop="openHelpBox"></svg-icon>
     <div v-if="state.helpBox" class="help-plugin-box">
       <div class="help-plugin-box-top">
-        <svg-icon name="close" class="help-plugin-tooltip-close" @click.stop="closeHelpBox"></svg-icon>
+        <svg-icon name="close" class="help-plugin-close" @click.stop="closeHelpBox"></svg-icon>
       </div>
       <div class="help-plugin-box-title">
         {{ helpTitle }}
@@ -245,6 +245,15 @@ export default {
   margin-left: 20px;
   cursor: pointer;
 }
+.help-plugin-close {
+  cursor: pointer;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}
+a:hover {
+  text-decoration: underline;
+}
 </style>
 
 <!-- tiny-guide在body元素上，所以不使用scoped -->
@@ -317,14 +326,13 @@ div.tiny-guide.shepherd-element {
 .help-plugin-box {
   cursor: auto;
   position: absolute;
-  left: calc(var(--base-nav-panel-width) + 10px);
+  left: calc(var(--base-nav-panel-width));
   bottom: 20px;
   width: 260px;
-  height: 385px;
   background-color: #fff;
   border-radius: 6px;
   box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.2);
-  padding: 32px;
+  padding: 28px 32px;
   &-top {
     text-align: right;
   }
@@ -335,34 +343,34 @@ div.tiny-guide.shepherd-element {
     margin-bottom: 16px;
   }
   &-body {
-    margin-left: 4px;
-    margin-bottom: 20px;
     &-item {
+      display: block;
       cursor: pointer;
       width: 60px;
-      height: 32px;
-      line-height: 32px;
       font-size: 14px;
       color: #191919;
+      margin-bottom: 12px;
+    }
+    &-item:hover {
+      text-decoration: underline;
     }
   }
 
   &-ques {
     border-top: 1px solid #ebebeb;
-    padding-top: 18px;
+    padding-top: 12px;
     &-title {
       color: #191919;
       font-size: 20px;
       font-weight: 600;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
     &-item {
       display: inline-block;
-      height: 32px;
-      line-height: 32px;
       color: #1476ff;
       cursor: pointer;
       font-size: 14px;
+      margin-bottom: 12px;
     }
   }
 }

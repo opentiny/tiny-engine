@@ -4,9 +4,7 @@
       <div class="title">
         <span>状态管理</span>
         <div>
-          <a class="help-box" :href="docsUrl" target="_blank">
-            <svg-button id="help-icon" name="plugin-icon-plugin-help" tips="帮助"></svg-button>
-          </a>
+          <link-button :href="docsUrl"></link-button>
           <close-icon @close="closePanel"></close-icon>
         </div>
       </div>
@@ -78,7 +76,7 @@ import {
   useLayout
 } from '@opentiny/tiny-engine-controller'
 import { setState, getSchema, deleteState, setGlobalState, getGlobalState } from '@opentiny/tiny-engine-canvas'
-import { CloseIcon, SvgButton } from '@opentiny/tiny-engine-common'
+import { CloseIcon, LinkButton } from '@opentiny/tiny-engine-common'
 import DataSourceList from './DataSourceList.vue'
 import CreateVariable from './CreateVariable.vue'
 import CreateStore from './CreateStore.vue'
@@ -96,7 +94,7 @@ export default {
     TinyTabs: Tabs,
     TinyTabItem: TabItem,
     CreateStore,
-    SvgButton
+    LinkButton
   },
   setup(props, { emit }) {
     const variableRef = ref(null)
@@ -474,15 +472,6 @@ export default {
     & > div {
       height: 100%;
     }
-  }
-}
-.help-box {
-  width: 24px;
-  height: 42px;
-}
-#help-icon {
-  :deep(.svg-icon.icon-plugin-icon-plugin-help) {
-    font-size: 16px;
   }
 }
 </style>
