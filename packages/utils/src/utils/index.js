@@ -251,11 +251,12 @@ function cloneObject(target, map, _deepClone) {
   return res
 }
 
-export function naiveDeepClone(target) {
+export function nativeDeepClone(target) {
   try {
     return structuredClone(target)
   } catch (error) {
     // target is no serializable
+    return undefined
   }
 }
 
@@ -297,7 +298,7 @@ function _deepClone(target, map) {
     return target
   }
 
-  let res = naiveDeepClone(copyTarget)
+  let res = nativeDeepClone(copyTarget)
 
   if (res) {
     map.set(target, res)
