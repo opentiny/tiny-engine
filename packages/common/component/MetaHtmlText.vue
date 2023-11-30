@@ -1,18 +1,16 @@
 <template>
-  <div>
-    <div v-if="state.show" class="tiny-radio-buttons">
-      <div
-        v-for="(item, index) in data"
-        :key="item"
-        :class="['tiny-radio-button', state.active === index ? 'active' : '']"
-        @click="triggerType(item, index, $event)"
-      >
-        <span>{{ item }}</span>
-      </div>
+  <div v-if="state.show" class="tiny-radio-buttons">
+    <div
+      v-for="(item, index) in data"
+      :key="item"
+      :class="['tiny-radio-button', state.active === index ? 'active' : '']"
+      @click="triggerType(item, index, $event)"
+    >
+      <span>{{ item }}</span>
     </div>
-    <div class="head-content">
-      <meta-input v-model="state.text" type="textarea" @change="change"></meta-input>
-    </div>
+  </div>
+  <div class="head-content">
+    <meta-input v-model="state.text" type="textarea" @change="change"></meta-input>
   </div>
 </template>
 <script>
@@ -21,6 +19,7 @@ import { useProperties } from '@opentiny/tiny-engine-controller'
 import MetaInput from './MetaInput.vue'
 
 export default {
+  inheritAttrs: false,
   components: {
     MetaInput
   },
