@@ -19,6 +19,7 @@ import { useProperties } from '@opentiny/tiny-engine-controller'
 import MetaInput from './MetaInput.vue'
 
 export default {
+  inheritAttrs: false,
   components: {
     MetaInput
   },

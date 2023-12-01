@@ -1,14 +1,14 @@
 /**
-* Copyright (c) 2023 - present TinyEngine Authors.
-* Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
-*
-* Use of this source code is governed by an MIT-style license.
-*
-* THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
-* BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
-* A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
-*
-*/
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
+ *
+ * Use of this source code is governed by an MIT-style license.
+ *
+ * THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
+ * BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
+ * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
+ *
+ */
 
 import { reactive, readonly, onMounted } from 'vue'
 import { extend } from '@opentiny/vue-renderless/common/object'
@@ -534,16 +534,14 @@ export const getDeployProgress = (taskId, block) => {
         getDeployProgress(taskId, block)
       }, INTERVAL_PROGRESS)
     } else if (block.deployStatus === DEPLOY_STATUS.Stopped) {
-      const title = '异常提示'
-      const status = 'error'
-      const messagePub = {
-        render: () => <span style="max-height:540px;overflow:auto;">{`区块发布失败: ${block.taskResult}`}</span>
-      }
-      const exec = () => {
-        getDeployProgress(taskId, block)
-      }
-
-      confirm({ title, status, messagePub, exec })
+      message({
+        title: '异常提示',
+        status: 'error',
+        message: {
+          render: () => <span style="max-height:276px;overflow:auto;">{`区块发布失败: ${block.taskResult}`}</span>
+        },
+        width: '550'
+      })
       setDeployFailed(block)
     } else {
       setDeployFinished(block)

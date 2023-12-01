@@ -47,7 +47,7 @@ import { closePageSettingPanel } from './PageSetting.vue'
 import { closeFolderSettingPanel } from './PageFolderSetting.vue'
 import http from './http.js'
 
-const { ELEMENT_TAG, PAGE_STATUS } = constants
+const { ELEMENT_TAG, PAGE_STATUS, COMPONENT_NAME } = constants
 
 export default {
   components: {
@@ -67,7 +67,8 @@ export default {
     const { appInfoState } = useApp()
     const { confirm } = useModal()
     const { initData, pageState, isBlock, isSaved } = useCanvas()
-    const { pageSettingState, changeTreeData, isCurrentDataSame } = usePage()
+    const { pageSettingState, changeTreeData, isCurrentDataSame, STATIC_PAGE_GROUP_ID, COMMON_PAGE_GROUP_ID } =
+      usePage()
     const { fetchPageList, fetchPageDetail } = http
     const { setBreadcrumbPage } = useBreadcrumb()
     const pageTreeRefs = ref([])
@@ -75,23 +76,23 @@ export default {
 
     const state = reactive({
       pageSearchValue: '',
-      collapseValue: [0, 1],
+      collapseValue: [STATIC_PAGE_GROUP_ID, COMMON_PAGE_GROUP_ID],
       currentNodeData: {}
     })
 
     const formatTreeData = (data, parentId, id) => {
-      const orginObj = { 0: { id: ROOT_ID, name: '站点根目录', children: [] } }
+      const originObj = { [ROOT_ID]: { id: ROOT_ID, name: '站点根目录', children: [] } }
       const treeArr = []
 
       data.forEach((item) => {
-        orginObj[item[id]] = item
+        originObj[item[id]] = item
         if (item.parentId === ROOT_ID) {
-          orginObj[ROOT_ID].children.push(item)
+          originObj[ROOT_ID].children.push(item)
         }
       })
 
       data.forEach((item) => {
-        let parentObj = orginObj[item[parentId]]
+        let parentObj = originObj[item[parentId]]
         if (parentObj && parentObj.id !== ROOT_ID) {
           parentObj.children = parentObj.children || []
           parentObj.children.push(item)
@@ -100,7 +101,7 @@ export default {
         }
       })
 
-      pageSettingState.treeDataMapping = orginObj
+      pageSettingState.treeDataMapping = originObj
 
       return pageSettingState.treeDataMapping
     }
@@ -108,8 +109,8 @@ export default {
     const refreshPageList = async (appId, data) => {
       const pagesData = data ? data : await fetchPageList(appId)
 
-      const firstGroupData = { groupName: '静态页面', groupId: 0, data: [] }
-      const secondGroupData = { groupName: '公共页面', groupId: 1, data: [] }
+      const firstGroupData = { groupName: '静态页面', groupId: STATIC_PAGE_GROUP_ID, data: [] }
+      const secondGroupData = { groupName: '公共页面', groupId: COMMON_PAGE_GROUP_ID, data: [] }
 
       pagesData.forEach((item) => {
         const node = item.meta
@@ -160,6 +161,18 @@ export default {
     }
 
     const getPageDetail = (pageId) => {
+      // pageId !== 0 防止 pageId 为 0 的时候判断不出来
+      if (pageId !== 0 && !pageId) {
+        updateUrlPageId('')
+        initData({ componentName: COMPONENT_NAME.Page }, {})
+        useLayout().layoutState.pageStatus = {
+          state: 'empty',
+          data: {}
+        }
+
+        return
+      }
+
       fetchPageDetail(pageId).then((data) => {
         updateUrlPageId(pageId)
         closePageSettingPanel()
@@ -173,7 +186,12 @@ export default {
     const switchPage = (data) => {
       pageState.hoverVm = null
       state.currentNodeData = data
-      setBreadcrumbPage([data?.name || 'untitle'])
+
+      let pageName = ''
+      if (data.isPage) {
+        pageName = data?.name || ''
+      }
+      setBreadcrumbPage([pageName])
 
       // 切换页面时清空 选中节点信息状态
       clearCurrentState()
@@ -368,12 +386,19 @@ export default {
     color: var(--ti-lowcode-page-manage-tree-color);
 
     .tiny-tree-node {
-      &.is-current {
-        .tiny-tree-node__content {
-          background-color: var(--ti-lowcode-page-manage-page-tree-background-color);
-          &:hover {
-            background-color: var(--ti-lowcode-page-manage-page-tree-background-hover-color);
-          }
+      &:hover {
+        background-color: var(--ti-lowcode-page-manage-page-tree-background-hover-color);
+      }
+      &.is-current,
+      &.is-current .tiny-tree-node__content,
+      &.is-current .tiny-tree-node__content-box {
+        color: var(--ti-lowcode-page-manage-tree-color);
+        background-color: var(--ti-lowcode-page-manage-page-tree-background-active-color);
+        &:hover {
+          background-color: var(--ti-lowcode-page-manage-page-tree-background-hover-color);
+        }
+        & > .tiny-tree-node__content-left {
+          font-weight: 700;
         }
       }
     }
@@ -403,7 +428,6 @@ export default {
         visibility: hidden;
       }
       &:hover {
-        background-color: var(--ti-lowcode-page-manage-page-tree-background-color) !important;
         border-radius: 0;
         .icons {
           .setting {

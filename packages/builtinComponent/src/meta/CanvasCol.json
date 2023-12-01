@@ -1,0 +1,196 @@
+{
+  "components": {
+    "icon": "Box",
+    "name": {
+      "zh_CN": "CanvasCol"
+    },
+    "component": "CanvasCol",
+    "schema": {
+      "slots": {},
+      "properties": [
+        {
+          "label": {
+            "zh_CN": "基础信息"
+          },
+          "description": {
+            "zh_CN": "基础信息"
+          },
+          "collapse": {
+            "number": 6,
+            "text": {
+              "zh_CN": "显示更多"
+            }
+          },
+          "content": [
+            {
+              "property": "widthType",
+              "type": "String",
+              "defaultValue": "auto",
+              "label": {
+                "text": {
+                  "zh_CN": "宽度类型"
+                }
+              },
+              "cols": 12,
+              "rules": [],
+              "widget": {
+                "component": "MetaRadioGroup",
+                "props": {
+                  "options": [
+                    { "label": "auto", "text": "自适应" },
+                    { "label": "fixed", "text": "固定" }
+                  ],
+                  "type": "button"
+                }
+              }
+            },
+            {
+              "property": "flexBasis",
+              "type": "String",
+              "defaultValue": "",
+              "label": {
+                "text": {
+                  "zh_CN": "固定宽度"
+                }
+              },
+              "cols": 12,
+              "rules": [],
+              "widget": {
+                "component": "MetaInput",
+                "props": {}
+              }
+            },
+            {
+              "property": "rowGap",
+              "type": "String",
+              "defaultValue": "",
+              "label": {
+                "text": {
+                  "zh_CN": "行间距"
+                }
+              },
+              "cols": 12,
+              "rules": [],
+              "widget": {
+                "component": "MetaInput",
+                "props": {}
+              }
+            },
+            {
+              "property": "colGap",
+              "type": "String",
+              "defaultValue": "",
+              "label": {
+                "text": {
+                  "zh_CN": "列间距"
+                }
+              },
+              "cols": 12,
+              "rules": [],
+              "widget": {
+                "component": "MetaInput",
+                "props": {}
+              }
+            },
+            {
+              "property": "align",
+              "type": "String",
+              "defaultValue": "",
+              "label": {
+                "text": {
+                  "zh_CN": "副轴对齐"
+                }
+              },
+              "cols": 12,
+              "rules": [],
+              "widget": {
+                "component": "MetaSelect",
+                "props": {
+                  "options": [
+                    { "value": "flex-start", "label": "头部对齐" },
+                    { "value": "center", "label": "中间对齐" },
+                    { "value": "flex-end", "label": "尾端对齐" },
+                    { "value": "stretch", "label": "拉伸对齐" }
+                  ],
+                  "type": "button"
+                }
+              }
+            },
+            {
+              "property": "justAlign",
+              "type": "String",
+              "defaultValue": "",
+              "label": {
+                "text": {
+                  "zh_CN": "主轴对齐"
+                }
+              },
+              "cols": 12,
+              "rules": [],
+              "widget": {
+                "component": "MetaSelect",
+                "props": {
+                  "options": [
+                    { "value": "flex-start", "label": "头部对齐" },
+                    { "value": "center", "label": "中间对齐" },
+                    { "value": "flex-end", "label": "尾端对齐" },
+                    { "value": "space-between", "label": "两端对齐" },
+                    { "value": "space-evenly", "label": "均分对齐" }
+                  ],
+                  "type": "button"
+                }
+              }
+            },
+            {
+              "property": "grow",
+              "type": "String",
+              "defaultValue": "",
+              "label": {
+                "text": {
+                  "zh_CN": "增长"
+                }
+              },
+              "cols": 12,
+              "rules": [],
+              "widget": {
+                "component": "MetaSwitch",
+                "props": {}
+              }
+            },
+            {
+              "property": "shrink",
+              "type": "String",
+              "defaultValue": "",
+              "label": {
+                "text": {
+                  "zh_CN": "收缩"
+                }
+              },
+              "cols": 12,
+              "rules": [],
+              "widget": {
+                "component": "MetaSwitch",
+                "props": {}
+              }
+            }
+          ]
+        }
+      ],
+      "events": {},
+      "shortcuts": {
+        "properties": []
+      },
+      "contentMenu": {
+        "actions": []
+      }
+    },
+    "configure": {
+      "loop": true,
+      "isContainer": true,
+      "nestingRule": {
+        "childWhitelist": [],
+        "descendantBlacklist": []
+      }
+    }
+  }
+}

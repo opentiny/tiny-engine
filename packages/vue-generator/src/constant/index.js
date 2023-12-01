@@ -1,14 +1,14 @@
 /**
-* Copyright (c) 2023 - present TinyEngine Authors.
-* Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
-*
-* Use of this source code is governed by an MIT-style license.
-*
-* THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
-* BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
-* A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
-*
-*/
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
+ *
+ * Use of this source code is governed by an MIT-style license.
+ *
+ * THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
+ * BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
+ * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
+ *
+ */
 
 /**
  * 组件映射关系，默认使用 Tiny Vue 组件，支持传入其它组件库的映射关系
@@ -2173,6 +2173,31 @@ const DEFAULT_COMPONENTS_MAP = [
   }
 ]
 
+// 内置组件映射关系
+const BUILTIN_COMPONENTS_MAP = [
+  {
+    componentName: 'CanvasRow',
+    exportName: 'CanvasRow',
+    package: '@opentiny/tiny-engine-builtin-component',
+    version: '^0.1.0',
+    destructuring: true
+  },
+  {
+    componentName: 'CanvasCol',
+    exportName: 'CanvasCol',
+    package: '@opentiny/tiny-engine-builtin-component',
+    version: '^0.1.0',
+    destructuring: true
+  },
+  {
+    componentName: 'CanvasRowColContainer',
+    exportName: 'CanvasRowColContainer',
+    package: '@opentiny/tiny-engine-builtin-component',
+    version: '^0.1.0',
+    destructuring: true
+  }
+]
+
 /**
  * 内部保留组件名称，出码时可能需要特殊处理
  */
@@ -2210,4 +2235,4 @@ export const [JS_EXPRESSION, JS_FUNCTION, JS_I18N, JS_RESOURCE, JS_SLOT] = [
   'JSSlot'
 ]
 
-export { DEFAULT_COMPONENTS_MAP, BUILTIN_COMPONENT_NAME, TINY_ICON, UNWRAP_QUOTES }
+export { DEFAULT_COMPONENTS_MAP, BUILTIN_COMPONENT_NAME, TINY_ICON, UNWRAP_QUOTES, BUILTIN_COMPONENTS_MAP }

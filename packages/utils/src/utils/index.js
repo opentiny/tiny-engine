@@ -1,15 +1,16 @@
 /**
-* Copyright (c) 2023 - present TinyEngine Authors.
-* Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
-*
-* Use of this source code is governed by an MIT-style license.
-*
-* THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
-* BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
-* A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
-*
-*/
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
+ *
+ * Use of this source code is governed by an MIT-style license.
+ *
+ * THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
+ * BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
+ * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
+ *
+ */
 
+import { isRef, isProxy, unref, toRaw } from 'vue'
 import { isObject, isArray } from '@opentiny/vue-renderless/grid/static'
 
 export const fun_ctor = Function
@@ -176,4 +177,151 @@ export function generateRandomLetters(length = 1) {
     result += chars.charAt(Math.floor(random * chars.length))
   }
   return result
+}
+
+export function getRawValue(target) {
+  let res = target
+
+  if (isRef(res)) {
+    res = unref(res)
+  }
+
+  if (isProxy(res)) {
+    return toRaw(res)
+  }
+
+  return res
+}
+
+export function getType(val) {
+  let type = typeof val
+
+  if (type !== 'object') {
+    return type
+  }
+
+  return Object.prototype.toString.call(val).replace(/\[object (.*)\]/, '$1')
+}
+
+function cloneArray(target, map, _deepClone) {
+  let res = []
+
+  map.set(target, res)
+
+  target.forEach((item, index) => {
+    res[index] = _deepClone(item, map)
+  })
+
+  return res
+}
+
+function cloneMap(target, map, _deepClone) {
+  let res = new Map()
+
+  map.set(target, res)
+
+  target.forEach((value, key) => {
+    res.set(key, _deepClone(value, map))
+  })
+
+  return res
+}
+
+function cloneSet(target, map, _deepClone) {
+  let res = new Set()
+
+  map.set(target, res)
+
+  target.forEach((value) => {
+    res.add(_deepClone(value, map))
+  })
+
+  return res
+}
+
+function cloneObject(target, map, _deepClone) {
+  const res = {}
+
+  map.set(target, res)
+
+  Object.entries(target).forEach(([key, value]) => {
+    res[key] = _deepClone(value, map)
+  })
+
+  return res
+}
+
+export function nativeDeepClone(target) {
+  try {
+    return structuredClone(target)
+  } catch (error) {
+    // target is no serializable
+    return undefined
+  }
+}
+
+/**
+ * 使用 JSON.stringify 进行 deep clone
+ * 不支持 Map、Set、Date、RegExp、ArrayBuffer 等变量类型
+ * 不支持循环引用
+ * @param {*} target target to be copy
+ * @param {*} callback target copyed
+ */
+export function jsonDeepClone(target, callback) {
+  try {
+    JSON.parse(JSON.stringify(target))
+  } catch (error) {
+    if (typeof callback === 'function') {
+      callback()
+    }
+  }
+}
+
+const copyMethodMap = {
+  Array: cloneArray,
+  Map: cloneMap,
+  Set: cloneSet,
+  Object: cloneObject
+}
+
+function _deepClone(target, map) {
+  if (map.has(target)) {
+    return map.get(target)
+  }
+
+  const copyTarget = getRawValue(target)
+  const basicType = ['undefined', 'number', 'string', 'boolean', 'function', 'bigint', 'symbol', 'Null']
+
+  let type = getType(copyTarget)
+
+  if (basicType.includes(type)) {
+    return target
+  }
+
+  let res = nativeDeepClone(copyTarget)
+
+  if (res) {
+    map.set(target, res)
+
+    return res
+  }
+
+  if (copyMethodMap[type]) {
+    res = copyMethodMap[type](target, map, _deepClone)
+
+    return res
+  }
+
+  return copyTarget
+}
+
+/**
+ * 优先使用 structuredClone 的深拷贝方法
+ * 不支持 拷贝 prototype、function、DOM nodes、proxy(getter、setter)
+ * 如果是 vue 的 ref 或者 reactive，会尝试拿到 raw value 然后进行深拷贝
+ * @param {*} target value to be deep clone
+ * @returns * deepCloned target
+ */
+export function deepClone(target) {
+  return _deepClone(target, new WeakMap())
 }

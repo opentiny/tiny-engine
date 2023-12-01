@@ -1,16 +1,19 @@
 /**
-* Copyright (c) 2023 - present TinyEngine Authors.
-* Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
-*
-* Use of this source code is governed by an MIT-style license.
-*
-* THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
-* BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
-* A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
-*
-*/
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
+ *
+ * Use of this source code is governed by an MIT-style license.
+ *
+ * THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
+ * BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
+ * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
+ *
+ */
 
 import { reactive, nextTick } from 'vue'
+import { constants } from '@opentiny/tiny-engine-utils'
+
+const { PAGE_STATUS } = constants
 
 const PLUGIN_NAME = {
   Materials: 'Materials',
@@ -111,6 +114,8 @@ const getDimension = () => layoutState.dimension
 
 const getPluginState = () => layoutState.plugins
 
+const isEmptyPage = () => layoutState.pageStatus?.state === PAGE_STATUS.Empty
+
 export default () => {
   return {
     PLUGIN_NAME,
@@ -124,6 +129,7 @@ export default () => {
     registerPluginApi,
     getPluginApi,
     getPluginState,
-    pluginState
+    pluginState,
+    isEmptyPage
   }
 }
