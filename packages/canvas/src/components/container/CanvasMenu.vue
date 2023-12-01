@@ -162,7 +162,12 @@ export default {
                 props: {
                   slot: 'reference'
                 },
-                children: [schema]
+                children: [
+                  {
+                    componentName: 'div',
+                    children: [schema]
+                  }
+                ]
               },
               {
                 componentName: 'Template',
