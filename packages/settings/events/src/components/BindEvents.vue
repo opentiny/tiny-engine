@@ -262,7 +262,7 @@ export default {
     const addMethod = () => {
       ruleForm.value.validate((valid) => {
         if (!valid) {
-          return
+          return false
         }
         if (state.componentEvents[state.formData.methodName]) {
           useNotify({
@@ -290,8 +290,6 @@ export default {
           })
           state.showEventAdditive = !state.showEventAdditive
         }
-
-        return undefined
       })
     }
 
