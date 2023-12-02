@@ -11,17 +11,19 @@
  */
 
 ;(function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined'
-    ? (module.exports = factory(
-        require('@opentiny/tiny-engine-webcomponent-core'),
-        require('vue'),
-        require('vue-i18n'),
-        require('@opentiny/vue-icon')
-      ))
-    : typeof define === 'function' && define.amd
-    ? define(['@opentiny/tiny-engine-webcomponent-core', 'vue', 'vue-i18n', '@opentiny/vue-icon'], factory)
-    : ((global = typeof globalThis !== 'undefined' ? globalThis : global || self),
-      (global.TinyVueBlock = factory(global.TinyWebcomponentCore, global.Vue, global.VueI18n, global.TinyVueIcon)))
+  if (typeof exports === 'object' && typeof module !== 'undefined') {
+    module.exports = factory(
+      require('@opentiny/tiny-engine-webcomponent-core'),
+      require('vue'),
+      require('vue-i18n'),
+      require('@opentiny/vue-icon')
+    )
+  } else if (typeof define === 'function' && define.amd) {
+    define(['@opentiny/tiny-engine-webcomponent-core', 'vue', 'vue-i18n', '@opentiny/vue-icon'], factory)
+  } else {
+    ;(global = typeof globalThis !== 'undefined' ? globalThis : global || self),
+      (global.TinyVueBlock = factory(global.TinyWebcomponentCore, global.Vue, global.VueI18n, global.TinyVueIcon))
+  }
 })(this, (tinyWebcomponentCore, vue, vueI18n, tinyVue3Icon) => {
   function _interopNamespace(e) {
     if (e && e.__esModule) return e
