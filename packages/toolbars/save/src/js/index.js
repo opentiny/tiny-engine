@@ -74,7 +74,7 @@ export const saveCommon = (value) => {
 
     pageSettingState.currentPageData[pageContent] = pageSchema
 
-    return
+    return Promise.resolve()
   }
 
   return isBlock() ? saveBlock(pageSchema) : savePage(pageSchema)

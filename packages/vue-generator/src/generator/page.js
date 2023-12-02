@@ -166,6 +166,8 @@ function handleBinding(props, attrsArr, description, state) {
     if (propType === 'i18n') {
       return attrsArr.push(`:${key}="t('${item.key}')"`)
     }
+
+    return attrsArr
   })
 }
 

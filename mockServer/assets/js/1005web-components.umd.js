@@ -27,7 +27,7 @@
     if (e && e.__esModule) return e
     const n = Object.create(null, { [Symbol.toStringTag]: { value: 'Module' } })
     if (e) {
-      Object.keys(e).forEach(function (k) {
+      Object.keys(e).forEach((k) => {
         if (k !== 'default') {
           const d = Object.getOwnPropertyDescriptor(e, k)
           Object.defineProperty(
