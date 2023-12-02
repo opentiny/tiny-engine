@@ -17,7 +17,7 @@
     ? define(['@opentiny/vue'], factory)
     : ((global = typeof globalThis !== 'undefined' ? globalThis : global || self),
       (global.TinyLowcodeComponent = factory(global.TinyVue)))
-})(this, function (tinyVue3) {
+})(this, (tinyVue3) => {
   'use strict'
   const Mapper = {
     TinyCarouselItem: tinyVue3.CarouselItem,
@@ -52,7 +52,7 @@
     TinyDropdown: tinyVue3.Dropdown,
     TinyChartHistogram: tinyVue3.ChartHistogram
   }
-  Mapper['TinyTabs'].isGroup = true
-  Mapper['TinyGrid'].isGroup = true
+  Mapper.TinyTabs.isGroup = true
+  Mapper.TinyGrid.isGroup = true
   return Mapper
 })

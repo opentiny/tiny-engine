@@ -1,14 +1,14 @@
 /**
-* Copyright (c) 2023 - present TinyEngine Authors.
-* Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
-*
-* Use of this source code is governed by an MIT-style license.
-*
-* THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
-* BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
-* A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
-*
-*/
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
+ *
+ * Use of this source code is governed by an MIT-style license.
+ *
+ * THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
+ * BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
+ * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
+ *
+ */
 
 import { capitalize, hyphenate } from '@vue/shared'
 import { tinyIcon as unifyIconName } from '../pre-processor'
@@ -26,17 +26,19 @@ const getFunctionInfo = (fnStr) => {
       params: result[3]
         .split(',')
         .map((item) => item.trim())
-        .filter((item) => !!item),
+        .filter((item) => Boolean(item)),
       body: result[4]
     }
   }
   return null
 }
 
+const safeRandom = () => crypto.getRandomValues(new Uint32Array(1))[0] / (Math.pow(2, 32) - 1)
+
 const randomString = (length = 4, chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') => {
   let result = ''
   for (let i = length; i > 0; --i) {
-    result += chars[Math.floor(Math.random() * chars.length)]
+    result += chars[Math.floor(safeRandom() * chars.length)]
   }
   return result
 }
@@ -142,6 +144,7 @@ const handleIconInProps = (description, iconProp) => {
 export {
   getTypeOfSchema,
   getFunctionInfo,
+  safeRandom,
   randomString,
   avoidDuplicateString,
   lowerFirst,

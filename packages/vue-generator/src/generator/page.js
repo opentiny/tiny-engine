@@ -54,8 +54,6 @@ function recurseChildren(children, state, description, result) {
   return result
 }
 
-// const isEmptyRoot = (isRootNode, props) => isRootNode && Object.keys(props).length === 0
-
 const isEmptySlot = (componentName, children) =>
   componentName === BUILTIN_COMPONENT_NAME.TEMPLATE && !(children?.length || children?.type)
 
@@ -361,7 +359,6 @@ const generateVueCode = ({ schema, name, type, componentsMap }) => {
   // 转换 state 中的特殊类型
   traverseState(state, description)
 
-  // const { utils, bridge } = wrap(function() { return this })()
   const usedResource = Object.keys(description.jsResource).filter((key) => description.jsResource[key])
   const resourceStatement = usedResource.length
     ? `const { ${usedResource.join(',')} } = wrap(function() { return this })()`

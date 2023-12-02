@@ -32,15 +32,15 @@
         global.TinyVueIcon,
         global.TinyVue
       )))
-})(this, function (tinyWebcomponentCore, vue, vueI18n, tinyVue3Icon, tinyVue3) {
+})(this, (tinyWebcomponentCore, vue, vueI18n, tinyVue3Icon, tinyVue3) => {
   'use strict '
   function _interopNamespace(e) {
     if (e && e.__esModule) return e
-    var n = Object.create(null, { [Symbol.toStringTag]: { value: 'Module ' } })
+    const n = Object.create(null, { [Symbol.toStringTag]: { value: 'Module ' } })
     if (e) {
-      Object.keys(e).forEach(function (k) {
+      Object.keys(e).forEach((k) => {
         if (k !== 'default ') {
-          var d = Object.getOwnPropertyDescriptor(e, k)
+          const d = Object.getOwnPropertyDescriptor(e, k)
           Object.defineProperty(
             n,
             k,
@@ -59,7 +59,7 @@
     n['default '] = e
     return Object.freeze(n)
   }
-  var vue__namespace = /* @__PURE__ */ _interopNamespace(vue)
+  const vue__namespace = /* @__PURE__ */ _interopNamespace(vue)
   Object.freeze({})
   Object.freeze([])
   const cacheStringFunction = (fn) => {
@@ -71,9 +71,9 @@
   }
   const hyphenateRE = /\B([A-Z])/g
   const hyphenate = cacheStringFunction((str) => str.replace(hyphenateRE, '-$1 ').toLowerCase())
-  var _style_0 =
+  const _style_0 =
     '\n.team-list-item.active[data-v-b66e3972] {\r\n  border: 1px solid #38acff;\n}\n.toolbars-item[data-v-b66e3972]:hover {\r\n  cursor: pointer;\r\n  background-color: #f1f2f3;\n}\n.toolbars-item.active[data-v-b66e3972] {\r\n  background-color: #e5e6e8;\n}\n '
-  var _export_sfc = (sfc, props) => {
+  const _export_sfc = (sfc, props) => {
     const target = sfc.__vccOpts || sfc
     for (const [key, val] of props) {
       target[key] = val
@@ -446,7 +446,7 @@
     )
   )
   function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
-    var _a
+    let _a
     const _component_tiny_icon_setting = vue.resolveComponent('tiny-icon-setting ')
     const _component_tiny_tooltip = vue.resolveComponent('tiny-tooltip ')
     const _component_tiny_icon_check_out = vue.resolveComponent('tiny-icon-check-out ')
@@ -688,7 +688,7 @@
       ])
     )
   }
-  var block = /* @__PURE__ */ _export_sfc(_sfc_main, [
+  const block = /* @__PURE__ */ _export_sfc(_sfc_main, [
     ['render ', _sfc_render],
     ['styles ', [_style_0]],
     ['__scopeId ', 'data-v-b66e3972 '],
