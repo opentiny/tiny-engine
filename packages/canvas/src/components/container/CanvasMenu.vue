@@ -137,7 +137,7 @@ export default {
           return
         }
 
-        const index = parent.children.indexOf(schema)
+        const index = parent.children.findIndex(({ id }) => schema.id === id)
         let wrapSchema = {
           componentName,
           id: null,
@@ -162,12 +162,7 @@ export default {
                 props: {
                   slot: 'reference'
                 },
-                children: [
-                  {
-                    componentName: 'div',
-                    children: [schema]
-                  }
-                ]
+                children: [schema]
               },
               {
                 componentName: 'Template',
