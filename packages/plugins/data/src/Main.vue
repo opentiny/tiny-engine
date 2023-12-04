@@ -73,7 +73,8 @@ import {
   useResource,
   useNotify,
   useData,
-  useLayout
+  useLayout,
+  useHelp
 } from '@opentiny/tiny-engine-controller'
 import { setState, getSchema, deleteState, setGlobalState, getGlobalState } from '@opentiny/tiny-engine-canvas'
 import { CloseIcon, LinkButton } from '@opentiny/tiny-engine-common'
@@ -110,7 +111,7 @@ export default {
     const { setSaved } = useCanvas()
     const { PLUGIN_NAME, getPluginApi } = useLayout()
     const { openCommon } = getPluginApi(PLUGIN_NAME.save)
-    const docsUrl = 'https://opentiny.design/tiny-engine#/help-center/course/engine/7'
+    const docsUrl = useHelp().helpState.docsUrl.data
     const state = reactive({
       dataSource: {},
       createData: {

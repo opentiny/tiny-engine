@@ -29,6 +29,7 @@
 import { onBeforeUnmount } from 'vue'
 import { Button } from '@opentiny/vue'
 import { VueMonaco, CloseIcon, LinkButton } from '@opentiny/tiny-engine-common'
+import { useHelp } from '@opentiny/tiny-engine-controller'
 import { initCompletion } from '@opentiny/tiny-engine-common/js/completion'
 import { initLinter } from '@opentiny/tiny-engine-common/js/linter'
 import { theme } from '@opentiny/tiny-engine-controller/adapter'
@@ -50,7 +51,7 @@ export default {
   },
   emits: ['close'],
   setup(props, { emit }) {
-    const docsUrl = 'https://opentiny.design/tiny-engine#/help-center/course/engine/8'
+    const docsUrl = useHelp().helpState.docsUrl.script
     const { state, monaco, change, close, saveMethods } = useMethod({ emit })
 
     const options = {

@@ -57,7 +57,7 @@ import DataSourceForm, { open as openDataSourceForm, close as closeDataSourceFor
 import { close as closeRecordList } from './DataSourceRecordList.vue'
 import { close as closeRecordForm } from './DataSourceRecordForm.vue'
 import DataSourceRemoteMapping, { isOpen as isOpenSourceRemoteMapping } from './DataSourceRemoteMapping.vue'
-import { useDataSource } from '@opentiny/tiny-engine-controller'
+import { useDataSource, useHelp } from '@opentiny/tiny-engine-controller'
 import { requestUpdateDataSource } from './js/http'
 import DataSourceGlobalDataHandler, {
   open as openGlobalDataHander,
@@ -76,7 +76,7 @@ export default {
     LinkButton
   },
   setup() {
-    const docsUrl = 'https://opentiny.design/tiny-engine#/help-center/course/engine/11'
+    const docsUrl = useHelp().helpState.docsUrl.datasource
     const state = reactive({
       editable: true,
       currentDataSource: { name: 'untitled', data: { type: 'array', columns: [] } },

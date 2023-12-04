@@ -22,6 +22,7 @@
 import { ref, computed } from 'vue'
 import { Tabs, TabItem } from '@opentiny/vue'
 import { PluginPanel, SvgButton, LinkButton } from '@opentiny/tiny-engine-common'
+import { useHelp } from '@opentiny/tiny-engine-controller'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import { RESOURCE_TYPE } from './js/resource'
 import BridgeManage from './BridgeManage.vue'
@@ -43,7 +44,7 @@ export default {
     const bridge = ref(null)
     const utilsRef = ref(null)
     const tips = computed(() => RESOURCE_TIP[activedName.value])
-    const docsUrl = 'https://opentiny.design/tiny-engine#/help-center/course/engine/13'
+    const docsUrl = useHelp().helpState.docsUrl.bridge
 
     const switchTab = (tab) => {
       closePanel()

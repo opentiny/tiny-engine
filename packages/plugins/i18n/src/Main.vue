@@ -127,7 +127,7 @@ import useClipboard from 'vue-clipboard3'
 import { Grid, GridColumn, Input, Popover, Button, FileUpload, Loading, Tooltip, Select } from '@opentiny/vue'
 import { iconLoadingShadow } from '@opentiny/vue-icon'
 import { PluginPanel, LinkButton } from '@opentiny/tiny-engine-common'
-import { useTranslate, useApp, useModal, getGlobalConfig } from '@opentiny/tiny-engine-controller'
+import { useTranslate, useApp, useModal, getGlobalConfig, useHelp } from '@opentiny/tiny-engine-controller'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { BASE_URL } from '@opentiny/tiny-engine-common/js/environments'
@@ -178,7 +178,7 @@ export default {
         label: '按英文排序'
       }
     ]
-    const docsUrl = 'https://opentiny.design/tiny-engine#/help-center/course/engine/12'
+    const docsUrl = useHelp().helpState.docsUrl.i18n
     const currentSearchType = ref('')
     const copyTipContent = ref('')
     const searchKey = ref('')

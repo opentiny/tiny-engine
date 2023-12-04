@@ -5,7 +5,7 @@
 </template>
 
 <script lang="jsx">
-import { SvgButton } from '@opentiny/tiny-engine-common'
+import SvgButton from './SvgButton.vue'
 export default {
   components: {
     SvgButton
