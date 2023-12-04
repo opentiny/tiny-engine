@@ -9,9 +9,8 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-import { reactive } from 'vue'
 
-const helpState = reactive({
+const helpState = {
   docsUrl: {
     block: 'https://opentiny.design/tiny-engine#/help-center/course/engine/3',
     bridge: 'https://opentiny.design/tiny-engine#/help-center/course/engine/13',
@@ -21,7 +20,7 @@ const helpState = reactive({
     page: 'https://opentiny.design/tiny-engine#/help-center/course/engine/2',
     script: 'https://opentiny.design/tiny-engine#/help-center/course/engine/8'
   }
-})
+}
 
 export default () => {
   return { helpState }
