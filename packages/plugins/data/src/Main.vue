@@ -461,7 +461,7 @@ export default {
   }
 
   :deep(.tiny-tabs__content) {
-    height: calc(100% - 48px);
+    height: 0;
     padding: 0;
     & > div {
       height: 100%;
