@@ -288,12 +288,10 @@ export default {
           maxWidth: item.maxWidth
         })
         state.width = parseInt(item.width, 10)
-        state.scaleValue = scale.value.toFixed(2)
-        state.readonly = item.view !== 'mdx'
       } else {
-        state.activeIndex = item.idx
         emit('setViewPort', item.width)
       }
+      state.activeIndex = item.idx
     }
 
     const activeView = (val, type) => {
@@ -314,29 +312,28 @@ export default {
         state.width = prevWidthVal ? prevWidthVal : parseInt(dimension.width)
       } else if (String(val) === '0' || Number(val) < 240) {
         state.width = 240
-        prevWidthVal = 240
       } else if (Number(val) > 1920) {
         state.width = 1920
-        prevWidthVal = 1920
       } else {
-        prevWidthVal = val
+        state.width = val
       }
+      prevWidthVal = state.width
 
       switch (true) {
         case 1200 < Number(state.width) && Number(state.width) <= 1920:
-          activeView(val, 'mdx')
+          activeView(state.width, 'mdx')
           break
         case 992 < Number(state.width) && Number(state.width) <= 1200:
-          activeView(val, 'desktop')
+          activeView(state.width, 'desktop')
           break
         case 768 < Number(state.width) && Number(state.width) <= 992:
-          activeView(val, 'tablet')
+          activeView(state.width, 'tablet')
           break
         case 480 < Number(state.width) && Number(state.width) <= 768:
-          activeView(val, 'lanMobile')
+          activeView(state.width, 'lanMobile')
           break
         case 240 <= Number(state.width) && Number(state.width) <= 480:
-          activeView(val, 'mobile')
+          activeView(state.width, 'mobile')
           break
         default:
           break
@@ -354,14 +351,11 @@ export default {
       } else if (Number(val) < 20) {
         state.scaleValue = 20
       } else {
-        prevScaleVal = val
+        state.scaleValue = val
       }
+      prevScaleVal = val
 
       useLayout().setDimension({
-        deviceType: item.view,
-        width: item.width,
-        minWidth: item.minWidth,
-        maxWidth: item.maxWidth,
         scale: Number(state.scaleValue) / 100
       })
     }
@@ -370,15 +364,10 @@ export default {
       setCanvasType(value ? 'absolute' : 'normal')
     }
 
-    watchEffect(
-      () => {
-        const mode = dimension.value.deviceType || 'desktop'
-
-        state.activeIndex = mediaMap[mode].index || 0
-        setViewPort(mediaMap[mode])
-      },
-      { flush: 'post' }
-    )
+    watchEffect(() => {
+      state.readonly = dimension.value.deviceType !== 'mdx'
+      state.scaleValue = scale.value.toFixed(2)
+    })
 
     watch(
       () => useLayout().getDimension().width,
@@ -397,6 +386,10 @@ export default {
     onUnmounted(() => {
       document.removeEventListener('click', closePopover)
     })
+
+    // 初始化 viewpoint
+    const mode = dimension.value.deviceType || 'desktop'
+    setViewPort(mediaMap[mode])
 
     return {
       scale,
