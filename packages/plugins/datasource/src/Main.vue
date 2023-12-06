@@ -1,26 +1,28 @@
 <template>
   <plugin-panel title="数据源">
     <template #header>
-      <link-button :href="docsUrl"></link-button>
-      <svg-button
-        class="add-page"
-        tips="新建数据源"
-        name="text-source-list-add"
-        @click="openDataSourceFormPanel()"
-        placement="top"
-      ></svg-button>
-      <svg-button
-        class="set-page"
-        tips="全局设置"
-        name="text-source-setting"
-        @click="openGlobalDataHanderPanel"
-      ></svg-button>
-      <svg-button
-        class="refresh-page"
-        tips="刷新数据源"
-        name="text-source-list-ref"
-        @click="refreshDataSource"
-      ></svg-button>
+      <div class="data-source-header">
+        <link-button :href="docsUrl"></link-button>
+        <svg-button
+          class="add-page"
+          tips="新建数据源"
+          name="text-source-list-add"
+          @click="openDataSourceFormPanel()"
+          placement="top"
+        ></svg-button>
+        <svg-button
+          class="set-page"
+          tips="全局设置"
+          name="text-source-setting"
+          @click="openGlobalDataHanderPanel"
+        ></svg-button>
+        <svg-button
+          class="refresh-page"
+          tips="刷新数据源"
+          name="text-source-list-ref"
+          @click="refreshDataSource"
+        ></svg-button>
+      </div>
     </template>
     <template #content>
       <data-source-list @edit="openDataSourceFormPanel"></data-source-list>
@@ -148,14 +150,25 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.data-source-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .add-page {
   color: var(--ti-lowcode-datasource-btn-click-color);
 }
 .set-page {
-  font-size: 18px;
+  font-size: 16px;
   color: var(--ti-lowcode-datasource-btn-click-color);
 }
 .refresh-page {
   color: var(--ti-lowcode-datasource-btn-click-color);
+}
+:deep(.help-box) {
+  height: 38px;
+}
+:deep(.svg-icon.icon-plugin-icon-plugin-help) {
+  font-size: 20px !important;
 }
 </style>

@@ -3,7 +3,7 @@
     <div class="data-source-left-panel">
       <div class="title">
         <span>状态管理</span>
-        <div>
+        <div class="data-source-icon">
           <link-button :href="docsUrl"></link-button>
           <close-icon @close="closePanel"></close-icon>
         </div>
@@ -384,6 +384,13 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      .data-source-icon {
+        display: flex;
+        justify-content: center;
+        :deep(.help-box) {
+          height: 24px;
+        }
+      }
     }
 
     .left-filter {
