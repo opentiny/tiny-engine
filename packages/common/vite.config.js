@@ -40,7 +40,7 @@ export default defineConfig({
             return 'import "./style.css"'
           }
 
-          return
+          return ''
         }
       },
       external: ['vue', 'monaco-editor', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/, /^prettier.*/]
