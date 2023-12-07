@@ -42,9 +42,9 @@ function recurseChildren(children, state, description, result) {
   } else if (children?.type === 'JSExpression') {
     result.push(`{{ ${children.value.replace(/this\.(props\.)?/g, '')} }}`)
 
-    for (const key in description.jsResource) {
+    Object.keys(description.jsResource).forEach((key) => {
       description.jsResource[key] = description.jsResource[key] || children.value.includes(`.${key}.`)
-    }
+    })
   } else if (children?.type === 'i18n') {
     result.push(`{{ t('${children.key}') }}`)
   } else {
