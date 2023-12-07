@@ -11,25 +11,27 @@
  */
 
 ;(function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined'
-    ? (module.exports = factory(
-        require('@opentiny/tiny-engine-webcomponent-core'),
-        require('vue'),
-        require('vue-i18n'),
-        require('@opentiny/vue-icon')
-      ))
-    : typeof define === 'function' && define.amd
-    ? define(['@opentiny/tiny-engine-webcomponent-core', 'vue', 'vue-i18n', '@opentiny/vue-icon'], factory)
-    : ((global = typeof globalThis !== 'undefined' ? globalThis : global || self),
-      (global.TinyVueBlock = factory(global.TinyWebcomponentCore, global.Vue, global.VueI18n, global.TinyVueIcon)))
-})(this, function (tinyWebcomponentCore, vue, vueI18n, tinyVue3Icon) {
+  if (typeof exports === 'object' && typeof module !== 'undefined') {
+    module.exports = factory(
+      require('@opentiny/tiny-engine-webcomponent-core'),
+      require('vue'),
+      require('vue-i18n'),
+      require('@opentiny/vue-icon')
+    )
+  } else if (typeof define === 'function' && define.amd) {
+    define(['@opentiny/tiny-engine-webcomponent-core', 'vue', 'vue-i18n', '@opentiny/vue-icon'], factory)
+  } else {
+    ;(global = typeof globalThis !== 'undefined' ? globalThis : global || self),
+      (global.TinyVueBlock = factory(global.TinyWebcomponentCore, global.Vue, global.VueI18n, global.TinyVueIcon))
+  }
+})(this, (tinyWebcomponentCore, vue, vueI18n, tinyVue3Icon) => {
   function _interopNamespace(e) {
     if (e && e.__esModule) return e
-    var n = Object.create(null, { [Symbol.toStringTag]: { value: 'Module' } })
+    const n = Object.create(null, { [Symbol.toStringTag]: { value: 'Module' } })
     if (e) {
-      Object.keys(e).forEach(function (k) {
+      Object.keys(e).forEach((k) => {
         if (k !== 'default') {
-          var d = Object.getOwnPropertyDescriptor(e, k)
+          const d = Object.getOwnPropertyDescriptor(e, k)
           Object.defineProperty(
             n,
             k,
@@ -45,10 +47,10 @@
         }
       })
     }
-    n['default'] = e
+    n.default = e
     return Object.freeze(n)
   }
-  var vue__namespace = /* @__PURE__ */ _interopNamespace(vue)
+  const vue__namespace = /* @__PURE__ */ _interopNamespace(vue)
   Object.freeze({})
   Object.freeze([])
   const cacheStringFunction = (fn) => {
@@ -60,7 +62,7 @@
   }
   const hyphenateRE = /\B([A-Z])/g
   const hyphenate = cacheStringFunction((str) => str.replace(hyphenateRE, '-$1').toLowerCase())
-  var _export_sfc = (sfc, props) => {
+  const _export_sfc = (sfc, props) => {
     const target = sfc.__vccOpts || sfc
     for (const [key, val] of props) {
       target[key] = val
@@ -112,7 +114,7 @@
       ])
     )
   }
-  var block = /* @__PURE__ */ _export_sfc(_sfc_main, [
+  const block = /* @__PURE__ */ _export_sfc(_sfc_main, [
     ['render', _sfc_render],
     ['__file', 'D:/tmp/buildground/buildground_1673597935715/src/block/generated/components/PortalBlock.vue']
   ])

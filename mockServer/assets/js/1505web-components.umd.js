@@ -1,23 +1,25 @@
 /**
-* Copyright (c) 2023 - present TinyEngine Authors.
-* Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
-*
-* Use of this source code is governed by an MIT-style license.
-*
-* THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
-* BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
-* A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
-*
-*/
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
+ *
+ * Use of this source code is governed by an MIT-style license.
+ *
+ * THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
+ * BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
+ * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
+ *
+ */
 
 ;(function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined'
-    ? (module.exports = factory(require('@opentiny/vue')))
-    : typeof define === 'function' && define.amd
-    ? define(['@opentiny/vue'], factory)
-    : ((global = typeof globalThis !== 'undefined' ? globalThis : global || self),
-      (global.TinyLowcodeComponent = factory(global.TinyVue)))
-})(this, function (tinyVue3) {
+  if (typeof exports === 'object' && typeof module !== 'undefined') {
+    module.exports = factory(require('@opentiny/vue'))
+  } else if (typeof define === 'function' && define.amd) {
+    define(['@opentiny/vue'], factory)
+  } else {
+    ;(global = typeof globalThis !== 'undefined' ? globalThis : global || self),
+      (global.TinyLowcodeComponent = factory(global.TinyVue))
+  }
+})(this, (tinyVue3) => {
   'use strict'
   const Mapper = {
     TinyCarouselItem: tinyVue3.CarouselItem,
@@ -52,7 +54,7 @@
     TinyDropdown: tinyVue3.Dropdown,
     TinyChartHistogram: tinyVue3.ChartHistogram
   }
-  Mapper['TinyTabs'].isGroup = true
-  Mapper['TinyGrid'].isGroup = true
+  Mapper.TinyTabs.isGroup = true
+  Mapper.TinyGrid.isGroup = true
   return Mapper
 })

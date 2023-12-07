@@ -31,7 +31,7 @@ export default class AppService {
     // 拼装数据源
     const dataSource = {
       list: source,
-      dataHandler: app['data_handler']
+      dataHandler: app.data_handler
     }
     // 拼装工具类
     const utils = []
@@ -47,7 +47,7 @@ export default class AppService {
     const i18n = this.formatI18nEntrites(entriesData)
     return getResponseData({
       dataSource,
-      globalState: app['global_state'],
+      globalState: app.global_state,
       utils,
       i18n
     })
