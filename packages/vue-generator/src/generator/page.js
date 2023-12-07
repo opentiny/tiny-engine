@@ -164,7 +164,12 @@ function handleBinding(props, attrsArr, description, state) {
     }
 
     if (propType === 'i18n') {
-      return attrsArr.push(`:${key}="t('${item.key}')"`)
+      const tArguments = [`'${item.key}'`]
+      const i18nParams = JSON.stringify(item.params)?.replace(/"/g, "'")
+
+      i18nParams && tArguments.push(i18nParams)
+
+      return attrsArr.push(`:${key}="t(${tArguments.join(',')})"`)
     }
 
     return attrsArr

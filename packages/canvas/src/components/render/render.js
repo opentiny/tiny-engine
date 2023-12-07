@@ -160,7 +160,7 @@ const parseI18n = (i18n, scope, ctx) => {
   return parseExpression(
     {
       type: 'JSExpression',
-      value: `this.i18n('${i18n.key}')`
+      value: `this.i18n('${i18n.key}', ${JSON.stringify(i18n.params)})`
     },
     scope,
     { i18n: i18nHost.global.t, ...ctx }
