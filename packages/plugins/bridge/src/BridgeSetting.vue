@@ -6,8 +6,15 @@
       </div>
     </template>
     <template #header>
-      <div class="header-wrap">
-        <svg-button v-show="state.status" class="delete-btn" name="delete" @click="deleteReSource"></svg-button>
+      <div class="header-wrap" @mouseenter="handleMouseEnterHeader">
+        <svg-button
+          v-show="state.status"
+          class="delete-btn"
+          name="delete"
+          @click="deleteReSource"
+          :disabled="deleteDisabled"
+          :tips="deleteBtnTips"
+        ></svg-button>
         <tiny-button class="save-btn" type="primary" @click="save">保存</tiny-button>
         <svg-button class="close-btn" name="close" @click="closePanel"></svg-button>
       </div>
@@ -119,8 +126,9 @@ import {
   getResourceNamesByType
 } from './js/resource'
 import { VueMonaco as MonacoEditor, PluginSetting, SvgButton } from '@opentiny/tiny-engine-common'
-import { useApp, getGlobalConfig, useModal, useNotify } from '@opentiny/tiny-engine-controller'
+import { useApp, getGlobalConfig, useModal, useNotify, useLayout } from '@opentiny/tiny-engine-controller'
 import { theme } from '@opentiny/tiny-engine-controller/adapter'
+import { getSchema } from '@opentiny/tiny-engine-canvas'
 
 const isOpen = ref(false)
 
@@ -131,6 +139,29 @@ export const openPanel = () => {
 
 export const closePanel = () => {
   isOpen.value = false
+}
+
+const utilsVariableRegex = new RegExp(`(?<=[^A-Za-z0-9_$]utils\\.)[\\w$]+(?=[^A-Za-z0-9_$]*)`, 'g')
+
+const deleteBtnTips = ref('')
+const deleteDisabled = ref(false)
+const mouseEnteredHeader = ref(0)
+
+const checkUtilsVariableUse = (variableName) => {
+  if (!variableName) {
+    return
+  }
+
+  const schemaStr = JSON.stringify(getSchema())
+  const variableNames = [...schemaStr.matchAll(utilsVariableRegex)].map((item) => item[0])
+
+  if (variableNames.includes(variableName)) {
+    deleteDisabled.value = true
+    deleteBtnTips.value = '当前工具正在被使用，无法删除'
+  } else {
+    deleteDisabled.value = false
+    deleteBtnTips.value = ''
+  }
 }
 
 export default {
@@ -198,6 +229,15 @@ export default {
       }
     )
 
+    watch(
+      [() => useLayout().getPluginState().render, isOpen, () => state.name, mouseEnteredHeader],
+      ([render, open, name]) => {
+        if (render === 'Bridge' && open) {
+          checkUtilsVariableUse(name)
+        }
+      }
+    )
+
     const editor = ref(null)
     const resourceForm = ref(null)
 
@@ -250,6 +290,10 @@ export default {
       })
     }
 
+    const handleMouseEnterHeader = () => {
+      mouseEnteredHeader.value++
+    }
+
     const rules = {
       name: [
         { required: true, message: '必填', trigger: 'change' },
@@ -281,11 +325,14 @@ export default {
       editor,
       state,
       isOpen,
+      deleteDisabled,
+      deleteBtnTips,
       closePanel,
       save,
       deleteReSource,
       options: monacoOptions,
       handleChangeType,
+      handleMouseEnterHeader,
       RESOURCE_CATEGORY
     }
   }
@@ -323,8 +370,12 @@ export default {
     column-gap: 16px;
     .delete-btn {
       color: var(--ti-lowcode-common-text-color-5);
-      &:hover {
+      &:not([disabled='true']):hover {
         color: var(--ti-lowcode-common-primary-text-color);
+      }
+
+      &[disabled='true'] {
+        cursor: not-allowed;
       }
     }
   }
