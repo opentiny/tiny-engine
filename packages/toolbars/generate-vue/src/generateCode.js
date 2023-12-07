@@ -214,7 +214,14 @@ function getImportStrsFromImports(imports) {
     }
 
     if (Array.isArray(value.destructurings) && value.destructurings.length) {
-      list.push(`{ ${value.destructurings.join(', ')} }`)
+      const destructuringsWidthAliases = value.destructurings.map((destructuring, index) => {
+        const alias = value.aliases[index]
+        if (destructuring === alias) {
+          return destructuring
+        }
+        return `${destructuring} as ${alias}`
+      })
+      list.push(`{ ${destructuringsWidthAliases.join(', ')} }`)
     }
 
     result.push(`import ${list.join(', ')} from '${key}'`)
@@ -234,11 +241,13 @@ function parseExportInfo(utilItem, imports, exportNames, functionStrs) {
       if (utilItem.content.destructuring) {
         importItem.destructurings = importItem.destructurings || []
         importItem.destructurings.push(utilItem.content.exportName)
+        importItem.aliases = importItem.aliases || []
+        importItem.aliases.push(utilItem.name)
       } else {
-        importItem.exportName = utilItem.content.exportName
+        importItem.exportName = utilItem.name
       }
 
-      exportNames.push(utilItem.content.exportName)
+      exportNames.push(utilItem.name)
     }
   } else if (utilItem.type === 'function') {
     functionStrs.push(`const ${utilItem.name} = ${utilItem.content.value}`)

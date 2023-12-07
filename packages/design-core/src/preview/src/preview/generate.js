@@ -71,11 +71,13 @@ function generateImportsByType({ item, imports, exportNames, functionStrs }) {
       if (item.content.destructuring) {
         importItem.destructurings = importItem.destructurings || []
         importItem.destructurings.push(item.content.exportName)
+        importItem.aliases = importItem.aliases || []
+        importItem.aliases.push(item.name)
       } else {
-        importItem.exportName = item.content.exportName
+        importItem.exportName = item.name
       }
 
-      exportNames.push(item.content.exportName)
+      exportNames.push(item.name)
     }
   } else if (item.type === 'function' && checkIsValidFunString(item.content.value)) {
     functionStrs.push(`const ${item.name} = ${item.content.value}`)
@@ -94,7 +96,14 @@ function generateStrsFromImports({ imports, strs, functionStrs, exportNames }) {
     }
 
     if (Array.isArray(value.destructurings) && value.destructurings.length) {
-      list.push(`{ ${value.destructurings.join(', ')} }`)
+      const destructuringsWidthAliases = value.destructurings.map((destructuring, index) => {
+        const alias = value.aliases[index]
+        if (destructuring === alias) {
+          return destructuring
+        }
+        return `${destructuring} as ${alias}`
+      })
+      list.push(`{ ${destructuringsWidthAliases.join(', ')} }`)
     }
 
     importStrs.push(`import ${list.join(', ')} from '${key}'`)
