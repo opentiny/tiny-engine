@@ -287,16 +287,13 @@ export default {
           minWidth: item.minWidth,
           maxWidth: item.maxWidth
         })
-        state.width = parseInt(item.width, 10)
       } else {
         emit('setViewPort', item.width)
       }
-      state.activeIndex = item.idx
     }
 
     const activeView = (val, type) => {
       const item = mediaMap[type]
-      state.activeIndex = mediaMap[type].index
       useLayout().setDimension({
         deviceType: item.view,
         width: val ? `${val}px` : item.width,
@@ -305,35 +302,34 @@ export default {
       })
     }
     const widthChange = (val) => {
-      const reg = '^[0-9]*$'
-      const dimension = useLayout().getDimension()
+      const reg = '^[0-9]+$'
 
       if (!String(val).match(reg)) {
-        state.width = prevWidthVal ? prevWidthVal : parseInt(dimension.width)
-      } else if (String(val) === '0' || Number(val) < 240) {
+        state.width = prevWidthVal ? prevWidthVal : parseInt(dimension.value.width, 10)
+      } else if (Number(val) < 240) {
         state.width = 240
       } else if (Number(val) > 1920) {
         state.width = 1920
       } else {
         state.width = val
       }
-      prevWidthVal = state.width
 
+      const width = Number(state.width)
       switch (true) {
-        case 1200 < Number(state.width) && Number(state.width) <= 1920:
-          activeView(state.width, 'mdx')
+        case 1200 < width && width <= 1920:
+          activeView(width, 'mdx')
           break
-        case 992 < Number(state.width) && Number(state.width) <= 1200:
-          activeView(state.width, 'desktop')
+        case 992 < width && width <= 1200:
+          activeView(width, 'desktop')
           break
-        case 768 < Number(state.width) && Number(state.width) <= 992:
-          activeView(state.width, 'tablet')
+        case 768 < width && width <= 992:
+          activeView(width, 'tablet')
           break
-        case 480 < Number(state.width) && Number(state.width) <= 768:
-          activeView(state.width, 'lanMobile')
+        case 480 < width && width <= 768:
+          activeView(width, 'lanMobile')
           break
-        case 240 <= Number(state.width) && Number(state.width) <= 480:
-          activeView(state.width, 'mobile')
+        case 240 <= width && width <= 480:
+          activeView(width, 'mobile')
           break
         default:
           break
@@ -342,7 +338,7 @@ export default {
 
     const scaleChange = (val) => {
       const item = mediaMap['mdx']
-      const reg = '^[0-9]*$'
+      const reg = '^[0-9]+$'
 
       if (!String(val).match(reg)) {
         state.scaleValue = prevScaleVal ? prevScaleVal : parseInt(item.scale)
@@ -353,7 +349,7 @@ export default {
       } else {
         state.scaleValue = val
       }
-      prevScaleVal = val
+      state.scaleValue = Number(state.scaleValue).toFixed(2)
 
       useLayout().setDimension({
         scale: Number(state.scaleValue) / 100
@@ -365,8 +361,14 @@ export default {
     }
 
     watchEffect(() => {
+      const deviceType = dimension.value.deviceType
+      state.activeIndex = mediaMap[deviceType].index
       state.readonly = dimension.value.deviceType !== 'mdx'
+    })
+
+    watchEffect(() => {
       state.scaleValue = scale.value.toFixed(2)
+      prevScaleVal = scale.value
     })
 
     watch(
@@ -375,6 +377,7 @@ export default {
         const newWidth = parseInt(width, 10)
         if (Number.isInteger(newWidth) && newWidth !== state.width) {
           state.width = newWidth
+          prevWidthVal = newWidth
         }
       }
     )
