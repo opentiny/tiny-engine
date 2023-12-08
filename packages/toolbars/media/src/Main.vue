@@ -375,7 +375,7 @@ export default {
       () => useLayout().getDimension().width,
       (width) => {
         const newWidth = parseInt(width, 10)
-        if (Number.isInteger(newWidth) && newWidth !== state.width) {
+        if (Number.isInteger(newWidth)) {
           state.width = newWidth
           prevWidthVal = newWidth
         }
