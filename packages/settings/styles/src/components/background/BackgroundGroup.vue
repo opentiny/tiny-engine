@@ -144,7 +144,6 @@ export default {
     })
 
     const { getProperty, getSettingFlag } = useProperties({
-      props,
       names: Object.values(BACKGROUND_PROPERTY),
       parseNumber: true
     })
