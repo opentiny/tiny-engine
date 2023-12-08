@@ -397,7 +397,6 @@
 
 <script>
 import { computed, reactive } from 'vue'
-import { camelize } from '@opentiny/tiny-engine-controller/utils'
 import SpacingSetting from './SpacingSetting.vue'
 import ModalMask, { useModal } from '../inputs/ModalMask.vue'
 import useEvent from '../../js/useEvent'
@@ -433,8 +432,7 @@ export default {
     const spacing = computed(() => {
       const properties = {}
 
-      Object.values(SPACING_PROPERTY).forEach((str) => {
-        const name = camelize(str)
+      Object.values(SPACING_PROPERTY).forEach((name) => {
         const value = props.style[name]
 
         properties[name] = {
@@ -446,6 +444,21 @@ export default {
 
       return reactive(properties)
     })
+
+    const getSettingFlag = (styleName) => Boolean(spacing.value[styleName]?.setting)
+    const getPropertyText = (styleName) => spacing.value[styleName]?.text || 0
+    const getPropertyValue = (styleName) => spacing.value[styleName]?.value
+
+    // 打开单个属性设置弹窗
+    const openSetting = (type, styleName) => {
+      state.property = {
+        type,
+        name: styleName,
+        value: getPropertyValue(styleName)
+      }
+
+      state.showModal = true
+    }
 
     const clickMargin = (styleName, event) => {
       state.className = styleName
@@ -463,27 +476,10 @@ export default {
       openSetting(SPACING_PROPERTY.Padding, styleName)
     }
 
-    // 打开单个属性设置弹窗
-    const openSetting = (type, styleName) => {
-      styleName = camelize(styleName)
-
-      state.property = {
-        type,
-        name: styleName,
-        value: getPropertyValue(styleName)
-      }
-
-      state.showModal = true
-    }
-
     const closeModal = () => {
       state.show = false
       state.showModal = false
     }
-
-    const getSettingFlag = (styleName) => Boolean(spacing.value[camelize(styleName)]?.setting)
-    const getPropertyText = (styleName) => spacing.value[camelize(styleName)]?.text || 0
-    const getPropertyValue = (styleName) => spacing.value[camelize(styleName)]?.value
 
     // 向父级传递更新 style 对象
     const update = (property) => {

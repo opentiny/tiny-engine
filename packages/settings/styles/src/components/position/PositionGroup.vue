@@ -221,7 +221,6 @@
 import { reactive, watchEffect } from 'vue'
 import { Tooltip } from '@opentiny/vue'
 import { MetaSelect } from '@opentiny/tiny-engine-common'
-import { camelize } from '@opentiny/tiny-engine-controller/utils'
 import { push } from '@opentiny/vue-renderless/common/array'
 import ModalMask, { useModal } from '../inputs/ModalMask.vue'
 import SpacingSetting from '../spacing/SpacingSetting.vue'
@@ -368,7 +367,6 @@ export default {
     }
 
     const { getProperty, getSettingFlag, getPropertyValue, getPropertyText } = useProperties({
-      props,
       names: Object.values(POSITION_PROPERTY),
       parseNumber: true
     })
@@ -413,7 +411,6 @@ export default {
     }
 
     const openDirectionSetting = (type, styleName) => {
-      styleName = camelize(styleName)
 
       state.property = {
         type,
