@@ -278,7 +278,7 @@ const selectorValidator = (selector) => {
   }
 
   // 不能包含空格
-  if (sel.includes(' ') || sel.includes('>') || sel.includes('~') || sel.includes('+')) {
+  if (/[\s>~+]/.test(sel)) {
     classNameState.selectorHasError = "不能包含空格 '>' '~' '+' 等符号"
 
     return false
