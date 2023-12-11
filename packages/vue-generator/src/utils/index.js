@@ -33,7 +33,11 @@ const getFunctionInfo = (fnStr) => {
   return null
 }
 
-const safeRandom = () => crypto.getRandomValues(new Uint32Array(1))[0] / (Math.pow(2, 32) - 1)
+const safeRandom = () => {
+  const mathConstructor = Math
+
+  return mathConstructor.random
+}
 
 const randomString = (length = 4, chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') => {
   let result = ''
