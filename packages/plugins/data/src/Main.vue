@@ -3,10 +3,8 @@
     <div class="data-source-left-panel">
       <div class="title">
         <span>状态管理</span>
-        <div class="data-source-icon">
-          <link-button :href="docsUrl"></link-button>
-          <close-icon @close="closePanel"></close-icon>
-        </div>
+        <link-button :href="docsUrl"></link-button>
+        <close-icon @close="closePanel"></close-icon>
       </div>
       <tiny-tabs v-model="activeName" @click="tabClick" tab-style="button-card">
         <tiny-tab-item v-if="isBlock" :name="STATE.CURRENT_STATE" title="区块状态"></tiny-tab-item>
@@ -384,13 +382,6 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      .data-source-icon {
-        display: flex;
-        justify-content: center;
-        :deep(.help-box) {
-          height: 24px;
-        }
-      }
     }
 
     .left-filter {
@@ -480,6 +471,11 @@ export default {
     & > div {
       height: 100%;
     }
+  }
+  :deep(.help-box) {
+    position: absolute;
+    left: 72px;
+    top: 10px;
   }
 }
 </style>

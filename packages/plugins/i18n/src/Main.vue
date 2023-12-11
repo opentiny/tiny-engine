@@ -640,4 +640,9 @@ export default {
     color: var(--ti-lowcode-base-text-color);
   }
 }
+:deep(.help-box) {
+  position: absolute;
+  left: 86px;
+  top: 4px;
+}
 </style>

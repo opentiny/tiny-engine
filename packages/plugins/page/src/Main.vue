@@ -157,3 +157,11 @@ export default {
   }
 }
 </script>
+
+<style lang="less" scoped>
+:deep(.help-box) {
+  position: absolute;
+  left: 72px;
+  top: 4px;
+}
+</style>

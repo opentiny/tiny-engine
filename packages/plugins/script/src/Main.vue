@@ -176,7 +176,7 @@ export default {
 :deep(.help-box) {
   height: auto;
   #help-icon {
-    margin-left: 4px;
+    margin-left: 8px;
   }
 }
 </style>

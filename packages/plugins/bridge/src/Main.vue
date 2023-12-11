@@ -103,4 +103,9 @@ export default {
     height: 100%;
   }
 }
+:deep(.help-box) {
+  position: absolute;
+  left: 72px;
+  top: 4px;
+}
 </style>

@@ -487,6 +487,12 @@ export default {
     margin-left: 8px;
   }
 }
+
+:deep(.help-box) {
+  position: absolute;
+  left: 72px;
+  top: 4px;
+}
 </style>
 
 <style lang="less">
