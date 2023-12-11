@@ -301,6 +301,15 @@ export default {
         maxWidth: item.maxWidth
       })
     }
+
+    const breakpoints = [
+      { type: 'mobile', min: 240, max: 480 },
+      { type: 'lanMobile', min: 480, max: 768 },
+      { type: 'tablet', min: 768, max: 992 },
+      { type: 'desktop', min: 992, max: 1200 },
+      { type: 'mdx', min: 1200, max: 1920 }
+    ]
+
     const widthChange = (val) => {
       const reg = '^[0-9]+$'
 
@@ -315,25 +324,8 @@ export default {
       }
 
       const width = Number(state.width)
-      switch (true) {
-        case 1200 < width && width <= 1920:
-          activeView(width, 'mdx')
-          break
-        case 992 < width && width <= 1200:
-          activeView(width, 'desktop')
-          break
-        case 768 < width && width <= 992:
-          activeView(width, 'tablet')
-          break
-        case 480 < width && width <= 768:
-          activeView(width, 'lanMobile')
-          break
-        case 240 <= width && width <= 480:
-          activeView(width, 'mobile')
-          break
-        default:
-          break
-      }
+      const type = breakpoints.find((item) => item.min <= width && width <= item.max)?.type || 'desktop'
+      activeView(width, type)
     }
 
     const scaleChange = (val) => {
