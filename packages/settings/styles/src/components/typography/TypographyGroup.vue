@@ -239,7 +239,6 @@ export default {
     let activedName = ''
     const showModal = ref(false)
     const { getProperty, getSettingFlag, getPropertyValue } = useProperties({
-      props,
       names: Object.values(TYPO_PROPERTY),
       parseNumber: true
     })

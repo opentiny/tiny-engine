@@ -42,9 +42,9 @@ const cacheStringFunction = (fn) => {
 }
 const hyphenateRE = /\B([A-Z])/g
 const hyphenate = cacheStringFunction((str) => str.replace(hyphenateRE, '-$1').toLowerCase())
-var _style_0 =
+const _style_0 =
   '\n.team-list-item.active[data-v-b66e3972] {\r\n  border: 1px solid #38acff;\n}\n.toolbars-item[data-v-b66e3972]:hover {\r\n  cursor: pointer;\r\n  background-color: #f1f2f3;\n}\n.toolbars-item.active[data-v-b66e3972] {\r\n  background-color: #e5e6e8;\n}\n'
-var _export_sfc = (sfc, props) => {
+const _export_sfc = (sfc, props) => {
   const target = sfc.__vccOpts || sfc
   for (const [key, val] of props) {
     target[key] = val
@@ -406,7 +406,7 @@ const _hoisted_22 = /* @__PURE__ */ _withScopeId(() =>
   )
 )
 function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
-  var _a
+  let _a
   const _component_tiny_icon_setting = resolveComponent('tiny-icon-setting')
   const _component_tiny_tooltip = resolveComponent('tiny-tooltip')
   const _component_tiny_icon_check_out = resolveComponent('tiny-icon-check-out')
@@ -640,7 +640,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     ])
   )
 }
-var block = /* @__PURE__ */ _export_sfc(_sfc_main, [
+const block = /* @__PURE__ */ _export_sfc(_sfc_main, [
   ['render', _sfc_render],
   ['styles', [_style_0]],
   ['__scopeId', 'data-v-b66e3972'],

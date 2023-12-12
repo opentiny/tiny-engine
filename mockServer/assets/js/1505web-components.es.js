@@ -76,6 +76,6 @@ const Mapper = {
   TinyDropdown: Dropdown,
   TinyChartHistogram: ChartHistogram
 }
-Mapper['TinyTabs'].isGroup = true
-Mapper['TinyGrid'].isGroup = true
+Mapper.TinyTabs.isGroup = true
+Mapper.TinyGrid.isGroup = true
 export { Mapper as default }

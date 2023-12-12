@@ -522,7 +522,7 @@ const configureSlots = (blockSchema = {}) => {
 export const getDeployProgress = (taskId, block) => {
   fetchDeployProgress(taskId).then((data) => {
     block.deployStatus = data.taskStatus
-    block.publishProgress = data['progress_percent']
+    block.publishProgress = data.progress_percent
     block.taskResult = data.taskResult
 
     if (block.publishProgress === PROGRESS.End) {
