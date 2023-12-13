@@ -146,10 +146,6 @@ export default {
 
     const { highlightMethod } = getPluginApi(PLUGIN_NAME.PageController)
 
-    const rules = {
-      methodDescription: [{ required: true, message: '必填', trigger: 'blur' }],
-      methodName: [{ required: true, message: '必填', trigger: 'blur' }]
-    }
     const ruleForm = ref(null)
 
     const state = reactive({
@@ -164,6 +160,22 @@ export default {
       },
       showEventAdditive: false
     })
+
+    const eventVerification = (rule, value, callback) => {
+      if (!checkEvent(state.formData.methodName)) {
+        callback(new Error('请输入正确的浏览器事件'))
+      } else {
+        callback()
+      }
+    }
+
+    const rules = {
+      methodDescription: [{ required: true, message: '必填', trigger: 'blur' }],
+      methodName: [
+        { required: true, message: '必填', trigger: 'blur' },
+        { validator: eventVerification, trigger: 'blur' }
+      ]
+    }
 
     const isBlock = computed(() => Boolean(pageState.isBlock))
     const isEmpty = computed(() => Object.keys(state.bindActions).length === 0)

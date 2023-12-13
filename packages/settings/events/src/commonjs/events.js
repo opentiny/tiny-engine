@@ -9,7 +9,6 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-import { useNotify } from '@opentiny/tiny-engine-controller'
 
 export const commonEvents = {
   onClick: {
@@ -188,10 +187,6 @@ export const checkEvent = (event) => {
     return `${e.substring(0, 2)}${three}${e.substring(3)}`
   })
   if (!checkEventList.includes(event)) {
-    useNotify({
-      type: 'error',
-      message: '请输入正确的浏览器事件'
-    })
     return false
   }
   return true
