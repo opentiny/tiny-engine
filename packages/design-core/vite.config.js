@@ -177,7 +177,7 @@ const devAlias = {
 
 const devVueAlias = {
   find: /^vue$/,
-  replacement: `https://unpkg.com/vue@${importMapVersions.vue}/dist/vue.runtime.esm-browser.js`
+  replacement: `https://registry.npmmirror.com/vue/${importMapVersions.vue}/files/dist/vue.runtime.esm-browser.js`
 }
 
 const prodAlias = {

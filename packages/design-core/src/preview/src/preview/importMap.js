@@ -26,21 +26,22 @@ const tinyVue3Imports = {
 }
 
 importMap.imports = {
-  vue: 'https://unpkg.com/vue@3.2.36/dist/vue.runtime.esm-browser.js',
-  'vue/server-renderer': 'https://unpkg.com/@vue/server-renderer@3.2.36/dist/server-renderer.esm-browser.js',
-  'vue-i18n': 'https://unpkg.com/vue-i18n@9.2.0-beta.36/dist/vue-i18n.esm-browser.js',
-  'vue-router': 'https://unpkg.com/vue-router@4.0.16/dist/vue-router.esm-browser.js',
-  '@vue/devtools-api': 'https://unpkg.com/@vue/devtools-api@6.1.4/lib/esm/index.js',
-  '@vueuse/core': 'https://unpkg.com/@vueuse/core@9.6.0/index.mjs',
-  '@vueuse/shared': 'https://unpkg.com/@vueuse/shared@9.6.0/index.mjs',
-  axios: 'https://unpkg.com/axios@1.0.0-alpha.1/dist/esm/axios.js',
-  'axios-mock-adapter': 'https://unpkg.com/axios-mock-adapter@1.21.1/dist/axios-mock-adapter.js',
+  vue: 'https://registry.npmmirror.com/vue/3.2.36/files/dist/vue.runtime.esm-browser.js',
+  'vue/server-renderer':
+    'https://registry.npmmirror.com/@vue/server-renderer/3.2.36/files/dist/server-renderer.esm-browser.js',
+  'vue-i18n': 'https://registry.npmmirror.com/vue-i18n/9.2.0-beta.36/files/dist/vue-i18n.esm-browser.js',
+  'vue-router': 'https://registry.npmmirror.com/vue-router/4.0.16/files/dist/vue-router.esm-browser.js',
+  '@vue/devtools-api': 'https://registry.npmmirror.com/@vue/devtools-api/6.1.4/files/lib/esm/index.js',
+  '@vueuse/core': 'https://registry.npmmirror.com/@vueuse/core/9.6.0/files/index.mjs',
+  '@vueuse/shared': 'https://registry.npmmirror.com/@vueuse/shared/9.6.0/files/index.mjs',
+  axios: 'https://registry.npmmirror.com/axios/1.0.0-alpha.1/files/dist/esm/axios.js',
+  'axios-mock-adapter': 'https://registry.npmmirror.com/axios-mock-adapter/1.21.1/files/dist/axios-mock-adapter.js',
   '@opentiny/tiny-engine-webcomponent-core':
-    'https://unpkg.com/@opentiny/tiny-engine-webcomponent-core@1/dist/tiny-engine-webcomponent-core.es.js',
+    'https://registry.npmmirror.com/@opentiny/tiny-engine-webcomponent-core/1/files/dist/tiny-engine-webcomponent-core.es.js',
   '@opentiny/tiny-engine-i18n-host':
-    'https://unpkg.com/@opentiny/tiny-engine-i18n-host@1/dist/tiny-engine-i18n-host.es.js',
-  'vue-demi': 'https://unpkg.com/vue-demi@0.13.11/lib/index.mjs',
-  pinia: 'https://unpkg.com/pinia@2.0.22/dist/pinia.esm-browser.js',
+    'https://registry.npmmirror.com/@opentiny/tiny-engine-i18n-host/1/files/dist/tiny-engine-i18n-host.es.js',
+  'vue-demi': 'https://registry.npmmirror.com/vue-demi/0.13.11/files/lib/index.mjs',
+  pinia: 'https://registry.npmmirror.com/pinia/2.0.22/files/dist/pinia.esm-browser.js',
   ...tinyVue3Imports,
   ...getSearchParams().scripts
 }
