@@ -24,8 +24,8 @@ const config = {
         '@opentiny/vue-icon'
       ],
       output: {
-        global: {
-          vue: 'vue',
+        globals: {
+          vue: 'Vue',
           'vue-i18n': 'VueI18n',
           '@opentiny/tiny-engine-i18n-host': 'TinyI18nHost',
           '@opentiny/tiny-engine-webcomponent-core': 'TinyWebcomponentCore',
