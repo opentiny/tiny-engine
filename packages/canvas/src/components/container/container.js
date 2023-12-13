@@ -680,8 +680,8 @@ export const setState = (state) => {
   getRenderer().setState(state)
 }
 
-export const setUtils = (utils) => {
-  getRenderer().setUtils(utils)
+export const setUtils = (utils, clear, isForceRefresh) => {
+  getRenderer().setUtils(utils, clear, isForceRefresh)
 }
 
 export const deleteState = (variable) => {
