@@ -288,6 +288,7 @@ export default {
           maxWidth: item.maxWidth
         })
       } else {
+        state.activeIndex = item.idx
         emit('setViewPort', item.width)
       }
     }
