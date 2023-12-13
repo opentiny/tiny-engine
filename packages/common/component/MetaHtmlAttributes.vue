@@ -49,11 +49,12 @@
 <script>
 import { reactive, ref, watchEffect } from 'vue'
 import { useProperties, useResource } from '@opentiny/tiny-engine-controller'
-import { IconDel, IconEdit, IconClose } from '@opentiny/vue-icon'
-import { Form, FormItem, Input, Button, Popover } from '@opentiny/vue'
+import { IconDel, IconEdit, IconClose, IconPlus } from '@opentiny/vue-icon'
+import { Form, FormItem, Input, Button, Popover, Tooltip } from '@opentiny/vue'
 import { utils } from '@opentiny/tiny-engine-utils'
 
 export default {
+  inheritAttrs: false,
   components: {
     TinyForm: Form,
     TinyFormItem: FormItem,
@@ -62,7 +63,9 @@ export default {
     IconEdit: IconEdit(),
     IconDel: IconDel(),
     TinyPopover: Popover,
-    IconClose: IconClose()
+    IconClose: IconClose(),
+    IconPlus: IconPlus(),
+    TinyTooltip: Tooltip
   },
   props: {
     modelValue: {

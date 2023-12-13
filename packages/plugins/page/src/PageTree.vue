@@ -113,6 +113,7 @@ export default {
       const secondGroupData = { groupName: '公共页面', groupId: COMMON_PAGE_GROUP_ID, data: [] }
 
       pagesData.forEach((item) => {
+        const namedNode = item.name ? item : { ...item, name: item.folderName, group: 'staticPages' }
         const node = item.meta
           ? {
               ...item,
@@ -121,9 +122,7 @@ export default {
               isPage: true,
               isBody: item.meta.rootElement === ELEMENT_TAG.Body
             }
-          : item.name
-          ? item
-          : { ...item, name: item.folderName, group: 'staticPages' }
+          : namedNode
 
         const { children, ...other } = node
 
@@ -258,7 +257,16 @@ export default {
       } else {
         data.trueFolder = false
       }
+
       const isPageLocked = getCanvasStatus(data.occupier).state === PAGE_STATUS.Lock
+      const pageEditIcon = isPageLocked ? (
+        <SvgIcon
+          class="page-edit-icon"
+          name="locked-outline"
+          onMousedown={(e) => openSettingPanel(e, node, isPageLocked)}
+        ></SvgIcon>
+      ) : null
+
       return (
         <span class="tiny-tree-node__label" onMousedown={(e) => nodeClick(e, node)}>
           <span class="page-name-label" title={node.label}>
@@ -267,15 +275,7 @@ export default {
             <span class="label">{node.label}</span>
           </span>
           <span class="icons">
-            {data.isPage ? (
-              isPageLocked ? (
-                <SvgIcon
-                  class="page-edit-icon"
-                  name="locked-outline"
-                  onMousedown={(e) => openSettingPanel(e, node, isPageLocked)}
-                ></SvgIcon>
-              ) : null
-            ) : null}
+            {data.isPage ? pageEditIcon : null}
             {data.isHome ? (
               <span class="home">
                 <SvgIcon class="page-edit-icon" name="text-page-home"></SvgIcon>

@@ -41,6 +41,10 @@ function recurseChildren(children, state, description, result) {
     result.push(subTemplate)
   } else if (children?.type === 'JSExpression') {
     result.push(`{{ ${children.value.replace(/this\.(props\.)?/g, '')} }}`)
+
+    Object.keys(description.jsResource).forEach((key) => {
+      description.jsResource[key] = description.jsResource[key] || children.value.includes(`.${key}.`)
+    })
   } else if (children?.type === 'i18n') {
     result.push(`{{ t('${children.key}') }}`)
   } else {
@@ -49,8 +53,6 @@ function recurseChildren(children, state, description, result) {
 
   return result
 }
-
-// const isEmptyRoot = (isRootNode, props) => isRootNode && Object.keys(props).length === 0
 
 const isEmptySlot = (componentName, children) =>
   componentName === BUILTIN_COMPONENT_NAME.TEMPLATE && !(children?.length || children?.type)
@@ -162,8 +164,15 @@ function handleBinding(props, attrsArr, description, state) {
     }
 
     if (propType === 'i18n') {
-      return attrsArr.push(`:${key}="t('${item.key}')"`)
+      const tArguments = [`'${item.key}'`]
+      const i18nParams = JSON.stringify(item.params)?.replace(/"/g, "'")
+
+      i18nParams && tArguments.push(i18nParams)
+
+      return attrsArr.push(`:${key}="t(${tArguments.join(',')})"`)
     }
+
+    return attrsArr
   })
 }
 
@@ -357,7 +366,6 @@ const generateVueCode = ({ schema, name, type, componentsMap }) => {
   // 转换 state 中的特殊类型
   traverseState(state, description)
 
-  // const { utils, bridge } = wrap(function() { return this })()
   const usedResource = Object.keys(description.jsResource).filter((key) => description.jsResource[key])
   const resourceStatement = usedResource.length
     ? `const { ${usedResource.join(',')} } = wrap(function() { return this })()`
@@ -398,7 +406,7 @@ ${imports.join('\n')}
 const props = defineProps({${propsArr.join(',\n')}})
 const emit = defineEmits(${JSON.stringify(emitsArr)})
 
-const { t, lowcodeWrap, stores, utils } = vue.inject(I18nInjectionKey).lowcode()
+const { t, lowcodeWrap, stores } = vue.inject(I18nInjectionKey).lowcode()
 const wrap = lowcodeWrap(props, { emit }, t)
 
 ${iconStatement}

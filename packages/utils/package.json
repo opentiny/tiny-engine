@@ -11,7 +11,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "vite build"
+    "build": "vite build",
+    "test": "vitest"
   },
   "keywords": [],
   "repository": {
@@ -26,9 +27,11 @@
   "license": "MIT",
   "homepage": "https://opentiny.design/tiny-engine",
   "devDependencies": {
-    "vite": "^4.3.7"
+    "vite": "^4.3.7",
+    "vitest": "^0.34.6"
   },
   "dependencies": {
-    "@opentiny/vue-renderless": "~3.10.0"
+    "@opentiny/vue-renderless": "~3.10.0",
+    "vue": "^3.3.8"
   }
 }
