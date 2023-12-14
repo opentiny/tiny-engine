@@ -8,14 +8,32 @@
       single
       @save="save(CSS_TYPE.Css, $event)"
     />
-    <meta-code-editor
-      :modelValue="state.styleContent"
-      title="Style 编辑"
-      button-text="编辑行内样式"
-      language="css"
-      single
-      @save="save(CSS_TYPE.Style, $event)"
-    />
+    <div class="line-style">
+      <span style="display: block; margin-top: 16px; margin-bottom: 8px; color: #595959; font-size: 12px">
+        行内样式
+      </span>
+      <div class="inline-style" style="display: flex">
+        <meta-code-editor
+          v-if="state.lineStyleDisable"
+          :modelValue="state.styleContent"
+          title="Style 编辑"
+          :button-text="state.lineStyle"
+          language="css"
+          single
+          @save="save(CSS_TYPE.Style, $event)"
+        />
+        <div v-if="!state.lineStyleDisable">
+          <tiny-input v-model="state.propertiesList" class="inline-bind-style"> </tiny-input>
+        </div>
+        <meta-bind-variable
+          ref="bindVariable"
+          :model-value="state.bindModelValue"
+          name="advance"
+          @update:modelValue="setConfig"
+        >
+        </meta-bind-variable>
+      </div>
+    </div>
   </div>
   <class-names-container></class-names-container>
   <tiny-collapse v-model="activeNames">
@@ -56,11 +74,11 @@
 </template>
 
 <script>
-import { ref } from 'vue'
-import { Collapse, CollapseItem } from '@opentiny/vue'
+import { ref, watch } from 'vue'
+import { Collapse, CollapseItem, Input } from '@opentiny/vue'
 import { useHistory, useCanvas, useProperties } from '@opentiny/tiny-engine-controller'
 import { setPageCss, getSchema as getCanvasPageSchema } from '@opentiny/tiny-engine-canvas'
-import { MetaCodeEditor } from '@opentiny/tiny-engine-common'
+import { MetaCodeEditor, MetaBindVariable } from '@opentiny/tiny-engine-common'
 import { formatString } from '@opentiny/tiny-engine-common/js/ast'
 import {
   SizeGroup,
@@ -146,6 +164,46 @@ export default {
       }
     }
 
+    const setConfig = (value) => {
+      const pageSchema = getCanvasPageSchema()
+      const currentSchema = getCurrentSchema() || pageSchema
+      const schema = getSchema() || pageSchema
+      if (value !== 'remove') {
+        schema.props.style = value
+        currentSchema.props.style = value
+        state.propertiesList = `已绑定：${value.value}`
+        state.lineStyleDisable = false
+        addHistory()
+      } else {
+        schema.props.style = ''
+        currentSchema.props.style = ''
+        state.propertiesList = '编辑行内样式'
+        state.lineStyleDisable = true
+        addHistory()
+      }
+    }
+
+    watch(
+      () => {
+        const currentSchema = getCurrentSchema()
+        return currentSchema
+      },
+      (val) => {
+        if (val?.props && val.props?.style?.value) {
+          state.lineStyleDisable = false
+          state.propertiesList = `已绑定：${val.props.style?.value}`
+          state.bindModelValue = val.props.style
+        } else {
+          state.lineStyleDisable = true
+          state.propertiesList = '编辑行内样式'
+          state.bindModelValue = null
+        }
+      },
+      {
+        deep: true
+      }
+    )
+
     return {
       state,
       activeNames,
@@ -153,7 +211,8 @@ export default {
       open,
       save,
       close,
-      updateStyle
+      updateStyle,
+      setConfig
     }
   }
 }
