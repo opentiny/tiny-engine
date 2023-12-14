@@ -114,7 +114,7 @@
 import { reactive } from 'vue'
 import { Select, Option, OptionGroup, Tooltip } from '@opentiny/vue'
 import { MetaSlider, MetaColor } from '@opentiny/tiny-engine-common'
-import ModalMask, { useModal } from '../inputs/ModalMask.vue'
+import { PanelModalMask, usePanelModal } from '@opentiny/tiny-engine-common'
 import ResetButton from '../inputs/ResetButton.vue'
 import InputSelect from '../inputs/InputSelect.vue'
 import { useProperties } from '../../js/useStyle'
@@ -129,7 +129,7 @@ export default {
     TinyTooltip: Tooltip,
     MetaSlider,
     MetaColor,
-    ModalMask,
+    ModalMask: PanelModalMask,
     ResetButton,
     InputSelect
   },
@@ -385,7 +385,7 @@ export default {
       showModal: false
     })
 
-    const { setPosition } = useModal()
+    const { setPosition } = usePanelModal()
 
     const { getSettingFlag, getProperty } = useProperties({
       names: Object.values(EFFECTS_PROPERTY),

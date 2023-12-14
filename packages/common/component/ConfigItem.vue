@@ -27,10 +27,16 @@
             </div>
           </div>
           <template #reference>
-            <div>
-              <div :class="[{ 'pro-underline': propDescription && propDescription !== propLabel }]">
-                <span>{{ propLabel }}</span>
-              </div>
+            <div
+              :class="[
+                {
+                  'pro-underline': propDescription && propDescription !== propLabel,
+                  'is-setting': canOpenResetSetting()
+                }
+              ]"
+              @click="openSetting($event)"
+            >
+              <span>{{ propLabel }}</span>
             </div>
           </template>
         </tiny-popover>
@@ -96,11 +102,15 @@
       </div>
     </div>
   </div>
+  <modal-mask v-if="showModal" @close="showModal = false" class="reset-mask">
+    <TinyButton class="reset-btn" @click="reset">重置</TinyButton>
+    <div class="reset-tip">重置后将恢复到初始值</div>
+  </modal-mask>
 </template>
 
 <script>
 import { inject, computed, watch, ref, reactive, provide } from 'vue'
-import { Popover, Tooltip } from '@opentiny/vue'
+import { Popover, Tooltip, Button } from '@opentiny/vue'
 import { IconWriting, IconHelpCircle, IconPlusCircle } from '@opentiny/vue-icon'
 import { typeOf } from '@opentiny/vue-renderless/common/type'
 import i18n from '../js/i18n'
@@ -108,6 +118,7 @@ import { MetaComponents } from '../index'
 import MetaBindVariable from './MetaBindVariable.vue'
 import MetaCodeEditor from './MetaCodeEditor.vue'
 import MultiTypeSelector from './MultiTypeSelector.vue'
+import PanelModalMask, { usePanelModal } from './PanelModalMask.vue'
 import { useHistory, useProperties, useResource, useLayout, useCanvas } from '@opentiny/tiny-engine-controller'
 import { generateFunction } from '@opentiny/tiny-engine-controller/utils'
 import { SCHEMA_DATA_TYPE, PAGE_STATUS, TYPES } from '../js/constants'
@@ -126,6 +137,8 @@ export default {
     MetaBindVariable,
     TinyPopover: Popover,
     TinyTooltip: Tooltip,
+    TinyButton: Button,
+    ModalMask: PanelModalMask,
     IconWriting: IconWriting(),
     IconPlusCircle: IconPlusCircle(),
     IconHelpCircle: IconHelpCircle()
@@ -170,6 +183,11 @@ export default {
       hasRule: computed(() => hasRule(props.property?.required, props.property?.rules))
     })
     const editorModalRef = ref(null)
+    const showModal = ref(false)
+    const isValueChanged = ref(false)
+
+    const { setPosition } = usePanelModal()
+
     const currentProperty = inject('currentProperty', null)
     const propsObj = inject('propsObj', null)
     const required = computed(() => props.property?.required || false)
@@ -222,6 +240,8 @@ export default {
 
       return value
     })
+
+    const initValue = bindValue.value
 
     const currentLanguage = computed(() => {
       const language = props.property?.widget?.props?.language
@@ -392,6 +412,7 @@ export default {
       const preValue = bindValue.value
       widget.value.props.modelValue = data
       emit('update:modelValue', data)
+
       if (!shouldUpdate) {
         return
       }
@@ -408,6 +429,7 @@ export default {
       () => bindValue.value,
       (value) => {
         isBindingState.value = value?.type === SCHEMA_DATA_TYPE.JSExpression
+        isValueChanged.value = initValue !== value
       },
       {
         immediate: true
@@ -449,14 +471,31 @@ export default {
 
     const isRelatedComponents = (component) => ['MetaRelatedEditor', 'MetaRelatedColumns'].includes(component)
 
+    const canResetComponents = (component) => ['MetaSelectIcon'].includes(component)
+
     const showBindState = computed(
       () => !props.onlyEdit && (isBindingState.value || isLinked.value) && !isRelatedComponents(widget.value.component)
     )
+
+    const canOpenResetSetting = () => isValueChanged.value && canResetComponents(widget.value.component)
+
+    const openSetting = (event) => {
+      if (canOpenResetSetting()) {
+        setPosition(event)
+        showModal.value = true
+      }
+    }
+
+    const reset = () => {
+      onModelUpdate(initValue.value, true)
+      showModal.value = false
+    }
 
     return {
       verification,
       showCodeEditIcon,
       editorModalRef,
+      showModal,
       isBindingState,
       component,
       MetaComponents,
@@ -479,7 +518,10 @@ export default {
       handleBlur,
       isFocus,
       isRelatedComponents,
-      labelPosition
+      labelPosition,
+      openSetting,
+      reset,
+      canOpenResetSetting
     }
   }
 }
@@ -692,5 +734,13 @@ export default {
       }
     }
   }
+}
+.is-setting {
+  color: var(--ti-lowcode-style-setting-label-color);
+  background-color: var(--ti-lowcode-style-setting-label-bg);
+}
+.reset-btn {
+  display: block;
+  margin: 8px auto;
 }
 </style>
