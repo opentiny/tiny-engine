@@ -300,6 +300,7 @@
               },
               "component": "Icon",
               "container": false,
+              "required": false,
               "schema": {
                 "properties": [
                   {
@@ -319,7 +320,7 @@
                       {
                         "property": "name",
                         "type": "String",
-                        "defaultValue": "IconDel",
+                        "defaultValue": "",
                         "bindState": true,
                         "label": {
                           "text": {
@@ -893,7 +894,7 @@
               "schema": {
                 "componentName": "Icon",
                 "props": {
-                  "name": "IconDel"
+                  "name": ""
                 }
               }
             },

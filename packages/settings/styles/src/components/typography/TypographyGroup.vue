@@ -207,13 +207,13 @@ import { MetaColor, MetaSelect } from '@opentiny/tiny-engine-common'
 import { TYPO_PROPERTY } from '../../js/styleProperty'
 import useEvent from '../../js/useEvent'
 import { useProperties } from '../../js/useStyle'
-import ModalMask, { useModal } from '../inputs/ModalMask.vue'
+import { PanelModalMask, usePanelModal } from '@opentiny/tiny-engine-common'
 import ResetButton from '../inputs/ResetButton.vue'
 
 export default {
   components: {
     NumericSelect,
-    ModalMask,
+    ModalMask: PanelModalMask,
     ResetButton,
     // TypographyMore,
     ColorSelect: MetaColor,
@@ -243,7 +243,7 @@ export default {
       names: Object.values(TYPO_PROPERTY),
       parseNumber: true
     })
-    const { setPosition } = useModal()
+    const { setPosition } = usePanelModal()
 
     const fontFamilyOptions = [
       {

@@ -223,7 +223,7 @@ import { Tooltip } from '@opentiny/vue'
 import { MetaSelect } from '@opentiny/tiny-engine-common'
 import { camelize } from '@opentiny/tiny-engine-controller/utils'
 import { push } from '@opentiny/vue-renderless/common/array'
-import ModalMask, { useModal } from '../inputs/ModalMask.vue'
+import { PanelModalMask, usePanelModal } from '@opentiny/tiny-engine-common'
 import SpacingSetting from '../spacing/SpacingSetting.vue'
 import ResetButton from '../inputs/ResetButton.vue'
 import NumericSelect from '../inputs/NumericSelect.vue'
@@ -232,7 +232,7 @@ import { POSITION_PROPERTY } from '../../js/styleProperty'
 
 export default {
   components: {
-    ModalMask,
+    ModalMask: PanelModalMask,
     ResetButton,
     MetaSelect,
     NumericSelect,
@@ -347,7 +347,7 @@ export default {
     watchEffect(() => {
       state.selectValue = props.style?.position || 'static'
     })
-    const { setPosition } = useModal()
+    const { setPosition } = usePanelModal()
 
     const updateStyle = (property) => {
       emit('update', property)
@@ -404,14 +404,6 @@ export default {
 
     const getDirectionText = (name) => state.directionText[name] || getPropertyText(name) || 'auto'
 
-    const clickDirection = (styleName, event) => {
-      state.activeArr = push(state.activeArr, styleName)
-      state.className = styleName
-      state.show = true
-      setPosition(event)
-      openDirectionSetting(POSITION_PROPERTY.Position, styleName)
-    }
-
     const openDirectionSetting = (type, styleName) => {
       styleName = camelize(styleName)
 
@@ -422,6 +414,14 @@ export default {
       }
 
       state.showDirectionModal = true
+    }
+
+    const clickDirection = (styleName, event) => {
+      state.activeArr = push(state.activeArr, styleName)
+      state.className = styleName
+      state.show = true
+      setPosition(event)
+      openDirectionSetting(POSITION_PROPERTY.Position, styleName)
     }
 
     const closeDirectionModal = () => {

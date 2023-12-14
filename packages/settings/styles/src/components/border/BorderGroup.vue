@@ -227,7 +227,7 @@
 <script>
 import { computed, reactive, watch } from 'vue'
 import { Tooltip } from '@opentiny/vue'
-import ModalMask, { useModal } from '../inputs/ModalMask.vue'
+import { PanelModalMask, usePanelModal } from '@opentiny/tiny-engine-common'
 import NumericSelect from '../inputs/NumericSelect.vue'
 import ResetButton from '../inputs/ResetButton.vue'
 import { MetaColor, MetaSlider } from '@opentiny/tiny-engine-common'
@@ -264,7 +264,7 @@ const BORDER_COLOR = {
 export default {
   components: {
     MetaSlider,
-    ModalMask,
+    ModalMask: PanelModalMask,
     ResetButton,
     ColorSelect: MetaColor,
     NumericSelect,
@@ -296,7 +296,7 @@ export default {
       isUpdateFromProps: false
     })
 
-    const { setPosition } = useModal()
+    const { setPosition } = usePanelModal()
 
     const { getProperty, getSettingFlag, getPropertyValue } = useProperties({
       props,

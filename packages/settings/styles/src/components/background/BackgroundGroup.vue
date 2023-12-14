@@ -86,7 +86,7 @@ import { Tooltip } from '@opentiny/vue'
 import { MetaColor, MetaSelect } from '@opentiny/tiny-engine-common'
 import { useCanvas } from '@opentiny/tiny-engine-controller'
 import { iconPlus } from '@opentiny/vue-icon'
-import ModalMask, { useModal } from '../inputs/ModalMask.vue'
+import { PanelModalMask, usePanelModal } from '@opentiny/tiny-engine-common'
 import ResetButton from '../inputs/ResetButton.vue'
 import BackgroundImageSetting from './BackgroundImageSetting.vue'
 import { useProperties } from '../../js/useStyle'
@@ -98,7 +98,7 @@ const PAGE_ROOT_ID = 'page-root-id'
 export default {
   components: {
     MetaColor,
-    ModalMask,
+    ModalMask: PanelModalMask,
     ResetButton,
     MetaSelect,
     BackgroundImageSetting,
@@ -148,7 +148,7 @@ export default {
       names: Object.values(BACKGROUND_PROPERTY),
       parseNumber: true
     })
-    const { setPosition } = useModal()
+    const { setPosition } = usePanelModal()
     const { getCurrentSchema } = useCanvas()
 
     watch(

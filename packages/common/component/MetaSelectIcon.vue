@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { reactive, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { Popover, Search } from '@opentiny/vue'
 import { iconClose } from '@opentiny/vue-icon'
 import SvgICons from '@opentiny/vue-icon'
@@ -51,10 +51,10 @@ export default {
   setup(props, { emit }) {
     const state = reactive({
       iconSearchValue: '',
-      icon: {
+      icon: computed(() => ({
         name: props.modelValue,
         component: props.modelValue && SvgICons[props.modelValue]()
-      },
+      })),
       defaultIcon: {
         name: props.modelValue,
         component: props.modelValue && SvgICons[props.modelValue]()
@@ -62,13 +62,11 @@ export default {
     })
 
     const selectIcon = (icon) => {
-      state.icon = icon
       emit('update:modelValue', icon.name)
     }
 
     const clearIcon = (e) => {
       e.stopPropagation()
-      state.icon = state.defaultIcon
       emit('update:modelValue', '')
     }
 

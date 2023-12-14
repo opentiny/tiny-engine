@@ -399,13 +399,13 @@
 import { computed, reactive } from 'vue'
 import { camelize } from '@opentiny/tiny-engine-controller/utils'
 import SpacingSetting from './SpacingSetting.vue'
-import ModalMask, { useModal } from '../inputs/ModalMask.vue'
+import { PanelModalMask, usePanelModal } from '@opentiny/tiny-engine-common'
 import useEvent from '../../js/useEvent'
 import { SPACING_PROPERTY } from '../../js/styleProperty'
 
 export default {
   components: {
-    ModalMask,
+    ModalMask: PanelModalMask,
     SpacingSetting
   },
   props: {
@@ -416,7 +416,7 @@ export default {
   },
   emits: useEvent(),
   setup(props, { emit }) {
-    const { setPosition } = useModal()
+    const { setPosition } = usePanelModal()
 
     const state = reactive({
       className: '',
@@ -447,6 +447,22 @@ export default {
       return reactive(properties)
     })
 
+    const getSettingFlag = (styleName) => Boolean(spacing.value[camelize(styleName)]?.setting)
+    const getPropertyText = (styleName) => spacing.value[camelize(styleName)]?.text || 0
+    const getPropertyValue = (styleName) => spacing.value[camelize(styleName)]?.value
+
+    // 打开单个属性设置弹窗
+    const openSetting = (type, styleName) => {
+      styleName = camelize(styleName)
+
+      state.property = {
+        type,
+        name: styleName,
+        value: getPropertyValue(styleName)
+      }
+
+      state.showModal = true
+    }
     const clickMargin = (styleName, event) => {
       state.className = styleName
       state.show = true
@@ -463,27 +479,10 @@ export default {
       openSetting(SPACING_PROPERTY.Padding, styleName)
     }
 
-    // 打开单个属性设置弹窗
-    const openSetting = (type, styleName) => {
-      styleName = camelize(styleName)
-
-      state.property = {
-        type,
-        name: styleName,
-        value: getPropertyValue(styleName)
-      }
-
-      state.showModal = true
-    }
-
     const closeModal = () => {
       state.show = false
       state.showModal = false
     }
-
-    const getSettingFlag = (styleName) => Boolean(spacing.value[camelize(styleName)]?.setting)
-    const getPropertyText = (styleName) => spacing.value[camelize(styleName)]?.text || 0
-    const getPropertyValue = (styleName) => spacing.value[camelize(styleName)]?.value
 
     // 向父级传递更新 style 对象
     const update = (property) => {
