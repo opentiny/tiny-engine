@@ -1,7 +1,7 @@
 <template>
   <div class="components-wrap">
     <tiny-search v-model="state.searchValue" placeholder="请输入关键字搜索" clearable @update:modelValue="change">
-      <template #prefix> <icon-search /> </template>
+      <template #prefix> <icon-search class="searchIcon" /> </template>
     </tiny-search>
     <tiny-collapse v-model="state.activeName" class="lowcode-scrollbar">
       <tiny-collapse-item v-for="(item, index) in state.components" :key="item.group" :title="item.group" :name="index">
@@ -124,6 +124,10 @@ export default {
 
   .tiny-search {
     padding: 12px 8px;
+  }
+
+  .searchIcon {
+    transform: none !important;
   }
 
   .component-group {

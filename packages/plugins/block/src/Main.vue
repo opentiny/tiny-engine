@@ -67,7 +67,11 @@
         <svg-button class="add-group-btn" tips="新建分类" name="add-page" @click="createCategory"></svg-button>
       </div>
       <div class="app-manage-search">
-        <tiny-search v-model="state.searchKey" placeholder="请输入关键字搜索"></tiny-search>
+        <tiny-search v-model="state.searchKey" placeholder="请输入关键字搜索">
+          <template #prefix>
+            <tiny-icon-search />
+          </template>
+        </tiny-search>
       </div>
       <plugin-block-list
         class="plugin-block-list"
@@ -115,7 +119,7 @@ import {
 import { PluginPanel, PluginBlockList, SvgButton, SaveNewBlock } from '@opentiny/tiny-engine-common'
 import { useBlock, useModal, useLayout, useCanvas } from '@opentiny/tiny-engine-controller'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { iconChevronDown } from '@opentiny/vue-icon'
+import { iconChevronDown, iconSearch } from '@opentiny/vue-icon'
 import BlockSetting, { openPanel, closePanel } from './BlockSetting.vue'
 import BlockGroupArrange from './BlockGroupArrange.vue'
 import CategoryEdit from './CategoryEdit.vue'
@@ -184,7 +188,8 @@ export default {
     PluginBlockList,
     TinyPopover,
     TinyButton,
-    IconChevronDown: iconChevronDown()
+    IconChevronDown: iconChevronDown(),
+    TinyIconSearch: iconSearch()
   },
 
   setup() {
