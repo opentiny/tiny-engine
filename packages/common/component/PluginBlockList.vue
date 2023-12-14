@@ -1,13 +1,7 @@
 <template>
   <ul
     v-if="state.data.length"
-    :class="[
-      'block-list',
-      'lowcode-scrollbar',
-      { 'is-list': blockStyle === 'list' },
-      { 'is-small-list': blockStyle === 'mini' },
-      { isShortcutPanel }
-    ]"
+    :class="['block-list', 'lowcode-scrollbar', { 'is-small-list': blockStyle === 'mini' }, { isShortcutPanel }]"
     @mouseleave="state.hover = false"
   >
     <li
@@ -18,7 +12,6 @@
         'block-item',
         { 'is-active': state.activeIndex === index },
         { 'is-disabled': showBlockDetail },
-        { 'block-item-list': blockStyle === 'list' },
         { 'block-item-small-list': blockStyle === 'mini' }
       ]"
       :title="getTitle(item)"
@@ -393,10 +386,7 @@ export default {
   overflow-y: auto;
   overflow-x: hidden;
   color: var(--ti-lowcode-common-secondary-text-color);
-  &.is-list {
-    grid-template-columns: 100%;
-    grid-template-rows: repeat(auto-fill, 60px);
-  }
+
   &.is-small-list {
     grid-template-columns: 100%;
     grid-template-rows: repeat(auto-fill, 30px);
@@ -432,36 +422,7 @@ export default {
       border-radius: 4px 0 4px 0;
       transform: scale(0.9);
     }
-    &.block-item-list {
-      flex-direction: row;
-      height: 60px;
-      .item-image {
-        width: 50px;
-      }
-      .item-text {
-        text-align: left;
-        margin-top: 0;
-        margin-left: 4px;
-      }
-      .publish-flag {
-        position: static;
-      }
-      .block-detail,
-      .block-setting {
-        visibility: hidden;
-        position: static;
-        margin-left: 4px;
-        z-index: 9;
-        .block-detail-icon {
-          color: var(--ti-lowcode-component-block-list-setting-btn-color);
-          display: block;
-          &:hover {
-            cursor: not-allowed;
-            color: var(--ti-lowcode-component-block-list-setting-btn-hover-color);
-          }
-        }
-      }
-    }
+
     &.block-item-small-list {
       flex-direction: row;
       align-items: center;
@@ -691,7 +652,6 @@ export default {
     }
   }
 
-  &.is-list,
   &.is-small-list {
     display: block;
     grid-template-columns: initial;
@@ -719,22 +679,6 @@ export default {
         color: var(--ti-lowcode-toolbar-title-color);
         font-size: 12px;
       }
-    }
-  }
-
-  &.is-list {
-    .block-item {
-      height: 58px;
-    }
-
-    .item-image {
-      font-size: 2.5em;
-      width: 48px;
-      height: 42px;
-    }
-
-    .item-text {
-      width: calc(100% - 56px);
     }
   }
 
