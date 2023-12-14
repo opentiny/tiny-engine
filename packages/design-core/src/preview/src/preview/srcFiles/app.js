@@ -16,5 +16,5 @@ function addCss(href) {
   link.setAttribute('href', href)
   document.head.appendChild(link)
 }
-addCss('https://registry.npmmirror.com/@opentiny/vue-theme/3.11/files/index.css')
-addCss('https://registry.npmmirror.com/@opentiny/vue-theme-mobile/3/files/index.css')
+addCss('https://registry.npmmirror.com/@opentiny/vue-theme/3.10/files/index.css')
+addCss('https://registry.npmmirror.com/@opentiny/vue-theme-mobile/3.10/files/index.css')
