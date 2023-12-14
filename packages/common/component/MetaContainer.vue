@@ -1,6 +1,6 @@
 <template>
   <div>
-    <meta-list-items class="list" :optionsList="children">
+    <meta-list-items class="list" :optionsList="children" @dragEnd="dragEnd">
       <template #content="{ data }">
         <div class="item-text">
           <div class="tiny-input">
@@ -22,7 +22,7 @@
 <script>
 import { ref } from 'vue'
 import MetaListItems from './MetaListItems.vue'
-import { useProperties, useHistory } from '@opentiny/tiny-engine-controller'
+import { useProperties, useResource, useHistory } from '@opentiny/tiny-engine-controller'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { iconDel } from '@opentiny/vue-icon'
 
@@ -32,7 +32,10 @@ export default {
     IconDel: iconDel()
   },
   setup() {
-    const schemaChildren = useProperties().getSchema().children
+    const { children: schemaChildren, componentName } = useProperties().getSchema()
+    const configureMap = useResource().getConfigureMap()
+    const childComponentName =
+      configureMap[componentName]?.nestingRule?.childWhitelist?.[0] || schemaChildren?.[0]?.componentName
 
     schemaChildren.forEach((item) => {
       if (!item.props) {
@@ -48,7 +51,7 @@ export default {
       const name = utils.guid()
 
       schemaChildren.push({
-        componentName: schemaChildren?.[0]?.componentName,
+        componentName: childComponentName,
         props: {
           title: '选项卡',
           name
@@ -64,7 +67,21 @@ export default {
       useHistory().addHistory()
     }
 
-    return { children, addChildren, delChildren }
+    const dragEnd = (params = {}) => {
+      const { oldIndex, newIndex } = params?.moved || {}
+
+      if (oldIndex === undefined || newIndex === undefined) {
+        return
+      }
+
+      const list = schemaChildren
+      const spliceItem = list.splice(oldIndex, 1)
+
+      list.splice(newIndex, 0, ...spliceItem)
+      children.value = [...list]
+    }
+
+    return { children, addChildren, delChildren, dragEnd }
   }
 }
 </script>

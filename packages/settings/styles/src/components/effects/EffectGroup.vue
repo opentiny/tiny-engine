@@ -388,7 +388,6 @@ export default {
     const { setPosition } = useModal()
 
     const { getSettingFlag, getProperty } = useProperties({
-      props,
       names: Object.values(EFFECTS_PROPERTY),
       parseNumber: true
     })

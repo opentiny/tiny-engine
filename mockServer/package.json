@@ -5,8 +5,17 @@
     "access": "public"
   },
   "description": "mock服务",
-  "author": "opentiny",
-  "license": "WTFPL",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/opentiny/tiny-engine",
+    "directory": "mockServer"
+  },
+  "bugs": {
+    "url": "https://github.com/opentiny/tiny-engine/issues"
+  },
+  "author": "OpenTiny Team",
+  "license": "MIT",
+  "homepage": "https://opentiny.design/tiny-engine",
   "scripts": {
     "start": "gulp nodemon",
     "dev": "gulp",

@@ -102,7 +102,7 @@
       "type": "function",
       "content": {
         "type": "JSFunction",
-        "value": "function util() {\r\n  console.log(3211)\r\n}"
+        "value": "function test() {\r\n  return 'test'\r\n}"
       },
       "app": 918,
       "category": "utils",
