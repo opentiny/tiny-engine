@@ -31,7 +31,7 @@ importMap.imports = {
     'https://registry.npmmirror.com/vue/server-renderer/3.2.36/files/dist/server-renderer.esm-browser.js',
   'vue-i18n': 'https://registry.npmmirror.com/vue-i18n/9.2.0/files/dist/vue-i18n.esm-browser.js',
   'vue-router': 'https://registry.npmmirror.com/vue-router/4.0.16/files/dist/vue-router.esm-browser.js',
-  '@vue/devtools-api': 'https://registry.npmmirror.com/@vue/devtools-api/6.1.4/files/lib/esm/index.js',
+  '@vue/devtools-api': 'https://unpkg.com/@vue/devtools-api@6.1.4/lib/esm/index.js',
   '@vueuse/core': 'https://registry.npmmirror.com/@vueuse/core/9.6.0/files/index.mjs',
   '@vueuse/shared': 'https://registry.npmmirror.com/@vueuse/shared/9.6.0/files/index.mjs',
   axios: 'https://registry.npmmirror.com/axios/1.0.0-alpha.1/files/dist/esm/axios.js',
