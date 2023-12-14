@@ -22,7 +22,7 @@ const tinyVue3Imports = {
   '@opentiny/vue-icon': 'https://registry.npmmirror.com/@opentiny/vue/3.11/files/runtime/tiny-vue-icon.mjs',
   '@opentiny/vue-common': 'https://registry.npmmirror.com/@opentiny/vue/3.11/files/runtime/tiny-vue-common.mjs',
   '@opentiny/vue-locale': 'https://registry.npmmirror.com/@opentiny/vue/3.11/files/runtime/tiny-vue-locale.mjs',
-  '@opentiny/vue-renderless/': 'https://esm.sh/@opentiny/vue-renderless@3/?raw'
+  '@opentiny/vue-renderless/': 'https://esm.sh/@opentiny/vue-renderless@3.11/?raw'
 }
 
 importMap.imports = {
