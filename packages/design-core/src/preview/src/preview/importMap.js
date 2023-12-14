@@ -26,10 +26,9 @@ const tinyVue3Imports = {
 }
 
 importMap.imports = {
-  vue: 'https://registry.npmmirror.com/vue/3.2.36/files/dist/vue.runtime.esm-browser.js',
-  'vue/server-renderer':
-    'https://registry.npmmirror.com/@vue/server-renderer/3.2.36/files/dist/server-renderer.esm-browser.js',
-  'vue-i18n': 'https://registry.npmmirror.com/vue-i18n/9.2.0-beta.36/files/dist/vue-i18n.esm-browser.js',
+  vue: '/node_modules/vue/dist/vue.esm-browser.js',
+  'vue/server-renderer': '/node_modules/vue/server-renderer/index.mjs',
+  'vue-i18n': '/node_modules/vue-i18n/dist/vue-i18n.esm-browser.js',
   'vue-router': 'https://registry.npmmirror.com/vue-router/4.0.16/files/dist/vue-router.esm-browser.js',
   '@vue/devtools-api': 'https://registry.npmmirror.com/@vue/devtools-api/6.1.4/files/lib/esm/index.js',
   '@vueuse/core': 'https://registry.npmmirror.com/@vueuse/core/9.6.0/files/index.mjs',
@@ -37,9 +36,8 @@ importMap.imports = {
   axios: 'https://registry.npmmirror.com/axios/1.0.0-alpha.1/files/dist/esm/axios.js',
   'axios-mock-adapter': 'https://registry.npmmirror.com/axios-mock-adapter/1.21.1/files/dist/axios-mock-adapter.js',
   '@opentiny/tiny-engine-webcomponent-core':
-    'https://registry.npmmirror.com/@opentiny/tiny-engine-webcomponent-core/1/files/dist/tiny-engine-webcomponent-core.es.js',
-  '@opentiny/tiny-engine-i18n-host':
-    'https://registry.npmmirror.com/@opentiny/tiny-engine-i18n-host/1/files/dist/tiny-engine-i18n-host.es.js',
+    '/node_modules/@opentiny/tiny-engine-webcomponent-core/dist/tiny-engine-webcomponent-core.es.js',
+  '@opentiny/tiny-engine-i18n-host': '/node_modules/@opentiny/tiny-engine-i18n-host/dist/tiny-engine-i18n-host.es.js',
   'vue-demi': 'https://registry.npmmirror.com/vue-demi/0.13.11/files/lib/index.mjs',
   pinia: 'https://registry.npmmirror.com/pinia/2.0.22/files/dist/pinia.esm-browser.js',
   ...tinyVue3Imports,
