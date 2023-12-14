@@ -112,7 +112,9 @@ export default {
     EffectGroup,
     ClassNamesContainer,
     TinyCollapse: Collapse,
-    TinyCollapseItem: CollapseItem
+    TinyCollapseItem: CollapseItem,
+    TinyInput: Input,
+    MetaBindVariable
   },
   setup() {
     const activeNames = ref([
