@@ -222,14 +222,31 @@ export default {
 
 <style lang="less" scoped>
 .style-editor {
-  display: flex;
   justify-content: space-around;
   padding: 8px 16px 12px;
   column-gap: 8px;
-  :deep(.editor-wrap) {
-    .tiny-button {
-      padding: 0 16px;
+  .inline-style {
+    :deep(.editor-wrap) {
+      display: flex;
+      .tiny-button {
+        padding: 0 16px;
+        border-radius: 8px;
+        width: 216px;
+        text-align: left;
+      }
     }
+    .inline-bind-style {
+      :deep(.tiny-input__inner) {
+        width: 216px;
+        pointer-events: none;
+        background: #1476ff;
+        color: #ffffff;
+        border-color: #1476ff;
+      }
+    }
+  }
+  :deep(.svg-icon) {
+    margin-top: 5px;
   }
 }
 </style>
