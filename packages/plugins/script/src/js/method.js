@@ -12,7 +12,7 @@
 
 import { ref, reactive, watchEffect, onActivated, nextTick } from 'vue'
 import { useCanvas, useModal, useNotify } from '@opentiny/tiny-engine-controller'
-import { string2Ast, ast2String, insertName } from '@opentiny/tiny-engine-common/js/ast'
+import { string2Ast, ast2String, insertName, formatString } from '@opentiny/tiny-engine-common/js/ast'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { getSchema } from '@opentiny/tiny-engine-canvas'
 import { lint } from '@opentiny/tiny-engine-common/js/linter'
@@ -109,7 +109,7 @@ const saveMethods = () => {
       delete declaration.trailingComments
     }
 
-    const content = ast2String(declaration).trim()
+    const content = formatString(ast2String(declaration).trim(), 'javascript')
 
     saveMethod({ name, content })
   })
