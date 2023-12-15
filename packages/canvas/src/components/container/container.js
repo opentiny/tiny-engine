@@ -410,6 +410,8 @@ export const clearSelect = () => {
   canvasState.current = null
   canvasState.parent = null
   Object.assign(selectState, initialRectState)
+  // 临时借用 remote 事件出发 currentSchema 更新
+  canvasState?.emit?.('remove')
 }
 
 export const querySelectById = (id, type = '') => {

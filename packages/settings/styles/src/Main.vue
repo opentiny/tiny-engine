@@ -17,7 +17,7 @@
       @save="save(CSS_TYPE.Style, $event)"
     />
   </div>
-
+  <class-names-container></class-names-container>
   <tiny-collapse v-model="activeNames">
     <tiny-collapse-item title="布局" name="layout">
       <layout-group :display="state.style.display" @update="updateStyle" />
@@ -58,23 +58,26 @@
 <script>
 import { ref } from 'vue'
 import { Collapse, CollapseItem } from '@opentiny/vue'
+import { useHistory, useCanvas, useProperties } from '@opentiny/tiny-engine-controller'
+import { setPageCss, getSchema as getCanvasPageSchema } from '@opentiny/tiny-engine-canvas'
 import { MetaCodeEditor } from '@opentiny/tiny-engine-common'
-import SizeGroup from './components/size/SizeGroup.vue'
-import LayoutGroup from './components/layout/LayoutGroup.vue'
-import FlexBox from './components/layout/FlexBox.vue'
-import GridBox from './components/layout/GridBox.vue'
-import PositionGroup from './components/position/PositionGroup.vue'
-import BorderGroup from './components/border/BorderGroup.vue'
-import SpacingGroup from './components/spacing/SpacingGroup.vue'
-import BackgroundGroup from './components/background/BackgroundGroup.vue'
-import EffectGroup from './components/effects/EffectGroup.vue'
-// import BoxShadowGroup from './components/shadow/BoxShadowGroup.vue'
-import TypographyGroup from './components/typography/TypographyGroup.vue'
+import { formatString } from '@opentiny/tiny-engine-common/js/ast'
+import {
+  SizeGroup,
+  LayoutGroup,
+  FlexBox,
+  GridBox,
+  PositionGroup,
+  BorderGroup,
+  SpacingGroup,
+  BackgroundGroup,
+  EffectGroup,
+  TypographyGroup,
+  ClassNamesContainer
+} from './components'
 import { CSS_TYPE } from './js/cssType'
 import useStyle from './js/useStyle'
 import { styleStrRemoveRoot } from './js/cssConvert'
-import { useHistory, useCanvas, useProperties } from '@opentiny/tiny-engine-controller'
-import { setPageCss, getSchema as getCanvasPageSchema } from '@opentiny/tiny-engine-canvas'
 
 export default {
   components: {
@@ -87,9 +90,9 @@ export default {
     BorderGroup,
     SpacingGroup,
     BackgroundGroup,
-    // BoxShadowGroup,
     TypographyGroup,
     EffectGroup,
+    ClassNamesContainer,
     TinyCollapse: Collapse,
     TinyCollapseItem: CollapseItem
   },
@@ -106,7 +109,7 @@ export default {
     ])
     const { getCurrentSchema, getPageSchema } = useCanvas()
     // 获取当前节点 style 对象
-    const { state, updateStyle, setStyle } = useStyle() // updateStyle
+    const { state, updateStyle } = useStyle() // updateStyle
     const { addHistory } = useHistory()
     const { getSchema } = useProperties()
 
@@ -117,7 +120,7 @@ export default {
       if (type === CSS_TYPE.Style) {
         const pageSchema = getCanvasPageSchema()
         const schema = getSchema() || pageSchema
-        const styleString = styleStrRemoveRoot(content)
+        const styleString = formatString(styleStrRemoveRoot(content), 'css')
         const currentSchema = getCurrentSchema() || pageSchema
 
         state.styleContent = content
@@ -132,13 +135,13 @@ export default {
           delete currentSchema.props.style
         }
 
-        setStyle(styleString)
         addHistory()
       } else if (type === CSS_TYPE.Css) {
-        const cssString = content.replace(/"/g, "'")
+        const cssString = formatString(content.replace(/"/g, "'"), 'css')
         getPageSchema().css = cssString
         getCanvasPageSchema().css = cssString
         setPageCss(cssString)
+        state.schemaUpdateKey++
         addHistory()
       }
     }

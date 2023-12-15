@@ -26,7 +26,7 @@ const cacheStringFunction = (fn) => {
 }
 const hyphenateRE = /\B([A-Z])/g
 const hyphenate = cacheStringFunction((str) => str.replace(hyphenateRE, '-$1').toLowerCase())
-var _export_sfc = (sfc, props) => {
+const _export_sfc = (sfc, props) => {
   const target = sfc.__vccOpts || sfc
   for (const [key, val] of props) {
     target[key] = val
@@ -73,7 +73,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     ])
   )
 }
-var block = /* @__PURE__ */ _export_sfc(_sfc_main, [
+const block = /* @__PURE__ */ _export_sfc(_sfc_main, [
   ['render', _sfc_render],
   ['__file', 'D:/tmp/buildground/buildground_1673597935715/src/block/generated/components/PortalBlock.vue']
 ])

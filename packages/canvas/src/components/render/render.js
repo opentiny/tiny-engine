@@ -160,7 +160,7 @@ const parseI18n = (i18n, scope, ctx) => {
   return parseExpression(
     {
       type: 'JSExpression',
-      value: `this.i18n('${i18n.key}')`
+      value: `this.i18n('${i18n.key}', ${JSON.stringify(i18n.params)})`
     },
     scope,
     { i18n: i18nHost.global.t, ...ctx }
@@ -169,6 +169,7 @@ const parseI18n = (i18n, scope, ctx) => {
 
 const renderDefault = (children, scope, parent) =>
   children.map?.((child) =>
+    // eslint-disable-next-line no-use-before-define
     h(renderer, {
       schema: child,
       scope,
@@ -495,20 +496,22 @@ const stopEvent = (event) => {
   return false
 }
 
-const generateSlotGroup = (children, isCustomElm) => {
+const generateSlotGroup = (children, isCustomElm, schema) => {
   const slotGroup = {}
 
   children.forEach((child) => {
     const { componentName, children, params = [], props } = child
     const slot = child.slot || props?.slot?.name || props?.slot || 'default'
+    const isNotEmptyTemplate = componentName === 'Template' && children.length
 
     isCustomElm && (child.props.slot = 'slot') // CE下需要给子节点加上slot标识
     slotGroup[slot] = slotGroup[slot] || {
       value: [],
-      params
+      params,
+      parent: isNotEmptyTemplate ? child : schema
     }
 
-    slotGroup[slot].value.push(...(componentName === 'Template' && children.length ? children : [child])) // template 标签直接过滤掉
+    slotGroup[slot].value.push(...(isNotEmptyTemplate ? children : [child])) // template 标签直接过滤掉
   })
 
   return slotGroup
@@ -516,11 +519,13 @@ const generateSlotGroup = (children, isCustomElm) => {
 
 const renderSlot = (children, scope, schema, isCustomElm) => {
   if (children.some((a) => a.componentName === 'Template')) {
-    const slotGroup = generateSlotGroup(children, isCustomElm)
+    const slotGroup = generateSlotGroup(children, isCustomElm, schema)
     const slots = {}
 
     Object.keys(slotGroup).forEach((slotName) => {
-      slots[slotName] = ($scope) => renderDefault(slotGroup[slotName].value, { ...scope, ...$scope }, schema)
+      const currentSlot = slotGroup[slotName]
+
+      slots[slotName] = ($scope) => renderDefault(currentSlot.value, { ...scope, ...$scope }, currentSlot.parent)
     })
 
     return slots

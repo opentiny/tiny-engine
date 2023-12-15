@@ -176,7 +176,6 @@ export default {
     const showModal = ref(false)
 
     const { getSettingFlag } = useProperties({
-      props,
       names: Object.values(FLEX_PROPERTY),
       parseNumber: true
     })

@@ -49,7 +49,7 @@ export default class BlockCategoryService {
       const categories = await this.db.findOneAsync({ _id: id })
       categories.blocks.push(params._id)
       await this.db.updateAsync({ _id: id }, { $set: categories })
-      return
+      return getResponseData(categories)
     }
     params.app = appinfo.app
     await this.db.updateAsync({ _id: id }, { $set: params })
