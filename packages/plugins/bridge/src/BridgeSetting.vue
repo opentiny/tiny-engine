@@ -6,15 +6,8 @@
       </div>
     </template>
     <template #header>
-      <div class="header-wrap" @mouseenter="handleMouseEnterHeader">
-        <svg-button
-          v-show="state.status"
-          class="delete-btn"
-          name="delete"
-          @click="deleteReSource"
-          :disabled="deleteDisabled"
-          :tips="deleteBtnTips"
-        ></svg-button>
+      <div class="header-wrap">
+        <svg-button v-show="state.status" class="delete-btn" name="delete" @click="deleteReSource"></svg-button>
         <tiny-button class="save-btn" type="primary" @click="save">保存</tiny-button>
         <svg-button class="close-btn" name="close" @click="closePanel"></svg-button>
       </div>
@@ -42,14 +35,14 @@
             </tiny-radio-group>
           </tiny-form-item>
           <tiny-form-item v-if="!state.status" label="名称" prop="name">
-            <tiny-input v-model="state.name" placeholder="请输入名称"></tiny-input>
+            <tiny-input v-model="state.name" placeholder="请输入工具类名称"></tiny-input>
           </tiny-form-item>
           <div v-if="state.category">
             <tiny-form-item label="包名" prop="content.package">
-              <tiny-input v-model="state.content.package" placeholder="package"></tiny-input>
+              <tiny-input v-model="state.content.package" placeholder="请输入npm包名称"></tiny-input>
             </tiny-form-item>
             <tiny-form-item label="导出名称" prop="content.exportName">
-              <tiny-input v-model="state.content.exportName" placeholder="exportName"></tiny-input>
+              <tiny-input v-model="state.content.exportName" placeholder="请输入npm包的导出名称"></tiny-input>
             </tiny-form-item>
             <tiny-form-item label="是否解构">
               <tiny-switch v-model="state.content.destructuring"></tiny-switch>
@@ -84,6 +77,9 @@
                 placeholder="浏览器直接可用的生产包链接，请确保可用，否则可能会造成页面预览失败"
               ></tiny-input>
             </tiny-form-item>
+            <div class="code-preview">
+              <pre>// <span class="pre-title">生成的</span> utils.js <span class="pre-title">代码预览</span>&#10;{{ codePreview }}</pre>
+            </div>
           </div>
           <monaco-editor
             v-else
@@ -126,9 +122,8 @@ import {
   getResourceNamesByType
 } from './js/resource'
 import { VueMonaco as MonacoEditor, PluginSetting, SvgButton } from '@opentiny/tiny-engine-common'
-import { useApp, getGlobalConfig, useModal, useNotify, useLayout } from '@opentiny/tiny-engine-controller'
+import { useApp, getGlobalConfig, useModal, useNotify } from '@opentiny/tiny-engine-controller'
 import { theme } from '@opentiny/tiny-engine-controller/adapter'
-import { getSchema } from '@opentiny/tiny-engine-canvas'
 
 const isOpen = ref(false)
 
@@ -139,29 +134,6 @@ export const openPanel = () => {
 
 export const closePanel = () => {
   isOpen.value = false
-}
-
-const utilsVariableRegex = new RegExp(`(?<=[^A-Za-z0-9_$]utils\\.)[\\w$]+(?=[^A-Za-z0-9_$]*)`, 'g')
-
-const deleteBtnTips = ref('')
-const deleteDisabled = ref(false)
-const mouseEnteredHeader = ref(0)
-
-const checkUtilsVariableUse = (variableName) => {
-  if (!variableName) {
-    return
-  }
-
-  const schemaStr = JSON.stringify(getSchema())
-  const variableNames = [...schemaStr.matchAll(utilsVariableRegex)].map((item) => item[0])
-
-  if (variableNames.includes(variableName)) {
-    deleteDisabled.value = true
-    deleteBtnTips.value = '当前工具正在被使用，无法删除'
-  } else {
-    deleteDisabled.value = false
-    deleteBtnTips.value = ''
-  }
 }
 
 export default {
@@ -214,6 +186,21 @@ export default {
       type: RESOURCE_CATEGORY.Npm
     })
 
+    const codePreview = computed(() => {
+      const name = state.name || 'name'
+      let importName = name
+      if (state.content.destructuring) {
+        if (state.name && state.name === state.content.exportName) {
+          importName = `{ ${state.content.exportName || 'exportName'} }`
+        } else {
+          importName = `{ ${state.content.exportName || 'exportName'} } as ${name}`
+        }
+      }
+
+      const importFrom = `${state.content.package || 'package'}${state.content.main || ''}`
+      return `import ${importName} from '${importFrom}'\nexport { ${name} }`
+    })
+
     watchEffect(() => {
       state.name = state.resource.name
       state.content = state.resource.content || {}
@@ -225,15 +212,6 @@ export default {
       (value) => {
         if (!value) {
           state.content.instance = ''
-        }
-      }
-    )
-
-    watch(
-      [() => useLayout().getPluginState().render, isOpen, () => state.name, mouseEnteredHeader],
-      ([render, open, name]) => {
-        if (render === 'Bridge' && open) {
-          checkUtilsVariableUse(name)
         }
       }
     )
@@ -283,15 +261,11 @@ export default {
     const deleteReSource = () => {
       confirm({
         title: '删除资源',
-        message: '您确认删除该资源吗?',
+        message: '删除资源可能会导致预览失败，您确认删除该资源吗?',
         exec: () => {
           deleteData(state.name, closePanel, emit)
         }
       })
-    }
-
-    const handleMouseEnterHeader = () => {
-      mouseEnteredHeader.value++
     }
 
     const rules = {
@@ -324,15 +298,13 @@ export default {
       resourceForm,
       editor,
       state,
+      codePreview,
       isOpen,
-      deleteDisabled,
-      deleteBtnTips,
       closePanel,
       save,
       deleteReSource,
       options: monacoOptions,
       handleChangeType,
-      handleMouseEnterHeader,
       RESOURCE_CATEGORY
     }
   }
@@ -370,12 +342,8 @@ export default {
     column-gap: 16px;
     .delete-btn {
       color: var(--ti-lowcode-common-text-color-5);
-      &:not([disabled='true']):hover {
+      &:hover {
         color: var(--ti-lowcode-common-primary-text-color);
-      }
-
-      &[disabled='true'] {
-        cursor: not-allowed;
       }
     }
   }
@@ -404,6 +372,24 @@ export default {
   .cdn-label-wrap {
     display: flex;
     align-items: center;
+  }
+}
+
+.code-preview {
+  font-size: 14px;
+  line-height: 20px;
+  margin-left: 12px;
+  background-color: #f0f0f0;
+  border-radius: 6px;
+
+  & .pre-title {
+    font-family: Microsoft YaHei;
+  }
+
+  & > pre {
+    margin: 0;
+    padding: 8px 20px;
+    font-family: Consolas, 'Courier New', monospace;
   }
 }
 </style>

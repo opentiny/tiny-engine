@@ -61,16 +61,8 @@ const setUtils = (data, clear, isForceRefresh) => {
     reset(utils)
   }
   const utilsCollection = {}
-  const utilsWithCDN = []
+  // 目前画布还不具备远程加载utils工具类的功能，目前只能加载TinyVue组件库中的组件工具
   data?.forEach((item) => {
-    // 解析函数式的工具类
-    if (item.type === 'function') {
-      const defaultFn = () => {}
-      utilsCollection[item.name] = generateFunction(item.content.value, context) || defaultFn
-      return
-    }
-
-    // 解析npm式的工具类
     const util = window.TinyVue[item.content.exportName]
     if (util) {
       utilsCollection[item.name] = util
@@ -82,26 +74,13 @@ const setUtils = (data, clear, isForceRefresh) => {
       utilsCollection[item.name] = utilIcon
     }
 
-    if (item.content.cdnLink) {
-      utilsWithCDN.push(item)
+    // 解析函数式的工具类
+    if (item.type === 'function') {
+      const defaultFn = () => {}
+      utilsCollection[item.name] = generateFunction(item.content.value, context) || defaultFn
     }
   })
   Object.assign(utils, utilsCollection)
-
-  if (utilsWithCDN.length > 0) {
-    // 动态导入utils中有cdnLink的模块
-    Promise.all(
-      utilsWithCDN.map((item) => import(/* @vite-ignore */ item.content.cdnLink).then((module) => [item, module]))
-    ).then((modules) => {
-      modules.forEach(([item, module]) => {
-        const defaultExport = module.default
-        Object.assign(utils, {
-          [item.name]: item.content.destructuring ? defaultExport[item.content.exportName] : defaultExport
-        })
-      })
-      refreshKey.value++
-    })
-  }
 
   // 因为工具类并不具有响应式行为，所以需要通过修改key来强制刷新画布
   if (isForceRefresh) {

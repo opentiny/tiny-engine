@@ -1,5 +1,5 @@
 <template>
-  <span class="svg-button" @click="handleClick" :disabled="disabled">
+  <span class="svg-button" @click="$emit('click', $event)">
     <tiny-tooltip effect="dark" :content="tips" :placement="placement">
       <component :is="name" v-if="isTinyIcon" />
       <svg-icon v-else :name="name"></svg-icon>
@@ -27,26 +27,14 @@ export default {
     name: {
       type: String,
       default: 'add'
-    },
-    disabled: {
-      type: Boolean,
-      default: false
     }
   },
   emits: ['click'],
-  setup(props, ctx) {
+  setup(props) {
     const isTinyIcon = computed(() => props.name.toLowerCase().indexOf('icon') === 0)
 
-    const handleClick = (event) => {
-      if (props.disabled) {
-        return
-      }
-      ctx.emit('click', event)
-    }
-
     return {
-      isTinyIcon,
-      handleClick
+      isTinyIcon
     }
   }
 }
