@@ -331,7 +331,7 @@ export default {
 
     const scaleChange = (val) => {
       const item = mediaMap['mdx']
-      const reg = '^[0-9]+$'
+      const reg = '^[0-9]+(\\.[0-9]+)?$'
 
       if (!String(val).match(reg)) {
         state.scaleValue = prevScaleVal ? prevScaleVal : parseInt(item.scale)
