@@ -12,7 +12,7 @@
       <span>
         行内样式
       </span>
-      <div class="inline-style" style="display: flex">
+      <div class="inline-style">
         <meta-code-editor
           v-if="state.lineStyleDisable"
           :modelValue="state.styleContent"
@@ -229,31 +229,32 @@ export default {
     display: block;
     margin-top: 16px;
     margin-bottom: 8px;
-    color: var(--ti-lowcode-datasource-label-color);
+    color: var(--ti-lowcode-setting-style-font-color);
     font-size: 12px
   }
   .inline-style {
-    :deep(.editor-wrap) {
-      display: flex;
-      .tiny-button {
-        padding: 0 16px;
-        border-radius: 8px;
-        width: 216px;
-        text-align: left;
-      }
-    }
-    .inline-bind-style {
-      :deep(.tiny-input__inner) {
-        width: 216px;
-        pointer-events: none;
-        background: var(--ti-lowcode-datasource-canvas-handle-hover-bg);
-        color: var(--ti-lowcode-base-gray-0);
-        border-color: var(--ti-lowcode-datasource-canvas-handle-hover-bg);
-      }
+  display: flex;
+  :deep(.editor-wrap) {
+    display: flex;
+    .tiny-button {
+      padding: 0 16px;
+      border-radius: 8px;
+      width: 216px;
+      text-align: left;
     }
   }
-  :deep(.svg-icon) {
-    margin-top: 5px;
+  .inline-bind-style {
+    :deep(.tiny-input__inner) {
+      width: 216px;
+      pointer-events: none;
+      background: var(--ti-lowcode-setting-style-input-bg);
+      color: var(--ti-lowcode-setting-style-input-font-color);
+      border-color: var(--ti-lowcode-setting-style-input-bg);
+    }
   }
+}
+:deep(.svg-icon) {
+  margin-top: 5px;
+}
 }
 </style>
