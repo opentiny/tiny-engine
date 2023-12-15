@@ -9,7 +9,7 @@
       @save="save(CSS_TYPE.Css, $event)"
     />
     <div class="line-style">
-      <span style="display: block; margin-top: 16px; margin-bottom: 8px; color: #595959; font-size: 12px">
+      <span>
         行内样式
       </span>
       <div class="inline-style" style="display: flex">
@@ -225,6 +225,13 @@ export default {
   justify-content: space-around;
   padding: 8px 16px 12px;
   column-gap: 8px;
+  .line-style {
+    display: block;
+    margin-top: 16px;
+    margin-bottom: 8px;
+    color: var(--ti-lowcode-datasource-label-color);
+    font-size: 12px
+  }
   .inline-style {
     :deep(.editor-wrap) {
       display: flex;
@@ -239,9 +246,9 @@ export default {
       :deep(.tiny-input__inner) {
         width: 216px;
         pointer-events: none;
-        background: #1476ff;
-        color: #ffffff;
-        border-color: #1476ff;
+        background: var(--ti-lowcode-datasource-canvas-handle-hover-bg);
+        color: var(--ti-lowcode-base-gray-0);
+        border-color: var(--ti-lowcode-datasource-canvas-handle-hover-bg);
       }
     }
   }
