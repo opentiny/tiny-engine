@@ -193,7 +193,7 @@ export default {
         if (state.name && state.name === state.content.exportName) {
           importName = `{ ${state.content.exportName || 'exportName'} }`
         } else {
-          importName = `{ ${state.content.exportName || 'exportName'} } as ${name}`
+          importName = `{ ${state.content.exportName || 'exportName'} as ${name} }`
         }
       }
 
@@ -261,7 +261,7 @@ export default {
     const deleteReSource = () => {
       confirm({
         title: '删除资源',
-        message: '删除资源可能会导致预览失败，您确认删除该资源吗?',
+        message: '如果您删除了正在使用的资源，将无法正常预览页面。您确认要删除吗？',
         exec: () => {
           deleteData(state.name, closePanel, emit)
         }
