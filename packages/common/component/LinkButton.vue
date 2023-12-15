@@ -34,7 +34,7 @@ export default {
 
   #help-icon {
     :deep(.svg-icon.icon-plugin-icon-plugin-help) {
-      font-size: 18px;
+      font-size: 16px;
     }
   }
 }

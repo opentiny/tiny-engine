@@ -106,6 +106,6 @@ export default {
 :deep(.help-box) {
   position: absolute;
   left: 72px;
-  top: 4px;
+  top: 3px;
 }
 </style>

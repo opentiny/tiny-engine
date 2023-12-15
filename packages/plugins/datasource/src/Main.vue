@@ -149,21 +149,20 @@ export default {
 </script>
 <style lang="less" scoped>
 .add-page {
+  font-size: 14px;
   color: var(--ti-lowcode-datasource-btn-click-color);
 }
 .set-page {
-  font-size: 16px;
+  font-size: 14px;
   color: var(--ti-lowcode-datasource-btn-click-color);
 }
 .refresh-page {
+  font-size: 14px;
   color: var(--ti-lowcode-datasource-btn-click-color);
 }
 :deep(.help-box) {
   position: absolute;
-  left: 60px;
-  top: 4px;
-}
-:deep(.svg-icon.icon-plugin-icon-plugin-help) {
-  font-size: 20px !important;
+  left: 58px;
+  top: 3px;
 }
 </style>
