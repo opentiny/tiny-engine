@@ -312,7 +312,7 @@ export default {
     ]
 
     const widthChange = (val) => {
-      const reg = '^[0-9]+$'
+      const reg = /^\d+$/
 
       if (!String(val).match(reg)) {
         state.width = prevWidthVal ? prevWidthVal : parseInt(dimension.value.width, 10)
@@ -331,7 +331,7 @@ export default {
 
     const scaleChange = (val) => {
       const item = mediaMap['mdx']
-      const reg = '^[0-9]+(\\.[0-9]+)?$'
+      const reg = /^\d+(\.\d+)?$/
 
       if (!String(val).match(reg)) {
         state.scaleValue = prevScaleVal ? prevScaleVal : parseInt(item.scale)
@@ -353,11 +353,13 @@ export default {
       setCanvasType(value ? 'absolute' : 'normal')
     }
 
-    watchEffect(() => {
-      const deviceType = dimension.value.deviceType
-      state.activeIndex = mediaMap[deviceType].index
-      state.readonly = dimension.value.deviceType !== 'mdx'
-    })
+    watch(
+      () => dimension.value.deviceType,
+      (deviceType) => {
+        state.activeIndex = mediaMap[deviceType].index
+        state.readonly = deviceType !== 'mdx'
+      }
+    )
 
     watchEffect(() => {
       state.scaleValue = scale.value.toFixed(2)
@@ -365,7 +367,7 @@ export default {
     })
 
     watch(
-      () => useLayout().getDimension().width,
+      () => dimension.value.width,
       (width) => {
         const newWidth = parseInt(width, 10)
         if (Number.isInteger(newWidth)) {
