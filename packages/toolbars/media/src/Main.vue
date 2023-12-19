@@ -287,9 +287,6 @@ export default {
           minWidth: item.minWidth,
           maxWidth: item.maxWidth
         })
-        state.width = parseInt(item.width, 10)
-        state.scaleValue = scale.value.toFixed(2)
-        state.readonly = item.view !== 'mdx'
       } else {
         state.activeIndex = item.idx
         emit('setViewPort', item.width)
@@ -298,7 +295,6 @@ export default {
 
     const activeView = (val, type) => {
       const item = mediaMap[type]
-      state.activeIndex = mediaMap[type].index
       useLayout().setDimension({
         deviceType: item.view,
         width: val ? `${val}px` : item.width,
@@ -306,46 +302,36 @@ export default {
         maxWidth: item.maxWidth
       })
     }
+
+    const breakpoints = [
+      { type: 'mobile', min: 240, max: 480 },
+      { type: 'lanMobile', min: 480, max: 768 },
+      { type: 'tablet', min: 768, max: 992 },
+      { type: 'desktop', min: 992, max: 1200 },
+      { type: 'mdx', min: 1200, max: 1920 }
+    ]
+
     const widthChange = (val) => {
-      const reg = '^[0-9]*$'
-      const dimension = useLayout().getDimension()
+      const reg = /^\d+$/
 
       if (!String(val).match(reg)) {
-        state.width = prevWidthVal ? prevWidthVal : parseInt(dimension.width)
-      } else if (String(val) === '0' || Number(val) < 240) {
+        state.width = prevWidthVal ? prevWidthVal : parseInt(dimension.value.width, 10)
+      } else if (Number(val) < 240) {
         state.width = 240
-        prevWidthVal = 240
       } else if (Number(val) > 1920) {
         state.width = 1920
-        prevWidthVal = 1920
       } else {
-        prevWidthVal = val
+        state.width = val
       }
 
-      switch (true) {
-        case 1200 < Number(state.width) && Number(state.width) <= 1920:
-          activeView(val, 'mdx')
-          break
-        case 992 < Number(state.width) && Number(state.width) <= 1200:
-          activeView(val, 'desktop')
-          break
-        case 768 < Number(state.width) && Number(state.width) <= 992:
-          activeView(val, 'tablet')
-          break
-        case 480 < Number(state.width) && Number(state.width) <= 768:
-          activeView(val, 'lanMobile')
-          break
-        case 240 <= Number(state.width) && Number(state.width) <= 480:
-          activeView(val, 'mobile')
-          break
-        default:
-          break
-      }
+      const width = Number(state.width)
+      const type = breakpoints.find((item) => item.min <= width && width <= item.max)?.type || 'desktop'
+      activeView(width, type)
     }
 
     const scaleChange = (val) => {
       const item = mediaMap['mdx']
-      const reg = '^[0-9]*$'
+      const reg = /^\d+(\.\d+)?$/
 
       if (!String(val).match(reg)) {
         state.scaleValue = prevScaleVal ? prevScaleVal : parseInt(item.scale)
@@ -354,14 +340,11 @@ export default {
       } else if (Number(val) < 20) {
         state.scaleValue = 20
       } else {
-        prevScaleVal = val
+        state.scaleValue = val
       }
+      state.scaleValue = Number(state.scaleValue).toFixed(2)
 
       useLayout().setDimension({
-        deviceType: item.view,
-        width: item.width,
-        minWidth: item.minWidth,
-        maxWidth: item.maxWidth,
         scale: Number(state.scaleValue) / 100
       })
     }
@@ -370,22 +353,26 @@ export default {
       setCanvasType(value ? 'absolute' : 'normal')
     }
 
-    watchEffect(
-      () => {
-        const mode = dimension.value.deviceType || 'desktop'
-
-        state.activeIndex = mediaMap[mode].index || 0
-        setViewPort(mediaMap[mode])
-      },
-      { flush: 'post' }
+    watch(
+      () => dimension.value.deviceType,
+      (deviceType) => {
+        state.activeIndex = mediaMap[deviceType].index
+        state.readonly = deviceType !== 'mdx'
+      }
     )
 
+    watchEffect(() => {
+      state.scaleValue = scale.value.toFixed(2)
+      prevScaleVal = scale.value
+    })
+
     watch(
-      () => useLayout().getDimension().width,
+      () => dimension.value.width,
       (width) => {
         const newWidth = parseInt(width, 10)
-        if (Number.isInteger(newWidth) && newWidth !== state.width) {
+        if (Number.isInteger(newWidth)) {
           state.width = newWidth
+          prevWidthVal = newWidth
         }
       }
     )
@@ -397,6 +384,10 @@ export default {
     onUnmounted(() => {
       document.removeEventListener('click', closePopover)
     })
+
+    // 初始化 viewpoint
+    const mode = dimension.value.deviceType || 'desktop'
+    setViewPort(mediaMap[mode])
 
     return {
       scale,
