@@ -121,7 +121,7 @@ const config = {
 const importMapVersions = {
   prettier: '2.7.1',
   vue: '3',
-  tinyVue: '3'
+  tinyVue: '~3.11'
 }
 
 const devAlias = {
@@ -176,7 +176,7 @@ const devAlias = {
 
 const devVueAlias = {
   find: /^vue$/,
-  replacement: `https://unpkg.com/vue@${importMapVersions.vue}/dist/vue.runtime.esm-browser.js`
+  replacement: `https://registry.npmmirror.com/vue/${importMapVersions.vue}/files/dist/vue.runtime.esm-browser.js`
 }
 
 const prodAlias = {
@@ -267,7 +267,11 @@ export default defineConfig(({ command, mode }) => {
     }
   }
 
-  config.plugins.push(monacoEditorPluginInstance, htmlPlugin(mode), importmapPlugin(importmap, importMapStyles))
+  config.plugins.push(
+    monacoEditorPluginInstance,
+    htmlPlugin(mode),
+    command === 'build' && importmapPlugin(importmap, importMapStyles)
+  )
 
   return config
 })
