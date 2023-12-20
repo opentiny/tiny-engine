@@ -261,7 +261,7 @@ export default {
     const deleteReSource = () => {
       confirm({
         title: '删除资源',
-        message: '如果您删除了正在使用的资源，将无法正常预览页面。您确认要删除吗？',
+        message: '如果删除正在使用的资源，将无法正常预览页面，确认要删除吗？',
         exec: () => {
           deleteData(state.name, closePanel, emit)
         }
@@ -379,7 +379,8 @@ export default {
   font-size: 14px;
   line-height: 20px;
   margin-left: 12px;
-  background-color: #f0f0f0;
+  color: var(--ti-lowcode-utils-code-preview-color);
+  background-color: var(--ti-lowcode-utils-code-preview-bg-color);
   border-radius: 6px;
 
   & .pre-title {
