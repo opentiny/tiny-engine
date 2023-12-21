@@ -12,6 +12,12 @@ import axiosFile from './templateFiles/src/http/axios.js?raw'
 import axiosConfigFile from './templateFiles/src/http/config.js?raw'
 import httpEntryFile from './templateFiles/src/http/index.js?raw'
 
+/**
+ * 模板写入动态内容
+ * @param {*} context
+ * @param {*} str
+ * @returns
+ */
 const getTemplate = (context, str) => {
   return str.replace(/(\$\$TinyEngine{(.*)}END\$)/g, function (match, p1, p2) {
     if (!p2) {
