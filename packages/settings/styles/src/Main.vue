@@ -9,9 +9,7 @@
       @save="save(CSS_TYPE.Css, $event)"
     />
     <div class="line-style">
-      <span>
-        行内样式
-      </span>
+      <span> 行内样式 </span>
       <div class="inline-style">
         <meta-code-editor
           v-if="state.lineStyleDisable"
@@ -230,31 +228,31 @@ export default {
     margin-top: 16px;
     margin-bottom: 8px;
     color: var(--ti-lowcode-setting-style-font-color);
-    font-size: 12px
+    font-size: 12px;
   }
   .inline-style {
-  display: flex;
-  :deep(.editor-wrap) {
     display: flex;
-    .tiny-button {
-      padding: 0 16px;
-      border-radius: 8px;
-      width: 216px;
-      text-align: left;
+    :deep(.editor-wrap) {
+      display: flex;
+      .tiny-button {
+        padding: 0 16px;
+        border-radius: 8px;
+        width: 216px;
+        text-align: left;
+      }
+    }
+    .inline-bind-style {
+      :deep(.tiny-input__inner) {
+        width: 216px;
+        pointer-events: none;
+        background: var(--ti-lowcode-setting-style-input-bg);
+        color: var(--ti-lowcode-setting-style-input-font-color);
+        border-color: var(--ti-lowcode-setting-style-input-bg);
+      }
     }
   }
-  .inline-bind-style {
-    :deep(.tiny-input__inner) {
-      width: 216px;
-      pointer-events: none;
-      background: var(--ti-lowcode-setting-style-input-bg);
-      color: var(--ti-lowcode-setting-style-input-font-color);
-      border-color: var(--ti-lowcode-setting-style-input-bg);
-    }
+  :deep(.svg-icon) {
+    margin-top: 5px;
   }
-}
-:deep(.svg-icon) {
-  margin-top: 5px;
-}
 }
 </style>
