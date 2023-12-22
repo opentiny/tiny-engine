@@ -93,7 +93,8 @@ export default {
 
     // 相比store.setFiles，只要少了state.activeFile = state.files[filename]，因为改变activeFile会触发多余的文件解析
     const setFiles = async (newFiles, mainFileName) => {
-      store.setFiles(newFiles, mainFileName)
+      await store.setFiles(newFiles, mainFileName)
+      // 强制更新 codeSandbox
       store.state.resetFlip = !store.state.resetFlip
     }
 
@@ -108,9 +109,9 @@ export default {
       store.setImportMap(newImportMap)
     }
 
-    const params = getSearchParams()
+    const queryParams = getSearchParams()
 
-    const promiseList = [fetchCode(params), fetchMetaData(params), setFiles(srcFiles, 'src/Main.vue')]
+    const promiseList = [fetchCode(queryParams), fetchMetaData(queryParams), setFiles(srcFiles, 'src/Main.vue')]
     Promise.all(promiseList).then(([codeList, metaData]) => {
       addUtilsImportMap(metaData.utils || [])
       const codeErrorMsgs = codeList
@@ -155,7 +156,7 @@ export default {
         newFiles[panelName] = panelValue
       }
 
-      const appJsCode = processAppJsCode(newFiles['app.js'], params.styles)
+      const appJsCode = processAppJsCode(newFiles['app.js'], queryParams.styles)
 
       newFiles['app.js'] = appJsCode
 
