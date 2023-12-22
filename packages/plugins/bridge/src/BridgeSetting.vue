@@ -379,8 +379,8 @@ export default {
   font-size: 14px;
   line-height: 20px;
   margin-left: 12px;
-  color: var(--ti-lowcode-utils-code-preview-color);
-  background-color: var(--ti-lowcode-utils-code-preview-bg-color);
+  color: var(--ti-lowcode-birdge-code-preview-color);
+  background-color: var(--ti-lowcode-birdge-code-preview-bg-color);
   border-radius: 6px;
 
   & .pre-title {
