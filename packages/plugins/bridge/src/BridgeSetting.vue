@@ -35,14 +35,14 @@
             </tiny-radio-group>
           </tiny-form-item>
           <tiny-form-item v-if="!state.status" label="名称" prop="name">
-            <tiny-input v-model="state.name" placeholder="请输入名称"></tiny-input>
+            <tiny-input v-model="state.name" placeholder="请输入工具类名称"></tiny-input>
           </tiny-form-item>
           <div v-if="state.category">
             <tiny-form-item label="包名" prop="content.package">
-              <tiny-input v-model="state.content.package" placeholder="package"></tiny-input>
+              <tiny-input v-model="state.content.package" placeholder="请输入npm包名称"></tiny-input>
             </tiny-form-item>
             <tiny-form-item label="导出名称" prop="content.exportName">
-              <tiny-input v-model="state.content.exportName" placeholder="exportName"></tiny-input>
+              <tiny-input v-model="state.content.exportName" placeholder="请输入npm包的导出名称"></tiny-input>
             </tiny-form-item>
             <tiny-form-item label="是否解构">
               <tiny-switch v-model="state.content.destructuring"></tiny-switch>
@@ -77,6 +77,9 @@
                 placeholder="浏览器直接可用的生产包链接，请确保可用，否则可能会造成页面预览失败"
               ></tiny-input>
             </tiny-form-item>
+            <div class="code-preview">
+              <pre>// <span class="pre-title">生成的</span> utils.js <span class="pre-title">代码预览</span>&#10;{{ codePreview }}</pre>
+            </div>
           </div>
           <monaco-editor
             v-else
@@ -183,6 +186,21 @@ export default {
       type: RESOURCE_CATEGORY.Npm
     })
 
+    const codePreview = computed(() => {
+      const name = state.name || 'name'
+      let importName = name
+      if (state.content.destructuring) {
+        if (state.name && state.name === state.content.exportName) {
+          importName = `{ ${state.content.exportName || 'exportName'} }`
+        } else {
+          importName = `{ ${state.content.exportName || 'exportName'} as ${name} }`
+        }
+      }
+
+      const importFrom = `${state.content.package || 'package'}${state.content.main || ''}`
+      return `import ${importName} from '${importFrom}'\nexport { ${name} }`
+    })
+
     watchEffect(() => {
       state.name = state.resource.name
       state.content = state.resource.content || {}
@@ -243,7 +261,7 @@ export default {
     const deleteReSource = () => {
       confirm({
         title: '删除资源',
-        message: '您确认删除该资源吗?',
+        message: '如果删除正在使用的资源，将无法正常预览页面，确认要删除吗？',
         exec: () => {
           deleteData(state.name, closePanel, emit)
         }
@@ -280,6 +298,7 @@ export default {
       resourceForm,
       editor,
       state,
+      codePreview,
       isOpen,
       closePanel,
       save,
@@ -353,6 +372,25 @@ export default {
   .cdn-label-wrap {
     display: flex;
     align-items: center;
+  }
+}
+
+.code-preview {
+  font-size: 14px;
+  line-height: 20px;
+  margin-left: 12px;
+  color: var(--ti-lowcode-birdge-code-preview-color);
+  background-color: var(--ti-lowcode-birdge-code-preview-bg-color);
+  border-radius: 6px;
+
+  & .pre-title {
+    font-family: Microsoft YaHei;
+  }
+
+  & > pre {
+    margin: 0;
+    padding: 8px 20px;
+    font-family: Consolas, 'Courier New', monospace;
   }
 }
 </style>
