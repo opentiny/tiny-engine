@@ -168,7 +168,7 @@ export default {
       const pageSchema = getCanvasPageSchema()
       const currentSchema = getCurrentSchema() || pageSchema
       const schema = getSchema() || pageSchema
-      if (value !== 'remove') {
+      if (value !== '') {
         schema.props.style = value
         currentSchema.props.style = value
         state.propertiesList = `已绑定：${value.value}`

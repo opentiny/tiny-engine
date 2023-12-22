@@ -386,7 +386,7 @@ export default {
     }
 
     const remove = () => {
-      emit('update:modelValue', 'remove')
+      emit('update:modelValue', '')
       cancel()
     }
 
