@@ -1,5 +1,6 @@
 <template>
   <Repl
+    :editor="Monaco"
     :store="store"
     :sfcOptions="sfcOptions"
     :showCompileOutput="false"
@@ -10,7 +11,8 @@
 </template>
 
 <script>
-import { Repl, ReplStore, File, compileFile } from '@vue/repl'
+import { Repl, ReplStore } from '@vue/repl'
+import Monaco from '@vue/repl/monaco-editor'
 import vueJsx from '@vue/babel-plugin-jsx'
 import { transformSync } from '@babel/core'
 import { Notify } from '@opentiny/vue'
@@ -90,21 +92,11 @@ export default {
     store.setImportMap(importMap)
 
     // 相比store.setFiles，只要少了state.activeFile = state.files[filename]，因为改变activeFile会触发多余的文件解析
-    const setFiles = async (newFiles, mainfileName = 'App.vue') => {
-      const files = {}
-      Object.entries(newFiles).forEach(([fileName, fileCode]) => {
-        files[fileName] = new File(fileName, fileCode)
-      })
-      const compilingList = Object.values(files).map((file) => compileFile(store, file))
-
-      await Promise.all(compilingList)
-      store.state.mainFile = mainfileName
-      store.state.files = files
+    const setFiles = async (newFiles, mainFileName) => {
+      await store.setFiles(newFiles, mainFileName)
+      // 强制更新 codeSandbox
       store.state.resetFlip = !store.state.resetFlip
     }
-
-    const files = store.getFiles()
-    Object.assign(files, srcFiles)
 
     const addUtilsImportMap = (utils = []) => {
       const utilsImportMaps = {}
@@ -117,9 +109,9 @@ export default {
       store.setImportMap(newImportMap)
     }
 
-    const params = getSearchParams()
+    const queryParams = getSearchParams()
 
-    const promiseList = [fetchCode(params), fetchMetaData(params), setFiles(files, 'Main.vue')]
+    const promiseList = [fetchCode(queryParams), fetchMetaData(queryParams), setFiles(srcFiles, 'src/Main.vue')]
     Promise.all(promiseList).then(([codeList, metaData]) => {
       addUtilsImportMap(metaData.utils || [])
       const codeErrorMsgs = codeList
@@ -164,8 +156,8 @@ export default {
         newFiles[panelName] = panelValue
       }
 
-      const appJsCode = processAppJsCode(newFiles['app.js'], params.styles)
- 
+      const appJsCode = processAppJsCode(newFiles['app.js'], queryParams.styles)
+
       newFiles['app.js'] = appJsCode
 
       codeList.map(fixScriptLang).forEach(assignFiles)
@@ -180,7 +172,8 @@ export default {
 
     return {
       store,
-      sfcOptions
+      sfcOptions,
+      Monaco
     }
   }
 }
