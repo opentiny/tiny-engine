@@ -18,10 +18,10 @@
           "keywords": "",
           "dev_mode": "proCode",
           "npm": {
-            "package": "element-plus",
+            "package": "ElementPlus",
             "version": "2.4.2",
-            "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
-            "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css",
+            "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
+            "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
             "dependencies": null,
             "exportName": "ElInput"
           },
@@ -298,10 +298,10 @@
           "keywords": "",
           "dev_mode": "proCode",
           "npm": {
-            "package": "element-plus",
+            "package": "ElementPlus",
             "version": "2.4.2",
-            "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
-            "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css",
+            "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
+            "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
             "dependencies": null,
             "exportName": "ElButton"
           },
@@ -619,10 +619,10 @@
           "keywords": "",
           "dev_mode": "proCode",
           "npm": {
-            "package": "element-plus",
+            "package": "ElementPlus",
             "version": "2.4.2",
-            "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
-            "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css",
+            "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
+            "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
             "dependencies": null,
             "exportName": "ElForm"
           },
@@ -1076,10 +1076,10 @@
           "keywords": "",
           "dev_mode": "proCode",
           "npm": {
-            "package": "element-plus",
+            "package": "ElementPlus",
             "version": "2.4.2",
-            "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
-            "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css",
+            "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
+            "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
             "dependencies": null,
             "exportName": "ElFormItem"
           },
@@ -1426,10 +1426,10 @@
           "keywords": "",
           "dev_mode": "proCode",
           "npm": {
-            "package": "element-plus",
+            "package": "ElementPlus",
             "version": "2.4.2",
-            "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
-            "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css",
+            "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
+            "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
             "dependencies": null,
             "exportName": "ElTable"
           },
@@ -2662,10 +2662,10 @@
           "keywords": "",
           "dev_mode": "proCode",
           "npm": {
-            "package": "element-plus",
+            "package": "ElementPlus",
             "version": "2.4.2",
-            "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
-            "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css",
+            "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
+            "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
             "dependencies": null,
             "exportName": "ElTableColumn"
           },

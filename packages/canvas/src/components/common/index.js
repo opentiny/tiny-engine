@@ -1,14 +1,14 @@
 /**
-* Copyright (c) 2023 - present TinyEngine Authors.
-* Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
-*
-* Use of this source code is governed by an MIT-style license.
-*
-* THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
-* BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
-* A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
-*
-*/
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
+ *
+ * Use of this source code is governed by an MIT-style license.
+ *
+ * THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
+ * BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
+ * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
+ *
+ */
 
 export const NODE_UID = 'data-uid'
 export const NODE_TAG = 'data-tag'
@@ -126,19 +126,43 @@ export const getClipboardSchema = (event) => translateStringToSchame(event.clipb
 export const dynamicImportComponents = async ({ package: pkg, script, components }) => {
   if (!script) return
 
-  if (!window.TinyComponentLibs[pkg]) {
-    const modules = await import(/* @vite-ignore */ script)
+  const loadScript = new Promise((resolve) => {
+    if (window.TinyComponentLibs[pkg]) {
+      resolve()
+    }
 
-    window.TinyComponentLibs[pkg] = modules
-  }
+    if (!window.TinyComponentLibs[pkg]) {
+      console.log('ddddddddd', pkg)
+      // const modules = await import(/* @vite-ignore */ script)
+      // const sc = document.createElement('script')
+      // sc.setAttribute('src', script)
+      // document.body.appendChild(sc)
+      // document.body.append(script)
+      // console.log('modules', modules)
+      // window.TinyComponentLibs[pkg] = modules
+      const ele = document.createElement('script')
+      ele.setAttribute('type', 'text/javascript')
+      ele.setAttribute('src', 'https://npm.onmicrosoft.cn/element-plus@2.4.2')
+      ele.addEventListener('load', () => {
+        resolve()
+      })
+      document.body.appendChild(ele)
+    }
+  })
+
+  await loadScript
 
   Object.entries(components).forEach(([componentId, exportName]) => {
-    const modules = window.TinyComponentLibs[pkg]
+    console.log('pkg', pkg)
+    const modules = window[pkg]
+
+    console.log('modules[exportName]', modules[exportName])
 
     if (!window.TinyLowcodeComponent[componentId]) {
       window.TinyLowcodeComponent[componentId] = modules[exportName]
     }
   })
+  setTimeout(() => {}, 5000)
 }
 
 /**
