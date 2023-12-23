@@ -129,17 +129,16 @@ export const dynamicImportComponents = async ({ package: pkg, script, components
   const loadScript = new Promise((resolve) => {
     if (window.TinyComponentLibs[pkg]) {
       resolve()
+      return
     }
 
-    if (!window.TinyComponentLibs[pkg]) {
-      const module = document.createElement('script')
-      module.setAttribute('type', 'text/javascript')
-      module.setAttribute('src', script)
-      module.addEventListener('load', () => {
-        resolve()
-      })
-      document.body.appendChild(module)
-    }
+    const module = document.createElement('script')
+    module.setAttribute('type', 'text/javascript')
+    module.setAttribute('src', script)
+    module.addEventListener('load', () => {
+      resolve()
+    })
+    document.body.appendChild(module)
   })
 
   await loadScript
