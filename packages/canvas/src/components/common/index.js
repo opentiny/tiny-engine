@@ -132,37 +132,25 @@ export const dynamicImportComponents = async ({ package: pkg, script, components
     }
 
     if (!window.TinyComponentLibs[pkg]) {
-      console.log('ddddddddd', pkg)
-      // const modules = await import(/* @vite-ignore */ script)
-      // const sc = document.createElement('script')
-      // sc.setAttribute('src', script)
-      // document.body.appendChild(sc)
-      // document.body.append(script)
-      // console.log('modules', modules)
-      // window.TinyComponentLibs[pkg] = modules
-      const ele = document.createElement('script')
-      ele.setAttribute('type', 'text/javascript')
-      ele.setAttribute('src', 'https://npm.onmicrosoft.cn/element-plus@2.4.2')
-      ele.addEventListener('load', () => {
+      const module = document.createElement('script')
+      module.setAttribute('type', 'text/javascript')
+      module.setAttribute('src', script)
+      module.addEventListener('load', () => {
         resolve()
       })
-      document.body.appendChild(ele)
+      document.body.appendChild(module)
     }
   })
 
   await loadScript
 
   Object.entries(components).forEach(([componentId, exportName]) => {
-    console.log('pkg', pkg)
     const modules = window[pkg]
-
-    console.log('modules[exportName]', modules[exportName])
 
     if (!window.TinyLowcodeComponent[componentId]) {
       window.TinyLowcodeComponent[componentId] = modules[exportName]
     }
   })
-  setTimeout(() => {}, 5000)
 }
 
 /**

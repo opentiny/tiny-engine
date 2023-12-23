@@ -20,7 +20,7 @@
           "npm": {
             "package": "ElementPlus",
             "version": "2.4.2",
-            "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
+            "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2",
             "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
             "dependencies": null,
             "exportName": "ElInput"
@@ -300,7 +300,7 @@
           "npm": {
             "package": "ElementPlus",
             "version": "2.4.2",
-            "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
+            "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2",
             "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
             "dependencies": null,
             "exportName": "ElButton"
@@ -621,7 +621,7 @@
           "npm": {
             "package": "ElementPlus",
             "version": "2.4.2",
-            "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
+            "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2",
             "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
             "dependencies": null,
             "exportName": "ElForm"
@@ -1078,7 +1078,7 @@
           "npm": {
             "package": "ElementPlus",
             "version": "2.4.2",
-            "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
+            "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2",
             "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
             "dependencies": null,
             "exportName": "ElFormItem"
@@ -1428,7 +1428,7 @@
           "npm": {
             "package": "ElementPlus",
             "version": "2.4.2",
-            "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
+            "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2",
             "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
             "dependencies": null,
             "exportName": "ElTable"
@@ -2664,7 +2664,7 @@
           "npm": {
             "package": "ElementPlus",
             "version": "2.4.2",
-            "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
+            "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2",
             "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
             "dependencies": null,
             "exportName": "ElTableColumn"

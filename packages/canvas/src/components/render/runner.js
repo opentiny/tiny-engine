@@ -132,8 +132,6 @@ export const createRender = (config) => {
   const { dslMode, canvasOptions } = config
   const { styles = [], scripts = [] } = canvasOptions[dslMode]
   const { styles: thirdStyles = [], scripts: thirdScripts = [] } = window.thirdPartyDeps || {}
-  console.log('scripts', scripts)
-  console.log('dynamicImportComponents', thirdScripts)
 
   Promise.all([
     ...thirdScripts.map(dynamicImportComponents),

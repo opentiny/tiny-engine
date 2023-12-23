@@ -270,7 +270,11 @@ export default defineConfig(({ command, mode }) => {
     }
   }
 
-  config.plugins.push(monacoEditorPluginInstance, htmlPlugin(mode), importmapPlugin(importmap, importMapStyles))
+  config.plugins.push(
+    monacoEditorPluginInstance,
+    htmlPlugin(mode),
+    command === 'build' && importmapPlugin(importmap, importMapStyles)
+  )
 
   return config
 })
