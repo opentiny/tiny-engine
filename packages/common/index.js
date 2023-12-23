@@ -77,7 +77,7 @@ import MetaRelatedColumns from './component/MetaRelatedColumns.vue'
 import BlockDeployDialog from './component/BlockDeployDialog.vue'
 import ProgressBar from './component/ProgressBar.vue'
 import MetaButtonGroup from './component/MetaButtonGroup.vue'
-import PanelModalMask, { usePanelModal } from './component/PanelModalMask'
+import PanelModalMask, { usePanelModal } from './component/PanelModalMask.vue'
 
 import i18n, { i18nKeyMaps } from './js/i18n.js'
 
