@@ -52,7 +52,7 @@ export default {
   top: 0;
   left: 0;
   margin-top: 10px;
-  width: calc(var(--lowcode-setting-panel-min-width) - 24px);
+  width: calc(var(--base-right-panel-width) - 24px);
   z-index: 9999;
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.5);
   .modal-mask {
