@@ -184,10 +184,7 @@ export default {
     }
 
     watch(
-      () => {
-        const currentSchema = getCurrentSchema()
-        return currentSchema
-      },
+      () => getCurrentSchema(),
       (val) => {
         if (val?.props && val.props?.style?.value) {
           state.lineStyleDisable = false
