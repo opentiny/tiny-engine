@@ -51,6 +51,7 @@ const transformJSX = (code) => {
     .replace(/h\(_?resolveComponent\((.*?)\)/g, `h(this.getComponent($1)`)
     .replace(/_?resolveComponent/g, 'h')
     .replace(/_?createTextVNode\((.*?)\)/g, '$1')
+    .trim()
 }
 
 export const blockSlotDataMap = reactive({})
