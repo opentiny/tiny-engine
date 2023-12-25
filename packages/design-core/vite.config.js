@@ -177,7 +177,7 @@ const devAlias = {
 
 const devVueAlias = {
   find: /^vue$/,
-  replacement: `https://registry.npmmirror.com/vue/${importMapVersions.vue}/files/dist/vue.runtime.esm-browser.js`
+  replacement: `https://npm.onmicrosoft.cn/vue@${importMapVersions.vue}/dist/vue.runtime.esm-browser.js`
 }
 
 const prodAlias = {
@@ -193,25 +193,25 @@ const commonAlias = {
 
 const importmap = {
   imports: {
-    prettier: `https://unpkg.com/prettier@${importMapVersions.prettier}/esm/standalone.mjs`,
-    'prettier/': `https://unpkg.com/prettier@${importMapVersions.prettier}/esm/`,
-    'prettier/parser-typescript': `https://unpkg.com/prettier@${importMapVersions.prettier}/esm/parser-typescript.mjs`,
-    'prettier/parser-html': `https://unpkg.com/prettier@${importMapVersions.prettier}/esm/parser-html.mjs`,
-    'prettier/parser-postcss': `https://unpkg.com/prettier@${importMapVersions.prettier}/esm/parser-postcss.mjs`,
-    'prettier/parser-babel': `https://unpkg.com/prettier@${importMapVersions.prettier}/esm/parser-babel.mjs`,
+    prettier: `https://npm.onmicrosoft.cn/prettier@${importMapVersions.prettier}/esm/standalone.mjs`,
+    'prettier/': `https://npm.onmicrosoft.cn/prettier@${importMapVersions.prettier}/esm/`,
+    'prettier/parser-typescript': `https://npm.onmicrosoft.cn/prettier@${importMapVersions.prettier}/esm/parser-typescript.mjs`,
+    'prettier/parser-html': `https://npm.onmicrosoft.cn/prettier@${importMapVersions.prettier}/esm/parser-html.mjs`,
+    'prettier/parser-postcss': `https://npm.onmicrosoft.cn/prettier@${importMapVersions.prettier}/esm/parser-postcss.mjs`,
+    'prettier/parser-babel': `https://npm.onmicrosoft.cn/prettier@${importMapVersions.prettier}/esm/parser-babel.mjs`,
 
-    vue: `https://unpkg.com/vue@${importMapVersions.vue}/dist/vue.runtime.esm-browser.js`,
-    '@opentiny/vue': `https://unpkg.com/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue.mjs`,
-    '@opentiny/vue-icon': `https://unpkg.com/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue-icon.mjs`,
-    '@opentiny/vue-common': `https://unpkg.com/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue-common.mjs`,
-    '@opentiny/vue-locale': `https://unpkg.com/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue-locale.mjs`,
-    '@opentiny/vue-design-smb': `https://unpkg.com/@opentiny/vue-design-smb@${importMapVersions.tinyVue}/index.js`,
-    '@opentiny/vue-theme/theme-tool': `https://unpkg.com/@opentiny/vue-theme@${importMapVersions.tinyVue}/theme-tool`,
-    '@opentiny/vue-theme/theme': `https://unpkg.com/@opentiny/vue-theme@${importMapVersions.tinyVue}/theme`
+    vue: `https://npm.onmicrosoft.cn/vue@${importMapVersions.vue}/dist/vue.runtime.esm-browser.js`,
+    '@opentiny/vue': `https://npm.onmicrosoft.cn/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue.mjs`,
+    '@opentiny/vue-icon': `https://npm.onmicrosoft.cn/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue-icon.mjs`,
+    '@opentiny/vue-common': `https://npm.onmicrosoft.cn/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue-common.mjs`,
+    '@opentiny/vue-locale': `https://npm.onmicrosoft.cn/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue-locale.mjs`,
+    '@opentiny/vue-design-smb': `https://npm.onmicrosoft.cn/@opentiny/vue-design-smb@${importMapVersions.tinyVue}/index.js`,
+    '@opentiny/vue-theme/theme-tool': `https://npm.onmicrosoft.cn/@opentiny/vue-theme@${importMapVersions.tinyVue}/theme-tool`,
+    '@opentiny/vue-theme/theme': `https://npm.onmicrosoft.cn/@opentiny/vue-theme@${importMapVersions.tinyVue}/theme`
   }
 }
 
-const importMapStyles = [`https://unpkg.com/@opentiny/vue-theme@${importMapVersions.tinyVue}/index.css`]
+const importMapStyles = [`https://npm.onmicrosoft.cn/@opentiny/vue-theme@${importMapVersions.tinyVue}/index.css`]
 
 export default defineConfig(({ command, mode }) => {
   const monacoPublicPath = {
@@ -270,11 +270,7 @@ export default defineConfig(({ command, mode }) => {
     }
   }
 
-  config.plugins.push(
-    monacoEditorPluginInstance,
-    htmlPlugin(mode),
-    command === 'build' && importmapPlugin(importmap, importMapStyles)
-  )
+  config.plugins.push(monacoEditorPluginInstance, htmlPlugin(mode), importmapPlugin(importmap, importMapStyles))
 
   return config
 })
