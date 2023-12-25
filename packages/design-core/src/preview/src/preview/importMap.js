@@ -16,13 +16,15 @@ import { getSearchParams } from './http'
 
 const importMap = {}
 
+const opentinyVueVersion = '~3.11'
+
 const tinyVue3Imports = {
   // 推荐之后统一使用@opentiny/vue去引入依赖，兼容后续录入的组件来源于tiny-vue
-  '@opentiny/vue': 'https://npm.onmicrosoft.cn/@opentiny/vue@3/runtime/tiny-vue.mjs',
-  '@opentiny/vue-icon': 'https://npm.onmicrosoft.cn/@opentiny/vue@3/runtime/tiny-vue-icon.mjs',
-  '@opentiny/vue-common': 'https://npm.onmicrosoft.cn/@opentiny/vue@3/runtime/tiny-vue-common.mjs',
-  '@opentiny/vue-locale': 'https://npm.onmicrosoft.cn/@opentiny/vue@3/runtime/tiny-vue-locale.mjs',
-  '@opentiny/vue-renderless/': 'https://npm.onmicrosoft.cn/@opentiny/vue-renderless@3/'
+  '@opentiny/vue': `https://npm.onmicrosoft.cn/@opentiny/vue@${opentinyVueVersion}/runtime/tiny-vue.mjs`,
+  '@opentiny/vue-icon': `https://npm.onmicrosoft.cn/@opentiny/vue@${opentinyVueVersion}/runtime/tiny-vue-icon.mjs`,
+  '@opentiny/vue-common': `https://npm.onmicrosoft.cn/@opentiny/vue@${opentinyVueVersion}/runtime/tiny-vue-common.mjs`,
+  '@opentiny/vue-locale': `https://npm.onmicrosoft.cn/@opentiny/vue@${opentinyVueVersion}/runtime/tiny-vue-locale.mjs`,
+  '@opentiny/vue-renderless/': `https://npm.onmicrosoft.cn/@opentiny/vue-renderless@${opentinyVueVersion}/`
 }
 
 importMap.imports = {
