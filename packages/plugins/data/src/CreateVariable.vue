@@ -46,6 +46,11 @@
                   <li class="ml20">示例2： function fnName() {}</li>
                   <li class="ml20">示例3： { getValue: () => {} }</li>
                 </ul>
+                <div class="create-content-foot">
+                  <div class="create-content-tip">
+                    注意：使用JS表达式定义state变量的时候无法调用state其他变量定义，<br />另由于JS函数定义在变量之后，也无法调用JS面板定义的函数
+                  </div>
+                </div>
               </div>
             </div>
             <template #reference>
@@ -464,6 +469,11 @@ export default {
     li {
       margin-top: 8px;
     }
+  }
+  .create-content-foot {
+    margin-top: 4px;
+    font-size: 14px;
+    line-height: 22px;
   }
 }
 
