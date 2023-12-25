@@ -32,7 +32,7 @@ importMap.imports = {
   'vue/server-renderer': 'https://npm.onmicrosoft.cn/@vue/server-renderer@3.2.36/dist/server-renderer.esm-browser.js',
   'vue-i18n': 'https://npm.onmicrosoft.cn/vue-i18n@9.2.0-beta.36/dist/vue-i18n.esm-browser.js',
   'vue-router': 'https://npm.onmicrosoft.cn/vue-router@4.0.16/dist/vue-router.esm-browser.js',
-  '@vue/devtools-api': 'https://npm.onmicrosoft.cn/@vue/devtools-api@6.1.4/lib/esm/index.js',
+  '@vue/devtools-api': 'https://npm.onmicrosoft.cn/@vue/devtools-api@6.5.1/lib/esm/index.js',
   '@vueuse/core': 'https://npm.onmicrosoft.cn/@vueuse/core@9.6.0/index.mjs',
   '@vueuse/shared': 'https://npm.onmicrosoft.cn/@vueuse/shared@9.6.0/index.mjs',
   axios: 'https://npm.onmicrosoft.cn/axios@1.0.0-alpha.1/dist/esm/axios.js',
