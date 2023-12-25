@@ -293,7 +293,29 @@ const updateGlobalStyle = (newSelector) => {
 // 更新 style 对象到 schema
 const updateStyle = (properties) => {
   const schema = getSchema() || getCanvasPageSchema()
+  const currentSchema = getCurrentSchema() || schema
+
   schema.props = schema.props || {}
+  currentSchema.props = currentSchema.props || {}
+
+  // 更新行内样式
+  if (currentSchema.props.style) {
+    const styleObj = currentSchema.props.style.split(';')
+    const propertyKey = Object.keys(properties)[0]
+    const hasProperty = currentSchema.props.style.includes(propertyKey)
+    if (hasProperty) {
+      for (let index = 0; index < styleObj.length; index++) {
+        const element = styleObj[index]
+        if (element.includes(propertyKey)) {
+          const indexOf = element.indexOf(element.indexOf(propertyKey))
+          const newStr = element.replace(element.substring(indexOf - 1), properties[propertyKey])
+          styleObj[index] = indexOf > 0 ? newStr : element
+          break
+        }
+      }
+      currentSchema.props.style = styleObj.join(';')
+    }
+  }
 
   if (properties) {
     Object.entries(properties).forEach(([key, value]) => {
