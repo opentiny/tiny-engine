@@ -14,8 +14,8 @@
         <meta-code-editor
           v-if="state.lineStyleDisable"
           :modelValue="state.styleContent"
-          title="Style 编辑"
-          :button-text="state.lineStyle"
+          title="编辑行内样式"
+          :button-text="state.inlineBtnText"
           language="css"
           single
           @save="save(CSS_TYPE.Style, $event)"
@@ -186,7 +186,7 @@ export default {
     watch(
       () => getCurrentSchema(),
       (val) => {
-        if (val?.props && val.props?.style?.value) {
+        if (val?.props?.style?.value) {
           state.lineStyleDisable = false
           state.propertiesList = `已绑定：${val.props.style?.value}`
           state.bindModelValue = val.props.style

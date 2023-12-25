@@ -44,7 +44,7 @@ const state = reactive({
   currentIdList: [],
   selectorOptionLists: [],
   schemaUpdateKey: 0,
-  lineStyle: '编辑行内样式',
+  inlineBtnText: '编辑行内样式',
   lineStyleDisable: true,
   propertiesList: '',
   bindModelValue: null
