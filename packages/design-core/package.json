@@ -82,7 +82,7 @@
     "@opentiny/vue-renderless": "~3.10.0",
     "@opentiny/vue-theme": "~3.10.0",
     "@vue/babel-plugin-jsx": "1.1.1",
-    "@vue/repl": "^1.3.0",
+    "@vue/repl": "^2.9.0",
     "@vueuse/core": "^9.6.0",
     "element-resize-detector": "^1.2.4",
     "file-saver": "^2.0.5",

@@ -1,14 +1,14 @@
 /**
-* Copyright (c) 2023 - present TinyEngine Authors.
-* Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
-*
-* Use of this source code is governed by an MIT-style license.
-*
-* THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
-* BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
-* A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
-*
-*/
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
+ *
+ * Use of this source code is governed by an MIT-style license.
+ *
+ * THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
+ * BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
+ * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
+ *
+ */
 
 const generateDefaultExport = (data) =>
   data && typeof data === 'object' ? `export default ${JSON.stringify(data, null, 2)}`.trim() : 'export default {}'
@@ -71,11 +71,13 @@ function generateImportsByType({ item, imports, exportNames, functionStrs }) {
       if (item.content.destructuring) {
         importItem.destructurings = importItem.destructurings || []
         importItem.destructurings.push(item.content.exportName)
+        importItem.aliases = importItem.aliases || []
+        importItem.aliases.push(item.name)
       } else {
-        importItem.exportName = item.content.exportName
+        importItem.exportName = item.name
       }
 
-      exportNames.push(item.content.exportName)
+      exportNames.push(item.name)
     }
   } else if (item.type === 'function' && checkIsValidFunString(item.content.value)) {
     functionStrs.push(`const ${item.name} = ${item.content.value}`)
@@ -94,7 +96,14 @@ function generateStrsFromImports({ imports, strs, functionStrs, exportNames }) {
     }
 
     if (Array.isArray(value.destructurings) && value.destructurings.length) {
-      list.push(`{ ${value.destructurings.join(', ')} }`)
+      const destructuringsWithAliases = value.destructurings.map((destructuring, index) => {
+        const alias = value.aliases[index]
+        if (destructuring === alias) {
+          return destructuring
+        }
+        return `${destructuring} as ${alias}`
+      })
+      list.push(`{ ${destructuringsWithAliases.join(', ')} }`)
     }
 
     importStrs.push(`import ${list.join(', ')} from '${key}'`)

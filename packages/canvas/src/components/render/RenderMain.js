@@ -63,13 +63,13 @@ const setUtils = (data, clear, isForceRefresh) => {
   const utilsCollection = {}
   // 目前画布还不具备远程加载utils工具类的功能，目前只能加载TinyVue组件库中的组件工具
   data?.forEach((item) => {
-    const util = window.TinyVue[item.name]
+    const util = window.TinyVue[item.content.exportName]
     if (util) {
       utilsCollection[item.name] = util
     }
 
     // 此处需要把工具类中的icon图标也加入utils上下文环境
-    const utilIcon = window.TinyVueIcon[item.name]
+    const utilIcon = window.TinyVueIcon[item.content.exportName]
     if (utilIcon) {
       utilsCollection[item.name] = utilIcon
     }
@@ -86,6 +86,19 @@ const setUtils = (data, clear, isForceRefresh) => {
   if (isForceRefresh) {
     refreshKey.value++
   }
+}
+
+const updateUtils = (data) => {
+  setUtils(data, false, true)
+}
+
+const deleteUtils = (data) => {
+  data?.forEach((item) => {
+    if (utils[item.name]) {
+      delete utils[item.name]
+    }
+  })
+  setUtils([], false, true)
 }
 
 const setBridge = (data, clear) => {
@@ -381,6 +394,8 @@ export default {
 export const api = {
   getUtils,
   setUtils,
+  updateUtils,
+  deleteUtils,
   getBridge,
   setBridge,
   getMethods,
