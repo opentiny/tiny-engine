@@ -9,7 +9,7 @@
       @save="save(CSS_TYPE.Css, $event)"
     />
     <div class="line-style">
-      <span> 行内样式 </span>
+      <span class="line-text"> 行内样式 </span>
       <div class="inline-style">
         <meta-code-editor
           v-if="state.lineStyleDisable"
@@ -229,6 +229,10 @@ export default {
     margin-bottom: 8px;
     color: var(--ti-lowcode-setting-style-font-color);
     font-size: 12px;
+    .line-text {
+      margin-bottom: 8px;
+      display: block;
+    }
   }
   .inline-style {
     display: flex;
@@ -239,6 +243,11 @@ export default {
         border-radius: 8px;
         width: 216px;
         text-align: left;
+        color: var(--ti-lowcode-setting-style-btn-font-color);
+      }
+      .tiny-button:hover {
+        background: none;
+        border-color: var(--ti-lowcode-setting-style-btn-border-color);
       }
     }
     .inline-bind-style {
