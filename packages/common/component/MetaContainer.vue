@@ -1,6 +1,6 @@
 <template>
   <div>
-    <meta-list-items class="list" :optionsList="children">
+    <meta-list-items class="list" :optionsList="children" @dragEnd="dragEnd">
       <template #content="{ data }">
         <div class="item-text">
           <div class="tiny-input">
@@ -67,7 +67,21 @@ export default {
       useHistory().addHistory()
     }
 
-    return { children, addChildren, delChildren }
+    const dragEnd = (params = {}) => {
+      const { oldIndex, newIndex } = params?.moved || {}
+
+      if (oldIndex === undefined || newIndex === undefined) {
+        return
+      }
+
+      const list = schemaChildren
+      const spliceItem = list.splice(oldIndex, 1)
+
+      list.splice(newIndex, 0, ...spliceItem)
+      children.value = [...list]
+    }
+
+    return { children, addChildren, delChildren, dragEnd }
   }
 }
 </script>

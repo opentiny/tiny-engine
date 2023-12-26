@@ -111,8 +111,15 @@ export default {
   setup(props, { emit }) {
     const { requestCreatePage, requestDeletePage } = http
     const { appInfoState } = useApp()
-    const { DEFAULT_PAGE, pageSettingState, changeTreeData, isCurrentDataSame, initCurrentPageData, isTemporaryPage } =
-      usePage()
+    const {
+      DEFAULT_PAGE,
+      pageSettingState,
+      changeTreeData,
+      isCurrentDataSame,
+      initCurrentPageData,
+      isTemporaryPage,
+      STATIC_PAGE_GROUP_ID
+    } = usePage()
     const { pageState, initData } = useCanvas()
     const { confirm } = useModal()
     const pageGeneralRef = ref(null)
@@ -154,6 +161,11 @@ export default {
         },
         app: appInfoState.selectedId,
         isPage: true
+      }
+
+      if (createParams.id) {
+        delete createParams.id
+        delete createParams._id
       }
 
       requestCreatePage(createParams)
@@ -288,6 +300,28 @@ export default {
       pageGeneralRef.value.validGeneralForm().then(createHistoryMessage)
     }
 
+    const collectAllPage = (staticPageList = []) => {
+      if (!Array.isArray(staticPageList)) {
+        return []
+      }
+
+      const pageList = []
+
+      staticPageList.forEach((pageItem) => {
+        if (pageItem?.isPage) {
+          pageList.push(pageItem)
+
+          return
+        }
+
+        if (!pageItem?.isPage && pageItem?.children?.length) {
+          pageList.push(...collectAllPage(pageItem.children))
+        }
+      })
+
+      return pageList
+    }
+
     const deletePage = () => {
       confirm({
         title: '提示',
@@ -297,12 +331,20 @@ export default {
           requestDeletePage(id)
             .then(() => {
               pageSettingState.updateTreeData().then((pages) => {
-                const pageInfo = pages?.[0]?.data?.[0] || {
+                if (pageState?.currentPage?.id !== id) {
+                  return
+                }
+
+                const staticPageList = (pages || []).find(({ groupId }) => groupId === STATIC_PAGE_GROUP_ID)?.data || []
+                const pageList = collectAllPage(staticPageList)
+
+                const pageHome = pageList.find((page) => page.isHome)
+                const firstPage = pageList?.[0]
+                const defaultPage = {
                   componentName: COMPONENT_NAME.Page
                 }
-                if (pageState?.currentPage?.id === id) {
-                  emit('openNewPage', pageInfo)
-                }
+
+                emit('openNewPage', pageHome || firstPage || defaultPage)
               })
 
               closePageSettingPanel()

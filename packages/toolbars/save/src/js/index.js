@@ -10,13 +10,13 @@
  *
  */
 
+import { reactive, ref } from 'vue'
 import { useBlock, useCanvas, useLayout, useNotify, usePage } from '@opentiny/tiny-engine-controller'
-import { getSchema, setSchema } from '@opentiny/tiny-engine-canvas'
+import { getSchema, setSchema, selectNode } from '@opentiny/tiny-engine-canvas'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { reactive, ref, watch } from 'vue'
-import { Loading } from '@opentiny/vue'
-const { pageState, isSaved, isBlock } = useCanvas()
 import { handlePageUpdate } from '@opentiny/tiny-engine-common/js/http'
+
+const { pageState, isSaved, isBlock } = useCanvas()
 const { PLUGIN_NAME, getPluginApi } = useLayout()
 const { getCurrentBlock } = useBlock()
 const { PAGE_STATUS } = constants
@@ -27,7 +27,9 @@ const state = reactive({
   originalCode: '',
   disabled: false
 })
+
 export const isLoading = ref(false)
+
 // 保存或新建区块
 const saveBlock = async (pageSchema) => {
   const api = getPluginApi(PLUGIN_NAME.BlockManage)
@@ -48,6 +50,7 @@ const savePage = async (pageSchema) => {
   const params = {
     page_content: pageSchema
   }
+
   isLoading.value = true
   await handlePageUpdate(currentPage.id, { ...currentPage, ...params })
   isLoading.value = false
@@ -55,29 +58,38 @@ const savePage = async (pageSchema) => {
 
 export const saveCommon = (value) => {
   const pageSchema = JSON.parse(value)
+
   pageState.pageSchema = pageSchema
   // setSchema 是异步，保存直接传递当前 schema
   setSchema(pageSchema)
+
   if (pageSettingState?.isAIPage) {
     if (isTemporaryPage.saved) {
       isTemporaryPage.saved = false
     }
+
     // 如果当前页面没有ID，为临时生成的页面，则打开新建页面面板
     isTemporaryPage.saved = true
     const pageContent = 'page_content'
+
     pageSettingState.currentPageData[pageContent] = pageSchema
-    return
+
+    return Promise.resolve()
   }
-  isBlock() ? saveBlock(pageSchema) : savePage(pageSchema)
+
+  // 选中画布中的页面，关闭插件、属性配置
+  selectNode(null)
+
+  return isBlock() ? saveBlock(pageSchema) : savePage(pageSchema)
 }
 export const openCommon = async () => {
   if (isSaved() || state.disabled) {
     return
   }
+
   const pageStatus = useLayout().layoutState?.pageStatus
   const curPageState = pageStatus?.state
   const pageInfo = pageStatus?.data
-
   const ERR_MSG = {
     [PAGE_STATUS.Release]: '当前页面未锁定，请先锁定再保存',
     [PAGE_STATUS.Empty]: '当前应用无页面，请先新建页面再保存',
@@ -96,13 +108,9 @@ export const openCommon = async () => {
   }
 
   state.disabled = true
-  let loadingInstance = Loading.service({
-    lock: true,
-    text: '保存中',
-    background: 'rgba(0, 0, 0, 0.5)'
-  })
 
   const pageSchema = getSchema()
+
   state.code = JSON.stringify(pageSchema || {}, null, 2)
 
   // 获取请求前schema代码，暂时先屏蔽
@@ -119,17 +127,7 @@ export const openCommon = async () => {
         }
    */
 
-  saveCommon(state.code)
-
-  if (isLoading.value) {
+  saveCommon(state.code).finally(() => {
     state.disabled = false
-  }
-  watch(
-    () => pageState.isSaved,
-    (value) => {
-      if (value) {
-        loadingInstance.close()
-      }
-    }
-  )
+  })
 }

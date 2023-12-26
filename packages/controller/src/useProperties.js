@@ -10,11 +10,13 @@
  *
  */
 
-import { toRaw, nextTick, shallowReactive } from 'vue'
+import { toRaw, nextTick, shallowReactive, ref } from 'vue'
+import { getNode, setState, updateRect } from '@opentiny/tiny-engine-canvas'
 import useCanvas from './useCanvas'
 import useResource from './useResource'
 import useTranslate from './useTranslate'
-import { getNode, setState, updateRect } from '@opentiny/tiny-engine-canvas'
+
+const propsUpdateKey = ref(0)
 
 const otherBaseKey = {
   className: {
@@ -168,6 +170,10 @@ const getProps = (schema, parent) => {
 }
 
 const setProp = (name, value) => {
+  if (!properties.schema) {
+    return
+  }
+
   properties.schema.props = properties.schema.props || {}
 
   if (value === '' || value === undefined || value === null) {
@@ -178,6 +184,7 @@ const setProp = (name, value) => {
 
   // 没有父级，或者不在节点上面，要更新内容。就用setState
   getNode(properties.schema.id, true).parent || setState(useCanvas().getPageSchema().state)
+  propsUpdateKey.value++
   nextTick(updateRect)
 }
 
@@ -188,6 +195,7 @@ const getProp = (key) => {
 const delProp = (name) => {
   const props = properties.schema.props || {}
   delete props[name]
+  propsUpdateKey.value++
 }
 
 const setProps = (schema) => {
@@ -205,6 +213,7 @@ export default function () {
     translateProp,
     getSchema(parent) {
       return parent ? properties : properties.schema
-    }
+    },
+    propsUpdateKey
   }
 }

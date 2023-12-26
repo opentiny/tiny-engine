@@ -68,7 +68,7 @@ export default {
       }
     }
     .tiny-tabs__header {
-      padding-bottom: 20px;
+      padding-bottom: 12px;
     }
     .tiny-tabs__content {
       flex: 1;

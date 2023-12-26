@@ -28,8 +28,11 @@
     "@opentiny/tiny-engine-common": "workspace:^1.0.0",
     "@opentiny/tiny-engine-controller": "workspace:^1.0.0",
     "@opentiny/tiny-engine-http": "workspace:^1.0.0",
+    "@opentiny/tiny-engine-utils": "workspace:^1.0.0",
     "@opentiny/vue": "~3.10.0",
     "@opentiny/vue-renderless": "~3.10.0",
+    "@vueuse/core": "^9.6.0",
+    "postcss": "^8.4.31",
     "vue": "3.2.45"
   },
   "devDependencies": {

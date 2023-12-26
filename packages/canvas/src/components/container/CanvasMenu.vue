@@ -4,9 +4,12 @@
       <li
         v-for="(item, index) in menus"
         :key="index"
-        :class="item.items ? 'li-item' : ''"
+        :class="{
+          'li-item': item.items,
+          'li-item-disabled': actionDisabled(item)
+        }"
         @click="doOperation(item)"
-        @mouseover="current = item"
+        @mouseover="onShowChildrenMenu(item)"
       >
         <div>
           <span>{{ item.name }}</span>
@@ -14,7 +17,10 @@
         </div>
         <ul v-if="item.items && current === item" class="sub-menu menu-item">
           <template v-for="(subItem, subIndex) in item.items" :key="subIndex">
-            <li v-if="subItem?.check?.() !== false" @click.stop="doOperation(subItem)">
+            <li
+              :class="[{ 'menu-item-disabled': subItem.check && !subItem.check?.() }]"
+              @click.stop="doOperation(subItem)"
+            >
               {{ subItem.name }}
             </li>
           </template>
@@ -95,7 +101,8 @@ export default {
         items: [
           { name: '文字提示', code: 'wrap', value: 'TinyTooltip' },
           { name: '弹出框', code: 'wrap', value: 'TinyPopover' }
-        ]
+        ],
+        code: 'addParent'
       },
       { name: '删除', code: 'del' },
       { name: '复制', code: 'copy' },
@@ -108,10 +115,10 @@ export default {
 
     const operations = {
       del() {
-        removeNodeById(getCurrent().schema.id)
+        removeNodeById(getCurrent().schema?.id)
       },
       copy() {
-        copyNode(getCurrent().schema.id)
+        copyNode(getCurrent().schema?.id)
       },
       config() {
         useLayout().activeSetting('props')
@@ -125,16 +132,56 @@ export default {
       wrap({ value, name }) {
         const componentName = value || name
         const { schema, parent } = getCurrent()
-        const index = parent.children.indexOf(schema)
-        const wrapSchema = {
-          componentName,
-          id: null,
-          props: {},
-          children: [schema]
+
+        if (!schema || !parent) {
+          return
         }
 
+        const index = parent.children.findIndex(({ id }) => schema.id === id)
+        let wrapSchema = {
+          componentName,
+          id: null,
+          props: {
+            content: '提示信息'
+          },
+          children: [schema]
+        }
+        // 需要对popover特殊处理
+        if (value === 'TinyPopover') {
+          wrapSchema = {
+            componentName,
+            props: {
+              width: 200,
+              title: '弹框标题',
+              trigger: 'manual',
+              modelValue: true
+            },
+            children: [
+              {
+                componentName: 'Template',
+                props: {
+                  slot: 'reference'
+                },
+                children: [schema]
+              },
+              {
+                componentName: 'Template',
+                props: {
+                  slot: 'default'
+                },
+                children: [
+                  {
+                    componentName: 'div',
+                    props: {
+                      placeholder: '提示内容'
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
         parent.children.splice(index, 1, wrapSchema)
-
         getController().addHistory()
       },
       createBlock() {
@@ -149,12 +196,25 @@ export default {
       }
     }
 
+    const actionDisabled = (actionItem) => {
+      const actions = ['del', 'copy', 'addParent']
+      return actions.includes(actionItem.code) && !getCurrent().schema?.id
+    }
+
+    const onShowChildrenMenu = (menuItem) => {
+      current.value = !actionDisabled(menuItem) ? menuItem : null
+    }
+
     const close = () => {
       boxVisibility.value = false
     }
     const doOperation = (item) => {
+      if ((item.check && !item.check?.()) || actionDisabled(item)) {
+        return
+      }
+
       if (item?.code) {
-        operations[item.code](item)
+        operations[item.code]?.(item)
         closeMenu()
       }
     }
@@ -166,7 +226,9 @@ export default {
       boxVisibility,
       close,
       current,
-      menuDom
+      menuDom,
+      actionDisabled,
+      onShowChildrenMenu
     }
   }
 }
@@ -189,6 +251,10 @@ export default {
   .li-item {
     border-bottom: 1px solid var(--ti-lowcode-canvas-menu-border-color);
   }
+  .li-item-disabled {
+    cursor: not-allowed;
+    color: var(--ti-lowcode-canvas-menu-item-disabled-color);
+  }
   li {
     & > div {
       display: flex;
@@ -196,13 +262,17 @@ export default {
       justify-content: space-between;
     }
     font-size: 12px;
-    color: var(--ti-lowcode-toolbar-breadcrumb-color);
+    color: var(--ti-lowcode-canvas-menu-item-color);
     padding: 6px 15px;
-    &:hover {
-      color: var(--ti-lowcode-toolbar-icon-color);
-      background: var(--ti-lowcode-canvas-menu-hover-color);
+    &:not(.menu-item-disabled):hover {
+      background: var(--ti-lowcode-canvas-menu-item-hover-bg-color);
     }
     position: relative;
+
+    &.menu-item-disabled {
+      cursor: not-allowed;
+      color: var(--ti-lowcode-canvas-menu-item-disabled-color);
+    }
   }
   &.sub-menu {
     width: 100px;

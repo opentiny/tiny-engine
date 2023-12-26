@@ -111,11 +111,15 @@ const create = () => {
 
   document.body.remove()
   document.body = document.createElement('body')
+  const app = document.createElement('div')
+  app.setAttribute('id', 'app')
+  document.body.appendChild(app)
+
   dispatch('canvasReady', { detail: renderer })
 
   App = Vue.createApp(Main).use(TinyI18nHost).provide(I18nInjectionKey, TinyI18nHost)
   App.config.globalProperties.lowcodeConfig = window.parent.TinyGlobalConfig
-  App.mount(document.body)
+  App.mount(document.querySelector('#app'))
 
   new ResizeObserver(() => {
     dispatch('canvasResize')

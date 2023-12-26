@@ -51,14 +51,11 @@ Local startup steps:
 git clone git@github.com:username/tiny-engine.git
 cd tiny-engine
 git remote add upstream git@github.com:opentiny/tiny-engine.git
-npm i
+pnpm i
 
 # Start the project.
-$ npm run serve
+$ pnpm dev
 
-# start another terminal
-$ cd mockServer
-$ npm run dev
 ```
 
 To submit a PR:
@@ -67,7 +64,7 @@ To submit a PR:
 - Local coding.
 - Submit according to [Commit Message Format](https://www.conventionalcommits.org/zh-hans/v1.0.0/) specification. PR that do not conform to the submission specification will not be merged.
 - Submit to remote repository: `git push origin branchName`.
-- (Optional) Synchronize upstream repository dev branch latest code: `git pull upstream dev`.
+- (Optional) Synchronize upstream repository dev branch latest code: `git pull upstream develop`.
 - Open the [Pull requests](https://github.com/opentiny/tiny-engine/pulls) link of the TinyEngine code repository and click the New pull request button to submit the PR.
 - Project Committer conducts Code Review and makes comments.
 - The PR author adjusts the code according to the opinion. Please note that when a branch initiates PR, the subsequent commit will be synchronized automatically, and there is no need to resubmit the PR.

@@ -24,10 +24,12 @@ const confirm = ({ title, status, message, exec, cancel, showFooter = true }) =>
   })
 }
 
-const message = ({ title, status, message, exec }) => {
+const message = ({ title, status, message, exec, width = '400' }) => {
   Modal.alert({
     title,
     status,
+    'confirm-btn-props': { text: '确定' },
+    width: width,
     message() {
       return (
         <div div class="modal-content" >
