@@ -84,7 +84,7 @@ export default class Schema2CodeServcice {
     return components.map((component) => {
       const {
         component: componentName,
-        npm: { package: packageName, exportName, version, destructuring }
+        npm: { package: packageName, exportName, version, destructuring } = {}
       } = component
       return {
         componentName,

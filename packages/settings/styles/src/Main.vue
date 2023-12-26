@@ -8,14 +8,30 @@
       single
       @save="save(CSS_TYPE.Css, $event)"
     />
-    <meta-code-editor
-      :modelValue="state.styleContent"
-      title="Style 编辑"
-      button-text="编辑行内样式"
-      language="css"
-      single
-      @save="save(CSS_TYPE.Style, $event)"
-    />
+    <div class="line-style">
+      <span class="line-text"> 行内样式 </span>
+      <div class="inline-style">
+        <meta-code-editor
+          v-if="state.lineStyleDisable"
+          :modelValue="state.styleContent"
+          title="编辑行内样式"
+          :button-text="state.inlineBtnText"
+          language="css"
+          single
+          @save="save(CSS_TYPE.Style, $event)"
+        />
+        <div v-if="!state.lineStyleDisable">
+          <tiny-input v-model="state.propertiesList" class="inline-bind-style"> </tiny-input>
+        </div>
+        <meta-bind-variable
+          ref="bindVariable"
+          :model-value="state.bindModelValue"
+          name="advance"
+          @update:modelValue="setConfig"
+        >
+        </meta-bind-variable>
+      </div>
+    </div>
   </div>
   <class-names-container></class-names-container>
   <tiny-collapse v-model="activeNames">
@@ -56,11 +72,11 @@
 </template>
 
 <script>
-import { ref } from 'vue'
-import { Collapse, CollapseItem } from '@opentiny/vue'
+import { ref, watch } from 'vue'
+import { Collapse, CollapseItem, Input } from '@opentiny/vue'
 import { useHistory, useCanvas, useProperties } from '@opentiny/tiny-engine-controller'
 import { setPageCss, getSchema as getCanvasPageSchema } from '@opentiny/tiny-engine-canvas'
-import { MetaCodeEditor } from '@opentiny/tiny-engine-common'
+import { MetaCodeEditor, MetaBindVariable } from '@opentiny/tiny-engine-common'
 import { formatString } from '@opentiny/tiny-engine-common/js/ast'
 import {
   SizeGroup,
@@ -94,7 +110,9 @@ export default {
     EffectGroup,
     ClassNamesContainer,
     TinyCollapse: Collapse,
-    TinyCollapseItem: CollapseItem
+    TinyCollapseItem: CollapseItem,
+    TinyInput: Input,
+    MetaBindVariable
   },
   setup() {
     const activeNames = ref([
@@ -146,6 +164,43 @@ export default {
       }
     }
 
+    const setConfig = (value) => {
+      const pageSchema = getCanvasPageSchema()
+      const currentSchema = getCurrentSchema() || pageSchema
+      const schema = getSchema() || pageSchema
+      if (value !== '') {
+        schema.props.style = value
+        currentSchema.props.style = value
+        state.propertiesList = `已绑定：${value.value}`
+        state.lineStyleDisable = false
+        addHistory()
+      } else {
+        schema.props.style = ''
+        currentSchema.props.style = ''
+        state.propertiesList = '编辑行内样式'
+        state.lineStyleDisable = true
+        addHistory()
+      }
+    }
+
+    watch(
+      () => getCurrentSchema(),
+      (val) => {
+        if (val?.props?.style?.value) {
+          state.lineStyleDisable = false
+          state.propertiesList = `已绑定：${val.props.style?.value}`
+          state.bindModelValue = val.props.style
+        } else {
+          state.lineStyleDisable = true
+          state.propertiesList = '编辑行内样式'
+          state.bindModelValue = null
+        }
+      },
+      {
+        deep: true
+      }
+    )
+
     return {
       state,
       activeNames,
@@ -153,7 +208,8 @@ export default {
       open,
       save,
       close,
-      updateStyle
+      updateStyle,
+      setConfig
     }
   }
 }
@@ -161,14 +217,48 @@ export default {
 
 <style lang="less" scoped>
 .style-editor {
-  display: flex;
   justify-content: space-around;
   padding: 8px 16px 12px;
   column-gap: 8px;
-  :deep(.editor-wrap) {
-    .tiny-button {
-      padding: 0 16px;
+  .line-style {
+    display: block;
+    margin-top: 16px;
+    margin-bottom: 8px;
+    color: var(--ti-lowcode-setting-style-font-color);
+    font-size: 12px;
+    .line-text {
+      margin-bottom: 8px;
+      display: block;
     }
+  }
+  .inline-style {
+    display: flex;
+    :deep(.editor-wrap) {
+      display: flex;
+      .tiny-button {
+        padding: 0 16px;
+        border-radius: 8px;
+        width: 216px;
+        text-align: left;
+        color: var(--ti-lowcode-setting-style-btn-font-color);
+      }
+      .tiny-button:hover {
+        background: none;
+        border-color: var(--ti-lowcode-setting-style-btn-border-color);
+      }
+    }
+    .inline-bind-style {
+      :deep(.tiny-input__inner) {
+        width: 216px;
+        pointer-events: none;
+        background: var(--ti-lowcode-setting-style-input-bg);
+        color: var(--ti-lowcode-setting-style-input-font-color);
+        border-color: var(--ti-lowcode-setting-style-input-bg);
+      }
+    }
+  }
+  :deep(.svg-icon) {
+    margin-top: 5px;
   }
 }
 </style>
