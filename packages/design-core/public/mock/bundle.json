@@ -7212,12 +7212,12 @@
                 },
                 "defaultValue": ""
               },
-              "onUpdate:modelValue": {
+              "before-change": {
                 "label": {
-                  "zh_CN": "双向绑定的值改变时触发"
+                  "zh_CN": "开关值变化前置处理"
                 },
                 "description": {
-                  "zh_CN": "开关的状态值改变时触发"
+                  "zh_CN": "开关值变化前置处理"
                 },
                 "type": "event",
                 "functionInfo": {
@@ -7227,13 +7227,25 @@
                       "type": "string",
                       "defaultValue": "",
                       "description": {
-                        "zh_CN": "双向绑定的开关状态值"
+                        "zh_CN": "开关值变化前置处理"
                       }
                     }
                   ],
                   "returns": {}
                 },
                 "defaultValue": ""
+              }
+            },
+            "slots": {
+              "close": {
+                "label": {
+                  "zh_CN": "关闭内容,当show-text为true时有效"
+                }
+              },
+              "open": {
+                "label": {
+                  "zh_CN": "开启内容,当show-text为true时有效"
+                }
               }
             }
           },
@@ -7616,6 +7628,65 @@
                     }
                   },
                   {
+                    "property": "label",
+                    "label": {
+                      "text": {
+                        "zh_CN": "选中状态的值（只有在checkbox-group中或者绑定对象的类型为array时有效）"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": ""
+                    },
+                    "labelPosition": "left"
+                  },
+                  {
+                    "property": "name",
+                    "label": {
+                      "text": {
+                        "zh_CN": "原生name属性"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": ""
+                    },
+                    "labelPosition": "left"
+                  },
+                  {
+                    "property": "indeterminate",
+                    "label": {
+                      "text": {
+                        "zh_CN": "设置indeterminate状态,只负责样式控制"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": ""
+                    }
+                  },
+                  {
                     "property": "checked",
                     "label": {
                       "text": {
@@ -7632,6 +7703,26 @@
                     },
                     "description": {
                       "zh_CN": "当前是否勾选"
+                    },
+                    "labelPosition": "left"
+                  },
+                  {
+                    "property": "border",
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否显示边框"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": ""
                     },
                     "labelPosition": "left"
                   },
@@ -7654,76 +7745,43 @@
                       "zh_CN": "复选框的文本"
                     },
                     "labelPosition": "left"
+                  },
+                  {
+                    "property": "size",
+                    "label": {
+                      "text": {
+                        "zh_CN": "checkbox尺寸，仅在border为真时候有效"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "MetaSelect",
+                      "props": {
+                        "options": [
+                          {
+                            "label": "medium",
+                            "value": "medium"
+                          },
+                          {
+                            "label": "small",
+                            "value": "small"
+                          },
+                          {
+                            "label": "mini",
+                            "value": "mini"
+                          }
+                        ]
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "checkbox组件类型（button/checkbox），该属性的默认值为 checkbox,配合 options 属性一起使用"
+                    },
+                    "labelPosition": "left"
                   }
                 ]
-              },
-              {
-                "name": "1",
-                "label": {
-                  "zh_CN": "其他"
-                },
-                "content": [
-                  {
-                    "property": "border",
-                    "label": {
-                      "text": {
-                        "zh_CN": "边框"
-                      }
-                    },
-                    "required": true,
-                    "readOnly": false,
-                    "disabled": false,
-                    "cols": 12,
-                    "widget": {
-                      "component": "MetaSwitch",
-                      "props": {}
-                    },
-                    "description": {
-                      "zh_CN": "是否显示边框"
-                    }
-                  },
-                  {
-                    "property": "false-label",
-                    "label": {
-                      "text": {
-                        "zh_CN": "未选中的值"
-                      }
-                    },
-                    "required": true,
-                    "readOnly": false,
-                    "disabled": false,
-                    "cols": 12,
-                    "widget": {
-                      "component": "MetaInput",
-                      "props": {}
-                    },
-                    "description": {
-                      "zh_CN": "没有选中时的值"
-                    }
-                  },
-                  {
-                    "property": "true-label",
-                    "label": {
-                      "text": {
-                        "zh_CN": "选择时的值"
-                      }
-                    },
-                    "required": true,
-                    "readOnly": false,
-                    "disabled": false,
-                    "cols": 12,
-                    "widget": {
-                      "component": "MetaInput",
-                      "props": {}
-                    },
-                    "description": {
-                      "zh_CN": "选中时的值"
-                    }
-                  }
-                ],
-                "description": {
-                  "zh_CN": ""
-                }
               }
             ],
             "events": {
@@ -7749,29 +7807,18 @@
                   "returns": {}
                 },
                 "defaultValue": ""
-              },
-              "onUpdate:modelValue": {
+              }
+            },
+            "slots": {
+              "default": {
                 "label": {
-                  "zh_CN": "双向绑定的值改变时触发"
-                },
-                "description": {
-                  "zh_CN": "当前选中的值改变时触发"
-                },
-                "type": "event",
-                "functionInfo": {
-                  "params": [
-                    {
-                      "name": "value",
-                      "type": "string",
-                      "defaultValue": "",
-                      "description": {
-                        "zh_CN": "双向绑定的当前选中值"
-                      }
-                    }
-                  ],
-                  "returns": {}
-                },
-                "defaultValue": ""
+                  "zh_CN": "checkbox的内容"
+                }
+              },
+              "open": {
+                "label": {
+                  "zh_CN": "开启内容,当show-text为true时有效"
+                }
               }
             }
           },
@@ -7895,6 +7942,82 @@
                     "labelPosition": "left"
                   },
                   {
+                    "property": "false-label",
+                    "label": {
+                      "text": {
+                        "zh_CN": "没有选中时的值"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": ""
+                    }
+                  },
+                  {
+                    "property": "label",
+                    "label": {
+                      "text": {
+                        "zh_CN": "选中状态的值（只有在check-group中或者绑定对象类型为array时有效）"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": ""
+                    }
+                  },
+                  {
+                    "property": "true-label",
+                    "label": {
+                      "text": {
+                        "zh_CN": "选中时的值"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": ""
+                    }
+                  },
+                  {
+                    "property": "name",
+                    "label": {
+                      "text": {
+                        "zh_CN": "原生name属性"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": ""
+                    }
+                  },
+                  {
                     "property": "text",
                     "label": {
                       "text": {
@@ -7917,52 +8040,11 @@
                 ]
               }
             ],
-            "events": {
-              "onChange": {
+            "slots": {
+              "default": {
                 "label": {
-                  "zh_CN": "勾选值改变后将触发"
-                },
-                "description": {
-                  "zh_CN": "勾选值改变后将触发"
-                },
-                "type": "event",
-                "functionInfo": {
-                  "params": [
-                    {
-                      "name": "value",
-                      "type": "string",
-                      "defaultValue": "",
-                      "description": {
-                        "zh_CN": "选中项的值"
-                      }
-                    }
-                  ],
-                  "returns": {}
-                },
-                "defaultValue": ""
-              },
-              "onUpdate:modelValue": {
-                "label": {
-                  "zh_CN": "双向绑定的值改变时触发"
-                },
-                "description": {
-                  "zh_CN": "当前选中的值改变时触发"
-                },
-                "type": "event",
-                "functionInfo": {
-                  "params": [
-                    {
-                      "name": "value",
-                      "type": "array",
-                      "defaultValue": "",
-                      "description": {
-                        "zh_CN": "双向绑定的当前选中值"
-                      }
-                    }
-                  ],
-                  "returns": {}
-                },
-                "defaultValue": ""
+                  "zh_CN": "checkbox-button的内容"
+                }
               }
             }
           },
@@ -8049,6 +8131,101 @@
                     "labelPosition": "left"
                   },
                   {
+                    "property": "fill",
+                    "label": {
+                      "text": {
+                        "zh_CN": "按钮形式的checkbox激活时的填充色和边框色"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": ""
+                    },
+                    "labelPosition": "left"
+                  },
+                  {
+                    "property": "max",
+                    "label": {
+                      "text": {
+                        "zh_CN": "可被勾选的checkbox的最大数量"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": ""
+                    },
+                    "labelPosition": "left"
+                  },
+                  {
+                    "property": "min",
+                    "label": {
+                      "text": {
+                        "zh_CN": "可被勾选的checkbox的最小数量"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": ""
+                    },
+                    "labelPosition": "left"
+                  },
+                  {
+                    "property": "size",
+                    "label": {
+                      "text": {
+                        "zh_CN": "多选框尺寸，仅对按钮形式的checkbox或带有边框的checkbox生效"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "MetaSelect",
+                      "props": {
+                        "options": [
+                          {
+                            "label": "medium",
+                            "value": "medium"
+                          },
+                          {
+                            "label": "small",
+                            "value": "small"
+                          },
+                          {
+                            "label": "mini",
+                            "value": "mini"
+                          }
+                        ]
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "checkbox组件类型（button/checkbox），该属性的默认值为 checkbox,配合 options 属性一起使用"
+                    },
+                    "labelPosition": "left"
+                  },
+                  {
                     "property": "disabled",
                     "label": {
                       "text": {
@@ -8066,6 +8243,45 @@
                     "description": {
                       "zh_CN": ""
                     }
+                  },
+                  {
+                    "property": "vertical",
+                    "label": {
+                      "text": {
+                        "zh_CN": "设置组件排列方式，设置复选框是否垂直排列"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": ""
+                    }
+                  },
+                  {
+                    "property": "text-color",
+                    "label": {
+                      "text": {
+                        "zh_CN": "按钮形式的checkbox激活时的文本颜色"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": ""
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "options",
@@ -8151,29 +8367,13 @@
                   "returns": {}
                 },
                 "defaultValue": ""
-              },
-              "onUpdate:modelValue": {
+              }
+            },
+            "slots": {
+              "default": {
                 "label": {
-                  "zh_CN": "双向绑定的值改变时触发"
-                },
-                "description": {
-                  "zh_CN": "当前选中的值改变时触发"
-                },
-                "type": "event",
-                "functionInfo": {
-                  "params": [
-                    {
-                      "name": "value",
-                      "type": "array",
-                      "defaultValue": "",
-                      "description": {
-                        "zh_CN": "双向绑定的当前选中值"
-                      }
-                    }
-                  ],
-                  "returns": {}
-                },
-                "defaultValue": ""
+                  "zh_CN": "checkbox-group选项组"
+                }
               }
             }
           },
