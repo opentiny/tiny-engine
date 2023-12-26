@@ -3,7 +3,8 @@
     <plugin-setting title="获取远程字段" :isSecond="true" @cancel="closePanel" @save="saveRemote">
       <template #content>
         <div class="create-config">
-          <data-source-remote-form v-model="state.remoteData.options"></data-source-remote-form>
+          <data-source-remote-form v-model="state.remoteData.options"
+                                   @sendRequest="sendRequest"></data-source-remote-form>
           <data-source-remote-autoload v-model="state.remoteData.options.isSync"></data-source-remote-autoload>
           <div class="tabBox">
             <tiny-tabs v-model="state.activeNameTabs">
@@ -153,6 +154,7 @@ export default {
     }
 
     const sendRequest = () => {
+      console.log('sendRequest')
       getServiceForm().validate((valid) => {
         if (!valid) {
           confirm({
@@ -205,6 +207,7 @@ export default {
     font-size: 14px;
     font-weight: normal;
   }
+
   :deep(.title) {
     display: flex;
     justify-content: space-between;
@@ -258,20 +261,25 @@ export default {
     height: 80px;
     margin-top: 8px;
   }
+
   .tabBox {
     height: 500px;
     box-sizing: border-box;
     overflow-y: scroll;
+
     :deep(.is-active) {
       border-bottom: 2px solid var(--ti-lowcode-datasource-tabs-bottom-border-color) !important;
+
       .tiny-tabs__item__title {
         color: var(--ti-lowcode-datasource-tabs-bottom-border-color);
       }
     }
+
     :deep(.tiny-tabs__item__title) {
       font-size: 14px;
     }
   }
+
   :deep(.tiny-tabs__item__title) {
     margin-right: 20px;
     margin-left: 15px;

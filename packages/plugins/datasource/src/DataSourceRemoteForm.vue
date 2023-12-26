@@ -56,6 +56,7 @@ export default {
       default: () => ({})
     }
   },
+  emits: ['sendRequest', 'update:modelValue'],
   setup(props) {
     const state = reactive({
       serviceForm: {},
@@ -95,9 +96,11 @@ export default {
     margin-top: 4px;
     font-size: 12px;
   }
+
   :deep(.tiny-form-item__label) {
     color: var(--ti-lowcode-datasource-label-color);
   }
+
   .textarea-warp {
     display: flex;
     justify-content: flex-start;
@@ -107,9 +110,11 @@ export default {
       width: 100px;
       border: none;
     }
+
     :deep(.tiny-input-group__prepend) {
       background: var(--ti-lowcode-datasource-respones-select-color-bg);
       border-color: var(--ti-lowcode-datasource-select-border-color);
+
       .tiny-input-suffix {
         .tiny-input-display-only {
           .tiny-input__inner {
@@ -119,25 +124,31 @@ export default {
         }
       }
     }
+
     :deep(.tiny-input-display-only) {
       .tiny-input__inner {
         border-left: none;
       }
     }
+
     :deep(.tiny-input-group__append) {
       border: none;
       background: var(--ti-lowcode-datasource-respones-color-bg);
     }
+
     .requestBtn {
       color: var(--ti-lowcode-datasource-respones-border-color-bg);
     }
   }
+
   .tiny-button-group {
     width: 100%;
   }
+
   :deep(.tiny-group-item) {
     display: flex;
     width: 100%;
+
     button {
       position: relative;
       min-width: inherit;
@@ -145,8 +156,10 @@ export default {
       margin: 0;
       width: 100%;
     }
+
     li {
       flex: 1 1 0;
+
       &:not(:last-child) {
         button:before {
           content: '';
