@@ -10,11 +10,25 @@
  *
  */
 
-import HelpIcon from './src/HelpIcon.vue'
+const getBaseUrl = () => 'https://opentiny.design/tiny-engine#/help-center/course/engine/'
 
-export default {
-  id: 'EditorHelp',
-  title: '',
-  icon: HelpIcon,
-  align: 'bottom'
+const helpState = {
+  docsUrl: {
+    block: 3,
+    bridge: 13,
+    data: 7,
+    datasource: 11,
+    i18n: 12,
+    page: 2,
+    script: 8
+  }
 }
+
+const getDocsUrl = (plugin) => {
+  return `${getBaseUrl()}${helpState.docsUrl[plugin]}`
+}
+
+export default () => ({
+  getBaseUrl,
+  getDocsUrl
+})
