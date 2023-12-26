@@ -1,21 +1,47 @@
 <template>
-  <tiny-tooltip v-model="state.showTooltip" :manual="true" effect="light" placement="right-end">
-    <template #content>
-      <div>
-        <span>{{ toolTipContent }}</span>
-        <svg-icon name="close" class="help-plugin-tooltip-close" @click="closeToolTip"></svg-icon>
-      </div>
-    </template>
-    <div id="help-plugin" @click.stop="onOpen">
-      <svg-icon name="plugin-icon-plugin-help"></svg-icon>
-      <tiny-guide
-        ref="tinyGuideRef"
-        :show-step="state.showStep"
-        :dom-data="domData"
-        :width="state.guideWidth"
-      ></tiny-guide>
+  <div id="help-plugin">
+    <div title="帮助">
+      <svg-icon name="plugin-icon-plugin-help" @click.stop="openHelpBox"></svg-icon>
     </div>
-  </tiny-tooltip>
+    <div v-if="state.helpBox" class="help-plugin-box">
+      <div class="help-plugin-box-top">
+        <svg-icon name="close" class="help-plugin-close" @click.stop="closeHelpBox"></svg-icon>
+      </div>
+      <div class="help-plugin-box-title">
+        {{ helpTitle }}
+      </div>
+      <div class="help-plugin-box-body">
+        <a class="help-plugin-box-body-item" :href="courseUrl" target="_blank">使用手册</a>
+        <tiny-tooltip v-model="state.showTooltip" :manual="true" effect="light" placement="right-end">
+          <template #content>
+            <div>
+              <span>{{ toolTipContent }}</span>
+              <svg-icon name="close" class="help-plugin-tooltip-close" @click="closeToolTip"></svg-icon>
+            </div>
+          </template>
+          <div class="help-plugin-box-body-item help-plugin-box-body-guide" @click="toShowStep">新手引导</div>
+        </tiny-tooltip>
+      </div>
+      <div class="help-plugin-box-ques">
+        <div class="help-plugin-box-ques-title">{{ questionTitle }}</div>
+        <a
+          v-for="(item, idx) in questionList"
+          :key="idx"
+          :href="item.url"
+          target="_blank"
+          class="help-plugin-box-ques-item"
+        >
+          {{ idx + 1 }}.{{ item.label }}
+        </a>
+      </div>
+    </div>
+    <tiny-guide
+      ref="tinyGuideRef"
+      :show-step="state.showStep"
+      :dom-data="domData"
+      :width="state.guideWidth"
+    ></tiny-guide>
+  </div>
 </template>
 
 <script>
@@ -34,13 +60,32 @@ export default {
   },
   setup() {
     const { activePlugin, PLUGIN_NAME, pluginState } = useLayout()
-    const toolTipContent = '点击这里，再次查看新手指引'
     const tinyGuideRef = ref()
+    const toolTipContent = '点击这里，再次查看新手指引'
+    const helpTitle = '帮助'
+    const questionTitle = '常见问题'
+    const courseUrl = 'https://opentiny.design/tiny-engine#/help-center/course/engine'
+    const questionList = [
+      {
+        label: '如何引入第三方组件库',
+        url: 'https://opentiny.design/tiny-engine#/help-center/course/engine/15'
+      },
+      {
+        label: '如何使用AI功能创建页面',
+        url: 'https://opentiny.design/tiny-engine#/help-center/course/engine/16'
+      },
+      {
+        label: '答疑视频回放',
+        url: 'https://opentiny.design/tiny-engine#/help-center/course/video/38'
+      }
+    ]
 
     const state = reactive({
       showStep: false,
       guideWidth: 360,
-      showTooltip: false
+      showTooltip: false,
+      showHelpDialog: false,
+      helpBox: false
     })
 
     let toolTipTimer
@@ -58,6 +103,20 @@ export default {
         closeToolTip()
       }, 8000)
     }
+    const closeHelpBox = () => {
+      state.helpBox = false
+    }
+
+    const openHelpBox = () => {
+      state.helpBox = !state.helpBox
+    }
+
+    const toShowStep = () => {
+      if (!tinyGuideRef.value?.state?.tour?.isActive()) {
+        state.showStep = !state.showStep
+        state.helpBox = false
+      }
+    }
 
     const domData = [
       {
@@ -73,6 +132,7 @@ export default {
           }
         ],
         beforeShow: () => {
+          closeHelpBox()
           activePlugin(PLUGIN_NAME.Materials)
           closeToolTip()
           pluginState.pluginEvent = 'none'
@@ -154,18 +214,12 @@ export default {
       }
     ]
 
-    const onOpen = () => {
-      if (!tinyGuideRef.value?.state?.tour?.isActive()) {
-        state.showStep = !state.showStep
-      }
-    }
-
     onMounted(() => {
       // 需要注意，同一个平台，有可能会同时出现多个不同版本的设计器。
       const localStorageVersion = window.localStorage.getItem(GUIDE_STORAGE_KEY)
 
       if (!localStorageVersion || localStorageVersion < GUIDE_VERSION) {
-        onOpen()
+        toShowStep()
       }
     })
 
@@ -173,10 +227,16 @@ export default {
       tinyGuideRef,
       IconClose: IconClose(),
       toolTipContent,
+      helpTitle,
+      questionTitle,
+      questionList,
+      courseUrl,
       domData,
       state,
       closeToolTip,
-      onOpen
+      closeHelpBox,
+      openHelpBox,
+      toShowStep
     }
   }
 }
@@ -186,6 +246,15 @@ export default {
 .help-plugin-tooltip-close {
   margin-left: 20px;
   cursor: pointer;
+}
+.help-plugin-close {
+  cursor: pointer;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}
+a:hover {
+  text-decoration: underline;
 }
 </style>
 
@@ -254,5 +323,60 @@ div.tiny-guide.shepherd-element {
 // 引导遮罩层
 .shepherd-modal-overlay-container.shepherd-modal-is-visible {
   fill: var(--ti-lowcode-help-guide-mask-bg-color);
+}
+
+.help-plugin-box {
+  cursor: auto;
+  position: absolute;
+  left: var(--base-nav-panel-width);
+  bottom: 68px;
+  width: 260px;
+  background-color: var(--ti-lowcode-help-box-bg-color);
+  border-radius: 6px;
+  box-shadow: var(--ti-lowcode-help-box-shadow);
+  padding: 28px 32px;
+  &-top {
+    text-align: right;
+  }
+  &-title {
+    color: var(--ti-lowcode-help-box-title-text-color);
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+  &-body {
+    &-item {
+      display: block;
+      cursor: pointer;
+      width: 60px;
+      font-size: 14px;
+      color: var(--ti-lowcode-help-box-item-text-color);
+      margin-bottom: 12px;
+    }
+    &-item:hover {
+      text-decoration: underline;
+    }
+    &-guide:hover {
+      text-decoration: none;
+    }
+  }
+
+  &-ques {
+    border-top: 1px solid var(--ti-lowcode-help-box-question-border-top);
+    padding-top: 12px;
+    &-title {
+      color: var(--ti-lowcode-help-box-title-text-color);
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    &-item {
+      display: inline-block;
+      color: var(--ti-lowcode-help-box-question-item-text-color);
+      cursor: pointer;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+  }
 }
 </style>
