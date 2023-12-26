@@ -16,6 +16,7 @@ import { I18nInjectionKey } from 'vue-i18n'
 import dataSourceMap from './dataSource'
 import * as utils from '../utils'
 import * as bridge from './bridge'
+import { useStores } from './store'
 
 export const lowcodeWrap = (props, context) => {
   const global = {}
@@ -78,5 +79,8 @@ export const lowcodeWrap = (props, context) => {
 export default () => {
   const i18n = inject(I18nInjectionKey)
   provide(I18nInjectionKey, i18n)
-  return { t: i18n.global.t, lowcodeWrap }
+
+  const stores = useStores()
+
+  return { t: i18n.global.t, lowcodeWrap, stores }
 }
