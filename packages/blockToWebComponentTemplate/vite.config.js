@@ -39,7 +39,7 @@ const config = {
 
 export default defineConfig(({ command, mode }) => {
   if (command !== 'build' || mode !== 'block') {
-    return
+    return config
   }
 
   const vuePluginConfig = {}
