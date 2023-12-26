@@ -109,7 +109,7 @@ export default {
     const { setSaved } = useCanvas()
     const { PLUGIN_NAME, getPluginApi } = useLayout()
     const { openCommon } = getPluginApi(PLUGIN_NAME.save)
-    const docsUrl = useHelp().helpState.docsUrl.data
+    const docsUrl = useHelp().getDocsUrl('data')
     const state = reactive({
       dataSource: {},
       createData: {
@@ -474,7 +474,7 @@ export default {
   }
   :deep(.help-box) {
     position: absolute;
-    left: 72px;
+    left: 70px;
     top: 11px;
   }
 }

@@ -76,7 +76,7 @@ export default {
     const { resState } = useResource()
     const pageTreeRef = ref(null)
     const ROOT_ID = pageSettingState.ROOT_ID
-    const docsUrl = useHelp().helpState.docsUrl.page
+    const docsUrl = useHelp().getDocsUrl('page')
 
     const state = reactive({
       isFolder: false

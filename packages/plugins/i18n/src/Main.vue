@@ -178,7 +178,7 @@ export default {
         label: '按英文排序'
       }
     ]
-    const docsUrl = useHelp().helpState.docsUrl.i18n
+    const docsUrl = useHelp().getDocsUrl('i18n')
     const currentSearchType = ref('')
     const copyTipContent = ref('')
     const searchKey = ref('')
@@ -643,6 +643,6 @@ export default {
 :deep(.help-box) {
   position: absolute;
   left: 86px;
-  top: 4px;
+  top: 3px;
 }
 </style>

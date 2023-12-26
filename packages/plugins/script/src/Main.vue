@@ -51,7 +51,7 @@ export default {
   },
   emits: ['close'],
   setup(props, { emit }) {
-    const docsUrl = useHelp().helpState.docsUrl.script
+    const docsUrl = useHelp().getDocsUrl('script')
     const { state, monaco, change, close, saveMethods } = useMethod({ emit })
 
     const options = {
@@ -123,7 +123,6 @@ export default {
     .head-left {
       padding-left: 15px;
       display: flex;
-      flex-direction: row;
       align-items: center;
       .title {
         color: var(--ti-lowcode-plugin-panel-title-color);

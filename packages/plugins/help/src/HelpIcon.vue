@@ -1,6 +1,8 @@
 <template>
   <div id="help-plugin">
-    <svg-icon name="plugin-icon-plugin-help" @click.stop="openHelpBox"></svg-icon>
+    <div title="帮助">
+      <svg-icon name="plugin-icon-plugin-help" @click.stop="openHelpBox"></svg-icon>
+    </div>
     <div v-if="state.helpBox" class="help-plugin-box">
       <div class="help-plugin-box-top">
         <svg-icon name="close" class="help-plugin-close" @click.stop="closeHelpBox"></svg-icon>
@@ -17,17 +19,17 @@
               <svg-icon name="close" class="help-plugin-tooltip-close" @click="closeToolTip"></svg-icon>
             </div>
           </template>
-          <div class="help-plugin-box-body-item" @click="toShowStep">新手引导</div>
+          <div class="help-plugin-box-body-item help-plugin-box-body-guide" @click="toShowStep">新手引导</div>
         </tiny-tooltip>
       </div>
       <div class="help-plugin-box-ques">
         <div class="help-plugin-box-ques-title">{{ questionTitle }}</div>
         <a
+          v-for="(item, idx) in questionList"
+          :key="idx"
           :href="item.url"
           target="_blank"
           class="help-plugin-box-ques-item"
-          v-for="(item, idx) in questionList"
-          :key="idx"
         >
           {{ idx + 1 }}.{{ item.label }}
         </a>
@@ -326,8 +328,8 @@ div.tiny-guide.shepherd-element {
 .help-plugin-box {
   cursor: auto;
   position: absolute;
-  left: calc(var(--base-nav-panel-width));
-  bottom: 20px;
+  left: var(--base-nav-panel-width);
+  bottom: 68px;
   width: 260px;
   background-color: var(--ti-lowcode-help-box-bg-color);
   border-radius: 6px;
@@ -353,6 +355,9 @@ div.tiny-guide.shepherd-element {
     }
     &-item:hover {
       text-decoration: underline;
+    }
+    &-guide:hover {
+      text-decoration: none;
     }
   }
 

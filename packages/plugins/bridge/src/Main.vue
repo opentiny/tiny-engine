@@ -44,7 +44,7 @@ export default {
     const bridge = ref(null)
     const utilsRef = ref(null)
     const tips = computed(() => RESOURCE_TIP[activedName.value])
-    const docsUrl = useHelp().helpState.docsUrl.bridge
+    const docsUrl = useHelp().getDocsUrl('bridge')
 
     const switchTab = (tab) => {
       closePanel()

@@ -10,18 +10,25 @@
  *
  */
 
+const getBaseUrl = () => 'https://opentiny.design/tiny-engine#/help-center/course/engine/'
+
 const helpState = {
   docsUrl: {
-    block: 'https://opentiny.design/tiny-engine#/help-center/course/engine/3',
-    bridge: 'https://opentiny.design/tiny-engine#/help-center/course/engine/13',
-    data: 'https://opentiny.design/tiny-engine#/help-center/course/engine/7',
-    datasource: 'https://opentiny.design/tiny-engine#/help-center/course/engine/11',
-    i18n: 'https://opentiny.design/tiny-engine#/help-center/course/engine/12',
-    page: 'https://opentiny.design/tiny-engine#/help-center/course/engine/2',
-    script: 'https://opentiny.design/tiny-engine#/help-center/course/engine/8'
+    block: 3,
+    bridge: 13,
+    data: 7,
+    datasource: 11,
+    i18n: 12,
+    page: 2,
+    script: 8
   }
 }
 
-export default () => {
-  return { helpState }
+const getDocsUrl = (plugin) => {
+  return `${getBaseUrl()}${helpState.docsUrl[plugin]}`
 }
+
+export default () => ({
+  getBaseUrl,
+  getDocsUrl
+})

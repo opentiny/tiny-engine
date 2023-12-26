@@ -76,7 +76,7 @@ export default {
     LinkButton
   },
   setup() {
-    const docsUrl = useHelp().helpState.docsUrl.datasource
+    const docsUrl = useHelp().getDocsUrl('datasource')
     const state = reactive({
       editable: true,
       currentDataSource: { name: 'untitled', data: { type: 'array', columns: [] } },
@@ -148,16 +148,11 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.add-page {
-  font-size: 14px;
-  color: var(--ti-lowcode-datasource-btn-click-color);
-}
-.set-page {
-  font-size: 14px;
-  color: var(--ti-lowcode-datasource-btn-click-color);
-}
+.add-page,
+.set-page,
 .refresh-page {
-  font-size: 14px;
+  width: 16px;
+  margin-right: 6px !important;
   color: var(--ti-lowcode-datasource-btn-click-color);
 }
 :deep(.help-box) {
