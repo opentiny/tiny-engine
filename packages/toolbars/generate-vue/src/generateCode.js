@@ -99,7 +99,7 @@ function generateStores({ globalState }) {
   actions: {
     ${getStoreFnStrs(actions)}
   }
-})`
+})\n`
 
     result += storeCode
   })
