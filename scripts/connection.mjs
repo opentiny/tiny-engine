@@ -151,9 +151,7 @@ class MysqlConnection {
       isOfficial = 0,
       isDefault = 0,
       tiny_reserved = 0,
-      component_metadata = null,
-      tenant = null,
-      library = null,
+      tenant = 1,
       createBy = 86,
       updatedBy = 86
     } = component
