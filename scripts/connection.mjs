@@ -80,7 +80,7 @@ class MysqlConnection {
    */
   updateComponent(component) {
     const values = []
-    let sqlContent = 'update user_components set '
+    let sqlContent = `update ${componentsTableName} set `
 
     Object.keys(component).forEach((key) => {
       const { [key]: value } = component
@@ -182,7 +182,7 @@ class MysqlConnection {
     '${updatedBy}',
   );`
 
-    const sqlContent = `INSERT INTO user_components (version, name, component, icon, description, doc_url,
+    const sqlContent = `INSERT INTO ${componentsTableName} (version, name, component, icon, description, doc_url,
        screenshot, tags, keywords, dev_mode, npm, \`group\`, \`category\`, priority, snippets,
         schema_fragment, configure, \`public\`, framework, isOfficial, isDefault, tiny_reserved,
          component_metadata, tenant, library, createdBy, updatedBy) VALUES ${values}`.replace(/\n/g, '')
@@ -201,7 +201,7 @@ class MysqlConnection {
    * @param {object} component 组件数据
    */
   initDB(component) {
-    const selectSqlContent = `SELECT * FROM components.user_components WHERE component = '${component.component}'`
+    const selectSqlContent = `SELECT * FROM ${this.config.database}.${componentsTableName} WHERE component = '${component.component}'`
 
     this.query(selectSqlContent)
       .then((result) => {
@@ -261,8 +261,10 @@ class MysqlConnection {
     return new Promise((resolve, reject) => {
       this.query(sqlContent, (error, result) => {
         if (error) {
+          logger.success(`创建表 ${componentsTableName} 失败：${error}`)
           reject(error)
         } else {
+          logger.success(`创建表 ${componentsTableName} 成功`)
           resolve(result)
         }
       })
@@ -276,22 +278,24 @@ class MysqlConnection {
   initUserComponentsTable() {
     return new Promise((resolve, reject) => {
       // 查询是否已存在表
-      this.query(`SHOW TABLES LIKE '${componentsTableName}'`, (error, result) => {
-        if (error) {
+      this.query(`SHOW TABLES LIKE '${componentsTableName}'`)
+        .then((result) => {
+          if (result.length) {
+            // 已存在
+            resolve()
+          } else {
+            this.createUserComponentsTable()
+              .then(() => {
+                resolve()
+              })
+              .catch((err) => {
+                reject(err)
+              })
+          }
+        })
+        .catch((error) => {
           reject(error)
-        } else if (result.length) {
-          // 已存在
-          resolve()
-        } else {
-          this.createUserComponentsTable()
-            .then(() => {
-              resolve()
-            })
-            .catch((err) => {
-              reject(err)
-            })
-        }
-      })
+        })
     })
   }
 }
