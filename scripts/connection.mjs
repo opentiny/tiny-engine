@@ -1,27 +1,34 @@
 // const mysql = require('mysql')
 import mysql from 'mysql'
+import logger from './logger.mjs'
 
+const componentsTableName = 'user_components'
 class MysqlConnection {
   constructor(config) {
-    const { host = 'localhost', port = '3306', user = 'root', password = 'yao8yun5!', database = '' } = config || {}
+    this.config = config || {
+      host: 'localhost', // 主机名（服务器地址）
+      port: '3306', // 端口号
+      user: 'root', // 用户名
+      password: 'password', // 密码
+      database: 'components' // 数据库名称
+    }
     // 是否连接上了数据库
     this.connected = false
+    this.connection = mysql.createConnection(this.config)
+  }
 
-    this.connection = mysql.createConnection({
-      host, // 主机名（服务器地址）
-      port, // 端口号
-      user, // 用户名
-      password, // 密码
-      database // 数据库名称
-    })
-
-    this.connection.connect((error) => {
-      if (error) {
-        console.log('连接数据库失败：', error)
-      } else {
-        console.log('连接数据库成功')
-        this.connected = true
-      }
+  connect() {
+    return new Promise((resolve, reject) => {
+      this.connection.connect((error) => {
+        if (error) {
+          logger.warn('连接数据库失败')
+          reject()
+        } else {
+          logger.success('连接数据库成功')
+          this.connected = true
+          resolve()
+        }
+      })
     })
   }
 
@@ -30,11 +37,15 @@ class MysqlConnection {
    * @param {string} sql sql语句
    * @param {string} componentName 组件名称
    */
-  connectQuery(sql, componentName) {
-    this.connection.query(sql, (error) => {
-      if (error) {
-        console.log(`组件 ${componentName} 执行sql失败：${error}`)
-      }
+  query(sql) {
+    return new Promise((resolve, reject) => {
+      this.connection.query(sql, (error, result) => {
+        if (error) {
+          reject(error)
+        } else {
+          resolve(result)
+        }
+      })
     })
   }
 
@@ -98,7 +109,13 @@ class MysqlConnection {
     sqlContent += values.join()
     sqlContent += ` where component = '${component.component}';`
 
-    this.connectQuery(sqlContent, component.component)
+    this.query(sqlContent, component.component)
+      .then(() => {
+        logger.success(`更新组件 ${component.component} 成功`)
+      })
+      .catch((error) => {
+        logger.success(`更新组件 ${component.component} 失败：${error}`)
+      })
   }
 
   /**
@@ -168,9 +185,15 @@ class MysqlConnection {
     const sqlContent = `INSERT INTO user_components (version, name, component, icon, description, doc_url,
        screenshot, tags, keywords, dev_mode, npm, \`group\`, \`category\`, priority, snippets,
         schema_fragment, configure, \`public\`, framework, isOfficial, isDefault, tiny_reserved,
-         component_metadata, tenant, library, createdBy, updatedBy) VALUES ${values}\n`.replace(/\n/g, '')
+         component_metadata, tenant, library, createdBy, updatedBy) VALUES ${values}`.replace(/\n/g, '')
 
-    this.connectQuery(sqlContent, componentName)
+    this.query(sqlContent, componentName)
+      .then(() => {
+        logger.success(`新增组件 ${component.component} 成功`)
+      })
+      .catch((error) => {
+        logger.success(`新增组件 ${component.component} 失败：${error}`)
+      })
   }
 
   /**
@@ -178,20 +201,98 @@ class MysqlConnection {
    * @param {object} component 组件数据
    */
   initDB(component) {
-    this.connection.query(
-      `SELECT * FROM components.user_components WHERE component = '${component.component}'`,
-      (error, result) => {
-        if (error) {
-          console.log(`查询组件 ${component.component} 失败：`, error)
+    const selectSqlContent = `SELECT * FROM components.user_components WHERE component = '${component.component}'`
 
-          return
-        }
-
+    this.query(selectSqlContent)
+      .then((result) => {
         if (!result.length) {
           this.insertComponent(component)
         }
-      }
-    )
+      })
+      .catch((error) => {
+        logger.success(`查询组件 ${component.component} 失败：${error}`)
+      })
+  }
+
+  /**
+   * 创建组件表
+   * @returns promise
+   */
+  createUserComponentsTable() {
+    const sqlContent = `
+      CREATE TABLE ${componentsTableName}  (
+        id int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+        version varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+        name longtext CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+        component varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+        icon varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+        description varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+        doc_url varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+        screenshot varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+        tags varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+        keywords varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+        dev_mode varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+        npm longtext CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+        \`group\` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+        category varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+        priority int(11) NULL DEFAULT NULL,
+        snippets longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
+        schema_fragment longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
+        configure longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
+        createdBy int(11) NULL DEFAULT NULL,
+        updatedBy int(11) NULL DEFAULT NULL,
+        created_by int(11) NULL DEFAULT NULL,
+        updated_by int(11) NULL DEFAULT NULL,
+        created_at timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+        public int(11) NULL DEFAULT NULL,
+        framework varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+        isOfficial tinyint(1) NULL DEFAULT NULL,
+        isDefault tinyint(1) NULL DEFAULT NULL,
+        tiny_reserved tinyint(1) NULL DEFAULT NULL,
+        tenant int(11) NULL DEFAULT NULL,
+        component_metadata longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
+        library int(11) NULL DEFAULT NULL,
+        PRIMARY KEY (id) USING BTREE,
+        UNIQUE INDEX unique_component(createdBy, framework, component, version) USING BTREE
+      ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+    `.replace(/\n/g, '')
+
+    return new Promise((resolve, reject) => {
+      this.query(sqlContent, (error, result) => {
+        if (error) {
+          reject(error)
+        } else {
+          resolve(result)
+        }
+      })
+    })
+  }
+
+  /**
+   * 初始化组件表
+   * @returns promise
+   */
+  initUserComponentsTable() {
+    return new Promise((resolve, reject) => {
+      // 查询是否已存在表
+      this.query(`SHOW TABLES LIKE '${componentsTableName}'`, (error, result) => {
+        if (error) {
+          reject(error)
+        } else if (result.length) {
+          // 已存在
+          resolve()
+        } else {
+          this.createUserComponentsTable()
+            .then(() => {
+              resolve()
+            })
+            .catch((err) => {
+              reject(err)
+            })
+        }
+      })
+    })
   }
 }
 

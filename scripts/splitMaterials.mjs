@@ -1,5 +1,6 @@
 import fs from 'fs-extra'
 import path from 'node:path'
+import logger from './logger.mjs'
 
 const bundlePath = path.join(process.cwd(), '/packages/design-core/public/mock/bundle.json')
 const bundle = fs.readJSONSync(bundlePath)
@@ -20,7 +21,7 @@ try {
       })
 
       if (snippet) {
-        comp.snippet = { ...snippet }
+        comp.snippets = [snippet]
         comp.category = child.group
 
         return true
@@ -30,7 +31,7 @@ try {
     })
 
     const fileName = Array.isArray(comp.component) ? comp.component[0] : comp.component
-    const componentPath = path.join(process.cwd(), '/materials/components', `${fileName}.json`)
+    const componentPath = path.join(process.cwd(), '/materials/components', `${toPascalCase(fileName)}.json`)
 
     fs.outputJsonSync(componentPath, comp, { spaces: 2 })
   })
@@ -40,6 +41,8 @@ try {
 
     fs.outputJsonSync(blockPath, block, { spaces: 2 })
   })
+
+  logger.success('拆分物料资产包完成')
 } catch (error) {
-  throw new Error(`拆分物料资产包失败, ${error}`)
+  logger.error(`拆分物料资产包失败： ${error}`)
 }
