@@ -181,7 +181,7 @@ class MysqlConnection {
     '${tiny_reserved}',
     '${tenant}',
     '${createBy}',
-    '${updatedBy}',
+    '${updatedBy}'
   );`
 
     const sqlContent = `INSERT INTO ${componentsTableName} (version, name, component, icon, description, doc_url,
