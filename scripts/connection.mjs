@@ -259,15 +259,15 @@ class MysqlConnection {
     `.replace(/\n/g, '')
 
     return new Promise((resolve, reject) => {
-      this.query(sqlContent, (error, result) => {
-        if (error) {
-          logger.success(`创建表 ${componentsTableName} 失败：${error}`)
-          reject(error)
-        } else {
+      this.query(sqlContent)
+        .then((result) => {
           logger.success(`创建表 ${componentsTableName} 成功`)
           resolve(result)
-        }
-      })
+        })
+        .catch((error) => {
+          logger.success(`创建表 ${componentsTableName} 失败：${error}`)
+          reject(error)
+        })
     })
   }
 
