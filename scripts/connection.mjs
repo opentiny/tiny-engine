@@ -70,6 +70,10 @@ class MysqlConnection {
    * @returns 格式化后的字符串
    */
   formatSingleQuoteValue(str) {
+    if (typeof str !== 'string') {
+      return str
+    }
+
     return str.replace(/'/g, "\\'")
   }
 
@@ -175,9 +179,7 @@ class MysqlConnection {
     '${isOfficial}',
     '${isDefault}',
     '${tiny_reserved}',
-    '${component_metadata}',
     '${tenant}',
-    '${library}',
     '${createBy}',
     '${updatedBy}',
   );`
@@ -185,7 +187,7 @@ class MysqlConnection {
     const sqlContent = `INSERT INTO ${componentsTableName} (version, name, component, icon, description, doc_url,
        screenshot, tags, keywords, dev_mode, npm, \`group\`, \`category\`, priority, snippets,
         schema_fragment, configure, \`public\`, framework, isOfficial, isDefault, tiny_reserved,
-         component_metadata, tenant, library, createdBy, updatedBy) VALUES ${values}`.replace(/\n/g, '')
+         tenant, createdBy, updatedBy) VALUES ${values}`.replace(/\n/g, '')
 
     this.query(sqlContent, componentName)
       .then(() => {
