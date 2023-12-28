@@ -2,8 +2,10 @@ import fs from 'fs-extra'
 import path from 'node:path'
 import logger from './logger.mjs'
 
+// 物料资产包mock数据路径
 const bundlePath = path.join(process.cwd(), '/packages/design-core/public/mock/bundle.json')
-const materialsDir = '/materials'
+// 物料文件存放文件夹名称
+const materialsDir = 'materials'
 const bundle = fs.readJSONSync(bundlePath)
 const { components, snippets, blocks } = bundle.data.materials
 

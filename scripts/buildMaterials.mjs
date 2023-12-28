@@ -5,6 +5,8 @@ import fg from 'fast-glob'
 import MysqlConnection from './connection.mjs'
 import logger from './logger.mjs'
 
+// 物料文件存放文件夹名称
+const materialsDir = 'materials'
 // 物料资产包
 const bundlePath = path.join(process.cwd(), '/packages/design-core/public/mock/bundle.json')
 // mockServer应用数据
@@ -84,7 +86,11 @@ const validateBlock = (file, block) => {
  */
 const generateComponents = () => {
   try {
-    fg(['materials/**/*.json']).then((files) => {
+    fg([`${materialsDir}/**/*.json`]).then((files) => {
+      if(!files.length) {
+        logger.warn('物料文件夹为空，请检查路径')
+      }
+
       const { components = [], snippets = [], blocks = [] } = bundle.data.materials
       const componentsMap = []
       const appInfoBlocksLabels = appInfo.blockHistories.map((item) => item.label)
@@ -152,7 +158,7 @@ const generateComponents = () => {
 }
 
 // 监听materials下json文件的变化
-const watcher = chokidar.watch('materials/**/*.json', { ignoreInitial: true })
+const watcher = chokidar.watch(`${materialsDir}/**/*.json`, { ignoreInitial: true })
 
 watcher.on('all', (event, file) => {
   const eventMap = {
