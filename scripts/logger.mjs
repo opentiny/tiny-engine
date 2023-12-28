@@ -14,7 +14,7 @@ const output = (type, msg) => {
     const time = new Date().toLocaleTimeString()
     const colorMsg = colors[colorMap[type]](msg)
 
-    return `${colors.dim(time)} ${colorMsg}`
+    return `[buildMaterials] [${colors.dim(time)}] ${colorMsg}`
   }
 
   // eslint-disable-next-line no-console

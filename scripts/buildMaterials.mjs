@@ -22,11 +22,20 @@ const bundle = {
 }
 const connection = new MysqlConnection()
 
+/**
+ * 更新物料资产包和应用mock数据
+ */
 const write = () => {
   fsExtra.outputJSONSync(bundlePath, bundle, { spaces: 2 })
   fsExtra.outputJSONSync(appInfoPath, appInfo, { spaces: 2 })
 }
 
+/**
+ * 校验组件文件数据
+ * @param {string} file 组件文件路径
+ * @param {object} component 组件数据
+ * @returns 
+ */
 const validateComponent = (file, component) => {
   const requiredFields = ['component']
   const fields = Object.keys(component)
@@ -47,6 +56,12 @@ const validateComponent = (file, component) => {
   return true
 }
 
+/**
+ * 校验区块文件数据
+ * @param {string} file 区块文件路径
+ * @param {object} block 区块数据
+ * @returns 
+ */
 const validateBlock = (file, block) => {
   const requiredFields = ['label', 'assets']
   const fields = Object.keys(block)
@@ -61,6 +76,12 @@ const validateBlock = (file, block) => {
   return true
 }
 
+/**
+ * 读取materials目录下的json文件，执行下列操作
+ * 1. 合并生成物料资产包
+ * 2. 更新应用的组件数据componentsMap
+ * 3. 连接上数据库后，将组件数据写入数据库（新增或更新）
+ */
 const generateComponents = () => {
   try {
     fg(['materials/**/*.json']).then((files) => {
@@ -130,6 +151,7 @@ const generateComponents = () => {
   }
 }
 
+// 监听materials下json文件的变化
 const watcher = chokidar.watch('materials/**/*.json', { ignoreInitial: true })
 
 watcher.on('all', (event, file) => {
@@ -155,6 +177,7 @@ watcher.on('all', (event, file) => {
   }
 })
 
+// 连接数据库
 connection
   .connect()
   .then(() => {
@@ -163,5 +186,6 @@ connection
     })
   })
   .catch(() => {
+    // 未能连接数据库也可以执行更新本地mock数据
     generateComponents()
   })

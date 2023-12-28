@@ -2,16 +2,19 @@
 import mysql from 'mysql'
 import logger from './logger.mjs'
 
+// 组件表名称
 const componentsTableName = 'user_components'
+// 数据库配置
+const mysqlConfig = {
+  host: 'localhost', // 主机名（服务器地址）
+  port: '3306', // 端口号
+  user: 'root', // 用户名
+  password: 'admin', // 密码
+  database: 'components' // 数据库名称
+}
 class MysqlConnection {
   constructor(config) {
-    this.config = config || {
-      host: 'localhost', // 主机名（服务器地址）
-      port: '3306', // 端口号
-      user: 'root', // 用户名
-      password: 'password', // 密码
-      database: 'components' // 数据库名称
-    }
+    this.config = config || mysqlConfig
     // 是否连接上了数据库
     this.connected = false
     this.connection = mysql.createConnection(this.config)
@@ -21,7 +24,7 @@ class MysqlConnection {
     return new Promise((resolve, reject) => {
       this.connection.connect((error) => {
         if (error) {
-          logger.warn('连接数据库失败')
+          logger.warn('未能连接到数据库，请查看数据库配置是否正确')
           reject()
         } else {
           logger.success('连接数据库成功')
@@ -272,7 +275,7 @@ class MysqlConnection {
   }
 
   /**
-   * 初始化组件表
+   * 初始化数据库的组件表
    * @returns promise
    */
   initUserComponentsTable() {
