@@ -272,12 +272,7 @@ const confirm = () => {
     }
   })
 }
-const validatePass = (rule, value, callback) => {
-  if (!/((IR|RR|BUG|US|WI|Hawk|DTS|FE|TG|NA|EP)[0-9]{13}.*)|(#[0-9a-zA-Z]*)/.test(value)) {
-    callback(new Error('输入的commit msg不合法，请填写正确的单号'))
-  }
-  callback()
-}
+
 const handleClick = ({ code }) => {
   actions[code]?.()
 }
@@ -285,10 +280,7 @@ const handleClick = ({ code }) => {
 const rules = {
   account: [{ required: true, message: '必填', trigger: 'change' }],
   password: [{ required: true, message: '必填', trigger: 'change' }],
-  commitMsg: [
-    { required: true, message: '必填', trigger: 'change' },
-    { validator: validatePass, trigger: 'blur' }
-  ],
+  commitMsg: [{ required: true, message: '必填', trigger: 'change' }],
   branch: [{ required: true, message: '必填', trigger: 'change' }]
 }
 
