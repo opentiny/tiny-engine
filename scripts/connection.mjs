@@ -4,6 +4,8 @@ import Logger from './logger.mjs'
 const logger = new Logger('buildMaterials')
 // 组件表名称
 const componentsTableName = 'user_components'
+// 组件关联到物料资产包的id
+const materialHistoryId = 639
 // 数据库配置
 const mysqlConfig = {
   host: 'localhost', // 主机名（服务器地址）
@@ -130,7 +132,7 @@ class MysqlConnection {
    * @param {number} id 新建的组件id
    */
   relationMaterialHistory(id) {
-    const sqlContent = `INSERT INTO \`material_histories_components__user_components_mhs\` (\`material-history_id\`, \`user-component_id\`) VALUES (639, ${id})`
+    const sqlContent = `INSERT INTO \`material_histories_components__user_components_mhs\` (\`material-history_id\`, \`user-component_id\`) VALUES (${materialHistoryId}, ${id})`
 
     this.query(sqlContent)
   }
