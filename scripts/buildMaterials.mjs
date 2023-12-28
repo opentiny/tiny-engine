@@ -3,8 +3,9 @@ import path from 'node:path'
 import chokidar from 'chokidar'
 import fg from 'fast-glob'
 import MysqlConnection from './connection.mjs'
-import logger from './logger.mjs'
+import Logger from './logger.mjs'
 
+const logger = new Logger('buildMaterials')
 // 物料文件存放文件夹名称
 const materialsDir = 'materials'
 // 物料资产包
@@ -22,6 +23,7 @@ const bundle = {
     }
   }
 }
+
 const connection = new MysqlConnection()
 
 /**
@@ -88,7 +90,7 @@ const generateComponents = () => {
   try {
     fg([`${materialsDir}/**/*.json`]).then((files) => {
       if(!files.length) {
-        logger.warn('物料文件夹为空，请检查路径')
+        logger.warn('物料文件夹为空，请先执行`pnpm splitMaterials`命令拆分物料资产包')
       }
 
       const { components = [], snippets = [], blocks = [] } = bundle.data.materials

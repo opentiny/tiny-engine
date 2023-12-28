@@ -1,7 +1,8 @@
 // const mysql = require('mysql')
 import mysql from 'mysql'
-import logger from './logger.mjs'
+import Logger from './logger.mjs'
 
+const logger = new Logger('buildMaterials')
 // 组件表名称
 const componentsTableName = 'user_components'
 // 数据库配置
@@ -126,6 +127,16 @@ class MysqlConnection {
   }
 
   /**
+   * 新建的组件关联物料资产包
+   * @param {number} id 新建的组件id
+   */
+  relationMaterialHistory(id) {
+    const sqlContent = `INSERT INTO \`material_histories_components__user_components_mhs\` (\`material-history_id\`, \`user-component_id\`) VALUES (639, ${id})`
+
+    this.query(sqlContent)
+  }
+
+  /**
    * 生成新增组件的sql语句
    * @param {object} component 组件数据
    * @returns 新增组件的sql语句
@@ -191,8 +202,11 @@ class MysqlConnection {
          tenant, createdBy, updatedBy) VALUES ${values}`.replace(/\n/g, '')
 
     this.query(sqlContent, componentName)
-      .then(() => {
+      .then((result) => {
+        const id = result.insertId
+
         logger.success(`新增组件 ${component.component} 成功`)
+        this.relationMaterialHistory(id)
       })
       .catch((error) => {
         logger.success(`新增组件 ${component.component} 失败：${error}`)
