@@ -10,7 +10,7 @@ const mysqlConfig = {
   port: '3306', // 端口号
   user: 'root', // 用户名
   password: 'admin', // 密码
-  database: 'components' // 数据库名称
+  database: 'tiny_engine' // 数据库名称
 }
 class MysqlConnection {
   constructor(config) {
