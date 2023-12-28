@@ -1,18 +1,31 @@
 import mysql from 'mysql'
 import Logger from './logger.mjs'
+import fs from 'node:fs'
+import path from 'node:path'
+import dotenv from 'dotenv'
 
+// 先构造出.env*文件的绝对路径
+const appDirectory = fs.realpathSync(process.cwd());
+const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
+const pathsDotenv = resolveApp(".env");
+
+// 加载.env.local
+dotenv.config({ path: `${pathsDotenv}.local` })
+
+const { SQL_HOST, SQL_PORT, SQL_USER, SQL_PASSWORD, SQL_DATABASE } = process.env
 const logger = new Logger('buildMaterials')
+logger.info(`${SQL_HOST}、${SQL_PORT}`)
 // 组件表名称
 const componentsTableName = 'user_components'
 // 组件关联到物料资产包的id
 const materialHistoryId = 639
 // 数据库配置
 const mysqlConfig = {
-  host: 'localhost', // 主机名（服务器地址）
-  port: '3306', // 端口号
-  user: 'root', // 用户名
-  password: 'admin', // 密码
-  database: 'tiny_engine' // 数据库名称
+  host: SQL_HOST, // 主机名（服务器地址）
+  port: SQL_PORT, // 端口号
+  user: SQL_USER, // 用户名
+  password: SQL_PASSWORD, // 密码
+  database: SQL_DATABASE // 数据库名称
 }
 class MysqlConnection {
   constructor(config) {
