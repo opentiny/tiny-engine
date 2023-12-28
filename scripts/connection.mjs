@@ -1,4 +1,3 @@
-// const mysql = require('mysql')
 import mysql from 'mysql'
 import Logger from './logger.mjs'
 
