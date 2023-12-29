@@ -39,9 +39,9 @@ $ pnpm dev
 
 ## Local development, directly connected to the local tiny-engine-webservice server
 
-1. Start [tiny-engine-data-center](https://github.com/opentiny/tiny-engine-data-center/blob/main/README.md)
+1. Start [tiny-engine-data-center](https://github.com/opentiny/tiny-engine-data-center/blob/main/README.md){:target="_blank"}
 
-2. Start [tiny-engine-webservice](https://github.com/opentiny/tiny-engine-webservice/blob/main/README.md)
+2. Start [tiny-engine-webservice](https://github.com/opentiny/tiny-engine-webservice/blob/main/README.md){:target="_blank"}
 
 3. Modify the origin value in `vite.config.js` in the `packages/design-core/` directory of the tiny-engine project to be the address port of your local webService project (the webService port defaults to 7011), such as:
 
