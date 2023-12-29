@@ -4,7 +4,7 @@
     <tiny-search v-model="state.searchValue" placeholder="请输入关键字搜索">
       <template #prefix> <tiny-icon-search /> </template>
     </tiny-search>
-    <block-list v-model:blockList="filterBlocks" :show-add-button="false" :show-block-shot="true"></block-list>
+    <block-list v-model:blockList="filterBlocks" :show-add-button="true" :show-block-shot="true"></block-list>
   </div>
 </template>
 
