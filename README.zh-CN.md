@@ -45,7 +45,7 @@ $ pnpm dev
 
 3. 修改 tiny-engine 项目 `packages/design-core/` 目录下 `vite.config.js` 中origin的值为自己本地webService项目的地址端口（webService端口默认为7011），如：
 
-<img alt="修改端口" src="https://res.hc-cdn.com/lowcode-portal/1.1.51/img/docimg/backend_deploy_5.png">
+<img alt="修改端口" src="https://res.hc-cdn.com/lowcode-portal/1.1.53/img/docimg/backend_deploy_5.png">
 
 
 浏览器打开：`http://localhost:8080/?type=app&id=918&tenant=1&pageid=NTJ4MjvqoVj8OVsc`  
