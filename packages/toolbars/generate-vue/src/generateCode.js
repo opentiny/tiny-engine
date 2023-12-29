@@ -343,9 +343,12 @@ export function generateRouter(pages) {
   }
 
   const routes = generateRoutes(pages)
+  const importRoutes = "import { createRouter, createWebHashHistory } from 'vue-router'\n"
 
   const content = `
-  export const routes = [
+  ${importRoutes}
+
+  const routes = [
   ${routes
     .map(
       ({ fileName, path, redirect, filePath }) => `{
@@ -355,6 +358,11 @@ export function generateRouter(pages) {
     )
     .join(',')}
   ]
+
+  export default createRouter({
+    history: createWebHashHistory(),
+    routes
+  })
   `
   const codeStr = formatScript(content)
 
