@@ -45,7 +45,7 @@ $ pnpm dev
 
 3. Modify the origin value in `vite.config.js` in the `packages/design-core/` directory of the tiny-engine project to be the address port of your local webService project (the webService port defaults to 7011), such as:
 
-<img alt="Modify port" src="https://res.hc-cdn.com/lowcode-portal/1.1.53/img/docimg/backend_deploy_5.png">
+<img alt="Modify port" src="https://res.hc-cdn.com/lowcode-portal/1.1.55/img/docimg/backend_deploy_5.png">
 
 
 Open a browser: `http://localhost:8080/?type=app&id=918&tenant=1&pageid=NTJ4MjvqoVj8OVsc`
