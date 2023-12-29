@@ -144,9 +144,14 @@ class MysqlConnection {
    * @param {number} id 新建的组件id
    */
   relationMaterialHistory(id) {
-    const sqlContent = `INSERT INTO \`material_histories_components__user_components_mhs\` (\`material-history_id\`, \`user-component_id\`) VALUES (${materialHistoryId}, ${id})`
+    const uniqSql = `SELECT * FROM \`material_histories_components__user_components_mhs\` WHERE \`material-history_id\`=${materialHistoryId} AND \`user-component_id\`=${id}`
+    this.query(uniqSql).then((result) => {
+      if (!result.length) {
+        const sqlContent = `INSERT INTO \`material_histories_components__user_components_mhs\` (\`material-history_id\`, \`user-component_id\`) VALUES (${materialHistoryId}, ${id})`
 
-    this.query(sqlContent)
+        this.query(sqlContent)
+      }
+    })
   }
 
   /**
