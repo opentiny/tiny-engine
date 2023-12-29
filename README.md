@@ -37,6 +37,16 @@ $ pnpm install
 $ pnpm dev
 ```
 
+### Materials Synchronization [Solution](https://opentiny.design/tiny-engine#/help-center/course/engine/56)
+
+```sh
+$ pnpm splitMaterials
+```
+
+```sh
+$ pnpm buildMaterials
+```
+
 Open a browser: `http://localhost:8080/?type=app&id=918&tenant=1&pageid=NTJ4MjvqoVj8OVsc`
 `url search` Parameters:
 
