@@ -4,17 +4,16 @@ import fs from 'node:fs'
 import path from 'node:path'
 import dotenv from 'dotenv'
 
-// 先构造出.env*文件的绝对路径
-const appDirectory = fs.realpathSync(process.cwd());
-const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
-const pathsDotenv = resolveApp(".env");
+const logger = new Logger('buildMaterials')
 
+// 先构造出.env*文件的绝对路径
+const appDirectory = fs.realpathSync(process.cwd())
+const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath)
+const pathsDotenv = resolveApp('.env')
 // 加载.env.local
 dotenv.config({ path: `${pathsDotenv}.local` })
-
 const { SQL_HOST, SQL_PORT, SQL_USER, SQL_PASSWORD, SQL_DATABASE } = process.env
-const logger = new Logger('buildMaterials')
-logger.info(`${SQL_HOST}、${SQL_PORT}`)
+
 // 组件表名称
 const componentsTableName = 'user_components'
 // 组件关联到物料资产包的id
