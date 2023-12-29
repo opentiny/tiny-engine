@@ -37,6 +37,17 @@ $ pnpm install
 $ pnpm dev
 ```
 
+### 本地开发，直连本地的tiny-engine-webservice服务端
+
+1. 启动 [tiny-engine-data-center](https://github.com/opentiny/tiny-engine-data-center/blob/main/README.md)
+
+2. 启动 [tiny-engine-webservice](https://github.com/opentiny/tiny-engine-webservice/blob/main/README.md)
+
+3. 修改 tiny-engine 项目 `packages/design-core/` 目录下 `vite.config.js` 中origin的值为自己本地webService项目的地址端口（webService端口默认为7011），如：
+
+<img alt="修改端口" src="https://res.hc-cdn.com/lowcode-portal/1.1.51/img/docimg/backend_deploy_5.png">
+
+
 浏览器打开：`http://localhost:8080/?type=app&id=918&tenant=1&pageid=NTJ4MjvqoVj8OVsc`  
 `url search`参数：
 
