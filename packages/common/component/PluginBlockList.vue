@@ -446,7 +446,7 @@ export default {
           color: var(--ti-lowcode-component-block-list-setting-btn-color);
           display: block;
           &:hover {
-            cursor: not-allowed;
+            cursor: pointer;
             color: var(--ti-lowcode-component-block-list-setting-btn-hover-color);
           }
         }
@@ -553,7 +553,7 @@ export default {
       .block-detail-icon {
         color: var(--ti-lowcode-component-block-list-setting-btn-color);
         &:hover {
-          cursor: not-allowed;
+          cursor: pointer;
           color: var(--ti-lowcode-component-block-list-setting-btn-hover-color);
         }
       }
