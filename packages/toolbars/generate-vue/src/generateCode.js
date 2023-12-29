@@ -22,8 +22,8 @@ const basePaths = {
   blocks: 'src/components/',
   utils: 'src/lowcode/utils.js',
   dataSource: 'src/lowcode/dataSource.json',
-  router: 'src/lowcode/routes.js',
-  store: 'src/lowcode/stores.js'
+  router: 'src/router/index.js',
+  store: 'src/stores/'
 }
 
 const FILE_TYPES = {
@@ -82,7 +82,10 @@ function generateStores({ globalState }) {
   }
 
   const filePath = basePaths.store
-  let result = "import { defineStore } from 'pinia'\n\n"
+  const result = "import { defineStore } from 'pinia'\n\n"
+
+  const res = []
+  const storeIds = []
 
   const getStoreFnStrs = (getters = {}) =>
     Object.values(getters)
@@ -90,6 +93,7 @@ function generateStores({ globalState }) {
       .join(',\n')
 
   globalState.forEach(({ id, state, getters, actions }) => {
+    storeIds.push(id)
     const storeCode = `export const ${id} = defineStore({
   id: '${id}',
   state: () => (${JSON.stringify(state)}),
@@ -101,16 +105,20 @@ function generateStores({ globalState }) {
   }
 })\n`
 
-    result += storeCode
+    res.push({
+      filePath: `${filePath}${id}.js`,
+      fileType: FILE_TYPES.Store,
+      fileContent: formatScript(`${result}\n${storeCode}`)
+    })
   })
 
-  return [
-    {
-      filePath,
-      fileType: FILE_TYPES.Store,
-      fileContent: formatScript(result)
-    }
-  ]
+  res.push({
+    filePath: `${filePath}index.js`,
+    fileType: FILE_TYPES.Store,
+    fileContent: formatScript(storeIds.map((id) => `export { ${id} } from './${id}'`).join('\n'))
+  })
+
+  return res
 }
 
 function generatePageFiles(codeList, pagePath = '') {
@@ -335,9 +343,12 @@ export function generateRouter(pages) {
   }
 
   const routes = generateRoutes(pages)
+  const importRoutes = "import { createRouter, createWebHashHistory } from 'vue-router'\n"
 
   const content = `
-  export const routes = [
+  ${importRoutes}
+
+  const routes = [
   ${routes
     .map(
       ({ fileName, path, redirect, filePath }) => `{
@@ -347,6 +358,11 @@ export function generateRouter(pages) {
     )
     .join(',')}
   ]
+
+  export default createRouter({
+    history: createWebHashHistory(),
+    routes
+  })
   `
   const codeStr = formatScript(content)
 
