@@ -2,7 +2,7 @@
   <plugin-panel class="block-manage" title="区块管理" :isCloseLeft="false" @close="closePanel">
     <template #header>
       <link-button :href="docsUrl"></link-button>
-      <svg-button name="add-page" placement="bottom" tips="新建区块" style="cursor: not-allowed"></svg-button>
+      <svg-button name="add-page" placement="bottom" tips="新建区块" @click="openBlockAdd"></svg-button>
     </template>
     <template #content>
       <div class="app-manage-search">
@@ -78,6 +78,8 @@
         :blockStyle="state.layout"
         default-icon-tip="查看区块"
         :externalBlock="externalBlock"
+        @click="editBlock"
+        @iconClick="openSettingPanel"
       ></plugin-block-list>
       <block-setting></block-setting>
       <div class="block-footer">
