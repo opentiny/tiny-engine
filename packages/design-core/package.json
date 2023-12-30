@@ -85,6 +85,7 @@
     "@vue/repl": "^2.9.0",
     "@vueuse/core": "^9.6.0",
     "element-resize-detector": "^1.2.4",
+    "eslint-linter-browserify": "^8.56.0",
     "file-saver": "^2.0.5",
     "html2canvas": "^1.4.1",
     "jszip": "^3.10.1",
@@ -120,7 +121,9 @@
     "rollup-plugin-visualizer": "^5.8.3",
     "svg-sprite-loader": "^6.0.11",
     "vite": "^4.3.7",
+    "vite-plugin-copy-files": "^1.1.1",
     "vite-plugin-monaco-editor": "^1.0.10",
+    "vite-plugin-static-copy": "^0.16.0",
     "vite-plugin-svg-icons": "^2.0.1",
     "vue-eslint-parser": "^8.0.1"
   },
