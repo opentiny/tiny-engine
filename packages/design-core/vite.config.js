@@ -1,4 +1,5 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
+
 import path from 'path'
 import vue from '@vitejs/plugin-vue'
 import monacoEditorPlugin from 'vite-plugin-monaco-editor'
@@ -12,6 +13,7 @@ import { importmapPlugin } from './scripts/externalDeps'
 import visualizer from 'rollup-plugin-visualizer'
 
 const origin = 'http://localhost:9090/'
+
 const config = {
   base: './',
   publicDir: path.resolve(__dirname, './public'),
@@ -118,10 +120,11 @@ const config = {
     }
   }
 }
+
 const importMapVersions = {
   prettier: '2.7.1',
   vue: '3',
-  tinyVue: '3'
+  tinyVue: '~3.11'
 }
 
 const devAlias = {
@@ -175,11 +178,6 @@ const devAlias = {
   '@opentiny/tiny-engine-builtin-component': path.resolve(__dirname, '../builtinComponent/index.js')
 }
 
-const devVueAlias = {
-  find: /^vue$/,
-  replacement: `https://unpkg.com/vue@${importMapVersions.vue}/dist/vue.runtime.esm-browser.js`
-}
-
 const prodAlias = {
   '@opentiny/tiny-engine-theme': path.resolve(
     __dirname,
@@ -191,29 +189,8 @@ const commonAlias = {
   '@opentiny/tiny-engine-app-addons': path.resolve(__dirname, './config/addons.js')
 }
 
-const importmap = {
-  imports: {
-    prettier: `https://unpkg.com/prettier@${importMapVersions.prettier}/esm/standalone.mjs`,
-    'prettier/': `https://unpkg.com/prettier@${importMapVersions.prettier}/esm/`,
-    'prettier/parser-typescript': `https://unpkg.com/prettier@${importMapVersions.prettier}/esm/parser-typescript.mjs`,
-    'prettier/parser-html': `https://unpkg.com/prettier@${importMapVersions.prettier}/esm/parser-html.mjs`,
-    'prettier/parser-postcss': `https://unpkg.com/prettier@${importMapVersions.prettier}/esm/parser-postcss.mjs`,
-    'prettier/parser-babel': `https://unpkg.com/prettier@${importMapVersions.prettier}/esm/parser-babel.mjs`,
-
-    vue: `https://unpkg.com/vue@${importMapVersions.vue}/dist/vue.runtime.esm-browser.js`,
-    '@opentiny/vue': `https://unpkg.com/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue.mjs`,
-    '@opentiny/vue-icon': `https://unpkg.com/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue-icon.mjs`,
-    '@opentiny/vue-common': `https://unpkg.com/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue-common.mjs`,
-    '@opentiny/vue-locale': `https://unpkg.com/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue-locale.mjs`,
-    '@opentiny/vue-design-smb': `https://unpkg.com/@opentiny/vue-design-smb@${importMapVersions.tinyVue}/index.js`,
-    '@opentiny/vue-theme/theme-tool': `https://unpkg.com/@opentiny/vue-theme@${importMapVersions.tinyVue}/theme-tool`,
-    '@opentiny/vue-theme/theme': `https://unpkg.com/@opentiny/vue-theme@${importMapVersions.tinyVue}/theme`
-  }
-}
-
-const importMapStyles = [`https://unpkg.com/@opentiny/vue-theme@${importMapVersions.tinyVue}/index.css`]
-
 export default defineConfig(({ command, mode }) => {
+  const { VITE_CDN_DOMAIN } = loadEnv(mode, process.cwd(), '')
   const monacoPublicPath = {
     local: 'editor/monaco-workers',
     alpha: 'https://tinyengine-assets.obs.cn-north-4.myhuaweicloud.com/files/monaco-assets',
@@ -251,6 +228,11 @@ export default defineConfig(({ command, mode }) => {
   }
 
   if (command === 'serve') {
+    const devVueAlias = {
+      find: /^vue$/,
+      replacement: `${VITE_CDN_DOMAIN}/vue@${importMapVersions.vue}/dist/vue.runtime.esm-browser.js`
+    }
+
     config.resolve.alias = [
       devVueAlias,
       ...Object.entries({ ...commonAlias, ...devAlias }).map(([find, replacement]) => ({
@@ -269,6 +251,28 @@ export default defineConfig(({ command, mode }) => {
       config.build.sourcemap = false
     }
   }
+
+  const importmap = {
+    imports: {
+      prettier: `${VITE_CDN_DOMAIN}/prettier@${importMapVersions.prettier}/esm/standalone.mjs`,
+      'prettier/': `${VITE_CDN_DOMAIN}/prettier@${importMapVersions.prettier}/esm/`,
+      'prettier/parser-typescript': `${VITE_CDN_DOMAIN}/prettier@${importMapVersions.prettier}/esm/parser-typescript.mjs`,
+      'prettier/parser-html': `${VITE_CDN_DOMAIN}/prettier@${importMapVersions.prettier}/esm/parser-html.mjs`,
+      'prettier/parser-postcss': `${VITE_CDN_DOMAIN}/prettier@${importMapVersions.prettier}/esm/parser-postcss.mjs`,
+      'prettier/parser-babel': `${VITE_CDN_DOMAIN}/prettier@${importMapVersions.prettier}/esm/parser-babel.mjs`,
+
+      vue: `${VITE_CDN_DOMAIN}/vue@${importMapVersions.vue}/dist/vue.runtime.esm-browser.js`,
+      '@opentiny/vue': `${VITE_CDN_DOMAIN}/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue.mjs`,
+      '@opentiny/vue-icon': `${VITE_CDN_DOMAIN}/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue-icon.mjs`,
+      '@opentiny/vue-common': `${VITE_CDN_DOMAIN}/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue-common.mjs`,
+      '@opentiny/vue-locale': `${VITE_CDN_DOMAIN}/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue-locale.mjs`,
+      '@opentiny/vue-design-smb': `${VITE_CDN_DOMAIN}/@opentiny/vue-design-smb@${importMapVersions.tinyVue}/index.js`,
+      '@opentiny/vue-theme/theme-tool': `${VITE_CDN_DOMAIN}/@opentiny/vue-theme@${importMapVersions.tinyVue}/theme-tool`,
+      '@opentiny/vue-theme/theme': `${VITE_CDN_DOMAIN}/@opentiny/vue-theme@${importMapVersions.tinyVue}/theme`
+    }
+  }
+
+  const importMapStyles = [`${VITE_CDN_DOMAIN}/@opentiny/vue-theme@${importMapVersions.tinyVue}/index.css`]
 
   config.plugins.push(monacoEditorPluginInstance, htmlPlugin(mode), importmapPlugin(importmap, importMapStyles))
 

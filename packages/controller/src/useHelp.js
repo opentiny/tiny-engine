@@ -10,11 +10,25 @@
  *
  */
 
-function addCss(href) {
-  const link = document.createElement('link')
-  link.setAttribute('rel', 'stylesheet')
-  link.setAttribute('href', href)
-  document.head.appendChild(link)
+const getBaseUrl = () => 'https://opentiny.design/tiny-engine#/help-center/course/engine/'
+
+const helpState = {
+  docsUrl: {
+    block: 3,
+    bridge: 13,
+    data: 7,
+    datasource: 11,
+    i18n: 12,
+    page: 2,
+    script: 8
+  }
 }
-addCss('https://npm.onmicrosoft.cn/@opentiny/vue-theme@3.11/index.css')
-addCss('https://npm.onmicrosoft.cn/@opentiny/vue-theme-mobile@3.11/index.css')
+
+const getDocsUrl = (plugin) => {
+  return `${getBaseUrl()}${helpState.docsUrl[plugin]}`
+}
+
+export default () => ({
+  getBaseUrl,
+  getDocsUrl
+})
