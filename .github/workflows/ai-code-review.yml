@@ -5,11 +5,12 @@ permissions:
   pull-requests: write
 
 on:
-  pull_request_target:
-    types: [opened, reopened, synchronize]
+  issue_comment:
+    types: [created]
 
 jobs:
   review:
+    if: contains(github.event.comment.body, '/review')
     runs-on: ubuntu-latest
     steps:
       - uses: anc95/ChatGPT-CodeReview@main
