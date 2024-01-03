@@ -1,8 +1,6 @@
 name: AI Code Review
 
-permissions:
-  contents: read
-  pull-requests: write
+permissions: write-all
 
 on:
   pull_request:
