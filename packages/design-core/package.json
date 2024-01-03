@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine",
-  "version": "1.0.0",
+  "version": "1.0.0-beta.2",
   "description": "TinyEngine enables developers to customize low-code platforms, build low-bit platforms online in real time, and support secondary development or integration of low-bit platform capabilities.",
   "homepage": "https://opentiny.design/tiny-engine",
   "keywords": [
@@ -98,10 +98,10 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
-    "@opentiny/tiny-engine-i18n-host": "workspace:*",
     "@babel/eslint-parser": "^7.21.3",
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
+    "@opentiny/tiny-engine-i18n-host": "workspace:*",
     "@types/node": "^18.0.0",
     "@vitejs/plugin-vue": "^4.2.3",
     "@vitejs/plugin-vue-jsx": "^1.3.2",
