@@ -254,12 +254,12 @@ export default defineConfig(({ command, mode }) => {
 
   const importmap = {
     imports: {
-      prettier: `${VITE_CDN_DOMAIN}/prettier@${importMapVersions.prettier}/esm/standalone.mjs`,
-      'prettier/': `${VITE_CDN_DOMAIN}/prettier@${importMapVersions.prettier}/esm/`,
-      'prettier/parser-typescript': `${VITE_CDN_DOMAIN}/prettier@${importMapVersions.prettier}/esm/parser-typescript.mjs`,
-      'prettier/parser-html': `${VITE_CDN_DOMAIN}/prettier@${importMapVersions.prettier}/esm/parser-html.mjs`,
-      'prettier/parser-postcss': `${VITE_CDN_DOMAIN}/prettier@${importMapVersions.prettier}/esm/parser-postcss.mjs`,
-      'prettier/parser-babel': `${VITE_CDN_DOMAIN}/prettier@${importMapVersions.prettier}/esm/parser-babel.mjs`,
+      prettier: `https://esm.sh/prettier@${importMapVersions.prettier}/esm/standalone.mjs?raw`,
+      'prettier/': `https://esm.sh/prettier@${importMapVersions.prettier}/esm/?raw`,
+      'prettier/parser-typescript': `https://esm.sh/prettier@${importMapVersions.prettier}/esm/parser-typescript.mjs?raw`,
+      'prettier/parser-html': `https://esm.sh/prettier@${importMapVersions.prettier}/esm/parser-html.mjs?raw`,
+      'prettier/parser-postcss': `https://esm.sh/prettier@${importMapVersions.prettier}/esm/parser-postcss.mjs?raw`,
+      'prettier/parser-babel': `https://esm.sh/prettier@${importMapVersions.prettier}/esm/parser-babel.mjs?raw`,
 
       vue: `${VITE_CDN_DOMAIN}/vue@${importMapVersions.vue}/dist/vue.runtime.esm-browser.js`,
       '@opentiny/vue': `${VITE_CDN_DOMAIN}/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue.mjs`,
