@@ -117,7 +117,21 @@ const create = () => {
 
   dispatch('canvasReady', { detail: renderer })
 
-  App = Vue.createApp(Main).use(TinyI18nHost).provide(I18nInjectionKey, TinyI18nHost)
+  const GetComponentByDomNode = {
+    install: (Vue) => {
+      Vue.mixin({
+        mounted() {
+          // const instance = Vue.getCurrentInstance()
+          // console.log('instance', instance)
+          console.log('this', this)
+          console.log('children', this.$children)
+          this.$el.__vueComponent = this
+        }
+      })
+    }
+  }
+
+  App = Vue.createApp(Main).use(GetComponentByDomNode).use(TinyI18nHost).provide(I18nInjectionKey, TinyI18nHost)
   App.config.globalProperties.lowcodeConfig = window.parent.TinyGlobalConfig
   App.mount(document.querySelector('#app'))
 

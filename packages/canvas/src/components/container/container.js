@@ -141,22 +141,61 @@ export const getOffset = (element) => {
   return { x, y, bottom, top }
 }
 
-export const getElement = (element) => {
-  // 如果当前元素是body
+export const getClosedVueElement = (element) => {
   if (element === element.ownerDocument.body) {
     return element
   }
-  if (!element || element.nodeType !== 1) {
-    return undefined
+
+  if (!element) {
+    return
   }
 
-  if (element.getAttribute(NODE_UID)) {
-    return element
-  } else if (element.parentElement) {
-    return getElement(element.parentElement)
+  if (element.__vueComponent) {
+    return element.__vueComponent
   }
 
-  return undefined
+  if (element.parentElement) {
+    return getClosedVueElement(element.parentElement)
+  }
+}
+
+export const getElement = (element) => {
+  let closedVueEle = getClosedVueElement(element)
+
+  if (!closedVueEle) {
+    return
+  }
+
+  while (closedVueEle && !closedVueEle?.[NODE_UID]) {
+    console.log('closedVueEle111111111', closedVueEle)
+    closedVueEle = closedVueEle.$parent
+  }
+
+  if (closedVueEle) {
+    console.log('target closedvue ele', closedVueEle)
+
+    return closedVueEle
+  }
+
+  // // 如果当前元素是body
+  // if (element === element.ownerDocument.body) {
+  //   return element
+  // }
+  // if (!element || element.nodeType !== 1) {
+  //   return undefined
+  // }
+
+  // console.log('getAttribute', element.getAttribute(NODE_UID))
+  // console.log('directAccess', element[NODE_UID])
+
+  // if (element.getAttribute(NODE_UID)) {
+  // if (element[NODE_UID]) {
+  //   return element
+  // } else if (element.parentElement) {
+  //   return getElement(element.parentElement)
+  // }
+
+  // return undefined
 }
 
 const inserAfter = ({ parent, node, data }) => {
@@ -386,12 +425,12 @@ export const dragMove = (event, isHover) => {
   // 如果仅仅是mouseover事件直接return,并重置拖拽位置状态，优化性能
   if (isHover) {
     lineState.position = ''
-    setHoverRect(getElement(event.target), null)
+    // setHoverRect(getElement(event.target), null)
 
     return
   }
 
-  setHoverRect(getElement(event.target), dragState.data)
+  // setHoverRect(getElement(event.target), dragState.data)
 
   if (dragState.draging) {
     // 绝对布局时走的逻辑
@@ -440,7 +479,7 @@ export const updateRect = (id) => {
   }
 }
 // type == clickTree, 为点击大纲; type == loop-id=xxx ,为点击循环数据
-export const selectNode = async (id, type) => {
+export const selectNode = async (id, instance, type) => {
   if (type && type.indexOf('loop-id') > -1) {
     const loopId = type.split('=')[1]
     canvasState.loopId = loopId
@@ -456,8 +495,8 @@ export const selectNode = async (id, type) => {
   canvasState.current = node
   canvasState.parent = parent
 
-  await scrollToNode(element)
-  setSelectRect(element)
+  // await scrollToNode(element)
+  setSelectRect(instance)
   canvasState.emit('selected', node, parent, type)
 
   return node
@@ -468,11 +507,119 @@ export const hoverNode = (id, data) => {
   element && setHoverRect(element, data)
 }
 
+let range
+
+const getTextRect = (node) => {
+  if (!range) {
+    range = document.createRange()
+  }
+
+  range.selectNode(node)
+
+  return range.getBoundingClientRect()
+}
+
+function createRect() {
+  const rect = {
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    get width() {
+      return rect.right - rect.left
+    },
+    get height() {
+      return rect.bottom - rect.top
+    }
+  }
+
+  return rect
+}
+
+const mergeRects = (a, b) => {
+  if (!a.top || b.top < a.top) {
+    a.top = b.top
+  }
+
+  if (!a.bottom || b.bottom > a.bottom) {
+    a.bottom = b.bottom
+  }
+
+  if (!a.left || b.left < a.left) {
+    a.left = b.left
+  }
+
+  if (!a.right || b.right > a.right) {
+    a.right = b.right
+  }
+
+  return a
+}
+
+const getFragmentRect = (instance) => {
+  const rect = createRect()
+
+  if (!instance.children) {
+    return rect
+  }
+
+  for (const child of instance.children) {
+    let childRect
+
+    if (child.component) {
+      childRect = getElementRect(child.component)
+    } else if (child.el) {
+      const el = child.el
+
+      if (el.nodeType === 1 || el.getBoundingClientRect) {
+        childRect = el.getBoundingClientRect()
+      } else if (el.nodeType === 3 && el.data.trim()) {
+        childRect = getTextRect(el)
+      }
+    }
+
+    if (childRect) {
+      mergeRects(rect, childRect)
+    }
+  }
+
+  return rect
+}
+
+const getElementRect = (instance) => {
+  console.log('instance', instance)
+  // console.log('instance.$slots', instance.$slots)
+  // console.log('instance.$children', instance.$children)
+  // console.log('instance.$el', instance.$el)
+  console.log('instance.subTree', instance.subTree)
+
+  // Fragment
+  if (instance?.type?.description === 'v-fgt') {
+    return getFragmentRect(instance)
+  }
+
+  if (instance.el?.nodeType === 1) {
+    return instance.el.getBoundingClientRect()
+  }
+
+  if (instance.component) {
+    return getElementRect(instance.component)
+  }
+
+  if (instance.subTree) {
+    return getElementRect(instance.subTree)
+  }
+
+  // return document.body.getBoundingClientRect()
+}
+
 export const scrollToNode = (element) => {
   if (element) {
     const container = getDocument().documentElement
     const h = container?.clientHeight
-    const { y, height } = element.getBoundingClientRect()
+
+    // const { y, height } = element.getBoundingClientRect()
+    const { y, height } = getElementRect(element.$)
 
     if (y < 0) {
       container.scrollTo({ top: container.scrollTop + y - 15 })
@@ -484,9 +631,11 @@ export const scrollToNode = (element) => {
   return nextTick()
 }
 const setSelectRect = (element) => {
+  console.log('setSelectRect', element)
   element = element || getDocument().body
 
-  const { left, height, top, width } = element.getBoundingClientRect()
+  // const { left, height, top, width } = element.getBoundingClientRect()
+  const { left, height, top, width } = getElementRect(element.$)
   const { x, y } = getOffset(element)
   const componentName = getCurrent().schema?.componentName || ''
   const scale = useLayout().getScale()
@@ -506,71 +655,74 @@ const setHoverRect = (element, data) => {
   if (!element) {
     return clearHover()
   }
-  const componentName = element.getAttribute(NODE_TAG)
-  const id = element.getAttribute(NODE_UID)
+  // const componentName = element.getAttribute(NODE_TAG)
+  const componentName = element[NODE_TAG]
+  // const id = element.getAttribute(NODE_UID)
+  const id = element[NODE_UID]
   const configure = getConfigure(componentName)
-  const rect = element.getBoundingClientRect()
-  const { left, height, top, width } = rect
-  const { x, y } = getOffset(element)
-  const scale = useLayout().getScale()
+  return
+  // const rect = element.getBoundingClientRect()
+  // const { left, height, top, width } = rect
+  // const { x, y } = getOffset(element)
+  // const scale = useLayout().getScale()
 
-  hoverState.configure = configure
+  // hoverState.configure = configure
 
-  if (data) {
-    let childEle = null
-    lineState.id = id
-    lineState.configure = configure
-    const rectType = isBodyEl(element) ? POSITION.IN : getPosLine(rect, configure).type
+  // if (data) {
+  //   let childEle = null
+  //   lineState.id = id
+  //   lineState.configure = configure
+  //   const rectType = isBodyEl(element) ? POSITION.IN : getPosLine(rect, configure).type
 
-    // 如果拖拽经过的元素是body或者是带有容器属性的盒子，并且在元素内部插入,则需要特殊处理
-    if ((isBodyEl(element) || configure?.isContainer) && rectType === POSITION.IN) {
-      const { node } = isBodyEl(element) ? { node: getSchema() } : getNode(id, true) || {}
-      const children = node?.children || []
-      if (children.length > 0) {
-        // 如果容器盒子有子节点，则以最后一个子节点为拖拽参照物
-        const lastNode = children[children.length - 1]
-        childEle = querySelectById(lastNode.id)
-        const childComponentName = element.getAttribute(childEle)
-        const Childconfigure = getConfigure(childComponentName)
-        lineState.id = lastNode.id
-        lineState.configure = Childconfigure
-      }
-    }
+  //   // 如果拖拽经过的元素是body或者是带有容器属性的盒子，并且在元素内部插入,则需要特殊处理
+  //   if ((isBodyEl(element) || configure?.isContainer) && rectType === POSITION.IN) {
+  //     const { node } = isBodyEl(element) ? { node: getSchema() } : getNode(id, true) || {}
+  //     const children = node?.children || []
+  //     if (children.length > 0) {
+  //       // 如果容器盒子有子节点，则以最后一个子节点为拖拽参照物
+  //       const lastNode = children[children.length - 1]
+  //       childEle = querySelectById(lastNode.id)
+  //       const childComponentName = element.getAttribute(childEle)
+  //       const Childconfigure = getConfigure(childComponentName)
+  //       lineState.id = lastNode.id
+  //       lineState.configure = Childconfigure
+  //     }
+  //   }
 
-    // 如果容器盒子有子元素
-    if (childEle) {
-      const childRect = childEle.getBoundingClientRect()
-      const { left, height, top, width } = childRect
-      const { x, y } = getOffset(childEle)
-      Object.assign(lineState, {
-        width: width * scale,
-        height: height * scale,
-        top: top * scale + y,
-        left: left * scale + x,
-        position: canvasState.type === 'absolute' || getPosLine(childRect, lineState.configure).type
-      })
-    } else {
-      Object.assign(lineState, {
-        width: width * scale,
-        height: height * scale,
-        top: top * scale + y,
-        left: left * scale + x,
-        position: canvasState.type === 'absolute' || getPosLine(rect, configure).type
-      })
-    }
+  //   // 如果容器盒子有子元素
+  //   if (childEle) {
+  //     const childRect = childEle.getBoundingClientRect()
+  //     const { left, height, top, width } = childRect
+  //     const { x, y } = getOffset(childEle)
+  //     Object.assign(lineState, {
+  //       width: width * scale,
+  //       height: height * scale,
+  //       top: top * scale + y,
+  //       left: left * scale + x,
+  //       position: canvasState.type === 'absolute' || getPosLine(childRect, lineState.configure).type
+  //     })
+  //   } else {
+  //     Object.assign(lineState, {
+  //       width: width * scale,
+  //       height: height * scale,
+  //       top: top * scale + y,
+  //       left: left * scale + x,
+  //       position: canvasState.type === 'absolute' || getPosLine(rect, configure).type
+  //     })
+  //   }
 
-    useLayout().closePlugin()
-  }
+  //   useLayout().closePlugin()
+  // }
 
-  // 设置元素hover状态
-  Object.assign(hoverState, {
-    width: width * scale,
-    height: height * scale,
-    top: top * scale + y,
-    left: left * scale + x,
-    componentName
-  })
-  return undefined
+  // // 设置元素hover状态
+  // Object.assign(hoverState, {
+  //   width: width * scale,
+  //   height: height * scale,
+  //   top: top * scale + y,
+  //   left: left * scale + x,
+  //   componentName
+  // })
+  // return undefined
 }
 
 /**
