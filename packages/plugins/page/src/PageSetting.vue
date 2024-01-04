@@ -163,6 +163,11 @@ export default {
         isPage: true
       }
 
+      if (createParams.id) {
+        delete createParams.id
+        delete createParams._id
+      }
+
       requestCreatePage(createParams)
         .then((data) => {
           pageSettingState.updateTreeData()

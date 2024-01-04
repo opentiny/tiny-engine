@@ -3,6 +3,7 @@
     <div class="data-source-left-panel">
       <div class="title">
         <span>状态管理</span>
+        <link-button :href="docsUrl"></link-button>
         <close-icon @close="closePanel"></close-icon>
       </div>
       <tiny-tabs v-model="activeName" @click="tabClick" tab-style="button-card">
@@ -70,10 +71,11 @@ import {
   useResource,
   useNotify,
   useData,
-  useLayout
+  useLayout,
+  useHelp
 } from '@opentiny/tiny-engine-controller'
 import { setState, getSchema, deleteState, setGlobalState, getGlobalState } from '@opentiny/tiny-engine-canvas'
-import { CloseIcon } from '@opentiny/tiny-engine-common'
+import { CloseIcon, LinkButton } from '@opentiny/tiny-engine-common'
 import DataSourceList from './DataSourceList.vue'
 import CreateVariable from './CreateVariable.vue'
 import CreateStore from './CreateStore.vue'
@@ -90,7 +92,8 @@ export default {
     CloseIcon,
     TinyTabs: Tabs,
     TinyTabItem: TabItem,
-    CreateStore
+    CreateStore,
+    LinkButton
   },
   setup(props, { emit }) {
     const variableRef = ref(null)
@@ -106,6 +109,7 @@ export default {
     const { setSaved } = useCanvas()
     const { PLUGIN_NAME, getPluginApi } = useLayout()
     const { openCommon } = getPluginApi(PLUGIN_NAME.save)
+    const docsUrl = useHelp().getDocsUrl('data')
     const state = reactive({
       dataSource: {},
       createData: {
@@ -346,7 +350,8 @@ export default {
       removeStore,
       storeRef,
       OPTION_TYPE,
-      open
+      open,
+      docsUrl
     }
   }
 }
@@ -466,6 +471,11 @@ export default {
     & > div {
       height: 100%;
     }
+  }
+  :deep(.help-box) {
+    position: absolute;
+    left: 70px;
+    top: 11px;
   }
 }
 </style>

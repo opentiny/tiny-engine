@@ -3,6 +3,7 @@
     <div class="code-edit-head">
       <div class="head-left">
         <span class="title">页面 JS</span>
+        <link-button :href="docsUrl"></link-button>
       </div>
       <div class="head-right">
         <tiny-button type="primary" class="save-btn" @click="saveMethods">
@@ -27,7 +28,8 @@
 <script>
 import { onBeforeUnmount } from 'vue'
 import { Button } from '@opentiny/vue'
-import { VueMonaco, CloseIcon } from '@opentiny/tiny-engine-common'
+import { VueMonaco, CloseIcon, LinkButton } from '@opentiny/tiny-engine-common'
+import { useHelp } from '@opentiny/tiny-engine-controller'
 import { initCompletion } from '@opentiny/tiny-engine-common/js/completion'
 import { initLinter } from '@opentiny/tiny-engine-common/js/linter'
 import { theme } from '@opentiny/tiny-engine-controller/adapter'
@@ -44,10 +46,12 @@ export default {
   components: {
     MonacoEditor: VueMonaco,
     TinyButton: Button,
-    CloseIcon
+    CloseIcon,
+    LinkButton
   },
   emits: ['close'],
   setup(props, { emit }) {
+    const docsUrl = useHelp().getDocsUrl('script')
     const { state, monaco, change, close, saveMethods } = useMethod({ emit })
 
     const options = {
@@ -90,7 +94,8 @@ export default {
       close,
       change,
       saveMethods,
-      editorDidMount
+      editorDidMount,
+      docsUrl
     }
   }
 }
@@ -117,6 +122,8 @@ export default {
 
     .head-left {
       padding-left: 15px;
+      display: flex;
+      align-items: center;
       .title {
         color: var(--ti-lowcode-plugin-panel-title-color);
         font-weight: var(--ti-lowcode-plugin-panel-title-font-weight);
@@ -163,6 +170,12 @@ export default {
       border: 1px solid var(--ti-lowcode-code-edit-content-border-color);
       height: 100%;
     }
+  }
+}
+:deep(.help-box) {
+  height: auto;
+  #help-icon {
+    margin-left: 8px;
   }
 }
 </style>
