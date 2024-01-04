@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-block-build",
-  "version": "0.0.1-alpha.0",
+  "version": "1.0.1",
   "description": "translate block to webcomponent template",
   "main": "./dist/web-components.es.js",
   "scripts": {
