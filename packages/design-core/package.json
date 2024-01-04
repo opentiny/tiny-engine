@@ -34,6 +34,7 @@
     "@babel/generator": "7.18.13",
     "@babel/parser": "7.18.13",
     "@babel/traverse": "7.18.13",
+    "@eslint/js": "^8.56.0",
     "@opentiny/tiny-engine-canvas": "workspace:*",
     "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-controller": "workspace:*",

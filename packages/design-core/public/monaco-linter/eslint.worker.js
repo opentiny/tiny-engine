@@ -10,8 +10,12 @@
  *
  */
 
-// importScripts 不支持 esm, 此处使用 umd, 对外暴露的变量名：linter，需要填写openTiny的cdn地址
+// importScripts 不支持 esm (safari不支持), 此处使用 umd，脚本地址参考vite.config.js的静态拷贝配置
 importScripts('./linter.js')
+
+importScripts('./eslint-rules/eslint-recommended.js')
+importScripts('./eslint-rules/eslint-all.js')
+
 const defaultConfig = {
   env: {
     browser: true,
@@ -23,21 +27,25 @@ const defaultConfig = {
     },
     ecmaVersion: 'latest',
     sourceType: 'module'
+  },
+  rulesPreset: {
+    recommended: eslintRecommended.rules,
+    all: eslintAll.rules
   }
 }
 
-// 根据公司的编码规范内置了 config/rules, 可以进一步定制
-const config = {
+// 内置了eslintRecommended, 可以进一步定制
+const getConfig = (style) => ({
   ...defaultConfig,
   rules: {
-    // ...self.eslint.config.rules,
+    ...defaultConfig.rulesPreset[style || 'recommended'],
     // JS 面板中，仅定义 function，但可能不使用该方法
     'no-unused-vars': 'off',
     'no-alert': 'off',
     'no-console': 'off'
   },
   settings: {}
-}
+})
 
 // 错误的等级，ESLint 与 monaco 的存在差异，做一层映射
 const severityMap = {
@@ -47,10 +55,10 @@ const severityMap = {
 const linter = new self.eslint.Linter()
 
 self.addEventListener('message', (event) => {
-  const { code, version } = event.data
+  const { code, version, style } = event.data
 
   const ruleDefines = linter.getRules()
-  const errs = linter.verify(code, config)
+  const errs = linter.verify(code, getConfig(style))
 
   const markers = errs.map(({ ruleId = '', line, endLine, column, endColumn, message, severity }) => ({
     code: {

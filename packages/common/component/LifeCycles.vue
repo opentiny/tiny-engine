@@ -85,7 +85,7 @@ import MetaListItems from './MetaListItems.vue'
 import { iconYes } from '@opentiny/vue-icon'
 import VueMonaco from './VueMonaco.vue'
 import { initCompletion } from '../js/completion'
-import { initLinter, lint } from '../js/linter'
+import { initEslintMenu, initLinter, lint } from '../js/linter'
 import { SvgButton } from '../index'
 
 export default {
@@ -125,7 +125,8 @@ export default {
       bindLifeCycles: {},
       editorValue: '{}',
       hasError: false,
-      linterWorker: null
+      linterWorker: null,
+      linterMenu: null
     })
 
     watchEffect(() => {
@@ -205,17 +206,6 @@ export default {
       }
     }
 
-    const editorDidMount = (editor) => {
-      if (!editorRef.value) {
-        return
-      }
-      // Lowcode API 提示
-      initCompletion(editorRef.value.getMonaco())
-
-      // 初始化 ESLint worker
-      state.linterWorker = initLinter(editor, editorRef.value.getMonaco(), state)
-    }
-
     const handleEditorChange = () => {
       if (!editorRef.value) {
         return
@@ -225,9 +215,22 @@ export default {
       lint(monacoModel, state.linterWorker)
     }
 
+    const editorDidMount = (editor) => {
+      if (!editorRef.value) {
+        return
+      }
+      // Lowcode API 提示
+      initCompletion(editorRef.value.getMonaco())
+
+      // 初始化 ESLint worker
+      state.linterWorker = initLinter(editor, editorRef.value.getMonaco(), state)
+      state.linterMenu = initEslintMenu(editor, handleEditorChange)
+    }
+
     onBeforeUnmount(() => {
       // 终止 ESLint worker
       state.linterWorker?.terminate?.()
+      state.linterMen?.dispose()
     })
 
     return {

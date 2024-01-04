@@ -31,7 +31,7 @@ import { Button } from '@opentiny/vue'
 import { VueMonaco, CloseIcon, LinkButton } from '@opentiny/tiny-engine-common'
 import { useHelp } from '@opentiny/tiny-engine-controller'
 import { initCompletion } from '@opentiny/tiny-engine-common/js/completion'
-import { initLinter } from '@opentiny/tiny-engine-common/js/linter'
+import { initLinter, initEslintMenu, lint } from '@opentiny/tiny-engine-common/js/linter'
 import { theme } from '@opentiny/tiny-engine-controller/adapter'
 import useMethod, { saveMethod, highlightMethod, getMethodNameList, getMethods } from './js/method'
 
@@ -80,11 +80,15 @@ export default {
 
       // 初始化 ESLint worker
       state.linterWorker = initLinter(editor, monaco.value.getMonaco(), state)
+      state.linterMenu = initEslintMenu(editor, () => {
+        lint(monaco.value.getEditor().getModel(), state.linterWorker)
+      })
     }
 
     onBeforeUnmount(() => {
       // 终止 ESLint worker
       state.linterWorker?.terminate?.()
+      state.linterMenu?.dispose()
     })
 
     return {

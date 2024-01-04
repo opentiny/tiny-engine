@@ -23,6 +23,7 @@ const { message, confirm } = useModal()
 
 const state = reactive({
   linterWorker: null,
+  linterMenu: null,
   script: '',
   isChanged: false,
   hasError: false,

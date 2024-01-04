@@ -75,6 +75,22 @@ const config = {
     viteStaticCopy({
       targets: [
         {
+          src: 'node_modules/@eslint/js/src/configs/eslint-recommended.js',
+          dest: 'monaco-linter/eslint-rules',
+          transform: {
+            encoding: 'utf-8',
+            handler: (content) => content.replace('module.exports', 'self.eslintRecommended')
+          }
+        },
+        {
+          src: 'node_modules/@eslint/js/src/configs/eslint-all.js',
+          dest: 'monaco-linter/eslint-rules',
+          transform: {
+            encoding: 'utf-8',
+            handler: (content) => content.replace('module.exports', 'self.eslintAll')
+          }
+        },
+        {
           src: 'node_modules/eslint-linter-browserify/linter.js',
           dest: 'monaco-linter',
           rename: 'linter.js',
