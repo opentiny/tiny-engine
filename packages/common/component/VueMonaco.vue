@@ -5,6 +5,7 @@
 import * as monacoEditor from 'monaco-editor'
 import { watch, onMounted, nextTick, onBeforeUnmount, ref } from 'vue'
 import { formatString } from '../js/ast.js'
+import { usePrettierConfigModal } from '../js/usePrettierConfig.jsx'
 
 export default {
   name: 'MonacoEditor',
@@ -88,6 +89,8 @@ export default {
       emit('editorDidMount', vueMonaco.editor)
     }
 
+    const { config: prettierConfig, edit: prettierEdit } = usePrettierConfigModal(props.options?.language)
+
     onMounted(() => {
       if (props.amdRequire) {
         props.amdRequire(['vs/editor/editor.main'], () => {
@@ -107,11 +110,27 @@ export default {
             contextMenuGroupId: 'navigation',
             run(editor) {
               const currentValue = editor.getValue()
-              const newValue = formatString(currentValue, props.options.language)
+              const newValue = formatString(currentValue, props.options.language, prettierConfig.value)
 
               if (newValue !== currentValue) {
                 editor.setValue(newValue)
               }
+            }
+          })
+          vueMonaco.editor.addAction({
+            id: 'prettier-config',
+            label: 'Prettier Custom Config',
+            precondition: null,
+            contextMenuGroupId: 'navigation',
+            run(editor) {
+              const save = () => {
+                const currentValue = editor.getValue()
+                const newValue = formatString(currentValue, props.options.language, prettierConfig.value)
+                if (newValue !== currentValue) {
+                  editor.setValue(newValue)
+                }
+              }
+              prettierEdit(save)
             }
           })
         })

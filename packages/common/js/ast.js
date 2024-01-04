@@ -1,14 +1,14 @@
 /**
-* Copyright (c) 2023 - present TinyEngine Authors.
-* Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
-*
-* Use of this source code is governed by an MIT-style license.
-*
-* THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
-* BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
-* A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
-*
-*/
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
+ *
+ * Use of this source code is governed by an MIT-style license.
+ *
+ * THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
+ * BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
+ * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
+ *
+ */
 
 import { parse, parseExpression } from '@babel/parser'
 import generate from '@babel/generator'
@@ -28,7 +28,7 @@ export const string2Ast = (string = '') => parse(string, { sourceType: 'module',
 
 export const ast2String = (ast) => generate(ast, { retainLines: true }).code
 
-const formatScript = (string) => {
+const formatScript = (string, extraConfig) => {
   let newStr = string
   const options = {
     parser: 'babel',
@@ -36,7 +36,8 @@ const formatScript = (string) => {
     printWidth: 120,
     singleQuote: true,
     semi: false,
-    trailingComma: 'none'
+    trailingComma: 'none',
+    ...extraConfig
   }
   try {
     // 低码中的编辑器大多只会输入js值，并不是一个完整的javascript表达式，无法格式化，因此需要特殊处理预格式化该种情形
@@ -48,26 +49,29 @@ const formatScript = (string) => {
   return newStr
 }
 
-const formatJson = (string) =>
+const formatJson = (string, extraConfig) =>
   prettier.format(string, {
     parser: 'json',
     plugins: [parserBabel],
     trailingComma: 'es5',
     tabWidth: 2,
     semi: false,
-    singleQuote: true
+    singleQuote: true,
+    ...extraConfig
   })
 
-const formatHtml = (string) =>
+const formatHtml = (string, extraConfig) =>
   prettier.format(string, {
     parser: 'html',
-    plugins: [parserBabel, parserHtml]
+    plugins: [parserBabel, parserHtml],
+    ...extraConfig
   })
 
-const formatCss = (string) =>
+const formatCss = (string, extraConfig) =>
   prettier.format(string, {
     parser: 'css',
-    plugins: [parseCss]
+    plugins: [parseCss],
+    ...extraConfig
   })
 
 const formatterMap = {
@@ -78,11 +82,11 @@ const formatterMap = {
   css: formatCss
 }
 
-export const formatString = (str, language) => {
+export const formatString = (str, language, extraConfig) => {
   const formatter = formatterMap[language] || formatJson
   let result = str
   try {
-    result = formatter(str)
+    result = formatter(str, extraConfig)
   } catch (error) {
     const printer = console
     printer.log(error)
