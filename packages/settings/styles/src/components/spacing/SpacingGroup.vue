@@ -554,7 +554,7 @@ export default {
     padding: 2px 4px;
     margin-left: -2px;
     border-radius: 2px;
-    max-width: 100%;
+    width: 100%;
     box-sizing: content-box;
     place-self: center;
     position: relative;
