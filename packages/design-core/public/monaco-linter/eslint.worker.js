@@ -47,6 +47,28 @@ const getConfig = (style) => ({
   settings: {}
 })
 
+const getCustomConfig = (rulesObjectStr) => {
+  let rules
+  try {
+    rules = JSON.parse(rulesObjectStr)
+  } catch (e) {
+    rules = {}
+    const logger = console
+    logger.warn('Failed to parse custom rules')
+  }
+  return {
+    ...defaultConfig,
+    rules: {
+      // JS 面板中，仅定义 function，但可能不使用该方法
+      'no-unused-vars': 'off',
+      'no-alert': 'off',
+      'no-console': 'off',
+      ...rules
+    },
+    settings: {}
+  }
+}
+
 // 错误的等级，ESLint 与 monaco 的存在差异，做一层映射
 const severityMap = {
   2: 'Error',
@@ -55,10 +77,10 @@ const severityMap = {
 const linter = new self.eslint.Linter()
 
 self.addEventListener('message', (event) => {
-  const { code, version, style } = event.data
+  const { code, version, style, customRules } = event.data
 
   const ruleDefines = linter.getRules()
-  const errs = linter.verify(code, getConfig(style))
+  const errs = linter.verify(code, style === 'custom' ? getCustomConfig(customRules) : getConfig(style))
 
   const markers = errs.map(({ ruleId = '', line, endLine, column, endColumn, message, severity }) => ({
     code: {
