@@ -10,7 +10,7 @@
  *
  */
 
-import { h, provide, reactive } from 'vue'
+import { h, provide, reactive, onMounted } from 'vue'
 import { isHTMLTag, hyphenate } from '@vue/shared'
 import { useBroadcastChannel } from '@vueuse/core'
 import { constants, utils } from '@opentiny/tiny-engine-utils'
@@ -290,6 +290,27 @@ const generateBlockContent = (schema) => {
     schema.children.forEach((item) => {
       generateBlockContent(item)
     })
+  }
+}
+
+function WrapHocComponent(Component, props, children) {
+  return {
+    mounted() {
+      const ele = this
+      console.log('$el', ele)
+      console.log('props', props)
+      const keys = [DESIGN_UIDKEY, DESIGN_TAGKEY, DESIGN_LOOPID]
+
+      for (const key of keys) {
+        if (props[key]) {
+          // ele.setAttribute(key, props[key])
+          ele[key] = props[key]
+        }
+      }
+    },
+    render() {
+      return h(Component, props, children)
+    }
   }
 }
 
@@ -610,9 +631,11 @@ const renderGroup = (children, scope, parent) => {
       }
 
       return h(
-        getComponent(componentName),
-        getBindProps(schema, mergeScope),
-        Array.isArray(children) ? renderSlot(children, mergeScope, schema) : parseData(children, mergeScope)
+        WrapHocComponent(
+          getComponent(componentName),
+          getBindProps(schema, mergeScope),
+          Array.isArray(children) ? renderSlot(children, mergeScope, schema) : parseData(children, mergeScope)
+        )
       )
     }
 
@@ -661,6 +684,25 @@ export const renderer = {
   setup(props) {
     provide('schema', props.schema)
   },
+  mounted() {
+    console.log('renderer this', this)
+    // console.log('element', this.$el)
+    // console.log('this', this)
+    // // console.log('this.props', this.props)
+    // const { id, componentName } = this.schema
+    // this.$el.setAttribute(DESIGN_UIDKEY, id)
+    // // [DESIGN_UIDKEY] = id
+    // // this.$el[DESIGN_TAGKEY] = componentName
+    // this.$el.setAttribute(DESIGN_TAGKEY, componentName)
+
+    // console.log('this.$el.designuidkey', this.$el[DESIGN_UIDKEY])
+    // console.log('this.scope', this.scope)
+    // if (this.scope) {
+    //   this.$el.setAttribute(DESIGN_LOOPID, this.scope.index === undefined ? this.scope.idx : this.scope.index)
+    // }
+
+    // bindProps[DESIGN_LOOPID] = scope.index === undefined ? scope.idx : scope.index
+  },
   render() {
     const { scope, schema, parent } = this
     const { componentName, loop, loopArgs, condition } = schema
@@ -701,7 +743,8 @@ export const renderer = {
         return null
       }
 
-      return h(component, getBindProps(schema, mergeScope), getChildren(schema, mergeScope))
+      // return h(component, getBindProps(schema, mergeScope), getChildren(schema, mergeScope))
+      return h(WrapHocComponent(component, getBindProps(schema, mergeScope), getChildren(schema, mergeScope)))
     }
 
     return loopList?.length ? loopList.map(renderElement) : renderElement()

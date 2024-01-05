@@ -9,7 +9,7 @@
           "name": {
             "zh_CN": "输入框"
           },
-          "component": "ElInput",
+          "component": "ElDatePicker",
           "icon": "input",
           "description": "通过鼠标或键盘输入字符",
           "doc_url": "",
@@ -23,7 +23,7 @@
             "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
             "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
             "dependencies": null,
-            "exportName": "ElInput"
+            "exportName": "ElDatePicker"
           },
           "group": "表单组件",
           "category": "element-plus",
@@ -12103,7 +12103,7 @@
               },
               "icon": "input",
               "screenshot": "",
-              "snippetName": "ElInput",
+              "snippetName": "ElDatePicker",
               "schema": {}
             },
             {
