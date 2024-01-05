@@ -10,6 +10,6 @@
  *
  */
 
-import { generateCode, generateBlocksCode, generatePageCode } from './page'
-
-export { generateCode, generateBlocksCode, generatePageCode }
+export default {
+  withCredentials: false
+}
