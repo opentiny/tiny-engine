@@ -514,8 +514,7 @@
               "schema": {
                 "componentName": "Img",
                 "props": {
-                  "src": "img/webNova.jpg",
-                  "style": "width: 200px; height: 200px"
+                  "src": "https://tinyengine-assets.obs.cn-north-4.myhuaweicloud.com/files/designer-default-icon.jpg"
                 }
               }
             }
