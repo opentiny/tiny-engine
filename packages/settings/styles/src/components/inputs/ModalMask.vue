@@ -18,7 +18,8 @@ const modal = reactive({
 })
 export const useModal = () => {
   const setPosition = (event) => {
-    const panelWidth = window.getComputedStyle(document.body).getPropertyValue('--base-right-panel-width')
+    const panelWidthStr = window.outerWidth >= 2000 ? '--base-right-panel-width' : '--lowcode-setting-panel-min-width'
+    const panelWidth = window.getComputedStyle(document.body).getPropertyValue(panelWidthStr)
     const innnerWidth = window.innerWidth
     const modalHalfWidth = (parseInt(panelWidth) - 24) / 2
     const x = event.x
@@ -46,12 +47,21 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@media (min-width: 2000px) {
+  .modal-wrapper {
+    width: calc(var(--base-right-panel-width) - 24px) !important;
+    .modal-mask {
+      left: calc(100% - var(--base-right-panel-width)) !important;
+    }
+  }
+}
+
 .modal-wrapper {
   position: fixed;
   top: 0;
   left: 0;
   margin-top: 10px;
-  width: calc(var(--base-right-panel-width) - 24px);
+  width: calc(var(--lowcode-setting-panel-min-width) - 24px);
   z-index: 9999;
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.5);
   .modal-mask {
@@ -59,7 +69,7 @@ export default {
     top: 0;
     right: 0;
     bottom: 0;
-    left: calc(100% - var(--base-right-panel-width));
+    left: calc(100% - var(--lowcode-setting-panel-min-width));
     background: rgba(33, 33, 33, 0.65);
     z-index: 9999;
   }
