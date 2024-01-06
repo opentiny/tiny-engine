@@ -27,16 +27,25 @@
       </tiny-grid>
     </div>
     <template #footer>
-      <tiny-button type="primary" @click="confirm">确定</tiny-button>
-      <tiny-button @click="$emit('cancel')">取消</tiny-button>
+      <div class="dialog-footer">
+        <div class="config-area">
+          <tiny-button type="text" @click="() => prettierEdit(prettierChange)" text="编辑Prettier规则"></tiny-button>
+        </div>
+        <div>
+          <tiny-button type="primary" @click="confirm">确定</tiny-button>
+          <tiny-button @click="$emit('cancel')">取消</tiny-button>
+        </div>
+        <div></div>
+      </div>
     </template>
   </tiny-dialog-box>
 </template>
 
 <script>
 import { DialogBox, Button, Grid, GridColumn } from '@opentiny/vue'
-import { reactive, computed, ref, nextTick } from 'vue'
+import { reactive, computed, ref, nextTick, onMounted } from 'vue'
 import { useNotify } from '@opentiny/tiny-engine-controller'
+import { usePrettierConfigModal } from '@opentiny/tiny-engine-common/js/usePrettierConfig'
 
 export default {
   components: {
@@ -52,7 +61,7 @@ export default {
       default: () => []
     }
   },
-  emits: ['cancel', 'confirm'],
+  emits: ['cancel', 'confirm', 'prettierChange'],
   setup(props, { emit }) {
     const getTableTreeData = (data) => {
       const dataMap = {}
@@ -69,7 +78,9 @@ export default {
     const tableData = computed(() => getTableTreeData(props.data))
     const gridRef = ref(null)
 
-    const state = reactive({})
+    const state = reactive({
+      prettierOption: null
+    })
 
     const confirm = () => {
       const selectedData = gridRef.value.getSelectRecords().filter((item) => !item.children)
@@ -81,7 +92,7 @@ export default {
         })
         return
       }
-
+      emit('prettierChange', state.prettierOption)
       emit('confirm', selectedData)
     }
 
@@ -92,12 +103,22 @@ export default {
       })
     }
 
+    const { config: prettierOptions, edit: prettierEdit } = usePrettierConfigModal('common')
+    onMounted(() => {
+      state.prettierOption = prettierOptions.value
+    })
+    const prettierChange = (v) => {
+      state.prettierOption = v
+    }
+
     return {
       state,
       tableData,
       gridRef,
       confirm,
-      openDialog
+      openDialog,
+      prettierEdit,
+      prettierChange
     }
   }
 }
@@ -225,6 +246,19 @@ export default {
 
       .tiny-grid__empty-text {
         color: var(--ti-lowcode-toolbar-breadcrumb-color);
+      }
+    }
+  }
+  .dialog-footer {
+    display: flex;
+    flex-direction: row;
+    & > div {
+      flex: 1 1 auto;
+      &:first-of-type {
+        flex: 1;
+      }
+      &:last-of-type {
+        flex: 1;
       }
     }
   }

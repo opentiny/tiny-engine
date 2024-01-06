@@ -10,6 +10,7 @@ const jsTsSharedConfig = {
 }
 
 export const prettierDefaultConfigMap = {
+  'common': {...jsTsSharedConfig},
   'javascript': {...jsTsSharedConfig},
   'typescript': {...jsTsSharedConfig},
   'json': {
@@ -43,7 +44,7 @@ export function usePrettierConfigModal(language) {
   const edit = (save) => {
     const configString = ref(JSON.stringify(config.value, null, 2))
     message({
-      title: `编辑${language ? ` ${language} 语言的` : ''} Prettier 配置`,
+      title: `编辑${language ? ( language === 'common' ? '通用' : ` ${language} 语言的`) : ''} Prettier 配置`,
       message: () => (<VueMonaco value={configString.value} language={'json'} onChange={
         (v) => {
           configString.value = v
