@@ -90,6 +90,13 @@ const { mergeLocaleMessage } = i18n.global
 mergeLocaleMessage(i18nKeyMaps.enUS, enUs)
 mergeLocaleMessage(i18nKeyMaps.zhCN, zhCn)
 
+import { useEslintCustomModal, getEslintCustomRules, setEslintCustomRules } from './component/useEslintCustomModal.jsx'
+import {
+  usePrettierConfigModal,
+  getPrettierLanguageConfig,
+  setPrettierLanguageConfig
+} from './component/usePrettierConfigModal.jsx'
+
 export const MetaComponents = {
   MetaArrayItem,
   MetaBindI18n,
@@ -192,5 +199,11 @@ export {
   BindI18n,
   BlockDeployDialog,
   ProgressBar,
-  MetaTableColumns
+  MetaTableColumns,
+  useEslintCustomModal,
+  getEslintCustomRules,
+  setEslintCustomRules,
+  usePrettierConfigModal,
+  getPrettierLanguageConfig,
+  setPrettierLanguageConfig
 }

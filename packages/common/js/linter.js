@@ -12,9 +12,7 @@
 
 import { PROD, BASE_URL } from './environments'
 import { addContextMenu } from './monacoContextMenu'
-import { ref, defineAsyncComponent } from 'vue'
-import { useModal } from '@opentiny/tiny-engine-controller'
-const VueMonaco = defineAsyncComponent(() => import('../component/VueMonaco.vue'))
+import { useEslintCustomModal, getEslintCustomRules } from '../index'
 
 export const initLinter = (editor, monacoInstance, state) => {
   let workerUrl = `${BASE_URL}monaco-linter/eslint.worker.js`
@@ -43,12 +41,6 @@ export const initLinter = (editor, monacoInstance, state) => {
   return worker
 }
 
-function getEslintCustomRules() {
-  return localStorage.getItem('monaco-eslint-custom-rules')
-}
-function setEslintCustomRules(rulesString) {
-  localStorage.setItem('monaco-eslint-custom-rules', rulesString)
-}
 function getEslintStyle() {
   return localStorage.getItem('monaco-eslint-style')
 }
@@ -56,35 +48,8 @@ function setEsLintStyle(style) {
   localStorage.setItem('monaco-eslint-style', style)
 }
 
-export function useEslintCustomModal() {
-  const customRules = ref(getEslintCustomRules())
-  const { message } = useModal();
-  const edit = (save) => {
-    const configString = ref(customRules.value || '{}')
-    message({
-      title: `自定义 ESLint Rules 配置`,
-      message: () => (<VueMonaco value={configString.value} language={'json'} onChange={
-        (v) => {
-          configString.value = v
-        }
-      } style='height: 60vh'></VueMonaco>),
-      exec: () => {
-        customRules.value = configString.value;
-        setEslintCustomRules(customRules.value )
-        save?.(customRules.value)
-      },
-      width: 800
-    })
-  }
-  
-  return {
-    customRules,
-    edit
-  }
-} 
-
-export function initEslintMenu(editor, refresh ) {
-  const { edit: customRulesEdit } = useEslintCustomModal();
+export function initEslintMenu(editor, refresh) {
+  const { edit: customRulesEdit } = useEslintCustomModal()
   return addContextMenu(editor, {
     menuContext: 'SwitchESlintRulesContext',
     title: 'Switch ESlint Rules',
@@ -93,24 +58,26 @@ export function initEslintMenu(editor, refresh ) {
     menuItems: [
       { name: 'eslint:recommended', style: 'recommended' },
       { name: 'eslint:all', style: 'all' }
-    ].map((ruleSet) => ({
-      id: ruleSet.name,
-      label: ruleSet.name,
-      run() {
-        setEsLintStyle(ruleSet.style)
-        refresh()
-      }
-    })).concat({
-      id: 'eslint-custom-rules',
-      label: 'Customize',
-      run() {
-        const save = () => {
-          setEsLintStyle('custom')
+    ]
+      .map((ruleSet) => ({
+        id: ruleSet.name,
+        label: ruleSet.name,
+        run() {
+          setEsLintStyle(ruleSet.style)
           refresh()
         }
-        customRulesEdit(save)
-      }
-    })
+      }))
+      .concat({
+        id: 'eslint-custom-rules',
+        label: 'Customize',
+        run() {
+          const save = () => {
+            setEsLintStyle('custom')
+            refresh()
+          }
+          customRulesEdit(save)
+        }
+      })
   })
 }
 
@@ -124,7 +91,7 @@ export const lint = (model, worker) => {
   // 防抖处理
   timer = setTimeout(() => {
     timer = null
-    const eslintStyle = getEslintStyle();
+    const eslintStyle = getEslintStyle()
     worker.postMessage({
       code: model.getValue(),
       // 发起 ESLint 静态检查时，携带 versionId
@@ -134,4 +101,3 @@ export const lint = (model, worker) => {
     })
   }, 500)
 }
-

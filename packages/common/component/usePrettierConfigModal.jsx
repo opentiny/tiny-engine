@@ -1,6 +1,6 @@
 import { ref, defineAsyncComponent } from 'vue'
 import { useModal } from '@opentiny/tiny-engine-controller'
-const VueMonaco = defineAsyncComponent(() => import('../component/VueMonaco.vue'))
+const VueMonaco = defineAsyncComponent(() => import('./VueMonaco.vue'))
 
 const jsTsSharedConfig = {
   printWidth: 120,

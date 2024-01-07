@@ -5,7 +5,7 @@
 import * as monacoEditor from 'monaco-editor'
 import { watch, onMounted, nextTick, onBeforeUnmount, ref } from 'vue'
 import { formatString } from '../js/ast.js'
-import { usePrettierConfigModal } from '../js/usePrettierConfig.jsx'
+import { usePrettierConfigModal } from './usePrettierConfigModal.jsx'
 
 export default {
   name: 'MonacoEditor',

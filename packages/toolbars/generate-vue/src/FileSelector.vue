@@ -45,7 +45,7 @@
 import { DialogBox, Button, Grid, GridColumn } from '@opentiny/vue'
 import { reactive, computed, ref, nextTick, onMounted } from 'vue'
 import { useNotify } from '@opentiny/tiny-engine-controller'
-import { usePrettierConfigModal } from '@opentiny/tiny-engine-common/js/usePrettierConfig'
+import { usePrettierConfigModal } from '@opentiny/tiny-engine-common'
 
 export default {
   components: {
