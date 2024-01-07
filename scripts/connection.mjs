@@ -112,6 +112,10 @@ class MysqlConnection {
         return
       }
 
+      if (value === void 0) {
+        return
+      }
+
       if (typeof value === 'string') {
         const formatValue = this.formatSingleQuoteValue(value)
 
@@ -160,8 +164,37 @@ class MysqlConnection {
    * @returns 新增组件的sql语句
    */
   insertComponent(component) {
+    const defaultNpm = {
+      package: '',
+      exportName: '',
+      version: '1.0.0',
+      destructuring: true
+    }
+    const defaultConfigure = {
+      loop: true,
+      condition: true,
+      styles: true,
+      isContainer: true,
+      isModal: false,
+      nestingRule: {
+        childWhiteList: '',
+        parentWhiteList: '',
+        descendantBlacklist: '',
+        ancestorWhitelist: ''
+      },
+      isNullNode: false,
+      isLayout: false,
+      rootSelector: '',
+      shortcuts: {
+        properties: ['value', 'disabled']
+      },
+      contextMenu: {
+        actions: ['create symbol'],
+        disable: ['copy', 'remove']
+      }
+    }
     const {
-      version,
+      version = '1.0.0',
       name,
       component: componentName,
       icon,
@@ -170,14 +203,14 @@ class MysqlConnection {
       screenshot,
       tags,
       keywords,
-      devMode,
-      npm,
+      devMode = 'proCode',
+      npm = defaultNpm,
       group,
-      category,
+      category = 'general',
       priority = 1,
-      snippets,
-      schema,
-      configure,
+      snippets = [{}],
+      schema = {},
+      configure = defaultConfigure,
       public: publicRight = 0,
       framework = 'vue',
       isOfficial = 0,
