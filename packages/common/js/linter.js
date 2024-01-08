@@ -19,7 +19,9 @@ export const initLinter = (editor, monacoInstance, state) => {
 
   // 线上环境，存在 worker 资源跨域的情况
   if (PROD) {
-    const workerBlob = new Blob([`importScripts('${workerUrl}');`], { type: 'application/javascript' })
+    const workerBlob = new Blob([`self.relativeDir='${BASE_URL}monaco-linter/';importScripts('${workerUrl}');`], {
+      type: 'application/javascript'
+    })
     workerUrl = window.URL.createObjectURL(workerBlob)
   }
 

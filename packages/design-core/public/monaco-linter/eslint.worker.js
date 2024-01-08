@@ -11,10 +11,11 @@
  */
 
 // importScripts 不支持 esm (safari不支持), 此处使用 umd，脚本地址参考vite.config.js的静态拷贝配置
-importScripts('./linter.js')
+const relativeDir = self.relativeDir || './'
+importScripts(`${relativeDir}linter.js`)
 
-importScripts('./eslint-rules/eslint-recommended.js')
-importScripts('./eslint-rules/eslint-all.js')
+importScripts(`${relativeDir}eslint-rules/eslint-recommended.js`)
+importScripts(`${relativeDir}eslint-rules/eslint-all.js`)
 
 const defaultConfig = {
   env: {
