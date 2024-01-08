@@ -205,6 +205,7 @@ export default {
       state.name = state.resource.name
       state.content = state.resource.content || {}
       state.value = state.resource?.content?.value || ''
+      state.type = getCategory()
     })
 
     watch(
