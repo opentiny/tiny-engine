@@ -37,35 +37,7 @@
               </span>
               <div v-if="!classNameState.curSelectorIsEditing && classNameState.curSelectorEditable" class="edit-wrap">
                 <svg-icon name="edit" title="编辑" class="edit-btn" @click.stop="handleEditCurSelector"></svg-icon>
-                <tiny-popover
-                  v-model="classNameState.showDelConfirm"
-                  trigger="manual"
-                  class="del-selector-popover"
-                  popper-class="del-selector-popper-wrapper"
-                >
-                  <div class="popper-confirm" @mousedown.stop="">
-                    <div class="popper-confirm-header">
-                      <svg-icon class="icon" name="warning"></svg-icon>
-                      <span class="title">您确定删除该选择器吗？</span>
-                    </div>
-                    <div class="popper-confirm-footer">
-                      <tiny-button class="confirm-btn" size="small" type="primary" @click="handleDelSelector">
-                        确定
-                      </tiny-button>
-                      <tiny-button size="small" class="cancel-btn" @click="handleTriggerDelConfirm(false)">
-                        取消
-                      </tiny-button>
-                    </div>
-                  </div>
-                  <template #reference>
-                    <svg-icon
-                      name="delete"
-                      title="删除"
-                      class="delete-btn"
-                      @click.stop="handleTriggerDelConfirm(true)"
-                    ></svg-icon>
-                  </template>
-                </tiny-popover>
+                <svg-icon name="close" title="删除" class="delete-btn" @click.stop="handleDelSelector"></svg-icon>
               </div>
             </div>
           </div>
@@ -118,7 +90,7 @@
 
 <script setup>
 import { computed, reactive, ref, nextTick, watch, watchEffect } from 'vue'
-import { Select as TinySelect, Popover as TinyPopover, Button as TinyButton } from '@opentiny/vue'
+import { Select as TinySelect } from '@opentiny/vue'
 import { setPageCss, getSchema as getCanvasPageSchema, updateRect } from '@opentiny/tiny-engine-canvas'
 import { useProperties, useCanvas, useHistory } from '@opentiny/tiny-engine-controller'
 import { MetaCodeEditor } from '@opentiny/tiny-engine-common'
@@ -418,21 +390,6 @@ const handleCompleteEditCurSelector = () => {
   updateGlobalStyleStr(newStyleStr)
 }
 
-const listener = () => {
-  classNameState.showDelConfirm = false
-}
-
-// 删除确认弹窗
-const handleTriggerDelConfirm = (visible) => {
-  classNameState.showDelConfirm = visible
-
-  if (visible) {
-    window.addEventListener('click', listener)
-  } else {
-    window.removeEventListener('click', listener)
-  }
-}
-
 const handleDelSelector = () => {
   // 删除选择器，仅从当前选中组件中删除类名, 不删除全局 css 中的 css 类名和样式
   // 后期需要可以拿到全局组件的类名，如果只有当前组件使用该类名，从全局样式中删除之
@@ -487,8 +444,9 @@ const save = ({ content }) => {
   margin-top: 10px;
   color: var(--ti-lowcode-className-selector-container-color);
   .className-selector-wrap {
-    overflow: hidden;
     margin-left: 8px;
+    max-width: 180px;
+    min-width: 0;
     .error-tips {
       margin-top: 8px;
       font-size: 12px;
@@ -507,20 +465,19 @@ const save = ({ content }) => {
   }
 
   .className-selector-container {
-    flex: 7;
+    display: flex;
+    row-gap: 2px;
+    align-items: center;
+    position: relative;
+    overflow: visible;
+    flex-wrap: wrap;
+    max-width: 100%;
     border: 1px solid var(--ti-lowcode-className-selector-container-border-color);
     border-right: none;
     border-radius: 6px;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     padding: 1px 10px;
-    display: flex;
-    max-width: 180px;
-    row-gap: 2px;
-    align-items: center;
-    position: relative;
-    overflow: visible;
-    flex-wrap: wrap;
     &:hover {
       border-color: var(--ti-lowcode-className-selector-container-hover-border-color);
     }
@@ -550,7 +507,7 @@ const save = ({ content }) => {
         background-color: var(--ti-lowcode-className-selector-container-label-bg-color);
         color: var(--ti-lowcode-className-selector-container-label-color);
         padding: 1px 4px;
-        border-radius: 2px;
+        border-radius: 4px;
         line-height: 26px;
         .selector-label-text {
           outline: none;
@@ -609,10 +566,11 @@ const save = ({ content }) => {
       background-color: var(--ti-lowcode-className-selector-dropdown-list-bg-color);
 
       border: 1px solid transparent;
+      border-radius: 6px;
       z-index: 1;
       flex-direction: column;
       overflow: scroll;
-      box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.15);
 
       .selector-dropdown-list-tips {
         font-size: 12px;
