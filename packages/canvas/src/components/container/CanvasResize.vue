@@ -95,7 +95,13 @@ export default {
 
     watch(
       () => useLayout().getPluginState().render,
-      (value) => !value && setScale(),
+      (value) => {
+        const currentFixed = useLayout().getPluginState().fixedPanels.includes(value)
+
+        if (!value || currentFixed) {
+          setScale()
+        }
+      },
       { flush: 'post' }
     )
 
