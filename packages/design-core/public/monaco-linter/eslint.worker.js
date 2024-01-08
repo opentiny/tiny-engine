@@ -10,8 +10,10 @@
  *
  */
 
-// importScripts 不支持 esm, 此处使用 umd, 对外暴露的变量名：linter，需要填写openTiny的cdn地址
-importScripts('./linter.js')
+// importScripts 不支持 esm (safari不支持), 此处使用 umd，脚本地址参考vite.config.js的静态拷贝配置
+const relativeDir = self.relativeDir || './'
+importScripts(`${relativeDir}linter.js`)
+
 const defaultConfig = {
   env: {
     browser: true,
