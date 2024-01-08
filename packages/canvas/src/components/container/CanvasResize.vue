@@ -30,13 +30,6 @@ export default {
     const mouseDown = ref(false)
     const resizeDom = ref(null)
 
-    const onMouseMove = (event) => {
-      if (mouseDown.value) {
-        event.preventDefault()
-        calculateSize(event)
-      }
-    }
-
     const calculateSize = ({ movementX }) => {
       const dimension = useLayout().getDimension()
       const { maxWidth, minWidth, width } = dimension
@@ -46,6 +39,13 @@ export default {
       useLayout().setDimension({
         width: `${parseInt(Math.min(Math.max(newWidth, parseInt(minWidth)), parseInt(maxWidth)), 10)}px`
       })
+    }
+
+    const onMouseMove = (event) => {
+      if (mouseDown.value) {
+        event.preventDefault()
+        calculateSize(event)
+      }
     }
 
     const onMouseDown = () => {
