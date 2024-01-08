@@ -10,12 +10,18 @@
  *
  */
 
-import { BASE_URL } from './environments'
+import { PROD, BASE_URL } from './environments'
 import { addContextMenu } from './monacoContextMenu'
 import { useEslintCustomModal, getEslintCustomRules } from '../index'
 
 export const initLinter = (editor, monacoInstance, state) => {
-  const workerUrl = `${BASE_URL}monaco-linter/eslint.worker.js`
+  let workerUrl = `${BASE_URL}monaco-linter/eslint.worker.js`
+
+  // 线上环境，存在 worker 资源跨域的情况
+  if (PROD) {
+    const workerBlob = new Blob([`importScripts('${workerUrl}');`], { type: 'application/javascript' })
+    workerUrl = window.URL.createObjectURL(workerBlob)
+  }
 
   const worker = new Worker(workerUrl)
 
