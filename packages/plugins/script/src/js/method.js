@@ -26,7 +26,8 @@ const state = reactive({
   script: '',
   isChanged: false,
   hasError: false,
-  editorSelection: null
+  editorSelection: null,
+  completionProvider: null
 })
 
 const monaco = ref(null)

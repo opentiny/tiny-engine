@@ -46,6 +46,11 @@
                   <li class="ml20">示例2： function fnName() {}</li>
                   <li class="ml20">示例3： { getValue: () => {} }</li>
                 </ul>
+                <div class="create-content-foot">
+                  <div class="create-content-tip">
+                    注意：使用JS表达式定义state变量的时候无法调用state其他变量定义，<br />另由于JS函数定义在变量之后，也无法调用JS面板定义的函数
+                  </div>
+                </div>
               </div>
             </div>
             <template #reference>
@@ -112,10 +117,11 @@
 </template>
 
 <script>
-import { reactive, ref, computed, watch } from 'vue'
+import { reactive, ref, computed, watch, onBeforeUnmount } from 'vue'
 import { Popover, Form, FormItem, Input, ButtonGroup } from '@opentiny/vue'
 import { MonacoEditor } from '@opentiny/tiny-engine-common'
 import { verifyJsVarName } from '@opentiny/tiny-engine-common/js/verification'
+import { initCompletion } from '@opentiny/tiny-engine-common/js/completion'
 import * as Monaco from 'monaco-editor'
 import { validateMonacoEditorData } from './js/common'
 import EditorI18nTool from './EditorI18nTool.vue'
@@ -188,8 +194,14 @@ export default {
         lineNumbers: true,
         // 禁用滚动条边边一直显示的边框
         overviewRulerBorder: false,
-        renderLineHighlightOnlyWhenFocus: true
-      }
+        renderLineHighlightOnlyWhenFocus: true,
+        quickSuggestions: false, // 快速提示禁用，避免调用其他模块提供的函数，因为变量是最先初始化
+        suggest: {
+          showFields: false,
+          showFunctions: false
+        }
+      },
+      completionProvider: null
     })
 
     const changeLanguage = (language) => {
@@ -314,7 +326,20 @@ export default {
         noSyntaxValidation: true,
         noSemanticValidation: true
       })
+      if (variableEditor.value) {
+        state.completionProvider = initCompletion(
+          variableEditor.value.editor.getMonaco(),
+          variableEditor.value.editor.getEditor()?.getModel(),
+          (item) => item.label !== 'this.state' && !item.label.startsWith('this.state.')
+        )
+      }
     }
+
+    onBeforeUnmount(() => {
+      state.completionProvider?.forEach((provider) => {
+        provider.dispose()
+      })
+    })
 
     const insertContent = (insertText = '') => {
       const monacoEditor = getEditor().editor.getEditor()
@@ -444,6 +469,11 @@ export default {
     li {
       margin-top: 8px;
     }
+  }
+  .create-content-foot {
+    margin-top: 4px;
+    font-size: 14px;
+    line-height: 22px;
   }
 }
 

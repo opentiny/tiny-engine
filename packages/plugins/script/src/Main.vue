@@ -76,13 +76,16 @@ export default {
       }
 
       // Lowcode API 提示
-      initCompletion(monaco.value.getMonaco())
+      state.completionProvider = initCompletion(monaco.value.getMonaco(), monaco.value.getEditor()?.getModel())
 
       // 初始化 ESLint worker
       state.linterWorker = initLinter(editor, monaco.value.getMonaco(), state)
     }
 
     onBeforeUnmount(() => {
+      state.completionProvider?.forEach((provider) => {
+        provider.dispose()
+      })
       // 终止 ESLint worker
       state.linterWorker?.terminate?.()
     })

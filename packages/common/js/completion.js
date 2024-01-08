@@ -157,7 +157,7 @@ const getWords = (model, position) => {
     const lastWord = model.getWordUntilPosition(lastPosition).word
       ? model.getWordUntilPosition(lastPosition)
       : getCurrentChar(model, lastPosition)
-    if (!/[\w\.]/.test(lastWord.word)) break
+    if (!/[\w.]/.test(lastWord.word)) break
     words.push(lastWord)
     lastPosition.column = lastWord.startColumn
   }
@@ -172,9 +172,14 @@ const getRange = (position, words) => ({
   endColumn: words[words.length - 1].endColumn
 })
 
-export const initCompletion = (monacoInstance) => {
+export const initCompletion = (monacoInstance, editorModel, conditionFn) => {
   const completionItemProvider = {
     provideCompletionItems(model, position, _context, _token) {
+      if (editorModel && model.id !== editorModel.id) {
+        return {
+          suggestions: []
+        }
+      }
       const words = getWords(model, position)
       const wordContent = words.map((item) => item.word).join('')
       const range = getRange(position, words)
@@ -185,9 +190,10 @@ export const initCompletion = (monacoInstance) => {
       const snippetSuggestions = getSnippetsSuggestions(monacoInstance, range, wordContent)
       // 用户变量数据提示 e.g. this.dataSourceMap.xxx.load()
       const userSuggestions = getUserSuggestions(monacoInstance, range, wordContent)
-
       return {
-        suggestions: [...apiSuggestions, ...snippetSuggestions, ...userSuggestions]
+        suggestions: [...apiSuggestions, ...snippetSuggestions, ...userSuggestions].filter((item) =>
+          conditionFn ? conditionFn(item) : true
+        )
       }
     },
     triggerCharacters: ['.']
