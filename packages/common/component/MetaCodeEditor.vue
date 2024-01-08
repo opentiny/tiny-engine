@@ -1,6 +1,6 @@
 <template>
   <div class="editor-wrap">
-    <slot>
+    <slot :open="open">
       <div v-if="buttonShowContent" :class="['full-width', { 'empty-color': value === '' }]" @click="open">
         <span>{{ value === '' ? buttonLabel : value?.slice(0, 30) }}</span>
         <svg-icon class="edit-icon" name="flow-edit"></svg-icon>
@@ -45,7 +45,13 @@
       </div>
       <template #footer>
         <div class="btn-box">
-          <tiny-button plain type="danger" v-if="language === 'json' && showFormatBtn" @click="formatCode">
+          <tiny-button
+            v-if="language === 'json' && showFormatBtn"
+            class="format-btn"
+            plain
+            type="danger"
+            @click="formatCode"
+          >
             {{ $t('common.format') }}
           </tiny-button>
           <div>
@@ -269,7 +275,10 @@ export default {
 }
 .btn-box {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
+  &:has(.format-btn) {
+    justify-content: space-between;
+  }
 }
 .full-width {
   border: 1px solid #adb0b8;

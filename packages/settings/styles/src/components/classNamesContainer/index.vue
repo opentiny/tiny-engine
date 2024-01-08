@@ -1,7 +1,19 @@
 <template>
   <div class="className-container">
-    <h6 class="title">样式选择器</h6>
+    <h6 class="title">全局样式</h6>
     <div class="selector-container">
+      <meta-code-editor
+        :modelValue="state.cssContent"
+        title="Css 编辑"
+        language="css"
+        v-slot="scope"
+        single
+        @save="save"
+      >
+        <div class="edit-global-css" title="编辑全局样式" @click="scope.open">
+          <svg-icon name="edit"></svg-icon>
+        </div>
+      </meta-code-editor>
       <div class="className-selector-wrap">
         <div
           :class="['className-selector-container', { 'has-error': classNameState.selectorHasError }]"
@@ -14,6 +26,7 @@
                 :contenteditable="classNameState.curSelectorIsEditing"
                 :class="['selector-label-text', { 'text-editing': classNameState.curSelectorIsEditing }]"
                 :key="classNameState.curSelectorIsEditing"
+                :title="classNameState.curSelector"
                 @click.stop="handleEditCurSelector"
                 @input="handleCurSelectorChange"
                 @blur="handleCompleteEditCurSelector"
@@ -106,8 +119,10 @@
 <script setup>
 import { computed, reactive, ref, nextTick, watch, watchEffect } from 'vue'
 import { Select as TinySelect, Popover as TinyPopover, Button as TinyButton } from '@opentiny/vue'
-import { getSchema as getCanvasPageSchema } from '@opentiny/tiny-engine-canvas'
-import { useProperties } from '@opentiny/tiny-engine-controller'
+import { setPageCss, getSchema as getCanvasPageSchema, updateRect } from '@opentiny/tiny-engine-canvas'
+import { useProperties, useCanvas, useHistory } from '@opentiny/tiny-engine-controller'
+import { MetaCodeEditor } from '@opentiny/tiny-engine-common'
+import { formatString } from '@opentiny/tiny-engine-common/js/ast'
 import useStyle, { updateGlobalStyleStr } from '../../js/useStyle'
 import { stringify, getSelectorArr } from '../../js/parser'
 
@@ -182,7 +197,14 @@ const setSelectorProps = (type, value) => {
 // 编辑 className 新增、删除、或修改
 const editClassName = (curClassName, optionType = OPTION_TYPE.ADD, oldSelector = '') => {
   const schema = getSchema() || getCanvasPageSchema()
-  const type = curClassName.startsWith('.') ? SELECTOR_TYPE.CLASS_NAME : SELECTOR_TYPE.ID
+  let type = ''
+
+  if (curClassName.startsWith('.')) {
+    type = SELECTOR_TYPE.CLASS_NAME
+  } else if (curClassName.startsWith('#')) {
+    type = SELECTOR_TYPE.ID
+  }
+
   const classNames = schema.props.className || ''
   const ids = schema.props.id || ''
   const typeMap = {
@@ -436,11 +458,28 @@ const handleCurSelectorChange = (event) => {
 watchEffect(() => {
   selectorValidator(classNameState.newSelector)
 })
+
+const save = ({ content }) => {
+  const cssString = formatString(content.replace(/"/g, "'"), 'css')
+  const { getPageSchema } = useCanvas()
+  const { addHistory } = useHistory()
+  getPageSchema().css = cssString
+  getCanvasPageSchema().css = cssString
+  setPageCss(cssString)
+  state.schemaUpdateKey++
+
+  addHistory()
+  updateRect()
+}
 </script>
 
 <style lang="less" scoped>
 .className-container {
   padding: 10px;
+}
+.title {
+  margin: 0;
+  color: var(--ti-lowcode-className-selector-title-color);
 }
 
 .selector-container {
@@ -448,18 +487,33 @@ watchEffect(() => {
   margin-top: 10px;
   color: var(--ti-lowcode-className-selector-container-color);
   .className-selector-wrap {
+    overflow: hidden;
+    margin-left: 8px;
     .error-tips {
       margin-top: 8px;
       font-size: 12px;
       color: var(--ti-lowcode-className-selector-error-tips-color);
     }
   }
+  :deep(.editor-wrap) {
+    width: 30px;
+  }
+  .edit-global-css {
+    display: flex;
+    padding: 6px;
+    border: 1px solid #c2c2c2;
+    border-radius: 6px;
+    cursor: pointer;
+  }
 
   .className-selector-container {
     flex: 7;
     border: 1px solid var(--ti-lowcode-className-selector-container-border-color);
+    border-right: none;
     border-radius: 6px;
-    padding: 2px 10px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    padding: 1px 10px;
     display: flex;
     max-width: 180px;
     row-gap: 2px;
@@ -494,10 +548,10 @@ watchEffect(() => {
         display: flex;
         align-items: center;
         background-color: var(--ti-lowcode-className-selector-container-label-bg-color);
-        color: #fff;
+        color: var(--ti-lowcode-className-selector-container-label-color);
         padding: 1px 4px;
         border-radius: 2px;
-        line-height: 30px;
+        line-height: 26px;
         .selector-label-text {
           outline: none;
           overflow: hidden;
@@ -531,7 +585,7 @@ watchEffect(() => {
       color: var(--ti-lowcode-className-selector-container-color);
       min-width: 0;
       flex: 0 0 0;
-      line-height: 30px;
+      line-height: 28px;
       z-index: 1;
       border: none;
       outline: none;
@@ -595,13 +649,14 @@ watchEffect(() => {
   .state-selector {
     flex: 4;
     flex-shrink: 0;
-    margin-left: 4px;
+    min-width: 84px;
+    :deep(input) {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      padding-right: 30px;
+      font-size: 12px;
+    }
   }
-}
-
-.title {
-  margin: 0;
-  color: var(--ti-lowcode-className-selector-title-color);
 }
 </style>
 <style lang="less">
