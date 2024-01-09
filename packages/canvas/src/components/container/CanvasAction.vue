@@ -339,7 +339,7 @@ export default {
         }
 
         if (isLabelAtBottom === isOptionAtBottom) {
-          // 标签框和工作操作框都在顶部或者都在底部
+          // 标签框和工具操作框都在顶部或者都在底部
 
           // 都放在左侧
           styleObjAlign(labelStyleObj, 'left')
