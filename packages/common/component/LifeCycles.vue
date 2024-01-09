@@ -230,7 +230,7 @@ export default {
     onBeforeUnmount(() => {
       // 终止 ESLint worker
       state.linterWorker?.terminate?.()
-      state.linterMen?.dispose()
+      state.linterMenu?.dispose()
     })
 
     return {
