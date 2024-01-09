@@ -26,7 +26,7 @@
   "dependencies": {
     "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-controller": "workspace:*",
-    "@opentiny/vue": "~3.10.0",
+    "@opentiny/vue": "~3.13.0",
     "vue": "3.2.45"
   },
   "devDependencies": {

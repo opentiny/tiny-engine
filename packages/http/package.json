@@ -26,7 +26,7 @@
   "dependencies": {
     "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
-    "@opentiny/vue": "~3.10.0",
+    "@opentiny/vue": "~3.13.0",
     "@vueuse/core": "^9.6.0",
     "axios": "^0.27.2",
     "axios-mock-adapter": "^1.21.5",

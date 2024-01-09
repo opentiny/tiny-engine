@@ -34,8 +34,8 @@
     "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-http": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
-    "@opentiny/vue": "~3.10.0",
-    "@opentiny/vue-renderless": "~3.10.0",
+    "@opentiny/vue": "~3.13.0",
+    "@opentiny/vue-renderless": "~3.13.0",
     "@vue/shared": "^3.3.4",
     "vue": "3.2.45"
   },
