@@ -166,7 +166,7 @@ watch(
       state.style = {}
     }
 
-    state.styleContent = `:root {\n ${schema?.props?.style || ''}\n}`
+    state.styleContent = formatString(`:root {\n ${schema?.props?.style || ''}\n}`, 'css')
   },
   {
     immediate: true,
