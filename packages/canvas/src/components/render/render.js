@@ -634,6 +634,7 @@ const getChildren = (schema, mergeScope) => {
     ]
   }
 
+  const component = getComponent(componentName)
   const isNative = typeof component === 'string'
   const isCustomElm = customElements[componentName]
   const isGroup = checkGroup(componentName)
