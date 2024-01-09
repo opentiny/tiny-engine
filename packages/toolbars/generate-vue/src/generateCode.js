@@ -115,19 +115,21 @@ function generateStores({ globalState }) {
   }
 })\n`
 
+    const content = `${result}\n${storeCode}`
     res.push({
       filePath: `${filePath}${id}.js`,
       fileType: FILE_TYPES.Store,
-      fileContent: formatScript(`${result}\n${storeCode}`),
-      reFormat: genReFormateFn(`${result}\n${storeCode}`, scriptPrettierOption)
+      fileContent: formatScript(content),
+      reFormat: genReFormateFn(content, scriptPrettierOption)
     })
   })
 
+  const indexContent = storeIds.map((id) => `export { ${id} } from './${id}'`).join('\n')
   res.push({
     filePath: `${filePath}index.js`,
     fileType: FILE_TYPES.Store,
-    fileContent: formatScript(storeIds.map((id) => `export { ${id} } from './${id}'`).join('\n')),
-    reFormat: genReFormateFn(storeIds.map((id) => `export { ${id} } from './${id}'`).join('\n'), scriptPrettierOption)
+    fileContent: formatScript(indexContent),
+    reFormat: genReFormateFn(indexContent, scriptPrettierOption)
   })
 
   return res

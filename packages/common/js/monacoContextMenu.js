@@ -53,29 +53,27 @@ export function addContextMenu(
       dispose = MenuRegistry.appendMenuItem(parentMenu, item)
     }
     return dispose
-  } else {
-    const subMenuId = new MenuId(menuContext)
-
-    const disposeParent = MenuRegistry.appendMenuItem(parentMenu || MenuId.EditorContext, {
-      context: menuContext,
-      submenu: subMenuId,
-      title,
-      group,
-      order
-    })
-    const disposeGroup = menuItems.map((item, i) => {
-      return addContextMenu(editor, {
-        ...item,
-        contextMenuGroupId: menuContext,
-        contextMenuOrder: i,
-        parentMenu: subMenuId
-      })
-    })
-    return toDisposable(() => {
-      disposeParent.dispose()
-      disposeGroup.forEach((single) => {
-        single.dispose()
-      })
-    })
   }
+  const subMenuId = new MenuId(menuContext)
+  const disposeParent = MenuRegistry.appendMenuItem(parentMenu || MenuId.EditorContext, {
+    context: menuContext,
+    submenu: subMenuId,
+    title,
+    group,
+    order
+  })
+  const disposeGroup = menuItems.map((item, i) => {
+    return addContextMenu(editor, {
+      ...item,
+      contextMenuGroupId: menuContext,
+      contextMenuOrder: i,
+      parentMenu: subMenuId
+    })
+  })
+  return toDisposable(() => {
+    disposeParent.dispose()
+    disposeGroup.forEach((single) => {
+      single.dispose()
+    })
+  })
 }

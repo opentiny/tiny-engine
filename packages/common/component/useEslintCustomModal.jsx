@@ -14,12 +14,13 @@ import { ref, defineAsyncComponent } from 'vue'
 import { useModal } from '@opentiny/tiny-engine-controller'
 const VueMonaco = defineAsyncComponent(() => import('../component/VueMonaco.vue'))
 
+const ESLINT_CUSTOM_RULES_KEY = 'monaco-eslint-custom-rules'
 
 export function getEslintCustomRules() {
-  return localStorage.getItem('monaco-eslint-custom-rules')
+  return localStorage.getItem(ESLINT_CUSTOM_RULES_KEY)
 }
 export function setEslintCustomRules(rulesString) {
-  localStorage.setItem('monaco-eslint-custom-rules', rulesString)
+  localStorage.setItem(ESLINT_CUSTOM_RULES_KEY, rulesString)
 }
 
 export function useEslintCustomModal() {

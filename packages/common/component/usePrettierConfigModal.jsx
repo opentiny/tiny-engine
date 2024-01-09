@@ -2,6 +2,7 @@ import { ref, defineAsyncComponent } from 'vue'
 import { useModal } from '@opentiny/tiny-engine-controller'
 const VueMonaco = defineAsyncComponent(() => import('./VueMonaco.vue'))
 
+const PRETTIER_PREFIX = 'prettier-config-language-'
 const jsTsSharedConfig = {
   printWidth: 120,
   singleQuote: true,
@@ -31,15 +32,18 @@ function jsonParse(str) {
   }
 }
 export function getPrettierLanguageConfig(language) {
-  return jsonParse(localStorage.getItem('prettier-config-language-'+ language))
+  return jsonParse(localStorage.getItem(PRETTIER_PREFIX + language))
 }
 
 export function setPrettierLanguageConfig(language, config) {
-  return localStorage.setItem('prettier-config-language-'+ language, JSON.stringify(config))
+  return localStorage.setItem(PRETTIER_PREFIX + language, JSON.stringify(config))
 }
 
 export function usePrettierConfigModal(language) {
-  const config = ref(Object.assign({}, (prettierDefaultConfigMap[language] || {}), getPrettierLanguageConfig(language || 'other')))
+  const config = ref({
+    ...(prettierDefaultConfigMap[language] || {}),
+    ...getPrettierLanguageConfig(language || 'other')
+  })
   const { message } = useModal();
   const edit = (save) => {
     const configString = ref(JSON.stringify(config.value, null, 2))
@@ -63,4 +67,4 @@ export function usePrettierConfigModal(language) {
     config,
     edit
   }
-} 
+}

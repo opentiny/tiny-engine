@@ -251,7 +251,6 @@ export default {
   }
   .dialog-footer {
     display: flex;
-    flex-direction: row;
     & > div {
       flex: 1 1 auto;
       &:first-of-type {
