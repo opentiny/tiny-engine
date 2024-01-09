@@ -123,8 +123,30 @@ export default {
         const doc = iframe.value.contentDocument
         const win = iframe.value.contentWindow
 
+        let isScrolling = false
+
         // 以下是内部iframe监听的事件
         win.addEventListener('mousedown', (event) => {
+          // html元素使用scroll和mouseup事件处理
+          if (event.target === doc.documentElement) {
+            isScrolling = false
+            return
+          }
+
+          insertPosition.value = false
+          setCurrentNode(event)
+          target.value = event.target
+        })
+
+        win.addEventListener('scroll', () => {
+          isScrolling = true
+        })
+
+        win.addEventListener('mouseup', (event) => {
+          if (event.target !== doc.documentElement || isScrolling) {
+            return
+          }
+
           insertPosition.value = false
           setCurrentNode(event)
           target.value = event.target
@@ -194,7 +216,9 @@ export default {
 
     onMounted(() => run(iframe))
     onUnmounted(() => {
-      removeHostkeyEvent(iframe.value.contentDocument)
+      if (iframe.value?.contentDocument) {
+        removeHostkeyEvent(iframe.value.contentDocument)
+      }
       window.removeEventListener('message', updateI18n, false)
     })
 

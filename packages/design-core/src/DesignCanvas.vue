@@ -175,6 +175,7 @@ export default {
     height: calc(100% - var(--base-bottom-panel-height, 30px) - 36px);
     background: var(--ti-lowcode-breadcrumb-hover-bg);
     position: absolute;
+    overflow: hidden;
     margin: 18px 0;
   }
 }
