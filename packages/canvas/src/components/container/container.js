@@ -146,6 +146,12 @@ export const getElement = (element) => {
   if (element === element.ownerDocument.body) {
     return element
   }
+
+  // 如果当前元素是画布的html，返回画布的body
+  if (element === element.ownerDocument.documentElement) {
+    return element.ownerDocument.body
+  }
+
   if (!element || element.nodeType !== 1) {
     return undefined
   }
@@ -157,6 +163,23 @@ export const getElement = (element) => {
   }
 
   return undefined
+}
+
+const getRect = (element) => {
+  if (element === getDocument().body) {
+    const { innerWidth: width, innerHeight: height } = getWindow()
+    return {
+      left: 0,
+      top: 0,
+      right: width,
+      bottom: height,
+      width,
+      height,
+      x: 0,
+      y: 0
+    }
+  }
+  return element.getBoundingClientRect()
 }
 
 const inserAfter = ({ parent, node, data }) => {
@@ -436,6 +459,10 @@ export const updateRect = (id) => {
   if (id) {
     setTimeout(() => setSelectRect(querySelectById(id)))
   } else {
+    // 如果选中的是body，不清除选中框
+    if (!selectState.componentName && selectState.width > 0) {
+      return
+    }
     clearSelect()
   }
 }
@@ -486,16 +513,17 @@ export const scrollToNode = (element) => {
 const setSelectRect = (element) => {
   element = element || getDocument().body
 
-  const { left, height, top, width } = element.getBoundingClientRect()
+  const { left, height, top, width } = getRect(element)
   const { x, y } = getOffset(element)
+  const siteCanvasRect = document.querySelector('.site-canvas').getBoundingClientRect()
   const componentName = getCurrent().schema?.componentName || ''
   const scale = useLayout().getScale()
   clearHover()
   Object.assign(selectState, {
     width: width * scale,
     height: height * scale,
-    top: top * scale + y,
-    left: left * scale + x,
+    top: top * scale + y - siteCanvasRect.y,
+    left: left * scale + x - siteCanvasRect.x,
     componentName
   })
 }
@@ -509,9 +537,10 @@ const setHoverRect = (element, data) => {
   const componentName = element.getAttribute(NODE_TAG)
   const id = element.getAttribute(NODE_UID)
   const configure = getConfigure(componentName)
-  const rect = element.getBoundingClientRect()
+  const rect = getRect(element)
   const { left, height, top, width } = rect
   const { x, y } = getOffset(element)
+  const siteCanvasRect = document.querySelector('.site-canvas').getBoundingClientRect()
   const scale = useLayout().getScale()
 
   hoverState.configure = configure
@@ -539,22 +568,22 @@ const setHoverRect = (element, data) => {
 
     // 如果容器盒子有子元素
     if (childEle) {
-      const childRect = childEle.getBoundingClientRect()
+      const childRect = getRect(childEle)
       const { left, height, top, width } = childRect
       const { x, y } = getOffset(childEle)
       Object.assign(lineState, {
         width: width * scale,
         height: height * scale,
-        top: top * scale + y,
-        left: left * scale + x,
+        top: top * scale + y - siteCanvasRect.y,
+        left: left * scale + x - siteCanvasRect.x,
         position: canvasState.type === 'absolute' || getPosLine(childRect, lineState.configure).type
       })
     } else {
       Object.assign(lineState, {
         width: width * scale,
         height: height * scale,
-        top: top * scale + y,
-        left: left * scale + x,
+        top: top * scale + y - siteCanvasRect.y,
+        left: left * scale + x - siteCanvasRect.x,
         position: canvasState.type === 'absolute' || getPosLine(rect, configure).type
       })
     }
@@ -566,8 +595,8 @@ const setHoverRect = (element, data) => {
   Object.assign(hoverState, {
     width: width * scale,
     height: height * scale,
-    top: top * scale + y,
-    left: left * scale + x,
+    top: top * scale + y - siteCanvasRect.y,
+    left: left * scale + x - siteCanvasRect.x,
     componentName
   })
   return undefined
