@@ -40,7 +40,6 @@ export default {
 <style lang="less" scoped>
 #tiny-right-panel {
   width: var(--base-right-panel-width);
-  min-width: var(--lowcode-setting-panel-min-width);
   height: 100%;
   transition: 0.3s linear;
   position: relative;
