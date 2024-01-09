@@ -11,8 +11,8 @@
 </template>
 
 <script>
+import { defineComponent } from 'vue'
 import { Repl, ReplStore } from '@vue/repl'
-import Monaco from '@vue/repl/monaco-editor'
 import vueJsx from '@vue/babel-plugin-jsx'
 import { transformSync } from '@babel/core'
 import { Notify } from '@opentiny/vue'
@@ -22,6 +22,12 @@ import generateMetaFiles, { processAppJsCode } from './generate'
 import { getSearchParams, fetchCode, fetchMetaData } from './http'
 import { PanelType, PreviewTips } from '../constant'
 import '@vue/repl/style.css'
+
+const fakeEditor = defineComponent({
+  setup() {
+    return () => null
+  }
+}) // 不需要MonacoEditor的编辑框，用空组件替代
 
 const importNames = [
   'createVNode',
@@ -173,7 +179,7 @@ export default {
     return {
       store,
       sfcOptions,
-      Monaco
+      Monaco: fakeEditor
     }
   }
 }
