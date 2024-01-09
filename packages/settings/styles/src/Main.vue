@@ -219,6 +219,7 @@ export default {
   }
   .inline-style {
     display: flex;
+    align-items: center;
     :deep(.editor-wrap) {
       display: flex;
       .tiny-button {
@@ -242,9 +243,6 @@ export default {
         border-color: var(--ti-lowcode-setting-style-input-bg);
       }
     }
-  }
-  :deep(.svg-icon) {
-    margin-top: 5px;
   }
 }
 </style>

@@ -3,7 +3,7 @@
     <slot :open="open">
       <div v-if="buttonShowContent" :class="['full-width', { 'empty-color': value === '' }]" @click="open">
         <span>{{ value === '' ? buttonLabel : value?.slice(0, 30) }}</span>
-        <svg-icon class="edit-icon" name="flow-edit"></svg-icon>
+        <svg-icon class="edit-icon" name="edit"></svg-icon>
       </div>
       <tiny-button v-else class="edit-btn" @click="open">
         {{ buttonLabel }}
@@ -15,6 +15,7 @@
       width="50vw"
       class="meta-code-editor-dialog-box"
       append-to-body
+      :close-on-click-modal="false"
     >
       <div class="source-code">
         <div v-if="editorTipsTitle" class="header-tips-container">

@@ -14,76 +14,83 @@
           <svg-icon name="edit"></svg-icon>
         </div>
       </meta-code-editor>
-      <div class="className-selector-wrap">
-        <div
-          :class="['className-selector-container', { 'has-error': classNameState.selectorHasError }]"
-          @click="handleFocusInput"
-        >
-          <div v-if="classNameState.curSelector || classNameState.curSelectorIsEditing" class="current-selector">
-            <div class="current-selector-label">
-              <span
-                ref="selectorTextRef"
-                :contenteditable="classNameState.curSelectorIsEditing"
-                :class="['selector-label-text', { 'text-editing': classNameState.curSelectorIsEditing }]"
-                :key="classNameState.curSelectorIsEditing"
-                :title="classNameState.curSelector"
-                @click.stop="handleEditCurSelector"
-                @input="handleCurSelectorChange"
-                @blur="handleCompleteEditCurSelector"
-                @keyup.enter="handleCompleteEditCurSelector"
-                @keyup.esc="handleCompleteEditCurSelector"
-              >
-                {{ classNameState.curSelector }}
-              </span>
-              <div v-if="!classNameState.curSelectorIsEditing && classNameState.curSelectorEditable" class="edit-wrap">
-                <svg-icon name="edit" title="编辑" class="edit-btn" @click.stop="handleEditCurSelector"></svg-icon>
-                <svg-icon name="close" title="删除" class="delete-btn" @click.stop="handleDelSelector"></svg-icon>
+      <div class="selector-right-container">
+        <div class="selector-right-container-wrap">
+          <div
+            :class="['className-selector-container', { 'has-error': classNameState.selectorHasError }]"
+            @click="handleFocusInput"
+          >
+            <div v-if="classNameState.curSelector || classNameState.curSelectorIsEditing" class="current-selector">
+              <div class="current-selector-label">
+                <span
+                  ref="selectorTextRef"
+                  :contenteditable="classNameState.curSelectorIsEditing"
+                  :class="['selector-label-text', { 'text-editing': classNameState.curSelectorIsEditing }]"
+                  :key="classNameState.curSelectorIsEditing"
+                  :title="classNameState.curSelector"
+                  @click.stop="handleEditCurSelector"
+                  @input="handleCurSelectorChange"
+                  @blur="handleCompleteEditCurSelector"
+                  @keyup.enter="handleCompleteEditCurSelector"
+                  @keyup.esc="handleCompleteEditCurSelector"
+                >
+                  {{ classNameState.curSelector }}
+                </span>
+                <div
+                  v-if="!classNameState.curSelectorIsEditing && classNameState.curSelectorEditable"
+                  class="edit-wrap"
+                >
+                  <svg-icon name="edit" title="编辑" class="edit-btn" @click.stop="handleEditCurSelector"></svg-icon>
+                  <svg-icon name="close" title="删除" class="delete-btn" @click.stop="handleDelSelector"></svg-icon>
+                </div>
               </div>
             </div>
+            <span v-else class="empty-tips">请选择或创建类名</span>
+            <input
+              ref="newSelectorInputRef"
+              type="text"
+              v-model="classNameState.newSelector"
+              class="selector-input"
+              @change="handleInputChange"
+              @blur="handleCreateNewClass"
+              @keyup.enter="handleCreateNewClass"
+              @keydown.delete="handleDeleteCurSelector"
+            />
           </div>
-          <span v-else class="empty-tips">请选择或创建类名</span>
-          <input
-            ref="newSelectorInputRef"
-            type="text"
-            v-model="classNameState.newSelector"
-            class="selector-input"
-            @change="handleInputChange"
-            @blur="handleCreateNewClass"
-            @keyup.enter="handleCreateNewClass"
-          />
-          <div v-if="classNameState.showDropdownList" class="selector-drop-down-list">
-            <span class="selector-dropdown-list-tips">输入并回车创建新选择器</span>
-            <span v-if="currentSelectorList.length" class="selector-dropdown-list-tips">选择已有选择器编辑</span>
-            <ul class="exist-class-list">
-              <li
-                v-for="item in currentSelectorList"
-                :key="item"
-                :title="item"
-                class="exist-class-item"
-                @mousedown="handleSelectExistingClass(item)"
-              >
-                <span>{{ item }}</span>
-              </li>
-            </ul>
-            <span v-if="state.selectors.length" class="selector-dropdown-list-tips add-global-class-tips">
-              添加全局类到当前组件并编辑
-            </span>
-            <ul class="exist-class-list">
-              <li
-                v-for="item in state.selectors"
-                :key="item"
-                :title="item"
-                class="exist-class-item"
-                @mousedown="handleSelectExistingClass(item)"
-              >
-                <span>{{ item }}</span>
-              </li>
-            </ul>
-          </div>
+          <tiny-select v-model="state.className.mouseState" :options="stateOptions" class="state-selector">
+          </tiny-select>
         </div>
         <div v-if="classNameState.selectorHasError" class="error-tips">{{ classNameState.selectorHasError }}</div>
+        <div v-if="classNameState.showDropdownList" class="selector-drop-down-list">
+          <span class="selector-dropdown-list-tips">输入并回车创建新选择器</span>
+          <span v-if="currentSelectorList.length" class="selector-dropdown-list-tips">选择已有选择器编辑</span>
+          <ul class="exist-class-list">
+            <li
+              v-for="item in currentSelectorList"
+              :key="item"
+              :title="item"
+              class="exist-class-item"
+              @mousedown="handleSelectExistingClass(item)"
+            >
+              <span>{{ item }}</span>
+            </li>
+          </ul>
+          <span v-if="state.selectors.length" class="selector-dropdown-list-tips add-global-class-tips">
+            添加全局类到当前组件并编辑
+          </span>
+          <ul class="exist-class-list">
+            <li
+              v-for="item in state.selectors"
+              :key="item"
+              :title="item"
+              class="exist-class-item"
+              @mousedown="handleSelectExistingClass(item)"
+            >
+              <span>{{ item }}</span>
+            </li>
+          </ul>
+        </div>
       </div>
-      <tiny-select v-model="state.className.mouseState" :options="stateOptions" class="state-selector"> </tiny-select>
     </div>
   </div>
 </template>
@@ -428,6 +435,22 @@ const save = ({ content }) => {
   addHistory()
   updateRect()
 }
+
+// 监听回车删除键，如果当前输入为空，则解绑当前选择器
+const handleDeleteCurSelector = () => {
+  // 当前新建的选择器不为空，则在编辑当前选择器
+  if (classNameState.newSelector) {
+    return
+  }
+
+  // 在编辑当前选择器则不做更改
+  if (classNameState.curSelectorIsEditing) {
+    return
+  }
+
+  // 解绑当前选择器
+  handleDelSelector()
+}
 </script>
 
 <style lang="less" scoped>
@@ -443,22 +466,30 @@ const save = ({ content }) => {
   display: flex;
   margin-top: 10px;
   color: var(--ti-lowcode-className-selector-container-color);
-  .className-selector-wrap {
+
+  .selector-right-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    position: relative;
     margin-left: 8px;
+  }
+  .selector-right-container-wrap {
+    display: flex;
+    border: 1px solid var(--ti-lowcode-className-selector-container-border-color);
+    border-radius: 6px;
+  }
+  .className-selector-wrap {
     max-width: 180px;
     min-width: 0;
-    .error-tips {
-      margin-top: 8px;
-      font-size: 12px;
-      color: var(--ti-lowcode-className-selector-error-tips-color);
-    }
   }
   :deep(.editor-wrap) {
     width: 30px;
   }
   .edit-global-css {
     display: flex;
-    padding: 6px;
+    padding: 7px;
     border: 1px solid #c2c2c2;
     border-radius: 6px;
     cursor: pointer;
@@ -468,15 +499,9 @@ const save = ({ content }) => {
     display: flex;
     row-gap: 2px;
     align-items: center;
-    position: relative;
-    overflow: visible;
     flex-wrap: wrap;
-    max-width: 100%;
-    border: 1px solid var(--ti-lowcode-className-selector-container-border-color);
-    border-right: none;
-    border-radius: 6px;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+    max-width: 180px;
+    min-width: 0;
     padding: 1px 10px;
     &:hover {
       border-color: var(--ti-lowcode-className-selector-container-hover-border-color);
@@ -484,9 +509,6 @@ const save = ({ content }) => {
     &.has-error {
       border-color: var(--ti-lowcode-className-selector-container-error-border-color);
       background-color: var(--ti-lowcode-className-selector-container-error-bg-color);
-      .selector-drop-down-list {
-        top: calc(100% + 30px);
-      }
     }
     &:has(.selector-input:focus) {
       .empty-tips {
@@ -553,53 +575,59 @@ const save = ({ content }) => {
         padding: 1px 2px;
       }
     }
+  }
 
-    .selector-drop-down-list {
-      box-sizing: border-box;
-      position: absolute;
+  .error-tips {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--ti-lowcode-className-selector-error-tips-color);
+  }
+
+  .selector-drop-down-list {
+    box-sizing: border-box;
+    position: absolute;
+    display: flex;
+    width: 100%;
+    max-height: 200px;
+    top: calc(100% + 10px);
+    left: 0;
+    padding: 8px 0;
+    background-color: var(--ti-lowcode-className-selector-dropdown-list-bg-color);
+
+    border: 1px solid transparent;
+    border-radius: 6px;
+    z-index: 1;
+    flex-direction: column;
+    overflow: scroll;
+    box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.15);
+
+    .selector-dropdown-list-tips {
+      font-size: 12px;
+      padding: 0 10px;
+    }
+
+    .selector-dropdown-list-tips + .selector-dropdown-list-tips {
+      margin-top: 10px;
+    }
+    .add-global-class-tips {
+      margin-top: 10px;
+    }
+
+    .exist-class-item {
+      cursor: pointer;
+      height: 32px;
+      padding: 0 16px;
       display: flex;
-      width: 100%;
-      max-height: 200px;
-      top: calc(100% + 10px);
-      left: 0;
-      padding: 8px 0;
-      background-color: var(--ti-lowcode-className-selector-dropdown-list-bg-color);
-
-      border: 1px solid transparent;
-      border-radius: 6px;
-      z-index: 1;
-      flex-direction: column;
-      overflow: scroll;
-      box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.15);
-
-      .selector-dropdown-list-tips {
-        font-size: 12px;
-        padding: 0 10px;
+      align-items: center;
+      font-size: 14px;
+      > span {
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
-
-      .selector-dropdown-list-tips + .selector-dropdown-list-tips {
-        margin-top: 10px;
-      }
-      .add-global-class-tips {
-        margin-top: 10px;
-      }
-
-      .exist-class-item {
-        cursor: pointer;
-        height: 32px;
-        padding: 0 16px;
-        display: flex;
-        align-items: center;
-        font-size: 14px;
-        > span {
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-        &.active,
-        &:hover {
-          background-color: var(--ti-lowcode-className-selector-dropdown-list-item-active-bg-color);
-          color: var(--ti-lowcode-className-selector-dropdown-list-item-color);
-        }
+      &.active,
+      &:hover {
+        background-color: var(--ti-lowcode-className-selector-dropdown-list-item-active-bg-color);
+        color: var(--ti-lowcode-className-selector-dropdown-list-item-color);
       }
     }
   }
@@ -608,42 +636,12 @@ const save = ({ content }) => {
     flex: 4;
     flex-shrink: 0;
     min-width: 84px;
+    border-left: 1px solid var(--ti-lowcode-className-selector-container-border-color);
     :deep(input) {
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
       padding-right: 30px;
+      border: none;
       font-size: 12px;
     }
-  }
-}
-</style>
-<style lang="less">
-.tiny-popover.tiny-popper.del-selector-popper-wrapper {
-  width: 220px;
-  height: 108px;
-  box-sizing: border-box;
-  background-color: var(--ti-lowcode-className-selector-del-popover-bg-color);
-  padding: 6px;
-
-  .popper-confirm {
-    padding: 20px;
-  }
-
-  .popper-confirm-header {
-    font-size: 12px;
-    color: var(--ti-lowcode-className-selector-del-popover-title-color);
-    .icon {
-      color: var(--ti-lowcode-warning-color);
-      width: 16px;
-      height: 16px;
-    }
-    .title {
-      margin-left: 4px;
-    }
-  }
-  .popper-confirm-footer {
-    text-align: center;
-    margin-top: 22px;
   }
 }
 </style>
