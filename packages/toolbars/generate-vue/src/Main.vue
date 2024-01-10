@@ -17,6 +17,7 @@
     :data="state.saveFilesInfo"
     @confirm="confirm"
     @cancel="cancel"
+    @prettierChange="saveCustomPrettierRules"
   ></generate-file-selector>
 </template>
 
@@ -26,7 +27,7 @@ import { Popover } from '@opentiny/vue'
 import { getGlobalConfig, useBlock, useCanvas, useNotify, useLayout } from '@opentiny/tiny-engine-controller'
 import { fs } from '@opentiny/tiny-engine-utils'
 import { getSchema } from '@opentiny/tiny-engine-canvas'
-import { generateVuePage, generateVueBlock } from './generateCode'
+import { generateVuePage, generateVueBlock, prettierCommon as innerPrettierCommonOpts } from './generateCode'
 import { fetchCode, fetchMetaData, fetchPageList } from './http'
 import FileSelector from './FileSelector.vue'
 
@@ -49,7 +50,8 @@ export default {
       dirHandle: null,
       generating: false,
       showDialogbox: false,
-      saveFilesInfo: []
+      saveFilesInfo: [],
+      prettierOption: null
     })
 
     const getParams = () => {
@@ -150,6 +152,18 @@ export default {
         state.generating = false
       }
     }
+    const reFormat = (saveData) => {
+      const isFormatOptionEqual = !Object.keys(state.prettierOption).some(
+        (opt) => state.prettierOption[opt] !== innerPrettierCommonOpts[opt]
+      )
+      if (isFormatOptionEqual) {
+        return saveData
+      }
+      return saveData.map((fileDesc) => ({
+        ...fileDesc,
+        fileContent: fileDesc.reFormat ? fileDesc.reFormat(state.prettierOption) : fileDesc.fileContent
+      }))
+    }
 
     const confirm = async (saveData) => {
       useNotify({ type: 'info', title: '代码保存中...' })
@@ -157,7 +171,7 @@ export default {
 
       try {
         // 生成代码到本地
-        await saveCodeToLocal(saveData)
+        await saveCodeToLocal(reFormat(saveData))
 
         useNotify({ type: 'success', title: '代码文件保存成功', message: `已保存${saveData.length}个文件` })
       } catch (error) {
@@ -175,11 +189,16 @@ export default {
       state.saveFilesInfo = []
     }
 
+    const saveCustomPrettierRules = (v) => {
+      state.prettierOption = v
+    }
+
     return {
       state,
       generate,
       confirm,
-      cancel
+      cancel,
+      saveCustomPrettierRules
     }
   }
 }

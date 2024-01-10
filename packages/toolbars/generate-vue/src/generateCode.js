@@ -36,19 +36,29 @@ const FILE_TYPES = {
   Store: 'Store'
 }
 
-const prettierCommon = {
+export const prettierCommon = {
   printWidth: 120,
   semi: false,
   singleQuote: true,
   trailingComma: 'none'
 }
 
-function formatScript(string) {
-  return prettier.format(string, {
-    ...prettierCommon,
-    parser: 'babel',
-    plugins: [parserBabel]
+const genReFormateFn = (content, prettierOpts, plugins) => (appendedOption) => {
+  return prettier.format(content, {
+    ...prettierOpts,
+    ...(plugins ? { plugins } : {}),
+    ...appendedOption
   })
+}
+
+const scriptPrettierOption = {
+  ...prettierCommon,
+  parser: 'babel',
+  plugins: [parserBabel]
+}
+
+function formatScript(string) {
+  return prettier.format(string, scriptPrettierOption)
 }
 
 function getPaths(page, pagesMap) {
@@ -105,17 +115,21 @@ function generateStores({ globalState }) {
   }
 })\n`
 
+    const content = `${result}\n${storeCode}`
     res.push({
       filePath: `${filePath}${id}.js`,
       fileType: FILE_TYPES.Store,
-      fileContent: formatScript(`${result}\n${storeCode}`)
+      fileContent: formatScript(content),
+      reFormat: genReFormateFn(content, scriptPrettierOption)
     })
   })
 
+  const indexContent = storeIds.map((id) => `export { ${id} } from './${id}'`).join('\n')
   res.push({
     filePath: `${filePath}index.js`,
     fileType: FILE_TYPES.Store,
-    fileContent: formatScript(storeIds.map((id) => `export { ${id} } from './${id}'`).join('\n'))
+    fileContent: formatScript(indexContent),
+    reFormat: genReFormateFn(indexContent, scriptPrettierOption)
   })
 
   return res
@@ -151,7 +165,8 @@ function generatePageFiles(codeList, pagePath = '') {
       pageFiles.push({
         fileType: type,
         filePath: (type === 'Block' ? basePaths.blocks : basePaths.pages + pagePath) + panelName,
-        fileContent: panelValue
+        fileContent: panelValue,
+        reFormat: genReFormateFn(panelValue, prettierOpts, formatTypePluginMap[prettierOpts.parser])
       })
     }
   })
@@ -296,7 +311,8 @@ function generateUtils({ utils }) {
     result.push({
       fileType: FILE_TYPES.Utils,
       filePath: basePaths.utils,
-      fileContent: formatScript(content)
+      fileContent: formatScript(content),
+      reFormat: genReFormateFn(content, scriptPrettierOption)
     })
   }
 
@@ -370,7 +386,8 @@ export function generateRouter(pages) {
     {
       fileType: FILE_TYPES.Router,
       filePath: basePaths.router,
-      fileContent: codeStr
+      fileContent: codeStr,
+      reFormat: genReFormateFn(codeStr, scriptPrettierOption)
     }
   ]
 }
