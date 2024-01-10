@@ -30,13 +30,6 @@ export default {
     const mouseDown = ref(false)
     const resizeDom = ref(null)
 
-    const onMouseMove = (event) => {
-      if (mouseDown.value) {
-        event.preventDefault()
-        calculateSize(event)
-      }
-    }
-
     const calculateSize = ({ movementX }) => {
       const dimension = useLayout().getDimension()
       const { maxWidth, minWidth, width } = dimension
@@ -48,13 +41,10 @@ export default {
       })
     }
 
-    const onMouseDown = () => {
-      const iframe = canvasState.iframe
-
-      if (iframe) {
-        iframe.style['pointer-events'] = 'none'
-        bindEvents()
-        mouseDown.value = true
+    const onMouseMove = (event) => {
+      if (mouseDown.value) {
+        event.preventDefault()
+        calculateSize(event)
       }
     }
 
@@ -64,7 +54,9 @@ export default {
       if (iframe) {
         iframe.style['pointer-events'] = 'auto'
         mouseDown.value = false
-        unbindEvents()
+
+        document.removeEventListener('mousemove', onMouseMove, { passive: false })
+        document.removeEventListener('mouseup', onMouseUp)
       }
     }
 
@@ -73,9 +65,14 @@ export default {
       document.addEventListener('mouseup', onMouseUp)
     }
 
-    const unbindEvents = () => {
-      document.removeEventListener('mousemove', onMouseMove, { passive: false })
-      document.removeEventListener('mouseup', onMouseUp)
+    const onMouseDown = () => {
+      const iframe = canvasState.iframe
+
+      if (iframe) {
+        iframe.style['pointer-events'] = 'none'
+        bindEvents()
+        mouseDown.value = true
+      }
     }
 
     const setScale = () => {
@@ -95,7 +92,13 @@ export default {
 
     watch(
       () => useLayout().getPluginState().render,
-      (value) => !value && setScale(),
+      (value) => {
+        const currentFixed = useLayout().getPluginState().fixedPanels.includes(value)
+
+        if (!value || currentFixed) {
+          setScale()
+        }
+      },
       { flush: 'post' }
     )
 

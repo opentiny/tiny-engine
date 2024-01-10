@@ -13,23 +13,13 @@ const bundlePath = path.join(process.cwd(), '/packages/design-core/public/mock/b
 // mockServer应用数据
 const appInfoPath = path.join(process.cwd(), '/mockServer/src/services/appinfo.json')
 const appInfo = fsExtra.readJSONSync(appInfoPath)
-const bundle = {
-  data: {
-    framework: 'Vue',
-    materials: {
-      components: [],
-      blocks: [],
-      snippets: []
-    }
-  }
-}
 
 const connection = new MysqlConnection()
 
 /**
  * 更新物料资产包和应用mock数据
  */
-const write = () => {
+const write = (bundle) => {
   fsExtra.outputJSONSync(bundlePath, bundle, { spaces: 2 })
   fsExtra.outputJSONSync(appInfoPath, appInfo, { spaces: 2 })
 }
@@ -93,6 +83,16 @@ const generateComponents = () => {
         logger.warn('物料文件夹为空，请先执行`pnpm splitMaterials`命令拆分物料资产包')
       }
 
+      const bundle = {
+        data: {
+          framework: 'Vue',
+          materials: {
+            components: [],
+            blocks: [],
+            snippets: []
+          }
+        }
+      }
       const { components = [], snippets = [], blocks = [] } = bundle.data.materials
       const componentsMap = []
       const appInfoBlocksLabels = appInfo.blockHistories.map((item) => item.label)
@@ -150,7 +150,7 @@ const generateComponents = () => {
 
       appInfo.materialHistory.components = componentsMap
 
-      write()
+      write(bundle)
     })
 
     logger.success('构建物料资产包成功')
