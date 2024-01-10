@@ -104,6 +104,9 @@ const OPTION_BAR_HEIGHT = 24
 // 标签高度
 const LABEL_HEIGHT = 24
 
+// 画布右边滚动条宽度
+const SCROLL_BAR_WIDTH = 8
+
 // 当工具操作条和标签高度并排显示时，需要的间距 6px
 const OPTION_SPACE = 6
 
@@ -327,7 +330,7 @@ export default {
         // 选中框宽度小于标签宽度和工具操作条宽度之和加上间距
 
         // label 是否对齐右侧
-        const isLabelAlignRight = left + labelRect.width > siteCanvasWidth && labelRect.width > width
+        const isLabelAlignRight = left + labelRect.width + SCROLL_BAR_WIDTH > siteCanvasWidth && labelRect.width > width
         if (isLabelAlignRight) {
           styleObjAlign(labelStyleObj, 'right')
         }
@@ -356,8 +359,8 @@ export default {
           styleObjAlign(labelStyleObj, 'left', Math.min(-left, width - fullRectWidth))
         }
 
-        if (left + width > siteCanvasWidth) {
-          styleObjAlign(optionStyleObj, 'right', Math.min(left + width - siteCanvasWidth, width - fullRectWidth))
+        if (left + width + SCROLL_BAR_WIDTH > siteCanvasWidth) {
+          styleObjAlign(optionStyleObj, 'right', Math.min(left + width + SCROLL_BAR_WIDTH - siteCanvasWidth, width - fullRectWidth))
         }
       }
 

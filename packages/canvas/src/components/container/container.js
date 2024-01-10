@@ -495,16 +495,30 @@ export const hoverNode = (id, data) => {
   element && setHoverRect(element, data)
 }
 
+// 滚动页面后，目标元素与页面边界至少保留的边距
+const SCROLL_MARGIN = 15
+
 export const scrollToNode = (element) => {
   if (element) {
     const container = getDocument().documentElement
-    const h = container?.clientHeight
-    const { y, height } = element.getBoundingClientRect()
+    const { clientWidth, clientHeight } = container
+    const { x, y, width, height } = element.getBoundingClientRect()
+    const option = {}
+
+    if (x < 0) {
+      option.left = container.scrollLeft + x - SCROLL_MARGIN
+    } else if (x > clientWidth) {
+      option.left = x + width - clientWidth + SCROLL_MARGIN
+    }
 
     if (y < 0) {
-      container.scrollTo({ top: container.scrollTop + y - 15 })
-    } else if (y > h) {
-      container.scrollTo({ top: y + height - h + 15 })
+      option.top = container.scrollTop + y - SCROLL_MARGIN
+    } else if (y > clientHeight) {
+      option.top = y + height - clientHeight + SCROLL_MARGIN
+    }
+
+    if (typeof option.left === 'number' || typeof option.top === 'number') {
+      container.scrollTo(option)
     }
   }
 
