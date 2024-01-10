@@ -60,7 +60,10 @@
           <tiny-select v-model="state.className.mouseState" :options="stateOptions" class="state-selector">
           </tiny-select>
         </div>
-        <div v-if="classNameState.selectorHasError" class="error-tips">{{ classNameState.selectorHasError }}</div>
+        <div v-if="classNameState.selectorHasError" class="error-tips">
+          <svg-icon name="error"></svg-icon>
+          <span class="error-tips-text">{{ classNameState.selectorHasError }}</span>
+        </div>
         <div v-if="classNameState.showDropdownList" class="selector-drop-down-list">
           <span class="selector-dropdown-list-tips">输入并回车创建新选择器</span>
           <span v-if="currentSelectorList.length" class="selector-dropdown-list-tips">选择已有选择器编辑</span>
@@ -401,6 +404,8 @@ const handleDelSelector = () => {
   // 删除选择器，仅从当前选中组件中删除类名, 不删除全局 css 中的 css 类名和样式
   // 后期需要可以拿到全局组件的类名，如果只有当前组件使用该类名，从全局样式中删除之
   editClassName(classNameState.curSelector, OPTION_TYPE.REMOVE)
+  state.className.classNameList = ''
+  state.className.mouseState = ''
 }
 
 const handleFocusInput = () => {
@@ -477,8 +482,6 @@ const handleDeleteCurSelector = () => {
   }
   .selector-right-container-wrap {
     display: flex;
-    border: 1px solid var(--ti-lowcode-className-selector-container-border-color);
-    border-radius: 6px;
   }
   .className-selector-wrap {
     max-width: 180px;
@@ -490,7 +493,7 @@ const handleDeleteCurSelector = () => {
   .edit-global-css {
     display: flex;
     padding: 7px;
-    border: 1px solid #c2c2c2;
+    border: 1px solid var(--ti-lowcode-className-selector-container-border-color);
     border-radius: 6px;
     cursor: pointer;
   }
@@ -503,6 +506,10 @@ const handleDeleteCurSelector = () => {
     max-width: 180px;
     min-width: 0;
     padding: 1px 10px;
+    border: 1px solid var(--ti-lowcode-className-selector-container-border-color);
+    border-radius: 6px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
     &:hover {
       border-color: var(--ti-lowcode-className-selector-container-hover-border-color);
     }
@@ -578,9 +585,14 @@ const handleDeleteCurSelector = () => {
   }
 
   .error-tips {
+    display: flex;
+    align-items: center;
     margin-top: 8px;
     font-size: 12px;
     color: var(--ti-lowcode-className-selector-error-tips-color);
+    .error-tips-text {
+      margin-left: 4px;
+    }
   }
 
   .selector-drop-down-list {
@@ -593,7 +605,6 @@ const handleDeleteCurSelector = () => {
     left: 0;
     padding: 8px 0;
     background-color: var(--ti-lowcode-className-selector-dropdown-list-bg-color);
-
     border: 1px solid transparent;
     border-radius: 6px;
     z-index: 1;
@@ -634,9 +645,12 @@ const handleDeleteCurSelector = () => {
 
   .state-selector {
     flex: 4;
-    flex-shrink: 0;
     min-width: 84px;
-    border-left: 1px solid var(--ti-lowcode-className-selector-container-border-color);
+    border: 1px solid var(--ti-lowcode-className-selector-container-border-color);
+    border-radius: 6px;
+    border-left: none;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
     :deep(input) {
       padding-right: 30px;
       border: none;

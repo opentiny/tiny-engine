@@ -2,7 +2,7 @@
   <div class="editor-wrap">
     <slot :open="open">
       <div v-if="buttonShowContent" :class="['full-width', { 'empty-color': value === '' }]" @click="open">
-        <span>{{ value === '' ? buttonLabel : value?.slice(0, 30) }}</span>
+        <span class="text-content text-ellipsis-multiple">{{ value === '' ? buttonLabel : value }}</span>
         <svg-icon class="edit-icon" name="edit"></svg-icon>
       </div>
       <tiny-button v-else class="edit-btn" @click="open">
@@ -282,17 +282,26 @@ export default {
   }
 }
 .full-width {
-  border: 1px solid #adb0b8;
-  border-radius: 6px;
-  padding: 4px 8px;
-  height: 32px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
+  height: 32px;
+  padding: 4px 8px;
+  border: 1px solid var(--ti-lowcode-meta-codeEditor-border-color);
+  border-radius: 6px;
+  &:hover {
+    border-color: var(--ti-lowcode-meta-codeEditor-border-hover-color);
+  }
+  .text-content {
+    --ellipsis-line: 1;
+  }
   &.empty-color {
     color: var(--ti-lowcode-common-text-desc-color);
   }
   .edit-icon {
+    margin-left: 4px;
+    flex-shrink: 0;
     cursor: pointer;
     color: var(--ti-lowcode-common-text-main-color);
   }
