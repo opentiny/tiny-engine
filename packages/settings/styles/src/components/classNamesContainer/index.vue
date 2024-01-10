@@ -460,11 +460,16 @@ const handleDeleteCurSelector = () => {
 
 <style lang="less" scoped>
 .className-container {
+  ::-webkit-scrollbar {
+    display: block;
+  }
   padding: 10px;
 }
 .title {
   margin: 0;
+  font-size: 14px;
   color: var(--ti-lowcode-className-selector-title-color);
+  font-weight: normal;
 }
 
 .selector-container {
@@ -510,6 +515,7 @@ const handleDeleteCurSelector = () => {
     border-radius: 6px;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
+    font-size: 12px;
     &:hover {
       border-color: var(--ti-lowcode-className-selector-container-hover-border-color);
     }
@@ -524,7 +530,6 @@ const handleDeleteCurSelector = () => {
     }
     .empty-tips {
       position: absolute;
-      font-size: 14px;
       color: var(--ti-lowcode-className-selector-container-empty-tips-color);
       z-index: 0;
     }
@@ -630,7 +635,7 @@ const handleDeleteCurSelector = () => {
       padding: 0 16px;
       display: flex;
       align-items: center;
-      font-size: 14px;
+      font-size: 12px;
       > span {
         overflow: hidden;
         text-overflow: ellipsis;

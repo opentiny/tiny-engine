@@ -204,7 +204,7 @@ export default {
 <style lang="less" scoped>
 .style-editor {
   justify-content: space-around;
-  padding: 8px 16px 12px;
+  padding: 8px 10px 12px;
   column-gap: 8px;
   .line-style {
     display: block;
@@ -213,8 +213,10 @@ export default {
     color: var(--ti-lowcode-setting-style-font-color);
     font-size: 12px;
     .line-text {
-      margin-bottom: 8px;
       display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: var(--ti-lowcode-setting-style-title-color);
     }
   }
   .inline-style {

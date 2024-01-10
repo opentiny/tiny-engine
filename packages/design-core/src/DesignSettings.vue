@@ -48,10 +48,6 @@ export default {
   padding-top: 20px;
   background-color: var(--ti-lowcode-setting-panel-bg-color);
 
-  ::-webkit-scrollbar {
-    display: none;
-  }
-
   .tiny-tabs {
     height: 100%;
   }
