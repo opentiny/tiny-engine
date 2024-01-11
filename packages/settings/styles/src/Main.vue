@@ -204,12 +204,10 @@ export default {
 <style lang="less" scoped>
 .style-editor {
   justify-content: space-around;
-  padding: 8px 10px 12px;
+  padding: 0 16px 0;
   column-gap: 8px;
   .line-style {
     display: block;
-    margin-top: 16px;
-    margin-bottom: 8px;
     color: var(--ti-lowcode-setting-style-font-color);
     font-size: 12px;
     .line-text {

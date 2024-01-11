@@ -463,7 +463,7 @@ const handleDeleteCurSelector = () => {
   ::-webkit-scrollbar {
     display: block;
   }
-  padding: 10px;
+  padding: 16px 16px 8px;
 }
 .title {
   margin: 0;
