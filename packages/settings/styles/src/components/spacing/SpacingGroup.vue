@@ -19,6 +19,7 @@
               aria-label="Margin top button"
               class="tb-path-color"
               style="cursor: n-resize"
+              @click="clickMargin(SPACING_PROPERTY.MarginTop, $event)"
             ></path>
           </g>
         </g>
@@ -39,6 +40,7 @@
               aria-label="Margin right button"
               class="lr-path-color"
               style="cursor: e-resize"
+              @click="clickMargin(SPACING_PROPERTY.MarginRight, $event)"
             ></path>
           </g>
         </g>
@@ -59,6 +61,7 @@
               aria-label="Margin bottom button"
               class="tb-path-color"
               style="cursor: s-resize"
+              @click="clickMargin(SPACING_PROPERTY.MarginBottom, $event)"
             ></path>
           </g>
         </g>
@@ -79,6 +82,7 @@
               aria-label="Margin left button"
               class="lr-path-color"
               style="cursor: w-resize"
+              @click="clickMargin(SPACING_PROPERTY.MarginLeft, $event)"
             ></path>
           </g>
         </g>
@@ -203,6 +207,7 @@
               aria-label="Padding top button"
               class="tb-path-color"
               style="cursor: s-resize"
+              @click="clickPadding(SPACING_PROPERTY.PaddingTop, $event)"
             ></path>
           </g>
         </g>
@@ -223,6 +228,7 @@
               aria-label="Padding right button"
               class="lr-path-color"
               style="cursor: w-resize"
+              @click="clickPadding(SPACING_PROPERTY.PaddingRight, $event)"
             ></path>
           </g>
         </g>
@@ -243,6 +249,7 @@
               aria-label="Padding bottom button"
               class="tb-path-color"
               style="cursor: n-resize"
+              @click="clickPadding(SPACING_PROPERTY.PaddingBottom, $event)"
             ></path>
           </g>
         </g>
@@ -263,6 +270,7 @@
               aria-label="Padding left button"
               class="lr-path-color"
               style="cursor: e-resize"
+              @click="clickPadding(SPACING_PROPERTY.PaddingLeft, $event)"
             ></path>
           </g>
         </g>
@@ -554,7 +562,7 @@ export default {
     padding: 2px 4px;
     margin-left: -2px;
     border-radius: 2px;
-    width: 100%;
+    max-width: 100%;
     box-sizing: content-box;
     place-self: center;
     position: relative;
