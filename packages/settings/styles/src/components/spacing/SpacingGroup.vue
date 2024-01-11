@@ -5,7 +5,6 @@
         <g>
           <g>
             <path
-              cursor="n-resize"
               mode="delta"
               fill="currentColor"
               d="
@@ -18,7 +17,6 @@
               data-automation-id="margin-top-button"
               aria-label="Margin top button"
               class="tb-path-color"
-              style="cursor: n-resize"
               @click="clickMargin(SPACING_PROPERTY.MarginTop, $event)"
             ></path>
           </g>
@@ -26,7 +24,6 @@
         <g>
           <g>
             <path
-              cursor="e-resize"
               mode="delta"
               fill="currentColor"
               d="
@@ -39,7 +36,6 @@
               data-automation-id="margin-right-button"
               aria-label="Margin right button"
               class="lr-path-color"
-              style="cursor: e-resize"
               @click="clickMargin(SPACING_PROPERTY.MarginRight, $event)"
             ></path>
           </g>
@@ -47,7 +43,6 @@
         <g>
           <g>
             <path
-              cursor="s-resize"
               mode="delta"
               fill="currentColor"
               d="
@@ -60,7 +55,6 @@
               data-automation-id="margin-bottom-button"
               aria-label="Margin bottom button"
               class="tb-path-color"
-              style="cursor: s-resize"
               @click="clickMargin(SPACING_PROPERTY.MarginBottom, $event)"
             ></path>
           </g>
@@ -68,7 +62,6 @@
         <g>
           <g>
             <path
-              cursor="w-resize"
               mode="delta"
               fill="currentColor"
               d="
@@ -81,7 +74,6 @@
               data-automation-id="margin-left-button"
               aria-label="Margin left button"
               class="lr-path-color"
-              style="cursor: w-resize"
               @click="clickMargin(SPACING_PROPERTY.MarginLeft, $event)"
             ></path>
           </g>
@@ -193,7 +185,6 @@
         <g>
           <g>
             <path
-              cursor="s-resize"
               mode="delta"
               fill="currentColor"
               d="
@@ -206,7 +197,6 @@
               data-automation-id="padding-top-button"
               aria-label="Padding top button"
               class="tb-path-color"
-              style="cursor: s-resize"
               @click="clickPadding(SPACING_PROPERTY.PaddingTop, $event)"
             ></path>
           </g>
@@ -214,7 +204,6 @@
         <g>
           <g>
             <path
-              cursor="w-resize"
               mode="delta"
               fill="currentColor"
               d="
@@ -227,7 +216,6 @@
               data-automation-id="padding-right-button"
               aria-label="Padding right button"
               class="lr-path-color"
-              style="cursor: w-resize"
               @click="clickPadding(SPACING_PROPERTY.PaddingRight, $event)"
             ></path>
           </g>
@@ -235,7 +223,6 @@
         <g>
           <g>
             <path
-              cursor="n-resize"
               mode="delta"
               fill="currentColor"
               d="
@@ -248,7 +235,6 @@
               data-automation-id="padding-bottom-button"
               aria-label="Padding bottom button"
               class="tb-path-color"
-              style="cursor: n-resize"
               @click="clickPadding(SPACING_PROPERTY.PaddingBottom, $event)"
             ></path>
           </g>
@@ -256,7 +242,6 @@
         <g>
           <g>
             <path
-              cursor="e-resize"
               mode="delta"
               fill="currentColor"
               d="
@@ -269,7 +254,6 @@
               data-automation-id="padding-left-button"
               aria-label="Padding left button"
               class="lr-path-color"
-              style="cursor: e-resize"
               @click="clickPadding(SPACING_PROPERTY.PaddingLeft, $event)"
             ></path>
           </g>
@@ -545,7 +529,7 @@ export default {
   }
 
   .spacing-edit {
-    cursor: default;
+    cursor: pointer;
     user-select: none;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -608,6 +592,7 @@ export default {
   }
 
   .lr-path-color {
+    cursor: pointer;
     color: var(--ti-lowcode-spacing-lr-color);
     &:hover {
       color: var(--ti-lowcode-spacing-lr-hover-color);
@@ -615,6 +600,7 @@ export default {
   }
 
   .tb-path-color {
+    cursor: pointer;
     color: var(--ti-lowcode-spacing-tb-color);
     &:hover {
       color: var(--ti-lowcode-spacing-tb-hover-color);
