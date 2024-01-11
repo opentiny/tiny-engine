@@ -106,7 +106,8 @@ export default {
       },
       { name: '删除', code: 'del' },
       { name: '复制', code: 'copy' },
-      { name: '绑定事件', code: 'bindEvent' }
+      { name: '绑定事件', code: 'bindEvent' },
+      { name: '新建区块', code: 'createBlock' }
     ])
 
     const boxVisibility = ref(false)
@@ -132,19 +133,57 @@ export default {
       wrap({ value, name }) {
         const componentName = value || name
         const { schema, parent } = getCurrent()
-        if (schema && parent) {
-          const index = parent.children.indexOf(schema)
-          const wrapSchema = {
-            componentName,
-            id: null,
-            props: {},
-            children: [schema]
-          }
 
-          parent.children.splice(index, 1, wrapSchema)
-
-          getController().addHistory()
+        if (!schema || !parent) {
+          return
         }
+
+        const index = parent.children.findIndex(({ id }) => schema.id === id)
+        let wrapSchema = {
+          componentName,
+          id: null,
+          props: {
+            content: '提示信息'
+          },
+          children: [schema]
+        }
+        // 需要对popover特殊处理
+        if (value === 'TinyPopover') {
+          wrapSchema = {
+            componentName,
+            props: {
+              width: 200,
+              title: '弹框标题',
+              trigger: 'manual',
+              modelValue: true
+            },
+            children: [
+              {
+                componentName: 'Template',
+                props: {
+                  slot: 'reference'
+                },
+                children: [schema]
+              },
+              {
+                componentName: 'Template',
+                props: {
+                  slot: 'default'
+                },
+                children: [
+                  {
+                    componentName: 'div',
+                    props: {
+                      placeholder: '提示内容'
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+        parent.children.splice(index, 1, wrapSchema)
+        getController().addHistory()
       },
       createBlock() {
         if (useCanvas().isSaved()) {

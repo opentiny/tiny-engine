@@ -13,7 +13,7 @@
 import { reactive } from 'vue'
 import { useApp, useResource, useNotify } from '@opentiny/tiny-engine-controller'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
-import { setUtils } from '@opentiny/tiny-engine-canvas'
+import { updateUtils, deleteUtils } from '@opentiny/tiny-engine-canvas'
 import {
   fetchResourceList,
   requestDeleteReSource,
@@ -183,7 +183,7 @@ export const saveResource = (data, callback, emit) => {
         useResource().resState[data.category][index] = result
 
         // 更新画布工具函数环境，保证渲染最新工具类返回值, 并触发画布的强制刷新
-        setUtils([result], false, true)
+        updateUtils([result])
         generateBridgeUtil(useApp().appInfoState.selectedId)
 
         useNotify({
@@ -201,6 +201,8 @@ export const saveResource = (data, callback, emit) => {
       if (result) {
         useResource().resState[data.category].push(result)
 
+        // 更新画布工具函数环境，保证渲染最新工具类返回值, 并触发画布的强制刷新
+        updateUtils([result])
         generateBridgeUtil(useApp().appInfoState.selectedId)
         useNotify({
           type: 'success',
@@ -221,6 +223,7 @@ export const deleteData = (name, callback, emit) => {
       const index = useResource().resState[state.type].findIndex((item) => item.name === data.name)
       useResource().resState[state.type].splice(index, 1)
 
+      deleteUtils([data])
       generateBridgeUtil(useApp().appInfoState.selectedId)
       useNotify({
         type: 'success',

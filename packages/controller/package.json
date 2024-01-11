@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-controller",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "publishConfig": {
     "access": "public"
   },
@@ -29,11 +29,11 @@
   "license": "MIT",
   "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
-    "@opentiny/tiny-engine-canvas": "workspace:^1.0.0",
-    "@opentiny/tiny-engine-common": "workspace:^1.0.0",
-    "@opentiny/tiny-engine-http": "workspace:^1.0.0",
-    "@opentiny/tiny-engine-utils": "workspace:^1.0.0",
     "@opentiny/tiny-engine-builtin-component": "workspace:*",
+    "@opentiny/tiny-engine-canvas": "workspace:*",
+    "@opentiny/tiny-engine-common": "workspace:*",
+    "@opentiny/tiny-engine-http": "workspace:*",
+    "@opentiny/tiny-engine-utils": "workspace:*",
     "@opentiny/vue": "~3.10.0",
     "@opentiny/vue-renderless": "~3.10.0",
     "@vue/shared": "^3.3.4",
