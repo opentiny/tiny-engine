@@ -344,7 +344,7 @@ export default {
   position: fixed;
   z-index: 9999;
   top: 50px;
-  left: calc(var(--base-left-panel-width, 268px) + var(--base-nav-panel-width) + 10px);
+  left: calc(var(--base-left-panel-width) + var(--base-nav-panel-width) + 10px);
   max-width: 500px;
   max-height: 136px;
   padding: 12px;
