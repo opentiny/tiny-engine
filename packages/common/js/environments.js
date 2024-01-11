@@ -15,6 +15,7 @@ export const PROD = import.meta.env.PROD
 export const BASE_URL = import.meta.env.BASE_URL
 export const VITE_ORIGIN = import.meta.env.VITE_ORIGIN
 export const VITE_API_MOCK = import.meta.env.VITE_API_MOCK
+export const VITE_CDN_DOMAIN = import.meta.env.VITE_CDN_DOMAIN
 
 export const isMock = VITE_API_MOCK === 'mock'
 
