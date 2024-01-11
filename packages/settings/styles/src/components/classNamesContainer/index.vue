@@ -620,6 +620,7 @@ const handleDeleteCurSelector = () => {
     .selector-dropdown-list-tips {
       font-size: 12px;
       padding: 0 10px;
+      color: var(--ti-lowcode-className-selector-dropdown-list-tips-color);
     }
 
     .selector-dropdown-list-tips + .selector-dropdown-list-tips {
