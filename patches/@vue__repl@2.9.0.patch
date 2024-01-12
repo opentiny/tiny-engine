@@ -7,7 +7,7 @@ index c9668cbf8c44ba3c816246b746127204839f8349..a37490f2eeda313390ede42233801d37
  import { c as commonjsGlobal, a as getAugmentedNamespace } from './_commonjsHelpers-9Q-OoQuc.js';
 +function getWorkerURL(url){
 +    if (typeof document !== 'undefined' && document.location && document.location.origin !== url.origin) {
-+        return URL.createObjectURL(new Blob([`importScripts('${url.href}')`], {
++        return URL.createObjectURL(new Blob([`import '${url.href}'`], {
 +            type: 'application/javascript'
 +        }))
 +    }
