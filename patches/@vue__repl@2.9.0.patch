@@ -1,5 +1,5 @@
 diff --git a/dist/chunks/MonacoEditor-KSgTEMrh.js b/dist/chunks/MonacoEditor-KSgTEMrh.js
-index c9668cbf8c44ba3c816246b746127204839f8349..a37490f2eeda313390ede42233801d373a329232 100644
+index c9668cbf8c44ba3c816246b746127204839f8349..e893c59a432e53372c18aa2e70d7b7bb9fd666ba 100644
 --- a/dist/chunks/MonacoEditor-KSgTEMrh.js
 +++ b/dist/chunks/MonacoEditor-KSgTEMrh.js
 @@ -1,5 +1,13 @@
@@ -34,3 +34,17 @@ index c9668cbf8c44ba3c816246b746127204839f8349..a37490f2eeda313390ede42233801d37
              {
          type: "module",
          name: options?.name
+diff --git a/dist/vue-repl.js b/dist/vue-repl.js
+index 43bfd22a1a7d6f831e3f85228d809750317c4bfb..d5f5cb335533295c63e4cfa8aaa02770d16babca 100644
+--- a/dist/vue-repl.js
++++ b/dist/vue-repl.js
+@@ -528,7 +528,8 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent({
+           "allow-popups",
+           "allow-same-origin",
+           "allow-scripts",
+-          "allow-top-navigation-by-user-activation"
++          "allow-top-navigation-by-user-activation",
++          "allow-downloads"
+         ].join(" ")
+       );
+       const importMap = store.getImportMap();
