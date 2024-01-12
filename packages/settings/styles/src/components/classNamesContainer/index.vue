@@ -64,7 +64,7 @@
           <svg-icon name="error"></svg-icon>
           <span class="error-tips-text">{{ classNameState.selectorHasError }}</span>
         </div>
-        <div v-if="classNameState.showDropdownList" class="selector-drop-down-list">
+        <div v-if="classNameState.showDropdownList" class="selector-drop-down-list lowcode-scrollbar-thin">
           <span class="selector-dropdown-list-tips">输入并回车创建新选择器</span>
           <span v-if="currentSelectorList.length" class="selector-dropdown-list-tips">选择已有选择器编辑</span>
           <ul class="exist-class-list">
@@ -620,6 +620,7 @@ const handleDeleteCurSelector = () => {
     .selector-dropdown-list-tips {
       font-size: 12px;
       padding: 0 10px;
+      line-height: 32px;
       color: var(--ti-lowcode-className-selector-dropdown-list-tips-color);
     }
 
