@@ -1,17 +1,20 @@
 <template>
-  <Repl
-    :editor="Monaco"
-    :store="store"
-    :sfcOptions="sfcOptions"
-    :showCompileOutput="false"
-    :showImportMap="false"
-    :clearConsole="false"
-    :autoResize="false"
-  />
+  <div :class="['vue-repl-container', debugSwitch ? 'preview-debug-mode' : '']">
+    <Repl
+      :editor="editorComponent"
+      :store="store"
+      :sfcOptions="sfcOptions"
+      :showCompileOutput="false"
+      :showTsConfig="false"
+      :showImportMap="true"
+      :clearConsole="false"
+      :autoResize="false"
+    />
+  </div>
 </template>
 
 <script>
-import { defineComponent } from 'vue'
+import { defineComponent, computed, defineAsyncComponent } from 'vue'
 import { Repl, ReplStore } from '@vue/repl'
 import vueJsx from '@vue/babel-plugin-jsx'
 import { transformSync } from '@babel/core'
@@ -21,13 +24,16 @@ import srcFiles from './srcFiles'
 import generateMetaFiles, { processAppJsCode } from './generate'
 import { getSearchParams, fetchCode, fetchMetaData } from './http'
 import { PanelType, PreviewTips } from '../constant'
+import { injectDebugSwitch } from './debugSwitch'
 import '@vue/repl/style.css'
 
-const fakeEditor = defineComponent({
+const Monaco = defineAsyncComponent(() => import('@vue/repl/monaco-editor')) // 异步组件实现懒加载，打开debug后再加载
+
+const EmptyEditor = defineComponent({
   setup() {
     return () => null
   }
-}) // 不需要MonacoEditor的编辑框，用空组件替代
+})
 
 const importNames = [
   'createVNode',
@@ -57,6 +63,8 @@ export default {
     Repl
   },
   setup() {
+    const debugSwitch = injectDebugSwitch()
+    const editorComponent = computed(() => (debugSwitch?.value ? Monaco : EmptyEditor))
     const store = new ReplStore()
 
     const compiler = store.compiler
@@ -102,6 +110,7 @@ export default {
       await store.setFiles(newFiles, mainFileName)
       // 强制更新 codeSandbox
       store.state.resetFlip = !store.state.resetFlip
+      store['initTsConfig']() // 触发获取组件d.ts方便调试
     }
 
     const addUtilsImportMap = (utils = []) => {
@@ -179,7 +188,8 @@ export default {
     return {
       store,
       sfcOptions,
-      Monaco: fakeEditor
+      editorComponent,
+      debugSwitch
     }
   }
 }
@@ -209,6 +219,16 @@ export default {
       .tab-buttons {
         display: none;
       }
+    }
+  }
+}
+.vue-repl-container {
+  height: calc(100vh - 48px);
+  width: 100%;
+  &.preview-debug-mode .vue-repl .split-pane {
+    .left,
+    .right .tab-buttons {
+      display: block;
     }
   }
 }
