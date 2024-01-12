@@ -7,6 +7,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import nodeGlobalsPolyfillPlugin from '@esbuild-plugins/node-globals-polyfill'
 import nodeModulesPolyfillPlugin from '@esbuild-plugins/node-modules-polyfill'
 import nodePolyfill from 'rollup-plugin-polyfill-node'
+import esbuildCopy from 'esbuild-plugin-copy'
 import lowcodeConfig from './config/lowcode.config'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import { importmapPlugin } from './scripts/externalDeps'
@@ -79,7 +80,16 @@ const config = {
           process: true,
           buffer: true
         }),
-        nodeModulesPolyfillPlugin()
+        nodeModulesPolyfillPlugin(),
+        esbuildCopy({
+          //@vue/repl monaco编辑器需要
+          resolveFrom: 'cwd',
+          assets: {
+            from: ['./node_modules/@vue/repl/dist/assets/*'], // worker.js文件以url形式引用不会被esbuild拉起，需要手动复制
+            to: ['./node_modules/.vite/assets'] // 开发态，js文件被缓存在.vite/deps，请求相对路径为.vite/assets
+          },
+          watch: true
+        })
       ]
     }
   },
