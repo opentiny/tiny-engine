@@ -77,7 +77,8 @@ const initialLineState = {
   left: 0,
   position: '',
   id: '',
-  config: null
+  config: null,
+  doc: null
 }
 
 // 选中画布中元素时的状态
@@ -538,7 +539,8 @@ const setSelectRect = (element) => {
     height: height * scale,
     top: top * scale + y - siteCanvasRect.y,
     left: left * scale + x - siteCanvasRect.x,
-    componentName
+    componentName,
+    doc: getDocument()
   })
 }
 

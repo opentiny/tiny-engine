@@ -269,46 +269,75 @@ export default {
     const labelRef = ref(null)
     const labelStyle = ref('')
 
-    const styleObj2Str = (styleObj) => {
-      return Object.entries(styleObj)
-        .map(([key, value]) => {
-          const num = Number(value)
+    class Align {
+      alignLeft = false
+      horizontalValue = 0
+      alignTop = false
+      verticalValue = 0
 
-          if (Number.isNaN(num)) {
-            return `${key}:${value}`
+      constructor({ alignLeft, horizontalValue, alignTop, verticalValue }) {
+        this.alignLeft = alignLeft
+        this.horizontalValue = horizontalValue
+        this.alignTop = alignTop
+        this.verticalValue = verticalValue
+      }
+
+      align(position, value = 0) {
+        if (typeof position === 'string') {
+          if (position === 'left' || position === 'right') {
+            this.alignLeft = position === 'left'
+            this.horizontalValue = value
+            return this
           }
+          if (position === 'top' || position === 'bottom') {
+            this.alignTop = position === 'top'
+            this.horizontalValue = value
+            return this
+          }
+        }
+        return this
+      }
 
-          const val = key === 'right' || key === 'left' ? num - SELECTION_BORDER_WIDTH : num
-          return `${key}:${val}px`
-        })
-        .join(';')
-    }
+      toStyleValue() {
+        const styleObj = {}
 
-    const styleObjAlign = (obj, position, val = 0) => {
-      if (position === 'left') {
-        obj.left = val
-        obj.right = STYLE_UNSET
-        return
+        if (this.alignLeft) {
+          styleObj.left = this.horizontalValue
+          styleObj.right = STYLE_UNSET
+        } else {
+          styleObj.right = this.horizontalValue
+          styleObj.left = STYLE_UNSET
+        }
+
+        if (this.alignTop) {
+          styleObj.top = this.verticalValue
+          styleObj.bottom = STYLE_UNSET
+        } else {
+          styleObj.bottom = this.verticalValue
+          styleObj.top = STYLE_UNSET
+        }
+
+        return this.styleObj2Str(styleObj)
       }
-      if (position === 'right') {
-        obj.left = STYLE_UNSET
-        obj.right = val
-        return
-      }
-      if (position === 'top') {
-        obj.top = val
-        obj.bottom = STYLE_UNSET
-        return
-      }
-      if (position === 'bottom') {
-        obj.top = STYLE_UNSET
-        obj.bottom = val
-        return
+
+      styleObj2Str = (styleObj) => {
+        return Object.entries(styleObj)
+          .map(([key, value]) => {
+            const num = Number(value)
+
+            if (Number.isNaN(num)) {
+              return `${key}:${value}`
+            }
+
+            const val = key === 'right' || key === 'left' ? num - SELECTION_BORDER_WIDTH : num
+            return `${key}:${val}px`
+          })
+          .join(';')
       }
     }
 
     const getStyleValues = (selectState, siteCanvasWidth, siteCanvasHeight) => {
-      const { left, top, width, height } = selectState
+      const { left, top, width, height, doc } = selectState
       const labelRect = labelRef.value.getBoundingClientRect()
       const optionRect = optionRef.value.getBoundingClientRect()
       // 标签宽度和工具操作条宽度之和加上间距
@@ -316,63 +345,71 @@ export default {
 
       // 是否 将label 标签放置到底部，判断 top 距离
       const isLabelAtBottom = top <= LABEL_HEIGHT
-      const labelStyleObj = {}
-      styleObjAlign(labelStyleObj, isLabelAtBottom ? 'bottom' : 'top', -LABEL_HEIGHT)
-      styleObjAlign(labelStyleObj, 'left')
+      const labelAlign = new Align({
+        alignLeft: true,
+        horizontalValue: 0,
+        alignTop: !isLabelAtBottom,
+        verticalValue: -LABEL_HEIGHT
+      })
 
       // 是否将操作栏放置到底部，判断当前选中组件底部与页面底部的距离。
       const isOptionAtBottom = siteCanvasHeight - top - height > OPTION_BAR_HEIGHT
-      const optionStyleObj = {}
-      styleObjAlign(optionStyleObj, isOptionAtBottom ? 'bottom' : 'top', -OPTION_BAR_HEIGHT)
-      styleObjAlign(optionStyleObj, 'right')
+      const optionAlign = new Align({
+        alignLeft: false,
+        horizontalValue: 0,
+        alignTop: !isOptionAtBottom,
+        verticalValue: -OPTION_BAR_HEIGHT
+      })
+
+      const scrollBarWidth = doc.documentElement.scrollHeight > doc.documentElement.clientHeight ? SCROLL_BAR_WIDTH : 0
 
       if (width < fullRectWidth) {
         // 选中框宽度小于标签宽度和工具操作条宽度之和加上间距
 
-        // label 是否对齐右侧
-        const isLabelAlignRight = left + labelRect.width + SCROLL_BAR_WIDTH > siteCanvasWidth && labelRect.width > width
+        // 如果labe宽度大于选中框宽度，并且label右侧已经超出画布，则label对齐右侧
+        const isLabelAlignRight = labelRect.width > width && left + labelRect.width + scrollBarWidth > siteCanvasWidth
         if (isLabelAlignRight) {
-          styleObjAlign(labelStyleObj, 'right')
+          labelAlign.align('right')
         }
 
-        // option 是否对齐左侧
-        const isOptionAlignLeft = left + width < optionRect.width && optionRect.width > width
+        // 如果option宽度大于选中框宽度，并且option左侧已经超出画布，则option对齐左侧
+        const isOptionAlignLeft = optionRect.width > width && left + width - optionRect.width < 0
         if (isOptionAlignLeft) {
-          styleObjAlign(optionStyleObj, 'left')
+          optionAlign.align('left')
         }
 
         if (isLabelAtBottom === isOptionAtBottom) {
           // 标签框和工具操作框都在顶部或者都在底部
 
-          // 都放在左侧
-          styleObjAlign(labelStyleObj, 'left')
-          styleObjAlign(optionStyleObj, 'left', labelRect.width + OPTION_SPACE)
-
-          // 都放在右侧
-          if (left + fullRectWidth > siteCanvasWidth) {
-            styleObjAlign(optionStyleObj, 'right')
-            styleObjAlign(labelStyleObj, 'right', optionRect.width + OPTION_SPACE)
+          if (left + fullRectWidth < siteCanvasWidth) {
+            // 都放在左侧
+            labelAlign.align('left')
+            optionAlign.align('left', labelRect.width + OPTION_SPACE)
+          } else {
+            // 都放在右侧
+            optionAlign.align('right')
+            labelAlign.align('right', optionRect.width + OPTION_SPACE)
           }
         }
       } else {
         if (left < 0) {
-          styleObjAlign(labelStyleObj, 'left', Math.min(-left, width - fullRectWidth))
+          labelAlign.align('left', Math.min(-left, width - fullRectWidth))
         }
 
-        if (left + width + SCROLL_BAR_WIDTH > siteCanvasWidth) {
-          styleObjAlign(optionStyleObj, 'right', Math.min(left + width + SCROLL_BAR_WIDTH - siteCanvasWidth, width - fullRectWidth))
+        if (left + width + scrollBarWidth > siteCanvasWidth) {
+          optionAlign.align('right', Math.min(left + width + scrollBarWidth - siteCanvasWidth, width - fullRectWidth))
         }
       }
 
       return {
-        labelStyleValue: styleObj2Str(labelStyleObj),
-        optionStyleValue: styleObj2Str(optionStyleObj)
+        labelStyleValue: labelAlign.toStyleValue(),
+        optionStyleValue: optionAlign.toStyleValue()
       }
     }
 
     watchPostEffect(async () => {
       let { left } = props.selectState
-      const { top, width, height } = props.selectState
+      const { top, width, height, doc } = props.selectState
 
       // nextTick后ref才能获取到元素。需要把监听的依赖放在await之前，否则无法监听变化
       await nextTick()
@@ -393,7 +430,7 @@ export default {
       left -= ((1 - scale) / 2) * siteCanvasRect.width
 
       const { labelStyleValue, optionStyleValue } = getStyleValues(
-        { left, top, width, height },
+        { left, top, width, height, doc },
         siteCanvasRect.width * scale,
         siteCanvasRect.height
       )
