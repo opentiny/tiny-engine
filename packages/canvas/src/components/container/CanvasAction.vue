@@ -283,17 +283,15 @@ export default {
       }
 
       align(position, value = 0) {
-        if (typeof position === 'string') {
-          if (position === 'left' || position === 'right') {
-            this.alignLeft = position === 'left'
-            this.horizontalValue = value
-            return this
-          }
-          if (position === 'top' || position === 'bottom') {
-            this.alignTop = position === 'top'
-            this.horizontalValue = value
-            return this
-          }
+        if (position === 'left' || position === 'right') {
+          this.alignLeft = position === 'left'
+          this.horizontalValue = value
+          return this
+        }
+        if (position === 'top' || position === 'bottom') {
+          this.alignTop = position === 'top'
+          this.horizontalValue = value
+          return this
         }
         return this
       }
