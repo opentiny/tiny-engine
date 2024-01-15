@@ -14,13 +14,14 @@ import Koa2 from 'koa'
 import KoaBody from 'koa-body'
 import KoaStatic from 'koa-static2'
 import path from 'path'
-import MainRoutes from './routes/main-routes'
+import config from '../config/config'
 import ErrorRoutesCatch from './middleware/ErrorRoutesCatch'
 import ErrorRoutes from './routes/error-routes'
+import MainRoutes from './routes/main-routes'
 
 const app = new Koa2()
-const env = process.env.NODE_ENV || 'development' // Current mode
-const PORT = 9090
+const env = config.env
+const PORT = config.port
 app
   .use((ctx, next) => {
     ctx.set('Access-Control-Allow-Origin', '*')
