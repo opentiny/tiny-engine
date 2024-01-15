@@ -40,6 +40,7 @@ importMap.imports = {
   'axios-mock-adapter': `${VITE_CDN_DOMAIN}/axios-mock-adapter@1.21.1/dist/axios-mock-adapter.js`,
   '@opentiny/tiny-engine-webcomponent-core': `${VITE_CDN_DOMAIN}/@opentiny/tiny-engine-webcomponent-core@1/dist/tiny-engine-webcomponent-core.es.js`,
   '@opentiny/tiny-engine-i18n-host': `${VITE_CDN_DOMAIN}/@opentiny/tiny-engine-i18n-host@1/dist/tiny-engine-i18n-host.es.js`,
+  '@opentiny/tiny-engine-builtin-component': `${VITE_CDN_DOMAIN}/@opentiny/tiny-engine-builtin-component@1/dist/index.js`,
   'vue-demi': `${VITE_CDN_DOMAIN}/vue-demi@0.13.11/lib/index.mjs`,
   pinia: `${VITE_CDN_DOMAIN}/pinia@2.0.22/dist/pinia.esm-browser.js`,
   ...tinyVue3Imports,

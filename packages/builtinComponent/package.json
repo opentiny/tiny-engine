@@ -16,10 +16,12 @@
     "directory": "packages/builtinComponent"
   },
   "scripts": {
-    "build": "vite build"
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@opentiny/vue": "~3.10.0"
+    "@opentiny/vue": "~3.10.0",
+    "vite-plugin-css-injected-by-js": "^3.3.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
