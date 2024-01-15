@@ -1,6 +1,9 @@
 <template>
   <div class="className-container">
-    <h6 class="title">全局样式</h6>
+    <h6 class="title">
+      <span>全局样式</span>
+      <link-button :href="docsUrl" class="help-link"></link-button>
+    </h6>
     <div class="selector-container">
       <meta-code-editor
         :modelValue="state.cssContent"
@@ -102,8 +105,8 @@
 import { computed, reactive, ref, nextTick, watch, watchEffect } from 'vue'
 import { Select as TinySelect } from '@opentiny/vue'
 import { setPageCss, getSchema as getCanvasPageSchema, updateRect } from '@opentiny/tiny-engine-canvas'
-import { useProperties, useCanvas, useHistory } from '@opentiny/tiny-engine-controller'
-import { MetaCodeEditor } from '@opentiny/tiny-engine-common'
+import { useProperties, useCanvas, useHistory, useHelp } from '@opentiny/tiny-engine-controller'
+import { MetaCodeEditor, LinkButton } from '@opentiny/tiny-engine-common'
 import { formatString } from '@opentiny/tiny-engine-common/js/ast'
 import useStyle, { updateGlobalStyleStr } from '../../js/useStyle'
 import { stringify, getSelectorArr } from '../../js/parser'
@@ -127,6 +130,8 @@ const OPTION_TYPE = {
   REMOVE: 'remove',
   EDIT: 'edit'
 }
+
+const docsUrl = useHelp().getDocsUrl('stylePanel')
 
 const classNameState = reactive({
   curSelector: '',
@@ -470,6 +475,9 @@ const handleDeleteCurSelector = () => {
   font-size: 14px;
   color: var(--ti-lowcode-className-selector-title-color);
   font-weight: normal;
+  .help-link {
+    vertical-align: middle;
+  }
 }
 
 .selector-container {

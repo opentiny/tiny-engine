@@ -20,7 +20,8 @@ const helpState = {
     datasource: 11,
     i18n: 12,
     page: 2,
-    script: 8
+    script: 8,
+    stylePanel: 6
   }
 }
 
