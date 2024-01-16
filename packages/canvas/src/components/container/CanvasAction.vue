@@ -269,7 +269,7 @@ export default {
     const labelRef = ref(null)
     const labelStyle = ref('')
 
-    const Position = {
+    const positions = {
       LEFT: 'left',
       RIGHT: 'right',
       TOP: 'top',
@@ -296,13 +296,13 @@ export default {
       }
 
       align(position, value = 0) {
-        if (Position.isHorizontal(position)) {
-          this.alignLeft = position === Position.LEFT
+        if (positions.isHorizontal(position)) {
+          this.alignLeft = position === positions.LEFT
           this.horizontalValue = value
           return this
         }
-        if (Position.isVertical(position)) {
-          this.alignTop = position === Position.TOP
+        if (positions.isVertical(position)) {
+          this.alignTop = position === positions.TOP
           this.horizontalValue = value
           return this
         }
@@ -340,7 +340,7 @@ export default {
               return `${key}:${value}`
             }
 
-            const val = Position.isHorizontal(key) ? num - SELECTION_BORDER_WIDTH : num
+            const val = positions.isHorizontal(key) ? num - SELECTION_BORDER_WIDTH : num
             return `${key}:${val}px`
           })
           .join(';')
@@ -380,13 +380,13 @@ export default {
         // 如果labe宽度大于选中框宽度，并且label右侧已经超出画布，则label对齐右侧
         const isLabelAlignRight = labelRect.width > width && left + labelRect.width + scrollBarWidth > siteCanvasWidth
         if (isLabelAlignRight) {
-          labelAlign.align(Position.RIGHT)
+          labelAlign.align(positions.RIGHT)
         }
 
         // 如果option宽度大于选中框宽度，并且option左侧已经超出画布，则option对齐左侧
         const isOptionAlignLeft = optionRect.width > width && left + width - optionRect.width < 0
         if (isOptionAlignLeft) {
-          optionAlign.align(Position.LEFT)
+          optionAlign.align(positions.LEFT)
         }
 
         if (isLabelAtBottom === isOptionAtBottom) {
@@ -394,22 +394,22 @@ export default {
 
           if (left + fullRectWidth < siteCanvasWidth) {
             // 都放在左侧
-            labelAlign.align(Position.LEFT)
-            optionAlign.align(Position.LEFT, labelRect.width + OPTION_SPACE)
+            labelAlign.align(positions.LEFT)
+            optionAlign.align(positions.LEFT, labelRect.width + OPTION_SPACE)
           } else {
             // 都放在右侧
-            optionAlign.align(Position.RIGHT)
-            labelAlign.align(Position.RIGHT, optionRect.width + OPTION_SPACE)
+            optionAlign.align(positions.RIGHT)
+            labelAlign.align(positions.RIGHT, optionRect.width + OPTION_SPACE)
           }
         }
       } else {
         if (left < 0) {
-          labelAlign.align(Position.LEFT, Math.min(-left, width - fullRectWidth))
+          labelAlign.align(positions.LEFT, Math.min(-left, width - fullRectWidth))
         }
 
         if (left + width + scrollBarWidth > siteCanvasWidth) {
           optionAlign.align(
-            Position.RIGHT,
+            positions.RIGHT,
             Math.min(left + width + scrollBarWidth - siteCanvasWidth, width - fullRectWidth)
           )
         }
