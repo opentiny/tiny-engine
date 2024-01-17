@@ -11,6 +11,6 @@
  */
 
 module.exports = {
-  port: 9090,
+  port: process.env.MOCK_PORT || 9090,
   env: process.env.NODE_ENV || 'development' // Current mode
 }
