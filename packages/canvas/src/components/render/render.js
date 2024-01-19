@@ -145,7 +145,7 @@ export const newFn = (...argv) => {
   return new Fn(...argv)
 }
 
-const parseExpression = (data, scope, ctx, jsx = false) => {
+const parseExpression = (data, scope, ctx, isJsx = false) => {
   try {
     if (data.value.indexOf('this.i18n') > -1) {
       ctx.i18n = i18nHost.global.t
@@ -153,15 +153,15 @@ const parseExpression = (data, scope, ctx, jsx = false) => {
       ctx.t = i18nHost.global.t
     }
 
-    const expression = jsx ? transformJSX(data.value) : data.value
+    const expression = isJsx ? transformJSX(data.value) : data.value
     return newFn('$scope', `with($scope || {}) { return ${expression} }`).call(ctx, {
       ...ctx,
       ...scope,
       slotScope: scope
     })
   } catch (err) {
-    // 解析抛出异常，则再尝试解析 JSX 语法。如果解析 JSX 语法仍然出现错误，jsx 变量会确保不会再次递归执行解析
-    if (!jsx) {
+    // 解析抛出异常，则再尝试解析 JSX 语法。如果解析 JSX 语法仍然出现错误，isJsx 变量会确保不会再次递归执行解析
+    if (!isJsx) {
       return parseExpression(data, scope, ctx, true)
     }
     return undefined
