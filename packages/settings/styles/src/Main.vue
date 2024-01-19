@@ -144,7 +144,6 @@ export default {
       }
 
       addHistory()
-
       updateRect()
     }
 
