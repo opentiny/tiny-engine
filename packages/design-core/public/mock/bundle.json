@@ -10910,7 +10910,7 @@
                   "zh_CN": "基础信息"
                 },
                 "collapse": {
-                  "number": 6,
+                  "number": 10,
                   "text": {
                     "zh_CN": "显示更多"
                   }
@@ -10984,6 +10984,28 @@
                       "zh_CN": "节点唯一标识属性名称"
                     },
                     "labelPosition": "left"
+                  },
+                  {
+                    "property": "render-content",
+                    "label": {
+                      "text": {
+                        "zh_CN": "渲染函数"
+                      }
+                    },
+                    "required": false,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {
+                        "disabled": true,
+                        "placeholder": "请使用变量绑定来绑定函数"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "树节点的内容区的渲染函数"
+                    }
                   },
                   {
                     "property": "icon-trigger-click-node",
@@ -11530,6 +11552,28 @@
                     },
                     "description": {
                       "zh_CN": "显示的内容，也可以通过 slot#content 传入 DOM"
+                    }
+                  },
+                  {
+                    "property": "render-content",
+                    "label": {
+                      "text": {
+                        "zh_CN": "渲染函数"
+                      }
+                    },
+                    "required": false,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {
+                        "disabled": true,
+                        "placeholder": "请使用变量绑定来绑定函数"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "自定义渲染函数，返回需要渲染的节点内容"
                     }
                   },
                   {

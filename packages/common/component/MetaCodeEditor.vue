@@ -139,7 +139,7 @@ export default {
 
     watchEffect(() => {
       const { modelValue, dataType } = props
-      const val = dataType ? modelValue?.value : modelValue
+      const val = dataType ? modelValue?.value || '' : modelValue
       value.value = typeof val === 'string' ? val : JSON.stringify(val, null, 2)
     })
 
