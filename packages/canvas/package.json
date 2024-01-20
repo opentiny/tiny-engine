@@ -27,6 +27,7 @@
   "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
     "@antv/x6": "^2.17.1",
+    "@antv/x6-vue-shape": "^2.1.1",
     "@babel/core": "7.18.13",
     "@opentiny/tiny-engine-builtin-component": "workspace:*",
     "@opentiny/tiny-engine-common": "workspace:*",

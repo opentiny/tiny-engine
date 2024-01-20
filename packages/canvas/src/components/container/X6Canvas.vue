@@ -1,40 +1,195 @@
 <template>
-  <div id="container" style="width: 100%; height: 100%"></div>
+  <div style="width: 100%; height: 100%">
+    <div id="container" style="width: 100%; height: 100%"></div>
+    <teleport-content />
+  </div>
 </template>
 
 <script setup>
 import { onMounted } from 'vue'
-import { Graph } from '@antv/x6'
+import { useX6 } from './x6.js'
+import { register, getTeleport } from '@antv/x6-vue-shape'
+import AlgoNode from './AlgoNode.vue'
+
+const teleportContent = getTeleport()
 
 onMounted(() => {
-  new Graph({
-    container: document.getElementById('container'),
-    background: {
-      color: '#F2F7FA'
-    },
-    grid: {
-      visible: true,
-      type: 'doubleMesh',
-      args: [
-        {
-          color: '#eee',
-          thickness: 1
+  const g = useX6('container')
+  // register()
+  register({
+    shape: 'dag-node',
+    width: 180,
+    height: 36,
+    component: AlgoNode,
+    ports: {
+      groups: {
+        top: {
+          position: 'top',
+          attrs: {
+            circle: {
+              r: 4,
+              magnet: true,
+              stroke: '#C2C8D5',
+              strokeWidth: 1,
+              fill: '#fff'
+            }
+          }
         },
-        {
-          color: '#ddd',
-          thickness: 1,
-          factor: 4
+        bottom: {
+          position: 'bottom',
+          attrs: {
+            circle: {
+              r: 4,
+              magnet: true,
+              stroke: '#C2C8D5',
+              strokeWidth: 1,
+              fill: '#fff'
+            }
+          }
         }
-      ]
-    },
-    panning: true,
-    mousewheel: {
-      enabled: true,
-      modifiers: 'Ctrl',
-      maxScale: 4,
-      minScale: 0.2
-    },
-    autoResize: true
+      }
+    }
   })
+  g.addNode({
+    shape: 'dag-node',
+    // x: 100,
+    // y: 60,
+    data: {
+      label: 'CNN'
+    },
+    ports: [
+      {
+        id: 'in',
+        group: 'top'
+      },
+      {
+        id: 'out',
+        group: 'bottom'
+      }
+    ]
+  })
+  // g.addNode({
+  //   shape: 'rect',
+  //   x: 100,
+  //   y: 40,
+  //   width: 100,
+  //   height: 40,
+  //   ports: {
+  //     groups: {
+  //       top: {
+  //         position: 'top',
+  //         attrs: {
+  //           circle: {
+  //             magnet: true,
+  //             stroke: '#8f8f8f',
+  //             r: 5,
+  //           },
+  //         },
+  //       },
+  //       bottom: {
+  //         position: 'bottom',
+  //         attrs: {
+  //           circle: {
+  //             magnet: true,
+  //             stroke: '#8f8f8f',
+  //             r: 5,
+  //           },
+  //         },
+  //       },
+  //     },
+  //     items: [
+  //       {
+  //         id: 'in',
+  //         group: 'top',
+  //       },
+  //       {
+  //         id: 'out',
+  //         group: 'bottom',
+  //       },
+  //     ]
+  //   },
+  // })
+  // g.addNode({
+  //   shape: 'rect',
+  //   x: 100,
+  //   y: 40,
+  //   width: 100,
+  //   height: 40,
+  //   ports: {
+  //     groups: {
+  //       top: {
+  //         position: 'top',
+  //         attrs: {
+  //           circle: {
+  //             magnet: true,
+  //             stroke: '#8f8f8f',
+  //             r: 5,
+  //           },
+  //         },
+  //       },
+  //       bottom: {
+  //         position: 'bottom',
+  //         attrs: {
+  //           circle: {
+  //             magnet: true,
+  //             stroke: '#8f8f8f',
+  //             r: 5,
+  //           },
+  //         },
+  //       },
+  //     },
+  //     items: [
+  //       {
+  //         id: 'in',
+  //         group: 'top',
+  //       },
+  //       {
+  //         id: 'out',
+  //         group: 'bottom',
+  //       },
+  //     ]
+  //   },
+  // })
+  // g.addNode({
+  //   shape: 'rect',
+  //   x: 100,
+  //   y: 40,
+  //   width: 100,
+  //   height: 40,
+  //   ports: {
+  //     groups: {
+  //       top: {
+  //         position: 'top',
+  //         attrs: {
+  //           circle: {
+  //             magnet: true,
+  //             stroke: '#8f8f8f',
+  //             r: 5,
+  //           },
+  //         },
+  //       },
+  //       bottom: {
+  //         position: 'bottom',
+  //         attrs: {
+  //           circle: {
+  //             magnet: true,
+  //             stroke: '#8f8f8f',
+  //             r: 5,
+  //           },
+  //         },
+  //       },
+  //     },
+  //     items: [
+  //       {
+  //         id: 'in',
+  //         group: 'top',
+  //       },
+  //       {
+  //         id: 'out',
+  //         group: 'bottom',
+  //       },
+  //     ]
+  //   },
+  // })
 })
 </script>
