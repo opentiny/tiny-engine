@@ -10,21 +10,7 @@
  *
  */
 
-import Breadcrumb from '@opentiny/tiny-engine-toolbar-breadcrumb'
-import Fullscreen from '@opentiny/tiny-engine-toolbar-fullscreen'
-import Lang from '@opentiny/tiny-engine-toolbar-lang'
-import Checkinout from '@opentiny/tiny-engine-toolbar-checkinout'
 import Logo from '@opentiny/tiny-engine-toolbar-logo'
-import Media from '@opentiny/tiny-engine-toolbar-media'
-import Redoundo from '@opentiny/tiny-engine-toolbar-redoundo'
-import Save from '@opentiny/tiny-engine-toolbar-save'
-import Clean from '@opentiny/tiny-engine-toolbar-clean'
-import Preview from '@opentiny/tiny-engine-toolbar-preview'
-import GenerateVue from '@opentiny/tiny-engine-toolbar-generate-vue'
-import Refresh from '@opentiny/tiny-engine-toolbar-refresh'
-import Collaboration from '@opentiny/tiny-engine-toolbar-collaboration'
-import Setting from '@opentiny/tiny-engine-toolbar-setting'
-
 import Materials from '@opentiny/tiny-engine-plugin-materials'
 
 import Props from '@opentiny/tiny-engine-setting-props'
@@ -35,22 +21,8 @@ import '@opentiny/tiny-engine-theme'
 
 const addons = {
   plugins: [Materials],
-  toolbars: [
-    Logo,
-    Breadcrumb,
-    Media,
-    Collaboration,
-    Clean,
-    Refresh,
-    Save,
-    GenerateVue,
-    Preview,
-    Redoundo,
-    Fullscreen,
-    Checkinout,
-    Setting,
-    Lang
-  ],
+
+  toolbars: [Logo],
   settings: [Props, Styles, Events]
 }
 

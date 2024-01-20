@@ -31,6 +31,7 @@ import useNotify from './useNotify'
 import useData from './useData'
 import useMessage from './useMessage'
 import useHelp from './useHelp'
+import useX6 from './useX6'
 
 export const getExample = example
 
@@ -55,5 +56,6 @@ export {
   useNotify,
   useData,
   useMessage,
-  useHelp
+  useHelp,
+  useX6
 }

@@ -172,10 +172,12 @@ export default {
   position: relative;
 
   .site-canvas {
-    height: calc(100% - var(--base-bottom-panel-height, 30px) - 36px);
+    width: 100%;
+    height: 100%;
+    // height: calc(100% - var(--base-bottom-panel-height, 30px) - 36px);
     background: var(--ti-lowcode-breadcrumb-hover-bg);
     position: absolute;
-    margin: 18px 0;
+    // margin: 18px 0;
   }
 }
 </style>

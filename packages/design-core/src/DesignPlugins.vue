@@ -50,13 +50,12 @@
         </div>
       </li>
       <li
-        v-if="robot"
         :key="state.bottomNavLists.length + 1"
         :class="['list-item']"
         :title="state.independence?.title"
         @click="openAIRobot"
       >
-        <div>
+        <div v-if="robot">
           <span class="item-icon">
             <img class="chatgpt-icon" src="../assets/AI.png" />
           </span>

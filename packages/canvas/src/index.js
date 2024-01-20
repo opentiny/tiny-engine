@@ -10,6 +10,7 @@
  *
  */
 
+import AlgoNode from './components/container/AlgoNode.vue'
 import CanvasContainer from './components/container/CanvasContainer.vue'
 import CanvasAction from './components/container/CanvasAction.vue'
 import CanvasDragItem from './components/container/CanvasDragItem.vue'
@@ -96,7 +97,8 @@ export {
   getGlobalState,
   getDocument,
   canvasDispatch,
-  createRender
+  createRender,
+  AlgoNode
 }
 
 export default CanvasContainer

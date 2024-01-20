@@ -1,10 +1,8 @@
 <template>
-  <canvas-resize>
-    <x6-canvas />
-  </canvas-resize>
+  <x6-canvas />
 </template>
 
 <script setup>
 import X6Canvas from './X6Canvas.vue'
-import CanvasResize from './CanvasResize.vue'
+// import CanvasResize from './CanvasResize.vue'
 </script>
