@@ -23,7 +23,7 @@ export default {
   setup() {
     const { PLUGIN_NAME, getPluginApi } = useLayout()
     const { getEditBlock } = getPluginApi(PLUGIN_NAME.BlockManage)
-    const editBlock = computed(getEditBlock)
+    const editBlock = computed(getEditBlock ?? (() => {}))
 
     return {
       editBlock

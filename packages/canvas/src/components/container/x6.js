@@ -1,4 +1,6 @@
 import { Graph, Path } from '@antv/x6'
+import { register } from '@antv/x6-vue-shape'
+import AlgoNode from './AlgoNode.vue'
 /**
  *
  * @param {`in-${string}` | `out-${string}`} a
@@ -69,8 +71,11 @@ const DEFAULT_OPTION = {
     }
   }
 }
-
+let ready = false
 const graphPreapre = () => {
+  if (ready) {
+    return ready
+  }
   Graph.registerEdge(
     'dag-edge',
     {
@@ -85,6 +90,40 @@ const graphPreapre = () => {
     },
     true
   )
+  register({
+    shape: 'dag-node',
+    width: 180,
+    height: 36,
+    component: AlgoNode,
+    ports: {
+      groups: {
+        top: {
+          position: 'top',
+          attrs: {
+            circle: {
+              r: 4,
+              magnet: true,
+              stroke: '#C2C8D5',
+              strokeWidth: 1,
+              fill: '#fff'
+            }
+          }
+        },
+        bottom: {
+          position: 'bottom',
+          attrs: {
+            circle: {
+              r: 4,
+              magnet: true,
+              stroke: '#C2C8D5',
+              strokeWidth: 1,
+              fill: '#fff'
+            }
+          }
+        }
+      }
+    }
+  })
   Graph.registerConnector(
     'algo-connector',
     (s, e) => {
@@ -106,7 +145,8 @@ const graphPreapre = () => {
     true
   )
   // TODO: 从后端获取node
-  return true
+  ready = true
+  return ready
 }
 
 /**

@@ -8,64 +8,28 @@
 <script setup>
 import { onMounted } from 'vue'
 import { useX6 } from './x6.js'
-import { register, getTeleport } from '@antv/x6-vue-shape'
-import AlgoNode from './AlgoNode.vue'
+import { getTeleport } from '@antv/x6-vue-shape'
 
 const teleportContent = getTeleport()
 
 onMounted(() => {
-  const g = useX6('container')
-  // register()
-  register({
-    shape: 'dag-node',
-    width: 180,
-    height: 36,
-    component: AlgoNode,
-    ports: {
-      groups: {
-        top: {
-          position: 'top',
-          attrs: {
-            circle: {
-              r: 4,
-              magnet: true,
-              stroke: '#C2C8D5',
-              strokeWidth: 1,
-              fill: '#fff'
-            }
-          }
-        },
-        bottom: {
-          position: 'bottom',
-          attrs: {
-            circle: {
-              r: 4,
-              magnet: true,
-              stroke: '#C2C8D5',
-              strokeWidth: 1,
-              fill: '#fff'
-            }
-          }
-        }
-      }
-    }
-  })
-  g.addNode({
-    shape: 'dag-node',
+  useX6('container')
+  // g.addNode({
+  //   shape: 'dag-node',
 
-    data: {
-      label: 'CNN'
-    },
-    ports: [
-      {
-        id: 'in',
-        group: 'top'
-      },
-      {
-        id: 'out',
-        group: 'bottom'
-      }
-    ]
-  })
+  //   data: {
+  //     label: 'CNN'
+  //   },
+  //   ports: [
+  //     {
+  //       id: 'in',
+  //       group: 'top'
+  //     },
+  //     {
+  //       id: 'out',
+  //       group: 'bottom'
+  //     }
+  //   ]
+  // })
 })
 </script>
