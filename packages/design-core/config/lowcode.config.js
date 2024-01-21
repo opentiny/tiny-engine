@@ -10,12 +10,33 @@
  *
  */
 
+/**
+ * @typedef {Object} CanvasOptionsItem
+ * @prop  {string[]} material
+ * @prop  {string[]} scripts
+ * @prop  {string[]} styles
+ *
+ * @typedef {{[x:string]:CanvasOptionsItem}} CanvasOptions
+ *
+ * @typedef {Object} Config
+ * @prop {'light'|'dark'} theme
+ * @prop {'paddlepaddle'} dslMode
+ * @prop {string} delHost
+ * @prop {string[]} toolbarOptions
+ * @prop {string[]} pluginOptions
+ * @prop {CanvasOptions} canvasOptions
+ * @prop {string} platformHost
+ * @prop {string} appHost
+ * @prop {string} materialHost
+ * @prop {number} platformId
+ * @prop {number} defaultImportLayout
+ */
 export default {
   // 编辑器主题类型， 取值：dark暗色系，light浅色系, 对应的npm包名为：@opentiny/tiny-engine-theme-${theme}, 暗色主题名需要以dark开头
   theme: 'light',
 
-  // 当前面板技术栈类型，DSL转义参数， 其取值有: Angular、React、HTML、Vue、Flowchart
-  dslMode: 'Vue',
+  // 当前面板技术栈类型，DSL转义参数， 其取值有: PaddlePaddle ... (后续追加更多)
+  dslMode: 'paddlepaddle',
 
   // DSL 代码转换的服务地址
   dslHost: '',
@@ -27,57 +48,11 @@ export default {
   pluginOptions: [],
 
   canvasOptions: {
-    Angular: {},
-    Vue: {
+    paddlepaddle: {
       material: ['http://localhost:8080/mock/bundle.json'],
       scripts: [],
       styles: ['http://localhost:8080/tiny-vue.css']
-    },
-    React: {},
-    HTML: {},
-    Flowchart: {}
-  },
-
-  // 生命周期函数
-  lifeCyclesOptions: {
-    Angular: [
-      '_constructor_',
-      'ngOnInit',
-      'ngOnChanges',
-      'ngDoCheck',
-      'ngAfterContentInit',
-      'ngAfterContentChecked',
-      'ngAfterViewInit',
-      'ngAfterViewChecked',
-      'ngOnDestroy'
-    ],
-    Vue: [
-      'setup',
-      'onBeforeMount',
-      'onMounted',
-      'onBeforeUpdate',
-      'onUpdated',
-      'onBeforeUnmount',
-      'onUnmounted',
-      'onErrorCaptured',
-      'onActivated',
-      'onDeactivated'
-    ],
-    HTML: [],
-    React: [
-      'componentWillMount',
-      'componentDidMount',
-      'componentWillReceiveProps',
-      'shouldComponentUpdate',
-      'componentWillUpdate',
-      'componentDidUpdate',
-      'componentWillUnmount'
-    ]
-  },
-
-  // 生命周期使用提示
-  lifeCycleTips: {
-    Vue: '通过Vue解构出来的方法都可以在setup这里使用，比如watch、computed、watchEffect等'
+    }
   },
 
   // 设计器服务的host

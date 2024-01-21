@@ -1,13 +1,39 @@
+/**
+ * @typedef {Object} MaterialProperty
+ * @property {string} id
+ * @property {{zh_CN:string,en_US:string}} label
+ * @property {'number'|'string'|'boolean'|'enums'} type
+ * @property {{id:number,label:string,value:any,default?:boolean}[]} [enums]
+ */
+
+/**
+ *
+ * @typedef {Object} MaterialInfo - 物料信息
+ * @prop {{zh_CN: string, en_US: string}} label - 物料名称
+ * @prop {string|undefined} nnName - 如果为网络，网络名称
+ * @prop {string} desc - 简介
+ * @prop {boolean} nn - 是否为网络
+ * @prop {MaterialProperty[]} properties - 配置信息
+ *
+ */
+/**
+ * @typedef {{materials: MaterialInfo[]}} Materials
+ */
+
 import { Graph, Path } from '@antv/x6'
 import { register } from '@antv/x6-vue-shape'
-import AlgoNode from '@opentiny/tiny-engine-canvas'
+import { AlgoNode } from '@opentiny/tiny-engine-canvas'
+import { Selection } from '@antv/x6-plugin-selection'
+import { Keyboard } from '@antv/x6-plugin-keyboard'
 /**
  *
  * @param {`in-${string}` | `out-${string}`} a
  * @param {`in-${string}` | `out-${string}`} b
  */
-/** @type {Graph | undefined} */
-let g
+/**
+ * @type {Graph|null}
+ */
+let g = null
 /** @type {import('@antv/x6').Graph.Options} */
 const DEFAULT_OPTION = {
   background: {
@@ -144,32 +170,78 @@ const graphPreapre = () => {
     },
     true
   )
-  // TODO: 从后端获取node
   ready = true
   return ready
 }
+export const getCanvas = () => g
 /**
  *
- * @param {string} id
- * @param {Partial<import('@antv/x6').Graph.Options>} option
- * @returns {Graph}
+ * @param {MaterialInfo} info
+ */
+const addNode = (info) => {
+  const g = getCanvas()
+  const node = g.addNode({
+    shape: 'dag-node',
+    data: {
+      ...info
+    },
+    ports: [
+      {
+        id: 'in',
+        group: 'top'
+      },
+      {
+        id: 'out',
+        group: 'bottom'
+      }
+    ]
+  })
+  if (!g.getSelectedCellCount()) {
+    g.centerCell(node)
+    return
+  }
+  const selectNode = g.getSelectedCells().sort((a, b) => a.getBBox().bottom - b.getBBox().bottom)[0]
+  const {
+    bottom,
+    center: { x }
+  } = selectNode.getBBox()
+  const { height } = node.getSize()
+  node.setPosition({ x: x, y: bottom + height })
+}
+/**
+ *
+ * @param {string} [id]
+ * @param {Partial<import('@antv/x6').Graph.Options>} [option]
  */
 const useX6 = (id, option) => {
-  if (g) {
-    return g
-  }
-
   if (!graphPreapre()) {
     throw new Error('出现未知错误')
   }
-  g = new Graph({
-    container: document.getElementById(id),
-    ...{
-      ...option,
-      ...DEFAULT_OPTION
-    }
-  })
-  return g
+  if (!g) {
+    g = new Graph({
+      container: document.getElementById(id),
+      ...{
+        ...option,
+        ...DEFAULT_OPTION
+      }
+    })
+    g.use(
+      new Selection({
+        enabled: true,
+        multiple: true,
+        rubberband: true,
+        movable: true,
+        showNodeSelectionBox: true,
+        modifiers: ['shift', 'ctrl']
+      })
+    )
+    g.use(new Keyboard())
+    g.bindKey('delete', () => {
+      const selectCells = g.getSelectedCells()
+      g.removeCells(selectCells)
+    })
+  }
+  return { g: g, addNode, getCanvas }
 }
 
 export default useX6

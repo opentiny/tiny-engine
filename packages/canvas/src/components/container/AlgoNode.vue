@@ -11,8 +11,10 @@
 </template>
 
 <script setup>
-import { inject, ref, onMounted, watch } from 'vue'
+import { inject, ref, onMounted, watch, onUnmounted } from 'vue'
 import { _default } from '@opentiny/tiny-engine-common/js/utils'
+import i18n from '../../i18n'
+const locale = i18n.global.locale
 /**
  * @type {()=>void}
  */
@@ -22,10 +24,10 @@ const getNode = inject('getNode')
  */
 const node = getNode()
 /**
- * @type {{ label: string, fail: boolean }}
+ * @type {import('@opentiny/tiny-engine-controller/useX6').MaterialInfo['label']}
  */
-const { label: _label, fail: _fail } = _default(node.getData(), { label: '', fail: false })
-const label = ref(_label)
+const { label: _label, fail: _fail } = _default(node.getData(), { label: { zh_CN: '', en_US: '' }, fail: false })
+const label = ref(_label[locale.value])
 const fail = ref(_fail)
 /**
  * @type {HTMLElement}
@@ -39,21 +41,25 @@ node.on('change:data', ({ current }) => {
     fail.value = current.fail
   }
 })
+let stop
 onMounted(() => {
-  watch(
+  node.resize(wrapper.value.clientWidth, wrapper.value.clientHeight, { absolute: true })
+  stop = watch(
     label,
     () => {
-      node.resize(wrapper.value.clientWidth, wrapper.value.clientHeight)
+      node.resize(wrapper.value.clientWidth, wrapper.value.clientHeight, { absolute: true })
     },
-    { immediate: true }
+    { immediate: true, flush: 'pre' }
   )
 })
+onUnmounted(() => stop())
 </script>
 
 <style scoped>
 .node {
   width: fit-content;
   min-width: 114px;
+  max-width: 120px;
   display: flex;
   padding: 8px 12px;
   border-radius: 4px;
@@ -64,6 +70,7 @@ onMounted(() => {
   border-left: 4px solid #5f95ff;
 }
 .node > span {
+  /* white-space: nowrap; */
   color: #666;
   font-size: 12px;
 }

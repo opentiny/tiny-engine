@@ -13,17 +13,13 @@
 import Logo from '@opentiny/tiny-engine-toolbar-logo'
 import Materials from '@opentiny/tiny-engine-plugin-materials'
 
-import Props from '@opentiny/tiny-engine-setting-props'
-import Events from '@opentiny/tiny-engine-setting-events'
-import Styles from '@opentiny/tiny-engine-setting-styles'
-
 import '@opentiny/tiny-engine-theme'
 
 const addons = {
   plugins: [Materials],
 
   toolbars: [Logo],
-  settings: [Props, Styles, Events]
+  settings: []
 }
 
 export default addons

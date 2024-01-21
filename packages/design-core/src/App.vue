@@ -1,4 +1,38 @@
+<script setup>
+import { ConfigProvider } from '@opentiny/vue'
+import DesignToolbars from './DesignToolbars.vue'
+import DesignPlugins from './DesignPlugins.vue'
+import DesignCanvas from './DesignCanvas.vue'
+import DesignSettings from './DesignSettings.vue'
+import designSmbConfig from '@opentiny/vue-design-smb'
+import { useLayout } from '@opentiny/tiny-engine-controller'
+const { layoutState } = useLayout()
+const { plugins } = layoutState
+const toggleNav = ({ item }) => {
+  if (!item.id) return
+  plugins.render = plugins.render === item.id ? null : item.id
+}
+</script>
 <template>
+  <config-provider :design="designSmbConfig">
+    <div id="tiny-engine">
+      <design-toolbars></design-toolbars>
+      <div class="tiny-engine-main">
+        <div class="tiny-engine-left-wrap">
+          <div class="tiny-engine-content-wrap">
+            <design-plugins :render-panel="plugins.render" @click="toggleNav"></design-plugins>
+            <design-canvas></design-canvas>
+          </div>
+        </div>
+        <div class="tiny-engine-right-wrap">
+          <design-settings v-show="layoutState.settings.showDesignSettings" ref="right"></design-settings>
+        </div>
+      </div>
+    </div>
+  </config-provider>
+</template>
+
+<!-- <template>
   <tiny-config-provider :design="designSmbConfig">
     <div id="tiny-engine">
       <design-toolbars></design-toolbars>
@@ -34,9 +68,9 @@ import materials from '@opentiny/tiny-engine-plugin-materials'
 import { useBroadcastChannel } from '@vueuse/core'
 import { constants } from '@opentiny/tiny-engine-utils'
 
-const { message } = useModal()
-const { requestInitBlocks } = blockPlugin.api
-const { fetchGroups } = materials.api
+// const { message } = useModal()
+// const { requestInitBlocks } = blockPlugin.api
+// const { fetchGroups } = materials.api
 const { BROADCAST_CHANNEL } = constants
 
 export default {
@@ -90,27 +124,27 @@ export default {
     }
 
     useEditorInfo().getUserInfo()
-    useResource().fetchResource()
+    // useResource().fetchResource()
 
     const handlePopStateEvent = () => {
-      useResource().handlePopStateEvent()
+      // useResource().handlePopStateEvent()
     }
 
     window.addEventListener('popstate', handlePopStateEvent)
 
     if (isVsCodeEnv) {
       const appId = useApp().appInfoState.selectedId
-      fetchGroups(appId)
-        .then((groups) => {
-          const blocks = []
-          groups.forEach((group) => {
-            blocks.push(...group.blocks)
-          })
-          requestInitBlocks(blocks)
-        })
-        .catch((error) => {
-          message({ message: error.message, status: 'error' })
-        })
+      // fetchGroups(appId)
+      //   .then((groups) => {
+      //     const blocks = []
+      //     groups.forEach((group) => {
+      //       blocks.push(...group.blocks)
+      //     })
+      //     requestInitBlocks(blocks)
+      //   })
+      //   .catch((error) => {
+      //     message({ message: error.message, status: 'error' })
+      //   })
     }
 
     onUnmounted(() => {
@@ -129,6 +163,7 @@ export default {
   }
 }
 </script>
+ -->
 
 <style lang="less" scoped>
 #tiny-engine {

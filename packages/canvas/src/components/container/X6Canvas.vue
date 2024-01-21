@@ -14,23 +14,25 @@ import { getTeleport } from '@antv/x6-vue-shape'
 const teleportContent = getTeleport()
 
 onMounted(() => {
-  const g = useX6('container')
-  g.addNode({
-    shape: 'dag-node',
+  useX6('container')
 
-    data: {
-      label: 'CNN'
-    },
-    ports: [
-      {
-        id: 'in',
-        group: 'top'
-      },
-      {
-        id: 'out',
-        group: 'bottom'
-      }
-    ]
-  })
+  // const g = getCanvas()
+  // appendNode({
+  //   shape: 'dag-node',
+
+  //   data: {
+  //     label: 'CNN'
+  //   },
+  //   ports: [
+  //     {
+  //       id: 'in',
+  //       group: 'top'
+  //     },
+  //     {
+  //       id: 'out',
+  //       group: 'bottom'
+  //     }
+  //   ]
+  // })
 })
 </script>

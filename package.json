@@ -68,6 +68,8 @@
   },
   "dependencies": {
     "@antv/x6": "^2.17.1",
+    "@antv/x6-plugin-keyboard": "^2.2.2",
+    "@antv/x6-plugin-selection": "^2.2.1",
     "@antv/x6-vue-shape": "^2.1.1"
   }
 }
