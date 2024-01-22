@@ -120,7 +120,7 @@ export default {
     const robotComponent = ref(null)
     const { isTemporaryPage } = usePage()
     const HELP_PLUGIN_ID = 'EditorHelp'
-    const robot = Addons.plugins.filter((v) => v.id === 'Robot').length === 1
+    const robot = Addons.plugins.filter((v) => v.id === 'Robot').length !== 0
 
     const {
       pluginState,
