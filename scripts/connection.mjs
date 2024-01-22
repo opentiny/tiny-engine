@@ -95,11 +95,36 @@ class MysqlConnection {
   }
 
   /**
+   * 校验组件字段数据
+   * @param {object} component 组件数据
+   * @returns boolean 校验组件字段是否失败，true-有字段出错
+   */
+  validateFields(component) {
+    const longtextFields = ['name', 'npm', 'snippets', 'schema_fragment', 'configure', 'component_metadata']
+
+    return Object.entries(component).some(([key, value]) => {
+      if (longtextFields.includes(key) && value !== null && typeof value !== 'object') {
+        logger.error(`组件 ${component.component} 的字段 ${key} 值类型有误`)
+
+        return true
+      }
+
+      return false
+    })
+  }
+
+  /**
    * 生成更新组件的sql语句
    * @param {object} component 组件数据
    * @returns 更新组件的sql语句
    */
   updateComponent(component) {
+    const valid = this.validateFields(component)
+
+    if (valid) {
+      return
+    }
+
     const values = []
     let sqlContent = `update ${componentsTableName} set `
 
@@ -164,6 +189,15 @@ class MysqlConnection {
    * @returns 新增组件的sql语句
    */
   insertComponent(component) {
+    const valid = this.validateFields(component)
+
+    if (valid) {
+      return
+    }
+
+    const defaultName = {
+      zh_CN: component.component
+    }
     const defaultNpm = {
       package: '',
       exportName: '',
@@ -195,7 +229,7 @@ class MysqlConnection {
     }
     const {
       version = '1.0.0',
-      name,
+      name = defaultName,
       component: componentName,
       icon,
       description,
