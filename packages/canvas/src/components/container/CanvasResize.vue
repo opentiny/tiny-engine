@@ -79,14 +79,19 @@ export default {
       useLayout().setDimension({ scale: 1 })
       nextTick(() => {
         const canvasWrap = document.querySelector('#canvas-wrap')
+
+        if (!canvasWrap) {
+          return
+        }
+
         const rate = canvasWrap.offsetWidth / resizeDom.value.offsetWidth
         useLayout().setDimension({
-          scale: rate > 1 ? 1 : rate
+          scale: Math.min(rate, 1)
         })
       })
     }
 
-    watch(() => useLayout().getDimension().width, setScale, { flush: 'post' })
+    watch(() => useLayout().getDimension().width, setScale, { flush: 'post', immediate: true })
 
     watch(() => useLayout().getPluginState().fixedPanels, setScale, { flush: 'post' })
 
