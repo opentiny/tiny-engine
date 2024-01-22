@@ -1,30 +1,43 @@
+import { Graph, Path } from '@antv/x6'
+import { register } from '@antv/x6-vue-shape'
+import { AlgoNode } from '@opentiny/tiny-engine-canvas'
+import { Selection } from '@antv/x6-plugin-selection'
+import { Keyboard } from '@antv/x6-plugin-keyboard'
+/**
+ * @typedef {Object}
+ * @prop {'L1Decay' | 'L2Decay'} type
+ * @prop {number} val
+ */
+/**
+ * @typedef {Object} ParamAttr
+ * @prop {string} [name]
+ * @prop {null} [initializer]
+ * @prop {number} [learning_rate]
+ * @prop {Regularizer} [regularizer]
+ * @prop {boolean} [trainable]
+ * @prop {boolean} [do_model_average]
+ * @prop {boolean} [need_clip]
+ */
 /**
  * @typedef {Object} MaterialProperty
  * @property {string} id
  * @property {{zh_CN:string,en_US:string}} label
- * @property {'number'|'string'|'boolean'|'enums'} type
+ * @property {'number'|'string'|'boolean'|'enums'|'ParamAttr'} type
  * @property {{id:number,label:string,value:any,default?:boolean}[]} [enums]
+ * @property {any} default
+ * @prop {number | string | boolean | ParamAttr} data - 用于存储Property数据
  */
-
 /**
- *
  * @typedef {Object} MaterialInfo - 物料信息
  * @prop {{zh_CN: string, en_US: string}} label - 物料名称
  * @prop {string|undefined} nnName - 如果为网络，网络名称
  * @prop {string} desc - 简介
  * @prop {boolean} nn - 是否为网络
  * @prop {MaterialProperty[]} properties - 配置信息
- *
  */
 /**
  * @typedef {{materials: MaterialInfo[]}} Materials
  */
-
-import { Graph, Path } from '@antv/x6'
-import { register } from '@antv/x6-vue-shape'
-import { AlgoNode } from '@opentiny/tiny-engine-canvas'
-import { Selection } from '@antv/x6-plugin-selection'
-import { Keyboard } from '@antv/x6-plugin-keyboard'
 /**
  *
  * @param {`in-${string}` | `out-${string}`} a
@@ -174,12 +187,53 @@ const graphPreapre = () => {
   return ready
 }
 export const getCanvas = () => g
+const processData = {
+  /**
+   *
+   * @param {string} [defaultVal]
+   * @returns {string}
+   */
+  string: (defaultVal) => defaultVal ?? '',
+  /**
+   *
+   * @param {number} [defaultVal]
+   * @returns {number}
+   */
+  number: (defaultVal) => defaultVal ?? 0,
+  /**
+   *
+   * @param {boolean} [defaultVal]
+   * @returns {boolean}
+   */
+  boolean: (defaultVal) => defaultVal ?? false,
+  /**
+   *
+   * @param {MaterialProperty['enums']} [defaultVal]
+   * @returns {Extract<MaterialProperty['enums'],number>|undefined}
+   */
+  enums: (defaultVal) =>
+    defaultVal ? defaultVal.filter((v) => v.default)[0].value ?? defaultVal.sort((a, b) => a.id - b.id)[0].value : '',
+  /**
+   *
+   * @param {ParamAttr} defaultVal
+   */
+  ParamAttr: (defaultVal) => {
+    return defaultVal ?? {}
+  }
+}
 /**
  *
  * @param {MaterialInfo} info
  */
 const addNode = (info) => {
   const g = getCanvas()
+  info.properties = info.properties.map((p) => {
+    let data = processData[p.type](p.default)
+    return {
+      ...p,
+      data
+    }
+  })
   const node = g.addNode({
     shape: 'dag-node',
     data: {
@@ -207,6 +261,14 @@ const addNode = (info) => {
   } = selectNode.getBBox()
   const { height } = node.getSize()
   node.setPosition({ x: x, y: bottom + height })
+}
+/**
+ * @template T
+ * @param {import('@antv/x6')['Cell']} cell
+ * @returns {T extends any ? MaterialInfo : T}
+ */
+const getData = (cell) => {
+  return cell.getData()
 }
 /**
  *
@@ -241,7 +303,7 @@ const useX6 = (id, option) => {
       g.removeCells(selectCells)
     })
   }
-  return { g: g, addNode, getCanvas }
+  return { g: g, addNode, getCanvas, getData }
 }
 
 export default useX6
