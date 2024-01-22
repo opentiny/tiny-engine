@@ -50,6 +50,7 @@
         </div>
       </li>
       <li
+        v-if="robot"
         :key="state.bottomNavLists.length + 1"
         :class="['list-item']"
         :title="state.independence.title"
@@ -119,6 +120,7 @@ export default {
     const robotComponent = ref(null)
     const { isTemporaryPage } = usePage()
     const HELP_PLUGIN_ID = 'EditorHelp'
+    const robot = Addons.plugins.filter((v) => v.id === 'Robot').length === 1
 
     const {
       pluginState,
@@ -213,7 +215,8 @@ export default {
       iconComponents,
       completed,
       doCompleted,
-      pluginState
+      pluginState,
+      robot
     }
   }
 }
