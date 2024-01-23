@@ -40,16 +40,15 @@ function genUtilsPlugin(options = {}) {
   return {
     name: 'tinyengine-plugin-generatecode-utils',
     description: 'transform utils schema to utils code',
-    parseSchema(schema) {
+    // parseSchema(schema) {
+    //   const { utils } = schema
+    //   return {
+    //     id: 'utils',
+    //     result: utils || []
+    //   }
+    // },
+    transform(schema) {
       const { utils } = schema
-
-      return {
-        id: 'utils',
-        result: utils || []
-      }
-    },
-    transform(transformedSchema) {
-      const { utils } = transformedSchema
 
       if (!Array.isArray(utils)) {
         return
@@ -83,6 +82,7 @@ function genUtilsPlugin(options = {}) {
       `
 
       return {
+        fileType: 'js',
         fileName,
         path,
         fileContent

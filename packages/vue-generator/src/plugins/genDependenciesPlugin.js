@@ -29,13 +29,11 @@ function genDependenciesPlugin(options = {}) {
         utilsDependencies[packageName] = version || 'latest'
       }
 
-      return {
-        id: 'dependencies',
-        result: utilsDependencies
-      }
+      // TODO, 这里缺组件依赖分析
+      return utilsDependencies
     },
-    transform(transformedSchema) {
-      const { dependencies } = transformedSchema
+    transform(schema) {
+      const { dependencies } = this.parseSchema(schema)
       const originPackageItem = this.genResult.find((item) => item.fileName === fileName && item.path === path)
 
       if (!originPackageItem) {
@@ -53,7 +51,7 @@ function genDependenciesPlugin(options = {}) {
         ...dependencies
       }
 
-      this.replaceGenResult({ fileName, path, fileContent: JSON.stringify(originPackageJSON) })
+      this.replaceGenResult({ fileType: 'json', fileName, path, fileContent: JSON.stringify(originPackageJSON) })
     }
   }
 }

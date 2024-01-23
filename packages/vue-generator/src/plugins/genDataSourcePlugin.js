@@ -14,13 +14,10 @@ function genDataSourcePlugin(options = {}) {
     name: 'tinyengine-plugin-generatecode-datasource',
     description: 'transform schema to dataSource plugin',
     parseSchema(schema) {
-      return {
-        id: 'dataSource',
-        result: schema?.dataSource || {}
-      }
+      return schema?.dataSource || {}
     },
-    transform(transformedSchema) {
-      const dataSource = transformedSchema.dataSource
+    transform(schema) {
+      const dataSource = this.parseSchema(schema)
 
       const { dataHandler, errorHandler, willFetch, list } = dataSource || {}
 
@@ -41,6 +38,7 @@ function genDataSourcePlugin(options = {}) {
       }
 
       return {
+        fileType: 'json',
         fileName,
         path,
         fileContent: JSON.stringify(data)

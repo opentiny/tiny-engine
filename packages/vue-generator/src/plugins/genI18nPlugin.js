@@ -15,20 +15,15 @@ function genI18nPlugin(options = {}) {
   return {
     name: 'tinyengine-plugin-generatecode-i18n',
     description: 'transform i18n schema to i18n code plugin',
-    parseSchema(schema) {
-      return {
-        id: 'i18n',
-        result: schema?.i18n || []
-      }
-    },
-    transform(transformedSchema) {
-      const { i18n } = transformedSchema || {}
+    transform(schema) {
+      const i18n = schema?.i18n || []
 
       const res = []
 
       // 生成国际化词条文件
       for (const [key, value] of Object.entries(i18n)) {
         res.push({
+          fileType: 'json',
           fileName: `${key}.json`,
           path,
           fileContent: JSON.stringify(value, null, 2)
@@ -42,6 +37,7 @@ function genI18nPlugin(options = {}) {
 
       // 生成 locale.js
       res.push({
+        fileType: 'json',
         fileName: localeFileName,
         path,
         fileContent: `

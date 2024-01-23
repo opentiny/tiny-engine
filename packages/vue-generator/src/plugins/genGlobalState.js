@@ -20,13 +20,10 @@ function genDependenciesPlugin(options = {}) {
         global_state = []
       }
 
-      return {
-        id: 'globalState',
-        result: global_state
-      }
+      return global_state
     },
-    transform(transformedSchema) {
-      const { globalState } = transformedSchema
+    transform(schema) {
+      const globalState = this.parseSchema(schema)
 
       const res = []
       const ids = []
@@ -61,6 +58,7 @@ function genDependenciesPlugin(options = {}) {
          })
         `
         res.push({
+          fileType: 'js',
           fileName: `${id}.js`,
           path,
           fileContent: storeFiles
@@ -68,6 +66,7 @@ function genDependenciesPlugin(options = {}) {
       }
 
       res.push({
+        fileType: 'js',
         fileName: 'index.js',
         path,
         fileContent: ids.map((item) => `export { ${item} } from './${item}'`).join('\n')

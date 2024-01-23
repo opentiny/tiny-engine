@@ -30,13 +30,10 @@ function genRouterPlugin(options = {}) {
         routes.unshift({ path: '/', redirect: homePath })
       }
 
-      return {
-        id: 'routes',
-        result: routes
-      }
+      return routes
     },
-    transform(transformedSchema) {
-      const { routes: routesList } = transformedSchema || {}
+    transform(schema) {
+      const { routes: routesList } = this.parseSchema(schema)
 
       // TODO: 支持 hash 模式、history 模式
       const importSnippet = "import { createRouter, createWebHashHistory } from 'vue-router'"
@@ -65,6 +62,7 @@ function genRouterPlugin(options = {}) {
       const routeSnippets = `const routes = [${routes.join(',')}]`
 
       const res = {
+        fileType: 'js',
         fileName,
         path,
         fileContent: `${importSnippet}\n ${routeSnippets} \n ${exportSnippet}`
