@@ -36,16 +36,19 @@ const getTemplate = (context, str) => {
 export function generateTemplate(context) {
   return [
     {
+      fileType: 'md',
       fileName: 'README.md',
       paths: '.',
       fileContent: getTemplate(context, readmeFile)
     },
     {
+      fileType: 'js',
       fileName: 'vite.config.js',
       paths: '.',
       fileContent: getTemplate(context, viteConfigFile)
     },
     {
+      fileType: 'json',
       fileName: 'package.json',
       paths: '.',
       fileContent: getPackageJson(context)
@@ -56,46 +59,55 @@ export function generateTemplate(context) {
       fileContent: getTemplate(context, gitIgnoreFile)
     },
     {
+      fileType: 'html',
       fileName: 'index.html',
       paths: '.',
       fileContent: getTemplate(context, entryHTMLFile)
     },
     {
+      fileType: 'js',
       fileName: 'main.js',
       paths: './src',
       fileContent: getTemplate(context, mainJSFile)
     },
     {
+      fileType: 'vue',
       fileName: 'App.vue',
       paths: './src',
       fileContent: getTemplate(context, appVueFile)
     },
     {
+      fileType: 'js',
       fileName: 'bridge.js',
       paths: './src/lowcodeConfig',
       fileContent: bridgeFile
     },
     {
+      fileType: 'js',
       fileName: 'dataSource.js',
       paths: './src/lowcodeConfig',
       fileContent: dataSourceFile
     },
     {
+      fileType: 'js',
       fileName: 'lowcode.js',
       paths: './src/lowcodeConfig',
       fileContent: lowcodeJSFile
     },
     {
+      fileType: 'js',
       fileName: 'axios.js',
       paths: './src/http',
       fileContent: axiosFile
     },
     {
+      fileType: 'js',
       fileName: 'config.js',
       paths: './src/http',
       fileContent: axiosConfigFile
     },
     {
+      fileType: 'js',
       fileName: 'index.js',
       paths: './src/http',
       fileContent: httpEntryFile

@@ -47,13 +47,10 @@ function genPagePlugin(options = {}) {
         resPageTree.push(newComponentItem)
       }
 
-      return {
-        id: 'pages',
-        result: resPageTree
-      }
+      return resPageTree
     },
-    transform(transformedSchema) {
-      const { pages } = transformedSchema
+    transform(schema) {
+      const pages = this.parseSchema(schema)
 
       const resPage = []
 
@@ -70,9 +67,10 @@ function genPagePlugin(options = {}) {
           continue
         }
 
-        const { panelName, panelValue } = restInfo
+        const { panelName, panelValue, panelType } = restInfo
 
         resPage.push({
+          fileType: panelType,
           fileName: panelName,
           path: page.path,
           fileContent: panelValue

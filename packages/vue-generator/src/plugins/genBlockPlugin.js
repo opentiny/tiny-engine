@@ -17,13 +17,10 @@ function genBlockPlugin(options = {}) {
       const { blockHistories } = schema
       const blockSchema = blockHistories.map((block) => block?.content).filter((schema) => typeof schema === 'object')
 
-      return {
-        id: 'blocks',
-        result: blockSchema
-      }
+      return blockSchema
     },
-    transform(transformedSchema) {
-      const { blocks } = transformedSchema
+    transform(schema) {
+      const blocks = this.parseSchema(schema)
 
       const resBlocks = []
 
@@ -40,9 +37,10 @@ function genBlockPlugin(options = {}) {
           continue
         }
 
-        const { panelName, panelValue } = restInfo
+        const { panelName, panelValue, panelType } = restInfo
 
         resBlocks.push({
+          fileType: panelType,
           fileName: panelName,
           path: blockBasePath,
           fileContent: panelValue

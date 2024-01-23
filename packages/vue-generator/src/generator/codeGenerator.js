@@ -4,22 +4,49 @@ class CodeGenerator {
   plugins = []
   genLogs = []
   schema = {}
-  parsedSchema = {}
   context = {}
+  // 是否允许插件报错
+  tolerateError = true
   constructor(config) {
     this.config = config
     this.plugins = config.plugins
+    this.context = {
+      ...this.context,
+      ...(this.config.context || {})
+    }
+
+    if (typeof config.tolerateError === 'boolean') {
+      this.tolerateError = config.tolerateError
+    }
   }
   getContext() {
     return {
       config: this.config,
       genResult: this.genResult,
-      plugins: this.plugins,
       genLogs: this.genLogs,
-      schema: this.schema,
-      parsedSchema: this.parsedSchema,
       ...this.context
     }
+  }
+  /**
+   * 写入 log
+   * @param {*} log
+   */
+  addGenLogs(log) {
+    this.genLogs.push(log)
+  }
+  /**
+   * 覆写 config
+   * @param {*} newConfig
+   */
+  overrideConfig(newConfig) {
+    this.config = newConfig
+  }
+  /**
+   * 覆写 schema
+   * @param {*} newSchema
+   */
+  overrideSchema(newSchema) {
+    this.schema = newSchema
   }
   getPluginsByHook(hookName) {
     const res = []
@@ -33,19 +60,30 @@ class CodeGenerator {
     return res
   }
   async generate(schema) {
-    const hooks = ['transformStart', 'parseConfig', 'parseSchema', 'transform', 'transformEnd']
-    let err = null
+    const hooks = ['transformStart', 'transform', 'transformEnd']
 
-    this.schema = schema
+    this.schema = this.parseSchema(schema)
+
+    let err = []
+    let curHookName = ''
 
     try {
       for (const hookItem of hooks) {
+        curHookName = hookItem
         const plugins = this.getPluginsByHook(hookItem)
 
         await this[hookItem](plugins)
       }
     } catch (error) {
-      err = error
+      err.push(error)
+
+      if (!this.tolerateError) {
+        throw new Error(
+          `[codeGenerator][generate] get error when running hook: ${curHookName}. error message: ${JSON.stringify(
+            error
+          )}`
+        )
+      }
     } finally {
       const plugins = this.getPluginsByHook('transformEnd')
       await this.transformEnd(plugins, err)
@@ -56,35 +94,18 @@ class CodeGenerator {
       genLogs: this.genLogs
     }
   }
+  /**
+   * 转换开始的钩子，在正式开始转换前，用户可以做一些预处理的动作
+   * @param {*} plugins
+   */
   async transformStart(plugins) {
     for (const pluginItem of plugins) {
-      await pluginItem.apply(this, [this.config])
-    }
-  }
-  async parseConfig(plugins) {
-    for (const pluginItem of plugins) {
-      const newConfig = await pluginItem.apply(this, [this.config])
-
-      if (newConfig) {
-        this.config = newConfig
-      }
-    }
-  }
-
-  async parseSchema(plugins) {
-    for (const pluginItem of plugins) {
-      const parseResult = await pluginItem.apply(this, [this.schema])
-
-      if (!parseResult?.id || !parseResult?.result) {
-        continue
-      }
-
-      this.parsedSchema[parseResult.id] = parseResult.result
+      await pluginItem(this.config, this.getContext())
     }
   }
   async transform(plugins) {
     for (const pluginItem of plugins) {
-      const transformRes = await pluginItem.apply(this, [this.parsedSchema])
+      const transformRes = await pluginItem(this.schema, this.getContext())
 
       if (!transformRes) {
         return
@@ -99,7 +120,22 @@ class CodeGenerator {
   }
   async transformEnd(plugins, err) {
     for (const pluginItem of plugins) {
-      await pluginItem.apply(this, [err])
+      await pluginItem(err)
+    }
+  }
+  parseSchema(schema) {
+    if (!schema) {
+      throw new Error(
+        '[codeGenerator][generate] parseSchema error, schema is not valid, should be json object or json string.'
+      )
+    }
+
+    try {
+      return typeof schema === 'string' ? JSON.parse(schema) : schema
+    } catch (error) {
+      throw new Error(
+        '[codeGenerator][generate] parseSchema error, schema is not valid, please check the input params.'
+      )
     }
   }
   replaceGenResult(resultItem) {

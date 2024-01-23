@@ -98,7 +98,7 @@ function transformSchema(appSchema) {
 /**
  * 整体应用出码
  */
-export async function generateApp(appSchema) {
+export async function generateApp(appSchema, context = {}) {
   const codeGenInstance = new CodeGenerator({
     plugins: [
       genBlockPlugin(),
@@ -109,7 +109,8 @@ export async function generateApp(appSchema) {
       genRouterPlugin(),
       genTemplatePlugin(),
       genUtilsPlugin()
-    ]
+    ],
+    context: context || {}
   })
 
   return codeGenInstance.generate(appSchema)
