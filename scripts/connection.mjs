@@ -95,11 +95,11 @@ class MysqlConnection {
   }
 
   /**
-   * 校验组件字段数据
+   * 校验组件数据是否有效
    * @param {object} component 组件数据
    * @returns boolean 校验组件字段是否失败，false-有字段出错
    */
-  validate(component, file) {
+  isValid(component, file) {
     const longtextFields = ['name', 'npm', 'snippets', 'schema_fragment', 'configure', 'component_metadata']
 
     return Object.entries(component).every(([key, value]) => {
@@ -119,7 +119,7 @@ class MysqlConnection {
    * @returns 更新组件的sql语句
    */
   updateComponent(component, file) {
-    const valid = this.validate(component, file)
+    const valid = this.isValid(component, file)
 
     if (!valid) {
       return
@@ -130,6 +130,38 @@ class MysqlConnection {
 
     Object.keys(component).forEach((key) => {
       const { [key]: value } = component
+      const fields = [
+        'version',
+        'name',
+        'component',
+        'icon',
+        'description',
+        'docUrl',
+        'screenshot',
+        'tags',
+        'keywords',
+        'devMode',
+        'npm',
+        'group',
+        'category',
+        'priority',
+        'snippets',
+        'schema',
+        'configure',
+        'public',
+        'framework',
+        'isOfficial',
+        'isDefault',
+        'tiny_reserved',
+        'tenant',
+        'createBy',
+        'updatedBy'
+      ]
+
+      if (!fields.includes(key)) {
+        return
+      }
+
       const field = this.fieldTransform(key)
       let updateContent = ''
 
@@ -161,10 +193,10 @@ class MysqlConnection {
 
     this.query(sqlContent, component.component)
       .then(() => {
-        logger.success(`组件 ${component.component} 更新成功`)
+        logger.success(`组件 ${component.component} 数据更新成功`)
       })
       .catch((error) => {
-        logger.error(`组件 ${component.component} 更新失败：${error}`)
+        logger.error(`组件 ${component.component} 数据更新失败 ${error}`)
       })
   }
 
@@ -189,7 +221,7 @@ class MysqlConnection {
    * @returns 新增组件的sql语句
    */
   insertComponent(component, file) {
-    const valid = this.validate(component, file)
+    const valid = this.isValid(component, file)
 
     if (!valid) {
       return
@@ -290,11 +322,11 @@ class MysqlConnection {
       .then((result) => {
         const id = result.insertId
 
-        logger.success(`组件 ${component.component} 新增成功`)
+        logger.success(`组件 ${component.component} 数据新增成功`)
         this.relationMaterialHistory(id)
       })
       .catch((error) => {
-        logger.success(`组件 ${component.component} 新增失败：${error}`)
+        logger.success(`组件 ${component.component} 数据新增失败：${error}`)
       })
   }
 
