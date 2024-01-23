@@ -60,7 +60,7 @@ export default {
     top: 0;
     right: 0;
     bottom: 0;
-    left: calc(100% - var(--lowcode-setting-panel-min-width));
+    left: calc(100% - var(--base-right-panel-width));
     background: rgba(0, 0, 0, 0.15);
     z-index: 9999;
   }
