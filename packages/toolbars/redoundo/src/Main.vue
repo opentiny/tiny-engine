@@ -64,9 +64,9 @@ export default {
     height: 32px;
     width: 32px;
     border-radius: 6px;
-    font-size: 20px;
     svg {
       color: var(--ti-lowcode-toolbar-title-color);
+      font-size: 20px;
     }
     &.disabled {
       cursor: not-allowed;
