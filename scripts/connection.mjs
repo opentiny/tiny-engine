@@ -41,7 +41,7 @@ class MysqlConnection {
           logger.warn('未能连接到数据库，请查看数据库配置是否正确')
           reject()
         } else {
-          logger.success('连接数据库成功')
+          logger.success('数据库连接成功')
           this.connected = true
           resolve()
         }
@@ -99,17 +99,17 @@ class MysqlConnection {
    * @param {object} component 组件数据
    * @returns boolean 校验组件字段是否失败，true-有字段出错
    */
-  validateFields(component) {
+  validateFields(component, file) {
     const longtextFields = ['name', 'npm', 'snippets', 'schema_fragment', 'configure', 'component_metadata']
 
-    return Object.entries(component).some(([key, value]) => {
+    return Object.entries(component).every(([key, value]) => {
       if (longtextFields.includes(key) && value !== null && typeof value !== 'object') {
-        logger.error(`组件 ${component.component} 的字段 ${key} 值类型有误`)
+        logger.error(`"${key}" 的值不是有效的JSON (${file})`)
 
-        return true
+        return false
       }
 
-      return false
+      return true
     })
   }
 
@@ -118,10 +118,10 @@ class MysqlConnection {
    * @param {object} component 组件数据
    * @returns 更新组件的sql语句
    */
-  updateComponent(component) {
-    const valid = this.validateFields(component)
+  updateComponent(component, file) {
+    const valid = this.validateFields(component, file)
 
-    if (valid) {
+    if (!valid) {
       return
     }
 
@@ -161,10 +161,10 @@ class MysqlConnection {
 
     this.query(sqlContent, component.component)
       .then(() => {
-        logger.success(`更新组件 ${component.component} 成功`)
+        logger.success(`组件 ${component.component} 更新成功`)
       })
       .catch((error) => {
-        logger.success(`更新组件 ${component.component} 失败：${error}`)
+        logger.error(`组件 ${component.component} 更新失败：${error}`)
       })
   }
 
@@ -188,10 +188,10 @@ class MysqlConnection {
    * @param {object} component 组件数据
    * @returns 新增组件的sql语句
    */
-  insertComponent(component) {
-    const valid = this.validateFields(component)
+  insertComponent(component, file) {
+    const valid = this.validateFields(component, file)
 
-    if (valid) {
+    if (!valid) {
       return
     }
 
@@ -290,11 +290,11 @@ class MysqlConnection {
       .then((result) => {
         const id = result.insertId
 
-        logger.success(`新增组件 ${component.component} 成功`)
+        logger.success(`组件 ${component.component} 新增成功`)
         this.relationMaterialHistory(id)
       })
       .catch((error) => {
-        logger.success(`新增组件 ${component.component} 失败：${error}`)
+        logger.success(`组件 ${component.component} 新增失败：${error}`)
       })
   }
 
@@ -363,11 +363,11 @@ class MysqlConnection {
     return new Promise((resolve, reject) => {
       this.query(sqlContent)
         .then((result) => {
-          logger.success(`创建表 ${componentsTableName} 成功`)
+          logger.success(`表 ${componentsTableName} 创建成功`)
           resolve(result)
         })
         .catch((error) => {
-          logger.success(`创建表 ${componentsTableName} 失败：${error}`)
+          logger.success(`表 ${componentsTableName} 创建失败：${error}`)
           reject(error)
         })
     })

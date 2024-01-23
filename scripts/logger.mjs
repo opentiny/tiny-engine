@@ -14,9 +14,9 @@ class Logger {
         success: 'green'
       }
       const time = new Date().toLocaleTimeString()
-      const colorMsg = colors[colorMap[type]](msg)
+      const colorMsg = colors[colorMap[type]](type)
 
-      return `[${this.command}] [${colors.dim(time)}] ${colorMsg}`
+      return `[${this.command}] [${colors.dim(time)}] ${colorMsg} ${msg}`
     }
 
     // eslint-disable-next-line no-console
