@@ -97,9 +97,9 @@ class MysqlConnection {
   /**
    * 校验组件字段数据
    * @param {object} component 组件数据
-   * @returns boolean 校验组件字段是否失败，true-有字段出错
+   * @returns boolean 校验组件字段是否失败，false-有字段出错
    */
-  validateFields(component, file) {
+  validate(component, file) {
     const longtextFields = ['name', 'npm', 'snippets', 'schema_fragment', 'configure', 'component_metadata']
 
     return Object.entries(component).every(([key, value]) => {
@@ -119,7 +119,7 @@ class MysqlConnection {
    * @returns 更新组件的sql语句
    */
   updateComponent(component, file) {
-    const valid = this.validateFields(component, file)
+    const valid = this.validate(component, file)
 
     if (!valid) {
       return
@@ -189,7 +189,7 @@ class MysqlConnection {
    * @returns 新增组件的sql语句
    */
   insertComponent(component, file) {
-    const valid = this.validateFields(component, file)
+    const valid = this.validate(component, file)
 
     if (!valid) {
       return
