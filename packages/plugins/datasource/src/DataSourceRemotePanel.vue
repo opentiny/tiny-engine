@@ -3,7 +3,10 @@
     <plugin-setting title="获取远程字段" :isSecond="true" @cancel="closePanel" @save="saveRemote">
       <template #content>
         <div class="create-config">
-          <data-source-remote-form v-model="state.remoteData.options"></data-source-remote-form>
+          <data-source-remote-form
+            v-model="state.remoteData.options"
+            @sendRequest="sendRequest"
+          ></data-source-remote-form>
           <data-source-remote-autoload v-model="state.remoteData.options.isSync"></data-source-remote-autoload>
           <div class="tabBox">
             <tiny-tabs v-model="state.activeNameTabs">
@@ -22,7 +25,7 @@
           <div>
             <tiny-collapse v-model="state.activeName">
               <tiny-collapse-item name="result">
-                <template #title> 请求结果</template>
+                <template #title>请求结果</template>
                 <data-srouce-remote-data-result v-model="state.remoteData.result"></data-srouce-remote-data-result>
               </tiny-collapse-item>
             </tiny-collapse>
@@ -181,6 +184,10 @@ export default {
         .load()
         .then((res) => {
           state.remoteData.result = Array.isArray(res?.data?.items) ? res.data.items[0] : res?.data || res
+
+          const remoteDataEditor = document.querySelector('#remote-data-editor')
+
+          remoteDataEditor.scrollIntoView()
         })
         .catch((error) => {
           useModal().message({ message: error.message || '请求失败，请确认请求地址是否正确！', status: 'error' })
