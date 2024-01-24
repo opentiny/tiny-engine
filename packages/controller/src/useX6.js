@@ -10,6 +10,7 @@ import { Keyboard } from '@antv/x6-plugin-keyboard'
  */
 /**
  * @typedef {Object} ParamAttr
+ * @prop {string} id
  * @prop {string} [name]
  * @prop {null} [initializer]
  * @prop {number} [learning_rate]
@@ -187,48 +188,58 @@ const graphPreapre = () => {
   return ready
 }
 export const getCanvas = () => g
-const processData = {
+
+/**
+ *
+ * @param {MaterialProperty} property
+ * @param {{[x:string]:import('./useResource').Type}[]} externalType
+ */
+const processDefaultValue = (property, externalType) => {
   /**
-   *
-   * @param {string} [defaultVal]
-   * @returns {string}
+   * @type {import('./useResource').Type[]}
    */
-  string: (defaultVal) => defaultVal ?? '',
-  /**
-   *
-   * @param {number} [defaultVal]
-   * @returns {number}
-   */
-  number: (defaultVal) => defaultVal ?? 0,
-  /**
-   *
-   * @param {boolean} [defaultVal]
-   * @returns {boolean}
-   */
-  boolean: (defaultVal) => defaultVal ?? false,
-  /**
-   *
-   * @param {MaterialProperty['enums']} [defaultVal]
-   * @returns {Extract<MaterialProperty['enums'],number>|undefined}
-   */
-  enums: (defaultVal) =>
-    defaultVal ? defaultVal.filter((v) => v.default)[0].value ?? defaultVal.sort((a, b) => a.id - b.id)[0].value : '',
-  /**
-   *
-   * @param {ParamAttr} defaultVal
-   */
-  ParamAttr: (defaultVal) => {
-    return defaultVal ?? {}
+  const paramAttr = externalType.ParamAttr
+  let data = {}
+  switch (property.type) {
+    case 'string':
+      return property.default ?? ''
+    case 'number':
+      return property.default ?? 0
+    case 'boolean':
+      return property.default ?? false
+    case 'enums':
+      return property.enums.filter((v) => v.default)[0].value
+    case 'ParamAttr':
+      for (const attr of paramAttr) {
+        data[attr.id] = processDefaultValue(attr, externalType)
+      }
+      return data
   }
 }
 /**
  *
  * @param {MaterialInfo} info
+ * @param {{[x:string]:import('./useResource').Type[]}} types
  */
-const addNode = (info) => {
+const addNode = (info, types) => {
   const g = getCanvas()
   info.properties = info.properties.map((p) => {
-    let data = processData[p.type](p.default)
+    let data = null
+    if (!data) {
+      switch (p.type) {
+        case 'string':
+        case 'number':
+        case 'boolean':
+          data = p.default
+          break
+        case 'enums':
+          data = p.enums.filter((v) => v.default)[0].value
+          break
+        case 'ParamAttr':
+          data = processDefaultValue(p, types)
+          break
+      }
+    }
     return {
       ...p,
       data

@@ -3,28 +3,28 @@
     "types": {
       "ParamAttr": [
         {
-          "id": 0,
+          "id": "name",
           "label": { "zh_CN": "前缀", "en_US": "Name" },
           "type": "string",
           "optional": true,
           "default": ""
         },
         {
-          "id": 1,
+          "id": "initializer",
           "label": { "zh_CN": "初始化方法", "en_US": "initializer" },
           "type": "Initializer",
           "optional": true,
           "default": null
         },
         {
-          "id": 2,
+          "id": "learning_rate",
           "label": { "zh_CN": "学习率", "en_US": "learning_rate" },
           "type": "number",
           "optional": true,
-          "default": ""
+          "default": 1.0
         },
         {
-          "id": 3,
+          "id": "regularizer",
           "label": { "zh_CN": "正则化方法", "en_US": "regularizer" },
           "type": "enums",
           "enums": [
@@ -34,21 +34,21 @@
           "optional": true
         },
         {
-          "id": 4,
+          "id": "trainable",
           "label": { "zh_CN": "是否参与训练", "en_US": "trainable" },
           "type": "boolean",
           "optional": true,
           "default": true
         },
         {
-          "id": 5,
+          "id": "do_model_average",
           "label": { "zh_CN": "模型平均", "en_US": "do_model_average" },
           "type": "boolean",
           "optional": true,
           "default": true
         },
         {
-          "id": 6,
+          "id": "need_clip",
           "label": { "zh_CN": "梯度裁剪", "en_US": "need_clip" },
           "type": "boolean",
           "optional": true,
@@ -72,7 +72,9 @@
               "zh_CN": "输入通道数",
               "en_US": "in_channels"
             },
-            "type": "number"
+            "type": "number",
+            "required": true,
+            "default": 255
           },
           {
             "id": "out_channels",
@@ -80,7 +82,9 @@
               "zh_CN": "输出通道数",
               "en_US": "out_channels"
             },
-            "type": "number"
+            "type": "number",
+            "required": true,
+            "default": 255
           },
           {
             "id": "kernal_size",
@@ -88,7 +92,9 @@
               "zh_CN": "卷积核大小",
               "en_US": "kernal_size"
             },
-            "type": "number"
+            "type": "number",
+            "required": true,
+            "default": 3
           },
           {
             "id": "stride",
@@ -96,7 +102,9 @@
               "zh_CN": "步长",
               "en_US": "stride"
             },
-            "type": "number"
+            "type": "number",
+            "required": true,
+            "default": 1
           },
           {
             "id": "dilation",
@@ -104,7 +112,9 @@
               "zh_CN": "空洞大小",
               "en_US": "dilation"
             },
-            "type": "number"
+            "type": "number",
+            "required": true,
+            "default": 0
           },
           {
             "id": "groups",
@@ -112,7 +122,9 @@
               "zh_CN": "组数",
               "en_US": "groups"
             },
-            "type": "number"
+            "type": "number",
+            "required": true,
+            "default": 0
           },
           {
             "id": "padding_mode",
@@ -126,7 +138,8 @@
               { "id": 2, "label": "reflect", "value": "reflect" },
               { "id": 3, "label": "replicate", "value": "replicate" },
               { "id": 4, "label": "circular", "value": "circular" }
-            ]
+            ],
+            "required": true
           },
           {
             "id": "weight_attr",
@@ -150,7 +163,8 @@
               "zh_CN": "数据格式",
               "en_US": "data_format"
             },
-            "type": "string"
+            "type": "string",
+            "required": true
           }
         ]
       }

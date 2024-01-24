@@ -11,7 +11,7 @@
  */
 /**
  * @typedef {Object} Type
- * @prop {number}
+ * @prop {string} id
  * @prop {{zh_CN: string, en_US: string}} label
  * @prop {string} type
  * @prop {boolean} optional
@@ -87,7 +87,7 @@ const fetchNN = async () => {
   }
 }
 
-const fetchType = () => {
+const fetchType = async () => {
   const { dslMode, canvasOptions } = getGlobalConfig()
   const bundleUrls = canvasOptions[dslMode].material
   const loading = ref(true)
@@ -99,7 +99,7 @@ const fetchType = () => {
       .then((res) => {
         return res.map((v) => (v.status === 'fulfilled' ? v.value : []))
       })
-      .then(([types]) => registerType(types))
+      .then(([{ types }]) => registerType(types))
       .catch((err) => {
         error.value = true
         reason.value = err

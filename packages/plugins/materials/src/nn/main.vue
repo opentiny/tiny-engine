@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper" v-loading="loading">
+  <div class="wrapper" v-loading="loading || TypeLoading">
     <template v-for="(item, idx) of nn" :key="idx">
       <div @click="() => onClickNN(item)">
         <span>{{ item.label.zh_CN }}</span>
@@ -11,13 +11,14 @@
 <script setup>
 import { useResource, useX6 } from '@opentiny/tiny-engine-controller'
 import { Loading } from '@opentiny/vue'
-const { fetchNN } = useResource()
+const { fetchType, fetchNN, resState } = useResource()
+const { loading: TypeLoading } = await fetchType()
 const { nn, loading } = await fetchNN()
 const vLoading = Loading.directive
 const { addNode } = useX6()
 /** @param {import('@opentiny/tiny-engine-controller/useX6').MaterialInfo} item */
 const onClickNN = (item) => {
-  addNode(item)
+  addNode(item, resState.types)
 }
 </script>
 
