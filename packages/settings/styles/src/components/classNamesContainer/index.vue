@@ -1,113 +1,113 @@
 <template>
   <div class="className-container">
-    <h6 class="title">样式选择器</h6>
+    <h6 class="title">
+      <span>全局样式</span>
+      <link-button :href="docsUrl" class="help-link"></link-button>
+    </h6>
     <div class="selector-container">
-      <div class="className-selector-wrap">
-        <div
-          :class="['className-selector-container', { 'has-error': classNameState.selectorHasError }]"
-          @click="handleFocusInput"
-        >
-          <div v-if="classNameState.curSelector || classNameState.curSelectorIsEditing" class="current-selector">
-            <div class="current-selector-label">
-              <span
-                ref="selectorTextRef"
-                :contenteditable="classNameState.curSelectorIsEditing"
-                :class="['selector-label-text', { 'text-editing': classNameState.curSelectorIsEditing }]"
-                :key="classNameState.curSelectorIsEditing"
-                @click.stop="handleEditCurSelector"
-                @input="handleCurSelectorChange"
-                @blur="handleCompleteEditCurSelector"
-                @keyup.enter="handleCompleteEditCurSelector"
-                @keyup.esc="handleCompleteEditCurSelector"
-              >
-                {{ classNameState.curSelector }}
-              </span>
-              <div v-if="!classNameState.curSelectorIsEditing && classNameState.curSelectorEditable" class="edit-wrap">
-                <svg-icon name="edit" title="编辑" class="edit-btn" @click.stop="handleEditCurSelector"></svg-icon>
-                <tiny-popover
-                  v-model="classNameState.showDelConfirm"
-                  trigger="manual"
-                  class="del-selector-popover"
-                  popper-class="del-selector-popper-wrapper"
+      <meta-code-editor
+        :modelValue="state.cssContent"
+        title="Css 编辑"
+        language="css"
+        v-slot="scope"
+        single
+        @save="save"
+      >
+        <div class="edit-global-css" title="编辑全局样式" @click="scope.open">
+          <svg-icon name="edit"></svg-icon>
+        </div>
+      </meta-code-editor>
+      <div class="selector-right-container">
+        <div class="selector-right-container-wrap">
+          <div
+            :class="['className-selector-container', { 'has-error': classNameState.selectorHasError }]"
+            @click="handleFocusInput"
+          >
+            <div v-if="classNameState.curSelector || classNameState.curSelectorIsEditing" class="current-selector">
+              <div class="current-selector-label">
+                <span
+                  ref="selectorTextRef"
+                  :contenteditable="classNameState.curSelectorIsEditing"
+                  :class="['selector-label-text', { 'text-editing': classNameState.curSelectorIsEditing }]"
+                  :key="classNameState.curSelectorIsEditing"
+                  :title="classNameState.curSelector"
+                  @click.stop="handleEditCurSelector"
+                  @input="handleCurSelectorChange"
+                  @blur="handleCompleteEditCurSelector"
+                  @keyup.enter="handleCompleteEditCurSelector"
+                  @keyup.esc="handleCompleteEditCurSelector"
                 >
-                  <div class="popper-confirm" @mousedown.stop="">
-                    <div class="popper-confirm-header">
-                      <svg-icon class="icon" name="warning"></svg-icon>
-                      <span class="title">您确定删除该选择器吗？</span>
-                    </div>
-                    <div class="popper-confirm-footer">
-                      <tiny-button class="confirm-btn" size="small" type="primary" @click="handleDelSelector">
-                        确定
-                      </tiny-button>
-                      <tiny-button size="small" class="cancel-btn" @click="handleTriggerDelConfirm(false)">
-                        取消
-                      </tiny-button>
-                    </div>
-                  </div>
-                  <template #reference>
-                    <svg-icon
-                      name="delete"
-                      title="删除"
-                      class="delete-btn"
-                      @click.stop="handleTriggerDelConfirm(true)"
-                    ></svg-icon>
-                  </template>
-                </tiny-popover>
+                  {{ classNameState.curSelector }}
+                </span>
+                <div
+                  v-if="!classNameState.curSelectorIsEditing && classNameState.curSelectorEditable"
+                  class="edit-wrap"
+                >
+                  <svg-icon name="edit" title="编辑" class="edit-btn" @click.stop="handleEditCurSelector"></svg-icon>
+                  <svg-icon name="close" title="删除" class="delete-btn" @click.stop="handleDelSelector"></svg-icon>
+                </div>
               </div>
             </div>
+            <span v-else class="empty-tips">请选择或创建类名</span>
+            <input
+              ref="newSelectorInputRef"
+              type="text"
+              v-model="classNameState.newSelector"
+              class="selector-input"
+              @change="handleInputChange"
+              @blur="handleCreateNewClass"
+              @keyup.enter="handleCreateNewClass"
+              @keydown.delete="handleDeleteCurSelector"
+            />
           </div>
-          <span v-else class="empty-tips">请选择或创建类名</span>
-          <input
-            ref="newSelectorInputRef"
-            type="text"
-            v-model="classNameState.newSelector"
-            class="selector-input"
-            @change="handleInputChange"
-            @blur="handleCreateNewClass"
-            @keyup.enter="handleCreateNewClass"
-          />
-          <div v-if="classNameState.showDropdownList" class="selector-drop-down-list">
-            <span class="selector-dropdown-list-tips">输入并回车创建新选择器</span>
-            <span v-if="currentSelectorList.length" class="selector-dropdown-list-tips">选择已有选择器编辑</span>
-            <ul class="exist-class-list">
-              <li
-                v-for="item in currentSelectorList"
-                :key="item"
-                :title="item"
-                class="exist-class-item"
-                @mousedown="handleSelectExistingClass(item)"
-              >
-                <span>{{ item }}</span>
-              </li>
-            </ul>
-            <span v-if="state.selectors.length" class="selector-dropdown-list-tips add-global-class-tips">
-              添加全局类到当前组件并编辑
-            </span>
-            <ul class="exist-class-list">
-              <li
-                v-for="item in state.selectors"
-                :key="item"
-                :title="item"
-                class="exist-class-item"
-                @mousedown="handleSelectExistingClass(item)"
-              >
-                <span>{{ item }}</span>
-              </li>
-            </ul>
-          </div>
+          <tiny-select v-model="state.className.mouseState" :options="stateOptions" class="state-selector">
+          </tiny-select>
         </div>
-        <div v-if="classNameState.selectorHasError" class="error-tips">{{ classNameState.selectorHasError }}</div>
+        <div v-if="classNameState.selectorHasError" class="error-tips">
+          <svg-icon name="error"></svg-icon>
+          <span class="error-tips-text">{{ classNameState.selectorHasError }}</span>
+        </div>
+        <div v-if="classNameState.showDropdownList" class="selector-drop-down-list lowcode-scrollbar-thin">
+          <span class="selector-dropdown-list-tips">输入并回车创建新选择器</span>
+          <span v-if="currentSelectorList.length" class="selector-dropdown-list-tips">选择已有选择器编辑</span>
+          <ul class="exist-class-list">
+            <li
+              v-for="item in currentSelectorList"
+              :key="item"
+              :title="item"
+              class="exist-class-item"
+              @mousedown="handleSelectExistingClass(item)"
+            >
+              <span>{{ item }}</span>
+            </li>
+          </ul>
+          <span v-if="state.selectors.length" class="selector-dropdown-list-tips add-global-class-tips">
+            添加全局类到当前组件并编辑
+          </span>
+          <ul class="exist-class-list">
+            <li
+              v-for="item in state.selectors"
+              :key="item"
+              :title="item"
+              class="exist-class-item"
+              @mousedown="handleSelectExistingClass(item)"
+            >
+              <span>{{ item }}</span>
+            </li>
+          </ul>
+        </div>
       </div>
-      <tiny-select v-model="state.className.mouseState" :options="stateOptions" class="state-selector"> </tiny-select>
     </div>
   </div>
 </template>
 
 <script setup>
 import { computed, reactive, ref, nextTick, watch, watchEffect } from 'vue'
-import { Select as TinySelect, Popover as TinyPopover, Button as TinyButton } from '@opentiny/vue'
-import { getSchema as getCanvasPageSchema } from '@opentiny/tiny-engine-canvas'
-import { useProperties } from '@opentiny/tiny-engine-controller'
+import { Select as TinySelect } from '@opentiny/vue'
+import { setPageCss, getSchema as getCanvasPageSchema, updateRect } from '@opentiny/tiny-engine-canvas'
+import { useProperties, useCanvas, useHistory, useHelp } from '@opentiny/tiny-engine-controller'
+import { MetaCodeEditor, LinkButton } from '@opentiny/tiny-engine-common'
+import { formatString } from '@opentiny/tiny-engine-common/js/ast'
 import useStyle, { updateGlobalStyleStr } from '../../js/useStyle'
 import { stringify, getSelectorArr } from '../../js/parser'
 
@@ -130,6 +130,8 @@ const OPTION_TYPE = {
   REMOVE: 'remove',
   EDIT: 'edit'
 }
+
+const docsUrl = useHelp().getDocsUrl('stylePanel')
 
 const classNameState = reactive({
   curSelector: '',
@@ -182,7 +184,14 @@ const setSelectorProps = (type, value) => {
 // 编辑 className 新增、删除、或修改
 const editClassName = (curClassName, optionType = OPTION_TYPE.ADD, oldSelector = '') => {
   const schema = getSchema() || getCanvasPageSchema()
-  const type = curClassName.startsWith('.') ? SELECTOR_TYPE.CLASS_NAME : SELECTOR_TYPE.ID
+  let type = ''
+
+  if (curClassName.startsWith('.')) {
+    type = SELECTOR_TYPE.CLASS_NAME
+  } else if (curClassName.startsWith('#')) {
+    type = SELECTOR_TYPE.ID
+  }
+
   const classNames = schema.props.className || ''
   const ids = schema.props.id || ''
   const typeMap = {
@@ -396,25 +405,12 @@ const handleCompleteEditCurSelector = () => {
   updateGlobalStyleStr(newStyleStr)
 }
 
-const listener = () => {
-  classNameState.showDelConfirm = false
-}
-
-// 删除确认弹窗
-const handleTriggerDelConfirm = (visible) => {
-  classNameState.showDelConfirm = visible
-
-  if (visible) {
-    window.addEventListener('click', listener)
-  } else {
-    window.removeEventListener('click', listener)
-  }
-}
-
 const handleDelSelector = () => {
   // 删除选择器，仅从当前选中组件中删除类名, 不删除全局 css 中的 css 类名和样式
   // 后期需要可以拿到全局组件的类名，如果只有当前组件使用该类名，从全局样式中删除之
   editClassName(classNameState.curSelector, OPTION_TYPE.REMOVE)
+  state.className.classNameList = ''
+  state.className.mouseState = ''
 }
 
 const handleFocusInput = () => {
@@ -436,46 +432,104 @@ const handleCurSelectorChange = (event) => {
 watchEffect(() => {
   selectorValidator(classNameState.newSelector)
 })
+
+const save = ({ content }) => {
+  const cssString = formatString(content.replace(/"/g, "'"), 'css')
+  const { getPageSchema } = useCanvas()
+  const { addHistory } = useHistory()
+  getPageSchema().css = cssString
+  getCanvasPageSchema().css = cssString
+  setPageCss(cssString)
+  state.schemaUpdateKey++
+
+  addHistory()
+  updateRect()
+}
+
+// 监听回车删除键，如果当前输入为空，则解绑当前选择器
+const handleDeleteCurSelector = () => {
+  // 当前新建的选择器不为空，则在编辑当前选择器
+  if (classNameState.newSelector) {
+    return
+  }
+
+  // 在编辑当前选择器则不做更改
+  if (classNameState.curSelectorIsEditing) {
+    return
+  }
+
+  // 解绑当前选择器
+  handleDelSelector()
+}
 </script>
 
 <style lang="less" scoped>
 .className-container {
-  padding: 10px;
+  ::-webkit-scrollbar {
+    display: block;
+  }
+  padding: 16px 16px 8px;
+}
+.title {
+  margin: 0;
+  font-size: 14px;
+  color: var(--ti-lowcode-className-selector-title-color);
+  font-weight: normal;
+  .help-link {
+    vertical-align: middle;
+  }
 }
 
 .selector-container {
   display: flex;
   margin-top: 10px;
   color: var(--ti-lowcode-className-selector-container-color);
+
+  .selector-right-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    position: relative;
+    margin-left: 8px;
+  }
+  .selector-right-container-wrap {
+    display: flex;
+  }
   .className-selector-wrap {
-    .error-tips {
-      margin-top: 8px;
-      font-size: 12px;
-      color: var(--ti-lowcode-className-selector-error-tips-color);
-    }
+    max-width: 180px;
+    min-width: 0;
+  }
+  :deep(.editor-wrap) {
+    width: 30px;
+  }
+  .edit-global-css {
+    display: flex;
+    padding: 7px;
+    border: 1px solid var(--ti-lowcode-className-selector-container-border-color);
+    border-radius: 6px;
+    cursor: pointer;
   }
 
   .className-selector-container {
-    flex: 7;
-    border: 1px solid var(--ti-lowcode-className-selector-container-border-color);
-    border-radius: 6px;
-    padding: 2px 10px;
     display: flex;
-    max-width: 180px;
     row-gap: 2px;
     align-items: center;
-    position: relative;
-    overflow: visible;
     flex-wrap: wrap;
+    max-width: 180px;
+    min-width: 0;
+    padding: 1px 10px;
+    border: 1px solid var(--ti-lowcode-className-selector-container-border-color);
+    border-radius: 6px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    font-size: 12px;
     &:hover {
       border-color: var(--ti-lowcode-className-selector-container-hover-border-color);
     }
     &.has-error {
       border-color: var(--ti-lowcode-className-selector-container-error-border-color);
       background-color: var(--ti-lowcode-className-selector-container-error-bg-color);
-      .selector-drop-down-list {
-        top: calc(100% + 30px);
-      }
     }
     &:has(.selector-input:focus) {
       .empty-tips {
@@ -484,7 +538,6 @@ watchEffect(() => {
     }
     .empty-tips {
       position: absolute;
-      font-size: 14px;
       color: var(--ti-lowcode-className-selector-container-empty-tips-color);
       z-index: 0;
     }
@@ -494,10 +547,10 @@ watchEffect(() => {
         display: flex;
         align-items: center;
         background-color: var(--ti-lowcode-className-selector-container-label-bg-color);
-        color: #fff;
+        color: var(--ti-lowcode-className-selector-container-label-color);
         padding: 1px 4px;
-        border-radius: 2px;
-        line-height: 30px;
+        border-radius: 4px;
+        line-height: 26px;
         .selector-label-text {
           outline: none;
           overflow: hidden;
@@ -531,7 +584,7 @@ watchEffect(() => {
       color: var(--ti-lowcode-className-selector-container-color);
       min-width: 0;
       flex: 0 0 0;
-      line-height: 30px;
+      line-height: 28px;
       z-index: 1;
       border: none;
       outline: none;
@@ -542,95 +595,82 @@ watchEffect(() => {
         padding: 1px 2px;
       }
     }
+  }
 
-    .selector-drop-down-list {
-      box-sizing: border-box;
-      position: absolute;
+  .error-tips {
+    display: flex;
+    align-items: center;
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--ti-lowcode-className-selector-error-tips-color);
+    .error-tips-text {
+      margin-left: 4px;
+    }
+  }
+
+  .selector-drop-down-list {
+    box-sizing: border-box;
+    position: absolute;
+    display: flex;
+    width: 100%;
+    max-height: 200px;
+    top: calc(100% + 10px);
+    left: 0;
+    padding: 8px 0;
+    background-color: var(--ti-lowcode-className-selector-dropdown-list-bg-color);
+    border: 1px solid transparent;
+    border-radius: 6px;
+    z-index: 1;
+    flex-direction: column;
+    overflow: scroll;
+    box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.15);
+
+    .selector-dropdown-list-tips {
+      font-size: 12px;
+      padding: 0 10px;
+      line-height: 32px;
+      color: var(--ti-lowcode-className-selector-dropdown-list-tips-color);
+    }
+
+    .selector-dropdown-list-tips + .selector-dropdown-list-tips {
+      margin-top: 10px;
+    }
+    .add-global-class-tips {
+      margin-top: 10px;
+    }
+
+    .exist-class-item {
+      cursor: pointer;
+      height: 32px;
+      padding: 0 16px;
       display: flex;
-      width: 100%;
-      max-height: 200px;
-      top: calc(100% + 10px);
-      left: 0;
-      padding: 8px 0;
-      background-color: var(--ti-lowcode-className-selector-dropdown-list-bg-color);
-
-      border: 1px solid transparent;
-      z-index: 1;
-      flex-direction: column;
-      overflow: scroll;
-      box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);
-
-      .selector-dropdown-list-tips {
-        font-size: 12px;
-        padding: 0 10px;
+      align-items: center;
+      font-size: 12px;
+      > span {
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
-
-      .selector-dropdown-list-tips + .selector-dropdown-list-tips {
-        margin-top: 10px;
-      }
-      .add-global-class-tips {
-        margin-top: 10px;
-      }
-
-      .exist-class-item {
-        cursor: pointer;
-        height: 32px;
-        padding: 0 16px;
-        display: flex;
-        align-items: center;
-        font-size: 14px;
-        > span {
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-        &.active,
-        &:hover {
-          background-color: var(--ti-lowcode-className-selector-dropdown-list-item-active-bg-color);
-          color: var(--ti-lowcode-className-selector-dropdown-list-item-color);
-        }
+      &.active,
+      &:hover {
+        background-color: var(--ti-lowcode-className-selector-dropdown-list-item-active-bg-color);
+        color: var(--ti-lowcode-className-selector-dropdown-list-item-color);
       }
     }
   }
 
   .state-selector {
     flex: 4;
-    flex-shrink: 0;
-    margin-left: 4px;
-  }
-}
-
-.title {
-  margin: 0;
-  color: var(--ti-lowcode-className-selector-title-color);
-}
-</style>
-<style lang="less">
-.tiny-popover.tiny-popper.del-selector-popper-wrapper {
-  width: 220px;
-  height: 108px;
-  box-sizing: border-box;
-  background-color: var(--ti-lowcode-className-selector-del-popover-bg-color);
-  padding: 6px;
-
-  .popper-confirm {
-    padding: 20px;
-  }
-
-  .popper-confirm-header {
-    font-size: 12px;
-    color: var(--ti-lowcode-className-selector-del-popover-title-color);
-    .icon {
-      color: var(--ti-lowcode-warning-color);
-      width: 16px;
-      height: 16px;
+    min-width: 84px;
+    border: 1px solid var(--ti-lowcode-className-selector-container-border-color);
+    border-radius: 6px;
+    border-left: none;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    :deep(input) {
+      padding-right: 30px;
+      border: none;
+      font-size: 12px;
     }
-    .title {
-      margin-left: 4px;
-    }
-  }
-  .popper-confirm-footer {
-    text-align: center;
-    margin-top: 22px;
   }
 }
 </style>
