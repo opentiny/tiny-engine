@@ -1,30 +1,44 @@
+import { Graph, Path } from '@antv/x6'
+import { register } from '@antv/x6-vue-shape'
+import { AlgoNode } from '@opentiny/tiny-engine-canvas'
+import { Selection } from '@antv/x6-plugin-selection'
+import { Keyboard } from '@antv/x6-plugin-keyboard'
+/**
+ * @typedef {Object}
+ * @prop {'L1Decay' | 'L2Decay'} type
+ * @prop {number} val
+ */
+/**
+ * @typedef {Object} ParamAttr
+ * @prop {string} id
+ * @prop {string} [name]
+ * @prop {null} [initializer]
+ * @prop {number} [learning_rate]
+ * @prop {Regularizer} [regularizer]
+ * @prop {boolean} [trainable]
+ * @prop {boolean} [do_model_average]
+ * @prop {boolean} [need_clip]
+ */
 /**
  * @typedef {Object} MaterialProperty
  * @property {string} id
  * @property {{zh_CN:string,en_US:string}} label
- * @property {'number'|'string'|'boolean'|'enums'} type
+ * @property {'number'|'string'|'boolean'|'enums'|'ParamAttr'} type
  * @property {{id:number,label:string,value:any,default?:boolean}[]} [enums]
+ * @property {any} default
+ * @prop {number | string | boolean | ParamAttr} data - 用于存储Property数据
  */
-
 /**
- *
  * @typedef {Object} MaterialInfo - 物料信息
  * @prop {{zh_CN: string, en_US: string}} label - 物料名称
  * @prop {string|undefined} nnName - 如果为网络，网络名称
  * @prop {string} desc - 简介
  * @prop {boolean} nn - 是否为网络
  * @prop {MaterialProperty[]} properties - 配置信息
- *
  */
 /**
  * @typedef {{materials: MaterialInfo[]}} Materials
  */
-
-import { Graph, Path } from '@antv/x6'
-import { register } from '@antv/x6-vue-shape'
-import { AlgoNode } from '@opentiny/tiny-engine-canvas'
-import { Selection } from '@antv/x6-plugin-selection'
-import { Keyboard } from '@antv/x6-plugin-keyboard'
 /**
  *
  * @param {`in-${string}` | `out-${string}`} a
@@ -174,12 +188,63 @@ const graphPreapre = () => {
   return ready
 }
 export const getCanvas = () => g
+
+/**
+ *
+ * @param {MaterialProperty} property
+ * @param {{[x:string]:import('./useResource').Type}[]} externalType
+ */
+const processDefaultValue = (property, externalType) => {
+  /**
+   * @type {import('./useResource').Type[]}
+   */
+  const paramAttr = externalType.ParamAttr
+  let data = {}
+  switch (property.type) {
+    case 'string':
+      return property.default ?? ''
+    case 'number':
+      return property.default ?? 0
+    case 'boolean':
+      return property.default ?? false
+    case 'enums':
+      return property.enums.filter((v) => v.default)[0].value
+    case 'ParamAttr':
+      for (const attr of paramAttr) {
+        data[attr.id] = processDefaultValue(attr, externalType)
+      }
+      return data
+  }
+}
 /**
  *
  * @param {MaterialInfo} info
+ * @param {{[x:string]:import('./useResource').Type[]}} types
  */
-const addNode = (info) => {
+const addNode = (info, types) => {
   const g = getCanvas()
+  info.properties = info.properties.map((p) => {
+    let data = null
+    if (!data) {
+      switch (p.type) {
+        case 'string':
+        case 'number':
+        case 'boolean':
+          data = p.default
+          break
+        case 'enums':
+          data = p.enums.filter((v) => v.default)[0].value
+          break
+        case 'ParamAttr':
+          data = processDefaultValue(p, types)
+          break
+      }
+    }
+    return {
+      ...p,
+      data
+    }
+  })
   const node = g.addNode({
     shape: 'dag-node',
     data: {
@@ -207,6 +272,14 @@ const addNode = (info) => {
   } = selectNode.getBBox()
   const { height } = node.getSize()
   node.setPosition({ x: x, y: bottom + height })
+}
+/**
+ * @template T
+ * @param {import('@antv/x6')['Cell']} cell
+ * @returns {T extends any ? MaterialInfo : T}
+ */
+const getData = (cell) => {
+  return cell.getData()
 }
 /**
  *
@@ -241,7 +314,7 @@ const useX6 = (id, option) => {
       g.removeCells(selectCells)
     })
   }
-  return { g: g, addNode, getCanvas }
+  return { g: g, addNode, getCanvas, getData }
 }
 
 export default useX6
