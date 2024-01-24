@@ -81,7 +81,7 @@ export default {
 
     watch(
       () => [state.dataHandler, state.willFetch, state.shouldFetch, state.errorHandler],
-      ({ dataHandler, willFetch, shouldFetch, errorHandler }) => {
+      ([dataHandler, willFetch, shouldFetch, errorHandler]) => {
         emit('update:modelValue', { dataHandler, willFetch, shouldFetch, errorHandler })
       }
     )
