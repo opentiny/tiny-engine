@@ -163,6 +163,12 @@ export default {
         white-space: nowrap;
       }
     }
+
+    :deep(.drag-item:nth-child(3n)) {
+      .component-item {
+        border-right: none;
+      }
+    }
   }
 
   .tiny-collapse {

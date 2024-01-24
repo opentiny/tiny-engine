@@ -34,8 +34,8 @@ const { BROADCAST_CHANNEL } = constants
 const { hyphenateRE } = utils
 const customElements = {}
 
-const transformJSX = (code) =>
-  transformSync(code, {
+const transformJSX = (code) => {
+  const res = transformSync(code, {
     plugins: [
       [
         babelPluginJSX,
@@ -46,6 +46,13 @@ const transformJSX = (code) =>
       ]
     ]
   })
+  return (res.code || '')
+    .replace(/import \{.+\} from "vue";/, '')
+    .replace(/h\(_?resolveComponent\((.*?)\)/g, `h(this.getComponent($1)`)
+    .replace(/_?resolveComponent/g, 'h')
+    .replace(/_?createTextVNode\((.*?)\)/g, '$1')
+    .trim()
+}
 
 export const blockSlotDataMap = reactive({})
 
@@ -138,7 +145,7 @@ export const newFn = (...argv) => {
   return new Fn(...argv)
 }
 
-const parseExpression = (data, scope, ctx) => {
+const parseExpression = (data, scope, ctx, isJsx = false) => {
   try {
     if (data.value.indexOf('this.i18n') > -1) {
       ctx.i18n = i18nHost.global.t
@@ -146,12 +153,17 @@ const parseExpression = (data, scope, ctx) => {
       ctx.t = i18nHost.global.t
     }
 
-    return newFn('$scope', `with($scope || {}) { return ${data.value} }`).call(ctx, {
+    const expression = isJsx ? transformJSX(data.value) : data.value
+    return newFn('$scope', `with($scope || {}) { return ${expression} }`).call(ctx, {
       ...ctx,
       ...scope,
       slotScope: scope
     })
   } catch (err) {
+    // 解析抛出异常，则再尝试解析 JSX 语法。如果解析 JSX 语法仍然出现错误，isJsx 变量会确保不会再次递归执行解析
+    if (!isJsx) {
+      return parseExpression(data, scope, ctx, true)
+    }
     return undefined
   }
 }
@@ -347,10 +359,6 @@ export const getComponent = (name) => {
 const parseJSXFunction = (data, ctx) => {
   try {
     const newValue = transformJSX(data.value)
-      .code.replace(/import \{.+\} from "vue";/, '')
-      .replace(/h\(_?resolveComponent\((.*?)\)/g, `h(this.getComponent($1)`)
-      .replace(/_?resolveComponent/g, 'h')
-      .replace(/_?createTextVNode\((.*?)\)/g, '$1')
     const fnInfo = parseFunctionString(newValue)
     if (!fnInfo) throw Error('函数解析失败，请检查格式。示例：function fnName() { }')
 
@@ -634,6 +642,7 @@ const getChildren = (schema, mergeScope) => {
     ]
   }
 
+  const component = getComponent(componentName)
   const isNative = typeof component === 'string'
   const isCustomElm = customElements[componentName]
   const isGroup = checkGroup(componentName)
