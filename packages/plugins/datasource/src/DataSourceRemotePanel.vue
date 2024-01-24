@@ -155,17 +155,17 @@ export default {
       })
     }
 
-    const sendRequest = () => {
-      getServiceForm().validate((valid) => {
-        if (!valid) {
-          confirm({
-            title: '提示',
-            message: '请求地址和请求方式必填！！！'
-          })
+    const sendRequest = async () => {
+      const valid = await getServiceForm().validate()
 
-          return
-        }
-      })
+      if (!valid) {
+        confirm({
+          title: '提示',
+          message: '请求地址和请求方式必填！！！'
+        })
+
+        return
+      }
 
       const options = { ...state.remoteData.options }
 
