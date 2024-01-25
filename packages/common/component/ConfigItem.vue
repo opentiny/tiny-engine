@@ -241,8 +241,6 @@ export default {
       return value
     })
 
-    const initValue = bindValue.value
-
     const currentLanguage = computed(() => {
       const language = props.property?.widget?.props?.language
       const defaultLanguage =
@@ -429,7 +427,7 @@ export default {
       () => bindValue.value,
       (value) => {
         isBindingState.value = value?.type === SCHEMA_DATA_TYPE.JSExpression
-        isValueChanged.value = initValue !== value
+        isValueChanged.value = !!value
       },
       {
         immediate: true
@@ -487,7 +485,7 @@ export default {
     }
 
     const reset = () => {
-      onModelUpdate(initValue.value, true)
+      onModelUpdate(null, true)
       showModal.value = false
     }
 
