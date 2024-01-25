@@ -9,10 +9,32 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
+
+// I know it looks like ugly. But we need type check /(ToT)/~~
+
 /**
+ *
+ *
+ * @typedef {object} Label
+ * @prop {string} zh_CN
+ * @prop {string} en_US
+ *
+ * @typedef {Object} Code
+ * @prop {Label} label
+ * @prop {string} fnName
+ * @prop {string} content
+ *
+ * @typedef {Object} LayerItem
+ * @prop {string|number} id
+ * @prop {Label} label
+ * @prop {Code[]} code
+ *
+ * @typedef {LayerItem[]} Layer
+ *
  * @typedef {Object} Type
+ *
  * @prop {string} id
- * @prop {{zh_CN: string, en_US: string}} label
+ * @prop {Label} label
  * @prop {string} type
  * @prop {boolean} optional
  * @prop {string} [default]
@@ -27,7 +49,9 @@ const resState = reactive({
   /**@type {import('@opentiny/tiny-engine-controller/useX6').MaterialInfo[]} */
   nn: [],
   /** @type {Types} */
-  types: {}
+  types: {},
+  /** @type {Layer} */
+  layer: []
 })
 
 /**
@@ -44,6 +68,13 @@ const registerNN = (data) => {
       })
     resolve()
   })
+}
+/**
+ *
+ * @param {Layer} data
+ */
+const registerLayer = (data) => {
+  resState.layer = data
 }
 
 /**
@@ -72,6 +103,7 @@ const fetchNN = async () => {
       return res.map((v) => (v.status === 'fulfilled' ? v.value : []))
     })
     .then(registerNN)
+    .then(registerLayer)
     .catch((err) => {
       error.value = true
       reason.value = err

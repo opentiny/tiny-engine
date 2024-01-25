@@ -1,0 +1,195 @@
+{
+  "$id": "bundle",
+  "type": "object",
+  "definitions": {
+    "enums": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "该选项的id",
+            "type": ["number", "string"]
+          },
+          "label": {
+            "description": "该选项的显示名称",
+            "type": "string"
+          },
+          "value": {
+            "description": "该选项的数值",
+            "type": "string"
+          },
+          "default": {
+            "description": "是否默认选择",
+            "type": "boolean"
+          }
+        }
+      },
+      "required": ["id", "label", "value"]
+    },
+    "label": {
+      "type": "object",
+      "properties": {
+        "zh_CN": {
+          "type": "string"
+        },
+        "en_US": {
+          "type": "string"
+        }
+      },
+      "required": ["zh_CN", "en_US"]
+    },
+    "layer": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": ["string", "number"],
+            "description": "Layer的全局唯一ID"
+          },
+          "label": {
+            "$ref": "#/definitions/label",
+            "description": "Layer的label"
+          },
+          "code": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "$ref": "#/definitions/label"
+                },
+                "fnName": {
+                  "type": "string"
+                },
+                "content": {
+                  "type": "string",
+                  "default": ""
+                }
+              },
+              "required": ["label", "fnName", "content"]
+            }
+          }
+        }
+      }
+    },
+    "materials": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "description": "定义了物料的label",
+            "$ref": "#/definitions/label"
+          },
+          "nnName": {
+            "description": "网络名称",
+            "type": "string"
+          },
+          "desc": {
+            "description": "该物料简短的介绍",
+            "type": "string"
+          },
+          "nn": {
+            "description": "是否是网络",
+            "type": "boolean"
+          },
+          "properties": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "description": "该设置的唯一ID",
+                  "type": "string"
+                },
+                "label": {
+                  "description": "该设置的label",
+                  "$ref": "#/definitions/label"
+                },
+                "type": {
+                  "description": "该设置的数据类型",
+                  "type": "string"
+                },
+                "required": {
+                  "description": "该设置是否是必选",
+                  "type": "boolean"
+                },
+                "default": {
+                  "description": "该设置的默认值",
+                  "type": ["string", "number", "null", "boolean"]
+                },
+                "enums": {
+                  "description": "该设置是否为select, 如果type为enum, 则该选项为必选",
+                  "$ref": "#/definitions/enums"
+                }
+              },
+              "if": {
+                "properties": {
+                  "type": { "const": "enums" }
+                }
+              },
+              "then": {
+                "required": ["enums"]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "layer": {
+          "description": "自定义层信息",
+          "$ref": "#/definitions/layer"
+        },
+        "materials": {
+          "description": "物料信息",
+          "$ref": "#/definitions/materials"
+        },
+        "types": {
+          "description": "第三方类型",
+          "type": "object",
+          "patternProperties": {
+            ".*": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "label": {
+                    "$ref": "#/definitions/label"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "default": {
+                    "type": ["string", "number", "boolean", "object", "null"]
+                  },
+                  "enums": {
+                    "$ref": "#/definitions/enums"
+                  }
+                },
+                "if": {
+                  "properties": {
+                    "type": { "const": "enums" }
+                  }
+                },
+                "then": {
+                  "required": ["enums"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": ["layer", "materials"]
+    }
+  }
+}

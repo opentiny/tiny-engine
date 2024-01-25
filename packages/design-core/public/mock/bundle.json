@@ -1,4 +1,5 @@
 {
+  "$schema": "bundle.schema.json",
   "data": {
     "types": {
       "ParamAttr": [
@@ -168,6 +169,7 @@
           }
         ]
       }
-    ]
+    ],
+    "layer": []
   }
 }
