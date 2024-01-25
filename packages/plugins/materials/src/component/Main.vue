@@ -184,12 +184,5 @@ export default {
       }
     }
   }
-
-  :deep(.tiny-svg, #tiny-engine .tiny-svg) {
-    transform: rotate(270deg);
-    &.is-active {
-      transform: rotate(180deg);
-    }
-  }
 }
 </style>
