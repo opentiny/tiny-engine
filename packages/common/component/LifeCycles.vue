@@ -227,7 +227,7 @@ export default {
     }
 
     onBeforeUnmount(() => {
-      state.completionProvider.forEach((provider) => {
+      state.completionProvider?.forEach?.((provider) => {
         provider.dispose()
       })
       // 终止 ESLint worker
