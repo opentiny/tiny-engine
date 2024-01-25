@@ -18,7 +18,7 @@
 
 <script>
 import { computed, reactive } from 'vue'
-import { useCanvas, useLayout, useBlock, useNotify, useEditorInfo } from '@opentiny/tiny-engine-controller'
+import { useCanvas, useLayout, useBlock, useNotify } from '@opentiny/tiny-engine-controller'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { Popover } from '@opentiny/vue'
 import { requestBlockPage } from './http'
@@ -66,17 +66,32 @@ export default {
       disabled: false
     })
 
-    const iconName = computed(() => (state.status === PAGE_STATUS.Occupy ? 'locked' : 'unlocked'))
+    const iconName = computed(() => {
+      switch (state.status) {
+        case PAGE_STATUS.Occupy:
+          return 'locked'
+        case PAGE_STATUS.Lock:
+          return 'user-locked'
+        default:
+          return 'unlocked'
+      }
+    })
 
     const lockPage = (id, type, newState) => {
       requestBlockPage(`id=${id}&state=${newState}&type=${type}`)
         .then((data) => {
-          if (data) {
+          if (data?.operate === 'success') {
             useNotify({
               type: 'success',
               message: statusMessageMap[newState].message(type)
             })
             layoutState.pageStatus.state = newState
+          } else {
+            const pageInfo = layoutState.pageStatus?.data
+            useNotify({
+              type: 'warning',
+              message: `当前页面被 ${pageInfo?.username || ''} ${pageInfo?.resetPasswordToken || ''} 锁定，请联系解锁`
+            })
           }
         })
         .catch((error) => {
@@ -91,35 +106,8 @@ export default {
         })
     }
 
-    const hasPermission = () => {
-      if (state.disabled) {
-        return false
-      }
-
-      const isAdmin = useEditorInfo().isAdmin()
-
-      if (state.status === PAGE_STATUS.Lock) {
-        if (!isAdmin) {
-          const pageInfo = layoutState.pageStatus?.data
-
-          useNotify({
-            type: 'warning',
-            message: `当前页面被 ${pageInfo?.username || ''} ${pageInfo?.resetPasswordToken || ''} 锁定，请联系解锁`
-          })
-        }
-
-        return isAdmin
-      }
-
-      if (![PAGE_STATUS.Occupy, PAGE_STATUS.Release].includes(state.status)) {
-        return false
-      }
-
-      return true
-    }
-
     const lockOrUnlock = () => {
-      if (!hasPermission()) {
+      if (state.disabled) {
         return
       }
 
