@@ -8780,7 +8780,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "TinyTabItem",
+            "exportName": "TabItem",
             "version": "",
             "destructuring": true
           },
@@ -9029,7 +9029,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "TinyBreadcrumbItem",
+            "exportName": "BreadcrumbItem",
             "version": "",
             "destructuring": true
           },
