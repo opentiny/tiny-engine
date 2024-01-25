@@ -81,21 +81,25 @@ export default {
       let node = getCurrent().schema
 
       if (element) {
-        const currentElement = querySelectById(getCurrent().schema?.id)
+        // const currentElement = querySelectById(getCurrent().schema?.id)
+        const currentElement = element
+        console.log('selectedElement', currentElement)
 
-        if (!currentElement?.contains(element) || event.button === 0) {
-          const loopId = element.getAttribute(NODE_LOOP)
+        if (!currentElement?.contains?.(element) || event.button === 0) {
+          // const loopId = element.getAttribute(NODE_LOOP)
+          const loopId = element[NODE_LOOP]
           if (loopId) {
-            node = await selectNode(element.getAttribute(NODE_UID), `loop-id=${loopId}`)
+            // node = await selectNode(element.getAttribute(NODE_UID), `loop-id=${loopId}`)
+            node = await selectNode(element[NODE_UID], element, `loop-id=${loopId}`)
           } else {
-            node = await selectNode(element.getAttribute(NODE_UID))
+            // node = await selectNode(element.getAttribute(NODE_UID))
+            node = await selectNode(element[NODE_UID], element)
           }
         }
 
-        if (event.button === 0 && element !== element.ownerDocument.body) {
-          const { x, y } = element.getBoundingClientRect()
-
-          dragStart(node, element, { offsetX: clientX - x, offsetY: clientY - y })
+        if (event.button === 0 && element !== element?.ownerDocument?.body) {
+          // const { x, y } = element.getBoundingClientRect()
+          // dragStart(node, element, { offsetX: clientX - x, offsetY: clientY - y })
         }
 
         // 如果是点击右键则打开右键菜单
