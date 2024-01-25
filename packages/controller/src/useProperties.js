@@ -152,8 +152,7 @@ const properties = shallowReactive({
   parent: null
 })
 
-const isPageOrBlock = (schema) =>
-  schema.componentName === COMPONENT_NAME.Block || schema.componentName === COMPONENT_NAME.Page
+const isPageOrBlock = (schema) => [COMPONENT_NAME.Block, COMPONENT_NAME.Page].includes(schema?.componentName)
 
 const getProps = (schema, parent) => {
   // 1 现在选中的节点和当前节点一样，不需要重新计算, 2 默认进来由于scheme和properities.schema相等，因此判断如果是“页面或者区块”需要进入if判断
