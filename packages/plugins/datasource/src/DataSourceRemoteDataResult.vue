@@ -9,7 +9,7 @@
         class="life-cycle-alert"
       ></tiny-alert>
     </div>
-    <div class="data-editor">
+    <div id="remote-data-editor" class="data-editor">
       <monaco-editor ref="editor" :value="state.value" class="monaco-editor" :options="state.options" />
     </div>
   </div>
