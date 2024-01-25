@@ -46,7 +46,7 @@ import DataSourceRemoteAutoload from './DataSourceRemoteAutoload.vue'
 import DataSourceRemoteAdapter from './DataSourceRemoteDataAdapter.vue'
 import DataSrouceRemoteDataResult, { getResponseData } from './DataSourceRemoteDataResult.vue'
 import { open as openRemoteMapping } from './DataSourceRemoteMapping.vue'
-import { useModal, useDataSource } from '@opentiny/tiny-engine-controller'
+import { useModal, useDataSource, useNotify } from '@opentiny/tiny-engine-controller'
 import { isEmptyObject } from '@opentiny/vue-renderless/common/type'
 import { obj2String, string2Obj } from '@opentiny/tiny-engine-controller/adapter'
 import { getRequest } from './js/datasource'
@@ -185,12 +185,23 @@ export default {
         .then((res) => {
           state.remoteData.result = Array.isArray(res?.data?.items) ? res.data.items[0] : res?.data || res
 
+          useNotify({
+            type: 'success',
+            title: '请求成功',
+            message: '返回已填充到"请求结果"'
+          })
+
+          // "请求结果"代码编辑框
           const remoteDataEditor = document.querySelector('#remote-data-editor')
 
           remoteDataEditor.scrollIntoView()
         })
         .catch((error) => {
-          useModal().message({ message: error.message || '请求失败，请确认请求地址是否正确！', status: 'error' })
+          useNotify({
+            type: 'error',
+            title: '请求失败',
+            message: error.message || '请求失败，请确认请求地址是否正确！'
+          })
         })
     }
 
