@@ -41,7 +41,7 @@ class MysqlConnection {
           logger.warn('未能连接到数据库，请查看数据库配置是否正确')
           reject()
         } else {
-          logger.success('连接数据库成功')
+          logger.success('数据库连接成功')
           this.connected = true
           resolve()
         }
@@ -95,16 +95,73 @@ class MysqlConnection {
   }
 
   /**
+   * 校验组件数据是否有效
+   * @param {object} component 组件数据
+   * @returns boolean 校验组件字段是否失败，false-有字段出错
+   */
+  isValid(component, file) {
+    const longtextFields = ['name', 'npm', 'snippets', 'schema_fragment', 'configure', 'component_metadata']
+
+    return Object.entries(component).every(([key, value]) => {
+      if (longtextFields.includes(key) && value !== null && typeof value !== 'object') {
+        logger.error(`"${key}" 的值不是有效的JSON (${file})`)
+
+        return false
+      }
+
+      return true
+    })
+  }
+
+  /**
    * 生成更新组件的sql语句
    * @param {object} component 组件数据
    * @returns 更新组件的sql语句
    */
-  updateComponent(component) {
+  updateComponent(component, file) {
+    const valid = this.isValid(component, file)
+
+    if (!valid) {
+      return
+    }
+
     const values = []
     let sqlContent = `update ${componentsTableName} set `
 
     Object.keys(component).forEach((key) => {
       const { [key]: value } = component
+      const fields = [
+        'version',
+        'name',
+        'component',
+        'icon',
+        'description',
+        'docUrl',
+        'screenshot',
+        'tags',
+        'keywords',
+        'devMode',
+        'npm',
+        'group',
+        'category',
+        'priority',
+        'snippets',
+        'schema',
+        'configure',
+        'public',
+        'framework',
+        'isOfficial',
+        'isDefault',
+        'tiny_reserved',
+        'tenant',
+        'createBy',
+        'updatedBy'
+      ]
+
+      if (!fields.includes(key)) {
+        return
+      }
+
       const field = this.fieldTransform(key)
       let updateContent = ''
 
@@ -136,10 +193,10 @@ class MysqlConnection {
 
     this.query(sqlContent, component.component)
       .then(() => {
-        logger.success(`更新组件 ${component.component} 成功`)
+        logger.success(`组件 ${component.component} 数据更新成功`)
       })
       .catch((error) => {
-        logger.success(`更新组件 ${component.component} 失败：${error}`)
+        logger.error(`组件 ${component.component} 数据更新失败 ${error}`)
       })
   }
 
@@ -163,7 +220,16 @@ class MysqlConnection {
    * @param {object} component 组件数据
    * @returns 新增组件的sql语句
    */
-  insertComponent(component) {
+  insertComponent(component, file) {
+    const valid = this.isValid(component, file)
+
+    if (!valid) {
+      return
+    }
+
+    const defaultName = {
+      zh_CN: component.component
+    }
     const defaultNpm = {
       package: '',
       exportName: '',
@@ -195,7 +261,7 @@ class MysqlConnection {
     }
     const {
       version = '1.0.0',
-      name,
+      name = defaultName,
       component: componentName,
       icon,
       description,
@@ -256,11 +322,11 @@ class MysqlConnection {
       .then((result) => {
         const id = result.insertId
 
-        logger.success(`新增组件 ${component.component} 成功`)
+        logger.success(`组件 ${component.component} 数据新增成功`)
         this.relationMaterialHistory(id)
       })
       .catch((error) => {
-        logger.success(`新增组件 ${component.component} 失败：${error}`)
+        logger.success(`组件 ${component.component} 数据新增失败：${error}`)
       })
   }
 
@@ -329,11 +395,11 @@ class MysqlConnection {
     return new Promise((resolve, reject) => {
       this.query(sqlContent)
         .then((result) => {
-          logger.success(`创建表 ${componentsTableName} 成功`)
+          logger.success(`表 ${componentsTableName} 创建成功`)
           resolve(result)
         })
         .catch((error) => {
-          logger.success(`创建表 ${componentsTableName} 失败：${error}`)
+          logger.success(`表 ${componentsTableName} 创建失败：${error}`)
           reject(error)
         })
     })

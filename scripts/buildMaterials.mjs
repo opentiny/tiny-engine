@@ -28,7 +28,7 @@ const write = (bundle) => {
  * 校验组件文件数据
  * @param {string} file 组件文件路径
  * @param {object} component 组件数据
- * @returns 
+ * @returns
  */
 const validateComponent = (file, component) => {
   const requiredFields = ['component']
@@ -54,7 +54,7 @@ const validateComponent = (file, component) => {
  * 校验区块文件数据
  * @param {string} file 区块文件路径
  * @param {object} block 区块数据
- * @returns 
+ * @returns
  */
 const validateBlock = (file, block) => {
   const requiredFields = ['label', 'assets']
@@ -79,7 +79,7 @@ const validateBlock = (file, block) => {
 const generateComponents = () => {
   try {
     fg([`${materialsDir}/**/*.json`]).then((files) => {
-      if(!files.length) {
+      if (!files.length) {
         logger.warn('物料文件夹为空，请先执行`pnpm splitMaterials`命令拆分物料资产包')
       }
 
@@ -101,7 +101,9 @@ const generateComponents = () => {
         const material = fsExtra.readJsonSync(file, { throws: false })
 
         if (!material) {
-          logger.error(`读取物料文件 ${file} 失败`)
+          const fileFullPath = path.join(process.cwd(), file)
+
+          logger.error(`文件格式有误 (${fileFullPath})`)
 
           return
         }
@@ -146,16 +148,16 @@ const generateComponents = () => {
         if (connection.connected) {
           connection.initDB(material)
         }
+
+        appInfo.materialHistory.components = componentsMap
+
+        write(bundle)
       })
-
-      appInfo.materialHistory.components = componentsMap
-
-      write(bundle)
     })
 
-    logger.success('构建物料资产包成功')
+    logger.success('物料资产包构建成功')
   } catch (error) {
-    logger.error(`构建物料资产包失败：${error}`)
+    logger.error(`物料资产包构建失败：${error}`)
   }
 }
 
@@ -168,20 +170,21 @@ watcher.on('all', (event, file) => {
     change: '更新',
     unlink: '删除'
   }
+  const fileFullPath = path.join(process.cwd(), file)
 
-  logger.info(`${eventMap[event]}组件文件 ${file}`)
+  logger.info(`${eventMap[event]}组件文件 (${fileFullPath})`)
 
   // 监听物料文件变化，更新物料资产包
   generateComponents()
 
   if (!connection.connected || event === 'unlink') return
 
-  const component = fsExtra.readJsonSync(path.join(process.cwd(), file))
+  const component = fsExtra.readJsonSync(fileFullPath)
 
   if (event === 'change') {
-    connection.updateComponent(component)
+    connection.updateComponent(component, fileFullPath)
   } else if (event === 'add') {
-    connection.insertComponent(component)
+    connection.insertComponent(component, fileFullPath)
   }
 })
 
