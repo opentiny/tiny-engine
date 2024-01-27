@@ -11,6 +11,14 @@
  */
 
 /**
+ * @typedef {Object} LSPConfig
+ * @prop {boolean} enable
+ * @prop {string} url
+ * @prop {number} [port]
+ * @prop {string} [ns]
+ * @prop {'wss'|'ws'} [protocol]
+ * @prop {import('reconnecting-websocket').Options} options
+ *
  * @typedef {Object} CanvasOptionsItem
  * @prop  {string[]} material
  * @prop  {string[]} scripts
@@ -30,8 +38,13 @@
  * @prop {string} materialHost
  * @prop {number} platformId
  * @prop {number} defaultImportLayout
+ * @prop {LSPConfig} lspConfig
+ *
  */
-export default {
+/**
+ * @type {Config}
+ */
+const config = {
   // 编辑器主题类型， 取值：dark暗色系，light浅色系, 对应的npm包名为：@opentiny/tiny-engine-theme-${theme}, 暗色主题名需要以dark开头
   theme: 'light',
 
@@ -68,5 +81,24 @@ export default {
   platformId: 897,
 
   // 是否默认导入布局组件
-  defaultImportLayout: 1
+  defaultImportLayout: 1,
+
+  // 语言服务器设置
+  lspConfig: {
+    enable: true,
+    url: 'localhost',
+    port: 6000,
+    ns: '/python',
+    protocol: 'ws',
+    options: {
+      maxReconnectionDelay: 10000,
+      minReconnectionDelay: 1000,
+      reconnectionDelayGrowFactor: 1.3,
+      connectionTimeout: 10000,
+      maxRetries: Infinity,
+      debug: true
+    }
+  }
 }
+
+export default config

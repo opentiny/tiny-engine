@@ -32,6 +32,7 @@ import useData from './useData'
 import useMessage from './useMessage'
 import useHelp from './useHelp'
 import useX6 from './useX6'
+import useEditor from './useMonaco'
 
 export const getExample = example
 
@@ -57,5 +58,6 @@ export {
   useData,
   useMessage,
   useHelp,
-  useX6
+  useX6,
+  useEditor
 }

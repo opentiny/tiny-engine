@@ -52,6 +52,10 @@ export default {
     showFullScreenBtn: {
       type: Boolean,
       default: true
+    },
+    language: {
+      type: String,
+      default: 'python'
     }
   },
   emits: ['editorDidMount'],
@@ -59,20 +63,24 @@ export default {
     const editor = ref(null)
     const fullscreen = ref(false)
     const editorOptions = computed(() => {
-      return {
+      /**
+       * @type {typeof import('monaco-editor').editor.EditorOptions}
+       */
+      let options = {
         theme: theme(),
         tabSize: 2,
-        language: 'javascript',
+        language: props.language,
         autoIndent: true,
         formatOnPaste: true,
         automaticLayout: true,
         roundedSelection: true,
-        lineNumbers: false,
+        lineNumbers: true,
         minimap: {
           enabled: false
         },
         ...props.options
       }
+      return options
     })
 
     const getEditorValue = () => editor.value?.getEditor()?.getValue()

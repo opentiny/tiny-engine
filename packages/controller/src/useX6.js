@@ -20,7 +20,7 @@ import { Keyboard } from '@antv/x6-plugin-keyboard'
  * @prop {boolean} [need_clip]
  */
 /**
- * @typedef {Object} MaterialProperty
+ * @typedef {Object} Property
  * @property {string} id
  * @property {{zh_CN:string,en_US:string}} label
  * @property {'number'|'string'|'boolean'|'enums'|'ParamAttr'} type
@@ -34,7 +34,8 @@ import { Keyboard } from '@antv/x6-plugin-keyboard'
  * @prop {string|undefined} nnName - 如果为网络，网络名称
  * @prop {string} desc - 简介
  * @prop {boolean} nn - 是否为网络
- * @prop {MaterialProperty[]} properties - 配置信息
+ * @prop {'nn'|'layer'|'backbone'|'utils'} mode
+ * @prop {Property[]} properties - 配置信息
  */
 /**
  * @typedef {{materials: MaterialInfo[]}} Materials
@@ -191,7 +192,7 @@ export const getCanvas = () => g
 
 /**
  *
- * @param {MaterialProperty} property
+ * @param {Property} property
  * @param {{[x:string]:import('./useResource').Type}[]} externalType
  */
 const processDefaultValue = (property, externalType) => {
@@ -223,28 +224,30 @@ const processDefaultValue = (property, externalType) => {
  */
 const addNode = (info, types) => {
   const g = getCanvas()
-  info.properties = info.properties.map((p) => {
-    let data = null
-    if (!data) {
-      switch (p.type) {
-        case 'string':
-        case 'number':
-        case 'boolean':
-          data = p.default
-          break
-        case 'enums':
-          data = p.enums.filter((v) => v.default)[0].value
-          break
-        case 'ParamAttr':
-          data = processDefaultValue(p, types)
-          break
+  if (info.properties) {
+    info.properties = info.properties.map((p) => {
+      let data = null
+      if (!data) {
+        switch (p.type) {
+          case 'string':
+          case 'number':
+          case 'boolean':
+            data = p.default
+            break
+          case 'enums':
+            data = p.enums.filter((v) => v.default)[0].value
+            break
+          case 'ParamAttr':
+            data = processDefaultValue(p, types)
+            break
+        }
       }
-    }
-    return {
-      ...p,
-      data
-    }
-  })
+      return {
+        ...p,
+        data
+      }
+    })
+  }
   const node = g.addNode({
     shape: 'dag-node',
     data: {

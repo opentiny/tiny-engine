@@ -66,6 +66,7 @@
         "nnName": "Conv1D",
         "desc": "一维卷积层",
         "nn": true,
+        "mode": "nn",
         "properties": [
           {
             "id": "in_channels",

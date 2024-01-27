@@ -1,4 +1,7 @@
 const vueMonaco = {
+  /**
+   * @type {import('monaco-editor').editor.IStandaloneCodeEditor|import('monaco-editor').editor.IDiffEditor}
+   */
   editor: null,
   monaco: null
 }

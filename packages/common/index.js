@@ -79,6 +79,10 @@ import BlockDeployDialog from './component/BlockDeployDialog.vue'
 import ProgressBar from './component/ProgressBar.vue'
 import MetaButtonGroup from './component/MetaButtonGroup.vue'
 import MetaTableColumns from './component/MetaTableColumns.vue'
+import Empty from './component/Empty.vue'
+import Tip from './component/Tip.vue'
+import FadeTransition from './component/transition/TransitionFade.vue'
+import PythonMonaco from './component/PythonMonaco.vue'
 
 import i18n, { i18nKeyMaps } from './js/i18n.js'
 
@@ -182,6 +186,7 @@ export {
   CloseIcon,
   LifeCycles,
   EmptyTip,
+  Empty,
   MetaContainer,
   MonacoEditor,
   MaskModal,
@@ -192,5 +197,8 @@ export {
   BindI18n,
   BlockDeployDialog,
   ProgressBar,
-  MetaTableColumns
+  MetaTableColumns,
+  FadeTransition,
+  PythonMonaco,
+  Tip
 }

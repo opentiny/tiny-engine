@@ -28,6 +28,7 @@
  * @prop {string|number} id
  * @prop {Label} label
  * @prop {Code[]} code
+ * @prop {import('@opentiny/tiny-engine-controller/useX6').Property[]} properties
  *
  * @typedef {LayerItem[]} Layer
  *
@@ -39,6 +40,12 @@
  * @prop {boolean} optional
  * @prop {string} [default]
  * @typedef {{[x:string]:Type[]}} Types
+ *
+ * @typedef {Object} ResState
+ * @prop {import('@opentiny/tiny-engine-controller/useX6').MaterialInfo[]} materials
+ * @prop {Types} types
+ * @prop {Layer} layer
+ *
  */
 import { getGlobalConfig } from './globalConfig'
 import { reactive, ref, computed } from 'vue'
@@ -56,35 +63,18 @@ const resState = reactive({
 
 /**
  *
- * @param {import('@opentiny/tiny-engine-controller/useX6').Materials[]} data
+ * @param {[ResState]} data
  */
-const registerNN = (data) => {
+const registerNN = ([data]) => {
   return new Promise((resolve) => {
-    data
-      .map((v) => v.materials)
-      .flat()
-      .map((v) => {
-        resState.nn.push(v)
-      })
-    resolve()
-  })
-}
-/**
- *
- * @param {Layer} data
- */
-const registerLayer = (data) => {
-  resState.layer = data
-}
-
-/**
- *
- * @param {Types[]} types
- */
-const registerType = (types) => {
-  return new Promise((resolve) => {
-    resState.types = types
-    resolve()
+    data.layer.forEach((layer) => {
+      resState.layer.push(layer)
+    })
+    data.materials.forEach((n) => {
+      resState.nn.push(n)
+    })
+    resState.types = data.types
+    resolve(data)
   })
 }
 
@@ -100,10 +90,9 @@ const fetchNN = async () => {
   const nn = computed(() => resState.nn)
   Promise.allSettled(bundleUrls.map((url) => http.get(url)))
     .then((res) => {
-      return res.map((v) => (v.status === 'fulfilled' ? v.value : []))
+      return res.map((v) => (v.status === 'fulfilled' ? v.value : {}))
     })
     .then(registerNN)
-    .then(registerLayer)
     .catch((err) => {
       error.value = true
       reason.value = err
@@ -119,39 +108,9 @@ const fetchNN = async () => {
   }
 }
 
-const fetchType = async () => {
-  const { dslMode, canvasOptions } = getGlobalConfig()
-  const bundleUrls = canvasOptions[dslMode].material
-  const loading = ref(true)
-  const error = ref(false)
-  const reason = ref()
-  const types = computed(() => resState.types)
-  if (JSON.stringify(types.value) === '{}') {
-    Promise.allSettled(bundleUrls.map((url) => http.get(url)))
-      .then((res) => {
-        return res.map((v) => (v.status === 'fulfilled' ? v.value : []))
-      })
-      .then(([{ types }]) => registerType(types))
-      .catch((err) => {
-        error.value = true
-        reason.value = err
-      })
-      .finally(() => {
-        loading.value = false
-      })
-  }
-  return {
-    types,
-    loading,
-    error,
-    reason
-  }
-}
-
 export default function () {
   return {
     resState,
-    fetchNN,
-    fetchType
+    fetchNN
   }
 }

@@ -14,37 +14,24 @@ import { defineConfig } from 'vite'
 import path from 'path'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
-import monaco from 'vite-plugin-monaco-editor'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue(), vueJsx(), monaco()],
+  plugins: [vue(), vueJsx()],
   publicDir: false,
   resolve: {},
-  define: {
-    'process.env': {}
-  },
   build: {
-    cssCodeSplit: false,
     lib: {
-      entry: {
-        index: path.resolve(__dirname, './index.js')
-      },
-      name: 'common',
-      fileName: (format, entryName) => `${entryName}.js`,
+      entry: path.resolve(__dirname, './index.js'),
+      name: 'setting-events',
+      fileName: () => 'index.js',
       formats: ['es']
     },
     rollupOptions: {
       output: {
-        banner: (chunk) => {
-          if (chunk.name === 'index') {
-            return 'import "./style.css"'
-          }
-
-          return ''
-        }
+        banner: 'import "./style.css"'
       },
-      external: ['vue', 'monaco-editor', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/, /^prettier.*/]
+      external: ['vue', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/]
     }
   }
 })

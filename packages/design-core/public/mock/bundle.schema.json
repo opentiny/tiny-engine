@@ -2,6 +2,35 @@
   "$id": "bundle",
   "type": "object",
   "definitions": {
+    "properties": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "该设置的唯一ID",
+          "type": "string"
+        },
+        "label": {
+          "description": "该设置的label",
+          "$ref": "#/definitions/label"
+        },
+        "type": {
+          "description": "该设置的数据类型",
+          "type": "string"
+        },
+        "required": {
+          "description": "该设置是否是必选",
+          "type": "boolean"
+        },
+        "default": {
+          "description": "该设置的默认值",
+          "type": ["string", "number", "null", "boolean"]
+        },
+        "enums": {
+          "description": "该设置是否为select, 如果type为enum, 则该选项为必选",
+          "$ref": "#/definitions/enums"
+        }
+      }
+    },
     "enums": {
       "type": "array",
       "items": {
@@ -70,72 +99,46 @@
               },
               "required": ["label", "fnName", "content"]
             }
+          },
+          "properties": {
+            "$ref": "#/definitions/properties",
+            "description": "转码时会将该properties作为参数带入"
           }
         }
       }
     },
+    "Options": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "$ref": "#/definitions/label"
+        },
+        "nnName": {
+          "type": "string"
+        },
+        "desc": {
+          "type": "string"
+        },
+        "nn": {
+          "type": "boolean"
+        },
+        "mode": {
+          "type": "string",
+          "enum": ["nn", "layer", "backbone", "utils"]
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/properties"
+          }
+        }
+      },
+      "required": ["*"]
+    },
     "materials": {
       "type": "array",
       "items": {
-        "type": "object",
-        "properties": {
-          "label": {
-            "description": "定义了物料的label",
-            "$ref": "#/definitions/label"
-          },
-          "nnName": {
-            "description": "网络名称",
-            "type": "string"
-          },
-          "desc": {
-            "description": "该物料简短的介绍",
-            "type": "string"
-          },
-          "nn": {
-            "description": "是否是网络",
-            "type": "boolean"
-          },
-          "properties": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "description": "该设置的唯一ID",
-                  "type": "string"
-                },
-                "label": {
-                  "description": "该设置的label",
-                  "$ref": "#/definitions/label"
-                },
-                "type": {
-                  "description": "该设置的数据类型",
-                  "type": "string"
-                },
-                "required": {
-                  "description": "该设置是否是必选",
-                  "type": "boolean"
-                },
-                "default": {
-                  "description": "该设置的默认值",
-                  "type": ["string", "number", "null", "boolean"]
-                },
-                "enums": {
-                  "description": "该设置是否为select, 如果type为enum, 则该选项为必选",
-                  "$ref": "#/definitions/enums"
-                }
-              },
-              "if": {
-                "properties": {
-                  "type": { "const": "enums" }
-                }
-              },
-              "then": {
-                "required": ["enums"]
-              }
-            }
-          }
-        }
+        "$ref": "#/definitions/material"
       }
     }
   },
