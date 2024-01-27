@@ -2,9 +2,9 @@
   <div ref="monacoRef"></div>
 </template>
 <script>
+import { useEditor } from '@opentiny/tiny-engine-controller'
 import * as monacoEditor from 'monaco-editor'
 import { watch, onMounted, nextTick, onBeforeUnmount, ref } from 'vue'
-import { formatString } from '../js/ast.js'
 
 export default {
   name: 'MonacoEditor',
@@ -39,81 +39,28 @@ export default {
   },
   emits: ['change', 'editorWillMount', 'editorDidMount'],
   setup(props, { emit }) {
-    const vueMonaco = {
-      editor: null,
-      monaco: null
-    }
     const monacoRef = ref(null)
-
-    const focus = () => vueMonaco.editor && vueMonaco.editor.focus()
-
-    const getMonaco = () => vueMonaco.monaco
-
-    const getEditor = () => vueMonaco.editor
-
-    const getModifiedEditor = () => (props.diffEditor ? vueMonaco.editor.getModifiedEditor() : vueMonaco.editor)
-
-    const getOriginalEditor = () => (props.diffEditor ? vueMonaco.editor.getOriginalEditor() : vueMonaco.editor)
-
-    const getModelMarkers = () => vueMonaco.monaco.editor.getModelMarkers()
-
-    const initMonaco = (monaco) => {
-      emit('editorWillMount', vueMonaco.monaco)
-
-      const options = { value: props.value, theme: props.theme, language: props.language, ...props.options }
-
-      if (props.diffEditor) {
-        vueMonaco.editor = monaco.editor.createDiffEditor(monacoRef.value, options)
-        const originalModel = monaco.editor.createModel(props.original, props.language)
-        const modifiedModel = monaco.editor.createModel(props.value, props.language)
-
-        vueMonaco.editor.setModel({
-          original: originalModel,
-          modified: modifiedModel
-        })
-      } else {
-        vueMonaco.editor = monaco.editor.create(monacoRef.value, options)
-      }
-
-      const editor2 = getModifiedEditor()
-
-      editor2.onDidChangeModelContent((event) => {
-        const value = editor2.getValue()
-
-        if (props.value !== value) {
-          emit('change', value, event)
-        }
-      })
-
-      emit('editorDidMount', vueMonaco.editor)
-    }
-
+    const {
+      init: initMonaco,
+      getModifiedEditor,
+      getOriginalEditor,
+      getModelMarkers,
+      getEditor,
+      getMonaco,
+      vueMonaco
+    } = useEditor()
     onMounted(() => {
       if (props.amdRequire) {
         props.amdRequire(['vs/editor/editor.main'], () => {
           vueMonaco.monaco = window.monaco
           nextTick(() => {
-            initMonaco(window.monaco)
+            initMonaco(window.monaco, emit, props, monacoRef)
           })
         })
       } else {
         vueMonaco.monaco = monacoEditor
         nextTick(() => {
-          initMonaco(vueMonaco.monaco)
-          vueMonaco.editor.addAction({
-            id: 'prettier',
-            label: 'Prettier',
-            precondition: null,
-            contextMenuGroupId: 'navigation',
-            run(editor) {
-              const currentValue = editor.getValue()
-              const newValue = formatString(currentValue, props.options.language)
-
-              if (newValue !== currentValue) {
-                editor.setValue(newValue)
-              }
-            }
-          })
+          initMonaco(vueMonaco.monaco, emit, props, monacoRef)
         })
       }
     })
@@ -126,7 +73,7 @@ export default {
       () => props.options,
       (options) => {
         if (vueMonaco.editor) {
-          const editor2 = getModifiedEditor()
+          const editor2 = getModifiedEditor(props)
 
           editor2.updateOptions(options)
         }
@@ -140,7 +87,7 @@ export default {
       () => props.value,
       (newValue) => {
         if (vueMonaco.editor) {
-          const editor = getModifiedEditor()
+          const editor = getModifiedEditor(props)
 
           if (newValue !== editor.getValue()) {
             editor.setValue(newValue)
