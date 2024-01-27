@@ -4,7 +4,7 @@
     "materials": {
       "components": [
         {
-          "id": 2,
+          "tiny_mode": "mobile",
           "version": "3.11.0",
           "name": {
             "zh_CN": "导航栏"
@@ -12,11 +12,11 @@
           "component": "TinyNavBar",
           "icon": "",
           "description": "",
-          "doc_url": "",
+          "docUrl": "",
           "screenshot": "",
           "tags": "",
           "keywords": "",
-          "dev_mode": "proCode",
+          "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "NavBar",
@@ -70,7 +70,7 @@
                     "defaultValue": "true",
                     "label": {
                       "text": {
-                        "zh_CN": "<p>是否固定在顶部，该属性默认为true</p>"
+                        "zh_CN": "是否固定在顶部，该属性默认为true"
                       }
                     },
                     "cols": 12,
@@ -84,7 +84,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": "<p>是否固定在顶部，该属性默认为true</p>"
+                      "zh_CN": "是否固定在顶部，该属性默认为true"
                     }
                   },
                   {
@@ -93,7 +93,7 @@
                     "defaultValue": "",
                     "label": {
                       "text": {
-                        "zh_CN": "<p>是否显示左侧箭头，该属性默认为false</p>"
+                        "zh_CN": "是否显示左侧箭头，该属性默认为false"
                       }
                     },
                     "cols": 12,
@@ -107,7 +107,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": "<p>是否显示左侧箭头，该属性默认为false</p>"
+                      "zh_CN": "是否显示左侧箭头，该属性默认为false"
                     }
                   },
                   {
@@ -116,7 +116,7 @@
                     "defaultValue": "",
                     "label": {
                       "text": {
-                        "zh_CN": "<p>是否显示右侧箭头</p>"
+                        "zh_CN": "是否显示右侧箭头"
                       }
                     },
                     "cols": 12,
@@ -130,7 +130,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": "<p>是否显示右侧箭头</p>"
+                      "zh_CN": "是否显示右侧箭头"
                     }
                   },
                   {
@@ -139,7 +139,7 @@
                     "defaultValue": "",
                     "label": {
                       "text": {
-                        "zh_CN": "<p>设置右侧文本</p>"
+                        "zh_CN": "设置右侧文本"
                       }
                     },
                     "cols": 12,
@@ -153,7 +153,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": "<p>设置右侧文本</p>"
+                      "zh_CN": "设置右侧文本"
                     }
                   },
                   {
@@ -162,7 +162,7 @@
                     "defaultValue": "",
                     "label": {
                       "text": {
-                        "zh_CN": "<p>设置左侧文本</p>"
+                        "zh_CN": "设置左侧文本"
                       }
                     },
                     "cols": 12,
@@ -176,7 +176,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": "<p>设置左侧文本</p>"
+                      "zh_CN": "设置左侧文本"
                     }
                   },
                   {
@@ -185,7 +185,7 @@
                     "defaultValue": "",
                     "label": {
                       "text": {
-                        "zh_CN": "<p>设置副标题</p>"
+                        "zh_CN": "设置副标题"
                       }
                     },
                     "cols": 12,
@@ -199,7 +199,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": "<p>设置副标题</p>"
+                      "zh_CN": "设置副标题"
                     }
                   },
                   {
@@ -208,7 +208,7 @@
                     "defaultValue": "",
                     "label": {
                       "text": {
-                        "zh_CN": "<p>设置主标题</p>"
+                        "zh_CN": "设置主标题"
                       }
                     },
                     "cols": 12,
@@ -222,7 +222,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": "<p>设置主标题</p>"
+                      "zh_CN": "设置主标题"
                     }
                   },
                   {
@@ -231,7 +231,7 @@
                     "defaultValue": "",
                     "label": {
                       "text": {
-                        "zh_CN": "<p>设置z-index</p>"
+                        "zh_CN": "设置z-index"
                       }
                     },
                     "cols": 12,
@@ -245,7 +245,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": "<p>设置z-index</p>"
+                      "zh_CN": "设置z-index"
                     }
                   }
                 ]
@@ -255,263 +255,33 @@
             "slots": {
               "default": {
                 "label": {
-                  "zh_CN": "<p>自定义标题</p>"
+                  "zh_CN": "自定义标题"
                 },
                 "description": {
-                  "zh_CN": "<p>自定义标题</p>"
+                  "zh_CN": "自定义标题"
                 }
               },
               "left": {
                 "label": {
-                  "zh_CN": "<p>自定义左侧内容</p>"
+                  "zh_CN": "自定义左侧内容"
                 },
                 "description": {
-                  "zh_CN": "<p>自定义左侧内容</p>"
+                  "zh_CN": "自定义左侧内容"
                 }
               },
               "right": {
                 "label": {
-                  "zh_CN": "<p>自定义右侧内容</p>"
+                  "zh_CN": "自定义右侧内容"
                 },
                 "description": {
-                  "zh_CN": "<p>自定义右侧内容</p>"
+                  "zh_CN": "自定义右侧内容"
                 }
               }
             }
           }
         },
         {
-          "id": 3,
-          "version": "3.11.0",
-          "name": {
-            "zh_CN": "标签栏"
-          },
-          "component": "TinyTabbar",
-          "icon": "",
-          "description": "",
-          "docUrl": "",
-          "screenshot": "",
-          "tags": "",
-          "keywords": "",
-          "devMode": "proCode",
-          "npm": {
-            "package": "@opentiny/vue",
-            "exportName": "Tabbar",
-            "version": "3.11.0",
-            "destructuring": true
-          },
-          "group": "component",
-          "configure": {
-            "loop": true,
-            "condition": true,
-            "styles": true,
-            "isContainer": false,
-            "isModal": false,
-            "nestingRule": {
-              "childWhitelist": "",
-              "parentWhitelist": "",
-              "descendantBlacklist": "",
-              "ancestorWhitelist": ""
-            },
-            "isNullNode": false,
-            "isLayout": false,
-            "rootSelector": "",
-            "shortcuts": {
-              "properties": []
-            },
-            "contextMenu": {
-              "actions": [],
-              "disable": []
-            },
-            "framework": "Vue"
-          },
-          "schema": {
-            "properties": [
-              {
-                "label": {
-                  "zh_CN": "基础信息"
-                },
-                "description": {
-                  "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
-                },
-                "content": [
-                  {
-                    "property": "active-color",
-                    "type": "String",
-                    "defaultValue": "",
-                    "label": {
-                      "text": {
-                        "zh_CN": "<p>选中标签的颜色</p>"
-                      }
-                    },
-                    "cols": 12,
-                    "rules": [],
-                    "hidden": false,
-                    "required": true,
-                    "readOnly": true,
-                    "disabled": true,
-                    "widget": {
-                      "component": "MetaInput",
-                      "props": {}
-                    },
-                    "description": {
-                      "zh_CN": "<p>选中标签的颜色</p>"
-                    }
-                  },
-                  {
-                    "property": "border",
-                    "type": "Boolean",
-                    "defaultValue": "",
-                    "label": {
-                      "text": {
-                        "zh_CN": "<p>是否显示外边框，该属性默认为true</p>"
-                      }
-                    },
-                    "cols": 12,
-                    "rules": [],
-                    "hidden": false,
-                    "required": true,
-                    "readOnly": true,
-                    "disabled": true,
-                    "widget": {
-                      "component": "MetaSwitch",
-                      "props": {}
-                    },
-                    "description": {
-                      "zh_CN": "<p>是否显示外边框，该属性默认为true</p>"
-                    }
-                  },
-                  {
-                    "property": "fixed",
-                    "type": "Boolen",
-                    "defaultValue": "",
-                    "label": {
-                      "text": {
-                        "zh_CN": "<p>是否固定在底部，该属性默认为true</p>"
-                      }
-                    },
-                    "cols": 12,
-                    "rules": [],
-                    "hidden": false,
-                    "required": true,
-                    "readOnly": true,
-                    "disabled": true,
-                    "widget": {
-                      "component": "",
-                      "props": {}
-                    },
-                    "description": {
-                      "zh_CN": "<p>是否固定在底部，该属性默认为true</p>"
-                    }
-                  },
-                  {
-                    "property": "inactive-color",
-                    "type": "String",
-                    "defaultValue": "",
-                    "label": {
-                      "text": {
-                        "zh_CN": "<p>未选中标签的颜色</p>"
-                      }
-                    },
-                    "cols": 12,
-                    "rules": [],
-                    "hidden": false,
-                    "required": true,
-                    "readOnly": true,
-                    "disabled": true,
-                    "widget": {
-                      "component": "MetaInput",
-                      "props": {}
-                    },
-                    "description": {
-                      "zh_CN": "<p>未选中标签的颜色</p>"
-                    }
-                  },
-                  {
-                    "property": "route",
-                    "type": "Boolean",
-                    "defaultValue": "",
-                    "label": {
-                      "text": {
-                        "zh_CN": "<p>是否开启路由模式，该属性默认为false</p>"
-                      }
-                    },
-                    "cols": 12,
-                    "rules": [],
-                    "hidden": false,
-                    "required": true,
-                    "readOnly": true,
-                    "disabled": true,
-                    "widget": {
-                      "component": "MetaSwitch",
-                      "props": {}
-                    },
-                    "description": {
-                      "zh_CN": "<p>是否开启路由模式，该属性默认为false</p>"
-                    }
-                  },
-                  {
-                    "property": "z-index",
-                    "type": "Number | String",
-                    "defaultValue": "",
-                    "label": {
-                      "text": {
-                        "zh_CN": "<p>元素 z-index</p>"
-                      }
-                    },
-                    "cols": 12,
-                    "rules": [],
-                    "hidden": false,
-                    "required": true,
-                    "readOnly": true,
-                    "disabled": true,
-                    "widget": {
-                      "component": "",
-                      "props": {}
-                    },
-                    "description": {
-                      "zh_CN": "<p>元素 z-index</p>"
-                    }
-                  }
-                ]
-              }
-            ],
-            "events": {
-              "onChange": {
-                "label": {
-                  "zh_CN": "<p>切换标签时触发,value: 当前选中标签的名称或索引值</p>"
-                },
-                "description": {
-                  "zh_CN": "<p>切换标签时触发,value: 当前选中标签的名称或索引值</p>"
-                },
-                "type": "event",
-                "functionInfo": {
-                  "params": [],
-                  "returns": {}
-                },
-                "defaultValue": ""
-              }
-            },
-            "slots": {
-              "icon": {
-                "label": {
-                  "zh_CN": "<p>自定义图标</p>"
-                },
-                "description": {
-                  "zh_CN": "<p>自定义图标</p>"
-                }
-              }
-            }
-          }
-        },
-        {
-          "id": 11,
+          "tiny_mode": "mobile",
           "version": "3.11.0",
           "name": {
             "zh_CN": "表格"
@@ -577,7 +347,7 @@
                     "defaultValue": "",
                     "label": {
                       "text": {
-                        "zh_CN": "<p>列数据</p>"
+                        "zh_CN": "列数据"
                       }
                     },
                     "cols": 12,
@@ -593,7 +363,7 @@
                       }
                     },
                     "description": {
-                      "zh_CN": "<p>列数据</p>"
+                      "zh_CN": "列数据"
                     }
                   },
                   {
@@ -602,7 +372,7 @@
                     "defaultValue": "",
                     "label": {
                       "text": {
-                        "zh_CN": "<p>表格数据</p>"
+                        "zh_CN": "表格数据"
                       }
                     },
                     "cols": 12,
@@ -618,7 +388,7 @@
                       }
                     },
                     "description": {
-                      "zh_CN": "<p>表格数据</p>"
+                      "zh_CN": "表格数据"
                     }
                   },
                   {
@@ -627,7 +397,7 @@
                     "defaultValue": "",
                     "label": {
                       "text": {
-                        "zh_CN": "<p>表格宽度</p>"
+                        "zh_CN": "表格宽度"
                       }
                     },
                     "cols": 12,
@@ -641,7 +411,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": "<p>表格宽度</p>"
+                      "zh_CN": "表格宽度"
                     }
                   },
                   {
@@ -650,7 +420,7 @@
                     "defaultValue": "",
                     "label": {
                       "text": {
-                        "zh_CN": "<p>默认选中项</p>"
+                        "zh_CN": "默认选中项"
                       }
                     },
                     "cols": 12,
@@ -666,7 +436,7 @@
                       }
                     },
                     "description": {
-                      "zh_CN": "<p>默认选中项</p>"
+                      "zh_CN": "默认选中项"
                     }
                   },
                   {
@@ -675,7 +445,7 @@
                     "defaultValue": "",
                     "label": {
                       "text": {
-                        "zh_CN": "<p>数据标识</p>"
+                        "zh_CN": "数据标识"
                       }
                     },
                     "cols": 12,
@@ -689,7 +459,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": "<p>数据标识</p>"
+                      "zh_CN": "数据标识"
                     }
                   }
                 ]
@@ -697,6 +467,214 @@
             ],
             "events": {},
             "slots": {}
+          }
+        },
+        {
+          "id": 1,
+          "tiny_mode": "mobile",
+          "version": "3.11.0",
+          "name": {
+            "zh_CN": "单选"
+          },
+          "component": "TinyRadio",
+          "icon": "",
+          "description": "",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "package": "@opentiny/vue",
+            "exportName": "Radio",
+            "version": "3.11.0",
+            "destructuring": true
+          },
+          "group": "component",
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": [],
+              "disable": []
+            },
+            "framework": "Vue"
+          },
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "collapse": {
+                  "number": 6,
+                  "text": {
+                    "zh_CN": "显示更多"
+                  }
+                },
+                "content": [
+                  {
+                    "property": "disabled",
+                    "type": "boolean",
+                    "defaultValue": "false",
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否禁用"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": true,
+                    "disabled": true,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": "是否禁用"
+                    }
+                  },
+                  {
+                    "property": "label",
+                    "type": "object | string",
+                    "defaultValue": "",
+                    "label": {
+                      "text": {
+                        "zh_CN": "Radio 的 value,该属性默认为{}"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": true,
+                    "disabled": true,
+                    "widget": {
+                      "component": "",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": "Radio 的 value,该属性默认为{}"
+                    }
+                  },
+                  {
+                    "property": "name",
+                    "type": "string",
+                    "defaultValue": "",
+                    "label": {
+                      "text": {
+                        "zh_CN": "原生 name 属性"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": true,
+                    "disabled": true,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": "原生 name 属性"
+                    }
+                  },
+                  {
+                    "property": "text",
+                    "type": "string",
+                    "defaultValue": "",
+                    "label": {
+                      "text": {
+                        "zh_CN": "文本"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": true,
+                    "disabled": true,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": "文本"
+                    }
+                  },
+                  {
+                    "property": "value",
+                    "type": "object | string",
+                    "defaultValue": "{}",
+                    "label": {
+                      "text": {
+                        "zh_CN": "绑定值，该属性默认为{}"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": true,
+                    "disabled": true,
+                    "widget": {
+                      "component": "",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": "绑定值，该属性默认为{}"
+                    }
+                  }
+                ]
+              }
+            ],
+            "events": {
+              "onChange": {
+                "label": {
+                  "zh_CN": "绑定值变化时触发的事件,可获取changeValue"
+                },
+                "description": {
+                  "zh_CN": "绑定值变化时触发的事件,可获取changeValue"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [],
+                  "returns": {}
+                },
+                "defaultValue": ""
+              }
+            },
+            "slots": {
+              "default": {
+                "label": {
+                  "zh_CN": "Radio的内容"
+                },
+                "description": {
+                  "zh_CN": "Radio的内容"
+                }
+              }
+            }
           }
         },
         {
@@ -4396,6 +4374,7 @@
           }
         },
         {
+          "tiny_mode": "pc",
           "icon": "radio",
           "name": {
             "zh_CN": "单选"
@@ -11095,6 +11074,7 @@
               },
               "icon": "radio",
               "screenshot": "",
+              "tiny_mode": "pc",
               "snippetName": "TinyRadio",
               "schema": {
                 "componentName": "TinyRadio",
@@ -11172,19 +11152,17 @@
               "name": {
                 "zh_CN": "导航栏"
               },
-              "icon": "nav-bar",
+              "icon": "tabs",
               "screenshot": "",
               "snippetName": "TinyNavBar",
-              "schema": {}
-            },
-            {
-              "name": {
-                "zh_CN": "标签栏"
-              },
-              "icon": "tabbar",
-              "screenshot": "",
-              "snippetName": "TinyTabbar",
-              "schema": {}
+              "schema": {
+                "props": {
+                  "tiny_mode": "mobile",
+                  "left-text": "返回",
+                  "right-text": "确定",
+                  "title": "导航栏"
+                }
+              }
             },
             {
               "name": {
@@ -11193,7 +11171,47 @@
               "icon": "table",
               "screenshot": "",
               "snippetName": "TinyTable",
-              "schema": {}
+              "schema": {
+                "props": {
+                  "columns": [
+                    {
+                      "width": 100,
+                      "title": "业务",
+                      "field": "business"
+                    },
+                    {
+                      "width": 100,
+                      "title": "空间",
+                      "field": "space"
+                    },
+                    {
+                      "width": 100,
+                      "title": "IDC",
+                      "field": "idc"
+                    }
+                  ],
+                  "data": [
+                    {
+                      "id": "1",
+                      "business": "直播",
+                      "space": 60,
+                      "idc": 80
+                    },
+                    {
+                      "id": "2",
+                      "business": "大数据",
+                      "space": 60,
+                      "idc": 80
+                    },
+                    {
+                      "id": "3",
+                      "business": "web业务",
+                      "space": 60,
+                      "idc": 80
+                    }
+                  ]
+                }
+              }
             },
             {
               "name": {
@@ -11201,8 +11219,13 @@
               },
               "icon": "radio",
               "screenshot": "",
+              "tiny_mode": "mobile",
               "snippetName": "TinyRadio",
-              "schema": {}
+              "schema": {
+                "props": {
+                  "tiny_mode": "mobile"
+                }
+              }
             }
           ]
         }

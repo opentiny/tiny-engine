@@ -154,7 +154,7 @@ const getProps = (schema, parent) => {
   // 现在选中的节点和当前节点一样，不需要重新计算
   if (schema && properties.schema !== schema) {
     const { props, componentName } = schema
-    const { schema: metaSchema, content, properties } = useResource().getMaterial(componentName)
+    const { schema: metaSchema, content, properties } = useResource().getMaterial(componentName, schema)
     const schemaProps = properties || metaSchema?.properties || content?.schema?.properties || []
     const propGroups = [...schemaProps]
 
