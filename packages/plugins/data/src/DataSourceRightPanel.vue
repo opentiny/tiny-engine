@@ -116,7 +116,7 @@ export default {
   border-right: 1px solid var(--ti-lowcode-toolbar-border-color);
   background: var(--ti-lowcode-toolbar-bg);
   position: absolute;
-  left: calc(var(--base-left-panel-width, 268px) - 6px);
+  left: calc(var(--base-left-panel-width) - 6px);
   top: 0;
 
   .right-head {

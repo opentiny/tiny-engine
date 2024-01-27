@@ -36,7 +36,7 @@
       <div class="drag-resize resize-bottom-left" @mousedown.stop="onMousedown($event, 'start', 'end')"></div>
       <div class="drag-resize resize-bottom-right" @mousedown.stop="onMousedown($event, 'end', 'end')"></div>
     </template>
-    <div v-if="showAction" class="corner-mark-right" :style="fixStyle">
+    <div v-if="showAction" ref="optionRef" class="corner-mark-right" :style="fixStyle">
       <template v-if="!isModal">
         <div v-if="showToParent" title="选择父级">
           <icon-chevron-left @click.stop="selectParent"></icon-chevron-left>
@@ -74,7 +74,7 @@
   </div>
 </template>
 <script>
-import { watchPostEffect, ref, watch, computed } from 'vue'
+import { watchPostEffect, ref, watch, computed, nextTick } from 'vue'
 import {
   IconDel,
   IconSetting,
@@ -95,7 +95,7 @@ import {
   dragStart,
   getCurrentElement
 } from './container'
-import { useResource } from '@opentiny/tiny-engine-controller'
+import { useLayout, useResource } from '@opentiny/tiny-engine-controller'
 import { Popover } from '@opentiny/vue'
 import shortCutPopover from './shortCutPopover.vue'
 
@@ -103,14 +103,17 @@ import shortCutPopover from './shortCutPopover.vue'
 const OPTION_BAR_HEIGHT = 24
 // 标签高度
 const LABEL_HEIGHT = 24
-// 操作条最大宽度
-const MAX_OPTION_WIDTH = 110
 
 // 画布右边滚动条宽度
 const SCROLL_BAR_WIDTH = 8
 
 // 当工具操作条和标签高度并排显示时，需要的间距 6px
 const OPTION_SPACE = 6
+
+// 选中框的边框宽度
+const SELECTION_BORDER_WIDTH = 2
+
+const STYLE_UNSET = 'unset'
 
 export default {
   components: {
@@ -204,6 +207,7 @@ export default {
       return config?.configure?.isModal
     })
 
+    const optionRef = ref(null)
     const fixStyle = ref('')
 
     let showPopover = ref(false)
@@ -265,45 +269,188 @@ export default {
     const labelRef = ref(null)
     const labelStyle = ref('')
 
-    const bottomPanelHeight = ref(0)
-    const topToolbarHeight = ref(0)
-
-    watchPostEffect(() => {
-      if (!bottomPanelHeight.value) {
-        bottomPanelHeight.value = document.querySelector('#tiny-bottom-panel')?.offsetHeight
+    const positions = {
+      LEFT: 'left',
+      RIGHT: 'right',
+      TOP: 'top',
+      BOTTOM: 'bottom',
+      isHorizontal(position) {
+        return [this.LEFT, this.RIGHT].includes(position)
+      },
+      isVertical(position) {
+        return [this.TOP, this.BOTTOM].includes(position)
       }
-      if (!topToolbarHeight.value) {
-        topToolbarHeight.value = document.querySelector('.tiny-engine-toolbar')?.offsetHeight
+    }
+
+    class Align {
+      alignLeft = false
+      horizontalValue = 0
+      alignTop = false
+      verticalValue = 0
+
+      constructor({ alignLeft, horizontalValue, alignTop, verticalValue }) {
+        this.alignLeft = alignLeft
+        this.horizontalValue = horizontalValue
+        this.alignTop = alignTop
+        this.verticalValue = verticalValue
       }
 
-      const { left, top, width, height } = props.selectState
+      align(position, value = 0) {
+        if (positions.isHorizontal(position)) {
+          this.alignLeft = position === positions.LEFT
+          this.horizontalValue = value
+          return this
+        }
+        if (positions.isVertical(position)) {
+          this.alignTop = position === positions.TOP
+          this.horizontalValue = value
+          return this
+        }
+        return this
+      }
+
+      toStyleValue() {
+        const styleObj = {}
+
+        if (this.alignLeft) {
+          styleObj.left = this.horizontalValue
+          styleObj.right = STYLE_UNSET
+        } else {
+          styleObj.right = this.horizontalValue
+          styleObj.left = STYLE_UNSET
+        }
+
+        if (this.alignTop) {
+          styleObj.top = this.verticalValue
+          styleObj.bottom = STYLE_UNSET
+        } else {
+          styleObj.bottom = this.verticalValue
+          styleObj.top = STYLE_UNSET
+        }
+
+        return this.styleObj2Str(styleObj)
+      }
+
+      styleObj2Str = (styleObj) => {
+        return Object.entries(styleObj)
+          .map(([key, value]) => {
+            const num = Number(value)
+
+            if (Number.isNaN(num)) {
+              return `${key}:${value}`
+            }
+
+            const val = positions.isHorizontal(key) ? num - SELECTION_BORDER_WIDTH : num
+            return `${key}:${val}px`
+          })
+          .join(';')
+      }
+    }
+
+    const getStyleValues = (selectState, siteCanvasWidth, siteCanvasHeight) => {
+      const { left, top, width, height, doc } = selectState
+      const labelRect = labelRef.value.getBoundingClientRect()
+      const optionRect = optionRef.value.getBoundingClientRect()
+      // 标签宽度和工具操作条宽度之和加上间距
+      const fullRectWidth = labelRect.width + optionRect.width + OPTION_SPACE
 
       // 是否 将label 标签放置到底部，判断 top 距离
-      const isLabelAtBottom = top <= topToolbarHeight.value + LABEL_HEIGHT
+      const isLabelAtBottom = top <= LABEL_HEIGHT
+      const labelAlign = new Align({
+        alignLeft: true,
+        horizontalValue: 0,
+        alignTop: !isLabelAtBottom,
+        verticalValue: -LABEL_HEIGHT
+      })
+
       // 是否将操作栏放置到底部，判断当前选中组件底部与页面底部的距离。
-      const isOptionAtBottom = window.innerHeight - top - height - bottomPanelHeight.value > OPTION_BAR_HEIGHT
+      const isOptionAtBottom = siteCanvasHeight - top - height > OPTION_BAR_HEIGHT
+      const optionAlign = new Align({
+        alignLeft: false,
+        horizontalValue: 0,
+        alignTop: !isOptionAtBottom,
+        verticalValue: -OPTION_BAR_HEIGHT
+      })
 
-      // 选中组件需要最小的宽度，如果小于这个最小宽度，label 和 option 组件可能会重叠遮挡，labelRef.value.clientWidth：label 的宽度
-      const minWidth = MAX_OPTION_WIDTH + labelRef.value?.clientWidth || 0
-      let translateXDis = 0
+      const scrollBarWidth = doc.documentElement.scrollHeight > doc.documentElement.clientHeight ? SCROLL_BAR_WIDTH : 0
 
-      const siteCanvas = document.querySelector('.site-canvas')
-      const right = siteCanvas.getBoundingClientRect().right
-      // 判断是否偏右，偏右且重叠的话，需要移动 label 的位移，不能移动 option 的位移，否则有可能被遮挡
-      const isOverRight = right <= left + width + SCROLL_BAR_WIDTH
+      if (width < fullRectWidth) {
+        // 选中框宽度小于标签宽度和工具操作条宽度之和加上间距
 
-      // 如果选中组件宽度小于最小宽度要求，则需要位移
-      if (width < minWidth) {
-        translateXDis = MAX_OPTION_WIDTH - width + (labelRef.value?.clientWidth || 0) + OPTION_SPACE
+        // 如果labe宽度大于选中框宽度，并且label右侧已经超出画布，则label对齐右侧
+        const isLabelAlignRight = labelRect.width > width && left + labelRect.width + scrollBarWidth > siteCanvasWidth
+        if (isLabelAlignRight) {
+          labelAlign.align(positions.RIGHT)
+        }
+
+        // 如果option宽度大于选中框宽度，并且option左侧已经超出画布，则option对齐左侧
+        const isOptionAlignLeft = optionRect.width > width && left + width - optionRect.width < 0
+        if (isOptionAlignLeft) {
+          optionAlign.align(positions.LEFT)
+        }
+
+        if (isLabelAtBottom === isOptionAtBottom) {
+          // 标签框和工具操作框都在顶部或者都在底部
+
+          if (left + fullRectWidth < siteCanvasWidth) {
+            // 都放在左侧
+            labelAlign.align(positions.LEFT)
+            optionAlign.align(positions.LEFT, labelRect.width + OPTION_SPACE)
+          } else {
+            // 都放在右侧
+            optionAlign.align(positions.RIGHT)
+            labelAlign.align(positions.RIGHT, optionRect.width + OPTION_SPACE)
+          }
+        }
+      } else {
+        if (left < 0) {
+          labelAlign.align(positions.LEFT, Math.min(-left, width - fullRectWidth))
+        }
+
+        if (left + width + scrollBarWidth > siteCanvasWidth) {
+          optionAlign.align(
+            positions.RIGHT,
+            Math.min(left + width + scrollBarWidth - siteCanvasWidth, width - fullRectWidth)
+          )
+        }
       }
 
-      labelStyle.value = `top: unset; ${isLabelAtBottom ? 'bottom' : 'top'}: -${LABEL_HEIGHT}px; ${
-        isOverRight && isLabelAtBottom === isOptionAtBottom && `left: -${translateXDis}px;`
-      }`
+      return {
+        labelStyleValue: labelAlign.toStyleValue(),
+        optionStyleValue: optionAlign.toStyleValue()
+      }
+    }
 
-      fixStyle.value = `
-        ${translateXDis && !isOverRight ? `transform: translateX(${translateXDis}px);` : ''}
-        ${isOptionAtBottom ? 'bottom' : 'top'}: -${OPTION_BAR_HEIGHT}px;`
+    watchPostEffect(async () => {
+      let { left } = props.selectState
+      const { top, width, height, doc } = props.selectState
+
+      // nextTick后ref才能获取到元素。需要把监听的依赖放在await之前，否则无法监听变化
+      await nextTick()
+
+      if (labelRef.value && !optionRef.value) {
+        // 选中body的情况
+        labelStyle.value = `left: 0; right: unset; top: unset; bottom: 0`
+        return
+      }
+
+      if (!labelRef.value || !optionRef.value) {
+        return
+      }
+
+      const siteCanvasRect = document.querySelector('.site-canvas').getBoundingClientRect()
+      const scale = useLayout().getScale()
+
+      left -= ((1 - scale) / 2) * siteCanvasRect.width
+
+      const { labelStyleValue, optionStyleValue } = getStyleValues(
+        { left, top, width, height, doc },
+        siteCanvasRect.width * scale,
+        siteCanvasRect.height
+      )
+
+      labelStyle.value = labelStyleValue
+      fixStyle.value = optionStyleValue
     })
 
     return {
@@ -313,6 +460,7 @@ export default {
       copy,
       hide,
       selectParent,
+      optionRef,
       fixStyle,
       showAction,
       showPopover,
@@ -329,7 +477,7 @@ export default {
 
 <style lang="less">
 .canvas-rect {
-  position: fixed;
+  position: absolute;
   box-sizing: border-box;
   pointer-events: none;
   border: 1px solid var(--ti-lowcode-canvas-rect-border-color);
@@ -454,7 +602,6 @@ export default {
     display: flex;
     align-items: center;
     position: absolute;
-    right: -1px;
     height: 24px;
     padding: 0 4px;
     color: var(--ti-lowcode-canvas-corner-mark-right-color);
@@ -479,7 +626,6 @@ export default {
     .corner-mark-left {
       white-space: nowrap;
       pointer-events: all;
-      left: -2px;
       color: var(--ti-lowcode-canvas-select-corner-mark-left-color);
       background: var(--ti-lowcode-canvas-select-corner-mark-left-bg-color);
       svg {

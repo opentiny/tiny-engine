@@ -7,7 +7,7 @@
     :content="isLoading ? '保存中' : '保存'"
   >
     <template #reference>
-      <span :class="[isLoading ? 'saving' : 'icon']" @click="openApi">
+      <span :id="`${isLoading ? 'saving' : ''}`" class="icon" @click="openApi">
         <span v-show="!isSaved()" class="dots"></span>
         <svg-icon :name="icon"></svg-icon>
       </span>
@@ -134,14 +134,12 @@ export default {
   right: 3px;
   z-index: 100;
 }
-.saving {
-  width: 32px;
-  height: 32px;
-  display: inline-block;
+#saving {
   cursor: not-allowed;
   color: var(--ti-lowcode-disabled-color);
-  font-size: 20px;
-  margin-bottom: -2px;
+  :deep(svg) {
+    color: var(--ti-lowcode-disabled-color);
+  }
 }
 
 .dialog-box {

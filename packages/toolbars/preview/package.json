@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-toolbar-preview",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publishConfig": {
     "access": "public"
   },
@@ -24,9 +24,9 @@
   "license": "MIT",
   "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
-    "@opentiny/tiny-engine-canvas": "workspace:^1.0.0",
-    "@opentiny/tiny-engine-common": "workspace:^1.0.0",
-    "@opentiny/tiny-engine-controller": "workspace:^1.0.0",
+    "@opentiny/tiny-engine-canvas": "workspace:*",
+    "@opentiny/tiny-engine-common": "workspace:*",
+    "@opentiny/tiny-engine-controller": "workspace:*",
     "@opentiny/vue": "~3.10.0",
     "vue": "3.2.45"
   },

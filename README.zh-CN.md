@@ -37,6 +37,27 @@ $ pnpm install
 $ pnpm dev
 ```
 
+### 本地开发，直连本地的tiny-engine-webservice服务端
+
+1. 启动 <a href="https://github.com/opentiny/tiny-engine-data-center/blob/main/README.md" target="_blank">tiny-engine-data-center</a>
+
+2. 启动 <a href="https://github.com/opentiny/tiny-engine-webservice/blob/main/README.md" target="_blank">tiny-engine-webservice</a>
+
+3. 修改 tiny-engine 项目 `packages/design-core/` 目录下 `vite.config.js` 中origin的值为自己本地webService项目的地址端口（webService端口默认为7011），如：
+
+<img alt="修改端口" src="https://res.hc-cdn.com/lowcode-portal/1.1.55/img/docimg/backend_deploy_5.png">
+
+
+### 物料同步[方案](https://opentiny.design/tiny-engine#/help-center/course/engine/56)
+
+```sh
+$ pnpm splitMaterials
+```
+
+```sh
+$ pnpm buildMaterials
+```
+
 浏览器打开：`http://localhost:8080/?type=app&id=918&tenant=1&pageid=NTJ4MjvqoVj8OVsc`  
 `url search`参数：
 
@@ -59,7 +80,7 @@ pnpm run build:alpha  或 build:prod
 ## 里程碑
 
 ```mermaid
-gantt 
+gantt
 dateFormat YYYY-MM-DD
 axisFormat %Y-%m-%d
 

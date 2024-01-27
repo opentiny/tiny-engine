@@ -163,6 +163,12 @@ export default {
         white-space: nowrap;
       }
     }
+
+    :deep(.drag-item:nth-child(3n)) {
+      .component-item {
+        border-right: none;
+      }
+    }
   }
 
   .tiny-collapse {
@@ -176,13 +182,6 @@ export default {
       .item {
         cursor: pointer;
       }
-    }
-  }
-
-  :deep(.tiny-svg, #tiny-engine .tiny-svg) {
-    transform: rotate(270deg);
-    &.is-active {
-      transform: rotate(180deg);
     }
   }
 }
