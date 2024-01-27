@@ -39,7 +39,7 @@
     "@vue/babel-plugin-jsx": "1.1.1",
     "@vue/shared": "^3.3.4",
     "@vueuse/core": "^9.6.0",
-    "vue": "3.2.45",
+    "vue": "3.4.15",
     "vue-i18n": "9.2.2"
   },
   "devDependencies": {

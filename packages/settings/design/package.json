@@ -27,7 +27,7 @@
     "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/vue": "~3.10.0",
     "sortablejs": "^1.14.0",
-    "vue": "3.2.45"
+    "vue": "3.4.15"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",

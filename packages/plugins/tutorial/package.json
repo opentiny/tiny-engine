@@ -29,7 +29,7 @@
     "@opentiny/tiny-engine-http": "workspace:*",
     "@opentiny/vue": "~3.10.0",
     "marked": "^4.0.17",
-    "vue": "3.2.45"
+    "vue": "3.4.15"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",

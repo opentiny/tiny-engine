@@ -31,7 +31,7 @@
     "@opentiny/vue": "~3.10.0",
     "@opentiny/vue-icon": "~3.10.0",
     "@opentiny/vue-renderless": "~3.10.0",
-    "vue": "3.2.45"
+    "vue": "3.4.15"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",

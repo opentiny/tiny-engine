@@ -30,7 +30,7 @@
     "@opentiny/tiny-engine-utils": "workspace:*",
     "@opentiny/vue": "~3.10.0",
     "prettier": "2.7.1",
-    "vue": "3.2.45"
+    "vue": "3.4.15"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
