@@ -94,7 +94,7 @@
     "vue": "3.4.15",
     "vue-clipboard3": "^2.0.0",
     "vue-draggable-next": "2.1.0",
-    "vue-i18n": "9.2.2",
+    "vue-i18n": "9.9.0",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

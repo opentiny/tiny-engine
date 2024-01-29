@@ -47,7 +47,7 @@
     "prettier": "2.7.1",
     "vue": "3.4.15",
     "vue-draggable-next": "2.1.0",
-    "vue-i18n": "9.2.2"
+    "vue-i18n": "9.9.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
