@@ -1,24 +1,17 @@
 <template>
   <div class="style-editor">
-    <meta-code-editor
-      :modelValue="state.cssContent"
-      title="Css 编辑"
-      button-text="编辑全局样式"
-      language="css"
-      single
-      @save="save(CSS_TYPE.Css, $event)"
-    />
     <div class="line-style">
       <span class="line-text"> 行内样式 </span>
       <div class="inline-style">
         <meta-code-editor
           v-if="state.lineStyleDisable"
+          :buttonShowContent="true"
           :modelValue="state.styleContent"
           title="编辑行内样式"
           :button-text="state.inlineBtnText"
           language="css"
           single
-          @save="save(CSS_TYPE.Style, $event)"
+          @save="save"
         />
         <div v-if="!state.lineStyleDisable">
           <tiny-input v-model="state.propertiesList" class="inline-bind-style"> </tiny-input>
@@ -75,7 +68,7 @@
 import { ref, watch } from 'vue'
 import { Collapse, CollapseItem, Input } from '@opentiny/vue'
 import { useHistory, useCanvas, useProperties } from '@opentiny/tiny-engine-controller'
-import { setPageCss, getSchema as getCanvasPageSchema } from '@opentiny/tiny-engine-canvas'
+import { getSchema as getCanvasPageSchema, updateRect } from '@opentiny/tiny-engine-canvas'
 import { MetaCodeEditor, MetaBindVariable } from '@opentiny/tiny-engine-common'
 import { formatString } from '@opentiny/tiny-engine-common/js/ast'
 import {
@@ -125,43 +118,33 @@ export default {
       'borders',
       'effects'
     ])
-    const { getCurrentSchema, getPageSchema } = useCanvas()
+    const { getCurrentSchema } = useCanvas()
     // 获取当前节点 style 对象
     const { state, updateStyle } = useStyle() // updateStyle
     const { addHistory } = useHistory()
     const { getSchema } = useProperties()
 
-    // 打开编辑器
-
     // 保存编辑器内容，并回写到 schema
-    const save = (type, { content }) => {
-      if (type === CSS_TYPE.Style) {
-        const pageSchema = getCanvasPageSchema()
-        const schema = getSchema() || pageSchema
-        const styleString = formatString(styleStrRemoveRoot(content), 'css')
-        const currentSchema = getCurrentSchema() || pageSchema
+    const save = ({ content }) => {
+      const pageSchema = getCanvasPageSchema()
+      const schema = getSchema() || pageSchema
+      const styleString = formatString(styleStrRemoveRoot(content), 'css')
+      const currentSchema = getCurrentSchema() || pageSchema
 
-        state.styleContent = content
-        schema.props = schema.props || {}
-        schema.props.style = styleString
+      state.styleContent = content
+      schema.props = schema.props || {}
+      schema.props.style = styleString
 
-        currentSchema.props = currentSchema.props || {}
+      currentSchema.props = currentSchema.props || {}
 
-        if (styleString) {
-          currentSchema.props.style = styleString
-        } else {
-          delete currentSchema.props.style
-        }
-
-        addHistory()
-      } else if (type === CSS_TYPE.Css) {
-        const cssString = formatString(content.replace(/"/g, "'"), 'css')
-        getPageSchema().css = cssString
-        getCanvasPageSchema().css = cssString
-        setPageCss(cssString)
-        state.schemaUpdateKey++
-        addHistory()
+      if (styleString) {
+        currentSchema.props.style = styleString
+      } else {
+        delete currentSchema.props.style
       }
+
+      addHistory()
+      updateRect()
     }
 
     const setConfig = (value) => {
@@ -181,6 +164,8 @@ export default {
         state.lineStyleDisable = true
         addHistory()
       }
+
+      updateRect()
     }
 
     watch(
@@ -218,21 +203,22 @@ export default {
 <style lang="less" scoped>
 .style-editor {
   justify-content: space-around;
-  padding: 8px 16px 12px;
+  padding: 8px 16px 0;
   column-gap: 8px;
   .line-style {
     display: block;
-    margin-top: 16px;
-    margin-bottom: 8px;
     color: var(--ti-lowcode-setting-style-font-color);
     font-size: 12px;
     .line-text {
-      margin-bottom: 8px;
       display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: var(--ti-lowcode-setting-style-title-color);
     }
   }
   .inline-style {
     display: flex;
+    align-items: center;
     :deep(.editor-wrap) {
       display: flex;
       .tiny-button {
@@ -256,9 +242,6 @@ export default {
         border-color: var(--ti-lowcode-setting-style-input-bg);
       }
     }
-  }
-  :deep(.svg-icon) {
-    margin-top: 5px;
   }
 }
 </style>

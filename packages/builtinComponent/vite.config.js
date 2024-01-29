@@ -13,9 +13,10 @@ import { defineConfig } from 'vite'
 import path from 'path'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
+import vitePluginCssInjectedByJs from 'vite-plugin-css-injected-by-js'
 
 export default defineConfig({
-  plugins: [vue(), vueJsx()],
+  plugins: [vue(), vueJsx(), vitePluginCssInjectedByJs()],
   publicDir: false,
   build: {
     cssCodeSplit: false,
@@ -26,9 +27,6 @@ export default defineConfig({
       formats: ['es']
     },
     rollupOptions: {
-      output: {
-        banner: 'import "./style.css"'
-      },
       external: ['vue']
     }
   }

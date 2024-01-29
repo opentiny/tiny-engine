@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-toolbar-logout",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "publishConfig": {
     "access": "public"
   },

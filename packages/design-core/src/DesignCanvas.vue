@@ -15,7 +15,14 @@
 
 <script>
 import { ref, onMounted, watch } from 'vue'
-import { CanvasContainer, CanvasFooter, selectNode, getNodePath, updateRect } from '@opentiny/tiny-engine-canvas'
+import {
+  CanvasContainer,
+  CanvasFooter,
+  selectNode,
+  getNodePath,
+  updateRect,
+  getSchema
+} from '@opentiny/tiny-engine-canvas'
 import {
   useProperties,
   useCanvas,
@@ -125,8 +132,11 @@ export default {
       if (type !== 'clickTree') {
         useLayout().closePlugin()
       }
-      useProperties().getProps(node, parent)
-      useCanvas().setCurrentSchema(node)
+
+      const schema = getSchema()
+      // 如果选中的节点是画布，就设置成默认选中最外层schema
+      useProperties().getProps(node || schema, parent)
+      useCanvas().setCurrentSchema(node || schema)
       footData.value = getNodePath(node?.id)
       toolbars.visiblePopover = false
     }
@@ -175,6 +185,7 @@ export default {
     height: calc(100% - var(--base-bottom-panel-height, 30px) - 36px);
     background: var(--ti-lowcode-breadcrumb-hover-bg);
     position: absolute;
+    overflow: hidden;
     margin: 18px 0;
   }
 }

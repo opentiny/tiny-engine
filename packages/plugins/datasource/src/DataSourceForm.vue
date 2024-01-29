@@ -1,5 +1,5 @@
 <template>
-  <plugin-setting v-if="isOpen" title="添加数据源">
+  <plugin-setting v-if="isOpen" title="设置数据源">
     <template #header>
       <button-group>
         <tiny-button class="field-save" type="primary" @click="save">保存</tiny-button>

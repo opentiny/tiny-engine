@@ -59,8 +59,9 @@ export default {
     const { message, confirm } = useModal()
     const appId = useApp().appInfoState.selectedId
 
-    const openVersionPanel = async () => {
-      return
+    const openVersionPanel = async ({ item }) => {
+      selectedBlock.value = item
+      setBlockVersionPanelVisible(true)
     }
 
     const state = reactive({

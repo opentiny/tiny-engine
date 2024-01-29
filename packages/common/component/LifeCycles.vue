@@ -125,7 +125,8 @@ export default {
       bindLifeCycles: {},
       editorValue: '{}',
       hasError: false,
-      linterWorker: null
+      linterWorker: null,
+      completionProvider: null
     })
 
     watchEffect(() => {
@@ -210,7 +211,7 @@ export default {
         return
       }
       // Lowcode API 提示
-      initCompletion(editorRef.value.getMonaco())
+      state.completionProvider = initCompletion(editorRef.value.getMonaco(), editorRef.value.getEditor()?.getModel())
 
       // 初始化 ESLint worker
       state.linterWorker = initLinter(editor, editorRef.value.getMonaco(), state)
@@ -226,6 +227,9 @@ export default {
     }
 
     onBeforeUnmount(() => {
+      state.completionProvider?.forEach?.((provider) => {
+        provider.dispose()
+      })
       // 终止 ESLint worker
       state.linterWorker?.terminate?.()
     })

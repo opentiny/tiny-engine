@@ -344,7 +344,7 @@ export default {
   position: fixed;
   z-index: 9999;
   top: 50px;
-  left: calc(var(--base-left-panel-width, 268px) + var(--base-nav-panel-width) + 10px);
+  left: calc(var(--base-left-panel-width) + var(--base-nav-panel-width) + 10px);
   max-width: 500px;
   max-height: 136px;
   padding: 12px;
@@ -446,7 +446,7 @@ export default {
           color: var(--ti-lowcode-component-block-list-setting-btn-color);
           display: block;
           &:hover {
-            cursor: not-allowed;
+            cursor: pointer;
             color: var(--ti-lowcode-component-block-list-setting-btn-hover-color);
           }
         }
@@ -553,7 +553,7 @@ export default {
       .block-detail-icon {
         color: var(--ti-lowcode-component-block-list-setting-btn-color);
         &:hover {
-          cursor: not-allowed;
+          cursor: pointer;
           color: var(--ti-lowcode-component-block-list-setting-btn-hover-color);
         }
       }

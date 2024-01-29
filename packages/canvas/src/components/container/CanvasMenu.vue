@@ -106,7 +106,8 @@ export default {
       },
       { name: '删除', code: 'del' },
       { name: '复制', code: 'copy' },
-      { name: '绑定事件', code: 'bindEvent' }
+      { name: '绑定事件', code: 'bindEvent' },
+      { name: '新建区块', code: 'createBlock' }
     ])
 
     const boxVisibility = ref(false)
