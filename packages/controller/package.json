@@ -37,8 +37,7 @@
     "@opentiny/vue": "~3.10.0",
     "@opentiny/vue-renderless": "~3.10.0",
     "@vue/shared": "^3.3.4",
-    "monaco-languageclient": "^7.3.0",
-    "vscode-ws-jsonrpc": "^3.1.0",
+    "monaco-editor": "0.33.0",
     "vue": "3.2.45"
   },
   "devDependencies": {

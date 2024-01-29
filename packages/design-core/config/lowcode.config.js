@@ -11,13 +11,6 @@
  */
 
 /**
- * @typedef {Object} LSPConfig
- * @prop {boolean} enable
- * @prop {string} url
- * @prop {number} [port]
- * @prop {string} [ns]
- * @prop {'wss'|'ws'} [protocol]
- * @prop {import('reconnecting-websocket').Options} options
  *
  * @typedef {Object} CanvasOptionsItem
  * @prop  {string[]} material
@@ -81,24 +74,7 @@ const config = {
   platformId: 897,
 
   // 是否默认导入布局组件
-  defaultImportLayout: 1,
-
-  // 语言服务器设置
-  lspConfig: {
-    enable: true,
-    url: 'localhost',
-    port: 6000,
-    ns: '/python',
-    protocol: 'ws',
-    options: {
-      maxReconnectionDelay: 10000,
-      minReconnectionDelay: 1000,
-      reconnectionDelayGrowFactor: 1.3,
-      connectionTimeout: 10000,
-      maxRetries: Infinity,
-      debug: true
-    }
-  }
+  defaultImportLayout: 1
 }
 
 export default config

@@ -71,10 +71,6 @@
     "@antv/x6-plugin-keyboard": "^2.2.2",
     "@antv/x6-plugin-selection": "^2.2.1",
     "@antv/x6-vue-shape": "^2.1.1",
-    "dt-python-parser": "^0.9.0",
-    "monaco-editor": "0.33.0",
-    "monaco-languageclient": "^7.3.0",
-    "reconnecting-websocket": "^4.4.0",
-    "vscode-ws-jsonrpc": "^3.1.0"
+    "dt-python-parser": "^0.9.0"
   }
 }

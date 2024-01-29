@@ -22,11 +22,16 @@ const getModifiedEditor = (props) => (props.diffEditor ? vueMonaco.editor.getMod
 const getOriginalEditor = (props) => (props.diffEditor ? vueMonaco.editor.getOriginalEditor() : vueMonaco.editor)
 const getModelMarkers = () => vueMonaco.monaco.editor.getModelMarkers()
 
-const init = (monaco, emit, props, monacoRef) => {
+/**
+ *
+ * @param {typeof import('monaco-editor')} monaco
+ * @param {*} emit
+ * @param {*} props
+ * @param {*} monacoRef
+ */
+const init = async (monaco, emit, props, monacoRef) => {
   emit('editorWillMount', vueMonaco.monaco)
-
   const options = { value: props.value, theme: props.theme, language: props.language, ...props.options }
-
   if (props.diffEditor) {
     vueMonaco.editor = monaco.editor.createDiffEditor(monacoRef.value, options)
     const originalModel = monaco.editor.createModel(props.original, props.language)
@@ -37,7 +42,9 @@ const init = (monaco, emit, props, monacoRef) => {
       modified: modifiedModel
     })
   } else {
-    vueMonaco.editor = monaco.editor.create(monacoRef.value, options)
+    vueMonaco.editor = monaco.editor.create(monacoRef.value, {
+      ...options
+    })
   }
 
   const editor2 = getModifiedEditor(props)

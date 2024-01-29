@@ -1,25 +1,23 @@
 <template>
   <div class="code">
-    <Tip v-if="!editorVisible" desc="当前节点不支持代码编辑" style="margin: 0px" />
-    <monaco-editor v-else :value="code" class="code__editor" ref="editor" />
+    <Tip v-if="!editorVisible" desc="当前节点不支持代码编辑" class="code__tip" />
+    <VueMonaco v-else :value="code" class="code__editor" />
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { Tip, MonacoEditor } from '@opentiny/tiny-engine-common'
-import { useX6 } from '@opentiny/tiny-engine-controller'
-/**
- * @type {import('vue').Ref<import('monaco-editor').editor.IStandaloneCodeEditor|import('monaco-editor').editor.IDiffEditor>}
- */
-const editor = ref()
-const editorVisible = ref(false)
+import { ref, onMounted, computed } from 'vue'
+import { Tip, VueMonaco } from '@opentiny/tiny-engine-common'
+import { useX6, useLayout } from '@opentiny/tiny-engine-controller'
 const code = ref('')
+const { layoutState } = useLayout()
+const selectMode = ref()
+const editorVisible = computed(() => selectMode.value === 'layer' && layoutState.settings.render === 'Code')
 onMounted(() => {
   const { g } = useX6()
   g.on('selection:changed', () => {
     if (!g.getSelectedCellCount()) {
-      editorVisible.value = false
+      selectMode.value = ''
       return
     }
     const _node = g.getSelectedCells()
@@ -33,7 +31,7 @@ onMounted(() => {
      * @type {import('../../../controller/src/useX6.js').MaterialInfo}
      */
     const data = node.getData()
-    editorVisible.value = data.mode === 'layer'
+    selectMode.value = data.mode
   })
 })
 </script>
@@ -42,6 +40,10 @@ onMounted(() => {
 .code {
   width: 100%;
   height: 100%;
+  &__tip {
+    margin: 0%;
+    padding-top: 50px;
+  }
   &__editor {
     width: 100%;
     height: 100%;

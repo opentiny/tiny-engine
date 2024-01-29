@@ -24,7 +24,8 @@ export default {
       default: 'vs'
     },
     language: {
-      type: String
+      type: String,
+      default: 'python'
     },
     options: {
       type: Object

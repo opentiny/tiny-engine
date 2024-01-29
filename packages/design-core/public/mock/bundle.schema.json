@@ -5,6 +5,9 @@
     "properties": {
       "type": "object",
       "properties": {
+        "order": {
+          "type": "number"
+        },
         "id": {
           "description": "该设置的唯一ID",
           "type": "string"
@@ -82,29 +85,28 @@
             "description": "Layer的label"
           },
           "code": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "label": {
-                  "$ref": "#/definitions/label"
-                },
-                "fnName": {
-                  "type": "string"
-                },
-                "content": {
-                  "type": "string",
-                  "default": ""
-                }
-              },
-              "required": ["label", "fnName", "content"]
-            }
+            "type": "string"
+          },
+          "codeAst": {
+            "$comment": "记录AST信息, 前端负责, 因为要动态插槽",
+            "type": "object",
+            "properties": {}
+          },
+          "clazz": {
+            "$comment": "一个Layer理论上可以有多个Class,但传入进Seq的时候只能有一个, 这里提供一个clazz的选项, 该选项应该是codeAST中的一个合法的class",
+            "description": "一个Layer理论上可以有多个Class,但传入进Seq的时候只能有一个, 这里提供一个clazz的选项, 该选项应该是codeAST中的一个合法的class",
+            "type": "string"
           },
           "properties": {
-            "$ref": "#/definitions/properties",
+            "$comment": "从codeAST中获取的properties信息, 对应的是python中__init__中的参数, 需要有序",
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/properties"
+            },
             "description": "转码时会将该properties作为参数带入"
           }
-        }
+        },
+        "required": ["id", "label", "code"]
       }
     },
     "Options": {
@@ -124,7 +126,7 @@
         },
         "mode": {
           "type": "string",
-          "enum": ["nn", "layer", "backbone", "utils"]
+          "enum": ["nn", "layer", "backbone", "fn"]
         },
         "properties": {
           "type": "array",
