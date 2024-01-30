@@ -29,7 +29,7 @@ const tinyVue3Imports = {
 }
 
 importMap.imports = {
-  vue: `${VITE_CDN_DOMAIN}/vue@3.2.36/dist/vue.runtime.esm-browser.prod.js`,
+  vue: `${VITE_CDN_DOMAIN}/vue@3.2.36/dist/vue.runtime.esm-browser.js`,
   'vue/server-renderer': `${VITE_CDN_DOMAIN}/@vue/server-renderer@3.2.36/dist/server-renderer.esm-browser.js`,
   'vue-i18n': `${VITE_CDN_DOMAIN}/vue-i18n@9.2.0-beta.36/dist/vue-i18n.esm-browser.js`,
   'vue-router': `${VITE_CDN_DOMAIN}/vue-router@4.0.16/dist/vue-router.esm-browser.js`,
