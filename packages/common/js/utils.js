@@ -13,3 +13,21 @@ export const _default = (obj, defaultValue) => ({ ...defaultValue, ...obj })
  * @returns {T}
  */
 export const deepClone = (obj) => structuredClone(obj)
+
+/**
+ *
+ * @param {T extends Function} fn
+ * @param {number} delay
+ * @returns {(...args:Parameters<T>)=>ReturnType<T>}
+ */
+export const Debounce = (fn, delay) => {
+  let timer = null
+  return () => {
+    if (timer) {
+      clearTimeout(timer)
+    }
+    timer = setTimeout(() => {
+      fn()
+    }, delay)
+  }
+}

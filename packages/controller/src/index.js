@@ -33,6 +33,7 @@ import useMessage from './useMessage'
 import useHelp from './useHelp'
 import useX6 from './useX6'
 import useEditor from './useMonaco'
+import { useVisitor, Visitor } from './useVisitor'
 
 export const getExample = example
 
@@ -59,5 +60,7 @@ export {
   useMessage,
   useHelp,
   useX6,
-  useEditor
+  useEditor,
+  useVisitor,
+  Visitor
 }

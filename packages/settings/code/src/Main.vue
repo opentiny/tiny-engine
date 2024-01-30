@@ -1,18 +1,37 @@
 <template>
   <div class="code">
     <Tip v-if="!editorVisible" desc="当前节点不支持代码编辑" class="code__tip" />
-    <VueMonaco v-else :value="code" class="code__editor" />
+    <VueMonaco v-else v-model:value="code" class="code__editor" @change="onChange" />
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { Tip, VueMonaco } from '@opentiny/tiny-engine-common'
-import { useX6, useLayout } from '@opentiny/tiny-engine-controller'
+import { useX6, useLayout, useVisitor } from '@opentiny/tiny-engine-controller'
+import { Python3Parser } from 'dt-python-parser'
+const parser = new Python3Parser()
 const code = ref('')
 const { layoutState } = useLayout()
 const selectMode = ref()
 const editorVisible = computed(() => selectMode.value === 'layer' && layoutState.settings.render === 'Code')
+
+const { visitor } = useVisitor()
+const errors = computed(() => parser.validate(code.value))
+const ast = ref()
+const clazzDef = ref()
+watch(ast, () => {
+  if (ast.value) {
+    clazzDef.value = visitor.visit(ast.value)
+  }
+})
+watch(errors, () => {
+  if (!errors.value.length) {
+    ast.value = parser.parse(code.value)
+    return
+  }
+  ast.value = null
+})
 onMounted(() => {
   const { g } = useX6()
   g.on('selection:changed', () => {
