@@ -376,6 +376,13 @@ export default {
     )
   },
   render() {
+    // 渲染画布增加根节点，与出码和预览保持一致
+    const rootChildrenSchema = {
+      componentName: 'div',
+      props: schema.props,
+      children: schema.children
+    }
+
     return h(
       'tiny-i18n-host',
       {
@@ -384,9 +391,7 @@ export default {
         ref: 'page',
         className: 'design-page'
       },
-      schema.children?.length
-        ? schema.children.map((child) => h(renderer, { schema: child, parent: schema }))
-        : [h(CanvasEmpty)]
+      schema.children?.length ? h(renderer, { schema: rootChildrenSchema, parent: schema }) : [h(CanvasEmpty)]
     )
   }
 }

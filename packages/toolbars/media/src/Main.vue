@@ -358,7 +358,8 @@ export default {
       (deviceType) => {
         state.activeIndex = mediaMap[deviceType].index
         state.readonly = deviceType !== 'mdx'
-      }
+      },
+      { immediate: true }
     )
 
     watchEffect(() => {

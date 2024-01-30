@@ -276,7 +276,7 @@ export default {
     }
 
     const handleAddGroup = () => {
-      return
+      state.showCreateGroupForm = true
     }
 
     const handleClickOption = ({ value: { groupId, groupName } }) => {
@@ -426,7 +426,6 @@ export default {
     }
   }
   .add-group-btn {
-    cursor: not-allowed;
     font-size: 16px;
     width: 32px;
     height: 32px;

@@ -37,6 +37,27 @@ $ pnpm install
 $ pnpm dev
 ```
 
+## Local development, directly connected to the local tiny-engine-webservice server
+
+1. Start <a href="https://github.com/opentiny/tiny-engine-data-center/blob/main/README.md" target="_blank">tiny-engine-data-center</a>
+
+2. Start <a href="https://github.com/opentiny/tiny-engine-webservice/blob/main/README.md" target="_blank">tiny-engine-webservice</a>
+
+3. Modify the origin value in `vite.config.js` in the `packages/design-core/` directory of the tiny-engine project to be the address port of your local webService project (the webService port defaults to 7011), such as:
+
+<img alt="Modify port" src="https://res.hc-cdn.com/lowcode-portal/1.1.55/img/docimg/backend_deploy_5.png">
+
+
+### Materials Synchronization [Solution](https://opentiny.design/tiny-engine#/help-center/course/engine/56)
+
+```sh
+$ pnpm splitMaterials
+```
+
+```sh
+$ pnpm buildMaterials
+```
+
 Open a browser: `http://localhost:8080/?type=app&id=918&tenant=1&pageid=NTJ4MjvqoVj8OVsc`
 `url search` Parameters:
 

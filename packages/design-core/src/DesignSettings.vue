@@ -40,17 +40,12 @@ export default {
 <style lang="less" scoped>
 #tiny-right-panel {
   width: var(--base-right-panel-width);
-  min-width: var(--lowcode-setting-panel-min-width);
   height: 100%;
   transition: 0.3s linear;
   position: relative;
   border-left: 1px solid var(--ti-lowcode-plugin-setting-panel-border-left-color);
   padding-top: 20px;
   background-color: var(--ti-lowcode-setting-panel-bg-color);
-
-  ::-webkit-scrollbar {
-    display: none;
-  }
 
   .tiny-tabs {
     height: 100%;

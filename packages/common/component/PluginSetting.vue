@@ -125,7 +125,7 @@ export default {
 <style lang="less" scoped>
 .plugin-setting {
   position: absolute;
-  left: calc(var(--base-left-panel-width, 268px) - 6px);
+  left: calc(var(--base-left-panel-width) - 6px);
   top: 0;
   width: var(--base-collection-panel-width);
   height: 100%;
