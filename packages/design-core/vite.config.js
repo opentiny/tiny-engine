@@ -230,7 +230,7 @@ export default defineConfig(({ command, mode }) => {
   if (command === 'serve') {
     const devVueAlias = {
       find: /^vue$/,
-      replacement: `${VITE_CDN_DOMAIN}/vue@${importMapVersions.vue}/dist/vue.runtime.esm-browser.js`
+      replacement: `${VITE_CDN_DOMAIN}/vue@${importMapVersions.vue}/dist/vue.runtime.esm-browser.prod.js`
     }
 
     config.resolve.alias = [
