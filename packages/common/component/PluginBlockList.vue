@@ -1,5 +1,6 @@
 <template>
   <ul
+    v-if="state.data.length"
     :class="['block-list', 'lowcode-scrollbar', { 'is-small-list': blockStyle === 'mini' }, { isShortcutPanel }]"
     @mouseleave="state.hover = false"
   >
@@ -122,6 +123,10 @@
       </div>
     </div>
   </ul>
+  <div v-else class="empty-wrap">
+    <svg-icon class="empty-icon" name="empty"></svg-icon>
+    <p class="empty-text">暂无数据</p>
+  </div>
 </template>
 
 <script>
@@ -344,7 +349,7 @@ export default {
   position: fixed;
   z-index: 9999;
   top: 50px;
-  left: calc(var(--base-left-panel-width) + var(--base-nav-panel-width) + 10px);
+  left: calc(var(--base-left-panel-width, 268px) + var(--base-nav-panel-width) + 10px);
   max-width: 500px;
   max-height: 136px;
   padding: 12px;
@@ -446,7 +451,7 @@ export default {
           color: var(--ti-lowcode-component-block-list-setting-btn-color);
           display: block;
           &:hover {
-            cursor: pointer;
+            cursor: not-allowed;
             color: var(--ti-lowcode-component-block-list-setting-btn-hover-color);
           }
         }
@@ -553,7 +558,7 @@ export default {
       .block-detail-icon {
         color: var(--ti-lowcode-component-block-list-setting-btn-color);
         &:hover {
-          cursor: pointer;
+          cursor: not-allowed;
           color: var(--ti-lowcode-component-block-list-setting-btn-hover-color);
         }
       }

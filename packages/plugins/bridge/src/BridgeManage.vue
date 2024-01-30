@@ -6,7 +6,11 @@
         clearable
         placeholder="请输入关键字搜索"
         @update:modelValue="searchBridgeData"
-      ></tiny-search>
+      >
+        <template #prefix>
+          <tiny-icon-search />
+        </template>
+      </tiny-search>
     </div>
     <div class="list">
       <div
@@ -30,6 +34,7 @@
 <script>
 import { watchEffect, ref, reactive } from 'vue'
 import { Search } from '@opentiny/vue'
+import { iconSearch } from '@opentiny/vue-icon'
 import {
   RESOURCE_TYPE,
   ACTION_TYPE,
@@ -44,7 +49,8 @@ import {
 
 export default {
   components: {
-    TinySearch: Search
+    TinySearch: Search,
+    TinyIconSearch: iconSearch()
   },
   props: {
     name: {

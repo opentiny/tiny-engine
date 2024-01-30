@@ -1,7 +1,7 @@
 <template>
   <div class="components-wrap">
-    <tiny-search v-model="state.searchValue" placeholder="请输入关键字搜索" @update:modelValue="change">
-      <template #prefix> <icon-search /> </template>
+    <tiny-search v-model="state.searchValue" clearable placeholder="请输入关键字搜索" @update:modelValue="change">
+      <template #prefix> <icon-search class="searchIcon" /> </template>
     </tiny-search>
     <tiny-collapse v-model="state.activeName" class="lowcode-scrollbar">
       <tiny-collapse-item v-for="(item, index) in state.components" :key="item.group" :title="item.group" :name="index">
@@ -24,6 +24,10 @@
           </template>
         </ul>
       </tiny-collapse-item>
+      <div v-if="!state.components.length" class="empty-wrap">
+        <svg-icon class="empty-icon" name="empty"></svg-icon>
+        <p class="empty-text">暂无数据</p>
+      </div>
     </tiny-collapse>
   </div>
 </template>
@@ -123,7 +127,9 @@ export default {
   .tiny-search {
     padding: 12px 8px;
   }
-
+  .searchIcon {
+    transform: none !important;
+  }
   .component-group {
     display: grid;
     width: 100%;
@@ -163,12 +169,6 @@ export default {
         white-space: nowrap;
       }
     }
-
-    :deep(.drag-item:nth-child(3n)) {
-      .component-item {
-        border-right: none;
-      }
-    }
   }
 
   .tiny-collapse {
@@ -182,6 +182,13 @@ export default {
       .item {
         cursor: pointer;
       }
+    }
+  }
+
+  :deep(.tiny-svg, #tiny-engine .tiny-svg) {
+    transform: rotate(270deg);
+    &.is-active {
+      transform: rotate(180deg);
     }
   }
 }

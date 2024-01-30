@@ -1,8 +1,7 @@
 <template>
   <plugin-panel class="block-manage" title="区块管理" :isCloseLeft="false" @close="closePanel">
     <template #header>
-      <link-button :href="docsUrl"></link-button>
-      <svg-button name="add-page" placement="bottom" tips="新建区块" @click="openBlockAdd"></svg-button>
+      <svg-button name="add-page" placement="bottom" tips="新建区块" style="cursor: not-allowed"></svg-button>
     </template>
     <template #content>
       <div class="app-manage-search">
@@ -68,7 +67,9 @@
         <svg-button class="add-group-btn" tips="新建分类" name="add-page" @click="createCategory"></svg-button>
       </div>
       <div class="app-manage-search">
-        <tiny-search v-model="state.searchKey" placeholder="请输入关键字搜索"></tiny-search>
+        <tiny-search v-model="state.searchKey" clearable placeholder="请输入关键字搜索">
+          <template #prefix> <tiny-icon-search /> </template>
+        </tiny-search>
       </div>
       <plugin-block-list
         class="plugin-block-list"
@@ -78,8 +79,6 @@
         :blockStyle="state.layout"
         default-icon-tip="查看区块"
         :externalBlock="externalBlock"
-        @click="editBlock"
-        @iconClick="openSettingPanel"
       ></plugin-block-list>
       <block-setting></block-setting>
       <div class="block-footer">
@@ -115,10 +114,10 @@ import {
   Popover as TinyPopover,
   Button as TinyButton
 } from '@opentiny/vue'
-import { PluginPanel, PluginBlockList, SvgButton, SaveNewBlock, LinkButton } from '@opentiny/tiny-engine-common'
-import { useBlock, useModal, useLayout, useCanvas, useHelp } from '@opentiny/tiny-engine-controller'
+import { PluginPanel, PluginBlockList, SvgButton, SaveNewBlock } from '@opentiny/tiny-engine-common'
+import { useBlock, useModal, useLayout, useCanvas } from '@opentiny/tiny-engine-controller'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { iconChevronDown } from '@opentiny/vue-icon'
+import { iconChevronDown, iconSearch } from '@opentiny/vue-icon'
 import BlockSetting, { openPanel, closePanel } from './BlockSetting.vue'
 import BlockGroupArrange from './BlockGroupArrange.vue'
 import CategoryEdit from './CategoryEdit.vue'
@@ -137,7 +136,6 @@ import {
 } from './js/blockSetting'
 import { fetchBlockList, requestBlocks, requestInitBlocks, fetchBlockContent } from './js/http'
 
-const docsUrl = useHelp().getDocsUrl('block')
 const { SORT_TYPE } = constants
 const externalBlock = ref(null) // 外部区块信息，用作激活外部传入的区块样式
 
@@ -178,7 +176,6 @@ export default {
     TinySelect,
     TinyOption,
     SvgButton,
-    LinkButton,
     TinyDropdown,
     TinyDropdownMenu,
     PluginPanel,
@@ -189,7 +186,8 @@ export default {
     PluginBlockList,
     TinyPopover,
     TinyButton,
-    IconChevronDown: iconChevronDown()
+    IconChevronDown: iconChevronDown(),
+    TinyIconSearch: iconSearch()
   },
 
   setup() {
@@ -411,8 +409,7 @@ export default {
       delCategory,
       handleChangeDeletePopoverVisible,
       handleSelectVisibleChange,
-      externalBlock,
-      docsUrl
+      externalBlock
     }
   }
 }
@@ -488,12 +485,6 @@ export default {
   .ml8 {
     margin-left: 8px;
   }
-}
-
-:deep(.help-box) {
-  position: absolute;
-  left: 72px;
-  top: 3px;
 }
 </style>
 

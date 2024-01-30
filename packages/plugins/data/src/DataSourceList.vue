@@ -15,7 +15,10 @@
         </div>
       </li>
     </ul>
-    <div v-if="!filteredKey.length" class="data-source-list-blank"><span>查询结果为空</span></div>
+    <div v-if="!filteredKey.length" class="data-source-list-blank">
+      <svg-icon class="empty-icon" name="empty"></svg-icon>
+      <p class="empty-text">暂无数据</p>
+    </div>
   </div>
 </template>
 
@@ -194,7 +197,7 @@ export default {
   .content-item {
     p span {
       &:first-child {
-        font-size: 14;
+        font-size: 14px;
         color: var(--ti-lowcode-toolbar-breadcrumb-color);
       }
 
