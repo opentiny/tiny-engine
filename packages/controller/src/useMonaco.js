@@ -29,7 +29,7 @@ const getModelMarkers = () => vueMonaco.monaco.editor.getModelMarkers()
  * @param {*} props
  * @param {*} monacoRef
  */
-const init = async (monaco, emit, props, monacoRef) => {
+const init = (monaco, emit, props, monacoRef) => {
   emit('editorWillMount', vueMonaco.monaco)
   const options = { value: props.value, theme: props.theme, language: props.language, ...props.options }
   if (props.diffEditor) {
@@ -51,6 +51,7 @@ const init = async (monaco, emit, props, monacoRef) => {
 
   editor2.onDidChangeModelContent((event) => {
     const value = editor2.getValue()
+    emit('update:value', value)
 
     if (props.value !== value) {
       emit('change', value, event)
