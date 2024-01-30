@@ -8,26 +8,19 @@
     :rules="rules"
     validate-type="text"
   >
-    <!-- <tiny-form-item label="名称" prop="name">
-      <tiny-input v-model="state.serviceForm.name" placeholder="只能包含数字字母及下划线"></tiny-input>
-    </tiny-form-item> -->
-
-    <tiny-form-item label="描述" prop="description">
-      <tiny-input v-model="state.serviceForm.description" placeholder="请输入"></tiny-input>
-    </tiny-form-item>
-
     <tiny-form-item label="请求地址" prop="uri">
       <div class="textarea-warp">
+        <tiny-select class="selectResType" v-model="state.serviceForm.method" placeholder="请选择">
+          <tiny-option v-for="item in state.requestData" :key="item.value" :label="item.value" :value="item.value">
+          </tiny-option>
+        </tiny-select>
         <tiny-input class="border-input" v-model="state.serviceForm.uri" resize="none" placeholder="请输入">
-          <template #prepend>
-            <tiny-select class="selectResType" v-model="state.serviceForm.method" placeholder="请选择">
-              <tiny-option v-for="item in state.requestData" :key="item.value" :label="item.value" :value="item.value">
-              </tiny-option>
-            </tiny-select>
-          </template>
           <template #append><a class="requestBtn" type="info" @click="$emit('sendRequest')">发送请求</a></template>
         </tiny-input>
       </div>
+    </tiny-form-item>
+    <tiny-form-item label="描述" prop="description">
+      <tiny-input v-model="state.serviceForm.description" placeholder="请输入"></tiny-input>
     </tiny-form-item>
   </tiny-form>
 </template>
@@ -119,9 +112,10 @@ export default {
         }
       }
     }
-    :deep(.tiny-input-display-only) {
-      .tiny-input__inner {
-        border-left: none;
+    :deep(.tiny-input-suffix) {
+      width: 100px;
+      input {
+        border-radius: 6px 0 0 6px;
       }
     }
     :deep(.tiny-input-group__append) {
@@ -130,6 +124,12 @@ export default {
     }
     .requestBtn {
       color: var(--ti-lowcode-datasource-respones-border-color-bg);
+    }
+    :deep(.border-input) {
+      input {
+        border-radius: 0;
+        border-left: none;
+      }
     }
   }
   .tiny-button-group {

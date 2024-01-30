@@ -3,10 +3,7 @@
     <plugin-setting title="获取远程字段" :isSecond="true" @cancel="closePanel" @save="saveRemote">
       <template #content>
         <div class="create-config">
-          <data-source-remote-form
-            v-model="state.remoteData.options"
-            @sendRequest="sendRequest"
-          ></data-source-remote-form>
+          <data-source-remote-form v-model="state.remoteData.options"></data-source-remote-form>
           <data-source-remote-autoload v-model="state.remoteData.options.isSync"></data-source-remote-autoload>
           <div class="tabBox">
             <tiny-tabs v-model="state.activeNameTabs">
@@ -25,7 +22,7 @@
           <div>
             <tiny-collapse v-model="state.activeName">
               <tiny-collapse-item name="result">
-                <template #title>请求结果</template>
+                <template #title> 请求结果</template>
                 <data-srouce-remote-data-result v-model="state.remoteData.result"></data-srouce-remote-data-result>
               </tiny-collapse-item>
             </tiny-collapse>
@@ -46,7 +43,7 @@ import DataSourceRemoteAutoload from './DataSourceRemoteAutoload.vue'
 import DataSourceRemoteAdapter from './DataSourceRemoteDataAdapter.vue'
 import DataSrouceRemoteDataResult, { getResponseData } from './DataSourceRemoteDataResult.vue'
 import { open as openRemoteMapping } from './DataSourceRemoteMapping.vue'
-import { useModal, useDataSource, useNotify } from '@opentiny/tiny-engine-controller'
+import { useModal, useDataSource } from '@opentiny/tiny-engine-controller'
 import { isEmptyObject } from '@opentiny/vue-renderless/common/type'
 import { obj2String, string2Obj } from '@opentiny/tiny-engine-controller/adapter'
 import { getRequest } from './js/datasource'
@@ -114,6 +111,7 @@ export default {
       (value) => {
         const { willFetch, dataHandler, shouldFetch, errorHandler, columns } = value
         state.remoteData.options = { ...value?.options } || {}
+        state.remoteData.options.method = value.method || 'JSONP'
         state.remoteData.options.params = obj2String(value?.options?.params)
         state.responseData.willFetch = willFetch?.value || ''
         state.responseData.dataHandler = dataHandler?.value || ''
@@ -155,17 +153,17 @@ export default {
       })
     }
 
-    const sendRequest = async () => {
-      const valid = await getServiceForm().validate()
+    const sendRequest = () => {
+      getServiceForm().validate((valid) => {
+        if (!valid) {
+          confirm({
+            title: '提示',
+            message: '请求地址和请求方式必填！！！'
+          })
 
-      if (!valid) {
-        confirm({
-          title: '提示',
-          message: '请求地址和请求方式必填！！！'
-        })
-
-        return
-      }
+          return
+        }
+      })
 
       const options = { ...state.remoteData.options }
 
@@ -184,24 +182,9 @@ export default {
         .load()
         .then((res) => {
           state.remoteData.result = Array.isArray(res?.data?.items) ? res.data.items[0] : res?.data || res
-
-          useNotify({
-            type: 'success',
-            title: '请求成功',
-            message: '返回已填充到"请求结果"'
-          })
-
-          // "请求结果"代码编辑框
-          const remoteDataEditor = document.querySelector('#remote-data-editor')
-
-          remoteDataEditor.scrollIntoView()
         })
         .catch((error) => {
-          useNotify({
-            type: 'error',
-            title: '请求失败',
-            message: error.message || '请求失败，请确认请求地址是否正确！'
-          })
+          useModal().message({ message: error.message || '请求失败，请确认请求地址是否正确！', status: 'error' })
         })
     }
 
