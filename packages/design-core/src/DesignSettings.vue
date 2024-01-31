@@ -53,6 +53,9 @@ export default {
 
   .tiny-tabs {
     height: 100%;
+    #pane-Code {
+      height: 100%;
+    }
   }
   :deep(.tiny-tabs) {
     display: flex;

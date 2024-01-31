@@ -11,6 +11,7 @@
  */
 
 /**
+ *
  * @typedef {Object} CanvasOptionsItem
  * @prop  {string[]} material
  * @prop  {string[]} scripts
@@ -30,8 +31,13 @@
  * @prop {string} materialHost
  * @prop {number} platformId
  * @prop {number} defaultImportLayout
+ * @prop {LSPConfig} lspConfig
+ *
  */
-export default {
+/**
+ * @type {Config}
+ */
+const config = {
   // 编辑器主题类型， 取值：dark暗色系，light浅色系, 对应的npm包名为：@opentiny/tiny-engine-theme-${theme}, 暗色主题名需要以dark开头
   theme: 'light',
 
@@ -70,3 +76,5 @@ export default {
   // 是否默认导入布局组件
   defaultImportLayout: 1
 }
+
+export default config
