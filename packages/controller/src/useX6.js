@@ -21,6 +21,7 @@ import { Keyboard } from '@antv/x6-plugin-keyboard'
  */
 /**
  * @typedef {Object} Property
+ * @property {number} order
  * @property {string} id
  * @property {{zh_CN:string,en_US:string}} label
  * @property {'number'|'string'|'boolean'|'enums'|'ParamAttr'} type

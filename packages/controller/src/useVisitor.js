@@ -69,10 +69,7 @@ export class Visitor extends Python3Visitor {
         clazzFnMemberRecord.set(className, new Map())
         fnMember = clazzFnMemberRecord.get(className)
       }
-      let member = fnMember.get(this.activeFn)
-      if (!member) {
-        member = fnMember.set(this.activeFn, [...this.activeArgs])
-      }
+      fnMember.set(this.activeFn, [...this.activeArgs])
       this.activeArgs = []
     }
   }
@@ -80,17 +77,129 @@ export class Visitor extends Python3Visitor {
     visitor(ctx.children, this)
   }
   visitTfpdef(ctx) {
-    const [name, type = 'any'] = ctx.getText().split(':')
+    const types = ctx.getText().split(':')
+    const name = types[0]
+    const type = types[1] ?? 'any'
     this.activeArgs.push([name, type])
   }
 }
+
+/**
+ * @description
+ * 例如 `{direction:'left'}|{getDirection:()=>string}` 是和类型
+ *
+ * 但 `{direction:'left'}&{getDirection:()=>string}` 不是和类型，因为是积类型
+ * @param {string} typeString
+ * @returns {boolean}
+ */
+const isSumType = (typeString) => typeString.includes('|')
+/**
+ * @description
+ * 例如 `{direction:'left'}&{getDirection:()=>string}` 是积类型
+ *
+ * 但 `{direction:'left'}|{getDirection:()=>string}` 不是, 它是和类型
+ * @param {string} typeString
+ * @returns boolean
+ */
+const isProductType = (typeString) => typeString.includes('&')
+
+const levelType = {
+  any: 1000000,
+  string: 9,
+  object: 9,
+  ParamAttr: 9,
+  number: 8,
+  boolean: 7
+}
+
+/**
+ *
+ * @param {string} type
+ * @returns {string}
+ */
+const standardizationType = (type) => {
+  /**
+   * @param {string} type
+   */
+  const standardizationTypeName = (type) => {
+    if (type === 'ParamAttr') {
+      return type
+    }
+    let _type = type.toLowerCase()
+    if (_type === 'any') {
+      return 'any'
+    }
+    if (_type.startsWith('str')) {
+      return 'string'
+    }
+    if (_type === 'int' || _type === 'float') {
+      return 'number'
+    }
+    if (_type.startsWith('obj')) {
+      return 'object'
+    }
+  }
+  if (!isSumType(type) && !isProductType(type)) {
+    return standardizationTypeName(type)
+  }
+  const typeStack = type
+    .split('&')
+    .map((v) => v.split('|'))
+    .flat(Infinity)
+  const typeLevelTable = typeStack.map((type) => {
+    return {
+      coin: levelType[type] ?? 0,
+      val: type
+    }
+  })
+  return typeLevelTable.sort((a, b) => a.coin - b.coin)[0]
+}
+
+/**
+ * @param {[string,string][]} args
+ */
+const toProperty = (args) => {
+  return args.map(
+    /**
+     *
+     * @param {[string, strig]} param0
+     * @returns {import('./useX6').Property}
+     */
+    ([argName, argType]) => {
+      return {
+        id: argName,
+        label: {
+          zh_CN: argName,
+          en_US: argName
+        },
+        type: standardizationType(argType),
+        default: ''
+      }
+    }
+  )
+}
+
 const v = new Visitor()
 export const useVisitor = () => {
   const getClassNames = () => {
     return classNames
   }
+  /**
+   *
+   * @param {string} className
+   * @returns {import('./useX6').Property[]}
+   */
+  const getProperty = (className) => {
+    const args = clazzFnMemberRecord.get(className)?.get('__init__')
+    if (!args.length) {
+      return []
+    }
+    return toProperty(args)
+  }
   return {
     visitor: v,
-    getClassNames
+    getClassNames,
+    toProperty,
+    getProperty
   }
 }
