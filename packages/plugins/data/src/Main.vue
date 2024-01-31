@@ -3,7 +3,6 @@
     <div class="data-source-left-panel">
       <div class="title">
         <span>状态管理</span>
-        <link-button :href="docsUrl"></link-button>
         <close-icon @close="closePanel"></close-icon>
       </div>
       <tiny-tabs v-model="activeName" @click="tabClick" tab-style="button-card">
@@ -15,8 +14,13 @@
         :modelValue="query"
         class="left-filter"
         placeholder="请输入搜索条件"
+        clearable
         @update:modelValue="search"
-      ></tiny-search>
+      >
+        <template #prefix>
+          <tiny-icon-search />
+        </template>
+      </tiny-search>
       <div class="add-btn">
         <tiny-button @click="openPanel(OPTION_TYPE.ADD)">{{
           activeName === STATE.CURRENT_STATE ? '添加变量' : '添加全局变量'
@@ -64,6 +68,7 @@
 <script>
 import { reactive, ref, computed, onActivated } from 'vue'
 import { Button, Search, Tabs, TabItem } from '@opentiny/vue'
+import { iconSearch } from '@opentiny/vue-icon'
 import {
   useCanvas,
   useHistory,
@@ -71,11 +76,10 @@ import {
   useResource,
   useNotify,
   useData,
-  useLayout,
-  useHelp
+  useLayout
 } from '@opentiny/tiny-engine-controller'
 import { setState, getSchema, deleteState, setGlobalState, getGlobalState } from '@opentiny/tiny-engine-canvas'
-import { CloseIcon, LinkButton } from '@opentiny/tiny-engine-common'
+import { CloseIcon } from '@opentiny/tiny-engine-common'
 import DataSourceList from './DataSourceList.vue'
 import CreateVariable from './CreateVariable.vue'
 import CreateStore from './CreateStore.vue'
@@ -87,13 +91,13 @@ export default {
   components: {
     TinySearch: Search,
     TinyButton: Button,
+    TinyIconSearch: iconSearch(),
     DataSourceList,
     CreateVariable,
     CloseIcon,
     TinyTabs: Tabs,
     TinyTabItem: TabItem,
-    CreateStore,
-    LinkButton
+    CreateStore
   },
   setup(props, { emit }) {
     const variableRef = ref(null)
@@ -109,7 +113,6 @@ export default {
     const { setSaved } = useCanvas()
     const { PLUGIN_NAME, getPluginApi } = useLayout()
     const { openCommon } = getPluginApi(PLUGIN_NAME.save)
-    const docsUrl = useHelp().getDocsUrl('data')
     const state = reactive({
       dataSource: {},
       createData: {
@@ -350,8 +353,7 @@ export default {
       removeStore,
       storeRef,
       OPTION_TYPE,
-      open,
-      docsUrl
+      open
     }
   }
 }
@@ -410,7 +412,7 @@ export default {
     border-right: 1px solid var(--ti-lowcode-toolbar-border-color);
     background: var(--ti-lowcode-common-component-bg);
     position: absolute;
-    left: calc(var(--base-left-panel-width) - 6px);
+    left: calc(var(--base-left-panel-width, 268px) - 6px);
     top: 0;
 
     .header {
@@ -471,11 +473,6 @@ export default {
     & > div {
       height: 100%;
     }
-  }
-  :deep(.help-box) {
-    position: absolute;
-    left: 70px;
-    top: 11px;
   }
 }
 </style>
