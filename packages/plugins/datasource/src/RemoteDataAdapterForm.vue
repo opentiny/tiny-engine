@@ -77,7 +77,7 @@ export default {
 
 .monaco-editor {
   min-height: 120px;
-  height: 100%;
+  height: 60%;
   margin-top: 8px;
 }
 </style>

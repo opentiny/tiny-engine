@@ -9,7 +9,7 @@
       ></tiny-alert>
     </div>
   </div>
-  <div>
+  <div class="mateCodeBox">
     <remote-data-adapter-form
       v-model="state.shouldFetch"
       name="是否可以发起请求的计算函数（shouldFetch）"
@@ -111,5 +111,20 @@ export default {
   .life-cycle-alert {
     margin-top: -10px;
   }
+}
+.mateCodeBox {
+  overflow-y: scroll;
+  width: auto;
+  height: 290px;
+}
+.mateCodeBox::-webkit-scrollbar {
+  display: block;
+  width: 8px;
+}
+.mateCodeBox::-webkit-scrollbar-thumb {
+  background-color: var(--ti-lowcode-datasource-scrollbar-thumb-color-bg);
+}
+.mateCodeBox::-webkit-scrollbar-thumb:hover {
+  background-color: var(--ti-lowcode-datasource-scrollbar-thumb-color-hover-bg);
 }
 </style>
