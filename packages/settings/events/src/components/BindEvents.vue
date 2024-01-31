@@ -2,58 +2,22 @@
   <div class="bind-action-list">
     <div class="popover-head">
       <span class="head-left">
-        <tiny-popover
-          v-model="state.showEventAdditive"
-          popperClass="option-popper"
-          placement="bottom-end"
-          trigger="manual"
-          @hide="clearFromData"
+        <tiny-button
+          class="title add-custom-event-button"
+          :reset-time="0"
+          @click.stop="handleToggleAddEventDialog(true)"
         >
-          <template #reference>
-            <tiny-button
-              class="title add-custom-event-button"
-              :reset-time="0"
-              @click.stop="state.showEventAdditive = !state.showEventAdditive"
-            >
-              <span class="custom-event-button-text">添加自定义事件</span>
-              <tiny-popover
-                placement="bottom-start"
-                trigger="hover"
-                popperClass="setting-advanced-add-custom-event-tip"
-              >
-                <template #reference>
-                  <icon-help-query class="icon-help"></icon-help-query>
-                </template>
-                <div class="add-custom-event-tip">
-                  支持添加原生 DOM 事件，添加后点击
-                  <span class="event-tip-highlight"> 绑定事件 </span> 为画布中所选元素增加事件
-                </div>
-              </tiny-popover>
-            </tiny-button>
-          </template>
-          <div class="custom-event" @click.stop>
-            <tiny-form
-              ref="ruleForm"
-              :model="state.formData"
-              :rules="rules"
-              label-width="100px"
-              :inline-message="true"
-              validate-type="text"
-              label-position="left"
-            >
-              <tiny-form-item label="事件函数名" prop="methodName" required>
-                <tiny-input v-model="state.formData.methodName" placeholder="小驼峰格式，如：onDrag"></tiny-input>
-              </tiny-form-item>
-              <tiny-form-item label="事件描述" prop="methodDescription" required>
-                <tiny-input v-model="state.formData.methodDescription"></tiny-input>
-              </tiny-form-item>
-              <footer>
-                <tiny-button @click="addMethod"> 确定</tiny-button>
-                <tiny-button @click="state.showEventAdditive = !state.showEventAdditive"> 取消</tiny-button>
-              </footer>
-            </tiny-form>
-          </div>
-        </tiny-popover>
+          <span class="custom-event-button-text">添加自定义事件</span>
+          <tiny-popover placement="bottom-start" trigger="hover" popperClass="setting-advanced-add-custom-event-tip">
+            <template #reference>
+              <icon-help-query class="icon-help"></icon-help-query>
+            </template>
+            <div class="add-custom-event-tip">
+              支持添加原生 DOM 事件，添加后点击
+              <span class="event-tip-highlight"> 绑定事件 </span> 为画布中所选元素增加事件
+            </div>
+          </tiny-popover>
+        </tiny-button>
       </span>
       <tiny-popover popperClass="option-popper setting-advanced-bind-event-list" placement="bottom-end" trigger="hover">
         <template #reference>
@@ -112,29 +76,34 @@
     </div>
   </div>
   <bind-events-dialog :eventBinding="state.eventBinding"></bind-events-dialog>
+  <add-events-dialog
+    :visible="state.showBindEventDialog"
+    :componentEvents="state.componentEvents"
+    @closeDialog="handleToggleAddEventDialog(false)"
+    @addEvent="handleAddEvent"
+  ></add-events-dialog>
 </template>
 
 <script>
-import { computed, reactive, watchEffect, ref, watch } from 'vue'
-import { Popover, Input, Form, FormItem, Button } from '@opentiny/vue'
-import { useCanvas, useModal, useLayout, useBlock, useResource, useNotify } from '@opentiny/tiny-engine-controller'
+import { computed, reactive, watchEffect } from 'vue'
+import { Popover, Button } from '@opentiny/vue'
+import { useCanvas, useModal, useLayout, useBlock, useResource } from '@opentiny/tiny-engine-controller'
 import { BlockLinkEvent, SvgButton } from '@opentiny/tiny-engine-common'
 import { iconHelpQuery, iconChevronDown } from '@opentiny/vue-icon'
 import BindEventsDialog, { open as openDialog } from './BindEventsDialog.vue'
-import { commonEvents, checkEvent } from '../commonjs/events.js'
+import { commonEvents } from '../commonjs/events.js'
+import AddEventsDialog from './AddEventsDialog.vue'
 
 export default {
   components: {
     BlockLinkEvent,
     BindEventsDialog,
     TinyPopover: Popover,
-    TinyForm: Form,
-    TinyFormItem: FormItem,
-    TinyInput: Input,
     TinyButton: Button,
     IconHelpQuery: iconHelpQuery(),
     IconChevronDown: iconChevronDown(),
-    SvgButton
+    SvgButton,
+    AddEventsDialog
   },
   inheritAttrs: false,
   setup() {
@@ -146,23 +115,13 @@ export default {
 
     const { highlightMethod } = getPluginApi(PLUGIN_NAME.PageController)
 
-    const rules = {
-      methodDescription: [{ required: true, message: '必填', trigger: 'blur' }],
-      methodName: [{ required: true, message: '必填', trigger: 'blur' }]
-    }
-    const ruleForm = ref(null)
-
     const state = reactive({
       eventName: '', // 事件名称
       eventBinding: null, // 事件绑定的处理方法对象
       componentEvent: {},
       componentEvents: commonEvents,
       bindActions: {},
-      formData: {
-        methodDescription: '',
-        methodName: ''
-      },
-      showEventAdditive: false
+      showBindEventDialog: false
     })
 
     const isBlock = computed(() => Boolean(pageState.isBlock))
@@ -259,55 +218,32 @@ export default {
       }
     }
 
-    const addMethod = () => {
-      if (state.componentEvents[state.formData.methodName]) {
-        useNotify({
-          type: 'error',
-          message: `${state.formData.methodName}事件函数名已存在`
-        })
-        return false
-      }
-      if (checkEvent(state.formData.methodName)) {
-        Object.assign(state.componentEvents, {
-          [state.formData.methodName]: {
-            label: {
-              zh_CN: state.formData.methodDescription
-            },
-            description: {
-              zh_CN: `${state.formData.methodDescription}的回调函数`
-            },
-            type: 'event',
-            functionInfo: {
-              params: [],
-              returns: {}
-            },
-            defaultValue: ''
-          }
-        })
-        state.showEventAdditive = !state.showEventAdditive
-      }
-
-      return undefined
+    const handleToggleAddEventDialog = (visible) => {
+      state.showBindEventDialog = visible
     }
 
-    const clearFromData = () => {
-      ruleForm.value?.resetFields()
-    }
+    const handleAddEvent = (params) => {
+      const { eventName, eventDescription } = params
 
-    const handleCloseEventModal = () => {
-      state.showEventAdditive = false
-    }
-
-    watch(
-      () => state.showEventAdditive,
-      (visible) => {
-        if (visible) {
-          window.addEventListener('click', handleCloseEventModal)
-        } else {
-          window.removeEventListener('click', handleCloseEventModal)
+      Object.assign(state.componentEvents, {
+        [eventName]: {
+          label: {
+            zh_CN: eventDescription
+          },
+          description: {
+            zh_CN: `${eventDescription}的回调函数`
+          },
+          type: 'event',
+          functionInfo: {
+            params: [],
+            returns: {}
+          },
+          defaultValue: ''
         }
-      }
-    )
+      })
+
+      state.showBindEventDialog = false
+    }
 
     return {
       state,
@@ -316,10 +252,8 @@ export default {
       delEvent,
       openCodePanel,
       openActionDialog,
-      rules,
-      addMethod,
-      clearFromData,
-      ruleForm
+      handleAddEvent,
+      handleToggleAddEventDialog
     }
   }
 }
