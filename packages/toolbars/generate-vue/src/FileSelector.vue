@@ -1,7 +1,6 @@
 <template>
   <tiny-dialog-box
     class="dialog-box"
-    :modal="false"
     :visible="visible"
     :close-on-click-modal="false"
     :append-to-body="true"
