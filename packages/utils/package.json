@@ -31,7 +31,9 @@
     "vitest": "^0.34.6"
   },
   "dependencies": {
-    "@opentiny/vue-renderless": "~3.10.0",
-    "vue": "^3.3.8"
+    "@opentiny/vue-renderless": "~3.10.0"
+  },
+  "peerDependencies": {
+    "vue": "^3.4.15"
   }
 }

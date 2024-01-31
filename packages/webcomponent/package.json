@@ -29,8 +29,7 @@
   "license": "MIT",
   "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
-    "@vue/shared": "^3.3.4",
-    "vue": "^3.2.1"
+    "@vue/shared": "^3.3.4"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.2.0",
@@ -43,5 +42,8 @@
     "eslint-plugin-vue": "^7.17.0",
     "prettier": "^2.4.0",
     "vite": "^2.9.1"
+  },
+  "peerDependencies": {
+    "vue": "^3.4.15"
   }
 }
