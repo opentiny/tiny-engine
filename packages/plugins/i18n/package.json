@@ -30,12 +30,14 @@
     "@opentiny/tiny-engine-utils": "workspace:*",
     "@opentiny/vue": "~3.10.0",
     "@opentiny/vue-icon": "~3.10.0",
-    "vue": "3.2.45",
     "vue-clipboard3": "^2.0.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
     "@vitejs/plugin-vue-jsx": "^1.3.10",
     "vite": "^4.3.7"
+  },
+  "peerDependencies": {
+    "vue": "^3.4.15"
   }
 }
