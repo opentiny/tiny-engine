@@ -7,8 +7,13 @@ export default (logger:FastifyBaseLogger) => {
     mongoose
       .connect(process.env.DB_URL ?? 'mongodb://localhost:27017/dl-flow', {
         directConnection: true,
+        autoCreate: true
       })
       .then(() => { logger.info({}, 'MongoDB Connect Success');resolve(true); })
       .catch((err) => { logger.error(err);reject(err); });
   });
 };
+
+
+export * from './layer.shema';
+export * from './property.schema';
