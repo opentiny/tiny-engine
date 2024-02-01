@@ -1,0 +1,10 @@
+{
+    "folders": [
+        {
+            "path": "./dl-flow-frontend"
+        },
+        {
+            "path": "./dl-flow-backend"
+        }
+    ]
+}
