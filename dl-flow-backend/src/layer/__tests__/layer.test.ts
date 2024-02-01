@@ -1,12 +1,17 @@
-import { expect, test } from 'vitest';
+import { describe, expect, test } from 'vitest';
 import { App } from '~/app';
 
 
-test('Layer', async () => {
-    const app = await App();
-    const rep = await app.inject({
-        method: 'get',
-        url: '/layer'
+describe('Layer', () => {
+    test('get layer', async () => {
+        const app = await App();
+        const rep = await app.inject({
+            method: 'get',
+            url: '/layers'
+        });
+        console.log(__TEST__);
+        expect(rep.statusCode).toBe(200);
     });
-    expect(rep.statusCode).toBe(200);
+}, {
+    timeout: 60 * 1000
 });
