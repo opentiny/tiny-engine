@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev -r tsconfig-paths/register --no-notify --transpile-only src/app.ts",
+    "dev": "ts-node-dev -r tsconfig-paths/register --no-notify --transpile-only src/server.ts",
     "build": "rm -rf dist && node build.js",
-    "start": "npm run build && node dist/index.js"
+    "start": "npm run build && node dist/index.js",
+    "test": "vitest"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +20,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@typegoose/typegoose": "^12.1.0",
     "@types/node": "^20.11.13",
     "@typescript-eslint/eslint-plugin": "^6.20.0",
     "@typescript-eslint/parser": "^6.20.0",
@@ -27,6 +29,7 @@
     "pino-pretty": "^10.3.1",
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.2"
   }
 }

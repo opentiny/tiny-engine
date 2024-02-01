@@ -29,7 +29,7 @@ module.exports = {
     '@typescript-eslint'
   ],
   'rules': {
-    'indent': ['error', 2],
+    // 'indent': ['error', 2],
     'linebreak-style': ['error', 'unix'],
     'quotes': ['error', 'single'],
     'semi': ['error', 'always'],
@@ -71,5 +71,8 @@ module.exports = {
     'object-curly-spacing': ['error', 'always'],
     '@typescript-eslint/ban-types': 0,
     '@typescript-eslint/no-explicit-any': 0,
+    '@typescript-eslint/interface-name-prefix': 'off',
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
   },
 };
