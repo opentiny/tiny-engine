@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "target": "ES2020",
+        "module": "CommonJS",
+        "esModuleInterop": true,
+        "strict": true,
+        "outDir": "dist",
+        "sourceMap": true,
+        "paths": {
+            "~/": ["./src/"],
+            "~/*": ["./src/*"],
+            "~db/*": ["./src/db/*"],
+            "~db/": ["./src/db/"],
+        },
+        "baseUrl": "."
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules"]
+}

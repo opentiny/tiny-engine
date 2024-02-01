@@ -1,0 +1,32 @@
+{
+  "name": "dl-flow-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node-dev -r tsconfig-paths/register --no-notify --transpile-only src/app.ts",
+    "build": "rm -rf dist && node build.js",
+    "start": "npm run build && node dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.1",
+    "fastify": "^4.26.0",
+    "fastify-cors": "^6.1.0",
+    "mongoose": "^8.1.1",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.13",
+    "@typescript-eslint/eslint-plugin": "^6.20.0",
+    "@typescript-eslint/parser": "^6.20.0",
+    "esbuild": "^0.20.0",
+    "eslint": "^8.56.0",
+    "pino-pretty": "^10.3.1",
+    "ts-node-dev": "^2.0.0",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.3.3"
+  }
+}
