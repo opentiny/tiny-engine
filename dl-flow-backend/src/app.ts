@@ -7,7 +7,7 @@ dotenv.config({
 });
 export async function App() {
     const app = fastify({
-      logger: process.env.NODE_ENV === 'dev' ? {
+      logger: (__DEV__ || __TEST__) ? {
         transport: {
           target: 'pino-pretty',
           options:{
@@ -18,6 +18,8 @@ export async function App() {
         level: 'debug'
       } : true,
     });
+    app.log.debug({}, `Env: ${__TEST__ ? 'Test' : __DEV__ ? 'DEV' : 'Prod'}`);
+    app.log.info({}, 'Prepare install Mongo');
     await Mongo(app.log);
     // TODO: auto register controller
     (await import('~/layer/layer.controller')).default(app);

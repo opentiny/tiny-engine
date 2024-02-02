@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev -r tsconfig-paths/register --no-notify --transpile-only src/server.ts",
+    "_dev": "ts-node-dev -r tsconfig-paths/register --no-notify --transpile-only src/server.ts",
+    "dev": "node dev.js",
     "build": "rm -rf dist && node build.js",
     "start": "npm run build && node dist/index.js",
     "test": "vitest"
@@ -26,6 +27,7 @@
     "@typescript-eslint/parser": "^6.20.0",
     "esbuild": "^0.20.0",
     "eslint": "^8.56.0",
+    "mongodb-memory-server": "^9.1.6",
     "pino-pretty": "^10.3.1",
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.2.0",

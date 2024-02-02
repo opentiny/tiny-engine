@@ -6,5 +6,9 @@ export default defineConfig({
             '~': resolve(__dirname, './src'),
             '~db': resolve(__dirname, './src/db'),
         },
+    },
+    define: {
+        '__DEV__': true,
+        '__TEST__': true
     }
 });
