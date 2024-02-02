@@ -1,10 +1,16 @@
-import { FastifyInstance } from 'fastify';
-import { LayerModel } from '~/db/';
+import { Controller, Get, Post, Body } from '@nestjs/common';
+import { LayerService } from './layer.service';
+import { CreateLayerDto } from './dto/create-layer.dto';
 
-export default (fastify: FastifyInstance) => {
-  fastify.get('/layers', async (req, rep) => {
-    const data = await LayerModel.find({});
-    console.log(data);
-    rep.send('hello-world');
-  });
-};
+@Controller('layer')
+export class LayerController {
+  constructor(private readonly layerService: LayerService) {}
+  @Get('/')
+  async getLayerList() {
+    return await this.layerService.findAll();
+  }
+  @Post('/')
+  createLayer(@Body() dto: CreateLayerDto) {
+    return this.layerService.saveLayer(dto);
+  }
+}
