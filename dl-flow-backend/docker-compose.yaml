@@ -7,5 +7,7 @@ services:
       - 27018:27017
   server:
     image: dl-flow-back:0.0.1
+    ports:
+      - 9000:9000
     environment:
       - DB_URL=mongodb://mongodb:27017/dl-flow
