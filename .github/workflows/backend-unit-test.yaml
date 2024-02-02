@@ -8,6 +8,9 @@ jobs:
   unit_test:
     name: BackEnd unit Test
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./dl-flow-backend
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2
@@ -20,8 +23,6 @@ jobs:
           cache: 'pnpm'
           cache-dependency-path: 'dl-flow-backend/pnpm-lock.yaml'
       - name: Install dep
-        working-directory: dl-flow-backend
         run: pnpm install
       - name: Run Test
-        working-directory: dl-flow-backend
         run: pnpm test
