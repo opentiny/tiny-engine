@@ -26,4 +26,5 @@ jobs:
       - name: Run Test
         run: |
           cd dl-flow-backend
+          pwd
           pnpm test
