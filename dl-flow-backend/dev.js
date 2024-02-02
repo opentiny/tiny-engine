@@ -8,23 +8,17 @@ const { watch } = require('fs');
 const { join } = require('path');
 const debounce = (fn, delay) => {
     let timer = null;
-    let flag = false;
-    return () => {
+    return (...args) => {
         if (timer) {
             clearTimeout(timer);
         }
-        if (!flag) {
-            fn();
-            flag = true;
-        }
         timer = setTimeout(() => {
-            fn();
-            flag = true;
+            fn(...args);
         }, delay);
     };
 };
 (async function() {
-    const ctx = esbuild.context({
+    const option = {
         entryPoints: ['./src/**/*.ts'],
         outdir: 'dist',
         platform: 'node',
@@ -32,22 +26,25 @@ const debounce = (fn, delay) => {
         sourcemap: 'external',
         bundle: true,
         define: {
-            __TEST__: '"false"'
+            __TEST__: '""',
+            __DEV__: '"true"'
         }
-    });
+    };
+    esbuild.buildSync(option);
+    const ctx = esbuild.context(option);
 
     /**
      * @type {import('child_process').ChildProcess}
      */
     let child;
-    const f = debounce(() => {
-        console.log(new Date().getTime(), 'change');
+    const f = debounce((ev, fileName) => {
+        console.log(fileName, ev);
         if (child) {
             child.kill();
         }
+        console.clear();
         child = fork('./dist/server.js');
     }, 1000);
     (await ctx).watch();
     watch(join(__dirname, 'dist'), f);
-    console.log('watch');
 })();

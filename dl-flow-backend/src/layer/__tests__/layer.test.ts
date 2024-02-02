@@ -9,7 +9,6 @@ describe('Layer', () => {
             method: 'get',
             url: '/layers'
         });
-        console.log(__TEST__);
         expect(rep.statusCode).toBe(200);
     });
 }, {

@@ -6,6 +6,5 @@ export default (fastify: FastifyInstance) => {
     const data = await LayerModel.find({});
     console.log(data);
     rep.send('hello-world');
-    
   });
 };
