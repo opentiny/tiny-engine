@@ -20,7 +20,9 @@ jobs:
           cache: 'pnpm'
           cache-dependency-path: 'dl-flow-backend/pnpm-lock.yaml'
       - name: Install dep
-        run: pnpm install
+        run: |
+          cd dl-flow-backend
+          pnpm install
       - name: Run Test
         run: |
           cd dl-flow-backend
