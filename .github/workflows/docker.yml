@@ -33,10 +33,10 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      -
-        name: Build and push
+      - name: Build and push
         uses: docker/build-push-action@v5
         with:
+          working-directory: dl-flow-backend/
           context: dl-flow-backend/
           file: dl-flow-backend/dockerfile
           push: ${{ github.event_name != 'pull_request' }}
