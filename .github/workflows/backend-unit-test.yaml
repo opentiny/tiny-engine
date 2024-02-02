@@ -8,9 +8,6 @@ jobs:
   unit_test:
     name: BackEnd unit Test
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./dl-flow-backend
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2
@@ -25,4 +22,6 @@ jobs:
       - name: Install dep
         run: pnpm install
       - name: Run Test
-        run: pnpm test
+        run: |
+          cd dl-flow-backend
+          pnpm test
