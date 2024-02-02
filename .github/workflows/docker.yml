@@ -3,7 +3,7 @@ name: Build And Publish
 on:
   push:
     tags:
-      - "*.*.*-*.*"
+      - "*.*.*"
 
 jobs:
   build_test:
