@@ -6,7 +6,6 @@ import { DbModule } from '@app/database';
 
 describe('LayerService', () => {
   let service: LayerService;
-  let id = '';
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -17,7 +16,14 @@ describe('LayerService', () => {
     }).compile();
 
     service = module.get<LayerService>(LayerService);
-    id = (
+  });
+
+  it('should be defined', () => {
+    expect(service).toBeDefined();
+  });
+
+  it('Get All Layer', async () => {
+    const id = (
       await service.saveLayer({
         label: {
           en_US: '',
@@ -28,22 +34,26 @@ describe('LayerService', () => {
         clazz: '',
       })
     ).id;
-  });
-
-  it('should be defined', () => {
-    expect(service).toBeDefined();
-  });
-
-  it('Get All Layer', () => {
     expect(service.findAll()).resolves.toHaveLength(1);
   });
   it('Create Layer', () => {
     expect(service.saveLayer({} as any)).resolves.not.toThrow();
   });
   it('Delete Layer', async () => {
+    const id = (
+      await service.saveLayer({
+        label: {
+          en_US: '',
+          zh_CN: '',
+        },
+        properties: [],
+        code: '',
+        clazz: '',
+      })
+    ).id;
     expect(service.deleteLayer({ id })).resolves.toBeUndefined();
   });
-  it('Delete Layer But not exists', async () => {
+  it('Delete Layer But not exists', () => {
     expect(service.deleteLayer({ id: 'not exists record' })).rejects.toThrow();
   });
 });
