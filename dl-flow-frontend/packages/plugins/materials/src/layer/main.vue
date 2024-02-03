@@ -1,5 +1,6 @@
 <script setup lang="jsx">
-import { Button } from '@opentiny/vue'
+import {Empty} from '@opentiny/tiny-engine-common';
+import { Button, Search } from '@opentiny/vue'
 import { useX6, useResource } from '@opentiny/tiny-engine-controller'
 import { computed } from 'vue'
 const { resState } = useResource()
@@ -18,15 +19,11 @@ const addEmptyLayer = () => {
 
 <template>
   <div class="layer">
-    <fade-transition group>
-      <template v-if="isEmpty">
-        <Search class="layer__search" v-if="!isEmpty" />
-        <Button @click="addEmptyLayer">Add</Button>
-        <div class="layer--empty">
-          <empty desc="自定义层为空" />
-        </div>
-      </template>
-    </fade-transition>
+    <Search class="layer__search" v-if="!isEmpty" />
+    <Button @click="addEmptyLayer">Add</Button>
+    <div class="layer--empty">
+      <empty desc="自定义层为空" />
+    </div>
   </div>
 </template>
 

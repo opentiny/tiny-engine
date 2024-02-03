@@ -63,6 +63,7 @@
           "zh_CN": "1D 卷积神经网络",
           "en_US": "Conv 1D"
         },
+        "id": "Conv1D",
         "nnName": "Conv1D",
         "desc": "一维卷积层",
         "nn": true,

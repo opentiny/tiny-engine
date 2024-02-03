@@ -88,6 +88,9 @@ onMounted(() => {
     } else {
       node = _node.filter((n) => n && n.getData().mode === 'layer')[0]
     }
+    if (!node){
+    return;
+    }
     /**
      * @type {import('../../../controller/src/useX6.js').MaterialInfo}
      */

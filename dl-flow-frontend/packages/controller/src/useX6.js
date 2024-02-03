@@ -31,6 +31,7 @@ import { Keyboard } from '@antv/x6-plugin-keyboard'
  */
 /**
  * @typedef {Object} MaterialInfo - 物料信息
+ * @prop {string} id 用于标识以及转码时候插入
  * @prop {{zh_CN: string, en_US: string}} label - 物料名称
  * @prop {string|undefined} nnName - 如果为网络，网络名称
  * @prop {string} desc - 简介
