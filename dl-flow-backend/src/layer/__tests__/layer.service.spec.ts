@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { LayerService } from '../layer.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Layer, LayerSchema } from '../Layer.schema';
+import { Layer, LayerSchema } from '../layer.schema';
 import { DbModule } from '@app/database';
 
 describe('LayerService', () => {
