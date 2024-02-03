@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, Delete, Param } from '@nestjs/common';
 import { LayerService } from './layer.service';
 import { CreateLayerDto } from './dto/create-layer.dto';
 
@@ -12,5 +12,9 @@ export class LayerController {
   @Post('/')
   createLayer(@Body() dto: CreateLayerDto) {
     return this.layerService.saveLayer(dto);
+  }
+  @Delete('/:id')
+  deleteLayer(@Param('id') id: string) {
+    return this.layerService.deleteLayer({ id });
   }
 }
