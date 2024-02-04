@@ -217,6 +217,8 @@ const processDefaultValue = (property, externalType) => {
         data[attr.id] = processDefaultValue(attr, externalType)
       }
       return data
+    default:
+      return '';
   }
 }
 /**
@@ -239,6 +241,9 @@ const addNode = (info, types) => {
           case 'enums':
             data = p.enums.filter((v) => v.default)[0].value
             break
+          case 'any':
+            data = '';
+            break;
           case 'ParamAttr':
             data = processDefaultValue(p, types)
             break

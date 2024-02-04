@@ -29,7 +29,6 @@ new TinyThemeTool(tinySmbTheme, 'smbtheme') // 初始化主题
 if (!isDevelopEnv) {
   initMonitor()
 }
-
 window.TinyGlobalConfig = globalConfig
 setGlobalConfig(globalConfig)
 
