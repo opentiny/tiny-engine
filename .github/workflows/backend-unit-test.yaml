@@ -17,11 +17,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
-          cache: 'pnpm'
-          cache-dependency-path: 'dl-flow-backend/pnpm-lock.yaml'
       - name: Install dep
         run: |
           cd dl-flow-backend
+          npm install pnpm -g 
           pnpm install
       - name: Run Test
         run: |
