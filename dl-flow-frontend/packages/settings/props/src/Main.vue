@@ -43,7 +43,6 @@ const shouldShow = computed(() => {
      * @type {import('../../../controller/src/useX6.js').MaterialInfo}
      */
     const data = v.getData()
-    console.log(data)
     return data.mode === 'nn' ? true : Boolean(data.properties?.length)
   })
 })
