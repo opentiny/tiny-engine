@@ -15,6 +15,7 @@
       :inline-message="true"
       validate-type="text"
       label-position="left"
+      class="add-custom-event-form"
     >
       <tiny-form-item label="事件函数名" prop="eventName" required>
         <tiny-input v-model="formData.eventName" placeholder="小驼峰格式，如：onDrag"></tiny-input>
@@ -116,6 +117,11 @@ const addMethod = () => {
 </script>
 
 <style lang="less" scoped>
+.add-custom-event-form {
+  :deep(.tiny-form-item__label) {
+    padding-left: 0;
+  }
+}
 .footer {
   display: flex;
   justify-content: flex-end;
