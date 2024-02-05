@@ -61,7 +61,8 @@ export function IsProperties(validationOptions?: ValidationOptions) {
       options: validationOptions,
       validator: {
         validate(value: unknown[]) {
-          if (!value.length) {
+          console.log(value);
+          if (!value?.length) {
             return false;
           }
           return value.every((v) => isProperty(v));

@@ -13,7 +13,7 @@
 /* eslint-disable no-undef */
 import axios from './axios'
 import { createApp } from 'vue'
-import { isMock, isVsCodeEnv, isDevelopEnv } from '@opentiny/tiny-engine-common/js/environments'
+import { isMock, isVsCodeEnv, isDevelopEnv, ENDPOINT_URL } from '@opentiny/tiny-engine-common/js/environments'
 import { useBroadcastChannel } from '@vueuse/core'
 import Login from './Login.vue'
 import config from './config'
@@ -57,8 +57,11 @@ window.lowcode = {
   }
 }
 
-export const createHttp = (options) => {
-  const http = axios(config)
+export const createHttp = (options, extendsConfig) => {
+  const http = axios({
+    ...config,
+    ...extendsConfig
+  })
 
   // 如果未指定是否启用 mock，则本地开发时默认启用，模拟数据在 public/mock 目录下
   const { enableMock = isDevelopEnv } = options
@@ -72,7 +75,6 @@ export const createHttp = (options) => {
     if (isVsCodeEnv) {
       config.baseURL = ''
     }
-
     return config
   }
 
@@ -85,7 +87,10 @@ export const createHttp = (options) => {
 
       return Promise.reject(res.data.error)
     }
-    return res.data?.data
+    if (res.data.data){
+      return res.data.data;
+    }
+    return res.data;
   }
 
   const openLogin = () => {
@@ -125,4 +130,5 @@ export const createHttp = (options) => {
   return http
 }
 
-export const useHttp = () => createHttp({ enableMock: isMock })
+export const useHttp = () => createHttp({ enableMock: isMock }, {})
+export const useEndpoint = () => createHttp({enableMock: false})

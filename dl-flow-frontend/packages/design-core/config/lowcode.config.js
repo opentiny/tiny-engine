@@ -32,6 +32,8 @@
  * @prop {number} platformId
  * @prop {number} defaultImportLayout
  * @prop {LSPConfig} lspConfig
+
+ * @prop {{enable: boolean, path: string}} extendsEndpoint 扩展接入端 (非TinyEngine服务端, 为了避免歧义(比如SSR中的服务端)这里使用的是接入端)
  *
  */
 /**
@@ -74,7 +76,12 @@ const config = {
   platformId: 897,
 
   // 是否默认导入布局组件
-  defaultImportLayout: 1
+  defaultImportLayout: 1,
+
+  extendsEndpoint: {
+    enable: true,
+    path: 'http://localhost:9000'
+  }
 }
 
 export default config

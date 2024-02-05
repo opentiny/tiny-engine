@@ -4,8 +4,11 @@
     <div class="code__editor" v-else>
       <div class="code__editor__header">
         <tiny-form :model="formData" :rules="rules" :hide-required-asterisk="false" label-position="top" ref="form">
-          <tiny-form-item label="请选择类" prop="selectedClass" required>
-            <tiny-select v-model="formData.selectedClass">
+          <tiny-form-item label="Label" props="label" required>
+            <tiny-input v-model="label" title="你不应该手动修改label, 因为Layer应该是有语义的" disabled />
+          </tiny-form-item>
+          <tiny-form-item label="请选择类" prop="clazz" required>
+            <tiny-select v-model="formData.clazz">
               <tiny-option v-for="(clazz, idx) in classes" :value="clazz" :key="idx">
                 {{ clazz }}
               </tiny-option>
@@ -29,10 +32,12 @@ import {
   Button as TinyButton,
   ButtonGroup as TinyButtonGroup,
   Select as TinySelect,
-  Option as TinyOption
+  Option as TinyOption,
+  Input as TinyInput
 } from '@opentiny/vue'
 import { Tip, VueMonaco } from '@opentiny/tiny-engine-common'
-import { useX6, useLayout, useVisitor } from '@opentiny/tiny-engine-controller'
+import { useX6, useLayout, useVisitor, useLayer } from '@opentiny/tiny-engine-controller'
+import i18n from '@opentiny/tiny-engine-i18n-host';
 import { Python3Parser } from 'dt-python-parser'
 const parser = new Python3Parser()
 const code = ref('')
@@ -46,20 +51,51 @@ const errors = computed(() => parser.validate(code.value))
 const error = computed(() => Boolean(errors.value.length))
 const classes = computed(() => (ast.value && !error.value ? getClassNames() : new Set()))
 const form = ref()
+/**
+ * @type {import('@opentiny/tiny-engine-controller/useResource').LayerItem}
+ */
 const formData = reactive({
-  selectedClass: '',
-  property: {}
+  label: {
+    zh_CN: '',
+    en_US: '',
+  },
+  clazz: '',
+  properties: [],
+  code: '',
+  id: '',
 })
+const label = ref('');
+const locale = i18n.global.locale;
 const rules = reactive({
-  selectedClass: [{ required: true, trigger: 'change' }]
+  clazz: [{ required: true, trigger: 'change' }]
 })
+const {createLayer} = useLayer();
+/**
+ * @type {import('@antv/x6').Cell}
+ */
+let node
 const save = () => {
   form.value.validate((valid) => {
     if (!valid) {
       return
     }
-    formData.property = getProperty(formData.selectedClass)
-    // send request
+    formData.id = formData.clazz;
+    formData.code = code.value;
+    formData.properties = getProperty(formData.clazz)
+    formData.label = {
+      zh_CN: label.value,
+      en_US: label.value
+    };
+    createLayer(formData)
+      .then(()=>{
+        if (node){
+          node.setData({
+            ...node.getData(),
+            ...formData,
+            new: false
+          })
+        }
+      })
   })
 }
 watch(ast, () => {
@@ -74,6 +110,17 @@ watch(errors, () => {
   }
   ast.value = null
 })
+watch(formData, () => {
+  if (node && formData.clazz){
+    label.value = formData.clazz;
+    node.setData(
+      {
+        ...node.getData(),
+        label: label.value
+      }
+    )
+  }
+}, {deep: true})
 onMounted(() => {
   const { g } = useX6()
   g.on('selection:changed', () => {
@@ -82,17 +129,20 @@ onMounted(() => {
       return
     }
     const _node = g.getSelectedCells()
-    let node
     if (_node.length === 1 && _node[0].getData().mode === 'layer') {
       node = _node[0]
     } else {
       node = _node.filter((n) => n && n.getData().mode === 'layer')[0]
+    }
+    if (!node){
+      return;
     }
     /**
      * @type {import('../../../controller/src/useX6.js').MaterialInfo}
      */
     const data = node.getData()
     selectMode.value = data.mode
+    formData.label = data.label[locale.value];
   })
 })
 </script>

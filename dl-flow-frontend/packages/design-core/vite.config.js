@@ -25,11 +25,12 @@ const config = {
     // 这里保证本地启动服务是localhost,支持js多线程和谷歌浏览器读写本地文件api
     port: 8080,
     open: '/?type=app&id=918&tenant=1',
+
     proxy: {
       '/app-center/v1/api': {
         target: origin,
         changeOrigin: true
-      },
+      },  
       '/app-center/api': {
         target: origin,
         changeOrigin: true
@@ -41,7 +42,7 @@ const config = {
       '/platform-center/api': {
         target: origin,
         changeOrigin: true
-      }
+      },
     }
   },
   preview: {
@@ -190,7 +191,7 @@ const commonAlias = {
 }
 
 export default defineConfig(({ command, mode }) => {
-  const { VITE_CDN_DOMAIN } = loadEnv(mode, process.cwd(), '')
+  const { VITE_CDN_DOMAIN, VITE_ENDPOINT_URL } = loadEnv(mode, process.cwd(), '')
   const monacoPublicPath = {
     local: 'editor/monaco-workers',
     alpha: 'https://tinyengine-assets.obs.cn-north-4.myhuaweicloud.com/files/monaco-assets',
@@ -275,6 +276,10 @@ export default defineConfig(({ command, mode }) => {
   const importMapStyles = [`${VITE_CDN_DOMAIN}/@opentiny/vue-theme@${importMapVersions.tinyVue}/index.css`]
 
   config.plugins.push(monacoEditorPluginInstance, htmlPlugin(mode), importmapPlugin(importmap, importMapStyles))
-
+  config.server.proxy['/endpoint'] = {
+    target: VITE_ENDPOINT_URL,
+    changeOrigin: true,
+    rewrite: path => path.replace(/^\/endpoint/, ''),
+  }
   return config
 })

@@ -6,7 +6,7 @@
         <collapse-item
           :name="cell.id"
           :title="cell.data.label[locale]"
-          v-if="cell.data.mode === 'nn' || cell.data.mode === 'utils'"
+          v-if="!cell.data.new"
         >
           <property-setting v-model="cell.data" :cell-id="cell.id" @update="onUpdate" />
         </collapse-item>
@@ -43,19 +43,22 @@ const shouldShow = computed(() => {
      * @type {import('../../../controller/src/useX6.js').MaterialInfo}
      */
     const data = v.getData()
+    console.log(data)
     return data.mode === 'nn' ? true : Boolean(data.properties?.length)
   })
 })
 
 /** @type {import('@antv/x6').Graph} */
 let g
+const onSelection = () => {
+  const cells = g.getSelectedCells()
+  empty.value = !cells.length;
+  activeCells.value = cells
+}
 onMounted(() => {
   g = useX6().g
-  g.on('selection:changed', () => {
-    const cells = g.getSelectedCells()
-    empty.value = !cells.length
-    activeCells.value = cells
-  })
+  g.on('selection:changed', onSelection)
+  onSelection();
 })
 const onUpdate = ({ properties, id }) => {
   if (!g) {

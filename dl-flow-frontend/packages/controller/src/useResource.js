@@ -19,15 +19,12 @@
  * @prop {string} zh_CN
  * @prop {string} en_US
  *
- * @typedef {Object} Code
- * @prop {Label} label
- * @prop {string} fnName
- * @prop {string} content
  *
  * @typedef {Object} LayerItem
  * @prop {string|number} id
  * @prop {Label} label
- * @prop {Code[]} code
+ * @prop {string} code
+ * @prop {string} clazz
  * @prop {import('@opentiny/tiny-engine-controller/useX6').Property[]} properties
  *
  * @typedef {LayerItem[]} Layer
