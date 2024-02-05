@@ -18,7 +18,6 @@ jobs:
         with:
           node-version: '18.x'
           cache: 'pnpm'
-          cache-dependency-path: 'dl-flow-backend/pnpm-lock.yaml'
       - name: Install dep
         run: |
           cd dl-flow-backend
