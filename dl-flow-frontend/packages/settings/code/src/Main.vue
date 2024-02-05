@@ -116,7 +116,10 @@ watch(formData, () => {
     node.setData(
       {
         ...node.getData(),
-        label: label.value
+        label: {
+          zh_CN: label.value,
+          en_US: label.value
+        }
       }
     )
   }

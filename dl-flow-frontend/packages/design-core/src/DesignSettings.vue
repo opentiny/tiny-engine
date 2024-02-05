@@ -6,7 +6,6 @@
         :key="index"
         :title="setting.title"
         :name="setting.name"
-        lazy
       >
         <component :is="setting.component"></component>
         <div v-show="activating" class="active"></div>
