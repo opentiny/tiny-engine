@@ -1,6 +1,6 @@
 {
   "name": "dl-flow-backend",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "",
   "author": "",
   "private": true,
@@ -8,8 +8,8 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"libs/**/*.ts\"",
-    "start": "nest start",
-    "start:dev": "cross-env NODE_ENV=DEV nest start --watch",
+    "start": "cross-env DB_URL=mongodb://127.0.0.1:27017/dl-flow?directConnection=true nest start --watch",
+    "start:dev": "cross-env NODE_ENV=DEV DB_URL=mongodb://127.0.0.1:27017/?directConnection=true nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",

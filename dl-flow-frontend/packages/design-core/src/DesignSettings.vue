@@ -1,7 +1,12 @@
 <template>
   <div id="tiny-right-panel">
     <tiny-tabs v-model="layoutState.settings.render" tab-style="button-card">
-      <tiny-tab-item v-for="(setting, index) in settings" :key="index" :title="setting.title" :name="setting.name">
+      <tiny-tab-item
+        v-for="(setting, index) in settings"
+        :key="index"
+        :title="setting.title"
+        :name="setting.name"
+      >
         <component :is="setting.component"></component>
         <div v-show="activating" class="active"></div>
       </tiny-tab-item>

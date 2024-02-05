@@ -22,6 +22,7 @@ const emits = defineEmits(['update'])
 const properties = computed(() => props.modelValue.properties)
 const locale = i18n.global.locale
 const components = {
+  any: () => TInput,
   string: () => TInput,
   number: () => <TNumeric mouse-wheel controls={false} min={0} />,
   enums: () => Enums,

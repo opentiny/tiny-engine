@@ -81,7 +81,6 @@ import MetaButtonGroup from './component/MetaButtonGroup.vue'
 import MetaTableColumns from './component/MetaTableColumns.vue'
 import Empty from './component/Empty.vue'
 import Tip from './component/Tip.vue'
-import FadeTransition from './component/transition/TransitionFade.vue'
 import PythonMonaco from './component/PythonMonaco.vue'
 
 import i18n, { i18nKeyMaps } from './js/i18n.js'
@@ -198,7 +197,6 @@ export {
   BlockDeployDialog,
   ProgressBar,
   MetaTableColumns,
-  FadeTransition,
   PythonMonaco,
   Tip
 }
