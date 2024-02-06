@@ -139,7 +139,7 @@ export default {
   }
   &._full {
     position: fixed;
-    top: 35px;
+    top: var(--base-top-panel-height);
     z-index: 1;
     padding-right: 15px;
     right: var(--base-left-panel-width);
@@ -151,7 +151,7 @@ export default {
 }
 .fullscreen {
   position: fixed;
-  top: 35px;
+  top: var(--base-top-panel-height);
   bottom: 0;
   left: calc(var(--base-nav-panel-width) + 1px);
   right: var(--base-left-panel-width);
