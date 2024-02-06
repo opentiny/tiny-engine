@@ -43,7 +43,7 @@ const shouldShow = computed(() => {
      * @type {import('../../../controller/src/useX6.js').MaterialInfo}
      */
     const data = v.getData()
-    return data.mode === 'nn' ? true : Boolean(data.properties?.length)
+    return data?.mode && (data.mode === 'nn' ? true : Boolean(data.properties?.length))
   })
 })
 
@@ -56,8 +56,12 @@ const onSelection = () => {
     activeCells.value = [];
   }
   cells.forEach((cell) => {
+    if (activeCells.value.includes(cell)){
+      return;
+    }
     if (cell.children && cell.children.length){
-      activeCells.value.push(...cell.children);
+      const children = cell.getChildren().filter((child) => child.getData() && child.getData().mode !== undefined);
+      activeCells.value.push(...children);
     } else {
       activeCells.value.push(cell)
     }

@@ -114,23 +114,54 @@ const menuData = reactive([
       const group = g.addNode({
         shape: 'group-node'
       });
-      let w = 0;
-      let h = 0;
-      let preX = 0;
-      let preY = 0;
-      cells.forEach((cell) => {
-        group.addChild(cell)
-        if (cell.isNode()){
-          const {width, height} = cell.getSize()
-          const {x,y} = cell.getPosition();
-          w += width + Math.abs(preX - x);
-          h += height + Math.abs(preY - y);
+      let [
+        width,
+        height,
+        x,
+        y
+      ] = [
+        cells[0].getSize().width + groupPadding.value,
+        cells[0].getSize().height + groupPadding.value,
+        cells[0].getPosition().x,
+        cells[0].getPosition().y
+      ];
+      for (let i=0;i<cells.length;i++){
+        const cell = cells[i];
+        if (!cell.isNode()){
+          continue;
         }
-      })
-      group.setSize({
-        width: w + groupPadding.value,
-        height: h + groupPadding.value
-      })
+        const {x:cx,y:cy} = cell.getPosition();
+        const {width:cw, height:ch} = cell.getSize();
+        if (cx === 0 || cy === 0){
+          continue;
+        }
+        width += Math.abs(cx)+cw + groupPadding.value
+        height = Math.abs(cy)+ch + groupPadding.value
+        x = Math.min(x, cx);
+        y = Math.min(y, cy);
+      }
+      group.setSize({width,height});
+      group.setPosition({x,y});
+      // cells.forEach((cell, idx) => {
+      //   group.addChild(cell)
+      //   if (cell.isNode()){
+      //     if (idx !== 0){
+      //       verticalGap += 
+      //     }
+      //     // const {width, height} = cell.getSize()
+      //     // w += width
+      //     // h += height
+      //   }
+      // })
+      // group.setSize({
+      //   width: w + groupPadding.value,
+      //   height: h + groupPadding.value
+      // })
+      // const xAvg = cells.map((cell) => cell.getPosition().x).reduce((pre,cur) => pre+cur) / cells.length;
+      // const yAvg = cells.map((cell) => cell.getPosition().y).reduce((pre,cur) => pre+cur) / cells.length;
+      // group.setPosition({
+      //   ...cells[0].getPosition()
+      // })
     }
   }
 ])
