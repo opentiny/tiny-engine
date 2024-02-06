@@ -305,7 +305,7 @@ const useX6 = (id, option) => {
       container: document.getElementById(id),
       ...{
         ...option,
-        ...DEFAULT_OPTION
+        ...DEFAULT_OPTION,
       }
     })
     g.use(
