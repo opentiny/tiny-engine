@@ -67,7 +67,6 @@ const isEndNode = (cell) => (cell?.id ?? cell) === schema.meta.end;
 const clearStartNode = () => schema.meta.start = '';
 const clearEndNode = () => schema.meta.end = '';
 
-
 export default ()=>{
     return {
         schema,

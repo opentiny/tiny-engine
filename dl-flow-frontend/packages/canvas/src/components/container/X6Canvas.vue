@@ -36,7 +36,7 @@ const menu = ref(null);
 const activeNodeId = ref('');
 const hasStart = ref(false);
 const hasEnd = ref(false);
-
+const groupPadding = ref(20);
 const hiddenContextMenu = () => visible.value = false;
 const {
   schema,
@@ -48,8 +48,8 @@ const {
   isEndNode,
   clearStartNode,
   clearEndNode,
-  updateRelation
 } = useSchema()
+const ctrlPressed = ref(false);
 /**
  * @type {import('@antv/x6').Graph}
  */
@@ -102,11 +102,43 @@ const menuData = reactive([
       }
       setEndNode(activeNodeId.value);
     }
+  },
+  {
+    label: '创建组合',
+    extrenalClass: '',
+    action: () => {
+      if (!g){
+        return;
+      }
+      const cells = g.getSelectedCells();
+      const group = g.addNode({
+        shape: 'group-node'
+      });
+      let w = 0;
+      let h = 0;
+      let preX = 0;
+      let preY = 0;
+      cells.forEach((cell) => {
+        group.addChild(cell)
+        if (cell.isNode()){
+          const {width, height} = cell.getSize()
+          const {x,y} = cell.getPosition();
+          w += width + Math.abs(preX - x);
+          h += height + Math.abs(preY - y);
+        }
+      })
+      group.setSize({
+        width: w + groupPadding.value,
+        height: h + groupPadding.value
+      })
+    }
   }
 ])
 
 onMounted(() => {
-  g = useX6('container').g;
+  const x6 = useX6('container');
+  g = x6.g;
+  groupPadding.value = x6.GROUP_PADDING
   watch(schema, ()=>{
     hasStart.value = hasStartNode();
     hasEnd.value = hasEndNode();
@@ -129,6 +161,79 @@ onMounted(() => {
     if (isEndNode(cell)){
       clearEndNode();
     }
+  })
+  g.on('node:embedding', ({ e }) => {
+    ctrlPressed.value = e.metaKey || e.ctrlKey
+  })
+  g.on('node:embedding', ({ e }) => {
+    ctrlPressed.value = e.metaKey || e.ctrlKey
+  })
+  g.on('node:change:position', ({node})=>{
+    if (!node.isNode()){
+      return ;
+    }
+    const children = node.getChildren();
+    if (children && children.length){
+      node.prop('originPosition', node.getPosition());
+    }
+    const parent = node.getParent();
+    if (parent && parent.isNode()) {
+        let originSize = parent.prop('originSize')
+        if (originSize == null) {
+          originSize = parent.getSize()
+          parent.prop('originSize', originSize)
+        }
+
+        let originPosition = parent.prop('originPosition')
+        if (originPosition == null) {
+          originPosition = parent.getPosition()
+          parent.prop('originPosition', originPosition)
+        }
+
+        let x = originPosition.x
+        let y = originPosition.y
+        let cornerX = originPosition.x + originSize.width
+        let cornerY = originPosition.y + originSize.height
+        let hasChange = false
+
+        const children = parent.getChildren()
+        if (children) {
+          children.forEach((child) => {
+            const bbox = child.getBBox().inflate(groupPadding.value)
+            const corner = bbox.getCorner()
+
+            if (bbox.x < x) {
+              x = bbox.x
+              hasChange = true
+            }
+
+            if (bbox.y < y) {
+              y = bbox.y
+              hasChange = true
+            }
+
+            if (corner.x > cornerX) {
+              cornerX = corner.x
+              hasChange = true
+            }
+
+            if (corner.y > cornerY) {
+              cornerY = corner.y
+              hasChange = true
+            }
+          })
+        }
+
+        if (hasChange) {
+          parent.prop(
+            {
+              position: { x, y },
+              size: { width: cornerX - x, height: cornerY - y },
+            },
+            { skipParentHandler: true },
+          )
+        }
+      }
   })
 })
 </script>

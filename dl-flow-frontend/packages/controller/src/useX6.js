@@ -1,6 +1,6 @@
 import { Graph, Path } from '@antv/x6'
 import { register } from '@antv/x6-vue-shape'
-import { AlgoNode } from '@opentiny/tiny-engine-canvas'
+import { AlgoNode, GroupNode } from '@opentiny/tiny-engine-canvas'
 import { Selection } from '@antv/x6-plugin-selection'
 import { Keyboard } from '@antv/x6-plugin-keyboard'
 /**
@@ -133,6 +133,11 @@ const graphPreapre = () => {
     },
     true
   )
+  register({
+    shape: 'group-node',
+    component: GroupNode,
+    zIndex: -1
+  })
   register({
     shape: 'dag-node',
     width: 180,
@@ -291,6 +296,9 @@ const addNode = (info, types) => {
 const getData = (cell) => {
   return cell.getData()
 }
+
+const GROUP_PADDING = 20;
+
 /**
  *
  * @param {string} [id]
@@ -306,6 +314,9 @@ const useX6 = (id, option) => {
       ...{
         ...option,
         ...DEFAULT_OPTION,
+        embedding:{
+          enabled: true
+        }
       }
     })
     g.use(
@@ -324,7 +335,7 @@ const useX6 = (id, option) => {
       g.removeCells(selectCells)
     })
   }
-  return { g: g, addNode, getCanvas, getData }
+  return { g: g, addNode, getCanvas, getData, GROUP_PADDING }
 }
 
 export default useX6

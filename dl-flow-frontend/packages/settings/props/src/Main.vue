@@ -52,7 +52,16 @@ let g
 const onSelection = () => {
   const cells = g.getSelectedCells()
   empty.value = !cells.length;
-  activeCells.value = cells
+  if (activeCells.value.length){
+    activeCells.value = [];
+  }
+  cells.forEach((cell) => {
+    if (cell.children && cell.children.length){
+      activeCells.value.push(...cell.children);
+    } else {
+      activeCells.value.push(cell)
+    }
+  })
 }
 onMounted(() => {
   g = useX6().g
