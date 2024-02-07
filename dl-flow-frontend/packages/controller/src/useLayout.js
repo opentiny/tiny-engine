@@ -23,7 +23,8 @@ const PLUGIN_NAME = {
   Lock: 'Lock',
   Tutorial: 'Tutorial',
   OutlineTree: 'OutlineTree',
-  save: 'save'
+  save: 'save',
+  Schema: 'Schema'
 }
 
 const pluginState = reactive({

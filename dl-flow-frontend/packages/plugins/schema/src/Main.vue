@@ -1,10 +1,48 @@
 <template>
+  <plugin-panel title="Schema" @close="$emit('close')">
+    <template #header>
+      <svg-button
+        class="item icon-sidebar"
+        :class="[fixedPanels?.includes(PLUGIN_NAME.Schema) && 'active']"
+        name="fixed"
+        :tips="!fixedPanels?.includes(PLUGIN_NAME.Schema) ? '固定面板' : '解除固定面板'"
+        @click="$emit('fixPanel', PLUGIN_NAME.Schema)"
+      ></svg-button>
+    </template>
+    <template #content>
+      <vue-monaco :value="code" language="json" class="editor" />
+    </template>
+  </plugin-panel>
+</template>
+
+<script setup>
+import { VueMonaco } from '@opentiny/tiny-engine-common'
+import { defineProps, toRefs, computed } from 'vue';
+import { useSchema, useLayout } from '@opentiny/tiny-engine-controller';
+import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
+const {schema} = useSchema();
+const code = computed(() => JSON.stringify(schema,null,2));
+const props = defineProps({
+  fixedPanels: {
+    type: Array
+  }
+})
+const { fixedPanels } = toRefs(props)
+const { PLUGIN_NAME } = useLayout()
+</script>
+
+<style lang="less" scoped>
+.editor{
+  height: 100%;
+  flex: 1 1 auto;
+}
+</style>
+
+<!-- <template>
   <div id="source-code">
     <div class="source-code-header">
       <div class="title">页面Schema</div>
       <div class="header-title">
-        <!-- 暂时放开schema录入功能，等画布功能完善后，再打开下面一行的注释 -->
-        <!-- <tiny-popover v-if="isEdit" placement="bottom" trigger="hover" append-to-body content="保存"> -->
         <tiny-popover placement="bottom" trigger="hover" append-to-body content="保存">
           <template #reference>
             <span class="icon-wrap" @click="saveSchema">
@@ -227,4 +265,4 @@ export default {
     }
   }
 }
-</style>
+</style> -->
