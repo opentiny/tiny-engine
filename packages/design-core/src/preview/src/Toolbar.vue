@@ -7,7 +7,7 @@
       <component :is="ToolbarMedia" :isCanvas="false" @setViewPort="setViewPort"></component>
     </div>
     <div class="toolbar-right">
-      <span><tiny-switch v-model="debugSwitch"></tiny-switch>调试模式</span>
+      <span><tiny-switch v-model="debugSwitch"></tiny-switch><span class="toolbar-button-text">调试模式</span></span>
       <component :is="ChangeLang" :langChannel="previewLangChannel"></component>
     </div>
   </div>
@@ -81,6 +81,11 @@ export default {
   margin: 0 12px;
   display: flex;
   gap: 12px;
+}
+.toolbar-button-text {
+  color: #191919;
+  margin-left: 4px;
+  font-size: 12px;
 }
 :deep(.top-panel-breadcrumb) {
   width: auto;
