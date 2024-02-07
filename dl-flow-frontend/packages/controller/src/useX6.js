@@ -82,15 +82,17 @@ const DEFAULT_OPTION = {
   connecting: {
     snap: true,
     allowBlank: false,
-    allowLoop: false,
+    // allowLoop: false,
     highlight: true,
     allowNode: false,
     connector: 'algo-connector',
     connectionPoint: 'anchor',
     anchor: 'center',
     validateMagnet(args) {
-      const { magnet } = args
-      return magnet.getAttribute('port-group') !== 'top'
+      return true;
+      // const { magnet } = args
+      // console.log(magnet);
+      // return magnet.getAttribute('port-group') !== 'top'
     },
     createEdge() {
       return g.createEdge({
@@ -105,12 +107,24 @@ const DEFAULT_OPTION = {
     },
     validateEdge(args) {
       const {
-        edge: { source, target }
+        edge: { source, target },
       } = args
-      return (
-        (source.port.includes('in') && target.port.includes('out')) ||
-        (source.port.includes('out') && target.port.includes('in'))
-      )
+      const [sourceCell, targetCell] = [g.getCellById(source.cell), g.getCellById(target.cell)];
+      if (!sourceCell.isNode() || !targetCell.isNode()){
+        return false;
+      }
+      let group = null;
+      if (sourceCell.getChildCount() || targetCell.getChildren()){
+        group = sourceCell.getChildCount() ? sourceCell : targetCell;
+      }
+      if (!group){
+        return (
+          (source.port.includes('in') && target.port.includes('out')) ||
+          (source.port.includes('out') && target.port.includes('in'))
+        )
+      }
+      return (source.port.includes('in') && target.port.includes('in') ||
+              source.port.includes('out') && target.port.includes('out'))
     }
   }
 }
@@ -133,11 +147,6 @@ const graphPreapre = () => {
     },
     true
   )
-  register({
-    shape: 'group-node',
-    component: GroupNode,
-    zIndex: -1
-  })
   register({
     shape: 'dag-node',
     width: 180,
@@ -169,6 +178,41 @@ const graphPreapre = () => {
             }
           }
         }
+      }
+    }
+  })
+  register({
+    shape: 'group-node',
+    component: GroupNode,
+    zIndex: -1,
+    ports: {
+      groups: {
+        top: {
+          position: {
+            name: 'top',
+          },
+          attrs: {
+            circle: {
+              r: 4,
+              magnet: true,
+              stroke: '#C2C8D5',
+              strokeWidth: 1,
+              fill: '#fff',
+            },
+          },
+        },
+        bottom: {
+          position: 'bottom',
+          attrs: {
+            circle: {
+              r: 4,
+              magnet: true,
+              stroke: '#C2C8D5',
+              strokeWidth: 1,
+              fill: '#fff'
+            }
+          }
+        },
       }
     }
   })
@@ -314,8 +358,12 @@ const useX6 = (id, option) => {
       ...{
         ...option,
         ...DEFAULT_OPTION,
-        embedding:{
-          enabled: true
+        embedding: {
+          enabled: true,
+        },
+        mousewheel: {
+          enable: true,
+          modifiers: ['alt']
         }
       }
     })
@@ -326,7 +374,7 @@ const useX6 = (id, option) => {
         rubberband: true,
         movable: true,
         showNodeSelectionBox: true,
-        modifiers: ['shift', 'ctrl']
+        modifiers: ['alt']
       })
     )
     g.use(new Keyboard())

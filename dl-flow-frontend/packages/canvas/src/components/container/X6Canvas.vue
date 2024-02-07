@@ -55,6 +55,71 @@ const ctrlPressed = ref(false);
  */
 let g;
 onClickOutside(menu, hiddenContextMenu);
+/**
+* 
+* @param {import('@antv/x6').Node} node 
+*/
+const calcGroupPosition = (node) => {
+  if (ctrlPressed.value || !node.isNode()) {
+    return
+  }
+  const children = node.getChildren();
+  if (children && children.length) {
+    node.prop('originPosition', node.getPosition())
+  }
+  const parent = node.getParent()
+  if (parent && parent.isNode()) {
+    let originSize = parent.prop('originSize')
+    if (originSize == null) {
+      originSize = parent.getSize()
+      parent.prop('originSize', originSize)
+    }
+    let originPosition = parent.prop('originPosition')
+    if (originPosition == null) {
+      originPosition = parent.getPosition()
+      parent.prop('originPosition', originPosition)
+    }
+    let x = originPosition.x
+    let y = originPosition.y
+    let cornerX = originPosition.x + originSize.width
+    let cornerY = originPosition.y + originSize.height
+    let hasChange = false
+    const children = parent.getChildren()
+    if (children) {
+      children
+      .filter((child) => child.isNode())
+      .forEach((child) => {
+        const bbox = child.getBBox().inflate(groupPadding.value)
+        const corner = bbox.getCorner()
+        if (bbox.x < x) {
+          x = bbox.x
+          hasChange = true
+        }
+        if (bbox.y < y) {
+          y = bbox.y
+          hasChange = true
+        }
+        if (corner.x > cornerX) {
+          cornerX = corner.x
+          hasChange = true
+        }
+        if (corner.y > cornerY) {
+          cornerY = corner.y
+          hasChange = true
+        }
+      })
+    }
+    if (hasChange) {
+      parent.prop(
+        {
+          position: { x, y },
+          size: { width: cornerX - x, height: cornerY - y },
+        },
+        { skipParentHandler: true },
+      )
+    }
+  }
+}
 
 const menuData = reactive([
   {
@@ -110,58 +175,24 @@ const menuData = reactive([
       if (!g){
         return;
       }
-      const cells = g.getSelectedCells();
+      const cells = g.getSelectedCells().filter((cell) => cell.getChildCount() === 0 && !cell.hasParent());
       const group = g.addNode({
-        shape: 'group-node'
+        shape: 'group-node',
+        ports: [
+          {
+            id: 'in',
+            group: 'top'
+          },
+          {
+            id: 'out',
+            group: 'bottom'
+          }
+        ]
       });
-      let [
-        width,
-        height,
-        x,
-        y
-      ] = [
-        cells[0].getSize().width + groupPadding.value,
-        cells[0].getSize().height + groupPadding.value,
-        cells[0].getPosition().x,
-        cells[0].getPosition().y
-      ];
-      for (let i=0;i<cells.length;i++){
-        const cell = cells[i];
-        if (!cell.isNode()){
-          continue;
-        }
-        const {x:cx,y:cy} = cell.getPosition();
-        const {width:cw, height:ch} = cell.getSize();
-        if (cx === 0 || cy === 0){
-          continue;
-        }
-        width += Math.abs(cx)+cw + groupPadding.value
-        height = Math.abs(cy)+ch + groupPadding.value
-        x = Math.min(x, cx);
-        y = Math.min(y, cy);
-      }
-      group.setSize({width,height});
-      group.setPosition({x,y});
-      // cells.forEach((cell, idx) => {
-      //   group.addChild(cell)
-      //   if (cell.isNode()){
-      //     if (idx !== 0){
-      //       verticalGap += 
-      //     }
-      //     // const {width, height} = cell.getSize()
-      //     // w += width
-      //     // h += height
-      //   }
-      // })
-      // group.setSize({
-      //   width: w + groupPadding.value,
-      //   height: h + groupPadding.value
-      // })
-      // const xAvg = cells.map((cell) => cell.getPosition().x).reduce((pre,cur) => pre+cur) / cells.length;
-      // const yAvg = cells.map((cell) => cell.getPosition().y).reduce((pre,cur) => pre+cur) / cells.length;
-      // group.setPosition({
-      //   ...cells[0].getPosition()
-      // })
+      cells.forEach((cell) => {
+        group.addChild(cell);
+        calcGroupPosition(cell);
+      });
     }
   }
 ])
@@ -196,75 +227,11 @@ onMounted(() => {
   g.on('node:embedding', ({ e }) => {
     ctrlPressed.value = e.metaKey || e.ctrlKey
   })
-  g.on('node:embedding', ({ e }) => {
-    ctrlPressed.value = e.metaKey || e.ctrlKey
+  g.on('node:embedded', () => {
+    ctrlPressed.value = false
   })
-  g.on('node:change:position', ({node})=>{
-    if (!node.isNode()){
-      return ;
-    }
-    const children = node.getChildren();
-    if (children && children.length){
-      node.prop('originPosition', node.getPosition());
-    }
-    const parent = node.getParent();
-    if (parent && parent.isNode()) {
-        let originSize = parent.prop('originSize')
-        if (originSize == null) {
-          originSize = parent.getSize()
-          parent.prop('originSize', originSize)
-        }
-
-        let originPosition = parent.prop('originPosition')
-        if (originPosition == null) {
-          originPosition = parent.getPosition()
-          parent.prop('originPosition', originPosition)
-        }
-
-        let x = originPosition.x
-        let y = originPosition.y
-        let cornerX = originPosition.x + originSize.width
-        let cornerY = originPosition.y + originSize.height
-        let hasChange = false
-
-        const children = parent.getChildren()
-        if (children) {
-          children.forEach((child) => {
-            const bbox = child.getBBox().inflate(groupPadding.value)
-            const corner = bbox.getCorner()
-
-            if (bbox.x < x) {
-              x = bbox.x
-              hasChange = true
-            }
-
-            if (bbox.y < y) {
-              y = bbox.y
-              hasChange = true
-            }
-
-            if (corner.x > cornerX) {
-              cornerX = corner.x
-              hasChange = true
-            }
-
-            if (corner.y > cornerY) {
-              cornerY = corner.y
-              hasChange = true
-            }
-          })
-        }
-
-        if (hasChange) {
-          parent.prop(
-            {
-              position: { x, y },
-              size: { width: cornerX - x, height: cornerY - y },
-            },
-            { skipParentHandler: true },
-          )
-        }
-      }
+  g.on('node:change:position', ({ node }) => {
+    calcGroupPosition(node);
   })
 })
 </script>
