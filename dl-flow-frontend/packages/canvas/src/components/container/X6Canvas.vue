@@ -48,6 +48,7 @@ const {
   isEndNode,
   clearStartNode,
   clearEndNode,
+  updateSchema
 } = useSchema()
 const ctrlPressed = ref(false);
 /**
@@ -232,6 +233,9 @@ onMounted(() => {
   })
   g.on('node:change:position', ({ node }) => {
     calcGroupPosition(node);
+  })
+  g.on('cell:added', ()=>{
+    updateSchema(g.toJSON())
   })
 })
 </script>

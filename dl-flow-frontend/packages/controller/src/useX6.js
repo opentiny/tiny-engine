@@ -82,17 +82,14 @@ const DEFAULT_OPTION = {
   connecting: {
     snap: true,
     allowBlank: false,
-    // allowLoop: false,
+    allowLoop: false,
     highlight: true,
     allowNode: false,
     connector: 'algo-connector',
     connectionPoint: 'anchor',
     anchor: 'center',
-    validateMagnet(args) {
+    validateMagnet() {
       return true;
-      // const { magnet } = args
-      // console.log(magnet);
-      // return magnet.getAttribute('port-group') !== 'top'
     },
     createEdge() {
       return g.createEdge({

@@ -67,6 +67,10 @@ const isEndNode = (cell) => (cell?.id ?? cell) === schema.meta.end;
 const clearStartNode = () => schema.meta.start = '';
 const clearEndNode = () => schema.meta.end = '';
 
+const updateSchema = (obj) => {
+    schema.relation = obj;
+}
+
 export default ()=>{
     return {
         schema,
@@ -80,5 +84,6 @@ export default ()=>{
         isEndNode,
         clearStartNode,
         clearEndNode,
+        updateSchema
     }
 }
