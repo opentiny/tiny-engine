@@ -237,6 +237,9 @@ onMounted(() => {
   g.on('cell:added', ()=>{
     updateSchema(g.toJSON())
   })
+  g.on('cell:removed', () => {
+    updateSchema(g.toJSON());
+  })
 })
 </script>
 

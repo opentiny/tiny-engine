@@ -31,7 +31,7 @@ const getModelMarkers = () => vueMonaco.monaco.editor.getModelMarkers()
  */
 const init = (monaco, emit, props, monacoRef) => {
   emit('editorWillMount', vueMonaco.monaco)
-  const options = { value: props.value, theme: props.theme, language: props.language, ...props.options }
+  const options = { value: props.value, theme: props.theme, language: props.language, ...props.options, readOnly: props.readOnly }
   if (props.diffEditor) {
     vueMonaco.editor = monaco.editor.createDiffEditor(monacoRef.value, options)
     const originalModel = monaco.editor.createModel(props.original, props.language)

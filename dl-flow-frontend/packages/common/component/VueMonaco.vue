@@ -33,6 +33,10 @@ const props = defineProps({
   diffEditor: {
     type: Boolean,
     default: false
+  },
+  readOnly: {
+    type: Boolean,
+    default: false,
   }
 })
 const monacoRef = ref(null)
@@ -112,33 +116,3 @@ watch(
   }
 )
 </script>
-
-<!-- <script>
-import { useEditor } from '@opentiny/tiny-engine-controller'
-import * as monacoEditor from 'monaco-editor'
-import { watch, onMounted, nextTick, onBeforeUnmount, ref } from 'vue'
-
-export default {
-  name: 'MonacoEditor',
-  model: {
-    event: 'change'
-  },
-  props: {
-    
-  },
-  emits: ,
-  setup(props, { emit }) {
-
-    return {
-      getMonaco,
-      getEditor,
-      getModifiedEditor,
-      getOriginalEditor,
-      initMonaco,
-      focus,
-      monacoRef,
-      getModelMarkers
-    }
-  }
-}
-</script> -->

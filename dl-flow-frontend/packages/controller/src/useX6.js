@@ -339,7 +339,20 @@ const getData = (cell) => {
 }
 
 const GROUP_PADDING = 20;
-
+/**
+ * 
+ * @param {import('@antv/x6').Graph} g 
+ * @param {Object} [obj]
+ */
+const reRender = (g, obj) => {
+  g.fromJSON(obj, {silent: false});
+  const node = g.getCells()[0];
+  if (!node.isNode()){
+    return;
+  }
+  g.centerCell(node);
+  return;
+}
 /**
  *
  * @param {string} [id]
@@ -380,7 +393,7 @@ const useX6 = (id, option) => {
       g.removeCells(selectCells)
     })
   }
-  return { g: g, addNode, getCanvas, getData, GROUP_PADDING }
+  return { g: g, addNode, getCanvas, getData, GROUP_PADDING, reRender}
 }
 
 export default useX6
