@@ -54,6 +54,7 @@ import {
   getDocument,
   canvasDispatch
 } from './components/container/container'
+import GroupNode from './components/container/GroupNode.vue';
 
 export {
   CanvasContainer,
@@ -98,7 +99,8 @@ export {
   getDocument,
   canvasDispatch,
   createRender,
-  AlgoNode
+  AlgoNode,
+  GroupNode
 }
 
 export default CanvasContainer

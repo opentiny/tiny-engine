@@ -43,8 +43,7 @@ const shouldShow = computed(() => {
      * @type {import('../../../controller/src/useX6.js').MaterialInfo}
      */
     const data = v.getData()
-    console.log(data)
-    return data.mode === 'nn' ? true : Boolean(data.properties?.length)
+    return data?.mode && (data.mode === 'nn' ? true : Boolean(data.properties?.length))
   })
 })
 
@@ -53,7 +52,20 @@ let g
 const onSelection = () => {
   const cells = g.getSelectedCells()
   empty.value = !cells.length;
-  activeCells.value = cells
+  if (activeCells.value.length){
+    activeCells.value = [];
+  }
+  cells.forEach((cell) => {
+    if (activeCells.value.includes(cell)){
+      return;
+    }
+    if (cell.children && cell.children.length){
+      const children = cell.getChildren().filter((child) => child.getData() && child.getData().mode !== undefined);
+      activeCells.value.push(...children);
+    } else {
+      activeCells.value.push(cell)
+    }
+  })
 }
 onMounted(() => {
   g = useX6().g

@@ -13,12 +13,13 @@
 import Logo from '@opentiny/tiny-engine-toolbar-logo'
 import Materials from '@opentiny/tiny-engine-plugin-materials'
 import Props from '@opentiny/tiny-engine-setting-props'
+import Schema from '@opentiny/tiny-engine-plugin-schema'
 import Code from 'dl-flow-setting-code'
 
 import '@opentiny/tiny-engine-theme'
 
 const addons = {
-  plugins: [Materials],
+  plugins: [Materials, Schema],
 
   toolbars: [Logo],
   settings: [Props, Code]
