@@ -12,19 +12,19 @@ import {reactive} from 'vue';
 /**
  * @typedef {Object} Schema
  * @prop {Meta} meta
- * @prop {Relation[]} relation[]
+ * @prop {import('@antv/x6').Cell[]} payload
  */
 
 
 /**
- * @type {Schema}
+ * @type {import('vue').UnwrapNestedRefs<Schema>}
  */
 const schema = reactive({
     meta:{
         start: '',
         end: '',
     },
-    relation: []
+    payload: {}
 })
 
 /**
@@ -68,7 +68,7 @@ const clearStartNode = () => schema.meta.start = '';
 const clearEndNode = () => schema.meta.end = '';
 
 const updateSchema = (obj) => {
-    schema.relation = obj;
+    schema.payload = obj;
 }
 
 

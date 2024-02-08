@@ -17,7 +17,7 @@
 
 <script setup>
 import { VueMonaco } from '@opentiny/tiny-engine-common'
-import { defineProps, toRefs, watch, computed, onMounted } from 'vue';
+import { defineProps, toRefs, computed } from 'vue';
 import { useSchema, useLayout, useX6 } from '@opentiny/tiny-engine-controller';
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
 const {schema, updateSchema} = useSchema();
@@ -29,9 +29,6 @@ const props = defineProps({
 })
 const { fixedPanels } = toRefs(props)
 const { PLUGIN_NAME } = useLayout()
-watch(schema, ()=>{
-  console.log(schema);
-})
 let g = null;
 let reRender = null;
 const onChange = (args) => {
@@ -45,8 +42,8 @@ const onChange = (args) => {
   code.value = args;
   const obj = JSON.parse(code.value ?? '{}');
 
-  updateSchema(obj?.relation);
-  reRender(g, schema.relation);
+  updateSchema(obj?.payload);
+  reRender(g, schema.payload);
 }
 </script>
 
