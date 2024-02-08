@@ -38,6 +38,7 @@
     "@opentiny/vue-renderless": "~3.10.0",
     "@vue/babel-plugin-jsx": "1.1.1",
     "@vue/shared": "^3.3.4",
+    "@vueuse/components": "^10.7.2",
     "@vueuse/core": "^9.6.0",
     "vue": "3.2.45",
     "vue-i18n": "9.2.2"

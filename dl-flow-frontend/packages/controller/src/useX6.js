@@ -1,6 +1,6 @@
 import { Graph, Path } from '@antv/x6'
 import { register } from '@antv/x6-vue-shape'
-import { AlgoNode } from '@opentiny/tiny-engine-canvas'
+import { AlgoNode, GroupNode } from '@opentiny/tiny-engine-canvas'
 import { Selection } from '@antv/x6-plugin-selection'
 import { Keyboard } from '@antv/x6-plugin-keyboard'
 /**
@@ -88,9 +88,8 @@ const DEFAULT_OPTION = {
     connector: 'algo-connector',
     connectionPoint: 'anchor',
     anchor: 'center',
-    validateMagnet(args) {
-      const { magnet } = args
-      return magnet.getAttribute('port-group') !== 'top'
+    validateMagnet() {
+      return true;
     },
     createEdge() {
       return g.createEdge({
@@ -105,12 +104,24 @@ const DEFAULT_OPTION = {
     },
     validateEdge(args) {
       const {
-        edge: { source, target }
+        edge: { source, target },
       } = args
-      return (
-        (source.port.includes('in') && target.port.includes('out')) ||
-        (source.port.includes('out') && target.port.includes('in'))
-      )
+      const [sourceCell, targetCell] = [g.getCellById(source.cell), g.getCellById(target.cell)];
+      if (!sourceCell.isNode() || !targetCell.isNode()){
+        return false;
+      }
+      let group = null;
+      if (sourceCell.getChildCount() || targetCell.getChildren()){
+        group = sourceCell.getChildCount() ? sourceCell : targetCell;
+      }
+      if (!group){
+        return (
+          (source.port.includes('in') && target.port.includes('out')) ||
+          (source.port.includes('out') && target.port.includes('in'))
+        )
+      }
+      return (source.port.includes('in') && target.port.includes('in') ||
+              source.port.includes('out') && target.port.includes('out'))
     }
   }
 }
@@ -164,6 +175,41 @@ const graphPreapre = () => {
             }
           }
         }
+      }
+    }
+  })
+  register({
+    shape: 'group-node',
+    component: GroupNode,
+    zIndex: -1,
+    ports: {
+      groups: {
+        top: {
+          position: {
+            name: 'top',
+          },
+          attrs: {
+            circle: {
+              r: 4,
+              magnet: true,
+              stroke: '#C2C8D5',
+              strokeWidth: 1,
+              fill: '#fff',
+            },
+          },
+        },
+        bottom: {
+          position: 'bottom',
+          attrs: {
+            circle: {
+              r: 4,
+              magnet: true,
+              stroke: '#C2C8D5',
+              strokeWidth: 1,
+              fill: '#fff'
+            }
+          }
+        },
       }
     }
   })
@@ -291,6 +337,22 @@ const addNode = (info, types) => {
 const getData = (cell) => {
   return cell.getData()
 }
+
+const GROUP_PADDING = 20;
+/**
+ * 
+ * @param {import('@antv/x6').Graph} g 
+ * @param {Object} [obj]
+ */
+const reRender = (g, obj) => {
+  g.fromJSON(obj, {silent: false});
+  const node = g.getCells()[0];
+  if (!node.isNode()){
+    return;
+  }
+  g.centerCell(node);
+  return;
+}
 /**
  *
  * @param {string} [id]
@@ -305,7 +367,14 @@ const useX6 = (id, option) => {
       container: document.getElementById(id),
       ...{
         ...option,
-        ...DEFAULT_OPTION
+        ...DEFAULT_OPTION,
+        embedding: {
+          enabled: true,
+        },
+        mousewheel: {
+          enable: true,
+          modifiers: ['alt']
+        }
       }
     })
     g.use(
@@ -315,7 +384,7 @@ const useX6 = (id, option) => {
         rubberband: true,
         movable: true,
         showNodeSelectionBox: true,
-        modifiers: ['shift', 'ctrl']
+        modifiers: ['alt']
       })
     )
     g.use(new Keyboard())
@@ -324,7 +393,7 @@ const useX6 = (id, option) => {
       g.removeCells(selectCells)
     })
   }
-  return { g: g, addNode, getCanvas, getData }
+  return { g: g, addNode, getCanvas, getData, GROUP_PADDING, reRender}
 }
 
 export default useX6

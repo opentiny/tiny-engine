@@ -6,7 +6,7 @@
     }"
     ref="wrapper"
   >
-    <span>{{ label }}</span>
+    <span @contextmenu="()=>{}">{{ label }}</span>
   </div>
 </template>
 
