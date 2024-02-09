@@ -1,4 +1,5 @@
 import {reactive} from 'vue';
+import { Channel } from '../utils';
 /**
  * @typedef {Object} Meta
  * @prop {string|string[]} [start] 整个流程图起始节点ID
@@ -67,8 +68,23 @@ const isEndNode = (cell) => (cell?.id ?? cell) === schema.meta.end;
 const clearStartNode = () => schema.meta.start = '';
 const clearEndNode = () => schema.meta.end = '';
 
+const eventEmitter = new Channel();
+
+/**
+ * 
+ * @param {()=>void} cb 
+ */
+const onSchemaChange = (cb) => {
+    eventEmitter.on('schema-change', cb);
+}
+
+const notifyChange = () => {
+    eventEmitter.emit('schema-change', schema);
+}
+
 const updateSchema = (obj) => {
     schema.payload = obj;
+    notifyChange();
 }
 
 
@@ -85,6 +101,8 @@ export default ()=>{
         isEndNode,
         clearStartNode,
         clearEndNode,
-        updateSchema
+        updateSchema,
+        onSchemaChange,
+        notifyChange
     }
 }

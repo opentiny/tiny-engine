@@ -353,6 +353,7 @@ const reRender = (g, obj) => {
   g.centerCell(node);
   return;
 }
+
 /**
  *
  * @param {string} [id]
