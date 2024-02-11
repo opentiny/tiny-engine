@@ -18,6 +18,7 @@ export type Property = {
   type: string;
   default: string | number | null | boolean;
   enums: Enum[];
+  data: any;
 };
 
 export const isProperty = (object: unknown | unknown[]) => {
