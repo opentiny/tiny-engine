@@ -15,6 +15,8 @@ export class Layer {
   properties: Property[];
   @Prop({ type: () => Boolean })
   del: boolean;
+  @Prop({ type: () => String })
+  mode: string;
 }
 
 export const LayerSchema = SchemaFactory.createForClass(Layer);
