@@ -7,7 +7,6 @@ import {
 import { CodeGenerateService } from './code-generate.service';
 import { Cell, Edge, GenerateCodeDto } from './code-generate.schema';
 import { Socket } from 'socket.io';
-import { Node } from '@antv/x6';
 import { AST } from './ast.service';
 
 export enum State {
@@ -53,9 +52,8 @@ export class CodeGenerateGateway {
       return;
     }
     client.emit(State.progress, '提取节点...');
-    const nodes = this.codeGenerateService.extract<Cell>(
-      cell,
-      (cell: any) => cell.shape === 'dag-node',
+    const nodes = this.codeGenerateService.extract<Cell>(cell, (cell: any) =>
+      cell.shape.includes('node'),
     );
     client.emit(State.progress, `节点数量为: ${nodes.length}`);
     if (!nodes.length) {

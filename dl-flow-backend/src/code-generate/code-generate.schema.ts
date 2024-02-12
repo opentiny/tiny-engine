@@ -6,6 +6,7 @@ import {
   IsString,
 } from 'class-validator';
 import { Enum, Label, Property as TProperty } from '@app/shared';
+import { Layer as LayerSchema } from '../layer/layer.schema';
 
 class Meta {
   @IsString()
@@ -38,7 +39,7 @@ class Material {
   mode: string;
 }
 
-export class Layer {
+export class Layer extends LayerSchema {
   @IsString()
   id: string;
   @IsObject()
@@ -49,6 +50,8 @@ export class Layer {
   clazz: string;
   @IsArray()
   properties: Property[];
+  @IsString()
+  mode: string;
 }
 
 export class Cell {

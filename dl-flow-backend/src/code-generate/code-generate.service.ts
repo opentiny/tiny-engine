@@ -32,15 +32,11 @@ export class CodeGenerateService {
   standardizationEdge(edges: Edge[]) {
     const obj: StandardizationEdges = {};
     for (const edge of edges) {
-      if (obj[edge.source.cell]) {
-        obj[edge.source.cell].add(edge.target.cell);
+      const { source, target } = edge;
+      if (obj[target.cell]) {
+        obj[target.cell].add(source.cell);
       } else {
-        obj[edge.source.cell] = new Set([edge.target.cell]);
-      }
-      if (obj[edge.target.cell]) {
-        obj[edge.target.cell].add(edge.source.cell);
-      } else {
-        obj[edge.target.cell] = new Set([edge.source.cell]);
+        obj[target.cell] = new Set([source.cell]);
       }
     }
     return obj;
@@ -94,27 +90,23 @@ export class CodeGenerateService {
     endId: string,
     startId: string,
   ) {
+    console.log(nodes);
     const endNode = nodes[endId];
-    const startNode = nodes[startId];
     const sequence: Cell[] = [endNode];
     const visitor = (id: string) => {
       if (!id || id === startId) {
         return;
       }
-      const edgesArr = Array.from(edges[id]);
+      const edgesArr = Array.from(edges[id] ?? []);
       for (const edge of edgesArr) {
         const connectedNode = nodes[edge];
         if (connectedNode) {
           sequence.unshift(connectedNode);
+          visitor(connectedNode.id);
         }
-        visitor(connectedNode.id);
       }
     };
-    sequence.unshift(startNode);
+    visitor(endId);
     return sequence;
-  }
-  codeGen(edge: StandardizationEdges, nodes: StandardizationNodes) {
-    for (const [key, node] of Object.entries(nodes)) {
-    }
   }
 }
