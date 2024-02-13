@@ -9,13 +9,26 @@ export class AST {
     const ast: IAST = {
       type: 'root',
       children: [],
-      codeGen: () => ast.children.map((child) => child.codeGen()).join('\n'),
+      codeGen: () => {
+        return ast.children.map((child) => child.codeGen()).join('\n');
+      },
     };
     for (const cell of cells) {
       const data = cell.data as Material | Layer;
       let item;
+      if (this.isGroup(cell)) {
+        item = this.buildGroup(cell);
+      }
       if (this.isLayer(data)) {
-        item = this.buildLayer(data, cell.id);
+        item = this.buildLayer(data);
+        ast.children.push(item);
+        const callee = new Identifier(data.clazz);
+        const clazzInstance = new CallExpression(
+          callee,
+          data.properties.map((v) => v.data),
+        );
+        const instance = new VarDecl(cell.id.replace('-', ''), clazzInstance);
+        ast.children.push(instance);
       }
       if (this.isNN(data)) {
         item = this.buildNN(data, cell.id);
@@ -26,47 +39,84 @@ export class AST {
   }
   buildNN(nn: Material, cellId: string) {
     const args = nn.properties.map((v) => v.data);
-    const callee = new Identifier(nn.id);
+    const callee = new Identifier(`paddle.nn.${nn.id}`);
     const fnCall = new CallExpression(callee, args);
 
     const varDecl = new VarDecl(cellId.replace('-', ''), fnCall);
     return varDecl;
   }
-  buildLayer(layer: Layer, cellId: string) {
-    const args = layer.properties.map((v) => v.data);
-    const clazzDef: IClazzDefine = {
-      name: layer.clazz,
-      code: layer.code,
-      codeGen: () => {
-        return [
-          layer.code,
-          `${cellId.replace('-', '')}=${layer.clazz}(${args.join(',')})`,
-        ].join('\n');
-      },
-    };
+  buildLayer(layer: Layer) {
+    const clazzDef = new ClazzDef(layer.code);
     return clazzDef;
   }
-  buildGroup(cells: Cell) {
+  buildGroup(group: Cell) {
     const subAst: IAST = {
       type: 'root',
       children: [],
       codeGen: () => subAst.children.map((child) => child.codeGen()).join('\n'),
     };
-    for (const child of cells.children ?? []) {
+    const groups: { [x: string]: string[] } = {};
+    for (const child of group.children ?? []) {
       if (this.isGroup(child)) {
-        subAst.children.push(...this.buildGroup(child).children);
+        if (!groups[child.id]) {
+          groups[child.id] = [];
+        }
+        const subAST = this.buildGroup(child);
+        subAst.children.push(...subAST.children);
+        groups[child.id] = subAST.children
+          .filter(
+            (v, i) => i !== subAST.children.length - 1 && v instanceof VarDecl,
+          )
+          .map((v: VarDecl) => v.name);
       }
       if (this.isNN(child.data)) {
-        subAst.children.push(this.buildNN(child.data, child.id));
+        const nn = this.buildNN(child.data, child.id);
+        subAst.children.push(nn);
+        if (groups[child.id]) {
+          groups[child.id].push(nn.name);
+        }
       }
       if (this.isLayer(child.data)) {
-        subAst.children.push(this.buildLayer(child.data, child.id));
+        const clazz = this.buildLayer(child.data);
+        const callee = new Identifier(child.data.clazz);
+        const clazzInstance = new CallExpression(
+          callee,
+          child.data.properties.map((v) => v.data),
+        );
+        const instance = new VarDecl(child.id, clazzInstance);
+        subAst.children.push(clazz);
+        subAst.children.push(instance);
       }
     }
-    const idx = subAst.children.findIndex((item) => item instanceof Node);
-    if (idx === -1) {
-      throw new Error('Should find one var decl, but can not find anything');
-    }
+    groups[group.id] = group.children
+      .filter((child) => !this.isGroup(child))
+      .map((v) => v.id);
+    const varDecl = subAst.children.filter(
+      (item) => item instanceof VarDecl,
+    ) as VarDecl[];
+    const keys = Object.keys(groups);
+    const values = keys
+      .map((k) => Object.values(groups[k]))
+      .reduce((pre, cur) => {
+        return [...pre, ...cur];
+      }, []);
+    const names =
+      keys.length === 1
+        ? varDecl.map((decl) => decl.name)
+        : varDecl
+            .map((decl) => {
+              return decl.name;
+            })
+            .filter((v) => {
+              return !keys.includes(v) && !values.includes(v);
+            });
+
+    const callee = new Identifier('paddle.concat');
+    const call = new CallExpression(callee, [
+      ['x=[', names.join(','), ']'].join(''),
+    ]);
+    const concatVar = new VarDecl(group.id.replace('-', ''), call);
+    subAst.children.push(concatVar);
     return subAst;
   }
   isGroup(cell: Cell) {
@@ -84,8 +134,8 @@ export class AST {
 class Node {}
 
 class VarDecl implements IVarDecl, Node {
-  name: string;
-  val: ASTItem;
+  public name: string;
+  public val: ASTItem;
   constructor(name: string, val: ASTItem) {
     this.name = name;
     this.val = val;
@@ -96,26 +146,34 @@ class VarDecl implements IVarDecl, Node {
 }
 
 class Identifier implements IIdentifier, Node {
-  prefix = 'paddle.nn';
   name: string;
-  constructor(name: string, prefix = 'paddle.nn') {
+  constructor(name: string) {
     this.name = name;
-    this.prefix = prefix;
   }
   codeGen() {
-    return `${this.prefix}.${this.name}`;
+    return `${this.name}`;
   }
 }
 
 class CallExpression implements ICallExpression, Node {
   callee: IIdentifier;
   args: any[];
-  constructor(calle: IIdentifier, args: any[]) {
-    this.callee = calle;
+  constructor(callee: IIdentifier, args: any[]) {
+    this.callee = callee;
     this.args = args;
   }
   codeGen() {
     return `${this.callee.codeGen()}(${this.args.join(',')})`;
+  }
+}
+
+class ClazzDef implements IClazzDefine {
+  code: string;
+  constructor(code: string) {
+    this.code = code;
+  }
+  codeGen() {
+    return `${this.code}`;
   }
 }
 
@@ -125,7 +183,6 @@ type IVarDecl = {
   codeGen: () => string;
 };
 type IIdentifier = {
-  prefix: string;
   name: string;
   codeGen: () => string;
 };
@@ -135,7 +192,6 @@ type ICallExpression = {
   codeGen: () => string;
 };
 type IClazzDefine = {
-  name: string;
   code: string;
   codeGen: () => string;
 };
