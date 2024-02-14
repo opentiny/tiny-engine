@@ -90,7 +90,6 @@ export class CodeGenerateService {
     endId: string,
     startId: string,
   ) {
-    console.log(nodes);
     const endNode = nodes[endId];
     const sequence: Cell[] = [endNode];
     const visitor = (id: string) => {

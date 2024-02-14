@@ -100,8 +100,9 @@ export class Edge {
 export class GenerateCodeDto {
   @IsObject()
   meta: Meta;
-  @IsObject({ each: true })
+  @IsObject()
   payload: {
-    cell: (Cell | Edge)[];
+    cells: (Cell | Edge)[];
+    edges: Edge[];
   };
 }

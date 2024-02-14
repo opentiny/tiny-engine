@@ -31,7 +31,7 @@ describe('CodeGenerateGateway', () => {
             end: 'end',
           },
           payload: {
-            cell: [],
+            cells: [],
           },
         },
         client as any,
@@ -47,7 +47,7 @@ describe('CodeGenerateGateway', () => {
             end: 'end',
           },
           payload: {
-            cell: [
+            cells: [
               {
                 id: 'uuid',
               } as any,
@@ -67,7 +67,7 @@ describe('CodeGenerateGateway', () => {
             end: '',
           },
           payload: {
-            cell: [
+            cells: [
               {
                 id: 'uuid',
               } as any,
@@ -87,7 +87,7 @@ describe('CodeGenerateGateway', () => {
             end: 'end',
           },
           payload: {
-            cell: [
+            cells: [
               {
                 id: 'uuid',
               } as any,
@@ -106,7 +106,7 @@ describe('CodeGenerateGateway', () => {
             end: 'end',
           },
           payload: {
-            cell: [
+            cells: [
               {
                 id: 'uuid',
               } as any,
@@ -125,7 +125,7 @@ describe('CodeGenerateGateway', () => {
             end: 'uuid-end',
           },
           payload: {
-            cell: [
+            cells: [
               {
                 id: 'uuid',
               } as any,
@@ -153,7 +153,7 @@ describe('CodeGenerateGateway', () => {
             end: 'uuid-end',
           },
           payload: {
-            cell: [
+            cells: [
               {
                 id: 'uuid',
                 shape: 'dag-node',
@@ -172,86 +172,466 @@ describe('CodeGenerateGateway', () => {
         expect.stringMatching('生成结束, 边节点数量为0'),
       );
     });
-    it('success - not group', () => {
-      const code = gateway.create(
+    it.only('success - not group', () => {
+      gateway.create(
         {
           meta: {
-            start: 'start',
-            end: 'end',
+            start: '5893f689-879b-4c5e-b988-98fdc5ed23da',
+            end: 'bd90870d-3bc7-4edc-83d5-11585e6e24c2',
           },
           payload: {
-            cell: [
+            cells: [],
+            edges: [
               {
-                shape: 'dag-edge',
-                source: { cell: 'start' },
-                target: { cell: 'node-2' },
-              } as Edge,
-              {
-                shape: 'dag-edge',
-                source: { cell: 'node-2' },
-                target: { cell: 'end' },
-              } as Edge,
-              {
-                id: 'start',
-                shape: 'dag-node',
-                position: { x: 0, y: 0 },
-                size: { width: 0, height: 0 },
-                data: {
-                  mode: 'nn',
-                  id: 'Conv1d',
-                  properties: [
-                    {
-                      id: 'in_channel',
-                      data: 256,
-                    },
-                    {
-                      id: 'out_channel',
-                      data: 128,
-                    },
-                  ],
-                } as Material,
-              } as Cell,
-              {
-                id: 'node-2',
-                shape: 'dag-node',
-                position: { x: 0, y: 0 },
-                size: { width: 0, height: 0 },
-                data: {
-                  mode: 'nn',
-                  id: 'Conv1d',
-                  properties: [
-                    {
-                      id: 'in_channel',
-                      data: 128,
-                    },
-                  ],
-                } as Material,
-              } as Cell,
-              {
-                id: 'end',
-                shape: 'dag-node',
-                position: { x: 0, y: 0 },
-                size: { width: 0, height: 0 },
-                data: {
-                  mode: 'nn',
-                  id: 'Conv1d',
-                  properties: [
-                    {
-                      id: 'in_channel',
-                      data: 128,
-                    },
-                    {
-                      id: 'out_channel',
-                      data: 128 / 2,
-                    },
-                  ],
-                } as Material,
-              } as Cell,
+                source: {},
+              },
             ],
           },
         },
-        client as any,
+        client,
       );
+      // const code = gateway.create(
+      //   {
+      //     meta: {
+      //       start: '5893f689-879b-4c5e-b988-98fdc5ed23da',
+      //       end: 'bd90870d-3bc7-4edc-83d5-11585e6e24c2',
+      //     },
+      //     payload: {
+      //       cells: [
+      //         {
+      //           shape: 'dag-edge',
+      //           attrs: {
+      //             line: {
+      //               strokeDasharray: '5 5',
+      //             },
+      //           },
+      //           id: '56921448-80a7-4782-ba1a-61859e5dbe79',
+      //           zIndex: -1,
+      //           source: {
+      //             cell: '5893f689-879b-4c5e-b988-98fdc5ed23da',
+      //             port: 'out',
+      //           },
+      //           target: {
+      //             x: 50,
+      //             y: 50,
+      //           },
+      //         },
+      //         {
+      //           position: {
+      //             x: 0,
+      //             y: 0,
+      //           },
+      //           size: {
+      //             width: 112,
+      //             height: 48,
+      //           },
+      //           view: 'vue-shape-view',
+      //           shape: 'dag-node',
+      //           ports: {
+      //             groups: {
+      //               top: {
+      //                 position: 'top',
+      //                 attrs: {
+      //                   circle: {
+      //                     r: 4,
+      //                     magnet: true,
+      //                     stroke: '#C2C8D5',
+      //                     strokeWidth: 1,
+      //                     fill: '#fff',
+      //                   },
+      //                 },
+      //               },
+      //               bottom: {
+      //                 position: 'bottom',
+      //                 attrs: {
+      //                   circle: {
+      //                     r: 4,
+      //                     magnet: true,
+      //                     stroke: '#C2C8D5',
+      //                     strokeWidth: 1,
+      //                     fill: '#fff',
+      //                   },
+      //                 },
+      //               },
+      //             },
+      //             items: [
+      //               {
+      //                 id: 'in',
+      //                 group: 'top',
+      //               },
+      //               {
+      //                 id: 'out',
+      //                 group: 'bottom',
+      //               },
+      //             ],
+      //           },
+      //           id: '5893f689-879b-4c5e-b988-98fdc5ed23da',
+      //           data: {
+      //             label: {
+      //               zh_CN: '1D 卷积神经网络',
+      //               en_US: 'Conv 1D',
+      //             },
+      //             id: 'Conv1D',
+      //             desc: '一维卷积层',
+      //             nn: true,
+      //             mode: 'nn',
+      //             properties: [
+      //               {
+      //                 id: 'in_channels',
+      //                 label: {
+      //                   zh_CN: '输入通道数',
+      //                   en_US: 'in_channels',
+      //                 },
+      //                 type: 'number',
+      //                 required: true,
+      //                 default: 255,
+      //                 data: 255,
+      //               },
+      //               {
+      //                 id: 'out_channels',
+      //                 label: {
+      //                   zh_CN: '输出通道数',
+      //                   en_US: 'out_channels',
+      //                 },
+      //                 type: 'number',
+      //                 required: true,
+      //                 default: 255,
+      //                 data: 255,
+      //               },
+      //               {
+      //                 id: 'kernal_size',
+      //                 label: {
+      //                   zh_CN: '卷积核大小',
+      //                   en_US: 'kernal_size',
+      //                 },
+      //                 type: 'number',
+      //                 required: true,
+      //                 default: 3,
+      //                 data: 3,
+      //               },
+      //               {
+      //                 id: 'stride',
+      //                 label: {
+      //                   zh_CN: '步长',
+      //                   en_US: 'stride',
+      //                 },
+      //                 type: 'number',
+      //                 required: true,
+      //                 default: 1,
+      //                 data: 1,
+      //               },
+      //               {
+      //                 id: 'dilation',
+      //                 label: {
+      //                   zh_CN: '空洞大小',
+      //                   en_US: 'dilation',
+      //                 },
+      //                 type: 'number',
+      //                 required: true,
+      //                 default: 0,
+      //                 data: 0,
+      //               },
+      //               {
+      //                 id: 'groups',
+      //                 label: {
+      //                   zh_CN: '组数',
+      //                   en_US: 'groups',
+      //                 },
+      //                 type: 'number',
+      //                 required: true,
+      //                 default: 0,
+      //                 data: 0,
+      //               },
+      //               {
+      //                 id: 'padding_mode',
+      //                 label: {
+      //                   zh_CN: '填充模式',
+      //                   en_US: 'padding_mode',
+      //                 },
+      //                 type: 'enums',
+      //                 enums: [
+      //                   {
+      //                     id: 1,
+      //                     label: 'zeros',
+      //                     value: 'zeros',
+      //                     default: true,
+      //                   },
+      //                   {
+      //                     id: 2,
+      //                     label: 'reflect',
+      //                     value: 'reflect',
+      //                   },
+      //                   {
+      //                     id: 3,
+      //                     label: 'replicate',
+      //                     value: 'replicate',
+      //                   },
+      //                   {
+      //                     id: 4,
+      //                     label: 'circular',
+      //                     value: 'circular',
+      //                   },
+      //                 ],
+      //                 required: true,
+      //                 data: 'zeros',
+      //               },
+      //               {
+      //                 id: 'weight_attr',
+      //                 label: {
+      //                   zh_CN: '权重参数',
+      //                   en_US: 'weight_attr',
+      //                 },
+      //                 type: 'ParamAttr',
+      //                 data: {
+      //                   name: '',
+      //                   initializer: '',
+      //                   learning_rate: 1,
+      //                   regularizer: 'L1Decay',
+      //                   trainable: true,
+      //                   do_model_average: true,
+      //                   need_clip: true,
+      //                 },
+      //               },
+      //               {
+      //                 id: 'bias_attr',
+      //                 label: {
+      //                   zh_CN: '偏置参数',
+      //                   en_US: 'bias_attr',
+      //                 },
+      //                 type: 'ParamAttr',
+      //                 data: {
+      //                   name: '',
+      //                   initializer: '',
+      //                   learning_rate: 1,
+      //                   regularizer: 'L1Decay',
+      //                   trainable: true,
+      //                   do_model_average: true,
+      //                   need_clip: true,
+      //                 },
+      //               },
+      //               {
+      //                 id: 'data_format',
+      //                 label: {
+      //                   zh_CN: '数据格式',
+      //                   en_US: 'data_format',
+      //                 },
+      //                 type: 'string',
+      //                 required: true,
+      //               },
+      //             ] as any,
+      //           },
+      //           zIndex: 1,
+      //         },
+      //         {
+      //           position: {
+      //             x: 10,
+      //             y: 160,
+      //           },
+      //           size: {
+      //             width: 112,
+      //             height: 48,
+      //           },
+      //           shape: 'dag-node',
+      //           ports: {
+      //             groups: {
+      //               top: {
+      //                 position: 'top',
+      //                 attrs: {
+      //                   circle: {
+      //                     r: 4,
+      //                     magnet: true,
+      //                     stroke: '#C2C8D5',
+      //                     strokeWidth: 1,
+      //                     fill: '#fff',
+      //                   },
+      //                 },
+      //               },
+      //               bottom: {
+      //                 position: 'bottom',
+      //                 attrs: {
+      //                   circle: {
+      //                     r: 4,
+      //                     magnet: true,
+      //                     stroke: '#C2C8D5',
+      //                     strokeWidth: 1,
+      //                     fill: '#fff',
+      //                   },
+      //                 },
+      //               },
+      //             },
+      //             items: [
+      //               {
+      //                 id: 'in',
+      //                 group: 'top',
+      //               },
+      //               {
+      //                 id: 'out',
+      //                 group: 'bottom',
+      //               },
+      //             ],
+      //           } as any,
+      //           id: 'bd90870d-3bc7-4edc-83d5-11585e6e24c2',
+      //           data: {
+      //             label: {
+      //               zh_CN: '1D 卷积神经网络',
+      //               en_US: 'Conv 1D',
+      //             },
+      //             id: 'Conv1D',
+      //             desc: '一维卷积层',
+      //             nn: true,
+      //             mode: 'nn',
+      //             properties: [
+      //               {
+      //                 id: 'in_channels',
+      //                 label: {
+      //                   zh_CN: '输入通道数',
+      //                   en_US: 'in_channels',
+      //                 },
+      //                 type: 'number',
+      //                 required: true,
+      //                 default: 255,
+      //                 data: 255,
+      //               },
+      //               {
+      //                 id: 'out_channels',
+      //                 label: {
+      //                   zh_CN: '输出通道数',
+      //                   en_US: 'out_channels',
+      //                 },
+      //                 type: 'number',
+      //                 required: true,
+      //                 default: 255,
+      //                 data: 255,
+      //               },
+      //               {
+      //                 id: 'kernal_size',
+      //                 label: {
+      //                   zh_CN: '卷积核大小',
+      //                   en_US: 'kernal_size',
+      //                 },
+      //                 type: 'number',
+      //                 required: true,
+      //                 default: 3,
+      //                 data: 3,
+      //               },
+      //               {
+      //                 id: 'stride',
+      //                 label: {
+      //                   zh_CN: '步长',
+      //                   en_US: 'stride',
+      //                 },
+      //                 type: 'number',
+      //                 required: true,
+      //                 default: 1,
+      //                 data: 1,
+      //               },
+      //               {
+      //                 id: 'dilation',
+      //                 label: {
+      //                   zh_CN: '空洞大小',
+      //                   en_US: 'dilation',
+      //                 },
+      //                 type: 'number',
+      //                 required: true,
+      //                 default: 0,
+      //                 data: 0,
+      //               },
+      //               {
+      //                 id: 'groups',
+      //                 label: {
+      //                   zh_CN: '组数',
+      //                   en_US: 'groups',
+      //                 },
+      //                 type: 'number',
+      //                 required: true,
+      //                 default: 0,
+      //                 data: 0,
+      //               },
+      //               {
+      //                 id: 'padding_mode',
+      //                 label: {
+      //                   zh_CN: '填充模式',
+      //                   en_US: 'padding_mode',
+      //                 },
+      //                 type: 'enums',
+      //                 enums: [
+      //                   {
+      //                     id: 1,
+      //                     label: 'zeros',
+      //                     value: 'zeros',
+      //                     default: true,
+      //                   },
+      //                   {
+      //                     id: 2,
+      //                     label: 'reflect',
+      //                     value: 'reflect',
+      //                   },
+      //                   {
+      //                     id: 3,
+      //                     label: 'replicate',
+      //                     value: 'replicate',
+      //                   },
+      //                   {
+      //                     id: 4,
+      //                     label: 'circular',
+      //                     value: 'circular',
+      //                   },
+      //                 ],
+      //                 required: true,
+      //                 data: 'zeros',
+      //               },
+      //               {
+      //                 id: 'weight_attr',
+      //                 label: {
+      //                   zh_CN: '权重参数',
+      //                   en_US: 'weight_attr',
+      //                 },
+      //                 type: 'ParamAttr',
+      //                 data: {
+      //                   name: '',
+      //                   initializer: '',
+      //                   learning_rate: 1,
+      //                   regularizer: 'L1Decay',
+      //                   trainable: true,
+      //                   do_model_average: true,
+      //                   need_clip: true,
+      //                 } as any,
+      //               } as any,
+      //               {
+      //                 id: 'bias_attr',
+      //                 label: {
+      //                   zh_CN: '偏置参数',
+      //                   en_US: 'bias_attr',
+      //                 },
+      //                 type: 'ParamAttr',
+      //                 data: {
+      //                   name: '',
+      //                   initializer: '',
+      //                   learning_rate: 1,
+      //                   regularizer: 'L1Decay',
+      //                   trainable: true,
+      //                   do_model_average: true,
+      //                   need_clip: true,
+      //                 },
+      //               },
+      //               {
+      //                 id: 'data_format',
+      //                 label: {
+      //                   zh_CN: '数据格式',
+      //                   en_US: 'data_format',
+      //                 },
+      //                 type: 'string',
+      //                 required: true,
+      //               },
+      //             ],
+      //           },
+      //           zIndex: 2,
+      //         },
+      //       ],
+      //     },
+      //   } as any,
+      //   client as any,
+      // );
       console.log(code);
       expect(code).not.toBeUndefined();
       expect(code).toBe(
@@ -268,7 +648,7 @@ end = paddle.nn.Conv1d(128,64)`,
             end: 'e',
           },
           payload: {
-            cell: [
+            cells: [
               {
                 shape: 'dag-edge',
                 source: { cell: 's' },

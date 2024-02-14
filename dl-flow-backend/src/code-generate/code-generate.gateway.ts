@@ -8,6 +8,7 @@ import { CodeGenerateService } from './code-generate.service';
 import { Cell, Edge, GenerateCodeDto } from './code-generate.schema';
 import { Socket } from 'socket.io';
 import { AST } from './ast.service';
+import { ValidationPipe } from '@nestjs/common';
 
 export enum State {
   err = 'err',
@@ -15,7 +16,7 @@ export enum State {
   progress = 'progress',
 }
 
-@WebSocketGateway({
+@WebSocketGateway(9001, {
   cors: {
     origin: '*',
   },
@@ -28,13 +29,17 @@ export class CodeGenerateGateway {
 
   @SubscribeMessage('createCodeGenerate')
   create(
-    @MessageBody() schema: GenerateCodeDto,
+    @MessageBody(new ValidationPipe()) schema: GenerateCodeDto,
     @ConnectedSocket() client: Socket,
   ) {
     const {
       meta: { start, end },
-      payload: { cell },
+      payload: { cells: cell, edges },
     } = schema;
+    if (!cell) {
+      client.emit(State.err, '创建结束, 因为没有节点');
+      return;
+    }
     if (!cell.length) {
       client.emit(State.finfish, '创建结束, 因为图为空');
       return;
@@ -60,11 +65,10 @@ export class CodeGenerateGateway {
       client.emit(State.finfish, '生成结束');
       return;
     }
-    client.emit(State.progress, '提取边...');
-    const edges = this.codeGenerateService.extract<Edge>(
-      cell,
-      (cell: any) => cell.shape === 'dag-edge',
-    );
+    // const edges = this.codeGenerateService.extract<Edge>(
+    //   cell,
+    //   (cell: any) => cell.shape === 'dag-edge',
+    // );
     client.emit(State.progress, `边数量为: ${edges.length}`);
     if (!edges.length) {
       client.emit(State.finfish, `生成结束, 边节点数量为0`);
@@ -92,10 +96,12 @@ export class CodeGenerateGateway {
     if (!ast.children) {
       // transform success
       client.emit(State.finfish, 'AST转码成功');
+      return;
     }
     client.emit(State.progress, 'AST转码');
     const code = ast.codeGen();
     client.emit(State.finfish, 'AST转码成功');
+    client.emit(State.finfish, code);
     return code;
   }
 }

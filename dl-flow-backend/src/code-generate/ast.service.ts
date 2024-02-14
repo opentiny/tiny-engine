@@ -8,7 +8,11 @@ export class AST {
   build(cells: Cell[]) {
     const ast: IAST = {
       type: 'root',
-      children: [],
+      children: [
+        // I HATE PYTHON
+        new VarDecl('true', new Identifier('True')),
+        new VarDecl('false', new Identifier('False')),
+      ],
       codeGen: () => {
         return ast.children.map((child) => child.codeGen()).join('\n');
       },
@@ -37,12 +41,50 @@ export class AST {
     }
     return ast;
   }
+  /**
+   * Eg.
+   *  abcd -> 'abcd'
+   */
+  standardization(val: string): string {
+    if (val.toString() === 'true' || val.toString() === 'false') {
+      return val;
+    }
+    if (/[a-zA-Z]/.test(val)) {
+      return `'${val}'`;
+    }
+    return `${val}`;
+  }
   buildNN(nn: Material, cellId: string) {
-    const args = nn.properties.map((v) => v.data);
+    const args = nn.properties
+      .map((v) => {
+        if (typeof v.data === 'object') {
+          const args: string[] = [];
+          for (const key of Object.keys(v.data)) {
+            if (v.data[key]) {
+              const val = this.standardization(
+                v.data[key] ?? v.default ?? 'None',
+              );
+              args.push(new VarDecl(key, new Identifier(val)).codeGen());
+            }
+          }
+          const callExpression = new CallExpression(
+            new Identifier(v.type),
+            args,
+          );
+          const varDecl = new VarDecl(v.id, callExpression);
+          return varDecl.codeGen();
+        }
+        if (v.data) {
+          return new VarDecl(
+            v.id,
+            new Identifier(this.standardization(v.data)),
+          ).codeGen();
+        }
+      })
+      .filter((v) => v !== undefined);
     const callee = new Identifier(`paddle.nn.${nn.id}`);
     const fnCall = new CallExpression(callee, args);
-
-    const varDecl = new VarDecl(cellId.replace('-', ''), fnCall);
+    const varDecl = new VarDecl(cellId.replace(/-/gim, ''), fnCall);
     return varDecl;
   }
   buildLayer(layer: Layer) {
