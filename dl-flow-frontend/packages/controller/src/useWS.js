@@ -1,11 +1,9 @@
-import {ref} from 'vue';
 import {io} from 'socket.io-client';
 
-const client = io('/endpoint')
-/**
- * @type {import('vue').Ref<null|import('socket.io-client').Socket>}
- */
-const socket = ref(null);
+const client = io({
+    path: '/socket.io',
+    retries: 5
+})
 /**
  * 
  * @param {(socket: import('socket.io-client').Socket)=>void} cb 
@@ -15,7 +13,6 @@ const onConnect = (cb) => {
         cb(socket);
     })
 }
-
 /**
  * 
  * @param {(message: string)=>void} cb 
@@ -41,15 +38,8 @@ export default ()=>{
      * 
      * @param {(socket: import('socket.io-client').Socket)=>void} cb 
      */
-    const init = (s) => {
-        socket.value = s; 
-        client.off('connection', init);
-    }
-    if (!socket.value){
-        client.on('connection', init);
-    }
     return {
-        socket,
+        client,
         onConnect,
         onProgess,
         onFinish,

@@ -13,7 +13,7 @@ import { Channel } from '../utils';
 /**
  * @typedef {Object} Schema
  * @prop {Meta} meta
- * @prop {import('@antv/x6').Cell[]} payload
+ * @prop {{cell: import('@antv/x6').Cell[], edges: import('@antv/x6').Edge[]}} payload
  */
 
 
