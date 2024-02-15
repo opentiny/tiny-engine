@@ -57,6 +57,7 @@ export class AST {
   buildNN(nn: Material, cellId: string) {
     const args = nn.properties
       .map((v) => {
+        const id = `node${v.id.replace(/-/gim, '')}`;
         if (typeof v.data === 'object') {
           const args: string[] = [];
           for (const key of Object.keys(v.data)) {
@@ -71,12 +72,12 @@ export class AST {
             new Identifier(v.type),
             args,
           );
-          const varDecl = new VarDecl(v.id, callExpression);
+          const varDecl = new VarDecl(id, callExpression);
           return varDecl.codeGen();
         }
         if (v.data) {
           return new VarDecl(
-            v.id,
+            id,
             new Identifier(this.standardization(v.data)),
           ).codeGen();
         }
