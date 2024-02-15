@@ -57,7 +57,7 @@ export class AST {
   buildNN(nn: Material, cellId: string) {
     const args = nn.properties
       .map((v) => {
-        const id = `node${v.id.replace(/-/gim, '')}`;
+        const id = v.id;
         if (typeof v.data === 'object') {
           const args: string[] = [];
           for (const key of Object.keys(v.data)) {
@@ -85,7 +85,7 @@ export class AST {
       .filter((v) => v !== undefined);
     const callee = new Identifier(`paddle.nn.${nn.id}`);
     const fnCall = new CallExpression(callee, args);
-    const varDecl = new VarDecl(cellId.replace(/-/gim, ''), fnCall);
+    const varDecl = new VarDecl(`node${cellId.replace(/-/gim, '')}`, fnCall);
     return varDecl;
   }
   buildLayer(layer: Layer) {

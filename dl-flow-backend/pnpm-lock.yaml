@@ -91,6 +91,9 @@ devDependencies:
   eslint-plugin-prettier:
     specifier: ^4.0.0
     version: 4.2.1(eslint-config-prettier@8.10.0)(eslint@8.56.0)(prettier@2.8.8)
+  express:
+    specifier: ^4.18.2
+    version: 4.18.2
   jest:
     specifier: 29.5.0
     version: 29.5.0(@types/node@18.16.12)(ts-node@10.9.2)

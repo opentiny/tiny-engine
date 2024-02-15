@@ -1,20 +1,25 @@
 <script setup>
 import {ref} from 'vue';
-import { useSchema, useWs, useX6 } from '@opentiny/tiny-engine-controller'
+import { useSchema, useWs } from '@opentiny/tiny-engine-controller'
 import {Button as TinyButton, DialogBox} from '@opentiny/vue';
+const loading = ref(false);
 /**
  * @type {import('vue').Ref<[keyof typeof colors, string]>}
  */
 const visible = ref(false);
 const messages = ref([])
 const finish = ref(false);
+const error = ref(false);
+const canDownload = ref(false);
+const downloadFileName = ref('');
 const { schema } = useSchema();
 const {
   client, 
   onConnect,
   onProgess,
   onFinish,
-  onError
+  onError,
+  onDone
 } = useWs();
 
 /**
@@ -26,26 +31,38 @@ const colors = {
 }
 
 onConnect(()=>{
-  messages.value.push('Connect server success...')
+  messages.value.push([colors.info, 'Connect server success...'])
 })
 onProgess((message)=>{
   messages.value.push([colors.info, message]);
 })
 onFinish(()=>{
   finish.value = true;
+  loading.value = false;
 })
 onError((reason)=>{
   messages.value.push(
     [colors.error, reason]
   );
   finish.value = true;
+  error.value = true;
+})
+onDone((fileName) => {
+  downloadFileName.value = fileName;
+  canDownload.value = true;
 })
 
 const openApi = () => {
-  visible.value = true;
-  const {g} = useX6();
-  schema.payload.edges = g.getEdges();
-  client.emit('createCodeGenerate', schema);
+  loading.value = true;
+  if (!visible.value){
+    visible.value = true;
+  }
+  client.emitWithAck('createCodeGenerate', schema)
+  .catch(() => {
+    messages.value.push([colors.error, '服务器超时, 请重试'])
+    finish.value = true;
+    loading.value = false;
+  })
 }
 </script>
 <template>
@@ -64,9 +81,19 @@ const openApi = () => {
     </p>
     </div>
     <template #footer>
-      <tiny-button @click="visible=false">
-        关闭
-      </tiny-button>
+      <div style="display: flex;flex-direction: row; justify-content: center; margin: auto; align-items: center; gap: 1em;">
+        <a :href="`/endpoint/code-generate/${downloadFileName}`" download>
+          <tiny-button type="text">
+            下载
+          </tiny-button>
+        </a>
+        <tiny-button v-if="error" @click="openApi" type="primary" :loading="loading">
+          重试
+        </tiny-button>
+        <tiny-button @click="visible=false">
+          关闭
+        </tiny-button>
+      </div>
     </template>
   </dialog-box>
 </template>

@@ -13,9 +13,9 @@ import { join } from 'path';
 
 @Controller('code-generate')
 export class CodeGenerateController {
-  @Get(':file-name')
+  @Get(':filename')
   download(
-    @Param('file-name') fileName: string,
+    @Param('filename') fileName: string,
     @Res({ passthrough: true }) res: Response,
   ): StreamableFile {
     if (!fileName) {
@@ -24,7 +24,8 @@ export class CodeGenerateController {
         HttpStatus.BAD_REQUEST,
       );
     }
-    const filePath = join(process.cwd(), fileName);
+    const filePath = join(process.cwd(), 'public', fileName + '.py');
+    console.log(filePath);
     if (!existsSync(filePath)) {
       throw new HttpException(`${fileName} not found`, HttpStatus.NOT_FOUND);
     }

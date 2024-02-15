@@ -13,7 +13,7 @@ import { Channel } from '../utils';
 /**
  * @typedef {Object} Schema
  * @prop {Meta} meta
- * @prop {{cell: import('@antv/x6').Cell[], edges: import('@antv/x6').Edge[]}} payload
+ * @prop {{cells: import('@antv/x6').Cell[], edges: import('@antv/x6').Edge[]}} payload
  */
 
 
@@ -25,48 +25,11 @@ const schema = reactive({
         start: '',
         end: '',
     },
-    payload: {}
+    payload: {
+        cells: [],
+        edges: []
+    }
 })
-
-/**
- * 
- * @param {import('@antv/x6').Cell | string} node 
- */
-const setStartNode = (node)=>{
-    if (!node){
-        return;
-    }
-    schema.meta.start = node?.id ?? node;
-}
-/**
- * 
- * @param {import('@antv/x6').Cell | string} node 
- */
-const setEndNode = (node) => {
-    if (!node){
-        return;
-    }
-    schema.meta.end = node?.id ?? node;
-}
-
-const unsetEndNode = () => schema.meta.end = '';
-const unsetStartNode = () => schema.meta.start = '';
-const hasStartNode = () => schema.meta.start !== '';
-const hasEndNode = () => schema.meta.end !== '';
-
-/**
- * 
- * @param {import('@antv/x6').Cell|string} cell
- */
-const isStartNode = (cell) => (cell?.id ?? cell) === schema.meta.start;
-/**
- * 
- * @param {import('@antv/x6').Cell|string} cell
- */
-const isEndNode = (cell) => (cell?.id ?? cell) === schema.meta.end;
-
-const clearStartNode = () => schema.meta.start = '';
-const clearEndNode = () => schema.meta.end = '';
 
 const eventEmitter = new Channel();
 
@@ -81,6 +44,60 @@ const onSchemaChange = (cb) => {
 const notifyChange = () => {
     eventEmitter.emit('schema-change', schema);
 }
+
+/**
+ * 
+ * @param {import('@antv/x6').Cell | string} node 
+ */
+const setStartNode = (node)=>{
+    if (!node){
+        return;
+    }
+    schema.meta.start = node?.id ?? node;
+    notifyChange()
+}
+/**
+ * 
+ * @param {import('@antv/x6').Cell | string} node 
+ */
+const setEndNode = (node) => {
+    if (!node){
+        return;
+    }
+    schema.meta.end = node?.id ?? node;
+    notifyChange()
+}
+
+const unsetEndNode = () => {
+    schema.meta.end = '';
+    notifyChange();
+}
+const unsetStartNode = () => {
+    schema.meta.start = '';
+    notifyChange();
+}
+const hasStartNode = () => {
+    schema.meta.start !== '';
+    notifyChange();
+}
+const hasEndNode = () => {
+    schema.meta.end !== '';
+    notifyChange();
+}
+
+/**
+ * 
+ * @param {import('@antv/x6').Cell|string} cell
+ */
+const isStartNode = (cell) => (cell?.id ?? cell) === schema.meta.start;
+/**
+ * 
+ * @param {import('@antv/x6').Cell|string} cell
+ */
+const isEndNode = (cell) => (cell?.id ?? cell) === schema.meta.end;
+
+const clearStartNode = () => schema.meta.start = '';
+const clearEndNode = () => schema.meta.end = '';
 
 const updateSchema = (obj) => {
     schema.payload = obj;

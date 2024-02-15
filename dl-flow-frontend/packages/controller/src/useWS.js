@@ -33,6 +33,14 @@ const onError = (cb) => {
     client.on('err', cb);
 }
 
+/**
+ * 
+ * @param {(fileName: string)=>void} cb 
+ */
+const onDone = (cb) => {
+    client.on('done', cb);
+}
+
 export default ()=>{
     /**
      * 
@@ -43,6 +51,7 @@ export default ()=>{
         onConnect,
         onProgess,
         onFinish,
-        onError
+        onError,
+        onDone
     }
 }

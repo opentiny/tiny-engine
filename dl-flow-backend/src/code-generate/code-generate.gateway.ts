@@ -111,7 +111,6 @@ export class CodeGenerateGateway {
     const content = ['import paddle', 'from paddle import *', code].join('\n');
     const publicPath = join(cwd(), 'public');
     writeFileSync(join(publicPath, fileName + '.py'), content);
-    client.emitWithAck(State.done, fileName);
-    return code;
+    return client.emitWithAck(State.done, fileName);
   }
 }
