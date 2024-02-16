@@ -37,6 +37,7 @@ onProgess((message)=>{
   messages.value.push([colors.info, message]);
 })
 onFinish(()=>{
+  error.value = false;
   finish.value = true;
   loading.value = false;
 })
@@ -46,13 +47,16 @@ onError((reason)=>{
   );
   finish.value = true;
   error.value = true;
+  loading.value = false;
 })
 onDone((fileName) => {
   downloadFileName.value = fileName;
   canDownload.value = true;
 })
-
 const openApi = () => {
+  if (messages.value.length){
+    messages.value = [];
+  }
   loading.value = true;
   if (!visible.value){
     visible.value = true;
@@ -63,6 +67,10 @@ const openApi = () => {
     finish.value = true;
     loading.value = false;
   })
+}
+const retry = () => {
+  messages.value = [];
+  openApi()
 }
 </script>
 <template>
@@ -82,12 +90,12 @@ const openApi = () => {
     </div>
     <template #footer>
       <div style="display: flex;flex-direction: row; justify-content: center; margin: auto; align-items: center; gap: 1em;">
-        <a :href="`/endpoint/code-generate/${downloadFileName}`" download>
+        <a v-if="downloadFileName" :href="`/endpoint/code-generate/${downloadFileName}`" download>
           <tiny-button type="text">
             下载
           </tiny-button>
         </a>
-        <tiny-button v-if="error" @click="openApi" type="primary" :loading="loading">
+        <tiny-button v-if="error" @click="retry" type="primary" :loading="loading">
           重试
         </tiny-button>
         <tiny-button @click="visible=false">
