@@ -15,6 +15,7 @@ export class LayerService {
     const data = {
       id: new Types.ObjectId(),
       ...dto,
+      mode: 'layer',
     };
     return await this.LayerModel.create(data);
   }

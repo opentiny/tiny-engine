@@ -74,6 +74,7 @@
     "@vue/repl": "^2.9.0",
     "@vueuse/core": "^9.6.0",
     "dl-flow-setting-code": "workspace:^",
+    "dl-flow-toolbar-export": "workspace:^",
     "element-resize-detector": "^1.2.4",
     "file-saver": "^2.0.5",
     "html2canvas": "^1.4.1",

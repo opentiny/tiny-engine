@@ -36,6 +36,7 @@ import useEditor from './useMonaco'
 import { useVisitor, Visitor } from './useVisitor'
 import useLayer from './useLayer'
 import useSchema from './useSchema';
+import useWs from './useWS';
 
 export const getExample = example
 
@@ -66,5 +67,6 @@ export {
   useVisitor,
   Visitor,
   useLayer,
-  useSchema
+  useSchema,
+  useWs
 }

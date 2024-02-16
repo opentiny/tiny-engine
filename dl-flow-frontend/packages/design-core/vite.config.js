@@ -176,7 +176,8 @@ const devAlias = {
   '@opentiny/tiny-engine-utils': path.resolve(__dirname, '../utils/src/index.js'),
   '@opentiny/tiny-engine-webcomponent-core': path.resolve(__dirname, '../webcomponent/src/lib.js'),
   '@opentiny/tiny-engine-i18n-host': path.resolve(__dirname, '../i18n/src/lib.js'),
-  '@opentiny/tiny-engine-builtin-component': path.resolve(__dirname, '../builtinComponent/index.js')
+  '@opentiny/tiny-engine-builtin-component': path.resolve(__dirname, '../builtinComponent/index.js'),
+  'dl-flow-toolbar-export': path.resolve(__dirname, '../toolbars/export/index.js')
 }
 
 const prodAlias = {
@@ -191,7 +192,7 @@ const commonAlias = {
 }
 
 export default defineConfig(({ command, mode }) => {
-  const { VITE_CDN_DOMAIN, VITE_ENDPOINT_URL } = loadEnv(mode, process.cwd(), '')
+  const { VITE_CDN_DOMAIN, VITE_ENDPOINT_URL, VITE_ENDPOINT_WS_URL} = loadEnv(mode, process.cwd(), '')
   const monacoPublicPath = {
     local: 'editor/monaco-workers',
     alpha: 'https://tinyengine-assets.obs.cn-north-4.myhuaweicloud.com/files/monaco-assets',
@@ -276,6 +277,11 @@ export default defineConfig(({ command, mode }) => {
   const importMapStyles = [`${VITE_CDN_DOMAIN}/@opentiny/vue-theme@${importMapVersions.tinyVue}/index.css`]
 
   config.plugins.push(monacoEditorPluginInstance, htmlPlugin(mode), importmapPlugin(importmap, importMapStyles))
+  config.server.proxy['/socket.io']={
+    target: VITE_ENDPOINT_WS_URL,
+    changeOrigin: true,
+    ws: true
+  }
   config.server.proxy['/endpoint'] = {
     target: VITE_ENDPOINT_URL,
     changeOrigin: true,

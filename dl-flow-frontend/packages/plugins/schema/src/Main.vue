@@ -17,11 +17,11 @@
 
 <script setup>
 import { VueMonaco } from '@opentiny/tiny-engine-common'
-import { defineProps, toRefs, computed } from 'vue';
+import { defineProps, toRefs, ref, onMounted } from 'vue';
 import { useSchema, useLayout, useX6 } from '@opentiny/tiny-engine-controller';
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
-const {schema, updateSchema} = useSchema();
-const code = computed(() => JSON.stringify(schema,null,2));
+const {schema, updateSchema, onSchemaChange } = useSchema();
+const code = ref(JSON.stringify(schema,null,2));
 const props = defineProps({
   fixedPanels: {
     type: Array
@@ -45,6 +45,12 @@ const onChange = (args) => {
   updateSchema(obj?.payload);
   reRender(g, schema.payload);
 }
+onMounted(()=>{
+  onSchemaChange(()=>{
+    console.log('trigger');
+    code.value = JSON.stringify(schema, null, 2);
+  })
+})
 </script>
 
 <style lang="less" scoped>
