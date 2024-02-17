@@ -70,10 +70,6 @@ export class CodeGenerateGateway {
       client.emitWithAck(State.finfish, '生成结束');
       return;
     }
-    // const edges = this.codeGenerateService.extract<Edge>(
-    //   cell,
-    //   (cell: any) => cell.shape === 'dag-edge',
-    // );
     client.emitWithAck(State.progress, `边数量为: ${edges.length}`);
     if (!edges.length) {
       client.emitWithAck(State.finfish, `生成结束, 边节点数量为0`);
@@ -97,7 +93,7 @@ export class CodeGenerateGateway {
       start,
     );
     client.emitWithAck(State.progress, 'AST构建');
-    const ast = this.ast.build(sequence);
+    const ast = this.ast.build(sequence, standardizationNodes);
     if (!ast.children) {
       // transform success
       client.emitWithAck(State.finfish, 'AST转码成功');
