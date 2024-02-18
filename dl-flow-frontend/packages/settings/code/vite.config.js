@@ -23,7 +23,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, './index.js'),
-      name: 'setting-events',
+      name: 'setting-code',
       fileName: () => 'index.js',
       formats: ['es']
     },
