@@ -5,6 +5,7 @@
         show-message
         :model="formData"
         :rules="rules"
+        ref="formRef"
         label-width="120px"
         :label-align="true"
         label-position="left"
@@ -33,7 +34,7 @@
 </template>
 
 <script>
-import { reactive, computed } from 'vue'
+import { reactive, computed, ref } from 'vue'
 import { Input, Form, FormItem, Button, DialogBox, Select } from '@opentiny/vue'
 import { useBlock, useLayout, useCanvas, useModal } from '@opentiny/tiny-engine-controller'
 import { REGEXP_BLOCK_NAME } from '../js/verification'
@@ -64,6 +65,7 @@ export default {
     const { PLUGIN_NAME, activePlugin } = useLayout()
     const { isSaved } = useCanvas()
     const { confirm } = useModal()
+    const formRef = ref(null)
 
     const categoryList = computed(() =>
       getCategoryList().map((item) => ({ ...item, value: item.id, label: item.name }))
@@ -84,15 +86,21 @@ export default {
       cancel()
     }
     const addBlock = () => {
-      if (isSaved()) {
-        handleAddBlock()
-        return
-      }
-      confirm({
-        message: '当前画布内容尚未保存，新建区块会将画布切换至新区块中，是否要继续切换?',
-        exec: () => {
-          handleAddBlock()
+      formRef.value.validate((valid) => {
+        if (!valid) {
+          return
         }
+
+        if (isSaved()) {
+          handleAddBlock()
+          return
+        }
+        confirm({
+          message: '当前画布内容尚未保存，新建区块会将画布切换至新区块中，是否要继续切换?',
+          exec: () => {
+            handleAddBlock()
+          }
+        })
       })
     }
 
@@ -107,6 +115,7 @@ export default {
     return {
       formData,
       categoryList,
+      formRef,
       rules,
       addBlock,
       cancel,
