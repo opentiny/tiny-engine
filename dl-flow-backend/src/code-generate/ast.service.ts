@@ -2,10 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { Material } from '../material/material.schema';
 import { Layer } from '../layer/layer.schema';
 import { Cell } from './code-generate.schema';
+import { StandardizationNodes } from './code-generate.service';
 
 @Injectable()
 export class AST {
-  build(cells: Cell[]) {
+  build(cells: Cell[], standardizationNodes: StandardizationNodes) {
     const ast: IAST = {
       type: 'root',
       children: [
@@ -21,7 +22,9 @@ export class AST {
       const data = cell.data as Material | Layer;
       let item;
       if (this.isGroup(cell)) {
-        item = this.buildGroup(cell);
+        item = this.buildGroup(cell, standardizationNodes);
+        ast.children.push(item);
+        continue;
       }
       if (this.isLayer(data)) {
         item = this.buildLayer(data);
@@ -33,11 +36,14 @@ export class AST {
         );
         const instance = new VarDecl(cell.id.replace('-', ''), clazzInstance);
         ast.children.push(instance);
+        ast.children.push(item);
+        continue;
       }
       if (this.isNN(data)) {
         item = this.buildNN(data, cell.id);
+        ast.children.push(item);
+        continue;
       }
-      ast.children.push(item);
     }
     return ast;
   }
@@ -92,19 +98,20 @@ export class AST {
     const clazzDef = new ClazzDef(layer.code);
     return clazzDef;
   }
-  buildGroup(group: Cell) {
+  buildGroup(group: Cell, standardizationNodes: StandardizationNodes) {
     const subAst: IAST = {
       type: 'root',
       children: [],
       codeGen: () => subAst.children.map((child) => child.codeGen()).join('\n'),
     };
     const groups: { [x: string]: string[] } = {};
-    for (const child of group.children ?? []) {
+    for (const childId of (group.children as unknown as string[]) ?? []) {
+      const child = standardizationNodes[childId];
       if (this.isGroup(child)) {
         if (!groups[child.id]) {
           groups[child.id] = [];
         }
-        const subAST = this.buildGroup(child);
+        const subAST = this.buildGroup(child, standardizationNodes);
         subAst.children.push(...subAST.children);
         groups[child.id] = subAST.children
           .filter(
@@ -158,12 +165,15 @@ export class AST {
     const call = new CallExpression(callee, [
       ['x=[', names.join(','), ']'].join(''),
     ]);
-    const concatVar = new VarDecl(group.id.replace('-', ''), call);
+    const concatVar = new VarDecl(
+      `group_${group.id}`.replace(/-/gim, ''),
+      call,
+    );
     subAst.children.push(concatVar);
     return subAst;
   }
   isGroup(cell: Cell) {
-    return cell.shape.includes('group');
+    return cell?.shape && cell.shape.includes('group');
   }
   isNN(data: Material | Layer): data is Material {
     return data.mode === 'nn';
