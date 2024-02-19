@@ -244,7 +244,7 @@ export default {
     })
 
     const updateValue = (value) => {
-      const { property } = props.property
+      const { property, type } = props.property
       const { setProp } = useProperties()
 
       // 是否双向绑定
@@ -283,7 +283,7 @@ export default {
         }
 
         if (props.isTopLayer) {
-          setProp(property, value)
+          setProp(property, value, type)
         }
       }
 

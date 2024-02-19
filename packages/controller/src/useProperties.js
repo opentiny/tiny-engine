@@ -178,14 +178,14 @@ const getProps = (schema, parent) => {
   properties.parent = parent
 }
 
-const setProp = (name, value) => {
+const setProp = (name, value, type) => {
   if (!properties.schema) {
     return
   }
 
   properties.schema.props = properties.schema.props || {}
 
-  if (value === '' || value === undefined || value === null) {
+  if ((value === '' && type !== 'String') || value === undefined || value === null) {
     delete properties.schema.props[name]
   } else {
     properties.schema.props[name] = value
