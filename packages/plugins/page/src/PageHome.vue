@@ -14,12 +14,11 @@
 </template>
 
 <script>
-import { computed, reactive, watchEffect } from 'vue'
+import { computed, reactive, watchEffect, inject } from 'vue'
 import { Checkbox } from '@opentiny/vue'
 import { usePage, useModal, useNotify } from '@opentiny/tiny-engine-controller'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import { generateRouter } from '@opentiny/tiny-engine-common/js/vscodeGenerateFile'
-import { closePageSettingPanel } from './PageSetting.vue'
 import http from './http.js'
 
 export default {
@@ -53,6 +52,8 @@ export default {
       return home
     })
 
+    const openSettingPanel = inject('openSettingPanel')
+
     const settingHome = () => {
       confirm({
         title: '提示',
@@ -69,7 +70,7 @@ export default {
           handleRouteHomeUpdate(id, params)
             .then(() => {
               pageSettingState.updateTreeData()
-              closePageSettingPanel()
+              openSettingPanel({ data: pageSettingState.currentPageData })
               pageSettingState.isNew = false
               if (isVsCodeEnv) {
                 generateRouter({
