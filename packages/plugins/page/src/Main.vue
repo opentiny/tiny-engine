@@ -34,7 +34,7 @@
 </template>
 
 <script lang="jsx">
-import { reactive, ref, watchEffect } from 'vue'
+import { reactive, ref, watchEffect, provide } from 'vue'
 import { useCanvas, useApp, useResource, usePage, useHelp } from '@opentiny/tiny-engine-controller'
 import { PluginPanel, SvgButton, LinkButton } from '@opentiny/tiny-engine-common'
 import { extend } from '@opentiny/vue-renderless/common/object'
@@ -131,6 +131,8 @@ export default {
       const pageDetail = await fetchPageDetail(node.data?.id)
       initCurrentPageData(pageDetail)
     }
+
+    provide('openSettingPanel', openSettingPanel)
 
     const pluginPanelClosed = () => {
       closePageSettingPanel()
