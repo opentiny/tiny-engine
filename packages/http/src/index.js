@@ -38,8 +38,8 @@ const loginVM = createApp(Login).mount(loginDom)
 const showError = (url, message) => {
   globalNotify({
     type: 'error',
-    title: `接口 ${url} 请求报错`,
-    message: `报错信息: ${message}`
+    title: '接口报错',
+    message: `报错接口: ${url} \n报错信息: ${message ?? ''}`
   })
 }
 
