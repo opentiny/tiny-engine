@@ -424,15 +424,6 @@
       &:hover {
         background: var(--ti-lowcode-button-hover-bg);
       }
-
-      &.selected {
-        &::before {
-          content: '\2714';
-          display: block;
-          position: absolute;
-          left: 10px;
-        }
-      }
     }
   }
 
@@ -1582,17 +1573,7 @@ span.tiny-switch {
 
         & > span {
           position: relative;
-
-          &::before {
-            content: '\2714';
-            position: absolute;
-            left: 0;
-          }
         }
-      }
-
-      & > span {
-        padding-left: 16px;
       }
 
       &.is-disabled > a {
