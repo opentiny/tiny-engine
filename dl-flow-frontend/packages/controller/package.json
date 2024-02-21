@@ -38,6 +38,7 @@
     "@opentiny/vue-renderless": "~3.10.0",
     "@vue/shared": "^3.3.4",
     "monaco-editor": "0.33.0",
+    "socket.io-client": "^4.7.4",
     "vue": "3.2.45"
   },
   "devDependencies": {

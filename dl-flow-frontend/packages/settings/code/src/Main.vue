@@ -36,7 +36,7 @@ import {
   Input as TinyInput
 } from '@opentiny/vue'
 import { Tip, VueMonaco } from '@opentiny/tiny-engine-common'
-import { useX6, useLayout, useVisitor, useLayer } from '@opentiny/tiny-engine-controller'
+import { useX6, useLayout, useVisitor, useLayer, useSchema } from '@opentiny/tiny-engine-controller'
 import i18n from '@opentiny/tiny-engine-i18n-host';
 import { Python3Parser } from 'dt-python-parser'
 const parser = new Python3Parser()
@@ -70,10 +70,15 @@ const rules = reactive({
   clazz: [{ required: true, trigger: 'change' }]
 })
 const {createLayer} = useLayer();
+const {updateSchema} = useSchema()
 /**
  * @type {import('@antv/x6').Cell}
  */
 let node
+/**
+ * @type {import('@antv/x6').Graph}
+ */
+let g;
 const save = () => {
   form.value.validate((valid) => {
     if (!valid) {
@@ -87,13 +92,17 @@ const save = () => {
       en_US: label.value
     };
     createLayer(formData)
-      .then(()=>{
-        if (node){
+      .then(({error})=>{
+        if (!error.value && node){
           node.setData({
             ...node.getData(),
             ...formData,
             new: false
           })
+          const {g} = useX6()
+          updateSchema(
+            g.toJSON()
+          )
         }
       })
   })
@@ -122,10 +131,13 @@ watch(formData, () => {
         }
       }
     )
+    if (g){
+      updateSchema(g.toJSON());
+    }
   }
 }, {deep: true})
 onMounted(() => {
-  const { g } = useX6()
+  g = useX6().g;
   g.on('selection:changed', () => {
     if (!g.getSelectedCellCount()) {
       selectMode.value = ''

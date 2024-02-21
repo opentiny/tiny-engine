@@ -131,3 +131,53 @@ export const getDefaultProps = (properties = []) => {
 
   return props
 }
+
+export class Channel {
+  constructor(){
+    /**
+     * @type {Map<string, ((...args: any[])=>void)[]}
+     */
+    this.map = new Map();
+  }
+  /**
+   * 
+   * @param {string} name 
+   * @param {(...args: any[])=>void} cb 
+   */
+  on(name, cb){
+    if (this.map.get(name)){
+      this.map.get(name).push(cb);
+      return;
+    }
+    this.map.set(name, [cb]);
+  }
+  /**
+   * 
+   * @param {string} name 
+   * @param {any[]} args 
+   * @returns 
+   */
+  emit(name, ...args){
+    const fns = this.map.get(name);
+    if (!fns){
+      return;
+    }
+    fns.forEach((f) => f(...args));
+  }
+  /**
+   * 
+   * @param {(...args:any[])=>void} fn 
+   * @returns 
+   */
+  off(fn){
+    const fns = this.map.get(name);
+    if (!fns){
+      return ;
+    }
+    const idx = fns.indexOf(fn);
+    if (idx === -1){
+      return;
+    }
+    fns.splice(idx,1);
+  }
+}

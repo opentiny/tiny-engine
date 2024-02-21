@@ -1,4 +1,5 @@
 import {reactive} from 'vue';
+import { Channel } from '../utils';
 /**
  * @typedef {Object} Meta
  * @prop {string|string[]} [start] 整个流程图起始节点ID
@@ -12,7 +13,7 @@ import {reactive} from 'vue';
 /**
  * @typedef {Object} Schema
  * @prop {Meta} meta
- * @prop {import('@antv/x6').Cell[]} payload
+ * @prop {{cells: import('@antv/x6').Cell[], edges: import('@antv/x6').Edge[]}} payload
  */
 
 
@@ -24,8 +25,25 @@ const schema = reactive({
         start: '',
         end: '',
     },
-    payload: {}
+    payload: {
+        cells: [],
+        edges: []
+    }
 })
+
+const eventEmitter = new Channel();
+
+/**
+ * 
+ * @param {()=>void} cb 
+ */
+const onSchemaChange = (cb) => {
+    eventEmitter.on('schema-change', cb);
+}
+
+const notifyChange = () => {
+    eventEmitter.emit('schema-change', schema);
+}
 
 /**
  * 
@@ -36,6 +54,7 @@ const setStartNode = (node)=>{
         return;
     }
     schema.meta.start = node?.id ?? node;
+    notifyChange()
 }
 /**
  * 
@@ -46,12 +65,25 @@ const setEndNode = (node) => {
         return;
     }
     schema.meta.end = node?.id ?? node;
+    notifyChange()
 }
 
-const unsetEndNode = () => schema.meta.end = '';
-const unsetStartNode = () => schema.meta.start = '';
-const hasStartNode = () => schema.meta.start !== '';
-const hasEndNode = () => schema.meta.end !== '';
+const unsetEndNode = () => {
+    schema.meta.end = '';
+    notifyChange();
+}
+const unsetStartNode = () => {
+    schema.meta.start = '';
+    notifyChange();
+}
+const hasStartNode = () => {
+    schema.meta.start !== '';
+    notifyChange();
+}
+const hasEndNode = () => {
+    schema.meta.end !== '';
+    notifyChange();
+}
 
 /**
  * 
@@ -69,6 +101,7 @@ const clearEndNode = () => schema.meta.end = '';
 
 const updateSchema = (obj) => {
     schema.payload = obj;
+    notifyChange();
 }
 
 
@@ -85,6 +118,8 @@ export default ()=>{
         isEndNode,
         clearStartNode,
         clearEndNode,
-        updateSchema
+        updateSchema,
+        onSchemaChange,
+        notifyChange
     }
 }

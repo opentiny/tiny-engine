@@ -22,7 +22,7 @@ import { Collapse, CollapseItem } from '@opentiny/vue'
 import { onMounted, ref, computed } from 'vue'
 import Empty from './components/Empty.vue'
 import { Tip } from '@opentiny/tiny-engine-common'
-import { useX6 } from '@opentiny/tiny-engine-controller'
+import { useX6, useSchema } from '@opentiny/tiny-engine-controller'
 import i18n from '@opentiny/tiny-engine-i18n-host'
 
 const locale = i18n.global.locale
@@ -67,6 +67,7 @@ const onSelection = () => {
     }
   })
 }
+const {updateSchema} = useSchema();
 onMounted(() => {
   g = useX6().g
   g.on('selection:changed', onSelection)
@@ -83,6 +84,9 @@ const onUpdate = ({ properties, id }) => {
   const data = cell.getData()
   data.properties = properties
   cell.setData(data)
+  if (g){
+    updateSchema(g.toJSON());
+  }
 }
 </script>
 

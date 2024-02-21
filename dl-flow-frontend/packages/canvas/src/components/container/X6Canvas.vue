@@ -240,6 +240,13 @@ onMounted(() => {
   g.on('cell:removed', () => {
     updateSchema(g.toJSON());
   })
+  g.on('edge:added', () => {
+    const edges = g.getEdges();
+    updateSchema({
+      cells: g.toJSON().cells,
+      edges,
+    })
+  })
 })
 </script>
 
