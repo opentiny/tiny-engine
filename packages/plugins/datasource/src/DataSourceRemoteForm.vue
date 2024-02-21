@@ -19,7 +19,7 @@
         </tiny-input>
       </div>
     </tiny-form-item>
-    <tiny-form-item label="描述" prop="description">
+    <tiny-form-item label="请求描述" prop="description">
       <tiny-input v-model="state.serviceForm.description" placeholder="请输入"></tiny-input>
     </tiny-form-item>
   </tiny-form>
