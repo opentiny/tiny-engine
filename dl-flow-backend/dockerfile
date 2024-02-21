@@ -11,5 +11,5 @@ VOLUME [ "/public" ]
 
 ENV DB_URL=""
 
-EXPOSE 9000
+EXPOSE 9000-9900
 CMD [ "node","dist/main.js" ]
