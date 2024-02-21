@@ -12,7 +12,7 @@ export class MaterialService {
     private readonly MaterialMode: Model<Material>,
   ) {}
   findAll() {
-    return this.MaterialMode.find({});
+    return this.MaterialMode.find();
   }
   async createMaterial(data: CretaeMaterial) {
     const material = await this.MaterialMode.find({ id: data.id });
