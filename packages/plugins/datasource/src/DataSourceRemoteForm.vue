@@ -10,9 +10,12 @@
   >
     <tiny-form-item label="请求地址" prop="uri">
       <div class="textarea-warp">
-        <tiny-select class="selectResType" v-model="state.serviceForm.method" placeholder="请选择">
-          <tiny-option v-for="item in state.requestData" :key="item.value" :label="item.value" :value="item.value">
-          </tiny-option>
+        <tiny-select
+          class="selectResType"
+          v-model="state.serviceForm.method"
+          placeholder="请选择"
+          :options="state.requestData"
+        >
         </tiny-select>
         <tiny-input class="border-input" v-model="state.serviceForm.uri" resize="none" placeholder="请输入">
           <template #append><a class="requestBtn" type="info" @click="$emit('sendRequest')">发送请求</a></template>
@@ -27,7 +30,7 @@
 
 <script>
 import { reactive, watchEffect, ref } from 'vue'
-import { Form, FormItem, Input, Select, Option } from '@opentiny/vue'
+import { Form, FormItem, Input, Select } from '@opentiny/vue'
 
 const serviceFormRef = ref(null)
 
@@ -40,8 +43,7 @@ export default {
     TinyForm: Form,
     TinyFormItem: FormItem,
     TinyInput: Input,
-    TinySelect: Select,
-    TinyOption: Option
+    TinySelect: Select
   },
   props: {
     modelValue: {
@@ -53,11 +55,11 @@ export default {
     const state = reactive({
       serviceForm: {},
       requestData: [
-        { text: 'JSONP', value: 'JSONP' },
-        { text: 'GET', value: 'GET' },
-        { text: 'POST', value: 'POST' },
-        { text: 'PUT', value: 'PUT' },
-        { text: 'DELETE', value: 'DELETE' }
+        { label: 'JSONP', value: 'JSONP' },
+        { label: 'GET', value: 'GET' },
+        { label: 'POST', value: 'POST' },
+        { label: 'PUT', value: 'PUT' },
+        { label: 'DELETE', value: 'DELETE' }
       ]
     })
 
@@ -67,8 +69,8 @@ export default {
     })
 
     const rules = {
-      uri: [{ required: true, message: '必填', trigger: 'change' }],
-      method: { required: true, message: '必选', trigger: 'change' }
+      uri: [{ required: true, message: '必填', trigger: ['change', 'blur'] }],
+      method: { required: true, message: '必选', trigger: ['change', 'blur'] }
     }
 
     return {
