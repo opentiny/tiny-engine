@@ -155,16 +155,10 @@ export default {
     }
 
     const sendRequest = async () => {
-      let valid = false
-
       try {
         // await validate() 如果验证不通过会抛出异常，而不是返回 false
-        valid = await getServiceForm().validate()
+        await getServiceForm().validate()
       } catch (error) {
-        /* empty */
-      }
-
-      if (!valid) {
         return
       }
 
