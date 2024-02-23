@@ -113,7 +113,7 @@ import {
 import { iconHelpCircle } from '@opentiny/vue-icon'
 import { useLayout, useApp, getGlobalConfig, useModal } from '@opentiny/tiny-engine-controller'
 import { useHttp } from '@opentiny/tiny-engine-http'
-import { isDevelopEnv } from '@opentiny/tiny-engine-common/js/environments'
+import { isDevelopEnv } from '@opentiny/tiny-engine-controller/js/environments'
 
 const http = useHttp()
 

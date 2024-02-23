@@ -61,8 +61,8 @@ import { getCurrentInstance, reactive, ref, computed } from 'vue'
 import { Form, FormItem, Input, Popover } from '@opentiny/vue'
 import { MonacoEditor } from '@opentiny/tiny-engine-common'
 import { theme } from '@opentiny/tiny-engine-controller/adapter'
-import { string2Ast, ast2String, insertName } from '@opentiny/tiny-engine-common/js/ast'
-import { verifyJsVarName } from '@opentiny/tiny-engine-common/js/verification'
+import { string2Ast, ast2String, insertName } from '@opentiny/tiny-engine-controller/js/ast'
+import { verifyJsVarName } from '@opentiny/tiny-engine-controller/js/verification'
 
 export default {
   components: {

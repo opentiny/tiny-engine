@@ -130,7 +130,7 @@ import { PluginPanel, LinkButton } from '@opentiny/tiny-engine-common'
 import { useTranslate, useApp, useModal, getGlobalConfig, useHelp } from '@opentiny/tiny-engine-controller'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { useHttp } from '@opentiny/tiny-engine-http'
-import { BASE_URL } from '@opentiny/tiny-engine-common/js/environments'
+import { BASE_URL } from '@opentiny/tiny-engine-controller/js/environments'
 
 export default {
   components: {

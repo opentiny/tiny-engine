@@ -16,7 +16,7 @@
 
 <script>
 import { Popover } from '@opentiny/vue'
-import { previewPage, previewBlock } from '@opentiny/tiny-engine-common/js/preview'
+import { previewPage, previewBlock } from '@opentiny/tiny-engine-controller/js/preview'
 import { getGlobalConfig, useBlock, useCanvas, useLayout, useNotify } from '@opentiny/tiny-engine-controller'
 import { getSchema } from '@opentiny/tiny-engine-canvas'
 

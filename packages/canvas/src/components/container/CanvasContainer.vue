@@ -29,7 +29,7 @@
 
 <script>
 import { onMounted, ref, computed, onUnmounted } from 'vue'
-import { iframeMonitoring } from '@opentiny/tiny-engine-common/js/monitor'
+import { iframeMonitoring } from '@opentiny/tiny-engine-controller/js/monitor'
 import { useTranslate, useCanvas, useResource } from '@opentiny/tiny-engine-controller'
 import CanvasAction from './CanvasAction.vue'
 import CanvasResize from './CanvasResize.vue'

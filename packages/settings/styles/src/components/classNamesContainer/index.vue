@@ -107,7 +107,7 @@ import { Select as TinySelect } from '@opentiny/vue'
 import { setPageCss, getSchema as getCanvasPageSchema, updateRect } from '@opentiny/tiny-engine-canvas'
 import { useProperties, useCanvas, useHistory, useHelp } from '@opentiny/tiny-engine-controller'
 import { MetaCodeEditor, LinkButton } from '@opentiny/tiny-engine-common'
-import { formatString } from '@opentiny/tiny-engine-common/js/ast'
+import { formatString } from '@opentiny/tiny-engine-controller/js/ast'
 import useStyle, { updateGlobalStyleStr } from '../../js/useStyle'
 import { stringify, getSelectorArr } from '../../js/parser'
 
