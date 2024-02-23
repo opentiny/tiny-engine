@@ -18,7 +18,8 @@
         },
         "type": {
           "description": "该设置的数据类型",
-          "type": "string"
+          "type": "string",
+          "enum": ["string", "number", "boolean", "enums", "ParamAttr"]
         },
         "required": {
           "description": "该设置是否是必选",
@@ -32,6 +33,14 @@
           "description": "该设置是否为select, 如果type为enum, 则该选项为必选",
           "$ref": "#/definitions/enums"
         }
+      },
+      "if": {
+        "properties": {
+          "type": { "const": "enums"}
+        }
+      },
+      "then": {
+        "required": ["enums"]
       }
     },
     "enums": {
@@ -63,10 +72,12 @@
       "type": "object",
       "properties": {
         "zh_CN": {
-          "type": "string"
+          "type": "string",
+          "default": ""
         },
         "en_US": {
-          "type": "string"
+          "type": "string",
+          "default": ""
         }
       },
       "required": ["zh_CN", "en_US"]
@@ -167,7 +178,8 @@
             "$ref": "#/definitions/properties"
           }
         }
-      }
+      },
+      "required": ["id", "label", "mode", "properties"]
     },
     "materials": {
       "type": "array",
