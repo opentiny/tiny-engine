@@ -10,12 +10,10 @@
   "main": "dist/index.js",
   "module": "dist/index.js",
   "exports": {
-    ".": "./dist/index.js",
-    "./js/*": "./js/*.js"
+    ".": "./dist/index.js"
   },
   "files": [
-    "dist",
-    "js"
+    "dist"
   ],
   "repository": {
     "type": "git",
@@ -29,9 +27,6 @@
   "license": "MIT",
   "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
-    "@babel/generator": "7.18.13",
-    "@babel/parser": "7.18.13",
-    "@babel/traverse": "7.18.13",
     "@opentiny/tiny-engine-canvas": "workspace:*",
     "@opentiny/tiny-engine-controller": "workspace:*",
     "@opentiny/tiny-engine-http": "workspace:*",
@@ -39,10 +34,8 @@
     "@opentiny/tiny-engine-utils": "workspace:*",
     "@opentiny/vue": "~3.10.0",
     "@opentiny/vue-icon": "~3.10.0",
-    "@opentiny/vue-locale": "~3.10.0",
     "@opentiny/vue-renderless": "~3.10.0",
     "@vue/shared": "^3.3.4",
-    "css-tree": "^2.3.1",
     "monaco-editor": "0.33.0",
     "prettier": "2.7.1",
     "vue-draggable-next": "2.1.0"
@@ -53,7 +46,6 @@
     "vite": "^4.3.7"
   },
   "peerDependencies": {
-    "vue": "^3.4.15",
-    "vue-i18n": "^9.9.0"
+    "vue": "^3.4.15"
   }
 }
