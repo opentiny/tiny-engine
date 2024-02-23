@@ -80,7 +80,7 @@ import ProgressBar from './component/ProgressBar.vue'
 import MetaButtonGroup from './component/MetaButtonGroup.vue'
 import MetaTableColumns from './component/MetaTableColumns.vue'
 
-import i18n, { i18nKeyMaps } from './js/i18n.js'
+import i18n, { i18nKeyMaps } from '@opentiny/tiny-engine-controller/js/i18n.js'
 
 import enUs from './i18n/en-us.json'
 import zhCn from './i18n/zh-cn.json'
