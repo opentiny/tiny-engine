@@ -197,8 +197,7 @@ export default {
 
 <style lang="less">
 .vue-repl {
-  width: 100vw;
-  height: 100vh;
+  height: 100%;
 
   .split-pane {
     .left {
@@ -224,11 +223,13 @@ export default {
 }
 .vue-repl-container {
   height: calc(100vh - 48px);
-  width: 100%;
   &.preview-debug-mode .vue-repl .split-pane {
     .left,
     .right .tab-buttons {
       display: block;
+    }
+    .right .output-container {
+      height: calc(100% - 38px);
     }
   }
 }
