@@ -19,7 +19,7 @@
         "type": {
           "description": "该设置的数据类型",
           "type": "string",
-          "enum": ["string", "number", "boolean", "enums", "ParamAttr"]
+          "enum": ["string", "number", "boolean", "enums", "ParamAttr", "ref"]
         },
         "required": {
           "description": "该设置是否是必选",
