@@ -1,6 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AST } from '../ast.service';
+import { AST, VarDecl } from '../ast.service';
 import { Material } from '../../material/material.schema';
+import { Cell, Edge } from '@antv/x6';
+import { Layer } from '../code-generate.schema';
+import { StandardizationNodes } from '../code-generate.service';
 
 describe('AST', () => {
   let service: AST;
@@ -20,11 +23,24 @@ class Layer:
     del: false,
     mode: 'layer',
   };
-  const buildNode = (total: number) => {
-    const arr = [];
+  const buildNode = (total: number, startId = 0) => {
+    const arr: {
+      id: string;
+      shape: string;
+      position: {
+        x: number;
+        y: number;
+      };
+      size: {
+        width: number;
+        height: number;
+      };
+      zIndex: number;
+      data: Material;
+    }[] = [];
     for (let i = 1; i <= total; i++) {
-      arr.push({
-        id: `node-${i}`,
+      const obj = {
+        id: `node${i + startId}`,
         shape: 'dag-node',
         position: { x: 0, y: 0 },
         size: { width: 0, height: 0 },
@@ -35,11 +51,12 @@ class Layer:
           id: 'Conv1d',
           properties: [],
         } as any,
-      });
+      };
+      arr.push(obj);
     }
     return arr;
   };
-  const buildLayer = (total: number) => {
+  const buildLayer = (total: number): any[] => {
     const arr = [];
     for (let i = 1; i <= total; i++) {
       arr.push({
@@ -73,536 +90,230 @@ class Layer${i}:
   it.skip('should be defined', () => {
     expect(service).toBeDefined();
   });
-  describe('build', () => {
-    it.skip('just cell', () => {
-      const ast = service.build([...buildNode(100)], {});
-      expect(ast.children.length).toBe(100);
-      expect(ast.codeGen()).not.toContain('undefined');
-    });
-    it.skip('just layer', () => {
-      const ast = service.build([...buildLayer(100)], {});
-      expect(ast.codeGen()).not.toContain('undefined');
-    });
-    it.skip('group', () => {
-      const ast = service.build(
-        [
-          {
-            children: [
-              {
-                id: 'node-1',
-                shape: 'dag-node',
-                position: {
-                  x: 0,
-                  y: 0,
-                },
-                size: {
-                  width: 0,
-                  height: 0,
-                },
-                attrs: {},
-                zIndex: 0,
-                data: {
-                  id: 'Conv1D',
-                  mode: 'nn',
-                  properties: [{ id: 'p', type: 'number', data: 123 } as any],
-                } as any,
-              },
-              {
-                shape: 'dag-node',
-                id: 'layer',
-                data: layer,
-              } as any,
-            ],
-            id: 'group',
-            shape: 'group-node',
-            position: {
-              x: 0,
-              y: 0,
-            },
-            size: {
-              width: 0,
-              height: 0,
-            },
-            attrs: undefined,
-            zIndex: 0,
-            data: {} as any,
-          },
-        ],
-        {},
-      );
-      expect(ast.codeGen()).toContain('group = paddle.concat(x=[node1,layer]');
-    });
+  it('standardization', () => {
+    expect(service.standardization('123', 'string')).toBe(`'123'`);
+    expect(service.standardization('123', 'number')).toBe(`123`);
+    expect(service.standardization('[0,0]', 'array')).toBe('[0,0]');
+    expect(service.standardization('123', 'boolean')).toBe('true');
+    expect(service.standardization('true', 'boolean')).toBe('true');
+    expect(service.standardization('false', 'boolean')).toBe('false');
   });
   describe('buildNN', () => {
-    it.skip('non properties', () => {
-      const varDecl = service.buildNN(
-        {
-          id: 'nn',
-          label: {
-            zh_CN: '',
-            en_US: '',
-          },
-          properties: [],
-          desc: '',
-          mode: 'nn',
-          nn: true,
-        },
-        'cell',
+    it('non properties', () => {
+      const node = buildNode(1)[0];
+      expect(service.buildNN(node.data, node.id).name).toBe(`node${node.id}`);
+      expect(service.buildNN(node.data, node.id).codeGen()).toBe(
+        `node${node.id} = paddle.nn.${node.data.id}()`,
       );
-      expect(varDecl).toBeDefined();
-      expect(varDecl.codeGen()).toBe('cell = paddle.nn.nn()');
     });
-    it.skip('has properties', () => {
-      const varDecl = service.buildNN(
+    it('has properties', () => {
+      const node = buildNode(1)[0];
+      node.data.properties.push(
         {
-          id: 'nn',
+          id: 'in_channel',
+          data: 256,
           label: {
             zh_CN: '',
             en_US: '',
           },
-          properties: [
-            {
-              id: 'in_channel',
-              data: 256,
-              label: {
-                zh_CN: 'in_channel',
-                en_US: 'in_channel',
-              },
-              type: 'number',
-              default: 256,
-              enums: [],
-            },
-          ],
-          desc: '',
-          mode: 'nn',
-          nn: true,
+          type: 'number',
+          default: '',
+          enums: [],
         },
-        'cell',
-      );
-      expect(varDecl).toBeDefined();
-      expect(varDecl.codeGen()).toBe('cell = paddle.nn.nn(256)');
-      const varDecl2 = service.buildNN(
         {
-          id: 'nn',
+          id: 'out_channel',
+          data: 128,
           label: {
             zh_CN: '',
             en_US: '',
           },
-          properties: [
-            {
-              id: 'in_channel',
-              data: 256,
-              label: {
-                zh_CN: 'in_channel',
-                en_US: 'in_channel',
-              },
-              type: 'number',
-              default: 256,
-              enums: [],
-            },
-            {
-              id: 'out_channel',
-              data: 128,
-              label: {
-                zh_CN: 'in_channel',
-                en_US: 'in_channel',
-              },
-              type: 'number',
-              default: 256,
-              enums: [],
-            },
-          ],
-          desc: '',
-          mode: 'nn',
-          nn: true,
+          type: 'number',
+          default: '',
+          enums: [],
         },
-        'cell',
+        {
+          id: 'weight_attr',
+          data: {
+            name: 'weight',
+            learning_rate: 1e-5,
+          },
+          label: {
+            zh_CN: '',
+            en_US: '',
+          },
+          type: 'ParamAttr',
+          default: '',
+          enums: [],
+        },
+        {
+          id: 'test',
+          type: 'list',
+          data: [1, '2', true, {}],
+          label: {
+            zh_CN: '',
+            en_US: '',
+          },
+          default: '',
+          enums: [],
+        },
       );
-      expect(varDecl2).toBeDefined();
-      expect(varDecl2.codeGen()).toBe('cell = paddle.nn.nn(256,128)');
+      expect(service.buildNN(node.data, node.id).name).toBe(`node${node.id}`);
+      expect(service.buildNN(node.data, node.id).codeGen()).toBe(
+        `node${node.id} = paddle.nn.${node.data.id}(in_channel = 256,out_channel = 128,weight_attr = ParamAttr(name = 'weight',learning_rate = 0.00001),test = [1,'2',true,{}])`,
+      );
     });
   });
-  it.skip('buildLayer', () => {
-    const ast = service.buildLayer(layer);
-    expect(ast.code).toBe(layer.code);
-    expect(ast.codeGen()).toBe(layer.code);
-  });
-  describe('buildGroup', () => {
-    describe('just cell', () => {
-      it.skip('non nest', () => {
-        const ast = service.buildGroup(
-          {
-            children: [
-              {
-                id: 'node-1',
-                shape: 'dag-node',
-                position: {
-                  x: 0,
-                  y: 0,
-                },
-                size: {
-                  width: 0,
-                  height: 0,
-                },
-                attrs: {},
-                zIndex: 0,
-                data: {
-                  id: 'Conv1D',
-                  mode: 'nn',
-                  properties: [{ id: 'p', type: 'number', data: 123 } as any],
-                } as any,
-              },
-              {
-                id: 'node-2',
-                shape: 'dag-node',
-                position: {
-                  x: 0,
-                  y: 0,
-                },
-                size: {
-                  width: 0,
-                  height: 0,
-                },
-                attrs: {},
-                zIndex: 0,
-                data: {
-                  id: 'Conv1D',
-                  mode: 'nn',
-                  properties: [{ id: 'p', type: 'string', data: '123' } as any],
-                } as any,
-              },
-            ],
-            id: 'group',
-            shape: 'group-node',
-            position: {
-              x: 0,
-              y: 0,
-            },
-            size: {
-              width: 0,
-              height: 0,
-            },
-            attrs: undefined,
-            zIndex: 0,
-            data: new Material(),
+  describe('group', () => {
+    it('non nest', () => {
+      const group = {
+        id: 'group-1',
+        shape: 'group-node',
+        position: {
+          x: 0,
+          y: 0,
+        },
+        size: {
+          width: 0,
+          height: 0,
+        },
+        attrs: undefined,
+        zIndex: 0,
+        data: new Material(),
+        children: ['node-1', 'node-2'],
+      };
+      const ast = service.buildGroup(group as any, {
+        // 我觉得x6就是一坨 s**t
+        'group-1': group as any,
+        'node-1': {
+          id: 'node-1',
+          shape: 'dag-node',
+          data: {
+            id: 'Conv1D',
+            mode: 'nn',
+            properties: [],
+          } as Material,
+          position: { x: 0, y: 0 },
+          size: {
+            width: 0,
+            height: 0,
           },
-          {},
-        );
-        expect(ast.codeGen()).toBeDefined();
-        expect(ast.codeGen()).toBe(`node1 = paddle.nn.Conv1D(123)
-node2 = paddle.nn.Conv1D(123)
-group = paddle.concat(x=[node1,node2])`);
-      });
-      it.skip('has nest', () => {
-        const ast = service.buildGroup(
-          {
-            children: [
-              {
-                children: [
-                  {
-                    id: 'node-1',
-                    shape: 'dag-node',
-                    position: {
-                      x: 0,
-                      y: 0,
-                    },
-                    size: {
-                      width: 0,
-                      height: 0,
-                    },
-                    attrs: {},
-                    zIndex: 0,
-                    data: {
-                      id: 'Conv1D',
-                      mode: 'nn',
-                      properties: [
-                        { id: 'p', type: 'number', data: 123 } as any,
-                      ],
-                    } as any,
-                  },
-                  {
-                    id: 'node-2',
-                    shape: 'dag-node',
-                    position: {
-                      x: 0,
-                      y: 0,
-                    },
-                    size: {
-                      width: 0,
-                      height: 0,
-                    },
-                    attrs: {},
-                    zIndex: 0,
-                    data: {
-                      id: 'Conv1D',
-                      mode: 'nn',
-                      properties: [
-                        { id: 'p', type: 'string', data: '123' } as any,
-                      ],
-                    } as any,
-                  },
-                  {
-                    children: [
-                      {
-                        id: 'node-3',
-                        shape: 'dag-node',
-                        position: {
-                          x: 0,
-                          y: 0,
-                        },
-                        size: {
-                          width: 0,
-                          height: 0,
-                        },
-                        attrs: {},
-                        zIndex: 0,
-                        data: {
-                          id: 'Conv1D',
-                          mode: 'nn',
-                          properties: [
-                            { id: 'p', type: 'number', data: 123 } as any,
-                          ],
-                        } as any,
-                      },
-                      {
-                        id: 'node-4',
-                        shape: 'dag-node',
-                        position: {
-                          x: 0,
-                          y: 0,
-                        },
-                        size: {
-                          width: 0,
-                          height: 0,
-                        },
-                        attrs: {},
-                        zIndex: 0,
-                        data: {
-                          id: 'Conv1D',
-                          mode: 'nn',
-                          properties: [
-                            { id: 'p', type: 'string', data: '123' } as any,
-                          ],
-                        } as any,
-                      },
-                    ],
-                    id: 'group-2',
-                    shape: 'group-node',
-                    position: {
-                      x: 0,
-                      y: 0,
-                    },
-                    size: {
-                      width: 0,
-                      height: 0,
-                    },
-                    attrs: undefined,
-                    zIndex: 0,
-                    data: new Material(),
-                  },
-                ],
-                id: 'group-3',
-                shape: 'group-node',
-                position: {
-                  x: 0,
-                  y: 0,
-                },
-                size: {
-                  width: 0,
-                  height: 0,
-                },
-                attrs: undefined,
-                zIndex: 0,
-                data: new Material(),
-              },
-              {
-                id: 'node-5',
-                shape: 'dag-node',
-                position: {
-                  x: 0,
-                  y: 0,
-                },
-                size: {
-                  width: 0,
-                  height: 0,
-                },
-                attrs: {},
-                zIndex: 0,
-                data: {
-                  id: 'Conv1D',
-                  mode: 'nn',
-                  properties: [{ id: 'p', type: 'number', data: 123 } as any],
-                } as any,
-              },
-              {
-                id: 'node-6',
-                shape: 'dag-node',
-                position: {
-                  x: 0,
-                  y: 0,
-                },
-                size: {
-                  width: 0,
-                  height: 0,
-                },
-                attrs: {},
-                zIndex: 0,
-                data: {
-                  id: 'Conv1D',
-                  mode: 'nn',
-                  properties: [{ id: 'p', type: 'string', data: '123' } as any],
-                } as any,
-              },
-            ],
-            id: 'group',
-            shape: 'group-node',
-            position: {
-              x: 0,
-              y: 0,
-            },
-            size: {
-              width: 0,
-              height: 0,
-            },
-            attrs: undefined,
-            zIndex: 0,
-            data: new Material(),
+          attrs: undefined,
+          zIndex: 0,
+        },
+        'node-2': {
+          id: 'node-2',
+          shape: 'dag-node',
+          data: {
+            id: 'Conv1D',
+            mode: 'nn',
+            properties: [],
+          } as Material,
+          position: { x: 0, y: 0 },
+          size: {
+            width: 0,
+            height: 0,
           },
-          {},
-        );
-        expect(ast.codeGen()).toBeDefined();
-        expect(ast.codeGen()).toBe(`node1 = paddle.nn.Conv1D(123)
-node2 = paddle.nn.Conv1D(123)
-node3 = paddle.nn.Conv1D(123)
-node4 = paddle.nn.Conv1D(123)
-group2 = paddle.concat(x=[node3,node4])
-group3 = paddle.concat(x=[node1,node2,group2])
-node5 = paddle.nn.Conv1D(123)
-node6 = paddle.nn.Conv1D(123)
-group = paddle.concat(x=[group3,node5,node6])`);
+          attrs: undefined,
+          zIndex: 0,
+        },
       });
+      expect(ast.children.length).toBe(3);
+      expect(ast.children[0]).toBeInstanceOf(VarDecl);
+      expect(ast.children[1]).toBeInstanceOf(VarDecl);
+      expect(ast.children[2]).toBeInstanceOf(VarDecl);
+      expect(ast.children[2].codeGen()).toContain('group1');
     });
-    describe('layer & cell', () => {
-      it.skip('non nest', () => {
-        const code = service.buildGroup(
-          {
-            children: [
-              {
-                id: 'node-1',
-                shape: 'dag-node',
-                position: {
-                  x: 0,
-                  y: 0,
-                },
-                size: {
-                  width: 0,
-                  height: 0,
-                },
-                attrs: {},
-                zIndex: 0,
-                data: {
-                  id: 'Conv1D',
-                  mode: 'nn',
-                  properties: [{ id: 'p', type: 'number', data: 123 } as any],
-                } as any,
-              },
-              {
-                shape: 'dag-node',
-                id: 'layer',
-                data: layer,
-              } as any,
-            ],
-            id: 'group',
-            shape: 'group-node',
-            position: {
-              x: 0,
-              y: 0,
-            },
-            size: {
-              width: 0,
-              height: 0,
-            },
-            attrs: undefined,
-            zIndex: 0,
-            data: null,
+    it('has nest', () => {
+      const nodes = {
+        'node-4': buildNode(1, 3)[0],
+        'node-11': buildNode(1, 10)[0],
+        'group-3': {
+          id: 'group-3',
+          shape: 'group',
+          children: ['node-11'] as any,
+          data: new Material(),
+          position: { x: 0, y: 0 },
+          size: {
+            width: 0,
+            height: 0,
           },
-          {},
-        );
-        expect(code.codeGen()).toContain(
-          'group = paddle.concat(x=[node1,layer]',
-        );
-      });
-      it.skip('has nest', () => {
-        const code = service.buildGroup(
-          {
-            children: [
-              {
-                id: 'group-2',
-                shape: 'group-node',
-                position: {
-                  x: 0,
-                  y: 0,
-                },
-                size: { width: 0, height: 0 },
-                attrs: undefined,
-                zIndex: 0,
-                data: {} as any,
-                children: [
-                  {
-                    id: 'node-1',
-                    shape: 'dag-node',
-                    position: {
-                      x: 0,
-                      y: 0,
-                    },
-                    size: {
-                      width: 0,
-                      height: 0,
-                    },
-                    attrs: {},
-                    zIndex: 0,
-                    data: {
-                      id: 'Conv1D',
-                      mode: 'nn',
-                      properties: [
-                        { id: 'p', type: 'number', data: 123 } as any,
-                      ],
-                    } as any,
-                  },
-                  {
-                    shape: 'dag-node',
-                    id: 'layer',
-                    data: layer,
-                  } as any,
-                ],
-              },
-            ],
-            id: 'group',
-            shape: 'group-node',
-            position: {
-              x: 0,
-              y: 0,
-            },
-            size: {
-              width: 0,
-              height: 0,
-            },
-            attrs: undefined,
-            zIndex: 0,
-            data: null,
+          attrs: undefined,
+          zIndex: 0,
+        },
+        'group-2': {
+          id: 'group-2',
+          shape: 'group',
+          data: new Material(),
+          position: { x: 0, y: 0 },
+          size: {
+            width: 0,
+            height: 0,
           },
-          {},
-        );
-        expect(code.codeGen()).toBe(`node1 = paddle.nn.Conv1D(123)
-
-class Layer:
-    def __init__(self,x):
-      pass
-
-layer = Layer()
-group2 = paddle.concat(x=[node1,layer])
-group = paddle.concat(x=[group2])`);
-      });
+          attrs: undefined,
+          zIndex: 0,
+          children: ['node-4', 'group-3'] as any,
+        },
+        'node-2': {
+          id: 'node-2',
+          shape: 'dag-node',
+          data: {
+            id: 'Conv1D',
+            mode: 'nn',
+            properties: [],
+          } as Material,
+          position: { x: 0, y: 0 },
+          size: {
+            width: 0,
+            height: 0,
+          },
+          attrs: undefined,
+          zIndex: 0,
+        },
+        'node-1': {
+          id: 'node-1',
+          shape: 'dag-node',
+          data: {
+            id: 'Conv1D',
+            mode: 'nn',
+            properties: [],
+          } as Material,
+          position: { x: 0, y: 0 },
+          size: {
+            width: 0,
+            height: 0,
+          },
+          attrs: undefined,
+          zIndex: 0,
+        },
+      };
+      const group = {
+        id: 'group-1',
+        shape: 'group-node',
+        position: {
+          x: 0,
+          y: 0,
+        },
+        size: {
+          width: 0,
+          height: 0,
+        },
+        attrs: undefined,
+        zIndex: 0,
+        data: new Material(),
+        children: ['node-1', 'node-2', 'group-2'],
+      };
+      const ast = service.buildGroup(group as any, nodes as any);
+      expect(ast.children.length).toBe(7);
+      expect(
+        ast.children.every((child) => child instanceof VarDecl),
+      ).toBeTruthy();
+      expect(ast.codeGen()).toBe(`nodenode1 = paddle.nn.Conv1D()
+nodenode2 = paddle.nn.Conv1D()
+nodenode4 = paddle.nn.Conv1d()
+nodenode11 = paddle.nn.Conv1d()
+group_group3 = paddle.concat(x=[nodenode11])
+group_group2 = paddle.concat(x=[nodenode4,group_group3])
+group_group1 = paddle.concat(x=[nodenode1,nodenode2,group_group2])`);
     });
   });
 });

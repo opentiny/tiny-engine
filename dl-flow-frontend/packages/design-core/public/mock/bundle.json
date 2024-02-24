@@ -14,16 +14,6 @@
           "default": ""
         },
         {
-          "id": "initializer",
-          "label": {
-            "zh_CN": "初始化方法",
-            "en_US": "initializer"
-          },
-          "type": "Initializer",
-          "optional": true,
-          "default": null
-        },
-        {
           "id": "learning_rate",
           "label": {
             "zh_CN": "学习率",
@@ -32,28 +22,6 @@
           "type": "number",
           "optional": true,
           "default": 1.0
-        },
-        {
-          "id": "regularizer",
-          "label": {
-            "zh_CN": "正则化方法",
-            "en_US": "regularizer"
-          },
-          "type": "enums",
-          "enums": [
-            {
-              "id": 1,
-              "label": "L1Decay",
-              "value": "L1Decay",
-              "default": true
-            },
-            {
-              "id": 2,
-              "label": "L2Decay",
-              "value": "L2Decay"
-            }
-          ],
-          "optional": true
         },
         {
           "id": "trainable",
