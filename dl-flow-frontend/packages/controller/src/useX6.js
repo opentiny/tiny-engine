@@ -3,6 +3,7 @@ import { register } from '@antv/x6-vue-shape'
 import { AlgoNode, GroupNode } from '@opentiny/tiny-engine-canvas'
 import { Selection } from '@antv/x6-plugin-selection'
 import { Keyboard } from '@antv/x6-plugin-keyboard'
+import { Notify } from '@opentiny/vue';
 /**
  * @typedef {Object}
  * @prop {'L1Decay' | 'L2Decay'} type
@@ -52,6 +53,11 @@ import { Keyboard } from '@antv/x6-plugin-keyboard'
  * @type {Graph|null}
  */
 let g = null
+/**
+ * 
+ * @param {import('@antv/x6').Cell} node 
+ */
+const isGroup = (node) => node.shape.includes('group');
 /** @type {import('@antv/x6').Graph.Options} */
 const DEFAULT_OPTION = {
   background: {
@@ -111,16 +117,33 @@ const DEFAULT_OPTION = {
       if (!sourceCell.isNode() || !targetCell.isNode()){
         return false;
       }
-      let group = null;
-      if (sourceCell.getChildCount() || targetCell.getChildren()){
-        group = sourceCell.getChildCount() ? sourceCell : targetCell;
-      }
-      if (!group){
+      if (!isGroup(sourceCell)){
+        if (targetCell.getParentId() !== sourceCell.getParentId()){
+          Notify({
+            type: 'error',
+            message: '不允许越过组进行连接',
+            position: 'top-right'
+          })
+          return false; // 不允许越过组进行连接
+        }
         return (
           (source.port.includes('in') && target.port.includes('out')) ||
           (source.port.includes('out') && target.port.includes('in'))
         )
       }
+      if (!sourceCell.hasParent() || !targetCell.hasParent()){
+        return (source.port.includes('in') && target.port.includes('out') ||
+              source.port.includes('out') && target.port.includes('in'))
+      }
+      if (targetCell.getParentId() !== sourceCell.getParentId()){
+        Notify({
+          type: 'error',
+          message: '不允许越过组进行连接',
+          position: 'top-right'
+        })
+        return false; // 不允许越过组进行连接
+      }
+
       return (source.port.includes('in') && target.port.includes('in') ||
               source.port.includes('out') && target.port.includes('out'))
     }

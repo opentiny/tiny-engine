@@ -2,7 +2,7 @@ import {io} from 'socket.io-client';
 
 const client = io({
     path: '/socket.io',
-    retries: 5
+    retries: 0
 })
 /**
  * 

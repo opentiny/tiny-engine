@@ -13,7 +13,7 @@
 /* eslint-disable no-undef */
 import axios from './axios'
 import { createApp } from 'vue'
-import { isMock, isVsCodeEnv, isDevelopEnv, ENDPOINT_URL } from '@opentiny/tiny-engine-common/js/environments'
+import { isMock, isVsCodeEnv, isDevelopEnv } from '@opentiny/tiny-engine-common/js/environments'
 import { useBroadcastChannel } from '@vueuse/core'
 import Login from './Login.vue'
 import config from './config'

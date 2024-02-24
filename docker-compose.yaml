@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  front:
+    image: gaonengwww/dl-flow-frontend
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+  mongodb:
+    image: mongo
+    ports:
+      - 27018:27017
+  server:
+    image: gaonengwww/dl-flow-backend
+    ports:
+      - 9000:9000
+      - 9001:9001
+    environment:
+      - DB_URL=mongodb://mongodb:27017/dl-flow

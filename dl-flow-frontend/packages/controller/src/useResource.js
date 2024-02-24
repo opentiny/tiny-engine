@@ -46,8 +46,9 @@
  */
 import { getGlobalConfig } from './globalConfig'
 import { reactive, ref, computed } from 'vue'
-import { useHttp } from '@opentiny/tiny-engine-http'
-const http = useHttp()
+import { useHttp, useEndpoint } from '@opentiny/tiny-engine-http'
+import { isProdEnv, isMock } from '@opentiny/tiny-engine-common/js/environments'
+const http = isProdEnv ? useHttp() : useEndpoint();
 
 const resState = reactive({
   /**@type {import('@opentiny/tiny-engine-controller/useX6').MaterialInfo[]} */
@@ -79,24 +80,29 @@ const registerNN = ([data]) => {
  * @description 获取所有的基础网络
  */
 const fetchNN = async () => {
-  const { dslMode, canvasOptions } = getGlobalConfig()
+  const { dslMode, canvasOptions, materialHost } = getGlobalConfig()
   const bundleUrls = canvasOptions[dslMode].material
   const loading = ref(true)
   const error = ref(false)
   const reason = ref()
   const nn = computed(() => resState.nn)
-  Promise.allSettled(bundleUrls.map((url) => http.get(url)))
-    .then((res) => {
-      return res.map((v) => (v.status === 'fulfilled' ? v.value : {}))
-    })
-    .then(registerNN)
-    .catch((err) => {
-      error.value = true
-      reason.value = err
-    })
-    .finally(() => {
-      loading.value = false
-    })
+  let p;
+  if (isMock){
+    p = Promise.allSettled(bundleUrls.map((url) => http.get(url)))
+  } else {
+    p = Promise.allSettled([http.get(materialHost)])
+  }
+  p.then((res) => {
+    return res.map((v) => (v.status === 'fulfilled' ? v.value : {}))
+  })
+  .then(registerNN)
+  .catch((err) => {
+    error.value = true
+    reason.value = err
+  })
+  .finally(() => {
+    loading.value = false
+  })
   return {
     nn,
     loading,

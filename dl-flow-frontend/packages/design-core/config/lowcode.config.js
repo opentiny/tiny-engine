@@ -70,7 +70,7 @@ const config = {
   appHost: '',
 
   // 物料服务的host
-  materialHost: '',
+  materialHost: '/endpoint/material',
 
   // 当前 editor 实例绑定的设计器id
   platformId: 897,

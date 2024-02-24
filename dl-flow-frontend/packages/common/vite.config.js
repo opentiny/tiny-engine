@@ -14,10 +14,10 @@ import { defineConfig } from 'vite'
 import path from 'path'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
-import monaco from 'vite-plugin-monaco-editor'
+
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue(), vueJsx(), monaco()],
+  plugins: [vue(), vueJsx()],
   publicDir: false,
   resolve: {},
   define: {

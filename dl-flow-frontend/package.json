@@ -7,7 +7,7 @@
     "dev:mock": "pnpm --filter @opentiny/tiny-engine dev",
     "serve:frontend": "pnpm --filter @opentiny/tiny-engine serve",
     "serve:backend": "pnpm --filter @opentiny/tiny-engine-mock dev",
-    "build:plugin": "pnpm --filter @opentiny/tiny-engine-* build",
+    "build:plugin": "pnpm --filter @opentiny/tiny-engine-* build && pnpm --filter dl-flow-* build",
     "build:alpha": "pnpm --filter @opentiny/tiny-engine build:alpha",
     "build:prod": "pnpm --filter @opentiny/tiny-engine build:prod",
     "buildComponentSchemas": "node scripts/buildComponentSchemas.js",

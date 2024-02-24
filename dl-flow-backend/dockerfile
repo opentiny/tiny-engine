@@ -7,8 +7,9 @@ RUN npm install pnpm -g && pnpm install && pnpm build
 FROM node:18-alpine as runner
 COPY --from=builder /CODE/dist ./dist
 COPY --from=builder /CODE/node_modules ./node_modules
+VOLUME [ "/public" ]
 
 ENV DB_URL=""
 
-EXPOSE 9000
+EXPOSE 9000-9900
 CMD [ "node","dist/main.js" ]

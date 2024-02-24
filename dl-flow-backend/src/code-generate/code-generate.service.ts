@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Cell, Edge } from './code-generate.schema';
 
-type StandardizationEdges = {
+export type StandardizationEdges = {
   [source: string]: Set<string>;
 };
 
-type StandardizationNodes = {
+export type StandardizationNodes = {
   [id: string]: Cell;
 };
 
