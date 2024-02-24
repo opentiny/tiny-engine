@@ -5240,7 +5240,10 @@
               "zh_CN": "大小",
               "en_US": "size"
             },
-            "default": [0,0],
+            "default": [
+              0,
+              0
+            ],
             "items": "number"
           },
           {
@@ -5350,6 +5353,79 @@
                 "label": "NDHWC"
               }
             ]
+          }
+        ]
+      },
+      {
+        "id": "SpectralNorm",
+        "mode": "nn",
+        "label": {
+          "en_US": "SpectralNorm",
+          "zh_CN": "SpectralNorm"
+        },
+        "properties": [
+          {
+            "id": "weight_shape",
+            "type": "list",
+            "items": "number",
+            "label": {
+              "zh_CN": "权重参数的shape",
+              "en_US": "shape of weight attr"
+            }
+          },
+          {
+            "id": "dim",
+            "type": "number",
+            "default": 0,
+            "label": {
+              "zh_CN": "维度索引",
+              "en_US": "dim"
+            }
+          },
+          {
+            "id": "power_iters",
+            "default": 0,
+            "type": "number",
+            "label": {
+              "en_US": "power iters",
+              "zh_CN": "用于计算的 SpectralNorm 功率迭代次数"
+            }
+          },
+          {
+            "id": "eps",
+            "type": "number",
+            "default": 1e-12,
+            "label": {
+              "zh_CN": "用于保证计算规范中的数值稳定性",
+              "en_US": "eps"
+            }
+          }
+        ]
+      },
+      {
+        "id": "Unflatten",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "Unflatten",
+          "en_US": "Unflatten"
+        },
+        "properties": [
+          {
+            "id": "axis",
+            "type": "number",
+            "label": {
+              "en_US": "axis",
+              "zh_CN": "要展开维度的轴"
+            }
+          },
+          {
+            "id": "shape",
+            "type": "list",
+            "items": "number",
+            "label": {
+              "en_US": "shape",
+              "zh_CN": "展开的shape"
+            }
           }
         ]
       }
