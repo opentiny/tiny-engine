@@ -5256,6 +5256,134 @@
             ]
           }
         ]
+      },
+      {
+        "id": "Upsample",
+        "label": {
+          "en_US": "Upsample",
+          "zh_CN": "上采样"
+        },
+        "mode": "nn",
+        "properties": [
+          {
+            "id": "size",
+            "type": "list",
+            "label": {
+              "zh_CN": "大小",
+              "en_US": "size"
+            },
+            "default": [0,0],
+            "items": "number"
+          },
+          {
+            "id": "scale_factor",
+            "type": "number",
+            "label": {
+              "en_US": "scale_factor",
+              "zh_CN": "缩放因子"
+            }
+          },
+          {
+            "id": "mode",
+            "type": "enums",
+            "label": {
+              "zh_CN": "采样方法",
+              "en_US": "mode"
+            },
+            "enums": [
+              {
+                "id": "bilinear",
+                "value": "bilinear",
+                "label": "bilinear"
+              },
+              {
+                "id": "trilinear",
+                "value": "trilinear",
+                "label": "trilinear"
+              },
+              {
+                "id": "nearest",
+                "value": "nearest",
+                "label": "nearest",
+                "default": true
+              },
+              {
+                "id": "bicubic",
+                "value": "bicubic",
+                "label": "bicubic"
+              },
+              {
+                "id": "linear",
+                "value": "linear",
+                "label": "linear"
+              },
+              {
+                "id": "area",
+                "value": "area",
+                "label": "area"
+              }
+            ]
+          },
+          {
+            "id": "align_corners",
+            "type": "boolean",
+            "label": {
+              "en_US": "align_corners",
+              "zh_CN": "对齐"
+            },
+            "default": false
+          },
+          {
+            "id": "align_mode",
+            "type": "number",
+            "default": 0,
+            "label": {
+              "en_US": "align_mode",
+              "zh_CN": "双线性插值"
+            }
+          },
+          {
+            "id": "data_format",
+            "type": "enums",
+            "label": {
+              "en_US": "data format",
+              "zh_CN": "数据格式"
+            },
+            "enums": [
+              {
+                "id": "NCW",
+                "value": "NCW",
+                "label": "NCW"
+              },
+              {
+                "id": "NWC",
+                "value": "NWC",
+                "label": "NWC"
+              },
+              {
+                "id": "NCHW",
+                "value": "NCHW",
+                "label": "NCHW",
+                "default": true
+              },
+              {
+                "id": "NHWC",
+                "value": "NHWC",
+                "label": "NHWC"
+              },
+              {
+                "id": "NCDHW",
+                "value": "NCDHW",
+                "label": "NCDHW"
+              },
+              {
+                "id": "NDHWC",
+                "value": "NDHWC",
+                "label": "NDHWC"
+              }
+            ]
+          }
+        ]
       }
     ],
     "layer": []

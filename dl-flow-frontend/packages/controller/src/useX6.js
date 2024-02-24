@@ -24,9 +24,10 @@ import { Keyboard } from '@antv/x6-plugin-keyboard'
  * @property {number} order
  * @property {string} id
  * @property {{zh_CN:string,en_US:string}} label
- * @property {'number'|'string'|'boolean'|'enums'|'ParamAttr'} type
+ * @property {'number'|'string'|'boolean'|'enums'|'ParamAttr'|'list'} type
  * @property {{id:number,label:string,value:any,default?:boolean}[]} [enums]
  * @property {any} default
+ * @property {'boolean'|'string'|'number'} [items]
  * @prop {number | string | boolean | ParamAttr} data - 用于存储Property数据
  */
 /**

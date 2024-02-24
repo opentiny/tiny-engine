@@ -1,4 +1,5 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "bundle",
   "type": "object",
   "definitions": {
@@ -19,7 +20,7 @@
         "type": {
           "description": "该设置的数据类型",
           "type": "string",
-          "enum": ["string", "number", "boolean", "enums", "ParamAttr", "ref"]
+          "enum": ["string", "number", "boolean", "enums", "ParamAttr", "list"]
         },
         "required": {
           "description": "该设置是否是必选",
@@ -27,21 +28,44 @@
         },
         "default": {
           "description": "该设置的默认值",
-          "type": ["string", "number", "null", "boolean"]
+          "type": ["string", "number", "null", "boolean", "array"]
         },
         "enums": {
           "description": "该设置是否为select, 如果type为enum, 则该选项为必选",
           "$ref": "#/definitions/enums"
+        },
+        "items": {
+          "type": "string",
+          "enum": ["string", "number", "boolean"],
+          "description": "该项用于显式指定list中的数据结构, 如果type不为list, 该项则不是必选"
         }
       },
-      "if": {
-        "properties": {
-          "type": { "const": "enums"}
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "enums"
+              }
+            }
+          },
+          "then": {
+            "required": ["enums"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type":{
+                "const": "list"
+              }
+            }
+          },
+          "then": {
+            "required": ["items"]
+          }
         }
-      },
-      "then": {
-        "required": ["enums"]
-      }
+      ]
     },
     "enums": {
       "type": "array",
