@@ -18,6 +18,7 @@ import App from './App.vue'
 import globalConfig from '../config/lowcode.config'
 import { initMonitor } from '@opentiny/tiny-engine-controller/js/monitor'
 import { isDevelopEnv } from '@opentiny/tiny-engine-controller/js/environments'
+import { injectGlobalComponents } from '@opentiny/tiny-engine-common'
 import 'virtual:svg-icons-register'
 
 import TinyThemeTool from '@opentiny/vue-theme/theme-tool'
@@ -37,4 +38,4 @@ const app = createApp(App)
 
 initSvgs(app)
 window.lowcodeI18n = i18n
-app.use(i18n).mount('#app')
+app.use(i18n).use(injectGlobalComponents).mount('#app')

@@ -90,6 +90,20 @@ const { mergeLocaleMessage } = i18n.global
 mergeLocaleMessage(i18nKeyMaps.enUS, enUs)
 mergeLocaleMessage(i18nKeyMaps.zhCN, zhCn)
 
+const globalComponents = {
+  SaveNewBlock,
+  ConfigGroup,
+  ConfigItem
+}
+
+export const injectGlobalComponents = {
+  install: (app) => {
+    Object.entries(globalComponents).forEach(([name, component]) => {
+      app.component(name, component)
+    })
+  }
+}
+
 export const MetaComponents = {
   MetaArrayItem,
   MetaBindI18n,
