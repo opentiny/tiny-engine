@@ -316,4 +316,99 @@ group_group2 = paddle.concat(x=[nodenode4,group_group3])
 group_group1 = paddle.concat(x=[nodenode1,nodenode2,group_group2])`);
     });
   });
+  it('build', () => {
+    const node: StandardizationNodes = {
+      'node-1': {
+        id: 'node-1',
+        shape: 'node',
+        position: {
+          x: 0,
+          y: 0,
+        },
+        size: { width: 0, height: 0 },
+        attrs: {},
+        zIndex: 0,
+        data: {
+          mode: 'nn',
+          id: 'Conv1D',
+          properties: [],
+        } as Material,
+      },
+      'node-2': {
+        id: 'node-2',
+        shape: 'node',
+        position: {
+          x: 0,
+          y: 0,
+        },
+        size: { width: 0, height: 0 },
+        attrs: {},
+        zIndex: 0,
+        data: {
+          mode: 'nn',
+          id: 'Conv1D',
+          properties: [],
+        } as Material,
+      },
+      layer: {
+        ...(buildLayer(1)[0] as Layer),
+      } as any,
+      'node-3': {
+        id: 'node-3',
+        shape: 'node',
+        position: {
+          x: 0,
+          y: 0,
+        },
+        size: { width: 0, height: 0 },
+        attrs: {},
+        zIndex: 0,
+        data: {
+          mode: 'nn',
+          id: 'Conv1D',
+          properties: [],
+        } as Material,
+      },
+      'layer-2': {
+        ...buildLayer(1)[0],
+      },
+      group: {
+        id: 'group',
+        shape: 'group',
+        position: {
+          x: 0,
+          y: 0,
+        },
+        size: { width: 0, height: 0 },
+        attrs: {},
+        zIndex: 0,
+        children: ['node-3', 'layer-2'] as any,
+        data: new Material(),
+      },
+    };
+    const ast = service.build(
+      [node['node-1'], node['node-2'], node['layer'], node['group']],
+      node,
+    );
+    expect(ast.codeGen().replace(/\n| /gim, '')).toEqual(
+      `true = True  
+    false = False
+    nodenode1 = paddle.nn.Conv1D()
+    nodenode2 = paddle.nn.Conv1D()
+
+    class Layer1:
+      def __init__(self,x):
+        pass
+
+    layer1 = Layer1(x=1)
+    nodenode3 = paddle.nn.Conv1D()
+
+    class Layer1:
+      def __init__(self,x):
+        pass
+
+    layer-1 = Layer1(x = 1)
+    group_group = paddle.concat(x=[nodenode3,layer-1])`.replace(/\n| /gim, ''),
+    );
+  });
 });

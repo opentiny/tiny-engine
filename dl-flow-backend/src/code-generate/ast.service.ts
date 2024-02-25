@@ -32,11 +32,10 @@ export class AST {
         const callee = new Identifier(data.clazz);
         const clazzInstance = new CallExpression(
           callee,
-          data.properties.map((v) => v.data),
+          data.properties.map((v) => `${v.id}=${v.data}`),
         );
         const instance = new VarDecl(cell.id.replace('-', ''), clazzInstance);
         ast.children.push(instance);
-        ast.children.push(item);
         continue;
       }
       if (this.isNN(data)) {
@@ -147,7 +146,6 @@ export class AST {
           )
           .map((v: VarDecl) => v.name);
       }
-      console.log(child);
       if (this.isNN(child.data)) {
         const nn = this.buildNN(child.data, child.id);
         subAst.children.push(nn);
@@ -160,7 +158,7 @@ export class AST {
         const callee = new Identifier(child.data.clazz);
         const clazzInstance = new CallExpression(
           callee,
-          child.data.properties.map((v) => v.data),
+          child.data.properties.map((v) => `${v.id} = ${v.data}`),
         );
         const instance = new VarDecl(child.id, clazzInstance);
         subAst.children.push(clazz);
