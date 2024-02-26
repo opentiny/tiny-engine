@@ -10,7 +10,7 @@
  *
  */
 
-import { VITE_ORIGIN, isDevelopEnv } from '@opentiny/tiny-engine-controller/js/environments'
+import { VITE_ORIGIN, isDevelopEnv } from './environments'
 
 const baseURL = VITE_ORIGIN
 
