@@ -47,7 +47,6 @@ const onChange = (args) => {
 }
 onMounted(()=>{
   onSchemaChange(()=>{
-    console.log('trigger');
     code.value = JSON.stringify(schema, null, 2);
   })
 })
