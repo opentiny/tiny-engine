@@ -46,7 +46,7 @@ import DataSourceRemoteAutoload from './DataSourceRemoteAutoload.vue'
 import DataSourceRemoteAdapter from './DataSourceRemoteDataAdapter.vue'
 import DataSrouceRemoteDataResult, { getResponseData } from './DataSourceRemoteDataResult.vue'
 import { open as openRemoteMapping } from './DataSourceRemoteMapping.vue'
-import { useModal, useDataSource, useNotify } from '@opentiny/tiny-engine-controller'
+import { useDataSource, useNotify } from '@opentiny/tiny-engine-controller'
 import { isEmptyObject } from '@opentiny/vue-renderless/common/type'
 import { obj2String, string2Obj } from '@opentiny/tiny-engine-controller/adapter'
 import { getRequest } from './js/datasource'
@@ -94,7 +94,6 @@ export default {
   emits: ['confirm'],
   setup(props, { emit }) {
     const dataSourceRemoteAdapteRef = ref(null)
-    const { confirm } = useModal()
     const { dataSourceState } = useDataSource()
 
     const state = reactive({
@@ -156,14 +155,10 @@ export default {
     }
 
     const sendRequest = async () => {
-      const valid = await getServiceForm().validate()
-
-      if (!valid) {
-        confirm({
-          title: '提示',
-          message: '请求地址和请求方式必填！！！'
-        })
-
+      try {
+        // await validate() 如果验证不通过会抛出异常，而不是返回 false
+        await getServiceForm().validate()
+      } catch (error) {
         return
       }
 
