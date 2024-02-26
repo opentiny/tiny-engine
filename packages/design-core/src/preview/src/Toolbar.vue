@@ -7,6 +7,7 @@
       <component :is="ToolbarMedia" :isCanvas="false" @setViewPort="setViewPort"></component>
     </div>
     <div class="toolbar-right">
+      <span><tiny-switch v-model="debugSwitch"></tiny-switch><span class="toolbar-button-text">调试模式</span></span>
       <component :is="ChangeLang" :langChannel="previewLangChannel"></component>
     </div>
   </div>
@@ -15,9 +16,11 @@
 <script lang="jsx">
 import { defineAsyncComponent } from 'vue'
 import { useBreadcrumb } from '@opentiny/tiny-engine-controller'
+import { Switch as TinySwitch } from '@opentiny/vue'
 import { getSearchParams } from './preview/http'
 import { BROADCAST_CHANNEL } from '../src/preview/srcFiles/constant'
 import addons from '@opentiny/tiny-engine-app-addons'
+import { injectDebugSwitch } from './preview/debugSwitch'
 
 const getToolbars = (pluginId) => {
   return defineAsyncComponent(() =>
@@ -26,7 +29,11 @@ const getToolbars = (pluginId) => {
 }
 
 export default {
+  components: {
+    TinySwitch
+  },
   setup() {
+    const debugSwitch = injectDebugSwitch()
     const tools = ['breadcrumb', 'lang', 'media']
     const [Breadcrumb, ChangeLang, ToolbarMedia] = tools.map(getToolbars)
 
@@ -47,7 +54,8 @@ export default {
       Breadcrumb,
       ChangeLang,
       ToolbarMedia,
-      setViewPort
+      setViewPort,
+      debugSwitch
     }
   }
 }
@@ -71,6 +79,13 @@ export default {
 .toolbar-left,
 .toolbar-right {
   margin: 0 12px;
+  display: flex;
+  gap: 12px;
+}
+.toolbar-button-text {
+  color: #191919;
+  margin-left: 4px;
+  font-size: 12px;
 }
 :deep(.top-panel-breadcrumb) {
   width: auto;

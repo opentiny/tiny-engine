@@ -1,18 +1,21 @@
 <template>
-  <Repl
-    :editor="Monaco"
-    :store="store"
-    :sfcOptions="sfcOptions"
-    :showCompileOutput="false"
-    :showImportMap="false"
-    :clearConsole="false"
-    :autoResize="false"
-  />
+  <div :class="['vue-repl-container', debugSwitch ? 'preview-debug-mode' : '']">
+    <Repl
+      :editor="editorComponent"
+      :store="store"
+      :sfcOptions="sfcOptions"
+      :showCompileOutput="false"
+      :showTsConfig="false"
+      :showImportMap="true"
+      :clearConsole="false"
+      :autoResize="false"
+    />
+  </div>
 </template>
 
 <script>
+import { defineComponent, computed, defineAsyncComponent } from 'vue'
 import { Repl, ReplStore } from '@vue/repl'
-import Monaco from '@vue/repl/monaco-editor'
 import vueJsx from '@vue/babel-plugin-jsx'
 import { transformSync } from '@babel/core'
 import { Notify } from '@opentiny/vue'
@@ -21,7 +24,16 @@ import srcFiles from './srcFiles'
 import generateMetaFiles, { processAppJsCode } from './generate'
 import { getSearchParams, fetchCode, fetchMetaData } from './http'
 import { PanelType, PreviewTips } from '../constant'
+import { injectDebugSwitch } from './debugSwitch'
 import '@vue/repl/style.css'
+
+const Monaco = defineAsyncComponent(() => import('@vue/repl/monaco-editor')) // 异步组件实现懒加载，打开debug后再加载
+
+const EmptyEditor = defineComponent({
+  setup() {
+    return () => null
+  }
+})
 
 const importNames = [
   'createVNode',
@@ -51,6 +63,8 @@ export default {
     Repl
   },
   setup() {
+    const debugSwitch = injectDebugSwitch()
+    const editorComponent = computed(() => (debugSwitch?.value ? Monaco : EmptyEditor))
     const store = new ReplStore()
 
     const compiler = store.compiler
@@ -96,6 +110,7 @@ export default {
       await store.setFiles(newFiles, mainFileName)
       // 强制更新 codeSandbox
       store.state.resetFlip = !store.state.resetFlip
+      store['initTsConfig']() // 触发获取组件d.ts方便调试
     }
 
     const addUtilsImportMap = (utils = []) => {
@@ -173,7 +188,8 @@ export default {
     return {
       store,
       sfcOptions,
-      Monaco
+      editorComponent,
+      debugSwitch
     }
   }
 }
@@ -181,8 +197,7 @@ export default {
 
 <style lang="less">
 .vue-repl {
-  width: 100vw;
-  height: 100vh;
+  height: 100%;
 
   .split-pane {
     .left {
@@ -203,6 +218,18 @@ export default {
       .tab-buttons {
         display: none;
       }
+    }
+  }
+}
+.vue-repl-container {
+  height: calc(100vh - 48px);
+  &.preview-debug-mode .vue-repl .split-pane {
+    .left,
+    .right .tab-buttons {
+      display: block;
+    }
+    .right .output-container {
+      height: calc(100% - 38px);
     }
   }
 }
