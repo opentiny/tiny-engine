@@ -5,9 +5,16 @@ import { MaterialModule } from './material/material.module';
 import { CodeGenerateModule } from './code-generate/code-generate.module';
 import { existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
+import { UserModule } from './user/user.module';
 
 @Module({
-  imports: [DbModule, LayerModule, MaterialModule, CodeGenerateModule],
+  imports: [
+    DbModule,
+    LayerModule,
+    MaterialModule,
+    CodeGenerateModule,
+    UserModule,
+  ],
 })
 export class AppModule implements OnModuleInit {
   onModuleInit() {
