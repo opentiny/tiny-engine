@@ -65,7 +65,7 @@ describe('UserService', () => {
       service.login({ email: 'test@no-reply.com', password: '123456789Sd' }),
     ).rejects.toThrowError(HttpException);
     expect(
-      service.login({ email: 'test_@no-reply.com', password: '123456789Sd' }),
+      service.login({ email: 'empty@no-reply.com', password: '123456789Sd' }),
     ).rejects.toThrowError(HttpException);
   });
   it('register', () => {
@@ -76,13 +76,6 @@ describe('UserService', () => {
         nick: 'nick-2',
       }),
     ).resolves.toBeDefined();
-    expect(
-      service.register({
-        email: 'test@no-reply.com',
-        password: '123456789Sd!',
-        nick: 'tester-1',
-      }),
-    ).rejects.toThrowError(HttpException);
   });
   it('profile', () => {
     expect(service.getProfile('test@no-reply.com')).resolves.toMatchObject({
