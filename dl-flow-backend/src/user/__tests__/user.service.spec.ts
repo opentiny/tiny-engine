@@ -27,14 +27,15 @@ describe('UserService', () => {
           },
         ]),
         JwtModule.register({
-          publicKey: readFileSync(
-            process.env.JWT_PUB_KEY ?? './static/pub.key',
-          ),
-          privateKey: readFileSync(
-            process.env.JWT_PRI_KEY ?? './static/pri.key',
-          ),
+          // publicKey: readFileSync(
+          //   process.env.JWT_PUB_KEY ?? './static/pub.key',
+          // ),
+          // privateKey: readFileSync(
+          //   process.env.JWT_PRI_KEY ?? './static/pri.key',
+          // ),
+          secret: 'test',
           signOptions: {
-            algorithm: process.env.JWT_SIGN_ALGORITHM,
+            algorithm: 'none',
             expiresIn: process.env.JWT_EXPIRE_IN ?? '24h',
           },
         }),
