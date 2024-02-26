@@ -82,9 +82,10 @@ export const getRequest = (config) => {
   }
 
   const errorHandler = (error) => {
-    createFn(config.errorHandler.value)(error)
+    const reject = createFn(config.errorHandler.value)(error)
     dataSource.status = 'error'
     dataSource.error = error
+    return reject
   }
 
   http.interceptors.request.use(willFetch, errorHandler)
