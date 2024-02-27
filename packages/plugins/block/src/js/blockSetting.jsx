@@ -23,7 +23,7 @@ import {
   useNotify
 } from '@opentiny/tiny-engine-controller'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
-import { getCanvasStatus } from '@opentiny/tiny-engine-controller/js/index'
+import { getCanvasStatus } from '@opentiny/tiny-engine-controller/js/canvas'
 import { useHistory, useResource } from '@opentiny/tiny-engine-controller'
 import html2canvas from 'html2canvas'
 
