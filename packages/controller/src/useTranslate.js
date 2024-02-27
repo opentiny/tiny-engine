@@ -13,11 +13,12 @@
 import { reactive, ref } from 'vue'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { utils } from '@opentiny/tiny-engine-utils'
-import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
+import { isVsCodeEnv } from '../js/environments'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { generateI18n } from '@opentiny/tiny-engine-controller/js/vscodeGenerateFile'
+import { generateI18n } from '../js/vscodeGenerateFile'
 import useResource from './useResource'
 import { PROP_DATA_TYPE } from '../utils'
+import useCanvas from './useCanvas'
 
 const { HOST_TYPE } = constants
 const state = reactive({
