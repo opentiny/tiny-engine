@@ -25,15 +25,19 @@ const onClickNN = (item) => {
 .wrapper {
   width: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, 50%);
   grid-template-rows: 1fr 1fr;
   gap: 8px;
+  padding: 0 1em;
 }
 .wrapper > div {
   cursor: pointer;
   text-align: center;
   font-size: 14px;
   padding: 4px 6px;
+}
+.wrapper > div > span {
+  word-break: break-all;
 }
 .wrapper > div:hover {
   border-radius: 4px;

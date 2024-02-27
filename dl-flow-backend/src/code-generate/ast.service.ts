@@ -32,11 +32,10 @@ export class AST {
         const callee = new Identifier(data.clazz);
         const clazzInstance = new CallExpression(
           callee,
-          data.properties.map((v) => v.data),
+          data.properties.map((v) => `${v.id}=${v.data}`),
         );
         const instance = new VarDecl(cell.id.replace('-', ''), clazzInstance);
         ast.children.push(instance);
-        ast.children.push(item);
         continue;
       }
       if (this.isNN(data)) {
@@ -51,26 +50,54 @@ export class AST {
    * Eg.
    *  abcd -> 'abcd'
    */
-  standardization(val: string): string {
-    if (val.toString() === 'true' || val.toString() === 'false') {
+  standardization(val: unknown, type?: string): string {
+    if (val === 'true' || val === 'false') {
       return val;
     }
-    if (/[a-zA-Z]/.test(val)) {
+    if (type === 'list') {
+      return `[${(val as any[]).map((v) =>
+        typeof v !== 'string' ? JSON.stringify(v) : `'${v}'`,
+      )}]`;
+    }
+    if (type === 'boolean') {
+      return `${Boolean(val)}`;
+    }
+    if (type === 'string') {
       return `'${val}'`;
     }
     return `${val}`;
+  }
+  standardizationParamAttr(key: string, val: string) {
+    switch (key) {
+      case 'name':
+        return this.standardization(val, 'string');
+      case 'learning_rate':
+        return this.standardization(val, 'number');
+      case 'trainable':
+        return this.standardization(val, 'boolean');
+      case 'do_model_average':
+        return this.standardization(val, 'boolean');
+      case 'need_clip':
+        return this.standardization(val, 'boolean');
+      default:
+        return val;
+    }
   }
   buildNN(nn: Material, cellId: string) {
     const args = nn.properties
       .map((v) => {
         const id = v.id;
-        if (typeof v.data === 'object') {
+        if (typeof v.data === 'object' && !Array.isArray(v.data)) {
           const args: string[] = [];
           for (const key of Object.keys(v.data)) {
-            if (v.data[key]) {
-              const val = this.standardization(
-                v.data[key] ?? v.default ?? 'None',
-              );
+            if (v.data[key] !== undefined) {
+              const val =
+                v.type === 'ParamAttr'
+                  ? this.standardizationParamAttr(key, v.data[key])
+                  : this.standardization(
+                      v.data[key] ?? v.default ?? 'None',
+                      v.type,
+                    );
               args.push(new VarDecl(key, new Identifier(val)).codeGen());
             }
           }
@@ -84,7 +111,7 @@ export class AST {
         if (v.data) {
           return new VarDecl(
             id,
-            new Identifier(this.standardization(v.data)),
+            new Identifier(this.standardization(v.data, v.type)),
           ).codeGen();
         }
       })
@@ -131,7 +158,7 @@ export class AST {
         const callee = new Identifier(child.data.clazz);
         const clazzInstance = new CallExpression(
           callee,
-          child.data.properties.map((v) => v.data),
+          child.data.properties.map((v) => `${v.id} = ${v.data}`),
         );
         const instance = new VarDecl(child.id, clazzInstance);
         subAst.children.push(clazz);
@@ -184,9 +211,9 @@ export class AST {
 }
 
 // base type
-class Node {}
+export class Node {}
 
-class VarDecl implements IVarDecl, Node {
+export class VarDecl implements IVarDecl, Node {
   public name: string;
   public val: ASTItem;
   constructor(name: string, val: ASTItem) {
@@ -198,7 +225,7 @@ class VarDecl implements IVarDecl, Node {
   }
 }
 
-class Identifier implements IIdentifier, Node {
+export class Identifier implements IIdentifier, Node {
   name: string;
   constructor(name: string) {
     this.name = name;
@@ -208,7 +235,7 @@ class Identifier implements IIdentifier, Node {
   }
 }
 
-class CallExpression implements ICallExpression, Node {
+export class CallExpression implements ICallExpression, Node {
   callee: IIdentifier;
   args: any[];
   constructor(callee: IIdentifier, args: any[]) {
@@ -220,7 +247,7 @@ class CallExpression implements ICallExpression, Node {
   }
 }
 
-class ClazzDef implements IClazzDefine {
+export class ClazzDef implements IClazzDefine {
   code: string;
   constructor(code: string) {
     this.code = code;

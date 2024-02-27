@@ -18,7 +18,7 @@
 
 <script setup>
 import PropertySetting from './components/property-setting.vue'
-import { Collapse, CollapseItem } from '@opentiny/vue'
+import { Collapse, CollapseItem} from '@opentiny/vue'
 import { onMounted, ref, computed } from 'vue'
 import Empty from './components/Empty.vue'
 import { Tip } from '@opentiny/tiny-engine-common'

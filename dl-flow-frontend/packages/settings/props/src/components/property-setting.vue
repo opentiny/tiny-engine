@@ -10,6 +10,7 @@ import { defineProps, defineEmits, computed, watch, ref } from 'vue'
 import i18n from '@opentiny/tiny-engine-i18n-host'
 import Enums from './enums.vue'
 import ParamAttr from './ParamAttr.vue'
+import list from './list.vue'
 
 /**
  * @type {{modelValue: import('../../../../controller/src/useX6').MaterialInfo}}
@@ -27,7 +28,8 @@ const components = {
   number: () => <TNumeric mouse-wheel controls={false} min={0} />,
   enums: () => Enums,
   boolean: () => TCheckBox,
-  ParamAttr: () => ParamAttr
+  ParamAttr: () => ParamAttr,
+  list: () => list
 }
 const data = ref(
   properties.value
@@ -58,6 +60,8 @@ watch(
             v-model="data[property.id].data"
             :data="property.enums"
             :property="property"
+            :cell-id="props.cellId"
+            :default-value="data[property.id].default"
           />
         </t-form-item>
       </template>
@@ -68,5 +72,8 @@ watch(
 <style scoped lang="less">
 .property__wrapper {
   width: 100%;
+}
+:deep(.tiny-form-item__content) {
+  margin: 0 !important;
 }
 </style>
