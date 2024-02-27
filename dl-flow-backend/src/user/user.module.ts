@@ -18,14 +18,6 @@ import { RedisModule } from '@app/redis';
         schema: UserSchema,
       },
     ]),
-    JwtModule.register({
-      publicKey: process.env.JWT_PUB_KEY ?? './static/pub.key',
-      privateKey: process.env.JWT_PRI_KEY ?? './static/pri.key',
-      signOptions: {
-        algorithm: process.env.JWT_SIGN_ALGORITHM,
-        expiresIn: process.env.JWT_EXPIRE_IN ?? '24h',
-      },
-    }),
     RedisModule,
   ],
 })

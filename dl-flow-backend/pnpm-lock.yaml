@@ -67,6 +67,9 @@ devDependencies:
   '@antv/x6':
     specifier: ^2.18.1
     version: 2.18.1
+  '@golevelup/ts-jest':
+    specifier: ^0.4.0
+    version: 0.4.0
   '@nestjs/cli':
     specifier: ^9.0.0
     version: 9.5.0
@@ -80,7 +83,7 @@ devDependencies:
     specifier: ^2.4.6
     version: 2.4.6
   '@types/express':
-    specifier: ^4.17.13
+    specifier: ^4.17.21
     version: 4.17.21
   '@types/jest':
     specifier: 29.5.1
@@ -619,6 +622,10 @@ packages:
   /@eslint/js@8.56.0:
     resolution: {integrity: sha512-gMsVel9D7f2HLkBma9VbtzZRehRogVRfbr++f06nL2vnCGCNlzOD+/MUov/F4p8myyAHspEhVobgjpX64q5m6A==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    dev: true
+
+  /@golevelup/ts-jest@0.4.0:
+    resolution: {integrity: sha512-ehgllV/xU8PC+yVyEUtTzhiSQKsr7k5Jz74B6dtCaVJz7/Vo7JiaACsCLvD7/iATlJUAEqvBson0OHewD3JDzQ==}
     dev: true
 
   /@humanwhocodes/config-array@0.11.14:
