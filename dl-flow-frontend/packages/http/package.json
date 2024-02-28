@@ -7,7 +7,7 @@
   "scripts": {
     "build": "vite build"
   },
-  "exports":{
+  "exports": {
     ".": "./dist/index.js"
   },
   "main": "dist/index.js",
@@ -30,7 +30,7 @@
     "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
     "@opentiny/vue": "~3.10.0",
-    "@vueuse/core": "^9.6.0",
+    "@vueuse/core": "^9.13.0",
     "axios": "^0.27.2",
     "axios-cache-adapter": "^2.7.3",
     "axios-mock-adapter": "^1.21.5",

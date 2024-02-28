@@ -1,9 +1,20 @@
 import {io} from 'socket.io-client';
+import {useSessionStorage} from '@vueuse/core'
+
+const token = useSessionStorage('token', '');
 
 const client = io({
     path: '/socket.io',
-    retries: 0
+    retries: 0,
+    extraHeaders: {
+        authorization: token.value
+    }
 })
+
+client.on('unauth', ()=>{
+    window.location.href = '/authentication.html'
+})
+
 /**
  * 
  * @param {(socket: import('socket.io-client').Socket)=>void} cb 

@@ -8,11 +8,12 @@ import { CodeGenerateService } from './code-generate.service';
 import { Cell, Edge, GenerateCodeDto } from './code-generate.schema';
 import { Socket } from 'socket.io';
 import { AST } from './ast.service';
-import { ValidationPipe } from '@nestjs/common';
+import { UseGuards, ValidationPipe } from '@nestjs/common';
 import { writeFileSync } from 'fs';
 import { createHash } from 'crypto';
 import { join } from 'path';
 import { cwd } from 'process';
+import { JwtService } from '@nestjs/jwt';
 
 export enum State {
   err = 'err',
@@ -30,6 +31,7 @@ export class CodeGenerateGateway {
   constructor(
     private readonly codeGenerateService: CodeGenerateService,
     private readonly ast: AST,
+    private readonly jwt: JwtService,
   ) {}
 
   @SubscribeMessage('createCodeGenerate')
@@ -37,6 +39,18 @@ export class CodeGenerateGateway {
     @MessageBody(new ValidationPipe()) schema: GenerateCodeDto,
     @ConnectedSocket() client: Socket,
   ) {
+    try {
+      const {
+        handshake: {
+          headers: { authorization },
+        },
+      } = client;
+      this.jwt.verifyAsync(authorization);
+    } catch {
+      client.emit('unauth', '');
+      client.disconnect();
+      return;
+    }
     const {
       meta: { start, end },
       payload: { cells: cell, edges },
@@ -108,5 +122,14 @@ export class CodeGenerateGateway {
     const publicPath = join(cwd(), 'public');
     writeFileSync(join(publicPath, fileName + '.py'), content);
     return client.emitWithAck(State.done, fileName);
+  }
+  handleConnection(@ConnectedSocket() socket: Socket) {
+    try {
+      this.jwt.verifyAsync(socket.handshake.headers.authorization);
+    } catch {
+      socket.emit('unauth', '');
+      socket.disconnect();
+      return;
+    }
   }
 }

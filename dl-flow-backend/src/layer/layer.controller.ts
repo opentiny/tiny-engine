@@ -1,8 +1,18 @@
-import { Controller, Get, Post, Body, Delete, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Delete,
+  Param,
+  UseGuards,
+} from '@nestjs/common';
 import { LayerService } from './layer.service';
 import { CreateLayerDto } from './dto/create-layer.dto';
+import { AuthGuard } from '../auth-guard/auth-guard.guard';
 
 @Controller('layer')
+@UseGuards(AuthGuard)
 export class LayerController {
   constructor(private readonly layerService: LayerService) {}
   @Get('/')
