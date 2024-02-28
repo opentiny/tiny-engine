@@ -39,6 +39,18 @@ export class CodeGenerateGateway {
     @MessageBody(new ValidationPipe()) schema: GenerateCodeDto,
     @ConnectedSocket() client: Socket,
   ) {
+    try {
+      const {
+        handshake: {
+          headers: { authorization },
+        },
+      } = client;
+      this.jwt.verifyAsync(authorization);
+    } catch {
+      client.emit('unauth', '');
+      client.disconnect();
+      return;
+    }
     const {
       meta: { start, end },
       payload: { cells: cell, edges },
