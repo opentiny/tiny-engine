@@ -1,7 +1,7 @@
 <template>
     <div class="form">
         <div class="form__wrapper">
-            <tiny-form :model="loginData" :rules="rules" validate-type="text" label-position="top" style="display:flex; flex-flow: column;">
+            <tiny-form ref="form" :model="loginData" :rules="rules" validate-type="text" label-position="top" style="display:flex; flex-flow: column;">
                 <h1>登录</h1>
                 <tiny-form-item label="邮箱" prop="email">
                     <tiny-input v-model="loginData.email" />
@@ -15,7 +15,7 @@
                     </tiny-link>
                 </tiny-form-item>
                 <tiny-form-item>
-                    <tiny-button type="primary" native-type="submit">
+                    <tiny-button type="primary" native-type="submit" @click="login">
                         登录
                     </tiny-button>
                 </tiny-form-item>
@@ -25,8 +25,13 @@
 </template>
 
 <script setup>
-import {Link as TinyLink, Button as TinyButton, Form as TinyForm, FormItem as TinyFormItem, Input as TinyInput} from '@opentiny/vue';
+import {useEndpoint} from '@opentiny/tiny-engine-http';
+import {Link as TinyLink, Button as TinyButton, Form as TinyForm, FormItem as TinyFormItem, Input as TinyInput, Modal} from '@opentiny/vue';
 import {defineProps, defineEmits, reactive, watch ,ref} from 'vue';
+import {useSessionStorage} from '@vueuse/core';
+const form = ref();
+const token = useSessionStorage('token', '');
+const endpoint = useEndpoint();
 const props = defineProps(['modelValue', 'active']);
 const emits = defineEmits(['update:modelValue', 'update:active'])
 const loginData = reactive({
@@ -53,6 +58,28 @@ const rules = {
         required: true,
         trigger: 'blur'
     }
+}
+const login = () => {
+    form.value.validate((valid) => {
+        if (!valid){
+            return;
+        }
+        endpoint.post('/endpoint/user/login', loginData)
+        .then(({jwt})=>{
+            token.value = jwt;
+            Modal.message({
+                status: 'success',
+                message: '登陆成功'
+            })
+            window.location.href = '/dashboard.html'
+        })
+        .catch((reason) => {
+            Modal.message({
+                status: 'error',
+                message: reason
+            })
+        })
+    })
 }
 </script>
 

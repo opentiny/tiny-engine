@@ -14,7 +14,7 @@
 import axios from './axios'
 import { createApp } from 'vue'
 import { isMock, isVsCodeEnv, isDevelopEnv } from '@opentiny/tiny-engine-common/js/environments'
-import { useBroadcastChannel } from '@vueuse/core'
+import { useBroadcastChannel, useSessionStorage } from '@vueuse/core'
 import Login from './Login.vue'
 import config from './config'
 import mockData from './mock'
@@ -30,6 +30,7 @@ const procession = {
 }
 
 const LOGIN_EXPIRED_CODE = 401
+const BAD_REQUEST = 400;
 
 const loginDom = document.createElement('div')
 document.body.appendChild(loginDom)
@@ -67,6 +68,11 @@ export const createHttp = (options, extendsConfig) => {
   const { enableMock = isDevelopEnv } = options
   enableMock && http.mock(mockData)
 
+  /**
+   * 
+   * @param {import('axios').AxiosRequestConfig} config 
+   * @returns 
+   */
   const preRequest = (config) => {
     if (isDevelopEnv && config.url.match(/\/generate\//)) {
       config.baseURL = ''
@@ -75,6 +81,8 @@ export const createHttp = (options, extendsConfig) => {
     if (isVsCodeEnv) {
       config.baseURL = ''
     }
+    const token = useSessionStorage('token', '');
+    config.headers.Authorization = `Bearer ${token.value}`;
     return config
   }
 
@@ -93,35 +101,17 @@ export const createHttp = (options, extendsConfig) => {
     return res.data;
   }
 
-  const openLogin = () => {
-    return new Promise((resolve, reject) => {
-      if (!procession.promiseLogin) {
-        procession.promiseLogin = loginVM.openLogin(procession, '/api/rebuildSession')
-        procession.promiseLogin.then(() => {
-          http.request(response.config).then(resolve, reject)
-        })
-      }
-    })
-  }
-
   const errorResponse = (error) => {
     // 用户信息失效时，弹窗提示登录
     const { response } = error
-    if (response?.status === LOGIN_EXPIRED_CODE) {
-      // vscode 插件环境弹出输入框提示登录
-      if (window.vscodeBridge) {
-        return Promise.resolve(true)
-      }
-
-      // 浏览器环境弹出小窗登录
-      if (response?.headers['x-login-url']) {
-        return openLogin()
-      }
+    if (response.status === LOGIN_EXPIRED_CODE){
+      window.location.href = '/authentication.html'
+      return Promise.reject('登录过期');
     }
-
-    showError(error.config?.url, error?.message)
-
-    return response?.data.error ? Promise.reject(response.data.error) : Promise.reject(error.message)
+    if (response.status === BAD_REQUEST){
+      return Promise.reject(response.data.message[0]);
+    }
+    return Promise.reject(response.data.message);
   }
 
   // 响应拦截器

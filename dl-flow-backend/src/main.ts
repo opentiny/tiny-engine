@@ -1,12 +1,14 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import { parse } from 'dotenv';
-import { readFileSync } from 'fs';
+import { config } from 'dotenv';
 
 async function bootstrap() {
   if (__DEV__) {
-    parse(readFileSync('.env').toString());
+    config({
+      path: '.env',
+      debug: true,
+    });
   }
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());

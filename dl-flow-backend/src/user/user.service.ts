@@ -20,7 +20,6 @@ export class UserService {
   ) {}
   async login(data: LoginDTO) {
     const { email, password } = data;
-    const jwt = this.jwt.sign({ email });
     const userProfile = await this.UserModel.findOne({
       email,
     });
@@ -29,8 +28,9 @@ export class UserService {
       isEmpty(userProfile) ||
       !compareSync(password, userProfile.password)
     ) {
-      throw new HttpException(``, HttpStatus.NOT_FOUND);
+      throw new HttpException(`${email} is not found`, HttpStatus.NOT_FOUND);
     }
+    const jwt = this.jwt.sign({ email });
     await this.redis.set(`token:${email}`, jwt);
     await this.redis.hmset(`profile:${email}`, userProfile.toJSON());
     return jwt;

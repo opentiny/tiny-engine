@@ -27,7 +27,8 @@
 
 <script setup>
 import {useEndpoint} from '@opentiny/tiny-engine-http';
-import {Form as TinyForm, FormItem as TinyFormItem, Input as TinyInput, Button as TinyButton} from '@opentiny/vue';
+import {useSessionStorage} from '@vueuse/core';
+import {Form as TinyForm, FormItem as TinyFormItem, Input as TinyInput, Button as TinyButton, Modal} from '@opentiny/vue';
 import {defineProps, defineEmits, reactive, watch, ref} from 'vue';
 const endpoint = useEndpoint();
 const props = defineProps(['modelValue', 'active']);
@@ -35,6 +36,7 @@ const emits = defineEmits(['update:modelValue', 'update:active'])
 const _active = ref(props.active);
 const form = ref();
 const loading = ref(false);
+const storage = useSessionStorage('token', '');
 watch(_active, ()=>{
     emits('update:active', _active.value)
 })
@@ -65,7 +67,23 @@ const submit = () => {
         if (!valid){
             return;
         }
-        endpoint.post('/endpoint/reg',registerData)
+        endpoint.post('/endpoint/user/reg',registerData)
+        .then(()=>endpoint.post('/endpoint/user/login', {email: registerData.email, password: registerData.password}))
+        .then(({jwt})=>{
+            Modal.message({
+                status: 'success',
+                message: '登陆成功!',
+            })
+            storage.value = jwt;
+            window.location.href= '/dashboard.html'
+        })
+        .catch((reason) => {
+            Modal.message({
+                status: 'error',
+                message: reason,
+            })
+            
+        })
         .finally(()=>{
             loading.value = false;
         })

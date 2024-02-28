@@ -18,7 +18,7 @@ export class UserController {
   @Post('/login')
   async login(@Body() body: LoginDTO) {
     return {
-      jwt: this.userService.login(body),
+      jwt: await this.userService.login(body),
     };
   }
   @Post('/reg')
