@@ -83,6 +83,15 @@ const forward = () => {
   }
 }
 
+const clear = () => {
+  list.splice(0)
+  Object.assign(historyState, {
+    index: 0,
+    back: false,
+    forward: false
+  })
+}
+
 const addHistory = (schema) => {
   if (!schema) {
     useCanvas().setSaved(false)
@@ -92,15 +101,6 @@ const addHistory = (schema) => {
     // 初始 schema 需要设置为第一条历史记录
     push(schema)
   }
-}
-
-const clear = () => {
-  list.splice(0)
-  Object.assign(historyState, {
-    index: 0,
-    back: false,
-    forward: false
-  })
 }
 
 // 监控下标，判断是否允许前进后退标志
