@@ -7,9 +7,18 @@ RUN npm install pnpm -g && pnpm install && pnpm build
 FROM node:18-alpine as runner
 COPY --from=builder /CODE/dist ./dist
 COPY --from=builder /CODE/node_modules ./node_modules
-VOLUME [ "/public" ]
+VOLUME [ "/public", "/keys"]
 
 ENV DB_URL=""
+ENV REDIS_HOST = ""
+ENV REDIS_PORT = ""
+ENV REDIS_DB = ""
+ENV REDIS_PASSWORD = ""
+ENV JWT_EXPIRE_IN = ""
+ENV JWT_SIGN_ALGORITHM = ""
+ENV JWT_PUB_KEY = ""
+ENV JWT_PRI_KEY = ""
+ENV PWD_SALT = ""
 
 EXPOSE 9000-9900
 CMD [ "node","dist/main.js" ]
