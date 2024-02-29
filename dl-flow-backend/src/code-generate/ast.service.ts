@@ -44,6 +44,7 @@ export class AST {
         continue;
       }
     }
+    ast.children.push(this.buildSequential(ast));
     return ast;
   }
   /**
@@ -142,12 +143,7 @@ export class AST {
   }
   buildGroup(group: Cell, standardizationNodes: StandardizationNodes) {
     console.log(group);
-    const ast: GroupAst = {
-      type: 'root',
-      children: [],
-      childId: [],
-      codeGen: () => ast.children.map((child) => child.codeGen()).join('\n'),
-    };
+    const ast = new GroupAst();
     const stack: [Cell, 'start' | 'node' | 'end'][] = [];
     const groups = this.extractGroup(group, standardizationNodes);
     for (const g of groups) {
@@ -195,9 +191,25 @@ export class AST {
           call,
         );
         ast.children.push(concatVar);
+        ast.childId.push(...children);
       }
     }
     return ast;
+  }
+  buildSequential(ast: IAST) {
+    const stack = [
+      ...ast.children
+        .map((child) => (child instanceof VarDecl ? child.name : null))
+        .filter((child) => child !== null),
+    ];
+    const groups = ast.children
+      .map((child) => (child instanceof GroupAst ? child : null))
+      .filter((child) => child !== null);
+    const childrenId = groups
+      .map((group) => group.childId)
+      .reduce((pre, cur) => [...pre, ...cur], []);
+    stack.filter((item) => !childrenId.includes(item));
+    return new CallExpression(new Identifier('paddle.nn.Sequential'), stack);
   }
 
   isGroup(cell: Cell) {
@@ -262,6 +274,15 @@ export class Statement implements IStmt, Node {
   children: Node[] = [];
 }
 
+export class GroupAst implements IGroupAst {
+  type = 'root' as const;
+  children: ASTItem[] = [];
+  childId: string[] = [];
+  codeGen() {
+    return this.children.map((child) => child.codeGen()).join('\n');
+  }
+}
+
 type IVarDecl = {
   name: string;
   val: ASTItem;
@@ -289,7 +310,7 @@ type ASTItem =
   | IIdentifier
   | ICallExpression
   | IClazzDefine
-  | GroupAst;
+  | IGroupAst;
 
 type IAST = {
   type: 'root';
@@ -297,6 +318,6 @@ type IAST = {
   codeGen: () => string;
 };
 
-interface GroupAst extends IAST {
+interface IGroupAst extends IAST {
   childId: string[];
 }
