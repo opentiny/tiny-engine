@@ -44,7 +44,7 @@ export class AST {
         continue;
       }
     }
-    ast.children.push(this.buildSequential(ast));
+    ast.children.push(new VarDecl('model', this.buildSequential(ast)));
     return ast;
   }
   /**
@@ -142,7 +142,6 @@ export class AST {
     return clazzDef;
   }
   buildGroup(group: Cell, standardizationNodes: StandardizationNodes) {
-    console.log(group);
     const ast = new GroupAst();
     const stack: [Cell, 'start' | 'node' | 'end'][] = [];
     const groups = this.extractGroup(group, standardizationNodes);
@@ -164,7 +163,12 @@ export class AST {
         if (this.isGroup(cell)) {
           children.push(`group_${cell.id.replace(/-/gim, '')}`);
         } else {
-          children.push(`node${cell.id.replace(/-/gim, '')}`);
+          if (this.isNN(cell.data)) {
+            children.push(`node${cell.id.replace(/-/gim, '')}`);
+          }
+          if (this.isLayer(cell.data)) {
+            children.push(`${cell.id.replace('-', '')}`);
+          }
         }
         while (true) {
           const [cell, type] = stack.pop();
@@ -174,7 +178,12 @@ export class AST {
           if (this.isGroup(cell)) {
             children.push(`group_${cell.id.replace(/-/gim, '')}`);
           } else {
-            children.push(`node${cell.id.replace(/-/gim, '')}`);
+            if (this.isNN(cell.data)) {
+              children.push(`node${cell.id.replace(/-/gim, '')}`);
+            }
+            if (this.isLayer(cell.data)) {
+              children.push(`${cell.id.replace('-', '')}`);
+            }
           }
         }
         if (!activeGroup) {
@@ -199,8 +208,21 @@ export class AST {
   buildSequential(ast: IAST) {
     const stack = [
       ...ast.children
-        .map((child) => (child instanceof VarDecl ? child.name : null))
-        .filter((child) => child !== null),
+        .map((child) => {
+          if (child instanceof VarDecl) {
+            return child.name;
+          }
+          if (child instanceof GroupAst) {
+            return child.children.map((child) =>
+              child instanceof VarDecl ? child.name : null,
+            );
+          }
+          return null;
+        })
+        .flat()
+        .filter(
+          (child) => child !== null && child !== 'true' && child !== 'false',
+        ),
     ];
     const groups = ast.children
       .map((child) => (child instanceof GroupAst ? child : null))
@@ -208,8 +230,10 @@ export class AST {
     const childrenId = groups
       .map((group) => group.childId)
       .reduce((pre, cur) => [...pre, ...cur], []);
-    stack.filter((item) => !childrenId.includes(item));
-    return new CallExpression(new Identifier('paddle.nn.Sequential'), stack);
+    return new CallExpression(
+      new Identifier('paddle.nn.Sequential'),
+      stack.filter((item) => !childrenId.includes(item)),
+    );
   }
 
   isGroup(cell: Cell) {

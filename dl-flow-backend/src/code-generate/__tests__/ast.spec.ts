@@ -302,7 +302,6 @@ class Layer${i}:
         children: ['node-1', 'node-2', 'group-2'],
       };
       const ast = service.buildGroup(group as any, nodes as any);
-      console.log(ast.codeGen());
       expect(ast.codeGen()).toBe(`group_group3 = paddle.concat(x=[nodenode11])
 group_group2 = paddle.concat(x=[group_group3,nodenode4])
 group_group1 = paddle.concat(x=[group_group2,nodenode2,nodenode1])`);
@@ -379,10 +378,15 @@ group_group1 = paddle.concat(x=[group_group2,nodenode2,nodenode1])`);
       },
     };
     const ast = service.build(
-      [node['node-1'], node['node-2'], node['layer'], node['group']],
+      [
+        node['node-1'],
+        node['node-2'],
+        node['layer'],
+        node['node-3'],
+        node['group'],
+      ],
       node,
     );
-    console.log(ast.codeGen());
     expect(ast.codeGen().replace(/\n| /gim, '')).toEqual(
       `true = True
       false = False
@@ -394,7 +398,9 @@ group_group1 = paddle.concat(x=[group_group2,nodenode2,nodenode1])`);
           pass
   
       layer1 = Layer1(x=1)
-      group_group = paddle.concat(x=[nodelayer1,nodenode3])`.replace(
+      nodenode3 = paddle.nn.Conv1D()
+      group_group = paddle.concat(x=[layer1,nodenode3])
+      model=paddle.nn.Sequential(nodenode1,nodenode2,group_group)`.replace(
         /\n| /gim,
         '',
       ),
