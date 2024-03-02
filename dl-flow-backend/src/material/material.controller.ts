@@ -7,7 +7,9 @@ import { AuthGuard } from '../auth-guard/auth-guard.guard';
 export class MaterialController {
   constructor(private readonly materialService: MaterialService) {}
   @Get()
-  getAll() {
-    return this.materialService.findAll();
+  async getAll() {
+    return {
+      data: await this.materialService.findAll(),
+    };
   }
 }

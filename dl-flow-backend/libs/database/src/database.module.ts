@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { DatabaseService } from './database.service';
 import { MongooseModule } from '@nestjs/mongoose';
 
@@ -17,6 +17,7 @@ import { MongooseModule } from '@nestjs/mongoose';
             },
           });
           uri = mongod.getUri();
+          Logger.log(`Memory server url is: ${uri}`, 'DbModule');
         }
         return {
           uri,

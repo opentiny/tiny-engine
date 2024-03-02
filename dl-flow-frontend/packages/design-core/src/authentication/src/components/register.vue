@@ -75,7 +75,7 @@ const submit = () => {
                 message: '登陆成功!',
             })
             storage.value = jwt;
-            window.location.href= '/dashboard.html'
+            window.location.href= '/'
         })
         .catch((reason) => {
             Modal.message({
