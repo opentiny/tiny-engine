@@ -63,14 +63,15 @@ const resState = reactive({
  *
  * @param {[ResState]} data
  */
-const registerNN = ([data]) => {
+const registerNN = (data) => {
   return new Promise((resolve) => {
-    data.layer.forEach((layer) => {
+    data?.layer?.forEach((layer) => {
       resState.layer.push(layer)
     })
-    data.materials.forEach((n) => {
-      resState.nn.push(n)
+    data?.materials?.forEach((n)=>{
+      resState.nn.push(n);
     })
+
     resState.types = data.types
     resolve(data)
   })
@@ -95,7 +96,9 @@ const fetchNN = async () => {
   p.then((res) => {
     return res.map((v) => (v.status === 'fulfilled' ? v.value : {}))
   })
-  .then(registerNN)
+  .then((res)=>{
+    registerNN(res[0]);
+  })
   .catch((err) => {
     error.value = true
     reason.value = err
