@@ -56,7 +56,7 @@ export class AppModule implements OnModuleInit {
     const publicPath = join(root, 'public');
     const lock = join(root, 'data', 'install.lock');
     const bundle = join(root, 'data', 'bundle.json');
-    if (existsSync(lock)) {
+    if (existsSync(lock) && !__DEV__) {
       this.Logger.log('Lock file exists');
       return;
     }

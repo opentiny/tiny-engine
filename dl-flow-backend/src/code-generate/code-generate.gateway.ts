@@ -14,6 +14,8 @@ import { createHash } from 'crypto';
 import { join } from 'path';
 import { cwd } from 'process';
 import { JwtService } from '@nestjs/jwt';
+import { InjectRedis } from '@liaoliaots/nestjs-redis';
+import { Redis } from 'ioredis';
 
 export enum State {
   err = 'err',
@@ -32,20 +34,26 @@ export class CodeGenerateGateway {
     private readonly codeGenerateService: CodeGenerateService,
     private readonly ast: AST,
     private readonly jwt: JwtService,
+    @InjectRedis() private readonly redis: Redis,
   ) {}
-
   @SubscribeMessage('createCodeGenerate')
-  create(
+  async create(
     @MessageBody(new ValidationPipe()) schema: GenerateCodeDto,
     @ConnectedSocket() client: Socket,
   ) {
+    const token = client.handshake.headers.authorization;
+    if (!token || !(await this.redis.exists(token))) {
+      client.emit('unauth', '');
+      client.disconnect();
+      return;
+    }
     try {
       const {
         handshake: {
           headers: { authorization },
         },
       } = client;
-      this.jwt.verifyAsync(authorization);
+      this.jwt.verifyAsync(authorization ?? '');
     } catch {
       client.emit('unauth', '');
       client.disconnect();
@@ -123,9 +131,15 @@ export class CodeGenerateGateway {
     writeFileSync(join(publicPath, fileName + '.py'), content);
     return client.emitWithAck(State.done, fileName);
   }
-  handleConnection(@ConnectedSocket() socket: Socket) {
+  async handleConnection(@ConnectedSocket() socket: Socket) {
+    const token = socket.handshake.headers.authorization;
+    if (!token || !(await this.redis.exists(token))) {
+      socket.emit('unauth', '');
+      socket.disconnect();
+      return;
+    }
     try {
-      this.jwt.verifyAsync(socket.handshake.headers.authorization);
+      this.jwt.verifyAsync(socket.handshake.headers.authorization ?? '');
     } catch {
       socket.emit('unauth', '');
       socket.disconnect();
