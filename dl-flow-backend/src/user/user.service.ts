@@ -7,7 +7,8 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import { Redis } from 'ioredis';
 import { compareSync, hashSync } from 'bcryptjs';
-import { isEmpty, pick } from 'ramda';
+import { isEmpty } from 'ramda';
+import ms from 'ms';
 
 @Injectable()
 export class UserService {
@@ -33,6 +34,8 @@ export class UserService {
     const jwt = this.jwt.sign({ email });
     await this.redis.set(`token:${email}`, jwt);
     await this.redis.hmset(`profile:${email}`, userProfile.toJSON());
+    await this.redis.set(`${jwt}`, email);
+    await this.redis.setnx(jwt, ms(process.env.JWT_EXPIRE_IN));
     return jwt;
   }
   async register(data: RegisterDTO) {

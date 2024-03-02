@@ -1,3 +1,4 @@
+import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import {
   CanActivate,
   ExecutionContext,
@@ -5,20 +6,28 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Observable } from 'rxjs';
 import { Request } from 'express';
+import { Redis } from 'ioredis';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private jwt: JwtService) {}
-  canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  constructor(
+    private jwt: JwtService,
+    @InjectRedis()
+    private redis: Redis,
+  ) {}
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    if (__DEV__) {
+      return true;
+    }
     const req = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(req);
     try {
       this.jwt.verify(token);
     } catch {
+      throw new UnauthorizedException();
+    }
+    if (!Boolean(await this.redis.exists(token))) {
       throw new UnauthorizedException();
     }
     return true;
