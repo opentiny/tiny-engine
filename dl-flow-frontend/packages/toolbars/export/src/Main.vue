@@ -1,6 +1,6 @@
 <script setup>
 import {ref} from 'vue';
-import { useSchema, useWs } from '@opentiny/tiny-engine-controller'
+import { useSchema, useWs, useX6 } from '@opentiny/tiny-engine-controller'
 import {Button as TinyButton, DialogBox} from '@opentiny/vue';
 const loading = ref(false);
 /**
@@ -12,7 +12,7 @@ const finish = ref(false);
 const error = ref(false);
 const canDownload = ref(false);
 const downloadFileName = ref('');
-const { schema } = useSchema();
+const { schema, updateSchema } = useSchema();
 const {
   client, 
   onConnect,
@@ -29,6 +29,11 @@ const colors = {
   'info': '#1976D2',
   'error': '#D32F2F',
 }
+
+/**
+ * @type {import('@antv/x6').Graph | null}
+ */
+let g = null;
 
 onConnect(()=>{
   messages.value.push([colors.info, 'Connect server success...'])
@@ -61,6 +66,14 @@ const openApi = () => {
   if (!visible.value){
     visible.value = true;
   }
+  if (!g){
+    g = useX6().g;
+  }
+  const edges = g.getEdges()
+  updateSchema({
+    cells: g.toJSON().cells,
+    edges
+  })
   client.emitWithAck('createCodeGenerate', schema)
   .catch(() => {
     messages.value.push([colors.error, '服务器超时, 请重试'])
