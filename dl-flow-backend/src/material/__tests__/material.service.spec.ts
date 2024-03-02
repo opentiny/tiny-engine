@@ -3,6 +3,7 @@ import { MaterialService } from '../material.service';
 import { Material, MaterialSchema } from '../material.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { DbModule } from '@app/database';
+import { RedisModule } from '@app/redis';
 
 describe('MaterialService', () => {
   let service: MaterialService;
@@ -17,6 +18,7 @@ describe('MaterialService', () => {
             schema: MaterialSchema,
           },
         ]),
+        RedisModule,
       ],
       providers: [MaterialService],
     }).compile();

@@ -5,9 +5,28 @@ services:
     image: mongo
     ports:
       - 27018:27017
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
   server:
-    image: dl-flow-back:0.0.1
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - 9000:9000
     environment:
       - DB_URL=mongodb://mongodb:27017/dl-flow
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      # - REDIS_PASSWORD=""
+      # - JWT_EXPIRE_IN=""
+      # - JWT_SIGN_ALGORITHM=""
+      - JWT_PUB_KEY=./keys/pub.key
+      - JWT_PRI_KEY=./keys/pri.key
+      # - PWD_SALT=""
+    volumes:
+      - ./_test/public:/public
+      - ./_test/keys:/keys
+      - ./_test/data:/data

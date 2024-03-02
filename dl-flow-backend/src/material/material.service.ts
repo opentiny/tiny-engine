@@ -4,15 +4,27 @@ import { Material } from './material.schema';
 import { Model } from 'mongoose';
 import { CretaeMaterial } from './dto/cretae-material.dto';
 import { DeleteMaterial } from './dto/delete-material.dto';
+import { InjectRedis } from '@liaoliaots/nestjs-redis';
+import { Redis } from 'ioredis';
 
 @Injectable()
 export class MaterialService {
   constructor(
+    @InjectRedis()
+    private readonly redis: Redis,
     @InjectModel(Material.name)
     private readonly MaterialMode: Model<Material>,
   ) {}
-  findAll() {
-    return this.MaterialMode.find();
+  async findAll() {
+    const typesRaw = await this.redis.hgetall('types');
+    const types = [];
+    for (const [key, value] of Object.entries(typesRaw)) {
+      types.push([key, JSON.parse(value)]);
+    }
+    return {
+      types: Object.fromEntries(types),
+      materials: await this.MaterialMode.find(),
+    };
   }
   async createMaterial(data: CretaeMaterial) {
     const material = await this.MaterialMode.find({ id: data.id });
