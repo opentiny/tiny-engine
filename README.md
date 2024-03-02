@@ -10,8 +10,6 @@ dl-Flow 是一种拖拽式的线性网络搭建的 Web 应用程序。你可以�
 
 ```yaml
 # docker-compose.yaml
-version: '3'
-
 services:
   mongodb:
     image: mongo
@@ -28,9 +26,7 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
   server:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: gaonengwww/dl-flow-backend
     ports:
       - 9000:9000
     environment:
@@ -40,15 +36,15 @@ services:
       - REDIS_DB=0 # redis数据库 (必填)
       - REDIS_PASSWORD="" # redis密码
       - JWT_EXPIRE_IN="1d" # JWT 过期时间 (必填)
-      - JWT_SIGN_ALGORITHM="" # JWT签名算法, 要与密钥对符合, 例如密钥对是RSA 2048bit, 那么此处应该是 RS256 (必填)
-      - JWT_PUB_KEY= # JWT 公钥 (必填)
-      - JWT_PRI_KEY= # JWT 私钥 (必填)
-      - PWD_SALT="" # bcrypt 盐(必填)
-    volumes: # 强烈将下述卷挂载到本地, 以避免数据丢失
-      - ./_test/public:/public # 代码生成暂存位置
-      - ./_test/keys:/keys # 密钥对存放位置
-      - ./_test/data:/data # bundle.json与install.lock 存放位置
-    
+      - JWT_SIGN_ALGORITHM="RS256" # JWT签名算法, 要与密钥对符合, 例如密钥对是RSA 2048bit, 那么此处应该是 RS256 (必填)
+      - JWT_PUB_KEY=./keys/key.pub # JWT 公钥 (必填)
+      - JWT_PRI_KEY=./keys/key.pri # JWT 私钥 (必填)
+      - PWD_SALT=salt # bcrypt 盐(必填)
+    # volumes: # 强烈将下述卷挂载到本地, 以避免数据丢失
+      # - ./_test/public:/public # 代码生成暂存位置
+      # - ./_test/keys:/keys # 密钥对存放位置
+      # - ./_test/data:/data # bundle.json与install.lock 存放位置
+      
 ```
 
 `Web-Ui` 使用nginx驱动, 接下来我们需要编写 `nginx.conf`
