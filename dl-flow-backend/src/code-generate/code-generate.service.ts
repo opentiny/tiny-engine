@@ -32,7 +32,10 @@ export class CodeGenerateService {
   standardizationEdge(edges: Edge[]) {
     const obj: StandardizationEdges = {};
     for (const edge of edges) {
-      const { source, target } = edge;
+      const { source, target, parent } = edge;
+      if (parent === source.cell || parent === target.cell) {
+        continue;
+      }
       if (obj[target.cell]) {
         obj[target.cell].add(source.cell);
       } else {
@@ -90,8 +93,10 @@ export class CodeGenerateService {
     endId: string,
     startId: string,
   ) {
+    debugger;
     const endNode = nodes[endId];
     const sequence: Cell[] = [endNode];
+    console.log(edges);
     const visitor = (id: string) => {
       if (!id || id === startId) {
         return;
