@@ -300,13 +300,13 @@ const addNode = (info, types) => {
   const g = getCanvas()
   if (info.properties) {
     info.properties = info.properties.map((p) => {
-      let data = null
+      let data = ''
       if (!data) {
         switch (p.type) {
           case 'string':
           case 'number':
           case 'boolean':
-            data = p.default
+            data = p.default ?? 0
             break
           case 'enums':
             data = p.enums.filter((v) => v.default)[0].value

@@ -12,7 +12,7 @@
 import { useResource, useX6 } from '@opentiny/tiny-engine-controller'
 import { Loading } from '@opentiny/vue'
 const { fetchNN, resState } = useResource()
-const { nn, loading } = await fetchNN()
+const { nn } = await fetchNN()
 const vLoading = Loading.directive
 const { addNode } = useX6()
 /** @param {import('@opentiny/tiny-engine-controller/useX6').MaterialInfo} item */
