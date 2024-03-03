@@ -81,9 +81,9 @@ const DEFAULT_OPTION = {
   panning: true,
   mousewheel: {
     enabled: true,
-    modifiers: 'Ctrl',
-    maxScale: 4,
-    minScale: 0.2
+    modifiers: 'shift',
+    maxScale: 10,
+    minScale: 0.1
   },
   autoResize: true,
   connecting: {
@@ -95,6 +95,7 @@ const DEFAULT_OPTION = {
     connector: 'algo-connector',
     connectionPoint: 'anchor',
     anchor: 'center',
+    allowMulti: true,
     validateMagnet() {
       return true;
     },
@@ -117,31 +118,29 @@ const DEFAULT_OPTION = {
       if (!sourceCell.isNode() || !targetCell.isNode()){
         return false;
       }
-      if (!isGroup(sourceCell)){
-        if (targetCell.getParentId() !== sourceCell.getParentId()){
+      if (!isGroup(sourceCell) && !isGroup(targetCell)){
+        if (sourceCell.getParentId() !== targetCell.getParentId()){
           Notify({
             type: 'error',
             message: '不允许越过组进行连接',
             position: 'top-right'
           })
-          return false; // 不允许越过组进行连接
+          return false;
         }
-        return (
-          (source.port.includes('in') && target.port.includes('out')) ||
-          (source.port.includes('out') && target.port.includes('in'))
-        )
+        return (source.port.includes('in') && target.port.includes('out')) ||
+        (source.port.includes('out') && target.port.includes('in'))
       }
-      if (!sourceCell.hasParent() || !targetCell.hasParent()){
-        return (source.port.includes('in') && target.port.includes('out') ||
-              source.port.includes('out') && target.port.includes('in'))
-      }
-      if (targetCell.getParentId() !== sourceCell.getParentId()){
-        Notify({
-          type: 'error',
-          message: '不允许越过组进行连接',
-          position: 'top-right'
-        })
-        return false; // 不允许越过组进行连接
+      if (isGroup(sourceCell) || isGroup(targetCell)){
+        const group = isGroup(sourceCell) ? sourceCell : targetCell;
+        const node = isGroup(sourceCell) ? targetCell : sourceCell;
+        if (group.isParentOf(node)){
+          return (source.port.includes('in') && target.port.includes('in')) ||
+                 (source.port.includes('out') && target.port.includes('out'))
+        }
+        if (group.getParentId() === node.getParentId()){
+          return (source.port.includes('in') && target.port.includes('out')) ||
+                 (source.port.includes('out') && target.port.includes('in'))
+        }
       }
 
       return (source.port.includes('in') && target.port.includes('in') ||
@@ -162,7 +161,7 @@ const graphPreapre = () => {
         line: {
           stroke: '#C2C8D5',
           strokeWidth: 1,
-          targetMarker: null
+          targetMarker: 'block'
         }
       }
     },
@@ -362,7 +361,7 @@ const getData = (cell) => {
   return cell.getData()
 }
 
-const GROUP_PADDING = 20;
+const GROUP_PADDING = 32;
 /**
  * 
  * @param {import('@antv/x6').Graph} g 
@@ -396,10 +395,6 @@ const useX6 = (id, option) => {
         embedding: {
           enabled: true,
         },
-        mousewheel: {
-          enable: true,
-          modifiers: ['alt']
-        }
       }
     })
     g.use(
