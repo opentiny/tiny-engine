@@ -27,6 +27,7 @@
         :stateScope="activeName"
         :query="query"
         @openPanel="openPanel"
+        :selectedKey="selectedKey"
         @remove="remove"
         @removeStore="removeStore"
       />
@@ -62,7 +63,7 @@
 </template>
 
 <script>
-import { reactive, ref, computed, onActivated } from 'vue'
+import { reactive, ref, computed, onActivated, watch } from 'vue'
 import { Button, Search, Tabs, TabItem } from '@opentiny/vue'
 import {
   useCanvas,
@@ -118,6 +119,11 @@ export default {
         variable: ''
       }
     })
+    const selectedKey = ref(null)
+
+    watch(activeName, () => {
+      selectedKey.value = null
+    })
 
     const openPanel = (flagValue, key = '') => {
       updateKey.value = key
@@ -139,11 +145,13 @@ export default {
       }
 
       isPanelShow.value = true
+      selectedKey.value = flagValue === OPTION_TYPE.UPDATE ? key : null
     }
 
     const cancel = () => {
       errorMessage.value = ''
       isPanelShow.value = false
+      selectedKey.value = null
     }
 
     const add = (name, variable) => {
@@ -345,6 +353,7 @@ export default {
       flag,
       updateKey,
       activeName,
+      selectedKey,
       tabClick,
       STATE,
       removeStore,

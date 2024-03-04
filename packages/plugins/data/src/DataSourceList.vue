@@ -1,7 +1,7 @@
 <template>
   <div class="data-source-list">
     <ul>
-      <li v-for="key in filteredKey" :key="key" class="data-source-list-item">
+      <li v-for="key in filteredKey" :key="key" :class="['data-source-list-item', { selected: key === selectedKey }]">
         <div class="item-head">
           <div class="item-head-left">
             <span class="protocal"> {{ stateScope === STATE.CURRENT_STATE ? 'state.' : 'stores.' }}</span>
@@ -44,6 +44,9 @@ export default {
       default: ''
     },
     stateScope: {
+      type: String
+    },
+    selectedKey: {
       type: String
     }
   },
@@ -118,6 +121,7 @@ export default {
     font-size: 12px;
   }
   .data-source-list-item {
+    &.selected,
     &:hover {
       background: var(--ti-lowcode-common-component-hover-bg);
     }
