@@ -76,7 +76,7 @@ export class Cell {
   @IsObject()
   data: Material | Layer;
   @IsObject()
-  children?: Cell[];
+  children?: string[];
 }
 export class Edge {
   @IsString()

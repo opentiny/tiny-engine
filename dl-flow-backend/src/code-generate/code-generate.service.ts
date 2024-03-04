@@ -29,19 +29,20 @@ export class CodeGenerateService {
   extract<R>(cell: (Cell | Edge)[], fn: (cell: Cell | Edge) => boolean) {
     return cell.filter(fn) as unknown as R[];
   }
-  standardizationEdge(edges: Edge[]) {
+  standardizationEdge(edges: Edge[], nodes: StandardizationNodes) {
     const obj: StandardizationEdges = {};
     for (const edge of edges) {
-      const { source, target, parent } = edge;
-      if (parent === source.cell || parent === target.cell) {
-        continue;
-      }
+      const { source, target } = edge;
+      // if (source.port === target.port) {
+      //   throw new Error('source port和target port不能相同');
+      // }
       if (obj[target.cell]) {
         obj[target.cell].add(source.cell);
       } else {
         obj[target.cell] = new Set([source.cell]);
       }
     }
+    console.log(obj);
     return obj;
   }
   standardizationNode(cells: Cell[]) {
@@ -96,7 +97,6 @@ export class CodeGenerateService {
     debugger;
     const endNode = nodes[endId];
     const sequence: Cell[] = [endNode];
-    console.log(edges);
     const visitor = (id: string) => {
       if (!id || id === startId) {
         return;
@@ -106,11 +106,17 @@ export class CodeGenerateService {
         const connectedNode = nodes[edge];
         if (connectedNode) {
           sequence.unshift(connectedNode);
+          if (connectedNode.shape.includes('group')) {
+            for (const child of connectedNode.children) {
+              visitor(child);
+            }
+          }
           visitor(connectedNode.id);
         }
       }
     };
     visitor(endId);
+    console.log(nodes, edges);
     return sequence;
   }
 }

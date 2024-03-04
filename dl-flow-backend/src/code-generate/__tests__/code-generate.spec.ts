@@ -19,11 +19,13 @@ describe('code generate', () => {
     expect(
       service.standardizationEdge(
         groupNestTestCase.payload.edges as unknown as Edge[],
+        service.standardizationNode(groupNestTestCase.payload.cells),
       ),
     ).toBeDefined();
     console.log(
       service.standardizationEdge(
         groupNestTestCase.payload.edges as unknown as Edge[],
+        service.standardizationNode(groupNestTestCase.payload.cells),
       ),
     );
   });
@@ -36,9 +38,9 @@ describe('code generate', () => {
     );
     const edges = service.standardizationEdge(
       groupNestTestCase.payload.edges as unknown as Edge[],
+      service.standardizationNode(groupNestTestCase.payload.cells),
     );
     const { start, end } = groupNestTestCase.meta;
     expect(service.sequencingNode(nodes, edges, start, end)).toBeDefined();
-    console.log(service.sequencingNode(nodes, edges, end, start));
   });
 });
