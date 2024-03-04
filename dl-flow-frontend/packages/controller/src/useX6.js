@@ -134,17 +134,24 @@ const DEFAULT_OPTION = {
         const group = isGroup(sourceCell) ? sourceCell : targetCell;
         const node = isGroup(sourceCell) ? targetCell : sourceCell;
         if (group.isParentOf(node)){
-          return (source.port.includes('in') && target.port.includes('in')) ||
-                 (source.port.includes('out') && target.port.includes('out'))
+          return (source.port.includes('out') && target.port.includes('out'))
         }
         if (group.getParentId() === node.getParentId()){
           return (source.port.includes('in') && target.port.includes('out')) ||
                  (source.port.includes('out') && target.port.includes('in'))
         }
       }
+      if (isGroup(sourceCell) || isGroup(targetCell)) {
+        Notify({
+          type: 'error',
+          message: '不允许组嵌套',
+          position: 'top-right'
+        })
+        return false;
+      }
 
-      return (source.port.includes('in') && target.port.includes('in') ||
-              source.port.includes('out') && target.port.includes('out'))
+      return (source.port.includes('in') && target.port.includes('out')) ||
+              (source.port.includes('out') && target.port.includes('in'))
     }
   }
 }
