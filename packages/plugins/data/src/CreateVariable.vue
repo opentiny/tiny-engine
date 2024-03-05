@@ -18,7 +18,7 @@
     <tiny-form-item label="初始值类型" class="var-type-item">
       <tiny-radio-group v-model="state.variableType" :options="VAR_TYPES"></tiny-radio-group>
     </tiny-form-item>
-    <tiny-form-item class="monaco-form-item init-value-item">
+    <tiny-form-item>
       <monaco-editor
         ref="variableEditor"
         class="variable-editor"
@@ -222,7 +222,7 @@ export default {
     })
 
     watch(
-      () => props.createDate.name,
+      () => props.createData.name,
       () => {
         variableEditor.value.switchFullScreen(false)
       }

@@ -26,8 +26,8 @@
         :modelValue="Object.keys(state.dataSource)"
         :stateScope="activeName"
         :query="query"
-        @openPanel="openPanel"
         :selectedKey="selectedKey"
+        @openPanel="openPanel"
         @remove="remove"
         @removeStore="removeStore"
       />

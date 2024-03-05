@@ -233,7 +233,7 @@ export default {
 <style lang="less" scoped>
 .store-form {
   padding: 12px;
-  height: calc(100%-45px);
+  height: calc(100% - 45px);
   overflow-y: auto;
 
   .tiny-form-item:not(:last-child) {

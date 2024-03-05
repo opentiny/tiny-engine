@@ -142,12 +142,14 @@ export default {
   position: fixed;
   top: var(--base-top-panel-height);
   bottom: 0;
-  left: calc(var(--base-nav-panel-width)+var(--base-left-panel-width));
+  left: calc(var(--base-nav-panel-width) + var(--base-left-panel-width));
   right: var(--base-left-panel-width);
   z-index: 10;
+  padding: 10px 16px 16px 16px;
   background-color: var(--ti-lowcode-common-component-bg);
   height: auto !important;
 }
+
 .toolbar {
   display: flex;
   margin-bottom: 4px;
