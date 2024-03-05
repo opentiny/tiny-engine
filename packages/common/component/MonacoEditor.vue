@@ -159,7 +159,7 @@ export default {
   .buttons {
     color: var(--ti-lowcode-component-svg-button-color);
     cursor: pointer;
-    &:hover {
+    :hover {
       color: var(--ti-lowcode-component-svg-button-hover-color);
     }
   }
@@ -168,7 +168,8 @@ export default {
 .editor {
   flex: 1;
   overflow: hidden;
-  border: 1px solid var(--ti-lowcode-plugin-panel-border-right-color);
+  border: 1px solid var(--ti-lowcode-state-management-monaco-editor-border-color);
+  border-radius: 6px;
 }
 .public-icon {
   font-size: 18px;
