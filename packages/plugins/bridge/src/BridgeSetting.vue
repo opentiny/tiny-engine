@@ -350,7 +350,7 @@ export default {
   }
 
   .resource-type-radio-item {
-    --ti-radio-text-color: var(--ti-lowcode-common-secondary-text-color);
+    --ti-radio-text-color: var(--ti-lowcode-common-radio-label-color);
   }
 
   .monaco-editor {
