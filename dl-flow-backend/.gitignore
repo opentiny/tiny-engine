@@ -34,7 +34,9 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# not upload public fold
+# do not upload public fold
 public
 # do not upload keys
 keys
+# do not upload data
+data

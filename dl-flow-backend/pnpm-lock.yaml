@@ -50,6 +50,9 @@ dependencies:
   mongoose:
     specifier: ^8.1.1
     version: 8.1.1
+  ms:
+    specifier: ^2.1.3
+    version: 2.1.3
   ramda:
     specifier: ^0.29.1
     version: 0.29.1
@@ -88,6 +91,9 @@ devDependencies:
   '@types/jest':
     specifier: 29.5.1
     version: 29.5.1
+  '@types/ms':
+    specifier: ^0.7.34
+    version: 0.7.34
   '@types/node':
     specifier: 18.16.12
     version: 18.16.12
@@ -1418,6 +1424,10 @@ packages:
 
   /@types/mime@3.0.4:
     resolution: {integrity: sha512-iJt33IQnVRkqeqC7PzBHPTC6fDlRNRW8vjrgqtScAhrmMwe8c4Eo7+fUGTa+XdWrpEgpyKWMYmi2dIwMAYRzPw==}
+    dev: true
+
+  /@types/ms@0.7.34:
+    resolution: {integrity: sha512-nG96G3Wp6acyAgJqGasjODb+acrI7KltPiRxzHPXnP3NgI28bpQDRv53olbqGXbfcgF5aiiHmO3xpwEpS5Ld9g==}
     dev: true
 
   /@types/node@18.16.12:

@@ -148,7 +148,9 @@ export class AST {
     for (const g of groups) {
       stack.push([g, 'start']);
       for (const child of (g.children as unknown as string[]) ?? []) {
-        stack.push([standardizationNodes[child], 'node']);
+        if (standardizationNodes[child]) {
+          stack.push([standardizationNodes[child], 'node']);
+        }
       }
       stack.push([g, 'end']);
     }
