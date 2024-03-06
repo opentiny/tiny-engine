@@ -76,7 +76,7 @@ export class Cell {
   @IsObject()
   data: Material | Layer;
   @IsObject()
-  children?: Cell[];
+  children?: string[];
 }
 export class Edge {
   @IsString()
@@ -86,15 +86,19 @@ export class Edge {
   @IsObject()
   source: {
     cell: string;
+    port: string;
   };
   @IsObject()
   target: {
     cell: string;
+    port: string;
   };
   @IsObject()
   attr: object;
   @IsNumber()
   zIndex: number;
+  @IsString()
+  parent: string;
 }
 
 export class GenerateCodeDto {

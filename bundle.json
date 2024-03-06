@@ -187,8 +187,8 @@
         "id": "AvgPool1D",
         "mode": "nn",
         "label": {
-          "zh_CN": "",
-          "en_US": ""
+          "zh_CN": "AvgPool1D",
+          "en_US": "AvgPool1D"
         },
         "properties": [
           {
@@ -242,8 +242,8 @@
         "id": "AvgPool2D",
         "mode": "nn",
         "label": {
-          "zh_CN": "",
-          "en_US": ""
+          "zh_CN": "AvgPool2D",
+          "en_US": "AvgPool2D"
         },
         "properties": [
           {
@@ -297,8 +297,8 @@
         "id": "AvgPool3D",
         "mode": "nn",
         "label": {
-          "zh_CN": "",
-          "en_US": ""
+          "zh_CN": "AvgPool3D",
+          "en_US": "AvgPool3D"
         },
         "properties": [
           {
@@ -475,8 +475,8 @@
         "id": "BatchNorm1D",
         "mode": "nn",
         "label": {
-          "zh_CN": "",
-          "en_US": ""
+          "zh_CN": "BatchNorm1D",
+          "en_US": "BatchNorm1D"
         },
         "properties": [
           {
@@ -548,8 +548,8 @@
         "id": "BatchNorm2D",
         "mode": "nn",
         "label": {
-          "zh_CN": "",
-          "en_US": ""
+          "zh_CN": "BatchNorm2D",
+          "en_US": "BatchNorm2D"
         },
         "properties": [
           {
@@ -621,8 +621,8 @@
         "id": "BatchNorm3D",
         "mode": "nn",
         "label": {
-          "zh_CN": "",
-          "en_US": ""
+          "zh_CN": "BatchNorm3D",
+          "en_US": "BatchNorm3D"
         },
         "properties": [
           {
