@@ -47,7 +47,7 @@ export class UserService {
       throw new HttpException('user exists', HttpStatus.BAD_REQUEST);
     }
     const date = new Date();
-    const _password = hashSync(password, process.env.PWD_SALT);
+    const _password = hashSync(password, process.env.PWD_SALT.length ?? 10);
     const userModel = new this.UserModel();
     userModel.email = email;
     userModel.password = _password;
