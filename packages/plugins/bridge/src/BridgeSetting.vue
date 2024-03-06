@@ -26,10 +26,10 @@
         <div class="right-item">
           <tiny-form-item v-if="!state.status" label="工具类型" prop="type">
             <tiny-radio-group v-model="state.type" class="resource-type-radio-group" @change="handleChangeType">
-              <tiny-radio :label="RESOURCE_CATEGORY.Npm" class="resource-type-radio-item">
+              <tiny-radio :label="RESOURCE_CATEGORY.Npm">
                 {{ RESOURCE_CATEGORY.Npm }}
               </tiny-radio>
-              <tiny-radio :label="RESOURCE_CATEGORY.Function" class="resource-type-radio-item">
+              <tiny-radio :label="RESOURCE_CATEGORY.Function">
                 {{ RESOURCE_CATEGORY.Function }}
               </tiny-radio>
             </tiny-radio-group>
@@ -347,10 +347,6 @@ export default {
         color: var(--ti-lowcode-common-primary-text-color);
       }
     }
-  }
-
-  .resource-type-radio-item {
-    --ti-radio-text-color: var(--ti-lowcode-common-secondary-text-color);
   }
 
   .monaco-editor {
