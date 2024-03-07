@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-mock",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "publishConfig": {
     "access": "public"
   },
@@ -25,7 +25,7 @@
     "lint": "eslint --fix ."
   },
   "dependencies": {
-    "@opentiny/tiny-engine-dsl-vue": "1.0.2",
+    "@opentiny/tiny-engine-dsl-vue": "^1.0.3",
     "@seald-io/nedb": "^4.0.2",
     "fs-extra": "^11.1.1",
     "glob": "^10.3.4",

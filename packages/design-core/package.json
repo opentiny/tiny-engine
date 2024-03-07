@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine",
-  "version": "1.0.0-beta.3",
+  "version": "1.0.0-beta.4",
   "description": "TinyEngine enables developers to customize low-code platforms, build low-bit platforms online in real time, and support secondary development or integration of low-bit platform capabilities.",
   "homepage": "https://opentiny.design/tiny-engine",
   "keywords": [
