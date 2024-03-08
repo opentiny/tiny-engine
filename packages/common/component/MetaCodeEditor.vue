@@ -70,8 +70,8 @@ import { reactive, ref, computed, watchEffect, nextTick } from 'vue'
 import { Button, DialogBox } from '@opentiny/vue'
 import { iconChevronDown, iconChevronUp } from '@opentiny/vue-icon'
 import VueMonaco from './VueMonaco.vue'
-import i18n from '../js/i18n'
-import { formatString } from '../js/ast.js'
+import i18n from '@opentiny/tiny-engine-controller/js/i18n'
+import { formatString } from '@opentiny/tiny-engine-controller/js/ast'
 
 export default {
   components: {

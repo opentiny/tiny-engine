@@ -70,7 +70,7 @@ import { Collapse, CollapseItem, Input } from '@opentiny/vue'
 import { useHistory, useCanvas, useProperties } from '@opentiny/tiny-engine-controller'
 import { getSchema as getCanvasPageSchema, updateRect } from '@opentiny/tiny-engine-canvas'
 import { MetaCodeEditor, MetaBindVariable } from '@opentiny/tiny-engine-common'
-import { formatString } from '@opentiny/tiny-engine-common/js/ast'
+import { formatString } from '@opentiny/tiny-engine-controller/js/ast'
 import {
   SizeGroup,
   LayoutGroup,

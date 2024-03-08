@@ -11,12 +11,11 @@
  */
 
 /* eslint-disable no-undef */
-import axios from './axios'
+import axios, { globalDefaults } from './axios'
 import { createApp } from 'vue'
-import { isMock, isVsCodeEnv, isDevelopEnv } from '@opentiny/tiny-engine-common/js/environments'
 import { useBroadcastChannel } from '@vueuse/core'
 import Login from './Login.vue'
-import config from './config'
+import { getConfig } from './config'
 import mockData from './mock'
 import { constants } from '@opentiny/tiny-engine-utils'
 
@@ -57,8 +56,20 @@ window.lowcode = {
   }
 }
 
+let http // 封装axios的http实例
+let environment = import.meta.env // 当前设计器运行环境变量
+
+const isVsCodeEnv = window.vscodeBridge
+const isMock = () => environment.VITE_API_MOCK === 'mock'
+
 export const createHttp = (options) => {
-  const http = axios(config)
+  // 缓存http实例，避免每个请求重新创建实例
+  if (http && !options.force) {
+    return http
+  }
+  const isDevelopEnv = environment.MODE?.includes('dev')
+  const axiosConfig = getConfig(environment)
+  http = axios(axiosConfig)
 
   // 如果未指定是否启用 mock，则本地开发时默认启用，模拟数据在 public/mock 目录下
   const { enableMock = isDevelopEnv } = options
@@ -126,4 +137,19 @@ export const createHttp = (options) => {
   return http
 }
 
-export const useHttp = () => createHttp({ enableMock: isMock })
+/**
+ * 根据环境不同初始化设置http参数
+ * @param {*} env: 当前环境变量
+ */
+export const initHttp = ({ env }) => {
+  if (Object.keys(env).length) {
+    environment = env
+  }
+  const baseURL = environment.VITE_ORIGIN
+  // 调用初始化方法前可能已经存在已经实例化的http，需要设置baseURL
+  http?.defaults('baseURL', baseURL)
+  globalDefaults('baseURL', baseURL)
+  http = createHttp({ force: true, enableMock: isMock() })
+}
+
+export const useHttp = () => createHttp({ enableMock: isMock() })

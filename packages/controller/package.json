@@ -10,10 +10,12 @@
   "main": "dist/index.js",
   "module": "dist/index.js",
   "files": [
-    "dist"
+    "dist",
+    "js"
   ],
   "exports": {
     ".": "./dist/index.js",
+    "./js/": "./js/",
     "./utils": "./dist/utils.js",
     "./adapter": "./dist/adapter.js"
   },
@@ -29,14 +31,19 @@
   "license": "MIT",
   "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
+    "@babel/generator": "7.18.13",
+    "@babel/parser": "7.18.13",
+    "@babel/traverse": "7.18.13",
     "@opentiny/tiny-engine-builtin-component": "workspace:*",
-    "@opentiny/tiny-engine-canvas": "workspace:*",
-    "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-http": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
+    "@opentiny/tiny-engine-i18n-host": "workspace:*",
     "@opentiny/vue": "~3.10.0",
+    "@opentiny/vue-locale": "~3.10.0",
     "@opentiny/vue-renderless": "~3.10.0",
-    "@vue/shared": "^3.3.4"
+    "@vue/shared": "^3.3.4",
+    "css-tree": "^2.3.1",
+    "prettier": "2.7.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
@@ -44,6 +51,7 @@
     "vite": "^4.3.7"
   },
   "peerDependencies": {
-    "vue": "^3.4.15"
+    "vue": "^3.4.15",
+    "vue-i18n": "^9.9.0"
   }
 }

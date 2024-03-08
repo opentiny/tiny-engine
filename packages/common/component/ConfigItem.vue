@@ -103,14 +103,14 @@ import { inject, computed, watch, ref, reactive, provide } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
 import { IconWriting, IconHelpCircle, IconPlusCircle } from '@opentiny/vue-icon'
 import { typeOf } from '@opentiny/vue-renderless/common/type'
-import i18n from '../js/i18n'
+import i18n from '@opentiny/tiny-engine-controller/js/i18n'
 import { MetaComponents } from '../index'
 import MetaBindVariable from './MetaBindVariable.vue'
 import MetaCodeEditor from './MetaCodeEditor.vue'
 import MultiTypeSelector from './MultiTypeSelector.vue'
 import { useHistory, useProperties, useResource, useLayout, useCanvas } from '@opentiny/tiny-engine-controller'
 import { generateFunction } from '@opentiny/tiny-engine-controller/utils'
-import { SCHEMA_DATA_TYPE, PAGE_STATUS, TYPES } from '../js/constants'
+import { SCHEMA_DATA_TYPE, PAGE_STATUS, TYPES } from '@opentiny/tiny-engine-controller/js/constants'
 
 const hasRule = (required, rules) => {
   if (required) {

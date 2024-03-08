@@ -11,7 +11,6 @@
  */
 
 import { toRaw, nextTick, shallowReactive, ref } from 'vue'
-import { getNode, setState, updateRect } from '@opentiny/tiny-engine-canvas'
 import { constants } from '@opentiny/tiny-engine-utils'
 import useCanvas from './useCanvas'
 import useResource from './useResource'
@@ -192,6 +191,7 @@ const setProp = (name, value, type) => {
   }
 
   // 没有父级，或者不在节点上面，要更新内容。就用setState
+  const { getNode, setState, updateRect } = useCanvas().renderer.value || {}
   getNode(properties.schema.id, true)?.parent || setState(useCanvas().getPageSchema().state)
   propsUpdateKey.value++
 

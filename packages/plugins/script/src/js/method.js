@@ -12,10 +12,10 @@
 
 import { ref, reactive, watchEffect, onActivated, nextTick } from 'vue'
 import { useCanvas, useModal, useNotify } from '@opentiny/tiny-engine-controller'
-import { string2Ast, ast2String, insertName, formatString } from '@opentiny/tiny-engine-common/js/ast'
+import { string2Ast, ast2String, insertName, formatString } from '@opentiny/tiny-engine-controller/js/ast'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { getSchema } from '@opentiny/tiny-engine-canvas'
-import { lint } from '@opentiny/tiny-engine-common/js/linter'
+import { lint } from '@opentiny/tiny-engine-controller/js/linter'
 import { isFunction } from '@opentiny/vue-renderless/grid/static'
 
 const { SCHEMA_DATA_TYPE } = constants

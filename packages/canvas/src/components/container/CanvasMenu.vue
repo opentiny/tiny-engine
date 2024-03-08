@@ -27,7 +27,7 @@
         </ul>
       </li>
     </ul>
-    <save-new-block :boxVisibility="boxVisibility" fromCanvas @close="close"></save-new-block>
+    <SaveNewBlock :boxVisibility="boxVisibility" fromCanvas @close="close"></SaveNewBlock>
   </div>
 </template>
 
@@ -35,7 +35,6 @@
 import { ref, reactive, nextTick } from 'vue'
 import { getConfigure, getController, getCurrent, copyNode, removeNodeById } from './container'
 import { useLayout, useModal, useCanvas } from '@opentiny/tiny-engine-controller'
-import { SaveNewBlock } from '@opentiny/tiny-engine-common'
 import { iconRight } from '@opentiny/vue-icon'
 
 const menuState = reactive({
@@ -74,7 +73,6 @@ export const openMenu = (offset, event) => {
 
 export default {
   components: {
-    SaveNewBlock,
     IconRight: iconRight()
   },
   setup(props, { emit }) {

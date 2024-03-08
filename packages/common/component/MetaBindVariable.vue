@@ -128,10 +128,10 @@ import { useCanvas, useResource, useLayout, useApp, useProperties, useData } fro
 import { theme } from '@opentiny/tiny-engine-controller/adapter'
 import { constants } from '@opentiny/tiny-engine-utils'
 import SvgButton from './SvgButton.vue'
-import { parse, traverse, generate } from '../js/ast'
-import { DEFAULT_LOOP_NAME } from '../js/constants.js'
+import { parse, traverse, generate } from '@opentiny/tiny-engine-controller/js/ast'
+import { DEFAULT_LOOP_NAME } from '@opentiny/tiny-engine-controller/js/constants'
 import MonacoEditor from './VueMonaco.vue'
-import { formatString } from '../js/ast.js'
+import { formatString } from '@opentiny/tiny-engine-controller/js/ast'
 
 const { EXPRESSION_TYPE } = constants
 

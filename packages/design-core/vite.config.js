@@ -138,7 +138,7 @@ const importMapVersions = {
 }
 
 const devAlias = {
-  '@opentiny/tiny-engine-common/js': path.resolve(__dirname, '../common/js'),
+  '@opentiny/tiny-engine-controller/js': path.resolve(__dirname, '../controller/js'),
   '@opentiny/tiny-engine-common/component': path.resolve(__dirname, '../common/component'),
   '@opentiny/tiny-engine-common': path.resolve(__dirname, '../common/index.js'),
   '@opentiny/tiny-engine-controller/utils': path.resolve(__dirname, '../controller/utils.js'),

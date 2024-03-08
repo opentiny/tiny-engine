@@ -15,17 +15,16 @@ import { hyphenate } from '@vue/shared'
 import { extend, copyArray } from '@opentiny/vue-renderless/common/object'
 import { format } from '@opentiny/vue-renderless/common/date'
 import { remove } from '@opentiny/vue-renderless/common/array'
-import { getCanvasStatus } from '@opentiny/tiny-engine-common/js/index'
-import { ast2String, parseExpression } from '@opentiny/tiny-engine-common/js/ast'
-import { getCssObjectFromStyleStr } from '@opentiny/tiny-engine-common/js/css'
 import { constants } from '@opentiny/tiny-engine-utils'
+import { getCanvasStatus } from '../js/canvas'
+import { ast2String, parseExpression } from '../js/ast'
+import { getCssObjectFromStyleStr } from '../js/css'
 import useCanvas from './useCanvas'
 import useTranslate from './useTranslate'
 import useEditorInfo from './useEditorInfo'
 import useBreadcrumb from './useBreadcrumb'
 import useLayout from './useLayout'
 import { getGlobalConfig } from './globalConfig'
-import { getSchema, getCurrent } from '@opentiny/tiny-engine-canvas'
 
 const { SORT_TYPE, SCHEMA_DATA_TYPE, BLOCK_OPENNESS } = constants
 
@@ -279,7 +278,7 @@ const initBlock = async (block = {}, _langs = {}, isEdit) => {
   // 把区块的schema传递给画布
   await resetBlockCanvasState({ pageSchema: getBlockPageSchema(block) })
   // 这一步操作很重要，让区块管理面板和画布共同维护同一份区块schema
-  block.content = getSchema()
+  block.content = useCanvas().renderer.value?.getSchema()
 
   setCurrentBlock(block)
   setBreadcrumbBlock([block[nameCn] || block.label], block.histories)
@@ -362,7 +361,7 @@ const createEmptyBlock = ({ name_cn, label, path, categories }) => {
 }
 
 const setComponentLinkedValue = ({ propertyName, value }) => {
-  const { schema } = getCurrent()
+  const { schema } = useCanvas().renderer.value?.getCurrent() || {}
 
   if (!propertyName || !schema) {
     return

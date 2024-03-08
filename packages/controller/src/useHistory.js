@@ -12,7 +12,6 @@
 
 import { reactive, isProxy, toRaw, watch } from 'vue'
 import useCanvas from './useCanvas'
-import { setSchema, getSchema } from '@opentiny/tiny-engine-canvas'
 
 const schema2String = (schema) => {
   if (isProxy(schema)) {
@@ -62,7 +61,7 @@ const push = (schema) => {
 
 const go = (addend, valid) => {
   historyState.index = historyState.index + addend
-  setSchema(string2Schema(list[historyState.index]))
+  useCanvas().renderer.value?.setSchema(string2Schema(list[historyState.index]))
 
   // 不是锁定状态，撤销操作后，传递第二个标识位，将 list 的长度减一，置灰 undoredo 操作按钮
   if (typeof valid === 'boolean') {
@@ -84,17 +83,6 @@ const forward = () => {
   }
 }
 
-const addHistory = (schema) => {
-  if (!schema) {
-    useCanvas().setSaved(false)
-    push(getSchema())
-  } else {
-    clear()
-    // 初始 schema 需要设置为第一条历史记录
-    push(schema)
-  }
-}
-
 const clear = () => {
   list.splice(0)
   Object.assign(historyState, {
@@ -102,6 +90,17 @@ const clear = () => {
     back: false,
     forward: false
   })
+}
+
+const addHistory = (schema) => {
+  if (!schema) {
+    useCanvas().setSaved(false)
+    push(useCanvas().renderer.value?.getSchema())
+  } else {
+    clear()
+    // 初始 schema 需要设置为第一条历史记录
+    push(schema)
+  }
 }
 
 // 监控下标，判断是否允许前进后退标志

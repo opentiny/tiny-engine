@@ -5,7 +5,7 @@
 <script>
 import { ref, watchEffect } from 'vue'
 import { BlockHistoryList } from '@opentiny/tiny-engine-common'
-import { previewPage } from '@opentiny/tiny-engine-common/js/preview'
+import { previewPage } from '@opentiny/tiny-engine-controller/js/preview'
 import { getGlobalConfig, usePage, useBlock, useEditorInfo, useModal } from '@opentiny/tiny-engine-controller'
 import { fetchPageHistory } from './http.js'
 

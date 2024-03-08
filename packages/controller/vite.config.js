@@ -20,6 +20,9 @@ export default defineConfig({
   plugins: [vue(), vueJsx()],
   publicDir: false,
   resolve: {},
+  define: {
+    'process.env': {}
+  },
   build: {
     cssCodeSplit: false,
     lib: {
@@ -33,7 +36,7 @@ export default defineConfig({
       formats: ['es']
     },
     rollupOptions: {
-      external: ['vue', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/]
+      external: ['vue', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/, /^prettier.*/]
     }
   }
 })
