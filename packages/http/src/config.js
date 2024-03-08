@@ -10,21 +10,20 @@
  *
  */
 
-import { VITE_ORIGIN, isDevelopEnv } from '@opentiny/tiny-engine-common/js/environments'
+export function getConfig(env = import.meta.env) {
+  const baseURL = env.VITE_ORIGIN
 
-const baseURL = VITE_ORIGIN
+  // 仅在本地开发时，启用 withCredentials
+  const dev = env.MODE?.includes('dev')
 
-// 仅在本地开发时，启用 withCredentials
-const dev = isDevelopEnv
-
-// 获取租户 id
-const getTenant = () => new URLSearchParams(location.search).get('tenant')
-
-export default {
-  baseURL,
-  withCredentials: false,
-  headers: {
-    'x-lowcode-mode': dev ? 'develop' : null,
-    'x-lowcode-org': getTenant()
+  // 获取租户 id
+  const getTenant = () => new URLSearchParams(location.search).get('tenant')
+  return {
+    baseURL,
+    withCredentials: false,
+    headers: {
+      'x-lowcode-mode': dev ? 'develop' : null,
+      'x-lowcode-org': getTenant()
+    }
   }
 }

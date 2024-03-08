@@ -28,7 +28,7 @@ export const POSITION = Object.freeze({
   IN: 'in',
   FORBID: 'forbid'
 })
-import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
+import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
 
 const initialDragState = {
   keydown: false,

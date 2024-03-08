@@ -13,12 +13,12 @@
 import { reactive, ref } from 'vue'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { utils } from '@opentiny/tiny-engine-utils'
-import { setLocales } from '@opentiny/tiny-engine-canvas'
-import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
+import { isVsCodeEnv } from '../js/environments'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { generateI18n } from '@opentiny/tiny-engine-common/js/vscodeGenerateFile'
+import { generateI18n } from '../js/vscodeGenerateFile'
 import useResource from './useResource'
 import { PROP_DATA_TYPE } from '../utils'
+import useCanvas from './useCanvas'
 
 const { HOST_TYPE } = constants
 const state = reactive({
@@ -101,7 +101,7 @@ const ensureI18n = (obj, send) => {
       }
     })
 
-    setLocales(messages, true)
+    useCanvas().renderer.value?.setLocales(messages, true)
   } catch (e) {
     // 不需要处理，有报错的词条会在画布初始化的时候统一调setLocales这个方法
   }
@@ -171,7 +171,7 @@ const initAppI18n = async (appId) => {
       host: appId,
       hostType: HOST_TYPE.App
     })
-    setLocales(i18nResource.messages)
+    useCanvas().renderer.value?.setLocales(i18nResource.messages)
   }
 }
 
@@ -181,7 +181,7 @@ const initBlockI18n = async (blockId) => {
       host: blockId,
       hostType: HOST_TYPE.Block
     })
-    setLocales(i18nResource.messages)
+    useCanvas().renderer.value?.setLocales(i18nResource.messages)
   }
 }
 
@@ -192,7 +192,7 @@ const initBlockLocalI18n = async (langs = {}) => {
     hostType: HOST_TYPE.Block,
     local: true
   })
-  setLocales(i18nResource.messages)
+  useCanvas().renderer.value?.setLocales(i18nResource.messages)
 }
 
 const format = (str = '', params = {}) => str.replace(/\$\{(.+?)\}/g, (substr, key) => params[key] || '')

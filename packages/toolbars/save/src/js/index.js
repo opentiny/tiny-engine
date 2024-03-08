@@ -14,7 +14,7 @@ import { reactive, ref } from 'vue'
 import { useBlock, useCanvas, useLayout, useNotify, usePage } from '@opentiny/tiny-engine-controller'
 import { getSchema, setSchema, selectNode } from '@opentiny/tiny-engine-canvas'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { handlePageUpdate } from '@opentiny/tiny-engine-common/js/http'
+import { handlePageUpdate } from '@opentiny/tiny-engine-controller/js/http'
 
 const { pageState, isSaved, isBlock } = useCanvas()
 const { PLUGIN_NAME, getPluginApi } = useLayout()

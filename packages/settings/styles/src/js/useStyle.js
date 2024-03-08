@@ -14,7 +14,7 @@ import { computed, reactive, watch } from 'vue'
 import { useBroadcastChannel } from '@vueuse/core'
 import { getSchema as getCanvasPageSchema, updateRect, setPageCss } from '@opentiny/tiny-engine-canvas'
 import { useCanvas, useHistory, useProperties as useProps } from '@opentiny/tiny-engine-controller'
-import { formatString } from '@opentiny/tiny-engine-common/js/ast'
+import { formatString } from '@opentiny/tiny-engine-controller/js/ast'
 import { constants, utils } from '@opentiny/tiny-engine-utils'
 import { parser, stringify, getSelectorArr } from './parser'
 

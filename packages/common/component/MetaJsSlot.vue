@@ -37,7 +37,7 @@ import { ref, inject, watchEffect, reactive } from 'vue'
 import { Input, Tooltip, Form, FormItem } from '@opentiny/vue'
 import { useProperties, useCanvas, useModal } from '@opentiny/tiny-engine-controller'
 import SvgICons from '@opentiny/vue-icon'
-import { verifyJsVarName } from '../js/verification'
+import { verifyJsVarName } from '@opentiny/tiny-engine-controller/js/verification'
 
 export default {
   components: {

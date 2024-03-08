@@ -21,8 +21,8 @@
 import { ref, onMounted } from 'vue'
 import { Progress, Button } from '@opentiny/vue'
 import { useHttp } from '@opentiny/tiny-engine-http'
-import { VITE_ORIGIN } from '@opentiny/tiny-engine-common/js/environments'
-import { EXTEND_CONFIG } from '@opentiny/tiny-engine-common/js/app'
+import { VITE_ORIGIN } from '@opentiny/tiny-engine-controller/js/environments'
+import { EXTEND_CONFIG } from '@opentiny/tiny-engine-controller/js/app'
 import { useApp } from '@opentiny/tiny-engine-controller'
 
 export default {

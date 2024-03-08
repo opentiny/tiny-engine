@@ -7,9 +7,9 @@
         <icon-close class="icon-close" @click="closePanel"></icon-close>
       </span>
     </div>
-    <config-group :group="propertiesList" :index="0">
+    <ConfigGroup :group="propertiesList" :index="0">
       <template #item="{ data, propIndex }">
-        <config-item
+        <ConfigItem
           :key="propIndex"
           :property="data"
           :data-prop-index="propIndex"
@@ -22,22 +22,19 @@
           <template v-if="!data.noBinding" #suffix>
             <slot name="suffix" :data="data"></slot>
           </template>
-        </config-item>
+        </ConfigItem>
       </template>
-    </config-group>
+    </ConfigGroup>
   </div>
 </template>
 
 <script>
 import { computed, ref } from 'vue'
 import { useResource, useProperties, useCanvas, useProperty } from '@opentiny/tiny-engine-controller'
-import { ConfigGroup, ConfigItem } from '@opentiny/tiny-engine-common'
 import { iconSetting, iconClose } from '@opentiny/vue-icon'
 
 export default {
   components: {
-    ConfigGroup,
-    ConfigItem,
     IconSetting: iconSetting(),
     IconClose: iconClose()
   },

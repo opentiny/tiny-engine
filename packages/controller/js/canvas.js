@@ -11,7 +11,8 @@
  */
 
 import { PAGE_STATUS } from './constants'
-import { useEditorInfo, useResource } from '@opentiny/tiny-engine-controller'
+import useEditorInfo from '../src/useEditorInfo'
+import useResource from '../src/useResource'
 
 export const getCanvasStatus = (data) => {
   // 写死ID 待删除

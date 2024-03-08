@@ -11,7 +11,7 @@
  */
 
 import { useHttp } from '@opentiny/tiny-engine-http'
-import { generateBridge, generateUtil } from '@opentiny/tiny-engine-common/js/vscodeGenerateFile'
+import { generateBridge, generateUtil } from '@opentiny/tiny-engine-controller/js/vscodeGenerateFile'
 const http = useHttp()
 
 // 资源管理 -- 获取列表

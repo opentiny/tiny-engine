@@ -80,7 +80,7 @@ import ProgressBar from './component/ProgressBar.vue'
 import MetaButtonGroup from './component/MetaButtonGroup.vue'
 import MetaTableColumns from './component/MetaTableColumns.vue'
 
-import i18n, { i18nKeyMaps } from './js/i18n.js'
+import i18n, { i18nKeyMaps } from '@opentiny/tiny-engine-controller/js/i18n'
 
 import enUs from './i18n/en-us.json'
 import zhCn from './i18n/zh-cn.json'
@@ -89,6 +89,20 @@ const { mergeLocaleMessage } = i18n.global
 
 mergeLocaleMessage(i18nKeyMaps.enUS, enUs)
 mergeLocaleMessage(i18nKeyMaps.zhCN, zhCn)
+
+const globalComponents = {
+  SaveNewBlock,
+  ConfigGroup,
+  ConfigItem
+}
+
+export const injectGlobalComponents = {
+  install: (app) => {
+    Object.entries(globalComponents).forEach(([name, component]) => {
+      app.component(name, component)
+    })
+  }
+}
 
 export const MetaComponents = {
   MetaArrayItem,
