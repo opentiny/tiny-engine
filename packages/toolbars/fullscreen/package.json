@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-toolbar-fullscreen",
-  "version": "1.0.3",
+  "version": "1.0.4-alpha.0",
   "publishConfig": {
     "access": "public"
   },

@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-controller",
-  "version": "1.0.3",
+  "version": "1.0.4-alpha.0",
   "publishConfig": {
     "access": "public"
   },
@@ -36,8 +36,8 @@
     "@babel/traverse": "7.18.13",
     "@opentiny/tiny-engine-builtin-component": "workspace:*",
     "@opentiny/tiny-engine-http": "workspace:*",
-    "@opentiny/tiny-engine-utils": "workspace:*",
     "@opentiny/tiny-engine-i18n-host": "workspace:*",
+    "@opentiny/tiny-engine-utils": "workspace:*",
     "@opentiny/vue": "~3.10.0",
     "@opentiny/vue-locale": "~3.10.0",
     "@opentiny/vue-renderless": "~3.10.0",
