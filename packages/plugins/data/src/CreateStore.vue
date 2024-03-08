@@ -251,7 +251,8 @@ export default {
 }
 
 .create-content-description {
-  color: var(--ti-lowcode-description-color);
+  font-size: 12px;
+  color: var(--ti-lowcode-common-primary-color);
   margin-left: 8px;
   cursor: pointer;
 }

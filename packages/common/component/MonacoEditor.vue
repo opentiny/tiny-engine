@@ -157,6 +157,8 @@ export default {
   align-items: center;
 
   .buttons {
+    display: flex;
+    gap: 8px;
     color: var(--ti-lowcode-component-svg-button-color);
     cursor: pointer;
     :hover {
@@ -170,9 +172,5 @@ export default {
   overflow: hidden;
   border: 1px solid var(--ti-lowcode-state-management-monaco-editor-border-color);
   border-radius: 6px;
-}
-.public-icon {
-  font-size: 18px;
-  margin-left: 10px;
 }
 </style>

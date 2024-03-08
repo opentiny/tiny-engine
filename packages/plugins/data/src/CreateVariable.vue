@@ -449,7 +449,8 @@ export default {
 }
 
 .create-content-description {
-  color: var(--ti-lowcode-description-color);
+  font-size: 12px;
+  color: var(--ti-lowcode-common-primary-color);
   margin-left: 8px;
   cursor: pointer;
 }
@@ -472,10 +473,18 @@ export default {
 .tiny-popover.tiny-popper.state-data-example-tips {
   background-color: var(--ti-lowcode-data-example-bg-color);
   color: var(--ti-lowcode-data-example-color);
-  .popper__arrow {
+
+  &[x-placement^='bottom'] .popper__arrow {
     &,
     &::after {
       border-bottom-color: var(--ti-lowcode-data-example-bg-color);
+    }
+  }
+
+  &[x-placement^='top'] .popper__arrow {
+    &,
+    &::after {
+      border-top-color: var(--ti-lowcode-data-example-bg-color);
     }
   }
 }
