@@ -15,10 +15,15 @@ import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src')
+    }
+  },
   build: {
     lib: {
       entry: path.resolve(__dirname, './src/index.js'),
-      formats: ['cjs']
+      formats: ['cjs', 'es']
     },
     sourcemap: true
   }

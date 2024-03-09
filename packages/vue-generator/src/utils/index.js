@@ -40,7 +40,7 @@ const safeRandom = () => {
   return mathConstructor.random
 }
 
-const randomString = (length = 4, chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') => {
+export const randomString = (length = 4, chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') => {
   let result = ''
   for (let i = length; i > 0; --i) {
     result += chars[Math.floor(safeRandom() * chars.length)]
@@ -78,6 +78,7 @@ const prettierOpts = {
 
 const onRE = /^on([A-Z]\w*)/
 const onUpdateRE = /^on(Update:\w+)/
+export const thisBindRe = /this\.(props\.)?/g
 
 const isOn = (key) => onRE.test(key)
 const isOnUpdate = (key) => onUpdateRE.test(key)
