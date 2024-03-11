@@ -14,3 +14,33 @@ export function generateImportStatement(config) {
 
   return `import ${statementName} from ${moduleName}`
 }
+
+export function generateImportByPkgName(config) {
+  const { pkgName, imports } = config
+
+  const importStatements = imports
+    .filter(({ destructuring }) => destructuring)
+    .map(({ componentName, exportName }) => {
+      if (componentName === exportName) {
+        return componentName
+      }
+
+      return `${exportName} as ${componentName}`
+    })
+
+  // 默认导出如果存在，应该只有一个
+  let defaultImports = imports.find(({ destructuring }) => !destructuring)
+  let defaultImportStatement = ''
+
+  if (defaultImports) {
+    const { componentName, exportName } = defaultImports
+
+    if (exportName && exportName !== componentName) {
+      defaultImportStatement = `${exportName} as ${componentName},`
+    } else {
+      defaultImportStatement = `${exportName},`
+    }
+  }
+
+  return `import ${defaultImportStatement} { ${importStatements.join(',')} } from ${pkgName}`
+}
