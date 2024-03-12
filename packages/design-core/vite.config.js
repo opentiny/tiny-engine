@@ -311,10 +311,10 @@ export default defineConfig(({ command, mode }) => {
       }/index.js`,
       '@opentiny/vue-theme/theme-tool': `${VITE_CDN_DOMAIN}/@opentiny/vue-theme@${
         versionPlaceholder ?? importMapVersions.tinyVue
-      }/theme-tool`,
+      }/theme-tool.js`,
       '@opentiny/vue-theme/theme': `${VITE_CDN_DOMAIN}/@opentiny/vue-theme@${
         versionPlaceholder ?? importMapVersions.tinyVue
-      }/theme`
+      }/theme/index.js`
     }
   }
 
@@ -326,10 +326,17 @@ export default defineConfig(({ command, mode }) => {
     monacoEditorPluginInstance,
     htmlPlugin(mode),
     importmapPlugin(importmap, importMapStyles),
-    copyImportMapFilePlugin({
-      ...importmap.imports, // js import map
-      '@opentiny/vue-theme/index.css': importMapStyles[0] // css import style
-    })
+    copyImportMapFilePlugin(
+      {
+        ...importmap.imports, // js import map
+        '@opentiny/vue-theme/index.css': importMapStyles[0] // css import style
+      },
+      [
+        // 这两个包的js存在相对路径引用，不能单独拷贝一个文件，需要整个包拷贝
+        '@opentiny/vue-theme/theme-tool',
+        '@opentiny/vue-theme/theme'
+      ]
+    )
   )
   return config
 })

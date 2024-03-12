@@ -9,8 +9,20 @@ export const useLocalImportMap = (flag, publicPath = '', dir = 'import-map-stati
   }
   const cdnPrefix = publicPath + (!publicPath || publicPath.endsWith('/') ? '' : '/') + dir
   const versionPlaceholder = 'workspace'
-  const copyImportMapFilePlugin = (imports) => {
+  const copyImportMapFilePlugin = (imports, packageCopy) => {
     const files = Object.entries(imports).map(([libKey, libPath]) => {
+      if (packageCopy.includes(libKey)) {
+        const srcPath = libPath
+          .replace(new RegExp('^' + cdnPrefix + '/' + '(.*?)' + '@' + versionPlaceholder + '.*?$'), 'node_modules/$1')
+          .replace(/\/$/, '')
+        const distFullPath = libPath
+          .replace(new RegExp('^' + cdnPrefix + '/' + '(.*?' + '@' + versionPlaceholder + ')' + '.*?$'), dir + '/$1')
+          .replace(/\/$/, '')
+        const distPath = distFullPath.replace(/\/([^/]*?)$/, '')
+        const rename = distFullPath.match(/\/([^/]*?)$/)?.[1]
+
+        return [libKey, libPath, srcPath, distPath, rename]
+      }
       const srcPath = libPath
         .replace(new RegExp('^' + cdnPrefix + '/' + '(.*?)' + '@' + versionPlaceholder), 'node_modules/$1')
         .replace(/\/$/, '')
@@ -18,12 +30,21 @@ export const useLocalImportMap = (flag, publicPath = '', dir = 'import-map-stati
         .replace(new RegExp('^' + cdnPrefix + '/'), dir + '/')
         .replace(/\/$/, '')
         .replace(/\/([^/]*?)$/, '')
-      return [libKey, libPath, srcPath, distPath]
+      return [libKey, libPath, srcPath, distPath, null]
     })
-    const copyFiles = files.map(([_libKey, _libPath, srcPath, distPath]) => ({
-      src: srcPath,
-      dest: distPath
-    }))
+    const copyFiles = files
+      .map(([_libKey, _libPath, srcPath, distPath, rename]) => ({
+        src: srcPath,
+        dest: distPath,
+        rename: rename
+      }))
+      .reduce((acc, cur) => {
+        //去重
+        if (!acc.some((item) => item.src === cur.src && item.dest === cur.dest)) {
+          acc.push(cur)
+        }
+        return acc
+      }, [])
     return viteStaticCopy({
       targets: copyFiles
     })
