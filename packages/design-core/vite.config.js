@@ -11,7 +11,7 @@ import esbuildCopy from 'esbuild-plugin-copy'
 import lowcodeConfig from './config/lowcode.config'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import { importmapPlugin } from './scripts/externalDeps'
-import { useLocalImportMap } from './scripts/copyExternal'
+import { useLocalImportMap, getBaseUrlFromCli } from './scripts/copyExternal'
 import visualizer from 'rollup-plugin-visualizer'
 
 const origin = 'http://localhost:9090/'
@@ -206,9 +206,9 @@ export default defineConfig(({ command, mode }) => {
     cdnPrefix: localCdn,
     versionPlaceholder,
     copyImportMapFilePlugin
-  } = useLocalImportMap(isLocalImportMap && (mode === 'alpha') | (mode === 'prod'), process.env.BASE_URL)
+  } = useLocalImportMap(isLocalImportMap && (mode === 'alpha') | (mode === 'prod'), getBaseUrlFromCli(config.base))
   const VITE_CDN_DOMAIN = localCdn ?? envCdn
-  const monacoLocalPublicPath = `${localCdn}/monaco-assets/`
+  const monacoLocalPublicPath = `${localCdn}/monaco-assets`
   const monacoPublicPath = {
     local: 'editor/monaco-workers',
     alpha: isLocalImportMap

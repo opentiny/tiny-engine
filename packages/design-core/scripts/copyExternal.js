@@ -34,3 +34,8 @@ export const useLocalImportMap = (flag, publicPath = '', dir = 'import-map-stati
     copyImportMapFilePlugin
   }
 }
+
+export const getBaseUrlFromCli = (fallback = '') => {
+  const index = process.argv?.indexOf('--base')
+  return index > -1 ? process.argv[index + 1] || fallback : fallback
+}
