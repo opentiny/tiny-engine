@@ -1,5 +1,6 @@
+import { INSERT_POSITION } from '@/constant'
 import { getImportMap } from './parseImport'
-import { genTemplateByHook } from './generateTemplate'
+import { genTemplateByHook, handleComponentNameHook, handleTinyGrid, handleTinyIcon } from './generateTemplate'
 import { generateStyleTag } from './generateStyle'
 
 const parseConfig = (config = {}) => {
@@ -44,25 +45,15 @@ const generateSFCFile = (schema, componentsMap, config = {}) => {
   // 解析 method
   const methods = schema.methods || {}
 
-  const POSITION = {
-    AFTER_IMPORT: 'AFTER_IMPORT',
-    BEFORE_PROPS: 'BEFORE_PROPS',
-    AFTER_PROPS: 'AFTER_PROPS',
-    BEFORE_STATE: 'BEFORE_STATE',
-    AFTER_STATE: 'AFTER_STATE',
-    BEFORE_METHODS: 'BEFORE_METHODS',
-    AFTER_METHODS: 'AFTER_METHODS'
-  }
-
   // 其他表达式语句
   const statements = {
-    [POSITION.AFTER_IMPORT]: [],
-    [POSITION.BEFORE_PROPS]: [],
-    [POSITION.AFTER_PROPS]: [],
-    [POSITION.BEFORE_STATE]: [],
-    [POSITION.AFTER_STATE]: [],
-    [POSITION.BEFORE_METHODS]: [],
-    [POSITION.AFTER_METHODS]: []
+    [INSERT_POSITION.AFTER_IMPORT]: [],
+    [INSERT_POSITION.BEFORE_PROPS]: [],
+    [INSERT_POSITION.AFTER_PROPS]: [],
+    [INSERT_POSITION.BEFORE_STATE]: [],
+    [INSERT_POSITION.AFTER_STATE]: [],
+    [INSERT_POSITION.BEFORE_METHODS]: [],
+    [INSERT_POSITION.AFTER_METHODS]: []
   }
 
   // config
@@ -82,7 +73,7 @@ const generateSFCFile = (schema, componentsMap, config = {}) => {
         return false
       }
 
-      ;(statements[newStatement?.position] || statements[POSITION.AFTER_METHODS]).push(newStatement?.value)
+      ;(statements[newStatement?.position] || statements[INSERT_POSITION.AFTER_METHODS]).push(newStatement?.value)
 
       return true
     },
@@ -161,6 +152,27 @@ const generateSFCFile = (schema, componentsMap, config = {}) => {
   const styleStr = generateStyleTag(schema, styleConfig)
 
   return `${templateStr}\n${scriptStr}\n${styleStr}`
+}
+
+export const genSFCWithDefaultPlugin = (schema, componentsMap, config = {}) => {
+  // const hooks = config.hooks
+  const { componentName = [], attribute = [], children = [] } = config.hooks || {}
+  const defaultComponentHooks = [handleComponentNameHook, handleTinyIcon]
+
+  const defaultAttributeHook = [handleTinyGrid]
+
+  const defaultChildrenHook = []
+
+  const newConfig = {
+    ...config,
+    hooks: {
+      componentName: [...componentName, ...defaultComponentHooks],
+      attribute: [...attribute, ...defaultAttributeHook],
+      children: [...children, ...defaultChildrenHook]
+    }
+  }
+
+  return generateSFCFile(schema, componentsMap, newConfig)
 }
 
 export default generateSFCFile

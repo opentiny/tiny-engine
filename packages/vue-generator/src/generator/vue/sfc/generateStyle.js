@@ -1,11 +1,17 @@
-export const generateStyleTag = (schema) => {
-  const { cssLang, css } = schema
+export const generateStyleTag = (schema, config = {}) => {
+  const { css } = schema
+  const { scoped = true, lang = '' } = config
 
   let langDesc = ''
+  let scopedStr = ''
 
-  if (cssLang) {
+  if (scoped) {
+    scopedStr = 'scoped'
+  }
+
+  if (lang) {
     langDesc = `lang=${langDesc}`
   }
 
-  return `<style ${langDesc} scoped> ${css} </style>`
+  return `<style ${langDesc} ${scopedStr}> ${css} </style>`
 }
