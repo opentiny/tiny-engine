@@ -120,7 +120,9 @@ export default {
     watch(
       () => state.storeData.name,
       () => {
-        variableEditor.value.switchFullScreen(false)
+        variableEditor.value?.switchFullScreen(false)
+        gettersEditor.value?.switchFullScreen(false)
+        actionsEditor.value?.switchFullScreen(false)
       }
     )
 

@@ -217,14 +217,19 @@ export default {
       }
     )
 
-    watch([() => props.createData.name, () => props.createData.variable], () => {
-      state.createData = getPropsCreateData()
-    })
+    watch(
+      () => [props.createData.name, props.createData.variable],
+      () => {
+        state.createData = getPropsCreateData()
+      }
+    )
 
     watch(
       () => props.createData.name,
       () => {
-        variableEditor.value.switchFullScreen(false)
+        variableEditor.value?.switchFullScreen(false)
+        getterEditor.value?.switchFullScreen(false)
+        setterEditor.value?.switchFullScreen(false)
       }
     )
 
