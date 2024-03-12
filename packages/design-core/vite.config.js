@@ -201,12 +201,12 @@ const commonAlias = {
 }
 const isLocalImportMap = true // true公共依赖库使用本地打包文件，false公共依赖库使用公共CDN
 export default defineConfig(({ command, mode }) => {
-  const { VITE_CDN_DOMAIN: envCdn, BASE_URL } = loadEnv(mode, process.cwd(), '')
+  const { VITE_CDN_DOMAIN: envCdn } = loadEnv(mode, process.cwd(), '')
   const {
     cdnPrefix: localCdn,
     versionPlaceholder,
     copyImportMapFilePlugin
-  } = useLocalImportMap(isLocalImportMap && (mode === 'alpha') | (mode === 'prod'), BASE_URL)
+  } = useLocalImportMap(isLocalImportMap && (mode === 'alpha') | (mode === 'prod'), process.env.BASE_URL)
   const VITE_CDN_DOMAIN = localCdn ?? envCdn
   const monacoLocalPublicPath = `${localCdn}/monaco-assets/`
   const monacoPublicPath = {
