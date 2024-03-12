@@ -27,8 +27,22 @@ export const generateSetupScript = (schema, config) => {
   ]
   const compImportStr = generateImports(schema)
   const importStr = `${defaultImports.join('\n')}\n${compImportStr}`
+}
 
-  
+export const genScriptByHook = (schema, globalHooks, config) => {
+  // 变量、方法、生命周期可能会相互影响，对 script lang 也可能有影响（产生 jsx），先解析，再生成
+  // parseState()
+  // parseMethod()
+  // parseLifeCycles()
 
+  // generateImports
+  // generate props declaration
+  // generate emit declaration
+  // generate reactive statement
+  // generate method statement
+  // generate lifecycle statement
+  // generate setup statement
+  // generate extra statement
 
+  return `<script></script>`
 }

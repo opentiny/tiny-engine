@@ -26,6 +26,37 @@ export const parseImport = (children) => {
   }
 }
 
+export const getImportMap = (schema, componentsMap, config) => {
+  const { components, blocks } = parseImport(schema.children)
+  const pkgMap = {}
+  const importComps = componentsMap.filter(({ componentName }) => components.includes(componentName))
+
+  importComps.forEach((item) => {
+    pkgMap[item.package] = pkgMap[item.package] || []
+
+    pkgMap[item.package].push(item)
+  })
+
+  const { blockRelativePath = '../components/', blockSuffix = '.vue' } = config
+  const blockPkgMap = {}
+
+  blocks.map((name) => {
+    const source = `${blockRelativePath}/${name}${blockSuffix}`
+
+    blockPkgMap[source] = {
+      componentName: name,
+      exportName: name,
+      destructuring: false,
+      package: source
+    }
+  })
+
+  return {
+    pkgMap,
+    blockPkgMap
+  }
+}
+
 export const genCompImport = (schema, componentsMap, config = {}) => {
   const { components, blocks } = parseImport(schema.children)
   const pkgMap = {}

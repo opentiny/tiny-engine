@@ -305,3 +305,71 @@ export const generateAttribute = (schema) => {
     resultStr: resultArr.join(' ')
   }
 }
+
+export const handleConditionAttrHook = (schemaData) => {
+  const { resArr, schema } = schemaData
+  const { condition } = schema
+
+  if (typeof condition === 'boolean') {
+    resArr.unshift(`v-if=${condition}`)
+    return
+  }
+
+  if (!condition?.type) {
+    return
+  }
+
+  if (condition?.kind === 'else') {
+    resArr.unshift('v-else')
+  }
+
+  const conditionValue = condition?.value?.replace(thisBindRe, '')
+
+  resArr.unshift(`v-${condition?.kind || 'if'}=${conditionValue}`)
+}
+
+export const handleLoopAttrHook = (schemaData = {}) => {
+  const { resArr, schema } = schemaData
+  const { loop, loopArgs } = schema || {}
+
+  if (!loop) {
+    return
+  }
+
+  const source = (loop?.value || '').replace(thisBindRe, '')
+  const iterVar = [...loopArgs]
+
+  resArr.push(`v-for="(${iterVar.join(',')}) in ${source}"`)
+}
+
+export const handleEventAttrHook = (schemaData) => {
+  const { resArr, props } = schemaData
+
+  const eventBindArr = Object.entries(props)
+    .filter(([key]) => isOn(key))
+    .map(([key, value]) => handleEventBinding(key, value))
+
+  resArr.push(...eventBindArr)
+}
+
+// 处理基本类似的 attribute，如 string、boolean
+export const handlePrimitiveAttributeHook = (schemaData) => {
+  const { resArr, props } = schemaData
+
+  for (const [key, value] of Object.entries(props)) {
+    const valueType = typeof value
+    const renderKey = handleAttributeKey(key)
+
+    if (valueType === 'string') {
+      resArr.push(`${renderKey}=${value}`)
+
+      delete props[key]
+    }
+
+    if (['boolean', 'number'].includes(valueType)) {
+      resArr.push(`:${renderKey}=${value}`)
+
+      delete props[key]
+    }
+  }
+}
