@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Material } from '../material/material.schema';
 import { Layer } from '../layer/layer.schema';
 import { Cell } from './code-generate.schema';
-import { StandardizationNodes } from './code-generate.service';
+import { Exception, StandardizationNodes } from './code-generate.service';
 
 @Injectable()
 export class AST {
@@ -189,9 +189,7 @@ export class AST {
           }
         }
         if (!activeGroup) {
-          throw new Error(
-            `Can not find active group. Please check your schema.`,
-          );
+          throw new Exception('Schema错误, 请检查Schema格式');
         }
         const callee = new Identifier('paddle.concat');
         const call = new CallExpression(callee, [

@@ -4,11 +4,11 @@ import {
   MessageBody,
   ConnectedSocket,
 } from '@nestjs/websockets';
-import { CodeGenerateService } from './code-generate.service';
-import { Cell, Edge, GenerateCodeDto } from './code-generate.schema';
+import { CodeGenerateService, Exception } from './code-generate.service';
+import { Cell, GenerateCodeDto } from './code-generate.schema';
 import { Socket } from 'socket.io';
 import { AST } from './ast.service';
-import { UseGuards, ValidationPipe } from '@nestjs/common';
+import { UseFilters, ValidationPipe } from '@nestjs/common';
 import { writeFileSync } from 'fs';
 import { createHash } from 'crypto';
 import { join } from 'path';
@@ -16,6 +16,7 @@ import { cwd } from 'process';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import { Redis } from 'ioredis';
+import { WsExceptionFilter } from '../ws-exception/ws-exception.filter';
 
 export enum State {
   err = 'err',
@@ -36,6 +37,7 @@ export class CodeGenerateGateway {
     private readonly jwt: JwtService,
     @InjectRedis() private readonly redis: Redis,
   ) {}
+  @UseFilters(WsExceptionFilter)
   @SubscribeMessage('createCodeGenerate')
   async create(
     @MessageBody(new ValidationPipe()) schema: GenerateCodeDto,
