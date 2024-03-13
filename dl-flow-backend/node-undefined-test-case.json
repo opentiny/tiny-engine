@@ -1,0 +1,1118 @@
+{
+  "meta": {
+    "start": "a2437095-7c2f-4ca6-8273-9df4f2555338",
+    "end": "6bd4b1bd-e9ab-490f-b742-6ef287eedf63"
+  },
+  "payload": {
+    "cells": [
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "5c36a959-6118-408f-bf9a-11455f9e0509",
+        "zIndex": -1,
+        "source": {
+          "cell": "a2437095-7c2f-4ca6-8273-9df4f2555338",
+          "port": "out"
+        },
+        "target": {
+          "cell": "caf7e809-74ba-418f-9f6a-b3d512364649",
+          "port": "in"
+        }
+      },
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "9886445a-7c34-455a-b2be-93ce05d5501b",
+        "zIndex": -1,
+        "source": {
+          "cell": "8d7d3c5c-c1d1-494a-ba53-57d929d8f8ac",
+          "port": "out"
+        },
+        "target": {
+          "cell": "d6db9931-ac7a-4123-9a81-e611e4747ae7",
+          "port": "in"
+        },
+        "parent": "79f84abd-09f2-4289-905d-3b34242ad5b8"
+      },
+      {
+        "position": {
+          "x": 70,
+          "y": 150
+        },
+        "size": {
+          "width": 184,
+          "height": 206
+        },
+        "view": "vue-shape-view",
+        "shape": "group-node",
+        "zIndex": -1,
+        "ports": {
+          "groups": {
+            "top": {
+              "position": {
+                "name": "top"
+              },
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            },
+            "bottom": {
+              "position": "bottom",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            }
+          },
+          "items": [
+            {
+              "id": "in",
+              "group": "top"
+            },
+            {
+              "id": "out",
+              "group": "bottom"
+            }
+          ]
+        },
+        "id": "79f84abd-09f2-4289-905d-3b34242ad5b8",
+        "children": [
+          "d6db9931-ac7a-4123-9a81-e611e4747ae7",
+          "8d7d3c5c-c1d1-494a-ba53-57d929d8f8ac",
+          "9886445a-7c34-455a-b2be-93ce05d5501b"
+        ],
+        "originSize": {
+          "width": 1,
+          "height": 1
+        },
+        "originPosition": {
+          "x": 70,
+          "y": 150
+        }
+      },
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "8ea6b4b9-efa2-4e0f-8bae-8695a0b0c7b6",
+        "zIndex": -1,
+        "source": {
+          "cell": "caf7e809-74ba-418f-9f6a-b3d512364649",
+          "port": "out"
+        },
+        "target": {
+          "cell": "79f84abd-09f2-4289-905d-3b34242ad5b8",
+          "port": "in"
+        }
+      },
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "77d3e225-35bc-4501-8637-475b16489a8e",
+        "zIndex": -1,
+        "source": {
+          "cell": "79f84abd-09f2-4289-905d-3b34242ad5b8",
+          "port": "out"
+        },
+        "target": {
+          "cell": "6bd4b1bd-e9ab-490f-b742-6ef287eedf63",
+          "port": "in"
+        }
+      },
+      {
+        "position": {
+          "x": -10,
+          "y": -80
+        },
+        "size": {
+          "width": 112,
+          "height": 48
+        },
+        "view": "vue-shape-view",
+        "shape": "dag-node",
+        "ports": {
+          "groups": {
+            "top": {
+              "position": "top",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            },
+            "bottom": {
+              "position": "bottom",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            }
+          },
+          "items": [
+            {
+              "id": "in",
+              "group": "top"
+            },
+            {
+              "id": "out",
+              "group": "bottom"
+            }
+          ]
+        },
+        "id": "a2437095-7c2f-4ca6-8273-9df4f2555338",
+        "data": {
+          "_id": "65e57005fb3fb874f535ff7a",
+          "label": {
+            "zh_CN": "2D 卷积神经网络",
+            "en_US": "Conv 2D"
+          },
+          "id": "Conv2D",
+          "desc": "二维卷积层",
+          "nn": true,
+          "properties": [
+            {
+              "id": "in_channels",
+              "label": {
+                "zh_CN": "输入通道数",
+                "en_US": "in_channels"
+              },
+              "type": "number",
+              "required": true,
+              "default": 255,
+              "data": 255
+            },
+            {
+              "id": "out_channels",
+              "label": {
+                "zh_CN": "输出通道数",
+                "en_US": "out_channels"
+              },
+              "type": "number",
+              "required": true,
+              "default": 255,
+              "data": 255
+            },
+            {
+              "id": "kernel_size",
+              "label": {
+                "zh_CN": "卷积核大小",
+                "en_US": "kernel_size"
+              },
+              "type": "number",
+              "required": true,
+              "default": 3,
+              "data": 3
+            },
+            {
+              "id": "stride",
+              "label": {
+                "zh_CN": "步长",
+                "en_US": "stride"
+              },
+              "type": "number",
+              "required": true,
+              "default": 1,
+              "data": 1
+            },
+            {
+              "id": "dilation",
+              "label": {
+                "zh_CN": "空洞大小",
+                "en_US": "dilation"
+              },
+              "type": "number",
+              "required": true,
+              "default": 0,
+              "data": 0
+            },
+            {
+              "id": "groups",
+              "label": {
+                "zh_CN": "组数",
+                "en_US": "groups"
+              },
+              "type": "number",
+              "required": true,
+              "default": 0,
+              "data": 0
+            },
+            {
+              "id": "padding_mode",
+              "label": {
+                "zh_CN": "填充模式",
+                "en_US": "padding_mode"
+              },
+              "type": "enums",
+              "enums": [
+                {
+                  "id": 1,
+                  "label": "zeros",
+                  "value": "zeros",
+                  "default": true
+                },
+                {
+                  "id": 2,
+                  "label": "reflect",
+                  "value": "reflect"
+                },
+                {
+                  "id": 3,
+                  "label": "replicate",
+                  "value": "replicate"
+                },
+                {
+                  "id": 4,
+                  "label": "circular",
+                  "value": "circular"
+                }
+              ],
+              "required": true,
+              "data": "zeros"
+            },
+            {
+              "id": "weight_attr",
+              "label": {
+                "zh_CN": "权重参数",
+                "en_US": "weight_attr"
+              },
+              "type": "ParamAttr",
+              "data": {
+                "name": "",
+                "learning_rate": 1,
+                "trainable": true,
+                "do_model_average": true,
+                "need_clip": true
+              }
+            },
+            {
+              "id": "bias_attr",
+              "label": {
+                "zh_CN": "偏置参数",
+                "en_US": "bias_attr"
+              },
+              "type": "ParamAttr",
+              "data": {
+                "name": "",
+                "learning_rate": 1,
+                "trainable": true,
+                "do_model_average": true,
+                "need_clip": true
+              }
+            },
+            {
+              "id": "data_format",
+              "label": {
+                "zh_CN": "数据格式",
+                "en_US": "data_format"
+              },
+              "type": "string",
+              "required": true,
+              "data": 0
+            }
+          ],
+          "mode": "nn",
+          "__v": 0
+        },
+        "zIndex": 1
+      },
+      {
+        "position": {
+          "x": -10,
+          "y": 20
+        },
+        "size": {
+          "width": 112,
+          "height": 48
+        },
+        "view": "vue-shape-view",
+        "shape": "dag-node",
+        "ports": {
+          "groups": {
+            "top": {
+              "position": "top",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            },
+            "bottom": {
+              "position": "bottom",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            }
+          },
+          "items": [
+            {
+              "id": "in",
+              "group": "top"
+            },
+            {
+              "id": "out",
+              "group": "bottom"
+            }
+          ]
+        },
+        "id": "caf7e809-74ba-418f-9f6a-b3d512364649",
+        "data": {
+          "_id": "65e57005fb3fb874f535ff7a",
+          "label": {
+            "zh_CN": "2D 卷积神经网络",
+            "en_US": "Conv 2D"
+          },
+          "id": "Conv2D",
+          "desc": "二维卷积层",
+          "nn": true,
+          "properties": [
+            {
+              "id": "in_channels",
+              "label": {
+                "zh_CN": "输入通道数",
+                "en_US": "in_channels"
+              },
+              "type": "number",
+              "required": true,
+              "default": 255,
+              "data": 255
+            },
+            {
+              "id": "out_channels",
+              "label": {
+                "zh_CN": "输出通道数",
+                "en_US": "out_channels"
+              },
+              "type": "number",
+              "required": true,
+              "default": 255,
+              "data": 255
+            },
+            {
+              "id": "kernel_size",
+              "label": {
+                "zh_CN": "卷积核大小",
+                "en_US": "kernel_size"
+              },
+              "type": "number",
+              "required": true,
+              "default": 3,
+              "data": 3
+            },
+            {
+              "id": "stride",
+              "label": {
+                "zh_CN": "步长",
+                "en_US": "stride"
+              },
+              "type": "number",
+              "required": true,
+              "default": 1,
+              "data": 1
+            },
+            {
+              "id": "dilation",
+              "label": {
+                "zh_CN": "空洞大小",
+                "en_US": "dilation"
+              },
+              "type": "number",
+              "required": true,
+              "default": 0,
+              "data": 0
+            },
+            {
+              "id": "groups",
+              "label": {
+                "zh_CN": "组数",
+                "en_US": "groups"
+              },
+              "type": "number",
+              "required": true,
+              "default": 0,
+              "data": 0
+            },
+            {
+              "id": "padding_mode",
+              "label": {
+                "zh_CN": "填充模式",
+                "en_US": "padding_mode"
+              },
+              "type": "enums",
+              "enums": [
+                {
+                  "id": 1,
+                  "label": "zeros",
+                  "value": "zeros",
+                  "default": true
+                },
+                {
+                  "id": 2,
+                  "label": "reflect",
+                  "value": "reflect"
+                },
+                {
+                  "id": 3,
+                  "label": "replicate",
+                  "value": "replicate"
+                },
+                {
+                  "id": 4,
+                  "label": "circular",
+                  "value": "circular"
+                }
+              ],
+              "required": true,
+              "data": "zeros"
+            },
+            {
+              "id": "weight_attr",
+              "label": {
+                "zh_CN": "权重参数",
+                "en_US": "weight_attr"
+              },
+              "type": "ParamAttr",
+              "data": {
+                "name": "",
+                "learning_rate": 1,
+                "trainable": true,
+                "do_model_average": true,
+                "need_clip": true
+              }
+            },
+            {
+              "id": "bias_attr",
+              "label": {
+                "zh_CN": "偏置参数",
+                "en_US": "bias_attr"
+              },
+              "type": "ParamAttr",
+              "data": {
+                "name": "",
+                "learning_rate": 1,
+                "trainable": true,
+                "do_model_average": true,
+                "need_clip": true
+              }
+            },
+            {
+              "id": "data_format",
+              "label": {
+                "zh_CN": "数据格式",
+                "en_US": "data_format"
+              },
+              "type": "string",
+              "required": true,
+              "data": 0
+            }
+          ],
+          "mode": "nn",
+          "__v": 0
+        },
+        "zIndex": 2
+      },
+      {
+        "position": {
+          "x": 112,
+          "y": 292
+        },
+        "size": {
+          "width": 110,
+          "height": 32
+        },
+        "view": "vue-shape-view",
+        "shape": "dag-node",
+        "ports": {
+          "groups": {
+            "top": {
+              "position": "top",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            },
+            "bottom": {
+              "position": "bottom",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            }
+          },
+          "items": [
+            {
+              "id": "in",
+              "group": "top"
+            },
+            {
+              "id": "out",
+              "group": "bottom"
+            }
+          ]
+        },
+        "id": "d6db9931-ac7a-4123-9a81-e611e4747ae7",
+        "data": {
+          "_id": "65e57005fb3fb874f535ff78",
+          "label": {
+            "zh_CN": "ReLU",
+            "en_US": "ReLU"
+          },
+          "id": "ReLU",
+          "properties": [],
+          "mode": "nn",
+          "__v": 0
+        },
+        "zIndex": 3,
+        "parent": "79f84abd-09f2-4289-905d-3b34242ad5b8"
+      },
+      {
+        "position": {
+          "x": 112,
+          "y": 212
+        },
+        "size": {
+          "width": 110,
+          "height": 32
+        },
+        "view": "vue-shape-view",
+        "shape": "dag-node",
+        "ports": {
+          "groups": {
+            "top": {
+              "position": "top",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            },
+            "bottom": {
+              "position": "bottom",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            }
+          },
+          "items": [
+            {
+              "id": "in",
+              "group": "top"
+            },
+            {
+              "id": "out",
+              "group": "bottom"
+            }
+          ]
+        },
+        "id": "8d7d3c5c-c1d1-494a-ba53-57d929d8f8ac",
+        "data": {
+          "_id": "65e57005fb3fb874f535ff77",
+          "label": {
+            "zh_CN": "BatchNorm",
+            "en_US": "BatchNorm"
+          },
+          "id": "BatchNorm",
+          "properties": [
+            {
+              "id": "num_channels",
+              "type": "number",
+              "label": {
+                "zh_CN": "输入通道数量",
+                "en_US": "num_channels"
+              },
+              "data": 0
+            },
+            {
+              "id": "is_test",
+              "type": "boolean",
+              "label": {
+                "zh_CN": "是否在测试阶段",
+                "en_US": "Is test"
+              },
+              "default": false,
+              "data": false
+            },
+            {
+              "id": "epsilon",
+              "type": "number",
+              "label": {
+                "zh_CN": "epsilon",
+                "en_US": "epsilon"
+              },
+              "default": 0.00001,
+              "data": 0.00001
+            },
+            {
+              "id": "momentum",
+              "type": "number",
+              "default": 0.9,
+              "label": {
+                "zh_CN": "momentum",
+                "en_US": "momentum"
+              },
+              "data": 0.9
+            },
+            {
+              "id": "param_attr",
+              "type": "ParamAttr",
+              "label": {
+                "zh_CN": "权重参数",
+                "en_US": "param attr"
+              },
+              "data": {
+                "name": "",
+                "learning_rate": 1,
+                "trainable": true,
+                "do_model_average": true,
+                "need_clip": true
+              }
+            },
+            {
+              "id": "bias_attr",
+              "label": {
+                "zh_CN": "偏置参数",
+                "en_US": "Bias attr"
+              },
+              "type": "ParamAttr",
+              "data": {
+                "name": "",
+                "learning_rate": 1,
+                "trainable": true,
+                "do_model_average": true,
+                "need_clip": true
+              }
+            },
+            {
+              "id": "data_layout",
+              "type": "enums",
+              "enums": [
+                {
+                  "id": 0,
+                  "label": "NC",
+                  "value": "NC"
+                },
+                {
+                  "id": 1,
+                  "label": "NCL",
+                  "value": "NCL",
+                  "default": true
+                }
+              ],
+              "label": {
+                "zh_CN": "数据格式",
+                "en_US": "Data format"
+              },
+              "data": "NCL"
+            },
+            {
+              "id": "in_place",
+              "type": "boolean",
+              "default": false,
+              "label": {
+                "zh_CN": "batch_norm是否可以服用输入内存",
+                "en_US": "Can batch norm take input memory"
+              },
+              "data": false
+            },
+            {
+              "id": "do_model_average_for_mean_and_var",
+              "type": "boolean",
+              "default": "false",
+              "label": {
+                "zh_CN": "是否为 mean 和 variance 做模型均值",
+                "en_US": "Are we doing model mean for mean and variance"
+              },
+              "data": "false"
+            },
+            {
+              "id": "use_global_stats",
+              "type": "boolean",
+              "default": false,
+              "label": {
+                "zh_CN": "是否使用全局均值和方差",
+                "en_US": "Is global mean and variance used"
+              },
+              "data": false
+            },
+            {
+              "id": "trainable_statistics",
+              "type": "boolean",
+              "default": false,
+              "label": {
+                "zh_CN": "eval 模式下是否计算 mean 均值和 var 方差",
+                "en_US": "Is the mean and variance of var calculated in eval mode"
+              },
+              "data": false
+            },
+            {
+              "id": "moving_mean_name",
+              "type": "string",
+              "label": {
+                "zh_CN": "moving_mean 的名称",
+                "en_US": "name of moving_mean"
+              },
+              "data": 0
+            },
+            {
+              "id": "moving_variance_name",
+              "type": "string",
+              "label": {
+                "zh_CN": "moving_var 的名称",
+                "en_US": "name of moving_var"
+              },
+              "data": 0
+            }
+          ],
+          "mode": "nn",
+          "__v": 0
+        },
+        "zIndex": 4,
+        "parent": "79f84abd-09f2-4289-905d-3b34242ad5b8"
+      },
+      {
+        "position": {
+          "x": 10,
+          "y": 430
+        },
+        "size": {
+          "width": 112,
+          "height": 48
+        },
+        "view": "vue-shape-view",
+        "shape": "dag-node",
+        "ports": {
+          "groups": {
+            "top": {
+              "position": "top",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            },
+            "bottom": {
+              "position": "bottom",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            }
+          },
+          "items": [
+            {
+              "id": "in",
+              "group": "top"
+            },
+            {
+              "id": "out",
+              "group": "bottom"
+            }
+          ]
+        },
+        "id": "6bd4b1bd-e9ab-490f-b742-6ef287eedf63",
+        "data": {
+          "_id": "65e57005fb3fb874f535ff7a",
+          "label": {
+            "zh_CN": "2D 卷积神经网络",
+            "en_US": "Conv 2D"
+          },
+          "id": "Conv2D",
+          "desc": "二维卷积层",
+          "nn": true,
+          "properties": [
+            {
+              "id": "in_channels",
+              "label": {
+                "zh_CN": "输入通道数",
+                "en_US": "in_channels"
+              },
+              "type": "number",
+              "required": true,
+              "default": 255,
+              "data": 255
+            },
+            {
+              "id": "out_channels",
+              "label": {
+                "zh_CN": "输出通道数",
+                "en_US": "out_channels"
+              },
+              "type": "number",
+              "required": true,
+              "default": 255,
+              "data": 255
+            },
+            {
+              "id": "kernel_size",
+              "label": {
+                "zh_CN": "卷积核大小",
+                "en_US": "kernel_size"
+              },
+              "type": "number",
+              "required": true,
+              "default": 3,
+              "data": 3
+            },
+            {
+              "id": "stride",
+              "label": {
+                "zh_CN": "步长",
+                "en_US": "stride"
+              },
+              "type": "number",
+              "required": true,
+              "default": 1,
+              "data": 1
+            },
+            {
+              "id": "dilation",
+              "label": {
+                "zh_CN": "空洞大小",
+                "en_US": "dilation"
+              },
+              "type": "number",
+              "required": true,
+              "default": 0,
+              "data": 0
+            },
+            {
+              "id": "groups",
+              "label": {
+                "zh_CN": "组数",
+                "en_US": "groups"
+              },
+              "type": "number",
+              "required": true,
+              "default": 0,
+              "data": 0
+            },
+            {
+              "id": "padding_mode",
+              "label": {
+                "zh_CN": "填充模式",
+                "en_US": "padding_mode"
+              },
+              "type": "enums",
+              "enums": [
+                {
+                  "id": 1,
+                  "label": "zeros",
+                  "value": "zeros",
+                  "default": true
+                },
+                {
+                  "id": 2,
+                  "label": "reflect",
+                  "value": "reflect"
+                },
+                {
+                  "id": 3,
+                  "label": "replicate",
+                  "value": "replicate"
+                },
+                {
+                  "id": 4,
+                  "label": "circular",
+                  "value": "circular"
+                }
+              ],
+              "required": true,
+              "data": "zeros"
+            },
+            {
+              "id": "weight_attr",
+              "label": {
+                "zh_CN": "权重参数",
+                "en_US": "weight_attr"
+              },
+              "type": "ParamAttr",
+              "data": {
+                "name": "",
+                "learning_rate": 1,
+                "trainable": true,
+                "do_model_average": true,
+                "need_clip": true
+              }
+            },
+            {
+              "id": "bias_attr",
+              "label": {
+                "zh_CN": "偏置参数",
+                "en_US": "bias_attr"
+              },
+              "type": "ParamAttr",
+              "data": {
+                "name": "",
+                "learning_rate": 1,
+                "trainable": true,
+                "do_model_average": true,
+                "need_clip": true
+              }
+            },
+            {
+              "id": "data_format",
+              "label": {
+                "zh_CN": "数据格式",
+                "en_US": "data_format"
+              },
+              "type": "string",
+              "required": true,
+              "data": 0
+            }
+          ],
+          "mode": "nn",
+          "__v": 0
+        },
+        "zIndex": 5
+      }
+    ],
+    "edges": [
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "5c36a959-6118-408f-bf9a-11455f9e0509",
+        "zIndex": -1,
+        "source": {
+          "cell": "a2437095-7c2f-4ca6-8273-9df4f2555338",
+          "port": "out"
+        },
+        "target": {
+          "cell": "caf7e809-74ba-418f-9f6a-b3d512364649",
+          "port": "in"
+        }
+      },
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "9886445a-7c34-455a-b2be-93ce05d5501b",
+        "zIndex": -1,
+        "source": {
+          "cell": "8d7d3c5c-c1d1-494a-ba53-57d929d8f8ac",
+          "port": "out"
+        },
+        "target": {
+          "cell": "d6db9931-ac7a-4123-9a81-e611e4747ae7",
+          "port": "in"
+        },
+        "parent": "79f84abd-09f2-4289-905d-3b34242ad5b8"
+      },
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "8ea6b4b9-efa2-4e0f-8bae-8695a0b0c7b6",
+        "zIndex": -1,
+        "source": {
+          "cell": "caf7e809-74ba-418f-9f6a-b3d512364649",
+          "port": "out"
+        },
+        "target": {
+          "cell": "79f84abd-09f2-4289-905d-3b34242ad5b8",
+          "port": "in"
+        }
+      },
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "77d3e225-35bc-4501-8637-475b16489a8e",
+        "zIndex": -1,
+        "source": {
+          "cell": "79f84abd-09f2-4289-905d-3b34242ad5b8",
+          "port": "out"
+        },
+        "target": {
+          "cell": "6bd4b1bd-e9ab-490f-b742-6ef287eedf63",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}
