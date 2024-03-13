@@ -9,6 +9,8 @@ export type StandardizationNodes = {
   [id: string]: Cell;
 };
 
+export class Exception extends Error {}
+
 @Injectable()
 export class CodeGenerateService {
   checkStartNodes(cells: (Cell | Edge)[], startId: string) {
@@ -20,10 +22,10 @@ export class CodeGenerateService {
   checkEndNode(cells: (Cell | Edge)[], endId: string) {
     const nodes = cells.filter(({ id }) => id === endId);
     if (!nodes.length) {
-      throw new Error('找不到结束节点');
+      throw new Exception('找不到结束节点');
     }
     if (nodes.length > 1) {
-      throw new Error('结束节点数量大于1, 请考虑合并或修改网络结构');
+      throw new Exception('结束节点数量大于1, 请考虑合并或修改网络结构');
     }
   }
   extract<R>(cell: (Cell | Edge)[], fn: (cell: Cell | Edge) => boolean) {
@@ -33,16 +35,12 @@ export class CodeGenerateService {
     const obj: StandardizationEdges = {};
     for (const edge of edges) {
       const { source, target } = edge;
-      // if (source.port === target.port) {
-      //   throw new Error('source port和target port不能相同');
-      // }
       if (obj[target.cell]) {
         obj[target.cell].add(source.cell);
       } else {
         obj[target.cell] = new Set([source.cell]);
       }
     }
-    console.log(obj);
     return obj;
   }
   standardizationNode(cells: Cell[]) {
@@ -116,7 +114,6 @@ export class CodeGenerateService {
       }
     };
     visitor(endId);
-    console.log(nodes, edges);
     return sequence;
   }
 }

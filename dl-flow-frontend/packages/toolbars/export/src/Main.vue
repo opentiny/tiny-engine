@@ -41,10 +41,11 @@ onConnect(()=>{
 onProgess((message)=>{
   messages.value.push([colors.info, message]);
 })
-onFinish(()=>{
+onFinish((message)=>{
   error.value = false;
   finish.value = true;
   loading.value = false;
+  messages.value.push([colors.info, message])
 })
 onError((reason)=>{
   messages.value.push(
