@@ -1,4 +1,36 @@
 import { viteStaticCopy } from 'vite-plugin-static-copy'
+import { replaceImportPath } from './replaceImportPath.mjs'
+
+export const handleStaticFileRelativeImport = (dirs, option = { detail: false }) => {
+  let config
+  return {
+    name: 'vite-plugin-replace-import:build',
+    apply: 'build',
+    configResolved(resolvedConfig) {
+      config = resolvedConfig
+    },
+    async closeBundle() {
+      const logger = config.logger
+      const outputDir = config.build.outDir
+      const processDirs = dirs.map((dir) => `${outputDir}/${dir}`)
+      replaceImportPath(processDirs, logger).then(({ fileList, success, error, errorFileList }) => {
+        logger.info(
+          `[vite-plugin-replace-import]: relative path replaced with certain file path total ${success.length} path(s) in ${fileList.length} file(s)`
+        )
+        if (success.length) {
+          option.detail && logger.info(success)
+        }
+        if (error?.length) {
+          logger.info(
+            `[vite-plugin-replace-import]: error found in total ${error.length} path(s) in ${errorFileList.length} file(s)`
+          )
+          option.detail && logger.info(error)
+        }
+      })
+    }
+  }
+}
+
 export const useLocalImportMap = (flag, publicPath = '', dir = 'import-map-static') => {
   if (!flag) {
     return {
@@ -45,9 +77,14 @@ export const useLocalImportMap = (flag, publicPath = '', dir = 'import-map-stati
         }
         return acc
       }, [])
-    return viteStaticCopy({
-      targets: copyFiles
-    })
+
+    const handleImport = copyFiles.filter(({ rename }) => !!rename).map(({ dest, rename }) => `${dest}/${rename}`)
+    return [
+      ...viteStaticCopy({
+        targets: copyFiles
+      }),
+      handleStaticFileRelativeImport(handleImport)
+    ]
   }
   return {
     cdnPrefix, // 替换VITE_CDN_DOMAIN
