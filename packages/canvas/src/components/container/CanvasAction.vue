@@ -74,7 +74,7 @@
   </div>
 </template>
 <script>
-import { watchPostEffect, ref, watch, computed, nextTick } from 'vue'
+import { watchPostEffect, ref, watch, computed, nextTick, onMounted, onUnmounted } from 'vue'
 import {
   IconDel,
   IconSetting,
@@ -451,6 +451,20 @@ export default {
 
       labelStyle.value = labelStyleValue
       fixStyle.value = optionStyleValue
+    })
+
+    const onDeleteKeydown = (event) => {
+      if (event.keyCode === 8) {
+        remove()
+      }
+    }
+
+    onMounted(() => {
+      document.addEventListener('keydown', onDeleteKeydown)
+    })
+
+    onUnmounted(() => {
+      document.removeEventListener('keydown', onDeleteKeydown)
     })
 
     return {
