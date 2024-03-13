@@ -2240,6 +2240,8 @@ const UNWRAP_QUOTES = {
   end: '#QUOTES_END#'
 }
 
+export const SPECIAL_UTILS_TYPE = ['utils', 'bridge']
+
 /**
  * 协议中的类型
  */

@@ -1,8 +1,8 @@
 import { expect, test } from 'vitest'
-import { generateTag } from '@/generator/vue/template/generateTag'
+import { generateTag } from '@/generator/vue/sfc/generateTag'
 
 test('should validate tagName', () => {
-  expect(generateTag('')).toBe(undefined)
+  expect(generateTag('')).toBe('')
 })
 
 test('should generate start tag correctly', () => {

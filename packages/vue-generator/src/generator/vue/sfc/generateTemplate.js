@@ -77,7 +77,7 @@ export const handleTinyIcon = (nameObj, globalHooks) => {
   const name = nameObj.schema.props.name
   const iconName = name.startsWith(TINY_ICON) ? name : `Tiny${name}`
 
-  globalHooks.addImport('@opentiny/vue-icon', {
+  const success = globalHooks.addImport('@opentiny/vue-icon', {
     componentName: iconName,
     exportName: name,
     package: '@opentiny/vue-icon',
@@ -86,7 +86,13 @@ export const handleTinyIcon = (nameObj, globalHooks) => {
   })
 
   // tiny icon 需要调用
-  globalHooks.addStatement(INSERT_POSITION.BEFORE_PROPS, `const ${iconName} = ${name}()`)
+  if (success) {
+    globalHooks.addStatement({
+      position: INSERT_POSITION.BEFORE_PROPS,
+      value: `const ${iconName} = ${name}()`,
+      key: iconName
+    })
+  }
 
   nameObj.componentName = iconName
   delete nameObj.schema.props.name
@@ -101,30 +107,20 @@ export const handleTinyGrid = (schemaData) => {
   }
 }
 
-// 处理 templateName
-// - 内置 templateName 映射
-// - 自定义 templateName 处理
-// 处理 attribute
-// - 常见 attribute 处理（string、number、boolean）
-// - 特殊 attribute 处理
-//   - js expression 、js function、 js slot、i18n、js resource、
-//   - 自定义 attribute 处理（可以转化成 children、add import、add script statement、）
-// 处理 children
-// 自定义处理 children 方法（）
-
-// 处理 attribute
-// 处理 children
-
 // TODO: 支持物料中自定义出码关联片段
 
-// hooks 如何注入？
-// 如何判断 hooks 已处理？、未处理？
-// 如何判断该调用哪一个 hooks ?
-const recursiveGenTemplateByHook = (schemaWithRes, globalHooks, config = {}) => {
-  const schemaChildren = schemaWithRes.children || []
+export const recursiveGenTemplateByHook = (schemaWithRes, globalHooks, config = {}) => {
+  const schemaChildren = schemaWithRes?.schema?.children || []
+  console.log('schemaChildren', schemaChildren)
   const { hooks = {} } = config
   // 自定义 hooks
   const { componentName: componentNameHooks, attribute: attributeHooks, children: childrenHooks } = hooks
+
+  if (!Array.isArray(schemaChildren)) {
+    schemaWithRes.resArr.push(schemaChildren || '')
+
+    return
+  }
 
   const resArr = schemaChildren.map((schemaItem) => {
     if (typeof schemaItem !== 'object' || !schemaItem) {
@@ -139,17 +135,17 @@ const recursiveGenTemplateByHook = (schemaWithRes, globalHooks, config = {}) => 
     }
 
     for (const hookItem of componentNameHooks) {
-      hookItem(parsedComponentName, globalHooks)
+      hookItem(parsedComponentName, globalHooks, config)
     }
 
     const parsedAttribute = {
       resArr: [],
-      props: structuredClone(props),
+      props: structuredClone(props || {}),
       schema: schemaItem
     }
 
     for (const hookItem of attributeHooks) {
-      hookItem(parsedAttribute, globalHooks)
+      hookItem(parsedAttribute, globalHooks, config)
     }
 
     const parsedChildren = {
@@ -162,7 +158,7 @@ const recursiveGenTemplateByHook = (schemaWithRes, globalHooks, config = {}) => 
     }
 
     const startTag = generateTag(parsedComponentName.componentName, {
-      attribute: parsedAttribute.join(' '),
+      attribute: parsedAttribute.resArr.join(' '),
       isVoidElement: parsedComponentName.voidElement
     })
 
@@ -172,7 +168,7 @@ const recursiveGenTemplateByHook = (schemaWithRes, globalHooks, config = {}) => 
       endTag = generateTag(parsedComponentName.componentName, { isStartTag: false })
     }
 
-    return `${startTag}${parsedChildren.join('')}${endTag}`
+    return `${startTag}${parsedChildren.resArr.join('')}${endTag}`
   })
 
   schemaWithRes.resArr = schemaWithRes.resArr.concat(resArr)

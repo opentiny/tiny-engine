@@ -23,6 +23,8 @@ export const generateTag = (tagName, config = {}) => {
     return ''
   }
 
+  let renderTagName = tagName
+
   const isVoidEle =
     isVoidElement || (typeof isVoidElement !== 'boolean' && HTML_DEFAULT_VOID_ELEMENTS.includes(renderTagName))
 
@@ -30,8 +32,6 @@ export const generateTag = (tagName, config = {}) => {
   if (!isStartTag && isVoidEle) {
     return ''
   }
-
-  let renderTagName = tagName
 
   if (useHyphenate) {
     renderTagName = hyphenate(tagName)
