@@ -49,7 +49,7 @@ export class UserService {
     const date = new Date();
     const _password = hashSync(
       password,
-      process.env.PWD_SALT_LEN ?? process.env.PWD_SALT.length ?? 10,
+      process.env.PWD_SALT_LEN ?? process.env.PWD_SALT?.length ?? 10,
     );
     const userModel = new this.UserModel();
     userModel.email = email;
