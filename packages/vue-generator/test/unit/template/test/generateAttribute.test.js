@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { generateAttribute } from '@/generator/vue/template/generateAttribute'
+// import { generateAttribute } from '@/generator/vue/template/generateAttribute'
 
 // 处理 number、boolean 绑定
 

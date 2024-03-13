@@ -1,7 +1,33 @@
-import { INSERT_POSITION } from '@/constant'
 import { getImportMap } from './parseImport'
 import { genTemplateByHook, handleComponentNameHook, handleTinyGrid, handleTinyIcon } from './generateTemplate'
 import { generateStyleTag } from './generateStyle'
+import {
+  handleConditionAttrHook,
+  handleLoopAttrHook,
+  handleSlotBindAttrHook,
+  handleAttrKeyHook,
+  handlePrimitiveAttributeHook,
+  handleExpressionAttrHook,
+  handleI18nAttrHook,
+  handleObjBindAttrHook,
+  handleEventAttrHook
+} from './generateAttribute'
+import {
+  GEN_SCRIPT_HOOKS,
+  genScriptByHook,
+  parsePropsHook,
+  parseReactiveStateHook,
+  addDefaultVueImport,
+  addDefaultVueI18nImport,
+  handleProvideStatesContextHook,
+  handleContextInjectHook,
+  defaultGenImportHook,
+  defaultGenPropsHook,
+  defaultGenEmitsHook,
+  defaultGenStateHook,
+  defaultGenMethodHook,
+  defaultGenLifecycleHook
+} from './generateScript'
 
 const parseConfig = (config = {}) => {
   const {
@@ -40,21 +66,13 @@ const generateSFCFile = (schema, componentsMap, config = {}) => {
   const { pkgMap, blockPkgMap } = getImportMap(schema, componentsMap, { blockRelativePath, blockSuffix })
 
   // 解析 state
-  const state = schema.state || {}
+  let state = schema.state || {}
 
   // 解析 method
   const methods = schema.methods || {}
 
   // 其他表达式语句
-  const statements = {
-    [INSERT_POSITION.AFTER_IMPORT]: [],
-    [INSERT_POSITION.BEFORE_PROPS]: [],
-    [INSERT_POSITION.AFTER_PROPS]: [],
-    [INSERT_POSITION.BEFORE_STATE]: [],
-    [INSERT_POSITION.AFTER_STATE]: [],
-    [INSERT_POSITION.BEFORE_METHODS]: [],
-    [INSERT_POSITION.AFTER_METHODS]: []
-  }
+  const statements = {}
 
   // config
   let scriptConfig = {
@@ -73,11 +91,18 @@ const generateSFCFile = (schema, componentsMap, config = {}) => {
         return false
       }
 
-      ;(statements[newStatement?.position] || statements[INSERT_POSITION.AFTER_METHODS]).push(newStatement?.value)
+      const key = newStatement.key || newStatement.value
+
+      if (statements[key]) {
+        return false
+      }
+
+      statements[key] = newStatement
 
       return true
     },
-    addMethod: (key, value) => {
+    getStatements: () => statements,
+    addMethods: (key, value) => {
       if (methods[key]) {
         return false
       }
@@ -86,6 +111,7 @@ const generateSFCFile = (schema, componentsMap, config = {}) => {
 
       return true
     },
+    getMethods: () => methods,
     addState: (key, value) => {
       if (state[key]) {
         return false
@@ -95,12 +121,28 @@ const generateSFCFile = (schema, componentsMap, config = {}) => {
 
       return true
     },
+    getState: () => state,
+    setState: (newState) => {
+      state = newState
+    },
     addImport: (fromPath, config) => {
       const dependenciesMap = pkgMap[fromPath] || blockPkgMap[fromPath]
 
       if (dependenciesMap) {
         // 默认导出
         if (!config.destructuring && dependenciesMap.find(({ destructuring }) => !destructuring)) {
+          return false
+        }
+
+        const hasExists = dependenciesMap.find(({ destructuring, exportName, componentName }) => {
+          return (
+            destructuring === config.destructuring &&
+            exportName === config.exportName &&
+            componentName === config.componentName
+          )
+        })
+
+        if (hasExists) {
           return false
         }
 
@@ -146,7 +188,7 @@ const generateSFCFile = (schema, componentsMap, config = {}) => {
   const templateStr = genTemplateByHook(schema, globalHooks, parsedConfig)
 
   // 生成 script
-  const scriptStr = ''
+  const scriptStr = genScriptByHook(schema, globalHooks, parsedConfig)
 
   // 生成 style
   const styleStr = generateStyleTag(schema, styleConfig)
@@ -155,20 +197,54 @@ const generateSFCFile = (schema, componentsMap, config = {}) => {
 }
 
 export const genSFCWithDefaultPlugin = (schema, componentsMap, config = {}) => {
-  // const hooks = config.hooks
-  const { componentName = [], attribute = [], children = [] } = config.hooks || {}
+  const { componentName = [], attribute = [], children = [], genScript = {}, parseScript = [] } = config.hooks || {}
   const defaultComponentHooks = [handleComponentNameHook, handleTinyIcon]
 
-  const defaultAttributeHook = [handleTinyGrid]
+  const defaultAttributeHook = [
+    handleTinyGrid,
+    handleConditionAttrHook,
+    handleLoopAttrHook,
+    handleSlotBindAttrHook,
+    handleAttrKeyHook,
+    handlePrimitiveAttributeHook,
+    handleExpressionAttrHook,
+    handleI18nAttrHook,
+    handleObjBindAttrHook,
+    handleEventAttrHook
+  ]
 
   const defaultChildrenHook = []
+
+  const defaultParseScriptHook = [
+    addDefaultVueImport,
+    addDefaultVueI18nImport,
+    parsePropsHook,
+    parseReactiveStateHook,
+    handleProvideStatesContextHook,
+    handleContextInjectHook
+  ]
+
+  const { GEN_IMPORT, GEN_PROPS, GEN_EMIT, GEN_STATE, GEN_METHOD, GEN_LIFECYCLE } = GEN_SCRIPT_HOOKS
+  const defaultGenScriptHooks = {
+    [GEN_IMPORT]: defaultGenImportHook,
+    [GEN_PROPS]: defaultGenPropsHook,
+    [GEN_EMIT]: defaultGenEmitsHook,
+    [GEN_STATE]: defaultGenStateHook,
+    [GEN_METHOD]: defaultGenMethodHook,
+    [GEN_LIFECYCLE]: defaultGenLifecycleHook
+  }
 
   const newConfig = {
     ...config,
     hooks: {
       componentName: [...componentName, ...defaultComponentHooks],
       attribute: [...attribute, ...defaultAttributeHook],
-      children: [...children, ...defaultChildrenHook]
+      children: [...children, ...defaultChildrenHook],
+      parseScript: [...parseScript, ...defaultParseScriptHook],
+      genScript: {
+        ...defaultGenScriptHooks,
+        ...genScript
+      }
     }
   }
 

@@ -1,7 +1,17 @@
-import { BUILTIN_COMPONENT_NAME, JS_EXPRESSION, JS_FUNCTION, JS_I18N, JS_RESOURCE, JS_SLOT } from '@/constant'
-import { isOn, toEventKey, thisBindRe, randomString } from '@/utils'
+import {
+  BUILTIN_COMPONENT_NAME,
+  JS_EXPRESSION,
+  JS_FUNCTION,
+  JS_I18N,
+  JS_RESOURCE,
+  JS_SLOT,
+  SPECIAL_UTILS_TYPE,
+  INSERT_POSITION
+} from '@/constant'
+import { isOn, toEventKey, thisBindRe, randomString, getFunctionInfo, hasAccessor } from '@/utils'
 import { strategy } from '@/parser/state-type'
 import { unwrapExpression } from '@/parser/state'
+import { recursiveGenTemplateByHook } from './generateTemplate'
 
 export const generateTemplateCondition = (condition) => {
   if (typeof condition === 'boolean') {
@@ -352,22 +362,233 @@ export const handleEventAttrHook = (schemaData) => {
   resArr.push(...eventBindArr)
 }
 
+export const handleSlotBindAttrHook = (schemaData) => {
+  const { resArr, props } = schemaData
+
+  const slot = props?.slot
+
+  if (!slot) {
+    return
+  }
+
+  if (typeof slot === 'string') {
+    resArr.push(`#${slot}`)
+
+    delete props.slot
+  }
+
+  const { name, params } = slot
+
+  let paramsValue = ''
+
+  if (Array.isArray(params)) {
+    paramsValue = `={ ${params.join(',')} }`
+  } else if (typeof params === 'string') {
+    paramsValue = `="${params}"`
+  }
+
+  resArr.push(`#${name}${paramsValue}`)
+
+  delete props.slot
+}
+
+export const handleAttrKeyHook = (schemaData) => {
+  const { props } = schemaData
+  const specialKey = {
+    className: 'class'
+  }
+
+  Object.keys(props || {}).forEach((key) => {
+    if (specialKey[key]) {
+      props[specialKey[key]] = props[key]
+
+      delete props[key]
+    }
+  })
+}
+
+export const handleExpressionAttrHook = (schemaData) => {
+  const { resArr, props } = schemaData
+
+  Object.entries(props).forEach(([key, value]) => {
+    if (value?.type === JS_EXPRESSION && !isOn(key)) {
+      resArr.push(handleJSExpressionBinding(key, value))
+
+      delete props[key]
+    }
+  })
+}
+
+export const handleI18nAttrHook = (schemaData) => {
+  const { resArr, props } = schemaData
+
+  Object.entries(props).forEach(([key, value]) => {
+    if (value?.type === JS_I18N) {
+      resArr.push(handleBindI18n(key, value))
+    }
+  })
+}
+
+const specialTypeHandler = {
+  [JS_EXPRESSION]: ({ value, computed }) => {
+    if (computed) {
+      return {
+        value: `vue.computed(${value.replace(/this\./g, '')})`
+      }
+    }
+
+    return {
+      value: value.replace(/this\./g, '')
+    }
+  },
+  [JS_FUNCTION]: ({ value }) => {
+    const { type, params, body } = getFunctionInfo(value)
+    const inlineFunc = `${type} (${params.join(',')}) => { ${body.replace(/this\./g, '')} }`
+
+    return {
+      value: inlineFunc
+    }
+  },
+  [JS_I18N]: ({ key }) => {
+    return {
+      value: `t("${key}")`
+    }
+  },
+  [JS_RESOURCE]: ({ value }, globalHooks) => {
+    const resourceType = value.split('.')[1]
+
+    if (SPECIAL_UTILS_TYPE.includes(resourceType)) {
+      globalHooks.addStatement({
+        position: INSERT_POSITION.AFTER_PROPS,
+        value: `const { ${resourceType} } = wrap(function() { return this })()`,
+        key: resourceType
+      })
+    }
+
+    return {
+      value: value.replace(/this\./g, '')
+    }
+  },
+  [JS_SLOT]: ({ value = [], params = ['row'] }, globalHooks, config) => {
+    globalHooks.setScriptConfig({ lang: 'jsx' })
+
+    const structData = {
+      resArr: [],
+      schema: { children: value }
+    }
+
+    // TODO: 需要验证 template 的生成有无问题
+    recursiveGenTemplateByHook(structData, globalHooks, config)
+
+    // TODO: 这里不通用，需要设计通用的做法，或者独立成 grid 的 hook
+
+    return {
+      value: `({${params.join(',')}}, h) => ${structData.resArr.join('')}`
+    }
+  }
+}
+
+export const transformObjType = (obj, globalHooks, config) => {
+  if (!obj || typeof obj !== 'object') {
+    return
+  }
+
+  let res = {}
+  let shouldBindToState = false
+
+  if (Array.isArray(obj)) {
+    res = []
+  }
+
+  for (const [key, value] of Object.entries(obj)) {
+    if (typeof value !== 'object') {
+      res[key] = value
+
+      continue
+    }
+
+    if (specialTypeHandler[value?.type]) {
+      res[key] = specialTypeHandler[value.type](value, globalHooks, config)?.value || ''
+
+      if (specialTypes.includes(value.type)) {
+        shouldBindToState = true
+      }
+
+      continue
+    }
+
+    if (hasAccessor(value?.accessor)) {
+      res[key] = value.defaultValue
+
+      globalHooks.addStatement({
+        position: INSERT_POSITION.AFTER_METHODS,
+        value: value.accessor.getter?.value || value.accessor.setter?.value
+      })
+    }
+
+    const { res: tempRes, shouldBindToState: tempShouldBindToState } = transformObjType(value, globalHooks, config)
+
+    res[key] = tempRes
+
+    if (tempShouldBindToState) {
+      shouldBindToState = true
+    }
+  }
+
+  return {
+    shouldBindToState,
+    res
+  }
+}
+
+export const handleObjBindAttrHook = (schemaData, globalHooks, config) => {
+  const { resArr, props } = schemaData
+
+  Object.entries(props).forEach(([key, value]) => {
+    if (!value || typeof value !== 'object') {
+      return
+    }
+
+    if ([JS_EXPRESSION, JS_I18N].includes(value?.type)) {
+      return
+    }
+
+    // TODO: 处理 accessor 协议
+    const { res, shouldBindToState } = transformObjType(value, globalHooks, config)
+
+    if (shouldBindToState) {
+      let stateKey = key
+      let addSuccess = globalHooks.addState(key, res)
+
+      while (!addSuccess) {
+        stateKey = `${key}${randomString()}`
+        addSuccess = globalHooks.addState(key, res)
+      }
+
+      resArr.push(`:${key}=state.${stateKey}`)
+    } else {
+      resArr.push(`:${key}=${res}`)
+    }
+
+    delete props[key]
+  })
+}
+
 // 处理基本类似的 attribute，如 string、boolean
 export const handlePrimitiveAttributeHook = (schemaData) => {
   const { resArr, props } = schemaData
 
   for (const [key, value] of Object.entries(props)) {
     const valueType = typeof value
-    const renderKey = handleAttributeKey(key)
 
     if (valueType === 'string') {
-      resArr.push(`${renderKey}=${value}`)
+      resArr.push(`${key}=${value}`)
 
       delete props[key]
     }
 
     if (['boolean', 'number'].includes(valueType)) {
-      resArr.push(`:${renderKey}=${value}`)
+      resArr.push(`:${key}=${value}`)
 
       delete props[key]
     }

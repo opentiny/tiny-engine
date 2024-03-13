@@ -93,9 +93,9 @@ const toEventKey = (str) => {
   return hyphenate(strRemovedPrefix)
 }
 
-const isGetter = (accessor) => accessor?.getter?.type === JS_FUNCTION
-const isSetter = (accessor) => accessor?.setter?.type === JS_FUNCTION
-const hasAccessor = (accessor) => isGetter(accessor) || isSetter(accessor)
+export const isGetter = (accessor) => accessor?.getter?.type === JS_FUNCTION
+export const isSetter = (accessor) => accessor?.setter?.type === JS_FUNCTION
+export const hasAccessor = (accessor) => isGetter(accessor) || isSetter(accessor)
 
 const addAccessorRecord = (accessor, record) => {
   if (isGetter(accessor)) {
@@ -153,7 +153,6 @@ export {
   prettierOpts,
   isOn,
   toEventKey,
-  hasAccessor,
   addAccessorRecord,
   addIconRecord,
   handleIconInProps
