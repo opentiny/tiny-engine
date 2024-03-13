@@ -39,7 +39,8 @@ services:
       - JWT_SIGN_ALGORITHM="RS256" # JWT签名算法, 要与密钥对符合, 例如密钥对是RSA 2048bit, 那么此处应该是 RS256 (必填)
       - JWT_PUB_KEY=./keys/key.pub # JWT 公钥 (必填)
       - JWT_PRI_KEY=./keys/key.pri # JWT 私钥 (必填)
-      - PWD_SALT=salt # bcrypt 盐(必填)
+      - PWD_SALT=salt # bcrypt 盐(废弃)(必填)
+      - PWD_SALT_LEN=12 # bcrypt 盐长度
     # volumes: # 强烈将下述卷挂载到本地, 以避免数据丢失
       # - ./_test/public:/public # 代码生成暂存位置
       # - ./_test/keys:/keys # 密钥对存放位置
@@ -140,7 +141,8 @@ cd packages/design-core/dist
 - JWT_SIGN_ALGORITHM: JWT签名算法, 要与密钥对符合, 例如密钥对是RSA 2048bit, 那么此处应该是 RS256 (必填)
 - JWT_PUB_KEY: JWT 公钥 (必填)
 - JWT_PRI_KEY: JWT 私钥 (必填)
-- PWD_SALT: bcrypt 盐 (必填)
+- ~~PWD_SALT: bcrypt 盐 (必填)~~
+- PWD_SALT_LEN: bcrypt 盐长度
 
 ### Bug 反馈
 
