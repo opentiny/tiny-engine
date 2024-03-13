@@ -25,7 +25,6 @@ export class CodeGenerateController {
       );
     }
     const filePath = join(process.cwd(), 'public', fileName + '.py');
-    console.log(filePath);
     if (!existsSync(filePath)) {
       throw new HttpException(`${fileName} not found`, HttpStatus.NOT_FOUND);
     }

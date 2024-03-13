@@ -31,7 +31,10 @@ const onConnect = (cb) => {
 const onProgess = (cb) => {
     client.on('progress', cb);
 }
-
+/**
+ * 
+ * @param {(message: string)=>void} cb 
+ */
 const onFinish = (cb) => {
     client.on('finish', cb);
 }
