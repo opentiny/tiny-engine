@@ -12,7 +12,11 @@ declare global {
       JWT_SIGN_ALGORITHM: JwtSignOptions['algorithm'];
       JWT_PUB_KEY: string;
       JWT_PRI_KEY: string;
+      /**
+       * @deprecated
+       */
       PWD_SALT: string; // used for bcrypt
+      PWD_SALT_LEN: string;
     }
   }
   declare const __DEV__: boolean;
