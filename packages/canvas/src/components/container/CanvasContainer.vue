@@ -119,7 +119,7 @@ export default {
         iframeMonitoring()
 
         initCanvas({ emit, renderer: detail, iframe: iframe.value, controller: props.controller })
-        useCanvas().renderer.value = detail
+        useCanvas().renderer.value = window.api
 
         const doc = iframe.value.contentDocument
         const win = iframe.value.contentWindow
