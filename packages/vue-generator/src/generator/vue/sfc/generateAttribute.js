@@ -6,7 +6,8 @@ import {
   JS_RESOURCE,
   JS_SLOT,
   SPECIAL_UTILS_TYPE,
-  INSERT_POSITION
+  INSERT_POSITION,
+  TINY_ICON
 } from '@/constant'
 import { isOn, toEventKey, thisBindRe, randomString, getFunctionInfo, hasAccessor } from '@/utils'
 import { strategy } from '@/parser/state-type'
@@ -43,21 +44,28 @@ export const generateLoopTemplate = (loop, loopArgs) => {
   return `v-for="(${iterVar.join(',')}) in ${source}"`
 }
 
-const handleEventBinding = (key, item) => {
+const handleEventBinding = (key, item, isJSX) => {
   const eventKey = toEventKey(key)
   let eventBinding = ''
 
   // vue 事件绑定，仅支持：内联事件处理器 or 方法事件处理器（绑定方法名或对某个方法的调用）
   if (item?.type === JS_EXPRESSION) {
-    const eventHandler = item.value.replace(thisBindRe, '')
+    let eventHandler = item.value.replace(thisBindRe, '')
+    let renderKey = isJSX ? `${key}` : `@${eventKey}`
 
     // Vue Template 中，为事件处理函数传递额外的参数时，需要使用内联箭头函数
     if (item.params?.length) {
       const extendParams = item.params.join(',')
-      eventBinding = `@${eventKey}="(...eventArgs) => ${eventHandler}(eventArgs, ${extendParams})"`
-    } else {
-      eventBinding = `@${eventKey}="${eventHandler}"`
+      eventHandler = `(...eventArgs) => ${eventHandler}(eventArgs, ${extendParams})`
     }
+
+    if (isJSX) {
+      eventHandler = `{${eventHandler}}`
+    } else {
+      eventHandler = `"${eventHandler}"`
+    }
+
+    eventBinding = `${renderKey}=${eventHandler}`
   }
 
   return eventBinding
@@ -194,24 +202,34 @@ export const handleObjectBinding = (key, value) => {
   }
 }
 
-const handleJSExpressionBinding = (key, value) => {
+const handleJSExpressionBinding = (key, value, isJSX) => {
+  const expressValue = value.value.replace(thisBindRe, '')
+
+  if (isJSX) {
+    return `${key}={${expressValue}}`
+  }
+
   // 支持带参数的 v-model
   if (value.model) {
     const modelArgs = value.model?.prop ? `:${value.model.prop}` : ''
 
-    return `v-model${modelArgs}="${value.value.replace(thisBindRe, '')}"`
+    return `v-model${modelArgs}="${expressValue}"`
   }
 
   // expression 使用 v-bind 绑定
-  return `:${key}="${value.value.replace(thisBindRe, '')}"`
+  return `:${key}="${expressValue}"`
 }
 
-const handleBindI18n = (key, value) => {
+const handleBindI18n = (key, value, isJSX) => {
   const tArguments = [`'${value.key}'`]
   // TODO: 拿到场景用例
   const i18nParams = JSON.stringify(value.params)
 
   i18nParams && tArguments.push(i18nParams)
+
+  if (isJSX) {
+    return `${key}={t(${tArguments.join(',')})}`
+  }
 
   return `:${key}="t(${tArguments.join(',')})"`
 }
@@ -316,12 +334,49 @@ export const generateAttribute = (schema) => {
   }
 }
 
-export const handleConditionAttrHook = (schemaData) => {
-  const { resArr, schema } = schemaData
-  const { condition } = schema
+const handleJSXConditionBind = (schemaData, globalHooks, config) => {
+  const { prefix, suffix, schema: { condition } = {} } = schemaData
+  const isJSX = config.isJSX
+
+  if (!isJSX) {
+    return
+  }
+
+  if (typeof condition !== 'boolean' && !condition?.type) {
+    return
+  }
+
+  if (prefix[0] !== '{') {
+    prefix.unshift('{')
+  }
+
+  if (suffix.at(-1) !== '}') {
+    suffix.push('}')
+  }
 
   if (typeof condition === 'boolean') {
-    resArr.unshift(`v-if=${condition}`)
+    prefix.push(`${condition} && `)
+
+    return
+  }
+
+  const conditionValue = condition?.value?.replace(thisBindRe, '')
+
+  prefix.push(`${conditionValue} &&`)
+}
+
+export const handleConditionAttrHook = (schemaData, globalHooks, config) => {
+  const { attributes, schema: { condition } = {} } = schemaData
+  const isJSX = config.isJSX
+
+  if (isJSX) {
+    handleJSXConditionBind(schemaData, globalHooks, config)
+
+    return
+  }
+
+  if (typeof condition === 'boolean') {
+    attributes.unshift(`v-if=${condition}`)
     return
   }
 
@@ -329,41 +384,64 @@ export const handleConditionAttrHook = (schemaData) => {
     return
   }
 
-  if (condition?.kind === 'else') {
-    resArr.unshift('v-else')
-  }
-
   const conditionValue = condition?.value?.replace(thisBindRe, '')
 
-  resArr.unshift(`v-${condition?.kind || 'if'}=${conditionValue}`)
+  if (condition?.kind === 'else') {
+    attributes.unshift('v-else')
+  }
+
+  attributes.unshift(`v-${condition?.kind || 'if'}=${conditionValue}`)
 }
 
-export const handleLoopAttrHook = (schemaData = {}) => {
-  const { resArr, schema } = schemaData
-  const { loop, loopArgs } = schema || {}
+export const handleLoopAttrHook = (schemaData = {}, globalHooks, config) => {
+  const { prefix, suffix, attributes, schema: { loop, loopArgs } = {} } = schemaData
+  const isJSX = config.isJSX
 
   if (!loop) {
     return
   }
 
-  const source = (loop?.value || '').replace(thisBindRe, '')
+  let source = ''
+
+  if (loop?.value && loop?.type) {
+    source = loop.value.replace(thisBindRe, '')
+  } else {
+    source = JSON.stringify(loop)
+  }
+
   const iterVar = [...loopArgs]
 
-  resArr.push(`v-for="(${iterVar.join(',')}) in ${source}"`)
+  if (!isJSX) {
+    attributes.push(`v-for="(${iterVar.join(',')}) in ${source}"`)
+
+    return
+  }
+
+  prefix.push(`${source}.map((${iterVar.join(',')}) => `)
+  suffix.unshift(`)`)
+
+  if (prefix[0] !== '{') {
+    prefix.unshift['{']
+  }
+
+  if (suffix.at(-1) !== '}') {
+    suffix.push('}')
+  }
 }
 
-export const handleEventAttrHook = (schemaData) => {
-  const { resArr, props } = schemaData
+export const handleEventAttrHook = (schemaData, globalHooks, config) => {
+  const { attributes, schema: { props = {} } = {} } = schemaData || {}
+  const isJSX = config.isJSX
 
   const eventBindArr = Object.entries(props)
     .filter(([key]) => isOn(key))
-    .map(([key, value]) => handleEventBinding(key, value))
+    .map(([key, value]) => handleEventBinding(key, value, isJSX))
 
-  resArr.push(...eventBindArr)
+  attributes.push(...eventBindArr)
 }
 
 export const handleSlotBindAttrHook = (schemaData) => {
-  const { resArr, props } = schemaData
+  const { attributes, schema: { props = {} } = {} } = schemaData || {}
 
   const slot = props?.slot
 
@@ -372,9 +450,11 @@ export const handleSlotBindAttrHook = (schemaData) => {
   }
 
   if (typeof slot === 'string') {
-    resArr.push(`#${slot}`)
+    attributes.push(`#${slot}`)
 
     delete props.slot
+
+    return
   }
 
   const { name, params } = slot
@@ -387,13 +467,13 @@ export const handleSlotBindAttrHook = (schemaData) => {
     paramsValue = `="${params}"`
   }
 
-  resArr.push(`#${name}${paramsValue}`)
+  attributes.push(`#${name}${paramsValue}`)
 
   delete props.slot
 }
 
 export const handleAttrKeyHook = (schemaData) => {
-  const { props } = schemaData
+  const { schema: { props = {} } = {} } = schemaData
   const specialKey = {
     className: 'class'
   }
@@ -407,24 +487,57 @@ export const handleAttrKeyHook = (schemaData) => {
   })
 }
 
-export const handleExpressionAttrHook = (schemaData) => {
-  const { resArr, props } = schemaData
+export const handleExpressionAttrHook = (schemaData, globalHooks, config) => {
+  const { attributes, schema: { props = {} } = {} } = schemaData || {}
+  const isJSX = config.isJSX
 
   Object.entries(props).forEach(([key, value]) => {
     if (value?.type === JS_EXPRESSION && !isOn(key)) {
-      resArr.push(handleJSExpressionBinding(key, value))
+      attributes.push(handleJSExpressionBinding(key, value, isJSX))
 
       delete props[key]
     }
   })
 }
 
-export const handleI18nAttrHook = (schemaData) => {
-  const { resArr, props } = schemaData
+export const handleI18nAttrHook = (schemaData, globalHooks, config) => {
+  const { attributes, schema: { props = {} } = {} } = schemaData || {}
+  const isJSX = config.isJSX
 
   Object.entries(props).forEach(([key, value]) => {
     if (value?.type === JS_I18N) {
-      resArr.push(handleBindI18n(key, value))
+      attributes.push(handleBindI18n(key, value, isJSX))
+    }
+  })
+}
+
+export const handleTinyIconPropsHook = (schemaData, globalHooks, config) => {
+  const { attributes, schema: { props = {} } = {} } = schemaData || {}
+  const isJSX = config.isJSX
+
+  Object.entries(props).forEach(([key, value]) => {
+    if (value?.componentName === 'Icon' && value?.props?.name) {
+      const name = value.props.name
+      const iconName = name.startsWith(TINY_ICON) ? name : `Tiny${name}`
+      const success = globalHooks.addImport('@opentiny/vue-icon', {
+        componentName: name,
+        exportName: name,
+        package: '@opentiny/vue-icon',
+        version: '^3.10.0',
+        destructuring: true
+      })
+
+      if (success) {
+        globalHooks.addStatement({
+          position: INSERT_POSITION.BEFORE_PROPS,
+          value: `const ${iconName} = ${name}()`,
+          key: iconName
+        })
+      }
+
+      attributes.push(isJSX ? `icon={${iconName}}` : `:icon="${iconName}"`)
+
+      delete props[key]
     }
   })
 }
@@ -473,17 +586,17 @@ const specialTypeHandler = {
     globalHooks.setScriptConfig({ lang: 'jsx' })
 
     const structData = {
-      resArr: [],
+      children: [],
       schema: { children: value }
     }
 
     // TODO: 需要验证 template 的生成有无问题
-    recursiveGenTemplateByHook(structData, globalHooks, config)
+    recursiveGenTemplateByHook(structData, globalHooks, { ...config, isJSX: true })
 
     // TODO: 这里不通用，需要设计通用的做法，或者独立成 grid 的 hook
 
     return {
-      value: `({${params.join(',')}}, h) => ${structData.resArr.join('')}`
+      value: `({${params.join(',')}}, h) => ${structData.children.join('')}`
     }
   }
 }
@@ -526,7 +639,8 @@ export const transformObjType = (obj, globalHooks, config) => {
       })
     }
 
-    const { res: tempRes, shouldBindToState: tempShouldBindToState } = transformObjType(value, globalHooks, config)
+    const { res: tempRes, shouldBindToState: tempShouldBindToState } =
+      transformObjType(value, globalHooks, config) || {}
 
     res[key] = tempRes
 
@@ -542,7 +656,9 @@ export const transformObjType = (obj, globalHooks, config) => {
 }
 
 export const handleObjBindAttrHook = (schemaData, globalHooks, config) => {
-  const { resArr, props } = schemaData
+  const { attributes, schema: { props = {} } = {} } = schemaData || {}
+
+  const isJSX = config.isJSX
 
   Object.entries(props).forEach(([key, value]) => {
     if (!value || typeof value !== 'object') {
@@ -553,21 +669,20 @@ export const handleObjBindAttrHook = (schemaData, globalHooks, config) => {
       return
     }
 
-    // TODO: 处理 accessor 协议
     const { res, shouldBindToState } = transformObjType(value, globalHooks, config)
 
-    if (shouldBindToState) {
+    if (shouldBindToState && !isJSX) {
       let stateKey = key
       let addSuccess = globalHooks.addState(key, res)
 
       while (!addSuccess) {
         stateKey = `${key}${randomString()}`
-        addSuccess = globalHooks.addState(key, res)
+        addSuccess = globalHooks.addState(stateKey, res)
       }
 
-      resArr.push(`:${key}=state.${stateKey}`)
+      attributes.push(`:${key}="state.${stateKey}"`)
     } else {
-      resArr.push(`:${key}=${res}`)
+      attributes.push(isJSX ? `${key}={${JSON.stringify(res)}}` : `:${key}="${JSON.stringify(res)}"`)
     }
 
     delete props[key]
@@ -575,20 +690,22 @@ export const handleObjBindAttrHook = (schemaData, globalHooks, config) => {
 }
 
 // 处理基本类似的 attribute，如 string、boolean
-export const handlePrimitiveAttributeHook = (schemaData) => {
-  const { resArr, props } = schemaData
+export const handlePrimitiveAttributeHook = (schemaData, globalHooks, config) => {
+  const { attributes } = schemaData
+  const props = schemaData.schema?.props || {}
+  const isJSX = config.isJSX
 
   for (const [key, value] of Object.entries(props)) {
     const valueType = typeof value
 
     if (valueType === 'string') {
-      resArr.push(`${key}=${value}`)
+      attributes.push(`${key}="${value}"`)
 
       delete props[key]
     }
 
     if (['boolean', 'number'].includes(valueType)) {
-      resArr.push(`:${key}=${value}`)
+      attributes.push(isJSX ? `${key}={${value}}` : `:${key}="${value}"`)
 
       delete props[key]
     }

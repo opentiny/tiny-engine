@@ -2,39 +2,11 @@ import { capitalize } from '@vue/shared'
 import { toEventKey, hasAccessor } from '@/utils'
 import { generateImportByPkgName } from '@/utils/generateImportStatement'
 import { INSERT_POSITION } from '@/constant'
-// import { genCompImport } from './parseImport'
 import { transformObjType } from './generateAttribute'
 
-// const generateImports = (schema, config = {}) => {
-//   const { defaultImports = [], componentsMap = [] } = config
-//   // 组件 import
-//   const compImportStr = genCompImport(schema, componentsMap)
+export const defaultGenImportHook = (schema, globalHooks) => {
+  const dependenciesMap = globalHooks.getImport() || {}
 
-//   return `${[...defaultImports, ...compImportStr].join('\n')}`
-// }
-
-// export const generateSetupScript = (schema, config) => {
-//   // generate import statement
-//   // props 声明
-//   // emits 声明
-//   // resource 工具类绑定
-//   // reactive State 页面变量绑定声明
-//   // js 方法声明绑定
-//   // 生命周期绑定
-
-//   const lang = ''
-//   const scriptStart = `<script setup ${lang}>`
-//   const endScript = '</script>'
-//   const defaultImports = [
-//     'import * as vue from "vue"',
-//     'import { defineProps, defineEmits } from "vue"',
-//     'import { I18nInjectionKey } from "vue-i18n"'
-//   ]
-//   const compImportStr = generateImports(schema)
-//   const importStr = `${defaultImports.join('\n')}\n${compImportStr}`
-// }
-
-export const defaultGenImportHook = (dependenciesMap = {}) => {
   return Object.entries(dependenciesMap)
     .map(([key, value]) => {
       return generateImportByPkgName({ pkgName: key, imports: value }) || ''
@@ -103,7 +75,7 @@ export const defaultGenLifecycleHook = (schema) => {
 
   const restLifeCycleRes = Object.entries(restLifeCycle).map(([key, item]) => `vue.${key}(wrap(${item.value}))`)
 
-  return `${setupRes}${restLifeCycleRes.join('\n')}`
+  return `${setupRes}\n${restLifeCycleRes.join('\n')}`
 }
 
 export const parsePropsHook = (schema, globalHooks) => {
@@ -216,13 +188,12 @@ export const genScriptByHook = (schema, globalHooks, config) => {
     statementGroupByPosition[AFTER_METHODS].push(statement?.value)
   })
 
-  // TODO: statement generate
-  const importStr = genScript[GEN_SCRIPT_HOOKS.GEN_IMPORT]?.() || ''
-  const propsStr = genScript[GEN_SCRIPT_HOOKS.GEN_PROPS]?.() || ''
-  const emitStr = genScript[GEN_SCRIPT_HOOKS.GEN_EMIT]?.() || ''
-  const stateStr = genScript[GEN_SCRIPT_HOOKS.GEN_STATE]?.() || ''
-  const methodStr = genScript[GEN_SCRIPT_HOOKS.GEN_METHOD]?.() || ''
-  const lifeCycleStr = genScript[GEN_SCRIPT_HOOKS.GEN_LIFECYCLE]?.() || ''
+  const importStr = genScript[GEN_SCRIPT_HOOKS.GEN_IMPORT]?.(schema, globalHooks, config) || ''
+  const propsStr = genScript[GEN_SCRIPT_HOOKS.GEN_PROPS]?.(schema, globalHooks, config) || ''
+  const emitStr = genScript[GEN_SCRIPT_HOOKS.GEN_EMIT]?.(schema, globalHooks, config) || ''
+  const stateStr = genScript[GEN_SCRIPT_HOOKS.GEN_STATE]?.(schema, globalHooks, config) || ''
+  const methodStr = genScript[GEN_SCRIPT_HOOKS.GEN_METHOD]?.(schema, globalHooks, config) || ''
+  const lifeCycleStr = genScript[GEN_SCRIPT_HOOKS.GEN_LIFECYCLE]?.(schema, globalHooks, config) || ''
 
   const scriptConfig = globalHooks.getScriptConfig()
 
@@ -233,8 +204,10 @@ export const genScriptByHook = (schema, globalHooks, config) => {
   }
 
   if (scriptConfig.lang) {
-    scriptTag = `${scriptTag} lang=${scriptConfig.lang}`
+    scriptTag = `${scriptTag} lang="${scriptConfig.lang}"`
   }
+
+  scriptTag = `${scriptTag}>`
 
   return `
 ${scriptTag}
@@ -251,6 +224,5 @@ ${statementGroupByPosition[BEFORE_METHODS].join('\n')}
 ${methodStr}
 ${statementGroupByPosition[AFTER_METHODS].join('\n')}
 ${lifeCycleStr}
-</script>
-`
+</script>`
 }

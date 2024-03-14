@@ -36,7 +36,7 @@ const getFunctionInfo = (fnStr) => {
 const safeRandom = () => {
   const mathConstructor = Math
 
-  return mathConstructor.random
+  return mathConstructor.random()
 }
 
 export const randomString = (length = 4, chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') => {
@@ -150,7 +150,6 @@ export {
   getTypeOfSchema,
   getFunctionInfo,
   safeRandom,
-  // randomString,
   avoidDuplicateString,
   lowerFirst,
   toPascalCase,

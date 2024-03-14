@@ -32,9 +32,14 @@ export const getImportMap = (schema, componentsMap, config) => {
   const importComps = componentsMap.filter(({ componentName }) => components.includes(componentName))
 
   importComps.forEach((item) => {
-    pkgMap[item.package] = pkgMap[item.package] || []
+    const key = item.package || item.main
+    if (!key) {
+      return
+    }
 
-    pkgMap[item.package].push(item)
+    pkgMap[key] = pkgMap[key] || []
+
+    pkgMap[key].push(item)
   })
 
   const { blockRelativePath = '../components/', blockSuffix = '.vue' } = config
@@ -43,12 +48,13 @@ export const getImportMap = (schema, componentsMap, config) => {
   blocks.map((name) => {
     const source = `${blockRelativePath}/${name}${blockSuffix}`
 
-    blockPkgMap[source] = {
+    blockPkgMap[source] = blockPkgMap[source] || []
+    blockPkgMap[source].push({
       componentName: name,
       exportName: name,
       destructuring: false,
       package: source
-    }
+    })
   })
 
   return {
