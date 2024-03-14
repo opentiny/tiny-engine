@@ -1,5 +1,12 @@
 import { getImportMap } from './parseImport'
-import { genTemplateByHook, handleComponentNameHook, handleTinyGrid, handleTinyIcon } from './generateTemplate'
+import {
+  genTemplateByHook,
+  handleComponentNameHook,
+  handleTinyGrid,
+  handleTinyIcon,
+  handleExpressionChildren,
+  validEmptyTemplateHook
+} from './generateTemplate'
 import { generateStyleTag } from './generateStyle'
 import {
   handleConditionAttrHook,
@@ -10,7 +17,8 @@ import {
   handleExpressionAttrHook,
   handleI18nAttrHook,
   handleObjBindAttrHook,
-  handleEventAttrHook
+  handleEventAttrHook,
+  handleTinyIconPropsHook
 } from './generateAttribute'
 import {
   GEN_SCRIPT_HOOKS,
@@ -155,6 +163,7 @@ const generateSFCFile = (schema, componentsMap, config = {}) => {
 
       return true
     },
+    getImport: () => ({ ...pkgMap, ...blockPkgMap }),
     setScriptConfig: (newConfig) => {
       if (!newConfig || typeof newConfig !== 'object') {
         return
@@ -197,7 +206,14 @@ const generateSFCFile = (schema, componentsMap, config = {}) => {
 }
 
 export const genSFCWithDefaultPlugin = (schema, componentsMap, config = {}) => {
-  const { componentName = [], attribute = [], children = [], genScript = {}, parseScript = [] } = config.hooks || {}
+  const {
+    componentName = [],
+    attribute = [],
+    children = [],
+    genScript = {},
+    parseScript = [],
+    templateItemValidate = []
+  } = config.hooks || {}
   const defaultComponentHooks = [handleComponentNameHook, handleTinyIcon]
 
   const defaultAttributeHook = [
@@ -209,11 +225,13 @@ export const genSFCWithDefaultPlugin = (schema, componentsMap, config = {}) => {
     handlePrimitiveAttributeHook,
     handleExpressionAttrHook,
     handleI18nAttrHook,
+    handleTinyIconPropsHook,
     handleObjBindAttrHook,
     handleEventAttrHook
   ]
 
-  const defaultChildrenHook = []
+  const defaultChildrenHook = [handleExpressionChildren]
+  const defaultTemplateItemValidateHook = [validEmptyTemplateHook]
 
   const defaultParseScriptHook = [
     addDefaultVueImport,
@@ -237,6 +255,7 @@ export const genSFCWithDefaultPlugin = (schema, componentsMap, config = {}) => {
   const newConfig = {
     ...config,
     hooks: {
+      templateItemValidate: [...templateItemValidate, ...defaultTemplateItemValidateHook],
       componentName: [...componentName, ...defaultComponentHooks],
       attribute: [...attribute, ...defaultAttributeHook],
       children: [...children, ...defaultChildrenHook],

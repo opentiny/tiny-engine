@@ -36,11 +36,17 @@ export function generateImportByPkgName(config) {
     const { componentName, exportName } = defaultImports
 
     if (exportName && exportName !== componentName) {
-      defaultImportStatement = `${exportName} as ${componentName},`
+      defaultImportStatement = `${exportName} as ${componentName}`
     } else {
-      defaultImportStatement = `${exportName},`
+      defaultImportStatement = `${exportName || componentName || ''}`
     }
   }
 
-  return `import ${defaultImportStatement} { ${importStatements.join(',')} } from ${pkgName}`
+  if (!importStatements.length) {
+    return `import ${defaultImportStatement} from "${pkgName}"`
+  }
+
+  const comma = defaultImportStatement ? ',' : ''
+
+  return `import ${defaultImportStatement}${comma} { ${importStatements.join(',')} } from "${pkgName}"`
 }
