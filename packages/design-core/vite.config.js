@@ -204,19 +204,17 @@ export default defineConfig(({ command, mode }) => {
   const { VITE_CDN_DOMAIN: envCdn } = loadEnv(mode, process.cwd(), '')
   const {
     cdnPrefix: localCdn,
+    distDir: localDist,
     versionPlaceholder,
     copyImportMapFilePlugin
   } = useLocalImportMap(isLocalImportMap && (mode === 'alpha') | (mode === 'prod'), getBaseUrlFromCli(config.base))
   const VITE_CDN_DOMAIN = localCdn ?? envCdn
   const monacoLocalPublicPath = `${localCdn}/monaco-assets`
+  const monacoDistPath = `${localDist}/monaco-assets`
   const monacoPublicPath = {
     local: 'editor/monaco-workers',
-    alpha: isLocalImportMap
-      ? monacoLocalPublicPath
-      : 'https://tinyengine-assets.obs.cn-north-4.myhuaweicloud.com/files/monaco-assets',
-    prod: isLocalImportMap
-      ? monacoLocalPublicPath
-      : 'https://tinyengine-assets.obs.cn-north-4.myhuaweicloud.com/files/monaco-assets'
+    alpha: 'https://tinyengine-assets.obs.cn-north-4.myhuaweicloud.com/files/monaco-assets',
+    prod: 'https://tinyengine-assets.obs.cn-north-4.myhuaweicloud.com/files/monaco-assets'
   }
 
   let monacoEditorPluginInstance = monacoEditorPlugin({ publicPath: monacoPublicPath.local })
@@ -266,7 +264,15 @@ export default defineConfig(({ command, mode }) => {
     // command === 'build'
     config.resolve.alias = { ...commonAlias, ...prodAlias }
 
-    monacoEditorPluginInstance = monacoEditorPlugin({ publicPath: monacoPublicPath[mode] })
+    monacoEditorPluginInstance = monacoEditorPlugin(
+      isLocalImportMap
+        ? {
+            publicPath: monacoLocalPublicPath,
+            forceBuildCDN: true,
+            customDistPath: (_root, outDir, _base) => path.join(outDir, monacoDistPath)
+          }
+        : { publicPath: monacoPublicPath[mode] }
+    )
 
     if (mode === 'prod') {
       config.build.minify = true

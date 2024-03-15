@@ -35,6 +35,7 @@ export const useLocalImportMap = (flag, publicPath = '', dir = 'import-map-stati
   if (!flag) {
     return {
       cdnPrefix: null,
+      distDir: null,
       versionPlaceholder: null,
       copyImportMapFilePlugin: (_) => null
     }
@@ -88,6 +89,7 @@ export const useLocalImportMap = (flag, publicPath = '', dir = 'import-map-stati
   }
   return {
     cdnPrefix, // 替换VITE_CDN_DOMAIN
+    distDir: dir,
     versionPlaceholder, //替换@version中的version
     copyImportMapFilePlugin
   }
