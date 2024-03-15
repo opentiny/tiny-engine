@@ -207,7 +207,7 @@ export default defineConfig(({ command, mode }) => {
     distDir: localDist,
     versionPlaceholder,
     copyImportMapFilePlugin
-  } = useLocalImportMap(isLocalImportMap && (mode === 'alpha') | (mode === 'prod'), getBaseUrlFromCli(config.base))
+  } = useLocalImportMap(isLocalImportMap, getBaseUrlFromCli(config.base))
   const VITE_CDN_DOMAIN = localCdn ?? envCdn
   const monacoLocalPublicPath = `${localCdn}/monaco-assets`
   const monacoDistPath = `${localDist}/monaco-assets`
@@ -254,7 +254,7 @@ export default defineConfig(({ command, mode }) => {
     }
 
     config.resolve.alias = [
-      devVueAlias,
+      ...(isLocalImportMap ? [] : [devVueAlias]),
       ...Object.entries({ ...commonAlias, ...devAlias }).map(([find, replacement]) => ({
         find,
         replacement
