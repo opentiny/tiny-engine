@@ -14,7 +14,6 @@ export function relativePathPattern(relativePath) {
   return './' + (path.sep === '/' ? relativePath : relativePath.replace(/\\/g, '/'))
 }
 
-
 export function resolvePath(importPath, currentFilePath) {
   if (['js', 'mjs'].some(suffix =>importPath.endsWith(suffix))) { // 文件名已经带有.js，.mjs后缀
     return importPath
@@ -123,7 +122,3 @@ export function replaceImportPath(dirs, logger = console) {
     }
   })
 }
-
-// replaceImportPath(['dist/import-map-static-copy3/@opentiny/vue-theme@workspace']).then(fileList => {
-//   console.log(`${fileList.length} file(s) handled`)
-// })
