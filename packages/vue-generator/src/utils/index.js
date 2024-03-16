@@ -79,6 +79,8 @@ const prettierOpts = {
 const onRE = /^on([A-Z]\w*)/
 const onUpdateRE = /^on(Update:\w+)/
 export const thisBindRe = /this\.(props\.)?/g
+export const thisPropsBindRe = /this\.(props\.)?/g
+export const thisRegexp = /this\./g
 
 const isOn = (key) => onRE.test(key)
 const isOnUpdate = (key) => onUpdateRE.test(key)

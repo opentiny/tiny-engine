@@ -13,7 +13,7 @@ import CodeGenerator from './codeGenerator'
 
 const inputMock = {
   // 应用相关配置信息
-  //config: {},
+  // config: {},
   // 应用相关的 meta 信息
   appMeta: {},
   // 页面区块信息

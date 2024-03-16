@@ -17,7 +17,7 @@ const HTML_DEFAULT_VOID_ELEMENTS = [
 ]
 
 export const generateTag = (tagName, config = {}) => {
-  const { isVoidElement, isStartTag = true, attribute, useHyphenate = true } = config
+  const { isVoidElement, isStartTag = true, attribute, isJSX = false, useHyphenate = !isJSX } = config
 
   if (typeof tagName !== 'string' || !tagName) {
     return ''

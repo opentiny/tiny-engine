@@ -40,13 +40,13 @@ export function generateImportByPkgName(config) {
     } else {
       defaultImportStatement = `${exportName || componentName || ''}`
     }
+
+    defaultImportStatement = `import ${defaultImportStatement} from "${pkgName}"\n`
   }
 
-  if (!importStatements.length) {
-    return `import ${defaultImportStatement} from "${pkgName}"`
+  if (!importStatements.length && defaultImportStatement) {
+    return defaultImportStatement
   }
 
-  const comma = defaultImportStatement ? ',' : ''
-
-  return `import ${defaultImportStatement}${comma} { ${importStatements.join(',')} } from "${pkgName}"`
+  return `${defaultImportStatement}import { ${importStatements.join(',')} } from "${pkgName}"`
 }

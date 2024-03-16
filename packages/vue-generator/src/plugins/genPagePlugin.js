@@ -1,5 +1,5 @@
 import { mergeOptions } from '../utils/mergeOptions'
-import { generatePageCode } from '../generator/page'
+import { genSFCWithDefaultPlugin } from '../generator'
 
 const defaultOption = {
   pageBasePath: './src/views'
@@ -55,25 +55,13 @@ function genPagePlugin(options = {}) {
       const resPage = []
 
       for (const page of pages) {
-        const res = generatePageCode({
-          pageInfo: { schema: page, name: page.componentName },
-          componentsMap: this.schema.componentsMap
-        })
-
-        const { errors, ...restInfo } = res[0]
-
-        if (errors?.length > 0) {
-          this.genLogs.push(...errors)
-          continue
-        }
-
-        const { panelName, panelValue, panelType } = restInfo
+        const res = genSFCWithDefaultPlugin(page, this.schema.componentsMap)
 
         resPage.push({
-          fileType: panelType,
-          fileName: panelName,
+          fileType: 'vue',
+          fileName: `${page.componentName}.vue`,
           path: page.path,
-          fileContent: panelValue
+          fileContent: res
         })
       }
 

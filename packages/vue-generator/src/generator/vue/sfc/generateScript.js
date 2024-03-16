@@ -1,5 +1,5 @@
 import { capitalize } from '@vue/shared'
-import { toEventKey, hasAccessor } from '@/utils'
+import { toEventKey, isGetter, isSetter } from '@/utils'
 import { generateImportByPkgName } from '@/utils/generateImportStatement'
 import { INSERT_POSITION } from '@/constant'
 import { transformObjType } from './generateAttribute'
@@ -46,7 +46,7 @@ export const defaultGenEmitsHook = (schema) => {
 }
 
 export const defaultGenStateHook = (schema, globalHooks) => {
-  const reactiveStatement = `const state = vue.reactive(${JSON.stringify(globalHooks.getState() || {}, null, 2)})`
+  const reactiveStatement = `const state = vue.reactive({${Object.values(globalHooks.getState()).join(',')}})`
 
   return reactiveStatement
 }
@@ -56,9 +56,10 @@ export const defaultGenMethodHook = (schema, globalHooks) => {
 
   // TODO: 判断 methods 中是否有 jsx
   const methodsArr = Object.entries(methods).map(([key, item]) => `const ${key} = wrap(${item.value})`)
-  const methodsName = Object.keys(methods)
+  const methodsNames = Object.keys(methods)
+  const wrapMethods = methodsNames.length ? `wrap({ ${methodsNames.join(',')} })` : ''
 
-  return `${methodsArr.join('\n')}\nwrap({ ${methodsName.join(',')} })`
+  return `${methodsArr.join('\n')}\n\n${wrapMethods}`
 }
 
 export const defaultGenLifecycleHook = (schema) => {
@@ -83,10 +84,17 @@ export const parsePropsHook = (schema, globalHooks) => {
 
   properties.forEach(({ content = [] }) => {
     content.forEach(({ accessor } = {}) => {
-      if (hasAccessor(accessor)) {
+      if (isGetter(accessor)) {
         globalHooks.addStatement({
           position: INSERT_POSITION.AFTER_METHODS,
-          value: accessor.getter?.value || accessor.setter?.value
+          value: `vue.watchEffect(wrap(${accessor.getter?.value ?? ''}))`
+        })
+      }
+
+      if (isSetter(accessor)) {
+        globalHooks.addStatement({
+          position: INSERT_POSITION.AFTER_METHODS,
+          value: `vue.watchEffect(wrap(${accessor.setter?.value ?? ''}))`
         })
       }
     })
@@ -94,9 +102,9 @@ export const parsePropsHook = (schema, globalHooks) => {
 }
 
 export const parseReactiveStateHook = (schema, globalHooks, config) => {
-  const { res } = transformObjType(globalHooks.getState() || {}, globalHooks, config)
+  const { res } = transformObjType(schema.state, globalHooks, config)
 
-  globalHooks.setState(res || {})
+  globalHooks.addState('$$innerState', `${res.slice(1, -1)}`)
 }
 
 export const handleProvideStatesContextHook = (schema, globalHooks) => {
@@ -113,7 +121,7 @@ export const handleContextInjectHook = (schema, globalHooks) => {
 
   globalHooks.addStatement({
     key: 'tiny-engine-inject-statement',
-    position: INSERT_POSITION.AFTER_PROPS,
+    position: INSERT_POSITION.AFTER_EMIT,
     value: `${injectLowcode}\n${injectLowcodeWrap}\n${wrapStoresStatement}`
   })
 }
@@ -163,13 +171,24 @@ export const genScriptByHook = (schema, globalHooks, config) => {
     parseHook(schema, globalHooks, config)
   }
 
-  const { AFTER_IMPORT, BEFORE_PROPS, AFTER_PROPS, BEFORE_STATE, AFTER_STATE, BEFORE_METHODS, AFTER_METHODS } =
-    INSERT_POSITION
+  const {
+    AFTER_IMPORT,
+    BEFORE_PROPS,
+    AFTER_PROPS,
+    BEFORE_STATE,
+    AFTER_STATE,
+    BEFORE_METHODS,
+    AFTER_METHODS,
+    BEFORE_EMIT,
+    AFTER_EMIT
+  } = INSERT_POSITION
 
   const statementGroupByPosition = {
     [AFTER_IMPORT]: [],
     [BEFORE_PROPS]: [],
     [AFTER_PROPS]: [],
+    [BEFORE_EMIT]: [],
+    [AFTER_EMIT]: [],
     [BEFORE_STATE]: [],
     [AFTER_STATE]: [],
     [BEFORE_METHODS]: [],
@@ -212,17 +231,24 @@ export const genScriptByHook = (schema, globalHooks, config) => {
   return `
 ${scriptTag}
 ${importStr}
+
 ${statementGroupByPosition[AFTER_IMPORT].join('\n')}
 ${statementGroupByPosition[BEFORE_PROPS].join('\n')}
 ${propsStr}
 ${statementGroupByPosition[AFTER_PROPS].join('\n')}
+
+${statementGroupByPosition[BEFORE_EMIT].join('\n')}
 ${emitStr}
+${statementGroupByPosition[AFTER_EMIT].join('\n')}
+
 ${statementGroupByPosition[BEFORE_STATE].join('\n')}
 ${stateStr}
 ${statementGroupByPosition[AFTER_STATE].join('\n')}
+
 ${statementGroupByPosition[BEFORE_METHODS].join('\n')}
 ${methodStr}
 ${statementGroupByPosition[AFTER_METHODS].join('\n')}
+
 ${lifeCycleStr}
 </script>`
 }
