@@ -74,7 +74,8 @@ const generateSFCFile = (schema, componentsMap, config = {}) => {
   const { pkgMap, blockPkgMap } = getImportMap(schema, componentsMap, { blockRelativePath, blockSuffix })
 
   // 解析 state
-  let state = schema.state || {}
+  // let state = schema.state || {}
+  let stateRes = {}
 
   // 解析 method
   const methods = schema.methods || {}
@@ -121,17 +122,17 @@ const generateSFCFile = (schema, componentsMap, config = {}) => {
     },
     getMethods: () => methods,
     addState: (key, value) => {
-      if (state[key]) {
+      if (schema.state[key] || stateRes[key]) {
         return false
       }
 
-      state[key] = value
+      stateRes[key] = value
 
       return true
     },
-    getState: () => state,
-    setState: (newState) => {
-      state = newState
+    getState: () => stateRes,
+    setState: () => {
+      // state = newState
     },
     addImport: (fromPath, config) => {
       const dependenciesMap = pkgMap[fromPath] || blockPkgMap[fromPath]

@@ -10,6 +10,5 @@
  *
  */
 
-import { generateCode, generateBlocksCode, generatePageCode } from './page'
-
-export { generateCode, generateBlocksCode, generatePageCode }
+export { generateCode, generateBlocksCode, generatePageCode } from './page'
+export { genSFCWithDefaultPlugin } from './vue/sfc'

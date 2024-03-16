@@ -7,59 +7,7 @@ import {
   JS_I18N
 } from '@/constant'
 import { generateTag } from './generateTag'
-import { generateAttribute, mergeDescription } from './generateAttribute'
-import { thisBindRe } from '@/utils'
-
-const recursiveGenTemplate = (children) => {
-  const effect = {
-    description: {
-      hasJSX: false,
-      jsResource: { utils: false, bridge: false }
-    },
-    stateVariable: {}
-  }
-
-  const schemaChildren = children || []
-
-  const resArr = schemaChildren.map((schemaItem) => {
-    const { componentName, children } = schemaItem
-    const { description, stateVariable, resultStr } = generateAttribute(schemaItem)
-
-    mergeDescription(effect.description, description)
-    effect.stateVariable = {
-      ...effect.stateVariable,
-      ...(stateVariable || {})
-    }
-
-    const startTag = generateTag(componentName, { attribute: resultStr })
-    const endTag = generateTag(componentName, { isStartTag: false })
-    const { description: childDesc, stateVariable: childStateVar, resStr } = recursiveGenTemplate(children)
-
-    mergeDescription(effect.description, childDesc)
-
-    effect.stateVariable = {
-      ...effect.stateVariable,
-      ...(childStateVar || {})
-    }
-
-    return `${startTag}${resStr}${endTag}`
-  })
-
-  return {
-    ...effect,
-    resStr: resArr.join('')
-  }
-}
-
-export const genTemplate = (schema) => {
-  const { description, stateVariable, resStr } = recursiveGenTemplate(schema.children)
-
-  return {
-    description,
-    stateVariable,
-    resStr: `<template>${resStr}</template>`
-  }
-}
+import { thisPropsBindRe, thisRegexp } from '@/utils'
 
 export const handleComponentNameHook = (nameObj) => {
   const { componentName, schema } = nameObj
@@ -84,10 +32,11 @@ export const handleTinyIcon = (nameObj, globalHooks) => {
 
   const name = nameObj.schema.props.name
   const iconName = name.startsWith(TINY_ICON) ? name : `Tiny${name}`
+  const exportName = name.replace(TINY_ICON, 'icon')
 
   const success = globalHooks.addImport('@opentiny/vue-icon', {
-    componentName: name,
-    exportName: name,
+    componentName: exportName,
+    exportName: exportName,
     package: '@opentiny/vue-icon',
     version: '^3.10.0',
     destructuring: true
@@ -97,7 +46,7 @@ export const handleTinyIcon = (nameObj, globalHooks) => {
   if (success) {
     globalHooks.addStatement({
       position: INSERT_POSITION.BEFORE_PROPS,
-      value: `const ${iconName} = ${name}()`,
+      value: `const ${iconName} = ${exportName}()`,
       key: iconName
     })
   }
@@ -115,19 +64,24 @@ export const handleTinyGrid = (schemaData) => {
   }
 }
 
-export const handleExpressionChildren = (schemaData = {}) => {
+export const handleExpressionChildren = (schemaData = {}, globalHooks, config) => {
   const { children, schema } = schemaData
   const type = schema?.children?.type
+  const isJSX = config.isJSX
+  const prefix = isJSX ? '{' : '{{'
+  const suffix = isJSX ? '}' : '}}'
 
   if (type === JS_EXPRESSION) {
-    children.push(`{{ ${schema.children?.value.replace(thisBindRe, '') || ''} }}`)
+    children.push(
+      `${prefix} ${schema.children?.value.replace(isJSX ? thisRegexp : thisPropsBindRe, '') || ''} ${suffix}`
+    )
 
     delete schema.children
     return
   }
 
   if (type === JS_I18N && schema.children?.key) {
-    children.push(`{{ t('${schema.children.key}') }}`)
+    children.push(`${prefix} t('${schema.children.key}') ${suffix}`)
 
     delete schema.children
     return
@@ -146,7 +100,7 @@ export const validEmptyTemplateHook = (schema = {}) => {
 
 export const recursiveGenTemplateByHook = (schemaWithRes, globalHooks, config = {}) => {
   const schemaChildren = schemaWithRes?.schema?.children || []
-  const { hooks = {} } = config
+  const { hooks = {}, isJSX } = config
   // 自定义 hooks
   const {
     componentName: componentNameHooks,
@@ -172,12 +126,12 @@ export const recursiveGenTemplateByHook = (schemaWithRes, globalHooks, config = 
       return schemaItem || ''
     }
 
-    const { componentName } = schemaItem
+    const { componentName, component } = schemaItem
 
     const optionData = {
       schema: schemaItem,
       voidElement: false,
-      componentName,
+      componentName: componentName ?? component ?? '',
       prefix: [],
       attributes: [],
       children: [],
@@ -198,13 +152,14 @@ export const recursiveGenTemplateByHook = (schemaWithRes, globalHooks, config = 
 
     const startTag = generateTag(optionData.componentName, {
       attribute: optionData.attributes.join(' '),
-      isVoidElement: optionData.voidElement
+      isVoidElement: optionData.voidElement,
+      isJSX
     })
 
     let endTag = ''
 
     if (!optionData.voidElement) {
-      endTag = generateTag(optionData.componentName, { isStartTag: false })
+      endTag = generateTag(optionData.componentName, { isStartTag: false, isJSX })
     }
 
     return `

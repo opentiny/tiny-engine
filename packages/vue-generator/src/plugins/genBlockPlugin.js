@@ -1,5 +1,5 @@
 import { mergeOptions } from '../utils/mergeOptions'
-import { generatePageCode } from '../generator/page'
+import { genSFCWithDefaultPlugin } from '../generator'
 
 const defaultOption = {
   blockBasePath: './src/components'
@@ -25,25 +25,13 @@ function genBlockPlugin(options = {}) {
       const resBlocks = []
 
       for (const block of blocks) {
-        const res = generatePageCode({
-          pageInfo: { schema: block, name: block.componentName },
-          componentsMap: this.schema.componentsMap
-        })
-
-        const { errors, ...restInfo } = res[0]
-
-        if (errors?.length > 0) {
-          this.genLogs.push(...errors)
-          continue
-        }
-
-        const { panelName, panelValue, panelType } = restInfo
+        const res = genSFCWithDefaultPlugin(block, this.schema.componentsMap, { blockRelativePath: './' })
 
         resBlocks.push({
-          fileType: panelType,
-          fileName: panelName,
+          fileType: 'vue',
+          fileName: `${block.componentName}.vue`,
           path: blockBasePath,
-          fileContent: panelValue
+          fileContent: res
         })
       }
 

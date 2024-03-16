@@ -1,0 +1,48 @@
+{
+  "componentName": "Page",
+  "fileName": "UseStateAccessor",
+  "css": "",
+  "props": {},
+  "state": {
+    "firstName": "",
+    "lastName": ""
+  },
+  "methods": {},
+  "lifeCycles": {},
+  "children": [
+    {
+      "componentName": "TinyForm",
+      "props": {
+        "labelWidth": "80px",
+        "labelPosition": "top"
+      },
+      "children": [
+        {
+          "componentName": "TinyFormItem",
+          "props": {
+            "label": "全名"
+          },
+          "children": [
+            {
+              "componentType": "Block",
+              "componentName": "StateAccessor",
+              "props": {
+                "firstName": {
+                  "type": "JSExpression",
+                  "value": "this.state.firstName"
+                },
+                "lastName": {
+                  "type": "JSExpression",
+                  "value": "this.state.lastName"
+                }
+              },
+              "id": "acdd0030"
+            }
+          ],
+          "id": "6140da6b"
+        }
+      ],
+      "id": "88ecfcff"
+    }
+  ]
+}
