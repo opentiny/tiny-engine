@@ -140,10 +140,15 @@ body {
   --base-top-panel-height: 35px;
   --base-bottom-panel-height: 30px;
   --base-nav-panel-width: 40px;
-  scrollbar-color: rgba(0, 0, 0, 0.1) #fff;
-  scrollbar-width: thin;
   -webkit-font-smoothing: subpixel-antialiased;
   background: #f9f9f9;
+}
+
+@supports not selector(::webkit-scrollbar) {
+  body {
+    scrollbar-color: rgba(0, 0, 0, 0.1) #fff;
+    scrollbar-width: thin;
+  }
 }
 
 ol,

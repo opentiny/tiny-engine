@@ -72,3 +72,23 @@ td {
   -webkit-line-clamp: var(--ellipsis-line, 2);
   -webkit-box-orient: vertical;
 }
+
+// support for not webkit browser and won't override ::webkit-scrollbar-* selector
+@supports not selector(::-webkit-scrollbar) {
+  body {
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: #dbdbdb transparent;
+    }
+  }
+
+  .lowcode-scrollbar-hide {
+    scrollbar-width: none;
+  }
+}
+
+.lowcode-scrollbar-hide {
+  &::-webkit-scrollbar {
+    display: none;
+  }    
+}
