@@ -15,7 +15,6 @@
     </div>
     <div class="field-content type-list">
       <a v-for="fieldType in state.fieldTypes" :key="fieldType.name" class="type-item" @click="selectType(fieldType)">
-        <!-- <component :is="fieldType.icon" class="type-icon"></component> -->
         <svg-icon :name="fieldType.icon" class="type-icon" />
         <span>{{ fieldType.name }}</span>
       </a>
