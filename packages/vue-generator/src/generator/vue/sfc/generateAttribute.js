@@ -160,7 +160,7 @@ export const handleConditionAttrHook = (schemaData, globalHooks, config) => {
 }
 
 export const handleLoopAttrHook = (schemaData = {}, globalHooks, config) => {
-  const { prefix, suffix, attributes, schema: { loop, loopArgs } = {} } = schemaData
+  const { prefix, suffix, attributes, schema: { loop, loopArgs = [] } = {} } = schemaData
   const isJSX = config.isJSX
 
   if (!loop) {

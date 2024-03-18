@@ -1,8 +1,8 @@
 // 这里 package.json 格式设置为 js，避免被识别成一个 package
-export default (context) => {
-  const packageName = context?.appName || '@opentiny/tiny-engine-preview-vue'
+export default (schema) => {
+  const packageName = schema?.meta?.name || '@opentiny/tiny-engine-preview-vue'
 
-  return {
+  const res = {
     name: packageName,
     version: '1.0.0',
     scripts: {
@@ -28,4 +28,6 @@ export default (context) => {
       vite: '^4.3.7'
     }
   }
+
+  return JSON.stringify(res)
 }

@@ -1,29 +1,23 @@
-import { mergeOptions } from '../utils/mergeOptions'
 import { templateMap } from '../templates'
 
-const defaultOption = {}
-
-function genTemplatePlugin(options = {}) {
-  // 保留，用作拓展配置用途
-  const realOptions = mergeOptions(defaultOption, options)
-
+function genTemplatePlugin() {
   return {
-    name: 'tinyengine-plugin-generatecode-template',
+    name: 'tinyEngine-generateCode-plugin-template',
     description: 'generate template code',
-    transform() {
-      const meta = this.schema.appMeta
-      const { template } = meta
+    run(schema, context) {
+      const template = context?.template || 'default'
 
       if (!template) {
         return
       }
 
       if (typeof template === 'function') {
-        return template(meta)
+        context.genResult.push(...(template(schema) || []))
+        return
       }
 
       if (templateMap[template]) {
-        return templateMap[template](meta)
+        context.genResult.push(...templateMap[template](schema))
       }
     }
   }

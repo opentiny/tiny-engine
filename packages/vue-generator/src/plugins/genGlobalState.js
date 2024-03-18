@@ -11,18 +11,23 @@ function genDependenciesPlugin(options = {}) {
   const { path } = realOptions
 
   return {
-    name: 'tinyengine-plugin-generatecode-globalState',
+    name: 'tinyEngine-generateCode-plugin-globalState',
     description: 'transform schema to globalState',
     parseSchema(schema) {
-      let { global_state } = schema
+      let globalState = schema?.globalState
 
-      if (!Array.isArray(global_state)) {
-        global_state = []
+      if (!Array.isArray(globalState)) {
+        globalState = []
       }
 
-      return global_state
+      return globalState
     },
-    transform(schema) {
+    /**
+     * 转换 globalState
+     * @param {import('../generator/generateApp').AppSchema} schema
+     * @returns
+     */
+    run(schema) {
       const globalState = this.parseSchema(schema)
 
       const res = []

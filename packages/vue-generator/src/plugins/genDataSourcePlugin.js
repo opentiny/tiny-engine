@@ -11,13 +11,15 @@ function genDataSourcePlugin(options = {}) {
   const { path, fileName } = realOptions
 
   return {
-    name: 'tinyengine-plugin-generatecode-datasource',
+    name: 'tinyEngine-generateCode-plugin-dataSource',
     description: 'transform schema to dataSource plugin',
-    parseSchema(schema) {
-      return schema?.dataSource || {}
-    },
-    transform(schema) {
-      const dataSource = this.parseSchema(schema)
+    /**
+     * 转换 dataSource
+     * @param {import('../generator/generateApp').AppSchema} schema
+     * @returns
+     */
+    run(schema) {
+      const dataSource = schema?.dataSource || {}
 
       const { dataHandler, errorHandler, willFetch, list } = dataSource || {}
 
