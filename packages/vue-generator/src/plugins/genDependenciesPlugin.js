@@ -5,36 +5,47 @@ const defaultOption = {
   path: '.'
 }
 
+const parseSchema = (schema) => {
+  const { utils = [], componentsMap = [] } = schema
+
+  const resDeps = {}
+
+  for (const {
+    type,
+    content: { package: packageName, version }
+  } of utils) {
+    if (type !== 'npm' || resDeps[packageName]) {
+      continue
+    }
+
+    resDeps[packageName] = version || 'latest'
+  }
+
+  for (const { package: packageName, version } of componentsMap) {
+    if (packageName && !resDeps[packageName]) {
+      resDeps[packageName] = version || 'latest'
+    }
+  }
+
+  return resDeps
+}
+
 function genDependenciesPlugin(options = {}) {
   const realOptions = mergeOptions(defaultOption, options)
 
   const { path, fileName } = realOptions
 
   return {
-    name: 'tinyengine-plugin-generatecode-dependencies',
+    name: 'tinyEngine-generateCode-plugin-dependencies',
     description: 'transform dependencies to package.json',
-    parseSchema(schema) {
-      const { utils } = schema
-
-      const utilsDependencies = {}
-
-      for (const {
-        type,
-        content: { package: packageName, version }
-      } of utils) {
-        if (type !== 'npm') {
-          continue
-        }
-
-        utilsDependencies[packageName] = version || 'latest'
-      }
-
-      // TODO, 这里缺组件依赖分析
-      return utilsDependencies
-    },
-    transform(schema) {
-      const { dependencies } = this.parseSchema(schema)
-      const originPackageItem = this.genResult.find((item) => item.fileName === fileName && item.path === path)
+    /**
+     * 分析依赖，写入 package.json
+     * @param {import('../generator/generateApp').AppSchema} schema
+     * @returns
+     */
+    run(schema) {
+      const dependencies = parseSchema(schema)
+      const originPackageItem = this.getFile(path, fileName)
 
       if (!originPackageItem) {
         return {
@@ -51,7 +62,7 @@ function genDependenciesPlugin(options = {}) {
         ...dependencies
       }
 
-      this.replaceGenResult({ fileType: 'json', fileName, path, fileContent: JSON.stringify(originPackageJSON) })
+      this.addFile({ fileType: 'json', fileName, path, fileContent: JSON.stringify(originPackageJSON) }, true)
     }
   }
 }

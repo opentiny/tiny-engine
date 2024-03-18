@@ -12,7 +12,7 @@ export function generateImportStatement(config) {
     statementName = `{ ${statementName} }`
   }
 
-  return `import ${statementName} from ${moduleName}`
+  return `import ${statementName} from '${moduleName}'`
 }
 
 export function generateImportByPkgName(config) {

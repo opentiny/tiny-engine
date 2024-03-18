@@ -15,6 +15,10 @@ import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  test: {
+    exclude: ['**/result/**'],
+    watchExclude: ['**/result/**']
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src')

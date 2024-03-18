@@ -18,13 +18,15 @@ import httpEntryFile from './templateFiles/src/http/index.js?raw'
  * @param {*} str
  * @returns
  */
-const getTemplate = (context, str) => {
+const getTemplate = (schema, str) => {
   return str.replace(/(\$\$TinyEngine{(.*)}END\$)/g, function (match, p1, p2) {
     if (!p2) {
       return ''
     }
+
     const keyArr = p2.split('.')
-    const value = keyArr.reduce((preVal, key) => preVal?.[key] ?? '', context)
+    const value = keyArr.reduce((preVal, key) => preVal?.[key] ?? '', schema)
+
     return value
   })
 }
@@ -33,83 +35,83 @@ const getTemplate = (context, str) => {
  * get project template
  * @returns
  */
-export function generateTemplate(context) {
+export function generateTemplate(schema) {
   return [
     {
       fileType: 'md',
       fileName: 'README.md',
-      paths: '.',
-      fileContent: getTemplate(context, readmeFile)
+      path: '.',
+      fileContent: getTemplate(schema, readmeFile)
     },
     {
       fileType: 'js',
       fileName: 'vite.config.js',
-      paths: '.',
-      fileContent: getTemplate(context, viteConfigFile)
+      path: '.',
+      fileContent: getTemplate(schema, viteConfigFile)
     },
     {
       fileType: 'json',
       fileName: 'package.json',
-      paths: '.',
-      fileContent: getPackageJson(context)
+      path: '.',
+      fileContent: getPackageJson(schema)
     },
     {
       fileName: '.gitignore',
-      paths: '.',
-      fileContent: getTemplate(context, gitIgnoreFile)
+      path: '.',
+      fileContent: getTemplate(schema, gitIgnoreFile)
     },
     {
       fileType: 'html',
       fileName: 'index.html',
-      paths: '.',
-      fileContent: getTemplate(context, entryHTMLFile)
+      path: '.',
+      fileContent: getTemplate(schema, entryHTMLFile)
     },
     {
       fileType: 'js',
       fileName: 'main.js',
-      paths: './src',
-      fileContent: getTemplate(context, mainJSFile)
+      path: './src',
+      fileContent: getTemplate(schema, mainJSFile)
     },
     {
       fileType: 'vue',
       fileName: 'App.vue',
-      paths: './src',
-      fileContent: getTemplate(context, appVueFile)
+      path: './src',
+      fileContent: getTemplate(schema, appVueFile)
     },
     {
       fileType: 'js',
       fileName: 'bridge.js',
-      paths: './src/lowcodeConfig',
+      path: './src/lowcodeConfig',
       fileContent: bridgeFile
     },
     {
       fileType: 'js',
       fileName: 'dataSource.js',
-      paths: './src/lowcodeConfig',
+      path: './src/lowcodeConfig',
       fileContent: dataSourceFile
     },
     {
       fileType: 'js',
       fileName: 'lowcode.js',
-      paths: './src/lowcodeConfig',
+      path: './src/lowcodeConfig',
       fileContent: lowcodeJSFile
     },
     {
       fileType: 'js',
       fileName: 'axios.js',
-      paths: './src/http',
+      path: './src/http',
       fileContent: axiosFile
     },
     {
       fileType: 'js',
       fileName: 'config.js',
-      paths: './src/http',
+      path: './src/http',
       fileContent: axiosConfigFile
     },
     {
       fileType: 'js',
       fileName: 'index.js',
-      paths: './src/http',
+      path: './src/http',
       fileContent: httpEntryFile
     }
   ]

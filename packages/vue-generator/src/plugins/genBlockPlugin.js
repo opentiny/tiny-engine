@@ -8,24 +8,28 @@ const defaultOption = {
 function genBlockPlugin(options = {}) {
   const realOptions = mergeOptions(defaultOption, options)
 
-  const { blockBasePath } = realOptions
+  const { blockBasePath, sfcConfig = {} } = realOptions
 
   return {
-    name: 'tinyengine-plugin-generatecode-block',
+    name: 'tinyEngine-generateCode-plugin-block',
     description: 'transform block schema to code',
-    parseSchema(schema) {
-      const { blockHistories } = schema
-      const blockSchema = blockHistories.map((block) => block?.content).filter((schema) => typeof schema === 'object')
+    /**
+     * 将区块 schema 转换成高代码
+     * @param {import('../generator/generateApp').AppSchema} schema
+     * @returns
+     */
+    run(schema) {
+      const blocks = schema?.blockSchema || []
+      const componentsMap = schema?.componentsMap
 
-      return blockSchema
-    },
-    transform(schema) {
-      const blocks = this.parseSchema(schema)
+      if (blocks && !Array.isArray(blocks)) {
+        throw new Error(`[codeGenerate][plugins] blockSchema should be array, but actually receive ${typeof blocks}`)
+      }
 
       const resBlocks = []
 
       for (const block of blocks) {
-        const res = genSFCWithDefaultPlugin(block, this.schema.componentsMap, { blockRelativePath: './' })
+        const res = genSFCWithDefaultPlugin(block, componentsMap, { blockRelativePath: './', ...sfcConfig })
 
         resBlocks.push({
           fileType: 'vue',

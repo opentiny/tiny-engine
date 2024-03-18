@@ -10,4 +10,4 @@
  *
  */
 
-export { generateCode, generateBlocksCode, generatePageCode } from './generator'
+export { generateCode, generateBlocksCode, generatePageCode, generateApp, CodeGenerator } from './generator'

@@ -38,16 +38,14 @@ function genUtilsPlugin(options = {}) {
   }
 
   return {
-    name: 'tinyengine-plugin-generatecode-utils',
+    name: 'tinyEngine-generateCode-plugin-utils',
     description: 'transform utils schema to utils code',
-    // parseSchema(schema) {
-    //   const { utils } = schema
-    //   return {
-    //     id: 'utils',
-    //     result: utils || []
-    //   }
-    // },
-    transform(schema) {
+    /**
+     * 生成 utils 源码
+     * @param {import('../generator/generateApp').AppSchema} schema
+     * @returns
+     */
+    run(schema) {
       const { utils } = schema
 
       if (!Array.isArray(utils)) {
@@ -76,10 +74,10 @@ function genUtilsPlugin(options = {}) {
       }
 
       const fileContent = `
-      ${importStatements.join('\n')}\n
-      ${variableStatements.join('\n')}\n
-      export { ${exportVariables.join(',')} }
-      `
+${importStatements.join('\n')}
+${variableStatements.join('\n')}
+export { ${exportVariables.join(',')} }
+`
 
       return {
         fileType: 'js',

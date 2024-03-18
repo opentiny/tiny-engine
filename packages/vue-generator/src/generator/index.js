@@ -12,3 +12,5 @@
 
 export { generateCode, generateBlocksCode, generatePageCode } from './page'
 export { genSFCWithDefaultPlugin } from './vue/sfc'
+export { generateApp } from './generateApp'
+export { default as CodeGenerator } from './codeGenerator'

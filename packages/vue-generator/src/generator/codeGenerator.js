@@ -7,6 +7,13 @@ class CodeGenerator {
   context = {}
   // 是否允许插件报错
   tolerateError = true
+  error = []
+  contextApi = {
+    addLog: this.addLog.bind(this),
+    addFile: this.addFile.bind(this),
+    getFile: this.getFile.bind(this),
+    replaceFile: this.replaceFile.bind(this)
+  }
   constructor(config) {
     this.config = config
     this.plugins = config.plugins
@@ -24,58 +31,21 @@ class CodeGenerator {
       config: this.config,
       genResult: this.genResult,
       genLogs: this.genLogs,
+      error: this.error,
       ...this.context
     }
   }
-  /**
-   * 写入 log
-   * @param {*} log
-   */
-  addGenLogs(log) {
-    this.genLogs.push(log)
-  }
-  /**
-   * 覆写 config
-   * @param {*} newConfig
-   */
-  overrideConfig(newConfig) {
-    this.config = newConfig
-  }
-  /**
-   * 覆写 schema
-   * @param {*} newSchema
-   */
-  overrideSchema(newSchema) {
-    this.schema = newSchema
-  }
-  getPluginsByHook(hookName) {
-    const res = []
-
-    for (const pluginItem of this.plugins) {
-      if (typeof pluginItem[hookName] === 'function') {
-        res.push(pluginItem[hookName])
-      }
-    }
-
-    return res
-  }
   async generate(schema) {
-    const hooks = ['transformStart', 'transform', 'transformEnd']
-
     this.schema = this.parseSchema(schema)
+    this.error = []
 
-    let err = []
     let curHookName = ''
 
     try {
-      for (const hookItem of hooks) {
-        curHookName = hookItem
-        const plugins = this.getPluginsByHook(hookItem)
-
-        await this[hookItem](plugins)
-      }
+      await this.transformStart()
+      await this.transform()
     } catch (error) {
-      err.push(error)
+      this.error.push(error)
 
       if (!this.tolerateError) {
         throw new Error(
@@ -85,8 +55,7 @@ class CodeGenerator {
         )
       }
     } finally {
-      const plugins = this.getPluginsByHook('transformEnd')
-      await this.transformEnd(plugins, err)
+      await this.transformEnd()
     }
 
     return {
@@ -98,17 +67,25 @@ class CodeGenerator {
    * 转换开始的钩子，在正式开始转换前，用户可以做一些预处理的动作
    * @param {*} plugins
    */
-  async transformStart(plugins) {
-    for (const pluginItem of plugins) {
-      await pluginItem(this.config, this.getContext())
+  async transformStart() {
+    for (const pluginItem of this.plugins.transformStart) {
+      if (typeof pluginItem.run !== 'function') {
+        continue
+      }
+
+      await pluginItem.run.apply(this.contextApi, [this.schema, this.getContext()])
     }
   }
-  async transform(plugins) {
-    for (const pluginItem of plugins) {
-      const transformRes = await pluginItem(this.schema, this.getContext())
+  async transform() {
+    for (const pluginItem of this.plugins.transform) {
+      if (typeof pluginItem.run !== 'function') {
+        continue
+      }
+
+      const transformRes = await pluginItem.run.apply(this.contextApi, [this.schema, this.getContext()])
 
       if (!transformRes) {
-        return
+        continue
       }
 
       if (Array.isArray(transformRes)) {
@@ -118,9 +95,13 @@ class CodeGenerator {
       }
     }
   }
-  async transformEnd(plugins, err) {
-    for (const pluginItem of plugins) {
-      await pluginItem(err)
+  async transformEnd() {
+    for (const pluginItem of this.plugins.transformEnd) {
+      if (typeof pluginItem.run !== 'function') {
+        continue
+      }
+
+      await pluginItem.run.apply(this.contextApi, [this.schema, this.getContext()])
     }
   }
   parseSchema(schema) {
@@ -138,16 +119,47 @@ class CodeGenerator {
       )
     }
   }
-  replaceGenResult(resultItem) {
+  /**
+   * 写入 log
+   * @param {*} log
+   */
+  addLog(log) {
+    this.genLogs.push(log)
+  }
+  getFile(path, fileName) {
+    return this.genResult.find((item) => item.path === path && item.fileName === fileName)
+  }
+  addFile(file, override) {
+    const { path, fileName } = file
+
+    const isExist = this.getFile(path, fileName)
+
+    if (isExist && !override) {
+      return false
+    }
+
+    if (isExist) {
+      this.replaceFile(file)
+
+      return true
+    }
+
+    this.genResult.push(file)
+
+    return true
+  }
+  replaceFile(resultItem) {
     const { path, fileName } = resultItem
 
     const index = this.genResult.findIndex((item) => item.path === path && item.fileName === fileName)
 
     if (index === -1) {
-      return
+      return false
     }
 
     this.genResult.splice(index, 1, resultItem)
+
+    return true
   }
 }
 

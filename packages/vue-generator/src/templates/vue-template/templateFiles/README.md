@@ -1,4 +1,4 @@
-## $TinyEngine{appName}END$
+## $$TinyEngine{meta.name}END$
 
 本工程是使用 TinyEngine 低代码引擎搭建之后得到的出码工程。
 

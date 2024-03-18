@@ -13,9 +13,14 @@ function genI18nPlugin(options = {}) {
   const { path, localeFileName, entryFileName } = realOptions
 
   return {
-    name: 'tinyengine-plugin-generatecode-i18n',
+    name: 'tinyEngine-generateCode-plugin-i18n',
     description: 'transform i18n schema to i18n code plugin',
-    transform(schema) {
+    /**
+     * 将国际化 schema 转换成 i18n 高代码
+     * @param {import('../generator/generateApp').AppSchema} schema
+     * @returns
+     */
+    run(schema) {
       const i18n = schema?.i18n || []
 
       const res = []
@@ -41,10 +46,9 @@ function genI18nPlugin(options = {}) {
         fileName: localeFileName,
         path,
         fileContent: `
-     ${importStatements.join('\n')}
+${importStatements.join('\n')}
 
-     export default { ${langs.join(',')} }
-    `
+export default { ${langs.join(',')} }`
       })
 
       // 生成 index.js 入口文件
@@ -52,15 +56,14 @@ function genI18nPlugin(options = {}) {
         fileName: entryFileName,
         path,
         fileContent: `
-      import i18n from '@opentiny/tiny-engine-i18n-host'
-      import lowcode from '../lowcode'
-      import locale from './${localeFileName}'
+import i18n from '@opentiny/tiny-engine-i18n-host'
+import lowcode from '../lowcode'
+import locale from './${localeFileName}'
 
-      i18n.lowcode = lowcode
-      ${langs.map((langItem) => `i18n.global.mergeLocaleMessage('${langItem}', locale.${langItem})`).join('\n')}
+i18n.lowcode = lowcode
+${langs.map((langItem) => `i18n.global.mergeLocaleMessage('${langItem}', locale.${langItem})`).join('\n')}
 
-      export default i18n
-    `
+export default i18n`
       })
 
       return res

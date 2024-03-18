@@ -192,8 +192,6 @@ const generateSFCFile = (schema, componentsMap, config = {}) => {
     }
   }
 
-  // TODO: 支持页面级别的 dataSource、utils
-
   // 解析 template
   const templateStr = genTemplateByHook(schema, globalHooks, parsedConfig)
 
