@@ -6,6 +6,7 @@
   </slot>
 
   <tiny-dialog-box
+    v-if="dialogShouldInitialize"
     :visible="state.isVisible"
     title="变量绑定"
     width="48%"
@@ -181,6 +182,10 @@ export default {
     modelValue: {
       type: [String, Number, Boolean, Array, Object, Date],
       default: ''
+    },
+    lazyLoad: {
+      type: Boolean,
+      default: true
     }
   },
   setup(props, { emit }) {
@@ -442,7 +447,9 @@ export default {
       return ''
     }
 
+    const dialogShouldInitialize = ref(!props.lazyLoad)
     const open = () => {
+      dialogShouldInitialize.value = true
       state.isVisible = true
       state.variableName = bindKey.value
       state.variable = getInitVariable()
@@ -527,6 +534,7 @@ export default {
       remove,
       cancel,
       confirm,
+      dialogShouldInitialize,
       open,
       selectItem,
       state,
