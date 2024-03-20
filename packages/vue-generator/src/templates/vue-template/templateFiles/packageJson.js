@@ -15,6 +15,7 @@ export default (schema) => {
     dependencies: {
       '@opentiny/tiny-engine-i18n-host': '^1.0.0',
       '@opentiny/vue': '^3.10.0',
+      '@opentiny/vue-icon': '^3.10.0',
       axios: '^0.21.1',
       'axios-mock-adapter': '^1.19.0',
       vue: '^3.3.9',

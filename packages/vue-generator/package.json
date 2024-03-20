@@ -5,6 +5,7 @@
     "access": "public"
   },
   "main": "dist/tiny-engine-dsl-vue.js",
+  "module": "dist/tiny-engine-dsl-vue.mjs",
   "files": [
     "dist"
   ],

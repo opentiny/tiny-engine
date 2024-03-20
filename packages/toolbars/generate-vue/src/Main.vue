@@ -23,10 +23,18 @@
 <script>
 import { reactive } from 'vue'
 import { Popover } from '@opentiny/vue'
-import { getGlobalConfig, useBlock, useCanvas, useNotify, useLayout } from '@opentiny/tiny-engine-controller'
+import {
+  getGlobalConfig,
+  useBlock,
+  useCanvas,
+  useNotify,
+  useLayout,
+  useEditorInfo
+} from '@opentiny/tiny-engine-controller'
 import { fs } from '@opentiny/tiny-engine-utils'
-import { generateVuePage, generateVueBlock } from './generateCode'
-import { fetchCode, fetchMetaData, fetchPageList } from './http'
+import { useHttp } from '@opentiny/tiny-engine-http'
+import { generateApp } from '@opentiny/tiny-engine-dsl-vue'
+import { fetchMetaData, fetchPageList } from './http'
 import FileSelector from './FileSelector.vue'
 
 export default {
@@ -85,27 +93,71 @@ export default {
       }
     }
 
+    const instance = generateApp()
+
     const getPreGenerateInfo = async () => {
       const params = getParams()
-      const promises = [fetchCode(params), fetchMetaData(params), fetchPageList(params.app)]
+      const { id } = useEditorInfo().useInfo()
+      const promises = [
+        useHttp().get(`/app-center/v1/api/apps/schema/${id}`),
+        fetchMetaData(params),
+        fetchPageList(params.app)
+      ]
 
       if (!state.dirHandle) {
         promises.push(fs.getUserBaseDirHandle())
       }
 
-      const [codeList, metaData, pageList, dirHandle] = await Promise.all(promises)
+      const [appData, metaData, pageList, dirHandle] = await Promise.all(promises)
 
-      return [params, codeList, metaData, pageList, dirHandle]
-    }
+      const appSchema = {
+        // dataSource、utils、i18n、globalState
+        ...metaData,
+        // 页面 schema
+        pageSchema: pageList.map((item) => {
+          const { page_content, ...meta } = item
 
-    const getToSaveFilesInfo = ({ params, codeList, metaData, pageList }) => {
-      const handlers = {
-        Block: generateVueBlock,
-        Page: generateVuePage
+          return {
+            ...page_content,
+            meta: {
+              ...meta,
+              router: meta.route
+            }
+          }
+        }),
+        // 物料数据
+        componentsMap: [...(appData.componentsMap || [])],
+
+        meta: {
+          ...(appData.meta || {})
+        }
       }
-      const filesInfo = handlers[params.type]({ params, codeList, metaData, pageList })
 
-      return filesInfo
+      const res = await instance.generate(appSchema)
+
+      const { genResult = [] } = res || {}
+      const fileRes = genResult.map(({ fileContent, fileName, path, fileType }) => {
+        const slash = path.endsWith('/') || path === '.' ? '' : '/'
+        let filePath = `${path}${slash}`
+        if (filePath.startsWith('./')) {
+          filePath = filePath.slice(2)
+        }
+        if (filePath.startsWith('.')) {
+          filePath = filePath.slice(1)
+        }
+
+        if (filePath.startsWith('/')) {
+          filePath = filePath.slice(1)
+        }
+
+        return {
+          fileContent,
+          filePath: `${filePath}${fileName}`,
+          fileType
+        }
+      })
+
+      return [dirHandle, fileRes]
     }
 
     const saveCodeToLocal = async (filesInfo) => {
@@ -133,10 +185,10 @@ export default {
 
       try {
         // 保存代码前置任务：调用接口生成代码并获取用户本地文件夹授权
-        const [params, codeList, metaData, pageList, dirHandle] = await getPreGenerateInfo()
+        const [dirHandle, fileRes] = await getPreGenerateInfo()
 
         // 暂存待生成代码文件信息
-        state.saveFilesInfo = getToSaveFilesInfo({ params, codeList, metaData, pageList })
+        state.saveFilesInfo = fileRes
 
         // 保存用户授权的文件夹句柄
         initDirHandle(dirHandle)

@@ -74,7 +74,6 @@ const generateSFCFile = (schema, componentsMap, config = {}) => {
   const { pkgMap, blockPkgMap } = getImportMap(schema, componentsMap, { blockRelativePath, blockSuffix })
 
   // 解析 state
-  // let state = schema.state || {}
   let stateRes = {}
 
   // 解析 method

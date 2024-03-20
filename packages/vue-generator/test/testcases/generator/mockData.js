@@ -1,18 +1,4 @@
 export const appSchemaDemo01 = {
-  meta: {
-    name: 'portal-app',
-    tenant: 1,
-    git_group: '',
-    project_name: '',
-    description: 'demo应用',
-    branch: 'develop',
-    is_demo: null,
-    global_state: [],
-    appId: '918',
-    creator: '',
-    gmt_create: '2022-06-08 03:19:01',
-    gmt_modified: '2023-08-23 10:22:28'
-  },
   dataSource: {
     list: [
       {
@@ -690,9 +676,118 @@ export const appSchemaDemo01 = {
       value: 'function dataHanlder(res){\n return res;\n}'
     }
   },
+  globalState: [],
+  utils: [
+    {
+      name: 'axios',
+      type: 'npm',
+      content: {
+        type: 'JSFunction',
+        value: '',
+        package: 'axios',
+        destructuring: false,
+        exportName: 'axios'
+      }
+    },
+    {
+      name: 'Button',
+      type: 'npm',
+      content: {
+        package: '@opentiny/vue',
+        version: '',
+        exportName: 'Button',
+        subName: '',
+        destructuring: true,
+        main: ''
+      }
+    },
+    {
+      name: 'Menu',
+      type: 'npm',
+      content: {
+        type: 'JSFunction',
+        value: '',
+        package: '@opentiny/vue',
+        exportName: 'NavMenu',
+        destructuring: true
+      }
+    },
+    {
+      name: 'Modal ',
+      type: 'npm',
+      content: {
+        package: '@opentiny/vue',
+        version: '',
+        exportName: 'Modal ',
+        subName: '',
+        destructuring: true,
+        main: ''
+      }
+    },
+    {
+      name: 'npm',
+      type: 'function',
+      content: {
+        type: 'JSFunction',
+        value: "''"
+      }
+    },
+    {
+      name: 'Pager',
+      type: 'npm',
+      content: {
+        package: '@opentiny/vue',
+        version: '',
+        exportName: 'Pager',
+        subName: '',
+        destructuring: true,
+        main: ''
+      }
+    },
+    {
+      name: 'test',
+      type: 'function',
+      content: {
+        type: 'JSFunction',
+        value: "function test() {\r\n  return 'test'\r\n}"
+      }
+    },
+    {
+      name: 'util',
+      type: 'function',
+      content: {
+        type: 'JSFunction',
+        value: 'function util () {\r\n  console.log(321)\r\n}'
+      }
+    }
+  ],
   i18n: {
+    en_US: {
+      'lowcode.c257d5e8': 'search',
+      'lowcode.61c8ac8c': 'dsdsa',
+      'lowcode.f53187a0': 'test',
+      'lowcode.97ad00dd': 'createMaterial',
+      'lowcode.61dcef52': 'sadasda',
+      'lowcode.45f4c42a': 'gfdgfd',
+      'lowcode.c6f5a652': 'fsdafds',
+      'lowcode.34923432': 'fdsafds',
+      'lowcode.6534943e': 'fdsafdsa',
+      'lowcode.44252642': 'aaaa',
+      'lowcode.2a743651': 'fdsaf',
+      'lowcode.24315357': 'fsdafds',
+      'lowcode.44621691': 'sd',
+      'lowcode.65636226': 'fdsfsd',
+      'lowcode.6426a4e2': 'fdsafsd',
+      'lowcode.e41c6636': 'aa',
+      'lowcode.51c23164': 'aa',
+      'lowcode.17245b46': 'aa',
+      'lowcode.4573143c': 'a',
+      'lowcode.56432442': 'aa',
+      'lowcode.33566643': 'aa',
+      'lowcode.565128f3': 'aa',
+      'lowcode.56643835': 'aa'
+    },
     zh_CN: {
-      'lowcode.cca8d0ea': '应用',
       'lowcode.c257d5e8': '查询',
       'lowcode.61c8ac8c': '地方',
       'lowcode.f53187a0': '测试',
@@ -716,42 +811,66 @@ export const appSchemaDemo01 = {
       'lowcode.56432442': 'aa',
       'lowcode.33566643': 'aa',
       'lowcode.565128f3': 'aa',
-      'lowcode.56643835': 'aa',
-      'lowcode.33311134': 'aa',
-      'lowcode.44326643': 'aa',
-      'lowcode.36223242': 'aa'
-    },
-    en_US: {
-      'lowcode.cca8d0ea': 'app',
-      'lowcode.c257d5e8': 'search',
-      'lowcode.61c8ac8c': 'dsdsa',
-      'lowcode.f53187a0': 'test',
-      'lowcode.97ad00dd': 'createMaterial',
-      'lowcode.61dcef52': 'sadasda',
-      'lowcode.45f4c42a': 'gfdgfd',
-      'lowcode.c6f5a652': 'fsdafds',
-      'lowcode.34923432': 'fdsafds',
-      'lowcode.6534943e': 'fdsafdsa',
-      'lowcode.44252642': 'aaaa',
-      'lowcode.2a743651': 'fdsaf',
-      'lowcode.24315357': 'fsdafds',
-      'lowcode.44621691': 'sd',
-      'lowcode.65636226': 'fdsfsd',
-      'lowcode.6426a4e2': 'fdsafsd',
-      'lowcode.e41c6636': 'aa',
-      'lowcode.51c23164': 'aa',
-      'lowcode.17245b46': 'aa',
-      'lowcode.4573143c': 'a',
-      'lowcode.56432442': 'aa',
-      'lowcode.33566643': 'aa',
-      'lowcode.565128f3': 'aa',
-      'lowcode.56643835': 'aa',
-      'lowcode.33311134': 'aa',
-      'lowcode.44326643': 'aa',
-      'lowcode.36223242': 'aa'
+      'lowcode.56643835': 'aa'
     }
   },
   pageSchema: [
+    {
+      state: {},
+      methods: {},
+      componentName: 'Page',
+      css: '',
+      props: {},
+      lifeCycles: {},
+      children: [
+        {
+          componentName: 'div',
+          props: {},
+          id: '85375559',
+          children: [
+            {
+              componentName: 'TinySwitch',
+              props: {
+                modelValue: ''
+              },
+              id: '33433546'
+            }
+          ]
+        }
+      ],
+      dataSource: {
+        list: []
+      },
+      utils: [],
+      bridge: [],
+      inputs: [],
+      outputs: [],
+      fileName: 'DemoPage',
+      meta: {
+        name: 'DemoPage',
+        id: '5bhD7p5FUsUOTFRN',
+        app: '918',
+        router: 'demopage',
+        tenant: 1,
+        isBody: false,
+        parentId: '0',
+        group: 'staticPages',
+        depth: 0,
+        isPage: true,
+        isDefault: false,
+        occupier: {
+          id: 86,
+          username: '开发者',
+          email: 'developer@lowcode.com',
+          resetPasswordToken: 'developer',
+          confirmationToken: 'dfb2c162-351f-4f44-ad5f-8998',
+          is_admin: true
+        },
+        isHome: false,
+        message: 'Page auto save',
+        _id: '5bhD7p5FUsUOTFRN'
+      }
+    },
     {
       state: {
         dataDisk: [1, 2, 3]
@@ -1698,34 +1817,27 @@ export const appSchemaDemo01 = {
       ],
       fileName: 'createVm',
       meta: {
-        id: 1977,
+        name: 'createVm',
+        id: 'NTJ4MjvqoVj8OVsc',
+        app: '918',
+        router: 'createVm',
+        tenant: 1,
+        isBody: false,
         parentId: '0',
         group: 'staticPages',
+        depth: 0,
+        isPage: true,
+        isDefault: false,
         occupier: {
           id: 86,
           username: '开发者',
           email: 'developer@lowcode.com',
-          provider: null,
-          password: null,
           resetPasswordToken: 'developer',
-          confirmationToken: 'dfb2c162-351f-4f44-ad5f-899831311129',
-          confirmed: true,
-          blocked: null,
-          role: null,
-          created_by: null,
-          updated_by: null,
-          created_at: '2022-05-27T16:50:44.000Z',
-          updated_at: '2022-05-27T16:50:44.000Z',
-          block: null,
-          is_admin: true,
-          is_public: null
+          confirmationToken: 'dfb2c162-351f-4f44-ad5f-8998',
+          is_admin: true
         },
         isHome: false,
-        router: 'createVm',
-        rootElement: 'div',
-        creator: '',
-        gmt_create: '2022-07-21 03:08:20',
-        gmt_modified: '2022-07-21 05:18:26'
+        _id: 'NTJ4MjvqoVj8OVsc'
       }
     }
   ],
@@ -1795,7 +1907,7 @@ export const appSchemaDemo01 = {
     },
     {
       componentName: 'TinyPlusFrozenPage',
-      package: '@opentiny/vuee',
+      package: '@opentiny/vue',
       exportName: 'FrozenPage',
       destructuring: true,
       version: '3.4.1'
@@ -2006,98 +2118,18 @@ export const appSchemaDemo01 = {
       version: '1.0.0'
     }
   ],
-  bridge: [],
-  utils: [
-    {
-      name: 'axios',
-      type: 'npm',
-      content: {
-        type: 'JSFunction',
-        value: '',
-        package: 'axios',
-        destructuring: false,
-        exportName: 'axios'
-      }
-    },
-    {
-      name: 'Button',
-      type: 'npm',
-      content: {
-        package: '@opentiny/vue',
-        version: '',
-        exportName: 'Button',
-        subName: '',
-        destructuring: true,
-        main: ''
-      }
-    },
-    {
-      name: 'Menu',
-      type: 'npm',
-      content: {
-        type: 'JSFunction',
-        value: '',
-        package: '@opentiny/vue',
-        exportName: 'NavMenu',
-        destructuring: true
-      }
-    },
-    {
-      name: 'Modal ',
-      type: 'npm',
-      content: {
-        package: '@opentiny/vue',
-        version: '',
-        exportName: 'Modal ',
-        subName: '',
-        destructuring: true,
-        main: ''
-      }
-    },
-    {
-      name: 'npm',
-      type: 'function',
-      content: {
-        type: 'JSFunction',
-        value: "''"
-      }
-    },
-    {
-      name: 'Pager',
-      type: 'npm',
-      content: {
-        package: '@opentiny/vue',
-        version: '',
-        exportName: 'Pager',
-        subName: '',
-        destructuring: true,
-        main: ''
-      }
-    },
-    {
-      name: 'test',
-      type: 'function',
-      content: {
-        type: 'JSFunction',
-        value: "function test() {\r\n  return 'test'\r\n}"
-      }
-    },
-    {
-      name: 'util',
-      type: 'function',
-      content: {
-        type: 'JSFunction',
-        value: 'function util () {\r\n  console.log(321)\r\n}'
-      }
-    }
-  ],
-  config: {
-    sdkVersion: '1.0.3',
-    historyMode: 'hash',
-    targetRootID: 'app'
-  },
-  constants: '',
-  css: '',
-  version: '',
-  globalState: []
+  meta: {
+    name: 'portal-app',
+    tenant: 1,
+    git_group: '',
+    project_name: '',
+    description: 'demo应用',
+    branch: 'develop',
+    is_demo: null,
+    global_state: [],
+    appId: '918',
+    creator: '',
+    gmt_create: '2022-06-08 03:19:01',
+    gmt_modified: '2023-08-23 10:22:28'
+  }
 }

@@ -8,7 +8,8 @@ import {
   genTemplatePlugin,
   genUtilsPlugin,
   formatCodePlugin,
-  parseSchemaPlugin
+  parseSchemaPlugin,
+  genGlobalState
 } from '../plugins'
 import CodeGenerator from './codeGenerator'
 
@@ -51,7 +52,7 @@ import CodeGenerator from './codeGenerator'
  * @property {Object.<String, { type: "JSFunction", value: String }>} methods
  * @property {Object<String, any>} props
  * @property {Array<Object.<String, any>>} state
- * @property {{ id: Number, isHome: Boolean, parentId: String, rootElement: String, router: String }} meta
+ * @property {{ id: Number, isHome: Boolean, parentId: String, rootElement: String, route: String }} meta
  * @property {Array.<SchemaChildrenItem>} children
  * @property {{ properties: Array<Object.<String, any>>, events: Object.<String> }} [schema]
  */
@@ -123,16 +124,17 @@ import CodeGenerator from './codeGenerator'
  */
 export function generateApp(config = {}) {
   const defaultPlugins = {
-    template: new genTemplatePlugin(config.pluginConfig?.template || {}),
-    block: new genBlockPlugin(config.pluginConfig?.block || {}),
-    page: new genPagePlugin(config.pluginConfig?.page || {}),
-    dataSource: new genDataSourcePlugin(config.pluginConfig?.dataSource || {}),
-    dependencies: new genDependenciesPlugin(config.pluginConfig?.dependencies || {}),
-    i18n: new genI18nPlugin(config.pluginConfig?.i18n || {}),
-    router: new genRouterPlugin(config.pluginConfig?.router || {}),
-    utils: new genUtilsPlugin(config.pluginConfig?.utils || {}),
-    formatCode: new formatCodePlugin(config.pluginConfig?.formatCode || {}),
-    parseSchema: new parseSchemaPlugin(config.pluginConfig?.parseSchema || {})
+    template: genTemplatePlugin(config.pluginConfig?.template || {}),
+    block: genBlockPlugin(config.pluginConfig?.block || {}),
+    page: genPagePlugin(config.pluginConfig?.page || {}),
+    dataSource: genDataSourcePlugin(config.pluginConfig?.dataSource || {}),
+    dependencies: genDependenciesPlugin(config.pluginConfig?.dependencies || {}),
+    globalState: genGlobalState(config.pluginConfig?.globalState || {}),
+    i18n: genI18nPlugin(config.pluginConfig?.i18n || {}),
+    router: genRouterPlugin(config.pluginConfig?.router || {}),
+    utils: genUtilsPlugin(config.pluginConfig?.utils || {}),
+    formatCode: formatCodePlugin(config.pluginConfig?.formatCode || {}),
+    parseSchema: parseSchemaPlugin(config.pluginConfig?.parseSchema || {})
   }
 
   const { customPlugins = {} } = config
@@ -147,6 +149,7 @@ export function generateApp(config = {}) {
     utils,
     formatCode,
     parseSchema,
+    globalState,
     transformStart = [],
     transform = [],
     transformEnd = []
@@ -159,7 +162,8 @@ export function generateApp(config = {}) {
     dependencies: dependencies || defaultPlugins.dependencies,
     i18n: i18n || defaultPlugins.i18n,
     router: router || defaultPlugins.router,
-    utils: utils || defaultPlugins.utils
+    utils: utils || defaultPlugins.utils,
+    globalState: globalState || defaultPlugins.globalState
   }
 
   const codeGenInstance = new CodeGenerator({
