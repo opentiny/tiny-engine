@@ -4,7 +4,7 @@
   </a>
 </p>
 
-<p align="center">TinyEngine低代码引擎使能开发者定制低代码平台，支持在线实时构建低码平台，支持二次开发或集成低码平台能力</p>
+<p align="center">TinyEngine低代码引擎能使开发者定制低代码平台，支持在线实时构建低码平台，支持二次开发或集成低码平台能力</p>
 
 [English](README.md) | 简体中文
 
