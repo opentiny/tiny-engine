@@ -5,6 +5,16 @@ const defaultOption = {
   path: './src/stores'
 }
 
+const parseSchema = (schema) => {
+  let globalState = schema?.globalState
+
+  if (!Array.isArray(globalState)) {
+    globalState = []
+  }
+
+  return globalState
+}
+
 function genDependenciesPlugin(options = {}) {
   const realOptions = mergeOptions(defaultOption, options)
 
@@ -13,22 +23,13 @@ function genDependenciesPlugin(options = {}) {
   return {
     name: 'tinyEngine-generateCode-plugin-globalState',
     description: 'transform schema to globalState',
-    parseSchema(schema) {
-      let globalState = schema?.globalState
-
-      if (!Array.isArray(globalState)) {
-        globalState = []
-      }
-
-      return globalState
-    },
     /**
      * 转换 globalState
      * @param {import('../generator/generateApp').AppSchema} schema
      * @returns
      */
     run(schema) {
-      const globalState = this.parseSchema(schema)
+      const globalState = parseSchema(schema)
 
       const res = []
       const ids = []

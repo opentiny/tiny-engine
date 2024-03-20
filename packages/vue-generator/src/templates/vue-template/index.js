@@ -8,6 +8,7 @@ import appVueFile from './templateFiles/src/App.vue?raw'
 import bridgeFile from './templateFiles/src/lowcodeConfig/bridge.js?raw'
 import dataSourceFile from './templateFiles/src/lowcodeConfig/dataSource.js?raw'
 import lowcodeJSFile from './templateFiles/src/lowcodeConfig/lowcode.js?raw'
+import lowcodeStoreFile from './templateFiles/src/lowcodeConfig/store.js?raw'
 import axiosFile from './templateFiles/src/http/axios.js?raw'
 import axiosConfigFile from './templateFiles/src/http/config.js?raw'
 import httpEntryFile from './templateFiles/src/http/index.js?raw'
@@ -95,6 +96,12 @@ export function generateTemplate(schema) {
       fileName: 'lowcode.js',
       path: './src/lowcodeConfig',
       fileContent: lowcodeJSFile
+    },
+    {
+      fileType: 'js',
+      fileName: 'store.js',
+      path: './src/lowcodeConfig',
+      fileContent: lowcodeStoreFile
     },
     {
       fileType: 'js',

@@ -21,10 +21,16 @@ const parseSchema = (schema) => {
     resDeps[packageName] = version || 'latest'
   }
 
+  // TODO: 这里理论上应该传 物料数据，然后分析页面 schema 中用到的所有组件，将需要的组件的依赖注入到 package.json，没用到则不注入
   for (const { package: packageName, version } of componentsMap) {
     if (packageName && !resDeps[packageName]) {
       resDeps[packageName] = version || 'latest'
     }
+  }
+
+  // 处理内置 Icon，如果使用了 tinyvue 组件，则默认添加 @opentiny/vue-icon 依赖，且依赖与 @opentiny/vue 依赖版本一致
+  if (resDeps['@opentiny/vue']) {
+    resDeps['@opentiny/vue-icon'] = resDeps['@opentiny/vue']
   }
 
   return resDeps

@@ -3,7 +3,6 @@ import path from 'path'
 import fs from 'fs'
 import { generateApp } from '@/generator/generateApp'
 import { appSchemaDemo01 } from './mockData'
-// import { describe } from 'node:test'
 
 describe('generate whole application', () => {
   test('should not throw error', async () => {
@@ -13,8 +12,8 @@ describe('generate whole application', () => {
     const { genResult } = res
 
     genResult.forEach(({ fileName, path: filePath, fileContent }) => {
-      fs.mkdirSync(path.resolve(__dirname, `./result/${filePath}`), { recursive: true })
-      fs.writeFileSync(path.resolve(__dirname, `./result/${filePath}/${fileName}`), fileContent)
+      fs.mkdirSync(path.resolve(__dirname, `./result/appdemo01/${filePath}`), { recursive: true })
+      fs.writeFileSync(path.resolve(__dirname, `./result/appdemo01/${filePath}/${fileName}`), fileContent)
     })
 
     expect(true).toBe(true)

@@ -2,7 +2,7 @@ import { mergeOptions } from '../utils/mergeOptions'
 
 const defaultOption = {
   fileName: 'dataSource.json',
-  path: './src'
+  path: './src/lowcodeConfig'
 }
 
 function genDataSourcePlugin(options = {}) {
