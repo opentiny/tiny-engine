@@ -13,6 +13,7 @@ import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import { importmapPlugin } from './scripts/externalDeps'
 import { useLocalImportMap, getBaseUrlFromCli } from './scripts/copyExternal'
 import visualizer from 'rollup-plugin-visualizer'
+import { CopyBundleDeps } from './scripts/copyBundleDeps'
 
 const origin = 'http://localhost:9090/'
 
@@ -200,6 +201,7 @@ const commonAlias = {
   '@opentiny/tiny-engine-app-addons': path.resolve(__dirname, './config/addons.js')
 }
 const isLocalImportMap = true // true公共依赖库使用本地打包文件，false公共依赖库使用公共CDN
+const isCopyBundleDeps = true // true bundle里的cdn依赖处理成本地依赖， false 不处理
 export default defineConfig(({ command, mode }) => {
   const { VITE_CDN_DOMAIN: envCdn } = loadEnv(mode, process.cwd(), '')
   const {
@@ -250,7 +252,7 @@ export default defineConfig(({ command, mode }) => {
   if (command === 'serve') {
     const devVueAlias = {
       find: /^vue$/,
-      replacement: `${VITE_CDN_DOMAIN}/vue@${importMapVersions.vue}/dist/vue.runtime.esm-browser.js`
+      replacement: `${envCdn}/vue@${importMapVersions.vue}/dist/vue.runtime.esm-browser.js`
     }
 
     config.resolve.alias = [
@@ -342,7 +344,16 @@ export default defineConfig(({ command, mode }) => {
         '@opentiny/vue-theme/theme-tool',
         '@opentiny/vue-theme/theme'
       ]
-    )
+    ),
+    isCopyBundleDeps
+      ? CopyBundleDeps(
+          'public/mock/bundle.json',
+          'mock/bundle.json',
+          'https://npm.onmicrosoft.cn',
+          getBaseUrlFromCli(config.base),
+          'material-static'
+        ).plugin()
+      : []
   )
   return config
 })

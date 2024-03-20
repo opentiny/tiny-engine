@@ -1,5 +1,5 @@
-import path from 'node:path'
-import { glob } from 'glob'
+import fg from 'fast-glob'
+import { normalizePath } from 'vite'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
 import { babelReplaceImportPathWithCertainFIleName } from './replaceImportPath.mjs'
 
@@ -35,9 +35,9 @@ export const useLocalImportMap = (flag, publicPath = '', dir = 'import-map-stati
           }
           return content
         }
-        const replace = (relativePath) => (path.sep === '/' ? relativePath : relativePath.replace(/\\/g, '/'))
-        const onlyFiles = (globString) => glob.sync(globString + '/**/*', { nodir: true }).map((p) => replace(p))
-        return [libKey, libPath, onlyFiles(srcPath), distPath, rename, transform]
+        const onlyFiles = (globString) =>
+          fg.sync(globString + '/**/*', { onlyFiles: true }).map((p) => normalizePath(p))
+        return [libKey, libPath, onlyFiles(srcPath), distPath, rename, transform, srcPath]
       }
       const srcPath = libPath
         .replace(new RegExp('^' + cdnPrefix + '/' + '(.*?)' + '@' + versionPlaceholder), 'node_modules/$1')
