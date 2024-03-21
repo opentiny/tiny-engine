@@ -33,8 +33,8 @@ import {
 } from '@opentiny/tiny-engine-controller'
 import { fs } from '@opentiny/tiny-engine-utils'
 import { useHttp } from '@opentiny/tiny-engine-http'
-import { generateApp } from '@opentiny/tiny-engine-dsl-vue'
-import { fetchMetaData, fetchPageList } from './http'
+import { generateApp, parseRequiredBlocks } from '@opentiny/tiny-engine-dsl-vue'
+import { fetchMetaData, fetchPageList, fetchBlockSchema } from './http'
 import FileSelector from './FileSelector.vue'
 
 export default {
@@ -93,6 +93,33 @@ export default {
       }
     }
 
+    const getBlocksSchema = async (pageSchema, blockSet = new Set()) => {
+      let res = []
+
+      const blockNames = parseRequiredBlocks(pageSchema)
+      const promiseList = blockNames
+        .filter((name) => {
+          if (blockSet.has(name)) {
+            return false
+          }
+
+          blockSet.add(name)
+
+          return true
+        })
+        .map((name) => fetchBlockSchema(name))
+      const schemaList = await Promise.allSettled(promiseList)
+
+      schemaList.forEach((item) => {
+        if (item.status === 'fulfilled' && item.value?.[0]?.content) {
+          res.push(item.value[0].content)
+          res.push(...getBlocksSchema(item.value[0].content, blockSet))
+        }
+      })
+
+      return res
+    }
+
     const instance = generateApp()
 
     const getPreGenerateInfo = async () => {
@@ -110,6 +137,17 @@ export default {
 
       const [appData, metaData, pageList, dirHandle] = await Promise.all(promises)
 
+      const blockSet = new Set()
+      const list = pageList.map((page) => getBlocksSchema(page.page_content, blockSet))
+      const blocks = await Promise.allSettled(list)
+
+      const blockSchema = []
+      blocks.forEach((item) => {
+        if (item.status === 'fulfilled' && Array.isArray(item.value)) {
+          blockSchema.push(...blockSchema)
+        }
+      })
+
       const appSchema = {
         // dataSource、utils、i18n、globalState
         ...metaData,
@@ -125,6 +163,7 @@ export default {
             }
           }
         }),
+        blockSchema,
         // 物料数据
         componentsMap: [...(appData.componentsMap || [])],
 
