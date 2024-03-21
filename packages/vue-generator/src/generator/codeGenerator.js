@@ -38,6 +38,8 @@ class CodeGenerator {
   async generate(schema) {
     this.schema = this.parseSchema(schema)
     this.error = []
+    this.genResult = []
+    this.genLogs = []
 
     let curHookName = ''
 
@@ -59,6 +61,7 @@ class CodeGenerator {
     }
 
     return {
+      errors: this.error,
       genResult: this.genResult,
       genLogs: this.genLogs
     }

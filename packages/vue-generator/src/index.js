@@ -10,4 +10,14 @@
  *
  */
 
-export { generateCode, generateBlocksCode, generatePageCode, generateApp, CodeGenerator } from './generator'
+export {
+  generateCode,
+  generateBlocksCode,
+  generatePageCode,
+  generateApp,
+  CodeGenerator,
+  genSFCWithDefaultPlugin,
+  generateSFCFile
+} from './generator'
+
+export { parseRequiredBlocks } from './utils/parseRequiredBlocks'

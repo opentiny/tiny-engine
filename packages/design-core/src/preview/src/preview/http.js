@@ -50,3 +50,6 @@ export const fetchMetaData = async ({ platform, app, type, id, history, tenant }
         params: { platform, app, type, id, history }
       })
     : {}
+
+export const fetchAppSchema = async (id) => http.get(`/app-center/v1/api/apps/schema/${id}`)
+export const fetchBlockSchema = async (blockName) => http.get(`/material-center/api/block?label=${blockName}`)

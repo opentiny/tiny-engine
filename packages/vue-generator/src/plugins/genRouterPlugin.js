@@ -8,11 +8,11 @@ const defaultOption = {
 const parseSchema = (schema) => {
   const { pageSchema } = schema
 
-  const routes = pageSchema.map(({ meta: { isHome, router }, fileName, path }) => ({
+  const routes = pageSchema.map(({ meta: { isHome = false, router = '' } = {}, fileName, path }) => ({
     filePath: `@/views${path ? `/${path}` : ''}/${fileName}.vue`,
     fileName,
     isHome,
-    path: router.startsWith('/') ? router : `/${router}`
+    path: router?.startsWith?.('/') ? router : `/${router}`
   }))
 
   const hasRoot = routes.some(({ path }) => path === '/')
