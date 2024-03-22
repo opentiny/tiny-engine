@@ -12,10 +12,6 @@
 
 import AlgoNode from './components/container/AlgoNode.vue'
 import CanvasContainer from './components/container/CanvasContainer.vue'
-import CanvasAction from './components/container/CanvasAction.vue'
-import CanvasDragItem from './components/container/CanvasDragItem.vue'
-import CanvasFooter from './components/container/CanvasFooter.vue'
-import CanvasResize from './components/container/CanvasResize.vue'
 import Builtin from './components/builtin/builtin.json'
 import RenderMain, { api as renderApi } from './components/render/RenderMain'
 import { createRender } from './components/render/runner'
@@ -58,10 +54,6 @@ import GroupNode from './components/container/GroupNode.vue';
 
 export {
   CanvasContainer,
-  CanvasAction,
-  CanvasFooter,
-  CanvasDragItem,
-  CanvasResize,
   RenderMain,
   renderApi,
   Builtin,
