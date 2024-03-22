@@ -147,3 +147,94 @@ cd packages/design-core/dist
 ### Bug 反馈
 
 如有bug与其他方面的疑问, 欢迎提交[issue](https://atomgit.com/opentiny/000003/issues)
+
+## 结构
+
+### 流程图
+
+
+
+### Web UI
+
+下图展示了项目与TinyEngine的差异文件
+
+```
+├── packages
+    ├── canvas
+    │   ├── src
+    │   │   ├── components
+    │   │   │   ├── container
+    │   │   │   │   ├── AlgoNode.vue          // 创建的自定义节点
+    │   │   │   │   ├── GroupNode.vue         // 组节点
+    │   │   │   │   └── X6Canvas.vue          // x6容器
+    ├── controller
+    │   ├── src
+    │   │   ├── useLayer.js                   // 自定义Layer的逻辑
+    │   │   ├── useResource.js                // 数据请求逻辑
+    │   │   ├── useSchema.js                  // schema逻辑
+    │   │   ├── useVisitor.js                 // Python AST解析
+    │   │   ├── useWS.js                      // socket.io的二次封装
+    │   │   └── useX6.js                      // x6的一些逻辑封装
+    ├── design-core
+    │   ├── authentication.html
+    │   ├── src
+    │   │   ├── App.vue
+    │   │   └── authentication               // 登陆页面
+    │   │       └── src
+    │   │           ├── App.vue
+    │   │           ├── components
+    │   │           │   ├── login.vue
+    │   │           │   └── register.vue
+    │   │           └── main.js
+    ├── plugins
+    │   ├── materials                       // 物料 (paddlepaddle的网络物料)
+    │   │   └── src
+    │   │       ├── Main.vue
+    │   │       ├── layer
+    │   │       │   └── main.vue
+    │   │       └── networks
+    │   │           └── main.vue
+    │   └── schema                         // 传输给后端的schema的预览窗
+    │       └── src
+    │           └── Main.vue
+    └── settings                          // 物料的Props设计页面
+        ├── code
+        │   └── src
+        │       └── Main.vue
+        └── props
+            ├── index.js
+            ├── package.json
+            └── src
+                ├── Main.vue
+                └── components
+                    ├── Empty.vue
+                    ├── ParamAttr.vue
+                    ├── enums.vue
+                    ├── list.vue
+                    └── property-setting.vue
+```
+
+```mermaid
+sequenceDiagram
+    Front->>+Back: 登录
+    Back->>Back: 校验邮箱与密码
+    Back->>-Front: 返回Token
+    Front->>+Back: 请求物料
+    Back->>-Front: 返回物料信息
+    Front->>+Back: 建立Websocket链接
+    Back->>Back: 检查Token
+    Back->>-Front: 建立连接
+    Front->>Front: 设计
+    Front->>+Back: 携带Schema发送createCodeGenerate事件
+    Back->>Back: 校验
+    Back->>Back: DSL转AST
+    Back->>Back: AST生成代码
+    Back->>Back: 写入磁盘
+    Back->>-Front: 携带文件名, 返回Done事件
+    Front->>+Back: 请求 /code-generate/文件名
+    Back->>-Front: 返回文件
+```
+
+### 后端
+
+[参考](./dl-flow-backend/README.md)
