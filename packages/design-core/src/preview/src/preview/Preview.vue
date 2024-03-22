@@ -35,29 +35,6 @@ const EmptyEditor = defineComponent({
   }
 })
 
-const importNames = [
-  'createVNode',
-  'Fragment',
-  'resolveComponent',
-  'withDirectives',
-  'vShow',
-  'vModelSelect',
-  'vModelText',
-  'vModelCheckbox',
-  'vModelRadio',
-  'vModelText',
-  'vModelDynamic',
-  'resolveDirective',
-  'mergeProps',
-  'createTextVNode',
-  'isVNode'
-]
-
-const importRegexps = importNames.map((name) => ({
-  regexp: new RegExp(`_${name}`, 'g'),
-  replace: `vue.${name}`
-}))
-
 export default {
   components: {
     Repl
@@ -66,35 +43,6 @@ export default {
     const debugSwitch = injectDebugSwitch()
     const editorComponent = computed(() => (debugSwitch?.value ? Monaco : EmptyEditor))
     const store = new ReplStore()
-
-    const compiler = store.compiler
-    const compileScript = compiler.compileScript
-    // repl 编译 script 之后加入 vue jsx 编译
-    store.compiler = {
-      ...compiler,
-      compileScript(...args) {
-        // repl 内置 script 编译
-        const compiledScript = compileScript(...args)
-        // vue jsx 编译
-        const script = transformSync(compiledScript.content, {
-          babelrc: false,
-          plugins: [vueJsx],
-          sourceMaps: false,
-          configFile: false
-        })
-
-        // 清除 vue jsx 编译后注入的 import
-        let code = script.code.replace(/import \{.+\} from "vue";/, '')
-        // 使用 vue 函数时，从 vue 对象中获取 vue 函数
-        importRegexps.forEach((regexp) => {
-          code = code.replace(regexp.regexp, regexp.replace)
-        })
-
-        compiledScript.content = code
-
-        return compiledScript
-      }
-    }
 
     const sfcOptions = {
       script: {
@@ -168,7 +116,27 @@ export default {
           panelName = 'Main.vue'
         }
 
-        newFiles[panelName] = panelValue
+        const newPanelValue = panelValue.replace(/<script\s*setup\s*>([\s\S]*)<\/script>/, (match, p1) => {
+          if (!p1) {
+            // eslint-disable-next-line no-useless-escape
+            return '<script setup><\/script>'
+          }
+
+          const transformedScript = transformSync(p1, {
+            babelrc: false,
+            plugins: [[vueJsx, { pragma: 'h' }]],
+            sourceMaps: false,
+            configFile: false
+          })
+
+          const res = `<script setup>${transformedScript.code}`
+          // eslint-disable-next-line no-useless-escape
+          const endTag = '<\/script>'
+
+          return `${res}${endTag}`
+        })
+
+        newFiles[panelName] = newPanelValue
       }
 
       const appJsCode = processAppJsCode(newFiles['app.js'], queryParams.styles)
