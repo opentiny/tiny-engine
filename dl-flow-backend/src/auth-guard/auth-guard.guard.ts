@@ -17,9 +17,6 @@ export class AuthGuard implements CanActivate {
     private redis: Redis,
   ) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    if (__DEV__) {
-      return true;
-    }
     const req = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(req);
     try {
@@ -27,6 +24,7 @@ export class AuthGuard implements CanActivate {
     } catch {
       throw new UnauthorizedException();
     }
+    // 如果redis中不存在token, 那么也提示未登陆错误
     if (!Boolean(await this.redis.exists(token))) {
       throw new UnauthorizedException();
     }

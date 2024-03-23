@@ -10,7 +10,6 @@
  *
  */
 
-import Logo from '@opentiny/tiny-engine-toolbar-logo'
 import Materials from '@opentiny/tiny-engine-plugin-materials'
 import Props from '@opentiny/tiny-engine-setting-props'
 import Schema from '@opentiny/tiny-engine-plugin-schema'
@@ -22,7 +21,7 @@ import '@opentiny/tiny-engine-theme'
 const addons = {
   plugins: [Materials, Schema],
 
-  toolbars: [Logo, Export],
+  toolbars: [Export],
   settings: [Props, Code]
 }
 

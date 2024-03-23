@@ -102,7 +102,6 @@ ls -al
 # .github
 # dl-flow-backend  // 后端
 # dl-flow-frontend // WebUi
-# dl-flow.code-workspace
 # docker-compose.yaml // 预设好的docker-compose文件
 # nginx.conf // 预设好的nginx文件
 ```
@@ -147,3 +146,99 @@ cd packages/design-core/dist
 ### Bug 反馈
 
 如有bug与其他方面的疑问, 欢迎提交[issue](https://atomgit.com/opentiny/000003/issues)
+
+## 结构
+
+### 流程图
+
+### Web UI
+
+下图展示了项目与TinyEngine的差异文件
+
+```
+├── packages
+    ├── canvas
+    │   ├── src
+    │   │   ├── components
+    │   │   │   ├── container
+    │   │   │   │   ├── AlgoNode.vue          // 创建的自定义节点
+    │   │   │   │   ├── GroupNode.vue         // 组节点
+    │   │   │   │   └── X6Canvas.vue          // x6容器
+    ├── controller
+    │   ├── src
+    │   │   ├── useLayer.js                   // 自定义Layer的逻辑
+    │   │   ├── useResource.js                // 数据请求逻辑
+    │   │   ├── useSchema.js                  // schema逻辑
+    │   │   ├── useVisitor.js                 // Python AST解析
+    │   │   ├── useWS.js                      // socket.io的二次封装
+    │   │   └── useX6.js                      // x6的一些逻辑封装
+    ├── design-core
+    │   ├── authentication.html
+    │   ├── src
+    │   │   ├── App.vue
+    │   │   └── authentication               // 登陆页面
+    │   │       └── src
+    │   │           ├── App.vue
+    │   │           ├── components
+    │   │           │   ├── login.vue
+    │   │           │   └── register.vue
+    │   │           └── main.js
+    ├── plugins
+    │   ├── materials                       // 物料 (paddlepaddle的网络物料)
+    │   │   └── src
+    │   │       ├── Main.vue
+    │   │       ├── layer
+    │   │       │   └── main.vue
+    │   │       └── networks
+    │   │           └── main.vue
+    │   └── schema                         // 传输给后端的schema的预览窗
+    │       └── src
+    │           └── Main.vue
+    └── settings                          // 物料的Props设计页面
+        ├── code
+        │   └── src
+        │       └── Main.vue
+        └── props
+            ├── index.js
+            ├── package.json
+            └── src
+                ├── Main.vue
+                └── components
+                    ├── Empty.vue
+                    ├── ParamAttr.vue
+                    ├── enums.vue
+                    ├── list.vue
+                    └── property-setting.vue
+```
+
+### 后端
+
+[参考](./dl-flow-backend/README.md)
+
+
+### 为什么结束节点和开始节点必须只有一个
+
+因为目前生成的是`Sequential`而不是`Layer`. 
+
+`Layer`的确更加的灵活。但是问题也非常的显而易见。
+
+我们设计的是又向无环图, 又向表明 A->B 是正确的，但是 B->A 是不一定的。假设有一幅图
+
+```
+    Start
+      |
+      v
+   Node-1
+      |
+ -----+-----
+ |    |    |
+ V    V    V
+END1 END2 END3
+```
+
+那么不管如何遍历最终节点，其实都是正确的。但在神经网络中，不同网络的运算顺序会有不同的结果。比如`先池化后卷积`和`先卷积后池化`的运算结果是不同的。进入训练阶段，训练结果也可能不同。这主要是因为函数的组合在某些条件下是不可交换的，我们也使用数学语言证明了这一点。详细可以参考[函数组合的交换性讨论](./dl-flow-backend/proof/函数组合的可交换性讨论.pdf)
+
+
+## 前端流程图
+
+![](./public/sequenceDiagram.png)
