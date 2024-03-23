@@ -102,7 +102,6 @@ ls -al
 # .github
 # dl-flow-backend  // 后端
 # dl-flow-frontend // WebUi
-# dl-flow.code-workspace
 # docker-compose.yaml // 预设好的docker-compose文件
 # nginx.conf // 预设好的nginx文件
 ```
@@ -151,8 +150,6 @@ cd packages/design-core/dist
 ## 结构
 
 ### 流程图
-
-
 
 ### Web UI
 
@@ -214,27 +211,34 @@ cd packages/design-core/dist
                     └── property-setting.vue
 ```
 
-```mermaid
-sequenceDiagram
-    Front->>+Back: 登录
-    Back->>Back: 校验邮箱与密码
-    Back->>-Front: 返回Token
-    Front->>+Back: 请求物料
-    Back->>-Front: 返回物料信息
-    Front->>+Back: 建立Websocket链接
-    Back->>Back: 检查Token
-    Back->>-Front: 建立连接
-    Front->>Front: 设计
-    Front->>+Back: 携带Schema发送createCodeGenerate事件
-    Back->>Back: 校验
-    Back->>Back: DSL转AST
-    Back->>Back: AST生成代码
-    Back->>Back: 写入磁盘
-    Back->>-Front: 携带文件名, 返回Done事件
-    Front->>+Back: 请求 /code-generate/文件名
-    Back->>-Front: 返回文件
-```
-
 ### 后端
 
 [参考](./dl-flow-backend/README.md)
+
+
+### 为什么结束节点和开始节点必须只有一个
+
+因为目前生成的是`Sequential`而不是`Layer`. 
+
+`Layer`的确更加的灵活。但是问题也非常的显而易见。
+
+我们设计的是又向无环图, 又向表明 A->B 是正确的，但是 B->A 是不一定的。假设有一幅图
+
+```
+    Start
+      |
+      v
+   Node-1
+      |
+ -----+-----
+ |    |    |
+ V    V    V
+END1 END2 END3
+```
+
+那么不管如何遍历最终节点，其实都是正确的。但在神经网络中，不同网络的运算顺序会有不同的结果。比如`先池化后卷积`和`先卷积后池化`的运算结果是不同的。进入训练阶段，训练结果也可能不同。这主要是因为函数的组合在某些条件下是不可交换的，我们也使用数学语言证明了这一点。详细可以参考[函数组合的交换性讨论](./dl-flow-backend/proof/函数组合的可交换性讨论.pdf)
+
+
+## 前端流程图
+
+![](./public/sequenceDiagram.png)
