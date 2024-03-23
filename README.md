@@ -41,10 +41,10 @@ services:
       - JWT_PRI_KEY=./keys/key.pri # JWT 私钥 (必填)
       - PWD_SALT=salt # bcrypt 盐(废弃)(必填)
       - PWD_SALT_LEN=12 # bcrypt 盐长度
-    # volumes: # 强烈将下述卷挂载到本地, 以避免数据丢失
-      # - ./_test/public:/public # 代码生成暂存位置
-      # - ./_test/keys:/keys # 密钥对存放位置
-      # - ./_test/data:/data # bundle.json与install.lock 存放位置
+    volumes: # 强烈将下述卷挂载到本地, 以避免数据丢失
+      - ./public:/public # 代码生成暂存位置 (必须)
+      - ./keys:/keys # 密钥对存放位置 (必须)
+      - ./data:/data # bundle.json与install.lock 存放位置 ((必须))
       
 ```
 
