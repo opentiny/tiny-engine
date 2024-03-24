@@ -40,11 +40,11 @@ services:
       - JWT_PUB_KEY=./keys/key.pub # JWT 公钥 (必填)
       - JWT_PRI_KEY=./keys/key.pri # JWT 私钥 (必填)
       - PWD_SALT=salt # bcrypt 盐(废弃)(必填)
-      - PWD_SALT_LEN=12 # bcrypt 盐长度
-    # volumes: # 强烈将下述卷挂载到本地, 以避免数据丢失
-      # - ./_test/public:/public # 代码生成暂存位置
-      # - ./_test/keys:/keys # 密钥对存放位置
-      # - ./_test/data:/data # bundle.json与install.lock 存放位置
+      - PWD_SALT_LEN=12 # bcrypt 盐长度 (设置的越大，在登录和注册时候都会耗费更多的时间)
+    volumes: # 强烈将下述卷挂载到本地, 以避免数据丢失
+      - ./public:/public # 代码生成暂存位置
+      - ./keys:/keys # 密钥对存放位置
+      - ./data:/data # bundle.json与install.lock 存放位置
       
 ```
 
@@ -146,6 +146,25 @@ cd packages/design-core/dist
 ### Bug 反馈
 
 如有bug与其他方面的疑问, 欢迎提交[issue](https://atomgit.com/opentiny/000003/issues)
+
+## WebUi布局
+
+![](public/Snipaste_2024-03-24_21-37-53.png)
+
+绿色区域: 网络与layer选择区域
+红色区域: 布局区域, 在绿色区域 单击需要的网络后会显示在红色布局区内
+蓝色区域: 网络区域, 可以配置网络的一些属性(Covn2D 举例)
+
+- 输入特征大小
+- 输出特征大小 
+- 卷积核大小等
+
+注意, 您应当自行校验网络的配置项, 例如: 理论上卷积核大小为1是可以存在的，它也的确有一些作用，比如
+
+- 升维/降维
+- 增加非线性
+
+但是**可以**这么做并不意味着它**适合**你的需求更不等同于**不存在运行时候错误**(比如维度错误)
 
 ## 结构
 
