@@ -40,11 +40,11 @@ services:
       - JWT_PUB_KEY=./keys/key.pub # JWT 公钥 (必填)
       - JWT_PRI_KEY=./keys/key.pri # JWT 私钥 (必填)
       - PWD_SALT=salt # bcrypt 盐(废弃)(必填)
-      - PWD_SALT_LEN=12 # bcrypt 盐长度 (设置的越大，在登录和注册时候都会耗费更多的时间)
+      - PWD_SALT_LEN=12 # bcrypt 盐长度
     volumes: # 强烈将下述卷挂载到本地, 以避免数据丢失
-      - ./public:/public # 代码生成暂存位置
-      - ./keys:/keys # 密钥对存放位置
-      - ./data:/data # bundle.json与install.lock 存放位置
+      - ./public:/public # 代码生成暂存位置 (必须)
+      - ./keys:/keys # 密钥对存放位置 (必须)
+      - ./data:/data # bundle.json与install.lock 存放位置 ((必须))
       
 ```
 
