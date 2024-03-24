@@ -84,7 +84,16 @@ export class CodeGenerateService {
    *      |       |
    *       -------
    * ```
-   * 上图所示, 所以需要对节点进行排序。
+   * 
+   * 上图所示, 所以需要对节点进行排序。变为一个栈，即
+   * ```
+   * |               |
+   * |---------------|
+   * |     start     |  <----- Stack Top
+   * |---------------|
+   * |      end      |  <----- Stack Bottom
+   * +---------------+
+     ```
    */
   sequencingNode(
     nodes: StandardizationNodes,

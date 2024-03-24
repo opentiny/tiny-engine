@@ -6,6 +6,11 @@ import { Exception, StandardizationNodes } from './code-generate.service';
 
 @Injectable()
 export class AST {
+  /**
+   * # Reference material
+   * @see {@link https://llvm.org/docs/tutorial/MyFirstLanguageFrontend/LangImpl03.html|Kaleidoscope}
+   * @see {@link https://github.com/xkbeyer/liquid|liquid}
+   */
   build(cells: Cell[], standardizationNodes: StandardizationNodes) {
     const ast: IAST = {
       type: 'root',
@@ -15,6 +20,9 @@ export class AST {
         new VarDecl('false', new Identifier('False')),
       ],
       codeGen: () => {
+        // 每个 AstItem 必须存在一个 codeGen 函数，只要根节点调用第一层节点的codeGen
+        // 并且在开发时, 确保其他节点的codeGen函数中也遍历了子节点且调用codeGen就可以完成整个语法树的代码生成
+        // 不过考虑到说动频接换行符太繁琐, 这里包装成了数组, 最后join就可以
         return ast.children.map((child) => child.codeGen()).join('\n');
       },
     };
@@ -85,6 +93,9 @@ export class AST {
     }
   }
   buildNN(nn: Material, cellId: string) {
+    /*
+     * 构建 arguments, 是一个string数组, 这样下一步在 new CallExpress或者 new VarDecl时就不需要再次递归调用`codeGen`了
+     */
     const args = nn.properties
       .map((v) => {
         const id = v.id;
@@ -112,6 +123,8 @@ export class AST {
         if (v.data) {
           return new VarDecl(
             id,
+            // 标准化参数
+            // 比如字符串 abcd 会被标准化为 'abcd'
             new Identifier(this.standardization(v.data, v.type)),
           ).codeGen();
         }
@@ -128,6 +141,7 @@ export class AST {
       stack.push(group);
     }
     for (const child of (group.children as unknown as string[]) ?? []) {
+      // 考虑group嵌套问题
       if (this.isGroup(nodeTable[child])) {
         stack.push(...this.extractGroup(nodeTable[child], nodeTable));
       }
@@ -137,6 +151,11 @@ export class AST {
   isChild(group: Cell, child: Cell) {
     return (group.children as unknown as string[]).includes(child.id);
   }
+  /**
+   * @description
+   *
+   * Layer本质是一组代码, 直接用ClazzDef一下就好.
+   */
   buildLayer(layer: Layer) {
     const clazzDef = new ClazzDef(layer.code);
     return clazzDef;
@@ -155,6 +174,16 @@ export class AST {
       stack.push([g, 'end']);
     }
     let activeGroup: Cell | null = null;
+    /**
+     * 如果不做处理可能会出现
+     * node_1 = ...
+     * node_2 = ...
+     * group_1 = paddle.concat(node_1,node_2)
+     * node_3 = ...
+     * group_2 = paddle.concat(node_1,node_2,node_3, group_1)
+     * 本质与LC. 20是同一种思路
+     * @see https://leetcode.cn/problems/valid-parentheses/description/
+     */
     while (stack.length) {
       const [cell, type] = stack.pop();
       const children = [];
@@ -192,6 +221,9 @@ export class AST {
           throw new Exception('Schema错误, 请检查Schema格式');
         }
         const callee = new Identifier('paddle.concat');
+        /**
+         * @see https://www.paddlepaddle.org.cn/documentation/docs/zh/api/paddle/concat_cn.html
+         */
         const call = new CallExpression(callee, [
           ['x=[', children.join(','), ']'].join(''),
         ]);
@@ -209,9 +241,12 @@ export class AST {
     const stack = [
       ...ast.children
         .map((child) => {
+          // 是变量直接拿到变量名
           if (child instanceof VarDecl) {
             return child.name;
           }
+          // 这里不过是为了方便开发时区分, 将Group做了一个新的AST root, 被称作GroupAst
+          //
           if (child instanceof GroupAst) {
             return child.children.map((child) =>
               child instanceof VarDecl ? child.name : null,

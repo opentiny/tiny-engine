@@ -242,3 +242,11 @@ END1 END2 END3
 ## 前端流程图
 
 ![](./public/sequenceDiagram.png)
+
+## 源码阅读顺序
+
+```
+dl-flow-back >> README.md >> code-generate/README.md >> code-generate.gateway.ts >> code-generate.service.ts >> ast.service.ts 
+
+dl-flow-frontend >> X6Canvas >> useX6 >> useSchma >> export
+```
