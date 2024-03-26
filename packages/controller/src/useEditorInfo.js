@@ -9,7 +9,7 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-
+import { ref } from 'vue'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import useModal from './useModal'
 
@@ -31,14 +31,14 @@ const _getWebData = () => {
   }
 }
 
-let userInfo = {}
+let userInfo = ref({})
 const getUserInfo = () => {
   // 获取登录用户信息
   useHttp()
     .get('/platform-center/api/user/me')
     .then((data) => {
       if (data) {
-        userInfo = data
+        userInfo.value = data
       }
     })
     .catch((error) => {
@@ -46,7 +46,7 @@ const getUserInfo = () => {
     })
 }
 
-const isAdmin = () => userInfo.resetPasswordToken === 'p_webcenter'
+const isAdmin = () => userInfo.value.resetPasswordToken === 'p_webcenter'
 /**
  * 1、是否是VSCode插件: 通过是否有全局变量window.vscodeBridge判断
  *
