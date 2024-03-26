@@ -15,7 +15,7 @@
   ],
   "exports": {
     ".": "./dist/index.js",
-    "./js/": "./js/",
+    "./js/": "./dist/js/",
     "./utils": "./dist/utils.js",
     "./adapter": "./dist/adapter.js"
   },
