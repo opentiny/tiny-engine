@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import {
   CanvasContainer,
   CanvasFooter,
@@ -29,20 +29,22 @@ import {
   useLayout,
   useResource,
   useHistory,
-  useModal
+  useModal,
+  useEnvironmentConfig
 } from '@opentiny/tiny-engine-controller'
 import materials from '@opentiny/tiny-engine-plugin-materials'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { isVsCodeEnv, isDevelopEnv } from '@opentiny/tiny-engine-controller/js/environments'
 import * as ast from '@opentiny/tiny-engine-controller/js/ast'
 
+const { config } = useEnvironmentConfig()
 const { PAGE_STATUS } = constants
 const tenant = new URLSearchParams(location.search).get('tenant') || ''
-const canvasUrl =
-  isVsCodeEnv || isDevelopEnv
+const canvasUrl = computed(() => {
+  return config.value.isLocalEnv || config.value.isDevelopEnv
     ? `canvas.html?tenant=${tenant}`
     : window.location.origin + window.location.pathname + `/canvas?tenant=${tenant}`
+})
 
 const componentType = {
   Block: '区块',

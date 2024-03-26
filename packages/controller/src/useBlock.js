@@ -16,7 +16,8 @@ import { extend, copyArray } from '@opentiny/vue-renderless/common/object'
 import { format } from '@opentiny/vue-renderless/common/date'
 import { remove } from '@opentiny/vue-renderless/common/array'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { getCanvasStatus } from '../js/canvas'
+import useResource from './useResource'
+import { getPageStatus } from '../js/page'
 import { ast2String, parseExpression } from '../js/ast'
 import { getCssObjectFromStyleStr } from '../js/css'
 import useCanvas from './useCanvas'
@@ -287,7 +288,7 @@ const initBlock = async (block = {}, _langs = {}, isEdit) => {
   if (!isEdit) {
     // 非编辑状态即为新增，新增默认锁定画布
     block.occupier = useEditorInfo().userInfo
-    useLayout().layoutState.pageStatus = getCanvasStatus(block.occupier)
+    useLayout().layoutState.pageStatus = getPageStatus(block.occupier, useResource().resState.isDemo)
     addBlock(block)
     setSaved(false)
   }

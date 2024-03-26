@@ -11,7 +11,7 @@
  */
 
 import { Modal } from '@opentiny/vue'
-import { VITE_ORIGIN } from '../js/environments'
+import { useEnvironmentConfig } from './useEnvironmentConfig'
 import useCanvas from './useCanvas'
 import { getGlobalConfig } from './globalConfig'
 
@@ -23,9 +23,10 @@ const confirmSaveLocal = async () => {
   const { pageState, setSaved } = useCanvas()
   const currentPageId = pageState.currentPageId || pageState.currentPage.id
   const currentPageName = pageState.currentPageName || pageState.currentPage.name
+  const { config } = useEnvironmentConfig()
 
   const savePage = await bridge.callHandler('save-page', {
-    api: `${VITE_ORIGIN}/app-service/api/pages/code/${currentPageId}`,
+    api: `${config.value.VITE_ORIGIN}/app-service/api/pages/code/${currentPageId}`,
     pageName: currentPageName,
     pageId: currentPageId,
     platformId: getGlobalConfig()?.platformId

@@ -19,7 +19,8 @@ import {
   NODE_TAG,
   NODE_LOOP
 } from '../common'
-import { useCanvas, useLayout, useResource, useTranslate } from '@opentiny/tiny-engine-controller'
+import { useCanvas, useLayout, useResource, useTranslate, useEnvironmentConfig } from '@opentiny/tiny-engine-controller'
+
 export const POSITION = Object.freeze({
   TOP: 'top',
   BOTTOM: 'bottom',
@@ -28,7 +29,6 @@ export const POSITION = Object.freeze({
   IN: 'in',
   FORBID: 'forbid'
 })
-import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
 
 const initialDragState = {
   keydown: false,
@@ -836,7 +836,10 @@ export const initCanvas = ({ renderer, iframe, emit, controller }) => {
   canvasState.renderer = renderer
   renderer.setController(controller)
   setLocales(useTranslate().getData(), true)
-  if (isVsCodeEnv) {
+
+  const { config } = useEnvironmentConfig()
+
+  if (config.value.isLocalEnv) {
     const parent = window.parent
     const senterMessage = parent.postMessage
     // 发消息给webview

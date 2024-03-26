@@ -14,8 +14,10 @@ import { useHttp } from '@opentiny/tiny-engine-http'
 import usePage from '../src/usePage'
 import useCanvas from '../src/useCanvas'
 import useNotify from '../src/useNotify'
-import { isVsCodeEnv } from './environments'
+import { useEnvironmentConfig } from '../src/useEnvironmentConfig'
 import { generateRouter, generatePage } from './vscodeGenerateFile'
+
+const { config } = useEnvironmentConfig()
 
 const http = useHttp()
 
@@ -24,8 +26,7 @@ const http = useHttp()
  * @param { json } params {"event_type": design_error,"url": "elit in reprehenderit enim incididunt" }
  * @returns { Promise }
  */
-export const requestEvent = (params) =>
-  http.post('/platform-center/api/platform/monitoring/event', params).catch(() => {})
+export const requestEvent = (params) => http.post(config.value.ERROR_MONITOR_URL, params).catch(() => {})
 
 /**
  * 页面更新
@@ -40,7 +41,7 @@ export const handlePageUpdate = (pageId, params, routerChange) => {
     .then((res) => {
       const { pageSettingState } = usePage()
       const { setSaved } = useCanvas()
-      if (isVsCodeEnv) {
+      if (config.value.isLocalEnv) {
         generatePage({
           id: pageId,
           name: params.name,

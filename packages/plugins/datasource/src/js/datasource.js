@@ -11,9 +11,8 @@
  */
 
 import axios from 'axios'
-import { useResource } from '@opentiny/tiny-engine-controller'
+import { useResource, useEnvironmentConfig } from '@opentiny/tiny-engine-controller'
 import { generateFunction } from '@opentiny/tiny-engine-controller/utils'
-import { isMock } from '@opentiny/tiny-engine-controller/js/environments'
 import { utils as commonUtils, constants } from '@opentiny/tiny-engine-utils'
 import { read, utils, writeFileXLSX } from 'xlsx'
 
@@ -93,7 +92,9 @@ export const getRequest = (config) => {
 
   http.interceptors.response.use(dataHandler, errorHandler)
 
-  if (isMock) {
+  const { config: environmentConfig } = useEnvironmentConfig()
+
+  if (environmentConfig.value.isMock) {
     http.mock([
       {
         url: config.options.uri,

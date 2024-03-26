@@ -11,7 +11,7 @@
  */
 
 import { constants } from '@opentiny/tiny-engine-utils'
-import { isDevelopEnv } from './environments'
+import { useEnvironmentConfig } from '../src/useEnvironmentConfig'
 import useResource from '../src/useResource'
 // prefer old unicode hacks for backward compatibility
 
@@ -35,8 +35,9 @@ const open = (params = {}) => {
   const tenant = new URLSearchParams(location.search).get('tenant') || ''
   let openUrl = ''
   const hashString = utoa(JSON.stringify(params))
+  const { config } = useEnvironmentConfig()
 
-  openUrl = isDevelopEnv
+  openUrl = config.value.isDevelopEnv
     ? `./preview.html?tenant=${tenant}#${hashString}`
     : `${href}/preview?tenant=${tenant}#${hashString}`
 

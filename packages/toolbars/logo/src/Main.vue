@@ -111,9 +111,8 @@ import {
   Tooltip as TinyTooltip
 } from '@opentiny/vue'
 import { iconHelpCircle } from '@opentiny/vue-icon'
-import { useLayout, useApp, getGlobalConfig, useModal } from '@opentiny/tiny-engine-controller'
+import { useLayout, useApp, getGlobalConfig, useModal, useEnvironmentConfig } from '@opentiny/tiny-engine-controller'
 import { useHttp } from '@opentiny/tiny-engine-http'
-import { isDevelopEnv } from '@opentiny/tiny-engine-controller/js/environments'
 
 const http = useHttp()
 
@@ -193,7 +192,8 @@ const actions = {
     const getTenant = () => new URLSearchParams(location.search).get('tenant')
     const tenantId = getTenant() || ''
     const href = window.location.href.split('?')[0] || './'
-    const openUrl = isDevelopEnv
+    const { config } = useEnvironmentConfig()
+    const openUrl = config.value.isDevelopEnv
       ? `./previewApp.html?appid=${appId}&tenant=${tenantId}`
       : `${href}/previewApp?appid=${appId}&tenant=${tenantId}`
     window.open(openUrl)

@@ -21,9 +21,16 @@
 import { reactive, ref, watch, onUnmounted } from 'vue'
 import { ConfigProvider as TinyConfigProvider } from '@opentiny/vue'
 import designSmbConfig from '@opentiny/vue-design-smb'
-import { useResource, useLayout, useEditorInfo, useModal, useApp, useNotify } from '@opentiny/tiny-engine-controller'
+import {
+  useResource,
+  useLayout,
+  useEditorInfo,
+  useModal,
+  useApp,
+  useNotify,
+  useEnvironmentConfig
+} from '@opentiny/tiny-engine-controller'
 import AppManage from '@opentiny/tiny-engine-plugin-page'
-import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
 import DesignToolbars from './DesignToolbars.vue'
 import DesignPlugins from './DesignPlugins.vue'
 import DesignCanvas from './DesignCanvas.vue'
@@ -98,7 +105,9 @@ export default {
 
     window.addEventListener('popstate', handlePopStateEvent)
 
-    if (isVsCodeEnv) {
+    const { config } = useEnvironmentConfig()
+
+    if (config.value.isLocalEnv) {
       const appId = useApp().appInfoState.selectedId
       fetchGroups(appId)
         .then((groups) => {

@@ -39,9 +39,17 @@
 import { reactive, ref, watchEffect } from 'vue'
 import { Search, Tree, Collapse, CollapseItem } from '@opentiny/vue'
 import { IconFolderOpened, IconFolderClosed } from '@opentiny/vue-icon'
-import { useCanvas, useApp, useModal, usePage, useBreadcrumb, useLayout } from '@opentiny/tiny-engine-controller'
+import {
+  useCanvas,
+  useApp,
+  useModal,
+  usePage,
+  useBreadcrumb,
+  useLayout,
+  useResource
+} from '@opentiny/tiny-engine-controller'
+import { getPageStatus } from '@opentiny/tiny-engine-controller/js/page'
 import { isEqual } from '@opentiny/vue-renderless/common/object'
-import { getCanvasStatus } from '@opentiny/tiny-engine-controller/js/canvas'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { closePageSettingPanel } from './PageSetting.vue'
 import { closeFolderSettingPanel } from './PageFolderSetting.vue'
@@ -177,7 +185,7 @@ export default {
         closePageSettingPanel()
         closeFolderSettingPanel()
         useLayout().closePlugin()
-        useLayout().layoutState.pageStatus = getCanvasStatus(data.occupier)
+        useLayout().layoutState.pageStatus = getPageStatus(data.occupier, useResource().resState.isDemo)
         initData(data['page_content'], data)
       })
     }
@@ -258,7 +266,7 @@ export default {
         data.trueFolder = false
       }
 
-      const isPageLocked = getCanvasStatus(data.occupier).state === PAGE_STATUS.Lock
+      const isPageLocked = getPageStatus(data.occupier, useResource().resState.isDemo).state === PAGE_STATUS.Lock
       const pageEditIcon = isPageLocked ? (
         <SvgIcon
           class="page-edit-icon"

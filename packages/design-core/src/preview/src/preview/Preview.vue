@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { defineComponent, computed, defineAsyncComponent } from 'vue'
+import { defineComponent, computed, defineAsyncComponent, ref, watch } from 'vue'
 import { Repl, ReplStore } from '@vue/repl'
 import vueJsx from '@vue/babel-plugin-jsx'
 import { transformSync } from '@babel/core'
@@ -43,6 +43,7 @@ export default {
     const debugSwitch = injectDebugSwitch()
     const editorComponent = computed(() => (debugSwitch?.value ? Monaco : EmptyEditor))
     const store = new ReplStore()
+    const extraImportMap = ref({})
 
     const sfcOptions = {
       script: {
@@ -51,7 +52,15 @@ export default {
       }
     }
 
-    store.setImportMap(importMap)
+    watch(
+      () => [importMap.value, extraImportMap.value],
+      () => {
+        store.setImportMap({ imports: { ...importMap.value.imports, ...extraImportMap.value } })
+      },
+      {
+        flush: 'sync'
+      }
+    )
 
     // 相比store.setFiles，只要少了state.activeFile = state.files[filename]，因为改变activeFile会触发多余的文件解析
     const setFiles = async (newFiles, mainFileName) => {
@@ -68,8 +77,11 @@ export default {
           utilsImportMaps[packageName] = cdnLink
         }
       })
-      const newImportMap = { imports: { ...importMap.imports, ...utilsImportMaps } }
-      store.setImportMap(newImportMap)
+
+      extraImportMap.value = {
+        ...extraImportMap.value,
+        ...utilsImportMaps
+      }
     }
 
     const queryParams = getSearchParams()

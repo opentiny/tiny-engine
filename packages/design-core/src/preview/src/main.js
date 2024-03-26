@@ -13,7 +13,10 @@
 import { createApp } from 'vue'
 import initSvgs from '@opentiny/tiny-engine-svgs'
 import App from './App.vue'
+import { initEnvironment } from '../../initEnvironment'
 import 'virtual:svg-icons-register'
+
+initEnvironment()
 
 const app = createApp(App)
 

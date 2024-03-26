@@ -55,10 +55,17 @@
 import { reactive, ref } from 'vue'
 import { Button, Collapse, CollapseItem, Input } from '@opentiny/vue'
 import { PluginSetting, ButtonGroup, SvgButton, LifeCycles } from '@opentiny/tiny-engine-common'
-import { useLayout, usePage, useCanvas, useModal, useApp, useNotify } from '@opentiny/tiny-engine-controller'
+import {
+  useLayout,
+  usePage,
+  useCanvas,
+  useModal,
+  useApp,
+  useNotify,
+  useEnvironmentConfig
+} from '@opentiny/tiny-engine-controller'
 import { extend, isEqual } from '@opentiny/vue-renderless/common/object'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
 import { handlePageUpdate } from '@opentiny/tiny-engine-controller/js/http'
 import { generatePage } from '@opentiny/tiny-engine-controller/js/vscodeGenerateFile'
 import PageGeneral from './PageGeneral.vue'
@@ -180,7 +187,10 @@ export default {
             type: 'success',
             message: '新建页面成功!'
           })
-          if (isVsCodeEnv) {
+
+          const { config } = useEnvironmentConfig()
+
+          if (config.value.isLocalEnv) {
             generatePage(data)
           }
         })

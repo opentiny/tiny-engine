@@ -9,7 +9,7 @@
         <tiny-tab-item :name="RESOURCE_TYPE.Util" title="工具类">
           <bridge-manage ref="utilsRef" :name="RESOURCE_TYPE.Util" @open="openBridgePanel"></bridge-manage>
         </tiny-tab-item>
-        <tiny-tab-item v-if="isVsCodeEnv" :name="RESOURCE_TYPE.Bridge" title="桥接源">
+        <tiny-tab-item v-if="isLocalEnv" :name="RESOURCE_TYPE.Bridge" title="桥接源">
           <bridge-manage ref="bridge" :name="RESOURCE_TYPE.Bridge" @open="openBridgePanel"></bridge-manage>
         </tiny-tab-item>
       </tiny-tabs>
@@ -22,8 +22,7 @@
 import { ref, computed } from 'vue'
 import { Tabs, TabItem } from '@opentiny/vue'
 import { PluginPanel, SvgButton, LinkButton } from '@opentiny/tiny-engine-common'
-import { useHelp } from '@opentiny/tiny-engine-controller'
-import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
+import { useHelp, useEnvironmentConfig } from '@opentiny/tiny-engine-controller'
 import { RESOURCE_TYPE } from './js/resource'
 import BridgeManage from './BridgeManage.vue'
 import BridgeSetting, { openPanel, closePanel } from './BridgeSetting.vue'
@@ -67,6 +66,8 @@ export default {
       activedName.value === RESOURCE_TYPE.Util ? utilsRef.value.add(type) : bridge.value.add(type)
     }
 
+    const { config } = useEnvironmentConfig()
+
     return {
       addResource,
       RESOURCE_TYPE,
@@ -80,7 +81,7 @@ export default {
       docsUrl,
       utilsRef,
       tips,
-      isVsCodeEnv
+      isLocalEnv: config.value.isLocalEnv
     }
   }
 }

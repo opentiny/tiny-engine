@@ -13,7 +13,7 @@
 import { reactive, ref } from 'vue'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { utils } from '@opentiny/tiny-engine-utils'
-import { isVsCodeEnv } from '../js/environments'
+import { useEnvironmentConfig } from './useEnvironmentConfig'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { generateI18n } from '../js/vscodeGenerateFile'
 import useResource from './useResource'
@@ -84,8 +84,9 @@ const ensureI18n = (obj, send) => {
       }
     })
 
+    const { config } = useEnvironmentConfig()
     // VsCode环境生成本地国际化
-    if (isVsCodeEnv) {
+    if (config.value.isLocalEnv) {
       generateI18n({
         key,
         contents
