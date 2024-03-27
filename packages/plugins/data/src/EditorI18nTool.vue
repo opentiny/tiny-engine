@@ -29,7 +29,7 @@
 
     <template #reference>
       <tiny-tooltip content="插入国际化词条" placement="top">
-        <icon-language class="button-icon" @click="openPopover"></icon-language>
+        <svg-icon name="internationalization" @click="openPopover"></svg-icon>
       </tiny-tooltip>
     </template>
   </tiny-popover>
@@ -38,7 +38,7 @@
 <script>
 import { reactive, ref, computed } from 'vue'
 import { Button, Popover, Tooltip } from '@opentiny/vue'
-import { iconLanguage, iconClose } from '@opentiny/vue-icon'
+import { iconClose } from '@opentiny/vue-icon'
 import { BindI18n } from '@opentiny/tiny-engine-common'
 import { useTranslate } from '@opentiny/tiny-engine-controller'
 
@@ -47,7 +47,6 @@ export default {
     TinyButton: Button,
     TinyTooltip: Tooltip,
     TinyPopover: Popover,
-    IconLanguage: iconLanguage(),
     IconClose: iconClose(),
     BindI18n
   },
