@@ -1,0 +1,207 @@
+{
+  "componentName": "Block",
+  "fileName": "ImageTitle",
+  "css": ".image-title {\n  margin-right: 15px;\ndisplay: flex;\n  align-items: center; \n}\n.crm-title {\n  margin-left: 8px;\n  font-family: PingFangSC-Regular; \nfont-size: 22px; \ncolor: #333333; \nline-height: 30px; \n}\n.split {\r\n  align-self: center;\r\n  width: 1px;\r\n  height: 20px;\r\n  background-color: #dddee4;\r\n  margin-left: 20px;\r\n}\r\n",
+  "props": {},
+  "lifeCycles": {},
+  "children": [
+    {
+      "componentName": "div",
+      "id": "ImageTitleizk3",
+      "props": {
+        "className": "image-title",
+        "onClick": {
+          "type": "JSExpression",
+          "value": "this.handleClick"
+        }
+      },
+      "children": [
+        {
+          "componentName": "img",
+          "id": "imageizk3",
+          "props": {
+            "src": {
+              "type": "JSExpression",
+              "value": "this.props.src"
+            }
+          }
+        },
+        {
+          "componentName": "span",
+          "id": "spanizk3",
+          "props": {
+            "className": "crm-title"
+          },
+          "children": {
+            "type": "JSExpression",
+            "value": "this.props.text"
+          }
+        },
+        {
+          "componentName": "span",
+          "id": "spanizk4",
+          "condition": {
+            "type": "JSExpression",
+            "value": "this.props.hasSplitLine"
+          },
+          "props": {
+            "className": "split"
+          }
+        }
+      ]
+    }
+  ],
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "collapse": {
+          "number": 6,
+          "text": {
+            "zh_CN": "显示更多"
+          }
+        },
+        "content": [
+          {
+            "property": "handleClick",
+            "type": "Function",
+            "defaultValue": {
+              "type": "Function",
+              "value": "function handleClick(event) { return event }"
+            },
+            "label": {
+              "text": {
+                "zh_CN": "点击Image触发事件"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaCodeEditor",
+              "props": {}
+            }
+          },
+          {
+            "property": "options",
+            "type": "Array",
+            "defaultValue": [],
+            "label": {
+              "text": {
+                "zh_CN": "选项"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaCodeEditor",
+              "props": {
+                "modelValue": []
+              }
+            }
+          },
+          {
+            "property": "src",
+            "type": "string",
+            "defaultValue": "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/TinyLowCode/crm/img/bussiness/businessmanage.svg",
+            "label": {
+              "text": {
+                "zh_CN": "图片地址"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaInput",
+              "props": {
+                "modelValue": "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/TinyLowCode/crm/img/bussiness/businessmanage.svg"
+              }
+            }
+          },
+          {
+            "property": "text",
+            "type": "String",
+            "defaultValue": "商务管理",
+            "label": {
+              "text": {
+                "zh_CN": "标题文本"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaInput",
+              "props": {
+                "modelValue": "商务管理"
+              }
+            }
+          },
+          {
+            "property": "hasSplitLine",
+            "type": "Boolean",
+            "defaultValue": true,
+            "label": {
+              "text": {
+                "zh_CN": "是否添加分割线"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {
+                "modelValue": true
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "events": {
+      "onClickLogo": {
+        "label": {
+          "zh_CN": "点击事件"
+        },
+        "description": {
+          "zh_CN": "通常用于配置处理点击跳转"
+        }
+      }
+    }
+  },
+  "state": {
+    "activeMethod": {
+      "type": "JSFunction",
+      "value": "function() {\n  return this.props.isEdit;\r\n}"
+    }
+  },
+  "methods": {
+    "handleClick": {
+      "type": "JSFunction",
+      "value": "function() { this.emit('click-logo') }"
+    }
+  }
+}

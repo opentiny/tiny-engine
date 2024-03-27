@@ -40,4 +40,69 @@ srcFiles['locales.js'] = localesJS
 srcFiles['stores.js'] = storesJS
 srcFiles['storesHelper.js'] = storesHelperJS
 
+export const genPreviewTemplate = () => {
+  return [
+    {
+      fileName: 'App.vue',
+      path: '',
+      fileContent: appVue
+    },
+    {
+      fileName: 'constant.js',
+      path: '',
+      fileContent: constantJS
+    },
+    {
+      fileName: 'app.js',
+      path: '',
+      fileContent: appJS.replace(/VITE_CDN_DOMAIN/g, import.meta.env.VITE_CDN_DOMAIN)
+    },
+    {
+      fileName: 'injectGlobal.js',
+      path: '',
+      fileContent: injectGlobalJS
+    },
+    {
+      fileName: 'lowcode.js',
+      path: '',
+      fileContent: lowcodeJS
+    },
+    {
+      fileName: 'dataSourceMap.js',
+      path: '',
+      fileContent: dataSourceMapJS
+    },
+    {
+      fileName: 'dataSource.js',
+      path: '',
+      fileContent: dataSourceJS
+    },
+    {
+      fileName: 'utils.js',
+      path: '',
+      fileContent: utilsJS
+    },
+    {
+      fileName: 'bridge.js',
+      path: '',
+      fileContent: bridgeJS
+    },
+    {
+      fileName: 'locales.js',
+      path: '',
+      fileContent: localesJS
+    },
+    {
+      fileName: 'stores.js',
+      path: '',
+      fileContent: storesJS
+    },
+    {
+      fileName: 'storesHelper.js',
+      path: '',
+      fileContent: storesHelperJS
+    }
+  ]
+}
+
 export default srcFiles

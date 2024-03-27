@@ -14,7 +14,7 @@ const path = require('path')
 const fs = require('fs-extra')
 const prettier = require('prettier')
 const { execSync } = require('child_process')
-const { generateCode } = require('../../../dist/tiny-engine-dsl-vue.cjs')
+const { generateCode } = require('../../../dist/tiny-engine-dsl-vue.js')
 const { logger } = require('../../utils/logger')
 
 const getPageData = (testCaseFile) => {

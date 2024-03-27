@@ -2211,6 +2211,24 @@ const BUILTIN_COMPONENT_NAME = {
   ICON: 'Icon'
 }
 
+export const BUILTIN_COMPONENT_NAME_MAP = {
+  Text: 'span',
+  Collection: 'div',
+  Block: 'div'
+}
+
+export const INSERT_POSITION = {
+  AFTER_IMPORT: 'AFTER_IMPORT',
+  BEFORE_PROPS: 'BEFORE_PROPS',
+  AFTER_PROPS: 'AFTER_PROPS',
+  BEFORE_EMIT: 'BEFORE_EMIT',
+  AFTER_EMIT: 'AFTER_EMIT',
+  BEFORE_STATE: 'BEFORE_STATE',
+  AFTER_STATE: 'AFTER_STATE',
+  BEFORE_METHODS: 'BEFORE_METHODS',
+  AFTER_METHODS: 'AFTER_METHODS'
+}
+
 /**
  * 图标组件名，统一前缀为 TinyIcon，与从组件库引入的方法名 iconXxx 区分开
  */
@@ -2223,6 +2241,8 @@ const UNWRAP_QUOTES = {
   start: '#QUOTES_START#',
   end: '#QUOTES_END#'
 }
+
+export const SPECIAL_UTILS_TYPE = ['utils', 'bridge']
 
 /**
  * 协议中的类型

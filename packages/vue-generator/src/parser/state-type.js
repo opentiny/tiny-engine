@@ -1,14 +1,14 @@
 /**
-* Copyright (c) 2023 - present TinyEngine Authors.
-* Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
-*
-* Use of this source code is governed by an MIT-style license.
-*
-* THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
-* BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
-* A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
-*
-*/
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
+ *
+ * Use of this source code is governed by an MIT-style license.
+ *
+ * THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
+ * BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
+ * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
+ *
+ */
 
 import { UNWRAP_QUOTES, JS_EXPRESSION, JS_FUNCTION, JS_I18N, JS_RESOURCE, JS_SLOT } from '../constant'
 import { getFunctionInfo, hasAccessor, addAccessorRecord } from '../utils'
@@ -17,7 +17,7 @@ import { generateJSXTemplate } from './jsx-slot'
 
 const { start, end } = UNWRAP_QUOTES
 
-const strategy = {
+export const strategy = {
   [JS_EXPRESSION]: ({ value, computed }) => {
     if (computed) {
       return `${start}vue.computed(${value.replace(/this\./g, '')})${end}`
@@ -72,6 +72,7 @@ const transformType = (current, prop, description) => {
     current[prop] = strategy[type](current[prop], description)
   }
 
+  // TODO: 这个是什么场景？
   if (hasAccessor(accessor)) {
     current[prop] = defaultValue
 
