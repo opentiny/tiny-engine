@@ -86,7 +86,7 @@ function generateApp(config: IConfig): CodeGenInstance
 config 传参配置：
 
 ```typescript
-interface ICode {
+interface IConfig {
   // 插件配置，会传入对应的官方插件配置里面
   pluginConfig: {
     template: ITemplatePluginConfig;
@@ -208,11 +208,137 @@ interface IAppSchema {
 }
 ```
 
-
-
 ### 官方内置 plugin API
 
-- [ ] 待补充
+#### genBlockPlugin  生成区块代码
+
+```typescript
+interface Config {
+  blockBasePath: String; // 区块生成文件所在的目录，默认值：'./src/component'
+  sfcConfig: ISFCConfig; // 生成 sfc 风格的 vue 文件的配置，详见下面 sfc 插件
+}
+```
+
+#### genDataSourcePlugin 生成数据源代码
+
+```typescript
+interface IConfig {
+  path: string; // 生成数据源的路径，默认值：./src/lowcodeConfig
+}
+```
+
+#### genGlobalState 生成全局 state
+
+```typescript
+interface IConfig {
+  path: string; // 生成全局 state 所在的目录，默认值 ./src/stores
+}
+```
+
+#### genI18nPlugin 生成国际化相关文件
+
+```typescript
+interface IConfig {
+  localeFileName: string; // locale 文件名，默认值 locale.js
+  entryFileName: string; // 入口文件名，默认值 index.js
+  path: string; // 生成 i18n 所在的目录
+}
+```
+
+#### genPagePlugin 生成页面 vue 文件
+
+```typescript
+interface IConfig {
+  pageBasePath: string; // 页面生成文件所在目录
+}
+```
+
+#### genRouterPlugin 生成路由相关文件
+
+```typescript
+interface IConfig {
+  fileName: string; // 路由文件名，默认值： index.js
+  path: string; // 生成路由文件所在文件夹 默认值：./src/router
+}
+```
+
+#### genTemplatePlugin
+
+```typescript
+interface IConfig {
+  template: string | () => Array<IFile> // 可指定出码模板，或自定义生成出码模板函数
+}
+```
+
+#### genUtilsPlugin
+
+```typescript
+interface IConfig {
+  fileName: string; // 生成工具类的文件名，默认值：utils.js
+  path: string; // 生成工具类所在的目录 ./src
+}
+```
+
+#### formatCodePlugin 格式化代码
+
+```javascript
+// prettier 配置
+{
+ singleQuote: true,
+  printWidth: 120,
+  semi: false,
+  trailingComma: 'none' 
+}
+```
+
+#### genSFCWithDefaultPlugin & generateSFCFile
+
+官方生成 sfc 风格的 .vue 文件，提供了 hook 插槽，可以对生成的.vue 文件做细微调整
+
+- genSFCWithDefaultPlugin  带有官方 hooks 的生成 .vue 文件方法
+- generateSFCFile  无官方 hooks 的生成 .vue 文件方法
+
+##### 使用示例
+
+**处理自定义 props**
+
+```javascript
+// 自定义插件处理 TinyGrid 中的 editor 配置
+const customPropsHook = (schemaData, globalHooks) => {
+  const { componentName, props } = schemaData.schema
+
+  // 处理 TinyGrid 插槽
+  if (componentName !== 'TinyGrid' || !Array.isArray(props?.columns)) {
+    return
+  }
+
+  props.columns.forEach((item) => {
+    if (!item.editor?.component?.startsWith?.('Tiny')) {
+      return
+    }
+
+    const name = item.editor?.component
+
+    globalHooks.addImport('@opentiny/vue', {
+      destructuring: true,
+      exportName: name.slice(4),
+      componentName: name,
+      package: '@opentiny/vue'
+    })
+
+    item.editor.component = {
+      type: 'JSExpression',
+      value: name
+    }
+  })
+}
+
+// 使用
+genSFCWithDefaultPlugin(schema, componentsMap, {
+  attribute: [customPropsHook]
+})
+```
+
 
 
 ## 如何编写自定义插件
@@ -253,11 +379,11 @@ generateApp({
 generateApp({
   customPlugins: {
     // 解析阶段的自定义插件
-    transformStart: [],
+    transformStart: [customPlugin1],
     // 转换 schema，出码的自定义插件
-    transform: [],
+    transform: [customPlugin2],
     // 结束阶段的自定义插件
-    transformEnd: []
+    transformEnd: [customPlugin3]
   }
 })
 ```
