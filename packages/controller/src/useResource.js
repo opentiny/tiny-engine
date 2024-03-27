@@ -36,6 +36,8 @@ const blockResource = new Map()
 
 const http = useHttp()
 
+const MOBILE = 'mobile'
+
 const resState = reactive({
   components: [],
   blocks: [],
@@ -47,21 +49,21 @@ const resState = reactive({
   thirdPartyDeps: { scripts: [], styles: new Set() }
 })
 
-const getSnippet = (component) => {
+const getSnippet = (component, tinyMode) => {
   let schema = {}
   resState.components.forEach(({ children }) => {
-    const child = children.find(({ snippetName }) => snippetName === component)
+    const child = children.find(({ snippetName, tiny_mode }) => snippetName === component && tinyMode === tiny_mode)
     child && (schema = child.schema)
   })
 
   return schema
 }
 
-const generateNode = ({ type, component }) => {
+const generateNode = ({ type, component, tinyMode }) => {
   const schema = {
     componentName: component,
     props: {},
-    ...getSnippet(component)
+    ...getSnippet(component, tinyMode)
   }
 
   if (type === 'block') {
@@ -78,7 +80,8 @@ const registerComponent = (data) => {
       resource.set(item, { item, ...others, type: MATERIAL_TYPE.Component })
     })
   } else {
-    resource.set(data.component, { ...data, type: MATERIAL_TYPE.Component })
+    const componentName = data.tiny_mode && data.tiny_mode === MOBILE ? `${data.component}Mobile` : data.component
+    resource.set(componentName, { ...data, type: MATERIAL_TYPE.Component })
   }
 
   return data
@@ -219,14 +222,18 @@ const addMaterials = (materials = {}) => {
   })
 }
 
-const getMaterial = (name) => {
-  if (name) {
+const getMaterial = (name, schema) => {
+  let newName = name
+  if (newName) {
+    if (schema && schema.props.tiny_mode && schema.props.tiny_mode === MOBILE) {
+      newName = `${name}Mobile`
+    }
     // 先读取组件缓存，再读取区块缓存
     return (
-      resource.get(name) ||
-      resource.get(capitalize(camelize(name))) ||
-      blockResource.get(name) ||
-      blockResource.get(capitalize(camelize(name))) ||
+      resource.get(newName) ||
+      resource.get(capitalize(camelize(newName))) ||
+      blockResource.get(newName) ||
+      blockResource.get(capitalize(camelize(newName))) ||
       {}
     )
   } else {

@@ -9,7 +9,7 @@
           <template v-for="child in item.children" :key="child.component">
             <canvas-drag-item
               v-if="!child.hidden && (child.name?.zh_CN || child.name)"
-              :data="generateNode({ component: child.snippetName || child.component })"
+              :data="generateNode({ component: child.snippetName || child.component, tinyMode: child.tiny_mode })"
               @click="componentClick"
             >
               <li class="component-item">
