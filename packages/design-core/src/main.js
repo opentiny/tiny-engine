@@ -16,7 +16,7 @@ import { setGlobalConfig } from '@opentiny/tiny-engine-controller'
 import i18n from '@opentiny/tiny-engine-controller/js/i18n'
 import App from './App.vue'
 import globalConfig from '../config/lowcode.config'
-import { initMonitor } from '@opentiny/tiny-engine-controller/js/monitor'
+import { initMonitor, setErrorMonitorUrl } from '@opentiny/tiny-engine-controller/js/monitor'
 import { injectGlobalComponents } from '@opentiny/tiny-engine-common'
 import { initHttp } from '@opentiny/tiny-engine-http'
 import TinyThemeTool from '@opentiny/vue-theme/theme-tool'
@@ -32,6 +32,7 @@ initHttp({ env: import.meta.env })
 new TinyThemeTool(tinySmbTheme, 'smbtheme') // 初始化主题
 
 if (import.meta.env.VITE_ERROR_MONITOR && import.meta.env.VITE_ERROR_MONITOR_URL) {
+  setErrorMonitorUrl(import.meta.env.VITE_ERROR_MONITOR_URL)
   initMonitor()
 }
 

@@ -14,8 +14,6 @@ export const initEnvironment = () => {
     isLocalEnv: window.vscodeBridge,
     isDevelopEnv: MODE?.includes('dev'),
     isAlphaEnv: MODE?.includes('alpha'),
-    isProdEnv: MODE?.includes('prod'),
-    ERROR_MONITOR_URL: import.meta.env.VITE_ERROR_MONITOR_URL,
-    ERROR_MONITOR: import.meta.env.VITE_ERROR_MONITOR
+    isProdEnv: MODE?.includes('prod')
   })
 }

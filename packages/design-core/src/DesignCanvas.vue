@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { ref, onMounted, watch, computed } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import {
   CanvasContainer,
   CanvasFooter,
@@ -40,11 +40,10 @@ import * as ast from '@opentiny/tiny-engine-controller/js/ast'
 const { config } = useEnvironmentConfig()
 const { PAGE_STATUS } = constants
 const tenant = new URLSearchParams(location.search).get('tenant') || ''
-const canvasUrl = computed(() => {
-  return config.value.isLocalEnv || config.value.isDevelopEnv
+const canvasUrl =
+  config.value.isLocalEnv || import.meta.env.MODE.includes('dev')
     ? `canvas.html?tenant=${tenant}`
     : window.location.origin + window.location.pathname + `/canvas?tenant=${tenant}`
-})
 
 const componentType = {
   Block: '区块',
