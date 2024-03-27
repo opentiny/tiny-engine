@@ -64,6 +64,14 @@ body:
     attributes:
       label: What is actually happening
       placeholder: Please Input
+  - type: input
+    id: project-name
+    attributes:
+      label: What is your project name
+      description: We also welcome you to fill in more detailed project information in the following issue [#334](https://github.com/opentiny/tiny-engine/issues/334).
+      placeholder: Please Input
+    validations:
+      required: true
   - type: textarea
     id: additional-comments
     attributes:
