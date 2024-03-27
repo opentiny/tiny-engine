@@ -16,99 +16,93 @@
       ></tiny-input>
     </tiny-form-item>
     <tiny-form-item label="初始值类型" class="var-type-item">
-      <tiny-button-group
-        class="variable-type"
-        :data="VAR_TYPES"
-        size="mini"
-        v-model="state.variableType"
-        @change="state.variableType = $event"
-      ></tiny-button-group>
+      <tiny-radio-group v-model="state.variableType" :options="VAR_TYPES"></tiny-radio-group>
     </tiny-form-item>
-    <tiny-form-item class="monaco-form-item init-value-item">
-      <template #label>
-        <div class="label-left-wrap">
-          <div>初始值</div>
-          <tiny-popover placement="bottom-start" effect="dark" trigger="hover" popper-class="state-data-example-tips">
-            <div class="tips-content">
-              <div class="create-content-head">
-                <div class="create-content-tip">数据写法和JS写法一致</div>
-              </div>
-              <div class="create-content-demo">
-                <ul>
-                  <li>字符串: "string"</li>
-                  <li>数字: 123</li>
-                  <li>布尔值: true/false</li>
-                  <li>对象: {"name": "xxx"}</li>
-                  <li>数组: ["1", "2"]</li>
-                  <li>空值: null</li>
-                  <li>JS表达式: (需要先选择JS表达式类型)</li>
-                  <li class="ml20">示例1： t('i18nkey1')</li>
-                  <li class="ml20">示例2： function fnName() {}</li>
-                  <li class="ml20">示例3： { getValue: () => {} }</li>
-                </ul>
-                <div class="create-content-foot">
-                  <div class="create-content-tip">
-                    注意：使用JS表达式定义state变量的时候无法调用state其他变量定义，<br />另由于JS函数定义在变量之后，也无法调用JS面板定义的函数
+    <tiny-form-item>
+      <monaco-editor
+        ref="variableEditor"
+        class="variable-editor"
+        :value="editorCode"
+        :showFormatBtn="true"
+        :options="state.editorOptions"
+        @editorDidMount="editorDidMount"
+      >
+        <template #toolbarStart>
+          <div class="label-left-wrap">
+            <div>初始值</div>
+            <tiny-popover placement="bottom-start" effect="dark" trigger="hover" popper-class="state-data-example-tips">
+              <div class="tips-content">
+                <div class="create-content-head">
+                  <div class="create-content-tip">数据写法和JS写法一致</div>
+                </div>
+                <div class="create-content-demo">
+                  <ul>
+                    <li>字符串: "string"</li>
+                    <li>数字: 123</li>
+                    <li>布尔值: true/false</li>
+                    <li>对象: {"name": "xxx"}</li>
+                    <li>数组: ["1", "2"]</li>
+                    <li>空值: null</li>
+                    <li>JS表达式: (需要先选择JS表达式类型)</li>
+                    <li class="ml20">示例1： t('i18nkey1')</li>
+                    <li class="ml20">示例2： function fnName() {}</li>
+                    <li class="ml20">示例3： { getValue: () => {} }</li>
+                  </ul>
+                  <div class="create-content-foot">
+                    <div class="create-content-tip">
+                      注意：使用JS表达式定义state变量的时候无法调用state其他变量定义，<br />另由于JS函数定义在变量之后，也无法调用JS面板定义的函数
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <template #reference>
-              <div class="create-content-description">查看示例</div>
-            </template>
-          </tiny-popover>
-        </div>
-      </template>
-      <div class="create-content">
-        <monaco-editor
-          ref="variableEditor"
-          class="create-content-editor"
-          :value="editorCode"
-          :showFormatBtn="true"
-          :options="state.editorOptions"
-          @editorDidMount="editorDidMount"
-        >
-          <template #buttons>
-            <editor-i18n-tool ref="i18nToolRef" @confirm="insertContent"></editor-i18n-tool>
-          </template>
-        </monaco-editor>
-      </div>
+              <template #reference>
+                <div class="create-content-description">查看示例</div>
+              </template>
+            </tiny-popover>
+          </div>
+        </template>
+        <template #buttons>
+          <editor-i18n-tool ref="i18nToolRef" @confirm="insertContent"></editor-i18n-tool>
+        </template>
+      </monaco-editor>
     </tiny-form-item>
-    <tiny-form-item v-if="state.hasAccessor" class="store-form-item monaco-form-item">
-      <template #label>
-        <div class="label-left-wrap">
-          <div>getter</div>
-          <tiny-popover placement="bottom-start" trigger="hover" popper-class="state-data-example-tips">
-            <div class="tips-content">
-              <div class="create-content-demo">
-                <pre><code>{{ getterExample }}</code></pre>
+    <tiny-form-item v-if="state.hasAccessor">
+      <monaco-editor ref="getterEditor" class="variable-editor" :options="options" :value="state.getterEditorValue">
+        <template #toolbarStart>
+          <div class="label-left-wrap">
+            <div>getter</div>
+            <tiny-popover placement="bottom-start" trigger="hover" popper-class="state-data-example-tips">
+              <div class="tips-content">
+                <div class="create-content-demo">
+                  <pre><code>{{ getterExample }}</code></pre>
+                </div>
               </div>
-            </div>
-            <template #reference>
-              <div class="create-content-description">查看示例</div>
-            </template>
-          </tiny-popover>
-        </div>
-      </template>
-      <monaco-editor ref="getterEditor" class="variable-editor" :options="options" :value="state.getterEditorValue" />
+              <template #reference>
+                <div class="create-content-description">查看示例</div>
+              </template>
+            </tiny-popover>
+          </div>
+        </template>
+      </monaco-editor>
     </tiny-form-item>
-    <tiny-form-item v-if="state.hasAccessor" class="store-form-item monaco-form-item">
-      <template #label>
-        <div class="label-left-wrap">
-          <div>setter</div>
-          <tiny-popover placement="bottom-start" trigger="hover" popper-class="state-data-example-tips">
-            <div class="tips-content">
-              <div class="create-content-demo">
-                <pre><code>{{ setterExample }}</code></pre>
+    <tiny-form-item v-if="state.hasAccessor">
+      <monaco-editor ref="setterEditor" class="variable-editor" :options="options" :value="state.setterEditorValue">
+        <template #toolbarStart>
+          <div class="label-left-wrap">
+            <div>setter</div>
+            <tiny-popover placement="bottom-start" trigger="hover" popper-class="state-data-example-tips">
+              <div class="tips-content">
+                <div class="create-content-demo">
+                  <pre><code>{{ setterExample }}</code></pre>
+                </div>
               </div>
-            </div>
-            <template #reference>
-              <div class="create-content-description">查看示例</div>
-            </template>
-          </tiny-popover>
-        </div>
-      </template>
-      <monaco-editor ref="setterEditor" class="variable-editor" :options="options" :value="state.setterEditorValue" />
+              <template #reference>
+                <div class="create-content-description">查看示例</div>
+              </template>
+            </tiny-popover>
+          </div>
+        </template>
+      </monaco-editor>
     </tiny-form-item>
     <div class="show-advanced" @click="state.hasAccessor = !state.hasAccessor">
       {{ (state.hasAccessor ? '移除' : '添加') + '高级属性' }}
@@ -118,7 +112,7 @@
 
 <script>
 import { reactive, ref, computed, watch, onBeforeUnmount } from 'vue'
-import { Popover, Form, FormItem, Input, ButtonGroup } from '@opentiny/vue'
+import { Popover, Form, FormItem, Input, RadioGroup } from '@opentiny/vue'
 import { MonacoEditor } from '@opentiny/tiny-engine-common'
 import { verifyJsVarName } from '@opentiny/tiny-engine-controller/js/verification'
 import { initCompletion } from '@opentiny/tiny-engine-controller/js/completion'
@@ -133,7 +127,7 @@ export default {
     TinyFormItem: FormItem,
     TinyInput: Input,
     TinyPopover: Popover,
-    TinyButtonGroup: ButtonGroup,
+    TinyRadioGroup: RadioGroup,
     EditorI18nTool
   },
   props: {
@@ -177,8 +171,8 @@ export default {
       JS: 'javascript'
     }
     const VAR_TYPES = [
-      { text: 'JSON类型', value: LANG_TYPES.JSON },
-      { text: 'JS表达式类型', value: LANG_TYPES.JS }
+      { text: 'JSON类型', label: LANG_TYPES.JSON },
+      { text: 'JS表达式类型', label: LANG_TYPES.JS }
     ]
     const getVarType = () => (props.createData.variable?.type === 'JSExpression' ? LANG_TYPES.JS : LANG_TYPES.JSON)
 
@@ -213,7 +207,6 @@ export default {
       () => props.createData.variable,
       () => {
         state.errorMessage = ''
-        state.createData = getPropsCreateData()
         state.hasAccessor = isAccessorData(props.createData?.variable)
         state.getterEditorValue = props.createData.variable?.accessor?.getter?.value || DEFAULT_GETTER
         state.setterEditorValue = props.createData.variable?.accessor?.setter?.value || DEFAULT_SETTER
@@ -221,6 +214,22 @@ export default {
         if (state.editorOptions.language !== state.variableType) {
           changeLanguage(state.variableType)
         }
+      }
+    )
+
+    watch(
+      () => [props.createData.name, props.createData.variable],
+      () => {
+        state.createData = getPropsCreateData()
+      }
+    )
+
+    watch(
+      () => props.createData.name,
+      () => {
+        variableEditor.value?.switchFullScreen(false)
+        getterEditor.value?.switchFullScreen(false)
+        setterEditor.value?.switchFullScreen(false)
       }
     )
 
@@ -394,54 +403,21 @@ export default {
 <style lang="less" scoped>
 .create-form {
   padding: 12px;
-  height: calc(100% - 50px);
+  height: calc(100% - 45px);
   overflow-y: auto;
-
-  .error-tip {
-    color: var(--ti-lowcode-error-tip-color);
-    margin-top: 4px;
-    font-size: 12px;
-  }
 
   .tiny-form-item:not(:last-child) {
     margin-bottom: 12px;
   }
 
-  .init-value-item {
-    margin-top: -22px;
-  }
-
-  .tiny-form-item {
-    &.var-type-item {
-      :deep(.tiny-button-group ul.tiny-group-item li.active button:not(.disabled)) {
-        background: var(--ti-lowcode-data-radio-group-active-bg);
-      }
-      :deep(.tiny-button-group ul.tiny-group-item li button:not(.disabled)) {
-        background: var(--ti-lowcode-data-radio-group-bg);
-        border: 0px;
-        border-radius: 0px;
-      }
-    }
-    &.monaco-form-item {
-      margin-bottom: 24px;
-      :deep(.tiny-form-item__label) {
-        position: relative;
-        z-index: 1;
-        margin-bottom: -58px;
-      }
-    }
-  }
-
   :deep(.tiny-form-item__label) {
     color: var(--ti-lowcode-toolbar-icon-color);
-    .label-left-wrap {
-      display: flex;
-    }
   }
-}
 
-.create-content {
-  color: var(--ti-lowcode-create-color);
+  .label-left-wrap {
+    color: var(--ti-lowcode-toolbar-icon-color);
+    display: flex;
+  }
 }
 
 .tips-content {
@@ -478,32 +454,18 @@ export default {
 }
 
 .create-content-description {
-  color: var(--ti-lowcode-description-color);
+  font-size: 12px;
+  color: var(--ti-lowcode-common-primary-color);
   margin-left: 8px;
   cursor: pointer;
 }
-.create-content-editor {
-  height: 230px;
-  .monaco-editor {
-    height: 200px !important;
-  }
-}
 
 .variable-editor {
-  height: 230px;
-  :deep(.toolbar) {
-    margin-bottom: 8px;
-  }
-  .monaco-editor {
-    height: 200px !important;
-  }
+  height: 270px;
 }
-:deep(.tiny-form-item__label) {
-  height: unset;
-}
+
 .show-advanced {
   font-size: 12px;
-  margin-top: 40px;
   color: var(--ti-lowcode-data-advanced-text-color);
   &:hover {
     color: var(--ti-lowcode-data-advanced-text-hover-color);
@@ -516,10 +478,18 @@ export default {
 .tiny-popover.tiny-popper.state-data-example-tips {
   background-color: var(--ti-lowcode-data-example-bg-color);
   color: var(--ti-lowcode-data-example-color);
-  .popper__arrow {
+
+  &[x-placement^='bottom'] .popper__arrow {
     &,
     &::after {
       border-bottom-color: var(--ti-lowcode-data-example-bg-color);
+    }
+  }
+
+  &[x-placement^='top'] .popper__arrow {
+    &,
+    &::after {
+      border-top-color: var(--ti-lowcode-data-example-bg-color);
     }
   }
 }
