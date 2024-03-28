@@ -200,8 +200,8 @@ const prodAlias = {
 const commonAlias = {
   '@opentiny/tiny-engine-app-addons': path.resolve(__dirname, './config/addons.js')
 }
-const isLocalImportMap = true // true公共依赖库使用本地打包文件，false公共依赖库使用公共CDN
-const isCopyBundleDeps = true // true bundle里的cdn依赖处理成本地依赖， false 不处理
+const isLocalImportMap = false // true公共依赖库使用本地打包文件，false公共依赖库使用公共CDN
+const isCopyBundleDeps = false // true bundle里的cdn依赖处理成本地依赖， false 不处理
 export default defineConfig(({ command, mode }) => {
   const { VITE_CDN_DOMAIN: envCdn } = loadEnv(mode, process.cwd(), '')
   const {
