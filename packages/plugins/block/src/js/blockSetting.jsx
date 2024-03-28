@@ -20,11 +20,12 @@ import {
   useTranslate,
   useApp,
   useLayout,
-  useNotify
+  useNotify,
+  useResource,
+  useHistory,
+  useLocalEnv
 } from '@opentiny/tiny-engine-controller'
-import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
-import { getCanvasStatus } from '@opentiny/tiny-engine-controller/js/canvas'
-import { useHistory, useResource } from '@opentiny/tiny-engine-controller'
+import { getPageStatus } from '@opentiny/tiny-engine-controller/js/page'
 import html2canvas from 'html2canvas'
 
 import {
@@ -45,6 +46,7 @@ import {
 import { constants, utils } from '@opentiny/tiny-engine-utils'
 import { generateBlock } from '@opentiny/tiny-engine-controller/js/vscodeGenerateFile'
 
+const isLocalEnv = useLocalEnv().isLocalEnv
 const { HOST_TYPE } = constants
 const { getBlockList, setBlockList, setCategoryList, getCurrentBlock, addBlockEvent, addBlockProperty } = useBlock()
 const { batchCreateI18n } = useTranslate()
@@ -436,7 +438,7 @@ export const refreshBlockData = async (block = {}) => {
         newBlock.public_scope_tenants = newBlock.public_scope_tenants.map((e) => e.id)
       }
       Object.assign(block, newBlock)
-      useLayout().layoutState.pageStatus = getCanvasStatus(newBlock?.occupier)
+      useLayout().layoutState.pageStatus = getPageStatus(newBlock?.occupier, useResource().resState.isDemo)
 
       useHistory().addHistory(block.content)
     }
@@ -594,7 +596,7 @@ const createBlock = (block = {}) => {
   const { selectedId: created_app } = appInfoState
   const params = { ...block, created_app }
 
-  if (isVsCodeEnv) {
+  if (isLocalEnv) {
     const id = getMaterialHistory()?.id
 
     if (id) {
@@ -613,7 +615,7 @@ const createBlock = (block = {}) => {
       useBlock().initBlock(data, {}, true)
       message({ message: '新建区块成功！', status: 'success' })
       // 本地生成区块服务
-      if (isVsCodeEnv) {
+      if (isLocalEnv) {
         generateBlock({ schema: data.content, blockPath: data.path })
       }
       // 更新区块分类数据，分类下区块不为空的不能删除
@@ -638,6 +640,7 @@ const updateBlock = (block = {}) => {
     label
   } = block
   const nameCn = 'name_cn'
+
   requestUpdateBlock(
     id,
     {
@@ -663,7 +666,7 @@ const updateBlock = (block = {}) => {
       // 弹出保存区块成功
       message({ message: '保存区块成功！', status: 'success' })
       // 本地生成区块服务
-      if (isVsCodeEnv) {
+      if (isLocalEnv) {
         generateBlock({ schema: data.content, blockPath: data.path })
       }
       // 更新区块分类数据，分类下区块不为空的不能删除
@@ -752,7 +755,7 @@ export const mountedHook = () => {
     updateBlockList()
     getCategories()
 
-    if (isVsCodeEnv) {
+    if (isLocalEnv) {
       fetchMaterialId()
     }
   })

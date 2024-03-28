@@ -10,16 +10,23 @@
  *
  */
 
-import { createApp } from 'vue'
-import initSvgs from '@opentiny/tiny-engine-svgs'
-import App from './App.vue'
-import { initEnvironment } from '../../initEnvironment'
-import 'virtual:svg-icons-register'
+import { ref } from 'vue'
 
-initEnvironment()
+const config = ref({})
 
-const app = createApp(App)
+const setEnvironmentConfig = (newConfig = {}) => {
+  for (const [key, value] of Object.entries(newConfig)) {
+    config.value[key] = value
+  }
+}
 
-initSvgs(app)
+export const useEnvironmentConfig = (initConfig) => {
+  if (initConfig) {
+    setEnvironmentConfig(initConfig)
+  }
 
-app.mount('#app')
+  return {
+    config,
+    setEnvironmentConfig
+  }
+}

@@ -11,7 +11,6 @@
  */
 
 import { Modal } from '@opentiny/vue'
-import { VITE_ORIGIN } from '../js/environments'
 import useCanvas from './useCanvas'
 import { getGlobalConfig } from './globalConfig'
 
@@ -19,13 +18,13 @@ import { getGlobalConfig } from './globalConfig'
 
 const bridge = window.vscodeBridge
 
-const confirmSaveLocal = async () => {
+const confirmSaveLocal = async (apiPrefix) => {
   const { pageState, setSaved } = useCanvas()
   const currentPageId = pageState.currentPageId || pageState.currentPage.id
   const currentPageName = pageState.currentPageName || pageState.currentPage.name
 
   const savePage = await bridge.callHandler('save-page', {
-    api: `${VITE_ORIGIN}/app-service/api/pages/code/${currentPageId}`,
+    api: `${apiPrefix}/app-service/api/pages/code/${currentPageId}`,
     pageName: currentPageName,
     pageId: currentPageId,
     platformId: getGlobalConfig()?.platformId
@@ -47,7 +46,7 @@ const confirmSaveLocal = async () => {
   Modal.message({ message, status: 'error', duration: '5000', top: 60 })
 }
 
-const savePageLocal = async () => {
+const savePageLocal = async (apiPrefix) => {
   // 查询本地页面文件是否存在
   const { currentPageId, currentPageName, currentPage } = useCanvas().pageState
   const fileExistRes = await bridge.callHandler('page-is-exist', {
@@ -64,7 +63,7 @@ const savePageLocal = async () => {
 
   // 如果本地不存在同名文件，执行保存文件到本地操作
   if (!fileExistRes.data.isExist) {
-    confirmSaveLocal()
+    confirmSaveLocal(apiPrefix)
     return
   }
 
@@ -73,7 +72,7 @@ const savePageLocal = async () => {
     title: '查询本地文件',
     message: '本地已经存在同名文件，是否覆盖？'
   }).then((res) => {
-    res === 'confirm' && confirmSaveLocal()
+    res === 'confirm' && confirmSaveLocal(apiPrefix)
   })
 }
 

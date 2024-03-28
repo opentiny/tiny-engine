@@ -68,6 +68,7 @@ export default {
           utilsImportMaps[packageName] = cdnLink
         }
       })
+
       const newImportMap = { imports: { ...importMap.imports, ...utilsImportMaps } }
       store.setImportMap(newImportMap)
     }

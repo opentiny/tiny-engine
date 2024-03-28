@@ -21,7 +21,6 @@
 import { ref, onMounted } from 'vue'
 import { Progress, Button } from '@opentiny/vue'
 import { useHttp } from '@opentiny/tiny-engine-http'
-import { VITE_ORIGIN } from '@opentiny/tiny-engine-controller/js/environments'
 import { EXTEND_CONFIG } from '@opentiny/tiny-engine-controller/js/app'
 import { useApp } from '@opentiny/tiny-engine-controller'
 
@@ -81,6 +80,8 @@ export default {
         } else if (data.taskStatus === taskStatus.FINISHED) {
           progressStatus.value = 'success'
           percentage.value = 100
+
+          const VITE_ORIGIN = import.meta.env.VITE_ORIGIN
 
           let openUrl = `${VITE_ORIGIN}/app-center/entry/${appId}/`
 

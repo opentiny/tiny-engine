@@ -15,7 +15,6 @@ import { getGlobalConfig } from './globalConfig'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { utils, constants } from '@opentiny/tiny-engine-utils'
 import { meta as BuiltinComponentMaterials } from '@opentiny/tiny-engine-builtin-component'
-import { getCanvasStatus } from '../js/canvas'
 import useApp from './useApp'
 import useCanvas from './useCanvas'
 import useTranslate from './useTranslate'
@@ -24,6 +23,7 @@ import useBreadcrumb from './useBreadcrumb'
 import useLayout from './useLayout'
 import useBlock from './useBlock'
 import useNotify from './useNotify'
+import { getPageStatus } from '../js/page'
 
 const { camelize, capitalize } = utils
 const { MATERIAL_TYPE, COMPONENT_NAME, DEFAULT_INTERCEPTOR } = constants
@@ -262,7 +262,7 @@ const initPage = (pageInfo) => {
     if (pageInfo.meta) {
       const { occupier } = pageInfo.meta
 
-      useLayout().layoutState.pageStatus = getCanvasStatus(occupier)
+      useLayout().layoutState.pageStatus = getPageStatus(occupier, resState.isDemo)
     } else {
       useLayout().layoutState.pageStatus = {
         state: 'empty',
@@ -297,7 +297,7 @@ const initBlock = async (blockId) => {
     blockContent.public_scope_tenants = blockContent.public_scope_tenants.map((e) => e.id)
   }
 
-  useLayout().layoutState.pageStatus = getCanvasStatus(blockContent?.occupier)
+  useLayout().layoutState.pageStatus = getPageStatus(blockContent?.occupier, resState.isDemo)
 
   // 请求区块详情
   useBlock().initBlock(blockContent, {}, true)
@@ -313,7 +313,7 @@ const initPageOrBlock = async () => {
 
     const data = await pagePluginApi.getPageById(pageId)
 
-    useLayout().layoutState.pageStatus = getCanvasStatus(data.occupier)
+    useLayout().layoutState.pageStatus = getPageStatus(data.occupier, resState.isDemo)
     useCanvas().initData(data.page_content, data)
     setBreadcrumbPage([data.name])
     return

@@ -34,15 +34,17 @@ import {
 import materials from '@opentiny/tiny-engine-plugin-materials'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { isVsCodeEnv, isDevelopEnv } from '@opentiny/tiny-engine-controller/js/environments'
 import * as ast from '@opentiny/tiny-engine-controller/js/ast'
 
 const { PAGE_STATUS } = constants
 const tenant = new URLSearchParams(location.search).get('tenant') || ''
-const canvasUrl =
-  isVsCodeEnv || isDevelopEnv
-    ? `canvas.html?tenant=${tenant}`
-    : window.location.origin + window.location.pathname + `/canvas?tenant=${tenant}`
+let url = `${window.location.origin}${window.location.pathname}`
+
+if (url.endsWith('/')) {
+  url = url.slice(0, -1)
+}
+
+const canvasUrl = `${url}/canvas?tenant=${tenant}`
 
 const componentType = {
   Block: '区块',

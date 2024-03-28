@@ -59,7 +59,7 @@ window.lowcode = {
 let http // 封装axios的http实例
 let environment = import.meta.env // 当前设计器运行环境变量
 
-const isVsCodeEnv = window.vscodeBridge
+const isLocalEnv = window.vscodeBridge
 const isMock = () => environment.VITE_API_MOCK === 'mock'
 
 export const createHttp = (options) => {
@@ -80,7 +80,7 @@ export const createHttp = (options) => {
       config.baseURL = ''
     }
 
-    if (isVsCodeEnv) {
+    if (isLocalEnv) {
       config.baseURL = ''
     }
 
