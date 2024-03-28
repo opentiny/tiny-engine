@@ -16,7 +16,7 @@ const modal = reactive({
   left: 0,
   top: 0
 })
-export const useModal = () => {
+export const usePanelModal = () => {
   const setPosition = (event) => {
     const panelWidth = window.getComputedStyle(document.body).getPropertyValue('--base-right-panel-width')
     const innnerWidth = window.innerWidth
@@ -37,6 +37,7 @@ export const useModal = () => {
 }
 
 export default {
+  emits: ['close'],
   setup() {
     return {
       modal
@@ -60,7 +61,7 @@ export default {
     right: 0;
     bottom: 0;
     left: calc(100% - var(--base-right-panel-width));
-    background: rgba(33, 33, 33, 0.65);
+    background: rgba(0, 0, 0, 0.15);
     z-index: 9999;
   }
 
@@ -76,6 +77,11 @@ export default {
     overflow: auto;
     max-height: 100%;
     box-sizing: border-box;
+    :deep(.reset-tip) {
+      font-size: 12px;
+      color: var(--ti-lowcode-common-text-desc-color);
+      text-align: center;
+    }
   }
 }
 </style>

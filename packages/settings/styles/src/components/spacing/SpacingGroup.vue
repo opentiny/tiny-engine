@@ -390,13 +390,13 @@
 <script>
 import { computed, reactive } from 'vue'
 import SpacingSetting from './SpacingSetting.vue'
-import ModalMask, { useModal } from '../inputs/ModalMask.vue'
+import { PanelModalMask, usePanelModal } from '@opentiny/tiny-engine-common'
 import useEvent from '../../js/useEvent'
 import { SPACING_PROPERTY } from '../../js/styleProperty'
 
 export default {
   components: {
-    ModalMask,
+    ModalMask: PanelModalMask,
     SpacingSetting
   },
   props: {
@@ -407,7 +407,7 @@ export default {
   },
   emits: useEvent(),
   setup(props, { emit }) {
-    const { setPosition } = useModal()
+    const { setPosition } = usePanelModal()
 
     const state = reactive({
       className: '',
@@ -451,7 +451,7 @@ export default {
 
       state.showModal = true
     }
-
+    
     const clickMargin = (styleName, event) => {
       state.className = styleName
       state.show = true

@@ -24,7 +24,7 @@
 import { ref, watchEffect } from 'vue'
 import { MetaRadio } from '@opentiny/tiny-engine-common'
 import { hyphenate } from '@opentiny/tiny-engine-controller/utils'
-import ModalMask, { useModal } from '../inputs/ModalMask.vue'
+import { PanelModalMask, usePanelModal } from '@opentiny/tiny-engine-common'
 import ResetButton from '../inputs/ResetButton.vue'
 import { useProperties } from '../../js/useStyle'
 import { FLEX_PROPERTY } from '../../js/styleProperty'
@@ -32,7 +32,7 @@ import { FLEX_PROPERTY } from '../../js/styleProperty'
 export default {
   components: {
     MetaRadio,
-    ModalMask,
+    ModalMask: PanelModalMask,
     ResetButton
   },
   props: {
@@ -172,7 +172,7 @@ export default {
         ]
       }
     ])
-    const { setPosition } = useModal()
+    const { setPosition } = usePanelModal()
     const showModal = ref(false)
 
     const { getSettingFlag } = useProperties({

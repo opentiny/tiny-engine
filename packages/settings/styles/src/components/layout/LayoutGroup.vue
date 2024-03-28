@@ -17,12 +17,12 @@ import { DISPLAY_TYPE } from '../../js/cssType'
 import { MetaRadio } from '@opentiny/tiny-engine-common'
 import useEvent from '../../js/useEvent'
 import ResetButton from '../inputs/ResetButton.vue'
-import ModalMask, { useModal } from '../inputs/ModalMask.vue'
+import { PanelModalMask, usePanelModal } from '@opentiny/tiny-engine-common'
 
 export default {
   components: {
     MetaRadio,
-    ModalMask,
+    ModalMask: PanelModalMask,
     ResetButton
   },
   props: {
@@ -45,7 +45,7 @@ export default {
   },
   emits: useEvent(),
   setup(props, { emit }) {
-    const { setPosition } = useModal()
+    const { setPosition } = usePanelModal()
 
     const picked = ref(props.display)
     const showModal = ref(false)

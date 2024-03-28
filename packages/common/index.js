@@ -79,6 +79,7 @@ import BlockDeployDialog from './component/BlockDeployDialog.vue'
 import ProgressBar from './component/ProgressBar.vue'
 import MetaButtonGroup from './component/MetaButtonGroup.vue'
 import MetaTableColumns from './component/MetaTableColumns.vue'
+import PanelModalMask, { usePanelModal } from './component/PanelModalMask.vue'
 
 import i18n, { i18nKeyMaps } from '@opentiny/tiny-engine-controller/js/i18n'
 
@@ -206,5 +207,7 @@ export {
   BindI18n,
   BlockDeployDialog,
   ProgressBar,
-  MetaTableColumns
+  MetaTableColumns,
+  PanelModalMask,
+  usePanelModal
 }
