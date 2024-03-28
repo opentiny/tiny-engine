@@ -349,7 +349,7 @@ export default defineConfig(({ command, mode }) => {
       ? CopyBundleDeps(
           'public/mock/bundle.json',
           'mock/bundle.json',
-          'https://npm.onmicrosoft.cn',
+          envCdn, // mock 中bundle的域名当前和环境的VITE_CDN_DOMAIN一致
           getBaseUrlFromCli(config.base),
           'material-static'
         ).plugin()

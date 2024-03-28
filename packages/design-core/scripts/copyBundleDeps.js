@@ -1,7 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import shelljs from 'shelljs'
-import { babelReplaceImportPathWithCertainFIleName } from './replaceImportPath.mjs'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
 
 export function readJsonFile(filename) {
@@ -118,12 +117,7 @@ export function CopyBundleDeps(
       version,
       sourceExist,
       sourceExistExternal,
-      transform: url.endsWith('.js')
-        ? (content, filename) => {
-            const result = babelReplaceImportPathWithCertainFIleName(content, filename, console)
-            return result.code || content
-          }
-        : null
+      transform: null // 物料的依赖目前暂定是需要mjs，暂不考虑相对链接问题
     }
   })
 

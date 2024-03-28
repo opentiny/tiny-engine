@@ -1,14 +1,10 @@
 import fs from 'node:fs'
-import fsPromise from 'node:fs/promises'
 import path from 'node:path'
-import { glob } from 'glob'
 import { parse } from '@babel/core'
 import traversePkg from '@babel/traverse'
 import generatePkg from '@babel/generator'
 const traverse = traversePkg.default
 const generate = generatePkg.default
-
-const flattenReducer = (acc, cur) => [...acc, ...cur]
 
 export function relativePathPattern(relativePath) {
   return './' + (path.sep === '/' ? relativePath : relativePath.replace(/\\/g, '/'))
@@ -89,36 +85,4 @@ export function babelReplaceImportPathWithCertainFIleName(content, currentFilePa
   }
   return result
 }
-/**
- * 入口函数 replaceImportPath
- * 1） 扫描dirs文件夹内的js文件
- * 2） 分析js文件内部的相对路径引用，替换成确定带完整文件名和后缀的相对文件路径
- * @param {Array<string>} dirs 需要处理的目录的数组
- */
-export function replaceImportPath(dirs, logger = console) {
-  const files = dirs.map(dir => glob.sync(`${path.resolve(dir)}/**/*.js`)).reduce(flattenReducer, [])
-  return Promise.all(files.map(async file => {
-    const content = await fsPromise.readFile(file, {encoding: 'utf-8'})
-    const { code, success, error} = babelReplaceImportPathWithCertainFIleName(content, file, logger)
-    if (code) {
-      await fsPromise.writeFile(file, code, { encoding: 'utf-8' })
-    }
-    return {
-      file,
-      changed: !!code,
-      success,
-      error
-    }
-  })).then(arr => {
-    const success = arr.map(item => item.success.map(s => ({...s, file: item.file}))).reduce(flattenReducer, [])
-    const error = arr.map(item => item.error.map(e => ({notFound: e, file: item.file}))).reduce(flattenReducer, [])
-    const fileList = arr.filter(item => item.changed)
-    const errorFileList = arr.filter(item => item.error?.length)
-    return {
-      fileList,
-      success,
-      error,
-      errorFileList
-    }
-  })
-}
+
