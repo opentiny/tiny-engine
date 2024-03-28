@@ -21,9 +21,9 @@ import {
   useApp,
   useLayout,
   useNotify,
-  useEnvironmentConfig,
   useResource,
-  useHistory
+  useHistory,
+  useLocalEnv
 } from '@opentiny/tiny-engine-controller'
 import { getPageStatus } from '@opentiny/tiny-engine-controller/js/page'
 import html2canvas from 'html2canvas'
@@ -46,6 +46,7 @@ import {
 import { constants, utils } from '@opentiny/tiny-engine-utils'
 import { generateBlock } from '@opentiny/tiny-engine-controller/js/vscodeGenerateFile'
 
+const isLocalEnv = useLocalEnv().isLocalEnv
 const { HOST_TYPE } = constants
 const { getBlockList, setBlockList, setCategoryList, getCurrentBlock, addBlockEvent, addBlockProperty } = useBlock()
 const { batchCreateI18n } = useTranslate()
@@ -594,9 +595,8 @@ const createBlock = (block = {}) => {
   const { appInfoState } = useApp()
   const { selectedId: created_app } = appInfoState
   const params = { ...block, created_app }
-  const { config } = useEnvironmentConfig()
 
-  if (config.value.isLocalEnv) {
+  if (isLocalEnv) {
     const id = getMaterialHistory()?.id
 
     if (id) {
@@ -615,7 +615,7 @@ const createBlock = (block = {}) => {
       useBlock().initBlock(data, {}, true)
       message({ message: '新建区块成功！', status: 'success' })
       // 本地生成区块服务
-      if (config.value.isLocalEnv) {
+      if (isLocalEnv) {
         generateBlock({ schema: data.content, blockPath: data.path })
       }
       // 更新区块分类数据，分类下区块不为空的不能删除
@@ -640,7 +640,6 @@ const updateBlock = (block = {}) => {
     label
   } = block
   const nameCn = 'name_cn'
-  const { config } = useEnvironmentConfig()
 
   requestUpdateBlock(
     id,
@@ -667,7 +666,7 @@ const updateBlock = (block = {}) => {
       // 弹出保存区块成功
       message({ message: '保存区块成功！', status: 'success' })
       // 本地生成区块服务
-      if (config.value.isLocalEnv) {
+      if (isLocalEnv) {
         generateBlock({ schema: data.content, blockPath: data.path })
       }
       // 更新区块分类数据，分类下区块不为空的不能删除
@@ -755,9 +754,8 @@ export const mountedHook = () => {
   onMounted(() => {
     updateBlockList()
     getCategories()
-    const { config } = useEnvironmentConfig()
 
-    if (config.value.isLocalEnv) {
+    if (isLocalEnv) {
       fetchMaterialId()
     }
   })

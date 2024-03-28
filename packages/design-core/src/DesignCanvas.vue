@@ -29,21 +29,16 @@ import {
   useLayout,
   useResource,
   useHistory,
-  useModal,
-  useEnvironmentConfig
+  useModal
 } from '@opentiny/tiny-engine-controller'
 import materials from '@opentiny/tiny-engine-plugin-materials'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { constants } from '@opentiny/tiny-engine-utils'
 import * as ast from '@opentiny/tiny-engine-controller/js/ast'
 
-const { config } = useEnvironmentConfig()
 const { PAGE_STATUS } = constants
 const tenant = new URLSearchParams(location.search).get('tenant') || ''
-const canvasUrl =
-  config.value.isLocalEnv || import.meta.env.MODE.includes('dev')
-    ? `canvas.html?tenant=${tenant}`
-    : window.location.origin + window.location.pathname + `/canvas?tenant=${tenant}`
+const canvasUrl = window.location.origin + window.location.pathname + `canvas?tenant=${tenant}`
 
 const componentType = {
   Block: '区块',

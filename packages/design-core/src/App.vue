@@ -28,7 +28,7 @@ import {
   useModal,
   useApp,
   useNotify,
-  useEnvironmentConfig
+  useLocalEnv
 } from '@opentiny/tiny-engine-controller'
 import AppManage from '@opentiny/tiny-engine-plugin-page'
 import DesignToolbars from './DesignToolbars.vue'
@@ -105,9 +105,7 @@ export default {
 
     window.addEventListener('popstate', handlePopStateEvent)
 
-    const { config } = useEnvironmentConfig()
-
-    if (config.value.isLocalEnv) {
+    if (useLocalEnv().isLocalEnv) {
       const appId = useApp().appInfoState.selectedId
       fetchGroups(appId)
         .then((groups) => {

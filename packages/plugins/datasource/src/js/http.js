@@ -10,7 +10,7 @@
  *
  */
 
-import { useEnvironmentConfig } from '@opentiny/tiny-engine-controller'
+import { useLocalEnv } from '@opentiny/tiny-engine-controller'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { generateDataSource } from '@opentiny/tiny-engine-controller/js/vscodeGenerateFile'
 
@@ -43,9 +43,7 @@ export const requestGlobalDataHandler = (appId, params) => http.post(`/app-cente
 
 // 生成数据源配置到本地文件
 export const requestGenerateDataSource = (appId) => {
-  const { config } = useEnvironmentConfig()
-
-  if (config.value.isLocalEnv) {
+  if (useLocalEnv().isLocalEnv) {
     http.get(`/app-center/api/apps/schema/${appId}`).then((data) => {
       generateDataSource(data.dataSource)
     })

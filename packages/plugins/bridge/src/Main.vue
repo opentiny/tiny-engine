@@ -22,7 +22,7 @@
 import { ref, computed } from 'vue'
 import { Tabs, TabItem } from '@opentiny/vue'
 import { PluginPanel, SvgButton, LinkButton } from '@opentiny/tiny-engine-common'
-import { useHelp, useEnvironmentConfig } from '@opentiny/tiny-engine-controller'
+import { useHelp, useLocalEnv } from '@opentiny/tiny-engine-controller'
 import { RESOURCE_TYPE } from './js/resource'
 import BridgeManage from './BridgeManage.vue'
 import BridgeSetting, { openPanel, closePanel } from './BridgeSetting.vue'
@@ -66,8 +66,6 @@ export default {
       activedName.value === RESOURCE_TYPE.Util ? utilsRef.value.add(type) : bridge.value.add(type)
     }
 
-    const { config } = useEnvironmentConfig()
-
     return {
       addResource,
       RESOURCE_TYPE,
@@ -81,7 +79,7 @@ export default {
       docsUrl,
       utilsRef,
       tips,
-      isLocalEnv: config.value.isLocalEnv
+      isLocalEnv: useLocalEnv().isLocalEnv
     }
   }
 }

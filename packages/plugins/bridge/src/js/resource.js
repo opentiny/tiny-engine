@@ -11,7 +11,7 @@
  */
 
 import { reactive } from 'vue'
-import { useApp, useResource, useNotify, useEnvironmentConfig } from '@opentiny/tiny-engine-controller'
+import { useApp, useResource, useNotify, useLocalEnv } from '@opentiny/tiny-engine-controller'
 import { updateUtils, deleteUtils } from '@opentiny/tiny-engine-canvas'
 import {
   fetchResourceList,
@@ -168,9 +168,7 @@ export const getCategory = () => state.category
 
 // VS Code环境生成本地util
 const generateBridgeUtil = (...args) => {
-  const { config } = useEnvironmentConfig()
-
-  if (config.value.isLocalEnv) {
+  if (useLocalEnv().isLocalEnv) {
     requestGenerateBridgeUtil(...args)
   }
 }

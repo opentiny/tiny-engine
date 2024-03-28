@@ -16,7 +16,7 @@
 <script>
 import { computed, reactive, watchEffect, inject } from 'vue'
 import { Checkbox } from '@opentiny/vue'
-import { usePage, useModal, useNotify, useEnvironmentConfig } from '@opentiny/tiny-engine-controller'
+import { usePage, useModal, useNotify, useLocalEnv } from '@opentiny/tiny-engine-controller'
 import { generateRouter } from '@opentiny/tiny-engine-controller/js/vscodeGenerateFile'
 import http from './http.js'
 
@@ -71,9 +71,8 @@ export default {
               pageSettingState.updateTreeData()
               openSettingPanel({ data: pageSettingState.currentPageData })
               pageSettingState.isNew = false
-              const { config } = useEnvironmentConfig()
 
-              if (config.value.isLocalEnv) {
+              if (useLocalEnv().isLocalEnv) {
                 generateRouter({
                   pageId: id,
                   componentsTree: params

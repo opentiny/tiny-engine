@@ -32,6 +32,7 @@ import useData from './useData'
 import useMessage from './useMessage'
 import useHelp from './useHelp'
 import { useEnvironmentConfig } from './useEnvironmentConfig'
+import { useLocalEnv } from './useLocalEnv'
 
 export const getExample = example
 
@@ -57,5 +58,6 @@ export {
   useData,
   useMessage,
   useHelp,
-  useEnvironmentConfig
+  useEnvironmentConfig,
+  useLocalEnv
 }

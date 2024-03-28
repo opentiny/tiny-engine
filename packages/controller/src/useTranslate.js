@@ -13,12 +13,12 @@
 import { reactive, ref } from 'vue'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { utils } from '@opentiny/tiny-engine-utils'
-import { useEnvironmentConfig } from './useEnvironmentConfig'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { generateI18n } from '../js/vscodeGenerateFile'
 import useResource from './useResource'
 import { PROP_DATA_TYPE } from '../utils'
 import useCanvas from './useCanvas'
+import { useLocalEnv } from './useLocalEnv'
 
 const { HOST_TYPE } = constants
 const state = reactive({
@@ -84,9 +84,8 @@ const ensureI18n = (obj, send) => {
       }
     })
 
-    const { config } = useEnvironmentConfig()
     // VsCode环境生成本地国际化
-    if (config.value.isLocalEnv) {
+    if (useLocalEnv().isLocalEnv) {
       generateI18n({
         key,
         contents

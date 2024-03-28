@@ -11,7 +11,6 @@
  */
 
 import { constants } from '@opentiny/tiny-engine-utils'
-import { useEnvironmentConfig } from '../src/useEnvironmentConfig'
 import useResource from '../src/useResource'
 // prefer old unicode hacks for backward compatibility
 
@@ -31,15 +30,16 @@ const open = (params = {}) => {
     .reduce((pre, cur) => ({ ...pre, [cur.package]: cur.script }), {})
   params.styles = [...styles]
 
-  const href = window.location.href.split('?')[0] || './'
+  let href = window.location.href.split('?')[0] || './'
   const tenant = new URLSearchParams(location.search).get('tenant') || ''
   let openUrl = ''
   const hashString = utoa(JSON.stringify(params))
-  const { config } = useEnvironmentConfig()
 
-  openUrl = config.value.isDevelopEnv
-    ? `./preview.html?tenant=${tenant}#${hashString}`
-    : `${href}/preview?tenant=${tenant}#${hashString}`
+  if (href.endsWith('/')) {
+    href = href.slice(0, -1)
+  }
+
+  openUrl = `${href}/preview?tenant=${tenant}#${hashString}`
 
   const aTag = document.createElement('a')
   aTag.href = openUrl

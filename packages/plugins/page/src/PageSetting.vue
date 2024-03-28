@@ -62,7 +62,7 @@ import {
   useModal,
   useApp,
   useNotify,
-  useEnvironmentConfig
+  useLocalEnv
 } from '@opentiny/tiny-engine-controller'
 import { extend, isEqual } from '@opentiny/vue-renderless/common/object'
 import { constants } from '@opentiny/tiny-engine-utils'
@@ -188,9 +188,7 @@ export default {
             message: '新建页面成功!'
           })
 
-          const { config } = useEnvironmentConfig()
-
-          if (config.value.isLocalEnv) {
+          if (useLocalEnv().isLocalEnv) {
             generatePage(data)
           }
         })

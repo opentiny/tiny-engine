@@ -19,7 +19,7 @@ import {
   NODE_TAG,
   NODE_LOOP
 } from '../common'
-import { useCanvas, useLayout, useResource, useTranslate, useEnvironmentConfig } from '@opentiny/tiny-engine-controller'
+import { useCanvas, useLayout, useResource, useTranslate, useLocalEnv } from '@opentiny/tiny-engine-controller'
 
 export const POSITION = Object.freeze({
   TOP: 'top',
@@ -837,9 +837,7 @@ export const initCanvas = ({ renderer, iframe, emit, controller }) => {
   renderer.setController(controller)
   setLocales(useTranslate().getData(), true)
 
-  const { config } = useEnvironmentConfig()
-
-  if (config.value.isLocalEnv) {
+  if (useLocalEnv().isLocalEnv) {
     const parent = window.parent
     const senterMessage = parent.postMessage
     // 发消息给webview

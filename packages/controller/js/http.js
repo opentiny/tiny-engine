@@ -14,10 +14,8 @@ import { useHttp } from '@opentiny/tiny-engine-http'
 import usePage from '../src/usePage'
 import useCanvas from '../src/useCanvas'
 import useNotify from '../src/useNotify'
-import { useEnvironmentConfig } from '../src/useEnvironmentConfig'
 import { generateRouter, generatePage } from './vscodeGenerateFile'
-
-const { config } = useEnvironmentConfig()
+import { useLocalEnv } from '../src/useLocalEnv'
 
 const http = useHttp()
 
@@ -41,7 +39,7 @@ export const handlePageUpdate = (pageId, params, routerChange) => {
     .then((res) => {
       const { pageSettingState } = usePage()
       const { setSaved } = useCanvas()
-      if (config.value.isLocalEnv) {
+      if (useLocalEnv().isLocalEnv) {
         generatePage({
           id: pageId,
           name: params.name,
