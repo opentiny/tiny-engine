@@ -1,6 +1,6 @@
 import { hyphenate } from '@vue/shared'
 
-const HTML_DEFAULT_VOID_ELEMENTS = [
+export const HTML_DEFAULT_VOID_ELEMENTS = [
   'img',
   'input',
   'br',
@@ -38,7 +38,7 @@ export const generateTag = (tagName, config = {}) => {
   }
 
   if (isVoidEle) {
-    return `<${renderTagName} />`
+    return `<${renderTagName} ${attribute || ''}/>`
   }
 
   if (isStartTag) {

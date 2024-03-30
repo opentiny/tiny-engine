@@ -69,6 +69,9 @@ const generateSFCFile = (schema, componentsMap, config = {}) => {
   const parsedConfig = parseConfig(config)
   const { blockRelativePath, blockSuffix, scriptConfig: initScriptConfig, styleConfig: initStyleConfig } = parsedConfig
   // 前置动作，对 Schema 进行解析初始化相关配置与变量
+  if (!schema.state) {
+    schema.state = {}
+  }
 
   // 解析 import
   const { pkgMap, blockPkgMap } = getImportMap(schema, componentsMap, { blockRelativePath, blockSuffix })

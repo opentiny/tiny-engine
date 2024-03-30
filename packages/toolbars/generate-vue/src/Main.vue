@@ -109,11 +109,17 @@ export default {
         })
         .map((name) => fetchBlockSchema(name))
       const schemaList = await Promise.allSettled(promiseList)
+      const extraList = []
 
       schemaList.forEach((item) => {
         if (item.status === 'fulfilled' && item.value?.[0]?.content) {
           res.push(item.value[0].content)
-          res.push(...getBlocksSchema(item.value[0].content, blockSet))
+          extraList.push(getBlocksSchema(item.value[0].content, blockSet))
+        }
+      })
+      ;(await Promise.allSettled(extraList)).forEach((item) => {
+        if (item.status === 'fulfilled' && item.value) {
+          res.push(...item.value)
         }
       })
 
@@ -161,6 +167,19 @@ export default {
       }
     })
 
+    const getAllPageDetails = async (pageList) => {
+      const detailPromise = pageList.map(({ id }) => useLayout().getPluginApi('AppManage').getPageById(id))
+      const detailList = await Promise.allSettled(detailPromise)
+
+      return detailList
+        .map((item) => {
+          if (item.status === 'fulfilled' && item.value) {
+            return item.value
+          }
+        })
+        .filter((item) => Boolean(item))
+    }
+
     const getPreGenerateInfo = async () => {
       const params = getParams()
       const { id } = useEditorInfo().useInfo()
@@ -175,15 +194,16 @@ export default {
       }
 
       const [appData, metaData, pageList, dirHandle] = await Promise.all(promises)
+      const pageDetailList = await getAllPageDetails(pageList)
 
       const blockSet = new Set()
-      const list = pageList.map((page) => getBlocksSchema(page.page_content, blockSet))
+      const list = pageDetailList.map((page) => getBlocksSchema(page.page_content, blockSet))
       const blocks = await Promise.allSettled(list)
 
       const blockSchema = []
       blocks.forEach((item) => {
         if (item.status === 'fulfilled' && Array.isArray(item.value)) {
-          blockSchema.push(...blockSchema)
+          blockSchema.push(...item.value)
         }
       })
 
@@ -191,7 +211,7 @@ export default {
         // dataSource、utils、i18n、globalState
         ...metaData,
         // 页面 schema
-        pageSchema: pageList.map((item) => {
+        pageSchema: pageDetailList.map((item) => {
           const { page_content, ...meta } = item
 
           return {

@@ -33,7 +33,7 @@ function genBlockPlugin(options = {}) {
 
         resBlocks.push({
           fileType: 'vue',
-          fileName: `${block.componentName}.vue`,
+          fileName: `${block.fileName}.vue`,
           path: blockBasePath,
           fileContent: res
         })

@@ -6,11 +6,11 @@ import {
   JS_EXPRESSION,
   JS_I18N
 } from '@/constant'
-import { generateTag } from './generateTag'
+import { generateTag, HTML_DEFAULT_VOID_ELEMENTS } from './generateTag'
 import { thisPropsBindRe, thisRegexp } from '@/utils'
 
-export const handleComponentNameHook = (nameObj) => {
-  const { componentName, schema } = nameObj
+export const handleComponentNameHook = (optionData) => {
+  const { componentName, schema } = optionData
 
   // 内置 component
   if (!BUILTIN_COMPONENT_NAME_MAP[componentName]) {
@@ -18,11 +18,15 @@ export const handleComponentNameHook = (nameObj) => {
   }
 
   if (componentName === BUILTIN_COMPONENT_NAME.TEXT && schema.props.text) {
-    schema.children = [schema.props.text]
+    schema.children = schema.props.text
     delete schema.props.text
   }
 
-  nameObj.componentName = BUILTIN_COMPONENT_NAME_MAP[componentName]
+  optionData.componentName = BUILTIN_COMPONENT_NAME_MAP[componentName]
+
+  if (HTML_DEFAULT_VOID_ELEMENTS.includes(componentName)) {
+    optionData.voidElement = true
+  }
 }
 
 export const handleTinyIcon = (nameObj, globalHooks) => {
