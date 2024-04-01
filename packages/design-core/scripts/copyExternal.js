@@ -17,9 +17,8 @@ export const useLocalImportMap = (flag, publicPath = '', dir = 'import-map-stati
   const versionPlaceholder = 'workspace'
   const copyImportMapFilePlugin = (imports, packageCopy) => {
     const files = Object.entries(imports).map(([libKey, libPath]) => {
-      const packageName = libPath.match(
-        new RegExp('^' + cdnPrefix + '/' + '(.*?)' + '@' + versionPlaceholder + '.*?$')
-      )[1]
+      const reg = new RegExp('^' + cdnPrefix + '/' + '(.*?)' + '@' + versionPlaceholder + '(.*?)$')
+      const packageName = libPath.match(reg)[1]
       if (packageCopy.includes(libKey)) {
         const srcPath = `node_modules/${packageName}`
         const distFullPath = `${dir}/${packageName}@${versionPlaceholder}`
@@ -39,13 +38,10 @@ export const useLocalImportMap = (flag, publicPath = '', dir = 'import-map-stati
           fg.sync(globString + '/**/*', { onlyFiles: true }).map((p) => normalizePath(p)) // viteStaticCopy 自带的glob匹配无法过滤目录， 手动过滤目录作为数组传入
         return [libKey, libPath, onlyFiles(srcPath), distPath, rename, transform]
       }
-
-      const pathnameInPackage = libPath.match(
-        new RegExp('^' + cdnPrefix + '/' + '.*?' + '@' + versionPlaceholder + '/(.*?)$')
-      )[1]
-      const srcPath = `node_modules/${packageName}/${pathnameInPackage}`.replace(/\/$/, '')
+      const pathnameInPackage = libPath.match(reg)[2]
+      const srcPath = `node_modules/${packageName}${pathnameInPackage}`.replace(/\/$/, '')
       const distPath = path.dirname(
-        `${dir}/${packageName}@${versionPlaceholder}/${pathnameInPackage}`.replace(/\/$/, '')
+        `${dir}/${packageName}@${versionPlaceholder}${pathnameInPackage}`.replace(/\/$/, '')
       )
       return [libKey, libPath, srcPath, distPath, null, null]
     })
