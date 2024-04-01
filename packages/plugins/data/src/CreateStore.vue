@@ -12,25 +12,7 @@
     <tiny-form-item label="stores" prop="name">
       <tiny-input v-model="state.storeData.name" placeholder="只能包含数字字母及下划线"></tiny-input>
     </tiny-form-item>
-    <tiny-form-item prop="state" class="monaco-form-item">
-      <template #label>
-        <div class="label-left-wrap">
-          <span>state</span>
-          <tiny-popover placement="bottom-start" effect="dark" trigger="hover" popper-class="state-data-example-tips">
-            <div class="tips-content">
-              <div class="create-content-demo">
-                <ul>
-                  <li>state为对象(一个对象内可包含多个属性): {"name": "xxx"}</li>
-                  <li>actions/getters为函数(可写多个函数): function count(){}</li>
-                </ul>
-              </div>
-            </div>
-            <template #reference>
-              <div class="create-content-description">查看示例</div>
-            </template>
-          </tiny-popover>
-        </div>
-      </template>
+    <tiny-form-item prop="state">
       <monaco-editor
         ref="variableEditor"
         class="store-editor"
@@ -45,19 +27,42 @@
         }"
         @editorDidMount="editorDidMount"
         @change="editorDidMount"
-      />
+      >
+        <template #toolbarStart>
+          <div class="label-left-wrap">
+            <span>state</span>
+            <tiny-popover placement="bottom-start" effect="dark" trigger="hover" popper-class="state-data-example-tips">
+              <div class="tips-content">
+                <div class="create-content-demo">
+                  <ul>
+                    <li>state为对象(一个对象内可包含多个属性): {"name": "xxx"}</li>
+                    <li>actions/getters为函数(可写多个函数): function count(){}</li>
+                  </ul>
+                </div>
+              </div>
+              <template #reference>
+                <div class="create-content-description">查看示例</div>
+              </template>
+            </tiny-popover>
+          </div>
+        </template>
+      </monaco-editor>
     </tiny-form-item>
-    <tiny-form-item label="getters" prop="getters" class="store-form-item monaco-form-item">
-      <monaco-editor ref="gettersEditor" class="store-editor" :options="options" :value="getters" />
+    <tiny-form-item prop="getters">
+      <monaco-editor ref="gettersEditor" class="store-editor" :options="options" :value="getters">
+        <template #toolbarStart><label>getters</label></template>
+      </monaco-editor>
     </tiny-form-item>
-    <tiny-form-item label="actions" prop="actions" class="store-form-item monaco-form-item">
-      <monaco-editor ref="actionsEditor" class="store-editor" :options="options" :value="actions" />
+    <tiny-form-item prop="actions">
+      <monaco-editor ref="actionsEditor" class="store-editor" :options="options" :value="actions">
+        <template #toolbarStart><label>actions</label></template>
+      </monaco-editor>
     </tiny-form-item>
   </tiny-form>
 </template>
 
 <script>
-import { getCurrentInstance, reactive, ref, computed } from 'vue'
+import { getCurrentInstance, reactive, ref, computed, watch } from 'vue'
 import { Form, FormItem, Input, Popover } from '@opentiny/vue'
 import { MonacoEditor } from '@opentiny/tiny-engine-common'
 import { theme } from '@opentiny/tiny-engine-controller/adapter'
@@ -111,6 +116,15 @@ export default {
       overviewRulerBorder: false,
       renderLineHighlightOnlyWhenFocus: true
     }
+
+    watch(
+      () => state.storeData.name,
+      () => {
+        variableEditor.value?.switchFullScreen(false)
+        gettersEditor.value?.switchFullScreen(false)
+        actionsEditor.value?.switchFullScreen(false)
+      }
+    )
 
     const validateName = (rule, name, callback) => {
       let errorMessage = ''
@@ -221,67 +235,39 @@ export default {
 <style lang="less" scoped>
 .store-form {
   padding: 12px;
+  height: calc(100% - 45px);
+  overflow-y: auto;
 
-  .error-tip {
-    color: var(--ti-lowcode-error-tip-color);
-    margin-top: 4px;
-    font-size: 12px;
-  }
-
-  .textarea-warp {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
+  .tiny-form-item:not(:last-child) {
+    margin-bottom: 12px;
   }
 
   :deep(.tiny-form-item__label) {
     color: var(--ti-lowcode-toolbar-icon-color);
   }
-  &-item {
-    margin-top: 30px;
-  }
 
-  .tiny-form-item {
-    :deep(.tiny-form-item__label) {
-      color: var(--ti-lowcode-toolbar-icon-color);
-      .label-left-wrap {
-        display: flex;
-      }
-    }
-    &.monaco-form-item {
-      :deep(.tiny-form-item__label) {
-        position: relative;
-        z-index: 1;
-        margin-bottom: -36px;
-      }
-      &.is-required {
-        :deep(.tiny-form-item__label) {
-          .label-left-wrap {
-            margin-left: 10px;
-          }
-          &::before {
-            position: absolute;
-          }
-        }
-      }
-    }
-
-    .create-content-description {
-      color: var(--ti-lowcode-description-color);
-      margin-left: 8px;
-      cursor: pointer;
-    }
+  .label-left-wrap {
+    color: var(--ti-lowcode-toolbar-icon-color);
+    display: flex;
   }
 }
+
+.create-content-description {
+  font-size: 12px;
+  color: var(--ti-lowcode-common-primary-color);
+  margin-left: 8px;
+  cursor: pointer;
+}
+
 .create-content-demo {
   padding: 12px;
-  font-size: 12px;
+  font-size: 14px;
   li + li {
     margin-top: 8px;
   }
 }
 
 .store-editor {
-  height: 200px;
+  height: 270px;
 }
 </style>

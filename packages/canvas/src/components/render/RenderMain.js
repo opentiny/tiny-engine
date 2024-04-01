@@ -424,15 +424,19 @@ export const api = {
   getGlobalState,
   getDataSourceMap,
   setDataSourceMap,
-  setGlobalState,
-  getCurrent, 
+  setGlobalState
+}
+
+const canvasApi = {
+  getCurrent,
   setLocales,
   getNodeById: getNode,
   updateRect,
-  addStyle, 
-  addScript, 
+  addStyle,
+  addScript,
   canvasDispatch
 }
 
 window.api = api
+window.canvasApi = canvasApi
 window.Builtin = Builtin

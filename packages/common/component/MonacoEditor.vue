@@ -1,6 +1,9 @@
 <template>
-  <div>
-    <div :class="['toolbar', { _full: fullscreen }]">
+  <div :class="['editor-container', { 'editor-container-full': fullscreen }]">
+    <div class="toolbar">
+      <div class="toolbar-start">
+        <slot name="toolbarStart"></slot>
+      </div>
       <div class="buttons">
         <slot name="buttons"></slot>
         <tiny-tooltip v-if="showFormatBtn && options.language === 'json'" content="格式化" placement="top">
@@ -8,17 +11,17 @@
         </tiny-tooltip>
         <span v-if="showFullScreenBtn">
           <tiny-tooltip v-if="!fullscreen" content="全屏" placement="top">
-            <public-icon name="full-screen" @click="fullscreen = true"></public-icon>
+            <public-icon name="full-screen" @click="switchFullScreen(true)"></public-icon>
           </tiny-tooltip>
           <tiny-tooltip v-else content="退出全屏" placement="top">
-            <public-icon name="cancel-full-screen" @click="fullscreen = false"></public-icon>
+            <public-icon name="cancel-full-screen" @click="switchFullScreen(false)"></public-icon>
           </tiny-tooltip>
         </span>
       </div>
     </div>
     <monaco-editor
       ref="editor"
-      :class="fullscreen ? 'fullscreen' : 'iniline'"
+      class="editor"
       :value="value"
       :options="editorOptions"
       language="javascript"
@@ -110,12 +113,17 @@ export default {
       editor.value.getEditor().dispose()
     })
 
+    const switchFullScreen = (value) => {
+      fullscreen.value = value
+    }
+
     return {
       editorOptions,
       editor,
       getEditor,
       getEditorValue,
       fullscreen,
+      switchFullScreen,
       getValue,
       formatCode
     }
@@ -124,41 +132,45 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.toolbar {
+.editor-container {
   display: flex;
-  margin-bottom: 4px;
-  justify-content: flex-end;
-  align-items: center;
-  z-index: 3000 !important;
-  .buttons {
-    color: var(--ti-lowcode-component-svg-button-color);
-    cursor: pointer;
-    &:hover {
-      color: var(--ti-lowcode-component-svg-button-hover-color);
-    }
-  }
-  &._full {
-    position: fixed;
-    top: var(--base-top-panel-height);
-    z-index: 1;
-    padding-right: 15px;
-    right: var(--base-left-panel-width);
-  }
+  flex-direction: column;
+  padding: 0;
 }
-.iniline {
-  height: 100%;
-  width: 100%;
-}
-.fullscreen {
+
+.editor-container-full {
   position: fixed;
   top: var(--base-top-panel-height);
   bottom: 0;
-  left: calc(var(--base-nav-panel-width) + 1px);
+  left: calc(var(--base-nav-panel-width) + var(--base-left-panel-width));
   right: var(--base-left-panel-width);
-  z-index: 2500;
+  z-index: 10;
+  padding: 10px 16px 16px 16px;
+  background-color: var(--ti-lowcode-common-component-bg);
+  height: auto !important;
 }
-.public-icon {
-  font-size: 18px;
-  margin-left: 10px;
+
+.toolbar {
+  display: flex;
+  margin-bottom: 4px;
+  justify-content: space-between;
+  align-items: center;
+
+  .buttons {
+    display: flex;
+    gap: 8px;
+    color: var(--ti-lowcode-component-svg-button-color);
+    cursor: pointer;
+    :hover {
+      color: var(--ti-lowcode-component-svg-button-hover-color);
+    }
+  }
+}
+
+.editor {
+  flex: 1;
+  overflow: hidden;
+  border: 1px solid var(--ti-lowcode-state-management-monaco-editor-border-color);
+  border-radius: 6px;
 }
 </style>
