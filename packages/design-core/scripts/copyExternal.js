@@ -1,3 +1,4 @@
+import path from 'node:path'
 import fg from 'fast-glob'
 import { normalizePath } from 'vite'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
@@ -23,8 +24,8 @@ export const useLocalImportMap = (flag, publicPath = '', dir = 'import-map-stati
         const distFullPath = libPath
           .replace(new RegExp('^' + cdnPrefix + '/' + '(.*?' + '@' + versionPlaceholder + ')' + '.*?$'), dir + '/$1')
           .replace(/\/$/, '')
-        const distPath = distFullPath.replace(/\/([^/]*?)$/, '')
-        const packageDirName = distFullPath.match(/\/([^/]*?)$/)?.[1]
+        const distPath = path.dirname(distFullPath)
+        const packageDirName = path.basename(distFullPath)
         const rename = (_filename, _fileExtension, fullPath) => {
           return packageDirName + '/' + fullPath.replace(srcPath, '')
         }
@@ -36,16 +37,13 @@ export const useLocalImportMap = (flag, publicPath = '', dir = 'import-map-stati
           return content
         }
         const onlyFiles = (globString) =>
-          fg.sync(globString + '/**/*', { onlyFiles: true }).map((p) => normalizePath(p))
-        return [libKey, libPath, onlyFiles(srcPath), distPath, rename, transform, srcPath]
+          fg.sync(globString + '/**/*', { onlyFiles: true }).map((p) => normalizePath(p)) // viteStaticCopy 自带的glob匹配无法过滤目录， 手动过滤目录作为数组传入
+        return [libKey, libPath, onlyFiles(srcPath), distPath, rename, transform]
       }
       const srcPath = libPath
         .replace(new RegExp('^' + cdnPrefix + '/' + '(.*?)' + '@' + versionPlaceholder), 'node_modules/$1')
         .replace(/\/$/, '')
-      const distPath = libPath
-        .replace(new RegExp('^' + cdnPrefix + '/'), dir + '/')
-        .replace(/\/$/, '')
-        .replace(/\/([^/]*?)$/, '')
+      const distPath = path.dirname(libPath.replace(new RegExp('^' + cdnPrefix + '/'), dir + '/').replace(/\/$/, ''))
       return [libKey, libPath, srcPath, distPath, null, null]
     })
     const copyFiles = files
