@@ -111,46 +111,6 @@ export default {
 
       const blocks = await getBlocksSchema(queryParams.pageInfo?.schema)
 
-      //       {
-      //   "component": "TinySelect",
-      //   "attrs": {
-      //     "options": {
-      //       "type": "JSExpression",
-      //       "value": "this.state.testOptions"
-      //     },
-      //     "filterable": true
-      //   }
-      // }
-
-      const customPropsHook = (schemaData, globalHooks) => {
-        const { componentName, props } = schemaData.schema
-
-        // 处理 TinyGrid 插槽
-        if (componentName !== 'TinyGrid' || !Array.isArray(props?.columns)) {
-          return
-        }
-
-        props.columns.forEach((item) => {
-          if (!item.editor?.component?.startsWith?.('Tiny')) {
-            return
-          }
-
-          const name = item.editor?.component
-
-          globalHooks.addImport('@opentiny/vue', {
-            destructuring: true,
-            exportName: name.slice(4),
-            componentName: name,
-            package: '@opentiny/vue'
-          })
-
-          item.editor.component = {
-            type: 'JSExpression',
-            value: name
-          }
-        })
-      }
-
       // TODO: 需要验证级联生成 block schema
       // TODO: 物料内置 block 需要如何处理？
       const pageCode = [
@@ -158,10 +118,7 @@ export default {
           panelName: 'Main.vue',
           panelValue:
             genSFCWithDefaultPlugin(queryParams.pageInfo?.schema, appData?.componentsMap || [], {
-              blockRelativePath: './',
-              hooks: {
-                attribute: [customPropsHook]
-              }
+              blockRelativePath: './'
             }) || '',
           panelType: 'vue',
           index: true

@@ -59,13 +59,39 @@ export const handleTinyIcon = (nameObj, globalHooks) => {
   delete nameObj.schema.props.name
 }
 
-export const handleTinyGrid = (schemaData) => {
+export const handleTinyGrid = (schemaData, globalHooks) => {
   const { componentName, props } = schemaData.schema
 
   // 同时存在 data 和 fetchData 的时候，删除 data
   if (componentName === 'TinyGrid' && props?.data && props?.fetchData) {
     delete props.data
   }
+
+  // 处理 TinyGrid 插槽
+  if (componentName !== 'TinyGrid' || !Array.isArray(props?.columns)) {
+    return
+  }
+
+  // 处理 TinyGrid 组件 editor 插槽组件使用 opentiny/vue 组件的场景，需要在 import 中添加对应Tiny组件的引入
+  props.columns.forEach((item) => {
+    if (!item.editor?.component?.startsWith?.('Tiny')) {
+      return
+    }
+
+    const name = item.editor?.component
+
+    globalHooks.addImport('@opentiny/vue', {
+      destructuring: true,
+      exportName: name.slice(4),
+      componentName: name,
+      package: '@opentiny/vue'
+    })
+
+    item.editor.component = {
+      type: 'JSExpression',
+      value: name
+    }
+  })
 }
 
 export const handleExpressionChildren = (schemaData = {}, globalHooks, config) => {

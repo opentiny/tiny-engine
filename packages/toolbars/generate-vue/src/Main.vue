@@ -126,46 +126,7 @@ export default {
       return res
     }
 
-    const customPropsHook = (schemaData, globalHooks) => {
-      const { componentName, props } = schemaData.schema
-
-      // 处理 TinyGrid 插槽
-      if (componentName !== 'TinyGrid' || !Array.isArray(props?.columns)) {
-        return
-      }
-
-      props.columns.forEach((item) => {
-        if (!item.editor?.component?.startsWith?.('Tiny')) {
-          return
-        }
-
-        const name = item.editor?.component
-
-        globalHooks.addImport('@opentiny/vue', {
-          destructuring: true,
-          exportName: name.slice(4),
-          componentName: name,
-          package: '@opentiny/vue'
-        })
-
-        item.editor.component = {
-          type: 'JSExpression',
-          value: name
-        }
-      })
-    }
-
-    const instance = generateApp({
-      pluginConfig: {
-        page: {
-          sfcConfig: {
-            hooks: {
-              attribute: [customPropsHook]
-            }
-          }
-        }
-      }
-    })
+    const instance = generateApp()
 
     const getAllPageDetails = async (pageList) => {
       const detailPromise = pageList.map(({ id }) => useLayout().getPluginApi('AppManage').getPageById(id))
