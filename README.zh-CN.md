@@ -76,6 +76,10 @@ pnpm run build:plugin
 pnpm run build:alpha  或 build:prod
 
 ```
+构建后产物所在文件夹
+```
+ tiny-engine/packages/design-core/dist/
+```
 
 ## 里程碑
 
