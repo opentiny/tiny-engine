@@ -30,13 +30,14 @@ export function extraBundleCdnLink(filename, originCdnPrefix) {
   }, [])
 }
 
-export function replaceBundleCdnLink(bundleContent, originUrl, newUrl) {
-  bundleContent.data?.material?.forEach((component) => {
+export function replaceBundleCdnLink(bundle, fileMap) {
+  bundle.data?.materials?.components?.forEach((component) => {
     if (component.npm) {
-      const possibleUrl = [component.npm.script, component.npm.css]
-      possibleUrl.forEach((url) => {
-        if (url.equals(originUrl)) {
-          url = newUrl
+      const possibleUrl = ['script', 'css']
+      possibleUrl.forEach((key) => {
+        const matchRule = fileMap.find((rule) => component.npm[key] === rule.originUrl)
+        if (matchRule) {
+          component.npm[key] = matchRule.newUrl
         }
       })
     }
@@ -152,13 +153,13 @@ export function CopyBundleDeps(
           })),
           {
             src: bundleFile,
-            dest: targetBundleFile.replace(/\/([^/]*?)$/, ''),
+            dest: path.dirname(targetBundleFile),
             transform: (content) => {
-              files.forEach(({ originUrl, newUrl }) => {
-                replaceBundleCdnLink(content, originUrl, newUrl)
-              })
-              return content
+              const json = JSON.parse(content)
+              replaceBundleCdnLink(json, files)
+              return JSON.stringify(json, null, 2)
             },
+            rename: path.basename(targetBundleFile),
             overwrite: true // 覆盖public的
           }
         ]
