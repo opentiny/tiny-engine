@@ -3,9 +3,9 @@
     <span style="background: url('**/public/logo.png')" class="page-header">标题区</span>
     <span style="background: url('**/public/background.png')">副标题区</span>
     <image-title
-      :class="['basic-info', { 'form-fixed-layout': isFixed }, { 'form-auto-layout': isAuto }]"
       text="配置报价"
       :hasSplitLine="false"
+      :class="['basic-info', { 'form-fixed-layout': isFixed }, { 'form-auto-layout': isAuto }]"
       @click-logo="(...eventArgs) => handleReset(eventArgs, state.flag)"
     ></image-title>
     <tiny-form :inline="true" :style="{ margin: '12px' }" class="form">
@@ -79,22 +79,19 @@ import {
   Select as TinySelect,
   Switch as TinySwitch
 } from '@opentiny/vue'
-import { iconDel, iconEdit, iconHelpCircle, iconSearch } from '@opentiny/vue-icon'
+import { IconSearch, IconDel, iconHelpCircle, IconEdit } from '@opentiny/vue-icon'
 import ImageTitle from '../components/ImageTitle.vue'
 import CrmQuoteListGridStatus from './crm/quote-list/CrmQuoteListGridStatus.vue'
 
+const TinyIconSearch = IconSearch()
+const TinyIconDel = IconDel()
+const TinyIconHelpCircle = iconHelpCircle()
+const TinyIconEdit = IconEdit()
 const props = defineProps({})
 const emit = defineEmits([])
 
 const { t, lowcodeWrap, stores } = vue.inject(I18nInjectionKey).lowcode()
-const wrap = lowcodeWrap(props, { emit }, t)
-
-const [TinyIconSearch, TinyIconDel, TinyIconEdit, TinyIconHelpCircle] = [
-  iconSearch(),
-  iconDel(),
-  iconEdit(),
-  iconHelpCircle()
-]
+const wrap = lowcodeWrap(props, { emit })
 
 const { utils } = wrap(function () {
   return this

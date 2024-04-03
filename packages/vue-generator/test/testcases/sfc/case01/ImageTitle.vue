@@ -28,10 +28,11 @@ const props = defineProps({
   text: { type: String, default: '商务管理' },
   hasSplitLine: { type: Boolean, default: true }
 })
+
 const emit = defineEmits(['click-logo'])
 
 const { t, lowcodeWrap, stores } = vue.inject(I18nInjectionKey).lowcode()
-const wrap = lowcodeWrap(props, { emit }, t)
+const wrap = lowcodeWrap(props, { emit })
 
 const state = vue.reactive({
   activeMethod: () => {
