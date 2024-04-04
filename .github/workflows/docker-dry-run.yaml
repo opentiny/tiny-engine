@@ -1,0 +1,53 @@
+name: Build And Publish (Dry run)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  front:
+    name: Build Front docker image
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./dl-flow-frontend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            gaonengwww/dl-flow-frontend
+          tags: |
+            type=semver,pattern={{version}}
+            type=raw,value=latest,enable=${{ github.event_name != 'pull_request' }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+  back:
+    name: Build docker image
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./dl-flow-backend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            gaonengwww/dl-flow-backend
+          tags: |
+            type=semver,pattern={{version}}
+            type=raw,value=latest,enable=${{ github.event_name != 'pull_request' }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
