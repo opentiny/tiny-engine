@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./dl-flow-frontend
+        working-directory: .
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -39,10 +39,10 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          working-directory: dl-flow-frontend/
-          context: dl-flow-frontend/
-          build-context: dl-flow-frontend/
-          file: dl-flow-frontend/dockerfile
+          working-directory: ./
+          context: ./
+          build-context: ./
+          file: ./dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
