@@ -4,10 +4,9 @@ ADD . /CODE/
 
 RUN npm install pnpm -g && \ 
     pnpm install && \
-    pnpm build:plugin && \
-    pnpm build:prod
+    pnpm build:frontend
 
 FROM nginx as RUNNER
-COPY --from=builder /CODE/packages/design-core/dist /usr/share/nginx/html
+COPY --from=builder /CODE/dl-flow-frontend/packages/design-core/dist /usr/share/nginx/html
 VOLUME [ "/etc/nginx/nginx.conf", "/etc/nginx/conf.d", "/var/log/nginx"]
 EXPOSE 80
