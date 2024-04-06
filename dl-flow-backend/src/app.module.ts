@@ -13,6 +13,7 @@ import { Model } from 'mongoose';
 import { RedisModule } from '@app/redis';
 import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import { Redis } from 'ioredis';
+import { ProjectModule } from './project/project.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { Redis } from 'ioredis';
       },
     ]),
     RedisModule,
+    ProjectModule,
   ],
 })
 export class AppModule implements OnModuleInit {

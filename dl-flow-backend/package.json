@@ -90,7 +90,6 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "./coverage",
-    "testEnvironment": "node",
     "globals": {
       "__TEST__": true,
       "__DEV__": false
