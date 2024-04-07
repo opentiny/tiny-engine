@@ -72,3 +72,59 @@ td {
   -webkit-line-clamp: var(--ellipsis-line, 2);
   -webkit-box-orient: vertical;
 }
+
+body {
+  *,
+  .lowcode-scrollbar,
+  .lowcode-scrollbar-thin {
+    &::-webkit-scrollbar-track,
+    &::-webkit-scrollbar-track-piece,
+    &::-webkit-scrollbar-corner {
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #dbdbdb;
+
+      &:hover {
+        background-color: #c2c2c2;
+      }
+    }
+  }
+  *,
+  .lowcode-scrollbar {
+    &::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+  }
+  .lowcode-scrollbar-thin {
+    &::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+  }
+}
+
+// support for not webkit browser and won't override ::webkit-scrollbar-* selector
+@supports not selector(::-webkit-scrollbar) {
+  body {
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: #dbdbdb transparent;
+    }
+  }
+}
+
+// hide scrollbar
+@supports not selector(::-webkit-scrollbar) {
+  .lowcode-scrollbar-hide {
+    scrollbar-width: none;
+  }
+}
+
+.lowcode-scrollbar-hide {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
