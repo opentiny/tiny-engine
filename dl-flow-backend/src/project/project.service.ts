@@ -17,7 +17,6 @@ interface ProjectItem {
   name: string;
   status: ProjectStatus;
   author: {
-    _id: string;
     nick: string;
   };
   createAt: string;
@@ -52,6 +51,10 @@ export class ProjectService {
     project.author = email;
     project.removed = false;
     const res = await project.save();
+    if (!(await this.redis.get('project:counter'))) {
+      await this.redis.set('project:counter', 1);
+      return res;
+    }
     await this.redis.incr('project:counter');
     return res;
   }

@@ -18,7 +18,6 @@ import { RedisModule } from '@app/redis';
         schema: UserSchema,
       },
     ]),
-    RedisModule,
   ],
 })
 export class UserModule {}

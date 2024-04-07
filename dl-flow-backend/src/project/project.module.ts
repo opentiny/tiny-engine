@@ -17,7 +17,6 @@ import { RedisModule } from '@app/redis';
         schema: ProjectSchema,
       },
     ]),
-    RedisModule,
   ],
 })
 export class ProjectModule {}
