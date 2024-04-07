@@ -17,7 +17,6 @@ import i18n from '@opentiny/tiny-engine-controller/js/i18n'
 import App from './App.vue'
 import globalConfig from '../config/lowcode.config'
 import { initMonitor } from '@opentiny/tiny-engine-controller/js/monitor'
-import { isDevelopEnv } from '@opentiny/tiny-engine-controller/js/environments'
 import { injectGlobalComponents } from '@opentiny/tiny-engine-common'
 import { initHttp } from '@opentiny/tiny-engine-http'
 import 'virtual:svg-icons-register'
@@ -30,8 +29,8 @@ initHttp({ env: import.meta.env })
 // eslint-disable-next-line no-new
 new TinyThemeTool(tinySmbTheme, 'smbtheme') // 初始化主题
 
-if (!isDevelopEnv) {
-  initMonitor()
+if (import.meta.env.VITE_ERROR_MONITOR === 'true' && import.meta.env.VITE_ERROR_MONITOR_URL) {
+  initMonitor(import.meta.env.VITE_ERROR_MONITOR_URL)
 }
 
 window.TinyGlobalConfig = globalConfig
