@@ -37,6 +37,7 @@ import { useVisitor, Visitor } from './useVisitor'
 import useLayer from './useLayer'
 import useSchema from './useSchema';
 import useWs from './useWS';
+import useProjects from './useProjects'
 
 export const getExample = example
 
@@ -68,5 +69,6 @@ export {
   Visitor,
   useLayer,
   useSchema,
-  useWs
+  useWs,
+  useProjects
 }

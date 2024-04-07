@@ -34,7 +34,7 @@
       "@opentiny/tiny-engine-theme-dark": ["packages/theme/dark/index.less"],
       "@opentiny/tiny-engine-theme-light": ["packages/theme/light/index.less"],
       "@opentiny/tiny-engine-svgs": ["packages/svgs/index"],
-      "@opentiny/tiny-engine-http": ["packages/http/index"],
+      "@opentiny/tiny-engine-http": ["packages/http/src/index"],
       "@opentiny/tiny-engine-controller/*": ["packages/controller/src/*"],
       "@opentiny/tiny-engine-plugin-materials/*": ["packages/plugins/materials/*"],
       "@opentiny/tiny-engine-plugin-data/*": ["packages/plugins/data/*"],
