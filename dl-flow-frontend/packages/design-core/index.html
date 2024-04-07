@@ -126,6 +126,12 @@
         </div>
       </div>
     </div>
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      if (!params.get('projectId')){
+        window.location.href = '/dashboard.html'
+      }
+    </script>
     <script type="module" src="./src/main.js"></script>
   </body>
 </html>

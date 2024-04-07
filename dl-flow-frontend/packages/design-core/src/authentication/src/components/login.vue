@@ -71,7 +71,7 @@ const login = () => {
                 status: 'success',
                 message: '登陆成功'
             })
-            window.location.href = '/'
+            window.location.href = '/dashboard.html'
         })
         .catch((reason) => {
             Modal.message({

@@ -89,7 +89,7 @@ const loadMore = () => {
                     </div>
                     <template #suffix>
                         <div class="dashboard__projects__item__suffix">
-                            <Link :href="`/?id=${item.projectId}`">
+                            <Link :href="`/?projectId=${item.projectId}`">
                                 进入
                             </Link>
                         </div>

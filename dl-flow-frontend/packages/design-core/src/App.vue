@@ -1,4 +1,12 @@
-<script setup>
+<script lang="ts">
+import { Loading } from '@opentiny/vue'
+export default {
+  directives: {
+    loading: Loading.directive
+  },
+}
+</script>
+<script setup lang="ts">
 import { ConfigProvider } from '@opentiny/vue'
 import DesignToolbars from './DesignToolbars.vue'
 import DesignPlugins from './DesignPlugins.vue'
@@ -12,6 +20,7 @@ const toggleNav = ({ item }) => {
   if (!item.id) return
   plugins.render = plugins.render === item.id ? null : item.id
 }
+
 </script>
 <template>
   <config-provider :design="designSmbConfig">
