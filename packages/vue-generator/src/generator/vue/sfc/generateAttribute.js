@@ -20,6 +20,7 @@ import {
   isSetter
 } from '@/utils'
 import { recursiveGenTemplateByHook } from './generateTemplate'
+import { getImportMap } from './parseImport'
 
 const handleEventBinding = (key, item, isJSX) => {
   const eventKey = toEventKey(key)
@@ -339,7 +340,7 @@ const specialTypeHandler = {
 
     if (SPECIAL_UTILS_TYPE.includes(resourceType)) {
       globalHooks.addStatement({
-        position: INSERT_POSITION.AFTER_PROPS,
+        position: INSERT_POSITION.BEFORE_STATE,
         value: `const { ${resourceType} } = wrap(function() { return this })()`,
         key: resourceType
       })
@@ -357,11 +358,18 @@ const specialTypeHandler = {
       schema: { children: value }
     }
 
+    const { pkgMap = {}, blockPkgMap = {} } = getImportMap(structData.schema, config.componentsMap, config)
+
+    Object.entries({ ...pkgMap, ...blockPkgMap }).forEach(([key, value]) => {
+      value.forEach((valueItem) => {
+        globalHooks.addImport(key, valueItem)
+      })
+    })
+
     // TODO: 需要验证 template 的生成有无问题
     recursiveGenTemplateByHook(structData, globalHooks, { ...config, isJSX: true })
 
     // TODO: 这里不通用，需要设计通用的做法，或者独立成 grid 的 hook
-
     return {
       value: `({${params.join(',')}}, h) => ${structData.children.join('')}`
     }
@@ -386,7 +394,7 @@ export const transformObjType = (obj, globalHooks, config) => {
       continue
     }
 
-    if (typeof value !== 'object') {
+    if (typeof value !== 'object' || value === null) {
       resStr.push(`${renderKey}${value}`)
 
       continue

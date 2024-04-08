@@ -30,6 +30,7 @@
     {
       "componentName": "ImageTitle",
       "fileName": "ImageTitle",
+      "componentType": "Block",
       "props": {
         "className": {
           "type": "JSExpression",
@@ -495,8 +496,8 @@
                     }
                   },
                   {
-                    "componentName": "Block",
-                    "fileName": "CrmQuoteListGridStatus",
+                    "componentName": "CrmQuoteListGridStatus",
+                    "componentType": "Block",
                     "condition": {
                       "type": "JSExpression",
                       "value": "this.props.isEdit"

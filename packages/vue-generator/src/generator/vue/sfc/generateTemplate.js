@@ -59,7 +59,40 @@ export const handleTinyIcon = (nameObj, globalHooks) => {
   delete nameObj.schema.props.name
 }
 
-export const handleTinyGrid = (schemaData, globalHooks) => {
+const handleTinyGridSlots = (value, globalHooks, config) => {
+  if (!Array.isArray(value)) {
+    return
+  }
+
+  value.forEach((slotItem) => {
+    const name = slotItem.componentName
+
+    if (!name) {
+      return
+    }
+
+    if (slotItem.componentType === 'Block') {
+      const importPath = `${config.blockRelativePath}${name}${config.blockSuffix}`
+
+      globalHooks.addImport(importPath, {
+        exportName: name,
+        componentName: name,
+        package: importPath
+      })
+    } else if (name?.startsWith?.('Tiny')) {
+      globalHooks.addImport('@opentiny/vue', {
+        destructuring: true,
+        exportName: name.slice(4),
+        componentName: name,
+        package: '@opentiny/vue'
+      })
+    }
+
+    handleTinyGridSlots(slotItem.children, globalHooks, config)
+  })
+}
+
+export const handleTinyGrid = (schemaData, globalHooks, config) => {
   const { componentName, props } = schemaData.schema
 
   // 同时存在 data 和 fetchData 的时候，删除 data
@@ -74,22 +107,24 @@ export const handleTinyGrid = (schemaData, globalHooks) => {
 
   // 处理 TinyGrid 组件 editor 插槽组件使用 opentiny/vue 组件的场景，需要在 import 中添加对应Tiny组件的引入
   props.columns.forEach((item) => {
-    if (!item.editor?.component?.startsWith?.('Tiny')) {
-      return
+    if (item.editor?.component?.startsWith?.('Tiny')) {
+      const name = item.editor?.component
+
+      globalHooks.addImport('@opentiny/vue', {
+        destructuring: true,
+        exportName: name.slice(4),
+        componentName: name,
+        package: '@opentiny/vue'
+      })
+
+      item.editor.component = {
+        type: 'JSExpression',
+        value: name
+      }
     }
 
-    const name = item.editor?.component
-
-    globalHooks.addImport('@opentiny/vue', {
-      destructuring: true,
-      exportName: name.slice(4),
-      componentName: name,
-      package: '@opentiny/vue'
-    })
-
-    item.editor.component = {
-      type: 'JSExpression',
-      value: name
+    if (typeof item.slots === 'object') {
+      Object.values(item.slots).forEach((slotItem) => handleTinyGridSlots(slotItem?.value, globalHooks, config))
     }
   })
 }

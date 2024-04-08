@@ -30,27 +30,23 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['click-logo'])
-
 const { t, lowcodeWrap, stores } = vue.inject(I18nInjectionKey).lowcode()
 const wrap = lowcodeWrap(props, { emit })
+wrap({ stores })
 
 const state = vue.reactive({
   activeMethod: () => {
     return props.isEdit
   }
 })
+wrap({ state })
 
 const handleClick = wrap(function () {
   this.emit('click-logo')
 })
 
-wrap({
-  stores,
-  state,
-  handleClick
-})
+wrap({ handleClick })
 </script>
-
 <style scoped>
 .image-title {
   margin-right: 15px;

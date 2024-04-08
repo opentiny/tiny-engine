@@ -195,10 +195,10 @@ const generateSFCFile = (schema, componentsMap, config = {}) => {
   }
 
   // 解析 template
-  const templateStr = genTemplateByHook(schema, globalHooks, parsedConfig)
+  const templateStr = genTemplateByHook(schema, globalHooks, { ...parsedConfig, componentsMap })
 
   // 生成 script
-  const scriptStr = genScriptByHook(schema, globalHooks, parsedConfig)
+  const scriptStr = genScriptByHook(schema, globalHooks, { ...parsedConfig, componentsMap })
 
   // 生成 style
   const styleStr = generateStyleTag(schema, styleConfig)
