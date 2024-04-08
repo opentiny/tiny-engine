@@ -35,10 +35,12 @@ export class ProjectController {
   }
   @Post('/')
   async create(@Body() body: CreateProjectDto, @Req() req: Request) {
-    return this.projectService.create(
-      body,
-      req.headers.authorization.replace('Bearer', '').trim(),
-    );
+    return {
+      data: await this.projectService.create(
+        body,
+        req.headers.authorization.replace('Bearer', '').trim(),
+      ),
+    };
   }
   @Patch('/:id')
   async patchProjectInfo(

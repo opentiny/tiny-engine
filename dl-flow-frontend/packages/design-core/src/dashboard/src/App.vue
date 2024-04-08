@@ -42,7 +42,13 @@ const createProject = () =>{
             type: 'success',
             message: '创建成功'
         })
-        res.project.push(data);
+        res.project.unshift({
+            ...data,
+            author: {
+                nick: userName.value
+            }
+        });
+        console.log(res.project)
         projectInfo.projectName = '';
         dialogVisible.value = false;
     })
