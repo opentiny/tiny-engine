@@ -10,7 +10,7 @@
 *
 */
 
-import component from './src/Main.vue'
+import component from './src/main.vue'
 
 export default {
   id: 'save',
