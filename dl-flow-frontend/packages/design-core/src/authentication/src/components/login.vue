@@ -31,6 +31,7 @@ import {defineProps, defineEmits, reactive, watch ,ref} from 'vue';
 import {useSessionStorage} from '@vueuse/core';
 const form = ref();
 const token = useSessionStorage('token', '');
+const userName = useSessionStorage('userName', '');
 const endpoint = useEndpoint();
 const props = defineProps(['modelValue', 'active']);
 const emits = defineEmits(['update:modelValue', 'update:active'])
@@ -65,8 +66,9 @@ const login = () => {
             return;
         }
         endpoint.post('/endpoint/user/login', loginData)
-        .then(({jwt})=>{
+        .then(({jwt, nick})=>{
             token.value = jwt;
+            userName.value = nick;
             Modal.message({
                 status: 'success',
                 message: '登陆成功'

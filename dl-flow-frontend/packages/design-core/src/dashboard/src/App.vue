@@ -5,6 +5,7 @@ import {useProjects} from '@opentiny/tiny-engine-controller';
 import List from './components/List';
 import ListItem from './components/ListItem';
 import Empty from './components/empty.vue'
+import {useSessionStorage} from '@vueuse/core';
 import { reactive, ref, computed } from 'vue';
 /**
  * @param {number} hours
@@ -26,7 +27,8 @@ const getWelcomeMessage = (hours) => {
         return '晚上好'
     }
 }
-const welcomeMessage = getWelcomeMessage(new Date().getHours())
+const userName = useSessionStorage('userName', '')
+const welcomeMessage = `${getWelcomeMessage(new Date().getHours())},${userName.value}`
 const {getProjects, newProject} = useProjects();
 const projectInfo = reactive({
     projectName: ''

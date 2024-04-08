@@ -38,7 +38,7 @@ export class UserService {
     await this.redis.set(`${jwt}:id`, userProfile._id.toString());
     await this.redis.setnx(jwt, ms(process.env.JWT_EXPIRE_IN));
     await this.redis.setnx(`${jwt}:id`, ms(process.env.JWT_EXPIRE_IN));
-    return jwt;
+    return { jwt, nick: userProfile.nick };
   }
   async register(data: RegisterDTO) {
     const { email, password, nick } = data;
