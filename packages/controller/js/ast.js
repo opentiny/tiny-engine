@@ -17,6 +17,7 @@ import prettier from 'prettier'
 import parserHtml from 'prettier/parser-html'
 import parseCss from 'prettier/parser-postcss'
 import parserBabel from 'prettier/parser-babel'
+import prettierConfig from './config-files/prettierrc'
 
 const METHOD_REGEXP = /function.*?\(/
 
@@ -33,10 +34,7 @@ const formatScript = (string) => {
   const options = {
     parser: 'babel',
     plugins: [parserBabel],
-    printWidth: 120,
-    singleQuote: true,
-    semi: false,
-    trailingComma: 'none'
+    ...prettierConfig
   }
   try {
     // 低码中的编辑器大多只会输入js值，并不是一个完整的javascript表达式，无法格式化，因此需要特殊处理预格式化该种情形
@@ -53,21 +51,21 @@ const formatJson = (string) =>
     parser: 'json',
     plugins: [parserBabel],
     trailingComma: 'es5',
-    tabWidth: 2,
-    semi: false,
-    singleQuote: true
+    ...prettierConfig
   })
 
 const formatHtml = (string) =>
   prettier.format(string, {
     parser: 'html',
-    plugins: [parserBabel, parserHtml]
+    plugins: [parserBabel, parserHtml],
+    ...prettierConfig
   })
 
 const formatCss = (string) =>
   prettier.format(string, {
     parser: 'css',
-    plugins: [parseCss]
+    plugins: [parseCss],
+    ...prettierConfig
   })
 
 const formatterMap = {

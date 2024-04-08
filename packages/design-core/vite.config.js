@@ -12,7 +12,6 @@ import lowcodeConfig from './config/lowcode.config'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import { importmapPlugin } from './scripts/externalDeps'
 import visualizer from 'rollup-plugin-visualizer'
-import { viteStaticCopy } from 'vite-plugin-static-copy'
 
 const origin = 'http://localhost:9090/'
 
@@ -72,19 +71,6 @@ const config = {
       ],
       symbolId: 'icon-[name]',
       inject: 'body-last'
-    }),
-    viteStaticCopy({
-      targets: [
-        {
-          src: 'node_modules/eslint-linter-browserify/linter.js',
-          dest: 'monaco-linter',
-          rename: 'linter.js',
-          transform: {
-            encoding: 'utf-8',
-            handler: (content) => content.replace('(window || globalThis)', 'global') // 修复eslint-linter-browserify用于serviceWorker内报找不到windows问题
-          }
-        }
-      ]
     })
   ],
   optimizeDeps: {

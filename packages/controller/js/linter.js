@@ -10,20 +10,21 @@
  *
  */
 
-import { PROD, BASE_URL } from './environments'
+// import { PROD, BASE_URL } from './environments'
+import eslintWorkerUrl from './worker-files/eslint.worker?worker&url'
 
 export const initLinter = (editor, monacoInstance, state) => {
-  let workerUrl = `${BASE_URL}monaco-linter/eslint.worker.js`
+  let workerUrl = new URL(eslintWorkerUrl, import.meta.url)
 
   // 线上环境，存在 worker 资源跨域的情况
-  if (PROD) {
-    const workerBlob = new Blob([`self.relativeDir='${BASE_URL}monaco-linter/';importScripts('${workerUrl}');`], {
+  if (workerUrl.origin !== location.origin) {
+    const workerBlob = new Blob([`import('${workerUrl}');`], {
       type: 'application/javascript'
     })
     workerUrl = window.URL.createObjectURL(workerBlob)
   }
 
-  const worker = new Worker(workerUrl)
+  const worker = new Worker(eslintWorkerUrl, { type: 'module' })
 
   // 监听 ESLint web worker 的返回
   worker.onmessage = function (event) {

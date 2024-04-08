@@ -10,9 +10,8 @@
  *
  */
 
-// importScripts 不支持 esm (safari不支持), 此处使用 umd，脚本地址参考vite.config.js的静态拷贝配置
-const relativeDir = self.relativeDir || './'
-importScripts(`${relativeDir}linter.js`)
+import { Linter } from 'eslint-linter-browserify'
+import eslintRule from '../config-files/eslint-rule'
 
 const defaultConfig = {
   env: {
@@ -32,11 +31,11 @@ const defaultConfig = {
 const config = {
   ...defaultConfig,
   rules: {
-    // ...self.eslint.config.rules,
+    ...(eslintRule || {}),
     // JS 面板中，仅定义 function，但可能不使用该方法
     'no-unused-vars': 'off',
-    'no-alert': 'off',
-    'no-console': 'off'
+    'no-alert': 'off'
+    // 'no-console': 'off'
   },
   settings: {}
 }
@@ -46,7 +45,7 @@ const severityMap = {
   2: 'Error',
   1: 'Warning'
 }
-const linter = new self.eslint.Linter()
+const linter = new Linter()
 
 self.addEventListener('message', (event) => {
   const { code, version } = event.data

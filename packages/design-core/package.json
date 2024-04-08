@@ -85,12 +85,13 @@
     "@vue/repl": "^2.9.0",
     "@vueuse/core": "^9.6.0",
     "element-resize-detector": "^1.2.4",
-    "eslint-linter-browserify": "^8.56.0",
+    "eslint-linter-browserify": "9.0.0",
     "file-saver": "^2.0.5",
     "html2canvas": "^1.4.1",
     "jszip": "^3.10.1",
     "monaco-editor": "0.33.0",
     "prettier": "2.7.1",
+    "rollup": "^4.14.1",
     "sortablejs": "^1.14.0",
     "vue": "^3.4.15",
     "vue-i18n": "^9.9.0"
@@ -122,7 +123,6 @@
     "svg-sprite-loader": "^6.0.11",
     "vite": "^4.3.7",
     "vite-plugin-monaco-editor": "^1.0.10",
-    "vite-plugin-static-copy": "^0.16.0",
     "vite-plugin-svg-icons": "^2.0.1",
     "vue-eslint-parser": "^8.0.1"
   },
