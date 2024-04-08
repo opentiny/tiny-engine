@@ -1,6 +1,6 @@
 <script setup>
 import {IconUser} from '@opentiny/vue-icon';
-import {Link, Button, DialogBox,Form as TinyForm,FormItem,Input as TinyInput, Notify} from '@opentiny/vue';
+import {Button, DialogBox,Form as TinyForm,FormItem,Input as TinyInput, Notify} from '@opentiny/vue';
 import {useProjects} from '@opentiny/tiny-engine-controller';
 import List from './components/List';
 import ListItem from './components/ListItem';
@@ -10,7 +10,7 @@ import { reactive, ref, computed } from 'vue';
  * @param {number} hours
  */
 const getWelcomeMessage = (hours) => {
-    if (hours > 0 && hours <= 6){
+    if (hours > 23 && hours <= 6){
         return '凌晨好'
     }
     if (hours > 6 && hours <= 10){
@@ -22,7 +22,7 @@ const getWelcomeMessage = (hours) => {
     if (hours > 14 && hours <= 16){
         return '下午好'
     }
-    if (hours > 16 && hours <= 0){
+    if (hours > 16 && hours <= 23){
         return '晚上好'
     }
 }
@@ -62,6 +62,10 @@ const loadMore = () => {
     }
     nextPage()
 }
+const storageState = (id) => {
+    window.location.href = `/?projectId=${id}`
+}
+
 </script>
 
 <template>
@@ -89,9 +93,12 @@ const loadMore = () => {
                     </div>
                     <template #suffix>
                         <div class="dashboard__projects__item__suffix">
-                            <Link :href="`/?projectId=${item.projectId}`">
+                            <span @click="()=>storageState(item.projectId)" class="dashboard__projects__item__link">
                                 进入
-                            </Link>
+                            </span>
+                            <!-- <Link @click="()=>storageState(item.projectId)" :href="``">
+                                
+                            </Link> -->
                         </div>
                     </template>
                 </list-item>
@@ -156,6 +163,13 @@ html,body, #app{
                 gap: 8px;
                 align-items: center;
                 font-size: var(--ti-common-font-size-base);
+            }
+            &__link{
+                cursor: pointer;
+                transition: all 200ms ease;
+                &:hover {
+                    color: rgb(16, 60, 255);
+                }
             }
         }
     }

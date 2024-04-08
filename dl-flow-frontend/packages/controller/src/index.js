@@ -38,6 +38,8 @@ import useLayer from './useLayer'
 import useSchema from './useSchema';
 import useWs from './useWS';
 import useProjects from './useProjects'
+import useSearchParam from './useSearchParam';
+import useState from './useState';
 
 export const getExample = example
 
@@ -70,5 +72,7 @@ export {
   useLayer,
   useSchema,
   useWs,
-  useProjects
+  useProjects,
+  useSearchParam,
+  useState,
 }

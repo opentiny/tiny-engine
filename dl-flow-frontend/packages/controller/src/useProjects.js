@@ -3,7 +3,7 @@
  * @prop {string} name                  Project Name
  * @prop {{nick: string}} author        Project author
  * @prop {number} createAt              Project created timestamp
- * @prop {number} projectid                    Id of project
+ * @prop {number} projectId                    Id of project
  */
 /**
  * @typedef {Object} Project
@@ -35,10 +35,7 @@ const rename = (id, name) => {
 }
 
 const save = (id, schema) => {
-    return ep.patch('/endpoint/project', {
-        query: {id},
-        body: schema
-    })
+    return ep.patch(`/endpoint/project/${id}`, schema)
 }
 
 /**

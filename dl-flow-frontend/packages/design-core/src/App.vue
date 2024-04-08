@@ -1,26 +1,32 @@
-<script lang="ts">
-import { Loading } from '@opentiny/vue'
-export default {
-  directives: {
-    loading: Loading.directive
-  },
-}
-</script>
 <script setup lang="ts">
-import { ConfigProvider } from '@opentiny/vue'
+import { ConfigProvider, Loading } from '@opentiny/vue'
 import DesignToolbars from './DesignToolbars.vue'
 import DesignPlugins from './DesignPlugins.vue'
 import DesignCanvas from './DesignCanvas.vue'
 import DesignSettings from './DesignSettings.vue'
 import designSmbConfig from '@opentiny/vue-design-smb'
-import { useLayout } from '@opentiny/tiny-engine-controller'
+import { useLayout, useState } from '@opentiny/tiny-engine-controller'
+import {watch} from 'vue';
 const { layoutState } = useLayout()
 const { plugins } = layoutState
 const toggleNav = ({ item }) => {
   if (!item.id) return
   plugins.render = plugins.render === item.id ? null : item.id
 }
-
+const state = useState();
+let loading = null;
+watch(state, ()=>{
+  if (state.saving){
+    loading = Loading.service({
+      lock: true,
+      text: '保存中...',
+      background: 'rgba(0, 0, 0, .3)',
+      customClass: 'loading'
+    })
+  } else {
+    loading.close();
+  }
+}, {deep: true})
 </script>
 <template>
   <config-provider :design="designSmbConfig">
@@ -41,6 +47,12 @@ const toggleNav = ({ item }) => {
   </config-provider>
 </template>
 
+<style>
+.loading .tiny-loading__spinner .tiny-loading__text {
+  fill: #fff;
+  color: #fff;
+}
+</style>
 
 <style lang="less" scoped>
 #tiny-engine {
