@@ -60,6 +60,9 @@ export class ProjectService {
         edges: [],
       },
     };
+    project.graphData = {
+      cells: [],
+    };
     const res = await project.save();
     if (!(await this.redis.get('project:counter'))) {
       await this.redis.set('project:counter', 1);

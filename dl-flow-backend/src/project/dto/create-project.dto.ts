@@ -11,4 +11,7 @@ export class UpdateProjectDto {
   @IsOptional()
   @IsObject()
   data?: Record<string, any>;
+  @IsOptional()
+  @IsObject()
+  graphData?: Record<string, any>;
 }

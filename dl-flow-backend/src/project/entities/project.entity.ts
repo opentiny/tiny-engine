@@ -15,6 +15,8 @@ export class Project {
   removed: boolean;
   @Prop({ type: () => Object })
   data: Record<string, any>;
+  @Prop({ type: () => Object })
+  graphData: Record<string, any>;
 }
 
 export const ProjectSchema = SchemaFactory.createForClass(Project);
