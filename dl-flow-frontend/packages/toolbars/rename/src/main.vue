@@ -31,6 +31,7 @@ const onBlur = useDebounce(() => {
     rename(id, projectName.value)
     .then(()=>{
         useNotify({message: '改名成功', type: 'success'})
+        state.name.value = projectName.value;
     })
     .catch((reason)=>{
         useNotify({title: '改名失败', message: reason, type: 'error'})
