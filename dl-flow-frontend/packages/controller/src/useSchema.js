@@ -104,6 +104,12 @@ const updateSchema = (obj) => {
     notifyChange();
 }
 
+const updateSchemaFull = (obj) => {
+    schema.payload = obj.payload;
+    schema.meta = obj.meta;
+    notifyChange();
+}
+
 
 export default ()=>{
     return {
@@ -120,6 +126,7 @@ export default ()=>{
         clearEndNode,
         updateSchema,
         onSchemaChange,
-        notifyChange
+        notifyChange,
+        updateSchemaFull
     }
 }

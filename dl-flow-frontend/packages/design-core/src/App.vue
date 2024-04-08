@@ -5,8 +5,8 @@ import DesignPlugins from './DesignPlugins.vue'
 import DesignCanvas from './DesignCanvas.vue'
 import DesignSettings from './DesignSettings.vue'
 import designSmbConfig from '@opentiny/vue-design-smb'
-import { useLayout, useState } from '@opentiny/tiny-engine-controller'
-import {watch} from 'vue';
+import { useLayout, useState, useSchema, useProjects, useSearchParam, useNotify, useX6 } from '@opentiny/tiny-engine-controller'
+import {onMounted, watch} from 'vue';
 const { layoutState } = useLayout()
 const { plugins } = layoutState
 const toggleNav = ({ item }) => {
@@ -14,9 +14,11 @@ const toggleNav = ({ item }) => {
   plugins.render = plugins.render === item.id ? null : item.id
 }
 const state = useState();
+const {updateSchemaFull} = useSchema();
+const {getProjectInfo} = useProjects();
 let loading = null;
 watch(state, ()=>{
-  if (state.saving){
+  if (state.loading){
     loading = Loading.service({
       lock: true,
       text: '保存中...',
@@ -27,6 +29,26 @@ watch(state, ()=>{
     loading.close();
   }
 }, {deep: true})
+onMounted(()=>{
+  const id = useSearchParam(window.location.search).get('projectId');
+  if (id === undefined){
+    useNotify({
+      type: 'error',
+      message: 'Id 不应该为空'
+    })
+    window.location.href = '/dashboard.html';
+    return;
+  }
+  const {data, loading} = getProjectInfo(Number(id));
+  const {g} = useX6()
+  watch(loading, ()=>{
+    if (!loading.value){
+      updateSchemaFull(data.value.data);
+      g.fromJSON(data.value.graphData)
+    }
+    state.loading = loading.value;
+  });
+})
 </script>
 <template>
   <config-provider :design="designSmbConfig">

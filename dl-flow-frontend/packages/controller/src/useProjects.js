@@ -1,9 +1,11 @@
 /**
  * @typedef {Object} ProjectItem
- * @prop {string} name                  Project Name
- * @prop {{nick: string}} author        Project author
- * @prop {number} createAt              Project created timestamp
+ * @prop {string} name                         Project Name
+ * @prop {{nick: string}} author               Project author
+ * @prop {number} createAt                     Project created timestamp
  * @prop {number} projectId                    Id of project
+ * @prop {Object} data
+ * @prop {Object} graphData
  */
 /**
  * @typedef {Object} Project
@@ -34,8 +36,11 @@ const rename = (id, name) => {
     })
 }
 
-const save = (id, schema) => {
-    return ep.patch(`/endpoint/project/${id}`, schema)
+const save = (id, schema, graphData) => {
+    return ep.patch(`/endpoint/project/${id}`, {
+        data: schema,
+        graphData
+    })
 }
 
 /**
@@ -83,15 +88,20 @@ const getProjectInfo = (id) => {
     /**
      * @type {import('vue').Ref<ProjectItem>}
      */
-    const schema = ref(null);
+    const data = ref(null);
+    const error = ref(false);
     const loading = ref(true);
     ep.get(`/endpoint/project/${id}`)
-    .then(({data})=>{
-        schema.value = data;
+    .then((res)=>{
+        data.value = res;
+    })
+    .catch(()=>{
+        error.value = true;
     })
     .finally(()=>{
         loading.value = false;
     })
+    return {data, loading, error};
 }
 
 const  useProjects = () => {

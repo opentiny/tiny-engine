@@ -1,6 +1,6 @@
 import {reactive} from 'vue';
 const state = reactive({
-    saving: false
+    loading: false
 })
 
 const useState = () => state;
