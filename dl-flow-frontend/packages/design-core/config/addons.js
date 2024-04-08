@@ -15,13 +15,14 @@ import Props from '@opentiny/tiny-engine-setting-props'
 import Schema from '@opentiny/tiny-engine-plugin-schema'
 import Code from 'dl-flow-setting-code'
 import Export from 'dl-flow-toolbar-export'
+import Save from 'dl-flow-toolbar-save';
 
 import '@opentiny/tiny-engine-theme'
 
 const addons = {
   plugins: [Materials, Schema],
 
-  toolbars: [Export],
+  toolbars: [Export, Save],
   settings: [Props, Code]
 }
 

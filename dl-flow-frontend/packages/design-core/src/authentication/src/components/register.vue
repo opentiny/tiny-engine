@@ -37,6 +37,7 @@ const _active = ref(props.active);
 const form = ref();
 const loading = ref(false);
 const storage = useSessionStorage('token', '');
+const userName = useSessionStorage('userName', '');
 watch(_active, ()=>{
     emits('update:active', _active.value)
 })
@@ -69,13 +70,14 @@ const submit = () => {
         }
         endpoint.post('/endpoint/user/reg',registerData)
         .then(()=>endpoint.post('/endpoint/user/login', {email: registerData.email, password: registerData.password}))
-        .then(({jwt})=>{
+        .then(({jwt, nick})=>{
             Modal.message({
                 status: 'success',
                 message: '登陆成功!',
             })
             storage.value = jwt;
-            window.location.href= '/'
+            userName.value = nick;
+            window.location.href= '/dashboard.html'
         })
         .catch((reason) => {
             Modal.message({

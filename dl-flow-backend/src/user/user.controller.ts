@@ -17,9 +17,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
   @Post('/login')
   async login(@Body() body: LoginDTO) {
-    return {
-      jwt: await this.userService.login(body),
-    };
+    return this.userService.login(body);
   }
   @Post('/reg')
   async register(@Body() body: RegisterDTO) {

@@ -109,7 +109,7 @@ export const createHttp = (options, extendsConfig) => {
       return Promise.reject('登录过期');
     }
     if (response.status === BAD_REQUEST){
-      return Promise.reject(response.data.message[0]);
+      return Promise.reject(typeof response.data.message === 'string' ? response.data.message : response.data.message[0]);
     }
     return Promise.reject(response.data.message);
   }
