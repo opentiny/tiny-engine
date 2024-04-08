@@ -85,7 +85,7 @@
     "@vue/repl": "^2.9.0",
     "@vueuse/core": "^9.6.0",
     "element-resize-detector": "^1.2.4",
-    "eslint-linter-browserify": "9.0.0",
+    "eslint-linter-browserify": "8.57.0",
     "file-saver": "^2.0.5",
     "html2canvas": "^1.4.1",
     "jszip": "^3.10.1",
