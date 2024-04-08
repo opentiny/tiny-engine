@@ -2,6 +2,7 @@
   "private": true,
   "packageManager": "pnpm@8.15.3",
   "devDependencies": {
+    "concurrently": "^8.2.0",
     "rimraf": "^3.0.2"
   },
   "scripts": {
@@ -10,5 +11,9 @@
     "build:frontend": "pnpm --filter tiny-engine build:plugin && pnpm --filter tiny-engine build:alpha",
     "build:backend": "pnpm -C dl-flow-backend build",
     "test:back": "pnpm -C dl-flow-backend test"
+    "start:all": "pnpm start",
+    "start:back": "pnpm -C dl-flow-backend start:dev",
+    "start:front": "pnpm -C dl-flow-frontend dev",
+    "start": "concurrently \"pnpm start:back\" \"pnpm start:front\""
   }
 }
