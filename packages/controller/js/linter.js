@@ -10,7 +10,6 @@
  *
  */
 
-// import { PROD, BASE_URL } from './environments'
 import eslintWorkerUrl from './worker-files/eslint.worker?worker&url'
 
 export const initLinter = (editor, monacoInstance, state) => {

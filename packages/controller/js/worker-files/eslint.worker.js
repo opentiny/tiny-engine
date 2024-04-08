@@ -34,8 +34,8 @@ const config = {
     ...(eslintRule || {}),
     // JS 面板中，仅定义 function，但可能不使用该方法
     'no-unused-vars': 'off',
-    'no-alert': 'off'
-    // 'no-console': 'off'
+    'no-alert': 'off',
+    'no-console': 'off'
   },
   settings: {}
 }
