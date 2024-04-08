@@ -24,7 +24,7 @@ export const initLinter = (editor, monacoInstance, state) => {
     workerUrl = window.URL.createObjectURL(workerBlob)
   }
 
-  const worker = new Worker(eslintWorkerUrl, { type: 'module' })
+  const worker = new Worker(workerUrl, { type: 'module' })
 
   // 监听 ESLint web worker 的返回
   worker.onmessage = function (event) {
