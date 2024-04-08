@@ -97,7 +97,7 @@ const initialLineState = {
   width: 0,
   left: 0,
   position: '',
-  forbid: false,
+  forbidden: false,
   id: '',
   config: null,
   doc: null
@@ -440,7 +440,7 @@ const getPosLine = (rect, configure) => {
   const yAbs = Math.min(lineAbs, rect.height / 3)
   const xAbs = Math.min(lineAbs, rect.width / 3)
   let type
-  let forbid = false
+  let forbidden = false
 
   if (mousePos.y < rect.top + yAbs) {
     type = POSITION.TOP
@@ -453,7 +453,7 @@ const getPosLine = (rect, configure) => {
   } else if (configure.isContainer) {
     type = POSITION.IN
     if (!allowInsert()) {
-      forbid = true
+      forbidden = true
     }
   } else {
     type = POSITION.BOTTOM
@@ -462,10 +462,10 @@ const getPosLine = (rect, configure) => {
   // 如果被拖拽的节点不是新增的，并且是放置的节点的祖先节点，则禁止插入
   const draggedId = dragState.data?.id
   if (draggedId && isAncestor(draggedId, lineState.id)) {
-    forbid = true
+    forbidden = true
   }
 
-  return { type, forbid }
+  return { type, forbidden }
 }
 
 const isBodyEl = (element) => element.nodeName === 'BODY'
@@ -518,7 +518,7 @@ const setHoverRect = (element, data) => {
         top: top * scale + y - siteCanvasRect.y,
         left: left * scale + x - siteCanvasRect.x,
         position: canvasState.type === 'absolute' || posLine.type,
-        forbid: posLine.forbid
+        forbidden: posLine.forbidden
       })
     } else {
       const posLine = getPosLine(rect, configure)
@@ -528,7 +528,7 @@ const setHoverRect = (element, data) => {
         top: top * scale + y - siteCanvasRect.y,
         left: left * scale + x - siteCanvasRect.x,
         position: canvasState.type === 'absolute' || posLine.type,
-        forbid: posLine.forbid
+        forbidden: posLine.forbidden
       })
     }
 
@@ -701,12 +701,12 @@ export const copyNode = (id) => {
 
 export const onMouseUp = () => {
   const { draging, data } = dragState
-  const { position, forbid } = lineState
+  const { position, forbidden } = lineState
   const absolute = canvasState.type === 'absolute'
   const sourceId = data?.id
   const lineId = lineState.id
 
-  if (draging && !forbid) {
+  if (draging && !forbidden) {
     const { parent, node } = getNode(lineId, true) || {} // target
     const targetNode = { parent, node, data: toRaw(data) }
 

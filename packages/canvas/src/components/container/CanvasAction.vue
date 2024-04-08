@@ -68,7 +68,7 @@
     <div v-show="hoverState.configure?.isContainer" class="corner-mark-bottom-right">拖放元素到容器内</div>
   </div>
   <div v-show="lineState.height && lineState.width" class="canvas-rect line">
-    <div :class="['hover-line', lineState.position, { forbid: lineState.forbid }]">
+    <div :class="['hover-line', lineState.position, { forbidden: lineState.forbidden }]">
       <div v-if="lineState.position === 'in' && hoverState.configure" class="choose-slots"></div>
     </div>
   </div>
@@ -540,10 +540,10 @@ export default {
       height: 100%;
       background: var(--ti-lowcode-canvas-hover-line-in-bg-color);
     }
-    &.forbid:not(.in) {
+    &.forbidden:not(.in) {
       background: var(--ti-lowcode-canvas-hover-line-forbid-bg-color);
     }
-    &.forbid.in {
+    &.forbidden.in {
       background: var(--ti-lowcode-canvas-hover-line-in-forbid-bg-color);
     }
   }
