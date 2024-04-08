@@ -50,6 +50,16 @@ export class ProjectService {
     project.createAt = new Date().getTime();
     project.author = email;
     project.removed = false;
+    project.data = {
+      meta: {
+        start: '',
+        end: '',
+      },
+      payload: {
+        cells: [],
+        edges: [],
+      },
+    };
     const res = await project.save();
     if (!(await this.redis.get('project:counter'))) {
       await this.redis.set('project:counter', 1);

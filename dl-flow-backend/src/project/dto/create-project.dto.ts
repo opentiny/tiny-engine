@@ -10,5 +10,5 @@ export class UpdateProjectDto {
   name?: string;
   @IsOptional()
   @IsObject()
-  schema?: Record<string, any>;
+  data?: Record<string, any>;
 }

@@ -29,7 +29,9 @@ export class ProjectController {
     if (Number.isNaN(Number(id))) {
       throw new BadRequestException('id 应该为数字');
     }
-    return this.projectService.getProjectInfo(Number(id));
+    return {
+      data: await this.projectService.getProjectInfo(Number(id)),
+    };
   }
   @Post('/')
   async create(@Body() body: CreateProjectDto, @Req() req: Request) {

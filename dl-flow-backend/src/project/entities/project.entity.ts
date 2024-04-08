@@ -14,7 +14,7 @@ export class Project {
   @Prop({ type: () => Boolean })
   removed: boolean;
   @Prop({ type: () => Object })
-  schema: Record<string, any>;
+  data: Record<string, any>;
 }
 
 export const ProjectSchema = SchemaFactory.createForClass(Project);
