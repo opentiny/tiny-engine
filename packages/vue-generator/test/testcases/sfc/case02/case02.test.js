@@ -1,24 +1,22 @@
-import fs from 'fs'
-import path from 'path'
 import { expect, test } from 'vitest'
 import { genSFCWithDefaultPlugin } from '@/generator/vue/sfc'
 import schema from './page.schema.json'
 import componentsMap from './components-map.json'
-import expectedRes from './UsePropAccessor.vue?raw'
 import blockSchema from './blocks.schema.json'
+import { formatCode } from '@/utils/formatCode'
 
-console.log('case02', typeof expectedRes)
-
-test('should validate tagName', () => {
+test('should generate use prop accessor correctly', async () => {
   const res = genSFCWithDefaultPlugin(schema, componentsMap)
 
-  fs.writeFileSync(path.resolve(__dirname, 'Res.vue'), res)
-  expect(res).toBe('')
+  const formattedCode = formatCode(res, 'vue')
+
+  await expect(formattedCode).toMatchFileSnapshot('./UsePropAccessor.vue')
 })
 
-test('should generate prop accessor correctly', () => {
+test('should generate prop accessor correctly', async () => {
   const res = genSFCWithDefaultPlugin(blockSchema, componentsMap)
 
-  fs.writeFileSync(path.resolve(__dirname, 'PropAccessorRes.vue'), res)
-  expect(res).toBe('')
+  const formattedCode = formatCode(res, 'vue')
+
+  await expect(formattedCode).toMatchFileSnapshot('./PropAccessor.vue')
 })
