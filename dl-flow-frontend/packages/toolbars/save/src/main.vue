@@ -9,7 +9,7 @@ const {schema} = useSchema();
 const saveSchema = () => {
     const graphData = useX6().g.toJSON();
     let timer = setTimeout(() => {
-        state.loading = true;
+        state.loading.value = true;
     }, 500);
     const id = useSearchParam(window.location.search).get('projectId');
     save(id, schema, graphData)
@@ -27,13 +27,13 @@ const saveSchema = () => {
         })
         .finally(()=>{
             clearTimeout(timer)
-            state.loading = false;
+            state.loading.value = false;
         })
 }
 
 </script>
 <template>
-    <Button @click="saveSchema" :loading="state.loading">
+    <Button @click="saveSchema" :loading="state.loading.value">
         保存
     </Button>
 </template>

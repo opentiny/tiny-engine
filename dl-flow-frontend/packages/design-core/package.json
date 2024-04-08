@@ -56,6 +56,7 @@
     "@vueuse/core": "^9.6.0",
     "dl-flow-setting-code": "workspace:^",
     "dl-flow-toolbar-export": "workspace:^",
+    "dl-flow-toolbar-rename": "workspace:^",
     "dl-flow-toolbar-save": "workspace:^",
     "element-resize-detector": "^1.2.4",
     "file-saver": "^2.0.5",
