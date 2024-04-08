@@ -144,11 +144,7 @@ onMounted(() => {
       return
     }
     const _node = g.getSelectedCells()
-    if (_node.length === 1 && _node[0].getData().mode === 'layer') {
-      node = _node[0]
-    } else {
-      node = _node.filter((n) => n && n.getData().mode === 'layer')[0]
-    }
+    node = _node.filter((n) => n && n.getData()?.mode === 'layer')[0]
     if (!node){
       return;
     }
