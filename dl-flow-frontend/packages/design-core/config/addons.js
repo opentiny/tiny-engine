@@ -16,13 +16,15 @@ import Schema from '@opentiny/tiny-engine-plugin-schema'
 import Code from 'dl-flow-setting-code'
 import Export from 'dl-flow-toolbar-export'
 import Save from 'dl-flow-toolbar-save';
+import Rename from 'dl-flow-toolbar-rename'
+import Menu from 'dl-flow-toolbar-menu';
 
 import '@opentiny/tiny-engine-theme'
 
 const addons = {
   plugins: [Materials, Schema],
 
-  toolbars: [Export, Save],
+  toolbars: [Export, Save, Rename, Menu ],
   settings: [Props, Code]
 }
 

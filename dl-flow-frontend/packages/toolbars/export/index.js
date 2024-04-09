@@ -11,6 +11,7 @@
 */
 
 import component from './src/Main.vue'
+import * as api from './src/api';
 
 export default {
   id: 'export',
@@ -18,4 +19,5 @@ export default {
   icon: '',
   align: 'right',
   component,
+  api
 }
