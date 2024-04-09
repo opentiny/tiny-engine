@@ -20,9 +20,6 @@ export default defineConfig({
       entry: path.resolve(__dirname, './src/index.js'),
       formats: ['cjs']
     },
-    sourcemap: true,
-    rollupOptions: {
-      external: [/@opentiny\/tiny-engine.*/]
-    }
+    sourcemap: true
   }
 })

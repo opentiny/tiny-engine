@@ -27,11 +27,10 @@ const defaultConfig = {
   }
 }
 
-// 根据公司的编码规范内置了 config/rules, 可以进一步定制
 const config = {
   ...defaultConfig,
   rules: {
-    ...(eslintRule || {}),
+    ...eslintRule,
     // JS 面板中，仅定义 function，但可能不使用该方法
     'no-unused-vars': 'off',
     'no-alert': 'off',
