@@ -697,6 +697,9 @@ importers:
       '@opentiny/vue-design-smb':
         specifier: ~3.11.0
         version: 3.11.0
+      '@opentiny/vue-icon':
+        specifier: ^3.15.0
+        version: 3.15.0
       '@opentiny/vue-renderless':
         specifier: ~3.11.0
         version: 3.11.8
@@ -5799,6 +5802,16 @@ packages:
       tailwind-merge: 1.14.0
     dev: false
 
+  /@opentiny/vue-common@3.15.0:
+    resolution: {integrity: sha512-oEEW4CtSVgzDektAbTwLLsV1MrKMVBVeZomRCv+c+R1G489V6GYfjx25ZlYJ4SQSYeXuaZBdYNxUxM4Idq+dNA==}
+    dependencies:
+      '@opentiny/vue-locale': 3.15.0
+      '@opentiny/vue-renderless': 3.15.0
+      '@opentiny/vue-theme': 3.15.0
+      '@opentiny/vue-theme-mobile': 3.15.0
+      tailwind-merge: 1.14.0
+    dev: false
+
   /@opentiny/vue-company@3.10.0:
     resolution: {integrity: sha512-Zdn5cPAkaXK7HOlHyQ3wW8CNfHT77R8B2NXXpvr360ysGNnvNxTdkE4MJR9ENt0t3Z9QapSBHqn+nMvPxmAP3w==}
     dependencies:
@@ -6690,6 +6703,13 @@ packages:
       '@opentiny/vue-theme': 3.11.6
     dev: false
 
+  /@opentiny/vue-icon@3.15.0:
+    resolution: {integrity: sha512-g7EJLgAP82/yD8qnGyXNYBRmrzT4j16OW5grqZq3kwFP8xVzsGvSjco8BJM/n4OTp7uKzfFJZZg1VSGhh6qSDQ==}
+    dependencies:
+      '@opentiny/vue-common': 3.15.0
+      '@opentiny/vue-theme': 3.15.0
+    dev: false
+
   /@opentiny/vue-image-viewer@3.10.0:
     resolution: {integrity: sha512-+pFkdGj2BOBJpblMNAR7DDbuhdnfPZkvVGY3KwUZyXhFb5mXg5LtZWFgOrWrmL6+45/GugABM6ZrNL4FMH+l3w==}
     dependencies:
@@ -6888,6 +6908,14 @@ packages:
       '@opentiny/vue-renderless': 3.11.8
       '@opentiny/vue-theme': 3.11.6
       '@opentiny/vue-theme-mobile': 3.11.1
+    dev: false
+
+  /@opentiny/vue-locale@3.15.0:
+    resolution: {integrity: sha512-viJsWN/zCwPq2Fa5bhVSTmwrnr/Hxz6V/PIx0NXyuVKMnapstALUzzpydsMOLSYLj9Jr0fgpCf7gEJcPO+DLQg==}
+    dependencies:
+      '@opentiny/vue-renderless': 3.15.0
+      '@opentiny/vue-theme': 3.15.0
+      '@opentiny/vue-theme-mobile': 3.15.0
     dev: false
 
   /@opentiny/vue-locales@3.10.0:
@@ -7534,6 +7562,13 @@ packages:
       xss: 1.0.11
     dev: false
 
+  /@opentiny/vue-renderless@3.15.0:
+    resolution: {integrity: sha512-WtT4NGILLer49d0wM4iZQBkQfsJUdTAH/3xknAbM/GJKReV/0v7+czfcjCmONU2XQk6hjKbsbGRGqCb0kQpjrw==}
+    dependencies:
+      color: 4.2.3
+      xss: 1.0.11
+    dev: false
+
   /@opentiny/vue-rich-text-editor@3.11.2:
     resolution: {integrity: sha512-+62NCwMkLXGccCymHczEJzlihLKHdMLWEcJdk25AshzKAz8njw7wXylfidIhmnJ+vZ6etIC5f+UtV4s6iOYs0g==}
     dependencies:
@@ -8053,12 +8088,20 @@ packages:
     resolution: {integrity: sha512-liivr+BpfhC+/B8lzPvJ9saX5pTgKEdbIeyRozXedAh8cJ7MGdoMA/CwZPlyEuFvPQbmHnA0aPaVWMkRtMSlqA==}
     dev: false
 
+  /@opentiny/vue-theme-mobile@3.15.0:
+    resolution: {integrity: sha512-eBcEbbA5Ncrfs8D+WRj2L8g/ed5sGky4lZeiShNAww6Mj0b8cG8oIKvp4hXvpYEMWSP8sgOHPcvnXtr7QI0yqA==}
+    dev: false
+
   /@opentiny/vue-theme@3.10.4:
     resolution: {integrity: sha512-Q0PAlZBD+2gfImechnXMKpdIYgEHlm8furaU8+ajv1tSzzF75OPd+FjJOx5BvvPwwV9yw9W0BY8mdtr8iuRu7g==}
     dev: false
 
   /@opentiny/vue-theme@3.11.6:
     resolution: {integrity: sha512-jfoARGaiPhQrqiR4CiWZ6pUN6/91rJsGL0pD8KWAUZFbMC14lchYOU+7EM+eZ5tvHuJtWFyJzuhhwLZnFYzPDw==}
+    dev: false
+
+  /@opentiny/vue-theme@3.15.0:
+    resolution: {integrity: sha512-4CbCU5lG10+r8ZISOVxHzG1iM+b+g883LCikfEilnyG4sZFa1f4GXXgA4ZjkF6F6E2vrF/QNoCwL/zwDGTZKOQ==}
     dev: false
 
   /@opentiny/vue-time-line@3.10.0:

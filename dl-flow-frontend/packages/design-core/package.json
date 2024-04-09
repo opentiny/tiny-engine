@@ -49,6 +49,7 @@
     "@opentiny/tiny-engine-webcomponent-core": "workspace:*",
     "@opentiny/vue": "~3.11.0",
     "@opentiny/vue-design-smb": "~3.11.0",
+    "@opentiny/vue-icon": "^3.15.0",
     "@opentiny/vue-renderless": "~3.11.0",
     "@opentiny/vue-theme": "~3.11.0",
     "@vue/babel-plugin-jsx": "1.1.1",
