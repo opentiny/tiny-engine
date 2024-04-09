@@ -1,94 +1,20 @@
 <script setup>
-import {ref} from 'vue';
-import { useSchema, useWs, useX6 } from '@opentiny/tiny-engine-controller'
+import {
+  useExport,
+  visible,
+  messages,
+  error,
+  downloadFileName,
+  loading,
+} from './api';
 import {Button as TinyButton, DialogBox} from '@opentiny/vue';
-const loading = ref(false);
-/**
- * @type {import('vue').Ref<[keyof typeof colors, string]>}
- */
-const visible = ref(false);
-const messages = ref([])
-const finish = ref(false);
-const error = ref(false);
-const canDownload = ref(false);
-const downloadFileName = ref('');
-const { schema, updateSchema } = useSchema();
 const {
-  client, 
-  onConnect,
-  onProgess,
-  onFinish,
-  onError,
-  onDone
-} = useWs();
-
-/**
- * @type {{info: string, error: string}}
- */
-const colors = {
-  'info': '#1976D2',
-  'error': '#D32F2F',
-}
-
-/**
- * @type {import('@antv/x6').Graph | null}
- */
-let g = null;
-
-onConnect(()=>{
-  messages.value.push([colors.info, 'Connect server success...'])
-})
-onProgess((message)=>{
-  messages.value.push([colors.info, message]);
-})
-onFinish((message)=>{
-  error.value = false;
-  finish.value = true;
-  loading.value = false;
-  messages.value.push([colors.info, message])
-})
-onError((reason)=>{
-  messages.value.push(
-    [colors.error, reason]
-  );
-  finish.value = true;
-  error.value = true;
-  loading.value = false;
-})
-onDone((fileName) => {
-  downloadFileName.value = fileName;
-  canDownload.value = true;
-})
-const openApi = () => {
-  if (messages.value.length){
-    messages.value = [];
-  }
-  loading.value = true;
-  if (!visible.value){
-    visible.value = true;
-  }
-  if (!g){
-    g = useX6().g;
-  }
-  const edges = g.getEdges()
-  updateSchema({
-    cells: g.toJSON().cells,
-    edges
-  })
-  client.emitWithAck('createCodeGenerate', schema)
-  .catch(() => {
-    messages.value.push([colors.error, '服务器超时, 请重试'])
-    finish.value = true;
-    loading.value = false;
-  })
-}
-const retry = () => {
-  messages.value = [];
-  openApi()
-}
+  retry,
+  openDialog,
+} = useExport();
 </script>
 <template>
-  <tiny-button @click="openApi">
+  <tiny-button @click="openDialog">
     导出
   </tiny-button>
   <dialog-box v-model:visible="visible" append-to-body>

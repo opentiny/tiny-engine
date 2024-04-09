@@ -180,7 +180,8 @@ const devAlias = {
   '@opentiny/tiny-engine-builtin-component': path.resolve(__dirname, '../builtinComponent/index.js'),
   'dl-flow-toolbar-export': path.resolve(__dirname, '../toolbars/export/index.js'),
   'dl-flow-toolbar-save': path.resolve(__dirname, '../toolbars/save/index.js'),
-  'dl-flow-toolbar-rename': path.resolve(__dirname, '../toolbars/rename/index.js')
+  'dl-flow-toolbar-rename': path.resolve(__dirname, '../toolbars/rename/index.js'),
+  'dl-flow-toolbar-menu': path.resolve(__dirname, '../toolbars/menu/index.js')
 }
 
 const prodAlias = {
