@@ -8,7 +8,7 @@
   "scripts": {
     "clean:node_modules": "rimraf -V dl-flow-{backend,frontend}/node_modules",
     "clean:dist": "rimraf -V dl-flow-{backend,frontend}/dist",
-    "build:frontend": "pnpm --filter tiny-engine build:plugin && pnpm --filter tiny-engine build:alpha",
+    "build:frontend": "pnpm --filter tiny-engine build:plugin && pnpm --filter tiny-engine build:prod",
     "build:backend": "pnpm -C dl-flow-backend build",
     "test:back": "pnpm -C dl-flow-backend test",
     "start:all": "pnpm start",
