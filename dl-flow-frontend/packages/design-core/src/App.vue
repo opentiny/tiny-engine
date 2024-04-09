@@ -17,7 +17,7 @@ const state = useState();
 const {updateSchemaFull} = useSchema();
 const {getProjectInfo} = useProjects();
 let loading = null;
-watch(state, ()=>{
+watch(state.loading, ()=>{
   if (state.loading){
     loading = Loading.service({
       lock: true,
@@ -26,9 +26,9 @@ watch(state, ()=>{
       customClass: 'loading'
     })
   } else {
-    loading.close();
+    loading && loading.close();
   }
-}, {deep: true})
+})
 onMounted(()=>{
   const id = useSearchParam(window.location.search).get('projectId');
   if (id === undefined){
@@ -45,8 +45,9 @@ onMounted(()=>{
     if (!loading.value){
       updateSchemaFull(data.value.data);
       g.fromJSON(data.value.graphData)
+      state.name.value = data.value.name
     }
-    state.loading = loading.value;
+    state.loading.value = loading.value;
   });
 })
 </script>

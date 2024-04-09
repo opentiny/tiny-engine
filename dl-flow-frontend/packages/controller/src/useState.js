@@ -1,9 +1,15 @@
-import {reactive} from 'vue';
-const state = reactive({
-    loading: false
+import {ref} from 'vue';
+import {createGlobalState} from '@vueuse/core';
+const useState = createGlobalState(()=>{
+    const loading = ref(false);
+    const name = ref('');
+    const renameLoading = ref(false);
+    return {
+        loading,
+        name,
+        renameLoading
+    }
 })
-
-const useState = () => state;
 
 
 export default useState;

@@ -12,7 +12,7 @@
     "build:backend": "pnpm -C dl-flow-backend build",
     "test:back": "pnpm -C dl-flow-backend test",
     "start:all": "pnpm start",
-    "start:back": "pnpm -C dl -flow-backend start:dev",
+    "start:back": "pnpm -C dl-flow-backend start:dev",
     "start:front": "pnpm -C dl-flow-frontend dev",
     "start": "concurrently \"pnpm start:back\" \"pnpm start:front\""
   }

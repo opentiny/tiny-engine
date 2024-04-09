@@ -30,10 +30,7 @@ const deleteProject = (id) => {
 }
 
 const rename = (id, name) => {
-    return ep.patch('/endpoint/project', {
-        query: {id},
-        body: {name}
-    })
+    return ep.patch(`/endpoint/project/${id}`, {name})
 }
 
 const save = (id, schema, graphData) => {

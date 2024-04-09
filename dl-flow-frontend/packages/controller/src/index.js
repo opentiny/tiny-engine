@@ -40,6 +40,7 @@ import useWs from './useWS';
 import useProjects from './useProjects'
 import useSearchParam from './useSearchParam';
 import useState from './useState';
+import {useDebounceFn} from '@vueuse/core';
 
 export const getExample = example
 
@@ -75,4 +76,5 @@ export {
   useProjects,
   useSearchParam,
   useState,
+  useDebounceFn as useDebounce
 }
