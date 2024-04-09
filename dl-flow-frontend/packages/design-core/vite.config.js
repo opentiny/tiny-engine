@@ -102,7 +102,8 @@ const config = {
         canvas: path.resolve(__dirname, './canvas.html'),
         preview: path.resolve(__dirname, './preview.html'),
         previewApp: path.resolve(__dirname, './previewApp.html'),
-        authentication: path.resolve(__dirname, './authentication.html')
+        authentication: path.resolve(__dirname, './authentication.html'),
+        dashboard: path.resolve(__dirname, './dashboard.html')
       },
       output: {
         manualChunks: (id) => {
