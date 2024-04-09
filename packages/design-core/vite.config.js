@@ -281,54 +281,33 @@ export default defineConfig(({ command, mode }) => {
       config.build.sourcemap = false
     }
   }
+  const importMapVersionsHolder = Object.fromEntries(
+    Object.entries(importMapVersions).map(([k, v]) => [k, versionPlaceholder ?? v])
+  )
 
   const importmap = {
     imports: {
-      prettier: `${VITE_CDN_DOMAIN}/prettier@${versionPlaceholder ?? importMapVersions.prettier}/esm/standalone.mjs`,
-      'prettier/': `${VITE_CDN_DOMAIN}/prettier@${versionPlaceholder ?? importMapVersions.prettier}/esm/`,
-      'prettier/parser-typescript': `${VITE_CDN_DOMAIN}/prettier@${
-        versionPlaceholder ?? importMapVersions.prettier
-      }/esm/parser-typescript.mjs`,
-      'prettier/parser-html': `${VITE_CDN_DOMAIN}/prettier@${
-        versionPlaceholder ?? importMapVersions.prettier
-      }/esm/parser-html.mjs`,
-      'prettier/parser-postcss': `${VITE_CDN_DOMAIN}/prettier@${
-        versionPlaceholder ?? importMapVersions.prettier
-      }/esm/parser-postcss.mjs`,
-      'prettier/parser-babel': `${VITE_CDN_DOMAIN}/prettier@${
-        versionPlaceholder ?? importMapVersions.prettier
-      }/esm/parser-babel.mjs`,
+      prettier: `${VITE_CDN_DOMAIN}/prettier@${importMapVersionsHolder.prettier}/esm/standalone.mjs`,
+      'prettier/': `${VITE_CDN_DOMAIN}/prettier@${importMapVersionsHolder.prettier}/esm/`,
+      'prettier/parser-typescript': `${VITE_CDN_DOMAIN}/prettier@${importMapVersionsHolder.prettier}/esm/parser-typescript.mjs`,
+      'prettier/parser-html': `${VITE_CDN_DOMAIN}/prettier@${importMapVersionsHolder.prettier}/esm/parser-html.mjs`,
+      'prettier/parser-postcss': `${VITE_CDN_DOMAIN}/prettier@${importMapVersionsHolder.prettier}/esm/parser-postcss.mjs`,
+      'prettier/parser-babel': `${VITE_CDN_DOMAIN}/prettier@${importMapVersionsHolder.prettier}/esm/parser-babel.mjs`,
 
-      vue: `${VITE_CDN_DOMAIN}/vue@${versionPlaceholder ?? importMapVersions.vue}/dist/vue.runtime.esm-browser${
+      vue: `${VITE_CDN_DOMAIN}/vue@${importMapVersionsHolder.vue}/dist/vue.runtime.esm-browser${
         command === 'build' ? '.prod' : ''
       }.js`,
-      '@opentiny/vue': `${VITE_CDN_DOMAIN}/@opentiny/vue@${
-        versionPlaceholder ?? importMapVersions.tinyVue
-      }/runtime/tiny-vue.mjs`,
-      '@opentiny/vue-icon': `${VITE_CDN_DOMAIN}/@opentiny/vue@${
-        versionPlaceholder ?? importMapVersions.tinyVue
-      }/runtime/tiny-vue-icon.mjs`,
-      '@opentiny/vue-common': `${VITE_CDN_DOMAIN}/@opentiny/vue@${
-        versionPlaceholder ?? importMapVersions.tinyVue
-      }/runtime/tiny-vue-common.mjs`,
-      '@opentiny/vue-locale': `${VITE_CDN_DOMAIN}/@opentiny/vue@${
-        versionPlaceholder ?? importMapVersions.tinyVue
-      }/runtime/tiny-vue-locale.mjs`,
-      '@opentiny/vue-design-smb': `${VITE_CDN_DOMAIN}/@opentiny/vue-design-smb@${
-        versionPlaceholder ?? importMapVersions.tinyVue
-      }/index.js`,
-      '@opentiny/vue-theme/theme-tool': `${VITE_CDN_DOMAIN}/@opentiny/vue-theme@${
-        versionPlaceholder ?? importMapVersions.tinyVue
-      }/theme-tool.js`,
-      '@opentiny/vue-theme/theme': `${VITE_CDN_DOMAIN}/@opentiny/vue-theme@${
-        versionPlaceholder ?? importMapVersions.tinyVue
-      }/theme/index.js`
+      '@opentiny/vue': `${VITE_CDN_DOMAIN}/@opentiny/vue@${importMapVersionsHolder.tinyVue}/runtime/tiny-vue.mjs`,
+      '@opentiny/vue-icon': `${VITE_CDN_DOMAIN}/@opentiny/vue@${importMapVersionsHolder.tinyVue}/runtime/tiny-vue-icon.mjs`,
+      '@opentiny/vue-common': `${VITE_CDN_DOMAIN}/@opentiny/vue@${importMapVersionsHolder.tinyVue}/runtime/tiny-vue-common.mjs`,
+      '@opentiny/vue-locale': `${VITE_CDN_DOMAIN}/@opentiny/vue@${importMapVersionsHolder.tinyVue}/runtime/tiny-vue-locale.mjs`,
+      '@opentiny/vue-design-smb': `${VITE_CDN_DOMAIN}/@opentiny/vue-design-smb@${importMapVersionsHolder.tinyVue}/index.js`,
+      '@opentiny/vue-theme/theme-tool': `${VITE_CDN_DOMAIN}/@opentiny/vue-theme@${importMapVersionsHolder.tinyVue}/theme-tool.js`,
+      '@opentiny/vue-theme/theme': `${VITE_CDN_DOMAIN}/@opentiny/vue-theme@${importMapVersionsHolder.tinyVue}/theme/index.js`
     }
   }
 
-  const importMapStyles = [
-    `${VITE_CDN_DOMAIN}/@opentiny/vue-theme@${versionPlaceholder ?? importMapVersions.tinyVue}/index.css`
-  ]
+  const importMapStyles = [`${VITE_CDN_DOMAIN}/@opentiny/vue-theme@${importMapVersionsHolder.tinyVue}/index.css`]
 
   config.plugins.push(
     monacoEditorPluginInstance,
