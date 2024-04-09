@@ -718,6 +718,15 @@ importers:
       dl-flow-toolbar-export:
         specifier: workspace:^
         version: link:../toolbars/export
+      dl-flow-toolbar-menu:
+        specifier: workspace:^
+        version: link:../toolbars/menu
+      dl-flow-toolbar-rename:
+        specifier: workspace:^
+        version: link:../toolbars/rename
+      dl-flow-toolbar-save:
+        specifier: workspace:^
+        version: link:../toolbars/save
       element-resize-detector:
         specifier: ^1.2.4
         version: 1.2.4
@@ -1097,6 +1106,105 @@ importers:
         version: 4.5.3(@types/node@18.16.12)(less@4.2.0)
 
   dl-flow-frontend/packages/toolbars/export:
+    dependencies:
+      '@opentiny/tiny-engine-canvas':
+        specifier: workspace:*
+        version: link:../../canvas
+      '@opentiny/tiny-engine-common':
+        specifier: workspace:*
+        version: link:../../common
+      '@opentiny/tiny-engine-controller':
+        specifier: workspace:*
+        version: link:../../controller
+      '@opentiny/tiny-engine-utils':
+        specifier: workspace:*
+        version: link:../../utils
+      '@opentiny/vue':
+        specifier: ~3.10.0
+        version: 3.10.1(@floating-ui/dom@1.6.3)(echarts@5.5.0)
+      vue:
+        specifier: 3.2.45
+        version: 3.2.45
+    devDependencies:
+      '@vitejs/plugin-vue':
+        specifier: ^4.2.3
+        version: 4.6.2(vite@4.5.3)(vue@3.2.45)
+      '@vitejs/plugin-vue-jsx':
+        specifier: ^1.3.10
+        version: 1.3.10
+      vite:
+        specifier: ^4.3.7
+        version: 4.5.3(@types/node@18.16.12)(less@4.2.0)
+
+  dl-flow-frontend/packages/toolbars/menu:
+    dependencies:
+      '@opentiny/tiny-engine-canvas':
+        specifier: workspace:*
+        version: link:../../canvas
+      '@opentiny/tiny-engine-common':
+        specifier: workspace:*
+        version: link:../../common
+      '@opentiny/tiny-engine-controller':
+        specifier: workspace:*
+        version: link:../../controller
+      '@opentiny/tiny-engine-utils':
+        specifier: workspace:*
+        version: link:../../utils
+      '@opentiny/vue':
+        specifier: ~3.10.0
+        version: 3.10.1(@floating-ui/dom@1.6.3)(echarts@5.5.0)
+      dl-flow-toolbar-export:
+        specifier: workspace:^
+        version: link:../export
+      dl-flow-toolbar-save:
+        specifier: workspace:^
+        version: link:../save
+      vue:
+        specifier: 3.2.45
+        version: 3.2.45
+    devDependencies:
+      '@vitejs/plugin-vue':
+        specifier: ^4.2.3
+        version: 4.6.2(vite@4.5.3)(vue@3.2.45)
+      '@vitejs/plugin-vue-jsx':
+        specifier: ^1.3.10
+        version: 1.3.10
+      vite:
+        specifier: ^4.3.7
+        version: 4.5.3(@types/node@18.16.12)(less@4.2.0)
+
+  dl-flow-frontend/packages/toolbars/rename:
+    dependencies:
+      '@opentiny/tiny-engine-canvas':
+        specifier: workspace:*
+        version: link:../../canvas
+      '@opentiny/tiny-engine-common':
+        specifier: workspace:*
+        version: link:../../common
+      '@opentiny/tiny-engine-controller':
+        specifier: workspace:*
+        version: link:../../controller
+      '@opentiny/tiny-engine-utils':
+        specifier: workspace:*
+        version: link:../../utils
+      '@opentiny/vue':
+        specifier: ~3.10.0
+        version: 3.10.1(@floating-ui/dom@1.6.3)(echarts@5.5.0)
+      vue:
+        specifier: 3.2.45
+        version: 3.2.45
+    devDependencies:
+      '@vitejs/plugin-vue':
+        specifier: ^4.2.3
+        version: 4.6.2(vite@4.5.3)(vue@3.2.45)
+      '@vitejs/plugin-vue-jsx':
+        specifier: ^1.3.10
+        version: 1.3.10
+      vite:
+        specifier: ^4.3.7
+        version: 4.5.3(@types/node@18.16.12)(less@4.2.0)
+
+  dl-flow-frontend/packages/toolbars/save:
     dependencies:
       '@opentiny/tiny-engine-canvas':
         specifier: workspace:*

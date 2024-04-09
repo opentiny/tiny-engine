@@ -11,13 +11,11 @@
 */
 
 import component from './src/main.vue'
-import {saveSchema} from './src/api';
 
 export default {
-  id: 'save',
-  title: '保存',
+  id: 'menu',
+  title: '菜单',
   icon: '',
-  align: 'right',
+  align: 'left',
   component,
-  api: {saveSchema}
 }

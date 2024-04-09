@@ -65,7 +65,9 @@
       "@opentiny/tiny-engine-http/*": ["packages/http/*"],
       "@opentiny/tiny-engine-utils": ["packages/utils/src/index.js"],
       "@opentiny/tiny-engine-webcomponent-core": ["packages/webcomponent/src/lib"],
-      "@opentiny/tiny-engine-i18n-host": ["packages/i18n/src/lib"]
+      "@opentiny/tiny-engine-i18n-host": ["packages/i18n/src/lib"],
+      "dl-flow-toolbar-export": ["packages/toolbars/export/index.js"],
+      "dl-flow-toolbar-save": ["packages/toolbars/save/index.js"]
     }
   },
   "include": ["packages/**/*"],
