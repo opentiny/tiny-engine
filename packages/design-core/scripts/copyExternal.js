@@ -2,7 +2,7 @@ import path from 'node:path'
 import fg from 'fast-glob'
 import { normalizePath } from 'vite'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
-import { babelReplaceImportPathWithCertainFIleName } from './replaceImportPath.mjs'
+import { babelReplaceImportPathWithCertainFileName } from './replaceImportPath.mjs'
 
 export const useLocalImportMap = (flag, publicPath = '', dir = 'import-map-static') => {
   if (!flag) {
@@ -17,7 +17,8 @@ export const useLocalImportMap = (flag, publicPath = '', dir = 'import-map-stati
   const versionPlaceholder = 'workspace'
   const copyImportMapFilePlugin = (imports, packageCopy) => {
     const files = Object.entries(imports).map(([libKey, libPath]) => {
-      const reg = new RegExp('^' + cdnPrefix + '/' + '(.*?)' + '@' + versionPlaceholder + '(.*?)$')
+      const reg = new RegExp(`^${cdnPrefix}/(.*?)@${versionPlaceholder}(.*?)$`)
+
       const packageName = libPath.match(reg)[1]
       if (packageCopy.includes(libKey)) {
         const srcPath = `node_modules/${packageName}`
@@ -29,7 +30,7 @@ export const useLocalImportMap = (flag, publicPath = '', dir = 'import-map-stati
         }
         const transform = (content, filename) => {
           if (filename.endsWith('.js')) {
-            const result = babelReplaceImportPathWithCertainFIleName(content, filename, console)
+            const result = babelReplaceImportPathWithCertainFileName(content, filename, console)
             return result.code || content
           }
           return content
@@ -72,6 +73,7 @@ export const useLocalImportMap = (flag, publicPath = '', dir = 'import-map-stati
 }
 
 export const getBaseUrlFromCli = (fallback = '') => {
+  // 理论上要从resolvedConfig阶段的钩子里面拿到base，由于插件嵌套插件，子插件的配置项需要在resolveConfig前传入这里，无法等resolvedConfig手动获取命令行base
   const index = process.argv?.indexOf('--base')
   return index > -1 ? process.argv[index + 1] || fallback : fallback
 }

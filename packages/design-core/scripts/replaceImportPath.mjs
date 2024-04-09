@@ -46,7 +46,7 @@ export function resolvePath(importPath, currentFilePath) {
   return null
 }
 
-export function babelReplaceImportPathWithCertainFIleName(content, currentFilePath, logger) {
+export function babelReplaceImportPathWithCertainFileName(content, currentFilePath, logger) {
   let fileChangedMark = false
   let result = {
     code: null,

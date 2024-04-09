@@ -16,18 +16,13 @@ export function extraBundleCdnLink(filename, originCdnPrefix) {
     if (component.npm) {
       const possibleUrl = [component.npm.script, component.npm.css]
       possibleUrl.forEach((url) => {
-        if (url?.startsWith(originCdnPrefix)) {
+        if (url?.startsWith(originCdnPrefix) && !result.includes(url)) {
           result.push(url)
         }
       })
     }
   })
-  return result.reduce((acc, cur) => {
-    if (!acc.includes(cur)) {
-      acc.push(cur)
-    }
-    return acc
-  }, [])
+  return result
 }
 
 export function replaceBundleCdnLink(bundle, fileMap) {
@@ -49,35 +44,35 @@ export function installPackageTemporary(packageNeedToInstall, tempDir, logger = 
     {
       name: 'vite-plugin-install-package-temporary',
       buildStart() {
-        if (packageNeedToInstall.some((pkg) => !pkg.exist)) {
-          let code = shelljs.mkdir('-p', tempDir).code
-          code ||
-            fs.writeFileSync(
-              path.resolve(tempDir, 'package.json'),
-              JSON.stringify(
-                {
-                  name: 'bundle-deps',
-                  dependencies: packageNeedToInstall.reduce((acc, cur) => {
-                    acc[cur.packageName] = cur.version
-                    return acc
-                  }, {})
-                },
-                null,
-                2
-              ),
-              { encoding: 'utf-8' }
-            )
-          code = code || shelljs.cd(tempDir).code || shelljs.exec(`npm install`).code || shelljs.cd('../').code
-
-          if (code !== 0) {
-            logger.warn(`[vite-plugin-install-package-temporary]: bundle dependencies package install failed`)
-          } else {
-            logger.info(
-              `[vite-plugin-install-package-temporary]: bundle dependencies package install success, total ${packageNeedToInstall.length} package(s)`
-            )
-          }
-        } else {
+        if (packageNeedToInstall.every((pkg) => pkg.exist)) {
           logger.info(`[vite-plugin-install-package-temporary]: bundle dependencies packages exist, skip install `)
+          return
+        }
+
+        let code = shelljs.mkdir('-p', tempDir).code
+        if (code === 0) {
+          //code 为 0 表示成功
+          fs.writeFileSync(
+            path.resolve(tempDir, 'package.json'),
+            JSON.stringify(
+              {
+                name: 'bundle-deps',
+                dependencies: Object.fromEntries(packageNeedToInstall.map((cur) => [cur.packageName, cur.version]))
+              },
+              null,
+              2
+            ),
+            { encoding: 'utf-8' }
+          )
+        }
+        code = code || shelljs.cd(tempDir).code || shelljs.exec(`npm install`).code || shelljs.cd('../').code
+
+        if (code === 0) {
+          logger.info(
+            `[vite-plugin-install-package-temporary]: bundle dependencies package install success, total ${packageNeedToInstall.length} package(s)`
+          )
+        } else {
+          logger.warn(`[vite-plugin-install-package-temporary]: bundle dependencies package install failed`)
         }
       }
     }
@@ -92,30 +87,30 @@ export function CopyBundleDeps(
   dir,
   bundleTempDir = 'bundle-deps'
 ) {
+  const baseSlash = base.endsWith('/') ? '' : '/'
   const files = extraBundleCdnLink(bundleFile, originCdnPrefix).map((url) => {
-    const relativeUrl = url.replace(new RegExp('^' + originCdnPrefix + '/?'), '')
-    const packageName = relativeUrl.match(/^(.+?)@/)[1]
-    let version = relativeUrl.match(new RegExp('^' + packageName + '@([^/]+)'))[1]
-    const baseSlash = base.endsWith('/') ? '' : '/'
-    const filePathInPackage = `${relativeUrl.replace(new RegExp('^' + packageName + '@' + version), '')}`
+    const { packageName, versionDemand, filePathInPackage } = url.match(
+      new RegExp(`^${originCdnPrefix}/?(?<packageName>.+?)@(?<versionDemand>[^/]+)(?<filePathInPackage>.*?)$`)
+    ).groups
+    let version = versionDemand
     let src = `node_modules/${packageName}${filePathInPackage}`
     const sourceExist = fs.existsSync(path.resolve(src))
     let sourceExistExternal = false
     if (sourceExist) {
       const content = readJsonFile(`node_modules/${packageName}/package.json`)
-      version = content.version
+      version = content.version // 忽略请求的包版本，使用本地包版本号
     } else {
       src = bundleTempDir + '/' + src
       sourceExistExternal = fs.existsSync(path.resolve(src)) // 安装过的不重新安装
     }
-    const newRelativeUrl = `${packageName}@${version}${filePathInPackage}`
     return {
       originUrl: url,
-      newUrl: `${base}${baseSlash}${dir}/${newRelativeUrl}`,
+      newUrl: `${base}${baseSlash}${dir}/${packageName}@${version}${filePathInPackage}`,
       src,
-      dest: `${dir}/${newRelativeUrl}`.replace(/\/([^/]*?)$/, ''),
+      dest: path.dirname(`${dir}/${packageName}@${version}${filePathInPackage}`),
       packageName,
       version,
+      filePathInPackage,
       sourceExist,
       sourceExistExternal,
       transform: null // 物料的依赖目前暂定是需要mjs，暂不考虑相对链接问题
@@ -126,6 +121,7 @@ export function CopyBundleDeps(
     .filter((item) => !item.sourceExist)
     .map(({ packageName, version, sourceExistExternal: exist }) => ({ packageName, version, exist }))
     .reduce((acc, cur) => {
+      // 同个包避免多个版本只保留一个版本
       if (!acc.some(({ packageName }) => cur.packageName === packageName)) {
         acc.push(cur)
       }
@@ -133,10 +129,15 @@ export function CopyBundleDeps(
     }, [])
 
   if (packageNeedToInstall.length) {
+    // 确保同个包多个版本只能从一个版本引用文件
     files.forEach((file) => {
-      const samePackage = packageNeedToInstall.find(({ packageName }) => packageName === file.packageName)
-      if (samePackage) {
-        file.version = samePackage.version
+      const samePackageDifferentVersion = packageNeedToInstall.find(
+        ({ packageName, version }) => packageName === file.packageName && version !== file.version
+      )
+      if (samePackageDifferentVersion) {
+        file.version = samePackageDifferentVersion.version
+        file.newUrl = `${base}${baseSlash}${dir}/${file.packageName}@${file.version}${file.filePathInPackage}`
+        file.dest = path.dirname(`${dir}/${file.packageName}@${file.version}${file.filePathInPackage}`)
       }
     })
   }
