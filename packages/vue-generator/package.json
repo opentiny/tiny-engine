@@ -14,6 +14,7 @@
     "test": "npx nyc@latest --reporter=lcov node test/test_generator.js",
     "test:latest": "npm run build && node test/testcases/full/index.js",
     "test:unit": "vitest",
+    "coverage": "vitest run --coverage",
     "publish:npm": "npm publish --verbose"
   },
   "repository": {
@@ -37,7 +38,9 @@
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.1",
+    "@vitest/coverage-v8": "^1.4.0",
     "@vue/eslint-config-prettier": "^7.0.0",
+    "dir-compare": "^4.2.0",
     "eslint": "^8.12.0",
     "eslint-plugin-vue": "^8.6.0",
     "fs-extra": "^10.0.1",

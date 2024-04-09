@@ -151,6 +151,17 @@ class CodeGenerator {
 
     return true
   }
+  deleteFile(file) {
+    const { path, fileName } = file
+    const index = this.genResult.findIndex((item) => item.path === path && item.fileName === fileName)
+
+    if (index !== -1) {
+      this.genResult.splice(index, 1)
+      return true
+    }
+
+    return false
+  }
   replaceFile(resultItem) {
     const { path, fileName } = resultItem
 

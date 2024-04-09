@@ -15,5 +15,7 @@ module.exports = {
     ecmaFeatures: {
       jsx: true
     }
-  }
+  },
+  // 忽略 expected 中的内容 
+  ignorePatterns: ['**/**/expected/*']
 }

@@ -10,12 +10,11 @@
  *
  */
 
-const { createLogger, format, transports } = require('winston')
+import { createApp } from 'vue'
+import router from './router'
+import { createPinia } from 'pinia'
+import App from './App.vue'
 
-const logger = createLogger({
-  level: 'info',
-  format: format.combine(format.colorize({ all: true }), format.simple()),
-  transports: [new transports.Console()]
-})
+const pinia = createPinia()
 
-module.exports = { logger }
+createApp(App).use(pinia).use(router).mount('#app')

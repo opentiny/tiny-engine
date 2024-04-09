@@ -8,7 +8,7 @@ function parseSchema() {
      * @param {import('../generator/generateApp').AppSchema} schema
      * @returns
      */
-    parse(schema) {
+    run(schema) {
       const { pageSchema } = schema
       const pagesMap = {}
       const resPageTree = []
