@@ -1,4 +1,4 @@
-<script setup lang="jsx">
+<script setup>
 import {
   Form as TForm,
   FormItem as TFormItem,
@@ -22,15 +22,6 @@ const props = defineProps({
 const emits = defineEmits(['update'])
 const properties = computed(() => props.modelValue.properties)
 const locale = i18n.global.locale
-const components = {
-  any: () => TInput,
-  string: () => TInput,
-  number: () => <TNumeric mouse-wheel controls={false} min={0} />,
-  enums: () => Enums,
-  boolean: () => TCheckBox,
-  ParamAttr: () => ParamAttr,
-  list: () => list
-}
 const data = ref(
   properties.value
     .map((p) => ({ [p.id]: p }))
@@ -55,14 +46,27 @@ watch(
     <t-form label-position="top">
       <template v-for="property of properties" :key="property.id">
         <t-form-item :label="property.label[locale]">
-          <component
-            :is="components[property.type]()"
+          <t-input
             v-model="data[property.id].data"
-            :data="property.enums"
-            :property="property"
-            :cell-id="props.cellId"
+            v-if="property.type === 'any'"
+            :default-value="data[property.id].default" />
+          <t-input
+            v-model="data[property.id].data"
+            v-if="property.type === 'string'"
             :default-value="data[property.id].default"
           />
+          <t-numeric
+            v-model="data[property.id].data"
+            mouse-wheel
+            :controls="false"
+            :min="0"
+            v-if="property.type === 'number'"
+            :default-value="data[property.id].default"
+          />
+          <enums v-model="data[property.id].data" mouse-wheel :controls="false" :min="0" v-if="property.type === 'enums'" :data="property.enums" />
+          <t-check-box v-model="data[property.id].data" :default-value="data[property.id].default" v-if="property.type === 'boolean'" />
+          <param-attr v-model="data[property.id].data" v-if="property.type === 'ParamAttr'" />
+          <list v-model="data[property.id].data" :default-value="data[property.id].default" :property="property" v-if="property.type === 'list'" />
         </t-form-item>
       </template>
     </t-form>

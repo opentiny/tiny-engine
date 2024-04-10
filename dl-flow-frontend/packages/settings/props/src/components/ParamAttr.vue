@@ -2,13 +2,17 @@
   <tiny-form label-position="top">
     <template v-for="attr of resState.types.ParamAttr" :key="attr.id">
       <tiny-form-item :label="attr.label.zh_CN">
-        <component v-model="data[attr.id]" :is="components[attr.type]()" :data="attr.enums" />
+        <t-input v-model="data[attr.id]" @input="onStringChange" v-if="attr.type === 'string'" />
+        <t-numeric v-model="data[attr.id]" mouse-wheel :controls="false" :min="0" v-if="attr.type === 'number'" />
+        <enums v-model="data[attr.id]" v-if="attr.type === 'enums'" :data="attr.enums" />
+        <t-check-box v-model="data[attr.id]" v-if="attr.type === 'boolean'" />
+        <t-numeric v-model="data[attr.id]" mouse-wheel :controls="false" :min="0" v-if="attr.type === 'Initializer'"  />
       </tiny-form-item>
     </template>
   </tiny-form>
 </template>
 
-<script setup lang="jsx">
+<script setup>
 import {
   Input as TInput,
   Checkbox as TCheckBox,
@@ -25,11 +29,7 @@ const props = defineProps({
 })
 const emits = defineEmits(['update:modelValue'])
 const data = reactive(props.modelValue)
-const components = {
-  string: () => <TInput onInput={() => emits('update:modelValue', data)} />,
-  number: () => <TNumeric mouse-wheel controls={false} min={0} />,
-  enums: () => Enums,
-  boolean: () => TCheckBox,
-  Initializer: () => <TNumeric mouse-wheel controls={false} min={0} />
+const onStringChange = () => {
+  emits('update:modelValue', data);
 }
 </script>
