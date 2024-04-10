@@ -3,8 +3,14 @@ import { LayerModule } from './layer/layer.module';
 import { DbModule } from '@app/database';
 import { MaterialModule } from './material/material.module';
 import { CodeGenerateModule } from './code-generate/code-generate.module';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
-import { join } from 'path';
+import {
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  writeFileSync,
+} from 'fs';
+import { basename, join } from 'path';
 import { UserModule } from './user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { InjectModel, MongooseModule } from '@nestjs/mongoose';
@@ -14,6 +20,11 @@ import { RedisModule } from '@app/redis';
 import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import { Redis } from 'ioredis';
 import { ProjectModule } from './project/project.module';
+import { User, UserSchema } from './user/user.schema';
+import { Project, ProjectSchema } from './project/entities/project.entity';
+import { isEmpty } from 'ramda';
+import { UserService } from './user/user.service';
+import { ProjectService } from './project/project.service';
 
 @Module({
   imports: [
@@ -40,10 +51,19 @@ import { ProjectModule } from './project/project.module';
         name: Material.name,
         schema: MaterialSchema,
       },
+      {
+        name: User.name,
+        schema: UserSchema,
+      },
+      {
+        name: Project.name,
+        schema: ProjectSchema,
+      },
     ]),
     RedisModule,
     ProjectModule,
   ],
+  providers: [UserService, ProjectService],
 })
 export class AppModule implements OnModuleInit {
   private readonly Logger: Logger = new Logger('App');
@@ -52,12 +72,19 @@ export class AppModule implements OnModuleInit {
     private readonly redis: Redis,
     @InjectModel(Material.name)
     private readonly MaterialModel: Model<Material>,
+    @InjectModel(User.name)
+    private readonly UserModel: Model<User>,
+    @InjectModel(Project.name)
+    private readonly ProjectModel: Model<Project>,
+    private readonly userService: UserService,
+    private readonly projectService: ProjectService,
   ) {}
   async onModuleInit() {
     const root = process.cwd();
     const publicPath = join(root, 'public');
     const lock = join(root, 'data', 'install.lock');
     const bundle = join(root, 'data', 'bundle.json');
+    const examplePath = join(root, 'examples');
     if (existsSync(lock) && !__DEV__) {
       this.Logger.log('Lock file exists');
       return;
@@ -95,6 +122,48 @@ export class AppModule implements OnModuleInit {
     }
     if (!existsSync(publicPath)) {
       mkdirSync(publicPath);
+    }
+    const adminUser = await this.UserModel.findOne({
+      email: 'admin@no-reply.com',
+    });
+    let profile;
+    let token;
+    if (!adminUser) {
+      this.Logger.warn('Not find admin user');
+      profile = await this.userService.register({
+        email: 'admin@no-reply.com',
+        nick: 'Admin',
+        password: 'admin',
+      });
+      token = (
+        await this.userService.login({
+          email: 'admin@no-reply.com',
+          password: 'admin',
+        })
+      ).jwt;
+      this.Logger.log('Create Admin user success');
+    }
+    if (existsSync(examplePath)) {
+      const examples = readdirSync(examplePath).map((fileName) => {
+        return [basename(fileName, '.json'), join(examplePath, fileName)];
+      });
+
+      for (const [exampleName, examplePath] of examples) {
+        this.Logger.log(`Insert ${exampleName} example`);
+        const content = JSON.parse(readFileSync(examplePath).toString());
+        if (!isEmpty(content['data']) && !isEmpty(content['graphData'])) {
+          const { projectId } = await this.projectService.create(
+            { name: exampleName },
+            token,
+          );
+          await this.projectService.updateProject(projectId, {
+            ...content,
+          });
+          this.Logger.log(`Insert ${exampleName} success`);
+        } else {
+          this.Logger.warn(`Example should contain data and graphdata`);
+        }
+      }
     }
     writeFileSync(lock, '1');
   }
