@@ -136,7 +136,17 @@ export const dynamicImportComponents = async ({ package: pkg, script, components
     const modules = window.TinyComponentLibs[pkg]
 
     if (!window.TinyLowcodeComponent[componentId]) {
-      window.TinyLowcodeComponent[componentId] = modules[exportName]
+      const component = modules[exportName]
+      if (component) {
+        window.TinyLowcodeComponent[componentId] = component
+      } else {
+        Object.keys(modules).forEach((key) => {
+          const value = modules[key]
+          if (Object.prototype.toString.call(value) === '[object Object]' && value.name === exportName) {
+            window.TinyLowcodeComponent[componentId] = value
+          }
+        })
+      }
     }
   })
 }
