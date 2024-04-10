@@ -4,7 +4,9 @@
       <label class="text-ellipsis-multiple">是否渲染</label>
       <div class="advanced-config-form-item">
         <meta-switch v-if="!isBind" :modelValue="condition" @update:modelValue="setConfig"> </meta-switch>
-        <div v-else class="binding-state">已绑定：{{ condition.value }}</div>
+        <div v-else class="binding-state text-ellipsis-multiple" :title="condition.value">
+          已绑定：{{ condition.value }}
+        </div>
         <meta-bind-variable v-model="condition" name="advance" @update:modelValue="setConfig"></meta-bind-variable>
       </div>
     </div>
@@ -19,7 +21,9 @@
           @update:modelValue="setLoop"
           @open="openEditor"
         ></meta-code-editor>
-        <div v-else class="binding-state text-ellipsis-multiple">已绑定：{{ state.loopData?.value }}</div>
+        <div v-else class="binding-state text-ellipsis-multiple" :title="state.loopData?.value">
+          已绑定：{{ state.loopData?.value }}
+        </div>
         <meta-bind-variable v-model="state.loopData" name="advance" @update:modelValue="setLoop"></meta-bind-variable>
       </div>
     </div>
