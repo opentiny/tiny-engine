@@ -3,6 +3,7 @@ import { Material } from '../material/material.schema';
 import { Layer } from '../layer/layer.schema';
 import { Cell } from './code-generate.schema';
 import { Exception, StandardizationNodes } from './code-generate.service';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class AST {
@@ -79,7 +80,10 @@ export class AST {
   standardizationParamAttr(key: string, val: string) {
     switch (key) {
       case 'name':
-        return this.standardization(val, 'string');
+        return this.standardization(
+          val === '' ? randomUUID().replace(/\-/gim, '') : val,
+          'string',
+        );
       case 'learning_rate':
         return this.standardization(val, 'number');
       case 'trainable':
