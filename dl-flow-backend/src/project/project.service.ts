@@ -65,7 +65,7 @@ export class ProjectService {
     };
     const res = await project.save();
     if (!(await this.redis.get('project:counter'))) {
-      await this.redis.set('project:counter', 1);
+      await this.redis.set('project:counter', 2);
       return res;
     }
     await this.redis.incr('project:counter');
