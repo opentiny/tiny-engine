@@ -37,25 +37,30 @@ export const useLocalImportMap = (flag, publicPath = '', dir = 'import-map-stati
         }
         const onlyFiles = (globString) =>
           fg.sync(globString + '/**/*', { onlyFiles: true }).map((p) => normalizePath(p)) // viteStaticCopy 自带的glob匹配无法过滤目录， 手动过滤目录作为数组传入
-        return [libKey, libPath, onlyFiles(srcPath), distPath, rename, transform]
+        return [libKey, libPath, onlyFiles(srcPath), distPath, rename, transform, srcPath]
       }
       const pathnameInPackage = libPath.match(reg)[2]
       const srcPath = `node_modules/${packageName}${pathnameInPackage}`.replace(/\/$/, '')
       const distPath = path.dirname(
         `${dir}/${packageName}@${versionPlaceholder}${pathnameInPackage}`.replace(/\/$/, '')
       )
-      return [libKey, libPath, srcPath, distPath, null, null]
+      return [libKey, libPath, srcPath, distPath, null, null, null]
     })
     const copyFiles = files
-      .map(([_libKey, _libPath, srcPath, distPath, rename, transform]) => ({
+      .map(([_libKey, _libPath, srcPath, distPath, rename, transform, packageSrc]) => ({
         src: srcPath,
         dest: distPath,
         rename,
-        transform
+        transform,
+        packageSrc
       }))
       .reduce((acc, cur) => {
-        //去重
-        if (!acc.some((item) => item.src === cur.src && item.dest === cur.dest)) {
+        //去重，分别处理字符串和数组
+        if (
+          (typeof cur.src === 'string' && !acc.some((item) => item.src === cur.src && item.dest === cur.dest)) ||
+          (Array.isArray(cur.src) &&
+            !acc.some((item) => !!item.packageSrc && item.packageSrc === cur.packageSrc && item.dest === cur.dest))
+        ) {
           acc.push(cur)
         }
         return acc
@@ -73,7 +78,7 @@ export const useLocalImportMap = (flag, publicPath = '', dir = 'import-map-stati
 }
 
 export const getBaseUrlFromCli = (fallback = '') => {
-  // 理论上要从resolvedConfig阶段的钩子里面拿到base，由于插件嵌套插件，子插件的配置项需要在resolveConfig前传入这里，无法等resolvedConfig手动获取命令行base
+  // 理论上要从resolvedConfig阶段的钩子里面拿到base，由于插件嵌套插件，子插件的配置项需要在resolveConfig前传入这里，无法等resolvedConfig，故手动获取命令行base
   const index = process.argv?.indexOf('--base')
   return index > -1 ? process.argv[index + 1] || fallback : fallback
 }
