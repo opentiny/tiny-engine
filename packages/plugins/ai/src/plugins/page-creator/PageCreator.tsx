@@ -4,14 +4,17 @@ import { Image } from 'lucide-react'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { sharedApi } from '../shared-api'
-import systemPrompt from '../../prompts/schema.system.md?raw'
+import pageSystemPrompt from '../../prompts/schema.system.md?raw'
+import componentSystemPrompt from '../../prompts/live-component.system.md?raw'
 import { ChangeEventHandler, forwardRef, useCallback, useState } from 'react'
 import { chatLLM, extractCode } from '../fetch-llm'
 import { ComponentProps } from '@/components/business/ApiConfigSteps'
 import icon from '/public/page-creator.svg'
 
 export default function PageCreator({ apiConfig, onClose }: ComponentProps) {
+  const [mode, setMode] = useState('page')
   const [imageSrc, setImageSrc] = useState<FileReader['result']>(null)
   const [msg, setMsg] = useState('')
   const handleImageChange: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -33,7 +36,7 @@ export default function PageCreator({ apiConfig, onClose }: ComponentProps) {
       [
         {
           role: 'system',
-          content: systemPrompt
+          content: mode === 'component' ? componentSystemPrompt : pageSystemPrompt
         },
         {
           role: 'user',
@@ -60,14 +63,26 @@ export default function PageCreator({ apiConfig, onClose }: ComponentProps) {
       apiConfig
     )
       .then((choices) => {
-        const schema = JSON.parse(extractCode(choices))
-        sharedApi.saveSchema(schema)
+        const code = extractCode(choices)
+        if (mode === 'page') {
+          sharedApi.saveSchema(JSON.parse(code))
+        } else {
+          const schema = sharedApi.getPageSchema()
+          schema.children.push({
+            componentName: 'Live',
+            props: {
+              // fix common issues
+              code: code.replace('<script setup>', '<script setup lang="tsx">')
+            }
+          })
+          sharedApi.saveSchema(schema)
+        }
         onClose()
       })
       .finally(() => {
         setFetching(false)
       })
-  }, [apiConfig, onClose, msg, imageSrc])
+  }, [apiConfig, onClose, msg, imageSrc, mode])
 
   return (
     <>
@@ -76,8 +91,18 @@ export default function PageCreator({ apiConfig, onClose }: ComponentProps) {
       </DialogHeader>
       <div className="flex flex-col gap-4 p-4">
         <div className="rounded-lg overflow-hidden p-1">
+          <RadioGroup value={mode} onValueChange={setMode}>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="page" id="page" />
+              <Label htmlFor="page">生成页面</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="component" id="component" />
+              <Label htmlFor="component">生成组件</Label>
+            </div>
+          </RadioGroup>
           <Textarea
-            className="w-full h-32 p-4 resize-none"
+            className="w-full h-32 p-4 resize-none mt-1"
             placeholder="描述您的代码生成需求，可包含图像或文本"
             value={msg}
             onChange={(evt) => setMsg(evt.currentTarget.value)}
