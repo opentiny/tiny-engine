@@ -2170,6 +2170,13 @@ const DEFAULT_COMPONENTS_MAP = [
     package: '@opentiny/vue',
     version: '^3.10.0',
     destructuring: true
+  },
+  {
+    componentName: 'Live',
+    exportName: 'CanvasLive',
+    package: '@opentiny/tiny-engine-live-component',
+    version: '*',
+    destructuring: true
   }
 ]
 
@@ -2208,7 +2215,8 @@ const BUILTIN_COMPONENT_NAME = {
   SLOT: 'Slot',
   COLLECTION: 'Collection',
   TEXT: 'Text',
-  ICON: 'Icon'
+  ICON: 'Icon',
+  LIVE: 'Live'
 }
 
 /**

@@ -30,6 +30,7 @@
     "@opentiny/tiny-engine-builtin-component": "workspace:*",
     "@opentiny/tiny-engine-controller": "workspace:*",
     "@opentiny/tiny-engine-i18n-host": "workspace:*",
+    "@opentiny/tiny-engine-live-component": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
     "@opentiny/tiny-engine-webcomponent-core": "workspace:*",
     "@opentiny/vue": "~3.10.0",

@@ -5,19 +5,22 @@
 </template>
 
 <script>
-import { VueLivePreview } from "vue-live-preview-only-fork";
+import { VueLivePreview } from 'vue-live-preview-only-fork'
 
 export default {
   components: { VueLivePreview },
   props: {
     code: {
       type: String,
-      default: "",
+      default: ''
     },
     style: {
       type: String,
-      default: "",
-    },
+      default: ''
+    }
   },
-};
+  data() {
+    return {}
+  }
+}
 </script>

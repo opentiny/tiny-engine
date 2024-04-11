@@ -185,7 +185,8 @@ const devAlias = {
   '@opentiny/tiny-engine-utils': path.resolve(__dirname, '../utils/src/index.js'),
   '@opentiny/tiny-engine-webcomponent-core': path.resolve(__dirname, '../webcomponent/src/lib.js'),
   '@opentiny/tiny-engine-i18n-host': path.resolve(__dirname, '../i18n/src/lib.js'),
-  '@opentiny/tiny-engine-builtin-component': path.resolve(__dirname, '../builtinComponent/index.js')
+  '@opentiny/tiny-engine-builtin-component': path.resolve(__dirname, '../builtinComponent/index.js'),
+  '@opentiny/tiny-engine-live-component': path.resolve(__dirname, '../live-component/src/index.js')
 }
 
 const prodAlias = {
@@ -271,9 +272,8 @@ export default defineConfig(({ command, mode }) => {
       'prettier/parser-postcss': `${VITE_CDN_DOMAIN}/prettier@${importMapVersions.prettier}/esm/parser-postcss.mjs`,
       'prettier/parser-babel': `${VITE_CDN_DOMAIN}/prettier@${importMapVersions.prettier}/esm/parser-babel.mjs`,
 
-      vue: `${VITE_CDN_DOMAIN}/vue@${importMapVersions.vue}/dist/vue.runtime.esm-browser${
-        command === 'build' ? '.prod' : ''
-      }.js`,
+      vue: `${VITE_CDN_DOMAIN}/vue@${importMapVersions.vue}/dist/vue.runtime.esm-browser${command === 'build' ? '.prod' : ''
+        }.js`,
       '@opentiny/vue': `${VITE_CDN_DOMAIN}/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue.mjs`,
       '@opentiny/vue-icon': `${VITE_CDN_DOMAIN}/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue-icon.mjs`,
       '@opentiny/vue-common': `${VITE_CDN_DOMAIN}/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue-common.mjs`,

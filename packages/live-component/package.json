@@ -1,0 +1,33 @@
+{
+  "name": "@opentiny/tiny-engine-live-component",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/opentiny/tiny-engine",
+    "directory": "packages/live-component"
+  },
+  "scripts": {
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vite-plugin-css-injected-by-js": "^3.3.1",
+    "lucide-vue-next": "^0.367.0",
+    "radix-vue": "^1.7.0",
+    "vue-live-preview-only-fork": "^0.1.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.2.3",
+    "@vitejs/plugin-vue-jsx": "^3.1.0",
+    "vite": "^4.5.0"
+  }
+}

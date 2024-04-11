@@ -18,6 +18,7 @@ import babelPluginJSX from '@vue/babel-plugin-jsx'
 import { transformSync } from '@babel/core'
 import i18nHost from '@opentiny/tiny-engine-i18n-host'
 import { CanvasRow, CanvasCol, CanvasRowColContainer } from '@opentiny/tiny-engine-builtin-component'
+import { CanvasLive } from '@opentiny/tiny-engine-live-component'
 import { context, conditions, setNode } from './context'
 import {
   CanvasBox,
@@ -65,6 +66,7 @@ const Mapper = {
   slot: CanvasSlot,
   Template: CanvasBox,
   Img: CanvasImg,
+  Live: CanvasLive,
   CanvasRow,
   CanvasCol,
   CanvasRowColContainer,
@@ -688,11 +690,11 @@ export const renderer = {
     const renderElement = (item, index) => {
       let mergeScope = item
         ? getLoopScope({
-            item,
-            index,
-            loopArgs,
-            scope
-          })
+          item,
+          index,
+          loopArgs,
+          scope
+        })
         : scope
 
       // 如果是区块，并且使用了区块的作用域插槽，则需要将作用域插槽的数据传递下去

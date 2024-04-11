@@ -1,7 +1,6 @@
 import PageCreator from './plugins/page-creator/PageCreator.vue'
 import ComponentEditor from './plugins/component-editor/ComponentEditor.vue'
 import { sharedApi } from './plugins/shared-api'
-import CanvasLive from './CanvasLive.vue'
 
 import './index.css'
 
@@ -24,4 +23,4 @@ const getPlugins = (di: any) => {
   }
 }
 
-export { getPlugins, CanvasLive }
+export { getPlugins }

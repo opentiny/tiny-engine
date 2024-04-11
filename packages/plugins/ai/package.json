@@ -33,7 +33,6 @@
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7",
     "unist-util-visit-parents": "^6.0.1",
-    "vue-live-preview-only-fork": "^0.1.0",
     "xstate": "^5.9.1",
     "zod": "^3.22.4",
     "zod-to-json-schema": "^3.22.4"

@@ -432,6 +432,61 @@
               "configure": {
                 "loop": true
               }
+            },
+            {
+              "icon": "Image",
+              "name": {
+                "zh_CN": "Live"
+              },
+              "component": "Live",
+              "container": false,
+              "schema": {
+                "properties": [
+                  {
+                    "label": {
+                      "zh_CN": "基础信息"
+                    },
+                    "description": {
+                      "zh_CN": "基础信息"
+                    },
+                    "collapse": {
+                      "number": 6,
+                      "text": {
+                        "zh_CN": "显示更多"
+                      }
+                    },
+                    "content": [
+                      {
+                        "property": "code",
+                        "type": "String",
+                        "defaultValue": "",
+                        "bindState": true,
+                        "label": {
+                          "text": {
+                            "zh_CN": "代码逻辑"
+                          }
+                        },
+                        "cols": 12,
+                        "rules": [],
+                        "widget": {
+                          "component": "MetaCodeEditor",
+                          "props": {
+                            "language": "vue"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "events": {},
+                "shortcuts": {},
+                "contentMenu": {
+                  "actions": []
+                }
+              },
+              "configure": {
+                "loop": true
+              }
             }
           ]
         }
@@ -515,6 +570,20 @@
                 "componentName": "Img",
                 "props": {
                   "src": "https://tinyengine-assets.obs.cn-north-4.myhuaweicloud.com/files/designer-default-icon.jpg"
+                }
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "Live"
+              },
+              "screenshot": "",
+              "snippetName": "Live",
+              "icon": "Image",
+              "schema": {
+                "componentName": "Live",
+                "props": {
+                  "code": "<script setup lang='tsx'>import { ref } from 'vue';const msg = ref('Hello World!')</script><template><h1>{{ msg }}</h1><input v-model='msg' /></template>"
                 }
               }
             }
