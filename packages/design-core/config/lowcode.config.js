@@ -12,7 +12,7 @@
 
 export default {
   // 编辑器主题类型， 取值：dark暗色系，light浅色系, 对应的npm包名为：@opentiny/tiny-engine-theme-${theme}, 暗色主题名需要以dark开头
-  theme: 'light',
+  theme: 'dark',
 
   // 当前面板技术栈类型，DSL转义参数， 其取值有: Angular、React、HTML、Vue、Flowchart
   dslMode: 'Vue',
