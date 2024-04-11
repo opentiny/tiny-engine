@@ -28916,7 +28916,7 @@
                   "disabled": false,
                   "cols": 12,
                   "widget": {
-                    "component": "MetaDisabled",
+                    "component": "MetaSwitch",
                     "props": {}
                   },
                   "description": {
@@ -29293,7 +29293,7 @@
                   "disabled": false,
                   "cols": 12,
                   "widget": {
-                    "component": "MetaDisabled",
+                    "component": "MetaSwitch",
                     "props": {}
                   },
                   "description": {
