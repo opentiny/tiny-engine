@@ -41,7 +41,7 @@ importMap.imports = {
   '@opentiny/tiny-engine-webcomponent-core': `${VITE_CDN_DOMAIN}/@opentiny/tiny-engine-webcomponent-core@1/dist/tiny-engine-webcomponent-core.es.js`,
   '@opentiny/tiny-engine-i18n-host': `${VITE_CDN_DOMAIN}/@opentiny/tiny-engine-i18n-host@1/dist/tiny-engine-i18n-host.es.js`,
   '@opentiny/tiny-engine-builtin-component': `${VITE_CDN_DOMAIN}/@opentiny/tiny-engine-builtin-component@1/dist/index.js`,
-  '@opentiny/tiny-engine-live-component': `${VITE_CDN_DOMAIN}/tiny-engine-live-component@1/dist/index.js`,
+  '@opentiny/tiny-engine-live-component': `${VITE_CDN_DOMAIN}/tiny-engine-live-component@1.0.8/dist/index.js`,
   'vue-demi': `${VITE_CDN_DOMAIN}/vue-demi@0.13.11/lib/index.mjs`,
   pinia: `${VITE_CDN_DOMAIN}/pinia@2.0.22/dist/pinia.esm-browser.js`,
   ...tinyVue3Imports,

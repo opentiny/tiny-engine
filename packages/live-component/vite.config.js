@@ -15,7 +15,15 @@ import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import vitePluginCssInjectedByJs from 'vite-plugin-css-injected-by-js'
 
+import tailwind from "tailwindcss"
+import autoprefixer from "autoprefixer"
+
 export default defineConfig({
+  css: {
+    postcss: {
+      plugins: [tailwind(), autoprefixer()],
+    },
+  },
   plugins: [vue(), vueJsx(), vitePluginCssInjectedByJs()],
   publicDir: false,
   build: {
