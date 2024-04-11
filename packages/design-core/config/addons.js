@@ -37,15 +37,20 @@ import Bridge from '@opentiny/tiny-engine-plugin-bridge'
 import Block from '@opentiny/tiny-engine-plugin-block'
 import Datasource from '@opentiny/tiny-engine-plugin-datasource'
 import Robot from '@opentiny/tiny-engine-plugin-robot'
+import { getPlugins } from '@opentiny/tiny-engine-plugin-ai'
 
 import Props from '@opentiny/tiny-engine-setting-props'
 import Events from '@opentiny/tiny-engine-setting-events'
 import Styles from '@opentiny/tiny-engine-setting-styles'
 
+import { useCanvas, useHistory } from '@opentiny/tiny-engine-controller'
+
 import '@opentiny/tiny-engine-theme'
 
+const { PageCreator, ComponentEditor } = getPlugins({ useCanvas, useHistory })
+
 const addons = {
-  plugins: [Materials, Tree, Page, Block, Datasource, Bridge, I18n, Script, Data, Schema, Help, Robot],
+  plugins: [Materials, Tree, Page, Block, Datasource, Bridge, I18n, Script, Data, Schema, Help, Robot, PageCreator, ComponentEditor],
   toolbars: [
     Logo,
     Breadcrumb,

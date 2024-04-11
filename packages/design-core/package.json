@@ -39,6 +39,7 @@
     "@opentiny/tiny-engine-controller": "workspace:*",
     "@opentiny/tiny-engine-http": "workspace:*",
     "@opentiny/tiny-engine-i18n-host": "workspace:*",
+    "@opentiny/tiny-engine-plugin-ai": "workspace:*",
     "@opentiny/tiny-engine-plugin-block": "workspace:*",
     "@opentiny/tiny-engine-plugin-bridge": "workspace:*",
     "@opentiny/tiny-engine-plugin-data": "workspace:*",
