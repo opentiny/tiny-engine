@@ -905,6 +905,14 @@
             "default": 0
           },
           {
+            "id": "padding",
+            "label": {
+              "zh_CN": "填充",
+              "en_US": "padding"
+            },
+            "type": "number"
+          },
+          {
             "id": "padding_mode",
             "label": {
               "zh_CN": "填充模式",
@@ -915,23 +923,23 @@
               {
                 "id": 1,
                 "label": "zeros",
-                "value": "zeros",
+                "value": "\"zeros\"",
                 "default": true
               },
               {
                 "id": 2,
                 "label": "reflect",
-                "value": "reflect"
+                "value": "\"reflect\""
               },
               {
                 "id": 3,
                 "label": "replicate",
-                "value": "replicate"
+                "value": "\"replicate\""
               },
               {
                 "id": 4,
                 "label": "circular",
-                "value": "circular"
+                "value": "\"circular\""
               }
             ],
             "required": true
@@ -1035,6 +1043,14 @@
             "default": 0
           },
           {
+            "id": "padding",
+            "label": {
+              "zh_CN": "填充",
+              "en_US": "padding"
+            },
+            "type": "number"
+          },
+          {
             "id": "padding_mode",
             "label": {
               "zh_CN": "填充模式",
@@ -1045,23 +1061,23 @@
               {
                 "id": 1,
                 "label": "zeros",
-                "value": "zeros",
+                "value": "\"zeros\"",
                 "default": true
               },
               {
                 "id": 2,
                 "label": "reflect",
-                "value": "reflect"
+                "value": "\"reflect\""
               },
               {
                 "id": 3,
                 "label": "replicate",
-                "value": "replicate"
+                "value": "\"replicate\""
               },
               {
                 "id": 4,
                 "label": "circular",
-                "value": "circular"
+                "value": "\"circular\""
               }
             ],
             "required": true
@@ -1165,6 +1181,14 @@
             "default": 0
           },
           {
+            "id": "padding",
+            "label": {
+              "zh_CN": "填充",
+              "en_US": "padding"
+            },
+            "type": "number"
+          },
+          {
             "id": "padding_mode",
             "label": {
               "zh_CN": "填充模式",
@@ -1175,23 +1199,23 @@
               {
                 "id": 1,
                 "label": "zeros",
-                "value": "zeros",
+                "value": "\"zeros\"",
                 "default": true
               },
               {
                 "id": 2,
                 "label": "reflect",
-                "value": "reflect"
+                "value": "\"reflect\""
               },
               {
                 "id": 3,
                 "label": "replicate",
-                "value": "replicate"
+                "value": "\"replicate\""
               },
               {
                 "id": 4,
                 "label": "circular",
-                "value": "circular"
+                "value": "\"circular\""
               }
             ],
             "required": true

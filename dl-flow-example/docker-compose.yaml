@@ -33,3 +33,4 @@ services:
       - ./public:/public # 代码生成暂存位置
       - ./keys:/keys # 密钥对存放位置
       - ./data:/data # bundle.json与install.lock 存放位置
+      - ./examples:/examples
