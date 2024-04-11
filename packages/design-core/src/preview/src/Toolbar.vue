@@ -1,5 +1,5 @@
 <template>
-  <div class="toolbar-wrap">
+  <div class="tiny-engine-toolbar">
     <div class="toolbar-left">
       <component :is="Breadcrumb"></component>
     </div>
@@ -62,7 +62,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.toolbar-wrap {
+.tiny-engine-toolbar {
   user-select: none;
   display: flex;
   flex-shrink: 0;
@@ -83,7 +83,7 @@ export default {
   gap: 12px;
 }
 .toolbar-button-text {
-  color: #191919;
+  color: var(--ti-lowcode-toolbar-title-color);
   margin-left: 4px;
   font-size: 12px;
 }
