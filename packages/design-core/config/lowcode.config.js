@@ -29,7 +29,7 @@ export default {
   canvasOptions: {
     Angular: {},
     Vue: {
-      material: ['/mock/bundle.json'],
+      material: ['/mock/bundle.json', 'http://localhost:9527/assets/bundle.json'],
       scripts: [],
       styles: ['/tiny-vue.css']
     },
