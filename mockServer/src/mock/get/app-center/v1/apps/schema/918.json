@@ -1525,7 +1525,8 @@
           {
             "componentName": "div",
             "props": {
-              "style": "border-width: 1px; border-style: solid; border-color: #ffffff; padding-top: 10px; padding-left: 10px; padding-right: 10px; box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px; background-color: #fff; position: fixed; inset: auto 0% 0% 0%; height: 80px; line-height: 80px; border-radius: 0px;"
+              
+              "style": "border-width: 1px;z-index:1;border-style: solid; border-color: #ffffff; padding-top: 10px; padding-left: 10px; padding-right: 10px; box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px; background-color: #fff; position: fixed; inset: auto 0% 0% 0%; height: 80px; line-height: 80px; border-radius: 0px;"
             },
             "children": [
               {
@@ -1922,6 +1923,13 @@
         "componentName": "TinySelect",
         "package": "@opentiny/vue",
         "exportName": "Select",
+        "destructuring": true,
+        "version": "0.1.16"
+      },
+      {
+        "componentName": "TinyButton",
+        "package": "@opentiny/vue",
+        "exportName": "Button",
         "destructuring": true,
         "version": "0.1.16"
       },
