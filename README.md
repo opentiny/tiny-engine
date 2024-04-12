@@ -35,17 +35,17 @@ services:
       - REDIS_PORT=6379 # redis端口 (必填)
       - REDIS_DB=0 # redis数据库 (必填)
       - REDIS_PASSWORD="" # redis密码
-      - JWT_EXPIRE_IN="1d" # JWT 过期时间 (必填)
-      - JWT_SIGN_ALGORITHM="RS256" # JWT签名算法, 要与密钥对符合, 例如密钥对是RSA 2048bit, 那么此处应该是 RS256 (必填)
-      - JWT_PUB_KEY=./keys/key.pub # JWT 公钥 (必填)
-      - JWT_PRI_KEY=./keys/key.pri # JWT 私钥 (必填)
-      - PWD_SALT=salt # bcrypt 盐(废弃)(必填)
-      - PWD_SALT_LEN=12 # bcrypt 盐长度
+      - JWT_EXPIRE_IN=1d # JWT 过期时间 (必填)
+      - JWT_SIGN_ALGORITHM=RS256 # JWT签名算法, 要与密钥对符合, 例如密钥对是RSA 2048bit, 那么此处应该是 RS256 (必填)
+      - JWT_PUB_KEY=./keys/pub.key # JWT 公钥 (必填)
+      - JWT_PRI_KEY=./keys/pri.key # JWT 私钥 (必填)
+      - PWD_SALT=salt # bcrypt 盐(必填)
+      - PWD_SALT_LEN=12 # bcrypt 盐(必填)
     volumes: # 强烈将下述卷挂载到本地, 以避免数据丢失
-      - ./public:/public # 代码生成暂存位置 (必须)
-      - ./keys:/keys # 密钥对存放位置 (必须)
-      - ./data:/data # bundle.json与install.lock 存放位置 ((必须))
-      
+      - ./public:/public # 代码生成暂存位置
+      - ./keys:/keys # 密钥对存放位置
+      - ./data:/data # bundle.json与install.lock 存放位置
+      - ./examples:/examples # 示例文件夹
 ```
 
 `Web-Ui` 使用nginx驱动, 接下来我们需要编写 `nginx.conf`
@@ -102,7 +102,7 @@ ls -al
 # .github
 # dl-flow-backend  // 后端
 # dl-flow-frontend // WebUi
-# docker-compose.yaml // 预设好的docker-compose文件
+# dl-flow-example // 示例
 # nginx.conf // 预设好的nginx文件
 ```
 
