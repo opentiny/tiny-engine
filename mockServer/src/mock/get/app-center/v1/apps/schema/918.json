@@ -1926,6 +1926,13 @@
         "version": "0.1.16"
       },
       {
+        "componentName": "TinyButton",
+        "package": "@opentiny/vue",
+        "exportName": "Button",
+        "destructuring": true,
+        "version": "0.1.16"
+      },
+      {
         "componentName": "TinyButtonGroup",
         "package": "@opentiny/vue",
         "exportName": "ButtonGroup",
