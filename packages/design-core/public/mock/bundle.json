@@ -23,7 +23,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "AAffix"
+            "exportName": "Affix"
           },
           "group": "其他",
           "category": "ant-design-vue",
@@ -196,7 +196,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "AAlert"
+            "exportName": "Alert"
           },
           "group": "反馈",
           "category": "ant-design-vue",
@@ -489,7 +489,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "AAnchor"
+            "exportName": "Anchor"
           },
           "group": "导航",
           "category": "ant-design-vue",
@@ -909,7 +909,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "AAutoComplete"
+            "exportName": "AutoComplete"
           },
           "group": "数据录入",
           "category": "ant-design-vue",
@@ -1433,7 +1433,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "AAvatar"
+            "exportName": "Avatar"
           },
           "group": "数据展示",
           "category": "ant-design-vue",
@@ -1782,7 +1782,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ABadge"
+            "exportName": "Badge"
           },
           "group": "数据展示",
           "category": "ant-design-vue",
@@ -2133,7 +2133,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ABreadcrumb"
+            "exportName": "Breadcrumb"
           },
           "group": "导航",
           "category": "ant-design-vue",
@@ -2225,7 +2225,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "AButton"
+            "exportName": "Button"
           },
           "group": "通用",
           "category": "ant-design-vue",
@@ -2648,7 +2648,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ACalendar"
+            "exportName": "Calendar"
           },
           "group": "数据展示",
           "category": "ant-design-vue",
@@ -2973,7 +2973,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ACard"
+            "exportName": "Card"
           },
           "group": "数据展示",
           "category": "ant-design-vue",
@@ -3375,7 +3375,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ACarousel"
+            "exportName": "Carousel"
           },
           "group": "数据展示",
           "category": "ant-design-vue",
@@ -3706,7 +3706,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ACascader"
+            "exportName": "Cascader"
           },
           "group": "数据录入",
           "category": "ant-design-vue",
@@ -4616,7 +4616,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ACheckbox"
+            "exportName": "Checkbox"
           },
           "group": "数据录入",
           "category": "ant-design-vue",
@@ -4826,7 +4826,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ACollapse"
+            "exportName": "Collapse"
           },
           "group": "数据展示",
           "category": "ant-design-vue",
@@ -5142,7 +5142,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "AComment"
+            "exportName": "Comment"
           },
           "group": "数据展示",
           "category": "ant-design-vue",
@@ -5399,7 +5399,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ADatePicker"
+            "exportName": "DatePicker"
           },
           "group": "数据录入",
           "category": "ant-design-vue",
@@ -6101,7 +6101,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ADivider"
+            "exportName": "Divider"
           },
           "group": "布局",
           "category": "ant-design-vue",
@@ -6327,7 +6327,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ADrawer"
+            "exportName": "Drawer"
           },
           "group": "反馈",
           "category": "ant-design-vue",
@@ -7050,7 +7050,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ADropdown"
+            "exportName": "Dropdown"
           },
           "group": "导航",
           "category": "ant-design-vue",
@@ -7512,7 +7512,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "AEmpty"
+            "exportName": "Empty"
           },
           "group": "数据展示",
           "category": "ant-design-vue",
@@ -7681,7 +7681,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "AFlex"
+            "exportName": "Flex"
           },
           "group": "布局",
           "category": "ant-design-vue",
@@ -7922,7 +7922,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "AFloatButton"
+            "exportName": "FloatButton"
           },
           "group": "其他",
           "category": "ant-design-vue",
@@ -8250,7 +8250,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "AForm"
+            "exportName": "Form"
           },
           "group": "数据录入",
           "category": "ant-design-vue",
@@ -8721,6 +8721,542 @@
           }
         },
         {
+          "id": 26996,
+          "version": "4.1.2",
+          "name": {
+            "zh_CN": "表单"
+          },
+          "component": "AFormItem",
+          "icon": "Form",
+          "description": "高性能表单控件，自带数据域管理。包含数据录入、校验以及对应样式。",
+          "doc_url": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "ant-design-vue",
+            "version": "4.1.2",
+            "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
+            "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
+            "dependencies": null,
+            "exportName": "FormItem"
+          },
+          "group": "数据录入",
+          "category": "ant-design-vue",
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "isPopper": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": [
+                "autoLink",
+                "colon",
+                "extra",
+                "hasFeedback",
+                "help",
+                "htmlFor",
+                "label",
+                "labelAlign",
+                "labelCol",
+                "name",
+                "required",
+                "rules",
+                "tooltip",
+                "validateFirst",
+                "validateStatus",
+                "validateTrigger",
+                "wrapperCol"
+              ]
+            },
+            "contextMenu": {
+              "actions": [
+                "copy",
+                "remove",
+                "insert",
+                "updateAttr",
+                "bindEevent",
+                "createBlock"
+              ],
+              "disable": []
+            },
+            "invalidity": [
+              ""
+            ],
+            "clickCapture": true,
+            "framework": "Vue"
+          },
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "collapse": {
+                  "number": 6,
+                  "text": {
+                    "zh_CN": "显示更多"
+                  }
+                },
+                "content": [
+                  {
+                    "property": "autoLink",
+                    "label": {
+                      "text": {
+                        "zh_CN": "autoLink"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否自动关联表单域，对于大部分情况都可以使用自动关联，如果不满足自动关联的条件，可以手动关联，参见下方注意事项"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "colon",
+                    "label": {
+                      "text": {
+                        "zh_CN": "colon"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "配合 label 属性使用，表示是否显示 label 后面的冒号"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "extra",
+                    "label": {
+                      "text": {
+                        "zh_CN": "extra"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "额外的提示信息，和 help 类似，当需要错误信息和提示文案同时出现时，可以使用这个。"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "string",
+                    "defaultValue": "",
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "hasFeedback",
+                    "label": {
+                      "text": {
+                        "zh_CN": "hasFeedback"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "配合 validateStatus 属性使用，展示校验状态图标，建议只配合 Input 组件使用"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "boolean",
+                    "defaultValue": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "help",
+                    "label": {
+                      "text": {
+                        "zh_CN": "help"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "提示信息，如不设置，则会根据校验规则自动生成"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "string",
+                    "defaultValue": "",
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "htmlFor",
+                    "label": {
+                      "text": {
+                        "zh_CN": "htmlFor"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "设置子元素 label `htmlFor` 属性"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "string",
+                    "defaultValue": "",
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "htmlFor",
+                    "label": {
+                      "text": {
+                        "zh_CN": "htmlFor"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "设置子元素 label `htmlFor` 属性"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "string",
+                    "defaultValue": "",
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "label",
+                    "label": {
+                      "text": {
+                        "zh_CN": "label"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "label 标签的文本"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "string",
+                    "defaultValue": "",
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "tooltip",
+                    "label": {
+                      "text": {
+                        "zh_CN": "tooltip"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "配置提示信息"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "string",
+                    "defaultValue": "",
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "validateTrigger",
+                    "label": {
+                      "text": {
+                        "zh_CN": "validateTrigger"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "设置字段校验的时机"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "string",
+                    "defaultValue": "",
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "name",
+                    "label": {
+                      "text": {
+                        "zh_CN": "name"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "表单域 model 字段，在使用 validate、resetFields 方法的情况下，该属性是必填的"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "string",
+                    "defaultValue": "",
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "required",
+                    "label": {
+                      "text": {
+                        "zh_CN": "required"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否必填，如不设置，则会根据校验规则自动生成"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "boolean",
+                    "defaultValue": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "validateFirst",
+                    "label": {
+                      "text": {
+                        "zh_CN": "validateFirst"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "当某一规则校验不通过时，是否停止剩下的规则的校验。"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "boolean",
+                    "defaultValue": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "labelAlign",
+                    "label": {
+                      "text": {
+                        "zh_CN": "labelAlign"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "标签文本对齐方式"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "'left' | 'right'",
+                    "widget": {
+                      "component": "MetaSelect",
+                      "props": {
+                        "options": [
+                          {
+                            "label": "left",
+                            "value": "left"
+                          },
+                          {
+                            "label": "right",
+                            "value": "right"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "property": "validateStatus",
+                    "label": {
+                      "text": {
+                        "zh_CN": "validateStatus"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "校验状态，如不设置，则会根据校验规则自动生成，可选：'success' 'warning' 'error' 'validating'"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "string",
+                    "widget": {
+                      "component": "MetaSelect",
+                      "props": {
+                        "options": [
+                          {
+                            "label": "success",
+                            "value": "success"
+                          },
+                          {
+                            "label": "warning",
+                            "value": "warning"
+                          },
+                          {
+                            "label": "error",
+                            "value": "error"
+                          },
+                          {
+                            "label": "validating",
+                            "value": "validating"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "property": "labelCol",
+                    "label": {
+                      "text": {
+                        "zh_CN": "labelCol"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "label 标签布局，同 `<Col>` 组件，设置 `span` `offset` 值，如 `{span: 3, offset: 12}` 或 `sm: {span: 3, offset: 12}`"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "[object](/components/grid-cn/#col)",
+                    "widget": {
+                      "component": "MetaCodeEditor",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "wrapperCol",
+                    "label": {
+                      "text": {
+                        "zh_CN": "wrapperCol"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "需要为输入控件设置布局样式时，使用该属性，用法同 labelCol"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "object",
+                    "widget": {
+                      "component": "MetaCodeEditor",
+                      "props": {}
+                    }
+                  }
+                ]
+              }
+            ],
+            "events": {},
+            "shortcuts": {},
+            "slots": {
+              "extra": {
+                "label": {
+                  "zh_CN": "extra"
+                },
+                "description": {
+                  "zh_CN": "额外的提示信息，和 help 类似，当需要错误信息和提示文案同时出现时，可以使用这个。"
+                }
+              },
+              "help": {
+                "label": {
+                  "zh_CN": "help"
+                },
+                "description": {
+                  "zh_CN": "提示信息，如不设置，则会根据校验规则自动生成"
+                }
+              },
+              "label": {
+                "label": {
+                  "zh_CN": "label"
+                },
+                "description": {
+                  "zh_CN": "label 标签的文本"
+                }
+              },
+              "tooltip": {
+                "label": {
+                  "zh_CN": "tooltip"
+                },
+                "description": {
+                  "zh_CN": "配置提示信息"
+                }
+              }
+            },
+            "contentMenu": {}
+          }
+        },
+        {
           "id": 27,
           "version": "4.1.2",
           "name": {
@@ -8740,7 +9276,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "AGrid"
+            "exportName": "Grid"
           },
           "group": "布局",
           "category": "ant-design-vue",
@@ -9110,7 +9646,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "AIcon"
+            "exportName": "Icon"
           },
           "group": "通用",
           "category": "ant-design-vue",
@@ -9306,7 +9842,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "AImage"
+            "exportName": "Image"
           },
           "group": "数据展示",
           "category": "ant-design-vue",
@@ -9603,7 +10139,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "AInputNumber"
+            "exportName": "InputNumber"
           },
           "group": "数据录入",
           "category": "ant-design-vue",
@@ -10181,7 +10717,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "AInput"
+            "exportName": "Input"
           },
           "group": "数据录入",
           "category": "ant-design-vue",
@@ -10672,7 +11208,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ALayout"
+            "exportName": "Layout"
           },
           "group": "布局",
           "category": "ant-design-vue",
@@ -10851,7 +11387,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "AMentions"
+            "exportName": "Mentions"
           },
           "group": "数据录入",
           "category": "ant-design-vue",
@@ -11001,7 +11537,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "AMenu"
+            "exportName": "Menu"
           },
           "group": "导航",
           "category": "ant-design-vue",
@@ -11205,7 +11741,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "AModal"
+            "exportName": "Modal"
           },
           "group": "反馈",
           "category": "ant-design-vue",
@@ -11869,7 +12405,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "APageHeader"
+            "exportName": "PageHeader"
           },
           "group": "导航",
           "category": "ant-design-vue",
@@ -12268,7 +12804,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "APagination"
+            "exportName": "Pagination"
           },
           "group": "导航",
           "category": "ant-design-vue",
@@ -12725,7 +13261,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "APopconfirm"
+            "exportName": "Popconfirm"
           },
           "group": "反馈",
           "category": "ant-design-vue",
@@ -13111,7 +13647,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "APopover"
+            "exportName": "Popover"
           },
           "group": "数据展示",
           "category": "ant-design-vue",
@@ -13258,7 +13794,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "AProgress"
+            "exportName": "Progress"
           },
           "group": "反馈",
           "category": "ant-design-vue",
@@ -13660,7 +14196,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "AQrcode"
+            "exportName": "Qrcode"
           },
           "group": "数据展示",
           "category": "ant-design-vue",
@@ -13752,7 +14288,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ARadio"
+            "exportName": "Radio"
           },
           "group": "数据录入",
           "category": "ant-design-vue",
@@ -13962,7 +14498,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ARate"
+            "exportName": "Rate"
           },
           "group": "数据录入",
           "category": "ant-design-vue",
@@ -14310,7 +14846,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "AResult"
+            "exportName": "Result"
           },
           "group": "反馈",
           "category": "ant-design-vue",
@@ -14529,7 +15065,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ASegmented"
+            "exportName": "Segmented"
           },
           "group": "数据展示",
           "category": "ant-design-vue",
@@ -14753,7 +15289,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ASelect"
+            "exportName": "Select"
           },
           "group": "数据录入",
           "category": "ant-design-vue",
@@ -15991,7 +16527,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ASkeleton"
+            "exportName": "Skeleton"
           },
           "group": "反馈",
           "category": "ant-design-vue",
@@ -16233,7 +16769,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ASlider"
+            "exportName": "Slider"
           },
           "group": "数据录入",
           "category": "ant-design-vue",
@@ -16725,7 +17261,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ASpace"
+            "exportName": "Space"
           },
           "group": "布局",
           "category": "ant-design-vue",
@@ -16962,7 +17498,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ASpin"
+            "exportName": "Spin"
           },
           "group": "反馈",
           "category": "ant-design-vue",
@@ -17194,7 +17730,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "AStatistic"
+            "exportName": "Statistic"
           },
           "group": "数据展示",
           "category": "ant-design-vue",
@@ -17594,7 +18130,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ASteps"
+            "exportName": "Steps"
           },
           "group": "导航",
           "category": "ant-design-vue",
@@ -17948,7 +18484,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ASwitch"
+            "exportName": "Switch"
           },
           "group": "数据录入",
           "category": "ant-design-vue",
@@ -18283,7 +18819,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ATable"
+            "exportName": "Table"
           },
           "group": "数据展示",
           "category": "ant-design-vue",
@@ -19351,7 +19887,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ATag"
+            "exportName": "Tag"
           },
           "group": "数据展示",
           "category": "ant-design-vue",
@@ -19534,7 +20070,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ATimePicker"
+            "exportName": "TimePicker"
           },
           "group": "数据录入",
           "category": "ant-design-vue",
@@ -20233,7 +20769,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ATimeline"
+            "exportName": "Timeline"
           },
           "group": "数据展示",
           "category": "ant-design-vue",
@@ -20475,7 +21011,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ATooltip"
+            "exportName": "Tooltip"
           },
           "group": "数据展示",
           "category": "ant-design-vue",
@@ -20601,7 +21137,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ATour"
+            "exportName": "Tour"
           },
           "group": "数据展示",
           "category": "ant-design-vue",
@@ -20939,7 +21475,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ATransfer"
+            "exportName": "Transfer"
           },
           "group": "数据录入",
           "category": "ant-design-vue",
@@ -21478,7 +22014,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ATreeSelect"
+            "exportName": "TreeSelect"
           },
           "group": "数据录入",
           "category": "ant-design-vue",
@@ -22593,7 +23129,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ATree"
+            "exportName": "Tree"
           },
           "group": "数据展示",
           "category": "ant-design-vue",
@@ -23302,7 +23838,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "ATypography"
+            "exportName": "Typography"
           },
           "group": "通用",
           "category": "ant-design-vue",
@@ -23683,7 +24219,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "AUpload"
+            "exportName": "Upload"
           },
           "group": "数据录入",
           "category": "ant-design-vue",
@@ -24409,7 +24945,7 @@
             "script": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/antd.esm.js",
             "css": "https://npm.onmicrosoft.cn/ant-design-vue@4.1.2/dist/reset.css",
             "dependencies": null,
-            "exportName": "AWatermark"
+            "exportName": "Watermark"
           },
           "group": "其他",
           "category": "ant-design-vue",
@@ -24748,9 +25284,18 @@
                               "mode": "horizontal",
                               "style": "line-height: 64px;",
                               "items": [
-                                { "key": "1", "label": "nav 1" },
-                                { "key": "2", "label": "nav 2" },
-                                { "key": "3", "label": "nav 3" }
+                                {
+                                  "key": "1",
+                                  "label": "nav 1"
+                                },
+                                {
+                                  "key": "2",
+                                  "label": "nav 2"
+                                },
+                                {
+                                  "key": "3",
+                                  "label": "nav 3"
+                                }
                               ]
                             },
                             "children": []
@@ -24774,39 +25319,77 @@
                                 "props": {
                                   "mode": "inline",
                                   "style": "height: 100%; border-right: 0;",
-                                  "openKeys": ["sub1"],
+                                  "openKeys": [
+                                    "sub1"
+                                  ],
                                   "items": [
-                                    { 
-                                      "key": "sub1", 
+                                    {
+                                      "key": "sub1",
                                       "title": "subnav 1",
                                       "label": "subnav 1",
                                       "children": [
-                                        { "key": "1", "label": "option1" },
-                                        { "key": "2", "label": "option2" },
-                                        { "key": "3", "label": "option3" },
-                                        { "key": "4", "label": "option4" }
+                                        {
+                                          "key": "1",
+                                          "label": "option1"
+                                        },
+                                        {
+                                          "key": "2",
+                                          "label": "option2"
+                                        },
+                                        {
+                                          "key": "3",
+                                          "label": "option3"
+                                        },
+                                        {
+                                          "key": "4",
+                                          "label": "option4"
+                                        }
                                       ]
                                     },
-                                    { 
-                                      "key": "sub2", 
+                                    {
+                                      "key": "sub2",
                                       "title": "subnav 2",
                                       "label": "subnav 2",
                                       "children": [
-                                        { "key": "5", "label": "option5" },
-                                        { "key": "6", "label": "option6" },
-                                        { "key": "7", "label": "option7" },
-                                        { "key": "8", "label": "option8" }
+                                        {
+                                          "key": "5",
+                                          "label": "option5"
+                                        },
+                                        {
+                                          "key": "6",
+                                          "label": "option6"
+                                        },
+                                        {
+                                          "key": "7",
+                                          "label": "option7"
+                                        },
+                                        {
+                                          "key": "8",
+                                          "label": "option8"
+                                        }
                                       ]
                                     },
-                                    { 
-                                      "key": "sub3", 
+                                    {
+                                      "key": "sub3",
                                       "title": "subnav 3",
                                       "label": "subnav 3",
                                       "children": [
-                                        { "key": "9", "label": "option9" },
-                                        { "key": "10", "label": "option10" },
-                                        { "key": "11", "label": "option11" },
-                                        { "key": "12", "label": "option12" }
+                                        {
+                                          "key": "9",
+                                          "label": "option9"
+                                        },
+                                        {
+                                          "key": "10",
+                                          "label": "option10"
+                                        },
+                                        {
+                                          "key": "11",
+                                          "label": "option11"
+                                        },
+                                        {
+                                          "key": "12",
+                                          "label": "option12"
+                                        }
                                       ]
                                     }
                                   ]
@@ -24826,9 +25409,18 @@
                                 "props": {
                                   "style": "margin: 16px 0",
                                   "routes": [
-                                    { "path": "home", "breadcrumbName": "Home" },
-                                    { "path": "list", "breadcrumbName": "List" },
-                                    { "path": "app", "breadcrumbName": "App" }
+                                    {
+                                      "path": "home",
+                                      "breadcrumbName": "Home"
+                                    },
+                                    {
+                                      "path": "list",
+                                      "breadcrumbName": "List"
+                                    },
+                                    {
+                                      "path": "app",
+                                      "breadcrumbName": "App"
+                                    }
                                   ]
                                 },
                                 "children": []
@@ -25472,40 +26064,49 @@
               "screenshot": "",
               "snippetName": "AForm",
               "schema": {
+                "props": {
+                  "layout": "inline"
+                },
                 "children": [
                   {
                     "componentName": "AFormItem",
                     "props": {
-                      "label": "Username",
+                      "label": "姓名",
                       "name": "username",
                       "rules": [
                         {
                           "required": true,
-                          "message": "Please input your username!"
+                          "message": "请输入姓名!"
                         }
                       ]
                     },
                     "children": [
                       {
-                        "componentName": "AInput"
+                        "componentName": "AInput",
+                        "props": {
+                          "placeholder": "请输入姓名"
+                        }
                       }
                     ]
                   },
                   {
                     "componentName": "AFormItem",
                     "props": {
-                      "label": "Password",
-                      "name": "password",
+                      "label": "年龄",
+                      "name": "age",
                       "rules": [
                         {
                           "required": true,
-                          "message": "Please input your password!"
+                          "message": "请输入年龄!"
                         }
                       ]
                     },
                     "children": [
                       {
-                        "componentName": "AInput"
+                        "componentName": "AInputNumber",
+                        "props": {
+                          "placeholder": "请输入年龄"
+                        }
                       }
                     ]
                   },
@@ -25515,7 +26116,7 @@
                       {
                         "componentName": "Text",
                         "props": {
-                          "text": "ok"
+                          "text": "搜索"
                         }
                       }
                     ]
