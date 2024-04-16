@@ -15,7 +15,7 @@
   ],
   "exports": {
     ".": "./dist/index.js",
-    "./js/": "./js/",
+    "./js/": "./dist/js/",
     "./utils": "./dist/utils.js",
     "./adapter": "./dist/adapter.js"
   },
@@ -49,6 +49,7 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
     "@vitejs/plugin-vue-jsx": "^3.1.0",
+    "glob": "^10.3.4",
     "vite": "^4.3.7"
   },
   "peerDependencies": {

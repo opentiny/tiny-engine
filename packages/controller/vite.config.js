@@ -14,26 +14,36 @@ import { defineConfig } from 'vite'
 import path from 'path'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
+import { glob } from 'glob'
+import { fileURLToPath } from 'node:url'
+
+const jsEntries = glob.sync('./js/**.js').map((file) => {
+  return [file.slice(0, file.length - path.extname(file).length), fileURLToPath(new URL(file, import.meta.url))]
+})
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue(), vueJsx()],
   publicDir: false,
   resolve: {},
+  define: {
+    'import.meta': 'import.meta'
+  },
   build: {
     cssCodeSplit: false,
     lib: {
       entry: {
         index: path.resolve(__dirname, './src/index.js'),
         adapter: path.resolve(__dirname, './adapter.js'),
-        utils: path.resolve(__dirname, './utils.js')
+        utils: path.resolve(__dirname, './utils.js'),
+        ...Object.fromEntries(jsEntries)
       },
       name: 'controller',
       fileName: (formats, entryName) => `${entryName}.js`,
       formats: ['es']
     },
     rollupOptions: {
-      external: ['vue', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/, /^prettier.*/]
+      external: ['vue', 'vue-i18n', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/, /^prettier.*/, /^@babel.*/]
     }
   }
 })
