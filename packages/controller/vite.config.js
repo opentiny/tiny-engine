@@ -28,7 +28,10 @@ export default defineConfig({
   resolve: {},
   base: './',
   define: {
-    'import.meta': 'import.meta'
+    'import.meta': 'import.meta',
+    'import.meta.env.MODE': 'import.meta.env.MODE',
+    'import.meta.env.PROD': 'import.meta.env.PROD',
+    'import.meta.env.BASE_URL': 'import.meta.env.BASE_URL'
   },
   build: {
     cssCodeSplit: false,
