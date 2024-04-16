@@ -13,6 +13,7 @@
 import { capitalize, hyphenate } from '@vue/shared'
 import { tinyIcon as unifyIconName } from '../pre-processor'
 import { TINY_ICON, JS_FUNCTION } from '../constant'
+import prettierConfig from '@opentiny/tiny-engine-controller/js/config-files/prettierrc'
 
 const getTypeOfSchema = (schema) => schema.componentName
 
@@ -69,12 +70,7 @@ const lowerFirst = (str) => str[0].toLowerCase() + str.slice(1)
  */
 const toPascalCase = (input, delimiter = '-') => input.split(delimiter).map(capitalize).join('')
 
-const commonOpts = {
-  printWidth: 120,
-  semi: false,
-  singleQuote: true,
-  trailingComma: 'none'
-}
+const commonOpts = prettierConfig
 const prettierOpts = {
   vue: { ...commonOpts, parser: 'vue', htmlWhitespaceSensitivity: 'ignore' },
   js: { ...commonOpts, parser: 'typescript' }
