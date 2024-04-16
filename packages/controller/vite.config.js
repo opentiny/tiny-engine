@@ -26,6 +26,7 @@ export default defineConfig({
   plugins: [vue(), vueJsx()],
   publicDir: false,
   resolve: {},
+  base: './',
   define: {
     'import.meta': 'import.meta'
   },
