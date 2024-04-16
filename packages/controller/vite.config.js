@@ -17,7 +17,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import { glob } from 'glob'
 import { fileURLToPath } from 'node:url'
 
-const jsEntries = glob.sync('./js/**.js').map((file) => {
+const jsEntries = glob.sync('./js/**/*.js').map((file) => {
   return [file.slice(0, file.length - path.extname(file).length), fileURLToPath(new URL(file, import.meta.url))]
 })
 
@@ -26,8 +26,8 @@ export default defineConfig({
   plugins: [vue(), vueJsx()],
   publicDir: false,
   resolve: {},
+  base: './',
   define: {
-    'process.env': {},
     'import.meta': 'import.meta',
     'import.meta.env.MODE': 'import.meta.env.MODE',
     'import.meta.env.PROD': 'import.meta.env.PROD',
