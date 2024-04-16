@@ -51,14 +51,20 @@ const defaultSchema = {
   outputs: []
 }
 
-const renderer = ref(null)
+const canvasApi = ref({})
+const isCanvasApiReady = ref(false)
+
+const initCanvasApi = (newCanvasApi) => {
+  canvasApi.value = newCanvasApi
+  isCanvasApiReady.value = true
+}
 
 const pageState = reactive({ ...defaultPageState, loading: true })
 // 重置画布数据
 const resetCanvasState = async (state = {}) => {
   Object.assign(pageState, defaultPageState, state)
 
-  await renderer.value?.setSchema(pageState.pageSchema)
+  await canvasApi.value?.setSchema(pageState.pageSchema)
 }
 
 // 页面重置画布数据
@@ -142,7 +148,6 @@ const getCurrentPage = () => pageState.currentPage
 export default function () {
   return {
     pageState,
-    renderer,
     isBlock,
     isSaved,
     isLoading,
@@ -153,10 +158,11 @@ export default function () {
     resetPageCanvasState,
     resetBlockCanvasState,
     clearCurrentState,
-    getDataSourceMap: renderer.value?.getDataSourceMap,
-    setDataSourceMap: renderer.value?.setDataSourceMap,
     getCurrentSchema,
     setCurrentSchema,
-    getCurrentPage
+    getCurrentPage,
+    initCanvasApi,
+    canvasApi,
+    isCanvasApiReady
   }
 }

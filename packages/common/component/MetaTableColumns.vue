@@ -4,8 +4,7 @@
 
 <script setup>
 import { nextTick } from 'vue'
-import { updateRect } from '@opentiny/tiny-engine-canvas'
-import { useProperties, useResource } from '@opentiny/tiny-engine-controller'
+import { useProperties, useResource, useCanvas } from '@opentiny/tiny-engine-controller'
 import MetaArrayItem from './MetaArrayItem.vue'
 
 const { children: schemaChildren, componentName, props } = useProperties().getSchema()
@@ -26,7 +25,7 @@ const updateColumns = (columns) => {
   })
 
   useProperties().getSchema().children = children
-  nextTick(updateRect)
+  nextTick(useCanvas().canvasApi.value.updateRect)
 }
 
 updateColumns(props?.columns)

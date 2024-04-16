@@ -55,7 +55,8 @@ import {
   initCanvas,
   clearLineState,
   querySelectById,
-  getCurrent
+  getCurrent,
+  canvasApi
 } from './container'
 
 export default {
@@ -105,6 +106,8 @@ export default {
       }
     }
 
+    useCanvas().initCanvasApi(canvasApi)
+
     const beforeCanvasReady = () => {
       if (iframe.value) {
         const win = iframe.value.contentWindow
@@ -119,7 +122,6 @@ export default {
         iframeMonitoring()
 
         initCanvas({ emit, renderer: detail, iframe: iframe.value, controller: props.controller })
-        useCanvas().renderer.value = { ...detail, ...window.canvasApi }
 
         const doc = iframe.value.contentDocument
         const win = iframe.value.contentWindow

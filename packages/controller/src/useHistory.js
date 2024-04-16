@@ -61,7 +61,7 @@ const push = (schema) => {
 
 const go = (addend, valid) => {
   historyState.index = historyState.index + addend
-  useCanvas().renderer.value?.setSchema(string2Schema(list[historyState.index]))
+  useCanvas().canvasApi.value?.setSchema(string2Schema(list[historyState.index]))
 
   // 不是锁定状态，撤销操作后，传递第二个标识位，将 list 的长度减一，置灰 undoredo 操作按钮
   if (typeof valid === 'boolean') {
@@ -95,7 +95,7 @@ const clear = () => {
 const addHistory = (schema) => {
   if (!schema) {
     useCanvas().setSaved(false)
-    push(useCanvas().renderer.value?.getSchema())
+    push(useCanvas().canvasApi.value?.getSchema())
   } else {
     clear()
     // 初始 schema 需要设置为第一条历史记录

@@ -28,6 +28,7 @@ export const POSITION = Object.freeze({
   IN: 'in'
 })
 import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
+import Builtin from '../builtin/builtin.json'
 
 const initialDragState = {
   keydown: false,
@@ -851,6 +852,49 @@ export const canvasDispatch = (name, data, doc = getDocument()) => {
   if (!doc) return
 
   doc.dispatchEvent(new CustomEvent(name, data))
+}
+
+export const canvasApi = {
+  dragStart,
+  updateRect,
+  getContext,
+  getNodePath,
+  dragMove,
+  setLocales,
+  setState,
+  deleteState,
+  getRenderer,
+  clearSelect,
+  selectNode,
+  hoverNode,
+  insertNode,
+  removeNode,
+  addComponent,
+  setPageCss,
+  addScript,
+  addStyle,
+  getNode,
+  getCurrent,
+  setSchema,
+  setUtils,
+  updateUtils,
+  deleteUtils,
+  getSchema,
+  setI18n,
+  getCanvasType,
+  setCanvasType,
+  setProps,
+  setGlobalState,
+  getGlobalState,
+  getDocument,
+  canvasDispatch,
+  Builtin,
+  setDataSourceMap: (...args) => {
+    return canvasState.renderer.setDataSourceMap(...args)
+  },
+  getDataSourceMap: (...args) => {
+    return canvasState.renderer.getDataSourceMap(...args)
+  }
 }
 
 export const initCanvas = ({ renderer, iframe, emit, controller }) => {
