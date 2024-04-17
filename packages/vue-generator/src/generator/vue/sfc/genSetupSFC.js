@@ -36,6 +36,7 @@ import {
   defaultGenMethodHook,
   defaultGenLifecycleHook
 } from './generateScript'
+import { BUILTIN_COMPONENTS_MAP } from '@/constant'
 
 const parseConfig = (config = {}) => {
   const {
@@ -73,8 +74,10 @@ const generateSFCFile = (schema, componentsMap, config = {}) => {
     schema.state = {}
   }
 
+  const combinedComponentsMap = [...componentsMap, ...BUILTIN_COMPONENTS_MAP]
+
   // 解析 import
-  const { pkgMap, blockPkgMap } = getImportMap(schema, componentsMap, { blockRelativePath, blockSuffix })
+  const { pkgMap, blockPkgMap } = getImportMap(schema, combinedComponentsMap, { blockRelativePath, blockSuffix })
 
   // 解析 state
   let stateRes = {}
@@ -195,10 +198,10 @@ const generateSFCFile = (schema, componentsMap, config = {}) => {
   }
 
   // 解析 template
-  const templateStr = genTemplateByHook(schema, globalHooks, { ...parsedConfig, componentsMap })
+  const templateStr = genTemplateByHook(schema, globalHooks, { ...parsedConfig, componentsMap: combinedComponentsMap })
 
   // 生成 script
-  const scriptStr = genScriptByHook(schema, globalHooks, { ...parsedConfig, componentsMap })
+  const scriptStr = genScriptByHook(schema, globalHooks, { ...parsedConfig, componentsMap: combinedComponentsMap })
 
   // 生成 style
   const styleStr = generateStyleTag(schema, styleConfig)

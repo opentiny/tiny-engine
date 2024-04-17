@@ -24,7 +24,7 @@ export const handleComponentNameHook = (optionData) => {
 
   optionData.componentName = BUILTIN_COMPONENT_NAME_MAP[componentName]
 
-  if (HTML_DEFAULT_VOID_ELEMENTS.includes(componentName)) {
+  if (HTML_DEFAULT_VOID_ELEMENTS.includes(optionData.componentName)) {
     optionData.voidElement = true
   }
 }

@@ -2174,26 +2174,26 @@ const DEFAULT_COMPONENTS_MAP = [
 ]
 
 // 内置组件映射关系
-const BUILTIN_COMPONENTS_MAP = [
+export const BUILTIN_COMPONENTS_MAP = [
   {
     componentName: 'CanvasRow',
     exportName: 'CanvasRow',
     package: '@opentiny/tiny-engine-builtin-component',
-    version: '^0.1.0',
+    version: '^1.0.1',
     destructuring: true
   },
   {
     componentName: 'CanvasCol',
     exportName: 'CanvasCol',
     package: '@opentiny/tiny-engine-builtin-component',
-    version: '^0.1.0',
+    version: '^1.0.1',
     destructuring: true
   },
   {
     componentName: 'CanvasRowColContainer',
     exportName: 'CanvasRowColContainer',
     package: '@opentiny/tiny-engine-builtin-component',
-    version: '^0.1.0',
+    version: '^1.0.1',
     destructuring: true
   }
 ]
@@ -2214,7 +2214,8 @@ const BUILTIN_COMPONENT_NAME = {
 export const BUILTIN_COMPONENT_NAME_MAP = {
   Text: 'span',
   Collection: 'div',
-  Block: 'div'
+  Block: 'div',
+  Img: 'img'
 }
 
 export const INSERT_POSITION = {
@@ -2255,4 +2256,4 @@ export const [JS_EXPRESSION, JS_FUNCTION, JS_I18N, JS_RESOURCE, JS_SLOT] = [
   'JSSlot'
 ]
 
-export { DEFAULT_COMPONENTS_MAP, BUILTIN_COMPONENT_NAME, TINY_ICON, UNWRAP_QUOTES, BUILTIN_COMPONENTS_MAP }
+export { DEFAULT_COMPONENTS_MAP, BUILTIN_COMPONENT_NAME, TINY_ICON, UNWRAP_QUOTES }
