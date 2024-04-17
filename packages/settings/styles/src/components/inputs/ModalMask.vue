@@ -1,6 +1,6 @@
 <template>
   <teleport to="body">
-    <div :style="{ top: modal.top + 'px', left: modal.left + 'px' }" class="modal-wrapper">
+    <div :style="{ top: modal.top + 'px' }" class="modal-wrapper">
       <div class="modal-mask" @click="$emit('close')"></div>
       <div class="modal-content">
         <slot></slot>
@@ -49,9 +49,9 @@ export default {
 .modal-wrapper {
   position: fixed;
   top: 0;
-  left: 0;
+  right: 0;
   margin-top: 10px;
-  width: calc(var(--base-right-panel-width) - 24px);
+  width: calc(var(--base-right-panel-width));
   z-index: 9999;
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.5);
   .modal-mask {
