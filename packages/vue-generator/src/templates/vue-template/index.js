@@ -1,5 +1,5 @@
 import readmeFile from './templateFiles/README.md?raw'
-import viteConfigFile from './templateFiles/vite.config.js?raw'
+import viteConfigFile from './templateFiles/vite.config.js.template?raw'
 import getPackageJson from './templateFiles/packageJson'
 import gitIgnoreFile from './templateFiles/.gitignore?raw'
 import entryHTMLFile from './templateFiles/index.html?raw'

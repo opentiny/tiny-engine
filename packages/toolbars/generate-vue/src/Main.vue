@@ -4,7 +4,7 @@
     :open-delay="1000"
     popper-class="toolbar-right-popover"
     append-to-body
-    content="生成当前页面/区块的Vue代码到本地文件"
+    content="生成当前应用代码到本地文件"
   >
     <template #reference>
       <span class="icon" @click="generate">
@@ -169,7 +169,7 @@ export default {
       })
 
       const appSchema = {
-        // dataSource、utils、i18n、globalState
+        // metaData 包含dataSource、utils、i18n、globalState
         ...metaData,
         // 页面 schema
         pageSchema: pageDetailList.map((item) => {
