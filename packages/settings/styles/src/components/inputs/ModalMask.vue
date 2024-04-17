@@ -50,28 +50,28 @@ export default {
   position: fixed;
   top: 0;
   right: 0;
-  margin-top: 10px;
-  width: calc(var(--base-right-panel-width));
+  margin-top: 18px;
+  width: calc(var(--base-right-panel-width) - 16px);
   z-index: 9999;
-  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.5);
   .modal-mask {
     position: fixed;
     top: 0;
     right: 0;
     bottom: 0;
     left: calc(100% - var(--base-right-panel-width));
-    background: rgba(33, 33, 33, 0.65);
+    background: rgba(0, 0, 0, 0.2);
     z-index: 9999;
   }
 
   .modal-content {
     position: relative;
-    width: 100%;
+    width: 70%;
     z-index: 10000;
     padding: 8px;
     color: var(--ti-lowcode-toolbar-breadcrumb-color);
     border: 1px solid var(--ti-lowcode-tabs-border-color);
-    border-radius: 4px;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
     background-color: var(--ti-lowcode-toolbar-bg);
     overflow: auto;
     max-height: 100%;
