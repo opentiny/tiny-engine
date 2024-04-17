@@ -1,5 +1,5 @@
 import readmeFile from './templateFiles/README.md?raw'
-import viteConfigFile from './templateFiles/vite.config.js.template?raw'
+import genViteConfig from './templateFiles/genViteConfig'
 import getPackageJson from './templateFiles/packageJson'
 import gitIgnoreFile from './templateFiles/.gitignore?raw'
 import entryHTMLFile from './templateFiles/index.html?raw'
@@ -48,7 +48,7 @@ export function generateTemplate(schema) {
       fileType: 'js',
       fileName: 'vite.config.js',
       path: '.',
-      fileContent: getTemplate(schema, viteConfigFile)
+      fileContent: genViteConfig(schema)
     },
     {
       fileType: 'json',
