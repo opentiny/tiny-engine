@@ -1,3 +1,5 @@
+import { BUILTIN_COMPONENTS_MAP } from '@/constant'
+
 function parseSchema() {
   return {
     name: 'tinyEngine-generateCode-plugin-parse-schema',
@@ -12,6 +14,7 @@ function parseSchema() {
       const { pageSchema } = schema
       const pagesMap = {}
       const resPageTree = []
+      schema.componentsMap = [...schema.componentsMap, ...BUILTIN_COMPONENTS_MAP]
 
       for (const componentItem of pageSchema) {
         pagesMap[componentItem.id] = componentItem
