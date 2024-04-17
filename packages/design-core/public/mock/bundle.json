@@ -13019,7 +13019,7 @@
             "css": ""
           },
           "group": "component",
-          "category": "扩展组件",
+          "category": "contrib",
           "configure": {
             "loop": true,
             "condition": true,
@@ -13311,7 +13311,7 @@
             "css": "https://npm.onmicrosoft.cn/tiny-transitions@0.0.2/dist/style.css"
           },
           "group": "component",
-          "category": "扩展组件",
+          "category": "contrib",
           "configure": {
             "loop": true,
             "condition": true,
