@@ -16,7 +16,11 @@ describe('generate whole application', () => {
     // 写入文件
     genResult.forEach(({ fileName, path: filePath, fileContent }) => {
       fs.mkdirSync(path.resolve(__dirname, `./result/appdemo01/${filePath}`), { recursive: true })
-      fs.writeFileSync(path.resolve(__dirname, `./result/appdemo01/${filePath}/${fileName}`), fileContent)
+      fs.writeFileSync(
+        path.resolve(__dirname, `./result/appdemo01/${filePath}/${fileName}`),
+        // 这里需要将换行符替换成 CRLF 格式的
+        fileContent.replace(/\r?\n/g, '\r\n')
+      )
     })
 
     const compareOptions = {
