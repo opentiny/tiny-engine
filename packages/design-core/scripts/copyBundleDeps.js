@@ -79,6 +79,22 @@ export function installPackageTemporary(packageNeedToInstall, tempDir, logger = 
   ]
 }
 
+export function configServerAddProxy(path, target) {
+  return [
+    {
+      name: 'vite-plugin-config-server-add-proxy',
+      configureServer(server) {
+        server.middlewares.use((req, res, next) => {
+          if (req.url.includes(path)) {
+            req.url = req.url.replace(path, target)
+          }
+          next()
+        })
+      }
+    }
+  ]
+}
+
 export function CopyBundleDeps(
   bundleFile,
   targetBundleFile,
@@ -142,8 +158,9 @@ export function CopyBundleDeps(
     })
   }
 
-  const plugin = () => {
+  const plugin = (isDev) => {
     return [
+      ...(isDev ? configServerAddProxy(targetBundleFile, targetBundleFile.replace(/\.([^.]+?$)/, '-local.$1')) : []),
       ...installPackageTemporary(packageNeedToInstall, bundleTempDir),
       ...viteStaticCopy({
         targets: [
@@ -160,7 +177,8 @@ export function CopyBundleDeps(
               replaceBundleCdnLink(json, files)
               return JSON.stringify(json, null, 2)
             },
-            rename: path.basename(targetBundleFile),
+            rename: (filename, fileExtension) =>
+              isDev ? `${filename}-local.${fileExtension}` : path.basename(targetBundleFile),
             overwrite: true // 覆盖public的
           }
         ]

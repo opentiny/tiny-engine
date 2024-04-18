@@ -15,7 +15,7 @@ import { useLocalImportMap, getBaseUrlFromCli } from './scripts/copyExternal'
 import visualizer from 'rollup-plugin-visualizer'
 import { CopyBundleDeps } from './scripts/copyBundleDeps'
 
-const origin = 'http://localhost:9090/'
+const origin = 'http://localhost:9091/'
 
 const config = {
   base: './',
@@ -332,7 +332,7 @@ export default defineConfig(({ command, mode }) => {
           envCdn, // mock 中bundle的域名当前和环境的VITE_CDN_DOMAIN一致
           getBaseUrlFromCli(config.base),
           'material-static'
-        ).plugin()
+        ).plugin(command === 'serve')
       : []
   )
   return config
