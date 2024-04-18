@@ -70,6 +70,17 @@ export const checkHasSpecialType = (obj) => {
 }
 
 const handleJSExpressionBinding = (key, value, isJSX) => {
+  // TODO: 处理 utils 类型的 import
+  // const resourceType = value.split('.')[1]
+
+  // if (SPECIAL_UTILS_TYPE.includes(resourceType)) {
+  //   globalHooks.addStatement({
+  //     position: INSERT_POSITION.BEFORE_STATE,
+  //     value: `const { ${resourceType} } = wrap(function() { return this })()`,
+  //     key: resourceType
+  //   })
+  // }
+
   const expressValue = value.value.replace(isJSX ? thisRegexp : thisPropsBindRe, '')
 
   if (isJSX) {
@@ -254,62 +265,6 @@ export const handleAttrKeyHook = (schemaData) => {
   })
 }
 
-export const handleExpressionAttrHook = (schemaData, globalHooks, config) => {
-  const { attributes, schema: { props = {} } = {} } = schemaData || {}
-  const isJSX = config.isJSX
-
-  Object.entries(props).forEach(([key, value]) => {
-    if (value?.type === JS_EXPRESSION && !isOn(key)) {
-      attributes.push(handleJSExpressionBinding(key, value, isJSX))
-
-      delete props[key]
-    }
-  })
-}
-
-export const handleI18nAttrHook = (schemaData, globalHooks, config) => {
-  const { attributes, schema: { props = {} } = {} } = schemaData || {}
-  const isJSX = config.isJSX
-
-  Object.entries(props).forEach(([key, value]) => {
-    if (value?.type === JS_I18N) {
-      attributes.push(handleBindI18n(key, value, isJSX))
-    }
-  })
-}
-
-export const handleTinyIconPropsHook = (schemaData, globalHooks, config) => {
-  const { attributes, schema: { props = {} } = {} } = schemaData || {}
-  const isJSX = config.isJSX
-
-  Object.entries(props).forEach(([key, value]) => {
-    if (value?.componentName === 'Icon' && value?.props?.name) {
-      const name = value.props.name
-      const iconName = name.startsWith(TINY_ICON) ? name : `Tiny${name}`
-      const exportName = name.replace(TINY_ICON, 'icon')
-      const success = globalHooks.addImport('@opentiny/vue-icon', {
-        componentName: exportName,
-        exportName: exportName,
-        package: '@opentiny/vue-icon',
-        version: '^3.10.0',
-        destructuring: true
-      })
-
-      if (success) {
-        globalHooks.addStatement({
-          position: INSERT_POSITION.BEFORE_PROPS,
-          value: `const ${iconName} = ${exportName}()`,
-          key: iconName
-        })
-      }
-
-      attributes.push(isJSX ? `icon={${iconName}}` : `:icon="${iconName}"`)
-
-      delete props[key]
-    }
-  })
-}
-
 const specialTypeHandler = {
   [JS_EXPRESSION]: ({ value, computed }) => {
     if (computed) {
@@ -374,6 +329,63 @@ const specialTypeHandler = {
       value: `({${params.join(',')}}, h) => ${structData.children.join('')}`
     }
   }
+}
+
+export const handleExpressionAttrHook = (schemaData, globalHooks, config) => {
+  const { attributes, schema: { props = {} } = {} } = schemaData || {}
+  const isJSX = config.isJSX
+
+  Object.entries(props).forEach(([key, value]) => {
+    if (value?.type === JS_EXPRESSION && !isOn(key)) {
+      specialTypeHandler[JS_RESOURCE](value, globalHooks, config)
+      attributes.push(handleJSExpressionBinding(key, value, isJSX))
+
+      delete props[key]
+    }
+  })
+}
+
+export const handleI18nAttrHook = (schemaData, globalHooks, config) => {
+  const { attributes, schema: { props = {} } = {} } = schemaData || {}
+  const isJSX = config.isJSX
+
+  Object.entries(props).forEach(([key, value]) => {
+    if (value?.type === JS_I18N) {
+      attributes.push(handleBindI18n(key, value, isJSX))
+    }
+  })
+}
+
+export const handleTinyIconPropsHook = (schemaData, globalHooks, config) => {
+  const { attributes, schema: { props = {} } = {} } = schemaData || {}
+  const isJSX = config.isJSX
+
+  Object.entries(props).forEach(([key, value]) => {
+    if (value?.componentName === 'Icon' && value?.props?.name) {
+      const name = value.props.name
+      const iconName = name.startsWith(TINY_ICON) ? name : `Tiny${name}`
+      const exportName = name.replace(TINY_ICON, 'icon')
+      const success = globalHooks.addImport('@opentiny/vue-icon', {
+        componentName: exportName,
+        exportName: exportName,
+        package: '@opentiny/vue-icon',
+        version: '^3.10.0',
+        destructuring: true
+      })
+
+      if (success) {
+        globalHooks.addStatement({
+          position: INSERT_POSITION.BEFORE_PROPS,
+          value: `const ${iconName} = ${exportName}()`,
+          key: iconName
+        })
+      }
+
+      attributes.push(isJSX ? `icon={${iconName}}` : `:icon="${iconName}"`)
+
+      delete props[key]
+    }
+  })
 }
 
 export const transformObjType = (obj, globalHooks, config) => {
@@ -502,4 +514,15 @@ export const handlePrimitiveAttributeHook = (schemaData, globalHooks, config) =>
       delete props[key]
     }
   }
+}
+
+// 检测表达式类型引用 utils 的场景，需要在 script 中声明 utils 表达式
+export const handleBindUtilsHooks = (schemaData, globalHooks, config) => {
+  const { schema: { props = {} } = {} } = schemaData || {}
+
+  Object.entries(props).forEach(([key, value]) => {
+    if (value?.type === JS_EXPRESSION && !isOn(key)) {
+      specialTypeHandler[JS_RESOURCE](value, globalHooks, config)
+    }
+  })
 }
