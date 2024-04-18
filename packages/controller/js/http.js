@@ -24,8 +24,13 @@ const http = useHttp()
  * @param { json } params {"event_type": design_error,"url": "elit in reprehenderit enim incididunt" }
  * @returns { Promise }
  */
-export const requestEvent = (params) =>
-  http.post('/platform-center/api/platform/monitoring/event', params).catch(() => {})
+export const requestEvent = (url, params) => {
+  if (!url) {
+    return
+  }
+
+  return http.post(url, params).catch(() => {})
+}
 
 /**
  * 页面更新

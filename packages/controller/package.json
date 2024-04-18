@@ -15,7 +15,7 @@
   ],
   "exports": {
     ".": "./dist/index.js",
-    "./js/": "./js/",
+    "./js/": "./dist/js/",
     "./utils": "./dist/utils.js",
     "./adapter": "./dist/adapter.js"
   },
@@ -36,18 +36,20 @@
     "@babel/traverse": "7.18.13",
     "@opentiny/tiny-engine-builtin-component": "workspace:*",
     "@opentiny/tiny-engine-http": "workspace:*",
-    "@opentiny/tiny-engine-utils": "workspace:*",
     "@opentiny/tiny-engine-i18n-host": "workspace:*",
+    "@opentiny/tiny-engine-utils": "workspace:*",
     "@opentiny/vue": "~3.10.0",
     "@opentiny/vue-locale": "~3.10.0",
     "@opentiny/vue-renderless": "~3.10.0",
     "@vue/shared": "^3.3.4",
     "css-tree": "^2.3.1",
+    "eslint-linter-browserify": "8.57.0",
     "prettier": "2.7.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
     "@vitejs/plugin-vue-jsx": "^3.1.0",
+    "glob": "^10.3.4",
     "vite": "^4.3.7"
   },
   "peerDependencies": {

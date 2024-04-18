@@ -82,7 +82,7 @@ export default {
 
     const state = reactive({
       showStep: false,
-      guideWidth: 360,
+      guideWidth: '360',
       showTooltip: false,
       showHelpDialog: false,
       helpBox: false

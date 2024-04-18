@@ -76,6 +76,10 @@ pnpm build:plugin
 pnpm build:alpha or build:prod
 
 ```
+The folder where the product is located after building
+```
+ tiny-engine/packages/design-core/dist/
+```
 
 ## Milestones
 
