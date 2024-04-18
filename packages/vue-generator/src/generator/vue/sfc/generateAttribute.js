@@ -70,17 +70,6 @@ export const checkHasSpecialType = (obj) => {
 }
 
 const handleJSExpressionBinding = (key, value, isJSX) => {
-  // TODO: 处理 utils 类型的 import
-  // const resourceType = value.split('.')[1]
-
-  // if (SPECIAL_UTILS_TYPE.includes(resourceType)) {
-  //   globalHooks.addStatement({
-  //     position: INSERT_POSITION.BEFORE_STATE,
-  //     value: `const { ${resourceType} } = wrap(function() { return this })()`,
-  //     key: resourceType
-  //   })
-  // }
-
   const expressValue = value.value.replace(isJSX ? thisRegexp : thisPropsBindRe, '')
 
   if (isJSX) {
@@ -265,7 +254,7 @@ export const handleAttrKeyHook = (schemaData) => {
   })
 }
 
-const specialTypeHandler = {
+export const specialTypeHandler = {
   [JS_EXPRESSION]: ({ value, computed }) => {
     if (computed) {
       return {

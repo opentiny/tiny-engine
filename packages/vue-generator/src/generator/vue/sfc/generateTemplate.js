@@ -4,9 +4,11 @@ import {
   TINY_ICON,
   INSERT_POSITION,
   JS_EXPRESSION,
-  JS_I18N
+  JS_I18N,
+  JS_RESOURCE
 } from '@/constant'
 import { generateTag, HTML_DEFAULT_VOID_ELEMENTS } from './generateTag'
+import { specialTypeHandler } from './generateAttribute'
 import { thisPropsBindRe, thisRegexp } from '@/utils'
 
 export const handleComponentNameHook = (optionData) => {
@@ -137,6 +139,8 @@ export const handleExpressionChildren = (schemaData = {}, globalHooks, config) =
   const suffix = isJSX ? '}' : '}}'
 
   if (type === JS_EXPRESSION) {
+    specialTypeHandler[JS_RESOURCE](schema.children, globalHooks, config)
+
     children.push(
       `${prefix} ${schema.children?.value.replace(isJSX ? thisRegexp : thisPropsBindRe, '') || ''} ${suffix}`
     )

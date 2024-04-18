@@ -30,12 +30,12 @@ test('should validate tagName', async () => {
   const res = genSFCWithDefaultPlugin(schema, componentsMap)
   const formattedCode = formatCode(res, 'vue')
 
-  await expect(formattedCode).toMatchFileSnapshot('./FormTable.vue')
+  await expect(formattedCode).toMatchFileSnapshot('./expected/FormTable.vue')
 })
 
 test('should generate block component correct', async () => {
   const res = genSFCWithDefaultPlugin(blockSchema, componentsMap)
   const formattedCode = formatCode(res, 'vue')
 
-  await expect(formattedCode).toMatchFileSnapshot('./ImageTitle.vue')
+  await expect(formattedCode).toMatchFileSnapshot('./expected/ImageTitle.vue')
 })

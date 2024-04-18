@@ -10,7 +10,7 @@ test('should generate use prop accessor correctly', async () => {
 
   const formattedCode = formatCode(res, 'vue')
 
-  await expect(formattedCode).toMatchFileSnapshot('./UsePropAccessor.vue')
+  await expect(formattedCode).toMatchFileSnapshot('./expected/UsePropAccessor.vue')
 })
 
 test('should generate prop accessor correctly', async () => {
@@ -18,5 +18,5 @@ test('should generate prop accessor correctly', async () => {
 
   const formattedCode = formatCode(res, 'vue')
 
-  await expect(formattedCode).toMatchFileSnapshot('./PropAccessor.vue')
+  await expect(formattedCode).toMatchFileSnapshot('./expected/PropAccessor.vue')
 })

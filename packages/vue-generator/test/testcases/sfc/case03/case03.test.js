@@ -9,12 +9,12 @@ test('should generate useStateAccessor Correct', async () => {
   const res = genSFCWithDefaultPlugin(schema, componentsMap)
   const formattedCode = formatCode(res, 'vue')
 
-  await expect(formattedCode).toMatchFileSnapshot('./UseStateAccessor.vue')
+  await expect(formattedCode).toMatchFileSnapshot('./expected/UseStateAccessor.vue')
 })
 
 test('should generate block state accessor correct', async () => {
   const res = genSFCWithDefaultPlugin(blockSchema, componentsMap)
   const formattedCode = formatCode(res, 'vue')
 
-  await expect(formattedCode).toMatchFileSnapshot('./StateAccessor.vue')
+  await expect(formattedCode).toMatchFileSnapshot('./expected/StateAccessor.vue')
 })
