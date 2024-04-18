@@ -20,6 +20,9 @@ import {
   NODE_LOOP
 } from '../common'
 import { useCanvas, useLayout, useResource, useTranslate } from '@opentiny/tiny-engine-controller'
+import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
+import Builtin from '../builtin/builtin.json'
+
 export const POSITION = Object.freeze({
   TOP: 'top',
   BOTTOM: 'bottom',
@@ -27,8 +30,6 @@ export const POSITION = Object.freeze({
   RIGHT: 'right',
   IN: 'in'
 })
-import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
-import Builtin from '../builtin/builtin.json'
 
 const initialDragState = {
   keydown: false,
