@@ -27,14 +27,46 @@
     </div>
     <!-- 绝对定位画布时调节元素大小 -->
     <template v-else>
-      <div class="drag-resize resize-top" @mousedown.stop="onMousedown($event, 'center', 'start')"></div>
-      <div class="drag-resize resize-bottom" @mousedown.stop="onMousedown($event, 'center', 'end')"></div>
-      <div class="drag-resize resize-left" @mousedown.stop="onMousedown($event, 'start', 'center')"></div>
-      <div class="drag-resize resize-right" @mousedown.stop="onMousedown($event, 'end', 'center')"></div>
-      <div class="drag-resize resize-top-left" @mousedown.stop="onMousedown($event, 'start', 'start')"></div>
-      <div class="drag-resize resize-top-right" @mousedown.stop="onMousedown($event, 'end', 'start')"></div>
-      <div class="drag-resize resize-bottom-left" @mousedown.stop="onMousedown($event, 'start', 'end')"></div>
-      <div class="drag-resize resize-bottom-right" @mousedown.stop="onMousedown($event, 'end', 'end')"></div>
+      <div
+        class="drag-resize resize-top"
+        draggable="true"
+        @mousedown.stop="onMousedown($event, 'center', 'start')"
+      ></div>
+      <div
+        class="drag-resize resize-bottom"
+        draggable="true"
+        @mousedown.stop="onMousedown($event, 'center', 'end')"
+      ></div>
+      <div
+        class="drag-resize resize-left"
+        draggable="true"
+        @mousedown.stop="onMousedown($event, 'start', 'center')"
+      ></div>
+      <div
+        class="drag-resize resize-right"
+        draggable="true"
+        @mousedown.stop="onMousedown($event, 'end', 'center')"
+      ></div>
+      <div
+        class="drag-resize resize-top-left"
+        draggable="true"
+        @mousedown.stop="onMousedown($event, 'start', 'start')"
+      ></div>
+      <div
+        class="drag-resize resize-top-right"
+        draggable="true"
+        @mousedown.stop="onMousedown($event, 'end', 'start')"
+      ></div>
+      <div
+        class="drag-resize resize-bottom-left"
+        draggable="true"
+        @mousedown.stop="onMousedown($event, 'start', 'end')"
+      ></div>
+      <div
+        class="drag-resize resize-bottom-right"
+        draggable="true"
+        @mousedown.stop="onMousedown($event, 'end', 'end')"
+      ></div>
     </template>
     <div v-if="showAction" ref="optionRef" class="corner-mark-right" :style="fixStyle">
       <template v-if="!isModal">
