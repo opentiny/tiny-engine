@@ -31,7 +31,13 @@ export default {
     MetaListItems,
     IconDel: iconDel()
   },
-  setup() {
+  props: {
+    modelValue: Array,
+    default: () => []
+  },
+  emits: ['update:modelValue'],
+  setup(props, { emit }) {
+    const tabsOptions = ref(props.modelValue)
     const { children: schemaChildren, componentName } = useProperties().getSchema()
     const configureMap = useResource().getConfigureMap()
     const childComponentName =
@@ -58,13 +64,20 @@ export default {
         },
         children: [{ componentName: 'div' }]
       })
+      tabsOptions.value.push({
+        label: '选项卡',
+        value: name
+      })
       children.value = [...schemaChildren]
+      emit('update:modelValue', tabsOptions.value)
     }
 
     const delChildren = (data) => {
       schemaChildren.splice(children.value.indexOf(data), 1)
+      tabsOptions.value = tabsOptions.value.filter((option) => option.value !== data.props.name)
       children.value = [...schemaChildren]
       useHistory().addHistory()
+      emit('update:modelValue', tabsOptions.value)
     }
 
     const dragEnd = (params = {}) => {

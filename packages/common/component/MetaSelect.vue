@@ -4,7 +4,7 @@
     :multiple="multi"
     :is-drop-inherit-width="true"
     :show-alloption="false"
-    :clearable="true"
+    :clearable="clearable"
     @change="handleChange"
   >
     <template v-if="groups?.length">
@@ -70,6 +70,10 @@ export default {
     options: {
       type: Array,
       default: () => []
+    },
+    clearable: {
+      type: Boolean,
+      default: true
     }
   },
   emits: ['update:modelValue'],
