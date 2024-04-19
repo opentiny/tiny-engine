@@ -143,7 +143,7 @@ export const handleConditionAttrHook = (schemaData, globalHooks, config) => {
   }
 
   if (typeof condition === 'boolean') {
-    attributes.unshift(`v-if=${condition}`)
+    attributes.unshift(`v-if="${condition}"`)
     return
   }
 
@@ -157,7 +157,7 @@ export const handleConditionAttrHook = (schemaData, globalHooks, config) => {
     attributes.unshift('v-else')
   }
 
-  attributes.unshift(`v-${condition?.kind || 'if'}=${conditionValue}`)
+  attributes.unshift(`v-${condition?.kind || 'if'}="${conditionValue}"`)
 }
 
 export const handleLoopAttrHook = (schemaData = {}, globalHooks, config) => {

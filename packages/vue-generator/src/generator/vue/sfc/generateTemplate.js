@@ -37,6 +37,11 @@ export const handleTinyIcon = (nameObj, globalHooks) => {
   }
 
   const name = nameObj.schema.props.name
+
+  if (!name) {
+    return
+  }
+
   const iconName = name.startsWith(TINY_ICON) ? name : `Tiny${name}`
   const exportName = name.replace(TINY_ICON, 'icon')
 

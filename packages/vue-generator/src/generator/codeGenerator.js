@@ -76,7 +76,16 @@ class CodeGenerator {
         continue
       }
 
-      await pluginItem.run.apply(this.contextApi, [this.schema, this.getContext()])
+      try {
+        await pluginItem.run.apply(this.contextApi, [this.schema, this.getContext()])
+      } catch (error) {
+        const err = { message: error.message, stack: error.stack, plugin: pluginItem.name }
+        this.error.push(err)
+
+        if (!this.tolerateError) {
+          throw new Error(`[${pluginItem.name}] throws error`, { cause: error })
+        }
+      }
     }
   }
   async transform() {
@@ -85,16 +94,25 @@ class CodeGenerator {
         continue
       }
 
-      const transformRes = await pluginItem.run.apply(this.contextApi, [this.schema, this.getContext()])
+      try {
+        const transformRes = await pluginItem.run.apply(this.contextApi, [this.schema, this.getContext()])
 
-      if (!transformRes) {
-        continue
-      }
+        if (!transformRes) {
+          continue
+        }
 
-      if (Array.isArray(transformRes)) {
-        this.genResult.push(...transformRes)
-      } else {
-        this.genResult.push(transformRes)
+        if (Array.isArray(transformRes)) {
+          this.genResult.push(...transformRes)
+        } else {
+          this.genResult.push(transformRes)
+        }
+      } catch (error) {
+        const err = { message: error.message, stack: error.stack, plugin: pluginItem.name }
+        this.error.push(err)
+
+        if (!this.tolerateError) {
+          throw new Error(`[${pluginItem.name}] throws error`, { cause: error })
+        }
       }
     }
   }
@@ -104,7 +122,16 @@ class CodeGenerator {
         continue
       }
 
-      await pluginItem.run.apply(this.contextApi, [this.schema, this.getContext()])
+      try {
+        await pluginItem.run.apply(this.contextApi, [this.schema, this.getContext()])
+      } catch (error) {
+        const err = { message: error.message, stack: error.stack, plugin: pluginItem.name }
+        this.error.push(err)
+
+        if (!this.tolerateError) {
+          throw new Error(`[${pluginItem.name}] throws error`, { cause: error })
+        }
+      }
     }
   }
   parseSchema(schema) {

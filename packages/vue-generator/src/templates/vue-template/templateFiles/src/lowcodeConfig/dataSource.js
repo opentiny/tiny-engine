@@ -59,7 +59,7 @@ dataSources.list.forEach((config) => {
   const http = useHttp(globalDataHandle)
   const dataSource = { config }
 
-  dataSourceMap[config.id] = dataSource
+  dataSourceMap[config.name] = dataSource
 
   const shouldFetch = config.shouldFetch?.value ? createFn(config.shouldFetch.value) : () => true
   const willFetch = config.willFetch?.value ? createFn(config.willFetch.value) : (options) => options

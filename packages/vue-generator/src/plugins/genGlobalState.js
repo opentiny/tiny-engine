@@ -41,7 +41,19 @@ function genDependenciesPlugin(options = {}) {
         ids.push(id)
 
         const stateExpression = `() => ({ ${Object.entries(state)
-          .map((item) => item.join(':'))
+          .map((item) => {
+            let [key, value] = item
+
+            if (value === '') {
+              value = "''"
+            }
+
+            if (value && typeof value === 'object') {
+              value = JSON.stringify(value)
+            }
+
+            return [key, value].join(':')
+          })
           .join(',')} })`
 
         const getterExpression = Object.entries(getters)
