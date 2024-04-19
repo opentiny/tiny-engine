@@ -17,11 +17,11 @@ function parseSchema() {
       schema.componentsMap = [...schema.componentsMap, ...BUILTIN_COMPONENTS_MAP]
 
       for (const componentItem of pageSchema) {
-        pagesMap[componentItem.id] = componentItem
+        pagesMap[componentItem.meta.id] = componentItem
       }
 
       for (const componentItem of pageSchema) {
-        if (componentItem.componentName === 'Folder') {
+        if (!componentItem.meta.isPage) {
           continue
         }
 
@@ -35,8 +35,9 @@ function parseSchema() {
         while (curParentId !== '0' && depth < 1000) {
           const preFolder = pagesMap[curParentId]
 
-          path = `${preFolder.folderName}/${path}`
-          curParentId = preFolder.parentId
+          path = `${preFolder.meta.name}${path ? '/' : ''}${path}`
+          newComponentItem.meta.router = `${preFolder.meta.router}/${newComponentItem.meta.router}`
+          curParentId = preFolder.meta.parentId
           depth++
         }
 
