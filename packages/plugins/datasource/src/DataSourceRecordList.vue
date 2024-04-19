@@ -35,7 +35,7 @@
           @click.stop="batchDelete"
           ><span class="all-delete">批量删除</span></tiny-link
         >
-        <tiny-link type="primary" class="download normal-text-color" :underline="false" @click="download"
+        <tiny-link type="primary" class="download" :underline="false" @click="download"
           ><icon-download class="tiny-svg-size icon-download"></icon-download>下载导入模板</tiny-link
         >
       </div>
