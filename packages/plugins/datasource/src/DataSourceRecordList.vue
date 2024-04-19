@@ -12,27 +12,30 @@
     <template #content>
       <div class="actions">
         <tiny-link
-          :class="['addButton', allowCreate ? 'normal-text-color' : '']"
+          type="primary"
+          class="addButton"
           :underline="false"
           :disabled="!allowCreate"
           @click.stop="insertNewData"
           ><icon-plusCircle class="tiny-svg-size icon-plusCircle"></icon-plusCircle>新增静态数据</tiny-link
         >
         <tiny-link
-          :class="['importButton', allowCreate ? 'normal-text-color' : '']"
+          type="primary"
+          class="importButton"
           :underline="false"
           :disabled="!allowCreate"
           @click.stop="showImportModal(true)"
           ><icon-import class="tiny-svg-size icon-import"></icon-import>批量导入</tiny-link
         >
         <tiny-link
-          :class="['box-all-delete', state.isBatchDeleteDisable ? '' : 'normal-text-color']"
+          type="primary"
+          class="box-all-delete"
           :underline="false"
           :disabled="state.isBatchDeleteDisable"
           @click.stop="batchDelete"
           ><span class="all-delete">批量删除</span></tiny-link
         >
-        <tiny-link class="download normal-text-color" :underline="false" @click="download"
+        <tiny-link type="primary" class="download normal-text-color" :underline="false" @click="download"
           ><icon-download class="tiny-svg-size icon-download"></icon-download>下载导入模板</tiny-link
         >
       </div>
@@ -605,9 +608,6 @@ export default {
   justify-content: left;
   align-items: center;
   margin: 16px 0 30px 0;
-  .normal-text-color {
-    color: var(--ti-lowcode-datasource-common-text-main-color);
-  }
   .box-all-delete {
     margin: 1px 5px 0 5px;
     .all-delete {
