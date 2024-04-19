@@ -102,7 +102,7 @@ export default {
     const handleCancel = () => {
       emit('cancel')
     }
-    const onlyName = () => {
+    const uniqueName = () => {
       return props.modelValue.some((item) => item.name === state.field.name)
     }
     const saveField = () => {
@@ -122,7 +122,7 @@ export default {
 
         return
       }
-      if (onlyName() && rule.field === 'name') {
+      if (uniqueName() && rule.field === 'name') {
         callback(new Error('该字段已存在，请重新输入'))
         return
       }
