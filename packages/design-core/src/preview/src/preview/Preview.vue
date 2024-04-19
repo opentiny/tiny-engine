@@ -22,7 +22,7 @@ import { Notify } from '@opentiny/vue'
 import importMap from './importMap'
 import srcFiles from './srcFiles'
 import generateMetaFiles, { processAppJsCode } from './generate'
-import { getSearchParams, fetchCode, fetchMetaData } from './http'
+import { getSearchParams, fetchCode, fetchMetaData, fetchImportMap } from './http'
 import { PanelType, PreviewTips } from '../constant'
 import { injectDebugSwitch } from './debugSwitch'
 import '@vue/repl/style.css'
@@ -51,8 +51,6 @@ export default {
       }
     }
 
-    store.setImportMap(importMap)
-
     // 相比store.setFiles，只要少了state.activeFile = state.files[filename]，因为改变activeFile会触发多余的文件解析
     const setFiles = async (newFiles, mainFileName) => {
       await store.setFiles(newFiles, mainFileName)
@@ -61,7 +59,7 @@ export default {
       store['initTsConfig']() // 触发获取组件d.ts方便调试
     }
 
-    const addUtilsImportMap = (utils = []) => {
+    const addUtilsImportMap = (importMap, utils = []) => {
       const utilsImportMaps = {}
       utils.forEach(({ type, content: { package: packageName, cdnLink } }) => {
         if (type === 'npm' && cdnLink) {
@@ -73,10 +71,27 @@ export default {
     }
 
     const queryParams = getSearchParams()
+    const getImportMap = async () => {
+      if (import.meta.env.VITE_LOCAL_BUNDLE_DEPS === 'true') {
+        const mapJSON = await fetchImportMap()
+        return {
+          imports: {
+            ...mapJSON.imports,
+            ...getSearchParams().scripts
+          }
+        }
+      }
+      return importMap
+    }
 
-    const promiseList = [fetchCode(queryParams), fetchMetaData(queryParams), setFiles(srcFiles, 'src/Main.vue')]
-    Promise.all(promiseList).then(([codeList, metaData]) => {
-      addUtilsImportMap(metaData.utils || [])
+    const promiseList = [
+      fetchCode(queryParams),
+      fetchMetaData(queryParams),
+      setFiles(srcFiles, 'src/Main.vue'),
+      getImportMap()
+    ]
+    Promise.all(promiseList).then(([codeList, metaData, _void, importMapData]) => {
+      addUtilsImportMap(importMapData, metaData.utils || [])
       const codeErrorMsgs = codeList
         .filter(({ errors }) => errors?.length)
         .map(({ errors }) => errors)

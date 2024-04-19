@@ -65,7 +65,7 @@ export function installPackageTemporary(packageNeedToInstall, tempDir, logger = 
             { encoding: 'utf-8' }
           )
         }
-        code = code || shelljs.cd(tempDir).code || shelljs.exec(`npm install`).code || shelljs.cd('../').code
+        code = code || shelljs.cd(tempDir).code || shelljs.exec(`npm install --force`).code || shelljs.cd('../').code
 
         if (code === 0) {
           logger.info(
@@ -101,10 +101,12 @@ export function CopyBundleDeps(
   originCdnPrefix,
   base,
   dir,
+  extraCopyUrls = null,
+  extraTransformFiles = null,
   bundleTempDir = 'bundle-deps'
 ) {
   const baseSlash = base.endsWith('/') ? '' : '/'
-  const files = extraBundleCdnLink(bundleFile, originCdnPrefix).map((url) => {
+  const files = [...extraBundleCdnLink(bundleFile, originCdnPrefix), ...(extraCopyUrls ?? [])].map((url) => {
     const { packageName, versionDemand, filePathInPackage } = url.match(
       new RegExp(`^${originCdnPrefix}/?(?<packageName>.+?)@(?<versionDemand>[^/]+)(?<filePathInPackage>.*?)$`)
     ).groups
@@ -180,7 +182,8 @@ export function CopyBundleDeps(
             rename: (filename, fileExtension) =>
               isDev ? `${filename}-local.${fileExtension}` : path.basename(targetBundleFile),
             overwrite: true // 覆盖public的
-          }
+          },
+          ...(extraTransformFiles ? extraTransformFiles(files) : [])
         ]
       })
     ]

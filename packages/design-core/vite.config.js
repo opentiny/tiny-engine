@@ -14,6 +14,7 @@ import { importmapPlugin } from './scripts/externalDeps'
 import { useLocalImportMap, getBaseUrlFromCli } from './scripts/copyExternal'
 import visualizer from 'rollup-plugin-visualizer'
 import { CopyBundleDeps } from './scripts/copyBundleDeps'
+import { extraCanvasImport, extraCanvasImportFile } from './scripts/extraCanvasImportMap'
 
 const origin = 'http://localhost:9091/'
 
@@ -199,9 +200,9 @@ const commonAlias = {
 }
 
 export default defineConfig(({ command, mode }) => {
-  const { VITE_CDN_DOMAIN: envCdn, LOCAL_IMPORT_MAPS, LOCAL_BUNDLE_DEPS } = loadEnv(mode, process.cwd(), '')
-  const isLocalImportMap = LOCAL_IMPORT_MAPS === 'true' // true公共依赖库使用本地打包文件，false公共依赖库使用公共CDN
-  const isCopyBundleDeps = LOCAL_BUNDLE_DEPS === 'true' // true bundle里的cdn依赖处理成本地依赖， false 不处理
+  const { VITE_CDN_DOMAIN: envCdn, VITE_LOCAL_IMPORT_MAPS, VITE_LOCAL_BUNDLE_DEPS } = loadEnv(mode, process.cwd(), '')
+  const isLocalImportMap = VITE_LOCAL_IMPORT_MAPS === 'true' // true公共依赖库使用本地打包文件，false公共依赖库使用公共CDN
+  const isCopyBundleDeps = VITE_LOCAL_BUNDLE_DEPS === 'true' // true bundle里的cdn依赖处理成本地依赖， false 不处理
   const {
     cdnPrefix: localCdn,
     distDir: localDist,
@@ -328,7 +329,13 @@ export default defineConfig(({ command, mode }) => {
           'mock/bundle.json',
           envCdn, // mock 中bundle的域名当前和环境的VITE_CDN_DOMAIN一致
           getBaseUrlFromCli(config.base),
-          'material-static'
+          'material-static',
+          extraCanvasImport('./src/preview/src/preview/importMap.json', envCdn),
+          extraCanvasImportFile(
+            './src/preview/src/preview/importMap.json',
+            'material-static/preview-importmap.json',
+            envCdn
+          )
         ).plugin(command === 'serve')
       : []
   )
