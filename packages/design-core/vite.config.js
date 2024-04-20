@@ -206,7 +206,7 @@ export default defineConfig(({ command, mode }) => {
   const isCopyBundleDeps = VITE_LOCAL_BUNDLE_DEPS === 'true' // true bundle里的cdn依赖处理成本地依赖， false 不处理
 
   const monacoPublicPath = 'editor/monaco-workers'
-  let monacoEditorPluginInstance = monacoEditorPlugin({
+  const monacoEditorPluginInstance = monacoEditorPlugin({
     publicPath: monacoPublicPath,
     forceBuildCDN: true,
     customDistPath: (_root, outDir, _base) => path.join(outDir, `${_base}${monacoPublicPath}`)
@@ -290,23 +290,20 @@ export default defineConfig(({ command, mode }) => {
   config.plugins.push(
     monacoEditorPluginInstance,
     htmlPlugin(mode),
-    ...(isLocalImportMap ? [] : [importmapPlugin(importmap, importMapStyles)]),
     isLocalImportMap
       ? useLocalImportMap(
-          isLocalImportMap,
+          importmap,
+          importMapStyles,
+          VITE_CDN_DOMAIN,
           getBaseUrlFromCli(config.base),
           'import-map-static',
-          VITE_CDN_DOMAIN
-        ).copyImportMapFilePlugin(
-          importmap.imports, // js import map
-          importMapStyles,
           [
             // 这两个包的js存在相对路径引用，不能单独拷贝一个文件，需要整个包拷贝
             '@opentiny/vue-theme/theme-tool',
             '@opentiny/vue-theme/theme'
           ]
         )
-      : [],
+      : importmapPlugin(importmap, importMapStyles),
     isCopyBundleDeps
       ? CopyBundleDeps(
           'public/mock/bundle.json',
