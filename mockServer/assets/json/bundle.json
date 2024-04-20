@@ -5832,6 +5832,7 @@
                     "required": true,
                     "readOnly": false,
                     "disabled": false,
+                    "onChange": "function(val) { console.log(val); this.setPropertyProps('modelValue', { 'options': val }) }",
                     "defaultValue": "",
                     "cols": 12,
                     "bindState": false,
@@ -5842,7 +5843,7 @@
                     "description": {
                       "zh_CN": "tabs"
                     },
-                    "labelPosition": "none"
+                    "labelPosition": "top"
                   },
                   {
                     "property": "modelValue",
@@ -5856,13 +5857,25 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaInput",
-                      "props": {}
+                      "component": "MetaSelect",
+                      "props": {
+                        "clearable": false,
+                        "options": [
+                          {
+                            "label": "标签页1",
+                            "value": "first"
+                          },
+                          {
+                            "label": "标签页2",
+                            "value": "second"
+                          }
+                        ]
+                      }
                     },
                     "description": {
                       "zh_CN": "绑定值，选中选项卡的 name"
                     },
-                    "labelPosition": "left"
+                    "labelPosition": "top"
                   },
                   {
                     "property": "with-add",
@@ -9819,7 +9832,17 @@
               "schema": {
                 "componentName": "TinyTabs",
                 "props": {
-                  "modelValue": "first"
+                  "modelValue": "first",
+                  "tabs": [
+                    {
+                      "label": "标签页1",
+                      "value": "first"
+                    },
+                    {
+                      "label": "标签页2",
+                      "value": "second"
+                    }
+                  ]
                 },
                 "children": [
                   {

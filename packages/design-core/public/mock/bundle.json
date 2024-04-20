@@ -8577,7 +8577,6 @@
                       "component": "MetaSelect",
                       "props": {
                         "clearable": false,
-                        "optionsLink": "tabs",
                         "options": [
                           {
                             "label": "标签页1",
