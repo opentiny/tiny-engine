@@ -1,12 +1,12 @@
 import path from 'node:path'
-import { installPackageTemporary } from './vite-plugins/installPackageTemporary'
-import { configServerAddProxy } from './vite-plugins/configureServerAddProxy'
+import { installPackageTemporary } from '../vite-plugins/installPackageTemporary'
+import { configServerAddProxy } from '../vite-plugins/configureServerAddProxy'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
 import {
   getCdnPathNpmInfoForSingleFile,
   analysisPackageNeedToInstallAndModifyFilesMergeToSameVersion
-} from './localCdnFile/locateCdnNpmInfo'
-import { readJsonFile } from './localCdnFile/utils'
+} from './locateCdnNpmInfo'
+import { readJsonFile } from './utils'
 
 export function extraBundleCdnLink(filename, originCdnPrefix) {
   const result = []

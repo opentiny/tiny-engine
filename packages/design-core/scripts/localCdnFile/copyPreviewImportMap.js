@@ -1,12 +1,13 @@
+import path from 'node:path'
 import {
   analysisPackageNeedToInstallAndModifyFilesMergeToSameVersion,
+  dedupeCopyFiles,
   getCdnPathNpmInfoForPackage,
   getCdnPathNpmInfoForSingleFile
-} from './localCdnFile/locateCdnNpmInfo'
-import { readJsonFile } from './localCdnFile/utils'
-import path from 'node:path'
-import { installPackageTemporary } from './vite-plugins/installPackageTemporary'
+} from './locateCdnNpmInfo'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
+import { installPackageTemporary } from '../vite-plugins/installPackageTemporary'
+import { readJsonFile } from './utils'
 
 export function extraPreviewImport(filename, originCdnPrefix) {
   const result = []
@@ -66,8 +67,9 @@ export function CopyPreviewImportMap(
     }
     return getCdnPathNpmInfoForSingleFile(url, originCdnPrefix, base, dir, false, bundleTempDir)
   })
-  const { packages: packageNeedToInstall, files } =
-    analysisPackageNeedToInstallAndModifyFilesMergeToSameVersion(cdnFiles)
+  const { packages: packageNeedToInstall, files } = analysisPackageNeedToInstallAndModifyFilesMergeToSameVersion(
+    dedupeCopyFiles(cdnFiles)
+  )
   return [
     ...installPackageTemporary(packageNeedToInstall, bundleTempDir),
     ...viteStaticCopy({

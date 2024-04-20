@@ -5,7 +5,7 @@ import { normalizePath } from 'vite'
 import { babelReplaceImportPathWithCertainFileName } from './replaceImportPath.mjs'
 import { readJsonFile } from './utils'
 
-export function transform(content, filename) {
+function transform(content, filename) {
   if (filename.endsWith('.js')) {
     const result = babelReplaceImportPathWithCertainFileName(content, filename, console)
     return result.code || content
@@ -13,12 +13,12 @@ export function transform(content, filename) {
   return content
 }
 
-export function onlyFiles(globString) {
+function onlyFiles(globString) {
   // viteStaticCopy 自带的glob匹配无法过滤目录， 手动过滤目录作为数组传入
   return fg.sync(globString + '/**/*', { onlyFiles: true }).map((p) => normalizePath(p))
 }
 
-export function replaceTailSlash(pathStr) {
+function replaceTailSlash(pathStr) {
   // 替换尾部的 / 可以把目录当文件复制
   return pathStr.replace(/\/$/, '')
 }

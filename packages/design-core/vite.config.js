@@ -11,11 +11,8 @@ import esbuildCopy from 'esbuild-plugin-copy'
 import lowcodeConfig from './config/lowcode.config'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import { importmapPlugin } from './scripts/externalDeps'
-import { useLocalImportMap } from './scripts/copyExternal'
-import { getBaseUrlFromCli } from './scripts/localCdnFile/utils'
 import visualizer from 'rollup-plugin-visualizer'
-import { CopyBundleDeps } from './scripts/copyBundleDeps'
-import { CopyPreviewImportMap } from './scripts/extraPreviewImportMap'
+import { getBaseUrlFromCli, CopyBundleDeps, CopyPreviewImportMap, useLocalImportMap } from './scripts/localCdnFile'
 
 const origin = 'http://localhost:9091/'
 
