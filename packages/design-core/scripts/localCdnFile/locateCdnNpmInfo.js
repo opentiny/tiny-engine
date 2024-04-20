@@ -135,6 +135,20 @@ export function getCdnPathNpmInfoForPackage(
   }
 }
 
+export function dedupeCopyFiles(files) {
+  return files.reduce((acc, cur) => {
+    //去重，分别处理字符串和数组
+    if (
+      (typeof cur.src === 'string' && !acc.some((item) => item.src === cur.src && item.dest === cur.dest)) ||
+      (Array.isArray(cur.src) &&
+        !acc.some((item) => !!item.folder && item.folder === cur.folder && item.dest === cur.dest))
+    ) {
+      acc.push(cur)
+    }
+    return acc
+  }, [])
+}
+
 export function analysisPackageNeedToInstallAndModifyFilesMergeToSameVersion(files) {
   const packageNeedToInstall = files
     .filter((item) => !item.sourceExist)
@@ -146,7 +160,6 @@ export function analysisPackageNeedToInstallAndModifyFilesMergeToSameVersion(fil
       }
       return acc
     }, [])
-
   let newFiles = null
   if (packageNeedToInstall.length) {
     // 确保同个包多个版本只能从一个版本引用文件

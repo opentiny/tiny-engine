@@ -52,5 +52,7 @@ export const fetchMetaData = async ({ platform, app, type, id, history, tenant }
     : {}
 
 export const fetchImportMap = async () => {
-  return fetch(new URL('./material-static/preview-importmap.json', location.href).href).then((res) => res.json())
+  return fetch(new URL('./preview-import-map-static/preview-importmap.json', location.href).href).then((res) =>
+    res.json()
+  )
 }

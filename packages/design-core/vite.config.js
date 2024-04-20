@@ -15,7 +15,7 @@ import { useLocalImportMap } from './scripts/copyExternal'
 import { getBaseUrlFromCli } from './scripts/localCdnFile/utils'
 import visualizer from 'rollup-plugin-visualizer'
 import { CopyBundleDeps } from './scripts/copyBundleDeps'
-import { extraCanvasImport, extraCanvasImportFile } from './scripts/extraCanvasImportMap'
+import { CopyPreviewImportMap } from './scripts/extraPreviewImportMap'
 
 const origin = 'http://localhost:9091/'
 
@@ -204,16 +204,7 @@ export default defineConfig(({ command, mode }) => {
   const { VITE_CDN_DOMAIN, VITE_LOCAL_IMPORT_MAPS, VITE_LOCAL_BUNDLE_DEPS } = loadEnv(mode, process.cwd(), '')
   const isLocalImportMap = VITE_LOCAL_IMPORT_MAPS === 'true' // true公共依赖库使用本地打包文件，false公共依赖库使用公共CDN
   const isCopyBundleDeps = VITE_LOCAL_BUNDLE_DEPS === 'true' // true bundle里的cdn依赖处理成本地依赖， false 不处理
-  const base = getBaseUrlFromCli(config.base)
-  const { copyImportMapFilePlugin } = useLocalImportMap(
-    isLocalImportMap,
-    getBaseUrlFromCli(config.base),
-    'workspace',
-    VITE_CDN_DOMAIN
-  )
 
-  const monacoLocalPublicPath = `editor/monaco-assets`
-  const monacoDistPath = `${base}/editor/monaco-assets`
   const monacoPublicPath = {
     local: 'editor/monaco-workers',
     alpha: 'https://tinyengine-assets.obs.cn-north-4.myhuaweicloud.com/files/monaco-assets',
@@ -270,9 +261,10 @@ export default defineConfig(({ command, mode }) => {
     monacoEditorPluginInstance = monacoEditorPlugin(
       isLocalImportMap
         ? {
-            publicPath: monacoLocalPublicPath,
+            publicPath: 'editor/monaco-assets',
             forceBuildCDN: true,
-            customDistPath: (_root, outDir, _base) => path.join(outDir, monacoDistPath)
+            customDistPath: (_root, outDir, _base) =>
+              path.join(outDir, `${getBaseUrlFromCli(config.base)}editor/monaco-assets`)
           }
         : { publicPath: monacoPublicPath[mode] }
     )
@@ -311,31 +303,43 @@ export default defineConfig(({ command, mode }) => {
     monacoEditorPluginInstance,
     htmlPlugin(mode),
     ...(isLocalImportMap ? [] : [importmapPlugin(importmap, importMapStyles)]),
-    ...copyImportMapFilePlugin(
-      {
-        ...importmap.imports // js import map
-        // '@opentiny/vue-theme/index.css': importMapStyles[0] // css import style
-      },
-      [
-        // 这两个包的js存在相对路径引用，不能单独拷贝一个文件，需要整个包拷贝
-        '@opentiny/vue-theme/theme-tool',
-        '@opentiny/vue-theme/theme'
-      ]
-    ),
+    isLocalImportMap
+      ? useLocalImportMap(
+          isLocalImportMap,
+          getBaseUrlFromCli(config.base),
+          'import-map-static',
+          VITE_CDN_DOMAIN
+        ).copyImportMapFilePlugin(
+          importmap.imports, // js import map
+          importMapStyles,
+          [
+            // 这两个包的js存在相对路径引用，不能单独拷贝一个文件，需要整个包拷贝
+            '@opentiny/vue-theme/theme-tool',
+            '@opentiny/vue-theme/theme'
+          ]
+        )
+      : [],
     isCopyBundleDeps
       ? CopyBundleDeps(
           'public/mock/bundle.json',
           'mock/bundle.json',
           VITE_CDN_DOMAIN, // mock 中bundle的域名当前和环境的VITE_CDN_DOMAIN一致
           getBaseUrlFromCli(config.base),
-          'material-static',
-          extraCanvasImport('./src/preview/src/preview/importMap.json', VITE_CDN_DOMAIN),
-          extraCanvasImportFile(
-            './src/preview/src/preview/importMap.json',
-            'material-static/preview-importmap.json',
-            VITE_CDN_DOMAIN
-          )
+          'material-static'
         ).plugin(command === 'serve')
+      : [],
+    isLocalImportMap
+      ? CopyPreviewImportMap(
+          './src/preview/src/preview/importMap.json',
+          'preview-import-map-static/preview-importmap.json',
+          VITE_CDN_DOMAIN,
+          getBaseUrlFromCli(config.base),
+          'preview-import-map-static',
+          [
+            // 以下的js存在相对路径引用，不能单独拷贝一个文件，需要整个包拷贝
+            '@vue/devtools-api'
+          ]
+        )
       : []
   )
   return config

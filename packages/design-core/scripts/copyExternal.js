@@ -1,5 +1,9 @@
 import { viteStaticCopy } from 'vite-plugin-static-copy'
-import { getCdnPathNpmInfoForPackage, getCdnPathNpmInfoForSingleFile } from './localCdnFile/locateCdnNpmInfo'
+import {
+  dedupeCopyFiles,
+  getCdnPathNpmInfoForPackage,
+  getCdnPathNpmInfoForSingleFile
+} from './localCdnFile/locateCdnNpmInfo'
 import { importmapPlugin } from './externalDeps'
 
 export const useLocalImportMap = (flag, publicPath = '/', dir = 'import-map-static', originCdnPrefix) => {
@@ -11,7 +15,7 @@ export const useLocalImportMap = (flag, publicPath = '/', dir = 'import-map-stat
       copyImportMapFilePlugin: (_) => null
     }
   }
-  const copyImportMapFilePlugin = (imports, packageCopy) => {
+  const copyImportMapFilePlugin = (imports, styles, packageCopy) => {
     const files = Object.entries(imports)
       .filter(([_libKey, libPath]) => libPath.startsWith(originCdnPrefix))
       .map(([libKey, libPath]) => {
@@ -20,32 +24,24 @@ export const useLocalImportMap = (flag, publicPath = '/', dir = 'import-map-stat
         }
         return getCdnPathNpmInfoForSingleFile(libPath, originCdnPrefix, publicPath, dir, false)
       })
-    const copyFiles = files.reduce((acc, cur) => {
-      //去重，分别处理字符串和数组
-      if (
-        (typeof cur.src === 'string' && !acc.some((item) => item.src === cur.src && item.dest === cur.dest)) ||
-        (Array.isArray(cur.src) &&
-          !acc.some((item) => !!item.folder && item.folder === cur.folder && item.dest === cur.dest))
-      ) {
-        acc.push(cur)
-      }
-      return acc
-    }, [])
-    return copyFiles.length
-      ? [
-          ...viteStaticCopy({
-            targets: copyFiles
-          }),
-          importmapPlugin(
-            {
-              imports: Object.fromEntries(
-                Object.entries(imports).map(([k, v]) => [k, files.find((f) => f.originUrl === v)?.newUrl ?? v])
-              )
-            },
-            ['./import-map-static/@opentiny/vue-theme@3.11.6/index.css']
+    const styleFiles = styles
+      .filter((styleUrl) => styleUrl.startsWith(originCdnPrefix))
+      .map((url) => getCdnPathNpmInfoForSingleFile(url, originCdnPrefix, publicPath, dir, false))
+    const copyFiles = dedupeCopyFiles(files.concat(styleFiles))
+    // 缺少分析需要安装的文件
+    return [
+      ...viteStaticCopy({
+        targets: copyFiles
+      }),
+      importmapPlugin(
+        {
+          imports: Object.fromEntries(
+            Object.entries(imports).map(([k, v]) => [k, files.find((f) => f.originUrl === v)?.newUrl ?? v])
           )
-        ]
-      : []
+        },
+        styles.map((url) => styleFiles.find((f) => f.originUrl === url).newUrl ?? url)
+      )
+    ]
   }
   return {
     cdnPrefix: null,

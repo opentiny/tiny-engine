@@ -44,13 +44,11 @@ export function CopyBundleDeps(
   originCdnPrefix,
   base,
   dir,
-  extraCopyUrls = null,
-  extraTransformFiles = null,
-  bundleTempDir = 'bundle-deps'
+  bundleTempDir = 'bundle-deps/material-static'
 ) {
-  const cdnFiles = extraBundleCdnLink(bundleFile, originCdnPrefix)
-    .concat(...extraCopyUrls)
-    .map((url) => getCdnPathNpmInfoForSingleFile(url, originCdnPrefix, base, dir, false, bundleTempDir))
+  const cdnFiles = extraBundleCdnLink(bundleFile, originCdnPrefix).map((url) =>
+    getCdnPathNpmInfoForSingleFile(url, originCdnPrefix, base, dir, false, bundleTempDir)
+  )
   const { packages: packageNeedToInstall, files } =
     analysisPackageNeedToInstallAndModifyFilesMergeToSameVersion(cdnFiles)
 
@@ -76,8 +74,7 @@ export function CopyBundleDeps(
             rename: (filename, fileExtension) =>
               isDev ? `${filename}-local.${fileExtension}` : path.basename(targetBundleFile),
             overwrite: true // 覆盖public的
-          },
-          ...(extraTransformFiles ? extraTransformFiles(files) : [])
+          }
         ]
       })
     ]
