@@ -205,13 +205,12 @@ export default defineConfig(({ command, mode }) => {
   const isLocalImportMap = VITE_LOCAL_IMPORT_MAPS === 'true' // true公共依赖库使用本地打包文件，false公共依赖库使用公共CDN
   const isCopyBundleDeps = VITE_LOCAL_BUNDLE_DEPS === 'true' // true bundle里的cdn依赖处理成本地依赖， false 不处理
 
-  const monacoPublicPath = {
-    local: 'editor/monaco-workers',
-    alpha: 'https://tinyengine-assets.obs.cn-north-4.myhuaweicloud.com/files/monaco-assets',
-    prod: 'https://tinyengine-assets.obs.cn-north-4.myhuaweicloud.com/files/monaco-assets'
-  }
-
-  let monacoEditorPluginInstance = monacoEditorPlugin({ publicPath: monacoPublicPath.local })
+  const monacoPublicPath = 'editor/monaco-workers'
+  let monacoEditorPluginInstance = monacoEditorPlugin({
+    publicPath: monacoPublicPath,
+    forceBuildCDN: true,
+    customDistPath: (_root, outDir, _base) => path.join(outDir, `${_base}${monacoPublicPath}`)
+  })
   const htmlPlugin = (mode) => {
     const upgradeHttpsMetaTags = []
     const includeHtmls = ['index.html', 'preview.html', 'previewApp.html']
@@ -257,17 +256,6 @@ export default defineConfig(({ command, mode }) => {
   } else {
     // command === 'build'
     config.resolve.alias = { ...commonAlias, ...prodAlias }
-
-    monacoEditorPluginInstance = monacoEditorPlugin(
-      isLocalImportMap
-        ? {
-            publicPath: 'editor/monaco-assets',
-            forceBuildCDN: true,
-            customDistPath: (_root, outDir, _base) =>
-              path.join(outDir, `${getBaseUrlFromCli(config.base)}editor/monaco-assets`)
-          }
-        : { publicPath: monacoPublicPath[mode] }
-    )
 
     if (mode === 'prod') {
       config.build.minify = true
