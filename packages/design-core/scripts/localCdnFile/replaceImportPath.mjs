@@ -46,7 +46,8 @@ export function resolvePath(importPath, currentFilePath) {
   return null
 }
 
-export function babelReplaceImportPathWithCertainFileName(content, currentFilePath, logger) {
+// babel 替换 js的相对地址引用为确定文件后缀
+export function babelReplaceImportPathWithCertainFileName(content, currentFilePath, logger = console) {
   let fileChangedMark = false
   let result = {
     code: null,

@@ -1,4 +1,4 @@
-import { readJsonFile } from './copyBundleDeps'
+import { readJsonFile } from './localCdnFile/utils'
 import path from 'node:path'
 
 export function extraCanvasImport(filename, originCdnPrefix) {
