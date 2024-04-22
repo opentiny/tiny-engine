@@ -311,7 +311,7 @@
             "loop": true,
             "condition": true,
             "styles": true,
-            "isContainer": false,
+            "isContainer": true,
             "isModal": false,
             "isPopper": false,
             "nestingRule": {
@@ -632,7 +632,7 @@
             "loop": true,
             "condition": true,
             "styles": true,
-            "isContainer": false,
+            "isContainer": true,
             "isModal": false,
             "isPopper": false,
             "nestingRule": {
@@ -1089,7 +1089,7 @@
             "loop": true,
             "condition": true,
             "styles": true,
-            "isContainer": false,
+            "isContainer": true,
             "isModal": false,
             "isPopper": false,
             "nestingRule": {
@@ -5979,7 +5979,7 @@
             "loop": true,
             "condition": true,
             "styles": true,
-            "isContainer": true,
+            "isContainer": false,
             "isModal": false,
             "nestingRule": {
               "childWhitelist": "",
@@ -6394,7 +6394,7 @@
             "loop": true,
             "condition": true,
             "styles": true,
-            "isContainer": true,
+            "isContainer": false,
             "isModal": false,
             "nestingRule": {
               "childWhitelist": "",
@@ -8183,7 +8183,7 @@
             "loop": true,
             "condition": true,
             "styles": true,
-            "isContainer": true,
+            "isContainer": false,
             "isModal": false,
             "nestingRule": {
               "childWhitelist": "",
@@ -8950,7 +8950,9 @@
                     "cols": 12,
                     "widget": {
                       "component": "MetaCodeEditor",
-                      "props": {}
+                      "props": {
+                        "language": "json"
+                      }
                     },
                     "description": {
                       "zh_CN": ""
@@ -8996,7 +8998,7 @@
             "loop": true,
             "condition": true,
             "styles": true,
-            "isContainer": true,
+            "isContainer": false,
             "clickCapture": false,
             "isModal": false,
             "nestingRule": {
