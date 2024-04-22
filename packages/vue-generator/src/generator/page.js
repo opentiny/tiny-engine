@@ -159,6 +159,15 @@ function handleBinding(props, attrsArr, description, state) {
         return attrsArr.push(`v-model${modelArgs}="${item.value.replace(/this\.(props\.)?/g, '')}"`)
       }
 
+      // 弥补在recurseChildren方法中，当children为undefined，但是该元素的props存在变量绑定的情况，此变量绑定的为
+      // 当前JSResources在props的使用场景为变量绑定，使用范式一般为：this.xxx
+      const pickResourceKeys = item.value?.match(/(?<=this\.)\w+/g) || []
+      const itemObject = Object.fromEntries(pickResourceKeys.map((key) => [key, true]))
+
+      Object.keys(description.jsResource).forEach((jsResourceKey) => {
+        description.jsResource[jsResourceKey] = description.jsResource[jsResourceKey] || itemObject[jsResourceKey]
+      })
+
       // expression 使用 v-bind 绑定
       return attrsArr.push(`:${key}="${item.value.replace(/this\.(props\.)?/g, '')}"`)
     }
