@@ -165,7 +165,7 @@ export default {
     const openLifeCyclesPanel = (item) => {
       state.title = item
       const bindLifeCycleSource =
-        props.bindLifeCycles?.[item] || useCanvas().canvasApi?.getSchema?.()?.lifeCycles?.[item]
+        props.bindLifeCycles?.[item] || useCanvas().canvasApi.value?.getSchema?.()?.lifeCycles?.[item]
       state.editorValue =
         bindLifeCycleSource?.value ||
         `function ${item} (${item === 'setup' ? '{ props, state, watch, onMounted }' : ''}) {} `

@@ -100,11 +100,14 @@ export default {
     useEditorInfo().getUserInfo()
 
     watch(
-      () => useCanvas().isCanvasApiReady.value,
+      useCanvas().isCanvasApiReady,
       (ready) => {
         if (ready) {
           useResource().fetchResource()
         }
+      },
+      {
+        immediate: true
       }
     )
 
