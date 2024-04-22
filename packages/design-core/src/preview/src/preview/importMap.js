@@ -13,7 +13,7 @@
 // import { hyphenate } from '@vue/shared'
 
 import { getSearchParams } from './http'
-import { importMapJSON } from './importMap.json'
+import importMapJSON from './importMap.json'
 import { VITE_CDN_DOMAIN } from '@opentiny/tiny-engine-controller/js/environments'
 
 const importMap = {}
