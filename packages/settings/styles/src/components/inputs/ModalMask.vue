@@ -1,8 +1,9 @@
 <template>
-  <teleport to="body">
-    <div :style="{ top: modal.top + 'px' }" class="modal-wrapper">
+  <teleport to=".tiny-engine-right-wrap">
+    <div class="modal-wrapper">
       <div class="modal-mask" @click="$emit('close')"></div>
-      <div class="modal-content">
+
+      <div :style="{ top: modal.top - 30 + 'px' }" class="modal-content">
         <slot></slot>
       </div>
     </div>
@@ -47,25 +48,20 @@ export default {
 
 <style lang="less" scoped>
 .modal-wrapper {
-  position: fixed;
-  top: 0;
-  right: 0;
-  margin-top: 18px;
-  width: calc(var(--base-right-panel-width) - 16px);
-  z-index: 9999;
   .modal-mask {
-    position: fixed;
+    position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
-    left: calc(100% - var(--base-right-panel-width));
+    left: 0;
     background: rgba(0, 0, 0, 0.2);
     z-index: 9999;
   }
 
   .modal-content {
-    position: relative;
-    width: 70%;
+    position: absolute;
+    top: 0;
+    left: 16px;
     z-index: 10000;
     padding: 8px;
     color: var(--ti-lowcode-toolbar-breadcrumb-color);

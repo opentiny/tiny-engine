@@ -154,6 +154,7 @@ export default {
     }
   }
   .tiny-engine-right-wrap {
+    position: relative;
     z-index: 4;
   }
   :deep(.monaco-editor .suggest-widget) {
