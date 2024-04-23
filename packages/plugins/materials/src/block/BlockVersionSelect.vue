@@ -17,10 +17,7 @@
           </template>
         </tiny-grid-column>
         <template #empty>
-          <div class="empty-wrap">
-            <svg-icon class="empty-icon" name="empty"></svg-icon>
-            <p class="empty-text">暂无数据</p>
-          </div>
+          <search-empty :isShow="true" />
         </template>
       </tiny-grid>
     </template>
@@ -30,7 +27,7 @@
 <script>
 import { reactive, watch, ref } from 'vue'
 import { Grid, GridColumn, Button } from '@opentiny/vue'
-import { PluginSetting, CloseIcon, BlockHistoryTemplate } from '@opentiny/tiny-engine-common'
+import { PluginSetting, CloseIcon, BlockHistoryTemplate, SearchEmpty } from '@opentiny/tiny-engine-common'
 import { useBlock, useModal } from '@opentiny/tiny-engine-controller'
 import { fetchBlockById, requestGroupBlockVersion } from './http'
 import { useVersionSelectPanel } from './js/usePanel'
@@ -42,7 +39,8 @@ export default {
     TinyButton: Button,
     PluginSetting,
     BlockHistoryTemplate,
-    CloseIcon
+    CloseIcon,
+    SearchEmpty
   },
   setup() {
     const { confirm } = useModal()
