@@ -15,7 +15,7 @@ export const useLocalImportMap = (
   publicPath,
   dir,
   packageCopy,
-  bundleTempDir = 'design-core-import-map'
+  bundleTempDir = 'bundle-deps/design-core-import-map'
 ) => {
   const importMapFiles = Object.entries(importMap.imports)
     .filter(([_libKey, libPath]) => libPath.startsWith(originCdnPrefix))
@@ -30,14 +30,30 @@ export const useLocalImportMap = (
     .map((url) => getCdnPathNpmInfoForSingleFile(url, originCdnPrefix, publicPath, dir, false), bundleTempDir)
 
   const { packages: packageNeedToInstall, files } = analysisPackageNeedToInstallAndModifyFilesMergeToSameVersion(
-    dedupeCopyFiles(importMapFiles.concat(styleFiles))
+    importMapFiles.concat(styleFiles)
   )
 
   return [
     ...installPackageTemporary(packageNeedToInstall, bundleTempDir),
     ...viteStaticCopy({
-      targets: files
+      targets: dedupeCopyFiles(files)
     }),
+    {
+      config(config, { command }) {
+        // 处理devAlias带CDN域名， 另外需要使得本地vue和importMap的vue是同一个实例
+        if (command === 'serve') {
+          config.resolve.alias = [
+            ...config.resolve.alias,
+            {
+              find: /^vue$/,
+              replacement: `http://localhost:8080/${
+                files.find(({ originUrl }) => importMap.imports.vue === originUrl).newUrl
+              }` // 实际端口号需要更具本地启动修改
+            }
+          ]
+        }
+      }
+    },
     importmapPlugin(
       {
         imports: Object.fromEntries(
