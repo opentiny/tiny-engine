@@ -320,19 +320,19 @@ export const scrollToNode = (element) => {
   if (element) {
     const container = getDocument().documentElement
     const { clientWidth, clientHeight } = container
-    const { x, y, width, height } = element.getBoundingClientRect()
+    const { left, right, top, bottom, width, height } = element.getBoundingClientRect()
     const option = {}
 
-    if (x < 0) {
-      option.left = container.scrollLeft + x - SCROLL_MARGIN
-    } else if (x > clientWidth) {
-      option.left = x + width - clientWidth + SCROLL_MARGIN
+    if (right < 0) {
+      option.left = container.scrollLeft + left - SCROLL_MARGIN
+    } else if (left > clientWidth) {
+      option.left = container.scrollLeft + left - clientWidth + width + SCROLL_MARGIN
     }
 
-    if (y < 0) {
-      option.top = container.scrollTop + y - SCROLL_MARGIN
-    } else if (y > clientHeight) {
-      option.top = y + height - clientHeight + SCROLL_MARGIN
+    if (bottom < 0) {
+      option.top = container.scrollTop + top - SCROLL_MARGIN
+    } else if (top > clientHeight) {
+      option.top = container.scrollTop + top - clientHeight + height + SCROLL_MARGIN
     }
 
     if (typeof option.left === 'number' || typeof option.top === 'number') {
