@@ -67,9 +67,12 @@ const transformJSX = (code) => {
     const result = replaceCode(res.code || '')
     if (result.startsWith('(')) {
       const index = result.lastIndexOf(')')
-      return result.slice(1, index).concat(result.slice(index + 1))
+      return result
+        .slice(1, index)
+        .concat(result.slice(index + 1))
+        .trim()
     }
-    return result.trim()
+    return result
   }
 }
 
