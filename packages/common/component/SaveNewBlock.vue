@@ -1,6 +1,13 @@
 <template>
   <div>
-    <tiny-dialog-box :append-to-body="true" :visible="visible" title="新建区块" width="500" @close="cancel">
+    <tiny-dialog-box
+      :append-to-body="true"
+      :close-on-click-modal="false"
+      :visible="visible"
+      title="新建区块"
+      width="500"
+      @close="cancel"
+    >
       <tiny-form
         show-message
         :model="formData"
