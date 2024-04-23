@@ -1,8 +1,24 @@
 import { mergeOptions } from '../utils/mergeOptions'
+import { parseImport } from '@/generator/vue/sfc/parseImport'
 
 const defaultOption = {
   fileName: 'package.json',
   path: '.'
+}
+
+const getComponentsSet = (schema) => {
+  const { pageSchema = [], blockSchema = [] } = schema
+  let allComponents = []
+
+  pageSchema.forEach((pageItem) => {
+    allComponents = allComponents.concat(parseImport(pageItem.children || [])?.components || [])
+  })
+
+  blockSchema.forEach((blockItem) => {
+    allComponents = allComponents.concat(parseImport(blockItem.children || [])?.components || [])
+  })
+
+  return new Set(allComponents)
 }
 
 const parseSchema = (schema) => {
@@ -21,9 +37,10 @@ const parseSchema = (schema) => {
     resDeps[packageName] = version || 'latest'
   }
 
-  // TODO: 这里理论上应该传 物料数据，然后分析页面 schema 中用到的所有组件，将需要的组件的依赖注入到 package.json，没用到则不注入
-  for (const { package: packageName, version } of componentsMap) {
-    if (packageName && !resDeps[packageName]) {
+  const componentsSet = getComponentsSet(schema)
+
+  for (const { package: packageName, version, componentName } of componentsMap) {
+    if (packageName && !resDeps[packageName] && componentsSet.has(componentName)) {
       resDeps[packageName] = version || 'latest'
     }
   }
