@@ -92,7 +92,7 @@
     "monaco-editor": "0.33.0",
     "prettier": "2.7.1",
     "sortablejs": "^1.14.0",
-    "vue": "^3.4.15",
+    "vue": "3.4.23",
     "vue-i18n": "^9.9.0"
   },
   "devDependencies": {
