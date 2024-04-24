@@ -2,7 +2,7 @@
   <plugin-setting v-if="isShow" :title="state.title" class="pageFolder-plugin-setting">
     <template #header>
       <button-group>
-        <tiny-button type="primary" @click="saveFolderSetting">保存</tiny-button>
+        <loading-button :loading="savingState" @save="saveFolderSetting"></loading-button>
         <svg-button
           v-if="!pageSettingState.isNew"
           name="delete"
@@ -28,8 +28,8 @@
 
 <script>
 import { reactive, ref } from 'vue'
-import { Button, Collapse, CollapseItem } from '@opentiny/vue'
-import { PluginSetting, SvgButton, ButtonGroup } from '@opentiny/tiny-engine-common'
+import { Collapse, CollapseItem } from '@opentiny/vue'
+import { PluginSetting, SvgButton, ButtonGroup, LoadingButton } from '@opentiny/tiny-engine-common'
 import { usePage, useModal, useApp, useNotify } from '@opentiny/tiny-engine-controller'
 import { isEqual } from '@opentiny/vue-renderless/common/object'
 import throttle from '@opentiny/vue-renderless/common/deps/throttle'
@@ -51,12 +51,12 @@ export const closeFolderSettingPanel = () => {
 
 export default {
   components: {
-    TinyButton: Button,
     TinyCollapse: Collapse,
     TinyCollapseItem: CollapseItem,
     PluginSetting,
     PageGeneral,
     SvgButton,
+    LoadingButton,
     ButtonGroup
   },
   props: {
@@ -71,6 +71,8 @@ export default {
       title: '文件夹设置'
     })
     const folderGeneralRef = ref(null)
+    const savingState = ref(false)
+
     const { requestCreatePage, requestUpdatePage, requestDeletePage } = http
     const { appInfoState } = useApp()
     const { pageSettingState, changeTreeData } = usePage()
@@ -102,6 +104,7 @@ export default {
         isPage: false
       }
 
+      savingState.value = true
       requestCreatePage(createParams)
         .then(() => {
           pageSettingState.updateTreeData()
@@ -119,11 +122,15 @@ export default {
             message: JSON.stringify(error?.message || error)
           })
         })
+        .finally(() => {
+          savingState.value = false
+        })
     }
 
     const updateFolder = () => {
       const { id } = pageSettingState.currentPageData
 
+      savingState.value = true
       requestUpdatePage(id, { ...pageSettingState.currentPageData, page_content: null })
         .then(() => {
           pageSettingState.updateTreeData()
@@ -140,6 +147,9 @@ export default {
             title: '更新文件夹失败',
             message: JSON.stringify(error?.message || error)
           })
+        })
+        .finally(() => {
+          savingState.value = false
         })
     }
 
@@ -193,6 +203,7 @@ export default {
       saveFolderSetting,
       deleteFolder: throttle(5000, true, deleteFolder),
       folderGeneralRef,
+      savingState,
       closeFolderSettingPanel,
       isShow,
       state,

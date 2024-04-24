@@ -2,7 +2,7 @@
   <plugin-setting v-if="isShow" :title="state.title" class="page-plugin-setting">
     <template #header>
       <button-group>
-        <tiny-button type="primary" @click="savePageSetting">保存</tiny-button>
+        <loading-button :loading="savingState" @save="savePageSetting"></loading-button>
         <svg-button v-if="!pageSettingState.isNew" name="delete" tips="删除页面" @click="deletePage"></svg-button>
         <svg-button
           v-if="!pageSettingState.isNew"
@@ -53,8 +53,8 @@
 
 <script lang="jsx">
 import { reactive, ref } from 'vue'
-import { Button, Collapse, CollapseItem, Input } from '@opentiny/vue'
-import { PluginSetting, ButtonGroup, SvgButton, LifeCycles } from '@opentiny/tiny-engine-common'
+import { Collapse, CollapseItem, Input } from '@opentiny/vue'
+import { PluginSetting, ButtonGroup, SvgButton, LifeCycles, LoadingButton } from '@opentiny/tiny-engine-common'
 import { useLayout, usePage, useCanvas, useModal, useApp, useNotify } from '@opentiny/tiny-engine-controller'
 import { extend, isEqual } from '@opentiny/vue-renderless/common/object'
 import { constants } from '@opentiny/tiny-engine-utils'
@@ -90,7 +90,6 @@ const PAGE_SETTING_SESSION = {
 
 export default {
   components: {
-    TinyButton: Button,
     TinyCollapse: Collapse,
     TinyCollapseItem: CollapseItem,
     PageInputOutput,
@@ -99,6 +98,7 @@ export default {
     PageHistory,
     PluginSetting,
     SvgButton,
+    LoadingButton,
     ButtonGroup
   },
   props: {
@@ -123,6 +123,7 @@ export default {
     const { pageState, initData } = useCanvas()
     const { confirm } = useModal()
     const pageGeneralRef = ref(null)
+    const savingState = ref(false)
 
     const state = reactive({
       activeName: Object.values(PAGE_SETTING_SESSION),
@@ -191,6 +192,9 @@ export default {
             message: JSON.stringify(err?.message || err)
           })
         })
+        .finally(() => {
+          savingState.value = false
+        })
     }
 
     const updatePage = (id, params) => {
@@ -230,8 +234,9 @@ export default {
         }
       }
 
+      savingState.value = true
       const res = await updatePage(id, params)
-
+      savingState.value = false
       initCurrentPageData(res)
     }
 
@@ -292,11 +297,14 @@ export default {
 
         state.historyMessage = ''
       }
-
-      confirm({ title, status, message: messageRender, exec })
+      const cancel = () => {
+        savingState.value = false
+      }
+      confirm({ title, status, message: messageRender, exec, cancel })
     }
 
     const savePageSetting = () => {
+      savingState.value = true
       pageGeneralRef.value.validGeneralForm().then(createHistoryMessage)
     }
 
@@ -360,6 +368,7 @@ export default {
     return {
       state,
       isShow,
+      savingState,
       savePageSetting,
       copyPage,
       pageSettingState,
