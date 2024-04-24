@@ -49,7 +49,7 @@
       :modal="false"
       :fullscreen="true"
       :append-to-body="true"
-      title="Schema 本地与线上差异"
+      title="Schema 线上与本地差异"
     >
       <vue-monaco
         v-if="state.compareVisible"
@@ -82,7 +82,7 @@ import {
   FormItem as TinyFormItem
 } from '@opentiny/vue'
 import { theme } from '@opentiny/tiny-engine-controller/adapter'
-import { useLayout } from '@opentiny/tiny-engine-controller'
+import { useLayout, useNotify } from '@opentiny/tiny-engine-controller'
 import { getSchema, setSchema } from '@opentiny/tiny-engine-canvas'
 import VueMonaco from './VueMonaco.vue'
 
@@ -212,10 +212,20 @@ export default {
     }
 
     const save = () => {
-      const pageSchema = JSON.parse(state.newCode)
-      setSchema(pageSchema)
-
-      close()
+      if (state.newCode) {
+        try {
+          const pageSchema = JSON.parse(state.newCode)
+          setSchema(pageSchema)
+          close()
+        } catch (err) {
+          useNotify({
+            type: 'error',
+            message: '代码静态检查有错误，请先修改后再保存'
+          })
+        }
+      } else {
+        close()
+      }
     }
 
     return {
