@@ -186,7 +186,7 @@ export default {
 
 <style lang="less" scoped>
 .resize-border {
-  position: fixed;
+  position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
