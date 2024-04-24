@@ -2,7 +2,7 @@
   <plugin-setting v-if="isOpen" title="设置数据源">
     <template #header>
       <button-group>
-        <tiny-button class="field-save" type="primary" @click="save">保存</tiny-button>
+        <loading-button :loading="savingState" @save="save"></loading-button>
         <div class="field-handler" @click="deleteDataSource" v-if="editable" tips="删除">
           <svg-button name="text-source-delete"></svg-button>
         </div>
@@ -30,8 +30,8 @@
 
 <script lang="jsx">
 import { reactive, ref, watch } from 'vue'
-import { Form, Button } from '@opentiny/vue'
-import { ButtonGroup, PluginSetting, SvgButton } from '@opentiny/tiny-engine-common'
+import { Form } from '@opentiny/vue'
+import { ButtonGroup, PluginSetting, SvgButton, LoadingButton } from '@opentiny/tiny-engine-common'
 import DataSourceType from './DataSourceType.vue'
 import DataSourceName, { getDataSourceName } from './DataSourceName.vue'
 import DataSourceField from './DataSourceField.vue'
@@ -60,8 +60,8 @@ export default {
   components: {
     ButtonGroup,
     SvgButton,
+    LoadingButton,
     TinyForm: Form,
-    TinyButton: Button,
     PluginSetting,
     DataSourceType,
     DataSourceName,
@@ -82,6 +82,7 @@ export default {
     const { confirm, message } = useModal()
     const { appInfoState } = useApp()
     const { dataSourceState } = useDataSource()
+    const savingState = ref(false)
 
     const state = reactive({
       dataSource: {}
@@ -171,10 +172,8 @@ export default {
     const save = () => {
       getDataSourceName().validate((valid) => {
         if (valid) {
-          close()
           closeRemotePanel()
-
-          const columns = state.dataSource.data.columns.map(({ name, title, type, format, field }) => {
+          const columns = state.dataSource.data.columns?.map(({ name, title, type, format, field }) => {
             return {
               name,
               title,
@@ -183,24 +182,32 @@ export default {
               format
             }
           })
-
+          if (!columns || !columns.length) {
+            return
+          }
+          savingState.value = true
           if (props.editable) {
             requestUpdateDataSource(state.dataSource.id, {
               name: state.dataSource.name,
               data: Object.assign(state.dataSource.data, { columns, ...dataSourceState.remoteConfig })
-            }).then(() => {
-              requestGenerateDataSource(appInfoState.selectedId)
-              // 修改dataSource成功
-              confirm({
-                title: '提示',
-                message: { render: () => <span>数据源修改成功</span> },
-                exec: () => {
-                  emit('save')
-                  dataSourceState.dataSourceColumn = {}
-                  dataSourceState.dataSourceColumnCopies = {}
-                }
-              })
             })
+              .then(() => {
+                requestGenerateDataSource(appInfoState.selectedId)
+                // 修改dataSource成功
+                confirm({
+                  title: '提示',
+                  message: { render: () => <span>数据源修改成功</span> },
+                  exec: () => {
+                    emit('save')
+                    dataSourceState.dataSourceColumn = {}
+                    dataSourceState.dataSourceColumnCopies = {}
+                  }
+                })
+              })
+              .finally(() => {
+                savingState.value = false
+                close()
+              })
           } else {
             requestAddDataSource({
               name: state.dataSource.name,
@@ -227,6 +234,10 @@ export default {
               .catch((error) => {
                 message({ message: `数据源保存失败：${error?.message || ''}`, status: 'error' })
               })
+              .finally(() => {
+                savingState.value = false
+                close()
+              })
           }
         }
       })
@@ -249,6 +260,7 @@ export default {
     return {
       state,
       isOpen,
+      savingState,
       save,
       closeAllPanel,
       openRemotePanel,

@@ -8,7 +8,8 @@
     <template #header>
       <div class="header-wrap">
         <svg-button v-show="state.status" class="delete-btn" name="delete" @click="deleteReSource"></svg-button>
-        <tiny-button class="save-btn" type="primary" @click="save">保存</tiny-button>
+        <loading-button :loading="savingState" @save="save"></loading-button>
+        <!-- <tiny-button class="save-btn" type="primary" @click="save">保存</tiny-button> -->
         <svg-button class="close-btn" name="close" @click="closePanel"></svg-button>
       </div>
     </template>
@@ -98,7 +99,6 @@
 import { computed, onMounted, reactive, ref, watchEffect, nextTick, watch } from 'vue'
 import {
   Input as TinyInput,
-  Button as TinyButton,
   Form as TinyForm,
   FormItem as TinyFormItem,
   Switch as TinySwitch,
@@ -121,11 +121,12 @@ import {
   getActionType,
   getResourceNamesByType
 } from './js/resource'
-import { VueMonaco as MonacoEditor, PluginSetting, SvgButton } from '@opentiny/tiny-engine-common'
+import { VueMonaco as MonacoEditor, PluginSetting, SvgButton, LoadingButton } from '@opentiny/tiny-engine-common'
 import { useApp, getGlobalConfig, useModal, useNotify } from '@opentiny/tiny-engine-controller'
 import { theme } from '@opentiny/tiny-engine-controller/adapter'
 
 const isOpen = ref(false)
+const savingState = ref(false)
 
 export const openPanel = () => {
   isOpen.value = true
@@ -133,6 +134,7 @@ export const openPanel = () => {
 }
 
 export const closePanel = () => {
+  savingState.value = false
   isOpen.value = false
 }
 
@@ -140,7 +142,6 @@ export default {
   components: {
     TinyForm,
     TinyInput,
-    TinyButton,
     TinyFormItem,
     TinyCheckbox,
     PluginSetting,
@@ -150,7 +151,8 @@ export default {
     TinyTooltip: Tooltip,
     TinyRadioGroup: RadioGroup,
     TinyRadio: Radio,
-    SvgButton
+    SvgButton,
+    LoadingButton
   },
   setup(props, { emit }) {
     const monacoOptions = {
@@ -166,6 +168,7 @@ export default {
       overviewRulerBorder: false,
       renderLineHighlightOnlyWhenFocus: true
     }
+
     const { confirm } = useModal()
 
     const state = reactive({
@@ -242,7 +245,6 @@ export default {
             type: 'error',
             message: '请检查必填项'
           })
-
           return
         }
 
@@ -251,10 +253,9 @@ export default {
             type: 'error',
             message: 'function 内容必填'
           })
-
           return
         }
-
+        savingState.value = true
         saveResource(data, closePanel, emit)
       })
     }
@@ -297,6 +298,7 @@ export default {
     return {
       rules,
       resourceForm,
+      savingState,
       editor,
       state,
       codePreview,
