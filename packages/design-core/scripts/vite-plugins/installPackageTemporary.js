@@ -28,7 +28,11 @@ export function installPackageTemporary(packageNeedToInstall, tempDir, logger = 
             { encoding: 'utf-8' }
           )
         }
-        code = code || shelljs.cd(tempDir).code || shelljs.exec(`npm install --force`).code || shelljs.cd('../').code
+        code =
+          code ||
+          shelljs.cd(tempDir).code ||
+          shelljs.exec(`npm install --force`).code ||
+          shelljs.cd(path.resolve(tempDir, '.')).code
 
         if (code === 0) {
           logger.info(
