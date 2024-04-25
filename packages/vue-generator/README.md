@@ -335,7 +335,7 @@ const customPropsHook = (schemaData, globalHooks) => {
 
 // 使用
 genSFCWithDefaultPlugin(schema, componentsMap, {
-  attribute: [customPropsHook]
+  genTemplate: [customPropsHook]
 })
 ```
 
