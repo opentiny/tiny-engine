@@ -36,7 +36,7 @@
 </template>
 
 <script lang="jsx">
-import { reactive, ref, watchEffect, watch } from 'vue'
+import { reactive, ref, watchEffect } from 'vue'
 import { Search, Tree, Collapse, CollapseItem } from '@opentiny/vue'
 import { IconFolderOpened, IconFolderClosed } from '@opentiny/vue-icon'
 import { useCanvas, useApp, useModal, usePage, useBreadcrumb, useLayout } from '@opentiny/tiny-engine-controller'
@@ -135,6 +135,7 @@ export default {
       const firstGroupTreeData = formatTreeData([...firstGroupData.data], 'parentId', 'id')
       firstGroupData.data = firstGroupTreeData[ROOT_ID].children
       pageSettingState.pages = [firstGroupData, secondGroupData]
+      state.pageSearchValue = ''
       return pageSettingState.pages
     }
 
@@ -304,13 +305,6 @@ export default {
       }
     }
 
-    watch(
-      () => pageSettingState.pages,
-      () => {
-        searchPageData(state.pageSearchValue)
-      },
-      { deep: true }
-    )
     const filterPageTreeData = (value, data) => {
       if (!value) return true
 
