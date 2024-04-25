@@ -206,7 +206,7 @@ export default defineConfig(({ command, mode }) => {
   const monacoEditorPluginInstance = monacoEditorPlugin({
     publicPath: monacoPublicPath,
     forceBuildCDN: true,
-    customDistPath: (_root, outDir, _base) => path.join(outDir, `${_base}${monacoPublicPath}`)
+    customDistPath: (_root, outDir, _base) => path.join(outDir, monacoPublicPath)
   })
   const htmlPlugin = (mode) => {
     const upgradeHttpsMetaTags = []
