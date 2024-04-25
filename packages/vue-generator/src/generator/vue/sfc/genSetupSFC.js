@@ -207,14 +207,7 @@ const generateSFCFile = (schema, componentsMap, config = {}) => {
 }
 
 export const genSFCWithDefaultPlugin = (schema, componentsMap, config = {}) => {
-  const {
-    componentName = [],
-    attribute = [],
-    children = [],
-    genScript = {},
-    parseScript = [],
-    templateItemValidate = []
-  } = config.hooks || {}
+  const { templateItemValidate = [], genTemplate = [], parseScript = [], genScript = {} } = config.hooks || {}
   const defaultComponentHooks = [handleComponentNameHook, handleTinyIcon]
 
   const defaultAttributeHook = [
@@ -257,9 +250,7 @@ export const genSFCWithDefaultPlugin = (schema, componentsMap, config = {}) => {
     ...config,
     hooks: {
       templateItemValidate: [...templateItemValidate, ...defaultTemplateItemValidateHook],
-      componentName: [...componentName, ...defaultComponentHooks],
-      attribute: [...attribute, ...defaultAttributeHook],
-      children: [...children, ...defaultChildrenHook],
+      genTemplate: [...genTemplate, ...defaultComponentHooks, ...defaultAttributeHook, ...defaultChildrenHook],
       parseScript: [...parseScript, ...defaultParseScriptHook],
       genScript: {
         ...defaultGenScriptHooks,

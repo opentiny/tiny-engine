@@ -176,12 +176,7 @@ export const recursiveGenTemplateByHook = (schemaWithRes, globalHooks, config = 
   const schemaChildren = schemaWithRes?.schema?.children || []
   const { hooks = {}, isJSX } = config
   // 自定义 hooks
-  const {
-    componentName: componentNameHooks,
-    attribute: attributeHooks,
-    children: childrenHooks,
-    templateItemValidate
-  } = hooks
+  const { genTemplate: genTemplateHooks, templateItemValidate } = hooks
 
   if (!Array.isArray(schemaChildren)) {
     schemaWithRes.children.push(schemaChildren || '')
@@ -212,15 +207,7 @@ export const recursiveGenTemplateByHook = (schemaWithRes, globalHooks, config = 
       suffix: []
     }
 
-    for (const hookItem of componentNameHooks) {
-      hookItem(optionData, globalHooks, config)
-    }
-
-    for (const hookItem of attributeHooks) {
-      hookItem(optionData, globalHooks, config)
-    }
-
-    for (const hookItem of [...childrenHooks, recursiveGenTemplateByHook]) {
+    for (const hookItem of [...genTemplateHooks, recursiveGenTemplateByHook]) {
       hookItem(optionData, globalHooks, config)
     }
 
