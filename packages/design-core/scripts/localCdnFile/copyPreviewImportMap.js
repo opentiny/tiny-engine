@@ -1,6 +1,7 @@
 import path from 'node:path'
 import {
   analysisPackageNeedToInstallAndModifyFilesMergeToSameVersion,
+  copyfileToDynamicSrcMapper,
   dedupeCopyFiles,
   getCdnPathNpmInfoForPackage,
   getCdnPathNpmInfoForSingleFile
@@ -73,12 +74,7 @@ export function CopyPreviewImportMap(
     ...installPackageTemporary(packageNeedToInstall, bundleTempDir),
     ...viteStaticCopy({
       targets: [
-        ...dedupeCopyFiles(files).map(({ src, dest, transform, rename }) => ({
-          src,
-          dest,
-          transform,
-          rename
-        })),
+        ...dedupeCopyFiles(files).map(copyfileToDynamicSrcMapper),
         ...extraPreviewImportFile(importMapJson, targetImportMapJson, originCdnPrefix)(files)
       ]
     })

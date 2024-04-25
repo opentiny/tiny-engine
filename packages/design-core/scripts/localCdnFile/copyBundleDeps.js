@@ -5,7 +5,8 @@ import { viteStaticCopy } from 'vite-plugin-static-copy'
 import {
   getCdnPathNpmInfoForSingleFile,
   analysisPackageNeedToInstallAndModifyFilesMergeToSameVersion,
-  dedupeCopyFiles
+  dedupeCopyFiles,
+  copyfileToDynamicSrcMapper
 } from './locateCdnNpmInfo'
 import { readJsonFile } from './utils'
 
@@ -59,12 +60,7 @@ export function CopyBundleDeps(
       ...installPackageTemporary(packageNeedToInstall, bundleTempDir),
       ...viteStaticCopy({
         targets: [
-          ...dedupeCopyFiles(files).map(({ src, dest, transform, rename }) => ({
-            src,
-            dest,
-            transform,
-            rename
-          })),
+          ...dedupeCopyFiles(files).map(copyfileToDynamicSrcMapper),
           {
             src: bundleFile,
             dest: path.dirname(targetBundleFile),

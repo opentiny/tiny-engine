@@ -1,6 +1,7 @@
 import { viteStaticCopy } from 'vite-plugin-static-copy'
 import {
   analysisPackageNeedToInstallAndModifyFilesMergeToSameVersion,
+  copyfileToDynamicSrcMapper,
   dedupeCopyFiles,
   getCdnPathNpmInfoForPackage,
   getCdnPathNpmInfoForSingleFile
@@ -36,7 +37,7 @@ export const useLocalImportMap = (
   return [
     ...installPackageTemporary(packageNeedToInstall, bundleTempDir),
     ...viteStaticCopy({
-      targets: dedupeCopyFiles(files)
+      targets: dedupeCopyFiles(files).map(copyfileToDynamicSrcMapper)
     }),
     {
       config(config, { command }) {

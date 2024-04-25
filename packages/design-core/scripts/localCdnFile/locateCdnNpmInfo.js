@@ -23,6 +23,20 @@ function replaceTailSlash(pathStr) {
   return pathStr.replace(/\/$/, '')
 }
 
+export function copyfileToDynamicSrcMapper({ src, dest, transform, rename, folder, ...rest }) {
+  // viteStaticCopy 自带的glob匹配无法过滤目录， 手动过滤目录作为数组传入，但是不存在的包需要推迟glob的时机到安装文件后
+  return {
+    ...rest,
+    get src() {
+      // 注意对象不能被解构，否则getter无法动态计算
+      return src || onlyFiles(folder)
+    },
+    dest,
+    transform,
+    rename
+  }
+}
+
 // 生成复制单个文件所需要的信息
 export function getCdnPathNpmInfoForSingleFile(
   url, // cdn托管的npm文件地址数组
@@ -129,7 +143,7 @@ export function getCdnPathNpmInfoForPackage(
     folder: src,
     originUrl: url,
     // newUrl, // overwrite by updateVersion(version)
-    src: onlyFiles(src),
+    src: sourceExist || sourceExistExternal ? onlyFiles(src) : null,
     // dest, // overwrite by updateVersion(version)
     packageName,
     // version, // overwrite by updateVersion(version)
@@ -147,9 +161,8 @@ export function dedupeCopyFiles(files) {
   return files.reduce((acc, cur) => {
     //去重，分别处理字符串和数组
     if (
-      (typeof cur.src === 'string' && !acc.some((item) => item.src === cur.src && item.dest === cur.dest)) ||
-      (Array.isArray(cur.src) &&
-        !acc.some((item) => !!item.folder && item.folder === cur.folder && item.dest === cur.dest))
+      (cur.folder && !acc.some((item) => !!item.folder && item.folder === cur.folder && item.dest === cur.dest)) || // 文件夹拷贝
+      (typeof cur.src === 'string' && !acc.some((item) => item.src === cur.src && item.dest === cur.dest)) // 文件拷贝
     ) {
       acc.push(cur)
     }
