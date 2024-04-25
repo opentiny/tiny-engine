@@ -4,7 +4,8 @@ import { configServerAddProxy } from '../vite-plugins/configureServerAddProxy'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
 import {
   getCdnPathNpmInfoForSingleFile,
-  analysisPackageNeedToInstallAndModifyFilesMergeToSameVersion
+  analysisPackageNeedToInstallAndModifyFilesMergeToSameVersion,
+  dedupeCopyFiles
 } from './locateCdnNpmInfo'
 import { readJsonFile } from './utils'
 
@@ -58,10 +59,11 @@ export function CopyBundleDeps(
       ...installPackageTemporary(packageNeedToInstall, bundleTempDir),
       ...viteStaticCopy({
         targets: [
-          ...files.map(({ src, dest, transform }) => ({
+          ...dedupeCopyFiles(files).map(({ src, dest, transform, rename }) => ({
             src,
             dest,
-            transform
+            transform,
+            rename
           })),
           {
             src: bundleFile,

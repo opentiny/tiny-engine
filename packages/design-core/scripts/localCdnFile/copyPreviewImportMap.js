@@ -67,14 +67,13 @@ export function CopyPreviewImportMap(
     }
     return getCdnPathNpmInfoForSingleFile(url, originCdnPrefix, base, dir, false, bundleTempDir)
   })
-  const { packages: packageNeedToInstall, files } = analysisPackageNeedToInstallAndModifyFilesMergeToSameVersion(
-    dedupeCopyFiles(cdnFiles)
-  )
+  const { packages: packageNeedToInstall, files } =
+    analysisPackageNeedToInstallAndModifyFilesMergeToSameVersion(cdnFiles)
   return [
     ...installPackageTemporary(packageNeedToInstall, bundleTempDir),
     ...viteStaticCopy({
       targets: [
-        ...files.map(({ src, dest, transform, rename }) => ({
+        ...dedupeCopyFiles(files).map(({ src, dest, transform, rename }) => ({
           src,
           dest,
           transform,

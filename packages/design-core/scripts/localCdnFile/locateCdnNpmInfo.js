@@ -56,11 +56,19 @@ export function getCdnPathNpmInfoForSingleFile(
       version = packageJson.version // 如果重新安装这个版本号还需要刷新
     }
   }
-  const updateVersion = (version) => ({
-    version,
-    newUrl: `${base}${baseSlash}${dir}/${packageName}@${version}${filePathInPackage}`,
-    dest: path.dirname(replaceTailSlash(`${dir}/${packageName}@${version}${filePathInPackage}`))
-  })
+  const updateVersion = (version) => {
+    const destPackageDir = `${dir}/${packageName}@${version}`
+    const destFullPath = `${destPackageDir}${filePathInPackage}`
+    const destFullPathWithoutTailSlash = replaceTailSlash(destFullPath)
+    const dest = path.dirname(destFullPathWithoutTailSlash)
+    const rename = dest.startsWith(destPackageDir) ? null : path.basename(destFullPathWithoutTailSlash) // 版本号被截断，需要补充回去
+    return {
+      version,
+      newUrl: `${base}${baseSlash}${destFullPath}`,
+      dest,
+      rename
+    }
+  }
 
   return {
     originUrl: url,
@@ -113,7 +121,7 @@ export function getCdnPathNpmInfoForPackage(
       version,
       newUrl: `${base}${baseSlash}${dir}/${packageName}@${version}${filePathInPackage}`,
       dest: path.dirname(packageDir),
-      rename: (_filename, _fileExtension, fullPath) => `${packageDirBasename}/${fullPath.replace(src, '')}`
+      rename: (_filename, _fileExtension, fullPath) => `${packageDirBasename}${fullPath.replace(src, '')}`
     }
   }
 
