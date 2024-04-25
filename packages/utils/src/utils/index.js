@@ -10,10 +10,12 @@
  *
  */
 
-import { isRef, isProxy, unref, toRaw } from 'vue'
+import { isRef, isProxy, unref, toRaw, ref } from 'vue'
 import { isObject, isArray } from '@opentiny/vue-renderless/grid/static'
 
 export const fun_ctor = Function
+
+export const releaseBlockState = ref(false)
 
 /**
  * 解析表达式字符串

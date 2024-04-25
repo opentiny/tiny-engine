@@ -46,6 +46,7 @@ import { constants, utils } from '@opentiny/tiny-engine-utils'
 import { generateBlock } from '@opentiny/tiny-engine-controller/js/vscodeGenerateFile'
 
 const { HOST_TYPE } = constants
+const { releaseBlockState } = utils;
 const { getBlockList, setBlockList, setCategoryList, getCurrentBlock, addBlockEvent, addBlockProperty } = useBlock()
 const { batchCreateI18n } = useTranslate()
 const { message, confirm } = useModal()
@@ -542,9 +543,11 @@ export const getDeployProgress = (taskId, block) => {
         },
         width: '550'
       })
+      releaseBlockState.value = false;
       setDeployFailed(block)
     } else {
       setDeployFinished(block)
+      releaseBlockState.value = false;
       useNotify({ message: '区块发布成功!', type: 'success' })
     }
   })
@@ -567,6 +570,7 @@ export const publishBlock = (params) => {
 
   // 校验区块插槽名称
   if (block && validBlockSlotsName(block)) {
+    releaseBlockState.value = true;
     // 查询发布进度之前，先将动画状态初始化
     setDeployStarted(block)
 
@@ -575,6 +579,7 @@ export const publishBlock = (params) => {
         getDeployProgress(data.id, block)
       })
       .catch((error) => {
+        releaseBlockState.value = false;
         message({ message: error.message, status: 'error' })
         setDeployFailed(block)
       })

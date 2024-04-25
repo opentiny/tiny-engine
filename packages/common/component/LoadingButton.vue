@@ -1,5 +1,5 @@
 <template>
-  <tiny-button type="info" @click="$emit('save')" :disabled="loading">
+  <tiny-button type="info" @click="$emit('save')" :disabled="disabled || loading">
     <span>
       <svg-icon v-if="loading" class="loading-svg" name="loading"></svg-icon>
       {{ text }}
@@ -19,6 +19,10 @@ export default {
       default: '保存'
     },
     loading: {
+      type: Boolean,
+      default: false
+    },
+    disabled: {
       type: Boolean,
       default: false
     }

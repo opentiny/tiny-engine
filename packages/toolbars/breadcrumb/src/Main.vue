@@ -3,29 +3,29 @@
     <tiny-breadcrumb separator="：">
       <tiny-breadcrumb-item v-for="item in breadcrumbData.slice(0, 2)" :key="item">{{ item }}</tiny-breadcrumb-item>
     </tiny-breadcrumb>
-    <tiny-button
-      class="publish"
+    <loading-button
       v-if="breadcrumbData[0] === CONSTANTS.BLOCKTEXT"
-      @click="publishBlock()"
-      type="primary"
-      size="small"
-      >发布区块</tiny-button
-    >
+      :loading="releaseBlockState"
+      text="发布区块"
+      @save="publishBlock"
+    ></loading-button>
   </div>
   <block-deploy-dialog v-model:visible="state.showDeployBlock" :nextVersion="nextVersion"></block-deploy-dialog>
 </template>
 
 <script>
 import { reactive, computed } from 'vue'
-import { Breadcrumb, BreadcrumbItem, Button } from '@opentiny/vue'
+import { Breadcrumb, BreadcrumbItem } from '@opentiny/vue'
 import { useBreadcrumb } from '@opentiny/tiny-engine-controller'
-import { BlockDeployDialog } from '@opentiny/tiny-engine-common'
+import { BlockDeployDialog, LoadingButton } from '@opentiny/tiny-engine-common'
+import { utils } from '@opentiny/tiny-engine-utils'
+
 export default {
   components: {
     TinyBreadcrumb: Breadcrumb,
     TinyBreadcrumbItem: BreadcrumbItem,
     BlockDeployDialog,
-    TinyButton: Button
+    LoadingButton
   },
   setup() {
     const state = reactive({
@@ -33,6 +33,7 @@ export default {
     })
     const { CONSTANTS, getBreadcrumbData } = useBreadcrumb()
     const breadcrumbData = getBreadcrumbData()
+    const { releaseBlockState } = utils
     const publishBlock = () => {
       state.showDeployBlock = true
     }
@@ -55,6 +56,7 @@ export default {
       return latestVersion.replace(/\d+$/, (match) => Number(match) + 1)
     })
     return {
+      releaseBlockState,
       breadcrumbData,
       publishBlock,
       state,
