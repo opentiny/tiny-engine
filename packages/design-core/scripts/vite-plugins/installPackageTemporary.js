@@ -32,7 +32,7 @@ export function installPackageTemporary(packageNeedToInstall, tempDir, logger = 
           code ||
           shelljs.cd(tempDir).code ||
           shelljs.exec(`npm install --force`).code ||
-          shelljs.cd(path.resolve(tempDir, '.')).code
+          shelljs.cd(path.relative(tempDir, '.')).code
 
         if (code === 0) {
           logger.info(
