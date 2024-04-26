@@ -4,7 +4,7 @@
       <template #content="{ data }">
         <div class="item-text">
           <div class="tiny-input">
-            <input v-model="data.props.title" class="tiny-input__inner" />
+            <input v-model="data.props.title" @input="labelChange" class="tiny-input__inner" />
           </div>
         </div>
       </template>
@@ -20,7 +20,7 @@
   </div>
 </template>
 <script>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import MetaListItems from './MetaListItems.vue'
 import { useProperties, useResource, useHistory } from '@opentiny/tiny-engine-controller'
 import { utils } from '@opentiny/tiny-engine-utils'
@@ -64,12 +64,7 @@ export default {
         },
         children: [{ componentName: 'div' }]
       })
-      tabsOptions.value.push({
-        label: '选项卡',
-        value: name
-      })
       children.value = [...schemaChildren]
-      emit('update:modelValue', tabsOptions.value)
     }
 
     const delChildren = (data) => {
@@ -77,7 +72,6 @@ export default {
       tabsOptions.value = tabsOptions.value.filter((option) => option.value !== data.props.name)
       children.value = [...schemaChildren]
       useHistory().addHistory()
-      emit('update:modelValue', tabsOptions.value)
     }
 
     const dragEnd = (params = {}) => {
@@ -94,7 +88,29 @@ export default {
       children.value = [...list]
     }
 
-    return { children, addChildren, delChildren, dragEnd }
+    const updateTabsOptions = (schema) => {
+      tabsOptions.value = schema.map((item) => {
+        return {
+          label: item.props.title,
+          value: item.props.name
+        }
+      })
+      emit('update:modelValue', tabsOptions.value)
+    }
+
+    const labelChange = () => {
+      updateTabsOptions(children.value)
+    }
+
+    watch(
+      () => children.value,
+      (value) => {
+        updateTabsOptions(value)
+      },
+      { deep: true }
+    )
+
+    return { children, addChildren, delChildren, labelChange, dragEnd }
   }
 }
 </script>
