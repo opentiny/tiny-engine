@@ -19,6 +19,7 @@ import { Breadcrumb, BreadcrumbItem } from '@opentiny/vue'
 import { useBreadcrumb } from '@opentiny/tiny-engine-controller'
 import { BlockDeployDialog, LoadingButton } from '@opentiny/tiny-engine-common'
 import { utils } from '@opentiny/tiny-engine-utils'
+const { releaseBlockState } = utils
 
 export default {
   components: {
@@ -33,7 +34,6 @@ export default {
     })
     const { CONSTANTS, getBreadcrumbData } = useBreadcrumb()
     const breadcrumbData = getBreadcrumbData()
-    const { releaseBlockState } = utils
     const publishBlock = () => {
       state.showDeployBlock = true
     }

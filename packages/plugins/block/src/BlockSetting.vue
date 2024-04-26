@@ -97,6 +97,7 @@ import {
 import { BlockDeployDialog } from '@opentiny/tiny-engine-common'
 
 const isOpen = ref(false)
+const { releaseBlockState } = utils
 
 export const openPanel = () => {
   isOpen.value = true
@@ -134,7 +135,6 @@ export default {
     const { confirm } = useModal()
     const editBlock = computed(getEditBlock)
     const blockConfigForm = ref(null)
-    const { releaseBlockState } = utils
 
     const state = reactive({
       activeName: ['base', 'attribute', 'event', 'lifeCycle', 'history'],
