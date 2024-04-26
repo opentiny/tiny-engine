@@ -36,7 +36,7 @@
 </template>
 
 <script lang="jsx">
-import { reactive, ref, watchEffect } from 'vue'
+import { reactive, ref, watchEffect, nextTick } from 'vue'
 import { Search, Tree, Collapse, CollapseItem } from '@opentiny/vue'
 import { IconFolderOpened, IconFolderClosed } from '@opentiny/vue-icon'
 import { useCanvas, useApp, useModal, usePage, useBreadcrumb, useLayout } from '@opentiny/tiny-engine-controller'
@@ -105,6 +105,16 @@ export default {
       return pageSettingState.treeDataMapping
     }
 
+    const searchPageData = (value) => {
+      if (Array.isArray(pageTreeRefs?.value)) {
+        nextTick(() => {
+          pageTreeRefs.value.forEach((item) => {
+            item?.filter(value)
+          })
+        })
+      }
+    }
+
     const refreshPageList = async (appId, data) => {
       const pagesData = data ? data : await fetchPageList(appId)
 
@@ -135,7 +145,7 @@ export default {
       const firstGroupTreeData = formatTreeData([...firstGroupData.data], 'parentId', 'id')
       firstGroupData.data = firstGroupTreeData[ROOT_ID].children
       pageSettingState.pages = [firstGroupData, secondGroupData]
-      state.pageSearchValue = ''
+      searchPageData(state.pageSearchValue)
       return pageSettingState.pages
     }
 
@@ -296,14 +306,6 @@ export default {
         refreshPageList(appInfoState.selectedId)
       }
     })
-
-    const searchPageData = (value) => {
-      if (Array.isArray(pageTreeRefs?.value)) {
-        pageTreeRefs.value.forEach((item) => {
-          item?.filter(value)
-        })
-      }
-    }
 
     const filterPageTreeData = (value, data) => {
       if (!value) return true
