@@ -25,7 +25,7 @@
   "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
     "@opentiny/tiny-engine-utils": "workspace:*",
-    "@opentiny/vue": "~3.10.0",
+    "@opentiny/vue": "~3.14.0",
     "@vueuse/core": "^9.6.0"
   },
   "devDependencies": {

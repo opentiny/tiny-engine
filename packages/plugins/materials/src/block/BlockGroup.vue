@@ -402,7 +402,7 @@ export default {
 .blocks-header-wrap {
   display: flex;
   justify-content: space-between;
-  padding: 8px;
+  padding: 0 8px 8px;
 
   .blocks-header-select {
     width: calc(100% - 36px);

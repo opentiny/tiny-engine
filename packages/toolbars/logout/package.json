@@ -24,7 +24,7 @@
   "license": "MIT",
   "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
-    "@opentiny/vue": "~3.10.0"
+    "@opentiny/vue": "~3.14.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",

@@ -20,7 +20,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@opentiny/vue": "~3.10.0",
+    "@opentiny/vue": "~3.14.0",
     "vite-plugin-css-injected-by-js": "^3.3.1"
   },
   "devDependencies": {

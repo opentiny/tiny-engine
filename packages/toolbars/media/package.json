@@ -26,8 +26,8 @@
   "dependencies": {
     "@opentiny/tiny-engine-canvas": "workspace:*",
     "@opentiny/tiny-engine-controller": "workspace:*",
-    "@opentiny/vue": "~3.10.0",
-    "@opentiny/vue-icon": "~3.10.0"
+    "@opentiny/vue": "~3.14.0",
+    "@opentiny/vue-icon": "~3.14.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",

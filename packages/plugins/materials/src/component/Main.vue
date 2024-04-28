@@ -124,7 +124,7 @@ export default {
   flex-direction: column;
 
   .tiny-search {
-    padding: 12px 8px;
+    padding: 0 8px 12px;
   }
 
   .component-group {
