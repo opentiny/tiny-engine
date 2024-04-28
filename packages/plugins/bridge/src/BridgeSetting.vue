@@ -9,7 +9,6 @@
       <div class="header-wrap">
         <svg-button v-show="state.status" class="delete-btn" name="delete" @click="deleteReSource"></svg-button>
         <loading-button :loading="savingState" @save="save"></loading-button>
-        <!-- <tiny-button class="save-btn" type="primary" @click="save">保存</tiny-button> -->
         <svg-button class="close-btn" name="close" @click="closePanel"></svg-button>
       </div>
     </template>
