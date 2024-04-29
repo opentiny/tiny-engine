@@ -10,7 +10,7 @@
  *
  */
 
-import { reactive, readonly, onMounted } from 'vue'
+import { ref, reactive, readonly, onMounted } from 'vue'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { remove } from '@opentiny/vue-renderless/common/array'
 import {
@@ -46,7 +46,6 @@ import { constants, utils } from '@opentiny/tiny-engine-utils'
 import { generateBlock } from '@opentiny/tiny-engine-controller/js/vscodeGenerateFile'
 
 const { HOST_TYPE } = constants
-const { releaseBlockState } = utils;
 const { getBlockList, setBlockList, setCategoryList, getCurrentBlock, addBlockEvent, addBlockProperty } = useBlock()
 const { batchCreateI18n } = useTranslate()
 const { message, confirm } = useModal()
@@ -65,6 +64,8 @@ const DEPLOY_STATUS = readonly({
   Stopped: 2, // 发布失败
   Finished: 3 // 发布成功
 })
+
+export const releaseBlockState = ref(false)
 
 export const DEPLOY_TIPS = {
   1: '正在发布中',

@@ -5,7 +5,7 @@
     </tiny-breadcrumb>
     <loading-button
       v-if="breadcrumbData[0] === CONSTANTS.BLOCKTEXT"
-      :loading="releaseBlockState"
+      :loading="releaseState"
       text="发布区块"
       @save="publishBlock"
     ></loading-button>
@@ -14,12 +14,10 @@
 </template>
 
 <script>
-import { reactive, computed } from 'vue'
+import { ref, reactive, computed, watchEffect } from 'vue'
 import { Breadcrumb, BreadcrumbItem } from '@opentiny/vue'
-import { useBreadcrumb } from '@opentiny/tiny-engine-controller'
+import { useBreadcrumb, useLayout } from '@opentiny/tiny-engine-controller'
 import { BlockDeployDialog, LoadingButton } from '@opentiny/tiny-engine-common'
-import { utils } from '@opentiny/tiny-engine-utils'
-const { releaseBlockState } = utils
 
 export default {
   components: {
@@ -33,9 +31,16 @@ export default {
       showDeployBlock: false
     })
     const { CONSTANTS, getBreadcrumbData } = useBreadcrumb()
+    const { PLUGIN_NAME, getPluginApi } = useLayout()
+    const releaseState = ref(false)
+
     const breadcrumbData = getBreadcrumbData()
     const publishBlock = () => {
       state.showDeployBlock = true
+      const blockApi = getPluginApi(PLUGIN_NAME.BlockManage)
+      watchEffect(() => {
+        releaseState.value = blockApi.releaseBlockState
+      })
     }
 
     const nextVersion = computed(() => {
@@ -56,7 +61,7 @@ export default {
       return latestVersion.replace(/\d+$/, (match) => Number(match) + 1)
     })
     return {
-      releaseBlockState,
+      releaseState,
       breadcrumbData,
       publishBlock,
       state,

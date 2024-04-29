@@ -81,11 +81,11 @@ import { getGlobalConfig, useModal } from '@opentiny/tiny-engine-controller'
 import { BlockHistoryList, PluginSetting, CloseIcon, SvgButton, LoadingButton } from '@opentiny/tiny-engine-common'
 import { previewBlock } from '@opentiny/tiny-engine-controller/js/preview'
 import { LifeCycles } from '@opentiny/tiny-engine-common'
-import { utils } from '@opentiny/tiny-engine-utils'
 import BlockEvent from './BlockEvent.vue'
 import BlockConfig from './BlockConfig.vue'
 import BlockProperty from './BlockProperty.vue'
 import {
+  releaseBlockState,
   getEditBlock,
   delBlock,
   saveBlock,
@@ -97,7 +97,6 @@ import {
 import { BlockDeployDialog } from '@opentiny/tiny-engine-common'
 
 const isOpen = ref(false)
-const { releaseBlockState } = utils
 
 export const openPanel = () => {
   isOpen.value = true
