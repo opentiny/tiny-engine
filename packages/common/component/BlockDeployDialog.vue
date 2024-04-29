@@ -218,7 +218,7 @@ export default {
       }
       try {
         const pageSchema = JSON.parse(state.newCode)
-        setSchema(pageSchema)
+        setSchema({ ...pageSchema, componentName: state.code.componentName })
         close()
       } catch (err) {
         useNotify({
