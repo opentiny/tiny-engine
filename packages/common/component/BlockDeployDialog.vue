@@ -212,19 +212,19 @@ export default {
     }
 
     const save = () => {
-      if (state.newCode) {
-        try {
-          const pageSchema = JSON.parse(state.newCode)
-          setSchema(pageSchema)
-          close()
-        } catch (err) {
-          useNotify({
-            type: 'error',
-            message: '代码静态检查有错误，请先修改后再保存'
-          })
-        }
-      } else {
+      if (!state.newCode) {
         close()
+        return
+      }
+      try {
+        const pageSchema = JSON.parse(state.newCode)
+        setSchema(pageSchema)
+        close()
+      } catch (err) {
+        useNotify({
+          type: 'error',
+          message: '代码静态检查有错误，请先修改后再保存'
+        })
       }
     }
 
