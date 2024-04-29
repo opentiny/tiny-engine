@@ -24,6 +24,7 @@ import GenerateVue from '@opentiny/tiny-engine-toolbar-generate-vue'
 import Refresh from '@opentiny/tiny-engine-toolbar-refresh'
 import Collaboration from '@opentiny/tiny-engine-toolbar-collaboration'
 import Setting from '@opentiny/tiny-engine-toolbar-setting'
+import ChangeTheme from '@opentiny/tiny-engine-toolbar-changetheme'
 
 import Materials from '@opentiny/tiny-engine-plugin-materials'
 import Data from '@opentiny/tiny-engine-plugin-data'
@@ -42,7 +43,8 @@ import Props from '@opentiny/tiny-engine-setting-props'
 import Events from '@opentiny/tiny-engine-setting-events'
 import Styles from '@opentiny/tiny-engine-setting-styles'
 
-import '@opentiny/tiny-engine-theme'
+import '@opentiny/tiny-engine-theme-light'
+import '@opentiny/tiny-engine-theme-dark'
 
 const addons = {
   plugins: [Materials, Tree, Page, Block, Datasource, Bridge, I18n, Script, Data, Schema, Help, Robot],
@@ -60,7 +62,8 @@ const addons = {
     Fullscreen,
     Checkinout,
     Setting,
-    Lang
+    Lang,
+    ChangeTheme
   ],
   settings: [Props, Styles, Events]
 }

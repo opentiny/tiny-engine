@@ -66,6 +66,7 @@
     "@opentiny/tiny-engine-toolbar-fullscreen": "workspace:*",
     "@opentiny/tiny-engine-toolbar-generate-vue": "workspace:*",
     "@opentiny/tiny-engine-toolbar-lang": "workspace:*",
+    "@opentiny/tiny-engine-toolbar-changetheme": "workspace:*",
     "@opentiny/tiny-engine-toolbar-layout": "workspace:*",
     "@opentiny/tiny-engine-toolbar-logo": "workspace:*",
     "@opentiny/tiny-engine-toolbar-logout": "workspace:*",

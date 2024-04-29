@@ -21,7 +21,15 @@
 import { reactive, ref, watch, onUnmounted } from 'vue'
 import { ConfigProvider as TinyConfigProvider } from '@opentiny/vue'
 import designSmbConfig from '@opentiny/vue-design-smb'
-import { useResource, useLayout, useEditorInfo, useModal, useApp, useNotify } from '@opentiny/tiny-engine-controller'
+import {
+  useResource,
+  useLayout,
+  useEditorInfo,
+  useModal,
+  useApp,
+  useNotify,
+  getGlobalConfig
+} from '@opentiny/tiny-engine-controller'
 import AppManage from '@opentiny/tiny-engine-plugin-page'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
 import DesignToolbars from './DesignToolbars.vue'
@@ -66,6 +74,10 @@ export default {
     const { layoutState } = useLayout()
     const { plugins } = layoutState
     const right = ref(null)
+
+    // 给根元素初始化主题色
+    const theme = getGlobalConfig().theme
+    document.documentElement.setAttribute('data-theme', theme)
 
     // 此处接收画布内部的错误和警告提示
     const { data } = useBroadcastChannel({ name: BROADCAST_CHANNEL.Notify })

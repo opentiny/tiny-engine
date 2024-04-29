@@ -8,7 +8,6 @@ import nodeGlobalsPolyfillPlugin from '@esbuild-plugins/node-globals-polyfill'
 import nodeModulesPolyfillPlugin from '@esbuild-plugins/node-modules-polyfill'
 import nodePolyfill from 'rollup-plugin-polyfill-node'
 import esbuildCopy from 'esbuild-plugin-copy'
-import lowcodeConfig from './config/lowcode.config'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import { importmapPlugin } from './scripts/externalDeps'
 import visualizer from 'rollup-plugin-visualizer'
@@ -160,6 +159,7 @@ const devAlias = {
   '@opentiny/tiny-engine-toolbar-breadcrumb': path.resolve(__dirname, '../toolbars/breadcrumb/index.js'),
   '@opentiny/tiny-engine-toolbar-fullscreen': path.resolve(__dirname, '../toolbars/fullscreen/index.js'),
   '@opentiny/tiny-engine-toolbar-lang': path.resolve(__dirname, '../toolbars/lang/index.js'),
+  '@opentiny/tiny-engine-toolbar-changetheme': path.resolve(__dirname, '../toolbars/changetheme/index.js'),
   '@opentiny/tiny-engine-toolbar-layout': path.resolve(__dirname, '../toolbars/layout/index.js'),
   '@opentiny/tiny-engine-toolbar-checkinout': path.resolve(__dirname, '../toolbars/lock/index.js'),
   '@opentiny/tiny-engine-toolbar-logo': path.resolve(__dirname, '../toolbars/logo/index.js'),
@@ -178,18 +178,10 @@ const devAlias = {
   '@opentiny/tiny-engine-svgs': path.resolve(__dirname, '../svgs/index.js'),
   '@opentiny/tiny-engine-http': path.resolve(__dirname, '../http/src/index.js'),
   '@opentiny/tiny-engine-canvas': path.resolve(__dirname, '../canvas/src/index.js'),
-  '@opentiny/tiny-engine-theme': path.resolve(__dirname, `../theme/${lowcodeConfig.theme}/index.less`),
   '@opentiny/tiny-engine-utils': path.resolve(__dirname, '../utils/src/index.js'),
   '@opentiny/tiny-engine-webcomponent-core': path.resolve(__dirname, '../webcomponent/src/lib.js'),
   '@opentiny/tiny-engine-i18n-host': path.resolve(__dirname, '../i18n/src/lib.js'),
   '@opentiny/tiny-engine-builtin-component': path.resolve(__dirname, '../builtinComponent/index.js')
-}
-
-const prodAlias = {
-  '@opentiny/tiny-engine-theme': path.resolve(
-    __dirname,
-    `node_modules/@opentiny/tiny-engine-theme-${lowcodeConfig.theme}/dist/style.css`
-  )
 }
 
 const commonAlias = {
@@ -249,7 +241,7 @@ export default defineConfig(({ command, mode }) => {
     ]
   } else {
     // command === 'build'
-    config.resolve.alias = { ...commonAlias, ...prodAlias }
+    config.resolve.alias = { ...commonAlias }
 
     monacoEditorPluginInstance = monacoEditorPlugin({ publicPath: monacoPublicPath[mode] })
 
