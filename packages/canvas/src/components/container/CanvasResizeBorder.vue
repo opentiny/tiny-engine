@@ -8,6 +8,7 @@
 
 <script>
 import { reactive, watch } from 'vue'
+import { useLayout } from '@opentiny/tiny-engine-controller'
 import { getCurrent, updateRect, selectState, querySelectById } from './container'
 
 export default {
@@ -40,10 +41,20 @@ export default {
     const handleResize = (event, type) => {
       let { clientX, clientY } = event
 
+      const siteCanvasRect = document.querySelector('.site-canvas').getBoundingClientRect()
+      const scale = useLayout().getScale()
+      const offsetX = ((1 - scale) / 2) * siteCanvasRect.width
+
       if (type === 'iframe' && props.iframe) {
-        const iframeRect = props.iframe.getBoundingClientRect()
-        clientX += iframeRect.left
-        clientY += iframeRect.top
+        clientX = clientX - offsetX
+      } else {
+        clientX = clientX - siteCanvasRect.left - offsetX
+        clientY = clientY - siteCanvasRect.top
+
+        if (scale < 1) {
+          clientX = clientX / scale - offsetX
+          clientY = clientY / scale
+        }
       }
 
       const { parent, schema } = getCurrent()
