@@ -39,22 +39,17 @@ export default {
     }
 
     const handleResize = (event, type) => {
+      if (!props.iframe) {
+        return
+      }
+
       let { clientX, clientY } = event
-
-      const siteCanvasRect = document.querySelector('.site-canvas').getBoundingClientRect()
+      const iframeRect = props.iframe.getBoundingClientRect()
       const scale = useLayout().getScale()
-      const offsetX = ((1 - scale) / 2) * siteCanvasRect.width
 
-      if (type === 'iframe' && props.iframe) {
-        clientX = clientX - offsetX
-      } else {
-        clientX = clientX - siteCanvasRect.left - offsetX
-        clientY = clientY - siteCanvasRect.top
-
-        if (scale < 1) {
-          clientX = clientX / scale - offsetX
-          clientY = clientY / scale
-        }
+      if (type !== 'iframe') {
+        clientX = (clientX - iframeRect.left) / scale
+        clientY = (clientY - iframeRect.top) / scale
       }
 
       const { parent, schema } = getCurrent()
@@ -76,14 +71,9 @@ export default {
         const parentWidth = parseInt(window.getComputedStyle(parentDomNode).width, 10)
 
         // 最大宽度不能大于父组件宽度
-        if (newWidth >= parentWidth) {
-          newWidth = parentWidth
-        }
-
+        newWidth = Math.min(newWidth, parentWidth)
         // 最小宽度32
-        if (newWidth <= 32) {
-          newWidth = 32
-        }
+        newWidth = Math.max(newWidth, 32)
 
         schema.props.flexBasis = `${newWidth}px`
         schema.props.widthType = 'fixed'

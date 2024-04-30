@@ -51,13 +51,11 @@ export const closeMenu = () => {
   current.value = null
 }
 
-export const openMenu = (offset, event) => {
-  const { x, y } = offset
-  const { getScale } = useLayout()
+export const openMenu = (event) => {
   menuState.position = {
     // 位置处于画布右侧边缘时需要调整显示方向 TODO
-    left: event.clientX * getScale() + x + 2 + 'px',
-    top: event.clientY * getScale() + y + 'px'
+    left: event.clientX + 2 + 'px',
+    top: event.clientY + 'px'
   }
   menuState.show = sessionStorage.getItem('pageInfo') ? true : false
 
@@ -235,7 +233,7 @@ export default {
 
 <style lang="less" scoped>
 .context-menu {
-  position: fixed;
+  position: absolute;
   z-index: 10;
 }
 .menu-item {
