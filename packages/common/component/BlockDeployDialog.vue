@@ -84,6 +84,7 @@ import {
 import { theme } from '@opentiny/tiny-engine-controller/adapter'
 import { useLayout, useNotify } from '@opentiny/tiny-engine-controller'
 import { getSchema, setSchema } from '@opentiny/tiny-engine-canvas'
+import { constants } from '@opentiny/tiny-engine-utils'
 import VueMonaco from './VueMonaco.vue'
 
 export default {
@@ -106,6 +107,7 @@ export default {
   },
   emits: ['update:visible'],
   setup(props, { emit, attrs }) {
+    const { COMPONENT_NAME } = constants
     const formState = reactive({
       deployInfo: '',
       version: '',
@@ -218,7 +220,7 @@ export default {
       }
       try {
         const pageSchema = JSON.parse(state.newCode)
-        setSchema({ ...pageSchema, componentName: state.code.componentName })
+        setSchema({ ...pageSchema, componentName: COMPONENT_NAME.Block })
         close()
       } catch (err) {
         useNotify({
