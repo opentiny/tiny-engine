@@ -7035,7 +7035,7 @@
                 "defaultValue": ""
               }
             },
-            "onBeforeMount": "console.log('table on load'); this.options = source.data"
+            "onBeforeMount": "this.options = source.data"
           },
           "configure": {
             "loop": true,
@@ -8549,7 +8549,7 @@
                     "required": true,
                     "readOnly": false,
                     "disabled": false,
-                    "onChange": "function(val) { console.log(val); this.setPropertyProps('modelValue', { 'options': val }) }",
+                    "onChange": "function(val) { this.setPropertyProps('modelValue', { 'options': val }) }",
                     "defaultValue": "",
                     "cols": 12,
                     "bindState": false,
@@ -10266,7 +10266,7 @@
             "contentMenu": {
               "actions": ["create symbol"]
             },
-            "onBeforeMount": "console.log('table on load'); this.pager = source.pager; this.fetchData = source.fetchData; this.data = source.data ;this.columns = source.columns"
+            "onBeforeMount": "this.pager = source.pager; this.fetchData = source.fetchData; this.data = source.data ;this.columns = source.columns"
           },
           "configure": {
             "loop": true,
