@@ -15,8 +15,13 @@
         :modelValue="query"
         class="left-filter"
         placeholder="请输入搜索条件"
+        clearable
         @update:modelValue="search"
-      ></tiny-search>
+      >
+        <template #prefix>
+          <tiny-icon-search />
+        </template>
+      </tiny-search>
       <div class="add-btn">
         <tiny-button @click="openPanel(OPTION_TYPE.ADD)">{{
           activeName === STATE.CURRENT_STATE ? '添加变量' : '添加全局变量'
@@ -76,6 +81,7 @@ import {
   useHelp
 } from '@opentiny/tiny-engine-controller'
 import { setState, getSchema, deleteState, setGlobalState, getGlobalState } from '@opentiny/tiny-engine-canvas'
+import { iconSearch } from '@opentiny/vue-icon'
 import { CloseIcon, LinkButton } from '@opentiny/tiny-engine-common'
 import DataSourceList from './DataSourceList.vue'
 import CreateVariable from './CreateVariable.vue'
@@ -94,7 +100,8 @@ export default {
     TinyTabs: Tabs,
     TinyTabItem: TabItem,
     CreateStore,
-    LinkButton
+    LinkButton,
+    TinyIconSearch: iconSearch()
   },
   setup(props, { emit }) {
     const variableRef = ref(null)
