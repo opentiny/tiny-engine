@@ -1,8 +1,9 @@
 <template>
-  <teleport to="body">
-    <div :style="{ top: modal.top + 'px', left: modal.left + 'px' }" class="modal-wrapper">
+  <teleport to=".tiny-engine-right-wrap">
+    <div class="modal-wrapper">
       <div class="modal-mask" @click="$emit('close')"></div>
-      <div class="modal-content">
+
+      <div :style="{ top: modal.top - 30 + 'px' }" class="modal-content">
         <slot></slot>
       </div>
     </div>
@@ -47,31 +48,26 @@ export default {
 
 <style lang="less" scoped>
 .modal-wrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
-  margin-top: 10px;
-  width: calc(var(--base-right-panel-width) - 24px);
-  z-index: 9999;
-  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.5);
   .modal-mask {
-    position: fixed;
+    position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
-    left: calc(100% - var(--base-right-panel-width));
-    background: rgba(33, 33, 33, 0.65);
+    left: 0;
+    background: rgba(0, 0, 0, 0.2);
     z-index: 9999;
   }
 
   .modal-content {
-    position: relative;
-    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 16px;
     z-index: 10000;
     padding: 8px;
     color: var(--ti-lowcode-toolbar-breadcrumb-color);
     border: 1px solid var(--ti-lowcode-tabs-border-color);
-    border-radius: 4px;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
     background-color: var(--ti-lowcode-toolbar-bg);
     overflow: auto;
     max-height: 100%;
