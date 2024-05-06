@@ -32,6 +32,9 @@ export default {
 
       if (pageId) {
         fetchPageHistory(pageId + params).then((data) => {
+          if (!data) {
+            return
+          }
           data.forEach((item) => {
             item.backupTitle = item.message
             item.backupTime = getDateFromNow(new Date(item.time))
