@@ -110,10 +110,7 @@
           </tiny-grid-column>
           <template #empty>
             <div v-if="isLoading" id="empty-loading-box" class="i18n-loading"></div>
-            <div v-else class="empty-wrap">
-              <svg-icon class="empty-icon" name="empty"></svg-icon>
-              <p class="empty-text">暂无数据</p>
-            </div>
+            <search-empty isShow="!isLoading" />
           </template>
         </tiny-grid>
       </div>
@@ -126,7 +123,7 @@ import { computed, ref, watchEffect, reactive, onMounted, nextTick, resolveCompo
 import useClipboard from 'vue-clipboard3'
 import { Grid, GridColumn, Input, Popover, Button, FileUpload, Loading, Tooltip, Select } from '@opentiny/vue'
 import { iconLoadingShadow } from '@opentiny/vue-icon'
-import { PluginPanel, LinkButton } from '@opentiny/tiny-engine-common'
+import { PluginPanel, LinkButton, SearchEmpty } from '@opentiny/tiny-engine-common'
 import { useTranslate, useApp, useModal, getGlobalConfig, useHelp } from '@opentiny/tiny-engine-controller'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { useHttp } from '@opentiny/tiny-engine-http'
@@ -143,7 +140,8 @@ export default {
     PluginPanel,
     LinkButton,
     TinySelect: Select,
-    TinyFileUpload: FileUpload
+    TinyFileUpload: FileUpload,
+    SearchEmpty
   },
   setup() {
     // 组件库iconLoadingShadow图标不能切换颜色，因此不同主题用不同icon
