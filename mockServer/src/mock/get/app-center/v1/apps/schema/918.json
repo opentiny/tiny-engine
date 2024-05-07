@@ -769,7 +769,7 @@
               {
                 "componentName": "TinyTimeLine",
                 "props": {
-                  "active": "2",
+                  "active": 2,
                   "data": [
                     {
                       "name": "基础配置"
@@ -1525,7 +1525,7 @@
           {
             "componentName": "div",
             "props": {
-              "style": "border-width: 1px; border-style: solid; border-color: #ffffff; padding-top: 10px; padding-left: 10px; padding-right: 10px; box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px; background-color: #fff; position: fixed; inset: auto 0% 0% 0%; height: 80px; line-height: 80px; border-radius: 0px;"
+              "style": "border-width: 1px;z-index:1;border-style: solid; border-color: #ffffff; padding-top: 10px; padding-left: 10px; padding-right: 10px; box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px; background-color: #fff; position: fixed; inset: auto 0% 0% 0%; height: 80px; line-height: 80px; border-radius: 0px;"
             },
             "children": [
               {
@@ -1550,7 +1550,7 @@
                   {
                     "componentName": "TinyCol",
                     "props": {
-                      "span": "8"
+                      "span": 8
                     },
                     "id": "b9d051a5",
                     "children": [
@@ -1563,7 +1563,7 @@
                           {
                             "componentName": "TinyCol",
                             "props": {
-                              "span": "5",
+                              "span": 5,
                               "style": "display: flex;"
                             },
                             "id": "02352776",
@@ -1597,7 +1597,7 @@
                           {
                             "componentName": "TinyCol",
                             "props": {
-                              "span": "7"
+                              "span": 7
                             },
                             "id": "82b6c659",
                             "children": [
@@ -1665,7 +1665,7 @@
                   {
                     "componentName": "TinyCol",
                     "props": {
-                      "span": "4",
+                      "span": 4,
                       "style": "display: flex; flex-direction: row-reverse; border-radius: 0px; height: 100%; justify-content: flex-start; align-items: center;"
                     },
                     "id": "10b73009",
@@ -1690,7 +1690,7 @@
         ],
         "fileName": "createVm",
         "meta": {
-          "id": 1977,
+          "id": "NTJ4MjvqoVj8OVsc",
           "parentId": "0",
           "group": "staticPages",
           "occupier": {
@@ -1922,6 +1922,13 @@
         "componentName": "TinySelect",
         "package": "@opentiny/vue",
         "exportName": "Select",
+        "destructuring": true,
+        "version": "0.1.16"
+      },
+      {
+        "componentName": "TinyButton",
+        "package": "@opentiny/vue",
+        "exportName": "Button",
         "destructuring": true,
         "version": "0.1.16"
       },

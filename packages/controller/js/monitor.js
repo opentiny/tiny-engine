@@ -93,6 +93,10 @@ const promiseMonitoring = () => {
  */
 
 export const iframeMonitoring = () => {
+  if (!monitorUrl) {
+    return false
+  }
+
   window.frames[0].onerror = function (errorMessage, scriptURI, lineNo, columnNo, error) {
     requestEvent(monitorUrl, {
       event_type: 'design_iframeError',

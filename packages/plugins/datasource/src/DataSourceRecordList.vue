@@ -11,16 +11,31 @@
   >
     <template #content>
       <div class="actions">
-        <tiny-link class="addButton" :underline="false" :disabled="!allowCreate" @click.stop="insertNewData"
+        <tiny-link
+          type="primary"
+          class="addButton"
+          :underline="false"
+          :disabled="!allowCreate"
+          @click.stop="insertNewData"
           ><icon-plusCircle class="tiny-svg-size icon-plusCircle"></icon-plusCircle>新增静态数据</tiny-link
         >
-        <tiny-link class="importButton" :underline="false" :disabled="!allowCreate" @click.stop="showImportModal(true)"
+        <tiny-link
+          type="primary"
+          class="importButton"
+          :underline="false"
+          :disabled="!allowCreate"
+          @click.stop="showImportModal(true)"
           ><icon-import class="tiny-svg-size icon-import"></icon-import>批量导入</tiny-link
         >
-        <tiny-button class="box-all-delete" type="text" :disabled="state.isBatchDeleteDisable" @click.stop="batchDelete"
-          ><span class="all-delete">批量删除</span></tiny-button
+        <tiny-link
+          type="primary"
+          class="box-all-delete"
+          :underline="false"
+          :disabled="state.isBatchDeleteDisable"
+          @click.stop="batchDelete"
+          ><span class="all-delete">批量删除</span></tiny-link
         >
-        <tiny-link class="download" :underline="false" @click="download"
+        <tiny-link type="primary" class="download" :underline="false" @click="download"
           ><icon-download class="tiny-svg-size icon-download"></icon-download>下载导入模板</tiny-link
         >
       </div>
@@ -80,7 +95,7 @@
 <script lang="jsx">
 import { reactive, ref, watchEffect, watch, computed } from 'vue'
 import { camelize, capitalize } from '@vue/shared'
-import { Grid, Pager, Button, Input, Numeric, DatePicker, Switch, Slider, Link } from '@opentiny/vue'
+import { Grid, Pager, Input, Numeric, DatePicker, Switch, Slider, Link } from '@opentiny/vue'
 import { IconPlusCircle, IconImport } from '@opentiny/vue-icon'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
 import { utils } from '@opentiny/tiny-engine-utils'
@@ -104,7 +119,6 @@ export const close = () => {
 export default {
   components: {
     TinyGrid: Grid,
-    TinyButton: Button,
     PluginSetting,
     TinyPager: Pager,
     DataSourceRecordUpload,
@@ -595,14 +609,13 @@ export default {
   align-items: center;
   margin: 16px 0 30px 0;
   .box-all-delete {
-    margin: -3px 5px 0 5px;
+    margin: 1px 5px 0 5px;
     .all-delete {
       font-size: 14px;
     }
   }
   .download {
     margin: 0 12px;
-    color: var(--ti-lowcode-datasource-common-text-main-color);
     font-size: 14px;
     .icon-download {
       margin: 0 1px 4px 0;
@@ -611,7 +624,6 @@ export default {
   }
   .addButton {
     margin: 0 12px;
-    color: var(--ti-lowcode-datasource-common-text-main-color);
     font-size: 14px;
     .icon-plusCircle {
       margin: 0 1px 4px 0;
@@ -620,7 +632,6 @@ export default {
   }
   .importButton {
     margin: 0 12px;
-    color: var(--ti-lowcode-datasource-common-text-main-color);
     font-size: 14px;
     .icon-import {
       margin: 0 1px 4px 0;

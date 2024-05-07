@@ -23,6 +23,7 @@
           <data-source-field-type @cancel="closeFieldType" @select="selectFieldType"></data-source-field-type>
           <data-source-field-form
             ref="fieldForm"
+            :modelValue="modelValue"
             :field="state.field"
             :editable="true"
             :is-open="false"
