@@ -3,6 +3,7 @@ import { toEventKey, isGetter, isSetter } from '@/utils'
 import { generateImportByPkgName } from '@/utils/generateImportStatement'
 import { INSERT_POSITION } from '@/constant'
 import { transformObjType } from './generateAttribute'
+import { hasJsx } from '@/utils/hasJsx'
 
 export const defaultGenImportHook = (schema, globalHooks) => {
   const dependenciesMap = globalHooks.getImport() || {}
@@ -53,8 +54,6 @@ export const defaultGenStateHook = (schema, globalHooks) => {
 
 export const defaultGenMethodHook = (schema, globalHooks) => {
   const methods = globalHooks.getMethods() || {}
-
-  // TODO: 判断 methods 中是否有 jsx
   const methodsArr = Object.entries(methods).map(([key, item]) => `const ${key} = wrap(${item.value})`)
   const methodsNames = Object.keys(methods)
   const wrapMethods = methodsNames.length ? `wrap({ ${methodsNames.join(',')} })` : ''
@@ -226,12 +225,7 @@ export const genScriptByHook = (schema, globalHooks, config) => {
     scriptTag = `${scriptTag} lang="${scriptConfig.lang}"`
   }
 
-  scriptTag = `${scriptTag}>`
-
-  return `
-${scriptTag}
-${importStr}
-
+  const content = `
 ${statementGroupByPosition[AFTER_IMPORT].join('\n')}
 ${statementGroupByPosition[BEFORE_PROPS].join('\n')}
 ${propsStr}
@@ -249,6 +243,21 @@ ${statementGroupByPosition[BEFORE_METHODS].join('\n')}
 ${methodStr}
 ${statementGroupByPosition[AFTER_METHODS].join('\n')}
 
-${lifeCycleStr}
+${lifeCycleStr}`
+
+  // 检测当前 script 内容是否有 jsx，如果有且未配置lang，则需要自动加上 jsx 的配置
+  const isHasJsx = hasJsx(content)
+
+  if (!scriptConfig.lang && isHasJsx) {
+    scriptTag = `${scriptTag} lang="jsx"`
+  }
+
+  scriptTag = `${scriptTag}>`
+
+  return `
+${scriptTag}
+${importStr}
+
+${content}
 </script>`
 }
