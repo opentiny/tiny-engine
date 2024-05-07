@@ -37,7 +37,7 @@ export default {
   },
   emits: ['update:modelValue'],
   setup(props, { emit }) {
-    const tabsOptions = ref(props.modelValue)
+    const tabsOptions = ref([])
     const { children: schemaChildren, componentName } = useProperties().getSchema()
     const configureMap = useResource().getConfigureMap()
     const childComponentName =
@@ -107,7 +107,7 @@ export default {
       (value) => {
         updateTabsOptions(value)
       },
-      { deep: true }
+      { deep: true, immediate: true }
     )
 
     return { children, addChildren, delChildren, labelChange, dragEnd }
