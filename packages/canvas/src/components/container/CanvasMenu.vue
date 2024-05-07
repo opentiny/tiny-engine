@@ -69,6 +69,7 @@ export const openMenu = (event) => {
       if (right > canvasRect.right) {
         menuState.position.left = `${parseInt(menuState.position.left) - width - 2}px`
       }
+      // sub-menu样式width为100px，少于100宽度的空白区域则放置到左侧
       if (right + 100 < canvasRect.right) {
         subMenuStyles.value = { right: '-100px' }
       } else {
