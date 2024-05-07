@@ -11,12 +11,13 @@
  */
 
 import { toRaw, nextTick, shallowReactive, ref } from 'vue'
-import { constants } from '@opentiny/tiny-engine-utils'
+import { constants, utils } from '@opentiny/tiny-engine-utils'
 import useCanvas from './useCanvas'
 import useResource from './useResource'
 import useTranslate from './useTranslate'
 
 const { COMPONENT_NAME } = constants
+const { delNullKey } = utils
 const propsUpdateKey = ref(0)
 
 const otherBaseKey = {
@@ -153,6 +154,90 @@ const properties = shallowReactive({
 
 const isPageOrBlock = (schema) => [COMPONENT_NAME.Block, COMPONENT_NAME.Page].includes(schema?.componentName)
 
+const getPropertyItem = (propertyName, properties) => {
+  const { pageState } = useCanvas()
+
+  if (!properties) {
+    properties = pageState.properties
+  }
+  let propertyItem = null
+  properties.some((property) => {
+    return property.content.some((item) => {
+      if (item.property === propertyName) {
+        propertyItem = item
+        return true
+      }
+      if (item.properties) {
+        propertyItem = getPropertyItem(propertyName, item.properties)
+        return propertyItem
+      }
+      return false
+    })
+  })
+  return propertyItem
+}
+
+/**
+ * get property value
+ * @param {string} propertyName
+ * @returns any
+ */
+const getPropertyValue = (propertyName) => {
+  const propertyItem = getPropertyItem(propertyName)
+  return propertyItem?.widget?.props?.modelValue
+}
+
+/**
+ * set property value
+ * @param {string} propertyName
+ * @param {any} value
+ */
+const setPropertyValue = async (propertyName, value) => {
+  const propertyItem = getPropertyItem(propertyName)
+  if (propertyItem?.widget?.props) {
+    await nextTick()
+    propertyItem.widget.props.modelValue = value
+  }
+}
+
+/**
+ * get property props
+ * @param {string} propertyName
+ * @returns object
+ */
+const getPropertyProps = (propertyName) => {
+  const propertyItem = getPropertyItem(propertyName)
+  return propertyItem?.widget?.props
+}
+
+/**
+ * set property props
+ * @param {string} propertyName
+ * @param {object} props
+ */
+const setPropertyProps = (propertyName, props = {}) => {
+  const propertyItem = getPropertyItem(propertyName)
+  if (propertyItem?.widget?.props) {
+    const realProps = delNullKey(props, { deep: false, keepRef: true })
+    if (!propertyItem?.widget?.props) {
+      propertyItem.widget.props = {}
+    }
+    Object.assign(propertyItem.widget?.props, realProps)
+  }
+}
+
+const getPropertyHidden = (propertyName) => {
+  const propertyItem = getPropertyItem(propertyName)
+  return propertyItem?.hidden ?? false
+}
+
+const setPropertyHidden = (propertyName, hidden) => {
+  const propertyItem = getPropertyItem(propertyName)
+  if (propertyItem) {
+    propertyItem.hidden = Boolean(hidden)
+  }
+}
+
 const getProps = (schema, parent) => {
   // 1 现在选中的节点和当前节点一样，不需要重新计算, 2 默认进来由于scheme和properities.schema相等，因此判断如果是“页面或者区块”需要进入if判断
   if (schema && (properties.schema !== schema || isPageOrBlock(schema))) {
@@ -219,6 +304,12 @@ const setProps = (schema) => {
 
 export default function () {
   return {
+    getPropertyHidden,
+    setPropertyHidden,
+    getPropertyValue,
+    setPropertyValue,
+    getPropertyProps,
+    setPropertyProps,
     getProps,
     getProp,
     setProps,

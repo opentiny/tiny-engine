@@ -108,7 +108,6 @@ import { MetaComponents } from '../index'
 import MetaBindVariable from './MetaBindVariable.vue'
 import MetaCodeEditor from './MetaCodeEditor.vue'
 import MultiTypeSelector from './MultiTypeSelector.vue'
-import * as propertyUtils from '../js/properties'
 import { useHistory, useProperties, useResource, useLayout, useCanvas } from '@opentiny/tiny-engine-controller'
 import { generateFunction } from '@opentiny/tiny-engine-controller/utils'
 import { SCHEMA_DATA_TYPE, PAGE_STATUS, TYPES } from '@opentiny/tiny-engine-controller/js/constants'
@@ -365,7 +364,7 @@ export default {
 
     const executeRelationAction = (value, preValue) => {
       const { onChange, rules } = props.property
-      const { setProp, delProp } = useProperties()
+      const { setProp, delProp, setPropertyProps } = useProperties()
 
       // 关联
       if (onChange && propsObj) {
@@ -375,7 +374,7 @@ export default {
             config: {
               ...widget.value?.props
             },
-            setPropertyProps: propertyUtils.setPropertyProps,
+            setPropertyProps,
             setProp: setProp,
             delProp
           })
