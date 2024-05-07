@@ -1,7 +1,7 @@
 <template>
   <div class="blocks-wrap">
     <block-group v-model="state.groups" @changeGroup="changeGroup"></block-group>
-    <tiny-search v-model="state.searchValue" placeholder="请输入关键字搜索">
+    <tiny-search v-model="state.searchValue" clearable placeholder="请输入关键字搜索">
       <template #prefix> <tiny-icon-search /> </template>
     </tiny-search>
     <block-list v-model:blockList="filterBlocks" :show-add-button="true" :show-block-shot="true"></block-list>

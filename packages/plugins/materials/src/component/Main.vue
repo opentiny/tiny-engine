@@ -1,6 +1,6 @@
 <template>
   <div class="components-wrap">
-    <tiny-search v-model="state.searchValue" placeholder="请输入关键字搜索" @update:modelValue="change">
+    <tiny-search v-model="state.searchValue" placeholder="请输入关键字搜索" clearable @update:modelValue="change">
       <template #prefix> <icon-search /> </template>
     </tiny-search>
     <tiny-collapse v-model="state.activeName" class="lowcode-scrollbar">
@@ -24,6 +24,7 @@
           </template>
         </ul>
       </tiny-collapse-item>
+      <search-empty :isShow="!state.components.length" />
     </tiny-collapse>
   </div>
 </template>
@@ -31,6 +32,7 @@
 <script>
 import { inject, onMounted, reactive, ref } from 'vue'
 import { Collapse, CollapseItem, Search } from '@opentiny/vue'
+import { SearchEmpty } from '@opentiny/tiny-engine-common'
 import { iconSearch } from '@opentiny/vue-icon'
 import { useResource } from '@opentiny/tiny-engine-controller'
 import { CanvasDragItem, addComponent } from '@opentiny/tiny-engine-canvas'
@@ -41,7 +43,8 @@ export default {
     IconSearch: iconSearch(),
     TinyCollapse: Collapse,
     TinyCollapseItem: CollapseItem,
-    CanvasDragItem
+    CanvasDragItem,
+    SearchEmpty
   },
   setup() {
     const COMPONENT_PANEL_COLUMNS = '1fr 1fr 1fr'
