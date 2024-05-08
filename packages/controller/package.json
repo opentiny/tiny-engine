@@ -31,9 +31,9 @@
   "license": "MIT",
   "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
-    "@babel/generator": "7.18.13",
-    "@babel/parser": "7.18.13",
-    "@babel/traverse": "7.18.13",
+    "@babel/generator": "~7.23.2",
+    "@babel/parser": "~7.23.2",
+    "@babel/traverse": "~7.23.2",
     "@opentiny/tiny-engine-builtin-component": "workspace:*",
     "@opentiny/tiny-engine-http": "workspace:*",
     "@opentiny/tiny-engine-i18n-host": "workspace:*",

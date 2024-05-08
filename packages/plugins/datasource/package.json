@@ -33,7 +33,7 @@
     "@opentiny/vue-icon": "~3.10.0",
     "@opentiny/vue-renderless": "~3.10.0",
     "@vue/shared": "^3.3.4",
-    "axios": "^0.27.2",
+    "axios": "~0.28.0",
     "vue-clipboard3": "^2.0.0",
     "xlsx": "^0.18.5"
   },
