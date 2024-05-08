@@ -8,11 +8,11 @@ test('should not be array or object value', () => {
 })
 
 test('should be array value', () => {
-  expect(isOmitValue([], true)).toBe(true)
+  expect(isOmitValue([])).toBe(true)
   expect(isOmitValue([1, 2, 3], true)).toBe(false)
 })
 
 test('should be object value', () => {
-  expect(isOmitValue({}, true)).toBe(true)
-  expect(isOmitValue({ name: 'astro', id: 1 }, true)).toBe(false)
+  expect(isOmitValue({})).toBe(true)
+  expect(isOmitValue({ name: 'astro', id: 1 })).toBe(false)
 })

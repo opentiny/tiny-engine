@@ -29,7 +29,7 @@ const testObj = {
 }
 
 test('should be object value, deep is false', () => {
-  expect(delNullKey(testObj, { deep: false, keepRef: false })).toBe({
+  expect(delNullKey(testObj, { deep: false, keepRef: true })).toBe({
     number1: 1,
     number2: 0,
     string1: '1',
@@ -48,8 +48,8 @@ test('should be object value, deep is false', () => {
   })
 })
 
-test('should be object value, keepRef is false', () => {
-  expect(delNullKey(testObj, { deep: true, keepRef: false })).toBe({
+test('should be object value, keepRef is true', () => {
+  expect(delNullKey(testObj, { deep: true, keepRef: true })).toBe({
     number1: 1,
     number2: 0,
     string1: '1',
@@ -65,8 +65,8 @@ test('should be object value, keepRef is false', () => {
   })
 })
 
-test('should be object value, keepRef is true', () => {
-  expect(delNullKey(testObj, { deep: true, keepRef: true })).toBe({
+test('should be object value, keepRef is false', () => {
+  expect(delNullKey(testObj, { deep: true, keepRef: false })).toBe({
     number1: 1,
     number2: 0,
     string1: '1',
