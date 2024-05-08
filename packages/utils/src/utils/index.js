@@ -70,7 +70,7 @@ export const isOmitValue = (value, keepRef = false) => {
  * 过滤对象属性、数组的空值
  * 过滤的空值包括： []、{}、''、null、undefined
  * @param {object | Array<any>} obj
- * @param {{deep: boolean; keepRef: boolean}} deep 是否深度过滤，默认true
+ * @param {{deep: boolean; keepRef: boolean}} deep 是否深度过滤; keepRef 是否过滤空数组或空对象
  * @returns 过滤的对象
  */
 export const delNullKey = (obj = {}, options = {}) => {
