@@ -1,0 +1,117 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "clearable": {
+        "title": "是否可清空",
+        "type": "boolean",
+        "default": false
+      },
+      "debounce": {
+        "title": "获取输入建议的去抖延时",
+        "type": "number",
+        "default": 300
+      },
+      "disabled": {
+        "title": "禁用",
+        "type": "boolean",
+        "default": false
+      },
+      "hide-loading": {
+        "title": "是否隐藏远程加载时的加载图标",
+        "type": "boolean",
+        "default": false
+      },
+      "highlight-first-item": {
+        "title": "是否默认突出显示远程搜索建议中的第一项",
+        "type": "boolean",
+        "default": false
+      },
+      "label": {
+        "title": "输入框关联的label文字",
+        "type": "string",
+        "default": ""
+      },
+      "name": {
+        "title": "原生属性name",
+        "type": "string",
+        "default": ""
+      },
+      "placeholder": {
+        "title": "输入框占位文本",
+        "type": "string",
+        "default": ""
+      },
+      "$$placement": {
+        "title": "菜单弹出位置",
+        "type": "string",
+        "enum": ["top", "top-start", "top-end", "bottom", "bottom-start", "bottom-end"],
+        "enumNames": ["顶部", "顶部左侧", "顶部右侧", "底部", "底部左侧", "底部右侧"],
+        "default": "bottom-start"
+      },
+      "popper-append-to-body": {
+        "title": "是否将下拉列表插入至 body 元素。在下拉列表的定位出现问题时，可将该属性设置为 false",
+        "type": "boolean",
+        "default": true
+      },
+      "popper-class": {
+        "title": "Autocomplete 下拉列表的类名",
+        "type": "string",
+        "default": ""
+      },
+      "$$prefix-icon": {
+        "title": "输入框头部图标",
+        "type": ["string", "object"],
+        "default": ""
+      },
+      "select-when-unmatched": {
+        "title": "在输入没有任何匹配建议的情况下，按下回车是否触发 select 事件",
+        "type": "boolean",
+        "default": false
+      },
+      "size": {
+        "title": "设置组件大小",
+        "type": "string",
+        "enum": ["medium", "small", "mini"],
+        "enumNames": ["中等尺寸", "较小尺寸", "迷你尺寸"],
+        "default": ""
+      },
+      "$$suffix-icon": {
+        "title": "输入框尾部图标",
+        "type": ["string", "object"],
+        "default": ""
+      },
+      "trigger-on-focus": {
+        "title": "是否在输入框 focus 时显示建议列表",
+        "type": "boolean",
+        "default": true
+      },
+      "value": {
+        "title": "输入绑定值。必填",
+        "type": "string",
+        "default": ""
+      },
+      "value-key": {
+        "title": "输入建议对象中用于显示的键名",
+        "type": "string",
+        "default": "value"
+      },
+      "#append": {
+        "title": "输入框后置内容插槽",
+        "type": "string"
+      },
+      "#prefix": {
+        "title": "输入框头部内容插槽",
+        "type": "string"
+      },
+      "#prepend": {
+        "title": "输入框前置内容插槽",
+        "type": "string"
+      },
+      "#suffix": {
+        "title": "输入框尾部内容插槽",
+        "type": "string"
+      }
+    }
+  }
+}

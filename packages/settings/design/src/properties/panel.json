@@ -1,0 +1,58 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "expand": {
+        "title": "初始化时是否默认展开内容区，默认为 true 展开，false 则为收起",
+        "type": "boolean",
+        "default": true
+      },
+      "foot": {
+        "title": "指定底部内容，可输入 i18n 内容",
+        "type": "string",
+        "default": ""
+      },
+      "head": {
+        "title": "指定头部内容，可输入 i18n 内容",
+        "type": "string",
+        "default": ""
+      },
+      "$$iconClose": {
+        "title": "收缩时的 icon，提供 icon-font 的样式类名称",
+        "type": "string",
+        "default": "icon-chevron-down"
+      },
+      "$$iconOpen": {
+        "title": "展开时的 icon，提供 icon-font 的样式类名称",
+        "type": "string",
+        "default": "icon-chevron-right"
+      },
+      "isToggle": {
+        "title": "是否可收缩模式，默认为 true 可以收缩",
+        "type": "boolean",
+        "default": true
+      },
+      "transition": {
+        "title": "动画名称",
+        "type": "string",
+        "default": "panel"
+      },
+      "#collapse": {
+        "title": "内容插槽",
+        "type": "string"
+      },
+      "#default": {
+        "title": "默认插槽",
+        "type": "string"
+      },
+      "#footer": {
+        "title": "底部插槽",
+        "type": "string"
+      },
+      "#header": {
+        "title": "头部插槽",
+        "type": "string"
+      }
+    }
+  }
+}

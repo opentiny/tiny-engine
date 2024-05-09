@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="%VITE_CDN_DOMAIN%/@opentiny/vue-theme@3.11/index.css" rel="stylesheet" />
+    <style type="text/css">
+      .loading-warp {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: fixed;
+        top: -75px;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
+      .loading {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto;
+        position: relative;
+        animation: load 3s linear infinite;
+      }
+      .loading div {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+      }
+      .loading span {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #99cc66;
+        position: absolute;
+        left: 50%;
+        margin-top: -10px;
+        margin-left: -10px;
+        animation: changeBgColor 3s ease infinite;
+      }
+      @keyframes load {
+        0% {
+          transform: rotate(0deg);
+        }
+        33.3% {
+          transform: rotate(120deg);
+        }
+        66.6% {
+          transform: rotate(240deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes changeBgColor {
+        0%,
+        100% {
+          background: #99cc66;
+        }
+        33.3% {
+          background: #ffff66;
+        }
+        66.6% {
+          background: #ff6666;
+        }
+      }
+      .loading div:nth-child(2) {
+        transform: rotate(120deg);
+      }
+      .loading div:nth-child(3) {
+        transform: rotate(240deg);
+      }
+      .loading div:nth-child(2) span {
+        animation-delay: 1s;
+      }
+      .loading div:nth-child(3) span {
+        animation-delay: 2s;
+      }
+      html,
+      body,
+      div,
+      span,
+      object,
+      iframe,
+      p,
+      blockquote,
+      pre,
+      abbr,
+      address,
+      cite,
+      code,
+      del,
+      dfn,
+      em,
+      img,
+      ins,
+      kbd,
+      q,
+      samp,
+      small,
+      strong,
+      sub,
+      sup,
+      var,
+      b,
+      i,
+      dl,
+      dt,
+      dd,
+      ol,
+      ul,
+      li,
+      fieldset,
+      form,
+      label,
+      legend,
+      table,
+      caption,
+      tbody,
+      tfoot,
+      thead,
+      tr,
+      th,
+      td,
+      article,
+      aside,
+      canvas,
+      details,
+      figcaption,
+      figure,
+      footer,
+      header,
+      hgroup,
+      menu,
+      nav,
+      section,
+      summary,
+      time,
+      mark,
+      audio,
+      video {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        outline: 0;
+        font-size: 100%;
+        background: transparent;
+        user-select: none;
+      }
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        min-height: 100vh;
+      }
+
+      .design-canvas {
+        margin: 0;
+        padding: 0;
+      }
+
+      body::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      body::-webkit-scrollbar-track,
+      body::-webkit-scrollbar-track-piece,
+      body::-webkit-scrollbar-corner {
+        background-color: transparent;
+      }
+      body::-webkit-scrollbar-thumb {
+        background-color: #dbdbdb;
+        border-radius: 4px;
+      }
+      body::-webkit-scrollbar-thumb:hover {
+        background-color: #c2c2c2;
+      }
+      .design-page {
+        display: block;
+        height: 100%;
+      }
+      .design-page > :not(:defined):empty {
+        display: flex;
+        margin: 10px;
+        align-items: center;
+      }
+      /* 此选择器表示所有未被定义的自定义元素，用来表示区块还没加载完成，并添加加载中动画 */
+      .design-page > :not(:defined):empty::before {
+        content: '';
+        display: block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid #4f77ff;
+        border-top-color: transparent;
+        border-radius: 100%;
+        animation: circle infinite 0.75s linear;
+      }
+      /* 以下代码是为了保证区块还没加载完成之前不显示内部插槽内容 */
+      .design-page > :not(:defined):empty > * {
+        display: none;
+      }
+      .design-page > :not(:defined):empty::after {
+        margin-left: 10px;
+        content: '区块加载中...';
+        font-size: 16px;
+      }
+      .canvas-container {
+        background: #f1f1f1;
+        height: 100%;
+      }
+      .canvas-container .container-box {
+        background-repeat: no-repeat;
+        background-size: 1px 100%, 100% 1px;
+        background-position: 100% 0, 100% 100%;
+        position: relative;
+        height: 100%;
+        background-image: linear-gradient(-90deg, #e0e0e0, #e0e0e0), linear-gradient(-180deg, #e0e0e0, #e0e0e0);
+      }
+      .design-page .tiny-row .tiny-col:empty {
+        min-height: 30px;
+        border: 1px solid #ccc;
+      }
+      .canvas-container .container-box .container-tip {
+        background-repeat: no-repeat;
+        background-size: 1px 100%, 100% 1px;
+        background-position: initial;
+        font-size: 14px;
+        font-weight: 400;
+        height: 100%;
+        min-height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #a7b1bd;
+        background-image: linear-gradient(-90deg, #e0e0e0, #e0e0e0), linear-gradient(-180deg, #e0e0e0, #e0e0e0);
+      }
+      .canvas-grid-bg {
+        background-image: linear-gradient(#dadada7d 1px, transparent 0),
+          linear-gradient(90deg, #dadada7d 1px, transparent 0), linear-gradient(#dadada 1px, transparent 0),
+          linear-gradient(90deg, #dadada 1px, transparent 0);
+        background-size: 11px 11px, 11px 11px, 55px 55px, 55px 55px;
+        background-color: rgb(255, 255, 255);
+      }
+      @keyframes circle {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body class="design-canvas" id="app">
+    <div class="loading-warp">
+      <div class="loading">
+        <div><span></span></div>
+        <div><span></span></div>
+        <div><span></span></div>
+      </div>
+    </div>
+    <script type="module" src="./src/canvas.js"></script>
+  </body>
+</html>

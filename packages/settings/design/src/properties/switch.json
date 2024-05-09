@@ -1,0 +1,45 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "disabled": {
+        "title": "是否禁用",
+        "type": "boolean",
+        "default": false
+      },
+      "false-value": {
+        "title": "switch 关闭时的值",
+        "type": ["string", "boolean", "number"],
+        "default": ""
+      },
+      "mini": {
+        "title": "设置是否显示为 mini 模式。mini 模式下不会显示 slot 的内容",
+        "type": "boolean",
+        "default": false
+      },
+      "true-value": {
+        "title": "switch 打开时的值",
+        "type": ["string", "boolean", "number"],
+        "default": ""
+      },
+      "$$value": {
+        "title": "绑定值",
+        "type": ["string", "number"],
+        "default": ""
+      },
+      "value": {
+        "title": "绑定值",
+        "type": "boolean",
+        "default": false
+      },
+      "#close": {
+        "title": "关闭内容插槽",
+        "type": "string"
+      },
+      "#open": {
+        "title": "开启内容插槽",
+        "type": "string"
+      }
+    }
+  }
+}

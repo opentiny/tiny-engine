@@ -1,0 +1,266 @@
+{
+  "icon": "gridcolumn",
+  "name": {
+    "zh_CN": "表格列"
+  },
+  "component": "tiny-grid-column",
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础属性"
+        },
+        "description": {
+          "zh_CN": "基础属性"
+        },
+        "collapse": {
+          "number": 6,
+          "text": {
+            "zh_CN": "显示更多"
+          }
+        },
+        "content": [
+          {
+            "property": "field",
+            "label": {
+              "text": {
+                "zh_CN": "字段名"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "设置表格列对应数据源的字段名，注意:该属性配置不支持含'.'，数字开头的字符串，不支持中文，不支持列字段重复（会导致配置个性化设置，自定义列拖动无效）"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "width",
+            "label": {
+              "text": {
+                "zh_CN": "宽度"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "设置列的宽度，可以是像素或者百分比或者'auto'，设置为'auto'时，列宽会自动适应。"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "title",
+            "label": {
+              "text": {
+                "zh_CN": "标题"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "列标题（支持开启国际化），可以是函数 Function(h, params)"
+            }
+          },
+          {
+            "property": "type",
+            "label": {
+              "text": {
+                "zh_CN": "列类型"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSelect",
+              "props": {
+                "options": [
+                  {
+                    "label": "index",
+                    "text": "index"
+                  },
+                  {
+                    "label": "selection",
+                    "text": "selection"
+                  },
+                  {
+                    "label": "radio",
+                    "text": "radio"
+                  },
+                  {
+                    "label": "expand",
+                    "text": "expand"
+                  }
+                ]
+              }
+            },
+            "description": {
+              "zh_CN": "设置内置列的类型，该属性的可选值为 index（序号）/ selection（复选框）/ radio（单选框）/ expand（展开行）"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "required",
+            "label": {
+              "text": {
+                "zh_CN": "必填"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否必填，如不设置，则会根据校验规则自动生成"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "editor",
+            "label": {
+              "text": {
+                "zh_CN": "编辑配置"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaCodeEditor",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "单元格编辑渲染配置项，也可以是函数 Function(h, params)"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "filter",
+            "label": {
+              "text": {
+                "zh_CN": "筛选配置"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaCodeEditor",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "设置表格列的筛选配置信息。默认值为 false 不配置筛选信息"
+            }
+          },
+          {
+            "property": "renderer",
+            "label": {
+              "text": {
+                "zh_CN": "列渲染配置"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "单元格渲染配置项，其优先级高于列的 formatText 属性配置，也可以是函数 Function(h, params)"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "show-icon",
+            "label": {
+              "text": {
+                "zh_CN": "显示编辑ICON"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否显示列头编辑图标，在编辑时有效"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "align",
+            "label": {
+              "text": {
+                "zh_CN": "对齐"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSelect",
+              "props": {
+                "options": [
+                  {
+                    "label": "left",
+                    "text": "left"
+                  },
+                  {
+                    "label": "center",
+                    "text": "center"
+                  },
+                  {
+                    "label": "right",
+                    "text": "right"
+                  }
+                ]
+              }
+            },
+            "description": {
+              "zh_CN": "列对齐方式"
+            },
+            "labelPosition": "left"
+          }
+        ]
+      }
+    ],
+    "events": {},
+    "shortcuts": {
+      "properties": ["title", "field"]
+    },
+    "contentMenu": {
+      "actions": ["create symbol"]
+    }
+  }
+}

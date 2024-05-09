@@ -1,0 +1,47 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "content": {
+        "title": "富文本编辑器内容，一段 HTML 代码的字符串",
+        "type": "string",
+        "default": ""
+      },
+      "disabled": {
+        "title": "是否禁用富文本编辑器",
+        "type": "boolean",
+        "default": false
+      },
+      "$$file-upload": {
+        "title": "上传文件配置(包括上传地址，上传头部信息配置，是否跨域，以及上传前，上传失败，上传成功回调事件)，IE 浏览器下不支持",
+        "type": "object",
+        "default": ""
+      },
+      "$$global-options": {
+        "title": "内部的 quill 插件全局配置",
+        "type": "object",
+        "default": ""
+      },
+      "image-drop": {
+        "title": "配置图片是否可以拖拽到富文本编辑器内，IE 浏览器下不支持",
+        "type": "boolean",
+        "default": true
+      },
+      "$$image-upload": {
+        "title": "上传图片配置(包括上传地址，上传头部信息配置，是否跨域，以及上传前，上传失败，上传成功回调事件)，IE 浏览器下不支持",
+        "type": "object",
+        "default": ""
+      },
+      "$$options": {
+        "title": "内部的 quill 插件配置",
+        "type": "object",
+        "default": ""
+      },
+      "value": {
+        "title": "富文本编辑器初始值",
+        "type": "string",
+        "default": ""
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "material-generator",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "gen-antdv": "node ./scripts/antdvToMaterials.mjs",
+    "gen-vant": "node ./scripts/vantToMaterials.mjs"
+  },
+  "devDependencies": {
+    "ant-design-vue": "^4.1.2",
+    "vant": "^4.8.10",
+    "vite": "^5.2.0"
+  },
+  "dependencies": {
+    "axios": "^0.27.2",
+    "markdown-it": "^14.0.0",
+    "naive-ui": "2.38.1"
+  }
+}

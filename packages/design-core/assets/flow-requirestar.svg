@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>星号</title>
+    <g id="全量" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="表单1009" transform="translate(-552.000000, -1265.000000)">
+            <g id="星号" transform="translate(552.000000, 1265.000000)">
+                <polygon id="路径" fill="currentcolor" fill-rule="nonzero"
+                    points="7.34788903 5 8.65095538 5 8.57145974 7.31023644 10.5945766 6.50395543 11 7.77279472 8.90982217 8.42458016 10.3171339 10.165034 9.31201471 11 8 9.10299931 6.68798529 11 5.68286611 10.165034 7.09017783 8.42458016 5 7.77279472 5.40528134 6.50440005 7.43874276 7.31027632"></polygon>
+                <rect id="矩形" fill="#FFFFFF" opacity="0" x="0" y="0" width="16" height="16"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,85 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "currency": {
+        "title": "指定币种",
+        "type": "string",
+        "default": "CNY"
+      },
+      "date": {
+        "title": "设置弹出框内显示日期框",
+        "type": "string",
+        "format": "date"
+      },
+      "digits": {
+        "title": "设置小数点位数",
+        "type": "number",
+        "default": 2
+      },
+      "disabled": {
+        "title": "设置是否禁用",
+        "type": "boolean",
+        "default": false
+      },
+      "fields": {
+        "title": "自定义金额组件数据映射，在没有使用框架服务时必填",
+        "type": "object",
+        "properties": {
+          "textField": {
+            "title": "自定义金额组件的请求服务接口中，币种编码的字段名",
+            "type": "string",
+            "default": ""
+          },
+          "valueField": {
+            "title": "自定义金额组件的请求服务接口中，币种符号的字段名",
+            "type": "string",
+            "default": ""
+          }
+        }
+      },
+      "max-len": {
+        "title": "整数位最大长度",
+        "type": "number",
+        "default": 15
+      },
+      "negative": {
+        "title": "是否可为负数",
+        "type": "boolean",
+        "default": true
+      },
+      "placeholder": {
+        "title": "当数据为空时的占位符",
+        "type": "string",
+        "default": ""
+      },
+      "popper-append-to-body": {
+        "title": "是否将弹出框插入至 body 元素。在弹出框的定位出现问题时，可将该属性设置为 false (可参考 select 组件)",
+        "type": "boolean",
+        "default": true
+      },
+      "popper-class": {
+        "title": "为 popper 添加自定义样式类。值为该样式类的类名(可参考 popover 组件)",
+        "type": "string",
+        "default": ""
+      },
+      "rounding": {
+        "title": "金额是否四舍五入",
+        "type": "boolean",
+        "default": true
+      },
+      "size": {
+        "title": "设置组件大小",
+        "type": "string",
+        "default": "",
+        "enum": ["medium", "small", "mini"],
+        "enumNames": ["中等尺寸", "较小尺寸", "迷你尺寸"]
+      },
+      "value": {
+        "title": "设置金额组件的值",
+        "type": ["string", "number"],
+        "default": ""
+      }
+    }
+  }
+}

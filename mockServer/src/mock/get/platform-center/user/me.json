@@ -1,0 +1,57 @@
+{
+  "data": {
+    "id": 86,
+    "username": "开发者",
+    "email": "developer@lowcode.com",
+    "provider": null,
+    "password": null,
+    "resetPasswordToken": "developer",
+    "confirmationToken": "uuid~dfafasdfasdfa",
+    "confirmed": true,
+    "blocked": null,
+    "role": null,
+    "created_by": null,
+    "updated_by": null,
+    "created_at": "2021-11-11T13:52:21.000Z",
+    "updated_at": "2022-11-01T01:39:30.000Z",
+    "block": null,
+    "is_admin": true,
+    "is_public": null,
+    "tenant": {
+      "id": "1"
+    },
+    "auths": [
+      {
+        "id": 265,
+        "unit": {
+          "type": "tenant",
+          "id": 1,
+          "name": "public"
+        },
+        "auth_type": null,
+        "expired_time": null,
+        "role": {
+          "name": "Tinybuilder_Tenant_Admin",
+          "id": 6,
+          "description": "组织管理员"
+        }
+      }
+    ],
+    "tenants": [
+      {
+        "id": 1,
+        "tenant_id": "public",
+        "name_cn": "公共租户",
+        "name_en": "Public Tenant",
+        "description": "Default tenant for new user to explore.",
+        "created_by": null,
+        "updated_by": null,
+        "created_at": "2021-12-28T11:39:10.000Z",
+        "updated_at": "2023-02-09T08:23:00.000Z",
+        "createdBy": null,
+        "updatedBy": 86
+      }
+    ]
+  },
+  "locale": "zh-cn"
+}

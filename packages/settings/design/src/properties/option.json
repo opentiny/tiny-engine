@@ -1,0 +1,36 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "disabled": {
+        "title": "是否禁用该选项",
+        "type": "boolean",
+        "default": false
+      },
+      "$$highlight-class": {
+        "title": "下拉选项自定义高亮类名",
+        "type": "string",
+        "default": ""
+      },
+      "label": {
+        "title": "选项的标签，若不设置则默认与 value 相同",
+        "type": ["string", "number"],
+        "default": ""
+      },
+      "value": {
+        "title": "选项的值",
+        "type": ["string", "number"],
+        "default": ""
+      },
+      "$$value": {
+        "title": "选项的值",
+        "type": "object",
+        "default": ""
+      },
+      "#default": {
+        "title": "默认插槽(将自定义的 HTML 模板插入 aui-option 中)",
+        "type": "string"
+      }
+    }
+  }
+}

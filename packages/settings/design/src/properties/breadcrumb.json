@@ -1,0 +1,20 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "separator": {
+        "title": "分隔符",
+        "type": "string",
+        "default": "/"
+      },
+      "$$separator-icon": {
+        "title": "图标分隔符",
+        "type": "object"
+      },
+      "#default": {
+        "title": "默认插槽",
+        "type": "string"
+      }
+    }
+  }
+}

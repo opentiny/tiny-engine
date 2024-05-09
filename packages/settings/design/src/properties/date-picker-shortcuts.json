@@ -1,0 +1,12 @@
+{
+  "$$schema": {
+    "type": "object",
+    "properties": {
+      "text": {
+        "title": "标题文本",
+        "type": "string",
+        "default": ""
+      }
+    }
+  }
+}

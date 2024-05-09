@@ -1,0 +1,272 @@
+{
+  "icon": "tabs",
+  "name": {
+    "zh_CN": "标签页"
+  },
+  "component": "tiny-tabs",
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "collapse": {
+          "number": 6,
+          "text": {
+            "zh_CN": "显示更多"
+          }
+        },
+        "content": [
+          {
+            "property": "showEditIcon",
+            "label": {
+              "text": {
+                "zh_CN": "显示编辑ICON "
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否显示标题后编辑 ICON"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "active-name",
+            "label": {
+              "text": {
+                "zh_CN": "默认值"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "当前被激活的页签值"
+            }
+          },
+          {
+            "property": "modelValue",
+            "label": {
+              "text": {
+                "zh_CN": "绑定值"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "绑定值，选中选项卡的 name"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "with-add",
+            "label": {
+              "text": {
+                "zh_CN": "可新增"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "标签是否可增加"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "with-close",
+            "label": {
+              "text": {
+                "zh_CN": "可关闭"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "标签是否可关闭"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "tab-style",
+            "label": {
+              "text": {
+                "zh_CN": "标签页样式"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSelect",
+              "props": {
+                "options": [
+                  {
+                    "label": "card",
+                    "value": "card"
+                  },
+                  {
+                    "label": "border-card",
+                    "value": "border-card"
+                  }
+                ]
+              }
+            },
+            "description": {
+              "zh_CN": "标签页样式"
+            },
+            "labelPosition": "left"
+          }
+        ]
+      }
+    ],
+    "slots": {
+      "default": [
+        {
+          "componentName": "tiny-tab-item",
+          "props": {
+            "title": "item1"
+          }
+        },
+        {
+          "componentName": "tiny-tab-item",
+          "props": {
+            "title": "item2"
+          }
+        },
+        {
+          "componentName": "tiny-tab-item",
+          "props": {
+            "title": "item3"
+          }
+        }
+      ]
+    },
+    "events": {
+      "onClick": {
+        "label": {
+          "zh_CN": "点击页签时触发事件"
+        },
+        "description": {
+          "zh_CN": "在 Input 值改变时触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "component",
+              "type": "Object",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "当前点击的页签对象"
+              }
+            },
+            {
+              "name": "event",
+              "type": "Object",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "原生 event"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      },
+      "onEdit": {
+        "label": {
+          "zh_CN": "点击新增按钮或关闭按钮或者编辑按钮后触发"
+        },
+        "description": {
+          "zh_CN": "点击新增按钮或关闭按钮或者编辑按钮后触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "tab",
+              "type": "Object",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "当前操作的页签对象"
+              }
+            },
+            {
+              "name": "type",
+              "type": "String",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "当前操作的类型（remove || add || edit）"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      },
+      "onClose": {
+        "label": {
+          "zh_CN": "关闭页签时触发"
+        },
+        "description": {
+          "zh_CN": "关闭页签时触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "name",
+              "type": "String",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "页签名称"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      }
+    },
+    "shortcuts": {
+      "properties": ["value", "disabled"]
+    },
+    "contentMenu": {
+      "actions": ["create symbol"]
+    }
+  }
+}

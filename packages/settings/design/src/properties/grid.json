@@ -1,0 +1,750 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "align": {
+        "title": "所有的列对其方式",
+        "type": "string",
+        "enum": ["left", "center", "right"],
+        "enumNames": ["左对齐", "居中对齐", "右对齐"],
+        "default": "left"
+      },
+      "auto-load": {
+        "title": "是否开启自动请求服务，配置 fetch-data 时有效，该属性的默认值为 true",
+        "type": "boolean",
+        "default": true
+      },
+      "auto-resize": {
+        "title": "父元素响应式监听（对于父元素可能存在动态变化的场景可能会用到）",
+        "type": "boolean",
+        "default": false
+      },
+      "border": {
+        "title": "是否带有纵向边框",
+        "type": "boolean",
+        "default": false
+      },
+      "cell-class-name": {
+        "title": "给单元格附加 className，也可以是函数 Function({seq, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex})",
+        "type": "string"
+      },
+      "column-key": {
+        "title": "是否需要为每一列的 VNode 设置 key 属性（非特殊情况下不需要使用）",
+        "type": "boolean",
+        "default": false
+      },
+      "column-min-width": {
+        "title": "设置可以调整到的最小宽度，不设置时默认为列头 span 的宽度 + 36（头部固定宽度）值可以为整数, px，% ",
+        "type": ["string", "number"]
+      },
+      "column-width": {
+        "title": "所有列宽度，值可以为整数, px，%，默认均匀分配",
+        "type": ["string", "number"]
+      },
+      "columns": {
+        "title": "表格列的配置信息，具体参考列配置项",
+        "type": "array",
+        "items": {
+          "properties": {
+            "align": {
+              "title": "列对其方式",
+              "type": "string",
+              "enum": ["left", "right", "center"],
+              "enumNames": ["左对齐", "右对齐", "居中对齐"],
+              "default": "left"
+            },
+            "class-name": {
+              "title": "给单元格附加 className，也可以是函数 Function({seq, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex})",
+              "type": "string"
+            },
+            "$$editor": {
+              "title": "单元格编辑渲染配置项，也可以是函数 Function(h, params)",
+              "type": "object",
+              "properties": {
+                "test1": {
+                  "title": "最小列宽度；会自动将剩余空间按比例分配,值可以为整数, px，%，",
+                  "type": ["string", "number"]
+                },
+                "test2": {
+                  "title": "是 filter 对象内置的属性，筛选是否允许多选",
+                  "type": "boolean",
+                  "default": true
+                },
+                "test3": {
+                  "title": "额外的参数（自定义一些数据参数，对于某些特殊的场景可能会用到）",
+                  "type": "object"
+                },
+                "test4": {
+                  "title": "是否使用服务端排序，如果设置为 true 则不会对数据进行处理",
+                  "type": "boolean",
+                  "default": false
+                },
+                "test5": {
+                  "title": "单元格渲染配置项，其优先级高于列的 formatText 属性配置，也可以是函数 Function(h, params)",
+                  "type": "object"
+                },
+                "test6": {
+                  "title": "是否必填，如不设置，则会根据校验规则自动生成",
+                  "type": "boolean",
+                  "default": false
+                },
+                "test7": {
+                  "title": "设置是否允许调整列宽",
+                  "type": "boolean",
+                  "default": true
+                }
+              }
+            },
+            "field": {
+              "title": "设置表格列对应数据源的字段名，注意:该属性配置不支持含'.'，数字开头的字符串，不支持中文，不支持列字段重复（会导致配置个性化设置，自定义列拖动无效）",
+              "type": "string",
+              "default": ""
+            },
+            "filter": {
+              "title": "设置表格列的筛选配置信息。默认值为 false 不配置筛选信息",
+              "type": "boolean",
+              "default": false
+            },
+            "$$filter": {
+              "title": "设置表格列的筛选配置信息。默认值为 false 不配置筛选信息",
+              "type": "object"
+            },
+            "fixed": {
+              "title": "将列固定在左侧或者右侧（注意：固定列应该放在左右两侧的位置）",
+              "type": "string",
+              "enum": ["left", "right"],
+              "enumNames": ["左侧", "右侧"],
+              "default": ""
+            },
+            "footer-align": {
+              "title": "表尾列的对齐方式",
+              "type": "string",
+              "enum": ["left", "right", "center"],
+              "enumNames": ["左对齐", "右对齐", "居中对齐"],
+              "default": ""
+            },
+            "footer-class-name": {
+              "title": "给表尾的单元格附加 className，也可以是函数 Function({$rowIndex, column, columnIndex, $columnIndex})",
+              "type": "string"
+            },
+            "$$format-config": {
+              "title": "开启该列数据异步渲染",
+              "type": "object"
+            },
+            "format-text": {
+              "title": "设置当前表格列的显示获取编辑类型，也可以是函数 Function(params)",
+              "type": "string",
+              "enum": [
+                "money",
+                "enum",
+                "number",
+                "integer",
+                "filesize",
+                "date",
+                "dateTime",
+                "longDateTime",
+                "time",
+                "longTime",
+                "yearMonth",
+                "ellipsis",
+                "rate",
+                "boole"
+              ],
+              "enumNames": [
+                "金额",
+                "枚举",
+                "小数",
+                "整数",
+                "文件大小",
+                "年月日",
+                "年月日时分",
+                "年月日时分秒",
+                "时分",
+                "时分秒",
+                "年月",
+                "省略号，hover 时提示全部内容",
+                "百分比",
+                "对号或者叉号的图标"
+              ],
+              "default": ""
+            },
+            "header-align": {
+              "title": "表头列的对齐方式",
+              "type": "string",
+              "enum": ["left", "right", "center"],
+              "enumNames": ["左对齐", "右对齐", "居中对齐"],
+              "default": "left"
+            },
+            "header-class-name": {
+              "title": "给表头的单元格附加 className，也可以是函数 Function({$rowIndex, column, columnIndex, $columnIndex})",
+              "type": "string"
+            },
+            "min-width": {
+              "title": "最小列宽度；会自动将剩余空间按比例分配,值可以为整数, px，%，",
+              "type": ["string", "number"]
+            },
+            "multi": {
+              "title": "是 filter 对象内置的属性，筛选是否允许多选",
+              "type": "boolean",
+              "default": true
+            },
+            "$$params": {
+              "title": "额外的参数（自定义一些数据参数，对于某些特殊的场景可能会用到）",
+              "type": "object"
+            },
+            "remote-sort": {
+              "title": "是否使用服务端排序，如果设置为 true 则不会对数据进行处理",
+              "type": "boolean",
+              "default": false
+            },
+            "$$renderer": {
+              "title": "单元格渲染配置项，其优先级高于列的 formatText 属性配置，也可以是函数 Function(h, params)",
+              "type": "object"
+            },
+            "required": {
+              "title": "是否必填，如不设置，则会根据校验规则自动生成",
+              "type": "boolean",
+              "default": false
+            },
+            "resizable": {
+              "title": "设置是否允许调整列宽",
+              "type": "boolean",
+              "default": true
+            },
+            "$$rules": {
+              "title": "表单的验证功能",
+              "type": "object"
+            },
+            "show-header-overflow": {
+              "title": "当表头内容过长时显示为省略号",
+              "type": ["string", "boolean"],
+              "enum": ["ellipsis", "title", "tooltip"],
+              "enumNames": [
+                "只显示省略号",
+                "显示省略号并且 hover 时显示原生 title 提示",
+                "显示省略号并且 hover 时显示 tooltip 提示"
+              ]
+            },
+            "show-header-tip": {
+              "title": "表格列头是否需要提示",
+              "type": "boolean",
+              "default": false
+            },
+            "show-icon": {
+              "title": "是否显示列头编辑图标，在编辑时有效",
+              "type": "boolean",
+              "default": true
+            },
+            "show-overflow": {
+              "title": "当内容过长时显示为省略号",
+              "type": ["string", "boolean"],
+              "enum": ["ellipsis", "title", "tooltip"],
+              "enumNames": [
+                "只显示省略号",
+                "显示省略号并且 hover 时显示原生 title 提示",
+                "显示省略号并且 hover 时显示 tooltip 提示"
+              ]
+            },
+            "show-tip": {
+              "title": "表格列单元格是否需要提示",
+              "type": "boolean",
+              "default": false
+            },
+            "sort-by": {
+              "title": "只对 sortable 有效，自定义排序的属性",
+              "type": "string",
+              "default": ""
+            },
+            "$$sort-by": {
+              "title": "只对 sortable 有效，自定义排序的属性",
+              "type": "array",
+              "default": ""
+            },
+            "sortable": {
+              "title": "设置是否允许列数据排序。默认为 true 可排序",
+              "type": "boolean",
+              "default": true
+            },
+            "title": {
+              "title": "列标题（支持开启国际化），也可以是函数 Function(h, params)",
+              "type": "string",
+              "default": ""
+            },
+            "tree-node": {
+              "title": "只对 tree-config 配置时有效，指定为树节点",
+              "type": "boolean",
+              "default": false
+            },
+            "type": {
+              "title": "列的类型",
+              "type": "string",
+              "enum": ["index", "selection", "radio", "expand"],
+              "enumNames": ["序号列", "复选框列", "单选框列", "展开行"],
+              "default": ""
+            },
+            "width": {
+              "title": "设置列的宽度，可以是像素或者百分比或者'auto'，设置为'auto'时，列宽会自动适应",
+              "type": ["string", "number"]
+            },
+            "#default": {
+              "title": "自定义显示内容模板插槽",
+              "type": "string"
+            },
+            "#edit": {
+              "title": "自定义可编辑组件模板插槽",
+              "type": "string"
+            },
+            "#filter": {
+              "title": "自定义筛选模板插槽",
+              "type": "string"
+            },
+            "#header": {
+              "title": "自定义表头内容的模板插槽",
+              "type": "string"
+            }
+          }
+        }
+      },
+      "$$context-menu": {
+        "title": "菜单的配置信息",
+        "type": "object"
+      },
+      "$$data": {
+        "title": "设置表格的数据",
+        "type": "array"
+      },
+      "$$delete-data": {
+        "title": "服务端数据删除方法",
+        "type": "object"
+      },
+      "$$drop-config": {
+        "title": "表格行上下拖拽配置信息",
+        "type": "object"
+      },
+      "$$edit-config": {
+        "title": "编辑配置",
+        "type": "object",
+        "properties": {
+          "trigger": {
+            "title": "触发激活编辑的方式",
+            "type": "string",
+            "default": "click",
+            "enum": ["click", "dblclick", "manual"],
+            "enumNames": ["单击触发", "双击触发", "手动触发，行编辑下生效"]
+          },
+          "mode": {
+            "title": "激活类型",
+            "type": "string",
+            "default": "cell",
+            "enum": ["cell", "row"],
+            "enumNames": ["单元格编辑", "行编辑"]
+          },
+          "showStatus": {
+            "title": "是否显示编辑状态",
+            "type": "boolean",
+            "default": true
+          }
+        }
+      },
+      "$$edit-rules": {
+        "title": "校验规则配置项",
+        "type": "object"
+      },
+      "$$events": {
+        "title": "事件对象",
+        "type": "object"
+      },
+      "$$expand-config": {
+        "title": "展开行配置项",
+        "type": "object"
+      },
+      "expand-last-column": {
+        "title": "是否展开最后一列",
+        "type": "boolean",
+        "default": false
+      },
+      "$$fetch-data": {
+        "title": "服务端数据查询方法",
+        "type": "object"
+      },
+      "fit": {
+        "title": "所有列的宽度是否自撑开",
+        "type": "boolean",
+        "default": true
+      },
+      "footer-align": {
+        "title": "所有的表尾列的对齐方式",
+        "type": "string",
+        "enum": ["left", "center", "right"],
+        "enumNames": ["左对齐", "居中对齐", "右对齐"],
+        "default": "left"
+      },
+      "footer-cell-class-name": {
+        "title": "给表尾的单元格附加 className，也可以是函数 Function({$rowIndex, column, columnIndex, $columnIndex})",
+        "type": "string"
+      },
+      "footer-row-class-name": {
+        "title": "给表尾的行附加 className，也可以是函数 Function({$rowIndex})",
+        "type": "string"
+      },
+      "$$head-custom": {
+        "title": "设置自定义表头的容器选择器",
+        "type": "string",
+        "default": ""
+      },
+      "header-align": {
+        "title": "所有的表头列的对齐方式",
+        "type": "string",
+        "enum": ["left", "center", "right"],
+        "enumNames": ["左对齐", "居中对齐", "右对齐"],
+        "default": "left"
+      },
+      "header-cell-class-name": {
+        "title": "给表头的单元格附加 className，也可以是函数 Function({$rowIndex, column, columnIndex, $columnIndex})",
+        "type": "string"
+      },
+      "header-row-class-name": {
+        "title": "给表头的行附加 className，也可以是函数 Function({$rowIndex})",
+        "type": "string"
+      },
+      "height": {
+        "title": "表格的高度；支持铺满父容器或者固定宽高,值可以为整数, px，%",
+        "type": ["string", "number"]
+      },
+      "highlight-cell": {
+        "title": "只对 editConfig 配置时有效，是否在编辑时高亮单元格边框",
+        "type": "boolean",
+        "default": false
+      },
+      "highlight-current-column": {
+        "title": "是否要高亮当前列",
+        "type": "boolean",
+        "default": false
+      },
+      "highlight-current-row": {
+        "title": "是否要高亮当前行",
+        "type": "boolean",
+        "default": false
+      },
+      "highlight-hover-column": {
+        "title": "鼠标移到列是否要高亮显示",
+        "type": "boolean",
+        "default": false
+      },
+      "highlight-hover-row": {
+        "title": "鼠标移到行是否要高亮显示",
+        "type": "boolean",
+        "default": false
+      },
+      "is-async-column": {
+        "title": "是否开启异步列功能，配合 scrollLoad 一起使用",
+        "type": "boolean",
+        "default": false
+      },
+      "$$keyboard-config": {
+        "title": "按键配置项，配置 :keyboard-config={isArrow: true} 属性启用方向键功能",
+        "type": "object"
+      },
+      "loading": {
+        "title": "表格是否显示加载中",
+        "type": "boolean",
+        "default": true
+      },
+      "max-height": {
+        "title": "设置表格内容区域（不含表格头部，底部）的最大高度",
+        "type": ["string", "number"]
+      },
+      "min-height": {
+        "title": "设置表格内容区域（不含表格头部，底部）的最小高度",
+        "type": ["string", "number"]
+      },
+      "$$mouse-config": {
+        "title": "鼠标配置项，mouse-config {selected: true 是否开启左键选中功能 默认为false }",
+        "type": "object"
+      },
+      "$$optimization": {
+        "title": "优化配置项",
+        "type": "object",
+        "properties": {
+          "animat": {
+            "title": "是否开启动画效果",
+            "type": "boolean",
+            "default": true
+          },
+          "delayHover": {
+            "title": "当表格发生拖动、滚动等行为时，至少多少毫秒之后才允许触发 hover 事件",
+            "type": "number",
+            "default": 250
+          },
+          "scrollX": {
+            "title": "横向 X 虚拟滚动配置",
+            "type": "number",
+            "properties": {
+              "gt": {
+                "title": "指定大于多少范围时自动启动虚拟滚动（启用 X 虚拟滚动，必须固定所有列宽，否则无法兼容）",
+                "type": "number",
+                "default": 100
+              },
+              "oSize": {
+                "title": "当剩余数据少于指定范围时触发重新渲染 默认自动计算",
+                "type": "number",
+                "default": 2
+              },
+              "rSize": {
+                "title": "每次渲染条数 默认自动计算",
+                "type": "number",
+                "default": 2
+              },
+              "vSize": {
+                "title": "指定可视区域条数",
+                "type": "number",
+                "default": 5
+              }
+            }
+          },
+          "scrollY": {
+            "title": "纵向 Y 虚拟滚动配置",
+            "type": "number",
+            "properties": {
+              "gt": {
+                "title": "指定大于多少范围时自动启动虚拟滚动（启用 Y 虚拟滚动，必须固定所有行高，否则无法兼容）",
+                "type": "number",
+                "default": 500
+              },
+              "oSize": {
+                "title": "当剩余数据少于指定范围时触发重新渲染 默认自动计算",
+                "type": "number",
+                "default": 2
+              },
+              "rSize": {
+                "title": "每次渲染条数 默认自动计算",
+                "type": "number",
+                "default": 2
+              },
+              "vSize": {
+                "title": "指定可视区域条数 默认自动计算",
+                "type": "number",
+                "default": 5
+              },
+              "rHeight": {
+                "title": "指定行高 默认自动计算",
+                "type": "number",
+                "default": 50
+              },
+              "adaptive": {
+                "title": "自动适配最优的渲染方式",
+                "type": "boolean",
+                "default": true
+              }
+            }
+          }
+        }
+      },
+      "$$pager": {
+        "title": "分页配置项",
+        "type": "object"
+      },
+      "$$params": {
+        "title": "额外的参数",
+        "type": "object"
+      },
+      "$$radio-config": {
+        "title": "单选框配置项，可以配置单选框的默认选中项和禁用配置等特性",
+        "type": "object"
+      },
+      "remote-filter": {
+        "title": "所有列是否使用服务端筛选，如果设置为 true 则不会对数据进行处理",
+        "type": "boolean",
+        "default": false
+      },
+      "remote-sort": {
+        "title": "是否将服务端的全部数据进行排序。默认为 false 不进行服务端排序",
+        "type": "boolean",
+        "default": false
+      },
+      "resizable": {
+        "title": "设置是否允许调整列宽",
+        "type": "boolean",
+        "default": true
+      },
+      "row-class-name": {
+        "title": "给行附加 className，也可以是函数 Function({seq, row, rowIndex, $rowIndex})",
+        "type": "string"
+      },
+      "$$row-group": {
+        "title": "设置行分组",
+        "type": "object"
+      },
+      "row-id": {
+        "title": "自定义行数据唯一主键的字段名（行数据必须要有唯一主键，默认自动生成）",
+        "type": "string",
+        "default": "_RID"
+      },
+      "row-key": {
+        "title": "是否需要为每一行的 VNode 设置 key 属性（非特殊情况下没必要设置）",
+        "type": "boolean",
+        "default": false
+      },
+      "$$row-span": {
+        "title": "设置行合并，该属性仅适用于普通表格，不可与 tree-config 同时使用",
+        "type": "array"
+      },
+      "$$save-data": {
+        "title": "服务端数据保存方法",
+        "type": "object"
+      },
+      "$$scroll-load": {
+        "title": "滚动加载配置",
+        "type": "object",
+        "properties": {
+          "pageSize": {
+            "title": "每次加载多少条",
+            "type": "number",
+            "default": 10
+          },
+          "isInfinity": {
+            "title": "是否连续",
+            "type": "boolean",
+            "default": false
+          }
+        }
+      },
+      "$$select-config": {
+        "title": "复选框配置项",
+        "type": "object"
+      },
+      "seq-serial": {
+        "title": "设置行序号是否连续，开启分页时有效，该属性的默认值为 false",
+        "type": "boolean",
+        "default": false
+      },
+      "show-footer": {
+        "title": "是否显示表尾合计",
+        "type": "boolean",
+        "default": false
+      },
+      "show-header": {
+        "title": "是否显示表头",
+        "type": "boolean",
+        "default": false
+      },
+      "show-header-overflow": {
+        "title": "设置表头所有内容过长时显示为省略号",
+        "type": ["string", "boolean"],
+        "enum": ["ellipsis", "title", "tooltip"],
+        "enumNames": [
+          "只显示省略号",
+          "显示省略号并且 hover 时显示原生 title 提示",
+          "显示省略号并且 hover 时显示 tooltip 提示"
+        ]
+      },
+      "show-overflow": {
+        "title": "设置所有内容过长时显示为省略号（如果是固定列建议设置该值，提升渲染速度）",
+        "type": ["string", "boolean"],
+        "enum": ["ellipsis", "title", "tooltip"],
+        "enumNames": [
+          "只显示省略号",
+          "显示省略号并且 hover 时显示原生 title 提示",
+          "显示省略号并且 hover 时显示 tooltip 提示"
+        ]
+      },
+      "size": {
+        "title": "表格的尺寸",
+        "type": "string",
+        "enum": ["medium", "small", "mini"],
+        "enumNames": ["中等尺寸", "较小尺寸", "迷你尺寸"],
+        "default": ""
+      },
+      "$$sort-config": {
+        "title": "排序配置项",
+        "type": "object",
+        "properties": {
+          "trigger": {
+            "title": "点击头部单元格触发排序",
+            "type": "string",
+            "default": "default",
+            "enum": ["cell", "default"],
+            "enumNames": ["点击头部单元格触发排序", "点击上下箭头触发排序"]
+          }
+        }
+      },
+      "sortable": {
+        "title": "设置是否允许列数据排序。默认为 true 可排序",
+        "type": "boolean",
+        "default": true
+      },
+      "start-index": {
+        "title": "只对 type=index 的列有效，动态索引的起始值",
+        "type": "number",
+        "default": 0
+      },
+      "stripe": {
+        "title": "是否带有斑马纹",
+        "type": "boolean",
+        "default": false
+      },
+      "$$summary-config": {
+        "title": "设置表格统计功能",
+        "type": "object",
+        "properties": {
+          "fields": {
+            "title": "统计字段名",
+            "type": "array"
+          },
+          "fraction": {
+            "title": "小数点后保留的小数位",
+            "type": "number",
+            "default": 2
+          },
+          "truncate": {
+            "title": "是否截断",
+            "type": "boolean",
+            "default": false
+          },
+          "text": {
+            "title": "统计显示的文本",
+            "type": "string",
+            "default": ""
+          }
+        }
+      },
+      "sync-resize": {
+        "title": "响应式跟随某个属性（对于通过某个属性来控制显示/隐藏切换的场景可能会用到）",
+        "type": "boolean",
+        "default": false
+      },
+      "$$toolbar": {
+        "title": "工具栏配置",
+        "type": "object"
+      },
+      "$$tooltip-config": {
+        "title": "tooltip 配置项",
+        "type": "object"
+      },
+      "$$tree-config": {
+        "title": "树形结构配置项",
+        "type": "object"
+      },
+      "$$valid-config": {
+        "title": "校验配置项",
+        "type": "object"
+      },
+      "#default": {
+        "title": "默认插槽（表格列 <grid-column> ）",
+        "type": "string"
+      },
+      "#empty": {
+        "title": "空数据时显示的文本内容插槽",
+        "type": "string"
+      },
+      "#pager": {
+        "title": "分页插件插槽，<pager>",
+        "type": "string"
+      },
+      "#toolbar": {
+        "title": "工具栏插槽，（包含：缩放、个性化、刷新表格、自定义按钮）<grid-toolbar>",
+        "type": "string"
+      }
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "hidden": {
+        "title": "是否隐藏 badge",
+        "type": "boolean",
+        "default": false
+      },
+      "href": {
+        "title": "指定跳转的目标页面地址",
+        "type": "string",
+        "default": ""
+      },
+      "is-dot": {
+        "title": "设置是否有默认的新消息提示",
+        "type": "boolean",
+        "default": false
+      },
+      "max": {
+        "title": "最大值，超过最大值会显示 '{max}+'，要求 value 是 Number 类型",
+        "type": "number"
+      },
+      "target": {
+        "title": "指定点击徽章 Dom 节点时链接到目标页面的跳转方式，仅在 href 属性存在时使用",
+        "type": "string",
+        "enum": ["_self", "_blank"],
+        "enumNames": ["当前标签打开", "新建标签打开"]
+      },
+      "type": {
+        "title": "类型",
+        "type": "string",
+        "enum": ["primary", "success", "warning", "danger", "info"],
+        "enumNames": ["主要", "成功", "警告", "危险", "信息"],
+        "default": ""
+      },
+      "value": {
+        "title": "显示值",
+        "type": ["string", "number"],
+        "default": ""
+      },
+      "#content": {
+        "title": "消息提示内容插槽",
+        "type": "string"
+      },
+      "#default": {
+        "title": "默认插槽",
+        "type": "string"
+      }
+    }
+  }
+}

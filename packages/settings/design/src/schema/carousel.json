@@ -1,0 +1,146 @@
+{
+  "properties": [
+    {
+      "label": { "zh_CN": "基础信息" },
+      "description": { "zh_CN": "基础信息" },
+      "collapse": { "number": 6, "text": { "zh_CN": "显示更多" } },
+      "content": [
+        {
+          "property": "arrow",
+          "label": { "text": { "zh_CN": "切换箭头的显示时机" } },
+          "required": true,
+          "readOnly": false,
+          "disabled": false,
+          "cols": 12,
+          "widget": {
+            "component": "MetaInput",
+            "props": {
+              "options": [
+                { "label": "总是显示", "value": "always" },
+                { "label": "鼠标悬停时显示", "value": "hover" },
+                { "label": "从不显示", "value": "never" }
+              ]
+            }
+          },
+          "description": { "zh_CN": "" }
+        },
+        {
+          "property": "autoplay",
+          "label": { "text": { "zh_CN": "是否自动切换" } },
+          "required": true,
+          "readOnly": false,
+          "disabled": false,
+          "cols": 12,
+          "widget": { "component": "MetaSwitch", "props": {} },
+          "description": { "zh_CN": "" }
+        },
+        {
+          "property": "height",
+          "label": { "text": { "zh_CN": "走马灯的高度" } },
+          "required": true,
+          "readOnly": false,
+          "disabled": false,
+          "cols": 12,
+          "widget": { "component": "MetaInput", "props": {} },
+          "description": { "zh_CN": "" }
+        },
+        {
+          "property": "indicator-position",
+          "label": { "text": { "zh_CN": "指示器的位置" } },
+          "required": true,
+          "readOnly": false,
+          "disabled": false,
+          "cols": 12,
+          "widget": {
+            "component": "MetaInput",
+            "props": {
+              "options": [
+                { "label": "走马灯外部", "value": "outside" },
+                { "label": "不显示", "value": "none" }
+              ]
+            }
+          },
+          "description": { "zh_CN": "" }
+        },
+        {
+          "property": "initial-index",
+          "label": { "text": { "zh_CN": "初始状态激活的幻灯片的索引，从 0 开始 " } },
+          "required": true,
+          "readOnly": false,
+          "disabled": false,
+          "cols": 12,
+          "widget": { "component": "MetaNumeric", "props": {} },
+          "description": { "zh_CN": "" }
+        },
+        {
+          "property": "interval",
+          "label": { "text": { "zh_CN": "自动切换的时间间隔，单位为毫秒" } },
+          "required": true,
+          "readOnly": false,
+          "disabled": false,
+          "cols": 12,
+          "widget": { "component": "MetaNumeric", "props": {} },
+          "description": { "zh_CN": "" }
+        },
+        {
+          "property": "loop",
+          "label": { "text": { "zh_CN": "是否循环显示" } },
+          "required": true,
+          "readOnly": false,
+          "disabled": false,
+          "cols": 12,
+          "widget": { "component": "MetaSwitch", "props": {} },
+          "description": { "zh_CN": "" }
+        },
+        {
+          "property": "show-title",
+          "label": { "text": { "zh_CN": "是否显示标题" } },
+          "required": true,
+          "readOnly": false,
+          "disabled": false,
+          "cols": 12,
+          "widget": { "component": "MetaSwitch", "props": {} },
+          "description": { "zh_CN": "" }
+        },
+        {
+          "property": "trigger",
+          "label": { "text": { "zh_CN": "指示器的触发方式，默认为 hover" } },
+          "required": true,
+          "readOnly": false,
+          "disabled": false,
+          "cols": 12,
+          "widget": {
+            "component": "MetaInput",
+            "props": {
+              "options": [
+                { "label": "点击", "value": "click" },
+                { "label": "悬停", "value": "hover" }
+              ]
+            }
+          },
+          "description": { "zh_CN": "" }
+        },
+        {
+          "property": "type",
+          "label": { "text": { "zh_CN": "走马灯的类型" } },
+          "required": true,
+          "readOnly": false,
+          "disabled": false,
+          "cols": 12,
+          "widget": {
+            "component": "MetaInput",
+            "props": {
+              "options": [
+                { "label": "水平", "value": "horizontal" },
+                { "label": "垂直", "value": "vertical" },
+                { "label": "卡片", "value": "card" }
+              ]
+            }
+          },
+          "description": { "zh_CN": "" }
+        }
+      ]
+    }
+  ],
+  "events": {}
+}

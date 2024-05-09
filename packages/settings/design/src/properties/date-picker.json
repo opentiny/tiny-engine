@@ -1,0 +1,169 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "align": {
+        "title": "对齐方式",
+        "type": "string",
+        "enum": ["left", "center", "right"],
+        "enumNames": ["左对齐", "居中对齐", "右对齐"],
+        "default": "left"
+      },
+      "$$clear-icon": {
+        "title": "自定义清空图标的类名",
+        "type": "object",
+        "default": "IconOperationfaild"
+      },
+      "clearable": {
+        "title": "是否显示清除按钮",
+        "type": "boolean",
+        "default": true
+      },
+      "default-time": {
+        "title": "范围选择时选中日期所使用的当日内具体时刻，可选值为 支持的日期格式",
+        "type": "string",
+        "default": ""
+      },
+      "default-value": {
+        "title": "可选，选择器打开时默认显示的时间，可选值为 可被new Date()解析",
+        "type": "date",
+        "format": "date-time",
+        "default": ""
+      },
+      "disabled": {
+        "title": "禁用",
+        "type": "boolean",
+        "default": false
+      },
+      "editable": {
+        "title": "文本框可输入",
+        "type": "boolean",
+        "default": true
+      },
+      "end-placeholder": {
+        "title": "范围选择时结束日期的占位内容",
+        "type": "string",
+        "default": ""
+      },
+      "format": {
+        "title": "显示在输入框中的格式",
+        "type": "string",
+        "default": "yyyy-MM-dd"
+      },
+      "isutc8": {
+        "title": "默认值为 false ,设置为 true 时切换系统默认时区，时间依然显示为东八区时间。适用场景为海外地区显示东八区时间",
+        "type": "boolean",
+        "default": false
+      },
+      "name": {
+        "title": "原生属性",
+        "type": "string",
+        "default": ""
+      },
+      "$$picker-options": {
+        "title": "当前时间日期选择器特有的选项参考下表",
+        "type": "object",
+        "properties": {
+          "firstDayOfWeek": {
+            "title": "周起始日",
+            "type": "number",
+            "enum": [1, 2, 3, 4, 5, 6, 7],
+            "enumNames": ["周一", "周二", "周三", "周四", "周五", "周六", "周日"],
+            "default": "7"
+          },
+          "$$shortcuts": {
+            "title": "设置快捷选项，需要传入 { text, onClick } 对象用法参考 demo 或下表",
+            "type": "object",
+            "properties": {
+              "text": {
+                "title": "快捷选项文本",
+                "type": "string",
+                "default": ""
+              },
+              "onClick": {
+                "title": "快捷选项点击事件",
+                "type": "function",
+                "default": ""
+              }
+            }
+          }
+        }
+      },
+      "placeholder": {
+        "title": "非范围选择时的占位内容",
+        "type": "string",
+        "default": ""
+      },
+      "popper-append-to-body": {
+        "title": "是否将弹出框插入至 body 元素。在弹出框的定位出现问题时，可将该属性设置为 false (可参考 select 组件)",
+        "type": "boolean",
+        "default": true
+      },
+      "$$popper-class": {
+        "title": "为 popper 添加类名(可参考 popover 组件)",
+        "type": "string",
+        "default": ""
+      },
+      "range-separator": {
+        "title": "选择范围时的分隔符",
+        "type": "string",
+        "default": "-"
+      },
+      "readonly": {
+        "title": "设置日历组件是否只读",
+        "type": "boolean",
+        "default": false
+      },
+      "size": {
+        "title": "输入框尺寸",
+        "type": "string",
+        "enum": ["medium", "small", "mini"],
+        "enumNames": ["中等尺寸", "较小尺寸", "迷你尺寸"],
+        "default": ""
+      },
+      "start-placeholder": {
+        "title": "范围选择时开始日期的占位内容",
+        "type": "string",
+        "default": ""
+      },
+      "$$suffix-icon ": {
+        "title": "自定义后置图标的类名，prefix-icon 自 AUI 3.8.0 版本将替换为 suffix-icon ",
+        "type": "object",
+        "default": "IconCalendar"
+      },
+      "time-arrow-control": {
+        "title": "通过箭头按钮控制时间选择，当 type 为 datetime、datetimerange 时使用，默认为 通过鼠标滚轮滚动选择时间",
+        "type": "boolean",
+        "default": false
+      },
+      "type": {
+        "title": "显示类型",
+        "type": "string",
+        "enum": ["year", "month", "dates", "week", "daterange", "date", "datetime", "datetimerange", "monthrange"],
+        "enumNames": ["年", "月", "多个日期", "周", "日期范围", "日期", "日期时间", "日期时间范围", "月范围"],
+        "default": "date"
+      },
+      "unlink-panels": {
+        "title": "在范围选择器里取消两个日期面板之间的联动",
+        "type": "boolean",
+        "default": false
+      },
+      "validate-event": {
+        "title": "设置日期选择器在输入时是否会触发表单校验",
+        "type": "boolean",
+        "default": true
+      },
+      "value": {
+        "title": "绑定值",
+        "type": ["string", "array"],
+        "format": "date-time",
+        "default": ""
+      },
+      "value-format": {
+        "title": "指定绑定值的格式。不指定则绑定值为 Date 对象",
+        "type": "string",
+        "default": ""
+      }
+    }
+  }
+}

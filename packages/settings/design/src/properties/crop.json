@@ -1,0 +1,140 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "aspect-ratio": {
+        "title": "裁剪框的宽高比, 默认为 16 / 9",
+        "type": "number",
+        "default": "16/9"
+      },
+      "auto-crop": {
+        "title": "初始化时，是否自动显示裁剪框",
+        "type": "boolean",
+        "default": true
+      },
+      "auto-crop-area": {
+        "title": "定义自动裁剪面积大小（百分比）",
+        "type": "number",
+        "default": 0.8
+      },
+      "background": {
+        "title": "是否显示容器的网格背景",
+        "type": "boolean",
+        "default": true
+      },
+      "center": {
+        "title": "裁剪框是否在图片正中心",
+        "type": "boolean",
+        "default": true
+      },
+      "crop-type": {
+        "title": "设置图片裁剪后返回的类型",
+        "type": "string",
+        "default": "base64",
+        "enum": ["blob", "base64"],
+        "enumNames": ["blob", "base64"]
+      },
+      "cropvisible": {
+        "title": "设置裁剪弹框是否可见",
+        "type": "boolean",
+        "default": false
+      },
+      "drag-mode": {
+        "title": "定义 cropper 的拖拽模式，'crop'： 可以产生一个新的裁剪框 3；'move'：只可以移动图片 3；'none'： 什么也不处理",
+        "type": "string",
+        "enum": ["crop", "move", "none"],
+        "enumNames": ["可以产生一个新的裁剪框", "只可以移动图片", "什么也不处理"],
+        "default": "crop"
+      },
+      "guides": {
+        "title": "是否在裁剪框上方显示虚线",
+        "type": "boolean",
+        "default": true
+      },
+      "max-size": {
+        "title": "设置待裁剪图片的最大大小",
+        "type": "string",
+        "default": "1M"
+      },
+      "min-container-height": {
+        "title": "容器的最小高度",
+        "type": "number",
+        "default": 300
+      },
+      "min-container-width": {
+        "title": "容器的最小宽度",
+        "type": "number",
+        "default": 652
+      },
+      "min-crop-box-height": {
+        "title": "裁剪层的最小高度",
+        "type": "number",
+        "default": 0
+      },
+      "min-crop-box-width": {
+        "title": "裁剪层的最小宽度",
+        "type": "number",
+        "default": 0
+      },
+      "modal": {
+        "title": "是否显示图片上方裁剪框下方的黑色模态",
+        "type": "boolean",
+        "default": true
+      },
+      "movable": {
+        "title": "是否允许可以移动后面的图片",
+        "type": "boolean",
+        "default": true
+      },
+      "preview": {
+        "title": "设置裁剪区域图片是否可预览",
+        "type": "boolean",
+        "default": false
+      },
+      "quality": {
+        "title": "设置图片裁剪后的压缩比例，值在 0-1 之间",
+        "type": "number",
+        "exclusiveMinimum": 0,
+        "maximum": 1,
+        "default": 0.92
+      },
+      "rotatable": {
+        "title": "是否允许旋转图像",
+        "type": "boolean",
+        "default": true
+      },
+      "src": {
+        "title": "默认裁剪的源图片",
+        "type": "string",
+        "default": ""
+      },
+      "view-mode": {
+        "title": "定义 cropper 的视图模式，0：没有限制，3 可以移动到 2 外；1：3 只能在 2 内移动；2：2 图片不全部铺满 1 （即缩小时可以有一边出现空隙）；3：2 图片填充整个 1",
+        "type": "number",
+        "enum": [0, 1, 2, 3],
+        "enumNames": [
+          "没有限制，3 可以移动到 2 外",
+          "3 只能在 2 内移动",
+          "2 图片不全部铺满 1 （即缩小时可以有一边出现空隙）",
+          "2 图片填充整个 1"
+        ],
+        "default": 0
+      },
+      "wheel-zoom-ratio": {
+        "title": "用鼠标移动图像时，定义缩放比例",
+        "type": "number",
+        "default": 0.1
+      },
+      "zoom-on-wheel": {
+        "title": "是否可以通过滚动鼠标滚轮来缩放图像",
+        "type": "boolean",
+        "default": true
+      },
+      "zoomable": {
+        "title": "是否允许放大图像",
+        "type": "boolean",
+        "default": true
+      }
+    }
+  }
+}

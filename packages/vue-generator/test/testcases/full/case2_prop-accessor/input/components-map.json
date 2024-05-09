@@ -1,0 +1,10 @@
+[
+  {
+    "componentName": "UsePropAccessor",
+    "main": "./views"
+  },
+  {
+    "componentName": "PropAccessor",
+    "main": "./components"
+  }
+]

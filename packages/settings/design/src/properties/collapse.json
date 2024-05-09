@@ -1,0 +1,20 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "accordion": {
+        "title": "是否手风琴模式",
+        "type": "boolean",
+        "default": false
+      },
+      "value": {
+        "title": "当前激活的面板(如果是手风琴模式，绑定值类型需要为 String，否则为 Array)",
+        "type": ["string", "array"]
+      },
+      "#default": {
+        "title": "默认插槽",
+        "type": "string"
+      }
+    }
+  }
+}

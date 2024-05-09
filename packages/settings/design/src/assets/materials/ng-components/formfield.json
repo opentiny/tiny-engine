@@ -1,0 +1,259 @@
+{
+  "icon": "",
+  "name": {
+    "zh_CN": "Formfield"
+  },
+  "component": "tiny-formfield",
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "collapse": {
+          "number": 6,
+          "text": {
+            "zh_CN": "显示更多"
+          }
+        },
+        "content": [
+          {
+            "property": "condition",
+            "type": "boolean",
+            "defaultValue": true,
+            "label": {
+              "text": {
+                "zh_CN": "是否渲染"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            }
+          },
+          {
+            "property": "title",
+            "type": "string",
+            "label": {
+              "text": {
+                "zh_CN": "标题"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            }
+          },
+          {
+            "property": "showLine",
+            "type": "boolean",
+            "defaultValue": true,
+            "label": {
+              "text": {
+                "zh_CN": "是否显示间隔"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            }
+          },
+          {
+            "property": "isEdit",
+            "type": "boolean",
+            "defaultValue": false,
+            "label": {
+              "text": {
+                "zh_CN": "编辑状态"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            }
+          },
+          {
+            "property": "colsNumber",
+            "type": "string",
+            "defaultValue": "2",
+            "label": {
+              "text": {
+                "zh_CN": "列数"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            }
+          },
+          {
+            "property": "labelWidth",
+            "type": "string",
+            "defaultValue": "120px",
+            "label": {
+              "text": {
+                "zh_CN": "label的宽度"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            }
+          },
+          {
+            "property": "colsWidth",
+            "type": "array",
+            "defaultValue": ["50%", "50%"],
+            "label": {
+              "text": {
+                "zh_CN": "列宽"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            }
+          },
+          {
+            "property": "colsGap",
+            "type": "array",
+            "defaultValue": ["50px"],
+            "label": {
+              "text": {
+                "zh_CN": "列间距"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            }
+          },
+          {
+            "property": "options",
+            "type": "array",
+            "defaultValue": [
+              {
+                "label": "项目名称",
+                "value": "ghx-123-变更",
+                "editConfig": {
+                  "type": "text",
+                  "disabled": true
+                }
+              },
+              {
+                "label": "合同模板",
+                "value": "线下客户模板",
+                "editConfig": {
+                  "type": "select",
+                  "options": [
+                    {
+                      "label": "线上华为模板（预付费）",
+                      "value": "线上华为模板（预付费）"
+                    },
+                    {
+                      "label": "线下客户模板",
+                      "value": "线下客户模板"
+                    },
+                    {
+                      "label": "线上华为模板（后付费）",
+                      "value": "线上华为模板（后付费）"
+                    }
+                  ],
+                  "placeholder": "请选择合同模板"
+                }
+              }
+            ],
+            "label": {
+              "text": {
+                "zh_CN": "表单数据"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            }
+          }
+        ]
+      }
+    ],
+    "events": {
+      "onStateChange": {
+        "label": {
+          "zh_CN": "onStateChange"
+        },
+        "description": {
+          "zh_CN": "详细的描述文字，会在鼠标放入？时显示"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [],
+          "returns": {}
+        },
+        "defaultValue": "function onStateChange(e) {}"
+      }
+    },
+    "shortcuts": {
+      "properties": []
+    },
+    "contentMenu": {
+      "actions": []
+    }
+  }
+}

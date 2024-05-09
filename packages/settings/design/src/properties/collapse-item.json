@@ -1,0 +1,28 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "disabled": {
+        "title": "是否禁用",
+        "type": "boolean",
+        "default": false
+      },
+      "name": {
+        "title": "唯一标志符",
+        "type": ["string", "number"]
+      },
+      "title": {
+        "title": "面板标题",
+        "type": "string"
+      },
+      "#default": {
+        "title": "默认插槽",
+        "type": "string"
+      },
+      "#title": {
+        "title": "标题插槽",
+        "type": "string"
+      }
+    }
+  }
+}

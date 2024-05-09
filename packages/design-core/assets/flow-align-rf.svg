@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon9</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="0 16 16 16 16 0 0 0"></polygon>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="属性面板-Tips样式-浅色" transform="translate(-800.000000, -60.000000)">
+            <g id="编组-28" transform="translate(456.000000, 60.000000)">
+                <g id="icon9" transform="translate(344.000000, 0.000000)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <g id="Fill-1"></g>
+                    <g id="编组" mask="url(#mask-2)" fill="currentColor">
+                        <g transform="translate(2.000000, 1.000000)">
+                            <path d="M1,0.5 C1.414,0.5 1.75,0.836 1.75,1.25 L1.75,12.75 C1.75,13.164 1.414,13.5 1,13.5 C0.586,13.5 0.25,13.164 0.25,12.75 L0.25,1.25 C0.25,0.836 0.586,0.5 1,0.5" id="Fill-2"></path>
+                            <path d="M11,10.125 L4.25,10.125 C3.836,10.125 3.5,9.789 3.5,9.375 C3.5,8.961 3.836,8.625 4.25,8.625 L11,8.625 C11.414,8.625 11.75,8.961 11.75,9.375 C11.75,9.789 11.414,10.125 11,10.125" id="Fill-4"></path>
+                            <path d="M7.625,5.375 L4.25,5.375 C3.836,5.375 3.5,5.039 3.5,4.625 C3.5,4.211 3.836,3.875 4.25,3.875 L7.625,3.875 C8.039,3.875 8.375,4.211 8.375,4.625 C8.375,5.039 8.039,5.375 7.625,5.375" id="Fill-6"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

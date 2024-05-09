@@ -1,0 +1,28 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "disabled": {
+        "title": "禁用",
+        "type": "boolean",
+        "default": false
+      },
+      "size": {
+        "title": "设置组件大小",
+        "type": "string",
+        "enum": ["medium", "small", "mini"],
+        "enumNames": ["中等尺寸", "较小尺寸", "迷你尺寸"],
+        "default": ""
+      },
+      "value": {
+        "title": "设置部门组件的初始化时的显示值",
+        "type": "string",
+        "default": ""
+      },
+      "#hrapprover": {
+        "title": "权签人插槽",
+        "type": "string"
+      }
+    }
+  }
+}
