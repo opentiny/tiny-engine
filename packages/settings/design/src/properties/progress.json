@@ -1,0 +1,59 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "color": {
+        "title": "进度条背景色（会覆盖 status 状态颜色）",
+        "type": "string",
+        "default": ""
+      },
+      "$$color": {
+        "title": "进度条背景色（会覆盖 status 状态颜色）",
+        "type": "array",
+        "default": ""
+      },
+      "percentage": {
+        "title": "百分比（必填）",
+        "type": "number",
+        "minimum": 0,
+        "maximum": 100,
+        "default": 0
+      },
+      "show-text": {
+        "title": "是否显示进度条文字内容",
+        "type": "boolean",
+        "default": true
+      },
+      "status": {
+        "title": "进度条当前状态",
+        "type": "string",
+        "enum": ["success", "exception", "warning"],
+        "enumNames": ["成功状态", "意外状态", "警告状态"],
+        "default": ""
+      },
+      "stroke-width": {
+        "title": "进度条的宽度，单位 px",
+        "type": "number",
+        "default": 6
+      },
+      "text-inside": {
+        "title": "进度条显示文字内置在进度条内（只在 type=line 时可用）",
+        "type": "boolean",
+        "default": false
+      },
+      "type": {
+        "title": "进度条类型",
+        "type": "string",
+        "enum": ["line", "circle", "dashboard"],
+        "enumNames": ["线性进度条", "环形进度条", "仪表盘形进度条"],
+        "default": "line"
+      },
+      "width": {
+        "title": "环形进度条画布宽度（只在 type 为 circle 或 dashboard 时可用）",
+        "type": "number",
+        "default": 126
+      }
+    },
+    "required": ["percentage"]
+  }
+}

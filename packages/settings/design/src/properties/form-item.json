@@ -1,0 +1,57 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "error": {
+        "title": "表单域验证错误信息, 设置该值会使表单验证状态变为error，并显示该错误信息",
+        "type": "string"
+      },
+      "inline-message": {
+        "title": "以行内形式展示校验信息",
+        "type": "boolean",
+        "default": false
+      },
+      "label": {
+        "title": "标签文本",
+        "type": "string"
+      },
+      "label-width": {
+        "title": "表单域标签的的宽度，例如 '50px'。支持 auto",
+        "type": "string"
+      },
+      "prop": {
+        "title": "表单域 model 字段，在使用 validate、resetFields 方法的情况下，该属性是必填的",
+        "type": "string"
+      },
+      "required": {
+        "title": "是否必填，如不设置，则会根据校验规则自动生成",
+        "type": "boolean",
+        "default": false
+      },
+      "$$rules": {
+        "title": "表单验证规则",
+        "type": "object"
+      },
+      "show-message": {
+        "title": "是否显示校验错误信息",
+        "type": "boolean",
+        "default": true
+      },
+      "size": {
+        "title": "用于控制该表单域下组件的尺寸",
+        "type": "string",
+        "enum": ["medium", "small", "mini"],
+        "enumNames": ["中等尺寸", "较小尺寸", "迷你尺寸"],
+        "default": ""
+      },
+      "#default": {
+        "title": "默认插槽",
+        "type": "string"
+      },
+      "#label": {
+        "title": "标签文本的内容插槽",
+        "type": "string"
+      }
+    }
+  }
+}

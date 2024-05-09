@@ -1,0 +1,3 @@
+build/*.js
+assets/*.js
+test/**/*.js

@@ -1,0 +1,127 @@
+{
+  "icon": "tooltip",
+  "name": {
+    "zh_CN": "文字提示"
+  },
+  "component": "tiny-tooltip",
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "collapse": {
+          "number": 6,
+          "text": {
+            "zh_CN": "显示更多"
+          }
+        },
+        "content": [
+          {
+            "property": "placement",
+            "label": {
+              "text": {
+                "zh_CN": "提示位置"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSelect",
+              "props": {
+                "options": [
+                  {
+                    "label": "top",
+                    "value": "top"
+                  },
+                  {
+                    "label": "top-start",
+                    "value": "top-start"
+                  },
+                  {
+                    "label": "top-end",
+                    "value": "top-end"
+                  },
+                  {
+                    "label": "bottom",
+                    "value": "bottom"
+                  },
+                  {
+                    "label": "bottom-start",
+                    "value": "bottom-start"
+                  },
+                  {
+                    "label": "bottom-end",
+                    "value": "bottom-end"
+                  },
+                  {
+                    "label": "left",
+                    "value": "left"
+                  },
+                  {
+                    "label": "left-start",
+                    "value": "left-start"
+                  },
+                  {
+                    "label": "left-end",
+                    "value": "left-end"
+                  },
+                  {
+                    "label": "right",
+                    "value": "right"
+                  },
+                  {
+                    "label": "right-start",
+                    "value": "right-start"
+                  },
+                  {
+                    "label": "right-end",
+                    "value": "right-end"
+                  }
+                ]
+              }
+            },
+            "description": {
+              "zh_CN": "Tooltip 的出现位置"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "content",
+            "label": {
+              "text": {
+                "zh_CN": "内容"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "显示的内容，也可以通过 slot#content 传入 DOM"
+            }
+          }
+        ]
+      }
+    ],
+    "slots": {
+      "default": {}
+    },
+    "events": {},
+    "shortcuts": {
+      "properties": ["value", "disabled"]
+    },
+    "contentMenu": {
+      "actions": ["create symbol"]
+    }
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "center": {
+        "title": "文字是否居中",
+        "type": "boolean",
+        "default": false
+      },
+      "closable": {
+        "title": "设置警告是否可以关闭",
+        "type": "boolean",
+        "default": true
+      },
+      "close-text": {
+        "title": "关闭按钮自定义文本",
+        "type": "string",
+        "default": ""
+      },
+      "description": {
+        "title": "设置警告的提示内容",
+        "type": "string",
+        "default": ""
+      },
+      "$$icon": {
+        "title": "设置警告的图标，默认会根据 type 值自动使用对应图标",
+        "type": ["string", "object"],
+        "default": ""
+      },
+      "show-icon": {
+        "title": "是否显示图标",
+        "type": "boolean",
+        "default": true
+      },
+      "size": {
+        "title": "设置警告的大小",
+        "type": "string",
+        "enum": ["normal", "large"],
+        "enumNames": ["正常尺寸", "较大尺寸"],
+        "default": "normal"
+      },
+      "title": {
+        "title": "设置警告的标题，在 size 为 large 时有效，默认根据 type 自动设置",
+        "type": "string",
+        "default": ""
+      },
+      "type": {
+        "title": "设置警告的类型",
+        "type": "string",
+        "enum": ["success", "warning", "info", "error"],
+        "enumNames": ["成功", "警告", "信息", "错误"],
+        "default": "info"
+      },
+      "#default": {
+        "title": "默认插槽",
+        "type": "string"
+      },
+      "#description": {
+        "title": "提示内容插槽",
+        "type": "string"
+      },
+      "#title": {
+        "title": "标题的内容插槽",
+        "type": "string"
+      }
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "data": {
+    "locales": [
+      {
+        "lang": "en_US",
+        "label": "美式英文"
+      },
+      {
+        "lang": "zh_CN",
+        "label": "简体中文"
+      }
+    ],
+    "messages": {
+      "en_US": {
+        "lowcode.c257d5e8": "search",
+        "lowcode.61c8ac8c": "testi18n",
+        "lowcode.f53187a0": "test",
+        "lowcode.97ad00dd": "createMaterial",
+        "common.index.fullName": "zhangsan",
+        "other.utileName": "getName"
+      },
+      "zh_CN": {
+        "lowcode.c257d5e8": "查询",
+        "lowcode.61c8ac8c": "地方",
+        "lowcode.f53187a0": "测试",
+        "lowcode.97ad00dd": "创建物料资产包",
+        "common.index.fullName": "张三",
+        "other.utileName": "获取名称"
+      }
+    }
+  },
+  "locale": "zh-cn"
+}

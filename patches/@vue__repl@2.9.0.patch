@@ -1,0 +1,50 @@
+diff --git a/dist/chunks/MonacoEditor-KSgTEMrh.js b/dist/chunks/MonacoEditor-KSgTEMrh.js
+index c9668cbf8c44ba3c816246b746127204839f8349..e893c59a432e53372c18aa2e70d7b7bb9fd666ba 100644
+--- a/dist/chunks/MonacoEditor-KSgTEMrh.js
++++ b/dist/chunks/MonacoEditor-KSgTEMrh.js
+@@ -1,5 +1,13 @@
+ import { watchEffect, defineComponent, ref, shallowRef, inject, computed, onMounted, nextTick, watch, onBeforeUnmount, openBlock, createElementBlock, createBlock } from 'vue';
+ import { c as commonjsGlobal, a as getAugmentedNamespace } from './_commonjsHelpers-9Q-OoQuc.js';
++function getWorkerURL(url){
++    if (typeof document !== 'undefined' && document.location && document.location.origin !== url.origin) {
++        return URL.createObjectURL(new Blob([`import '${url.href}'`], {
++            type: 'application/javascript'
++        }))
++    }
++    return url.href;
++}
+ 
+ /*---------------------------------------------------------------------------------------------
+  *  Copyright (c) Microsoft Corporation. All rights reserved.
+@@ -170640,7 +170648,7 @@ var languages;
+ 
+ function WorkerWrapper$1(options) {
+           return new Worker(
+-            ""+new URL('../assets/editor.worker-FXpxnIqv.js', import.meta.url).href+"",
++            ""+getWorkerURL(new URL('../assets/editor.worker-FXpxnIqv.js', import.meta.url))+"",
+             {
+         type: "module",
+         name: options?.name
+@@ -172020,7 +172028,7 @@ function getOrCreateModel(uri, lang, value) {
+ 
+ function WorkerWrapper(options) {
+           return new Worker(
+-            ""+new URL('../assets/vue.worker-eqEbSb3e.js', import.meta.url).href+"",
++            ""+getWorkerURL(new URL('../assets/vue.worker-eqEbSb3e.js', import.meta.url))+"",
+             {
+         type: "module",
+         name: options?.name
+diff --git a/dist/vue-repl.js b/dist/vue-repl.js
+index 43bfd22a1a7d6f831e3f85228d809750317c4bfb..d5f5cb335533295c63e4cfa8aaa02770d16babca 100644
+--- a/dist/vue-repl.js
++++ b/dist/vue-repl.js
+@@ -528,7 +528,8 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent({
+           "allow-popups",
+           "allow-same-origin",
+           "allow-scripts",
+-          "allow-top-navigation-by-user-activation"
++          "allow-top-navigation-by-user-activation",
++          "allow-downloads"
+         ].join(" ")
+       );
+       const importMap = store.getImportMap();

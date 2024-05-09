@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>操作/撤销</title>
+    <g id="操作/撤销" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
+        <path
+            d="M11.6666667,12.5898133 L5.74253948,12.5898133 C3.95173438,12.5898133 2.5,11.1380789 2.5,9.34727383 C2.5,7.55646872 3.95173438,6.10473434 5.74253948,6.10473434 L13.5,6.10473434 L13.5,6.10473434 M13.5,6.10473434 L10.9193405,3.5"
+            id="形状结合备份-2" stroke="currentColor"
+            transform="translate(8.000000, 8.044907) scale(-1, 1) translate(-8.000000, -8.044907) "></path>
+    </g>
+</svg>

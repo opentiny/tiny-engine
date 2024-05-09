@@ -1,0 +1,59 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "background-color": {
+        "title": "背景色 ",
+        "type": "string",
+        "default": "#d9d9d9"
+      },
+      "color": {
+        "title": "文字颜色 ",
+        "type": "string",
+        "default": "#ffffff"
+      },
+      "message-total": {
+        "title": "消息计数 ",
+        "type": "number"
+      },
+      "message-type": {
+        "title": "消息类型",
+        "type": "string",
+        "enum": ["details", "basic"],
+        "enumNames": ["数字类型", "小圆点类型"],
+        "default": "details"
+      },
+      "message-upper-limit": {
+        "title": "消息显示上限 ",
+        "type": "number",
+        "default": 0
+      },
+      "min": {
+        "title": "小尺寸模式 ",
+        "type": "boolean",
+        "default": false
+      },
+      "round": {
+        "title": "圆形模式 ",
+        "type": "boolean",
+        "default": true
+      },
+      "type": {
+        "title": "头像类型，icon|image|label 可选",
+        "type": "string",
+        "enum": ["icon", "image", "label"],
+        "enumNames": ["图标类型", "图像类型", "标签类型"],
+        "default": "label"
+      },
+      "$$value": {
+        "title": "type=icon 时为图标类名（默认'icon-user'），type=label 时为字体串（默认'U'），type=image时为资源路径",
+        "type": "string",
+        "default": ""
+      },
+      "#default": {
+        "title": "自定义图像内容",
+        "type": "string"
+      }
+    }
+  }
+}

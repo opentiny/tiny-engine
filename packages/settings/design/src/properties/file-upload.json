@@ -1,0 +1,215 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "accept": {
+        "title": "接受上传的文件类型（thumbnail-mode 模式下此参数无效）",
+        "type": "string",
+        "default": ""
+      },
+      "action": {
+        "title": "上传的服务地址，当不配置 action 时，会连接默认的网关地址",
+        "type": "string",
+        "default": ""
+      },
+      "auto-upload": {
+        "title": "是否在选取文件后立即进行上传",
+        "type": "boolean",
+        "default": true
+      },
+      "$$data": {
+        "title": "上传时附带的额外参数",
+        "type": "object"
+      },
+      "disabled": {
+        "title": "是否禁用",
+        "type": "boolean",
+        "default": false
+      },
+      "drag": {
+        "title": "是否启用拖拽上传",
+        "type": "boolean",
+        "default": false
+      },
+      "$$dragger": {
+        "title": "拖拽器",
+        "type": "boolean",
+        "default": false
+      },
+      "$$edm": {
+        "title": "使用 EDM 的上传下载预览功能，可在该对象里边配置上传、下载、预览功能的参数",
+        "type": "object",
+        "default": "",
+        "properties": {
+          "updateId": {
+            "title": "EDM 需要更新文档的 docId",
+            "type": "string",
+            "default": ""
+          },
+          "upload": {
+            "title": "配置 EDM 上传功能所需的参数,例如：edm:{upload:{plugin:sha256,token:()=>{}}},plugin 为第三方依赖可生成文档内容校验 hash 值，token为鉴权token，类型为Function,返回 Promise",
+            "type": "object",
+            "properties": {
+              "plugin": {
+                "title": "依赖的第三方插件 js-sha256 的对象",
+                "type": "object"
+              },
+              "isFolder": {
+                "title": "是否启用 EDM 上传文件夹的功能，若配置为 true，最多只能上传 5 层；{edm:upload:{plugin:sha256,isFolder:true,token:()=>{}}}",
+                "type": "boolean",
+                "default": false
+              },
+              "levelCode": {
+                "title": "标签密级",
+                "type": "string",
+                "enum": ["C", "S", "IP", "EP", "GI", "KI", "SI"],
+                "enumNames": ["机密", "秘密", "内部公开", "外部公开", "普通信息", "关键信息", "保密信息"]
+              },
+              "finalSite": {
+                "title": "指定文档永久存储站点",
+                "type": "string"
+              },
+              "textStyle": {
+                "title": "标签名称",
+                "type": "string"
+              }
+            }
+          },
+          "download": {
+            "title": "配置 EDM 下载功能所需的参数,例如：edm:{download:{token:()=>{}}},token为鉴权token",
+            "type": "object"
+          },
+          "preivew": {
+            "title": "配置 EDM 预览功能所需的参数,例如：edm:{preview:{plugin：util.default,previewUrl:./_index.html?appid=应用Id,packageName: 'jslib',token:()=>{}}}",
+            "type": "object",
+            "properties": {
+              "online": {
+                "title": "线上预览",
+                "type": "object",
+                "properties": {
+                  "showdownload": {
+                    "title": "在预览界面隐藏下载按钮，'hide'为隐藏下载按钮，其他值为显示",
+                    "type": "string"
+                  },
+                  "appid": {
+                    "title": "应用ID",
+                    "type": "string"
+                  },
+                  "baseurl": {
+                    "title": "请求的基准路径",
+                    "type": "string",
+                    "enum": ["http://example.com/", "https://example.com/"],
+                    "enumNames": ["内网 UAT 地址", "内网 PRO 地址"]
+                  },
+                  "jslibhtml": {
+                    "title": "预览包静态资源地址",
+                    "type": "string",
+                    "enum": ["http://example.com/index.html?", "http://example.com/index.html?"],
+                    "enumNames": ["内网 UAT 地址", "内网 PRO 地址"]
+                  }
+                }
+              },
+              "watermark": {
+                "title": "预览水印",
+                "type": "object",
+                "properties": {
+                  "showWatermark": {
+                    "title": "水印宽度",
+                    "type": "number"
+                  },
+                  "text": {
+                    "title": "水印文本",
+                    "type": "string"
+                  },
+                  "rotation": {
+                    "title": "水印旋转角度",
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "$$ext-icons": {
+        "title": "设置自定义文件类型图标，根据扩展名定义，默认由组件内部提供",
+        "type": "object"
+      },
+      "$$file-list": {
+        "title": "上传的文件列表, 例如: [{name: 'food.jpg', url: 'https://xxx.cdn.com/xxx.jpg'}]",
+        "type": "array",
+        "default": []
+      },
+      "$$headers": {
+        "title": "设置上传的请求头部",
+        "type": "object"
+      },
+      "limit": {
+        "title": "最大允许上传个数",
+        "type": "number"
+      },
+      "list-type": {
+        "title": "文件列表的类型",
+        "type": "string",
+        "enum": ["text", "picture", "picture-card"],
+        "enumNames": ["文字", "缩略图", "照片墙"],
+        "default": "text"
+      },
+      "mergeService": {
+        "title": "配置 mergeService 为true 且开启多文件上传走默认服务会将多个上传服务合并为一个服务上传",
+        "type": "boolean",
+        "default": false
+      },
+      "$$mini-mode": {
+        "title": "设置 mini 模式",
+        "type": "boolean",
+        "default": false
+      },
+      "multiple": {
+        "title": "是否支持多选文件",
+        "type": "boolean",
+        "default": false
+      },
+      "$$name": {
+        "title": "上传的文件字段名",
+        "type": "string",
+        "default": "file"
+      },
+      "open-download-file": {
+        "title": "是否开启点击下载文件",
+        "type": "boolean",
+        "default": false
+      },
+      "show-file-list": {
+        "title": "是否显示已上传文件列表",
+        "type": "boolean",
+        "default": true
+      },
+      "size": {
+        "title": "设置按钮尺寸，为单个按钮且按钮为 AUI 的 Button 组件时生效",
+        "type": "string",
+        "enum": ["medium", "small", "mini"],
+        "enumNames": ["中等尺寸", "较小尺寸", "迷你尺寸"],
+        "default": ""
+      },
+      "$$type": {
+        "title": "文本",
+        "type": "string",
+        "default": "select"
+      },
+      "with-credentials": {
+        "title": "支持发送 cookie 凭证信息",
+        "type": "boolean",
+        "default": true
+      },
+      "#tip": {
+        "title": "提示说明文字",
+        "type": "string"
+      },
+      "#trigger": {
+        "title": "触发文件选择框的内容",
+        "type": "string"
+      }
+    }
+  }
+}

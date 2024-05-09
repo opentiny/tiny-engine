@@ -1,0 +1,45 @@
+{
+  "name": "@opentiny/tiny-engine-dsl-vue",
+  "version": "1.0.3",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "dist/tiny-engine-dsl-vue.cjs.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "test": "npx nyc@latest --reporter=lcov node test/test_generator.js",
+    "test:latest": "npm run build && node test/testcases/full/index.js",
+    "publish:npm": "npm publish --verbose"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/opentiny/tiny-engine",
+    "directory": "packages/vue-generator"
+  },
+  "bugs": {
+    "url": "https://github.com/opentiny/tiny-engine/issues"
+  },
+  "author": "OpenTiny Team",
+  "license": "MIT",
+  "homepage": "https://opentiny.design/tiny-engine",
+  "dependencies": {
+    "@opentiny/tiny-engine-builtin-component": "workspace:*",
+    "@vue/compiler-sfc": "3.2.45",
+    "@vue/shared": "^3.3.4",
+    "vue": "^3.4.15",
+    "vue-eslint-parser": "8.3.0"
+  },
+  "devDependencies": {
+    "@rushstack/eslint-patch": "^1.1.1",
+    "@vue/eslint-config-prettier": "^7.0.0",
+    "eslint": "^8.12.0",
+    "eslint-plugin-vue": "^8.6.0",
+    "fs-extra": "^10.0.1",
+    "prettier": "^2.6.1",
+    "vite": "^2.8.6",
+    "winston": "^3.10.0"
+  }
+}

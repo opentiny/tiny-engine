@@ -1,0 +1,33 @@
+export const videoName = 'MVideo';
+export const audioName = 'MAudio';
+
+export const EVENT_NAMES = [
+    'progress',
+    'playing',
+    'play',
+    'pause',
+    'timeupdate',
+    'volumechange',
+    'seeking',
+    'seeked',
+    'ratechange',
+    'ended',
+    'enterfullscreen',
+    'exitfullscreen',
+    'captionsenabled',
+    'captionsdisabled',
+    'languagechange',
+    'controlshidden',
+    'controlsshown',
+    'loadstart',
+    'loadeddata',
+    'loadedmetadata',
+    'qualitychange',
+    'canplay',
+    'canplaythrough',
+    'stalled',
+    'waiting',
+    'emptied',
+    'cuechange',
+    'error',
+];

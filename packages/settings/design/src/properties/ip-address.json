@@ -1,0 +1,44 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "delimiter": {
+        "title": "设置IP段之间的分隔符类名",
+        "type": "string",
+        "default": "icon-dot-ipv4"
+      },
+      "disabled": {
+        "title": "设置文本的禁用属性",
+        "type": "boolean",
+        "default": false
+      },
+      "readonly": {
+        "title": "设置文本的只读属性",
+        "type": "boolean",
+        "default": false
+      },
+      "size": {
+        "title": "设置组件大小",
+        "type": "string",
+        "enum": ["medium", "small", "mini"],
+        "enumNames": ["中等尺寸", "较小尺寸", "迷你尺寸"],
+        "default": ""
+      },
+      "type": {
+        "title": "设置 IpAddress 框的 type 属性",
+        "type": "string",
+        "enum": ["IPv4", "IPv6"],
+        "enumNames": ["IPv4", "IPv6"],
+        "default": "IPv4"
+      },
+      "value": {
+        "title": "设置文本显示的默认值",
+        "type": "string"
+      },
+      "#default": {
+        "title": "IP段之间的分隔符插槽",
+        "type": "string"
+      }
+    }
+  }
+}

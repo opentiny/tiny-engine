@@ -1,0 +1,77 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "autofocus": {
+        "title": "是否默认聚焦",
+        "type": "boolean",
+        "default": false
+      },
+      "circle": {
+        "title": "是否圆形按钮",
+        "type": "boolean",
+        "default": false
+      },
+      "disabled": {
+        "title": "设置按钮是否被禁用",
+        "type": "boolean",
+        "default": false
+      },
+      "$$icon": {
+        "title": "svg 图片对象",
+        "type": ["string", "object"],
+        "default": ""
+      },
+      "loading": {
+        "title": "是否加载中状态",
+        "type": "boolean",
+        "default": false
+      },
+      "native-type": {
+        "title": "设置 button、image 两种按钮的表单类型",
+        "type": "string",
+        "enum": ["button", "submit", "reset"],
+        "enumNames": ["按钮", "提交", "重置"],
+        "default": "button"
+      },
+      "plain": {
+        "title": "是否朴素按钮",
+        "type": "boolean",
+        "default": false
+      },
+      "reset-time": {
+        "title": "设置按钮禁用时间，防止重复提交，单位毫秒",
+        "type": "number",
+        "default": 1000
+      },
+      "round": {
+        "title": "是否圆角按钮",
+        "type": "boolean",
+        "default": false
+      },
+      "size": {
+        "title": "定义按钮尺寸",
+        "type": "string",
+        "enum": ["large", "medium", "small", "mini"],
+        "enumNames": ["较大尺寸", "中等尺寸", "较小尺寸", "迷你尺寸"],
+        "default": ""
+      },
+      "text": {
+        "title": "设置按钮显示的文本",
+        "type": "string",
+        "default": ""
+      },
+      "type": {
+        "title": "类型",
+        "type": "string",
+        "enum": ["primary", "success", "warning", "danger", "info", "text"],
+        "enumNames": ["主要", "成功", "警告", "危险", "信息", "文字"],
+        "default": ""
+      },
+      "#default": {
+        "title": "默认插槽",
+        "type": "string"
+      }
+    }
+  }
+}

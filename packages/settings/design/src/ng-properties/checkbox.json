@@ -1,0 +1,38 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "condition": {
+        "title": "是否渲染",
+        "type": "boolean",
+        "default": true
+      },
+      "id": {
+        "title": "绑定id",
+        "type": "string"
+      },
+      "class": {
+        "title": "绑定class",
+        "type": "string"
+      },
+      "label": {
+        "title": "label",
+        "type": "object",
+        "default": {
+          "type": "i18n",
+          "zh_CN": "标签",
+          "en_US": "Label",
+          "key": ""
+        }
+      },
+      "checked": {
+        "title": "是否选中",
+        "type": "boolean"
+      },
+      "disabled": {
+        "title": "是否禁用",
+        "type": "boolean"
+      }
+    }
+  }
+}

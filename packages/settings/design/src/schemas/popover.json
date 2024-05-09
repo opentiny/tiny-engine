@@ -1,0 +1,205 @@
+{
+  "icon": "popover",
+  "name": {
+    "zh_CN": "提示框"
+  },
+  "component": "tiny-popover",
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "collapse": {
+          "number": 6,
+          "text": {
+            "zh_CN": "显示更多"
+          }
+        },
+        "content": [
+          {
+            "property": "modelValue",
+            "label": {
+              "text": {
+                "zh_CN": "绑定值"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "双向绑定值"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "placement",
+            "label": {
+              "text": {
+                "zh_CN": "位置"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSelect",
+              "props": {
+                "options": [
+                  {
+                    "label": "top",
+                    "value": "top"
+                  },
+                  {
+                    "label": "top-start",
+                    "value": "top-start"
+                  },
+                  {
+                    "label": "top-end",
+                    "value": "top-end"
+                  },
+                  {
+                    "label": "bottom",
+                    "value": "bottom"
+                  },
+                  {
+                    "label": "bottom-start",
+                    "value": "bottom-start"
+                  },
+                  {
+                    "label": "bottom-end",
+                    "value": "bottom-end"
+                  },
+                  {
+                    "label": "left",
+                    "value": "left"
+                  },
+                  {
+                    "label": "left-start",
+                    "value": "left-start"
+                  },
+                  {
+                    "label": "left-end",
+                    "value": "left-end"
+                  },
+                  {
+                    "label": "right",
+                    "value": "right"
+                  },
+                  {
+                    "label": "right-start",
+                    "value": "right-start"
+                  },
+                  {
+                    "label": "right-end",
+                    "value": "right-end"
+                  }
+                ]
+              }
+            },
+            "description": {
+              "zh_CN": ""
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "trigger",
+            "label": {
+              "text": {
+                "zh_CN": "触发方式"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSelect",
+              "props": {
+                "options": [
+                  {
+                    "label": "click",
+                    "value": "click"
+                  },
+                  {
+                    "label": "focus",
+                    "value": "focus"
+                  },
+                  {
+                    "label": "hover",
+                    "value": "hover"
+                  },
+                  {
+                    "label": "manual",
+                    "value": "manual"
+                  }
+                ]
+              }
+            },
+            "description": {
+              "zh_CN": "触发方式，该属性的可选值为 click / focus / hover / manual，该属性的默认值为 click"
+            }
+          },
+          {
+            "property": "popper-class",
+            "label": {
+              "text": {
+                "zh_CN": "自定义类"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "为 popper 添加类名"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "visible-arrow",
+            "label": {
+              "text": {
+                "zh_CN": "显示箭头"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否显示 Tooltip 箭头"
+            }
+          }
+        ]
+      }
+    ],
+    "slots": {
+      "default": {}
+    },
+    "events": {},
+    "shortcuts": {
+      "properties": ["value", "disabled"]
+    },
+    "contentMenu": {
+      "actions": ["create symbol"]
+    }
+  }
+}

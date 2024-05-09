@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>操作/播放1</title>
+    <g id="操作/播放1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <circle id="椭圆形" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="6.5">
+        </circle>
+        <path
+            d="M10.138376,8.55150128 L7.18978679,10.166874 C6.89439465,10.3287034 6.52771748,10.2129487 6.3707904,9.90832866 C6.32430724,9.81809757 6.3,9.71748421 6.3,9.61531063 L6.3,6.38456522 C6.3,6.03962737 6.57115659,5.76 6.90564519,5.76 C7.00472361,5.76 7.10228908,5.78506659 7.18978679,5.83300186 L10.138376,7.44837456 C10.4337682,7.61020395 10.5460163,7.98833592 10.3890892,8.29295596 C10.3323995,8.40299956 10.2450861,8.49304062 10.138376,8.55150128 Z"
+            id="三角形" fill="currentColor"></path>
+    </g>
+</svg>

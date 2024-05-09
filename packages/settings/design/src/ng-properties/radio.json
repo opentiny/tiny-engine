@@ -1,0 +1,55 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "condition": {
+        "title": "是否渲染",
+        "type": "boolean",
+        "default": true
+      },
+      "options": {
+        "title": "选项",
+        "type": "array",
+        "default": [
+          {
+            "label": {
+              "type": "i18n",
+              "zh_CN": "蛋糕",
+              "en_US": "cake",
+              "key": ""
+            },
+            "text": "cake"
+          },
+          {
+            "label": {
+              "type": "i18n",
+              "zh_CN": "鸡蛋",
+              "en_US": "egg",
+              "key": ""
+            },
+            "text": "egg"
+          },
+          {
+            "label": {
+              "type": "i18n",
+              "zh_CN": "牛奶",
+              "en_US": "milk",
+              "key": ""
+            },
+            "text": "milk"
+          }
+        ]
+      }
+    },
+    "selected": {
+      "title": "选中项",
+      "type": "string",
+      "default": "egg"
+    },
+    "onChange": {
+      "title": "onChange",
+      "type": "function",
+      "default": "function onChange(){}"
+    }
+  }
+}

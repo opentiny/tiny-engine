@@ -1,0 +1,84 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "disabled": {
+        "title": "是否禁用",
+        "type": "boolean",
+        "default": false
+      },
+      "fill": {
+        "title": "按钮形式的 Checkbox 激活时的填充色和边框色",
+        "type": "string",
+        "default": "#409EFF"
+      },
+      "max": {
+        "title": "可被勾选的 Checkbox 的最大数量",
+        "type": "number"
+      },
+      "min": {
+        "title": "可被勾选的 Checkbox 的最小数量",
+        "type": "number"
+      },
+      "options": {
+        "title": "通过配置对象数组的形式来渲染复选框组",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "title": "标签文本",
+              "type": "string",
+              "default": ""
+            },
+            "text": {
+              "title": "显示的文本",
+              "type": "string",
+              "default": ""
+            },
+            "$$events": {
+              "title": "原生事件",
+              "type": "object",
+              "properties": {}
+            }
+          }
+        }
+      },
+      "size": {
+        "title": "复选框组尺寸，仅对按钮形式的 Checkbox 或带有边框的 Checkbox 有效",
+        "type": "string",
+        "enum": ["medium", "small", "mini"],
+        "enumNames": ["中等尺寸", "较小尺寸", "迷你尺寸"],
+        "default": ""
+      },
+      "text-color": {
+        "title": "按钮形式的 Checkbox 激活时的文本颜色",
+        "type": "string",
+        "default": "#ffffff"
+      },
+      "type": {
+        "title": "当通过 options 属性渲染复选框组时，可通过该属性来指定 Checkbox 类型",
+        "type": "string",
+        "enum": ["button", "checkbox"],
+        "enumNames": ["按钮类型", "复选框类型"],
+        "default": "checkbox"
+      },
+      "value": {
+        "title": "绑定值",
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "vertical": {
+        "title": "设置复选框是否垂直排列",
+        "type": "boolean",
+        "default": false
+      },
+      "#default": {
+        "title": "checkbox选项组插槽",
+        "type": "string"
+      }
+    }
+  }
+}

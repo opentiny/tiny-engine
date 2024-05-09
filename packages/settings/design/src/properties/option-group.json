@@ -1,0 +1,21 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "disabled": {
+        "title": "是否将该分组下所有选项置为禁用",
+        "type": "boolean",
+        "default": false
+      },
+      "label": {
+        "title": "分组的组名",
+        "type": "string",
+        "default": ""
+      },
+      "#default": {
+        "title": "默认插槽",
+        "type": "string"
+      }
+    }
+  }
+}

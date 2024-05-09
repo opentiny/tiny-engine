@@ -1,0 +1,48 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "disabled": {
+        "title": "是否禁用",
+        "type": "boolean",
+        "default": false
+      },
+      "fill": {
+        "title": "按钮形式的 Radio 激活时的填充色和边框色",
+        "type": "string",
+        "default": ""
+      },
+      "$$options": {
+        "title": "循环配置 Radio",
+        "type": "array",
+        "default": ""
+      },
+      "size": {
+        "title": "单选框组尺寸，仅对按钮形式的 Radio 或带有边框的 Radio 有效",
+        "type": "string",
+        "enum": ["medium", "small", "mini"],
+        "enumNames": ["中等尺寸", "较小尺寸", "迷你尺寸"],
+        "default": ""
+      },
+      "text-color": {
+        "title": "按钮形式的 Radio 激活时的文本颜色",
+        "type": "string",
+        "default": "#fff"
+      },
+      "$$value": {
+        "title": "绑定值",
+        "type": "string",
+        "default": ""
+      },
+      "vertical": {
+        "title": "设置组件排列方式",
+        "type": "boolean",
+        "default": true
+      },
+      "#default": {
+        "title": "radio默认插槽",
+        "type": "string"
+      }
+    }
+  }
+}

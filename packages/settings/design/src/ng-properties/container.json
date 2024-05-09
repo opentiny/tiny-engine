@@ -1,0 +1,26 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "condition": {
+        "title": "是否渲染",
+        "type": "boolean",
+        "default": true
+      },
+      "style": {
+        "title": "样式",
+        "type": "string",
+        "default": "margin: 10px;"
+      },
+      "class": {
+        "title": "样式类",
+        "type": "string"
+      },
+      "onClick": {
+        "title": "点击事件",
+        "type": "function",
+        "default": "function onClick(e) {}"
+      }
+    }
+  }
+}

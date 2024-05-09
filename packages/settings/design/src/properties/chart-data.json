@@ -1,0 +1,22 @@
+{
+  "$$schema": {
+    "type": "object",
+    "properties": {
+      "columns": {
+        "title": "维度和指标的集合，chart 中的大部分图表都是单维度多指标，所以默认第一个值为 维度，剩余的值为指标",
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "rows": {
+        "title": "数据的集合",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {}
+        }
+      }
+    }
+  }
+}

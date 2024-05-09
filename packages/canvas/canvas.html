@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style type="text/css">
+      .loading-warp {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: fixed;
+        top: -75px;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
+      .loading {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto;
+        position: relative;
+        animation: load 3s linear infinite;
+      }
+      .loading div {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+      }
+      .loading span {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #99cc66;
+        position: absolute;
+        left: 50%;
+        margin-top: -10px;
+        margin-left: -10px;
+        animation: changeBgColor 3s ease infinite;
+      }
+      @keyframes load {
+        0% {
+          transform: rotate(0deg);
+        }
+        33.3% {
+          transform: rotate(120deg);
+        }
+        66.6% {
+          transform: rotate(240deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes changeBgColor {
+        0%,
+        100% {
+          background: #99cc66;
+        }
+        33.3% {
+          background: #ffff66;
+        }
+        66.6% {
+          background: #ff6666;
+        }
+      }
+      .loading div:nth-child(2) {
+        transform: rotate(120deg);
+      }
+      .loading div:nth-child(3) {
+        transform: rotate(240deg);
+      }
+      .loading div:nth-child(2) span {
+        animation-delay: 1s;
+      }
+      .loading div:nth-child(3) span {
+        animation-delay: 2s;
+      }
+      html,
+      body,
+      object,
+      iframe,
+      p,
+      blockquote,
+      pre,
+      abbr,
+      address,
+      cite,
+      code,
+      del,
+      dfn,
+      em,
+      img,
+      ins,
+      kbd,
+      q,
+      samp,
+      small,
+      strong,
+      sub,
+      sup,
+      var,
+      b,
+      i,
+      dl,
+      dt,
+      dd,
+      ol,
+      ul,
+      li,
+      fieldset,
+      form,
+      label,
+      legend,
+      table,
+      caption,
+      tbody,
+      tfoot,
+      thead,
+      tr,
+      th,
+      td,
+      article,
+      aside,
+      canvas,
+      details,
+      figcaption,
+      figure,
+      footer,
+      header,
+      hgroup,
+      menu,
+      nav,
+      section,
+      summary,
+      time,
+      mark,
+      audio,
+      video {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        outline: 0;
+        font-size: 100%;
+        background: transparent;
+        user-select: none;
+      }
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+      }
+
+      body {
+        overflow-y: scroll;
+      }
+      .design-canvas {
+        margin: 0;
+        padding: 0;
+      }
+
+      body::-webkit-scrollbar {
+        width: 8px;
+      }
+      body::-webkit-scrollbar-track {
+        background-color: var(--ti-lowcode-canvas-iframe-scrollbar-track-color);
+      }
+      body::-webkit-scrollbar-thumb {
+        background-color: var(--ti-lowcode-canvas-iframe-scrollbar-thumb-color);
+        border-radius: 4px;
+      }
+      .design-page {
+        display: block;
+        padding: 18px 10px 0 10px;
+      }
+      .design-page .tiny-row .tiny-col:empty {
+        min-height: 30px;
+        border: '1px solid #ccc';
+      }
+      .canvas-container {
+        background: #f1f1f1;
+      }
+      .canvas-container .container-box {
+        background-repeat: no-repeat;
+        background-size: 1px 100%, 100% 1px;
+        background-position: 100% 0, 100% 100%;
+        position: relative;
+        height: 30px;
+        background-image: linear-gradient(-90deg, #e0e0e0, #e0e0e0), linear-gradient(-180deg, #e0e0e0, #e0e0e0);
+      }
+      .canvas-container .container-box .container-tip {
+        background-repeat: no-repeat;
+        background-size: 1px 100%, 100% 1px;
+        background-position: initial;
+        font-size: 14px;
+        font-weight: 400;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #a7b1bd;
+        background-image: linear-gradient(-90deg, #e0e0e0, #e0e0e0), linear-gradient(-180deg, #e0e0e0, #e0e0e0);
+      }
+    </style>
+    <title>Vite App</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/canvas.js"></script>
+  </body>
+</html>

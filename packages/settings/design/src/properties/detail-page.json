@@ -1,0 +1,52 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "cancel-button": {
+        "title": "个性化弹窗取消按钮的文本",
+        "type": "string",
+        "default": "取 消"
+      },
+      "dialog-title": {
+        "title": "个性化弹窗标题",
+        "type": "string",
+        "default": "个性化设置"
+      },
+      "label-title": {
+        "title": "个性化弹窗表头文本标题栏字段",
+        "type": "string",
+        "default": "字段"
+      },
+      "save-button": {
+        "title": "个性化弹窗确定按钮的文本",
+        "type": "string",
+        "default": "确 定"
+      },
+      "text-split": {
+        "title": "详情栏标题分隔符",
+        "type": "string",
+        "default": ":"
+      },
+      "tips": {
+        "title": "提示不能全部隐藏的提示语",
+        "type": "string",
+        "default": "至少显示一个"
+      },
+      "title": {
+        "title": "详情栏标题",
+        "type": "string",
+        "default": "带表头的详情栏"
+      },
+      "$$value": {
+        "title": "设置表头详情栏的数据",
+        "type": "array",
+        "default": ""
+      },
+      "value-title": {
+        "title": "个性化弹窗表头文本操作栏字段",
+        "type": "string",
+        "default": "隐藏"
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "local": {
+        "title": "是否本地",
+        "type": "boolean",
+        "default": false
+      },
+      "popper-append-to-body": {
+        "title": "是否将弹出框插入至 body 元素。在弹出框的定位出现问题时，可将该属性设置为 false (可参考 select 组件)",
+        "type": "boolean",
+        "default": true
+      },
+      "$$popper-class": {
+        "title": "为 popper 添加类名(可参考 popover 组件)",
+        "type": "string",
+        "default": ""
+      }
+    }
+  }
+}

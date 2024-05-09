@@ -1,0 +1,13 @@
+<svg
+  data-icon="BorderStyleDashed"
+  aria-hidden="true"
+  focusable="false"
+  width="16"
+  height="16"
+  viewBox="0 0 16 16"
+  version="1.1"
+  xmlns="http://www.w3.org/2000/svg"
+  style="display: block"
+>
+  <path d="M0 7h4v2H0zm6 0h4v2H6zm6 0h4v2h-4z"></path>
+</svg>

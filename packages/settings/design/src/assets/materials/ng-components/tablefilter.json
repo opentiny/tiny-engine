@@ -1,0 +1,263 @@
+{
+  "icon": "",
+  "name": {
+    "zh_CN": "TableFilter"
+  },
+  "component": "tiny-tablefilter",
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "collapse": {
+          "number": 6,
+          "text": {
+            "zh_CN": "显示更多"
+          }
+        },
+        "content": [
+          {
+            "property": "condition",
+            "type": "boolean",
+            "defaultValue": true,
+            "label": {
+              "text": {
+                "zh_CN": "是否渲染"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            }
+          },
+          {
+            "property": "showSlide",
+            "type": "boolean",
+            "defaultValue": true,
+            "label": {
+              "text": {
+                "zh_CN": "是否显示展开收起"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            }
+          },
+          {
+            "property": "slidePosition",
+            "type": "number",
+            "defaultValue": 4,
+            "label": {
+              "text": {
+                "zh_CN": "展开收起位置"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            }
+          },
+          {
+            "property": "placeholder",
+            "type": "object",
+            "defaultValue": {
+              "type": "i18n",
+              "zh_CN": "支持的模糊搜索条件：商务编号，项目名称，客户名称，客户账号，伙伴名称，伙伴账号",
+              "key": ""
+            },
+            "label": {
+              "text": {
+                "zh_CN": "搜索框placeholder"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            }
+          },
+          {
+            "property": "tipStr",
+            "type": "object",
+            "defaultValue": {
+              "type": "i18n",
+              "zh_CN": "支持的模糊搜索条件：商务编号，项目名称，客户名称，客户账号，伙伴名称，伙伴账号",
+              "key": ""
+            },
+            "label": {
+              "text": {
+                "zh_CN": "搜索框提示文案"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            }
+          },
+          {
+            "property": "options",
+            "type": "array",
+            "defaultValue": [
+              {
+                "key": "status",
+                "title": {
+                  "type": "i18n",
+                  "zh_CN": "状态",
+                  "key": ""
+                },
+                "multiple": true,
+                "values": [
+                  {
+                    "text": {
+                      "type": "i18n",
+                      "zh_CN": "全部",
+                      "key": ""
+                    },
+                    "value": "all"
+                  },
+                  {
+                    "text": {
+                      "type": "i18n",
+                      "zh_CN": "草稿",
+                      "key": ""
+                    },
+                    "value": "draft"
+                  },
+                  {
+                    "text": {
+                      "type": "i18n",
+                      "zh_CN": "审批中",
+                      "key": ""
+                    },
+                    "value": "pending"
+                  },
+                  {
+                    "text": {
+                      "type": "i18n",
+                      "zh_CN": "已通过",
+                      "key": ""
+                    },
+                    "value": "approved"
+                  }
+                ]
+              }
+            ],
+            "label": {
+              "text": {
+                "zh_CN": "数据源"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            }
+          }
+        ]
+      }
+    ],
+    "events": {
+      "onSelect": {
+        "label": {
+          "zh_CN": "onSelect"
+        },
+        "description": {
+          "zh_CN": "详细的描述文字，会在鼠标放入？时显示"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [],
+          "returns": {}
+        },
+        "defaultValue": "function onSelect(e) {}"
+      },
+      "onSearch": {
+        "label": {
+          "zh_CN": "onSearch"
+        },
+        "description": {
+          "zh_CN": "详细的描述文字，会在鼠标放入？时显示"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [],
+          "returns": {}
+        },
+        "defaultValue": "function onSearch(e) {}"
+      },
+      "onRefresh": {
+        "label": {
+          "zh_CN": "onRefresh"
+        },
+        "description": {
+          "zh_CN": "详细的描述文字，会在鼠标放入？时显示"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [],
+          "returns": {}
+        },
+        "defaultValue": "function onRefresh(e) {}"
+      },
+      "onToggle": {
+        "label": {
+          "zh_CN": "onToggle"
+        },
+        "description": {
+          "zh_CN": "详细的描述文字，会在鼠标放入？时显示"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [],
+          "returns": {}
+        },
+        "defaultValue": "function onToggle(e) {}"
+      }
+    },
+    "shortcuts": {
+      "properties": []
+    },
+    "contentMenu": {
+      "actions": []
+    }
+  }
+}

@@ -1,0 +1,23 @@
+.build_config
+.cid
+.codecheck
+.husky
+.vscode
+# 只忽略根目录的 dist 文件夹
+/dist
+test
+node_modules
+.editorconfig
+.eslintignore
+.eslintrc.js
+.prettierignore
+.prettierrc
+jsconfig.json
+package-lock.json
+
+# 忽略可能存在的其它编辑器文件夹
+.idea
+
+/packages/design-core/public/mock/*
+**/**/tmp
+**/**/temp

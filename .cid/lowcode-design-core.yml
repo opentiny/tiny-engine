@@ -1,0 +1,23 @@
+version: 1.0
+name: tiny-engine
+language: nodejs
+
+#  构建工具
+dependencies:
+  base:
+    nodejs: best
+
+#  构建机器
+machine:
+  standard:
+    euler:
+      - default
+
+#  构建脚本
+scripts:
+  - sh ./.build_config/build.sh
+
+#  构建产物
+artifacts:
+  npm_deploy:
+    - config_path: ./package.json

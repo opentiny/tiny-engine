@@ -1,0 +1,143 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "$$duration": {
+        "title": "只对 type=message 有效，自动关闭的延时",
+        "type": "string",
+        "default": "3000"
+      },
+      "duration": {
+        "title": "只对 type=message 有效，自动关闭的延时",
+        "type": "number",
+        "default": 3000
+      },
+      "esc-closable": {
+        "title": "是否允许按 Esc 键关闭窗口",
+        "type": "boolean",
+        "default": true
+      },
+      "fullscreen": {
+        "title": "默认最大化显示",
+        "type": "boolean",
+        "default": false
+      },
+      "height": {
+        "title": "窗口的高度",
+        "type": ["string", "number"],
+        "default": ""
+      },
+      "id": {
+        "title": "只对 type=message 有效，如果不想窗口重复点击，可以设置唯一的 id 防止重复提示",
+        "type": "string",
+        "default": ""
+      },
+      "is-form-reset": {
+        "title": "关闭弹窗时是否默认重置表单数据",
+        "type": "boolean",
+        "default": true
+      },
+      "lock-scroll": {
+        "title": "是否锁住滚动条，不允许页面滚动",
+        "type": "boolean",
+        "default": true
+      },
+      "lock-view": {
+        "title": "是否锁住页面，不允许窗口之外的任何操作",
+        "type": "boolean",
+        "default": true
+      },
+      "mask": {
+        "title": "是否显示遮罩层",
+        "type": "boolean",
+        "default": true
+      },
+      "mask-closable": {
+        "title": "是否允许点击遮罩层关闭窗口",
+        "type": "boolean",
+        "default": ""
+      },
+      "message": {
+        "title": "窗口的内容",
+        "type": "string",
+        "default": ""
+      },
+      "min-height": {
+        "title": "窗口的最小高度",
+        "type": ["string", "number"],
+        "default": ""
+      },
+      "min-width": {
+        "title": "窗口的最小宽度",
+        "type": ["string", "number"],
+        "default": ""
+      },
+      "resize": {
+        "title": "是否允许拖动调整窗口大小",
+        "type": "boolean",
+        "default": false
+      },
+      "show-header": {
+        "title": "是否显示头部",
+        "type": "boolean",
+        "default": true
+      },
+      "showFooter": {
+        "title": "是否显示底部",
+        "type": "boolean"
+      },
+      "status": {
+        "title": "只对 type=alert | confirm | message 有效，消息状态",
+        "type": "string",
+        "enum": ["info", "success", "warning", "error", "loading"],
+        "enumNames": ["基本提示", "成功提示", "警告提示", "错误提示", "加载提示"],
+        "default": "info"
+      },
+      "title": {
+        "title": "窗口的标题（支持开启国际化）",
+        "type": "string",
+        "default": ""
+      },
+      "$$top": {
+        "title": "只对 type=message 有效，消息距离顶部的位置",
+        "type": "string",
+        "default": "15"
+      },
+      "top": {
+        "title": "只对 type=message 有效，消息距离顶部的位置",
+        "type": "number",
+        "default": 15
+      },
+      "type": {
+        "title": "窗口类型",
+        "type": "string",
+        "enum": ["alert", "confirm", "message"],
+        "enumNames": ["警告弹框", "确认弹框", "提示弹框"],
+        "default": "alert"
+      },
+      "value": {
+        "title": "绑定值",
+        "type": "boolean",
+        "default": true
+      },
+      "width": {
+        "title": "窗口的宽度",
+        "type": ["string", "number"],
+        "default": ""
+      },
+      "zIndex": {
+        "title": "自定义堆叠顺序（对于某些特殊场景，比如被遮挡时可能会用到）",
+        "type": "number",
+        "default": 3000
+      },
+      "#default": {
+        "title": "默认插槽",
+        "type": "string"
+      },
+      "#footer": {
+        "title": "窗口底部的模板插槽",
+        "type": "string"
+      }
+    }
+  }
+}

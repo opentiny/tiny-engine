@@ -1,0 +1,34 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "placeholder": {
+        "title": "设置输入框内的提示占位文本",
+        "type": "string",
+        "default": ""
+      },
+      "readonly": {
+        "title": "设置是否只读",
+        "type": "boolean",
+        "default": false
+      },
+      "separtor": {
+        "title": "分隔符",
+        "type": "string",
+        "default": ","
+      },
+      "value": {
+        "title": "绑定值",
+        "type": "string",
+        "default": ""
+      },
+      "width": {
+        "title": "设置宽度",
+        "type": ["number", "string"],
+        "minimum": 0,
+        "multipleOf": 1,
+        "default": "150"
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 26.0.2, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+	y="0px" viewBox="0 0 16 16" style="enable-background:new 0 0 16 16;" xml:space="preserve">
+	<style type="text/css">
+		.st0 {
+			fill: none;
+			stroke: currentColor;
+			stroke-linejoin: round;
+		}
+
+		.st1 {
+			fill: none;
+			stroke: currentColor;
+			stroke-linecap: round;
+			stroke-linejoin: round;
+		}
+	</style>
+	<path id="矩形备份" class="st0" d="M14,4v8c0,1.1-0.9,2-2,2H6l0,0H4c-1.1,0-2-0.9-2-2V4c0-1.1,0.9-2,2-2h2.1l0,0H12
+	C13.1,2,14,2.9,14,4z" />
+	<g id="编组-33"
+		transform="translate(6.330772, 1.677674) scale(-1, -1) translate(-6.330772, -1.677674) translate(4.661544, 0.000000)">
+		<path id="矩形备份-49" class="st1" d="M0.7-1v-2.6C0.7-3.8,0.8-4,1.1-4h2.6l0,0" />
+		<line id="路径-7备份" class="st1" x1="1" y1="-3.6" x2="4" y2="-0.6" />
+	</g>
+	<g id="编组-33_00000123434901296645393610000012002856905542474172_" transform="translate(0.000000, 4.644653)">
+		<path id="矩形备份-49_00000178902869813800452590000012495170303845069444_" class="st1" d="M8.7,7V4.4C8.7,4.2,8.8,4,9.1,4
+		h2.6l0,0" />
+		<line id="路径-7备份_00000070094367929097212360000007925166771528165784_" class="st1" x1="9" y1="4.4" x2="12"
+			y2="7.4" />
+	</g>
+</svg>

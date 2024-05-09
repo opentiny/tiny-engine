@@ -1,0 +1,193 @@
+{
+  "icon": "dialogbox",
+  "name": {
+    "zh_CN": "对话框"
+  },
+
+  "component": "tiny-dialog-box",
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "collapse": {
+          "number": 6,
+          "text": {
+            "zh_CN": "显示更多"
+          }
+        },
+        "content": [
+          {
+            "property": "title",
+            "label": {
+              "text": {
+                "zh_CN": "标题"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "弹出框标题"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "visible",
+            "label": {
+              "text": {
+                "zh_CN": "显示与隐藏"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "控制弹出框显示与关闭"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "width",
+            "label": {
+              "text": {
+                "zh_CN": "宽度"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "弹出框的宽度"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "draggable",
+            "label": {
+              "text": {
+                "zh_CN": "可拖拽"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否开启弹窗的拖拽功能，默认值为 false 。"
+            }
+          },
+          {
+            "property": "center",
+            "label": {
+              "text": {
+                "zh_CN": "居中"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "弹出框的头部与底部内容会自动居中"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "dialog-class",
+            "label": {
+              "text": {
+                "zh_CN": "自定义类"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "自定义配置弹窗类名"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "append-to-body",
+            "label": {
+              "text": {
+                "zh_CN": "插入到 Body "
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "DialogBox 本身是否插入到 body 上，嵌套的 Dialog 必须指定该属性并赋值为 true"
+            },
+            "labelPosition": "left"
+          }
+        ]
+      }
+    ],
+    "slots": {
+      "default": {},
+      "footer": {}
+    },
+    "events": {
+      "onClose": {
+        "label": {
+          "zh_CN": "关闭弹窗时触发"
+        },
+        "description": {
+          "zh_CN": "Dialog 关闭的回调"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [],
+          "returns": {}
+        },
+        "defaultValue": ""
+      }
+    },
+    "shortcuts": {
+      "properties": ["visible", "title"]
+    },
+    "contentMenu": {
+      "actions": ["create symbol"]
+    }
+  }
+}

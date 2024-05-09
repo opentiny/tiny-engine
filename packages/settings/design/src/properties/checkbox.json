@@ -1,0 +1,68 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "border": {
+        "title": "是否显示边框",
+        "type": "boolean",
+        "default": false
+      },
+      "checked": {
+        "title": "是否勾选",
+        "type": "boolean",
+        "default": false
+      },
+      "disabled": {
+        "title": "是否禁用",
+        "type": "boolean",
+        "default": false
+      },
+      "false-label": {
+        "title": "没有选中时的值",
+        "type": ["string", "number"],
+        "default": ""
+      },
+      "indeterminate": {
+        "title": "是否设置 indeterminate 状态，只负责样式控制",
+        "type": "boolean",
+        "default": false
+      },
+      "label": {
+        "title": "选中状态的值（只有在checkbox-group或者绑定对象类型为array时有效）",
+        "type": ["string", "number", "boolean"],
+        "default": ""
+      },
+      "name": {
+        "title": "名称，原生 name 属性",
+        "type": "string",
+        "default": ""
+      },
+      "size": {
+        "title": "Checkbox 的尺寸，仅在 是否显示边框 border 为真时有效",
+        "type": "string",
+        "enum": ["medium", "small", "mini"],
+        "enumNames": ["中等尺寸", "较小尺寸", "迷你尺寸"],
+        "default": ""
+      },
+      "text": {
+        "title": "复选框显示的文本",
+        "type": "string",
+        "default": ""
+      },
+      "true-label": {
+        "title": "选中时的值",
+        "type": ["string", "number"],
+        "default": ""
+      },
+      "value": {
+        "title": "绑定值",
+        "type": ["string", "number", "boolean"],
+        "default": ""
+      },
+      "#default": {
+        "title": "Checkbox的内容插槽",
+        "type": "string"
+      }
+    }
+  }
+}

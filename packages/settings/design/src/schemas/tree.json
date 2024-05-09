@@ -1,0 +1,275 @@
+{
+  "icon": "tree",
+  "name": {
+    "zh_CN": "树"
+  },
+  "component": "tiny-tree",
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "collapse": {
+          "number": 6,
+          "text": {
+            "zh_CN": "显示更多"
+          }
+        },
+        "content": [
+          {
+            "property": "show-checkbox",
+            "label": {
+              "text": {
+                "zh_CN": "多选"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "设置接口是否可以多选"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "data",
+            "label": {
+              "text": {
+                "zh_CN": "数据源"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaCodeEditor",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "可配置静态数据源和动态数据源"
+            }
+          },
+          {
+            "property": "node-key",
+            "label": {
+              "text": {
+                "zh_CN": "唯一标识"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "节点唯一标识属性名称"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "icon-trigger-click-node",
+            "label": {
+              "text": {
+                "zh_CN": "触发NodeClick 事件"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "点击图标展开节点时是否触发 node-click 事件"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "expand-icon",
+            "label": {
+              "text": {
+                "zh_CN": "展开图标"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaCodeEditor",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "节点展开图标"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "shrink-icon",
+            "label": {
+              "text": {
+                "zh_CN": "收缩图标"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaCodeEditor",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "节点收缩的图标"
+            },
+            "labelPosition": "left"
+          }
+        ]
+      },
+      {
+        "name": "1",
+        "label": {
+          "zh_CN": "其他"
+        },
+        "content": [
+          {
+            "property": "check-on-click-node",
+            "label": {
+              "text": {
+                "zh_CN": "点击节点选中"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否在点击节点的时候选中节点，默认值为 false，即只有在点击复选框时才会选中节点"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "filter-node-method",
+            "label": {
+              "text": {
+                "zh_CN": "筛选函数"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaCodeEditor",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "节点筛选函数"
+            },
+            "labelPosition": "left"
+          }
+        ],
+        "description": {
+          "zh_CN": ""
+        }
+      }
+    ],
+    "events": {
+      "onCheck": {
+        "label": {
+          "zh_CN": "勾选节点后的事件"
+        },
+        "description": {
+          "zh_CN": "勾选节点后的事件"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "data",
+              "type": "object",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "当前选中节点信息"
+              }
+            },
+            {
+              "name": "currentNode",
+              "type": "object",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "树组件目前的选中状态信息，包含 checkedNodes、checkedKeys、halfCheckedNodes、halfCheckedKeys 四个属性"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      },
+      "onNodeClick": {
+        "label": {
+          "zh_CN": "点击节点后的事件"
+        },
+        "description": {
+          "zh_CN": "点击节点后的事件"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "data",
+              "type": "Object",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "当前选中节点信息"
+              }
+            },
+            {
+              "name": "node",
+              "type": "Object",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "树组件目前的选中状态信息，包含 checkedNodes、checkedKeys、halfCheckedNodes、halfCheckedKeys 四个属性"
+              }
+            },
+            {
+              "name": "vm",
+              "type": "Object",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "树组件实例"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      }
+    },
+    "shortcuts": {
+      "properties": ["data", "show-checkbox"]
+    },
+    "contentMenu": {
+      "actions": ["create symbol"]
+    }
+  }
+}

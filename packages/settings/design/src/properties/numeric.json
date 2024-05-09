@@ -1,0 +1,87 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "circulate": {
+        "title": "向上到达最大值后从最小值开始，或反过来",
+        "type": "boolean",
+        "default": false
+      },
+      "controls": {
+        "title": "是否使用控制按钮",
+        "type": "boolean",
+        "default": true
+      },
+      "controls-position": {
+        "title": "控制按钮位置",
+        "type": "string",
+        "enum": ["right"],
+        "enumNames": ["右边"],
+        "default": ""
+      },
+      "disabled": {
+        "title": "是否禁用计数器",
+        "type": "boolean",
+        "default": false
+      },
+      "label": {
+        "title": "输入框关联的label文字",
+        "type": "string",
+        "default": ""
+      },
+      "$$max": {
+        "title": "设置计数器允许的最大值",
+        "type": "number",
+        "default": "Infinity"
+      },
+      "$$min": {
+        "title": "设置计数器允许的最小值",
+        "type": "number",
+        "default": "-Infinity"
+      },
+      "mouse-wheel": {
+        "title": "设置鼠标滚动滑轮是否改变数值",
+        "type": "boolean",
+        "default": true
+      },
+      "name": {
+        "title": "原生属性",
+        "type": "string",
+        "default": ""
+      },
+      "placeholder": {
+        "title": "设置输入框内的提示占位文本 ",
+        "type": "string",
+        "default": ""
+      },
+      "precision": {
+        "title": "数值精度",
+        "type": "number",
+        "minimum": 0,
+        "multipleOf": 1
+      },
+      "size": {
+        "title": "计数器尺寸",
+        "type": "string",
+        "enum": ["large", "small"],
+        "enumNames": ["较大尺寸", "较小尺寸"],
+        "default": ""
+      },
+      "step": {
+        "title": "设置按上下方向键或点击上下按钮增减的数值",
+        "type": "number",
+        "default": 1
+      },
+      "step-strictly": {
+        "title": "是否只能输入 step 的倍数",
+        "type": "boolean",
+        "default": false
+      },
+      "value": {
+        "title": "设置输入组件的默认值",
+        "type": "number",
+        "default": 0
+      }
+    }
+  }
+}

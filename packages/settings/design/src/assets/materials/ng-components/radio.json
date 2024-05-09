@@ -1,0 +1,102 @@
+{
+  "icon": "",
+  "name": {
+    "zh_CN": "Radio"
+  },
+  "component": "tiny-radio",
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "collapse": {
+          "number": 6,
+          "text": {
+            "zh_CN": "显示更多"
+          }
+        },
+        "content": [
+          {
+            "property": "condition",
+            "type": "boolean",
+            "defaultValue": true,
+            "label": {
+              "text": {
+                "zh_CN": "是否渲染"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            }
+          },
+          {
+            "property": "options",
+            "type": "array",
+            "defaultValue": [
+              {
+                "label": {
+                  "type": "i18n",
+                  "zh_CN": "蛋糕",
+                  "en_US": "cake",
+                  "key": ""
+                },
+                "text": "cake"
+              },
+              {
+                "label": {
+                  "type": "i18n",
+                  "zh_CN": "鸡蛋",
+                  "en_US": "egg",
+                  "key": ""
+                },
+                "text": "egg"
+              },
+              {
+                "label": {
+                  "type": "i18n",
+                  "zh_CN": "牛奶",
+                  "en_US": "milk",
+                  "key": ""
+                },
+                "text": "milk"
+              }
+            ],
+            "label": {
+              "text": {
+                "zh_CN": "选项"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            }
+          }
+        ]
+      }
+    ],
+    "events": {},
+    "shortcuts": {
+      "properties": []
+    },
+    "contentMenu": {
+      "actions": []
+    }
+  }
+}

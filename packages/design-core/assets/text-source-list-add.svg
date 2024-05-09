@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>创建/添加 create/add</title>
+    <g id="4.0icon" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="编组-15备份" transform="translate(0.500000, 0.500000)" stroke="currentColor">
+            <circle id="椭圆形" cx="6.5" cy="6.5" r="6.5"></circle>
+            <g id="编组-50" transform="translate(3.000000, 3.000000)">
+                <line x1="0" y1="3.5" x2="7" y2="3.5" id="路径-14"></line>
+                <line x1="2.64762869e-15" y1="3.5" x2="7" y2="3.5" id="路径-14" transform="translate(3.500000, 3.500000) rotate(90.000000) translate(-3.500000, -3.500000) "></line>
+            </g>
+        </g>
+    </g>
+</svg>

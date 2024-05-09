@@ -1,0 +1,100 @@
+{
+  "icon": "collapse",
+  "name": {
+    "zh_CN": "折叠面板"
+  },
+  "component": "tiny-collapse",
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "collapse": {
+          "number": 6,
+          "text": {
+            "zh_CN": "显示更多"
+          }
+        },
+        "content": [
+          {
+            "property": "modelValue",
+            "label": {
+              "text": {
+                "zh_CN": "当前激活的面板"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "当前激活的面板"
+            },
+            "labelPosition": "left"
+          }
+        ]
+      }
+    ],
+    "slots": {
+      "default": [
+        {
+          "componentName": "tiny-collapse-item",
+          "props": {
+            "name": "collapse1"
+          }
+        },
+        {
+          "componentName": "tiny-collapse-item",
+          "props": {
+            "name": "collapse2"
+          }
+        },
+        {
+          "componentName": "tiny-collapse-item",
+          "props": {
+            "name": "collapse3"
+          }
+        }
+      ]
+    },
+    "events": {
+      "onChange": {
+        "label": {
+          "zh_CN": "激活面板改变时触发"
+        },
+        "description": {
+          "zh_CN": "当前激活面板改变时触发(如果是手风琴模式，参数 activeNames 类型为string，否则为array)"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "data",
+              "type": "string",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "当前激活面板的值"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      }
+    },
+    "shortcuts": {
+      "properties": ["disabled", "mini"]
+    },
+    "contentMenu": {
+      "actions": ["create symbol"]
+    }
+  }
+}
