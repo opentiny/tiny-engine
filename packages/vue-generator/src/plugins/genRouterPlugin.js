@@ -36,7 +36,7 @@ function genRouterPlugin(options = {}) {
     description: 'transform router schema to router code plugin',
     /**
      * 根据页面生成路由配置
-     * @param {import('../generator/generateApp').AppSchema} schema
+     * @param {tinyEngineDslVue.IAppSchema} schema
      * @returns
      */
     run(schema) {

@@ -7,7 +7,7 @@ function parseSchema() {
 
     /**
      * 解析schema，预处理 schema
-     * @param {import('../generator/generateApp').AppSchema} schema
+     * @param {tinyEngineDslVue.IAppSchema} schema
      * @returns
      */
     run(schema) {

@@ -17,5 +17,5 @@ module.exports = {
     }
   },
   // 忽略 expected 中的内容
-  ignorePatterns: ['**/**/expected/*']
+  ignorePatterns: ['**/**/expected/*', '**/**.ts']
 }

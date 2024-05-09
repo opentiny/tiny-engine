@@ -10,6 +10,8 @@
  *
  */
 
+/// <reference path="index.d.ts">
+
 export {
   generateCode,
   generateBlocksCode,

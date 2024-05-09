@@ -6,6 +6,7 @@
   },
   "main": "dist/tiny-engine-dsl-vue.js",
   "module": "dist/tiny-engine-dsl-vue.mjs",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
@@ -46,6 +47,7 @@
     "fs-extra": "^10.0.1",
     "prettier": "^2.6.1",
     "vite": "^4.3.7",
+    "vite-plugin-static-copy": "^1.0.4",
     "vitest": "^1.4.0",
     "winston": "^3.10.0"
   },

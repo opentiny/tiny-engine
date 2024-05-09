@@ -12,6 +12,7 @@
 
 import { defineConfig } from 'vite'
 import path from 'path'
+import { viteStaticCopy } from 'vite-plugin-static-copy'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -24,6 +25,16 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src')
     }
   },
+  plugins: [
+    viteStaticCopy({
+      targets: [
+        {
+          src: './src/index.d.ts',
+          dest: '.'
+        }
+      ]
+    })
+  ],
   build: {
     lib: {
       entry: path.resolve(__dirname, './src/index.js'),
