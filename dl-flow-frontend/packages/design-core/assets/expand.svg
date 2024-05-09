@@ -1,0 +1,17 @@
+<svg
+  data-icon="Expand"
+  aria-hidden="true"
+  focusable="false"
+  width="16"
+  height="16"
+  viewBox="0 0 16 16"
+  version="1.1"
+  xmlns="http://www.w3.org/2000/svg"
+  style="display: block"
+>
+  <path
+    fill-rule="evenodd"
+    clip-rule="evenodd"
+    d="M3.793 10.207l1.414-1.414L8 11.586l2.793-2.793 1.414 1.414L8 14.414l-4.207-4.207zm0-4.414l1.414 1.414L8 4.414l2.793 2.793 1.414-1.414L8 1.586 3.793 5.793z"
+  ></path>
+</svg>

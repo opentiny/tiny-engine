@@ -1,0 +1,18 @@
+<svg
+  data-icon="FontStyleNone"
+  aria-hidden="true"
+  focusable="false"
+  width="16"
+  height="16"
+  viewBox="0 0 16 16"
+  version="1.1"
+  xmlns="http://www.w3.org/2000/svg"
+  style="display: block"
+>
+  <path
+    fill-rule="evenodd"
+    clip-rule="evenodd"
+    d="M9 3h2v2H9v6h2v2H5v-2h2V5H5V3h4z"
+    fill="currentColor"
+  ></path>
+</svg>

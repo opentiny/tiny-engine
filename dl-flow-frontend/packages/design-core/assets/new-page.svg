@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>操作/定位到面板</title>
+    <g id="操作/定位到面板" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
+        <path d="M8,14.5 L4.7,14.5 C3.48497355,14.5 2.5,13.6045695 2.5,12.5 L2.5,3.5 C2.5,2.3954305 3.48497355,1.5 4.7,1.5 L11.3,1.5 L13.4975166,3.5 M13.5,3.50123215 L13.5,8" id="形状" stroke="currentColor" stroke-linejoin="round"></path>
+        <line x1="10" y1="12.5" x2="14" y2="12.5" id="直线" stroke="currentColor"></line>
+        <line x1="10" y1="12.5" x2="14" y2="12.5" id="直线备份" stroke="currentColor" transform="translate(12.000000, 12.500000) rotate(90.000000) translate(-12.000000, -12.500000) "></line>
+        <line x1="10" y1="12.5" x2="14" y2="12.5" id="直线" stroke="currentColor"></line>
+        <line x1="10" y1="12.5" x2="14" y2="12.5" id="直线备份" stroke="currentColor" transform="translate(12.000000, 12.500000) rotate(90.000000) translate(-12.000000, -12.500000) "></line>
+        <line x1="5.5" y1="5.5" x2="10.5" y2="5.5" id="路径-18备份" stroke="currentColor"></line>
+        <line x1="5.5" y1="8.65717316" x2="8.5" y2="8.65717316" id="路径-18备份-2" stroke="currentColor"></line>
+    </g>
+</svg>

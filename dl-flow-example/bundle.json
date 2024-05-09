@@ -1,0 +1,5459 @@
+{
+  "$schema": "bundle.schema.json",
+  "data": {
+    "types": {
+      "ParamAttr": [
+        {
+          "id": "name",
+          "label": {
+            "zh_CN": "前缀",
+            "en_US": "Name"
+          },
+          "type": "string",
+          "optional": true,
+          "default": ""
+        },
+        {
+          "id": "learning_rate",
+          "label": {
+            "zh_CN": "学习率",
+            "en_US": "learning_rate"
+          },
+          "type": "number",
+          "optional": true,
+          "default": 1.0
+        },
+        {
+          "id": "trainable",
+          "label": {
+            "zh_CN": "是否参与训练",
+            "en_US": "trainable"
+          },
+          "type": "boolean",
+          "optional": true,
+          "default": true
+        },
+        {
+          "id": "do_model_average",
+          "label": {
+            "zh_CN": "模型平均",
+            "en_US": "do_model_average"
+          },
+          "type": "boolean",
+          "optional": true,
+          "default": true
+        },
+        {
+          "id": "need_clip",
+          "label": {
+            "zh_CN": "梯度裁剪",
+            "en_US": "need_clip"
+          },
+          "type": "boolean",
+          "optional": true,
+          "default": true
+        }
+      ]
+    },
+    "materials": [
+      {
+        "id": "AdaptiveAvgPool1D",
+        "mode": "nn",
+        "label": {
+          "en_US": "AdaptiveAvgPool1D",
+          "zh_CN": "1D 自适应平均池化"
+        },
+        "properties": [
+          {
+            "id": "output_size",
+            "type": "number",
+            "label": {
+              "zh_CN": "输出大小",
+              "en_US": "Output size"
+            }
+          }
+        ]
+      },
+      {
+        "id": "AdaptiveAvgPool2D",
+        "mode": "nn",
+        "label": {
+          "en_US": "AdaptiveAvgPool2D",
+          "zh_CN": "2D 自适应平均池化"
+        },
+        "properties": [
+          {
+            "id": "output_size",
+            "type": "number",
+            "label": {
+              "zh_CN": "输出大小",
+              "en_US": "Output size"
+            }
+          }
+        ]
+      },
+      {
+        "id": "AdaptiveAvgPool3D",
+        "mode": "nn",
+        "label": {
+          "en_US": "AdaptiveAvgPool3D",
+          "zh_CN": "3D 自适应平均池化"
+        },
+        "properties": [
+          {
+            "id": "output_size",
+            "type": "number",
+            "label": {
+              "zh_CN": "输出大小",
+              "en_US": "Output size"
+            }
+          }
+        ]
+      },
+      {
+        "id": "AdaptiveMaxPool1D_cn.rst",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "1D 自适应最大值池化",
+          "en_US": "AdaptiveMaxPool1D_cn"
+        },
+        "properties": [
+          {
+            "id": "output_size",
+            "type": "number",
+            "label": {
+              "zh_CN": "输出特征都大小",
+              "en_US": "Feature map size"
+            }
+          }
+        ]
+      },
+      {
+        "id": "AdaptiveMaxPool2D_cn.rst",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "2D 自适应最大值池化",
+          "en_US": "AdaptiveMaxPool2D_cn"
+        },
+        "properties": [
+          {
+            "id": "output_size",
+            "type": "number",
+            "label": {
+              "zh_CN": "输出特征都大小",
+              "en_US": "Feature map size"
+            }
+          }
+        ]
+      },
+      {
+        "id": "AdaptiveMaxPool3D_cn.rst",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "3D 自适应最大值池化",
+          "en_US": "AdaptiveMaxPool3D_cn"
+        },
+        "properties": [
+          {
+            "id": "output_size",
+            "type": "number",
+            "label": {
+              "zh_CN": "输出特征都大小",
+              "en_US": "Feature map size"
+            }
+          }
+        ]
+      },
+      {
+        "id": "AlphaDropout",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "自归一化dropout",
+          "en_US": "Alpha dropout"
+        },
+        "properties": [
+          {
+            "id": "p",
+            "type": "number",
+            "default": 0.5,
+            "label": {
+              "zh_CN": "丢弃概率",
+              "en_US": "Dropping probability"
+            }
+          }
+        ]
+      },
+      {
+        "id": "AvgPool1D",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "AvgPool1D",
+          "en_US": "AvgPool1D"
+        },
+        "properties": [
+          {
+            "id": "kernel_size",
+            "type": "number",
+            "label": {
+              "zh_CN": "池化核大小",
+              "en_US": "Size of avg pool size"
+            },
+            "default": 3
+          },
+          {
+            "id": "stride",
+            "type": "number",
+            "label": {
+              "zh_CN": "步长",
+              "en_US": "stride"
+            },
+            "default": 1
+          },
+          {
+            "id": "padding",
+            "type": "number",
+            "label": {
+              "zh_CN": "池化填充",
+              "en_US": "Padding"
+            },
+            "default": 0
+          },
+          {
+            "id": "ceil_mode",
+            "label": {
+              "zh_CN": "是否使用Ceil函数计算宽高",
+              "en_US": "Is the Ceil function used to calculate width and height"
+            },
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "id": "exclusive",
+            "type": "boolean",
+            "label": {
+              "zh_CN": "忽略填充值",
+              "en_US": "exclusive"
+            },
+            "default": true
+          }
+        ]
+      },
+      {
+        "id": "AvgPool2D",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "AvgPool2D",
+          "en_US": "AvgPool2D"
+        },
+        "properties": [
+          {
+            "id": "kernel_size",
+            "type": "number",
+            "label": {
+              "zh_CN": "池化核大小",
+              "en_US": "Size of avg pool size"
+            },
+            "default": 3
+          },
+          {
+            "id": "stride",
+            "type": "number",
+            "label": {
+              "zh_CN": "步长",
+              "en_US": "stride"
+            },
+            "default": 1
+          },
+          {
+            "id": "padding",
+            "type": "number",
+            "label": {
+              "zh_CN": "池化填充",
+              "en_US": "Padding"
+            },
+            "default": 0
+          },
+          {
+            "id": "ceil_mode",
+            "label": {
+              "zh_CN": "是否使用Ceil函数计算宽高",
+              "en_US": "Is the Ceil function used to calculate width and height"
+            },
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "id": "exclusive",
+            "type": "boolean",
+            "label": {
+              "zh_CN": "忽略填充值",
+              "en_US": "exclusive"
+            },
+            "default": true
+          }
+        ]
+      },
+      {
+        "id": "AvgPool3D",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "AvgPool3D",
+          "en_US": "AvgPool3D"
+        },
+        "properties": [
+          {
+            "id": "kernel_size",
+            "type": "number",
+            "label": {
+              "zh_CN": "池化核大小",
+              "en_US": "Size of avg pool size"
+            },
+            "default": 3
+          },
+          {
+            "id": "stride",
+            "type": "number",
+            "label": {
+              "zh_CN": "步长",
+              "en_US": "stride"
+            },
+            "default": 1
+          },
+          {
+            "id": "padding",
+            "type": "number",
+            "label": {
+              "zh_CN": "池化填充",
+              "en_US": "Padding"
+            },
+            "default": 0
+          },
+          {
+            "id": "ceil_mode",
+            "label": {
+              "zh_CN": "是否使用Ceil函数计算宽高",
+              "en_US": "Is the Ceil function used to calculate width and height"
+            },
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "id": "exclusive",
+            "type": "boolean",
+            "label": {
+              "zh_CN": "忽略填充值",
+              "en_US": "exclusive"
+            },
+            "default": true
+          }
+        ]
+      },
+      {
+        "id": "MaxPool1D",
+        "mode": "nn",
+        "label": {
+          "en_US": "MaxPool1D",
+          "zh_CN": "1D 最大值池化"
+        },
+        "properties": [
+          {
+            "id": "kernel_size",
+            "type": "number",
+            "label": {
+              "zh_CN": "池化核的尺寸大小",
+              "en_US": "kernel_size"
+            }
+          },
+          {
+            "id": "stride",
+            "type": "number",
+            "label": {
+              "zh_CN": "池化操作步长",
+              "en_US": "stride"
+            }
+          }
+        ]
+      },
+      {
+        "id": "MaxPool2D",
+        "mode": "nn",
+        "label": {
+          "en_US": "MaxPool2D",
+          "zh_CN": "2D 最大值池化"
+        },
+        "properties": [
+          {
+            "id": "kernel_size",
+            "type": "number",
+            "label": {
+              "zh_CN": "池化核的尺寸大小",
+              "en_US": "kernel_size"
+            }
+          },
+          {
+            "id": "stride",
+            "type": "number",
+            "label": {
+              "zh_CN": "池化操作步长",
+              "en_US": "stride"
+            }
+          }
+        ]
+      },
+      {
+        "id": "MaxPool3D",
+        "mode": "nn",
+        "label": {
+          "en_US": "MaxPool3D",
+          "zh_CN": "3D 最大值池化"
+        },
+        "properties": [
+          {
+            "id": "kernel_size",
+            "type": "number",
+            "label": {
+              "zh_CN": "池化核的尺寸大小",
+              "en_US": "kernel_size"
+            }
+          },
+          {
+            "id": "stride",
+            "type": "number",
+            "label": {
+              "zh_CN": "池化操作步长",
+              "en_US": "stride"
+            }
+          }
+        ]
+      },
+      {
+        "id": "BCELoss",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "BCELoss",
+          "en_US": "BCELoss"
+        },
+        "properties": []
+      },
+      {
+        "id": "BCEWithLogitsLoss",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "BCEWithLogitsLoss",
+          "en_US": "BCEWithLogitsLoss"
+        },
+        "properties": [
+          {
+            "id": "reduction",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "none",
+                "value": "none"
+              },
+              {
+                "id": 1,
+                "label": "mean",
+                "value": "mean",
+                "default": true
+              },
+              {
+                "id": 2,
+                "label": "sum",
+                "value": "sum"
+              }
+            ],
+            "label": {
+              "en_US": "reduction",
+              "zh_CN": "计算方式"
+            }
+          }
+        ]
+      },
+      {
+        "id": "BatchNorm1D",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "BatchNorm1D",
+          "en_US": "BatchNorm1D"
+        },
+        "properties": [
+          {
+            "id": "num_features",
+            "label": {
+              "zh_CN": "输入通道数",
+              "en_US": "Input tensor channel number"
+            },
+            "type": "number"
+          },
+          {
+            "id": "epsilon",
+            "type": "number",
+            "label": {
+              "zh_CN": "epsilon",
+              "en_US": "epsilon"
+            },
+            "default": 0.00001
+          },
+          {
+            "id": "momentum",
+            "type": "number",
+            "default": 0.9,
+            "label": {
+              "zh_CN": "momentum",
+              "en_US": "momentum"
+            }
+          },
+          {
+            "id": "weight_attr",
+            "type": "ParamAttr",
+            "label": {
+              "zh_CN": "权重参数",
+              "en_US": "Weight attr"
+            }
+          },
+          {
+            "id": "bias_attr",
+            "label": {
+              "zh_CN": "偏置参数",
+              "en_US": "Bias attr"
+            },
+            "type": "ParamAttr"
+          },
+          {
+            "id": "data_format",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "NC",
+                "value": "NC"
+              },
+              {
+                "id": 1,
+                "label": "NCL",
+                "value": "NCL",
+                "default": true
+              }
+            ],
+            "label": {
+              "zh_CN": "数据格式",
+              "en_US": "Data format"
+            }
+          }
+        ]
+      },
+      {
+        "id": "BatchNorm2D",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "BatchNorm2D",
+          "en_US": "BatchNorm2D"
+        },
+        "properties": [
+          {
+            "id": "num_features",
+            "label": {
+              "zh_CN": "输入通道数",
+              "en_US": "Input tensor channel number"
+            },
+            "type": "number"
+          },
+          {
+            "id": "epsilon",
+            "type": "number",
+            "label": {
+              "zh_CN": "epsilon",
+              "en_US": "epsilon"
+            },
+            "default": 0.00001
+          },
+          {
+            "id": "momentum",
+            "type": "number",
+            "default": 0.9,
+            "label": {
+              "zh_CN": "momentum",
+              "en_US": "momentum"
+            }
+          },
+          {
+            "id": "weight_attr",
+            "type": "ParamAttr",
+            "label": {
+              "zh_CN": "权重参数",
+              "en_US": "Weight attr"
+            }
+          },
+          {
+            "id": "bias_attr",
+            "label": {
+              "zh_CN": "偏置参数",
+              "en_US": "Bias attr"
+            },
+            "type": "ParamAttr"
+          },
+          {
+            "id": "data_format",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "NC",
+                "value": "NC"
+              },
+              {
+                "id": 1,
+                "label": "NCL",
+                "value": "NCL",
+                "default": true
+              }
+            ],
+            "label": {
+              "zh_CN": "数据格式",
+              "en_US": "Data format"
+            }
+          }
+        ]
+      },
+      {
+        "id": "BatchNorm3D",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "BatchNorm3D",
+          "en_US": "BatchNorm3D"
+        },
+        "properties": [
+          {
+            "id": "num_features",
+            "label": {
+              "zh_CN": "输入通道数",
+              "en_US": "Input tensor channel number"
+            },
+            "type": "number"
+          },
+          {
+            "id": "epsilon",
+            "type": "number",
+            "label": {
+              "zh_CN": "epsilon",
+              "en_US": "epsilon"
+            },
+            "default": 0.00001
+          },
+          {
+            "id": "momentum",
+            "type": "number",
+            "default": 0.9,
+            "label": {
+              "zh_CN": "momentum",
+              "en_US": "momentum"
+            }
+          },
+          {
+            "id": "weight_attr",
+            "type": "ParamAttr",
+            "label": {
+              "zh_CN": "权重参数",
+              "en_US": "Weight attr"
+            }
+          },
+          {
+            "id": "bias_attr",
+            "label": {
+              "zh_CN": "偏置参数",
+              "en_US": "Bias attr"
+            },
+            "type": "ParamAttr"
+          },
+          {
+            "id": "data_format",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "NC",
+                "value": "NC"
+              },
+              {
+                "id": 1,
+                "label": "NCL",
+                "value": "NCL",
+                "default": true
+              }
+            ],
+            "label": {
+              "zh_CN": "数据格式",
+              "en_US": "Data format"
+            }
+          }
+        ]
+      },
+      {
+        "id": "BatchNorm",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "BatchNorm",
+          "en_US": "BatchNorm"
+        },
+        "properties": [
+          {
+            "id": "num_channels",
+            "type": "number",
+            "label": {
+              "zh_CN": "输入通道数量",
+              "en_US": "num_channels"
+            }
+          },
+          {
+            "id": "is_test",
+            "type": "boolean",
+            "label": {
+              "zh_CN": "是否在测试阶段",
+              "en_US": "Is test"
+            },
+            "default": false
+          },
+          {
+            "id": "epsilon",
+            "type": "number",
+            "label": {
+              "zh_CN": "epsilon",
+              "en_US": "epsilon"
+            },
+            "default": 0.00001
+          },
+          {
+            "id": "momentum",
+            "type": "number",
+            "default": 0.9,
+            "label": {
+              "zh_CN": "momentum",
+              "en_US": "momentum"
+            }
+          },
+          {
+            "id": "param_attr",
+            "type": "ParamAttr",
+            "label": {
+              "zh_CN": "权重参数",
+              "en_US": "param attr"
+            }
+          },
+          {
+            "id": "bias_attr",
+            "label": {
+              "zh_CN": "偏置参数",
+              "en_US": "Bias attr"
+            },
+            "type": "ParamAttr"
+          },
+          {
+            "id": "data_layout",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "NC",
+                "value": "NC"
+              },
+              {
+                "id": 1,
+                "label": "NCL",
+                "value": "NCL",
+                "default": true
+              }
+            ],
+            "label": {
+              "zh_CN": "数据格式",
+              "en_US": "Data format"
+            }
+          },
+          {
+            "id": "in_place",
+            "type": "boolean",
+            "default": false,
+            "label": {
+              "zh_CN": "batch_norm是否可以服用输入内存",
+              "en_US": "Can batch norm take input memory"
+            }
+          },
+          {
+            "id": "do_model_average_for_mean_and_var",
+            "type": "boolean",
+            "default": "false",
+            "label": {
+              "zh_CN": "是否为 mean 和 variance 做模型均值",
+              "en_US": "Are we doing model mean for mean and variance"
+            }
+          },
+          {
+            "id": "use_global_stats",
+            "type": "boolean",
+            "default": false,
+            "label": {
+              "zh_CN": "是否使用全局均值和方差",
+              "en_US": "Is global mean and variance used"
+            }
+          },
+          {
+            "id": "trainable_statistics",
+            "type": "boolean",
+            "default": false,
+            "label": {
+              "zh_CN": "eval 模式下是否计算 mean 均值和 var 方差",
+              "en_US": "Is the mean and variance of var calculated in eval mode"
+            }
+          },
+          {
+            "id": "moving_mean_name",
+            "type": "string",
+            "label": {
+              "zh_CN": "moving_mean 的名称",
+              "en_US": "name of moving_mean"
+            }
+          },
+          {
+            "id": "moving_variance_name",
+            "type": "string",
+            "label": {
+              "zh_CN": "moving_var 的名称",
+              "en_US": "name of moving_var"
+            }
+          }
+        ]
+      },
+      {
+        "label": {
+          "zh_CN": "ReLU",
+          "en_US": "ReLU"
+        },
+        "id": "ReLU",
+        "mode": "nn",
+        "properties": []
+      },
+      {
+        "label": {
+          "zh_CN": "1D 卷积神经网络",
+          "en_US": "Conv 1D"
+        },
+        "id": "Conv1D",
+        "nnName": "Conv1D",
+        "desc": "一维卷积层",
+        "nn": true,
+        "mode": "nn",
+        "properties": [
+          {
+            "id": "in_channels",
+            "label": {
+              "zh_CN": "输入通道数",
+              "en_US": "in_channels"
+            },
+            "type": "number",
+            "required": true,
+            "default": 255
+          },
+          {
+            "id": "out_channels",
+            "label": {
+              "zh_CN": "输出通道数",
+              "en_US": "out_channels"
+            },
+            "type": "number",
+            "required": true,
+            "default": 255
+          },
+          {
+            "id": "kernel_size",
+            "label": {
+              "zh_CN": "卷积核大小",
+              "en_US": "kernel_size"
+            },
+            "type": "number",
+            "required": true,
+            "default": 3
+          },
+          {
+            "id": "stride",
+            "label": {
+              "zh_CN": "步长",
+              "en_US": "stride"
+            },
+            "type": "number",
+            "required": true,
+            "default": 1
+          },
+          {
+            "id": "dilation",
+            "label": {
+              "zh_CN": "空洞大小",
+              "en_US": "dilation"
+            },
+            "type": "number",
+            "required": true,
+            "default": 0
+          },
+          {
+            "id": "groups",
+            "label": {
+              "zh_CN": "组数",
+              "en_US": "groups"
+            },
+            "type": "number",
+            "required": true,
+            "default": 0
+          },
+          {
+            "id": "padding",
+            "label": {
+              "zh_CN": "填充",
+              "en_US": "padding"
+            },
+            "type": "number"
+          },
+          {
+            "id": "padding_mode",
+            "label": {
+              "zh_CN": "填充模式",
+              "en_US": "padding_mode"
+            },
+            "type": "enums",
+            "enums": [
+              {
+                "id": 1,
+                "label": "zeros",
+                "value": "\"zeros\"",
+                "default": true
+              },
+              {
+                "id": 2,
+                "label": "reflect",
+                "value": "\"reflect\""
+              },
+              {
+                "id": 3,
+                "label": "replicate",
+                "value": "\"replicate\""
+              },
+              {
+                "id": 4,
+                "label": "circular",
+                "value": "\"circular\""
+              }
+            ],
+            "required": true
+          },
+          {
+            "id": "weight_attr",
+            "label": {
+              "zh_CN": "权重参数",
+              "en_US": "weight_attr"
+            },
+            "type": "ParamAttr"
+          },
+          {
+            "id": "bias_attr",
+            "label": {
+              "zh_CN": "偏置参数",
+              "en_US": "bias_attr"
+            },
+            "type": "ParamAttr"
+          },
+          {
+            "id": "data_format",
+            "label": {
+              "zh_CN": "数据格式",
+              "en_US": "data_format"
+            },
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      {
+        "label": {
+          "zh_CN": "2D 卷积神经网络",
+          "en_US": "Conv 2D"
+        },
+        "id": "Conv2D",
+        "nnName": "Conv2D",
+        "desc": "二维卷积层",
+        "nn": true,
+        "mode": "nn",
+        "properties": [
+          {
+            "id": "in_channels",
+            "label": {
+              "zh_CN": "输入通道数",
+              "en_US": "in_channels"
+            },
+            "type": "number",
+            "required": true,
+            "default": 255
+          },
+          {
+            "id": "out_channels",
+            "label": {
+              "zh_CN": "输出通道数",
+              "en_US": "out_channels"
+            },
+            "type": "number",
+            "required": true,
+            "default": 255
+          },
+          {
+            "id": "kernel_size",
+            "label": {
+              "zh_CN": "卷积核大小",
+              "en_US": "kernel_size"
+            },
+            "type": "number",
+            "required": true,
+            "default": 3
+          },
+          {
+            "id": "stride",
+            "label": {
+              "zh_CN": "步长",
+              "en_US": "stride"
+            },
+            "type": "number",
+            "required": true,
+            "default": 1
+          },
+          {
+            "id": "dilation",
+            "label": {
+              "zh_CN": "空洞大小",
+              "en_US": "dilation"
+            },
+            "type": "number",
+            "required": true,
+            "default": 0
+          },
+          {
+            "id": "groups",
+            "label": {
+              "zh_CN": "组数",
+              "en_US": "groups"
+            },
+            "type": "number",
+            "required": true,
+            "default": 0
+          },
+          {
+            "id": "padding",
+            "label": {
+              "zh_CN": "填充",
+              "en_US": "padding"
+            },
+            "type": "number"
+          },
+          {
+            "id": "padding_mode",
+            "label": {
+              "zh_CN": "填充模式",
+              "en_US": "padding_mode"
+            },
+            "type": "enums",
+            "enums": [
+              {
+                "id": 1,
+                "label": "zeros",
+                "value": "\"zeros\"",
+                "default": true
+              },
+              {
+                "id": 2,
+                "label": "reflect",
+                "value": "\"reflect\""
+              },
+              {
+                "id": 3,
+                "label": "replicate",
+                "value": "\"replicate\""
+              },
+              {
+                "id": 4,
+                "label": "circular",
+                "value": "\"circular\""
+              }
+            ],
+            "required": true
+          },
+          {
+            "id": "weight_attr",
+            "label": {
+              "zh_CN": "权重参数",
+              "en_US": "weight_attr"
+            },
+            "type": "ParamAttr"
+          },
+          {
+            "id": "bias_attr",
+            "label": {
+              "zh_CN": "偏置参数",
+              "en_US": "bias_attr"
+            },
+            "type": "ParamAttr"
+          },
+          {
+            "id": "data_format",
+            "label": {
+              "zh_CN": "数据格式",
+              "en_US": "data_format"
+            },
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      {
+        "label": {
+          "zh_CN": "3D 卷积神经网络",
+          "en_US": "Conv 3D"
+        },
+        "id": "Conv3D",
+        "nnName": "Conv3D",
+        "desc": "三维卷积层",
+        "nn": true,
+        "mode": "nn",
+        "properties": [
+          {
+            "id": "in_channels",
+            "label": {
+              "zh_CN": "输入通道数",
+              "en_US": "in_channels"
+            },
+            "type": "number",
+            "required": true,
+            "default": 255
+          },
+          {
+            "id": "out_channels",
+            "label": {
+              "zh_CN": "输出通道数",
+              "en_US": "out_channels"
+            },
+            "type": "number",
+            "required": true,
+            "default": 255
+          },
+          {
+            "id": "kernel_size",
+            "label": {
+              "zh_CN": "卷积核大小",
+              "en_US": "kernel_size"
+            },
+            "type": "number",
+            "required": true,
+            "default": 3
+          },
+          {
+            "id": "stride",
+            "label": {
+              "zh_CN": "步长",
+              "en_US": "stride"
+            },
+            "type": "number",
+            "required": true,
+            "default": 1
+          },
+          {
+            "id": "dilation",
+            "label": {
+              "zh_CN": "空洞大小",
+              "en_US": "dilation"
+            },
+            "type": "number",
+            "required": true,
+            "default": 0
+          },
+          {
+            "id": "groups",
+            "label": {
+              "zh_CN": "组数",
+              "en_US": "groups"
+            },
+            "type": "number",
+            "required": true,
+            "default": 0
+          },
+          {
+            "id": "padding",
+            "label": {
+              "zh_CN": "填充",
+              "en_US": "padding"
+            },
+            "type": "number"
+          },
+          {
+            "id": "padding_mode",
+            "label": {
+              "zh_CN": "填充模式",
+              "en_US": "padding_mode"
+            },
+            "type": "enums",
+            "enums": [
+              {
+                "id": 1,
+                "label": "zeros",
+                "value": "\"zeros\"",
+                "default": true
+              },
+              {
+                "id": 2,
+                "label": "reflect",
+                "value": "\"reflect\""
+              },
+              {
+                "id": 3,
+                "label": "replicate",
+                "value": "\"replicate\""
+              },
+              {
+                "id": 4,
+                "label": "circular",
+                "value": "\"circular\""
+              }
+            ],
+            "required": true
+          },
+          {
+            "id": "weight_attr",
+            "label": {
+              "zh_CN": "权重参数",
+              "en_US": "weight_attr"
+            },
+            "type": "ParamAttr"
+          },
+          {
+            "id": "bias_attr",
+            "label": {
+              "zh_CN": "偏置参数",
+              "en_US": "bias_attr"
+            },
+            "type": "ParamAttr"
+          },
+          {
+            "id": "data_format",
+            "label": {
+              "zh_CN": "数据格式",
+              "en_US": "data_format"
+            },
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      {
+        "label": {
+          "zh_CN": "线性变换",
+          "en_US": "Linear"
+        },
+        "id": "Linear",
+        "nnName": "Linear",
+        "desc": "线性变换",
+        "nn": true,
+        "mode": "nn",
+        "properties": [
+          {
+            "id": "in_features",
+            "label": {
+              "zh_CN": "输入单元的数目",
+              "en_US": "in_features"
+            },
+            "type": "number",
+            "required": true,
+            "default": 255
+          },
+          {
+            "id": "out_features",
+            "label": {
+              "zh_CN": "输出单元的数目",
+              "en_US": "out_features"
+            },
+            "type": "number",
+            "required": true,
+            "default": 255
+          },
+          {
+            "id": "weight_attr",
+            "label": {
+              "zh_CN": "权重参数",
+              "en_US": "weight_attr"
+            },
+            "type": "ParamAttr"
+          },
+          {
+            "id": "bias_attr",
+            "label": {
+              "zh_CN": "偏置参数",
+              "en_US": "bias_attr"
+            },
+            "type": "ParamAttr"
+          },
+          {
+            "id": "data_format",
+            "label": {
+              "zh_CN": "数据格式",
+              "en_US": "data_format"
+            },
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      {
+        "label": {
+          "zh_CN": "展开",
+          "en_US": "Flatten"
+        },
+        "id": "Flatten",
+        "nnName": "Flatten",
+        "mode": "nn",
+        "properties": [
+          {
+            "id": "start_axis",
+            "label": {
+              "zh_CN": "起始维度",
+              "en_US": "start_axis"
+            },
+            "type": "number",
+            "required": true,
+            "default": 1
+          },
+          {
+            "id": "stop_axis",
+            "label": {
+              "zh_CN": "结束维度",
+              "en_US": "stop axis"
+            },
+            "type": "number",
+            "required": true,
+            "default": -1
+          }
+        ]
+      },
+      {
+        "label": {
+          "zh_CN": "一维转置卷积层",
+          "en_US": "Conv1DTranspose"
+        },
+        "id": "Conv1DTranspose",
+        "mode": "nn",
+        "properties": [
+          {
+            "id": "in_channels",
+            "label": {
+              "zh_CN": "输入通道数",
+              "en_US": "in_channels"
+            },
+            "type": "number",
+            "required": true,
+            "default": 255
+          },
+          {
+            "id": "out_channels",
+            "label": {
+              "zh_CN": "输出通道数",
+              "en_US": "out_channels"
+            },
+            "type": "number",
+            "required": true,
+            "default": 255
+          },
+          {
+            "id": "kernel_size",
+            "label": {
+              "zh_CN": "卷积核大小",
+              "en_US": "kernel_size"
+            },
+            "type": "number",
+            "required": true,
+            "default": 3
+          },
+          {
+            "id": "stride",
+            "label": {
+              "zh_CN": "步长",
+              "en_US": "stride"
+            },
+            "type": "number",
+            "required": true,
+            "default": 1
+          },
+          {
+            "id": "dilation",
+            "label": {
+              "zh_CN": "空洞大小",
+              "en_US": "dilation"
+            },
+            "type": "number",
+            "required": true,
+            "default": 0
+          },
+          {
+            "id": "groups",
+            "label": {
+              "zh_CN": "组数",
+              "en_US": "groups"
+            },
+            "type": "number",
+            "required": true,
+            "default": 0
+          },
+          {
+            "id": "padding",
+            "type": "number",
+            "label": {
+              "zh_CN": "填充大小",
+              "en_US": "padding"
+            }
+          },
+          {
+            "id": "output_padding",
+            "type": "number",
+            "label": {
+              "zh_CN": "输出特征尾部额外添加的大小",
+              "en_US": "Padding of output feature"
+            }
+          },
+          {
+            "id": "weight_attr",
+            "label": {
+              "zh_CN": "权重参数",
+              "en_US": "weight_attr"
+            },
+            "type": "ParamAttr"
+          },
+          {
+            "id": "bias_attr",
+            "label": {
+              "zh_CN": "偏置参数",
+              "en_US": "bias_attr"
+            },
+            "type": "ParamAttr"
+          },
+          {
+            "id": "data_format",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "NC",
+                "value": "NC"
+              },
+              {
+                "id": 1,
+                "label": "NCL",
+                "value": "NCL",
+                "default": true
+              }
+            ],
+            "label": {
+              "zh_CN": "数据格式",
+              "en_US": "Data format"
+            }
+          }
+        ]
+      },
+      {
+        "label": {
+          "zh_CN": "二维转置卷积层",
+          "en_US": "Conv2DTranspose"
+        },
+        "id": "Conv2DTranspose",
+        "mode": "nn",
+        "properties": [
+          {
+            "id": "in_channels",
+            "label": {
+              "zh_CN": "输入通道数",
+              "en_US": "in_channels"
+            },
+            "type": "number",
+            "required": true,
+            "default": 255
+          },
+          {
+            "id": "out_channels",
+            "label": {
+              "zh_CN": "输出通道数",
+              "en_US": "out_channels"
+            },
+            "type": "number",
+            "required": true,
+            "default": 255
+          },
+          {
+            "id": "kernel_size",
+            "label": {
+              "zh_CN": "卷积核大小",
+              "en_US": "kernel_size"
+            },
+            "type": "number",
+            "required": true,
+            "default": 3
+          },
+          {
+            "id": "stride",
+            "label": {
+              "zh_CN": "步长",
+              "en_US": "stride"
+            },
+            "type": "number",
+            "required": true,
+            "default": 1
+          },
+          {
+            "id": "dilation",
+            "label": {
+              "zh_CN": "空洞大小",
+              "en_US": "dilation"
+            },
+            "type": "number",
+            "required": true,
+            "default": 0
+          },
+          {
+            "id": "groups",
+            "label": {
+              "zh_CN": "组数",
+              "en_US": "groups"
+            },
+            "type": "number",
+            "required": true,
+            "default": 0
+          },
+          {
+            "id": "padding",
+            "type": "number",
+            "label": {
+              "zh_CN": "填充大小",
+              "en_US": "padding"
+            }
+          },
+          {
+            "id": "output_padding",
+            "type": "number",
+            "label": {
+              "zh_CN": "输出特征尾部额外添加的大小",
+              "en_US": "Padding of output feature"
+            }
+          },
+          {
+            "id": "weight_attr",
+            "label": {
+              "zh_CN": "权重参数",
+              "en_US": "weight_attr"
+            },
+            "type": "ParamAttr"
+          },
+          {
+            "id": "bias_attr",
+            "label": {
+              "zh_CN": "偏置参数",
+              "en_US": "bias_attr"
+            },
+            "type": "ParamAttr"
+          },
+          {
+            "id": "data_format",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "NC",
+                "value": "NC"
+              },
+              {
+                "id": 1,
+                "label": "NCL",
+                "value": "NCL",
+                "default": true
+              }
+            ],
+            "label": {
+              "zh_CN": "数据格式",
+              "en_US": "Data format"
+            }
+          }
+        ]
+      },
+      {
+        "label": {
+          "zh_CN": "三维转置卷积层",
+          "en_US": "Conv3DTranspose"
+        },
+        "id": "Conv3DTranspose",
+        "mode": "nn",
+        "properties": [
+          {
+            "id": "in_channels",
+            "label": {
+              "zh_CN": "输入通道数",
+              "en_US": "in_channels"
+            },
+            "type": "number",
+            "required": true,
+            "default": 255
+          },
+          {
+            "id": "out_channels",
+            "label": {
+              "zh_CN": "输出通道数",
+              "en_US": "out_channels"
+            },
+            "type": "number",
+            "required": true,
+            "default": 255
+          },
+          {
+            "id": "kernel_size",
+            "label": {
+              "zh_CN": "卷积核大小",
+              "en_US": "kernel_size"
+            },
+            "type": "number",
+            "required": true,
+            "default": 3
+          },
+          {
+            "id": "stride",
+            "label": {
+              "zh_CN": "步长",
+              "en_US": "stride"
+            },
+            "type": "number",
+            "required": true,
+            "default": 1
+          },
+          {
+            "id": "dilation",
+            "label": {
+              "zh_CN": "空洞大小",
+              "en_US": "dilation"
+            },
+            "type": "number",
+            "required": true,
+            "default": 0
+          },
+          {
+            "id": "groups",
+            "label": {
+              "zh_CN": "组数",
+              "en_US": "groups"
+            },
+            "type": "number",
+            "required": true,
+            "default": 0
+          },
+          {
+            "id": "padding",
+            "type": "number",
+            "label": {
+              "zh_CN": "填充大小",
+              "en_US": "padding"
+            }
+          },
+          {
+            "id": "output_padding",
+            "type": "number",
+            "label": {
+              "zh_CN": "输出特征尾部额外添加的大小",
+              "en_US": "Padding of output feature"
+            }
+          },
+          {
+            "id": "weight_attr",
+            "label": {
+              "zh_CN": "权重参数",
+              "en_US": "weight_attr"
+            },
+            "type": "ParamAttr"
+          },
+          {
+            "id": "bias_attr",
+            "label": {
+              "zh_CN": "偏置参数",
+              "en_US": "bias_attr"
+            },
+            "type": "ParamAttr"
+          },
+          {
+            "id": "data_format",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "NC",
+                "value": "NC"
+              },
+              {
+                "id": 1,
+                "label": "NCL",
+                "value": "NCL",
+                "default": true
+              }
+            ],
+            "label": {
+              "zh_CN": "数据格式",
+              "en_US": "Data format"
+            }
+          }
+        ]
+      },
+      {
+        "id": "Bilinear",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "双线性Tensor积",
+          "en_US": "Bilinear"
+        },
+        "properties": [
+          {
+            "id": "in1_features",
+            "type": "number",
+            "label": {
+              "zh_CN": "x1 元素的维度",
+              "en_US": ""
+            }
+          },
+          {
+            "id": "in2_features",
+            "type": "number",
+            "label": {
+              "zh_CN": "x2 元素的维度",
+              "en_US": ""
+            }
+          },
+          {
+            "id": "out_features",
+            "type": "number",
+            "label": {
+              "zh_CN": "输出 Tensor 的维度",
+              "en_US": "Size of output tensor"
+            }
+          },
+          {
+            "id": "weight_attr",
+            "label": {
+              "zh_CN": "权重参数",
+              "en_US": "weight_attr"
+            },
+            "type": "ParamAttr"
+          },
+          {
+            "id": "bias_attr",
+            "label": {
+              "zh_CN": "偏置参数",
+              "en_US": "bias_attr"
+            },
+            "type": "ParamAttr"
+          }
+        ]
+      },
+      {
+        "id": "CELU",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "CELU 激活函数",
+          "en_US": "CELU"
+        },
+        "properties": [
+          {
+            "id": "alpha",
+            "type": "number",
+            "default": 1.0,
+            "label": {
+              "zh_CN": "alpha",
+              "en_US": "alpha"
+            }
+          }
+        ]
+      },
+      {
+        "id": "CTCLoss",
+        "mode": "nn",
+        "label": {
+          "en_US": "CTC Loss",
+          "zh_CN": "CTC 损失函数"
+        },
+        "properties": [
+          {
+            "id": "blank",
+            "type": "number",
+            "default": 0,
+            "label": {
+              "en_US": "Blank",
+              "zh_CN": "v"
+            }
+          },
+          {
+            "id": "reduction",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "none",
+                "value": "none"
+              },
+              {
+                "id": 1,
+                "label": "mean",
+                "value": "mean",
+                "default": true
+              },
+              {
+                "id": 2,
+                "label": "sum",
+                "value": "sum"
+              }
+            ],
+            "label": {
+              "en_US": "reduction",
+              "zh_CN": "计算方式"
+            }
+          }
+        ]
+      },
+      {
+        "id": "CosineEmbeddingLoss",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "CosineEmbedding 损失",
+          "en_US": "CosineEmbeddingLoss"
+        },
+        "properties": [
+          {
+            "id": "margin",
+            "type": "number",
+            "default": 0,
+            "label": {
+              "zh_CN": "margin",
+              "en_US": "margin"
+            }
+          },
+          {
+            "id": "reduction",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "none",
+                "value": "none"
+              },
+              {
+                "id": 1,
+                "label": "mean",
+                "value": "mean",
+                "default": true
+              },
+              {
+                "id": 2,
+                "label": "sum",
+                "value": "sum"
+              }
+            ],
+            "label": {
+              "en_US": "reduction",
+              "zh_CN": "计算方式"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ChannelShuffle",
+        "label": {
+          "zh_CN": "通道分组",
+          "en_US": "group by channel"
+        },
+        "mode": "nn",
+        "properties": [
+          {
+            "id": "groups",
+            "type": "number",
+            "label": {
+              "zh_CN": "分组数",
+              "en_US": "total group"
+            }
+          },
+          {
+            "id": "data_format",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "NC",
+                "value": "NC"
+              },
+              {
+                "id": 1,
+                "label": "NCL",
+                "value": "NCL",
+                "default": true
+              }
+            ],
+            "label": {
+              "zh_CN": "数据格式",
+              "en_US": "Data format"
+            }
+          }
+        ]
+      },
+      {
+        "mode": "nn",
+        "id": "ClipGradByGlobalNorm",
+        "label": {
+          "zh_CN": "ClipGradByGlobalNorm",
+          "en_US": "ClipGradByGlobalNorm"
+        },
+        "properties": [
+          {
+            "id": "clip_norm",
+            "type": "number",
+            "label": {
+              "zh_CN": "范数最大值",
+              "en_US": "clip norm"
+            }
+          }
+        ]
+      },
+      {
+        "mode": "nn",
+        "id": "ClipGradByNorm",
+        "label": {
+          "zh_CN": "ClipGradByNorm",
+          "en_US": "ClipGradByNorm"
+        },
+        "properties": [
+          {
+            "id": "clip_norm",
+            "label": {
+              "zh_CN": "二范数最大值",
+              "en_US": "clip_norm"
+            },
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "mode": "nn",
+        "id": "ClipGradByValue",
+        "label": {
+          "en_US": "ClipGradByValue",
+          "zh_CN": "ClipGradByValue"
+        },
+        "properties": [
+          {
+            "id": "max",
+            "type": "number",
+            "label": {
+              "en_US": "max",
+              "zh_CN": "修剪的最大值"
+            }
+          },
+          {
+            "id": "min",
+            "type": "number",
+            "label": {
+              "en_US": "min",
+              "zh_CN": "修建的最小值"
+            }
+          }
+        ]
+      },
+      {
+        "mode": "nn",
+        "id": "CosineSimilarity",
+        "label": {
+          "en_US": "CosineSimilarity",
+          "zh_CN": "余弦相似度"
+        },
+        "properties": [
+          {
+            "id": "axis",
+            "type": "number",
+            "label": {
+              "zh_CN": "维度",
+              "en_US": "axis"
+            },
+            "default": 1
+          },
+          {
+            "id": "eps",
+            "type": "number",
+            "label": {
+              "zh_CN": "加在分母上的很小的数值, 防止分母为0的情况",
+              "en_US": "eps"
+            },
+            "default": 1e-8
+          }
+        ]
+      },
+      {
+        "mode": "nn",
+        "id": "CrossEntropyLoss",
+        "label": {
+          "en_US": "CrossEntropyLoss",
+          "zh_CN": "交叉熵损失"
+        },
+        "properties": [
+          {
+            "id": "ignore_index",
+            "type": "number",
+            "label": {
+              "en_US": "ignore index",
+              "zh_CN": "忽略的标签值"
+            },
+            "default": -100
+          },
+          {
+            "id": "reduction",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "none",
+                "value": "none"
+              },
+              {
+                "id": 1,
+                "label": "mean",
+                "value": "mean",
+                "default": true
+              },
+              {
+                "id": 2,
+                "label": "sum",
+                "value": "sum"
+              }
+            ],
+            "label": {
+              "en_US": "reduction",
+              "zh_CN": "计算方式"
+            }
+          },
+          {
+            "id": "soft_label",
+            "type": "boolean",
+            "default": false,
+            "label": {
+              "en_US": "soft label",
+              "zh_CN": "软标签"
+            }
+          },
+          {
+            "id": "axis",
+            "type": "number",
+            "label": {
+              "zh_CN": "维度",
+              "en_US": "axis"
+            },
+            "default": -1
+          },
+          {
+            "id": "use_softmax",
+            "type": "boolean",
+            "default": true,
+            "label": {
+              "zh_CN": "softmax 归一化",
+              "en_US": "use softmax normalization"
+            }
+          }
+        ]
+      },
+      {
+        "id": "Dropout2D",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "二维概率丢弃",
+          "en_US": "Dropout2D"
+        },
+        "properties": [
+          {
+            "id": "p",
+            "type": "number",
+            "default": 0.5,
+            "label": {
+              "zh_CN": "p值",
+              "en_US": "p"
+            }
+          }
+        ]
+      },
+      {
+        "id": "Dropout3D",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "三维概率丢弃",
+          "en_US": "Dropout3D"
+        },
+        "properties": [
+          {
+            "id": "p",
+            "type": "number",
+            "default": 0.5,
+            "label": {
+              "zh_CN": "p值",
+              "en_US": "p"
+            }
+          }
+        ]
+      },
+      {
+        "id": "Dropout",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "概率丢弃",
+          "en_US": "Dropout"
+        },
+        "properties": [
+          {
+            "id": "p",
+            "type": "number",
+            "default": 0.5,
+            "label": {
+              "zh_CN": "p值",
+              "en_US": "p"
+            }
+          },
+          {
+            "id": "axis",
+            "type": "number",
+            "label": {
+              "zh_CN": "丢弃轴",
+              "en_US": "axis"
+            }
+          },
+          {
+            "id": "mode",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "value": "upscale_in_train",
+                "label": "upscale_in_train",
+                "default": true
+              },
+              {
+                "id": 1,
+                "value": "downscale_in_infer",
+                "label": "downscale_in_infer"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "ELU",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "ELU 激活函数",
+          "en_US": "ELU activation"
+        },
+        "properties": [
+          {
+            "id": "alpha",
+            "type": "number",
+            "default": 1.0,
+            "label": {
+              "zh_CN": "alpha",
+              "en_US": "alpha"
+            }
+          }
+        ]
+      },
+      {
+        "id": "Embedding",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "嵌入层",
+          "en_US": "Embedding"
+        },
+        "properties": [
+          {
+            "id": "num_embeddings",
+            "type": "number",
+            "label": {
+              "zh_CN": "字典大小",
+              "en_US": "size of embeddings"
+            }
+          },
+          {
+            "id": "embedding_dim",
+            "type": "number",
+            "label": {
+              "zh_CN": "嵌入向量的维度",
+              "en_US": "Dim of every embedding"
+            }
+          }
+        ]
+      },
+      {
+        "id": "Fold",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "区块合并",
+          "en_US": "fold"
+        },
+        "properties": [
+          {
+            "id": "output_size",
+            "type": "number",
+            "label": {
+              "zh_CN": "输出大小",
+              "en_US": "output size"
+            }
+          },
+          {
+            "id": "kernel_size",
+            "type": "number",
+            "label": {
+              "zh_CN": "卷积核大小",
+              "en_US": "size of kernel"
+            }
+          },
+          {
+            "id": "strides",
+            "type": "number",
+            "label": {
+              "zh_CN": "步长大小",
+              "en_US": "size of stride"
+            },
+            "default": 1
+          },
+          {
+            "id": "padding",
+            "type": "number",
+            "default": 0,
+            "label": {
+              "zh_CN": "维度扩张大小",
+              "en_US": "padding"
+            }
+          },
+          {
+            "type": "number",
+            "default": 1,
+            "id": "dilations",
+            "label": {
+              "en_US": "dilations",
+              "zh_CN": "卷积膨胀"
+            }
+          }
+        ]
+      },
+      {
+        "id": "FractionalMaxPool2D",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "2维分数阶最大值池化",
+          "en_US": "FractionalMaxPool2D"
+        },
+        "properties": [
+          {
+            "id": "output_size",
+            "type": "number",
+            "label": {
+              "zh_CN": "输出尺寸",
+              "en_US": "output size"
+            }
+          },
+          {
+            "id": "kernel_size",
+            "type": "number",
+            "label": {
+              "zh_CN": "池化核大小",
+              "en_US": "kernel size"
+            }
+          },
+          {
+            "id": "random_u",
+            "type": "number",
+            "label": {
+              "zh_CN": "浮点随机数",
+              "en_US": "random number"
+            }
+          },
+          {
+            "id": "return_mask",
+            "type": "boolean",
+            "default": false,
+            "label": {
+              "zh_CN": "是否返回索引",
+              "en_US": "return mask"
+            }
+          }
+        ]
+      },
+      {
+        "id": "FractionalMaxPool3D",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "3维分数阶最大值池化",
+          "en_US": "FractionalMaxPool3D"
+        },
+        "properties": [
+          {
+            "id": "output_size",
+            "type": "number",
+            "label": {
+              "zh_CN": "输出尺寸",
+              "en_US": "output size"
+            }
+          },
+          {
+            "id": "kernel_size",
+            "type": "number",
+            "label": {
+              "zh_CN": "池化核大小",
+              "en_US": "kernel size"
+            }
+          },
+          {
+            "id": "random_u",
+            "type": "number",
+            "label": {
+              "zh_CN": "浮点随机数",
+              "en_US": "random number"
+            }
+          },
+          {
+            "id": "return_mask",
+            "type": "boolean",
+            "default": false,
+            "label": {
+              "zh_CN": "是否返回索引",
+              "en_US": "return mask"
+            }
+          }
+        ]
+      },
+      {
+        "id": "GELU",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "GELU 激活函数",
+          "en_US": "GELU activation"
+        },
+        "properties": [
+          {
+            "id": "approximate",
+            "type": "boolean",
+            "default": false,
+            "label": {
+              "zh_CN": "是否启用近似计算",
+              "en_US": "approximate"
+            }
+          }
+        ]
+      },
+      {
+        "id": "GLU",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "GLU 激活层",
+          "en_US": "GLU Activation Operator"
+        },
+        "properties": [
+          {
+            "id": "axis",
+            "type": "number",
+            "default": -1,
+            "label": {
+              "en_US": "axis",
+              "zh_CN": "沿着该轴将输入二等分"
+            }
+          }
+        ]
+      },
+      {
+        "id": "GRUCell",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "门控循环单元",
+          "en_US": "GRUCell"
+        },
+        "properties": [
+          {
+            "id": "input_size",
+            "label": {
+              "zh_CN": "输入大小",
+              "en_US": "input size"
+            },
+            "type": "number"
+          },
+          {
+            "id": "hidden_size",
+            "type": "number",
+            "label": {
+              "zh_CN": "隐藏状态大小",
+              "en_US": "hidden size"
+            }
+          },
+          {
+            "id": "weight_ih_attr",
+            "type": "ParamAttr",
+            "label": {
+              "en_US": "weight_ih param attr",
+              "zh_CN": "weight_ih 权重参数"
+            }
+          },
+          {
+            "id": "weight_hh_attr",
+            "type": "ParamAttr",
+            "label": {
+              "en_US": "weight_hh_attr",
+              "zh_CN": "weight_hh 权重参数"
+            }
+          },
+          {
+            "id": "bias_ih_attr",
+            "type": "ParamAttr",
+            "label": {
+              "en_US": "bias_ih param attr",
+              "zh_CN": "bias_ih 权重参数"
+            }
+          },
+          {
+            "id": "bias_hh_attr",
+            "type": "ParamAttr",
+            "label": {
+              "en_US": "bias_hh_attr",
+              "zh_CN": "bias_hh 权重参数"
+            }
+          }
+        ]
+      },
+      {
+        "id": "GRU",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "门控循环单元网络",
+          "en_US": "GRU"
+        },
+        "properties": [
+          {
+            "id": "input_size",
+            "label": {
+              "zh_CN": "输入大小",
+              "en_US": "input_size"
+            },
+            "type": "number"
+          },
+          {
+            "id": "hidden_size",
+            "label": {
+              "zh_CN": "隐藏状态大小",
+              "en_US": "hidden_size"
+            },
+            "type": "number"
+          },
+          {
+            "id": "num_layers",
+            "type": "number",
+            "label": {
+              "zh_CN": "循环网络层数",
+              "en_US": "rnn layer number"
+            },
+            "default": 1
+          },
+          {
+            "id": "direction",
+            "type": "enums",
+            "label": {
+              "zh_CN": "迭代方向",
+              "en_US": "direction"
+            },
+            "enums": [
+              {
+                "id": 0,
+                "label": "forward",
+                "value": "forward",
+                "default": true
+              },
+              {
+                "id": 1,
+                "label": "bidirect",
+                "value": "bidirect"
+              }
+            ]
+          },
+          {
+            "id": "time_major",
+            "type": "boolean",
+            "label": {
+              "zh_CN": "第一个维度是否是time steps",
+              "en_US": "Is the first dimension time steps"
+            },
+            "default": false
+          },
+          {
+            "id": "dropout",
+            "type": "number",
+            "label": {
+              "zh_CN": "dropout 概率",
+              "en_US": "dropout probability"
+            },
+            "default": 0
+          },
+          {
+            "id": "weight_ih_attr",
+            "type": "ParamAttr",
+            "label": {
+              "en_US": "weight_ih param attr",
+              "zh_CN": "weight_ih 权重参数"
+            }
+          },
+          {
+            "id": "weight_hh_attr",
+            "type": "ParamAttr",
+            "label": {
+              "en_US": "weight_hh_attr",
+              "zh_CN": "weight_hh 权重参数"
+            }
+          },
+          {
+            "id": "bias_ih_attr",
+            "type": "ParamAttr",
+            "label": {
+              "en_US": "bias_ih param attr",
+              "zh_CN": "bias_ih 权重参数"
+            }
+          },
+          {
+            "id": "bias_hh_attr",
+            "type": "ParamAttr",
+            "label": {
+              "en_US": "bias_hh_attr",
+              "zh_CN": "bias_hh 权重参数"
+            }
+          }
+        ]
+      },
+      {
+        "id": "GaussianNLLLoss",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "高斯负对数似然损失",
+          "en_US": "GaussianNLLLoss"
+        },
+        "properties": [
+          {
+            "id": "full",
+            "type": "boolean",
+            "label": {
+              "en_US": "Is the constant term included in the loss calculation",
+              "zh_CN": "是否在损失计算中包括常数项"
+            },
+            "default": false
+          },
+          {
+            "id": "epsilon",
+            "type": "number",
+            "label": {
+              "zh_CN": "epsilon",
+              "en_US": "epsilon"
+            },
+            "default": 1e-6
+          },
+          {
+            "id": "reduction",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "none",
+                "value": "none"
+              },
+              {
+                "id": 1,
+                "label": "mean",
+                "value": "mean",
+                "default": true
+              },
+              {
+                "id": 2,
+                "label": "sum",
+                "value": "sum"
+              }
+            ],
+            "label": {
+              "en_US": "reduction",
+              "zh_CN": "计算方式"
+            }
+          }
+        ]
+      },
+      {
+        "id": "GroupNorm",
+        "mode": "nn",
+        "label": {
+          "en_US": "Group Normalization",
+          "zh_CN": "组归一化"
+        },
+        "properties": [
+          {
+            "id": "num_groups",
+            "type": "number",
+            "label": {
+              "en_US": "num groups",
+              "zh_CN": "从通道中分离出的组数"
+            }
+          },
+          {
+            "id": "num_channels",
+            "type": "number",
+            "label": {
+              "en_US": "num channels",
+              "zh_CN": "输入通道数"
+            }
+          },
+          {
+            "id": "epsilon",
+            "type": "number",
+            "label": {
+              "zh_CN": "epsilon",
+              "en_US": "epsilon"
+            },
+            "default": 0.00001
+          },
+          {
+            "id": "weight_attr",
+            "type": "ParamAttr",
+            "label": {
+              "zh_CN": "权重参数",
+              "en_US": "Weight attr"
+            }
+          },
+          {
+            "id": "bias_attr",
+            "label": {
+              "zh_CN": "偏置参数",
+              "en_US": "Bias attr"
+            },
+            "type": "ParamAttr"
+          },
+          {
+            "id": "data_format",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "NC",
+                "value": "NC"
+              },
+              {
+                "id": 1,
+                "label": "NCL",
+                "value": "NCL",
+                "default": true
+              }
+            ],
+            "label": {
+              "zh_CN": "数据格式",
+              "en_US": "Data format"
+            }
+          }
+        ]
+      },
+      {
+        "id": "HSigmoidLoss",
+        "label": {
+          "en_US": "hierarchical sigmoid",
+          "zh_CN": "层次Sigmoid"
+        },
+        "mode": "nn",
+        "properties": [
+          {
+            "id": "feature_size",
+            "type": "number",
+            "label": {
+              "en_US": "input tensor size",
+              "zh_CN": "输入tensor的特征尺寸"
+            }
+          },
+          {
+            "id": "num_classes",
+            "type": "number",
+            "label": {
+              "en_US": "dictionary size",
+              "zh_CN": "字典大小"
+            }
+          },
+          {
+            "id": "weight_attr",
+            "type": "ParamAttr",
+            "label": {
+              "zh_CN": "权重参数",
+              "en_US": "Weight attr"
+            }
+          },
+          {
+            "id": "bias_attr",
+            "label": {
+              "zh_CN": "偏置参数",
+              "en_US": "Bias attr"
+            },
+            "type": "ParamAttr"
+          },
+          {
+            "id": "is_custom",
+            "type": "boolean",
+            "default": false,
+            "label": {
+              "zh_CN": "自定义二叉树",
+              "en_US": "custom Binary tree"
+            }
+          },
+          {
+            "id": "is_sparse",
+            "type": "boolean",
+            "default": false,
+            "label": {
+              "zh_CN": "是否使用稀疏更新",
+              "en_US": "Whether to use the sparse update method"
+            }
+          }
+        ]
+      },
+      {
+        "id": "Hardshrink",
+        "mode": "nn",
+        "label": {
+          "en_US": "Hardshrink",
+          "zh_CN": "Hardshrink 激活层"
+        },
+        "properties": [
+          {
+            "id": "threshold",
+            "type": "number",
+            "default": 0.5,
+            "label": {
+              "en_US": "threshold",
+              "zh_CN": "threshold"
+            }
+          }
+        ]
+      },
+      {
+        "id": "Hardsigmoid",
+        "mode": "nn",
+        "label": {
+          "en_US": "Hardsigmoid",
+          "zh_CN": "Hardsigmoid 激活层"
+        },
+        "properties": []
+      },
+      {
+        "id": "Hardswish",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "Hardswish 激活函数",
+          "en_US": "Hardswish"
+        },
+        "properties": []
+      },
+      {
+        "id": "Hardtanh",
+        "mode": "nn",
+        "label": {
+          "en_US": "Hardtanh Activation",
+          "zh_CN": "Hardtanh 激活层"
+        },
+        "properties": [
+          {
+            "id": "min",
+            "label": {
+              "en_US": "min value",
+              "zh_CN": "最小值"
+            },
+            "type": "number",
+            "default": -1
+          },
+          {
+            "id": "max",
+            "label": {
+              "en_US": "max value",
+              "zh_CN": "最大值"
+            },
+            "type": "number",
+            "default": 1
+          }
+        ]
+      },
+      {
+        "id": "HingeEmbeddingLoss",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "非线形的铰链嵌入损失",
+          "en_US": "HingeEmbeddingLoss"
+        },
+        "properties": [
+          {
+            "id": "margin",
+            "type": "number",
+            "default": 1.0,
+            "label": {
+              "zh_CN": "margin",
+              "en_US": "margin"
+            }
+          },
+          {
+            "id": "reduction",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "none",
+                "value": "none"
+              },
+              {
+                "id": 1,
+                "label": "mean",
+                "value": "mean",
+                "default": true
+              },
+              {
+                "id": 2,
+                "label": "sum",
+                "value": "sum"
+              }
+            ],
+            "label": {
+              "en_US": "reduction",
+              "zh_CN": "计算方式"
+            }
+          }
+        ]
+      },
+      {
+        "id": "Identity",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "等效层",
+          "en_US": "Identity"
+        },
+        "properties": []
+      },
+      {
+        "id": "InstanceNorm1D",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "InstanceNorm1D",
+          "en_US": "InstanceNorm1D"
+        },
+        "properties": [
+          {
+            "id": "num_features",
+            "type": "number",
+            "label": {
+              "zh_CN": "输入通道数量",
+              "en_US": "input channel size"
+            }
+          },
+          {
+            "id": "epsilon",
+            "type": "number",
+            "default": 0.00001,
+            "label": {
+              "zh_CN": "加在分母上的很小的数值",
+              "en_US": "epsilon"
+            }
+          },
+          {
+            "id": "momentum",
+            "type": "number",
+            "default": 0.9,
+            "label": {
+              "zh_CN": "momentum",
+              "en_US": "momentum"
+            }
+          },
+          {
+            "id": "weight_attr",
+            "type": "ParamAttr",
+            "label": {
+              "zh_CN": "权重参数",
+              "en_US": "Weight attr"
+            }
+          },
+          {
+            "id": "bias_attr",
+            "label": {
+              "zh_CN": "偏置参数",
+              "en_US": "Bias attr"
+            },
+            "type": "ParamAttr"
+          },
+          {
+            "id": "data_format",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "NC",
+                "value": "NC"
+              },
+              {
+                "id": 1,
+                "label": "NCL",
+                "value": "NCL",
+                "default": true
+              }
+            ],
+            "label": {
+              "zh_CN": "数据格式",
+              "en_US": "Data format"
+            }
+          }
+        ]
+      },
+      {
+        "id": "InstanceNorm2D",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "InstanceNorm2D",
+          "en_US": "InstanceNorm2D"
+        },
+        "properties": [
+          {
+            "id": "num_features",
+            "type": "number",
+            "label": {
+              "zh_CN": "输入通道数量",
+              "en_US": "input channel size"
+            }
+          },
+          {
+            "id": "epsilon",
+            "type": "number",
+            "default": 0.00001,
+            "label": {
+              "zh_CN": "加在分母上的很小的数值",
+              "en_US": "epsilon"
+            }
+          },
+          {
+            "id": "momentum",
+            "type": "number",
+            "default": 0.9,
+            "label": {
+              "zh_CN": "momentum",
+              "en_US": "momentum"
+            }
+          },
+          {
+            "id": "weight_attr",
+            "type": "ParamAttr",
+            "label": {
+              "zh_CN": "权重参数",
+              "en_US": "Weight attr"
+            }
+          },
+          {
+            "id": "bias_attr",
+            "label": {
+              "zh_CN": "偏置参数",
+              "en_US": "Bias attr"
+            },
+            "type": "ParamAttr"
+          },
+          {
+            "id": "data_format",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "NC",
+                "value": "NC"
+              },
+              {
+                "id": 1,
+                "label": "NCL",
+                "value": "NCL",
+                "default": true
+              }
+            ],
+            "label": {
+              "zh_CN": "数据格式",
+              "en_US": "Data format"
+            }
+          }
+        ]
+      },
+      {
+        "id": "InstanceNorm1D",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "InstanceNorm1D",
+          "en_US": "InstanceNorm1D"
+        },
+        "properties": [
+          {
+            "id": "num_features",
+            "type": "number",
+            "label": {
+              "zh_CN": "输入通道数量",
+              "en_US": "input channel size"
+            }
+          },
+          {
+            "id": "epsilon",
+            "type": "number",
+            "default": 0.00001,
+            "label": {
+              "zh_CN": "加在分母上的很小的数值",
+              "en_US": "epsilon"
+            }
+          },
+          {
+            "id": "momentum",
+            "type": "number",
+            "default": 0.9,
+            "label": {
+              "zh_CN": "momentum",
+              "en_US": "momentum"
+            }
+          },
+          {
+            "id": "weight_attr",
+            "type": "ParamAttr",
+            "label": {
+              "zh_CN": "权重参数",
+              "en_US": "Weight attr"
+            }
+          },
+          {
+            "id": "bias_attr",
+            "label": {
+              "zh_CN": "偏置参数",
+              "en_US": "Bias attr"
+            },
+            "type": "ParamAttr"
+          },
+          {
+            "id": "data_format",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "NC",
+                "value": "NC"
+              },
+              {
+                "id": 1,
+                "label": "NCL",
+                "value": "NCL",
+                "default": true
+              }
+            ],
+            "label": {
+              "zh_CN": "数据格式",
+              "en_US": "Data format"
+            }
+          }
+        ]
+      },
+      {
+        "id": "KLDivLoss",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "Kullback-Leibler 散度损失",
+          "en_US": "Kullback-Leibler loss"
+        },
+        "properties": [
+          {
+            "id": "reduction",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "none",
+                "value": "none"
+              },
+              {
+                "id": 1,
+                "label": "mean",
+                "value": "mean",
+                "default": true
+              },
+              {
+                "id": 2,
+                "label": "sum",
+                "value": "sum"
+              }
+            ],
+            "label": {
+              "en_US": "reduction",
+              "zh_CN": "计算方式"
+            }
+          }
+        ]
+      },
+      {
+        "id": "L1Loss",
+        "mode": "nn",
+        "label": {
+          "en_US": "L1 loss",
+          "zh_CN": "L1 loss"
+        },
+        "properties": [
+          {
+            "id": "reduction",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "none",
+                "value": "none"
+              },
+              {
+                "id": 1,
+                "label": "mean",
+                "value": "mean",
+                "default": true
+              },
+              {
+                "id": 2,
+                "label": "sum",
+                "value": "sum"
+              }
+            ],
+            "label": {
+              "en_US": "reduction",
+              "zh_CN": "计算方式"
+            }
+          }
+        ]
+      },
+      {
+        "id": "LSTMCell",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "长短期记忆网络单元",
+          "en_US": "LSTMCell"
+        },
+        "properties": [
+          {
+            "id": "input_size",
+            "label": {
+              "zh_CN": "输入大小",
+              "en_US": "input size"
+            },
+            "type": "number"
+          },
+          {
+            "id": "hidden_size",
+            "type": "number",
+            "label": {
+              "zh_CN": "隐藏状态大小",
+              "en_US": "hidden size"
+            }
+          },
+          {
+            "id": "weight_ih_attr",
+            "type": "ParamAttr",
+            "label": {
+              "en_US": "weight_ih param attr",
+              "zh_CN": "weight_ih 权重参数"
+            }
+          },
+          {
+            "id": "weight_hh_attr",
+            "type": "ParamAttr",
+            "label": {
+              "en_US": "weight_hh_attr",
+              "zh_CN": "weight_hh 权重参数"
+            }
+          },
+          {
+            "id": "bias_ih_attr",
+            "type": "ParamAttr",
+            "label": {
+              "en_US": "bias_ih param attr",
+              "zh_CN": "bias_ih 权重参数"
+            }
+          },
+          {
+            "id": "bias_hh_attr",
+            "type": "ParamAttr",
+            "label": {
+              "en_US": "bias_hh_attr",
+              "zh_CN": "bias_hh 权重参数"
+            }
+          }
+        ]
+      },
+      {
+        "id": "LSTM",
+        "mode": "nn",
+        "label": {
+          "en_US": "LSTM",
+          "zh_CN": "LSTM"
+        },
+        "properties": [
+          {
+            "id": "input_size",
+            "label": {
+              "zh_CN": "输入大小",
+              "en_US": "input_size"
+            },
+            "type": "number"
+          },
+          {
+            "id": "hidden_size",
+            "label": {
+              "zh_CN": "隐藏状态大小",
+              "en_US": "hidden_size"
+            },
+            "type": "number"
+          },
+          {
+            "id": "num_layers",
+            "type": "number",
+            "label": {
+              "zh_CN": "循环网络层数",
+              "en_US": "rnn layer number"
+            },
+            "default": 1
+          },
+          {
+            "id": "direction",
+            "type": "enums",
+            "label": {
+              "zh_CN": "迭代方向",
+              "en_US": "direction"
+            },
+            "enums": [
+              {
+                "id": 0,
+                "label": "forward",
+                "value": "forward",
+                "default": true
+              },
+              {
+                "id": 1,
+                "label": "bidirect",
+                "value": "bidirect"
+              }
+            ]
+          },
+          {
+            "id": "time_major",
+            "type": "boolean",
+            "label": {
+              "zh_CN": "第一个维度是否是time steps",
+              "en_US": "Is the first dimension time steps"
+            },
+            "default": false
+          },
+          {
+            "id": "dropout",
+            "type": "number",
+            "label": {
+              "zh_CN": "dropout 概率",
+              "en_US": "dropout probability"
+            },
+            "default": 0
+          },
+          {
+            "id": "weight_ih_attr",
+            "type": "ParamAttr",
+            "label": {
+              "en_US": "weight_ih param attr",
+              "zh_CN": "weight_ih 权重参数"
+            }
+          },
+          {
+            "id": "weight_hh_attr",
+            "type": "ParamAttr",
+            "label": {
+              "en_US": "weight_hh_attr",
+              "zh_CN": "weight_hh 权重参数"
+            }
+          },
+          {
+            "id": "bias_ih_attr",
+            "type": "ParamAttr",
+            "label": {
+              "en_US": "bias_ih param attr",
+              "zh_CN": "bias_ih 权重参数"
+            }
+          },
+          {
+            "id": "bias_hh_attr",
+            "type": "ParamAttr",
+            "label": {
+              "en_US": "bias_hh_attr",
+              "zh_CN": "bias_hh 权重参数"
+            }
+          }
+        ]
+      },
+      {
+        "id": "LeakyReLU",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "LeakyReLU 激活层",
+          "en_US": "LeakyReLU"
+        },
+        "properties": [
+          {
+            "id": "negative_slope",
+            "type": "number",
+            "default": 0.01,
+            "label": {
+              "zh_CN": "斜率",
+              "en_US": "slope"
+            }
+          }
+        ]
+      },
+      {
+        "id": "LocalResponseNorm",
+        "mode": "nn",
+        "label": {
+          "en_US": "LocalResponseNorm",
+          "zh_CN": "局部响应正则化"
+        },
+        "properties": [
+          {
+            "id": "size",
+            "type": "number",
+            "label": {
+              "zh_CN": "累加通道数",
+              "en_US": "Accumulated number of channels"
+            }
+          },
+          {
+            "id": "alpha",
+            "type": "number",
+            "default": 1e-4,
+            "label": {
+              "en_US": "Scaling parameters",
+              "zh_CN": "缩放参数"
+            }
+          },
+          {
+            "id": "beta",
+            "type": "number",
+            "default": 0.75,
+            "label": {
+              "zh_CN": "指数",
+              "en_US": "exponent"
+            }
+          },
+          {
+            "id": "k",
+            "type": "number",
+            "default": 1,
+            "label": {
+              "zh_CN": "位移",
+              "en_US": "k"
+            }
+          },
+          {
+            "id": "data_format",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "NC",
+                "value": "NC"
+              },
+              {
+                "id": 1,
+                "label": "NCL",
+                "value": "NCL",
+                "default": true
+              }
+            ],
+            "label": {
+              "zh_CN": "数据格式",
+              "en_US": "Data format"
+            }
+          }
+        ]
+      },
+      {
+        "id": "LogSigmoid",
+        "label": {
+          "zh_CN": "LogSigmoid 激活层",
+          "en_US": "LogSigmoid"
+        },
+        "mode": "nn",
+        "properties": []
+      },
+      {
+        "id": "LogSoftmax",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "LogSoftmax",
+          "en_US": "LogSoftmax_cn"
+        },
+        "properties": [
+          {
+            "id": "axis",
+            "type": "number",
+            "default": -1,
+            "label": {
+              "zh_CN": "轴",
+              "en_US": "axis"
+            }
+          }
+        ]
+      },
+      {
+        "id": "MSELoss",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "均方误差",
+          "en_US": "MSELoss"
+        },
+        "properties": [
+          {
+            "id": "reduction",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "none",
+                "value": "none"
+              },
+              {
+                "id": 1,
+                "label": "mean",
+                "value": "mean",
+                "default": true
+              },
+              {
+                "id": 2,
+                "label": "sum",
+                "value": "sum"
+              }
+            ],
+            "label": {
+              "en_US": "reduction",
+              "zh_CN": "计算方式"
+            }
+          }
+        ]
+      },
+      {
+        "id": "MarginRankingLoss",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "MarginRankingLoss",
+          "en_US": "MarginRankingLoss"
+        },
+        "properties": [
+          {
+            "id": "margin",
+            "type": "number",
+            "label": {
+              "zh_CN": "加和的 margin 值",
+              "en_US": "The margin value of the sum"
+            },
+            "default": 0
+          },
+          {
+            "id": "reduction",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "none",
+                "value": "none"
+              },
+              {
+                "id": 1,
+                "label": "mean",
+                "value": "mean",
+                "default": true
+              },
+              {
+                "id": 2,
+                "label": "sum",
+                "value": "sum"
+              }
+            ],
+            "label": {
+              "en_US": "reduction",
+              "zh_CN": "计算方式"
+            }
+          }
+        ]
+      },
+      {
+        "id": "MaxUnPool2D",
+        "label": {
+          "zh_CN": "一维最大值反池化",
+          "en_US": "MaxUnPool2D"
+        },
+        "mode": "nn",
+        "properties": [
+          {
+            "id": "kernel_size",
+            "type": "number",
+            "label": {
+              "zh_CN": "池化核大小",
+              "en_US": "Size of avg pool size"
+            },
+            "default": 3
+          },
+          {
+            "id": "stride",
+            "type": "number",
+            "label": {
+              "zh_CN": "步长",
+              "en_US": "stride"
+            },
+            "default": 1
+          },
+          {
+            "id": "padding",
+            "type": "number",
+            "label": {
+              "zh_CN": "池化填充",
+              "en_US": "Padding"
+            },
+            "default": 0
+          },
+          {
+            "id": "output_size",
+            "type": "number",
+            "label": {
+              "zh_CN": "输出尺寸",
+              "en_US": "output size"
+            }
+          }
+        ]
+      },
+      {
+        "id": "MaxUnPool3D",
+        "label": {
+          "zh_CN": "一维最大值反池化",
+          "en_US": "MaxUnPool3D"
+        },
+        "mode": "nn",
+        "properties": [
+          {
+            "id": "kernel_size",
+            "type": "number",
+            "label": {
+              "zh_CN": "池化核大小",
+              "en_US": "Size of avg pool size"
+            },
+            "default": 3
+          },
+          {
+            "id": "stride",
+            "type": "number",
+            "label": {
+              "zh_CN": "步长",
+              "en_US": "stride"
+            },
+            "default": 1
+          },
+          {
+            "id": "padding",
+            "type": "number",
+            "label": {
+              "zh_CN": "池化填充",
+              "en_US": "Padding"
+            },
+            "default": 0
+          },
+          {
+            "id": "output_size",
+            "type": "number",
+            "label": {
+              "zh_CN": "输出尺寸",
+              "en_US": "output size"
+            }
+          }
+        ]
+      },
+      {
+        "id": "MaxUnPool1D",
+        "label": {
+          "zh_CN": "一维最大值反池化",
+          "en_US": "MaxUnPool1D"
+        },
+        "mode": "nn",
+        "properties": [
+          {
+            "id": "kernel_size",
+            "type": "number",
+            "label": {
+              "zh_CN": "池化核大小",
+              "en_US": "Size of avg pool size"
+            },
+            "default": 3
+          },
+          {
+            "id": "stride",
+            "type": "number",
+            "label": {
+              "zh_CN": "步长",
+              "en_US": "stride"
+            },
+            "default": 1
+          },
+          {
+            "id": "padding",
+            "type": "number",
+            "label": {
+              "zh_CN": "池化填充",
+              "en_US": "Padding"
+            },
+            "default": 0
+          },
+          {
+            "id": "output_size",
+            "type": "number",
+            "label": {
+              "zh_CN": "输出尺寸",
+              "en_US": "output size"
+            }
+          }
+        ]
+      },
+      {
+        "id": "Maxout",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "Maxout 激活层",
+          "en_US": "Maxout"
+        },
+        "properties": [
+          {
+            "id": "groups",
+            "type": "number",
+            "label": {
+              "en_US": "groups",
+              "zh_CN": "组数"
+            }
+          },
+          {
+            "id": "axis",
+            "type": "number",
+            "label": {
+              "en_US": "axis",
+              "zh_CN": "指定通道所在维度的索引"
+            },
+            "default": 1
+          }
+        ]
+      },
+      {
+        "id": "Mish",
+        "label": {
+          "en_US": "Mish",
+          "zh_CN": "Mish 激活层"
+        },
+        "mode": "nn",
+        "properties": []
+      },
+      {
+        "id": "MultiHeadAttention",
+        "label": {
+          "en_US": "MultiHeadAttention",
+          "zh_CN": "多头注意力"
+        },
+        "mode": "nn",
+        "properties": [
+          {
+            "id": "embed_dim",
+            "type": "number",
+            "label": {
+              "zh_CN": "输入维度",
+              "en_US": "embed_dim"
+            }
+          },
+          {
+            "id": "num_heads",
+            "type": "number",
+            "label": {
+              "zh_CN": "head数量",
+              "en_US": "num_heads"
+            }
+          },
+          {
+            "id": "dropout",
+            "type": "number",
+            "default": 0,
+            "label": {
+              "zh_CN": "随机失活率",
+              "en_US": "dropout"
+            }
+          },
+          {
+            "id": "kdim",
+            "type": "number",
+            "label": {
+              "zh_CN": "key的维度",
+              "en_US": "kdim"
+            }
+          },
+          {
+            "id": "vdim",
+            "type": "number",
+            "label": {
+              "zh_CN": "value的维度",
+              "en_US": "vdim"
+            }
+          },
+          {
+            "id": "need_weights",
+            "type": "boolean",
+            "label": {
+              "zh_CN": "是否返回注意力权重",
+              "en_US": "need_weights"
+            },
+            "default": false
+          },
+          {
+            "id": "weight_attr",
+            "type": "ParamAttr"
+          },
+          {
+            "id": "bias_attr",
+            "type": "ParamAttr"
+          }
+        ]
+      },
+      {
+        "id": "PReLU",
+        "mode": "nn",
+        "label": {
+          "en_US": "PReLU",
+          "zh_CN": "PReLU"
+        },
+        "properties": [
+          {
+            "id": "num_parameters",
+            "type": "number",
+            "default": 1,
+            "label": {
+              "en_US": "num_parameters",
+              "zh_CN": "可训练 weight 数量"
+            }
+          },
+          {
+            "id": "init",
+            "type": "number",
+            "default": 0.25,
+            "label": {
+              "zh_CN": "初始值",
+              "en_US": "init"
+            }
+          },
+          {
+            "id": "weight_attr",
+            "type": "ParamAttr",
+            "label": {
+              "zh_CN": "权重参数",
+              "en_US": "Weight attr"
+            }
+          },
+          {
+            "id": "data_format",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "NC",
+                "value": "NC"
+              },
+              {
+                "id": 1,
+                "label": "NCL",
+                "value": "NCL",
+                "default": true
+              }
+            ],
+            "label": {
+              "zh_CN": "数据格式",
+              "en_US": "Data format"
+            }
+          }
+        ]
+      },
+      {
+        "id": "Pad1D",
+        "mode": "nn",
+        "label": {
+          "en_US": "Pad1D",
+          "zh_CN": "Pad1D"
+        },
+        "properties": [
+          {
+            "id": "padding",
+            "type": "number",
+            "label": {
+              "en_US": "padding",
+              "zh_CN": "填充大小"
+            }
+          },
+          {
+            "id": "mode",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "constant",
+                "value": "constant",
+                "default": true
+              },
+              {
+                "id": 1,
+                "label": "reflect",
+                "value": "reflect"
+              },
+              {
+                "id": 2,
+                "label": "replicate",
+                "value": "replicate"
+              },
+              {
+                "id": 3,
+                "label": "circular",
+                "value": "circular"
+              }
+            ]
+          },
+          {
+            "id": "value",
+            "type": "number",
+            "label": {
+              "en_US": "value",
+              "zh_CN": "填充值"
+            }
+          },
+          {
+            "id": "data_format",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "NC",
+                "value": "NC"
+              },
+              {
+                "id": 1,
+                "label": "NCL",
+                "value": "NCL",
+                "default": true
+              }
+            ],
+            "label": {
+              "zh_CN": "数据格式",
+              "en_US": "Data format"
+            }
+          }
+        ]
+      },
+      {
+        "id": "Pad2D",
+        "mode": "nn",
+        "label": {
+          "en_US": "Pad2D",
+          "zh_CN": "Pad2D"
+        },
+        "properties": [
+          {
+            "id": "padding",
+            "type": "number",
+            "label": {
+              "en_US": "padding",
+              "zh_CN": "填充大小"
+            }
+          },
+          {
+            "id": "mode",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "constant",
+                "value": "constant",
+                "default": true
+              },
+              {
+                "id": 1,
+                "label": "reflect",
+                "value": "reflect"
+              },
+              {
+                "id": 2,
+                "label": "replicate",
+                "value": "replicate"
+              },
+              {
+                "id": 3,
+                "label": "circular",
+                "value": "circular"
+              }
+            ]
+          },
+          {
+            "id": "value",
+            "type": "number",
+            "label": {
+              "en_US": "value",
+              "zh_CN": "填充值"
+            }
+          },
+          {
+            "id": "data_format",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "NC",
+                "value": "NC"
+              },
+              {
+                "id": 1,
+                "label": "NCL",
+                "value": "NCL",
+                "default": true
+              }
+            ],
+            "label": {
+              "zh_CN": "数据格式",
+              "en_US": "Data format"
+            }
+          }
+        ]
+      },
+      {
+        "id": "Pad3D",
+        "mode": "nn",
+        "label": {
+          "en_US": "Pad3D",
+          "zh_CN": "Pad3D"
+        },
+        "properties": [
+          {
+            "id": "padding",
+            "type": "number",
+            "label": {
+              "en_US": "padding",
+              "zh_CN": "填充大小"
+            }
+          },
+          {
+            "id": "mode",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "constant",
+                "value": "constant",
+                "default": true
+              },
+              {
+                "id": 1,
+                "label": "reflect",
+                "value": "reflect"
+              },
+              {
+                "id": 2,
+                "label": "replicate",
+                "value": "replicate"
+              },
+              {
+                "id": 3,
+                "label": "circular",
+                "value": "circular"
+              }
+            ]
+          },
+          {
+            "id": "value",
+            "type": "number",
+            "label": {
+              "en_US": "value",
+              "zh_CN": "填充值"
+            }
+          },
+          {
+            "id": "data_format",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "NC",
+                "value": "NC"
+              },
+              {
+                "id": 1,
+                "label": "NCL",
+                "value": "NCL",
+                "default": true
+              }
+            ],
+            "label": {
+              "zh_CN": "数据格式",
+              "en_US": "Data format"
+            }
+          }
+        ]
+      },
+      {
+        "id": "PairwiseDistance",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "范数距离",
+          "en_US": "PairwiseDistance"
+        },
+        "properties": [
+          {
+            "id": "p",
+            "type": "number",
+            "default": 2,
+            "label": {
+              "en_US": "p",
+              "zh_CN": "p阶的范数"
+            }
+          },
+          {
+            "id": "epsilon",
+            "type": "number",
+            "label": {
+              "zh_CN": "epsilon",
+              "en_US": "epsilon"
+            },
+            "default": 0.00001
+          },
+          {
+            "id": "keep_dim",
+            "type": "boolean",
+            "label": {
+              "zh_CN": "是否保留输出 Tensor 减少的维度",
+              "en_US": "keep_dim"
+            }
+          }
+        ]
+      },
+      {
+        "id": "PixelShuffle",
+        "label": {
+          "zh_CN": "PixelShuffle",
+          "en_US": "PixelShuffle"
+        },
+        "mode": "nn",
+        "properties": [
+          {
+            "id": "upscale_factor",
+            "type": "number",
+            "label": {
+              "en_US": "upscale_factor",
+              "zh_CN": "上采样增大因子"
+            }
+          },
+          {
+            "id": "data_format",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "NCHW",
+                "value": "NCHW",
+                "default": true
+              },
+              {
+                "id": 1,
+                "label": "NHWC",
+                "value": "NHWC"
+              }
+            ],
+            "label": {
+              "zh_CN": "数据格式",
+              "en_US": "Data format"
+            }
+          }
+        ]
+      },
+      {
+        "id": "PixelUnshuffle",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "PixelUnshuffle",
+          "en_US": "PixelUnshuffle"
+        },
+        "properties": [
+          {
+            "id": "downscale_factor",
+            "type": "number",
+            "label": {
+              "zh_CN": "下采样因子",
+              "en_US": "downscale_factor"
+            }
+          },
+          {
+            "id": "data_format",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "NCHW",
+                "value": "NCHW",
+                "default": true
+              },
+              {
+                "id": 1,
+                "label": "NHWC",
+                "value": "NHWC"
+              }
+            ],
+            "label": {
+              "zh_CN": "数据格式",
+              "en_US": "Data format"
+            }
+          }
+        ]
+      },
+      {
+        "id": "PoissonNLLLoss",
+        "mode": "nn",
+        "label": {
+          "en_US": "PoissonNLLLoss",
+          "zh_CN": "PoissonNLL 损失函数"
+        },
+        "properties": [
+          {
+            "id": "log_input",
+            "type": "boolean",
+            "label": {
+              "zh_CN": "输入是否为对数函数映射后结果",
+              "en_US": "log_input"
+            },
+            "default": true
+          },
+          {
+            "id": "full",
+            "type": "boolean",
+            "label": {
+              "en_US": "full",
+              "zh_CN": "是否在损失计算中包括 Stirling 近似项"
+            },
+            "default": false
+          },
+          {
+            "id": "epsilon",
+            "type": "number",
+            "label": {
+              "en_US": "epsilon",
+              "zh_CN": "在 log_input 为 true 时使用的常数小量"
+            },
+            "default": 1e-8
+          },
+          {
+            "id": "reduction",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "none",
+                "value": "none"
+              },
+              {
+                "id": 1,
+                "label": "mean",
+                "value": "mean",
+                "default": true
+              },
+              {
+                "id": 2,
+                "label": "sum",
+                "value": "sum"
+              }
+            ],
+            "label": {
+              "en_US": "reduction",
+              "zh_CN": "计算方式"
+            }
+          }
+        ]
+      },
+      {
+        "id": "RNNTLoss",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "RNNTLoss 损失",
+          "en_US": "RNNTLoss"
+        },
+        "properties": [
+          {
+            "id": "blank",
+            "type": "number",
+            "default": 0,
+            "label": {
+              "zh_CN": "空格标记的 ID 值",
+              "en_US": "blank"
+            }
+          },
+          {
+            "id": "fastemit_lambda",
+            "type": "number",
+            "default": 0.001,
+            "label": {
+              "en_US": "fastemit_lambda",
+              "zh_CN": "FastEmit 的正则化参数"
+            }
+          },
+          {
+            "id": "reduction",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "none",
+                "value": "none"
+              },
+              {
+                "id": 1,
+                "label": "mean",
+                "value": "mean",
+                "default": true
+              },
+              {
+                "id": 2,
+                "label": "sum",
+                "value": "sum"
+              }
+            ],
+            "label": {
+              "en_US": "reduction",
+              "zh_CN": "计算方式"
+            }
+          }
+        ]
+      },
+      {
+        "id": "RReLU",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "RReLU 激活层",
+          "en_US": "RReLU"
+        },
+        "properties": [
+          {
+            "id": "padding",
+            "type": "number",
+            "label": {
+              "zh_CN": "padding",
+              "en_US": "padding"
+            }
+          },
+          {
+            "id": "mode",
+            "type": "enums",
+            "enums": [
+              {
+                "id": "constant",
+                "label": "constant",
+                "value": "constant",
+                "default": true
+              },
+              {
+                "id": "reflect",
+                "label": "reflect",
+                "value": "reflect"
+              },
+              {
+                "id": "replicate",
+                "label": "replicate",
+                "value": "replicate"
+              },
+              {
+                "id": "circular",
+                "label": "circular",
+                "value": "circular"
+              }
+            ]
+          },
+          {
+            "id": "value",
+            "type": "number",
+            "default": 0.0,
+            "label": {
+              "zh_CN": "value",
+              "en_US": "value"
+            }
+          },
+          {
+            "id": "data_format",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "value": "NCL",
+                "label": "NCL"
+              },
+              {
+                "id": 1,
+                "value": "NLC",
+                "label": "NLC"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "ReLU6",
+        "mode": "nn",
+        "label": {
+          "en_US": "ReLU6",
+          "zh_CN": "ReLU6"
+        },
+        "properties": []
+      },
+      {
+        "id": "SELU",
+        "mode": "nn",
+        "label": {
+          "en_US": "SELU",
+          "zh_CN": "SELU"
+        },
+        "properties": [
+          {
+            "id": "scale",
+            "type": "number",
+            "default": 1.0507009873554804934193349852946,
+            "label": {
+              "en_US": "scale",
+              "zh_CN": "scale"
+            }
+          },
+          {
+            "id": "alpha",
+            "type": "number",
+            "default": 1.6732632423543772848170429916717,
+            "label": {
+              "zh_CN": "alpha",
+              "en_US": "alpha"
+            }
+          }
+        ]
+      },
+      {
+        "id": "Sigmoid",
+        "mode": "nn",
+        "label": {
+          "en_US": "Sigmoid",
+          "zh_CN": "Sigmoid"
+        },
+        "properties": []
+      },
+      {
+        "id": "Silu",
+        "mode": "nn",
+        "label": {
+          "en_US": "Silu",
+          "zh_CN": "Silu"
+        },
+        "properties": []
+      },
+      {
+        "id": "SmoothL1Loss",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "SmoothL1Loss",
+          "en_US": "SmoothL1Loss"
+        },
+        "properties": [
+          {
+            "id": "reduction",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "none",
+                "value": "none"
+              },
+              {
+                "id": 1,
+                "label": "mean",
+                "value": "mean",
+                "default": true
+              },
+              {
+                "id": 2,
+                "label": "sum",
+                "value": "sum"
+              }
+            ],
+            "label": {
+              "en_US": "reduction",
+              "zh_CN": "计算方式"
+            }
+          },
+          {
+            "id": "delta",
+            "label": {
+              "en_US": "delta",
+              "zh_CN": "delta"
+            },
+            "default": 1.0,
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "id": "SoftMarginLoss",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "SoftMarginLoss",
+          "en_US": "SoftMarginLoss"
+        },
+        "properties": [
+          {
+            "id": "reduction",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "none",
+                "value": "none"
+              },
+              {
+                "id": 1,
+                "label": "mean",
+                "value": "mean",
+                "default": true
+              },
+              {
+                "id": 2,
+                "label": "sum",
+                "value": "sum"
+              }
+            ],
+            "label": {
+              "en_US": "reduction",
+              "zh_CN": "计算方式"
+            }
+          }
+        ]
+      },
+      {
+        "id": "Softmax2D",
+        "mode": "nn",
+        "label": {
+          "en_US": "Softmax2D",
+          "zh_CN": "Softmax2D"
+        },
+        "properties": []
+      },
+      {
+        "id": "Softmax",
+        "mode": "nn",
+        "label": {
+          "en_US": "Softmax",
+          "zh_CN": "Softmax 激活层"
+        },
+        "properties": [
+          {
+            "id": "axis",
+            "type": "number",
+            "default": -1,
+            "label": {
+              "zh_CN": "运算轴",
+              "en_US": "axis"
+            }
+          }
+        ]
+      },
+      {
+        "id": "Softplus",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "Softplus 激活层",
+          "en_US": "Softplus"
+        },
+        "properties": [
+          {
+            "id": "beta",
+            "type": "number",
+            "default": 1,
+            "label": {
+              "en_US": "beta",
+              "zh_CN": "beta"
+            }
+          },
+          {
+            "id": "threshold",
+            "type": "number",
+            "label": {
+              "zh_CN": "threshold",
+              "en_US": "threshold"
+            },
+            "default": 20
+          }
+        ]
+      },
+      {
+        "id": "Softshrink",
+        "label": {
+          "zh_CN": "Softshrink 激活层",
+          "en_US": "Softshrink"
+        },
+        "properties": [
+          {
+            "id": "threshold",
+            "label": {
+              "zh_CN": "threshold",
+              "en_US": "threshold"
+            },
+            "type": "number",
+            "default": 0.5
+          }
+        ],
+        "mode": "nn"
+      },
+      {
+        "id": "Softsign",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "Softsign 激活层",
+          "en_US": "Softsign"
+        },
+        "properties": []
+      },
+      {
+        "id": "Swish",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "Swish",
+          "en_US": "Swish"
+        },
+        "properties": []
+      },
+      {
+        "id": "SyncBatchNorm",
+        "mode": "nn",
+        "label": {
+          "en_US": "SyncBatchNorm",
+          "zh_CN": "SyncBatchNorm"
+        },
+        "properties": [
+          {
+            "id": "num_features",
+            "label": {
+              "zh_CN": "输入通道数",
+              "en_US": "Input tensor channel number"
+            },
+            "type": "number"
+          },
+          {
+            "id": "epsilon",
+            "type": "number",
+            "label": {
+              "zh_CN": "epsilon",
+              "en_US": "epsilon"
+            },
+            "default": 0.00001
+          },
+          {
+            "id": "momentum",
+            "type": "number",
+            "default": 0.9,
+            "label": {
+              "zh_CN": "momentum",
+              "en_US": "momentum"
+            }
+          },
+          {
+            "id": "weight_attr",
+            "type": "ParamAttr",
+            "label": {
+              "zh_CN": "权重参数",
+              "en_US": "Weight attr"
+            }
+          },
+          {
+            "id": "bias_attr",
+            "label": {
+              "zh_CN": "偏置参数",
+              "en_US": "Bias attr"
+            },
+            "type": "ParamAttr"
+          }
+        ]
+      },
+      {
+        "id": "Hardtanh",
+        "mode": "nn",
+        "label": {
+          "en_US": "Hardtanh",
+          "zh_CN": "Hardtanh 激活层"
+        },
+        "properties": [
+          {
+            "id": "min",
+            "type": "number",
+            "default": -1,
+            "label": {
+              "en_US": "min",
+              "zh_CN": "最小值"
+            }
+          },
+          {
+            "id": "max",
+            "type": "number",
+            "default": 1,
+            "label": {
+              "zh_CN": "最大值",
+              "en_US": "最小值"
+            }
+          }
+        ]
+      },
+      {
+        "id": "Tanhshrink",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "Tanhshrink 激活层",
+          "en_US": "Tanhshrink"
+        },
+        "properties": []
+      },
+      {
+        "id": "ThresholdedReLU",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "ThresholdedReLU 激活层",
+          "en_US": "ThresholdedReLU"
+        },
+        "properties": [
+          {
+            "id": "threshold",
+            "type": "number",
+            "default": 1.0,
+            "label": {
+              "zh_CN": "threshold",
+              "en_US": "threshold"
+            }
+          }
+        ]
+      },
+      {
+        "id": "TransformerDecoderLayer",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "Transformer 解码器层",
+          "en_US": "TransformerDecoderLayer"
+        },
+        "properties": [
+          {
+            "id": "d_model",
+            "type": "number",
+            "label": {
+              "zh_CN": "输入输出维度",
+              "en_US": "d_model"
+            }
+          },
+          {
+            "id": "nhead",
+            "type": "number",
+            "label": {
+              "zh_CN": "多头注意力的head数",
+              "en_US": "nhead"
+            }
+          },
+          {
+            "id": "dim_feedforward",
+            "type": "number",
+            "label": {
+              "en_US": "dim_feedforward",
+              "zh_CN": "前馈神经网络中的隐藏层大小"
+            }
+          },
+          {
+            "id": "dropout",
+            "type": "number",
+            "default": 0.1,
+            "label": {
+              "en_US": "dropout",
+              "zh_CN": "三个字层的输出进行处理的dropout值"
+            }
+          },
+          {
+            "id": "activation",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "value": "relu",
+                "label": "relu"
+              }
+            ],
+            "label": {
+              "zh_CN": "前馈神经网络的激活函数",
+              "en_US": "activation"
+            }
+          },
+          {
+            "id": "attn_dropout",
+            "type": "number",
+            "label": {
+              "en_US": "attn_dropout",
+              "zh_CN": "随机失活率"
+            }
+          },
+          {
+            "id": "act_dropout",
+            "type": "number",
+            "label": {
+              "zh_CN": "前馈神经网络的激活函数后的 dropout",
+              "en_US": "act_dropout"
+            }
+          },
+          {
+            "id": "normalize_before",
+            "default": false,
+            "type": "boolean",
+            "label": {
+              "zh_CN": "每个子层的输入输出的处理",
+              "en_US": "normalize_before"
+            }
+          },
+          {
+            "id": "weight_attr",
+            "type": "ParamAttr",
+            "label": {
+              "zh_CN": "权重参数",
+              "en_US": "Weight attr"
+            }
+          },
+          {
+            "id": "bias_attr",
+            "label": {
+              "zh_CN": "偏置参数",
+              "en_US": "Bias attr"
+            },
+            "type": "ParamAttr"
+          },
+          {
+            "id": "layer_norm_eps",
+            "type": "number",
+            "default": 0.0001,
+            "label": {
+              "en_US": "layer_norm_eps",
+              "zh_CN": "transformer decoder 中 layer normalization 层的 eps 参数值"
+            }
+          }
+        ]
+      },
+      {
+        "id": "TransformerEncoderLayer",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "Transformer 编码器层",
+          "en_US": "TransformerEncoderLayer"
+        },
+        "properties": [
+          {
+            "id": "d_model",
+            "type": "number",
+            "label": {
+              "zh_CN": "输入输出维度",
+              "en_US": "d_model"
+            }
+          },
+          {
+            "id": "nhead",
+            "type": "number",
+            "label": {
+              "zh_CN": "多头注意力的head数",
+              "en_US": "nhead"
+            }
+          },
+          {
+            "id": "dim_feedforward",
+            "type": "number",
+            "label": {
+              "en_US": "dim_feedforward",
+              "zh_CN": "前馈神经网络中的隐藏层大小"
+            }
+          },
+          {
+            "id": "dropout",
+            "type": "number",
+            "default": 0.1,
+            "label": {
+              "en_US": "dropout",
+              "zh_CN": "三个字层的输出进行处理的dropout值"
+            }
+          },
+          {
+            "id": "activation",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "value": "relu",
+                "label": "relu"
+              }
+            ],
+            "label": {
+              "zh_CN": "前馈神经网络的激活函数",
+              "en_US": "activation"
+            }
+          },
+          {
+            "id": "attn_dropout",
+            "type": "number",
+            "label": {
+              "en_US": "attn_dropout",
+              "zh_CN": "随机失活率"
+            }
+          },
+          {
+            "id": "act_dropout",
+            "type": "number",
+            "label": {
+              "zh_CN": "前馈神经网络的激活函数后的 dropout",
+              "en_US": "act_dropout"
+            }
+          },
+          {
+            "id": "normalize_before",
+            "default": false,
+            "type": "boolean",
+            "label": {
+              "zh_CN": "每个子层的输入输出的处理",
+              "en_US": "normalize_before"
+            }
+          },
+          {
+            "id": "weight_attr",
+            "type": "ParamAttr",
+            "label": {
+              "zh_CN": "权重参数",
+              "en_US": "Weight attr"
+            }
+          },
+          {
+            "id": "bias_attr",
+            "label": {
+              "zh_CN": "偏置参数",
+              "en_US": "Bias attr"
+            },
+            "type": "ParamAttr"
+          }
+        ]
+      },
+      {
+        "id": "Transformer",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "Transformer 模型",
+          "en_US": "Transformer"
+        },
+        "properties": [
+          {
+            "id": "d_model",
+            "type": "number",
+            "label": {
+              "zh_CN": "输入输出维度",
+              "en_US": "d_model"
+            }
+          },
+          {
+            "id": "nhead",
+            "type": "number",
+            "label": {
+              "zh_CN": "多头注意力的head数",
+              "en_US": "nhead"
+            }
+          },
+          {
+            "id": "dim_feedforward",
+            "type": "number",
+            "label": {
+              "en_US": "dim_feedforward",
+              "zh_CN": "前馈神经网络中的隐藏层大小"
+            }
+          },
+          {
+            "id": "dropout",
+            "type": "number",
+            "default": 0.1,
+            "label": {
+              "en_US": "dropout",
+              "zh_CN": "三个字层的输出进行处理的dropout值"
+            }
+          },
+          {
+            "id": "activation",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "value": "relu",
+                "label": "relu"
+              }
+            ],
+            "label": {
+              "zh_CN": "前馈神经网络的激活函数",
+              "en_US": "activation"
+            }
+          },
+          {
+            "id": "attn_dropout",
+            "type": "number",
+            "label": {
+              "en_US": "attn_dropout",
+              "zh_CN": "随机失活率"
+            }
+          },
+          {
+            "id": "act_dropout",
+            "type": "number",
+            "label": {
+              "zh_CN": "前馈神经网络的激活函数后的 dropout",
+              "en_US": "act_dropout"
+            }
+          },
+          {
+            "id": "normalize_before",
+            "default": false,
+            "type": "boolean",
+            "label": {
+              "zh_CN": "每个子层的输入输出的处理",
+              "en_US": "normalize_before"
+            }
+          },
+          {
+            "id": "weight_attr",
+            "type": "ParamAttr",
+            "label": {
+              "zh_CN": "权重参数",
+              "en_US": "Weight attr"
+            }
+          },
+          {
+            "id": "bias_attr",
+            "label": {
+              "zh_CN": "偏置参数",
+              "en_US": "Bias attr"
+            },
+            "type": "ParamAttr"
+          }
+        ]
+      },
+      {
+        "id": "TripletMarginLoss",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "TripletMarginLoss",
+          "en_US": "TripletMarginLoss"
+        },
+        "properties": [
+          {
+            "id": "margin",
+            "type": "number",
+            "default": 1,
+            "label": {
+              "zh_CN": "间距",
+              "en_US": "margin"
+            }
+          },
+          {
+            "id": "p",
+            "label": {
+              "zh_CN": "范数",
+              "en_US": "p"
+            },
+            "type": "number",
+            "default": 2
+          },
+          {
+            "id": "epsilon",
+            "type": "number",
+            "default": 1e-6,
+            "label": {
+              "zh_CN": "防止除数为0",
+              "en_US": "epsilon"
+            }
+          },
+          {
+            "id": "swap",
+            "label": {
+              "zh_CN": "是否交换",
+              "en_US": "swap"
+            },
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "id": "reduction",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "none",
+                "value": "none"
+              },
+              {
+                "id": 1,
+                "label": "mean",
+                "value": "mean",
+                "default": true
+              },
+              {
+                "id": 2,
+                "label": "sum",
+                "value": "sum"
+              }
+            ],
+            "label": {
+              "en_US": "reduction",
+              "zh_CN": "计算方式"
+            }
+          }
+        ]
+      },
+      {
+        "id": "TripletMarginLoss",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "TripletMarginLoss",
+          "en_US": "TripletMarginLoss"
+        },
+        "properties": [
+          {
+            "id": "distance_function",
+            "type": "number",
+            "label": {
+              "zh_CN": "欧氏距离范数",
+              "en_US": "distance_function"
+            }
+          },
+          {
+            "id": "margin",
+            "type": "number",
+            "default": 1,
+            "label": {
+              "zh_CN": "间距",
+              "en_US": "margin"
+            }
+          },
+          {
+            "id": "swap",
+            "label": {
+              "zh_CN": "是否交换",
+              "en_US": "swap"
+            },
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "id": "reduction",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "label": "none",
+                "value": "none"
+              },
+              {
+                "id": 1,
+                "label": "mean",
+                "value": "mean",
+                "default": true
+              },
+              {
+                "id": 2,
+                "label": "sum",
+                "value": "sum"
+              }
+            ],
+            "label": {
+              "en_US": "reduction",
+              "zh_CN": "计算方式"
+            }
+          }
+        ]
+      },
+      {
+        "id": "Unfold",
+        "mode": "nn",
+        "label": {
+          "en_US": "Unfold",
+          "zh_CN": "Unfold"
+        },
+        "properties": [
+          {
+            "id": "kernel_sizes",
+            "type": "number",
+            "label": {
+              "zh_CN": "卷积核的尺寸",
+              "en_US": "kernel_sizes"
+            }
+          },
+          {
+            "id": "dilations",
+            "type": "number",
+            "default": 1,
+            "label": {
+              "zh_CN": "卷积膨胀",
+              "en_US": "dilations"
+            }
+          },
+          {
+            "id": "paddings",
+            "type": "number",
+            "default": 0,
+            "label": {
+              "en_US": "paddings",
+              "zh_CN": "扩张"
+            }
+          },
+          {
+            "id": "strides",
+            "type": "number",
+            "default": 1,
+            "label": {
+              "zh_CN": "卷积步长",
+              "en_US": "strides"
+            }
+          }
+        ]
+      },
+      {
+        "id": "UpsamplingBilinear2D",
+        "mode": "nn",
+        "label": {
+          "en_US": "UpsamplingBilinear2D",
+          "zh_CN": "UpsamplingBilinear2D"
+        },
+        "properties": [
+          {
+            "id": "size",
+            "type": "number",
+            "label": {
+              "en_US": "size",
+              "zh_CN": "大小"
+            }
+          },
+          {
+            "id": "scale_factor",
+            "type": "number",
+            "label": {
+              "zh_CN": "输入的高度或宽度的乘数因子",
+              "en_US": "scale factor"
+            }
+          },
+          {
+            "id": "data_format",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "value": "NCHW",
+                "label": "NCHW",
+                "default": true
+              },
+              {
+                "id": 1,
+                "value": "NHWC",
+                "label": "NHWC"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "UpsamplingNearest2D",
+        "mode": "nn",
+        "label": {
+          "en_US": "UpsamplingNearest2D",
+          "zh_CN": "UpsamplingNearest2D"
+        },
+        "properties": [
+          {
+            "id": "size",
+            "type": "number",
+            "label": {
+              "en_US": "size",
+              "zh_CN": "大小"
+            }
+          },
+          {
+            "id": "scale_factor",
+            "type": "number",
+            "label": {
+              "zh_CN": "输入的高度或宽度的乘数因子",
+              "en_US": "scale factor"
+            }
+          },
+          {
+            "id": "data_format",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "value": "NCHW",
+                "label": "NCHW",
+                "default": true
+              },
+              {
+                "id": 1,
+                "value": "NHWC",
+                "label": "NHWC"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "ZeroPad2D",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "零填充",
+          "en_US": "ZeroPad2D"
+        },
+        "properties": [
+          {
+            "id": "padding",
+            "type": "number",
+            "label": {
+              "zh_CN": "填充大小",
+              "en_US": "size of padding"
+            }
+          },
+          {
+            "id": "data_format",
+            "type": "enums",
+            "enums": [
+              {
+                "id": 0,
+                "value": "NCHW",
+                "label": "NCHW",
+                "default": true
+              },
+              {
+                "id": 1,
+                "value": "NHWC",
+                "label": "NHWC"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "Upsample",
+        "label": {
+          "en_US": "Upsample",
+          "zh_CN": "上采样"
+        },
+        "mode": "nn",
+        "properties": [
+          {
+            "id": "size",
+            "type": "list",
+            "label": {
+              "zh_CN": "大小",
+              "en_US": "size"
+            },
+            "default": [
+              0,
+              0
+            ],
+            "items": "number"
+          },
+          {
+            "id": "scale_factor",
+            "type": "number",
+            "label": {
+              "en_US": "scale_factor",
+              "zh_CN": "缩放因子"
+            }
+          },
+          {
+            "id": "mode",
+            "type": "enums",
+            "label": {
+              "zh_CN": "采样方法",
+              "en_US": "mode"
+            },
+            "enums": [
+              {
+                "id": "bilinear",
+                "value": "bilinear",
+                "label": "bilinear"
+              },
+              {
+                "id": "trilinear",
+                "value": "trilinear",
+                "label": "trilinear"
+              },
+              {
+                "id": "nearest",
+                "value": "nearest",
+                "label": "nearest",
+                "default": true
+              },
+              {
+                "id": "bicubic",
+                "value": "bicubic",
+                "label": "bicubic"
+              },
+              {
+                "id": "linear",
+                "value": "linear",
+                "label": "linear"
+              },
+              {
+                "id": "area",
+                "value": "area",
+                "label": "area"
+              }
+            ]
+          },
+          {
+            "id": "align_corners",
+            "type": "boolean",
+            "label": {
+              "en_US": "align_corners",
+              "zh_CN": "对齐"
+            },
+            "default": false
+          },
+          {
+            "id": "align_mode",
+            "type": "number",
+            "default": 0,
+            "label": {
+              "en_US": "align_mode",
+              "zh_CN": "双线性插值"
+            }
+          },
+          {
+            "id": "data_format",
+            "type": "enums",
+            "label": {
+              "en_US": "data format",
+              "zh_CN": "数据格式"
+            },
+            "enums": [
+              {
+                "id": "NCW",
+                "value": "NCW",
+                "label": "NCW"
+              },
+              {
+                "id": "NWC",
+                "value": "NWC",
+                "label": "NWC"
+              },
+              {
+                "id": "NCHW",
+                "value": "NCHW",
+                "label": "NCHW",
+                "default": true
+              },
+              {
+                "id": "NHWC",
+                "value": "NHWC",
+                "label": "NHWC"
+              },
+              {
+                "id": "NCDHW",
+                "value": "NCDHW",
+                "label": "NCDHW"
+              },
+              {
+                "id": "NDHWC",
+                "value": "NDHWC",
+                "label": "NDHWC"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "SpectralNorm",
+        "mode": "nn",
+        "label": {
+          "en_US": "SpectralNorm",
+          "zh_CN": "SpectralNorm"
+        },
+        "properties": [
+          {
+            "id": "weight_shape",
+            "type": "list",
+            "items": "number",
+            "label": {
+              "zh_CN": "权重参数的shape",
+              "en_US": "shape of weight attr"
+            }
+          },
+          {
+            "id": "dim",
+            "type": "number",
+            "default": 0,
+            "label": {
+              "zh_CN": "维度索引",
+              "en_US": "dim"
+            }
+          },
+          {
+            "id": "power_iters",
+            "default": 0,
+            "type": "number",
+            "label": {
+              "en_US": "power iters",
+              "zh_CN": "用于计算的 SpectralNorm 功率迭代次数"
+            }
+          },
+          {
+            "id": "eps",
+            "type": "number",
+            "default": 1e-12,
+            "label": {
+              "zh_CN": "用于保证计算规范中的数值稳定性",
+              "en_US": "eps"
+            }
+          }
+        ]
+      },
+      {
+        "id": "Unflatten",
+        "mode": "nn",
+        "label": {
+          "zh_CN": "Unflatten",
+          "en_US": "Unflatten"
+        },
+        "properties": [
+          {
+            "id": "axis",
+            "type": "number",
+            "label": {
+              "en_US": "axis",
+              "zh_CN": "要展开维度的轴"
+            }
+          },
+          {
+            "id": "shape",
+            "type": "list",
+            "items": "number",
+            "label": {
+              "en_US": "shape",
+              "zh_CN": "展开的shape"
+            }
+          }
+        ]
+      }
+    ],
+    "layer": []
+  }
+}

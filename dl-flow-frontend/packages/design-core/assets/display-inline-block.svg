@@ -1,0 +1,14 @@
+<svg
+  data-icon="DisplayInlineBlock"
+  aria-hidden="true"
+  focusable="false"
+  width="16"
+  height="16"
+  viewBox="0 0 16 16"
+  version="1.1"
+  xmlns="http://www.w3.org/2000/svg"
+  style="display: block"
+>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M4 4h8v8H4V4zm6 2H6v4h4V6z"></path>
+  <path opacity=".6" fill-rule="evenodd" clip-rule="evenodd" d="M1 2h1v12H1V2zm14 0h-1v12h1V2z"></path>
+</svg>

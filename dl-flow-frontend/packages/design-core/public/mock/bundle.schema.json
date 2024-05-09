@@ -1,0 +1,268 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "bundle",
+  "type": "object",
+  "definitions": {
+    "properties": {
+      "type": "object",
+      "properties": {
+        "order": {
+          "type": "number"
+        },
+        "id": {
+          "description": "该设置的唯一ID",
+          "type": "string"
+        },
+        "label": {
+          "description": "该设置的label",
+          "$ref": "#/definitions/label"
+        },
+        "type": {
+          "description": "该设置的数据类型",
+          "type": "string",
+          "enum": ["string", "number", "boolean", "enums", "ParamAttr", "list"]
+        },
+        "required": {
+          "description": "该设置是否是必选",
+          "type": "boolean"
+        },
+        "default": {
+          "description": "该设置的默认值",
+          "type": ["string", "number", "null", "boolean", "array"]
+        },
+        "enums": {
+          "description": "该设置是否为select, 如果type为enum, 则该选项为必选",
+          "$ref": "#/definitions/enums"
+        },
+        "items": {
+          "type": "string",
+          "enum": ["string", "number", "boolean"],
+          "description": "该项用于显式指定list中的数据结构, 如果type不为list, 该项则不是必选"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "enums"
+              }
+            }
+          },
+          "then": {
+            "required": ["enums"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type":{
+                "const": "list"
+              }
+            }
+          },
+          "then": {
+            "required": ["items"]
+          }
+        }
+      ]
+    },
+    "enums": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "该选项的id",
+            "type": ["number", "string"]
+          },
+          "label": {
+            "description": "该选项的显示名称",
+            "type": "string"
+          },
+          "value": {
+            "description": "该选项的数值",
+            "type": "string"
+          },
+          "default": {
+            "description": "是否默认选择",
+            "type": "boolean"
+          }
+        }
+      },
+      "required": ["id", "label", "value"]
+    },
+    "label": {
+      "type": "object",
+      "properties": {
+        "zh_CN": {
+          "type": "string",
+          "default": ""
+        },
+        "en_US": {
+          "type": "string",
+          "default": ""
+        }
+      },
+      "required": ["zh_CN", "en_US"]
+    },
+    "layer": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": ["string", "number"],
+            "description": "Layer的全局唯一ID"
+          },
+          "label": {
+            "$ref": "#/definitions/label",
+            "description": "Layer的label"
+          },
+          "code": {
+            "type": "string"
+          },
+          "codeAst": {
+            "$comment": "记录AST信息, 前端负责, 因为要动态插槽",
+            "type": "object",
+            "properties": {}
+          },
+          "clazz": {
+            "$comment": "一个Layer理论上可以有多个Class,但传入进Seq的时候只能有一个, 这里提供一个clazz的选项, 该选项应该是codeAST中的一个合法的class",
+            "description": "一个Layer理论上可以有多个Class,但传入进Seq的时候只能有一个, 这里提供一个clazz的选项, 该选项应该是codeAST中的一个合法的class",
+            "type": "string"
+          },
+          "properties": {
+            "$comment": "从codeAST中获取的properties信息, 对应的是python中__init__中的参数, 需要有序",
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/properties"
+            },
+            "description": "转码时会将该properties作为参数带入"
+          }
+        },
+        "required": ["id", "label", "code"]
+      }
+    },
+    "Options": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "$ref": "#/definitions/label"
+        },
+        "nnName": {
+          "type": "string"
+        },
+        "desc": {
+          "type": "string"
+        },
+        "nn": {
+          "type": "boolean"
+        },
+        "mode": {
+          "type": "string",
+          "enum": ["nn", "layer", "backbone", "fn"]
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/properties"
+          }
+        }
+      },
+      "required": ["*"]
+    },
+    "material": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "$ref": "#/definitions/label"
+        },
+        "id": {
+          "type": "string"
+        },
+        "nnName": {
+          "description": "会在日后的版本移除该属性",
+          "type": "string"
+        },
+        "desc": {
+          "type": "string",
+          "description": "该物料的介绍"
+        },
+        "nn":{
+          "description": "会在日后的版本移除该属性",
+          "type": "boolean"
+        },
+        "mode": {
+          "type": "string"
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/properties"
+          }
+        }
+      },
+      "required": ["id", "label", "mode", "properties"]
+    },
+    "materials": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/material"
+      }
+    }
+  },
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "layer": {
+          "description": "自定义层信息",
+          "$ref": "#/definitions/layer"
+        },
+        "materials": {
+          "description": "物料信息",
+          "$ref": "#/definitions/materials"
+        },
+        "types": {
+          "description": "第三方类型",
+          "type": "object",
+          "patternProperties": {
+            ".*": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "label": {
+                    "$ref": "#/definitions/label"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "default": {
+                    "type": ["string", "number", "boolean", "object", "null"]
+                  },
+                  "enums": {
+                    "$ref": "#/definitions/enums"
+                  }
+                },
+                "if": {
+                  "properties": {
+                    "type": { "const": "enums" }
+                  }
+                },
+                "then": {
+                  "required": ["enums"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": ["layer", "materials"]
+    }
+  }
+}

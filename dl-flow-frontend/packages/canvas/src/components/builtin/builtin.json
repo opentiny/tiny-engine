@@ -1,0 +1,73 @@
+{
+  "data": {
+    "materials": [
+      {
+        "label": {
+          "zhCN": "1D 卷积神经网络",
+          "enUS": "Conv 1D"
+        },
+        "nnName": "Conv1D",
+        "desc": "一维卷积层",
+        "nn": true,
+        "properties": [
+          {
+            "zhCN": "输入通道数",
+            "enUS": "in_channels",
+            "type": "number"
+          },
+          {
+            "zhCN": "输出通道数",
+            "enus": "out_channels",
+            "type": "number"
+          },
+          {
+            "zhCN": "卷积核大小",
+            "enUS": "kernal_size",
+            "type": "number"
+          },
+          {
+            "zhCN": "步长",
+            "enUS": "stride",
+            "type": "number"
+          },
+          {
+            "zhCN": "空洞大小",
+            "enUS": "dilation",
+            "type": "number"
+          },
+          {
+            "zhCN": "组数",
+            "enUS": "groups",
+            "type": "number"
+          },
+          {
+            "zhCN": "填充模式",
+            "enUS": "padding_mode",
+            "type": "enums",
+            "data": [
+              { "id": 1, "label": "zeros", "value": "zeros", "default": true },
+              { "id": 2, "label": "reflect", "value": "reflect" },
+              { "id": 3, "label": "replicate", "value": "replicate" },
+              { "id": 4, "label": "circular", "value": "circular" }
+            ]
+          },
+          {
+            "zhCN": "权重参数",
+            "enUS": "weight_attr",
+            "type": "ParamAttr"
+          },
+          {
+            "zhCN": "偏置参数",
+            "enUS": "bias_attr",
+            "type": "ParamAttr"
+          },
+          {
+            "zhCN": "数据格式",
+            "enUS": "data_format",
+            "type": "string"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,1524 @@
+{
+  "meta": {
+    "start": "b0f69335-4b2a-4e91-b774-847f18533f28",
+    "end": "e26f3956-fea8-4f81-9b15-6fe1cd4790e2"
+  },
+  "payload": {
+    "cells": [
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "6a320cbe-f9dd-4f28-b4dd-2edc908b0e6f",
+        "zIndex": -1,
+        "source": {
+          "cell": "b0f69335-4b2a-4e91-b774-847f18533f28",
+          "port": "out"
+        },
+        "target": {
+          "cell": "0d125a6a-c126-40b2-b8fb-04acfc9f18ee",
+          "port": "in"
+        }
+      },
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "2b094e64-696c-4095-a85c-f0ef2a21f8b8",
+        "zIndex": -1,
+        "source": {
+          "cell": "0d125a6a-c126-40b2-b8fb-04acfc9f18ee",
+          "port": "out"
+        },
+        "target": {
+          "cell": "5c317b1e-4ff2-4bf6-8636-aa5d523101d1",
+          "port": "in"
+        }
+      },
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "fec1dd68-f34d-4efa-aaf9-f81287eaa159",
+        "zIndex": -1,
+        "source": {
+          "cell": "5c317b1e-4ff2-4bf6-8636-aa5d523101d1",
+          "port": "out"
+        },
+        "target": {
+          "cell": "f2e4e734-2f5f-4a49-be37-854012fce6cc",
+          "port": "in"
+        }
+      },
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "7faf88ac-736a-4f38-a4b0-b21d30e593f5",
+        "zIndex": -1,
+        "source": {
+          "cell": "f2e4e734-2f5f-4a49-be37-854012fce6cc",
+          "port": "out"
+        },
+        "target": {
+          "cell": "fb7920f1-fb11-4ac3-b59f-6b47b6fdd4ec",
+          "port": "in"
+        }
+      },
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "f7097353-134e-4440-903c-3b6ea61b7085",
+        "zIndex": -1,
+        "source": {
+          "cell": "fb7920f1-fb11-4ac3-b59f-6b47b6fdd4ec",
+          "port": "out"
+        },
+        "target": {
+          "cell": "4e566507-bbcf-4b7c-8efc-b7466ad57312",
+          "port": "in"
+        }
+      },
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "0259c115-41d6-4d98-bd69-1b2e8d03f746",
+        "zIndex": -1,
+        "source": {
+          "cell": "4e566507-bbcf-4b7c-8efc-b7466ad57312",
+          "port": "out"
+        },
+        "target": {
+          "cell": "19ff38f1-26da-4e73-b296-b8e10501574e",
+          "port": "in"
+        }
+      },
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "421789b8-267d-47d2-98c8-b121c03b2854",
+        "zIndex": -1,
+        "source": {
+          "cell": "19ff38f1-26da-4e73-b296-b8e10501574e",
+          "port": "out"
+        },
+        "target": {
+          "cell": "597e8829-e0b4-44e9-b26d-9f2a708a5c94",
+          "port": "in"
+        }
+      },
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "e1e890ad-7673-4188-861e-86b471f59ccd",
+        "zIndex": -1,
+        "source": {
+          "cell": "597e8829-e0b4-44e9-b26d-9f2a708a5c94",
+          "port": "out"
+        },
+        "target": {
+          "cell": "534e08e2-3e9e-4e7f-8d84-06fb3da87452",
+          "port": "in"
+        }
+      },
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "b808c035-bea3-4e45-b450-40b93ca39ba0",
+        "zIndex": -1,
+        "source": {
+          "cell": "534e08e2-3e9e-4e7f-8d84-06fb3da87452",
+          "port": "out"
+        },
+        "target": {
+          "cell": "e26f3956-fea8-4f81-9b15-6fe1cd4790e2",
+          "port": "in"
+        }
+      },
+      {
+        "position": {
+          "x": 10,
+          "y": -90
+        },
+        "size": {
+          "width": 112,
+          "height": 48
+        },
+        "view": "vue-shape-view",
+        "shape": "dag-node",
+        "ports": {
+          "groups": {
+            "top": {
+              "position": "top",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            },
+            "bottom": {
+              "position": "bottom",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            }
+          },
+          "items": [
+            {
+              "id": "in",
+              "group": "top"
+            },
+            {
+              "id": "out",
+              "group": "bottom"
+            }
+          ]
+        },
+        "id": "b0f69335-4b2a-4e91-b774-847f18533f28",
+        "data": {
+          "_id": "661632e009b6b04d369ce9d9",
+          "label": {
+            "zh_CN": "2D 卷积神经网络",
+            "en_US": "Conv 2D"
+          },
+          "id": "Conv2D",
+          "desc": "二维卷积层",
+          "nn": true,
+          "properties": [
+            {
+              "id": "in_channels",
+              "label": {
+                "zh_CN": "输入通道数",
+                "en_US": "in_channels"
+              },
+              "type": "number",
+              "required": true,
+              "default": 255,
+              "data": 1
+            },
+            {
+              "id": "out_channels",
+              "label": {
+                "zh_CN": "输出通道数",
+                "en_US": "out_channels"
+              },
+              "type": "number",
+              "required": true,
+              "default": 255,
+              "data": 6
+            },
+            {
+              "id": "kernel_size",
+              "label": {
+                "zh_CN": "卷积核大小",
+                "en_US": "kernel_size"
+              },
+              "type": "number",
+              "required": true,
+              "default": 3,
+              "data": 3
+            },
+            {
+              "id": "stride",
+              "label": {
+                "zh_CN": "步长",
+                "en_US": "stride"
+              },
+              "type": "number",
+              "required": true,
+              "default": 1,
+              "data": 1
+            },
+            {
+              "id": "dilation",
+              "label": {
+                "zh_CN": "空洞大小",
+                "en_US": "dilation"
+              },
+              "type": "number",
+              "required": true,
+              "default": 0,
+              "data": 0
+            },
+            {
+              "id": "groups",
+              "label": {
+                "zh_CN": "组数",
+                "en_US": "groups"
+              },
+              "type": "number",
+              "required": true,
+              "default": 0,
+              "data": 0
+            },
+            {
+              "id": "padding",
+              "label": {
+                "zh_CN": "填充",
+                "en_US": "padding"
+              },
+              "type": "number",
+              "data": 1
+            },
+            {
+              "id": "padding_mode",
+              "label": {
+                "zh_CN": "填充模式",
+                "en_US": "padding_mode"
+              },
+              "type": "enums",
+              "enums": [
+                {
+                  "id": 1,
+                  "label": "zeros",
+                  "value": "\"zeros\"",
+                  "default": true
+                },
+                {
+                  "id": 2,
+                  "label": "reflect",
+                  "value": "\"reflect\""
+                },
+                {
+                  "id": 3,
+                  "label": "replicate",
+                  "value": "\"replicate\""
+                },
+                {
+                  "id": 4,
+                  "label": "circular",
+                  "value": "\"circular\""
+                }
+              ],
+              "required": true,
+              "data": "\"zeros\""
+            },
+            {
+              "id": "weight_attr",
+              "label": {
+                "zh_CN": "权重参数",
+                "en_US": "weight_attr"
+              },
+              "type": "ParamAttr",
+              "data": {
+                "name": "",
+                "learning_rate": 1,
+                "trainable": true,
+                "do_model_average": true,
+                "need_clip": true
+              }
+            },
+            {
+              "id": "bias_attr",
+              "label": {
+                "zh_CN": "偏置参数",
+                "en_US": "bias_attr"
+              },
+              "type": "ParamAttr",
+              "data": {
+                "name": "",
+                "learning_rate": 1,
+                "trainable": true,
+                "do_model_average": true,
+                "need_clip": true
+              }
+            },
+            {
+              "id": "data_format",
+              "label": {
+                "zh_CN": "数据格式",
+                "en_US": "data_format"
+              },
+              "type": "string",
+              "required": true,
+              "data": 0
+            }
+          ],
+          "mode": "nn",
+          "__v": 0
+        },
+        "zIndex": 1
+      },
+      {
+        "position": {
+          "x": 10,
+          "y": 10
+        },
+        "size": {
+          "width": 110,
+          "height": 32
+        },
+        "view": "vue-shape-view",
+        "shape": "dag-node",
+        "ports": {
+          "groups": {
+            "top": {
+              "position": "top",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            },
+            "bottom": {
+              "position": "bottom",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            }
+          },
+          "items": [
+            {
+              "id": "in",
+              "group": "top"
+            },
+            {
+              "id": "out",
+              "group": "bottom"
+            }
+          ]
+        },
+        "id": "0d125a6a-c126-40b2-b8fb-04acfc9f18ee",
+        "data": {
+          "_id": "661632e009b6b04d369ce9d7",
+          "label": {
+            "zh_CN": "ReLU",
+            "en_US": "ReLU"
+          },
+          "id": "ReLU",
+          "properties": [],
+          "mode": "nn",
+          "__v": 0
+        },
+        "zIndex": 2
+      },
+      {
+        "position": {
+          "x": 10,
+          "y": 100
+        },
+        "size": {
+          "width": 110,
+          "height": 32
+        },
+        "view": "vue-shape-view",
+        "shape": "dag-node",
+        "ports": {
+          "groups": {
+            "top": {
+              "position": "top",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            },
+            "bottom": {
+              "position": "bottom",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            }
+          },
+          "items": [
+            {
+              "id": "in",
+              "group": "top"
+            },
+            {
+              "id": "out",
+              "group": "bottom"
+            }
+          ]
+        },
+        "id": "5c317b1e-4ff2-4bf6-8636-aa5d523101d1",
+        "data": {
+          "_id": "661632e009b6b04d369ce9cf",
+          "label": {
+            "en_US": "MaxPool2D",
+            "zh_CN": "2D 最大值池化"
+          },
+          "id": "MaxPool2D",
+          "properties": [
+            {
+              "id": "kernel_size",
+              "type": "number",
+              "label": {
+                "zh_CN": "池化核的尺寸大小",
+                "en_US": "kernel_size"
+              },
+              "data": 2
+            },
+            {
+              "id": "stride",
+              "type": "number",
+              "label": {
+                "zh_CN": "池化操作步长",
+                "en_US": "stride"
+              },
+              "data": 2
+            }
+          ],
+          "mode": "nn",
+          "__v": 0
+        },
+        "zIndex": 3
+      },
+      {
+        "position": {
+          "x": 10,
+          "y": 180
+        },
+        "size": {
+          "width": 112,
+          "height": 48
+        },
+        "view": "vue-shape-view",
+        "shape": "dag-node",
+        "ports": {
+          "groups": {
+            "top": {
+              "position": "top",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            },
+            "bottom": {
+              "position": "bottom",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            }
+          },
+          "items": [
+            {
+              "id": "in",
+              "group": "top"
+            },
+            {
+              "id": "out",
+              "group": "bottom"
+            }
+          ]
+        },
+        "id": "f2e4e734-2f5f-4a49-be37-854012fce6cc",
+        "data": {
+          "_id": "661632e009b6b04d369ce9d9",
+          "label": {
+            "zh_CN": "2D 卷积神经网络",
+            "en_US": "Conv 2D"
+          },
+          "id": "Conv2D",
+          "desc": "二维卷积层",
+          "nn": true,
+          "properties": [
+            {
+              "id": "in_channels",
+              "label": {
+                "zh_CN": "输入通道数",
+                "en_US": "in_channels"
+              },
+              "type": "number",
+              "required": true,
+              "default": 255,
+              "data": 6
+            },
+            {
+              "id": "out_channels",
+              "label": {
+                "zh_CN": "输出通道数",
+                "en_US": "out_channels"
+              },
+              "type": "number",
+              "required": true,
+              "default": 255,
+              "data": 16
+            },
+            {
+              "id": "kernel_size",
+              "label": {
+                "zh_CN": "卷积核大小",
+                "en_US": "kernel_size"
+              },
+              "type": "number",
+              "required": true,
+              "default": 3,
+              "data": 5
+            },
+            {
+              "id": "stride",
+              "label": {
+                "zh_CN": "步长",
+                "en_US": "stride"
+              },
+              "type": "number",
+              "required": true,
+              "default": 1,
+              "data": 1
+            },
+            {
+              "id": "dilation",
+              "label": {
+                "zh_CN": "空洞大小",
+                "en_US": "dilation"
+              },
+              "type": "number",
+              "required": true,
+              "default": 0,
+              "data": 0
+            },
+            {
+              "id": "groups",
+              "label": {
+                "zh_CN": "组数",
+                "en_US": "groups"
+              },
+              "type": "number",
+              "required": true,
+              "default": 0,
+              "data": 0
+            },
+            {
+              "id": "padding",
+              "label": {
+                "zh_CN": "填充",
+                "en_US": "padding"
+              },
+              "type": "number",
+              "data": 0
+            },
+            {
+              "id": "padding_mode",
+              "label": {
+                "zh_CN": "填充模式",
+                "en_US": "padding_mode"
+              },
+              "type": "enums",
+              "enums": [
+                {
+                  "id": 1,
+                  "label": "zeros",
+                  "value": "\"zeros\"",
+                  "default": true
+                },
+                {
+                  "id": 2,
+                  "label": "reflect",
+                  "value": "\"reflect\""
+                },
+                {
+                  "id": 3,
+                  "label": "replicate",
+                  "value": "\"replicate\""
+                },
+                {
+                  "id": 4,
+                  "label": "circular",
+                  "value": "\"circular\""
+                }
+              ],
+              "required": true,
+              "data": "\"zeros\""
+            },
+            {
+              "id": "weight_attr",
+              "label": {
+                "zh_CN": "权重参数",
+                "en_US": "weight_attr"
+              },
+              "type": "ParamAttr",
+              "data": {
+                "name": "",
+                "learning_rate": 1,
+                "trainable": true,
+                "do_model_average": true,
+                "need_clip": true
+              }
+            },
+            {
+              "id": "bias_attr",
+              "label": {
+                "zh_CN": "偏置参数",
+                "en_US": "bias_attr"
+              },
+              "type": "ParamAttr",
+              "data": {
+                "name": "",
+                "learning_rate": 1,
+                "trainable": true,
+                "do_model_average": true,
+                "need_clip": true
+              }
+            },
+            {
+              "id": "data_format",
+              "label": {
+                "zh_CN": "数据格式",
+                "en_US": "data_format"
+              },
+              "type": "string",
+              "required": true,
+              "data": 0
+            }
+          ],
+          "mode": "nn",
+          "__v": 0
+        },
+        "zIndex": 4
+      },
+      {
+        "position": {
+          "x": 10,
+          "y": 290
+        },
+        "size": {
+          "width": 110,
+          "height": 32
+        },
+        "view": "vue-shape-view",
+        "shape": "dag-node",
+        "ports": {
+          "groups": {
+            "top": {
+              "position": "top",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            },
+            "bottom": {
+              "position": "bottom",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            }
+          },
+          "items": [
+            {
+              "id": "in",
+              "group": "top"
+            },
+            {
+              "id": "out",
+              "group": "bottom"
+            }
+          ]
+        },
+        "id": "fb7920f1-fb11-4ac3-b59f-6b47b6fdd4ec",
+        "data": {
+          "_id": "661632e009b6b04d369ce9d7",
+          "label": {
+            "zh_CN": "ReLU",
+            "en_US": "ReLU"
+          },
+          "id": "ReLU",
+          "properties": [],
+          "mode": "nn",
+          "__v": 0
+        },
+        "zIndex": 5
+      },
+      {
+        "position": {
+          "x": 10,
+          "y": 380
+        },
+        "size": {
+          "width": 110,
+          "height": 32
+        },
+        "view": "vue-shape-view",
+        "shape": "dag-node",
+        "ports": {
+          "groups": {
+            "top": {
+              "position": "top",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            },
+            "bottom": {
+              "position": "bottom",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            }
+          },
+          "items": [
+            {
+              "id": "in",
+              "group": "top"
+            },
+            {
+              "id": "out",
+              "group": "bottom"
+            }
+          ]
+        },
+        "id": "4e566507-bbcf-4b7c-8efc-b7466ad57312",
+        "data": {
+          "_id": "661632e009b6b04d369ce9cf",
+          "label": {
+            "en_US": "MaxPool2D",
+            "zh_CN": "2D 最大值池化"
+          },
+          "id": "MaxPool2D",
+          "properties": [
+            {
+              "id": "kernel_size",
+              "type": "number",
+              "label": {
+                "zh_CN": "池化核的尺寸大小",
+                "en_US": "kernel_size"
+              },
+              "data": 2
+            },
+            {
+              "id": "stride",
+              "type": "number",
+              "label": {
+                "zh_CN": "池化操作步长",
+                "en_US": "stride"
+              },
+              "data": 2
+            }
+          ],
+          "mode": "nn",
+          "__v": 0
+        },
+        "zIndex": 6
+      },
+      {
+        "position": {
+          "x": 10,
+          "y": 470
+        },
+        "size": {
+          "width": 110,
+          "height": 32
+        },
+        "view": "vue-shape-view",
+        "shape": "dag-node",
+        "ports": {
+          "groups": {
+            "top": {
+              "position": "top",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            },
+            "bottom": {
+              "position": "bottom",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            }
+          },
+          "items": [
+            {
+              "id": "in",
+              "group": "top"
+            },
+            {
+              "id": "out",
+              "group": "bottom"
+            }
+          ]
+        },
+        "id": "19ff38f1-26da-4e73-b296-b8e10501574e",
+        "data": {
+          "_id": "661632e009b6b04d369ce9dc",
+          "label": {
+            "zh_CN": "展开",
+            "en_US": "Flatten"
+          },
+          "id": "Flatten",
+          "properties": [
+            {
+              "id": "start_axis",
+              "label": {
+                "zh_CN": "起始维度",
+                "en_US": "start_axis"
+              },
+              "type": "number",
+              "required": true,
+              "default": 1,
+              "data": 1
+            },
+            {
+              "id": "stop_axis",
+              "label": {
+                "zh_CN": "结束维度",
+                "en_US": "stop axis"
+              },
+              "type": "number",
+              "required": true,
+              "default": -1,
+              "data": -1
+            }
+          ],
+          "mode": "nn",
+          "__v": 0
+        },
+        "zIndex": 7
+      },
+      {
+        "position": {
+          "x": 10,
+          "y": 540
+        },
+        "size": {
+          "width": 110,
+          "height": 32
+        },
+        "view": "vue-shape-view",
+        "shape": "dag-node",
+        "ports": {
+          "groups": {
+            "top": {
+              "position": "top",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            },
+            "bottom": {
+              "position": "bottom",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            }
+          },
+          "items": [
+            {
+              "id": "in",
+              "group": "top"
+            },
+            {
+              "id": "out",
+              "group": "bottom"
+            }
+          ]
+        },
+        "id": "597e8829-e0b4-44e9-b26d-9f2a708a5c94",
+        "data": {
+          "_id": "661632e009b6b04d369ce9db",
+          "label": {
+            "zh_CN": "线性变换",
+            "en_US": "Linear"
+          },
+          "id": "Linear",
+          "desc": "线性变换",
+          "nn": true,
+          "properties": [
+            {
+              "id": "in_features",
+              "label": {
+                "zh_CN": "输入单元的数目",
+                "en_US": "in_features"
+              },
+              "type": "number",
+              "required": true,
+              "default": 255,
+              "data": 400
+            },
+            {
+              "id": "out_features",
+              "label": {
+                "zh_CN": "输出单元的数目",
+                "en_US": "out_features"
+              },
+              "type": "number",
+              "required": true,
+              "default": 255,
+              "data": 120
+            },
+            {
+              "id": "weight_attr",
+              "label": {
+                "zh_CN": "权重参数",
+                "en_US": "weight_attr"
+              },
+              "type": "ParamAttr",
+              "data": {
+                "name": "",
+                "learning_rate": 1,
+                "trainable": true,
+                "do_model_average": true,
+                "need_clip": true
+              }
+            },
+            {
+              "id": "bias_attr",
+              "label": {
+                "zh_CN": "偏置参数",
+                "en_US": "bias_attr"
+              },
+              "type": "ParamAttr",
+              "data": {
+                "name": "",
+                "learning_rate": 1,
+                "trainable": true,
+                "do_model_average": true,
+                "need_clip": true
+              }
+            },
+            {
+              "id": "data_format",
+              "label": {
+                "zh_CN": "数据格式",
+                "en_US": "data_format"
+              },
+              "type": "string",
+              "required": true,
+              "data": 0
+            }
+          ],
+          "mode": "nn",
+          "__v": 0
+        },
+        "zIndex": 8
+      },
+      {
+        "position": {
+          "x": 10,
+          "y": 610
+        },
+        "size": {
+          "width": 110,
+          "height": 32
+        },
+        "view": "vue-shape-view",
+        "shape": "dag-node",
+        "ports": {
+          "groups": {
+            "top": {
+              "position": "top",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            },
+            "bottom": {
+              "position": "bottom",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            }
+          },
+          "items": [
+            {
+              "id": "in",
+              "group": "top"
+            },
+            {
+              "id": "out",
+              "group": "bottom"
+            }
+          ]
+        },
+        "id": "534e08e2-3e9e-4e7f-8d84-06fb3da87452",
+        "data": {
+          "_id": "661632e009b6b04d369ce9db",
+          "label": {
+            "zh_CN": "线性变换",
+            "en_US": "Linear"
+          },
+          "id": "Linear",
+          "desc": "线性变换",
+          "nn": true,
+          "properties": [
+            {
+              "id": "in_features",
+              "label": {
+                "zh_CN": "输入单元的数目",
+                "en_US": "in_features"
+              },
+              "type": "number",
+              "required": true,
+              "default": 255,
+              "data": 120
+            },
+            {
+              "id": "out_features",
+              "label": {
+                "zh_CN": "输出单元的数目",
+                "en_US": "out_features"
+              },
+              "type": "number",
+              "required": true,
+              "default": 255,
+              "data": 84
+            },
+            {
+              "id": "weight_attr",
+              "label": {
+                "zh_CN": "权重参数",
+                "en_US": "weight_attr"
+              },
+              "type": "ParamAttr",
+              "data": {
+                "name": "",
+                "learning_rate": 1,
+                "trainable": true,
+                "do_model_average": true,
+                "need_clip": true
+              }
+            },
+            {
+              "id": "bias_attr",
+              "label": {
+                "zh_CN": "偏置参数",
+                "en_US": "bias_attr"
+              },
+              "type": "ParamAttr",
+              "data": {
+                "name": "",
+                "learning_rate": 1,
+                "trainable": true,
+                "do_model_average": true,
+                "need_clip": true
+              }
+            },
+            {
+              "id": "data_format",
+              "label": {
+                "zh_CN": "数据格式",
+                "en_US": "data_format"
+              },
+              "type": "string",
+              "required": true,
+              "data": 0
+            }
+          ],
+          "mode": "nn",
+          "__v": 0
+        },
+        "zIndex": 9
+      },
+      {
+        "position": {
+          "x": 10,
+          "y": 680
+        },
+        "size": {
+          "width": 110,
+          "height": 32
+        },
+        "view": "vue-shape-view",
+        "shape": "dag-node",
+        "ports": {
+          "groups": {
+            "top": {
+              "position": "top",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            },
+            "bottom": {
+              "position": "bottom",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            }
+          },
+          "items": [
+            {
+              "id": "in",
+              "group": "top"
+            },
+            {
+              "id": "out",
+              "group": "bottom"
+            }
+          ]
+        },
+        "id": "e26f3956-fea8-4f81-9b15-6fe1cd4790e2",
+        "data": {
+          "_id": "661632e009b6b04d369ce9db",
+          "label": {
+            "zh_CN": "线性变换",
+            "en_US": "Linear"
+          },
+          "id": "Linear",
+          "desc": "线性变换",
+          "nn": true,
+          "properties": [
+            {
+              "id": "in_features",
+              "label": {
+                "zh_CN": "输入单元的数目",
+                "en_US": "in_features"
+              },
+              "type": "number",
+              "required": true,
+              "default": 255,
+              "data": 84
+            },
+            {
+              "id": "out_features",
+              "label": {
+                "zh_CN": "输出单元的数目",
+                "en_US": "out_features"
+              },
+              "type": "number",
+              "required": true,
+              "default": 255,
+              "data": 10
+            },
+            {
+              "id": "weight_attr",
+              "label": {
+                "zh_CN": "权重参数",
+                "en_US": "weight_attr"
+              },
+              "type": "ParamAttr",
+              "data": {
+                "name": "",
+                "learning_rate": 1,
+                "trainable": true,
+                "do_model_average": true,
+                "need_clip": true
+              }
+            },
+            {
+              "id": "bias_attr",
+              "label": {
+                "zh_CN": "偏置参数",
+                "en_US": "bias_attr"
+              },
+              "type": "ParamAttr",
+              "data": {
+                "name": "",
+                "learning_rate": 1,
+                "trainable": true,
+                "do_model_average": true,
+                "need_clip": true
+              }
+            },
+            {
+              "id": "data_format",
+              "label": {
+                "zh_CN": "数据格式",
+                "en_US": "data_format"
+              },
+              "type": "string",
+              "required": true,
+              "data": 0
+            }
+          ],
+          "mode": "nn",
+          "__v": 0
+        },
+        "zIndex": 10
+      }
+    ],
+    "edges": [
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "6a320cbe-f9dd-4f28-b4dd-2edc908b0e6f",
+        "zIndex": -1,
+        "source": {
+          "cell": "b0f69335-4b2a-4e91-b774-847f18533f28",
+          "port": "out"
+        },
+        "target": {
+          "cell": "0d125a6a-c126-40b2-b8fb-04acfc9f18ee",
+          "port": "in"
+        }
+      },
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "2b094e64-696c-4095-a85c-f0ef2a21f8b8",
+        "zIndex": -1,
+        "source": {
+          "cell": "0d125a6a-c126-40b2-b8fb-04acfc9f18ee",
+          "port": "out"
+        },
+        "target": {
+          "cell": "5c317b1e-4ff2-4bf6-8636-aa5d523101d1",
+          "port": "in"
+        }
+      },
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "fec1dd68-f34d-4efa-aaf9-f81287eaa159",
+        "zIndex": -1,
+        "source": {
+          "cell": "5c317b1e-4ff2-4bf6-8636-aa5d523101d1",
+          "port": "out"
+        },
+        "target": {
+          "cell": "f2e4e734-2f5f-4a49-be37-854012fce6cc",
+          "port": "in"
+        }
+      },
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "7faf88ac-736a-4f38-a4b0-b21d30e593f5",
+        "zIndex": -1,
+        "source": {
+          "cell": "f2e4e734-2f5f-4a49-be37-854012fce6cc",
+          "port": "out"
+        },
+        "target": {
+          "cell": "fb7920f1-fb11-4ac3-b59f-6b47b6fdd4ec",
+          "port": "in"
+        }
+      },
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "f7097353-134e-4440-903c-3b6ea61b7085",
+        "zIndex": -1,
+        "source": {
+          "cell": "fb7920f1-fb11-4ac3-b59f-6b47b6fdd4ec",
+          "port": "out"
+        },
+        "target": {
+          "cell": "4e566507-bbcf-4b7c-8efc-b7466ad57312",
+          "port": "in"
+        }
+      },
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "0259c115-41d6-4d98-bd69-1b2e8d03f746",
+        "zIndex": -1,
+        "source": {
+          "cell": "4e566507-bbcf-4b7c-8efc-b7466ad57312",
+          "port": "out"
+        },
+        "target": {
+          "cell": "19ff38f1-26da-4e73-b296-b8e10501574e",
+          "port": "in"
+        }
+      },
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "421789b8-267d-47d2-98c8-b121c03b2854",
+        "zIndex": -1,
+        "source": {
+          "cell": "19ff38f1-26da-4e73-b296-b8e10501574e",
+          "port": "out"
+        },
+        "target": {
+          "cell": "597e8829-e0b4-44e9-b26d-9f2a708a5c94",
+          "port": "in"
+        }
+      },
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "e1e890ad-7673-4188-861e-86b471f59ccd",
+        "zIndex": -1,
+        "source": {
+          "cell": "597e8829-e0b4-44e9-b26d-9f2a708a5c94",
+          "port": "out"
+        },
+        "target": {
+          "cell": "534e08e2-3e9e-4e7f-8d84-06fb3da87452",
+          "port": "in"
+        }
+      },
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "b808c035-bea3-4e45-b450-40b93ca39ba0",
+        "zIndex": -1,
+        "source": {
+          "cell": "534e08e2-3e9e-4e7f-8d84-06fb3da87452",
+          "port": "out"
+        },
+        "target": {
+          "cell": "e26f3956-fea8-4f81-9b15-6fe1cd4790e2",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

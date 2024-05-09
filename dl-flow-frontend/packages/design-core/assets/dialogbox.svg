@@ -1,0 +1,18 @@
+<svg version="1.1" id="图层_1"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 64 64" style="enable-background:new 0 0 64 64;" xml:space="preserve">
+  <style type="text/css">
+	.st0{fill:currentcolor;}
+  </style>
+  <g>
+    <path class="st0" d="M58,9.7H6c-1.1,0-2,0.9-2,2v40c0,1.1,0.9,2,2,2h52c1.1,0,2-0.9,2-2v-40C60,10.6,59.1,9.7,58,9.7z M56,49.7H8
+		v-36h48V49.7z"/>
+    <path class="st0" d="M40.6,40.2h-7.7c-0.2,0-0.4,0.2-0.4,0.4v3.9c0,0.2,0.2,0.4,0.4,0.4h7.7c0.2,0,0.4-0.2,0.4-0.4v-3.9
+		C41,40.4,40.8,40.2,40.6,40.2z"/>
+    <path class="st0" d="M43.1,40.7v3.9c0,0.2,0.2,0.4,0.4,0.4h7.7c0.2,0,0.4-0.2,0.4-0.4v-3.9c0-0.2-0.2-0.4-0.4-0.4h-7.7
+		C43.3,40.2,43.1,40.4,43.1,40.7z"/>
+    <rect x="12.3" y="28.9" class="st0" width="37.5" height="2.2"/>
+    <rect x="11.8" y="18.2" class="st0" width="14" height="6"/>
+    <rect x="12.3" y="33.5" class="st0" width="13.5" height="2.2"/>
+  </g>
+</svg>

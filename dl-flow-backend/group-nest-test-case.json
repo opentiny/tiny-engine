@@ -1,0 +1,1390 @@
+{
+  "meta": {
+    "start": "Start",
+    "end": "End"
+  },
+  "payload": {
+    "cells": [
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "1208c706-6de1-4e95-a487-e21b47d5087a",
+        "zIndex": -1,
+        "source": {
+          "cell": "ChildA",
+          "port": "out"
+        },
+        "target": {
+          "cell": "ChildB",
+          "port": "in"
+        }
+      },
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "dd672e2c-c68f-4719-8110-72e68fc50532",
+        "zIndex": -1,
+        "source": {
+          "cell": "ChildB",
+          "port": "out"
+        },
+        "target": {
+          "cell": "ChildC",
+          "port": "in"
+        }
+      },
+      {
+        "position": {
+          "x": -22,
+          "y": -102
+        },
+        "size": {
+          "width": 176,
+          "height": 282
+        },
+        "view": "vue-shape-view",
+        "shape": "group-node",
+        "zIndex": -1,
+        "ports": {
+          "groups": {
+            "top": {
+              "position": {
+                "name": "top"
+              },
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            },
+            "bottom": {
+              "position": "bottom",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            }
+          },
+          "items": [
+            {
+              "id": "in",
+              "group": "top"
+            },
+            {
+              "id": "out",
+              "group": "bottom"
+            }
+          ]
+        },
+        "id": "GroupA",
+        "children": [
+          "ChildA",
+          "ChildB",
+          "ChildC",
+          "ChildD",
+          "ChildE"
+        ],
+        "originSize": {
+          "width": 1,
+          "height": 1
+        },
+        "originPosition": {
+          "x": -22,
+          "y": -102
+        }
+      },
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "9c8dd65a-f7fc-4739-bb62-797fa92130ea",
+        "zIndex": -1,
+        "source": {
+          "cell": "GroupA",
+          "port": "out"
+        },
+        "target": {
+          "cell": "ConvA",
+          "port": "in"
+        }
+      },
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "cc11ca61-207e-42a3-a2d6-28f891dc8d79",
+        "zIndex": -1,
+        "source": {
+          "cell": "Start",
+          "port": "out"
+        },
+        "target": {
+          "cell": "GroupA",
+          "port": "in"
+        }
+      },
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "f7480397-aaa1-451e-9414-476a79f3b41d",
+        "zIndex": -1,
+        "source": {
+          "cell": "ConvA",
+          "port": "out"
+        },
+        "target": {
+          "cell": "End",
+          "port": "in"
+        }
+      },
+      {
+        "position": {
+          "x": 10,
+          "y": -70
+        },
+        "size": {
+          "width": 112,
+          "height": 48
+        },
+        "view": "vue-shape-view",
+        "shape": "dag-node",
+        "ports": {
+          "groups": {
+            "top": {
+              "position": "top",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            },
+            "bottom": {
+              "position": "bottom",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            }
+          },
+          "items": [
+            {
+              "id": "in",
+              "group": "top"
+            },
+            {
+              "id": "out",
+              "group": "bottom"
+            }
+          ]
+        },
+        "id": "ChildA",
+        "data": {
+          "_id": "65e467b8c08c8314009c86d8",
+          "label": {
+            "zh_CN": "2D 卷积神经网络",
+            "en_US": "Conv 2D"
+          },
+          "id": "Conv2D",
+          "desc": "二维卷积层",
+          "nn": true,
+          "properties": [
+            {
+              "id": "in_channels",
+              "label": {
+                "zh_CN": "输入通道数",
+                "en_US": "in_channels"
+              },
+              "type": "number",
+              "required": true,
+              "default": 255,
+              "data": 255
+            },
+            {
+              "id": "out_channels",
+              "label": {
+                "zh_CN": "输出通道数",
+                "en_US": "out_channels"
+              },
+              "type": "number",
+              "required": true,
+              "default": 255,
+              "data": 255
+            },
+            {
+              "id": "kernel_size",
+              "label": {
+                "zh_CN": "卷积核大小",
+                "en_US": "kernel_size"
+              },
+              "type": "number",
+              "required": true,
+              "default": 3,
+              "data": 3
+            },
+            {
+              "id": "stride",
+              "label": {
+                "zh_CN": "步长",
+                "en_US": "stride"
+              },
+              "type": "number",
+              "required": true,
+              "default": 1,
+              "data": 1
+            },
+            {
+              "id": "dilation",
+              "label": {
+                "zh_CN": "空洞大小",
+                "en_US": "dilation"
+              },
+              "type": "number",
+              "required": true,
+              "default": 0,
+              "data": 0
+            },
+            {
+              "id": "groups",
+              "label": {
+                "zh_CN": "组数",
+                "en_US": "groups"
+              },
+              "type": "number",
+              "required": true,
+              "default": 0,
+              "data": 0
+            },
+            {
+              "id": "padding_mode",
+              "label": {
+                "zh_CN": "填充模式",
+                "en_US": "padding_mode"
+              },
+              "type": "enums",
+              "enums": [
+                {
+                  "id": 1,
+                  "label": "zeros",
+                  "value": "zeros",
+                  "default": true
+                },
+                {
+                  "id": 2,
+                  "label": "reflect",
+                  "value": "reflect"
+                },
+                {
+                  "id": 3,
+                  "label": "replicate",
+                  "value": "replicate"
+                },
+                {
+                  "id": 4,
+                  "label": "circular",
+                  "value": "circular"
+                }
+              ],
+              "required": true,
+              "data": "zeros"
+            },
+            {
+              "id": "weight_attr",
+              "label": {
+                "zh_CN": "权重参数",
+                "en_US": "weight_attr"
+              },
+              "type": "ParamAttr",
+              "data": {
+                "name": "",
+                "learning_rate": 1,
+                "trainable": true,
+                "do_model_average": true,
+                "need_clip": true
+              }
+            },
+            {
+              "id": "bias_attr",
+              "label": {
+                "zh_CN": "偏置参数",
+                "en_US": "bias_attr"
+              },
+              "type": "ParamAttr",
+              "data": {
+                "name": "",
+                "learning_rate": 1,
+                "trainable": true,
+                "do_model_average": true,
+                "need_clip": true
+              }
+            },
+            {
+              "id": "data_format",
+              "label": {
+                "zh_CN": "数据格式",
+                "en_US": "data_format"
+              },
+              "type": "string",
+              "required": true,
+              "data": 0
+            }
+          ],
+          "mode": "nn",
+          "__v": 0
+        },
+        "zIndex": 1,
+        "parent": "GroupA"
+      },
+      {
+        "position": {
+          "x": 10,
+          "y": 20
+        },
+        "size": {
+          "width": 112,
+          "height": 48
+        },
+        "view": "vue-shape-view",
+        "shape": "dag-node",
+        "ports": {
+          "groups": {
+            "top": {
+              "position": "top",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            },
+            "bottom": {
+              "position": "bottom",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            }
+          },
+          "items": [
+            {
+              "id": "in",
+              "group": "top"
+            },
+            {
+              "id": "out",
+              "group": "bottom"
+            }
+          ]
+        },
+        "id": "ChildB",
+        "data": {
+          "_id": "65e467b8c08c8314009c86d8",
+          "label": {
+            "zh_CN": "2D 卷积神经网络",
+            "en_US": "Conv 2D"
+          },
+          "id": "Conv2D",
+          "desc": "二维卷积层",
+          "nn": true,
+          "properties": [
+            {
+              "id": "in_channels",
+              "label": {
+                "zh_CN": "输入通道数",
+                "en_US": "in_channels"
+              },
+              "type": "number",
+              "required": true,
+              "default": 255,
+              "data": 255
+            },
+            {
+              "id": "out_channels",
+              "label": {
+                "zh_CN": "输出通道数",
+                "en_US": "out_channels"
+              },
+              "type": "number",
+              "required": true,
+              "default": 255,
+              "data": 255
+            },
+            {
+              "id": "kernel_size",
+              "label": {
+                "zh_CN": "卷积核大小",
+                "en_US": "kernel_size"
+              },
+              "type": "number",
+              "required": true,
+              "default": 3,
+              "data": 3
+            },
+            {
+              "id": "stride",
+              "label": {
+                "zh_CN": "步长",
+                "en_US": "stride"
+              },
+              "type": "number",
+              "required": true,
+              "default": 1,
+              "data": 1
+            },
+            {
+              "id": "dilation",
+              "label": {
+                "zh_CN": "空洞大小",
+                "en_US": "dilation"
+              },
+              "type": "number",
+              "required": true,
+              "default": 0,
+              "data": 0
+            },
+            {
+              "id": "groups",
+              "label": {
+                "zh_CN": "组数",
+                "en_US": "groups"
+              },
+              "type": "number",
+              "required": true,
+              "default": 0,
+              "data": 0
+            },
+            {
+              "id": "padding_mode",
+              "label": {
+                "zh_CN": "填充模式",
+                "en_US": "padding_mode"
+              },
+              "type": "enums",
+              "enums": [
+                {
+                  "id": 1,
+                  "label": "zeros",
+                  "value": "zeros",
+                  "default": true
+                },
+                {
+                  "id": 2,
+                  "label": "reflect",
+                  "value": "reflect"
+                },
+                {
+                  "id": 3,
+                  "label": "replicate",
+                  "value": "replicate"
+                },
+                {
+                  "id": 4,
+                  "label": "circular",
+                  "value": "circular"
+                }
+              ],
+              "required": true,
+              "data": "zeros"
+            },
+            {
+              "id": "weight_attr",
+              "label": {
+                "zh_CN": "权重参数",
+                "en_US": "weight_attr"
+              },
+              "type": "ParamAttr",
+              "data": {
+                "name": "",
+                "learning_rate": 1,
+                "trainable": true,
+                "do_model_average": true,
+                "need_clip": true
+              }
+            },
+            {
+              "id": "bias_attr",
+              "label": {
+                "zh_CN": "偏置参数",
+                "en_US": "bias_attr"
+              },
+              "type": "ParamAttr",
+              "data": {
+                "name": "",
+                "learning_rate": 1,
+                "trainable": true,
+                "do_model_average": true,
+                "need_clip": true
+              }
+            },
+            {
+              "id": "data_format",
+              "label": {
+                "zh_CN": "数据格式",
+                "en_US": "data_format"
+              },
+              "type": "string",
+              "required": true,
+              "data": 0
+            }
+          ],
+          "mode": "nn",
+          "__v": 0
+        },
+        "zIndex": 2,
+        "parent": "GroupA"
+      },
+      {
+        "position": {
+          "x": 10,
+          "y": 100
+        },
+        "size": {
+          "width": 112,
+          "height": 48
+        },
+        "view": "vue-shape-view",
+        "shape": "dag-node",
+        "ports": {
+          "groups": {
+            "top": {
+              "position": "top",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            },
+            "bottom": {
+              "position": "bottom",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            }
+          },
+          "items": [
+            {
+              "id": "in",
+              "group": "top"
+            },
+            {
+              "id": "out",
+              "group": "bottom"
+            }
+          ]
+        },
+        "id": "ChildC",
+        "data": {
+          "_id": "65e467b8c08c8314009c86d8",
+          "label": {
+            "zh_CN": "2D 卷积神经网络",
+            "en_US": "Conv 2D"
+          },
+          "id": "Conv2D",
+          "desc": "二维卷积层",
+          "nn": true,
+          "properties": [
+            {
+              "id": "in_channels",
+              "label": {
+                "zh_CN": "输入通道数",
+                "en_US": "in_channels"
+              },
+              "type": "number",
+              "required": true,
+              "default": 255,
+              "data": 255
+            },
+            {
+              "id": "out_channels",
+              "label": {
+                "zh_CN": "输出通道数",
+                "en_US": "out_channels"
+              },
+              "type": "number",
+              "required": true,
+              "default": 255,
+              "data": 255
+            },
+            {
+              "id": "kernel_size",
+              "label": {
+                "zh_CN": "卷积核大小",
+                "en_US": "kernel_size"
+              },
+              "type": "number",
+              "required": true,
+              "default": 3,
+              "data": 3
+            },
+            {
+              "id": "stride",
+              "label": {
+                "zh_CN": "步长",
+                "en_US": "stride"
+              },
+              "type": "number",
+              "required": true,
+              "default": 1,
+              "data": 1
+            },
+            {
+              "id": "dilation",
+              "label": {
+                "zh_CN": "空洞大小",
+                "en_US": "dilation"
+              },
+              "type": "number",
+              "required": true,
+              "default": 0,
+              "data": 0
+            },
+            {
+              "id": "groups",
+              "label": {
+                "zh_CN": "组数",
+                "en_US": "groups"
+              },
+              "type": "number",
+              "required": true,
+              "default": 0,
+              "data": 0
+            },
+            {
+              "id": "padding_mode",
+              "label": {
+                "zh_CN": "填充模式",
+                "en_US": "padding_mode"
+              },
+              "type": "enums",
+              "enums": [
+                {
+                  "id": 1,
+                  "label": "zeros",
+                  "value": "zeros",
+                  "default": true
+                },
+                {
+                  "id": 2,
+                  "label": "reflect",
+                  "value": "reflect"
+                },
+                {
+                  "id": 3,
+                  "label": "replicate",
+                  "value": "replicate"
+                },
+                {
+                  "id": 4,
+                  "label": "circular",
+                  "value": "circular"
+                }
+              ],
+              "required": true,
+              "data": "zeros"
+            },
+            {
+              "id": "weight_attr",
+              "label": {
+                "zh_CN": "权重参数",
+                "en_US": "weight_attr"
+              },
+              "type": "ParamAttr",
+              "data": {
+                "name": "",
+                "learning_rate": 1,
+                "trainable": true,
+                "do_model_average": true,
+                "need_clip": true
+              }
+            },
+            {
+              "id": "bias_attr",
+              "label": {
+                "zh_CN": "偏置参数",
+                "en_US": "bias_attr"
+              },
+              "type": "ParamAttr",
+              "data": {
+                "name": "",
+                "learning_rate": 1,
+                "trainable": true,
+                "do_model_average": true,
+                "need_clip": true
+              }
+            },
+            {
+              "id": "data_format",
+              "label": {
+                "zh_CN": "数据格式",
+                "en_US": "data_format"
+              },
+              "type": "string",
+              "required": true,
+              "data": 0
+            }
+          ],
+          "mode": "nn",
+          "__v": 0
+        },
+        "zIndex": 3,
+        "parent": "GroupA"
+      },
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "ChildD",
+        "zIndex": 4,
+        "source": {
+          "cell": "GroupA",
+          "port": "in"
+        },
+        "target": {
+          "cell": "ChildA",
+          "port": "in"
+        },
+        "parent": "GroupA"
+      },
+      {
+        "position": {
+          "x": 10,
+          "y": 220
+        },
+        "size": {
+          "width": 112,
+          "height": 48
+        },
+        "view": "vue-shape-view",
+        "shape": "dag-node",
+        "ports": {
+          "groups": {
+            "top": {
+              "position": "top",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            },
+            "bottom": {
+              "position": "bottom",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            }
+          },
+          "items": [
+            {
+              "id": "in",
+              "group": "top"
+            },
+            {
+              "id": "out",
+              "group": "bottom"
+            }
+          ]
+        },
+        "id": "ConvA",
+        "data": {
+          "_id": "65e467b8c08c8314009c86d8",
+          "label": {
+            "zh_CN": "2D 卷积神经网络",
+            "en_US": "Conv 2D"
+          },
+          "id": "Conv2D",
+          "desc": "二维卷积层",
+          "nn": true,
+          "properties": [
+            {
+              "id": "in_channels",
+              "label": {
+                "zh_CN": "输入通道数",
+                "en_US": "in_channels"
+              },
+              "type": "number",
+              "required": true,
+              "default": 255,
+              "data": 255
+            },
+            {
+              "id": "out_channels",
+              "label": {
+                "zh_CN": "输出通道数",
+                "en_US": "out_channels"
+              },
+              "type": "number",
+              "required": true,
+              "default": 255,
+              "data": 255
+            },
+            {
+              "id": "kernel_size",
+              "label": {
+                "zh_CN": "卷积核大小",
+                "en_US": "kernel_size"
+              },
+              "type": "number",
+              "required": true,
+              "default": 3,
+              "data": 3
+            },
+            {
+              "id": "stride",
+              "label": {
+                "zh_CN": "步长",
+                "en_US": "stride"
+              },
+              "type": "number",
+              "required": true,
+              "default": 1,
+              "data": 1
+            },
+            {
+              "id": "dilation",
+              "label": {
+                "zh_CN": "空洞大小",
+                "en_US": "dilation"
+              },
+              "type": "number",
+              "required": true,
+              "default": 0,
+              "data": 0
+            },
+            {
+              "id": "groups",
+              "label": {
+                "zh_CN": "组数",
+                "en_US": "groups"
+              },
+              "type": "number",
+              "required": true,
+              "default": 0,
+              "data": 0
+            },
+            {
+              "id": "padding_mode",
+              "label": {
+                "zh_CN": "填充模式",
+                "en_US": "padding_mode"
+              },
+              "type": "enums",
+              "enums": [
+                {
+                  "id": 1,
+                  "label": "zeros",
+                  "value": "zeros",
+                  "default": true
+                },
+                {
+                  "id": 2,
+                  "label": "reflect",
+                  "value": "reflect"
+                },
+                {
+                  "id": 3,
+                  "label": "replicate",
+                  "value": "replicate"
+                },
+                {
+                  "id": 4,
+                  "label": "circular",
+                  "value": "circular"
+                }
+              ],
+              "required": true,
+              "data": "zeros"
+            },
+            {
+              "id": "weight_attr",
+              "label": {
+                "zh_CN": "权重参数",
+                "en_US": "weight_attr"
+              },
+              "type": "ParamAttr",
+              "data": {
+                "name": "",
+                "learning_rate": 1,
+                "trainable": true,
+                "do_model_average": true,
+                "need_clip": true
+              }
+            },
+            {
+              "id": "bias_attr",
+              "label": {
+                "zh_CN": "偏置参数",
+                "en_US": "bias_attr"
+              },
+              "type": "ParamAttr",
+              "data": {
+                "name": "",
+                "learning_rate": 1,
+                "trainable": true,
+                "do_model_average": true,
+                "need_clip": true
+              }
+            },
+            {
+              "id": "data_format",
+              "label": {
+                "zh_CN": "数据格式",
+                "en_US": "data_format"
+              },
+              "type": "string",
+              "required": true,
+              "data": 0
+            }
+          ],
+          "mode": "nn",
+          "__v": 0
+        },
+        "zIndex": 6
+      },
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "ChildE",
+        "zIndex": 7,
+        "source": {
+          "cell": "ChildC",
+          "port": "out"
+        },
+        "target": {
+          "cell": "GroupA",
+          "port": "out"
+        },
+        "parent": "GroupA"
+      },
+      {
+        "position": {
+          "x": 10,
+          "y": -200
+        },
+        "size": {
+          "width": 112,
+          "height": 48
+        },
+        "view": "vue-shape-view",
+        "shape": "dag-node",
+        "ports": {
+          "groups": {
+            "top": {
+              "position": "top",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            },
+            "bottom": {
+              "position": "bottom",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            }
+          },
+          "items": [
+            {
+              "id": "in",
+              "group": "top"
+            },
+            {
+              "id": "out",
+              "group": "bottom"
+            }
+          ]
+        },
+        "id": "Start",
+        "data": {
+          "_id": "65e467b8c08c8314009c86d8",
+          "label": {
+            "zh_CN": "2D 卷积神经网络",
+            "en_US": "Conv 2D"
+          },
+          "id": "Conv2D",
+          "desc": "二维卷积层",
+          "nn": true,
+          "properties": [
+            {
+              "id": "in_channels",
+              "label": {
+                "zh_CN": "输入通道数",
+                "en_US": "in_channels"
+              },
+              "type": "number",
+              "required": true,
+              "default": 255,
+              "data": 255
+            },
+            {
+              "id": "out_channels",
+              "label": {
+                "zh_CN": "输出通道数",
+                "en_US": "out_channels"
+              },
+              "type": "number",
+              "required": true,
+              "default": 255,
+              "data": 255
+            },
+            {
+              "id": "kernel_size",
+              "label": {
+                "zh_CN": "卷积核大小",
+                "en_US": "kernel_size"
+              },
+              "type": "number",
+              "required": true,
+              "default": 3,
+              "data": 3
+            },
+            {
+              "id": "stride",
+              "label": {
+                "zh_CN": "步长",
+                "en_US": "stride"
+              },
+              "type": "number",
+              "required": true,
+              "default": 1,
+              "data": 1
+            },
+            {
+              "id": "dilation",
+              "label": {
+                "zh_CN": "空洞大小",
+                "en_US": "dilation"
+              },
+              "type": "number",
+              "required": true,
+              "default": 0,
+              "data": 0
+            },
+            {
+              "id": "groups",
+              "label": {
+                "zh_CN": "组数",
+                "en_US": "groups"
+              },
+              "type": "number",
+              "required": true,
+              "default": 0,
+              "data": 0
+            },
+            {
+              "id": "padding_mode",
+              "label": {
+                "zh_CN": "填充模式",
+                "en_US": "padding_mode"
+              },
+              "type": "enums",
+              "enums": [
+                {
+                  "id": 1,
+                  "label": "zeros",
+                  "value": "zeros",
+                  "default": true
+                },
+                {
+                  "id": 2,
+                  "label": "reflect",
+                  "value": "reflect"
+                },
+                {
+                  "id": 3,
+                  "label": "replicate",
+                  "value": "replicate"
+                },
+                {
+                  "id": 4,
+                  "label": "circular",
+                  "value": "circular"
+                }
+              ],
+              "required": true,
+              "data": "zeros"
+            },
+            {
+              "id": "weight_attr",
+              "label": {
+                "zh_CN": "权重参数",
+                "en_US": "weight_attr"
+              },
+              "type": "ParamAttr",
+              "data": {
+                "name": "",
+                "learning_rate": 1,
+                "trainable": true,
+                "do_model_average": true,
+                "need_clip": true
+              }
+            },
+            {
+              "id": "bias_attr",
+              "label": {
+                "zh_CN": "偏置参数",
+                "en_US": "bias_attr"
+              },
+              "type": "ParamAttr",
+              "data": {
+                "name": "",
+                "learning_rate": 1,
+                "trainable": true,
+                "do_model_average": true,
+                "need_clip": true
+              }
+            },
+            {
+              "id": "data_format",
+              "label": {
+                "zh_CN": "数据格式",
+                "en_US": "data_format"
+              },
+              "type": "string",
+              "required": true,
+              "data": 0
+            }
+          ],
+          "mode": "nn",
+          "__v": 0
+        },
+        "zIndex": 8
+      },
+      {
+        "position": {
+          "x": 10,
+          "y": 310
+        },
+        "size": {
+          "width": 110,
+          "height": 32
+        },
+        "view": "vue-shape-view",
+        "shape": "dag-node",
+        "ports": {
+          "groups": {
+            "top": {
+              "position": "top",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            },
+            "bottom": {
+              "position": "bottom",
+              "attrs": {
+                "circle": {
+                  "r": 4,
+                  "magnet": true,
+                  "stroke": "#C2C8D5",
+                  "strokeWidth": 1,
+                  "fill": "#fff"
+                }
+              }
+            }
+          },
+          "items": [
+            {
+              "id": "in",
+              "group": "top"
+            },
+            {
+              "id": "out",
+              "group": "bottom"
+            }
+          ]
+        },
+        "id": "End",
+        "data": {
+          "_id": "65e467b8c08c8314009c86d6",
+          "label": {
+            "zh_CN": "ReLU",
+            "en_US": "ReLU"
+          },
+          "id": "ReLU",
+          "properties": [],
+          "mode": "nn",
+          "__v": 0
+        },
+        "zIndex": 9
+      }
+    ],
+    "edges": [
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "1208c706-6de1-4e95-a487-e21b47d5087a",
+        "zIndex": -1,
+        "source": {
+          "cell": "ChildA",
+          "port": "out"
+        },
+        "target": {
+          "cell": "ChildB",
+          "port": "in"
+        }
+      },
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "dd672e2c-c68f-4719-8110-72e68fc50532",
+        "zIndex": -1,
+        "source": {
+          "cell": "ChildB",
+          "port": "out"
+        },
+        "target": {
+          "cell": "ChildC",
+          "port": "in"
+        }
+      },
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "9c8dd65a-f7fc-4739-bb62-797fa92130ea",
+        "zIndex": -1,
+        "source": {
+          "cell": "GroupA",
+          "port": "out"
+        },
+        "target": {
+          "cell": "ConvA",
+          "port": "in"
+        }
+      },
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "cc11ca61-207e-42a3-a2d6-28f891dc8d79",
+        "zIndex": -1,
+        "source": {
+          "cell": "Start",
+          "port": "out"
+        },
+        "target": {
+          "cell": "GroupA",
+          "port": "in"
+        }
+      },
+      {
+        "shape": "dag-edge",
+        "attrs": {
+          "line": {
+            "strokeDasharray": "5 5"
+          }
+        },
+        "id": "f7480397-aaa1-451e-9414-476a79f3b41d",
+        "zIndex": -1,
+        "source": {
+          "cell": "ConvA",
+          "port": "out"
+        },
+        "target": {
+          "cell": "End",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

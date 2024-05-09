@@ -1,0 +1,25 @@
+<svg
+  data-icon="TextDirectionRtl"
+  aria-hidden="true"
+  focusable="false"
+  width="16"
+  height="16"
+  viewBox="0 0 16 16"
+  version="1.1"
+  xmlns="http://www.w3.org/2000/svg"
+  style="display: block"
+>
+  <path
+    fill-rule="evenodd"
+    clip-rule="evenodd"
+    d="M0 13l3-3v2h10v2H3v2l-3-3z"
+    fill="currentColor"
+  />
+  <path
+    opacity=".6"
+    fill-rule="evenodd"
+    clip-rule="evenodd"
+    d="M7 2v8H5V5.95a2.5 2.5 0 010-4.9V1h7v1h-1v8H9V2H7z"
+    fill="currentColor"
+  />
+</svg>

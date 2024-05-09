@@ -1,0 +1,24 @@
+<svg
+  data-icon="TextTransformCapitalize"
+  aria-hidden="true"
+  focusable="false"
+  width="16"
+  height="16"
+  viewBox="0 0 16 16"
+  version="1.1"
+  xmlns="http://www.w3.org/2000/svg"
+  style="display: block"
+>
+  <path
+    fill-rule="evenodd"
+    clip-rule="evenodd"
+    d="M3.75 3L0 13h2l1-3h3l1 3h2L5.25 3h-1.5zm1.917 6L4.5 5.5 3.333 9h2.334z"
+    fill="currentColor"
+  />
+  <path
+    fill-rule="evenodd"
+    clip-rule="evenodd"
+    d="M10.75 3L7 13h2l1-3h3l1 3h2L12.25 3h-1.5zm1.917 6L11.5 5.5 10.333 9h2.334z"
+    fill="currentColor"
+  />
+</svg>

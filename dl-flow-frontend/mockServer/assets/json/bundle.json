@@ -1,0 +1,334 @@
+{
+  "data": {
+    "materials": [
+      {
+        "label": {
+          "zh_CN": "1D 卷积神经网络",
+          "en_US": "Conv 1D"
+        },
+        "nnName": "Conv1D",
+        "desc": "一维卷积层",
+        "nn": true,
+        "properties": [
+          {
+            "id": "in_channels",
+            "zh_CN": "输入通道数",
+            "en_US": "in_channels",
+            "type": "number"
+          },
+          {
+            "id": "out_channels",
+            "zh_CN": "输出通道数",
+            "en_US": "out_channels",
+            "type": "number"
+          },
+          {
+            "id": "kernal_size",
+            "zh_CN": "卷积核大小",
+            "en_US": "kernal_size",
+            "type": "number"
+          },
+          {
+            "id": "stride",
+            "zh_CN": "步长",
+            "en_US": "stride",
+            "type": "number"
+          },
+          {
+            "id": "dilation",
+            "zh_CN": "空洞大小",
+            "en_US": "dilation",
+            "type": "number"
+          },
+          {
+            "id": "groups",
+            "zh_CN": "组数",
+            "en_US": "groups",
+            "type": "number"
+          },
+          {
+            "id": "padding_mode",
+            "zh_CN": "填充模式",
+            "en_US": "padding_mode",
+            "type": "enums",
+            "data": [
+              { "id": 1, "label": "zeros", "value": "zeros", "default": true },
+              { "id": 2, "label": "reflect", "value": "reflect" },
+              { "id": 3, "label": "replicate", "value": "replicate" },
+              { "id": 4, "label": "circular", "value": "circular" }
+            ]
+          },
+          {
+            "id": "weight_attr",
+            "zh_CN": "权重参数",
+            "en_US": "weight_attr",
+            "type": "ParamAttr"
+          },
+          {
+            "id": "bias_attr",
+            "zh_CN": "偏置参数",
+            "en_US": "bias_attr",
+            "type": "ParamAttr"
+          },
+          {
+            "id": "data_format",
+            "zh_CN": "数据格式",
+            "en_US": "data_format",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "label": {
+          "zh_CN": "1D 卷积神经网络",
+          "en_US": "Conv 1D"
+        },
+        "nnName": "Conv1D",
+        "desc": "一维卷积层",
+        "nn": true,
+        "properties": [
+          {
+            "id": "in_channels",
+            "label": {
+              "zh_CN": "输入通道数",
+              "en_US": "in_channels"
+            },
+            "type": "number"
+          },
+          {
+            "id": "out_channels",
+            "label": {
+              "zh_CN": "输出通道数",
+              "en_US": "out_channels"
+            },
+            "type": "number"
+          },
+          {
+            "id": "kernal_size",
+            "label": {
+              "zh_CN": "卷积核大小",
+              "en_US": "kernal_size"
+            },
+            "type": "number"
+          },
+          {
+            "id": "stride",
+            "label": {
+              "zh_CN": "步长",
+              "en_US": "stride"
+            },
+            "type": "number"
+          },
+          {
+            "id": "dilation",
+            "label": {
+              "zh_CN": "空洞大小",
+              "en_US": "dilation"
+            },
+            "type": "number"
+          },
+          {
+            "id": "groups",
+            "label": {
+              "zh_CN": "组数",
+              "en_US": "groups"
+            },
+            "type": "number"
+          },
+          {
+            "id": "padding_mode",
+            "label": {
+              "zh_CN": "填充模式",
+              "en_US": "padding_mode"
+            },
+            "type": "enums",
+            "data": [
+              { "id": 1, "label": "zeros", "value": "zeros", "default": true },
+              { "id": 2, "label": "reflect", "value": "reflect" },
+              { "id": 3, "label": "replicate", "value": "replicate" },
+              { "id": 4, "label": "circular", "value": "circular" }
+            ]
+          },
+          {
+            "id": "weight_attr",
+            "label": {
+              "zh_CN": "权重参数",
+              "en_US": "weight_attr"
+            },
+            "type": "ParamAttr"
+          },
+          {
+            "id": "bias_attr",
+            "label": {
+              "zh_CN": "偏置参数",
+              "en_US": "bias_attr"
+            },
+            "type": "ParamAttr"
+          },
+          {
+            "id": "data_format",
+            "label": {
+              "zh_CN": "数据格式",
+              "en_US": "data_format"
+            },
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "label": {
+          "zh_CN": "1D 卷积神经网络",
+          "en_US": "Conv 1D"
+        },
+        "nnName": "Conv1D",
+        "desc": "一维卷积层",
+        "nn": true,
+        "properties": [
+          {
+            "id": "in_channels",
+            "zh_CN": "输入通道数",
+            "en_US": "in_channels",
+            "type": "number"
+          },
+          {
+            "id": "out_channels",
+            "zh_CN": "输出通道数",
+            "en_US": "out_channels",
+            "type": "number"
+          },
+          {
+            "id": "kernal_size",
+            "zh_CN": "卷积核大小",
+            "en_US": "kernal_size",
+            "type": "number"
+          },
+          {
+            "id": "stride",
+            "zh_CN": "步长",
+            "en_US": "stride",
+            "type": "number"
+          },
+          {
+            "id": "dilation",
+            "zh_CN": "空洞大小",
+            "en_US": "dilation",
+            "type": "number"
+          },
+          {
+            "id": "groups",
+            "zh_CN": "组数",
+            "en_US": "groups",
+            "type": "number"
+          },
+          {
+            "id": "padding_mode",
+            "zh_CN": "填充模式",
+            "en_US": "padding_mode",
+            "type": "enums",
+            "data": [
+              { "id": 1, "label": "zeros", "value": "zeros", "default": true },
+              { "id": 2, "label": "reflect", "value": "reflect" },
+              { "id": 3, "label": "replicate", "value": "replicate" },
+              { "id": 4, "label": "circular", "value": "circular" }
+            ]
+          },
+          {
+            "id": "weight_attr",
+            "zh_CN": "权重参数",
+            "en_US": "weight_attr",
+            "type": "ParamAttr"
+          },
+          {
+            "id": "bias_attr",
+            "zh_CN": "偏置参数",
+            "en_US": "bias_attr",
+            "type": "ParamAttr"
+          },
+          {
+            "id": "data_format",
+            "zh_CN": "数据格式",
+            "en_US": "data_format",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "label": {
+          "zh_CN": "1D 卷积神经网络",
+          "en_US": "Conv 1D"
+        },
+        "nnName": "Conv1D",
+        "desc": "一维卷积层",
+        "nn": true,
+        "properties": [
+          {
+            "id": "in_channels",
+            "zh_CN": "输入通道数",
+            "en_US": "in_channels",
+            "type": "number"
+          },
+          {
+            "id": "out_channels",
+            "zh_CN": "输出通道数",
+            "en_US": "out_channels",
+            "type": "number"
+          },
+          {
+            "id": "kernal_size",
+            "zh_CN": "卷积核大小",
+            "en_US": "kernal_size",
+            "type": "number"
+          },
+          {
+            "id": "stride",
+            "zh_CN": "步长",
+            "en_US": "stride",
+            "type": "number"
+          },
+          {
+            "id": "dilation",
+            "zh_CN": "空洞大小",
+            "en_US": "dilation",
+            "type": "number"
+          },
+          {
+            "id": "groups",
+            "zh_CN": "组数",
+            "en_US": "groups",
+            "type": "number"
+          },
+          {
+            "id": "padding_mode",
+            "zh_CN": "填充模式",
+            "en_US": "padding_mode",
+            "type": "enums",
+            "enums": [
+              { "id": 1, "label": "zeros", "value": "zeros", "default": true },
+              { "id": 2, "label": "reflect", "value": "reflect" },
+              { "id": 3, "label": "replicate", "value": "replicate" },
+              { "id": 4, "label": "circular", "value": "circular" }
+            ]
+          },
+          {
+            "id": "weight_attr",
+            "zh_CN": "权重参数",
+            "en_US": "weight_attr",
+            "type": "ParamAttr"
+          },
+          {
+            "id": "bias_attr",
+            "zh_CN": "偏置参数",
+            "en_US": "bias_attr",
+            "type": "ParamAttr"
+          },
+          {
+            "id": "data_format",
+            "zh_CN": "数据格式",
+            "en_US": "data_format",
+            "type": "string"
+          }
+        ]
+      }
+    ]
+  }
+}

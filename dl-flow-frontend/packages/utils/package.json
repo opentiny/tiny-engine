@@ -1,0 +1,37 @@
+{
+  "name": "@opentiny/tiny-engine-utils",
+  "version": "1.0.3",
+  "publishConfig": {
+    "access": "public"
+  },
+  "description": "",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "test": "vitest"
+  },
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/opentiny/tiny-engine",
+    "directory": "packages/utils"
+  },
+  "bugs": {
+    "url": "https://github.com/opentiny/tiny-engine/issues"
+  },
+  "author": "OpenTiny Team",
+  "license": "MIT",
+  "homepage": "https://opentiny.design/tiny-engine",
+  "devDependencies": {
+    "vite": "^4.3.7",
+    "vitest": "^0.34.6"
+  },
+  "dependencies": {
+    "@opentiny/vue-renderless": "~3.10.0",
+    "vue": "^3.3.8"
+  }
+}
