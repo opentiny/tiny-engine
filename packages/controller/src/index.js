@@ -26,7 +26,7 @@ import usePage from './usePage'
 import useDataSource from './useDataSource'
 import useBreadcrumb from './useBreadcrumb'
 import useProperty from './useProperty'
-import { getGlobalConfig, setGlobalConfig } from './globalConfig'
+import { getGlobalConfig, setGlobalConfig, updateGlobalSingleConfig } from './globalConfig'
 import useNotify from './useNotify'
 import useData from './useData'
 import useMessage from './useMessage'
@@ -52,6 +52,7 @@ export {
   useProperty,
   getGlobalConfig,
   setGlobalConfig,
+  updateGlobalSingleConfig,
   useNotify,
   useData,
   useMessage,
