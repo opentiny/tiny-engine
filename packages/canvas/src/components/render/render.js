@@ -599,12 +599,9 @@ const getLoopScope = ({ scope, index, item, loopArgs }) => {
 }
 
 const injectPlaceHolder = (componentName, children) => {
-  // expression 类型的 children，不插入 placeholder
-  if (!Array.isArray(children) && parseList.some((item) => item.type(children))) {
-    return children
-  }
+  const isEmptyArr = Array.isArray(children) && !children.length
 
-  if (configure[componentName]?.isContainer && !children?.length) {
+  if (configure[componentName]?.isContainer && (!children || isEmptyArr)) {
     return [
       {
         componentName: 'CanvasPlaceholder'

@@ -4139,6 +4139,9 @@
             "contentMenu": {
               "actions": []
             }
+          },
+          "configure": {
+            "isContainer": true
           }
         },
         {
@@ -4497,6 +4500,9 @@
             "contentMenu": {
               "actions": []
             }
+          },
+          "configure": {
+            "isContainer": true
           }
         },
         {
