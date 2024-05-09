@@ -60,7 +60,7 @@ export const isOmitValue = (value, keepRef = false) => {
     return true
   }
   if (typeof value === 'object' && isEmptyObject(value) && !keepRef) {
-    return false
+    return true
   }
 
   return ['', null, undefined].includes(value)
@@ -89,7 +89,9 @@ export const delNullKey = (obj = {}, options = {}) => {
       const trimValue = deep ? delNullKey(value, deep, keepRef) : value
       if (!isOmitValue(trimValue, keepRef)) {
         newObj[key] = trimValue
-      } else if (!isOmitValue(value)) {
+      }
+    } else if (typeof value !== 'object') {
+      if (!isOmitValue(value)) {
         newObj[key] = value
       }
     }

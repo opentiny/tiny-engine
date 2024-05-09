@@ -29,13 +29,11 @@ const testObj = {
 }
 
 test('should be object value, deep is false', () => {
-  expect(delNullKey(testObj, { deep: false, keepRef: true })).toBe({
+  expect(delNullKey(testObj, { deep: false, keepRef: false })).toEqual({
     number1: 1,
     number2: 0,
     string1: '1',
-    array1: [],
     array2: [1, 2, 3],
-    object1: {},
     object2: { name: 'zh', id: 1 },
     object3: {
       inside: {
@@ -48,34 +46,40 @@ test('should be object value, deep is false', () => {
   })
 })
 
-test('should be object value, keepRef is true', () => {
-  expect(delNullKey(testObj, { deep: true, keepRef: true })).toBe({
+test('should be object value, keepRef is false', () => {
+  expect(delNullKey(testObj, { deep: true, keepRef: false })).toEqual({
+    array2: [1, 2, 3],
     number1: 1,
     number2: 0,
-    string1: '1',
-    array1: [],
-    array2: [1, 2, 3],
-    object1: {},
-    object2: { name: 'zh', id: 1 },
+    object2: {
+      id: 1,
+      name: 'zh'
+    },
     object3: {
       inside: {
         insideStringNotEmpty: '12'
       }
-    }
+    },
+    string1: '1'
   })
 })
 
-test('should be object value, keepRef is false', () => {
-  expect(delNullKey(testObj, { deep: true, keepRef: false })).toBe({
+test('should be object value, keepRef is true', () => {
+  expect(delNullKey(testObj, { deep: true, keepRef: true })).toEqual({
+    array1: [],
+    array2: [1, 2, 3],
     number1: 1,
     number2: 0,
-    string1: '1',
-    array2: [1, 2, 3],
-    object2: { name: 'zh', id: 1 },
+    object1: {},
+    object2: {
+      id: 1,
+      name: 'zh'
+    },
     object3: {
       inside: {
         insideStringNotEmpty: '12'
       }
-    }
+    },
+    string1: '1'
   })
 })
