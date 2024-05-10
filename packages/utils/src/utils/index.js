@@ -90,10 +90,8 @@ export const delNullKey = (obj = {}, options = {}) => {
       if (!isOmitValue(trimValue, keepRef)) {
         newObj[key] = trimValue
       }
-    } else if (typeof value !== 'object') {
-      if (!isOmitValue(value)) {
-        newObj[key] = value
-      }
+    } else if (!isOmitValue(value)) {
+      newObj[key] = value
     }
   }
   return newObj
