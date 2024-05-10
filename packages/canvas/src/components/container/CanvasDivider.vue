@@ -129,7 +129,10 @@ export default {
           ]
         } else {
           // 已经切割过了，直接加一行
-          schema.children.push(...extend(true, {}, ROW_SNIPPET))
+          schema.children.push({
+            ...extend(true, {}, ROW_SNIPPET),
+            children: [{ ...extend(true, {}, COL_SNIPPET) }]
+          })
         }
       }
 
