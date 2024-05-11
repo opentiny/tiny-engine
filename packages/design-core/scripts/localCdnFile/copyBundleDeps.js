@@ -40,14 +40,14 @@ export function replaceBundleCdnLink(bundle, fileMap) {
   })
 }
 
-export function copyBundleDeps(
+export function copyBundleDeps({
   bundleFile,
   targetBundleFile,
   originCdnPrefix,
   base,
-  dir,
+  dir = 'material-static',
   bundleTempDir = 'bundle-deps/material-static'
-) {
+}) {
   const cdnFiles = extraBundleCdnLink(bundleFile, originCdnPrefix).map((url) =>
     getCdnPathNpmInfoForSingleFile(url, originCdnPrefix, base, dir, false, bundleTempDir)
   )

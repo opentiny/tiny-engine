@@ -51,15 +51,15 @@ export function extraPreviewImportFile(filename, targetFileName, originCdnPrefix
   ]
 }
 
-export function copyPreviewImportMap(
+export function copyPreviewImportMap({
   importMapJson,
   targetImportMapJson,
   originCdnPrefix,
   base,
-  dir,
-  packageCopyLib = [],
-  bundleTempDir = 'bundle-deps/preview-import-map'
-) {
+  dir = 'preview-import-map-static',
+  bundleTempDir = 'bundle-deps/preview-import-map',
+  packageCopyLib = [] // key之为cdn地址上的包名
+}) {
   const cdnFiles = extraPreviewImport(importMapJson, originCdnPrefix).map((url) => {
     const { packageName } = url.match(
       new RegExp(`^${originCdnPrefix}/?(?<packageName>.+?)@(?<versionDemand>[^/]+)(?<filePathInPackage>.*?)$`)

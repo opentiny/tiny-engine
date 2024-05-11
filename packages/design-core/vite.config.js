@@ -288,40 +288,37 @@ export default defineConfig(({ command, mode }) => {
     monacoEditorPluginInstance,
     htmlPlugin(mode),
     isLocalImportMap
-      ? copyLocalImportMap(
-          importmap,
-          importMapStyles,
-          VITE_CDN_DOMAIN,
-          getBaseUrlFromCli(config.base),
-          'import-map-static',
-          [
+      ? copyLocalImportMap({
+          importMap: importmap,
+          styleUrls: importMapStyles,
+          originCdnPrefix: VITE_CDN_DOMAIN,
+          base: getBaseUrlFromCli(config.base),
+          packageCopy: [
             // 这两个包的js存在相对路径引用，不能单独拷贝一个文件，需要整个包拷贝
             '@opentiny/vue-theme/theme-tool',
             '@opentiny/vue-theme/theme'
           ]
-        )
+        })
       : importmapPlugin(importmap, importMapStyles),
     isCopyBundleDeps
-      ? copyBundleDeps(
-          'public/mock/bundle.json',
-          'mock/bundle.json',
-          VITE_CDN_DOMAIN, // mock 中bundle的域名当前和环境的VITE_CDN_DOMAIN一致
-          getBaseUrlFromCli(config.base),
-          'material-static'
-        ).plugin(command === 'serve')
+      ? copyBundleDeps({
+          bundleFile: 'public/mock/bundle.json',
+          targetBundleFile: 'mock/bundle.json',
+          originCdnPrefix: VITE_CDN_DOMAIN, // mock 中bundle的域名当前和环境的VITE_CDN_DOMAIN一致
+          base: getBaseUrlFromCli(config.base)
+        }).plugin(command === 'serve')
       : [],
     isLocalImportMap
-      ? copyPreviewImportMap(
-          './src/preview/src/preview/importMap.json',
-          'preview-import-map-static/preview-importmap.json',
-          VITE_CDN_DOMAIN,
-          getBaseUrlFromCli(config.base),
-          'preview-import-map-static',
-          [
+      ? copyPreviewImportMap({
+          importMapJson: './src/preview/src/preview/importMap.json',
+          targetImportMapJson: 'preview-import-map-static/preview-importmap.json',
+          originCdnPrefix: VITE_CDN_DOMAIN,
+          base: getBaseUrlFromCli(config.base),
+          packageCopyLib: [
             // 以下的js存在相对路径引用，不能单独拷贝一个文件，需要整个包拷贝
             '@vue/devtools-api'
           ]
-        )
+        })
       : []
   )
   return config

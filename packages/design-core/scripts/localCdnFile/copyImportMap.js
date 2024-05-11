@@ -9,26 +9,26 @@ import {
 import { importmapPlugin } from '../externalDeps'
 import { installPackageTemporary } from '../vite-plugins/installPackageTemporary'
 
-export const copyLocalImportMap = (
+export const copyLocalImportMap = ({
   importMap,
-  styles,
+  styleUrls,
   originCdnPrefix,
-  publicPath,
-  dir,
-  packageCopy,
-  bundleTempDir = 'bundle-deps/design-core-import-map'
-) => {
+  base,
+  dir = 'import-map-static',
+  bundleTempDir = 'bundle-deps/design-core-import-map',
+  packageCopy = [] // key之为importMap的imports的左值 （非右值的地址上的包名）
+}) => {
   const importMapFiles = Object.entries(importMap.imports)
     .filter(([_libKey, libPath]) => libPath.startsWith(originCdnPrefix))
     .map(([libKey, libPath]) => {
       if (packageCopy.includes(libKey)) {
-        return getCdnPathNpmInfoForPackage(libPath, originCdnPrefix, publicPath, dir, true, bundleTempDir)
+        return getCdnPathNpmInfoForPackage(libPath, originCdnPrefix, base, dir, true, bundleTempDir)
       }
-      return getCdnPathNpmInfoForSingleFile(libPath, originCdnPrefix, publicPath, dir, false, bundleTempDir)
+      return getCdnPathNpmInfoForSingleFile(libPath, originCdnPrefix, base, dir, false, bundleTempDir)
     })
-  const styleFiles = styles
+  const styleFiles = styleUrls
     .filter((styleUrl) => styleUrl.startsWith(originCdnPrefix))
-    .map((url) => getCdnPathNpmInfoForSingleFile(url, originCdnPrefix, publicPath, dir, false), bundleTempDir)
+    .map((url) => getCdnPathNpmInfoForSingleFile(url, originCdnPrefix, base, dir, false), bundleTempDir)
 
   const { packages: packageNeedToInstall, files } = getPackageNeedToInstallAndFilesUsingSameVersion(
     importMapFiles.concat(styleFiles)
@@ -61,7 +61,7 @@ export const copyLocalImportMap = (
           Object.entries(importMap.imports).map(([k, v]) => [k, files.find((f) => f.originUrl === v)?.newUrl ?? v])
         )
       },
-      styles.map((url) => styleFiles.find((f) => f.originUrl === url).newUrl ?? url)
+      styleUrls.map((url) => styleFiles.find((f) => f.originUrl === url).newUrl ?? url)
     )
   ]
 }
