@@ -598,6 +598,20 @@ const getLoopScope = ({ scope, index, item, loopArgs }) => {
   }
 }
 
+const injectPlaceHolder = (componentName, children) => {
+  const isEmptyArr = Array.isArray(children) && !children.length
+
+  if (configure[componentName]?.isContainer && (!children || isEmptyArr)) {
+    return [
+      {
+        componentName: 'CanvasPlaceholder'
+      }
+    ]
+  }
+
+  return children
+}
+
 const renderGroup = (children, scope, parent) => {
   return children.map?.((schema) => {
     const { componentName, children, loop, loopArgs, condition, id } = schema
@@ -617,10 +631,14 @@ const renderGroup = (children, scope, parent) => {
         return null
       }
 
+      const renderChildren = injectPlaceHolder(componentName, children)
+
       return h(
         getComponent(componentName),
         getBindProps(schema, mergeScope),
-        Array.isArray(children) ? renderSlot(children, mergeScope, schema) : parseData(children, mergeScope)
+        Array.isArray(renderChildren)
+          ? renderSlot(renderChildren, mergeScope, schema)
+          : parseData(renderChildren, mergeScope)
       )
     }
 
@@ -628,19 +646,9 @@ const renderGroup = (children, scope, parent) => {
   })
 }
 
-const ContainerComponent = ['CanvasCol', 'CanvasRow', 'CanvasRowColContainer']
-
 const getChildren = (schema, mergeScope) => {
   const { componentName, children } = schema
-  let renderChildren = children
-
-  if (ContainerComponent.includes(componentName) && !renderChildren?.length) {
-    renderChildren = [
-      {
-        componentName: 'CanvasPlaceholder'
-      }
-    ]
-  }
+  const renderChildren = injectPlaceHolder(componentName, children)
 
   const component = getComponent(componentName)
   const isNative = typeof component === 'string'
