@@ -170,7 +170,7 @@ export function dedupeCopyFiles(files) {
   }, [])
 }
 
-export function analysisPackageNeedToInstallAndModifyFilesMergeToSameVersion(files) {
+export function getPackageNeedToInstallAndFilesUsingSameVersion(files) {
   const packageNeedToInstall = files
     .filter((item) => !item.sourceExist)
     .map(({ packageName, version, sourceExistExternal: exist }) => ({ packageName, version, exist }))

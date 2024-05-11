@@ -1,7 +1,7 @@
 import path from 'node:path'
 import { readJsonSync } from 'fs-extra'
 import {
-  analysisPackageNeedToInstallAndModifyFilesMergeToSameVersion,
+  getPackageNeedToInstallAndFilesUsingSameVersion,
   copyfileToDynamicSrcMapper,
   dedupeCopyFiles,
   getCdnPathNpmInfoForPackage,
@@ -69,8 +69,7 @@ export function copyPreviewImportMap(
     }
     return getCdnPathNpmInfoForSingleFile(url, originCdnPrefix, base, dir, false, bundleTempDir)
   })
-  const { packages: packageNeedToInstall, files } =
-    analysisPackageNeedToInstallAndModifyFilesMergeToSameVersion(cdnFiles)
+  const { packages: packageNeedToInstall, files } = getPackageNeedToInstallAndFilesUsingSameVersion(cdnFiles)
   return [
     ...installPackageTemporary(packageNeedToInstall, bundleTempDir),
     ...viteStaticCopy({

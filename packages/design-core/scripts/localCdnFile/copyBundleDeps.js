@@ -5,7 +5,7 @@ import { configServerAddProxy } from '../vite-plugins/configureServerAddProxy'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
 import {
   getCdnPathNpmInfoForSingleFile,
-  analysisPackageNeedToInstallAndModifyFilesMergeToSameVersion,
+  getPackageNeedToInstallAndFilesUsingSameVersion,
   dedupeCopyFiles,
   copyfileToDynamicSrcMapper
 } from './locateCdnNpmInfo'
@@ -51,8 +51,7 @@ export function copyBundleDeps(
   const cdnFiles = extraBundleCdnLink(bundleFile, originCdnPrefix).map((url) =>
     getCdnPathNpmInfoForSingleFile(url, originCdnPrefix, base, dir, false, bundleTempDir)
   )
-  const { packages: packageNeedToInstall, files } =
-    analysisPackageNeedToInstallAndModifyFilesMergeToSameVersion(cdnFiles)
+  const { packages: packageNeedToInstall, files } = getPackageNeedToInstallAndFilesUsingSameVersion(cdnFiles)
 
   const plugin = (isDev) => {
     return [
