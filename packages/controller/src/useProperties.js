@@ -156,23 +156,28 @@ const isPageOrBlock = (schema) => [COMPONENT_NAME.Block, COMPONENT_NAME.Page].in
 
 const getPropertyItem = (propertyName, properties) => {
   const { pageState } = useCanvas()
-
   if (!properties) {
     properties = pageState.properties
   }
   let propertyItem = null
   properties.some((property) => {
-    return property.content.some((item) => {
+    const findInParentNode = property.content.some((item) => {
       if (item.property === propertyName) {
         propertyItem = item
         return true
       }
-      if (item.properties) {
-        propertyItem = getPropertyItem(propertyName, item.properties)
-        return propertyItem
-      }
       return false
     })
+    return (
+      findInParentNode ??
+      property.content.some((item) => {
+        if (item.properties) {
+          propertyItem = getPropertyItem(propertyName, item.properties)
+          return propertyItem
+        }
+        return false
+      })
+    )
   })
   return propertyItem
 }
@@ -192,10 +197,9 @@ const getPropertyValue = (propertyName) => {
  * @param {string} propertyName
  * @param {any} value
  */
-const setPropertyValue = async (propertyName, value) => {
+const setPropertyValue = (propertyName, value) => {
   const propertyItem = getPropertyItem(propertyName)
   if (propertyItem?.widget?.props) {
-    await nextTick()
     propertyItem.widget.props.modelValue = value
   }
 }
