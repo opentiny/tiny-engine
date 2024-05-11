@@ -27,10 +27,7 @@
     "@opentiny/tiny-engine-canvas": "workspace:*",
     "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-controller": "workspace:*",
-    "@opentiny/tiny-engine-utils": "workspace:*",
-    "@opentiny/vue": "~3.10.0",
-    "@opentiny/vue-icon": "~3.10.0",
-    "@opentiny/vue-renderless": "~3.10.0"
+    "@opentiny/tiny-engine-utils": "workspace:*"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
@@ -38,6 +35,9 @@
     "vite": "^4.3.7"
   },
   "peerDependencies": {
+    "@opentiny/vue": "^3.14.0",
+    "@opentiny/vue-icon": "^3.14.0",
+    "@opentiny/vue-renderless": "^3.14.0",
     "vue": "^3.4.15"
   }
 }
