@@ -87,8 +87,7 @@
 import { ref, reactive, computed, toRaw, watchEffect, onMounted, onUnmounted, watch } from 'vue'
 import { Popover, Input, Switch } from '@opentiny/vue'
 import { IconWebPlus } from '@opentiny/vue-icon'
-import { useLayout } from '@opentiny/tiny-engine-controller'
-import { getCanvasType, setCanvasType } from '@opentiny/tiny-engine-canvas'
+import { useLayout, useCanvas } from '@opentiny/tiny-engine-controller'
 
 export default {
   components: {
@@ -114,7 +113,8 @@ export default {
     const visible = ref(false)
     const active = ref(false)
     const flag = ref(false)
-    const isAbsolute = ref(getCanvasType() === 'absolute')
+    const { getCanvasType } = useCanvas().canvasApi.value
+    const isAbsolute = ref(getCanvasType?.() === 'absolute')
 
     const dimension = computed(() => useLayout().getDimension())
     const scale = computed(() => dimension.value.scale * 100)
@@ -350,6 +350,7 @@ export default {
     }
 
     const changeCanvasType = (value) => {
+      const { setCanvasType } = useCanvas().canvasApi.value
       setCanvasType(value ? 'absolute' : 'normal')
     }
 

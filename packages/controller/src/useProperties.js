@@ -191,7 +191,7 @@ const setProp = (name, value, type) => {
   }
 
   // 没有父级，或者不在节点上面，要更新内容。就用setState
-  const { getNode, setState, updateRect } = useCanvas().renderer.value || {}
+  const { getNode, setState, updateRect } = useCanvas().canvasApi.value || {}
   getNode(properties.schema.id, true)?.parent || setState(useCanvas().getPageSchema().state)
   propsUpdateKey.value++
 

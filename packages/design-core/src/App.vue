@@ -21,7 +21,15 @@
 import { reactive, ref, watch, onUnmounted } from 'vue'
 import { ConfigProvider as TinyConfigProvider } from '@opentiny/vue'
 import designSmbConfig from '@opentiny/vue-design-smb'
-import { useResource, useLayout, useEditorInfo, useModal, useApp, useNotify } from '@opentiny/tiny-engine-controller'
+import {
+  useResource,
+  useLayout,
+  useEditorInfo,
+  useModal,
+  useApp,
+  useNotify,
+  useCanvas
+} from '@opentiny/tiny-engine-controller'
 import AppManage from '@opentiny/tiny-engine-plugin-page'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
 import DesignToolbars from './DesignToolbars.vue'
@@ -90,7 +98,18 @@ export default {
     }
 
     useEditorInfo().getUserInfo()
-    useResource().fetchResource()
+
+    watch(
+      useCanvas().isCanvasApiReady,
+      (ready) => {
+        if (ready) {
+          useResource().fetchResource()
+        }
+      },
+      {
+        immediate: true
+      }
+    )
 
     const handlePopStateEvent = () => {
       useResource().handlePopStateEvent()

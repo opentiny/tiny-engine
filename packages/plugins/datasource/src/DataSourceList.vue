@@ -51,7 +51,7 @@ export const refresh = () => {
   const selectedId = appInfoState.selectedId || url.get('id')
   fetchDataSourceList(selectedId).then((data) => {
     dataSourceList.value = data
-    useCanvas().setDataSourceMap(data)
+    useCanvas().canvasApi.value.setDataSourceMap(data)
   })
 }
 

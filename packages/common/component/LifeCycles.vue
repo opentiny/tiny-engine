@@ -78,9 +78,8 @@
 <script lang="jsx">
 import { reactive, ref, watchEffect, onBeforeUnmount } from 'vue'
 import { Button, DialogBox, Popover, Search, Alert } from '@opentiny/vue'
-import { getGlobalConfig, useModal, usePage, useNotify } from '@opentiny/tiny-engine-controller'
+import { getGlobalConfig, useModal, usePage, useNotify, useCanvas } from '@opentiny/tiny-engine-controller'
 import { theme } from '@opentiny/tiny-engine-controller/adapter'
-import { getSchema } from '@opentiny/tiny-engine-canvas'
 import MetaListItems from './MetaListItems.vue'
 import { iconYes } from '@opentiny/vue-icon'
 import VueMonaco from './VueMonaco.vue'
@@ -130,7 +129,7 @@ export default {
     })
 
     watchEffect(() => {
-      state.bindLifeCycles = props.bindLifeCycles || getSchema()?.lifeCycles || {}
+      state.bindLifeCycles = props.bindLifeCycles || useCanvas().canvasApi.value?.getSchema()?.lifeCycles || {}
     })
 
     const searchLifeCyclesList = (value) => {
@@ -142,7 +141,7 @@ export default {
     }
 
     const syncLifeCycle = () => {
-      const currentSchema = getSchema()
+      const currentSchema = useCanvas().canvasApi.value?.getSchema?.()
       const pageContent = getPageContent()
       const { id, fileName } = pageContent
       if (id === currentSchema.id || fileName === currentSchema.fileName) {
@@ -165,7 +164,8 @@ export default {
 
     const openLifeCyclesPanel = (item) => {
       state.title = item
-      const bindLifeCycleSource = props.bindLifeCycles?.[item] || getSchema().lifeCycles?.[item]
+      const bindLifeCycleSource =
+        props.bindLifeCycles?.[item] || useCanvas().canvasApi.value?.getSchema?.()?.lifeCycles?.[item]
       state.editorValue =
         bindLifeCycleSource?.value ||
         `function ${item} (${item === 'setup' ? '{ props, state, watch, onMounted }' : ''}) {} `
