@@ -2,8 +2,8 @@ import path from 'node:path'
 import fs from 'node:fs'
 import fg from 'fast-glob'
 import { normalizePath } from 'vite'
+import { readJsonSync } from 'fs-extra'
 import { babelReplaceImportPathWithCertainFileName } from './replaceImportPath.mjs'
-import { readJsonFile } from './utils'
 
 function transform(content, filename) {
   if (filename.endsWith('.js')) {
@@ -60,13 +60,13 @@ export function getCdnPathNpmInfoForSingleFile(
     if (stat.isDirectory()) {
       isFolder = true
     }
-    const content = readJsonFile(`node_modules/${packageName}/package.json`)
+    const content = readJsonSync(`node_modules/${packageName}/package.json`)
     version = content.version // 忽略请求的包版本，使用本地包版本号
   } else {
     src = tempDir + '/' + src
     sourceExistExternal = fs.existsSync(path.resolve(src)) // 安装过的不重新安装, 当且仅当所有包都安装过
     if (sourceExistExternal) {
-      const packageJson = readJsonFile(`${tempDir}/node_modules/${packageName}/package.json`)
+      const packageJson = readJsonSync(`${tempDir}/node_modules/${packageName}/package.json`)
       version = packageJson.version // 如果重新安装这个版本号还需要刷新
     }
   }
@@ -118,13 +118,13 @@ export function getCdnPathNpmInfoForPackage(
   const sourceExist = fs.existsSync(path.resolve(src))
   let sourceExistExternal = false
   if (sourceExist) {
-    const content = readJsonFile(`${src}/package.json`)
+    const content = readJsonSync(`${src}/package.json`)
     version = content.version // 忽略请求的包版本，使用本地包版本号
   } else {
     src = tempDir + '/' + src
     sourceExistExternal = fs.existsSync(path.resolve(src)) // 安装过的不重新安装, 当且仅当所有包都安装过
     if (sourceExistExternal) {
-      const packageJson = readJsonFile(`${src}/package.json`)
+      const packageJson = readJsonSync(`${src}/package.json`)
       version = packageJson.version // 如果重新安装这个版本号还需要刷新
     }
   }

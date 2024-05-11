@@ -1,4 +1,5 @@
 import path from 'node:path'
+import { readJsonSync } from 'fs-extra'
 import { installPackageTemporary } from '../vite-plugins/installPackageTemporary'
 import { configServerAddProxy } from '../vite-plugins/configureServerAddProxy'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
@@ -8,11 +9,10 @@ import {
   dedupeCopyFiles,
   copyfileToDynamicSrcMapper
 } from './locateCdnNpmInfo'
-import { readJsonFile } from './utils'
 
 export function extraBundleCdnLink(filename, originCdnPrefix) {
   const result = []
-  const bundle = readJsonFile(filename)
+  const bundle = readJsonSync(filename)
   bundle.data?.materials?.components?.forEach((component) => {
     if (component.npm) {
       const possibleUrl = [component.npm.script, component.npm.css]

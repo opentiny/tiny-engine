@@ -1,4 +1,5 @@
 import path from 'node:path'
+import { readJsonSync } from 'fs-extra'
 import {
   analysisPackageNeedToInstallAndModifyFilesMergeToSameVersion,
   copyfileToDynamicSrcMapper,
@@ -8,11 +9,10 @@ import {
 } from './locateCdnNpmInfo'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
 import { installPackageTemporary } from '../vite-plugins/installPackageTemporary'
-import { readJsonFile } from './utils'
 
 export function extraPreviewImport(filename, originCdnPrefix) {
   const result = []
-  const importMap = readJsonFile(filename)
+  const importMap = readJsonSync(filename)
   Object.entries(importMap.imports)?.forEach(([_key, location]) => {
     const url = location.replace('${VITE_CDN_DOMAIN}', originCdnPrefix).replace('${opentinyVueVersion}', '~3.11')
     if (url?.startsWith(originCdnPrefix) && !result.includes(url)) {
