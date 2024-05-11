@@ -12,7 +12,7 @@ import lowcodeConfig from './config/lowcode.config'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import { importmapPlugin } from './scripts/externalDeps'
 import visualizer from 'rollup-plugin-visualizer'
-import { getBaseUrlFromCli, CopyBundleDeps, CopyPreviewImportMap, useLocalImportMap } from './scripts/localCdnFile'
+import { getBaseUrlFromCli, copyBundleDeps, copyPreviewImportMap, copyLocalImportMap } from './scripts/localCdnFile'
 
 const origin = 'http://localhost:9090/'
 
@@ -288,7 +288,7 @@ export default defineConfig(({ command, mode }) => {
     monacoEditorPluginInstance,
     htmlPlugin(mode),
     isLocalImportMap
-      ? useLocalImportMap(
+      ? copyLocalImportMap(
           importmap,
           importMapStyles,
           VITE_CDN_DOMAIN,
@@ -302,7 +302,7 @@ export default defineConfig(({ command, mode }) => {
         )
       : importmapPlugin(importmap, importMapStyles),
     isCopyBundleDeps
-      ? CopyBundleDeps(
+      ? copyBundleDeps(
           'public/mock/bundle.json',
           'mock/bundle.json',
           VITE_CDN_DOMAIN, // mock 中bundle的域名当前和环境的VITE_CDN_DOMAIN一致
@@ -311,7 +311,7 @@ export default defineConfig(({ command, mode }) => {
         ).plugin(command === 'serve')
       : [],
     isLocalImportMap
-      ? CopyPreviewImportMap(
+      ? copyPreviewImportMap(
           './src/preview/src/preview/importMap.json',
           'preview-import-map-static/preview-importmap.json',
           VITE_CDN_DOMAIN,

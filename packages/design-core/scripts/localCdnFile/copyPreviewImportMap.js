@@ -50,7 +50,7 @@ export function extraPreviewImportFile(filename, targetFileName, originCdnPrefix
   ]
 }
 
-export function CopyPreviewImportMap(
+export function copyPreviewImportMap(
   importMapJson,
   targetImportMapJson,
   originCdnPrefix,

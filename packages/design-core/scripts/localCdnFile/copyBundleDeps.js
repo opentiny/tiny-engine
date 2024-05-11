@@ -40,7 +40,7 @@ export function replaceBundleCdnLink(bundle, fileMap) {
   })
 }
 
-export function CopyBundleDeps(
+export function copyBundleDeps(
   bundleFile,
   targetBundleFile,
   originCdnPrefix,

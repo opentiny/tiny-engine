@@ -9,7 +9,7 @@ import {
 import { importmapPlugin } from '../externalDeps'
 import { installPackageTemporary } from '../vite-plugins/installPackageTemporary'
 
-export const useLocalImportMap = (
+export const copyLocalImportMap = (
   importMap,
   styles,
   originCdnPrefix,
@@ -47,7 +47,7 @@ export const useLocalImportMap = (
             ...config.resolve.alias,
             {
               find: /^vue$/,
-              replacement: `http://localhost:8080/${
+              replacement: `http://localhost:${config.server.port || 8080}/${
                 files.find(({ originUrl }) => importMap.imports.vue === originUrl).newUrl
               }` // 实际端口号需要更具本地启动修改
             }
