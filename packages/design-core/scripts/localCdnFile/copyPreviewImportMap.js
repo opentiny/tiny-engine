@@ -26,6 +26,7 @@ export function replacePreviewImport(importMap, fileMap, originCdnPrefix) {
   return {
     imports: Object.fromEntries(
       Object.entries(importMap.imports)?.map(([key, location]) => {
+        // 这里的替换占位符规则等同于packages/design-core/src/preview/src/preview/importMap.js, 两边修改需要同步
         const url = location.replace('${VITE_CDN_DOMAIN}', originCdnPrefix).replace('${opentinyVueVersion}', '~3.11')
         const matchRule = fileMap.find((rule) => url === rule.originUrl)
         if (matchRule) {
