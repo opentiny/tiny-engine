@@ -18,8 +18,6 @@ import { generateFunction } from '@opentiny/tiny-engine-controller/utils'
 import renderer, { parseData, setConfigure, setController, globalNotify, isStateAccessor } from './render'
 import { getNode as getNodeById, clearNodes, getRoot, setContext, getContext, setCondition, context } from './context'
 import CanvasEmpty from './CanvasEmpty.vue'
-import { getCurrent, setLocales, updateRect, addStyle, addScript, canvasDispatch } from '../container/container'
-import Builtin from '../builtin/builtin.json'
 
 const { BROADCAST_CHANNEL } = constants
 
@@ -426,17 +424,3 @@ export const api = {
   setDataSourceMap,
   setGlobalState
 }
-
-const canvasApi = {
-  getCurrent,
-  setLocales,
-  getNodeById: getNode,
-  updateRect,
-  addStyle,
-  addScript,
-  canvasDispatch
-}
-
-window.api = api
-window.canvasApi = canvasApi
-window.Builtin = Builtin

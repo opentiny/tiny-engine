@@ -80,7 +80,6 @@ import {
   useLayout,
   useHelp
 } from '@opentiny/tiny-engine-controller'
-import { setState, getSchema, deleteState, setGlobalState, getGlobalState } from '@opentiny/tiny-engine-canvas'
 import { iconSearch } from '@opentiny/vue-icon'
 import { CloseIcon, LinkButton } from '@opentiny/tiny-engine-common'
 import DataSourceList from './DataSourceList.vue'
@@ -162,6 +161,8 @@ export default {
     }
 
     const add = (name, variable) => {
+      const { getSchema } = useCanvas().canvasApi.value
+
       if (getSchema()) {
         if (updateKey.value !== name && flag.value === OPTION_TYPE.UPDATE) {
           delete state.dataSource[updateKey.value]
@@ -188,6 +189,7 @@ export default {
 
     const confirm = () => {
       const { name } = state.createData
+      const { setState, setGlobalState } = useCanvas().canvasApi.value
 
       if (!name || errorMessage.value) {
         notifySaveError('变量名未填写或名称不符合规范，请按照提示修改后重试。')
@@ -257,6 +259,8 @@ export default {
     }
 
     const remove = (key) => {
+      const { deleteState, getSchema } = useCanvas().canvasApi.value
+
       delete state.dataSource[key]
       // 删除变量也需要同步触发画布渲染
       deleteState(key)
@@ -285,6 +289,7 @@ export default {
     }
 
     const setGlobalStateToDataSource = () => {
+      const { getGlobalState } = useCanvas().canvasApi.value
       const globalState = getGlobalState()
 
       if (!globalState) {
@@ -299,6 +304,7 @@ export default {
     const removeStore = (key) => {
       const storeListt = [...useResource().resState.globalState] || []
       const index = storeListt.findIndex((store) => store.id === key)
+      const { setGlobalState } = useCanvas().canvasApi.value
 
       if (index !== -1) {
         const { id } = useEditorInfo().useInfo()
@@ -321,6 +327,8 @@ export default {
     }
 
     const initDataSource = (tabsName = activeName.value) => {
+      const { getSchema } = useCanvas().canvasApi.value
+
       if (tabsName === STATE.GLOBAL_STATE) {
         setGlobalStateToDataSource()
       } else {

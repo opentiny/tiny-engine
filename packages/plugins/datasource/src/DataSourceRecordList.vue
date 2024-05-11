@@ -99,8 +99,7 @@ import { Grid, Pager, Input, Numeric, DatePicker, Switch, Slider, Link } from '@
 import { IconPlusCircle, IconImport } from '@opentiny/vue-icon'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
 import { utils } from '@opentiny/tiny-engine-utils'
-import { useModal, useLayout, useNotify } from '@opentiny/tiny-engine-controller'
-import { getSchema } from '@opentiny/tiny-engine-canvas'
+import { useModal, useLayout, useNotify, useCanvas } from '@opentiny/tiny-engine-controller'
 import useClipboard from 'vue-clipboard3'
 import { fetchDataSourceDetail, requestUpdateDataSource } from './js/http'
 import { downloadFn, handleImportedData, overrideOrMergeData, getDataAfterPage } from './js/datasource'
@@ -437,7 +436,7 @@ export default {
         }
 
         const key = `datasource${capitalize(camelize(name))}`
-        const pageSchema = getSchema()
+        const pageSchema = useCanvas().canvasApi.value.getSchema()
 
         if (pageSchema.state[key]) {
           pageSchema.state[key] = data.map(({ _id, ...other }) => other)
