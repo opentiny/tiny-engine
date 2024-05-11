@@ -102,7 +102,11 @@ export default {
     }
 
     watchEffect(() => {
-      state.selected = props.modelValue ?? ''
+      if (!props.options.find((item) => item.value === props.modelValue)) {
+        state.selected = props.options?.[0]?.value || ''
+      } else {
+        state.selected = props.modelValue ?? ''
+      }
     })
 
     return {
