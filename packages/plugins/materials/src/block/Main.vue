@@ -142,7 +142,7 @@ export default {
   display: flex;
   flex-direction: column;
   .tiny-search {
-    padding: 12px 8px;
+    padding: 0 8px 12px;
     :deep(.tiny-input__inner) {
       height: 30px;
     }

@@ -7,8 +7,7 @@
         <close-icon @close="closePanel"></close-icon>
       </div>
       <tiny-tabs v-model="activeName" @click="tabClick" tab-style="button-card">
-        <tiny-tab-item v-if="isBlock" :name="STATE.CURRENT_STATE" title="区块状态"></tiny-tab-item>
-        <tiny-tab-item v-else :name="STATE.CURRENT_STATE" title="页面状态"></tiny-tab-item>
+        <tiny-tab-item :name="STATE.CURRENT_STATE" :title="isBlock ? '区块状态' : '页面状态'"></tiny-tab-item>
         <tiny-tab-item :name="STATE.GLOBAL_STATE" title="应用状态"></tiny-tab-item>
       </tiny-tabs>
       <tiny-search
@@ -490,11 +489,8 @@ export default {
   }
 
   :deep(.tiny-tabs__content) {
-    height: calc(100% - 48px);
+    margin: 0;
     padding: 0;
-    & > div {
-      height: 100%;
-    }
   }
   :deep(.help-box) {
     position: absolute;
