@@ -1,0 +1,48 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "border": {
+        "title": "是否显示边框",
+        "type": "boolean",
+        "default": false
+      },
+      "disabled": {
+        "title": "是否禁用",
+        "type": "boolean",
+        "default": false
+      },
+      "label": {
+        "title": "Radio 的 value",
+        "type": ["string", "number", "boolean"],
+        "default": ""
+      },
+      "name": {
+        "title": "原生 name 属性",
+        "type": "string",
+        "default": ""
+      },
+      "size": {
+        "title": "Radio 的尺寸，仅在 border 为真时有效",
+        "type": "string",
+        "enum": ["medium", "small", "mini"],
+        "enumNames": ["中等尺寸", "较小尺寸", "迷你尺寸"],
+        "default": ""
+      },
+      "text": {
+        "title": "文本",
+        "type": "string",
+        "default": ""
+      },
+      "value": {
+        "title": "绑定值",
+        "type": "string",
+        "default": ""
+      },
+      "#default": {
+        "title": "Radio的默认插槽",
+        "type": "string"
+      }
+    }
+  }
+}

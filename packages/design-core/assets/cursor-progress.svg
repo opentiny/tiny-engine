@@ -1,0 +1,13 @@
+<svg data-icon="CursorProgress" aria-hidden="true" focusable="false" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path fill="currentColor" d="M7 5.846L1 1v7.687l2.15-1.73L4.663 10l1.298-.674L4.48 6.36z"></path>
+  <g fill="currentColor">
+    <path d="M10.5 7h1v2h-1z"></path>
+    <path opacity=".7" d="M10.5 13h1v2h-1z"></path>
+    <path opacity=".9" d="M7 10.5h2v1H7z"></path>
+    <path opacity=".95" d="M10.104 9.397l-.707.707L8 8.707 8.707 8z"></path>
+    <path opacity=".5" d="M14.052 13.344l-.707.707-1.397-1.393.707-.707z"></path>
+    <path opacity=".8" d="M9.396 11.95l.707.706-1.396 1.396L8 13.345z"></path>
+    <path opacity=".3" d="M13.345 8l.707.707-1.397 1.396-.707-.707z"></path>
+    <path opacity=".4" d="M13 10.5h2v1h-2z"></path>
+  </g>
+</svg>

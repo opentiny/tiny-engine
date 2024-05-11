@@ -1,0 +1,299 @@
+{
+  "icon": "button",
+  "name": {
+    "zh_CN": "按钮"
+  },
+  "component": "tiny-button",
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "collapse": {
+          "number": 6,
+          "text": {
+            "zh_CN": "显示更多"
+          }
+        },
+        "content": [
+          {
+            "property": "text",
+            "type": "object",
+            "defaultValue": "按钮文案",
+            "label": {
+              "text": {
+                "zh_CN": "按钮文字"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaBindI18n",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": ""
+            }
+          },
+          {
+            "property": "size",
+            "type": "select",
+            "defaultValue": "large",
+            "label": {
+              "text": {
+                "zh_CN": "大小"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "select",
+              "props": {
+                "options": [
+                  { "label": "large", "value": "large" },
+                  { "label": "middle", "value": "middle" },
+                  { "label": "small", "value": "small" },
+                  { "label": "xs", "value": "xs" }
+                ]
+              }
+            },
+            "description": {
+              "zh_CN": ""
+            }
+          },
+          {
+            "property": "disabled",
+            "label": {
+              "text": {
+                "zh_CN": "禁用"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否被禁用"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "type",
+            "label": {
+              "text": {
+                "zh_CN": "类型"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSelect",
+              "props": {
+                "options": [
+                  {
+                    "label": "primary",
+                    "value": "primary"
+                  },
+                  {
+                    "label": "success",
+                    "value": "success"
+                  },
+                  {
+                    "label": "info",
+                    "value": "info"
+                  },
+                  {
+                    "label": "warning",
+                    "value": "warning"
+                  },
+                  {
+                    "label": "danger",
+                    "value": "danger"
+                  },
+                  {
+                    "label": "text",
+                    "value": "text"
+                  }
+                ]
+              }
+            },
+            "description": {
+              "zh_CN": "设置不同的主题样式"
+            },
+            "labelPosition": "left"
+          }
+        ]
+      },
+      {
+        "name": "1",
+        "label": {
+          "zh_CN": "其他"
+        },
+        "content": [
+          {
+            "property": "round",
+            "label": {
+              "text": {
+                "zh_CN": "圆角"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否圆角按钮"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "plain",
+            "label": {
+              "text": {
+                "zh_CN": "朴素按钮"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否为朴素按钮"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "reset-time",
+            "label": {
+              "text": {
+                "zh_CN": "禁用时间"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaNumeric",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "设置禁用时间，防止重复提交，单位毫秒"
+            }
+          },
+          {
+            "property": "circle",
+            "label": {
+              "text": {
+                "zh_CN": "圆角"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否圆形按钮"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "autofocus",
+            "label": {
+              "text": {
+                "zh_CN": "聚焦"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否默认聚焦"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "loading",
+            "label": {
+              "text": {
+                "zh_CN": "加载中"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否展示位加载中样式"
+            },
+            "labelPosition": "left"
+          }
+        ],
+        "description": {
+          "zh_CN": ""
+        }
+      }
+    ],
+    "events": {
+      "onClick": {
+        "label": {
+          "zh_CN": "点击事件"
+        },
+        "description": {
+          "zh_CN": "按钮被点击时触发的回调函数"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [],
+          "returns": {}
+        },
+        "defaultValue": ""
+      }
+    },
+    "shortcuts": {
+      "properties": ["text", "size"]
+    },
+    "contentMenu": {
+      "actions": ["create symbol"]
+    }
+  }
+}

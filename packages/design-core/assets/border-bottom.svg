@@ -1,0 +1,14 @@
+<svg
+  data-icon="BorderBottom"
+  aria-hidden="true"
+  focusable="false"
+  width="16"
+  height="16"
+  viewBox="0 0 16 16"
+  version="1.1"
+  xmlns="http://www.w3.org/2000/svg"
+  style="display: block"
+>
+  <path opacity=".4" fill-rule="evenodd" clip-rule="evenodd" d="M4 11V4h8v7h2V2H2v9h2z"></path>
+  <path d="M2 14v-2h12v2z"></path>
+</svg>

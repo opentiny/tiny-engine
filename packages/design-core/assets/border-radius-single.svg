@@ -1,0 +1,16 @@
+<svg
+  data-icon="BorderRadiusSingle"
+  aria-hidden="true"
+  focusable="false"
+  width="16"
+  height="16"
+  viewBox="0 0 16 16"
+  version="1.1"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <path
+    fill-rule="evenodd"
+    clip-rule="evenodd"
+    d="M5 2a3 3 0 00-3 3v6a3 3 0 003 3h6a3 3 0 003-3V5a3 3 0 00-3-3H5zm0 2a1 1 0 00-1 1v6a1 1 0 001 1h6a1 1 0 001-1V5a1 1 0 00-1-1H5z"
+  ></path>
+</svg>

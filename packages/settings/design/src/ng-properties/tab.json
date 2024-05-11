@@ -1,0 +1,32 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "condition": {
+        "title": "是否渲染",
+        "type": "boolean",
+        "default": true
+      },
+      "class": {
+        "title": "样式类",
+        "type": "string"
+      },
+      "tabs": {
+        "title": "标签项",
+        "type": "array",
+        "default": [
+          {
+            "title": "标签页一",
+            "active": true
+          },
+          {
+            "title": "标签页二"
+          },
+          {
+            "title": "标签页三"
+          }
+        ]
+      }
+    }
+  }
+}

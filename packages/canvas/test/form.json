@@ -1,0 +1,690 @@
+{
+  "componentName": "Block",
+  "fileName": "CrmQuoteInfo",
+  "css": ".crm-quote-info .form-title {\r\n  color: #252b3a;\r\n  font-size: 14px;\r\n  font-weight: bold;\r\n  margin-bottom: 20px;\r\n  padding-left: 12px;\r\n}\r\n.crm-quote-info .form-fixed-layout {\r\n  display: grid;\r\n  grid-template-columns: repeat(3, 1fr);\r\n  grid-column-gap: 12px;\r\n}\r\n.crm-quote-info {\r\n  background: #fff;\r\n  padding: 12px;\r\n  min-height: 500px;\r\n}\r\n.crm-quote-info .form-auto-layout {\r\n  display: flex;\r\n  flex-wrap: wrap;\r\n}\r\n.search-form {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: flex-end;\r\n  width: 70%;\r\n}\r\n.icon-wrap {\r\n  border: 1px solid #adb0b8;\r\n  margin-left: 10px;\r\n  border-radius: 3px;\r\n  vertical-align: middle;\r\n  cursor: pointer;\r\n  height: 30px;\r\n  display: flex;\r\n  align-items: center;\r\n  width: 24px;\r\n  padding: 0 12px;\r\n  justify-content: center;\r\n}\r\n.out-search-box {\r\n  display: flex;\r\n  justify-content: flex-end;\r\n}\r\n.tag-nomal {\r\n  display: flex;\r\n  align-items: center;\r\n}\r\n.tag-nomal span {\r\n  display: block;\r\n  background-color: #adb0b8;\r\n  border: 1px solid #adb0b8;\r\n  border-radius: 4px;\r\n  padding: 2px;\r\n  color: #fff;\r\n  height: 16px;\r\n  line-height: 16px;\r\n}\r\n.tag-success span {\r\n  background-color: #50d4a8;\r\n  border: 1px solid #50d4a8;\r\n}",
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "collapse": {
+          "number": 6,
+          "text": {
+            "zh_CN": "显示更多"
+          }
+        },
+        "content": [
+          {
+            "property": "isFixed",
+            "type": "Boolean",
+            "defaultValue": true,
+            "label": {
+              "text": {
+                "zh_CN": "是否固定列布局"
+              }
+            },
+            "description": {
+              "zh_CN": "配置固定列布局"
+            },
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "cols": 12,
+            "rules": [],
+            "required": true,
+            "handle": {}
+          },
+          {
+            "property": "isAuto",
+            "type": "Boolean",
+            "defaultValue": false,
+            "label": {
+              "text": {
+                "zh_CN": "是否弹性布局"
+              }
+            },
+            "description": {
+              "zh_CN": "配置弹性布局"
+            },
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "cols": 12,
+            "rules": [],
+            "required": true,
+            "handle": {}
+          },
+          {
+            "property": "cpqId",
+            "type": "String",
+            "defaultValue": "",
+            "label": {
+              "text": {
+                "zh_CN": "报价ID"
+              }
+            },
+            "description": {
+              "zh_CN": "报价ID"
+            },
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            },
+            "cols": 12,
+            "rules": [],
+            "required": true,
+            "handle": {}
+          }
+        ]
+      }
+    ]
+  },
+  "children": [
+    {
+      "componentName": "div",
+      "id": "ffab54ff",
+      "props": {
+        "className": "crm-quote-info"
+      },
+      "children": [
+        {
+          "componentName": "TinyForm",
+          "id": "85d5eae4",
+          "props": {
+            "ref": "quotaForm",
+            "disabled": {
+              "type": "JSExpression",
+              "value": "this.state.formDisabled"
+            },
+            "model": {
+              "type": "JSExpression",
+              "value": "this.state.quotationInfo"
+            },
+            "label-position": "left",
+            "label-width": "99px",
+            "label-align": true,
+            "rules": {
+              "type": "JSExpression",
+              "value": "this.state.rules"
+            }
+          },
+          "children": [
+            {
+              "componentName": "div",
+              "id": "51852926",
+              "props": {
+                "className": "form-title"
+              },
+              "children": [
+                {
+                  "componentName": "span",
+                  "id": "99ea0dcf",
+                  "children": {
+                    "type": "i18n",
+                    "key": "quotes.basic_info.basic_info"
+                  }
+                }
+              ]
+            },
+            {
+              "componentName": "div",
+              "id": "d9e174ae",
+              "props": {
+                "className": {
+                  "type": "JSExpression",
+                  "value": "['basic-info', {'form-fixed-layout': this.props.isFixed}, {'form-auto-layout': this.props.isAuto}]"
+                }
+              },
+              "children": [
+                {
+                  "componentName": "TinyFormItem",
+                  "id": "eab52926",
+                  "props": {
+                    "label": {
+                      "type": "i18n",
+                      "key": "quotes.quote_list.project_name"
+                    },
+                    "prop": "cpqName"
+                  },
+                  "children": [
+                    {
+                      "componentName": "TinyTooltip",
+                      "props": {
+                        "value": {
+                          "type": "JSExpression",
+                          "value": "this.state.showTooltip",
+                          "model": {
+                            "prop": ""
+                          }
+                        },
+                        "placement": "right",
+                        "content": {
+                          "type": "i18n",
+                          "key": "tips.valid_err_msg_project_name"
+                        },
+                        "manual": true
+                      },
+                      "children": [
+                        {
+                          "componentName": "TinyInput",
+                          "id": "eab11113",
+                          "props": {
+                            "value": {
+                              "type": "JSExpression",
+                              "value": "this.state.quotationInfo.cpqName",
+                              "model": {
+                                "prop": ""
+                              }
+                            },
+                            "placeholder": {
+                              "type": "JSExpression",
+                              "value": "`xxx客户-${new Date().toLocaleDateString()}`"
+                            },
+                            "onFocus": {
+                              "type": "JSExpression",
+                              "value": "this.state.showTooltip = true"
+                            },
+                            "onBlur": {
+                              "type": "JSExpression",
+                              "value": "this.state.showTooltip = false"
+                            }
+                          }
+                        }
+                      ],
+                      "id": "9dec979c"
+                    }
+                  ]
+                },
+                {
+                  "componentName": "TinyFormItem",
+                  "id": "eab174ae",
+                  "props": {
+                    "label": {
+                      "type": "i18n",
+                      "key": "quotes.basic_info.sales_method"
+                    },
+                    "prop": "salesMode"
+                  },
+                  "children": [
+                    {
+                      "componentName": "TinySelect",
+                      "id": "eab11114",
+                      "props": {
+                        "value": {
+                          "type": "JSExpression",
+                          "value": "this.state.quotationInfo.salesMode",
+                          "model": {
+                            "prop": ""
+                          }
+                        },
+                        "placeholder": {
+                          "type": "i18n",
+                          "key": "quotes.productlist.pleaseenterkeywords"
+                        }
+                      },
+                      "children": [
+                        {
+                          "componentName": "TinyOption",
+                          "props": {
+                            "key": {
+                              "type": "JSExpression",
+                              "value": "item.key"
+                            },
+                            "label": {
+                              "type": "JSExpression",
+                              "value": "item.label"
+                            },
+                            "value": {
+                              "type": "JSExpression",
+                              "value": "item.value"
+                            }
+                          },
+                          "id": "02944972"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "componentName": "TinyFormItem",
+                  "id": "eab11111",
+                  "props": {
+                    "label": {
+                      "type": "i18n",
+                      "key": "quotes.basic_info.agreement_type_create"
+                    },
+                    "prop": "bizType"
+                  },
+                  "children": [
+                    {
+                      "componentName": "TinySelect",
+                      "id": "eab11116",
+                      "props": {
+                        "value": {
+                          "type": "JSExpression",
+                          "value": "this.state.quotationInfo.bizType",
+                          "model": {
+                            "prop": ""
+                          }
+                        },
+                        "placeholder": {
+                          "type": "i18n",
+                          "key": "crm.common.pleaseselect"
+                        }
+                      },
+                      "children": [
+                        {
+                          "componentName": "TinyOption",
+                          "id": "eab11117",
+                          "props": {
+                            "key": {
+                              "type": "JSExpression",
+                              "value": "item.value"
+                            },
+                            "label": {
+                              "type": "JSExpression",
+                              "value": "item.text"
+                            },
+                            "value": {
+                              "type": "JSExpression",
+                              "value": "item.value"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "componentName": "TinyFormItem",
+                  "id": "eab11112",
+                  "props": {
+                    "label": {
+                      "type": "i18n",
+                      "key": "quotes.basic_info.opportunity_name_create"
+                    }
+                  },
+                  "children": [
+                    {
+                      "componentName": "TinyPopeditor",
+                      "props": {
+                        "value": {
+                          "type": "JSExpression",
+                          "value": "this.state.quotationInfo.opptyName",
+                          "model": {
+                            "prop": ""
+                          }
+                        },
+                        "placeholder": {
+                          "type": "i18n",
+                          "key": "quotes.basic_info.oppty_error"
+                        },
+                        "title": {
+                          "type": "i18n",
+                          "key": "business.basic_info.choose_opportunity"
+                        },
+                        "width": "700",
+                        "grid-op": {
+                          "type": "JSExpression",
+                          "value": "this.state.gridOp"
+                        },
+                        "text-field": "opportunity_name",
+                        "value-field": "opportunity_id",
+                        "show-pager": true,
+                        "remote-search": {
+                          "type": "JSExpression",
+                          "value": "this.remoteSearch"
+                        },
+                        "pager-op": {
+                          "type": "JSExpression",
+                          "value": "this.state.gridOp.pagerOp"
+                        },
+                        "conditions": {
+                          "type": "JSExpression",
+                          "value": "this.state.conditions"
+                        },
+                        "onChange": {
+                          "type": "JSExpression",
+                          "value": "this.opportunityChange"
+                        }
+                      },
+                      "children": [
+                        {
+                          "componentName": "Template",
+                          "props": {
+                            "slot": {
+                              "name": "search",
+                              "params": "slotScope"
+                            }
+                          },
+                          "children": [
+                            {
+                              "componentName": "div",
+                              "props": {
+                                "className": "out-search-box"
+                              },
+                              "children": [
+                                {
+                                  "componentName": "div",
+                                  "props": {
+                                    "className": "search-form"
+                                  },
+                                  "children": [
+                                    {
+                                      "componentName": "TinySelect",
+                                      "props": {
+                                        "value": {
+                                          "type": "JSExpression",
+                                          "value": "this.state.conditionForm.oppSourceSelected",
+                                          "model": {
+                                            "prop": ""
+                                          }
+                                        },
+                                        "placeholder": {
+                                          "type": "i18n",
+                                          "key": "crm.common.pleaseselect"
+                                        },
+                                        "onChange": {
+                                          "type": "JSExpression",
+                                          "value": "slotScope.searchOp.doSearch(this.state.conditionForm)"
+                                        }
+                                      },
+                                      "children": [
+                                        {
+                                          "componentName": "TinyOption",
+                                          "props": {
+                                            "key": {
+                                              "type": "JSExpression",
+                                              "value": "item.value"
+                                            },
+                                            "label": {
+                                              "type": "JSExpression",
+                                              "value": "item.label"
+                                            },
+                                            "value": {
+                                              "type": "JSExpression",
+                                              "value": "item.value"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "componentName": "TinySelect",
+                                      "props": {
+                                        "value": {
+                                          "type": "JSExpression",
+                                          "value": "this.state.conditionForm.searchTypeSelected",
+                                          "model": {
+                                            "prop": ""
+                                          }
+                                        },
+                                        "placeholder": {
+                                          "type": "i18n",
+                                          "key": "crm.common.pleaseselect"
+                                        }
+                                      },
+                                      "children": [
+                                        {
+                                          "componentName": "TinyOption",
+                                          "props": {
+                                            "key": {
+                                              "type": "JSExpression",
+                                              "value": "item.value"
+                                            },
+                                            "label": {
+                                              "type": "JSExpression",
+                                              "value": "item.label"
+                                            },
+                                            "value": {
+                                              "type": "JSExpression",
+                                              "value": "item.value"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "componentName": "TinySearch",
+                                      "props": {
+                                        "value": {
+                                          "type": "JSExpression",
+                                          "value": "this.state.conditionForm.searchOpportunityValue",
+                                          "model": {
+                                            "prop": ""
+                                          }
+                                        },
+                                        "placeholder": {
+                                          "type": "i18n",
+                                          "key": "crm.common.pleaseselect"
+                                        },
+                                        "size": "mini",
+                                        "onSearch": {
+                                          "type": "JSExpression",
+                                          "value": "slotScope.searchOp.doSearch(this.state.conditionForm)"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "componentName": "div",
+                                      "props": {
+                                        "className": "icon-wrap",
+                                        "onClick": {
+                                          "type": "JSExpression",
+                                          "value": "slotScope.searchOp.doSearch(this.state.conditionForm)"
+                                        }
+                                      },
+                                      "children": [
+                                        {
+                                          "componentName": "Icon",
+                                          "props": {
+                                            "name": "IconRefres"
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ],
+                      "id": "17ced631"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "componentName": "div",
+              "id": "eab11119",
+              "props": {
+                "className": "form-title"
+              },
+              "children": {
+                "type": "i18n",
+                "key": "quotes.basic_info.customer_info"
+              }
+            },
+            {
+              "componentName": "div",
+              "id": "eab11121",
+              "props": {
+                "className": {
+                  "type": "JSExpression",
+                  "value": "['customer-info', {'form-fixed-layout': this.props.isFixed}, {'form-auto-layout': this.props.isAuto}]"
+                }
+              },
+              "children": [
+                {
+                  "componentName": "TinyFormItem",
+                  "id": "eab11122",
+                  "props": {
+                    "label": {
+                      "type": "i18n",
+                      "key": "quotes.quotelistmodal.customername"
+                    }
+                  },
+                  "children": [
+                    {
+                      "componentName": "TinyInput",
+                      "id": "eab11124",
+                      "props": {
+                        "value": {
+                          "type": "JSExpression",
+                          "value": "this.state.quotationInfo.customerName",
+                          "model": {
+                            "prop": ""
+                          }
+                        },
+                        "disabled": {
+                          "type": "JSExpression",
+                          "value": "this.state.customDisabled"
+                        }
+                      },
+                      "children": [
+                        {
+                          "componentName": "Template",
+                          "props": {
+                            "slot": {
+                              "name": "suffix"
+                            }
+                          },
+                          "children": [
+                            {
+                              "componentName": "div",
+                              "condition": {
+                                "type": "JSExpression",
+                                "value": "this.state.customerNameTrack?.customer_track_name"
+                              },
+                              "props": {
+                                "className": "tag-nomal"
+                              },
+                              "children": [
+                                {
+                                  "componentName": "span",
+                                  "children": {
+                                    "type": "JSExpression",
+                                    "value": "this.state.customerNameTrack?.customer_track_name"
+                                  }
+                                }
+                              ],
+                              "id": "ffadf00e"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "componentName": "TinyFormItem",
+                  "id": "eab11123",
+                  "props": {
+                    "label": {
+                      "type": "i18n",
+                      "key": "quotes.quotelistmodal.amountnumber"
+                    }
+                  },
+                  "children": [
+                    {
+                      "componentName": "TinyInput",
+                      "id": "eab11125",
+                      "props": {
+                        "value": {
+                          "type": "JSExpression",
+                          "value": "this.state.quotationInfo.customAccount",
+                          "model": {
+                            "prop": ""
+                          }
+                        },
+                        "onBlur": {
+                          "type": "JSExpression",
+                          "value": "this.customAccountChange"
+                        }
+                      },
+                      "children": [
+                        {
+                          "componentName": "Template",
+                          "props": {
+                            "slot": {
+                              "name": "suffix"
+                            }
+                          },
+                          "children": [
+                            {
+                              "componentName": "div",
+                              "condition": {
+                                "type": "JSExpression",
+                                "value": "this.state.customerAcctNoTrack?.customer_track_name"
+                              },
+                              "props": {
+                                "className": "tag-nomal tag-success"
+                              },
+                              "children": [
+                                {
+                                  "componentName": "span",
+                                  "children": {
+                                    "type": "JSExpression",
+                                    "value": "this.state.customerAcctNoTrack?.customer_track_name"
+                                  },
+                                  "id": "264153c5"
+                                }
+                              ],
+                              "id": "84b2f9c0"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "componentName": "TinyAlert",
+                      "condition": {
+                        "type": "JSExpression",
+                        "value": "this.state.validateInfo.acctNoInvalidError"
+                      },
+                      "props": {
+                        "type": "warning",
+                        "description": {
+                          "type": "JSExpression",
+                          "value": "this.state.validateInfo.acctNoInvalidError"
+                        }
+                      },
+                      "id": "c7263fd2"
+                    },
+                    {
+                      "componentName": "TinyAlert",
+                      "condition": {
+                        "type": "JSExpression",
+                        "value": "this.state.validateInfo.acctountNoResigteredTip"
+                      },
+                      "props": {
+                        "type": "warning",
+                        "description": {
+                          "type": "JSExpression",
+                          "value": "state.validateInfo.acctountNoResigteredTip"
+                        }
+                      },
+                      "id": "fe165547"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "type": "block",
+  "component": "CrmQuoteInfo",
+  "label": "CrmQuoteInfo",
+  "methods": {}
+}

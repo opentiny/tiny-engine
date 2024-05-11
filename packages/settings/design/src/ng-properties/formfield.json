@@ -1,0 +1,87 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "condition": {
+        "title": "是否渲染",
+        "type": "boolean",
+        "default": true
+      },
+      "title": {
+        "title": "标题",
+        "type": "string"
+      },
+      "showLine": {
+        "title": "是否显示间隔",
+        "type": "boolean",
+        "default": true
+      },
+      "isEdit": {
+        "title": "编辑状态",
+        "type": "boolean",
+        "default": false
+      },
+      "colsNumber": {
+        "title": "列数",
+        "type": "string",
+        "default": "2"
+      },
+      "labelWidth": {
+        "title": "label的宽度",
+        "type": "string",
+        "default": "120px"
+      },
+      "colsWidth": {
+        "title": "列宽",
+        "type": "array",
+        "default": ["50%", "50%"]
+      },
+      "colsGap": {
+        "title": "列间距",
+        "type": "array",
+        "default": ["50px"]
+      },
+      "options": {
+        "title": "表单数据",
+        "type": "array",
+        "default": [
+          {
+            "label": "项目名称",
+            "value": "ghx-123-变更",
+            "editConfig": {
+              "type": "text",
+              "disabled": true
+            }
+          },
+          {
+            "label": "合同模板",
+            "value": "线下客户模板",
+            "editConfig": {
+              "type": "select",
+              "options": [
+                {
+                  "label": "线上华为模板（预付费）",
+                  "value": "线上华为模板（预付费）"
+                },
+                {
+                  "label": "线下客户模板",
+                  "value": "线下客户模板"
+                },
+                {
+                  "label": "线上华为模板（后付费）",
+                  "value": "线上华为模板（后付费）"
+                }
+              ],
+              "placeholder": "请选择合同模板"
+            }
+          }
+        ]
+      },
+      "onStateChange": {
+        "title": "值变化事件",
+        "type": "function",
+        "default": "function handleFormfieldOnStateChange(event) {}"
+      }
+    }
+  }
+}

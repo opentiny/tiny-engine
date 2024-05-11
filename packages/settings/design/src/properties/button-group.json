@@ -1,0 +1,62 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "data": {
+        "title": "按钮组数据",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "text": {
+              "title": "按钮显示文本",
+              "type": "string",
+              "default": ""
+            },
+            "value": {
+              "title": "双向绑定时指定的值",
+              "type": "string",
+              "default": ""
+            }
+          }
+        }
+      },
+      "disabled": {
+        "title": "设置按钮组是否被禁用",
+        "type": "boolean",
+        "default": false
+      },
+      "plain": {
+        "title": "是否朴素按钮",
+        "type": "boolean",
+        "default": false
+      },
+      "size": {
+        "title": "设置组件大小",
+        "type": "string",
+        "enum": ["medium", "small", "mini"],
+        "enumNames": ["中等尺寸", "较小尺寸", "迷你尺寸"],
+        "default": ""
+      },
+      "text-field": {
+        "title": "按钮显示文字的字段值",
+        "type": "string",
+        "default": "text"
+      },
+      "value": {
+        "title": "默认选中按钮的值",
+        "type": ["string", "number"],
+        "default": ""
+      },
+      "value-field": {
+        "title": "按钮值的字段值",
+        "type": "string",
+        "default": "value"
+      },
+      "#default": {
+        "title": "按钮组内容插槽",
+        "type": "string"
+      }
+    }
+  }
+}

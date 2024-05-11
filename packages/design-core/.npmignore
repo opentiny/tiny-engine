@@ -1,0 +1,8 @@
+test
+node_modules
+package-lock.json
+.idea
+
+public/mock/*
+tmp
+temp

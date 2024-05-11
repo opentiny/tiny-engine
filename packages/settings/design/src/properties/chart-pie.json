@@ -1,0 +1,395 @@
+{
+  "$$schema": {
+    "type": "object",
+    "properties": {
+      "dataType": {
+        "title": "数据类型",
+        "type": "string",
+        "enum": ["KMB", "normal", "percent"],
+        "enumNames": ["KMB 格式", "千分位", "百分比"],
+        "default": "normal"
+      },
+      "digit": {
+        "title": "设置数据类型为percent时保留的位数",
+        "type": "number",
+        "default": 2
+      },
+      "dimension": {
+        "title": "维度，默认columns第一项为维度",
+        "type": "string",
+        "default": ""
+      },
+      "hoverAnimation": {
+        "title": "是否开启 hover 在扇区上的放大动画效果",
+        "type": "boolean",
+        "default": true
+      },
+      "itemStyle": {
+        "title": "图形样式",
+        "type": "object",
+        "properties": {
+          "color": {
+            "title": "颜色",
+            "type": "string"
+          },
+          "borderColor": {
+            "title": "图形的描边颜色",
+            "type": "string",
+            "default": "#000"
+          },
+          "borderWidth": {
+            "title": "描边线宽。为 0 时无描边",
+            "type": "number",
+            "default": 0
+          },
+          "borderType": {
+            "title": "柱条的描边类型",
+            "type": "string",
+            "enum": ["solid", "dashed", "dotted"],
+            "enumNames": ["实线", "虚线", "点线"],
+            "default": "solid"
+          },
+          "shadowBlur": {
+            "title": "图形阴影的模糊大小",
+            "type": "number"
+          },
+          "shadowColor": {
+            "title": "阴影颜色",
+            "type": "string"
+          },
+          "shadowOffsetX": {
+            "title": "阴影水平方向上的偏移距离",
+            "type": "number",
+            "default": 0
+          },
+          "shadowOffsetY": {
+            "title": "阴影垂直方向上的偏移距离",
+            "type": "number",
+            "default": 0
+          },
+          "opacity": {
+            "title": "图形透明度。支持从 0 到 1 的数字，为 0 时不绘制该图形",
+            "type": "number"
+          }
+        },
+        "level": {
+          "title": "多圆饼图时设置内层和外层的指标",
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "title": "指标关键字",
+              "type": "string"
+            }
+          }
+        }
+      },
+      "label": {
+        "title": "饼图图形上的文本标签",
+        "type": "object",
+        "properties": {
+          "show": {
+            "title": "是否显示标签",
+            "type": "boolean",
+            "default": false
+          },
+          "position": {
+            "title": "标签的位置",
+            "type": "string",
+            "enum": ["outside", "inside", "inner", "center"],
+            "enumNames": [
+              "饼图扇区外侧 outside，通过视觉引导线连到相应的扇区",
+              "饼图扇区内部 inside",
+              "饼图扇区内部 inner，和 inside 配置相同",
+              "饼图中心位置"
+            ],
+            "default": "outside"
+          },
+          "formatter": {
+            "title": "标签内容格式器，支持用 \n 换行",
+            "type": "string",
+            "default": ""
+          },
+          "color": {
+            "title": "文字的颜色",
+            "type": "string",
+            "default": "#fff"
+          },
+          "fontStyle": {
+            "title": "文字字体的风格",
+            "type": "string",
+            "enum": ["normal", "italic", "oblique"],
+            "enumNames": ["正常字体", "斜体字 italic", "倾斜的文字 oblique"],
+            "default": "normal"
+          },
+          "fontWeight": {
+            "title": "文字字体的粗细",
+            "type": "string",
+            "enum": ["normal", "bold", "bolder", "lighter"],
+            "enumNamse": ["正常", "加粗", "更粗", "更细"],
+            "default": "normal"
+          },
+          "fontFamily": {
+            "title": "文字的字体",
+            "type": "string",
+            "default": "sans-serif"
+          },
+          "fontSize": {
+            "title": "文字的字体大小",
+            "type": "number",
+            "default": 12
+          },
+          "align": {
+            "title": "文字水平对齐方式，默认自动",
+            "type": "string",
+            "enum": ["left", "center", "right"],
+            "enumNames": ["左对齐", "居中对齐", "右对齐"],
+            "default": ""
+          },
+          "verticalAlign": {
+            "title": "文字垂直对齐方式，默认自动",
+            "type": "string",
+            "enum": ["top", "middle", "bottom"],
+            "enumNames": ["顶端对齐", "居中对齐", "底部对齐"],
+            "default": ""
+          },
+          "lineHeight": {
+            "title": "行高",
+            "type": "number"
+          },
+          "backgroundColor": {
+            "title": "文字块背景色",
+            "type": "string",
+            "default": "transparent"
+          },
+          "borderWidth": {
+            "title": "文字块边框宽度",
+            "type": "number",
+            "default": 0
+          },
+          "borderRadius": {
+            "title": "文字块的圆角",
+            "type": "number",
+            "default": 0
+          },
+          "padding": {
+            "title": "文字块的内边距",
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "shadowColor": {
+            "title": "文字块的背景阴影颜色",
+            "type": "string",
+            "default": "transparent"
+          },
+          "shadowBlur": {
+            "title": "文字块的背景阴影长度",
+            "type": "number",
+            "default": 0
+          },
+          "shadowOffsetX": {
+            "title": "文字块的背景阴影 X 偏移",
+            "type": "number",
+            "default": 0
+          },
+          "shadowOffsetY": {
+            "title": "文字块的背景阴影 Y 偏移",
+            "type": "number",
+            "default": 0
+          },
+          "width": {
+            "title": "文字块的宽度",
+            "type": "number",
+            "default": 0
+          },
+          "height": {
+            "title": "文字块的高度",
+            "type": "number",
+            "default": 0
+          },
+          "textBorderColor": {
+            "title": "文字本身的描边颜色",
+            "type": "string",
+            "default": "transparent"
+          },
+          "textShadowBlur": {
+            "title": "文字本身的阴影长度",
+            "type": "number",
+            "default": 0
+          },
+          "textShadowOffsetX": {
+            "title": "文字本身的阴影 X 偏移",
+            "type": "number",
+            "default": 0
+          },
+          "textShadowOffsetY": {
+            "title": "文字本身的阴影 Y 偏移",
+            "type": "number",
+            "default": 0
+          },
+          "rich": {
+            "title": "自定义富文本样式",
+            "type": "object"
+          }
+        }
+      },
+      "labelLine": {
+        "title": "标签的视觉引导线样式，在 label位置 设置为 'outside' 时会显示视觉引导线 ",
+        "type": "object",
+        "properties": {
+          "show": {
+            "title": "是否显示视觉引导线",
+            "type": "boolean"
+          },
+          "length": {
+            "title": "视觉引导线第一段的长度",
+            "type": "number"
+          },
+          "length2": {
+            "title": "视觉引导线第二段的长度",
+            "type": "number"
+          },
+          "smooth": {
+            "title": "是否平滑视觉引导线",
+            "type": "boolean",
+            "default": false
+          },
+          "color": {
+            "title": "线的颜色",
+            "type": "string",
+            "default": "#000"
+          },
+          "width": {
+            "title": "线宽",
+            "type": "number",
+            "default": 1
+          },
+          "type": {
+            "title": "线的类型",
+            "type": "string",
+            "enum": ["solid", "dashed", "dotted"],
+            "enumNames": ["实线", "虚线", "点线"],
+            "default": "solid"
+          },
+          "shadowBlur": {
+            "title": "图形阴影的模糊大小",
+            "type": "number"
+          },
+          "shadowColor": {
+            "title": "阴影颜色",
+            "type": "string"
+          },
+          "shadowOffsetX": {
+            "title": "阴影水平方向上的偏移距离",
+            "type": "number",
+            "default": 0
+          },
+          "shadowOffsetY": {
+            "title": "阴影垂直方向上的偏移距离",
+            "type": "number",
+            "default": 0
+          },
+          "opacity": {
+            "title": "图形透明度。支持从 0 到 1 的数字，为 0 时不绘制该图形",
+            "type": "number"
+          },
+          "emphasis": {
+            "title": "高亮状态下视觉引导线的样式",
+            "type": "object",
+            "properties": {
+              "show": {
+                "title": "是否显示视觉引导线",
+                "type": "boolean"
+              },
+              "lineStyle": {
+                "title": "视觉引导线",
+                "type": "object",
+                "properties": {
+                  "color": {
+                    "title": "线的颜色",
+                    "type": "string",
+                    "default": "#000"
+                  },
+                  "width": {
+                    "title": "线宽",
+                    "type": "number",
+                    "default": 1
+                  },
+                  "type": {
+                    "title": "线的类型",
+                    "type": "string",
+                    "enum": ["solid", "dashed", "dotted"],
+                    "enumNames": ["实线", "虚线", "点线"],
+                    "default": "solid"
+                  },
+                  "shadowBlur": {
+                    "title": "图形阴影的模糊大小",
+                    "type": "number"
+                  },
+                  "shadowColor": {
+                    "title": "阴影颜色",
+                    "type": "string"
+                  },
+                  "shadowOffsetX": {
+                    "title": "阴影水平方向上的偏移距离",
+                    "type": "number",
+                    "default": 0
+                  },
+                  "shadowOffsetY": {
+                    "title": "阴影垂直方向上的偏移距离",
+                    "type": "number",
+                    "default": 0
+                  },
+                  "opacity": {
+                    "title": "图形透明度。支持从 0 到 1 的数字，为 0 时不绘制该图形",
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "legendLimit": {
+        "title": "legend显示数量限制，legend数量过多会导致饼图样式错误，限制legend最大值并且当超过此值时，隐藏legend可以解决这个问题",
+        "type": "number",
+        "default": 30
+      },
+      "limitShowNum": {
+        "title": "设置超过此数字时使用‘其他’代替，此时数据会按照由大到小顺序显示",
+        "type": "number",
+        "default": 0
+      },
+      "metrics": {
+        "title": "指标，默认columns第二项为指标",
+        "type": "string",
+        "default": ""
+      },
+      "offsetY": {
+        "title": "纵向偏移量",
+        "type": ["string", "number"],
+        "default": "50%"
+      },
+      "radius": {
+        "title": "饼图半径",
+        "type": "number"
+      },
+      "roseType": {
+        "title": "显示为南丁格尔玫瑰图时的显示模式",
+        "type": ["string", "boolean"],
+        "enum": ["radius", "area"],
+        "enumNames": ["扇区圆心角展现数据的百分比，半径咱先数据的大小", "所有扇区圆心角相同，仅通过半径展现数据大小"],
+        "default": ""
+      },
+      "selectedMode": {
+        "title": "选中模式",
+        "type": ["string", "boolean"],
+        "enum": ["single", "multiple"],
+        "enumNames": ["单选", "多选"],
+        "default": ""
+      }
+    }
+  }
+}

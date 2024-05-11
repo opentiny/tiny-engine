@@ -1,0 +1,96 @@
+{
+  "icon": "",
+  "name": {
+    "zh_CN": "Alert"
+  },
+  "component": "tiny-alert",
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "collapse": {
+          "number": 6,
+          "text": {
+            "zh_CN": "显示更多"
+          }
+        },
+        "content": [
+          {
+            "property": "condition",
+            "type": "boolean",
+            "defaultValue": true,
+            "label": {
+              "text": {
+                "zh_CN": "是否渲染"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            }
+          },
+          {
+            "property": "type",
+            "type": "string",
+            "defaultValue": "prompt",
+            "label": {
+              "text": {}
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            }
+          },
+          {
+            "property": "label",
+            "type": "object",
+            "defaultValue": {
+              "type": "i18n",
+              "zh_CN": "提示文本",
+              "key": ""
+            },
+            "label": {
+              "text": {
+                "zh_CN": "提示文本"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            }
+          }
+        ]
+      }
+    ],
+    "events": {},
+    "shortcuts": {
+      "properties": []
+    },
+    "contentMenu": {
+      "actions": []
+    }
+  }
+}

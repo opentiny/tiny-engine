@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>编组</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="0.6 24.4 24.6 24.4 24.6 0.4 0.6 0.4"></polygon>
+        <path d="M0.316,0 L0.247,0.007 C0.114,0.039 0.015,0.157 0.015,0.3 L0.015,0.3 L0.023,0.368 C0.054,0.5 0.174,0.599 0.316,0.599 L0.316,0.599 L3.599,0.599 L3.6,3.817 L3.607,3.886 C3.639,4.019 3.758,4.117 3.9,4.117 L3.9,4.117 C4.065,4.117 4.199,3.983 4.199,3.817 L4.199,3.817 L4.199,0.3 L4.191,0.231 C4.161,0.098 4.042,0 3.9,0 L3.9,0 L0.316,0 Z" id="path-3"></path>
+        <path d="M-18.7,0 L-18.769,0.007 C-18.901,0.039 -19,0.157 -19,0.3 L-19,0.3 L-19,3.817 L-18.992,3.886 C-18.961,4.019 -18.842,4.117 -18.7,4.117 L-18.7,4.117 L-18.631,4.11 C-18.499,4.079 -18.4,3.96 -18.4,3.817 L-18.4,3.817 L-18.4,0.599 L-15.116,0.599 L-15.047,0.591 C-14.915,0.561 -14.817,0.441 -14.817,0.3 L-14.817,0.3 C-14.817,0.133 -14.951,0 -15.116,0 L-15.116,0 L-18.7,0 Z" id="path-5"></path>
+        <path d="M3.83,19.089 C3.698,19.12 3.6,19.239 3.6,19.381 L3.6,19.381 L3.599,22.599 L0.316,22.599 L0.247,22.607 C0.114,22.639 0.015,22.757 0.015,22.899 L0.015,22.899 C0.015,23.065 0.15,23.199 0.316,23.199 L0.316,23.199 L3.9,23.199 L3.968,23.191 C4.1,23.16 4.199,23.041 4.199,22.899 L4.199,22.899 L4.199,19.381 L4.191,19.312 C4.161,19.179 4.042,19.081 3.9,19.081 L3.9,19.081 L3.83,19.089 Z" id="path-7"></path>
+        <path d="M-19,19.381 L-19,22.899 L-18.992,22.967 C-18.961,23.1 -18.842,23.199 -18.7,23.199 L-18.7,23.199 L-15.116,23.199 L-15.047,23.191 C-14.915,23.16 -14.817,23.041 -14.817,22.899 L-14.817,22.899 L-14.824,22.831 C-14.854,22.698 -14.974,22.599 -15.116,22.599 L-15.116,22.599 L-18.401,22.599 L-18.4,19.381 L-18.408,19.312 C-18.439,19.179 -18.558,19.081 -18.7,19.081 L-18.7,19.081 C-18.866,19.081 -19,19.216 -19,19.381 L-19,19.381 Z" id="path-9"></path>
+    </defs>
+    <g id="页面-3-紫色" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="部署-紫色" transform="translate(-1030.000000, -56.000000)">
+            <g id="编组" transform="translate(1029.000000, 56.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <use id="Fill-1" fill-opacity="0" fill="#FFFFFF" xlink:href="#path-1"></use>
+                <g id="编组-18" mask="url(#mask-2)">
+                    <g transform="translate(5.090700, 3.782200)">
+                        <polygon id="Fill-10" fill="#6F89DF" points="0 4.315 7.509 8.629 15.018 4.315 7.509 0"></polygon>
+                        <polygon id="Fill-11" fill="#465EB8" points="0 12.9217 7.509 17.2357 7.509 8.6287 0 4.3147"></polygon>
+                        <polygon id="Fill-12" fill="#96ADFA" points="7.5087 8.6287 7.5087 17.2357 15.0187 12.9217 15.0187 4.3147"></polygon>
+                    </g>
+                </g>
+                <g id="编组-21" mask="url(#mask-2)">
+                    <g transform="translate(20.000000, 0.801000)">
+                        <mask id="mask-4" fill="white">
+                            <use xlink:href="#path-3"></use>
+                        </mask>
+                        <use id="Clip-3" stroke="none" fill="#4EA6E6" fill-rule="evenodd" xlink:href="#path-3"></use>
+                        <mask id="mask-6" fill="white">
+                            <use xlink:href="#path-5"></use>
+                        </mask>
+                        <use id="Clip-5" stroke="none" fill="#4EA6E6" fill-rule="evenodd" xlink:href="#path-5"></use>
+                        <mask id="mask-8" fill="white">
+                            <use xlink:href="#path-7"></use>
+                        </mask>
+                        <use id="Clip-7" stroke="none" fill="#4EA6E6" fill-rule="evenodd" xlink:href="#path-7"></use>
+                        <mask id="mask-10" fill="white">
+                            <use xlink:href="#path-9"></use>
+                        </mask>
+                        <use id="Clip-9" stroke="none" fill="#4EA6E6" fill-rule="evenodd" xlink:href="#path-9"></use>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

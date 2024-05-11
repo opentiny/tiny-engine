@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>操作/复制</title>
+    <g id="操作/复制" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="矩形" stroke="currentColor" transform="translate(6.500000, 9.500000) scale(-1, 1) translate(-6.500000, -9.500000) " x="1.5" y="4.5" width="10" height="10" rx="2"></rect>
+        <path d="M7.5,8.5043335 L7.5,3.5043335 C7.5,2.399764 8.3954305,1.5043335 9.5,1.5043335 L14.5,1.5043335" id="路径" stroke="currentColor" stroke-linecap="round" transform="translate(11.000000, 5.004333) scale(-1, 1) translate(-11.000000, -5.004333) "></path>
+    </g>
+</svg>

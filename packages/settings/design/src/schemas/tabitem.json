@@ -1,0 +1,77 @@
+{
+  "icon": "tabitem",
+  "name": {
+    "zh_CN": "标签页项"
+  },
+  "component": "tiny-tab-item",
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "collapse": {
+          "number": 6,
+          "text": {
+            "zh_CN": "显示更多"
+          }
+        },
+        "content": [
+          {
+            "property": "name",
+            "label": {
+              "text": {
+                "zh_CN": "唯一表示"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "唯一表示"
+            }
+          },
+          {
+            "property": "title",
+            "label": {
+              "text": {
+                "zh_CN": "标题"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "标题"
+            }
+          }
+        ]
+      }
+    ],
+    "slots": {
+      "title": {
+        "componentName": "slot"
+      }
+    },
+    "events": {},
+    "shortcuts": {
+      "properties": ["name", "title"]
+    },
+    "contentMenu": {
+      "actions": ["create symbol"]
+    }
+  }
+}

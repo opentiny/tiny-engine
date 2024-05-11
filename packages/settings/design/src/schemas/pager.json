@@ -1,0 +1,205 @@
+{
+  "icon": "pager",
+  "name": {
+    "zh_CN": "分页"
+  },
+  "component": "tiny-pager",
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "collapse": {
+          "number": 6,
+          "text": {
+            "zh_CN": "显示更多"
+          }
+        },
+        "content": [
+          {
+            "property": "current-page",
+            "label": {
+              "text": {
+                "zh_CN": "当前页数"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaNumeric",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "当前页数，支持 .sync 修饰符"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "page-size",
+            "label": {
+              "text": {
+                "zh_CN": "每页条数"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaNumeric",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "每页显示条目个数"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "page-sizes",
+            "label": {
+              "text": {
+                "zh_CN": "可选每页条数"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaCodeEditor",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "设置可选择的每页显示条数"
+            }
+          },
+          {
+            "property": "total",
+            "label": {
+              "text": {
+                "zh_CN": "总条数"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaNumeric",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "数据总条数"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "layout",
+            "label": {
+              "text": {
+                "zh_CN": "布局"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaInput",
+              "props": {
+                "value": "total,sizes,prev, pager, next"
+              }
+            },
+            "description": {
+              "zh_CN": "组件布局，子组件名用逗号分隔"
+            },
+            "labelPosition": "left"
+          }
+        ]
+      }
+    ],
+    "events": {
+      "onCurrentChange ": {
+        "label": {
+          "zh_CN": "切换页码时触发"
+        },
+        "description": {
+          "zh_CN": "切换页码时触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "value",
+              "type": "string",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "当前页的值"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      },
+      "onPrevClick ": {
+        "label": {
+          "zh_CN": "点击上一页按钮时触发"
+        },
+        "description": {
+          "zh_CN": "点击上一页按钮时触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "page",
+              "type": "String",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "当前页的页码值"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      },
+      "onNextClick": {
+        "label": {
+          "zh_CN": "点击下一页按钮时触发"
+        },
+        "description": {
+          "zh_CN": "点击上一页按钮时触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "page",
+              "type": "String",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "当前页的页码值"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      }
+    },
+    "shortcuts": {
+      "properties": ["current-page", "total"]
+    },
+    "contentMenu": {
+      "actions": ["create symbol"]
+    }
+  }
+}

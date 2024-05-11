@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>操作/保存</title>
+    <g id="操作/保存" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle-备份" stroke="currentColor" x="2" y="2" width="12" height="12" rx="1.71633267"></rect>
+        <path
+            d="M11.5,2 L11.5,5.375 C11.5,5.99632034 11.0522847,6.5 10.5,6.5 L5.5,6.5 C4.94771525,6.5 4.5,5.99632034 4.5,5.375 L4.5,2 L4.5,2"
+            id="路径" stroke="currentColor"></path>
+        <line x1="9.5" y1="3.75" x2="9.5" y2="4.75" id="直线" stroke="currentColor" stroke-linecap="round"></line>
+    </g>
+</svg>

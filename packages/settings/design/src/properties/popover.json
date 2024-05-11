@@ -1,0 +1,129 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "append-to-body": {
+        "title": "是否添加到body上",
+        "type": "boolean",
+        "default": true
+      },
+      "arrow-offset": {
+        "title": "箭头的位置偏移",
+        "type": "number",
+        "default": 0
+      },
+      "close-delay": {
+        "title": "触发方式为 hover 时的隐藏延迟，单位为毫秒",
+        "type": "number",
+        "default": 200
+      },
+      "content": {
+        "title": "显示的内容，也可以通过 slot 传入 DOM",
+        "type": "string",
+        "default": ""
+      },
+      "disabled": {
+        "title": "Popover 是否可用",
+        "type": "boolean",
+        "default": false
+      },
+      "offset": {
+        "title": "出现位置的偏移量",
+        "type": "number",
+        "default": 0
+      },
+      "open-delay": {
+        "title": "触发方式为 hover 时的显示延迟，单位为毫秒",
+        "type": "number",
+        "default": 0
+      },
+      "placement": {
+        "title": "出现位置",
+        "type": "string",
+        "enum": [
+          "top",
+          "top-start",
+          "top-end",
+          "bottom",
+          "bottom-start",
+          "bottom-end",
+          "left",
+          "left-start",
+          "left-end",
+          "right",
+          "right-start",
+          "right-end"
+        ],
+        "enumNames": ["上边", "上左", "上右", "下边", "下左", "下右", "左边", "左上", "左下", "右边", "右上", "右下"],
+        "default": "bottom"
+      },
+      "popper-class": {
+        "title": "为 popper 添加类名",
+        "type": "string",
+        "default": ""
+      },
+      "$$popper-options": {
+        "title": "popper.js 的参数",
+        "type": "object",
+        "default": "{ boundariesElement: 'body', gpuAcceleration: false }",
+        "properties": {
+          "boundariesElement": {
+            "title": "临近元素",
+            "type": "string",
+            "default": "body"
+          },
+          "gpuAcceleration": {
+            "title": "是否 popper 的位置将通过 CSS3 的 translate3d 来改变",
+            "type": "boolean",
+            "default": false
+          }
+        }
+      },
+      "title": {
+        "title": "标题",
+        "type": "string",
+        "default": ""
+      },
+      "transform-origin": {
+        "title": "组件的旋转中心点",
+        "type": ["number", "string"],
+        "default": true
+      },
+      "transition": {
+        "title": "定义渐变动画",
+        "type": "string",
+        "default": "fade-in-linear"
+      },
+      "trigger": {
+        "title": "触发方式",
+        "type": "string",
+        "enum": ["click", "focus", "hover", "manual"],
+        "enumNames": ["点击触发", "鼠标长按触发", "鼠标悬浮触发", "点击触发，再次点击隐藏"],
+        "default": "click"
+      },
+      "value": {
+        "title": "状态是否可见",
+        "type": "boolean",
+        "default": false
+      },
+      "visible-arrow": {
+        "title": "是否显示 Tooltip 箭头，更多参数可见Vue-popper",
+        "type": "boolean",
+        "default": true
+      },
+      "width": {
+        "title": "宽度",
+        "type": ["string", "number"],
+        "default": "150"
+      },
+      "#default": {
+        "title": "Popover 内嵌 HTML 文本插槽",
+        "type": "string"
+      },
+      "#reference": {
+        "title": "触发 Popover 显示的 HTML 元素插槽",
+        "type": "string"
+      }
+    }
+  }
+}

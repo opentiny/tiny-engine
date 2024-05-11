@@ -1,0 +1,5 @@
+<svg data-icon="GridColumnFlex" aria-hidden="true" focusable="false" viewBox="0 0 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <g fill="currentColor" fill-rule="evenodd" clip-rule="evenodd">
+    <path opacity=".5" d="M1 0H0v12h1V0zm11 0h-1v12h1V0z"></path><path d="M4 3L1 6l3 3V7h4v2l3-3-3-3v2H4V3z"></path>
+  </g>
+</svg>

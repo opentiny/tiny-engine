@@ -1,0 +1,148 @@
+{
+  "icon": "switch",
+  "name": {
+    "zh_CN": "开关"
+  },
+  "component": "tiny-switch",
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "collapse": {
+          "number": 6,
+          "text": {
+            "zh_CN": "显示更多"
+          }
+        },
+        "content": [
+          {
+            "property": "disabled",
+            "label": {
+              "text": {
+                "zh_CN": "禁用"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否被禁用"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "modelValue",
+            "label": {
+              "text": {
+                "zh_CN": "绑定值"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "绑定默认值"
+            }
+          },
+          {
+            "property": "true-value",
+            "label": {
+              "text": {
+                "zh_CN": "打开时的值"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "设置打开时的值(Boolean / String / Number)"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "false-value",
+            "label": {
+              "text": {
+                "zh_CN": "关闭时的值"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "设置关闭时的值(Boolean / String / Number)"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "mini",
+            "label": {
+              "text": {
+                "zh_CN": "迷你尺寸"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否显示为 mini 模式"
+            },
+            "labelPosition": "left"
+          }
+        ]
+      }
+    ],
+    "events": {
+      "onChange": {
+        "label": {
+          "zh_CN": "点击事件"
+        },
+        "description": {
+          "zh_CN": "按钮被点击时触发的回调函数"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [],
+          "returns": {}
+        },
+        "defaultValue": ""
+      }
+    },
+    "shortcuts": {
+      "properties": ["disabled", "mini"]
+    },
+    "contentMenu": {
+      "actions": ["create symbol"]
+    }
+  }
+}

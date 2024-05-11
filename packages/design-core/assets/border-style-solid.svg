@@ -1,0 +1,13 @@
+<svg
+  data-icon="BorderStyleSolid"
+  aria-hidden="true"
+  focusable="false"
+  width="16"
+  height="16"
+  viewBox="0 0 16 16"
+  version="1.1"
+  xmlns="http://www.w3.org/2000/svg"
+  style="display: block"
+>
+  <path d="M1 7h14v2H1z"></path>
+</svg>

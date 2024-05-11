@@ -1,0 +1,82 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "automatic-filtering": {
+        "title": "输入框输入内容时是否自动过滤内容",
+        "type": "boolean",
+        "default": true
+      },
+      "$$data": {
+        "title": "设置收缩菜单的数据",
+        "type": "array",
+        "default": ""
+      },
+      "default-expand-all": {
+        "title": "设置菜单默认是否展开所有节点",
+        "type": "boolean",
+        "default": false
+      },
+      "dragable": {
+        "title": "设置是否开启拖拽节点的功能",
+        "type": "boolean",
+        "default": false
+      },
+      "ellipsis": {
+        "title": "菜单内容超长时是否省略显示",
+        "type": "boolean",
+        "default": false
+      },
+      "expand-on-click-node": {
+        "title": "设置是否可以通过点击节点展开/收起菜单",
+        "type": "boolean",
+        "default": false
+      },
+      "$$icon": {
+        "title": "自定义菜单左侧图标",
+        "type": "object",
+        "default": ""
+      },
+      "placeholder": {
+        "title": "输入框占位符",
+        "type": "string",
+        "default": ""
+      },
+      "$$props": {
+        "title": "配置数据选项的映射字段名称",
+        "type": "object",
+        "properties": {
+          "children": {
+            "title": "子节点的映射字段名称",
+            "type": "string",
+            "default": "children"
+          },
+          "label": {
+            "title": "节点文本的映射字段名称",
+            "type": "string",
+            "default": "label"
+          },
+          "disabled": {
+            "title": "禁用映射字段名称",
+            "type": "string",
+            "default": "disabled"
+          }
+        }
+      },
+      "show-filter": {
+        "title": "设置是否展示过滤搜索框",
+        "type": "boolean",
+        "default": true
+      },
+      "wrap": {
+        "title": "菜单内容超长时是否换行显示",
+        "type": "boolean",
+        "default": false
+      },
+      "#node": {
+        "title": "默认插槽",
+        "type": "string"
+      }
+    }
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "cache": {
+        "title": "是否缓存用户数据",
+        "type": "boolean",
+        "default": true
+      },
+      "$$cache-fields": {
+        "title": "设置需要缓存的用户数据",
+        "type": "array",
+        "default": []
+      },
+      "cache-key": {
+        "title": "设置缓存数据的 key 值",
+        "type": "string",
+        "default": "aurora-user"
+      },
+      "collapse-show-overflow-tooltip": {
+        "title": "是否省略显示超出一行的数据并有tooltip提示",
+        "type": "boolean",
+        "default": true
+      },
+      "collapse-tags": {
+        "title": "多用户时是否折叠标签",
+        "type": "boolean",
+        "default": false
+      },
+      "delay": {
+        "title": "设置延时加载的时间(ms)",
+        "type": "number",
+        "default": 600
+      },
+      "disabled": {
+        "title": "是否禁用户组件",
+        "type": "boolean",
+        "default": false
+      },
+      "multiple": {
+        "title": "是否开启多用户形式",
+        "type": "boolean",
+        "default": false
+      },
+      "placeholder": {
+        "title": "设置输入框占位文本",
+        "type": "string",
+        "default": ""
+      },
+      "popper-append-to-body": {
+        "title": "是否将弹出框插入至 body 元素。在弹出框的定位出现问题时，可将该属性设置为 false (可参考 select 组件)",
+        "type": "boolean",
+        "default": true
+      },
+      "$$popper-class": {
+        "title": "为 popper 添加类名(可参考 popover 组件)",
+        "type": "string",
+        "default": ""
+      },
+      "size": {
+        "title": "设置用户组件尺寸",
+        "type": "string",
+        "enum": ["medium", "small", "mini"],
+        "enumNames": ["中等尺寸", "较小尺寸", "迷你尺寸"],
+        "default": ""
+      },
+      "sort-by-fetch-data": {
+        "title": "联想时下拉框的数据顺序和接口返回的数据顺序一致",
+        "type": "boolean",
+        "default": false
+      },
+      "suggest-length": {
+        "title": "设置输入指定长度完成后进行加载",
+        "type": "number",
+        "default": 3
+      },
+      "tag-selectable": {
+        "title": "是否开启输入框中已选择的选项可复制",
+        "type": "boolean",
+        "default": false
+      },
+      "text-field": {
+        "title": "显示字段映射",
+        "type": "string",
+        "default": "userCN"
+      },
+      "textSplit": {
+        "title": "文本粘贴复制查询时的分割符",
+        "type": "string",
+        "default": ","
+      },
+      "value": {
+        "title": "配置默认值",
+        "type": "string",
+        "default": ""
+      },
+      "value-field": {
+        "title": "取值字段映射",
+        "type": "string",
+        "default": "userId"
+      },
+      "value-split": {
+        "title": "值分隔符",
+        "type": "string",
+        "default": ","
+      },
+      "#options": {
+        "title": "选项文本插槽",
+        "type": "string"
+      }
+    }
+  }
+}

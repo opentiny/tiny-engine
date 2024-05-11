@@ -1,0 +1,32 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "$$data": {
+        "title": "设置导航菜单的数据",
+        "type": "array",
+        "default": ""
+      },
+      "$$fields": {
+        "title": "自定义菜单数据的映射",
+        "type": "object",
+        "default": ""
+      },
+      "overflow": {
+        "title": "设置一级菜单无法在当前菜单容器里显示完全时的处理策略",
+        "type": "string",
+        "enum": ["auto", "retract", "fixed", "hidden"],
+        "enumNames": ["显示 更多 菜单", "显示 三明治折叠/展开 图标", "只显示 三明治折叠/展开 图标", "多余隐藏不显示"],
+        "default": "auto"
+      },
+      "#logo": {
+        "title": "菜单栏 Logo 插槽",
+        "type": "string"
+      },
+      "#toolbar": {
+        "title": "菜单工具栏插槽",
+        "type": "string"
+      }
+    }
+  }
+}

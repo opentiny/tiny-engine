@@ -1,0 +1,112 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "allow-half": {
+        "title": "是否允许半选",
+        "type": "boolean",
+        "default": false
+      },
+      "$$colors": {
+        "title": "icon 的颜色数组，为 Threshold 3 个分段所对应的颜色",
+        "type": "array",
+        "$$default": ["#FADB14", "#FADB14", "#FADB14"]
+      },
+      "disabled": {
+        "title": "是否为只读",
+        "type": "boolean",
+        "default": false
+      },
+      "disabled-void-color": {
+        "title": "禁用状态下未选中 icon 的颜色",
+        "type": "string",
+        "default": "#D9D9D9"
+      },
+      "$$disabled-void-icon-class": {
+        "title": "只读状态下未选中的图标样式名",
+        "type": "string",
+        "default": "icon-stardisable"
+      },
+      "high-threshold": {
+        "title": "高分和中等分数的界限值，值本身被划分在高分中",
+        "type": "number",
+        "default": 4
+      },
+      "$$icon-classes": {
+        "title": "三个分段对应的图标样式名",
+        "type": "array",
+        "$$default": ["icon-starActive", "icon-starActive", "icon-starActive"]
+      },
+      "low-threshold": {
+        "title": "低分和中等分数的界限值，值本身被划分在低分中",
+        "type": "number",
+        "default": 2
+      },
+      "max": {
+        "title": "最大分值",
+        "type": "number",
+        "default": 5
+      },
+      "radio": {
+        "title": "评分其他形态单选",
+        "type": "boolean",
+        "default": false
+      },
+      "$$score-template": {
+        "title": "分数显示模板",
+        "type": "string",
+        "default": "{value}"
+      },
+      "show-score": {
+        "title": "是否显示当前分数，show-score 和 show-text 不能同时为真",
+        "type": "boolean",
+        "default": false
+      },
+      "show-text": {
+        "title": "是否显示辅助文字，若为真，则会从 texts 数组中选取当前分数对应的文字内容",
+        "type": "boolean",
+        "default": false
+      },
+      "size": {
+        "title": "图标字体大小",
+        "type": "string",
+        "default": "18px"
+      },
+      "space": {
+        "title": "每个图标所占宽度",
+        "type": "string",
+        "default": "24px"
+      },
+      "text-color": {
+        "title": "辅助文字的颜色",
+        "type": "string",
+        "default": "#666666"
+      },
+      "text-on-bottom": {
+        "title": "是否在图标下显示对应的文字",
+        "type": "boolean",
+        "default": false
+      },
+      "$$texts": {
+        "title": "辅助文字数组",
+        "type": "array",
+        "$$default": ["很差", "差", "一般", "好", "很好"]
+      },
+      "value": {
+        "title": "绑定值",
+        "type": "number",
+        "default": 0
+      },
+      "void-color": {
+        "title": "未选中 icon 的颜色",
+        "type": "string",
+        "default": "#BFBFBF"
+      },
+      "$$void-icon-class": {
+        "title": "未选中 icon 的类名",
+        "type": "string",
+        "default": "icon-stardisable"
+      }
+    }
+  }
+}

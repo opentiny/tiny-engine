@@ -1,0 +1,26 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "approval-person": {
+        "title": "权签人",
+        "type": "string",
+        "default": ""
+      },
+      "category": {
+        "title": "默认权签类别",
+        "type": "string",
+        "default": "0303"
+      },
+      "disabled": {
+        "title": "设置组件是否为禁用状态",
+        "type": "boolean",
+        "default": false
+      },
+      "value": {
+        "title": "设置权签人的值",
+        "type": "string"
+      }
+    }
+  }
+}

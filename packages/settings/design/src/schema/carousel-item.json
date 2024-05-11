@@ -1,0 +1,32 @@
+{
+  "properties": [
+    {
+      "label": { "zh_CN": "基础信息" },
+      "description": { "zh_CN": "基础信息" },
+      "collapse": { "number": 6, "text": { "zh_CN": "显示更多" } },
+      "content": [
+        {
+          "property": "name",
+          "label": { "text": { "zh_CN": "幻灯片的名字，可用作 setActiveItem 的参数" } },
+          "required": true,
+          "readOnly": false,
+          "disabled": false,
+          "cols": 12,
+          "widget": { "component": "MetaInput", "props": {} },
+          "description": { "zh_CN": "" }
+        },
+        {
+          "property": "title",
+          "label": { "text": { "zh_CN": "幻灯片的标题" } },
+          "required": true,
+          "readOnly": false,
+          "disabled": false,
+          "cols": 12,
+          "widget": { "component": "MetaInput", "props": {} },
+          "description": { "zh_CN": "" }
+        }
+      ]
+    }
+  ],
+  "events": {}
+}

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>操作/刷新</title>
+    <g id="操作/刷新" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="矩形" x="0" y="0" width="16" height="16"></rect>
+        <g id="编组-89" transform="translate(7.605789, 8.127228) rotate(-360.000000) translate(-7.605789, -8.127228) translate(0.005789, 0.994259)" stroke="#191919" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.96">
+            <g id="编组">
+                <path d="M12.8284128,10.3086812 C14.6343489,7.22563986 13.5670401,3.28593497 10.4445118,1.50910404 C7.32198354,-0.26772689 3.3266738,0.791165874 1.52073773,3.87420722 C-0.285198334,6.95724857 0.782110521,10.8969535 3.90463878,12.6737844 C5.98632429,13.8583383 8.20578153,13.9291005 10.5630105,12.8860708" id="椭圆形" transform="translate(7.174575, 7.132969) rotate(6.000000) translate(-7.174575, -7.132969) "></path>
+                <polyline id="路径-17" transform="translate(13.199702, 9.567274) rotate(-15.000000) translate(-13.199702, -9.567274) " points="11.5642809 7.94218774 11.5754879 11.1811752 14.8351223 11.1923608"></polyline>
+            </g>
+        </g>
+    </g>
+</svg>

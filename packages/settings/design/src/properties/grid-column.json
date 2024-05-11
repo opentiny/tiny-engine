@@ -1,0 +1,229 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "align": {
+        "title": "列对其方式",
+        "type": "string",
+        "enum": ["left", "right", "center"],
+        "enumNames": ["左对齐", "右对齐", "居中对齐"],
+        "default": "left"
+      },
+      "class-name": {
+        "title": "给单元格附加 className，也可以是函数 Function({seq, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex})",
+        "type": "string"
+      },
+      "$$editor": {
+        "title": "单元格编辑渲染配置项，也可以是函数 Function(h, params)",
+        "type": "object"
+      },
+      "field": {
+        "title": "设置表格列对应数据源的字段名，注意:该属性配置不支持含'.'，数字开头的字符串，不支持中文，不支持列字段重复（会导致配置个性化设置，自定义列拖动无效）",
+        "type": "string",
+        "default": ""
+      },
+      "filter": {
+        "title": "设置表格列的筛选配置信息。默认值为 false 不配置筛选信息",
+        "type": "boolean",
+        "default": false
+      },
+      "$$filter": {
+        "title": "设置表格列的筛选配置信息。默认值为 false 不配置筛选信息",
+        "type": "object"
+      },
+      "fixed": {
+        "title": "将列固定在左侧或者右侧（注意：固定列应该放在左右两侧的位置）",
+        "type": "string",
+        "enum": ["left", "right"],
+        "enumNames": ["左侧", "右侧"],
+        "default": ""
+      },
+      "footer-align": {
+        "title": "表尾列的对齐方式",
+        "type": "string",
+        "enum": ["left", "right", "center"],
+        "enumNames": ["左对齐", "右对齐", "居中对齐"],
+        "default": ""
+      },
+      "footer-class-name": {
+        "title": "给表尾的单元格附加 className，也可以是函数 Function({$rowIndex, column, columnIndex, $columnIndex})",
+        "type": "string"
+      },
+      "$$format-config": {
+        "title": "开启该列数据异步渲染",
+        "type": "object"
+      },
+      "format-text": {
+        "title": "设置当前表格列的显示获取编辑类型，也可以是函数 Function(params)",
+        "type": "string",
+        "enum": [
+          "money",
+          "enum",
+          "number",
+          "integer",
+          "filesize",
+          "date",
+          "dateTime",
+          "longDateTime",
+          "time",
+          "longTime",
+          "yearMonth",
+          "ellipsis",
+          "rate",
+          "boole"
+        ],
+        "enumNames": [
+          "金额",
+          "枚举",
+          "小数",
+          "整数",
+          "文件大小",
+          "年月日",
+          "年月日时分",
+          "年月日时分秒",
+          "时分",
+          "时分秒",
+          "年月",
+          "省略号，hover 时提示全部内容",
+          "百分比",
+          "对号或者叉号的图标"
+        ],
+        "default": ""
+      },
+      "header-align": {
+        "title": "表头列的对齐方式",
+        "type": "string",
+        "enum": ["left", "right", "center"],
+        "enumNames": ["左对齐", "右对齐", "居中对齐"],
+        "default": "left"
+      },
+      "header-class-name": {
+        "title": "给表头的单元格附加 className，也可以是函数 Function({$rowIndex, column, columnIndex, $columnIndex})",
+        "type": "string"
+      },
+      "min-width": {
+        "title": "最小列宽度；会自动将剩余空间按比例分配,值可以为整数, px，%，",
+        "type": ["string", "number"]
+      },
+      "multi": {
+        "title": "是 filter 对象内置的属性，筛选是否允许多选",
+        "type": "boolean",
+        "default": true
+      },
+      "$$params": {
+        "title": "额外的参数（自定义一些数据参数，对于某些特殊的场景可能会用到）",
+        "type": "object"
+      },
+      "remote-sort": {
+        "title": "是否使用服务端排序，如果设置为 true 则不会对数据进行处理",
+        "type": "boolean",
+        "default": false
+      },
+      "$$renderer": {
+        "title": "单元格渲染配置项，其优先级高于列的 formatText 属性配置，也可以是函数 Function(h, params)",
+        "type": "object"
+      },
+      "required": {
+        "title": "是否必填，如不设置，则会根据校验规则自动生成",
+        "type": "boolean",
+        "default": false
+      },
+      "resizable": {
+        "title": "设置是否允许调整列宽",
+        "type": "boolean",
+        "default": true
+      },
+      "$$rules": {
+        "title": "表单的验证功能",
+        "type": "object"
+      },
+      "show-header-overflow": {
+        "title": "当表头内容过长时显示为省略号",
+        "type": ["string", "boolean"],
+        "enum": ["ellipsis", "title", "tooltip"],
+        "enumNames": [
+          "只显示省略号",
+          "显示省略号并且 hover 时显示原生 title 提示",
+          "显示省略号并且 hover 时显示 tooltip 提示"
+        ]
+      },
+      "show-header-tip": {
+        "title": "表格列头是否需要提示",
+        "type": "boolean",
+        "default": false
+      },
+      "show-icon": {
+        "title": "是否显示列头编辑图标，在编辑时有效",
+        "type": "boolean",
+        "default": true
+      },
+      "show-overflow": {
+        "title": "当内容过长时显示为省略号",
+        "type": ["string", "boolean"],
+        "enum": ["ellipsis", "title", "tooltip"],
+        "enumNames": [
+          "只显示省略号",
+          "显示省略号并且 hover 时显示原生 title 提示",
+          "显示省略号并且 hover 时显示 tooltip 提示"
+        ]
+      },
+      "show-tip": {
+        "title": "表格列单元格是否需要提示",
+        "type": "boolean",
+        "default": false
+      },
+      "sort-by": {
+        "title": "只对 sortable 有效，自定义排序的属性",
+        "type": "string",
+        "default": ""
+      },
+      "$$sort-by": {
+        "title": "只对 sortable 有效，自定义排序的属性",
+        "type": "array",
+        "default": ""
+      },
+      "sortable": {
+        "title": "设置是否允许列数据排序。默认为 true 可排序",
+        "type": "boolean",
+        "default": true
+      },
+      "title": {
+        "title": "列标题（支持开启国际化），也可以是函数 Function(h, params)",
+        "type": "string",
+        "default": ""
+      },
+      "tree-node": {
+        "title": "只对 tree-config 配置时有效，指定为树节点",
+        "type": "boolean",
+        "default": false
+      },
+      "type": {
+        "title": "列的类型",
+        "type": "string",
+        "enum": ["index", "selection", "radio", "expand"],
+        "enumNames": ["序号列", "复选框列", "单选框列", "展开行"],
+        "default": ""
+      },
+      "width": {
+        "title": "设置列的宽度，可以是像素或者百分比或者'auto'，设置为'auto'时，列宽会自动适应",
+        "type": ["string", "number"]
+      },
+      "#default": {
+        "title": "自定义显示内容模板插槽",
+        "type": "string"
+      },
+      "#edit": {
+        "title": "自定义可编辑组件模板插槽",
+        "type": "string"
+      },
+      "#filter": {
+        "title": "自定义筛选模板插槽",
+        "type": "string"
+      },
+      "#header": {
+        "title": "自定义表头内容的模板插槽",
+        "type": "string"
+      }
+    }
+  }
+}

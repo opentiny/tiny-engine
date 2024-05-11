@@ -1,0 +1,35 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "init-blocks": {
+        "title": "初始时需要显示的块数",
+        "type": "number"
+      },
+      "sub-tag": {
+        "title": "设置组件的子级 Dom 标签",
+        "type": "string",
+        "default": "li"
+      },
+      "tag": {
+        "title": "设置组件的 Dom 标签",
+        "type": "string",
+        "default": "ul"
+      },
+      "$$value": {
+        "title": "调用服务时候获取数据的来源",
+        "type": "array",
+        "default": ""
+      },
+      "wheel-blocks": {
+        "title": "鼠标滚轮上下滚动的时候，滚动的块数长度",
+        "type": "number",
+        "default": 1
+      },
+      "#default": {
+        "title": "默认的作用域插槽",
+        "type": "string"
+      }
+    }
+  }
+}

@@ -1,0 +1,184 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "$$button-texts": {
+        "title": "自定义按钮文案",
+        "type": "array",
+        "default": []
+      },
+      "$$columns": {
+        "title": "设置穿梭框的表格列配置, 此属性只在渲染类型（renderType）为 grid 时生效",
+        "type": "array",
+        "default": ""
+      },
+      "$$data": {
+        "title": "Transfer 的数据源",
+        "type": "array",
+        "default": ""
+      },
+      "$$drop-config": {
+        "title": "设置穿梭框列表项可拖拽",
+        "type": "object",
+        "default": ""
+      },
+      "filter-placeholder": {
+        "title": "搜索框占位符",
+        "type": "string",
+        "default": "请输入搜索内容"
+      },
+      "filterable": {
+        "title": "是否可搜索",
+        "type": "boolean",
+        "default": true
+      },
+      "$$format": {
+        "title": "列表顶部勾选状态文案",
+        "type": "object",
+        "properties": {
+          "noChecked": {
+            "title": "左侧列表顶部将展示已勾选数据和所有数据的比值",
+            "type": "string",
+            "default": "${checked}/${total}"
+          },
+          "hasChecked": {
+            "title": "右侧列表顶部将展示已勾选数据和所有数据的比值",
+            "type": "string",
+            "default": "${checked}/${total}"
+          }
+        }
+      },
+      "$$left-default-checked": {
+        "title": "初始状态下左侧列表的已勾选项的 key 数组",
+        "type": "array",
+        "default": []
+      },
+      "$$pager-op": {
+        "title": "设置分页配置，当渲染为表格时有效",
+        "type": "object",
+        "properties": {
+          "mode": {
+            "title": "设置分页显示模式",
+            "type": "string",
+            "default": "fixed",
+            "enum": ["number", "simple", "complete", "fixed"],
+            "enumNames": ["数字模式", "简单模式", "完成模式", "固定模式"]
+          },
+          "render": {
+            "pageVO": "分页的配置对象",
+            "type": "object",
+            "properties": {
+              "currentPage": {
+                "title": "当前页数，支持 .sync 修饰符",
+                "type": "Number",
+                "default": "1"
+              },
+              "pageSize": {
+                "title": "每页显示条目个数，支持 .sync 修饰符",
+                "type": "Number",
+                "default": "10"
+              }
+            }
+          }
+        }
+      },
+      "$$props": {
+        "title": "数据源的字段别名，可对key、label、disabled字段进行映射",
+        "type": "object",
+        "properties": {
+          "label": {
+            "title": "节点文本的映射字段名称",
+            "type": "string",
+            "default": "label"
+          },
+          "key": {
+            "title": "子节点的映射字段 key 值",
+            "type": "string",
+            "default": "key"
+          },
+          "disabled": {
+            "title": "禁用映射字段名称",
+            "type": "string",
+            "default": "disabled"
+          }
+        }
+      },
+      "$$render": {
+        "title": "当plugin设置为Table时设置渲染为表格，当plugin设置为Tree渲染为树",
+        "type": "object",
+        "default": ""
+      },
+      "$$right-default-checked": {
+        "title": "初始状态下右侧列表的已勾选项的 key 数组",
+        "type": "array",
+        "default": []
+      },
+      "show-all-btn": {
+        "title": "展示全部移动按钮",
+        "type": "boolean",
+        "default": false
+      },
+      "show-pager": {
+        "title": "设置是否显示分页，当渲染为表格时有效",
+        "type": "boolean",
+        "default": false
+      },
+      "target-order": {
+        "title": "右侧列表元素的排序策略：若为 original，则保持与数据源相同的顺序；若为 push，则新加入的元素排在最后；若为 unshift，则新加入的元素排在最前",
+        "type": "string",
+        "enum": ["original", "push", "unshift"],
+        "enumNames": ["保持原顺序", "后排插入", "前排插入"],
+        "default": "original"
+      },
+      "$$titles": {
+        "title": "自定义列表标题",
+        "type": "array",
+        "default": ["列表 1", "列表 2"]
+      },
+      "to-left-disable": {
+        "title": "提供给用户控制穿梭框按钮禁用状态的属性,组件初始化状态下未选中时显示禁用状态",
+        "type": "boolean",
+        "default": true
+      },
+      "to-right-disable": {
+        "title": "提供给用户控制穿梭框按钮禁用状态的属性,组件初始化状态下未选中时显示禁用状态",
+        "type": "boolean",
+        "default": true
+      },
+      "$$tree-op": {
+        "title": "当plugin设置为Tree渲染为树时，设置树的相关配置属性",
+        "type": "object",
+        "default": ""
+      },
+      "$$value": {
+        "title": "绑定值",
+        "type": "array",
+        "default": []
+      },
+      "#button-panel": {
+        "title": "自定义穿梭按钮插槽",
+        "type": "string"
+      },
+      "#default": {
+        "title": "自定义数据项的内容插槽，参数为 { option }",
+        "type": "string"
+      },
+      "#left-footer": {
+        "title": "左侧列表底部的内容插槽",
+        "type": "string"
+      },
+      "#left-panel": {
+        "title": "左侧自定义内容插槽",
+        "type": "string"
+      },
+      "#right-footer": {
+        "title": "右侧列表底部的内容插槽",
+        "type": "string"
+      },
+      "#right-panel": {
+        "title": "右侧自定义内容插槽",
+        "type": "string"
+      }
+    }
+  }
+}

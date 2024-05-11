@@ -1,0 +1,56 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "$$data": {
+        "title": "设置收藏夹菜单的数据",
+        "type": "array",
+        "default": ""
+      },
+      "default-expand-all": {
+        "title": "设置打开菜单弹窗时默认是否展开所有节点",
+        "type": "boolean",
+        "default": true
+      },
+      "$$ellipsis": {
+        "title": "菜单内容超长时省略显示",
+        "type": "boolean",
+        "default": true
+      },
+      "$$icon": {
+        "title": "自定义节点展开折叠的图标",
+        "type": "object",
+        "default": ""
+      },
+      "keep-selected-nodes": {
+        "title": "树节点勾选内容后，点击取消按钮，再次打开弹窗是否保留取消前勾选的内容的状态",
+        "type": "boolean",
+        "default": true
+      },
+      "max-item": {
+        "title": "设置可收藏的栏目的最大数量",
+        "type": "number",
+        "minimum": 0
+      },
+      "$$search-icon": {
+        "title": "自定义搜索图标",
+        "type": "object",
+        "default": ""
+      },
+      "titile": {
+        "title": "设置收藏夹菜单的标题",
+        "type": "string",
+        "default": ""
+      },
+      "$$wrap": {
+        "title": "菜单内容超长时换行显示",
+        "type": "boolean",
+        "default": false
+      },
+      "#foot": {
+        "title": "菜单弹窗底部插槽",
+        "type": "string"
+      }
+    }
+  }
+}

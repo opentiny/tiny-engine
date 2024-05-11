@@ -1,0 +1,39 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "clearable": {
+        "title": "是否可清空",
+        "type": "boolean",
+        "default": true
+      },
+      "disabled": {
+        "title": "禁用",
+        "type": "boolean",
+        "default": false
+      },
+      "$$fields": {
+        "title": "自定义数据映射，未使用框架服务时必填",
+        "type": "object"
+      },
+      "placeholder": {
+        "title": "设置输入框内的提示占位文本",
+        "type": "string",
+        "default": ""
+      },
+      "popper-append-to-body": {
+        "title": "是否将弹出框插入至 body 元素。在弹出框的定位出现问题时，可将该属性设置为 false (可参考 select 组件)",
+        "type": "boolean",
+        "default": true
+      },
+      "popper-class": {
+        "title": "为 popper 添加类名(可参考 popover 组件)",
+        "type": "string"
+      },
+      "value": {
+        "title": "设置下拉框的值",
+        "type": ["string", "number"]
+      }
+    }
+  }
+}
