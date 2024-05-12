@@ -16,7 +16,7 @@ export const copyLocalImportMap = ({
   base,
   dir = 'import-map-static',
   bundleTempDir = 'bundle-deps/design-core-import-map',
-  packageCopy = [] // key之为importMap的imports的左值 （非右值的地址上的包名）
+  packageCopy = [] // 值为importMap的imports的左值 （非右值的地址上的包名）
 }) => {
   const importMapFiles = Object.entries(importMap.imports)
     .filter(([_libKey, libPath]) => libPath.startsWith(originCdnPrefix))
