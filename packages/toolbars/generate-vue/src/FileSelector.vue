@@ -54,15 +54,30 @@ export default {
   emits: ['cancel', 'confirm'],
   setup(props, { emit }) {
     const getTableTreeData = (data) => {
-      const dataMap = {}
+      const res = []
       data.forEach((item) => {
-        if (!dataMap[item.fileType]) {
-          dataMap[item.fileType] = { fileType: item.fileType, children: [] }
+        const folder = item.filePath.split('/').slice(0, -1)
+
+        if (!folder.length) {
+          res.push(item)
+          return
         }
-        dataMap[item.fileType].children.push(item)
+
+        const parentFolder = folder.reduce((parent, curPath) => {
+          let curItem = parent.find((parItem) => parItem.path === curPath)
+
+          if (!curItem) {
+            curItem = { path: curPath, filePath: curPath, children: [] }
+            parent.push(curItem)
+          }
+
+          return curItem.children
+        }, res)
+
+        parentFolder.push(item)
       })
 
-      return Object.values(dataMap)
+      return res
     }
 
     const tableData = computed(() => getTableTreeData(props.data))

@@ -1787,7 +1787,7 @@
       },
       {
         "componentName": "TinyPlusFrozenPage",
-        "package": "@opentiny/vuee",
+        "package": "@opentiny/vue",
         "exportName": "FrozenPage",
         "destructuring": true,
         "version": "3.4.1"

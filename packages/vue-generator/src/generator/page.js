@@ -94,6 +94,7 @@ const handleLiteralBinding = ({ key, item, attrsArr, description, state }) => {
   // string 直接静态绑定
   if (typeof item === 'string') return attrsArr.push(`${key}="${item.replace(/"/g, '&quot;')}"`)
 
+  // TODO: 拿到这里的场景 case？
   if (item?.componentName === BUILTIN_COMPONENT_NAME.ICON) {
     const iconName = handleIconInProps(description, item)
 
