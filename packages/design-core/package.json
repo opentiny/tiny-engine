@@ -120,9 +120,11 @@
     "rollup-plugin-polyfill-node": "^0.12.0",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-visualizer": "^5.8.3",
+    "shelljs": "^0.8.5",
     "svg-sprite-loader": "^6.0.11",
     "vite": "^4.3.7",
-    "vite-plugin-monaco-editor": "^1.0.10",
+    "vite-plugin-monaco-editor": "^1.1.0",
+    "vite-plugin-static-copy": "^0.16.0",
     "vite-plugin-svg-icons": "^2.0.1",
     "vue-eslint-parser": "^8.0.1"
   },

@@ -5,6 +5,7 @@ package-lock.json
 yarn.lock
 pnpm-lock.yaml
 lerna-debug.log
+packages/design-core/bundle-deps
 
 # local env files
 .env.local
