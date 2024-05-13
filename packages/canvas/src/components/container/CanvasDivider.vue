@@ -43,7 +43,8 @@ const ROW_SNIPPET = {
         grow: true,
         shrink: true,
         widthType: 'auto'
-      }
+      },
+      children: []
     }
   ]
 }
