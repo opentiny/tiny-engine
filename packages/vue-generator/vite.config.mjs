@@ -12,14 +12,37 @@
 
 import { defineConfig } from 'vite'
 import path from 'path'
+import { viteStaticCopy } from 'vite-plugin-static-copy'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  test: {
+    exclude: ['**/result/**'],
+    watchExclude: ['**/result/**']
+  },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src')
+    }
+  },
+  plugins: [
+    viteStaticCopy({
+      targets: [
+        {
+          src: './src/index.d.ts',
+          dest: '.'
+        }
+      ]
+    })
+  ],
   build: {
     lib: {
       entry: path.resolve(__dirname, './src/index.js'),
-      formats: ['cjs']
+      formats: ['cjs', 'es']
     },
-    sourcemap: true
+    sourcemap: true,
+    rollupOptions: {
+      external: ['@babel/parser', '@babel/traverse']
+    }
   }
 })

@@ -18,11 +18,11 @@ import { defineComponent, computed, defineAsyncComponent } from 'vue'
 import { Repl, ReplStore } from '@vue/repl'
 import vueJsx from '@vue/babel-plugin-jsx'
 import { transformSync } from '@babel/core'
-import { Notify } from '@opentiny/vue'
+import { genSFCWithDefaultPlugin, parseRequiredBlocks } from '@opentiny/tiny-engine-dsl-vue'
 import importMap from './importMap'
 import srcFiles from './srcFiles'
 import generateMetaFiles, { processAppJsCode } from './generate'
-import { getSearchParams, fetchCode, fetchMetaData, fetchImportMap } from './http'
+import { getSearchParams, fetchMetaData, fetchImportMap, fetchAppSchema, fetchBlockSchema } from './http'
 import { PanelType, PreviewTips } from '../constant'
 import { injectDebugSwitch } from './debugSwitch'
 import '@vue/repl/style.css'
@@ -69,6 +69,33 @@ export default {
       const newImportMap = { imports: { ...importMap.imports, ...utilsImportMaps } }
       store.setImportMap(newImportMap)
     }
+    const getBlocksSchema = async (pageSchema, blockSet = new Set()) => {
+      let res = []
+
+      const blockNames = parseRequiredBlocks(pageSchema)
+      const promiseList = blockNames
+        .filter((name) => {
+          if (blockSet.has(name)) {
+            return false
+          }
+
+          blockSet.add(name)
+
+          return true
+        })
+        .map((name) => fetchBlockSchema(name))
+
+      const schemaList = await Promise.allSettled(promiseList)
+
+      schemaList.forEach((item) => {
+        if (item.status === 'fulfilled' && item.value?.[0]?.content) {
+          res.push(item.value[0].content)
+          res.push(...getBlocksSchema(item.value[0].content, blockSet))
+        }
+      })
+
+      return res
+    }
 
     const queryParams = getSearchParams()
     const getImportMap = async () => {
@@ -85,32 +112,38 @@ export default {
     }
 
     const promiseList = [
-      fetchCode(queryParams),
+      fetchAppSchema(queryParams?.app),
       fetchMetaData(queryParams),
       setFiles(srcFiles, 'src/Main.vue'),
       getImportMap()
     ]
-    Promise.all(promiseList).then(([codeList, metaData, _void, importMapData]) => {
+    Promise.all(promiseList).then(async ([appData, metaData, _void, importMapData]) => {
       addUtilsImportMap(importMapData, metaData.utils || [])
-      const codeErrorMsgs = codeList
-        .filter(({ errors }) => errors?.length)
-        .map(({ errors }) => errors)
-        .flat()
-        .map(({ message }) => message)
 
-      if (codeErrorMsgs.length) {
-        const title = PreviewTips.ERROR_WHEN_COMPILE
-        Notify({
-          type: 'error',
-          title,
-          message: codeErrorMsgs.join('\n'),
-          // 不自动关闭
-          duration: 0,
-          position: 'top-right'
+      const blocks = await getBlocksSchema(queryParams.pageInfo?.schema)
+
+      // TODO: 需要验证级联生成 block schema
+      // TODO: 物料内置 block 需要如何处理？
+      const pageCode = [
+        {
+          panelName: 'Main.vue',
+          panelValue:
+            genSFCWithDefaultPlugin(queryParams.pageInfo?.schema, appData?.componentsMap || [], {
+              blockRelativePath: './'
+            }) || '',
+          panelType: 'vue',
+          index: true
+        },
+        ...(blocks || []).map((blockSchema) => {
+          return {
+            panelName: blockSchema.fileName,
+            panelValue:
+              genSFCWithDefaultPlugin(blockSchema, appData?.componentsMap || [], { blockRelativePath: './' }) || '',
+            panelType: 'vue',
+            index: true
+          }
         })
-
-        return title
-      }
+      ]
 
       // [@vue/repl] `Only lang="ts" is supported for <script> blocks.`
       const langReg = /lang="jsx"/
@@ -158,7 +191,7 @@ export default {
 
       newFiles['app.js'] = appJsCode
 
-      codeList.map(fixScriptLang).forEach(assignFiles)
+      pageCode.map(fixScriptLang).forEach(assignFiles)
 
       const metaFiles = generateMetaFiles(metaData)
       Object.assign(newFiles, metaFiles)

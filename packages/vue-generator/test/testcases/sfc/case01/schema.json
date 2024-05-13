@@ -1,0 +1,716 @@
+{
+  "version": "1.1",
+  "componentName": "Page",
+  "fileName": "FormTable",
+  "css": ".overflow-container .card {\n    padding-bottom: 8px;\n}\n.main-body {\n    display: flex;\n    flex: 1;\n    flex-direction: column;\n    margin: 20px 20px 9px 20px;\n}\n.card {\n    padding: 20px 20px;\n    background-color: #ffffff;\n    box-shadow: 0 2px 10px 0 rgb(0 0 0 / 6%);\n    border-radius: 2px;\n}\n.manage-list {\n    margin-bottom: 60px !important;\n} .crm-title-wrapper{\n  display: flex;\n  justify-content: start;\n  align-items: center;\n  margin-bottom: 20px;\n  gap: 20px;\n}\n .crm-import-button:not(:last-child) {\n  margin-right: 10px;\n}",
+  "props": {},
+  "children": [
+    {
+      "componentName": "Text",
+      "props": {
+        "style": "background: url(\"**/public/logo.png\");",
+        "className": "page-header",
+        "text": "标题区"
+      }
+    },
+    {
+      "componentName": "Text",
+      "props": {
+        "style": "background: url('**/public/background.png');",
+        "text": "副标题区"
+      }
+    },
+    {
+      "componentName": "Template",
+      "props": {
+        "text": "空插槽，出码会跳过此节点"
+      },
+      "children": []
+    },
+    {
+      "componentName": "ImageTitle",
+      "fileName": "ImageTitle",
+      "componentType": "Block",
+      "props": {
+        "className": {
+          "type": "JSExpression",
+          "value": "['basic-info', {'form-fixed-layout': this.props.isFixed}, {'form-auto-layout': this.props.isAuto}]"
+        },
+        "text": "配置报价",
+        "hasSplitLine": false,
+        "onClickLogo": {
+          "type": "JSExpression",
+          "value": "this.handleReset",
+          "params": ["state.flag"]
+        }
+      }
+    },
+    {
+      "componentName": "TinyForm",
+      "props": {
+        "inline": true,
+        "style": {
+          "margin": "12px"
+        },
+        "className": "form"
+      },
+      "children": [
+        {
+          "componentName": "TinyFormItem",
+          "props": {
+            "label": {
+              "type": "i18n",
+              "key": "company.name"
+            }
+          },
+          "children": [
+            {
+              "componentName": "TinyInput",
+              "props": {
+                "disabled": false,
+                "value": {
+                  "type": "JSExpression",
+                  "value": "state.companyName"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "componentName": "TinyFormItem",
+          "condition": {
+            "type": "JSExpression",
+            "value": "state.cityOptions.length"
+          },
+          "children": [
+            {
+              "componentName": "Template",
+              "props": {
+                "slot": "label"
+              },
+              "children": "城市"
+            },
+            {
+              "componentName": "TinySelect",
+              "props": {
+                "value": {
+                  "type": "JSExpression",
+                  "value": "state.companyCity"
+                },
+                "options": [
+                  {
+                    "label": {
+                      "type": "i18n",
+                      "key": "city.foochow",
+                      "zh_CN": "福州",
+                      "en_US": "Foochow"
+                    },
+                    "value": 0
+                  },
+                  {
+                    "label": "深'i'圳",
+                    "value": 1
+                  },
+                  {
+                    "label": "中山",
+                    "value": 2
+                  },
+                  {
+                    "label": "龙岩",
+                    "value": 3
+                  },
+                  {
+                    "label": "韶关",
+                    "value": 4
+                  },
+                  {
+                    "label": "黄冈",
+                    "value": 5
+                  },
+                  {
+                    "label": "赤壁",
+                    "value": 6
+                  },
+                  {
+                    "label": "厦门",
+                    "value": 7
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "componentName": "TinyFormItem",
+          "props": {},
+          "children": [
+            {
+              "componentName": "Text",
+              "props": {
+                "className": "form-footer",
+                "text": "表单提交区"
+              }
+            },
+            {
+              "componentName": "TinyButton",
+              "props": {
+                "type": "primary",
+                "icon": {
+                  "componentName": "Icon",
+                  "props": {
+                    "name": "IconSearch"
+                  }
+                },
+                "onClick": {
+                  "type": "JSExpression",
+                  "value": "this.handleSearch"
+                }
+              },
+              "children": "搜索"
+            },
+            {
+              "componentName": "TinyButton",
+              "props": {
+                "onClick": {
+                  "type": "JSExpression",
+                  "value": "this.handleReset"
+                }
+              },
+              "children": {
+                "type": "i18n",
+                "key": "operation.reset"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "componentName": "Collection",
+      "props": {
+        "dataSource": "a5f6ef4f"
+      },
+      "children": [
+        {
+          "componentName": "TinyGrid",
+          "props": {
+            "columns": {
+              "type": "JSExpression",
+              "value": "state.columns"
+            },
+            "data": {
+              "type": "JSExpression",
+              "value": "state.tableData"
+            },
+            "fetchData": {
+              "type": "JSExpression",
+              "value": "{ api: getTableData }"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "componentName": "Collection",
+      "props": {
+        "dataSource": "a5f6ef4f"
+      },
+      "children": [
+        {
+          "componentName": "TinyGrid",
+          "props": {
+            "columns": [
+              { "type": "index", "width": 60, "title": "" },
+              { "type": "selection", "width": 60 },
+              {
+                "field": "employees",
+                "title": "员工数",
+                "slots": {
+                  "default": {
+                    "type": "JSSlot",
+                    "params": ["row", "rowIndex"],
+                    "value": [{ "componentName": "TinyInput", "props": {}, "id": "49e232ce" }]
+                  }
+                }
+              },
+              { "field": "city", "title": "城市" },
+              {
+                "title": "产品",
+                "slots": {
+                  "default": {
+                    "type": "JSSlot",
+                    "params": ["row"],
+                    "value": [
+                      {
+                        "componentName": "div",
+                        "id": "592fbc05",
+                        "children": [{ "componentName": "TinySwitch", "props": { "modelValue": "" }, "id": "46a60c6f" }]
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "title": "操作",
+                "slots": {
+                  "default": {
+                    "type": "JSSlot",
+                    "value": [
+                      {
+                        "componentName": "TinyButton",
+                        "props": {
+                          "text": "删除",
+                          "icon": {
+                            "componentName": "Icon",
+                            "props": {
+                              "name": "IconDel"
+                            }
+                          },
+                          "onClick": {
+                            "type": "JSExpression",
+                            "value": "this.emit",
+                            "params": ["row"]
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            ],
+            "data": {
+              "type": "JSExpression",
+              "value": "state.tableData"
+            },
+            "fetchData": {
+              "type": "JSExpression",
+              "value": "{ api: getTableData }"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "componentName": "div",
+      "props": {
+        "style": {
+          "width": {
+            "type": "JSExpression",
+            "value": "this.props.quotePopWidth"
+          }
+        }
+      },
+      "children": "循环渲染："
+    },
+    {
+      "componentName": "Icon",
+      "condition": false,
+      "props": {
+        "name": "TinyIconHelpCircle"
+      }
+    },
+    {
+      "children": [
+        {
+          "componentName": "TinyButton",
+          "loop": {
+            "type": "JSExpression",
+            "value": "state.buttons"
+          },
+          "loopArgs": ["item", "index"],
+          "props": {
+            "key": {
+              "type": "JSExpression",
+              "value": "item.text"
+            },
+            "type": {
+              "type": "JSExpression",
+              "value": "item.type"
+            },
+            "text": {
+              "type": "JSExpression",
+              "value": "index + item.text"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "componentName": "br"
+    },
+    {
+      "children": [
+        {
+          "componentName": "TinyButton",
+          "loop": [
+            {
+              "type": "primary",
+              "text": "字面量"
+            },
+            {
+              "type": "success",
+              "text": "字面量"
+            },
+            {
+              "type": "danger",
+              "text": "危险操作"
+            }
+          ],
+          "loopArgs": ["item"],
+          "props": {
+            "key": {
+              "type": "JSExpression",
+              "value": "item.text"
+            },
+            "type": {
+              "type": "JSExpression",
+              "value": "item.type"
+            },
+            "text": {
+              "type": "JSExpression",
+              "value": "item.text"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "state": {
+    "IconPlusSquare": {
+      "type": "JSResource",
+      "value": "this.utils.IconPlusSquare()"
+    },
+    "theme": "{   \"id\": 22,   \"name\": \"@cloud/tinybuilder-theme-dark\",   \"description\": \"黑暗主题\" }",
+    "companyName": "",
+    "companyOptions": null,
+    "companyCity": "",
+    "cityOptions": [
+      {
+        "label": "福州",
+        "value": 0
+      },
+      {
+        "label": "深圳",
+        "value": 1
+      },
+      {
+        "label": "中山",
+        "value": 2
+      },
+      {
+        "label": "龙岩",
+        "value": 3
+      },
+      {
+        "label": "韶关",
+        "value": 4
+      },
+      {
+        "label": "黄冈",
+        "value": 5
+      },
+      {
+        "label": "赤壁",
+        "value": 6
+      },
+      {
+        "label": "厦门",
+        "value": 7
+      }
+    ],
+    "editConfig": {
+      "trigger": "click",
+      "mode": "cell",
+      "showStatus": true,
+      "activeMethod": {
+        "type": "JSFunction",
+        "value": "function() { return this.props.isEdit }"
+      }
+    },
+    "columns": [
+      {
+        "type": {
+          "type": "JSExpression",
+          "value": "this.props.isEdit ? 'selection' : 'index'"
+        },
+        "width": "60",
+        "title": {
+          "type": "JSExpression",
+          "value": "this.props.isEdit ? '' : '序号'"
+        }
+      },
+      {
+        "field": "status",
+        "title": "状态",
+        "filter": {
+          "layout": "input,enum,default,extends,base",
+          "inputFilter": {
+            "component": {
+              "type": "JSResource",
+              "value": "this.utils.Numeric"
+            },
+            "attrs": { "format": "yyyy/MM/dd hh:mm:ss" },
+            "relation": "A",
+            "relations": [
+              {
+                "label": "小于",
+                "value": "A",
+                "method": {
+                  "type": "JSFunction",
+                  "value": "function({ value, input }) { return value < input }"
+                }
+              },
+              { "label": "等于", "value": "equals" },
+              { "label": "大于", "value": "greaterThan" }
+            ]
+          },
+          "extends": [
+            {
+              "label": "我要过滤大于800的数",
+              "method": {
+                "type": "JSFunction",
+                "value": "function({ value }) { return value > 800 }"
+              }
+            },
+            {
+              "label": "我要过滤全部的数",
+              "method": {
+                "type": "JSFunction",
+                "value": "function() { return true }"
+              }
+            }
+          ]
+        },
+        "slots": {
+          "default": {
+            "type": "JSSlot",
+            "params": ["row"],
+            "value": [
+              {
+                "componentName": "div",
+                "children": [
+                  {
+                    "componentName": "Icon",
+                    "props": {
+                      "name": "IconEdit"
+                    }
+                  },
+                  {
+                    "componentName": "CrmQuoteListGridStatus",
+                    "componentType": "Block",
+                    "condition": {
+                      "type": "JSExpression",
+                      "value": "this.props.isEdit"
+                    },
+                    "props": {
+                      "isEdit": {
+                        "type": "JSExpression",
+                        "value": "this.props.isEdit"
+                      },
+                      "status": {
+                        "type": "JSExpression",
+                        "value": "row.status"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "index",
+        "width": 60
+      },
+      {
+        "type": "selection",
+        "width": 60
+      },
+      {
+        "field": "name",
+        "title": "公司名称"
+      },
+      {
+        "field": "employees",
+        "title": "员工数"
+      },
+      {
+        "field": "city",
+        "title": "城市"
+      },
+      {
+        "title": "操作",
+        "slots": {
+          "default": {
+            "type": "JSSlot",
+            "value": [
+              {
+                "component": "div",
+                "props": {
+                  "style": "color: rgb(94,124, 224);cursor:pointer;",
+                  "text": {
+                    "type": "i18n",
+                    "key": "operation.delete"
+                  },
+                  "prop1": {
+                    "a": 123
+                  },
+                  "visible": true,
+                  "onClick": {
+                    "type": "JSExpression",
+                    "value": "this.emit"
+                  }
+                },
+                "children": [
+                  {
+                    "componentName": "TinyInput",
+                    "props": {
+                      "value": {
+                        "type": "JSExpression",
+                        "value": "row.giveamount",
+                        "model": {
+                          "prop": ""
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "component": "span",
+                    "condition": {
+                      "type": "JSExpression",
+                      "value": "state.cityOptions.length"
+                    },
+                    "children": {
+                      "type": "i18n",
+                      "key": "operation.hello"
+                    }
+                  },
+                  {
+                    "componentName": "Icon",
+                    "props": {
+                      "name": "TinyIconHelpCircle",
+                      "style": "margin-left: 6px; cursor: pointer;vertical-align: top;"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "tableData": [
+      {
+        "id": "1",
+        "name": "GFD科技有限公司",
+        "city": "福州",
+        "employees": 800,
+        "boole": false
+      },
+      {
+        "id": "2",
+        "name": "WWW科技有限公司",
+        "city": "深圳",
+        "employees": 300,
+        "boole": true
+      },
+      {
+        "id": "3",
+        "name": "RFV有限责任公司",
+        "city": "中山",
+        "employees": 1300,
+        "boole": false
+      },
+      {
+        "id": "4",
+        "name": "TGB科技有限公司",
+        "city": "龙岩",
+        "employees": 360,
+        "boole": true
+      },
+      {
+        "id": "5",
+        "name": "YHN科技有限公司",
+        "city": "韶关",
+        "employees": 810,
+        "boole": true
+      },
+      {
+        "id": "6",
+        "name": "WSX科技有限公司",
+        "city": "黄冈",
+        "employees": 800,
+        "boole": true
+      },
+      {
+        "id": "7",
+        "name": "KBG物业有限公司",
+        "city": "赤壁",
+        "employees": 400,
+        "boole": false
+      },
+      {
+        "id": "8",
+        "name": "深圳市福德宝网络技术有限公司",
+        "boole": true,
+        "city": "厦门",
+        "employees": 540
+      }
+    ],
+    "status": {
+      "type": "JSExpression",
+      "value": "this.statusData",
+      "computed": true
+    },
+    "buttons": [
+      {
+        "type": "primary",
+        "text": "主要操作"
+      },
+      {
+        "type": "success",
+        "text": "成功操作"
+      },
+      {
+        "type": "danger",
+        "text": {
+          "type": "i18n",
+          "key": "operation.danger"
+        }
+      }
+    ]
+  },
+  "lifeCycles": {
+    "setup": {
+      "type": "JSFunction",
+      "value": "function({ props, watch, onMounted }) {\r\n  onMounted(() => {\r\n    this.getTableDta()\r\n  })\r\n  watch(\r\n    () => props.load,\r\n    (load) => {\r\n      if (load.isLoad) {\r\n        this.getTableDta()\r\n      }\r\n    },\r\n    {\r\n      deep: true\r\n    }\r\n  )\r\n}"
+    },
+    "onBeforeMount": {
+      "type": "JSFunction",
+      "value": "function() { return '生命周期：onBeforeMount'; }"
+    },
+    "onMounted": {
+      "type": "JSFunction",
+      "value": "function onMounted() { return '生命周期：onMounted'; }"
+    }
+  },
+  "methods": {
+    "getTableData": {
+      "type": "JSFunction",
+      "value": "function getData({ page, filterArgs }) {\n  const { curPage, pageSize } = page;\n  const offset = (curPage - 1) * pageSize;\n\n  return new Promise((resolve) => {\n    setTimeout(() => {\n      const { tableData } = this.state;\n      let result = [...tableData];\n\n      if (filterArgs) {\n        result = result.filter((item) => item.city === filterArgs);\n      }\n\n      const total = result.length;\n      result = result.slice(offset, offset + pageSize);\n\n      resolve({ result, page: { total } });\n    }, 500);\n  });\n}"
+    },
+    "handleSearch": {
+      "type": "JSFunction",
+      "value": "function(e) { return ['搜索:', this.i18n('operation.search'), e]; }"
+    },
+    "handleReset": {
+      "type": "JSFunction",
+      "value": "function handleReset(e) { return ['重置:', e]; }"
+    },
+    "statusData": {
+      "type": "JSFunction",
+      "value": "function () {\r\n return [\r\n { name: this.i18n('quotes.common.configure_basic_information'), status: 'ready' },\r\n   { name: this.i18n('quotes.quote_list.quote'), status: 'wait' },\r\n  { name: this.i18n('quotes.common.complete_configuration_quote'), status: 'wait' }\r\n ]\r\n}"
+    }
+  }
+}
