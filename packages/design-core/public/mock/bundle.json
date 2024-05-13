@@ -13005,6 +13005,700 @@
               "disable": ["copy", "remove"]
             }
           }
+        },
+        {
+          "icon": "Box",
+          "name": {
+            "zh_CN": "图表"
+          },
+          "component": "TinyEcharts",
+          "description": "图表",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "package": "tiny-echarts",
+            "version": "0.0.30",
+            "dependencies": null,
+            "exportName": "TinyEcharts",
+            "script": "https://npm.onmicrosoft.cn/tiny-echarts@0.0.30/dist/index.js",
+            "css": ""
+          },
+          "group": "component",
+          "category": "扩展组件",
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": [],
+              "disable": []
+            },
+            "clickCapture": false,
+            "framework": "Vue"
+          },
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "content": []
+              },
+              {
+                "name": "1",
+                "label": {
+                  "zh_CN": "组件属性"
+                },
+                "description": {
+                  "zh_CN": "组件属性"
+                },
+                "content": [
+                  {
+                    "property": "data",
+                    "label": {
+                      "text": {
+                        "zh_CN": "业务数据"
+                      }
+                    },
+                    "required": false,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "object",
+                    "widget": {
+                      "component": "MetaCodeEditor",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "设置图表的业务数据,数据将默认被合并到option.dataset.source,请参照文档 https://echarts.apache.org/zh/option.html#dataset.source"
+                    }
+                  },
+                  {
+                    "property": "option",
+                    "label": {
+                      "text": {
+                        "zh_CN": "配置数据"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": ["object", "function"],
+                    "widget": {
+                      "component": "MetaCodeEditor",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "设置图表的配置数据或函数,请参照文档 https://echarts.apache.org/zh/option.html#title"
+                    }
+                  },
+                  {
+                    "property": "optionOpts",
+                    "label": {
+                      "text": {
+                        "zh_CN": "配置参数"
+                      }
+                    },
+                    "required": false,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "object",
+                    "widget": {
+                      "component": "MetaCodeEditor",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "设置图表的数据刷新参数,请参照文档 https://echarts.apache.org/zh/api.html#echartsInstance.setOption"
+                    }
+                  },
+                  {
+                    "property": "loadingOpts",
+                    "label": {
+                      "text": {
+                        "zh_CN": "加载动画参数"
+                      }
+                    },
+                    "required": false,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "object",
+                    "widget": {
+                      "component": "MetaCodeEditor",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "设置图表的加载动画参数,请参照文档 https://echarts.apache.org/zh/api.html#echartsInstance.showLoading"
+                    }
+                  },
+                  {
+                    "property": "initTheme",
+                    "label": {
+                      "text": {
+                        "zh_CN": "初始化皮肤"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "设置图表创建时的皮肤样式,请参照文档 https://echarts.apache.org/zh/api.html#echarts.init"
+                    },
+                    "required": false,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "string",
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    },
+                    "device": []
+                  },
+                  {
+                    "property": "initOpts",
+                    "label": {
+                      "text": {
+                        "zh_CN": "初始化参数"
+                      }
+                    },
+                    "required": false,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "object",
+                    "widget": {
+                      "component": "MetaCodeEditor",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "设置图表创建时的初始化参数,请参照文档 https://echarts.apache.org/zh/api.html#echarts.init"
+                    }
+                  },
+
+                  {
+                    "property": "autoResize",
+                    "label": {
+                      "text": {
+                        "zh_CN": "自动缩放"
+                      }
+                    },
+                    "required": false,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": "设置图表是否自动随容器大小缩放"
+                    },
+                    "labelPosition": "left"
+                  }
+                ]
+              }
+            ],
+            "events": {
+              "onInit": {
+                "label": {
+                  "zh_CN": "初始化前事件"
+                },
+                "description": {
+                  "zh_CN": "图表初始化前触发的回调函数"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "echarts",
+                      "type": "object",
+                      "defaultValue": null,
+                      "description": {
+                        "zh_CN": "图表库对象"
+                      }
+                    }
+                  ],
+                  "returns": {}
+                },
+                "defaultValue": ""
+              },
+              "onInited": {
+                "label": {
+                  "zh_CN": "初始化后事件"
+                },
+                "description": {
+                  "zh_CN": "图表初始化后触发的回调函数"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "echartsInstance",
+                      "type": "object",
+                      "defaultValue": null,
+                      "description": {
+                        "zh_CN": "图表实例对象"
+                      }
+                    },
+                    {
+                      "name": "echarts",
+                      "type": "object",
+                      "defaultValue": null,
+                      "description": {
+                        "zh_CN": "图表库对象"
+                      }
+                    }
+                  ],
+                  "returns": {}
+                },
+                "defaultValue": ""
+              }
+            },
+            "shortcuts": {
+              "properties": []
+            },
+            "contentMenu": {
+              "actions": []
+            }
+          }
+        },
+        {
+          "icon": "carousel",
+          "name": {
+            "zh_CN": "过渡动画"
+          },
+          "component": "TinyTransitions",
+          "description": "过渡动画组件",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "package": "tiny-transitions",
+            "version": "0.0.3",
+            "dependencies": null,
+            "exportName": "TinyTransitions",
+            "script": "https://npm.onmicrosoft.cn/tiny-transitions@0.0.3/dist/index.js",
+            "css": "https://npm.onmicrosoft.cn/tiny-transitions@0.0.3/dist/style.css"
+          },
+          "group": "component",
+          "category": "扩展组件",
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": true,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": [],
+              "disable": []
+            },
+            "clickCapture": true,
+            "framework": "Vue"
+          },
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "content": []
+              },
+              {
+                "name": "1",
+                "label": {
+                  "zh_CN": "组件属性"
+                },
+                "description": {
+                  "zh_CN": "组件属性"
+                },
+                "content": [
+                  {
+                    "property": "enter",
+                    "label": {
+                      "text": {
+                        "zh_CN": "enter"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "入场动画"
+                    },
+                    "required": false,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "string",
+                    "defaultValue": "",
+                    "widget": {
+                      "component": "MetaSelect",
+                      "props": {
+                        "groups": [
+                          {
+                            "label": "Bouncing",
+                            "content": [
+                              "animate__bounceIn",
+                              "animate__bounceInDown",
+                              "animate__bounceInLeft",
+                              "animate__bounceInRight",
+                              "animate__bounceInUp"
+                            ]
+                          },
+                          {
+                            "label": "Fading",
+                            "content": [
+                              "animate__fadeIn",
+                              "animate__fadeInDown",
+                              "animate__fadeInDownBig",
+                              "animate__fadeInLeft",
+                              "animate__fadeInLeftBig",
+                              "animate__fadeInRight",
+                              "animate__fadeInRightBig",
+                              "animate__fadeInUp",
+                              "animate__fadeInUpBig",
+                              "animate__fadeInTopLeft",
+                              "animate__fadeInTopRight",
+                              "animate__fadeInBottomLeft",
+                              "animate__fadeInBottomRight"
+                            ]
+                          },
+                          {
+                            "label": "Flipping",
+                            "content": ["animate__flip", "animate__flipInX", "animate__flipInY"]
+                          },
+                          {
+                            "label": "Zooming",
+                            "content": [
+                              "animate__zoomIn",
+                              "animate__zoomInDown",
+                              "animate__zoomInLeft",
+                              "animate__zoomInRight",
+                              "animate__zoomInUp"
+                            ]
+                          },
+                          {
+                            "label": "Lightspeed",
+                            "content": ["animate__lightSpeedInRight", "animate__lightSpeedInLeft"]
+                          }
+                        ],
+                        "options": [
+                          { "label": "bounceIn", "value": "animate__bounceIn" },
+                          { "label": "bounceInDown", "value": "animate__bounceInDown" },
+                          { "label": "bounceInLeft", "value": "animate__bounceInLeft" },
+                          { "label": "bounceInRight", "value": "animate__bounceInRight" },
+                          { "label": "bounceInUp", "value": "animate__bounceInUp" },
+                          { "label": "fadeIn", "value": "animate__fadeIn" },
+                          { "label": "fadeInDown", "value": "animate__fadeInDown" },
+                          { "label": "fadeInDownBig", "value": "animate__fadeInDownBig" },
+                          { "label": "fadeInLeft", "value": "animate__fadeInLeft" },
+                          { "label": "fadeInLeftBig", "value": "animate__fadeInLeftBig" },
+                          { "label": "fadeInRight", "value": "animate__fadeInRight" },
+                          { "label": "fadeInRightBig", "value": "animate__fadeInRightBig" },
+                          { "label": "fadeInUp", "value": "animate__fadeInUp" },
+                          { "label": "fadeInUpBig", "value": "animate__fadeInUpBig" },
+                          { "label": "fadeInTopLeft", "value": "animate__fadeInTopLeft" },
+                          { "label": "fadeInTopRight", "value": "animate__fadeInTopRight" },
+                          { "label": "fadeInBottomLeft", "value": "animate__fadeInBottomLeft" },
+                          { "label": "fadeInBottomRight", "value": "animate__fadeInBottomRight" },
+                          { "label": "flip", "value": "animate__flip" },
+                          { "label": "flipInX", "value": "animate__flipInX" },
+                          { "label": "flipInY", "value": "animate__flipInY" },
+                          { "label": "zoomIn", "value": "animate__zoomIn" },
+                          { "label": "zoomInDown", "value": "animate__zoomInDown" },
+                          { "label": "zoomInLeft", "value": "animate__zoomInLeft" },
+                          { "label": "zoomInRight", "value": "animate__zoomInRight" },
+                          { "label": "zoomInUp", "value": "animate__zoomInUp" },
+                          { "label": "lightSpeedInRight", "value": "animate__lightSpeedInRight" },
+                          { "label": "lightSpeedInLeft", "value": "animate__lightSpeedInLeft" }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "property": "enterDuration",
+                    "label": {
+                      "text": {
+                        "zh_CN": "入场持续"
+                      }
+                    },
+                    "required": false,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "description": {
+                      "zh_CN": "入场动画持续时间毫秒"
+                    },
+                    "labelPosition": "top",
+                    "widget": {
+                      "component": "MetaNumber",
+                      "props": {
+                        "units": [{ "value": "ms", "label": "ms" }],
+                        "selectedUnit": "ms",
+                        "showUnit": true,
+                        "allowEmpty": true
+                      }
+                    }
+                  },
+                  {
+                    "property": "enterDelay",
+                    "label": {
+                      "text": {
+                        "zh_CN": "入场延迟"
+                      }
+                    },
+                    "required": false,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "description": {
+                      "zh_CN": "入场动画延迟时间毫秒"
+                    },
+                    "labelPosition": "top",
+                    "widget": {
+                      "component": "MetaNumber",
+                      "props": {
+                        "units": [{ "value": "ms", "label": "ms" }],
+                        "selectedUnit": "ms",
+                        "showUnit": true,
+                        "allowEmpty": true
+                      }
+                    }
+                  },
+                  {
+                    "property": "leave",
+                    "label": {
+                      "text": {
+                        "zh_CN": "leave"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "出场动画"
+                    },
+                    "required": false,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "string",
+                    "defaultValue": "",
+                    "widget": {
+                      "component": "MetaSelect",
+                      "props": {
+                        "groups": [
+                          {
+                            "label": "Bouncing",
+                            "content": [
+                              "animate__bounceOut",
+                              "animate__bounceOutDown",
+                              "animate__bounceOutLeft",
+                              "animate__bounceOutRight",
+                              "animate__bounceOutUp"
+                            ]
+                          },
+                          {
+                            "label": "Fading",
+                            "content": [
+                              "animate__fadeOut",
+                              "animate__fadeOutDown",
+                              "animate__fadeOutDownBig",
+                              "animate__fadeOutLeft",
+                              "animate__fadeOutLeftBig",
+                              "animate__fadeOutRight",
+                              "animate__fadeOutRightBig",
+                              "animate__fadeOutUp",
+                              "animate__fadeOutUpBig",
+                              "animate__fadeOutTopLeft",
+                              "animate__fadeOutTopRight",
+                              "animate__fadeOutBottomRight",
+                              "animate__fadeOutBottomLeft"
+                            ]
+                          },
+                          {
+                            "label": "Flipping",
+                            "content": ["animate__flip", "animate__flipOutX", "animate__flipOutY"]
+                          },
+                          {
+                            "label": "Zooming",
+                            "content": [
+                              "animate__zoomOut",
+                              "animate__zoomOutDown",
+                              "animate__zoomOutLeft",
+                              "animate__zoomOutRight",
+                              "animate__zoomOutUp"
+                            ]
+                          },
+                          {
+                            "label": "Lightspeed",
+                            "content": ["animate__lightSpeedOutRight", "animate__lightSpeedOutLeft"]
+                          }
+                        ],
+                        "options": [
+                          { "label": "bounceOut", "value": "animate__bounceOut" },
+                          { "label": "bounceOutDown", "value": "animate__bounceOutDown" },
+                          { "label": "bounceOutLeft", "value": "animate__bounceOutLeft" },
+                          { "label": "bounceOutRight", "value": "animate__bounceOutRight" },
+                          { "label": "bounceOutUp", "value": "animate__bounceOutUp" },
+                          { "label": "fadeOut", "value": "animate__fadeOut" },
+                          { "label": "fadeOutDown", "value": "animate__fadeOutDown" },
+                          { "label": "fadeOutDownBig", "value": "animate__fadeOutDownBig" },
+                          { "label": "fadeOutLeft", "value": "animate__fadeOutLeft" },
+                          { "label": "fadeOutLeftBig", "value": "animate__fadeOutLeftBig" },
+                          { "label": "fadeOutRight", "value": "animate__fadeOutRight" },
+                          { "label": "fadeOutRightBig", "value": "animate__fadeOutRightBig" },
+                          { "label": "fadeOutUp", "value": "animate__fadeOutUp" },
+                          { "label": "fadeOutUpBig", "value": "animate__fadeOutUpBig" },
+                          { "label": "fadeOutTopLeft", "value": "animate__fadeOutTopLeft" },
+                          { "label": "fadeOutTopRight", "value": "animate__fadeOutTopRight" },
+                          { "label": "fadeOutBottomRight", "value": "animate__fadeOutBottomRight" },
+                          { "label": "fadeOutBottomLeft", "value": "animate__fadeOutBottomLeft" },
+                          { "label": "flip", "value": "animate__flip" },
+                          { "label": "flipOutX", "value": "animate__flipOutX" },
+                          { "label": "flipOutY", "value": "animate__flipOutY" },
+                          { "label": "zoomOut", "value": "animate__zoomOut" },
+                          { "label": "zoomOutDown", "value": "animate__zoomOutDown" },
+                          { "label": "zoomOutLeft", "value": "animate__zoomOutLeft" },
+                          { "label": "zoomOutRight", "value": "animate__zoomOutRight" },
+                          { "label": "zoomOutUp", "value": "animate__zoomOutUp" },
+                          { "label": "lightSpeedOutRight", "value": "animate__lightSpeedOutRight" },
+                          { "label": "lightSpeedOutLeft", "value": "animate__lightSpeedOutLeft" }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "property": "leaveDuration",
+                    "label": {
+                      "text": {
+                        "zh_CN": "出场持续"
+                      }
+                    },
+                    "required": false,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "description": {
+                      "zh_CN": "出场动画持续时间毫秒"
+                    },
+                    "labelPosition": "top",
+                    "widget": {
+                      "component": "MetaNumber",
+                      "props": {
+                        "units": [{ "value": "ms", "label": "ms" }],
+                        "selectedUnit": "ms",
+                        "showUnit": true,
+                        "allowEmpty": true
+                      }
+                    }
+                  },
+                  {
+                    "property": "leaveDelay",
+                    "label": {
+                      "text": {
+                        "zh_CN": "出场延迟"
+                      }
+                    },
+                    "required": false,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "description": {
+                      "zh_CN": "出场动画延迟时间毫秒"
+                    },
+                    "labelPosition": "top",
+                    "widget": {
+                      "component": "MetaNumber",
+                      "props": {
+                        "units": [{ "value": "ms", "label": "ms" }],
+                        "selectedUnit": "ms",
+                        "showUnit": true,
+                        "allowEmpty": true
+                      }
+                    }
+                  },
+                  {
+                    "property": "appear",
+                    "label": {
+                      "text": {
+                        "zh_CN": "初始渲染"
+                      }
+                    },
+                    "required": false,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "description": {
+                      "zh_CN": "动画是否在初始渲染时触发"
+                    },
+                    "labelPosition": "left",
+                    "defaultValue": true,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  }
+                ]
+              }
+            ],
+            "events": {},
+            "shortcuts": {
+              "properties": []
+            },
+            "contentMenu": {
+              "actions": []
+            }
+          }
         }
       ],
       "blocks": [],
@@ -14291,6 +14985,73 @@
               }
             }
           ]
+        },
+        {
+          "name": {
+            "zh_CN": "图表"
+          },
+          "icon": "Box",
+          "screenshot": "",
+          "snippetName": "TinyEcharts",
+          "schema": {
+            "componentName": "TinyEcharts",
+            "props": {
+              "style": "height:200px",
+              "option": {
+                "tooltip": {
+                  "trigger": "item"
+                },
+                "series": [
+                  {
+                    "name": "Access From",
+                    "type": "pie",
+                    "radius": ["40%", "70%"],
+                    "avoidLabelOverlap": false,
+                    "padAngle": 5,
+                    "itemStyle": {
+                      "borderRadius": 10
+                    },
+                    "label": {
+                      "show": false,
+                      "position": "center"
+                    },
+                    "emphasis": {
+                      "label": {
+                        "show": true,
+                        "fontSize": 40,
+                        "fontWeight": "bold"
+                      }
+                    },
+                    "labelLine": {
+                      "show": false
+                    },
+                    "data": [
+                      { "value": 1048, "name": "Search Engine" },
+                      { "value": 735, "name": "Direct" },
+                      { "value": 580, "name": "Email" },
+                      { "value": 484, "name": "Union Ads" },
+                      { "value": 310, "name": "Video Ads" }
+                    ]
+                  }
+                ]
+              },
+              "autoResize": true
+            }
+          }
+        },
+        {
+          "name": {
+            "zh_CN": "过渡动画"
+          },
+          "icon": "carousel",
+          "screenshot": "",
+          "snippetName": "TinyTransitions",
+          "schema": {
+            "componentName": "TinyTransitions",
+            "props": {
+              "appear": true
+            }
+          }
         }
       ]
     }
