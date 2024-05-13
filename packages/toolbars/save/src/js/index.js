@@ -12,11 +12,10 @@
 
 import { reactive, ref } from 'vue'
 import { useBlock, useCanvas, useLayout, useNotify, usePage } from '@opentiny/tiny-engine-controller'
-import { getSchema, setSchema, selectNode } from '@opentiny/tiny-engine-canvas'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { handlePageUpdate } from '@opentiny/tiny-engine-controller/js/http'
 
-const { pageState, isSaved, isBlock } = useCanvas()
+const { pageState, isSaved, isBlock, canvasApi } = useCanvas()
 const { PLUGIN_NAME, getPluginApi } = useLayout()
 const { getCurrentBlock } = useBlock()
 const { PAGE_STATUS } = constants
@@ -58,6 +57,7 @@ const savePage = async (pageSchema) => {
 
 export const saveCommon = (value) => {
   const pageSchema = JSON.parse(value)
+  const { setSchema, selectNode } = canvasApi.value
 
   pageState.pageSchema = pageSchema
   // setSchema 是异步，保存直接传递当前 schema
@@ -90,6 +90,7 @@ export const openCommon = async () => {
   const pageStatus = useLayout().layoutState?.pageStatus
   const curPageState = pageStatus?.state
   const pageInfo = pageStatus?.data
+  const { getSchema } = canvasApi.value
   const ERR_MSG = {
     [PAGE_STATUS.Release]: '当前页面未锁定，请先锁定再保存',
     [PAGE_STATUS.Empty]: '当前应用无页面，请先新建页面再保存',

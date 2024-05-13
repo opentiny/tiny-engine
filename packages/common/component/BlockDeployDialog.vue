@@ -49,7 +49,7 @@
       :modal="false"
       :fullscreen="true"
       :append-to-body="true"
-      title="Schema 本地与线上差异"
+      title="Schema 线上与本地差异"
     >
       <vue-monaco
         v-if="state.compareVisible"
@@ -82,8 +82,8 @@ import {
   FormItem as TinyFormItem
 } from '@opentiny/vue'
 import { theme } from '@opentiny/tiny-engine-controller/adapter'
-import { useLayout } from '@opentiny/tiny-engine-controller'
-import { getSchema, setSchema } from '@opentiny/tiny-engine-canvas'
+import { useLayout, useNotify, useCanvas } from '@opentiny/tiny-engine-controller'
+import { constants } from '@opentiny/tiny-engine-utils'
 import VueMonaco from './VueMonaco.vue'
 
 export default {
@@ -106,6 +106,7 @@ export default {
   },
   emits: ['update:visible'],
   setup(props, { emit, attrs }) {
+    const { COMPONENT_NAME } = constants
     const formState = reactive({
       deployInfo: '',
       version: '',
@@ -186,9 +187,10 @@ export default {
         const remote = await api.getBlockById(block?.id)
         const originalObj = remote?.content || {}
         state.originalCode = JSON.stringify(originalObj, null, 2)
+        const getSchema = useCanvas().canvasApi.value.getSchema
 
         // 转为普通对象，和线上代码顺序保持一致
-        const pageSchema = getSchema() || {}
+        const pageSchema = getSchema?.() || {}
         if (pageSchema.componentName === 'Block') {
           state.code = JSON.stringify(pageSchema, null, 2)
         } else {
@@ -212,10 +214,21 @@ export default {
     }
 
     const save = () => {
-      const pageSchema = JSON.parse(state.newCode)
-      setSchema(pageSchema)
-
-      close()
+      if (!state.newCode) {
+        close()
+        return
+      }
+      try {
+        const pageSchema = JSON.parse(state.newCode)
+        const setSchema = useCanvas().canvasApi.value.setSchema
+        setSchema?.({ ...pageSchema, componentName: COMPONENT_NAME.Block })
+        close()
+      } catch (err) {
+        useNotify({
+          type: 'error',
+          message: '代码静态检查有错误，请先修改后再保存'
+        })
+      }
     }
 
     return {

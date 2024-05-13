@@ -12,7 +12,6 @@
 
 import { computed, reactive, watch } from 'vue'
 import { useBroadcastChannel } from '@vueuse/core'
-import { getSchema as getCanvasPageSchema, updateRect, setPageCss } from '@opentiny/tiny-engine-canvas'
 import { useCanvas, useHistory, useProperties as useProps } from '@opentiny/tiny-engine-controller'
 import { formatString } from '@opentiny/tiny-engine-controller/js/ast'
 import { constants, utils } from '@opentiny/tiny-engine-utils'
@@ -134,17 +133,17 @@ const getClassNameAndIdList = (schema) => {
   }
 }
 
-const { getPageSchema, getCurrentSchema } = useCanvas()
+const { getPageSchema, getCurrentSchema, canvasApi } = useCanvas()
 const { getSchema, propsUpdateKey } = useProps()
 const { addHistory } = useHistory()
 
 watch(
-  () => [getCurrentSchema(), state.schemaUpdateKey, propsUpdateKey.value, getCanvasPageSchema(), schemaLength],
+  () => [getCurrentSchema(), state.schemaUpdateKey, propsUpdateKey.value, canvasApi.value?.getSchema?.(), schemaLength],
   ([curSchema], [oldCurSchema] = []) => {
     let schema = getCurrentSchema()
 
     if (!schema || Object.keys(schema).length === 0) {
-      schema = getCanvasPageSchema()
+      schema = canvasApi.value?.getSchema?.()
     }
 
     if (!schema) {
@@ -260,9 +259,10 @@ watch(
 
 export const updateGlobalStyleStr = (styleStr) => {
   const pageSchema = getPageSchema()
+  const { getSchema, setPageCss } = canvasApi.value
 
   pageSchema.css = styleStr
-  getCanvasPageSchema().css = styleStr
+  getSchema().css = styleStr
   setPageCss(styleStr)
   state.schemaUpdateKey++
 }
@@ -296,6 +296,7 @@ const updateGlobalStyle = (newSelector) => {
 
 // 更新 style 对象到 schema
 const updateStyle = (properties) => {
+  const { getSchema: getCanvasPageSchema, updateRect } = canvasApi.value
   const schema = getSchema() || getCanvasPageSchema()
   schema.props = schema.props || {}
 

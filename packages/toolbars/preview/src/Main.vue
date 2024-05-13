@@ -18,7 +18,6 @@
 import { Popover } from '@opentiny/vue'
 import { previewPage, previewBlock } from '@opentiny/tiny-engine-controller/js/preview'
 import { getGlobalConfig, useBlock, useCanvas, useLayout, useNotify } from '@opentiny/tiny-engine-controller'
-import { getSchema } from '@opentiny/tiny-engine-canvas'
 
 export default {
   components: {
@@ -31,7 +30,7 @@ export default {
     }
   },
   setup() {
-    const { isBlock, getCurrentPage } = useCanvas()
+    const { isBlock, getCurrentPage, canvasApi } = useCanvas()
     const { getCurrentBlock } = useBlock()
 
     const preview = () => {
@@ -48,7 +47,7 @@ export default {
         framework: getGlobalConfig()?.dslMode,
         platform: getGlobalConfig()?.platformId,
         pageInfo: {
-          schema: getSchema()
+          schema: canvasApi.value?.getSchema?.()
         }
       }
 

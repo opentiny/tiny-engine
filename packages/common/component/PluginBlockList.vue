@@ -1,5 +1,6 @@
 <template>
   <ul
+    v-if="state.data.length"
     :class="['block-list', 'lowcode-scrollbar', { 'is-small-list': blockStyle === 'mini' }, { isShortcutPanel }]"
     @mouseleave="state.hover = false"
   >
@@ -122,12 +123,14 @@
       </div>
     </div>
   </ul>
+  <search-empty :isShow="!state.data.length" />
 </template>
 
 <script>
 import { computed, watch, inject, reactive } from 'vue'
 import { iconSetting, iconPlus } from '@opentiny/vue-icon'
 import { Tooltip, Progress, Popover } from '@opentiny/vue'
+import SearchEmpty from './SearchEmpty.vue'
 import SvgButton from './SvgButton.vue'
 
 const defaultImg =
@@ -140,7 +143,8 @@ export default {
     IconSetting: iconSetting(),
     IconPlus: iconPlus(),
     TinyPopover: Popover,
-    SvgButton
+    SvgButton,
+    SearchEmpty
   },
   props: {
     data: {

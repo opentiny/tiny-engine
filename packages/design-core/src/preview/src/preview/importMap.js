@@ -17,7 +17,7 @@ import { VITE_CDN_DOMAIN } from '@opentiny/tiny-engine-controller/js/environment
 
 const importMap = {}
 
-const opentinyVueVersion = '~3.11'
+const opentinyVueVersion = '~3.14'
 
 const tinyVue3Imports = {
   // 推荐之后统一使用@opentiny/vue去引入依赖，兼容后续录入的组件来源于tiny-vue

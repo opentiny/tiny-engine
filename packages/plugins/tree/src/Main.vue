@@ -80,8 +80,6 @@ import { IconChevronDown, iconEyeopen, iconEyeclose } from '@opentiny/vue-icon'
 import { useCanvas, useResource, useLayout } from '@opentiny/tiny-engine-controller'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { typeOf } from '@opentiny/vue-renderless/common/type'
-import { getRenderer, clearSelect, selectNode, hoverNode } from '@opentiny/tiny-engine-canvas'
-import { getSchema } from '@opentiny/tiny-engine-canvas'
 
 const { PAGE_STATUS } = constants
 export default {
@@ -141,12 +139,14 @@ export default {
     })
 
     onActivated(() => {
+      const { getSchema } = useCanvas().canvasApi.value
       state.pageSchema = filterSchema(getSchema())
     })
 
     watch(
       () => pageState.currentSchema,
       () => {
+        const { getSchema } = useCanvas().canvasApi.value
         state.pageSchema = filterSchema(getSchema())
       }
     )
@@ -158,6 +158,9 @@ export default {
     const showNode = (data) => {
       data.show = !data.show
       pageState.nodesStatus[data.id] = data.show
+
+      const { getRenderer, clearSelect } = useCanvas().canvasApi.value
+
       getRenderer().setCondition(data.id, data.show)
       clearSelect()
     }
@@ -172,6 +175,8 @@ export default {
       if (state.isLock) {
         return
       }
+
+      const { hoverNode } = useCanvas().canvasApi.value
 
       hoverNode(data.id)
       const handleEl = event.target.querySelector('.tree-handle')
@@ -189,6 +194,8 @@ export default {
       if (state.isLock) {
         return
       }
+
+      const { selectNode } = useCanvas().canvasApi.value
       selectNode(row?.id, 'clickTree')
     }
 

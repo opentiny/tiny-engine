@@ -14,15 +14,8 @@
 </template>
 
 <script>
-import { ref, onMounted, watch, computed } from 'vue'
-import {
-  CanvasContainer,
-  CanvasFooter,
-  selectNode,
-  getNodePath,
-  updateRect,
-  getSchema
-} from '@opentiny/tiny-engine-canvas'
+import { ref, watch, computed, onUnmounted } from 'vue'
+import { CanvasContainer, CanvasFooter } from '@opentiny/tiny-engine-canvas'
 import {
   useProperties,
   useCanvas,
@@ -62,7 +55,7 @@ export default {
 
     const removeNode = (node) => {
       const { pageState } = useCanvas()
-      footData.value = getNodePath(node?.id)
+      footData.value = useCanvas().canvasApi.value.getNodePath(node?.id)
       pageState.currentSchema = {}
       pageState.properties = null
     }
@@ -141,6 +134,8 @@ export default {
         useLayout().closePlugin()
       }
 
+      const { getSchema, getNodePath } = useCanvas().canvasApi.value
+
       const schema = getSchema()
       // 如果选中的节点是画布，就设置成默认选中最外层schema
       useProperties().getProps(node || schema, parent)
@@ -150,12 +145,31 @@ export default {
     }
 
     const selectFooterNode = ({ node }) => {
+      const { selectNode } = useCanvas().canvasApi.value
+
       selectNode(node)
     }
 
-    onMounted(() => {
-      document.addEventListener('canvasResize', updateRect)
-      new ResizeObserver(updateRect).observe(canvasRef.value)
+    let canvasResizeObserver = null
+    watch(
+      () => [useCanvas().isCanvasApiReady.value, canvasRef.value],
+      ([ready]) => {
+        if (!ready || !canvasRef.value) {
+          return
+        }
+
+        // 先取消监听，再增加监听事件，避免重复监听
+        document.removeEventListener('canvasResize', useCanvas().canvasApi.value.updateRect)
+        canvasResizeObserver?.disconnect?.()
+
+        document.addEventListener('canvasResize', useCanvas().canvasApi.value.updateRect)
+        canvasResizeObserver = new ResizeObserver(useCanvas().canvasApi.value.updateRect).observe(canvasRef.value)
+      }
+    )
+
+    onUnmounted(() => {
+      document.removeEventListener('canvasResize', useCanvas().canvasApi.value.updateRect)
+      canvasResizeObserver?.disconnect?.()
     })
 
     return {
