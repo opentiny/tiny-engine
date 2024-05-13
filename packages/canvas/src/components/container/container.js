@@ -20,15 +20,16 @@ import {
   NODE_LOOP
 } from '../common'
 import { useCanvas, useLayout, useResource, useTranslate } from '@opentiny/tiny-engine-controller'
+import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
+import Builtin from '../builtin/builtin.json'
+
 export const POSITION = Object.freeze({
   TOP: 'top',
   BOTTOM: 'bottom',
   LEFT: 'left',
   RIGHT: 'right',
-  IN: 'in',
-  FORBID: 'forbid'
+  IN: 'in'
 })
-import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
 
 const initialDragState = {
   keydown: false,
@@ -98,6 +99,7 @@ const initialLineState = {
   width: 0,
   left: 0,
   position: '',
+  forbidden: false,
   id: '',
   config: null,
   doc: null
@@ -320,19 +322,19 @@ export const scrollToNode = (element) => {
   if (element) {
     const container = getDocument().documentElement
     const { clientWidth, clientHeight } = container
-    const { x, y, width, height } = element.getBoundingClientRect()
+    const { left, right, top, bottom, width, height } = element.getBoundingClientRect()
     const option = {}
 
-    if (x < 0) {
-      option.left = container.scrollLeft + x - SCROLL_MARGIN
-    } else if (x > clientWidth) {
-      option.left = x + width - clientWidth + SCROLL_MARGIN
+    if (right < 0) {
+      option.left = container.scrollLeft + left - SCROLL_MARGIN
+    } else if (left > clientWidth) {
+      option.left = container.scrollLeft + left - clientWidth + width + SCROLL_MARGIN
     }
 
-    if (y < 0) {
-      option.top = container.scrollTop + y - SCROLL_MARGIN
-    } else if (y > clientHeight) {
-      option.top = y + height - clientHeight + SCROLL_MARGIN
+    if (bottom < 0) {
+      option.top = container.scrollTop + top - SCROLL_MARGIN
+    } else if (top > clientHeight) {
+      option.top = container.scrollTop + top - clientHeight + height + SCROLL_MARGIN
     }
 
     if (typeof option.left === 'number' || typeof option.top === 'number') {
@@ -416,6 +418,23 @@ export const allowInsert = (configure = hoverState.configure || {}, data = dragS
   return flag
 }
 
+const isAncestor = (ancestor, descendant) => {
+  const ancestorId = typeof ancestor === 'string' ? ancestor : ancestor.id
+  let descendantId = typeof descendant === 'string' ? descendant : descendant.id
+
+  while (descendantId) {
+    const { parent } = getNode(descendantId, true) || {}
+
+    if (parent.id === ancestorId) {
+      return true
+    }
+
+    descendantId = parent.id
+  }
+
+  return false
+}
+
 // 获取位置信息，返回状态
 const lineAbs = 20
 const getPosLine = (rect, configure) => {
@@ -423,6 +442,7 @@ const getPosLine = (rect, configure) => {
   const yAbs = Math.min(lineAbs, rect.height / 3)
   const xAbs = Math.min(lineAbs, rect.width / 3)
   let type
+  let forbidden = false
 
   if (mousePos.y < rect.top + yAbs) {
     type = POSITION.TOP
@@ -433,12 +453,21 @@ const getPosLine = (rect, configure) => {
   } else if (mousePos.x > rect.right - xAbs) {
     type = POSITION.RIGHT
   } else if (configure.isContainer) {
-    type = allowInsert() ? POSITION.IN : POSITION.FORBID
+    type = POSITION.IN
+    if (!allowInsert()) {
+      forbidden = true
+    }
   } else {
     type = POSITION.BOTTOM
   }
 
-  return { type }
+  // 如果被拖拽的节点不是新增的，并且是放置的节点的祖先节点，则禁止插入
+  const draggedId = dragState.data?.id
+  if (draggedId && isAncestor(draggedId, lineState.id)) {
+    forbidden = true
+  }
+
+  return { type, forbidden }
 }
 
 const isBodyEl = (element) => element.nodeName === 'BODY'
@@ -484,20 +513,24 @@ const setHoverRect = (element, data) => {
       const childRect = getRect(childEle)
       const { left, height, top, width } = childRect
       const { x, y } = getOffset(childEle)
+      const posLine = getPosLine(childRect, lineState.configure)
       Object.assign(lineState, {
         width: width * scale,
         height: height * scale,
         top: top * scale + y - siteCanvasRect.y,
         left: left * scale + x - siteCanvasRect.x,
-        position: canvasState.type === 'absolute' || getPosLine(childRect, lineState.configure).type
+        position: canvasState.type === 'absolute' || posLine.type,
+        forbidden: posLine.forbidden
       })
     } else {
+      const posLine = getPosLine(rect, configure)
       Object.assign(lineState, {
         width: width * scale,
         height: height * scale,
         top: top * scale + y - siteCanvasRect.y,
         left: left * scale + x - siteCanvasRect.x,
-        position: canvasState.type === 'absolute' || getPosLine(rect, configure).type
+        position: canvasState.type === 'absolute' || posLine.type,
+        forbidden: posLine.forbidden
       })
     }
 
@@ -670,13 +703,12 @@ export const copyNode = (id) => {
 
 export const onMouseUp = () => {
   const { draging, data } = dragState
-  const { position } = lineState
+  const { position, forbidden } = lineState
   const absolute = canvasState.type === 'absolute'
   const sourceId = data?.id
   const lineId = lineState.id
-  const allowInsert = position !== POSITION.FORBID
 
-  if (draging && allowInsert) {
+  if (draging && !forbidden) {
     const { parent, node } = getNode(lineId, true) || {} // target
     const targetNode = { parent, node, data: toRaw(data) }
 
@@ -821,6 +853,49 @@ export const canvasDispatch = (name, data, doc = getDocument()) => {
   if (!doc) return
 
   doc.dispatchEvent(new CustomEvent(name, data))
+}
+
+export const canvasApi = {
+  dragStart,
+  updateRect,
+  getContext,
+  getNodePath,
+  dragMove,
+  setLocales,
+  setState,
+  deleteState,
+  getRenderer,
+  clearSelect,
+  selectNode,
+  hoverNode,
+  insertNode,
+  removeNode,
+  addComponent,
+  setPageCss,
+  addScript,
+  addStyle,
+  getNode,
+  getCurrent,
+  setSchema,
+  setUtils,
+  updateUtils,
+  deleteUtils,
+  getSchema,
+  setI18n,
+  getCanvasType,
+  setCanvasType,
+  setProps,
+  setGlobalState,
+  getGlobalState,
+  getDocument,
+  canvasDispatch,
+  Builtin,
+  setDataSourceMap: (...args) => {
+    return canvasState.renderer.setDataSourceMap(...args)
+  },
+  getDataSourceMap: (...args) => {
+    return canvasState.renderer.getDataSourceMap(...args)
+  }
 }
 
 export const initCanvas = ({ renderer, iframe, emit, controller }) => {

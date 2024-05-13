@@ -15,7 +15,7 @@
         </div>
       </li>
     </ul>
-    <div v-if="!filteredKey.length" class="data-source-list-blank"><span>查询结果为空</span></div>
+    <search-empty :isShow="!filteredKey.length" />
   </div>
 </template>
 
@@ -25,14 +25,15 @@ import { useModal } from '@opentiny/tiny-engine-controller'
 import { useResource } from '@opentiny/tiny-engine-controller'
 import { findExpressionInAppSchema } from '@opentiny/tiny-engine-controller/js/ast'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { SvgButton } from '@opentiny/tiny-engine-common'
+import { SvgButton, SearchEmpty } from '@opentiny/tiny-engine-common'
 import { STATE, OPTION_TYPE } from './js/constants'
 
 const { COMPONENT_NAME } = constants
 
 export default {
   components: {
-    SvgButton
+    SvgButton,
+    SearchEmpty
   },
   props: {
     modelValue: {

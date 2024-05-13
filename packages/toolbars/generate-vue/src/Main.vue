@@ -25,7 +25,6 @@ import { reactive } from 'vue'
 import { Popover } from '@opentiny/vue'
 import { getGlobalConfig, useBlock, useCanvas, useNotify, useLayout } from '@opentiny/tiny-engine-controller'
 import { fs } from '@opentiny/tiny-engine-utils'
-import { getSchema } from '@opentiny/tiny-engine-canvas'
 import { generateVuePage, generateVueBlock } from './generateCode'
 import { fetchCode, fetchMetaData, fetchPageList } from './http'
 import FileSelector from './FileSelector.vue'
@@ -53,6 +52,7 @@ export default {
     })
 
     const getParams = () => {
+      const { getSchema } = useCanvas().canvasApi.value
       const params = {
         framework: getGlobalConfig()?.dslMode,
         platform: getGlobalConfig()?.platformId,

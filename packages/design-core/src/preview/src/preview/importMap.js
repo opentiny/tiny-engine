@@ -18,7 +18,7 @@ import { VITE_CDN_DOMAIN } from '@opentiny/tiny-engine-controller/js/environment
 
 const importMap = {}
 
-const opentinyVueVersion = '~3.11'
+const opentinyVueVersion = '~3.14'
 
 function replacePlaceholder(v) {
   return v.replace('${VITE_CDN_DOMAIN}', VITE_CDN_DOMAIN).replace('${opentinyVueVersion}', opentinyVueVersion)
