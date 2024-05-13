@@ -4,7 +4,9 @@
   "publishConfig": {
     "access": "public"
   },
-  "main": "dist/tiny-engine-dsl-vue.cjs.js",
+  "main": "dist/tiny-engine-dsl-vue.js",
+  "module": "dist/tiny-engine-dsl-vue.mjs",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
@@ -12,6 +14,8 @@
     "build": "vite build",
     "test": "npx nyc@latest --reporter=lcov node test/test_generator.js",
     "test:latest": "npm run build && node test/testcases/full/index.js",
+    "test:unit": "vitest",
+    "coverage": "vitest run --coverage",
     "publish:npm": "npm publish --verbose"
   },
   "repository": {
@@ -26,8 +30,8 @@
   "license": "MIT",
   "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
-    "@opentiny/tiny-engine-controller": "workspace:*",
     "@opentiny/tiny-engine-builtin-component": "workspace:*",
+    "@opentiny/tiny-engine-controller": "workspace:*",
     "@vue/compiler-sfc": "3.2.45",
     "@vue/shared": "^3.3.4",
     "vue": "^3.4.15",
@@ -35,12 +39,20 @@
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.1",
+    "@vitest/coverage-v8": "^1.4.0",
     "@vue/eslint-config-prettier": "^7.0.0",
+    "dir-compare": "^4.2.0",
     "eslint": "^8.12.0",
     "eslint-plugin-vue": "^8.6.0",
     "fs-extra": "^10.0.1",
     "prettier": "^2.6.1",
-    "vite": "^2.8.6",
+    "vite": "^4.3.7",
+    "vite-plugin-static-copy": "^1.0.4",
+    "vitest": "^1.4.0",
     "winston": "^3.10.0"
+  },
+  "peerDependencies": {
+    "@babel/parser": "^7.18.13",
+    "@babel/traverse": "^7.18.13"
   }
 }
