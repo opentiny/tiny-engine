@@ -32,7 +32,7 @@
     "@vue/shared": "^3.3.4",
     "axios": "^0.27.2",
     "vue-clipboard3": "^2.0.0",
-    "xlsx": "^0.18.5"
+    "xlsx": "file:./xlsx/xlsx-0.20.2.tgz"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
