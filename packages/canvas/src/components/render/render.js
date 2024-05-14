@@ -35,7 +35,7 @@ const { hyphenateRE } = utils
 const customElements = {}
 
 const transformJSX = (code) => {
-  const opts = {
+  const res = transformSync(code, {
     plugins: [
       [
         babelPluginJSX,
@@ -45,35 +45,13 @@ const transformJSX = (code) => {
         }
       ]
     ]
-  }
-
-  /**
-   * @returns {string}
-   */
-  const replaceCode = (code) =>
-    code
-      .replace(/import \{.+\} from "vue";/, '')
-      .replace(/h\(_?resolveComponent\((.*?)\)/g, `h(this.getComponent($1)`)
-      .replace(/_?resolveComponent/g, 'h')
-      .replace(/_?createTextVNode\((.*?)\)/g, '$1')
-      .trim()
-
-  try {
-    const res = transformSync(code, opts)
-    return replaceCode(res.code || '')
-  } catch (err) {
-    // js匿名函数中如果有jsx语法，需要在最外部加上括号才能被正确解析和转换
-    const res = transformSync(`(${code})`, opts)
-    const result = replaceCode(res.code || '')
-    if (result.startsWith('(')) {
-      const index = result.lastIndexOf(')')
-      return result
-        .slice(1, index)
-        .concat(result.slice(index + 1))
-        .trim()
-    }
-    return result
-  }
+  })
+  return (res.code || '')
+    .replace(/import \{.+\} from "vue";/, '')
+    .replace(/h\(_?resolveComponent\((.*?)\)/g, `h(this.getComponent($1)`)
+    .replace(/_?resolveComponent/g, 'h')
+    .replace(/_?createTextVNode\((.*?)\)/g, '$1')
+    .trim()
 }
 
 export const blockSlotDataMap = reactive({})
