@@ -1,0 +1,52 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "fit": {
+        "title": "确定图片如何适应容器框，同原生 object-fit",
+        "type": "string",
+        "enum": ["fill", "contain", "cover", "none", "scale-down"],
+        "enumNames": [
+          "被替换的内容将被缩放，以在填充元素的内容框时保持其宽高比",
+          "被替换的内容大小可以填充元素的内容框",
+          "被替换的内容大小保持其宽高比，同时填充元素的整个内容框",
+          "被替换的内容尺寸不会被改变",
+          "内容的尺寸就像是指定了none 或 contain，取决于哪一个将导致更小的对象尺寸"
+        ],
+        "default": ""
+      },
+      "lazy": {
+        "title": "是否开启懒加载",
+        "type": "boolean",
+        "default": false
+      },
+      "$$preview-src-list": {
+        "title": "开启图片预览功能",
+        "type": "array",
+        "default": []
+      },
+      "scroll-container": {
+        "title": "开启懒加载后，监听 scroll 事件的容器，默认值为最近一个 overflow 值为 auto 或 scroll 的父元素",
+        "type": "string",
+        "default": ""
+      },
+      "src": {
+        "title": "图片源，同原生src属性",
+        "type": "string"
+      },
+      "z-index": {
+        "title": "设置图片预览的 z-index",
+        "type": "number",
+        "default": 2000
+      },
+      "#error": {
+        "title": "加载失败的内容插槽",
+        "type": "string"
+      },
+      "#placeholder": {
+        "title": "图片未加载的占位内容插槽",
+        "type": "string"
+      }
+    }
+  }
+}

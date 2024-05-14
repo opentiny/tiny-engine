@@ -1,0 +1,51 @@
+{
+  "$$schema": {
+    "type": "object",
+    "properties": {
+      "columns": {
+        "title": "甘特图列配置",
+        "type": "array",
+        "default": ""
+      },
+      "configs": {
+        "title": "dates，scale，controls等的配置选项",
+        "type": "object",
+        "default": ""
+      },
+      "events": {
+        "title": "包括所有处理事件",
+        "type": "object",
+        "default": ""
+      },
+      "locale": {
+        "title": "设置组件的国际化",
+        "type": "object",
+        "default": ""
+      },
+      "scale": {
+        "title": "刻度，可以配置数组中设置对象来指定任意数量的刻度",
+        "type": "object",
+        "default": ""
+      },
+      "skin": {
+        "title": "设置甘特图皮肤",
+        "type": "string",
+        "default": ""
+      },
+      "subscales": {
+        "title": "指定第二时间刻度",
+        "type": "array",
+        "default": ""
+      },
+      "tasks": {
+        "type": "object",
+        "default": ""
+      },
+      "width": {
+        "title": "设置甘特图的宽度,不设置时，甘特图宽度自适应",
+        "type": "string",
+        "default": "500px"
+      }
+    }
+  }
+}

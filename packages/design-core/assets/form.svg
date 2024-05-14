@@ -1,0 +1,17 @@
+<svg version="1.1" id="图层_1"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 64 64" style="enable-background:new 0 0 64 64;" xml:space="preserve">
+  <style type="text/css">
+  .st0{fill:currentcolor;}
+  </style>
+  <g>
+    <path class="st0" d="M57.5,9.2h-51c-1.1,0-2,0.9-2,2v39.7c0,1.1,0.9,2,2,2h51.1c1.1,0,2-0.9,2-2V11.2C59.5,10.1,58.7,9.2,57.5,9.2z
+     M55.5,48.9h-47V13.2h47.1L55.5,48.9L55.5,48.9z"/>
+    <rect x="14.3" y="20.6" class="st0" width="5.3" height="3"/>
+    <rect x="25.1" y="20.6" class="st0" width="24.5" height="3"/>
+    <rect x="14.3" y="29.6" class="st0" width="5.3" height="3"/>
+    <rect x="25.1" y="29.6" class="st0" width="24.5" height="3"/>
+    <rect x="14.3" y="38.5" class="st0" width="5.3" height="3"/>
+    <rect x="25.1" y="38.5" class="st0" width="24.5" height="3"/>
+  </g>
+</svg>

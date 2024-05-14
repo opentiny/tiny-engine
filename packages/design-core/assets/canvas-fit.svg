@@ -1,0 +1,25 @@
+<svg
+  data-icon="CanvasFit"
+  aria-hidden="true"
+  focusable="false"
+  width="16"
+  height="16"
+  viewBox="0 0 16 16"
+  version="1.1"
+  xmlns="http://www.w3.org/2000/svg"
+  style="display: flex"
+>
+  <path
+    fill-rule="evenodd"
+    clip-rule="evenodd"
+    d="M10.5 11.5L9 13h4V9l-1.5 1.5L10 9l-1 1 1.5 1.5zM7 3H3v4l1.5-1.5L6 7l1-1-1.5-1.5L7 3z"
+    fill="currentColor"
+  ></path>
+  <path
+    opacity=".3"
+    fill-rule="evenodd"
+    clip-rule="evenodd"
+    d="M16 0H0v16h16V0zm-1 1H1v14h14V1z"
+    fill="currentColor"
+  ></path>
+</svg>

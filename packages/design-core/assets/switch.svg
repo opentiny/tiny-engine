@@ -1,0 +1,12 @@
+<svg version="1.1" id="图层_1"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 64 64" style="enable-background:new 0 0 64 64;" xml:space="preserve">
+  <style type="text/css">
+	.st0{fill:currentcolor;}
+  </style>
+  <g>
+    <path class="st0" d="M46,16.5H18.1c-8.4,0-15.3,6.9-15.3,15.3s6.9,15.3,15.3,15.3H46c8.4,0,15.3-6.9,15.3-15.3S54.4,16.5,46,16.5z
+		 M46,43.1H18.1c-6.2,0-11.3-5.1-11.3-11.3s5.1-11.3,11.3-11.3H46c6.2,0,11.3,5.1,11.3,11.3S52.2,43.1,46,43.1z"/>
+    <circle class="st0" cx="44.2" cy="31.8" r="8.4"/>
+  </g>
+</svg>

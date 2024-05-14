@@ -1,0 +1,45 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "condition": {
+        "title": "是否渲染",
+        "type": "boolean",
+        "default": true
+      },
+      "format": {
+        "title": "日期格式",
+        "type": "string",
+        "default": "yyyy-MM-dd"
+      },
+      "value": {
+        "title": "选中日期",
+        "type": "object",
+        "default": {
+          "begin": "",
+          "end": ""
+        }
+      },
+      "min": {
+        "title": "最小日期",
+        "type": "string",
+        "default": ""
+      },
+      "max": {
+        "title": "最大日期",
+        "type": "string",
+        "default": ""
+      },
+      "panelAlign": {
+        "title": "对齐方向",
+        "type": "string",
+        "default": "right"
+      },
+      "onChange": {
+        "title": "onChange事件",
+        "type": "function",
+        "default": "function onChange(e) {}"
+      }
+    }
+  }
+}

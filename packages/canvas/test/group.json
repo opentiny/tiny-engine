@@ -1,0 +1,99 @@
+{
+  "componentName": "div",
+  "children": [
+    {
+      "componentName": "TinyForm",
+      "props": { "labelWidth": 80, "labelPosition": "disabled" },
+      "children": [
+        {
+          "componentName": "TinyFormItem",
+          "props": { "label": "人员" },
+          "children": [
+            {
+              "componentName": "TinyInput",
+              "props": { "placeholder": "请输入", "modelValue": "" },
+              "id": "c3ec1fff"
+            }
+          ],
+          "id": "62717bc1"
+        },
+        {
+          "componentName": "TinyFormItem",
+          "props": { "label": "密码" },
+          "children": [
+            {
+              "componentName": "TinyInput",
+              "props": {
+                "placeholder": "请输入",
+                "modelValue": "",
+                "type": "password"
+              },
+              "id": "e1331c84"
+            }
+          ],
+          "id": "808159c9"
+        },
+        {
+          "componentName": "TinyFormItem",
+          "props": { "label": "" },
+          "children": [
+            {
+              "componentName": "TinyButton",
+              "props": {
+                "text": "提交",
+                "type": "primary",
+                "style": { "marginRight": "10px" }
+              },
+              "id": "01e8a1f3"
+            },
+            {
+              "componentName": "TinyButton",
+              "props": { "text": "重置", "type": "primary" },
+              "id": "7aecc5f4"
+            }
+          ],
+          "id": "41ecdb3d"
+        }
+      ],
+      "id": "b2341d0e"
+    },
+    {
+      "componentName": "TinyTabs",
+      "props": {
+        "modelValue": "first"
+      },
+      "children": [
+        {
+          "componentName": "TinyTabItem",
+          "props": {
+            "title": "标签页1",
+            "name": "first"
+          },
+          "children": [
+            {
+              "componentName": "div",
+              "id": "2e2bfde3"
+            }
+          ],
+          "id": "813aae66"
+        },
+        {
+          "componentName": "TinyTabItem",
+          "props": {
+            "title": "标签页2",
+            "name": "second"
+          },
+          "children": [
+            {
+              "componentName": "div",
+              "id": "295578a9"
+            }
+          ],
+          "id": "21873fc9"
+        }
+      ],
+      "id": "1f6e781f"
+    }
+  ],
+  "id": "root"
+}

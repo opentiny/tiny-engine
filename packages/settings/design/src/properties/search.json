@@ -1,0 +1,45 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "clearable": {
+        "title": "属性设置显示清空图标按钮",
+        "type": "boolean",
+        "default": false
+      },
+      "default-value": {
+        "title": "设置搜索输入框内的默认搜索值",
+        "type": "string",
+        "default": ""
+      },
+      "mini": {
+        "title": "迷你模式，配置为true时，搜索默认显示为一个带图标的圆形按钮，点击后展开",
+        "type": "boolean",
+        "default": false
+      },
+      "placeholder": {
+        "title": "设置搜索输入框内的提示占位文本 ",
+        "type": "string",
+        "default": ""
+      },
+      "$$search-types": {
+        "title": "搜索的类型选项，格式为[{text:'文档',value:1},...]，不配置时类型选择固定显示为All ",
+        "type": "array",
+        "default": ""
+      },
+      "transparent": {
+        "title": "设置为透明模式，配置为true时，边框变为透明且收缩后半透明显示，一般用在带有背景的场景",
+        "type": "boolean",
+        "default": false
+      },
+      "#poplist": {
+        "title": "搜索的弹出列表插槽",
+        "type": "string"
+      },
+      "#text": {
+        "title": "默认搜索类型插槽",
+        "type": "string"
+      }
+    }
+  }
+}

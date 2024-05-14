@@ -1,0 +1,75 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "$$btn-icon": {
+        "title": "按钮图标",
+        "type": "object",
+        "default": ""
+      },
+      "btn-text": {
+        "title": "自定义按钮文字",
+        "type": "string",
+        "default": ""
+      },
+      "can-be-del": {
+        "title": "是否可下载，默认为 true, 为 true 且当前页面为可编辑状态时，下载附件列表将包含删除图标",
+        "type": "boolean",
+        "default": true
+      },
+      "direct-download": {
+        "title": "是否快捷下载，默认为 false，即需要在打开的 EDM 页面中再次点击下载",
+        "type": "boolean",
+        "default": false
+      },
+      "doc-format": {
+        "title": "文档格式，比如 wm/pdf/swf，下载转换成功的水印文档时使用",
+        "type": "string",
+        "default": ""
+      },
+      "file-whitelist": {
+        "title": "允许用户上传文档类型的白名单，例如 .doc,.ppt,.txt等，若配置了此参数，则取此参数与 EDM 注册时给业务系统配置的值的交集，否则取 EDM 注册时给业务系统配置的值",
+        "type": "string",
+        "default": ""
+      },
+      "is-constraint": {
+        "title": "是否严格下载",
+        "type": "string",
+        "enum": ["yes", "no"],
+        "enumNames": ["只能下载指定文档格式的文档", "指定文档格式的文档不存在，可下载原始文档"],
+        "default": ""
+      },
+      "$$not-submit-data": {
+        "title": "不提交到服务端的文档信息",
+        "type": "array",
+        "default": ["hw_business_key", "canBeDel", "canBeEdit"]
+      },
+      "sub-class-name": {
+        "title": "快捷下载时，用于校验用户是否有权限。该配置值为业务系统后台实现 EdocAuthentication 接口的子类名，需要找业务系统后台确认该类名后再配置，配置的类名若后台还没实现，就会报错",
+        "type": "string",
+        "default": ""
+      },
+      "upload-flag": {
+        "title": "组织类型，one 表示上载单个文件，上载完成后默认的上载按钮会隐藏；more 表示上载多个文件",
+        "type": "string",
+        "enum": ["one", "more"],
+        "enumNames": ["单个文件", "多个文件"],
+        "default": "one"
+      },
+      "$$web-doc-ext": {
+        "title": "可以预览的文档类型，Gateway 和 Jalor 模式不支持预览服务，可设置 webDocExt 为空数组",
+        "type": "array",
+        "default": []
+      },
+      "$$web-doc-preview": {
+        "title": "预览文档/图片的配置信息， Gataway 和 Jalor5 模式不支持预览功能",
+        "type": "object",
+        "default": ""
+      },
+      "#default": {
+        "title": "默认插槽",
+        "type": "string"
+      }
+    }
+  }
+}

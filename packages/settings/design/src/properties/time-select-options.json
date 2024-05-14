@@ -1,0 +1,32 @@
+{
+  "$$schema": {
+    "type": "object",
+    "properties": {
+      "end": {
+        "title": "结束时间",
+        "type": "string",
+        "default": "18:00"
+      },
+      "maxTime": {
+        "title": "最大时间，大于该时间的时间段将被禁用",
+        "type": "string",
+        "default": ""
+      },
+      "minTime": {
+        "title": "最小时间，小于该时间的时间段将被禁用",
+        "type": "string",
+        "default": "00:00"
+      },
+      "start": {
+        "title": "开始时间",
+        "type": "string",
+        "default": "9:00"
+      },
+      "step": {
+        "title": "间隔时间",
+        "type": "string",
+        "default": "00:30"
+      }
+    }
+  }
+}

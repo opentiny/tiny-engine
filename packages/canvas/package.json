@@ -1,0 +1,52 @@
+{
+  "name": "@opentiny/tiny-engine-canvas",
+  "version": "1.0.3",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/opentiny/tiny-engine",
+    "directory": "packages/canvas"
+  },
+  "bugs": {
+    "url": "https://github.com/opentiny/tiny-engine/issues"
+  },
+  "author": "OpenTiny Team",
+  "license": "MIT",
+  "homepage": "https://opentiny.design/tiny-engine",
+  "dependencies": {
+    "@babel/core": "7.18.13",
+    "@opentiny/tiny-engine-builtin-component": "workspace:*",
+    "@opentiny/tiny-engine-controller": "workspace:*",
+    "@opentiny/tiny-engine-i18n-host": "workspace:*",
+    "@opentiny/tiny-engine-utils": "workspace:*",
+    "@opentiny/tiny-engine-webcomponent-core": "workspace:*",
+    "@vue/babel-plugin-jsx": "1.1.1",
+    "@vue/shared": "^3.3.4",
+    "@vueuse/core": "^9.6.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.2.3",
+    "@vitejs/plugin-vue-jsx": "^3.1.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "vite": "^4.3.7"
+  },
+  "peerDependencies": {
+    "@opentiny/vue": "^3.14.0",
+    "@opentiny/vue-icon": "^3.14.0",
+    "@opentiny/vue-renderless": "^3.14.0",
+    "vue": "^3.4.15",
+    "vue-i18n": "^9.9.0"
+  }
+}

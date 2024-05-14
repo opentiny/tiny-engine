@@ -1,0 +1,101 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "completed-field": {
+        "title": "设置里程碑完成状态对应的取值",
+        "type": "string",
+        "default": "completed"
+      },
+      "$$data": {
+        "title": "设置步骤条的数据 ",
+        "type": ["object", "array"]
+      },
+      "flag-before": {
+        "title": "设置里程碑上活动即旗子上的数据从前面还是后面节点上获取，默认为 false 取后面节点上的数据",
+        "type": "boolean",
+        "default": false
+      },
+      "flag-content-field": {
+        "title": "设置节点旗子数据中描述对应的字段名",
+        "type": "string",
+        "default": "content"
+      },
+      "flag-field": {
+        "title": "设置节点信息中旗子数据所在字段名",
+        "type": "string",
+        "default": "flags"
+      },
+      "flag-name-field": {
+        "title": "设置节点旗子数据中名称对应的字段名",
+        "type": "string",
+        "default": "name"
+      },
+      "flag-status-field": {
+        "title": "设置节点旗子数据中状态对应的字段名",
+        "type": "string",
+        "default": "status"
+      },
+      "line-style": {
+        "title": "在里程碑模式下，设置线条颜色取值模式，默认为1，采用两种颜色区分完成与未完成状态，完成状态的线条颜色与milestonesStatus定义的完成颜色一致。设置为 2 时线条颜色根随节点状态。设置为 16进制的色值 如：#1890ff 时，线条不区分状态，全部为所设置的颜色",
+        "type": ["string", "number"],
+        "default": "1"
+      },
+      "$$milestones-status": {
+        "title": "定义里程碑的状态与颜色对应关系，颜色取值必需为 16进制 如：{completed: '#1890FF'}",
+        "type": "object",
+        "default": ""
+      },
+      "name-field": {
+        "title": "设置节点信息中名称对应的字段名",
+        "type": "string",
+        "default": "name"
+      },
+      "show-number": {
+        "title": "设置未完成的状态是否显示序号",
+        "type": "boolean",
+        "default": true
+      },
+      "solid": {
+        "title": "在里程碑模式下，设置已经完成节点显示为实心，且光晕不透明",
+        "type": "boolean",
+        "default": false
+      },
+      "space": {
+        "title": "设置步骤条的宽度",
+        "type": "number"
+      },
+      "start": {
+        "title": "设置步骤条序号起始值",
+        "type": "number",
+        "default": -1
+      },
+      "status-field": {
+        "title": "设置数据状态对应的字段名",
+        "type": "string",
+        "default": "status"
+      },
+      "time-field": {
+        "title": "设置节点时间信息对应的字段名",
+        "type": "string",
+        "default": "time"
+      },
+      "#bottom": {
+        "title": "节点下方内容插槽",
+        "type": "string"
+      },
+      "#flag": {
+        "title": "旗帜内容插槽",
+        "type": "string"
+      },
+      "#icon": {
+        "title": "节点图标插槽",
+        "type": "string"
+      },
+      "#top": {
+        "title": "节点上方内容插槽",
+        "type": "string"
+      }
+    }
+  }
+}

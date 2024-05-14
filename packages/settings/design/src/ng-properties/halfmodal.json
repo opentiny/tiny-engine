@@ -1,0 +1,25 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "condition": {
+        "title": "是否渲染",
+        "type": "boolean",
+        "default": true
+      },
+      "width": {
+        "title": "宽度",
+        "type": "string",
+        "default": "80%"
+      },
+      "style": {
+        "title": "样式",
+        "type": "string"
+      },
+      "class": {
+        "title": "样式类",
+        "type": "string"
+      }
+    }
+  }
+}

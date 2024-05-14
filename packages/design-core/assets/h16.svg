@@ -1,0 +1,12 @@
+<svg version="1.1" id="图层_1"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 64 64" style="enable-background:new 0 0 64 64;" xml:space="preserve">
+  <style type="text/css">
+  .st0{fill:currentcolor}
+  </style>
+  <g>
+    <path class="st0" d="M52.9,34.1c-1.2,0.9-2.6,1.6-4.2,2v2.4c0.5-0.1,1.1-0.2,1.7-0.5c0.6-0.2,1.1-0.5,1.4-0.8V48h2.9V34.1H52.9z"/>
+    <polygon class="st0" points="36.5,28.6 22.6,28.6 22.6,15.5 15.7,15.5 15.7,48 22.6,48 22.6,34.6 36.5,34.6 36.5,48 43.4,48 
+    43.4,15.5 36.5,15.5   "/>
+  </g>
+</svg>

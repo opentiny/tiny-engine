@@ -1,0 +1,26 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "disabled": {
+        "title": "是否禁用",
+        "type": "boolean",
+        "default": false
+      },
+      "$$label": {
+        "title": "Radio 的 value",
+        "type": ["string", "number"],
+        "default": ""
+      },
+      "name": {
+        "title": "原生 name 属性",
+        "type": "string",
+        "default": ""
+      },
+      "#default": {
+        "title": "button按钮的内容插槽",
+        "type": "string"
+      }
+    }
+  }
+}

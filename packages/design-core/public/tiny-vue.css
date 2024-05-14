@@ -1,0 +1,63 @@
+tiny-button {
+  display: inline-block;
+}
+
+tiny-search{
+display: inline-block;
+}
+
+tiny-switch{
+  display: inline-block;
+}
+
+tiny-select{
+  display: inline-block;
+}
+
+tiny-input{
+  display: inline-table;
+}
+
+tiny-checkbox{
+  display: inline-flex;
+}
+
+tiny-checkbox-button{
+  display: block;
+}
+
+tiny-checkbox-group{
+  display: inline-block;
+}
+
+tiny-dialog-box{
+  display: block;
+}
+
+tiny-time-line{
+  display: block;
+}
+
+tiny-form{
+  display: block;
+}
+
+tiny-form-item{
+  display: block;
+}
+
+tiny-tabs{
+  display: block;
+}
+
+tiny-pager{
+  display: block;
+}
+
+tiny-grid{
+  display: block;
+}
+
+tiny-grid-column{
+  display: inline-block;
+}

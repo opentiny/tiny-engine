@@ -1,0 +1,12 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "redirectUrl": {
+        "title": "自定义配置注销后跳转地址",
+        "type": "string",
+        "default": ""
+      }
+    }
+  }
+}

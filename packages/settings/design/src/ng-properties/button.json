@@ -1,0 +1,37 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "condition": {
+        "title": "是否渲染",
+        "type": "boolean",
+        "default": true
+      },
+      "text": {
+        "title": "按钮文字",
+        "type": "object",
+        "default": {
+          "type": "i18n",
+          "zh_CN": "按钮文案",
+          "en_US": "Tiny Button",
+          "key": ""
+        }
+      },
+      "color": {
+        "title": "按钮颜色",
+        "type": "select",
+        "default": ["", "danger", "primary"]
+      },
+      "size": {
+        "title": "大小",
+        "type": "select",
+        "default": ["large", "middle", "small", "xs"]
+      },
+      "onClick": {
+        "title": "点击事件",
+        "type": "function",
+        "default": "function onClick(e) {}"
+      }
+    }
+  }
+}

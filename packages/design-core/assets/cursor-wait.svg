@@ -1,0 +1,12 @@
+<svg data-icon="CursorWait" aria-hidden="true" focusable="false" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <g fill="currentColor">
+    <path d="M7.125 1h1.75v3.5h-1.75z"></path>
+    <path opacity=".7" d="M7.125 11.5h1.75V15h-1.75z"></path>
+    <path opacity=".9" d="M1 7.125h3.5v1.75H1z"></path>
+    <path opacity=".95" d="M6.43 5.194L5.194 6.43 2.75 3.988 3.987 2.75z"></path>
+    <path opacity=".5" d="M13.34 12.103l-1.237 1.238L9.66 10.9l1.237-1.238z"></path>
+    <path opacity=".8" d="M5.194 9.66l1.238 1.237-2.444 2.444-1.238-1.235z"></path>
+    <path opacity=".3" d="M12.103 2.75l1.237 1.238-2.444 2.443L9.66 5.197z"></path>
+    <path opacity=".4" d="M11.5 7.125H15v1.75h-3.5z"></path>
+  </g>
+</svg>

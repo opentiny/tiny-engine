@@ -1,0 +1,90 @@
+{
+  "$$schema": {
+    "type": "object",
+    "properties": {
+      "cancel-resize-check": {
+        "title": "是否禁用 resize 时的容器检测",
+        "type": "boolean",
+        "default": false
+      },
+      "change-delay": {
+        "title": "属性修改触发图表重绘回调的延迟，单位毫秒",
+        "type": "number",
+        "default": 0
+      },
+      "data": {
+        "title": "数据由指标和维度组成,“维度” 指的是数据的属性,“指标” 是量化衡量标准",
+        "type": "object"
+      },
+      "events": {
+        "title": "事件绑定",
+        "type": "object"
+      },
+      "height": {
+        "title": "设置图表容器的高度",
+        "type": "string",
+        "default": "400px"
+      },
+      "init-options": {
+        "title": "init 附加参数",
+        "type": "object"
+      },
+      "judge-width": {
+        "title": "是否处理生成图表时的宽度问题",
+        "type": "boolean",
+        "default": false
+      },
+      "legend-visible": {
+        "title": "是否显示图例",
+        "type": "boolean",
+        "default": true
+      },
+      "not-set-unchange": {
+        "title": "未发生变化时不参加 setOption 的属性",
+        "type": "array"
+      },
+      "resize-delay": {
+        "title": "窗口 resize 事件回调的延迟，单位毫秒",
+        "type": "number",
+        "default": 200
+      },
+      "resizeable": {
+        "title": "是否处理窗口 resize 事件",
+        "type": "boolean",
+        "default": true
+      },
+      "set-option-opts": {
+        "title": "echarts setOption 的第二个参数",
+        "type": ["object", "boolean"]
+      },
+      "settings ": {
+        "title": "配置项，各图表 Settings 属性配置请查阅各图表详情页面",
+        "type": "object"
+      },
+      "theme": {
+        "title": "自定义主题对象",
+        "type": "object"
+      },
+      "theme-name": {
+        "title": "自定义主题名称,如果设置了theme-name,则theme无效",
+        "type": "string",
+        "default": ""
+      },
+      "tooltip-visible": {
+        "title": "是否显示提示框",
+        "type": "boolean",
+        "default": true
+      },
+      "width": {
+        "title": "设置图表容器的宽度",
+        "type": "string",
+        "default": "auto"
+      },
+      "width-change-delay": {
+        "title": "容器宽度变化的延迟，单位毫秒",
+        "type": "number",
+        "default": 300
+      }
+    }
+  }
+}

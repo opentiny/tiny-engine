@@ -1,0 +1,109 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "condition": {
+        "title": "是否渲染",
+        "type": "boolean",
+        "default": true
+      },
+      "showSlide": {
+        "title": "是否显示展开收起",
+        "type": "boolean",
+        "default": true
+      },
+      "slidePosition": {
+        "title": "展开收起位置",
+        "type": "number",
+        "default": 4
+      },
+      "placeholder": {
+        "title": "搜索框placeholder",
+        "type": "object",
+        "default": {
+          "type": "i18n",
+          "zh_CN": "支持的模糊搜索条件：商务编号，项目名称，客户名称，客户账号，伙伴名称，伙伴账号",
+          "key": ""
+        }
+      },
+      "tipStr": {
+        "title": "搜索框提示文案",
+        "type": "object",
+        "default": {
+          "type": "i18n",
+          "zh_CN": "支持的模糊搜索条件：商务编号，项目名称，客户名称，客户账号，伙伴名称，伙伴账号",
+          "key": ""
+        }
+      },
+      "options": {
+        "title": "数据源",
+        "type": "array",
+        "default": [
+          {
+            "key": "status",
+            "title": {
+              "type": "i18n",
+              "zh_CN": "状态",
+              "key": ""
+            },
+            "multiple": true,
+            "values": [
+              {
+                "text": {
+                  "type": "i18n",
+                  "zh_CN": "全部",
+                  "key": ""
+                },
+                "value": "all"
+              },
+              {
+                "text": {
+                  "type": "i18n",
+                  "zh_CN": "草稿",
+                  "key": ""
+                },
+                "value": "draft"
+              },
+              {
+                "text": {
+                  "type": "i18n",
+                  "zh_CN": "审批中",
+                  "key": ""
+                },
+                "value": "pending"
+              },
+              {
+                "text": {
+                  "type": "i18n",
+                  "zh_CN": "已通过",
+                  "key": ""
+                },
+                "value": "approved"
+              }
+            ]
+          }
+        ]
+      },
+      "onSelect": {
+        "title": "选择事件",
+        "type": "function",
+        "default": "function handleOnSelect(selected) {}"
+      },
+      "onSearch": {
+        "title": "搜索事件",
+        "type": "function",
+        "default": "function handleOnSearch(keyword) {}"
+      },
+      "onRefresh": {
+        "title": "刷新事件",
+        "type": "function",
+        "default": "function handleOnRefresh($event) {}"
+      },
+      "onToggle": {
+        "title": "过滤面板Toggle事件",
+        "type": "function",
+        "default": "function handleOnToggle($event) {}"
+      }
+    }
+  }
+}

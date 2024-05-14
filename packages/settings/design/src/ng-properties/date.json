@@ -1,0 +1,40 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "condition": {
+        "title": "是否渲染",
+        "type": "boolean",
+        "default": true
+      },
+      "id": {
+        "title": "绑定id",
+        "type": "string"
+      },
+      "class": {
+        "title": "绑定class",
+        "type": "string"
+      },
+      "format": {
+        "title": "日期格式",
+        "type": "string"
+      },
+      "disabled": {
+        "title": "是否禁用",
+        "type": "boolean"
+      },
+      "value": {
+        "title": "选中日期",
+        "type": "string"
+      },
+      "min": {
+        "title": "最小日期",
+        "type": "string"
+      },
+      "max": {
+        "title": "最大日期",
+        "type": "string"
+      }
+    }
+  }
+}

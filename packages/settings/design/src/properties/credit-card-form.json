@@ -1,0 +1,46 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "background-image": {
+        "title": "设置卡片的背景图片",
+        "type": "string"
+      },
+      "$$background-image": {
+        "title": "设置卡片的背景图片",
+        "type": "object"
+      },
+      "form-data": {
+        "title": "设置信用卡显示数据",
+        "type": "object",
+        "properties": {
+          "cardCvv": {
+            "title": "cvv",
+            "type": "string",
+            "default": ""
+          },
+          "cardName": {
+            "title": "持有者姓名",
+            "type": "string",
+            "default": ""
+          },
+          "cardYear": {
+            "title": "年份",
+            "type": "string",
+            "default": ""
+          },
+          "cardMonth": {
+            "title": "月份",
+            "type": "string",
+            "default": ""
+          },
+          "cardNumber": {
+            "title": "卡号",
+            "type": "string",
+            "default": ""
+          }
+        }
+      }
+    }
+  }
+}

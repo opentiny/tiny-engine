@@ -1,0 +1,150 @@
+{
+  "componentName": "Block",
+  "fileName": "PropAccessor",
+  "css": "",
+  "props": {},
+  "state": {
+    "firstName": "",
+    "lastName": ""
+  },
+  "methods": {},
+  "lifeCycles": {},
+  "children": [
+    {
+      "componentName": "TinyForm",
+      "props": {
+        "labelWidth": "80px",
+        "labelPosition": "top"
+      },
+      "children": [
+        {
+          "componentName": "TinyFormItem",
+          "props": {
+            "label": "姓"
+          },
+          "children": [
+            {
+              "componentName": "TinyInput",
+              "props": {
+                "placeholder": "请输入姓氏",
+                "modelValue": {
+                  "type": "JSExpression",
+                  "value": "this.state.lastName",
+                  "model": true
+                }
+              },
+              "id": "acdd0030"
+            }
+          ],
+          "id": "6140da6b"
+        },
+        {
+          "componentName": "TinyFormItem",
+          "props": {
+            "label": "名"
+          },
+          "children": [
+            {
+              "componentName": "TinyInput",
+              "props": {
+                "placeholder": "请输入名字",
+                "modelValue": {
+                  "type": "JSExpression",
+                  "value": "this.state.firstName",
+                  "model": true
+                }
+              },
+              "id": "f029ce23"
+            }
+          ],
+          "id": "3751a68b"
+        },
+        {
+          "componentName": "TinyFormItem",
+          "props": {},
+          "children": [
+            {
+              "componentName": "TinyButton",
+              "props": {
+                "text": "提交",
+                "type": "primary"
+              },
+              "id": "d2b35138"
+            },
+            {
+              "componentName": "TinyButton",
+              "props": {
+                "text": "重置",
+                "style": "margin-left: 10px"
+              },
+              "id": "89f92a92"
+            }
+          ],
+          "id": "2e93998e"
+        }
+      ],
+      "id": "88ecfcff"
+    }
+  ],
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "collapse": {
+          "number": 6,
+          "text": {
+            "zh_CN": "显示更多"
+          }
+        },
+        "content": [
+          {
+            "property": "name",
+            "type": "String",
+            "defaultValue": "",
+            "label": {
+              "text": {
+                "zh_CN": "全名"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "accessor": {
+              "getter": {
+                "type": "JSFunction",
+                "value": "function getter() {\r\n  this.emit('update:name', `${this.state.firstName} ${this.state.lastName}`)\r\n}"
+              },
+              "setter": {
+                "type": "JSFunction",
+                "value": "function setter() {\r\n  const [firstName, lastName] = this.props.name.split(' ')\r\n  this.state.firstName = firstName\r\n  this.state.lastName = lastName\r\n}"
+              }
+            },
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            }
+          }
+        ]
+      }
+    ],
+    "events": {
+      "onUpdate:name": {
+        "label": {
+          "zh_CN": "双向绑定的name变化时触发"
+        },
+        "description": {
+          "zh_CN": ""
+        }
+      }
+    },
+    "slots": {}
+  }
+}

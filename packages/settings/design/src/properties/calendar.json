@@ -1,0 +1,69 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "events": {
+        "title": "事件列表",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "time": {
+              "title": "指定需要展示事件的日期",
+              "type": "number"
+            },
+            "title": {
+              "title": "指定事件标题",
+              "type": "string",
+              "default": ""
+            },
+            "content": {
+              "title": "指定事件的具体内容",
+              "type": "string",
+              "default": ""
+            },
+            "type": {
+              "title": "指定当鼠标悬停在事件标题上时，弹出的展示事件具体内容的提示框的主题",
+              "type": "string",
+              "enum": ["warning", "error", "info", "success"],
+              "enumNames": ["警告", "错误", "信息", "成功"],
+              "default": ""
+            }
+          }
+        }
+      },
+      "mode": {
+        "title": "显示模式",
+        "type": "string",
+        "enum": ["month", "year"],
+        "enumNames": ["月", "年"],
+        "default": "month"
+      },
+      "month": {
+        "title": "指定月份，默认当月",
+        "type": "number"
+      },
+      "show-selected": {
+        "title": "显示选中的日期",
+        "type": "boolean",
+        "default": false
+      },
+      "year": {
+        "title": "指定年份，默认今年",
+        "type": "number"
+      },
+      "#day": {
+        "title": "日期单元格插槽",
+        "type": "string"
+      },
+      "#month": {
+        "title": "月份单元格插槽",
+        "type": "string"
+      },
+      "#tool": {
+        "title": "日历工具栏插槽",
+        "type": "string"
+      }
+    }
+  }
+}

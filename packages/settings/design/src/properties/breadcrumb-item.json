@@ -1,0 +1,21 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "replace": {
+        "title": "在使用 to 进行路由跳转时，是否向 history 添加新记录",
+        "type": "boolean",
+        "default": false
+      },
+      "to": {
+        "title": "路由跳转对象，同 vue-router 的 to",
+        "type": ["string", "object"],
+        "default": ""
+      },
+      "#default": {
+        "title": "默认插槽",
+        "type": "string"
+      }
+    }
+  }
+}

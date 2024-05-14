@@ -1,0 +1,106 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "accordion": {
+        "title": "是否展示为手风琴效果，默认值为 false",
+        "type": "boolean",
+        "default": false
+      },
+      "check-strictly": {
+        "title": "在显示复选框的情况下，是否严格的遵循父子不互相关联的做法，默认为 false, 需要与 show-checkbox 一起使用",
+        "type": "boolean",
+        "default": false
+      },
+      "$$data": {
+        "title": "展示数据",
+        "type": "array",
+        "default": ""
+      },
+      "$$default-checked-keys": {
+        "title": "默认勾选的节点的 key 的数组",
+        "type": "array",
+        "default": ""
+      },
+      "default-expand-all": {
+        "title": "初始化是否展开所有子节点",
+        "type": "boolean",
+        "default": false
+      },
+      "$$default-expanded-keys": {
+        "title": "默认展开的节点的 key 的数组",
+        "type": "array",
+        "default": ""
+      },
+      "draggable": {
+        "title": "是否可拖动菜单",
+        "type": "boolean",
+        "default": false
+      },
+      "ellipsis": {
+        "title": "是否省略显示。优先级高于wrap。配置为 true，节点文字显示需要的宽度超过容器的宽度，节点文字不换行，也不会出现横向滚动条，超出部分文字显示为'...'",
+        "type": "boolean",
+        "default": false
+      },
+      "empty-text": {
+        "title": "内容为空的时候展示的文本",
+        "type": "string",
+        "default": "暂无数据"
+      },
+      "expand-on-click-node": {
+        "title": "配置点击菜单文字是否能展开菜单",
+        "type": "boolean",
+        "default": true
+      },
+      "indent": {
+        "title": "相邻级节点间的水平缩进，单位为像素",
+        "type": "number",
+        "default": 12
+      },
+      "lazy": {
+        "title": "是否懒加载子节点，需与 load 方法结合使用",
+        "type": "boolean",
+        "default": false
+      },
+      "node-key": {
+        "title": "每个树节点用来作为唯一标识的属性，整棵树应该是唯一的",
+        "type": "string",
+        "default": ""
+      },
+      "$$prefix-icon": {
+        "title": "自定义前置图标",
+        "type": "object",
+        "default": ""
+      },
+      "$$search-icon": {
+        "title": "自定义搜索图标",
+        "type": "object",
+        "default": "IconSearch()"
+      },
+      "show-checkbox": {
+        "title": "节点是否可被选择",
+        "type": "boolean",
+        "default": false
+      },
+      "show-filter": {
+        "title": "是否显示搜索过滤框",
+        "type": "boolean",
+        "default": true
+      },
+      "show-title": {
+        "title": "是否显示节点的 title 提示，鼠标悬浮节点之上触发",
+        "type": "boolean",
+        "default": true
+      },
+      "wrap": {
+        "title": "是否换行显示",
+        "type": "boolean",
+        "default": false
+      },
+      "#default": {
+        "title": "自定义树节点的内容插槽，参数为 { node, data }",
+        "type": "string"
+      }
+    }
+  }
+}

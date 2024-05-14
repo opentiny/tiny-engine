@@ -1,0 +1,79 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "$$buttons": {
+        "title": "按钮列表",
+        "type": "array",
+        "default": []
+      },
+      "full-screen": {
+        "title": "设置工具栏属性是否显示全屏按钮",
+        "type": "boolean",
+        "default": false
+      },
+      "id": {
+        "title": "唯一 ID 标识",
+        "type": "string"
+      },
+      "loading": {
+        "title": "是否加载中",
+        "type": "boolean",
+        "default": false
+      },
+      "refresh": {
+        "title": "工具栏组件开启表格刷新功能",
+        "type": "boolean",
+        "default": false
+      },
+      "$$refresh": {
+        "title": "工具栏组件开启表格刷新功能",
+        "type": "object"
+      },
+      "resizable": {
+        "title": "列宽拖动配置（需要设置 id）",
+        "type": "boolean",
+        "default": true
+      },
+      "$$resizable": {
+        "title": "列宽拖动配置（需要设置 id）",
+        "type": "object",
+        "properties": {
+          "storage": {
+            "title": "调整列宽是否保存在本地的 localStroage 里",
+            "type": "boolean",
+            "default": false
+          }
+        }
+      },
+      "setting": {
+        "title": "设置工具栏属性是否显示个性化配置（需要设置 id）",
+        "type": "boolean",
+        "default": false
+      },
+      "$$setting": {
+        "title": "设置工具栏属性是否显示个性化配置（需要设置 id）",
+        "type": "object"
+      },
+      "size": {
+        "title": "尺寸",
+        "type": "string",
+        "enum": ["medium", "small", "mini"],
+        "enumNames": ["中等尺寸", "较小尺寸", "迷你尺寸"],
+        "default": ""
+      },
+      "#buttons": {
+        "title": "按钮列表插槽",
+        "type": "string"
+      },
+      "#toolbar": {
+        "title": "工具栏插槽",
+        "type": "string"
+      },
+      "#tools": {
+        "title": "右侧工具列表插槽",
+        "type": "string"
+      }
+    }
+  }
+}

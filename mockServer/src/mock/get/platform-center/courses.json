@@ -1,0 +1,148 @@
+{
+  "data": [
+    {
+      "id": 37,
+      "createdBy": {
+        "id": 86,
+        "username": "开发者",
+        "email": "developer@lowcode.com",
+        "resetPasswordToken": "developer",
+        "blocked": null,
+        "created_at": "2022-05-27T16:50:44.000Z",
+        "updated_at": "2022-05-27T16:50:44.000Z",
+        "block": null,
+        "is_admin": true,
+        "is_public": null
+      },
+      "updatedBy": {
+        "id": 86,
+        "username": "开发者",
+        "email": "developer@lowcode.com",
+        "resetPasswordToken": "developer",
+        "blocked": null,
+        "created_at": "2022-05-27T16:50:44.000Z",
+        "updated_at": "2022-05-27T16:50:44.000Z",
+        "block": null,
+        "is_admin": true,
+        "is_public": null
+      },
+      "created_at": "2023-08-17T02:40:06.000Z",
+      "updated_at": "2023-08-17T02:40:21.000Z",
+      "category": "appDev",
+      "name": "ai生成简单页面教程",
+      "desc": "",
+      "poster": "http://localhost:9090/assets/images/0055f57e0a38d45ced54e1b2b566cb29_308x180.jpg",
+      "type": "advanced",
+      "tags": "",
+      "variety": "solution",
+      "videos": [],
+      "progress": 0
+    },
+    {
+      "id": 34,
+      "createdBy": {
+        "id": 108,
+        "username": "张三",
+        "email": "xyz@email.com",
+        "resetPasswordToken": "工号xxxxxx",
+        "blocked": null,
+        "created_at": "2022-06-22T08:20:55.000Z",
+        "updated_at": "2022-12-08T07:29:41.000Z",
+        "block": null,
+        "is_admin": false,
+        "is_public": null
+      },
+      "updatedBy": {
+        "id": 108,
+        "username": "张三",
+        "email": "xyz@email.com",
+        "resetPasswordToken": "工号xxxxxx",
+        "blocked": null,
+        "created_at": "2022-06-22T08:20:55.000Z",
+        "updated_at": "2022-12-08T07:29:41.000Z",
+        "block": null,
+        "is_admin": false,
+        "is_public": null
+      },
+      "created_at": "2022-08-27T07:29:49.000Z",
+      "updated_at": "2022-08-27T07:29:49.000Z",
+      "category": "appDev",
+      "name": "如何加入组织",
+      "desc": "讲解如何加入已有组织，如何创建自己的组织",
+      "poster": "http://localhost:9090/assets/images/627366463067fa2f1a59d7db4ac55885_308x100.jpg",
+      "type": "introductory",
+      "tags": ["入门", "最新"],
+      "variety": "manual",
+      "videos": [
+        {
+          "id": 72,
+          "courseId": 34,
+          "title": "申请加入组织",
+          "video": "http://localhost:9090/assets/videos/tiny-engine.mp4",
+          "docs": "TinyEngine简介",
+          "created_at": "2022-08-27T07:29:49.000Z",
+          "updated_at": "2022-08-27T07:29:49.000Z"
+        },
+        {
+          "id": 73,
+          "courseId": 34,
+          "title": "创建平台",
+          "video": "http://localhost:9090/assets/videos/tiny-engine.mp4",
+          "docs": "fdsa",
+          "created_at": "2022-08-27T07:29:49.000Z",
+          "updated_at": "2022-08-27T07:29:49.000Z"
+        }
+      ],
+      "progress": 0
+    },
+    {
+      "id": 28,
+      "createdBy": {
+        "id": 169,
+        "username": "张三",
+        "email": "xyz@email.com",
+        "resetPasswordToken": "工号xxxxxx",
+        "blocked": null,
+        "created_at": "2022-07-04T07:25:53.000Z",
+        "updated_at": "2022-09-27T11:48:34.000Z",
+        "block": null,
+        "is_admin": true,
+        "is_public": true
+      },
+      "updatedBy": {
+        "id": 169,
+        "username": "张三",
+        "email": "xyz@email.com",
+        "resetPasswordToken": "工号xxxxxx",
+        "blocked": null,
+        "created_at": "2022-07-04T07:25:53.000Z",
+        "updated_at": "2022-09-27T11:48:34.000Z",
+        "block": null,
+        "is_admin": true,
+        "is_public": true
+      },
+      "created_at": "2022-08-10T08:38:06.000Z",
+      "updated_at": "2022-08-11T03:44:28.000Z",
+      "category": "appDev",
+      "name": "实战课程",
+      "desc": "实战课程",
+      "poster": "http://localhost:9090/assets/images/777aad0c570f653f0a95b48b898c7b4b_308x180.jpg",
+      "type": "practical",
+      "tags": "",
+      "variety": "manual",
+      "videos": [
+        {
+          "id": 66,
+          "courseId": 28,
+          "title": "从零搭建一个页面",
+          "video": "http://localhost:9090/assets/videos/in-action.mp4",
+          "docs": "",
+          "created_at": "2022-08-10T08:38:06.000Z",
+          "updated_at": "2022-08-10T08:38:06.000Z"
+        }
+      ],
+      "progress": 0
+    }
+  ],
+  "locale": "zh-cn"
+}

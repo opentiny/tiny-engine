@@ -1,0 +1,79 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "lg": {
+        "title": "≥1200px 响应式栅格数或者栅格属性对象，例如：{span: 4, offset: 4}",
+        "type": "number"
+      },
+      "$$lg": {
+        "title": "≥1200px 响应式栅格数或者栅格属性对象，例如：{span: 4, offset: 4}",
+        "type": "object"
+      },
+      "md": {
+        "title": "≥992px 响应式栅格数或者栅格属性对象，例如：{span: 4, offset: 4}",
+        "type": "number"
+      },
+      "$$md": {
+        "title": "≥992px 响应式栅格数或者栅格属性对象，例如：{span: 4, offset: 4}",
+        "type": "object"
+      },
+      "move": {
+        "title": "栅格左右移动格数（正数向右，负数向左）",
+        "type": "number",
+        "default": 0
+      },
+      "no": {
+        "title": "排序编号（Row 中启用 order 时生效），默认值为 0",
+        "type": "number",
+        "default": 0
+      },
+      "offset": {
+        "title": "栅格左侧的间隔格数，默认为 0",
+        "type": "number",
+        "minimum": 0,
+        "default": 0
+      },
+      "sm": {
+        "title": "≥768px 响应式栅格数或者栅格属性对象，例如：{span: 4, offset: 4}",
+        "type": "number"
+      },
+      "$$sm": {
+        "title": "≥768px 响应式栅格数或者栅格属性对象，例如：{span: 4, offset: 4}",
+        "type": "object"
+      },
+      "span": {
+        "title": "栅格占据的列数",
+        "type": "number",
+        "exclusiveMinimum": 0,
+        "maximum": 12,
+        "default": 12
+      },
+      "tag": {
+        "title": "自定义元素标签，可选任意标签",
+        "type": "string",
+        "default": "div"
+      },
+      "xl": {
+        "title": "≥1920px 响应式栅格数或者栅格属性对象，例如：{span: 4, offset: 4}",
+        "type": "number"
+      },
+      "$$xl": {
+        "title": "≥1920px 响应式栅格数或者栅格属性对象，例如：{span: 4, offset: 4}",
+        "type": "object"
+      },
+      "xs": {
+        "title": "<768px 响应式栅格数或者栅格属性对象，例如：{span: 4, offset: 4}",
+        "type": "number"
+      },
+      "$$xs": {
+        "title": "<768px 响应式栅格数或者栅格属性对象，例如：{span: 4, offset: 4}",
+        "type": "object"
+      },
+      "#default": {
+        "title": "默认插槽",
+        "type": "string"
+      }
+    }
+  }
+}

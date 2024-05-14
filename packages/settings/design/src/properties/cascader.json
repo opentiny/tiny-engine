@@ -1,0 +1,173 @@
+{
+  "$$schema": {
+    "type": "object",
+    "properties": {
+      "clearable": {
+        "title": "是否支持清空选项",
+        "type": "boolean",
+        "default": false
+      },
+      "collapse-tags": {
+        "title": "多选模式下是否折叠Tag",
+        "type": "boolean",
+        "default": false
+      },
+      "debounce": {
+        "title": "搜索关键词输入的去抖延迟，单位毫秒",
+        "type": "number",
+        "default": 300
+      },
+      "disabled": {
+        "title": "是否禁用",
+        "type": "boolean",
+        "default": false
+      },
+      "filterable": {
+        "title": "是否可搜索选项",
+        "type": "boolean",
+        "default": false
+      },
+      "$$options": {
+        "title": "可选项数据源，键名可通过 配置选项Props 属性配置",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "title": "指定值选项 value 值",
+              "type": "string",
+              "default": ""
+            },
+            "label": {
+              "title": "指定显示选项 label 值",
+              "type": "string",
+              "default": ""
+            },
+            "children": {
+              "title": "指定子级选项",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "title": "指定值选项 value 值",
+                    "type": "string",
+                    "default": ""
+                  },
+                  "label": {
+                    "title": "指定显示选项 label 值",
+                    "type": "string",
+                    "default": ""
+                  },
+                  "$$children": {
+                    "title": "指定子级选项",
+                    "type": "array"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "placeholder": {
+        "title": "输入框占位文本",
+        "type": "string",
+        "default": "请选择"
+      },
+      "popper-append-to-body": {
+        "title": "是否将弹出框插入至 body 元素。在弹出框的定位出现问题时，可将该属性设置为 false (可参考 select 组件)",
+        "type": "boolean",
+        "default": true
+      },
+      "popper-class": {
+        "title": "自定义浮层类名",
+        "type": "string",
+        "default": ""
+      },
+      "props": {
+        "type": "object",
+        "title": "配置选项",
+        "properties": {
+          "checkStrictly": {
+            "title": "是否严格的遵守父子节点不互相关联",
+            "type": "boolean",
+            "default": false
+          },
+          "children": {
+            "title": "指定选项的子选项为选项对象的某个属性值",
+            "type": "string",
+            "default": "children"
+          },
+          "disabled": {
+            "title": "指定选项的禁用为选项对象的某个属性值",
+            "type": "string",
+            "default": "disabled"
+          },
+          "emitPath": {
+            "title": "在选中节点改变时，是否返回由该节点所在的各级菜单的值所组成的数组，若设置 false，则只返回该节点的值",
+            "type": "boolean",
+            "default": true
+          },
+          "expandTrigger": {
+            "title": "次级菜单的展开方式",
+            "type": "string",
+            "enum": ["click", "hover"],
+            "enumNames": ["点击时触发", "滑过时触发"],
+            "default": "click"
+          },
+          "label": {
+            "title": "指定选项标签为选项对象的某个属性值",
+            "type": "string",
+            "default": "label"
+          },
+          "lazy": {
+            "title": "是否动态加载子节点，需与 lazyLoad 方法结合使用",
+            "type": "boolean",
+            "default": false
+          },
+          "leaf": {
+            "title": "指定选项的叶子节点的标志位为选项对象的某个属性值",
+            "type": "string",
+            "default": "leaf"
+          },
+          "multiple": {
+            "title": "是否多选",
+            "type": "boolean",
+            "default": false
+          },
+          "value": {
+            "title": "指定选项的值为选项对象的某个属性值",
+            "type": "string",
+            "default": "value"
+          }
+        }
+      },
+      "separator": {
+        "title": "选项分隔符",
+        "type": "string",
+        "default": "/"
+      },
+      "show-all-levels": {
+        "title": "输入框中是否显示选中值的完整路径",
+        "type": "boolean",
+        "default": true
+      },
+      "size": {
+        "title": "尺寸",
+        "type": "string",
+        "enum": ["medium", "small", "mini"],
+        "enumNames": ["中等尺寸", "较小尺寸", "迷你尺寸"],
+        "default": ""
+      },
+      "value": {
+        "title": "选中项绑定值",
+        "type": "string",
+        "default": ""
+      },
+      "#empty": {
+        "title": "无匹配选项时的内容插槽",
+        "type": "string"
+      }
+    }
+  }
+}

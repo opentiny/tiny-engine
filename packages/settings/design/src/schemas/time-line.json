@@ -1,0 +1,134 @@
+{
+  "icon": "timeline",
+  "name": {
+    "zh_CN": "时间线"
+  },
+  "component": "tiny-time-line",
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "collapse": {
+          "number": 6,
+          "text": {
+            "zh_CN": "显示更多"
+          }
+        },
+        "content": [
+          {
+            "property": "horizontal",
+            "type": "Boolean",
+            "defaultValue": {
+              "type": "i18n",
+              "zh_CN": "布局",
+              "en_US": "layout",
+              "key": ""
+            },
+            "label": {
+              "text": {
+                "zh_CN": "水平布局"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "节点和文字横向布局"
+            }
+          },
+          {
+            "property": "active",
+            "label": {
+              "text": {
+                "zh_CN": "选中值"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaNumeric",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "步骤条的选中步骤值"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "data",
+            "label": {
+              "text": {
+                "zh_CN": "数据"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaCollection",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "时间线步骤条数据"
+            },
+            "labelPosition": "left"
+          }
+        ]
+      }
+    ],
+    "events": {
+      "onClick": {
+        "label": {
+          "zh_CN": "节点的点击时触发"
+        },
+        "description": {
+          "zh_CN": "节点的点击时触发的回调函数"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "type",
+              "type": "string",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "点击节点的下标"
+              }
+            },
+            {
+              "name": "value",
+              "type": "string",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "当前节点对象：{ name: 节点名称, time: 时间 }"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      }
+    },
+    "shortcuts": {
+      "properties": ["disabled", "mini"]
+    },
+    "contentMenu": {
+      "actions": ["create symbol"]
+    }
+  }
+}

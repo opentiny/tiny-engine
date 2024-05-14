@@ -1,0 +1,109 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "append-to-body": {
+        "title": "DialogBox 本身是否插入到 body 上，嵌套的 Dialog 必须指定该属性并赋值为 true",
+        "type": "boolean",
+        "default": false
+      },
+      "center": {
+        "title": "设置为 true 时 弹出框的头部与底部内容会自动居中",
+        "type": "boolean",
+        "default": false
+      },
+      "close-on-click-modal": {
+        "title": "是否可以通过点击遮罩层关闭弹窗，默认为 true ,可以在标签上设置 :modal-closable=\"false\" 不能通过点击遮罩层关闭弹窗",
+        "type": "boolean",
+        "default": true
+      },
+      "close-on-press-escape": {
+        "title": "是否可以通过 ESC 键关闭遮罩层",
+        "type": "boolean",
+        "default": true
+      },
+      "dialog-class": {
+        "title": "自定义配置弹窗类名",
+        "type": "string",
+        "default": ""
+      },
+      "draggable": {
+        "title": "是否开启弹窗的拖拽功能",
+        "type": "boolean",
+        "default": false
+      },
+      "fullscreen": {
+        "title": "弹出框是否全屏",
+        "type": "boolean",
+        "default": false
+      },
+      "is-form-reset": {
+        "title": "关闭弹窗时是否重置表单数据",
+        "type": "boolean",
+        "default": true
+      },
+      "lock-scroll": {
+        "title": "Dialog弹出时是否禁用滚动条",
+        "type": "boolean",
+        "default": true
+      },
+      "modal": {
+        "title": "是否启用遮罩层",
+        "type": "boolean",
+        "default": true
+      },
+      "modal-append-to-body": {
+        "title": "遮罩层是否应用到 body 上，为 false 时遮罩层会应用到 DialogBox 的父元素上",
+        "type": "boolean",
+        "default": true
+      },
+      "right-slide": {
+        "title": "是否开启弹出右侧滑出功能",
+        "type": "boolean",
+        "default": false
+      },
+      "show-close": {
+        "title": "是否显示关闭按钮",
+        "type": "boolean",
+        "default": true
+      },
+      "show-header": {
+        "title": "是否显示弹窗头部 header",
+        "type": "boolean",
+        "default": true
+      },
+      "title": {
+        "title": "弹出框标题",
+        "type": "string",
+        "default": ""
+      },
+      "top": {
+        "title": "设置弹出框距离窗口顶部的高度，默认为屏高的 15%",
+        "type": "string",
+        "default": "15vh"
+      },
+      "visible": {
+        "title": "控制弹出框显示与关闭",
+        "type": "boolean",
+        "default": true
+      },
+      "width": {
+        "title": "弹出框的宽度",
+        "type": "string",
+        "default": "500px"
+      },
+      "#default": {
+        "title": "Dialog 的内容插槽",
+        "type": "string"
+      },
+      "#footer": {
+        "title": "Dialog 按钮操作区的内容插槽",
+        "type": "string"
+      },
+      "#title": {
+        "title": "Dialog 标题区的内容插槽",
+        "type": "string"
+      }
+    }
+  }
+}

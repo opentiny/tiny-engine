@@ -1,0 +1,28 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "condition": {
+        "title": "是否渲染",
+        "type": "boolean",
+        "default": true
+      },
+      "id": {
+        "title": "绑定id",
+        "type": "string"
+      },
+      "class": {
+        "title": "绑定class",
+        "type": "string"
+      },
+      "switch-state": {
+        "title": "开关",
+        "type": "boolean"
+      },
+      "disabled": {
+        "title": "是否禁用",
+        "type": "boolean"
+      }
+    }
+  }
+}

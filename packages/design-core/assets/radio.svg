@@ -1,0 +1,16 @@
+<svg version="1.1" id="图层_1"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 64 64" style="enable-background:new 0 0 64 64;" xml:space="preserve">
+  <style type="text/css">
+	.st0{fill:currentcolor;}
+  </style>
+  <g>
+    <g>
+      <path class="st0" d="M31.3,8.9C19,8.9,9,19,9,31.3s10,22.3,22.3,22.3s22.3-10,22.3-22.3C53.7,19,43.7,8.9,31.3,8.9z M31.3,49.6
+			C21.2,49.6,13,41.4,13,31.3S21.2,13,31.3,13s18.3,8.2,18.3,18.3C49.7,41.4,41.5,49.6,31.3,49.6z"/>
+    </g>
+    <g>
+      <ellipse class="st0" cx="31.3" cy="31.3" rx="9.7" ry="9.7"/>
+    </g>
+  </g>
+</svg>

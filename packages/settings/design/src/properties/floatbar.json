@@ -1,0 +1,11 @@
+{
+  "$$schema": {
+    "type": "object",
+    "properties": {
+      "#default": {
+        "title": "默认插槽",
+        "type": "string"
+      }
+    }
+  }
+}

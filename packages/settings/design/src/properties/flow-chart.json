@@ -1,0 +1,70 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "arrow-end": {
+        "title": "设置线条末端的形状",
+        "type": "string",
+        "default": "block",
+        "enum": ["block", "line"],
+        "enumNames": ["箭头", "线条"]
+      },
+      "element-color": {
+        "title": "设置节点颜色",
+        "type": "string",
+        "default": "black"
+      },
+      "fill": {
+        "title": "设置节点填充颜色",
+        "type": "string",
+        "default": "white"
+      },
+      "font-color": {
+        "title": "设置字体颜色",
+        "type": "string",
+        "default": "black"
+      },
+      "font-size": {
+        "title": "设置文本的字体大小",
+        "type": "number",
+        "default": 12
+      },
+      "line-color": {
+        "title": "设置线条颜色",
+        "type": "string",
+        "default": "black"
+      },
+      "line-length": {
+        "title": "设置线条长度",
+        "type": "number",
+        "default": 50
+      },
+      "line-width": {
+        "title": "设置线条宽度",
+        "type": "number",
+        "default": 2
+      },
+      "no-text": {
+        "title": "设置 no 分支显示文本",
+        "type": "string",
+        "default": "no"
+      },
+      "scale": {
+        "title": "设置缩放比例",
+        "type": "number",
+        "default": 1,
+        "enum": [0.5, 1, 2],
+        "enumNames": ["缩小 1 倍显示", "正常比例显示", "放大 2 倍显示"]
+      },
+      "$$value": {
+        "title": "设置复杂流程图的数据",
+        "type": "array"
+      },
+      "yes-text": {
+        "title": "设置 yes 分支显示文本",
+        "type": "string",
+        "default": "yes"
+      }
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "aside-width": {
+        "title": "左侧宽度",
+        "type": ["number", "string"],
+        "default": 200
+      },
+      "footer-height": {
+        "title": "底部高度",
+        "type": ["number", "string"],
+        "default": 60
+      },
+      "header-height": {
+        "title": "头部高度",
+        "type": ["number", "string"],
+        "default": 60
+      },
+      "pattern": {
+        "title": "版型类型",
+        "type": "string",
+        "enum": ["default", "simple", "legend", "classic", "fashion"],
+        "enumNames": ["默认布局", "简约布局", "传奇布局", "经典布局", "时尚布局"],
+        "default": "default"
+      },
+      "#aside": {
+        "title": "侧边内容插槽",
+        "type": "string"
+      },
+      "#default": {
+        "title": "主要内容插槽",
+        "type": "string"
+      },
+      "#footer": {
+        "title": "底部内容插槽",
+        "type": "string"
+      },
+      "#header": {
+        "title": "头部内容插槽",
+        "type": "string"
+      }
+    }
+  }
+}

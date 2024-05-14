@@ -1,0 +1,390 @@
+{
+  "icon": "",
+  "name": {
+    "zh_CN": "Table"
+  },
+  "component": "tiny-table",
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "collapse": {
+          "number": 6,
+          "text": {
+            "zh_CN": "显示更多"
+          }
+        },
+        "content": [
+          {
+            "property": "condition",
+            "type": "boolean",
+            "defaultValue": true,
+            "label": {
+              "text": {
+                "zh_CN": "是否渲染"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            }
+          },
+          {
+            "property": "columns",
+            "type": "array",
+            "defaultValue": [
+              {
+                "title": {
+                  "type": "i18n",
+                  "zh_CN": "序号",
+                  "en_US": "serial number",
+                  "key": ""
+                },
+                "sorter": true,
+                "dataKey": "testNo",
+                "width": "150px"
+              },
+              {
+                "title": {
+                  "type": "i18n",
+                  "zh_CN": "详情",
+                  "en_US": "detail",
+                  "key": ""
+                },
+                "sorter": true,
+                "dataKey": "testData"
+              }
+            ],
+            "label": {
+              "text": {
+                "zh_CN": "列配置"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaCodeEditorList",
+              "props": {
+                "language": "json",
+                "buttonText": "编辑列配置",
+                "title": "编辑列配置"
+              }
+            }
+          },
+          {
+            "property": "showToolbar",
+            "type": "boolean",
+            "defaultValue": true,
+            "label": {
+              "text": {
+                "zh_CN": "是否显示列显示隐藏配置"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            }
+          },
+          {
+            "property": "showBottom",
+            "type": "boolean",
+            "defaultValue": true,
+            "label": {
+              "text": {
+                "zh_CN": "翻页是否显示在屏幕最底部"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            }
+          },
+          {
+            "property": "contentMaxHeight",
+            "type": "string",
+            "defaultValue": "auto",
+            "label": {
+              "text": {
+                "zh_CN": "表格内容区域最大高度"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            }
+          },
+          {
+            "property": "tableData",
+            "type": "object",
+            "defaultValue": {
+              "data": [
+                {
+                  "testNo": "1",
+                  "testData": "测试数据1"
+                },
+                {
+                  "testNo": "2",
+                  "testData": "测试数据2"
+                }
+              ],
+              "state": {
+                "searched": true,
+                "sorted": true,
+                "paginated": true
+              }
+            },
+            "label": {
+              "text": {
+                "zh_CN": "数据源"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            }
+          },
+          {
+            "property": "remoteTableData",
+            "type": "object",
+            "defaultValue": {
+              "options": {
+                "method": "GET",
+                "url": "http://exapmle.com/crm-list.json",
+                "params": [
+                  {
+                    "name": "pageNo",
+                    "value": "1"
+                  },
+                  {
+                    "name": "pageSize",
+                    "value": "10"
+                  }
+                ],
+                "isSync": true
+              }
+            },
+            "label": {
+              "text": {
+                "zh_CN": "远程数据源"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            }
+          },
+          {
+            "property": "fit",
+            "type": "jsstring",
+            "defaultValue": "function fit(response, setState) {  return response; }",
+            "label": {
+              "text": {
+                "zh_CN": "远程数据源fit方法"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            }
+          },
+          {
+            "property": "didFetch",
+            "type": "jsstring",
+            "defaultValue": "function didFetch(response, setState) { return response; }",
+            "label": {
+              "text": {
+                "zh_CN": "远程数据源didFetch方法"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            }
+          },
+          {
+            "property": "pagination",
+            "type": "object",
+            "defaultValue": {
+              "currentPage": 1,
+              "pageSize": {
+                "options": [10, 20, 50, 100],
+                "size": 10
+              },
+              "totalNumber": 2
+            },
+            "label": {
+              "text": {
+                "zh_CN": "翻页配置"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            }
+          },
+          {
+            "property": "storageId",
+            "type": "string",
+            "label": {
+              "text": {
+                "zh_CN": "持久化Id"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            }
+          },
+          {
+            "property": "ref",
+            "type": "string",
+            "label": {
+              "text": {
+                "zh_CN": "表格引用"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            }
+          },
+          {
+            "property": "storageConfig",
+            "type": "object",
+            "defaultValue": {
+              "colsWidth": true,
+              "headerFilter": false,
+              "columnsDisplay": true
+            },
+            "label": {
+              "text": {
+                "zh_CN": "持久化配置"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            }
+          }
+        ]
+      }
+    ],
+    "events": {
+      "onStateChange": {
+        "label": {
+          "zh_CN": "onStateChange"
+        },
+        "description": {
+          "zh_CN": "详细的描述文字，会在鼠标放入？时显示"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [],
+          "returns": {}
+        },
+        "defaultValue": "function onStateChange(e) {}"
+      },
+      "onPageToDetail": {
+        "label": {
+          "zh_CN": "onPageToDetail"
+        },
+        "description": {
+          "zh_CN": "详细的描述文字，会在鼠标放入？时显示"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [],
+          "returns": {}
+        },
+        "defaultValue": "function onPageToDetail(e) {}"
+      }
+    },
+    "shortcuts": {
+      "properties": []
+    },
+    "contentMenu": {
+      "actions": []
+    }
+  }
+}

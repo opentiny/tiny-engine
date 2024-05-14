@@ -1,0 +1,3036 @@
+{
+  "data": {
+    "framework": "Angular",
+    "materials": {
+      "components": [
+        {
+          "icon": "",
+          "name": {
+            "zh_CN": "Container"
+          },
+          "component": "tiny-container",
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "collapse": {
+                  "number": 6,
+                  "text": {
+                    "zh_CN": "显示更多"
+                  }
+                },
+                "content": [
+                  {
+                    "property": "condition",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否渲染"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "style",
+                    "type": "string",
+                    "defaultValue": "margin: 10px;",
+                    "label": {
+                      "text": {
+                        "zh_CN": "样式"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "class",
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "样式类"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  }
+                ]
+              }
+            ],
+            "events": {
+              "onClick": {
+                "label": {
+                  "zh_CN": "onClick"
+                },
+                "description": {
+                  "zh_CN": "详细的描述文字，会在鼠标放入？时显示"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [],
+                  "returns": {}
+                },
+                "defaultValue": "function onClick(e) {}"
+              }
+            },
+            "shortcuts": {
+              "properties": []
+            },
+            "contentMenu": {
+              "actions": []
+            }
+          }
+        },
+        {
+          "icon": "",
+          "name": {
+            "zh_CN": "Accordion"
+          },
+          "component": "tiny-accordion",
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "collapse": {
+                  "number": 6,
+                  "text": {
+                    "zh_CN": "显示更多"
+                  }
+                },
+                "content": [
+                  {
+                    "property": "condition",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否渲染"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "title",
+                    "type": "object",
+                    "defaultValue": {
+                      "type": "i18n",
+                      "zh_CN": "默认标题",
+                      "key": ""
+                    },
+                    "label": {
+                      "text": {
+                        "zh_CN": "标题名称"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "open",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否默认展开"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  }
+                ]
+              }
+            ],
+            "events": {},
+            "shortcuts": {
+              "properties": []
+            },
+            "contentMenu": {
+              "actions": []
+            }
+          }
+        },
+        {
+          "icon": "",
+          "name": {
+            "zh_CN": "Alert"
+          },
+          "component": "tiny-alert",
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "collapse": {
+                  "number": 6,
+                  "text": {
+                    "zh_CN": "显示更多"
+                  }
+                },
+                "content": [
+                  {
+                    "property": "condition",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否渲染"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "type",
+                    "type": "string",
+                    "defaultValue": "prompt",
+                    "label": {
+                      "text": {}
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "label",
+                    "type": "object",
+                    "defaultValue": {
+                      "type": "i18n",
+                      "zh_CN": "提示文本",
+                      "key": ""
+                    },
+                    "label": {
+                      "text": {
+                        "zh_CN": "提示文本"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  }
+                ]
+              }
+            ],
+            "events": {},
+            "shortcuts": {
+              "properties": []
+            },
+            "contentMenu": {
+              "actions": []
+            }
+          }
+        },
+        {
+          "icon": "",
+          "name": {
+            "zh_CN": "Swiper"
+          },
+          "component": "tiny-swiper",
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "collapse": {
+                  "number": 6,
+                  "text": {
+                    "zh_CN": "显示更多"
+                  }
+                },
+                "content": [
+                  {
+                    "property": "condition",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否渲染"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "items",
+                    "type": "array",
+                    "defaultValue": [
+                      {
+                        "src": "img/rocket.jpg"
+                      },
+                      {
+                        "src": ""
+                      }
+                    ],
+                    "label": {
+                      "text": {
+                        "zh_CN": "轮播项"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "autoplay",
+                    "type": "boolean",
+                    "defaultValue": false,
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否自动播放"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "autoplaySpeed",
+                    "type": "number",
+                    "defaultValue": 3000,
+                    "label": {
+                      "text": {
+                        "zh_CN": "自动播放速度"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "heigth",
+                    "type": "number",
+                    "defaultValue": 200,
+                    "label": {
+                      "text": {
+                        "zh_CN": "高度"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  }
+                ]
+              }
+            ],
+            "events": {},
+            "shortcuts": {
+              "properties": []
+            },
+            "contentMenu": {
+              "actions": []
+            }
+          }
+        },
+        {
+          "icon": "",
+          "name": {
+            "zh_CN": "HalfModal"
+          },
+          "component": "tiny-halfmodal",
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "collapse": {
+                  "number": 6,
+                  "text": {
+                    "zh_CN": "显示更多"
+                  }
+                },
+                "content": [
+                  {
+                    "property": "condition",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否渲染"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "width",
+                    "type": "string",
+                    "defaultValue": "80%",
+                    "label": {
+                      "text": {
+                        "zh_CN": "宽度"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "style",
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "样式"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "class",
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "样式类"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  }
+                ]
+              }
+            ],
+            "events": {},
+            "shortcuts": {
+              "properties": []
+            },
+            "contentMenu": {
+              "actions": []
+            }
+          }
+        },
+        {
+          "icon": "",
+          "name": {
+            "zh_CN": "Button"
+          },
+          "component": "tiny-button",
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "collapse": {
+                  "number": 6,
+                  "text": {
+                    "zh_CN": "显示更多"
+                  }
+                },
+                "content": [
+                  {
+                    "property": "condition",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否渲染"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "text",
+                    "type": "object",
+                    "defaultValue": {
+                      "type": "i18n",
+                      "zh_CN": "按钮文案",
+                      "en_US": "Tiny Button",
+                      "key": ""
+                    },
+                    "label": {
+                      "text": {
+                        "zh_CN": "按钮文字"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "color",
+                    "type": "select",
+                    "defaultValue": "",
+                    "label": {
+                      "text": {
+                        "zh_CN": "按钮颜色"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSelect",
+                      "props": {
+                        "options": ["", "danger", "primary"]
+                      }
+                    }
+                  },
+                  {
+                    "property": "size",
+                    "type": "select",
+                    "defaultValue": "large",
+                    "label": {
+                      "text": {
+                        "zh_CN": "大小"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSelect",
+                      "props": {
+                        "options": ["large", "middle", "small", "xs"]
+                      }
+                    }
+                  }
+                ]
+              }
+            ],
+            "events": {
+              "onClick": {
+                "label": {
+                  "zh_CN": "onClick"
+                },
+                "description": {
+                  "zh_CN": "详细的描述文字，会在鼠标放入？时显示"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [],
+                  "returns": {}
+                },
+                "defaultValue": "function onClick(e) {}"
+              }
+            },
+            "shortcuts": {
+              "properties": []
+            },
+            "contentMenu": {
+              "actions": []
+            }
+          }
+        },
+        {
+          "icon": "",
+          "name": {
+            "zh_CN": "Input"
+          },
+          "component": "tiny-input",
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "collapse": {
+                  "number": 6,
+                  "text": {
+                    "zh_CN": "显示更多"
+                  }
+                },
+                "content": [
+                  {
+                    "property": "condition",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否渲染"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "value",
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "绑定值"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "placeholder",
+                    "type": "object",
+                    "defaultValue": {
+                      "type": "i18n",
+                      "zh_CN": "占位文本",
+                      "en_US": "placeholder",
+                      "key": ""
+                    },
+                    "label": {
+                      "text": {
+                        "zh_CN": "输入框占位文本"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  }
+                ]
+              }
+            ],
+            "events": {},
+            "shortcuts": {
+              "properties": []
+            },
+            "contentMenu": {
+              "actions": []
+            }
+          }
+        },
+        {
+          "icon": "",
+          "name": {
+            "zh_CN": "Radio"
+          },
+          "component": "tiny-radio",
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "collapse": {
+                  "number": 6,
+                  "text": {
+                    "zh_CN": "显示更多"
+                  }
+                },
+                "content": [
+                  {
+                    "property": "condition",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否渲染"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "options",
+                    "type": "array",
+                    "defaultValue": [
+                      {
+                        "label": {
+                          "type": "i18n",
+                          "zh_CN": "蛋糕",
+                          "en_US": "cake",
+                          "key": ""
+                        },
+                        "text": "cake"
+                      },
+                      {
+                        "label": {
+                          "type": "i18n",
+                          "zh_CN": "鸡蛋",
+                          "en_US": "egg",
+                          "key": ""
+                        },
+                        "text": "egg"
+                      },
+                      {
+                        "label": {
+                          "type": "i18n",
+                          "zh_CN": "牛奶",
+                          "en_US": "milk",
+                          "key": ""
+                        },
+                        "text": "milk"
+                      }
+                    ],
+                    "label": {
+                      "text": {
+                        "zh_CN": "选项"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  }
+                ]
+              }
+            ],
+            "events": {},
+            "shortcuts": {
+              "properties": []
+            },
+            "contentMenu": {
+              "actions": []
+            }
+          }
+        },
+        {
+          "icon": "",
+          "name": {
+            "zh_CN": "Select"
+          },
+          "component": "tiny-select",
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "collapse": {
+                  "number": 6,
+                  "text": {
+                    "zh_CN": "显示更多"
+                  }
+                },
+                "content": [
+                  {
+                    "property": "condition",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否渲染"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "items",
+                    "type": "array",
+                    "defaultValue": [
+                      {
+                        "label": {
+                          "type": "i18n",
+                          "zh_CN": "黄金糕",
+                          "key": ""
+                        },
+                        "text": "cake"
+                      },
+                      {
+                        "label": {
+                          "type": "i18n",
+                          "zh_CN": "双皮奶",
+                          "key": ""
+                        },
+                        "text": "milk"
+                      },
+                      {
+                        "label": {
+                          "type": "i18n",
+                          "zh_CN": "鸡蛋",
+                          "key": ""
+                        },
+                        "text": "egg"
+                      }
+                    ],
+                    "label": {
+                      "text": {
+                        "zh_CN": "选项"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "selected",
+                    "type": "object",
+                    "defaultValue": {
+                      "label": {
+                        "type": "i18n",
+                        "zh_CN": "黄金糕",
+                        "key": ""
+                      },
+                      "text": "cake"
+                    },
+                    "label": {
+                      "text": {
+                        "zh_CN": "选中项"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  }
+                ]
+              }
+            ],
+            "events": {},
+            "shortcuts": {
+              "properties": []
+            },
+            "contentMenu": {
+              "actions": []
+            }
+          }
+        },
+        {
+          "icon": "",
+          "name": {
+            "zh_CN": "Checkbox"
+          },
+          "component": "tiny-checkbox",
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "collapse": {
+                  "number": 6,
+                  "text": {
+                    "zh_CN": "显示更多"
+                  }
+                },
+                "content": [
+                  {
+                    "property": "condition",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否渲染"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "id",
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "绑定id"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "class",
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "绑定class"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "label",
+                    "type": "object",
+                    "defaultValue": {
+                      "type": "i18n",
+                      "zh_CN": "标签",
+                      "en_US": "Label",
+                      "key": ""
+                    },
+                    "label": {
+                      "text": {
+                        "zh_CN": "label"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "checked",
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否选中"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "disabled",
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否禁用"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  }
+                ]
+              }
+            ],
+            "events": {},
+            "shortcuts": {
+              "properties": []
+            },
+            "contentMenu": {
+              "actions": []
+            }
+          }
+        },
+        {
+          "icon": "",
+          "name": {
+            "zh_CN": "Tag"
+          },
+          "component": "tiny-tag",
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "collapse": {
+                  "number": 6,
+                  "text": {
+                    "zh_CN": "显示更多"
+                  }
+                },
+                "content": [
+                  {
+                    "property": "condition",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否渲染"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "id",
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "绑定id"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "class",
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "绑定class"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "value",
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "tag"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "disabled",
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否禁用"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  }
+                ]
+              }
+            ],
+            "events": {},
+            "shortcuts": {
+              "properties": []
+            },
+            "contentMenu": {
+              "actions": []
+            }
+          }
+        },
+        {
+          "icon": "",
+          "name": {
+            "zh_CN": "Switch"
+          },
+          "component": "tiny-switch",
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "collapse": {
+                  "number": 6,
+                  "text": {
+                    "zh_CN": "显示更多"
+                  }
+                },
+                "content": [
+                  {
+                    "property": "condition",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否渲染"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "id",
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "绑定id"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "class",
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "绑定class"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "switch-state",
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "开关"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "disabled",
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否禁用"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  }
+                ]
+              }
+            ],
+            "events": {},
+            "shortcuts": {
+              "properties": []
+            },
+            "contentMenu": {
+              "actions": []
+            }
+          }
+        },
+        {
+          "icon": "",
+          "name": {
+            "zh_CN": "Tab"
+          },
+          "component": "tiny-tab",
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "collapse": {
+                  "number": 6,
+                  "text": {
+                    "zh_CN": "显示更多"
+                  }
+                },
+                "content": [
+                  {
+                    "property": "condition",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否渲染"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "class",
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "样式类"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "tabs",
+                    "type": "array",
+                    "defaultValue": [
+                      {
+                        "title": "标签页一",
+                        "active": true
+                      },
+                      {
+                        "title": "标签页二"
+                      },
+                      {
+                        "title": "标签页三"
+                      }
+                    ],
+                    "label": {
+                      "text": {
+                        "zh_CN": "标签项"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  }
+                ]
+              }
+            ],
+            "events": {},
+            "shortcuts": {
+              "properties": []
+            },
+            "contentMenu": {
+              "actions": []
+            }
+          }
+        },
+        {
+          "icon": "",
+          "name": {
+            "zh_CN": "Date"
+          },
+          "component": "tiny-date",
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "collapse": {
+                  "number": 6,
+                  "text": {
+                    "zh_CN": "显示更多"
+                  }
+                },
+                "content": [
+                  {
+                    "property": "condition",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否渲染"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "id",
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "绑定id"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "class",
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "绑定class"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "format",
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "日期格式"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "disabled",
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否禁用"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "value",
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "选中日期"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "min",
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "最小日期"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "max",
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "最大日期"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  }
+                ]
+              }
+            ],
+            "events": {},
+            "shortcuts": {
+              "properties": []
+            },
+            "contentMenu": {
+              "actions": []
+            }
+          }
+        },
+        {
+          "icon": "",
+          "name": {
+            "zh_CN": "DateRange"
+          },
+          "component": "tiny-daterange",
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "collapse": {
+                  "number": 6,
+                  "text": {
+                    "zh_CN": "显示更多"
+                  }
+                },
+                "content": [
+                  {
+                    "property": "condition",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否渲染"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "format",
+                    "type": "string",
+                    "defaultValue": "yyyy-MM-dd",
+                    "label": {
+                      "text": {
+                        "zh_CN": "日期格式"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "value",
+                    "type": "object",
+                    "defaultValue": {
+                      "begin": "",
+                      "end": ""
+                    },
+                    "label": {
+                      "text": {
+                        "zh_CN": "选中日期"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "min",
+                    "type": "string",
+                    "defaultValue": "",
+                    "label": {
+                      "text": {
+                        "zh_CN": "最小日期"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "max",
+                    "type": "string",
+                    "defaultValue": "",
+                    "label": {
+                      "text": {
+                        "zh_CN": "最大日期"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "panelAlign",
+                    "type": "string",
+                    "defaultValue": "right",
+                    "label": {
+                      "text": {
+                        "zh_CN": "对齐方向"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  }
+                ]
+              }
+            ],
+            "events": {
+              "onChange": {
+                "label": {
+                  "zh_CN": "onChange"
+                },
+                "description": {
+                  "zh_CN": "详细的描述文字，会在鼠标放入？时显示"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [],
+                  "returns": {}
+                },
+                "defaultValue": "function onChange(e) {}"
+              }
+            },
+            "shortcuts": {
+              "properties": []
+            },
+            "contentMenu": {
+              "actions": []
+            }
+          }
+        },
+        {
+          "icon": "",
+          "name": {
+            "zh_CN": "Form"
+          },
+          "component": "tiny-form",
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "collapse": {
+                  "number": 6,
+                  "text": {
+                    "zh_CN": "显示更多"
+                  }
+                },
+                "content": [
+                  {
+                    "property": "condition",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否渲染"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "id",
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "绑定id"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "class",
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "绑定class"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "title",
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "title"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  }
+                ]
+              }
+            ],
+            "events": {},
+            "shortcuts": {
+              "properties": []
+            },
+            "contentMenu": {
+              "actions": []
+            }
+          }
+        },
+        {
+          "icon": "",
+          "name": {
+            "zh_CN": "Image"
+          },
+          "component": "tiny-image",
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "collapse": {
+                  "number": 6,
+                  "text": {
+                    "zh_CN": "显示更多"
+                  }
+                },
+                "content": [
+                  {
+                    "property": "condition",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否渲染"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "id",
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "绑定id"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "class",
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "绑定class"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "src",
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "src"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  }
+                ]
+              }
+            ],
+            "events": {},
+            "shortcuts": {
+              "properties": []
+            },
+            "contentMenu": {
+              "actions": []
+            }
+          }
+        },
+        {
+          "icon": "",
+          "name": {
+            "zh_CN": "Table"
+          },
+          "component": "tiny-table",
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "collapse": {
+                  "number": 6,
+                  "text": {
+                    "zh_CN": "显示更多"
+                  }
+                },
+                "content": [
+                  {
+                    "property": "condition",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否渲染"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "columns",
+                    "type": "array",
+                    "defaultValue": [
+                      {
+                        "title": {
+                          "type": "i18n",
+                          "zh_CN": "序号",
+                          "en_US": "serial number",
+                          "key": ""
+                        },
+                        "sorter": true,
+                        "dataKey": "testNo",
+                        "width": "150px"
+                      },
+                      {
+                        "title": {
+                          "type": "i18n",
+                          "zh_CN": "详情",
+                          "en_US": "detail",
+                          "key": ""
+                        },
+                        "sorter": true,
+                        "dataKey": "testData"
+                      }
+                    ],
+                    "label": {
+                      "text": {
+                        "zh_CN": "列配置"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "showToolbar",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否显示列显示隐藏配置"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "showBottom",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "label": {
+                      "text": {
+                        "zh_CN": "翻页是否显示在屏幕最底部"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "contentMaxHeight",
+                    "type": "string",
+                    "defaultValue": "auto",
+                    "label": {
+                      "text": {
+                        "zh_CN": "表格内容区域最大高度"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "tableData",
+                    "type": "object",
+                    "defaultValue": {
+                      "data": [
+                        {
+                          "testNo": "1",
+                          "testData": "测试数据1"
+                        },
+                        {
+                          "testNo": "2",
+                          "testData": "测试数据2"
+                        }
+                      ],
+                      "state": {
+                        "searched": true,
+                        "sorted": true,
+                        "paginated": true
+                      }
+                    },
+                    "label": {
+                      "text": {
+                        "zh_CN": "数据源"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "remoteTableData",
+                    "type": "object",
+                    "defaultValue": {
+                      "options": {
+                        "method": "GET",
+                        "url": "http://exapmle.com/crm-list.json",
+                        "params": [
+                          {
+                            "name": "pageNo",
+                            "value": "1"
+                          },
+                          {
+                            "name": "pageSize",
+                            "value": "10"
+                          }
+                        ],
+                        "isSync": true
+                      }
+                    },
+                    "label": {
+                      "text": {
+                        "zh_CN": "远程数据源"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "fit",
+                    "type": "jsstring",
+                    "defaultValue": "function fit(response, setState) {  return response; }",
+                    "label": {
+                      "text": {
+                        "zh_CN": "远程数据源fit方法"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "didFetch",
+                    "type": "jsstring",
+                    "defaultValue": "function didFetch(response, setState) { return response; }",
+                    "label": {
+                      "text": {
+                        "zh_CN": "远程数据源didFetch方法"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "pagination",
+                    "type": "object",
+                    "defaultValue": {
+                      "currentPage": 1,
+                      "pageSize": {
+                        "options": [10, 20, 50, 100],
+                        "size": 10
+                      },
+                      "totalNumber": 2
+                    },
+                    "label": {
+                      "text": {
+                        "zh_CN": "翻页配置"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "storageId",
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "持久化Id"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "ref",
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "表格引用"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "storageConfig",
+                    "type": "object",
+                    "defaultValue": {
+                      "colsWidth": true,
+                      "headerFilter": false,
+                      "columnsDisplay": true
+                    },
+                    "label": {
+                      "text": {
+                        "zh_CN": "持久化配置"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  }
+                ]
+              }
+            ],
+            "events": {
+              "onStateChange": {
+                "label": {
+                  "zh_CN": "onStateChange"
+                },
+                "description": {
+                  "zh_CN": "详细的描述文字，会在鼠标放入？时显示"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [],
+                  "returns": {}
+                },
+                "defaultValue": "function onStateChange(e) {}"
+              },
+              "onPageToDetail": {
+                "label": {
+                  "zh_CN": "onPageToDetail"
+                },
+                "description": {
+                  "zh_CN": "详细的描述文字，会在鼠标放入？时显示"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [],
+                  "returns": {}
+                },
+                "defaultValue": "function onPageToDetail(e) {}"
+              }
+            },
+            "shortcuts": {
+              "properties": []
+            },
+            "contentMenu": {
+              "actions": []
+            }
+          }
+        },
+        {
+          "icon": "",
+          "name": {
+            "zh_CN": "TableFilter"
+          },
+          "component": "tiny-tablefilter",
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "collapse": {
+                  "number": 6,
+                  "text": {
+                    "zh_CN": "显示更多"
+                  }
+                },
+                "content": [
+                  {
+                    "property": "condition",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否渲染"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "showSlide",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否显示展开收起"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "slidePosition",
+                    "type": "number",
+                    "defaultValue": 4,
+                    "label": {
+                      "text": {
+                        "zh_CN": "展开收起位置"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "placeholder",
+                    "type": "object",
+                    "defaultValue": {
+                      "type": "i18n",
+                      "zh_CN": "支持的模糊搜索条件：商务编号，项目名称，客户名称，客户账号，伙伴名称，伙伴账号",
+                      "key": ""
+                    },
+                    "label": {
+                      "text": {
+                        "zh_CN": "搜索框placeholder"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "tipStr",
+                    "type": "object",
+                    "defaultValue": {
+                      "type": "i18n",
+                      "zh_CN": "支持的模糊搜索条件：商务编号，项目名称，客户名称，客户账号，伙伴名称，伙伴账号",
+                      "key": ""
+                    },
+                    "label": {
+                      "text": {
+                        "zh_CN": "搜索框提示文案"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "options",
+                    "type": "array",
+                    "defaultValue": [
+                      {
+                        "key": "status",
+                        "title": {
+                          "type": "i18n",
+                          "zh_CN": "状态",
+                          "key": ""
+                        },
+                        "multiple": true,
+                        "values": [
+                          {
+                            "text": {
+                              "type": "i18n",
+                              "zh_CN": "全部",
+                              "key": ""
+                            },
+                            "value": "all"
+                          },
+                          {
+                            "text": {
+                              "type": "i18n",
+                              "zh_CN": "草稿",
+                              "key": ""
+                            },
+                            "value": "draft"
+                          },
+                          {
+                            "text": {
+                              "type": "i18n",
+                              "zh_CN": "审批中",
+                              "key": ""
+                            },
+                            "value": "pending"
+                          },
+                          {
+                            "text": {
+                              "type": "i18n",
+                              "zh_CN": "已通过",
+                              "key": ""
+                            },
+                            "value": "approved"
+                          }
+                        ]
+                      }
+                    ],
+                    "label": {
+                      "text": {
+                        "zh_CN": "数据源"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  }
+                ]
+              }
+            ],
+            "events": {
+              "onSelect": {
+                "label": {
+                  "zh_CN": "onSelect"
+                },
+                "description": {
+                  "zh_CN": "详细的描述文字，会在鼠标放入？时显示"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [],
+                  "returns": {}
+                },
+                "defaultValue": "function onSelect(e) {}"
+              },
+              "onSearch": {
+                "label": {
+                  "zh_CN": "onSearch"
+                },
+                "description": {
+                  "zh_CN": "详细的描述文字，会在鼠标放入？时显示"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [],
+                  "returns": {}
+                },
+                "defaultValue": "function onSearch(e) {}"
+              },
+              "onRefresh": {
+                "label": {
+                  "zh_CN": "onRefresh"
+                },
+                "description": {
+                  "zh_CN": "详细的描述文字，会在鼠标放入？时显示"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [],
+                  "returns": {}
+                },
+                "defaultValue": "function onRefresh(e) {}"
+              },
+              "onToggle": {
+                "label": {
+                  "zh_CN": "onToggle"
+                },
+                "description": {
+                  "zh_CN": "详细的描述文字，会在鼠标放入？时显示"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [],
+                  "returns": {}
+                },
+                "defaultValue": "function onToggle(e) {}"
+              }
+            },
+            "shortcuts": {
+              "properties": []
+            },
+            "contentMenu": {
+              "actions": []
+            }
+          }
+        },
+        {
+          "icon": "",
+          "name": {
+            "zh_CN": "Formfield"
+          },
+          "component": "tiny-formfield",
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "collapse": {
+                  "number": 6,
+                  "text": {
+                    "zh_CN": "显示更多"
+                  }
+                },
+                "content": [
+                  {
+                    "property": "condition",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否渲染"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "title",
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "标题"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "showLine",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否显示间隔"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "isEdit",
+                    "type": "boolean",
+                    "defaultValue": false,
+                    "label": {
+                      "text": {
+                        "zh_CN": "编辑状态"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "colsNumber",
+                    "type": "string",
+                    "defaultValue": "2",
+                    "label": {
+                      "text": {
+                        "zh_CN": "列数"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "labelWidth",
+                    "type": "string",
+                    "defaultValue": "120px",
+                    "label": {
+                      "text": {
+                        "zh_CN": "label的宽度"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "colsWidth",
+                    "type": "array",
+                    "defaultValue": ["50%", "50%"],
+                    "label": {
+                      "text": {
+                        "zh_CN": "列宽"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "colsGap",
+                    "type": "array",
+                    "defaultValue": ["50px"],
+                    "label": {
+                      "text": {
+                        "zh_CN": "列间距"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "options",
+                    "type": "array",
+                    "defaultValue": [
+                      {
+                        "label": "项目名称",
+                        "value": "ghx-123-变更",
+                        "editConfig": {
+                          "type": "text",
+                          "disabled": true
+                        }
+                      },
+                      {
+                        "label": "合同模板",
+                        "value": "线下客户模板",
+                        "editConfig": {
+                          "type": "select",
+                          "options": [
+                            {
+                              "label": "线上华为模板（预付费）",
+                              "value": "线上华为模板（预付费）"
+                            },
+                            {
+                              "label": "线下客户模板",
+                              "value": "线下客户模板"
+                            },
+                            {
+                              "label": "线上华为模板（后付费）",
+                              "value": "线上华为模板（后付费）"
+                            }
+                          ],
+                          "placeholder": "请选择合同模板"
+                        }
+                      }
+                    ],
+                    "label": {
+                      "text": {
+                        "zh_CN": "表单数据"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "hidden": false,
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  }
+                ]
+              }
+            ],
+            "events": {
+              "onStateChange": {
+                "label": {
+                  "zh_CN": "onStateChange"
+                },
+                "description": {
+                  "zh_CN": "详细的描述文字，会在鼠标放入？时显示"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [],
+                  "returns": {}
+                },
+                "defaultValue": "function onStateChange(e) {}"
+              }
+            },
+            "shortcuts": {
+              "properties": []
+            },
+            "contentMenu": {
+              "actions": []
+            }
+          }
+        }
+      ]
+    }
+  }
+}

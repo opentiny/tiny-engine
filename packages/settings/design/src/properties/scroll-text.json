@@ -1,0 +1,33 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "direction": {
+        "title": "滚动的方向",
+        "type": "string",
+        "enum": ["up", "left", "down", "right"],
+        "enumNames": ["上", "左", "下", "右"],
+        "default": "left"
+      },
+      "hover-stop": {
+        "title": "hover 滚动是否停止",
+        "type": "boolean",
+        "default": true
+      },
+      "text": {
+        "title": "滚动的文本内容",
+        "type": "string",
+        "default": "ScrollText"
+      },
+      "time": {
+        "title": "整个滚动过程所用的时间",
+        "type": "number",
+        "default": 5
+      },
+      "#default": {
+        "title": "默认插槽",
+        "type": "string"
+      }
+    }
+  }
+}

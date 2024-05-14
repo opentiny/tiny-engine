@@ -1,0 +1,205 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "allow-create": {
+        "title": "是否允许用户创建新条目，需配合 filterable 使用",
+        "type": "boolean",
+        "default": false
+      },
+      "autocomplete": {
+        "title": "select input 的 autocomplete 属性",
+        "type": "string",
+        "default": "off"
+      },
+      "automatic-dropdown": {
+        "title": "对于不可搜索的 Select，是否在输入框获得焦点后自动弹出选项菜单",
+        "type": "boolean",
+        "default": false
+      },
+      "$$cache-op": {
+        "title": "开启 select 本地缓存功能（根据用户点击选择的次数、最后时间继续存储排序）",
+        "type": "object",
+        "default": ""
+      },
+      "clearable": {
+        "title": "是否可以清空选项",
+        "type": "boolean",
+        "default": false
+      },
+      "collapse-tags": {
+        "title": "多选时是否将选中值按文字的形式展示",
+        "type": "boolean",
+        "default": false
+      },
+      "default-first-option": {
+        "title": "在输入框按下回车，选择第一个匹配项。需配合 filterable 或 remote 使用",
+        "type": "boolean",
+        "default": false
+      },
+      "disabled": {
+        "title": "是否禁用",
+        "type": "boolean",
+        "default": false
+      },
+      "filterable": {
+        "title": "是否可搜索",
+        "type": "boolean",
+        "default": false
+      },
+      "$$grid-op": {
+        "title": "下拉列表嵌套 Grid 组件时，用来配置 Grid 的数据信息",
+        "type": "object",
+        "default": ""
+      },
+      "loading": {
+        "title": "是否正在从远程获取数据",
+        "type": "boolean",
+        "default": false
+      },
+      "loading-text": {
+        "title": "远程加载时显示的文字",
+        "type": "string",
+        "default": "加载中"
+      },
+      "multiple": {
+        "title": "是否多选",
+        "type": "boolean",
+        "default": false
+      },
+      "multiple-limit": {
+        "title": "多选时用户最多可以选择的项目数，为 0 则不限制",
+        "type": "number",
+        "default": 0
+      },
+      "name": {
+        "title": "select input 的 name 属性",
+        "type": "string",
+        "default": ""
+      },
+      "no-data-text": {
+        "title": "选项为空时显示的文字，也可以使用slot= 'empty' 设置",
+        "type": "string",
+        "default": "无数据"
+      },
+      "no-match-text": {
+        "title": "搜索条件无匹配时显示的文字，也可以使用slot= 'empty' 设置",
+        "type": "string",
+        "default": "无匹配数据"
+      },
+      "$$options": {
+        "title": "配置 Select 数据项，使用后不需要再配置 aui-option",
+        "type": "array",
+        "default": ""
+      },
+      "placeholder": {
+        "title": "占位符",
+        "type": "string",
+        "default": "请选择"
+      },
+      "placement": {
+        "title": "tip 相对于创建 tip 的 dom 节点的位置",
+        "type": "string",
+        "enum": [
+          "top",
+          "top-start",
+          "top-end",
+          "bottom",
+          "bottom-start",
+          "bottom-end",
+          "left",
+          "left-start",
+          "left-end",
+          "right",
+          "right-start",
+          "right-end"
+        ],
+        "enumNames": ["上边", "上左", "上右", "下边", "下左", "下右", "左边", "左上", "左下", "右边", "右上", "右下"],
+        "default": "bottom-start"
+      },
+      "popper-append-to-body": {
+        "title": "是否将弹出框插入至 body 元素。在弹出框的定位出现问题时，可将该属性设置为 false",
+        "type": "boolean",
+        "default": true
+      },
+      "$$popper-class": {
+        "title": "Select 下拉框的类名",
+        "type": "string",
+        "default": ""
+      },
+      "remote": {
+        "title": "是否为远程搜索",
+        "type": "boolean",
+        "default": false
+      },
+      "render-type": {
+        "title": "设置下拉列表嵌套 Grid 或 Tree 时的组件类型",
+        "type": "string",
+        "default": ""
+      },
+      "reserve-keyword": {
+        "title": "多选且可搜索时，是否在选中一个选项后保留当前的搜索关键词",
+        "type": "boolean",
+        "default": false
+      },
+      "show-alloption": {
+        "title": "是否展示 `全选` 选项",
+        "type": "boolean",
+        "default": true
+      },
+      "size": {
+        "title": "输入框尺寸",
+        "type": "string",
+        "enum": ["medium", "small", "mini"],
+        "enumNames": ["中等尺寸", "较小尺寸", "迷你尺寸"],
+        "default": ""
+      },
+      "tag-selectable": {
+        "title": "下拉框内选中项支持复制功能",
+        "type": "string",
+        "default": ""
+      },
+      "text-field": {
+        "title": "设置下拉框的文本对应的数据源的字段名称",
+        "type": "string",
+        "default": "label"
+      },
+      "$$tree-op": {
+        "title": "下拉列表嵌套 Tree 组件时，用来配置 Tree 的数据信息",
+        "type": "object",
+        "default": ""
+      },
+      "value": {
+        "title": "绑定值",
+        "type": ["string", "boolean"],
+        "default": ""
+      },
+      "$$value": {
+        "title": "绑定值",
+        "type": "number"
+      },
+      "value-field": {
+        "title": "设置下拉框的值所对应数据源的字段名称,下拉框的值用于提交到服务器",
+        "type": "string",
+        "default": "value"
+      },
+      "value-key": {
+        "title": "作为 value 唯一标识的键名，绑定值为对象类型时必填",
+        "type": "string",
+        "default": "value"
+      },
+      "#default": {
+        "title": "Option 组件列表插槽",
+        "type": "string"
+      },
+      "#empty": {
+        "title": "无选项时的列表插槽",
+        "type": "string"
+      },
+      "#prefix": {
+        "title": "Select 组件头部内容插槽",
+        "type": "string"
+      }
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "closeable": {
+        "title": "是否可关闭",
+        "type": "boolean"
+      },
+      "color": {
+        "title": "背景色",
+        "type": "string",
+        "default": ""
+      },
+      "disable-transitions": {
+        "title": "是否禁用渐变动画",
+        "type": "boolean",
+        "default": false
+      },
+      "effect": {
+        "title": "主题",
+        "type": "string",
+        "enum": ["dark", "light", "plain"],
+        "enumNames": ["暗色", "亮色", "朴素色"],
+        "default": "light"
+      },
+      "hit": {
+        "title": "是否有边框描边",
+        "type": "boolean",
+        "default": false
+      },
+      "size": {
+        "title": "尺寸",
+        "type": "string",
+        "enum": ["medium", "small", "mini"],
+        "enumNames": ["中等尺寸", "较小尺寸", "迷你尺寸"],
+        "default": ""
+      },
+      "type": {
+        "title": "类型",
+        "type": "string",
+        "enum": ["success", "info", "warning", "danger"],
+        "enumNames": ["成功类型", "信息类型", "警告类型", "危险类型"],
+        "default": ""
+      },
+      "#default": {
+        "title": "标签内容插槽",
+        "type": "string"
+      }
+    }
+  }
+}
