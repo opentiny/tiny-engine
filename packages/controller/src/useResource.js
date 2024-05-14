@@ -137,7 +137,7 @@ const registerBlock = async (data, notFetchResouce) => {
     return block
   } else {
     if (!blockResource.get(label)) {
-      const { addScript, addStyle } = useCanvas().renderer.value
+      const { addScript, addStyle } = useCanvas().canvasApi.value
       const promises = scripts
         .filter((item) => item.includes('umd.js'))
         .map(addScript)
@@ -372,7 +372,7 @@ const fetchResource = async ({ isInit = true } = {}) => {
   const { id, type } = useEditorInfo().useInfo()
   useApp().appInfoState.selectedId = id
 
-  const Builtin = window.Builtin
+  const { Builtin } = useCanvas().canvasApi.value
   Builtin.data.materials.components[0].children.map(registerComponent)
   BuiltinComponentMaterials.components[0].children.map(registerComponent)
 
@@ -452,7 +452,7 @@ const updateCanvasDependencies = (blocks) => {
     getBlockDeps(block.content.dependencies)
   })
 
-  useCanvas().renderer.value?.canvasDispatch('updateDependencies', { detail: resState.thirdPartyDeps })
+  useCanvas().canvasApi.value?.canvasDispatch('updateDependencies', { detail: resState.thirdPartyDeps })
 }
 
 export default function () {

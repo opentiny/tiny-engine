@@ -68,7 +68,8 @@ export default {
     .tiny-tabs__content {
       flex: 1;
       overflow-y: scroll;
-      padding-top: 0;
+      padding: 0;
+      margin-top: 0;
     }
     .tiny-tabs__item {
       color: var(--ti-lowcode-setting-panel-tabs-item-title-color);

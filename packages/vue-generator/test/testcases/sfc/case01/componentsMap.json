@@ -1,0 +1,70 @@
+[
+  {
+    "componentName": "TinyButton",
+    "exportName": "Button",
+    "package": "@opentiny/vue",
+    "version": "^3.10.0",
+    "destructuring": true
+  },
+  {
+    "componentName": "TinyForm",
+    "exportName": "Form",
+    "package": "@opentiny/vue",
+    "version": "^3.10.0",
+    "destructuring": true
+  },
+  {
+    "componentName": "TinyFormItem",
+    "exportName": "FormItem",
+    "package": "@opentiny/vue",
+    "version": "^3.10.0",
+    "destructuring": true
+  },
+  {
+    "componentName": "TinyGrid",
+    "exportName": "Grid",
+    "package": "@opentiny/vue",
+    "version": "^3.10.0",
+    "destructuring": true
+  },
+  {
+    "componentName": "TinyInput",
+    "exportName": "Input",
+    "package": "@opentiny/vue",
+    "version": "^3.10.0",
+    "destructuring": true
+  },
+  {
+    "componentName": "TinySelect",
+    "exportName": "Select",
+    "package": "@opentiny/vue",
+    "version": "^3.10.0",
+    "destructuring": true
+  },
+  {
+    "componentName": "TinySwitch",
+    "exportName": "Switch",
+    "package": "@opentiny/vue",
+    "version": "^3.10.0",
+    "destructuring": true
+  },
+  {
+    "componentName": "Img",
+    "exportName": "",
+    "package": "",
+    "version": "1.0.0",
+    "destructuring": true
+  },
+  {
+    "componentName": "FormTable",
+    "main": "./views"
+  },
+  {
+    "componentName": "ImageTitle",
+    "main": "./components"
+  },
+  {
+    "componentName": "CrmQuoteListGridStatus",
+    "main": "./views/crm/quote-list"
+  }
+]

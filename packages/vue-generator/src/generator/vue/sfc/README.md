@@ -1,0 +1,2 @@
+# vue sfc code generator
+

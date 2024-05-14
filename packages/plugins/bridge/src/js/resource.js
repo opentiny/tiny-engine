@@ -11,9 +11,8 @@
  */
 
 import { reactive } from 'vue'
-import { useApp, useResource, useNotify } from '@opentiny/tiny-engine-controller'
+import { useApp, useResource, useNotify, useCanvas } from '@opentiny/tiny-engine-controller'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
-import { updateUtils, deleteUtils } from '@opentiny/tiny-engine-canvas'
 import {
   fetchResourceList,
   requestDeleteReSource,
@@ -175,6 +174,8 @@ const generateBridgeUtil = (...args) => {
 }
 
 export const saveResource = (data, callback, emit) => {
+  const { updateUtils } = useCanvas().canvasApi.value
+
   if (getActionType() === ACTION_TYPE.Edit) {
     data.id = state.resource.id
     requestUpdateReSource(data).then((result) => {
@@ -218,6 +219,8 @@ export const saveResource = (data, callback, emit) => {
 
 export const deleteData = (name, callback, emit) => {
   const params = `app=${useApp().appInfoState.selectedId}&id=${state.resource?.id}`
+  const { deleteUtils } = useCanvas().canvasApi.value
+
   requestDeleteReSource(params).then((data) => {
     if (data) {
       const index = useResource().resState[state.type].findIndex((item) => item.name === data.name)

@@ -1,0 +1,30 @@
+[
+  {
+    "componentName": "TinyForm",
+    "exportName": "Form",
+    "package": "@opentiny/vue",
+    "version": "^3.10.0",
+    "destructuring": true
+  },
+  {
+    "componentName": "TinyFormItem",
+    "exportName": "FormItem",
+    "package": "@opentiny/vue",
+    "version": "^3.10.0",
+    "destructuring": true
+  },
+  {
+    "componentName": "TinyButton",
+    "exportName": "Button",
+    "package": "@opentiny/vue",
+    "version": "^3.10.0",
+    "destructuring": true
+  },
+  {
+    "componentName": "TinyInput",
+    "exportName": "Input",
+    "package": "@opentiny/vue",
+    "version": "^3.10.0",
+    "destructuring": true
+  }
+]

@@ -1,3 +1,5 @@
 packages:
   - 'packages/**'
   - 'mockServer'
+  # 忽略测试文件夹中的 project
+  - '!packages/**/test/**'

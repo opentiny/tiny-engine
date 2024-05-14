@@ -1,0 +1,632 @@
+{
+  "list": [
+    {
+      "id": 132,
+      "name": "getAllComponent",
+      "data": [],
+      "type": "array"
+    },
+    {
+      "id": 133,
+      "name": "getAllList",
+      "columns": [
+        {
+          "name": "test",
+          "title": "测试",
+          "field": "test",
+          "type": "string",
+          "format": {}
+        },
+        {
+          "name": "test1",
+          "title": "测试1",
+          "field": "test1",
+          "type": "string",
+          "format": {}
+        }
+      ],
+      "type": "array",
+      "data": [
+        {
+          "test": "test1",
+          "test1": "test1",
+          "_id": "341efc48"
+        },
+        {
+          "test": "test2",
+          "test1": "test1",
+          "_id": "b86b516c"
+        },
+        {
+          "test": "test3",
+          "test1": "test1",
+          "_id": "f680cd78"
+        }
+      ],
+      "options": {
+        "uri": "",
+        "method": "GET"
+      },
+      "dataHandler": {
+        "type": "JSFunction",
+        "value": "function dataHandler(data) { \n return data \n}"
+      },
+      "willFetch": {
+        "type": "JSFunction",
+        "value": "function willFetch(option) {\n  return option \n}"
+      },
+      "shouldFetch": {
+        "type": "JSFunction",
+        "value": "function shouldFetch(option) {\n  return true \n}"
+      },
+      "errorHandler": {
+        "type": "JSFunction",
+        "value": "function errorHandler(err) {}"
+      }
+    },
+    {
+      "id": 135,
+      "name": "getAllMaterialList",
+      "columns": [
+        {
+          "name": "id",
+          "title": "id",
+          "field": "id",
+          "type": "string",
+          "format": {}
+        },
+        {
+          "name": "name",
+          "title": "name",
+          "field": "name",
+          "type": "string",
+          "format": {}
+        },
+        {
+          "name": "framework",
+          "title": "framework",
+          "field": "framework",
+          "type": "string",
+          "format": {
+            "required": true
+          }
+        },
+        {
+          "name": "components",
+          "title": "components",
+          "field": "components",
+          "type": "string",
+          "format": {}
+        },
+        {
+          "name": "content",
+          "title": "content",
+          "field": "content",
+          "type": "string",
+          "format": {}
+        },
+        {
+          "name": "url",
+          "title": "url",
+          "field": "url",
+          "type": "string",
+          "format": {}
+        },
+        {
+          "name": "published_at",
+          "title": "published_at",
+          "field": "published_at",
+          "type": "string",
+          "format": {}
+        },
+        {
+          "name": "created_at",
+          "title": "created_at",
+          "field": "created_at",
+          "type": "string",
+          "format": {}
+        },
+        {
+          "name": "updated_at",
+          "title": "updated_at",
+          "field": "updated_at",
+          "type": "string",
+          "format": {}
+        },
+        {
+          "name": "published",
+          "title": "published",
+          "field": "published",
+          "type": "string",
+          "format": {}
+        },
+        {
+          "name": "last_build_info",
+          "title": "last_build_info",
+          "field": "last_build_info",
+          "type": "string",
+          "format": {}
+        },
+        {
+          "name": "tenant",
+          "title": "tenant",
+          "field": "tenant",
+          "type": "string",
+          "format": {}
+        },
+        {
+          "name": "version",
+          "title": "version",
+          "field": "version",
+          "type": "string",
+          "format": {}
+        },
+        {
+          "name": "description",
+          "title": "description",
+          "field": "description",
+          "type": "string",
+          "format": {}
+        }
+      ],
+      "type": "array",
+      "data": [
+        {
+          "id": "f37123ec",
+          "url": "",
+          "name": "ng-material",
+          "tenant": "",
+          "content": "",
+          "version": "1.0.0",
+          "framework": "Angular",
+          "published": "",
+          "components": "",
+          "created_at": "2021-11-02T11:32:22.000Z",
+          "updated_at": "2021-11-02T11:32:22.000Z",
+          "description": "angular组件库物料",
+          "published_at": "2021-11-02T11:32:22.000Z",
+          "last_build_info": "",
+          "_id": "2a23e653"
+        },
+        {
+          "id": "f37123ec",
+          "url": "",
+          "name": "ng-material",
+          "tenant": "",
+          "content": "",
+          "version": "1.0.0",
+          "framework": "Angular",
+          "published": "",
+          "components": "",
+          "created_at": "2021-11-02T11:32:22.000Z",
+          "updated_at": "2021-11-02T11:32:22.000Z",
+          "description": "angular组件库物料",
+          "published_at": "2021-11-02T11:32:22.000Z",
+          "last_build_info": "",
+          "_id": "06b253be"
+        },
+        {
+          "id": "f37123ec",
+          "url": "",
+          "name": "ng-material",
+          "tenant": "",
+          "content": "",
+          "version": "1.0.0",
+          "framework": "Angular",
+          "published": "",
+          "components": "",
+          "created_at": "2021-11-02T11:32:22.000Z",
+          "updated_at": "2021-11-02T11:32:22.000Z",
+          "description": "angular组件库物料",
+          "published_at": "2021-11-02T11:32:22.000Z",
+          "last_build_info": "",
+          "_id": "c55a41ed"
+        },
+        {
+          "id": "f37123ec",
+          "url": "",
+          "name": "ng-material",
+          "tenant": "",
+          "content": "",
+          "version": "1.0.0",
+          "framework": "Angular",
+          "published": "",
+          "components": "",
+          "created_at": "2021-11-02T11:32:22.000Z",
+          "updated_at": "2021-11-02T11:32:22.000Z",
+          "description": "angular组件库物料",
+          "published_at": "2021-11-02T11:32:22.000Z",
+          "last_build_info": "",
+          "_id": "f37123ec"
+        },
+        {
+          "id": "7a63c1a2",
+          "url": "",
+          "name": "tiny-vue",
+          "tenant": "",
+          "content": "Tiny Vue物料",
+          "version": "1.0.0",
+          "framework": "Vue",
+          "published": "",
+          "components": "",
+          "created_at": "",
+          "updated_at": "",
+          "description": "Tiny Vue物料",
+          "published_at": "",
+          "last_build_info": "",
+          "_id": "7a63c1a2"
+        }
+      ],
+      "options": {
+        "uri": "",
+        "method": "GET"
+      },
+      "willFetch": {
+        "type": "JSFunction",
+        "value": "function willFetch(option) {\n  return option \n}"
+      },
+      "dataHandler": {
+        "type": "JSFunction",
+        "value": "function dataHandler(data) { \n return data \n}"
+      },
+      "shouldFetch": {
+        "type": "JSFunction",
+        "value": "function shouldFetch(option) {\n  return true \n}"
+      },
+      "errorHandler": {
+        "type": "JSFunction",
+        "value": "function errorHandler(err) {}"
+      }
+    },
+    {
+      "id": 139,
+      "name": "treedata",
+      "data": [
+        {
+          "label": "level111",
+          "value": "111",
+          "id": "f6609643",
+          "pid": "",
+          "_RID": "row_4"
+        },
+        {
+          "label": "level1-son",
+          "value": "111-1",
+          "id": "af1f937f",
+          "pid": "f6609643",
+          "_RID": "row_5"
+        },
+        {
+          "label": "level222",
+          "value": "222",
+          "id": "28e3709c",
+          "pid": "",
+          "_RID": "row_6"
+        },
+        {
+          "label": "level2-son",
+          "value": "222-1",
+          "id": "6b571bef",
+          "pid": "28e3709c",
+          "_RID": "row_5"
+        },
+        {
+          "id": "6317c2cc",
+          "pid": "fdfa",
+          "label": "fsdfaa",
+          "value": "fsadf",
+          "_RID": "row_6"
+        },
+        {
+          "id": "9cce369f",
+          "pid": "test",
+          "label": "test1",
+          "value": "001"
+        }
+      ],
+      "type": "tree"
+    },
+    {
+      "id": 150,
+      "name": "componentList",
+      "data": [
+        {
+          "_RID": "row_1",
+          "name": "表单",
+          "isSelected": "true",
+          "description": "由按钮、输入框、选择器、单选框、多选框等控件组成，用以收集、校验、提交数据"
+        },
+        {
+          "name": "按钮",
+          "isSelected": "false",
+          "description": "常用的操作按钮，提供包括默认按钮、图标按钮、图片按钮、下拉按钮等类型"
+        },
+        {
+          "id": "490f8a00",
+          "_RID": "row_3",
+          "name": "表单项",
+          "framework": "",
+          "materials": "",
+          "description": "Form 组件下的 FormItem 配置"
+        },
+        {
+          "id": "c259b8b3",
+          "_RID": "row_4",
+          "name": "开关",
+          "framework": "",
+          "materials": "",
+          "description": "关闭或打开"
+        },
+        {
+          "id": "083ed9c7",
+          "_RID": "row_5",
+          "name": "互斥按钮组",
+          "framework": "",
+          "materials": "",
+          "description": "以按钮组的方式出现，常用于多项类似操作"
+        },
+        {
+          "id": "09136cea",
+          "_RID": "row_6",
+          "name": "提示框",
+          "framework": "",
+          "materials": "",
+          "description": "Popover可通过对一个触发源操作触发弹出框,支持自定义弹出内容，延迟触发和渐变动画"
+        },
+        {
+          "id": "a63b57d5",
+          "_RID": "row_7",
+          "name": "文字提示框",
+          "framework": "",
+          "materials": "",
+          "description": "动态显示提示信息，一般通过鼠标事件进行响应；提供 warning、error、info、success 四种类型显示不同类别的信"
+        },
+        {
+          "id": "a0f6e8a3",
+          "_RID": "row_8",
+          "name": "树",
+          "framework": "",
+          "materials": "",
+          "description": "可进行展示有父子层级的数据，支持选择，异步加载等功能。但不推荐用它来展示菜单，展示菜单推荐使用树菜单"
+        },
+        {
+          "id": "d1aa18fc",
+          "_RID": "row_9",
+          "name": "分页",
+          "framework": "",
+          "materials": "",
+          "description": "当数据量过多时，使用分页分解数据，常用于 Grid 和 Repeater 组件"
+        },
+        {
+          "id": "ca49cc52",
+          "_RID": "row_10",
+          "name": "表格",
+          "framework": "",
+          "materials": "",
+          "description": "提供了非常强大数据表格功能，可以展示数据列表，可以对数据列表进行选择、编辑等"
+        },
+        {
+          "id": "4e20ecc9",
+          "name": "搜索框",
+          "framework": "",
+          "materials": "",
+          "description": "指定条件对象进行搜索数据"
+        },
+        {
+          "id": "6b093ee5",
+          "name": "折叠面板",
+          "framework": "",
+          "materials": "",
+          "description": "内容区可指定动态页面或自定义 html 等，支持展开收起操作"
+        },
+        {
+          "id": "0a09abc0",
+          "name": "对话框",
+          "framework": "",
+          "materials": "",
+          "description": "模态对话框，在浮层中显示，引导用户进行相关操作"
+        },
+        {
+          "id": "f814b901",
+          "name": "标签页签项",
+          "framework": "",
+          "materials": "",
+          "description": "tab页签"
+        },
+        {
+          "id": "c5ae797c",
+          "name": "单选",
+          "framework": "",
+          "materials": "",
+          "description": "用于配置不同场景的选项，在一组备选项中进行单选"
+        },
+        {
+          "id": "33d0c590",
+          "_RID": "row_13",
+          "name": "弹出编辑",
+          "framework": "",
+          "materials": "",
+          "description": "该组件只能在弹出的面板中选择数据，不能手动输入数据；弹出面板中显示为 Tree 组件或者 Grid 组件"
+        },
+        {
+          "id": "16711dfa",
+          "_RID": "row_14",
+          "name": "下拉框",
+          "framework": "",
+          "materials": "",
+          "description": "Select 选择器是一种通过点击弹出下拉列表展示数据并进行选择的 UI 组件"
+        },
+        {
+          "id": "a9fd190a",
+          "_RID": "row_15",
+          "name": "折叠面板项",
+          "framework": "",
+          "materials": "",
+          "description": "内容区可指定动态页面或自定义 html 等，支持展开收起操作"
+        },
+        {
+          "id": "a7dfa9ec",
+          "_RID": "row_16",
+          "name": "复选框",
+          "framework": "",
+          "materials": "",
+          "description": "用于配置不同场景的选项，提供用户可在一组选项中进行多选"
+        },
+        {
+          "id": "d4bb8330",
+          "name": "输入框",
+          "framework": "",
+          "materials": "",
+          "description": "通过鼠标或键盘输入字符"
+        },
+        {
+          "id": "ced3dc83",
+          "name": "时间线",
+          "framework": "",
+          "materials": "",
+          "description": "时间线"
+        }
+      ],
+      "type": "array",
+      "columns": [
+        {
+          "name": "name",
+          "type": "string",
+          "field": "name",
+          "title": "name",
+          "format": {
+            "max": 0,
+            "min": 0,
+            "dateTime": false,
+            "required": false,
+            "stringType": ""
+          }
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "field": "description",
+          "title": "description",
+          "format": {
+            "max": 0,
+            "min": 0,
+            "dateTime": false,
+            "required": false,
+            "stringType": ""
+          }
+        },
+        {
+          "name": "isSelected",
+          "type": "string",
+          "field": "isSelected",
+          "title": "isSelected",
+          "format": {
+            "max": 0,
+            "min": 0,
+            "dateTime": false,
+            "required": false,
+            "stringType": ""
+          }
+        }
+      ],
+      "options": {
+        "uri": "http://localhost:9090/assets/json/bundle.json",
+        "method": "GET"
+      },
+      "willFetch": {
+        "type": "JSFunction",
+        "value": "function willFetch(option) {\n  return option \n}"
+      },
+      "dataHandler": {
+        "type": "JSFunction",
+        "value": "function dataHandler(data) { \n return data \n}"
+      },
+      "shouldFetch": {
+        "type": "JSFunction",
+        "value": "function shouldFetch(option) {\n  return true \n}"
+      },
+      "errorHandler": {
+        "type": "JSFunction",
+        "value": "function errorHandler(err) {}"
+      }
+    },
+    {
+      "id": 151,
+      "name": "selectedComponents",
+      "columns": [
+        {
+          "name": "name",
+          "title": "name",
+          "field": "name",
+          "type": "string",
+          "format": {
+            "required": false,
+            "stringType": "",
+            "min": 0,
+            "max": 0,
+            "dateTime": false
+          }
+        },
+        {
+          "name": "description",
+          "title": "description",
+          "field": "description",
+          "type": "string",
+          "format": {
+            "required": false,
+            "stringType": "",
+            "min": 0,
+            "max": 0,
+            "dateTime": false
+          }
+        },
+        {
+          "name": "isSelected",
+          "title": "isSelected",
+          "field": "isSelected",
+          "type": "string",
+          "format": {
+            "required": false,
+            "stringType": "",
+            "min": 0,
+            "max": 0,
+            "dateTime": false
+          }
+        }
+      ],
+      "type": "array",
+      "data": [
+        {
+          "name": "标签页",
+          "description": "分隔内容上有关联但属于不同类别的数据集合",
+          "isSelected": "true",
+          "_RID": "row_2"
+        },
+        {
+          "name": "布局列",
+          "description": "列配置信息",
+          "isSelected": "true",
+          "id": "76a7080a",
+          "_RID": "row_4"
+        },
+        {
+          "name": "日期选择器",
+          "description": "用于设置/选择日期，包括年月/年月日/年月日时分/年月日时分秒日期格式",
+          "isSelected": "true",
+          "id": "76b20d73",
+          "_RID": "row_1"
+        },
+        {
+          "name": "走马灯",
+          "description": "常用于一组图片或卡片轮播，当内容空间不足时，可以用走马灯的形式进行收纳，进行轮播展现",
+          "isSelected": "true",
+          "id": "4c884c3d"
+        }
+      ]
+    }
+  ],
+  "dataHandler": {
+    "type": "JSFunction",
+    "value": "function dataHanlder(res){\n return res;\n}"
+  }
+}

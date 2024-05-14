@@ -25,8 +25,7 @@
 <script>
 import { ref, watchEffect, nextTick } from 'vue'
 import { Popover } from '@opentiny/vue'
-import { useProperties, useResource, useModal } from '@opentiny/tiny-engine-controller'
-import { updateRect } from '@opentiny/tiny-engine-canvas'
+import { useProperties, useResource, useModal, useCanvas } from '@opentiny/tiny-engine-controller'
 import { iconHelpCircle } from '@opentiny/vue-icon'
 
 export default {
@@ -121,7 +120,7 @@ export default {
         })
       }
 
-      updateRect()
+      useCanvas().canvasApi.value.updateRect()
     }
 
     return {

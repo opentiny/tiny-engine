@@ -26,8 +26,7 @@
   "dependencies": {
     "@opentiny/tiny-engine-canvas": "workspace:*",
     "@opentiny/tiny-engine-common": "workspace:*",
-    "@opentiny/tiny-engine-controller": "workspace:*",
-    "@opentiny/vue": "~3.10.0"
+    "@opentiny/tiny-engine-controller": "workspace:*"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
@@ -35,6 +34,7 @@
     "vite": "^4.3.7"
   },
   "peerDependencies": {
+    "@opentiny/vue": "^3.14.0",
     "vue": "^3.4.15"
   }
 }
