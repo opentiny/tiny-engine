@@ -13020,10 +13020,10 @@
           "devMode": "proCode",
           "npm": {
             "package": "tiny-echarts",
-            "version": "0.0.30",
+            "version": "0.0.31",
             "dependencies": null,
             "exportName": "TinyEcharts",
-            "script": "https://npm.onmicrosoft.cn/tiny-echarts@0.0.30/dist/index.js",
+            "script": "https://npm.onmicrosoft.cn/tiny-echarts@0.0.31/dist/index.js",
             "css": ""
           },
           "group": "component",
