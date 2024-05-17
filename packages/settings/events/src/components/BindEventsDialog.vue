@@ -352,8 +352,8 @@ export default {
       saveMethod?.({
         name: state.bindMethodInfo.name,
         content: state.enableExtraParams
-          ? `function (eventArgs,${formatParams}) ${functionBody}`
-          : `function (${formatParams})  ${functionBody}`
+          ? `function ${state.bindMethodInfo.name}(eventArgs,${formatParams}) ${functionBody}`
+          : `function ${state.bindMethodInfo.name}(${formatParams})  ${functionBody}`
       })
 
       activePagePlugin()
