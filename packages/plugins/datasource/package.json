@@ -30,7 +30,7 @@
     "@opentiny/tiny-engine-http": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
     "@vue/shared": "^3.3.4",
-    "axios": "^0.27.2",
+    "axios": "~0.28.0",
     "vue-clipboard3": "^2.0.0",
     "xlsx": "^0.18.5"
   },
