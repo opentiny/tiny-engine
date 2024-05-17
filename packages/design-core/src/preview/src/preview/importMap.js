@@ -19,9 +19,15 @@ import { VITE_CDN_DOMAIN } from '@opentiny/tiny-engine-controller/js/environment
 const importMap = {}
 
 const opentinyVueVersion = '~3.14'
+const versionDelimiter = import.meta.env.VITE_CDN_TYPE === 'npmmirror' ? '/' : '@'
+const fileDelimiter = import.meta.env.VITE_CDN_TYPE === 'npmmirror' ? '/files' : ''
 
 function replacePlaceholder(v) {
-  return v.replace('${VITE_CDN_DOMAIN}', VITE_CDN_DOMAIN).replace('${opentinyVueVersion}', opentinyVueVersion)
+  return v
+    .replace('${VITE_CDN_DOMAIN}', VITE_CDN_DOMAIN)
+    .replace('${opentinyVueVersion}', opentinyVueVersion)
+    .replace('${versionDelimiter}', versionDelimiter)
+    .replace('${fileDelimiter}', fileDelimiter)
 }
 
 importMap.imports = {
