@@ -50,7 +50,6 @@ import {
   updateRect,
   getElement,
   dragStart,
-  getOffset,
   selectNode,
   initCanvas,
   clearLineState,
@@ -101,7 +100,7 @@ export default {
 
         // 如果是点击右键则打开右键菜单
         if (event.button === 2) {
-          openMenu(getOffset(event.target), event)
+          openMenu(event)
         }
       }
     }

@@ -1,6 +1,6 @@
 <template>
   <div id="canvas-wrap" ref="canvasRef">
-    <div ref="siteCanvas" class="site-canvas">
+    <div ref="siteCanvas" class="site-canvas" :style="siteCanvasStyle">
       <canvas-container
         :controller="controller"
         :materials-panel="materialsPanel"
@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { ref, watch, onUnmounted } from 'vue'
+import { ref, watch, computed, onUnmounted } from 'vue'
 import { CanvasContainer, CanvasFooter } from '@opentiny/tiny-engine-canvas'
 import {
   useProperties,
@@ -59,6 +59,14 @@ export default {
       pageState.currentSchema = {}
       pageState.properties = null
     }
+
+    const siteCanvasStyle = computed(() => {
+      const { scale } = useLayout().getDimension()
+      return {
+        height: `calc((100% - var(--base-bottom-panel-height, 30px) - 36px) / ${scale})`,
+        transform: `scale(${scale})`
+      }
+    })
 
     watch(
       [() => useCanvas().isSaved(), () => useLayout().layoutState.pageStatus, () => useCanvas().getPageSchema()],
@@ -180,6 +188,7 @@ export default {
         request: useHttp(),
         ast
       },
+      siteCanvasStyle,
       canvasRef
     }
   }
@@ -196,11 +205,11 @@ export default {
   position: relative;
 
   .site-canvas {
-    height: calc(100% - var(--base-bottom-panel-height, 30px) - 36px);
     background: var(--ti-lowcode-breadcrumb-hover-bg);
     position: absolute;
     overflow: hidden;
     margin: 18px 0;
+    transform-origin: top;
   }
 }
 </style>

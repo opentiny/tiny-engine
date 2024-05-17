@@ -8,6 +8,7 @@
 
 <script>
 import { reactive, watch } from 'vue'
+import { useLayout } from '@opentiny/tiny-engine-controller'
 import { getCurrent, updateRect, selectState, querySelectById } from './container'
 
 export default {
@@ -38,12 +39,17 @@ export default {
     }
 
     const handleResize = (event, type) => {
-      let { clientX, clientY } = event
+      if (!props.iframe) {
+        return
+      }
 
-      if (type === 'iframe' && props.iframe) {
-        const iframeRect = props.iframe.getBoundingClientRect()
-        clientX += iframeRect.left
-        clientY += iframeRect.top
+      let { clientX, clientY } = event
+      const iframeRect = props.iframe.getBoundingClientRect()
+      const scale = useLayout().getScale()
+
+      if (type !== 'iframe') {
+        clientX = (clientX - iframeRect.left) / scale
+        clientY = (clientY - iframeRect.top) / scale
       }
 
       const { parent, schema } = getCurrent()
@@ -65,14 +71,9 @@ export default {
         const parentWidth = parseInt(window.getComputedStyle(parentDomNode).width, 10)
 
         // 最大宽度不能大于父组件宽度
-        if (newWidth >= parentWidth) {
-          newWidth = parentWidth
-        }
-
+        newWidth = Math.min(newWidth, parentWidth)
         // 最小宽度32
-        if (newWidth <= 32) {
-          newWidth = 32
-        }
+        newWidth = Math.max(newWidth, 32)
 
         schema.props.flexBasis = `${newWidth}px`
         schema.props.widthType = 'fixed'
@@ -186,7 +187,7 @@ export default {
 
 <style lang="less" scoped>
 .resize-border {
-  position: fixed;
+  position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;

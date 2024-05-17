@@ -17,13 +17,12 @@ import { canvasState } from './container'
 export default {
   setup() {
     const sizeStyle = computed(() => {
-      const { width, maxWidth, minWidth, scale } = useLayout().getDimension()
+      const { width, height, maxWidth, minWidth } = useLayout().getDimension()
       return {
         width,
+        height,
         maxWidth,
-        minWidth,
-        height: `${100 / scale}%`,
-        transform: `scale(${scale}) translateY(-${(100 / scale - 100) / 2}%)`
+        minWidth
       }
     })
 
