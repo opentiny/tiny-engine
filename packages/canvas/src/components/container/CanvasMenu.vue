@@ -15,7 +15,7 @@
           <span>{{ item.name }}</span>
           <span v-if="item.items"><icon-right></icon-right></span>
         </div>
-        <ul v-if="item.items && current === item" class="sub-menu menu-item">
+        <ul v-if="item.items && current === item" class="sub-menu menu-item" :style="subMenuStyles">
           <template v-for="(subItem, subIndex) in item.items" :key="subIndex">
             <li
               :class="[{ 'menu-item-disabled': subItem.check && !subItem.check?.() }]"
@@ -33,7 +33,7 @@
 
 <script lang="jsx">
 import { ref, reactive, nextTick } from 'vue'
-import { getConfigure, getController, getCurrent, copyNode, removeNodeById } from './container'
+import { canvasState, getConfigure, getController, getCurrent, copyNode, removeNodeById } from './container'
 import { useLayout, useModal, useCanvas } from '@opentiny/tiny-engine-controller'
 import { iconRight } from '@opentiny/vue-icon'
 
@@ -45,27 +45,35 @@ const menuState = reactive({
 
 const current = ref(null)
 const menuDom = ref(null)
+const subMenuStyles = ref(null)
 
 export const closeMenu = () => {
   menuState.show = false
   current.value = null
 }
 
-export const openMenu = (offset, event) => {
-  const { x, y } = offset
-  const { getScale } = useLayout()
+export const openMenu = (event) => {
   menuState.position = {
-    // 位置处于画布右侧边缘时需要调整显示方向 TODO
-    left: event.clientX * getScale() + x + 2 + 'px',
-    top: event.clientY * getScale() + y + 'px'
+    left: event.clientX + 2 + 'px',
+    top: event.clientY + 'px'
   }
   menuState.show = sessionStorage.getItem('pageInfo') ? true : false
 
   nextTick(() => {
     if (menuDom.value) {
-      const { bottom, height, top } = menuDom.value.getBoundingClientRect()
-      if (bottom > document.body?.clientHeight) {
-        menuState.position.top = top - height + 'px'
+      const { right, bottom, width, height } = menuDom.value.getBoundingClientRect()
+      const canvasRect = canvasState.iframe.getBoundingClientRect()
+      if (bottom > canvasRect.bottom) {
+        menuState.position.top = `${parseInt(menuState.position.top) - height}px`
+      }
+      if (right > canvasRect.right) {
+        menuState.position.left = `${parseInt(menuState.position.left) - width - 2}px`
+      }
+      // sub-menu样式width为100px，少于100宽度的空白区域则放置到左侧
+      if (right + 100 < canvasRect.right) {
+        subMenuStyles.value = { right: '-100px' }
+      } else {
+        subMenuStyles.value = { left: '-100px' }
       }
     }
   })
@@ -226,6 +234,7 @@ export default {
       close,
       current,
       menuDom,
+      subMenuStyles,
       actionDisabled,
       onShowChildrenMenu
     }
@@ -235,7 +244,7 @@ export default {
 
 <style lang="less" scoped>
 .context-menu {
-  position: fixed;
+  position: absolute;
   z-index: 10;
 }
 .menu-item {
@@ -276,7 +285,6 @@ export default {
   &.sub-menu {
     width: 100px;
     position: absolute;
-    right: -100px;
     top: -2px;
   }
 }

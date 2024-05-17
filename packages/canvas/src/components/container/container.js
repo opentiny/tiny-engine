@@ -348,16 +348,13 @@ const setSelectRect = (element) => {
   element = element || getDocument().body
 
   const { left, height, top, width } = getRect(element)
-  const { x, y } = getOffset(element)
-  const siteCanvasRect = document.querySelector('.site-canvas').getBoundingClientRect()
   const componentName = getCurrent().schema?.componentName || ''
-  const scale = useLayout().getScale()
   clearHover()
   Object.assign(selectState, {
-    width: width * scale,
-    height: height * scale,
-    top: top * scale + y - siteCanvasRect.y,
-    left: left * scale + x - siteCanvasRect.x,
+    width,
+    height,
+    top,
+    left,
     componentName,
     doc: getDocument()
   })
@@ -481,9 +478,6 @@ const setHoverRect = (element, data) => {
   const configure = getConfigure(componentName)
   const rect = getRect(element)
   const { left, height, top, width } = rect
-  const { x, y } = getOffset(element)
-  const siteCanvasRect = document.querySelector('.site-canvas').getBoundingClientRect()
-  const scale = useLayout().getScale()
 
   hoverState.configure = configure
 
@@ -512,23 +506,22 @@ const setHoverRect = (element, data) => {
     if (childEle) {
       const childRect = getRect(childEle)
       const { left, height, top, width } = childRect
-      const { x, y } = getOffset(childEle)
       const posLine = getPosLine(childRect, lineState.configure)
       Object.assign(lineState, {
-        width: width * scale,
-        height: height * scale,
-        top: top * scale + y - siteCanvasRect.y,
-        left: left * scale + x - siteCanvasRect.x,
+        width,
+        height,
+        top,
+        left,
         position: canvasState.type === 'absolute' || posLine.type,
         forbidden: posLine.forbidden
       })
     } else {
       const posLine = getPosLine(rect, configure)
       Object.assign(lineState, {
-        width: width * scale,
-        height: height * scale,
-        top: top * scale + y - siteCanvasRect.y,
-        left: left * scale + x - siteCanvasRect.x,
+        width,
+        height,
+        top,
+        left,
         position: canvasState.type === 'absolute' || posLine.type,
         forbidden: posLine.forbidden
       })
@@ -539,10 +532,10 @@ const setHoverRect = (element, data) => {
 
   // 设置元素hover状态
   Object.assign(hoverState, {
-    width: width * scale,
-    height: height * scale,
-    top: top * scale + y - siteCanvasRect.y,
-    left: left * scale + x - siteCanvasRect.x,
+    width,
+    height,
+    top,
+    left,
     componentName
   })
   return undefined

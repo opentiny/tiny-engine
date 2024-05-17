@@ -202,7 +202,7 @@ export default {
 
 <style lang="less" scoped>
 .divider-wrapper {
-  position: fixed;
+  position: absolute;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -239,7 +239,7 @@ export default {
 }
 
 .divider-line {
-  position: fixed;
+  position: absolute;
   border: 1px dashed var(--ti-lowcode-common-primary-color);
   z-index: 2;
 }
