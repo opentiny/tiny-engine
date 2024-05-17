@@ -28,13 +28,15 @@
 ### 安装所需的依赖
 
 ```sh
-$ pnpm install
+pnpm install
 ```
 
 ### 本地开发，启动本地 mock 服务器，使用本地 mock 服务器的 mock 数据
 
 ```sh
-$ pnpm dev
+# 启动前我们需要先构建 plugin
+pnpm build:plugin
+pnpm dev
 ```
 
 ### 本地开发，直连本地的tiny-engine-webservice服务端

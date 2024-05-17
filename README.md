@@ -28,13 +28,15 @@ English | [简体中文](README.zh-CN.md)
 ### Dependencies required for installation
 
 ```sh
-$ pnpm install
+pnpm install
 ```
 
 ### Local development: Start the local mock server and use the mock data of the local mock server.
 
 ```sh
-$ pnpm dev
+pnpm dev
+# we need to build plugin before starting
+pnpm build:plugin
 ```
 
 ## Local development, directly connected to the local tiny-engine-webservice server
