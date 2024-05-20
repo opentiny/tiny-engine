@@ -103,7 +103,7 @@ export default {
 
     watchEffect(() => {
       if (!props.options.find((item) => item.value === props.modelValue)) {
-        state.selected = props.options?.[0]?.value || ''
+        state.selected = props.options[0].value || ''
         emit('update:modelValue', state.selected)
       } else {
         state.selected = props.modelValue ?? ''
