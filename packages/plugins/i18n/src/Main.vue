@@ -1,5 +1,8 @@
 <template>
   <plugin-panel title="国际化资源" :isCloseLeft="false" class="plugin-panel-i18n">
+    <template #header>
+      <link-button :href="docsUrl"></link-button>
+    </template>
     <template #content>
       <div class="btn-box">
         <tiny-button @click="openEditor($event, {})">新增词条</tiny-button>
@@ -107,10 +110,7 @@
           </tiny-grid-column>
           <template #empty>
             <div v-if="isLoading" id="empty-loading-box" class="i18n-loading"></div>
-            <div v-else class="empty-wrap">
-              <svg-icon class="empty-icon" name="empty"></svg-icon>
-              <p class="empty-text">暂无数据</p>
-            </div>
+            <search-empty isShow="!isLoading" />
           </template>
         </tiny-grid>
       </div>
@@ -119,15 +119,16 @@
 </template>
 
 <script lang="jsx">
+/* metaService */
 import { computed, ref, watchEffect, reactive, onMounted, nextTick, resolveComponent } from 'vue'
 import useClipboard from 'vue-clipboard3'
 import { Grid, GridColumn, Input, Popover, Button, FileUpload, Loading, Tooltip, Select } from '@opentiny/vue'
 import { iconLoadingShadow } from '@opentiny/vue-icon'
-import { PluginPanel } from '@opentiny/tiny-engine-common'
-import { useTranslate, useApp, useModal, getGlobalConfig } from '@opentiny/tiny-engine-controller'
+import { PluginPanel, LinkButton, SearchEmpty } from '@opentiny/tiny-engine-common'
+import { useTranslate, useApp, useModal, getGlobalConfig, useHelp } from '@opentiny/tiny-engine-controller'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { useHttp } from '@opentiny/tiny-engine-http'
-import { BASE_URL } from '@opentiny/tiny-engine-common/js/environments'
+// import { BASE_URL } from '@opentiny/tiny-engine-controller/js/environments'
 
 export default {
   components: {
@@ -138,8 +139,10 @@ export default {
     TinyGrid: Grid,
     TinyGridColumn: GridColumn,
     PluginPanel,
+    LinkButton,
     TinySelect: Select,
-    TinyFileUpload: FileUpload
+    TinyFileUpload: FileUpload,
+    SearchEmpty
   },
   setup() {
     // 组件库iconLoadingShadow图标不能切换颜色，因此不同主题用不同icon
@@ -174,6 +177,7 @@ export default {
         label: '按英文排序'
       }
     ]
+    const docsUrl = useHelp().getDocsUrl('i18n')
     const currentSearchType = ref('')
     const copyTipContent = ref('')
     const searchKey = ref('')
@@ -285,7 +289,7 @@ export default {
     }
 
     const downloadFile = () => {
-      window.open(`${BASE_URL}src/app/public/i18n-mock/i18n-template-for-batch-import.zip`)
+      // window.open(`${BASE_URL}src/app/public/i18n-mock/i18n-template-for-batch-import.zip`)
     }
 
     const openDeletePopover = (row) => {
@@ -418,7 +422,8 @@ export default {
       downloadFile,
       isEditMode,
       editingRow,
-      batchDelete
+      batchDelete,
+      docsUrl
     }
   }
 }
@@ -633,5 +638,10 @@ export default {
   .tiny-button.tiny-button--text {
     color: var(--ti-lowcode-base-text-color);
   }
+}
+:deep(.help-box) {
+  position: absolute;
+  left: 86px;
+  top: 3px;
 }
 </style>

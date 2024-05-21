@@ -10,9 +10,9 @@
  *
  */
 
-import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
+import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
 import { useHttp } from '@opentiny/tiny-engine-http'
-import { generateDataSource } from '@opentiny/tiny-engine-common/js/vscodeGenerateFile'
+import { generateDataSource } from '@opentiny/tiny-engine-controller/js/vscodeGenerateFile'
 
 const http = useHttp()
 

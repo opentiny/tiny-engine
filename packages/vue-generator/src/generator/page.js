@@ -94,6 +94,7 @@ const handleLiteralBinding = ({ key, item, attrsArr, description, state }) => {
   // string 直接静态绑定
   if (typeof item === 'string') return attrsArr.push(`${key}="${item.replace(/"/g, '&quot;')}"`)
 
+  // TODO: 拿到这里的场景 case？
   if (item?.componentName === BUILTIN_COMPONENT_NAME.ICON) {
     const iconName = handleIconInProps(description, item)
 
@@ -158,6 +159,15 @@ function handleBinding(props, attrsArr, description, state) {
         const modelArgs = item.model?.prop ? `:${item.model.prop}` : ''
         return attrsArr.push(`v-model${modelArgs}="${item.value.replace(/this\.(props\.)?/g, '')}"`)
       }
+
+      // 弥补在recurseChildren方法中，当children为undefined，但是该元素的props存在变量绑定的情况，此变量绑定的为
+      // 当前JSResources在props的使用场景为变量绑定，使用范式一般为：this.xxx
+      const pickResourceKeys = item.value?.match(/(?<=this\.)\w+/g) || []
+      const itemObject = Object.fromEntries(pickResourceKeys.map((key) => [key, true]))
+
+      Object.keys(description.jsResource).forEach((jsResourceKey) => {
+        description.jsResource[jsResourceKey] = description.jsResource[jsResourceKey] || itemObject[jsResourceKey]
+      })
 
       // expression 使用 v-bind 绑定
       return attrsArr.push(`:${key}="${item.value.replace(/this\.(props\.)?/g, '')}"`)
@@ -407,7 +417,7 @@ const props = defineProps({${propsArr.join(',\n')}})
 const emit = defineEmits(${JSON.stringify(emitsArr)})
 
 const { t, lowcodeWrap, stores } = vue.inject(I18nInjectionKey).lowcode()
-const wrap = lowcodeWrap(props, { emit }, t)
+const wrap = lowcodeWrap(props, { emit })
 
 ${iconStatement}
 

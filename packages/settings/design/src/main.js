@@ -12,7 +12,7 @@
 
 import { createApp } from 'vue'
 import initSvgs from '@opentiny/tiny-engine-svgs'
-import i18n from '@opentiny/tiny-engine-common/js/i18n'
+import i18n from '@opentiny/tiny-engine-controller/js/i18n'
 import 'virtual:svg-icons-register'
 import App from './App.vue'
 

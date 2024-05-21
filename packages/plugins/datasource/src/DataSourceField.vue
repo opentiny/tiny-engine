@@ -13,16 +13,11 @@
     </span>
     <div class="section">
       <div class="field-list">
-        <!-- 字段列表 -->
-        <data-source-field-list
-          ref="fieldList"
-          v-model="state.fields"
-          @update:modelValue="$emit('update:modelValue', state.fields)"
-        ></data-source-field-list>
         <div v-if="state.showNewFieldForm" class="new-field-form">
           <data-source-field-type @cancel="closeFieldType" @select="selectFieldType"></data-source-field-type>
           <data-source-field-form
             ref="fieldForm"
+            :modelValue="modelValue"
             :field="state.field"
             :editable="true"
             :is-open="false"
@@ -30,6 +25,12 @@
             @save="saveFieldForm"
           ></data-source-field-form>
         </div>
+        <!-- 字段列表 -->
+        <data-source-field-list
+          ref="fieldList"
+          v-model="state.fields"
+          @update:modelValue="$emit('update:modelValue', state.fields)"
+        ></data-source-field-list>
       </div>
     </div>
   </div>
@@ -113,7 +114,7 @@ export default {
 
       if (name && title) {
         field.type = state.field.type
-        state.fields.push(field)
+        state.fields.unshift(field)
         emit('update:modelValue', state.fields)
       }
 

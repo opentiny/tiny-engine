@@ -1,6 +1,7 @@
 <template>
   <plugin-panel :title="title" @close="pluginPanelClosed">
     <template #header>
+      <link-button :href="docsUrl"></link-button>
       <svg-button
         class="add-folder-icon"
         name="add-folder"
@@ -33,9 +34,9 @@
 </template>
 
 <script lang="jsx">
-import { reactive, ref, watchEffect } from 'vue'
-import { useCanvas, useApp, useResource, usePage } from '@opentiny/tiny-engine-controller'
-import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
+import { reactive, ref, watchEffect, provide } from 'vue'
+import { useCanvas, useApp, useResource, usePage, useHelp } from '@opentiny/tiny-engine-controller'
+import { PluginPanel, SvgButton, LinkButton } from '@opentiny/tiny-engine-common'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import PageSetting, { openPageSettingPanel, closePageSettingPanel } from './PageSetting.vue'
 import PageFolderSetting, { openFolderSettingPanel, closeFolderSettingPanel } from './PageFolderSetting.vue'
@@ -59,7 +60,8 @@ export default {
     PluginPanel,
     SvgButton,
     PageFolderSetting,
-    PageTree
+    PageTree,
+    LinkButton
   },
   props: {
     title: {
@@ -74,6 +76,7 @@ export default {
     const { resState } = useResource()
     const pageTreeRef = ref(null)
     const ROOT_ID = pageSettingState.ROOT_ID
+    const docsUrl = useHelp().getDocsUrl('page')
 
     const state = reactive({
       isFolder: false
@@ -129,6 +132,8 @@ export default {
       initCurrentPageData(pageDetail)
     }
 
+    provide('openSettingPanel', openSettingPanel)
+
     const pluginPanelClosed = () => {
       closePageSettingPanel()
       closeFolderSettingPanel()
@@ -148,8 +153,17 @@ export default {
       pluginPanelClosed,
       openSettingPanel,
       createNewFolder,
-      createNewPage
+      createNewPage,
+      docsUrl
     }
   }
 }
 </script>
+
+<style lang="less" scoped>
+:deep(.help-box) {
+  position: absolute;
+  left: 72px;
+  top: 3px;
+}
+</style>

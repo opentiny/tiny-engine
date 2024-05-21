@@ -58,9 +58,9 @@ import { PluginSetting, ButtonGroup, SvgButton, LifeCycles } from '@opentiny/tin
 import { useLayout, usePage, useCanvas, useModal, useApp, useNotify } from '@opentiny/tiny-engine-controller'
 import { extend, isEqual } from '@opentiny/vue-renderless/common/object'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
-import { handlePageUpdate } from '@opentiny/tiny-engine-common/js/http'
-import { generatePage } from '@opentiny/tiny-engine-common/js/vscodeGenerateFile'
+import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
+import { handlePageUpdate } from '@opentiny/tiny-engine-controller/js/http'
+import { generatePage } from '@opentiny/tiny-engine-controller/js/vscodeGenerateFile'
 import PageGeneral from './PageGeneral.vue'
 import PageHistory from './PageHistory.vue'
 import PageInputOutput from './PageInputOutput.vue'
@@ -161,6 +161,11 @@ export default {
         },
         app: appInfoState.selectedId,
         isPage: true
+      }
+
+      if (createParams.id) {
+        delete createParams.id
+        delete createParams._id
       }
 
       requestCreatePage(createParams)

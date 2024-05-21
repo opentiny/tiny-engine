@@ -12,10 +12,9 @@
 
 import { ref, reactive, watchEffect, onActivated, nextTick } from 'vue'
 import { useCanvas, useModal, useNotify } from '@opentiny/tiny-engine-controller'
-import { string2Ast, ast2String, insertName, formatString } from '@opentiny/tiny-engine-common/js/ast'
+import { string2Ast, ast2String, insertName, formatString } from '@opentiny/tiny-engine-controller/js/ast'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { getSchema } from '@opentiny/tiny-engine-canvas'
-import { lint } from '@opentiny/tiny-engine-common/js/linter'
+import { lint } from '@opentiny/tiny-engine-controller/js/linter'
 import { isFunction } from '@opentiny/vue-renderless/grid/static'
 
 const { SCHEMA_DATA_TYPE } = constants
@@ -26,7 +25,8 @@ const state = reactive({
   script: '',
   isChanged: false,
   hasError: false,
-  editorSelection: null
+  editorSelection: null,
+  completionProvider: null
 })
 
 const monaco = ref(null)
@@ -34,7 +34,7 @@ const monaco = ref(null)
 let scriptAst = null
 
 export const getMethods = () => {
-  const pageSchema = getSchema?.() || {}
+  const pageSchema = useCanvas().canvasApi.value.getSchema?.() || {}
 
   pageSchema.methods = pageSchema?.methods || {}
   return pageSchema.methods
@@ -96,7 +96,7 @@ const saveMethods = () => {
 
   const editorContent = monaco.value.getEditor().getValue()
   const ast = string2Ast(editorContent)
-  getSchema().methods = {}
+  useCanvas().canvasApi.value.getSchema().methods = {}
 
   ast.program.body.forEach((declaration, index) => {
     const name = declaration?.id?.name

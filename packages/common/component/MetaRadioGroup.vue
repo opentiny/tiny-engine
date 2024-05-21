@@ -21,7 +21,7 @@
 <script>
 import { ref, watchEffect, computed } from 'vue'
 import { RadioGroup, RadioButton } from '@opentiny/vue'
-import i18n from '../js/i18n'
+import i18n from '@opentiny/tiny-engine-controller/js/i18n'
 
 export default {
   name: 'MetaRadioGroup',

@@ -78,14 +78,13 @@
 <script lang="jsx">
 import { reactive, ref, watchEffect, onBeforeUnmount } from 'vue'
 import { Button, DialogBox, Popover, Search, Alert } from '@opentiny/vue'
-import { getGlobalConfig, useModal, usePage, useNotify } from '@opentiny/tiny-engine-controller'
+import { getGlobalConfig, useModal, usePage, useNotify, useCanvas } from '@opentiny/tiny-engine-controller'
 import { theme } from '@opentiny/tiny-engine-controller/adapter'
-import { getSchema } from '@opentiny/tiny-engine-canvas'
 import MetaListItems from './MetaListItems.vue'
 import { iconYes } from '@opentiny/vue-icon'
 import VueMonaco from './VueMonaco.vue'
-import { initCompletion } from '../js/completion'
-import { initLinter, lint } from '../js/linter'
+import { initCompletion } from '@opentiny/tiny-engine-controller/js/completion'
+import { initLinter, lint } from '@opentiny/tiny-engine-controller/js/linter'
 import { SvgButton } from '../index'
 
 export default {
@@ -125,11 +124,12 @@ export default {
       bindLifeCycles: {},
       editorValue: '{}',
       hasError: false,
-      linterWorker: null
+      linterWorker: null,
+      completionProvider: null
     })
 
     watchEffect(() => {
-      state.bindLifeCycles = props.bindLifeCycles || getSchema()?.lifeCycles || {}
+      state.bindLifeCycles = props.bindLifeCycles || useCanvas().canvasApi.value?.getSchema()?.lifeCycles || {}
     })
 
     const searchLifeCyclesList = (value) => {
@@ -141,7 +141,7 @@ export default {
     }
 
     const syncLifeCycle = () => {
-      const currentSchema = getSchema()
+      const currentSchema = useCanvas().canvasApi.value?.getSchema?.()
       const pageContent = getPageContent()
       const { id, fileName } = pageContent
       if (id === currentSchema.id || fileName === currentSchema.fileName) {
@@ -164,7 +164,8 @@ export default {
 
     const openLifeCyclesPanel = (item) => {
       state.title = item
-      const bindLifeCycleSource = props.bindLifeCycles?.[item] || getSchema().lifeCycles?.[item]
+      const bindLifeCycleSource =
+        props.bindLifeCycles?.[item] || useCanvas().canvasApi.value?.getSchema?.()?.lifeCycles?.[item]
       state.editorValue =
         bindLifeCycleSource?.value ||
         `function ${item} (${item === 'setup' ? '{ props, state, watch, onMounted }' : ''}) {} `
@@ -210,7 +211,7 @@ export default {
         return
       }
       // Lowcode API 提示
-      initCompletion(editorRef.value.getMonaco())
+      state.completionProvider = initCompletion(editorRef.value.getMonaco(), editorRef.value.getEditor()?.getModel())
 
       // 初始化 ESLint worker
       state.linterWorker = initLinter(editor, editorRef.value.getMonaco(), state)
@@ -226,6 +227,9 @@ export default {
     }
 
     onBeforeUnmount(() => {
+      state.completionProvider?.forEach?.((provider) => {
+        provider.dispose()
+      })
       // 终止 ESLint worker
       state.linterWorker?.terminate?.()
     })

@@ -153,7 +153,7 @@ import { useApp, useBlock, useModal } from '@opentiny/tiny-engine-controller'
 import { SvgButton } from '@opentiny/tiny-engine-common'
 import { requestCreateGroup, requestDeleteGroup, fetchGroups, requestUpdateGroup } from './http'
 import { setBlockPanelVisible } from './js/usePanel'
-import { REGEXP_GROUP_NAME } from '@opentiny/tiny-engine-common/js/verification'
+import { REGEXP_GROUP_NAME } from '@opentiny/tiny-engine-controller/js/verification'
 
 export default {
   components: {
@@ -276,7 +276,7 @@ export default {
     }
 
     const handleAddGroup = () => {
-      return
+      state.showCreateGroupForm = true
     }
 
     const handleClickOption = ({ value: { groupId, groupName } }) => {
@@ -402,7 +402,7 @@ export default {
 .blocks-header-wrap {
   display: flex;
   justify-content: space-between;
-  padding: 8px;
+  padding: 0 8px 8px;
 
   .blocks-header-select {
     width: calc(100% - 36px);
@@ -426,7 +426,6 @@ export default {
     }
   }
   .add-group-btn {
-    cursor: not-allowed;
     font-size: 16px;
     width: 32px;
     height: 32px;

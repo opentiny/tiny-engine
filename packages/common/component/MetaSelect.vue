@@ -45,7 +45,7 @@
 <script>
 import { computed, reactive, watchEffect } from 'vue'
 import { Select, Option, OptionGroup, Tooltip } from '@opentiny/vue'
-import i18n from '../js/i18n'
+import i18n from '@opentiny/tiny-engine-controller/js/i18n'
 
 export default {
   components: {

@@ -36,12 +36,12 @@
 </template>
 
 <script lang="jsx">
-import { reactive, ref, watchEffect } from 'vue'
+import { reactive, ref, watchEffect, nextTick } from 'vue'
 import { Search, Tree, Collapse, CollapseItem } from '@opentiny/vue'
 import { IconFolderOpened, IconFolderClosed } from '@opentiny/vue-icon'
 import { useCanvas, useApp, useModal, usePage, useBreadcrumb, useLayout } from '@opentiny/tiny-engine-controller'
 import { isEqual } from '@opentiny/vue-renderless/common/object'
-import { getCanvasStatus } from '@opentiny/tiny-engine-common/js/index'
+import { getCanvasStatus } from '@opentiny/tiny-engine-controller/js/canvas'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { closePageSettingPanel } from './PageSetting.vue'
 import { closeFolderSettingPanel } from './PageFolderSetting.vue'
@@ -79,7 +79,6 @@ export default {
       collapseValue: [STATIC_PAGE_GROUP_ID, COMMON_PAGE_GROUP_ID],
       currentNodeData: {}
     })
-
     const formatTreeData = (data, parentId, id) => {
       const originObj = { [ROOT_ID]: { id: ROOT_ID, name: '站点根目录', children: [] } }
       const treeArr = []
@@ -104,6 +103,16 @@ export default {
       pageSettingState.treeDataMapping = originObj
 
       return pageSettingState.treeDataMapping
+    }
+
+    const searchPageData = (value) => {
+      if (Array.isArray(pageTreeRefs?.value)) {
+        nextTick(() => {
+          pageTreeRefs.value.forEach((item) => {
+            item?.filter(value)
+          })
+        })
+      }
     }
 
     const refreshPageList = async (appId, data) => {
@@ -136,6 +145,7 @@ export default {
       const firstGroupTreeData = formatTreeData([...firstGroupData.data], 'parentId', 'id')
       firstGroupData.data = firstGroupTreeData[ROOT_ID].children
       pageSettingState.pages = [firstGroupData, secondGroupData]
+      searchPageData(state.pageSearchValue)
       return pageSettingState.pages
     }
 
@@ -296,14 +306,6 @@ export default {
         refreshPageList(appInfoState.selectedId)
       }
     })
-
-    const searchPageData = (value) => {
-      if (Array.isArray(pageTreeRefs?.value)) {
-        pageTreeRefs.value.forEach((item) => {
-          item?.filter(value)
-        })
-      }
-    }
 
     const filterPageTreeData = (value, data) => {
       if (!value) return true
@@ -498,13 +500,6 @@ export default {
       margin-left: 12px;
       margin-right: 6px;
     }
-  }
-}
-
-:deep(.tiny-svg, #tiny-engine .tiny-svg) {
-  transform: rotate(270deg);
-  &.is-active {
-    transform: rotate(180deg);
   }
 }
 </style>

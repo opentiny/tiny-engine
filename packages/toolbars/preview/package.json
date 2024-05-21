@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-toolbar-preview",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "publishConfig": {
     "access": "public"
   },
@@ -24,15 +24,17 @@
   "license": "MIT",
   "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
-    "@opentiny/tiny-engine-canvas": "workspace:^1.0.0",
-    "@opentiny/tiny-engine-common": "workspace:^1.0.0",
-    "@opentiny/tiny-engine-controller": "workspace:^1.0.0",
-    "@opentiny/vue": "~3.10.0",
-    "vue": "3.2.45"
+    "@opentiny/tiny-engine-canvas": "workspace:*",
+    "@opentiny/tiny-engine-common": "workspace:*",
+    "@opentiny/tiny-engine-controller": "workspace:*"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
-    "@vitejs/plugin-vue-jsx": "^1.3.10",
+    "@vitejs/plugin-vue-jsx": "^3.1.0",
     "vite": "^4.3.7"
+  },
+  "peerDependencies": {
+    "@opentiny/vue": "^3.14.0",
+    "vue": "^3.4.15"
   }
 }

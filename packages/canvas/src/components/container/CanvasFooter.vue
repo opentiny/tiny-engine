@@ -17,7 +17,7 @@ export default {
   props: {
     data: {
       type: Array,
-      default: []
+      default: () => []
     }
   },
   emits: ['click']
@@ -44,37 +44,23 @@ export default {
       li {
         width: unset !important;
         background: var(--ti-lowcode-breadcrumb-bg);
-        a {
+        .label {
           padding: 0 3px 0 16px;
           border-top: 0;
           color: var(--ti-lowcode-breadcrumb-color);
           transition: 0.3s;
-          &::after {
-            display: inline-block;
-            right: -6px;
-            border-left: 6px solid var(--ti-lowcode-breadcrumb-bg);
-            transition: 0.3s;
-          }
-          &::before {
-            display: inline-block;
-            right: -7px;
-            left: unset;
-            border-left: 6px solid var(--ti-lowcode-breadcrumb-icon-color);
-            transition: 0.3s;
-            z-index: 1;
-          }
           &:hover {
-            background: var(--ti-lowcode-breadcrumb-hover-bg);
+            cursor: pointer;
             &::after {
-              border-left-color: var(--ti-lowcode-breadcrumb-hover-bg);
+              border-left-color: var(--ti-steps-advanced-li-hover-bg-color);
             }
           }
         }
-        &:last-child a {
+        &:last-child .label {
           border-right: 0px solid var(--ti-lowcode-breadcrumb-color);
           border-radius: 0;
         }
-        &:first-child a {
+        &:first-child .label {
           border-right: 0px solid var(--ti-lowcode-breadcrumb-color);
           border-radius: 0;
           border-left: unset;

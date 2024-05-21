@@ -1,0 +1,20 @@
+{
+  "name": "engine-cli-demo",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "engine-cli serve",
+    "build": "engine-cli build"
+  },
+  "dependencies": {
+    "vue": "^3.4.21",
+    "@opentiny/tiny-engine": "workspace:^",
+    "@opentiny/tiny-engine-entry": "workspace:^"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.4",
+    "vite": "^5.2.7",
+    "@opentiny/tiny-engine-cli": "workspace:^"
+  }
+}

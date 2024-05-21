@@ -29,7 +29,7 @@
         </template>
       </tiny-dropdown>
     </header>
-    <article class="chat-window" id="chatgpt-window">
+    <article class="chat-window lowcode-scrollbar-hide" id="chatgpt-window">
       <tiny-layout>
         <tiny-row
           v-for="(item, index) in activeMessages"
@@ -390,8 +390,6 @@ export default {
 .chat-window {
   max-height: 400px;
   overflow: scroll;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE 10+ */
   .chat-avatar-wrap {
     width: 46px;
     .chat-avatar {
@@ -437,9 +435,6 @@ export default {
   color: var(--ti-lowcode-chat-model-ai-fail-text);
 }
 
-::-webkit-scrollbar {
-  display: none; /* Chrome Safari */
-}
 .chat-tips {
   text-align: right;
   font-size: 12px;

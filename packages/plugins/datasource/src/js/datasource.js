@@ -13,7 +13,7 @@
 import axios from 'axios'
 import { useResource } from '@opentiny/tiny-engine-controller'
 import { generateFunction } from '@opentiny/tiny-engine-controller/utils'
-import { isMock } from '@opentiny/tiny-engine-common/js/environments'
+import { isMock } from '@opentiny/tiny-engine-controller/js/environments'
 import { utils as commonUtils, constants } from '@opentiny/tiny-engine-utils'
 import { read, utils, writeFileXLSX } from 'xlsx'
 
@@ -82,9 +82,10 @@ export const getRequest = (config) => {
   }
 
   const errorHandler = (error) => {
-    createFn(config.errorHandler.value)(error)
+    const reject = createFn(config.errorHandler.value)(error)
     dataSource.status = 'error'
     dataSource.error = error
+    return reject
   }
 
   http.interceptors.request.use(willFetch, errorHandler)

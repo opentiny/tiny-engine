@@ -22,7 +22,6 @@
 <script>
 import { onMounted, ref, watchEffect } from 'vue'
 import { useMessage, useCanvas } from '@opentiny/tiny-engine-controller'
-import { getSchema } from '@opentiny/tiny-engine-canvas'
 import MetaCodeEditor from './MetaCodeEditor.vue'
 import MetaBindVariable from './MetaBindVariable.vue'
 
@@ -91,7 +90,7 @@ export default {
       let newValue = value
 
       if (value?.type === CONSTANT.JSEXPRESSION) {
-        const pageSchema = getSchema()
+        const pageSchema = useCanvas().canvasApi.value.getSchema()
         const stateName = value?.value?.replace(CONSTANT.STATE, '')
         newValue = pageSchema?.state?.[stateName]
       }

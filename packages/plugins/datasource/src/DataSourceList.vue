@@ -13,7 +13,7 @@
           <div class="item-handler">
             <svg-button
               class="set-page"
-              tips="全局设置"
+              tips="设置数据源"
               name="text-source-setting"
               v-if="state.showSetting && index === state.hoverIndex"
               @mousedown.stop.prevent="openDataSourceForm(item, index)"
@@ -51,7 +51,7 @@ export const refresh = () => {
   const selectedId = appInfoState.selectedId || url.get('id')
   fetchDataSourceList(selectedId).then((data) => {
     dataSourceList.value = data
-    useCanvas().setDataSourceMap(data)
+    useCanvas().canvasApi.value.setDataSourceMap(data)
   })
 }
 

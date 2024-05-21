@@ -17,9 +17,8 @@
 
 <script lang="jsx">
 import { computed, inject, reactive, ref } from 'vue'
-import { useBlock, useResource, useModal, useApp } from '@opentiny/tiny-engine-controller'
+import { useBlock, useResource, useModal, useApp, useCanvas } from '@opentiny/tiny-engine-controller'
 import { PluginBlockList } from '@opentiny/tiny-engine-common'
-import { dragStart, addComponent } from '@opentiny/tiny-engine-canvas'
 import { requestUpdateGroup, fetchGroupBlocksById } from './http'
 import { setBlockPanelVisible, setBlockVersionPanelVisible } from './js/usePanel'
 
@@ -59,8 +58,9 @@ export default {
     const { message, confirm } = useModal()
     const appId = useApp().appInfoState.selectedId
 
-    const openVersionPanel = async () => {
-      return
+    const openVersionPanel = async ({ item }) => {
+      selectedBlock.value = item
+      setBlockVersionPanelVisible(true)
     }
 
     const state = reactive({
@@ -92,6 +92,7 @@ export default {
       registerBlock(block).then(() => {
         const blockName = block.component || block.blockName
         const node = generateNode({ type: 'block', component: blockName })
+        const { addComponent, dragStart } = useCanvas().canvasApi.value
         if (isShortcutPanel) {
           emitEvent('close')
           addComponent(node, isShortcutPanel)

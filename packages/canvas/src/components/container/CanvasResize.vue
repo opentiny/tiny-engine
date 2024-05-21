@@ -17,25 +17,17 @@ import { canvasState } from './container'
 export default {
   setup() {
     const sizeStyle = computed(() => {
-      const { width, maxWidth, minWidth, scale } = useLayout().getDimension()
+      const { width, height, maxWidth, minWidth } = useLayout().getDimension()
       return {
         width,
+        height,
         maxWidth,
-        minWidth,
-        height: `${100 / scale}%`,
-        transform: `scale(${scale}) translateY(-${(100 / scale - 100) / 2}%)`
+        minWidth
       }
     })
 
     const mouseDown = ref(false)
     const resizeDom = ref(null)
-
-    const onMouseMove = (event) => {
-      if (mouseDown.value) {
-        event.preventDefault()
-        calculateSize(event)
-      }
-    }
 
     const calculateSize = ({ movementX }) => {
       const dimension = useLayout().getDimension()
@@ -48,6 +40,30 @@ export default {
       })
     }
 
+    const onMouseMove = (event) => {
+      if (mouseDown.value) {
+        event.preventDefault()
+        calculateSize(event)
+      }
+    }
+
+    const onMouseUp = () => {
+      const iframe = canvasState.iframe
+
+      if (iframe) {
+        iframe.style['pointer-events'] = 'auto'
+        mouseDown.value = false
+
+        document.removeEventListener('mousemove', onMouseMove, { passive: false })
+        document.removeEventListener('mouseup', onMouseUp)
+      }
+    }
+
+    const bindEvents = () => {
+      document.addEventListener('mousemove', onMouseMove, { passive: false })
+      document.addEventListener('mouseup', onMouseUp)
+    }
+
     const onMouseDown = () => {
       const iframe = canvasState.iframe
 
@@ -58,44 +74,35 @@ export default {
       }
     }
 
-    const onMouseUp = () => {
-      const iframe = canvasState.iframe
-
-      if (iframe) {
-        iframe.style['pointer-events'] = 'auto'
-        mouseDown.value = false
-        unbindEvents()
-      }
-    }
-
-    const bindEvents = () => {
-      document.addEventListener('mousemove', onMouseMove, { passive: false })
-      document.addEventListener('mouseup', onMouseUp)
-    }
-
-    const unbindEvents = () => {
-      document.removeEventListener('mousemove', onMouseMove, { passive: false })
-      document.removeEventListener('mouseup', onMouseUp)
-    }
-
     const setScale = () => {
       useLayout().setDimension({ scale: 1 })
       nextTick(() => {
         const canvasWrap = document.querySelector('#canvas-wrap')
+
+        if (!canvasWrap) {
+          return
+        }
+
         const rate = canvasWrap.offsetWidth / resizeDom.value.offsetWidth
         useLayout().setDimension({
-          scale: rate > 1 ? 1 : rate
+          scale: Math.min(rate, 1)
         })
       })
     }
 
-    watch(() => useLayout().getDimension().width, setScale, { flush: 'post' })
+    watch(() => useLayout().getDimension().width, setScale, { flush: 'post', immediate: true })
 
     watch(() => useLayout().getPluginState().fixedPanels, setScale, { flush: 'post' })
 
     watch(
       () => useLayout().getPluginState().render,
-      (value) => !value && setScale(),
+      (value) => {
+        const currentFixed = useLayout().getPluginState().fixedPanels.includes(value)
+
+        if (!value || currentFixed) {
+          setScale()
+        }
+      },
       { flush: 'post' }
     )
 

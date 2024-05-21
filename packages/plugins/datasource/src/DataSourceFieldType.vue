@@ -15,7 +15,7 @@
     </div>
     <div class="field-content type-list">
       <a v-for="fieldType in state.fieldTypes" :key="fieldType.name" class="type-item" @click="selectType(fieldType)">
-        <component :is="fieldType.icon" class="type-icon"></component>
+        <svg-icon :name="fieldType.icon" class="type-icon" />
         <span>{{ fieldType.name }}</span>
       </a>
     </div>
@@ -25,7 +25,7 @@
 <script>
 import { reactive, ref } from 'vue'
 import { iconArrowDown } from '@opentiny/vue-icon'
-import { Button, Input, FormItem, Tooltip } from '@opentiny/vue'
+import { Button } from '@opentiny/vue'
 import fieldTypes from './config'
 
 let isOpen = ref(false)
@@ -41,10 +41,7 @@ export const close = () => {
 export default {
   components: {
     TinyButton: Button,
-    TinyInput: Input,
-    TinyFormItem: FormItem,
-    iconArrowDown: iconArrowDown(),
-    TinyTooltip: Tooltip
+    iconArrowDown: iconArrowDown()
   },
   emits: ['cancel', 'select'],
   setup(props, { emit }) {

@@ -1,17 +1,32 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
+
 import path from 'path'
 import vue from '@vitejs/plugin-vue'
-import monacoEditorPlugin from 'vite-plugin-monaco-editor'
+import monacoEditorPluginCjs from 'vite-plugin-monaco-editor'
 import vueJsx from '@vitejs/plugin-vue-jsx'
-import nodeGlobalsPolyfillPlugin from '@esbuild-plugins/node-globals-polyfill'
-import nodeModulesPolyfillPlugin from '@esbuild-plugins/node-modules-polyfill'
+import nodeGlobalsPolyfillPluginCjs from '@esbuild-plugins/node-globals-polyfill'
+import nodeModulesPolyfillPluginCjs from '@esbuild-plugins/node-modules-polyfill'
 import nodePolyfill from 'rollup-plugin-polyfill-node'
-import lowcodeConfig from './config/lowcode.config'
+import esbuildCopy from 'esbuild-plugin-copy'
+import lowcodeConfig from './config/lowcode.config.js'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
-import { importmapPlugin } from './scripts/externalDeps'
-import visualizer from 'rollup-plugin-visualizer'
+import { importmapPlugin } from './scripts/externalDeps.js'
+import visualizerCjs from 'rollup-plugin-visualizer'
+import { fileURLToPath } from 'node:url'
+import generateComment from '@opentiny/vite-plugin-generate-comments'
+import { getBaseUrlFromCli, copyBundleDeps, copyPreviewImportMap, copyLocalImportMap } from './scripts/localCdnFile'
+
+const monacoEditorPlugin = monacoEditorPluginCjs.default
+const nodeGlobalsPolyfillPlugin = nodeGlobalsPolyfillPluginCjs.default
+const nodeModulesPolyfillPlugin = nodeModulesPolyfillPluginCjs.default
+const visualizer = visualizerCjs.default
+
+const __filename = fileURLToPath(import.meta.url)
+
+const __dirname = path.dirname(__filename)
 
 const origin = 'http://localhost:9090/'
+
 const config = {
   base: './',
   publicDir: path.resolve(__dirname, './public'),
@@ -48,6 +63,7 @@ const config = {
     open: false
   },
   plugins: [
+    generateComment(),
     visualizer({
       filename: 'tmp/report.html',
       title: 'Bundle Analyzer'
@@ -77,12 +93,18 @@ const config = {
           process: true,
           buffer: true
         }),
-        nodeModulesPolyfillPlugin()
+        nodeModulesPolyfillPlugin(),
+        esbuildCopy({
+          //@vue/repl monaco编辑器需要
+          resolveFrom: 'cwd',
+          assets: {
+            from: ['./node_modules/@vue/repl/dist/assets/*'], // worker.js文件以url形式引用不会被esbuild拉起，需要手动复制
+            to: ['./node_modules/.vite/assets'] // 开发态，js文件被缓存在.vite/deps，请求相对路径为.vite/assets
+          },
+          watch: true
+        })
       ]
     }
-  },
-  define: {
-    'process.env': {}
   },
   build: {
     commonjsOptions: {
@@ -118,14 +140,15 @@ const config = {
     }
   }
 }
+
 const importMapVersions = {
   prettier: '2.7.1',
-  vue: '3',
-  tinyVue: '3'
+  vue: '3.4.23',
+  tinyVue: '~3.14'
 }
 
 const devAlias = {
-  '@opentiny/tiny-engine-common/js': path.resolve(__dirname, '../common/js'),
+  '@opentiny/tiny-engine-controller/js': path.resolve(__dirname, '../controller/js'),
   '@opentiny/tiny-engine-common/component': path.resolve(__dirname, '../common/component'),
   '@opentiny/tiny-engine-common': path.resolve(__dirname, '../common/index.js'),
   '@opentiny/tiny-engine-controller/utils': path.resolve(__dirname, '../controller/utils.js'),
@@ -172,12 +195,8 @@ const devAlias = {
   '@opentiny/tiny-engine-utils': path.resolve(__dirname, '../utils/src/index.js'),
   '@opentiny/tiny-engine-webcomponent-core': path.resolve(__dirname, '../webcomponent/src/lib.js'),
   '@opentiny/tiny-engine-i18n-host': path.resolve(__dirname, '../i18n/src/lib.js'),
-  '@opentiny/tiny-engine-builtin-component': path.resolve(__dirname, '../builtinComponent/index.js')
-}
-
-const devVueAlias = {
-  find: /^vue$/,
-  replacement: `https://unpkg.com/vue@${importMapVersions.vue}/dist/vue.runtime.esm-browser.js`
+  '@opentiny/tiny-engine-builtin-component': path.resolve(__dirname, '../builtinComponent/index.js'),
+  '@opentiny/tiny-engine-entry': path.resolve(__dirname, '../entry/index.js')
 }
 
 const prodAlias = {
@@ -191,36 +210,21 @@ const commonAlias = {
   '@opentiny/tiny-engine-app-addons': path.resolve(__dirname, './config/addons.js')
 }
 
-const importmap = {
-  imports: {
-    prettier: `https://unpkg.com/prettier@${importMapVersions.prettier}/esm/standalone.mjs`,
-    'prettier/': `https://unpkg.com/prettier@${importMapVersions.prettier}/esm/`,
-    'prettier/parser-typescript': `https://unpkg.com/prettier@${importMapVersions.prettier}/esm/parser-typescript.mjs`,
-    'prettier/parser-html': `https://unpkg.com/prettier@${importMapVersions.prettier}/esm/parser-html.mjs`,
-    'prettier/parser-postcss': `https://unpkg.com/prettier@${importMapVersions.prettier}/esm/parser-postcss.mjs`,
-    'prettier/parser-babel': `https://unpkg.com/prettier@${importMapVersions.prettier}/esm/parser-babel.mjs`,
+export default defineConfig(({ command = 'serve', mode = 'serve' }) => {
+  const {
+    VITE_CDN_DOMAIN = 'https://npm.onmicrosoft.cn',
+    VITE_LOCAL_IMPORT_MAPS,
+    VITE_LOCAL_BUNDLE_DEPS
+  } = loadEnv(mode, process.cwd(), '')
+  const isLocalImportMap = VITE_LOCAL_IMPORT_MAPS === 'true' // true公共依赖库使用本地打包文件，false公共依赖库使用公共CDN
+  const isCopyBundleDeps = VITE_LOCAL_BUNDLE_DEPS === 'true' // true bundle里的cdn依赖处理成本地依赖， false 不处理
 
-    vue: `https://unpkg.com/vue@${importMapVersions.vue}/dist/vue.runtime.esm-browser.js`,
-    '@opentiny/vue': `https://unpkg.com/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue.mjs`,
-    '@opentiny/vue-icon': `https://unpkg.com/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue-icon.mjs`,
-    '@opentiny/vue-common': `https://unpkg.com/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue-common.mjs`,
-    '@opentiny/vue-locale': `https://unpkg.com/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue-locale.mjs`,
-    '@opentiny/vue-design-smb': `https://unpkg.com/@opentiny/vue-design-smb@${importMapVersions.tinyVue}/index.js`,
-    '@opentiny/vue-theme/theme-tool': `https://unpkg.com/@opentiny/vue-theme@${importMapVersions.tinyVue}/theme-tool`,
-    '@opentiny/vue-theme/theme': `https://unpkg.com/@opentiny/vue-theme@${importMapVersions.tinyVue}/theme`
-  }
-}
-
-const importMapStyles = [`https://unpkg.com/@opentiny/vue-theme@${importMapVersions.tinyVue}/index.css`]
-
-export default defineConfig(({ command, mode }) => {
-  const monacoPublicPath = {
-    local: 'editor/monaco-workers',
-    alpha: 'https://tinyengine-assets.obs.cn-north-4.myhuaweicloud.com/files/monaco-assets',
-    prod: 'https://tinyengine-assets.obs.cn-north-4.myhuaweicloud.com/files/monaco-assets'
-  }
-
-  let monacoEditorPluginInstance = monacoEditorPlugin({ publicPath: monacoPublicPath.local })
+  const monacoPublicPath = 'editor/monaco-workers'
+  const monacoEditorPluginInstance = monacoEditorPlugin({
+    publicPath: monacoPublicPath,
+    forceBuildCDN: true,
+    customDistPath: (_root, outDir, _base) => path.join(outDir, monacoPublicPath)
+  })
   const htmlPlugin = (mode) => {
     const upgradeHttpsMetaTags = []
     const includeHtmls = ['index.html', 'preview.html', 'previewApp.html']
@@ -251,8 +255,13 @@ export default defineConfig(({ command, mode }) => {
   }
 
   if (command === 'serve') {
+    const devVueAlias = {
+      find: /^vue$/,
+      replacement: `${VITE_CDN_DOMAIN}/vue@${importMapVersions.vue}/dist/vue.runtime.esm-browser.js`
+    }
+
     config.resolve.alias = [
-      devVueAlias,
+      ...(isLocalImportMap ? [] : [devVueAlias]),
       ...Object.entries({ ...commonAlias, ...devAlias }).map(([find, replacement]) => ({
         find,
         replacement
@@ -262,15 +271,72 @@ export default defineConfig(({ command, mode }) => {
     // command === 'build'
     config.resolve.alias = { ...commonAlias, ...prodAlias }
 
-    monacoEditorPluginInstance = monacoEditorPlugin({ publicPath: monacoPublicPath[mode] })
-
     if (mode === 'prod') {
       config.build.minify = true
       config.build.sourcemap = false
     }
   }
 
-  config.plugins.push(monacoEditorPluginInstance, htmlPlugin(mode), importmapPlugin(importmap, importMapStyles))
+  const importmap = {
+    imports: {
+      prettier: `${VITE_CDN_DOMAIN}/prettier@${importMapVersions.prettier}/esm/standalone.mjs`,
+      'prettier/': `${VITE_CDN_DOMAIN}/prettier@${importMapVersions.prettier}/esm/`,
+      'prettier/parser-typescript': `${VITE_CDN_DOMAIN}/prettier@${importMapVersions.prettier}/esm/parser-typescript.mjs`,
+      'prettier/parser-html': `${VITE_CDN_DOMAIN}/prettier@${importMapVersions.prettier}/esm/parser-html.mjs`,
+      'prettier/parser-postcss': `${VITE_CDN_DOMAIN}/prettier@${importMapVersions.prettier}/esm/parser-postcss.mjs`,
+      'prettier/parser-babel': `${VITE_CDN_DOMAIN}/prettier@${importMapVersions.prettier}/esm/parser-babel.mjs`,
 
+      vue: `${VITE_CDN_DOMAIN}/vue@${importMapVersions.vue}/dist/vue.runtime.esm-browser${
+        command === 'build' ? '.prod' : ''
+      }.js`,
+      '@opentiny/vue': `${VITE_CDN_DOMAIN}/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue.mjs`,
+      '@opentiny/vue-icon': `${VITE_CDN_DOMAIN}/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue-icon.mjs`,
+      '@opentiny/vue-common': `${VITE_CDN_DOMAIN}/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue-common.mjs`,
+      '@opentiny/vue-locale': `${VITE_CDN_DOMAIN}/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue-locale.mjs`,
+      '@opentiny/vue-design-smb': `${VITE_CDN_DOMAIN}/@opentiny/vue-design-smb@${importMapVersions.tinyVue}/index.js`,
+      '@opentiny/vue-theme/theme-tool': `${VITE_CDN_DOMAIN}/@opentiny/vue-theme@${importMapVersions.tinyVue}/theme-tool.js`,
+      '@opentiny/vue-theme/theme': `${VITE_CDN_DOMAIN}/@opentiny/vue-theme@${importMapVersions.tinyVue}/theme/index.js`
+    }
+  }
+
+  const importMapStyles = [`${VITE_CDN_DOMAIN}/@opentiny/vue-theme@${importMapVersions.tinyVue}/index.css`]
+
+  config.plugins.push(
+    monacoEditorPluginInstance,
+    htmlPlugin(mode),
+    isLocalImportMap
+      ? copyLocalImportMap({
+          importMap: importmap,
+          styleUrls: importMapStyles,
+          originCdnPrefix: VITE_CDN_DOMAIN,
+          base: getBaseUrlFromCli(config.base),
+          packageCopy: [
+            // 这两个包的js存在相对路径引用，不能单独拷贝一个文件，需要整个包拷贝
+            '@opentiny/vue-theme/theme-tool',
+            '@opentiny/vue-theme/theme'
+          ]
+        })
+      : importmapPlugin(importmap, importMapStyles),
+    isCopyBundleDeps
+      ? copyBundleDeps({
+          bundleFile: 'public/mock/bundle.json',
+          targetBundleFile: 'mock/bundle.json',
+          originCdnPrefix: VITE_CDN_DOMAIN, // mock 中bundle的域名当前和环境的VITE_CDN_DOMAIN一致
+          base: getBaseUrlFromCli(config.base)
+        }).plugin(command === 'serve')
+      : [],
+    isLocalImportMap
+      ? copyPreviewImportMap({
+          importMapJson: './src/preview/src/preview/importMap.json',
+          targetImportMapJson: 'preview-import-map-static/preview-importmap.json',
+          originCdnPrefix: VITE_CDN_DOMAIN,
+          base: getBaseUrlFromCli(config.base),
+          packageCopyLib: [
+            // 以下的js存在相对路径引用，不能单独拷贝一个文件，需要整个包拷贝
+            '@vue/devtools-api'
+          ]
+        })
+      : []
+  )
   return config
 })

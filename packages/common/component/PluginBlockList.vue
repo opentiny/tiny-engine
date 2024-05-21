@@ -1,5 +1,6 @@
 <template>
   <ul
+    v-if="state.data.length"
     :class="['block-list', 'lowcode-scrollbar', { 'is-small-list': blockStyle === 'mini' }, { isShortcutPanel }]"
     @mouseleave="state.hover = false"
   >
@@ -122,12 +123,14 @@
       </div>
     </div>
   </ul>
+  <search-empty :isShow="!state.data.length" />
 </template>
 
 <script>
 import { computed, watch, inject, reactive } from 'vue'
 import { iconSetting, iconPlus } from '@opentiny/vue-icon'
 import { Tooltip, Progress, Popover } from '@opentiny/vue'
+import SearchEmpty from './SearchEmpty.vue'
 import SvgButton from './SvgButton.vue'
 
 const defaultImg =
@@ -140,7 +143,8 @@ export default {
     IconSetting: iconSetting(),
     IconPlus: iconPlus(),
     TinyPopover: Popover,
-    SvgButton
+    SvgButton,
+    SearchEmpty
   },
   props: {
     data: {
@@ -344,7 +348,7 @@ export default {
   position: fixed;
   z-index: 9999;
   top: 50px;
-  left: calc(var(--base-left-panel-width, 268px) + var(--base-nav-panel-width) + 10px);
+  left: calc(var(--base-left-panel-width) + var(--base-nav-panel-width) + 10px);
   max-width: 500px;
   max-height: 136px;
   padding: 12px;
@@ -446,7 +450,7 @@ export default {
           color: var(--ti-lowcode-component-block-list-setting-btn-color);
           display: block;
           &:hover {
-            cursor: not-allowed;
+            cursor: pointer;
             color: var(--ti-lowcode-component-block-list-setting-btn-hover-color);
           }
         }
@@ -553,7 +557,7 @@ export default {
       .block-detail-icon {
         color: var(--ti-lowcode-component-block-list-setting-btn-color);
         &:hover {
-          cursor: not-allowed;
+          cursor: pointer;
           color: var(--ti-lowcode-component-block-list-setting-btn-hover-color);
         }
       }

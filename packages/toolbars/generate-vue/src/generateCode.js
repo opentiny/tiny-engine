@@ -1,19 +1,20 @@
 /**
-* Copyright (c) 2023 - present TinyEngine Authors.
-* Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
-*
-* Use of this source code is governed by an MIT-style license.
-*
-* THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
-* BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
-* A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
-*
-*/
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
+ *
+ * Use of this source code is governed by an MIT-style license.
+ *
+ * THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
+ * BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
+ * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
+ *
+ */
 
 import prettier from 'prettier'
 import parserHtml from 'prettier/parser-html'
 import parseCss from 'prettier/parser-postcss'
 import parserBabel from 'prettier/parser-babel'
+import prettierCommon from '@opentiny/tiny-engine-controller/js/config-files/prettierrc'
 
 // LOWCODE_TODO: 从本地配置文件获取
 const basePaths = {
@@ -22,8 +23,8 @@ const basePaths = {
   blocks: 'src/components/',
   utils: 'src/lowcode/utils.js',
   dataSource: 'src/lowcode/dataSource.json',
-  router: 'src/lowcode/routes.js',
-  store: 'src/lowcode/stores.js'
+  router: 'src/router/index.js',
+  store: 'src/stores/'
 }
 
 const FILE_TYPES = {
@@ -34,13 +35,6 @@ const FILE_TYPES = {
   DataSource: 'DataSource',
   Router: 'Router',
   Store: 'Store'
-}
-
-const prettierCommon = {
-  printWidth: 120,
-  semi: false,
-  singleQuote: true,
-  trailingComma: 'none'
 }
 
 function formatScript(string) {
@@ -82,7 +76,10 @@ function generateStores({ globalState }) {
   }
 
   const filePath = basePaths.store
-  let result = "import { defineStore } from 'pinia'\n\n"
+  const result = "import { defineStore } from 'pinia'\n\n"
+
+  const res = []
+  const storeIds = []
 
   const getStoreFnStrs = (getters = {}) =>
     Object.values(getters)
@@ -90,6 +87,7 @@ function generateStores({ globalState }) {
       .join(',\n')
 
   globalState.forEach(({ id, state, getters, actions }) => {
+    storeIds.push(id)
     const storeCode = `export const ${id} = defineStore({
   id: '${id}',
   state: () => (${JSON.stringify(state)}),
@@ -99,18 +97,22 @@ function generateStores({ globalState }) {
   actions: {
     ${getStoreFnStrs(actions)}
   }
-})`
+})\n`
 
-    result += storeCode
+    res.push({
+      filePath: `${filePath}${id}.js`,
+      fileType: FILE_TYPES.Store,
+      fileContent: formatScript(`${result}\n${storeCode}`)
+    })
   })
 
-  return [
-    {
-      filePath,
-      fileType: FILE_TYPES.Store,
-      fileContent: formatScript(result)
-    }
-  ]
+  res.push({
+    filePath: `${filePath}index.js`,
+    fileType: FILE_TYPES.Store,
+    fileContent: formatScript(storeIds.map((id) => `export { ${id} } from './${id}'`).join('\n'))
+  })
+
+  return res
 }
 
 function generatePageFiles(codeList, pagePath = '') {
@@ -214,7 +216,14 @@ function getImportStrsFromImports(imports) {
     }
 
     if (Array.isArray(value.destructurings) && value.destructurings.length) {
-      list.push(`{ ${value.destructurings.join(', ')} }`)
+      const destructuringsWithAliases = value.destructurings.map((destructuring, index) => {
+        const alias = value.aliases[index]
+        if (destructuring === alias) {
+          return destructuring
+        }
+        return `${destructuring} as ${alias}`
+      })
+      list.push(`{ ${destructuringsWithAliases.join(', ')} }`)
     }
 
     result.push(`import ${list.join(', ')} from '${key}'`)
@@ -234,11 +243,13 @@ function parseExportInfo(utilItem, imports, exportNames, functionStrs) {
       if (utilItem.content.destructuring) {
         importItem.destructurings = importItem.destructurings || []
         importItem.destructurings.push(utilItem.content.exportName)
+        importItem.aliases = importItem.aliases || []
+        importItem.aliases.push(utilItem.name)
       } else {
-        importItem.exportName = utilItem.content.exportName
+        importItem.exportName = utilItem.name
       }
 
-      exportNames.push(utilItem.content.exportName)
+      exportNames.push(utilItem.name)
     }
   } else if (utilItem.type === 'function') {
     functionStrs.push(`const ${utilItem.name} = ${utilItem.content.value}`)
@@ -326,9 +337,12 @@ export function generateRouter(pages) {
   }
 
   const routes = generateRoutes(pages)
+  const importRoutes = "import { createRouter, createWebHashHistory } from 'vue-router'\n"
 
   const content = `
-  export const routes = [
+  ${importRoutes}
+
+  const routes = [
   ${routes
     .map(
       ({ fileName, path, redirect, filePath }) => `{
@@ -338,6 +352,11 @@ export function generateRouter(pages) {
     )
     .join(',')}
   ]
+
+  export default createRouter({
+    history: createWebHashHistory(),
+    routes
+  })
   `
   const codeStr = formatScript(content)
 

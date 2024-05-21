@@ -11,8 +11,7 @@
  */
 
 /* eslint-disable no-new-func */
-import { reactive } from 'vue'
-import { setSchema, renderApi } from '@opentiny/tiny-engine-canvas'
+import { reactive, ref } from 'vue'
 import { constants } from '@opentiny/tiny-engine-utils'
 import useHistory from './useHistory'
 
@@ -52,12 +51,20 @@ const defaultSchema = {
   outputs: []
 }
 
+const canvasApi = ref({})
+const isCanvasApiReady = ref(false)
+
+const initCanvasApi = (newCanvasApi) => {
+  canvasApi.value = newCanvasApi
+  isCanvasApiReady.value = true
+}
+
 const pageState = reactive({ ...defaultPageState, loading: true })
 // 重置画布数据
 const resetCanvasState = async (state = {}) => {
   Object.assign(pageState, defaultPageState, state)
 
-  await setSchema(pageState.pageSchema)
+  await canvasApi.value?.setSchema(pageState.pageSchema)
 }
 
 // 页面重置画布数据
@@ -151,10 +158,11 @@ export default function () {
     resetPageCanvasState,
     resetBlockCanvasState,
     clearCurrentState,
-    getDataSourceMap: renderApi.getDataSourceMap,
-    setDataSourceMap: renderApi.setDataSourceMap,
     getCurrentSchema,
     setCurrentSchema,
-    getCurrentPage
+    getCurrentPage,
+    initCanvasApi,
+    canvasApi,
+    isCanvasApiReady
   }
 }

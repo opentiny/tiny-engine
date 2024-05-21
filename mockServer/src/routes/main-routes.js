@@ -10,17 +10,15 @@
  *
  */
 
-import KoaRouter from 'koa-router'
-import * as glob from 'glob'
-import path from 'path'
 import fs from 'fs-extra'
+import * as glob from 'glob'
+import KoaRouter from 'koa-router'
+import path from 'path'
 import MockService from '../services/mockService'
-import BuildService from '../buildServices/main'
-
 import { getResponseData } from '../tool/Common'
+
 const router = new KoaRouter()
 export const mockService = new MockService()
-export const buildService = new BuildService(mockService)
 const getJsonPathData = (jpath, method = 'get') => {
   const usefulPath = jpath.split(`${method}${path.sep}`)[1]
   const apipath = usefulPath.split(path.sep)
@@ -107,14 +105,10 @@ router.get('/material-center/api/blocks', async (ctx) => {
 
 router.post('/material-center/api/block/create', async (ctx) => {
   const result = mockService.blockService.create(ctx.request.body)
-  const categoriesId = params.categories[0]
+  const categoriesId = ctx.request.body.categories[0]
   const _id = result.id
   await mockService.blockCategoryService.update(categoriesId, { _id })
-  ctx.body = result
-})
-
-router.post('/material-center/api/block/deploy', async (ctx) => {
-  ctx.body = await buildService.buildBlock.build(ctx.request.body)
+  ctx.body = getResponseData(result)
 })
 
 router.post('/material-center/api/block/update/:id', async (ctx) => {
@@ -146,7 +140,9 @@ router.get('/material-center/api/block-groups/delete/:id', async (ctx) => {
 router.get('/material-center/api/block-groups', async (ctx) => {
   const result = await mockService.blockGroupService.find(ctx.query)
   let blockGroup
-  if (result.data.length > 1) {
+  if (result.data.length === 0) {
+    ctx.body = result
+  } else if (result.data.length > 1) {
     blockGroup = await Promise.all(
       result.data.map(async (group) => {
         group.blocks = await Promise.all(
@@ -159,7 +155,7 @@ router.get('/material-center/api/block-groups', async (ctx) => {
       })
     )
     ctx.body = getResponseData(blockGroup)
-  } else {
+  } else if (result.data.length === 1) {
     blockGroup = result.data[0]
     const blocks = await Promise.all(
       blockGroup.blocks.map(async (item) => {
@@ -208,6 +204,10 @@ router.get('/material-center/api/block-categories', async (ctx) => {
 router.get('/app-center/api/sources/detail/:id', async (ctx) => {
   const { id } = ctx.params
   ctx.body = await mockService.sourceService.detail(id)
+})
+
+router.post('/material-center/api/block/deploy', async (ctx) => {
+  ctx.body = await mockService.blockBuildService.build(ctx.request.body)
 })
 
 router.get('/material-center/api/tasks/:id', async (ctx) => {

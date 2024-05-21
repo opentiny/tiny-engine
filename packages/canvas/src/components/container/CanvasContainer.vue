@@ -6,7 +6,7 @@
     :windowGetClickEventTarget="target"
     :resize="canvasState.type === 'absolute'"
     @select-slot="selectSlot"
-    @setting="settingModle"
+    @setting="settingModel"
   ></canvas-action>
   <canvas-divider :selectState="selectState"></canvas-divider>
   <canvas-resize-border :iframe="iframe"></canvas-resize-border>
@@ -29,7 +29,7 @@
 
 <script>
 import { onMounted, ref, computed, onUnmounted } from 'vue'
-import { iframeMonitoring } from '@opentiny/tiny-engine-common/js/monitor'
+import { iframeMonitoring } from '@opentiny/tiny-engine-controller/js/monitor'
 import { useTranslate, useCanvas, useResource } from '@opentiny/tiny-engine-controller'
 import CanvasAction from './CanvasAction.vue'
 import CanvasResize from './CanvasResize.vue'
@@ -50,12 +50,12 @@ import {
   updateRect,
   getElement,
   dragStart,
-  getOffset,
   selectNode,
   initCanvas,
   clearLineState,
   querySelectById,
-  getCurrent
+  getCurrent,
+  canvasApi
 } from './container'
 
 export default {
@@ -71,7 +71,7 @@ export default {
     const insertPanel = ref(null)
     const insertPosition = ref(false)
     const loading = computed(() => useCanvas().isLoading())
-    let showSettingModle = ref(false)
+    let showSettingModel = ref(false)
     let target = ref(null)
 
     const setCurrentNode = async (event) => {
@@ -100,10 +100,12 @@ export default {
 
         // 如果是点击右键则打开右键菜单
         if (event.button === 2) {
-          openMenu(getOffset(event.target), event)
+          openMenu(event)
         }
       }
     }
+
+    useCanvas().initCanvasApi(canvasApi)
 
     const beforeCanvasReady = () => {
       if (iframe.value) {
@@ -123,8 +125,30 @@ export default {
         const doc = iframe.value.contentDocument
         const win = iframe.value.contentWindow
 
+        let isScrolling = false
+
         // 以下是内部iframe监听的事件
         win.addEventListener('mousedown', (event) => {
+          // html元素使用scroll和mouseup事件处理
+          if (event.target === doc.documentElement) {
+            isScrolling = false
+            return
+          }
+
+          insertPosition.value = false
+          setCurrentNode(event)
+          target.value = event.target
+        })
+
+        win.addEventListener('scroll', () => {
+          isScrolling = true
+        })
+
+        win.addEventListener('mouseup', (event) => {
+          if (event.target !== doc.documentElement || isScrolling) {
+            return
+          }
+
           insertPosition.value = false
           setCurrentNode(event)
           target.value = event.target
@@ -156,8 +180,8 @@ export default {
       }
     }
     // 设置弹窗
-    const settingModle = () => {
-      showSettingModle.value = true
+    const settingModel = () => {
+      showSettingModel.value = true
     }
 
     const updateI18n = (message) => {
@@ -194,7 +218,9 @@ export default {
 
     onMounted(() => run(iframe))
     onUnmounted(() => {
-      removeHostkeyEvent(iframe.value.contentDocument)
+      if (iframe.value?.contentDocument) {
+        removeHostkeyEvent(iframe.value.contentDocument)
+      }
       window.removeEventListener('message', updateI18n, false)
     })
 
@@ -212,9 +238,9 @@ export default {
       canvasState,
       insertComponent,
       insertPanel,
-      settingModle,
+      settingModel,
       target,
-      showSettingModle,
+      showSettingModel,
       insertPosition,
       loading
     }

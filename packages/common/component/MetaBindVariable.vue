@@ -6,6 +6,7 @@
   </slot>
 
   <tiny-dialog-box
+    v-if="dialogShouldInitialize"
     :visible="state.isVisible"
     title="变量绑定"
     width="48%"
@@ -123,15 +124,14 @@ import { reactive, ref, computed, nextTick, watch } from 'vue'
 import { camelize, capitalize } from '@vue/shared'
 import { Button, DialogBox, Search, Switch, Input, Tooltip, Alert } from '@opentiny/vue'
 import { useHttp } from '@opentiny/tiny-engine-http'
-import { getSchema, getGlobalState, setState, getNode, getCurrent } from '@opentiny/tiny-engine-canvas'
 import { useCanvas, useResource, useLayout, useApp, useProperties, useData } from '@opentiny/tiny-engine-controller'
 import { theme } from '@opentiny/tiny-engine-controller/adapter'
 import { constants } from '@opentiny/tiny-engine-utils'
 import SvgButton from './SvgButton.vue'
-import { parse, traverse, generate } from '../js/ast'
-import { DEFAULT_LOOP_NAME } from '../js/constants.js'
+import { parse, traverse, generate } from '@opentiny/tiny-engine-controller/js/ast'
+import { DEFAULT_LOOP_NAME } from '@opentiny/tiny-engine-controller/js/constants'
 import MonacoEditor from './VueMonaco.vue'
-import { formatString } from '../js/ast.js'
+import { formatString } from '@opentiny/tiny-engine-controller/js/ast'
 
 const { EXPRESSION_TYPE } = constants
 
@@ -149,6 +149,12 @@ const CONSTANTS = {
 }
 
 const getJsSlot = () => {
+  const { getNode, getCurrent } = useCanvas().canvasApi.value || {}
+
+  if (!getNode || !getCurrent) {
+    return [false, {}]
+  }
+
   const jsSlot = getNode(getCurrent()?.parent?.id, true)?.parent
 
   return [jsSlot?.type === 'JSSlot', jsSlot]
@@ -181,6 +187,10 @@ export default {
     modelValue: {
       type: [String, Number, Boolean, Array, Object, Date],
       default: ''
+    },
+    lazyLoad: {
+      type: Boolean,
+      default: true
     }
   },
   setup(props, { emit }) {
@@ -393,10 +403,9 @@ export default {
     const confirm = () => {
       let variableContent = state.isEditorEditMode ? editor.value?.getEditor().getValue() : state.variable
 
+      const { setSaved, canvasApi } = useCanvas()
       // 如果新旧值不一样就显示未保存状态
       if (oldValue !== variableContent) {
-        const { setSaved } = useCanvas()
-
         setSaved(false)
         variableContent = formatString(variableContent, 'javascript')
       }
@@ -406,14 +415,14 @@ export default {
 
       if (variableContent) {
         if (state.bindPrefix === CONSTANTS.DATASOUCEPREFIX) {
-          const pageSchema = getSchema()
+          const pageSchema = canvasApi.value.getSchema()
           const stateName = state.variable.replace(`${CONSTANTS.STATE}`, '')
           const staticData = state.variableContent.map(({ _id, ...other }) => other)
 
           pageSchema.state[stateName] = staticData
 
           // 设置画布上下文环境，让画布触发更新渲染
-          setState({ [stateName]: staticData })
+          canvasApi.value.setState({ [stateName]: staticData })
 
           // 这里在setup生命周期函数内部处理用户真实环境中的数据源请求
           genRemoteMethodToLifeSetup(stateName, state.dataSouce, pageSchema)
@@ -442,11 +451,13 @@ export default {
       return ''
     }
 
+    const dialogShouldInitialize = ref(!props.lazyLoad)
     const open = () => {
+      dialogShouldInitialize.value = true
       state.isVisible = true
       state.variableName = bindKey.value
       state.variable = getInitVariable()
-      state.variables = getSchema()?.state || {}
+      state.variables = useCanvas().canvasApi.value.getSchema()?.state || {}
       state.bindPrefix = CONSTANTS.STATE
       state.variableContent = state.variables[bindKey.value]
       nextTick(() => window.dispatchEvent(new Event('resize')))
@@ -454,6 +465,8 @@ export default {
 
     const selectItem = (item) => {
       state.active = item.id
+      const { canvasApi } = useCanvas()
+
       if (item.id === 'function') {
         state.bindPrefix = CONSTANTS.THIS
         const { PLUGIN_NAME, getPluginApi } = useLayout()
@@ -469,7 +482,7 @@ export default {
         state.variables = bridge
       } else if (item.id === 'props') {
         state.bindPrefix = CONSTANTS.PROPS
-        const properties = getSchema()?.schema?.properties
+        const properties = canvasApi.value.getSchema()?.schema?.properties
         const bindProperties = {}
         properties?.forEach(({ content }) => {
           content.forEach(({ property }) => {
@@ -495,7 +508,7 @@ export default {
         state.bindPrefix = CONSTANTS.STORE
         state.variables = {}
 
-        const stores = getGlobalState()
+        const stores = canvasApi.value.getGlobalState()
         stores.forEach(({ id, state: storeState = {}, getters = {} }) => {
           const loadProp = (prop) => {
             const propBinding = `${id}.${prop}`
@@ -516,7 +529,7 @@ export default {
         state.variables = params.reduce((variables, param) => ({ ...variables, [param]: param }), {})
       } else {
         state.bindPrefix = CONSTANTS.STATE
-        state.variables = getSchema()?.[item.id]
+        state.variables = canvasApi.value.getSchema()?.[item.id]
       }
     }
 
@@ -527,6 +540,7 @@ export default {
       remove,
       cancel,
       confirm,
+      dialogShouldInitialize,
       open,
       selectItem,
       state,

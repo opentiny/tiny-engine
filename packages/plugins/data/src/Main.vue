@@ -3,19 +3,24 @@
     <div class="data-source-left-panel">
       <div class="title">
         <span>状态管理</span>
+        <link-button :href="docsUrl"></link-button>
         <close-icon @close="closePanel"></close-icon>
       </div>
       <tiny-tabs v-model="activeName" @click="tabClick" tab-style="button-card">
-        <tiny-tab-item v-if="isBlock" :name="STATE.CURRENT_STATE" title="区块状态"></tiny-tab-item>
-        <tiny-tab-item v-else :name="STATE.CURRENT_STATE" title="页面状态"></tiny-tab-item>
+        <tiny-tab-item :name="STATE.CURRENT_STATE" :title="isBlock ? '区块状态' : '页面状态'"></tiny-tab-item>
         <tiny-tab-item :name="STATE.GLOBAL_STATE" title="应用状态"></tiny-tab-item>
       </tiny-tabs>
       <tiny-search
         :modelValue="query"
         class="left-filter"
         placeholder="请输入搜索条件"
+        clearable
         @update:modelValue="search"
-      ></tiny-search>
+      >
+        <template #prefix>
+          <tiny-icon-search />
+        </template>
+      </tiny-search>
       <div class="add-btn">
         <tiny-button @click="openPanel(OPTION_TYPE.ADD)">{{
           activeName === STATE.CURRENT_STATE ? '添加变量' : '添加全局变量'
@@ -25,6 +30,7 @@
         :modelValue="Object.keys(state.dataSource)"
         :stateScope="activeName"
         :query="query"
+        :selectedKey="selectedKey"
         @openPanel="openPanel"
         @remove="remove"
         @removeStore="removeStore"
@@ -61,7 +67,7 @@
 </template>
 
 <script>
-import { reactive, ref, computed, onActivated } from 'vue'
+import { reactive, ref, computed, onActivated, watch } from 'vue'
 import { Button, Search, Tabs, TabItem } from '@opentiny/vue'
 import {
   useCanvas,
@@ -70,10 +76,11 @@ import {
   useResource,
   useNotify,
   useData,
-  useLayout
+  useLayout,
+  useHelp
 } from '@opentiny/tiny-engine-controller'
-import { setState, getSchema, deleteState, setGlobalState, getGlobalState } from '@opentiny/tiny-engine-canvas'
-import { CloseIcon } from '@opentiny/tiny-engine-common'
+import { iconSearch } from '@opentiny/vue-icon'
+import { CloseIcon, LinkButton } from '@opentiny/tiny-engine-common'
 import DataSourceList from './DataSourceList.vue'
 import CreateVariable from './CreateVariable.vue'
 import CreateStore from './CreateStore.vue'
@@ -90,7 +97,9 @@ export default {
     CloseIcon,
     TinyTabs: Tabs,
     TinyTabItem: TabItem,
-    CreateStore
+    CreateStore,
+    LinkButton,
+    TinyIconSearch: iconSearch()
   },
   setup(props, { emit }) {
     const variableRef = ref(null)
@@ -106,6 +115,7 @@ export default {
     const { setSaved } = useCanvas()
     const { PLUGIN_NAME, getPluginApi } = useLayout()
     const { openCommon } = getPluginApi(PLUGIN_NAME.save)
+    const docsUrl = useHelp().getDocsUrl('data')
     const state = reactive({
       dataSource: {},
       createData: {
@@ -113,6 +123,11 @@ export default {
         description: '',
         variable: ''
       }
+    })
+    const selectedKey = ref(null)
+
+    watch(activeName, () => {
+      selectedKey.value = null
     })
 
     const openPanel = (flagValue, key = '') => {
@@ -135,14 +150,18 @@ export default {
       }
 
       isPanelShow.value = true
+      selectedKey.value = flagValue === OPTION_TYPE.UPDATE ? key : null
     }
 
     const cancel = () => {
       errorMessage.value = ''
       isPanelShow.value = false
+      selectedKey.value = null
     }
 
     const add = (name, variable) => {
+      const { getSchema } = useCanvas().canvasApi.value
+
       if (getSchema()) {
         if (updateKey.value !== name && flag.value === OPTION_TYPE.UPDATE) {
           delete state.dataSource[updateKey.value]
@@ -169,6 +188,7 @@ export default {
 
     const confirm = () => {
       const { name } = state.createData
+      const { setState, setGlobalState } = useCanvas().canvasApi.value
 
       if (!name || errorMessage.value) {
         notifySaveError('变量名未填写或名称不符合规范，请按照提示修改后重试。')
@@ -238,6 +258,8 @@ export default {
     }
 
     const remove = (key) => {
+      const { deleteState, getSchema } = useCanvas().canvasApi.value
+
       delete state.dataSource[key]
       // 删除变量也需要同步触发画布渲染
       deleteState(key)
@@ -266,6 +288,7 @@ export default {
     }
 
     const setGlobalStateToDataSource = () => {
+      const { getGlobalState } = useCanvas().canvasApi.value
       const globalState = getGlobalState()
 
       if (!globalState) {
@@ -280,6 +303,7 @@ export default {
     const removeStore = (key) => {
       const storeListt = [...useResource().resState.globalState] || []
       const index = storeListt.findIndex((store) => store.id === key)
+      const { setGlobalState } = useCanvas().canvasApi.value
 
       if (index !== -1) {
         const { id } = useEditorInfo().useInfo()
@@ -302,6 +326,8 @@ export default {
     }
 
     const initDataSource = (tabsName = activeName.value) => {
+      const { getSchema } = useCanvas().canvasApi.value
+
       if (tabsName === STATE.GLOBAL_STATE) {
         setGlobalStateToDataSource()
       } else {
@@ -341,12 +367,14 @@ export default {
       flag,
       updateKey,
       activeName,
+      selectedKey,
       tabClick,
       STATE,
       removeStore,
       storeRef,
       OPTION_TYPE,
-      open
+      open,
+      docsUrl
     }
   }
 }
@@ -405,7 +433,7 @@ export default {
     border-right: 1px solid var(--ti-lowcode-toolbar-border-color);
     background: var(--ti-lowcode-common-component-bg);
     position: absolute;
-    left: calc(var(--base-left-panel-width, 268px) - 6px);
+    left: var(--base-left-panel-width);
     top: 0;
 
     .header {
@@ -461,11 +489,13 @@ export default {
   }
 
   :deep(.tiny-tabs__content) {
-    height: calc(100% - 48px);
+    margin: 0;
     padding: 0;
-    & > div {
-      height: 100%;
-    }
+  }
+  :deep(.help-box) {
+    position: absolute;
+    left: 70px;
+    top: 11px;
   }
 }
 </style>

@@ -11,9 +11,8 @@
  */
 
 import { reactive } from 'vue'
-import { useApp, useResource, useNotify } from '@opentiny/tiny-engine-controller'
-import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
-import { setUtils } from '@opentiny/tiny-engine-canvas'
+import { useApp, useResource, useNotify, useCanvas } from '@opentiny/tiny-engine-controller'
+import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
 import {
   fetchResourceList,
   requestDeleteReSource,
@@ -175,6 +174,8 @@ const generateBridgeUtil = (...args) => {
 }
 
 export const saveResource = (data, callback, emit) => {
+  const { updateUtils } = useCanvas().canvasApi.value
+
   if (getActionType() === ACTION_TYPE.Edit) {
     data.id = state.resource.id
     requestUpdateReSource(data).then((result) => {
@@ -183,7 +184,7 @@ export const saveResource = (data, callback, emit) => {
         useResource().resState[data.category][index] = result
 
         // 更新画布工具函数环境，保证渲染最新工具类返回值, 并触发画布的强制刷新
-        setUtils([result], false, true)
+        updateUtils([result])
         generateBridgeUtil(useApp().appInfoState.selectedId)
 
         useNotify({
@@ -201,6 +202,8 @@ export const saveResource = (data, callback, emit) => {
       if (result) {
         useResource().resState[data.category].push(result)
 
+        // 更新画布工具函数环境，保证渲染最新工具类返回值, 并触发画布的强制刷新
+        updateUtils([result])
         generateBridgeUtil(useApp().appInfoState.selectedId)
         useNotify({
           type: 'success',
@@ -216,11 +219,14 @@ export const saveResource = (data, callback, emit) => {
 
 export const deleteData = (name, callback, emit) => {
   const params = `app=${useApp().appInfoState.selectedId}&id=${state.resource?.id}`
+  const { deleteUtils } = useCanvas().canvasApi.value
+
   requestDeleteReSource(params).then((data) => {
     if (data) {
       const index = useResource().resState[state.type].findIndex((item) => item.name === data.name)
       useResource().resState[state.type].splice(index, 1)
 
+      deleteUtils([data])
       generateBridgeUtil(useApp().appInfoState.selectedId)
       useNotify({
         type: 'success',

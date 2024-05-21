@@ -9,8 +9,8 @@ body {
 }
 
 body {
-  --base-left-panel-width: 268px;
-  --base-right-panel-width: 240px;
+  --base-left-panel-width: 280px;
+  --base-right-panel-width: 280px;
   --base-top-panel-height: 48px;
   --base-bottom-panel-height: 30px;
   --base-nav-panel-width: 40px;
@@ -55,48 +55,6 @@ td {
   padding: 0;
 }
 
-@media (min-width: 576px) {
-  body {
-    --base-left-panel-width: 25vw;
-    --base-right-panel-width: 25vw;
-  }
-}
-
-@media (min-width: 768px) {
-  body {
-    --base-left-panel-width: 25vw;
-    --base-right-panel-width: 25vw;
-  }
-}
-
-@media (min-width: 992px) {
-  body {
-    --base-left-panel-width: 202px;
-    --base-right-panel-width: 208px;
-  }
-}
-
-@media (min-width: 1200px) {
-  body {
-    --base-left-panel-width: 236px;
-    --base-right-panel-width: 240px;
-  }
-}
-
-@media (min-width: 1600px) {
-  body {
-    --base-left-panel-width: 268px;
-    --base-right-panel-width: 272px;
-  }
-}
-
-@media (min-width: 2000px) {
-  body {
-    --base-left-panel-width: 300px;
-    --base-right-panel-width: 308px;
-  }
-}
-
 #tiny-engine * {
   box-sizing: border-box;
 }
@@ -113,4 +71,60 @@ td {
   display: -webkit-box;
   -webkit-line-clamp: var(--ellipsis-line, 2);
   -webkit-box-orient: vertical;
+}
+
+body {
+  *,
+  .lowcode-scrollbar,
+  .lowcode-scrollbar-thin {
+    &::-webkit-scrollbar-track,
+    &::-webkit-scrollbar-track-piece,
+    &::-webkit-scrollbar-corner {
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #dbdbdb;
+
+      &:hover {
+        background-color: #c2c2c2;
+      }
+    }
+  }
+  *,
+  .lowcode-scrollbar {
+    &::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+  }
+  .lowcode-scrollbar-thin {
+    &::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+  }
+}
+
+// support for not webkit browser and won't override ::webkit-scrollbar-* selector
+@supports not selector(::-webkit-scrollbar) {
+  body {
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: #dbdbdb transparent;
+    }
+  }
+}
+
+// hide scrollbar
+@supports not selector(::-webkit-scrollbar) {
+  .lowcode-scrollbar-hide {
+    scrollbar-width: none;
+  }
+}
+
+.lowcode-scrollbar-hide {
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }

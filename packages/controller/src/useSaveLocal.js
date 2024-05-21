@@ -11,7 +11,7 @@
  */
 
 import { Modal } from '@opentiny/vue'
-import { VITE_ORIGIN } from '@opentiny/tiny-engine-common/js/environments'
+import { VITE_ORIGIN } from '../js/environments'
 import useCanvas from './useCanvas'
 import { getGlobalConfig } from './globalConfig'
 

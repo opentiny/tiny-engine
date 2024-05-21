@@ -13,6 +13,7 @@
 import { capitalize, hyphenate } from '@vue/shared'
 import { tinyIcon as unifyIconName } from '../pre-processor'
 import { TINY_ICON, JS_FUNCTION } from '../constant'
+import prettierConfig from '@opentiny/tiny-engine-controller/js/config-files/prettierrc'
 
 const getTypeOfSchema = (schema) => schema.componentName
 
@@ -36,10 +37,10 @@ const getFunctionInfo = (fnStr) => {
 const safeRandom = () => {
   const mathConstructor = Math
 
-  return mathConstructor.random
+  return mathConstructor.random()
 }
 
-const randomString = (length = 4, chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') => {
+export const randomString = (length = 4, chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') => {
   let result = ''
   for (let i = length; i > 0; --i) {
     result += chars[Math.floor(safeRandom() * chars.length)]
@@ -69,12 +70,7 @@ const lowerFirst = (str) => str[0].toLowerCase() + str.slice(1)
  */
 const toPascalCase = (input, delimiter = '-') => input.split(delimiter).map(capitalize).join('')
 
-const commonOpts = {
-  printWidth: 120,
-  semi: false,
-  singleQuote: true,
-  trailingComma: 'none'
-}
+const commonOpts = prettierConfig
 const prettierOpts = {
   vue: { ...commonOpts, parser: 'vue', htmlWhitespaceSensitivity: 'ignore' },
   js: { ...commonOpts, parser: 'typescript' }
@@ -82,6 +78,9 @@ const prettierOpts = {
 
 const onRE = /^on([A-Z]\w*)/
 const onUpdateRE = /^on(Update:\w+)/
+export const thisBindRe = /this\.(props\.)?/g
+export const thisPropsBindRe = /this\.(props\.)?/g
+export const thisRegexp = /this\./g
 
 const isOn = (key) => onRE.test(key)
 const isOnUpdate = (key) => onUpdateRE.test(key)
@@ -96,9 +95,9 @@ const toEventKey = (str) => {
   return hyphenate(strRemovedPrefix)
 }
 
-const isGetter = (accessor) => accessor?.getter?.type === JS_FUNCTION
-const isSetter = (accessor) => accessor?.setter?.type === JS_FUNCTION
-const hasAccessor = (accessor) => isGetter(accessor) || isSetter(accessor)
+export const isGetter = (accessor) => accessor?.getter?.type === JS_FUNCTION
+export const isSetter = (accessor) => accessor?.setter?.type === JS_FUNCTION
+export const hasAccessor = (accessor) => isGetter(accessor) || isSetter(accessor)
 
 const addAccessorRecord = (accessor, record) => {
   if (isGetter(accessor)) {
@@ -149,14 +148,12 @@ export {
   getTypeOfSchema,
   getFunctionInfo,
   safeRandom,
-  randomString,
   avoidDuplicateString,
   lowerFirst,
   toPascalCase,
   prettierOpts,
   isOn,
   toEventKey,
-  hasAccessor,
   addAccessorRecord,
   addIconRecord,
   handleIconInProps

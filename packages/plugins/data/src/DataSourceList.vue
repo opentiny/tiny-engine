@@ -1,7 +1,7 @@
 <template>
   <div class="data-source-list">
     <ul>
-      <li v-for="key in filteredKey" :key="key" class="data-source-list-item">
+      <li v-for="key in filteredKey" :key="key" :class="['data-source-list-item', { selected: key === selectedKey }]">
         <div class="item-head">
           <div class="item-head-left">
             <span class="protocal"> {{ stateScope === STATE.CURRENT_STATE ? 'state.' : 'stores.' }}</span>
@@ -15,7 +15,7 @@
         </div>
       </li>
     </ul>
-    <div v-if="!filteredKey.length" class="data-source-list-blank"><span>查询结果为空</span></div>
+    <search-empty :isShow="!filteredKey.length" />
   </div>
 </template>
 
@@ -23,16 +23,17 @@
 import { computed } from 'vue'
 import { useModal } from '@opentiny/tiny-engine-controller'
 import { useResource } from '@opentiny/tiny-engine-controller'
-import { findExpressionInAppSchema } from '@opentiny/tiny-engine-common/js/ast'
+import { findExpressionInAppSchema } from '@opentiny/tiny-engine-controller/js/ast'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { SvgButton } from '@opentiny/tiny-engine-common'
+import { SvgButton, SearchEmpty } from '@opentiny/tiny-engine-common'
 import { STATE, OPTION_TYPE } from './js/constants'
 
 const { COMPONENT_NAME } = constants
 
 export default {
   components: {
-    SvgButton
+    SvgButton,
+    SearchEmpty
   },
   props: {
     modelValue: {
@@ -44,6 +45,9 @@ export default {
       default: ''
     },
     stateScope: {
+      type: String
+    },
+    selectedKey: {
       type: String
     }
   },
@@ -118,6 +122,7 @@ export default {
     font-size: 12px;
   }
   .data-source-list-item {
+    &.selected,
     &:hover {
       background: var(--ti-lowcode-common-component-hover-bg);
     }
