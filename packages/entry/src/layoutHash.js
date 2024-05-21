@@ -1,6 +1,6 @@
 /**
- * Copyright (c) 2023 - present TinyEngine Authors.
- * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
+ * Copyright (c) 2024 - present TinyEngine Authors.
+ * Copyright (c) 2024 - present Huawei Cloud Computing Technologies Co., Ltd.
  *
  * Use of this source code is governed by an MIT-style license.
  *
@@ -9,10 +9,10 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-import component from './src/Main.vue'
-import metaData from './meta.js'
 
-export default {
-  ...metaData,
-  component
+import { layoutHashMap } from './common'
+
+export const getLayoutComponent = (metaData) => {
+  const customLayout = layoutHashMap[metaData.id]
+  return customLayout
 }
