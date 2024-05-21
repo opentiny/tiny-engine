@@ -1,9 +1,10 @@
 import path from 'node:path'
-import fs from 'node:fs'
+import fs from 'fs-extra'
 import fg from 'fast-glob'
 import { normalizePath } from 'vite'
-import { readJsonSync } from 'fs-extra'
 import { babelReplaceImportPathWithCertainFileName } from './replaceImportPath.mjs'
+
+const { readJsonSync } = fs
 
 function transform(content, filename) {
   if (filename.endsWith('.js')) {
