@@ -8,4 +8,4 @@ tool_params:
   secsolar:
     source_dir: ./
   cmetrics:
-    exclude: vite.config.js|package.json|index.js|mockServer/assets
+    exclude: vite.config.js|package.json|index.js|mockServer/assets|packages/vue-generator/test
