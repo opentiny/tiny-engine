@@ -1,5 +1,5 @@
 import path from 'node:path'
-import { readJsonSync } from 'fs-extra'
+import fs from 'fs-extra'
 import {
   getPackageNeedToInstallAndFilesUsingSameVersion,
   copyfileToDynamicSrcMapper,
@@ -9,6 +9,8 @@ import {
 } from './locateCdnNpmInfo'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
 import { installPackageTemporary } from '../vite-plugins/installPackageTemporary'
+
+const { readJsonSync } = fs
 
 export function extraPreviewImport(filename, originCdnPrefix) {
   const result = []

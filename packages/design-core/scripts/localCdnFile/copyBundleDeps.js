@@ -1,5 +1,5 @@
 import path from 'node:path'
-import { readJsonSync } from 'fs-extra'
+import fs from 'fs-extra'
 import { installPackageTemporary } from '../vite-plugins/installPackageTemporary'
 import { configServerAddProxy } from '../vite-plugins/configureServerAddProxy'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
@@ -9,6 +9,8 @@ import {
   dedupeCopyFiles,
   copyfileToDynamicSrcMapper
 } from './locateCdnNpmInfo'
+
+const { readJsonSync } = fs
 
 export function extraBundleCdnLink(filename, originCdnPrefix) {
   const result = []
