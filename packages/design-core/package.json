@@ -1,6 +1,7 @@
 {
   "name": "@opentiny/tiny-engine",
   "version": "1.0.0-beta.4",
+  "type": "module",
   "description": "TinyEngine enables developers to customize low-code platforms, build low-bit platforms online in real time, and support secondary development or integration of low-bit platform capabilities.",
   "homepage": "https://opentiny.design/tiny-engine",
   "keywords": [
@@ -11,6 +12,14 @@
     "lowcode",
     "tiny-engine"
   ],
+  "module": "index.js",
+  "main": "index.js",
+  "exports": {
+    ".": "index.js",
+    "./vite.config.js": "./vite.config.js",
+    "./config/lowcode.config": "./config/lowcode.config.js",
+    "./scripts/externalDeps": "./scripts/externalDeps.js"
+  },
   "scripts": {
     "dev": "cross-env NODE_OPTIONS=--max-old-space-size=10240 VITE_API_MOCK=mock vite",
     "serve": "cross-env NODE_OPTIONS=--max-old-space-size=10240 vite",
@@ -34,6 +43,8 @@
     "@babel/generator": "~7.23.2",
     "@babel/parser": "~7.23.2",
     "@babel/traverse": "~7.23.2",
+    "@opentiny/vite-plugin-generate-comments": "workspace:*",
+    "@opentiny/tiny-engine-entry": "workspace:*",
     "@opentiny/tiny-engine-canvas": "workspace:*",
     "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-controller": "workspace:*",
@@ -126,7 +137,8 @@
     "vite-plugin-monaco-editor": "^1.1.0",
     "vite-plugin-static-copy": "^0.16.0",
     "vite-plugin-svg-icons": "^2.0.1",
-    "vue-eslint-parser": "^8.0.1"
+    "vue-eslint-parser": "^8.0.1",
+    "lodash-es": "^4.17.21"
   },
   "browserslist": [
     "> 1%",
