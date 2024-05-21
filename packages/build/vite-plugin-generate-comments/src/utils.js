@@ -33,6 +33,8 @@ export const vueLifeHook = [
 const callEntryExp = /\/\*\s*metaService/
 const compileExp = /\/\*\s*metaComponent/
 
+const statement = (code) => template.statement(code, { placeholderPattern: false })
+
 export const isCallEntryFile = (code) => {
   return callEntryExp.test(code)
 }
@@ -160,9 +162,9 @@ export const wrapEntryFuncNode = ({ path, functionName = '', varName, state }) =
   const callEntry = varName[CALLENTRY]
   const beforeCallEntry = varName[BEFORE_CALLENTRY]
   const afterCallEntry = varName[AFTER_CALLENTRY]
-  const entryAst = template.statement(`${callEntry}(${entryParam})`)()
-  const beforeEntryAst = template.statement(`${beforeCallEntry}(${entryParam})`)()
-  const afterEntryAst = template.statement(`${afterCallEntry}(${entryParam})`)()
+  const entryAst = statement(`${callEntry}(${entryParam})`)()
+  const beforeEntryAst = statement(`${beforeCallEntry}(${entryParam})`)()
+  const afterEntryAst = statement(`${afterCallEntry}(${entryParam})`)()
 
   const resultNode = path.node
   generateBeforeAfterEntry({ path, beforeEntryAst, afterEntryAst })
@@ -212,7 +214,7 @@ export const wrapExportComp = ({ path, varName }) => {
   properties.forEach((prop) => {
     if (prop.key?.name === 'component') {
       const val = prop.value
-      const compileAst = template.statement(`${useCompile}({ component: null, ${METADATANAME}: ${metaData} });`)()
+      const compileAst = statement(`${useCompile}({ component: null, ${METADATANAME}: ${metaData} });`)()
       compileAst.expression.arguments[0].properties[0].value = val
       path.traverse({
         enter(subPath) {
@@ -239,7 +241,7 @@ export const wrapHookCall = ({ path, varName, functionName, callName, state }) =
     varName,
     state
   })
-  const wrapAst = template.statement(`${callName}(${callEntry}(${entryParam}))`)()
+  const wrapAst = statement(`${callName}(${callEntry}(${entryParam}))`)()
   wrapAst.expression.arguments[0].arguments.unshift(argument)
   path.replaceWith(wrapAst)
   path.skip()
