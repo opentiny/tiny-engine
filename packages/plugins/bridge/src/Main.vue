@@ -19,6 +19,7 @@
 </template>
 
 <script>
+/* metaService */
 import { ref, computed } from 'vue'
 import { Tabs, TabItem } from '@opentiny/vue'
 import { PluginPanel, SvgButton, LinkButton } from '@opentiny/tiny-engine-common'

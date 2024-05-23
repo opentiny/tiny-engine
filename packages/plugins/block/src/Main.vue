@@ -104,6 +104,7 @@
 </template>
 
 <script lang="jsx">
+/* metaService */
 import { ref, reactive, computed, watch } from 'vue'
 import {
   Search as TinySearch,

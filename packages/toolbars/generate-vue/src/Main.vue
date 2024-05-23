@@ -129,7 +129,8 @@ export default {
     const instance = generateApp()
 
     const getAllPageDetails = async (pageList) => {
-      const detailPromise = pageList.map(({ id }) => useLayout().getPluginApi('AppManage').getPageById(id))
+      const { PLUGIN_NAME, getPluginApi } = useLayout()
+      const detailPromise = pageList.map(({ id }) => getPluginApi(PLUGIN_NAME.AppManage).getPageById(id))
       const detailList = await Promise.allSettled(detailPromise)
 
       return detailList

@@ -71,6 +71,7 @@
 </template>
 
 <script>
+/* metaService */
 import { reactive, watch, ref, onActivated, computed } from 'vue'
 import { Grid, GridColumn } from '@opentiny/vue'
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'

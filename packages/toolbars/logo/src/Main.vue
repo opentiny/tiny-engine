@@ -117,7 +117,7 @@ import { isDevelopEnv } from '@opentiny/tiny-engine-controller/js/environments'
 
 const http = useHttp()
 
-const { activePlugin } = useLayout()
+const { PLUGIN_NAME, activePlugin } = useLayout()
 
 const IconHelp = iconHelpCircle()
 
@@ -158,10 +158,10 @@ const getTargetUrl = (centerName) => {
 
 const actions = {
   pageManagement() {
-    activePlugin('AppManage')
+    activePlugin(PLUGIN_NAME.AppManage)
   },
   blockManagement() {
-    activePlugin('BlockManage')
+    activePlugin(PLUGIN_NAME.BlockManage)
   },
   gotoPlatformCenter() {
     window.open(getTargetUrl('my-platform'), '_blank')

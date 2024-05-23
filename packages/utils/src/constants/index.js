@@ -37,16 +37,6 @@ export const EXPRESSION_TYPE = {
   JS_EXPRESSION: 'JSExpression'
 }
 
-export const PLUGIN_NAME = {
-  Materials: 'Materials',
-  AppManage: 'AppManage',
-  BlockManage: 'BlockManage',
-  PageController: 'PageController',
-  Lock: 'Lock',
-  OutlineTree: 'OutlineTree',
-  save: 'save'
-}
-
 export const LOCALE = {
   zh_CN: 'zh_CN',
   en_US: 'en_US'

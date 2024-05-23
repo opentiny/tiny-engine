@@ -40,6 +40,7 @@
 </template>
 
 <script>
+/* metaService */
 import { onMounted, reactive, ref } from 'vue'
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
 import { IconChevronRight } from '@opentiny/vue-icon'
@@ -103,13 +104,12 @@ export default {
       boxVisibility.value = false
     }
 
+    const { PLUGIN_NAME, getPluginApi } = useLayout()
+
     const openVideoPanel = () => {
-      const { getPluginApi } = useLayout()
-      const { open } = getPluginApi('Tutorial')
+      const { open } = getPluginApi(PLUGIN_NAME.Tutorial)
       open()
     }
-
-    const { PLUGIN_NAME } = useLayout()
 
     return {
       state,

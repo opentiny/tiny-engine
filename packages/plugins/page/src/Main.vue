@@ -34,6 +34,7 @@
 </template>
 
 <script lang="jsx">
+/* metaService */
 import { reactive, ref, watchEffect, provide } from 'vue'
 import { useCanvas, useApp, useResource, usePage, useHelp } from '@opentiny/tiny-engine-controller'
 import { PluginPanel, SvgButton, LinkButton } from '@opentiny/tiny-engine-common'
