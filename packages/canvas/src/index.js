@@ -14,3 +14,4 @@ export { default as CanvasContainer } from './components/container/CanvasContain
 export { default as CanvasDragItem } from './components/container/CanvasDragItem.vue'
 export { default as CanvasFooter } from './components/container/CanvasFooter.vue'
 export { createRender } from './components/render/runner'
+export { default as metaData } from '../meta'
