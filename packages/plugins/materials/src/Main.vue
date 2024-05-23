@@ -25,7 +25,6 @@
 </template>
 
 <script>
-/* metaService */
 import { ref, reactive, provide } from 'vue'
 import { Tabs, TabItem } from '@opentiny/vue'
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'

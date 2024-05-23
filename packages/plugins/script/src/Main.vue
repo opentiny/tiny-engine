@@ -26,7 +26,6 @@
 </template>
 
 <script>
-/* metaService */
 import { onBeforeUnmount } from 'vue'
 import { Button } from '@opentiny/vue'
 import { VueMonaco, CloseIcon, LinkButton } from '@opentiny/tiny-engine-common'

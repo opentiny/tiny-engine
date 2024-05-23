@@ -39,7 +39,6 @@
 </template>
 
 <script lang="jsx">
-/* metaService */
 import { nextTick, reactive, getCurrentInstance, onActivated, ref } from 'vue'
 import { Popover } from '@opentiny/vue'
 import { VueMonaco, CloseIcon } from '@opentiny/tiny-engine-common'

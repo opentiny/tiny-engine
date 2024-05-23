@@ -46,7 +46,6 @@
 </template>
 
 <script>
-/* metaService */
 import { reactive, watch } from 'vue'
 import DataSourceList, { refresh as refreshDataSourceList, clearActive } from './DataSourceList.vue'
 import DataSourceRemotePanel, {
