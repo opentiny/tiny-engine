@@ -29,7 +29,8 @@
     "@opentiny/tiny-engine-dsl-vue": "workspace:*",
     "@opentiny/tiny-engine-http": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
-    "prettier": "2.7.1"
+    "prettier": "2.7.1",
+    "@opentiny/vite-plugin-generate-comments": "workspace:*"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",

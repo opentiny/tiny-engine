@@ -25,7 +25,8 @@
   "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
     "@opentiny/tiny-engine-utils": "workspace:*",
-    "@vueuse/core": "^9.6.0"
+    "@vueuse/core": "^9.6.0",
+    "@opentiny/vite-plugin-generate-comments": "workspace:*"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
