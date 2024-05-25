@@ -10,11 +10,8 @@
  *
  */
 
-import HelpIcon from './src/HelpIcon.vue'
+import metaData from './meta.js'
 
 export default {
-  id: 'EditorHelp',
-  title: '',
-  icon: HelpIcon,
-  align: 'bottom'
+  ...metaData
 }

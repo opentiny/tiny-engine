@@ -103,13 +103,12 @@ export default {
       boxVisibility.value = false
     }
 
+    const { PLUGIN_NAME, getPluginApi } = useLayout()
+
     const openVideoPanel = () => {
-      const { getPluginApi } = useLayout()
-      const { open } = getPluginApi('Tutorial')
+      const { open } = getPluginApi(PLUGIN_NAME.Tutorial)
       open()
     }
-
-    const { PLUGIN_NAME } = useLayout()
 
     return {
       state,
