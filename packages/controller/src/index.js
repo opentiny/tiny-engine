@@ -31,6 +31,7 @@ import useNotify from './useNotify'
 import useData from './useData'
 import useMessage from './useMessage'
 import useHelp from './useHelp'
+export { default as metaData } from '../meta'
 
 export const getExample = example
 
