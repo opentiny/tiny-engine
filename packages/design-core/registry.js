@@ -11,7 +11,9 @@
  */
 
 import i18nMeta from '@opentiny/tiny-engine-plugin-i18n'
+import layoutMeta from '@opentiny/tiny-engine-layout'
 
 export default {
+  layout: layoutMeta,
   plugins: [i18nMeta]
 }

@@ -27,10 +27,13 @@
   "license": "MIT",
   "homepage": "https://opentiny.design/tiny-engine",
   "devDependencies": {
+    "@opentiny/vite-plugin-generate-comments": "workspace:*",
     "vite": "^4.3.7",
     "vitest": "^1.4.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@opentiny/tiny-engine-entry": "workspace:*"
+  },
   "peerDependencies": {
     "@opentiny/vue-renderless": "^3.14.0",
     "vue": "^3.4.15"
