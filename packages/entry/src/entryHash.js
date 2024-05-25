@@ -15,11 +15,8 @@ import { generateRegistry, entryHashMap } from './common'
 const lowcodeRegistry = { registry: null }
 
 export const getMergeRegistry = (type, id) => {
-  if (!type) {
-    return lowcodeRegistry.registry
-  }
+  const registry = type ? lowcodeRegistry.registry[type] : lowcodeRegistry.registry
 
-  const registry = lowcodeRegistry.registry[type]
   if (!id) {
     return registry
   }
@@ -29,7 +26,7 @@ export const getMergeRegistry = (type, id) => {
     return item || null
   }
 
-  return registry?.id ? registry : null
+  return registry?.[id] ? registry : null
 }
 
 export const defineEntry = (registry) => {
