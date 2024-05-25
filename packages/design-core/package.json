@@ -109,6 +109,7 @@
     "vue-i18n": "^9.9.0"
   },
   "devDependencies": {
+    "@opentiny/vite-plugin-generate-comments": "workspace:*",
     "@babel/eslint-parser": "^7.21.3",
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",

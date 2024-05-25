@@ -119,9 +119,9 @@ export default {
     const robotVisible = ref(false)
     const robotComponent = ref(null)
     const { isTemporaryPage } = usePage()
-    const HELP_PLUGIN_ID = 'EditorHelp'
 
     const {
+      PLUGIN_NAME,
       pluginState,
       registerPluginApi,
       layoutState: { plugins: pluginsState }
@@ -154,7 +154,7 @@ export default {
     }
 
     const clickMenu = ({ item, index }) => {
-      if (item.id === HELP_PLUGIN_ID) return
+      if (item.id === PLUGIN_NAME.EditorHelp) return
       state.prevIdex = index
 
       // 切换插件与关闭插件时确认
@@ -177,8 +177,8 @@ export default {
     }
     watch(isTemporaryPage, () => {
       if (isTemporaryPage.saved) {
-        const pagePanel = state.topNavLists?.find((item) => item.id === 'AppManage') || null
-        const pageIndex = state.topNavLists?.findIndex((item) => item.id === 'AppManage') || -1
+        const pagePanel = state.topNavLists?.find((item) => item.id === PLUGIN_NAME.AppManage) || null
+        const pageIndex = state.topNavLists?.findIndex((item) => item.id === PLUGIN_NAME.AppManage) || -1
         if (pagePanel !== props.renderPanel) {
           clickMenu({ item: pagePanel, index: pageIndex })
         }
@@ -186,7 +186,7 @@ export default {
     })
 
     const openAIRobot = () => {
-      robotComponent.value = components.Robot
+      robotComponent.value = components[PLUGIN_NAME.Robot]
       robotVisible.value = !robotVisible.value
     }
     const close = () => {

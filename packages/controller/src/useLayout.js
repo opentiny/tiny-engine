@@ -16,13 +16,20 @@ import { constants } from '@opentiny/tiny-engine-utils'
 const { PAGE_STATUS } = constants
 
 const PLUGIN_NAME = {
-  Materials: 'Materials',
-  AppManage: 'AppManage',
-  BlockManage: 'BlockManage',
-  PageController: 'PageController',
+  Materials: 'engine.plugins.materials',
+  AppManage: 'engine.plugins.appmanage',
+  BlockManage: 'engine.plugins.blockmanage',
+  Bridge: 'engine.plugins.bridge',
+  DataSource: 'engine.plugins.datasource',
+  Collections: 'engine.plugins.collections',
+  EditorHelp: 'engine.plugins.editorhelp',
+  I18n: 'engine.plugins.i18n',
+  Robot: 'engine.plugins.robot',
+  Schema: 'engine.plugins.schema',
+  PageController: 'engine.plugins.pagecontroller',
+  OutlineTree: 'engine.plugins.outlinetree',
+  Tutorial: 'engine.plugins.tutorial',
   Lock: 'Lock',
-  Tutorial: 'Tutorial',
-  OutlineTree: 'OutlineTree',
   save: 'save'
 }
 
