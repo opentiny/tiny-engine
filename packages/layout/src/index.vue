@@ -1,14 +1,14 @@
 <template>
   <div class="tiny-engine-layout">
-    <div class="tiny-engine-layout__header">
+    <div class="tiny-engine-layout-header">
       <div v-for="(item, index) in state.toolbars" :key="index" class="toolbar-item">
         <component :is="item.component"></component>
       </div>
     </div>
   </div>
-  <div class="tiny-engine-layout__content">
+  <div class="tiny-engine-layout-content">
     <div class="left-panel">
-      <div class="left-panel--top">
+      <div class="left-panel-top">
         <div
           v-for="(item, index) in state.plugins"
           :key="index"
@@ -76,7 +76,8 @@ export default {
       } else {
         showDrawer.value = true
         showComponent.value = item.component
-        ;(state.drawerWidth = item.span ? (item.span * 100) / 24 + '%' : null), (active.value = index)
+        state.drawerWidth = item.span ? (item.span * 100) / 24 + '%' : null
+        active.value = index
         if (item.click) {
           item.click()
         }
