@@ -14,7 +14,12 @@ import { importmapPlugin } from './scripts/externalDeps.js'
 import visualizerCjs from 'rollup-plugin-visualizer'
 import { fileURLToPath } from 'node:url'
 import generateComment from '@opentiny/vite-plugin-generate-comments'
-import { getBaseUrlFromCli, copyBundleDeps, copyPreviewImportMap, copyLocalImportMap } from './scripts/localCdnFile'
+import {
+  getBaseUrlFromCli,
+  copyBundleDeps,
+  copyPreviewImportMap,
+  copyLocalImportMap
+} from './scripts/localCdnFile/index.js'
 
 const monacoEditorPlugin = monacoEditorPluginCjs.default
 const nodeGlobalsPolyfillPlugin = nodeGlobalsPolyfillPluginCjs.default
@@ -207,9 +212,7 @@ const prodAlias = {
   )
 }
 
-const commonAlias = {
-  '@opentiny/tiny-engine-app-addons': path.resolve(__dirname, './config/addons.js')
-}
+const commonAlias = {}
 
 export default defineConfig(({ command = 'serve', mode = 'serve' }) => {
   const {
