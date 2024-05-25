@@ -29,12 +29,14 @@
     "@opentiny/tiny-engine-dsl-vue": "workspace:*",
     "@opentiny/tiny-engine-http": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
-    "prettier": "2.7.1"
+    "prettier": "2.7.1",
+    "@opentiny/tiny-engine-entry": "workspace:*"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
     "@vitejs/plugin-vue-jsx": "^3.1.0",
-    "vite": "^4.3.7"
+    "vite": "^4.3.7",
+    "@opentiny/vite-plugin-generate-comments": "workspace:*"
   },
   "peerDependencies": {
     "@opentiny/vue": "^3.14.0",
