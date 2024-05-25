@@ -23,7 +23,10 @@ import 'virtual:svg-icons-register'
 
 import TinyThemeTool from '@opentiny/vue-theme/theme-tool'
 import { tinySmbTheme } from '@opentiny/vue-theme/theme' // SMB 主题
+import { defineEntry } from '@opentiny/tiny-engine-entry'
+import defaultResigry from '../registry.js'
 
+defineEntry(defaultResigry)
 initHttp({ env: import.meta.env })
 
 // eslint-disable-next-line no-new
