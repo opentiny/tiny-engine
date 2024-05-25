@@ -11,7 +11,8 @@
  */
 
 import SvgIcon from './src/Main.vue'
+import metaData from './meta.js'
 
 export default (app) => {
-  app.component('SvgIcon', SvgIcon)
+  app.component('SvgIcon', { ...metaData, SvgIcon })
 }

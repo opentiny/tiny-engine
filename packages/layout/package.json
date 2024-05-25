@@ -1,0 +1,23 @@
+{
+  "name": "@opentiny/tiny-engine-layout",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "vite build"
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@opentiny/tiny-engine-entry": "workspace:*",
+    "vue": "3.2.45"
+  },
+  "devDependencies": {
+    "@opentiny/vite-plugin-generate-comments": "workspace:*",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "less": "^4.2.0",
+    "vite": "^5.1.6"
+  }
+}

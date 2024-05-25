@@ -12,22 +12,21 @@
 
 import { defineConfig } from 'vite'
 import path from 'path'
+import vue from '@vitejs/plugin-vue'
+import vueJsx from '@vitejs/plugin-vue-jsx'
 import generateComment from '@opentiny/vite-plugin-generate-comments'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [generateComment()],
+  plugins: [generateComment(), vue(), vueJsx()],
   publicDir: false,
   resolve: {},
   build: {
     lib: {
-      entry: path.resolve(__dirname, './src/index.js'),
-      name: 'utils',
+      entry: path.resolve(__dirname, './index.js'),
+      name: 'layout',
       fileName: () => 'index.js',
       formats: ['es']
-    },
-    rollupOptions: {
-      external: ['vue', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/]
     }
   }
 })
