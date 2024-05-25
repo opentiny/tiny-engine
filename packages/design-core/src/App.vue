@@ -36,7 +36,6 @@ import DesignToolbars from './DesignToolbars.vue'
 import DesignPlugins from './DesignPlugins.vue'
 import DesignCanvas from './DesignCanvas.vue'
 import DesignSettings from './DesignSettings.vue'
-import addons from '@opentiny/tiny-engine-app-addons'
 import blockPlugin from '@opentiny/tiny-engine-plugin-block'
 import materials from '@opentiny/tiny-engine-plugin-materials'
 import { useBroadcastChannel } from '@vueuse/core'
@@ -141,7 +140,6 @@ export default {
       right,
       plugins,
       toggleNav,
-      addons,
       layoutState,
       designSmbConfig
     }
