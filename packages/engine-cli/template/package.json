@@ -10,11 +10,13 @@
   "dependencies": {
     "vue": "^3.4.21",
     "@opentiny/tiny-engine": "workspace:^",
-    "@opentiny/tiny-engine-entry": "workspace:^"
+    "@opentiny/tiny-engine-entry": "workspace:^",
+    "@opentiny/tiny-engine-canvas": "workspace:^"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",
     "vite": "^5.2.7",
-    "@opentiny/tiny-engine-cli": "workspace:^"
+    "@opentiny/tiny-engine-cli": "workspace:^",
+    "@opentiny/vite-plugin-generate-comments": "workspace:^"
   }
 }

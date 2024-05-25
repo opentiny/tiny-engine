@@ -10,12 +10,10 @@
  *
  */
 
-import vue from '@vitejs/plugin-vue'
-// TODO: 考虑是否把各项配置合并到一个配置文件当中
+import defaultConfig from '@opentiny/tiny-engine/vite.config.js'
+import { defineConfig } from 'vite'
+
 export default {
-  registry: {},
-  viteConfig: {
-    plugins: [vue()]
-  }, // 将vite.config.js配置到此处
+  viteConfig: defaultConfig(({ command }) => defineConfig({ command, mode: 'serve' })),
   otherConfig: {}
 }
