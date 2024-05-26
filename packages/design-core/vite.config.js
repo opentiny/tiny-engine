@@ -84,7 +84,6 @@ const config = {
     vueJsx(),
     createSvgIconsPlugin({
       iconDirs: [
-        path.resolve(__dirname, './assets/rf-resources/'), // 脚手架执行构建时将图元图片拷贝到此目录
         path.resolve(__dirname, './assets/')
       ],
       symbolId: 'icon-[name]',
