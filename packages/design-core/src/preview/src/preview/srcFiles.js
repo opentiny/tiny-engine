@@ -26,10 +26,16 @@ import storesHelperJS from './srcFiles/storesHelper.js?raw'
 
 const srcFiles = {}
 
+const versionDelimiter = import.meta.env.VITE_CDN_TYPE === 'npmmirror' ? '/' : '@'
+const fileDelimiter = import.meta.env.VITE_CDN_TYPE === 'npmmirror' ? '/files' : ''
+
 srcFiles['App.vue'] = appVue
 srcFiles['Main.vue'] = mainVue
 srcFiles['constant.js'] = constantJS
-srcFiles['app.js'] = appJS.replace(/VITE_CDN_DOMAIN/g, import.meta.env.VITE_CDN_DOMAIN)
+srcFiles['app.js'] = appJS
+  .replace(/VITE_CDN_DOMAIN/g, import.meta.env.VITE_CDN_DOMAIN)
+  .replaceAll('${versionDelimiter}', versionDelimiter)
+  .replaceAll('${fileDelimiter}', fileDelimiter)
 srcFiles['injectGlobal.js'] = injectGlobalJS
 srcFiles['lowcode.js'] = lowcodeJS
 srcFiles['dataSourceMap.js'] = dataSourceMapJS

@@ -16,5 +16,6 @@ function addCss(href) {
   link.setAttribute('href', href)
   document.head.appendChild(link)
 }
-addCss('VITE_CDN_DOMAIN/@opentiny/vue-theme@3.14/index.css')
-addCss('VITE_CDN_DOMAIN/@opentiny/vue-theme-mobile@3.14/index.css')
+
+addCss('VITE_CDN_DOMAIN/@opentiny/vue-theme${versionDelimiter}3.14${fileDelimiter}/index.css')
+addCss('VITE_CDN_DOMAIN/@opentiny/vue-theme-mobile${versionDelimiter}3.14${fileDelimiter}/index.css')
