@@ -27,6 +27,12 @@ export default defineConfig({
       name: 'layout',
       fileName: () => 'index.js',
       formats: ['es']
+    },
+    rollupOptions: {
+      output: {
+        banner: 'import "./style.css"'
+      },
+      external: ['vue', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/]
     }
   }
 })
