@@ -13,7 +13,7 @@
 import { defineEntry } from '@opentiny/tiny-engine-entry'
 import { createApp } from 'vue'
 import EngineApp from './src/index.js'
-import defaultResigry from './registry.js'
+import defaultRegistry from './registry.js'
 import { merge } from 'lodash-es'
 import initSvgs from '@opentiny/tiny-engine-svgs'
 import { setGlobalConfig } from '@opentiny/tiny-engine-controller'
@@ -33,7 +33,7 @@ const type = (obj) => {
 
 const mergeRegistry = (registry) => {
   Object.entries(registry).forEach(([key, value]) => {
-    const defaultConfig = defaultResigry[key]
+    const defaultConfig = defaultRegistry[key]
     if (Array.isArray(value) && defaultConfig) {
       value.forEach((meta, index) => {
         const defaultMeta = defaultConfig.find((item) => item.id === meta.id)
@@ -47,7 +47,8 @@ const mergeRegistry = (registry) => {
       registry[key] = merge(defaultConfig, registry[key])
     }
   })
-
+  console.log('default registry:', defaultRegistry)
+  console.log('merged registry:', registry)
   return registry
 }
 
