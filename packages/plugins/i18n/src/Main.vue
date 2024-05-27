@@ -119,7 +119,6 @@
 </template>
 
 <script lang="jsx">
-/* metaService */
 import { computed, ref, watchEffect, reactive, onMounted, nextTick, resolveComponent } from 'vue'
 import useClipboard from 'vue-clipboard3'
 import { Grid, GridColumn, Input, Popover, Button, FileUpload, Loading, Tooltip, Select } from '@opentiny/vue'
@@ -128,7 +127,7 @@ import { PluginPanel, LinkButton, SearchEmpty } from '@opentiny/tiny-engine-comm
 import { useTranslate, useApp, useModal, getGlobalConfig, useHelp } from '@opentiny/tiny-engine-controller'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { useHttp } from '@opentiny/tiny-engine-http'
-// import { BASE_URL } from '@opentiny/tiny-engine-controller/js/environments'
+import { BASE_URL } from '@opentiny/tiny-engine-controller/js/environments'
 
 export default {
   components: {
@@ -289,7 +288,7 @@ export default {
     }
 
     const downloadFile = () => {
-      // window.open(`${BASE_URL}src/app/public/i18n-mock/i18n-template-for-batch-import.zip`)
+      window.open(`${BASE_URL}src/app/public/i18n-mock/i18n-template-for-batch-import.zip`)
     }
 
     const openDeletePopover = (row) => {

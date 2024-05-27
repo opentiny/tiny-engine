@@ -2,10 +2,13 @@
   "name": "@opentiny/vite-plugin-generate-comments",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "module": "index.js",
-  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
+    "build": "vite build",
     "test": "node ./src/test/index.js"
   },
   "devDependencies": {
