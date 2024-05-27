@@ -34,10 +34,9 @@
   </div>
 </template>
 
-<script lang="jsx">
-/* metaService */
-import './index.less'
+<script>
 import { shallowRef, ref, reactive } from 'vue'
+import './index.less'
 
 export default {
   props: {

@@ -1,14 +1,14 @@
 import path from 'node:path'
 import fs from 'fs-extra'
-import { installPackageTemporary } from '../vite-plugins/installPackageTemporary'
-import { configServerAddProxy } from '../vite-plugins/configureServerAddProxy'
+import { installPackageTemporary } from '../vite-plugins/installPackageTemporary.js'
+import { configServerAddProxy } from '../vite-plugins/configureServerAddProxy.js'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
 import {
   getCdnPathNpmInfoForSingleFile,
   getPackageNeedToInstallAndFilesUsingSameVersion,
   dedupeCopyFiles,
   copyfileToDynamicSrcMapper
-} from './locateCdnNpmInfo'
+} from './locateCdnNpmInfo.js'
 
 const { readJsonSync } = fs
 
