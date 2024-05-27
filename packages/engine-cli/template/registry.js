@@ -14,15 +14,98 @@ export default {
   layout: { id: 'engine.layout' },
   toolbars: [
     {
-      id: 'engine.toolbars.download'
+      id: 'engine.toolbars.logo'
+    },
+    {
+      id: 'engine.toolbars.breadcrumb'
+    },
+    {
+      id: 'engine.toolbars.media'
+    },
+    {
+      id: 'engine.toolbars.collaboration'
+    },
+    {
+      id: 'engine.toolbars.clean'
     },
     {
       id: 'engine.toolbars.refresh'
+    },
+    {
+      id: 'engine.toolbars.save'
+    },
+    {
+      id: 'engine.toolbars.generate-vue'
+    },
+    {
+      id: 'engine.toolbars.preview'
+    },
+    {
+      id: 'engine.toolbars.redoundo'
+    },
+    {
+      id: 'engine.toolbars.fullscreen'
+    },
+    {
+      id: 'engine.toolbars.lock'
+    },
+    {
+      id: 'engine.toolbars.setting'
+    },
+    {
+      id: 'engine.toolbars.lang'
     }
   ],
-  plugins: [{ id: 'engine.plugins.i18n' }, { id: 'engine.plugins.status' }],
+  plugins: [
+    {
+      id: 'engine.plugins.materials'
+    },
+    {
+      id: 'engine.plugins.outlinetree'
+    },
+    {
+      id: 'engine.plugins.appmanage'
+    },
+    {
+      id: 'engine.plugins.blockmanage'
+    },
+    {
+      id: 'engine.plugins.collections'
+    },
+    {
+      id: 'engine.plugins.bridge'
+    },
+    {
+      id: 'engine.plugins.i18n'
+    },
+    {
+      id: 'engine.plugins.pagecontroller'
+    },
+    {
+      id: 'engine.plugins.datasource'
+    },
+    {
+      id: 'engine.plugins.schema'
+    },
+    {
+      id: 'engine.plugins.editorhelp'
+    },
+    {
+      id: 'engine.plugins.robot'
+    }
+  ],
   dsls: [{ id: 'engine.dsls.dslvue' }],
-  settings: [],
+  settings: [
+    {
+      id: 'engine.setting.props'
+    },
+    {
+      id: 'engine.setting.styles'
+    },
+    {
+      id: 'engine.setting.event'
+    }
+  ],
   canvas: {},
   utils: { id: 'engine.utils' }
 }
