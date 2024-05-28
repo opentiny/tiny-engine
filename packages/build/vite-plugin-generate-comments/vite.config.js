@@ -26,7 +26,7 @@ export default defineConfig({
       formats: ['es', 'cjs']
     },
     rollupOptions: {
-      external: ['vue', /@babel\/.*/, /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/]
+      external: ['node:fs', 'node:path', 'vue', /@babel\/.*/, /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/]
     }
   }
 })
