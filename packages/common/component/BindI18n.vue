@@ -117,7 +117,8 @@ export default {
       emit('bind', { ...data, key })
     }
 
-    const activeI18n = () => useLayout().activePlugin('I18n')
+    const { PLUGIN_NAME, activePlugin } = useLayout()
+    const activeI18n = () => activePlugin(PLUGIN_NAME.I18n)
 
     const addBindI18n = () => {
       useTranslate().ensureI18n(editForm, true)

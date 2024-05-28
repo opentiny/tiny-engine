@@ -6,9 +6,9 @@ import {
   dedupeCopyFiles,
   getCdnPathNpmInfoForPackage,
   getCdnPathNpmInfoForSingleFile
-} from './locateCdnNpmInfo'
+} from './locateCdnNpmInfo.js'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
-import { installPackageTemporary } from '../vite-plugins/installPackageTemporary'
+import { installPackageTemporary } from '../vite-plugins/installPackageTemporary.js'
 
 const { readJsonSync } = fs
 

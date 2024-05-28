@@ -14,7 +14,12 @@ import { importmapPlugin } from './scripts/externalDeps.js'
 import visualizerCjs from 'rollup-plugin-visualizer'
 import { fileURLToPath } from 'node:url'
 import generateComment from '@opentiny/vite-plugin-generate-comments'
-import { getBaseUrlFromCli, copyBundleDeps, copyPreviewImportMap, copyLocalImportMap } from './scripts/localCdnFile'
+import {
+  getBaseUrlFromCli,
+  copyBundleDeps,
+  copyPreviewImportMap,
+  copyLocalImportMap
+} from './scripts/localCdnFile/index.js'
 
 const monacoEditorPlugin = monacoEditorPluginCjs.default
 const nodeGlobalsPolyfillPlugin = nodeGlobalsPolyfillPluginCjs.default
@@ -79,7 +84,6 @@ const config = {
     vueJsx(),
     createSvgIconsPlugin({
       iconDirs: [
-        path.resolve(__dirname, './assets/rf-resources/'), // 脚手架执行构建时将图元图片拷贝到此目录
         path.resolve(__dirname, './assets/')
       ],
       symbolId: 'icon-[name]',
@@ -196,7 +200,8 @@ const devAlias = {
   '@opentiny/tiny-engine-webcomponent-core': path.resolve(__dirname, '../webcomponent/src/lib.js'),
   '@opentiny/tiny-engine-i18n-host': path.resolve(__dirname, '../i18n/src/lib.js'),
   '@opentiny/tiny-engine-builtin-component': path.resolve(__dirname, '../builtinComponent/index.js'),
-  '@opentiny/tiny-engine-entry': path.resolve(__dirname, '../entry/index.js')
+  '@opentiny/tiny-engine-entry': path.resolve(__dirname, '../entry/index.js'),
+  '@opentiny/tiny-engine-layout': path.resolve(__dirname, '../layout/index.js')
 }
 
 const prodAlias = {
@@ -206,9 +211,7 @@ const prodAlias = {
   )
 }
 
-const commonAlias = {
-  '@opentiny/tiny-engine-app-addons': path.resolve(__dirname, './config/addons.js')
-}
+const commonAlias = {}
 
 export default defineConfig(({ command = 'serve', mode = 'serve' }) => {
   const {
