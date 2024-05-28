@@ -10,19 +10,9 @@
  *
  */
 
-import { getMergeMeta } from './src/common'
-import { useCompile } from './src/templateHash'
-import { defineEntry, callEntry, beforeCallEntry, afterCallEntry, getMergeRegistry } from './src/entryHash'
-
-import { getLayoutComponent } from './src/layoutHash'
-
-export {
-  getMergeMeta,
-  useCompile,
-  defineEntry,
-  callEntry,
-  beforeCallEntry,
-  afterCallEntry,
-  getLayoutComponent,
-  getMergeRegistry
-}
+export { getMergeMeta, getPluginApi, getOptions } from './common'
+export { useCompile } from './templateHash'
+export { defineEntry, callEntry, beforeCallEntry, afterCallEntry, getMergeRegistry } from './entryHash'
+export { getLayoutComponent } from './layoutHash'
+export { default as useMessage } from './useMessage'
+export { useShareState } from './useShareState'

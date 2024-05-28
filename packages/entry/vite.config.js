@@ -20,7 +20,7 @@ export default defineConfig({
   resolve: {},
   build: {
     lib: {
-      entry: path.resolve(__dirname, './index.js'),
+      entry: path.resolve(__dirname, './src/index.js'),
       name: 'tiny-engine-entry',
       fileName: () => 'index.js',
       formats: ['es']
