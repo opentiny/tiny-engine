@@ -2,6 +2,7 @@
   "name": "@opentiny/vite-plugin-generate-comments",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "files": [
