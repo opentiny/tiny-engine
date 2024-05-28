@@ -88,20 +88,25 @@ const handleLifeCycles = (id, lifeCycles) => {
 }
 
 const handleRegistryProp = (id, value) => {
-  const { template, layout, methods, lifeCycles } = value
-  // 处理生命周期
-  if (lifeCycles) {
-    handleLifeCycles(id, lifeCycles)
-  }
-  // 如果id和模板配置同时存在则放到模板hash表中
-  if (template) {
-    templateHashMap[id] = template
-  }
+  const { layout, overwrite = {} } = value
+
   if (layout) {
     layoutHashMap[id] = layout
   }
-  if (methods) {
-    handleMethods(id, methods)
+
+  if (overwrite) {
+    const { template, lifeCycles, methods } = overwrite
+    // 处理模板
+    if (template) {
+      templateHashMap[id] = template
+    }
+    // 处理生命周期
+    if (lifeCycles) {
+      handleLifeCycles(id, lifeCycles)
+    }
+    if (methods) {
+      handleMethods(id, methods)
+    }
   }
 }
 

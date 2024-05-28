@@ -45,7 +45,7 @@ import Styles from '@opentiny/tiny-engine-setting-styles'
 import '@opentiny/tiny-engine-theme'
 
 export default {
-  plugins: [Materials, Tree, Page, Block, Datasource, Bridge, I18n, Script, Data, Schema, Help, Robot],
+  layout: { id: 'engine.layout' },
   toolbars: [
     Logo,
     Breadcrumb,
@@ -62,5 +62,9 @@ export default {
     Setting,
     Lang
   ],
-  settings: [Props, Styles, Events]
+  plugins: [Materials, Tree, Page, Block, Datasource, Bridge, I18n, Script, Data, Schema, Help, Robot],
+  dsls: [{ id: 'engine.dsls.dslvue' }],
+  settings: [Props, Styles, Events],
+  canvas: {},
+  utils: { id: 'engine.utils' }
 }

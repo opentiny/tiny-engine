@@ -16,11 +16,11 @@
         <div>
           <span class="item-icon">
             <svg-icon
-              v-if="typeof iconComponents[item.id] === 'string'"
-              :name="iconComponents[item.id]"
+              v-if="typeof pluginsMap[item.id].icon === 'string'"
+              :name="pluginsMap[item.id].icon"
               class="panel-icon"
             ></svg-icon>
-            <component v-else :is="iconComponents[item.id]" class="panel-icon"></component>
+            <component v-else :is="pluginsMap[item.id].icon" class="panel-icon"></component>
           </span>
         </div>
       </li>
@@ -40,12 +40,12 @@
         <div :class="{ 'is-show': renderPanel }">
           <span class="item-icon">
             <public-icon
-              v-if="typeof iconComponents[item.id] === 'string'"
-              :name="iconComponents[item.id]"
+              v-if="typeof pluginsMap[item.id].icon === 'string'"
+              :name="pluginsMap[item.id].icon"
               class="panel-icon"
               svgClass="panel-svg"
             ></public-icon>
-            <component v-else :is="iconComponents[item.id]" class="panel-icon"></component>
+            <component v-else :is="pluginsMap[item.id].icon" class="panel-icon"></component>
           </span>
         </div>
       </li>
@@ -66,16 +66,17 @@
   </div>
 
   <div
-    v-show="renderPanel && components[renderPanel]"
+    v-show="pluginsMap[renderPanel]?.component"
     id="tiny-engine-left-panel"
     :class="[renderPanel, { 'is-fixed': pluginsState.fixedPanels.includes(renderPanel) }]"
   >
     <div class="left-panel-wrap">
       <keep-alive>
         <component
-          :is="components[renderPanel]"
+          :is="pluginsMap[renderPanel]?.component"
           ref="pluginRef"
           :fixed-panels="pluginsState.fixedPanels"
+          :options="pluginsMap[renderPanel]?.options"
           @close="close"
           @fixPanel="fixPanel"
         ></component>
@@ -113,8 +114,7 @@ export default {
   emits: ['click', 'node-click'],
   setup(props, { emit }) {
     const plugins = getMergeRegistry('plugins')
-    const components = {}
-    const iconComponents = {}
+    const pluginsMap = {}
     const pluginRef = ref(null)
     const robotVisible = ref(false)
     const robotComponent = ref(null)
@@ -127,12 +127,11 @@ export default {
       layoutState: { plugins: pluginsState }
     } = useLayout()
 
-    plugins.forEach(({ id, component, api, icon }) => {
-      components[id] = component
-      iconComponents[id] = icon
-      if (api) {
+    plugins.forEach(({ id, ...rest }) => {
+      pluginsMap[id] = rest
+      if (rest.api) {
         registerPluginApi({
-          [id]: api
+          [id]: rest.api
         })
       }
     })
@@ -186,7 +185,7 @@ export default {
     })
 
     const openAIRobot = () => {
-      robotComponent.value = components[PLUGIN_NAME.Robot]
+      robotComponent.value = pluginsMap[PLUGIN_NAME.Robot].component
       robotVisible.value = !robotVisible.value
     }
     const close = () => {
@@ -210,8 +209,7 @@ export default {
       close,
       fixPanel,
       pluginsState,
-      components,
-      iconComponents,
+      pluginsMap,
       completed,
       doCompleted,
       pluginState
