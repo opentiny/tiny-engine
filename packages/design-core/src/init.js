@@ -32,7 +32,7 @@ const type = (obj) => {
 }
 
 const mergeRegistry = (registry) => {
-  Object.entries(registry).forEach(([key, value]) => {
+  for (const [key, value] of Object.entries(registry)) {
     const defaultConfig = defaultRegistry[key]
     if (Array.isArray(value) && defaultConfig) {
       value.forEach((meta, index) => {
@@ -46,51 +46,48 @@ const mergeRegistry = (registry) => {
     if (type(value) === 'Object' && defaultConfig) {
       registry[key] = merge(defaultConfig, registry[key])
     }
-  })
-  console.log('default registry:', defaultRegistry)
-  console.log('merged registry:', registry)
+  }
+  console.log('default registry:', defaultRegistry) // eslint-disable-line
+  console.log('merged registry:', registry) // eslint-disable-line
   return registry
 }
 
-const beforeAppCreate = ({ selector, registry }) => {
-  // 合并用户自定义注册表
-  const newRegistry = mergeRegistry(registry)
+const defaultLifeCycles = {
+  beforeAppCreate: ({ registry }) => {
+    // 合并用户自定义注册表
+    const newRegistry = mergeRegistry(registry)
 
-  // 在common层注入合并后的注册表
-  defineEntry(newRegistry)
+    // 在common层注入合并后的注册表
+    defineEntry(newRegistry)
 
-  initHttp({ env: import.meta.env })
+    initHttp({ env: import.meta.env })
 
-  // eslint-disable-next-line no-new
-  new TinyThemeTool(tinySmbTheme, 'smbtheme') // 初始化主题
+    // eslint-disable-next-line no-new
+    new TinyThemeTool(tinySmbTheme, 'smbtheme') // 初始化主题
 
-  if (import.meta.env.VITE_ERROR_MONITOR === 'true' && import.meta.env.VITE_ERROR_MONITOR_URL) {
-    initMonitor(import.meta.env.VITE_ERROR_MONITOR_URL)
-  }
+    if (import.meta.env.VITE_ERROR_MONITOR === 'true' && import.meta.env.VITE_ERROR_MONITOR_URL) {
+      initMonitor(import.meta.env.VITE_ERROR_MONITOR_URL)
+    }
 
-  window.TinyGlobalConfig = globalConfig
-  setGlobalConfig(globalConfig)
-}
-
-const appCreated = (app) => {
+    window.TinyGlobalConfig = globalConfig
+    setGlobalConfig(globalConfig)
+  },
+  appCreated: ({ app }) => {
     initSvgs(app)
     window.lowcodeI18n = i18n
     app.use(i18n).use(injectGlobalComponents)
+  }
 }
 
-const beforeAppMounted = (app) => {
+export const init = (selector = '#app', registry = defaultRegistry, lifeCycles = {}) => {
+  const { beforeAppCreate, appCreated, appMounted } = lifeCycles
 
-}
-
-const appMounted = (app) => {
-
-}
-
-export const init = (selector = '#app', registry = defaultRegistry) => {
-  beforeAppCreate({ selector, registry })
+  defaultLifeCycles.beforeAppCreate({ registry })
+  beforeAppCreate?.({ registry })
   const app = createApp(App)
-  appCreated(app)
-  beforeAppMounted(app)
+  defaultLifeCycles.appCreated({ app })
+  appCreated?.({ app })
+
   app.mount(selector)
-  appMounted(app)
+  appMounted?.({ app })
 }
