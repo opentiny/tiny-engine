@@ -21,15 +21,14 @@ import { injectGlobalComponents } from '@opentiny/tiny-engine-common'
 import { initHttp } from '@opentiny/tiny-engine-http'
 import TinyThemeTool from '@opentiny/vue-theme/theme-tool'
 import { tinySmbTheme } from '@opentiny/vue-theme/theme' // SMB 主题
+import { utils } from '@opentiny/tiny-engine-utils'
 import { defineEntry } from '@opentiny/tiny-engine-entry'
 import App from './App.vue'
 import defaultRegistry from '../registry.js'
 
 import 'virtual:svg-icons-register'
 
-const type = (obj) => {
-  return Object.prototype.toString.call(obj).match(/\[object (.*)\]/)[1]
-}
+const { getType } = utils
 
 const mergeRegistry = (registry) => {
   for (const [key, value] of Object.entries(registry)) {
@@ -43,12 +42,14 @@ const mergeRegistry = (registry) => {
       })
     }
 
-    if (type(value) === 'Object' && defaultConfig) {
+    if (getType(value) === 'Object' && defaultConfig) {
       registry[key] = merge(defaultConfig, registry[key])
     }
   }
-  console.log('default registry:', defaultRegistry) // eslint-disable-line
-  console.log('merged registry:', registry) // eslint-disable-line
+  if (process.env.NODE_ENV === 'development') {
+    console.log('default registry:', defaultRegistry) // eslint-disable-line
+    console.log('merged registry:', registry) // eslint-disable-line
+  }
   return registry
 }
 
