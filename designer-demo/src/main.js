@@ -14,4 +14,4 @@
 import { registry } from './defineEntry.js'
 import { init } from '@opentiny/tiny-engine'
 
-init('#app', registry)
+init({ registry })
