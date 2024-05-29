@@ -94,7 +94,7 @@ const handleRegistryProp = (id, value) => {
     layoutHashMap[id] = layout
   }
 
-  if (overwrite) {
+  if (typeof overwrite === 'object' && overwrite !== null) {
     const { template, lifeCycles, methods } = overwrite
     // 处理模板
     if (template) {
