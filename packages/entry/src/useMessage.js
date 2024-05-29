@@ -37,7 +37,7 @@ const subscribe = ({ topic, subscriber, callback } = {}) => {
     listeners[topic] = callbacks
     callbacks.push(callback)
 
-    const lastEvent = callbacks.lastEvent || (root[topic] && root[topic].lastEvent)
+    const lastEvent = callbacks.lastEvent || root[topic]?.lastEvent
     if (lastEvent) {
       callback(lastEvent.data)
     }
@@ -75,10 +75,12 @@ const unsubscribe = ({ topic, subscriber } = {}) => {
 
     if (subscriber && typeof subscriber === 'string') {
       removeListener(subscriber)
-    } else {
-      Object.keys(subscribers).forEach((key) => {
-        removeListener(key)
-      })
+
+      return
+    }
+
+    for (const key of Object.keys(subscribers)) {
+      removeListener(key)
     }
   }
 }
@@ -93,18 +95,20 @@ const unsubscribe = ({ topic, subscriber } = {}) => {
  * @param {Object} object { topic: 消息名称, data(string | object): 消息内容 }
  */
 const publish = ({ topic, data } = {}) => {
-  if (topic && typeof topic === 'string') {
-    Object.values(subscribers).forEach((value) => {
-      let callbacks = value[topic] || []
+  if (!topic || typeof topic !== 'string') {
+    return
+  }
 
-      if (callbacks.length) {
-        callbacks.forEach((callback) => callback(data))
-      } else {
-        value[topic] = callbacks
-      }
+  for (const value of Object.values(subscribers)) {
+    let callbacks = value[topic] || []
 
-      callbacks.lastEvent = { data }
-    })
+    if (callbacks.length) {
+      callbacks.forEach((callback) => callback(data))
+    } else {
+      value[topic] = callbacks
+    }
+
+    callbacks.lastEvent = { data }
   }
 }
 
