@@ -103,7 +103,9 @@ const publish = ({ topic, data } = {}) => {
     let callbacks = value[topic] || []
 
     if (callbacks.length) {
-      callbacks.forEach((callback) => callback(data))
+      for (const cb of callbacks) {
+        cb(data)
+      }
     } else {
       value[topic] = callbacks
     }
