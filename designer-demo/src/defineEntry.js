@@ -14,3 +14,5 @@ import registry from '../registry.js'
 import { defineEntry } from '@opentiny/tiny-engine-entry'
 
 defineEntry(registry)
+
+export { registry }

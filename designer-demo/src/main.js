@@ -11,7 +11,7 @@
  */
 
 // 导入@opentiny/tiny-engine时，内部的依赖包也会逐个导入，可能会执行useComplie，此时需要templateHashMap。所以需要先执行一次defineEntry
-import './defineEntry.js'
+import { registry } from './defineEntry.js'
 import { init } from '@opentiny/tiny-engine'
 
-init()
+init('#app', registry)
