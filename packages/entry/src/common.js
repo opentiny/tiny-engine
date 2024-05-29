@@ -88,7 +88,7 @@ const handleLifeCycles = (id, lifeCycles) => {
 }
 
 const handleRegistryProp = (id, value) => {
-  const { layout, overwrite = {} } = value
+  const { layout, overwrite } = value
 
   if (layout) {
     layoutHashMap[id] = layout
