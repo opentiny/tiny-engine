@@ -13,8 +13,6 @@
 // 导入@opentiny/tiny-engine时，内部的依赖包也会逐个导入，可能会执行useComplie，此时需要templateHashMap。所以需要先执行一次defineEntry
 import { registry } from './defineEntry.js'
 import { init } from '@opentiny/tiny-engine'
-import registerCustomMetaComponents from './registerCustomMetaComponents.js'
+import { metaComponents } from './metaComponents'
 
-registerCustomMetaComponents()
-
-init({ registry })
+init({ registry, metaComponents })
