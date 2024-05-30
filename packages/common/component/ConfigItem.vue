@@ -203,18 +203,12 @@ export default {
     )
     const isLinked = computed(() => Boolean(props.property.linked))
     const component = computed(() => {
-      if (multiType.value) {
-        return MultiTypeSelector
-      }
-
-      const component = getMetaComponent(widget.value.component)
-
-      if (component) {
-        return component
-      }
-
       // TODO: 需要弄清楚 props.metaComponents[widget.value.component] 是什么场景
-      return props.metaComponents[widget.value.component] || getMetaComponent('MetaInput')
+      return multiType.value
+        ? MultiTypeSelector
+        : getMetaComponent(widget.value.component) ||
+            props.metaComponents[widget.value.component] ||
+            getMetaComponent('MetaInput')
     })
     const bindValue = computed(() => {
       let value = props.property?.widget?.props?.modelValue
