@@ -10,6 +10,9 @@
  *
  */
 
-import component from './App.vue'
-
-export default component
+export { getMergeMeta, getPluginApi, getOptions } from './common'
+export { useCompile } from './templateHash'
+export { defineEntry, callEntry, beforeCallEntry, afterCallEntry, getMergeRegistry } from './entryHash'
+export { getLayoutComponent } from './layoutHash'
+export { default as useMessage } from './useMessage'
+export { useShareState } from './useShareState'

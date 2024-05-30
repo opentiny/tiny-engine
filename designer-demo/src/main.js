@@ -1,6 +1,6 @@
 /**
- * Copyright (c) 2024 - present TinyEngine Authors.
- * Copyright (c) 2024 - present Huawei Cloud Computing Technologies Co., Ltd.
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
  *
  * Use of this source code is governed by an MIT-style license.
  *
@@ -10,8 +10,8 @@
  *
  */
 
-import './defineEntry.js'
-import { createApp } from 'vue'
-import App from './App.vue'
+// 导入@opentiny/tiny-engine时，内部的依赖包也会逐个导入，可能会执行useComplie，此时需要templateHashMap。所以需要先执行一次defineEntry
+import { registry } from './defineEntry.js'
+import { init } from '@opentiny/tiny-engine'
 
-createApp(App).mount('#app')
+init({ registry })
