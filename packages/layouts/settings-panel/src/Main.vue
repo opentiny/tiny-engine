@@ -1,37 +1,44 @@
 <template>
   <div id="tiny-right-panel">
-    <tiny-tabs v-model="layoutState.settings.render" tab-style="button-card">
+    <tiny-tabs v-model="render" tab-style="button-card">
       <tiny-tab-item v-for="(setting, index) in settings" :key="index" :title="setting.title" :name="setting.name">
         <component :is="setting.component"></component>
-        <div v-show="activating" class="active"></div>
+        <div v-show="activated" class="active"></div>
       </tiny-tab-item>
     </tiny-tabs>
   </div>
 </template>
 
 <script>
-import { computed, ref } from 'vue'
-import { Tabs, TabItem } from '@opentiny/vue'
-import { useLayout } from '@opentiny/tiny-engine-controller'
 import { getMergeRegistry } from '@opentiny/tiny-engine-entry'
+import { TabItem, Tabs } from '@opentiny/vue'
 
 export default {
   components: {
     TinyTabs: Tabs,
     TinyTabItem: TabItem
   },
+  props: {
+    modelValue: String,
+    activated: String
+  },
+  emits: ['update:modelValue'],
+  computed: {
+    render: {
+      get() {
+        return this.modelValue
+      },
+      set(value) {
+        this.$emit('update:modelValue', value)
+      }
+    }
+  },
 
   setup() {
-    const { layoutState } = useLayout()
     const settings = getMergeRegistry('settings')
-    const activating = computed(() => layoutState.settings.activating)
-    const showMask = ref(true)
 
     return {
-      showMask,
-      settings,
-      activating,
-      layoutState
+      settings
     }
   }
 }

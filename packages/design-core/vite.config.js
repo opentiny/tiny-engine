@@ -156,6 +156,7 @@ const devAlias = {
   '@opentiny/tiny-engine-controller/utils': path.resolve(__dirname, '../controller/utils.js'),
   '@opentiny/tiny-engine-controller/adapter': path.resolve(__dirname, '../controller/adapter.js'),
   '@opentiny/tiny-engine-controller': path.resolve(__dirname, '../controller/src/index.js'),
+  '@opentiny/tiny-engine-layout-settings-panel': path.resolve(__dirname, '../layouts/settings-panel/index.js'),
   '@opentiny/tiny-engine-plugin-materials': path.resolve(__dirname, '../plugins/materials/index.js'),
   '@opentiny/tiny-engine-plugin-block': path.resolve(__dirname, '../plugins/block/index.js'),
   '@opentiny/tiny-engine-plugin-data': path.resolve(__dirname, '../plugins/data/index.js'),

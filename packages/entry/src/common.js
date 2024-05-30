@@ -154,6 +154,6 @@ export const generateRegistry = (registry) => {
   })
 }
 
-export const getMergeMeta = (meta) => {
-  return metasHashMap[meta?.id]
+export const getMergeMeta = (id) => {
+  return metasHashMap[id]
 }

@@ -10,7 +10,14 @@
           </div>
         </div>
         <div class="tiny-engine-right-wrap">
-          <design-settings v-show="layoutState.settings.showDesignSettings" ref="right"></design-settings>
+          <component
+            v-if="DesignSettings"
+            :is="DesignSettings"
+            v-show="layoutState.settings.showDesignSettings"
+            v-model="layoutState.settings.render"
+            :activated="settingsActivated"
+            ref="right"
+          ></component>
         </div>
       </div>
     </div>
@@ -18,7 +25,7 @@
 </template>
 
 <script>
-import { reactive, ref, watch, onUnmounted } from 'vue'
+import { computed, reactive, ref, watch, onUnmounted } from 'vue'
 import { ConfigProvider as TinyConfigProvider } from '@opentiny/vue'
 import designSmbConfig from '@opentiny/vue-design-smb'
 import {
@@ -35,11 +42,11 @@ import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
 import DesignToolbars from './DesignToolbars.vue'
 import DesignPlugins from './DesignPlugins.vue'
 import DesignCanvas from './DesignCanvas.vue'
-import DesignSettings from './DesignSettings.vue'
 import blockPlugin from '@opentiny/tiny-engine-plugin-block'
 import materials from '@opentiny/tiny-engine-plugin-materials'
 import { useBroadcastChannel } from '@vueuse/core'
 import { constants } from '@opentiny/tiny-engine-utils'
+import { getMergeMeta } from '@opentiny/tiny-engine-entry'
 
 const { message } = useModal()
 const { requestInitBlocks } = blockPlugin.api
@@ -52,7 +59,6 @@ export default {
     DesignToolbars,
     DesignPlugins,
     DesignCanvas,
-    DesignSettings,
     TinyConfigProvider
   },
   provide() {
@@ -62,6 +68,8 @@ export default {
   },
 
   setup() {
+    const DesignSettings = getMergeMeta('engine.layouts.settings-panel')?.component
+
     const state = reactive({
       globalClass: '',
       rightWidth: '',
@@ -73,6 +81,7 @@ export default {
     const { layoutState } = useLayout()
     const { plugins } = layoutState
     const right = ref(null)
+    const settingsActivated = computed(() => layoutState.settings.activating)
 
     // 此处接收画布内部的错误和警告提示
     const { data } = useBroadcastChannel({ name: BROADCAST_CHANNEL.Notify })
@@ -141,7 +150,9 @@ export default {
       plugins,
       toggleNav,
       layoutState,
-      designSmbConfig
+      settingsActivated,
+      designSmbConfig,
+      DesignSettings
     }
   }
 }
