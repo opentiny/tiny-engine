@@ -199,7 +199,8 @@ const devAlias = {
   '@opentiny/tiny-engine-i18n-host': path.resolve(__dirname, '../i18n/src/lib.js'),
   '@opentiny/tiny-engine-builtin-component': path.resolve(__dirname, '../builtinComponent/index.js'),
   '@opentiny/tiny-engine-entry': path.resolve(__dirname, '../entry/src/index.js'),
-  '@opentiny/tiny-engine-layout': path.resolve(__dirname, '../layout/index.js')
+  '@opentiny/tiny-engine-layout': path.resolve(__dirname, '../layout/index.js'),
+  '@opentiny/tiny-engine-meta-components': path.resolve(__dirname, '../meta-components/src/index.js')
 }
 
 const prodAlias = {

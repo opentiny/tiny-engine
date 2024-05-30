@@ -79,7 +79,7 @@
                     "labelPosition": "top",
                     "type": "string",
                     "widget": {
-                      "component": "MetaInput",
+                      "component": "meta-input-custom",
                       "props": {}
                     }
                   },
