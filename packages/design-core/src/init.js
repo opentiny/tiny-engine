@@ -80,7 +80,7 @@ const defaultLifeCycles = {
   }
 }
 
-export const init = (selector = '#app', registry = defaultRegistry, lifeCycles = {}) => {
+export const init = ({ selector = '#app', registry = defaultRegistry, lifeCycles = {} } = {}) => {
   const { beforeAppCreate, appCreated, appMounted } = lifeCycles
 
   defaultLifeCycles.beforeAppCreate({ registry })

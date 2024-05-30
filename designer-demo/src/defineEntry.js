@@ -10,23 +10,9 @@
  *
  */
 
-import { defineConfig } from 'vite'
-import path from 'path'
+import registry from '../registry.js'
+import { defineEntry } from '@opentiny/tiny-engine-entry'
 
-// https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [],
-  publicDir: false,
-  resolve: {},
-  build: {
-    lib: {
-      entry: path.resolve(__dirname, './src/index.js'),
-      name: 'tiny-engine-entry',
-      fileName: () => 'index.js',
-      formats: ['es']
-    },
-    rollupOptions: {
-      external: ['vue', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/]
-    }
-  }
-})
+defineEntry(registry)
+
+export { registry }

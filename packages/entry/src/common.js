@@ -46,6 +46,25 @@ export const layoutHashMap = {}
 
 export const metasHashMap = {}
 
+export const apisMap = {}
+export const optionsMap = {}
+
+export const getPluginApi = (id, key) => {
+  if (!apisMap[id]) {
+    return
+  }
+
+  if (key) {
+    return apisMap[id][key]
+  }
+
+  return apisMap[id]
+}
+
+export const getOptions = (id) => {
+  return optionsMap[id]
+}
+
 const handleMethods = (id, methods) => {
   Object.entries(methods).forEach(([fileId, idMethods]) => {
     if (typeof idMethods === 'object') {
@@ -88,7 +107,7 @@ const handleLifeCycles = (id, lifeCycles) => {
 }
 
 const handleRegistryProp = (id, value) => {
-  const { layout, overwrite } = value
+  const { layout, overwrite, apis, options } = value
 
   if (layout) {
     layoutHashMap[id] = layout
@@ -107,6 +126,14 @@ const handleRegistryProp = (id, value) => {
     if (methods) {
       handleMethods(id, methods)
     }
+  }
+
+  if (apis) {
+    apisMap[id] = apis
+  }
+
+  if (options) {
+    optionsMap[id] = options
   }
 }
 

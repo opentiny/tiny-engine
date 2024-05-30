@@ -10,9 +10,8 @@
  *
  */
 
-import registry from '../registry.js'
-import { defineEntry } from '@opentiny/tiny-engine-entry'
+// 导入@opentiny/tiny-engine时，内部的依赖包也会逐个导入，可能会执行useComplie，此时需要templateHashMap。所以需要先执行一次defineEntry
+import { registry } from './defineEntry.js'
 import { init } from '@opentiny/tiny-engine'
 
-defineEntry(registry)
-init()
+init({ registry })
