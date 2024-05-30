@@ -67,7 +67,7 @@ export const getOptions = (id) => {
 
 const handleMethods = (id, methods) => {
   Object.entries(methods).forEach(([fileId, idMethods]) => {
-    if (typeof idMethods === 'object') {
+    if (typeof idMethods === 'object' && idMethods) {
       Object.entries(idMethods).forEach(([name, method]) => {
         const prefix = fileId ? `.${fileId}` : ''
         const methodId = `${id}${prefix}.${name}`
@@ -78,7 +78,7 @@ const handleMethods = (id, methods) => {
 }
 
 const handleVueLifeCycle = (id, value) => {
-  vueLifeHook.forEach((hookName) => {
+  for (const hookName of vueLifeHook) {
     const hookConfig = value[hookName]
     if (!hookConfig) {
       return
@@ -87,7 +87,7 @@ const handleVueLifeCycle = (id, value) => {
       const hookId = `${id}.${hookName}[0]`
       entryHashMap[hookId] = hookConfig
     }
-    if (hookConfig instanceof Array) {
+    if (Array.isArray(hookConfig)) {
       hookConfig.forEach((hookFn, index) => {
         if (typeof hookFn === 'function') {
           const hookId = `${id}.${hookName}[${index}]`
@@ -95,7 +95,7 @@ const handleVueLifeCycle = (id, value) => {
         }
       })
     }
-  })
+  }
 }
 
 const handleLifeCycles = (id, lifeCycles) => {
@@ -107,20 +107,25 @@ const handleLifeCycles = (id, lifeCycles) => {
 }
 
 const handleRegistryProp = (id, value) => {
-  const { template, layout, methods, lifeCycles, apis, options } = value
-  // 处理生命周期
-  if (lifeCycles) {
-    handleLifeCycles(id, lifeCycles)
-  }
-  // 如果id和模板配置同时存在则放到模板hash表中
-  if (template) {
-    templateHashMap[id] = template
-  }
+  const { layout, overwrite, apis, options } = value
+
   if (layout) {
     layoutHashMap[id] = layout
   }
-  if (methods) {
-    handleMethods(id, methods)
+
+  if (typeof overwrite === 'object' && overwrite) {
+    const { template, lifeCycles, methods } = overwrite
+    // 处理模板
+    if (template) {
+      templateHashMap[id] = template
+    }
+    // 处理生命周期
+    if (lifeCycles) {
+      handleLifeCycles(id, lifeCycles)
+    }
+    if (methods) {
+      handleMethods(id, methods)
+    }
   }
 
   if (apis) {
