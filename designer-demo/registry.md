@@ -16,7 +16,7 @@ interface MetaApp {
   // 布局元应用。如果当前元应用需要定制布局，可以抽取一层布局元应用
   layout?: MetaApp
   // 元应用生命周期
-  lifeCycle?: Record<string, OverwriteFn>
+  lifeCycle?: Record<string, Function>
   overwrite?: {
     template?: string
     methods?: Record<string, Record<string, OverwriteFn>>
