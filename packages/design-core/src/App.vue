@@ -10,7 +10,7 @@
           </div>
         </div>
         <div class="tiny-engine-right-wrap">
-          <design-settings v-show="layoutState.settings.showDesignSettings" ref="right"></design-settings>
+          <design-settings></design-settings>
         </div>
       </div>
     </div>
@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { reactive, ref, watch, onUnmounted } from 'vue'
+import { reactive, watch, onUnmounted } from 'vue'
 import { ConfigProvider as TinyConfigProvider } from '@opentiny/vue'
 import designSmbConfig from '@opentiny/vue-design-smb'
 import {
@@ -72,7 +72,6 @@ export default {
 
     const { layoutState } = useLayout()
     const { plugins } = layoutState
-    const right = ref(null)
 
     // 此处接收画布内部的错误和警告提示
     const { data } = useBroadcastChannel({ name: BROADCAST_CHANNEL.Notify })
@@ -137,7 +136,6 @@ export default {
 
     return {
       state,
-      right,
       plugins,
       toggleNav,
       layoutState,
