@@ -38,11 +38,10 @@ import Block from '@opentiny/tiny-engine-plugin-block'
 import Datasource from '@opentiny/tiny-engine-plugin-datasource'
 import Robot from '@opentiny/tiny-engine-plugin-robot'
 
+import SettingsPanel from '@opentiny/tiny-engine-settings-panel'
 import Props from '@opentiny/tiny-engine-setting-props'
 import Events from '@opentiny/tiny-engine-setting-events'
 import Styles from '@opentiny/tiny-engine-setting-styles'
-
-import SettingsPanel from '@opentiny/tiny-engine-layout-settings-panel'
 
 import '@opentiny/tiny-engine-theme'
 
@@ -65,7 +64,9 @@ export default {
     Lang
   ],
   plugins: [Materials, Tree, Page, Block, Datasource, Bridge, I18n, Script, Data, Schema, Help, Robot],
-  settings: [Props, Styles, Events],
-  canvas: {},
-  layouts: [SettingsPanel]
+  settings: {
+    ...SettingsPanel,
+    metas: [Props, Styles, Events]
+  },
+  canvas: {}
 }

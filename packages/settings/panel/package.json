@@ -1,5 +1,5 @@
 {
-  "name": "@opentiny/tiny-engine-layout-settings-panel",
+  "name": "@opentiny/tiny-engine-settings-panel",
   "version": "1.0.3",
   "publishConfig": {
     "access": "public"
@@ -15,7 +15,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/opentiny/tiny-engine",
-    "directory": "packages/layouts/settings-panel"
+    "directory": "packages/settings/panel"
   },
   "bugs": {
     "url": "https://github.com/opentiny/tiny-engine/issues"

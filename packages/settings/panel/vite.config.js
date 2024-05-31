@@ -16,7 +16,7 @@ import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import generateComment from '@opentiny/vite-plugin-generate-comments'
 
-// https://vitejs.dev/config/
+/** @type {import('vite').UserConfig} */
 export default defineConfig({
   plugins: [generateComment(), vue(), vueJsx()],
   publicDir: false,
@@ -24,7 +24,6 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, './index.js'),
-      name: 'layout-settings-panel',
       fileName: () => 'index.js',
       formats: ['es']
     },

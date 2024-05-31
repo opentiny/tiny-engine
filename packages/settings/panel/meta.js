@@ -11,7 +11,5 @@
  */
 
 export default {
-  id: 'engine.layouts.settings-panel',
-  title: '',
-  type: 'layouts'
+  id: 'engine.settings'
 }

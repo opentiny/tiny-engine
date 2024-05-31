@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { getMergeRegistry } from '@opentiny/tiny-engine-entry'
+import { getMergeMeta } from '@opentiny/tiny-engine-entry'
 import { TabItem, Tabs } from '@opentiny/vue'
 
 export default {
@@ -35,7 +35,7 @@ export default {
   },
 
   setup() {
-    const settings = getMergeRegistry('settings')
+    const settings = getMergeMeta('engine.settings')?.metas || []
 
     return {
       settings
