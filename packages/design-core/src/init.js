@@ -81,10 +81,10 @@ const defaultLifeCycles = {
   }
 }
 
-export const init = ({ selector = '#app', registry = defaultRegistry, lifeCycles = {}, metaComponents = [] } = {}) => {
+export const init = ({ selector = '#app', registry = defaultRegistry, lifeCycles = {}, configurators = [] } = {}) => {
   const { beforeAppCreate, appCreated, appMounted } = lifeCycles
 
-  registerMetaComponents(metaComponents)
+  registerMetaComponents(configurators)
 
   defaultLifeCycles.beforeAppCreate({ registry })
   beforeAppCreate?.({ registry })

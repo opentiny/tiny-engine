@@ -1,20 +1,15 @@
 <template>
+  <span>我是自定义的 meta input</span>
   <tiny-input v-model="value" :type="type" :placeholder="placeholder" :rows="rows" @update:modelValue="change">
-    <template #suffix>
-      <div v-for="item in suffixIcons" :key="item.icon">
-        <svg-icon v-if="item.icon" :name="item.icon" class="tiny-svg-size" @click="item.onClick.action"></svg-icon>
-      </div>
-    </template>
   </tiny-input>
 </template>
 
 <script>
-import { ref, watchEffect } from 'vue'
+import { ref } from 'vue'
 import { Input } from '@opentiny/vue'
-import { useProperties } from '@opentiny/tiny-engine-controller'
 
 export default {
-  name: 'MetaInput',
+  name: 'MyInputConfigurator',
   components: {
     TinyInput: Input
   },
@@ -47,10 +42,6 @@ export default {
     const change = (val) => {
       emit('update:modelValue', props.dataType === 'Array' ? val.split(',') : val)
     }
-
-    watchEffect(() => {
-      value.value = useProperties().translateProp(props.modelValue)
-    })
 
     return {
       value,
