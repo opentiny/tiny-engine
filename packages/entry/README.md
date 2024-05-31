@@ -1,27 +1,27 @@
 # entry(暂定)
 
 
-## metaComponents
+## configurators
 
 往设计器添加 metaComponent，满足右侧属性面板属性设置器自定义组件的需求
 
-### addMetaComponents
+### addConfigurator
 
 ```javascript
-addMetaComponents([
+addConfigurator([
   {
-    name: 'MetaInput',
-    component: MetaInput
+    name: 'InputConfigurator',
+    component: InputConfigurator
   },
   {
-    name: 'MetaSelect',
-    component: MetaSelect
+    name: 'SelectConfigurator',
+    component: SelectConfigurator
   }
 ])
 ```
 
-### getMetaComponent
+### getConfigurator
 
 ```javascript
-getMetaComponent('MetaInput')
+getConfigurator('InputConfigurator')
 ```

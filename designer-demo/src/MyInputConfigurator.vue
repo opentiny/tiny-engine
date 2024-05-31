@@ -1,5 +1,5 @@
 <template>
-  <span>我是自定义的 meta input</span>
+  <span>我是自定义的 input configurator</span>
   <tiny-input v-model="value" :type="type" :placeholder="placeholder" :rows="rows" @update:modelValue="change">
   </tiny-input>
 </template>

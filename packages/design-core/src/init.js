@@ -25,7 +25,7 @@ import { utils } from '@opentiny/tiny-engine-utils'
 import { defineEntry } from '@opentiny/tiny-engine-entry'
 import App from './App.vue'
 import defaultRegistry from '../registry.js'
-import { registerMetaComponents } from './registerMetaComponents'
+import { registerConfigurators } from './registerConfigurators'
 
 import 'virtual:svg-icons-register'
 
@@ -84,7 +84,7 @@ const defaultLifeCycles = {
 export const init = ({ selector = '#app', registry = defaultRegistry, lifeCycles = {}, configurators = [] } = {}) => {
   const { beforeAppCreate, appCreated, appMounted } = lifeCycles
 
-  registerMetaComponents(configurators)
+  registerConfigurators(configurators)
 
   defaultLifeCycles.beforeAppCreate({ registry })
   beforeAppCreate?.({ registry })

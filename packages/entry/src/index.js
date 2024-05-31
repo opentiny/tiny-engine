@@ -16,4 +16,4 @@ export { defineEntry, callEntry, beforeCallEntry, afterCallEntry, getMergeRegist
 export { getLayoutComponent } from './layoutHash'
 export { default as useMessage } from './useMessage'
 export { useShareState } from './useShareState'
-export { getMetaComponent, addMetaComponents } from './metaComponents'
+export { getConfigurator, addConfigurator } from './configurators'
