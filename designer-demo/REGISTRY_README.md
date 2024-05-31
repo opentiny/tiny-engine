@@ -1,6 +1,8 @@
 # 注册表
 
-类型定义
+默认注册表会注册设计器的全部功能。自定义设计器时，选择指定功能只需要配置对应的ID，重新实现指定功能可通过配置其他字段来实现
+
+## 类型定义
 
 ```ts
 type VueComponent = any
@@ -15,11 +17,13 @@ interface MetaApp {
   options?: Record<string, any>
   // 布局元应用。如果当前元应用需要定制布局，可以抽取一层布局元应用
   layout?: MetaApp
-  // 元应用生命周期
+  // 元应用生命周期。此处写的代码会直接插入到应用中
   lifeCycle?: Record<string, Function>
+  // 覆盖逻辑
   overwrite?: {
     template?: string
     methods?: Record<string, Record<string, OverwriteFn>>
+    // 此处的lifeCycle会替换原来的生命周期，而上面的lifeCycle代码会直接插入到应用中
     lifeCycle?: Record<
       string,
       Record<string, OverwriteFn | (OverwriteFn | undefined)[]>
@@ -37,8 +41,8 @@ type AppRegistry = Record<string, MetaApp | MetaApp[]>
 
 ```js
 export default {
-  type: {
-    id: 'engine.type.id',
+  key: {
+    id: 'engine.key',
     component: VUE_COMPONENT,
     options: {
       left: '10px',
@@ -60,5 +64,43 @@ export default {
       },
     },
   },
+}
+```
+
+## 合并机制
+
+合并流程：1. 先根据自定义注册表填写的ID，取出默认注册表对应的功能模块。2. 自定义注册表某个功能模块的配置会覆盖默认注册表中对应的配置
+
+```js
+// 默认注册表
+{
+  key1: {
+    id: 'engine.key1',
+    component: VUE_COMPONENT_1,
+    apis: {
+      getDsl: () => {}
+    }
+  },
+  key2: {
+    id: 'engine.key2',
+    component: VUE_COMPONENT_2
+  }
+}
+// 自定义注册表
+{
+  key1: {
+    id: 'engine.key1',
+    component: VUE_COMPONENT_1_A
+  }
+}
+// 合并后的注册表
+{
+  key1: {
+    id: 'engine.key1',
+    component: VUE_COMPONENT_1_A,
+    apis: {
+      getDsl: () => {}
+    }
+  }
 }
 ```
