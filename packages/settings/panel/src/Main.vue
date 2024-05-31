@@ -1,6 +1,6 @@
 <template>
   <div id="tiny-right-panel">
-    <tiny-tabs v-model="render" tab-style="button-card">
+    <tiny-tabs :model-value="modelValue" @update:model-value="updateModelValue" tab-style="button-card">
       <tiny-tab-item v-for="(setting, index) in settings" :key="index" :title="setting.title" :name="setting.name">
         <component :is="setting.component"></component>
         <div v-show="activated" class="active"></div>
@@ -23,22 +23,16 @@ export default {
     activated: String
   },
   emits: ['update:modelValue'],
-  computed: {
-    render: {
-      get() {
-        return this.modelValue
-      },
-      set(value) {
-        this.$emit('update:modelValue', value)
-      }
-    }
-  },
-
-  setup() {
+  setup(props, { emit }) {
     const settings = getMergeMeta('engine.settings')?.metas || []
 
+    const updateModelValue = (value) => {
+      emit('update:modelValue', value)
+    }
+
     return {
-      settings
+      settings,
+      updateModelValue
     }
   }
 }
