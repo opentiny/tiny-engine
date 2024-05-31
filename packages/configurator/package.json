@@ -25,5 +25,16 @@
   },
   "dependencies": {
     "@opentiny/tiny-engine-controller": "workspace:*"
-  }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/opentiny/tiny-engine",
+    "directory": "packages/configurator"
+  },
+  "files": [
+    "dist"
+  ]
 }
