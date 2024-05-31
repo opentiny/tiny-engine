@@ -159,6 +159,7 @@ const devAlias = {
   '@opentiny/tiny-engine-plugin-materials': path.resolve(__dirname, '../plugins/materials/index.js'),
   '@opentiny/tiny-engine-plugin-block': path.resolve(__dirname, '../plugins/block/index.js'),
   '@opentiny/tiny-engine-plugin-data': path.resolve(__dirname, '../plugins/data/index.js'),
+  '@opentiny/tiny-engine-plugin-state': path.resolve(__dirname, '../plugins/state/index.js'),
   '@opentiny/tiny-engine-plugin-datasource': path.resolve(__dirname, '../plugins/datasource/index.js'),
   '@opentiny/tiny-engine-plugin-script': path.resolve(__dirname, '../plugins/script/index.js'),
   '@opentiny/tiny-engine-plugin-tree': path.resolve(__dirname, '../plugins/tree/index.js'),

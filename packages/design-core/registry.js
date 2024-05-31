@@ -27,6 +27,7 @@ import Setting from '@opentiny/tiny-engine-toolbar-setting'
 
 import Materials from '@opentiny/tiny-engine-plugin-materials'
 import Data from '@opentiny/tiny-engine-plugin-data'
+import State from '@opentiny/tiny-engine-plugin-state'
 import Script from '@opentiny/tiny-engine-plugin-script'
 import Tree from '@opentiny/tiny-engine-plugin-tree'
 import Help from '@opentiny/tiny-engine-plugin-help'
@@ -63,10 +64,11 @@ export default {
     Setting,
     Lang
   ],
-  plugins: [Materials, Tree, Page, Block, Datasource, Bridge, I18n, Script, Data, Schema, Help, Robot],
-  settings: {
-    ...SettingsPanel,
-    metas: [Props, Styles, Events]
-  },
+  plugins: [Materials, Tree, Page, Block, Datasource, Bridge, I18n, Script, Data, State, Schema, Help, Robot],
+  // settings: {
+  //   ...SettingsPanel,
+  //   metas: [Props, Styles, Events]
+  // },
+  settings: [Props, Styles, Events],
   canvas: {}
 }

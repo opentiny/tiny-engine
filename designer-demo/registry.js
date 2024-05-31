@@ -85,6 +85,18 @@ export default {
       id: 'engine.plugins.state'
     },
     {
+      id: 'engine.plugins.newstate',
+      title: 'State Management',
+      metas: [
+        {
+          id: 'engine.plugins.newstate.pageState'
+        },
+        {
+          id: 'engine.plugins.newstate.globalState'
+        }
+      ]
+    },
+    {
       id: 'engine.plugins.schema'
     },
     {
