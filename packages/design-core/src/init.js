@@ -11,7 +11,6 @@
  */
 
 import { createApp } from 'vue'
-import { merge } from 'lodash-es'
 import initSvgs from '@opentiny/tiny-engine-svgs'
 import { setGlobalConfig } from '@opentiny/tiny-engine-controller'
 import i18n from '@opentiny/tiny-engine-controller/js/i18n'
@@ -21,42 +20,20 @@ import { injectGlobalComponents } from '@opentiny/tiny-engine-common'
 import { initHttp } from '@opentiny/tiny-engine-http'
 import TinyThemeTool from '@opentiny/vue-theme/theme-tool'
 import { tinySmbTheme } from '@opentiny/vue-theme/theme' // SMB 主题
-import { utils } from '@opentiny/tiny-engine-utils'
-import { defineEntry } from '@opentiny/tiny-engine-entry'
+import { defineEntry, mergeRegistry } from '@opentiny/tiny-engine-entry'
 import App from './App.vue'
 import defaultRegistry from '../registry.js'
 
 import 'virtual:svg-icons-register'
 
-const { getType } = utils
-
-const mergeRegistry = (registry) => {
-  for (const [key, value] of Object.entries(registry)) {
-    const defaultConfig = defaultRegistry[key]
-    if (Array.isArray(value) && defaultConfig) {
-      value.forEach((meta, index) => {
-        const defaultMeta = defaultConfig.find((item) => item.id === meta.id)
-        if (defaultMeta) {
-          value[index] = merge(defaultMeta, meta)
-        }
-      })
-    }
-
-    if (getType(value) === 'Object' && defaultConfig) {
-      registry[key] = merge(defaultConfig, registry[key])
-    }
-  }
-  if (process.env.NODE_ENV === 'development') {
-    console.log('default registry:', defaultRegistry) // eslint-disable-line
-    console.log('merged registry:', registry) // eslint-disable-line
-  }
-  return registry
-}
-
 const defaultLifeCycles = {
   beforeAppCreate: ({ registry }) => {
     // 合并用户自定义注册表
-    const newRegistry = mergeRegistry(registry)
+    const newRegistry = mergeRegistry(registry, defaultRegistry)
+    if (process.env.NODE_ENV === 'development') {
+      console.log('default registry:', defaultRegistry) // eslint-disable-line
+      console.log('merged registry:', registry) // eslint-disable-line
+    }
 
     // 在common层注入合并后的注册表
     defineEntry(newRegistry)
