@@ -82,7 +82,7 @@ export default {
       id: 'engine.plugins.pagecontroller'
     },
     {
-      id: 'engine.plugins.datasource'
+      id: 'engine.plugins.state'
     },
     {
       id: 'engine.plugins.schema'
