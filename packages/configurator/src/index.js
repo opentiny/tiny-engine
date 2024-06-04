@@ -1,2 +1,7 @@
+export { default as CodeConfigurator } from './code-configurator'
+export { default as CollectionConfigurator } from './collection-configurator'
+export { default as ColorConfigurator } from './color-configurator'
+export { default as I18nConfigurator } from './i18n-configurator'
 export { default as InputConfigurator } from './input-configurator'
 export { default as SelectConfigurator } from './select-configurator'
+export { default as VariableConfigurator } from './variable-configurator'
