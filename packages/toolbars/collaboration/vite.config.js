@@ -14,7 +14,7 @@ import { defineConfig } from 'vite'
 import path from 'path'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
-import generateComment from '@opentiny/vite-plugin-generate-comments'
+import generateComment from '@opentiny/tiny-engine-vite-plugin-meta-comments'
 
 export default defineConfig({
   plugins: [generateComment(), vue(), vueJsx()],

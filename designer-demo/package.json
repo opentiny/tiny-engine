@@ -18,6 +18,6 @@
     "@vitejs/plugin-vue": "^5.0.4",
     "vite": "^5.2.7",
     "@opentiny/tiny-engine-cli": "workspace:^",
-    "@opentiny/vite-plugin-generate-comments": "workspace:^"
+    "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:^"
   }
 }

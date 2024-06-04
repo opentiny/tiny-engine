@@ -15,7 +15,7 @@ import path from 'path'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import { terser } from 'rollup-plugin-terser'
-import generateComments from '@opentiny/vite-plugin-generate-comments'
+import generateComments from '@opentiny/tiny-engine-vite-plugin-meta-comments'
 
 // https://vitejs.dev/config/
 export default defineConfig({
