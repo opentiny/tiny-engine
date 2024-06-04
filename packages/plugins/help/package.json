@@ -30,7 +30,7 @@
     "@opentiny/tiny-engine-http": "workspace:*"
   },
   "devDependencies": {
-    "@opentiny/vite-plugin-generate-comments": "workspace:*",
+    "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
     "@vitejs/plugin-vue": "^4.2.3",
     "@vitejs/plugin-vue-jsx": "^3.1.0",
     "vite": "^4.3.7"
