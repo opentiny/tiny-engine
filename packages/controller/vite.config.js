@@ -16,7 +16,7 @@ import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import { glob } from 'glob'
 import { fileURLToPath } from 'node:url'
-import generateComments from '@opentiny/vite-plugin-generate-comments'
+import generateComments from '@opentiny/tiny-engine-vite-plugin-meta-comments'
 
 const jsEntries = glob.sync('./js/**/*.js').map((file) => {
   return [file.slice(0, file.length - path.extname(file).length), fileURLToPath(new URL(file, import.meta.url))]

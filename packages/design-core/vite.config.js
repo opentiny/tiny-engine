@@ -13,8 +13,13 @@ import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import { importmapPlugin } from './scripts/externalDeps.js'
 import visualizerCjs from 'rollup-plugin-visualizer'
 import { fileURLToPath } from 'node:url'
-import generateComment from '@opentiny/vite-plugin-generate-comments'
-import { getBaseUrlFromCli, copyBundleDeps, copyPreviewImportMap, copyLocalImportMap } from './scripts/localCdnFile'
+import generateComment from '@opentiny/tiny-engine-vite-plugin-meta-comments'
+import {
+  getBaseUrlFromCli,
+  copyBundleDeps,
+  copyPreviewImportMap,
+  copyLocalImportMap
+} from './scripts/localCdnFile/index.js'
 
 const monacoEditorPlugin = monacoEditorPluginCjs.default
 const nodeGlobalsPolyfillPlugin = nodeGlobalsPolyfillPluginCjs.default
@@ -78,10 +83,7 @@ const config = {
     }),
     vueJsx(),
     createSvgIconsPlugin({
-      iconDirs: [
-        path.resolve(__dirname, './assets/rf-resources/'), // 脚手架执行构建时将图元图片拷贝到此目录
-        path.resolve(__dirname, './assets/')
-      ],
+      iconDirs: [path.resolve(__dirname, './assets/')],
       symbolId: 'icon-[name]',
       inject: 'body-last'
     })
@@ -167,6 +169,7 @@ const devAlias = {
   '@opentiny/tiny-engine-plugin-bridge': path.resolve(__dirname, '../plugins/bridge/index.js'),
   '@opentiny/tiny-engine-plugin-tutorial': path.resolve(__dirname, '../plugins/tutorial/index.js'),
   '@opentiny/tiny-engine-plugin-robot': path.resolve(__dirname, '../plugins/robot/index.js'),
+  '@opentiny/tiny-engine-settings-panel': path.resolve(__dirname, '../settings/panel/index.js'),
   '@opentiny/tiny-engine-setting-events': path.resolve(__dirname, '../settings/events/index.js'),
   '@opentiny/tiny-engine-setting-props': path.resolve(__dirname, '../settings/props/index.js'),
   '@opentiny/tiny-engine-setting-styles': path.resolve(__dirname, '../settings/styles/index.js'),
@@ -196,8 +199,9 @@ const devAlias = {
   '@opentiny/tiny-engine-webcomponent-core': path.resolve(__dirname, '../webcomponent/src/lib.js'),
   '@opentiny/tiny-engine-i18n-host': path.resolve(__dirname, '../i18n/src/lib.js'),
   '@opentiny/tiny-engine-builtin-component': path.resolve(__dirname, '../builtinComponent/index.js'),
-  '@opentiny/tiny-engine-entry': path.resolve(__dirname, '../entry/index.js'),
-  '@opentiny/tiny-engine-layout': path.resolve(__dirname, '../layout/index.js')
+  '@opentiny/tiny-engine-entry': path.resolve(__dirname, '../entry/src/index.js'),
+  '@opentiny/tiny-engine-layout': path.resolve(__dirname, '../layout/index.js'),
+  '@opentiny/tiny-engine-configurator': path.resolve(__dirname, '../configurator/src/index.js')
 }
 
 const prodAlias = {
@@ -207,9 +211,7 @@ const prodAlias = {
   )
 }
 
-const commonAlias = {
-  '@opentiny/tiny-engine-app-addons': path.resolve(__dirname, './config/addons.js')
-}
+const commonAlias = {}
 
 export default defineConfig(({ command = 'serve', mode = 'serve' }) => {
   const {

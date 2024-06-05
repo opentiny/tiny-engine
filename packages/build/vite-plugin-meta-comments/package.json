@@ -1,0 +1,39 @@
+{
+  "name": "@opentiny/tiny-engine-vite-plugin-meta-comments",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "test": "node ./src/test/index.js"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.4",
+    "vite": "^5.2.7",
+    "@babel/parser": "^7.18.13",
+    "@babel/traverse": "^7.18.13",
+    "@babel/generator": "^7.18.13",
+    "@babel/template": "^7.18.13",
+    "@vue/compiler-sfc": "^3.4.21"
+  },
+  "keywords": [],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/opentiny/tiny-engine",
+    "directory": "packages/build/vite-plugin-meta-comments"
+  },
+  "bugs": {
+    "url": "https://github.com/opentiny/tiny-engine/issues"
+  },
+  "author": "OpenTiny Team",
+  "license": "MIT",
+  "homepage": "https://opentiny.design/tiny-engine"
+}

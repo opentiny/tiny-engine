@@ -96,7 +96,7 @@
 import { reactive, ref, watch } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
 import { useLayout, usePage } from '@opentiny/tiny-engine-controller'
-import Addons from '@opentiny/tiny-engine-app-addons'
+import { getMergeRegistry } from '@opentiny/tiny-engine-entry'
 import { PublicIcon } from '@opentiny/tiny-engine-common'
 
 export default {
@@ -112,7 +112,7 @@ export default {
   },
   emits: ['click', 'node-click'],
   setup(props, { emit }) {
-    const plugins = Addons.plugins
+    const plugins = getMergeRegistry('plugins')
     const components = {}
     const iconComponents = {}
     const pluginRef = ref(null)
@@ -127,7 +127,7 @@ export default {
       layoutState: { plugins: pluginsState }
     } = useLayout()
 
-    Addons.plugins.forEach(({ id, component, api, icon }) => {
+    plugins.forEach(({ id, component, api, icon }) => {
       components[id] = component
       iconComponents[id] = icon
       if (api) {

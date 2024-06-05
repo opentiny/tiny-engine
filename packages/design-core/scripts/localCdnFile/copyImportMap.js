@@ -5,9 +5,9 @@ import {
   dedupeCopyFiles,
   getCdnPathNpmInfoForPackage,
   getCdnPathNpmInfoForSingleFile
-} from './locateCdnNpmInfo'
-import { importmapPlugin } from '../externalDeps'
-import { installPackageTemporary } from '../vite-plugins/installPackageTemporary'
+} from './locateCdnNpmInfo.js'
+import { importmapPlugin } from '../externalDeps.js'
+import { installPackageTemporary } from '../vite-plugins/installPackageTemporary.js'
 
 export const copyLocalImportMap = ({
   importMap,

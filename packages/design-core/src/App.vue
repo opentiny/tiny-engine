@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { reactive, ref, watch, onUnmounted } from 'vue'
+import { reactive, watch, onUnmounted } from 'vue'
 import { getMergeRegistry } from '@opentiny/tiny-engine-entry'
 import {
   useCanvas,
@@ -46,7 +46,6 @@ export default {
       preNode: AppManage,
       jsClose: null
     })
-    const right = ref(null)
 
     // 此处接收画布内部的错误和警告提示
     const { data } = useBroadcastChannel({ name: BROADCAST_CHANNEL.Notify })
@@ -111,7 +110,6 @@ export default {
 
     return {
       state,
-      right,
       plugins,
       toggleNav,
       layoutState,

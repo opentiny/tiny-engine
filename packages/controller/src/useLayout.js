@@ -20,7 +20,7 @@ const PLUGIN_NAME = {
   AppManage: 'engine.plugins.appmanage',
   BlockManage: 'engine.plugins.blockmanage',
   Bridge: 'engine.plugins.bridge',
-  DataSource: 'engine.plugins.datasource',
+  State: 'engine.plugins.state',
   Collections: 'engine.plugins.collections',
   EditorHelp: 'engine.plugins.editorhelp',
   I18n: 'engine.plugins.i18n',

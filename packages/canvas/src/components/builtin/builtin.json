@@ -94,7 +94,7 @@
                         },
                         "cols": 12,
                         "widget": {
-                          "component": "MetaInput",
+                          "component": "InputConfigurator",
                           "props": {}
                         }
                       },
@@ -256,7 +256,7 @@
                         "cols": 12,
                         "rules": [],
                         "widget": {
-                          "component": "MetaInput",
+                          "component": "InputConfigurator",
                           "props": {
                             "type": "textarea",
                             "autosize": true
@@ -399,7 +399,7 @@
                         "cols": 12,
                         "rules": [],
                         "widget": {
-                          "component": "MetaInput",
+                          "component": "InputConfigurator",
                           "props": {}
                         }
                       }

@@ -34,7 +34,7 @@
               "cols": 12,
               "rules": [],
               "widget": {
-                "component": "MetaInput",
+                "component": "InputConfigurator",
                 "props": {}
               }
             }

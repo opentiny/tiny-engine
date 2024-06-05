@@ -111,6 +111,7 @@ import MultiTypeSelector from './MultiTypeSelector.vue'
 import { useHistory, useProperties, useResource, useLayout, useCanvas } from '@opentiny/tiny-engine-controller'
 import { generateFunction } from '@opentiny/tiny-engine-controller/utils'
 import { SCHEMA_DATA_TYPE, PAGE_STATUS, TYPES } from '@opentiny/tiny-engine-controller/js/constants'
+import { getConfigurator } from '@opentiny/tiny-engine-entry'
 
 const hasRule = (required, rules) => {
   if (required) {
@@ -201,13 +202,14 @@ export default {
         (props.property?.label?.text?.[locale.value] ?? props.property?.label?.text)
     )
     const isLinked = computed(() => Boolean(props.property.linked))
-    const component = computed(() =>
-      multiType.value
+    const component = computed(() => {
+      // TODO: 需要弄清楚 props.metaComponents[widget.value.component] 是什么场景
+      return multiType.value
         ? MultiTypeSelector
-        : props.metaComponents[widget.value.component] ||
-          MetaComponents[widget.value.component] ||
-          MetaComponents['MetaInput']
-    )
+        : getConfigurator(widget.value.component) ||
+            props.metaComponents[widget.value.component] ||
+            getConfigurator('InputConfigurator')
+    })
     const bindValue = computed(() => {
       let value = props.property?.widget?.props?.modelValue
 

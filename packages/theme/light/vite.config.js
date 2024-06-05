@@ -12,7 +12,7 @@
 
 import { defineConfig } from 'vite'
 import path from 'path'
-import generateComment from '@opentiny/vite-plugin-generate-comments'
+import generateComment from '@opentiny/tiny-engine-vite-plugin-meta-comments'
 
 // https://vitejs.dev/config/
 export default defineConfig({
