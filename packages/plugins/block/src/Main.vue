@@ -134,6 +134,9 @@ import {
   publishBlock
 } from './js/blockSetting'
 import { fetchBlockList, requestBlocks, requestInitBlocks, fetchBlockContent } from './js/http'
+import { registerVariableConfiguratorList } from './register'
+
+registerVariableConfiguratorList()
 
 const docsUrl = useHelp().getDocsUrl('block')
 const { SORT_TYPE } = constants

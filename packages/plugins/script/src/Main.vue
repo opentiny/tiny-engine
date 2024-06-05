@@ -34,6 +34,9 @@ import { initCompletion } from '@opentiny/tiny-engine-controller/js/completion'
 import { initLinter } from '@opentiny/tiny-engine-controller/js/linter'
 import { theme } from '@opentiny/tiny-engine-controller/adapter'
 import useMethod, { saveMethod, highlightMethod, getMethodNameList, getMethods } from './js/method'
+import { registerVariableConfiguratorList } from './register'
+
+registerVariableConfiguratorList()
 
 export const api = {
   saveMethod,

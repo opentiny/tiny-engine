@@ -157,3 +157,47 @@ export const generateRegistry = (registry) => {
 export const getMergeMeta = (id) => {
   return metasHashMap[id]
 }
+
+// 全局注册数据
+const registration = {}
+
+/**
+ * 获取token对应的注册的数据
+ * @param {string} token
+ * @returns
+ */
+export const getRegistration = (token) => registration[token]
+
+/**
+ * 获取token对应的注册的数组数据。数组实际上是以对象保存的，根据_order字段排序
+ * @param {string} token
+ * @returns
+ */
+export const getRegistrationArray = (token) => {
+  const obj = getRegistration(token)
+
+  if (typeof obj !== 'object' || obj === null) {
+    return []
+  }
+
+  const result = Object.entries(obj).map(([key, value]) => ({ ...value, id: key }))
+
+  return result
+    .map(({ _order, ...rest }) => ({ ...rest, _order: _order ?? Number.MAX_SAFE_INTEGER }))
+    .sort((a, b) => a._order - b._order)
+}
+
+/**
+ * 注册全局数据
+ * @param {string} token
+ * @param {any} value
+ * @param {{ mergeObject: boolean }}
+ */
+export const register = (token, value, { mergeObject } = {}) => {
+  if (mergeObject) {
+    const registered = getRegistration(token) || {}
+    registration[token] = { ...registered, ...value }
+  } else {
+    registration[token] = value
+  }
+}

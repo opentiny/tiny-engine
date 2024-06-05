@@ -10,7 +10,7 @@
  *
  */
 
-export { getMergeMeta, getPluginApi, getOptions } from './common'
+export { getMergeMeta, getPluginApi, getOptions, register, getRegistration, getRegistrationArray } from './common'
 export { useCompile } from './templateHash'
 export { defineEntry, callEntry, beforeCallEntry, afterCallEntry, mergeRegistry, getMergeRegistry } from './entryHash'
 export { getLayoutComponent } from './layoutHash'
