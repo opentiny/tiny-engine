@@ -1,5 +1,5 @@
 <template>
-  <tiny-config-provider :design="designSmbConfig">
+  <tiny-config-provider>
     <div id="tiny-engine">
       <div class="tiny-engine-toolbar">
         <div class="toolbar-left">
@@ -31,10 +31,10 @@
                   @selected="nodeSelected"
                 >
                 </component>
-                <!-- </div> -->
-                <component :is="state.canvas.CanvasFooter.component" :data="footData" @click="selectFooterNode">
-                </component>
               </div>
+              <!-- </div> -->
+              <component :is="state.canvas.CanvasFooter.component" :data="footData" @click="selectFooterNode">
+              </component>
             </div>
           </div>
 
@@ -60,7 +60,7 @@
 import './index.less'
 import { ref, reactive, watch, nextTick, computed, onUnmounted } from 'vue'
 import { ConfigProvider, Popover, Tooltip } from '@opentiny/vue'
-import designSmbConfig from '@opentiny/vue-design-smb'
+// import designSmbConfig from '@opentiny/vue-design-smb'
 import { ProgressBar, PublicIcon } from '@opentiny/tiny-engine-common'
 import {
   useProperties,
@@ -300,7 +300,7 @@ export default {
     // }
 
     return {
-      designSmbConfig,
+      // designSmbConfig,
       leftBar,
       rightBar,
       centerBar,

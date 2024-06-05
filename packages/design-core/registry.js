@@ -43,10 +43,11 @@ import Events from '@opentiny/tiny-engine-setting-events'
 import Styles from '@opentiny/tiny-engine-setting-styles'
 
 import '@opentiny/tiny-engine-theme'
+import layout from '@opentiny/tiny-engine-layout'
 import { CanvasContainer, CanvasFooter } from '@opentiny/tiny-engine-canvas'
 
 export default {
-  layout: { id: 'engine.layout' },
+  layout,
   toolbars: [
     Logo,
     Breadcrumb,
@@ -65,5 +66,5 @@ export default {
   ],
   plugins: [Materials, Tree, Page, Block, Datasource, Bridge, I18n, Script, Data, Schema, Help, Robot],
   settings: [Props, Styles, Events],
-  canvas: {CanvasContainer, CanvasFooter}
+  canvas: { CanvasContainer, CanvasFooter }
 }
