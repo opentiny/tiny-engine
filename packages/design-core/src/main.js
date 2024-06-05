@@ -20,6 +20,8 @@ import { initMonitor } from '@opentiny/tiny-engine-controller/js/monitor'
 import { injectGlobalComponents } from '@opentiny/tiny-engine-common'
 import { initHttp } from '@opentiny/tiny-engine-http'
 import 'virtual:svg-icons-register'
+import { defineEntry } from '@opentiny/tiny-engine-entry'
+import defaultResigry from '../registry.js'
 
 import TinyThemeTool from '@opentiny/vue-theme/theme-tool'
 import { tinySmbTheme } from '@opentiny/vue-theme/theme' // SMB 主题
@@ -36,6 +38,7 @@ if (import.meta.env.VITE_ERROR_MONITOR === 'true' && import.meta.env.VITE_ERROR_
 window.TinyGlobalConfig = globalConfig
 setGlobalConfig(globalConfig)
 
+defineEntry(defaultResigry)
 const app = createApp(App)
 
 initSvgs(app)

@@ -1,95 +1,290 @@
-.tiny-engine-layout {
-  height: 100vh;
+#tiny-engine {
   display: flex;
   flex-flow: column;
-}
-.tiny-engine-layout-header {
-  height: 48px;
-  border-bottom: 1px solid #dfe1e6;
-  text-align: center;
-  line-height: 48px;
-  background: #ecf8ff;
-  display: flex;
-  justify-content: center;
-  & > div {
-    margin: 0 10px;
-  }
-}
-.tiny-engine-layout-content {
-  display: flex;
-  max-width: 100vw;
-  flex: 1;
-  position: relative;
-  .main-content {
-    flex-grow: 1;
-    background: #fffdec;
-  }
-}
-
-.left-panel {
-  width: 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  background: #fff;
-  box-sizing: border-box;
-  z-index: 1000;
-  border-right: 1px solid #dfe1e6;
-}
-.tiny-engine-drawer {
-  position: absolute;
-  width: 500px;
-  height: 100%;
-  left: 40px;
-  border-right: 1px solid #dfe1e6;
-  background: #fff;
-  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-}
-.left-panel-top {
-  padding-top: 20px;
-  .panel-item {
+  min-width: var(--base-min-width);
+  height: 100vh;
+  overflow: hidden;
+  .tiny-engine-toolbar {
+    user-select: none;
+    display: flex;
+    flex-shrink: 0;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: var(--base-top-panel-height);
     text-align: center;
-    margin-top: 16px;
-    cursor: pointer;
-    .icon-container {
-      display: inline-flex;
-      padding: 6px;
-      border-radius: 6px;
-      &:hover {
-        background: #f2f2f2;
-      }
+    background-color: var(--ti-lowcode-common-layout-bg);
+    position: relative;
+    z-index: 1001;
+    border-bottom: 1px solid var(--ti-lowcode-toolbar-border-bottom-color);
+
+    .toolbar-left,
+    .toolbar-center,
+    .toolbar-right {
+      height: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    &.active {
-      .icon-container {
-        background: #f2f2f2;
+
+    .toolbar-left {
+      margin: 0 1px;
+    }
+
+    .toolbar-right {
+      margin: 0 6px;
+      margin-right: 24px;
+      column-gap: 6px;
+      align-items: center;
+
+      :deep(.icon) {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        vertical-align: middle;
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        position: relative;
+
+        svg {
+          cursor: pointer;
+          font-size: 20px;
+          color: var(--ti-lowcode-toolbar-title-color);
+        }
+
+        &:not(.disabled):hover {
+          background: var(--ti-lowcode-toolbar-view-active-bg);
+        }
+
+        &.active {
+          color: var(--ti-lowcode-common-primary-color);
+        }
+
+        &.disabled {
+          cursor: not-allowed;
+        }
       }
-      svg {
-        fill: #1476ff;
+
+      .tiny-locales {
+        height: 35px;
+        padding: 5px 12px;
+        font-size: 12px;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+
+        :deep(span) {
+          color: var(--ti-lowcode-toolbar-icon-color);
+          opacity: 0.4;
+        }
+
+        &:hover {
+          :deep(span) {
+            opacity: 0.8;
+          }
+        }
       }
     }
   }
-  svg {
-    font-size: 20px;
+
+  @media only screen and (max-width: 1280px) {
+    .tiny-engine-toolbar {
+      .toolbar-center {
+        flex: 1;
+        justify-content: center;
+      }
+
+      :deep(.top-panel-breadcrumb) {
+        width: auto;
+      }
+    }
   }
-}
-.main-content {
-  flex-grow: 1;
-  background: #fffdec;
-  font-size: 30px;
-  text-align: center;
-}
-.right-panel {
-  width: 272px;
-  height: 100%;
-  transition: 0.3s linear;
-  position: relative;
-  border-left: 1px solid #dfe1e6;
-  background: #fff;
-  text-align: center;
-  font-size: 20px;
-  padding-top: 10px;
-  box-sizing: border-box;
-}
-.toolbar-item {
-  cursor: pointer;
+
+  .progress {
+    position: absolute;
+    top: var(--base-top-panel-height);
+    left: 0;
+    width: 100%;
+    z-index: 1002;
+
+    :deep(.tiny-progress-bar__innerText) {
+      display: none;
+    }
+  }
+
+  .tiny-engine-main {
+    display: flex;
+    flex: 1;
+    overflow-y: hidden;
+  }
+  .tiny-engine-left-wrap {
+    flex: 1 1 0;
+    display: flex;
+    flex-flow: column nowrap;
+    z-index: 4;
+    .tiny-engine-content-wrap {
+      display: flex;
+      max-width: 100vw;
+      flex: 1;
+      #canvas-wrap {
+        background: var(--ti-lowcode-canvas-wrap-bg);
+        flex: 1 1 0;
+        border: none;
+        display: flex;
+        justify-content: center;
+        position: relative;
+
+        .site-canvas {
+          background: var(--ti-lowcode-breadcrumb-hover-bg);
+          position: absolute;
+          overflow: hidden;
+          margin: 18px 0;
+          transform-origin: top;
+        }
+      }
+      #tiny-engine-left-panel {
+        width: var(--base-left-panel-width);
+        height: calc(100vh - var(--base-top-panel-height));
+        border-right: 1px solid var(--ti-lowcode-plugin-panel-border-right-color);
+        background: var(--ti-lowcode-common-component-bg);
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: var(--base-top-panel-height);
+        left: var(--base-nav-panel-width);
+        z-index: 999;
+
+        &.I18n {
+          width: auto;
+        }
+
+        &.is-fixed {
+          position: relative;
+          top: 0;
+          left: 0;
+        }
+
+        .left-panel-wrap {
+          width: 100%;
+          height: 100%;
+          position: relative;
+
+          :deep(.tiny-tabs__nav.is-show-active-bar) .tiny-tabs__item {
+            margin-right: 0;
+          }
+        }
+      }
+
+      #tiny-engine-nav-panel {
+        display: none;
+        width: var(--base-nav-panel-width);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background: var(--ti-lowcode-common-layout-bg);
+        box-sizing: border-box;
+        z-index: 1000;
+        border-right: 1px solid var(--ti-lowcode-plugin-panel-border-right-color);
+
+        &.completed {
+          display: block;
+        }
+
+        .nav-panel-lists {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          display: flex;
+          flex-direction: column;
+
+          &.bottom {
+            flex: 1;
+            padding-bottom: 36px;
+          }
+
+          .list-item {
+            width: 100%;
+            padding: 3px 0;
+
+            &:first-child {
+              padding-top: 16px;
+            }
+
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            &:hover,
+            &.active {
+              .item-icon {
+                background: var(--ti-lowcode-left-panel-active-bg);
+                border-radius: 6px;
+              }
+            }
+
+            &.active {
+              position: relative;
+
+              .item-icon {
+                color: var(--ti-lowcode-common-primary-color);
+              }
+            }
+
+            &.prev {
+              border-bottom-color: var(--ti-lowcode-left-panel-active-border-color);
+            }
+          }
+
+          .item-icon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--ti-lowcode-design-plugin-color);
+            font-size: 22px;
+            width: 32px;
+            height: 32px;
+
+            svg {
+              font-size: 22px;
+            }
+
+            .chatgpt-icon {
+              width: 18px;
+              height: 18px;
+            }
+          }
+        }
+      }
+
+      .robot-dialog {
+        position: fixed;
+        width: 700px;
+        z-index: 5;
+        right: 40px;
+        bottom: 40px;
+        background-color: var(--ti-lowcode-common-component-bg);
+        box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.15);
+        border: 1px solid #dbdbdb;
+        padding: 10px 20px 30px;
+        border-radius: 12px;
+      }
+
+      :deep(.panel-svg) {
+        font-size: 22px;
+      }
+
+      :deep(.svg-icon.icon-plugin-icon-plugin-help) {
+        font-size: 22px;
+      }
+    }
+  }
+  .tiny-engine-right-wrap {
+    position: relative;
+    z-index: 4;
+  }
+  :deep(.monaco-editor .suggest-widget) {
+    border-width: 0;
+  }
 }

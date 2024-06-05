@@ -10,10 +10,12 @@
  *
  */
 
-import i18nMeta from '@opentiny/tiny-engine-plugin-i18n'
 import layoutMeta from '@opentiny/tiny-engine-layout'
+import { CanvasContainer, CanvasFooter } from '@opentiny/tiny-engine-canvas'
+import addons from './config/addons.js'
 
 export default {
   layout: layoutMeta,
-  plugins: [i18nMeta]
+  ...addons,
+  canvas: { CanvasContainer, CanvasFooter }
 }
