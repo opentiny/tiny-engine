@@ -1,5 +1,5 @@
 {
-  "name": "@opentiny/vite-plugin-generate-comments",
+  "name": "@opentiny/tiny-engine-vite-plugin-meta-comments",
   "version": "1.0.0",
   "description": "",
   "type": "module",
@@ -22,6 +22,18 @@
     "@vue/compiler-sfc": "^3.4.21"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/opentiny/tiny-engine",
+    "directory": "packages/build/vite-plugin-meta-comments"
+  },
+  "bugs": {
+    "url": "https://github.com/opentiny/tiny-engine/issues"
+  },
+  "author": "OpenTiny Team",
+  "license": "MIT",
+  "homepage": "https://opentiny.design/tiny-engine"
 }

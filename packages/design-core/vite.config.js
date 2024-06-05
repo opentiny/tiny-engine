@@ -13,7 +13,7 @@ import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import { importmapPlugin } from './scripts/externalDeps.js'
 import visualizerCjs from 'rollup-plugin-visualizer'
 import { fileURLToPath } from 'node:url'
-import generateComment from '@opentiny/vite-plugin-generate-comments'
+import generateComment from '@opentiny/tiny-engine-vite-plugin-meta-comments'
 import {
   getBaseUrlFromCli,
   copyBundleDeps,

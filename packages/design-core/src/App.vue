@@ -10,7 +10,7 @@
           </div>
         </div>
         <div class="tiny-engine-right-wrap">
-          <design-settings></design-settings>
+          <design-settings v-show="layoutState.settings.showDesignSettings" ref="right"></design-settings>
         </div>
       </div>
     </div>

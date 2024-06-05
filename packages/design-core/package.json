@@ -44,7 +44,7 @@
     "@babel/parser": "~7.23.2",
     "@babel/traverse": "~7.23.2",
     "@opentiny/tiny-engine-layout": "workspace:~",
-    "@opentiny/vite-plugin-generate-comments": "workspace:*",
+    "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
     "@opentiny/tiny-engine-entry": "workspace:*",
     "@opentiny/tiny-engine-canvas": "workspace:*",
     "@opentiny/tiny-engine-common": "workspace:*",
@@ -110,11 +110,9 @@
     "vue-i18n": "^9.9.0"
   },
   "devDependencies": {
-    "@opentiny/vite-plugin-generate-comments": "workspace:*",
     "@babel/eslint-parser": "^7.21.3",
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
-    "@opentiny/tiny-engine-i18n-host": "workspace:*",
     "@types/node": "^18.0.0",
     "@vitejs/plugin-vue": "^4.2.3",
     "@vitejs/plugin-vue-jsx": "^3.1.0",
