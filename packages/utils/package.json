@@ -27,7 +27,6 @@
   "license": "MIT",
   "homepage": "https://opentiny.design/tiny-engine",
   "devDependencies": {
-    "@opentiny/vite-plugin-generate-comments": "workspace:*",
     "vite": "^4.3.7",
     "vitest": "^1.4.0"
   },
