@@ -43,7 +43,7 @@ import { constants } from '@opentiny/tiny-engine-utils'
 
 const { message } = useModal()
 const { requestInitBlocks } = blockPlugin.api
-const { fetchGroups } = materials.api
+const { fetchGroups } = materials.apis
 const { BROADCAST_CHANNEL } = constants
 
 export default {

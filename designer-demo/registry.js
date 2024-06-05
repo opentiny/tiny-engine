@@ -58,7 +58,21 @@ export default {
   ],
   plugins: [
     {
-      id: 'engine.plugins.materials'
+      id: 'engine.plugins.materials',
+      metas:[
+        {
+          id: 'engine.plugins.materials.header',
+        },
+        {
+          id: 'engine.plugins.materials.content',
+        },
+        {
+          id: 'engine.plugins.materials.block',
+        },
+        {
+          id: 'engine.plugins.materials.component',
+        }
+      ]
     },
     {
       id: 'engine.plugins.outlinetree'
