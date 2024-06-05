@@ -101,7 +101,7 @@ export const META_COMPONENTS_ENUM = {
   MetaBindI18n: 'MetaBindI18n',
   MetaNumber: 'MetaNumber',
   MetaJsSlot: 'MetaJsSlot',
-  MetaSwitch: 'MetaSwitch'
+  SwitchConfigurator: 'SwitchConfigurator'
 }
 
 // 每个值类型可选的编辑器类型
@@ -110,7 +110,7 @@ export const META_COMPONENT_LIST = {
   [META_TYPES.string]: ['MetaInput', 'MetaSelect', 'MetaBindI18n'],
   [META_TYPES.number]: ['MetaNumber'],
   [META_TYPES.object]: ['MetaCodeEditor', 'MetaJsSlot'],
-  [META_TYPES.boolean]: ['MetaSwitch'],
+  [META_TYPES.boolean]: ['SwitchConfigurator'],
   [META_TYPES.function]: ['MetaCodeEditor']
 }
 
@@ -239,7 +239,7 @@ export const META_COMPONENTS = {
   [META_TYPES.string]: 'MetaInput',
   [META_TYPES.number]: 'MetaNumber',
   [META_TYPES.object]: 'MetaCodeEditor',
-  [META_TYPES.boolean]: 'MetaSwitch',
+  [META_TYPES.boolean]: 'SwitchConfigurator',
   [META_TYPES.function]: 'MetaCodeEditor'
 }
 

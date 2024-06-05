@@ -172,7 +172,7 @@
             "readOnly": false,
             "disabled": false,
             "widget": {
-              "component": "MetaSwitch",
+              "component": "SwitchConfigurator",
               "props": {
                 "modelValue": true
               }

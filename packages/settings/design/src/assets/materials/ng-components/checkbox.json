@@ -36,7 +36,7 @@
             "readOnly": false,
             "disabled": false,
             "widget": {
-              "component": "MetaSwitch",
+              "component": "SwitchConfigurator",
               "props": {}
             }
           },
@@ -55,7 +55,7 @@
             "readOnly": false,
             "disabled": false,
             "widget": {
-              "component": "MetaInput",
+              "component": "InputConfigurator",
               "props": {}
             }
           },
@@ -74,7 +74,7 @@
             "readOnly": false,
             "disabled": false,
             "widget": {
-              "component": "MetaInput",
+              "component": "InputConfigurator",
               "props": {}
             }
           },
@@ -99,7 +99,7 @@
             "readOnly": false,
             "disabled": false,
             "widget": {
-              "component": "MetaInput",
+              "component": "InputConfigurator",
               "props": {}
             }
           },
@@ -118,7 +118,7 @@
             "readOnly": false,
             "disabled": false,
             "widget": {
-              "component": "MetaSwitch",
+              "component": "SwitchConfigurator",
               "props": {}
             }
           },
@@ -137,7 +137,7 @@
             "readOnly": false,
             "disabled": false,
             "widget": {
-              "component": "MetaSwitch",
+              "component": "SwitchConfigurator",
               "props": {}
             }
           }

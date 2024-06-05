@@ -1,7 +1,7 @@
 <template>
   <div class="slider-container">
     <input v-model="value" type="range" @change="onSliderStop" />
-    <meta-number
+    <number-configurator
       :min="0"
       :max="100"
       :controls="controls"
@@ -15,17 +15,17 @@
       ]"
       @numberChange="onNumberCompChange"
       @unitChange="onUnitChange"
-    ></meta-number>
+    ></number-configurator>
   </div>
 </template>
 
 <script>
 import { ref, watch } from 'vue'
-import MetaNumber from './MetaNumber.vue'
+import NumberConfigurator from '../number-configurator/NumberConfigurator.vue'
 
 export default {
   components: {
-    MetaNumber
+    NumberConfigurator
   },
   props: {
     modelValue: {
