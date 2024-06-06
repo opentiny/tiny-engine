@@ -180,7 +180,7 @@
                     "labelPosition": "top",
                     "type": "number",
                     "widget": {
-                      "component": "NumberConfiguratoric",
+                      "component": "NumberConfigurator",
                       "props": {}
                     },
                     "device": []
@@ -1635,7 +1635,7 @@
                               }
                             },
                             "widget": {
-                              "component": "NumberConfiguratoric",
+                              "component": "NumberConfigurator",
                               "props": {}
                             }
                           },
@@ -1654,7 +1654,7 @@
                               }
                             },
                             "widget": {
-                              "component": "NumberConfiguratoric",
+                              "component": "NumberConfigurator",
                               "props": {}
                             }
                           },
@@ -2119,7 +2119,7 @@
                     "labelPosition": "top",
                     "type": "number",
                     "widget": {
-                      "component": "NumberConfiguratoric",
+                      "component": "NumberConfigurator",
                       "props": {}
                     },
                     "device": []

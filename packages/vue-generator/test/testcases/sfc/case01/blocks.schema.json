@@ -128,7 +128,7 @@
             "readOnly": false,
             "disabled": false,
             "widget": {
-              "component": "MetaInput",
+              "component": "InputConfigurator",
               "props": {
                 "modelValue": "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/TinyLowCode/crm/img/bussiness/businessmanage.svg"
               }
@@ -150,7 +150,7 @@
             "readOnly": false,
             "disabled": false,
             "widget": {
-              "component": "MetaInput",
+              "component": "InputConfigurator",
               "props": {
                 "modelValue": "商务管理"
               }
