@@ -399,7 +399,7 @@ class MysqlConnection {
           resolve(result)
         })
         .catch((error) => {
-          logger.success(`create table ${componentsTableName} failed：${error}.`)
+          logger.error(`create table ${componentsTableName} failed：${error}.`)
           reject(error)
         })
     })
