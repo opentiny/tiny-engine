@@ -382,7 +382,7 @@
                 "readOnly": false,
                 "disabled": false,
                 "widget": {
-                  "component": "MetaInput",
+                  "component": "InputConfigurator",
                   "props": {
                     "modelValue": "MT0526-React 1.0"
                   }
@@ -432,5 +432,5 @@
     "categories": [],
     "public_scope_tenants": [],
     "histories_length": 1
-  }  
+  }
 }

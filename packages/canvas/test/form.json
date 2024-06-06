@@ -73,7 +73,7 @@
               "zh_CN": "报价ID"
             },
             "widget": {
-              "component": "MetaInput",
+              "component": "InputConfigurator",
               "props": {}
             },
             "cols": 12,
