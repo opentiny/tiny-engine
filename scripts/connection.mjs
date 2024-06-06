@@ -326,7 +326,7 @@ class MysqlConnection {
         this.relationMaterialHistory(id)
       })
       .catch((error) => {
-        logger.success(`add ${component.component} failed：${error}.`)
+        logger.error(`add ${component.component} failed：${error}.`)
       })
   }
 
