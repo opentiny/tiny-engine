@@ -23,7 +23,7 @@ export default {
   component,
   layout: MaterialLayout,
   options: {
-    layoutCompoentIdMap: {
+    layoutComponentIdMap: {
       header: 'engine.plugins.materials.header',
       content: 'engine.plugins.materials.content'
     }

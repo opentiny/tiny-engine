@@ -39,8 +39,8 @@ export default {
     })
     provide('panelState', panelState) // 使用provide传给子组件,后续可能会有调整，先暂定
 
-    const headerMeta = getMergeMeta(props.metaData.options?.layoutCompoentIdMap?.header)
-    const contentMeta = getMergeMeta(props.metaData.options?.layoutCompoentIdMap?.content)
+    const headerMeta = getMergeMeta(props.metaData.options?.layoutComponentIdMap?.header)
+    const contentMeta = getMergeMeta(props.metaData.options?.layoutComponentIdMap?.content)
     const pluginComponents = reactive({
       pluginHeader: headerMeta.component,
       pluginContent: contentMeta?.component
