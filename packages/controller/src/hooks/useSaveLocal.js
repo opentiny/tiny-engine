@@ -11,9 +11,9 @@
  */
 
 import { Modal } from '@opentiny/vue'
-import { VITE_ORIGIN } from '../js/environments'
-import useCanvas from './useCanvas'
-import { getGlobalConfig } from './globalConfig'
+import { VITE_ORIGIN } from '../../js/environments'
+import { getGlobalConfig } from '../globalConfig'
+import { HOOK_NAME, initHook, useCanvas } from '@opentiny/tiny-engine-entry'
 
 // 获取当前页面的全量信息
 
@@ -83,3 +83,8 @@ export default () => {
     savePageLocal
   }
 }
+
+initHook(HOOK_NAME.useSaveLocal, {
+  confirmSaveLocal,
+  savePageLocal
+})

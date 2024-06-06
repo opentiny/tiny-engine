@@ -11,19 +11,23 @@
  */
 
 import { reactive } from 'vue'
-import { getGlobalConfig } from './globalConfig'
+import { getGlobalConfig } from '../globalConfig'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { utils, constants } from '@opentiny/tiny-engine-utils'
 import { meta as BuiltinComponentMaterials } from '@opentiny/tiny-engine-builtin-component'
-import { getCanvasStatus } from '../js/canvas'
-import useApp from './useApp'
-import useCanvas from './useCanvas'
-import useTranslate from './useTranslate'
-import useEditorInfo from './useEditorInfo'
-import useBreadcrumb from './useBreadcrumb'
-import useLayout from './useLayout'
-import useBlock from './useBlock'
-import useNotify from './useNotify'
+import { getCanvasStatus } from '../../js/canvas'
+import useNotify from '../components/useNotify'
+import {
+  HOOK_NAME,
+  initHook,
+  useApp,
+  useCanvas,
+  useTranslate,
+  useEditorInfo,
+  useBreadcrumb,
+  useLayout,
+  useBlock
+} from '@opentiny/tiny-engine-entry'
 
 const { camelize, capitalize } = utils
 const { MATERIAL_TYPE, COMPONENT_NAME, DEFAULT_INTERCEPTOR } = constants
@@ -475,3 +479,22 @@ export default function () {
     updateCanvasDependencies
   }
 }
+
+initHook(HOOK_NAME.useResource, {
+  resState,
+  fetchResource,
+  fetchMaterial,
+  generateNode,
+  addMaterials,
+  clearMaterials,
+  clearBlockResources,
+  getMaterial,
+  setMaterial,
+  getConfigureMap,
+  registerComponent,
+  registerBlock,
+  getSnippetRelationship,
+  initPageOrBlock,
+  handlePopStateEvent,
+  updateCanvasDependencies
+})

@@ -12,6 +12,7 @@
 
 import { reactive } from 'vue'
 import { extend, isEqual } from '@opentiny/vue-renderless/common/object'
+import { HOOK_NAME, initHook } from '@opentiny/tiny-engine-entry'
 
 const DEFAULT_PAGE = {
   app: '',
@@ -145,3 +146,17 @@ export default () => {
     COMMON_PAGE_GROUP_ID
   }
 }
+
+initHook(HOOK_NAME.usePage, {
+  DEFAULT_PAGE,
+  pageSettingState,
+  isTemporaryPage,
+  isCurrentDataSame,
+  changeTreeData,
+  getPageContent,
+  resetPageData,
+  initCurrentPageData,
+  isChangePageData,
+  STATIC_PAGE_GROUP_ID,
+  COMMON_PAGE_GROUP_ID
+})

@@ -13,25 +13,9 @@
 import { computed } from 'vue'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { constants } from '@opentiny/tiny-engine-utils'
-import useBlock from './useBlock'
+import { HOOK_NAME, initHook, useBlock } from '@opentiny/tiny-engine-entry'
 
 const { SCHEMA_DATA_TYPE } = constants
-
-// 遍历区块属性，查找已关联的组件属性
-const findLinked = ({ componentProperties, componentId, blockProperties }) => {
-  for (let i = 0; i < blockProperties.length; i++) {
-    const property = blockProperties[i]
-
-    if (property.linked && componentId === property.linked.id) {
-      addPropertyLinks({
-        componentProperties,
-        linked: { ...property.linked, blockProperty: property.property },
-        defaultValue: property.defaultValue,
-        propertyName: property.linked.property
-      })
-    }
-  }
-}
 
 // 给组件属性添加关联信息
 const addPropertyLinks = ({ linked, propertyName, componentProperties }) => {
@@ -58,6 +42,22 @@ const addPropertyLinks = ({ linked, propertyName, componentProperties }) => {
   }
 }
 
+// 遍历区块属性，查找已关联的组件属性
+const findLinked = ({ componentProperties, componentId, blockProperties }) => {
+  for (let i = 0; i < blockProperties.length; i++) {
+    const property = blockProperties[i]
+
+    if (property.linked && componentId === property.linked.id) {
+      addPropertyLinks({
+        componentProperties,
+        linked: { ...property.linked, blockProperty: property.property },
+        defaultValue: property.defaultValue,
+        propertyName: property.linked.property
+      })
+    }
+  }
+}
+
 // 重置组件属性的关联信息
 const resetLink = (properties) => {
   if (properties && Array.isArray(properties)) {
@@ -71,7 +71,7 @@ const resetLink = (properties) => {
   }
 }
 
-export default ({ pageState }) => {
+const getProperty = ({ pageState }) => {
   const { getCurrentBlock, getBlockProperties } = useBlock()
 
   const properties = computed(() => {
@@ -93,3 +93,9 @@ export default ({ pageState }) => {
     properties
   }
 }
+
+export default () => ({ getProperty })
+
+initHook(HOOK_NAME.useProperty, {
+  getProperty
+})
