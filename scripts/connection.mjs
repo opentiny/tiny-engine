@@ -344,7 +344,7 @@ class MysqlConnection {
         }
       })
       .catch((error) => {
-        logger.success(`query ${component.component} failed：${error}.`)
+        logger.error(`query ${component.component} failed：${error}.`)
       })
   }
 
