@@ -55,8 +55,7 @@ export const useCustom = () => hooksState[HOOK_NAME.useCustom]
 
 export function initHook(hookName, hookContent) {
   if (!Object.keys(hooksState).includes(hookName)) {
-    console.warn('init hooks error, invalid hookName: ', hookName) // eslint-disable-line
-    return
+    throw new Error('Invalid hook name provided: ' + hookName)
   }
   Object.assign(hooksState[hookName], hookContent)
 }
