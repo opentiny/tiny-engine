@@ -12,6 +12,7 @@
 
 import { reactive, watch } from 'vue'
 import { useHttp } from '@opentiny/tiny-engine-http'
+import { HOOK_NAME, initHook } from '@opentiny/tiny-engine-entry'
 
 const http = useHttp()
 
@@ -71,3 +72,10 @@ export default () => {
     updateApp
   }
 }
+
+initHook(HOOK_NAME.useApp, {
+  appInfoState,
+  fetchAppInfo,
+  fetchAppList,
+  updateApp
+})

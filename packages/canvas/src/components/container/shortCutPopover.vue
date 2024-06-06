@@ -41,7 +41,7 @@ export default {
   setup(props, { emit }) {
     const { getMaterial } = useResource()
     const { pageState } = useCanvas()
-    const { properties } = useProperty({ pageState })
+    const { properties } = useProperty().getProperty({ pageState })
     const active = ref('props')
 
     const propertiesList = computed(() => {

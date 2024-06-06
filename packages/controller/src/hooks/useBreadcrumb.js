@@ -11,6 +11,7 @@
 */
 
 import { ref } from 'vue'
+import { HOOK_NAME, initHook } from '@opentiny/tiny-engine-entry'
 
 let breadcrumbData = ref([])
 const CONSTANTS = {
@@ -37,3 +38,10 @@ export default () => {
     getBreadcrumbData
   }
 }
+
+initHook(HOOK_NAME.useBreadcrumb, {
+  CONSTANTS,
+  setBreadcrumbPage,
+  setBreadcrumbBlock,
+  getBreadcrumbData
+})
