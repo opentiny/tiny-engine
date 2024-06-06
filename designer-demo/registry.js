@@ -11,6 +11,11 @@
  */
 
 export default {
+  config: {
+    id: 'engine.config',
+    theme: 'dark',
+    material: [],
+  },
   layout: { id: 'engine.layout' },
   toolbars: [
     {

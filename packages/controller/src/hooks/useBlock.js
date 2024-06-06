@@ -16,10 +16,10 @@ import { extend, copyArray } from '@opentiny/vue-renderless/common/object'
 import { format } from '@opentiny/vue-renderless/common/date'
 import { remove } from '@opentiny/vue-renderless/common/array'
 import { constants } from '@opentiny/tiny-engine-utils'
+import { getMergeMeta } from '@opentiny/tiny-engine-entry'
 import { getCanvasStatus } from '../../js/canvas'
 import { ast2String, parseExpression } from '../../js/ast'
 import { getCssObjectFromStyleStr } from '../../js/css'
-import { getGlobalConfig } from '../globalConfig'
 import {
   HOOK_NAME,
   initHook,
@@ -332,7 +332,7 @@ const createBlock = ({ name_cn, label, path, categories }) => {
     histories: [],
     categories,
     public: BLOCK_OPENNESS.Open,
-    framework: getGlobalConfig()?.dslMode,
+    framework: getMergeMeta('engine.config')?.dslMode,
     content: {
       ...extend(true, {}, DEFAULT_BLOCK),
       fileName: label,
@@ -354,7 +354,7 @@ const createEmptyBlock = ({ name_cn, label, path, categories }) => {
     label,
     categories,
     public: BLOCK_OPENNESS.Open,
-    framework: getGlobalConfig()?.dslMode,
+    framework: getMergeMeta('engine.config')?.dslMode,
     content: {
       ...extend(true, {}, DEFAULT_BLOCK),
       fileName: label

@@ -37,7 +37,7 @@ export default {
     HTML: {},
     Flowchart: {}
   },
-
+  // TODO: 声明周期相关配置拆分到页面管理的配置项里面
   // 生命周期函数
   lifeCyclesOptions: {
     Angular: [

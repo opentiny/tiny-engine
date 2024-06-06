@@ -11,9 +11,8 @@
  */
 
 import { Modal } from '@opentiny/vue'
+import { HOOK_NAME, initHook, useCanvas, getMergeMeta } from '@opentiny/tiny-engine-entry'
 import { VITE_ORIGIN } from '../../js/environments'
-import { getGlobalConfig } from '../globalConfig'
-import { HOOK_NAME, initHook, useCanvas } from '@opentiny/tiny-engine-entry'
 
 // 获取当前页面的全量信息
 
@@ -28,7 +27,7 @@ const confirmSaveLocal = async () => {
     api: `${VITE_ORIGIN}/app-service/api/pages/code/${currentPageId}`,
     pageName: currentPageName,
     pageId: currentPageId,
-    platformId: getGlobalConfig()?.platformId
+    platformId: getMergeMeta('engine.config')?.platformId
   })
 
   if (savePage.error) {
@@ -53,7 +52,7 @@ const savePageLocal = async () => {
   const fileExistRes = await bridge.callHandler('page-is-exist', {
     pageName: currentPageName || currentPage.name,
     pageId: currentPageId || currentPage.id,
-    platformId: getGlobalConfig()?.platformId
+    platformId: getMergeMeta('engine.config')?.platformId
   })
 
   // 查询本地文件失败：存在同名文件 / 接口报错
