@@ -75,7 +75,17 @@ const generateNode = ({ type, component }) => {
   return schema
 }
 
-const registerComponent = (data) => {
+const registerComponent = (data, baseProps) => {
+  const propertiesContent = data.schema?.properties?.[0]?.content
+
+  if (Array.isArray(propertiesContent)) {
+    for (const prop of (baseProps || []).slice().reverse()) {
+      if (!propertiesContent.some(({ property }) => property === prop.property)) {
+        propertiesContent.unshift(JSON.parse(JSON.stringify(prop)))
+      }
+    }
+  }
+
   if (Array.isArray(data.component)) {
     const { component, ...others } = data
     component.forEach((item) => {
@@ -204,7 +214,7 @@ const generateThirdPartyDeps = (components) => {
 const addMaterials = (materials = {}) => {
   generateThirdPartyDeps(materials.components)
   resState.components.push(...materials.snippets)
-  materials.components.map(registerComponent)
+  materials.components.map((item) => registerComponent(item, materials.baseProperties))
 
   const promises = materials?.blocks?.map((item) => registerBlock(item, true))
   Promise.allSettled(promises).then((blocks) => {
@@ -377,8 +387,12 @@ const fetchResource = async ({ isInit = true } = {}) => {
   useApp().appInfoState.selectedId = id
 
   const { Builtin } = useCanvas().canvasApi.value
-  Builtin.data.materials.components[0].children.map(registerComponent)
-  BuiltinComponentMaterials.components[0].children.map(registerComponent)
+  Builtin.data.materials.components[0].children.map((item) =>
+    registerComponent(item, Builtin.data.materials.baseProperties)
+  )
+  BuiltinComponentMaterials.components[0].children.map((item) =>
+    registerComponent(item, BuiltinComponentMaterials.baseProperties)
+  )
 
   const builtinSnippets = {
     group: '内置组件',
