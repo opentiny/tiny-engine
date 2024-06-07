@@ -78,7 +78,8 @@
 <script lang="jsx">
 import { reactive, ref, watchEffect, onBeforeUnmount } from 'vue'
 import { Button, DialogBox, Popover, Search, Alert } from '@opentiny/vue'
-import { getGlobalConfig, useModal, usePage, useNotify, useCanvas } from '@opentiny/tiny-engine-controller'
+import { useModal, usePage, useNotify, useCanvas } from '@opentiny/tiny-engine-controller'
+import { getMergeMeta } from '@opentiny/tiny-engine-entry'
 import { theme } from '@opentiny/tiny-engine-controller/adapter'
 import MetaListItems from './MetaListItems.vue'
 import { iconYes } from '@opentiny/vue-icon'
@@ -112,9 +113,9 @@ export default {
     const { confirm } = useModal()
     const { getPageContent } = usePage()
 
-    const lifeCycles = getGlobalConfig()?.lifeCyclesOptions[getGlobalConfig()?.dslMode]
+    const lifeCycles = getMergeMeta('engine.config')?.lifeCyclesOptions[getMergeMeta('engine.config')?.dslMode]
 
-    const lifeCycleTips = getGlobalConfig()?.lifeCycleTips[getGlobalConfig()?.dslMode]
+    const lifeCycleTips = getMergeMeta('engine.config')?.lifeCycleTips[getMergeMeta('engine.config')?.dslMode]
 
     const state = reactive({
       showPopover: true,

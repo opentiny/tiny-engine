@@ -11,10 +11,10 @@
  */
 
 import { reactive } from 'vue'
-import { getGlobalConfig } from '../globalConfig'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { utils, constants } from '@opentiny/tiny-engine-utils'
 import { meta as BuiltinComponentMaterials } from '@opentiny/tiny-engine-builtin-component'
+import { getMergeMeta } from '@opentiny/tiny-engine-entry'
 import { getCanvasStatus } from '../../js/canvas'
 import useNotify from '../components/useNotify'
 import {
@@ -250,8 +250,7 @@ const getConfigureMap = () => {
 }
 
 const fetchMaterial = async () => {
-  const { dslMode, canvasOptions } = getGlobalConfig()
-  const bundleUrls = canvasOptions[dslMode].material
+  const bundleUrls = getMergeMeta('engine.config')?.material || []
   const materials = await Promise.allSettled(bundleUrls.map((url) => http.get(url)))
 
   materials.forEach((response) => {
