@@ -40,16 +40,11 @@ import blockPlugin from '@opentiny/tiny-engine-plugin-block'
 import materials from '@opentiny/tiny-engine-plugin-materials'
 import { useBroadcastChannel } from '@vueuse/core'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { getMergeMeta } from '@opentiny/tiny-engine-entry'
 
 const { message } = useModal()
 const { requestInitBlocks } = blockPlugin.api
 const { fetchGroups } = materials.api
 const { BROADCAST_CHANNEL } = constants
-
-const config = getMergeMeta('engine.config')
-
-import(`./theme/${config.theme}.js`)
 
 export default {
   name: 'TinyLowCode',

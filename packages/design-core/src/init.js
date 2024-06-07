@@ -37,6 +37,9 @@ const defaultLifeCycles = {
     // 在common层注入合并后的注册表
     defineEntry(newRegistry)
 
+    // 加载主题样式，尽早加载
+    import(`./theme/${newRegistry.config.theme}.js`)
+
     initHttp({ env: import.meta.env })
 
     // eslint-disable-next-line no-new
