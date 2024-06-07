@@ -182,4 +182,3 @@ export default {
   }
 }
 </style>
-./theme/light.js

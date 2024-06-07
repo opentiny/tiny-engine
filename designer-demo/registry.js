@@ -13,7 +13,7 @@
 export default {
   config: {
     id: 'engine.config',
-    theme: 'dark',
+    theme: 'light',
     material: [],
   },
   layout: { id: 'engine.layout' },
