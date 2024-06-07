@@ -10,6 +10,6 @@
  *
  */
 
-import { createRender } from '@opentiny/tiny-engine-canvas'
+import { createRender } from '@opentiny/tiny-engine'
 
 createRender(window.parent.TinyGlobalConfig)

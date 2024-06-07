@@ -11,7 +11,6 @@
     "vue": "^3.4.21",
     "@opentiny/tiny-engine": "workspace:^",
     "@opentiny/tiny-engine-entry": "workspace:^",
-    "@opentiny/tiny-engine-canvas": "workspace:^",
     "@opentiny/tiny-engine-configurator": "workspace:*"
   },
   "devDependencies": {
