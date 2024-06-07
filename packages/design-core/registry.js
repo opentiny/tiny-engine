@@ -42,9 +42,63 @@ import Props from '@opentiny/tiny-engine-setting-props'
 import Events from '@opentiny/tiny-engine-setting-events'
 import Styles from '@opentiny/tiny-engine-setting-styles'
 
-import '@opentiny/tiny-engine-theme'
-
 export default {
+  config: {
+    id: 'engine.config',
+    // TODO: 主题支持传入主题 package 或者是 url。
+    theme: 'light',
+    // 物料链接
+    material: [],
+    // 画布依赖的 script、styles 链接。TODO: 解耦后添加默认 tinyvue 的链接
+    canvasDependencies: {
+      styles: [],
+      scripts: []
+    },
+    dslMode: 'Vue',
+    platformId: 918,
+    // TODO: 声明周期相关配置拆分到页面管理的配置项里面
+    // 生命周期函数
+    lifeCyclesOptions: {
+      Angular: [
+        '_constructor_',
+        'ngOnInit',
+        'ngOnChanges',
+        'ngDoCheck',
+        'ngAfterContentInit',
+        'ngAfterContentChecked',
+        'ngAfterViewInit',
+        'ngAfterViewChecked',
+        'ngOnDestroy'
+      ],
+      Vue: [
+        'setup',
+        'onBeforeMount',
+        'onMounted',
+        'onBeforeUpdate',
+        'onUpdated',
+        'onBeforeUnmount',
+        'onUnmounted',
+        'onErrorCaptured',
+        'onActivated',
+        'onDeactivated'
+      ],
+      HTML: [],
+      React: [
+        'componentWillMount',
+        'componentDidMount',
+        'componentWillReceiveProps',
+        'shouldComponentUpdate',
+        'componentWillUpdate',
+        'componentDidUpdate',
+        'componentWillUnmount'
+      ]
+    },
+
+    // 生命周期使用提示
+    lifeCycleTips: {
+      Vue: '通过Vue解构出来的方法都可以在setup这里使用，比如watch、computed、watchEffect等'
+    }
+  },
   layout: { id: 'engine.layout' },
   toolbars: [
     Logo,

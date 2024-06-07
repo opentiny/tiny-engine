@@ -12,7 +12,6 @@
 
 import './hooks/mountHooks'
 import useMessage from './useMessage'
-import { getGlobalConfig, setGlobalConfig } from './globalConfig'
 import useData from './useData'
 export { default as metaData } from '../meta'
 import example from './example'
@@ -42,4 +41,4 @@ export {
   useCustom
 } from '@opentiny/tiny-engine-entry'
 
-export { getGlobalConfig, setGlobalConfig, useNotify, useData, useMessage, useModal }
+export { useNotify, useData, useMessage, useModal }
