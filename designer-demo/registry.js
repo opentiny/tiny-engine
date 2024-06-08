@@ -42,16 +42,23 @@ import {
   Styles,
 } from '@opentiny/tiny-engine'
 
-
 export default {
   config: {
     id: 'engine.config',
-    theme: 'light',
+    theme: import.meta.env.VITE_THEME || 'light',
     material: ['/mock/bundle.json'],
     scripts: [],
     styles: []
   },
   layout: { id: 'engine.layout' },
+  themes: [
+    {
+      id: 'engine.theme.light'
+    },
+    {
+      id: 'engine.theme.dark'
+    }
+  ],
   toolbars: [
     Logo,
     Breadcrumb,

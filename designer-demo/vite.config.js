@@ -61,7 +61,11 @@ export default defineConfig((options) => {
     '@opentiny/tiny-engine-builtin-component': path.resolve(__dirname, '../packages/builtinComponent/index.js'),
     '@opentiny/tiny-engine-entry': path.resolve(__dirname, '../packages/entry/src/index.js'),
     '@opentiny/tiny-engine-layout': path.resolve(__dirname, '../packages/layout/index.js'),
-    '@opentiny/tiny-engine-configurator': path.resolve(__dirname, '../packages/configurator/src/index.js')
+    '@opentiny/tiny-engine-configurator': path.resolve(__dirname, '../packages/configurator/src/index.js'),
+    '@opentiny/tiny-engine-theme': ['light', 'dark'].includes(extOptions.VITE_THEME)
+    ? path.resolve(process.cwd(), `../packages/theme/${extOptions.VITE_THEME}/index.less`)
+    // ? path.resolve(process.cwd(), `./node_modules/@opentiny/tiny-engine/node_modules/@opentiny/tiny-engine-theme-${extOptions.VITE_THEME}/dist/style.css`)
+    : ''
   }
 
   const config = {
@@ -74,6 +78,6 @@ export default defineConfig((options) => {
       alias: devAlias
     }
   }
-
+  
   return mergeConfig(defaultConfig, config)
 })

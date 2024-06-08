@@ -16,6 +16,7 @@ import { init } from '@opentiny/tiny-engine'
 import { initHook, HOOK_NAME } from '@opentiny/tiny-engine-entry'
 import { configurators } from './configurators.js'
 import 'virtual:svg-icons-register'
+import '@opentiny/tiny-engine-theme'
 
 const beforeAppCreate = () => {
   initHook(HOOK_NAME.useEnv, import.meta.env)
