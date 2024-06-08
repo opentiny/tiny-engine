@@ -13,8 +13,7 @@
     ".": "./dist/index.js"
   },
   "files": [
-    "dist",
-    "assets"
+    "dist"
   ],
   "repository": {
     "type": "git",
