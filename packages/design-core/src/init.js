@@ -36,7 +36,7 @@ const defaultLifeCycles = {
     defineEntry(newRegistry)
 
     // 加载主题样式，尽早加载
-    import(`./theme/${newRegistry.config.theme}.js`)
+    // import(`./theme/${newRegistry.config.theme}.js`)
 
     initHttp({ env: import.meta.env })
 
