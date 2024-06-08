@@ -1,9 +1,10 @@
 import path from 'node:path'
-import { defineConfig, mergeConfig } from 'vite'
+import { defineConfig, mergeConfig, loadEnv } from 'vite'
 import { getDefaultConfig } from '@opentiny/tiny-engine-vite-config'
 
 export default defineConfig((options) => {
   const extOptions = {
+    ...loadEnv(options.mode, process.cwd(), ''),
     iconDirs: [path.resolve(__dirname, './node_modules/@opentiny/tiny-engine/assets/')]
   }
   const defaultConfig = getDefaultConfig(options, extOptions)
