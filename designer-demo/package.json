@@ -11,11 +11,16 @@
     "vue": "^3.4.21",
     "@opentiny/tiny-engine": "workspace:^",
     "@opentiny/tiny-engine-entry": "workspace:^",
-    "@opentiny/tiny-engine-configurator": "workspace:*"
+    "@opentiny/tiny-engine-configurator": "workspace:*",
+    "@opentiny/vue": "~3.14.0",
+    "@opentiny/vue-design-smb": "~3.14.0",
+    "@opentiny/vue-renderless": "~3.14.0",
+    "@opentiny/vue-theme": "~3.14.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",
     "vite": "^5.2.7",
+    "@opentiny/tiny-engine-vite-config": "workspace:^",
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:^"
   }
 }

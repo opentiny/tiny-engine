@@ -23,8 +23,6 @@ import App from './App.vue'
 import defaultRegistry from '../registry.js'
 import { registerConfigurators } from './registerConfigurators'
 
-import 'virtual:svg-icons-register'
-
 const defaultLifeCycles = {
   beforeAppCreate: ({ registry }) => {
     // 合并用户自定义注册表
