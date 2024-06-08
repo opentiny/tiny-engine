@@ -14,6 +14,8 @@ export const HOOK_NAME = {
   useDataSource: 'dataSource',
   useBreadcrumb: 'breadcrumb',
   useHelp: 'help',
+  useHttp: 'http',
+  useEnv: 'env',
   useCustom: 'custom'
 }
 
@@ -33,6 +35,8 @@ const hooksState = {
   [HOOK_NAME.useDataSource]: {},
   [HOOK_NAME.useBreadcrumb]: {},
   [HOOK_NAME.useHelp]: {},
+  [HOOK_NAME.useHttp]: {},
+  [HOOK_NAME.useEnv]: {},
   [HOOK_NAME.useCustom]: {} // 自定义
 }
 
@@ -51,11 +55,19 @@ export const useDataSource = () => hooksState[HOOK_NAME.useDataSource]
 export const useBreadcrumb = () => hooksState[HOOK_NAME.useBreadcrumb]
 export const useProperty = () => hooksState[HOOK_NAME.useProperty]
 export const useHelp = () => hooksState[HOOK_NAME.useHelp]
+export const useHttp = () => hooksState[HOOK_NAME.useHttp]
+export const useEnv = () => hooksState[HOOK_NAME.useEnv]
 export const useCustom = () => hooksState[HOOK_NAME.useCustom]
 
-export function initHook(hookName, hookContent) {
+export function initHook(hookName, hookContent, { useDefaultExport } = {}) {
   if (!Object.keys(hooksState).includes(hookName)) {
     throw new Error('Invalid hook name provided: ' + hookName)
   }
-  Object.assign(hooksState[hookName], hookContent)
+  if (useDefaultExport) {
+    hooksState[hookName] = hookContent
+  } else {
+    Object.assign(hooksState[hookName], hookContent)
+  }
+
+  return hooksState[hookName]
 }
