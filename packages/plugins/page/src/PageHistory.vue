@@ -6,7 +6,8 @@
 import { ref, watchEffect } from 'vue'
 import { BlockHistoryList } from '@opentiny/tiny-engine-common'
 import { previewPage } from '@opentiny/tiny-engine-controller/js/preview'
-import { getGlobalConfig, usePage, useBlock, useEditorInfo, useModal } from '@opentiny/tiny-engine-controller'
+import { usePage, useBlock, useEditorInfo, useModal } from '@opentiny/tiny-engine-controller'
+import { getMergeMeta } from '@opentiny/tiny-engine-entry'
 import { fetchPageHistory } from './http.js'
 
 export default {
@@ -56,8 +57,8 @@ export default {
         previewPage({
           id: item.page,
           history: item.id,
-          framework: getGlobalConfig()?.dslMode,
-          platform: getGlobalConfig()?.platformId
+          framework: getMergeMeta('engine.config')?.dslMode,
+          platform: getMergeMeta('engine.config')?.platformId
         })
     }
 

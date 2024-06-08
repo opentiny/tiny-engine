@@ -12,9 +12,7 @@
 
 import { toRaw, nextTick, shallowReactive, ref } from 'vue'
 import { constants } from '@opentiny/tiny-engine-utils'
-import useCanvas from './useCanvas'
-import useResource from './useResource'
-import useTranslate from './useTranslate'
+import { HOOK_NAME, initHook, useCanvas, useResource, useTranslate } from '@opentiny/tiny-engine-entry'
 
 const { COMPONENT_NAME } = constants
 const propsUpdateKey = ref(0)
@@ -217,6 +215,22 @@ const setProps = (schema) => {
   Object.entries(schema.props || {}).map(([key, value]) => setProp(key, value))
 }
 
+const getSchema = (parent) => {
+  return parent ? properties : properties.schema
+}
+
+initHook(HOOK_NAME.useProperties, {
+  getProps,
+  getProp,
+  setProps,
+  mergeProps,
+  delProp,
+  setProp,
+  translateProp,
+  getSchema,
+  propsUpdateKey
+})
+
 export default function () {
   return {
     getProps,
@@ -226,9 +240,7 @@ export default function () {
     delProp,
     setProp,
     translateProp,
-    getSchema(parent) {
-      return parent ? properties : properties.schema
-    },
+    getSchema,
     propsUpdateKey
   }
 }

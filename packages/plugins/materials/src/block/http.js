@@ -10,8 +10,9 @@
  *
  */
 
-import { getGlobalConfig, useApp } from '@opentiny/tiny-engine-controller'
+import { useApp } from '@opentiny/tiny-engine-controller'
 import { useHttp } from '@opentiny/tiny-engine-http'
+import { getMergeMeta } from '@opentiny/tiny-engine-entry'
 const http = useHttp()
 
 const getParams = (obj) => {
@@ -37,7 +38,7 @@ export const fetchGroupBlocks = ({ groupId, value }) =>
   http.get(
     `/material-center/api/block${getParams({
       groups: groupId,
-      framework: getGlobalConfig()?.dslMode,
+      framework: getMergeMeta('engine.config')?.dslMode,
       label_contains: value
     })}`
   )
@@ -51,7 +52,7 @@ export const fetchGroupBlocksByIds = async ({ groupIds }) => {
 
   // 所有分组下面可能会有区块重复，需要去重
   const blockIdSet = new Set()
-  const dslMode = getGlobalConfig()?.dslMode
+  const dslMode = getMergeMeta('engine.config')?.dslMode
 
   const blocks = blockGroups
     .map((group) => group.blocks.map((block) => ({ ...block, groupId: group.id, groupName: group.name })))
@@ -76,7 +77,9 @@ export const fetchGroupBlocksById = async ({ groupId }) => {
 
   let data = blockGroup?.[0]?.blocks || []
 
-  data = data.filter((block) => block.framework === getGlobalConfig()?.dslMode).map((item) => ({ ...item, groupId }))
+  data = data
+    .filter((block) => block.framework === getMergeMeta('engine.config')?.dslMode)
+    .map((item) => ({ ...item, groupId }))
 
   return data
 }

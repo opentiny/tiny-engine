@@ -16,6 +16,7 @@
   "main": "index.js",
   "exports": {
     ".": "index.js",
+    "./canvas": "./canvas.js",
     "./vite.config.js": "./vite.config.js",
     "./config/lowcode.config": "./config/lowcode.config.js",
     "./scripts/externalDeps": "./scripts/externalDeps.js"

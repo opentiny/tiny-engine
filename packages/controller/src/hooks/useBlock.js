@@ -16,15 +16,19 @@ import { extend, copyArray } from '@opentiny/vue-renderless/common/object'
 import { format } from '@opentiny/vue-renderless/common/date'
 import { remove } from '@opentiny/vue-renderless/common/array'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { getCanvasStatus } from '../js/canvas'
-import { ast2String, parseExpression } from '../js/ast'
-import { getCssObjectFromStyleStr } from '../js/css'
-import useCanvas from './useCanvas'
-import useTranslate from './useTranslate'
-import useEditorInfo from './useEditorInfo'
-import useBreadcrumb from './useBreadcrumb'
-import useLayout from './useLayout'
-import { getGlobalConfig } from './globalConfig'
+import { getMergeMeta } from '@opentiny/tiny-engine-entry'
+import { getCanvasStatus } from '../../js/canvas'
+import { ast2String, parseExpression } from '../../js/ast'
+import { getCssObjectFromStyleStr } from '../../js/css'
+import {
+  HOOK_NAME,
+  initHook,
+  useCanvas,
+  useTranslate,
+  useEditorInfo,
+  useBreadcrumb,
+  useLayout
+} from '@opentiny/tiny-engine-entry'
 
 const { SORT_TYPE, SCHEMA_DATA_TYPE, BLOCK_OPENNESS } = constants
 
@@ -328,7 +332,7 @@ const createBlock = ({ name_cn, label, path, categories }) => {
     histories: [],
     categories,
     public: BLOCK_OPENNESS.Open,
-    framework: getGlobalConfig()?.dslMode,
+    framework: getMergeMeta('engine.config')?.dslMode,
     content: {
       ...extend(true, {}, DEFAULT_BLOCK),
       fileName: label,
@@ -350,7 +354,7 @@ const createEmptyBlock = ({ name_cn, label, path, categories }) => {
     label,
     categories,
     public: BLOCK_OPENNESS.Open,
-    framework: getGlobalConfig()?.dslMode,
+    framework: getMergeMeta('engine.config')?.dslMode,
     content: {
       ...extend(true, {}, DEFAULT_BLOCK),
       fileName: label
@@ -764,3 +768,48 @@ export default function () {
     getDateFromNow
   }
 }
+
+initHook(HOOK_NAME.useBlock, {
+  NODE_TYPE_PAGE,
+  DEFAULT_GROUP_ID,
+  DEFAULT_GROUP_NAME,
+  selectedGroup,
+  selectedBlock,
+  selectedBlockArray,
+  isRefresh,
+  addBlock,
+  delBlock,
+  createBlock,
+  getBlockAssetsByVersion,
+  createEmptyBlock,
+  groupChange,
+  addDefaultGroup,
+  isDefaultGroupId,
+  isAllGroupId,
+  splitBackupGroups,
+  sort,
+  check,
+  cancelCheck,
+  getBlockList,
+  setBlockList,
+  getBlockI18n,
+  getGroupList,
+  setGroupList,
+  getCategoryList,
+  setCategoryList,
+  addBlockEvent,
+  getBlockEvents,
+  appendEventEmit,
+  getCurrentBlock,
+  initBlock,
+  setCurrentBlock,
+  removeEventLink,
+  getSelectedGroup,
+  setSelectedGroup,
+  addBlockProperty,
+  editBlockProperty,
+  removePropertyLink,
+  getBlockProperties,
+  getBlockPageSchema,
+  getDateFromNow
+})
