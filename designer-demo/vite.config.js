@@ -3,8 +3,9 @@ import { defineConfig, mergeConfig, loadEnv } from 'vite'
 import { getDefaultConfig } from '@opentiny/tiny-engine-vite-config'
 
 export default defineConfig((options) => {
+  const envDir = path.resolve(process.cwd(), 'env')
   const extOptions = {
-    ...loadEnv(options.mode, process.cwd(), ''),
+    ...loadEnv(options.mode, envDir, 'VITE_'),
     iconDirs: [path.resolve(__dirname, './node_modules/@opentiny/tiny-engine/assets/')]
   }
   const defaultConfig = getDefaultConfig(options, extOptions)
@@ -64,6 +65,8 @@ export default defineConfig((options) => {
   }
 
   const config = {
+    envDir,
+    publicDir: path.resolve(__dirname, './public'),
     server: {
       port: 8090
     },
