@@ -58,7 +58,7 @@
       >
         <div>
           <span class="item-icon">
-            <img class="chatgpt-icon" src="../assets/AI.png" />
+            <img class="chatgpt-icon" src="../../assets/AI.png" />
           </span>
         </div>
       </li>
