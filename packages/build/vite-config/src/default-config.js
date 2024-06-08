@@ -35,7 +35,7 @@ const config = {
   server: {
     // 这里保证本地启动服务是localhost,支持js多线程和谷歌浏览器读写本地文件api
     port: 8080,
-    open: '/?type=app&id=918&tenant=1',
+    open: '/index.html?type=app&id=918&tenant=1',
     proxy: {
       '/app-center/v1/api': {
         target: origin,
