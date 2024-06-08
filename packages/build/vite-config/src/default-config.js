@@ -1,4 +1,4 @@
-import { defineConfig, loadEnv } from 'vite'
+import { defineConfig } from 'vite'
 import path from 'path'
 import vue from '@vitejs/plugin-vue'
 import monacoEditorPluginCjs from 'vite-plugin-monaco-editor'
@@ -88,7 +88,10 @@ const config = {
           //@vue/repl monaco编辑器需要
           resolveFrom: 'cwd',
           assets: {
-            from: ['./node_modules/@vue/repl/dist/assets/*'], // worker.js文件以url形式引用不会被esbuild拉起，需要手动复制
+            from: [
+              './node_modules/@vue/repl/dist/assets/*',
+              './node_modules/@opentiny/tiny-engine/node_modules/@vue/repl/dist/assets/*'
+            ], // worker.js文件以url形式引用不会被esbuild拉起，需要手动复制
             to: ['./node_modules/.vite/assets'] // 开发态，js文件被缓存在.vite/deps，请求相对路径为.vite/assets
           },
           watch: true
@@ -107,10 +110,9 @@ const config = {
     rollupOptions: {
       plugins: [nodePolyfill({ include: null })], // 使用@rollup/plugin-inject的默认值{include: null}, 即在所有代码中生效
       input: {
-        index: path.resolve(__dirname, './index.html'),
-        canvas: path.resolve(__dirname, './canvas.html'),
-        preview: path.resolve(__dirname, './preview.html'),
-        previewApp: path.resolve(__dirname, './previewApp.html')
+        index: path.resolve(process.cwd(), './index.html'),
+        canvas: path.resolve(process.cwd(), './canvas.html'),
+        preview: path.resolve(process.cwd(), './preview.html')
       },
       output: {
         manualChunks: (id) => {
@@ -137,12 +139,9 @@ const importMapVersions = {
   tinyVue: '~3.14'
 }
 
-export default defineConfig(({ command = 'serve', mode = 'serve' }, extOptions, dirname) => {
-  const {
-    VITE_CDN_DOMAIN = 'https://npm.onmicrosoft.cn',
-    VITE_LOCAL_IMPORT_MAPS,
-    VITE_LOCAL_BUNDLE_DEPS
-  } = loadEnv(mode, process.cwd(), '')
+export default defineConfig(({ command = 'serve', mode = 'serve' }, extOptions) => {
+  const { VITE_CDN_DOMAIN = 'https://npm.onmicrosoft.cn', VITE_LOCAL_IMPORT_MAPS, VITE_LOCAL_BUNDLE_DEPS } = extOptions
+
   const isLocalImportMap = VITE_LOCAL_IMPORT_MAPS === 'true' // true公共依赖库使用本地打包文件，false公共依赖库使用公共CDN
   const isCopyBundleDeps = VITE_LOCAL_BUNDLE_DEPS === 'true' // true bundle里的cdn依赖处理成本地依赖， false 不处理
 
@@ -179,12 +178,6 @@ export default defineConfig(({ command = 'serve', mode = 'serve' }, extOptions, 
         }
       }
     }
-  }
-
-  config.build.rollupOptions.input = {
-    index: path.resolve(dirname, './index.html'),
-    canvas: path.resolve(dirname, './canvas.html'),
-    preview: path.resolve(dirname, './preview.html')
   }
 
   if (command === 'serve') {
