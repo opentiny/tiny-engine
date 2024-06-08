@@ -10,15 +10,6 @@
  *
  */
 
-import { createApp } from 'vue'
-import initSvgs from '@opentiny/tiny-engine-svgs'
-import App from './App.vue'
-import 'virtual:svg-icons-register'
+import { initPreview } from '@opentiny/tiny-engine'
 
-export const initPreview = () => {
-  const app = createApp(App)
-  
-  initSvgs(app)
-  
-  app.mount('#app')
-}
+initPreview()
