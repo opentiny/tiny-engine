@@ -18,13 +18,14 @@ import { injectGlobalComponents } from '@opentiny/tiny-engine-common'
 import { initHttp } from '@opentiny/tiny-engine-http'
 import TinyThemeTool from '@opentiny/vue-theme/theme-tool'
 import { tinySmbTheme } from '@opentiny/vue-theme/theme' // SMB 主题
-import { defineEntry, mergeRegistry } from '@opentiny/tiny-engine-entry'
+import { defineEntry, mergeRegistry, initHook, HOOK_NAME } from '@opentiny/tiny-engine-entry'
 import App from './layout/App.vue'
 import defaultRegistry from '../registry.js'
 import { registerConfigurators } from './registerConfigurators'
 
 const defaultLifeCycles = {
   beforeAppCreate: ({ registry }) => {
+    initHook(HOOK_NAME.useEnv, import.meta.env)
     // 合并用户自定义注册表
     const newRegistry = mergeRegistry(registry, defaultRegistry)
     if (process.env.NODE_ENV === 'development') {
