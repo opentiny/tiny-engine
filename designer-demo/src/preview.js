@@ -10,6 +10,7 @@
  *
  */
 
-import { initPreview } from '@opentiny/tiny-engine'
+import { initPreview, defaultRegistry } from '@opentiny/tiny-engine'
+import { mergeRegistry } from '@opentiny/tiny-engine-entry'
 
-initPreview()
+initPreview({ registry: mergeRegistry({ config: { id : 'engine.config', theme: 'light' } }, defaultRegistry) })

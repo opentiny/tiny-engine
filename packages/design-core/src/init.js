@@ -18,7 +18,7 @@ import { injectGlobalComponents } from '@opentiny/tiny-engine-common'
 import { initHttp } from '@opentiny/tiny-engine-http'
 import TinyThemeTool from '@opentiny/vue-theme/theme-tool'
 import { tinySmbTheme } from '@opentiny/vue-theme/theme' // SMB 主题
-import { defineEntry, mergeRegistry } from '@opentiny/tiny-engine-entry'
+import { defineEntry } from '@opentiny/tiny-engine-entry'
 import App from './layout/App.vue'
 import defaultRegistry from '../registry.js'
 import { registerConfigurators } from './registerConfigurators'
@@ -26,17 +26,16 @@ import { registerConfigurators } from './registerConfigurators'
 const defaultLifeCycles = {
   beforeAppCreate: ({ registry }) => {
     // 合并用户自定义注册表
-    const newRegistry = mergeRegistry(registry, defaultRegistry)
     if (process.env.NODE_ENV === 'development') {
       console.log('default registry:', defaultRegistry) // eslint-disable-line
       console.log('merged registry:', registry) // eslint-disable-line
     }
 
     // 在common层注入合并后的注册表
-    defineEntry(newRegistry)
+    defineEntry(registry)
 
     // 加载主题样式，尽早加载
-    import(`./theme/${newRegistry.config.theme}.js`)
+    import(`./theme/${registry.config.theme}.js`)
 
     initHttp({ env: import.meta.env })
 
@@ -48,7 +47,7 @@ const defaultLifeCycles = {
     }
 
     // 这里暴露到 window 是为了让 canvas 可以读取
-    window.TinyGlobalConfig = newRegistry.config || {}
+    window.TinyGlobalConfig = registry.config || {}
   },
   appCreated: ({ app }) => {
     initSvgs(app)
