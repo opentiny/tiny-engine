@@ -47,7 +47,9 @@ export default {
   config: {
     id: 'engine.config',
     theme: 'light',
-    material: [],
+    material: ['/mock/bundle.json'],
+    scripts: [],
+    styles: []
   },
   layout: { id: 'engine.layout' },
   toolbars: [
