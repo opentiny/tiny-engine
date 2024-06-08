@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build"
+    "dev": "cross-env VITE_THEME=light vite",
+    "build": "cross-env VITE_THEME=light vite build"
   },
   "dependencies": {
     "vue": "^3.4.21",
@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",
+    "cross-env": "^7.0.3",
     "vite": "^5.2.7",
     "@opentiny/tiny-engine-vite-config": "workspace:^",
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:^"

@@ -66,5 +66,15 @@ export default {
     lifeCycleTips: {
       Vue: '通过Vue解构出来的方法都可以在setup这里使用，比如watch、computed、watchEffect等'
     }
-  }
+  },
+  themes: [
+    {
+      id: 'engine.theme.light',
+      title: '亮色主题'
+    },
+    {
+      id: 'engine.theme.dark',
+      title: '暗色主题'
+    }
+  ],
 }
