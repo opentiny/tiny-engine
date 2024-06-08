@@ -12,12 +12,7 @@ import { importmapPlugin } from './externalDeps.js'
 import visualizerCjs from 'rollup-plugin-visualizer'
 import { fileURLToPath } from 'node:url'
 import generateComment from '@opentiny/tiny-engine-vite-plugin-meta-comments'
-import {
-  getBaseUrlFromCli,
-  copyBundleDeps,
-  copyPreviewImportMap,
-  copyLocalImportMap
-} from './localCdnFile/index.js'
+import { getBaseUrlFromCli, copyBundleDeps, copyPreviewImportMap, copyLocalImportMap } from './localCdnFile/index.js'
 
 const monacoEditorPlugin = monacoEditorPluginCjs.default
 const nodeGlobalsPolyfillPlugin = nodeGlobalsPolyfillPluginCjs.default
@@ -79,7 +74,7 @@ const config = {
         }
       }
     }),
-    vueJsx(),
+    vueJsx()
   ],
   optimizeDeps: {
     esbuildOptions: {
@@ -142,7 +137,7 @@ const importMapVersions = {
   tinyVue: '~3.14'
 }
 
-export default defineConfig(({ command = 'serve', mode = 'serve' }, extOptions) => {
+export default defineConfig(({ command = 'serve', mode = 'serve' }, extOptions, dirname) => {
   const {
     VITE_CDN_DOMAIN = 'https://npm.onmicrosoft.cn',
     VITE_LOCAL_IMPORT_MAPS,
@@ -184,6 +179,12 @@ export default defineConfig(({ command = 'serve', mode = 'serve' }, extOptions) 
         }
       }
     }
+  }
+
+  config.build.rollupOptions.input = {
+    index: path.resolve(dirname, './index.html'),
+    canvas: path.resolve(dirname, './canvas.html'),
+    preview: path.resolve(dirname, './preview.html')
   }
 
   if (command === 'serve') {
