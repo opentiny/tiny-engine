@@ -129,20 +129,18 @@
           </div>
         </div>
         <div class="tiny-engine-right-wrap">
-          <div v-show="layoutState.settings.showDesignSettings" ref="right">
-            <div id="tiny-right-panel">
-              <tiny-tabs v-model="layoutState.settings.render" tab-style="button-card">
-                <tiny-tab-item
-                  v-for="(setting, index) in state.settings"
-                  :key="index"
-                  :title="setting.title"
-                  :name="setting.name"
-                >
-                  <component :is="setting.component"></component>
-                  <div v-show="activating" class="active"></div>
-                </tiny-tab-item>
-              </tiny-tabs>
-            </div>
+          <div v-show="layoutState.settings.showDesignSettings" ref="right" id="tiny-right-panel">
+            <tiny-tabs v-model="layoutState.settings.render" tab-style="button-card">
+              <tiny-tab-item
+                v-for="(setting, index) in state.settings"
+                :key="index"
+                :title="setting.title"
+                :name="setting.name"
+              >
+                <component :is="setting.component"></component>
+                <div v-show="activating" class="active"></div>
+              </tiny-tab-item>
+            </tiny-tabs>
           </div>
         </div>
       </div>
