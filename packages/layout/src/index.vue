@@ -19,9 +19,100 @@
       <div class="tiny-engine-main">
         <div class="tiny-engine-left-wrap">
           <div class="tiny-engine-content-wrap">
+            <div id="tiny-engine-nav-panel" :style="{ 'pointer-events': pluginState.pluginEvent }">
+              <ul class="nav-panel-lists top">
+                <li
+                  v-for="(item, index) in state.topNavLists"
+                  :key="index"
+                  :class="{
+                    'list-item': true,
+                    'first-item': index === 0,
+                    active: item.id === renderPanel,
+                    prev: state.prevIdex - 1 === index
+                  }"
+                  :title="item.title"
+                  @click="clickMenu({ item, index })"
+                >
+                  <div>
+                    <span class="item-icon">
+                      <svg-icon
+                        v-if="typeof iconComponents[item.id] === 'string'"
+                        :name="iconComponents[item.id]"
+                        class="panel-icon"
+                      ></svg-icon>
+                      <component v-else :is="iconComponents[item.id]" class="panel-icon"></component>
+                    </span>
+                  </div>
+                </li>
+              </ul>
+              <ul class="nav-panel-lists bottom">
+                <li style="flex: 1" class="list-item"></li>
+                <li
+                  v-for="(item, index) in state.bottomNavLists"
+                  :key="index"
+                  :class="[
+                    'list-item',
+                    { active: renderPanel === item.id, prev: state.prevIdex - 1 === index, 'first-item': index === 0 }
+                  ]"
+                  :title="item.title"
+                  @click="clickMenu({ item, index })"
+                >
+                  <div :class="{ 'is-show': renderPanel }">
+                    <span class="item-icon">
+                      <public-icon
+                        v-if="typeof iconComponents[item.id] === 'string'"
+                        :name="iconComponents[item.id]"
+                        class="panel-icon"
+                        svgClass="panel-svg"
+                      ></public-icon>
+                      <component v-else :is="iconComponents[item.id]" class="panel-icon"></component>
+                    </span>
+                  </div>
+                </li>
+                <li
+                  v-if="state.independence"
+                  :key="state.bottomNavLists.length + 1"
+                  :class="['list-item']"
+                  :title="state.independence.title"
+                  @click="openAIRobot"
+                >
+                  <div>
+                    <span class="item-icon">
+                      <img class="chatgpt-icon" src="../assets/AI.png" />
+                    </span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <div
+              v-show="renderPanel && components[renderPanel]"
+              id="tiny-engine-left-panel"
+              :class="[renderPanel, { 'is-fixed': pluginsState.fixedPanels.includes(renderPanel) }]"
+            >
+              <div class="left-panel-wrap">
+                <keep-alive>
+                  <component
+                    :is="components[renderPanel]"
+                    ref="pluginRef"
+                    :fixed-panels="pluginsState.fixedPanels"
+                    @close="close"
+                    @fixPanel="fixPanel"
+                  ></component>
+                </keep-alive>
+              </div>
+            </div>
+            <!--  AI 悬浮窗  -->
+            <Teleport to="body">
+              <div v-if="robotVisible" class="robot-dialog">
+                <keep-alive>
+                  <component :is="robotComponent" @close-chat="robotVisible = false"></component>
+                </keep-alive>
+              </div>
+            </Teleport>
+
             <div id="canvas-wrap" ref="canvasRef">
               <div ref="siteCanvas" class="site-canvas" :style="siteCanvasStyle">
-                <!-- <div v-for="(item, index) in state.canvas.CanvasContainer" :key="index" class="panel-item"> -->
                 <component
                   :is="state.canvas.CanvasContainer.component"
                   :controller="controller"
@@ -32,22 +123,26 @@
                 >
                 </component>
               </div>
-              <!-- </div> -->
               <component :is="state.canvas.CanvasFooter.component" :data="footData" @click="selectFooterNode">
               </component>
             </div>
           </div>
-
-          <div id="tiny-right-panel">
-            <!-- <div v-show="layoutState.settings.showDesignSettings">
+        </div>
+        <div class="tiny-engine-right-wrap">
+          <div v-show="layoutState.settings.showDesignSettings" ref="right">
+            <div id="tiny-right-panel">
               <tiny-tabs v-model="layoutState.settings.render" tab-style="button-card">
-                <tiny-tab-item v-for="(setting, index) in state.settings" :key="index" :title="setting.title"
-                  :name="setting.name">
+                <tiny-tab-item
+                  v-for="(setting, index) in state.settings"
+                  :key="index"
+                  :title="setting.title"
+                  :name="setting.name"
+                >
                   <component :is="setting.component"></component>
                   <div v-show="activating" class="active"></div>
                 </tiny-tab-item>
               </tiny-tabs>
-            </div> -->
+            </div>
           </div>
         </div>
       </div>
@@ -59,7 +154,7 @@
 /* metaService */
 import './index.less'
 import { ref, reactive, watch, nextTick, computed, onUnmounted } from 'vue'
-import { ConfigProvider, Popover, Tooltip } from '@opentiny/vue'
+import { ConfigProvider, Popover, Tooltip, Tabs, TabItem } from '@opentiny/vue'
 // import designSmbConfig from '@opentiny/vue-design-smb'
 import { ProgressBar, PublicIcon } from '@opentiny/tiny-engine-common'
 import {
@@ -68,7 +163,8 @@ import {
   useLayout,
   useResource,
   useHistory,
-  useModal
+  useModal,
+  usePage
 } from '@opentiny/tiny-engine-controller'
 import materials from '@opentiny/tiny-engine-plugin-materials'
 import { useHttp } from '@opentiny/tiny-engine-http'
@@ -94,7 +190,9 @@ export default {
     PublicIcon,
     TinyConfigProvider: ConfigProvider,
     TinyPopover: Popover,
-    TinyTooltip: Tooltip
+    TinyTooltip: Tooltip,
+    TinyTabs: Tabs,
+    TinyTabItem: TabItem
   },
   props: {
     registry: {
@@ -105,7 +203,8 @@ export default {
       type: String
     }
   },
-  setup(props) {
+  emits: ['plugin-click'],
+  setup(props, { emit }) {
     const leftBar = []
     const rightBar = []
     const centerBar = []
@@ -115,16 +214,43 @@ export default {
     const canvasRef = ref(null)
     let showModal = false // 弹窗标识
 
+    const {
+      PLUGIN_NAME,
+      pluginState,
+      registerPluginApi,
+      layoutState,
+      layoutState: { plugins: pluginsState }
+    } = useLayout()
+    const activating = computed(() => layoutState.settings.activating)
+
+    const components = {}
+    const iconComponents = {}
+    const pluginRef = ref(null)
+    const robotVisible = ref(false)
+    const robotComponent = ref(null)
+    const { isTemporaryPage } = usePage()
+    const completed = ref(false)
+
+    props.registry.plugins.forEach(({ id, component, api, icon }) => {
+      components[id] = component
+      iconComponents[id] = icon
+      if (api) {
+        registerPluginApi({
+          [id]: api
+        })
+      }
+    })
+
     const state = reactive({
       plugins: props.registry.plugins,
       toolbars: props.registry.toolbars,
       settings: props.registry.settings,
       canvas: props.registry.canvas,
       showDeployBlock: false,
-      prevIdex: -2
-      // topNavLists: props.plugins.filter((item) => item.align === 'top'),
-      // bottomNavLists: props.plugins.filter((item) => item.align === 'bottom'),
-      // independence: props.plugins.find((item) => item.align === 'independence')
+      prevIdex: -2,
+      topNavLists: props.registry.plugins.filter((item) => item.align === 'top'),
+      bottomNavLists: props.registry.plugins.filter((item) => item.align === 'bottom'),
+      independence: props.registry.plugins.find((item) => item.align === 'independence')
     })
 
     state.toolbars.forEach((item) => {
@@ -266,38 +392,60 @@ export default {
       canvasResizeObserver?.disconnect?.()
     })
 
-    // watch(
-    //   () => state.jsClose,
-    //   () => {
-    //     if (state.preNode) {
-    //       plugins.render = state.preNode.id
-    //     }
-    //   }
-    // )
-
     // plugins
-    // const toggleNav = ({ item, navLists }) => {
-    //   if (navLists) state.preNode = navLists
+    const doCompleted = () => {
+      if (!completed.value) {
+        completed.value = true
+        useLayout().closePlugin()
+      }
+    }
 
-    //   if (!item.id) return
+    const clickMenu = ({ item, index }) => {
+      if (item.id === PLUGIN_NAME.EditorHelp) return
+      state.prevIdex = index
 
-    //   plugins.render = plugins.render === item.id ? null : item.id
-    // }
+      // 切换插件与关闭插件时确认
+      const lastPlugin = state.plugins.find((item) => item.id === props.renderPanel)
+      if (props.renderPanel && lastPlugin?.confirm) {
+        const confirmCallback = (result) =>
+          result &&
+          emit('plugin-click', {
+            item,
+            navLists: item.align === 'top' ? state.topNavLists[index] : state.bottomNavLists[index]
+          })
 
-    // const clickPanelItem = (item, index) => {
-    //   if (active.value === index) {
-    //     showDrawer.value = false
-    //     active.value = null
-    //   } else {
-    //     showDrawer.value = true
-    //     showComponent.value = item.component
-    //     state.drawerWidth = item.span ? (item.span * 100) / 24 + '%' : null
-    //     active.value = index
-    //     if (item.click) {
-    //       item.click()
-    //     }
-    //   }
-    // }
+        pluginRef.value?.[lastPlugin.confirm](confirmCallback)
+      } else {
+        emit('plugin-click', {
+          item,
+          navLists: item.align === 'top' ? state.topNavLists[index] : state.bottomNavLists[index]
+        })
+      }
+    }
+    watch(isTemporaryPage, () => {
+      if (isTemporaryPage.saved) {
+        const pagePanel = state.topNavLists?.find((item) => item.id === PLUGIN_NAME.AppManage) || null
+        const pageIndex = state.topNavLists?.findIndex((item) => item.id === PLUGIN_NAME.AppManage) || -1
+        if (pagePanel !== props.renderPanel) {
+          clickMenu({ item: pagePanel, index: pageIndex })
+        }
+      }
+    })
+
+    const openAIRobot = () => {
+      robotComponent.value = components[PLUGIN_NAME.Robot]
+      robotVisible.value = !robotVisible.value
+    }
+    const close = () => {
+      state.prevIdex = -2
+      useLayout().closePlugin(true)
+    }
+
+    const fixPanel = (pluginName) => {
+      pluginsState.fixedPanels = pluginsState.fixedPanels?.includes(pluginName)
+        ? pluginsState.fixedPanels?.filter((item) => item !== pluginName)
+        : [...pluginsState.fixedPanels, pluginName]
+    }
 
     return {
       // designSmbConfig,
@@ -321,8 +469,22 @@ export default {
         ast
       },
       siteCanvasStyle,
-      canvasRef
-      // clickPanelItem
+      canvasRef,
+      activating,
+      layoutState,
+      clickMenu,
+      openAIRobot,
+      pluginRef,
+      robotVisible,
+      robotComponent,
+      close,
+      fixPanel,
+      pluginsState,
+      components,
+      iconComponents,
+      completed,
+      doCompleted,
+      pluginState
     }
   }
 }

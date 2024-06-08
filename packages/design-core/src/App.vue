@@ -1,5 +1,11 @@
 <template>
-  <component :is="TinyLayout" :registry="registry" :materials="materials" :render-panel="plugins.render"></component>
+  <component
+    :is="TinyLayout"
+    :registry="registry"
+    :materials="materials"
+    :render-panel="plugins.render"
+    @pluginClick="toggleNav"
+  ></component>
 </template>
 
 <script>
