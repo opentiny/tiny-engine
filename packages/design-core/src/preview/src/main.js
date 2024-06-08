@@ -18,9 +18,10 @@ import App from './App.vue'
 import 'virtual:svg-icons-register'
 
 export const initPreview = ({ registry }) => {
-  defineEntry(mergeRegistry(registry, defaultRegistry))
+  const mergedRegistry = mergeRegistry(registry, defaultRegistry)
+  defineEntry(mergedRegistry)
 
-  import(`../../theme/${registry.config.theme || 'light'}.js`)
+  import(`../../theme/${mergedRegistry.config.theme || 'light'}.js`)
 
   const app = createApp(App)
 

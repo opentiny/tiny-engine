@@ -25,8 +25,8 @@ import { registerConfigurators } from './registerConfigurators'
 
 const defaultLifeCycles = {
   beforeAppCreate: ({ registry }) => {
-    const newRegistry = mergeRegistry(registry, defaultRegistry)
     // 合并用户自定义注册表
+    const newRegistry = mergeRegistry(registry, defaultRegistry)
     if (process.env.NODE_ENV === 'development') {
       console.log('default registry:', defaultRegistry) // eslint-disable-line
       console.log('merged registry:', registry) // eslint-disable-line
