@@ -12,12 +12,13 @@
 
 import { createApp } from 'vue'
 import initSvgs from '@opentiny/tiny-engine-svgs'
-import { defineEntry } from '@opentiny/tiny-engine-entry'
+import { defineEntry, mergeRegistry } from '@opentiny/tiny-engine-entry'
+import defaultRegistry from '../../../registry.js'
 import App from './App.vue'
 import 'virtual:svg-icons-register'
 
 export const initPreview = ({ registry }) => {
-  defineEntry(registry)
+  defineEntry(mergeRegistry(registry, defaultRegistry))
 
   import(`../../theme/${registry.config.theme || 'light'}.js`)
 
