@@ -1,0 +1,65 @@
+{
+  "name": "@opentiny/tiny-engine-vite-config",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "./index.js",
+  "module": "./index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@babel/core": "~7.23.2",
+    "@babel/generator": "~7.23.2",
+    "@babel/parser": "~7.23.2",
+    "@babel/traverse": "~7.23.2",
+    "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:^",
+    "@babel/eslint-parser": "^7.21.3",
+    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
+    "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
+    "@types/node": "^18.0.0",
+    "@vitejs/plugin-vue": "^4.2.3",
+    "@vitejs/plugin-vue-jsx": "^3.1.0",
+    "assert": "^2.0.0",
+    "buffer": "^6.0.3",
+    "cross-env": "^7.0.3",
+    "esbuild-plugin-copy": "^2.1.1",
+    "eslint": "^8.38.0",
+    "eslint-plugin-vue": "^8.0.0",
+    "fs-extra": "^10.1.0",
+    "husky": "^8.0.0",
+    "lerna": "^7.2.0",
+    "less": "^4.1.2",
+    "lint-staged": "^13.2.0",
+    "path": "^0.12.7",
+    "rimraf": "^3.0.2",
+    "rollup-plugin-polyfill-node": "^0.12.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-visualizer": "^5.8.3",
+    "shelljs": "^0.8.5",
+    "svg-sprite-loader": "^6.0.11",
+    "vite": "^4.3.7",
+    "vite-plugin-monaco-editor": "^1.1.0",
+    "vite-plugin-static-copy": "^0.16.0",
+    "vite-plugin-svg-icons": "^2.0.1",
+    "vue-eslint-parser": "^8.0.1"
+  },
+  "keywords": [],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/opentiny/tiny-engine",
+    "directory": "packages/build/vite-config"
+  },
+  "bugs": {
+    "url": "https://github.com/opentiny/tiny-engine/issues"
+  },
+  "author": "OpenTiny Team",
+  "license": "MIT",
+  "homepage": "https://opentiny.design/tiny-engine"
+}

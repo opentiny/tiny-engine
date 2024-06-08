@@ -8,7 +8,7 @@ import nodeModulesPolyfillPluginCjs from '@esbuild-plugins/node-modules-polyfill
 import nodePolyfill from 'rollup-plugin-polyfill-node'
 import esbuildCopy from 'esbuild-plugin-copy'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
-import { importmapPlugin } from './scripts/externalDeps.js'
+import { importmapPlugin } from './externalDeps.js'
 import visualizerCjs from 'rollup-plugin-visualizer'
 import { fileURLToPath } from 'node:url'
 import generateComment from '@opentiny/tiny-engine-vite-plugin-meta-comments'
@@ -17,7 +17,7 @@ import {
   copyBundleDeps,
   copyPreviewImportMap,
   copyLocalImportMap
-} from './scripts/localCdnFile/index.js'
+} from './localCdnFile/index.js'
 
 const monacoEditorPlugin = monacoEditorPluginCjs.default
 const nodeGlobalsPolyfillPlugin = nodeGlobalsPolyfillPluginCjs.default
@@ -80,11 +80,6 @@ const config = {
       }
     }),
     vueJsx(),
-    createSvgIconsPlugin({
-      iconDirs: [path.resolve(__dirname, './assets/')],
-      symbolId: 'icon-[name]',
-      inject: 'body-last'
-    })
   ],
   optimizeDeps: {
     esbuildOptions: {
@@ -147,7 +142,7 @@ const importMapVersions = {
   tinyVue: '~3.14'
 }
 
-export default defineConfig(({ command = 'serve', mode = 'serve' }) => {
+export default defineConfig(({ command = 'serve', mode = 'serve' }, extOptions) => {
   const {
     VITE_CDN_DOMAIN = 'https://npm.onmicrosoft.cn',
     VITE_LOCAL_IMPORT_MAPS,
@@ -231,6 +226,11 @@ export default defineConfig(({ command = 'serve', mode = 'serve' }) => {
   const importMapStyles = [`${VITE_CDN_DOMAIN}/@opentiny/vue-theme@${importMapVersions.tinyVue}/index.css`]
 
   config.plugins.push(
+    createSvgIconsPlugin({
+      iconDirs: extOptions.iconDirs || [],
+      symbolId: 'icon-[name]',
+      inject: 'body-last'
+    }),
     monacoEditorPluginInstance,
     htmlPlugin(mode),
     isLocalImportMap
