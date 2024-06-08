@@ -88,10 +88,7 @@ const config = {
           //@vue/repl monaco编辑器需要
           resolveFrom: 'cwd',
           assets: {
-            from: [
-              './node_modules/@vue/repl/dist/assets/*',
-              './node_modules/@opentiny/tiny-engine/node_modules/@vue/repl/dist/assets/*'
-            ], // worker.js文件以url形式引用不会被esbuild拉起，需要手动复制
+            from: ['./node_modules/@vue/repl/dist/assets/*'], // worker.js文件以url形式引用不会被esbuild拉起，需要手动复制
             to: ['./node_modules/.vite/assets'] // 开发态，js文件被缓存在.vite/deps，请求相对路径为.vite/assets
           },
           watch: true
