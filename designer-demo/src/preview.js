@@ -12,4 +12,4 @@
 
 import { initPreview } from '@opentiny/tiny-engine'
 
-initPreview()
+initPreview({ registry: { config: { id : 'engine.config', theme: 'light' } } })

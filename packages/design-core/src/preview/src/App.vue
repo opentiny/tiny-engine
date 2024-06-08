@@ -4,14 +4,9 @@
 </template>
 
 <script>
-import { getMergeMeta } from '@opentiny/tiny-engine-entry'
 import { useDebugSwitch } from './preview/debugSwitch'
 import Preview from './preview/Preview.vue'
 import Toolbar from './Toolbar.vue'
-
-const config = getMergeMeta('engine.config')
-
-import(`../../theme/${config.theme}.js`)
 
 export default {
   components: {
