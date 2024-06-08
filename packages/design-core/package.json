@@ -14,12 +14,13 @@
   ],
   "module": "index.js",
   "main": "index.js",
+  "files": [
+    "dist",
+    "assets"
+  ],
   "exports": {
     ".": "index.js",
-    "./canvas": "./canvas.js",
-    "./vite.config.js": "./vite.config.js",
-    "./config/lowcode.config": "./config/lowcode.config.js",
-    "./scripts/externalDeps": "./scripts/externalDeps.js"
+    "./canvas": "./canvas.js"
   },
   "scripts": {
     "dev": "cross-env NODE_OPTIONS=--max-old-space-size=10240 VITE_API_MOCK=mock vite",

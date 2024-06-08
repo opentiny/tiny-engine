@@ -10,10 +10,23 @@
  *
  */
 
-// 导入@opentiny/tiny-engine时，内部的依赖包也会逐个导入，可能会执行useComplie，此时需要templateHashMap。所以需要先执行一次defineEntry
-import { registry } from './defineEntry.js'
-import { init } from '@opentiny/tiny-engine'
-import { configurators } from './configurators.js'
-import 'virtual:svg-icons-register'
+import { defineConfig } from 'vite'
+import path from 'path'
 
-init({ registry, configurators })
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [],
+  publicDir: false,
+  resolve: {},
+  build: {
+    lib: {
+      entry: path.resolve(__dirname, './index.js'),
+      name: 'vite-config',
+      fileName: 'index',
+      formats: ['es', 'cjs']
+    },
+    rollupOptions: {
+      external: ['node:fs', 'node:path', 'vue', /@babel\/.*/, /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/]
+    }
+  }
+})
