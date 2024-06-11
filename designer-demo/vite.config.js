@@ -6,7 +6,7 @@ export default defineConfig((options) => {
   const envDir = path.resolve(process.cwd(), 'env')
   const extOptions = {
     ...loadEnv(options.mode, envDir, 'VITE_'),
-    iconDirs: [path.resolve(__dirname, './node_modules/@opentiny/tiny-engine/assets/')]
+    iconDirs: [path.resolve(__dirname, './node_modules/@opentiny/tiny-engine/dist/assets/')]
   }
   const defaultConfig = getDefaultConfig(options, extOptions)
 
@@ -64,7 +64,7 @@ export default defineConfig((options) => {
     '@opentiny/tiny-engine-configurator': path.resolve(__dirname, '../packages/configurator/src/index.js'),
     '@opentiny/tiny-engine-theme': ['light', 'dark'].includes(extOptions.VITE_THEME)
     ? path.resolve(process.cwd(), `../packages/theme/${extOptions.VITE_THEME}/index.less`)
-    // ? path.resolve(process.cwd(), `./node_modules/@opentiny/tiny-engine/node_modules/@opentiny/tiny-engine-theme-${extOptions.VITE_THEME}/dist/style.css`)
+    // ? path.resolve(process.cwd(), `./node_modules/@opentiny/tiny-engine-theme-${extOptions.VITE_THEME}/dist/style.css`)
     : ''
   }
 

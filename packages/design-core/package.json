@@ -19,12 +19,13 @@
     "assets"
   ],
   "exports": {
-    ".": "index.js",
-    "./canvas": "./src/canvas/canvas.js"
+    ".": "./dist/index.js",
+    "./canvas": "./dist/canvas.js"
   },
   "scripts": {
     "preview": "vite preview",
-    "lint": "eslint . --ext .js,.vue,.jsx --fix"
+    "lint": "eslint . --ext .js,.vue,.jsx --fix",
+    "build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 vite build"
   },
   "repository": {
     "type": "git",
@@ -108,6 +109,8 @@
     "vue-i18n": "^9.9.0"
   },
   "devDependencies": {
+    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
+    "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
     "@types/node": "^18.0.0",
     "@vitejs/plugin-vue": "^4.2.3",
     "@vitejs/plugin-vue-jsx": "^3.1.0",
