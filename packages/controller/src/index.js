@@ -11,7 +11,6 @@
  */
 
 import useLayout from './useLayout'
-import useCanvas from './useCanvas'
 import useApp from './useApp'
 import useResource from './useResource'
 import useHistory from './useHistory'
@@ -34,6 +33,8 @@ import useHelp from './useHelp'
 export { default as metaData } from '../meta'
 
 export const getExample = example
+
+const useCanvas = () => null //TODO: 需要调用 canvas元服务的api来获取
 
 export {
   useLayout,

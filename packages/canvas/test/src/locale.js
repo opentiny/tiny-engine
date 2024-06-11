@@ -10,8 +10,10 @@
  *
  */
 
-export { default as CanvasContainer } from './components/container/CanvasContainer.vue'
-export { default as CanvasDragItem } from './components/container/CanvasDragItem.vue'
-export { default as CanvasFooter } from './components/container/CanvasFooter.vue'
-export { createRender } from './components/render/runner'
-export { default as metaData } from '../meta'
+import zh from './i18n/zh.json'
+import en from './i18n/en.json'
+
+export default {
+  en,
+  zh
+}

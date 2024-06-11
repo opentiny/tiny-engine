@@ -27,7 +27,7 @@ import {
   CanvasSlot,
   CanvasImg,
   CanvasPlaceholder
-} from '../builtin'
+} from './builtin'
 import { NODE_UID as DESIGN_UIDKEY, NODE_TAG as DESIGN_TAGKEY, NODE_LOOP as DESIGN_LOOPID } from '../common'
 
 const { BROADCAST_CHANNEL } = constants

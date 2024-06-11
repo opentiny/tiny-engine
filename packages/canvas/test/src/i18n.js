@@ -11,7 +11,7 @@
  */
 
 import i18n from '@opentiny/tiny-engine-i18n-host'
-import lowcode from './lowcode'
+import lowcode from '../../render/src/lowcode'
 import locale from './locale'
 
 i18n.lowcode = lowcode

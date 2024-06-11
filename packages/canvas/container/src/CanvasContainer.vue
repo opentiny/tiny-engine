@@ -31,7 +31,7 @@
 import { onMounted, ref, computed, onUnmounted } from 'vue'
 import { iframeMonitoring } from '@opentiny/tiny-engine-controller/js/monitor'
 import { useTranslate, useCanvas, useResource } from '@opentiny/tiny-engine-controller'
-import CanvasAction from './CanvasAction.vue'
+import CanvasAction from './components/CanvasAction.vue'
 import CanvasResize from './CanvasResize.vue'
 import CanvasMenu, { closeMenu, openMenu } from './CanvasMenu.vue'
 import { NODE_UID, NODE_LOOP } from '../common'

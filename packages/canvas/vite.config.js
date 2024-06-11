@@ -59,7 +59,7 @@ export default defineConfig({
   build: {
     cssCodeSplit: false,
     lib: {
-      entry: path.resolve(__dirname, './src/index.js'),
+      entry: path.resolve(__dirname, './index.js'),
       name: 'canvas',
       fileName: () => 'index.js',
       formats: ['es']

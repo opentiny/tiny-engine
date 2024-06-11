@@ -10,8 +10,8 @@
  *
  */
 
-import { getController } from '../render/render'
-import { api } from '../render/RenderMain'
+import { getController } from '../render'
+import { api } from '../RenderMain'
 import { useModal } from '@opentiny/tiny-engine-controller'
 
 const NAME_PREFIX = {
@@ -123,7 +123,7 @@ const askShouldImportData = ({ node, sourceRef }) => {
       node.props.columns = generateAssginColumns(sourceColums, node.props.columns)
     },
     cancel() {
-      node.props.columns = [...sourceRef.value.data?.columns]
+      node.props.columns = [...(sourceRef.value.data?.columns || [])]
     }
   })
 }
@@ -139,7 +139,7 @@ const updateNodeHandler = ({ node, sourceRef, pageSchema, sourceName, methodName
   if (node.props.columns.length) {
     askShouldImportData({ node, sourceRef })
   } else {
-    node.props.columns = [...sourceRef.value.data?.columns]
+    node.props.columns = [...(sourceRef.value.data?.columns || [])]
   }
 
   const pageConfig = {
