@@ -91,6 +91,7 @@
     "@opentiny/tiny-engine-utils": "workspace:*",
     "@opentiny/tiny-engine-webcomponent-core": "workspace:*",
     "@opentiny/vue": "~3.14.0",
+    "@opentiny/vue-icon": "~3.14.0",
     "@opentiny/vue-design-smb": "~3.14.0",
     "@opentiny/vue-renderless": "~3.14.0",
     "@opentiny/vue-theme": "~3.14.0",
