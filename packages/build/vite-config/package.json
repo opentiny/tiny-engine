@@ -6,7 +6,9 @@
   "main": "./index.js",
   "module": "./index.js",
   "files": [
-    "dist"
+    "dist",
+    "src",
+    "index.js"
   ],
   "scripts": {
     "build": ""
