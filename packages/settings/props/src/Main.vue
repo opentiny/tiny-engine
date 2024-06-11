@@ -23,7 +23,7 @@ export default {
   },
   setup() {
     const { pageState } = useCanvas()
-    const { properties } = useProperty({ pageState })
+    const { properties } = useProperty().getProperty({ pageState })
     const showEmptyTips = ref(false)
 
     const isBlock = computed(() => pageState.isBlock)

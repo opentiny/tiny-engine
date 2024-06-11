@@ -13,6 +13,13 @@
 // 导入@opentiny/tiny-engine时，内部的依赖包也会逐个导入，可能会执行useComplie，此时需要templateHashMap。所以需要先执行一次defineEntry
 import { registry } from './defineEntry.js'
 import { init } from '@opentiny/tiny-engine'
+import { initHook, HOOK_NAME } from '@opentiny/tiny-engine-entry'
 import { configurators } from './configurators.js'
+import 'virtual:svg-icons-register'
+import '@opentiny/tiny-engine-theme'
 
-init({ registry, configurators })
+const beforeAppCreate = () => {
+  initHook(HOOK_NAME.useEnv, import.meta.env)
+}
+
+init({ registry, configurators, lifeCycles: { beforeAppCreate } })

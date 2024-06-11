@@ -4,20 +4,27 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build"
+    "dev": "cross-env VITE_THEME=light vite",
+    "build": "cross-env VITE_THEME=light vite build"
   },
   "dependencies": {
     "vue": "^3.4.21",
     "@opentiny/tiny-engine": "workspace:^",
     "@opentiny/tiny-engine-entry": "workspace:^",
-    "@opentiny/tiny-engine-canvas": "workspace:^",
-    "@opentiny/tiny-engine-configurator": "workspace:*"
+    "@opentiny/tiny-engine-configurator": "workspace:*",
+    "@opentiny/tiny-engine-theme-dark": "workspace:*",
+    "@opentiny/tiny-engine-theme-light": "workspace:*",
+    "@opentiny/vue": "~3.14.0",
+    "@opentiny/vue-icon": "~3.14.0",
+    "@opentiny/vue-design-smb": "~3.14.0",
+    "@opentiny/vue-renderless": "~3.14.0",
+    "@opentiny/vue-theme": "~3.14.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",
+    "cross-env": "^7.0.3",
     "vite": "^5.2.7",
-    "@opentiny/tiny-engine-cli": "workspace:^",
+    "@opentiny/tiny-engine-vite-config": "workspace:^",
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:^"
   }
 }

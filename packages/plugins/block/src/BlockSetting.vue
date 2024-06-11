@@ -78,7 +78,8 @@
 <script lang="jsx">
 import { reactive, ref, watch, watchEffect, computed } from 'vue'
 import { Button as TinyButton, Collapse as TinyCollapse, CollapseItem as TinyCollapseItem } from '@opentiny/vue'
-import { getGlobalConfig, useModal } from '@opentiny/tiny-engine-controller'
+import { useModal } from '@opentiny/tiny-engine-controller'
+import { getMergeMeta } from '@opentiny/tiny-engine-entry'
 import { BlockHistoryList, PluginSetting, CloseIcon, SvgButton } from '@opentiny/tiny-engine-common'
 import { previewBlock } from '@opentiny/tiny-engine-controller/js/preview'
 import { LifeCycles } from '@opentiny/tiny-engine-common'
@@ -243,8 +244,8 @@ export default {
         previewBlock({
           id: item.blockId,
           history: item.id,
-          framework: getGlobalConfig()?.dslMode,
-          platform: getGlobalConfig()?.platformId
+          framework: getMergeMeta('engine.config')?.dslMode,
+          platform: getMergeMeta('engine.config')?.platformId
         })
     }
 
@@ -273,7 +274,7 @@ export default {
       editBlock,
       blockConfigForm,
       deployTips: DEPLOY_TIPS,
-      globalConfig: getGlobalConfig(),
+      globalConfig: getMergeMeta('engine.config'),
       onMouseLeave,
       handleClick,
       handleShowGuide
