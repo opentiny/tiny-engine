@@ -16,8 +16,11 @@ import { defineEntry, mergeRegistry } from '@opentiny/tiny-engine-entry'
 import defaultRegistry from '../../../registry.js'
 import App from './App.vue'
 
-export const initPreview = ({ registry }) => {
+export const initPreview = ({ registry, lifeCycles = {} }) => {
+  const { beforeAppCreate } = lifeCycles
   const mergedRegistry = mergeRegistry(registry, defaultRegistry)
+
+  beforeAppCreate?.()
   defineEntry(mergedRegistry)
 
   // TODO: 后续需要方案
