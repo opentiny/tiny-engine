@@ -6,11 +6,13 @@ export default defineConfig((options) => {
   const envDir = path.resolve(process.cwd(), 'env')
   const extOptions = {
     ...loadEnv(options.mode, envDir, 'VITE_'),
-    iconDirs: [path.resolve(__dirname, './node_modules/@opentiny/tiny-engine/dist/assets/')]
+    iconDirs: [path.resolve(__dirname, './node_modules/@opentiny/tiny-engine/assets/')]
   }
   const defaultConfig = getDefaultConfig(options, extOptions)
 
   const devAlias = {
+    '@opentiny/tiny-engine/canvas': path.resolve(__dirname, '../packages/design-core/src/canvas/canvas.js'),
+    '@opentiny/tiny-engine': path.resolve(__dirname, '../packages/design-core/index.js'),
     '@opentiny/tiny-engine-controller/js': path.resolve(__dirname, '../packages/controller/js'),
     '@opentiny/tiny-engine-common/component': path.resolve(__dirname, '../packages/common/component'),
     '@opentiny/tiny-engine-common': path.resolve(__dirname, '../packages/common/index.js'),
