@@ -12,6 +12,7 @@
 
 import entry, { api } from './src/Main.vue'
 import metaData from './meta'
+import './src/hooks/useSaveLocal'
 
 export default {
   ...metaData,

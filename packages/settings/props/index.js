@@ -15,6 +15,9 @@ import entry from './src/Main.vue'
 import Components from './src/components'
 import metaData from './meta'
 
+import './src/hooks/useProperties'
+import './src/hooks/useProperty'
+
 export { Components }
 
 export default {

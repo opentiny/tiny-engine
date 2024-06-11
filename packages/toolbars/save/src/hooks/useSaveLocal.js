@@ -11,8 +11,7 @@
  */
 
 import { Modal } from '@opentiny/vue'
-import { useCanvas, getMergeMeta } from '@opentiny/tiny-engine-entry'
-import { VITE_ORIGIN } from '../../js/environments'
+import { useCanvas, getMergeMeta, useEnv } from '@opentiny/tiny-engine-entry'
 
 // 获取当前页面的全量信息
 
@@ -23,6 +22,7 @@ const confirmSaveLocal = async () => {
   const currentPageId = pageState.currentPageId || pageState.currentPage.id
   const currentPageName = pageState.currentPageName || pageState.currentPage.name
 
+  const { VITE_ORIGIN } = useEnv()
   const savePage = await bridge.callHandler('save-page', {
     api: `${VITE_ORIGIN}/app-service/api/pages/code/${currentPageId}`,
     pageName: currentPageName,
