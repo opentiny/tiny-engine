@@ -10,6 +10,20 @@
  *
  */
 
+import { initHook, HOOK_NAME } from '@opentiny/tiny-engine-entry'
 import { initPreview } from '@opentiny/tiny-engine'
+import 'virtual:svg-icons-register'
+import '@opentiny/tiny-engine-theme'
 
-initPreview({ registry: { config: { id : 'engine.config', theme: 'light' } } })
+const beforeAppCreate = () => {
+  initHook(HOOK_NAME.useEnv, import.meta.env)
+}
+
+initPreview({
+  registry: {
+    config: { id : 'engine.config', theme: 'light' },
+  },
+  lifeCycles: {
+    beforeAppCreate
+  }
+})
