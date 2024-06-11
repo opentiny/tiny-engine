@@ -12,6 +12,8 @@
     "@opentiny/tiny-engine": "workspace:^",
     "@opentiny/tiny-engine-entry": "workspace:^",
     "@opentiny/tiny-engine-configurator": "workspace:*",
+    "@opentiny/tiny-engine-theme-dark": "workspace:*",
+    "@opentiny/tiny-engine-theme-light": "workspace:*",
     "@opentiny/vue": "~3.14.0",
     "@opentiny/vue-design-smb": "~3.14.0",
     "@opentiny/vue-renderless": "~3.14.0",
