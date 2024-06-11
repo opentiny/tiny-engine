@@ -9,7 +9,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "vite build"
+    "build": ""
   },
   "dependencies": {
     "@babel/core": "~7.23.2",
