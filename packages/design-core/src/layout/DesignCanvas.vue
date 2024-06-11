@@ -15,7 +15,7 @@
 
 <script>
 import { ref, watch, computed, onUnmounted } from 'vue'
-import { CanvasContainer, CanvasFooter } from '@opentiny/tiny-engine-canvas'
+import { CanvasContainer, CanvasBreadcrumb } from '@opentiny/tiny-engine-canvas'
 import {
   useProperties,
   useCanvas,
@@ -44,8 +44,8 @@ const componentType = {
 
 export default {
   components: {
-    CanvasContainer,
-    FooterBar: CanvasFooter
+    CanvasContainer: CanvasContainer.component,
+    FooterBar: CanvasBreadcrumb.component
   },
   setup() {
     const footData = ref([])
