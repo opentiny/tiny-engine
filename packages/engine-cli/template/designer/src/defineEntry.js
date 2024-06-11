@@ -1,6 +1,6 @@
 /**
- * Copyright (c) 2024 - present TinyEngine Authors.
- * Copyright (c) 2024 - present Huawei Cloud Computing Technologies Co., Ltd.
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
  *
  * Use of this source code is governed by an MIT-style license.
  *
@@ -12,4 +12,7 @@
 
 import registry from '../registry.js'
 import { defineEntry } from '@opentiny/tiny-engine-entry'
+
 defineEntry(registry)
+
+export { registry }

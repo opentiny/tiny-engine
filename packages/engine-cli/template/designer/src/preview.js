@@ -1,6 +1,6 @@
 /**
- * Copyright (c) 2024 - present TinyEngine Authors.
- * Copyright (c) 2024 - present Huawei Cloud Computing Technologies Co., Ltd.
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
  *
  * Use of this source code is governed by an MIT-style license.
  *
@@ -10,8 +10,6 @@
  *
  */
 
-import './defineEntry.js'
-import { createApp } from 'vue'
-import App from './App.vue'
+import { initPreview } from '@opentiny/tiny-engine'
 
-createApp(App).mount('#app')
+initPreview({ registry: { config: { id : 'engine.config', theme: 'light' } } })
