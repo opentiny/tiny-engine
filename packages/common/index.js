@@ -146,8 +146,7 @@ export const MetaComponents = {
   MetaIpSection,
   MetaRelatedEditor,
   MetaRelatedColumns,
-  MetaTableColumns,
-  SearchEmpty
+  MetaTableColumns
 }
 
 export {

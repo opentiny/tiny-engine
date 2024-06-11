@@ -10,31 +10,17 @@
  *
  */
 
-import useLayout from './useLayout'
-import useApp from './useApp'
-import useResource from './useResource'
-import useHistory from './useHistory'
-import useProperties from './useProperties'
-import useSaveLocal from './useSaveLocal'
-import useEditorInfo from './useEditorInfo'
-import example from './example'
-import useModal from './useModal'
-import useBlock from './useBlock'
-import useTranslate from './useTranslate'
-import usePage from './usePage'
-import useDataSource from './useDataSource'
-import useBreadcrumb from './useBreadcrumb'
-import useProperty from './useProperty'
-import { getGlobalConfig, setGlobalConfig } from './globalConfig'
-import useNotify from './useNotify'
-import useData from './useData'
+import './hooks/mountHooks'
 import useMessage from './useMessage'
-import useHelp from './useHelp'
+import useData from './useData'
 export { default as metaData } from '../meta'
+import example from './example'
+
+// 后续移入common包components
+import useNotify from './components/useNotify'
+import useModal from './components/useModal'
 
 export const getExample = example
-
-const useCanvas = () => null //TODO: 需要调用 canvas元服务的api来获取
 
 export {
   useLayout,
@@ -44,7 +30,6 @@ export {
   useHistory,
   useProperties,
   useSaveLocal,
-  useModal,
   useEditorInfo,
   useBlock,
   useTranslate,
@@ -52,10 +37,8 @@ export {
   useDataSource,
   useBreadcrumb,
   useProperty,
-  getGlobalConfig,
-  setGlobalConfig,
-  useNotify,
-  useData,
-  useMessage,
-  useHelp
-}
+  useHelp,
+  useCustom
+} from '@opentiny/tiny-engine-entry'
+
+export { useNotify, useData, useMessage, useModal }

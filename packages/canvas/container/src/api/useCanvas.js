@@ -13,7 +13,7 @@
 /* eslint-disable no-new-func */
 import { reactive, ref } from 'vue'
 import { constants } from '@opentiny/tiny-engine-utils'
-import useHistory from '@opentiny/tiny-engine-controller/useHistory'
+import { HOOK_NAME, initHook, useHistory } from '@opentiny/tiny-engine-entry'
 
 const { COMPONENT_NAME } = constants
 
@@ -166,3 +166,23 @@ export default function () {
     isCanvasApiReady
   }
 }
+
+initHook(HOOK_NAME.useCanvas, {
+  pageState,
+  isBlock,
+  isSaved,
+  isLoading,
+  initData,
+  setSaved,
+  clearCanvas,
+  getPageSchema,
+  resetPageCanvasState,
+  resetBlockCanvasState,
+  clearCurrentState,
+  getCurrentSchema,
+  setCurrentSchema,
+  getCurrentPage,
+  initCanvasApi,
+  canvasApi,
+  isCanvasApiReady
+})

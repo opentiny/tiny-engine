@@ -10,8 +10,7 @@
  *
  */
 
-import useCanvas from '../src/useCanvas'
-import useResource from '../src/useResource'
+import { useCanvas, useResource } from '@opentiny/tiny-engine-entry'
 
 const keyWords = [
   'state',

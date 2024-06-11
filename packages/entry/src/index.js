@@ -12,7 +12,9 @@
 
 export { getMergeMeta, getPluginApi, getOptions } from './common'
 export { useCompile } from './templateHash'
-export { defineEntry, callEntry, beforeCallEntry, afterCallEntry, getMergeRegistry } from './entryHash'
+export { defineEntry, callEntry, beforeCallEntry, afterCallEntry, mergeRegistry, getMergeRegistry } from './entryHash'
 export { getLayoutComponent } from './layoutHash'
 export { default as useMessage } from './useMessage'
 export { useShareState } from './useShareState'
+export { getConfigurator, addConfigurator } from './configurators'
+export * from './hooks'
