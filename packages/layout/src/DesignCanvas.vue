@@ -1,21 +1,30 @@
 <template>
   <div id="canvas-wrap" ref="canvasRef">
     <div ref="siteCanvas" class="site-canvas" :style="siteCanvasStyle">
-      <canvas-container
+      <component
+        :is="canvas.component.CanvasContainer"
         :controller="controller"
         :materials-panel="materialsPanel"
         :canvas-src="canvasUrl"
         @remove="removeNode"
         @selected="nodeSelected"
-      ></canvas-container>
+      ></component>
+      <!-- <canvas-container
+        :controller="controller"
+        :materials-panel="materialsPanel"
+        :canvas-src="canvasUrl"
+        @remove="removeNode"
+        @selected="nodeSelected"
+      ></canvas-container> -->
     </div>
-    <footer-bar :data="footData" @click="selectFooterNode"></footer-bar>
+    <component :is="canvas.component.CanvasFooter" :data="footData" @click="selectFooterNode"></component>
+    <!-- <footer-bar :data="footData" @click="selectFooterNode"></footer-bar> -->
   </div>
 </template>
 
 <script>
 import { ref, watch, computed, onUnmounted } from 'vue'
-import { CanvasContainer, CanvasFooter } from '@opentiny/tiny-engine-canvas'
+// import { CanvasContainer, CanvasFooter } from '@opentiny/tiny-engine-canvas'
 import {
   useProperties,
   useCanvas,
@@ -44,8 +53,13 @@ const componentType = {
 
 export default {
   components: {
-    CanvasContainer,
-    FooterBar: CanvasFooter
+    // CanvasContainer,
+    // FooterBar: CanvasFooter////
+  },
+  props: {
+    canvas: {
+      type: Object
+    }
   },
   setup() {
     const footData = ref([])

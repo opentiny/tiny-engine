@@ -58,7 +58,7 @@
       >
         <div>
           <span class="item-icon">
-            <img class="chatgpt-icon" src="../../assets/AI.png" />
+            <img class="chatgpt-icon" src="../assets/AI.png" />
           </span>
         </div>
       </li>
@@ -96,7 +96,7 @@
 import { reactive, ref, watch } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
 import { useLayout, usePage } from '@opentiny/tiny-engine-controller'
-import { getMergeRegistry } from '@opentiny/tiny-engine-entry'
+// import { getMergeRegistry } from '@opentiny/tiny-engine-entry'
 import { PublicIcon } from '@opentiny/tiny-engine-common'
 
 export default {
@@ -108,11 +108,15 @@ export default {
   props: {
     renderPanel: {
       type: String
+    },
+    plugins: {
+      type: Array,
+      default: () => []
     }
   },
   emits: ['click', 'node-click'],
   setup(props, { emit }) {
-    const plugins = getMergeRegistry('plugins')
+    // const plugins = getMergeRegistry('plugins')
     const components = {}
     const iconComponents = {}
     const pluginRef = ref(null)
@@ -127,7 +131,7 @@ export default {
       layoutState: { plugins: pluginsState }
     } = useLayout()
 
-    plugins.forEach(({ id, component, api, icon }) => {
+    props.plugins.forEach(({ id, component, api, icon }) => {
       components[id] = component
       iconComponents[id] = icon
       if (api) {
@@ -141,9 +145,9 @@ export default {
 
     const state = reactive({
       prevIdex: -2,
-      topNavLists: plugins.filter((item) => item.align === 'top'),
-      bottomNavLists: plugins.filter((item) => item.align === 'bottom'),
-      independence: plugins.find((item) => item.align === 'independence')
+      topNavLists: props.plugins.filter((item) => item.align === 'top'),
+      bottomNavLists: props.plugins.filter((item) => item.align === 'bottom'),
+      independence: props.plugins.find((item) => item.align === 'independence')
     })
 
     const doCompleted = () => {
@@ -158,7 +162,7 @@ export default {
       state.prevIdex = index
 
       // 切换插件与关闭插件时确认
-      const lastPlugin = plugins.find((item) => item.id === props.renderPanel)
+      const lastPlugin = props.plugins.find((item) => item.id === props.renderPanel)
       if (props.renderPanel && lastPlugin?.confirm) {
         const confirmCallback = (result) =>
           result &&

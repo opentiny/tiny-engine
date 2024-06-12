@@ -1,16 +1,24 @@
 <template>
   <tiny-config-provider :design="designSmbConfig">
     <div id="tiny-engine">
-      <design-toolbars></design-toolbars>
+      <design-toolbars :toolbars="registry.toolbars"></design-toolbars>
       <div class="tiny-engine-main">
         <div class="tiny-engine-left-wrap">
           <div class="tiny-engine-content-wrap">
-            <design-plugins :render-panel="plugins.render" @click="toggleNav"></design-plugins>
-            <design-canvas></design-canvas>
+            <design-plugins
+              :plugins="registry.plugins"
+              :render-panel="plugins.render"
+              @click="toggleNav"
+            ></design-plugins>
+            <design-canvas :canvas="registry.canvas"></design-canvas>
           </div>
         </div>
         <div class="tiny-engine-right-wrap">
-          <design-settings v-show="layoutState.settings.showDesignSettings" ref="right"></design-settings>
+          <design-settings
+            :settings="registry.settings"
+            v-show="layoutState.settings.showDesignSettings"
+            ref="right"
+          ></design-settings>
         </div>
       </div>
     </div>
@@ -60,7 +68,11 @@ export default {
       editor: this
     }
   },
-
+  props: {
+    registry: {
+      type: Object
+    }
+  },
   setup() {
     const state = reactive({
       globalClass: '',

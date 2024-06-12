@@ -40,6 +40,10 @@ import {
   Props,
   Events,
   Styles,
+  Layout,
+  Canvas,
+  CanvasContainer,
+  CanvasFooter
 } from '@opentiny/tiny-engine'
 
 export default {
@@ -50,7 +54,7 @@ export default {
     scripts: [],
     styles: []
   },
-  layout: { id: 'engine.layout' },
+  layout: Layout,
   themes: [
     {
       id: 'engine.theme.light'
@@ -90,10 +94,12 @@ export default {
     Robot
   ],
   dsls: [{ id: 'engine.dsls.dslvue' }],
-  settings: [
-    Props,
-    Styles,
-    Events
-  ],
-  canvas: {}
+  settings: [Props, Styles, Events],
+  canvas: {
+    ...Canvas,
+    component: {
+      CanvasContainer,
+      CanvasFooter
+    }
+  }
 }
