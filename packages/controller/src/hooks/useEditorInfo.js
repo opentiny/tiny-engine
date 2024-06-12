@@ -33,7 +33,7 @@ const _getWebData = () => {
   }
 }
 
-let userInfo = ref({})
+const userInfo = ref({})
 const getUserInfo = () => {
   // 获取登录用户信息
   useHttp()
