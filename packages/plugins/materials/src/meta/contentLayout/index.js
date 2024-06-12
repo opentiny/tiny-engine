@@ -7,6 +7,6 @@ export default {
   options: {
     onlyShowDefault: false,
     defaultTabId: 'engine.plugins.materials.component',
-    children: [{ id: 'engine.plugins.materials.component' }, { id: 'engine.plugins.materials.block' }]
+    childrenIds: ['engine.plugins.materials.component', 'engine.plugins.materials.block']
   }
 }

@@ -13,7 +13,7 @@ import { ref } from 'vue'
 import { Tabs, TabItem } from '@opentiny/vue'
 import { getMergeMeta } from '@opentiny/tiny-engine-entry'
 
-import MetaData from '../index.js'
+import MetaData from '../meta.js'
 
 export default {
   components: {
@@ -22,15 +22,18 @@ export default {
   },
   setup() {
     const rightPanelRef = ref(null)
-    const onlyShowDefault = ref(MetaData.options?.isShowTabs)
-    const activeName = ref(MetaData.options?.defaultTabId)
+    const allMetaData = getMergeMeta(MetaData.id)
+
+    const onlyShowDefault = ref(allMetaData.options?.onlyShowDefault)
+    const activeName = ref(allMetaData.options?.defaultTabId)
     const defaultComponent = getMergeMeta(activeName.value)?.component
-    const tabComponents = MetaData.options.children?.map(({ id }) => {
-      const metaData = getMergeMeta(id)
+
+    const tabComponents = allMetaData.options.childrenIds?.map((id) => {
+      const itemMeta = getMergeMeta(id)
       return {
         id,
-        component: metaData?.component,
-        title: metaData?.options?.title || id
+        component: itemMeta?.component,
+        title: itemMeta?.options?.title || itemMeta?.id
       }
     })
 
