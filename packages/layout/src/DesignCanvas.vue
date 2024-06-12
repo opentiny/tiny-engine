@@ -9,22 +9,13 @@
         @remove="removeNode"
         @selected="nodeSelected"
       ></component>
-      <!-- <canvas-container
-        :controller="controller"
-        :materials-panel="materialsPanel"
-        :canvas-src="canvasUrl"
-        @remove="removeNode"
-        @selected="nodeSelected"
-      ></canvas-container> -->
     </div>
     <component :is="canvas.component.CanvasFooter" :data="footData" @click="selectFooterNode"></component>
-    <!-- <footer-bar :data="footData" @click="selectFooterNode"></footer-bar> -->
   </div>
 </template>
 
 <script>
 import { ref, watch, computed, onUnmounted } from 'vue'
-// import { CanvasContainer, CanvasFooter } from '@opentiny/tiny-engine-canvas'
 import {
   useProperties,
   useCanvas,
@@ -52,10 +43,6 @@ const componentType = {
 }
 
 export default {
-  components: {
-    // CanvasContainer,
-    // FooterBar: CanvasFooter////
-  },
   props: {
     canvas: {
       type: Object

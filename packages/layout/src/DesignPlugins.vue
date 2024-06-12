@@ -96,7 +96,6 @@
 import { reactive, ref, watch } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
 import { useLayout, usePage } from '@opentiny/tiny-engine-controller'
-// import { getMergeRegistry } from '@opentiny/tiny-engine-entry'
 import { PublicIcon } from '@opentiny/tiny-engine-common'
 
 export default {
@@ -116,7 +115,6 @@ export default {
   },
   emits: ['click', 'node-click'],
   setup(props, { emit }) {
-    // const plugins = getMergeRegistry('plugins')
     const components = {}
     const iconComponents = {}
     const pluginRef = ref(null)
