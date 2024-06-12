@@ -9,7 +9,7 @@
 <script>
 import { reactive, watch } from 'vue'
 import { useLayout } from '@opentiny/tiny-engine-controller'
-import { getCurrent, updateRect, selectState, querySelectById } from './container'
+import { getCurrent, updateRect, selectState, querySelectById } from '../container'
 
 export default {
   props: {

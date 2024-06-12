@@ -10,8 +10,10 @@
  *
  */
 export { createRender } from './render'
-export { default as CanvasDragItem } from './drag-item'
+export { CanvasDragItem } from './drag-drop'
 
 // meta app
-export { default as CanvasBreadcrumb } from './breadcrumb'
-export { default as CanvasContainer } from './container'
+import CanvasBreadcrumb from './breadcrumb'
+import CanvasContainer from './container'
+
+export { CanvasBreadcrumb, CanvasContainer }

@@ -33,7 +33,7 @@
 
 <script lang="jsx">
 import { ref, reactive, nextTick } from 'vue'
-import { canvasState, getConfigure, getController, getCurrent, copyNode, removeNodeById } from './container'
+import { canvasState, getConfigure, getController, getCurrent, copyNode, removeNodeById } from '../container'
 import { useLayout, useModal, useCanvas } from '@opentiny/tiny-engine-controller'
 import { iconRight } from '@opentiny/vue-icon'
 

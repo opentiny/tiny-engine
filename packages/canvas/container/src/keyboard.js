@@ -23,7 +23,8 @@ import {
   hoverState
 } from './container'
 import { useHistory } from '@opentiny/tiny-engine-controller'
-import { copyObject, getClipboardSchema, setClipboardSchema } from '../common'
+import { copyObject } from '../../common'
+import { getClipboardSchema, setClipboardSchema } from './utils'
 
 const KEY_Y = 89
 const KEY_Z = 90

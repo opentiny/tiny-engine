@@ -8,7 +8,7 @@
 
 <script>
 import { ref, watch, computed, inject } from 'vue'
-import { getController } from '../render/render'
+import { getController } from '../render'
 import CanvasPlaceholder from './CanvasPlaceholder.vue'
 
 import { getHandler } from './CanvasCollection.js'

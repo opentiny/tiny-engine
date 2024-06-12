@@ -12,7 +12,7 @@
 <script>
 import { ref, computed, watch, nextTick } from 'vue'
 import { useLayout } from '@opentiny/tiny-engine-controller'
-import { canvasState } from './container'
+import { canvasState } from '../container'
 
 export default {
   setup() {

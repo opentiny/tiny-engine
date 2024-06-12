@@ -31,13 +31,13 @@
 import { onMounted, ref, computed, onUnmounted } from 'vue'
 import { iframeMonitoring } from '@opentiny/tiny-engine-controller/js/monitor'
 import { useTranslate, useCanvas, useResource } from '@opentiny/tiny-engine-controller'
-import CanvasAction from './components/CanvasAction.vue'
-import CanvasResize from './CanvasResize.vue'
-import CanvasMenu, { closeMenu, openMenu } from './CanvasMenu.vue'
-import { NODE_UID, NODE_LOOP } from '../common'
+import { NODE_UID, NODE_LOOP } from '../../common'
 import { registerHostkeyEvent, removeHostkeyEvent } from './keyboard'
-import CanvasDivider from './CanvasDivider.vue'
-import CanvasResizeBorder from './CanvasResizeBorder.vue'
+import CanvasMenu, { closeMenu, openMenu } from './components/CanvasMenu.vue'
+import CanvasAction from './components/CanvasAction.vue'
+import CanvasResize from './components/CanvasResize.vue'
+import CanvasDivider from './components/CanvasDivider.vue'
+import CanvasResizeBorder from './components/CanvasResizeBorder.vue'
 import {
   canvasState,
   onMouseUp,

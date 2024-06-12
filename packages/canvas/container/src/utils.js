@@ -31,7 +31,7 @@ export const setClipboardSchema = (event, node) => {
   return text
 }
 
-const translateStringToSchame = (clipText) => {
+const translateStringToSchema = (clipText) => {
   if (!clipText) {
     return null
   }
@@ -55,4 +55,4 @@ const translateStringToSchame = (clipText) => {
  * @param {*} event ClipboardEvent
  * @return 节点的schema对象
  */
-export const getClipboardSchema = (event) => translateStringToSchame(event.clipboardData.getData('text/plain'))
+export const getClipboardSchema = (event) => translateStringToSchema(event.clipboardData.getData('text/plain'))

@@ -15,6 +15,7 @@ export default {
     TinySteps: Steps
   },
   props: {
+    // TODO: 待整改为自己去api获取信息， 元应用只应该支持配置项不应该支持获取动态数据
     data: {
       type: Array,
       default: () => []

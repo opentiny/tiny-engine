@@ -12,14 +12,14 @@
 
 import * as Vue from 'vue'
 import * as VueI18n from 'vue-i18n'
-import { addScript, addStyle, dynamicImportComponents, updateDependencies } from '../common'
+import { addScript, addStyle, dynamicImportComponents, updateDependencies } from '../../common'
 import TinyI18nHost, { I18nInjectionKey } from '@opentiny/tiny-engine-controller/js/i18n'
 import * as TinyWebcomponentCore from '@opentiny/tiny-engine-webcomponent-core'
 import TinyVue from '@opentiny/vue'
 import * as TinyVueIcon from '@opentiny/vue-icon'
 import Main, { api } from './RenderMain'
 import { getComponent, blockSlotDataMap } from './render'
-import lowcode from '../../lowcode'
+import lowcode from './lowcode'
 import { camelize, capitalize } from '@vue/shared'
 
 const dispatch = (name, data) => {

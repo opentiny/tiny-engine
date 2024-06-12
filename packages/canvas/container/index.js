@@ -4,5 +4,5 @@ import api from './src/api'
 export default {
   ...metaData,
   component: CanvasContainer,
-  api
+  apis: api()
 }

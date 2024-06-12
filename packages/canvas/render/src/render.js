@@ -18,6 +18,8 @@ import babelPluginJSX from '@vue/babel-plugin-jsx'
 import { transformSync } from '@babel/core'
 import i18nHost from '@opentiny/tiny-engine-i18n-host'
 import { CanvasRow, CanvasCol, CanvasRowColContainer } from '@opentiny/tiny-engine-builtin-component'
+
+import { NODE_UID as DESIGN_UIDKEY, NODE_TAG as DESIGN_TAGKEY, NODE_LOOP as DESIGN_LOOPID } from '../../common'
 import { context, conditions, setNode } from './context'
 import {
   CanvasBox,
@@ -28,7 +30,6 @@ import {
   CanvasImg,
   CanvasPlaceholder
 } from './builtin'
-import { NODE_UID as DESIGN_UIDKEY, NODE_TAG as DESIGN_TAGKEY, NODE_LOOP as DESIGN_LOOPID } from '../common'
 
 const { BROADCAST_CHANNEL } = constants
 const { hyphenateRE } = utils

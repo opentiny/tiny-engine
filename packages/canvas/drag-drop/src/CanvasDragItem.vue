@@ -5,8 +5,8 @@
 </template>
 
 <script>
+import { getPluginApi } from '@opentiny/tiny-engine-entry'
 import { utils } from '@opentiny/tiny-engine-utils'
-import { dragStart } from './container'
 
 const { deepClone } = utils
 
@@ -16,10 +16,11 @@ export default {
   },
   emits: ['click'],
   setup(props, { emit }) {
+    const canvasApi = getPluginApi('engine.canvas.container').canvasApi
     const dragstart = (e) => {
-      if (props.data) {
+      if (props.data && canvasApi.value?.dragStart) {
         const data = deepClone(props.data)
-        dragStart(data)
+        canvasApi.value.dragStart(data)
 
         // 设置拖拽鼠标样式和设置拖拽预览图
         const target = e.target.querySelector('.component-item-component')

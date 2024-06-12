@@ -24,7 +24,7 @@
 <script>
 import { reactive, watch } from 'vue'
 import { extend } from '@opentiny/vue-renderless/common/object'
-import { getCurrent, updateRect } from './container'
+import { getCurrent, updateRect } from '../container'
 
 const LEGAL_DIVIDER_COMPONENT = ['CanvasRow', 'CanvasCol']
 
