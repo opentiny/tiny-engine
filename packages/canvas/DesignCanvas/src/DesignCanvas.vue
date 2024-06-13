@@ -2,7 +2,7 @@
   <div id="canvas-wrap" ref="canvasRef">
     <div ref="siteCanvas" class="site-canvas" :style="siteCanvasStyle">
       <component
-        :is="CanvasContainer.component"
+        :is="CanvasContainer.entry"
         :controller="controller"
         :materials-panel="materialsPanel"
         :canvas-src="canvasUrl"
@@ -10,7 +10,7 @@
         @selected="nodeSelected"
       ></component>
     </div>
-    <component :is="CanvasBreadcrumb.component" :data="footData" @click="selectFooterNode"></component>
+    <component :is="CanvasBreadcrumb.entry" :data="footData" @click="selectFooterNode"></component>
   </div>
 </template>
 
@@ -178,7 +178,7 @@ export default {
       nodeSelected,
       selectFooterNode,
       footData,
-      materialsPanel: materials.component,
+      materialsPanel: materials.entry,
       showMask,
       controller: {
         // 需要在canvas/render或内置组件里使用的方法

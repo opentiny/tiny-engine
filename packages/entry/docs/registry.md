@@ -10,7 +10,10 @@ type OverwriteFn = (ctx, originFn) => (...args) => any
 
 interface MetaApp {
   id: string
-  component: VueComponent
+  // 元应用的入口组件
+  entry: VueComponent
+  // 元应用中可供定制的局部模块组件，例如定制 header、footer
+  components?: Record<string, VueComponent>
   // 组件暴露的api接口
   apis?: Record<string, Function>
   // component的配置项
