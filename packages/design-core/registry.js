@@ -76,5 +76,5 @@ export default {
       id: 'engine.theme.dark',
       title: '暗色主题'
     }
-  ],
+  ]
 }

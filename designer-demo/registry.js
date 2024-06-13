@@ -40,6 +40,8 @@ import {
   Props,
   Events,
   Styles,
+  CanvasBreadcrumb,
+  CanvasContainer
 } from '@opentiny/tiny-engine'
 
 export default {
@@ -95,5 +97,8 @@ export default {
     Styles,
     Events
   ],
-  canvas: {}
+  canvas: [
+    CanvasContainer,
+    CanvasBreadcrumb
+  ]
 }

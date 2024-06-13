@@ -25,7 +25,7 @@ import BreadcrumbPlugin from '@opentiny/tiny-engine-toolbar-breadcrumb'
 import LangPlugin from '@opentiny/tiny-engine-toolbar-lang'
 import MediaPlugin from '@opentiny/tiny-engine-toolbar-media'
 
-const getToolbars = (pluginId) => {
+const _getToolbars = (pluginId) => {
   return defineAsyncComponent(() =>
     // FIXME: preview 这里其实有单独的入口，拿到的注册表是空的
     Promise.resolve(getMergeRegistry('toolbars')?.find((t) => t.id === pluginId)?.component || <span></span>)
@@ -38,7 +38,7 @@ export default {
   },
   setup() {
     const debugSwitch = injectDebugSwitch()
-    const tools = ['breadcrumb', 'lang', 'media']
+    const _tools = ['breadcrumb', 'lang', 'media']
     const [Breadcrumb, ChangeLang, ToolbarMedia] = [
       BreadcrumbPlugin.component,
       LangPlugin.component,

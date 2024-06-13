@@ -122,7 +122,6 @@ export default () => {
   }
 }
 
-
 initHook(HOOK_NAME.useHistory, {
   historyState,
   back,

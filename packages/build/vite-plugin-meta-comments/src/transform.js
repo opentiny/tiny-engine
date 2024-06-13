@@ -54,6 +54,7 @@ export const transform = (code, id) => {
   // 找不到meta.js告警并返回
   const metaPath = getMeataPath(id)
   if (!metaPath) {
+    // eslint-disable-next-line no-console
     console.log('找不到对应的meta.js')
     return
   }

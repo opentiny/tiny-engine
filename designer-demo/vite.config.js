@@ -56,7 +56,7 @@ export default defineConfig((options) => {
     '@opentiny/tiny-engine-theme-light': path.resolve(__dirname, '../packages/theme/light/index.less'),
     '@opentiny/tiny-engine-svgs': path.resolve(__dirname, '../packages/svgs/index.js'),
     '@opentiny/tiny-engine-http': path.resolve(__dirname, '../packages/http/src/index.js'),
-    '@opentiny/tiny-engine-canvas': path.resolve(__dirname, '../packages/canvas/src/index.js'),
+    '@opentiny/tiny-engine-canvas': path.resolve(__dirname, '../packages/canvas/index.js'),
     '@opentiny/tiny-engine-utils': path.resolve(__dirname, '../packages/utils/src/index.js'),
     '@opentiny/tiny-engine-webcomponent-core': path.resolve(__dirname, '../packages/webcomponent/src/lib.js'),
     '@opentiny/tiny-engine-i18n-host': path.resolve(__dirname, '../packages/i18n/src/lib.js'),
