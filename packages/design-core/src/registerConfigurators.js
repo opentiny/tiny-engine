@@ -7,5 +7,5 @@ import { addConfigurator } from '@opentiny/tiny-engine-entry'
  */
 export const registerConfigurators = (configurators) => {
   addConfigurator(Object.entries(MetaComponents).map(([name, component]) => ({ name, component })))
-  addConfigurator(configurators)
+  addConfigurator(Object.entries(configurators).map(([name, component]) => ({ name, component })))
 }

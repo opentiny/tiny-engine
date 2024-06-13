@@ -1,7 +1,7 @@
 <template>
   <meta-list v-bind="options">
     <template #title>
-      <meta-list-title v-bind="titleOptions"></meta-list-title>
+      <div>{{ props.name }}</div>
     </template>
     <template #actions>
       <meta-list-actions v-bind="actionsOptions" @actionEvents="actionEvents"></meta-list-actions>
@@ -26,12 +26,11 @@ import {
   IconCode
 } from '@opentiny/vue-icon'
 import { useProperties, useResource, useCanvas } from '@opentiny/tiny-engine-controller'
-import { MetaList, MetaListTitle, MetaListActions, MetaListItems } from '@opentiny/tiny-engine-common'
+import { MetaList, MetaListActions, MetaListItems } from '@opentiny/tiny-engine-common'
 
 export default {
   components: {
     MetaList,
-    MetaListTitle,
     MetaListActions,
     MetaListItems
   },

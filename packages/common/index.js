@@ -10,6 +10,28 @@
  *
  */
 
+import {
+  ButtonGroupConfigurator,
+  CascaderConfigurator,
+  CheckBoxConfigurator,
+  CheckboxGroupConfigurator,
+  DatePickerConfigurator,
+  FormConfigurator,
+  HtmlAttributesConfigurator,
+  HtmlTextConfigurator,
+  InputConfigurator,
+  IpSectionConfigurator,
+  JsSlotConfigurator,
+  NumberConfigurator,
+  RadioConfigurator,
+  RadioGroupConfigurator,
+  SelectConfigurator,
+  SelectIconConfigurator,
+  SliderConfigurator,
+  SlotConfigurator,
+  SwitchConfigurator
+} from '@opentiny/tiny-engine-configurator'
+
 import PluginSetting from './component/PluginSetting.vue'
 import PluginPanel from './component/PluginPanel.vue'
 import SvgButton from './component/SvgButton.vue'
@@ -23,39 +45,19 @@ import ConfigRender from './component/ConfigRender.vue'
 import MetaArrayItem from './component/MetaArrayItem.vue'
 import MetaBindI18n from './component/MetaBindI18n.vue'
 import MetaBindVariable from './component/MetaBindVariable.vue'
-import MetaCascader from './component/MetaCascader.vue'
-import MetaCheckBox from './component/MetaCheckBox.vue'
+import MetaListActions from './component/MetaListActions.vue'
 import MetaCodeEditor from './component/MetaCodeEditor.vue'
 import MetaCodeEditorList from './component/MetaCodeEditorList.vue'
 import MetaCollection from './component/MetaCollection.vue'
 import MetaColor from './component/MetaColor.vue'
-import MetaDatePicker from './component/MetaDatePicker.vue'
-import MetaDescription from './component/MetaDescription.vue'
-import MetaForm from './component/MetaForm.vue'
 import MetaGroupItem from './component/MetaGroupItem.vue'
-import MetaInput from './component/MetaInput.vue'
 import MetaLayoutGrid from './component/MetaLayoutGrid.vue'
-import MetaList from './component/MetaList.vue'
 import MetaListTitle from './component/MetaListTitle.vue'
-import MetaListActions from './component/MetaListActions.vue'
 import MetaListItems from './component/MetaListItems.vue'
 import MetaListItem from './component/MetaListItem.vue'
 import MetaModal, { useModal } from './component/MetaModal.vue'
-import MetaNumber from './component/MetaNumber.vue'
 import MetaPopover from './component/MetaPopover.vue'
-import MetaRadio from './component/MetaRadio.vue'
-import MetaSelect from './component/MetaSelect.vue'
-import MetaSelectIcon from './component/MetaSelectIcon.vue'
-import MetaSlider from './component/MetaSlider.vue'
-import MetaSwitch from './component/MetaSwitch.vue'
 import MetaContainer from './component/MetaContainer.vue'
-import MetaJsSlot from './component/MetaJsSlot.vue'
-import MetaSlot from './component/MetaSlot.vue'
-import MetaHtmlText from './component/MetaHtmlText.vue'
-import MetaHtmlAttributes from './component/MetaHtmlAttributes.vue'
-import MetaRadioGroup from './component/MetaRadioGroup.vue'
-import MetaCheckboxGroup from './component/MetaCheckboxGroup.vue'
-import MetaIpSection from './component/MetaIpSection.vue'
 import VideoGuide from './component/VideoGuide.vue'
 import MonacoEditor from './component/MonacoEditor.vue'
 import BlockHistoryList from './component/BlockHistoryList.vue'
@@ -77,9 +79,10 @@ import MetaRelatedEditor from './component/MetaRelatedEditor.vue'
 import MetaRelatedColumns from './component/MetaRelatedColumns.vue'
 import BlockDeployDialog from './component/BlockDeployDialog.vue'
 import ProgressBar from './component/ProgressBar.vue'
-import MetaButtonGroup from './component/MetaButtonGroup.vue'
 import MetaTableColumns from './component/MetaTableColumns.vue'
 import SearchEmpty from './component/SearchEmpty.vue'
+import MetaDescription from './component/MetaDescription.vue'
+import MetaList from './component/MetaList.vue'
 
 import i18n, { i18nKeyMaps } from '@opentiny/tiny-engine-controller/js/i18n'
 
@@ -105,45 +108,45 @@ export const injectGlobalComponents = {
   }
 }
 
+// TODO: 后面由各自所需代码各自引入，然后删除
 export const MetaComponents = {
   MetaArrayItem,
   MetaBindI18n,
   MetaBindVariable,
-  MetaButtonGroup,
-  MetaCheckBox,
-  MetaCascader,
+  MetaButtonGroup: ButtonGroupConfigurator,
+  MetaCheckBox: CheckBoxConfigurator,
+  MetaCascader: CascaderConfigurator,
   MetaCodeEditor,
   MetaCodeEditorList,
   MetaColor,
-  MetaDatePicker,
-  MetaDescription,
+  MetaDatePicker: DatePickerConfigurator,
   MetaGroupItem,
-  MetaInput,
+  MetaInput: InputConfigurator,
   MetaLayoutGrid,
   MetaList,
   MetaModal,
-  MetaNumber,
-  MetaNumeric: MetaNumber,
+  MetaNumber: NumberConfigurator,
+  MetaNumeric: NumberConfigurator,
   MetaPopover,
-  MetaRadio,
-  MetaSelect,
-  MetaSelectIcon,
-  MetaSlider,
-  MetaSwitch,
+  MetaRadio: RadioConfigurator,
+  MetaSelect: SelectConfigurator,
+  MetaSelectIcon: SelectIconConfigurator,
+  MetaSlider: SliderConfigurator,
+  MetaSwitch: SwitchConfigurator,
   MetaListTitle,
   MetaListActions,
   MetaListItems,
   MetaListItem,
-  MetaForm,
+  MetaForm: FormConfigurator,
   MetaCollection,
   MetaContainer,
-  MetaJsSlot,
-  MetaSlot,
-  MetaHtmlText,
-  MetaHtmlAttributes,
-  MetaRadioGroup,
-  MetaCheckboxGroup,
-  MetaIpSection,
+  MetaJsSlot: JsSlotConfigurator,
+  MetaSlot: SlotConfigurator,
+  MetaHtmlText: HtmlTextConfigurator,
+  MetaHtmlAttributes: HtmlAttributesConfigurator,
+  MetaRadioGroup: RadioGroupConfigurator,
+  MetaCheckboxGroup: CheckboxGroupConfigurator,
+  MetaIpSection: IpSectionConfigurator,
   MetaRelatedEditor,
   MetaRelatedColumns,
   MetaTableColumns
@@ -152,30 +155,30 @@ export const MetaComponents = {
 export {
   MetaBindI18n,
   MetaBindVariable,
-  MetaCheckBox,
+  CheckBoxConfigurator as MetaCheckBox,
   MetaCodeEditor,
   MetaCodeEditorList,
   MetaColor,
-  MetaDatePicker,
+  DatePickerConfigurator as MetaDatePicker,
   MetaDescription,
-  MetaInput,
+  InputConfigurator as MetaInput,
   MetaList,
   MetaModal,
-  MetaNumber,
+  NumberConfigurator as MetaNumber,
   MetaPopover,
-  MetaRadio,
-  MetaSelect,
-  MetaSelectIcon,
-  MetaSlider,
-  MetaSwitch,
+  RadioConfigurator as MetaRadio,
+  SelectConfigurator as MetaSelect,
+  SelectIconConfigurator as MetaSelectIcon,
+  SliderConfigurator as MetaSlider,
+  SwitchConfigurator as MetaSwitch,
   MetaListTitle,
   MetaListActions,
   MetaListItems,
   MetaListItem,
-  MetaJsSlot,
-  MetaSlot,
-  MetaHtmlText,
-  MetaForm,
+  JsSlotConfigurator as MetaJsSlot,
+  SlotConfigurator as MetaSlot,
+  HtmlTextConfigurator as MetaHtmlText,
+  FormConfigurator as MetaForm,
   ConfigCollapse,
   ConfigGroup,
   ConfigItem,
@@ -200,7 +203,7 @@ export {
   MetaContainer,
   MonacoEditor,
   MaskModal,
-  MetaHtmlAttributes,
+  HtmlAttributesConfigurator as MetaHtmlAttributes,
   VueMonaco,
   PublicIcon,
   SaveNewBlock,

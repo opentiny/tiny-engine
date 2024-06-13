@@ -19,7 +19,7 @@ import { Cascader } from '@opentiny/vue'
 import i18n from '@opentiny/tiny-engine-controller/js/i18n'
 
 export default {
-  name: 'MetaCascader',
+  name: 'CascaderConfigurator',
   components: {
     TinyCascader: Cascader
   },

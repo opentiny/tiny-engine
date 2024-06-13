@@ -10,18 +10,18 @@
     </div>
   </div>
   <div class="head-content">
-    <meta-input v-model="state.text" type="textarea" @change="change"></meta-input>
+    <input-configurator v-model="state.text" type="textarea" @change="change"></input-configurator>
   </div>
 </template>
 <script>
 import { reactive, computed } from 'vue'
 import { useProperties } from '@opentiny/tiny-engine-controller'
-import MetaInput from './MetaInput.vue'
+import InputConfigurator from '../input-configurator/InputConfigurator.vue'
 
 export default {
   inheritAttrs: false,
   components: {
-    MetaInput
+    InputConfigurator
   },
   props: {
     modelValue: {
