@@ -34,3 +34,5 @@ export { default as Styles } from '@opentiny/tiny-engine-setting-styles'
 export { initPreview } from './src/preview/src/main'
 
 export { default as defaultRegistry } from './registry'
+
+export * from '@opentiny/tiny-engine-entry'
