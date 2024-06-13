@@ -30,6 +30,7 @@ export { default as Robot } from '@opentiny/tiny-engine-plugin-robot'
 export { default as Props } from '@opentiny/tiny-engine-setting-props'
 export { default as Events } from '@opentiny/tiny-engine-setting-events'
 export { default as Styles } from '@opentiny/tiny-engine-setting-styles'
+export { CanvasBreadcrumb, CanvasContainer } from '@opentiny/tiny-engine-canvas'
 
 export { initPreview } from './src/preview/src/main'
 
