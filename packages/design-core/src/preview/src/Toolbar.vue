@@ -21,9 +21,13 @@ import { Switch as TinySwitch } from '@opentiny/vue'
 import { getSearchParams } from './preview/http'
 import { BROADCAST_CHANNEL } from '../src/preview/srcFiles/constant'
 import { injectDebugSwitch } from './preview/debugSwitch'
+import BreadcrumbPlugin from '@opentiny/tiny-engine-toolbar-breadcrumb'
+import LangPlugin from '@opentiny/tiny-engine-toolbar-lang'
+import MediaPlugin from '@opentiny/tiny-engine-toolbar-media'
 
 const getToolbars = (pluginId) => {
   return defineAsyncComponent(() =>
+    // FIXME: preview 这里其实有单独的入口，拿到的注册表是空的
     Promise.resolve(getMergeRegistry('toolbars')?.find((t) => t.id === pluginId)?.component || <span></span>)
   )
 }
@@ -35,7 +39,11 @@ export default {
   setup() {
     const debugSwitch = injectDebugSwitch()
     const tools = ['breadcrumb', 'lang', 'media']
-    const [Breadcrumb, ChangeLang, ToolbarMedia] = tools.map(getToolbars)
+    const [Breadcrumb, ChangeLang, ToolbarMedia] = [
+      BreadcrumbPlugin.component,
+      LangPlugin.component,
+      MediaPlugin.component
+    ]
 
     const { setBreadcrumbPage } = useBreadcrumb()
     const { pageInfo } = getSearchParams()
@@ -44,8 +52,11 @@ export default {
     const setViewPort = (item) => {
       const iframe = document.getElementsByClassName('iframe-container')[0]
       const app = document.getElementById('app')
-      iframe.style.width = item
-      iframe.style.margin = 'auto'
+
+      if (iframe) {
+        iframe.style.width = item
+        iframe.style.margin = 'auto'
+      }
       app.style.overflow = 'hidden'
     }
 

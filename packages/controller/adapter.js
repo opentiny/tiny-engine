@@ -11,7 +11,7 @@
  */
 
 import { toRaw } from 'vue'
-import { getGlobalConfig } from './src/globalConfig'
+import { getMergeMeta } from '@opentiny/tiny-engine-entry'
 
 /**
  * 将画布pageSchema对象转换成编辑器中的string
@@ -55,7 +55,7 @@ export const string2Obj = (string) => {
  */
 
 export const theme = () => {
-  const theme = getGlobalConfig()?.theme?.includes('dark') ? 'vs-dark' : 'vs'
+  const theme = getMergeMeta('engine.config').theme?.includes('dark') ? 'vs-dark' : 'vs'
 
   return theme
 }

@@ -134,8 +134,8 @@ const create = () => {
 
 export const createRender = (config) => {
   initRenderContext()
-  const { dslMode, canvasOptions } = config
-  const { styles = [], scripts = [] } = canvasOptions[dslMode]
+
+  const { styles = [], scripts = [] } = config.canvasDependencies
   const { styles: thirdStyles = [], scripts: thirdScripts = [] } = window.thirdPartyDeps || {}
 
   Promise.all([
