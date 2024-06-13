@@ -1,22 +1,31 @@
 <template>
   <plugin-panel :title="shortcut ? '' : title" @close="$emit('close')">
     <template #header>
-      <component :is="pluginComponents.pluginHeader" :fixedPanels="fixedPanels"></component>
+      <component :is="headerComponent" :fixedPanels="fixedPanels"></component>
     </template>
     <template #content>
-      <component :is="pluginComponents.pluginContent"></component>
+      <tiny-tabs v-model="activeName" tab-style="button-card" class="full-width-tabs" v-if="!onlyShowDefault">
+        <tiny-tab-item :key="item.id" v-for="item in tabComponents" :title="item.title" :name="item.id">
+          <component :is="item.component" :activeTabName="activeName" :rightPanelRef="rightPanelRef"></component>
+        </tiny-tab-item>
+      </tiny-tabs>
+      <component :is="defaultComponent" v-if="onlyShowDefault"></component>
+      <div class="material-right-panel" ref="rightPanelRef"></div>
     </template>
   </plugin-panel>
 </template>
 
 <script>
 import { reactive, provide, ref } from 'vue'
-import { PluginPanel } from '@opentiny/tiny-engine-common'
+import { Tabs, TabItem } from '@opentiny/vue'
 import { getMergeMeta } from '@opentiny/tiny-engine-entry'
+import { PluginPanel } from '@opentiny/tiny-engine-common'
 
 export default {
   components: {
-    PluginPanel
+    PluginPanel,
+    TinyTabs: Tabs,
+    TinyTabItem: TabItem
   },
 
   props: {
@@ -24,7 +33,7 @@ export default {
     fixedPanels: {
       type: Array
     },
-    metaData: {
+    registryData: {
       type: Object,
       default: () => ({})
     }
@@ -39,17 +48,33 @@ export default {
     })
     provide('panelState', panelState) // 使用provide传给子组件,后续可能会有调整，先暂定
 
-    const headerMeta = getMergeMeta(props.metaData.options?.layoutComponentIdMap?.header)
-    const contentMeta = getMergeMeta(props.metaData.options?.layoutComponentIdMap?.content)
-    const pluginComponents = reactive({
-      pluginHeader: headerMeta.component,
-      pluginContent: contentMeta?.component
+    const pluginRegistryData = ref(props.registryData)
+    const rightPanelRef = ref(null)
+
+    const headerComponent = getMergeMeta(pluginRegistryData.value.components?.header)
+    const onlyShowDefault = ref(pluginRegistryData.value.options.childrenIds?.length === 1)
+    const activeName = ref(pluginRegistryData.value.options?.defaultTabId)
+
+    const defaultComponent = getMergeMeta(activeName.value)?.component
+    const tabComponents = pluginRegistryData.value.options.childrenIds?.map((id) => {
+      const itemMeta = getMergeMeta(id)
+      return {
+        id,
+        component: itemMeta?.entry,
+        title: itemMeta?.options?.title || itemMeta?.id
+      }
     })
-    const title = ref(props.metaData?.title)
+
+    const title = ref(props.registryData?.title)
 
     return {
-      pluginComponents,
-      title
+      headerComponent,
+      title,
+      activeName,
+      defaultComponent,
+      onlyShowDefault,
+      tabComponents,
+      rightPanelRef
     }
   }
 }

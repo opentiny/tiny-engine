@@ -10,24 +10,24 @@
  *
  */
 
-import component from './src/Main.vue'
+import entry from './src/Main.vue'
 import metaData from './meta.js'
 import MaterialLayout from './src/meta/layout'
-import MaterialHeader from './src/meta/header'
-import MaterialContent from './src/meta/contentLayout'
 import MaterialBlock from './src/meta/block'
 import MaterialComponent from './src/meta/component'
+import MaterialHeader from './src/components/header/Main.vue'
 
 export default {
   ...metaData,
-  component,
+  entry,
   layout: MaterialLayout,
   options: {
-    layoutComponentIdMap: {
-      header: 'engine.plugins.materials.header',
-      content: 'engine.plugins.materials.content'
-    }
+    defaultTabId: 'engine.plugins.materials.component',
+    childrenIds: ['engine.plugins.materials.component', 'engine.plugins.materials.block']
+  },
+  components: {
+    header: MaterialHeader
   },
   apis: { ...MaterialBlock.apis },
-  metas: [MaterialHeader, MaterialContent, MaterialBlock, MaterialComponent]
+  metas: [MaterialBlock, MaterialComponent]
 }

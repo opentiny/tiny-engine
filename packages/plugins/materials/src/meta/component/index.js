@@ -1,10 +1,10 @@
-import component from './src/Main.vue'
+import entry from './src/Main.vue'
 import metaData from './meta'
 
 export default {
   ...metaData,
-  component,
+  entry,
   options: {
-    title: '物料'
+    title: '组件'
   }
 }

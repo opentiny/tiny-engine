@@ -1,5 +1,5 @@
 <template>
-  <component :is="layout.component" :metaData="metaData"></component>
+  <component :is="layout.component" :registryData="registryData"></component>
 </template>
 
 <script>
@@ -10,7 +10,7 @@ export default {
     const registry = getMergeRegistry(meta.type, meta.id)
     const { layout, ...restRegistry } = registry
     return {
-      metaData: restRegistry,
+      registryData: restRegistry,
       layout
     }
   }
