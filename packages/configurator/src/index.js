@@ -3,6 +3,7 @@ export { default as CascaderConfigurator } from './cascader-configurator/Cascade
 export { default as CheckBoxConfigurator } from './checkbox-configurator/CheckBoxConfigurator.vue'
 export { default as CheckboxGroupConfigurator } from './checkbox-group-configurator/CheckboxGroupConfigurator.vue'
 export { default as CodeConfigurator } from './code-configurator/CodeConfigurator.vue'
+export { default as CodeListConfigurator } from './code-list-configurator/CodeListConfigurator.vue'
 export { default as CollectionConfigurator } from './collection-configurator/CollectionConfigurator.vue'
 export { default as ColorConfigurator } from './color-configurator/ColorConfigurator.vue'
 export { default as DatePickerConfigurator } from './date-picker-configurator/DatePickerConfigurator.vue'

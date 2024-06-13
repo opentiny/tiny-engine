@@ -18,7 +18,7 @@
     </div>
     <div class="color">
       <label for="">Color</label>
-      <meta-color :modelValue="state.colorValue" @change="colorChange" />
+      <color-configurator :modelValue="state.colorValue" @change="colorChange" />
       <tiny-input v-model="state.value" class="color-input" @change="percentChange">
         <template #suffix>
           <span>%</span>
@@ -31,13 +31,13 @@
 <script>
 import { computed, reactive, watchEffect } from 'vue'
 import { Input, Checkbox } from '@opentiny/vue'
-import { MetaColor } from '@opentiny/tiny-engine-common'
+import { ColorConfigurator } from '@opentiny/tiny-engine-configurator'
 
 export default {
   components: {
     TinyInput: Input,
     TinyCheckbox: Checkbox,
-    MetaColor
+    ColorConfigurator
   },
   props: {
     modelValue: {

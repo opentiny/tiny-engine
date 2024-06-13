@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import { VueMonaco } from '@opentiny/tiny-engine-common'
+import { VueMonaco } from '../components' // TODO 等 common 包移除了 configurator 依赖后再更换成 @opentiny/tiny-engine-common
 import { formatString } from '@opentiny/tiny-engine-controller/js/ast'
 import i18n from '@opentiny/tiny-engine-controller/js/i18n'
 import { Button, DialogBox } from '@opentiny/vue'
