@@ -3,5 +3,5 @@ import metaData from './meta'
 
 export default {
   ...metaData,
-  component: DesignCanvas
+  entry: DesignCanvas
 }

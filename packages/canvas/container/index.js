@@ -3,6 +3,6 @@ import metaData from './meta'
 import api from './src/api'
 export default {
   ...metaData,
-  component: CanvasContainer,
+  entry: CanvasContainer,
   apis: api()
 }
