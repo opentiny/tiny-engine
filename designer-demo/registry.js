@@ -42,8 +42,8 @@ import {
   Styles,
   Layout,
   Canvas,
-  CanvasContainer,
-  CanvasFooter
+  CanvasBreadcrumb,
+  CanvasContainer
 } from '@opentiny/tiny-engine'
 
 export default {

@@ -1,4 +1,5 @@
 import './useCanvas'
+import './useLayout'
 import './useApp'
 import './useResource'
 import './useHistory'
