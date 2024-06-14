@@ -11,11 +11,10 @@
  */
 
 import { useHttp } from '@opentiny/tiny-engine-http'
-import usePage from '../src/usePage'
-import useCanvas from '../src/useCanvas'
-import useNotify from '../src/useNotify'
+import useNotify from '../src/components/useNotify'
 import { isVsCodeEnv } from './environments'
 import { generateRouter, generatePage } from './vscodeGenerateFile'
+import { usePage, useCanvas } from '@opentiny/tiny-engine-entry'
 
 const http = useHttp()
 

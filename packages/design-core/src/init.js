@@ -12,20 +12,16 @@
 
 import { createApp } from 'vue'
 import initSvgs from '@opentiny/tiny-engine-svgs'
-import { setGlobalConfig } from '@opentiny/tiny-engine-controller'
 import i18n from '@opentiny/tiny-engine-controller/js/i18n'
-import globalConfig from '../config/lowcode.config'
 import { initMonitor } from '@opentiny/tiny-engine-controller/js/monitor'
 import { injectGlobalComponents } from '@opentiny/tiny-engine-common'
 import { initHttp } from '@opentiny/tiny-engine-http'
 import TinyThemeTool from '@opentiny/vue-theme/theme-tool'
 import { tinySmbTheme } from '@opentiny/vue-theme/theme' // SMB 主题
 import { defineEntry, mergeRegistry } from '@opentiny/tiny-engine-entry'
-import App from './App.vue'
+import App from './layout/App.vue'
 import defaultRegistry from '../registry.js'
 import { registerConfigurators } from './registerConfigurators'
-
-import 'virtual:svg-icons-register'
 
 const defaultLifeCycles = {
   beforeAppCreate: ({ registry }) => {
@@ -39,6 +35,9 @@ const defaultLifeCycles = {
     // 在common层注入合并后的注册表
     defineEntry(newRegistry)
 
+    // 加载主题样式，尽早加载
+    // import(`./theme/${newRegistry.config.theme}.js`)
+
     initHttp({ env: import.meta.env })
 
     // eslint-disable-next-line no-new
@@ -48,8 +47,8 @@ const defaultLifeCycles = {
       initMonitor(import.meta.env.VITE_ERROR_MONITOR_URL)
     }
 
-    window.TinyGlobalConfig = globalConfig
-    setGlobalConfig(globalConfig)
+    // 这里暴露到 window 是为了让 canvas 可以读取
+    window.TinyGlobalConfig = newRegistry.config || {}
   },
   appCreated: ({ app }) => {
     initSvgs(app)

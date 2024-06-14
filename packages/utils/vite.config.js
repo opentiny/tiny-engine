@@ -12,11 +12,9 @@
 
 import { defineConfig } from 'vite'
 import path from 'path'
-import generateComment from '@opentiny/vite-plugin-generate-comments'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [generateComment()],
   publicDir: false,
   resolve: {},
   build: {

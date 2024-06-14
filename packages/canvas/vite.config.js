@@ -15,7 +15,7 @@ import path from 'path'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import { terser } from 'rollup-plugin-terser'
-import generateComments from '@opentiny/vite-plugin-generate-comments'
+import generateComments from '@opentiny/tiny-engine-vite-plugin-meta-comments'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -59,7 +59,7 @@ export default defineConfig({
   build: {
     cssCodeSplit: false,
     lib: {
-      entry: path.resolve(__dirname, './src/index.js'),
+      entry: path.resolve(__dirname, './index.js'),
       name: 'canvas',
       fileName: () => 'index.js',
       formats: ['es']

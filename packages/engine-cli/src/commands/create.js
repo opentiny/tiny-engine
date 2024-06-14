@@ -21,7 +21,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 export default function (name) {
-  const sourcePath = path.join(__dirname, '../../template')
+  const sourcePath = path.join(__dirname, '../../template/designer/')
   const destPath = path.join(cwd(), name)
   fs.copySync(sourcePath, destPath)
   console.log(

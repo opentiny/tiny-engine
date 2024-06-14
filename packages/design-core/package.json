@@ -14,19 +14,18 @@
   ],
   "module": "index.js",
   "main": "index.js",
+  "files": [
+    "dist",
+    "assets"
+  ],
   "exports": {
-    ".": "index.js",
-    "./vite.config.js": "./vite.config.js",
-    "./config/lowcode.config": "./config/lowcode.config.js",
-    "./scripts/externalDeps": "./scripts/externalDeps.js"
+    ".": "./dist/index.js",
+    "./canvas": "./dist/canvas.js"
   },
   "scripts": {
-    "dev": "cross-env NODE_OPTIONS=--max-old-space-size=10240 VITE_API_MOCK=mock vite",
-    "serve": "cross-env NODE_OPTIONS=--max-old-space-size=10240 vite",
-    "build:alpha": "cross-env NODE_OPTIONS=--max-old-space-size=8192 vite build --mode alpha",
-    "build:prod": "cross-env NODE_OPTIONS=--max-old-space-size=8192 vite build --mode prod",
     "preview": "vite preview",
-    "lint": "eslint . --ext .js,.vue,.jsx --fix"
+    "lint": "eslint . --ext .js,.vue,.jsx --fix",
+    "build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 vite build"
   },
   "repository": {
     "type": "git",
@@ -44,7 +43,7 @@
     "@babel/parser": "~7.23.2",
     "@babel/traverse": "~7.23.2",
     "@opentiny/tiny-engine-layout": "workspace:~",
-    "@opentiny/vite-plugin-generate-comments": "workspace:*",
+    "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
     "@opentiny/tiny-engine-entry": "workspace:*",
     "@opentiny/tiny-engine-canvas": "workspace:*",
     "@opentiny/tiny-engine-common": "workspace:*",
@@ -92,6 +91,7 @@
     "@opentiny/tiny-engine-utils": "workspace:*",
     "@opentiny/tiny-engine-webcomponent-core": "workspace:*",
     "@opentiny/vue": "~3.14.0",
+    "@opentiny/vue-icon": "~3.14.0",
     "@opentiny/vue-design-smb": "~3.14.0",
     "@opentiny/vue-renderless": "~3.14.0",
     "@opentiny/vue-theme": "~3.14.0",
@@ -110,37 +110,19 @@
     "vue-i18n": "^9.9.0"
   },
   "devDependencies": {
-    "@opentiny/vite-plugin-generate-comments": "workspace:*",
-    "@babel/eslint-parser": "^7.21.3",
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
-    "@opentiny/tiny-engine-i18n-host": "workspace:*",
     "@types/node": "^18.0.0",
     "@vitejs/plugin-vue": "^4.2.3",
     "@vitejs/plugin-vue-jsx": "^3.1.0",
-    "assert": "^2.0.0",
-    "buffer": "^6.0.3",
     "cross-env": "^7.0.3",
-    "esbuild-plugin-copy": "^2.1.1",
     "eslint": "^8.38.0",
     "eslint-plugin-vue": "^8.0.0",
     "fs-extra": "^10.1.0",
     "husky": "^8.0.0",
     "lerna": "^7.2.0",
     "less": "^4.1.2",
-    "lint-staged": "^13.2.0",
-    "path": "^0.12.7",
-    "rimraf": "^3.0.2",
-    "rollup-plugin-polyfill-node": "^0.12.0",
-    "rollup-plugin-terser": "^7.0.2",
-    "rollup-plugin-visualizer": "^5.8.3",
-    "shelljs": "^0.8.5",
-    "svg-sprite-loader": "^6.0.11",
-    "vite": "^4.3.7",
-    "vite-plugin-monaco-editor": "^1.1.0",
-    "vite-plugin-static-copy": "^0.16.0",
-    "vite-plugin-svg-icons": "^2.0.1",
-    "vue-eslint-parser": "^8.0.1"
+    "lint-staged": "^13.2.0"
   },
   "browserslist": [
     "> 1%",
