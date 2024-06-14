@@ -45,6 +45,7 @@ const componentType = {
 
 export default {
   setup() {
+    // 暂时这么处理
     const CanvasContainer = getMergeRegistry('canvas').metas[0]
     const CanvasBreadcrumb = getMergeRegistry('canvas').metas[1]
     const footData = ref([])
