@@ -13,7 +13,7 @@
           "disabled": false,
           "cols": 12,
           "widget": {
-            "component": "MetaInput",
+            "component": "InputConfigurator",
             "props": {
               "options": [
                 { "label": "总是显示", "value": "always" },
@@ -31,7 +31,7 @@
           "readOnly": false,
           "disabled": false,
           "cols": 12,
-          "widget": { "component": "MetaSwitch", "props": {} },
+          "widget": { "component": "SwitchConfigurator", "props": {} },
           "description": { "zh_CN": "" }
         },
         {
@@ -41,7 +41,7 @@
           "readOnly": false,
           "disabled": false,
           "cols": 12,
-          "widget": { "component": "MetaInput", "props": {} },
+          "widget": { "component": "InputConfigurator", "props": {} },
           "description": { "zh_CN": "" }
         },
         {
@@ -52,7 +52,7 @@
           "disabled": false,
           "cols": 12,
           "widget": {
-            "component": "MetaInput",
+            "component": "InputConfigurator",
             "props": {
               "options": [
                 { "label": "走马灯外部", "value": "outside" },
@@ -69,7 +69,7 @@
           "readOnly": false,
           "disabled": false,
           "cols": 12,
-          "widget": { "component": "MetaNumeric", "props": {} },
+          "widget": { "component": "NumberConfigurator", "props": {} },
           "description": { "zh_CN": "" }
         },
         {
@@ -79,7 +79,7 @@
           "readOnly": false,
           "disabled": false,
           "cols": 12,
-          "widget": { "component": "MetaNumeric", "props": {} },
+          "widget": { "component": "NumberConfigurator", "props": {} },
           "description": { "zh_CN": "" }
         },
         {
@@ -89,7 +89,7 @@
           "readOnly": false,
           "disabled": false,
           "cols": 12,
-          "widget": { "component": "MetaSwitch", "props": {} },
+          "widget": { "component": "SwitchConfigurator", "props": {} },
           "description": { "zh_CN": "" }
         },
         {
@@ -99,7 +99,7 @@
           "readOnly": false,
           "disabled": false,
           "cols": 12,
-          "widget": { "component": "MetaSwitch", "props": {} },
+          "widget": { "component": "SwitchConfigurator", "props": {} },
           "description": { "zh_CN": "" }
         },
         {
@@ -110,7 +110,7 @@
           "disabled": false,
           "cols": 12,
           "widget": {
-            "component": "MetaInput",
+            "component": "InputConfigurator",
             "props": {
               "options": [
                 { "label": "点击", "value": "click" },
@@ -128,7 +128,7 @@
           "disabled": false,
           "cols": 12,
           "widget": {
-            "component": "MetaInput",
+            "component": "InputConfigurator",
             "props": {
               "options": [
                 { "label": "水平", "value": "horizontal" },

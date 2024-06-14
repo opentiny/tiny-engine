@@ -31,7 +31,7 @@ export default {
     options: {
       type: Array,
       required: true,
-      default: [
+      default: () => [
         {
           value: 'block',
           title: '',
