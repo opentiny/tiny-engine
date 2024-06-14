@@ -1,21 +1,21 @@
 <template>
   <div id="canvas-wrap" ref="canvasRef">
     <div ref="siteCanvas" class="site-canvas" :style="siteCanvasStyle">
-      <canvas-container
+      <component
+        :is="CanvasContainer.component"
         :controller="controller"
         :materials-panel="materialsPanel"
         :canvas-src="canvasUrl"
         @remove="removeNode"
         @selected="nodeSelected"
-      ></canvas-container>
+      ></component>
     </div>
-    <footer-bar :data="footData" @click="selectFooterNode"></footer-bar>
+    <component :is="CanvasBreadcrumb.component" :data="footData" @click="selectFooterNode"></component>
   </div>
 </template>
 
 <script>
 import { ref, watch, computed, onUnmounted } from 'vue'
-import { CanvasContainer, CanvasFooter } from '@opentiny/tiny-engine-canvas'
 import {
   useProperties,
   useCanvas,
@@ -29,6 +29,7 @@ import { useHttp } from '@opentiny/tiny-engine-http'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { isVsCodeEnv, isDevelopEnv } from '@opentiny/tiny-engine-controller/js/environments'
 import * as ast from '@opentiny/tiny-engine-controller/js/ast'
+import { getMergeRegistry } from '@opentiny/tiny-engine-entry'
 
 const { PAGE_STATUS } = constants
 const tenant = new URLSearchParams(location.search).get('tenant') || ''
@@ -43,11 +44,9 @@ const componentType = {
 }
 
 export default {
-  components: {
-    CanvasContainer,
-    FooterBar: CanvasFooter
-  },
   setup() {
+    const CanvasContainer = getMergeRegistry('canvas')[0]
+    const CanvasBreadcrumb = getMergeRegistry('canvas')[1]
     const footData = ref([])
     const showMask = ref(true)
     const canvasRef = ref(null)
@@ -189,7 +188,9 @@ export default {
         ast
       },
       siteCanvasStyle,
-      canvasRef
+      canvasRef,
+      CanvasContainer,
+      CanvasBreadcrumb
     }
   }
 }
