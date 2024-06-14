@@ -3,7 +3,8 @@
     <div class="advnce-config">
       <label class="text-ellipsis-multiple">是否渲染</label>
       <div class="advanced-config-form-item">
-        <meta-switch v-if="!isBind" :modelValue="condition" @update:modelValue="setConfig"> </meta-switch>
+        <switch-configurator v-if="!isBind" :modelValue="condition" @update:modelValue="setConfig">
+        </switch-configurator>
         <div v-else class="binding-state text-ellipsis-multiple" :title="condition.value">
           已绑定：{{ condition.value }}
         </div>
@@ -64,7 +65,8 @@
 
 <script>
 import { ref, computed, reactive, watch } from 'vue'
-import { MetaSwitch, MetaBindVariable, MetaInput, MetaCodeEditor } from '@opentiny/tiny-engine-common'
+import { MetaBindVariable, MetaInput, MetaCodeEditor } from '@opentiny/tiny-engine-common'
+import { SwitchConfigurator } from '@opentiny/tiny-engine-configurator'
 import { useProperties, useCanvas } from '@opentiny/tiny-engine-controller'
 import { PROP_DATA_TYPE } from '@opentiny/tiny-engine-controller/utils'
 import { string2Obj } from '@opentiny/tiny-engine-controller/adapter'
@@ -75,7 +77,7 @@ const { DEFAULT_LOOP_NAME } = constants
 
 export default {
   components: {
-    MetaSwitch,
+    SwitchConfigurator,
     TinyTooltip: Tooltip,
     MetaBindVariable,
     MetaInput,

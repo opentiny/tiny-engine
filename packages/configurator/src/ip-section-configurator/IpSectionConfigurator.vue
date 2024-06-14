@@ -44,7 +44,7 @@ import { reactive, computed, ref, watch } from 'vue'
 import { Input, Form, FormItem, Select, Option, Tooltip } from '@opentiny/vue'
 
 export default {
-  name: 'MetaIpSection',
+  name: 'IpSectionConfigurator',
   components: {
     TinyInput: Input,
     TinyForm: Form,

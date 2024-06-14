@@ -14,7 +14,7 @@ import { ButtonGroup } from '@opentiny/vue'
 import i18n from '@opentiny/tiny-engine-controller/js/i18n'
 
 export default {
-  name: 'MetaButtonGroup',
+  name: 'ButtonGroupConfigurator',
   components: {
     TinyButtonGroup: ButtonGroup
   },

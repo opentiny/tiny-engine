@@ -31,7 +31,7 @@
               "zh_CN": "配置固定列布局"
             },
             "widget": {
-              "component": "MetaSwitch",
+              "component": "SwitchConfigurator",
               "props": {}
             },
             "cols": 12,
@@ -52,7 +52,7 @@
               "zh_CN": "配置弹性布局"
             },
             "widget": {
-              "component": "MetaSwitch",
+              "component": "SwitchConfigurator",
               "props": {}
             },
             "cols": 12,
@@ -73,7 +73,7 @@
               "zh_CN": "报价ID"
             },
             "widget": {
-              "component": "MetaInput",
+              "component": "InputConfigurator",
               "props": {}
             },
             "cols": 12,
