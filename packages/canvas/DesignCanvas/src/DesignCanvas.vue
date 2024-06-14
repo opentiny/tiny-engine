@@ -45,8 +45,9 @@ const componentType = {
 
 export default {
   setup() {
-    const CanvasContainer = getMergeRegistry('canvas')[0]
-    const CanvasBreadcrumb = getMergeRegistry('canvas')[1]
+    // 暂时这么处理
+    const CanvasContainer = getMergeRegistry('canvas').metas[0]
+    const CanvasBreadcrumb = getMergeRegistry('canvas').metas[1]
     const footData = ref([])
     const showMask = ref(true)
     const canvasRef = ref(null)

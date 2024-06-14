@@ -12,7 +12,12 @@
   ],
   "dependencies": {
     "@opentiny/tiny-engine-entry": "workspace:*",
-    "vue": "3.2.45"
+    "vue": "3.2.45",
+    "@opentiny/vue": "~3.14.0",
+    "@opentiny/vue-icon": "~3.14.0",
+    "@opentiny/vue-design-smb": "~3.14.0",
+    "@opentiny/vue-renderless": "~3.14.0",
+    "@opentiny/vue-theme": "~3.14.0"
   },
   "devDependencies": {
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
