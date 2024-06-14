@@ -1,0 +1,117 @@
+{
+  "state": {
+    "options": {
+      "type": "JSExpression",
+      "value": "[\r\n  { label: '复选框1', value: 'name1' },\r\n  { label: '复选框2', value: 'name2' },\r\n  { label: '复选框3', value: 'name3' },\r\n]"
+    },
+    "optionValue": {
+      "type": "JSExpression",
+      "value": "[\"name1\"]"
+    },
+    "inputValue": "",
+    "testGetter": {
+      "defaultValue": "testGetter default value",
+      "accessor": {
+        "getter": {
+          "type": "JSFunction",
+          "value": "function getter() {\r\n  return this.state.inputValue + 'hello'\r\n}"
+        }
+      }
+    }
+  },
+  "methods": {
+    "onChangeNew": {
+      "type": "JSFunction",
+      "value": "function onChangeNew(value) {\n  this.setState({ optionValue: value })\n}"
+    },
+    "onChangeNew1": {
+      "type": "JSFunction",
+      "value": "function onChangeNew1(e) {\n  this.setState({ inputValue: e.target.value })\n}"
+    },
+    "onClickNew": {
+      "type": "JSFunction",
+      "value": "function onClickNew(event) {\n  console.log(this.utils)\n}"
+    }
+  },
+  "componentName": "Page",
+  "fileName": "Untitled",
+  "css": "",
+  "props": {},
+  "lifeCycles": {},
+  "children": [
+    {
+      "componentName": "div",
+      "props": {},
+      "id": "85224592",
+      "children": [
+        {
+          "componentName": "AntdCheckboxGroup",
+          "props": {
+            "type": "array",
+            "options": {
+              "type": "JSExpression",
+              "value": "this.state.options"
+            },
+            "onChange": {
+              "type": "JSExpression",
+              "value": "this.onChangeNew"
+            },
+            "value": {
+              "type": "JSExpression",
+              "value": "this.state.optionValue"
+            }
+          },
+          "id": "35445615"
+        }
+      ]
+    },
+    {
+      "componentName": "div",
+      "props": {},
+      "id": "56152322",
+      "children": [
+        {
+          "componentName": "AntdInput",
+          "props": {
+            "value": {
+              "type": "JSExpression",
+              "value": "this.state.inputValue"
+            },
+            "onChange": {
+              "type": "JSExpression",
+              "value": "this.onChangeNew1"
+            }
+          },
+          "id": "32245644"
+        }
+      ]
+    },
+    {
+      "componentName": "AntdButton",
+      "props": {
+        "onClick": {
+          "type": "JSExpression",
+          "value": "this.onClickNew"
+        }
+      },
+      "children": [
+        {
+          "componentName": "Text",
+          "props": {
+            "text": "ADD"
+          },
+          "id": "26342656"
+        }
+      ],
+      "id": "22e23234"
+    }
+  ],
+  "dataSource": {
+    "list": []
+  },
+  "bridge": {
+    "imports": []
+  },
+  "inputs": [],
+  "outputs": []
+}

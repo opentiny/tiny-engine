@@ -2,28 +2,17 @@ import { defineConfig, loadEnv } from 'vite'
 
 import path from 'path'
 import vue from '@vitejs/plugin-vue'
-import monacoEditorPluginCjs from 'vite-plugin-monaco-editor'
+import monacoEditorPlugin from 'vite-plugin-monaco-editor'
 import vueJsx from '@vitejs/plugin-vue-jsx'
-import nodeGlobalsPolyfillPluginCjs from '@esbuild-plugins/node-globals-polyfill'
-import nodeModulesPolyfillPluginCjs from '@esbuild-plugins/node-modules-polyfill'
+import nodeGlobalsPolyfillPlugin from '@esbuild-plugins/node-globals-polyfill'
+import nodeModulesPolyfillPlugin from '@esbuild-plugins/node-modules-polyfill'
 import nodePolyfill from 'rollup-plugin-polyfill-node'
 import esbuildCopy from 'esbuild-plugin-copy'
-import lowcodeConfig from './config/lowcode.config.js'
+import lowcodeConfig from './config/lowcode.config'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
-import { importmapPlugin } from './scripts/externalDeps.js'
-import visualizerCjs from 'rollup-plugin-visualizer'
-import { fileURLToPath } from 'node:url'
-import generateComment from '@opentiny/vite-plugin-generate-comments'
+import { importmapPlugin } from './scripts/externalDeps'
+import visualizer from 'rollup-plugin-visualizer'
 import { getBaseUrlFromCli, copyBundleDeps, copyPreviewImportMap, copyLocalImportMap } from './scripts/localCdnFile'
-
-const monacoEditorPlugin = monacoEditorPluginCjs.default
-const nodeGlobalsPolyfillPlugin = nodeGlobalsPolyfillPluginCjs.default
-const nodeModulesPolyfillPlugin = nodeModulesPolyfillPluginCjs.default
-const visualizer = visualizerCjs.default
-
-const __filename = fileURLToPath(import.meta.url)
-
-const __dirname = path.dirname(__filename)
 
 const origin = 'http://localhost:9090/'
 
@@ -63,7 +52,6 @@ const config = {
     open: false
   },
   plugins: [
-    generateComment(),
     visualizer({
       filename: 'tmp/report.html',
       title: 'Bundle Analyzer'
@@ -143,7 +131,7 @@ const config = {
 
 const importMapVersions = {
   prettier: '2.7.1',
-  vue: '3.4.23',
+  vue: '3.4.21',
   tinyVue: '~3.14'
 }
 
@@ -179,6 +167,7 @@ const devAlias = {
   '@opentiny/tiny-engine-toolbar-logout': path.resolve(__dirname, '../toolbars/logout/index.js'),
   '@opentiny/tiny-engine-toolbar-media': path.resolve(__dirname, '../toolbars/media/index.js'),
   '@opentiny/tiny-engine-toolbar-preview': path.resolve(__dirname, '../toolbars/preview/index.js'),
+  '@opentiny/tiny-engine-toolbar-generate-react': path.resolve(__dirname, '../toolbars/generate-react/index.js'),
   '@opentiny/tiny-engine-toolbar-generate-vue': path.resolve(__dirname, '../toolbars/generate-vue/index.js'),
   '@opentiny/tiny-engine-toolbar-refresh': path.resolve(__dirname, '../toolbars/refresh/index.js'),
   '@opentiny/tiny-engine-toolbar-redoundo': path.resolve(__dirname, '../toolbars/redoundo/index.js'),
@@ -195,8 +184,7 @@ const devAlias = {
   '@opentiny/tiny-engine-utils': path.resolve(__dirname, '../utils/src/index.js'),
   '@opentiny/tiny-engine-webcomponent-core': path.resolve(__dirname, '../webcomponent/src/lib.js'),
   '@opentiny/tiny-engine-i18n-host': path.resolve(__dirname, '../i18n/src/lib.js'),
-  '@opentiny/tiny-engine-builtin-component': path.resolve(__dirname, '../builtinComponent/index.js'),
-  '@opentiny/tiny-engine-entry': path.resolve(__dirname, '../entry/index.js')
+  '@opentiny/tiny-engine-builtin-component': path.resolve(__dirname, '../builtinComponent/index.js')
 }
 
 const prodAlias = {
@@ -210,12 +198,8 @@ const commonAlias = {
   '@opentiny/tiny-engine-app-addons': path.resolve(__dirname, './config/addons.js')
 }
 
-export default defineConfig(({ command = 'serve', mode = 'serve' }) => {
-  const {
-    VITE_CDN_DOMAIN = 'https://npm.onmicrosoft.cn',
-    VITE_LOCAL_IMPORT_MAPS,
-    VITE_LOCAL_BUNDLE_DEPS
-  } = loadEnv(mode, process.cwd(), '')
+export default defineConfig(({ command, mode }) => {
+  const { VITE_CDN_DOMAIN, VITE_LOCAL_IMPORT_MAPS, VITE_LOCAL_BUNDLE_DEPS } = loadEnv(mode, process.cwd(), '')
   const isLocalImportMap = VITE_LOCAL_IMPORT_MAPS === 'true' // true公共依赖库使用本地打包文件，false公共依赖库使用公共CDN
   const isCopyBundleDeps = VITE_LOCAL_BUNDLE_DEPS === 'true' // true bundle里的cdn依赖处理成本地依赖， false 不处理
 

@@ -21,6 +21,7 @@ import Save from '@opentiny/tiny-engine-toolbar-save'
 import Clean from '@opentiny/tiny-engine-toolbar-clean'
 import Preview from '@opentiny/tiny-engine-toolbar-preview'
 import GenerateVue from '@opentiny/tiny-engine-toolbar-generate-vue'
+import GenerateReact from '@opentiny/tiny-engine-toolbar-generate-react'
 import Refresh from '@opentiny/tiny-engine-toolbar-refresh'
 import Collaboration from '@opentiny/tiny-engine-toolbar-collaboration'
 import Setting from '@opentiny/tiny-engine-toolbar-setting'
@@ -43,9 +44,13 @@ import Events from '@opentiny/tiny-engine-setting-events'
 import Styles from '@opentiny/tiny-engine-setting-styles'
 
 import '@opentiny/tiny-engine-theme'
+import globalConfig from './lowcode.config'
+
+const otherPlugins = globalConfig.dslMode === 'React' ? [] : [Datasource, I18n]
+const techStackToolbars = globalConfig.dslMode === 'React' ? [GenerateReact] : [GenerateVue]
 
 const addons = {
-  plugins: [Materials, Tree, Page, Block, Datasource, Bridge, I18n, Script, Data, Schema, Help, Robot],
+  plugins: [Materials, Tree, Page, Block, Bridge, Script, Data, ...otherPlugins, Schema, Help, Robot],
   toolbars: [
     Logo,
     Breadcrumb,
@@ -54,7 +59,7 @@ const addons = {
     Clean,
     Refresh,
     Save,
-    GenerateVue,
+    ...techStackToolbars,
     Preview,
     Redoundo,
     Fullscreen,

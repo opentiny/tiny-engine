@@ -30,6 +30,14 @@ const controller = {
           descendantBlacklist: '',
           ancestorWhitelist: ''
         }
+      },
+      AntdForm: {
+        nestingRule: {
+          childWhitelist: ['AntdFormItem'],
+          parentWhitelist: '',
+          descendantBlacklist: '',
+          ancestorWhitelist: ''
+        }
       }
     }
   },

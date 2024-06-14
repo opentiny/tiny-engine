@@ -301,6 +301,7 @@ export const removeNodeById = (id) => {
 }
 
 export const querySelectById = (id) => {
+  if (!id) return
   let selector = `[${NODE_UID}="${id}"]`
   const doc = canvasState.iframe.contentDocument
   let element = doc.querySelector(selector)
