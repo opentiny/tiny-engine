@@ -16,10 +16,6 @@ import useData from './useData'
 export { default as metaData } from '../meta'
 import example from './example'
 
-// 后续移入common包components
-import useNotify from './components/useNotify'
-import useModal from './components/useModal'
-
 export const getExample = example
 
 export {
@@ -38,7 +34,9 @@ export {
   useBreadcrumb,
   useProperty,
   useHelp,
+  useModal,
+  useNotify,
   useCustom
 } from '@opentiny/tiny-engine-entry'
 
-export { useNotify, useData, useMessage, useModal }
+export { useData, useMessage }
