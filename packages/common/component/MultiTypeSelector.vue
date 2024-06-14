@@ -43,7 +43,7 @@ export default {
   props: {
     meta: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     },
     label: {
       type: String,
