@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { useShareState, useStore } from '../src/useShareState'
+import { useState, useStore } from '../src/useState'
 
-describe.concurrent('useShareState', () => {
+describe.concurrent('useState', () => {
   it('use share state correctly', () => {
-    const [state, setState] = useShareState('state')
+    const [state, setState] = useState('state')
 
     setState('hello world')
 
@@ -30,22 +30,6 @@ describe.concurrent('useShareState', () => {
     patchStore({ hello: 'univese' })
 
     expect(store).toEqual({ hello: 'univese', foo: 'bar' })
-  })
-
-  it('transform object to array correctly', () => {
-    const { patchStore, toArrayOfObjects } = useStore('bar')
-
-    patchStore({
-      item1: { hello: 'world' },
-      item2: { foo: 'bar' }
-    })
-
-    const arr = toArrayOfObjects()
-
-    expect(arr).toEqual([
-      { id: 'item1', hello: 'world' },
-      { id: 'item2', foo: 'bar' }
-    ])
   })
 
   it('patch store and set state correctly', () => {
