@@ -10,7 +10,7 @@
               :render-panel="plugins.render"
               @click="toggleNav"
             ></design-plugins>
-            <design-canvas :canvas="registry.canvas"></design-canvas>
+            <component :is="registry.canvas.component"></component>
           </div>
         </div>
         <div class="tiny-engine-right-wrap">
@@ -42,7 +42,6 @@ import AppManage from '@opentiny/tiny-engine-plugin-page'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
 import DesignToolbars from './DesignToolbars.vue'
 import DesignPlugins from './DesignPlugins.vue'
-import DesignCanvas from './DesignCanvas.vue'
 import DesignSettings from './DesignSettings.vue'
 import blockPlugin from '@opentiny/tiny-engine-plugin-block'
 import materials from '@opentiny/tiny-engine-plugin-materials'
@@ -59,7 +58,6 @@ export default {
   components: {
     DesignToolbars,
     DesignPlugins,
-    DesignCanvas,
     DesignSettings,
     TinyConfigProvider
   },

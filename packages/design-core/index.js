@@ -31,7 +31,7 @@ export { default as Props } from '@opentiny/tiny-engine-setting-props'
 export { default as Events } from '@opentiny/tiny-engine-setting-events'
 export { default as Styles } from '@opentiny/tiny-engine-setting-styles'
 export { default as Layout } from '@opentiny/tiny-engine-layout'
-export { metaData as Canvas, CanvasContainer, CanvasBreadcrumb } from '@opentiny/tiny-engine-canvas'
+export { default as Canvas } from '@opentiny/tiny-engine-canvas'
 export { initPreview } from './src/preview/src/main'
 
 export { default as defaultRegistry } from './registry'

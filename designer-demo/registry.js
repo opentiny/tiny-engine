@@ -41,9 +41,7 @@ import {
   Events,
   Styles,
   Layout,
-  Canvas,
-  CanvasBreadcrumb,
-  CanvasContainer
+  Canvas
 } from '@opentiny/tiny-engine'
 
 export default {
@@ -79,27 +77,8 @@ export default {
     Setting,
     Lang
   ],
-  plugins: [
-    Materials,
-    Tree,
-    Page,
-    Block,
-    Datasource,
-    Bridge,
-    I18n,
-    Script,
-    Data,
-    Schema,
-    Help,
-    Robot
-  ],
+  plugins: [Materials, Tree, Page, Block, Datasource, Bridge, I18n, Script, Data, Schema, Help, Robot],
   dsls: [{ id: 'engine.dsls.dslvue' }],
   settings: [Props, Styles, Events],
-  canvas: {
-    ...Canvas,
-    component: {
-      CanvasContainer,
-      CanvasFooter
-    }
-  }
+  canvas: Canvas
 }

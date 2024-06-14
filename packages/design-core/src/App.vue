@@ -1,5 +1,5 @@
 <template>
-  <component :is="registry.layout.component" :registry="registry"></component>
+  <component :is="registry.layout.entry" :registry="registry"></component>
 </template>
 
 <script>
