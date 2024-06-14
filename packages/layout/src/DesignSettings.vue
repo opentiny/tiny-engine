@@ -13,23 +13,25 @@
 import { computed, ref } from 'vue'
 import { Tabs, TabItem } from '@opentiny/vue'
 import { useLayout } from '@opentiny/tiny-engine-controller'
-import { getMergeRegistry } from '@opentiny/tiny-engine-entry'
 
 export default {
   components: {
     TinyTabs: Tabs,
     TinyTabItem: TabItem
   },
-
+  props: {
+    settings: {
+      type: Array,
+      default: () => []
+    }
+  },
   setup() {
     const { layoutState } = useLayout()
-    const settings = getMergeRegistry('settings')
     const activating = computed(() => layoutState.settings.activating)
     const showMask = ref(true)
 
     return {
       showMask,
-      settings,
       activating,
       layoutState
     }

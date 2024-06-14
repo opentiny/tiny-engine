@@ -19,13 +19,18 @@
 import { reactive, nextTick } from 'vue'
 import { useLayout } from '@opentiny/tiny-engine-controller'
 import { ProgressBar } from '@opentiny/tiny-engine-common'
-import { getMergeRegistry } from '@opentiny/tiny-engine-entry'
 
 export default {
   components: {
     ProgressBar
   },
-  setup() {
+  props: {
+    toolbars: {
+      type: Array,
+      default: () => []
+    }
+  },
+  setup(props) {
     const leftBar = []
     const rightBar = []
     const centerBar = []
@@ -33,7 +38,7 @@ export default {
       showDeployBlock: false
     })
 
-    getMergeRegistry('toolbars').forEach((item) => {
+    props.toolbars.forEach((item) => {
       if (item.align === 'right') {
         rightBar.push(item)
       } else if (item.align === 'center') {

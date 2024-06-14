@@ -15,5 +15,9 @@ export { CanvasDragItem } from './drag-drop'
 // meta app
 import CanvasBreadcrumb from './breadcrumb'
 import CanvasContainer from './container'
+import DesignCanvas from './DesignCanvas'
 
-export { CanvasBreadcrumb, CanvasContainer }
+export default {
+  ...DesignCanvas,
+  metas: [CanvasContainer, CanvasBreadcrumb]
+}
