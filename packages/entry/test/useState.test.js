@@ -1,23 +1,35 @@
 import { describe, expect, it } from 'vitest'
 import { useState, useStore } from '../src/useState'
 
-describe.concurrent('useState', () => {
-  it('use share state correctly', () => {
-    const [state, setState] = useState('state')
+describe.concurrent('useState Key-based Access', () => {
+  it('accesses shared state using a key', () => {
+    const [state, setState] = useState('sharedKey')
+    expect(state.value).toBeUndefined() // Assuming no initial value set
 
-    setState('hello world')
+    setState('new value')
+    expect(state.value).toEqual('new value')
 
-    expect(state.value).toEqual('hello world')
-
-    setState({ hello: 'world' })
-
-    expect(state.value).toEqual({ hello: 'world' })
-
-    setState(['hello', 'world'])
-
-    expect(state.value).toEqual(['hello', 'world'])
+    // Simulate another component accessing the same key
+    const [state2] = useState('sharedKey')
+    expect(state2.value).toEqual('new value')
   })
 
+  it('handles non-existent keys gracefully', () => {
+    const [state] = useState('nonExistentKey')
+    expect(state.value).toBeUndefined()
+  })
+
+  it('ensures state consistency across components', () => {
+    const [, setState] = useState('consistentKey')
+    setState('consistent value')
+
+    // Simulate another component accessing the same key
+    const [state2] = useState('consistentKey')
+    expect(state2.value).toEqual('consistent value')
+  })
+})
+
+describe.concurrent('useStore', () => {
   it('patch store correctly', () => {
     const { store, patchStore } = useStore('foo')
 
