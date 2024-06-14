@@ -7,4 +7,4 @@ tmp
 temp
 mockServer
 packages/vue-generator/**/output/**
-packages/build/vite-plugin-generate-comments/src/test/code/**
+packages/build/vite-plugin-meta-comments/src/test/code/**

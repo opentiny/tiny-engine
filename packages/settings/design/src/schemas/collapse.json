@@ -32,7 +32,7 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "MetaInput",
+              "component": "InputConfigurator",
               "props": {}
             },
             "description": {

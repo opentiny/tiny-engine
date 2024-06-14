@@ -11,12 +11,12 @@
  */
 
 import { fetchDataSourceList, fetchDataSourceDetail } from './src/js/http'
-import component from './src/Main.vue'
+import entry from './src/Main.vue'
 import metaData from './meta.js'
 
 export default {
   ...metaData,
-  component
+  entry
 }
 
 export { fetchDataSourceList, fetchDataSourceDetail }

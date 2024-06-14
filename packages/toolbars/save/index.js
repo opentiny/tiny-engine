@@ -10,11 +10,11 @@
  *
  */
 
-import component, { api } from './src/Main.vue'
+import entry, { api } from './src/Main.vue'
 import metaData from './meta'
 
 export default {
   ...metaData,
-  component,
+  entry,
   api
 }

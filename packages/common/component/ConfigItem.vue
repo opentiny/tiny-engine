@@ -238,7 +238,7 @@ export default {
         return props.property.labelPosition
       }
 
-      if (props.property.widget?.component === 'MetaSwitch') {
+      if (['MetaSwitch', 'SwitchConfigurator'].includes(props.property.widget?.component)) {
         return 'left'
       }
 
@@ -274,7 +274,10 @@ export default {
           return
         }
 
-        if (property !== 'name' && props.property.widget.component === 'MetaSelectIcon') {
+        if (
+          property !== 'name' &&
+          ['SelectIconConfigurator', 'MetaSelectIcon'].includes(props.property.widget.component)
+        ) {
           // icon以组件形式传入，实现类似:icon="IconPlus"的图标配置（排除Icon组件本身）
           value = {
             componentName: 'Icon',
