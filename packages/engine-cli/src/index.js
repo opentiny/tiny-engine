@@ -9,12 +9,8 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-
-import { fileURLToPath } from 'node:url'
 import { Command } from 'commander'
 import create from './commands/create.js'
-
-const __filename = fileURLToPath(import.meta.url)
 
 const program = new Command()
 
