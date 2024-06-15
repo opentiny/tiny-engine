@@ -11,12 +11,11 @@
  */
 
 import { constants } from '@opentiny/tiny-engine-utils'
-import { isDevelopEnv } from './environments'
 import { useResource } from '@opentiny/tiny-engine-entry'
-// prefer old unicode hacks for backward compatibility
 
 const { COMPONENT_NAME } = constants
 
+// prefer old unicode hacks for backward compatibility
 export const utoa = (string) => btoa(unescape(encodeURIComponent(string)))
 
 export const atou = (base64) => decodeURIComponent(escape(atob(base64)))
@@ -36,9 +35,7 @@ const open = (params = {}) => {
   let openUrl = ''
   const hashString = utoa(JSON.stringify(params))
 
-  openUrl = isDevelopEnv
-    ? `./preview.html?tenant=${tenant}#${hashString}`
-    : `${href}/preview?tenant=${tenant}#${hashString}`
+  openUrl = `${href}/preview?tenant=${tenant}#${hashString}`
 
   const aTag = document.createElement('a')
   aTag.href = openUrl
