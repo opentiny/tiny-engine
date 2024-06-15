@@ -21,8 +21,6 @@ import { getCanvasStatus } from '../../js/canvas'
 import { ast2String, parseExpression } from '../../js/ast'
 import { getCssObjectFromStyleStr } from '../../js/css'
 import {
-  HOOK_NAME,
-  initHook,
   useCanvas,
   useTranslate,
   useEditorInfo,
@@ -768,48 +766,3 @@ export default function () {
     getDateFromNow
   }
 }
-
-initHook(HOOK_NAME.useBlock, {
-  NODE_TYPE_PAGE,
-  DEFAULT_GROUP_ID,
-  DEFAULT_GROUP_NAME,
-  selectedGroup,
-  selectedBlock,
-  selectedBlockArray,
-  isRefresh,
-  addBlock,
-  delBlock,
-  createBlock,
-  getBlockAssetsByVersion,
-  createEmptyBlock,
-  groupChange,
-  addDefaultGroup,
-  isDefaultGroupId,
-  isAllGroupId,
-  splitBackupGroups,
-  sort,
-  check,
-  cancelCheck,
-  getBlockList,
-  setBlockList,
-  getBlockI18n,
-  getGroupList,
-  setGroupList,
-  getCategoryList,
-  setCategoryList,
-  addBlockEvent,
-  getBlockEvents,
-  appendEventEmit,
-  getCurrentBlock,
-  initBlock,
-  setCurrentBlock,
-  removeEventLink,
-  getSelectedGroup,
-  setSelectedGroup,
-  addBlockProperty,
-  editBlockProperty,
-  removePropertyLink,
-  getBlockProperties,
-  getBlockPageSchema,
-  getDateFromNow
-})

@@ -17,7 +17,7 @@ import { isVsCodeEnv } from '../../js/environments'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { generateI18n } from '../../js/vscodeGenerateFile'
 import { PROP_DATA_TYPE } from '../../utils'
-import { HOOK_NAME, initHook, useResource, useCanvas } from '@opentiny/tiny-engine-entry'
+import { useResource, useCanvas } from '@opentiny/tiny-engine-entry'
 
 const { HOST_TYPE } = constants
 const state = reactive({
@@ -252,20 +252,3 @@ export default () => {
     initBlockLocalI18n
   }
 }
-
-initHook(HOOK_NAME.useTranslate, {
-  i18nResource,
-  currentLanguage,
-  getLangs,
-  setLangs,
-  getData,
-  translate,
-  removeI18n,
-  ensureI18n,
-  initI18n,
-  batchCreateI18n,
-  initAppI18n,
-  initBlockI18n,
-  getI18nData,
-  initBlockLocalI18n
-})

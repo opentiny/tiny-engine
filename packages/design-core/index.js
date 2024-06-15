@@ -37,3 +37,19 @@ export { initPreview } from './src/preview/src/main'
 export { default as defaultRegistry } from './registry'
 
 export * from '@opentiny/tiny-engine-entry'
+
+export {
+  EditorInfoService,
+  HelpService,
+  AppService,
+  BlockService,
+  DataSourceService,
+  PageService,
+  ResourceService,
+  PropertiesService,
+  PropertyService,
+  SaveLocalService,
+  TranslateService,
+  HistoryService,
+  BreadcrumbService,
+} from '@opentiny/tiny-engine-controller'
