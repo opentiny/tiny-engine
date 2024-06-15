@@ -22,6 +22,7 @@ import { defineEntry, mergeRegistry } from '@opentiny/tiny-engine-entry'
 import App from './App.vue'
 import defaultRegistry from '../registry.js'
 import { registerConfigurators } from './registerConfigurators'
+import { initPreview } from './preview/src/main.js'
 
 const defaultLifeCycles = {
   beforeAppCreate: ({ registry }) => {
@@ -57,7 +58,7 @@ const defaultLifeCycles = {
   }
 }
 
-export const init = ({ selector = '#app', registry = defaultRegistry, lifeCycles = {}, configurators = [] } = {}) => {
+const initMain = ({ selector = '#app', registry = defaultRegistry, lifeCycles = {}, configurators = [] } = {}) => {
   const { beforeAppCreate, appCreated, appMounted } = lifeCycles
 
   registerConfigurators(configurators)
@@ -70,4 +71,17 @@ export const init = ({ selector = '#app', registry = defaultRegistry, lifeCycles
 
   app.mount(selector)
   appMounted?.({ app })
+}
+
+// 如果后续预览和主设计器的初始化参数差异大，需要拆分配置
+export const init = (params) => {
+  const path = window.location.pathname
+
+  // 预览页面
+  if (path.endsWith('/preview')) {
+    initPreview(params)
+  } else {
+    // 主设计器
+    initMain(params)
+  }
 }

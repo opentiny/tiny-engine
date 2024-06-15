@@ -11,7 +11,7 @@
  */
 
 import { constants } from '@opentiny/tiny-engine-utils'
-import { isDevelopEnv } from './environments'
+// import { isDevelopEnv } from './environments'
 import { useResource } from '@opentiny/tiny-engine-entry'
 // prefer old unicode hacks for backward compatibility
 
@@ -36,9 +36,11 @@ const open = (params = {}) => {
   let openUrl = ''
   const hashString = utoa(JSON.stringify(params))
 
-  openUrl = isDevelopEnv
-    ? `./preview.html?tenant=${tenant}#${hashString}`
-    : `${href}/preview?tenant=${tenant}#${hashString}`
+  // openUrl = isDevelopEnv
+  //   ? `./preview.html?tenant=${tenant}#${hashString}`
+  //   : `${href}/preview?tenant=${tenant}#${hashString}`
+
+  openUrl = `${href}/preview?tenant=${tenant}#${hashString}`
 
   const aTag = document.createElement('a')
   aTag.href = openUrl

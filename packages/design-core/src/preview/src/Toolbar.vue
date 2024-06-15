@@ -39,11 +39,8 @@ export default {
   setup() {
     const debugSwitch = injectDebugSwitch()
     const _tools = ['breadcrumb', 'lang', 'media']
-    const [Breadcrumb, ChangeLang, ToolbarMedia] = [
-      BreadcrumbPlugin.component,
-      LangPlugin.component,
-      MediaPlugin.component
-    ]
+
+    const [Breadcrumb, ChangeLang, ToolbarMedia] = [BreadcrumbPlugin.entry, LangPlugin.entry, MediaPlugin.entry]
 
     const { setBreadcrumbPage } = useBreadcrumb()
     const { pageInfo } = getSearchParams()

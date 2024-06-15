@@ -108,8 +108,7 @@ const config = {
       plugins: [nodePolyfill({ include: null })], // 使用@rollup/plugin-inject的默认值{include: null}, 即在所有代码中生效
       input: {
         index: path.resolve(process.cwd(), './index.html'),
-        canvas: path.resolve(process.cwd(), './canvas.html'),
-        preview: path.resolve(process.cwd(), './preview.html')
+        canvas: path.resolve(process.cwd(), './canvas.html')
       },
       output: {
         manualChunks: (id) => {
@@ -150,7 +149,7 @@ export default defineConfig(({ command = 'serve', mode = 'serve' }, extOptions) 
   })
   const htmlPlugin = (mode) => {
     const upgradeHttpsMetaTags = []
-    const includeHtmls = ['index.html', 'preview.html', 'previewApp.html']
+    const includeHtmls = ['index.html']
 
     if (mode === 'alpha' || mode === 'prod') {
       upgradeHttpsMetaTags.push({
