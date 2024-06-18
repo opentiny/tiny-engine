@@ -15,7 +15,6 @@ import { utils } from '@opentiny/tiny-engine-utils'
 import { isEqual } from '@opentiny/vue-renderless/common/object'
 import { isEmptyObject } from '@opentiny/vue-renderless/common/type'
 import useModal from '../components/useModal'
-import { HOOK_NAME, initHook } from '@opentiny/tiny-engine-entry'
 
 const dataSourceState = reactive({
   dataSource: {},
@@ -119,5 +118,3 @@ const saveDataSource = (callback) => {
 export default () => {
   return { dataSourceState, compareData, saveDataSource }
 }
-
-initHook(HOOK_NAME.useDataSource, { dataSourceState, compareData, saveDataSource })

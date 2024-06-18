@@ -18,8 +18,6 @@ import { getMergeMeta } from '@opentiny/tiny-engine-entry'
 import { getCanvasStatus } from '../../js/canvas'
 import useNotify from '../components/useNotify'
 import {
-  HOOK_NAME,
-  initHook,
   useApp,
   useCanvas,
   useTranslate,
@@ -478,22 +476,3 @@ export default function () {
     updateCanvasDependencies
   }
 }
-
-initHook(HOOK_NAME.useResource, {
-  resState,
-  fetchResource,
-  fetchMaterial,
-  generateNode,
-  addMaterials,
-  clearMaterials,
-  clearBlockResources,
-  getMaterial,
-  setMaterial,
-  getConfigureMap,
-  registerComponent,
-  registerBlock,
-  getSnippetRelationship,
-  initPageOrBlock,
-  handlePopStateEvent,
-  updateCanvasDependencies
-})

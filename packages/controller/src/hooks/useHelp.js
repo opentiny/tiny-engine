@@ -10,8 +10,6 @@
  *
  */
 
-import { HOOK_NAME, initHook } from '@opentiny/tiny-engine-entry'
-
 const getBaseUrl = () => 'https://opentiny.design/tiny-engine#/help-center/course/engine/'
 
 const helpState = {
@@ -32,11 +30,6 @@ const getDocsUrl = (plugin) => {
 }
 
 export default () => ({
-  getBaseUrl,
-  getDocsUrl
-})
-
-initHook(HOOK_NAME.useHelp, {
   getBaseUrl,
   getDocsUrl
 })

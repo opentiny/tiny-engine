@@ -12,7 +12,6 @@
 
 import { reactive, nextTick } from 'vue'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { HOOK_NAME, initHook } from '@opentiny/tiny-engine-entry'
 
 const { PAGE_STATUS } = constants
 
@@ -141,19 +140,3 @@ export default () => {
     isEmptyPage
   }
 }
-
-initHook(HOOK_NAME.useLayout, {
-  PLUGIN_NAME,
-  activeSetting,
-  activePlugin,
-  closePlugin,
-  layoutState,
-  getScale,
-  setDimension,
-  getDimension,
-  registerPluginApi,
-  getPluginApi,
-  getPluginState,
-  pluginState,
-  isEmptyPage
-})

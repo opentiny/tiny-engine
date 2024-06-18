@@ -11,7 +11,7 @@
  */
 
 import { Modal } from '@opentiny/vue'
-import { HOOK_NAME, initHook, useCanvas, getMergeMeta } from '@opentiny/tiny-engine-entry'
+import { useCanvas, getMergeMeta } from '@opentiny/tiny-engine-entry'
 import { VITE_ORIGIN } from '../../js/environments'
 
 // 获取当前页面的全量信息
@@ -82,8 +82,3 @@ export default () => {
     savePageLocal
   }
 }
-
-initHook(HOOK_NAME.useSaveLocal, {
-  confirmSaveLocal,
-  savePageLocal
-})
