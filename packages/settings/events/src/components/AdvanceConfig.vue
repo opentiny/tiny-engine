@@ -8,24 +8,32 @@
         <div v-else class="binding-state text-ellipsis-multiple" :title="condition.value">
           已绑定：{{ condition.value }}
         </div>
-        <meta-bind-variable v-model="condition" name="advance" @update:modelValue="setConfig"></meta-bind-variable>
+        <variable-configurator
+          v-model="condition"
+          name="advance"
+          @update:modelValue="setConfig"
+        ></variable-configurator>
       </div>
     </div>
 
     <div class="advnce-config">
       <label class="text-ellipsis-multiple">循环数据</label>
       <div class="advanced-config-form-item">
-        <meta-code-editor
+        <code-configurator
           v-if="!state.isLoop"
           v-model="state.loopData"
           data-type="JSExpression"
           @update:modelValue="setLoop"
           @open="openEditor"
-        ></meta-code-editor>
+        ></code-configurator>
         <div v-else class="binding-state text-ellipsis-multiple" :title="state.loopData?.value">
           已绑定：{{ state.loopData?.value }}
         </div>
-        <meta-bind-variable v-model="state.loopData" name="advance" @update:modelValue="setLoop"></meta-bind-variable>
+        <variable-configurator
+          v-model="state.loopData"
+          name="advance"
+          @update:modelValue="setLoop"
+        ></variable-configurator>
       </div>
     </div>
     <div class="advnce-config">
@@ -65,8 +73,8 @@
 
 <script>
 import { ref, computed, reactive, watch } from 'vue'
-import { MetaBindVariable, MetaInput, MetaCodeEditor } from '@opentiny/tiny-engine-common'
-import { SwitchConfigurator } from '@opentiny/tiny-engine-configurator'
+import { MetaInput } from '@opentiny/tiny-engine-common'
+import { CodeConfigurator, SwitchConfigurator, VariableConfigurator } from '@opentiny/tiny-engine-configurator'
 import { useProperties, useCanvas } from '@opentiny/tiny-engine-controller'
 import { PROP_DATA_TYPE } from '@opentiny/tiny-engine-controller/utils'
 import { string2Obj } from '@opentiny/tiny-engine-controller/adapter'
@@ -79,9 +87,9 @@ export default {
   components: {
     SwitchConfigurator,
     TinyTooltip: Tooltip,
-    MetaBindVariable,
+    VariableConfigurator,
     MetaInput,
-    MetaCodeEditor
+    CodeConfigurator
   },
   inheritAttrs: false,
   setup() {

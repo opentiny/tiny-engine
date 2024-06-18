@@ -15,10 +15,15 @@ import {
   CascaderConfigurator,
   CheckBoxConfigurator,
   CheckboxGroupConfigurator,
+  CodeConfigurator,
+  CodeListConfigurator,
+  CollectionConfigurator,
+  ColorConfigurator,
   DatePickerConfigurator,
   FormConfigurator,
   HtmlAttributesConfigurator,
   HtmlTextConfigurator,
+  I18nConfigurator,
   InputConfigurator,
   IpSectionConfigurator,
   JsSlotConfigurator,
@@ -29,7 +34,8 @@ import {
   SelectIconConfigurator,
   SliderConfigurator,
   SlotConfigurator,
-  SwitchConfigurator
+  SwitchConfigurator,
+  VariableConfigurator
 } from '@opentiny/tiny-engine-configurator'
 
 import PluginSetting from './component/PluginSetting.vue'
@@ -43,13 +49,7 @@ import ConfigItem from './component/ConfigItem.vue'
 import ConfigRender from './component/ConfigRender.vue'
 
 import MetaArrayItem from './component/MetaArrayItem.vue'
-import MetaBindI18n from './component/MetaBindI18n.vue'
-import MetaBindVariable from './component/MetaBindVariable.vue'
 import MetaListActions from './component/MetaListActions.vue'
-import MetaCodeEditor from './component/MetaCodeEditor.vue'
-import MetaCodeEditorList from './component/MetaCodeEditorList.vue'
-import MetaCollection from './component/MetaCollection.vue'
-import MetaColor from './component/MetaColor.vue'
 import MetaGroupItem from './component/MetaGroupItem.vue'
 import MetaLayoutGrid from './component/MetaLayoutGrid.vue'
 import MetaListTitle from './component/MetaListTitle.vue'
@@ -57,8 +57,8 @@ import MetaListItems from './component/MetaListItems.vue'
 import MetaListItem from './component/MetaListItem.vue'
 import MetaModal, { useModal } from './component/MetaModal.vue'
 import MetaPopover from './component/MetaPopover.vue'
-import MetaContainer from './component/MetaContainer.vue'
 import VideoGuide from './component/VideoGuide.vue'
+import MetaContainer from './component/MetaContainer.vue'
 import MonacoEditor from './component/MonacoEditor.vue'
 import BlockHistoryList from './component/BlockHistoryList.vue'
 import BlockHistoryTemplate from './component/BlockHistoryTemplate.vue'
@@ -111,14 +111,14 @@ export const injectGlobalComponents = {
 // TODO: 后面由各自所需代码各自引入，然后删除
 export const MetaComponents = {
   MetaArrayItem,
-  MetaBindI18n,
-  MetaBindVariable,
+  MetaBindI18n: I18nConfigurator,
+  MetaBindVariable: VariableConfigurator,
   MetaButtonGroup: ButtonGroupConfigurator,
   MetaCheckBox: CheckBoxConfigurator,
   MetaCascader: CascaderConfigurator,
-  MetaCodeEditor,
-  MetaCodeEditorList,
-  MetaColor,
+  MetaCodeEditor: CodeConfigurator,
+  MetaCodeEditorList: CodeListConfigurator,
+  MetaColor: ColorConfigurator,
   MetaDatePicker: DatePickerConfigurator,
   MetaGroupItem,
   MetaInput: InputConfigurator,
@@ -138,7 +138,7 @@ export const MetaComponents = {
   MetaListItems,
   MetaListItem,
   MetaForm: FormConfigurator,
-  MetaCollection,
+  MetaCollection: CollectionConfigurator,
   MetaContainer,
   MetaJsSlot: JsSlotConfigurator,
   MetaSlot: SlotConfigurator,
@@ -153,12 +153,12 @@ export const MetaComponents = {
 }
 
 export {
-  MetaBindI18n,
-  MetaBindVariable,
+  I18nConfigurator as MetaBindI18n,
+  VariableConfigurator as MetaBindVariable,
   CheckBoxConfigurator as MetaCheckBox,
-  MetaCodeEditor,
-  MetaCodeEditorList,
-  MetaColor,
+  CodeConfigurator as MetaCodeEditor,
+  CodeListConfigurator as MetaCodeEditorList,
+  ColorConfigurator as MetaColor,
   DatePickerConfigurator as MetaDatePicker,
   MetaDescription,
   InputConfigurator as MetaInput,
@@ -195,7 +195,7 @@ export {
   BlockLinkEvent,
   BlockDescription,
   PluginBlockList,
-  MetaCollection,
+  CollectionConfigurator as MetaCollection,
   ButtonGroup,
   CloseIcon,
   LifeCycles,

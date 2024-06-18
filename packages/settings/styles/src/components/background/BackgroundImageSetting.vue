@@ -38,7 +38,7 @@
 <script>
 import { reactive, onMounted } from 'vue'
 import { Tooltip, Checkbox } from '@opentiny/vue'
-import { MetaColor } from '@opentiny/tiny-engine-common'
+import { ColorConfigurator } from '@opentiny/tiny-engine-configurator'
 import InputSelect from '../inputs/InputSelect.vue'
 import PositionOrigin from './PositionOrigin.vue'
 import ImageSetting from './ImageSetting.vue'
@@ -53,7 +53,7 @@ export default {
     TinyTooltip: Tooltip,
     TinyCheckbox: Checkbox,
     InputSelect,
-    MetaColor,
+    ColorConfigurator,
     PositionOrigin,
     ImageSetting,
     LinearGradient,

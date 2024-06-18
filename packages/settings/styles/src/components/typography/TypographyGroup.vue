@@ -22,14 +22,14 @@
           字体
         </div>
         <div class="typography-select">
-          <meta-select
+          <select-configurator
             v-model="state.fontFamilyValue"
             :options="fontFamilyOptions"
             @update:modelValue="selectFontFamily"
             allow-create
             filterable
             default-first-option
-          ></meta-select>
+          ></select-configurator>
         </div>
       </div>
     </div>
@@ -56,14 +56,14 @@
           字重
         </div>
         <div class="typography-select">
-          <meta-select
+          <select-configurator
             v-model="state.value"
             :options="selectOptions"
             @update:modelValue="selectFontWeight"
             allow-create
             filterable
             default-first-option
-          ></meta-select>
+          ></select-configurator>
         </div>
       </div>
     </div>
@@ -74,7 +74,7 @@
         @click="openSetting(TYPO_PROPERTY.Color, $event)"
         >颜色</label
       >
-      <color-select :modelValue="getProperty(TYPO_PROPERTY.Color).value" @change="changeColor" />
+      <color-configurator :modelValue="getProperty(TYPO_PROPERTY.Color).value" @change="changeColor" />
     </div>
     <div class="typography-row">
       <label
@@ -202,8 +202,7 @@
 import { ref, reactive } from 'vue'
 import { Tooltip } from '@opentiny/vue'
 import NumericSelect from '../inputs/NumericSelect.vue'
-import { MetaColor, MetaSelect } from '@opentiny/tiny-engine-common'
-// import TypographyMore from './TypographyMore.vue'
+import { ColorConfigurator, SelectConfigurator } from '@opentiny/tiny-engine-configurator'
 import { TYPO_PROPERTY } from '../../js/styleProperty'
 import useEvent from '../../js/useEvent'
 import { useProperties } from '../../js/useStyle'
@@ -215,10 +214,9 @@ export default {
     NumericSelect,
     ModalMask,
     ResetButton,
-    // TypographyMore,
-    ColorSelect: MetaColor,
+    ColorConfigurator,
     TinyTooltip: Tooltip,
-    MetaSelect
+    SelectConfigurator
   },
   props: {
     style: {
