@@ -67,7 +67,7 @@
 import { ref, computed, reactive, watch } from 'vue'
 import { MetaBindVariable, MetaInput, MetaCodeEditor } from '@opentiny/tiny-engine-common'
 import { SwitchConfigurator } from '@opentiny/tiny-engine-configurator'
-import { useProperties, useCanvas } from '@opentiny/tiny-engine-controller'
+import { useProperties, useCanvas } from '@opentiny/tiny-engine-entry'
 import { PROP_DATA_TYPE } from '@opentiny/tiny-engine-controller/utils'
 import { string2Obj } from '@opentiny/tiny-engine-controller/adapter'
 import { constants } from '@opentiny/tiny-engine-utils'
