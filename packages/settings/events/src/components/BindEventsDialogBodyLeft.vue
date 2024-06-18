@@ -1,14 +1,19 @@
 <template>
-  <div class="left-action-list">
-    <tiny-search v-model="searchValue" placeholder="搜索"></tiny-search>
-    <ul class="action-list-wrap">
-      <li v-for="item in filteredMethodList" :key="item.name" @click="selectMethod(item)">
-        <div :class="['action-name', { active: item.name === bindMethodInfo.name }]">
-          {{ item.title || item.name }}
-          <icon-yes v-if="item.name === bindMethodInfo.name" class="action-selected-icon"></icon-yes>
-        </div>
-      </li>
-    </ul>
+  <div class="dialog-content-left">
+    <div class="left-title">响应方法</div>
+    <div class="left-list-wrap">
+      <div class="left-action-list">
+        <tiny-search v-model="searchValue" placeholder="搜索"></tiny-search>
+        <ul class="action-list-wrap">
+          <li v-for="item in filteredMethodList" :key="item.name" @click="selectMethod(item)">
+            <div :class="['action-name', { active: item.name === context.bindMethodInfo.name }]">
+              {{ item.title || item.name }}
+              <icon-yes v-if="item.name === context.bindMethodInfo.name" class="action-selected-icon"></icon-yes>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -16,7 +21,7 @@
 import { useLayout } from '@opentiny/tiny-engine-entry'
 import { Search } from '@opentiny/vue'
 import { iconYes } from '@opentiny/vue-icon'
-import { ref, watchEffect } from 'vue'
+import { inject, ref, watchEffect } from 'vue'
 import { INVALID_VARNAME_CHAR_RE, NEW_METHOD_TYPE } from './constants'
 
 export default {
@@ -24,24 +29,19 @@ export default {
     TinySearch: Search,
     IconYes: iconYes()
   },
-  inheritAttrs: false,
   props: {
     eventBinding: {
       type: Object,
-      default: () => {}
-    },
-    bindMethodInfo: {
-      type: Object,
-      default: () => {}
+      default: () => ({})
     }
   },
-  emits: ['selectMethod'],
-  setup(props, { emit }) {
+  setup(props) {
     const { PLUGIN_NAME, getPluginApi } = useLayout()
     const { getMethodNameList } = getPluginApi(PLUGIN_NAME.PageController)
 
     const searchValue = ref('')
     const filteredMethodList = ref([])
+    const context = inject('context')
 
     const generateMethodName = (nameList, eventName) => {
       const max = nameList
@@ -60,7 +60,7 @@ export default {
     }
 
     const selectMethod = (data) => {
-      emit('selectMethod', data)
+      context.bindMethodInfo = data
     }
 
     watchEffect(() => {})
@@ -92,6 +92,7 @@ export default {
     })
 
     return {
+      context,
       searchValue,
       filteredMethodList,
       selectMethod
@@ -101,28 +102,48 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.left-action-list {
-  flex: 1;
-  padding: 12px;
-  .action-list-wrap {
-    height: 250px;
-    margin-top: 8px;
-    overflow: auto;
+.dialog-content-left {
+  margin-right: 30px;
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+
+  .left-title {
+    font-weight: 600;
   }
 
-  .action-name {
+  .left-list-wrap {
+    border: 1px solid var(--ti-lowcode-bind-event-dialog-content-left-border-color);
+    border-radius: 4px;
+    height: 300px;
+    margin-top: 12px;
     display: flex;
-    justify-content: space-between;
-    padding: 8px 12px;
-    cursor: pointer;
+    flex: 1;
 
-    &.active {
-      background: var(--ti-lowcode-bind-event-dialog-content-left-list-item-active-bg-color);
-    }
+    .left-action-list {
+      flex: 1;
+      padding: 12px;
+      .action-list-wrap {
+        height: 250px;
+        margin-top: 8px;
+        overflow: auto;
+      }
 
-    .action-selected-icon {
-      font-size: 14px;
-      color: var(--ti-lowcode-bind-event-dialog-action-selected-icon-color);
+      .action-name {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 12px;
+        cursor: pointer;
+
+        &.active {
+          background: var(--ti-lowcode-bind-event-dialog-content-left-list-item-active-bg-color);
+        }
+
+        .action-selected-icon {
+          font-size: 14px;
+          color: var(--ti-lowcode-bind-event-dialog-action-selected-icon-color);
+        }
+      }
     }
   }
 }
