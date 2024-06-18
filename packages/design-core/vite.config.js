@@ -131,7 +131,7 @@ const config = {
 
 const importMapVersions = {
   prettier: '2.7.1',
-  vue: '3.4.23',
+  vue: '3.4.21',
   tinyVue: '~3.14'
 }
 
@@ -167,6 +167,7 @@ const devAlias = {
   '@opentiny/tiny-engine-toolbar-logout': path.resolve(__dirname, '../toolbars/logout/index.js'),
   '@opentiny/tiny-engine-toolbar-media': path.resolve(__dirname, '../toolbars/media/index.js'),
   '@opentiny/tiny-engine-toolbar-preview': path.resolve(__dirname, '../toolbars/preview/index.js'),
+  '@opentiny/tiny-engine-toolbar-generate-react': path.resolve(__dirname, '../toolbars/generate-react/index.js'),
   '@opentiny/tiny-engine-toolbar-generate-vue': path.resolve(__dirname, '../toolbars/generate-vue/index.js'),
   '@opentiny/tiny-engine-toolbar-refresh': path.resolve(__dirname, '../toolbars/refresh/index.js'),
   '@opentiny/tiny-engine-toolbar-redoundo': path.resolve(__dirname, '../toolbars/redoundo/index.js'),
