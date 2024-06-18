@@ -120,18 +120,16 @@
 </template>
 
 <script>
-import { reactive, ref, computed, nextTick, watch } from 'vue'
-import { camelize, capitalize } from '@vue/shared'
-import { Button, DialogBox, Search, Switch, Input, Tooltip, Alert } from '@opentiny/vue'
-import { useHttp } from '@opentiny/tiny-engine-http'
-import { useCanvas, useResource, useLayout, useApp, useProperties, useData } from '@opentiny/tiny-engine-controller'
+import { VueMonaco as MonacoEditor, SvgButton } from '../components' // TODO 等 common 包移除了 configurator 依赖后再更换成 @opentiny/tiny-engine-common
+import { useApp, useCanvas, useData, useLayout, useProperties, useResource } from '@opentiny/tiny-engine-controller'
 import { theme } from '@opentiny/tiny-engine-controller/adapter'
-import { constants } from '@opentiny/tiny-engine-utils'
-import SvgButton from './SvgButton.vue'
-import { parse, traverse, generate } from '@opentiny/tiny-engine-controller/js/ast'
+import { formatString, generate, parse, traverse } from '@opentiny/tiny-engine-controller/js/ast'
 import { DEFAULT_LOOP_NAME } from '@opentiny/tiny-engine-controller/js/constants'
-import MonacoEditor from './VueMonaco.vue'
-import { formatString } from '@opentiny/tiny-engine-controller/js/ast'
+import { useHttp } from '@opentiny/tiny-engine-http'
+import { constants } from '@opentiny/tiny-engine-utils'
+import { Alert, Button, DialogBox, Input, Search, Switch, Tooltip } from '@opentiny/vue'
+import { camelize, capitalize } from '@vue/shared'
+import { computed, nextTick, reactive, ref, watch } from 'vue'
 
 const { EXPRESSION_TYPE } = constants
 
@@ -166,7 +164,7 @@ const getJsSlotParams = () => {
 }
 
 export default {
-  name: 'MetaBindVariable',
+  name: 'VariableConfigurator',
   components: {
     MonacoEditor,
     TinyDialogBox: DialogBox,

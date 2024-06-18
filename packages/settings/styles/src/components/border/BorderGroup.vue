@@ -26,14 +26,14 @@
       </tiny-tooltip>
 
       <div v-show="isRaduisSelected(RADIUS_SETTING.Single)" class="radius-content-input">
-        <meta-slider
+        <slider-configurator
           :modelValue="borderRadius.BorderRadius"
           class="adjust-vertical"
           :controls="false"
           :showUnit="true"
           :selectedUnit="'px'"
           @update:modelValue="updateRadiusSingle"
-        ></meta-slider>
+        ></slider-configurator>
       </div>
 
       <div v-show="isRaduisSelected(RADIUS_SETTING.Multiple)" class="radius-multiple">
@@ -154,7 +154,7 @@
           >
         </div>
         <div class="border-content">
-          <color-select :modelValue="borderColorValue" @change="changeBorderColor"></color-select>
+          <color-configurator :modelValue="borderColorValue" @change="changeBorderColor"></color-configurator>
         </div>
       </div>
       <div class="border-row">
@@ -230,7 +230,7 @@ import { Tooltip } from '@opentiny/vue'
 import ModalMask, { useModal } from '../inputs/ModalMask.vue'
 import NumericSelect from '../inputs/NumericSelect.vue'
 import ResetButton from '../inputs/ResetButton.vue'
-import { MetaColor, MetaSlider } from '@opentiny/tiny-engine-common'
+import { ColorConfigurator, SliderConfigurator } from '@opentiny/tiny-engine-configurator'
 import useEvent from '../../js/useEvent'
 import { useProperties } from '../../js/useStyle'
 import { RADIUS_SETTING, BORDER_SETTING, BORDER_STYLE_TYPE } from '../../js/cssType'
@@ -262,10 +262,10 @@ const BORDER_COLOR = {
 
 export default {
   components: {
-    MetaSlider,
+    SliderConfigurator,
     ModalMask,
     ResetButton,
-    ColorSelect: MetaColor,
+    ColorConfigurator,
     NumericSelect,
     TinyTooltip: Tooltip
   },

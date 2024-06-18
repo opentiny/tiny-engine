@@ -66,12 +66,12 @@
 </template>
 
 <script>
-import { reactive, ref, computed, watchEffect, nextTick } from 'vue'
+import { VueMonaco } from '../components' // TODO 等 common 包移除了 configurator 依赖后再更换成 @opentiny/tiny-engine-common
+import { formatString } from '@opentiny/tiny-engine-controller/js/ast'
+import i18n from '@opentiny/tiny-engine-controller/js/i18n'
 import { Button, DialogBox } from '@opentiny/vue'
 import { iconChevronDown, iconChevronUp } from '@opentiny/vue-icon'
-import VueMonaco from './VueMonaco.vue'
-import i18n from '@opentiny/tiny-engine-controller/js/i18n'
-import { formatString } from '@opentiny/tiny-engine-controller/js/ast'
+import { computed, nextTick, reactive, ref, watchEffect } from 'vue'
 
 export default {
   components: {

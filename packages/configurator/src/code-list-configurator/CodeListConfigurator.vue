@@ -44,7 +44,7 @@ import { getCurrentInstance, reactive, ref, watchEffect } from 'vue'
 import { Button, Tabs, TabItem, Input, ButtonGroup, Switch, Select } from '@opentiny/vue'
 import { IconClose } from '@opentiny/vue-icon'
 import { theme } from '@opentiny/tiny-engine-controller/adapter'
-import VueMonaco from './VueMonaco.vue'
+import { VueMonaco } from '../components'
 
 export default {
   components: {
@@ -76,7 +76,7 @@ export default {
     }
   },
   emits: ['save'],
-  setup(props, { emit, attrs: { meta } }) {
+  setup(props, { emit }) {
     const editorState = reactive({
       show: false,
       created: false,

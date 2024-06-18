@@ -325,3 +325,23 @@ function _deepClone(target, map) {
 export function deepClone(target) {
   return _deepClone(target, new WeakMap())
 }
+
+/**
+ * 嵌套对象转换成对象数组，最外层对象的key默认转换成'id'，对象数组默认使用最外层对象的value中的'_order'字段升序排序
+ * @param {Record<string, Record<string, any>>} obj
+ * @returns
+ */
+export const objectToArray = (obj, { keyTo = 'id', orderKey = '_order' }) => {
+  if (typeof obj !== 'object' || obj === null) {
+    return []
+  }
+
+  const arr = Object.entries(obj)
+    // 过滤掉非对象的值，防止后面展开对象失败
+    .filter(([, value]) => typeof value === 'object' && obj !== null)
+    .map(([key, value]) => ({ ...value, [keyTo]: key }))
+    .map(({ [orderKey]: order, ...rest }) => ({ ...rest, [orderKey]: order ?? Number.MAX_SAFE_INTEGER }))
+    .sort((a, b) => a[orderKey] - b[orderKey])
+
+  return arr
+}
