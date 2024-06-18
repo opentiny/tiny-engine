@@ -41,10 +41,41 @@ import {
   Events,
   Styles,
   Layout,
-  Canvas
+  Canvas,
+  EditorInfoService,
+  HelpService,
+  AppService,
+  BlockService,
+  BreadcrumbService,
+  DataSourceService,
+  PageService,
+  ResourceService,
+  PropertiesService,
+  PropertyService,
+  SaveLocalService,
+  TranslateService,
+  HistoryService,
 } from '@opentiny/tiny-engine'
 
 export default {
+  root: {
+    id: 'engine.root',
+    metas: [
+      EditorInfoService,
+      HelpService,
+      AppService,
+      BreadcrumbService,
+      BlockService,
+      DataSourceService,
+      PageService,
+      ResourceService,
+      PropertiesService,
+      PropertyService,
+      SaveLocalService,
+      TranslateService,
+      HistoryService,
+    ]
+  },
   config: {
     id: 'engine.config',
     theme: import.meta.env.VITE_THEME || 'light',

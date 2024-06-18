@@ -13,7 +13,7 @@
 import { computed } from 'vue'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { HOOK_NAME, initHook, useBlock } from '@opentiny/tiny-engine-entry'
+import { useBlock } from '@opentiny/tiny-engine-entry'
 
 const { SCHEMA_DATA_TYPE } = constants
 
@@ -95,7 +95,3 @@ const getProperty = ({ pageState }) => {
 }
 
 export default () => ({ getProperty })
-
-initHook(HOOK_NAME.useProperty, {
-  getProperty
-})
