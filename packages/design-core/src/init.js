@@ -57,7 +57,7 @@ const defaultLifeCycles = {
   }
 }
 
-export const init = ({ selector = '#app', registry = defaultRegistry, lifeCycles = {}, configurators = [] } = {}) => {
+export const init = ({ selector = '#app', registry = defaultRegistry, lifeCycles = {}, configurators = {} } = {}) => {
   const { beforeAppCreate, appCreated, appMounted } = lifeCycles
 
   registerConfigurators(configurators)

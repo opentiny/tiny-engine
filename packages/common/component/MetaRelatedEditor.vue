@@ -3,7 +3,7 @@
     <div v-if="isBindingState" class="meta-binding-state">
       {{ `已绑定：${modelValue?.value}` }}
     </div>
-    <meta-code-editor
+    <code-configurator
       v-else
       :modelValue="modelValue"
       :language="language"
@@ -14,21 +14,20 @@
       :showFormatBtn="showFormatBtn"
       :showErrorMsg="showErrorMsg"
       @update:modelValue="saveValue"
-    ></meta-code-editor>
-    <meta-bind-variable :modelValue="bindValue" :name="name" @update:modelValue="saveValue"></meta-bind-variable>
+    ></code-configurator>
+    <variable-configurator :modelValue="bindValue" :name="name" @update:modelValue="saveValue"></variable-configurator>
   </div>
 </template>
 
 <script>
 import { onMounted, ref, watchEffect } from 'vue'
 import { useMessage, useCanvas } from '@opentiny/tiny-engine-controller'
-import MetaCodeEditor from './MetaCodeEditor.vue'
-import MetaBindVariable from './MetaBindVariable.vue'
+import { CodeConfigurator, VariableConfigurator } from '@opentiny/tiny-engine-configurator'
 
 export default {
   components: {
-    MetaCodeEditor,
-    MetaBindVariable
+    CodeConfigurator,
+    VariableConfigurator
   },
   props: {
     buttonText: {

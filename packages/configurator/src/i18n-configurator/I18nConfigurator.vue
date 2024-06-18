@@ -34,11 +34,11 @@
 </template>
 
 <script>
-import { ref, watchEffect, computed } from 'vue'
-import { Input, Popover } from '@opentiny/vue'
-import { IconLanguage, IconClose } from '@opentiny/vue-icon'
-import BindI18n from './BindI18n.vue'
+import { BindI18n } from '../components' // TODO 等 common 包移除了 configurator 依赖后再更换成 @opentiny/tiny-engine-common
 import { useTranslate } from '@opentiny/tiny-engine-controller'
+import { Input, Popover } from '@opentiny/vue'
+import { IconClose, IconLanguage } from '@opentiny/vue-icon'
+import { computed, ref, watchEffect } from 'vue'
 
 export default {
   components: {

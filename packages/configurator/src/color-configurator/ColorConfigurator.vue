@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import { ref, watchEffect } from 'vue'
 import { Input } from '@opentiny/vue'
+import { ref, watchEffect } from 'vue'
 
 export default {
   components: {
@@ -30,10 +30,6 @@ export default {
   setup(props, { emit }) {
     const color = ref(props.modelValue)
 
-    const changeColor = (event) => {
-      change(event.target.value)
-    }
-
     const change = (value) => {
       emit('update:modelValue', value)
       emit('change', value)
@@ -42,6 +38,10 @@ export default {
     watchEffect(() => {
       color.value = props.modelValue
     })
+
+    const changeColor = (event) => {
+      change(event.target.value)
+    }
 
     return {
       color,
