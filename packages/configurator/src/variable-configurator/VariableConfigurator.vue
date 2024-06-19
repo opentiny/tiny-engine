@@ -121,7 +121,8 @@
 
 <script>
 import { VueMonaco as MonacoEditor, SvgButton } from '../components' // TODO 等 common 包移除了 configurator 依赖后再更换成 @opentiny/tiny-engine-common
-import { useApp, useCanvas, useData, useLayout, useProperties, useResource } from '@opentiny/tiny-engine-controller'
+import { useApp, useCanvas, useLayout, useProperties, useResource } from '@opentiny/tiny-engine-controller'
+import { getCommentByKey } from '@opentiny/tiny-engine-controller/js/comment'
 import { theme } from '@opentiny/tiny-engine-controller/adapter'
 import { formatString, generate, parse, traverse } from '@opentiny/tiny-engine-controller/js/ast'
 import { DEFAULT_LOOP_NAME } from '@opentiny/tiny-engine-controller/js/constants'
@@ -318,7 +319,6 @@ export default {
     const genRemoteMethodToLifeSetup = (variableName, sourceRef, pageSchema) => {
       if (sourceRef?.data?.data) {
         const setupFn = pageSchema.lifeCycles?.setup?.value
-        const { getCommentByKey } = useData()
         const { start, end } = getCommentByKey(variableName)
         const intervalId = `${CONSTANTS.INTERVALID}${capitalize(camelize(sourceRef.name))}`
         const isPoll = state.isPoll && state.pollInterval !== undefined

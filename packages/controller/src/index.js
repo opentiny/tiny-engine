@@ -10,13 +10,7 @@
  *
  */
 
-export * from './hooks/'
-import useMessage from './useMessage'
-import useData from './useData'
-export { default as metaData } from '../meta'
-import example from './example'
-
-export const getExample = example
+export * from './composable/'
 
 export {
   useLayout,
@@ -36,7 +30,6 @@ export {
   useHelp,
   useModal,
   useNotify,
-  useCustom
+  useCustom,
+  useMessage
 } from '@opentiny/tiny-engine-entry'
-
-export { useData, useMessage }

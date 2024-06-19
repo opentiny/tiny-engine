@@ -48,7 +48,7 @@ import DataSrouceRemoteDataResult, { getResponseData } from './DataSourceRemoteD
 import { open as openRemoteMapping } from './DataSourceRemoteMapping.vue'
 import { useDataSource, useNotify } from '@opentiny/tiny-engine-controller'
 import { isEmptyObject } from '@opentiny/vue-renderless/common/type'
-import { obj2String, string2Obj } from '@opentiny/tiny-engine-controller/adapter'
+import { reactiveObj2String as obj2String, string2Obj } from '@opentiny/tiny-engine-controller/utils'
 import { getRequest } from './js/datasource'
 
 export const isOpen = ref(false)

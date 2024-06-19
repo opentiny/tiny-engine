@@ -10,44 +10,7 @@
  *
  */
 
-import { toRaw } from 'vue'
 import { getMergeMeta } from '@opentiny/tiny-engine-entry'
-
-/**
- * 将画布pageSchema对象转换成编辑器中的string
- *
- * @param {*} obj
- * @returns
- */
-export const obj2String = (obj) => {
-  let out = null
-
-  try {
-    out = JSON.stringify(toRaw(obj), null, 2)
-  } catch (error) {
-    // do nothing
-  }
-
-  return out
-}
-
-/**
- * 将编辑器中的string转换成画布识别的pageSchema对象
- * @param {*} string
- * @returns
- */
-
-export const string2Obj = (string) => {
-  let obj = null
-
-  try {
-    obj = JSON.parse(string)
-  } catch (error) {
-    // do nothing
-  }
-
-  return obj
-}
 
 /**
  * 判断 Monaco 编辑器背景色的主题

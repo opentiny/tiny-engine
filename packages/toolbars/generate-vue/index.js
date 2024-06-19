@@ -12,8 +12,12 @@
 
 import entry from './src/Main.vue'
 import metaData from './meta'
+import { SaveLocalService } from './src/composable/'
 
 export default {
   ...metaData,
-  entry
+  entry,
+  metas: [SaveLocalService]
 }
+
+export { SaveLocalService }

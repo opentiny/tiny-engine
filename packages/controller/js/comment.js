@@ -10,15 +10,7 @@
  *
  */
 
-import entry, { api } from './src/Main.vue'
-import metaData from './meta.js'
-import { PageService } from './src/composable/'
-
-export default {
-  ...metaData,
-  api,
-  entry,
-  metas: [PageService]
-}
-
-export { PageService }
+export const getCommentByKey = (key) => ({
+  start: `start-${key} 设计器生成的代码，为了避免出现问题，请勿修改`,
+  end: `end-${key}`
+})

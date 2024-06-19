@@ -11,16 +11,14 @@
  */
 
 import entry from './src/Main.vue'
-
 import Components from './src/components'
 import metaData from './meta'
+import { PropertyService, PropertiesService } from './src/composable/'
 
-import './src/hooks/useProperties'
-import './src/hooks/useProperty'
-
-export { Components }
+export { Components, PropertyService, PropertiesService }
 
 export default {
   ...metaData,
-  entry
+  entry,
+  metas: [PropertyService, PropertiesService]
 }

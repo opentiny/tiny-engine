@@ -1,15 +1,15 @@
 /**
-* Copyright (c) 2023 - present TinyEngine Authors.
-* Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
-*
-* Use of this source code is governed by an MIT-style license.
-*
-* THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
-* BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
-* A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
-*
-*/
-
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
+ *
+ * Use of this source code is governed by an MIT-style license.
+ *
+ * THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
+ * BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
+ * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
+ *
+ */
+import { toRaw } from 'vue'
 import { isObject, isArray } from '@opentiny/vue-renderless/grid/static'
 
 export const MATERIAL_TYPE = {
@@ -130,4 +130,40 @@ export const getDefaultProps = (properties = []) => {
   })
 
   return props
+}
+
+/**
+ * 响应式对象转化为字符串
+ *
+ * @param {*} obj
+ * @returns
+ */
+export const reactiveObj2String = (obj) => {
+  let out = null
+
+  try {
+    out = JSON.stringify(toRaw(obj), null, 2)
+  } catch (error) {
+    // do nothing
+  }
+
+  return out
+}
+
+/**
+ * 字符串转对象
+ * @param {*} string
+ * @returns
+ */
+
+export const string2Obj = (string) => {
+  let obj = null
+
+  try {
+    obj = JSON.parse(string)
+  } catch (error) {
+    // do nothing
+  }
+
+  return obj
 }

@@ -14,7 +14,7 @@ import { reactive } from 'vue'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { utils, constants } from '@opentiny/tiny-engine-utils'
 import { meta as BuiltinComponentMaterials } from '@opentiny/tiny-engine-builtin-component'
-import { getCanvasStatus } from '../../js/canvas'
+import { getCanvasStatus } from '@opentiny/tiny-engine-controller/js/canvas'
 import {
   getMergeMeta,
   useNotify,
