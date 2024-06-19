@@ -35,3 +35,5 @@ export { default as Canvas } from '@opentiny/tiny-engine-canvas'
 export { initPreview } from './src/preview/src/main'
 
 export { default as defaultRegistry } from './registry'
+
+export * from '@opentiny/tiny-engine-entry'

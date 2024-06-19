@@ -52,7 +52,8 @@
 <script>
 import { computed } from 'vue'
 import { Input as TinyInput, Form as TinyForm, FormItem as TinyFormItem, Select as TinySelect } from '@opentiny/vue'
-import { ConfigItem, MetaCodeEditor, MetaInput, MetaNumber, MetaSwitch } from '@opentiny/tiny-engine-common'
+import { ConfigItem, MetaCodeEditor, MetaNumber } from '@opentiny/tiny-engine-common'
+import { SwitchConfigurator, InputConfigurator } from '@opentiny/tiny-engine-configurator'
 import { useNotify } from '@opentiny/tiny-engine-controller'
 import { iconChevronLeft } from '@opentiny/vue-icon'
 import store, { META_TYPES_ENUM, META_TYPES_OPTIONS } from '../store'
@@ -153,10 +154,10 @@ export default {
       }
 
       if (type === 'boolean') {
-        return MetaSwitch
+        return SwitchConfigurator
       }
 
-      return MetaInput
+      return InputConfigurator
     })
 
     const handleSaveDefaultValue = (value) => {

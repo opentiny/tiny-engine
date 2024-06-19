@@ -10,7 +10,7 @@
               :render-panel="plugins.render"
               @click="toggleNav"
             ></design-plugins>
-            <component :is="registry.canvas.component"></component>
+            <component :is="registry.canvas.entry"></component>
           </div>
         </div>
         <div class="tiny-engine-right-wrap">

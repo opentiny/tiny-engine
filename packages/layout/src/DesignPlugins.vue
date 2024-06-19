@@ -129,8 +129,8 @@ export default {
       layoutState: { plugins: pluginsState }
     } = useLayout()
 
-    props.plugins.forEach(({ id, component, api, icon }) => {
-      components[id] = component
+    props.plugins.forEach(({ id, entry, api, icon }) => {
+      components[id] = entry
       iconComponents[id] = icon
       if (api) {
         registerPluginApi({

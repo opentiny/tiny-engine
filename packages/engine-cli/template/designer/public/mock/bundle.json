@@ -180,7 +180,7 @@
                     "labelPosition": "top",
                     "type": "number",
                     "widget": {
-                      "component": "MetaNumberic",
+                      "component": "NumberConfigurator",
                       "props": {}
                     },
                     "device": []
@@ -203,7 +203,7 @@
                     "defaultValue": false,
                     "type": "boolean",
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "device": []
@@ -417,7 +417,7 @@
                     "labelPosition": "top",
                     "type": "string",
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "device": []
@@ -439,7 +439,7 @@
                     "labelPosition": "top",
                     "type": "string",
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "device": []
@@ -461,7 +461,7 @@
                     "labelPosition": "top",
                     "type": "string",
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "device": []
@@ -483,7 +483,7 @@
                     "labelPosition": "top",
                     "type": "string",
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "device": []
@@ -505,7 +505,7 @@
                     "labelPosition": "top",
                     "type": "string",
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "device": []
@@ -527,7 +527,7 @@
                     "labelPosition": "top",
                     "type": "string",
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "device": []
@@ -549,7 +549,7 @@
                     "labelPosition": "top",
                     "type": "string",
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "device": []
@@ -572,7 +572,7 @@
                     "defaultValue": false,
                     "type": "boolean",
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "device": []
@@ -726,7 +726,7 @@
                     "labelPosition": "top",
                     "type": "boolean",
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     }
                   },
@@ -828,7 +828,7 @@
                     "labelPosition": "top",
                     "type": "boolean",
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     }
                   },
@@ -883,7 +883,7 @@
                     "defaultValue": true,
                     "type": "boolean",
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     }
                   },
@@ -905,7 +905,7 @@
                     "defaultValue": false,
                     "type": "boolean",
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     }
                   },
@@ -927,7 +927,7 @@
                     "defaultValue": false,
                     "type": "boolean",
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     }
                   },
@@ -949,7 +949,7 @@
                     "defaultValue": true,
                     "type": "boolean",
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     }
                   },
@@ -1008,7 +1008,7 @@
                     "defaultValue": false,
                     "type": "boolean",
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "device": []
@@ -1031,7 +1031,7 @@
                     "defaultValue": false,
                     "type": "boolean",
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "device": []
@@ -1200,7 +1200,7 @@
                     "labelPosition": "top",
                     "type": "boolean",
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     }
                   },
@@ -1265,7 +1265,7 @@
                     "labelPosition": "top",
                     "type": "boolean",
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     }
                   },
@@ -1286,7 +1286,7 @@
                     "labelPosition": "top",
                     "type": "boolean",
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     }
                   },
@@ -1635,7 +1635,7 @@
                               }
                             },
                             "widget": {
-                              "component": "MetaNumberic",
+                              "component": "NumberConfigurator",
                               "props": {}
                             }
                           },
@@ -1654,7 +1654,7 @@
                               }
                             },
                             "widget": {
-                              "component": "MetaNumberic",
+                              "component": "NumberConfigurator",
                               "props": {}
                             }
                           },
@@ -1703,7 +1703,7 @@
                               }
                             },
                             "widget": {
-                              "component": "MetaSwitch",
+                              "component": "SwitchConfigurator",
                               "props": {}
                             }
                           },
@@ -1784,7 +1784,7 @@
                               }
                             },
                             "widget": {
-                              "component": "MetaSwitch",
+                              "component": "SwitchConfigurator",
                               "props": {}
                             }
                           },
@@ -1826,7 +1826,7 @@
                               }
                             },
                             "widget": {
-                              "component": "MetaSwitch",
+                              "component": "SwitchConfigurator",
                               "props": {}
                             }
                           },
@@ -1976,7 +1976,7 @@
                               }
                             },
                             "widget": {
-                              "component": "MetaSwitch",
+                              "component": "SwitchConfigurator",
                               "props": {}
                             }
                           },
@@ -2037,7 +2037,7 @@
                               }
                             },
                             "widget": {
-                              "component": "MetaSwitch",
+                              "component": "SwitchConfigurator",
                               "props": {}
                             }
                           },
@@ -2119,7 +2119,7 @@
                     "labelPosition": "top",
                     "type": "number",
                     "widget": {
-                      "component": "MetaNumberic",
+                      "component": "NumberConfigurator",
                       "props": {}
                     },
                     "device": []
@@ -2164,7 +2164,7 @@
                     "defaultValue": false,
                     "type": "boolean",
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     }
                   },
@@ -2186,7 +2186,7 @@
                     "defaultValue": false,
                     "type": "boolean",
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     }
                   },
@@ -2245,7 +2245,7 @@
                     "defaultValue": true,
                     "type": "boolean",
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     }
                   },
@@ -2267,7 +2267,7 @@
                     "defaultValue": true,
                     "type": "boolean",
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     }
                   },
@@ -2289,7 +2289,7 @@
                     "defaultValue": false,
                     "type": "boolean",
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     }
                   },
@@ -2429,7 +2429,7 @@
                     "defaultValue": false,
                     "type": "boolean",
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     }
                   },
@@ -2451,7 +2451,7 @@
                     "defaultValue": false,
                     "type": "boolean",
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     }
                   }
@@ -2934,7 +2934,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -3024,7 +3024,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaNumber",
+                      "component": "NumberConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -3043,7 +3043,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaNumber",
+                      "component": "NumberConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -3062,7 +3062,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -3081,7 +3081,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -3225,7 +3225,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaHtmlText",
+                      "component": "HtmlTextConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -3294,7 +3294,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaHtmlAttributes",
+                      "component": "HtmlAttributesConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -3375,7 +3375,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaHtmlText",
+                      "component": "HtmlTextConfigurator",
                       "props": {
                         "showRadioButton": true
                       }
@@ -3397,7 +3397,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaHtmlAttributes",
+                      "component": "HtmlAttributesConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -3478,7 +3478,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaHtmlText",
+                      "component": "HtmlTextConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -3498,7 +3498,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaHtmlAttributes",
+                      "component": "HtmlAttributesConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -3700,7 +3700,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaHtmlAttributes",
+                      "component": "HtmlAttributesConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -3908,7 +3908,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -3927,7 +3927,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -3946,7 +3946,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaHtmlAttributes",
+                      "component": "HtmlAttributesConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -4043,7 +4043,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaHtmlAttributes",
+                      "component": "HtmlAttributesConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -4106,7 +4106,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaHtmlAttributes",
+                      "component": "HtmlAttributesConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -4225,7 +4225,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaHtmlAttributes",
+                      "component": "HtmlAttributesConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -4303,7 +4303,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaNumber",
+                      "component": "NumberConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -4322,7 +4322,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaNumber",
+                      "component": "NumberConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -4341,7 +4341,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaHtmlAttributes",
+                      "component": "HtmlAttributesConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -4690,7 +4690,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -4709,7 +4709,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -4844,7 +4844,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     }
                   },
@@ -4860,7 +4860,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaNumber",
+                      "component": "NumberConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -4943,7 +4943,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -4982,7 +4982,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -5001,7 +5001,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -5336,7 +5336,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -5473,7 +5473,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaNumber",
+                      "component": "NumberConfigurator",
                       "props": {
                         "min": -12,
                         "max": 12
@@ -5495,7 +5495,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaNumber",
+                      "component": "NumberConfigurator",
                       "props": {
                         "max": 12
                       }
@@ -5516,7 +5516,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaNumber",
+                      "component": "NumberConfigurator",
                       "props": {
                         "min": 0,
                         "max": 12
@@ -5538,7 +5538,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaNumber",
+                      "component": "NumberConfigurator",
                       "props": {
                         "min": 1,
                         "max": 12
@@ -5560,7 +5560,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaNumber",
+                      "component": "NumberConfigurator",
                       "props": {
                         "min": 1,
                         "max": 12
@@ -5582,7 +5582,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaNumber",
+                      "component": "NumberConfigurator",
                       "props": {
                         "min": 1,
                         "max": 12
@@ -5604,7 +5604,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaNumber",
+                      "component": "NumberConfigurator",
                       "props": {
                         "min": 1,
                         "max": 12
@@ -5626,7 +5626,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaNumber",
+                      "component": "NumberConfigurator",
                       "props": {
                         "min": 1,
                         "max": 12
@@ -5776,7 +5776,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -5851,7 +5851,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -5871,7 +5871,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -5891,7 +5891,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaNumber",
+                      "component": "NumberConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -5910,7 +5910,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -5930,7 +5930,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -5950,7 +5950,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -6099,7 +6099,7 @@
                       }
                     },
                     "widget": {
-                      "component": "MetaNumber"
+                      "component": "NumberConfigurator"
                     },
                     "description": {
                       "zh_CN": "输入框行数，只对 type='textarea' 有效"
@@ -6137,7 +6137,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -6157,7 +6157,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -6218,7 +6218,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaNumber",
+                      "component": "NumberConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -6238,7 +6238,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -6524,7 +6524,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -6553,7 +6553,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -6747,7 +6747,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -6767,7 +6767,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -6787,7 +6787,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -6828,7 +6828,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -6856,7 +6856,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaNumber",
+                      "component": "NumberConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -6896,7 +6896,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -7115,7 +7115,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -7194,7 +7194,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -7337,7 +7337,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -7377,7 +7377,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -7397,7 +7397,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -7425,7 +7425,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -7445,7 +7445,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -7616,7 +7616,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -7635,7 +7635,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -7683,7 +7683,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -7875,7 +7875,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -7894,7 +7894,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -8068,7 +8068,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -8277,7 +8277,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -8317,7 +8317,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -8336,7 +8336,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -8376,7 +8376,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -8396,7 +8396,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -8537,7 +8537,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -8599,7 +8599,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -8619,7 +8619,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -9478,7 +9478,7 @@
                               }
                             },
                             "widget": {
-                              "component": "MetaSwitch",
+                              "component": "SwitchConfigurator",
                               "props": {}
                             }
                           },
@@ -9492,7 +9492,7 @@
                               }
                             },
                             "widget": {
-                              "component": "MetaNumber",
+                              "component": "NumberConfigurator",
                               "props": {}
                             }
                           },
@@ -9576,7 +9576,7 @@
                             },
                             "labelPosition": "none",
                             "widget": {
-                              "component": "MetaJsSlot",
+                              "component": "JsSlotConfigurator",
                               "props": {
                                 "slots": ["header", "default"]
                               }
@@ -9782,7 +9782,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -9905,7 +9905,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -9941,7 +9941,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -9961,7 +9961,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -9981,7 +9981,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -10001,7 +10001,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -10021,7 +10021,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -10335,7 +10335,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaNumber",
+                      "component": "NumberConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -10355,7 +10355,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaNumber",
+                      "component": "NumberConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -10394,7 +10394,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaNumber",
+                      "component": "NumberConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -10612,7 +10612,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -10632,7 +10632,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -10659,7 +10659,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaNumber",
+                      "component": "NumberConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -10739,7 +10739,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -10759,7 +10759,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -10938,7 +10938,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -11029,7 +11029,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -11097,7 +11097,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -11285,7 +11285,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -11313,7 +11313,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -11332,7 +11332,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaNumber",
+                      "component": "NumberConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -11596,7 +11596,7 @@
                     "defaultValue": true,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -11612,7 +11612,7 @@
                     },
                     "defaultValue": true,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -11707,7 +11707,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -11856,7 +11856,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -11875,7 +11875,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -11894,7 +11894,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaNumber",
+                      "component": "NumberConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -11913,7 +11913,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaNumber",
+                      "component": "NumberConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -11951,7 +11951,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -11970,7 +11970,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaNumber",
+                      "component": "NumberConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -11989,7 +11989,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaNumber",
+                      "component": "NumberConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -12046,7 +12046,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -12084,7 +12084,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaNumber",
+                      "component": "NumberConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -12271,7 +12271,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -12291,7 +12291,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -12310,7 +12310,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -12371,7 +12371,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaNumber",
+                      "component": "NumberConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -12391,7 +12391,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -12648,7 +12648,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -12668,7 +12668,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -12721,7 +12721,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaSwitch",
+                      "component": "SwitchConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -12771,7 +12771,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaNumber",
+                      "component": "NumberConfigurator",
                       "props": {
                         "allowEmpty": true
                       }
@@ -12793,7 +12793,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaNumber",
+                      "component": "NumberConfigurator",
                       "props": {
                         "allowEmpty": true
                       }
@@ -12815,7 +12815,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaNumber",
+                      "component": "NumberConfigurator",
                       "props": {
                         "allowEmpty": true
                       }
@@ -12837,7 +12837,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaNumber",
+                      "component": "NumberConfigurator",
                       "props": {
                         "allowEmpty": true
                       }
