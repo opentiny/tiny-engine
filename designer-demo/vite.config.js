@@ -1,19 +1,24 @@
 import path from 'node:path'
-import { tinyEnginePreset } from '@opentiny/tiny-engine-vite-config'
+import { defineConfig, mergeConfig } from 'vite'
+import { useTinyEngineBaseConfig } from '@opentiny/tiny-engine-vite-config'
 
-export default tinyEnginePreset({
-  iconDirs: [path.resolve(__dirname, './node_modules/@opentiny/tiny-engine/assets/')],
-  useSourceAlias: true
-}, () => {
-  const envDir = path.resolve(process.cwd(), 'env')
+export default defineConfig((configEnv) => {
+  const baseConfig = useTinyEngineBaseConfig({
+    viteConfigEnv: configEnv,
+    root: __dirname,
+    iconDirs: [path.resolve(__dirname, './node_modules/@opentiny/tiny-engine/assets/')],
+    useSourceAlias: true,
+    envDir: './env'
+  })
 
-  const config = {
-    envDir,
+
+  const customConfig = {
+    envDir: './env',
     publicDir: path.resolve(__dirname, './public'),
     server: {
       port: 8090
     }
   }
-  
-  return config
+
+  return mergeConfig(baseConfig, customConfig)
 })
