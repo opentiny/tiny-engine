@@ -12,7 +12,7 @@
 <script>
 import { reactive, ref } from 'vue'
 import { Button } from '@opentiny/vue'
-import { useProperties, useResource, useCanvas } from '@opentiny/tiny-engine-controller'
+import { useProperties, useResource, useCanvas } from '@opentiny/tiny-engine-entry'
 import BindEventsDialog from '@/settings/events/src/components/BindEventsDialog.vue'
 
 export default {

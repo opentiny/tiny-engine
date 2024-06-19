@@ -32,7 +32,7 @@
 
 <script>
 import { computed, ref, onActivated, onDeactivated } from 'vue'
-import { theme } from '@opentiny/tiny-engine-controller/js/monaco'
+import { theme } from '@opentiny/tiny-engine-common/js/monaco'
 import { Tooltip } from '@opentiny/vue'
 import PublicIcon from './PublicIcon.vue'
 import VueMonaco from './VueMonaco.vue'

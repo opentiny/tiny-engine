@@ -10,7 +10,7 @@
  *
  */
 
-import { useApp } from '@opentiny/tiny-engine-controller'
+import { useApp } from '@opentiny/tiny-engine-entry'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { getMergeMeta } from '@opentiny/tiny-engine-entry'
 const http = useHttp()

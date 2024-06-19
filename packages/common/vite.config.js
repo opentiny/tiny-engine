@@ -14,7 +14,13 @@ import { defineConfig } from 'vite'
 import path from 'path'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
+import { glob } from 'glob'
+import { fileURLToPath } from 'node:url'
 import generateComments from '@opentiny/tiny-engine-vite-plugin-meta-comments'
+
+const jsEntries = glob.sync('./js/**/*.js').map((file) => {
+  return [file.slice(0, file.length - path.extname(file).length), fileURLToPath(new URL(file, import.meta.url))]
+})
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -25,7 +31,9 @@ export default defineConfig({
     cssCodeSplit: false,
     lib: {
       entry: {
-        index: path.resolve(__dirname, './index.js')
+        index: path.resolve(__dirname, './index.js'),
+        utils: path.resolve(__dirname, './utils/index.js'),
+        ...Object.fromEntries(jsEntries)
       },
       name: 'common',
       fileName: (format, entryName) => `${entryName}.js`,

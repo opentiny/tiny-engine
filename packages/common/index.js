@@ -84,7 +84,7 @@ import SearchEmpty from './component/SearchEmpty.vue'
 import MetaDescription from './component/MetaDescription.vue'
 import MetaList from './component/MetaList.vue'
 
-import i18n, { i18nKeyMaps } from '@opentiny/tiny-engine-controller/js/i18n'
+import i18n, { i18nKeyMaps } from '@opentiny/tiny-engine-common/js/i18n'
 
 import enUs from './i18n/en-us.json'
 import zhCn from './i18n/zh-cn.json'
@@ -216,3 +216,5 @@ export {
 
 export { default as Modal } from './component/Modal'
 export { default as Notify } from './component/Notify'
+
+export * from './composable'

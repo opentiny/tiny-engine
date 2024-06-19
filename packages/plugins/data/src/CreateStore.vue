@@ -65,9 +65,9 @@
 import { getCurrentInstance, reactive, ref, computed, watch } from 'vue'
 import { Form, FormItem, Input, Popover } from '@opentiny/vue'
 import { MonacoEditor } from '@opentiny/tiny-engine-common'
-import { theme } from '@opentiny/tiny-engine-controller/js/monaco'
-import { string2Ast, ast2String, insertName } from '@opentiny/tiny-engine-controller/js/ast'
-import { verifyJsVarName } from '@opentiny/tiny-engine-controller/js/verification'
+import { theme } from '@opentiny/tiny-engine-common/js/monaco'
+import { string2Ast, ast2String, insertName } from '@opentiny/tiny-engine-common/js/ast'
+import { verifyJsVarName } from '@opentiny/tiny-engine-common/js/verification'
 
 export default {
   components: {

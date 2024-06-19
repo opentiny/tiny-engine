@@ -37,7 +37,7 @@
 import { reactive, ref, computed } from 'vue'
 import Splitpanes from './SplitPanes.vue'
 import Pane from './Pane.vue'
-import { useProperties } from '@opentiny/tiny-engine-controller'
+import { useProperties } from '@opentiny/tiny-engine-entry'
 
 export default {
   components: {

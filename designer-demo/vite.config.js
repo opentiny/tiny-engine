@@ -13,11 +13,10 @@ export default defineConfig((options) => {
   const devAlias = {
     '@opentiny/tiny-engine/canvas': path.resolve(__dirname, '../packages/design-core/src/canvas/canvas.js'),
     '@opentiny/tiny-engine': path.resolve(__dirname, '../packages/design-core/index.js'),
-    '@opentiny/tiny-engine-controller/js': path.resolve(__dirname, '../packages/controller/js'),
     '@opentiny/tiny-engine-common/component': path.resolve(__dirname, '../packages/common/component'),
+    '@opentiny/tiny-engine-common/utils': path.resolve(__dirname, '../packages/common/utils/index.js'),
+    '@opentiny/tiny-engine-common/js': path.resolve(__dirname, '../packages/common/js'),
     '@opentiny/tiny-engine-common': path.resolve(__dirname, '../packages/common/index.js'),
-    '@opentiny/tiny-engine-controller/utils': path.resolve(__dirname, '../packages/controller/utils.js'),
-    '@opentiny/tiny-engine-controller': path.resolve(__dirname, '../packages/controller/src/index.js'),
     '@opentiny/tiny-engine-plugin-materials': path.resolve(__dirname, '../packages/plugins/materials/index.js'),
     '@opentiny/tiny-engine-plugin-block': path.resolve(__dirname, '../packages/plugins/block/index.js'),
     '@opentiny/tiny-engine-plugin-data': path.resolve(__dirname, '../packages/plugins/data/index.js'),

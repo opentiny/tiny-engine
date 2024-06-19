@@ -38,4 +38,4 @@ export { default as defaultRegistry } from './registry'
 
 export * from '@opentiny/tiny-engine-entry'
 
-export { EditorInfoService, AppService } from '@opentiny/tiny-engine-controller'
+export { EditorInfoService, AppService } from '@opentiny/tiny-engine-common'

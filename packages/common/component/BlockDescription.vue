@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { useLayout, useBlock } from '@opentiny/tiny-engine-controller'
+import { useLayout, useBlock } from '@opentiny/tiny-engine-entry'
 import MetaDescription from './MetaDescription.vue'
 
 export default {

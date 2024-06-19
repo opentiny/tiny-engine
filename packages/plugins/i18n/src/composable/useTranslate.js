@@ -13,10 +13,10 @@
 import { reactive, ref } from 'vue'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { utils } from '@opentiny/tiny-engine-utils'
-import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
+import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { generateI18n } from '@opentiny/tiny-engine-controller/js/vscodeGenerateFile'
-import { PROP_DATA_TYPE } from '@opentiny/tiny-engine-controller/utils'
+import { generateI18n } from '@opentiny/tiny-engine-common/js/vscodeGenerateFile'
+import { PROP_DATA_TYPE } from '@opentiny/tiny-engine-common/utils'
 import { useResource, useCanvas } from '@opentiny/tiny-engine-entry'
 
 const { HOST_TYPE } = constants

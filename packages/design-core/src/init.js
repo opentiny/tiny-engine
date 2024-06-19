@@ -12,8 +12,8 @@
 
 import { createApp } from 'vue'
 import initSvgs from '@opentiny/tiny-engine-svgs'
-import i18n from '@opentiny/tiny-engine-controller/js/i18n'
-import { initMonitor } from '@opentiny/tiny-engine-controller/js/monitor'
+import i18n from '@opentiny/tiny-engine-common/js/i18n'
+import { initMonitor } from '@opentiny/tiny-engine-common/js/monitor'
 import { injectGlobalComponents, Modal, Notify } from '@opentiny/tiny-engine-common'
 import { initHttp } from '@opentiny/tiny-engine-http'
 import TinyThemeTool from '@opentiny/vue-theme/theme-tool'

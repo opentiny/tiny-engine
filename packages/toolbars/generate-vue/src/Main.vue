@@ -23,7 +23,7 @@
 <script>
 import { reactive } from 'vue'
 import { Popover } from '@opentiny/vue'
-import { useBlock, useCanvas, useNotify, useLayout, useEditorInfo } from '@opentiny/tiny-engine-controller'
+import { useBlock, useCanvas, useNotify, useLayout, useEditorInfo } from '@opentiny/tiny-engine-entry'
 import { getMergeMeta } from '@opentiny/tiny-engine-entry'
 import { fs } from '@opentiny/tiny-engine-utils'
 import { useHttp } from '@opentiny/tiny-engine-http'

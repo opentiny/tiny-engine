@@ -22,7 +22,7 @@
 <script>
 import { ref } from 'vue'
 import MetaListItems from './MetaListItems.vue'
-import { useProperties, useResource, useHistory } from '@opentiny/tiny-engine-controller'
+import { useProperties, useResource, useHistory } from '@opentiny/tiny-engine-entry'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { iconDel } from '@opentiny/vue-icon'
 

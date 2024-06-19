@@ -77,8 +77,8 @@ import {
   useNotify,
   useLayout,
   useHelp
-} from '@opentiny/tiny-engine-controller'
-import { getCommentByKey } from '@opentiny/tiny-engine-controller/js/comment'
+} from '@opentiny/tiny-engine-entry'
+import { getCommentByKey } from '@opentiny/tiny-engine-common/js/comment'
 import { iconSearch } from '@opentiny/vue-icon'
 import { CloseIcon, LinkButton } from '@opentiny/tiny-engine-common'
 import DataSourceList from './DataSourceList.vue'

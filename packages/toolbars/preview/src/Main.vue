@@ -16,8 +16,8 @@
 
 <script>
 import { Popover } from '@opentiny/vue'
-import { previewPage, previewBlock } from '@opentiny/tiny-engine-controller/js/preview'
-import { useBlock, useCanvas, useLayout, useNotify } from '@opentiny/tiny-engine-controller'
+import { previewPage, previewBlock } from '@opentiny/tiny-engine-common/js/preview'
+import { useBlock, useCanvas, useLayout, useNotify } from '@opentiny/tiny-engine-entry'
 import { getMergeMeta } from '@opentiny/tiny-engine-entry'
 
 export default {

@@ -23,12 +23,12 @@ import {
   useResource,
   useHistory,
   useModal
-} from '@opentiny/tiny-engine-controller'
+} from '@opentiny/tiny-engine-entry'
 import materials from '@opentiny/tiny-engine-plugin-materials'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { isVsCodeEnv, isDevelopEnv } from '@opentiny/tiny-engine-controller/js/environments'
-import * as ast from '@opentiny/tiny-engine-controller/js/ast'
+import { isVsCodeEnv, isDevelopEnv } from '@opentiny/tiny-engine-common/js/environments'
+import * as ast from '@opentiny/tiny-engine-common/js/ast'
 import { getMergeRegistry } from '@opentiny/tiny-engine-entry'
 
 const { PAGE_STATUS } = constants

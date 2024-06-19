@@ -21,10 +21,10 @@ import {
   useApp,
   useLayout,
   useNotify
-} from '@opentiny/tiny-engine-controller'
-import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
-import { getCanvasStatus } from '@opentiny/tiny-engine-controller/js/canvas'
-import { useHistory, useResource } from '@opentiny/tiny-engine-controller'
+} from '@opentiny/tiny-engine-entry'
+import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
+import { getCanvasStatus } from '@opentiny/tiny-engine-common/js/canvas'
+import { useHistory, useResource } from '@opentiny/tiny-engine-entry'
 import html2canvas from 'html2canvas'
 
 import {
@@ -43,7 +43,7 @@ import {
   deleteCategory
 } from './http'
 import { constants, utils } from '@opentiny/tiny-engine-utils'
-import { generateBlock } from '@opentiny/tiny-engine-controller/js/vscodeGenerateFile'
+import { generateBlock } from '@opentiny/tiny-engine-common/js/vscodeGenerateFile'
 
 const { HOST_TYPE } = constants
 const { getBlockList, setBlockList, setCategoryList, getCurrentBlock, addBlockEvent, addBlockProperty } = useBlock()

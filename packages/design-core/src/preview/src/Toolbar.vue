@@ -15,7 +15,7 @@
 
 <script lang="jsx">
 import { defineAsyncComponent } from 'vue'
-import { useBreadcrumb } from '@opentiny/tiny-engine-controller'
+import { useBreadcrumb } from '@opentiny/tiny-engine-entry'
 import { getMergeRegistry } from '@opentiny/tiny-engine-entry'
 import { Switch as TinySwitch } from '@opentiny/vue'
 import { getSearchParams } from './preview/http'

@@ -74,9 +74,9 @@
 import { getCurrentInstance, reactive, toRefs } from 'vue'
 import { Button, DialogBox, Modal, Popover, Search, Tooltip } from '@opentiny/vue'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
-import { useCanvas } from '@opentiny/tiny-engine-controller'
+import { useCanvas } from '@opentiny/tiny-engine-entry'
 import { getMergeMeta } from '@opentiny/tiny-engine-entry'
-import { theme } from '@opentiny/tiny-engine-controller/js/monaco'
+import { theme } from '@opentiny/tiny-engine-common/js/monaco'
 import { iconAdd, IconDel, iconSetting, iconYes } from '@opentiny/vue-icon'
 
 export default {

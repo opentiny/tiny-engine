@@ -81,8 +81,8 @@ import {
   Popover as TinyPopover,
   FormItem as TinyFormItem
 } from '@opentiny/vue'
-import { theme } from '@opentiny/tiny-engine-controller/js/monaco'
-import { useLayout, useNotify, useCanvas } from '@opentiny/tiny-engine-controller'
+import { theme } from '@opentiny/tiny-engine-common/js/monaco'
+import { useLayout, useNotify, useCanvas } from '@opentiny/tiny-engine-entry'
 import { constants } from '@opentiny/tiny-engine-utils'
 import VueMonaco from './VueMonaco.vue'
 

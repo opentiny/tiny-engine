@@ -53,8 +53,8 @@
 
 <script>
 import { reactive, ref, watchEffect } from 'vue'
-import { useLayout, useTranslate } from '@opentiny/tiny-engine-controller'
-import { PROP_DATA_TYPE } from '@opentiny/tiny-engine-controller/utils'
+import { useLayout, useTranslate } from '@opentiny/tiny-engine-entry'
+import { PROP_DATA_TYPE } from '@opentiny/tiny-engine-common/utils'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { Select, Option, Button, Input } from '@opentiny/vue'
 import { iconPlus } from '@opentiny/vue-icon'

@@ -25,7 +25,7 @@ import {
   IconPlus,
   IconCode
 } from '@opentiny/vue-icon'
-import { useProperties, useResource, useCanvas } from '@opentiny/tiny-engine-controller'
+import { useProperties, useResource, useCanvas } from '@opentiny/tiny-engine-entry'
 import { MetaList, MetaListActions, MetaListItems } from '@opentiny/tiny-engine-common'
 
 export default {

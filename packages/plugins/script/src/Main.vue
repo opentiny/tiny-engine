@@ -29,10 +29,10 @@
 import { onBeforeUnmount } from 'vue'
 import { Button } from '@opentiny/vue'
 import { VueMonaco, CloseIcon, LinkButton } from '@opentiny/tiny-engine-common'
-import { useHelp } from '@opentiny/tiny-engine-controller'
-import { initCompletion } from '@opentiny/tiny-engine-controller/js/completion'
-import { initLinter } from '@opentiny/tiny-engine-controller/js/linter'
-import { theme } from '@opentiny/tiny-engine-controller/js/monaco'
+import { useHelp } from '@opentiny/tiny-engine-entry'
+import { initCompletion } from '@opentiny/tiny-engine-common/js/completion'
+import { initLinter } from '@opentiny/tiny-engine-common/js/linter'
+import { theme } from '@opentiny/tiny-engine-common/js/monaco'
 import useMethod, { saveMethod, highlightMethod, getMethodNameList, getMethods } from './js/method'
 
 export const api = {

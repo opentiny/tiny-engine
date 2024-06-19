@@ -52,7 +52,7 @@ import MetaList from './MetaList.vue'
 import MetaListActions from './MetaListActions.vue'
 import MetaListItem from './MetaListItem.vue'
 import MetaChildItem from './MetaChildItem.vue'
-import { useTranslate } from '@opentiny/tiny-engine-controller'
+import { useTranslate } from '@opentiny/tiny-engine-entry'
 import { VueDraggableNext } from 'vue-draggable-next'
 
 export default {

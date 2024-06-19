@@ -10,7 +10,7 @@
  *
  */
 
-import { camelize } from '@opentiny/tiny-engine-controller/utils'
+import { camelize } from '@opentiny/tiny-engine-common/utils'
 
 export const styleStrRemoveRoot = (str = '') =>
   typeof str === 'string'

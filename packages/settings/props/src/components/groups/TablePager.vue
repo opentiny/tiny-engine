@@ -11,7 +11,7 @@
 
 <script>
 import { reactive } from 'vue'
-import { useModal } from '@opentiny/tiny-engine-common'
+import { useModal } from '@opentiny/tiny-engine-entry'
 import { MetaModal } from '@opentiny/tiny-engine-common'
 import TableSettingPanel from '../modal/ModalContent.vue'
 

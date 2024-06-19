@@ -4,7 +4,7 @@
 <script>
 import * as monacoEditor from 'monaco-editor'
 import { watch, onMounted, nextTick, onBeforeUnmount, ref } from 'vue'
-import { formatString } from '@opentiny/tiny-engine-controller/js/ast'
+import { formatString } from '@opentiny/tiny-engine-common/js/ast'
 
 export default {
   name: 'MonacoEditor',

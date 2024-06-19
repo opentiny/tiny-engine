@@ -12,7 +12,7 @@
 
 import { ref, computed, watch } from 'vue'
 import { utils, constants } from '@opentiny/tiny-engine-utils'
-import { useNotify } from '@opentiny/tiny-engine-controller'
+import { useNotify } from '@opentiny/tiny-engine-entry'
 
 import {
   META_TYPES,

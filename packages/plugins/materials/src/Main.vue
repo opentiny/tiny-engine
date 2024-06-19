@@ -33,7 +33,7 @@ import BlockPanel from './block/Main.vue'
 import BlockGroupPanel from './block/BlockGroupPanel.vue'
 import BlockVersionSelect from './block/BlockVersionSelect.vue'
 import { setBlockPanelVisible, setBlockVersionPanelVisible } from './block/js/usePanel'
-import { useLayout } from '@opentiny/tiny-engine-controller'
+import { useLayout } from '@opentiny/tiny-engine-entry'
 import { fetchGroups } from './block/http'
 
 export const api = {

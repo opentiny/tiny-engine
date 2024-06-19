@@ -11,7 +11,7 @@
  */
 
 import { reactive } from 'vue'
-import { useApp } from '@opentiny/tiny-engine-controller'
+import { useApp } from '@opentiny/tiny-engine-entry'
 import { useHttp } from '@opentiny/tiny-engine-http'
 
 export const AIModelOptions = [

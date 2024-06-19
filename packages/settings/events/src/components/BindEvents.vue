@@ -87,7 +87,7 @@
 <script>
 import { computed, reactive, watchEffect } from 'vue'
 import { Popover, Button } from '@opentiny/vue'
-import { useCanvas, useModal, useLayout, useBlock, useResource } from '@opentiny/tiny-engine-controller'
+import { useCanvas, useModal, useLayout, useBlock, useResource } from '@opentiny/tiny-engine-entry'
 import { BlockLinkEvent, SvgButton } from '@opentiny/tiny-engine-common'
 import { iconHelpQuery, iconChevronDown } from '@opentiny/vue-icon'
 import BindEventsDialog, { open as openDialog } from './BindEventsDialog.vue'

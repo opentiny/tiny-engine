@@ -28,7 +28,7 @@
 import { reactive, watch, ref } from 'vue'
 import { Grid, GridColumn, Button } from '@opentiny/vue'
 import { PluginSetting, CloseIcon, BlockHistoryTemplate, SearchEmpty } from '@opentiny/tiny-engine-common'
-import { useBlock, useModal } from '@opentiny/tiny-engine-controller'
+import { useBlock, useModal } from '@opentiny/tiny-engine-entry'
 import { fetchBlockById, requestGroupBlockVersion } from './http'
 import { useVersionSelectPanel } from './js/usePanel'
 

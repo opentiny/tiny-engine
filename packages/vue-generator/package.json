@@ -32,7 +32,7 @@
   "dependencies": {
     "@opentiny/tiny-engine-entry": "workspace:*",
     "@opentiny/tiny-engine-builtin-component": "workspace:*",
-    "@opentiny/tiny-engine-controller": "workspace:*",
+    "@opentiny/tiny-engine-common": "workspace:*",
     "@vue/compiler-sfc": "3.2.45",
     "@vue/shared": "^3.3.4",
     "vue": "^3.4.15",

@@ -6,7 +6,7 @@
 
 <script>
 import { Select, Option } from '@opentiny/vue'
-import { useProperties } from '@opentiny/tiny-engine-controller'
+import { useProperties } from '@opentiny/tiny-engine-entry'
 import { computed } from 'vue'
 
 export default {

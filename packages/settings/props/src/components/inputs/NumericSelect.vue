@@ -23,7 +23,7 @@
 <script>
 import { ref, watchEffect } from 'vue'
 import { Numeric, Select } from '@opentiny/vue'
-import { useProperties } from '@opentiny/tiny-engine-controller'
+import { useProperties } from '@opentiny/tiny-engine-entry'
 export default {
   components: {
     TinyNumeric: Numeric,

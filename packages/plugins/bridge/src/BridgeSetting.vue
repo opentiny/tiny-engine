@@ -122,8 +122,8 @@ import {
   getResourceNamesByType
 } from './js/resource'
 import { VueMonaco as MonacoEditor, PluginSetting, SvgButton } from '@opentiny/tiny-engine-common'
-import { useApp, useModal, useNotify } from '@opentiny/tiny-engine-controller'
-import { theme } from '@opentiny/tiny-engine-controller/js/monaco'
+import { useApp, useModal, useNotify } from '@opentiny/tiny-engine-entry'
+import { theme } from '@opentiny/tiny-engine-common/js/monaco'
 import { getMergeMeta } from '@opentiny/tiny-engine-entry'
 
 const isOpen = ref(false)

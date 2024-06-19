@@ -9,7 +9,7 @@
 <script>
 import { getCurrentInstance, reactive } from 'vue'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
-import { theme } from '@opentiny/tiny-engine-controller/js/monaco'
+import { theme } from '@opentiny/tiny-engine-common/js/monaco'
 import { iconDel } from '@opentiny/vue-icon'
 
 export default {

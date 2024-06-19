@@ -41,7 +41,7 @@
 import { ref, watchEffect, computed } from 'vue'
 import { Form, FormItem, Switch, Alert } from '@opentiny/vue'
 import { CodeConfigurator } from '@opentiny/tiny-engine-configurator'
-import { usePage, useNotify } from '@opentiny/tiny-engine-controller'
+import { usePage, useNotify } from '@opentiny/tiny-engine-entry'
 
 export default {
   components: {

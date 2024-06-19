@@ -31,8 +31,8 @@
 <script>
 import { reactive, computed, ref } from 'vue'
 import { IconDel, IconEdit, IconPlus, IconCode, IconWriting } from '@opentiny/vue-icon'
-import { useProperties } from '@opentiny/tiny-engine-controller'
-import { useModal, MetaModal, MetaList, MetaListItems, MetaListActions } from '@opentiny/tiny-engine-common'
+import { useProperties, useModal } from '@opentiny/tiny-engine-entry'
+import { MetaModal, MetaList, MetaListItems, MetaListActions } from '@opentiny/tiny-engine-common'
 import TableSettingPanel from '../modal/ModalContent.vue'
 
 export default {
