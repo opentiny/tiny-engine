@@ -11,7 +11,7 @@
  */
 
 import { reactive, isProxy, toRaw, watch } from 'vue'
-import { HOOK_NAME, initHook, useCanvas } from '@opentiny/tiny-engine-entry'
+import { useCanvas } from '@opentiny/tiny-engine-entry'
 
 const schema2String = (schema) => {
   if (isProxy(schema)) {
@@ -121,11 +121,3 @@ export default () => {
     addHistory
   }
 }
-
-initHook(HOOK_NAME.useHistory, {
-  historyState,
-  back,
-  forward,
-  go,
-  addHistory
-})

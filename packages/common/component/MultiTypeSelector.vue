@@ -29,7 +29,6 @@
 <script>
 import { reactive } from 'vue'
 import { Tooltip, Popover, Radio, RadioGroup } from '@opentiny/vue'
-import MetaBindVariable from './MetaBindVariable.vue'
 import { MetaComponents } from '../index'
 
 export default {
@@ -38,14 +37,13 @@ export default {
     TinyTooltip: Tooltip,
     TinyPopover: Popover,
     TinyRadio: Radio,
-    TinyRadioGroup: RadioGroup,
-    MetaBindVariable
+    TinyRadioGroup: RadioGroup
   },
   inheritAttrs: false,
   props: {
     meta: {
       type: Object,
-      default: {}
+      default: () => ({})
     },
     label: {
       type: String,
@@ -69,6 +67,9 @@ export default {
       return result
     }
 
+    const currentType = getModelValueType(props.meta.type, props.meta.widget?.props?.modelValue)
+    const defaultType = getModelValueType(props.meta.type, props.meta.defaultValue)
+
     const initModelValue = () =>
       props.meta.type.map((type) => {
         if (type === currentType) return { modelValue: props.meta.widget?.props?.modelValue }
@@ -76,8 +77,6 @@ export default {
         return { modelValue: null }
       })
 
-    const currentType = getModelValueType(props.meta.type, props.meta.widget?.props?.modelValue)
-    const defaultType = getModelValueType(props.meta.type, props.meta.defaultValue)
     const state = reactive({
       type: currentType, // 当前选中的组件类型
       typesValue: initModelValue() // 保存多个组件的modelValue

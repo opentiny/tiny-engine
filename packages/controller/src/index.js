@@ -10,7 +10,7 @@
  *
  */
 
-import './hooks/mountHooks'
+export * from './hooks/'
 import useMessage from './useMessage'
 import useData from './useData'
 export { default as metaData } from '../meta'

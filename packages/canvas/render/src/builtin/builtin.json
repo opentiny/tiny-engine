@@ -108,7 +108,7 @@
                           }
                         },
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {
                             "language": "json",
                             "tips": {
@@ -170,7 +170,7 @@
                         "cols": 12,
                         "rules": [],
                         "widget": {
-                          "component": "MetaSwitch",
+                          "component": "SwitchConfigurator",
                           "props": {}
                         }
                       },
@@ -186,7 +186,7 @@
                         "cols": 12,
                         "rules": [],
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {}
                         }
                       },
@@ -203,7 +203,7 @@
                         "cols": 12,
                         "rules": [],
                         "widget": {
-                          "component": "MetaCollection",
+                          "component": "CollectionConfigurator",
                           "props": {}
                         }
                       }
@@ -329,7 +329,7 @@
                         "cols": 12,
                         "rules": [],
                         "widget": {
-                          "component": "MetaSelectIcon",
+                          "component": "SelectIconConfigurator",
                           "props": {}
                         }
                       }

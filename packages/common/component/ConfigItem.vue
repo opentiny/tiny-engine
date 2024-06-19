@@ -70,7 +70,7 @@
 
         <div class="action-icon">
           <slot name="suffix"></slot>
-          <meta-code-editor
+          <code-configurator
             v-if="showCodeEditIcon"
             ref="editorModalRef"
             v-bind="widget.props"
@@ -85,13 +85,13 @@
                 <icon-writing class="code-icon" @click="editorModalRef?.open && editorModalRef.open()"></icon-writing>
               </tiny-tooltip>
             </template>
-          </meta-code-editor>
-          <meta-bind-variable
+          </code-configurator>
+          <variable-configurator
             v-if="isTopLayer && !onlyEdit && property.bindState !== false && !isRelatedComponents(widget.component)"
             :model-value="widget.props.modelValue"
             :name="widget.props.name"
             @update:modelValue="onModelUpdate"
-          ></meta-bind-variable>
+          ></variable-configurator>
         </div>
       </div>
     </div>
@@ -104,9 +104,7 @@ import { Popover, Tooltip } from '@opentiny/vue'
 import { IconWriting, IconHelpCircle, IconPlusCircle } from '@opentiny/vue-icon'
 import { typeOf } from '@opentiny/vue-renderless/common/type'
 import i18n from '@opentiny/tiny-engine-controller/js/i18n'
-import { MetaComponents } from '../index'
-import MetaBindVariable from './MetaBindVariable.vue'
-import MetaCodeEditor from './MetaCodeEditor.vue'
+import { CodeConfigurator, VariableConfigurator } from '@opentiny/tiny-engine-configurator'
 import MultiTypeSelector from './MultiTypeSelector.vue'
 import { useHistory, useProperties, useResource, useLayout, useCanvas } from '@opentiny/tiny-engine-controller'
 import { generateFunction } from '@opentiny/tiny-engine-controller/utils'
@@ -123,8 +121,8 @@ const hasRule = (required, rules) => {
 export default {
   components: {
     MultiTypeSelector,
-    MetaCodeEditor,
-    MetaBindVariable,
+    CodeConfigurator,
+    VariableConfigurator,
     TinyPopover: Popover,
     TinyTooltip: Tooltip,
     IconWriting: IconWriting(),
@@ -238,7 +236,7 @@ export default {
         return props.property.labelPosition
       }
 
-      if (props.property.widget?.component === 'MetaSwitch') {
+      if (['MetaSwitch', 'SwitchConfigurator'].includes(props.property.widget?.component)) {
         return 'left'
       }
 
@@ -274,7 +272,10 @@ export default {
           return
         }
 
-        if (property !== 'name' && props.property.widget.component === 'MetaSelectIcon') {
+        if (
+          property !== 'name' &&
+          ['SelectIconConfigurator', 'MetaSelectIcon'].includes(props.property.widget.component)
+        ) {
           // icon以组件形式传入，实现类似:icon="IconPlus"的图标配置（排除Icon组件本身）
           value = {
             componentName: 'Icon',
@@ -461,7 +462,6 @@ export default {
       editorModalRef,
       isBindingState,
       component,
-      MetaComponents,
       hidden,
       widget,
       required,

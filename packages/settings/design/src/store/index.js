@@ -82,14 +82,16 @@ export const META_COMPONENTS = {
   MetaInput: 'MetaInput',
   MetaSelect: 'MetaSelect',
   MetaBindI18n: 'MetaBindI18n',
-  MetaCheckBox: 'MetaCheckBox',
+  CheckBoxConfigurator: 'CheckBoxConfigurator',
   MetaColor: 'MetaColor',
-  MetaDatePicker: 'MetaDatePicker',
+  DatePickerConfigurator: 'DatePickerConfigurator',
   MetaRadio: 'MetaRadio',
   MetaRadioGroup: 'MetaRadioGroup',
   MetaNumber: 'MetaNumber',
   MetaJsSlot: 'MetaJsSlot',
-  MetaSwitch: 'MetaSwitch'
+  JsSlotConfigurator: 'JsSlotConfigurator',
+  MetaSwitch: 'MetaSwitch',
+  SwitchConfigurator: 'SwitchConfigurator'
 }
 
 export const META_TYPES_ENUM = {
@@ -109,7 +111,7 @@ export const META_DEFAULT_COMPONENT = {
   [META_TYPES_ENUM.string]: META_COMPONENTS.MetaInput,
   [META_TYPES_ENUM.number]: META_COMPONENTS.MetaNumber,
   [META_TYPES_ENUM.object]: META_COMPONENTS.MetaCodeEditor,
-  [META_TYPES_ENUM.boolean]: META_COMPONENTS.MetaSwitch,
+  [META_TYPES_ENUM.boolean]: META_COMPONENTS.SwitchConfigurator,
   [META_TYPES_ENUM.function]: META_COMPONENTS.MetaCodeEditor
 }
 
@@ -188,7 +190,7 @@ export const addGroup = (index) => {
 export const addProperty = (group, prop, index = 0) => {
   const typeMap = {
     string: 'MetaInput',
-    boolean: 'MetaSwitch',
+    boolean: 'SwitchConfigurator',
     number: 'MetaNumeric',
     array: 'MetaInput',
     object: 'MetaInput'

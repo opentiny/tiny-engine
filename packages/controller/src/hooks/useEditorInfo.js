@@ -13,7 +13,6 @@
 import { ref } from 'vue'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import useModal from '../components/useModal'
-import { HOOK_NAME, initHook } from '@opentiny/tiny-engine-entry'
 
 // web版获取配置信息: 从url中获取
 const _getWebData = () => {
@@ -71,10 +70,3 @@ export default () => {
     isAdmin
   }
 }
-
-initHook(HOOK_NAME.useEditorInfo, {
-  useInfo: _getWebData,
-  getUserInfo,
-  userInfo,
-  isAdmin
-})
