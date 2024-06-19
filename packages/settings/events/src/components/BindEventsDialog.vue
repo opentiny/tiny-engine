@@ -8,8 +8,8 @@
     @opened="openedDialog"
   >
     <div class="bind-event-dialog-content">
-      <component :is="BindEventsDialogBodyLeft" :eventBinding="eventBinding"></component>
-      <component :is="BindEventsDialogBodyRight" :dialogVisible="dialogVisible"></component>
+      <component :is="BindEventsDialogSidebar" :eventBinding="eventBinding"></component>
+      <component :is="BindEventsDialogContent" :dialogVisible="dialogVisible"></component>
     </div>
     <template #footer>
       <div class="bind-dialog-footer">
@@ -50,7 +50,7 @@ export default {
     }
   },
   setup(props) {
-    const { BindEventsDialogBodyLeft, BindEventsDialogBodyRight } = getMergeMeta('engine.setting.event').components
+    const { BindEventsDialogSidebar, BindEventsDialogContent } = getMergeMeta('engine.setting.event').components
 
     const { PLUGIN_NAME, getPluginApi, activePlugin } = useLayout()
     const { pageState } = useCanvas()
@@ -205,8 +205,8 @@ export default {
     }
 
     return {
-      BindEventsDialogBodyLeft,
-      BindEventsDialogBodyRight,
+      BindEventsDialogSidebar,
+      BindEventsDialogContent,
       state,
       dialogVisible,
       confirm,

@@ -1,6 +1,6 @@
 import { commonEvents } from './src/commonjs/events.js'
-import BindEventsDialogBodyLeft from './src/components/BindEventsDialogBodyLeft.vue'
-import BindEventsDialogBodyRight from './src/components/BindEventsDialogBodyRight.vue'
+import BindEventsDialogContent from './src/components/BindEventsDialogContent.vue'
+import BindEventsDialogSidebar from './src/components/BindEventsDialogSidebar.vue'
 
 export default {
   id: 'engine.setting.event',
@@ -13,7 +13,7 @@ export default {
     commonEvents
   },
   components: {
-    BindEventsDialogBodyLeft,
-    BindEventsDialogBodyRight
+    BindEventsDialogSidebar,
+    BindEventsDialogContent
   }
 }
