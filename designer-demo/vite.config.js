@@ -17,7 +17,6 @@ export default defineConfig((options) => {
     '@opentiny/tiny-engine-common/component': path.resolve(__dirname, '../packages/common/component'),
     '@opentiny/tiny-engine-common': path.resolve(__dirname, '../packages/common/index.js'),
     '@opentiny/tiny-engine-controller/utils': path.resolve(__dirname, '../packages/controller/utils.js'),
-    '@opentiny/tiny-engine-controller/adapter': path.resolve(__dirname, '../packages/controller/adapter.js'),
     '@opentiny/tiny-engine-controller': path.resolve(__dirname, '../packages/controller/src/index.js'),
     '@opentiny/tiny-engine-plugin-materials': path.resolve(__dirname, '../packages/plugins/materials/index.js'),
     '@opentiny/tiny-engine-plugin-block': path.resolve(__dirname, '../packages/plugins/block/index.js'),
