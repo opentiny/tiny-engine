@@ -63,8 +63,6 @@ export default {
       context.bindMethodInfo = data
     }
 
-    watchEffect(() => {})
-
     watchEffect(() => {
       const eventName = props.eventBinding?.eventName
 
