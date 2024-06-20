@@ -16,7 +16,7 @@ export default {
   },
   emits: ['click'],
   setup(props, { emit }) {
-    const canvasApi = getPluginApi('engine.canvas.container').canvasApi
+    const canvasApi = getPluginApi('engine.canvas').canvasApi
     const dragstart = (e) => {
       if (props.data && canvasApi.value?.dragStart) {
         const data = deepClone(props.data)
