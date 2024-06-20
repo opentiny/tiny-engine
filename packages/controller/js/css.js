@@ -11,7 +11,9 @@
  */
 
 import * as cssTree from 'css-tree'
-import { hyphenate } from '../utils'
+import { utils } from '@opentiny/tiny-engine-utils'
+
+const { hyphenate } = utils
 
 /**
  * 传入 css 字符串，得到以选择器为 Key，css 规则为 value 的 object

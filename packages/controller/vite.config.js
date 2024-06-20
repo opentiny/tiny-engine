@@ -39,8 +39,6 @@ export default defineConfig({
     lib: {
       entry: {
         index: path.resolve(__dirname, './src/index.js'),
-        adapter: path.resolve(__dirname, './adapter.js'),
-        utils: path.resolve(__dirname, './utils.js'),
         ...Object.fromEntries(jsEntries)
       },
       name: 'controller',

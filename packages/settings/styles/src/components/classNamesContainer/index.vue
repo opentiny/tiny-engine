@@ -5,7 +5,7 @@
       <link-button :href="docsUrl" class="help-link"></link-button>
     </h6>
     <div class="selector-container">
-      <meta-code-editor
+      <code-configurator
         :modelValue="state.cssContent"
         title="Css 编辑"
         language="css"
@@ -16,7 +16,7 @@
         <div class="edit-global-css" title="编辑全局样式" @click="scope.open">
           <svg-icon name="edit"></svg-icon>
         </div>
-      </meta-code-editor>
+      </code-configurator>
       <div class="selector-right-container">
         <div class="selector-right-container-wrap">
           <div
@@ -105,7 +105,8 @@
 import { computed, reactive, ref, nextTick, watch, watchEffect } from 'vue'
 import { Select as TinySelect } from '@opentiny/vue'
 import { useProperties, useCanvas, useHistory, useHelp } from '@opentiny/tiny-engine-controller'
-import { MetaCodeEditor, LinkButton } from '@opentiny/tiny-engine-common'
+import { LinkButton } from '@opentiny/tiny-engine-common'
+import { CodeConfigurator } from '@opentiny/tiny-engine-configurator'
 import { formatString } from '@opentiny/tiny-engine-controller/js/ast'
 import useStyle, { updateGlobalStyleStr } from '../../js/useStyle'
 import { stringify, getSelectorArr } from '../../js/parser'

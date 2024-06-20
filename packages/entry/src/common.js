@@ -10,6 +10,8 @@
  *
  */
 
+import { initHook } from "./hooks"
+
 const vueLifeHook = [
   'onMounted',
   'onUpdated',
@@ -107,7 +109,7 @@ const handleLifeCycles = (id, lifeCycles) => {
 }
 
 const handleRegistryProp = (id, value) => {
-  const { layout, overwrite, apis, options } = value
+  const { layout, overwrite, apis, options, composable } = value
 
   if (layout) {
     layoutHashMap[id] = layout
@@ -130,6 +132,9 @@ const handleRegistryProp = (id, value) => {
 
   if (apis) {
     apisMap[id] = apis
+    if (composable?.name) {
+      initHook(composable.name, apis)
+    }
   }
 
   if (options) {

@@ -6,13 +6,13 @@
       >透明度</label
     >
     <div>
-      <meta-slider
+      <slider-configurator
         :modelValue="state.opacity"
         :controls="false"
         :showUnit="true"
         :disabled="true"
         @update:modelValue="updateOpacity"
-      ></meta-slider>
+      ></slider-configurator>
     </div>
   </div>
   <div class="effect-group line outline-wrap">
@@ -77,7 +77,7 @@
       </div>
       <div class="outline-color">
         <label>颜色</label>
-        <meta-color :modelValue="state.outlineColor" @change="changeOutlineColor" />
+        <color-configurator :modelValue="state.outlineColor" @change="changeOutlineColor" />
       </div>
     </div>
   </div>
@@ -113,7 +113,7 @@
 <script>
 import { reactive } from 'vue'
 import { Select, Option, OptionGroup, Tooltip } from '@opentiny/vue'
-import { MetaSlider, MetaColor } from '@opentiny/tiny-engine-common'
+import { ColorConfigurator, SliderConfigurator } from '@opentiny/tiny-engine-configurator'
 import ModalMask, { useModal } from '../inputs/ModalMask.vue'
 import ResetButton from '../inputs/ResetButton.vue'
 import InputSelect from '../inputs/InputSelect.vue'
@@ -127,8 +127,8 @@ export default {
     TinyOption: Option,
     TinyOptionGroup: OptionGroup,
     TinyTooltip: Tooltip,
-    MetaSlider,
-    MetaColor,
+    SliderConfigurator,
+    ColorConfigurator,
     ModalMask,
     ResetButton,
     InputSelect

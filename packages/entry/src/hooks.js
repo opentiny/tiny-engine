@@ -16,6 +16,8 @@ export const HOOK_NAME = {
   useHelp: 'help',
   useHttp: 'http',
   useEnv: 'env',
+  useModal: 'modal',
+  useNotify: 'notify',
   useCustom: 'custom'
 }
 
@@ -37,6 +39,8 @@ const hooksState = {
   [HOOK_NAME.useHelp]: {},
   [HOOK_NAME.useHttp]: {},
   [HOOK_NAME.useEnv]: {},
+  [HOOK_NAME.useNotify]: {},
+  [HOOK_NAME.useModal]: {},
   [HOOK_NAME.useCustom]: {} // 自定义
 }
 
@@ -57,6 +61,8 @@ export const useProperty = () => hooksState[HOOK_NAME.useProperty]
 export const useHelp = () => hooksState[HOOK_NAME.useHelp]
 export const useHttp = () => hooksState[HOOK_NAME.useHttp]
 export const useEnv = () => hooksState[HOOK_NAME.useEnv]
+export const useModal = () => hooksState[HOOK_NAME.useModal]
+export const useNotify = () => hooksState[HOOK_NAME.useNotify]
 export const useCustom = () => hooksState[HOOK_NAME.useCustom]
 
 export function initHook(hookName, hookContent, { useDefaultExport } = {}) {
