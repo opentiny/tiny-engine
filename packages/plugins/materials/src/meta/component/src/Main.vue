@@ -35,7 +35,7 @@ import { Collapse, CollapseItem, Search } from '@opentiny/vue'
 import { SearchEmpty } from '@opentiny/tiny-engine-common'
 import { iconSearch } from '@opentiny/vue-icon'
 import { useResource, useCanvas } from '@opentiny/tiny-engine-controller'
-import CanvasDragItem from './CanvasDragItem.vue'
+import { CanvasDragItem } from '@opentiny/tiny-engine-canvas'
 
 export default {
   components: {

@@ -1,5 +1,5 @@
 <template>
-  <component :is="layout.component" :registryData="registryData"></component>
+  <component :is="layout.entry" :registryData="registryData"></component>
 </template>
 
 <script>

@@ -29,5 +29,6 @@ export default {
     header: MaterialHeader
   },
   apis: { ...MaterialBlock.apis },
+  api: { ...MaterialBlock.apis },
   metas: [MaterialBlock, MaterialComponent]
 }
