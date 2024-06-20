@@ -1,6 +1,6 @@
 import component from './src/Main.vue'
 import metaData from './meta'
-import { LayoutService } from './src/composable/'
+import { LayoutService } from './src/composable'
 
 export default {
   ...metaData,

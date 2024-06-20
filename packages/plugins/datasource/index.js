@@ -13,7 +13,7 @@
 import { fetchDataSourceList, fetchDataSourceDetail } from './src/js/http'
 import entry from './src/Main.vue'
 import metaData from './meta.js'
-import { DataSourceService } from './src/composable/'
+import { DataSourceService } from './src/composable'
 
 export default {
   ...metaData,

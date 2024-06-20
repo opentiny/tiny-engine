@@ -12,7 +12,7 @@
 
 import entry, { api } from './src/Main.vue'
 import metaData from './meta.js'
-import { ResourceService } from './src/composable/'
+import { ResourceService } from './src/composable'
 
 export default {
   ...metaData,

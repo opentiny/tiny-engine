@@ -10,7 +10,7 @@
  *
  */
 
-export * from './composable/'
+export * from './composable'
 
 export {
   useLayout,

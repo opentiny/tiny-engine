@@ -12,7 +12,7 @@
 
 import entry from './src/Main.vue'
 import metaData from './meta'
-import { HistoryService } from './src/composable/'
+import { HistoryService } from './src/composable'
 
 export default {
   ...metaData,
