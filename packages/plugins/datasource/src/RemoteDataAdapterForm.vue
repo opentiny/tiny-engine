@@ -8,7 +8,7 @@
 <script>
 import { ref } from 'vue'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
-import { theme } from '@opentiny/tiny-engine-controller/adapter'
+import { theme } from '@opentiny/tiny-engine-controller/js/monaco'
 
 export default {
   components: {
