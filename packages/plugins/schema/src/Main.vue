@@ -44,8 +44,10 @@ import { Popover } from '@opentiny/vue'
 import { VueMonaco, CloseIcon } from '@opentiny/tiny-engine-common'
 import { useCanvas, useModal, useHistory, useNotify } from '@opentiny/tiny-engine-controller'
 import { theme } from '@opentiny/tiny-engine-controller/js/monaco'
-import { reactiveObj2String as obj2String, string2Obj } from '@opentiny/tiny-engine-controller/utils'
+import { utils } from '@opentiny/tiny-engine-utils'
 import { iconSave, iconDownloadLink } from '@opentiny/vue-icon'
+
+const { reactiveObj2String: obj2String, string2Obj } = utils
 
 export default {
   components: {

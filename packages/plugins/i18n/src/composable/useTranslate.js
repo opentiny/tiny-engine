@@ -16,7 +16,7 @@ import { utils } from '@opentiny/tiny-engine-utils'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { generateI18n } from '@opentiny/tiny-engine-controller/js/vscodeGenerateFile'
-import { PROP_DATA_TYPE } from '@opentiny/tiny-engine-controller/utils'
+import { PROP_DATA_TYPE } from '@opentiny/tiny-engine-controller/js/constants'
 import { useResource, useCanvas } from '@opentiny/tiny-engine-entry'
 
 const { HOST_TYPE } = constants

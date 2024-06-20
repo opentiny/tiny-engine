@@ -42,7 +42,7 @@ export function parseFunction(rawCode, context = {}) {
     return fun_ctor(`return (${rawCode})`).call(context).bind(context)
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error(`parseFunction error: ${JSON.Stringify(error)}`)
+    console.error(`parseFunction error: ${JSON.stringify(error)}`)
 
     return null
   }
@@ -344,4 +344,40 @@ export const objectToArray = (obj, { keyTo = 'id', orderKey = '_order' }) => {
     .sort((a, b) => a[orderKey] - b[orderKey])
 
   return arr
+}
+
+/**
+ * 响应式对象转化为字符串
+ *
+ * @param {*} obj
+ * @returns
+ */
+export const reactiveObj2String = (obj) => {
+  let out = null
+
+  try {
+    out = JSON.stringify(toRaw(obj), null, 2)
+  } catch (error) {
+    // do nothing
+  }
+
+  return out
+}
+
+/**
+ * 字符串转对象
+ * @param {*} string
+ * @returns
+ */
+
+export const string2Obj = (string) => {
+  let obj = null
+
+  try {
+    obj = JSON.parse(string)
+  } catch (error) {
+    // do nothing
+  }
+
+  return obj
 }
