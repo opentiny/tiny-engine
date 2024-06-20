@@ -11,8 +11,12 @@
  */
 import entry from './src/Main.vue'
 import metaData from './meta.js'
+import { TranslateService } from './src/composable'
 
 export default {
   ...metaData,
-  entry
+  entry,
+  metas: [TranslateService]
 }
+
+export { TranslateService }

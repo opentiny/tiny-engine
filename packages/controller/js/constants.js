@@ -71,8 +71,27 @@ export const HOST_TYPE = {
   Block: 'block'
 }
 
-// 转化国际化的映射关系表
 export const i18nKeyMaps = {
   zhCN: 'zh_CN',
   enUS: 'en_US'
+}
+
+export const MATERIAL_TYPE = {
+  Component: 'component',
+  Block: 'block'
+}
+
+export const NODE_INSERT_TYPE = {
+  Inside: 'inside',
+  After: 'after',
+  Before: 'before',
+  Replace: 'replace'
+}
+
+export const PROP_DATA_TYPE = {
+  I18N: 'i18n',
+  VARIABLE: 'variable',
+  JSEXPRESSION: 'JSExpression',
+  JSRESOURCE: 'JSResource',
+  JSSLOT: 'JSSlot'
 }

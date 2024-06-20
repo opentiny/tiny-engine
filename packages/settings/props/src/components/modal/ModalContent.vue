@@ -18,9 +18,11 @@
 
 <script>
 import { computed } from 'vue'
-import { getEnumData, camelize } from '@opentiny/tiny-engine-controller/utils'
+import { utils } from '@opentiny/tiny-engine-utils'
 import { useResource } from '@opentiny/tiny-engine-controller'
 import Components from '../../components'
+
+const { getEnumData, camelize } = utils
 
 export default {
   inheritAttrs: false,

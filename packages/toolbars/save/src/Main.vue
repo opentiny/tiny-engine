@@ -43,7 +43,7 @@ import { reactive, ref, onBeforeMount } from 'vue'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
 import { Button, Popover, DialogBox } from '@opentiny/vue'
 import { useCanvas } from '@opentiny/tiny-engine-controller'
-import { theme } from '@opentiny/tiny-engine-controller/adapter'
+import { theme } from '@opentiny/tiny-engine-controller/js/monaco'
 import { openCommon, saveCommon } from './js/index'
 import { isLoading } from './js/index'
 export const api = {

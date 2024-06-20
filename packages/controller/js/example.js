@@ -92,7 +92,8 @@ const exampleMap = {
     }
   ] `
 }
-export default (name) => {
+
+export const getExample = (name) => {
   const resetName = `${name || ''}`.toLocaleLowerCase()
   return exampleMap[resetName]
 }
