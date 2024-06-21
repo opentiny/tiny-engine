@@ -43,18 +43,7 @@ import {
   Layout,
   Canvas,
   EditorInfoService,
-  HelpService,
   AppService,
-  BlockService,
-  BreadcrumbService,
-  DataSourceService,
-  PageService,
-  ResourceService,
-  PropertiesService,
-  PropertyService,
-  SaveLocalService,
-  TranslateService,
-  HistoryService,
 } from '@opentiny/tiny-engine'
 
 export default {
@@ -62,18 +51,7 @@ export default {
     id: 'engine.root',
     metas: [
       EditorInfoService,
-      HelpService,
-      AppService,
-      BreadcrumbService,
-      BlockService,
-      DataSourceService,
-      PageService,
-      ResourceService,
-      PropertiesService,
-      PropertyService,
-      SaveLocalService,
-      TranslateService,
-      HistoryService,
+      AppService
     ]
   },
   config: {

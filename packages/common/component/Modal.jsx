@@ -9,9 +9,7 @@ const confirm = ({ title, status, message, exec, cancel, showFooter = true }) =>
     message: () => {
       return (
         <div class="modal-content">
-          <div class="wrap">
-            {typeof message === 'string' ? message : <message />}
-          </div>
+          <div class="wrap">{typeof message === 'string' ? message : <message />}</div>
         </div>
       )
     }
@@ -32,11 +30,9 @@ const message = ({ title, status, message, exec, width = '400' }) => {
     width: width,
     message() {
       return (
-        <div div class="modal-content" >
-          <div class="wrap">
-            {typeof message === 'string' ? message : <message />}
-          </div>
-        </div >
+        <div div class="modal-content">
+          <div class="wrap">{typeof message === 'string' ? message : <message />}</div>
+        </div>
       )
     }
   }).then(() => {
@@ -67,10 +63,8 @@ const topbox = (options) => {
 window.topbox = topbox
 window.message = message
 
-export default () => {
-  return {
-    confirm,
-    message,
-    topbox
-  }
+export default {
+  confirm,
+  message,
+  topbox
 }

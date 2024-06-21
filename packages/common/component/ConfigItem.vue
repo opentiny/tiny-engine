@@ -107,9 +107,11 @@ import i18n from '@opentiny/tiny-engine-controller/js/i18n'
 import { CodeConfigurator, VariableConfigurator } from '@opentiny/tiny-engine-configurator'
 import MultiTypeSelector from './MultiTypeSelector.vue'
 import { useHistory, useProperties, useResource, useLayout, useCanvas } from '@opentiny/tiny-engine-controller'
-import { generateFunction } from '@opentiny/tiny-engine-controller/utils'
 import { SCHEMA_DATA_TYPE, PAGE_STATUS, TYPES } from '@opentiny/tiny-engine-controller/js/constants'
 import { getConfigurator } from '@opentiny/tiny-engine-entry'
+import { utils } from '@opentiny/tiny-engine-utils'
+
+const { parseFunction: generateFunction } = utils
 
 const hasRule = (required, rules) => {
   if (required) {

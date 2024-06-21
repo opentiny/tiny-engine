@@ -13,8 +13,6 @@
 import { reactive, watch } from 'vue'
 import { useHttp } from '@opentiny/tiny-engine-http'
 
-const http = useHttp()
-
 const defaultState = {
   // 应用列表
   list: [],
@@ -41,7 +39,7 @@ const defaultState = {
 const appInfoState = reactive({ ...defaultState })
 
 // 获取当前应用的信息
-const fetchAppInfo = (appId) => http.get(`/app-center/api/apps/detail/${appId}`)
+const fetchAppInfo = (appId) => useHttp().get(`/app-center/api/apps/detail/${appId}`)
 
 watch(
   () => appInfoState.selectedId,
@@ -55,7 +53,7 @@ watch(
 )
 
 // 获取应用列表
-const fetchAppList = (platformId) => http.get(`/app-center/api/apps/list/${platformId}`)
+const fetchAppList = (platformId) => useHttp().get(`/app-center/api/apps/list/${platformId}`)
 
 const updateApp = async (id) => {
   const appInfo = await fetchAppInfo(id)

@@ -16,6 +16,7 @@ import MaterialLayout from './src/meta/layout'
 import MaterialBlock from './src/meta/block'
 import MaterialComponent from './src/meta/component'
 import MaterialHeader from './src/components/header/Main.vue'
+import { ResourceService } from './src/composable'
 
 export default {
   ...metaData,
@@ -30,5 +31,7 @@ export default {
   },
   apis: { ...MaterialBlock.apis },
   api: { ...MaterialBlock.apis },
-  metas: [MaterialBlock, MaterialComponent]
+  metas: [MaterialBlock, MaterialComponent, ResourceService]
 }
+
+export { entry, ResourceService }

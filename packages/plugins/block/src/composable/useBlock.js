@@ -17,10 +17,16 @@ import { format } from '@opentiny/vue-renderless/common/date'
 import { remove } from '@opentiny/vue-renderless/common/array'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { getMergeMeta } from '@opentiny/tiny-engine-entry'
-import { getCanvasStatus } from '../../js/canvas'
-import { ast2String, parseExpression } from '../../js/ast'
-import { getCssObjectFromStyleStr } from '../../js/css'
-import { useCanvas, useTranslate, useEditorInfo, useBreadcrumb, useLayout } from '@opentiny/tiny-engine-entry'
+import { getCanvasStatus } from '@opentiny/tiny-engine-controller/js/canvas'
+import { ast2String, parseExpression } from '@opentiny/tiny-engine-controller/js/ast'
+import { getCssObjectFromStyleStr } from '@opentiny/tiny-engine-controller/js/css'
+import {
+  useCanvas,
+  useTranslate,
+  useEditorInfo,
+  useBreadcrumb,
+  useLayout
+} from '@opentiny/tiny-engine-entry'
 
 const { SORT_TYPE, SCHEMA_DATA_TYPE, BLOCK_OPENNESS } = constants
 

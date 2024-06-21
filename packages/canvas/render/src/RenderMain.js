@@ -13,13 +13,13 @@
 import { h, provide, inject, nextTick, shallowReactive, reactive, ref, watch, watchEffect } from 'vue'
 import { I18nInjectionKey } from 'vue-i18n'
 import { useBroadcastChannel } from '@vueuse/core'
-import { constants } from '@opentiny/tiny-engine-utils'
-import { generateFunction } from '@opentiny/tiny-engine-controller/utils'
+import { constants, utils as commonUtils } from '@opentiny/tiny-engine-utils'
 import renderer, { parseData, setConfigure, setController, globalNotify, isStateAccessor } from './render'
 import { getNode as getNodeById, clearNodes, getRoot, setContext, getContext, setCondition, context } from './context'
 import CanvasEmpty from './CanvasEmpty.vue'
 
 const { BROADCAST_CHANNEL } = constants
+const { parseFunction: generateFunction } = commonUtils
 
 const reset = (obj) => {
   Object.keys(obj).forEach((key) => delete obj[key])
