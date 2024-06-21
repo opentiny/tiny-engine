@@ -1,8 +1,11 @@
 import component from './src/Main.vue'
 import metaData from './meta'
-import './src/hooks/useLayout'
+import { LayoutService } from './src/composable'
 
 export default {
   ...metaData,
-  component
+  component,
+  metas: [LayoutService]
 }
+
+export { LayoutService }

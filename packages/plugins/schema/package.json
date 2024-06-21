@@ -28,7 +28,8 @@
     "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-controller": "workspace:*",
     "@opentiny/tiny-engine-entry": "workspace:*",
-    "@opentiny/tiny-engine-http": "workspace:*"
+    "@opentiny/tiny-engine-http": "workspace:*",
+    "@opentiny/tiny-engine-utils": "workspace:*"
   },
   "devDependencies": {
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",

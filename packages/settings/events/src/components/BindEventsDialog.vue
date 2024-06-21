@@ -89,7 +89,7 @@ import { reactive, ref, watchEffect, nextTick } from 'vue'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
 import { Button, DialogBox, Input, Search, Popover, Switch } from '@opentiny/vue'
 import { useCanvas, useHistory, useLayout } from '@opentiny/tiny-engine-controller'
-import { theme } from '@opentiny/tiny-engine-controller/adapter'
+import { theme } from '@opentiny/tiny-engine-controller/js/monaco'
 import { string2Ast, ast2String } from '@opentiny/tiny-engine-controller/js/ast'
 import { iconYes, iconHelpQuery } from '@opentiny/vue-icon'
 

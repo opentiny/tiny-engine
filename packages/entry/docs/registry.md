@@ -7,15 +7,28 @@
 ```ts
 type VueComponent = any
 type OverwriteFn = (ctx, originFn) => (...args) => any
+type Overwrite = {
+  template?: string
+  methods?: Record<string, Record<string, OverwriteFn>>
+  // 此处的lifeCycle会替换原来的生命周期，而上面的lifeCycle代码会直接插入到应用中
+  lifeCycle?: Record<
+    string,
+    Record<string, OverwriteFn | (OverwriteFn | undefined)[]>
+  >
+}
 
 interface MetaApp {
   id: string
   // 元应用的入口组件
-  entry: VueComponent
+  entry?: VueComponent
   // 元应用中可供定制的局部模块组件，例如定制 header、footer
   components?: Record<string, VueComponent>
-  // 组件暴露的api接口
+  // 对外提供的api接口
   apis?: Record<string, Function>
+  // apis自动注册为useXxx composable形式(不对外)
+  composable?: {
+    name: string;
+  }
   // component的配置项
   options?: Record<string, any>
   // 布局元应用。如果当前元应用需要定制布局，可以抽取一层布局元应用
@@ -23,17 +36,19 @@ interface MetaApp {
   // 元应用生命周期。此处写的代码会直接插入到应用中
   lifeCycle?: Record<string, Function>
   // 覆盖逻辑
-  overwrite?: {
-    template?: string
-    methods?: Record<string, Record<string, OverwriteFn>>
-    // 此处的lifeCycle会替换原来的生命周期，而上面的lifeCycle代码会直接插入到应用中
-    lifeCycle?: Record<
-      string,
-      Record<string, OverwriteFn | (OverwriteFn | undefined)[]>
-    >
-  }
+  overwrite?: Overwrite
   // 依赖的其他元应用
-  metas?: MetaApp[]
+  metas?: Array<MetaApp | MetaService>
+}
+
+interface MetaService {
+  id: string
+  type: 'MetaService'
+  apis: Record<string, Function | Object>,
+  // apis自动注册为useXxx composable形式(不对外)
+  composable?: {
+    name: string;
+  }
 }
 
 // 注册表类型

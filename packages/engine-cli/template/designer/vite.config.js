@@ -10,13 +10,25 @@ export default defineConfig((options) => {
   }
   const defaultConfig = getDefaultConfig(options, extOptions)
 
+  const devAlias = {
+    '@opentiny/tiny-engine-theme': ['light', 'dark'].includes(extOptions.VITE_THEME)
+      ? path.resolve(
+          process.cwd(),
+          `./node_modules/@opentiny/tiny-engine-theme-${extOptions.VITE_THEME}/dist/style.css`
+        )
+      : ''
+  }
+
   const config = {
     envDir,
     publicDir: path.resolve(__dirname, './public'),
     server: {
       port: 8090
+    },
+    resolve: {
+      alias: devAlias
     }
   }
-  
+
   return mergeConfig(defaultConfig, config)
 })

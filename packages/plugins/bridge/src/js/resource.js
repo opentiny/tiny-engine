@@ -29,7 +29,7 @@ const state = reactive({
   resources: [],
   resourceNames: {},
   refresh: false,
-  id: useApp().appInfoState.selectedId
+  id: ''
 })
 
 const DEFAULT_RESOURCE = {

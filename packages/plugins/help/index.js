@@ -11,7 +11,11 @@
  */
 
 import metaData from './meta.js'
+import { HelpService } from './src/composable'
 
 export default {
-  ...metaData
+  ...metaData,
+  metas: [HelpService]
 }
+
+export { HelpService }

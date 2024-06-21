@@ -42,6 +42,7 @@
     "@babel/generator": "~7.23.2",
     "@babel/parser": "~7.23.2",
     "@babel/traverse": "~7.23.2",
+    "@opentiny/tiny-engine-configurator": "workspace:*",
     "@opentiny/tiny-engine-layout": "workspace:~",
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
     "@opentiny/tiny-engine-entry": "workspace:*",
