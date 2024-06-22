@@ -50,13 +50,16 @@ export default {
 
     const pluginRegistryData = ref(props.registryData)
     const rightPanelRef = ref(null)
-
+    const tabIds = pluginRegistryData.value.options.tabIds || []
     const headerComponent = getMergeMeta(pluginRegistryData.value.components?.header)
-    const onlyShowDefault = ref(pluginRegistryData.value.options.childrenIds?.length === 1)
-    const activeName = ref(pluginRegistryData.value.options?.defaultTabId)
+    const onlyShowDefault = ref(tabIds.length === 1)
+    const activeTabId =
+      pluginRegistryData.value.options.tabIds.find((item) => item === pluginRegistryData.value.options?.defaultTabId) ||
+      tabIds[0]
 
-    const defaultComponent = getMergeMeta(activeName.value)?.component
-    const tabComponents = pluginRegistryData.value.options.childrenIds?.map((id) => {
+    const activeName = ref(activeTabId)
+    const defaultComponent = getMergeMeta(activeName.value)?.entry
+    const tabComponents = tabIds.map((id) => {
       const itemMeta = getMergeMeta(id)
       return {
         id,
