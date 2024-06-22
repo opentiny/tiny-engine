@@ -34,7 +34,7 @@ import { inject, onMounted, reactive, ref } from 'vue'
 import { Collapse, CollapseItem, Search } from '@opentiny/vue'
 import { SearchEmpty } from '@opentiny/tiny-engine-common'
 import { iconSearch } from '@opentiny/vue-icon'
-import { useResource, useCanvas } from '@opentiny/tiny-engine-controller'
+import { useMaterial, useCanvas } from '@opentiny/tiny-engine-controller'
 import { CanvasDragItem } from '@opentiny/tiny-engine-canvas'
 
 export default {
@@ -49,10 +49,10 @@ export default {
   setup() {
     const COMPONENT_PANEL_COLUMNS = '1fr 1fr 1fr'
     const SHORTCUT_PANEL_COLUMNS = '1fr 1fr 1fr 1fr 1fr 1fr'
-    const { generateNode, resState } = useResource()
+    const { generateNode, materialState } = useMaterial()
     const gridTemplateColumns = ref(COMPONENT_PANEL_COLUMNS)
     const panelState = inject('panelState', {})
-    const { components } = resState
+    const { components } = materialState
 
     const fetchComponents = (components, name) => {
       if (!name) {

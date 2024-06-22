@@ -13,21 +13,11 @@
 import { reactive } from 'vue'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { utils, constants } from '@opentiny/tiny-engine-utils'
-import { getCanvasStatus } from '@opentiny/tiny-engine-controller/js/canvas'
-import {
-  useNotify,
-  useApp,
-  useCanvas,
-  useTranslate,
-  useEditorInfo,
-  useBreadcrumb,
-  useLayout,
-  useBlock,
-  useMaterial
-} from '@opentiny/tiny-engine-entry'
+import { meta as BuiltinComponentMaterials } from '@opentiny/tiny-engine-builtin-component'
+import { getMergeMeta, useNotify, useCanvas, useBlock } from '@opentiny/tiny-engine-entry'
 
 const { camelize, capitalize } = utils
-const { MATERIAL_TYPE, COMPONENT_NAME, DEFAULT_INTERCEPTOR } = constants
+const { MATERIAL_TYPE } = constants
 
 // 这里存放TinyVue组件、原生HTML、内置组件的缓存
 const resource = new Map()
@@ -37,20 +27,18 @@ const blockResource = new Map()
 
 const http = useHttp()
 
-const resState = reactive({
+const materialState = reactive({
   components: [],
   blocks: [],
-  dataSource: [],
-  pageTree: [],
-  langs: {},
-  utils: {},
-  globalState: [],
   thirdPartyDeps: { scripts: [], styles: new Set() }
 })
 
+const componentState = reactive({
+  componentsMap: {}
+})
 const getSnippet = (component) => {
   let schema = {}
-  resState.components.forEach(({ children }) => {
+  materialState.components.forEach(({ children }) => {
     const child = children.find(({ snippetName }) => snippetName === component)
     child && (schema = child.schema)
   })
@@ -87,7 +75,7 @@ const registerComponent = (data) => {
 
 const fetchBlockDetail = async (blockName) => {
   const { getBlockAssetsByVersion } = useBlock()
-  const currentVersion = resState.componentsMap?.[blockName]?.version
+  const currentVersion = componentState.componentsMap?.[blockName]?.version
   const block = (await http.get(`/material-center/api/block?label=${blockName}`))?.[0]
 
   if (!block) {
@@ -153,8 +141,8 @@ const registerBlock = async (data, notFetchResouce) => {
 }
 
 const clearMaterials = () => {
-  resState.components = []
-  resState.blocks = []
+  materialState.components = []
+  materialState.blocks = []
   resource.clear()
 }
 
@@ -194,13 +182,13 @@ const generateThirdPartyDeps = (components) => {
     }
   })
 
-  resState.thirdPartyDeps.scripts.push(...scripts)
-  styles.forEach((item) => resState.thirdPartyDeps.styles.add(item))
+  materialState.thirdPartyDeps.scripts.push(...scripts)
+  styles.forEach((item) => materialState.thirdPartyDeps.styles.add(item))
 }
 
 const addMaterials = (materials = {}) => {
   generateThirdPartyDeps(materials.components)
-  resState.components.push(...materials.snippets)
+  materialState.components.push(...materials.snippets)
   materials.components.map(registerComponent)
 
   const promises = materials?.blocks?.map((item) => registerBlock(item, true))
@@ -209,14 +197,16 @@ const addMaterials = (materials = {}) => {
       return
     }
     // 默认区块都会展示在默认分组中
-    if (!resState.blocks?.[0]?.children) {
-      resState.blocks.push({
+    if (!materialState.blocks?.[0]?.children) {
+      materialState.blocks.push({
         groupId: useBlock().DEFAULT_GROUP_ID,
         groupName: useBlock().DEFAULT_GROUP_NAME,
         children: []
       })
     }
-    resState.blocks[0].children.unshift(...blocks.filter((res) => res.status === 'fulfilled').map((res) => res.value))
+    materialState.blocks[0].children.unshift(
+      ...blocks.filter((res) => res.status === 'fulfilled').map((res) => res.value)
+    )
   })
 }
 
@@ -239,98 +229,15 @@ const setMaterial = (name, data) => {
   resource.set(name, data)
 }
 
-const getConfigureMap = () => {
-  const entries = Object.entries(Object.fromEntries(resource)).map(([key, value]) => {
-    return [key, value.content?.configure || value.configure]
-  })
-  return Object.fromEntries(entries)
-}
+const fetchMaterial = async () => {
+  const bundleUrls = getMergeMeta('engine.config')?.material || []
+  const materials = await Promise.allSettled(bundleUrls.map((url) => http.get(url)))
 
-const initPage = (pageInfo) => {
-  try {
-    if (pageInfo.meta) {
-      const { occupier } = pageInfo.meta
-
-      useLayout().layoutState.pageStatus = getCanvasStatus(occupier)
-    } else {
-      useLayout().layoutState.pageStatus = {
-        state: 'empty',
-        data: {}
-      }
+  materials.forEach((response) => {
+    if (response.status === 'fulfilled' && response.value.materials) {
+      addMaterials(response.value.materials)
     }
-
-    pageInfo.id = pageInfo.meta?.id
-  } catch (error) {
-    console.log(error) // eslint-disable-line
-  }
-
-  const { id, meta, ...pageSchema } = pageInfo
-  // 画布传递 schema ，多余的数据不能传递
-  useCanvas().initData(pageSchema, {
-    id,
-    name: pageInfo?.fileName
   })
-  useBreadcrumb().setBreadcrumbPage([pageInfo.fileName])
-}
-
-/**
- * 根据区块 id 初始化应用
- * @param {string} blockId 区块 id
- */
-const initBlock = async (blockId) => {
-  const { PLUGIN_NAME, getPluginApi } = useLayout()
-  const blockApi = getPluginApi(PLUGIN_NAME.BlockManage)
-  const blockContent = await blockApi.getBlockById(blockId)
-
-  if (blockContent.public_scope_tenants.length) {
-    blockContent.public_scope_tenants = blockContent.public_scope_tenants.map((e) => e.id)
-  }
-
-  useLayout().layoutState.pageStatus = getCanvasStatus(blockContent?.occupier)
-
-  // 请求区块详情
-  useBlock().initBlock(blockContent, {}, true)
-}
-
-const initPageOrBlock = async () => {
-  const { pageId, blockId } = useEditorInfo().useInfo()
-  const { setBreadcrumbPage } = useBreadcrumb()
-
-  if (pageId) {
-    const { PLUGIN_NAME, getPluginApi } = useLayout()
-    const pagePluginApi = getPluginApi(PLUGIN_NAME.AppManage)
-
-    const data = await pagePluginApi.getPageById(pageId)
-
-    useLayout().layoutState.pageStatus = getCanvasStatus(data.occupier)
-    useCanvas().initData(data.page_content, data)
-    setBreadcrumbPage([data.name])
-    return
-  }
-
-  if (blockId) {
-    await initBlock(blockId)
-
-    return
-  }
-
-  // url 没有 pageid 或 blockid，到页面首页或第一页
-  const pageInfo = resState.pageTree.find((page) => page?.meta?.isHome) ||
-    resState.pageTree.find(
-      (page) => page.componentName === COMPONENT_NAME.Page && page?.meta?.group !== 'publicPages'
-    ) || {
-      componentName: COMPONENT_NAME.Page
-    }
-  initPage(pageInfo)
-}
-
-const handlePopStateEvent = async () => {
-  const { id, type } = useEditorInfo().useInfo()
-
-  await initPageOrBlock()
-
-  // 国际化貌似有 app 和区块之分，但是目前其实都存到了 app 里面，需要确认是否需要修复
-  await useTranslate().initI18n({ host: id, hostType: type })
 }
 
 /**
@@ -343,10 +250,10 @@ const getBlockDeps = (dependencies = {}) => {
   scripts.length &&
     scripts.forEach((npm) => {
       const { package: pkg, script, css, components } = npm
-      const npmInfo = resState.thirdPartyDeps.scripts.find((item) => item.package === pkg)
+      const npmInfo = materialState.thirdPartyDeps.scripts.find((item) => item.package === pkg)
 
       if (!npmInfo || !npmInfo.script) {
-        resState.thirdPartyDeps.scripts.push({ package: pkg, script, css, components })
+        materialState.thirdPartyDeps.scripts.push({ package: pkg, script, css, components })
       } else {
         const components = npmInfo.components || {}
 
@@ -354,60 +261,7 @@ const getBlockDeps = (dependencies = {}) => {
       }
     })
 
-  styles?.forEach((item) => resState.thirdPartyDeps.styles.add(item))
-}
-
-const fetchResource = async ({ isInit = true } = {}) => {
-  const { id, type } = useEditorInfo().useInfo()
-  useApp().appInfoState.selectedId = id
-  const appData = await useHttp().get(`/app-center/v1/api/apps/schema/${id}`)
-  resState.pageTree = appData.componentsTree
-  resState.dataSource = appData.dataSource?.list
-  resState.dataHandler = appData.dataSource?.dataHandler || DEFAULT_INTERCEPTOR.dataHandler
-  resState.willFetch = appData.dataSource?.willFetch || DEFAULT_INTERCEPTOR.willFetch
-  resState.errorHandler = appData.dataSource?.errorHandler || DEFAULT_INTERCEPTOR.errorHandler
-
-  resState.bridge = appData.bridge
-  resState.utils = appData.utils
-  resState.isDemo = appData.meta?.is_demo
-  resState.globalState = appData?.meta.global_state
-
-  useMaterial().initMaterial({ isInit, appData })
-
-  // 词条语言为空时使用默认的语言
-  const defaultLocales = [
-    { lang: 'zh_CN', label: 'zh_CN' },
-    { lang: 'en_US', label: 'en_US' }
-  ]
-  const locales = Object.keys(appData.i18n).length
-    ? Object.keys(appData.i18n).map((key) => ({ lang: key, label: key }))
-    : defaultLocales
-  resState.langs = {
-    locales,
-    messages: appData.i18n
-  }
-
-  try {
-    await useMaterial().fetchMaterial()
-
-    if (isInit) {
-      await initPageOrBlock()
-    }
-
-    await useTranslate().initI18n({ host: id, hostType: type, init: true })
-  } catch (error) {
-    console.log(error) // eslint-disable-line
-  }
-}
-
-const getSnippetRelationship = (component) => {
-  let relationship = {}
-  resState.components.forEach(({ children }) => {
-    const child = children.find(({ snippetName }) => snippetName === component)
-    child && (relationship = child.relationship)
-  })
-
-  return relationship
+  styles?.forEach((item) => materialState.thirdPartyDeps.styles.add(item))
 }
 
 /**
@@ -421,25 +275,48 @@ const updateCanvasDependencies = (blocks) => {
     getBlockDeps(block.content.dependencies)
   })
 
-  useCanvas().canvasApi.value?.canvasDispatch('updateDependencies', { detail: resState.thirdPartyDeps })
+  useCanvas().canvasApi.value?.canvasDispatch('updateDependencies', { detail: materialState.thirdPartyDeps })
+}
+
+const initBuiltinMaterial = () => {
+  const { Builtin } = useCanvas().canvasApi.value
+  Builtin.data.materials.components[0].children.map(registerComponent)
+  BuiltinComponentMaterials.components[0].children.map(registerComponent)
+
+  const builtinSnippets = {
+    group: '内置组件',
+    children: [...Builtin.data.materials.snippets[0].children, ...BuiltinComponentMaterials.snippets[0].children]
+  }
+
+  materialState.components.push(builtinSnippets)
+}
+
+const initMaterial = ({ isInit = true, appData = {} } = {}) => {
+  initBuiltinMaterial()
+  if (isInit) {
+    componentState.componentsMap = appData.componentsMap?.reduce((componentsMap, component) => {
+      if (component.dependencies) {
+        getBlockDeps(component.dependencies)
+      }
+
+      return { ...componentsMap, [component.componentName]: component }
+    }, {})
+  }
 }
 
 export default function () {
   return {
-    resState,
-    fetchResource,
+    materialState,
+    initMaterial,
+    fetchMaterial,
     generateNode,
     addMaterials,
     clearMaterials,
     clearBlockResources,
     getMaterial,
     setMaterial,
-    getConfigureMap,
     registerComponent,
     registerBlock,
-    getSnippetRelationship,
-    initPageOrBlock,
-    handlePopStateEvent,
     updateCanvasDependencies
   }
 }

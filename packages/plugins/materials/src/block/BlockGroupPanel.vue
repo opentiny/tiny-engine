@@ -24,7 +24,7 @@ import { nextTick, reactive, watch, inject } from 'vue'
 import { Search } from '@opentiny/vue'
 import { iconSearch } from '@opentiny/vue-icon'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
-import { useApp, useBlock, useModal, useResource } from '@opentiny/tiny-engine-controller'
+import { useApp, useBlock, useModal, useResource, useMaterial } from '@opentiny/tiny-engine-controller'
 import BlockGroupTransfer from './BlockGroupTransfer.vue'
 import BlockGroupFilters from './BlockGroupFilters.vue'
 
@@ -113,7 +113,7 @@ export default {
             const selectedId = selectedBlockArray.value.map((b) => b.id)
             const addedBlocks = res.blocks.filter((item) => selectedId.includes(item.id))
 
-            useResource().updateCanvasDependencies(addedBlocks)
+            useMaterial().updateCanvasDependencies(addedBlocks)
 
             isRefresh.value = true
             state.searchValue = ''

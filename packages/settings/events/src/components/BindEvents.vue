@@ -87,7 +87,7 @@
 <script>
 import { computed, reactive, watchEffect } from 'vue'
 import { Popover, Button } from '@opentiny/vue'
-import { useCanvas, useModal, useLayout, useBlock, useResource } from '@opentiny/tiny-engine-controller'
+import { useCanvas, useModal, useLayout, useBlock, useMaterial } from '@opentiny/tiny-engine-controller'
 import { BlockLinkEvent, SvgButton } from '@opentiny/tiny-engine-common'
 import { iconHelpQuery, iconChevronDown } from '@opentiny/vue-icon'
 import BindEventsDialog, { open as openDialog } from './BindEventsDialog.vue'
@@ -110,7 +110,7 @@ export default {
     const { PLUGIN_NAME, activePlugin, getPluginApi } = useLayout()
     const { pageState } = useCanvas()
     const { getBlockEvents, getCurrentBlock, removeEventLink } = useBlock()
-    const { getMaterial } = useResource()
+    const { getMaterial } = useMaterial()
     const { confirm } = useModal()
 
     const { highlightMethod } = getPluginApi(PLUGIN_NAME.PageController)

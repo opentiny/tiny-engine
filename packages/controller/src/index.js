@@ -31,5 +31,6 @@ export {
   useModal,
   useNotify,
   useCustom,
-  useMessage
+  useMessage,
+  useMaterial
 } from '@opentiny/tiny-engine-entry'

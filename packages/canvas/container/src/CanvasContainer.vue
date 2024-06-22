@@ -30,7 +30,7 @@
 <script>
 import { onMounted, ref, computed, onUnmounted } from 'vue'
 import { iframeMonitoring } from '@opentiny/tiny-engine-controller/js/monitor'
-import { useTranslate, useCanvas, useResource } from '@opentiny/tiny-engine-controller'
+import { useTranslate, useCanvas, useMaterial } from '@opentiny/tiny-engine-controller'
 import { NODE_UID, NODE_LOOP } from '../../common'
 import { registerHostkeyEvent, removeHostkeyEvent } from './keyboard'
 import CanvasMenu, { closeMenu, openMenu } from './components/CanvasMenu.vue'
@@ -110,8 +110,7 @@ export default {
     const beforeCanvasReady = () => {
       if (iframe.value) {
         const win = iframe.value.contentWindow
-
-        win.thirdPartyDeps = useResource().resState.thirdPartyDeps
+        win.thirdPartyDeps = useMaterial().materialState.thirdPartyDeps
       }
     }
 
