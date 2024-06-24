@@ -31,6 +31,7 @@
     "@opentiny/tiny-engine-entry": "workspace:*",
     "@opentiny/tiny-engine-http": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
+    "@vue/shared": "^3.4.29",
     "html2canvas": "^1.4.1",
     "pinyin-pro": "^3.13.0"
   },

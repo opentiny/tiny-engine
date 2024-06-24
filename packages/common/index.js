@@ -213,3 +213,6 @@ export {
   MetaTableColumns,
   SearchEmpty
 }
+
+export { default as Modal } from './component/Modal'
+export { default as Notify } from './component/Notify'

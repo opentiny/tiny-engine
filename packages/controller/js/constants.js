@@ -1,14 +1,14 @@
 /**
-* Copyright (c) 2023 - present TinyEngine Authors.
-* Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
-*
-* Use of this source code is governed by an MIT-style license.
-*
-* THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
-* BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
-* A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
-*
-*/
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
+ *
+ * Use of this source code is governed by an MIT-style license.
+ *
+ * THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
+ * BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
+ * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
+ *
+ */
 
 export const COMPONENT_NAME = {
   Page: 'Page',
@@ -71,8 +71,27 @@ export const HOST_TYPE = {
   Block: 'block'
 }
 
-// 转化国际化的映射关系表
 export const i18nKeyMaps = {
   zhCN: 'zh_CN',
   enUS: 'en_US'
+}
+
+export const MATERIAL_TYPE = {
+  Component: 'component',
+  Block: 'block'
+}
+
+export const NODE_INSERT_TYPE = {
+  Inside: 'inside',
+  After: 'after',
+  Before: 'before',
+  Replace: 'replace'
+}
+
+export const PROP_DATA_TYPE = {
+  I18N: 'i18n',
+  VARIABLE: 'variable',
+  JSEXPRESSION: 'JSExpression',
+  JSRESOURCE: 'JSResource',
+  JSSLOT: 'JSSlot'
 }

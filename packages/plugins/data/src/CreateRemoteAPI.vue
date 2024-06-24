@@ -93,7 +93,7 @@
 import { getCurrentInstance, reactive } from 'vue'
 import { ButtonGroup, Form, FormItem, Input, Popover, Switch, Button } from '@opentiny/vue'
 import { VueMonaco as MonacoEditor, MetaDescription } from '@opentiny/tiny-engine-common'
-import { theme } from '@opentiny/tiny-engine-controller/adapter'
+import { theme } from '@opentiny/tiny-engine-controller/js/monaco'
 import { iconPlus } from '@opentiny/vue-icon'
 import CreateFunction from './CreateRemoteFunction.vue'
 

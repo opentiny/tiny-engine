@@ -75,13 +75,13 @@
 import { ref, computed, reactive, watch } from 'vue'
 import { MetaInput } from '@opentiny/tiny-engine-common'
 import { CodeConfigurator, SwitchConfigurator, VariableConfigurator } from '@opentiny/tiny-engine-configurator'
-import { useProperties, useCanvas } from '@opentiny/tiny-engine-entry'
-import { PROP_DATA_TYPE } from '@opentiny/tiny-engine-controller/utils'
-import { string2Obj } from '@opentiny/tiny-engine-controller/adapter'
-import { constants } from '@opentiny/tiny-engine-utils'
+import { useProperties, useCanvas } from '@opentiny/tiny-engine-controller'
+import { PROP_DATA_TYPE } from '@opentiny/tiny-engine-controller/js/constants'
+import { constants, utils } from '@opentiny/tiny-engine-utils'
 import { Tooltip } from '@opentiny/vue'
 
 const { DEFAULT_LOOP_NAME } = constants
+const { string2Obj } = utils
 
 export default {
   components: {
