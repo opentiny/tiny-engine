@@ -50,16 +50,15 @@ export default {
 
     const pluginRegistryData = ref(props.registryData)
     const rightPanelRef = ref(null)
-    const tabIds = pluginRegistryData.value.options.tabIds || []
+    const tabComponentIds = pluginRegistryData.value.options.tabComponentIds || []
     const headerComponent = getMergeMeta(pluginRegistryData.value.components?.header)
-    const onlyShowDefault = ref(tabIds.length === 1)
+    const onlyShowDefault = ref(tabComponentIds.length === 1)
     const activeTabId =
-      pluginRegistryData.value.options.tabIds.find((item) => item === pluginRegistryData.value.options?.defaultTabId) ||
-      tabIds[0]
+      tabComponentIds.find((item) => item === pluginRegistryData.value.options?.defaultTabId) || tabComponentIds[0]
 
     const activeName = ref(activeTabId)
     const defaultComponent = getMergeMeta(activeName.value)?.entry
-    const tabComponents = tabIds.map((id) => {
+    const tabComponents = tabComponentIds.map((id) => {
       const itemMeta = getMergeMeta(id)
       return {
         id,
@@ -82,3 +81,30 @@ export default {
   }
 }
 </script>
+
+<style lang="less" scoped>
+.tiny-tabs {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+}
+
+:deep(.tiny-tabs__header) {
+  padding: 8px;
+}
+
+:deep(.tiny-tabs__content) {
+  flex: 1;
+  overflow-y: scroll;
+  padding: 0;
+  & > div {
+    height: 100%;
+  }
+}
+
+.tiny-collapse {
+  flex: 1;
+  overflow-y: scroll;
+}
+</style>
