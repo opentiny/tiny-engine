@@ -76,7 +76,6 @@ import { Button, DialogBox, Modal, Popover, Search, Tooltip } from '@opentiny/vu
 import { VueMonaco } from '@opentiny/tiny-engine-common'
 import { useCanvas } from '@opentiny/tiny-engine-controller'
 import { getMergeMeta } from '@opentiny/tiny-engine-entry'
-import { theme } from '@opentiny/tiny-engine-controller/js/monaco'
 import { iconAdd, IconDel, iconSetting, iconYes } from '@opentiny/vue-icon'
 
 export default {
@@ -106,13 +105,7 @@ export default {
       lifeCycles: getMergeMeta('engine.config')?.lifeCyclesOptions[getMergeMeta('engine.config')?.dslMode],
       bindLifeCycles: pageState.pageSchema?.lifeCycles || {},
       options: {
-        roundedSelection: true,
-        automaticLayout: true,
-        autoIndent: true,
-        language: 'javascript',
-        formatOnPaste: true,
-        tabSize: 2,
-        theme: theme()
+        language: 'javascript'
       },
       editorValue: '{}'
     })

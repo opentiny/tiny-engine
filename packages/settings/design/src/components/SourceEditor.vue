@@ -47,13 +47,7 @@ export default {
       close,
       change,
       options: {
-        theme: 'vs', // vs | vs-dark
-        tabSize: 2,
         language: 'json',
-        autoIndent: true,
-        formatOnPaste: true,
-        automaticLayout: true,
-        roundedSelection: true,
         minimap: {
           enabled: false
         }
