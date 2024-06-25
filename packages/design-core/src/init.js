@@ -17,7 +17,7 @@ import { initMonitor } from '@opentiny/tiny-engine-controller/js/monitor'
 import { injectGlobalComponents } from '@opentiny/tiny-engine-common'
 import { initHttp } from '@opentiny/tiny-engine-http'
 import TinyThemeTool from '@opentiny/vue-theme/theme-tool'
-import { tinyEngineTheme } from '../../../packages/theme/tiny/index' // SMB 主题
+import { tinyEngineTheme } from '../../../packages/theme/tiny/index'
 import { defineEntry, mergeRegistry } from '@opentiny/tiny-engine-entry'
 import App from './App.vue'
 import defaultRegistry from '../registry.js'
