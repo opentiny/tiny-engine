@@ -17,7 +17,7 @@ import { initMonitor } from '@opentiny/tiny-engine-controller/js/monitor'
 import { injectGlobalComponents } from '@opentiny/tiny-engine-common'
 import { initHttp } from '@opentiny/tiny-engine-http'
 import TinyThemeTool from '@opentiny/vue-theme/theme-tool'
-import { tinySmbTheme } from '@opentiny/vue-theme/theme' // SMB 主题
+import { tinyEngineTheme } from '../../../packages/theme/tiny/index' // SMB 主题
 import { defineEntry, mergeRegistry } from '@opentiny/tiny-engine-entry'
 import App from './App.vue'
 import defaultRegistry from '../registry.js'
@@ -41,7 +41,7 @@ const defaultLifeCycles = {
     initHttp({ env: import.meta.env })
 
     // eslint-disable-next-line no-new
-    new TinyThemeTool(tinySmbTheme, 'smbtheme') // 初始化主题
+    new TinyThemeTool(tinyEngineTheme, 'enginetheme') // 初始化主题
 
     if (import.meta.env.VITE_ERROR_MONITOR === 'true' && import.meta.env.VITE_ERROR_MONITOR_URL) {
       initMonitor(import.meta.env.VITE_ERROR_MONITOR_URL)

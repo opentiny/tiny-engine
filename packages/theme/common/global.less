@@ -858,22 +858,7 @@
 // tiny-vue dialogBox 弹框样式
 .tiny-dialog-box__wrapper {
   .tiny-dialog-box {
-    background-color: var(--ti-lowcode-dialog-box-bg-color);
-    .tiny-dialog-box__header {
-      color: var(--ti-lowcode-dialog-header-color);
-      background-color: var(--ti-lowcode-dialog-box-bg-color);
-      .tiny-dialog-box__headerbtn {
-        color: var(--ti-lowcode-dialog-close-btn-color);
-
-        &:hover {
-          color: var(--ti-lowcode-dialog-close-btn-hover-color);
-        }
-      }
-    }
-
     .tiny-dialog-box__body {
-      color: var(--ti-lowcode-dialog-box-body-color);
-
       .tiny-collapse {
         margin: 16px 0;
       }
@@ -923,7 +908,6 @@
       .tiny-input {
         margin-bottom: 10px;
         background-color: -internal-light-dark(rgb(255, 255, 255), rgb(59, 59, 59));
-
         input {
           color: var(--ti-lowcode-toolbar-breadcrumb-color);
         }
@@ -1403,10 +1387,6 @@
 
 .tiny-input {
   .tiny-input__inner {
-    border-color: var(--ti-lowcode-input-border-color);
-    background-color: var(--ti-lowcode-input-bg-color);
-    color: var(--ti-lowcode-input-color);
-
     &:focus {
       border-color: var(--ti-lowcode-input-focus-border-color);
     }
@@ -1801,12 +1781,8 @@ button {
   }
 
   .tiny-collapse-item__header {
-    color: var(--ti-lowcode-collapse-item-header-color);
-    background: var(--ti-lowcode-collapse-item-header-bg-color);
     position: relative;
     min-height: 32px;
-    padding-top: 5px;
-    padding-bottom: 5px;
 
     &:hover,
     &.is-active {
@@ -1818,13 +1794,7 @@ button {
     }
   }
 
-  .tiny-collapse-item,
-  .tiny-collapse-item__wrap {
-    background-color: var(--ti-lowcode-collapse-item-bg-color);
-  }
-
   .tiny-collapse-item__content {
-    color: var(--ti-lowcode-collapse-item-content-color);
     padding: 0;
     border: none;
   }
@@ -1898,9 +1868,6 @@ button {
 .tiny-dropdown {
   &__trigger {
     color: var(--ti-lowcode-trigger-color);
-    &:not(&__caret-button):hover {
-      color: var(--ti-lowcode-trigger-hover-color);
-    }
   }
 }
 
