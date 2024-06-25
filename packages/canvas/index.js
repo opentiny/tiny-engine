@@ -9,7 +9,7 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-import { CanvasBreadcrumb } from './breadcrumb'
+import CanvasBreadcrumb from './breadcrumb'
 export { createRender } from './render'
 export { CanvasDragItem } from './drag-drop'
 
@@ -26,5 +26,5 @@ export default {
     CanvasBreadcrumb
   },
   layout: CanvasLayout,
-  metas: [CanvasContainer]
+  metas: [CanvasContainer, CanvasBreadcrumb]
 }
