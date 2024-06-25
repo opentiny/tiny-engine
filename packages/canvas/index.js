@@ -23,7 +23,7 @@ export { CanvasContainer, CanvasLayout, DesignCanvas }
 export default {
   ...DesignCanvas,
   components: {
-    CanvasBreadcrumb
+    CanvasBreadcrumb: CanvasBreadcrumb.entry
   },
   layout: CanvasLayout,
   metas: [CanvasContainer, CanvasBreadcrumb]
