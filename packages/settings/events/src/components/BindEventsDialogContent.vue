@@ -53,7 +53,6 @@
 
 <script>
 import { VueMonaco } from '@opentiny/tiny-engine-common'
-import { theme } from '@opentiny/tiny-engine-controller/js/monaco'
 import { useLayout } from '@opentiny/tiny-engine-entry'
 import { Input, Popover, Switch } from '@opentiny/vue'
 import { iconHelpQuery } from '@opentiny/vue-icon'
@@ -78,13 +77,7 @@ export default {
     const context = inject('context')
 
     const editorOptions = {
-      roundedSelection: true,
-      automaticLayout: true,
-      autoIndent: true,
       language: 'json',
-      formatOnPaste: true,
-      tabSize: 2,
-      theme: theme(),
       lineNumbers: false,
       minimap: {
         enabled: false
