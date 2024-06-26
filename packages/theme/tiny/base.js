@@ -1,4 +1,4 @@
-export const tinyBaseSmbTheme = {
+export const tinyBaseTheme = {
   /* 基础色 */
   'ti-base-color-white': '#fff', // 纯白
   'ti-base-color-transparent': 'transparent', // 透明色
