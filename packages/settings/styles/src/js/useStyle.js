@@ -134,7 +134,13 @@ const getClassNameAndIdList = (schema) => {
 }
 
 watch(
-  () => [useCanvas().getCurrentSchema?.(), state.schemaUpdateKey, useProps().propsUpdateKey?.value, useCanvas().canvasApi?.value?.getSchema?.(), schemaLength],
+  () => [
+    useCanvas().getCurrentSchema?.(),
+    state.schemaUpdateKey,
+    useProps().propsUpdateKey?.value,
+    useCanvas().canvasApi?.value?.getSchema?.(),
+    schemaLength
+  ],
   ([curSchema], [oldCurSchema] = []) => {
     const { getCurrentSchema, canvasApi } = useCanvas()
     let schema = getCurrentSchema()
