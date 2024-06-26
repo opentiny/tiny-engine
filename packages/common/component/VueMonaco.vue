@@ -6,13 +6,14 @@ import * as monacoEditor from 'monaco-editor'
 import { watch, onMounted, nextTick, onBeforeUnmount, ref } from 'vue'
 import { formatString } from '@opentiny/tiny-engine-controller/js/ast'
 
-const globalEditorTheme = ref('vs')
+const defaultMonacoEditorTheme = 'vs'
+const globalMonacoEditorTheme = ref(defaultMonacoEditorTheme)
 
 /**
- * @param {'vs' | 'vs-dark'} theme
+ * @param {'vs' | 'vs-dark' | undefined} theme
  */
-export const setGlobalEditorTheme = (theme) => {
-  globalEditorTheme.value = theme
+export const setGlobalMonacoEditorTheme = (theme) => {
+  globalMonacoEditorTheme.value = theme || defaultMonacoEditorTheme
 }
 
 export default {
@@ -73,7 +74,7 @@ export default {
     const initMonaco = (monaco) => {
       emit('editorWillMount', vueMonaco.monaco)
 
-      const options = { ...defaultOptions, ...props, theme: globalEditorTheme.value }
+      const options = { ...defaultOptions, ...props, theme: globalMonacoEditorTheme.value }
 
       if (props.diffEditor) {
         vueMonaco.editor = monaco.editor.createDiffEditor(monacoRef.value, options)
@@ -185,14 +186,11 @@ export default {
       }
     )
 
-    watch(
-      () => globalEditorTheme,
-      (newVal) => {
-        if (vueMonaco.editor) {
-          vueMonaco.monaco.editor.setTheme(newVal)
-        }
+    watch(globalMonacoEditorTheme, (newVal) => {
+      if (vueMonaco.editor) {
+        vueMonaco.monaco.editor.setTheme(newVal)
       }
-    )
+    })
 
     return {
       getMonaco,

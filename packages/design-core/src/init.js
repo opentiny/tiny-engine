@@ -14,7 +14,7 @@ import { createApp } from 'vue'
 import initSvgs from '@opentiny/tiny-engine-svgs'
 import i18n from '@opentiny/tiny-engine-controller/js/i18n'
 import { initMonitor } from '@opentiny/tiny-engine-controller/js/monitor'
-import { injectGlobalComponents, setGlobalEditorTheme, Modal, Notify } from '@opentiny/tiny-engine-common'
+import { injectGlobalComponents, setGlobalMonacoEditorTheme, Modal, Notify } from '@opentiny/tiny-engine-common'
 import { initHttp } from '@opentiny/tiny-engine-http'
 import TinyThemeTool from '@opentiny/vue-theme/theme-tool'
 import { tinySmbTheme } from '@opentiny/vue-theme/theme' // SMB 主题
@@ -60,7 +60,7 @@ const defaultLifeCycles = {
     app.use(i18n).use(injectGlobalComponents)
 
     const theme = getMergeMeta('engine.config').theme?.includes('dark') ? 'vs-dark' : 'vs'
-    setGlobalEditorTheme(theme)
+    setGlobalMonacoEditorTheme(theme)
   }
 }
 
