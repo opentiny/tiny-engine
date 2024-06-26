@@ -17,7 +17,6 @@
 <script>
 import { Popover } from '@opentiny/vue'
 import { useResource, useCanvas, useModal, useLayout, useBlock } from '@opentiny/tiny-engine-controller'
-import { getDocument } from '@opentiny/tiny-engine-canvas'
 
 export default {
   components: {
@@ -39,7 +38,7 @@ export default {
       // 清空区块缓存(不能清空组件缓存)，保证画布刷新后可以重新注册最新的区块资源
       useResource().clearBlockResources()
       // 因为webcomponents无法重复注册，所以需要刷新内部iframe
-      getDocument().location.reload()
+      useCanvas().canvasApi.value.getDocument().location.reload()
     }
 
     const refreshBlock = async () => {

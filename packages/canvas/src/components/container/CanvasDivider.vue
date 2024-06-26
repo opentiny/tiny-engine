@@ -43,7 +43,8 @@ const ROW_SNIPPET = {
         grow: true,
         shrink: true,
         widthType: 'auto'
-      }
+      },
+      children: []
     }
   ]
 }
@@ -103,16 +104,7 @@ export default {
       if (schema.componentName === 'CanvasCol') {
         // 当前组件为空组件，直接切成两行
         if (!schema.children?.length) {
-          schema.children = [
-            {
-              ...extend(true, {}, ROW_SNIPPET),
-              children: [{ ...extend(true, {}, COL_SNIPPET) }]
-            },
-            {
-              ...extend(true, {}, ROW_SNIPPET),
-              children: [{ ...extend(true, {}, COL_SNIPPET) }]
-            }
-          ]
+          schema.children = [extend(true, {}, ROW_SNIPPET), extend(true, {}, ROW_SNIPPET)]
         } else if (schema.children[0].componentName !== 'CanvasRow') {
           // 当前组件不为空组件且第一个孩子不为 row，则是第一次切割，切割成两行，需要将原来有的 children 放置到第一个 row 的 col
           schema.children = [
@@ -129,7 +121,7 @@ export default {
           ]
         } else {
           // 已经切割过了，直接加一行
-          schema.children.push(...extend(true, {}, ROW_SNIPPET))
+          schema.children.push(extend(true, {}, ROW_SNIPPET))
         }
       }
 
@@ -202,7 +194,7 @@ export default {
 
 <style lang="less" scoped>
 .divider-wrapper {
-  position: fixed;
+  position: absolute;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -239,7 +231,7 @@ export default {
 }
 
 .divider-line {
-  position: fixed;
+  position: absolute;
   border: 1px dashed var(--ti-lowcode-common-primary-color);
   z-index: 2;
 }

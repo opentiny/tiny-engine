@@ -43,7 +43,7 @@ export default defineConfig(({ command, mode }) => {
   }
 
   const vuePluginConfig = {}
-  const styleLinks = ['https://npm.onmicrosoft.cn/@opentiny/vue-theme@3.11/index.css']
+  const styleLinks = ['https://npm.onmicrosoft.cn/@opentiny/vue-theme@3.14/index.css']
 
   config.publicDir = false
 

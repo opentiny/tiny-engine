@@ -117,6 +117,7 @@ import {
   IconEyeclose
 } from '@opentiny/vue-icon'
 import {
+  canvasState,
   getCurrent,
   removeNodeById,
   selectNode,
@@ -379,15 +380,14 @@ export default {
       }
     }
 
-    const getStyleValues = (selectState, siteCanvasWidth, siteCanvasHeight) => {
+    const getStyleValues = (selectState, canvasSize, labelWidth, optionWidth) => {
       const { left, top, width, height, doc } = selectState
-      const labelRect = labelRef.value.getBoundingClientRect()
-      const optionRect = optionRef.value.getBoundingClientRect()
+      const { width: canvasWidth, height: canvasHeight } = canvasSize
       // 标签宽度和工具操作条宽度之和加上间距
-      const fullRectWidth = labelRect.width + optionRect.width + OPTION_SPACE
+      const fullRectWidth = labelWidth + optionWidth + OPTION_SPACE
 
       // 是否 将label 标签放置到底部，判断 top 距离
-      const isLabelAtBottom = top <= LABEL_HEIGHT
+      const isLabelAtBottom = top < LABEL_HEIGHT
       const labelAlign = new Align({
         alignLeft: true,
         horizontalValue: 0,
@@ -396,7 +396,7 @@ export default {
       })
 
       // 是否将操作栏放置到底部，判断当前选中组件底部与页面底部的距离。
-      const isOptionAtBottom = siteCanvasHeight - top - height > OPTION_BAR_HEIGHT
+      const isOptionAtBottom = canvasHeight - top - height >= OPTION_BAR_HEIGHT
       const optionAlign = new Align({
         alignLeft: false,
         horizontalValue: 0,
@@ -410,13 +410,13 @@ export default {
         // 选中框宽度小于标签宽度和工具操作条宽度之和加上间距
 
         // 如果labe宽度大于选中框宽度，并且label右侧已经超出画布，则label对齐右侧
-        const isLabelAlignRight = labelRect.width > width && left + labelRect.width + scrollBarWidth > siteCanvasWidth
+        const isLabelAlignRight = labelWidth > width && left + labelWidth + scrollBarWidth > canvasWidth
         if (isLabelAlignRight) {
           labelAlign.align(positions.RIGHT)
         }
 
         // 如果option宽度大于选中框宽度，并且option左侧已经超出画布，则option对齐左侧
-        const isOptionAlignLeft = optionRect.width > width && left + width - optionRect.width < 0
+        const isOptionAlignLeft = optionWidth > width && left + width - optionWidth < 0
         if (isOptionAlignLeft) {
           optionAlign.align(positions.LEFT)
         }
@@ -424,14 +424,14 @@ export default {
         if (isLabelAtBottom === isOptionAtBottom) {
           // 标签框和工具操作框都在顶部或者都在底部
 
-          if (left + fullRectWidth < siteCanvasWidth) {
+          if (left + fullRectWidth < canvasWidth) {
             // 都放在左侧
             labelAlign.align(positions.LEFT)
-            optionAlign.align(positions.LEFT, labelRect.width + OPTION_SPACE)
+            optionAlign.align(positions.LEFT, labelWidth + OPTION_SPACE)
           } else {
             // 都放在右侧
             optionAlign.align(positions.RIGHT)
-            labelAlign.align(positions.RIGHT, optionRect.width + OPTION_SPACE)
+            labelAlign.align(positions.RIGHT, optionWidth + OPTION_SPACE)
           }
         }
       } else {
@@ -439,10 +439,10 @@ export default {
           labelAlign.align(positions.LEFT, Math.min(-left, width - fullRectWidth))
         }
 
-        if (left + width + scrollBarWidth > siteCanvasWidth) {
+        if (left + width + scrollBarWidth > canvasWidth) {
           optionAlign.align(
             positions.RIGHT,
-            Math.min(left + width + scrollBarWidth - siteCanvasWidth, width - fullRectWidth)
+            Math.min(left + width + scrollBarWidth - canvasWidth, width - fullRectWidth)
           )
         }
       }
@@ -454,8 +454,7 @@ export default {
     }
 
     watchPostEffect(async () => {
-      let { left } = props.selectState
-      const { top, width, height, doc } = props.selectState
+      const { left, top, width, height, doc } = props.selectState
 
       // nextTick后ref才能获取到元素。需要把监听的依赖放在await之前，否则无法监听变化
       await nextTick()
@@ -470,15 +469,17 @@ export default {
         return
       }
 
-      const siteCanvasRect = document.querySelector('.site-canvas').getBoundingClientRect()
       const scale = useLayout().getScale()
+      const canvasRect = canvasState.iframe.getBoundingClientRect()
+      const { width: labelWidth } = labelRef.value.getBoundingClientRect()
+      const { width: optionWidth } = optionRef.value.getBoundingClientRect()
 
-      left -= ((1 - scale) / 2) * siteCanvasRect.width
-
+      // canvas容器中，iframe以及iframe之外的元素clientRect的尺寸都是缩放过的，除以scale得到原始大小
       const { labelStyleValue, optionStyleValue } = getStyleValues(
         { left, top, width, height, doc },
-        siteCanvasRect.width * scale,
-        siteCanvasRect.height
+        { width: canvasRect.width / scale, height: canvasRect.height / scale },
+        labelWidth / scale,
+        optionWidth / scale
       )
 
       labelStyle.value = labelStyleValue

@@ -278,7 +278,7 @@ const initBlock = async (block = {}, _langs = {}, isEdit) => {
   // 把区块的schema传递给画布
   await resetBlockCanvasState({ pageSchema: getBlockPageSchema(block) })
   // 这一步操作很重要，让区块管理面板和画布共同维护同一份区块schema
-  block.content = useCanvas().renderer.value?.getSchema()
+  block.content = useCanvas().canvasApi.value?.getSchema()
 
   setCurrentBlock(block)
   setBreadcrumbBlock([block[nameCn] || block.label], block.histories)
@@ -361,7 +361,7 @@ const createEmptyBlock = ({ name_cn, label, path, categories }) => {
 }
 
 const setComponentLinkedValue = ({ propertyName, value }) => {
-  const { schema } = useCanvas().renderer.value?.getCurrent() || {}
+  const { schema } = useCanvas().canvasApi.value?.getCurrent() || {}
 
   if (!propertyName || !schema) {
     return

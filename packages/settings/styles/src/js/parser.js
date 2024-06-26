@@ -248,7 +248,9 @@ export const stringify = (originParseList, styleObject, config = {}) => {
 
       // 在 styleObject  的，可能有改动，所以需要用 styleObject 拼接
       for (const [key, value] of Object.entries(styleObject[item.selectors].rules)) {
-        str += `${key}: ${value};\n`
+        if (![null, undefined].includes(value)) {
+          str += `${key}: ${value};\n`
+        }
       }
     }
     str += '}\n'
