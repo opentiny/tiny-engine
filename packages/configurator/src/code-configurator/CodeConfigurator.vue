@@ -227,11 +227,6 @@ export default {
       close()
     }
 
-    const getTheme = () => {
-      const defaultTheme = window?.TinyGlobalConfig?.theme || 'light'
-      return (props.theme || defaultTheme)?.includes('dark') ? 'vs-dark' : 'vs'
-    }
-
     return {
       save,
       close,
@@ -246,13 +241,7 @@ export default {
       editorState,
       value,
       options: {
-        theme: getTheme(),
-        tabSize: 2,
         language: props.language,
-        autoIndent: true,
-        formatOnPaste: true,
-        automaticLayout: true,
-        roundedSelection: true,
         minimap: {
           enabled: false
         }

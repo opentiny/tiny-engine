@@ -21,7 +21,7 @@ const beforeAppCreate = () => {
 
 initPreview({
   registry: {
-    config: { id : 'engine.config', theme: 'light' },
+    config: { id: 'engine.config', theme: 'light' }
   },
   lifeCycles: {
     beforeAppCreate

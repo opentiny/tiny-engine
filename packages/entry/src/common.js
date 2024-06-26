@@ -10,7 +10,7 @@
  *
  */
 
-import { initHook } from "./hooks"
+import { initHook } from './hooks'
 
 const vueLifeHook = [
   'onMounted',
