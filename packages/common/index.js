@@ -71,7 +71,7 @@ import CloseIcon from './component/CloseIcon.vue'
 import LifeCycles from './component/LifeCycles.vue'
 import EmptyTip from './component/EmptyTip.vue'
 import MaskModal from './component/MaskModal.vue'
-import VueMonaco from './component/VueMonaco.vue'
+import VueMonaco, { setGlobalMonacoEditorTheme } from './component/VueMonaco.vue'
 import PublicIcon from './component/PublicIcon.vue'
 import SaveNewBlock from './component/SaveNewBlock.vue'
 import BindI18n from './component/BindI18n.vue'
@@ -205,6 +205,7 @@ export {
   MaskModal,
   HtmlAttributesConfigurator as MetaHtmlAttributes,
   VueMonaco,
+  setGlobalMonacoEditorTheme,
   PublicIcon,
   SaveNewBlock,
   BindI18n,
