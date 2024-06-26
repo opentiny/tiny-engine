@@ -5,7 +5,7 @@ import { LayoutService } from './src/composable'
 export default {
   ...metaData,
   component,
-  metas: [LayoutService],
+  metas: [LayoutService]
 }
 
 export { LayoutService }

@@ -1,13 +1,14 @@
 <template>
   <div id="tiny-bottom-panel">
     <div class="content">
-      <tiny-steps v-show="data.length > 0" :data="data" @click="(index, node) => $emit('click', node)"></tiny-steps>
+      <tiny-steps v-show="data.length > 0" :data="data" @click="(_index, node) => selectFooterNode(node)"></tiny-steps>
       <div v-show="data.length <= 0" class="tip">没有选中的节点</div>
     </div>
   </div>
 </template>
 
 <script>
+import { getPluginApi } from '@opentiny/tiny-engine-entry'
 import { Steps } from '@opentiny/vue'
 
 export default {
@@ -15,13 +16,21 @@ export default {
     TinySteps: Steps
   },
   props: {
-    // TODO: 待整改为自己去api获取信息， 元应用只应该支持配置项不应该支持获取动态数据
     data: {
       type: Array,
       default: () => []
     }
   },
-  emits: ['click']
+  emits: ['click'],
+  setup() {
+    const { selectNode } = getPluginApi('engine.canvas').canvasApi.value
+    const selectFooterNode = ({ node }) => {
+      selectNode(node)
+    }
+    return {
+      selectFooterNode
+    }
+  }
 }
 </script>
 

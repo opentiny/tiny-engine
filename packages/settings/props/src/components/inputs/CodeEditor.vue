@@ -34,12 +34,11 @@
 </template>
 
 <script>
-import { reactive, getCurrentInstance, h, ref, computed } from 'vue'
+import { reactive, getCurrentInstance, ref, computed } from 'vue'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
 import { Button, Collapse, CollapseItem, DialogBox } from '@opentiny/vue'
 import { useCanvas, useProperties } from '@opentiny/tiny-engine-controller'
 import { getExample } from '@opentiny/tiny-engine-controller/js/example'
-import { theme } from '@opentiny/tiny-engine-controller/js/monaco'
 
 export default {
   components: {
@@ -67,12 +66,7 @@ export default {
     const { setProp } = useProperties()
 
     const options = reactive({
-      roundedSelection: true,
-      automaticLayout: true,
-      autoIndent: true,
-      theme: theme(),
       language: 'json',
-      formatOnPaste: true,
       minimap: { enabled: false }
     })
 
