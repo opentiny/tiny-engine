@@ -18,7 +18,7 @@ import { injectGlobalComponents, Modal, Notify } from '@opentiny/tiny-engine-com
 import { initHttp } from '@opentiny/tiny-engine-http'
 import TinyThemeTool from '@opentiny/vue-theme/theme-tool'
 import { tinySmbTheme } from '@opentiny/vue-theme/theme' // SMB 主题
-import { defineEntry, mergeRegistry, initHook, HOOK_NAME } from '@opentiny/tiny-engine-entry'
+import { defineEntry, mergeRegistry, initHook, HOOK_NAME, useEditorInfo } from '@opentiny/tiny-engine-entry'
 import App from './App.vue'
 import defaultRegistry from '../registry.js'
 import { registerConfigurators } from './registerConfigurators'
@@ -74,4 +74,5 @@ export const init = ({ selector = '#app', registry = defaultRegistry, lifeCycles
 
   app.mount(selector)
   appMounted?.({ app })
+  useEditorInfo().getUserInfo()
 }

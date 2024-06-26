@@ -49,19 +49,6 @@
           </span>
         </div>
       </li>
-      <li
-        v-if="state.independence"
-        :key="state.bottomNavLists.length + 1"
-        :class="['list-item']"
-        :title="state.independence.title"
-        @click="openAIRobot"
-      >
-        <div>
-          <span class="item-icon">
-            <img class="chatgpt-icon" src="../assets/AI.png" />
-          </span>
-        </div>
-      </li>
     </ul>
   </div>
 
@@ -82,20 +69,12 @@
       </keep-alive>
     </div>
   </div>
-  <!--  AI 悬浮窗  -->
-  <Teleport to="body">
-    <div v-if="robotVisible" class="robot-dialog">
-      <keep-alive>
-        <component :is="robotComponent" @close-chat="robotVisible = false"></component>
-      </keep-alive>
-    </div>
-  </Teleport>
 </template>
 
 <script>
 import { reactive, ref, watch } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
-import { useLayout, usePage } from '@opentiny/tiny-engine-controller'
+import { useLayout, usePage } from '@opentiny/tiny-engine-entry'
 import { PublicIcon } from '@opentiny/tiny-engine-common'
 
 export default {
@@ -118,8 +97,6 @@ export default {
     const components = {}
     const iconComponents = {}
     const pluginRef = ref(null)
-    const robotVisible = ref(false)
-    const robotComponent = ref(null)
     const { isTemporaryPage } = usePage()
 
     const {
@@ -139,8 +116,6 @@ export default {
       }
     })
 
-    const completed = ref(false)
-
     const state = reactive({
       prevIdex: -2,
       topNavLists: props.plugins.filter((item) => item.align === 'top'),
@@ -148,15 +123,9 @@ export default {
       independence: props.plugins.find((item) => item.align === 'independence')
     })
 
-    const doCompleted = () => {
-      if (!completed.value) {
-        completed.value = true
-        useLayout().closePlugin()
-      }
-    }
-
     const clickMenu = ({ item, index }) => {
-      if (item.id === PLUGIN_NAME.EditorHelp) return
+      if (item.id === PLUGIN_NAME.EditorHelp || item.id === PLUGIN_NAME.Robot) return
+
       state.prevIdex = index
 
       // 切换插件与关闭插件时确认
@@ -177,6 +146,7 @@ export default {
         })
       }
     }
+
     watch(isTemporaryPage, () => {
       if (isTemporaryPage.saved) {
         const pagePanel = state.topNavLists?.find((item) => item.id === PLUGIN_NAME.AppManage) || null
@@ -187,10 +157,6 @@ export default {
       }
     })
 
-    const openAIRobot = () => {
-      robotComponent.value = components[PLUGIN_NAME.Robot]
-      robotVisible.value = !robotVisible.value
-    }
     const close = () => {
       state.prevIdex = -2
       useLayout().closePlugin(true)
@@ -205,17 +171,12 @@ export default {
     return {
       state,
       clickMenu,
-      openAIRobot,
       pluginRef,
-      robotVisible,
-      robotComponent,
       close,
       fixPanel,
       pluginsState,
       components,
       iconComponents,
-      completed,
-      doCompleted,
       pluginState
     }
   }
