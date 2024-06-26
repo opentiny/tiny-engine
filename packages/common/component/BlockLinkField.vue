@@ -22,7 +22,6 @@ import { reactive, computed } from 'vue'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { Input as TinyInput, Popover as TinyPopover } from '@opentiny/vue'
 import { useLayout, useModal, useCanvas, useBlock, useHistory } from '@opentiny/tiny-engine-controller'
-import { getSchema, getCurrent } from '@opentiny/tiny-engine-canvas'
 
 export default {
   components: {
@@ -36,10 +35,10 @@ export default {
   },
   setup(props) {
     const { confirm } = useModal()
-    const { pageState } = useCanvas()
+    const { pageState, canvasApi } = useCanvas()
     const { addBlockProperty, removePropertyLink, getCurrentBlock, editBlockProperty } = useBlock()
     const { PLUGIN_NAME, activePlugin } = useLayout()
-    const { schema } = getSchema()
+    const { schema } = canvasApi.value.getSchema?.() || {}
 
     const state = reactive({
       newPropertyName: ''
@@ -68,7 +67,7 @@ export default {
         exec() {
           const {
             schema: { id, componentName }
-          } = getCurrent()
+          } = canvasApi.value?.getCurrent?.() || {}
           const newProperty = extend(true, {}, property, {
             property: state.newPropertyName || `${property.property}${id}`,
             linked: {
@@ -87,7 +86,7 @@ export default {
     const editProperty = (property) => {
       const {
         schema: { id, componentName }
-      } = getCurrent()
+      } = canvasApi.value?.getCurrent?.() || {}
 
       // 如果之前有关联关系，则需要去除关联
       if (props.data?.linked) {

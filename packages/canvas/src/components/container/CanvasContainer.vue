@@ -6,7 +6,7 @@
     :windowGetClickEventTarget="target"
     :resize="canvasState.type === 'absolute'"
     @select-slot="selectSlot"
-    @setting="settingModle"
+    @setting="settingModel"
   ></canvas-action>
   <canvas-divider :selectState="selectState"></canvas-divider>
   <canvas-resize-border :iframe="iframe"></canvas-resize-border>
@@ -50,12 +50,12 @@ import {
   updateRect,
   getElement,
   dragStart,
-  getOffset,
   selectNode,
   initCanvas,
   clearLineState,
   querySelectById,
-  getCurrent
+  getCurrent,
+  canvasApi
 } from './container'
 
 export default {
@@ -71,7 +71,7 @@ export default {
     const insertPanel = ref(null)
     const insertPosition = ref(false)
     const loading = computed(() => useCanvas().isLoading())
-    let showSettingModle = ref(false)
+    let showSettingModel = ref(false)
     let target = ref(null)
 
     const setCurrentNode = async (event) => {
@@ -100,10 +100,12 @@ export default {
 
         // 如果是点击右键则打开右键菜单
         if (event.button === 2) {
-          openMenu(getOffset(event.target), event)
+          openMenu(event)
         }
       }
     }
+
+    useCanvas().initCanvasApi(canvasApi)
 
     const beforeCanvasReady = () => {
       if (iframe.value) {
@@ -119,7 +121,6 @@ export default {
         iframeMonitoring()
 
         initCanvas({ emit, renderer: detail, iframe: iframe.value, controller: props.controller })
-        useCanvas().renderer.value = { ...detail, ...window.canvasApi }
 
         const doc = iframe.value.contentDocument
         const win = iframe.value.contentWindow
@@ -179,8 +180,8 @@ export default {
       }
     }
     // 设置弹窗
-    const settingModle = () => {
-      showSettingModle.value = true
+    const settingModel = () => {
+      showSettingModel.value = true
     }
 
     const updateI18n = (message) => {
@@ -237,9 +238,9 @@ export default {
       canvasState,
       insertComponent,
       insertPanel,
-      settingModle,
+      settingModel,
       target,
-      showSettingModle,
+      showSettingModel,
       insertPosition,
       loading
     }

@@ -66,6 +66,10 @@ export default {
     isOpen: {
       type: Boolean,
       default: true
+    },
+    modelValue: {
+      type: Array,
+      default: () => []
     }
   },
   emits: ['save', 'cancel'],
@@ -98,7 +102,9 @@ export default {
     const handleCancel = () => {
       emit('cancel')
     }
-
+    const uniqueName = () => {
+      return props.modelValue.some((item) => item.name === state.field.name)
+    }
     const saveField = () => {
       form.value.validate((valid) => {
         if (valid) {
@@ -114,6 +120,10 @@ export default {
       if (value === '_id') {
         callback(new Error('_id 是保留字段，不允许添加'))
 
+        return
+      }
+      if (uniqueName() && rule.field === 'name') {
+        callback(new Error('该字段已存在，请重新输入'))
         return
       }
       callback()

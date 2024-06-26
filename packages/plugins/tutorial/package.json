@@ -27,7 +27,6 @@
     "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-controller": "workspace:*",
     "@opentiny/tiny-engine-http": "workspace:*",
-    "@opentiny/vue": "~3.10.0",
     "marked": "^4.0.17"
   },
   "devDependencies": {
@@ -36,6 +35,7 @@
     "vite": "^4.3.7"
   },
   "peerDependencies": {
+    "@opentiny/vue": "^3.14.0",
     "vue": "^3.4.15"
   }
 }

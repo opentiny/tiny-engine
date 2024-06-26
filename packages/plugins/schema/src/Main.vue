@@ -44,7 +44,6 @@ import { Popover } from '@opentiny/vue'
 import { VueMonaco, CloseIcon } from '@opentiny/tiny-engine-common'
 import { useCanvas, useModal, useHistory, useNotify } from '@opentiny/tiny-engine-controller'
 import { obj2String, string2Obj, theme } from '@opentiny/tiny-engine-controller/adapter'
-import { getSchema } from '@opentiny/tiny-engine-canvas'
 import { iconSave, iconDownloadLink } from '@opentiny/vue-icon'
 
 export default {
@@ -114,7 +113,7 @@ export default {
     }
 
     onActivated(() => {
-      pageState.pageSchema = getSchema()
+      pageState.pageSchema = useCanvas().canvasApi.value?.getSchema?.() || {}
       state.pageData = obj2String(pageState.pageSchema)
       nextTick(() => {
         window.dispatchEvent(new Event('resize'))

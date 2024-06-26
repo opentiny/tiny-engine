@@ -86,7 +86,6 @@
         <tiny-dropdown trigger="click" @item-click="changeType">
           <span>
             <span>{{ state.sortTypeLabel }}</span>
-            <icon-chevron-down class="ml8"></icon-chevron-down>
           </span>
           <template #dropdown>
             <tiny-dropdown-menu
@@ -118,7 +117,6 @@ import {
 import { PluginPanel, PluginBlockList, SvgButton, SaveNewBlock, LinkButton } from '@opentiny/tiny-engine-common'
 import { useBlock, useModal, useLayout, useCanvas, useHelp } from '@opentiny/tiny-engine-controller'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { iconChevronDown } from '@opentiny/vue-icon'
 import BlockSetting, { openPanel, closePanel } from './BlockSetting.vue'
 import BlockGroupArrange from './BlockGroupArrange.vue'
 import CategoryEdit from './CategoryEdit.vue'
@@ -188,8 +186,7 @@ export default {
     CategoryEdit,
     PluginBlockList,
     TinyPopover,
-    TinyButton,
-    IconChevronDown: iconChevronDown()
+    TinyButton
   },
 
   setup() {

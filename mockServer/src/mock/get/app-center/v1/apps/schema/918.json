@@ -1690,7 +1690,7 @@
         ],
         "fileName": "createVm",
         "meta": {
-          "id": 1977,
+          "id": "NTJ4MjvqoVj8OVsc",
           "parentId": "0",
           "group": "staticPages",
           "occupier": {
@@ -1787,7 +1787,7 @@
       },
       {
         "componentName": "TinyPlusFrozenPage",
-        "package": "@opentiny/vuee",
+        "package": "@opentiny/vue",
         "exportName": "FrozenPage",
         "destructuring": true,
         "version": "3.4.1"
@@ -1973,6 +1973,48 @@
         "exportName": "ChartHistogram",
         "destructuring": true,
         "version": "0.1.16"
+      },
+      {
+        "componentName": "ElInput",
+        "package": "element-plus",
+        "exportName": "ElInput",
+        "destructuring": true,
+        "version": "2.4.2"
+      },
+      {
+        "componentName": "ElButton",
+        "package": "element-plus",
+        "exportName": "ElButton",
+        "destructuring": true,
+        "version": "2.4.2"
+      },
+      {
+        "componentName": "ElForm",
+        "package": "element-plus",
+        "exportName": "ElForm",
+        "destructuring": true,
+        "version": "2.4.2"
+      },
+      {
+        "componentName": "ElFormItem",
+        "package": "element-plus",
+        "exportName": "ElFormItem",
+        "destructuring": true,
+        "version": "2.4.2"
+      },
+      {
+        "componentName": "ElTable",
+        "package": "element-plus",
+        "exportName": "ElTable",
+        "destructuring": true,
+        "version": "2.4.2"
+      },
+      {
+        "componentName": "ElTableColumn",
+        "package": "element-plus",
+        "exportName": "ElTableColumn",
+        "destructuring": true,
+        "version": "2.4.2"
       },
       {
         "componentName": "PortalHome",

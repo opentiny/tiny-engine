@@ -1,0 +1,23 @@
+{
+  "imports": {
+    "vue": "${VITE_CDN_DOMAIN}/vue@3.4.23/dist/vue.runtime.esm-browser.js",
+    "vue/server-renderer": "${VITE_CDN_DOMAIN}/@vue/server-renderer@3.4.23/dist/server-renderer.esm-browser.js",
+    "vue-i18n": "${VITE_CDN_DOMAIN}/vue-i18n@9.2.0-beta.36/dist/vue-i18n.esm-browser.js",
+    "vue-router": "${VITE_CDN_DOMAIN}/vue-router@4.0.16/dist/vue-router.esm-browser.js",
+    "@vue/devtools-api": "${VITE_CDN_DOMAIN}/@vue/devtools-api@6.5.1/lib/esm/index.js",
+    "@vueuse/core": "${VITE_CDN_DOMAIN}/@vueuse/core@9.6.0/index.mjs",
+    "@vueuse/shared": "${VITE_CDN_DOMAIN}/@vueuse/shared@9.6.0/index.mjs",
+    "axios": "${VITE_CDN_DOMAIN}/axios@1.0.0/dist/esm/axios.js",
+    "axios-mock-adapter": "${VITE_CDN_DOMAIN}/axios-mock-adapter@1.21.1/dist/axios-mock-adapter.js",
+    "@opentiny/tiny-engine-webcomponent-core": "${VITE_CDN_DOMAIN}/@opentiny/tiny-engine-webcomponent-core@1/dist/tiny-engine-webcomponent-core.es.js",
+    "@opentiny/tiny-engine-i18n-host": "${VITE_CDN_DOMAIN}/@opentiny/tiny-engine-i18n-host@1/dist/lowcode-design-i18n-host.es.js",
+    "@opentiny/tiny-engine-builtin-component": "${VITE_CDN_DOMAIN}/@opentiny/tiny-engine-builtin-component@1/dist/index.js",
+    "vue-demi": "${VITE_CDN_DOMAIN}/vue-demi@0.13.11/lib/index.mjs",
+    "pinia": "${VITE_CDN_DOMAIN}/pinia@2.0.22/dist/pinia.esm-browser.js",
+    "@opentiny/vue": "${VITE_CDN_DOMAIN}/@opentiny/vue@${opentinyVueVersion}/runtime/tiny-vue.mjs",
+    "@opentiny/vue-icon": "${VITE_CDN_DOMAIN}/@opentiny/vue@${opentinyVueVersion}/runtime/tiny-vue-icon.mjs",
+    "@opentiny/vue-common": "${VITE_CDN_DOMAIN}/@opentiny/vue@${opentinyVueVersion}/runtime/tiny-vue-common.mjs",
+    "@opentiny/vue-locale": "${VITE_CDN_DOMAIN}/@opentiny/vue@${opentinyVueVersion}/runtime/tiny-vue-locale.mjs",
+    "@opentiny/vue-renderless/": "${VITE_CDN_DOMAIN}/@opentiny/vue-renderless@${opentinyVueVersion}/"
+  }
+}

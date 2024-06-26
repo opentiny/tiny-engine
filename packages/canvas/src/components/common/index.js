@@ -1,14 +1,14 @@
 /**
-* Copyright (c) 2023 - present TinyEngine Authors.
-* Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
-*
-* Use of this source code is governed by an MIT-style license.
-*
-* THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
-* BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
-* A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
-*
-*/
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
+ *
+ * Use of this source code is governed by an MIT-style license.
+ *
+ * THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
+ * BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
+ * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
+ *
+ */
 
 export const NODE_UID = 'data-uid'
 export const NODE_TAG = 'data-tag'
@@ -125,9 +125,10 @@ export const getClipboardSchema = (event) => translateStringToSchame(event.clipb
  */
 export const dynamicImportComponents = async ({ package: pkg, script, components }) => {
   if (!script) return
+  const scriptUrl = script.startsWith('.') ? new URL(script, location.href).href : script
 
   if (!window.TinyComponentLibs[pkg]) {
-    const modules = await import(/* @vite-ignore */ script)
+    const modules = await import(/* @vite-ignore */ scriptUrl)
 
     window.TinyComponentLibs[pkg] = modules
   }

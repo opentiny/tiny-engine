@@ -6,7 +6,11 @@
         clearable
         placeholder="请输入关键字搜索"
         @update:modelValue="searchBridgeData"
-      ></tiny-search>
+      >
+        <template #prefix>
+          <tiny-icon-search />
+        </template>
+      </tiny-search>
     </div>
     <div class="list">
       <div
@@ -19,10 +23,7 @@
         <div class="item-label">{{ item.name }}</div>
         <svg-icon class="setting-icon" name="setting" @click.stop="openEdit(item, index)"></svg-icon>
       </div>
-      <div v-if="!list.length" class="empty-wrap">
-        <svg-icon class="empty-icon" name="empty"></svg-icon>
-        <p class="empty-text">暂无数据</p>
-      </div>
+      <search-empty :isShow="!list.length" />
     </div>
   </div>
 </template>
@@ -30,6 +31,8 @@
 <script>
 import { watchEffect, ref, reactive } from 'vue'
 import { Search } from '@opentiny/vue'
+import { iconSearch } from '@opentiny/vue-icon'
+import { SearchEmpty } from '@opentiny/tiny-engine-common'
 import {
   RESOURCE_TYPE,
   ACTION_TYPE,
@@ -44,7 +47,9 @@ import {
 
 export default {
   components: {
-    TinySearch: Search
+    TinySearch: Search,
+    TinyIconSearch: iconSearch(),
+    SearchEmpty
   },
   props: {
     name: {
