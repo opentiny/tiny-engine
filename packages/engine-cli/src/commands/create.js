@@ -19,6 +19,7 @@ export default function (name) {
   const sourcePath = path.join(__dirname, '../template/designer/')
   const destPath = path.join(cwd(), name)
   fs.copySync(sourcePath, destPath)
+  // eslint-disable-next-line no-console
   console.log(
     chalk.green(`create finish, run the follow command to start project: \ncd ${name} && npm install && npm run dev`)
   )

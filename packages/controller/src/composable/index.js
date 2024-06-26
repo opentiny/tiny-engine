@@ -20,4 +20,3 @@ export const EditorInfoService = {
     name: HOOK_NAME.useEditorInfo
   }
 }
-

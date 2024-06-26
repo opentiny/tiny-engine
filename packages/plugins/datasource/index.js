@@ -18,9 +18,7 @@ import { DataSourceService } from './src/composable'
 export default {
   ...metaData,
   entry,
-  metas: [
-    DataSourceService
-  ]
+  metas: [DataSourceService]
 }
 
 export { fetchDataSourceList, fetchDataSourceDetail, DataSourceService }
