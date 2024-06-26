@@ -26,6 +26,7 @@ import { getMergeMeta, useCanvas, useHistory, useLayout } from '@opentiny/tiny-e
 import { Button, DialogBox } from '@opentiny/vue'
 import { nextTick, provide, reactive, ref } from 'vue'
 import { METHOD_TIPS_MAP } from './constants'
+import meta from '../../meta'
 
 const dialogVisible = ref(false)
 
@@ -50,7 +51,7 @@ export default {
     }
   },
   setup(props) {
-    const { BindEventsDialogSidebar, BindEventsDialogContent } = getMergeMeta('engine.setting.event').components
+    const { BindEventsDialogSidebar, BindEventsDialogContent } = getMergeMeta(meta.id).components
 
     const { PLUGIN_NAME, getPluginApi, activePlugin } = useLayout()
     const { pageState } = useCanvas()
