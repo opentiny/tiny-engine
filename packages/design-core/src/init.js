@@ -36,8 +36,8 @@ const defaultLifeCycles = {
     defineEntry(newRegistry)
 
     initHook(HOOK_NAME.useEnv, import.meta.env)
-    initHook(HOOK_NAME.useNotify, () => Notify)
-    initHook(HOOK_NAME.useModal, () => Modal)
+    initHook(HOOK_NAME.useNotify, Notify, { useDefaultExport: true })
+    initHook(HOOK_NAME.useModal, Modal)
 
     // 加载主题样式，尽早加载
     // import(`./theme/${newRegistry.config.theme}.js`)

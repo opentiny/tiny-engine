@@ -44,26 +44,33 @@ const hooksState = {
   [HOOK_NAME.useCustom]: {} // 自定义
 }
 
-export const useLayout = () => hooksState[HOOK_NAME.useLayout]
-export const useCanvas = () => hooksState[HOOK_NAME.useCanvas]
-export const useApp = () => hooksState[HOOK_NAME.useApp]
-export const useResource = () => hooksState[HOOK_NAME.useResource]
-export const useHistory = () => hooksState[HOOK_NAME.useHistory]
-export const useProperties = () => hooksState[HOOK_NAME.useProperties]
-export const useSaveLocal = () => hooksState[HOOK_NAME.useSaveLocal]
-export const useEditorInfo = () => hooksState[HOOK_NAME.useEditorInfo]
-export const useBlock = () => hooksState[HOOK_NAME.useBlock]
-export const useTranslate = () => hooksState[HOOK_NAME.useTranslate]
-export const usePage = () => hooksState[HOOK_NAME.usePage]
-export const useDataSource = () => hooksState[HOOK_NAME.useDataSource]
-export const useBreadcrumb = () => hooksState[HOOK_NAME.useBreadcrumb]
-export const useProperty = () => hooksState[HOOK_NAME.useProperty]
-export const useHelp = () => hooksState[HOOK_NAME.useHelp]
-export const useHttp = () => hooksState[HOOK_NAME.useHttp]
-export const useEnv = () => hooksState[HOOK_NAME.useEnv]
-export const useModal = () => hooksState[HOOK_NAME.useModal]
-export const useNotify = () => hooksState[HOOK_NAME.useNotify]
-export const useCustom = () => hooksState[HOOK_NAME.useCustom]
+const getHook = (hookName, args) => {
+  if (typeof hooksState[hookName] === 'function') {
+    return hooksState[hookName](...args)
+  }
+  return hooksState[hookName]
+}
+
+export const useLayout = (...args) => getHook(HOOK_NAME.useLayout, args)
+export const useCanvas = (...args) => getHook(HOOK_NAME.useCanvas, args)
+export const useApp = (...args) => getHook(HOOK_NAME.useApp, args)
+export const useResource = (...args) => getHook(HOOK_NAME.useResource, args)
+export const useHistory = (...args) => getHook(HOOK_NAME.useHistory, args)
+export const useProperties = (...args) => getHook(HOOK_NAME.useProperties, args)
+export const useSaveLocal = (...args) => getHook(HOOK_NAME.useSaveLocal, args)
+export const useEditorInfo = (...args) => getHook(HOOK_NAME.useEditorInfo, args)
+export const useBlock = (...args) => getHook(HOOK_NAME.useBlock, args)
+export const useTranslate = (...args) => getHook(HOOK_NAME.useTranslate, args)
+export const usePage = (...args) => getHook(HOOK_NAME.usePage, args)
+export const useDataSource = (...args) => getHook(HOOK_NAME.useDataSource, args)
+export const useBreadcrumb = (...args) => getHook(HOOK_NAME.useBreadcrumb, args)
+export const useProperty = (...args) => getHook(HOOK_NAME.useProperty, args)
+export const useHelp = (...args) => getHook(HOOK_NAME.useHelp, args)
+export const useHttp = (...args) => getHook(HOOK_NAME.useHttp, args)
+export const useEnv = (...args) => getHook(HOOK_NAME.useEnv, args)
+export const useModal = (...args) => getHook(HOOK_NAME.useModal, args)
+export const useNotify = (...args) => getHook(HOOK_NAME.useNotify, args)
+export const useCustom = (...args) => getHook(HOOK_NAME.useCustom, args)
 
 export function initHook(hookName, hookContent, { useDefaultExport } = {}) {
   if (!Object.keys(hooksState).includes(hookName)) {
