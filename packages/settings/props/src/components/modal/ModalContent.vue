@@ -44,7 +44,7 @@ export default {
       default: 0
     }
   },
-  setup(props, { emit }) {
+  setup(props) {
     const { resState } = useResource()
 
     const propertyList = computed(() => {

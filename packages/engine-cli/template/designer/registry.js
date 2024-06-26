@@ -43,16 +43,13 @@ import {
   Layout,
   Canvas,
   EditorInfoService,
-  AppService,
+  AppService
 } from '@opentiny/tiny-engine'
 
 export default {
   root: {
     id: 'engine.root',
-    metas: [
-      EditorInfoService,
-      AppService
-    ]
+    metas: [EditorInfoService, AppService]
   },
   config: {
     id: 'engine.config',
