@@ -1,9 +1,15 @@
-import { tinyBaseTheme, concatLightTheme } from './base'
+import { tinyBaseTheme, concatThemeLight, concatThemeDark } from './base'
 
-// light-concatLightTheme和dark-concatDarkTheme主题判断
-export const tinyEngineTheme = {
-  id: 'tiny-engine-theme',
-  name: 'Engine',
-  cnName: 'Engine',
-  data: { ...tinyBaseTheme, ...concatLightTheme }
+export const tinyEngineThemeLight = {
+  id: 'tiny-engine-light-theme',
+  name: 'EngineLightTheme',
+  cnName: 'EngineLightTheme',
+  data: { ...tinyBaseTheme, ...concatThemeLight }
+}
+
+export const tinyEngineThemeDark = {
+  id: 'tiny-engine-dark-theme',
+  name: 'EngineDarkTheme',
+  cnName: 'EngineDarkTheme',
+  data: { ...tinyBaseTheme, ...concatThemeDark }
 }

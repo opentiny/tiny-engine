@@ -1,4 +1,4 @@
-export const concatDarkTheme = {
+export const concatThemeDark = {
   // 弹窗
   'ti-dialog-box-bg-color': 'var(--ti-common-color-bg-dark-1)',
   'ti-dialog-box-head-title-text-color': 'var(--ti-common-color-bg-gray-3)',
