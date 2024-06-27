@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div title="AI对话框">
+    <div title="AI对话框" class="robot-img">
       <img class="chatgpt-icon" src="../assets/AI.png" @click="openAIRobot" />
     </div>
     <Teleport to="body">
@@ -384,10 +384,18 @@ export default {
 </script>
 
 <style lang="less" scope>
-.chatgpt-icon {
-  width: 18px;
-  height: 18px;
+.robot-img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  .chatgpt-icon {
+    width: 18px;
+    height: 18px;
+  }
 }
+
 .robot-dialog {
   position: fixed;
   width: 700px;

@@ -290,26 +290,8 @@ export default {
       svg {
         font-size: 22px;
       }
-
-      .chatgpt-icon {
-        width: 18px;
-        height: 18px;
-      }
     }
   }
-}
-
-.robot-dialog {
-  position: fixed;
-  width: 700px;
-  z-index: 5;
-  right: 40px;
-  bottom: 40px;
-  background-color: var(--ti-lowcode-common-component-bg);
-  box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.15);
-  border: 1px solid #dbdbdb;
-  padding: 10px 20px 30px;
-  border-radius: 12px;
 }
 
 :deep(.panel-svg) {
