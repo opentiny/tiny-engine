@@ -4,9 +4,16 @@
 
 <script>
 import { watch, onUnmounted } from 'vue'
-import { getMergeRegistry, getPluginApi } from '@opentiny/tiny-engine-entry'
+import {
+  getMergeRegistry,
+  getPluginApi,
+  useModal,
+  useApp,
+  useNotify,
+  useResource,
+  useCanvas
+} from '@opentiny/tiny-engine-entry'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
-import { useModal, useApp, useNotify, useResource, useCanvas } from '@opentiny/tiny-engine-entry'
 import { useBroadcastChannel } from '@vueuse/core'
 import { constants } from '@opentiny/tiny-engine-utils'
 

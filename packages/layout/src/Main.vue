@@ -61,7 +61,6 @@ export default {
     const { layoutState } = useLayout()
     const { plugins } = layoutState
 
-    //内部逻辑代码
     const toggleNav = ({ item, navLists }) => {
       if (navLists) state.preNode = navLists
 
