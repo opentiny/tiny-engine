@@ -32,7 +32,6 @@ import { reactive, computed } from 'vue'
 import MetaChildItem from './MetaChildItem.vue'
 
 export default {
-  name: 'MetaModalItem',
   components: {
     MetaChildItem,
     TinyButton: Button,

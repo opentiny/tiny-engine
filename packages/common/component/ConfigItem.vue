@@ -192,7 +192,9 @@ export default {
         !props.onlyEdit &&
         propLabel.value &&
         (isBindingState.value ||
-          !['MetaGroupItem', 'MetaArrayItem', 'MetaRelatedColumns'].includes(widget.value.component)) &&
+          !['GroupItemConfigurator', 'ArrayItemConfigurator', 'RelatedColumnsConfigurator'].includes(
+            widget.value.component
+          )) &&
         !multiType.value
     )
     const propDescription = computed(
@@ -237,7 +239,7 @@ export default {
         return props.property.labelPosition
       }
 
-      if (['MetaSwitch', 'SwitchConfigurator'].includes(props.property.widget?.component)) {
+      if (['SwitchConfigurator', 'SwitchConfigurator'].includes(props.property.widget?.component)) {
         return 'left'
       }
 
@@ -275,7 +277,7 @@ export default {
 
         if (
           property !== 'name' &&
-          ['SelectIconConfigurator', 'MetaSelectIcon'].includes(props.property.widget.component)
+          ['SelectIconConfigurator', 'SelectIconConfigurator'].includes(props.property.widget.component)
         ) {
           // icon以组件形式传入，实现类似:icon="IconPlus"的图标配置（排除Icon组件本身）
           value = {
@@ -451,7 +453,8 @@ export default {
       }
     }
 
-    const isRelatedComponents = (component) => ['MetaRelatedEditor', 'MetaRelatedColumns'].includes(component)
+    const isRelatedComponents = (component) =>
+      ['RelatedEditorConfigurator', 'RelatedColumnsConfigurator'].includes(component)
 
     const showBindState = computed(
       () => !props.onlyEdit && (isBindingState.value || isLinked.value) && !isRelatedComponents(widget.value.component)

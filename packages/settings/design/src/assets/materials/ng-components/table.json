@@ -78,7 +78,7 @@
             "readOnly": false,
             "disabled": false,
             "widget": {
-              "component": "MetaCodeEditorList",
+              "component": "CodeListConfigurator",
               "props": {
                 "language": "json",
                 "buttonText": "编辑列配置",

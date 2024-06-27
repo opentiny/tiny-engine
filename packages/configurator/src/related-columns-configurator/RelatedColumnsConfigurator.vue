@@ -36,7 +36,7 @@ export default {
 
     const CONSTANTS = {
       FIELD: 'field',
-      COMPONENT: 'MetaSelect'
+      COMPONENT: 'SelectConfigurator'
     }
 
     const saveValue = (value) => emit('update:modelValue', value)

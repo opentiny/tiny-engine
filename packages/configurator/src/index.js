@@ -62,7 +62,7 @@ export {
   SwitchConfigurator,
   TableColumnsConfigurator,
   VariableConfigurator,
-  // TODO Meta别名，后续删除
+  // 暂时保留Meta开头的旧组件名
   ArrayItemConfigurator as MetaArrayItem,
   I18nConfigurator as MetaBindI18n,
   VariableConfigurator as MetaBindVariable,

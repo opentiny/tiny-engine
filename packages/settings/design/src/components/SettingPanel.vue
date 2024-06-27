@@ -173,7 +173,7 @@ export default {
     const handleTypeChange = () => {
       const shouldShowArrayItem =
         store.currentProperty.type === META_TYPES_ENUM.array &&
-        store.currentProperty.widget.component === META_COMPONENTS.MetaArrayItem
+        store.currentProperty.widget.component === META_COMPONENTS.ArrayItemConfigurator
 
       showArrayItem.value = shouldShowArrayItem
 
@@ -198,7 +198,7 @@ export default {
           }
         },
         widget: {
-          component: 'MetaInput',
+          component: 'InputConfigurator',
           props: {}
         }
       })
