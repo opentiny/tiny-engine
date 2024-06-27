@@ -33,6 +33,17 @@ const PLUGIN_NAME = {
   save: 'save'
 }
 
+//插件对应变量绑定
+const VARIABLE_DEFAULT_LIST = {
+  State: [
+    { id: 'state', content: 'State 属性' },
+    { id: 'store', content: '应用状态' }
+  ],
+  PageController: [{ id: 'function', content: '自定义处理函数' }],
+  Bridge: [{ id: 'utils', content: '工具类' }],
+  Collections: [{ id: 'datasource', content: '数据源' }]
+}
+
 const pluginState = reactive({
   pluginEvent: 'all'
 })
@@ -126,6 +137,7 @@ const isEmptyPage = () => layoutState.pageStatus?.state === PAGE_STATUS.Empty
 export default () => {
   return {
     PLUGIN_NAME,
+    VARIABLE_DEFAULT_LIST,
     activeSetting,
     activePlugin,
     closePlugin,

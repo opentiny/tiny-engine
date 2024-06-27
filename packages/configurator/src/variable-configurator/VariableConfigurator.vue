@@ -121,7 +121,7 @@
 
 <script>
 import { VueMonaco as MonacoEditor, SvgButton } from '../components' // TODO 等 common 包移除了 configurator 依赖后再更换成 @opentiny/tiny-engine-common
-import { useApp, useCanvas, useLayout, useProperties, useResource } from '@opentiny/tiny-engine-controller'
+import { useApp, useCanvas, useLayout, useProperties, useResource, getMergeRegistry } from '@opentiny/tiny-engine-entry'
 import { getCommentByKey } from '@opentiny/tiny-engine-controller/js/comment'
 import { formatString, generate, parse, traverse } from '@opentiny/tiny-engine-controller/js/ast'
 import { DEFAULT_LOOP_NAME } from '@opentiny/tiny-engine-controller/js/constants'
@@ -130,6 +130,7 @@ import { constants } from '@opentiny/tiny-engine-utils'
 import { Alert, Button, DialogBox, Input, Search, Switch, Tooltip } from '@opentiny/vue'
 import { camelize, capitalize } from '@vue/shared'
 import { computed, nextTick, reactive, ref, watch } from 'vue'
+import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
 
 const { EXPRESSION_TYPE } = constants
 
@@ -194,16 +195,9 @@ export default {
   setup(props, { emit }) {
     const editor = ref(null)
     const http = useHttp()
+    const { PLUGIN_NAME, VARIABLE_DEFAULT_LIST } = useLayout()
+    const { plugins } = getMergeRegistry()
     let oldValue = ''
-
-    const list = [
-      { id: 'state', content: 'State 属性' },
-      { id: 'store', content: '应用状态' },
-      { id: 'function', content: '自定义处理函数' },
-      { id: 'utils', content: '工具类' },
-      { id: 'bridge', content: '桥接源' },
-      { id: 'datasource', content: '数据源' }
-    ]
 
     const state = reactive({
       isBlock: computed(() => useCanvas().isBlock()),
@@ -218,6 +212,16 @@ export default {
         const extendedVars = []
         const [isInJsSlot] = getJsSlot()
 
+        plugins.forEach((plugin) => {
+          const res = Object.entries(PLUGIN_NAME).find((item) => item[1] === plugin.id)
+          if (VARIABLE_DEFAULT_LIST[res[0]]) {
+            extendedVars.push(...VARIABLE_DEFAULT_LIST[res[0]])
+          }
+        })
+
+        if (isVsCodeEnv) {
+          extendedVars.push({ id: 'bridge', content: '桥接源' })
+        }
         if (state.isBlock) {
           extendedVars.push({ id: 'props', content: 'props' })
         }
@@ -230,7 +234,7 @@ export default {
           extendedVars.push({ id: 'slotScope', content: '暴露给插槽使用的变量' })
         }
 
-        return [...list, ...extendedVars]
+        return extendedVars
       }),
       // 绑定的变量名/变量表达式
       variable: '',
