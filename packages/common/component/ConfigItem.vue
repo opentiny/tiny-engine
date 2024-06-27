@@ -104,7 +104,6 @@ import { Popover, Tooltip } from '@opentiny/vue'
 import { IconWriting, IconHelpCircle, IconPlusCircle } from '@opentiny/vue-icon'
 import { typeOf } from '@opentiny/vue-renderless/common/type'
 import i18n from '@opentiny/tiny-engine-controller/js/i18n'
-import { CodeConfigurator, VariableConfigurator } from '@opentiny/tiny-engine-configurator'
 import MultiTypeSelector from './MultiTypeSelector.vue'
 import { useHistory, useProperties, useResource, useLayout, useCanvas } from '@opentiny/tiny-engine-controller'
 import { SCHEMA_DATA_TYPE, PAGE_STATUS, TYPES } from '@opentiny/tiny-engine-controller/js/constants'
@@ -123,8 +122,8 @@ const hasRule = (required, rules) => {
 export default {
   components: {
     MultiTypeSelector,
-    CodeConfigurator,
-    VariableConfigurator,
+    CodeConfigurator: getConfigurator('CodeConfigurator'),
+    VariableConfigurator: getConfigurator('VariableConfigurator'),
     TinyPopover: Popover,
     TinyTooltip: Tooltip,
     IconWriting: IconWriting(),

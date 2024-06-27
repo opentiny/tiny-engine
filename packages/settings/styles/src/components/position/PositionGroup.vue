@@ -8,11 +8,11 @@
       定位
     </div>
     <div class="position-select">
-      <meta-select
+      <select-configurator
         :modelValue="state.selectValue"
         :options="selectOptions"
         @update:modelValue="selectPosition"
-      ></meta-select>
+      ></select-configurator>
     </div>
     <div v-if="state.showSetting" class="position-dropdown">
       <div v-if="state.showSettingIcon" class="tooltip-wrap">
@@ -220,7 +220,7 @@
 <script>
 import { reactive, watchEffect } from 'vue'
 import { Tooltip } from '@opentiny/vue'
-import { MetaSelect } from '@opentiny/tiny-engine-common'
+import { SelectConfigurator } from '@opentiny/tiny-engine-configurator'
 import { push } from '@opentiny/vue-renderless/common/array'
 import ModalMask, { useModal } from '../inputs/ModalMask.vue'
 import SpacingSetting from '../spacing/SpacingSetting.vue'
@@ -233,7 +233,7 @@ export default {
   components: {
     ModalMask,
     ResetButton,
-    MetaSelect,
+    SelectConfigurator,
     NumericSelect,
     SpacingSetting,
     TinyTooltip: Tooltip
@@ -400,6 +400,16 @@ export default {
       }
     }
 
+    const openDirectionSetting = (type, styleName) => {
+      state.property = {
+        type,
+        name: styleName,
+        value: getPropertyValue(styleName)
+      }
+
+      state.showDirectionModal = true
+    }
+
     const getDirectionText = (name) => state.directionText[name] || getPropertyText(name) || 'auto'
 
     const clickDirection = (styleName, event) => {
@@ -408,17 +418,6 @@ export default {
       state.show = true
       setPosition(event)
       openDirectionSetting(POSITION_PROPERTY.Position, styleName)
-    }
-
-    const openDirectionSetting = (type, styleName) => {
-
-      state.property = {
-        type,
-        name: styleName,
-        value: getPropertyValue(styleName)
-      }
-
-      state.showDirectionModal = true
     }
 
     const closeDirectionModal = () => {

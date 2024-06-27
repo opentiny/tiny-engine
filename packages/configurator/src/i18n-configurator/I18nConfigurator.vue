@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { BindI18n } from '../components' // TODO 等 common 包移除了 configurator 依赖后再更换成 @opentiny/tiny-engine-common
+import { BindI18n } from '@opentiny/tiny-engine-common'
 import { useTranslate } from '@opentiny/tiny-engine-controller'
 import { Input, Popover } from '@opentiny/vue'
 import { IconClose, IconLanguage } from '@opentiny/vue-icon'

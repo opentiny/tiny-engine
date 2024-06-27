@@ -120,7 +120,7 @@
 </template>
 
 <script>
-import { VueMonaco as MonacoEditor, SvgButton } from '../components' // TODO 等 common 包移除了 configurator 依赖后再更换成 @opentiny/tiny-engine-common
+import { VueMonaco as MonacoEditor, SvgButton } from '@opentiny/tiny-engine-common'
 import { useApp, useCanvas, useLayout, useProperties, useResource } from '@opentiny/tiny-engine-controller'
 import { getCommentByKey } from '@opentiny/tiny-engine-controller/js/comment'
 import { formatString, generate, parse, traverse } from '@opentiny/tiny-engine-controller/js/ast'

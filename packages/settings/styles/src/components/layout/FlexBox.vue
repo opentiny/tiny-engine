@@ -7,11 +7,11 @@
         >{{ item.title }}</span
       >
       <div>
-        <meta-radio
+        <radio-configurator
           :options="item.btnList"
           :value="item.picked"
           @pickedChange="(args) => select(args, item)"
-        ></meta-radio>
+        ></radio-configurator>
       </div>
     </div>
   </div>
@@ -22,7 +22,7 @@
 
 <script>
 import { ref, watchEffect } from 'vue'
-import { MetaRadio } from '@opentiny/tiny-engine-common'
+import { RadioConfigurator } from '@opentiny/tiny-engine-configurator'
 import { utils } from '@opentiny/tiny-engine-utils'
 import ModalMask, { useModal } from '../inputs/ModalMask.vue'
 import ResetButton from '../inputs/ResetButton.vue'
@@ -33,7 +33,7 @@ const { hyphenate } = utils
 
 export default {
   components: {
-    MetaRadio,
+    RadioConfigurator,
     ModalMask,
     ResetButton
   },
