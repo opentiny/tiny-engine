@@ -12,8 +12,18 @@
 
 import entry from './src/Main.vue'
 import metaData from './meta'
+import { commonEvents } from './src/commonjs/events.js'
+import BindEventsDialogContent from './src/components/BindEventsDialogContent.vue'
+import BindEventsDialogSidebar from './src/components/BindEventsDialogSidebar.vue'
 
 export default {
   ...metaData,
-  entry
+  entry,
+  options: {
+    commonEvents
+  },
+  components: {
+    BindEventsDialogSidebar,
+    BindEventsDialogContent
+  }
 }

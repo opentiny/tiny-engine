@@ -641,7 +641,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "widget": {
-                      "component": "MetaSelect",
+                      "component": "SelectConfigurator",
                       "props": {
                         "options": ["", "danger", "primary"]
                       }
@@ -663,7 +663,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "widget": {
-                      "component": "MetaSelect",
+                      "component": "SelectConfigurator",
                       "props": {
                         "options": ["large", "middle", "small", "xs"]
                       }

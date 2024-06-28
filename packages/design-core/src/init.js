@@ -14,11 +14,11 @@ import { createApp } from 'vue'
 import initSvgs from '@opentiny/tiny-engine-svgs'
 import i18n from '@opentiny/tiny-engine-controller/js/i18n'
 import { initMonitor } from '@opentiny/tiny-engine-controller/js/monitor'
-import { injectGlobalComponents, Modal, Notify } from '@opentiny/tiny-engine-common'
+import { injectGlobalComponents, setGlobalMonacoEditorTheme, Modal, Notify } from '@opentiny/tiny-engine-common'
 import { initHttp } from '@opentiny/tiny-engine-http'
 import TinyThemeTool from '@opentiny/vue-theme/theme-tool'
 import { tinySmbTheme } from '@opentiny/vue-theme/theme' // SMB 主题
-import { defineEntry, mergeRegistry, initHook, HOOK_NAME } from '@opentiny/tiny-engine-entry'
+import { defineEntry, mergeRegistry, getMergeMeta, initHook, HOOK_NAME } from '@opentiny/tiny-engine-entry'
 import App from './App.vue'
 import defaultRegistry from '../registry.js'
 import { registerConfigurators } from './registerConfigurators'
@@ -36,8 +36,8 @@ const defaultLifeCycles = {
     defineEntry(newRegistry)
 
     initHook(HOOK_NAME.useEnv, import.meta.env)
-    initHook(HOOK_NAME.useNotify, () => Notify)
-    initHook(HOOK_NAME.useModal, () => Modal)
+    initHook(HOOK_NAME.useNotify, Notify, { useDefaultExport: true })
+    initHook(HOOK_NAME.useModal, Modal)
 
     // 加载主题样式，尽早加载
     // import(`./theme/${newRegistry.config.theme}.js`)
@@ -58,6 +58,9 @@ const defaultLifeCycles = {
     initSvgs(app)
     window.lowcodeI18n = i18n
     app.use(i18n).use(injectGlobalComponents)
+
+    const theme = getMergeMeta('engine.config').theme?.includes('dark') ? 'vs-dark' : 'vs'
+    setGlobalMonacoEditorTheme(theme)
   }
 }
 

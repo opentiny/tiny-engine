@@ -10,34 +10,6 @@
  *
  */
 
-import {
-  ButtonGroupConfigurator,
-  CascaderConfigurator,
-  CheckBoxConfigurator,
-  CheckboxGroupConfigurator,
-  CodeConfigurator,
-  CodeListConfigurator,
-  CollectionConfigurator,
-  ColorConfigurator,
-  DatePickerConfigurator,
-  FormConfigurator,
-  HtmlAttributesConfigurator,
-  HtmlTextConfigurator,
-  I18nConfigurator,
-  InputConfigurator,
-  IpSectionConfigurator,
-  JsSlotConfigurator,
-  NumberConfigurator,
-  RadioConfigurator,
-  RadioGroupConfigurator,
-  SelectConfigurator,
-  SelectIconConfigurator,
-  SliderConfigurator,
-  SlotConfigurator,
-  SwitchConfigurator,
-  VariableConfigurator
-} from '@opentiny/tiny-engine-configurator'
-
 import PluginSetting from './component/PluginSetting.vue'
 import PluginPanel from './component/PluginPanel.vue'
 import SvgButton from './component/SvgButton.vue'
@@ -48,17 +20,15 @@ import ConfigGroup from './component/ConfigGroup.vue'
 import ConfigItem from './component/ConfigItem.vue'
 import ConfigRender from './component/ConfigRender.vue'
 
-import MetaArrayItem from './component/MetaArrayItem.vue'
+import MetaForm from './component/MetaForm.vue'
 import MetaListActions from './component/MetaListActions.vue'
-import MetaGroupItem from './component/MetaGroupItem.vue'
-import MetaLayoutGrid from './component/MetaLayoutGrid.vue'
 import MetaListTitle from './component/MetaListTitle.vue'
 import MetaListItems from './component/MetaListItems.vue'
 import MetaListItem from './component/MetaListItem.vue'
 import MetaModal, { useModal } from './component/MetaModal.vue'
+import MetaModalItem from './component/MetaModalItem.vue'
 import MetaPopover from './component/MetaPopover.vue'
 import VideoGuide from './component/VideoGuide.vue'
-import MetaContainer from './component/MetaContainer.vue'
 import MonacoEditor from './component/MonacoEditor.vue'
 import BlockHistoryList from './component/BlockHistoryList.vue'
 import BlockHistoryTemplate from './component/BlockHistoryTemplate.vue'
@@ -71,18 +41,18 @@ import CloseIcon from './component/CloseIcon.vue'
 import LifeCycles from './component/LifeCycles.vue'
 import EmptyTip from './component/EmptyTip.vue'
 import MaskModal from './component/MaskModal.vue'
-import VueMonaco from './component/VueMonaco.vue'
+import VueMonaco, { setGlobalMonacoEditorTheme } from './component/VueMonaco.vue'
 import PublicIcon from './component/PublicIcon.vue'
 import SaveNewBlock from './component/SaveNewBlock.vue'
 import BindI18n from './component/BindI18n.vue'
-import MetaRelatedEditor from './component/MetaRelatedEditor.vue'
-import MetaRelatedColumns from './component/MetaRelatedColumns.vue'
 import BlockDeployDialog from './component/BlockDeployDialog.vue'
 import ProgressBar from './component/ProgressBar.vue'
-import MetaTableColumns from './component/MetaTableColumns.vue'
 import SearchEmpty from './component/SearchEmpty.vue'
 import MetaDescription from './component/MetaDescription.vue'
 import MetaList from './component/MetaList.vue'
+import MetaChildItem from './component/MetaChildItem.vue'
+import SplitPanes from './component/SplitPanes.vue'
+import Pane from './component/Pane.vue'
 
 import i18n, { i18nKeyMaps } from '@opentiny/tiny-engine-controller/js/i18n'
 
@@ -108,77 +78,18 @@ export const injectGlobalComponents = {
   }
 }
 
-// TODO: 后面由各自所需代码各自引入，然后删除
-export const MetaComponents = {
-  MetaArrayItem,
-  MetaBindI18n: I18nConfigurator,
-  MetaBindVariable: VariableConfigurator,
-  MetaButtonGroup: ButtonGroupConfigurator,
-  MetaCheckBox: CheckBoxConfigurator,
-  MetaCascader: CascaderConfigurator,
-  MetaCodeEditor: CodeConfigurator,
-  MetaCodeEditorList: CodeListConfigurator,
-  MetaColor: ColorConfigurator,
-  MetaDatePicker: DatePickerConfigurator,
-  MetaGroupItem,
-  MetaInput: InputConfigurator,
-  MetaLayoutGrid,
-  MetaList,
-  MetaModal,
-  MetaNumber: NumberConfigurator,
-  MetaNumeric: NumberConfigurator,
-  MetaPopover,
-  MetaRadio: RadioConfigurator,
-  MetaSelect: SelectConfigurator,
-  MetaSelectIcon: SelectIconConfigurator,
-  MetaSlider: SliderConfigurator,
-  MetaSwitch: SwitchConfigurator,
-  MetaListTitle,
-  MetaListActions,
-  MetaListItems,
-  MetaListItem,
-  MetaForm: FormConfigurator,
-  MetaCollection: CollectionConfigurator,
-  MetaContainer,
-  MetaJsSlot: JsSlotConfigurator,
-  MetaSlot: SlotConfigurator,
-  MetaHtmlText: HtmlTextConfigurator,
-  MetaHtmlAttributes: HtmlAttributesConfigurator,
-  MetaRadioGroup: RadioGroupConfigurator,
-  MetaCheckboxGroup: CheckboxGroupConfigurator,
-  MetaIpSection: IpSectionConfigurator,
-  MetaRelatedEditor,
-  MetaRelatedColumns,
-  MetaTableColumns
-}
-
 export {
-  I18nConfigurator as MetaBindI18n,
-  VariableConfigurator as MetaBindVariable,
-  CheckBoxConfigurator as MetaCheckBox,
-  CodeConfigurator as MetaCodeEditor,
-  CodeListConfigurator as MetaCodeEditorList,
-  ColorConfigurator as MetaColor,
-  DatePickerConfigurator as MetaDatePicker,
   MetaDescription,
-  InputConfigurator as MetaInput,
   MetaList,
   MetaModal,
-  NumberConfigurator as MetaNumber,
+  MetaModalItem,
   MetaPopover,
-  RadioConfigurator as MetaRadio,
-  SelectConfigurator as MetaSelect,
-  SelectIconConfigurator as MetaSelectIcon,
-  SliderConfigurator as MetaSlider,
-  SwitchConfigurator as MetaSwitch,
   MetaListTitle,
   MetaListActions,
   MetaListItems,
   MetaListItem,
-  JsSlotConfigurator as MetaJsSlot,
-  SlotConfigurator as MetaSlot,
-  HtmlTextConfigurator as MetaHtmlText,
-  FormConfigurator as MetaForm,
+  MetaChildItem,
+  MetaForm,
   ConfigCollapse,
   ConfigGroup,
   ConfigItem,
@@ -195,23 +106,22 @@ export {
   BlockLinkEvent,
   BlockDescription,
   PluginBlockList,
-  CollectionConfigurator as MetaCollection,
   ButtonGroup,
   CloseIcon,
   LifeCycles,
   EmptyTip,
-  MetaContainer,
   MonacoEditor,
   MaskModal,
-  HtmlAttributesConfigurator as MetaHtmlAttributes,
   VueMonaco,
+  setGlobalMonacoEditorTheme,
   PublicIcon,
   SaveNewBlock,
   BindI18n,
   BlockDeployDialog,
   ProgressBar,
-  MetaTableColumns,
-  SearchEmpty
+  SearchEmpty,
+  SplitPanes,
+  Pane
 }
 
 export { default as Modal } from './component/Modal'

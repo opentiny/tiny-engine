@@ -2087,7 +2087,7 @@
                       }
                     ],
                     "widget": {
-                      "component": "MetaTableColumns",
+                      "component": "TableColumnsConfigurator",
                       "props": {
                         "type": "object",
                         "textField": "label",
@@ -2955,7 +2955,7 @@
                     "cols": 12,
                     "bindState": false,
                     "widget": {
-                      "component": "MetaContainer",
+                      "component": "ContainerConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -4790,7 +4790,7 @@
                     },
                     "cols": 12,
                     "widget": {
-                      "component": "MetaLayoutGrid",
+                      "component": "LayoutGridConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -8559,7 +8559,7 @@
                     "cols": 12,
                     "bindState": false,
                     "widget": {
-                      "component": "MetaContainer",
+                      "component": "ContainerConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -9705,7 +9705,7 @@
                       }
                     ],
                     "widget": {
-                      "component": "MetaArrayItem",
+                      "component": "ArrayItemConfigurator",
                       "props": {
                         "type": "object",
                         "textField": "title",
