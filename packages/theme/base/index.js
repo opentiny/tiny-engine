@@ -1,4 +1,5 @@
 import { tinyBaseTheme, concatThemeLight, concatThemeDark } from './base'
+import './base.less'
 
 export const tinyEngineThemeLight = {
   id: 'tiny-engine-light-theme',

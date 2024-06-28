@@ -70,6 +70,7 @@
     "@opentiny/tiny-engine-setting-props": "workspace:*",
     "@opentiny/tiny-engine-setting-styles": "workspace:*",
     "@opentiny/tiny-engine-svgs": "workspace:*",
+    "@opentiny/tiny-engine-theme-base": "workspace:*",
     "@opentiny/tiny-engine-theme-dark": "workspace:*",
     "@opentiny/tiny-engine-theme-light": "workspace:*",
     "@opentiny/tiny-engine-toolbar-breadcrumb": "workspace:*",

@@ -1,13 +1,13 @@
 {
   "name": "@opentiny/tiny-engine-theme-base",
-  "version": "1.0.5",
+  "version": "1.0.0",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "vite build && rimraf dist/index.js"
+    "build": "vite build"
   },
-  "main": "dist/tiny-engine-theme.js",
+  "main": "dist/index.js",
   "files": [
     "dist"
   ],
