@@ -2,7 +2,7 @@
   <div class="display-row">
     <div :class="['display-label', { selected: display }]" @click="openDisplayModal($event)">排布</div>
     <div class="display-content">
-      <meta-radio :options="layoutOpts" :value="picked" @pickedChange="select"></meta-radio>
+      <radio-configurator :options="layoutOpts" :value="picked" @pickedChange="select"></radio-configurator>
     </div>
   </div>
 
@@ -14,14 +14,14 @@
 <script>
 import { ref, watch } from 'vue'
 import { DISPLAY_TYPE } from '../../js/cssType'
-import { MetaRadio } from '@opentiny/tiny-engine-common'
+import { RadioConfigurator } from '@opentiny/tiny-engine-configurator'
 import useEvent from '../../js/useEvent'
 import ResetButton from '../inputs/ResetButton.vue'
 import ModalMask, { useModal } from '../inputs/ModalMask.vue'
 
 export default {
   components: {
-    MetaRadio,
+    RadioConfigurator,
     ModalMask,
     ResetButton
   },

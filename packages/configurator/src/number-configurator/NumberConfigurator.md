@@ -1,4 +1,4 @@
-# MetaNumber
+# NumberConfigurator
 
 ## 属性
 

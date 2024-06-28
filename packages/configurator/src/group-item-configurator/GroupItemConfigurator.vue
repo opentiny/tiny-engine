@@ -8,10 +8,10 @@
 </template>
 
 <script>
-import MetaChildItem from './MetaChildItem.vue'
+import { MetaChildItem } from '@opentiny/tiny-engine-common'
 
 export default {
-  name: 'MetaGroupItem',
+  name: 'GroupItemConfigurator',
   components: {
     MetaChildItem
   },

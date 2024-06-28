@@ -21,7 +21,7 @@
 </template>
 <script>
 import { ref } from 'vue'
-import MetaListItems from './MetaListItems.vue'
+import { MetaListItems } from '@opentiny/tiny-engine-common'
 import { useProperties, useResource, useHistory } from '@opentiny/tiny-engine-controller'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { iconDel } from '@opentiny/vue-icon'

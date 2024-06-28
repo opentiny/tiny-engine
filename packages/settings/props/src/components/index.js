@@ -17,7 +17,7 @@ import LifeCycle from './groups/LifeCycle.vue'
 import DraggableOptions from './inputs/DraggableOptions.vue'
 import TableColumn from './groups/TableColumn.vue'
 import TablePager from './groups/TablePager.vue'
-import { MetaComponents } from '@opentiny/tiny-engine-common'
+import * as configurators from '@opentiny/tiny-engine-configurator'
 
 export default {
   CheckValue,
@@ -27,5 +27,5 @@ export default {
   TablePager,
   LifeCycle,
   DraggableOptions,
-  ...MetaComponents
+  ...configurators
 }

@@ -89,7 +89,7 @@
                 "readOnly": false,
                 "disabled": false,
                 "widget": {
-                  "component": "MetaCodeEditor",
+                  "component": "CodeConfigurator",
                   "props": {}
                 }
               },
@@ -109,7 +109,7 @@
                 "readOnly": false,
                 "disabled": false,
                 "widget": {
-                  "component": "MetaCodeEditor",
+                  "component": "CodeConfigurator",
                   "props": {
                     "modelValue": []
                   }
