@@ -2,7 +2,6 @@
 
 > tiny-engine 构建配置
 
-
 ## useTinyEngineBaseConfig
 
 基础的 TinyEngine vite 配置。用户基于 cli 创建的模板依赖该基础配置。
