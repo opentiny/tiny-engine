@@ -12,7 +12,7 @@
           "readOnly": false,
           "disabled": false,
           "cols": 12,
-          "widget": { "component": "MetaInput", "props": {} },
+          "widget": { "component": "InputConfigurator", "props": {} },
           "description": { "zh_CN": "" }
         },
         {
@@ -22,7 +22,7 @@
           "readOnly": false,
           "disabled": false,
           "cols": 12,
-          "widget": { "component": "MetaInput", "props": {} },
+          "widget": { "component": "InputConfigurator", "props": {} },
           "description": { "zh_CN": "" }
         }
       ]

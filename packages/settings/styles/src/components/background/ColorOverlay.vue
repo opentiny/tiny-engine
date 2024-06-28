@@ -1,13 +1,13 @@
 <template>
   <div class="background-row">
     <label class="row-label">Color</label>
-    <meta-color :modelValue="modelValue" @change="changeColor" />
+    <color-configurator :modelValue="modelValue" @change="changeColor" />
   </div>
 </template>
 
 <script setup>
 import { ref, defineProps, defineEmits, onMounted } from 'vue'
-import { MetaColor } from '@opentiny/tiny-engine-common'
+import { ColorConfigurator } from '@opentiny/tiny-engine-configurator'
 import { BACKGROUND_PROPERTY } from '../../js/styleProperty'
 
 const props = defineProps({

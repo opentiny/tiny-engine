@@ -32,7 +32,6 @@
 
 <script>
 import { computed, ref, onActivated, onDeactivated } from 'vue'
-import { theme } from '@opentiny/tiny-engine-controller/adapter'
 import { Tooltip } from '@opentiny/vue'
 import PublicIcon from './PublicIcon.vue'
 import VueMonaco from './VueMonaco.vue'
@@ -63,13 +62,7 @@ export default {
     const fullscreen = ref(false)
     const editorOptions = computed(() => {
       return {
-        theme: theme(),
-        tabSize: 2,
         language: 'javascript',
-        autoIndent: true,
-        formatOnPaste: true,
-        automaticLayout: true,
-        roundedSelection: true,
         lineNumbers: false,
         minimap: {
           enabled: false

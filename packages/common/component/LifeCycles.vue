@@ -51,13 +51,7 @@
           ref="editorRef"
           class="life-cycle-editor"
           :options="{
-            roundedSelection: true,
-            automaticLayout: true,
-            autoIndent: true,
-            language: 'javascript',
-            formatOnPaste: true,
-            tabSize: 2,
-            theme: theme()
+            language: 'javascript'
           }"
           :value="state.editorValue"
           @change="handleEditorChange"
@@ -80,7 +74,6 @@ import { reactive, ref, watchEffect, onBeforeUnmount } from 'vue'
 import { Button, DialogBox, Popover, Search, Alert } from '@opentiny/vue'
 import { useModal, usePage, useNotify, useCanvas } from '@opentiny/tiny-engine-controller'
 import { getMergeMeta } from '@opentiny/tiny-engine-entry'
-import { theme } from '@opentiny/tiny-engine-controller/adapter'
 import MetaListItems from './MetaListItems.vue'
 import { iconYes } from '@opentiny/vue-icon'
 import VueMonaco from './VueMonaco.vue'
@@ -243,7 +236,6 @@ export default {
       openLifeCyclesPanel,
       deleteLifeCycle,
       editorConfirm,
-      theme,
       editorDidMount,
       handleEditorChange
     }

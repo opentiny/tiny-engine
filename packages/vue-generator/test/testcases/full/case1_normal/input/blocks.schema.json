@@ -89,7 +89,7 @@
                 "readOnly": false,
                 "disabled": false,
                 "widget": {
-                  "component": "MetaCodeEditor",
+                  "component": "CodeConfigurator",
                   "props": {}
                 }
               },
@@ -109,7 +109,7 @@
                 "readOnly": false,
                 "disabled": false,
                 "widget": {
-                  "component": "MetaCodeEditor",
+                  "component": "CodeConfigurator",
                   "props": {
                     "modelValue": []
                   }
@@ -131,7 +131,7 @@
                 "readOnly": false,
                 "disabled": false,
                 "widget": {
-                  "component": "MetaInput",
+                  "component": "InputConfigurator",
                   "props": {
                     "modelValue": "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/TinyLowCode/crm/img/bussiness/businessmanage.svg"
                   }
@@ -153,7 +153,7 @@
                 "readOnly": false,
                 "disabled": false,
                 "widget": {
-                  "component": "MetaInput",
+                  "component": "InputConfigurator",
                   "props": {
                     "modelValue": "商务管理"
                   }
@@ -175,7 +175,7 @@
                 "readOnly": false,
                 "disabled": false,
                 "widget": {
-                  "component": "MetaSwitch",
+                  "component": "SwitchConfigurator",
                   "props": {
                     "modelValue": true
                   }

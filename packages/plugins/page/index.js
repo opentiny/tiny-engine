@@ -10,11 +10,15 @@
  *
  */
 
-import component, { api } from './src/Main.vue'
+import entry, { api } from './src/Main.vue'
 import metaData from './meta.js'
+import { PageService } from './src/composable'
 
 export default {
   ...metaData,
   api,
-  component
+  entry,
+  metas: [PageService]
 }
+
+export { PageService }

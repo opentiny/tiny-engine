@@ -123,7 +123,6 @@ import {
 } from './js/resource'
 import { VueMonaco as MonacoEditor, PluginSetting, SvgButton } from '@opentiny/tiny-engine-common'
 import { useApp, useModal, useNotify } from '@opentiny/tiny-engine-controller'
-import { theme } from '@opentiny/tiny-engine-controller/adapter'
 import { getMergeMeta } from '@opentiny/tiny-engine-entry'
 
 const isOpen = ref(false)
@@ -155,11 +154,6 @@ export default {
   },
   setup(props, { emit }) {
     const monacoOptions = {
-      theme: theme(),
-      roundedSelection: true,
-      automaticLayout: true,
-      autoIndent: true,
-      formatOnPaste: true,
       language: 'javascript',
       mouseStyle: 'default',
       minimap: { enabled: false },

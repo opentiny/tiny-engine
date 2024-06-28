@@ -138,7 +138,6 @@ import { registerVariableConfiguratorList } from './register'
 
 registerVariableConfiguratorList()
 
-const docsUrl = useHelp().getDocsUrl('block')
 const { SORT_TYPE } = constants
 const externalBlock = ref(null) // 外部区块信息，用作激活外部传入的区块样式
 
@@ -193,6 +192,7 @@ export default {
   },
 
   setup() {
+    const docsUrl = useHelp().getDocsUrl('block')
     const { getBlockList, sort } = useBlock()
     const { isSaved } = useCanvas()
     const { confirm } = useModal()

@@ -10,7 +10,7 @@
  *
  */
 
-import { initHook, HOOK_NAME } from '@opentiny/tiny-engine-entry'
+import { initHook, HOOK_NAME } from '@opentiny/tiny-engine'
 import { initPreview } from '@opentiny/tiny-engine'
 import 'virtual:svg-icons-register'
 import '@opentiny/tiny-engine-theme'

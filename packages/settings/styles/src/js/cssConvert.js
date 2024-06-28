@@ -9,8 +9,9 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
+import { utils } from '@opentiny/tiny-engine-utils'
 
-import { camelize } from '@opentiny/tiny-engine-controller/utils'
+const { camelize } = utils
 
 export const styleStrRemoveRoot = (str = '') =>
   typeof str === 'string'

@@ -10,13 +10,28 @@
  *
  */
 
-import component, { api } from './src/Main.vue'
+import entry from './src/Main.vue'
 import metaData from './meta.js'
+import MaterialLayout from './src/meta/layout'
+import MaterialBlock from './src/meta/block'
+import MaterialComponent from './src/meta/component'
+import MaterialHeader from './src/components/header/Main.vue'
+import { ResourceService } from './src/composable'
 
 export default {
   ...metaData,
-  component,
-  api
+  entry,
+  layout: MaterialLayout,
+  options: {
+    defaultTabId: 'engine.plugins.materials.component',
+    tabComponentIds: ['engine.plugins.materials.component', 'engine.plugins.materials.block']
+  },
+  components: {
+    header: MaterialHeader
+  },
+  apis: { ...MaterialBlock.apis },
+  api: { ...MaterialBlock.apis },
+  metas: [MaterialBlock, MaterialComponent, ResourceService]
 }
 
-export { component }
+export { entry, ResourceService }
