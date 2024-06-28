@@ -48,15 +48,12 @@
 <script>
 import { computed, reactive } from 'vue'
 import { IconDel, IconEdit, IconPlus } from '@opentiny/vue-icon'
-import MetaList from './MetaList.vue'
-import MetaListActions from './MetaListActions.vue'
-import MetaListItem from './MetaListItem.vue'
-import MetaChildItem from './MetaChildItem.vue'
+import { MetaList, MetaListActions, MetaListItem, MetaChildItem } from '@opentiny/tiny-engine-common'
 import { useTranslate } from '@opentiny/tiny-engine-controller'
 import { VueDraggableNext } from 'vue-draggable-next'
 
 export default {
-  name: 'MetaArrayItem',
+  name: 'ArrayItemConfigurator',
   components: {
     MetaList,
     MetaListItem,
@@ -116,22 +113,16 @@ export default {
       draggable: true
     }))
 
-    const actionEvents = (item) => {
-      switch (item.type) {
-        case 'add':
-          addItem()
-          break
-        default:
-          break
-      }
-    }
-
     const state = reactive({
       currentIndex: -1
     })
 
     const editItem = (data) => {
       state.currentIndex = data.index
+    }
+
+    const updatedColumns = () => {
+      emit('update:modelValue', [...columnsList.value])
     }
 
     const addItem = () => {
@@ -155,10 +146,6 @@ export default {
       updatedColumns()
     }
 
-    const updatedColumns = () => {
-      emit('update:modelValue', [...columnsList.value])
-    }
-
     const onValueChange = (index, { propertyKey, propertyValue }) => {
       if (propertyValue === '' || propertyValue === undefined || propertyValue === null) {
         delete columnsList.value[index][propertyKey]
@@ -170,6 +157,16 @@ export default {
 
     const dragEnd = () => {
       updatedColumns()
+    }
+
+    const actionEvents = (item) => {
+      switch (item.type) {
+        case 'add':
+          addItem()
+          break
+        default:
+          break
+      }
     }
 
     return {

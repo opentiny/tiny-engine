@@ -43,7 +43,7 @@
 import { getCurrentInstance, reactive, ref, watchEffect } from 'vue'
 import { Button, Tabs, TabItem, Input, ButtonGroup, Switch, Select } from '@opentiny/vue'
 import { IconClose } from '@opentiny/vue-icon'
-import { VueMonaco } from '../components'
+import { VueMonaco } from '@opentiny/tiny-engine-common'
 
 export default {
   components: {

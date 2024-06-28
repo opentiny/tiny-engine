@@ -30,7 +30,7 @@ const otherBaseKey = {
     cols: 12,
     rules: [],
     widget: {
-      component: 'MetaInput',
+      component: 'InputConfigurator',
       props: {}
     }
   },
@@ -46,7 +46,7 @@ const otherBaseKey = {
     cols: 12,
     rules: [],
     widget: {
-      component: 'MetaInput',
+      component: 'InputConfigurator',
       props: {}
     }
   },
@@ -62,7 +62,7 @@ const otherBaseKey = {
     cols: 12,
     rules: [],
     widget: {
-      component: 'MetaInput',
+      component: 'InputConfigurator',
       props: {}
     }
   }
@@ -92,7 +92,7 @@ const getSlotSwitch = (properties, slots = {}) => {
           labelPosition: 'none',
           bindState: false,
           widget: {
-            component: 'MetaSlot',
+            component: 'SlotConfigurator',
             props: {
               slots
             }
