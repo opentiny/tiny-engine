@@ -1,5 +1,5 @@
 <template>
-  <tiny-config-provider :design="designSmbConfig">
+  <component :is="configProvider" :design="configProviderDesign">
     <div id="tiny-engine">
       <design-toolbars :toolbars="registry.toolbars"></design-toolbars>
       <div class="tiny-engine-main">
@@ -22,26 +22,24 @@
         </div>
       </div>
     </div>
-  </tiny-config-provider>
+  </component>
 </template>
 
 <script>
 import { reactive } from 'vue'
-import { ConfigProvider as TinyConfigProvider } from '@opentiny/vue'
-import designSmbConfig from '@opentiny/vue-design-smb'
-import { useLayout } from '@opentiny/tiny-engine-entry'
+import { useLayout, getMergeRegistry } from '@opentiny/tiny-engine-entry'
 import AppManage from '@opentiny/tiny-engine-plugin-page'
 import DesignToolbars from './DesignToolbars.vue'
 import DesignPlugins from './DesignPlugins.vue'
 import DesignSettings from './DesignSettings.vue'
+import meta from '../meta'
 
 export default {
   name: 'TinyLowCode',
   components: {
     DesignToolbars,
     DesignPlugins,
-    DesignSettings,
-    TinyConfigProvider
+    DesignSettings
   },
   provide() {
     return {
@@ -54,6 +52,10 @@ export default {
     }
   },
   setup() {
+    const layoutRegistry = getMergeRegistry(meta.type)
+    const configProvider = layoutRegistry.options.configProvider
+    const configProviderDesign = layoutRegistry.options.configProviderDesign
+
     const state = reactive({
       preNode: AppManage
     })
@@ -70,11 +72,12 @@ export default {
     }
 
     return {
+      configProvider,
+      configProviderDesign,
       state,
       plugins,
       toggleNav,
-      layoutState,
-      designSmbConfig
+      layoutState
     }
   }
 }
