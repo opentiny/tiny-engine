@@ -63,9 +63,6 @@ import DataSourceGlobalDataHandler, {
   open as openGlobalDataHander,
   close as closeGlobalDataHandler
 } from './DataSourceGlobalDataHandler.vue'
-import { registerVariableConfiguratorList } from './register'
-
-registerVariableConfiguratorList()
 
 export default {
   components: {

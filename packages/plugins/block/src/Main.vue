@@ -134,9 +134,6 @@ import {
   publishBlock
 } from './js/blockSetting'
 import { fetchBlockList, requestBlocks, requestInitBlocks, fetchBlockContent } from './js/http'
-import { registerVariableConfiguratorList } from './register'
-
-registerVariableConfiguratorList()
 
 const { SORT_TYPE } = constants
 const externalBlock = ref(null) // 外部区块信息，用作激活外部传入的区块样式

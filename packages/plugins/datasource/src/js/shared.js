@@ -1,8 +1,8 @@
-import { useApp, useCanvas, useData } from '@opentiny/tiny-engine-controller'
+import { useApp, useCanvas } from '@opentiny/tiny-engine-controller'
 import { generate, parse, traverse } from '@opentiny/tiny-engine-controller/js/ast'
-import { register } from '@opentiny/tiny-engine-entry'
+import { getCommentByKey } from '@opentiny/tiny-engine-controller/js/comment'
 import { camelize, capitalize } from '@vue/shared'
-import { fetchDataSourceList } from './js/http'
+import { fetchDataSourceList } from './http'
 
 const removeInterval = (start, end, intervalId, pageSchema) => {
   const unmountedFn = pageSchema.lifeCycles?.onUnmounted?.value
@@ -30,7 +30,6 @@ const genRemoteMethodToLifeSetup = (variableName, sourceRef, pageSchema, pollInt
   }
 
   const setupFn = pageSchema.lifeCycles?.setup?.value
-  const { getCommentByKey } = useData()
   const { start, end } = getCommentByKey(variableName)
   const intervalId = `intervalId${capitalize(camelize(sourceRef.name))}`
   const isPoll = pollInterval > 0
@@ -79,44 +78,43 @@ const genRemoteMethodToLifeSetup = (variableName, sourceRef, pageSchema, pollInt
   }
 }
 
-export const registerVariableConfiguratorList = () => {
-  register(
-    'VARIABLE_CONFIGURATOR_LIST',
-    {
-      datasource: {
-        content: '数据源',
-        getVariablesAsync: () => {
-          const url = new URLSearchParams(location.search)
-          const selectedId = useApp().appInfoState.selectedId || url.get('id')
+const variableConfiguratorList = [
+  {
+    id: 'datasource',
+    content: '数据源',
+    getVariablesAsync: () => {
+      const url = new URLSearchParams(location.search)
+      const selectedId = useApp().appInfoState.selectedId || url.get('id')
 
-          return fetchDataSourceList(selectedId).then((data) => {
-            return {
-              bindPrefix: '数据源： ',
-              variables: data.reduce((result, item) => {
-                result[item.name] = item
-                return result
-              }, {})
-            }
-          })
-        },
-        postConfirm: (state) => {
-          const { canvasApi } = useCanvas()
-          const pageSchema = canvasApi.value.getSchema()
-          const stateName = state.variable.replace('this.state.', '')
-          const staticData = state.variableContent.map(({ _id, ...other }) => other)
-
-          pageSchema.state[stateName] = staticData
-
-          // 设置画布上下文环境，让画布触发更新渲染
-          canvasApi.value.setState({ [stateName]: staticData })
-
-          const pollInterval = state.isPoll ? state.pollInterval || -1 : -1
-          // 这里在setup生命周期函数内部处理用户真实环境中的数据源请求
-          genRemoteMethodToLifeSetup(stateName, state.dataSouce, pageSchema, pollInterval)
-        },
-        _order: 600
-      }
+      return fetchDataSourceList(selectedId).then((data) => {
+        return {
+          bindPrefix: '数据源： ',
+          variables: data.reduce((result, item) => {
+            result[item.name] = item
+            return result
+          }, {})
+        }
+      })
     },
-    { mergeObject: true }
-  )
-}
+    postConfirm: (state) => {
+      const { canvasApi } = useCanvas()
+      const pageSchema = canvasApi.value.getSchema()
+      const stateName = state.variable.replace('this.state.', '')
+      const staticData = state.variableContent.map(({ _id, ...other }) => other)
+
+      pageSchema.state[stateName] = staticData
+
+      // 设置画布上下文环境，让画布触发更新渲染
+      canvasApi.value.setState({ [stateName]: staticData })
+
+      const pollInterval = state.isPoll ? state.pollInterval || -1 : -1
+      // 这里在setup生命周期函数内部处理用户真实环境中的数据源请求
+      genRemoteMethodToLifeSetup(stateName, state.dataSouce, pageSchema, pollInterval)
+    },
+    _order: 600
+  }
+]
+
+export const getSharedOptions = () => ({
+  variableConfiguratorList
+})

@@ -14,10 +14,14 @@ import { fetchDataSourceList, fetchDataSourceDetail } from './src/js/http'
 import entry from './src/Main.vue'
 import metaData from './meta.js'
 import { DataSourceService } from './src/composable'
+import { getSharedOptions } from './src/js/shared'
 
 export default {
   ...metaData,
   entry,
+  apis: {
+    getSharedOptions
+  },
   metas: [DataSourceService]
 }
 

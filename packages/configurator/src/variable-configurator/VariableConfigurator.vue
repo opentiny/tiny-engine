@@ -124,7 +124,7 @@ import { VueMonaco as MonacoEditor, SvgButton } from '@opentiny/tiny-engine-comm
 import { useCanvas, useProperties } from '@opentiny/tiny-engine-controller'
 import { formatString } from '@opentiny/tiny-engine-controller/js/ast'
 import { DEFAULT_LOOP_NAME } from '@opentiny/tiny-engine-controller/js/constants'
-import { getRegistrationArray, register } from '@opentiny/tiny-engine-entry'
+import { getSharedOptions } from '@opentiny/tiny-engine-entry'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { Alert, Button, DialogBox, Input, Search, Switch, Tooltip } from '@opentiny/vue'
 import { camelize, capitalize } from '@vue/shared'
@@ -162,42 +162,39 @@ const getJsSlotParams = () => {
   return isJsSlot ? jsSlot?.params || [] : []
 }
 
-register(
-  'VARIABLE_CONFIGURATOR_LIST',
+const defaultVaribleList = [
   {
-    loop: {
-      content: '循环变量',
-      condition: () => useProperties().getSchema()?.loop,
-      getVariables: () => {
-        const [loopItem = DEFAULT_LOOP_NAME.ITEM, loopIndex = DEFAULT_LOOP_NAME.INDEX] =
-          useProperties().getSchema()?.loopArgs || []
+    id: 'loop',
+    content: '循环变量',
+    condition: () => useProperties().getSchema()?.loop,
+    getVariables: () => {
+      const [loopItem = DEFAULT_LOOP_NAME.ITEM, loopIndex = DEFAULT_LOOP_NAME.INDEX] =
+        useProperties().getSchema()?.loopArgs || []
 
-        return {
-          bindPrefix: '',
-          variables: [loopItem, loopIndex].reduce((variables, param) => ({ ...variables, [param]: param }), {})
-        }
-      },
-      _order: 800
+      return {
+        bindPrefix: '',
+        variables: [loopItem, loopIndex].reduce((variables, param) => ({ ...variables, [param]: param }), {})
+      }
     },
-    slotScope: {
-      id: 'slotScope',
-      content: '暴露给插槽使用的变量',
-      condition: () => {
-        const [isInJsSlot] = getJsSlot()
-        return isInJsSlot
-      },
-      getVariables: () => {
-        const params = getJsSlotParams()
-        return {
-          bindPrefix: '',
-          variables: params.reduce((variables, param) => ({ ...variables, [param]: param }), {})
-        }
-      },
-      _order: 900
-    }
+    _order: 800
   },
-  { mergeObject: true }
-)
+  {
+    id: 'slotScope',
+    content: '暴露给插槽使用的变量',
+    condition: () => {
+      const [isInJsSlot] = getJsSlot()
+      return isInJsSlot
+    },
+    getVariables: () => {
+      const params = getJsSlotParams()
+      return {
+        bindPrefix: '',
+        variables: params.reduce((variables, param) => ({ ...variables, [param]: param }), {})
+      }
+    },
+    _order: 900
+  }
+]
 
 export default {
   name: 'VariableConfigurator',
@@ -232,7 +229,7 @@ export default {
     let oldValue = ''
     let postConfirm = null
 
-    const list = getRegistrationArray('VARIABLE_CONFIGURATOR_LIST')
+    const list = (getSharedOptions('variableConfiguratorList') || []).concat(defaultVaribleList).sort((a, b) => a - b)
 
     const state = reactive({
       variables: {},

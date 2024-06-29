@@ -28,9 +28,6 @@ import { RESOURCE_TYPE } from './js/resource'
 import BridgeManage from './BridgeManage.vue'
 import BridgeSetting, { openPanel, closePanel } from './BridgeSetting.vue'
 import { setType, RESOURCE_TIP } from './js/resource'
-import { registerVariableConfiguratorList } from './register'
-
-registerVariableConfiguratorList()
 
 export default {
   components: {

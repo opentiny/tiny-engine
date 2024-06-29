@@ -87,9 +87,6 @@ import CreateStore from './CreateStore.vue'
 import { updateGlobalState } from './js/http'
 import { STATE, OPTION_TYPE } from './js/constants'
 import { validateMonacoEditorData } from './js/common'
-import { registerVariableConfiguratorList } from './register'
-
-registerVariableConfiguratorList()
 
 export default {
   components: {

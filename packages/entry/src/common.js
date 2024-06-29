@@ -163,46 +163,56 @@ export const getMergeMeta = (id) => {
   return metasHashMap[id]
 }
 
-// 全局注册数据
-const registration = {}
+const mergeObject = (mergeTo, merged) => {
+  const prevKeys = Object.keys(mergeTo)
+  for (const [currKey, currVal] of Object.entries(merged)) {
+    // new key
+    if (!prevKeys.includes(currKey)) {
+      mergeTo[currKey] = currVal
+      continue
+    }
 
-/**
- * 获取token对应的注册的数据
- * @param {string} token
- * @returns
- */
-export const getRegistration = (token) => registration[token]
+    const typeOfVal = typeof currVal
+    // 类型不同，不合并
+    if (typeof mergeTo[currKey] !== typeOfVal) {
+      continue
+    }
 
-/**
- * 获取token对应的注册的数组数据。数组实际上是以对象保存的，根据_order字段排序
- * @param {string} token
- * @returns
- */
-export const getRegistrationArray = (token) => {
-  const obj = getRegistration(token)
+    // 都是数组
+    if (Array.isArray(mergeTo[currKey]) && Array.isArray(currVal)) {
+      mergeTo[currKey] = mergeTo[currKey].concat(currVal)
+      continue
+    }
 
-  if (typeof obj !== 'object' || obj === null) {
-    return []
+    // 都是对象
+    if (typeOfVal === 'object' && typeOfVal !== null) {
+      mergeTo[currKey] = { ...mergeTo[currKey], ...currVal }
+    }
+
+    // 剩余类型不不做额外处理
   }
 
-  const result = Object.entries(obj).map(([key, value]) => ({ ...value, id: key }))
-
-  return result
-    .map(({ _order, ...rest }) => ({ ...rest, _order: _order ?? Number.MAX_SAFE_INTEGER }))
-    .sort((a, b) => a._order - b._order)
+  return mergeTo
 }
 
-/**
- * 注册全局数据
- * @param {string} token
- * @param {any} value
- * @param {{ mergeObject: boolean }}
- */
-export const register = (token, value, { mergeObject } = {}) => {
-  if (mergeObject) {
-    const registered = getRegistration(token) || {}
-    registration[token] = { ...registered, ...value }
-  } else {
-    registration[token] = value
+export const getSharedOptions = (key) => {
+  const options = Object.values(metasHashMap)
+    .filter(({ id }) => typeof id === 'string')
+    .map((meta) => meta.apis?.getSharedOptions?.())
+    .filter((options) => typeof options === 'object' && options !== null)
+    .reduce((prev, curr) => mergeObject(prev, curr), {})
+
+  for (const [key, value] of Object.entries(options)) {
+    if (Array.isArray(value)) {
+      options[key] = value
+        .map(({ _order, ...rest }) => ({ ...rest, _order: _order ?? Number.MAX_SAFE_INTEGER }))
+        .sort((a, b) => a._order - b._order)
+    }
   }
+
+  if (key) {
+    return options[key]
+  }
+
+  return options
 }
