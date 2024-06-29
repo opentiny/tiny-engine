@@ -200,6 +200,10 @@ const setThirdPartyDeps = (components) => {
   styles.forEach((item) => materialState.thirdPartyDeps.styles.add(item))
 }
 
+/**
+ * 获取到符合物料协议的bundle.json之后，对其进行处理的函数
+ * @param {*} materials
+ */
 const addMaterials = (materials = {}) => {
   setThirdPartyDeps(materials.components)
   materialState.components.push(...materials.snippets)
@@ -324,23 +328,13 @@ const initMaterial = ({ isInit = true, appData = {} } = {}) => {
   }
 }
 
-const getSnippetRelationship = (component) => {
-  let relationship = {}
-  materialState.components.forEach(({ children }) => {
-    const child = children.find(({ snippetName }) => snippetName === component)
-    child && (relationship = child.relationship)
-  })
-
-  return relationship
-}
-
 export default function () {
   return {
     materialState,
     initMaterial,
     fetchMaterial,
+    getMaterialsRes,
     generateNode,
-    addMaterials,
     clearMaterials,
     clearBlockResources,
     getMaterial,
@@ -348,7 +342,6 @@ export default function () {
     registerComponentToResource,
     registerBlock,
     updateCanvasDependencies,
-    getConfigureMap,
-    getSnippetRelationship
+    getConfigureMap
   }
 }

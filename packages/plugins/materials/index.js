@@ -24,7 +24,7 @@ export default {
   layout: MaterialLayout,
   options: {
     defaultTabId: 'engine.plugins.materials.component',
-    tabComponentIds: ['engine.plugins.materials.component', 'engine.plugins.materials.block']
+    displayComponentIds: ['engine.plugins.materials.component', 'engine.plugins.materials.block']
   },
   components: {
     header: MaterialHeader
