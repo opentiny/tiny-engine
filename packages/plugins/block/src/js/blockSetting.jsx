@@ -24,7 +24,7 @@ import {
 } from '@opentiny/tiny-engine-controller'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
 import { getCanvasStatus } from '@opentiny/tiny-engine-controller/js/canvas'
-import { useHistory, useResource } from '@opentiny/tiny-engine-controller'
+import { useHistory, useMaterial } from '@opentiny/tiny-engine-controller'
 import html2canvas from 'html2canvas'
 
 import {
@@ -50,7 +50,7 @@ const { getBlockList, setBlockList, setCategoryList, getCurrentBlock, addBlockEv
 const { batchCreateI18n } = useTranslate()
 const { message, confirm } = useModal()
 const { setSaved } = useCanvas()
-const { getMaterial } = useResource()
+const { getMaterial } = useMaterial()
 
 const STRING_SLOT = ['Slot', 'slot']
 

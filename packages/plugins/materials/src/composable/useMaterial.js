@@ -60,7 +60,18 @@ const generateNode = ({ type, component }) => {
   return schema
 }
 
-const registerComponent = (data) => {
+/**
+ * 获取物料组件的配置信息
+ * @returns
+ */
+const getConfigureMap = () => {
+  const entries = Object.entries(Object.fromEntries(resource)).map(([key, value]) => {
+    return [key, value.content?.configure || value.configure]
+  })
+  return Object.fromEntries(entries)
+}
+
+const registerComponentToResource = (data) => {
   if (Array.isArray(data.component)) {
     const { component, ...others } = data
     component.forEach((item) => {
@@ -69,8 +80,6 @@ const registerComponent = (data) => {
   } else {
     resource.set(data.component, { ...data, type: MATERIAL_TYPE.Component })
   }
-
-  return data
 }
 
 const fetchBlockDetail = async (blockName) => {
@@ -182,16 +191,26 @@ const generateThirdPartyDeps = (components) => {
     }
   })
 
+  return { styles, scripts }
+}
+
+/**
+ * 设置第三方组件库依赖
+ * @param {array} components 组件物料列表
+ */
+const setThirdPartyDeps = (components) => {
+  const { scripts = [], styles = [] } = generateThirdPartyDeps(components)
   materialState.thirdPartyDeps.scripts.push(...scripts)
   styles.forEach((item) => materialState.thirdPartyDeps.styles.add(item))
 }
 
 const addMaterials = (materials = {}) => {
-  generateThirdPartyDeps(materials.components)
+  setThirdPartyDeps(materials.components)
   materialState.components.push(...materials.snippets)
-  materials.components.map(registerComponent)
+  materials.components.forEach(registerComponentToResource)
 
   const promises = materials?.blocks?.map((item) => registerBlock(item, true))
+
   Promise.allSettled(promises).then((blocks) => {
     if (!blocks?.length) {
       return
@@ -229,9 +248,14 @@ const setMaterial = (name, data) => {
   resource.set(name, data)
 }
 
-const fetchMaterial = async () => {
+export const getMaterialsRes = async () => {
   const bundleUrls = getMergeMeta('engine.config')?.material || []
   const materials = await Promise.allSettled(bundleUrls.map((url) => http.get(url)))
+  return materials
+}
+
+const fetchMaterial = async () => {
+  const materials = await getMaterialsRes()
 
   materials.forEach((response) => {
     if (response.status === 'fulfilled' && response.value.materials) {
@@ -280,8 +304,8 @@ const updateCanvasDependencies = (blocks) => {
 
 const initBuiltinMaterial = () => {
   const { Builtin } = useCanvas().canvasApi.value
-  Builtin.data.materials.components[0].children.map(registerComponent)
-  BuiltinComponentMaterials.components[0].children.map(registerComponent)
+  Builtin.data.materials.components[0].children.forEach(registerComponentToResource)
+  BuiltinComponentMaterials.components[0].children.forEach(registerComponentToResource)
 
   const builtinSnippets = {
     group: '内置组件',
@@ -304,6 +328,16 @@ const initMaterial = ({ isInit = true, appData = {} } = {}) => {
   }
 }
 
+const getSnippetRelationship = (component) => {
+  let relationship = {}
+  materialState.components.forEach(({ children }) => {
+    const child = children.find(({ snippetName }) => snippetName === component)
+    child && (relationship = child.relationship)
+  })
+
+  return relationship
+}
+
 export default function () {
   return {
     materialState,
@@ -315,8 +349,10 @@ export default function () {
     clearBlockResources,
     getMaterial,
     setMaterial,
-    registerComponent,
+    registerComponentToResource,
     registerBlock,
-    updateCanvasDependencies
+    updateCanvasDependencies,
+    getConfigureMap,
+    getSnippetRelationship
   }
 }

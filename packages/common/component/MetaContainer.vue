@@ -22,7 +22,7 @@
 <script>
 import { ref } from 'vue'
 import MetaListItems from './MetaListItems.vue'
-import { useProperties, useResource, useHistory } from '@opentiny/tiny-engine-controller'
+import { useProperties, useHistory, useMaterial } from '@opentiny/tiny-engine-controller'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { iconDel } from '@opentiny/vue-icon'
 
@@ -33,7 +33,7 @@ export default {
   },
   setup() {
     const { children: schemaChildren, componentName } = useProperties().getSchema()
-    const configureMap = useResource().getConfigureMap()
+    const configureMap = useMaterial().getConfigureMap()
     const childComponentName =
       configureMap[componentName]?.nestingRule?.childWhitelist?.[0] || schemaChildren?.[0]?.componentName
 

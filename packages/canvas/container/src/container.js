@@ -916,7 +916,7 @@ export const initCanvas = ({ renderer, iframe, emit, controller }) => {
   // 设置画布全局的utils工具类上下文环境
   setUtils(useResource().resState.utils)
   setSchema(schema)
-  setConfigure(useResource().getConfigureMap())
+  setConfigure(useMaterial().getConfigureMap())
   canvasDispatch('updateDependencies', { detail: useMaterial().materialState.thirdPartyDeps })
   canvasState.loading = false
 }
