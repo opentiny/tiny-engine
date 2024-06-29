@@ -28,7 +28,7 @@ const open = (params = {}) => {
   const { scripts, styles } = useMaterial().materialState.thirdPartyDeps
   params.scripts = scripts
     .filter((item) => item.script)
-    .reduce((pre, cur) => ({ ...pre, [cur.package]: cur.script }), {})
+    .reduce((pre, cur) => Object.assign(pre, { [cur.package]: cur.script }), {})
   params.styles = [...styles]
 
   const href = window.location.href.split('?')[0] || './'

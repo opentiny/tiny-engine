@@ -47,10 +47,11 @@ const getSnippet = (component) => {
 }
 
 const generateNode = ({ type, component }) => {
+  const snippet = getSnippet(component) || {}
   const schema = {
     componentName: component,
     props: {},
-    ...getSnippet(component)
+    ...snippet
   }
 
   if (type === 'block') {
@@ -131,21 +132,16 @@ const registerBlock = async (data, notFetchResouce) => {
   const label = block.component
   const { scripts = [], styles = [] } = assets || {}
 
-  if (notFetchResouce) {
-    return block
-  } else {
-    if (!blockResource.get(label)) {
-      const { addScript, addStyle } = useCanvas().canvasApi.value
-      const promises = scripts
-        .filter((item) => item.includes('umd.js'))
-        .map(addScript)
-        .concat(styles.map(addStyle))
-      // 此处删除await，提前放行区块数据，在区块渲染前找到区块数据源映射关系
-      Promise.allSettled(promises)
-      blockResource.set(label, block.content)
-    }
+  if (!notFetchResouce && !blockResource.get(label)) {
+    const { addScript, addStyle } = useCanvas().canvasApi.value
+    const promises = scripts
+      .filter((item) => item.includes('umd.js'))
+      .map(addScript)
+      .concat(styles.map(addStyle))
+    // 此处删除await，提前放行区块数据，在区块渲染前找到区块数据源映射关系
+    Promise.allSettled(promises)
+    blockResource.set(label, block.content)
   }
-
   return block
 }
 
