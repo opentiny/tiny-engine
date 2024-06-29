@@ -4534,7 +4534,7 @@
                         ],
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {}
                         },
                         "description": {
@@ -4593,7 +4593,7 @@
                         "disabled": false,
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {}
                         },
                         "description": {
@@ -4613,7 +4613,7 @@
                         "disabled": false,
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {}
                         },
                         "description": {
@@ -4661,7 +4661,7 @@
                         "disabled": false,
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {}
                         },
                         "description": {
@@ -5183,7 +5183,7 @@
                         "disabled": false,
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {}
                         },
                         "description": {
@@ -6223,7 +6223,7 @@
                         "disabled": false,
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {}
                         },
                         "description": {
@@ -6865,7 +6865,7 @@
                         "disabled": false,
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {}
                         },
                         "description": {
@@ -7630,7 +7630,7 @@
                         },
                         "cols": 12,
                         "widget": {
-                          "component": "MetaLayoutGrid",
+                          "component": "LayoutGridConfigurator",
                           "props": {}
                         },
                         "description": {
@@ -8591,7 +8591,7 @@
                         "disabled": false,
                         "cols": 12,
                         "widget": {
-                          "component": "MetaBindI18n",
+                          "component": "I18nConfigurator",
                           "props": {}
                         },
                         "description": {
@@ -8663,7 +8663,7 @@
                         "disabled": false,
                         "cols": 12,
                         "widget": {
-                          "component": "MetaBindI18n",
+                          "component": "I18nConfigurator",
                           "props": {}
                         },
                         "description": {
@@ -10683,7 +10683,7 @@
                         ],
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {}
                         },
                         "description": {
@@ -11584,7 +11584,7 @@
                         "disabled": false,
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {}
                         },
                         "description": {
@@ -11604,7 +11604,7 @@
                         "disabled": false,
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {}
                         },
                         "description": {
@@ -11910,7 +11910,7 @@
                         "disabled": false,
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {
                             "language": "json"
                           }
@@ -11947,7 +11947,7 @@
                                   }
                                 },
                                 "widget": {
-                                  "component": "MetaBindI18n",
+                                  "component": "I18nConfigurator",
                                   "props": {}
                                 }
                               },
@@ -12056,7 +12056,7 @@
                                   }
                                 },
                                 "widget": {
-                                  "component": "MetaCodeEditor",
+                                  "component": "CodeConfigurator",
                                   "props": {
                                     "dataType": "JSFunction"
                                   }
@@ -12131,7 +12131,7 @@
                                 "disabled": false,
                                 "cols": 12,
                                 "widget": {
-                                  "component": "MetaCodeEditor",
+                                  "component": "CodeConfigurator",
                                   "props": {
                                     "language": "json"
                                   }
@@ -12153,7 +12153,7 @@
                                 "disabled": false,
                                 "cols": 12,
                                 "widget": {
-                                  "component": "MetaCodeEditor",
+                                  "component": "CodeConfigurator",
                                   "props": {}
                                 },
                                 "description": {
@@ -12200,7 +12200,7 @@
                           }
                         ],
                         "widget": {
-                          "component": "MetaArrayItem",
+                          "component": "ArrayItemConfigurator",
                           "props": {
                             "type": "object",
                             "textField": "title",
@@ -12228,7 +12228,7 @@
                         "onChange": "this.delProp('data')",
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {
                             "name": "fetchData"
                           }
@@ -12254,7 +12254,7 @@
                           }
                         },
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {
                             "name": "pager"
                           }
@@ -12317,7 +12317,7 @@
                         "disabled": false,
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {
                             "dataType": "JSExpression"
                           }
@@ -12339,7 +12339,7 @@
                         "disabled": false,
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {}
                         },
                         "description": {
@@ -12359,7 +12359,7 @@
                         "disabled": false,
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {}
                         },
                         "description": {
@@ -12378,7 +12378,7 @@
                         "disabled": false,
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {}
                         },
                         "description": {
@@ -12530,7 +12530,7 @@
                         "disabled": false,
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {}
                         },
                         "description": {
@@ -12570,7 +12570,7 @@
                         "disabled": false,
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {}
                         },
                         "description": {
@@ -13503,7 +13503,7 @@
                         "disabled": false,
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {}
                         },
                         "description": {
@@ -13855,7 +13855,7 @@
                         "disabled": false,
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {
                             "language": "json"
                           }
@@ -14253,7 +14253,7 @@
                         "disabled": false,
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {}
                         },
                         "description": {
@@ -15006,7 +15006,7 @@
                         "disabled": false,
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {}
                         },
                         "description": {
@@ -15026,7 +15026,7 @@
                         "disabled": false,
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {}
                         },
                         "description": {
@@ -15046,7 +15046,7 @@
                         "disabled": false,
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {}
                         },
                         "description": {
@@ -15330,7 +15330,7 @@
                         "disabled": false,
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {}
                         },
                         "description": {
@@ -15519,7 +15519,7 @@
                         "disabled": false,
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {}
                         },
                         "description": {
@@ -15686,7 +15686,7 @@
                         "disabled": false,
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {}
                         },
                         "description": {
@@ -15820,7 +15820,7 @@
                         "disabled": false,
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {}
                         },
                         "description": {
@@ -16069,7 +16069,7 @@
                         "disabled": false,
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {}
                         },
                         "description": {
@@ -16513,7 +16513,7 @@
                         "disabled": false,
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {}
                         },
                         "description": {
@@ -16532,7 +16532,7 @@
                         "disabled": false,
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {}
                         },
                         "description": {
@@ -16551,7 +16551,7 @@
                         "disabled": false,
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {}
                         },
                         "description": {
@@ -16608,7 +16608,7 @@
                         "disabled": false,
                         "cols": 12,
                         "widget": {
-                          "component": "MetaCodeEditor",
+                          "component": "CodeConfigurator",
                           "props": {}
                         },
                         "description": {
@@ -16838,7 +16838,7 @@
                   "labelPosition": "top",
                   "type": "string",
                   "widget": {
-                    "component": "MetaBindI18n",
+                    "component": "I18nConfigurator",
                     "props": {}
                   },
                   "device": []
@@ -17360,7 +17360,7 @@
                   "labelPosition": "top",
                   "type": "object",
                   "widget": {
-                    "component": "MetaCodeEditor",
+                    "component": "CodeConfigurator",
                     "props": {
                       "language": "json"
                     }
@@ -17383,7 +17383,7 @@
                   "labelPosition": "top",
                   "type": "object",
                   "widget": {
-                    "component": "MetaCodeEditor",
+                    "component": "CodeConfigurator",
                     "props": {
                       "language": "json"
                     }
@@ -17901,7 +17901,7 @@
                   "labelPosition": "top",
                   "type": "object",
                   "widget": {
-                    "component": "MetaCodeEditor",
+                    "component": "CodeConfigurator",
                     "props": {
                       "language": "json"
                     }
@@ -18167,7 +18167,7 @@
                   "labelPosition": "top",
                   "type": "array",
                   "widget": {
-                    "component": "MetaCodeEditor",
+                    "component": "CodeConfigurator",
                     "props": {
                       "language": "json"
                     }
@@ -18239,7 +18239,7 @@
                             }
                           },
                           "widget": {
-                            "component": "MetaCodeEditor",
+                            "component": "CodeConfigurator",
                             "props": {}
                           }
                         },
@@ -18402,7 +18402,7 @@
                             }
                           },
                           "widget": {
-                            "component": "MetaCodeEditor",
+                            "component": "CodeConfigurator",
                             "props": {}
                           }
                         },
@@ -18421,7 +18421,7 @@
                             }
                           },
                           "widget": {
-                            "component": "MetaCodeEditor",
+                            "component": "CodeConfigurator",
                             "props": {
                               "language": "json"
                             }
@@ -18442,7 +18442,7 @@
                             }
                           },
                           "widget": {
-                            "component": "MetaCodeEditor",
+                            "component": "CodeConfigurator",
                             "props": {
                               "language": "json"
                             }
@@ -18484,7 +18484,7 @@
                             }
                           },
                           "widget": {
-                            "component": "MetaCodeEditor",
+                            "component": "CodeConfigurator",
                             "props": {}
                           }
                         },
@@ -18634,7 +18634,7 @@
                             }
                           },
                           "widget": {
-                            "component": "MetaCodeEditor",
+                            "component": "CodeConfigurator",
                             "props": {}
                           }
                         },
@@ -18674,7 +18674,7 @@
                             }
                           },
                           "widget": {
-                            "component": "MetaCodeEditor",
+                            "component": "CodeConfigurator",
                             "props": {
                               "language": "json"
                             }
@@ -18735,7 +18735,7 @@
                             }
                           },
                           "widget": {
-                            "component": "MetaCodeEditor",
+                            "component": "CodeConfigurator",
                             "props": {}
                           }
                         },
@@ -18755,7 +18755,7 @@
                             }
                           },
                           "widget": {
-                            "component": "MetaCodeEditor",
+                            "component": "CodeConfigurator",
                             "props": {
                               "language": "json"
                             }
@@ -18765,7 +18765,7 @@
                     }
                   ],
                   "widget": {
-                    "component": "MetaTableColumns",
+                    "component": "TableColumnsConfigurator",
                     "props": {
                       "type": "object",
                       "textField": "title",
@@ -19030,7 +19030,7 @@
                   "cols": 12,
                   "labelPosition": "top",
                   "widget": {
-                    "component": "MetaCodeEditor",
+                    "component": "CodeConfigurator",
                     "props": {}
                   },
                   "device": []
@@ -19633,7 +19633,7 @@
                   "cols": 12,
                   "bindState": false,
                   "widget": {
-                    "component": "MetaContainer",
+                    "component": "ContainerConfigurator",
                     "props": {}
                   },
                   "description": {
@@ -21306,7 +21306,7 @@
                   "disabled": false,
                   "cols": 12,
                   "widget": {
-                    "component": "MetaCodeEditor",
+                    "component": "CodeConfigurator",
                     "props": {
                       "language": "json"
                     }
@@ -21461,7 +21461,7 @@
                   },
                   "cols": 12,
                   "widget": {
-                    "component": "MetaLayoutGrid",
+                    "component": "LayoutGridConfigurator",
                     "props": {}
                   },
                   "description": {
@@ -21753,7 +21753,7 @@
                   "disabled": false,
                   "cols": 12,
                   "widget": {
-                    "component": "MetaCodeEditor",
+                    "component": "CodeConfigurator",
                     "props": {}
                   },
                   "description": {
@@ -21773,7 +21773,7 @@
                   "disabled": false,
                   "cols": 12,
                   "widget": {
-                    "component": "MetaCodeEditor",
+                    "component": "CodeConfigurator",
                     "props": {}
                   },
                   "description": {
@@ -22387,7 +22387,7 @@
                   "readOnly": false,
                   "disabled": false,
                   "widget": {
-                    "component": "MetaBindI18n",
+                    "component": "I18nConfigurator",
                     "props": {}
                   },
                   "description": {
@@ -22724,7 +22724,7 @@
                   "disabled": false,
                   "cols": 12,
                   "widget": {
-                    "component": "MetaBindI18n",
+                    "component": "I18nConfigurator",
                     "props": {}
                   },
                   "description": {
@@ -22788,7 +22788,7 @@
                   "disabled": false,
                   "cols": 12,
                   "widget": {
-                    "component": "MetaBindI18n",
+                    "component": "I18nConfigurator",
                     "props": {}
                   },
                   "description": {
@@ -23477,7 +23477,7 @@
                   "disabled": false,
                   "cols": 12,
                   "widget": {
-                    "component": "MetaCodeEditor",
+                    "component": "CodeConfigurator",
                     "props": {
                       "language": "json"
                     }
@@ -24766,7 +24766,7 @@
                   "disabled": false,
                   "cols": 12,
                   "widget": {
-                    "component": "MetaCodeEditor",
+                    "component": "CodeConfigurator",
                     "props": {}
                   },
                   "description": {
@@ -25230,7 +25230,7 @@
                   "cols": 12,
                   "bindState": false,
                   "widget": {
-                    "component": "MetaContainer",
+                    "component": "ContainerConfigurator",
                     "props": {}
                   },
                   "description": {
@@ -25626,7 +25626,7 @@
                   "disabled": false,
                   "cols": 12,
                   "widget": {
-                    "component": "MetaCodeEditor",
+                    "component": "CodeConfigurator",
                     "props": {}
                   },
                   "description": {
@@ -26082,7 +26082,7 @@
                   "disabled": false,
                   "cols": 12,
                   "widget": {
-                    "component": "MetaCodeEditor",
+                    "component": "CodeConfigurator",
                     "props": {
                       "language": "json"
                     }
@@ -26119,7 +26119,7 @@
                             }
                           },
                           "widget": {
-                            "component": "MetaBindI18n",
+                            "component": "I18nConfigurator",
                             "props": {}
                           }
                         },
@@ -26228,7 +26228,7 @@
                             }
                           },
                           "widget": {
-                            "component": "MetaCodeEditor",
+                            "component": "CodeConfigurator",
                             "props": {
                               "dataType": "JSFunction"
                             }
@@ -26303,7 +26303,7 @@
                           "disabled": false,
                           "cols": 12,
                           "widget": {
-                            "component": "MetaCodeEditor",
+                            "component": "CodeConfigurator",
                             "props": {
                               "language": "json"
                             }
@@ -26325,7 +26325,7 @@
                           "disabled": false,
                           "cols": 12,
                           "widget": {
-                            "component": "MetaCodeEditor",
+                            "component": "CodeConfigurator",
                             "props": {
                               "language": "json"
                             }
@@ -26374,7 +26374,7 @@
                     }
                   ],
                   "widget": {
-                    "component": "MetaArrayItem",
+                    "component": "ArrayItemConfigurator",
                     "props": {
                       "type": "object",
                       "textField": "title",
@@ -26402,7 +26402,7 @@
                   "onChange": "this.delProp('data')",
                   "cols": 12,
                   "widget": {
-                    "component": "MetaCodeEditor",
+                    "component": "CodeConfigurator",
                     "props": {
                       "name": "fetchData",
                       "dataType": "JSExpression"
@@ -26429,7 +26429,7 @@
                     }
                   },
                   "widget": {
-                    "component": "MetaCodeEditor",
+                    "component": "CodeConfigurator",
                     "props": {
                       "name": "pager",
                       "dataType": "JSExpression"
@@ -26493,7 +26493,7 @@
                   "disabled": false,
                   "cols": 12,
                   "widget": {
-                    "component": "MetaCodeEditor",
+                    "component": "CodeConfigurator",
                     "props": {
                       "dataType": "JSExpression"
                     }
@@ -26515,7 +26515,7 @@
                   "disabled": false,
                   "cols": 12,
                   "widget": {
-                    "component": "MetaCodeEditor",
+                    "component": "CodeConfigurator",
                     "props": {}
                   },
                   "description": {
@@ -26535,7 +26535,7 @@
                   "disabled": false,
                   "cols": 12,
                   "widget": {
-                    "component": "MetaCodeEditor",
+                    "component": "CodeConfigurator",
                     "props": {}
                   },
                   "description": {
@@ -26554,7 +26554,7 @@
                   "disabled": false,
                   "cols": 12,
                   "widget": {
-                    "component": "MetaCodeEditor",
+                    "component": "CodeConfigurator",
                     "props": {}
                   },
                   "description": {
@@ -26710,7 +26710,7 @@
                   "disabled": false,
                   "cols": 12,
                   "widget": {
-                    "component": "MetaCodeEditor",
+                    "component": "CodeConfigurator",
                     "props": {}
                   },
                   "description": {
@@ -26750,7 +26750,7 @@
                   "disabled": false,
                   "cols": 12,
                   "widget": {
-                    "component": "MetaCodeEditor",
+                    "component": "CodeConfigurator",
                     "props": {}
                   },
                   "description": {
@@ -27044,7 +27044,7 @@
                   "disabled": false,
                   "cols": 12,
                   "widget": {
-                    "component": "MetaCodeEditor",
+                    "component": "CodeConfigurator",
                     "props": {}
                   },
                   "description": {
@@ -27348,7 +27348,7 @@
                   "disabled": false,
                   "cols": 12,
                   "widget": {
-                    "component": "MetaCodeEditor",
+                    "component": "CodeConfigurator",
                     "props": {}
                   },
                   "description": {
@@ -27368,7 +27368,7 @@
                   "disabled": false,
                   "cols": 12,
                   "widget": {
-                    "component": "MetaCodeEditor",
+                    "component": "CodeConfigurator",
                     "props": {}
                   },
                   "description": {
@@ -27388,7 +27388,7 @@
                   "disabled": false,
                   "cols": 12,
                   "widget": {
-                    "component": "MetaCodeEditor",
+                    "component": "CodeConfigurator",
                     "props": {}
                   },
                   "description": {
@@ -27637,7 +27637,7 @@
                   ],
                   "cols": 12,
                   "widget": {
-                    "component": "MetaCodeEditor",
+                    "component": "CodeConfigurator",
                     "props": {}
                   },
                   "description": {
@@ -27696,7 +27696,7 @@
                   "disabled": false,
                   "cols": 12,
                   "widget": {
-                    "component": "MetaCodeEditor",
+                    "component": "CodeConfigurator",
                     "props": {}
                   },
                   "description": {
@@ -27716,7 +27716,7 @@
                   "disabled": false,
                   "cols": 12,
                   "widget": {
-                    "component": "MetaCodeEditor",
+                    "component": "CodeConfigurator",
                     "props": {}
                   },
                   "description": {
@@ -27764,7 +27764,7 @@
                   "disabled": false,
                   "cols": 12,
                   "widget": {
-                    "component": "MetaCodeEditor",
+                    "component": "CodeConfigurator",
                     "props": {}
                   },
                   "description": {
@@ -28013,7 +28013,7 @@
                   ],
                   "cols": 12,
                   "widget": {
-                    "component": "MetaCodeEditor",
+                    "component": "CodeConfigurator",
                     "props": {
                       "language": "json"
                     }
@@ -28633,7 +28633,7 @@
                   "disabled": false,
                   "cols": 12,
                   "widget": {
-                    "component": "MetaCodeEditor",
+                    "component": "CodeConfigurator",
                     "props": {}
                   },
                   "description": {
@@ -28818,7 +28818,7 @@
                   "disabled": false,
                   "cols": 12,
                   "widget": {
-                    "component": "MetaBindI18n",
+                    "component": "I18nConfigurator",
                     "props": {}
                   },
                   "description": {
@@ -28876,7 +28876,7 @@
                   "disabled": false,
                   "cols": 12,
                   "widget": {
-                    "component": "MetaBindI18n",
+                    "component": "I18nConfigurator",
                     "props": {}
                   },
                   "description": {
@@ -29233,7 +29233,7 @@
                   "readOnly": false,
                   "disabled": false,
                   "widget": {
-                    "component": "MetaBindI18n",
+                    "component": "I18nConfigurator",
                     "props": {}
                   },
                   "description": {
@@ -29253,7 +29253,7 @@
                   "disabled": false,
                   "cols": 12,
                   "widget": {
-                    "component": "MetaBindI18n",
+                    "component": "I18nConfigurator",
                     "props": {}
                   },
                   "description": {

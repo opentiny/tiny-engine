@@ -1,11 +1,11 @@
 <template>
-  <MetaArrayItem v-bind="$attrs" @update:modelValue="updateColumns"></MetaArrayItem>
+  <ArrayItemConfigurator v-bind="$attrs" @update:modelValue="updateColumns"></ArrayItemConfigurator>
 </template>
 
 <script setup>
 import { nextTick } from 'vue'
 import { useProperties, useMaterial, useCanvas } from '@opentiny/tiny-engine-controller'
-import MetaArrayItem from './MetaArrayItem.vue'
+import ArrayItemConfigurator from '../array-item-configurator/ArrayItemConfigurator.vue'
 
 const { children: schemaChildren, componentName, props } = useProperties().getSchema()
 const configureMap = useMaterial().getConfigureMap()

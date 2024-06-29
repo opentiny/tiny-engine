@@ -18,7 +18,7 @@
         Customize:
         <span v-if="customizeShow" style="color: #de504e">*</span>
       </div>
-      <splitpanes class="default-theme" style="height: 28px" @resize="resize">
+      <split-panes class="default-theme" style="height: 28px" @resize="resize">
         <pane
           v-for="i in setting.len"
           :key="i"
@@ -28,20 +28,19 @@
         >
           <span>{{ setting.modeArray[i - 1] }}</span>
         </pane>
-      </splitpanes>
+      </split-panes>
     </div>
   </div>
 </template>
 
 <script>
 import { reactive, ref, computed } from 'vue'
-import Splitpanes from './SplitPanes.vue'
-import Pane from './Pane.vue'
+import { SplitPanes, Pane } from '@opentiny/tiny-engine-common'
 import { useProperties } from '@opentiny/tiny-engine-controller'
 
 export default {
   components: {
-    Splitpanes,
+    SplitPanes,
     Pane
   },
   inheritAttrs: false,

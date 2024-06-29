@@ -6,6 +6,10 @@
     </tiny-search>
     <block-list v-model:blockList="filterBlocks" :show-add-button="true" :show-block-shot="true"></block-list>
   </div>
+  <teleport to=".material-right-panel" v-if="rightPanelRef">
+    <block-group-panel></block-group-panel>
+    <block-version-select></block-version-select>
+  </teleport>
 </template>
 
 <script lang="jsx">
@@ -15,16 +19,26 @@ import { iconSearch } from '@opentiny/vue-icon'
 import { useApp, useBlock, useMaterial, useModal } from '@opentiny/tiny-engine-controller'
 import BlockGroup from './BlockGroup.vue'
 import BlockList from './BlockList.vue'
+import BlockGroupPanel from './BlockGroupPanel.vue'
+import BlockVersionSelect from './BlockVersionSelect.vue'
 import { fetchGroups, fetchGroupBlocksById, fetchGroupBlocksByIds } from './http'
+import metaData from '../meta'
+import { setBlockPanelVisible, setBlockVersionPanelVisible } from './js/usePanel'
 
 export default {
   components: {
     TinySearch: Search,
     TinyIconSearch: iconSearch(),
     BlockGroup,
-    BlockList
+    BlockList,
+    BlockGroupPanel,
+    BlockVersionSelect
   },
-  setup() {
+  props: {
+    activeTabName: String,
+    rightPanelRef: Object
+  },
+  setup(props) {
     const { addDefaultGroup, isDefaultGroupId, isAllGroupId, isRefresh, selectedGroup } = useBlock()
     const { materialState } = useMaterial()
     const { message } = useModal()
@@ -110,6 +124,16 @@ export default {
         if (value) {
           fetchBlocks()
           isRefresh.value = false
+        }
+      }
+    )
+
+    watch(
+      () => props.activeTabName,
+      (value) => {
+        if (value !== metaData.id) {
+          setBlockPanelVisible(false)
+          setBlockVersionPanelVisible(false)
         }
       }
     )

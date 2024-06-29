@@ -41,11 +41,11 @@ const results = {
 }
 
 const widgetMap = {
-  object: 'MetaCodeEditor',
-  array: 'MetaCodeEditor',
-  enum: 'MetaSelect',
-  string: 'MetaInput',
-  number: 'MetaNumeric',
+  object: 'CodeConfigurator',
+  array: 'CodeConfigurator',
+  enum: 'SelectConfigurator',
+  string: 'InputConfigurator',
+  number: 'NumberConfigurator',
   boolean: 'SwitchConfigurator'
 }
 

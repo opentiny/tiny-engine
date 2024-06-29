@@ -139,7 +139,7 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "MetaCodeEditor",
+              "component": "CodeConfigurator",
               "props": {}
             },
             "description": {
@@ -159,7 +159,7 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "MetaCodeEditor",
+              "component": "CodeConfigurator",
               "props": {}
             },
             "description": {
@@ -179,7 +179,7 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "MetaCodeEditor",
+              "component": "CodeConfigurator",
               "props": {}
             },
             "description": {

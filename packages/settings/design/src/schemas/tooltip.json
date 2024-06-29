@@ -32,7 +32,7 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "MetaSelect",
+              "component": "SelectConfigurator",
               "props": {
                 "options": [
                   {

@@ -9,16 +9,3 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-
-import { getMergeMeta } from '@opentiny/tiny-engine-entry'
-
-/**
- * 判断 Monaco 编辑器背景色的主题
- * @returns
- */
-// TODO: 后续放入Monaco组件中，由组件提供API设置主题
-export const theme = () => {
-  const theme = getMergeMeta('engine.config').theme?.includes('dark') ? 'vs-dark' : 'vs'
-
-  return theme
-}

@@ -1,5 +1,5 @@
 import { HOOK_NAME } from '@opentiny/tiny-engine-entry'
-import CanvasBreadcrumb from './src/CanvasFooter.vue'
+import CanvasBreadcrumb from './src/CanvasBreadcrumb.vue'
 import metaData from './meta'
 import useBreadcrumb from './src/useBreadcrumb'
 

@@ -1,6 +1,6 @@
 <template>
-  <div id="canvas-wrap" ref="canvasRef">
-    <div ref="siteCanvas" class="site-canvas" :style="siteCanvasStyle">
+  <component :is="CanvasLayout">
+    <template #container>
       <component
         :is="CanvasContainer.entry"
         :controller="controller"
@@ -9,13 +9,15 @@
         @remove="removeNode"
         @selected="nodeSelected"
       ></component>
-    </div>
-    <component :is="CanvasBreadcrumb.entry" :data="footData" @click="selectFooterNode"></component>
-  </div>
+    </template>
+    <template #footer>
+      <component :is="CanvasBreadcrumb" :data="footData" @click="selectFooterNode"></component>
+    </template>
+  </component>
 </template>
 
 <script>
-import { ref, watch, computed, onUnmounted } from 'vue'
+import { ref, watch, onUnmounted } from 'vue'
 import {
   useProperties,
   useCanvas,
@@ -45,9 +47,10 @@ const componentType = {
 
 export default {
   setup() {
-    // 暂时这么处理
-    const CanvasContainer = getMergeRegistry('canvas').metas[0]
-    const CanvasBreadcrumb = getMergeRegistry('canvas').metas[1]
+    const registry = getMergeRegistry('canvas')
+    const { CanvasBreadcrumb } = registry.components
+    const CanvasLayout = registry.layout.entry
+    const [CanvasContainer] = registry.metas
     const footData = ref([])
     const showMask = ref(true)
     const canvasRef = ref(null)
@@ -59,14 +62,6 @@ export default {
       pageState.currentSchema = {}
       pageState.properties = null
     }
-
-    const siteCanvasStyle = computed(() => {
-      const { scale } = useLayout().getDimension()
-      return {
-        height: `calc((100% - var(--base-bottom-panel-height, 30px) - 36px) / ${scale})`,
-        transform: `scale(${scale})`
-      }
-    })
 
     watch(
       [() => useCanvas().isSaved(), () => useLayout().layoutState.pageStatus, () => useCanvas().getPageSchema()],
@@ -144,12 +139,6 @@ export default {
       toolbars.visiblePopover = false
     }
 
-    const selectFooterNode = ({ node }) => {
-      const { selectNode } = useCanvas().canvasApi.value
-
-      selectNode(node)
-    }
-
     let canvasResizeObserver = null
     watch(
       () => [useCanvas().isCanvasApiReady.value, canvasRef.value],
@@ -176,7 +165,6 @@ export default {
       removeNode,
       canvasUrl,
       nodeSelected,
-      selectFooterNode,
       footData,
       materialsPanel: materials.entry,
       showMask,
@@ -188,7 +176,7 @@ export default {
         request: useHttp(),
         ast
       },
-      siteCanvasStyle,
+      CanvasLayout,
       canvasRef,
       CanvasContainer,
       CanvasBreadcrumb

@@ -18,7 +18,7 @@
           @change="handleChangeWidgetComponent"
         ></tiny-select>
         <div class="global-desc-info">
-          区块发布后使用当前区块时，会在属性面板中使用当前选择的组件（例如MetaSelect），来配置该属性
+          区块发布后使用当前区块时，会在属性面板中使用当前选择的组件（例如SelectConfigurator），来配置该属性
         </div>
       </tiny-form-item>
       <tiny-form-item label="属性面板组件属性">
@@ -172,15 +172,15 @@ export default {
           ...property.value.widget.props
         },
         component:
-          property.value.widget.component === META_COMPONENTS_ENUM.MetaArrayItem
-            ? META_COMPONENTS_ENUM.MetaCodeEditor
+          property.value.widget.component === META_COMPONENTS_ENUM.ArrayItemConfigurator
+            ? META_COMPONENTS_ENUM.CodeConfigurator
             : property.value.widget.component
       }
     })
 
     const componentPropsTips = ref({
       title: '该选项用于配置，当前选择的属性面板组件，其对应的props参数',
-      demo: '例如MetaSelect的props参数可以是 { options: [{ "label": "xx", "value": "xx"}, ...] }'
+      demo: '例如SelectConfigurator的props参数可以是 { options: [{ "label": "xx", "value": "xx"}, ...] }'
     })
     watch(
       () => getEditProperty(),
@@ -203,7 +203,9 @@ export default {
               modelValue: defaultValue
             },
             component:
-              component === META_COMPONENTS_ENUM.MetaArrayItem ? META_COMPONENTS_ENUM.MetaCodeEditor : component
+              component === META_COMPONENTS_ENUM.ArrayItemConfigurator
+                ? META_COMPONENTS_ENUM.CodeConfigurator
+                : component
           }
         }
 

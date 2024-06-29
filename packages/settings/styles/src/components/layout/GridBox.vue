@@ -47,12 +47,12 @@
               @click="openSetting(GRID_PROPERTY.GridAutoFlow, $event)"
               >方向</span
             >
-            <meta-radio
+            <radio-configurator
               :options="state.direction"
               :value="state.picked"
               :disabled="true"
               @pickedChange="select"
-            ></meta-radio>
+            ></radio-configurator>
           </div>
           <div class="dense">
             <input
@@ -106,16 +106,16 @@
           >{{ item.title }}</span
         >
         <div class="radio-wrap">
-          <meta-radio
+          <radio-configurator
             :options="item.align.list"
             :value="item.align.picked"
             @pickedChange="(args) => select(args, item.align)"
-          ></meta-radio>
-          <meta-radio
+          ></radio-configurator>
+          <radio-configurator
             :options="item.justify.list"
             :value="item.justify.picked"
             @pickedChange="(args) => select(args, item.justify)"
-          ></meta-radio>
+          ></radio-configurator>
         </div>
       </div>
     </div>
@@ -129,7 +129,8 @@
 <script>
 import { reactive, watchEffect } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
-import { MetaRadio, MetaListItems, MaskModal } from '@opentiny/tiny-engine-common'
+import { MetaListItems, MaskModal } from '@opentiny/tiny-engine-common'
+import { RadioConfigurator } from '@opentiny/tiny-engine-configurator'
 import { iconHelpSolid, iconCopy, iconDel } from '@opentiny/vue-icon'
 import { remove } from '@opentiny/vue-renderless/common/array'
 import ModalMask, { useModal } from '../inputs/ModalMask.vue'
@@ -140,7 +141,7 @@ import { GRID_PROPERTY } from '../../js/styleProperty'
 
 export default {
   components: {
-    MetaRadio,
+    RadioConfigurator,
     ModalMask,
     ResetButton,
     MetaListItems,

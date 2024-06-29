@@ -1,20 +1,20 @@
 <template>
-  <meta-array-item
+  <array-item-configurator
     :meta="meta"
     :expand="expand"
     :disableDrag="disableDrag"
     @update:modelValue="saveValue"
-  ></meta-array-item>
+  ></array-item-configurator>
 </template>
 
 <script>
 import { onMounted, onUnmounted } from 'vue'
 import { useMessage, useCanvas } from '@opentiny/tiny-engine-controller'
-import MetaArrayItem from './MetaArrayItem.vue'
+import ArrayItemConfigurator from '../array-item-configurator/ArrayItemConfigurator.vue'
 
 export default {
   components: {
-    MetaArrayItem
+    ArrayItemConfigurator
   },
   props: {
     meta: {
@@ -36,7 +36,7 @@ export default {
 
     const CONSTANTS = {
       FIELD: 'field',
-      COMPONENT: 'MetaSelect'
+      COMPONENT: 'SelectConfigurator'
     }
 
     const saveValue = (value) => emit('update:modelValue', value)

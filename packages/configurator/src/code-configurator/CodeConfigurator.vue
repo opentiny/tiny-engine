@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import { VueMonaco } from '../components' // TODO 等 common 包移除了 configurator 依赖后再更换成 @opentiny/tiny-engine-common
+import { VueMonaco } from '@opentiny/tiny-engine-common'
 import { formatString } from '@opentiny/tiny-engine-controller/js/ast'
 import i18n from '@opentiny/tiny-engine-controller/js/i18n'
 import { Button, DialogBox } from '@opentiny/vue'
@@ -227,11 +227,6 @@ export default {
       close()
     }
 
-    const getTheme = () => {
-      const defaultTheme = window?.TinyGlobalConfig?.theme || 'light'
-      return (props.theme || defaultTheme)?.includes('dark') ? 'vs-dark' : 'vs'
-    }
-
     return {
       save,
       close,
@@ -246,13 +241,7 @@ export default {
       editorState,
       value,
       options: {
-        theme: getTheme(),
-        tabSize: 2,
         language: props.language,
-        autoIndent: true,
-        formatOnPaste: true,
-        automaticLayout: true,
-        roundedSelection: true,
         minimap: {
           enabled: false
         }

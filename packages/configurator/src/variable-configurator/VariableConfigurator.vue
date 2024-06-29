@@ -120,10 +120,9 @@
 </template>
 
 <script>
-import { VueMonaco as MonacoEditor, SvgButton } from '../components' // TODO 等 common 包移除了 configurator 依赖后再更换成 @opentiny/tiny-engine-common
+import { VueMonaco as MonacoEditor, SvgButton } from '@opentiny/tiny-engine-common'
 import { useApp, useCanvas, useLayout, useProperties, useResource } from '@opentiny/tiny-engine-controller'
 import { getCommentByKey } from '@opentiny/tiny-engine-controller/js/comment'
-import { theme } from '@opentiny/tiny-engine-controller/js/monaco'
 import { formatString, generate, parse, traverse } from '@opentiny/tiny-engine-controller/js/ast'
 import { DEFAULT_LOOP_NAME } from '@opentiny/tiny-engine-controller/js/constants'
 import { useHttp } from '@opentiny/tiny-engine-http'
@@ -267,13 +266,7 @@ export default {
     const bindKey = computed(() => props.modelValue?.value?.replace?.('this.state.', '') || '')
 
     const editorOptions = {
-      theme: theme(),
-      tabSize: 2,
       language: 'javascript',
-      autoIndent: true,
-      formatOnPaste: true,
-      automaticLayout: true,
-      roundedSelection: true,
       lineNumbers: false,
       minimap: {
         enabled: false
