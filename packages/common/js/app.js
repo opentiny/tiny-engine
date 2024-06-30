@@ -10,4 +10,13 @@
  *
  */
 
-export {}
+export const EXTEND_CONFIG = {
+  TYPE: {
+    CONSOLE: 'console',
+    MOBILE: 'mobile',
+    BUG_SCREEN: 'bigScreen',
+    PRICE_CALCULATOR: 'priceCalculator',
+    TAIHU: 'taihu',
+    COMMON: 'common'
+  }
+}

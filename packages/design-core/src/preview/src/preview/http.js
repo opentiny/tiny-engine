@@ -11,7 +11,7 @@
  */
 
 import { useHttp } from '@opentiny/tiny-engine-http'
-import { atou } from '@opentiny/tiny-engine-controller/js/preview'
+import { atou } from '@opentiny/tiny-engine-common/js/preview'
 
 const http = useHttp()
 

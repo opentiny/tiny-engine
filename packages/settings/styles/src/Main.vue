@@ -69,7 +69,7 @@ import { ref, watch } from 'vue'
 import { Collapse, CollapseItem, Input } from '@opentiny/vue'
 import { useHistory, useCanvas, useProperties } from '@opentiny/tiny-engine-meta-register'
 import { CodeConfigurator, VariableConfigurator } from '@opentiny/tiny-engine-configurator'
-import { formatString } from '@opentiny/tiny-engine-controller/js/ast'
+import { formatString } from '@opentiny/tiny-engine-common/js/ast'
 import {
   SizeGroup,
   LayoutGroup,
