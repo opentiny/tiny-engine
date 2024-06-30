@@ -6,8 +6,6 @@ const devAlias = {
   '@opentiny/tiny-engine-common/component': path.resolve(process.cwd(), '../packages/common/component'),
   '@opentiny/tiny-engine-common/js': path.resolve(process.cwd(), '../packages/common/js'),
   '@opentiny/tiny-engine-common': path.resolve(process.cwd(), '../packages/common/index.js'),
-  '@opentiny/tiny-engine-controller/js': path.resolve(process.cwd(), '../packages/controller/js'),
-  '@opentiny/tiny-engine-controller': path.resolve(process.cwd(), '../packages/controller/src/index.js'),
   '@opentiny/tiny-engine-plugin-materials': path.resolve(process.cwd(), '../packages/plugins/materials/index.js'),
   '@opentiny/tiny-engine-plugin-block': path.resolve(process.cwd(), '../packages/plugins/block/index.js'),
   '@opentiny/tiny-engine-plugin-data': path.resolve(process.cwd(), '../packages/plugins/data/index.js'),
