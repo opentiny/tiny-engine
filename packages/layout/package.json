@@ -11,7 +11,7 @@
     "dist"
   ],
   "dependencies": {
-    "@opentiny/tiny-engine-entry": "workspace:*",
+    "@opentiny/tiny-engine-meta-register": "workspace:*",
     "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-controller": "workspace:*",
     "@opentiny/tiny-engine-plugin-block": "workspace:*",

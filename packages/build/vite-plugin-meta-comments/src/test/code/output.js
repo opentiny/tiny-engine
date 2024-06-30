@@ -3,7 +3,7 @@ import {
   beforeCallEntry as _beforeCallEntry,
   afterCallEntry as _afterCallEntry,
   useCompile as _useCompile
-} from '@opentiny/tiny-engine-entry'
+} from '@opentiny/tiny-engine-meta-register'
 import _metaData from '../meta.js'
 /* metaService */
 import { reactive, onMounted, onBeforeMount as beforeMount } from 'vue'

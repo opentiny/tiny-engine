@@ -12,7 +12,7 @@
 
 import { constants } from '@opentiny/tiny-engine-utils'
 import { isDevelopEnv } from './environments'
-import { useResource } from '@opentiny/tiny-engine-entry'
+import { useResource } from '@opentiny/tiny-engine-meta-register'
 // prefer old unicode hacks for backward compatibility
 
 const { COMPONENT_NAME } = constants

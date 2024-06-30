@@ -18,7 +18,7 @@ import Login from './Login.vue'
 import { getConfig } from './config'
 import mockData from './mock'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { initHook, HOOK_NAME } from '@opentiny/tiny-engine-entry'
+import { initHook, HOOK_NAME } from '@opentiny/tiny-engine-meta-register'
 
 const { BROADCAST_CHANNEL } = constants
 

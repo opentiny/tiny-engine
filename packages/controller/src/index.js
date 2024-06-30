@@ -30,4 +30,4 @@ export {
   useNotify,
   useCustom,
   useMessage
-} from '@opentiny/tiny-engine-entry'
+} from '@opentiny/tiny-engine-meta-register'

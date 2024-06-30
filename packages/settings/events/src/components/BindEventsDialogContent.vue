@@ -53,7 +53,7 @@
 
 <script>
 import { VueMonaco } from '@opentiny/tiny-engine-common'
-import { useLayout } from '@opentiny/tiny-engine-entry'
+import { useLayout } from '@opentiny/tiny-engine-meta-register'
 import { Input, Popover, Switch } from '@opentiny/vue'
 import { iconHelpQuery } from '@opentiny/vue-icon'
 import { inject } from 'vue'
