@@ -38,9 +38,13 @@ const componentState = reactive({
 })
 const getSnippet = (component) => {
   let schema = {}
-  materialState.components.forEach(({ children }) => {
+  materialState.components.some(({ children }) => {
     const child = children.find(({ snippetName }) => snippetName === component)
-    child && (schema = child.schema)
+    if (child) {
+      schema = child.schema
+      return true
+    }
+    return false
   })
 
   return schema
