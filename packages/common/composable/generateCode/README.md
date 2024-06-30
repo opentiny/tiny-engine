@@ -5,7 +5,7 @@
 ## 注册该 service
 
 ```javascript
-import { generateCodeService } from '@opentiny/tiny-engine'
+import { GenerateCodeService } from '@opentiny/tiny-engine'
 
 // 注册元服务
 init({
@@ -14,7 +14,7 @@ init({
       id: 'engine.root',
       metas: [
         // 这里注入 出码元服务
-        generateCodeService
+        GenerateCodeService
         // ... 其他元服务
       ]
     },
@@ -106,7 +106,7 @@ function generateAppCode(appSchema:IAppSchema, options: IConfig): ICodeGenResult
 最后，同样往注册表注入该 service 即可：
 
 ```javascript
-export const generateCodeService = {
+export const GenerateCodeService = {
   id: 'engine.service.generateCode',
   type: 'MetaService',
   options: {},
@@ -124,7 +124,7 @@ init({
       id: 'engine.root',
       metas: [
         // 自定义的出码元服务
-        generateCodeService
+        GenerateCodeService
       ]
     },
   }
