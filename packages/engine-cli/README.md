@@ -12,17 +12,21 @@ npm link       # after link, you can test engine-cli commands use: engine-cli cr
 
 ## usage
 
-### create
+### create platform or plugin by prompt
 
 ```sh
-npx @opentiny/tiny-engine-cli@latest create my-designer
+# dynamic create platform or plugin by complete prompt
+npx @opentiny/tiny-engine-cli@latest create
 ```
 
-### dev
+### create a tiny-engine platform
 
 ```sh
-cd my-designer && npm install # install
-npm run dev                   # designer dev
-npm run build                 # designer build
+npx @opentiny/tiny-engine-cli@latest create-platform my-designer
 ```
 
+### create a tiny-engine plugin
+
+```sh
+npx @opentiny/tiny-engine-cli@latest create-plugin my-plugin
+```
