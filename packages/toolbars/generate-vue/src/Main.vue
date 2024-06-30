@@ -24,7 +24,7 @@
 import { reactive } from 'vue'
 import { Popover } from '@opentiny/vue'
 import { useBlock, useCanvas, useNotify, useLayout, useEditorInfo } from '@opentiny/tiny-engine-controller'
-import { getMergeMeta, getPluginApi } from '@opentiny/tiny-engine-meta-register'
+import { getMergeMeta, getMetaApi } from '@opentiny/tiny-engine-meta-register'
 import { fs } from '@opentiny/tiny-engine-utils'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { fetchMetaData, fetchPageList, fetchBlockSchema } from './http'
@@ -86,7 +86,7 @@ export default {
       }
     }
 
-    const { getAllNestedBlocksSchema, generateAppCode } = getPluginApi('engine.service.generateCode')
+    const { getAllNestedBlocksSchema, generateAppCode } = getMetaApi('engine.service.generateCode')
 
     const getAllPageDetails = async (pageList) => {
       const { PLUGIN_NAME, getPluginApi } = useLayout()

@@ -51,7 +51,7 @@ export const metasHashMap = {}
 export const apisMap = {}
 export const optionsMap = {}
 
-export const getPluginApi = (id, key) => {
+export const getMetaApi = (id, key) => {
   if (!apisMap[id]) {
     return
   }
