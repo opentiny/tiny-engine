@@ -25,6 +25,7 @@
     "vue": "^3.4.15"
   },
   "dependencies": {
+    "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-http": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
     "@vue/shared": "^3.3.4",
