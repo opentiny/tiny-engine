@@ -11,7 +11,7 @@
  */
 
 import { reactive, ref } from 'vue'
-import { useBlock, useCanvas, useLayout, useNotify, usePage } from '@opentiny/tiny-engine-controller'
+import { useBlock, useCanvas, useLayout, useNotify, usePage } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { handlePageUpdate } from '@opentiny/tiny-engine-controller/js/http'
 

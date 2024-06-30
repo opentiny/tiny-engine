@@ -25,7 +25,7 @@
 
 <script>
 import { computed, onMounted, provide, reactive, watch } from 'vue'
-import { useBlock, useModal } from '@opentiny/tiny-engine-controller'
+import { useBlock, useModal } from '@opentiny/tiny-engine-meta-register'
 import BlockGroupTransferPanel from './BlockGroupTransferPanel.vue'
 import BlockGroupArrange from './BlockGroupArrange.vue'
 import { Select, Option } from '@opentiny/vue'

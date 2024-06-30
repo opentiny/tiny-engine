@@ -29,7 +29,7 @@
 import { onBeforeUnmount } from 'vue'
 import { Button } from '@opentiny/vue'
 import { VueMonaco, CloseIcon, LinkButton } from '@opentiny/tiny-engine-common'
-import { useHelp } from '@opentiny/tiny-engine-controller'
+import { useHelp } from '@opentiny/tiny-engine-meta-register'
 import { initCompletion } from '@opentiny/tiny-engine-controller/js/completion'
 import { initLinter } from '@opentiny/tiny-engine-controller/js/linter'
 import useMethod, { saveMethod, highlightMethod, getMethodNameList, getMethods } from './js/method'

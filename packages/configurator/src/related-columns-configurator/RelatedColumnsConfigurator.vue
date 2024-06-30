@@ -9,7 +9,7 @@
 
 <script>
 import { onMounted, onUnmounted } from 'vue'
-import { useMessage, useCanvas } from '@opentiny/tiny-engine-controller'
+import { useMessage, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import ArrayItemConfigurator from '../array-item-configurator/ArrayItemConfigurator.vue'
 
 export default {

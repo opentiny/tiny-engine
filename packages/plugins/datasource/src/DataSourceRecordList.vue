@@ -99,7 +99,7 @@ import { Grid, Pager, Input, Numeric, DatePicker, Switch, Slider, Link } from '@
 import { IconPlusCircle, IconImport } from '@opentiny/vue-icon'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
 import { utils } from '@opentiny/tiny-engine-utils'
-import { useModal, useLayout, useNotify, useCanvas } from '@opentiny/tiny-engine-controller'
+import { useModal, useLayout, useNotify, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import useClipboard from 'vue-clipboard3'
 import { fetchDataSourceDetail, requestUpdateDataSource } from './js/http'
 import { downloadFn, handleImportedData, overrideOrMergeData, getDataAfterPage } from './js/datasource'

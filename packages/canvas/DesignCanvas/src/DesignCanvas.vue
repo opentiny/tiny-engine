@@ -25,7 +25,7 @@ import {
   useResource,
   useHistory,
   useModal
-} from '@opentiny/tiny-engine-controller'
+} from '@opentiny/tiny-engine-meta-register'
 import materials from '@opentiny/tiny-engine-plugin-materials'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { constants } from '@opentiny/tiny-engine-utils'

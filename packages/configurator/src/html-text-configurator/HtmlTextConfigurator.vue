@@ -15,7 +15,7 @@
 </template>
 <script>
 import { reactive, computed } from 'vue'
-import { useProperties } from '@opentiny/tiny-engine-controller'
+import { useProperties } from '@opentiny/tiny-engine-meta-register'
 import InputConfigurator from '../input-configurator/InputConfigurator.vue'
 
 export default {
