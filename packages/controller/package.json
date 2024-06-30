@@ -15,8 +15,7 @@
   ],
   "exports": {
     ".": "./dist/index.js",
-    "./js/": "./dist/js/",
-    "./utils": "./dist/utils.js"
+    "./js/": "./dist/js/"
   },
   "repository": {
     "type": "git",
