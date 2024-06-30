@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { getPluginApi } from '@opentiny/tiny-engine-meta-register'
+import { getMetaApi } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
 
 const { deepClone } = utils
@@ -16,7 +16,7 @@ export default {
   },
   emits: ['click'],
   setup(props, { emit }) {
-    const canvasApi = getPluginApi('engine.canvas').canvasApi
+    const canvasApi = getMetaApi('engine.canvas').canvasApi
     const dragstart = (e) => {
       if (props.data && canvasApi.value?.dragStart) {
         const data = deepClone(props.data)

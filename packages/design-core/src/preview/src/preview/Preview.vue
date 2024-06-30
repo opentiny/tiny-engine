@@ -18,7 +18,7 @@ import { defineComponent, computed, defineAsyncComponent } from 'vue'
 import { Repl, ReplStore } from '@vue/repl'
 import vueJsx from '@vue/babel-plugin-jsx'
 import { transformSync } from '@babel/core'
-import { getPluginApi } from '@opentiny/tiny-engine-meta-register'
+import { getMetaApi } from '@opentiny/tiny-engine-meta-register'
 import { getImportMap as getInitImportMap } from './importMap'
 import srcFiles from './srcFiles'
 import generateMetaFiles, { processAppJsCode } from './generate'
@@ -93,7 +93,7 @@ export default {
     Promise.all(promiseList).then(async ([appData, metaData, _void, importMapData]) => {
       addUtilsImportMap(importMapData, metaData.utils || [])
 
-      const { getAllNestedBlocksSchema, generatePageCode } = getPluginApi('engine.service.generateCode')
+      const { getAllNestedBlocksSchema, generatePageCode } = getMetaApi('engine.service.generateCode')
 
       const blocks = await getAllNestedBlocksSchema(queryParams.pageInfo?.schema, fetchBlockSchema)
 
