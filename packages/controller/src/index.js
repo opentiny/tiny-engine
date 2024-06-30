@@ -10,29 +10,7 @@
  *
  */
 
-import useLayout from './useLayout'
-import useCanvas from './useCanvas'
-import useApp from './useApp'
-import useResource from './useResource'
-import useHistory from './useHistory'
-import useProperties from './useProperties'
-import useSaveLocal from './useSaveLocal'
-import useEditorInfo from './useEditorInfo'
-import example from './example'
-import useModal from './useModal'
-import useBlock from './useBlock'
-import useTranslate from './useTranslate'
-import usePage from './usePage'
-import useDataSource from './useDataSource'
-import useBreadcrumb from './useBreadcrumb'
-import useProperty from './useProperty'
-import { getGlobalConfig, setGlobalConfig } from './globalConfig'
-import useNotify from './useNotify'
-import useData from './useData'
-import useMessage from './useMessage'
-import useHelp from './useHelp'
-
-export const getExample = example
+export * from './composable'
 
 export {
   useLayout,
@@ -42,7 +20,6 @@ export {
   useHistory,
   useProperties,
   useSaveLocal,
-  useModal,
   useEditorInfo,
   useBlock,
   useTranslate,
@@ -50,10 +27,9 @@ export {
   useDataSource,
   useBreadcrumb,
   useProperty,
-  getGlobalConfig,
-  setGlobalConfig,
+  useHelp,
+  useModal,
   useNotify,
-  useData,
-  useMessage,
-  useHelp
-}
+  useCustom,
+  useMessage
+} from '@opentiny/tiny-engine-entry'

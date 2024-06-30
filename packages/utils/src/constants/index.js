@@ -10,7 +10,7 @@
  *
  */
 
-import * as utils from '../utils'
+import { guid } from '../utils'
 
 export const MATERIAL_TYPE = {
   Component: 'component',
@@ -35,16 +35,6 @@ export const PROP_DATA_TYPE = {
 export const EXPRESSION_TYPE = {
   JS_FUNCTION: 'JSFunction',
   JS_EXPRESSION: 'JSExpression'
-}
-
-export const PLUGIN_NAME = {
-  Materials: 'Materials',
-  AppManage: 'AppManage',
-  BlockManage: 'BlockManage',
-  PageController: 'PageController',
-  Lock: 'Lock',
-  OutlineTree: 'OutlineTree',
-  save: 'save'
 }
 
 export const LOCALE = {
@@ -90,9 +80,12 @@ export const BLOCK_OPENNESS = {
  * 为了避免在同一个浏览器下打开不同设计器应用造成的消息错乱
  * 频道名字 需要为 channelName + channelId
  */
-const CHANNEL_UID = sessionStorage.getItem('BROADCAST_CHANNEL_UID') || utils.guid()
-
-sessionStorage.setItem('BROADCAST_CHANNEL_UID', CHANNEL_UID)
+let CHANNEL_UID = ''
+if (typeof sessionStorage !== 'undefined') {
+  // 支持node环境，如单测场景
+  CHANNEL_UID = sessionStorage?.getItem('BROADCAST_CHANNEL_UID') || guid()
+  sessionStorage?.setItem('BROADCAST_CHANNEL_UID', CHANNEL_UID)
+}
 
 export const BROADCAST_CHANNEL = {
   CanvasLang: `tiny-lowcode-canvas-lang-${CHANNEL_UID}`,

@@ -63,7 +63,7 @@ const store = reactive({
   childrenSchema: [],
   currentProperties: {},
   currentProperty: {
-    widget: 'MetaInput',
+    widget: 'InputConfigurator',
     device: []
   },
   currentGroup: null,
@@ -77,19 +77,19 @@ const store = reactive({
 })
 
 export const META_COMPONENTS = {
-  MetaCodeEditor: 'MetaCodeEditor',
-  MetaArrayItem: 'MetaArrayItem',
-  MetaInput: 'MetaInput',
-  MetaSelect: 'MetaSelect',
-  MetaBindI18n: 'MetaBindI18n',
-  MetaCheckBox: 'MetaCheckBox',
-  MetaColor: 'MetaColor',
-  MetaDatePicker: 'MetaDatePicker',
-  MetaRadio: 'MetaRadio',
-  MetaRadioGroup: 'MetaRadioGroup',
-  MetaNumber: 'MetaNumber',
-  MetaJsSlot: 'MetaJsSlot',
-  MetaSwitch: 'MetaSwitch'
+  CodeConfigurator: 'CodeConfigurator',
+  ArrayItemConfigurator: 'ArrayItemConfigurator',
+  InputConfigurator: 'InputConfigurator',
+  SelectConfigurator: 'SelectConfigurator',
+  I18nConfigurator: 'I18nConfigurator',
+  CheckBoxConfigurator: 'CheckBoxConfigurator',
+  ColorConfigurator: 'ColorConfigurator',
+  DatePickerConfigurator: 'DatePickerConfigurator',
+  RadioConfigurator: 'RadioConfigurator',
+  RadioConfiguratorGroup: 'RadioGroupConfigurator',
+  NumberConfigurator: 'NumberConfigurator',
+  JsSlotConfigurator: 'JsSlotConfigurator',
+  SwitchConfigurator: 'SwitchConfigurator'
 }
 
 export const META_TYPES_ENUM = {
@@ -105,12 +105,12 @@ export const META_TYPES_OPTIONS = Object.entries(META_TYPES_ENUM).map(([key, val
 
 // 数据类型对应的默认 meta component
 export const META_DEFAULT_COMPONENT = {
-  [META_TYPES_ENUM.array]: META_COMPONENTS.MetaCodeEditor,
-  [META_TYPES_ENUM.string]: META_COMPONENTS.MetaInput,
-  [META_TYPES_ENUM.number]: META_COMPONENTS.MetaNumber,
-  [META_TYPES_ENUM.object]: META_COMPONENTS.MetaCodeEditor,
-  [META_TYPES_ENUM.boolean]: META_COMPONENTS.MetaSwitch,
-  [META_TYPES_ENUM.function]: META_COMPONENTS.MetaCodeEditor
+  [META_TYPES_ENUM.array]: META_COMPONENTS.CodeConfigurator,
+  [META_TYPES_ENUM.string]: META_COMPONENTS.InputConfigurator,
+  [META_TYPES_ENUM.number]: META_COMPONENTS.NumberConfigurator,
+  [META_TYPES_ENUM.object]: META_COMPONENTS.CodeConfigurator,
+  [META_TYPES_ENUM.boolean]: META_COMPONENTS.SwitchConfigurator,
+  [META_TYPES_ENUM.function]: META_COMPONENTS.CodeConfigurator
 }
 
 export const META_DEFAULT_VALUE = {
@@ -187,11 +187,11 @@ export const addGroup = (index) => {
 
 export const addProperty = (group, prop, index = 0) => {
   const typeMap = {
-    string: 'MetaInput',
-    boolean: 'MetaSwitch',
-    number: 'MetaNumeric',
-    array: 'MetaInput',
-    object: 'MetaInput'
+    string: 'InputConfigurator',
+    boolean: 'SwitchConfigurator',
+    number: 'NumberConfigurator',
+    array: 'InputConfigurator',
+    object: 'InputConfigurator'
   }
   const meta = store?.currentProperties[prop]
   const newProperty = {

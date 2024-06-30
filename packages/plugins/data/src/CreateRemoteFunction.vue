@@ -9,7 +9,6 @@
 <script>
 import { getCurrentInstance, reactive } from 'vue'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
-import { theme } from '@opentiny/tiny-engine-controller/adapter'
 import { iconDel } from '@opentiny/vue-icon'
 
 export default {
@@ -30,11 +29,6 @@ export default {
 
     const state = reactive({
       options: {
-        theme: theme(),
-        roundedSelection: true,
-        automaticLayout: true,
-        autoIndent: true,
-        formatOnPaste: true,
         language: 'javascript',
         minimap: { enabled: false }
       },

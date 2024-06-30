@@ -20,42 +20,14 @@ import ConfigGroup from './component/ConfigGroup.vue'
 import ConfigItem from './component/ConfigItem.vue'
 import ConfigRender from './component/ConfigRender.vue'
 
-import MetaArrayItem from './component/MetaArrayItem.vue'
-import MetaBindI18n from './component/MetaBindI18n.vue'
-import MetaBindVariable from './component/MetaBindVariable.vue'
-import MetaCascader from './component/MetaCascader.vue'
-import MetaCheckBox from './component/MetaCheckBox.vue'
-import MetaCodeEditor from './component/MetaCodeEditor.vue'
-import MetaCodeEditorList from './component/MetaCodeEditorList.vue'
-import MetaCollection from './component/MetaCollection.vue'
-import MetaColor from './component/MetaColor.vue'
-import MetaDatePicker from './component/MetaDatePicker.vue'
-import MetaDescription from './component/MetaDescription.vue'
 import MetaForm from './component/MetaForm.vue'
-import MetaGroupItem from './component/MetaGroupItem.vue'
-import MetaInput from './component/MetaInput.vue'
-import MetaLayoutGrid from './component/MetaLayoutGrid.vue'
-import MetaList from './component/MetaList.vue'
-import MetaListTitle from './component/MetaListTitle.vue'
 import MetaListActions from './component/MetaListActions.vue'
+import MetaListTitle from './component/MetaListTitle.vue'
 import MetaListItems from './component/MetaListItems.vue'
 import MetaListItem from './component/MetaListItem.vue'
 import MetaModal, { useModal } from './component/MetaModal.vue'
-import MetaNumber from './component/MetaNumber.vue'
+import MetaModalItem from './component/MetaModalItem.vue'
 import MetaPopover from './component/MetaPopover.vue'
-import MetaRadio from './component/MetaRadio.vue'
-import MetaSelect from './component/MetaSelect.vue'
-import MetaSelectIcon from './component/MetaSelectIcon.vue'
-import MetaSlider from './component/MetaSlider.vue'
-import MetaSwitch from './component/MetaSwitch.vue'
-import MetaContainer from './component/MetaContainer.vue'
-import MetaJsSlot from './component/MetaJsSlot.vue'
-import MetaSlot from './component/MetaSlot.vue'
-import MetaHtmlText from './component/MetaHtmlText.vue'
-import MetaHtmlAttributes from './component/MetaHtmlAttributes.vue'
-import MetaRadioGroup from './component/MetaRadioGroup.vue'
-import MetaCheckboxGroup from './component/MetaCheckboxGroup.vue'
-import MetaIpSection from './component/MetaIpSection.vue'
 import VideoGuide from './component/VideoGuide.vue'
 import MonacoEditor from './component/MonacoEditor.vue'
 import BlockHistoryList from './component/BlockHistoryList.vue'
@@ -69,17 +41,18 @@ import CloseIcon from './component/CloseIcon.vue'
 import LifeCycles from './component/LifeCycles.vue'
 import EmptyTip from './component/EmptyTip.vue'
 import MaskModal from './component/MaskModal.vue'
-import VueMonaco from './component/VueMonaco.vue'
+import VueMonaco, { setGlobalMonacoEditorTheme } from './component/VueMonaco.vue'
 import PublicIcon from './component/PublicIcon.vue'
 import SaveNewBlock from './component/SaveNewBlock.vue'
 import BindI18n from './component/BindI18n.vue'
-import MetaRelatedEditor from './component/MetaRelatedEditor.vue'
-import MetaRelatedColumns from './component/MetaRelatedColumns.vue'
 import BlockDeployDialog from './component/BlockDeployDialog.vue'
 import ProgressBar from './component/ProgressBar.vue'
-import MetaButtonGroup from './component/MetaButtonGroup.vue'
-import MetaTableColumns from './component/MetaTableColumns.vue'
 import SearchEmpty from './component/SearchEmpty.vue'
+import MetaDescription from './component/MetaDescription.vue'
+import MetaList from './component/MetaList.vue'
+import MetaChildItem from './component/MetaChildItem.vue'
+import SplitPanes from './component/SplitPanes.vue'
+import Pane from './component/Pane.vue'
 
 import i18n, { i18nKeyMaps } from '@opentiny/tiny-engine-controller/js/i18n'
 
@@ -105,77 +78,17 @@ export const injectGlobalComponents = {
   }
 }
 
-export const MetaComponents = {
-  MetaArrayItem,
-  MetaBindI18n,
-  MetaBindVariable,
-  MetaButtonGroup,
-  MetaCheckBox,
-  MetaCascader,
-  MetaCodeEditor,
-  MetaCodeEditorList,
-  MetaColor,
-  MetaDatePicker,
-  MetaDescription,
-  MetaGroupItem,
-  MetaInput,
-  MetaLayoutGrid,
-  MetaList,
-  MetaModal,
-  MetaNumber,
-  MetaNumeric: MetaNumber,
-  MetaPopover,
-  MetaRadio,
-  MetaSelect,
-  MetaSelectIcon,
-  MetaSlider,
-  MetaSwitch,
-  MetaListTitle,
-  MetaListActions,
-  MetaListItems,
-  MetaListItem,
-  MetaForm,
-  MetaCollection,
-  MetaContainer,
-  MetaJsSlot,
-  MetaSlot,
-  MetaHtmlText,
-  MetaHtmlAttributes,
-  MetaRadioGroup,
-  MetaCheckboxGroup,
-  MetaIpSection,
-  MetaRelatedEditor,
-  MetaRelatedColumns,
-  MetaTableColumns,
-  SearchEmpty
-}
-
 export {
-  MetaBindI18n,
-  MetaBindVariable,
-  MetaCheckBox,
-  MetaCodeEditor,
-  MetaCodeEditorList,
-  MetaColor,
-  MetaDatePicker,
   MetaDescription,
-  MetaInput,
   MetaList,
   MetaModal,
-  MetaNumber,
+  MetaModalItem,
   MetaPopover,
-  MetaRadio,
-  MetaSelect,
-  MetaSelectIcon,
-  MetaSlider,
-  MetaSwitch,
   MetaListTitle,
   MetaListActions,
   MetaListItems,
   MetaListItem,
-  MetaJsSlot,
-  MetaSlot,
-  MetaHtmlText,
+  MetaChildItem,
   MetaForm,
   ConfigCollapse,
   ConfigGroup,
@@ -193,21 +106,23 @@ export {
   BlockLinkEvent,
   BlockDescription,
   PluginBlockList,
-  MetaCollection,
   ButtonGroup,
   CloseIcon,
   LifeCycles,
   EmptyTip,
-  MetaContainer,
   MonacoEditor,
   MaskModal,
-  MetaHtmlAttributes,
   VueMonaco,
+  setGlobalMonacoEditorTheme,
   PublicIcon,
   SaveNewBlock,
   BindI18n,
   BlockDeployDialog,
   ProgressBar,
-  MetaTableColumns,
-  SearchEmpty
+  SearchEmpty,
+  SplitPanes,
+  Pane
 }
+
+export { default as Modal } from './component/Modal'
+export { default as Notify } from './component/Notify'

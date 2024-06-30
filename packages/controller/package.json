@@ -16,8 +16,7 @@
   "exports": {
     ".": "./dist/index.js",
     "./js/": "./dist/js/",
-    "./utils": "./dist/utils.js",
-    "./adapter": "./dist/adapter.js"
+    "./utils": "./dist/utils.js"
   },
   "repository": {
     "type": "git",
@@ -35,6 +34,7 @@
     "@babel/parser": "~7.23.2",
     "@babel/traverse": "~7.23.2",
     "@opentiny/tiny-engine-builtin-component": "workspace:*",
+    "@opentiny/tiny-engine-entry": "workspace:*",
     "@opentiny/tiny-engine-http": "workspace:*",
     "@opentiny/tiny-engine-i18n-host": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
@@ -44,6 +44,7 @@
     "prettier": "2.7.1"
   },
   "devDependencies": {
+    "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
     "@vitejs/plugin-vue": "^4.2.3",
     "@vitejs/plugin-vue-jsx": "^3.1.0",
     "glob": "^10.3.4",

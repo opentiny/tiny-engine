@@ -5,7 +5,6 @@
 
 <script>
 import { VueMonaco } from '@opentiny/tiny-engine-common'
-import { theme } from '@opentiny/tiny-engine-controller/adapter'
 
 export default {
   components: {
@@ -28,10 +27,6 @@ export default {
 
     return {
       options: {
-        theme: theme(),
-        roundedSelection: true,
-        automaticLayout: true,
-        autoIndent: true,
         language: 'json',
         minimap: { enabled: false }
       },

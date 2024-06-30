@@ -54,7 +54,7 @@
 <script>
 import { reactive, ref, watchEffect } from 'vue'
 import { useLayout, useTranslate } from '@opentiny/tiny-engine-controller'
-import { PROP_DATA_TYPE } from '@opentiny/tiny-engine-controller/utils'
+import { PROP_DATA_TYPE } from '@opentiny/tiny-engine-controller/js/constants'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { Select, Option, Button, Input } from '@opentiny/vue'
 import { iconPlus } from '@opentiny/vue-icon'
@@ -117,7 +117,8 @@ export default {
       emit('bind', { ...data, key })
     }
 
-    const activeI18n = () => useLayout().activePlugin('I18n')
+    const { PLUGIN_NAME, activePlugin } = useLayout()
+    const activeI18n = () => activePlugin(PLUGIN_NAME.I18n)
 
     const addBindI18n = () => {
       useTranslate().ensureI18n(editForm, true)

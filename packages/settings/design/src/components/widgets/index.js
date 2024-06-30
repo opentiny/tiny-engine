@@ -10,16 +10,13 @@
  *
  */
 
-import { MetaComponents } from '@opentiny/tiny-engine-common'
-
+import * as configurator from '@opentiny/tiny-engine-configurator'
 const widgets = {}
 const widgetNames = []
 
-Object.keys(MetaComponents).forEach((name) => {
-  if (/meta/i.test(name)) {
-    widgets[name] = MetaComponents[name]
-    widgetNames.push({ label: name, value: name })
-  }
+Object.keys(configurator).forEach((name) => {
+  widgets[name] = configurator[name]
+  widgetNames.push({ label: name, value: name })
 })
 
 export default widgets

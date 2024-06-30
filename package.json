@@ -5,7 +5,9 @@
     "preinstall": "npx only-allow pnpm",
     "dev": "pnpm run setup && concurrently 'pnpm:serve:backend' 'pnpm:serve:frontend'",
     "dev:mock": "pnpm --filter @opentiny/tiny-engine dev",
+    "dev:demo": "pnpm run setup && concurrently 'pnpm:serve:backend' 'pnpm:dev:demo:frontend'",
     "serve:frontend": "pnpm --filter @opentiny/tiny-engine serve",
+    "dev:demo:frontend": "pnpm --filter designer-demo dev",
     "serve:backend": "pnpm --filter @opentiny/tiny-engine-mock dev",
     "build:plugin": "pnpm --filter @opentiny/tiny-engine-* build",
     "build:alpha": "pnpm --filter @opentiny/tiny-engine build:alpha",
@@ -55,7 +57,8 @@
     "vite": "^4.3.7",
     "vite-plugin-monaco-editor": "^1.0.10",
     "vite-plugin-svg-icons": "^2.0.1",
-    "vue-eslint-parser": "^8.0.1"
+    "vue-eslint-parser": "^8.0.1",
+    "vue-i18n": "^9.9.0"
   },
   "browserslist": [
     "> 1%",

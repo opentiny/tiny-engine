@@ -127,7 +127,7 @@ export default {
     const state = reactive({
       inputVisible: false,
       inputValue: '',
-      publicOptions: useEditorInfo().userInfo.tenants
+      publicOptions: useEditorInfo().userInfo.value.tenants
     })
 
     const groupSelect = ref(null)

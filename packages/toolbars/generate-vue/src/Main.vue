@@ -23,14 +23,8 @@
 <script>
 import { reactive } from 'vue'
 import { Popover } from '@opentiny/vue'
-import {
-  getGlobalConfig,
-  useBlock,
-  useCanvas,
-  useNotify,
-  useLayout,
-  useEditorInfo
-} from '@opentiny/tiny-engine-controller'
+import { useBlock, useCanvas, useNotify, useLayout, useEditorInfo } from '@opentiny/tiny-engine-controller'
+import { getMergeMeta } from '@opentiny/tiny-engine-entry'
 import { fs } from '@opentiny/tiny-engine-utils'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { generateApp, parseRequiredBlocks } from '@opentiny/tiny-engine-dsl-vue'
@@ -62,8 +56,8 @@ export default {
     const getParams = () => {
       const { getSchema } = useCanvas().canvasApi.value
       const params = {
-        framework: getGlobalConfig()?.dslMode,
-        platform: getGlobalConfig()?.platformId,
+        framework: getMergeMeta('engine.config')?.dslMode,
+        platform: getMergeMeta('engine.config')?.platformId,
         pageInfo: {
           schema: getSchema()
         }
@@ -129,7 +123,8 @@ export default {
     const instance = generateApp()
 
     const getAllPageDetails = async (pageList) => {
-      const detailPromise = pageList.map(({ id }) => useLayout().getPluginApi('AppManage').getPageById(id))
+      const { PLUGIN_NAME, getPluginApi } = useLayout()
+      const detailPromise = pageList.map(({ id }) => getPluginApi(PLUGIN_NAME.AppManage).getPageById(id))
       const detailList = await Promise.allSettled(detailPromise)
 
       return detailList

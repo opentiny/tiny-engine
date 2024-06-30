@@ -16,6 +16,7 @@ import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import { glob } from 'glob'
 import { fileURLToPath } from 'node:url'
+import generateComments from '@opentiny/tiny-engine-vite-plugin-meta-comments'
 
 const jsEntries = glob.sync('./js/**/*.js').map((file) => {
   return [file.slice(0, file.length - path.extname(file).length), fileURLToPath(new URL(file, import.meta.url))]
@@ -23,7 +24,7 @@ const jsEntries = glob.sync('./js/**/*.js').map((file) => {
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue(), vueJsx()],
+  plugins: [vue(), vueJsx(), generateComments()],
   publicDir: false,
   resolve: {},
   base: './',
@@ -38,8 +39,6 @@ export default defineConfig({
     lib: {
       entry: {
         index: path.resolve(__dirname, './src/index.js'),
-        adapter: path.resolve(__dirname, './adapter.js'),
-        utils: path.resolve(__dirname, './utils.js'),
         ...Object.fromEntries(jsEntries)
       },
       name: 'controller',

@@ -18,11 +18,11 @@
           @change="handleChangeWidgetComponent"
         ></tiny-select>
         <div class="global-desc-info">
-          区块发布后使用当前区块时，会在属性面板中使用当前选择的组件（例如MetaSelect），来配置该属性
+          区块发布后使用当前区块时，会在属性面板中使用当前选择的组件（例如SelectConfigurator），来配置该属性
         </div>
       </tiny-form-item>
       <tiny-form-item label="属性面板组件属性">
-        <meta-code-editor
+        <code-configurator
           :modelValue="widgetProps"
           title="属性面板组件属性"
           button-text="设置"
@@ -30,7 +30,7 @@
           :tips="componentPropsTips"
           @save="handleSaveWidgetProps"
         >
-        </meta-code-editor>
+        </code-configurator>
       </tiny-form-item>
       <tiny-form-item v-if="showArrayItemConfig" label="配置项">
         <meta-list-items class="config-list" :optionsList="arrayConfig">
@@ -86,24 +86,24 @@
         <tiny-input v-model="label"></tiny-input>
       </tiny-form-item>
       <tiny-form-item label="获取属性值">
-        <meta-code-editor
+        <code-configurator
           :modelValue="getterValue"
           title="获取属性值"
           button-text="getter"
           language="javascript"
           single
           @save="(...args) => saveAccessor('getter', ...args)"
-        ></meta-code-editor>
+        ></code-configurator>
       </tiny-form-item>
       <tiny-form-item label="设置属性值">
-        <meta-code-editor
+        <code-configurator
           :modelValue="setterValue"
           title="设置属性值"
           button-text="setter"
           language="javascript"
           single
           @save="(...args) => saveAccessor('setter', ...args)"
-        ></meta-code-editor>
+        ></code-configurator>
       </tiny-form-item>
       <div v-if="property.linked" class="linked-info">
         链接到组件: {{ property.linked.componentName }} 属性: {{ property.linked.property }}
@@ -122,7 +122,8 @@ import {
   Tooltip as TinyTooltip
 } from '@opentiny/vue'
 import { iconChevronLeft, iconPlusCircle } from '@opentiny/vue-icon'
-import { ConfigItem, MetaCodeEditor, MetaListItems } from '@opentiny/tiny-engine-common'
+import { ConfigItem, MetaListItems } from '@opentiny/tiny-engine-common'
+import { CodeConfigurator } from '@opentiny/tiny-engine-configurator'
 import { getEditProperty, DEFAULT_ARRAY_CONFIG, META_COMPONENTS_ENUM } from './js/blockSetting'
 import {
   itemConfig,
@@ -154,7 +155,7 @@ export default {
     TinySelect,
     TinyFormItem,
     ConfigItem,
-    MetaCodeEditor,
+    CodeConfigurator,
     IconChevronLeft: iconChevronLeft(),
     IconPlusCircle: iconPlusCircle(),
     MetaListItems,
@@ -171,15 +172,15 @@ export default {
           ...property.value.widget.props
         },
         component:
-          property.value.widget.component === META_COMPONENTS_ENUM.MetaArrayItem
-            ? META_COMPONENTS_ENUM.MetaCodeEditor
+          property.value.widget.component === META_COMPONENTS_ENUM.ArrayItemConfigurator
+            ? META_COMPONENTS_ENUM.CodeConfigurator
             : property.value.widget.component
       }
     })
 
     const componentPropsTips = ref({
       title: '该选项用于配置，当前选择的属性面板组件，其对应的props参数',
-      demo: '例如MetaSelect的props参数可以是 { options: [{ "label": "xx", "value": "xx"}, ...] }'
+      demo: '例如SelectConfigurator的props参数可以是 { options: [{ "label": "xx", "value": "xx"}, ...] }'
     })
     watch(
       () => getEditProperty(),
@@ -202,7 +203,9 @@ export default {
               modelValue: defaultValue
             },
             component:
-              component === META_COMPONENTS_ENUM.MetaArrayItem ? META_COMPONENTS_ENUM.MetaCodeEditor : component
+              component === META_COMPONENTS_ENUM.ArrayItemConfigurator
+                ? META_COMPONENTS_ENUM.CodeConfigurator
+                : component
           }
         }
 

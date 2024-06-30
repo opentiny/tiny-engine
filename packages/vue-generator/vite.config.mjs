@@ -13,6 +13,7 @@
 import { defineConfig } from 'vite'
 import path from 'path'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
+import generateComment from '@opentiny/tiny-engine-vite-plugin-meta-comments'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -26,6 +27,7 @@ export default defineConfig({
     }
   },
   plugins: [
+    generateComment(),
     viteStaticCopy({
       targets: [
         {

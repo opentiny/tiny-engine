@@ -10,11 +10,12 @@
  *
  */
 
-import HelpIcon from './src/HelpIcon.vue'
+import metaData from './meta.js'
+import { HelpService } from './src/composable'
 
 export default {
-  id: 'EditorHelp',
-  title: '',
-  icon: HelpIcon,
-  align: 'bottom'
+  ...metaData,
+  metas: [HelpService]
 }
+
+export { HelpService }

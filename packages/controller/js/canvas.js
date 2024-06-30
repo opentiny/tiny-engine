@@ -11,13 +11,12 @@
  */
 
 import { PAGE_STATUS } from './constants'
-import useEditorInfo from '../src/useEditorInfo'
-import useResource from '../src/useResource'
+import { useEditorInfo, useResource } from '@opentiny/tiny-engine-entry'
 
 export const getCanvasStatus = (data) => {
   // 写死ID 待删除
   let isDemo = useResource().resState.isDemo
-  const { resetPasswordToken } = useEditorInfo().userInfo
+  const { resetPasswordToken } = useEditorInfo().userInfo.value
 
   if (isDemo && [PAGE_STATUS.Developer, PAGE_STATUS.SuperAdmin].includes(resetPasswordToken)) {
     isDemo = false
@@ -30,7 +29,7 @@ export const getCanvasStatus = (data) => {
   } else if (!data) {
     state = PAGE_STATUS.Release
   } else {
-    state = useEditorInfo().userInfo.id === data.id ? PAGE_STATUS.Occupy : PAGE_STATUS.Lock
+    state = useEditorInfo().userInfo.value.id === data.id ? PAGE_STATUS.Occupy : PAGE_STATUS.Lock
   }
 
   return {

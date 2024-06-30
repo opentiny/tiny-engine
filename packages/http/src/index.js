@@ -18,6 +18,7 @@ import Login from './Login.vue'
 import { getConfig } from './config'
 import mockData from './mock'
 import { constants } from '@opentiny/tiny-engine-utils'
+import { initHook, HOOK_NAME } from '@opentiny/tiny-engine-entry'
 
 const { BROADCAST_CHANNEL } = constants
 
@@ -153,3 +154,5 @@ export const initHttp = ({ env }) => {
 }
 
 export const useHttp = () => createHttp({ enableMock: isMock() })
+
+initHook(HOOK_NAME.useHttp, useHttp, { useDefaultExport: true })

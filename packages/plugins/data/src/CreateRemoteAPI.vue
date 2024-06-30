@@ -93,7 +93,6 @@
 import { getCurrentInstance, reactive } from 'vue'
 import { ButtonGroup, Form, FormItem, Input, Popover, Switch, Button } from '@opentiny/vue'
 import { VueMonaco as MonacoEditor, MetaDescription } from '@opentiny/tiny-engine-common'
-import { theme } from '@opentiny/tiny-engine-controller/adapter'
 import { iconPlus } from '@opentiny/vue-icon'
 import CreateFunction from './CreateRemoteFunction.vue'
 
@@ -132,10 +131,6 @@ export default {
     const state = reactive({
       createData: props.createData,
       options: {
-        theme: theme(),
-        roundedSelection: true,
-        automaticLayout: true,
-        autoIndent: true,
         language: 'javascript',
         minimap: { enabled: false }
       },
