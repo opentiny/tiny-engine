@@ -52,7 +52,7 @@ const getAllNestedBlocksSchema = async (pageSchema, fetchBlockSchemaApi, blockSe
   return res
 }
 
-export const generateCodeService = {
+export const GenerateCodeService = {
   id: 'engine.service.generateCode',
   type: 'MetaService',
   options: {},

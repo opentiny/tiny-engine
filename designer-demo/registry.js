@@ -44,7 +44,7 @@ import {
   Canvas,
   EditorInfoService,
   AppService,
-  generateCodeService
+  GenerateCodeService
 } from '@opentiny/tiny-engine'
 
 export default {
@@ -53,7 +53,7 @@ export default {
     metas: [
       EditorInfoService,
       AppService,
-      generateCodeService
+      GenerateCodeService
     ]
   },
   config: {

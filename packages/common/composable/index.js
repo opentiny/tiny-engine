@@ -3,6 +3,8 @@ import { HOOK_NAME } from '@opentiny/tiny-engine-meta-register'
 import useApp from './useApp'
 import useEditorInfo from './useEditorInfo'
 
+export { GenerateCodeService } from './generateCode'
+
 export const AppService = {
   id: 'engine.service.app',
   type: 'MetaService',

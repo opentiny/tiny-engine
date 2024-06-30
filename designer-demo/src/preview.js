@@ -10,7 +10,7 @@
  *
  */
 
-import { initHook, HOOK_NAME, generateCodeService } from '@opentiny/tiny-engine'
+import { initHook, HOOK_NAME, GenerateCodeService } from '@opentiny/tiny-engine'
 import { initPreview } from '@opentiny/tiny-engine'
 import 'virtual:svg-icons-register'
 import '@opentiny/tiny-engine-theme'
@@ -24,7 +24,7 @@ initPreview({
     root: {
       id: 'engine.root',
       metas: [
-        generateCodeService
+        GenerateCodeService
       ]
     },
     config: { id : 'engine.config', theme: 'light' },
