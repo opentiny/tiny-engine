@@ -22,7 +22,7 @@
 
 <script>
 import { ast2String, string2Ast } from '@opentiny/tiny-engine-controller/js/ast'
-import { getMergeMeta, useCanvas, useHistory, useLayout } from '@opentiny/tiny-engine-entry'
+import { getMergeMeta, useCanvas, useHistory, useLayout } from '@opentiny/tiny-engine-meta-register'
 import { Button, DialogBox } from '@opentiny/vue'
 import { nextTick, provide, reactive, ref } from 'vue'
 import { METHOD_TIPS_MAP } from './constants'

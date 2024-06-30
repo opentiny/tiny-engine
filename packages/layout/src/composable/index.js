@@ -1,4 +1,4 @@
-import { HOOK_NAME } from '@opentiny/tiny-engine-entry'
+import { HOOK_NAME } from '@opentiny/tiny-engine-meta-register'
 import useLayout from './useLayout'
 
 export const LayoutService = {

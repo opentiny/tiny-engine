@@ -18,7 +18,7 @@
 <script>
 import { reactive, onMounted } from 'vue'
 import { Button } from '@opentiny/vue'
-import { getMergeMeta } from '@opentiny/tiny-engine-entry'
+import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { fetchTemplates } from './js/http'
 
 export default {

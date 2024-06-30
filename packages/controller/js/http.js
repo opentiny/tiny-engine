@@ -13,7 +13,7 @@
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { isVsCodeEnv } from './environments'
 import { generateRouter, generatePage } from './vscodeGenerateFile'
-import { usePage, useCanvas, useNotify } from '@opentiny/tiny-engine-entry'
+import { usePage, useCanvas, useNotify } from '@opentiny/tiny-engine-meta-register'
 
 const http = useHttp()
 

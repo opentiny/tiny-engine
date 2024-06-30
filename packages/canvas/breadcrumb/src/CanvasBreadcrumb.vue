@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { getPluginApi } from '@opentiny/tiny-engine-entry'
+import { getPluginApi } from '@opentiny/tiny-engine-meta-register'
 import { Steps } from '@opentiny/vue'
 
 export default {

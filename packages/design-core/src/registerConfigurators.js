@@ -1,5 +1,5 @@
 import * as allConfigurator from '@opentiny/tiny-engine-configurator'
-import { addConfigurator } from '@opentiny/tiny-engine-entry'
+import { addConfigurator } from '@opentiny/tiny-engine-meta-register'
 
 /**
  * 注册用户指定的 configurators

@@ -29,7 +29,7 @@
 <script>
 import { reactive } from 'vue'
 import { Tooltip, Popover, Radio, RadioGroup } from '@opentiny/vue'
-import { getConfigurator } from '@opentiny/tiny-engine-entry'
+import { getConfigurator } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   name: 'MultiTypeSelector',

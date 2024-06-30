@@ -73,7 +73,7 @@
 import { reactive, ref, watchEffect, onBeforeUnmount } from 'vue'
 import { Button, DialogBox, Popover, Search, Alert } from '@opentiny/vue'
 import { useModal, usePage, useNotify, useCanvas } from '@opentiny/tiny-engine-controller'
-import { getMergeMeta } from '@opentiny/tiny-engine-entry'
+import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import MetaListItems from './MetaListItems.vue'
 import { iconYes } from '@opentiny/vue-icon'
 import VueMonaco from './VueMonaco.vue'

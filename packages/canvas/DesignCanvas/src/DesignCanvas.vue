@@ -31,7 +31,7 @@ import { useHttp } from '@opentiny/tiny-engine-http'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { isVsCodeEnv, isDevelopEnv } from '@opentiny/tiny-engine-controller/js/environments'
 import * as ast from '@opentiny/tiny-engine-controller/js/ast'
-import { getMergeRegistry } from '@opentiny/tiny-engine-entry'
+import { getMergeRegistry } from '@opentiny/tiny-engine-meta-register'
 
 const { PAGE_STATUS } = constants
 const tenant = new URLSearchParams(location.search).get('tenant') || ''

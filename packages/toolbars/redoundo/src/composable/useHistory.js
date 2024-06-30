@@ -11,7 +11,7 @@
  */
 
 import { reactive, isProxy, toRaw, watch } from 'vue'
-import { useCanvas } from '@opentiny/tiny-engine-entry'
+import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 
 const schema2String = (schema) => {
   if (isProxy(schema)) {

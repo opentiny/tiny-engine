@@ -21,7 +21,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, './src/index.js'),
-      name: 'tiny-engine-entry',
+      name: 'tiny-engine-meta-register',
       fileName: () => 'index.js',
       formats: ['es']
     },

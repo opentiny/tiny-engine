@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { getPluginApi } from '@opentiny/tiny-engine-entry'
+import { getPluginApi } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
 
 const { deepClone } = utils

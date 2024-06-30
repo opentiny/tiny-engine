@@ -55,7 +55,7 @@ const devAlias = {
   '@opentiny/tiny-engine-webcomponent-core': path.resolve(process.cwd(), '../packages/webcomponent/src/lib.js'),
   '@opentiny/tiny-engine-i18n-host': path.resolve(process.cwd(), '../packages/i18n/src/lib.js'),
   '@opentiny/tiny-engine-builtin-component': path.resolve(process.cwd(), '../packages/builtinComponent/index.js'),
-  '@opentiny/tiny-engine-entry': path.resolve(process.cwd(), '../packages/entry/src/index.js'),
+  '@opentiny/tiny-engine-meta-register': path.resolve(process.cwd(), '../packages/register/src/index.js'),
   '@opentiny/tiny-engine-layout': path.resolve(process.cwd(), '../packages/layout/index.js'),
   '@opentiny/tiny-engine-configurator': path.resolve(process.cwd(), '../packages/configurator/src/index.js')
 }

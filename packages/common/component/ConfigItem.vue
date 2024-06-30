@@ -107,7 +107,7 @@ import i18n from '@opentiny/tiny-engine-controller/js/i18n'
 import MultiTypeSelector from './MultiTypeSelector.vue'
 import { useHistory, useProperties, useResource, useLayout, useCanvas } from '@opentiny/tiny-engine-controller'
 import { SCHEMA_DATA_TYPE, PAGE_STATUS, TYPES } from '@opentiny/tiny-engine-controller/js/constants'
-import { getConfigurator } from '@opentiny/tiny-engine-entry'
+import { getConfigurator } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
 
 const { parseFunction: generateFunction } = utils
