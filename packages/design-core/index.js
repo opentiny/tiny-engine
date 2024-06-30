@@ -1,7 +1,7 @@
 export { init } from './src/init'
 
 // reexport all plugin, user can import ondemand
-export { default as Breadcrumb } from '@opentiny/tiny-engine-toolbar-breadcrumb'
+export { default as Breadcrumb, BreadcrumbService } from '@opentiny/tiny-engine-toolbar-breadcrumb'
 export { default as Fullscreen } from '@opentiny/tiny-engine-toolbar-fullscreen'
 export { default as Lang } from '@opentiny/tiny-engine-toolbar-lang'
 export { default as Checkinout } from '@opentiny/tiny-engine-toolbar-checkinout'
@@ -30,7 +30,7 @@ export { default as Robot } from '@opentiny/tiny-engine-plugin-robot'
 export { default as Props, PropertiesService, PropertyService } from '@opentiny/tiny-engine-setting-props'
 export { default as Events } from '@opentiny/tiny-engine-setting-events'
 export { default as Styles } from '@opentiny/tiny-engine-setting-styles'
-export { default as Layout } from '@opentiny/tiny-engine-layout'
+export { default as Layout, LayoutService } from '@opentiny/tiny-engine-layout'
 export { default as Canvas } from '@opentiny/tiny-engine-canvas'
 export { initPreview } from './src/preview/src/main'
 export { GenerateCodeService } from '@opentiny/tiny-engine-common'
