@@ -11,7 +11,7 @@
 </template>
 <script>
 import { ref, computed, watch, nextTick } from 'vue'
-import { useLayout } from '@opentiny/tiny-engine-controller'
+import { useLayout } from '@opentiny/tiny-engine-meta-register'
 import { canvasState } from '../container'
 
 export default {

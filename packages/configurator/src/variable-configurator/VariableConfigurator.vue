@@ -121,7 +121,7 @@
 
 <script>
 import { VueMonaco as MonacoEditor, SvgButton } from '@opentiny/tiny-engine-common'
-import { useApp, useCanvas, useLayout, useProperties, useResource } from '@opentiny/tiny-engine-controller'
+import { useApp, useCanvas, useLayout, useProperties, useResource } from '@opentiny/tiny-engine-meta-register'
 import { getCommentByKey } from '@opentiny/tiny-engine-controller/js/comment'
 import { formatString, generate, parse, traverse } from '@opentiny/tiny-engine-controller/js/ast'
 import { DEFAULT_LOOP_NAME } from '@opentiny/tiny-engine-controller/js/constants'

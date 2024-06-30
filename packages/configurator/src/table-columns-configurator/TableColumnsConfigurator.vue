@@ -4,7 +4,7 @@
 
 <script setup>
 import { nextTick } from 'vue'
-import { useProperties, useResource, useCanvas } from '@opentiny/tiny-engine-controller'
+import { useProperties, useResource, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import ArrayItemConfigurator from '../array-item-configurator/ArrayItemConfigurator.vue'
 
 const { children: schemaChildren, componentName, props } = useProperties().getSchema()

@@ -35,7 +35,7 @@
 
 <script lang="jsx">
 import { reactive, ref, watchEffect, provide } from 'vue'
-import { useCanvas, useApp, useResource, usePage, useHelp } from '@opentiny/tiny-engine-controller'
+import { useCanvas, useApp, useResource, usePage, useHelp } from '@opentiny/tiny-engine-meta-register'
 import { PluginPanel, SvgButton, LinkButton } from '@opentiny/tiny-engine-common'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import PageSetting, { openPageSettingPanel, closePageSettingPanel } from './PageSetting.vue'

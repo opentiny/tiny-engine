@@ -8,7 +8,7 @@
 </template>
 <script setup>
 import { computed } from 'vue'
-import { useLayout } from '@opentiny/tiny-engine-controller'
+import { useLayout } from '@opentiny/tiny-engine-meta-register'
 
 const siteCanvasStyle = computed(() => {
   const { scale } = useLayout().getDimension()

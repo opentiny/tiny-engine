@@ -49,7 +49,7 @@
 import { computed, reactive } from 'vue'
 import { IconDel, IconEdit, IconPlus } from '@opentiny/vue-icon'
 import { MetaList, MetaListActions, MetaListItem, MetaChildItem } from '@opentiny/tiny-engine-common'
-import { useTranslate } from '@opentiny/tiny-engine-controller'
+import { useTranslate } from '@opentiny/tiny-engine-meta-register'
 import { VueDraggableNext } from 'vue-draggable-next'
 
 export default {

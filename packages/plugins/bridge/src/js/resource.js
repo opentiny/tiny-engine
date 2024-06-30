@@ -11,7 +11,7 @@
  */
 
 import { reactive } from 'vue'
-import { useApp, useResource, useNotify, useCanvas } from '@opentiny/tiny-engine-controller'
+import { useApp, useResource, useNotify, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
 import {
   fetchResourceList,

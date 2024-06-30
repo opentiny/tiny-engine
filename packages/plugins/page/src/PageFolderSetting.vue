@@ -30,7 +30,7 @@
 import { reactive, ref } from 'vue'
 import { Button, Collapse, CollapseItem } from '@opentiny/vue'
 import { PluginSetting, SvgButton, ButtonGroup } from '@opentiny/tiny-engine-common'
-import { usePage, useModal, useApp, useNotify } from '@opentiny/tiny-engine-controller'
+import { usePage, useModal, useApp, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { isEqual } from '@opentiny/vue-renderless/common/object'
 import throttle from '@opentiny/vue-renderless/common/deps/throttle'
 import PageGeneral from './PageGeneral.vue'

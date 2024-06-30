@@ -36,7 +36,7 @@
 <script>
 import { reactive, ref, computed } from 'vue'
 import { SplitPanes, Pane } from '@opentiny/tiny-engine-common'
-import { useProperties } from '@opentiny/tiny-engine-controller'
+import { useProperties } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {

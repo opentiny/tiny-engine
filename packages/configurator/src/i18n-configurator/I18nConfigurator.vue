@@ -35,7 +35,7 @@
 
 <script>
 import { BindI18n } from '@opentiny/tiny-engine-common'
-import { useTranslate } from '@opentiny/tiny-engine-controller'
+import { useTranslate } from '@opentiny/tiny-engine-meta-register'
 import { Input, Popover } from '@opentiny/vue'
 import { IconClose, IconLanguage } from '@opentiny/vue-icon'
 import { computed, ref, watchEffect } from 'vue'

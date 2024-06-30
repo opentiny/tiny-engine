@@ -11,7 +11,7 @@
  */
 
 import { ref, reactive, watchEffect, onActivated, nextTick } from 'vue'
-import { useCanvas, useModal, useNotify } from '@opentiny/tiny-engine-controller'
+import { useCanvas, useModal, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { string2Ast, ast2String, insertName, formatString } from '@opentiny/tiny-engine-controller/js/ast'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { lint } from '@opentiny/tiny-engine-controller/js/linter'

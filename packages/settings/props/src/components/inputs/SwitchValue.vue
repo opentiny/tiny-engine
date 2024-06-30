@@ -5,7 +5,7 @@
 <script>
 import { Switch } from '@opentiny/vue'
 import { ref, watchEffect } from 'vue'
-import { useProperties } from '@opentiny/tiny-engine-controller'
+import { useProperties } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {

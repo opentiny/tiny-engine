@@ -105,7 +105,7 @@ import { Input, Tag, Button, Form, FormItem, Radio, Select, Option } from '@open
 import { constants } from '@opentiny/tiny-engine-utils'
 import { remove } from '@opentiny/vue-renderless/common/array'
 import { getEditBlock } from './js/blockSetting'
-import { useBlock, useEditorInfo } from '@opentiny/tiny-engine-controller'
+import { useBlock, useEditorInfo } from '@opentiny/tiny-engine-meta-register'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
 
 const { BLOCK_OPENNESS } = constants
