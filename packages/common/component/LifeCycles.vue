@@ -77,8 +77,8 @@ import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import MetaListItems from './MetaListItems.vue'
 import { iconYes } from '@opentiny/vue-icon'
 import VueMonaco from './VueMonaco.vue'
-import { initCompletion } from '@opentiny/tiny-engine-controller/js/completion'
-import { initLinter, lint } from '@opentiny/tiny-engine-controller/js/linter'
+import { initCompletion } from '../js/completion'
+import { initLinter, lint } from '../js/linter'
 import { SvgButton } from '../index'
 
 export default {

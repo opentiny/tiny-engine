@@ -38,7 +38,7 @@ import { reactive, getCurrentInstance, ref, computed } from 'vue'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
 import { Button, Collapse, CollapseItem, DialogBox } from '@opentiny/vue'
 import { useCanvas, useProperties } from '@opentiny/tiny-engine-meta-register'
-import { getExample } from '@opentiny/tiny-engine-controller/js/example'
+import { getExample } from '@opentiny/tiny-engine-common/js/example'
 
 export default {
   components: {

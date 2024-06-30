@@ -81,7 +81,7 @@ import { Button as TinyButton, Collapse as TinyCollapse, CollapseItem as TinyCol
 import { useModal } from '@opentiny/tiny-engine-meta-register'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { BlockHistoryList, PluginSetting, CloseIcon, SvgButton } from '@opentiny/tiny-engine-common'
-import { previewBlock } from '@opentiny/tiny-engine-controller/js/preview'
+import { previewBlock } from '@opentiny/tiny-engine-common/js/preview'
 import { LifeCycles } from '@opentiny/tiny-engine-common'
 import BlockEvent from './BlockEvent.vue'
 import BlockConfig from './BlockConfig.vue'

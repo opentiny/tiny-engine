@@ -29,8 +29,8 @@ import {
 import materials from '@opentiny/tiny-engine-plugin-materials'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { isVsCodeEnv, isDevelopEnv } from '@opentiny/tiny-engine-controller/js/environments'
-import * as ast from '@opentiny/tiny-engine-controller/js/ast'
+import { isVsCodeEnv, isDevelopEnv } from '@opentiny/tiny-engine-common/js/environments'
+import * as ast from '@opentiny/tiny-engine-common/js/ast'
 import { getMergeRegistry } from '@opentiny/tiny-engine-meta-register'
 
 const { PAGE_STATUS } = constants

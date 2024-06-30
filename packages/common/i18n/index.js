@@ -1,4 +1,4 @@
-import i18n, { i18nKeyMaps } from '@opentiny/tiny-engine-controller/js/i18n'
+import i18n, { i18nKeyMaps } from '../js/i18n'
 
 import enUs from './en-us.json'
 import zhCn from './zh-cn.json'

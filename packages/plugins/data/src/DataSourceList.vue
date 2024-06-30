@@ -22,7 +22,7 @@
 <script lang="jsx">
 import { computed } from 'vue'
 import { useModal, useResource } from '@opentiny/tiny-engine-meta-register'
-import { findExpressionInAppSchema } from '@opentiny/tiny-engine-controller/js/ast'
+import { findExpressionInAppSchema } from '@opentiny/tiny-engine-common/js/ast'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { SvgButton, SearchEmpty } from '@opentiny/tiny-engine-common'
 import { STATE, OPTION_TYPE } from './js/constants'

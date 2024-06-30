@@ -39,7 +39,7 @@ import {
   useCanvas
 } from '@opentiny/tiny-engine-meta-register'
 import AppManage from '@opentiny/tiny-engine-plugin-page'
-import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
+import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import DesignToolbars from './DesignToolbars.vue'
 import DesignPlugins from './DesignPlugins.vue'
 import DesignSettings from './DesignSettings.vue'
