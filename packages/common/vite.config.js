@@ -24,7 +24,7 @@ const jsEntries = glob.sync('./js/**/*.js').map((file) => {
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue(), vueJsx(), generateComments()],
+  plugins: [generateComments(), vue(), vueJsx()],
   publicDir: false,
   resolve: {},
   base: './',
