@@ -128,7 +128,7 @@ import { useTranslate, useApp, useModal, useHelp } from '@opentiny/tiny-engine-m
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { useHttp } from '@opentiny/tiny-engine-http'
-import { BASE_URL } from '@opentiny/tiny-engine-controller/js/environments'
+import { BASE_URL } from '@opentiny/tiny-engine-common/js/environments'
 
 export default {
   components: {

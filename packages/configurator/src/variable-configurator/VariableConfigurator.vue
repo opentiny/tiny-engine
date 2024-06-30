@@ -122,9 +122,9 @@
 <script>
 import { VueMonaco as MonacoEditor, SvgButton } from '@opentiny/tiny-engine-common'
 import { useApp, useCanvas, useLayout, useProperties, useResource } from '@opentiny/tiny-engine-meta-register'
-import { getCommentByKey } from '@opentiny/tiny-engine-controller/js/comment'
-import { formatString, generate, parse, traverse } from '@opentiny/tiny-engine-controller/js/ast'
-import { DEFAULT_LOOP_NAME } from '@opentiny/tiny-engine-controller/js/constants'
+import { getCommentByKey } from '@opentiny/tiny-engine-common/js/comment'
+import { formatString, generate, parse, traverse } from '@opentiny/tiny-engine-common/js/ast'
+import { DEFAULT_LOOP_NAME } from '@opentiny/tiny-engine-common/js/constants'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { Alert, Button, DialogBox, Input, Search, Switch, Tooltip } from '@opentiny/vue'

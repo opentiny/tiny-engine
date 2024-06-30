@@ -4,6 +4,7 @@ const devAlias = {
   '@opentiny/tiny-engine/canvas': path.resolve(process.cwd(), '../packages/design-core/src/canvas/canvas.js'),
   '@opentiny/tiny-engine': path.resolve(process.cwd(), '../packages/design-core/index.js'),
   '@opentiny/tiny-engine-common/component': path.resolve(process.cwd(), '../packages/common/component'),
+  '@opentiny/tiny-engine-common/js': path.resolve(process.cwd(), '../packages/common/js'),
   '@opentiny/tiny-engine-common': path.resolve(process.cwd(), '../packages/common/index.js'),
   '@opentiny/tiny-engine-controller/js': path.resolve(process.cwd(), '../packages/controller/js'),
   '@opentiny/tiny-engine-controller': path.resolve(process.cwd(), '../packages/controller/src/index.js'),

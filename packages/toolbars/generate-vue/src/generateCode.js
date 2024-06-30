@@ -14,7 +14,7 @@ import prettier from 'prettier'
 import parserHtml from 'prettier/parser-html'
 import parseCss from 'prettier/parser-postcss'
 import parserBabel from 'prettier/parser-babel'
-import prettierCommon from '@opentiny/tiny-engine-controller/js/config-files/prettierrc'
+import prettierCommon from '@opentiny/tiny-engine-common/js/config-files/prettierrc'
 
 // LOWCODE_TODO: 从本地配置文件获取
 const basePaths = {
