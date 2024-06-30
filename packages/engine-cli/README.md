@@ -12,7 +12,7 @@ npm link       # after link, you can test engine-cli commands use: engine-cli cr
 
 ## usage
 
-### create platform or plugin by promtp
+### create platform or plugin by prompt
 
 ```sh
 # dynamic create platform or plugin by complete prompt

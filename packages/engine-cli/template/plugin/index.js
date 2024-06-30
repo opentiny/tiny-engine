@@ -19,7 +19,7 @@ import { PluginDemoService } from './src/composable'
 export default {
   ...metaData,
   // 插件暴露的 api，可以提供其他 api 进行调用，如果无需暴露，可为空
-  api: {},
+  apis: {},
   // 插件的 UI 渲染入口
   entry,
   metas: [PluginDemoService]
