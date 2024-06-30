@@ -11,7 +11,7 @@
  */
 
 import { pageService } from '../routes/main-routes'
-import appInfo from './appinfo.json'
+import appInfo from '../assets/json/appinfo.json'
 
 export default class Schema2CodeServcice {
   constructor() {

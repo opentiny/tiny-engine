@@ -12,7 +12,7 @@
 import path from 'path'
 import DateStore from '@seald-io/nedb'
 import { getResponseData } from '../tool/Common'
-import appinfo from './appinfo.json'
+import appinfo from '../assets/json/appinfo.json'
 export default class BlockGroupService {
   constructor() {
     this.db = new DateStore({
