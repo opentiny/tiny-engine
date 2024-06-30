@@ -19,7 +19,7 @@ import { getMergeMeta, useNotify, useCanvas, useBlock } from '@opentiny/tiny-eng
 const { camelize, capitalize } = utils
 const { MATERIAL_TYPE } = constants
 
-// 这里存放TinyVue组件、原生HTML、内置组件的缓存
+// 这里存放所有TinyVue组件、原生HTML、内置组件的缓存，包含了物料插件面板里所有显示的组件，也包含了没显示的一些联动组件
 const resource = new Map()
 
 // 这里涉及到区块发布后的更新问题，所以需要单独缓存区块
@@ -28,7 +28,7 @@ const blockResource = new Map()
 const http = useHttp()
 
 const materialState = reactive({
-  components: [],
+  components: [], // 这里存放的是物料插件面板里所有显示的组件
   blocks: [],
   thirdPartyDeps: { scripts: [], styles: new Set() }
 })
@@ -72,6 +72,10 @@ const getConfigureMap = () => {
   return Object.fromEntries(entries)
 }
 
+/**
+ * 将component里的内容注册到resource变量中
+ * @param {*} data
+ */
 const registerComponentToResource = (data) => {
   if (Array.isArray(data.component)) {
     const { component, ...others } = data
@@ -248,6 +252,10 @@ const setMaterial = (name, data) => {
   resource.set(name, data)
 }
 
+/**
+ * 获取物料，并返回符合物料协议的bundle.json内容
+ * @returns getMaterialsRes: () =>  Promise<Materials>
+ */
 export const getMaterialsRes = async () => {
   const bundleUrls = getMergeMeta('engine.config')?.material || []
   const materials = await Promise.allSettled(bundleUrls.map((url) => http.get(url)))
@@ -330,18 +338,17 @@ const initMaterial = ({ isInit = true, appData = {} } = {}) => {
 
 export default function () {
   return {
-    materialState,
-    initMaterial,
-    fetchMaterial,
-    getMaterialsRes,
-    generateNode,
-    clearMaterials,
-    clearBlockResources,
-    getMaterial,
-    setMaterial,
-    registerComponentToResource,
-    registerBlock,
-    updateCanvasDependencies,
-    getConfigureMap
+    materialState, // 存放着组件、物料侧区块、第三方依赖信息
+    initMaterial, // 物料模块初始化
+    fetchMaterial, // 请求物料并进行处理
+    getMaterialsRes, // 获取物料，并返回符合物料协议的bundle.json内容，getMaterialsRes: () =>  Promise<Materials>
+    generateNode, // 根据 包含{ type, componentName }的组件信息生成组件schema节点，结构：
+    clearMaterials, // 清空物料
+    clearBlockResources, // 清空区块缓存，以便更新最新版区块
+    getMaterial, // 获取单个物料，(property) getMaterial: (name: string) => Material
+    setMaterial, // 设置单个物料 (property) setMaterial: (name: string, data: Material) => void
+    registerBlock, // 注册新的区块
+    updateCanvasDependencies, //传入新的区块，获取新增区块的依赖，更新画布中的组件依赖
+    getConfigureMap // 获取物料组件的配置信息
   }
 }

@@ -72,7 +72,7 @@ export const useHttp = (...args) => getHook(HOOK_NAME.useHttp, args)
 export const useEnv = (...args) => getHook(HOOK_NAME.useEnv, args)
 export const useModal = (...args) => getHook(HOOK_NAME.useModal, args)
 export const useNotify = (...args) => getHook(HOOK_NAME.useNotify, args)
-export const useMaterial = (...args) => hooksState[(HOOK_NAME.useMaterial, args)]
+export const useMaterial = (...args) => getHook(HOOK_NAME.useMaterial, args)
 export const useCustom = (...args) => getHook(HOOK_NAME.useCustom, args)
 
 export function initHook(hookName, hookContent, { useDefaultExport } = {}) {

@@ -20,11 +20,12 @@ import {
   useTranslate,
   useApp,
   useLayout,
-  useNotify
+  useNotify,
+  useHistory,
+  useMaterial
 } from '@opentiny/tiny-engine-controller'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
 import { getCanvasStatus } from '@opentiny/tiny-engine-controller/js/canvas'
-import { useHistory, useMaterial } from '@opentiny/tiny-engine-controller'
 import html2canvas from 'html2canvas'
 
 import {
