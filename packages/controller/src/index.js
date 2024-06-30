@@ -10,8 +10,6 @@
  *
  */
 
-export * from './composable'
-
 export {
   useLayout,
   useCanvas,
