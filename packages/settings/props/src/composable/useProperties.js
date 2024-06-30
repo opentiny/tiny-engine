@@ -12,7 +12,7 @@
 
 import { toRaw, nextTick, shallowReactive, ref } from 'vue'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { useCanvas, useResource, useTranslate } from '@opentiny/tiny-engine-entry'
+import { useCanvas, useResource, useTranslate } from '@opentiny/tiny-engine-meta-register'
 
 const { COMPONENT_NAME } = constants
 const propsUpdateKey = ref(0)

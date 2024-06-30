@@ -1,5 +1,5 @@
 {
-  "name": "@opentiny/tiny-engine-entry",
+  "name": "@opentiny/tiny-engine-meta-register",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",

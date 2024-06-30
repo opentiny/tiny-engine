@@ -1,4 +1,4 @@
-# entry(暂定)
+# meta-register
 
 ## configurators
 

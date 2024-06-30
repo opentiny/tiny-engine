@@ -13,7 +13,7 @@
 import { computed } from 'vue'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { useBlock } from '@opentiny/tiny-engine-entry'
+import { useBlock } from '@opentiny/tiny-engine-meta-register'
 
 const { SCHEMA_DATA_TYPE } = constants
 

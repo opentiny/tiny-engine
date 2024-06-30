@@ -1,4 +1,4 @@
-import { HOOK_NAME } from '@opentiny/tiny-engine-entry'
+import { HOOK_NAME } from '@opentiny/tiny-engine-meta-register'
 import useResource from './useResource'
 
 export const ResourceService = {

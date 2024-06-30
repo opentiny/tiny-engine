@@ -1,4 +1,4 @@
-import { HOOK_NAME } from '@opentiny/tiny-engine-entry'
+import { HOOK_NAME } from '@opentiny/tiny-engine-meta-register'
 import CanvasBreadcrumb from './src/CanvasBreadcrumb.vue'
 import metaData from './meta'
 import useBreadcrumb from './src/useBreadcrumb'

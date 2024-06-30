@@ -25,7 +25,7 @@ import {
   useBreadcrumb,
   useLayout,
   useBlock
-} from '@opentiny/tiny-engine-entry'
+} from '@opentiny/tiny-engine-meta-register'
 
 const { camelize, capitalize } = utils
 const { MATERIAL_TYPE, COMPONENT_NAME, DEFAULT_INTERCEPTOR } = constants

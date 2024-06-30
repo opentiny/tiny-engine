@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { getMergeRegistry } from '@opentiny/tiny-engine-entry'
+import { getMergeRegistry } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   setup() {

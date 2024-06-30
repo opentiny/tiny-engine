@@ -36,6 +36,6 @@ export { initPreview } from './src/preview/src/main'
 
 export { default as defaultRegistry } from './registry'
 
-export * from '@opentiny/tiny-engine-entry'
+export * from '@opentiny/tiny-engine-meta-register'
 
 export { EditorInfoService, AppService } from '@opentiny/tiny-engine-common'

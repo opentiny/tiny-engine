@@ -12,7 +12,7 @@
 
 import { createApp } from 'vue'
 import initSvgs from '@opentiny/tiny-engine-svgs'
-import { defineEntry, mergeRegistry } from '@opentiny/tiny-engine-entry'
+import { defineEntry, mergeRegistry } from '@opentiny/tiny-engine-meta-register'
 import defaultRegistry from '../../../registry.js'
 import App from './App.vue'
 

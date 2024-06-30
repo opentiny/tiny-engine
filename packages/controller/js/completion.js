@@ -10,7 +10,7 @@
  *
  */
 
-import { useCanvas, useResource } from '@opentiny/tiny-engine-entry'
+import { useCanvas, useResource } from '@opentiny/tiny-engine-meta-register'
 
 const keyWords = [
   'state',
