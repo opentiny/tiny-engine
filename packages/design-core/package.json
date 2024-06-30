@@ -90,7 +90,6 @@
     "@opentiny/tiny-engine-toolbar-setting": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
     "@opentiny/tiny-engine-webcomponent-core": "workspace:*",
-    "@opentiny/tiny-engine-service-generate-code": "workspace:*",
     "@vue/babel-plugin-jsx": "1.1.1",
     "@vue/repl": "^2.9.0",
     "@vueuse/core": "^9.6.0",
