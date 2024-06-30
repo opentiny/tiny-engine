@@ -26,10 +26,10 @@ init({
 ## 使用该 service
 
 ```javascript
-import { getPluginApi } from '@opentiny/tiny-engine-meta-register'
+import { getMetaApi } from '@opentiny/tiny-engine-meta-register'
 
 // 通过 id 得到出码元服务
-const generateCodeService = getPluginApi('engine.service.generateCode')
+const generateCodeService = getMetaApi('engine.service.generateCode')
 
 // 调用 api 得到页面出码结果
 generateCodeService.generatePageCode(...args)
