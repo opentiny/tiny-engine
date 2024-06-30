@@ -11,7 +11,9 @@
     "engine-cli": "./bin/cli.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "template",
+    "bin"
   ],
   "repository": {
     "type": "git",
