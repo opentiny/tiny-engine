@@ -104,7 +104,7 @@
 <script setup>
 import { computed, reactive, ref, nextTick, watch, watchEffect } from 'vue'
 import { Select as TinySelect } from '@opentiny/vue'
-import { useProperties, useCanvas, useHistory, useHelp } from '@opentiny/tiny-engine-controller'
+import { useProperties, useCanvas, useHistory, useHelp } from '@opentiny/tiny-engine-meta-register'
 import { LinkButton } from '@opentiny/tiny-engine-common'
 import { CodeConfigurator } from '@opentiny/tiny-engine-configurator'
 import { formatString } from '@opentiny/tiny-engine-controller/js/ast'

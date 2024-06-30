@@ -24,7 +24,7 @@ import { nextTick, reactive, watch, inject } from 'vue'
 import { Search } from '@opentiny/vue'
 import { iconSearch } from '@opentiny/vue-icon'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
-import { useApp, useBlock, useModal, useResource } from '@opentiny/tiny-engine-controller'
+import { useApp, useBlock, useModal, useResource } from '@opentiny/tiny-engine-meta-register'
 import BlockGroupTransfer from './BlockGroupTransfer.vue'
 import BlockGroupFilters from './BlockGroupFilters.vue'
 

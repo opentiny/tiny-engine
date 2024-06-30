@@ -87,7 +87,7 @@
 <script>
 import { computed, reactive, watchEffect } from 'vue'
 import { Popover, Button } from '@opentiny/vue'
-import { useModal } from '@opentiny/tiny-engine-controller'
+import { useModal } from '@opentiny/tiny-engine-meta-register'
 import { getMergeMeta, useCanvas, useLayout, useBlock, useResource } from '@opentiny/tiny-engine-meta-register'
 import { BlockLinkEvent, SvgButton } from '@opentiny/tiny-engine-common'
 import { iconHelpQuery, iconChevronDown } from '@opentiny/vue-icon'

@@ -12,7 +12,7 @@
 
 import { computed, reactive, watch } from 'vue'
 import { useBroadcastChannel } from '@vueuse/core'
-import { useCanvas, useHistory, useProperties as useProps } from '@opentiny/tiny-engine-controller'
+import { useCanvas, useHistory, useProperties as useProps } from '@opentiny/tiny-engine-meta-register'
 import { formatString } from '@opentiny/tiny-engine-controller/js/ast'
 import { constants, utils } from '@opentiny/tiny-engine-utils'
 import { parser, stringify, getSelectorArr } from './parser'

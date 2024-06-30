@@ -72,7 +72,7 @@
 <script lang="jsx">
 import { reactive, ref, watchEffect, onBeforeUnmount } from 'vue'
 import { Button, DialogBox, Popover, Search, Alert } from '@opentiny/vue'
-import { useModal, usePage, useNotify, useCanvas } from '@opentiny/tiny-engine-controller'
+import { useModal, usePage, useNotify, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import MetaListItems from './MetaListItems.vue'
 import { iconYes } from '@opentiny/vue-icon'

@@ -37,7 +37,7 @@ import {
   useApp,
   useNotify,
   useCanvas
-} from '@opentiny/tiny-engine-controller'
+} from '@opentiny/tiny-engine-meta-register'
 import AppManage from '@opentiny/tiny-engine-plugin-page'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
 import DesignToolbars from './DesignToolbars.vue'

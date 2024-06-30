@@ -8,7 +8,7 @@
 
 <script>
 import { reactive, watch } from 'vue'
-import { useLayout } from '@opentiny/tiny-engine-controller'
+import { useLayout } from '@opentiny/tiny-engine-meta-register'
 import { getCurrent, updateRect, selectState, querySelectById } from '../container'
 
 export default {

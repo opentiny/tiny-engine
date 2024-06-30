@@ -16,7 +16,7 @@
 <script>
 import { computed, reactive, watchEffect, inject } from 'vue'
 import { Checkbox } from '@opentiny/vue'
-import { usePage, useModal, useNotify } from '@opentiny/tiny-engine-controller'
+import { usePage, useModal, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
 import { generateRouter } from '@opentiny/tiny-engine-controller/js/vscodeGenerateFile'
 import http from './http.js'

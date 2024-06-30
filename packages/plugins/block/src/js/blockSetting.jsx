@@ -20,11 +20,12 @@ import {
   useTranslate,
   useApp,
   useLayout,
-  useNotify
-} from '@opentiny/tiny-engine-controller'
+  useNotify,
+  useHistory,
+  useResource
+} from '@opentiny/tiny-engine-meta-register'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
 import { getCanvasStatus } from '@opentiny/tiny-engine-controller/js/canvas'
-import { useHistory, useResource } from '@opentiny/tiny-engine-controller'
 import html2canvas from 'html2canvas'
 
 import {
@@ -106,7 +107,12 @@ export const META_COMPONENTS_ENUM = {
 
 // 每个值类型可选的编辑器类型
 export const META_COMPONENT_LIST = {
-  [META_TYPES.array]: ['CodeConfigurator', 'ArrayItemConfigurator', 'RelatedColumnsConfigurator', 'RelatedEditorConfigurator'],
+  [META_TYPES.array]: [
+    'CodeConfigurator',
+    'ArrayItemConfigurator',
+    'RelatedColumnsConfigurator',
+    'RelatedEditorConfigurator'
+  ],
   [META_TYPES.string]: ['InputConfigurator', 'SelectConfigurator', 'I18nConfigurator'],
   [META_TYPES.number]: ['NumberConfigurator'],
   [META_TYPES.object]: ['CodeConfigurator', 'JsSlotConfigurator'],

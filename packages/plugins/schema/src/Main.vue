@@ -42,7 +42,7 @@
 import { nextTick, reactive, getCurrentInstance, onActivated, ref } from 'vue'
 import { Popover } from '@opentiny/vue'
 import { VueMonaco, CloseIcon } from '@opentiny/tiny-engine-common'
-import { useCanvas, useModal, useHistory, useNotify } from '@opentiny/tiny-engine-controller'
+import { useCanvas, useModal, useHistory, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { iconSave, iconDownloadLink } from '@opentiny/vue-icon'
 

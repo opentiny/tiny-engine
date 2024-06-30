@@ -59,7 +59,7 @@ import {
   InputConfigurator,
   NumberConfigurator
 } from '@opentiny/tiny-engine-configurator'
-import { useNotify } from '@opentiny/tiny-engine-controller'
+import { useNotify } from '@opentiny/tiny-engine-meta-register'
 import { iconChevronLeft } from '@opentiny/vue-icon'
 import store, { META_TYPES_ENUM, META_TYPES_OPTIONS } from '../store'
 import { widgetNames } from './widgets'
