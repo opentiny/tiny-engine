@@ -326,13 +326,13 @@ const initBuiltinMaterial = () => {
 const initMaterial = ({ isInit = true, appData = {} } = {}) => {
   initBuiltinMaterial()
   if (isInit) {
-    componentState.componentsMap = appData.componentsMap?.reduce((componentsMap, component) => {
+    componentState.componentsMap = {}
+    appData.componentsMap?.forEach((component) => {
       if (component.dependencies) {
         getBlockDeps(component.dependencies)
       }
-
-      return { ...componentsMap, [component.componentName]: component }
-    }, {})
+      componentState.componentsMap[component.componentName] = component
+    })
   }
 }
 
