@@ -54,7 +54,6 @@ interface IPageOrBlockSchema {
 function parseRequiredBlocks(schema: IPageOrBlockSchema): string[]
 ```
 
-
 ### getAllNestedBlocksSchema
 
 > api 功能：递归解析页面 schema 或者区块 schema 中依赖的区块，并返回所有依赖区块的 schema
@@ -87,6 +86,7 @@ function generatePageCode(schema: IPageOrBlockSchema, componentsMap: IComponentM
 > api 功能：应用出码
 
 类型：
+
 ```typescript
 // 可查看 https://github.com/opentiny/tiny-engine/blob/develop/packages/vue-generator/src/index.d.ts
 // appSchema 为应用 schema IAppSchema
@@ -99,6 +99,7 @@ function generateAppCode(appSchema:IAppSchema, options: IConfig): ICodeGenResult
 如果您发现官方的出码并不能满足您的需求，您可以同样定制自己的出码 service。
 
 替换要求：
+
 - 自定义实现官方出码 service 的 api（parseRequiredBlocks、getAllNestedBlocksSchema、generatePageCode、generateAppCode），要求出参与入参一致
 - id 与 官方出码 service id 一致，即为：engine.service.generateCode
 
@@ -129,5 +130,3 @@ init({
   }
 })
 ```
-
-
