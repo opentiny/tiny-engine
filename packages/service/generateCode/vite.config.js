@@ -10,24 +10,21 @@
  *
  */
 
-import { initHook, HOOK_NAME, generateCodeService } from '@opentiny/tiny-engine'
-import { initPreview } from '@opentiny/tiny-engine'
-import 'virtual:svg-icons-register'
-import '@opentiny/tiny-engine-theme'
+import { defineConfig } from 'vite'
+import path from 'path'
 
-const beforeAppCreate = () => {
-  initHook(HOOK_NAME.useEnv, import.meta.env)
-}
-
-initPreview({
-  registry: {
-    root: {
-      id: 'engine.root',
-      metas: [generateCodeService]
+// https://vitejs.dev/config/
+export default defineConfig({
+  publicDir: false,
+  build: {
+    lib: {
+      entry: path.resolve(__dirname, './src/index.js'),
+      fileName: () => 'index.js',
+      formats: ['es']
     },
-    config: { id: 'engine.config', theme: 'light' }
-  },
-  lifeCycles: {
-    beforeAppCreate
+    rollupOptions: {
+      sourcemap: true,
+      external: ['@babel/parser', '@babel/traverse']
+    }
   }
 })

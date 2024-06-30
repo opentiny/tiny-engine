@@ -15,10 +15,10 @@
 
 <script lang="jsx">
 import { defineAsyncComponent } from 'vue'
-import { useBreadcrumb } from '@opentiny/tiny-engine-controller'
+// import { useBreadcrumb } from '@opentiny/tiny-engine-entry'
 import { getMergeRegistry } from '@opentiny/tiny-engine-meta-register'
 import { Switch as TinySwitch } from '@opentiny/vue'
-import { getSearchParams } from './preview/http'
+// import { getSearchParams } from './preview/http'
 import { BROADCAST_CHANNEL } from '../src/preview/srcFiles/constant'
 import { injectDebugSwitch } from './preview/debugSwitch'
 import BreadcrumbPlugin from '@opentiny/tiny-engine-toolbar-breadcrumb'
@@ -45,9 +45,10 @@ export default {
       MediaPlugin.component
     ]
 
-    const { setBreadcrumbPage } = useBreadcrumb()
-    const { pageInfo } = getSearchParams()
-    setBreadcrumbPage([pageInfo?.name])
+    // FIXME: 这里 breadcrumb 改错了，移动到了 canvas 里面，实际属于 toolbar/breadcrumb
+    // const { setBreadcrumbPage } = useBreadcrumb()
+    // const { pageInfo } = getSearchParams()
+    // setBreadcrumbPage([pageInfo?.name])
 
     const setViewPort = (item) => {
       const iframe = document.getElementsByClassName('iframe-container')[0]
