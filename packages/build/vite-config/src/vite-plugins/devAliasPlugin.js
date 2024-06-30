@@ -3,11 +3,9 @@ import path from 'node:path'
 const devAlias = {
   '@opentiny/tiny-engine/canvas': path.resolve(process.cwd(), '../packages/design-core/src/canvas/canvas.js'),
   '@opentiny/tiny-engine': path.resolve(process.cwd(), '../packages/design-core/index.js'),
-  '@opentiny/tiny-engine-controller/js': path.resolve(process.cwd(), '../packages/controller/js'),
   '@opentiny/tiny-engine-common/component': path.resolve(process.cwd(), '../packages/common/component'),
   '@opentiny/tiny-engine-common': path.resolve(process.cwd(), '../packages/common/index.js'),
-  '@opentiny/tiny-engine-controller/utils': path.resolve(process.cwd(), '../packages/controller/utils.js'),
-  '@opentiny/tiny-engine-controller/adapter': path.resolve(process.cwd(), '../packages/controller/adapter.js'),
+  '@opentiny/tiny-engine-controller/js': path.resolve(process.cwd(), '../packages/controller/js'),
   '@opentiny/tiny-engine-controller': path.resolve(process.cwd(), '../packages/controller/src/index.js'),
   '@opentiny/tiny-engine-plugin-materials': path.resolve(process.cwd(), '../packages/plugins/materials/index.js'),
   '@opentiny/tiny-engine-plugin-block': path.resolve(process.cwd(), '../packages/plugins/block/index.js'),
