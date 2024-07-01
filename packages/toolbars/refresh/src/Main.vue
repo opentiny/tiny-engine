@@ -16,7 +16,7 @@
 
 <script>
 import { Popover } from '@opentiny/vue'
-import { useResource, useCanvas, useModal, useLayout, useBlock } from '@opentiny/tiny-engine-controller'
+import { useResource, useCanvas, useModal, useLayout, useBlock } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {

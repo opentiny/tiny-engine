@@ -11,8 +11,8 @@
  */
 
 import { reactive } from 'vue'
-import { useApp, useResource, useNotify, useCanvas } from '@opentiny/tiny-engine-controller'
-import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
+import { useApp, useResource, useNotify, useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import {
   fetchResourceList,
   requestDeleteReSource,
@@ -29,7 +29,7 @@ const state = reactive({
   resources: [],
   resourceNames: {},
   refresh: false,
-  id: useApp().appInfoState.selectedId
+  id: ''
 })
 
 const DEFAULT_RESOURCE = {

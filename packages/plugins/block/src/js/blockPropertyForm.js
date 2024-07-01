@@ -12,7 +12,7 @@
 
 import { ref, computed, watch } from 'vue'
 import { utils, constants } from '@opentiny/tiny-engine-utils'
-import { useNotify } from '@opentiny/tiny-engine-controller'
+import { useNotify } from '@opentiny/tiny-engine-meta-register'
 
 import {
   META_TYPES,
@@ -88,13 +88,13 @@ export const type = computed({
 export const widgetComponent = computed({
   get() {
     const property = getEditProperty()
-    return property?.widget?.component || 'MetaInput'
+    return property?.widget?.component || 'InputConfigurator'
   },
   set(value) {
     const property = getEditProperty()
     property.widget = property.widget || {}
     property.widget.component = value
-    showArrayItemConfig.value = type.value === META_TYPES.array && value === META_COMPONENTS_ENUM.MetaArrayItem
+    showArrayItemConfig.value = type.value === META_TYPES.array && value === META_COMPONENTS_ENUM.ArrayItemConfigurator
 
     initSubProperties()
   }
@@ -192,7 +192,7 @@ export const handleAddItem = () => {
   arrayConfig.value.push({
     property: 'customProperty',
     type: 'string',
-    component: 'MetaInput',
+    component: 'InputConfigurator',
     props: {},
     defaultValue: '',
     description: ''
@@ -289,7 +289,7 @@ watch(
     }))
 
     showArrayItemConfig.value =
-      type.value === META_TYPES.array && widgetComponent.value === META_COMPONENTS_ENUM.MetaArrayItem
+      type.value === META_TYPES.array && widgetComponent.value === META_COMPONENTS_ENUM.ArrayItemConfigurator
 
     if (property) {
       widgetComponent.value = property.widget.component

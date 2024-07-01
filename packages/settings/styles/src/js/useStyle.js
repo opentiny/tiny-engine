@@ -12,8 +12,8 @@
 
 import { computed, reactive, watch } from 'vue'
 import { useBroadcastChannel } from '@vueuse/core'
-import { useCanvas, useHistory, useProperties as useProps } from '@opentiny/tiny-engine-controller'
-import { formatString } from '@opentiny/tiny-engine-controller/js/ast'
+import { useCanvas, useHistory, useProperties as useProps } from '@opentiny/tiny-engine-meta-register'
+import { formatString } from '@opentiny/tiny-engine-common/js/ast'
 import { constants, utils } from '@opentiny/tiny-engine-utils'
 import { parser, stringify, getSelectorArr } from './parser'
 
@@ -133,13 +133,16 @@ const getClassNameAndIdList = (schema) => {
   }
 }
 
-const { getPageSchema, getCurrentSchema, canvasApi } = useCanvas()
-const { getSchema, propsUpdateKey } = useProps()
-const { addHistory } = useHistory()
-
 watch(
-  () => [getCurrentSchema(), state.schemaUpdateKey, propsUpdateKey.value, canvasApi.value?.getSchema?.(), schemaLength],
+  () => [
+    useCanvas().getCurrentSchema?.(),
+    state.schemaUpdateKey,
+    useProps().propsUpdateKey?.value,
+    useCanvas().canvasApi?.value?.getSchema?.(),
+    schemaLength
+  ],
   ([curSchema], [oldCurSchema] = []) => {
+    const { getCurrentSchema, canvasApi } = useCanvas()
     let schema = getCurrentSchema()
 
     if (!schema || Object.keys(schema).length === 0) {
@@ -168,14 +171,14 @@ watch(
     state.styleContent = formatString(`:root {\n ${schema?.props?.style || ''}\n}`, 'css')
   },
   {
-    immediate: true,
+    // immediate: true, // TODO: 需要评估能否去掉
     deep: true
   }
 )
 
 // 监听全局样式的变化，重新解析
 watch(
-  () => getPageSchema()?.css,
+  () => useCanvas().getPageSchema?.()?.css,
   (value) => {
     state.cssContent = value || ''
 
@@ -258,6 +261,7 @@ watch(
 )
 
 export const updateGlobalStyleStr = (styleStr) => {
+  const { getPageSchema, canvasApi } = useCanvas()
   const pageSchema = getPageSchema()
   const { getSchema, setPageCss } = canvasApi.value
 
@@ -296,6 +300,9 @@ const updateGlobalStyle = (newSelector) => {
 
 // 更新 style 对象到 schema
 const updateStyle = (properties) => {
+  const { canvasApi } = useCanvas()
+  const { getSchema } = useProps()
+  const { addHistory } = useHistory()
   const { getSchema: getCanvasPageSchema, updateRect } = canvasApi.value
   const schema = getSchema() || getCanvasPageSchema()
   schema.props = schema.props || {}

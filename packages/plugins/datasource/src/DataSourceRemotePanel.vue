@@ -46,10 +46,12 @@ import DataSourceRemoteAutoload from './DataSourceRemoteAutoload.vue'
 import DataSourceRemoteAdapter from './DataSourceRemoteDataAdapter.vue'
 import DataSrouceRemoteDataResult, { getResponseData } from './DataSourceRemoteDataResult.vue'
 import { open as openRemoteMapping } from './DataSourceRemoteMapping.vue'
-import { useDataSource, useNotify } from '@opentiny/tiny-engine-controller'
+import { useDataSource, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { isEmptyObject } from '@opentiny/vue-renderless/common/type'
-import { obj2String, string2Obj } from '@opentiny/tiny-engine-controller/adapter'
+import { utils } from '@opentiny/tiny-engine-utils'
 import { getRequest } from './js/datasource'
+
+const { reactiveObj2String: obj2String, string2Obj } = utils
 
 export const isOpen = ref(false)
 

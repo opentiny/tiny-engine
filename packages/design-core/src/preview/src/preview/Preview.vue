@@ -18,8 +18,8 @@ import { defineComponent, computed, defineAsyncComponent } from 'vue'
 import { Repl, ReplStore } from '@vue/repl'
 import vueJsx from '@vue/babel-plugin-jsx'
 import { transformSync } from '@babel/core'
-import { genSFCWithDefaultPlugin, parseRequiredBlocks } from '@opentiny/tiny-engine-dsl-vue'
-import importMap from './importMap'
+import { getMetaApi } from '@opentiny/tiny-engine-meta-register'
+import { getImportMap as getInitImportMap } from './importMap'
 import srcFiles from './srcFiles'
 import generateMetaFiles, { processAppJsCode } from './generate'
 import { getSearchParams, fetchMetaData, fetchImportMap, fetchAppSchema, fetchBlockSchema } from './http'
@@ -69,33 +69,6 @@ export default {
       const newImportMap = { imports: { ...importMap.imports, ...utilsImportMaps } }
       store.setImportMap(newImportMap)
     }
-    const getBlocksSchema = async (pageSchema, blockSet = new Set()) => {
-      let res = []
-
-      const blockNames = parseRequiredBlocks(pageSchema)
-      const promiseList = blockNames
-        .filter((name) => {
-          if (blockSet.has(name)) {
-            return false
-          }
-
-          blockSet.add(name)
-
-          return true
-        })
-        .map((name) => fetchBlockSchema(name))
-
-      const schemaList = await Promise.allSettled(promiseList)
-
-      schemaList.forEach((item) => {
-        if (item.status === 'fulfilled' && item.value?.[0]?.content) {
-          res.push(item.value[0].content)
-          res.push(...getBlocksSchema(item.value[0].content, blockSet))
-        }
-      })
-
-      return res
-    }
 
     const queryParams = getSearchParams()
     const getImportMap = async () => {
@@ -108,7 +81,7 @@ export default {
           }
         }
       }
-      return importMap
+      return getInitImportMap()
     }
 
     const promiseList = [
@@ -120,7 +93,9 @@ export default {
     Promise.all(promiseList).then(async ([appData, metaData, _void, importMapData]) => {
       addUtilsImportMap(importMapData, metaData.utils || [])
 
-      const blocks = await getBlocksSchema(queryParams.pageInfo?.schema)
+      const { getAllNestedBlocksSchema, generatePageCode } = getMetaApi('engine.service.generateCode')
+
+      const blocks = await getAllNestedBlocksSchema(queryParams.pageInfo?.schema, fetchBlockSchema)
 
       // TODO: 需要验证级联生成 block schema
       // TODO: 物料内置 block 需要如何处理？
@@ -128,7 +103,7 @@ export default {
         {
           panelName: 'Main.vue',
           panelValue:
-            genSFCWithDefaultPlugin(queryParams.pageInfo?.schema, appData?.componentsMap || [], {
+            generatePageCode(queryParams.pageInfo?.schema, appData?.componentsMap || [], {
               blockRelativePath: './'
             }) || '',
           panelType: 'vue',
@@ -137,8 +112,7 @@ export default {
         ...(blocks || []).map((blockSchema) => {
           return {
             panelName: blockSchema.fileName,
-            panelValue:
-              genSFCWithDefaultPlugin(blockSchema, appData?.componentsMap || [], { blockRelativePath: './' }) || '',
+            panelValue: generatePageCode(blockSchema, appData?.componentsMap || [], { blockRelativePath: './' }) || '',
             panelType: 'vue',
             index: true
           }

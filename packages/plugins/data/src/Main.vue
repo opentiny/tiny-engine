@@ -75,10 +75,10 @@ import {
   useEditorInfo,
   useResource,
   useNotify,
-  useData,
   useLayout,
   useHelp
-} from '@opentiny/tiny-engine-controller'
+} from '@opentiny/tiny-engine-meta-register'
+import { getCommentByKey } from '@opentiny/tiny-engine-common/js/comment'
 import { iconSearch } from '@opentiny/vue-icon'
 import { CloseIcon, LinkButton } from '@opentiny/tiny-engine-common'
 import DataSourceList from './DataSourceList.vue'
@@ -266,7 +266,6 @@ export default {
 
       if (key.startsWith('datasource')) {
         const pageSchema = getSchema()
-        const { getCommentByKey } = useData()
         const { start, end } = getCommentByKey(key)
 
         /**

@@ -8,7 +8,6 @@
 <script>
 import { ref } from 'vue'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
-import { theme } from '@opentiny/tiny-engine-controller/adapter'
 
 export default {
   components: {
@@ -39,11 +38,6 @@ export default {
     return {
       editor,
       options: {
-        theme: theme(),
-        roundedSelection: true,
-        automaticLayout: true,
-        autoIndent: true,
-        formatOnPaste: true,
         language: 'javascript',
         mouseStyle: 'default',
         minimap: { enabled: false }

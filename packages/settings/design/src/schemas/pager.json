@@ -32,7 +32,7 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "MetaNumeric",
+              "component": "NumberConfigurator",
               "props": {}
             },
             "description": {
@@ -52,7 +52,7 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "MetaNumeric",
+              "component": "NumberConfigurator",
               "props": {}
             },
             "description": {
@@ -72,7 +72,7 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "MetaCodeEditor",
+              "component": "CodeConfigurator",
               "props": {}
             },
             "description": {
@@ -91,7 +91,7 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "MetaNumeric",
+              "component": "NumberConfigurator",
               "props": {}
             },
             "description": {
@@ -111,7 +111,7 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "MetaInput",
+              "component": "InputConfigurator",
               "props": {
                 "value": "total,sizes,prev, pager, next"
               }

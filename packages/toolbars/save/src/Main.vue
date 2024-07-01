@@ -42,8 +42,7 @@
 import { reactive, ref, onBeforeMount } from 'vue'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
 import { Button, Popover, DialogBox } from '@opentiny/vue'
-import { useCanvas } from '@opentiny/tiny-engine-controller'
-import { theme } from '@opentiny/tiny-engine-controller/adapter'
+import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { openCommon, saveCommon } from './js/index'
 import { isLoading } from './js/index'
 export const api = {
@@ -91,14 +90,8 @@ export default {
     }
     // 保存或新建区块
     const editorOptions = {
-      theme: theme(),
-      tabSize: 2,
       language: 'json',
-      autoIndent: true,
       lineNumbers: true,
-      formatOnPaste: true,
-      automaticLayout: true,
-      roundedSelection: true,
       minimap: {
         enabled: false
       }

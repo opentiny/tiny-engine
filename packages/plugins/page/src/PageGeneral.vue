@@ -66,8 +66,8 @@
 <script lang="jsx">
 import { ref, computed, watchEffect } from 'vue'
 import { Form, FormItem, Input, Select, Radio } from '@opentiny/vue'
-import { usePage } from '@opentiny/tiny-engine-controller'
-import { REGEXP_PAGE_NAME, REGEXP_FOLDER_NAME, REGEXP_ROUTE } from '@opentiny/tiny-engine-controller/js/verification'
+import { usePage } from '@opentiny/tiny-engine-meta-register'
+import { REGEXP_PAGE_NAME, REGEXP_FOLDER_NAME, REGEXP_ROUTE } from '@opentiny/tiny-engine-common/js/verification'
 import { SvgButton } from '@opentiny/tiny-engine-common'
 import PageHome from './PageHome.vue'
 

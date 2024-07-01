@@ -74,8 +74,8 @@
 import { getCurrentInstance, reactive, toRefs } from 'vue'
 import { Button, DialogBox, Modal, Popover, Search, Tooltip } from '@opentiny/vue'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
-import { useCanvas, getGlobalConfig } from '@opentiny/tiny-engine-controller'
-import { theme } from '@opentiny/tiny-engine-controller/adapter'
+import { useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { iconAdd, IconDel, iconSetting, iconYes } from '@opentiny/vue-icon'
 
 export default {
@@ -102,23 +102,17 @@ export default {
       showDialog: false,
       title: '',
       showEditor: false,
-      lifeCycles: getGlobalConfig()?.lifeCyclesOptions[getGlobalConfig()?.dslMode],
+      lifeCycles: getMergeMeta('engine.config')?.lifeCyclesOptions[getMergeMeta('engine.config')?.dslMode],
       bindLifeCycles: pageState.pageSchema?.lifeCycles || {},
       options: {
-        roundedSelection: true,
-        automaticLayout: true,
-        autoIndent: true,
-        language: 'javascript',
-        formatOnPaste: true,
-        tabSize: 2,
-        theme: theme()
+        language: 'javascript'
       },
       editorValue: '{}'
     })
 
     const search = (value) => {
       if (!value) {
-        state.lifeCycles = getGlobalConfig()?.lifeCyclesOptions[getGlobalConfig()?.dslMode]
+        state.lifeCycles = getMergeMeta('engine.config')?.lifeCyclesOptions[getMergeMeta('engine.config')?.dslMode]
         return
       }
 

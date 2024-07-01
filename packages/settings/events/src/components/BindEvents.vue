@@ -87,11 +87,11 @@
 <script>
 import { computed, reactive, watchEffect } from 'vue'
 import { Popover, Button } from '@opentiny/vue'
-import { useCanvas, useModal, useLayout, useBlock, useResource } from '@opentiny/tiny-engine-controller'
+import { useModal } from '@opentiny/tiny-engine-meta-register'
+import { getMergeMeta, useCanvas, useLayout, useBlock, useResource } from '@opentiny/tiny-engine-meta-register'
 import { BlockLinkEvent, SvgButton } from '@opentiny/tiny-engine-common'
 import { iconHelpQuery, iconChevronDown } from '@opentiny/vue-icon'
 import BindEventsDialog, { open as openDialog } from './BindEventsDialog.vue'
-import { commonEvents } from '../commonjs/events.js'
 import AddEventsDialog from './AddEventsDialog.vue'
 
 export default {
@@ -115,6 +115,8 @@ export default {
 
     const { highlightMethod } = getPluginApi(PLUGIN_NAME.PageController)
 
+    const { commonEvents = {} } = getMergeMeta('engine.setting.event').options
+
     const state = reactive({
       eventName: '', // 事件名称
       eventBinding: null, // 事件绑定的处理方法对象
@@ -131,7 +133,7 @@ export default {
       const componentName = pageState?.currentSchema?.componentName
       const componentSchema = getMaterial(componentName)
       state.componentEvent = componentSchema?.content?.schema?.events || componentSchema?.schema?.events || {}
-      Object.assign(state.componentEvents, state.componentEvent)
+      state.componentEvents = { ...commonEvents, ...state.componentEvent }
       const props = pageState?.currentSchema?.props || {}
       const keys = Object.keys(props)
       state.bindActions = {}

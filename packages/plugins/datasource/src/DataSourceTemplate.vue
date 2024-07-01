@@ -18,8 +18,8 @@
 <script>
 import { reactive, onMounted } from 'vue'
 import { Button } from '@opentiny/vue'
+import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { fetchTemplates } from './js/http'
-import { getGlobalConfig } from '@opentiny/tiny-engine-controller'
 
 export default {
   components: {
@@ -27,7 +27,7 @@ export default {
   },
   emits: ['select'],
   setup(props, { emit }) {
-    const platformId = getGlobalConfig()?.platformId
+    const platformId = getMergeMeta('engine.config')?.platformId
 
     const state = reactive({
       templates: []

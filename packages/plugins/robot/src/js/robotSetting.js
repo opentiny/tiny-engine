@@ -11,10 +11,8 @@
  */
 
 import { reactive } from 'vue'
-import { useApp, useBlock } from '@opentiny/tiny-engine-controller'
+import { useApp } from '@opentiny/tiny-engine-meta-register'
 import { useHttp } from '@opentiny/tiny-engine-http'
-
-const { getBlockList } = useBlock()
 
 export const AIModelOptions = [
   { label: 'ChatGPT：gpt-3.5-turbo', value: 'gpt-3.5-turbo', manufacturer: 'openai' },
@@ -23,11 +21,9 @@ export const AIModelOptions = [
 
 // 这里存放的是aichat的响应式数据
 const state = reactive({
-  blockList: getBlockList(),
+  blockList: [],
   blockContent: ''
 })
-
-const http = useHttp()
 
 export const getBlocks = () => state.blockList || []
 
@@ -65,7 +61,7 @@ export const initBlockList = async () => {
   }
   const appId = useApp().appInfoState.selectedId
   try {
-    const list = await http.get('/material-center/api/blocks', { params: { appId } })
+    const list = await useHttp().get('/material-center/api/blocks', { params: { appId } })
     setBlocks(list)
     setBlockContent(list)
   } catch (err) {

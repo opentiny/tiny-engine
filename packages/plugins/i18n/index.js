@@ -9,10 +9,14 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-import component from './src/Main.vue'
+import entry from './src/Main.vue'
 import metaData from './meta.js'
+import { TranslateService } from './src/composable'
 
 export default {
   ...metaData,
-  component
+  entry,
+  metas: [TranslateService]
 }
+
+export { TranslateService }

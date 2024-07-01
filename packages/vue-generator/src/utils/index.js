@@ -13,7 +13,7 @@
 import { capitalize, hyphenate } from '@vue/shared'
 import { tinyIcon as unifyIconName } from '../pre-processor'
 import { TINY_ICON, JS_FUNCTION } from '../constant'
-import prettierConfig from '@opentiny/tiny-engine-controller/js/config-files/prettierrc'
+import prettierConfig from '@opentiny/tiny-engine-common/js/config-files/prettierrc'
 
 const getTypeOfSchema = (schema) => schema.componentName
 

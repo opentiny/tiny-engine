@@ -10,11 +10,15 @@
  *
  */
 
-import component, { api } from './src/Main.vue'
+import entry, { api } from './src/Main.vue'
 import metaData from './meta.js'
+import { BlockService } from './src/composable'
 
 export default {
   ...metaData,
   api,
-  component
+  entry,
+  metas: [BlockService]
 }
+
+export { BlockService }

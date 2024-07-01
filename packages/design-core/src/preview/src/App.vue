@@ -7,7 +7,6 @@
 import { useDebugSwitch } from './preview/debugSwitch'
 import Preview from './preview/Preview.vue'
 import Toolbar from './Toolbar.vue'
-import '@opentiny/tiny-engine-theme'
 
 export default {
   components: {

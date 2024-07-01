@@ -3,59 +3,68 @@
     <div class="advnce-config">
       <label class="text-ellipsis-multiple">是否渲染</label>
       <div class="advanced-config-form-item">
-        <meta-switch v-if="!isBind" :modelValue="condition" @update:modelValue="setConfig"> </meta-switch>
+        <switch-configurator v-if="!isBind" :modelValue="condition" @update:modelValue="setConfig">
+        </switch-configurator>
         <div v-else class="binding-state text-ellipsis-multiple" :title="condition.value">
           已绑定：{{ condition.value }}
         </div>
-        <meta-bind-variable v-model="condition" name="advance" @update:modelValue="setConfig"></meta-bind-variable>
+        <variable-configurator
+          v-model="condition"
+          name="advance"
+          @update:modelValue="setConfig"
+        ></variable-configurator>
       </div>
     </div>
 
     <div class="advnce-config">
       <label class="text-ellipsis-multiple">循环数据</label>
       <div class="advanced-config-form-item">
-        <meta-code-editor
+        <code-configurator
           v-if="!state.isLoop"
           v-model="state.loopData"
           data-type="JSExpression"
           @update:modelValue="setLoop"
           @open="openEditor"
-        ></meta-code-editor>
+        ></code-configurator>
         <div v-else class="binding-state text-ellipsis-multiple" :title="state.loopData?.value">
           已绑定：{{ state.loopData?.value }}
         </div>
-        <meta-bind-variable v-model="state.loopData" name="advance" @update:modelValue="setLoop"></meta-bind-variable>
+        <variable-configurator
+          v-model="state.loopData"
+          name="advance"
+          @update:modelValue="setLoop"
+        ></variable-configurator>
       </div>
     </div>
     <div class="advnce-config">
       <label class="text-ellipsis-multiple">迭代变量名</label>
       <div class="advanced-config-form-item">
-        <meta-input
+        <input-configurator
           v-model="state.loopItem"
           :placeholder="`默认值为：${DEFAULT_LOOP_NAME.ITEM}`"
           @update:modelValue="setLoopItem"
-        ></meta-input>
+        ></input-configurator>
       </div>
     </div>
     <div class="advnce-config">
       <label class="text-ellipsis-multiple">索引变量名</label>
       <div class="advanced-config-form-item">
-        <meta-input
+        <input-configurator
           v-model="state.loopIndex"
           :placeholder="`默认值为：${DEFAULT_LOOP_NAME.INDEX}`"
           @update:modelValue="setLoopIndex"
-        ></meta-input>
+        ></input-configurator>
       </div>
     </div>
     <div class="advnce-config">
       <label class="text-ellipsis-multiple">key</label>
       <div class="advanced-config-form-item">
         <tiny-tooltip content="建议填写循环项中的唯一值（如item.id），如果填写为数字将不保存">
-          <meta-input
+          <input-configurator
             v-model="state.loopKey"
             :placeholder="`默认为索引名：${getIndexName()}`"
             @update:modelValue="setLoopKey"
-          ></meta-input>
+          ></input-configurator>
         </tiny-tooltip>
       </div>
     </div>
@@ -64,22 +73,27 @@
 
 <script>
 import { ref, computed, reactive, watch } from 'vue'
-import { MetaSwitch, MetaBindVariable, MetaInput, MetaCodeEditor } from '@opentiny/tiny-engine-common'
-import { useProperties, useCanvas } from '@opentiny/tiny-engine-controller'
-import { PROP_DATA_TYPE } from '@opentiny/tiny-engine-controller/utils'
-import { string2Obj } from '@opentiny/tiny-engine-controller/adapter'
-import { constants } from '@opentiny/tiny-engine-utils'
+import {
+  CodeConfigurator,
+  InputConfigurator,
+  SwitchConfigurator,
+  VariableConfigurator
+} from '@opentiny/tiny-engine-configurator'
+import { useProperties, useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { PROP_DATA_TYPE } from '@opentiny/tiny-engine-common/js/constants'
+import { constants, utils } from '@opentiny/tiny-engine-utils'
 import { Tooltip } from '@opentiny/vue'
 
 const { DEFAULT_LOOP_NAME } = constants
+const { string2Obj } = utils
 
 export default {
   components: {
-    MetaSwitch,
+    SwitchConfigurator,
     TinyTooltip: Tooltip,
-    MetaBindVariable,
-    MetaInput,
-    MetaCodeEditor
+    VariableConfigurator,
+    InputConfigurator,
+    CodeConfigurator
   },
   inheritAttrs: false,
   setup() {

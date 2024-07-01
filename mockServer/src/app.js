@@ -14,7 +14,7 @@ import Koa2 from 'koa'
 import KoaBody from 'koa-body'
 import KoaStatic from 'koa-static2'
 import path from 'path'
-import { env, port } from '../config/config'
+import { env, port } from './config/config'
 import ErrorRoutesCatch from './middleware/ErrorRoutesCatch'
 import ErrorRoutes from './routes/error-routes'
 import MainRoutes from './routes/main-routes'
@@ -29,13 +29,13 @@ app
     return next()
   })
   .use(ErrorRoutesCatch())
-  .use(KoaStatic('assets', path.resolve(__dirname, '../assets'))) // Static resource
+  .use(KoaStatic('assets', path.resolve(__dirname, './assets'))) // Static resource
   .use(
     KoaBody({
       multipart: true,
       parsedMethods: ['POST', 'PUT', 'PATCH', 'GET', 'HEAD', 'DELETE'], // parse GET, HEAD, DELETE requests
       formidable: {
-        uploadDir: path.join(__dirname, '../assets/uploads/tmp')
+        uploadDir: path.join(__dirname, './assets/uploads/tmp')
       },
       jsonLimit: '50mb',
       formLimit: '50mb',

@@ -18,7 +18,7 @@
 
 <script lang="jsx">
 import { Popover } from '@opentiny/vue'
-import { useCanvas, useLayout, useBlock, usePage, useModal, useNotify } from '@opentiny/tiny-engine-controller'
+import { useCanvas, useLayout, useBlock, usePage, useModal, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 
 const { PAGE_STATUS } = constants

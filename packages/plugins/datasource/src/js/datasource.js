@@ -11,13 +11,13 @@
  */
 
 import axios from 'axios'
-import { useResource } from '@opentiny/tiny-engine-controller'
-import { generateFunction } from '@opentiny/tiny-engine-controller/utils'
-import { isMock } from '@opentiny/tiny-engine-controller/js/environments'
+import { useResource } from '@opentiny/tiny-engine-meta-register'
+import { isMock } from '@opentiny/tiny-engine-common/js/environments'
 import { utils as commonUtils, constants } from '@opentiny/tiny-engine-utils'
 import { read, utils, writeFileXLSX } from 'xlsx'
 
 const { DEFAULT_INTERCEPTOR } = constants
+const { parseFunction: generateFunction } = commonUtils
 
 const load = (http, options, dataSource, shouldFetch) => (params, customUrl) => {
   if (!shouldFetch()) {

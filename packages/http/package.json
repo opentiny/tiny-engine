@@ -25,7 +25,7 @@
   "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
     "@opentiny/tiny-engine-utils": "workspace:*",
-    "@opentiny/tiny-engine-entry": "workspace:*",
+    "@opentiny/tiny-engine-meta-register": "workspace:*",
     "@vueuse/core": "^9.6.0",
     "axios": "~0.28.0",
     "axios-mock-adapter": "^1.21.5"

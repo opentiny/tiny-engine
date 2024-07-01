@@ -10,23 +10,23 @@
  *
  */
 
-// import { hyphenate } from '@vue/shared'
-
+import { useEnv } from '@opentiny/tiny-engine-meta-register'
 import { getSearchParams } from './http'
 import importMapJSON from './importMap.json'
-import { VITE_CDN_DOMAIN } from '@opentiny/tiny-engine-controller/js/environments'
 
 const importMap = {}
 
 const opentinyVueVersion = '~3.14'
 
 function replacePlaceholder(v) {
-  return v.replace('${VITE_CDN_DOMAIN}', VITE_CDN_DOMAIN).replace('${opentinyVueVersion}', opentinyVueVersion)
+  return v.replace('${VITE_CDN_DOMAIN}', useEnv().VITE_CDN_DOMAIN).replace('${opentinyVueVersion}', opentinyVueVersion)
 }
 
-importMap.imports = {
-  ...Object.fromEntries(Object.entries(importMapJSON.imports).map(([k, v]) => [k, replacePlaceholder(v)])),
-  ...getSearchParams().scripts
-}
+export const getImportMap = () => {
+  importMap.imports = {
+    ...Object.fromEntries(Object.entries(importMapJSON.imports).map(([k, v]) => [k, replacePlaceholder(v)])),
+    ...getSearchParams().scripts
+  }
 
-export default importMap
+  return importMap
+}

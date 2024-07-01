@@ -36,7 +36,7 @@
             "readOnly": false,
             "disabled": false,
             "widget": {
-              "component": "MetaBindI18n",
+              "component": "I18nConfigurator",
               "props": {}
             },
             "description": {
@@ -85,7 +85,7 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "MetaSwitch",
+              "component": "SwitchConfigurator",
               "props": {}
             },
             "description": {
@@ -105,7 +105,7 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "MetaSelect",
+              "component": "SelectConfigurator",
               "props": {
                 "options": [
                   {
@@ -160,7 +160,7 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "MetaSwitch",
+              "component": "SwitchConfigurator",
               "props": {}
             },
             "description": {
@@ -180,7 +180,7 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "MetaSwitch",
+              "component": "SwitchConfigurator",
               "props": {}
             },
             "description": {
@@ -200,7 +200,7 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "MetaNumeric",
+              "component": "NumberConfigurator",
               "props": {}
             },
             "description": {
@@ -219,7 +219,7 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "MetaSwitch",
+              "component": "SwitchConfigurator",
               "props": {}
             },
             "description": {
@@ -239,7 +239,7 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "MetaSwitch",
+              "component": "SwitchConfigurator",
               "props": {}
             },
             "description": {
@@ -259,7 +259,7 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "MetaSwitch",
+              "component": "SwitchConfigurator",
               "props": {}
             },
             "description": {

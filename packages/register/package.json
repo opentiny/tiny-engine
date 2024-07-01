@@ -1,0 +1,25 @@
+{
+  "name": "@opentiny/tiny-engine-meta-register",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@opentiny/tiny-engine-utils": "workspace:*",
+    "lodash-es": "^4.17.21",
+    "vue": "^3.4.21"
+  },
+  "devDependencies": {
+    "vitest": "^1.4.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

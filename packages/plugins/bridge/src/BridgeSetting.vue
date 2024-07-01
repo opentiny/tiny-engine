@@ -122,8 +122,8 @@ import {
   getResourceNamesByType
 } from './js/resource'
 import { VueMonaco as MonacoEditor, PluginSetting, SvgButton } from '@opentiny/tiny-engine-common'
-import { useApp, getGlobalConfig, useModal, useNotify } from '@opentiny/tiny-engine-controller'
-import { theme } from '@opentiny/tiny-engine-controller/adapter'
+import { useApp, useModal, useNotify } from '@opentiny/tiny-engine-meta-register'
+import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 
 const isOpen = ref(false)
 
@@ -154,11 +154,6 @@ export default {
   },
   setup(props, { emit }) {
     const monacoOptions = {
-      theme: theme(),
-      roundedSelection: true,
-      automaticLayout: true,
-      autoIndent: true,
-      formatOnPaste: true,
       language: 'javascript',
       mouseStyle: 'default',
       minimap: { enabled: false },
@@ -175,7 +170,7 @@ export default {
       content: {},
       status: computed(() => getActionType() === ACTION_TYPE.Edit),
       category: computed(() => getCategory() === RESOURCE_CATEGORY.Npm),
-      mode: computed(() => getGlobalConfig()?.dslMode !== 'Vue'),
+      mode: computed(() => getMergeMeta('engine.config')?.dslMode !== 'Vue'),
       isInstance: false,
       title: computed(() => {
         const action = getActionType() === ACTION_TYPE.Edit ? '编辑' : '添加'

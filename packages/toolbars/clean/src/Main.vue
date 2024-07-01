@@ -19,7 +19,7 @@
 <script lang="jsx">
 import { ref, watch, getCurrentInstance } from 'vue'
 import { Popover, Modal } from '@opentiny/vue'
-import { useCanvas, useLayout } from '@opentiny/tiny-engine-controller'
+import { useCanvas, useLayout } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 
 const { PAGE_STATUS } = constants

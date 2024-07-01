@@ -23,7 +23,7 @@
         ></tiny-select>
       </tiny-form-item>
       <tiny-form-item label="属性面板组件属性">
-        <meta-code-editor
+        <code-configurator
           :modelValue="props"
           single
           class="props-editor"
@@ -31,7 +31,7 @@
           button-text="属性面板组件属性"
           language="json"
           @save="handleSaveProps"
-        ></meta-code-editor>
+        ></code-configurator>
       </tiny-form-item>
       <tiny-form-item label="缺省值">
         <component
@@ -52,8 +52,14 @@
 <script>
 import { computed } from 'vue'
 import { Input as TinyInput, Form as TinyForm, FormItem as TinyFormItem, Select as TinySelect } from '@opentiny/vue'
-import { ConfigItem, MetaCodeEditor, MetaInput, MetaNumber, MetaSwitch } from '@opentiny/tiny-engine-common'
-import { useNotify } from '@opentiny/tiny-engine-controller'
+import { ConfigItem } from '@opentiny/tiny-engine-common'
+import {
+  CodeConfigurator,
+  SwitchConfigurator,
+  InputConfigurator,
+  NumberConfigurator
+} from '@opentiny/tiny-engine-configurator'
+import { useNotify } from '@opentiny/tiny-engine-meta-register'
 import { iconChevronLeft } from '@opentiny/vue-icon'
 import store, { META_TYPES_ENUM, META_TYPES_OPTIONS } from '../store'
 import { widgetNames } from './widgets'
@@ -67,7 +73,7 @@ export default {
     TinySelect,
     TinyFormItem,
     ConfigItem,
-    MetaCodeEditor,
+    CodeConfigurator,
     IconChevronLeft: iconChevronLeft()
   },
   setup() {
@@ -145,18 +151,18 @@ export default {
     const component = computed(() => {
       const type = store.currentSubConfig.type
       if (['array', 'object', 'function'].includes(type)) {
-        return MetaCodeEditor
+        return CodeConfigurator
       }
 
       if (type === 'number') {
-        return MetaNumber
+        return NumberConfigurator
       }
 
       if (type === 'boolean') {
-        return MetaSwitch
+        return SwitchConfigurator
       }
 
-      return MetaInput
+      return InputConfigurator
     })
 
     const handleSaveDefaultValue = (value) => {

@@ -17,7 +17,6 @@ import { Popover, Button } from '@opentiny/vue'
 import MetaChildItem from './MetaChildItem.vue'
 
 export default {
-  name: 'MetaPopover',
   components: {
     MetaChildItem,
     TinyPopover: Popover,
@@ -27,10 +26,10 @@ export default {
   props: {
     meta: {
       type: Object,
-      default: {}
+      default: () => ({})
     }
   },
-  setup(props, { attrs, emit }) {
+  setup(props, { emit }) {
     const title = computed(() => `编辑${props.meta.label?.text?.zh_CN || props.meta.property || '属性'}`)
     const onValueChange = ({ propertyKey, propertyValue }) => {
       const newPropertyValue = { ...props.meta.widget?.props?.modelValue, [propertyKey]: propertyValue }

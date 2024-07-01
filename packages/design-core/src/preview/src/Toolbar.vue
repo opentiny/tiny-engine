@@ -14,19 +14,11 @@
 </template>
 
 <script lang="jsx">
-import { defineAsyncComponent } from 'vue'
-import { useBreadcrumb } from '@opentiny/tiny-engine-controller'
-import { getMergeRegistry } from '@opentiny/tiny-engine-entry'
+import { useBreadcrumb, getMergeRegistry } from '@opentiny/tiny-engine-meta-register'
 import { Switch as TinySwitch } from '@opentiny/vue'
 import { getSearchParams } from './preview/http'
 import { BROADCAST_CHANNEL } from '../src/preview/srcFiles/constant'
 import { injectDebugSwitch } from './preview/debugSwitch'
-
-const getToolbars = (pluginId) => {
-  return defineAsyncComponent(() =>
-    Promise.resolve(getMergeRegistry('toolbars')?.find((t) => t.id === pluginId)?.component || <span></span>)
-  )
-}
 
 export default {
   components: {
@@ -34,8 +26,9 @@ export default {
   },
   setup() {
     const debugSwitch = injectDebugSwitch()
-    const tools = ['breadcrumb', 'lang', 'media']
-    const [Breadcrumb, ChangeLang, ToolbarMedia] = tools.map(getToolbars)
+    const Breadcrumb = getMergeRegistry('toolbars', 'engine.toolbars.breadcrumb')?.entry
+    const ChangeLang = getMergeRegistry('toolbars', 'engine.toolbars.lang')?.entry
+    const ToolbarMedia = null // TODO: Media plugin rely on layout/canvas. Further processing is required.
 
     const { setBreadcrumbPage } = useBreadcrumb()
     const { pageInfo } = getSearchParams()
@@ -44,8 +37,11 @@ export default {
     const setViewPort = (item) => {
       const iframe = document.getElementsByClassName('iframe-container')[0]
       const app = document.getElementById('app')
-      iframe.style.width = item
-      iframe.style.margin = 'auto'
+
+      if (iframe) {
+        iframe.style.width = item
+        iframe.style.margin = 'auto'
+      }
       app.style.overflow = 'hidden'
     }
 

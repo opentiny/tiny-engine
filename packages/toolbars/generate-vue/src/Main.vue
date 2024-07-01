@@ -23,17 +23,10 @@
 <script>
 import { reactive } from 'vue'
 import { Popover } from '@opentiny/vue'
-import {
-  getGlobalConfig,
-  useBlock,
-  useCanvas,
-  useNotify,
-  useLayout,
-  useEditorInfo
-} from '@opentiny/tiny-engine-controller'
+import { useBlock, useCanvas, useNotify, useLayout, useEditorInfo } from '@opentiny/tiny-engine-meta-register'
+import { getMergeMeta, getMetaApi } from '@opentiny/tiny-engine-meta-register'
 import { fs } from '@opentiny/tiny-engine-utils'
 import { useHttp } from '@opentiny/tiny-engine-http'
-import { generateApp, parseRequiredBlocks } from '@opentiny/tiny-engine-dsl-vue'
 import { fetchMetaData, fetchPageList, fetchBlockSchema } from './http'
 import FileSelector from './FileSelector.vue'
 
@@ -62,8 +55,8 @@ export default {
     const getParams = () => {
       const { getSchema } = useCanvas().canvasApi.value
       const params = {
-        framework: getGlobalConfig()?.dslMode,
-        platform: getGlobalConfig()?.platformId,
+        framework: getMergeMeta('engine.config')?.dslMode,
+        platform: getMergeMeta('engine.config')?.platformId,
         pageInfo: {
           schema: getSchema()
         }
@@ -93,40 +86,7 @@ export default {
       }
     }
 
-    const getBlocksSchema = async (pageSchema, blockSet = new Set()) => {
-      let res = []
-
-      const blockNames = parseRequiredBlocks(pageSchema)
-      const promiseList = blockNames
-        .filter((name) => {
-          if (blockSet.has(name)) {
-            return false
-          }
-
-          blockSet.add(name)
-
-          return true
-        })
-        .map((name) => fetchBlockSchema(name))
-      const schemaList = await Promise.allSettled(promiseList)
-      const extraList = []
-
-      schemaList.forEach((item) => {
-        if (item.status === 'fulfilled' && item.value?.[0]?.content) {
-          res.push(item.value[0].content)
-          extraList.push(getBlocksSchema(item.value[0].content, blockSet))
-        }
-      })
-      ;(await Promise.allSettled(extraList)).forEach((item) => {
-        if (item.status === 'fulfilled' && item.value) {
-          res.push(...item.value)
-        }
-      })
-
-      return res
-    }
-
-    const instance = generateApp()
+    const { getAllNestedBlocksSchema, generateAppCode } = getMetaApi('engine.service.generateCode')
 
     const getAllPageDetails = async (pageList) => {
       const { PLUGIN_NAME, getPluginApi } = useLayout()
@@ -158,8 +118,9 @@ export default {
       const [appData, metaData, pageList, dirHandle] = await Promise.all(promises)
       const pageDetailList = await getAllPageDetails(pageList)
 
+      // 这里需要手动传入 blockSet 的原因是多页面可能会存在重复的区块
       const blockSet = new Set()
-      const list = pageDetailList.map((page) => getBlocksSchema(page.page_content, blockSet))
+      const list = pageDetailList.map((page) => getAllNestedBlocksSchema(page.page_content, fetchBlockSchema, blockSet))
       const blocks = await Promise.allSettled(list)
 
       const blockSchema = []
@@ -193,7 +154,7 @@ export default {
         }
       }
 
-      const res = await instance.generate(appSchema)
+      const res = await generateAppCode(appSchema)
 
       const { genResult = [] } = res || {}
       const fileRes = genResult.map(({ fileContent, fileName, path, fileType }) => {

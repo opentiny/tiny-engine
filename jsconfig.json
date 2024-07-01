@@ -4,8 +4,9 @@
     "jsx": "react",
     "paths": {
       "@/*": ["packages/*"],
+      "@opentiny/tiny-engine": ["packages/design-core/index.js"],
+      "@opentiny/tiny-engine-meta-register": ["packages/register/src/index.js"],
       "@opentiny/tiny-engine-canvas": ["packages/canvas/src/index.js"],
-      "@opentiny/tiny-engine-controller": ["packages/controller/src/index"],
       "@opentiny/tiny-engine-plugin-materials": ["packages/plugins/materials/index"],
       "@opentiny/tiny-engine-plugin-data": ["packages/plugins/data/index"],
       "@opentiny/tiny-engine-plugin-script": ["packages/plugins/script/index"],
@@ -35,7 +36,6 @@
       "@opentiny/tiny-engine-theme-light": ["packages/theme/light/index.less"],
       "@opentiny/tiny-engine-svgs": ["packages/svgs/index"],
       "@opentiny/tiny-engine-http": ["packages/http/index"],
-      "@opentiny/tiny-engine-controller/*": ["packages/controller/src/*"],
       "@opentiny/tiny-engine-plugin-materials/*": ["packages/plugins/materials/*"],
       "@opentiny/tiny-engine-plugin-data/*": ["packages/plugins/data/*"],
       "@opentiny/tiny-engine-plugin-script/*": ["packages/plugins/script/*"],

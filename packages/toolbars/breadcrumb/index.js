@@ -10,10 +10,14 @@
  *
  */
 
-import component from './src/Main.vue'
+import entry from './src/Main.vue'
 import metaData from './meta'
+import { BreadcrumbService } from './src/composable'
 
 export default {
   ...metaData,
-  component
+  entry,
+  metas: [BreadcrumbService]
 }
+
+export { BreadcrumbService }

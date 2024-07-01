@@ -111,9 +111,10 @@ import {
   Tooltip as TinyTooltip
 } from '@opentiny/vue'
 import { iconHelpCircle } from '@opentiny/vue-icon'
-import { useLayout, useApp, getGlobalConfig, useModal } from '@opentiny/tiny-engine-controller'
+import { useLayout, useApp, useModal } from '@opentiny/tiny-engine-meta-register'
+import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { useHttp } from '@opentiny/tiny-engine-http'
-import { isDevelopEnv } from '@opentiny/tiny-engine-controller/js/environments'
+import { isDevelopEnv } from '@opentiny/tiny-engine-common/js/environments'
 
 const http = useHttp()
 
@@ -145,7 +146,7 @@ const tipBoxVisibility = ref(false)
 let tipText = ref('发布成功')
 const form = ref(null)
 const menus = ref(
-  getGlobalConfig()?.dslMode === 'Angular' ? [] : [{ name: '应用发布', code: 'publishApp', icon: 'news' }]
+  getMergeMeta('engine.config')?.dslMode === 'Angular' ? [] : [{ name: '应用发布', code: 'publishApp', icon: 'news' }]
 )
 
 const repalceTrim = (e) => {
