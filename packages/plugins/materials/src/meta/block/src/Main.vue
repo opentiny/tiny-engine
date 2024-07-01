@@ -16,7 +16,7 @@
 import { onMounted, reactive, watch, provide, computed } from 'vue'
 import { Search } from '@opentiny/vue'
 import { iconSearch } from '@opentiny/vue-icon'
-import { useApp, useBlock, useModal, useResource } from '@opentiny/tiny-engine-meta-register'
+import { useApp, useBlock, useMaterial, useModal } from '@opentiny/tiny-engine-meta-register'
 import BlockGroup from './BlockGroup.vue'
 import BlockList from './BlockList.vue'
 import BlockGroupPanel from './BlockGroupPanel.vue'
@@ -40,7 +40,7 @@ export default {
   },
   setup(props) {
     const { addDefaultGroup, isDefaultGroupId, isAllGroupId, isRefresh, selectedGroup } = useBlock()
-    const { resState } = useResource()
+    const { materialState } = useMaterial()
     const { message } = useModal()
     const appId = useApp().appInfoState.selectedId
 
@@ -81,14 +81,14 @@ export default {
       // 设计器默认区块分组的数据从bundle.json取，其他用户自定义分组调接口向数据库查询
       const groupId = selectedGroup.value.groupId
       if (isDefaultGroupId(groupId)) {
-        const blocks = resState.blocks[0]?.children || []
+        const blocks = materialState.blocks[0]?.children || []
         state.groupData = value ? blocks.filter((item) => new RegExp(value, 'i').test(item?.label)) : blocks
         state.groupData.forEach((block) => {
           block.isDefaultGroup = true
         })
       } else if (isAllGroupId(groupId)) {
         const groupIds = state.groups.map((item) => item.value.groupId).filter((id) => typeof id === 'number')
-        const innerBlocks = resState.blocks[0]?.children || []
+        const innerBlocks = materialState.blocks[0]?.children || []
         innerBlocks.forEach((item) => {
           item.isDefaultGroup = true
           item.groupName = '设计器默认区块分组'
