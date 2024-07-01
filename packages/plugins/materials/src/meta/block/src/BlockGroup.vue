@@ -149,11 +149,11 @@ import {
   Popover
 } from '@opentiny/vue'
 import { iconYes, iconClose, iconError } from '@opentiny/vue-icon'
-import { useApp, useBlock, useModal } from '@opentiny/tiny-engine-controller'
+import { useApp, useBlock, useModal } from '@opentiny/tiny-engine-meta-register'
 import { SvgButton } from '@opentiny/tiny-engine-common'
 import { requestCreateGroup, requestDeleteGroup, fetchGroups, requestUpdateGroup } from './http'
 import { setBlockPanelVisible } from './js/usePanel'
-import { REGEXP_GROUP_NAME } from '@opentiny/tiny-engine-controller/js/verification'
+import { REGEXP_GROUP_NAME } from '@opentiny/tiny-engine-common/js/verification'
 
 export default {
   components: {

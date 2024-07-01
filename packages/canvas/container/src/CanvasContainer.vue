@@ -29,8 +29,8 @@
 
 <script>
 import { onMounted, ref, computed, onUnmounted } from 'vue'
-import { iframeMonitoring } from '@opentiny/tiny-engine-controller/js/monitor'
-import { useTranslate, useCanvas, useResource } from '@opentiny/tiny-engine-controller'
+import { iframeMonitoring } from '@opentiny/tiny-engine-common/js/monitor'
+import { useTranslate, useCanvas, useResource } from '@opentiny/tiny-engine-meta-register'
 import { NODE_UID, NODE_LOOP } from '../../common'
 import { registerHostkeyEvent, removeHostkeyEvent } from './keyboard'
 import CanvasMenu, { closeMenu, openMenu } from './components/CanvasMenu.vue'

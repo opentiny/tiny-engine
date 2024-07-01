@@ -104,7 +104,7 @@ import {
   DropdownMenu as TinyDropdownMenu,
   DropdownItem as TinyDropdownItem
 } from '@opentiny/vue'
-import { useCanvas, useHistory, usePage, useModal } from '@opentiny/tiny-engine-controller'
+import { useCanvas, useHistory, usePage, useModal } from '@opentiny/tiny-engine-meta-register'
 import { iconChevronDown } from '@opentiny/vue-icon'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { useHttp } from '@opentiny/tiny-engine-http'

@@ -22,7 +22,7 @@ import {
   clearHover,
   hoverState
 } from './container'
-import { useHistory } from '@opentiny/tiny-engine-controller'
+import { useHistory } from '@opentiny/tiny-engine-meta-register'
 import { copyObject } from '../../common'
 import { getClipboardSchema, setClipboardSchema } from './utils'
 

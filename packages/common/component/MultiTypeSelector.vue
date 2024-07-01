@@ -12,7 +12,7 @@
           <slot name="prefix"></slot>
           <div class="component-wrap">
             <component
-              :is="MetaComponents[meta.widget.component?.[index]]"
+              :is="getConfigurator(meta.widget.component?.[index])"
               v-bind="meta.widget.props"
               v-model="state.typesValue[index].modelValue"
               :meta="meta"
@@ -29,7 +29,7 @@
 <script>
 import { reactive } from 'vue'
 import { Tooltip, Popover, Radio, RadioGroup } from '@opentiny/vue'
-import { MetaComponents } from '../index'
+import { getConfigurator } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   name: 'MultiTypeSelector',
@@ -113,7 +113,7 @@ export default {
       TYPE_MAP,
       change,
       handleChange,
-      MetaComponents
+      getConfigurator
     }
   }
 }

@@ -12,7 +12,7 @@
 
 import { getController } from '../render'
 import { api } from '../RenderMain'
-import { useModal } from '@opentiny/tiny-engine-controller'
+import { useModal } from '@opentiny/tiny-engine-meta-register'
 
 const NAME_PREFIX = {
   loop: 'loop',

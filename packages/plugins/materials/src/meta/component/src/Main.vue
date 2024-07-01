@@ -34,7 +34,7 @@ import { inject, onMounted, reactive, ref } from 'vue'
 import { Collapse, CollapseItem, Search } from '@opentiny/vue'
 import { SearchEmpty } from '@opentiny/tiny-engine-common'
 import { iconSearch } from '@opentiny/vue-icon'
-import { useResource, useCanvas } from '@opentiny/tiny-engine-controller'
+import { useResource, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { CanvasDragItem } from '@opentiny/tiny-engine-canvas'
 
 export default {

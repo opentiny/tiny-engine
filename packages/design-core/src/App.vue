@@ -12,7 +12,7 @@ import {
   useNotify,
   useResource,
   useCanvas
-} from '@opentiny/tiny-engine-entry'
+} from '@opentiny/tiny-engine-meta-register'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
 import { useBroadcastChannel } from '@vueuse/core'
 import { constants } from '@opentiny/tiny-engine-utils'

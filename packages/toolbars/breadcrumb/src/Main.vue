@@ -18,7 +18,7 @@
 <script>
 import { reactive, computed } from 'vue'
 import { Breadcrumb, BreadcrumbItem, Button } from '@opentiny/vue'
-import { useBreadcrumb } from '@opentiny/tiny-engine-controller'
+import { useBreadcrumb } from '@opentiny/tiny-engine-meta-register'
 import { BlockDeployDialog } from '@opentiny/tiny-engine-common'
 export default {
   components: {

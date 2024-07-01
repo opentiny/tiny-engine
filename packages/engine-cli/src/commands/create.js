@@ -15,8 +15,18 @@ import path from 'node:path'
 import fs from 'fs-extra'
 import chalk from 'chalk'
 
-export default function (name) {
+export function createPlatform(name) {
   const sourcePath = path.join(__dirname, '../template/designer/')
+  const destPath = path.join(cwd(), name)
+  fs.copySync(sourcePath, destPath)
+  // eslint-disable-next-line no-console
+  console.log(
+    chalk.green(`create finish, run the follow command to start project: \ncd ${name} && npm install && npm run dev`)
+  )
+}
+
+export function createPlugin(name) {
+  const sourcePath = path.join(__dirname, '../template/plugin/')
   const destPath = path.join(cwd(), name)
   fs.copySync(sourcePath, destPath)
   // eslint-disable-next-line no-console

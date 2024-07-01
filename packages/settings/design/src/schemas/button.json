@@ -36,7 +36,7 @@
             "readOnly": false,
             "disabled": false,
             "widget": {
-              "component": "MetaBindI18n",
+              "component": "I18nConfigurator",
               "props": {}
             },
             "description": {
@@ -105,7 +105,7 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "MetaSelect",
+              "component": "SelectConfigurator",
               "props": {
                 "options": [
                   {

@@ -10,7 +10,7 @@
 </template>
 
 <script lang="jsx">
-import { useApp, useModal } from '@opentiny/tiny-engine-controller'
+import { useApp, useModal } from '@opentiny/tiny-engine-meta-register'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { Option, Select, Tooltip } from '@opentiny/vue'
 import { IconConmentRefresh } from '@opentiny/vue-icon'

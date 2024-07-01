@@ -39,32 +39,32 @@
     <div class="advnce-config">
       <label class="text-ellipsis-multiple">迭代变量名</label>
       <div class="advanced-config-form-item">
-        <meta-input
+        <input-configurator
           v-model="state.loopItem"
           :placeholder="`默认值为：${DEFAULT_LOOP_NAME.ITEM}`"
           @update:modelValue="setLoopItem"
-        ></meta-input>
+        ></input-configurator>
       </div>
     </div>
     <div class="advnce-config">
       <label class="text-ellipsis-multiple">索引变量名</label>
       <div class="advanced-config-form-item">
-        <meta-input
+        <input-configurator
           v-model="state.loopIndex"
           :placeholder="`默认值为：${DEFAULT_LOOP_NAME.INDEX}`"
           @update:modelValue="setLoopIndex"
-        ></meta-input>
+        ></input-configurator>
       </div>
     </div>
     <div class="advnce-config">
       <label class="text-ellipsis-multiple">key</label>
       <div class="advanced-config-form-item">
         <tiny-tooltip content="建议填写循环项中的唯一值（如item.id），如果填写为数字将不保存">
-          <meta-input
+          <input-configurator
             v-model="state.loopKey"
             :placeholder="`默认为索引名：${getIndexName()}`"
             @update:modelValue="setLoopKey"
-          ></meta-input>
+          ></input-configurator>
         </tiny-tooltip>
       </div>
     </div>
@@ -73,10 +73,14 @@
 
 <script>
 import { ref, computed, reactive, watch } from 'vue'
-import { MetaInput } from '@opentiny/tiny-engine-common'
-import { CodeConfigurator, SwitchConfigurator, VariableConfigurator } from '@opentiny/tiny-engine-configurator'
-import { useProperties, useCanvas } from '@opentiny/tiny-engine-controller'
-import { PROP_DATA_TYPE } from '@opentiny/tiny-engine-controller/js/constants'
+import {
+  CodeConfigurator,
+  InputConfigurator,
+  SwitchConfigurator,
+  VariableConfigurator
+} from '@opentiny/tiny-engine-configurator'
+import { useProperties, useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { PROP_DATA_TYPE } from '@opentiny/tiny-engine-common/js/constants'
 import { constants, utils } from '@opentiny/tiny-engine-utils'
 import { Tooltip } from '@opentiny/vue'
 
@@ -88,7 +92,7 @@ export default {
     SwitchConfigurator,
     TinyTooltip: Tooltip,
     VariableConfigurator,
-    MetaInput,
+    InputConfigurator,
     CodeConfigurator
   },
   inheritAttrs: false,

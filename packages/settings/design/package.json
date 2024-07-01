@@ -26,7 +26,7 @@
   "dependencies": {
     "@opentiny/tiny-engine-configurator": "workspace:*",
     "@opentiny/tiny-engine-common": "workspace:*",
-    "@opentiny/tiny-engine-controller": "workspace:*",
+    "@opentiny/tiny-engine-meta-register": "workspace:*",
     "sortablejs": "^1.14.0"
   },
   "devDependencies": {

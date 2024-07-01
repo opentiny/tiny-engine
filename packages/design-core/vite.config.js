@@ -52,7 +52,7 @@ export default defineConfig({
           }
         }
       },
-      external: ['vue', 'monaco-editor', 'prettier', /@opentiny\/vue.*/, '@opentiny/tiny-engine-entry']
+      external: ['vue', 'monaco-editor', 'prettier', /@opentiny\/vue.*/, '@opentiny/tiny-engine-meta-register']
     }
   }
 })

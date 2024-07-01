@@ -25,11 +25,13 @@
     "vue": "^3.4.15"
   },
   "dependencies": {
-    "@opentiny/tiny-engine-controller": "workspace:*",
+    "@opentiny/tiny-engine-common": "workspace:*",
+    "@opentiny/tiny-engine-meta-register": "workspace:*",
     "@opentiny/tiny-engine-http": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
     "@vue/shared": "^3.3.4",
-    "monaco-editor": "0.33.0"
+    "monaco-editor": "0.33.0",
+    "vue-draggable-next": "2.1.0"
   },
   "publishConfig": {
     "access": "public"

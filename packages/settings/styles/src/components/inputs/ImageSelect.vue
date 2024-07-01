@@ -21,7 +21,7 @@
 <script>
 import { toRefs, reactive } from 'vue'
 import { Input, FileUpload } from '@opentiny/vue'
-import { useProperties } from '@opentiny/tiny-engine-controller'
+import { useProperties } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {

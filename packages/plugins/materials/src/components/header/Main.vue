@@ -10,7 +10,7 @@
 
 <script>
 import { SvgButton } from '@opentiny/tiny-engine-common'
-import { useLayout } from '@opentiny/tiny-engine-controller'
+import { useLayout } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {

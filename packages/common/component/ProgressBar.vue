@@ -14,7 +14,7 @@
 <script>
 import { computed } from 'vue'
 import { Progress as TinyProgress } from '@opentiny/vue'
-import { useLayout } from '@opentiny/tiny-engine-controller'
+import { useLayout } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {

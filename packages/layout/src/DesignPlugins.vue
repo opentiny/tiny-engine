@@ -74,7 +74,7 @@
 <script>
 import { reactive, ref, watch } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
-import { useLayout, usePage } from '@opentiny/tiny-engine-entry'
+import { useLayout, usePage } from '@opentiny/tiny-engine-meta-register'
 import { PublicIcon } from '@opentiny/tiny-engine-common'
 
 export default {

@@ -22,7 +22,7 @@
 import DataHandlerEditor from './RemoteDataAdapterForm.vue'
 import { watch, ref, nextTick, reactive } from 'vue'
 import { requestGlobalDataHandler } from './js/http'
-import { useApp, useModal, useResource } from '@opentiny/tiny-engine-controller'
+import { useApp, useModal, useResource } from '@opentiny/tiny-engine-meta-register'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
 import { Collapse, CollapseItem } from '@opentiny/vue'
 import { constants } from '@opentiny/tiny-engine-utils'

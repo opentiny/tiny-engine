@@ -27,7 +27,7 @@
 
 <script>
 import { reactive } from 'vue'
-import { useLayout, getMergeRegistry } from '@opentiny/tiny-engine-entry'
+import { useLayout, getMergeRegistry } from '@opentiny/tiny-engine-meta-register'
 import AppManage from '@opentiny/tiny-engine-plugin-page'
 import DesignToolbars from './DesignToolbars.vue'
 import DesignPlugins from './DesignPlugins.vue'

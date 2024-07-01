@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { useLayout } from '@opentiny/tiny-engine-entry'
+import { useLayout } from '@opentiny/tiny-engine-meta-register'
 import { Search } from '@opentiny/vue'
 import { iconYes } from '@opentiny/vue-icon'
 import { inject, ref, watchEffect } from 'vue'

@@ -20,11 +20,12 @@ import {
   useTranslate,
   useApp,
   useLayout,
-  useNotify
-} from '@opentiny/tiny-engine-controller'
-import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
-import { getCanvasStatus } from '@opentiny/tiny-engine-controller/js/canvas'
-import { useHistory, useResource } from '@opentiny/tiny-engine-controller'
+  useNotify,
+  useHistory,
+  useResource
+} from '@opentiny/tiny-engine-meta-register'
+import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
+import { getCanvasStatus } from '@opentiny/tiny-engine-common/js/canvas'
 import html2canvas from 'html2canvas'
 
 import {
@@ -43,7 +44,7 @@ import {
   deleteCategory
 } from './http'
 import { constants, utils } from '@opentiny/tiny-engine-utils'
-import { generateBlock } from '@opentiny/tiny-engine-controller/js/vscodeGenerateFile'
+import { generateBlock } from '@opentiny/tiny-engine-common/js/vscodeGenerateFile'
 
 const { HOST_TYPE } = constants
 const { getBlockList, setBlockList, setCategoryList, getCurrentBlock, addBlockEvent, addBlockProperty } = useBlock()
@@ -94,24 +95,29 @@ export const META_TYPES_OPTIONS = Object.entries(META_TYPES).map(([key, value]) 
 
 // 组件的枚举
 export const META_COMPONENTS_ENUM = {
-  MetaCodeEditor: 'MetaCodeEditor',
-  MetaArrayItem: 'MetaArrayItem',
-  MetaInput: 'MetaInput',
-  MetaSelect: 'MetaSelect',
-  MetaBindI18n: 'MetaBindI18n',
-  MetaNumber: 'MetaNumber',
-  MetaJsSlot: 'MetaJsSlot',
+  CodeConfigurator: 'CodeConfigurator',
+  ArrayItemConfigurator: 'ArrayItemConfigurator',
+  InputConfigurator: 'InputConfigurator',
+  SelectConfigurator: 'SelectConfigurator',
+  I18nConfigurator: 'I18nConfigurator',
+  NumberConfigurator: 'NumberConfigurator',
+  JsSlotConfigurator: 'JsSlotConfigurator',
   SwitchConfigurator: 'SwitchConfigurator'
 }
 
 // 每个值类型可选的编辑器类型
 export const META_COMPONENT_LIST = {
-  [META_TYPES.array]: ['MetaCodeEditor', 'MetaArrayItem', 'MetaRelatedColumns', 'MetaRelatedEditor'],
-  [META_TYPES.string]: ['MetaInput', 'MetaSelect', 'MetaBindI18n'],
-  [META_TYPES.number]: ['MetaNumber'],
-  [META_TYPES.object]: ['MetaCodeEditor', 'MetaJsSlot'],
+  [META_TYPES.array]: [
+    'CodeConfigurator',
+    'ArrayItemConfigurator',
+    'RelatedColumnsConfigurator',
+    'RelatedEditorConfigurator'
+  ],
+  [META_TYPES.string]: ['InputConfigurator', 'SelectConfigurator', 'I18nConfigurator'],
+  [META_TYPES.number]: ['NumberConfigurator'],
+  [META_TYPES.object]: ['CodeConfigurator', 'JsSlotConfigurator'],
   [META_TYPES.boolean]: ['SwitchConfigurator'],
-  [META_TYPES.function]: ['MetaCodeEditor']
+  [META_TYPES.function]: ['CodeConfigurator']
 }
 
 // 数组类型 item 的配置
@@ -127,7 +133,7 @@ export const DEFAULT_ARRAY_CONFIG = [
     },
     labelPosition: 'top',
     widget: {
-      component: 'MetaInput',
+      component: 'InputConfigurator',
       props: {
         modelValue: ''
       }
@@ -144,7 +150,7 @@ export const DEFAULT_ARRAY_CONFIG = [
     },
     labelPosition: 'top',
     widget: {
-      component: 'MetaSelect',
+      component: 'SelectConfigurator',
       props: {
         options: META_TYPES_OPTIONS,
         modelValue: ''
@@ -154,7 +160,7 @@ export const DEFAULT_ARRAY_CONFIG = [
   {
     property: 'component',
     type: META_TYPES.string,
-    defaultValue: 'MetaInput',
+    defaultValue: 'InputConfigurator',
     label: {
       text: {
         zh_CN: '设计器'
@@ -162,10 +168,10 @@ export const DEFAULT_ARRAY_CONFIG = [
     },
     labelPosition: 'top',
     widget: {
-      component: 'MetaSelect',
+      component: 'SelectConfigurator',
       props: {
         options: META_COMPONENT_LIST[META_TYPES.string],
-        modelValue: 'MetaInput'
+        modelValue: 'InputConfigurator'
       }
     }
   },
@@ -180,7 +186,7 @@ export const DEFAULT_ARRAY_CONFIG = [
     },
     labelPosition: 'top',
     widget: {
-      component: 'MetaCodeEditor',
+      component: 'CodeConfigurator',
       props: {
         modelValue: '{}',
         language: 'json'
@@ -198,7 +204,7 @@ export const DEFAULT_ARRAY_CONFIG = [
     },
     labelPosition: 'top',
     widget: {
-      component: 'MetaCodeEditor',
+      component: 'CodeConfigurator',
       props: {
         modelValue: ''
       }
@@ -215,7 +221,7 @@ export const DEFAULT_ARRAY_CONFIG = [
     },
     labelPosition: 'top',
     widget: {
-      component: 'MetaInput',
+      component: 'InputConfigurator',
       props: {
         modelValue: ''
       }
@@ -235,12 +241,12 @@ export const META_DEFAULT_VALUE = {
 
 // 区块暴露属性和事件各类型对应的默认编辑器
 export const META_COMPONENTS = {
-  [META_TYPES.array]: 'MetaCodeEditor',
-  [META_TYPES.string]: 'MetaInput',
-  [META_TYPES.number]: 'MetaNumber',
-  [META_TYPES.object]: 'MetaCodeEditor',
+  [META_TYPES.array]: 'CodeConfigurator',
+  [META_TYPES.string]: 'InputConfigurator',
+  [META_TYPES.number]: 'NumberConfigurator',
+  [META_TYPES.object]: 'CodeConfigurator',
   [META_TYPES.boolean]: 'SwitchConfigurator',
-  [META_TYPES.function]: 'MetaCodeEditor'
+  [META_TYPES.function]: 'CodeConfigurator'
 }
 
 // 区块默认的属性schema
@@ -322,7 +328,7 @@ export const setEditProperty = (property) => {
   state.property = property
 
   state.arrayConfig = (property?.properties?.[0]?.content || []).map(
-    ({ property, type, defaultValue, label, widget: { props = {}, component = 'MetaInput' } = {} }) => ({
+    ({ property, type, defaultValue, label, widget: { props = {}, component = 'InputConfigurator' } = {} }) => ({
       property,
       type,
       defaultValue,
