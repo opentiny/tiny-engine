@@ -17,6 +17,7 @@ import { meta as BuiltinComponentMaterials } from '@opentiny/tiny-engine-builtin
 import { getCanvasStatus } from '@opentiny/tiny-engine-common/js/canvas'
 import {
   getMergeMeta,
+  getOptions,
   useNotify,
   useApp,
   useCanvas,
@@ -26,6 +27,7 @@ import {
   useLayout,
   useBlock
 } from '@opentiny/tiny-engine-meta-register'
+import meta from '../../meta'
 
 const { camelize, capitalize } = utils
 const { MATERIAL_TYPE, COMPONENT_NAME, DEFAULT_INTERCEPTOR } = constants
@@ -73,11 +75,23 @@ const generateNode = ({ type, component }) => {
   return schema
 }
 
-const registerComponent = (data, baseProps) => {
+const getBasePropsFromOptions = () => {
+  const baseProperties = getOptions(meta.id).baseProperties
+
+  if (Array.isArray(baseProperties)) {
+    return baseProperties
+  }
+
+  return []
+}
+
+const registerComponent = (data) => {
   const propertiesContent = data.schema?.properties?.[0]?.content
 
+  const baseProps = getBasePropsFromOptions()
+
   if (Array.isArray(propertiesContent)) {
-    for (const prop of (baseProps || []).slice().reverse()) {
+    for (const prop of baseProps.slice().reverse()) {
       if (!propertiesContent.some(({ property }) => property === prop.property)) {
         propertiesContent.unshift(JSON.parse(JSON.stringify(prop)))
       }
@@ -212,7 +226,7 @@ const generateThirdPartyDeps = (components) => {
 const addMaterials = (materials = {}) => {
   generateThirdPartyDeps(materials.components)
   resState.components.push(...materials.snippets)
-  materials.components.map((item) => registerComponent(item, materials.baseProperties))
+  materials.components.map(registerComponent)
 
   const promises = materials?.blocks?.map((item) => registerBlock(item, true))
   Promise.allSettled(promises).then((blocks) => {
@@ -384,12 +398,8 @@ const fetchResource = async ({ isInit = true } = {}) => {
   useApp().appInfoState.selectedId = id
 
   const { Builtin } = useCanvas().canvasApi.value
-  Builtin.data.materials.components[0].children.map((item) =>
-    registerComponent(item, Builtin.data.materials.baseProperties)
-  )
-  BuiltinComponentMaterials.components[0].children.map((item) =>
-    registerComponent(item, BuiltinComponentMaterials.baseProperties)
-  )
+  Builtin.data.materials.components[0].children.map(registerComponent)
+  BuiltinComponentMaterials.components[0].children.map(registerComponent)
 
   const builtinSnippets = {
     group: '内置组件',
