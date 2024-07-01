@@ -106,7 +106,7 @@ import { typeOf } from '@opentiny/vue-renderless/common/type'
 import {
   useHistory,
   useProperties,
-  useResource,
+  useMaterial,
   useLayout,
   useCanvas,
   getConfigurator
@@ -261,7 +261,7 @@ export default {
         const currentComponent = useProperties().getSchema().componentName
         const {
           schema: { events = {} }
-        } = useResource().getMaterial(currentComponent)
+        } = useMaterial().getMaterial(currentComponent)
 
         if (Object.keys(events).includes(`onUpdate:${property}`)) {
           // 默认情况下，v-model 在组件上都是使用 modelValue 作为 prop，并以 update:modelValue 作为对应的事件。

@@ -17,7 +17,7 @@
 
 <script lang="jsx">
 import { computed, inject, reactive, ref } from 'vue'
-import { useBlock, useResource, useModal, useApp, useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { useBlock, useMaterial, useModal, useApp, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { PluginBlockList } from '@opentiny/tiny-engine-common'
 import { requestUpdateGroup, fetchGroupBlocksById } from './http'
 import { setBlockPanelVisible, setBlockVersionPanelVisible } from './js/usePanel'
@@ -49,7 +49,7 @@ export default {
   },
   emits: ['check', 'close'],
   setup(props, { emit }) {
-    const { generateNode, registerBlock } = useResource()
+    const { generateNode, registerBlock } = useMaterial()
     const { isDefaultGroupId, isAllGroupId, selectedBlock, selectedGroup, isRefresh, getBlockAssetsByVersion } =
       useBlock()
     const blockRef = ref(null)

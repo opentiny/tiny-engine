@@ -4,11 +4,11 @@
 
 <script setup>
 import { nextTick } from 'vue'
-import { useProperties, useResource, useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { useProperties, useMaterial, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import ArrayItemConfigurator from '../array-item-configurator/ArrayItemConfigurator.vue'
 
 const { children: schemaChildren, componentName, props } = useProperties().getSchema()
-const configureMap = useResource().getConfigureMap()
+const configureMap = useMaterial().getConfigureMap()
 const childComponentName =
   configureMap[componentName]?.nestingRule?.childWhitelist?.[0] || schemaChildren?.[0]?.componentName
 

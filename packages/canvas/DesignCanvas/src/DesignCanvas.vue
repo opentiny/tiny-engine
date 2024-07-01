@@ -22,7 +22,7 @@ import {
   useProperties,
   useCanvas,
   useLayout,
-  useResource,
+  useMaterial,
   useHistory,
   useModal
 } from '@opentiny/tiny-engine-meta-register'
@@ -170,9 +170,9 @@ export default {
       showMask,
       controller: {
         // 需要在canvas/render或内置组件里使用的方法
-        getMaterial: useResource().getMaterial,
+        getMaterial: useMaterial().getMaterial,
         addHistory: useHistory().addHistory,
-        registerBlock: useResource().registerBlock,
+        registerBlock: useMaterial().registerBlock,
         request: useHttp(),
         ast
       },
