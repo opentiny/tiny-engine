@@ -128,7 +128,7 @@ import {
   dragStart,
   getCurrentElement
 } from '../container'
-import { useLayout, useMaterial } from '@opentiny/tiny-engine-controller'
+import { useLayout, useMaterial } from '@opentiny/tiny-engine-meta-register'
 import { Popover } from '@opentiny/vue'
 import shortCutPopover from './shortCutPopover.vue'
 

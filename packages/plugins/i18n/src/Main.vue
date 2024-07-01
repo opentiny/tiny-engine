@@ -124,11 +124,11 @@ import useClipboard from 'vue-clipboard3'
 import { Grid, GridColumn, Input, Popover, Button, FileUpload, Loading, Tooltip, Select } from '@opentiny/vue'
 import { iconLoadingShadow } from '@opentiny/vue-icon'
 import { PluginPanel, LinkButton, SearchEmpty } from '@opentiny/tiny-engine-common'
-import { useTranslate, useApp, useModal, useHelp } from '@opentiny/tiny-engine-controller'
-import { getMergeMeta } from '@opentiny/tiny-engine-entry'
+import { useTranslate, useApp, useModal, useHelp } from '@opentiny/tiny-engine-meta-register'
+import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { useHttp } from '@opentiny/tiny-engine-http'
-import { BASE_URL } from '@opentiny/tiny-engine-controller/js/environments'
+import { BASE_URL } from '@opentiny/tiny-engine-common/js/environments'
 
 export default {
   components: {

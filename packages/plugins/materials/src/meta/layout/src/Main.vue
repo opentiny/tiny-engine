@@ -18,7 +18,7 @@
 <script>
 import { reactive, provide, ref } from 'vue'
 import { Tabs, TabItem } from '@opentiny/vue'
-import { getMergeMeta } from '@opentiny/tiny-engine-entry'
+import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { PluginPanel } from '@opentiny/tiny-engine-common'
 
 export default {

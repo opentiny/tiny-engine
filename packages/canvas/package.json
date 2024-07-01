@@ -27,9 +27,9 @@
   "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
     "@babel/core": "7.18.13",
+    "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-builtin-component": "workspace:*",
-    "@opentiny/tiny-engine-controller": "workspace:*",
-    "@opentiny/tiny-engine-entry": "workspace:*",
+    "@opentiny/tiny-engine-meta-register": "workspace:*",
     "@opentiny/tiny-engine-i18n-host": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
     "@opentiny/tiny-engine-webcomponent-core": "workspace:*",

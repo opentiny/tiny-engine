@@ -30,7 +30,7 @@
 
 <script>
 import { computed, ref } from 'vue'
-import { useMaterial, useProperties, useCanvas, useProperty } from '@opentiny/tiny-engine-controller'
+import { useMaterial, useProperties, useCanvas, useProperty } from '@opentiny/tiny-engine-meta-register'
 import { iconSetting, iconClose } from '@opentiny/vue-icon'
 
 export default {

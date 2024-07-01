@@ -16,7 +16,7 @@
 import { onMounted, reactive, watch, provide, computed } from 'vue'
 import { Search } from '@opentiny/vue'
 import { iconSearch } from '@opentiny/vue-icon'
-import { useApp, useBlock, useMaterial, useModal } from '@opentiny/tiny-engine-controller'
+import { useApp, useBlock, useMaterial, useModal } from '@opentiny/tiny-engine-meta-register'
 import BlockGroup from './BlockGroup.vue'
 import BlockList from './BlockList.vue'
 import BlockGroupPanel from './BlockGroupPanel.vue'

@@ -57,7 +57,7 @@ import DataSourceForm, { open as openDataSourceForm, close as closeDataSourceFor
 import { close as closeRecordList } from './DataSourceRecordList.vue'
 import { close as closeRecordForm } from './DataSourceRecordForm.vue'
 import DataSourceRemoteMapping, { isOpen as isOpenSourceRemoteMapping } from './DataSourceRemoteMapping.vue'
-import { useDataSource, useHelp } from '@opentiny/tiny-engine-controller'
+import { useDataSource, useHelp } from '@opentiny/tiny-engine-meta-register'
 import { requestUpdateDataSource } from './js/http'
 import DataSourceGlobalDataHandler, {
   open as openGlobalDataHander,

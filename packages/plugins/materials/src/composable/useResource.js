@@ -13,7 +13,7 @@
 import { reactive } from 'vue'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { getCanvasStatus } from '@opentiny/tiny-engine-controller/js/canvas'
+import { getCanvasStatus } from '@opentiny/tiny-engine-common/js/canvas'
 import {
   useApp,
   useCanvas,
@@ -23,7 +23,7 @@ import {
   useLayout,
   useBlock,
   useMaterial
-} from '@opentiny/tiny-engine-entry'
+} from '@opentiny/tiny-engine-meta-register'
 
 const { COMPONENT_NAME, DEFAULT_INTERCEPTOR } = constants
 

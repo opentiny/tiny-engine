@@ -40,7 +40,7 @@ import { reactive, ref, computed } from 'vue'
 import { Button, Popover, Tooltip } from '@opentiny/vue'
 import { iconClose } from '@opentiny/vue-icon'
 import { BindI18n } from '@opentiny/tiny-engine-common'
-import { useTranslate } from '@opentiny/tiny-engine-controller'
+import { useTranslate } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {

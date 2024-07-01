@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { getPluginApi } from '@opentiny/tiny-engine-entry'
+import { getMetaApi } from '@opentiny/tiny-engine-meta-register'
 import { Steps } from '@opentiny/vue'
 
 export default {
@@ -23,7 +23,7 @@ export default {
   },
   emits: ['click'],
   setup() {
-    const { selectNode } = getPluginApi('engine.canvas').canvasApi.value
+    const { selectNode } = getMetaApi('engine.canvas').canvasApi.value
     const selectFooterNode = ({ node }) => {
       selectNode(node)
     }

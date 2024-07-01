@@ -31,7 +31,7 @@
 
 <script>
 import { Popover } from '@opentiny/vue'
-import { useHistory } from '@opentiny/tiny-engine-controller'
+import { useHistory } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {

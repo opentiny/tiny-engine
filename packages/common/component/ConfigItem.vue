@@ -103,12 +103,18 @@ import { inject, computed, watch, ref, reactive, provide } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
 import { IconWriting, IconHelpCircle, IconPlusCircle } from '@opentiny/vue-icon'
 import { typeOf } from '@opentiny/vue-renderless/common/type'
-import i18n from '@opentiny/tiny-engine-controller/js/i18n'
-import MultiTypeSelector from './MultiTypeSelector.vue'
-import { useHistory, useProperties, useMaterial, useLayout, useCanvas } from '@opentiny/tiny-engine-controller'
-import { SCHEMA_DATA_TYPE, PAGE_STATUS, TYPES } from '@opentiny/tiny-engine-controller/js/constants'
-import { getConfigurator } from '@opentiny/tiny-engine-entry'
+import {
+  useHistory,
+  useProperties,
+  useMaterial,
+  useLayout,
+  useCanvas,
+  getConfigurator
+} from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
+import i18n from '../js/i18n'
+import MultiTypeSelector from './MultiTypeSelector.vue'
+import { SCHEMA_DATA_TYPE, PAGE_STATUS, TYPES } from '../js/constants'
 
 const { parseFunction: generateFunction } = utils
 

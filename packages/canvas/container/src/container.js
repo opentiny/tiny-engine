@@ -19,8 +19,8 @@ import {
   NODE_TAG,
   NODE_LOOP
 } from '../../common'
-import { useCanvas, useLayout, useResource, useTranslate, useMaterial } from '@opentiny/tiny-engine-controller'
-import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
+import { useCanvas, useLayout, useResource, useTranslate, useMaterial } from '@opentiny/tiny-engine-meta-register'
+import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import Builtin from '../../render/src/builtin/builtin.json' //TODO 画布内外应该分开
 
 export const POSITION = Object.freeze({

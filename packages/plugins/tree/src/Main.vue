@@ -77,7 +77,7 @@ import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { IconChevronDown, iconEyeopen, iconEyeclose } from '@opentiny/vue-icon'
 // import Sortable from 'sortablejs'
-import { useCanvas, useMaterial, useLayout } from '@opentiny/tiny-engine-controller'
+import { useCanvas, useMaterial, useLayout } from '@opentiny/tiny-engine-meta-register'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { typeOf } from '@opentiny/vue-renderless/common/type'
 

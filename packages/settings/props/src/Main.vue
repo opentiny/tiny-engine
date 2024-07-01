@@ -11,7 +11,7 @@
 <script>
 import { computed, watchEffect, ref } from 'vue'
 import { ConfigRender, BlockDescription, BlockLinkField } from '@opentiny/tiny-engine-common'
-import { useCanvas, useProperty } from '@opentiny/tiny-engine-controller'
+import { useCanvas, useProperty } from '@opentiny/tiny-engine-meta-register'
 import Empty from './components/Empty.vue'
 
 export default {

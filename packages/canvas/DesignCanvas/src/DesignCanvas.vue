@@ -11,7 +11,7 @@
       ></component>
     </template>
     <template #footer>
-      <component :is="CanvasBreadcrumb" :data="footData" @click="selectFooterNode"></component>
+      <component :is="CanvasBreadcrumb" :data="footData"></component>
     </template>
   </component>
 </template>
@@ -25,13 +25,13 @@ import {
   useMaterial,
   useHistory,
   useModal
-} from '@opentiny/tiny-engine-controller'
+} from '@opentiny/tiny-engine-meta-register'
 import materials from '@opentiny/tiny-engine-plugin-materials'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { isVsCodeEnv, isDevelopEnv } from '@opentiny/tiny-engine-controller/js/environments'
-import * as ast from '@opentiny/tiny-engine-controller/js/ast'
-import { getMergeRegistry } from '@opentiny/tiny-engine-entry'
+import { isVsCodeEnv, isDevelopEnv } from '@opentiny/tiny-engine-common/js/environments'
+import * as ast from '@opentiny/tiny-engine-common/js/ast'
+import { getMergeRegistry } from '@opentiny/tiny-engine-meta-register'
 
 const { PAGE_STATUS } = constants
 const tenant = new URLSearchParams(location.search).get('tenant') || ''
@@ -184,22 +184,3 @@ export default {
   }
 }
 </script>
-
-<style lang="less" scoped>
-#canvas-wrap {
-  background: var(--ti-lowcode-canvas-wrap-bg);
-  flex: 1 1 0;
-  border: none;
-  display: flex;
-  justify-content: center;
-  position: relative;
-
-  .site-canvas {
-    background: var(--ti-lowcode-breadcrumb-hover-bg);
-    position: absolute;
-    overflow: hidden;
-    margin: 18px 0;
-    transform-origin: top;
-  }
-}
-</style>

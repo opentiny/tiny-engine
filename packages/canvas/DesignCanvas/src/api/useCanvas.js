@@ -13,7 +13,7 @@
 /* eslint-disable no-new-func */
 import { reactive, ref } from 'vue'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { useHistory } from '@opentiny/tiny-engine-entry'
+import { useHistory } from '@opentiny/tiny-engine-meta-register'
 
 const { COMPONENT_NAME } = constants
 

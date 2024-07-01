@@ -18,7 +18,7 @@
 
 <script>
 import { computed, reactive } from 'vue'
-import { useCanvas, useLayout, useBlock, useNotify } from '@opentiny/tiny-engine-controller'
+import { useCanvas, useLayout, useBlock, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { Popover } from '@opentiny/vue'
 import { requestBlockPage } from './http'

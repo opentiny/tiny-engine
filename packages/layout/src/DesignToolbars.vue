@@ -17,7 +17,7 @@
 
 <script>
 import { reactive, nextTick } from 'vue'
-import { useLayout } from '@opentiny/tiny-engine-controller'
+import { useLayout } from '@opentiny/tiny-engine-meta-register'
 import { ProgressBar } from '@opentiny/tiny-engine-common'
 
 export default {

@@ -11,8 +11,8 @@
  */
 
 import axios from 'axios'
-import { useResource } from '@opentiny/tiny-engine-controller'
-import { isMock } from '@opentiny/tiny-engine-controller/js/environments'
+import { useResource } from '@opentiny/tiny-engine-meta-register'
+import { isMock } from '@opentiny/tiny-engine-common/js/environments'
 import { utils as commonUtils, constants } from '@opentiny/tiny-engine-utils'
 import { read, utils, writeFileXLSX } from 'xlsx'
 

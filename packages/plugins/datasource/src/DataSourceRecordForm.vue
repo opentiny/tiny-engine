@@ -50,7 +50,7 @@ import { computed, reactive, ref, watch } from 'vue'
 import { Button, Input, Numeric, DatePicker, Form, FormItem, Switch, Slider } from '@opentiny/vue'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
 import { isEmptyObject } from '@opentiny/vue-renderless/common/type'
-import { useDataSource } from '@opentiny/tiny-engine-controller'
+import { useDataSource } from '@opentiny/tiny-engine-meta-register'
 import { extend } from '@opentiny/vue-renderless/common/object'
 
 const CONSTANCTS = {

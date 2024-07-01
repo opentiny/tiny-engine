@@ -19,7 +19,7 @@ export const BEFORE_CALLENTRY = 'beforeCallEntry'
 export const AFTER_CALLENTRY = 'afterCallEntry'
 export const USE_COMPILE = 'useCompile'
 export const METADATANAME = 'metaData'
-export const COMMON_PACKAGE_NAME = '@opentiny/tiny-engine-entry'
+export const COMMON_PACKAGE_NAME = '@opentiny/tiny-engine-meta-register'
 export const vueLifeHook = [
   'onMounted',
   'onUpdated',

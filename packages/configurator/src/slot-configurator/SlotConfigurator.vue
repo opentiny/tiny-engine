@@ -25,7 +25,7 @@
 <script>
 import { ref, watchEffect, nextTick } from 'vue'
 import { Popover } from '@opentiny/vue'
-import { useProperties, useModal, useCanvas, useMaterial } from '@opentiny/tiny-engine-controller'
+import { useProperties, useModal, useCanvas, useMaterial } from '@opentiny/tiny-engine-meta-register'
 import { iconHelpCircle } from '@opentiny/vue-icon'
 
 export default {

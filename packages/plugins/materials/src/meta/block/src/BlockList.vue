@@ -17,7 +17,7 @@
 
 <script lang="jsx">
 import { computed, inject, reactive, ref } from 'vue'
-import { useBlock, useMaterial, useModal, useApp, useCanvas } from '@opentiny/tiny-engine-controller'
+import { useBlock, useMaterial, useModal, useApp, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { PluginBlockList } from '@opentiny/tiny-engine-common'
 import { requestUpdateGroup, fetchGroupBlocksById } from './http'
 import { setBlockPanelVisible, setBlockVersionPanelVisible } from './js/usePanel'

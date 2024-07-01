@@ -21,7 +21,7 @@
 import { reactive, computed } from 'vue'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { Input as TinyInput, Popover as TinyPopover } from '@opentiny/vue'
-import { useLayout, useModal, useCanvas, useBlock, useHistory } from '@opentiny/tiny-engine-controller'
+import { useLayout, useModal, useCanvas, useBlock, useHistory } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {

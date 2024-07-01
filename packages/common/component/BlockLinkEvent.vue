@@ -20,7 +20,7 @@ import { reactive, computed } from 'vue'
 import { capitalize } from '@vue/shared'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { Input as TinyInput, Form as TinyForm, FormItem as TinyFormItem, Popover as TinyPopover } from '@opentiny/vue'
-import { useLayout, useModal, useCanvas, useBlock } from '@opentiny/tiny-engine-controller'
+import { useLayout, useModal, useCanvas, useBlock } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
