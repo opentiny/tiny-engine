@@ -160,7 +160,7 @@ const getProps = (schema, parent) => {
       schema: metaSchema,
       content,
       properties
-    } = useMaterial().getMaterial(isPageOrBlock(schema) ? 'div' : componentName)
+    } = useMaterial().getMaterial(isPageOrBlock(schema) ? 'div' : componentName) || {}
     const schemaProps = properties || metaSchema?.properties || content?.schema?.properties || []
     const propGroups = [...schemaProps]
 
