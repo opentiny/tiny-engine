@@ -14,7 +14,7 @@ import { reactive } from 'vue'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { utils, constants } from '@opentiny/tiny-engine-utils'
 import { meta as BuiltinComponentMaterials } from '@opentiny/tiny-engine-builtin-component'
-import { getMergeMeta, useNotify, useCanvas, useBlock } from '@opentiny/tiny-engine-entry'
+import { getMergeMeta, useNotify, useCanvas, useBlock } from '@opentiny/tiny-engine-meta-register'
 
 const { camelize, capitalize } = utils
 const { MATERIAL_TYPE } = constants
