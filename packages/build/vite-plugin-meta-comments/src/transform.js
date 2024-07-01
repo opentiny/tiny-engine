@@ -95,25 +95,26 @@ function handleExpressionStatement(state) {
     const { hooksName, varName, hooksIndex } = state
     const callName = path.node.expression?.callee?.name
     const hookName = hooksName[callName]
-    if (hookName) {
-      let hookIndex
-      if (hooksIndex[hookName]) {
-        hookIndex = hooksIndex[hookName]
-        hooksIndex[hookName] = hookIndex + 1
-      } else {
-        hooksIndex[hookName] = 1
-        hookIndex = 0
-      }
-      const functionName = `${hookName}[${hookIndex}]`
-      wrapHookCall({
-        path,
-        varName,
-        hooksName,
-        functionName,
-        callName,
-        state
-      })
+    if (!hookName) {
+      return
     }
+    let hookIndex
+    if (hooksIndex[hookName]) {
+      hookIndex = hooksIndex[hookName]
+      hooksIndex[hookName] = hookIndex + 1
+    } else {
+      hooksIndex[hookName] = 1
+      hookIndex = 0
+    }
+    const functionName = `${hookName}[${hookIndex}]`
+    wrapHookCall({
+      path,
+      varName,
+      hooksName,
+      functionName,
+      callName,
+      state
+    })
   }
 }
 
@@ -149,9 +150,12 @@ function handleProgram(state, metaPath) {
 function handleExportDefaultDeclaration(state) {
   return function (path) {
     const comment = path.node.leadingComments
-    const lastComment = comment && comment[comment.length - 1].value
+    if (!comment) {
+      return
+    }
+    const lastComment = comment[comment.length - 1].value
     // 只判断最接近export default的注释节点
-    if (comment && lastComment.includes('metaComponent')) {
+    if (lastComment.includes('metaComponent')) {
       wrapExportComp({ path, varName: state.varName })
       path.skip()
     }
