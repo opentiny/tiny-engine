@@ -11,11 +11,10 @@
 */
 
 import { getResponseData } from '../tool/Common'
-import sources from './sources.json'
+import sources from '../assets/json/sources.json'
 export default class soueceService {
   detail(id) {
     const sourceData = sources[id] || {}
     return getResponseData(sourceData)
   }
-  
 }
