@@ -6,14 +6,14 @@
 import { watch, onUnmounted } from 'vue'
 import {
   getMergeRegistry,
-  getPluginApi,
+  getMetaApi,
   useModal,
   useApp,
   useNotify,
   useResource,
   useCanvas
 } from '@opentiny/tiny-engine-meta-register'
-import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
+import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import { useBroadcastChannel } from '@vueuse/core'
 import { constants } from '@opentiny/tiny-engine-utils'
 
@@ -23,8 +23,8 @@ const { message } = useModal()
 export default {
   setup() {
     const registry = getMergeRegistry()
-    const materialsApi = getPluginApi('engine.plugins.materials')
-    const blockApi = getPluginApi('engine.plugins.blockmanage')
+    const materialsApi = getMetaApi('engine.plugins.materials')
+    const blockApi = getMetaApi('engine.plugins.blockmanage')
 
     // 此处接收画布内部的错误和警告提示
     const { data } = useBroadcastChannel({ name: BROADCAST_CHANNEL.Notify })
