@@ -35,6 +35,7 @@
     "@opentiny/tiny-engine-dsl-vue": "workspace:*",
     "@opentiny/tiny-engine-meta-register": "workspace:*",
     "@opentiny/tiny-engine-http": "workspace:*",
+    "@opentiny/tiny-engine-i18n-host": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
     "@vue/shared": "^3.3.4",
     "css-tree": "^2.3.1",
