@@ -54,6 +54,7 @@ export default defineConfig((options) => {
     '@opentiny/tiny-engine-toolbar-collaboration': path.resolve(__dirname, '../packages/toolbars/collaboration/index.js'),
     '@opentiny/tiny-engine-theme-dark': path.resolve(__dirname, '../packages/theme/dark/index.less'),
     '@opentiny/tiny-engine-theme-light': path.resolve(__dirname, '../packages/theme/light/index.less'),
+    '@opentiny/tiny-engine-theme-base': path.resolve(__dirname, '../packages/theme/base/index.js'),
     '@opentiny/tiny-engine-svgs': path.resolve(__dirname, '../packages/svgs/index.js'),
     '@opentiny/tiny-engine-http': path.resolve(__dirname, '../packages/http/src/index.js'),
     '@opentiny/tiny-engine-canvas': path.resolve(__dirname, '../packages/canvas/index.js'),
@@ -64,7 +65,6 @@ export default defineConfig((options) => {
     '@opentiny/tiny-engine-entry': path.resolve(__dirname, '../packages/entry/src/index.js'),
     '@opentiny/tiny-engine-layout': path.resolve(__dirname, '../packages/layout/index.js'),
     '@opentiny/tiny-engine-configurator': path.resolve(__dirname, '../packages/configurator/src/index.js'),
-    '@opentiny/tiny-engine-theme-base': path.resolve(__dirname, '../packages/theme/base/index.js'),
     '@opentiny/tiny-engine-theme': ['light', 'dark'].includes(extOptions.VITE_THEME)
     ? path.resolve(process.cwd(), `../packages/theme/${extOptions.VITE_THEME}/index.less`)
     // ? path.resolve(process.cwd(), `./node_modules/@opentiny/tiny-engine-theme-${extOptions.VITE_THEME}/dist/style.css`)
