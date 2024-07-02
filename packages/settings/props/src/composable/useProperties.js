@@ -12,7 +12,7 @@
 
 import { toRaw, nextTick, shallowReactive, ref } from 'vue'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { useCanvas, useResource, useTranslate } from '@opentiny/tiny-engine-meta-register'
+import { useCanvas, useMaterial, useTranslate } from '@opentiny/tiny-engine-meta-register'
 
 const { COMPONENT_NAME } = constants
 const propsUpdateKey = ref(0)
@@ -100,7 +100,7 @@ const getProps = (schema, parent) => {
       schema: metaSchema,
       content,
       properties
-    } = useResource().getMaterial(isPageOrBlock(schema) ? 'div' : componentName)
+    } = useMaterial().getMaterial(isPageOrBlock(schema) ? 'div' : componentName) || {}
     const schemaProps = properties || metaSchema?.properties || content?.schema?.properties || []
     const propGroups = [...schemaProps]
 

@@ -22,7 +22,7 @@ import {
   useLayout,
   useNotify,
   useHistory,
-  useResource
+  useMaterial
 } from '@opentiny/tiny-engine-meta-register'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import { getCanvasStatus } from '@opentiny/tiny-engine-common/js/canvas'
@@ -51,7 +51,7 @@ const { getBlockList, setBlockList, setCategoryList, getCurrentBlock, addBlockEv
 const { batchCreateI18n } = useTranslate()
 const { message, confirm } = useModal()
 const { setSaved } = useCanvas()
-const { getMaterial } = useResource()
+const { getMaterial } = useMaterial()
 
 const STRING_SLOT = ['Slot', 'slot']
 
