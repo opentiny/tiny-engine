@@ -24,11 +24,6 @@ export default defineConfig({
       name: 'theme-base',
       fileName: () => 'index.js',
       formats: ['es']
-    },
-    rollupOptions: {
-      output: {
-        banner: 'import "./style.css"'
-      }
     }
   }
 })
