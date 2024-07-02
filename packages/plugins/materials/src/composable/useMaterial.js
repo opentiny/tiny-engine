@@ -14,7 +14,8 @@ import { reactive } from 'vue'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { utils, constants } from '@opentiny/tiny-engine-utils'
 import { meta as BuiltinComponentMaterials } from '@opentiny/tiny-engine-builtin-component'
-import { getMergeMeta, useNotify, useCanvas, useBlock } from '@opentiny/tiny-engine-meta-register'
+import { getMergeMeta, getOptions, useNotify, useCanvas, useBlock } from '@opentiny/tiny-engine-meta-register'
+import meta from '../../meta'
 
 const { camelize, capitalize } = utils
 const { MATERIAL_TYPE } = constants
@@ -77,10 +78,31 @@ const getConfigureMap = () => {
 }
 
 /**
+ * 附加基础属性，基础属性会插入在数组头部
+ * @param {any[]} properties
+ * @returns
+ */
+const patchBaseProps = (properties) => {
+  if (!Array.isArray(properties)) {
+    return
+  }
+
+  const baseProps = getOptions(meta.id).baseProperties || []
+
+  for (const prop of baseProps.slice().reverse()) {
+    if (!properties.some(({ property }) => property === prop.property)) {
+      properties.unshift(JSON.parse(JSON.stringify(prop)))
+    }
+  }
+}
+
+/**
  * 将component里的内容注册到resource变量中
  * @param {*} data
  */
 const registerComponentToResource = (data) => {
+  patchBaseProps(data.schema?.properties?.[0]?.content)
+
   if (Array.isArray(data.component)) {
     const { component, ...others } = data
     component.forEach((item) => {
