@@ -104,6 +104,7 @@ export default {
   flex: 1;
   overflow-y: scroll;
   padding: 0;
+  margin: 0px;
   & > div {
     height: 100%;
   }

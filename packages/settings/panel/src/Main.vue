@@ -70,7 +70,7 @@ export default {
       flex: 1;
       overflow-y: scroll;
       padding: 0;
-      margin-top: 0;
+      margin: 0;
     }
     .tiny-tabs__item {
       color: var(--ti-lowcode-setting-panel-tabs-item-title-color);
