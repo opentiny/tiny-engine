@@ -17,7 +17,7 @@ import MaterialLayout from './src/meta/layout'
 import MaterialBlock from './src/meta/block'
 import MaterialComponent from './src/meta/component'
 import MaterialHeader from './src/components/header/Main.vue'
-import { baseProperties } from './src/base.json'
+import { baseProperties } from './src/js/options'
 
 export default {
   ...metaData,
