@@ -4,5 +4,6 @@ export default {
   title: 'fullscreen',
   icon: '',
   align: 'right',
-  collapsed: true
+  collapsed: true,
+  classifyLine: true
 }
