@@ -5,11 +5,15 @@
     popper-class="toolbar-right-popover"
     append-to-body
     content="刷新画布"
+    :disabled="true"
   >
     <template #reference>
-      <span class="icon" @click="refresh">
-        <svg-icon :name="icon"></svg-icon>
-      </span>
+      <div @click="refresh">
+        <span class="icon-hides">
+          <svg-icon :name="icon"></svg-icon>
+        </span>
+        <span class="operate-title">画布刷新</span>
+      </div>
     </template>
   </tiny-popover>
 </template>

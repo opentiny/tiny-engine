@@ -3,5 +3,6 @@ export default {
   type: 'toolbars',
   title: 'refresh',
   icon: '',
-  align: 'right'
+  align: 'right',
+  collapsed: true
 }

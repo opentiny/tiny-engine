@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg"
-    xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>操作/播放1</title>
-    <g id="操作/播放1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <circle id="椭圆形" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="6.5">
-        </circle>
-        <path
-            d="M10.138376,8.55150128 L7.18978679,10.166874 C6.89439465,10.3287034 6.52771748,10.2129487 6.3707904,9.90832866 C6.32430724,9.81809757 6.3,9.71748421 6.3,9.61531063 L6.3,6.38456522 C6.3,6.03962737 6.57115659,5.76 6.90564519,5.76 C7.00472361,5.76 7.10228908,5.78506659 7.18978679,5.83300186 L10.138376,7.44837456 C10.4337682,7.61020395 10.5460163,7.98833592 10.3890892,8.29295596 C10.3323995,8.40299956 10.2450861,8.49304062 10.138376,8.55150128 Z"
-            id="三角形" fill="currentColor"></path>
-    </g>
+<svg width="16.000000" height="16.000000" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<desc>
+			Created with Pixso.
+	</desc>
+	<defs/>
+	<mask id="mask413_9711" mask-type="alpha" maskUnits="userSpaceOnUse" x="0.000000" y="0.000000" width="16.000000" height="16.000000">
+		<rect id="开始-start" width="16.000000" height="16.000000" fill="#000000" fill-opacity="1.000000"/>
+	</mask>
+	<g mask="url(#mask413_9711)">
+		<path id="形状结合" d="M8 1C11.86 1 15 4.13 15 8C15 11.86 11.86 15 8 15C4.13 15 1 11.86 1 8C1 4.13 4.13 1 8 1ZM8 2C4.68 2 2 4.68 2 8C2 11.3 4.68 14 8 14C11.31 14 14 11.3 14 8C14 4.68 11.31 2 8 2ZM6.9 5.76C7 5.76 7.09 5.78 7.17 5.82L10.13 7.44C10.42 7.59 10.54 7.97 10.38 8.28C10.33 8.4 10.24 8.48 10.13 8.54L7.17 10.16C6.89 10.31 6.52 10.21 6.37 9.9C6.32 9.8 6.3 9.71 6.3 9.6L6.3 6.38C6.3 6.03 6.57 5.76 6.9 5.76Z" fill="#191919" fill-opacity="1.000000" fill-rule="nonzero"/>
+	</g>
 </svg>

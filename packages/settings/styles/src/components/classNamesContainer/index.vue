@@ -474,11 +474,11 @@ const handleDeleteCurSelector = () => {
   ::-webkit-scrollbar {
     display: block;
   }
-  padding: 16px 16px 8px;
+  padding: 12px 8px 11px 12px;
 }
 .title {
   margin: 0;
-  font-size: 14px;
+  font-size: 12px;
   color: var(--ti-lowcode-className-selector-title-color);
   font-weight: normal;
   .help-link {

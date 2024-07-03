@@ -22,15 +22,19 @@
       <template #reference>
         <tiny-popover
           v-model="state.insideVisible"
+          class="toolbar-right-user"
           trigger="hover"
           :open-delay="1000"
-          popper-class="collaboration-popover toolbar-right-popover"
+          popper-class="collaboration-popover aaa toolbar-right-popover"
           append-to-body
           :content="`该项目共有 ${state.userLists.length} 位用户在编辑`"
         >
           <template #reference>
             <div class="icon collaboration-wrap">
-              <img class="user-head" :src="state.url" alt="" />
+              <span class="icon-hides">
+                <svg-icon v-if="state.url" :name="iconUser"></svg-icon>
+              </span>
+              <span class="operate-title">多人协作</span>
             </div>
           </template>
         </tiny-popover>
@@ -50,6 +54,7 @@ export default {
   },
   setup() {
     const { layoutState } = useLayout()
+    const iconUser = 'user'
 
     const state = reactive({
       outsideVisible: false,
@@ -80,7 +85,8 @@ export default {
 
     return {
       state,
-      isSingle
+      isSingle,
+      iconUser
     }
   }
 }
@@ -92,6 +98,13 @@ export default {
     display: flex;
   }
 }
+
+.toolbar-right-user {
+  :deep(.reference-wrapper) {
+    padding: 0 !important;
+  }
+}
+
 .collaborators-list {
   .page-name {
     display: inline-block;
@@ -102,13 +115,16 @@ export default {
     line-height: 18px;
     font-weight: 600;
   }
+
   .user-item {
     padding: 10px 16px;
     display: flex;
     align-items: center;
+
     &:hover {
       background: var(--ti-lowcode-toolbar-hover-color);
     }
+
     .user-item-head {
       width: 26px;
       height: 26px;
@@ -122,23 +138,28 @@ export default {
       font-weight: 400;
       margin: 0 4px 0 8px;
     }
+
     .user-item-status {
       font-size: 14px;
     }
   }
 }
+
 .collaboration-wrap {
   display: flex;
   align-items: center;
   cursor: pointer;
+  font-size: 12px;
 
   .user-head {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
+    margin-right: 8px;
     z-index: 9;
     border: 1px solid var(--ti-lowcode-toolbar-user-img-border-color);
   }
+
   .user-count {
     height: 20px;
     width: 20px;

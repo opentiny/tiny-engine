@@ -5,11 +5,15 @@
     popper-class="toolbar-right-popover"
     append-to-body
     content="画布中英文切换"
+    :disabled="true"
   >
     <template #reference>
-      <span class="icon">
-        <svg-icon :name="langVal === options[0].value ? 'cn' : 'en'" @click="changeLang"></svg-icon>
-      </span>
+      <div @click="changeLang">
+        <span class="icon-hides">
+          <svg-icon :name="langVal === options[0].value ? 'cn' : 'en'"></svg-icon>
+        </span>
+        <span class="operate-title">中英文切换</span>
+      </div>
     </template>
   </tiny-popover>
 </template>
