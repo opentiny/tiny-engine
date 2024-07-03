@@ -18,8 +18,13 @@ const program = new Command()
 program
   .command('create-platform <name>')
   .description('create a new tiny-engine platform 创建一个新的tiny-engine低代码平台')
-  .action((name) => {
-    createPlatform(name)
+  .option('-t, --theme <theme>', 'platform theme 平台主题', 'light')
+  .option('-pid, --platformId <platformId>', 'platform id 平台主题', '918')
+  .option('-m, --material [material...]', 'material address 物料地址', ['/mock/bundle.json'])
+  .option('--scripts [script...]', '物料 script', [])
+  .option('--styles [styles...]', '物料 styles', [])
+  .action((name, options) => {
+    createPlatform(name, options)
   })
 
 program
