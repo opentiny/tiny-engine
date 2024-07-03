@@ -7,10 +7,10 @@
         </span>
       </template>
       <div class="empty-bar" v-for="item in state.hidesbar" :key="item.id">
+        <div v-if="item.splitLine" class="empty-line"></div>
         <div class="toolbar-list">
           <component :is="item.entry"></component>
         </div>
-        <div v-if="item.classifyLine" class="empty-line"></div>
       </div>
     </tiny-popover>
   </div>

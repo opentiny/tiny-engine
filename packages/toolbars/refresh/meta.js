@@ -4,5 +4,6 @@ export default {
   title: 'refresh',
   icon: '',
   align: 'right',
-  collapsed: true
+  collapsed: true,
+  splitLine: true
 }

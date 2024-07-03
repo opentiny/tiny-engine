@@ -4,5 +4,6 @@ export default {
   title: 'lang',
   align: 'right',
   icon: '',
-  collapsed: true
+  collapsed: true,
+  splitLine: true
 }

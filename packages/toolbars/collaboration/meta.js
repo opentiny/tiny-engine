@@ -4,6 +4,5 @@ export default {
   title: 'collaboration',
   icon: '',
   align: 'right',
-  collapsed: true,
-  classifyLine: true
+  collapsed: true
 }
