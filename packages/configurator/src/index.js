@@ -65,6 +65,7 @@ export {
   I18nInput as I18nConfigurator,
   // 暂时保留Meta开头的旧组件名
   ArrayItemConfigurator as MetaArrayItem,
+  I18nInput as MetaBindI18n,
   VariableConfigurator as MetaBindVariable,
   ButtonGroupConfigurator as MetaButtonGroup,
   CheckBoxConfigurator as MetaCheckBox,
