@@ -12,7 +12,6 @@ import DatePickerConfigurator from './date-picker-configurator/DatePickerConfigu
 import GroupItemConfigurator from './group-item-configurator/GroupItemConfigurator.vue'
 import HtmlAttributesConfigurator from './html-attributes-configurator/HtmlAttributesConfigurator.vue'
 import HtmlTextConfigurator from './html-text-configurator/HtmlTextConfigurator.vue'
-import I18nConfigurator from './i18n-configurator/I18nConfigurator.vue'
 import InputConfigurator from './input-configurator/InputConfigurator.vue'
 import IpSectionConfigurator from './ip-section-configurator/IpSectionConfigurator.vue'
 import JsSlotConfigurator from './js-slot-configurator/JsSlotConfigurator.vue'
@@ -30,6 +29,8 @@ import SwitchConfigurator from './switch-configurator/SwitchConfigurator.vue'
 import TableColumnsConfigurator from './table-columns-configurator/TableColumnsConfigurator.vue'
 import VariableConfigurator from './variable-configurator/VariableConfigurator.vue'
 
+import { I18nInput } from '@opentiny/tiny-engine-common'
+
 export {
   ArrayItemConfigurator,
   ButtonGroupConfigurator,
@@ -45,7 +46,6 @@ export {
   GroupItemConfigurator,
   HtmlAttributesConfigurator,
   HtmlTextConfigurator,
-  I18nConfigurator,
   InputConfigurator,
   IpSectionConfigurator,
   JsSlotConfigurator,
@@ -62,9 +62,9 @@ export {
   SwitchConfigurator,
   TableColumnsConfigurator,
   VariableConfigurator,
+  I18nInput as I18nConfigurator,
   // 暂时保留Meta开头的旧组件名
   ArrayItemConfigurator as MetaArrayItem,
-  I18nConfigurator as MetaBindI18n,
   VariableConfigurator as MetaBindVariable,
   ButtonGroupConfigurator as MetaButtonGroup,
   CheckBoxConfigurator as MetaCheckBox,
