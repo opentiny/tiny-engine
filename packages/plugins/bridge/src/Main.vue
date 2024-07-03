@@ -99,6 +99,7 @@ export default {
 :deep(.tiny-tabs__content) {
   height: calc(100% - 45px);
   padding: 0;
+  margin: 0;
   & > div {
     height: 100%;
   }
