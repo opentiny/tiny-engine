@@ -71,6 +71,7 @@
     "@opentiny/tiny-engine-svgs": "workspace:*",
     "@opentiny/tiny-engine-theme-dark": "workspace:*",
     "@opentiny/tiny-engine-theme-light": "workspace:*",
+    "@opentiny/tiny-engine-theme-base": "workspace:*",
     "@opentiny/tiny-engine-toolbar-breadcrumb": "workspace:*",
     "@opentiny/tiny-engine-toolbar-checkinout": "workspace:*",
     "@opentiny/tiny-engine-toolbar-clean": "workspace:*",

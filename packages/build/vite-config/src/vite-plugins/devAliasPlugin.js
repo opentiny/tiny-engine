@@ -47,6 +47,7 @@ const devAlias = {
   ),
   '@opentiny/tiny-engine-theme-dark': path.resolve(process.cwd(), '../packages/theme/dark/index.less'),
   '@opentiny/tiny-engine-theme-light': path.resolve(process.cwd(), '../packages/theme/light/index.less'),
+  '@opentiny/tiny-engine-theme-base': path.resolve(process.cwd(), '../packages/theme/base/src/index.js'),
   '@opentiny/tiny-engine-svgs': path.resolve(process.cwd(), '../packages/svgs/index.js'),
   '@opentiny/tiny-engine-http': path.resolve(process.cwd(), '../packages/http/src/index.js'),
   '@opentiny/tiny-engine-canvas': path.resolve(process.cwd(), '../packages/canvas/index.js'),
