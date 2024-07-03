@@ -81,8 +81,7 @@ import {
   Popover as TinyPopover,
   FormItem as TinyFormItem
 } from '@opentiny/vue'
-import { theme } from '@opentiny/tiny-engine-controller/adapter'
-import { useLayout, useNotify, useCanvas } from '@opentiny/tiny-engine-controller'
+import { useLayout, useNotify, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 import VueMonaco from './VueMonaco.vue'
 
@@ -133,14 +132,8 @@ export default {
 
     const editor = ref(null)
     const editorOptions = {
-      theme: theme(),
-      tabSize: 2,
       language: 'javascript',
-      autoIndent: true,
       lineNumbers: true,
-      formatOnPaste: true,
-      automaticLayout: true,
-      roundedSelection: true,
       minimap: {
         enabled: false
       }

@@ -18,9 +18,11 @@
 
 <script>
 import { computed } from 'vue'
-import { getEnumData, camelize } from '@opentiny/tiny-engine-controller/utils'
-import { useResource } from '@opentiny/tiny-engine-controller'
+import { utils } from '@opentiny/tiny-engine-utils'
+import { useResource } from '@opentiny/tiny-engine-meta-register'
 import Components from '../../components'
+
+const { getEnumData, camelize } = utils
 
 export default {
   inheritAttrs: false,
@@ -42,7 +44,7 @@ export default {
       default: 0
     }
   },
-  setup(props, { emit }) {
+  setup(props) {
     const { resState } = useResource()
 
     const propertyList = computed(() => {

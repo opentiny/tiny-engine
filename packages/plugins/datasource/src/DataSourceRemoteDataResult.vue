@@ -18,7 +18,6 @@
 <script>
 import { reactive, watchEffect, ref } from 'vue'
 import { VueMonaco as MonacoEditor } from '@opentiny/tiny-engine-common'
-import { theme } from '@opentiny/tiny-engine-controller/adapter'
 import { iconCopy } from '@opentiny/vue-icon'
 import { Alert } from '@opentiny/vue'
 import useClipboard from 'vue-clipboard3'
@@ -43,10 +42,6 @@ export default {
     const state = reactive({
       value: '',
       options: {
-        theme: theme(),
-        roundedSelection: true,
-        automaticLayout: true,
-        autoIndent: true,
         language: 'json',
         minimap: { enabled: false }
       }

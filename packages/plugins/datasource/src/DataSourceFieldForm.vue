@@ -21,7 +21,7 @@
     <div v-if="editable" class="field-content">
       <tiny-form ref="form" label-position="left" :rules="rules" :model="state.field" validate-type="text">
         <tiny-form-item class="title-content" prop="title" label="字段名称" label-width="150px">
-          <meta-bind-i18n v-model="state.field.title"></meta-bind-i18n>
+          <i18n-configurator v-model="state.field.title"></i18n-configurator>
         </tiny-form-item>
         <tiny-form-item class="name-content" prop="name" label="字段唯一标识" label-width="150px">
           <tiny-input class="filedName" v-model="state.field.name"></tiny-input>
@@ -36,7 +36,8 @@
 <script>
 import { reactive, watchEffect, ref, provide } from 'vue'
 import { Button, Input, FormItem, Form } from '@opentiny/vue'
-import { ButtonGroup, MetaBindI18n, SvgButton } from '@opentiny/tiny-engine-common'
+import { ButtonGroup, SvgButton } from '@opentiny/tiny-engine-common'
+import { I18nConfigurator } from '@opentiny/tiny-engine-configurator'
 import { iconArrowDown } from '@opentiny/vue-icon'
 import DataSourceFieldCheck from './DataSourceFieldCheck.vue'
 
@@ -51,7 +52,7 @@ export default {
     TinyForm: Form,
     TinyFormItem: FormItem,
     iconArrowDown: iconArrowDown(),
-    MetaBindI18n,
+    I18nConfigurator,
     DataSourceFieldCheck
   },
   props: {

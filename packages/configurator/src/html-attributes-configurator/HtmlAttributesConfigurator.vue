@@ -48,7 +48,7 @@
 </template>
 <script>
 import { reactive, ref, watchEffect } from 'vue'
-import { useProperties, useResource } from '@opentiny/tiny-engine-controller'
+import { useProperties, useMaterial } from '@opentiny/tiny-engine-meta-register'
 import { IconDel, IconEdit, IconClose, IconPlus } from '@opentiny/vue-icon'
 import { Form, FormItem, Input, Button, Popover, Tooltip } from '@opentiny/vue'
 import { utils } from '@opentiny/tiny-engine-utils'
@@ -89,7 +89,7 @@ export default {
         return
       }
 
-      const { schema } = useResource().getMaterial(useProperties().getSchema().componentName)
+      const { schema } = useMaterial().getMaterial(useProperties().getSchema().componentName)
       schema?.properties?.forEach(({ content }) => {
         content.forEach(({ property }) => properties.push(property))
       })

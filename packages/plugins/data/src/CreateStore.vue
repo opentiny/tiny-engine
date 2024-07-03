@@ -20,7 +20,6 @@
         :showFormatBtn="true"
         :options="{
           language: 'json',
-          tabSize: 2,
           // 禁用滚动条边边一直显示的边框
           overviewRulerBorder: false,
           renderLineHighlightOnlyWhenFocus: true
@@ -65,9 +64,8 @@
 import { getCurrentInstance, reactive, ref, computed, watch } from 'vue'
 import { Form, FormItem, Input, Popover } from '@opentiny/vue'
 import { MonacoEditor } from '@opentiny/tiny-engine-common'
-import { theme } from '@opentiny/tiny-engine-controller/adapter'
-import { string2Ast, ast2String, insertName } from '@opentiny/tiny-engine-controller/js/ast'
-import { verifyJsVarName } from '@opentiny/tiny-engine-controller/js/verification'
+import { string2Ast, ast2String, insertName } from '@opentiny/tiny-engine-common/js/ast'
+import { verifyJsVarName } from '@opentiny/tiny-engine-common/js/verification'
 
 export default {
   components: {
@@ -102,13 +100,7 @@ export default {
     })
 
     const options = {
-      roundedSelection: true,
-      automaticLayout: true,
-      autoIndent: true,
       language: 'javascript',
-      formatOnPaste: true,
-      tabSize: 2,
-      theme: theme(),
       minimap: {
         enabled: false
       },

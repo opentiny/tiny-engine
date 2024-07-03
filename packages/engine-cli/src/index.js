@@ -9,20 +9,63 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-
-import { fileURLToPath } from 'node:url'
 import { Command } from 'commander'
-import create from './commands/create.js'
-
-const __filename = fileURLToPath(import.meta.url)
+import { input, select } from '@inquirer/prompts'
+import { createPlatform, createPlugin } from './commands/create.js'
 
 const program = new Command()
 
 program
-  .command('create <name>')
-  .description('创建一个新工程')
+  .command('create-platform <name>')
+  .description('create a new tiny-engine platform 创建一个新的tiny-engine低代码平台')
   .action((name) => {
-    create(name)
+    createPlatform(name)
+  })
+
+program
+  .command('create-plugin <name>')
+  .description('create a new tiny-engine plugin 创建一个新的 tiny-engine 插件')
+  .action((name) => {
+    createPlugin(name)
+  })
+
+program
+  .command('create')
+  .description('create a new tiny-engine platform or plugin by prompt 根据提示创建一个新的 tiny-engine 插件')
+  .action(async () => {
+    const type = await select({
+      message: 'select create type 选择创建类型',
+      choices: [
+        {
+          name: 'platform',
+          value: 'platform',
+          description: 'create a new tiny-engine platform 创建一个新的 tiny-engine 低代码平台'
+        },
+        {
+          name: 'plugin',
+          value: 'plugin',
+          description: 'create a new tiny-engine plugin 创建一个新的 tiny-engine 插件'
+        }
+      ]
+    })
+
+    const projectName = await input({
+      message: 'please enter the project name. 请输入项目名称',
+      validate: (inputName) => {
+        if (!inputName) {
+          return 'project name can not be empty. 项目名称不允许为空。'
+        }
+
+        return true
+      }
+    })
+
+    const typeMapper = {
+      platform: createPlatform,
+      plugin: createPlugin
+    }
+
+    typeMapper[type](projectName)
   })
 
 program.parse(process.argv)

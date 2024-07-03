@@ -12,7 +12,7 @@
 <script>
 import { computed, ref } from 'vue'
 import { Tabs, TabItem } from '@opentiny/vue'
-import { useLayout } from '@opentiny/tiny-engine-controller'
+import { useLayout } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
@@ -71,7 +71,7 @@ export default {
       flex: 1;
       overflow-y: auto;
       padding: 0;
-      margin: 0 0 15px;
+      margin: 0;
     }
     .tiny-tabs__item {
       color: var(--ti-lowcode-setting-panel-tabs-item-title-color);

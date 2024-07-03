@@ -33,6 +33,135 @@ import {
 
 const generateTraverse = traverse.default
 
+function handleFunctionExpression(state) {
+  return function (path) {
+    const parentNode = path.parentPath || {}
+    const functionName = parentNode.node?.id?.name
+
+    // 只有拿到函数的名称才可以被复写
+    if (functionName) {
+      wrapEntryFuncNode({
+        path,
+        functionName,
+        varName: state.varName,
+        state
+      })
+    }
+  }
+}
+
+function handleImportDeclaration(state) {
+  return function (path) {
+    // 解析vue的引入
+    const depName = path.node?.source?.value
+    if (depName === 'vue') {
+      const specifiers = path.node.specifiers
+      specifiers?.forEach((importSpecifier) => {
+        const { imported, local } = importSpecifier
+        const hookName = vueLifeHook.find((name) => imported.name === name)
+        if (hookName) {
+          state.hooksName[local.name] = hookName
+        }
+        state.noUseVars.push(local.name)
+      })
+    } else if (depName === '@opentiny/vue') {
+      const specifiers = path.node.specifiers
+      specifiers?.forEach((importSpecifier) => {
+        const { local } = importSpecifier
+        state.noUseVars.push(local.name)
+      })
+    }
+  }
+}
+
+function handleVariableDeclaration(state) {
+  return function (path) {
+    path.node.declarations?.forEach((val) => {
+      const name = val.id.name
+      const block = path.scope.block
+      if (!state.varDeclartion.has(block)) {
+        const arr = [name]
+        state.varDeclartion.set(block, arr)
+      } else {
+        const arr = state.varDeclartion.get(block)
+        arr.push(name)
+      }
+    })
+  }
+}
+
+function handleExpressionStatement(state) {
+  return function (path) {
+    const { hooksName, varName, hooksIndex } = state
+    const callName = path.node.expression?.callee?.name
+    const hookName = hooksName[callName]
+    if (!hookName) {
+      return
+    }
+    let hookIndex
+    if (hooksIndex[hookName]) {
+      hookIndex = hooksIndex[hookName]
+      hooksIndex[hookName] = hookIndex + 1
+    } else {
+      hooksIndex[hookName] = 1
+      hookIndex = 0
+    }
+    const functionName = `${hookName}[${hookIndex}]`
+    wrapHookCall({
+      path,
+      varName,
+      hooksName,
+      functionName,
+      callName,
+      state
+    })
+  }
+}
+
+function handleProgram(state, metaPath) {
+  return function (path) {
+    const code = path.toString()
+    state.moduleId = getModuleId(code)
+    const metaData = path.scope.generateUid(METADATANAME)
+    state.varName[METADATANAME] = metaData
+    path.node.body.unshift(template.statement(`import ${metaData} from '${metaPath}'`)())
+
+    const callEntry = path.scope.generateUid(CALLENTRY)
+    const beforeCallEntry = path.scope.generateUid(BEFORE_CALLENTRY)
+    const afterCallEntry = path.scope.generateUid(AFTER_CALLENTRY)
+    const useCompile = path.scope.generateUid(USE_COMPILE)
+    state.varName[CALLENTRY] = callEntry
+    state.varName[BEFORE_CALLENTRY] = beforeCallEntry
+    state.varName[AFTER_CALLENTRY] = afterCallEntry
+    state.varName[USE_COMPILE] = useCompile
+    path.node.body.unshift(
+      template.statement(
+        `import { 
+          ${CALLENTRY} as ${callEntry},
+          ${BEFORE_CALLENTRY} as ${beforeCallEntry},
+          ${AFTER_CALLENTRY} as ${afterCallEntry},
+          ${USE_COMPILE} as ${useCompile} 
+        } from '${COMMON_PACKAGE_NAME}'`
+      )()
+    )
+  }
+}
+
+function handleExportDefaultDeclaration(state) {
+  return function (path) {
+    const comment = path.node.leadingComments
+    if (!comment) {
+      return
+    }
+    const lastComment = comment[comment.length - 1].value
+    // 只判断最接近export default的注释节点
+    if (lastComment.includes('metaComponent')) {
+      wrapExportComp({ path, varName: state.varName })
+      path.skip()
+    }
+  }
+}
+
 export const transform = (code, id) => {
   // 如果不包含metaService或者metaComponent的文件直接退出
   const isCallEntry = isCallEntryFile(code)
@@ -67,113 +196,12 @@ export const transform = (code, id) => {
 
   generateTraverse(resultAst, {
     // 使用特定的类型回调处理、函数表达式、箭头函数、带导出的函数
-    'ArrowFunctionExpression|FunctionExpression'(path) {
-      const parentNode = path.parentPath || {}
-      const functionName = parentNode.node?.id?.name
-
-      // 只有拿到函数的名称才可以被复写
-      if (functionName) {
-        wrapEntryFuncNode({
-          path,
-          functionName,
-          varName: state.varName,
-          state
-        })
-      }
-    },
-    ImportDeclaration(path) {
-      // 解析vue的引入
-      const depName = path.node?.source?.value
-      if (depName === 'vue') {
-        const specifiers = path.node.specifiers
-        specifiers?.forEach((importSpecifier) => {
-          const { imported, local } = importSpecifier
-          const hookName = vueLifeHook.find((name) => imported.name === name)
-          if (hookName) {
-            state.hooksName[local.name] = hookName
-          }
-          state.noUseVars.push(local.name)
-        })
-      } else if (depName === '@opentiny/vue') {
-        const specifiers = path.node.specifiers
-        specifiers?.forEach((importSpecifier) => {
-          const { local } = importSpecifier
-          state.noUseVars.push(local.name)
-        })
-      }
-    },
-    VariableDeclaration(path) {
-      path.node.declarations?.forEach((val) => {
-        const name = val.id.name
-        const block = path.scope.block
-        if (!state.varDeclartion.has(block)) {
-          const arr = [name]
-          state.varDeclartion.set(block, arr)
-        } else {
-          const arr = state.varDeclartion.get(block)
-          arr.push(name)
-        }
-      })
-    },
-    ExpressionStatement(path) {
-      const { hooksName, varName, hooksIndex } = state
-      const callName = path.node.expression?.callee?.name
-      const hookName = hooksName[callName]
-      if (hookName) {
-        let hookIndex
-        if (hooksIndex[hookName]) {
-          hookIndex = hooksIndex[hookName]
-          hooksIndex[hookName] = hookIndex + 1
-        } else {
-          hooksIndex[hookName] = 1
-          hookIndex = 0
-        }
-        const functionName = `${hookName}[${hookIndex}]`
-        wrapHookCall({
-          path,
-          varName,
-          hooksName,
-          functionName,
-          callName,
-          state
-        })
-      }
-    },
-    Program(path) {
-      const code = path.toString()
-      state.moduleId = getModuleId(code)
-      const metaData = path.scope.generateUid(METADATANAME)
-      state.varName[METADATANAME] = metaData
-      path.node.body.unshift(template.statement(`import ${metaData} from '${metaPath}'`)())
-
-      const callEntry = path.scope.generateUid(CALLENTRY)
-      const beforeCallEntry = path.scope.generateUid(BEFORE_CALLENTRY)
-      const afterCallEntry = path.scope.generateUid(AFTER_CALLENTRY)
-      const useCompile = path.scope.generateUid(USE_COMPILE)
-      state.varName[CALLENTRY] = callEntry
-      state.varName[BEFORE_CALLENTRY] = beforeCallEntry
-      state.varName[AFTER_CALLENTRY] = afterCallEntry
-      state.varName[USE_COMPILE] = useCompile
-      path.node.body.unshift(
-        template.statement(
-          `import { 
-            ${CALLENTRY} as ${callEntry},
-            ${BEFORE_CALLENTRY} as ${beforeCallEntry},
-            ${AFTER_CALLENTRY} as ${afterCallEntry},
-            ${USE_COMPILE} as ${useCompile} 
-          } from '${COMMON_PACKAGE_NAME}'`
-        )()
-      )
-    },
-    ExportDefaultDeclaration(path) {
-      const comment = path.node.leadingComments
-      const lastComment = comment && comment[comment.length - 1].value
-      // 只判断最接近export default的注释节点
-      if (comment && lastComment.includes('metaComponent')) {
-        wrapExportComp({ path, varName: state.varName })
-        path.skip()
-      }
-    }
+    'ArrowFunctionExpression|FunctionExpression': handleFunctionExpression(state),
+    ImportDeclaration: handleImportDeclaration(state),
+    VariableDeclaration: handleVariableDeclaration(state),
+    ExpressionStatement: handleExpressionStatement(state),
+    Program: handleProgram(state, metaPath),
+    ExportDefaultDeclaration: handleExportDefaultDeclaration(state)
   })
 
   return generate.default(resultAst).code || ''

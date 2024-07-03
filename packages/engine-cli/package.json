@@ -1,27 +1,40 @@
 {
   "name": "@opentiny/tiny-engine-cli",
   "version": "1.0.0",
-  "type": "module",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "npm run build -- --watch",
+    "build": "esbuild src/index.js --bundle --minify=true --outfile=dist/index.js --format=cjs --platform=node --target=node14"
   },
   "bin": {
     "engine-cli": "./bin/cli.js"
   },
+  "files": [
+    "dist",
+    "template",
+    "bin"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/opentiny/tiny-engine",
+    "directory": "packages/engine-cli"
+  },
+  "bugs": {
+    "url": "https://github.com/opentiny/tiny-engine/issues"
+  },
+  "author": "OpenTiny Team",
+  "license": "MIT",
+  "homepage": "https://opentiny.design/tiny-engine",
   "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
     "chalk": "^5.3.0",
     "commander": "^12.0.0",
-    "execa": "^8.0.1",
+    "esbuild": "^0.18.20",
     "fs-extra": "^11.2.0",
-    "globby": "^14.0.1",
-    "handlebars": "^4.7.8",
-    "inquirer": "^9.2.17",
-    "ora": "^8.0.1",
-    "vite": "^5.1.6"
+    "@inquirer/prompts": "^5.0.7"
   }
 }

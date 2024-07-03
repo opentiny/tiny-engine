@@ -1,0 +1,112 @@
+<template>
+  <plugin-panel :title="shortcut ? '' : title" @close="$emit('close')">
+    <template #header>
+      <component :is="headerComponent" :fixedPanels="fixedPanels"></component>
+    </template>
+    <template #content>
+      <tiny-tabs v-model="activeName" tab-style="button-card" class="full-width-tabs" v-if="!onlyShowDefault">
+        <tiny-tab-item :key="item.id" v-for="item in tabComponents" :title="item.title" :name="item.id">
+          <component :is="item.component" :activeTabName="activeName" :rightPanelRef="rightPanelRef"></component>
+        </tiny-tab-item>
+      </tiny-tabs>
+      <component :is="defaultComponent" v-if="onlyShowDefault"></component>
+      <div class="material-right-panel" ref="rightPanelRef"></div>
+    </template>
+  </plugin-panel>
+</template>
+
+<script>
+import { reactive, provide, ref } from 'vue'
+import { Tabs, TabItem } from '@opentiny/vue'
+import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
+import { PluginPanel } from '@opentiny/tiny-engine-common'
+
+export default {
+  components: {
+    PluginPanel,
+    TinyTabs: Tabs,
+    TinyTabItem: TabItem
+  },
+
+  props: {
+    shortcut: [Boolean, String],
+    fixedPanels: {
+      type: Array
+    },
+    registryData: {
+      type: Object,
+      default: () => ({})
+    }
+  },
+  emits: ['close', 'fix-panel'],
+  setup(props, { emit }) {
+    const panelState = reactive({
+      isShortcutPanel: props.shortcut,
+      isBlockGroupPanel: false,
+      isBlockList: false,
+      emitEvent: emit
+    })
+    provide('panelState', panelState) // 使用provide传给子组件,后续可能会有调整，先暂定
+
+    const pluginRegistryData = ref(props.registryData)
+    const rightPanelRef = ref(null)
+    const displayComponentIds = pluginRegistryData.value.options.displayComponentIds || []
+    const headerComponent = getMergeMeta(pluginRegistryData.value.components?.header)
+    const onlyShowDefault = ref(displayComponentIds.length === 1)
+    const activeTabId =
+      displayComponentIds.find((item) => item === pluginRegistryData.value.options?.defaultTabId) ||
+      displayComponentIds[0]
+
+    const activeName = ref(activeTabId)
+    const defaultComponent = getMergeMeta(activeName.value)?.entry
+    const tabComponents = displayComponentIds.map((id) => {
+      const itemMeta = getMergeMeta(id)
+      return {
+        id,
+        component: itemMeta?.entry,
+        title: itemMeta?.options?.title || itemMeta?.id
+      }
+    })
+
+    const title = ref(props.registryData?.title)
+
+    return {
+      headerComponent,
+      title,
+      activeName,
+      defaultComponent,
+      onlyShowDefault,
+      tabComponents,
+      rightPanelRef
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.tiny-tabs {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+}
+
+:deep(.tiny-tabs__header) {
+  padding: 8px;
+}
+
+:deep(.tiny-tabs__content) {
+  flex: 1;
+  overflow-y: scroll;
+  padding: 0;
+  margin: 0px;
+  & > div {
+    height: 100%;
+  }
+}
+
+.tiny-collapse {
+  flex: 1;
+  overflow-y: scroll;
+}
+</style>

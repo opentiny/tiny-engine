@@ -30,7 +30,7 @@
               "zh_CN": "是否编辑配置项"
             },
             "widget": {
-              "component": "MetaCodeEditor"
+              "component": "CodeConfigurator"
             },
             "cols": 12,
             "rules": [],
@@ -55,7 +55,7 @@
               "zh_CN": "表格数据配置项"
             },
             "widget": {
-              "component": "MetaCodeEditor"
+              "component": "CodeConfigurator"
             },
             "cols": 12,
             "rules": [],
@@ -79,7 +79,7 @@
               "zh_CN": "下拉框数据配置项"
             },
             "widget": {
-              "component": "MetaCodeEditor"
+              "component": "CodeConfigurator"
             },
             "cols": 12,
             "rules": [],

@@ -20,7 +20,6 @@ import { computed } from 'vue'
 import ConfigItem from './ConfigItem.vue'
 
 export default {
-  name: 'MetaChildItem',
   components: {
     ConfigItem
   },
@@ -41,7 +40,7 @@ export default {
   },
   setup(props, { emit }) {
     const properties = computed(() => {
-      const result = [...props.meta?.properties?.[0]?.content]
+      const result = [...(props.meta?.properties?.[0]?.content || [])]
       const propsModelValue = props.meta.widget.props?.modelValue
 
       if (result.length && propsModelValue) {

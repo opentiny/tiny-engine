@@ -42,9 +42,11 @@
 import { nextTick, reactive, getCurrentInstance, onActivated, ref } from 'vue'
 import { Popover } from '@opentiny/vue'
 import { VueMonaco, CloseIcon } from '@opentiny/tiny-engine-common'
-import { useCanvas, useModal, useHistory, useNotify } from '@opentiny/tiny-engine-controller'
-import { obj2String, string2Obj, theme } from '@opentiny/tiny-engine-controller/adapter'
+import { useCanvas, useModal, useHistory, useNotify } from '@opentiny/tiny-engine-meta-register'
+import { utils } from '@opentiny/tiny-engine-utils'
 import { iconSave, iconDownloadLink } from '@opentiny/vue-icon'
+
+const { reactiveObj2String: obj2String, string2Obj } = utils
 
 export default {
   components: {
@@ -129,15 +131,9 @@ export default {
       close,
       showRed,
       options: {
-        roundedSelection: true,
-        automaticLayout: true,
-        autoIndent: true,
         language: 'json',
         // readOnly: !pageState.isLock,  暂时放开schema录入功能，等画布功能完善后，再打开此注释
         readOnly: false,
-        formatOnPaste: true,
-        tabSize: 2,
-        theme: theme(),
         minimap: {
           enabled: false
         }

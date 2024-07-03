@@ -12,7 +12,7 @@
 <script>
 import { reactive, ref } from 'vue'
 import { Button } from '@opentiny/vue'
-import { useProperties, useResource, useCanvas } from '@opentiny/tiny-engine-controller'
+import { useProperties, useMaterial, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import BindEventsDialog from '@/settings/events/src/components/BindEventsDialog.vue'
 
 export default {
@@ -34,7 +34,7 @@ export default {
   setup(props) {
     const { setProp } = useProperties()
     const { pageState } = useCanvas()
-    const { getMaterial } = useResource()
+    const { getMaterial } = useMaterial()
     const currentSchema = pageState.currentSchema
     const keys = Object.keys(currentSchema.props)
     const dialogVisible = ref(false)

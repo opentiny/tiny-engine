@@ -115,7 +115,7 @@ import {
   Button as TinyButton
 } from '@opentiny/vue'
 import { PluginPanel, PluginBlockList, SvgButton, SaveNewBlock, LinkButton } from '@opentiny/tiny-engine-common'
-import { useBlock, useModal, useLayout, useCanvas, useHelp } from '@opentiny/tiny-engine-controller'
+import { useBlock, useModal, useLayout, useCanvas, useHelp } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 import BlockSetting, { openPanel, closePanel } from './BlockSetting.vue'
 import BlockGroupArrange from './BlockGroupArrange.vue'
@@ -135,7 +135,6 @@ import {
 } from './js/blockSetting'
 import { fetchBlockList, requestBlocks, requestInitBlocks, fetchBlockContent } from './js/http'
 
-const docsUrl = useHelp().getDocsUrl('block')
 const { SORT_TYPE } = constants
 const externalBlock = ref(null) // 外部区块信息，用作激活外部传入的区块样式
 
@@ -190,6 +189,7 @@ export default {
   },
 
   setup() {
+    const docsUrl = useHelp().getDocsUrl('block')
     const { getBlockList, sort } = useBlock()
     const { isSaved } = useCanvas()
     const { confirm } = useModal()

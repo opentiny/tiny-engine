@@ -19,8 +19,8 @@ import {
   NODE_TAG,
   NODE_LOOP
 } from '../../common'
-import { useCanvas, useLayout, useResource, useTranslate } from '@opentiny/tiny-engine-controller'
-import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
+import { useCanvas, useLayout, useResource, useTranslate, useMaterial } from '@opentiny/tiny-engine-meta-register'
+import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import Builtin from '../../render/src/builtin/builtin.json' //TODO 画布内外应该分开
 
 export const POSITION = Object.freeze({
@@ -916,7 +916,7 @@ export const initCanvas = ({ renderer, iframe, emit, controller }) => {
   // 设置画布全局的utils工具类上下文环境
   setUtils(useResource().resState.utils)
   setSchema(schema)
-  setConfigure(useResource().getConfigureMap())
-  canvasDispatch('updateDependencies', { detail: useResource().resState.thirdPartyDeps })
+  setConfigure(useMaterial().getConfigureMap())
+  canvasDispatch('updateDependencies', { detail: useMaterial().materialState.thirdPartyDeps })
   canvasState.loading = false
 }

@@ -46,7 +46,7 @@
 <script>
 import { reactive, watchEffect } from 'vue'
 import { Popover } from '@opentiny/vue'
-import { useLayout } from '@opentiny/tiny-engine-controller'
+import { useLayout } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {

@@ -35,7 +35,7 @@
 <script>
 import { DialogBox, Button, Grid, GridColumn } from '@opentiny/vue'
 import { reactive, computed, ref, nextTick } from 'vue'
-import { useNotify } from '@opentiny/tiny-engine-controller'
+import { useNotify } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {

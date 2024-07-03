@@ -30,7 +30,7 @@
 
 <script>
 import { computed, ref } from 'vue'
-import { useResource, useProperties, useCanvas, useProperty } from '@opentiny/tiny-engine-controller'
+import { useMaterial, useProperties, useCanvas, useProperty } from '@opentiny/tiny-engine-meta-register'
 import { iconSetting, iconClose } from '@opentiny/vue-icon'
 
 export default {
@@ -39,7 +39,7 @@ export default {
     IconClose: iconClose()
   },
   setup(props, { emit }) {
-    const { getMaterial } = useResource()
+    const { getMaterial } = useMaterial()
     const { pageState } = useCanvas()
     const { properties } = useProperty().getProperty({ pageState })
     const active = ref('props')

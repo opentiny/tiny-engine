@@ -40,9 +40,18 @@ import {
   Props,
   Events,
   Styles,
+  Layout,
+  Canvas,
+  EditorInfoService,
+  AppService,
+  generateCodeService
 } from '@opentiny/tiny-engine'
 
 export default {
+  root: {
+    id: 'engine.root',
+    metas: [EditorInfoService, AppService, generateCodeService]
+  },
   config: {
     id: 'engine.config',
     theme: import.meta.env.VITE_THEME || 'light',
@@ -50,7 +59,7 @@ export default {
     scripts: [],
     styles: []
   },
-  layout: { id: 'engine.layout' },
+  layout: Layout,
   themes: [
     {
       id: 'engine.theme.light'
@@ -75,25 +84,8 @@ export default {
     Setting,
     Lang
   ],
-  plugins: [
-    Materials,
-    Tree,
-    Page,
-    Block,
-    Datasource,
-    Bridge,
-    I18n,
-    Script,
-    Data,
-    Schema,
-    Help,
-    Robot
-  ],
+  plugins: [Materials, Tree, Page, Block, Datasource, Bridge, I18n, Script, Data, Schema, Help, Robot],
   dsls: [{ id: 'engine.dsls.dslvue' }],
-  settings: [
-    Props,
-    Styles,
-    Events
-  ],
-  canvas: {}
+  settings: [Props, Styles, Events],
+  canvas: Canvas
 }

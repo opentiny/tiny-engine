@@ -3,7 +3,7 @@
     <div class="line-style">
       <span class="line-text"> 行内样式 </span>
       <div class="inline-style">
-        <meta-code-editor
+        <code-configurator
           v-if="state.lineStyleDisable"
           :buttonShowContent="true"
           :modelValue="state.styleContent"
@@ -16,13 +16,13 @@
         <div v-if="!state.lineStyleDisable">
           <tiny-input v-model="state.propertiesList" class="inline-bind-style"> </tiny-input>
         </div>
-        <meta-bind-variable
+        <variable-configurator
           ref="bindVariable"
           :model-value="state.bindModelValue"
           name="advance"
           @update:modelValue="setConfig"
         >
-        </meta-bind-variable>
+        </variable-configurator>
       </div>
     </div>
   </div>
@@ -67,9 +67,9 @@
 <script>
 import { ref, watch } from 'vue'
 import { Collapse, CollapseItem, Input } from '@opentiny/vue'
-import { useHistory, useCanvas, useProperties } from '@opentiny/tiny-engine-controller'
-import { MetaCodeEditor, MetaBindVariable } from '@opentiny/tiny-engine-common'
-import { formatString } from '@opentiny/tiny-engine-controller/js/ast'
+import { useHistory, useCanvas, useProperties } from '@opentiny/tiny-engine-meta-register'
+import { CodeConfigurator, VariableConfigurator } from '@opentiny/tiny-engine-configurator'
+import { formatString } from '@opentiny/tiny-engine-common/js/ast'
 import {
   SizeGroup,
   LayoutGroup,
@@ -89,7 +89,7 @@ import { styleStrRemoveRoot } from './js/cssConvert'
 
 export default {
   components: {
-    MetaCodeEditor,
+    CodeConfigurator,
     SizeGroup,
     LayoutGroup,
     FlexBox,
@@ -104,7 +104,7 @@ export default {
     TinyCollapse: Collapse,
     TinyCollapseItem: CollapseItem,
     TinyInput: Input,
-    MetaBindVariable
+    VariableConfigurator
   },
   setup() {
     const activeNames = ref([

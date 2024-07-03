@@ -10,10 +10,12 @@
   "main": "dist/index.js",
   "module": "dist/index.js",
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist/index.js",
+    "./js/": "./dist/js/"
   },
   "files": [
-    "dist"
+    "dist",
+    "js"
   ],
   "repository": {
     "type": "git",
@@ -27,12 +29,17 @@
   "license": "MIT",
   "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
-    "@opentiny/tiny-engine-configurator": "workspace:*",
-    "@opentiny/tiny-engine-controller": "workspace:*",
-    "@opentiny/tiny-engine-entry": "workspace:*",
+    "@babel/generator": "~7.23.2",
+    "@babel/parser": "~7.23.2",
+    "@babel/traverse": "~7.23.2",
+    "@opentiny/tiny-engine-dsl-vue": "workspace:*",
+    "@opentiny/tiny-engine-meta-register": "workspace:*",
     "@opentiny/tiny-engine-http": "workspace:*",
+    "@opentiny/tiny-engine-i18n-host": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
     "@vue/shared": "^3.3.4",
+    "css-tree": "^2.3.1",
+    "eslint-linter-browserify": "8.57.0",
     "monaco-editor": "0.33.0",
     "prettier": "2.7.1",
     "vue-draggable-next": "2.1.0"
@@ -41,12 +48,15 @@
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
     "@vitejs/plugin-vue": "^4.2.3",
     "@vitejs/plugin-vue-jsx": "^3.1.0",
+    "glob": "^10.3.4",
     "vite": "^4.3.7"
   },
   "peerDependencies": {
     "@opentiny/vue": "^3.14.0",
+    "@opentiny/vue-locale": "^3.14.0",
     "@opentiny/vue-icon": "^3.14.0",
     "@opentiny/vue-renderless": "^3.14.0",
-    "vue": "^3.4.15"
+    "vue": "^3.4.15",
+    "vue-i18n": "^9.9.0"
   }
 }

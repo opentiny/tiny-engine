@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { useLayout } from '@opentiny/tiny-engine-controller'
+import { useLayout } from '@opentiny/tiny-engine-meta-register'
 import CloseIcon from './CloseIcon.vue'
 
 export default {

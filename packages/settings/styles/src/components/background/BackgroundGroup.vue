@@ -52,7 +52,7 @@
         @click="openSetting(BACKGROUND_PROPERTY.BackgroundColor, $event)"
         >颜色</label
       >
-      <meta-color :modelValue="getProperty(BACKGROUND_PROPERTY.BackgroundColor).value" @change="changeColor" />
+      <color-configurator :modelValue="getProperty(BACKGROUND_PROPERTY.BackgroundColor).value" @change="changeColor" />
     </div>
     <div class="background-clip">
       <label
@@ -61,11 +61,11 @@
         >裁剪</label
       >
       <div class="position-select">
-        <meta-select
+        <select-configurator
           :modelValue="state.selectValue"
           :options="selectOptions"
           @update:modelValue="selectBackgroundClip"
-        ></meta-select>
+        ></select-configurator>
       </div>
     </div>
   </div>
@@ -83,8 +83,8 @@
 <script>
 import { reactive, watch } from 'vue'
 import { Tooltip } from '@opentiny/vue'
-import { MetaColor, MetaSelect } from '@opentiny/tiny-engine-common'
-import { useCanvas } from '@opentiny/tiny-engine-controller'
+import { ColorConfigurator, SelectConfigurator } from '@opentiny/tiny-engine-configurator'
+import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { iconPlus } from '@opentiny/vue-icon'
 import ModalMask, { useModal } from '../inputs/ModalMask.vue'
 import ResetButton from '../inputs/ResetButton.vue'
@@ -97,10 +97,10 @@ const PAGE_ROOT_ID = 'page-root-id'
 
 export default {
   components: {
-    MetaColor,
+    ColorConfigurator,
     ModalMask,
     ResetButton,
-    MetaSelect,
+    SelectConfigurator,
     BackgroundImageSetting,
     TinyTooltip: Tooltip,
     IconPlus: iconPlus()

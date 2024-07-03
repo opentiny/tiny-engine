@@ -29,10 +29,9 @@
 import { onBeforeUnmount } from 'vue'
 import { Button } from '@opentiny/vue'
 import { VueMonaco, CloseIcon, LinkButton } from '@opentiny/tiny-engine-common'
-import { useHelp } from '@opentiny/tiny-engine-controller'
-import { initCompletion } from '@opentiny/tiny-engine-controller/js/completion'
-import { initLinter } from '@opentiny/tiny-engine-controller/js/linter'
-import { theme } from '@opentiny/tiny-engine-controller/adapter'
+import { useHelp } from '@opentiny/tiny-engine-meta-register'
+import { initCompletion } from '@opentiny/tiny-engine-common/js/completion'
+import { initLinter } from '@opentiny/tiny-engine-common/js/linter'
 import useMethod, { saveMethod, highlightMethod, getMethodNameList, getMethods } from './js/method'
 
 export const api = {
@@ -55,13 +54,7 @@ export default {
     const { state, monaco, change, close, saveMethods } = useMethod({ emit })
 
     const options = {
-      roundedSelection: true,
-      automaticLayout: true,
-      autoIndent: true,
       language: 'javascript',
-      formatOnPaste: true,
-      tabSize: 2,
-      theme: theme(),
       minimap: {
         enabled: false
       },

@@ -1,83 +1,92 @@
 <template>
-  <div class="bind-chatgpt" id="bind-chatgpt">
-    <section>
-      <div class="chat-title-icons">
-        <svg-icon name="close" class="common-svg" @click="$emit('close-chat')"></svg-icon>
-        <svg-icon
-          :name="chatWindowOpened ? 'chat-maximize' : 'chat-minimize'"
-          class="common-svg"
-          @click="resizeChatWindow"
-        ></svg-icon>
-      </div>
-    </section>
-    <header class="chat-title">
-      <tiny-dropdown trigger="click" :show-icon="false">
-        <span>
-          <span>{{ selectedModel.label }}</span>
-          <icon-chevron-down class="ml8"></icon-chevron-down>
-        </span>
-        <template #dropdown>
-          <tiny-dropdown-menu popper-class="chat-model-popover" placement="bottom" :visible-arrow="false">
-            <tiny-dropdown-item
-              v-for="item in AIModelOptions"
-              :key="item.label"
-              :class="{ 'selected-model': selectedModel.value === item.value }"
-              @click="changeModel(item)"
-              >{{ item.label }}</tiny-dropdown-item
-            >
-          </tiny-dropdown-menu>
-        </template>
-      </tiny-dropdown>
-    </header>
-    <article class="chat-window lowcode-scrollbar-hide" id="chatgpt-window">
-      <tiny-layout>
-        <tiny-row
-          v-for="(item, index) in activeMessages"
-          :key="index"
-          :flex="true"
-          :order="item.role === 'user' ? 'des' : 'asc'"
-          :justify="item.role === 'user' ? 'end' : 'start'"
-          class="chat-message-row"
-        >
-          <tiny-col :span="1" :no="1" class="chat-avatar-wrap">
-            <img v-if="item.role !== 'user'" class="chat-avatar chat-avatar-ai" src="../assets/AI.png" />
-            <img v-else class="chat-avatar" :src="avatarUrl" />
-          </tiny-col>
-          <tiny-col :span="22" :no="2">
-            <div
-              :class="[
-                'chat-content',
-                chatWindowOpened ? '' : 'hidden-text',
-                item.role === 'user'
-                  ? 'chat-content-user'
-                  : connectedFailed
-                  ? 'chat-content-ai-unconnected'
-                  : 'chat-content-ai'
-              ]"
-            >
-              <span>{{ item.content }}</span>
+  <div>
+    <div title="AI对话框" class="robot-img">
+      <img class="chatgpt-icon" src="../assets/AI.png" @click="openAIRobot" />
+    </div>
+    <Teleport to="body">
+      <div v-if="robotVisible" class="robot-dialog">
+        <div class="bind-chatgpt" id="bind-chatgpt">
+          <section>
+            <div class="chat-title-icons">
+              <svg-icon name="close" class="common-svg" @click="robotVisible = false"></svg-icon>
+              <svg-icon
+                :name="chatWindowOpened ? 'chat-maximize' : 'chat-minimize'"
+                class="common-svg"
+                @click="resizeChatWindow"
+              ></svg-icon>
             </div>
-          </tiny-col>
-        </tiny-row>
-      </tiny-layout>
-    </article>
-    <article class="chat-tips">
-      <span>需要一个注册表单？</span>
-      <span @click="sendContent('如何将表单嵌进我的网站？', true)">如何将表单嵌进我的网站？</span>
-      <span>需要一个注册表单？</span>
-    </article>
-    <footer class="chat-submit">
-      <tiny-input placeholder="告诉我，你想做什么..." v-model="inputContent">
-        <template #prefix>
-          <svg-icon name="chat-message" class="common-svg"></svg-icon>
-        </template>
-        <template #suffix>
-          <svg-icon name="chat-microphone" class="common-svg microphone"></svg-icon>
-        </template>
-      </tiny-input>
-      <tiny-button @click="endContent">重新发起会话</tiny-button>
-      <tiny-button @click="sendContent(inputContent, false)">发送</tiny-button>
-    </footer>
+          </section>
+          <header class="chat-title">
+            <tiny-dropdown trigger="click" :show-icon="false">
+              <span>
+                <span>{{ selectedModel.label }}</span>
+                <icon-chevron-down class="ml8"></icon-chevron-down>
+              </span>
+              <template #dropdown>
+                <tiny-dropdown-menu popper-class="chat-model-popover" placement="bottom" :visible-arrow="false">
+                  <tiny-dropdown-item
+                    v-for="item in AIModelOptions"
+                    :key="item.label"
+                    :class="{ 'selected-model': selectedModel.value === item.value }"
+                    @click="changeModel(item)"
+                    >{{ item.label }}</tiny-dropdown-item
+                  >
+                </tiny-dropdown-menu>
+              </template>
+            </tiny-dropdown>
+          </header>
+          <article class="chat-window lowcode-scrollbar-hide" id="chatgpt-window">
+            <tiny-layout>
+              <tiny-row
+                v-for="(item, index) in activeMessages"
+                :key="index"
+                :flex="true"
+                :order="item.role === 'user' ? 'des' : 'asc'"
+                :justify="item.role === 'user' ? 'end' : 'start'"
+                class="chat-message-row"
+              >
+                <tiny-col :span="1" :no="1" class="chat-avatar-wrap">
+                  <img v-if="item.role !== 'user'" class="chat-avatar chat-avatar-ai" src="../assets/AI.png" />
+                  <img v-else class="chat-avatar" :src="avatarUrl" />
+                </tiny-col>
+                <tiny-col :span="22" :no="2">
+                  <div
+                    :class="[
+                      'chat-content',
+                      chatWindowOpened ? '' : 'hidden-text',
+                      item.role === 'user'
+                        ? 'chat-content-user'
+                        : connectedFailed
+                        ? 'chat-content-ai-unconnected'
+                        : 'chat-content-ai'
+                    ]"
+                  >
+                    <span>{{ item.content }}</span>
+                  </div>
+                </tiny-col>
+              </tiny-row>
+            </tiny-layout>
+          </article>
+          <article class="chat-tips">
+            <span>需要一个注册表单？</span>
+            <span @click="sendContent('如何将表单嵌进我的网站？', true)">如何将表单嵌进我的网站？</span>
+            <span>需要一个注册表单？</span>
+          </article>
+          <footer class="chat-submit">
+            <tiny-input placeholder="告诉我，你想做什么..." v-model="inputContent">
+              <template #prefix>
+                <svg-icon name="chat-message" class="common-svg"></svg-icon>
+              </template>
+              <template #suffix>
+                <svg-icon name="chat-microphone" class="common-svg microphone"></svg-icon>
+              </template>
+            </tiny-input>
+            <tiny-button @click="endContent">重新发起会话</tiny-button>
+            <tiny-button @click="sendContent(inputContent, false)">发送</tiny-button>
+          </footer>
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>
 
@@ -95,7 +104,7 @@ import {
   DropdownMenu as TinyDropdownMenu,
   DropdownItem as TinyDropdownItem
 } from '@opentiny/vue'
-import { useCanvas, useHistory, usePage, useModal } from '@opentiny/tiny-engine-controller'
+import { useCanvas, useHistory, usePage, useModal } from '@opentiny/tiny-engine-meta-register'
 import { iconChevronDown } from '@opentiny/vue-icon'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { useHttp } from '@opentiny/tiny-engine-http'
@@ -116,6 +125,7 @@ export default {
   emits: ['close-chat'],
   setup() {
     const { initData, isBlock, isSaved, clearCurrentState } = useCanvas()
+    const robotVisible = ref(false)
     const avatarUrl = ref('')
     const chatWindowOpened = ref(true)
     const http = useHttp()
@@ -231,7 +241,9 @@ export default {
     const scrollContent = async () => {
       await sleep(100)
       let scrollElement = document.getElementById('chatgpt-window')
-      scrollElement.scrollTop = scrollElement.scrollHeight
+      if (scrollElement) {
+        scrollElement.scrollTop = scrollElement.scrollHeight
+      }
     }
 
     const resetContent = async () => {
@@ -347,7 +359,13 @@ export default {
         })
       }
     }
+
+    const openAIRobot = () => {
+      robotVisible.value = !robotVisible.value
+    }
+
     return {
+      robotVisible,
       avatarUrl,
       chatWindowOpened,
       activeMessages,
@@ -358,13 +376,38 @@ export default {
       resizeChatWindow,
       AIModelOptions,
       selectedModel,
-      changeModel
+      changeModel,
+      openAIRobot
     }
   }
 }
 </script>
 
 <style lang="less" scope>
+.robot-img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  .chatgpt-icon {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.robot-dialog {
+  position: fixed;
+  width: 700px;
+  z-index: 5;
+  right: 40px;
+  bottom: 40px;
+  background-color: var(--ti-lowcode-common-component-bg);
+  box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.15);
+  border: 1px solid #dbdbdb;
+  padding: 10px 20px 30px;
+  border-radius: 12px;
+}
 .common-svg {
   color: var(--ti-lowcode-chat-model-common-icon);
 }
