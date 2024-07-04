@@ -3,7 +3,6 @@ import ButtonGroupConfigurator from './button-group-configurator/ButtonGroupConf
 import CascaderConfigurator from './cascader-configurator/CascaderConfigurator.vue'
 import CheckBoxConfigurator from './checkbox-configurator/CheckBoxConfigurator.vue'
 import CheckboxGroupConfigurator from './checkbox-group-configurator/CheckboxGroupConfigurator.vue'
-import CodeConfigurator from './code-configurator/CodeConfigurator.vue'
 import CodeListConfigurator from './code-list-configurator/CodeListConfigurator.vue'
 import CollectionConfigurator from './collection-configurator/CollectionConfigurator.vue'
 import ColorConfigurator from './color-configurator/ColorConfigurator.vue'
@@ -29,7 +28,7 @@ import SwitchConfigurator from './switch-configurator/SwitchConfigurator.vue'
 import TableColumnsConfigurator from './table-columns-configurator/TableColumnsConfigurator.vue'
 import VariableConfigurator from './variable-configurator/VariableConfigurator.vue'
 
-import { I18nInput } from '@opentiny/tiny-engine-common'
+import { I18nInput, MetaCodeEditor } from '@opentiny/tiny-engine-common'
 
 export {
   ArrayItemConfigurator,
@@ -37,7 +36,6 @@ export {
   CascaderConfigurator,
   CheckBoxConfigurator,
   CheckboxGroupConfigurator,
-  CodeConfigurator,
   CodeListConfigurator,
   CollectionConfigurator,
   ColorConfigurator,
@@ -62,7 +60,9 @@ export {
   SwitchConfigurator,
   TableColumnsConfigurator,
   VariableConfigurator,
+  MetaCodeEditor,
   I18nInput as I18nConfigurator,
+  MetaCodeEditor as CodeConfigurator,
   // 暂时保留Meta开头的旧组件名
   ArrayItemConfigurator as MetaArrayItem,
   I18nInput as MetaBindI18n,
@@ -70,7 +70,6 @@ export {
   ButtonGroupConfigurator as MetaButtonGroup,
   CheckBoxConfigurator as MetaCheckBox,
   CascaderConfigurator as MetaCascader,
-  CodeConfigurator as MetaCodeEditor,
   CodeListConfigurator as MetaCodeEditorList,
   ColorConfigurator as MetaColor,
   DatePickerConfigurator as MetaDatePicker,
