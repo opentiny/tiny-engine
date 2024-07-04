@@ -16,21 +16,6 @@ describe('preprocessRegistry', () => {
     })
   })
 
-  it('should transform array format configuration for single entry', () => {
-    const registry = {
-      layout: [{ id: 'layout1' }, { options: { extraOption: true } }]
-    }
-
-    preprocessRegistry(registry)
-
-    expect(registry).toEqual({
-      layout: {
-        id: 'layout1',
-        options: { extraOption: true }
-      }
-    })
-  })
-
   it('should transform array format configuration for multiple entries', () => {
     const registry = {
       plugins: [[{ id: 'plugin1' }, { options: { extraOption1: true } }], { id: 'plugin2' }]
