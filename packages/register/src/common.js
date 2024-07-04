@@ -144,7 +144,7 @@ const handleRegistryProp = (id, value) => {
 
 export const preprocessRegistry = (registry) => {
   // 元应用支持使用长度为2的数组来配置，第一个参数为元应用，第二个参数是额外的自定义配置。此函数判断数组是否属于这种配置格式
-  const isArrayFormat = (arr) => arr.length === 2 && arr[0].id && !arr[1].id
+  const isArrayFormat = (arr) => arr.length === 2 && arr[0].id
 
   Object.values(registry)
     .filter((metaApps) => Array.isArray(metaApps))
