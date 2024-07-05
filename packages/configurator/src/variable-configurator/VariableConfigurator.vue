@@ -461,7 +461,7 @@ export default {
       if (item.id === 'function') {
         state.bindPrefix = CONSTANTS.THIS
         const { PLUGIN_NAME, getPluginApi } = useLayout()
-        const { getMethods } = getPluginApi(PLUGIN_NAME.PageController)
+        const { getMethods } = getPluginApi(PLUGIN_NAME.Page)
         state.variables = { ...getMethods?.() }
       } else if (item.id === 'bridge' || item.id === 'utils') {
         state.bindPrefix = `${CONSTANTS.THIS}${item.id}.`

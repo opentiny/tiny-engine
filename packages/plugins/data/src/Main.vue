@@ -114,7 +114,7 @@ export default {
     const isBlock = computed(() => useCanvas().isBlock())
     const { setSaved } = useCanvas()
     const { PLUGIN_NAME, getPluginApi } = useLayout()
-    const { openCommon } = getPluginApi(PLUGIN_NAME.save)
+    const { openCommon } = getPluginApi(PLUGIN_NAME.Save)
     const docsUrl = useHelp().getDocsUrl('data')
     const state = reactive({
       dataSource: {},

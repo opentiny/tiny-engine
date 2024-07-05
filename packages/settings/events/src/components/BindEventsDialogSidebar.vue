@@ -37,7 +37,7 @@ export default {
   },
   setup(props) {
     const { PLUGIN_NAME, getPluginApi } = useLayout()
-    const { getMethodNameList } = getPluginApi(PLUGIN_NAME.PageController)
+    const { getMethodNameList } = getPluginApi(PLUGIN_NAME.Page)
 
     const searchValue = ref('')
     const filteredMethodList = ref([])

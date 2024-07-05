@@ -12,26 +12,9 @@
 
 import { reactive, nextTick } from 'vue'
 import { constants } from '@opentiny/tiny-engine-utils'
+import { META_APP as PLUGIN_NAME } from '@opentiny/tiny-engine-meta-register'
 
 const { PAGE_STATUS } = constants
-
-const PLUGIN_NAME = {
-  Materials: 'engine.plugins.materials',
-  AppManage: 'engine.plugins.appmanage',
-  BlockManage: 'engine.plugins.blockmanage',
-  Bridge: 'engine.plugins.bridge',
-  State: 'engine.plugins.state',
-  Collections: 'engine.plugins.collections',
-  EditorHelp: 'engine.plugins.editorhelp',
-  I18n: 'engine.plugins.i18n',
-  Robot: 'engine.plugins.robot',
-  Schema: 'engine.plugins.schema',
-  PageController: 'engine.plugins.pagecontroller',
-  OutlineTree: 'engine.plugins.outlinetree',
-  Tutorial: 'engine.plugins.tutorial',
-  Lock: 'Lock',
-  save: 'save'
-}
 
 const pluginState = reactive({
   pluginEvent: 'all'

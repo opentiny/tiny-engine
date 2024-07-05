@@ -55,7 +55,7 @@ export default {
 
     const { PLUGIN_NAME, getPluginApi, activePlugin } = useLayout()
     const { pageState } = useCanvas()
-    const { getMethods, saveMethod, highlightMethod } = getPluginApi(PLUGIN_NAME.PageController)
+    const { getMethods, saveMethod, highlightMethod } = getPluginApi(PLUGIN_NAME.Page)
 
     const state = reactive({
       editorContent: '',
@@ -150,7 +150,7 @@ export default {
     }
 
     const activePagePlugin = () => {
-      activePlugin(PLUGIN_NAME.PageController).then(() => {
+      activePlugin(PLUGIN_NAME.Page).then(() => {
         // 确认js面板渲染完成之后再对目标函数进行高亮处理
         nextTick(() => {
           if (highlightMethod) {

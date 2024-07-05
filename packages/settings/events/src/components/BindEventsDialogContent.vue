@@ -72,7 +72,7 @@ export default {
   },
   setup() {
     const { PLUGIN_NAME, getPluginApi } = useLayout()
-    const { getMethodNameList } = getPluginApi(PLUGIN_NAME.PageController)
+    const { getMethodNameList } = getPluginApi(PLUGIN_NAME.Page)
 
     const context = inject('context')
 

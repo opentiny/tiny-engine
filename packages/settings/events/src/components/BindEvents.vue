@@ -113,7 +113,7 @@ export default {
     const { getMaterial } = useMaterial()
     const { confirm } = useModal()
 
-    const { highlightMethod } = getPluginApi(PLUGIN_NAME.PageController)
+    const { highlightMethod } = getPluginApi(PLUGIN_NAME.Page)
 
     const { commonEvents = {} } = getMergeMeta('engine.setting.event').options
 
@@ -212,7 +212,7 @@ export default {
 
     const openCodePanel = (action) => {
       if (action) {
-        activePlugin(PLUGIN_NAME.PageController).then(() => {
+        activePlugin(PLUGIN_NAME.Page).then(() => {
           if (highlightMethod) {
             highlightMethod(action.ref)
           }

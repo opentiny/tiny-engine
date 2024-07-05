@@ -474,7 +474,7 @@ const appendEventEmit = ({ eventName, functionName } = {}) => {
   }
 
   const { PLUGIN_NAME, getPluginApi } = useLayout()
-  const getMethods = getPluginApi(PLUGIN_NAME.PageController)?.getMethods
+  const getMethods = getPluginApi(PLUGIN_NAME.Page)?.getMethods
 
   if (getMethods && typeof getMethods === 'function') {
     const method = getMethods()?.[functionName]

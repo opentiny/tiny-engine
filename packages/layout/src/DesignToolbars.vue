@@ -46,11 +46,8 @@ export default {
       } else {
         leftBar.push(item)
       }
-      if (item.id === 'lock') {
-        useLayout().registerPluginApi({ Lock: item.api })
-      }
-      if (item.id === 'save') {
-        useLayout().registerPluginApi({ save: item.api })
+      if (item.api) {
+        useLayout().registerPluginApi({ [item.id]: item.api })
       }
     })
     nextTick(() => {
