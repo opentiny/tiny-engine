@@ -229,7 +229,7 @@ export const handleSlotBindAttrHook = (schemaData) => {
   let paramsValue = ''
 
   if (Array.isArray(params)) {
-    paramsValue = `={ ${params.join(',')} }`
+    paramsValue = `="{ ${params.join(',')} }"`
   } else if (typeof params === 'string') {
     paramsValue = `="${params}"`
   }
