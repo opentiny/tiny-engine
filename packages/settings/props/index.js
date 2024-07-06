@@ -20,7 +20,7 @@ export default {
   id: 'SettingProps',
   name: 'props',
   title: '属性',
-  icon: '',
+  icon: 'form',
   align: 'left',
   component
 }
