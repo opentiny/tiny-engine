@@ -13,6 +13,7 @@
 import prettier from 'prettier'
 import parserHtml from 'prettier/parser-html'
 import parseCss from 'prettier/parser-postcss'
+import parseTypescript from 'prettier/parser-typescript'
 import parserBabel from 'prettier/parser-babel'
 import prettierCommon from '@opentiny/tiny-engine-controller/js/config-files/prettierrc'
 
@@ -122,6 +123,7 @@ function generatePageFiles(codeList, pagePath = '') {
     babel: [parserBabel],
     vue: [parserHtml, parserBabel, parseCss],
     javascript: [parserBabel],
+    typescript: [parseTypescript, parserBabel],
     css: [parseCss],
     less: [parseCss],
     sass: [parseCss],
@@ -129,8 +131,8 @@ function generatePageFiles(codeList, pagePath = '') {
   }
 
   const blockList = codeList.filter((item) => item.type === 'Block').map((item) => item.panelName)
-  codeList.forEach(({ panelName, panelValue, prettierOpts, type }) => {
-    if (panelName && panelValue) {
+  codeList.forEach(({ panelName, panelValue = '', prettierOpts, type }) => {
+    if (panelName) {
       if (prettierOpts?.parser && formatTypePluginMap[prettierOpts.parser]) {
         panelValue = prettier.format(panelValue, {
           ...prettierOpts,
@@ -272,9 +274,7 @@ function generateExport(list) {
 
     strs.push(...importStrs, ...functionStrs)
 
-    if (exportNames.length) {
-      strs.push(`export { ${exportNames.join(', ')} }`)
-    }
+    strs.push(`export { ${exportNames.join(', ')} }`)
   }
 
   return strs.join('\n')
@@ -283,16 +283,14 @@ function generateExport(list) {
 function generateUtils({ utils }) {
   const result = []
 
-  if (utils?.length) {
-    const utilStr = generateExport(utils)
-    const content = formatScript(utilStr)
+  const utilStr = generateExport(utils || [])
+  const content = formatScript(utilStr)
 
-    result.push({
-      fileType: FILE_TYPES.Utils,
-      filePath: basePaths.utils,
-      fileContent: formatScript(content)
-    })
-  }
+  result.push({
+    fileType: FILE_TYPES.Utils,
+    filePath: basePaths.utils,
+    fileContent: formatScript(content)
+  })
 
   return result
 }

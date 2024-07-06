@@ -68,7 +68,8 @@
   },
   "pnpm": {
     "patchedDependencies": {
-      "@vue/repl@2.9.0": "patches/@vue__repl@2.9.0.patch"
+      "@vue/repl@2.9.0": "patches/@vue__repl@2.9.0.patch",
+      "veaury@2.3.16": "patches/veaury@2.3.16.patch"
     }
   }
 }

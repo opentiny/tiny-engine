@@ -65,6 +65,7 @@
     "@opentiny/tiny-engine-toolbar-clean": "workspace:*",
     "@opentiny/tiny-engine-toolbar-collaboration": "workspace:*",
     "@opentiny/tiny-engine-toolbar-fullscreen": "workspace:*",
+    "@opentiny/tiny-engine-toolbar-generate-react": "workspace:*",
     "@opentiny/tiny-engine-toolbar-generate-vue": "workspace:*",
     "@opentiny/tiny-engine-toolbar-lang": "workspace:*",
     "@opentiny/tiny-engine-toolbar-layout": "workspace:*",
@@ -93,7 +94,7 @@
     "monaco-editor": "0.33.0",
     "prettier": "2.7.1",
     "sortablejs": "^1.14.0",
-    "vue": "3.4.23",
+    "vue": "3.4.21",
     "vue-i18n": "^9.9.0"
   },
   "devDependencies": {

@@ -26,7 +26,7 @@
               @editItem="editItem"
             >
               <template #content>
-                <span>{{ translate(item[itemsOptions.textField]) || item.type }}</span>
+                <span>{{ translate(item[itemsOptions.textField]) || item.type || item.title }}</span>
               </template>
               <template #metaForm>
                 <meta-child-item
@@ -116,14 +116,8 @@ export default {
       draggable: true
     }))
 
-    const actionEvents = (item) => {
-      switch (item.type) {
-        case 'add':
-          addItem()
-          break
-        default:
-          break
-      }
+    const updatedColumns = () => {
+      emit('update:modelValue', [...columnsList.value])
     }
 
     const state = reactive({
@@ -155,8 +149,14 @@ export default {
       updatedColumns()
     }
 
-    const updatedColumns = () => {
-      emit('update:modelValue', [...columnsList.value])
+    const actionEvents = (item) => {
+      switch (item.type) {
+        case 'add':
+          addItem()
+          break
+        default:
+          break
+      }
     }
 
     const onValueChange = (index, { propertyKey, propertyValue }) => {

@@ -74,7 +74,7 @@
             <tiny-popover placement="bottom-start" trigger="hover" popper-class="state-data-example-tips">
               <div class="tips-content">
                 <div class="create-content-demo">
-                  <pre><code>{{ getterExample }}</code></pre>
+                  <pre><code>{{ dslMode === 'React' ? getterReactExample : getterExample }}</code></pre>
                 </div>
               </div>
               <template #reference>
@@ -85,7 +85,7 @@
         </template>
       </monaco-editor>
     </tiny-form-item>
-    <tiny-form-item v-if="state.hasAccessor">
+    <tiny-form-item v-if="state.hasAccessor && moduleDisplayStatus[dslMode].globalState">
       <monaco-editor ref="setterEditor" class="variable-editor" :options="options" :value="state.setterEditorValue">
         <template #toolbarStart>
           <div class="label-left-wrap">
@@ -114,6 +114,7 @@
 import { reactive, ref, computed, watch, onBeforeUnmount } from 'vue'
 import { Popover, Form, FormItem, Input, RadioGroup } from '@opentiny/vue'
 import { MonacoEditor } from '@opentiny/tiny-engine-common'
+import { getGlobalConfig } from '@opentiny/tiny-engine-controller'
 import { verifyJsVarName } from '@opentiny/tiny-engine-controller/js/verification'
 import { initCompletion } from '@opentiny/tiny-engine-controller/js/completion'
 import * as Monaco from 'monaco-editor'
@@ -146,6 +147,8 @@ export default {
   },
   emits: ['nameInput'],
   setup(props) {
+    const dslMode = getGlobalConfig()?.dslMode
+    const moduleDisplayStatus = getGlobalConfig()?.moduleDisplayStatus
     const variableEditor = ref(null)
     const getterEditor = ref(null)
     const setterEditor = ref(null)
@@ -374,6 +377,7 @@ export default {
     }
     const getterExample =
       'function getter() {\r\n  // this.state.name = `${this.props.firstName} ${this.props.lastName}`\r\n}' // eslint-disable-line
+    const getterReactExample = 'function getter() {\r\n  return `${this.props.firstName} ${this.props.lastName}`\r\n}' // eslint-disable-line
     const setterExample =
       "function setter() {\r\n  // const [firstName, lastName] = this.state.name.split(' ')\r\n  // this.emit('update:firstName', firstName)\r\n  // this.emit('update:lastName', lastName)\r\n}" // eslint-disable-line
 
@@ -394,7 +398,10 @@ export default {
       editorDidMount,
       validate,
       getFormData,
-      insertContent
+      insertContent,
+      dslMode,
+      moduleDisplayStatus,
+      getterReactExample
     }
   }
 }
