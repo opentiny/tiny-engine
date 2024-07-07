@@ -384,6 +384,7 @@ const generateReactCode = ({ schema, name, type, componentsMap }) => {
 
   const { imports } = generateReactImports(description, name, type, componentsMap)
 
+  // 生成模板
   const result = `${imports.join('\n')}
 
   export default class ${name} extends React.Component {
