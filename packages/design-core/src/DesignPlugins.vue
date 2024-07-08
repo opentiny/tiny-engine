@@ -82,11 +82,25 @@
       </keep-alive>
     </div>
   </div>
-  <!--  AI 悬浮窗  -->
+
   <Teleport to="body">
+    <tiny-dialog-box v-model:visible="keyFormVisible" title="欢迎使用AI对话功能" >
+      <tiny-form :model="keyForm" :rules="rules" ref="keyFormRef" label-width="0" class="demo-form">
+        <tiny-alert :icon="TinyIconAssociation" :closable="false"  description="当前AI大模型为使用文心一言：ERNIE-Bot-turbo"></tiny-alert>
+        <tiny-alert :icon="TinyIconCommission" :closable="false"  description="尝试用自己的ACCESS_TOKEN开启AI对话功能吧！"></tiny-alert>
+        <tiny-form-item label="" prop="accessToken">
+          <tiny-input v-model="keyForm.accessToken" placeholder="点击这里输入你的access_token" validate-event></tiny-input>
+        </tiny-form-item>
+      </tiny-form>
+      <template #footer>
+        <tiny-button type="primary" @click="submitKeyForm"> 确定 </tiny-button>
+        <tiny-button @click="closeKeyFormDialog"> 取消 </tiny-button>
+      </template>
+    </tiny-dialog-box>
+    <!--  AI 悬浮窗  -->
     <div v-if="robotVisible" class="robot-dialog">
       <keep-alive>
-        <component :is="robotComponent" @close-chat="robotVisible = false"></component>
+        <component :is="robotComponent" @close-chat="robotVisible = false" @key-visible="openKeyFormDialog"></component>
       </keep-alive>
     </div>
   </Teleport>
@@ -94,24 +108,30 @@
 
 <script>
 import { reactive, ref, watch } from 'vue'
-import { Popover, Tooltip } from '@opentiny/vue'
+import { Popover, Tooltip, DialogBox, Button, Input, Alert, Form, FormItem  } from '@opentiny/vue'
 import { useLayout, usePage } from '@opentiny/tiny-engine-controller'
 import Addons from '@opentiny/tiny-engine-app-addons'
 import { PublicIcon } from '@opentiny/tiny-engine-common'
+import { iconCommission, iconAssociation } from '@opentiny/vue-icon'
+import { submitHandle } from '@opentiny/vue-renderless/wizard'
 
 export default {
+  methods: { submitHandle },
   components: {
     TinyPopover: Popover,
     TinyTooltip: Tooltip,
+    TinyDialogBox: DialogBox,
+    TinyButton: Button,
+    TinyInput: Input,
+    TinyAlert: Alert,
+    TinyForm: Form,
+    TinyFormItem: FormItem,
     PublicIcon
-  },
-  props: {
+  }, props: {
     renderPanel: {
       type: String
     }
-  },
-  emits: ['click', 'node-click'],
-  setup(props, { emit }) {
+  }, emits: ['click', 'node-click'], setup(props, { emit }) {
     const plugins = Addons.plugins
     const components = {}
     const iconComponents = {}
@@ -185,6 +205,48 @@ export default {
       }
     })
 
+    const keyFormVisible = ref(false)
+    const keyFormRef = ref(null)
+    const keyForm = ref({
+      accessToken: ''
+    })
+    const accessTokenReg = /^[A-Za-z0-9\-.]+$/
+    const accessTokenValidate = (rule, value, callback) => {
+      if (value.length !== 70 && !accessTokenReg.test(value)) {
+        callback(new Error('参数错误，请输入70位的英文数字字符串'))
+      } else {
+        callback()
+      }
+    }
+    const rules = ref({
+      accessToken: [
+        { required: true, message: '你的ACCESS_TOKEN不能为空', trigger: 'blur' },
+        { validator: accessTokenValidate, trigger: 'blur' }
+      ]
+    })
+    const openKeyFormDialog = (value) =>{
+      keyFormVisible.value = value
+    }
+    const closeKeyFormDialog = () =>{
+      keyFormVisible.value = false
+    }
+    const submitKeyForm = () =>{
+      keyFormRef.value.validate((valid)=>{
+        if(valid){
+          setOrUpdateLocalStorage('accessToken',keyForm.value.accessToken)
+          keyFormVisible.value = false
+        }
+      })
+    }
+
+    function setOrUpdateLocalStorage(key, value) {
+      if (localStorage.getItem(key) !== null) {
+        localStorage.setItem(key, value);
+      } else {
+        localStorage.setItem(key, value);
+      }
+    }
+
     const openAIRobot = () => {
       robotComponent.value = components.Robot
       robotVisible.value = !robotVisible.value
@@ -205,6 +267,13 @@ export default {
       clickMenu,
       openAIRobot,
       pluginRef,
+      keyFormRef,
+      keyForm,
+      rules,
+      closeKeyFormDialog,
+      submitKeyForm,
+      openKeyFormDialog,
+      keyFormVisible,
       robotVisible,
       robotComponent,
       close,
@@ -214,10 +283,11 @@ export default {
       iconComponents,
       completed,
       doCompleted,
-      pluginState
+      pluginState,
+      TinyIconAssociation: iconAssociation(),
+      TinyIconCommission: iconCommission(),
     }
-  }
-}
+  }}
 </script>
 
 <style lang="less" scoped>
@@ -335,6 +405,7 @@ export default {
     }
   }
 }
+
 
 .robot-dialog {
   position: fixed;

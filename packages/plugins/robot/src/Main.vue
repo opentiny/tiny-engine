@@ -93,7 +93,7 @@ import {
   Loading,
   Dropdown as TinyDropdown,
   DropdownMenu as TinyDropdownMenu,
-  DropdownItem as TinyDropdownItem
+  DropdownItem as TinyDropdownItem,
 } from '@opentiny/vue'
 import { useCanvas, useHistory, usePage, useModal } from '@opentiny/tiny-engine-controller'
 import { iconChevronDown } from '@opentiny/vue-icon'
@@ -113,8 +113,8 @@ export default {
     TinyDropdownItem,
     IconChevronDown: iconChevronDown()
   },
-  emits: ['close-chat'],
-  setup() {
+  emits: ['close-chat','keyVisible'],
+  setup(props, {emit}) {
     const { initData, isBlock, isSaved, clearCurrentState } = useCanvas()
     const avatarUrl = ref('')
     const chatWindowOpened = ref(true)
@@ -171,26 +171,28 @@ export default {
       useHistory().addHistory()
     }
 
-    const codeRules = `
-    请扮演一名前端开发专家，生成代码时遵从以下几条要求:
-###
-1. 只使用element-ui组件库完成代码编写
-2. 使用vue2技术栈
-3. 回复中只能有一个代码块
-4. el-table标签内不得出现el-table-column
-###
-  `
+//     const codeRules = `
+//     请扮演一名前端开发专家，生成代码时遵从以下几条要求:
+// ###
+// 1. 只使用element-ui组件库完成代码编写
+// 2. 使用vue2技术栈
+// 3. 回复中只能有一个代码块
+// 4. el-table标签内不得出现el-table-column
+// ###
+//   `
 
+    const codeRules = ''
     // 在每一次发送请求之前，都把引入区块的内容，给放到第一条消息中
     // 为了不污染存储在localstorage里的用户的原始消息，这里进行了简单的对象拷贝
     // 引入区块不存放在localstorage的原因：因为区块是可以变化的，用户可能在同一个会话中，对区块进行了删除和创建。那么存放的数据就不是即时数据了。
     const getSendSeesionProcess = () => {
-      const sendProcess = { ...sessionProcess }
+      const accessToken = localStorage.getItem('accessToken');
+      const sendProcess = { ...sessionProcess, accessToken}
       const firstMessage = sendProcess.messages[0]
       firstMessage.content
       sendProcess.messages = [
         { ...firstMessage, content: `${getBlockContent()}\n${codeRules}\n${firstMessage.content}` },
-        ...sendProcess.messages.slice(1)
+        ...sendProcess.messages.slice(1),
       ]
       delete sendProcess.displayMessages
       return sendProcess
@@ -201,6 +203,7 @@ export default {
       content,
       name: 'AI'
     })
+
     const sendRequest = () => {
       http
         .post('/app-center/api/ai/chat', getSendSeesionProcess(), { timeout: 600000 })
@@ -221,7 +224,10 @@ export default {
           inProcesing.value = false
           connectedFailed.value = false
         })
-        .catch(() => {
+        .catch((error) => {
+          if(error.code==='CM001'){
+            emit('keyVisible', true)
+          }
           messages.value[messages.value.length - 1].content = '连接失败'
           localStorage.removeItem('aiChat')
           inProcesing.value = false
