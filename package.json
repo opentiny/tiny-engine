@@ -3,10 +3,10 @@
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "dev": "pnpm run setup && concurrently 'pnpm:serve:backend' 'pnpm:serve:frontend'",
+    "dev": "pnpm run setup && concurrently 'pnpm:serve:backend' 'pnpm:dev:demo:frontend'",
     "dev:mock": "pnpm --filter @opentiny/tiny-engine dev",
     "dev:demo": "pnpm run setup && concurrently 'pnpm:serve:backend' 'pnpm:dev:demo:frontend'",
-    "serve:frontend": "pnpm --filter @opentiny/tiny-engine serve",
+    "serve:frontend": "pnpm --filter designer-demo dev",
     "dev:demo:frontend": "pnpm --filter designer-demo dev",
     "serve:backend": "pnpm --filter @opentiny/tiny-engine-mock dev",
     "build:plugin": "pnpm --filter @opentiny/tiny-engine-* --filter @opentiny/tiny-engine build",
