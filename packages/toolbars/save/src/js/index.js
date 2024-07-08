@@ -11,12 +11,19 @@
  */
 
 import { reactive, ref } from 'vue'
-import { useBlock, useCanvas, useLayout, useNotify, usePage } from '@opentiny/tiny-engine-meta-register'
+import {
+  useBlock,
+  useCanvas,
+  useLayout,
+  useNotify,
+  usePage,
+  getMetaApi,
+  META_APP
+} from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { handlePageUpdate } from '@opentiny/tiny-engine-common/js/http'
 
 const { pageState, isSaved, isBlock, canvasApi } = useCanvas()
-const { PLUGIN_NAME, getPluginApi } = useLayout()
 const { getCurrentBlock } = useBlock()
 const { PAGE_STATUS } = constants
 const { pageSettingState, isTemporaryPage } = usePage()
@@ -31,7 +38,7 @@ export const isLoading = ref(false)
 
 // 保存或新建区块
 const saveBlock = async (pageSchema) => {
-  const api = getPluginApi(PLUGIN_NAME.BlockManage)
+  const api = getMetaApi(META_APP.BlockManage)
   const block = getCurrentBlock()
 
   block.label = pageSchema.fileName
@@ -117,12 +124,12 @@ export const openCommon = async () => {
   // 获取请求前schema代码，暂时先屏蔽
   /**
    if (isBlock()) {
-          const api = getPluginApi(PLUGIN_NAME.BlockManage)
+          const api = getMetaApi(META_APP.BlockManage)
           const block = getCurrentBlock()
           const remote = await api.getBlockById(block?.id)
           state.originalCode = JSON.stringify(remote?.content || {}, null, 2)
         } else {
-          const api = getPluginApi(PLUGIN_NAME.AppManage)
+          const api = getMetaApi(META_APP.AppManage)
           const remote = await api.getPageById(pageState?.currentPage?.id)
           state.originalCode = JSON.stringify(remote?.['page_content'] || {}, null, 2)
         }

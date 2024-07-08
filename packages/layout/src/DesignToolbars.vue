@@ -17,7 +17,6 @@
 
 <script>
 import { reactive, nextTick } from 'vue'
-import { useLayout } from '@opentiny/tiny-engine-meta-register'
 import { ProgressBar } from '@opentiny/tiny-engine-common'
 
 export default {
@@ -45,9 +44,6 @@ export default {
         centerBar.push(item)
       } else {
         leftBar.push(item)
-      }
-      if (item.api) {
-        useLayout().registerPluginApi({ [item.id]: item.api })
       }
     })
     nextTick(() => {

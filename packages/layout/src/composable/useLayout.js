@@ -12,7 +12,7 @@
 
 import { reactive, nextTick } from 'vue'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { META_APP as PLUGIN_NAME } from '@opentiny/tiny-engine-meta-register'
+import { META_APP as PLUGIN_NAME, getMetaApi } from '@opentiny/tiny-engine-meta-register'
 
 const { PAGE_STATUS } = constants
 
@@ -33,8 +33,7 @@ const layoutState = reactive({
   },
   plugins: {
     fixedPanels: [PLUGIN_NAME.Materials],
-    render: null,
-    api: {} // 插件需要注册交互API到这里
+    render: null
   },
   settings: {
     render: 'props',
@@ -47,10 +46,6 @@ const layoutState = reactive({
   },
   pageStatus: ''
 })
-
-const registerPluginApi = (api) => {
-  Object.assign(layoutState.plugins.api, api)
-}
 
 const getScale = () => layoutState.dimension.scale
 
@@ -68,13 +63,6 @@ const activeSetting = (name) => {
   })
 }
 
-// 获取当前插件注册的Api
-const getPluginApi = (pluginName) => {
-  const { plugins } = layoutState
-
-  return plugins.api[pluginName] || plugins.api
-}
-
 // 激活plugin面板并返回当前插件注册的Api
 const activePlugin = (name, noActiveRender) => {
   const { plugins } = layoutState
@@ -84,7 +72,7 @@ const activePlugin = (name, noActiveRender) => {
   }
 
   return new Promise((resolve) => {
-    nextTick(() => resolve(getPluginApi(name)))
+    nextTick(() => resolve(getMetaApi(name)))
   })
 }
 
@@ -116,8 +104,6 @@ export default () => {
     getScale,
     setDimension,
     getDimension,
-    registerPluginApi,
-    getPluginApi,
     getPluginState,
     pluginState,
     isEmptyPage

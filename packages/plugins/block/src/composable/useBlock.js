@@ -20,7 +20,15 @@ import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { getCanvasStatus } from '@opentiny/tiny-engine-common/js/canvas'
 import { ast2String, parseExpression } from '@opentiny/tiny-engine-common/js/ast'
 import { getCssObjectFromStyleStr } from '@opentiny/tiny-engine-common/js/css'
-import { useCanvas, useTranslate, useEditorInfo, useBreadcrumb, useLayout } from '@opentiny/tiny-engine-meta-register'
+import {
+  useCanvas,
+  useTranslate,
+  useEditorInfo,
+  useBreadcrumb,
+  useLayout,
+  getMetaApi,
+  META_APP
+} from '@opentiny/tiny-engine-meta-register'
 
 const { SORT_TYPE, SCHEMA_DATA_TYPE, BLOCK_OPENNESS } = constants
 
@@ -473,8 +481,7 @@ const appendEventEmit = ({ eventName, functionName } = {}) => {
     return
   }
 
-  const { PLUGIN_NAME, getPluginApi } = useLayout()
-  const getMethods = getPluginApi(PLUGIN_NAME.Page)?.getMethods
+  const getMethods = getMetaApi(META_APP.Page)?.getMethods
 
   if (getMethods && typeof getMethods === 'function') {
     const method = getMethods()?.[functionName]

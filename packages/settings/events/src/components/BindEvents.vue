@@ -87,8 +87,16 @@
 <script>
 import { computed, reactive, watchEffect } from 'vue'
 import { Popover, Button } from '@opentiny/vue'
-import { useModal } from '@opentiny/tiny-engine-meta-register'
-import { getMergeMeta, useCanvas, useLayout, useBlock, useMaterial } from '@opentiny/tiny-engine-meta-register'
+import {
+  useModal,
+  getMergeMeta,
+  useCanvas,
+  useLayout,
+  useBlock,
+  useMaterial,
+  getMetaApi,
+  META_APP
+} from '@opentiny/tiny-engine-meta-register'
 import { BlockLinkEvent, SvgButton } from '@opentiny/tiny-engine-common'
 import { iconHelpQuery, iconChevronDown } from '@opentiny/vue-icon'
 import BindEventsDialog, { open as openDialog } from './BindEventsDialog.vue'
@@ -107,13 +115,13 @@ export default {
   },
   inheritAttrs: false,
   setup() {
-    const { PLUGIN_NAME, activePlugin, getPluginApi } = useLayout()
+    const { PLUGIN_NAME, activePlugin } = useLayout()
     const { pageState } = useCanvas()
     const { getBlockEvents, getCurrentBlock, removeEventLink } = useBlock()
     const { getMaterial } = useMaterial()
     const { confirm } = useModal()
 
-    const { highlightMethod } = getPluginApi(PLUGIN_NAME.Page)
+    const { highlightMethod } = getMetaApi(META_APP.Page)
 
     const { commonEvents = {} } = getMergeMeta('engine.setting.event').options
 

@@ -22,7 +22,14 @@
 
 <script>
 import { ast2String, string2Ast } from '@opentiny/tiny-engine-common/js/ast'
-import { getMergeMeta, useCanvas, useHistory, useLayout } from '@opentiny/tiny-engine-meta-register'
+import {
+  getMergeMeta,
+  useCanvas,
+  useHistory,
+  useLayout,
+  getMetaApi,
+  META_APP
+} from '@opentiny/tiny-engine-meta-register'
 import { Button, DialogBox } from '@opentiny/vue'
 import { nextTick, provide, reactive, ref } from 'vue'
 import { METHOD_TIPS_MAP } from './constants'
@@ -53,9 +60,9 @@ export default {
   setup(props) {
     const { BindEventsDialogSidebar, BindEventsDialogContent } = getMergeMeta(meta.id).components
 
-    const { PLUGIN_NAME, getPluginApi, activePlugin } = useLayout()
+    const { PLUGIN_NAME, activePlugin } = useLayout()
     const { pageState } = useCanvas()
-    const { getMethods, saveMethod, highlightMethod } = getPluginApi(PLUGIN_NAME.Page)
+    const { getMethods, saveMethod, highlightMethod } = getMetaApi(META_APP.Page)
 
     const state = reactive({
       editorContent: '',

@@ -53,7 +53,7 @@
 
 <script>
 import { VueMonaco } from '@opentiny/tiny-engine-common'
-import { useLayout } from '@opentiny/tiny-engine-meta-register'
+import { getMetaApi, META_APP } from '@opentiny/tiny-engine-meta-register'
 import { Input, Popover, Switch } from '@opentiny/vue'
 import { iconHelpQuery } from '@opentiny/vue-icon'
 import { inject } from 'vue'
@@ -71,8 +71,7 @@ export default {
     dialogVisible: Boolean
   },
   setup() {
-    const { PLUGIN_NAME, getPluginApi } = useLayout()
-    const { getMethodNameList } = getPluginApi(PLUGIN_NAME.Page)
+    const { getMethodNameList } = getMetaApi(META_APP.Page)
 
     const context = inject('context')
 

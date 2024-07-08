@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { useLayout } from '@opentiny/tiny-engine-meta-register'
+import { getMetaApi, META_APP } from '@opentiny/tiny-engine-meta-register'
 import { Search } from '@opentiny/vue'
 import { iconYes } from '@opentiny/vue-icon'
 import { inject, ref, watchEffect } from 'vue'
@@ -36,8 +36,7 @@ export default {
     }
   },
   setup(props) {
-    const { PLUGIN_NAME, getPluginApi } = useLayout()
-    const { getMethodNameList } = getPluginApi(PLUGIN_NAME.Page)
+    const { getMethodNameList } = getMetaApi(META_APP.Page)
 
     const searchValue = ref('')
     const filteredMethodList = ref([])
