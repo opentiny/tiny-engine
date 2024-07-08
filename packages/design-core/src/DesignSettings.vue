@@ -1,40 +1,43 @@
 <!-- 右侧插件栏,需要将下方的tabs改成DesignPlugins里插件菜单的方式 -->
 <template>
-  <div>
-    <div id="tiny-engine-nav-panel">
-      <!-- 图标菜单上侧区域（主要icon） -->
-      <ul class="nav-panel-lists">
-        <li
-          v-for="(item, index) in state.leftList"
-          :key="index"
-          :class="{
-            'list-item': true,
-            'first-item': index === 0,
-            active: item.name === renderPanel
-          }"
-          :title="item.title"
-          @click="clickMenu({ item, index })"
-        >
-          <div>
-            <span class="item-icon">
-              <svg-icon
-                v-if="iconComponents[item.name]"
-                :name="iconComponents[item.name]"
-                class="panel-icon"
-              ></svg-icon>
-              <component v-else :is="iconComponents[item.name]" class="panel-icon"></component>
-            </span>
-          </div>
-        </li>
-      </ul>
-    </div>
     <!-- 插件面板 -->
-    <div v-show="renderPanel && components[renderPanel]" id="tiny-engine-right-panel">
-      <div class="right-panel-wrap">
-        <component :is="components[renderPanel]"></component>
-        <div v-show="activating" class="active2" />
-      </div>
+    <div
+    v-show="renderPanel && components[renderPanel]"
+    id="tiny-engine-right-panel"
+    :class="[renderPanel, { 'is-fixed': settingsState.fixedPanels.includes(renderPanel) }]"
+  >
+    <div class="right-panel-wrap">
+      <component
+        :is="components[renderPanel]"
+        :fixed-panels="settingsState.fixedPanels"
+        @close="close"
+        @fixPanel="fixPanel"
+      ></component>
+      <div v-show="activating" class="active2" />
     </div>
+  </div>
+  <div id="tiny-engine-nav-panel">
+    <!-- 图标菜单 -->
+    <ul class="nav-panel-lists">
+      <li
+        v-for="(item, index) in state.leftList"
+        :key="index"
+        :class="{
+          'list-item': true,
+          'first-item': index === 0,
+          active: item.name === renderPanel
+        }"
+        :title="item.title"
+        @click="clickMenu({ item, index })"
+      >
+        <div>
+          <span class="item-icon">
+            <svg-icon v-if="iconComponents[item.name]" :name="iconComponents[item.name]" class="panel-icon"></svg-icon>
+            <component v-else :is="iconComponents[item.name]" class="panel-icon"></component>
+          </span>
+        </div>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -60,11 +63,13 @@ export default {
 
   setup(props) {
     const { renderPanel } = toRefs(props)
-    const { layoutState } = useLayout()
+    const {
+      layoutState: { settings: settingsState }
+    } = useLayout()
     const settings = Addons && Addons.settings
     const components = {}
     const iconComponents = {}
-    const activating = computed(() => layoutState.settings.activating) //高亮显示
+    const activating = computed(() => settingsState.activating) //高亮显示
     const showMask = ref(true)
 
     Addons.settings.forEach(({ name, component, icon }) => {
@@ -78,7 +83,7 @@ export default {
 
     //点击右侧菜单icon按钮
     const clickMenu = ({ item }) => {
-      if (layoutState.settings.render == item.name) {
+      if (settingsState.render == item.name) {
         setRender(null)
         return
       }
@@ -91,22 +96,30 @@ export default {
     }
 
     const setRender = (curName) => {
-      layoutState.settings.render = curName
+      settingsState.render = curName
     }
     watch(renderPanel, (n) => {
       setRender(n)
     })
+
+    const fixPanel = (pluginName) => {
+      settingsState.fixedPanels = settingsState.fixedPanels?.includes(pluginName)
+        ? settingsState.fixedPanels?.filter((item) => item !== pluginName)
+        : [...settingsState.fixedPanels, pluginName]
+    }
 
     return {
       state,
       showMask,
       settings,
       activating,
-      layoutState,
+      settingsState,
       components,
       iconComponents,
       clickMenu,
-      renderPanel
+      renderPanel,
+      close,
+      fixPanel
     }
   }
 }
@@ -116,15 +129,14 @@ export default {
 #tiny-engine-right-panel {
   width: var(--base-right-panel-width);
   height: calc(100vh - var(--base-top-panel-height));
-  border-right: 1px solid var(--ti-lowcode-plugin-setting-panel-border-left-color);
+  border-left: 1px solid var(--ti-lowcode-plugin-panel-border-right-color);
   background: var(--ti-lowcode-common-component-bg);
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: 0;
+  top: var(--base-top-panel-height);
   right: var(--base-nav-panel-width);
   z-index: 999;
-  padding: 20px 10px 0 10px;
 
   &.I18n {
     width: auto;
@@ -133,14 +145,13 @@ export default {
   &.is-fixed {
     position: relative;
     top: 0;
-    left: 0;
+    right: 0;
   }
 
   .right-panel-wrap {
     width: 100%;
     height: 100%;
     position: relative;
-
     :deep(.tiny-tabs__nav.is-show-active-bar) .tiny-tabs__item {
       margin-right: 0;
     }
@@ -156,7 +167,7 @@ export default {
   background: var(--ti-lowcode-common-layout-bg);
   box-sizing: border-box;
   z-index: 1000;
-  border-right: 1px solid var(--ti-lowcode-plugin-panel-border-right-color);
+  border-left: 1px solid var(--ti-lowcode-plugin-panel-border-right-color);
 
   &.completed {
     display: block;
@@ -169,11 +180,6 @@ export default {
     display: flex;
     flex-direction: column;
     height: 100vh;
-
-    &.bottom {
-      flex: 1;
-      padding-bottom: 36px;
-    }
 
     .list-item {
       width: 100%;
@@ -228,23 +234,6 @@ export default {
       }
     }
   }
-}
-
-.robot-dialog {
-  position: fixed;
-  width: 700px;
-  z-index: 5;
-  right: 40px;
-  bottom: 40px;
-  background-color: var(--ti-lowcode-common-component-bg);
-  box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.15);
-  border: 1px solid #dbdbdb;
-  padding: 10px 20px 30px;
-  border-radius: 12px;
-}
-
-:deep(.panel-svg) {
-  font-size: 22px;
 }
 
 :deep(.svg-icon.icon-plugin-icon-plugin-help) {

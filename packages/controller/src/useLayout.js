@@ -25,6 +25,11 @@ const PLUGIN_NAME = {
   OutlineTree: 'OutlineTree',
   save: 'save'
 }
+const SETTING_NAME = {
+  Event: 'event',
+  Style: 'style',
+  Props: 'props'
+}
 
 const pluginState = reactive({
   pluginEvent: 'all'
@@ -47,6 +52,7 @@ const layoutState = reactive({
     api: {} // 插件需要注册交互API到这里
   },
   settings: {
+    fixedPanels: [],
     render: null,
     api: null,
     activating: false, // 右侧面版激活提示状态
@@ -77,7 +83,7 @@ const activeSetting = (name) => {
     }, 1000)
   })
 }
-// 关闭右侧插件面板
+// 关闭右侧setting插件面板
 const closeSetting = (forceClose) => {
   const { settings } = layoutState
   if (forceClose) {
@@ -105,7 +111,7 @@ const activePlugin = (name, noActiveRender) => {
   })
 }
 
-// 关闭插件面板
+// 关闭左侧plugin插件面板
 const closePlugin = (forceClose) => {
   const { plugins } = layoutState
   if (!plugins.fixedPanels.includes(plugins.render) || forceClose) {
@@ -126,6 +132,7 @@ const isEmptyPage = () => layoutState.pageStatus?.state === PAGE_STATUS.Empty
 export default () => {
   return {
     PLUGIN_NAME,
+    SETTING_NAME,
     activeSetting,
     activePlugin,
     closePlugin,
