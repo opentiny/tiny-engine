@@ -78,20 +78,29 @@ const getConfigureMap = () => {
 }
 
 /**
- * 附加基础属性，基础属性会插入在数组头部
- * @param {any[]} properties
+ * 附加基础属性，基础属性可以通过注册表配置
+ * @param {any[]} schemaProperties
  * @returns
  */
-const patchBaseProps = (properties) => {
-  if (!Array.isArray(properties)) {
+const patchBaseProps = (schemaProperties) => {
+  if (!Array.isArray(schemaProperties)) {
     return
   }
 
-  const baseProps = getOptions(meta.id).baseProperties || []
+  const { properties = [], insertPosition = 'end' } = getOptions(meta.id).basePropertyOptions || {}
 
-  for (const prop of baseProps.slice().reverse()) {
-    if (!properties.some(({ property }) => property === prop.property)) {
-      properties.unshift(JSON.parse(JSON.stringify(prop)))
+  for (const props of properties) {
+    // TODO 判断分组相同，是否有其他更好的方法
+    const group = schemaProperties.find((item) => item.label.zh_CN === props.label.zh_CN)
+
+    if (group) {
+      if (insertPosition === 'start') {
+        group.content.splice(0, 0, ...props.content)
+      } else {
+        group.content.push(...props.content)
+      }
+    } else {
+      schemaProperties.push(props)
     }
   }
 }
@@ -101,7 +110,7 @@ const patchBaseProps = (properties) => {
  * @param {*} data
  */
 const registerComponentToResource = (data) => {
-  patchBaseProps(data.schema?.properties?.[0]?.content)
+  patchBaseProps(data.schema?.properties)
 
   if (Array.isArray(data.component)) {
     const { component, ...others } = data
