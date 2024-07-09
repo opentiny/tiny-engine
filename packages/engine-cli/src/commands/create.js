@@ -45,7 +45,7 @@ export function createPlatform(name, options = {}) {
   const configContent = generateConfig(mergedOptions)
   const pkgContent = generatePackageJson(name, mergedOptions, templatePath)
 
-  fs.outputFileSync(path.resolve(destPath, 'engine.config.js'), configContent, {})
+  fs.outputFileSync(path.resolve(destPath, 'engine.config.js'), configContent)
   fs.outputJSONSync(path.resolve(destPath, 'package.json'), pkgContent)
 
   logger.log(
