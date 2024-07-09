@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "cross-env VITE_THEME=light vite",
-    "build": "cross-env VITE_THEME=light vite build"
+    "build:alpha": "cross-env VITE_THEME=light vite build --mode alpha",
+    "build": "cross-env VITE_THEME=light vite build --mode prod"
   },
   "dependencies": {
     "vue": "^3.4.21",
