@@ -1,14 +1,11 @@
 <template>
-  <plugin-panel :title="shortcut ? '' : '物料'" @close="$emit('close')">
-    <template #header>
-      <svg-button
-        class="item icon-sidebar"
-        :class="[fixedPanels?.includes(PLUGIN_NAME.Materials) && 'active']"
-        name="fixed"
-        :tips="!fixedPanels?.includes(PLUGIN_NAME.Materials) ? '固定面板' : '解除固定面板'"
-        @click="$emit('fixPanel', PLUGIN_NAME.Materials)"
-      ></svg-button>
-    </template>
+  <plugin-panel
+    :title="shortcut ? '' : '物料'"
+    :fixed-panels="fixedPanels"
+    :fixed-name="PLUGIN_NAME.Materials"
+    @close="$emit('close')"
+  >
+    <template #header> </template>
     <template #content>
       <tiny-tabs v-model="activeName" tab-style="button-card" class="full-width-tabs" @click="tabClick">
         <tiny-tab-item name="components" title="组件">
@@ -27,7 +24,7 @@
 <script>
 import { ref, reactive, provide } from 'vue'
 import { Tabs, TabItem } from '@opentiny/vue'
-import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
+import { PluginPanel } from '@opentiny/tiny-engine-common'
 import ComponentPanel from './component/Main.vue'
 import BlockPanel from './block/Main.vue'
 import BlockGroupPanel from './block/BlockGroupPanel.vue'
@@ -48,10 +45,8 @@ export default {
     ComponentPanel,
     BlockPanel,
     BlockGroupPanel,
-    BlockVersionSelect,
-    SvgButton
+    BlockVersionSelect
   },
-
   props: {
     shortcut: [Boolean, String],
     fixedPanels: {
@@ -69,7 +64,7 @@ export default {
       emitEvent: emit
     })
 
-    provide('panelState', panelState)
+    provide('panelState', panelState) //将整个panelState provide出去
 
     const tabClick = (tabs) => {
       if (tabs.name === 'components') {
@@ -78,7 +73,6 @@ export default {
       }
     }
     const { PLUGIN_NAME } = useLayout()
-
     return {
       activeName,
       tabClick,

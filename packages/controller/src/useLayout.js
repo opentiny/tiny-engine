@@ -23,7 +23,15 @@ const PLUGIN_NAME = {
   Lock: 'Lock',
   Tutorial: 'Tutorial',
   OutlineTree: 'OutlineTree',
-  save: 'save'
+  save: 'save',
+  Page: 'AppManage',
+  Block: 'BlockManage',
+  Datasource: 'Collections',
+  Bridge: 'Bridge',
+  I18n: 'I18n',
+  Script: 'PageController',
+  Data: 'DataSource',
+  Schema: 'Schema',
 }
 const SETTING_NAME = {
   Event: 'event',

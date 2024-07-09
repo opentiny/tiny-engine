@@ -1,5 +1,11 @@
 <template>
-  <plugin-panel class="outlinebox" title="大纲树" @close="$emit('close')">
+  <plugin-panel
+    class="outlinebox"
+    title="大纲树"
+    :fixed-panels="fixedPanels"
+    :fixed-name="PLUGIN_NAME.OutlineTree"
+    @close="$emit('close')"
+  >
     <template #header>
       <!-- TODO 功能待实现 -->
       <!-- <tiny-tooltip class="item" effect="dark" :content="state.expandAll ? '收缩' : '展开'" placement="bottom">
@@ -22,13 +28,6 @@
           <svg-icon name="fixed"></svg-icon>
         </span>
       </tiny-tooltip> -->
-      <svg-button
-        class="item icon-sidebar"
-        :class="[fixedPanels?.includes(PLUGIN_NAME.OutlineTree) && 'active']"
-        :tips="!fixedPanels?.includes(PLUGIN_NAME.OutlineTree) ? '固定面板' : '解除固定面板'"
-        @click="$emit('fixPanel', PLUGIN_NAME.OutlineTree)"
-        name="fixed"
-      ></svg-button>
     </template>
     <template #content>
       <div class="tree-wrap lowcode-scrollbar">
@@ -71,7 +70,7 @@
 </template>
 
 <script>
-import { reactive, watch, ref, onActivated, computed } from 'vue'
+import { reactive, watch, ref, onActivated, computed , provide } from 'vue'
 import { Grid, GridColumn } from '@opentiny/vue'
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
 import { constants } from '@opentiny/tiny-engine-utils'
@@ -97,9 +96,14 @@ export default {
     }
   },
   emits: ['close', 'fix-panel'],
-  setup() {
+  setup(props, { emit }) {
     const { pageState, getInstance } = useCanvas()
     const { getMaterial } = useResource()
+
+    const panelState = reactive({
+      emitEvent: emit
+    })
+    provide('panelState', panelState)
 
     const filterSchema = (data) => {
       const translateChild = (data) => {

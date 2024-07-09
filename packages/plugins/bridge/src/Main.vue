@@ -1,5 +1,11 @@
 <template>
-  <plugin-panel title="资源管理" :isCloseLeft="false" @close="closePanel">
+  <plugin-panel
+    title="资源管理"
+    :isCloseLeft="false"
+    :fixed-panels="fixedPanels"
+    :fixed-name="PLUGIN_NAME.Bridge"
+    @close="closePanel"
+  >
     <template #header>
       <link-button :href="docsUrl"></link-button>
       <svg-button name="add-utils" placement="left" :tips="tips" @click="addResource('npm')"></svg-button>
@@ -19,7 +25,7 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue'
+import { ref, reactive,computed, provide } from 'vue'
 import { Tabs, TabItem } from '@opentiny/vue'
 import { PluginPanel, SvgButton, LinkButton } from '@opentiny/tiny-engine-common'
 import { useHelp } from '@opentiny/tiny-engine-controller'
@@ -28,6 +34,7 @@ import { RESOURCE_TYPE } from './js/resource'
 import BridgeManage from './BridgeManage.vue'
 import BridgeSetting, { openPanel, closePanel } from './BridgeSetting.vue'
 import { setType, RESOURCE_TIP } from './js/resource'
+import { useLayout } from '@opentiny/tiny-engine-controller'
 
 export default {
   components: {
@@ -39,12 +46,22 @@ export default {
     BridgeSetting,
     LinkButton
   },
-  setup() {
+  props: {
+    fixedPanels: {
+      type: Array
+    }
+  },
+  emits: ['fix-panel'],
+  setup(props, { emit }) {
     const activedName = ref(RESOURCE_TYPE.Util)
     const bridge = ref(null)
     const utilsRef = ref(null)
     const tips = computed(() => RESOURCE_TIP[activedName.value])
     const docsUrl = useHelp().getDocsUrl('bridge')
+    const panelState = reactive({
+      emitEvent: emit
+    })
+    provide('panelState', panelState)
 
     const switchTab = (tab) => {
       closePanel()
@@ -67,6 +84,7 @@ export default {
       activedName.value === RESOURCE_TYPE.Util ? utilsRef.value.add(type) : bridge.value.add(type)
     }
 
+    const { PLUGIN_NAME } = useLayout()
     return {
       addResource,
       RESOURCE_TYPE,
@@ -80,7 +98,8 @@ export default {
       docsUrl,
       utilsRef,
       tips,
-      isVsCodeEnv
+      isVsCodeEnv,
+      PLUGIN_NAME
     }
   }
 }

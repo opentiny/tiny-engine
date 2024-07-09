@@ -1,39 +1,43 @@
 <template>
-  <div class="plugin-page-js-container">
-    <div class="code-edit-head">
-      <div class="head-left">
-        <span class="title">页面 JS</span>
-        <link-button :href="docsUrl"></link-button>
+  <plugin-panel
+    title="页面 JS"
+    :fixed-panels="fixedPanels"
+    :fixed-name="PLUGIN_NAME.Script"
+    @close="$emit('close')"
+    class="plugin-page-js-container"
+  >
+    <template #header>
+      <link-button :href="docsUrl" class="head-left"></link-button>
+      <tiny-button type="primary" class="save-btn" @click="saveMethods">
+        <span>保存</span>
+        <span v-show="state.isChanged" class="dots"></span>
+      </tiny-button>
+    </template>
+    <template #content>
+      <div class="code-edit-content">
+        <monaco-editor
+          ref="monaco"
+          :value="state.script"
+          :options="options"
+          @change="change"
+          @editorDidMount="editorDidMount"
+        ></monaco-editor>
       </div>
-      <div class="head-right">
-        <tiny-button type="primary" class="save-btn" @click="saveMethods">
-          <span>保存</span>
-          <span v-show="state.isChanged" class="dots"></span>
-        </tiny-button>
-        <close-icon @close="close"></close-icon>
-      </div>
-    </div>
-    <div class="code-edit-content">
-      <monaco-editor
-        ref="monaco"
-        :value="state.script"
-        :options="options"
-        @change="change"
-        @editorDidMount="editorDidMount"
-      ></monaco-editor>
-    </div>
-  </div>
+    </template>
+  </plugin-panel>
 </template>
 
 <script>
-import { onBeforeUnmount } from 'vue'
+import { onBeforeUnmount, reactive, provide } from 'vue'
 import { Button } from '@opentiny/vue'
+import { PluginPanel } from '@opentiny/tiny-engine-common'
 import { VueMonaco, CloseIcon, LinkButton } from '@opentiny/tiny-engine-common'
 import { useHelp } from '@opentiny/tiny-engine-controller'
 import { initCompletion } from '@opentiny/tiny-engine-controller/js/completion'
 import { initLinter } from '@opentiny/tiny-engine-controller/js/linter'
 import { theme } from '@opentiny/tiny-engine-controller/adapter'
 import useMethod, { saveMethod, highlightMethod, getMethodNameList, getMethods } from './js/method'
+import { useLayout } from '@opentiny/tiny-engine-controller'
 
 export const api = {
   saveMethod,
@@ -47,12 +51,23 @@ export default {
     MonacoEditor: VueMonaco,
     TinyButton: Button,
     CloseIcon,
-    LinkButton
+    LinkButton,
+    PluginPanel
   },
-  emits: ['close'],
+  props: {
+    fixedPanels: {
+      type: Array
+    }
+  },
+  emits: ['close', 'fix-panel'],
   setup(props, { emit }) {
     const docsUrl = useHelp().getDocsUrl('script')
     const { state, monaco, change, close, saveMethods } = useMethod({ emit })
+
+    const panelState = reactive({
+      emitEvent: emit
+    })
+    provide('panelState', panelState)
 
     const options = {
       roundedSelection: true,
@@ -90,6 +105,7 @@ export default {
       state.linterWorker?.terminate?.()
     })
 
+    const { PLUGIN_NAME } = useLayout()
     return {
       state,
       monaco,
@@ -98,7 +114,8 @@ export default {
       change,
       saveMethods,
       editorDidMount,
-      docsUrl
+      docsUrl,
+      PLUGIN_NAME
     }
   }
 }
@@ -176,9 +193,8 @@ export default {
   }
 }
 :deep(.help-box) {
-  height: auto;
-  #help-icon {
-    margin-left: 8px;
-  }
+  position: absolute;
+  left: 65px;
+  top: 3px;
 }
 </style>

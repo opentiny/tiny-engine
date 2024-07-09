@@ -1,17 +1,5 @@
 <template>
-  <!-- 固定面板按钮组件 -->
-  <plugin-panel title="样式" @close="$emit('close')">
-    <!-- header插槽加入了一个固定面板按钮 -->
-    <template #header>
-      <svg-button
-        class="item icon-sidebar"
-        :class="[fixedPanels?.includes(SETTING_NAME.Style) && 'active']"
-        name="fixed"
-        :tips="!fixedPanels?.includes(SETTING_NAME.Style) ? '固定面板' : '解除固定面板'"
-        @click="$emit('fixPanel', SETTING_NAME.Style)"
-      ></svg-button>
-    </template>
-    <!-- 下面content插槽渲染的则是面板的具体内容 -->
+  <plugin-panel title="样式" :fixed-panels="fixedPanels" :fixed-name="SETTING_NAME.Style" @close="$emit('close')">
     <template #content>
       <div style="overflow-y: auto; max-height: 100vh">
         <div class="style-editor">
@@ -84,7 +72,7 @@
 
 <!-- style插件界面 -->
 <script>
-import { ref, watch } from 'vue'
+import { ref, watch, reactive, provide } from 'vue'
 import { Collapse, CollapseItem, Input } from '@opentiny/vue'
 import { useHistory, useCanvas, useProperties } from '@opentiny/tiny-engine-controller'
 import { MetaCodeEditor, MetaBindVariable } from '@opentiny/tiny-engine-common'
@@ -146,6 +134,12 @@ export default {
       'borders',
       'effects'
     ])
+
+    const panelState = reactive({
+      emitEvent: emit
+    })
+    provide('panelState', panelState)
+
     const { getCurrentSchema } = useCanvas()
     // 获取当前节点 style 对象
     const { state, updateStyle } = useStyle() // updateStyle

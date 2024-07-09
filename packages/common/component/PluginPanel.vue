@@ -1,4 +1,5 @@
 <template>
+  <!-- 基本插件板组件(不带固定面板)[带固定面板的插件板组件在package>plugins>materials>src>Main.vue] -->
   <div class="plugin-panel">
     <div class="plugin-panel-header">
       <div class="plugin-panel-title">
@@ -7,6 +8,13 @@
       </div>
       <div class="plugin-panel-icon">
         <slot name="header"></slot>
+        <svg-button
+          class="item icon-sidebar"
+          :class="[fixedPanels?.includes(fixedName) && 'active']"
+          name="fixed"
+          :tips="!fixedPanels?.includes(fixedName) ? '固定面板' : '解除固定面板'"
+          @click="fixPanel"
+        ></svg-button>
         <close-icon v-if="!isCloseLeft" :name="name" @close="closePanel"></close-icon>
       </div>
     </div>
@@ -15,12 +23,14 @@
 </template>
 
 <script>
+import { inject } from 'vue'
 import { useLayout } from '@opentiny/tiny-engine-controller'
 import CloseIcon from './CloseIcon.vue'
-
+import SvgButton from './SvgButton.vue'
 export default {
   components: {
-    CloseIcon
+    CloseIcon,
+    SvgButton
   },
   props: {
     /**
@@ -40,18 +50,36 @@ export default {
     name: {
       type: String,
       default: 'cross'
+    },
+    /**
+     * 固定面板插件数组
+     */
+    fixedPanels: {
+      type: Array
+    },
+    /**
+     * 固定面板标识
+     */
+    fixedName: {
+      type: String
     }
   },
   emits: ['close'],
   setup(props, { emit }) {
+    console.log('props', props)
+    const panelState = inject('panelState')
     const closePanel = () => {
       useLayout().closePlugin()
-
       emit('close')
     }
 
+    const fixPanel = () => {
+      panelState.emitEvent('fixPanel', props.fixedName)
+    }
+
     return {
-      closePanel
+      closePanel,
+      fixPanel
     }
   }
 }
@@ -65,6 +93,7 @@ export default {
   display: flex;
   flex-direction: column;
   position: relative;
+  overflow: auto;
 
   .plugin-panel-header {
     display: flex;
