@@ -10,7 +10,7 @@
     <template #reference>
       <div @click="changeLang">
         <span class="icon-hides">
-          <svg-icon :name="langVal === options[0].value ? 'cn' : 'en'"></svg-icon>
+          <svg-icon :name="langSvgIconNameMap[langVal]"></svg-icon>
         </span>
         <span class="operate-title">中英文切换</span>
       </div>
@@ -45,6 +45,11 @@ export default {
       langVal.value = data.value
     })
 
+    const langSvgIconNameMap = {
+      zh_CN: 'cn',
+      en_US: 'en'
+    }
+
     const options = [
       {
         value: 'zh_CN',
@@ -62,7 +67,8 @@ export default {
     return {
       options,
       langVal,
-      changeLang
+      changeLang,
+      langSvgIconNameMap
     }
   }
 }

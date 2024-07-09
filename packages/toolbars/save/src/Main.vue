@@ -1,6 +1,6 @@
 <template>
   <div class="toolbar-save">
-    <tiny-button @click="openApi" class="save-button">
+    <tiny-button class="save-button" @click="openApi">
       <svg-icon :name="icon"></svg-icon>
       <span class="save-title">{{ isLoading ? '保存中' : '保存' }}</span>
       <span @click.stop="state.saveVisible = !state.saveVisible">
@@ -13,9 +13,7 @@
             <tiny-checkbox v-model="state.checked" name="tiny-checkbox">自动保存</tiny-checkbox>
             <div class="save-time">
               <div>保存间隔</div>
-              <tiny-select v-model="state.timeValue" :disabled="!state.checked" autocomplete>
-                <tiny-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                </tiny-option>
+              <tiny-select v-model="state.timeValue" :options="options" :disabled="!state.checked" autocomplete>
               </tiny-select>
             </div>
             <div class="save-button-group">
@@ -55,8 +53,7 @@
 <script>
 import { reactive, ref, onUnmounted } from 'vue'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
-import { Button, Popover, DialogBox, Checkbox, Select, Option } from '@opentiny/vue'
-import { useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { Button, Popover, DialogBox, Checkbox, Select } from '@opentiny/vue'
 import { openCommon, saveCommon } from './js/index'
 import { isLoading } from './js/index'
 export const api = {
@@ -70,8 +67,7 @@ export default {
     TinyPopover: Popover,
     TinyDialogBox: DialogBox,
     TinyCheckbox: Checkbox,
-    TinySelect: Select,
-    TinyOption: Option
+    TinySelect: Select
   },
   props: {
     icon: {
@@ -84,8 +80,6 @@ export default {
     }
   },
   setup() {
-    // 获取当前页面的全量信息
-    const { isSaved } = useCanvas()
     const options = [
       { value: 5, label: '5分钟' },
       { value: 10, label: '10分钟' },
@@ -99,7 +93,7 @@ export default {
       timeValue: 5,
       saveVisible: false,
       checked: false,
-      saveInterval: null
+      preservationTime: null
     })
 
     const editor = ref(null)
@@ -124,13 +118,18 @@ export default {
         enabled: false
       }
     }
-
+    const saveSetTimeout = () => {
+      clearTimeout(state.preservationTime)
+      state.preservationTime = setTimeout(() => {
+        openApi()
+        saveSetTimeout()
+      }, state.timeValue * 60 * 1000)
+    }
     const autoSave = () => {
-      clearInterval(state.saveInterval)
       if (state.checked) {
-        state.saveInterval = setInterval(() => {
-          openApi()
-        }, state.timeValue * 60 * 1000)
+        saveSetTimeout()
+      } else {
+        clearTimeout(state.preservationTime)
       }
       state.saveVisible = false
     }
@@ -140,7 +139,7 @@ export default {
     }
 
     onUnmounted(() => {
-      clearInterval(state.saveInterval)
+      clearTimeout(state.preservationTime)
     })
 
     return {
@@ -149,7 +148,6 @@ export default {
       editorOptions,
       isLoading,
       close,
-      isSaved,
       openApi,
       saveApi,
       options,
@@ -178,7 +176,7 @@ export default {
     background-color: var(--ti-lowcode-toolbar-button-bg);
     border: none;
     min-width: 70px;
-    height: 24px;
+    height: 26px;
     line-height: 24px;
     padding: 0 8px;
     border-radius: 4px;
@@ -203,7 +201,7 @@ export default {
     :deep(.tiny-button) {
       min-width: 40px;
       padding: 0 8px;
-      height: 24px;
+      height: 26px;
       line-height: 24px;
       border-radius: 4px;
     }

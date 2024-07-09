@@ -25,14 +25,14 @@
           class="toolbar-right-user"
           trigger="hover"
           :open-delay="1000"
-          popper-class="collaboration-popover aaa toolbar-right-popover"
+          popper-class="collaboration-popover toolbar-right-popover"
           append-to-body
           :content="`该项目共有 ${state.userLists.length} 位用户在编辑`"
         >
           <template #reference>
             <div class="icon collaboration-wrap">
               <span class="icon-hides">
-                <svg-icon v-if="state.url" :name="iconUser"></svg-icon>
+                <svg-icon v-if="state.url" name="user"></svg-icon>
               </span>
               <span class="operate-title">多人协作</span>
             </div>
@@ -54,7 +54,6 @@ export default {
   },
   setup() {
     const { layoutState } = useLayout()
-    const iconUser = 'user'
 
     const state = reactive({
       outsideVisible: false,
@@ -85,8 +84,7 @@ export default {
 
     return {
       state,
-      isSingle,
-      iconUser
+      isSingle
     }
   }
 }

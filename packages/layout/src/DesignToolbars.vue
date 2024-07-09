@@ -8,7 +8,7 @@
     </div>
     <div class="toolbar-right">
       <component :is="item.entry" v-for="item in rightBar" :key="item.id"></component>
-      <toolbar-collapse :hidesBar="hidesBar"></toolbar-collapse>
+      <toolbar-collapse :collapseBar="collapseBar"></toolbar-collapse>
     </div>
   </div>
   <div class="progress">
@@ -37,14 +37,14 @@ export default {
     const leftBar = []
     const rightBar = []
     const centerBar = []
-    const hidesBar = []
+    const collapseBar = []
     const state = reactive({
       showDeployBlock: false
     })
 
     props.toolbars.forEach((item) => {
       if (item.align === 'right') {
-        item?.collapsed ? hidesBar.push(item) : rightBar.push(item)
+        item?.collapsed ? collapseBar.push(item) : rightBar.push(item)
       } else if (item.align === 'center') {
         centerBar.push(item)
       } else {
@@ -66,7 +66,7 @@ export default {
       rightBar,
       centerBar,
       state,
-      hidesBar
+      collapseBar
     }
   }
 }
@@ -109,8 +109,8 @@ export default {
       justify-content: center;
       align-items: center;
       vertical-align: middle;
-      width: 24px;
-      height: 24px;
+      width: 26px;
+      height: 26px;
       border-radius: 4px;
       position: relative;
       svg {

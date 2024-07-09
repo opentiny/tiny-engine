@@ -22,7 +22,6 @@
 <script>
 import { reactive, computed } from 'vue'
 import { Breadcrumb, BreadcrumbItem, Button } from '@opentiny/vue'
-import { IconFile } from '@opentiny/vue-icon'
 import { useBreadcrumb, useLayout } from '@opentiny/tiny-engine-meta-register'
 import lock from '../../lock'
 import { BlockDeployDialog } from '@opentiny/tiny-engine-common'
@@ -44,7 +43,6 @@ export default {
 
     const state = reactive({
       showDeployBlock: false,
-      IconFile: IconFile(),
       pageLock: lock
     })
     const { CONSTANTS, getBreadcrumbData } = useBreadcrumb()

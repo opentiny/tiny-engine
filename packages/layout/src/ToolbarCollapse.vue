@@ -1,14 +1,14 @@
 <template>
-  <div class="">
-    <tiny-popover width="140" trigger="click">
+  <div>
+    <tiny-popover width="140" trigger="click" popper-class="toolbar-collapse-popover">
       <template #reference>
         <span class="toolbar-ellipsis">
           <svg-icon name="ellipsis"></svg-icon>
         </span>
       </template>
-      <div class="empty-bar" v-for="item in state.hidesbar" :key="item.id">
+      <div class="empty-bar" v-for="item in collapseBar" :key="item.id">
         <div v-if="item.splitLine" class="empty-line"></div>
-        <div class="toolbar-list">
+        <div class="toolbar-list-button">
           <component :is="item.entry"></component>
         </div>
       </div>
@@ -17,7 +17,6 @@
 </template>
 
 <script>
-import { reactive } from 'vue'
 import { Popover } from '@opentiny/vue'
 import { IconPopup } from '@opentiny/vue-icon'
 
@@ -27,17 +26,9 @@ export default {
     IconPopup: IconPopup()
   },
   props: {
-    hidesBar: {
+    collapseBar: {
       type: Array,
       default: () => []
-    }
-  },
-  setup(props) {
-    const state = reactive({
-      hidesbar: props.hidesBar
-    })
-    return {
-      state
     }
   }
 }
@@ -59,7 +50,7 @@ export default {
 .empty-bar {
   font-size: 12px;
 
-  .toolbar-list {
+  .toolbar-list-button {
     padding-top: 4px;
     box-sizing: border-box;
     height: 24px;

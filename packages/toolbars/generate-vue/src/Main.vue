@@ -256,7 +256,7 @@ export default {
 .toolbar-generate {
   :deep(.tiny-button--default) {
     min-width: 58px;
-    height: 24px;
+    height: 26px;
     padding: 0 8px;
     line-height: 24px;
     border-radius: 4px;
