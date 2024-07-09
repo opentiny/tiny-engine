@@ -3,5 +3,7 @@ export default {
   type: 'toolbars',
   title: 'lang',
   align: 'right',
-  icon: ''
+  icon: '',
+  collapsed: true,
+  splitLine: true
 }

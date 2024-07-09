@@ -5,11 +5,15 @@
     popper-class="toolbar-right-popover"
     append-to-body
     :content="!isFullscreen ? '全屏' : '退出全屏'"
+    :disabled="true"
   >
     <template #reference>
-      <span class="icon" @click="fullscreen">
-        <svg-icon :name="iconName"></svg-icon>
-      </span>
+      <div>
+        <span class="icon-hides" @click="fullscreen">
+          <svg-icon :name="iconName"></svg-icon>
+        </span>
+        <span class="operate-title">切换全屏</span>
+      </div>
     </template>
   </tiny-popover>
 </template>
@@ -17,12 +21,10 @@
 <script>
 import { ref } from 'vue'
 import { Popover } from '@opentiny/vue'
-import { PublicIcon } from '@opentiny/tiny-engine-common'
 
 export default {
   components: {
-    TinyPopover: Popover,
-    PublicIcon
+    TinyPopover: Popover
   },
   props: {
     icon: {
@@ -30,7 +32,7 @@ export default {
       default: 'full-screen'
     }
   },
-  setup(props, { emit }) {
+  setup(props) {
     const isFullscreen = ref(false)
     const iconName = ref(props.icon)
 
