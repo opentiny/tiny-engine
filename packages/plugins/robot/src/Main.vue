@@ -1,7 +1,7 @@
 <template>
   <div>
     <div title="AI对话框" class="robot-img">
-      <img class="chatgpt-icon" src="../assets/AI.png" @click="openAIRobot" />
+      <img class="chatgpt-icon" src="../assets/AI.svg" @click="openAIRobot" />
     </div>
     <Teleport to="body">
       <div v-if="robotVisible" class="robot-dialog">
@@ -388,8 +388,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 32px;
-  height: 32px;
+  width: 26px;
+  height: 26px;
   .chatgpt-icon {
     width: 18px;
     height: 18px;
