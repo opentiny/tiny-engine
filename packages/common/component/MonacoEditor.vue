@@ -152,10 +152,10 @@ export default {
   .buttons {
     display: flex;
     gap: 8px;
-    color: var(--ti-lowcode-component-svg-button-color);
+    color: var(--ti-lowcode-common-svg-button-color);
     cursor: pointer;
     :hover {
-      color: var(--ti-lowcode-component-svg-button-hover-color);
+      color: var(--ti-lowcode-common-svg-button-hover-color);
     }
   }
 }

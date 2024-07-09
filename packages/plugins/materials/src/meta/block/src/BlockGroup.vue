@@ -458,7 +458,7 @@ export default {
       margin-left: 0;
     }
     :deep(svg) {
-      color: var(--ti-lowcode-component-svg-button-color);
+      color: var(--ti-lowcode-common-svg-button-color);
     }
   }
   &.show-underline {
@@ -512,7 +512,7 @@ export default {
     font-size: 12px;
     color: var(--ti-lowcode-materials-block-group-delete-popover-title-color);
     .icon {
-      color: var(--ti-lowcode-warning-color);
+      color: var(--ti-lowcode-common-warning-color);
       width: 16px;
       height: 16px;
     }

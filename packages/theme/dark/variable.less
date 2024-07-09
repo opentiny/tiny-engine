@@ -40,10 +40,25 @@
   --ti-lowcode-common-border-color-4: #232323;
   --ti-lowcode-common-error-color: var(--ti-lowcode-base-error-color);
 
-  --ti-lowcode-info-color: #7693f5;
-  --ti-lowcode-warning-color: #fa9841;
-  --ti-lowcode-warning-color-1: #fac20a;
+  --ti-lowcode-common-info-color: #7693f5;
+  --ti-lowcode-common-warning-color: #fa9841;
+  --ti-lowcode-common-warning-color-1: #fac20a;
   --ti-lowcode-common-empty-color: #9a9a9a;
+
+  // tinysearch  背景色
+  --ti-lowcode-common-search-bg: var(--ti-lowcode-input-bg);
+  // tinysearch  边框色
+  --ti-lowcode-component-input-border-color: transparent;
+  // svgButton
+  --ti-lowcode-common-svg-button-color: var(--ti-lowcode-common-text-color-2);
+  --ti-lowcode-common-svg-button-hover-color: var(--ti-lowcode-common-primary-color);
+  --ti-lowcode-common-svg-button-hover-bg-color: transparent;
+  --ti-lowcode-common-svg-button-active-color: var(--ti-lowcode-common-primary-color);
+  --ti-lowcode-common-svg-button-hover-bg-color: transparent;
+  // 关闭按钮
+  --ti-lowcode-common-close-icon-text-color: var(--ti-lowcode-common-third-text-color); // 关闭按钮默认颜色
+  // 关闭按钮 hover 颜色
+  --ti-lowcode-common-close-icon-text-hover-color: var(--ti-lowcode-common-primary-text-color);
 
   // tiny vue 的 css 变量，覆盖掉就好
 
@@ -62,26 +77,10 @@
   --ti-lowcode-input-error-color: var(--ti-lowcode-common-error-color);
   --ti-lowcode-input-error-bg: rgba(246, 111, 106, 0.1);
 
-  // ------ 公共组件的主题色，前缀为 --ti-lowcode-component-组件名 ------
-  // tinysearch  背景色
-  --ti-lowcode-component-search-bg: var(--ti-lowcode-input-bg);
-  // tinysearch  边框色
-  --ti-lowcode-component-input-border-color: transparent;
-  // svgButton
-  --ti-lowcode-component-svg-button-color: var(--ti-lowcode-common-text-color-2);
-  --ti-lowcode-component-svg-button-hover-color: var(--ti-lowcode-common-primary-color);
-  --ti-lowcode-component-svg-button-hover-bg-color: transparent;
-  --ti-lowcode-component-svg-button-active-color: var(--ti-lowcode-common-primary-color);
-  --ti-lowcode-component-svg-button-hover-bg-color: transparent;
-
   --ti-lowcode-tabs-active-border-bottom-color: var(--ti-lowcode-common-primary-color);
   --ti-lowcode-tabs-active-color: var(--ti-lowcode-common-primary-color);
 
   --ti-lowcode-form-error-tips-color: var(--ti-lowcode-common-error-color);
-  // 关闭按钮
-  --ti-lowcode-component-close-icon-text-color: var(--ti-lowcode-common-third-text-color); // 关闭按钮默认颜色
-  // 关闭按钮 hover 颜色
-  --ti-lowcode-component-close-icon-text-hover-color: var(--ti-lowcode-common-primary-text-color);
 
   // 设置面板
   --ti-lowcode-component-setting-panel-label-color: var(--ti-lowcode-common-secondary-text-color);

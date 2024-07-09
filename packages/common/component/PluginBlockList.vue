@@ -506,12 +506,12 @@ export default {
       align-items: center;
       .tiny-svg {
         font-size: 24px;
-        color: var(--ti-lowcode-component-svg-button-color);
+        color: var(--ti-lowcode-common-svg-button-color);
       }
 
       &:hover {
         cursor: pointer;
-        color: var(--ti-lowcode-component-svg-button-hover-color);
+        color: var(--ti-lowcode-common-svg-button-hover-color);
       }
     }
 
