@@ -44,6 +44,7 @@ import {
   AppService,
   GenerateCodeService
 } from '@opentiny/tiny-engine'
+import engineConfig from './engine.config'
 
 export default {
   root: {
@@ -54,13 +55,7 @@ export default {
       GenerateCodeService
     ]
   },
-  config: {
-    id: 'engine.config',
-    theme: import.meta.env.VITE_THEME || 'light',
-    material: ['/mock/bundle.json'],
-    scripts: [],
-    styles: []
-  },
+  config: engineConfig,
   layout: Layout,
   themes: [
     {

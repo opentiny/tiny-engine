@@ -25,7 +25,8 @@ const open = (params = {}) => {
   const paramsMap = new URLSearchParams(location.search)
   params.app = paramsMap.get('id')
   params.tenant = paramsMap.get('tenant')
-  const { scripts, styles } = useMaterial().resState.thirdPartyDeps
+
+  const { scripts, styles } = useMaterial().materialState.thirdPartyDeps
   params.scripts = {}
   scripts
     .filter((item) => item.script)
