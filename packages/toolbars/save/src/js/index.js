@@ -15,11 +15,7 @@ import { useBlock, useCanvas, useLayout, useNotify, usePage } from '@opentiny/ti
 import { constants } from '@opentiny/tiny-engine-utils'
 import { handlePageUpdate } from '@opentiny/tiny-engine-common/js/http'
 
-const { pageState, isSaved, isBlock, canvasApi } = useCanvas()
-const { PLUGIN_NAME, getPluginApi } = useLayout()
-const { getCurrentBlock } = useBlock()
 const { PAGE_STATUS } = constants
-const { pageSettingState, isTemporaryPage } = usePage()
 const state = reactive({
   visible: false,
   code: '',
@@ -31,6 +27,8 @@ export const isLoading = ref(false)
 
 // 保存或新建区块
 const saveBlock = async (pageSchema) => {
+  const { PLUGIN_NAME, getPluginApi } = useLayout()
+  const { getCurrentBlock } = useBlock()
   const api = getPluginApi(PLUGIN_NAME.BlockManage)
   const block = getCurrentBlock()
 
@@ -45,7 +43,7 @@ const saveBlock = async (pageSchema) => {
 }
 
 const savePage = async (pageSchema) => {
-  const { currentPage } = pageState
+  const { currentPage } = useCanvas().pageState
   const params = {
     page_content: pageSchema
   }
@@ -56,6 +54,8 @@ const savePage = async (pageSchema) => {
 }
 
 export const saveCommon = (value) => {
+  const { pageSettingState, isTemporaryPage } = usePage()
+  const { isBlock, canvasApi, pageState } = useCanvas()
   const pageSchema = JSON.parse(value)
   const { setSchema, selectNode } = canvasApi.value
 
@@ -83,6 +83,7 @@ export const saveCommon = (value) => {
   return isBlock() ? saveBlock(pageSchema) : savePage(pageSchema)
 }
 export const openCommon = async () => {
+  const { isSaved, canvasApi } = useCanvas()
   if (isSaved() || state.disabled) {
     return
   }
@@ -116,7 +117,7 @@ export const openCommon = async () => {
 
   // 获取请求前schema代码，暂时先屏蔽
   /**
-   if (isBlock()) {
+   if (useCanvas().isBlock()) {
           const api = getPluginApi(PLUGIN_NAME.BlockManage)
           const block = getCurrentBlock()
           const remote = await api.getBlockById(block?.id)
