@@ -44,21 +44,16 @@ import {
   Canvas,
   EditorInfoService,
   AppService,
-  generateCodeService
+  GenerateCodeService
 } from '@opentiny/tiny-engine'
+import engineConfig from './engine.config'
 
 export default {
   root: {
     id: 'engine.root',
-    metas: [EditorInfoService, AppService, generateCodeService]
+    metas: [EditorInfoService, AppService, GenerateCodeService]
   },
-  config: {
-    id: 'engine.config',
-    theme: import.meta.env.VITE_THEME || 'light',
-    material: ['/mock/bundle.json'],
-    scripts: [],
-    styles: []
-  },
+  config: engineConfig,
   layout: Layout,
   themes: [
     {
