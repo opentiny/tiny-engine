@@ -1,17 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg"
-    xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>操作/下载</title>
-    <g id="操作/下载" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
-        <g id="编组" transform="translate(5.171573, 2.000000)" stroke="currentColor">
-            <line x1="-1.50433655" y1="5.02" x2="7.03334564" y2="5.02" id="直线-12"
-                transform="translate(2.893346, 5.000000) rotate(90.000000) translate(-2.893346, -5.000000) "></line>
-            <polyline id="路径" stroke-linejoin="round"
-                transform="translate(2.828427, 7.304590) rotate(45.000000) translate(-2.828427, -7.304590) "
-                points="4.82842712 5.30458976 4.82842712 9.30458976 0.828427125 9.30458976"></polyline>
-        </g>
-        <path
-            d="M14,11 L14,11 L14,12.2836673 C14,13.2315717 13.2315717,14 12.2836673,14 L3.71633267,14 C2.76842831,14 2,13.2315717 2,12.2836673 L2,11 L2,11"
-            id="路径" stroke="currentColor"></path>
-    </g>
+<svg width="16.000000" height="16.000000" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<desc>
+			Created with Pixso.
+	</desc>
+	<defs/>
+	<mask id="mask413_10146" mask-type="alpha" maskUnits="userSpaceOnUse" x="0.000000" y="0.000000" width="16.000000" height="16.000000">
+		<rect id="下载-download" width="16.000000" height="16.000000" fill="#000000" fill-opacity="1.000000"/>
+	</mask>
+	<g mask="url(#mask413_10146)">
+		<path id="形状结合" d="M14 10.5C14.27 10.5 14.5 10.72 14.5 11L14.5 12.28C14.5 13.5 13.5 14.5 12.28 14.5L3.7 14.5C2.48 14.5 1.5 13.5 1.5 12.28L1.5 11C1.5 10.72 1.71 10.5 2 10.5C2.27 10.5 2.5 10.72 2.5 11L2.5 12.28C2.5 12.95 3.04 13.5 3.7 13.5L12.28 13.5C12.95 13.5 13.5 12.95 13.5 12.28L13.5 11C13.5 10.72 13.72 10.5 14 10.5ZM8.04 2.1C8.32 2.1 8.54 2.32 8.54 2.6L8.54 10.88L10.47 8.95C10.64 8.77 10.91 8.75 11.11 8.89C11.3 9.08 11.37 9.46 11.17 9.65L8.34 12.48C8.15 12.68 7.83 12.68 7.64 12.48L4.81 9.65C4.62 9.46 4.62 9.14 4.81 8.95C5.01 8.75 5.32 8.75 5.52 8.95L7.54 10.96L7.54 2.6C7.54 2.32 7.77 2.1 8.04 2.1Z" fill="#191919" fill-opacity="1.000000" fill-rule="nonzero"/>
+	</g>
 </svg>
