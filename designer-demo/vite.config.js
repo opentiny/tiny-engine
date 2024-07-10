@@ -7,7 +7,7 @@ export default defineConfig((configEnv) => {
     viteConfigEnv: configEnv,
     root: __dirname,
     iconDirs: [path.resolve(__dirname, './node_modules/@opentiny/tiny-engine/assets/')],
-    useSourceAlias: false,
+    useSourceAlias: true,
     envDir: './env'
   })
 
