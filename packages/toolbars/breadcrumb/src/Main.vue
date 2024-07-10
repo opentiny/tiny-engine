@@ -33,7 +33,7 @@ export default {
     TinyButton: Button
   },
   setup() {
-    const CONTENTS = {
+    const PLUGINSID = {
       PAGEID: 'engine.plugins.appmanage',
       BLOCKID: 'engine.plugins.blockmanage'
     }
@@ -70,7 +70,7 @@ export default {
     })
 
     const open = () => {
-      plugins.render = breadcrumbData.value[0] === CONSTANTS.PAGETEXT ? CONTENTS.PAGEID : CONTENTS.BLOCKID
+      plugins.render = breadcrumbData.value[0] === CONSTANTS.PAGETEXT ? PLUGINSID.PAGEID : PLUGINSID.BLOCKID
     }
 
     return {
