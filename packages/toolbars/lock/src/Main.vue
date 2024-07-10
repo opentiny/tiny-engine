@@ -6,9 +6,10 @@
       popper-class="toolbar-right-popover"
       append-to-body
       :content="statusMessageMap[state.status]?.nextOptName"
+      :disabled="true"
     >
       <template #reference>
-        <span class="icon">
+        <span class="icon-hides">
           <svg-icon :name="iconName" @click="lockOrUnlock"></svg-icon>
         </span>
       </template>

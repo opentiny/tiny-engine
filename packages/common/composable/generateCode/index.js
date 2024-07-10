@@ -1,8 +1,19 @@
 import { generateApp, parseRequiredBlocks, genSFCWithDefaultPlugin } from '@opentiny/tiny-engine-dsl-vue'
+import defaultPrettierConfig from '../../js/config-files/prettierrc'
+
+// 应用出码默认配置
+const defaultOptions = {
+  pluginConfig: {
+    formatCode: {
+      // 默认格式化配置
+      ...defaultPrettierConfig
+    }
+  }
+}
 
 // 应用出码
 const generateAppCode = async (appSchema, options = {}) => {
-  const instance = generateApp(options)
+  const instance = generateApp({ ...defaultOptions, ...options })
 
   return instance.generate(appSchema)
 }
