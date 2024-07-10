@@ -378,17 +378,15 @@ export const renameBlockEventName = (name, oldName) => {
   delete events[oldName]
 }
 
-export const initEditBlock = (block = useBlock().getCurrentBlock()) => {
-  const { getCurrentBlock } = useBlock()
+export const initEditBlock = (block) => {
+  const currentBlock = useBlock().getCurrentBlock()
   // 如果当前点击的区块和画布中的区块是同一区块，则直接获取最新的区块数据
-  if (block?.id && block?.id === getCurrentBlock()?.id) {
-    const currentBlock = getCurrentBlock()
-
+  if (block?.id && block.id === currentBlock?.id) {
     // 这里需要做一次合并，保证区块列表中的数据引用地址和getEditBlock获取的是一样的
     Object.assign(block, currentBlock)
   }
 
-  setEditBlock(block)
+  setEditBlock(block || currentBlock)
   setEditProperty(null)
   setEditEvent(null)
 }
