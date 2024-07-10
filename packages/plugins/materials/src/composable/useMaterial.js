@@ -89,18 +89,20 @@ const patchBaseProps = (schemaProperties) => {
 
   const { properties = [], insertPosition = 'end' } = getOptions(meta.id).basePropertyOptions || {}
 
-  for (const props of properties) {
-    // TODO 判断分组相同，是否有其他更好的方法
-    const group = schemaProperties.find((item) => item.label.zh_CN === props.label.zh_CN)
+  for (const basePropGroup of properties) {
+    const group = schemaProperties.find(
+      (item) =>
+        (basePropGroup.group && basePropGroup.group === item.group) || basePropGroup.label.zh_CN === item.label.zh_CN
+    )
 
     if (group) {
       if (insertPosition === 'start') {
-        group.content.splice(0, 0, ...props.content)
+        group.content.splice(0, 0, ...basePropGroup.content)
       } else {
-        group.content.push(...props.content)
+        group.content.push(...basePropGroup.content)
       }
     } else {
-      schemaProperties.push(props)
+      schemaProperties.push(basePropGroup)
     }
   }
 }

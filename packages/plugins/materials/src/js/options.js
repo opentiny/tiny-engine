@@ -1,6 +1,7 @@
 export const basePropertyOptions = {
   properties: [
     {
+      group: 'others',
       label: {
         zh_CN: '其他'
       },
