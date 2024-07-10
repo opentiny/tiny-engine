@@ -3,6 +3,7 @@
     title="页面Schema"
     :fixed-panels="fixedPanels"
     :fixed-name="PLUGIN_NAME.Schema"
+    :defaultWidth="1000" 
     @close="$emit('close')"
     id="source-code"
   >

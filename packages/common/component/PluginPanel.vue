@@ -1,6 +1,5 @@
 <template>
-  <!-- 基本插件板组件(不带固定面板)[带固定面板的插件板组件在package>plugins>materials>src>Main.vue] -->
-  <div class="plugin-panel">
+  <div class="plugin-panel" ref="panel" :style="{ width: panelWidth + 'px' }">
     <div class="plugin-panel-header">
       <div class="plugin-panel-title">
         <span class="title">{{ title }}</span>
@@ -19,11 +18,12 @@
       </div>
     </div>
     <slot name="content"></slot>
+    <div class="resizer" @mousedown="onMouseDown"></div>
   </div>
 </template>
 
 <script>
-import { inject } from 'vue'
+import { inject, ref } from 'vue'
 import { useLayout } from '@opentiny/tiny-engine-controller'
 import CloseIcon from './CloseIcon.vue'
 import SvgButton from './SvgButton.vue'
@@ -62,11 +62,14 @@ export default {
      */
     fixedName: {
       type: String
+    },
+    defaultWidth: {
+      type: Number,
+      default: 310
     }
   },
   emits: ['close'],
   setup(props, { emit }) {
-    console.log('props', props)
     const panelState = inject('panelState')
     const closePanel = () => {
       useLayout().closePlugin()
@@ -76,10 +79,58 @@ export default {
     const fixPanel = () => {
       panelState.emitEvent('fixPanel', props.fixedName)
     }
+    const MIN_WIDTH = 300 // 固定的最小宽度值
+    const MAX_WIDTH = 1000 // 固定的最大宽度值
+    const panel = ref(null)
+    const panelWidth = ref(props.defaultWidth) // 使用默认宽度
+    let startX = 0
+    let startWidth = 0
 
+    const onMouseDown = (event) => {
+      startX = event.clientX
+      startWidth = panel.value.offsetWidth
+      document.addEventListener('mousemove', throttledMouseMove)
+      document.addEventListener('mouseup', onMouseUp)
+    }
+
+    const onMouseMove = (event) => {
+      const newWidth = startWidth + (event.clientX - startX)
+      panelWidth.value = Math.max(MIN_WIDTH, Math.min(newWidth, MAX_WIDTH)) // 设置最小和最大宽度
+    }
+
+    const throttledMouseMove = throttle(onMouseMove, 50) // 50ms的节流
+
+    const onMouseUp = () => {
+      document.removeEventListener('mousemove', throttledMouseMove)
+      document.removeEventListener('mouseup', onMouseUp)
+    }
+
+    //节流
+    function throttle(func, limit) {
+      let lastFunc
+      let lastRan
+      return function (...args) {
+        const context = this
+        if (!lastRan) {
+          func.apply(context, args)
+          lastRan = Date.now()
+        } else {
+          clearTimeout(lastFunc)
+          lastFunc = setTimeout(function () {
+            if (Date.now() - lastRan >= limit) {
+              func.apply(context, args)
+              lastRan = Date.now()
+            }
+          }, limit - (Date.now() - lastRan))
+        }
+      }
+    }
     return {
       closePanel,
-      fixPanel
+      fixPanel,
+      panel,
+      panelWidth,
+      onMouseDown
     }
   }
 }
@@ -127,5 +178,14 @@ export default {
       }
     }
   }
+}
+.resizer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1px;
+  height: 100%;
+  cursor: ew-resize;
+  background-color: rgba(0, 0, 0, 0.1);
 }
 </style>

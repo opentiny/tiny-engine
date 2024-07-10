@@ -3,6 +3,7 @@
     :title="shortcut ? '' : '物料'"
     :fixed-panels="fixedPanels"
     :fixed-name="PLUGIN_NAME.Materials"
+    :defaultWidth="300" 
     @close="$emit('close')"
   >
     <template #header> </template>

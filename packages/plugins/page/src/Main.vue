@@ -1,5 +1,11 @@
 <template>
-  <plugin-panel :title="title" :fixed-panels="fixedPanels" :fixed-name="PLUGIN_NAME.Page" @close="pluginPanelClosed">
+  <plugin-panel
+    :title="title"
+    :fixed-panels="fixedPanels"
+    :fixed-name="PLUGIN_NAME.Page"
+    :defaultWidth="300"
+    @close="pluginPanelClosed"
+  >
     <template #header>
       <link-button :href="docsUrl"></link-button>
       <svg-button

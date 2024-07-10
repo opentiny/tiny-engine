@@ -3,6 +3,7 @@
     title="页面 JS"
     :fixed-panels="fixedPanels"
     :fixed-name="PLUGIN_NAME.Script"
+    :defaultWidth="1000" 
     @close="$emit('close')"
     class="plugin-page-js-container"
   >

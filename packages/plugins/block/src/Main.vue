@@ -5,6 +5,7 @@
     :fixed-panels="fixedPanels"
     :fixed-name="PLUGIN_NAME.Block"
     :isCloseLeft="false"
+    :defaultWidth="300" 
     @close="closePanel"
   >
     <template #header>

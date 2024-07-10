@@ -1,5 +1,5 @@
 <template>
-  <plugin-panel title="数据源" :fixed-panels="fixedPanels" :fixed-name="PLUGIN_NAME.Datasource">
+  <plugin-panel title="数据源" :fixed-panels="fixedPanels" :fixed-name="PLUGIN_NAME.Datasource" :defaultWidth="300">
     <template #header>
       <link-button :href="docsUrl"></link-button>
       <svg-button

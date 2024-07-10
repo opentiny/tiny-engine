@@ -1,5 +1,5 @@
 <template>
-  <plugin-panel title="高级" :fixed-panels="fixedPanels" :fixed-name="SETTING_NAME.Event" @close="$emit('close')">
+  <plugin-panel title="高级" :fixed-panels="fixedPanels" :fixed-name="SETTING_NAME.Event" :defaultWidth="320"  @close="$emit('close')">
     <template #content>
       <tiny-collapse v-model="activeNames">
         <tiny-collapse-item title="事件绑定" name="bindEvent">

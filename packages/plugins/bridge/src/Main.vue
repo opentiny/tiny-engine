@@ -4,6 +4,7 @@
     :isCloseLeft="false"
     :fixed-panels="fixedPanels"
     :fixed-name="PLUGIN_NAME.Bridge"
+    :defaultWidth="300" 
     @close="closePanel"
   >
     <template #header>
