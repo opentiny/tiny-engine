@@ -162,3 +162,57 @@ export const generateRegistry = (registry) => {
 export const getMergeMeta = (id) => {
   return metasHashMap[id]
 }
+
+const mergeObject = (mergeTo, merged) => {
+  const prevKeys = Object.keys(mergeTo)
+  for (const [currKey, currVal] of Object.entries(merged)) {
+    // new key
+    if (!prevKeys.includes(currKey)) {
+      mergeTo[currKey] = currVal
+      continue
+    }
+
+    const typeOfVal = typeof currVal
+    // 类型不同，不合并
+    if (typeof mergeTo[currKey] !== typeOfVal) {
+      continue
+    }
+
+    // 都是数组
+    if (Array.isArray(mergeTo[currKey]) && Array.isArray(currVal)) {
+      mergeTo[currKey] = mergeTo[currKey].concat(currVal)
+      continue
+    }
+
+    // 都是对象
+    if (typeOfVal === 'object' && typeOfVal !== null) {
+      mergeTo[currKey] = { ...mergeTo[currKey], ...currVal }
+    }
+
+    // 剩余类型不不做额外处理
+  }
+
+  return mergeTo
+}
+
+export const getSharedOptions = (key) => {
+  const options = Object.values(metasHashMap)
+    .filter(({ id }) => typeof id === 'string')
+    .map((meta) => meta.apis?.getSharedOptions?.())
+    .filter((options) => typeof options === 'object' && options !== null)
+    .reduce((prev, curr) => mergeObject(prev, curr), {})
+
+  for (const [key, value] of Object.entries(options)) {
+    if (Array.isArray(value)) {
+      options[key] = value
+        .map(({ _order, ...rest }) => ({ ...rest, _order: _order ?? Number.MAX_SAFE_INTEGER }))
+        .sort((a, b) => a._order - b._order)
+    }
+  }
+
+  if (key) {
+    return options[key]
+  }
+
+  return options
+}

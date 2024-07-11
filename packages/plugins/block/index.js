@@ -13,11 +13,15 @@
 import entry, { api } from './src/Main.vue'
 import metaData from './meta.js'
 import { BlockService } from './src/composable'
+import { getSharedOptions } from './src/js/shared'
 
 export default {
   ...metaData,
   api,
   entry,
+  apis: {
+    getSharedOptions
+  },
   metas: [BlockService]
 }
 

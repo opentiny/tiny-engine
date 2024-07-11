@@ -12,9 +12,13 @@
 
 import entry, { api } from './src/Main.vue'
 import metaData from './meta.js'
+import { getSharedOptions } from './src/js/shared'
 
 export default {
   ...metaData,
   api,
+  apis: {
+    getSharedOptions
+  },
   entry
 }

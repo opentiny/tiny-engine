@@ -121,11 +121,9 @@
 
 <script>
 import { VueMonaco as MonacoEditor, SvgButton } from '@opentiny/tiny-engine-common'
-import { useApp, useCanvas, useLayout, useProperties, useResource } from '@opentiny/tiny-engine-meta-register'
-import { getCommentByKey } from '@opentiny/tiny-engine-common/js/comment'
-import { formatString, generate, parse, traverse } from '@opentiny/tiny-engine-common/js/ast'
+import { getSharedOptions, useCanvas, useProperties } from '@opentiny/tiny-engine-meta-register'
+import { formatString } from '@opentiny/tiny-engine-common/js/ast'
 import { DEFAULT_LOOP_NAME } from '@opentiny/tiny-engine-common/js/constants'
-import { useHttp } from '@opentiny/tiny-engine-http'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { Alert, Button, DialogBox, Input, Search, Switch, Tooltip } from '@opentiny/vue'
 import { camelize, capitalize } from '@vue/shared'
@@ -163,6 +161,40 @@ const getJsSlotParams = () => {
   return isJsSlot ? jsSlot?.params || [] : []
 }
 
+const defaultVaribleList = [
+  {
+    id: 'loop',
+    content: '循环变量',
+    condition: () => useProperties().getSchema()?.loop,
+    getVariables: () => {
+      const [loopItem = DEFAULT_LOOP_NAME.ITEM, loopIndex = DEFAULT_LOOP_NAME.INDEX] =
+        useProperties().getSchema()?.loopArgs || []
+
+      return {
+        bindPrefix: '',
+        variables: [loopItem, loopIndex].reduce((variables, param) => ({ ...variables, [param]: param }), {})
+      }
+    },
+    _order: 800
+  },
+  {
+    id: 'slotScope',
+    content: '暴露给插槽使用的变量',
+    condition: () => {
+      const [isInJsSlot] = getJsSlot()
+      return isInJsSlot
+    },
+    getVariables: () => {
+      const params = getJsSlotParams()
+      return {
+        bindPrefix: '',
+        variables: params.reduce((variables, param) => ({ ...variables, [param]: param }), {})
+      }
+    },
+    _order: 900
+  }
+]
+
 export default {
   name: 'VariableConfigurator',
   components: {
@@ -193,20 +225,12 @@ export default {
   },
   setup(props, { emit }) {
     const editor = ref(null)
-    const http = useHttp()
     let oldValue = ''
+    let postConfirm = null
 
-    const list = [
-      { id: 'state', content: 'State 属性' },
-      { id: 'store', content: '应用状态' },
-      { id: 'function', content: '自定义处理函数' },
-      { id: 'utils', content: '工具类' },
-      { id: 'bridge', content: '桥接源' },
-      { id: 'datasource', content: '数据源' }
-    ]
+    const list = (getSharedOptions('variableConfiguratorList') || []).concat(defaultVaribleList).sort((a, b) => a - b)
 
     const state = reactive({
-      isBlock: computed(() => useCanvas().isBlock()),
       variables: {},
       // 控制变量列表显示/隐藏
       isVisible: false,
@@ -214,24 +238,7 @@ export default {
       value: '',
       active: 'state',
       // 某一类型下的变量列表
-      variableList: computed(() => {
-        const extendedVars = []
-        const [isInJsSlot] = getJsSlot()
-
-        if (state.isBlock) {
-          extendedVars.push({ id: 'props', content: 'props' })
-        }
-
-        if (state.loopData) {
-          extendedVars.push({ id: 'loop', content: '循环变量' })
-        }
-
-        if (isInJsSlot) {
-          extendedVars.push({ id: 'slotScope', content: '暴露给插槽使用的变量' })
-        }
-
-        return [...list, ...extendedVars]
-      }),
+      variableList: [],
       // 绑定的变量名/变量表达式
       variable: '',
       // 绑定的变量指向的值内容
@@ -244,7 +251,6 @@ export default {
       // 静态值
       mock: props.modelValue?.value || props.modelValue,
       bindPrefix: '',
-      loopData: null,
       loopArgs: '',
       isPoll: false,
       pollInterval: 5000
@@ -258,7 +264,9 @@ export default {
       (value) => {
         if (value) {
           oldValue = state.variable
-          state.loopData = useProperties().getSchema()?.loop
+          state.variableList = list.filter((item) =>
+            typeof item.condition === 'function' ? item.condition(state) : true
+          )
         }
       }
     )
@@ -287,78 +295,6 @@ export default {
         noSyntaxValidation: true,
         noSemanticValidation: true
       })
-    }
-
-    const removeInterval = (start, end, intervalId, pageSchema) => {
-      const unmountedFn = pageSchema.lifeCycles?.onUnmounted?.value
-      const fetchBody = `
-      /** ${start} */
-      clearInterval(state.${intervalId});
-      /** ${end} */`
-
-      if (!unmountedFn) {
-        pageSchema.lifeCycles = pageSchema.lifeCycles || {}
-        pageSchema.lifeCycles.onUnmounted = {
-          type: 'JSFunction',
-          value: `function onUnmounted() {${fetchBody}}`
-        }
-      } else {
-        if (!unmountedFn.includes(`${intervalId}`)) {
-          pageSchema.lifeCycles.onUnmounted.value = unmountedFn.trim().replace(/\}$/, fetchBody + '}')
-        }
-      }
-    }
-
-    const genRemoteMethodToLifeSetup = (variableName, sourceRef, pageSchema) => {
-      if (sourceRef?.data?.data) {
-        const setupFn = pageSchema.lifeCycles?.setup?.value
-        const { start, end } = getCommentByKey(variableName)
-        const intervalId = `${CONSTANTS.INTERVALID}${capitalize(camelize(sourceRef.name))}`
-        const isPoll = state.isPoll && state.pollInterval !== undefined
-
-        let fetchBodyFn = `${CONSTANTS.DATASOURCEMAP}${sourceRef.name}.load().then(res => {
-          state.${variableName} = res?.data?.items || res?.data || res
-        })`
-
-        if (isPoll) {
-          fetchBodyFn = `state.${intervalId} = setInterval(() => {${CONSTANTS.DATASOURCEMAP}${sourceRef.name}.load().then(res => {
-            state.${variableName} = res?.data?.items || res?.data || res
-          })}, ${state.pollInterval})`
-        }
-
-        const fetchBody = `
-        /** ${start} */
-        ${fetchBodyFn};
-        /** ${end} */`
-
-        if (!setupFn) {
-          pageSchema.lifeCycles = pageSchema.lifeCycles || {}
-          pageSchema.lifeCycles.setup = {
-            type: 'JSFunction',
-            value: `function setup({ props, state, watch, onMounted }) {${fetchBody}}`
-          }
-        } else {
-          if (!setupFn.includes(`${CONSTANTS.DATASOURCEMAP}${sourceRef.name}`)) {
-            pageSchema.lifeCycles.setup.value = setupFn.trim().replace(/\}$/, fetchBody + '}')
-          } else {
-            const ast = parse(setupFn)
-            traverse(ast, {
-              ExpressionStatement(path) {
-                if (path.toString().includes(sourceRef.name)) {
-                  path.replaceWithSourceString(fetchBodyFn)
-                  path.stop()
-                }
-              }
-            })
-
-            pageSchema.lifeCycles.setup.value = generate(ast).code
-          }
-        }
-
-        if (isPoll) {
-          removeInterval(start, end, intervalId, pageSchema)
-        }
-      }
     }
 
     const variableClick = (key, item) => {
@@ -394,7 +330,7 @@ export default {
     const confirm = () => {
       let variableContent = state.isEditorEditMode ? editor.value?.getEditor().getValue() : state.variable
 
-      const { setSaved, canvasApi } = useCanvas()
+      const { setSaved } = useCanvas()
       // 如果新旧值不一样就显示未保存状态
       if (oldValue !== variableContent) {
         setSaved(false)
@@ -405,18 +341,8 @@ export default {
       const needFetchDataFormat = props.name === 'fetchData' && !pattern.test(variableContent)
 
       if (variableContent) {
-        if (state.bindPrefix === CONSTANTS.DATASOUCEPREFIX) {
-          const pageSchema = canvasApi.value.getSchema()
-          const stateName = state.variable.replace(`${CONSTANTS.STATE}`, '')
-          const staticData = state.variableContent.map(({ _id, ...other }) => other)
-
-          pageSchema.state[stateName] = staticData
-
-          // 设置画布上下文环境，让画布触发更新渲染
-          canvasApi.value.setState({ [stateName]: staticData })
-
-          // 这里在setup生命周期函数内部处理用户真实环境中的数据源请求
-          genRemoteMethodToLifeSetup(stateName, state.dataSouce, pageSchema)
+        if (typeof postConfirm === 'function') {
+          postConfirm(state)
         }
 
         emit('update:modelValue', {
@@ -456,71 +382,20 @@ export default {
 
     const selectItem = (item) => {
       state.active = item.id
-      const { canvasApi } = useCanvas()
+      postConfirm = item.postConfirm
 
-      if (item.id === 'function') {
-        state.bindPrefix = CONSTANTS.THIS
-        const { PLUGIN_NAME, getPluginApi } = useLayout()
-        const { getMethods } = getPluginApi(PLUGIN_NAME.PageController)
-        state.variables = { ...getMethods?.() }
-      } else if (item.id === 'bridge' || item.id === 'utils') {
-        state.bindPrefix = `${CONSTANTS.THIS}${item.id}.`
-        const bridge = {}
-        useResource().resState[item.id]?.forEach((res) => {
-          bridge[res.name] = `${item.id}.${res.content.exportName}`
+      if (typeof item.getVariables === 'function') {
+        const { bindPrefix, variables } = item.getVariables()
+        state.bindPrefix = bindPrefix
+        state.variables = variables
+      } else if (typeof item.getVariablesAsync === 'function') {
+        item.getVariablesAsync().then(({ bindPrefix, variables }) => {
+          state.bindPrefix = bindPrefix
+          state.variables = variables
         })
-
-        state.variables = bridge
-      } else if (item.id === 'props') {
-        state.bindPrefix = CONSTANTS.PROPS
-        const properties = canvasApi.value.getSchema()?.schema?.properties
-        const bindProperties = {}
-        properties?.forEach(({ content }) => {
-          content.forEach(({ property }) => {
-            bindProperties[property] = property
-          })
-        })
-        state.variables = bindProperties
-      } else if (item.id === 'datasource') {
-        state.bindPrefix = CONSTANTS.DATASOUCEPREFIX
-        const { appInfoState } = useApp()
-        const url = new URLSearchParams(location.search)
-        const selectedId = appInfoState.selectedId || url.get('id')
-
-        // 实时请求数据源列表数据，保证数据源获取最新的数据源数据
-        http.get(`/app-center/api/sources/list/${selectedId}`).then((data) => {
-          const sourceData = {}
-          data.forEach((res) => {
-            sourceData[res.name] = res
-          })
-          state.variables = sourceData
-        })
-      } else if (item.id === 'store') {
-        state.bindPrefix = CONSTANTS.STORE
-        state.variables = {}
-
-        const stores = canvasApi.value.getGlobalState()
-        stores.forEach(({ id, state: storeState = {}, getters = {} }) => {
-          const loadProp = (prop) => {
-            const propBinding = `${id}.${prop}`
-            state.variables[propBinding] = propBinding
-          }
-
-          Object.keys(storeState).forEach(loadProp)
-          Object.keys(getters).forEach(loadProp)
-        })
-      } else if (item.id === 'loop') {
-        state.bindPrefix = ''
-        const [loopItem = DEFAULT_LOOP_NAME.ITEM, loopIndex = DEFAULT_LOOP_NAME.INDEX] =
-          useProperties().getSchema()?.loopArgs || []
-        state.variables = [loopItem, loopIndex].reduce((variables, param) => ({ ...variables, [param]: param }), {})
-      } else if (item.id === 'slotScope') {
-        state.bindPrefix = ''
-        const params = getJsSlotParams()
-        state.variables = params.reduce((variables, param) => ({ ...variables, [param]: param }), {})
       } else {
-        state.bindPrefix = CONSTANTS.STATE
-        state.variables = canvasApi.value.getSchema()?.[item.id]
+        state.bindPrefix = ''
+        state.variables = {}
       }
     }
 
