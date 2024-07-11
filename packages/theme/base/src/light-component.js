@@ -1,4 +1,5 @@
-import './light-common.js'
+import './base.less'
+import './light.less'
 
 export const concatThemeLight = {
   // 弹窗

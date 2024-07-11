@@ -1,4 +1,5 @@
-import './dark-common.js'
+import './base.less'
+import './dark.less'
 
 export const concatThemeDark = {
   // 弹窗
