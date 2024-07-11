@@ -3,5 +3,6 @@ export default {
   title: 'setting',
   type: 'toolbars',
   align: 'right',
-  icon: ''
+  icon: '',
+  collapsed: true
 }

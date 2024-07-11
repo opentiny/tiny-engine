@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg"
-    xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>操作/保存</title>
-    <g id="操作/保存" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <rect id="Rectangle-备份" stroke="currentColor" x="2" y="2" width="12" height="12" rx="1.71633267"></rect>
-        <path
-            d="M11.5,2 L11.5,5.375 C11.5,5.99632034 11.0522847,6.5 10.5,6.5 L5.5,6.5 C4.94771525,6.5 4.5,5.99632034 4.5,5.375 L4.5,2 L4.5,2"
-            id="路径" stroke="currentColor"></path>
-        <line x1="9.5" y1="3.75" x2="9.5" y2="4.75" id="直线" stroke="currentColor" stroke-linecap="round"></line>
-    </g>
+<svg width="16.000000" height="16.000000" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<desc>
+			Created with Pixso.
+	</desc>
+	<defs/>
+	<mask id="mask413_9381" mask-type="alpha" maskUnits="userSpaceOnUse" x="0.000000" y="0.000000" width="16.000000" height="16.000000">
+		<rect id="存储-save" width="16.000000" height="16.000000" fill="#000000" fill-opacity="1.000000"/>
+	</mask>
+	<g mask="url(#mask413_9381)">
+		<path id="形状结合" d="M12.28 1.5C13.5 1.5 14.5 2.48 14.5 3.7L14.5 12.28C14.5 13.5 13.5 14.5 12.28 14.5L3.7 14.5C2.48 14.5 1.5 13.5 1.5 12.28L1.5 3.7C1.5 2.48 2.48 1.5 3.7 1.5L12.28 1.5ZM4 2.5L3.7 2.5C3.04 2.5 2.5 3.04 2.5 3.7L2.5 12.28C2.5 12.95 3.04 13.5 3.7 13.5L12.28 13.5C12.95 13.5 13.5 12.95 13.5 12.28L13.5 3.7C13.5 3.04 12.95 2.5 12.28 2.5L12 2.5L12 5.37C12 6.26 11.34 7 10.5 7L5.5 7C4.65 7 4 6.26 4 5.37L4 2.5ZM11 2.5L5 2.5L5 5.37C5 5.72 5.22 6 5.5 6L10.5 6C10.76 6 11 5.72 11 5.37L11 2.5ZM9.5 3.25C9.77 3.25 10 3.46 10 3.75L10 4.75C10 5.02 9.77 5.25 9.5 5.25C9.21 5.25 9 5.02 9 4.75L9 3.75C9 3.46 9.21 3.25 9.5 3.25Z" fill="#191919" fill-opacity="1.000000" fill-rule="nonzero"/>
+	</g>
 </svg>
