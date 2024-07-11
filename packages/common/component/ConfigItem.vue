@@ -103,12 +103,18 @@ import { inject, computed, watch, ref, reactive, provide } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
 import { IconWriting, IconHelpCircle, IconPlusCircle } from '@opentiny/vue-icon'
 import { typeOf } from '@opentiny/vue-renderless/common/type'
-import i18n from '@opentiny/tiny-engine-controller/js/i18n'
-import MultiTypeSelector from './MultiTypeSelector.vue'
-import { useHistory, useProperties, useResource, useLayout, useCanvas } from '@opentiny/tiny-engine-controller'
-import { SCHEMA_DATA_TYPE, PAGE_STATUS, TYPES } from '@opentiny/tiny-engine-controller/js/constants'
-import { getConfigurator } from '@opentiny/tiny-engine-entry'
+import {
+  useHistory,
+  useProperties,
+  useMaterial,
+  useLayout,
+  useCanvas,
+  getConfigurator
+} from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
+import i18n from '../js/i18n'
+import MultiTypeSelector from './MultiTypeSelector.vue'
+import { SCHEMA_DATA_TYPE, PAGE_STATUS, TYPES } from '../js/constants'
 
 const { parseFunction: generateFunction } = utils
 
@@ -255,7 +261,7 @@ export default {
         const currentComponent = useProperties().getSchema().componentName
         const {
           schema: { events = {} }
-        } = useResource().getMaterial(currentComponent)
+        } = useMaterial().getMaterial(currentComponent)
 
         if (Object.keys(events).includes(`onUpdate:${property}`)) {
           // 默认情况下，v-model 在组件上都是使用 modelValue 作为 prop，并以 update:modelValue 作为对应的事件。

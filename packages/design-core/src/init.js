@@ -12,13 +12,20 @@
 
 import { createApp } from 'vue'
 import initSvgs from '@opentiny/tiny-engine-svgs'
-import i18n from '@opentiny/tiny-engine-controller/js/i18n'
-import { initMonitor } from '@opentiny/tiny-engine-controller/js/monitor'
+import i18n from '@opentiny/tiny-engine-common/js/i18n'
+import { initMonitor } from '@opentiny/tiny-engine-common/js/monitor'
 import { injectGlobalComponents, setGlobalMonacoEditorTheme, Modal, Notify } from '@opentiny/tiny-engine-common'
 import { initHttp } from '@opentiny/tiny-engine-http'
 import TinyThemeTool from '@opentiny/vue-theme/theme-tool'
-import { tinySmbTheme } from '@opentiny/vue-theme/theme' // SMB 主题
-import { defineEntry, mergeRegistry, getMergeMeta, initHook, HOOK_NAME } from '@opentiny/tiny-engine-entry'
+import { tinyEngineThemeLight } from '@opentiny/tiny-engine-theme-base'
+import {
+  defineEntry,
+  mergeRegistry,
+  getMergeMeta,
+  initHook,
+  HOOK_NAME,
+  useEditorInfo
+} from '@opentiny/tiny-engine-meta-register'
 import App from './App.vue'
 import defaultRegistry from '../registry.js'
 import { registerConfigurators } from './registerConfigurators'
@@ -45,7 +52,7 @@ const defaultLifeCycles = {
     initHttp({ env: import.meta.env })
 
     // eslint-disable-next-line no-new
-    new TinyThemeTool(tinySmbTheme, 'smbtheme') // 初始化主题
+    new TinyThemeTool(tinyEngineThemeLight, 'tinyEngineTheme') // 初始化主题
 
     if (import.meta.env.VITE_ERROR_MONITOR === 'true' && import.meta.env.VITE_ERROR_MONITOR_URL) {
       initMonitor(import.meta.env.VITE_ERROR_MONITOR_URL)
@@ -77,4 +84,5 @@ export const init = ({ selector = '#app', registry = defaultRegistry, lifeCycles
 
   app.mount(selector)
   appMounted?.({ app })
+  useEditorInfo().getUserInfo()
 }

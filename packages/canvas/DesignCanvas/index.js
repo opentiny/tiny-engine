@@ -1,4 +1,4 @@
-import { HOOK_NAME } from '@opentiny/tiny-engine-entry'
+import { HOOK_NAME } from '@opentiny/tiny-engine-meta-register'
 import DesignCanvas from './src/DesignCanvas.vue'
 import metaData from './meta'
 import api from './src/api'

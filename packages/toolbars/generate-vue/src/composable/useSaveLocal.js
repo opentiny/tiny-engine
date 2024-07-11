@@ -11,7 +11,7 @@
  */
 
 import { Modal } from '@opentiny/vue'
-import { useCanvas, getMergeMeta, useEnv } from '@opentiny/tiny-engine-entry'
+import { useCanvas, getMergeMeta, useEnv } from '@opentiny/tiny-engine-meta-register'
 
 // 获取当前页面的全量信息
 

@@ -87,7 +87,7 @@
 import { ref, reactive, computed, toRaw, watchEffect, onMounted, onUnmounted, watch } from 'vue'
 import { Popover, Input, Switch } from '@opentiny/vue'
 import { IconWebPlus } from '@opentiny/vue-icon'
-import { useLayout, useCanvas } from '@opentiny/tiny-engine-controller'
+import { useLayout, useCanvas } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
@@ -442,19 +442,19 @@ export default {
     gap: 6px;
 
     .icon {
-      width: 32px;
-      height: 32px;
+      width: 24px;
+      height: 24px;
       display: inline-flex;
       justify-content: center;
       align-items: center;
-      border-radius: 6px;
+      border-radius: 4px;
 
       svg {
         cursor: pointer;
         color: var(--ti-lowcode-toolbar-title-color);
         outline: none;
-        width: 22px;
-        height: 22px;
+        width: 18px;
+        height: 18px;
         margin-top: -0.5px;
       }
 

@@ -16,11 +16,17 @@
   "author": "OpenTiny Team",
   "license": "MIT",
   "homepage": "https://opentiny.design/tiny-engine",
+  "main": "dist/app.js",
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "start": "gulp nodemon",
     "dev": "gulp",
-    "build": "babel src -d dist",
-    "production": "node dist/app.js",
+    "build:js": "babel src --out-dir dist",
+    "build:static": "ncp src/assets dist/assets && ncp src/mock dist/mock && ncp src/database dist/database",
+    "build": "npm run build:js && npm run build:static",
     "test": "jest",
     "lint": "eslint --fix ."
   },
@@ -60,7 +66,8 @@
     "gulp-eslint": "^6.0.0",
     "gulp-nodemon": "^2.5.0",
     "jest": "^25.3.0",
-    "koa-logger": "^3.2.1"
+    "koa-logger": "^3.2.1",
+    "ncp": "^2.0.0"
   },
   "engines": {
     "node": ">= 7.8.0",

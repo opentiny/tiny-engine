@@ -14,7 +14,6 @@ import {
   Breadcrumb,
   Fullscreen,
   Lang,
-  Checkinout,
   Logo,
   Media,
   Redoundo,
@@ -24,7 +23,6 @@ import {
   GenerateVue,
   Refresh,
   Collaboration,
-  Setting,
   Materials,
   Data,
   Script,
@@ -44,23 +42,20 @@ import {
   Canvas,
   EditorInfoService,
   AppService,
+  GenerateCodeService
 } from '@opentiny/tiny-engine'
+import engineConfig from './engine.config'
 
 export default {
   root: {
     id: 'engine.root',
     metas: [
       EditorInfoService,
-      AppService
+      AppService,
+      GenerateCodeService
     ]
   },
-  config: {
-    id: 'engine.config',
-    theme: import.meta.env.VITE_THEME || 'light',
-    material: ['/mock/bundle.json'],
-    scripts: [],
-    styles: []
-  },
+  config: engineConfig,
   layout: Layout,
   themes: [
     {
@@ -74,16 +69,14 @@ export default {
     Logo,
     Breadcrumb,
     Media,
+    Redoundo,
     Collaboration,
     Clean,
-    Refresh,
-    Save,
-    GenerateVue,
     Preview,
-    Redoundo,
+    Refresh,
+    GenerateVue,
+    Save,
     Fullscreen,
-    Checkinout,
-    Setting,
     Lang
   ],
   plugins: [Materials, Tree, Page, Block, Datasource, Bridge, I18n, Script, Data, Schema, Help, Robot],

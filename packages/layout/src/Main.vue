@@ -1,5 +1,5 @@
 <template>
-  <tiny-config-provider :design="designSmbConfig">
+  <component :is="configProvider" :design="configProviderDesign">
     <div id="tiny-engine">
       <design-toolbars :toolbars="registry.toolbars"></design-toolbars>
       <div class="tiny-engine-main">
@@ -22,44 +22,24 @@
         </div>
       </div>
     </div>
-  </tiny-config-provider>
+  </component>
 </template>
 
 <script>
-import { reactive, watch, onUnmounted } from 'vue'
-import { ConfigProvider as TinyConfigProvider } from '@opentiny/vue'
-import designSmbConfig from '@opentiny/vue-design-smb'
-import {
-  useResource,
-  useLayout,
-  useEditorInfo,
-  useModal,
-  useApp,
-  useNotify,
-  useCanvas
-} from '@opentiny/tiny-engine-controller'
+import { reactive } from 'vue'
+import { useLayout, getMergeRegistry } from '@opentiny/tiny-engine-meta-register'
 import AppManage from '@opentiny/tiny-engine-plugin-page'
-import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
 import DesignToolbars from './DesignToolbars.vue'
 import DesignPlugins from './DesignPlugins.vue'
 import DesignSettings from './DesignSettings.vue'
-import blockPlugin from '@opentiny/tiny-engine-plugin-block'
-import materials from '@opentiny/tiny-engine-plugin-materials'
-import { useBroadcastChannel } from '@vueuse/core'
-import { constants } from '@opentiny/tiny-engine-utils'
-
-const { message } = useModal()
-const { requestInitBlocks } = blockPlugin.api
-const { fetchGroups } = materials.apis
-const { BROADCAST_CHANNEL } = constants
+import meta from '../meta'
 
 export default {
   name: 'TinyLowCode',
   components: {
     DesignToolbars,
     DesignPlugins,
-    DesignSettings,
-    TinyConfigProvider
+    DesignSettings
   },
   provide() {
     return {
@@ -72,30 +52,16 @@ export default {
     }
   },
   setup() {
+    const layoutRegistry = getMergeRegistry(meta.type)
+    const configProvider = layoutRegistry.options.configProvider
+    const configProviderDesign = layoutRegistry.options.configProviderDesign
+
     const state = reactive({
-      globalClass: '',
-      rightWidth: '',
-      leftWidfth: '',
-      preNode: AppManage,
-      jsClose: null
+      preNode: AppManage
     })
 
     const { layoutState } = useLayout()
     const { plugins } = layoutState
-
-    // 此处接收画布内部的错误和警告提示
-    const { data } = useBroadcastChannel({ name: BROADCAST_CHANNEL.Notify })
-
-    watch(data, (options) => useNotify(options))
-
-    watch(
-      () => state.jsClose,
-      () => {
-        if (state.preNode) {
-          plugins.render = state.preNode.id
-        }
-      }
-    )
 
     const toggleNav = ({ item, navLists }) => {
       if (navLists) state.preNode = navLists
@@ -105,51 +71,13 @@ export default {
       plugins.render = plugins.render === item.id ? null : item.id
     }
 
-    useEditorInfo().getUserInfo()
-
-    watch(
-      useCanvas().isCanvasApiReady,
-      (ready) => {
-        if (ready) {
-          useResource().fetchResource()
-        }
-      },
-      {
-        immediate: true
-      }
-    )
-
-    const handlePopStateEvent = () => {
-      useResource().handlePopStateEvent()
-    }
-
-    window.addEventListener('popstate', handlePopStateEvent)
-
-    if (isVsCodeEnv) {
-      const appId = useApp().appInfoState.selectedId
-      fetchGroups(appId)
-        .then((groups) => {
-          const blocks = []
-          groups.forEach((group) => {
-            blocks.push(...group.blocks)
-          })
-          requestInitBlocks(blocks)
-        })
-        .catch((error) => {
-          message({ message: error.message, status: 'error' })
-        })
-    }
-
-    onUnmounted(() => {
-      window.removeEventListener('popstate', handlePopStateEvent)
-    })
-
     return {
+      configProvider,
+      configProviderDesign,
       state,
       plugins,
       toggleNav,
-      layoutState,
-      designSmbConfig
+      layoutState
     }
   }
 }

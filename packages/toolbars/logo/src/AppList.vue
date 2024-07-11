@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { useApp } from '@opentiny/tiny-engine-controller'
+import { useApp } from '@opentiny/tiny-engine-meta-register'
 import { Select, Option } from '@opentiny/vue'
 
 export default {

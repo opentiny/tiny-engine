@@ -79,8 +79,8 @@ import {
   SwitchConfigurator,
   VariableConfigurator
 } from '@opentiny/tiny-engine-configurator'
-import { useProperties, useCanvas } from '@opentiny/tiny-engine-controller'
-import { PROP_DATA_TYPE } from '@opentiny/tiny-engine-controller/js/constants'
+import { useProperties, useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { PROP_DATA_TYPE } from '@opentiny/tiny-engine-common/js/constants'
 import { constants, utils } from '@opentiny/tiny-engine-utils'
 import { Tooltip } from '@opentiny/vue'
 

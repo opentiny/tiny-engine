@@ -27,6 +27,16 @@ export default defineConfig({
       ]
     }
   },
+  base: './',
+  define: {
+    'import.meta': 'import.meta',
+    'import.meta.env.MODE': 'import.meta.env.MODE',
+    'import.meta.env.PROD': 'import.meta.env.PROD',
+    'import.meta.env.BASE_URL': 'import.meta.env.BASE_URL',
+    'import.meta.env.VITE_ORIGIN': 'import.meta.env.VITE_ORIGIN',
+    'import.meta.env.VITE_CDN_DOMAIN': 'import.meta.env.VITE_CDN_DOMAIN',
+    'import.meta.env.VITE_API_MOCK': 'import.meta.env.VITE_API_MOCK'
+  },
   build: {
     commonjsOptions: {
       transformMixedEsModules: true,
@@ -52,7 +62,7 @@ export default defineConfig({
           }
         }
       },
-      external: ['vue', 'monaco-editor', 'prettier', /@opentiny\/vue.*/, '@opentiny/tiny-engine-entry']
+      external: ['vue', 'monaco-editor', 'prettier', /@opentiny\/vue.*/, '@opentiny/tiny-engine-meta-register']
     }
   }
 })

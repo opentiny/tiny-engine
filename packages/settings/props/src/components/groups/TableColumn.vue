@@ -31,7 +31,7 @@
 <script>
 import { reactive, computed, ref } from 'vue'
 import { IconDel, IconEdit, IconPlus, IconCode, IconWriting } from '@opentiny/vue-icon'
-import { useProperties } from '@opentiny/tiny-engine-controller'
+import { useProperties } from '@opentiny/tiny-engine-meta-register'
 import { useModal, MetaModal, MetaList, MetaListItems, MetaListActions } from '@opentiny/tiny-engine-common'
 import TableSettingPanel from '../modal/ModalContent.vue'
 
@@ -116,6 +116,15 @@ export default {
 
     const { modal, openModal, closeModal } = useModal()
 
+    const add = () => {
+      let newOption = reactive({})
+      newOption[itemsOptions.value.valueField] = ''
+      newOption[itemsOptions.value.textField] = ''
+
+      columnsList.value.push(newOption)
+      setProp(props.name, columnsList.value)
+    }
+
     const actionEvents = (item) => {
       switch (item.type) {
         case 'add':
@@ -132,13 +141,9 @@ export default {
       }
     }
 
-    const add = () => {
-      let newOption = reactive({})
-      newOption[itemsOptions.value.valueField] = ''
-      newOption[itemsOptions.value.textField] = ''
-
-      columnsList.value.push(newOption)
-      setProp(props.name, columnsList.value)
+    const updatedColumns = (list) => {
+      emit('update:modelValue', list)
+      setProp(props.name, list)
     }
 
     const deleteItem = (params) => {
@@ -152,11 +157,6 @@ export default {
 
     const hide = () => {
       updatedColumns([...columnsList.value])
-    }
-
-    const updatedColumns = (list) => {
-      emit('update:modelValue', list)
-      setProp(props.name, list)
     }
 
     const openColumnSetting = (params) => {

@@ -25,7 +25,7 @@ import {
   IconPlus,
   IconCode
 } from '@opentiny/vue-icon'
-import { useProperties, useResource, useCanvas } from '@opentiny/tiny-engine-controller'
+import { useProperties, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { MetaList, MetaListActions, MetaListItems } from '@opentiny/tiny-engine-common'
 
 export default {
@@ -51,7 +51,6 @@ export default {
   },
   setup(props, { emit }) {
     const { setProp } = useProperties()
-    const { resState } = useResource()
     const { pageState } = useCanvas()
 
     let properties = []
@@ -163,7 +162,6 @@ export default {
       changeItem,
       deleteItem,
       actionEvents,
-      resState,
       pageState,
       optionsList,
       actionsOptions,

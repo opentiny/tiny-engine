@@ -115,7 +115,7 @@ import {
   Button as TinyButton
 } from '@opentiny/vue'
 import { PluginPanel, PluginBlockList, SvgButton, SaveNewBlock, LinkButton } from '@opentiny/tiny-engine-common'
-import { useBlock, useModal, useLayout, useCanvas, useHelp } from '@opentiny/tiny-engine-controller'
+import { useBlock, useModal, useLayout, useCanvas, useHelp } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 import BlockSetting, { openPanel, closePanel } from './BlockSetting.vue'
 import BlockGroupArrange from './BlockGroupArrange.vue'

@@ -14,18 +14,35 @@ import { defineConfig } from 'vite'
 import path from 'path'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
+import { glob } from 'glob'
+import { fileURLToPath } from 'node:url'
 import generateComments from '@opentiny/tiny-engine-vite-plugin-meta-comments'
+
+const jsEntries = glob.sync('./js/**/*.js').map((file) => {
+  return [file.slice(0, file.length - path.extname(file).length), fileURLToPath(new URL(file, import.meta.url))]
+})
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue(), vueJsx(), generateComments()],
+  plugins: [generateComments(), vue(), vueJsx()],
   publicDir: false,
   resolve: {},
+  base: './',
+  define: {
+    'import.meta': 'import.meta',
+    'import.meta.env.MODE': 'import.meta.env.MODE',
+    'import.meta.env.PROD': 'import.meta.env.PROD',
+    'import.meta.env.BASE_URL': 'import.meta.env.BASE_URL',
+    'import.meta.env.VITE_ORIGIN': 'import.meta.env.VITE_ORIGIN',
+    'import.meta.env.VITE_CDN_DOMAIN': 'import.meta.env.VITE_CDN_DOMAIN',
+    'import.meta.env.VITE_API_MOCK': 'import.meta.env.VITE_API_MOCK'
+  },
   build: {
     cssCodeSplit: false,
     lib: {
       entry: {
-        index: path.resolve(__dirname, './index.js')
+        index: path.resolve(__dirname, './index.js'),
+        ...Object.fromEntries(jsEntries)
       },
       name: 'common',
       fileName: (format, entryName) => `${entryName}.js`,
@@ -41,7 +58,15 @@ export default defineConfig({
           return ''
         }
       },
-      external: ['vue', 'monaco-editor', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/, /^prettier.*/]
+      external: [
+        'vue',
+        'vue-i18n',
+        'monaco-editor',
+        /@opentiny\/tiny-engine.*/,
+        /@opentiny\/vue.*/,
+        /^prettier.*/,
+        /^@babel.*/
+      ]
     }
   }
 })

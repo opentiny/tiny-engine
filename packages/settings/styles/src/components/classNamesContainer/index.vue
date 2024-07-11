@@ -104,10 +104,10 @@
 <script setup>
 import { computed, reactive, ref, nextTick, watch, watchEffect } from 'vue'
 import { Select as TinySelect } from '@opentiny/vue'
-import { useProperties, useCanvas, useHistory, useHelp } from '@opentiny/tiny-engine-controller'
+import { useProperties, useCanvas, useHistory, useHelp } from '@opentiny/tiny-engine-meta-register'
 import { LinkButton } from '@opentiny/tiny-engine-common'
 import { CodeConfigurator } from '@opentiny/tiny-engine-configurator'
-import { formatString } from '@opentiny/tiny-engine-controller/js/ast'
+import { formatString } from '@opentiny/tiny-engine-common/js/ast'
 import useStyle, { updateGlobalStyleStr } from '../../js/useStyle'
 import { stringify, getSelectorArr } from '../../js/parser'
 
@@ -475,11 +475,11 @@ const handleDeleteCurSelector = () => {
   ::-webkit-scrollbar {
     display: block;
   }
-  padding: 16px 16px 8px;
+  padding: 12px 8px 11px 12px;
 }
 .title {
   margin: 0;
-  font-size: 14px;
+  font-size: 12px;
   color: var(--ti-lowcode-className-selector-title-color);
   font-weight: normal;
   .help-link {

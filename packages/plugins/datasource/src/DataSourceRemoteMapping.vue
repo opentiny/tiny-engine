@@ -35,7 +35,6 @@ import { reactive, watchEffect, ref } from 'vue'
 import { Input, Select, Switch } from '@opentiny/vue'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
 import mappingType from './config.js'
-// import { useDataSource } from '@opentiny/tiny-engine-controller'
 
 export const isOpen = ref(false)
 

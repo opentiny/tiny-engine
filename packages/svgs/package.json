@@ -23,9 +23,7 @@
   "author": "OpenTiny Team",
   "license": "MIT",
   "homepage": "https://opentiny.design/tiny-engine",
-  "dependencies": {
-    "@opentiny/tiny-engine-entry": "workspace:*"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
     "@vitejs/plugin-vue": "^4.2.3",

@@ -6,11 +6,13 @@
       popper-class="toolbar-right-popover"
       append-to-body
       :content="isBlock() ? '区块设置' : '页面设置'"
+      :disabled="true"
     >
       <template #reference>
-        <span class="icon" @click="openSetting">
+        <span class="icon-hides" @click="openSetting">
           <svg-icon :name="icon"></svg-icon>
         </span>
+        <span>{{ isBlock() ? '区块设置' : '页面设置' }}</span>
       </template>
     </tiny-popover>
   </div>
@@ -18,7 +20,7 @@
 
 <script lang="jsx">
 import { Popover } from '@opentiny/vue'
-import { useCanvas, useLayout, useBlock, usePage, useModal, useNotify } from '@opentiny/tiny-engine-controller'
+import { useCanvas, useLayout, useBlock, usePage, useModal, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 
 const { PAGE_STATUS } = constants

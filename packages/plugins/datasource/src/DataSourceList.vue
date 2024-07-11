@@ -32,7 +32,7 @@
 
 <script>
 import { onMounted, reactive, ref } from 'vue'
-import { useApp, useDataSource, useResource, useCanvas } from '@opentiny/tiny-engine-controller'
+import { useApp, useDataSource, useResource, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { close as closeRemotePanel } from './DataSourceRemotePanel.vue'
 import { close as closeDataSourceForm } from './DataSourceForm.vue'
 import DataSourceRecordList, { open as openRecordList } from './DataSourceRecordList.vue'

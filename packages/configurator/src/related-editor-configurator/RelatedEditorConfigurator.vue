@@ -21,7 +21,7 @@
 
 <script>
 import { onMounted, ref, watchEffect } from 'vue'
-import { useMessage, useCanvas } from '@opentiny/tiny-engine-controller'
+import { useMessage, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import CodeConfigurator from '../code-configurator/CodeConfigurator.vue'
 import VariableConfigurator from '../variable-configurator/VariableConfigurator.vue'
 

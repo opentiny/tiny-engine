@@ -4,7 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "cross-env VITE_THEME=light vite",
+    "dev": "concurrently 'pnpm:serve:mock' 'pnpm:serve:frontend'",
+    "serve:frontend": "cross-env VITE_THEME=light vite",
+    "serve:mock": "node node_modules/@opentiny/tiny-engine-mock/dist/app.js",
     "build": "cross-env VITE_THEME=light vite build"
   },
   "dependencies": {
@@ -22,6 +24,7 @@
     "@vitejs/plugin-vue": "^5.0.4",
     "cross-env": "^7.0.3",
     "vite": "^5.2.7",
-    "@opentiny/tiny-engine-vite-config": "latest"
+    "@opentiny/tiny-engine-vite-config": "latest",
+    "@opentiny/tiny-engine-mock": "latest"
   }
 }

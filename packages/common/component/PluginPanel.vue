@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { useLayout } from '@opentiny/tiny-engine-controller'
+import { useLayout } from '@opentiny/tiny-engine-meta-register'
 import CloseIcon from './CloseIcon.vue'
 
 export default {
@@ -71,7 +71,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     line-height: 48px;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: var(--ti-lowcode-plugin-panel-title-font-weight);
     font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
       'Helvetica Neue', sans-serif;
