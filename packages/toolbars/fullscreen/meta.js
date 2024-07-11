@@ -3,5 +3,6 @@ export default {
   type: 'toolbars',
   title: 'fullscreen',
   icon: '',
-  align: 'right'
+  align: 'right',
+  collapsed: true
 }

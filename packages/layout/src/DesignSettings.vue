@@ -69,7 +69,7 @@ export default {
     }
     .tiny-tabs__content {
       flex: 1;
-      overflow-y: scroll;
+      overflow-y: auto;
       padding: 0;
       margin: 0;
     }
@@ -85,7 +85,7 @@ export default {
   }
 
   :deep(.tiny-collapse-item__content) {
-    padding: 8px 16px;
+    padding: 8px 8px 8px 12px;
   }
 }
 

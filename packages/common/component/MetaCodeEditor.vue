@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import { VueMonaco } from '@opentiny/tiny-engine-common'
+import VueMonaco from './VueMonaco'
 import { formatString } from '@opentiny/tiny-engine-common/js/ast'
 import i18n from '@opentiny/tiny-engine-common/js/i18n'
 import { Button, DialogBox } from '@opentiny/vue'

@@ -239,9 +239,7 @@ export function useTinyEngineBaseConfig(engineConfig) {
       : []
   )
 
-  if (engineConfig.useSourceAlias) {
-    config.plugins.push(devAliasPlugin(env))
-  }
+  config.plugins.push(devAliasPlugin(env, engineConfig.useSourceAlias))
 
   return config
 }

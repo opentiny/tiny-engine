@@ -6,11 +6,13 @@
       popper-class="toolbar-right-popover"
       append-to-body
       :content="isBlock() ? '区块设置' : '页面设置'"
+      :disabled="true"
     >
       <template #reference>
-        <span class="icon" @click="openSetting">
+        <span class="icon-hides" @click="openSetting">
           <svg-icon :name="icon"></svg-icon>
         </span>
+        <span>{{ isBlock() ? '区块设置' : '页面设置' }}</span>
       </template>
     </tiny-popover>
   </div>
