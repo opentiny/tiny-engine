@@ -1,4 +1,4 @@
-import { useCanvas } from '@opentiny/tiny-engine-controller'
+import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 
 const variableConfiguratorList = [
   {

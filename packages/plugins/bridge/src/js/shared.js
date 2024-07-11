@@ -1,4 +1,4 @@
-import { useResource } from '@opentiny/tiny-engine-controller'
+import { useResource } from '@opentiny/tiny-engine-meta-register'
 
 export const variableConfiguratorList = [
   {

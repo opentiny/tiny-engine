@@ -121,10 +121,9 @@
 
 <script>
 import { VueMonaco as MonacoEditor, SvgButton } from '@opentiny/tiny-engine-common'
-import { useCanvas, useProperties } from '@opentiny/tiny-engine-meta-register'
+import { getSharedOptions, useCanvas, useProperties } from '@opentiny/tiny-engine-meta-register'
 import { formatString } from '@opentiny/tiny-engine-common/js/ast'
 import { DEFAULT_LOOP_NAME } from '@opentiny/tiny-engine-common/js/constants'
-import { getSharedOptions } from '@opentiny/tiny-engine-entry'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { Alert, Button, DialogBox, Input, Search, Switch, Tooltip } from '@opentiny/vue'
 import { camelize, capitalize } from '@vue/shared'

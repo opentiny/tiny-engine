@@ -1,6 +1,6 @@
-import { useApp, useCanvas } from '@opentiny/tiny-engine-controller'
-import { generate, parse, traverse } from '@opentiny/tiny-engine-controller/js/ast'
-import { getCommentByKey } from '@opentiny/tiny-engine-controller/js/comment'
+import { useApp, useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { generate, parse, traverse } from '@opentiny/tiny-engine-common/js/ast'
+import { getCommentByKey } from '@opentiny/tiny-engine-common/js/comment'
 import { camelize, capitalize } from '@vue/shared'
 import { fetchDataSourceList } from './http'
 
