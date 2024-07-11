@@ -22,7 +22,7 @@
         </div>
       </tiny-form-item>
       <tiny-form-item label="属性面板组件属性">
-        <code-configurator
+        <meta-code-editor
           :modelValue="widgetProps"
           title="属性面板组件属性"
           button-text="设置"
@@ -30,7 +30,7 @@
           :tips="componentPropsTips"
           @save="handleSaveWidgetProps"
         >
-        </code-configurator>
+        </meta-code-editor>
       </tiny-form-item>
       <tiny-form-item v-if="showArrayItemConfig" label="配置项">
         <meta-list-items class="config-list" :optionsList="arrayConfig">
@@ -86,24 +86,24 @@
         <tiny-input v-model="label"></tiny-input>
       </tiny-form-item>
       <tiny-form-item label="获取属性值">
-        <code-configurator
+        <meta-code-editor
           :modelValue="getterValue"
           title="获取属性值"
           button-text="getter"
           language="javascript"
           single
           @save="(...args) => saveAccessor('getter', ...args)"
-        ></code-configurator>
+        ></meta-code-editor>
       </tiny-form-item>
       <tiny-form-item label="设置属性值">
-        <code-configurator
+        <meta-code-editor
           :modelValue="setterValue"
           title="设置属性值"
           button-text="setter"
           language="javascript"
           single
           @save="(...args) => saveAccessor('setter', ...args)"
-        ></code-configurator>
+        ></meta-code-editor>
       </tiny-form-item>
       <div v-if="property.linked" class="linked-info">
         链接到组件: {{ property.linked.componentName }} 属性: {{ property.linked.property }}
@@ -122,8 +122,7 @@ import {
   Tooltip as TinyTooltip
 } from '@opentiny/vue'
 import { iconChevronLeft, iconPlusCircle } from '@opentiny/vue-icon'
-import { ConfigItem, MetaListItems } from '@opentiny/tiny-engine-common'
-import { CodeConfigurator } from '@opentiny/tiny-engine-configurator'
+import { ConfigItem, MetaListItems, MetaCodeEditor } from '@opentiny/tiny-engine-common'
 import { getEditProperty, DEFAULT_ARRAY_CONFIG, META_COMPONENTS_ENUM } from './js/blockSetting'
 import {
   itemConfig,
@@ -155,7 +154,7 @@ export default {
     TinySelect,
     TinyFormItem,
     ConfigItem,
-    CodeConfigurator,
+    MetaCodeEditor,
     IconChevronLeft: iconChevronLeft(),
     IconPlusCircle: iconPlusCircle(),
     MetaListItems,
