@@ -32,7 +32,10 @@ export default defineConfig({
     'import.meta': 'import.meta',
     'import.meta.env.MODE': 'import.meta.env.MODE',
     'import.meta.env.PROD': 'import.meta.env.PROD',
-    'import.meta.env.BASE_URL': 'import.meta.env.BASE_URL'
+    'import.meta.env.BASE_URL': 'import.meta.env.BASE_URL',
+    'import.meta.env.VITE_ORIGIN': 'import.meta.env.VITE_ORIGIN',
+    'import.meta.env.VITE_CDN_DOMAIN': 'import.meta.env.VITE_CDN_DOMAIN',
+    'import.meta.env.VITE_API_MOCK': 'import.meta.env.VITE_API_MOCK'
   },
   build: {
     cssCodeSplit: false,

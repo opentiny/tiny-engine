@@ -8,6 +8,7 @@
     </div>
     <div class="toolbar-right">
       <component :is="item.entry" v-for="item in rightBar" :key="item.id"></component>
+      <toolbar-collapse :collapseBar="collapseBar"></toolbar-collapse>
     </div>
   </div>
   <div class="progress">
@@ -18,10 +19,12 @@
 <script>
 import { reactive, nextTick } from 'vue'
 import { ProgressBar } from '@opentiny/tiny-engine-common'
+import ToolbarCollapse from './ToolbarCollapse.vue'
 
 export default {
   components: {
-    ProgressBar
+    ProgressBar,
+    ToolbarCollapse
   },
   props: {
     toolbars: {
@@ -33,13 +36,14 @@ export default {
     const leftBar = []
     const rightBar = []
     const centerBar = []
+    const collapseBar = []
     const state = reactive({
       showDeployBlock: false
     })
 
     props.toolbars.forEach((item) => {
       if (item.align === 'right') {
-        rightBar.push(item)
+        item?.collapsed ? collapseBar.push(item) : rightBar.push(item)
       } else if (item.align === 'center') {
         centerBar.push(item)
       } else {
@@ -54,7 +58,8 @@ export default {
       leftBar,
       rightBar,
       centerBar,
-      state
+      state,
+      collapseBar
     }
   }
 }
@@ -97,9 +102,9 @@ export default {
       justify-content: center;
       align-items: center;
       vertical-align: middle;
-      width: 32px;
-      height: 32px;
-      border-radius: 6px;
+      width: 26px;
+      height: 26px;
+      border-radius: 4px;
       position: relative;
       svg {
         cursor: pointer;

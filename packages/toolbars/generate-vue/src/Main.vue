@@ -1,17 +1,12 @@
 <template>
-  <tiny-popover
-    trigger="hover"
-    :open-delay="1000"
-    popper-class="toolbar-right-popover"
-    append-to-body
-    content="生成当前应用代码到本地文件"
-  >
-    <template #reference>
-      <span class="icon" @click="generate">
+  <div class="toolbar-generate">
+    <tiny-button @click="generate">
+      <span>
         <svg-icon :name="icon"></svg-icon>
+        <span class="button-title">出码</span>
       </span>
-    </template>
-  </tiny-popover>
+    </tiny-button>
+  </div>
   <generate-file-selector
     :visible="state.showDialogbox"
     :data="state.saveFilesInfo"
@@ -22,7 +17,6 @@
 
 <script>
 import { reactive } from 'vue'
-import { Popover } from '@opentiny/vue'
 import {
   useBlock,
   useCanvas,
@@ -33,6 +27,7 @@ import {
   META_APP,
   getMergeMeta
 } from '@opentiny/tiny-engine-meta-register'
+import { Button } from '@opentiny/vue'
 import { fs } from '@opentiny/tiny-engine-utils'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { fetchMetaData, fetchPageList, fetchBlockSchema } from './http'
@@ -40,7 +35,7 @@ import FileSelector from './FileSelector.vue'
 
 export default {
   components: {
-    TinyPopover: Popover,
+    TinyButton: Button,
     GenerateFileSelector: FileSelector
   },
   props: {
@@ -264,4 +259,19 @@ export default {
   }
 }
 </script>
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.toolbar-generate {
+  :deep(.tiny-button--default) {
+    min-width: 58px;
+    height: 26px;
+    padding: 0 8px;
+    line-height: 24px;
+    border-radius: 4px;
+    background-color: var(--ti-lowcode-toolbar-button-bg);
+    border: none;
+    .button-title {
+      margin-left: 4px;
+    }
+  }
+}
+</style>

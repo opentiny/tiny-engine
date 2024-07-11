@@ -235,7 +235,7 @@ export default {
 
     &.bottom {
       flex: 1;
-      padding-bottom: 36px;
+      padding-bottom: 20px;
     }
 
     .list-item {
@@ -243,7 +243,7 @@ export default {
       padding: 3px 0;
 
       &:first-child {
-        padding-top: 16px;
+        padding-top: 12px;
       }
 
       cursor: pointer;
@@ -255,7 +255,7 @@ export default {
       &.active {
         .item-icon {
           background: var(--ti-lowcode-left-panel-active-bg);
-          border-radius: 6px;
+          border-radius: 4px;
         }
       }
 
@@ -278,21 +278,21 @@ export default {
       align-items: center;
       color: var(--ti-lowcode-design-plugin-color);
       font-size: 22px;
-      width: 32px;
-      height: 32px;
+      width: 26px;
+      height: 26px;
 
       svg {
-        font-size: 22px;
+        font-size: 18px;
       }
     }
   }
 }
 
 :deep(.panel-svg) {
-  font-size: 22px;
+  font-size: 18px;
 }
 
 :deep(.svg-icon.icon-plugin-icon-plugin-help) {
-  font-size: 22px;
+  font-size: 18px;
 }
 </style>
