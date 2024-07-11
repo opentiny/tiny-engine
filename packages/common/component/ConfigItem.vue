@@ -70,7 +70,8 @@
 
         <div class="action-icon">
           <slot name="suffix"></slot>
-          <code-configurator
+          <component
+            :is="CodeConfigurator"
             v-if="showCodeEditIcon"
             ref="editorModalRef"
             v-bind="widget.props"
@@ -85,13 +86,14 @@
                 <icon-writing class="code-icon" @click="editorModalRef?.open && editorModalRef.open()"></icon-writing>
               </tiny-tooltip>
             </template>
-          </code-configurator>
-          <variable-configurator
+          </component>
+          <component
+            :is="VariableConfigurator"
             v-if="isTopLayer && !onlyEdit && property.bindState !== false && !isRelatedComponents(widget.component)"
             :model-value="widget.props.modelValue"
             :name="widget.props.name"
             @update:modelValue="onModelUpdate"
-          ></variable-configurator>
+          ></component>
         </div>
       </div>
     </div>
@@ -128,8 +130,6 @@ const hasRule = (required, rules) => {
 export default {
   components: {
     MultiTypeSelector,
-    CodeConfigurator: getConfigurator('CodeConfigurator'),
-    VariableConfigurator: getConfigurator('VariableConfigurator'),
     TinyPopover: Popover,
     TinyTooltip: Tooltip,
     IconWriting: IconWriting(),
@@ -168,6 +168,9 @@ export default {
   },
   emits: ['update:modelValue'],
   setup(props, { emit }) {
+    const CodeConfigurator = getConfigurator('CodeConfigurator')
+    const VariableConfigurator = getConfigurator('VariableConfigurator')
+
     const { t, locale } = i18n.global
 
     const verification = reactive({
@@ -467,6 +470,8 @@ export default {
     )
 
     return {
+      CodeConfigurator,
+      VariableConfigurator,
       verification,
       showCodeEditIcon,
       editorModalRef,
