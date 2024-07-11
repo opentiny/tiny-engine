@@ -41,6 +41,7 @@ import { IconClose, IconLanguage } from '@opentiny/vue-icon'
 import { computed, ref, watchEffect } from 'vue'
 
 export default {
+  name: 'I18nInput',
   components: {
     TinyInput: Input,
     BindI18n,
