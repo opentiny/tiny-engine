@@ -30,7 +30,6 @@
   "license": "MIT",
   "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
-    "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-builtin-component": "workspace:*",
     "@vue/compiler-sfc": "3.2.45",
     "@vue/shared": "^3.3.4",
