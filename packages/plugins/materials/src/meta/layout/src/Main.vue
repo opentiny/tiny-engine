@@ -51,7 +51,7 @@ export default {
     const pluginRegistryData = ref(props.registryData)
     const rightPanelRef = ref(null)
     const displayComponentIds = pluginRegistryData.value.options.displayComponentIds || []
-    const headerComponent = getMergeMeta(pluginRegistryData.value.components?.header)
+    const headerComponent = pluginRegistryData.value.components?.header
     const onlyShowDefault = ref(displayComponentIds.length === 1)
     const activeTabId =
       displayComponentIds.find((item) => item === pluginRegistryData.value.options?.defaultTabId) ||
@@ -99,6 +99,7 @@ export default {
   flex: 1;
   overflow-y: scroll;
   padding: 0;
+  margin: 0px;
   & > div {
     height: 100%;
   }

@@ -71,6 +71,7 @@
     "@opentiny/tiny-engine-svgs": "workspace:*",
     "@opentiny/tiny-engine-theme-dark": "workspace:*",
     "@opentiny/tiny-engine-theme-light": "workspace:*",
+    "@opentiny/tiny-engine-theme-base": "workspace:*",
     "@opentiny/tiny-engine-toolbar-breadcrumb": "workspace:*",
     "@opentiny/tiny-engine-toolbar-checkinout": "workspace:*",
     "@opentiny/tiny-engine-toolbar-clean": "workspace:*",
@@ -121,6 +122,7 @@
     "@opentiny/vue": "^3.14.0",
     "@opentiny/vue-icon": "^3.14.0",
     "@opentiny/vue-design-smb": "^3.14.0",
+    "@opentiny/vue-locale": "^3.14.0",
     "@opentiny/vue-renderless": "^3.14.0",
     "@opentiny/vue-theme": "^3.14.0",
     "vue": "^3.4.23"

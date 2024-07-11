@@ -3,7 +3,6 @@ import ButtonGroupConfigurator from './button-group-configurator/ButtonGroupConf
 import CascaderConfigurator from './cascader-configurator/CascaderConfigurator.vue'
 import CheckBoxConfigurator from './checkbox-configurator/CheckBoxConfigurator.vue'
 import CheckboxGroupConfigurator from './checkbox-group-configurator/CheckboxGroupConfigurator.vue'
-import CodeConfigurator from './code-configurator/CodeConfigurator.vue'
 import CodeListConfigurator from './code-list-configurator/CodeListConfigurator.vue'
 import CollectionConfigurator from './collection-configurator/CollectionConfigurator.vue'
 import ColorConfigurator from './color-configurator/ColorConfigurator.vue'
@@ -12,7 +11,6 @@ import DatePickerConfigurator from './date-picker-configurator/DatePickerConfigu
 import GroupItemConfigurator from './group-item-configurator/GroupItemConfigurator.vue'
 import HtmlAttributesConfigurator from './html-attributes-configurator/HtmlAttributesConfigurator.vue'
 import HtmlTextConfigurator from './html-text-configurator/HtmlTextConfigurator.vue'
-import I18nConfigurator from './i18n-configurator/I18nConfigurator.vue'
 import InputConfigurator from './input-configurator/InputConfigurator.vue'
 import IpSectionConfigurator from './ip-section-configurator/IpSectionConfigurator.vue'
 import JsSlotConfigurator from './js-slot-configurator/JsSlotConfigurator.vue'
@@ -30,13 +28,14 @@ import SwitchConfigurator from './switch-configurator/SwitchConfigurator.vue'
 import TableColumnsConfigurator from './table-columns-configurator/TableColumnsConfigurator.vue'
 import VariableConfigurator from './variable-configurator/VariableConfigurator.vue'
 
+import { I18nInput, MetaCodeEditor } from '@opentiny/tiny-engine-common'
+
 export {
   ArrayItemConfigurator,
   ButtonGroupConfigurator,
   CascaderConfigurator,
   CheckBoxConfigurator,
   CheckboxGroupConfigurator,
-  CodeConfigurator,
   CodeListConfigurator,
   CollectionConfigurator,
   ColorConfigurator,
@@ -45,7 +44,6 @@ export {
   GroupItemConfigurator,
   HtmlAttributesConfigurator,
   HtmlTextConfigurator,
-  I18nConfigurator,
   InputConfigurator,
   IpSectionConfigurator,
   JsSlotConfigurator,
@@ -62,14 +60,16 @@ export {
   SwitchConfigurator,
   TableColumnsConfigurator,
   VariableConfigurator,
+  MetaCodeEditor,
+  I18nInput as I18nConfigurator,
+  MetaCodeEditor as CodeConfigurator,
   // 暂时保留Meta开头的旧组件名
   ArrayItemConfigurator as MetaArrayItem,
-  I18nConfigurator as MetaBindI18n,
+  I18nInput as MetaBindI18n,
   VariableConfigurator as MetaBindVariable,
   ButtonGroupConfigurator as MetaButtonGroup,
   CheckBoxConfigurator as MetaCheckBox,
   CascaderConfigurator as MetaCascader,
-  CodeConfigurator as MetaCodeEditor,
   CodeListConfigurator as MetaCodeEditorList,
   ColorConfigurator as MetaColor,
   DatePickerConfigurator as MetaDatePicker,

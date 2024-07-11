@@ -47,6 +47,7 @@ const devAlias = {
   ),
   '@opentiny/tiny-engine-theme-dark': path.resolve(process.cwd(), '../packages/theme/dark/index.less'),
   '@opentiny/tiny-engine-theme-light': path.resolve(process.cwd(), '../packages/theme/light/index.less'),
+  '@opentiny/tiny-engine-theme-base': path.resolve(process.cwd(), '../packages/theme/base/src/index.js'),
   '@opentiny/tiny-engine-svgs': path.resolve(process.cwd(), '../packages/svgs/index.js'),
   '@opentiny/tiny-engine-http': path.resolve(process.cwd(), '../packages/http/src/index.js'),
   '@opentiny/tiny-engine-canvas': path.resolve(process.cwd(), '../packages/canvas/index.js'),
@@ -59,13 +60,25 @@ const devAlias = {
   '@opentiny/tiny-engine-configurator': path.resolve(process.cwd(), '../packages/configurator/src/index.js')
 }
 
+const getThemePath = (theme, useSourceAlias) => {
+  if (!['light', 'dark'].includes(theme)) {
+    return ''
+  }
+
+  if (useSourceAlias) {
+    return path.resolve(process.cwd(), `../packages/theme/${theme}/index.less`)
+  }
+
+  return path.resolve(process.cwd(), `./node_modules/@opentiny/tiny-engine-theme-${theme}/dist/style.css`)
+}
+
 /**
  * 源码调试插件
  * 开启后，会指定  alias 到官方源码 package
  * @param {*} env
  * @returns
  */
-export const devAliasPlugin = (env) => {
+export const devAliasPlugin = (env, useSourceAlias) => {
   return {
     name: 'vite-plugin-dev-alias',
     config(config, { command }) {
@@ -74,10 +87,8 @@ export const devAliasPlugin = (env) => {
         return {
           resolve: {
             alias: {
-              ...devAlias,
-              '@opentiny/tiny-engine-theme': ['light', 'dark'].includes(env.VITE_THEME)
-                ? path.resolve(process.cwd(), `../packages/theme/${env.VITE_THEME}/index.less`)
-                : ''
+              ...(useSourceAlias ? devAlias : {}),
+              '@opentiny/tiny-engine-theme': getThemePath(env.VITE_THEME, useSourceAlias)
             }
           }
         }
@@ -87,12 +98,8 @@ export const devAliasPlugin = (env) => {
         return {
           resolve: {
             alias: {
-              '@opentiny/tiny-engine-theme': ['light', 'dark'].includes(env.VITE_THEME)
-                ? path.resolve(
-                    process.cwd(),
-                    `./node_modules/@opentiny/tiny-engine-theme-${env.VITE_THEME}/dist/style.css`
-                  )
-                : ''
+              // 构建不使用 alias
+              '@opentiny/tiny-engine-theme': getThemePath(env.VITE_THEME, false)
             }
           }
         }
