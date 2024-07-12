@@ -25,9 +25,9 @@ import {
   useMaterial,
   useHistory,
   useModal,
-  getMergeRegistry
+  getMergeRegistry,
+  getMergeMeta
 } from '@opentiny/tiny-engine-meta-register'
-import materials from '@opentiny/tiny-engine-plugin-materials'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { isVsCodeEnv, isDevelopEnv } from '@opentiny/tiny-engine-common/js/environments'
@@ -48,6 +48,7 @@ const componentType = {
 export default {
   setup() {
     const registry = getMergeRegistry('canvas')
+    const materialsPanel = getMergeMeta('engine.plugins.materials')?.entry
     const { CanvasBreadcrumb } = registry.components
     const CanvasLayout = registry.layout.entry
     const [CanvasContainer] = registry.metas
@@ -166,7 +167,7 @@ export default {
       canvasUrl,
       nodeSelected,
       footData,
-      materialsPanel: materials.entry,
+      materialsPanel,
       showMask,
       controller: {
         // 需要在canvas/render或内置组件里使用的方法

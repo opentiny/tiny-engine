@@ -12,7 +12,7 @@
 
 import { merge } from 'lodash-es'
 import { utils } from '@opentiny/tiny-engine-utils'
-import { generateRegistry, entryHashMap } from './common'
+import { generateRegistry, entryHashMap, preprocessRegistry } from './common'
 
 const lowcodeRegistry = { registry: null }
 
@@ -79,6 +79,9 @@ export const defineEntry = (registry) => {
   if (!registry) {
     throw new Error('请传递正确的注册表')
   }
+
+  preprocessRegistry(registry)
+
   lowcodeRegistry.registry = registry
   generateRegistry(registry)
 }

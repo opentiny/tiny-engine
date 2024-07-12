@@ -18,7 +18,6 @@ import { lint } from '@opentiny/tiny-engine-common/js/linter'
 import { isFunction } from '@opentiny/vue-renderless/grid/static'
 
 const { SCHEMA_DATA_TYPE } = constants
-const { message, confirm } = useModal()
 
 const state = reactive({
   linterWorker: null,
@@ -81,6 +80,7 @@ export const saveMethod = ({ name, content }) => {
 }
 
 const saveMethods = () => {
+  const { message } = useModal()
   if (!state.isChanged) {
     return false
   }
@@ -124,6 +124,7 @@ const saveMethods = () => {
 }
 
 const close = (emit) => (callback) => {
+  const { confirm } = useModal()
   const callbackFn = isFunction(callback) ? callback : () => emit('close')
   if (!state.isChanged) {
     callbackFn(true)

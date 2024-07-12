@@ -142,6 +142,23 @@ const handleRegistryProp = (id, value) => {
   }
 }
 
+export const preprocessRegistry = (registry) => {
+  // 元应用支持使用长度为2的数组来配置，第一个参数为元应用，第二个参数是额外的自定义配置。此函数判断数组是否属于这种配置格式
+  const isArrayFormat = (arr) => Array.isArray(arr) && arr.length === 2 && arr[0].id
+
+  Object.values(registry)
+    .filter((metaApps) => Array.isArray(metaApps))
+    .forEach((metaApps) => {
+      // normal: { plugins: [ Page, Block, ... ] }
+      // array format: { plugins: [ [ Page, { options: extraOptions } ], Block, ... ] }
+      metaApps.forEach((metaApp, index) => {
+        if (isArrayFormat(metaApp)) {
+          metaApps.splice(index, 1, { ...metaApp[0], ...metaApp[1] })
+        }
+      })
+    })
+}
+
 export const generateRegistry = (registry) => {
   Object.entries(registry).forEach(([key, value]) => {
     if (typeof value === 'object' && value) {
