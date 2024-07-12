@@ -53,7 +53,7 @@ import { isEmptyObject } from '@opentiny/vue-renderless/common/type'
 import { useDataSource } from '@opentiny/tiny-engine-meta-register'
 import { extend } from '@opentiny/vue-renderless/common/object'
 
-const CONSTANCTS = {
+const CONSTANTS = {
   REQUIRED: 'required',
   EVENT_NAME: 'change',
   REQUIRED_TIP: '必填',
@@ -61,9 +61,9 @@ const CONSTANCTS = {
   MAX_VALUE_TIP: '不能大于最大值',
   MIN: 'min',
   MAX: 'max',
-  FIELD_TPEY_DATE: 'date',
-  FIELD_TPEY_DATETIME: 'datetime',
-  FIELD_TPEY_NUMBER: 'number',
+  FIELD_TYPE_DATE: 'date',
+  FIELD_TYPE_DATETIME: 'datetime',
+  FIELD_TYPE_NUMBER: 'number',
   MIN_LENGTH_TIP: '长度不小于',
   MAX_LENGTH_TIP: '长度不大于'
 }
@@ -88,10 +88,11 @@ export const update = (initialData, formData) => {
   dataSourceState.recordCopies = extend(true, {}, recordFormData)
 }
 
-export const initi = (data) => {
+// TODO: not used, should delete?
+export const init = (data) => {
   const { dataSourceState } = useDataSource()
   data?.forEach((item) => {
-    recordFormData[item.name] = item.type === CONSTANCTS.FIELD_TPEY_NUMBER ? 0 : ''
+    recordFormData[item.name] = item.type === CONSTANTS.FIELD_TYPE_NUMBER ? 0 : ''
   })
 
   dataSourceState.recordCopies = extend(true, {}, recordFormData)
@@ -142,9 +143,9 @@ export default {
 
     const validateNumber = (rule, value, callback) => {
       if (rule.min > value) {
-        callback(new Error(`${CONSTANCTS.MIN_VALUE_TIP}${rule.min}`))
+        callback(new Error(`${CONSTANTS.MIN_VALUE_TIP}${rule.min}`))
       } else if (rule.max < value) {
-        callback(new Error(`${CONSTANCTS.MAX_VALUE_TIP}${rule.max}`))
+        callback(new Error(`${CONSTANTS.MAX_VALUE_TIP}${rule.max}`))
       } else {
         callback()
       }
@@ -159,29 +160,29 @@ export default {
 
           !isEmptyObject(format) &&
             Object.keys(format).forEach((key) => {
-              if (key === CONSTANCTS.REQUIRED) {
+              if (key === CONSTANTS.REQUIRED) {
                 format[key] && (state.recordMapping[item.name] = format[key])
 
                 fieldRules.push({
                   [key]: format[key],
-                  message: CONSTANCTS.REQUIRED_TIP,
-                  trigger: CONSTANCTS.EVENT_NAME
+                  message: CONSTANTS.REQUIRED_TIP,
+                  trigger: CONSTANTS.EVENT_NAME
                 })
               }
 
-              if ((key === CONSTANCTS.MIN && format[key] !== 0) || (key === CONSTANCTS.MAX && format[key] !== 0)) {
-                if (item.type === CONSTANCTS.FIELD_TPEY_NUMBER) {
+              if ((key === CONSTANTS.MIN && format[key] !== 0) || (key === CONSTANTS.MAX && format[key] !== 0)) {
+                if (item.type === CONSTANTS.FIELD_TYPE_NUMBER) {
                   fieldRules.push({
                     [key]: format[key],
-                    trigger: CONSTANCTS.EVENT_NAME,
+                    trigger: CONSTANTS.EVENT_NAME,
                     validator: validateNumber
                   })
                 } else {
-                  const str = key === CONSTANCTS.MIN ? CONSTANCTS.MIN_LENGTH_TIP : CONSTANCTS.MAX_LENGTH_TIP
+                  const str = key === CONSTANTS.MIN ? CONSTANTS.MIN_LENGTH_TIP : CONSTANTS.MAX_LENGTH_TIP
                   fieldRules.push({
                     [key]: format[key],
                     message: str + format[key],
-                    trigger: CONSTANCTS.EVENT_NAME
+                    trigger: CONSTANTS.EVENT_NAME
                   })
                 }
               }
@@ -224,7 +225,7 @@ export default {
       if (text) {
         return text
       } else if (dateTime) {
-        return dateTime ? CONSTANCTS.FIELD_TPEY_DATETIME : CONSTANCTS.FIELD_TPEY_DATE
+        return dateTime ? CONSTANTS.FIELD_TYPE_DATETIME : CONSTANTS.FIELD_TYPE_DATE
       }
 
       return undefined

@@ -18,10 +18,10 @@ import { useBroadcastChannel } from '@vueuse/core'
 import { constants } from '@opentiny/tiny-engine-utils'
 
 const { BROADCAST_CHANNEL } = constants
-const { message } = useModal()
 
 export default {
   setup() {
+    const { message } = useModal()
     const registry = getMergeRegistry()
     const materialsApi = getMetaApi('engine.plugins.materials')
     const blockApi = getMetaApi('engine.plugins.blockmanage')
