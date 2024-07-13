@@ -31,7 +31,7 @@ export default {
   bottom: 0;
   position: absolute;
   background-color: var(--ti-lowcode-breadcrumb-bg);
-  z-index: 90;
+  z-index: 3;
   border-top: 1px solid var(--ti-lowcode-canvas-footer-border-top-color);
   .content {
     .tip {

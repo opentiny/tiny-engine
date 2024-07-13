@@ -3,7 +3,6 @@
     :title="shortcut ? '' : '物料'"
     :fixed-panels="fixedPanels"
     :fixed-name="PLUGIN_NAME.Materials"
-    :defaultWidth="300" 
     @close="$emit('close')"
   >
     <template #header> </template>
@@ -77,7 +76,7 @@ export default {
     return {
       activeName,
       tabClick,
-      PLUGIN_NAME
+      PLUGIN_NAME,
     }
   }
 }
@@ -97,7 +96,6 @@ export default {
 
 :deep(.tiny-tabs__content) {
   flex: 1;
-  overflow-y: scroll;
   padding: 0;
   & > div {
     height: 100%;
