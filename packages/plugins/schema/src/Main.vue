@@ -3,7 +3,6 @@
     title="页面Schema"
     :fixed-panels="fixedPanels"
     :fixed-name="PLUGIN_NAME.Schema"
-    :defaultWidth="1000" 
     @close="$emit('close')"
     id="source-code"
   >
@@ -171,9 +170,6 @@ export default {
   width: 45vw;
   height: calc(100% - var(--base-top-panel-height));
   padding: 12px;
-  position: fixed;
-  top: var(--base-top-panel-height);
-  left: 41px;
   background: var(--ti-lowcode-common-component-bg);
   box-shadow: 2px 2px 6px rgb(0 0 0 / 60%);
   z-index: 1000;
