@@ -34,11 +34,11 @@
 </template>
 
 <script>
-import { BindI18n } from '@opentiny/tiny-engine-common'
+import { computed, ref, watchEffect } from 'vue'
 import { useTranslate } from '@opentiny/tiny-engine-meta-register'
 import { Input, Popover } from '@opentiny/vue'
 import { IconClose, IconLanguage } from '@opentiny/vue-icon'
-import { computed, ref, watchEffect } from 'vue'
+import BindI18n from './BindI18n.vue'
 
 export default {
   name: 'I18nInput',
