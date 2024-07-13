@@ -3,7 +3,6 @@
     title="页面 JS"
     :fixed-panels="fixedPanels"
     :fixed-name="PLUGIN_NAME.Script"
-    :defaultWidth="1000" 
     @close="$emit('close')"
     class="plugin-page-js-container"
   >
@@ -128,9 +127,6 @@ export default {
   height: 100%;
   background: var(--ti-lowcode-plugin-js-bg);
   box-shadow: 6px 0px 3px 0px rgba(0, 0, 0, 0.05);
-  position: absolute;
-  left: 0;
-  top: 0;
   z-index: 999;
   box-sizing: border-box;
 

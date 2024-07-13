@@ -4,7 +4,6 @@
     :isCloseLeft="false"
     :fixed-panels="fixedPanels"
     :fixed-name="PLUGIN_NAME.I18n"
-    :defaultWidth="620" 
     class="plugin-panel-i18n"
   >
     <template #header>

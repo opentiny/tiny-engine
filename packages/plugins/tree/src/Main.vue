@@ -4,7 +4,6 @@
     title="大纲树"
     :fixed-panels="fixedPanels"
     :fixed-name="PLUGIN_NAME.OutlineTree"
-    :defaultWidth="300" 
     @close="$emit('close')"
   >
     <template #header>

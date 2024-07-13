@@ -3,7 +3,6 @@
     title="状态管理"
     :fixed-panels="fixedPanels"
     :fixed-name="PLUGIN_NAME.Data"
-    :defaultWidth="300" 
     @close="$emit('close')"
     id="data-source"
   >

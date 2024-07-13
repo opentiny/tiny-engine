@@ -63,13 +63,10 @@ export default {
     fixedName: {
       type: String
     },
-    defaultWidth: {
-      type: Number,
-      default: 310
-    }
   },
   emits: ['close'],
   setup(props, { emit }) {
+    const { pluginWidth } = useLayout()
     const panelState = inject('panelState')
     const closePanel = () => {
       useLayout().closePlugin()
@@ -82,7 +79,7 @@ export default {
     const MIN_WIDTH = 300 // 固定的最小宽度值
     const MAX_WIDTH = 1000 // 固定的最大宽度值
     const panel = ref(null)
-    const panelWidth = ref(props.defaultWidth) // 使用默认宽度
+    const panelWidth = ref(pluginWidth[props.fixedName]) // 使用默认宽度
     let startX = 0
     let startWidth = 0
 
@@ -96,6 +93,7 @@ export default {
     const onMouseMove = (event) => {
       const newWidth = startWidth + (event.clientX - startX)
       panelWidth.value = Math.max(MIN_WIDTH, Math.min(newWidth, MAX_WIDTH)) // 设置最小和最大宽度
+      pluginWidth[props.fixedName]=panelWidth.value//修改hook中插件宽度
     }
 
     const throttledMouseMove = throttle(onMouseMove, 50) // 50ms的节流
@@ -125,12 +123,14 @@ export default {
         }
       }
     }
+
     return {
       closePanel,
       fixPanel,
       panel,
       panelWidth,
-      onMouseDown
+      onMouseDown,
+      pluginWidth
     }
   }
 }
@@ -138,13 +138,12 @@ export default {
 
 <style lang="less" scoped>
 .plugin-panel {
-  width: 100%;
   height: 100%;
   background: var(--ti-lowcode-plugin-panel-bg, --ti-lowcode-toolbar-bg);
   display: flex;
   flex-direction: column;
   position: relative;
-  overflow: auto;
+  overflow: hidden;
 
   .plugin-panel-header {
     display: flex;
@@ -179,6 +178,7 @@ export default {
     }
   }
 }
+//拖拽线
 .resizer {
   position: absolute;
   top: 0;
@@ -187,5 +187,10 @@ export default {
   height: 100%;
   cursor: ew-resize;
   background-color: rgba(0, 0, 0, 0.1);
+  transition: width 0.3s ease;
+}
+.resizer:hover {
+  width: 8px;
+  background-color: var(--ti-base-color-brand-7);
 }
 </style>

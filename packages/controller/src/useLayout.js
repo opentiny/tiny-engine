@@ -38,7 +38,21 @@ const SETTING_NAME = {
   Style: 'style',
   Props: 'props'
 }
-
+const pluginWidth = reactive({
+  Materials: '300',
+  OutlineTree: '300',
+  AppManage: '300',
+  BlockManage: '300',
+  Collections: '300',
+  Bridge: '300',
+  I18n: '620',
+  PageController: '1000',
+  DataSource: '300',
+  Schema: '1000',
+  Props: '300',
+  Styles: '300',
+  Events: '300',
+})
 const pluginState = reactive({
   pluginEvent: 'all'
 })
@@ -153,6 +167,7 @@ export default () => {
     getPluginApi,
     getPluginState,
     pluginState,
-    isEmptyPage
+    isEmptyPage,
+    pluginWidth
   }
 }
