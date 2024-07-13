@@ -1,5 +1,10 @@
 <template>
-  <plugin-setting v-if="isShow" :title="state.title" class="page-plugin-setting">
+  <plugin-setting
+    v-if="isShow"
+    :title="state.title"
+    class="page-plugin-setting"
+    :style="{ marginLeft: leftMargin + 'px' }"
+  >
     <template #header>
       <button-group>
         <tiny-button type="primary" @click="savePageSetting">保存</tiny-button>
@@ -52,7 +57,7 @@
 </template>
 
 <script lang="jsx">
-import { reactive, ref } from 'vue'
+import { reactive, ref, computed } from 'vue'
 import { Button, Collapse, CollapseItem, Input } from '@opentiny/vue'
 import { PluginSetting, ButtonGroup, SvgButton, LifeCycles } from '@opentiny/tiny-engine-common'
 import { useLayout, usePage, useCanvas, useModal, useApp, useNotify } from '@opentiny/tiny-engine-controller'
@@ -68,6 +73,8 @@ import http from './http.js'
 
 const { COMPONENT_NAME } = constants
 const isShow = ref(false)
+const { pluginWidth,PLUGIN_NAME } = useLayout()
+const leftMargin = computed(() => pluginWidth[PLUGIN_NAME["AppManage"]])
 
 export const openPageSettingPanel = () => {
   isShow.value = true
@@ -369,7 +376,8 @@ export default {
       closePageSettingPanel,
       updatePageLifeCycles,
       restorePage,
-      PAGE_SETTING_SESSION
+      PAGE_SETTING_SESSION,
+      leftMargin
     }
   }
 }

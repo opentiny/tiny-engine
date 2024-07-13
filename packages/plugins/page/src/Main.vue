@@ -1,11 +1,5 @@
 <template>
-  <plugin-panel
-    :title="title"
-    :fixed-panels="fixedPanels"
-    :fixed-name="PLUGIN_NAME.Page"
-    :defaultWidth="300"
-    @close="pluginPanelClosed"
-  >
+  <plugin-panel :title="title" :fixed-panels="fixedPanels" :fixed-name="PLUGIN_NAME.Page" @close="pluginPanelClosed">
     <template #header>
       <link-button :href="docsUrl"></link-button>
       <svg-button
@@ -40,7 +34,7 @@
 </template>
 
 <script lang="jsx">
-import { reactive, ref, watchEffect, provide } from 'vue'
+import { reactive, ref, watchEffect, provide,watch } from 'vue'
 import { useCanvas, useApp, useResource, usePage, useHelp } from '@opentiny/tiny-engine-controller'
 import { PluginPanel, SvgButton, LinkButton } from '@opentiny/tiny-engine-common'
 import { extend } from '@opentiny/vue-renderless/common/object'
@@ -88,7 +82,6 @@ export default {
     const pageTreeRef = ref(null)
     const ROOT_ID = pageSettingState.ROOT_ID
     const docsUrl = useHelp().getDocsUrl('page')
-
     const state = reactive({
       isFolder: false
     })
@@ -159,6 +152,7 @@ export default {
     const openNewPage = (data) => {
       pageTreeRef.value.switchPage(data)
     }
+
 
     const { PLUGIN_NAME } = useLayout()
     return {
