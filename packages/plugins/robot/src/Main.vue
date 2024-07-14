@@ -55,16 +55,16 @@
                   : 'chat-content-ai'
               ]"
             >
-              <span>{{ item.content }}</span>
+              <dialog-content :markdownContent="item.content"/>
             </div>
           </tiny-col>
         </tiny-row>
       </tiny-layout>
     </article>
     <article class="chat-tips">
-      <span>需要一个注册表单？</span>
+      <span @click="sendContent('需要一个注册表单？', true)">需要一个注册表单？</span>
       <span @click="sendContent('如何将表单嵌进我的网站？', true)">如何将表单嵌进我的网站？</span>
-      <span>需要一个注册表单？</span>
+      <span @click="sendContent('需要一个注册表单？', true)">需要一个注册表单？</span>
     </article>
     <footer class="chat-submit">
       <tiny-input placeholder="告诉我，你想做什么..." v-model="inputContent">
@@ -72,7 +72,7 @@
           <svg-icon name="chat-message" class="common-svg"></svg-icon>
         </template>
         <template #suffix>
-          <svg-icon name="chat-microphone" class="common-svg microphone"></svg-icon>
+          <svg-icon name="chat-microphone" class="common-svg microphone" :class="{ 'microphone-svg': speechStatus }" @click="speechRecognition"></svg-icon>
         </template>
       </tiny-input>
       <tiny-button @click="endContent">重新发起会话</tiny-button>
@@ -82,7 +82,7 @@
 </template>
 
 <script>
-import { ref, onMounted, watchEffect } from 'vue'
+import { ref, onMounted, watch, watchEffect } from 'vue'
 import {
   Layout,
   Row,
@@ -100,6 +100,8 @@ import { iconChevronDown } from '@opentiny/vue-icon'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { getBlockContent, initBlockList, AIModelOptions } from './js/robotSetting'
+import DialogContent from './DialogContent.vue';
+import useSpeechRecognition from './js/useSpeechRecognition';
 
 export default {
   components: {
@@ -111,7 +113,8 @@ export default {
     TinyDropdown,
     TinyDropdownMenu,
     TinyDropdownItem,
-    IconChevronDown: iconChevronDown()
+    IconChevronDown: iconChevronDown(),
+    DialogContent,
   },
   emits: ['close-chat','keyVisible'],
   setup(props, {emit}) {
@@ -213,10 +216,10 @@ export default {
             originalResponse.choices?.[0]?.message.role,
             originalResponse.choices?.[0]?.message.content
           )
-          const respDisplayMessage = getAiRespMessage(originalResponse.choices?.[0]?.message.role, replyWithoutCode)
+          const respDisplayMessage = getAiRespMessage(originalResponse.choices?.[0]?.message.role, originalResponse.choices?.[0]?.message.content)
           sessionProcess.messages.push(responseMessage)
           sessionProcess.displayMessages.push(respDisplayMessage)
-          messages.value[messages.value.length - 1].content = replyWithoutCode
+          messages.value[messages.value.length - 1].content = originalResponse.choices?.[0]?.message.content
           setContextSession()
           if (schema?.schema) {
             createNewPage(schema.schema)
@@ -353,7 +356,34 @@ export default {
         })
       }
     }
+
+    const {
+      startRecognition,
+      stopRecognition,
+      recognizedText
+    } = useSpeechRecognition();
+
+    const speechStatus = ref(false)
+    const speechRecognition = () =>{
+      speechStatus.value = !speechStatus.value
+      console.log(speechStatus)
+      if(speechStatus.value){
+        startRecognition()
+      }else{
+        stopRecognition()
+      }
+    }
+
+    watch(
+      ()=>recognizedText.value,
+      (newInputContent) =>{
+        inputContent.value = newInputContent
+      }
+    )
+
     return {
+      speechStatus,
+      speechRecognition,
       avatarUrl,
       chatWindowOpened,
       activeMessages,
@@ -475,6 +505,9 @@ export default {
     }
     .microphone {
       font-size: 18px;
+    }
+    .microphone-svg{
+      color: var(--ti-lowcode-base-blue-6);
     }
   }
   .tiny-button {
