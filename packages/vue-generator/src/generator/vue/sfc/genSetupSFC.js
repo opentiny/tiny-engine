@@ -1,3 +1,4 @@
+import { BUILTIN_COMPONENTS_MAP } from '@/constant'
 import { getImportMap } from './parseImport'
 import {
   genTemplateByHook,
@@ -259,7 +260,10 @@ export const genSFCWithDefaultPlugin = (schema, componentsMap, config = {}) => {
     }
   }
 
-  return generateSFCFile(schema, componentsMap, newConfig)
+  // 兼容单独调用的场景，单独调用时，这里会默认加上 builtInComponents
+  const compsMapWithBuiltIn = [...componentsMap, ...BUILTIN_COMPONENTS_MAP]
+
+  return generateSFCFile(schema, compsMapWithBuiltIn, newConfig)
 }
 
 export default generateSFCFile
