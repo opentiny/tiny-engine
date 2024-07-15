@@ -212,8 +212,8 @@ export default {
     })
     const accessTokenReg = /^[A-Za-z0-9\-.]+$/
     const accessTokenValidate = (rule, value, callback) => {
-      if (value.length !== 70 && !accessTokenReg.test(value)) {
-        callback(new Error('参数错误，请输入70位的英文数字字符串'))
+      if (value.length > 100 || !accessTokenReg.test(value)) {
+        callback(new Error('参数错误，请输入小于100位的英文数字字符串'))
       } else {
         callback()
       }

@@ -42,8 +42,9 @@ export default {
   opacity: 1;
   transition: opacity .3s ease, transform .3s ease;
 }
-.hljs{
+.code-container{
   padding:10px;
+  border-radius: 5px;
 }
 .copy-btn {
   width:56px;

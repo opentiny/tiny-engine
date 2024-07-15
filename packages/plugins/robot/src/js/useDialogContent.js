@@ -23,7 +23,7 @@ export default function useMarkdown() {
       } else {
         highlighted = md.utils.escapeHtml(str);
       }
-      return `<div class="code-block"><pre class="hljs"><code>${highlighted}</code></pre><button class="copy-btn" >复制</button></div>`;
+      return `<div class="code-block"><pre class="hljs code-container"><code>${highlighted}</code></pre><button class="copy-btn" >复制</button></div>`;
     },
   });
 
