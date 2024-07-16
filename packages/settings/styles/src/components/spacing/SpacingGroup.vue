@@ -429,7 +429,7 @@ export default {
 
         properties[name] = {
           value,
-          text: value === 'auto' ? 'auto' : String(Number.parseInt(value || 0)), // 界面 box 中显示的数值
+          text: value === 'auto' ? 'auto' : String(Number.parseInt(value) || 0), // 界面 box 中显示的数值
           setting: Boolean(value) // 属性是否已设置值
         }
       })
