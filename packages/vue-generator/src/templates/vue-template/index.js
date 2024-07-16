@@ -3,6 +3,7 @@ import genViteConfig from './templateFiles/genViteConfig'
 import getPackageJson from './templateFiles/packageJson'
 import gitIgnoreFile from './templateFiles/.gitignore?raw'
 import entryHTMLFile from './templateFiles/index.html?raw'
+import logoImage from './templateFiles/public/favicon.ico'
 import mainJSFile from './templateFiles/src/main.js?raw'
 import appVueFile from './templateFiles/src/App.vue?raw'
 import bridgeFile from './templateFiles/src/lowcodeConfig/bridge.js?raw'
@@ -30,6 +31,30 @@ const getTemplate = (schema, str) => {
 
     return value
   })
+}
+
+/**
+ * 图片的 base64 转 Blob 对象，用于生成本地图片
+ * @param {*} base64 String
+ * @returns Blob
+ */
+const base64ToBlob = (base64Data) => {
+  // 分割base64
+  const arr = base64Data.split(',')
+  // 获取类型
+  const mime = arr[0].match(/:(.*?);/)[1]
+  if (!mime) {
+    return ''
+  }
+  // 解码使用 base-64 编码的字符串
+  const raw = window.atob(arr[1])
+  const rawLength = raw.length
+  // base64文件数据读取
+  const uInt8Array = new Uint8Array(rawLength)
+  for (let i = 0; i < rawLength; i += 1) {
+    uInt8Array[i] = raw.charCodeAt(i)
+  }
+  return new Blob([uInt8Array], { type: mime })
 }
 
 /**
@@ -66,6 +91,12 @@ export function generateTemplate(schema) {
       fileName: 'index.html',
       path: '.',
       fileContent: getTemplate(schema, entryHTMLFile)
+    },
+    {
+      fileType: 'image/x-icon',
+      fileName: 'favicon.ico',
+      path: './public',
+      fileContent: base64ToBlob(logoImage)
     },
     {
       fileType: 'js',
