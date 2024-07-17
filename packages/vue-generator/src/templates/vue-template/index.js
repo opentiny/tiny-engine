@@ -39,19 +39,25 @@ const getTemplate = (schema, str) => {
  * @returns Blob
  */
 const base64ToBlob = (base64Data) => {
-  // 分割base64
+  // Split base64
   const arr = base64Data.split(',')
-  // 获取类型
-  const mime = arr[0].match(/:(.*?);/)[1]
-  if (!mime) {
-    return ''
+  // Get MIME type
+  const mimeMatch = arr[0].match(/:(.*?);/)
+  if (!mimeMatch) {
+    throw new Error('Invalid base64 data')
   }
-  // 解码使用 base-64 编码的字符串
-  const raw = window.atob(arr[1])
+  const mime = mimeMatch[1]
+  // Decode base64 string
+  let raw
+  try {
+    raw = window.atob(arr[1])
+  } catch (e) {
+    throw new Error('Failed to decode base64 string')
+  }
   const rawLength = raw.length
-  // base64文件数据读取
+  // Convert to Blob
   const uInt8Array = new Uint8Array(rawLength)
-  for (let i = 0; i < rawLength; i += 1) {
+  for (let i = 0; i < rawLength; i++) {
     uInt8Array[i] = raw.charCodeAt(i)
   }
   return new Blob([uInt8Array], { type: mime })
