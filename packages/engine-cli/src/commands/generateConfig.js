@@ -32,6 +32,10 @@ export const generatePackageJson = (name, options, templatePath) => {
     /VITE_THEME=[^\s]+/,
     `VITE_THEME=${options.theme}`
   )
+  templatePackageJson.scripts['build:alpha'] = templatePackageJson.scripts['build:alpha'].replace(
+    /VITE_THEME=[^\s]+/,
+    `VITE_THEME=${options.theme}`
+  )
 
   return templatePackageJson
 }
