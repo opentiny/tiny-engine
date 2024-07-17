@@ -520,7 +520,7 @@ export default {
   .item-label {
     width: 30%;
     color: var(--ti-lowcode-meta-config-item-label-color);
-    font-size: 14px;
+    font-size: 12px;
     display: flex;
     margin-right: 5px;
     line-height: 18px;
@@ -617,7 +617,7 @@ export default {
     display: flex;
     width: 100%;
     align-items: center;
-    padding: 8px 0;
+    padding: 6px 0;
     .pro-underline {
       border-bottom: 1px dashed transparent;
       &:hover {

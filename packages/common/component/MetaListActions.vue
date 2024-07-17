@@ -3,6 +3,7 @@
     <tiny-tooltip class="item" effect="dark" :content="actionsItem.title" placement="top">
       <component :is="actionsItem.icon"></component>
     </tiny-tooltip>
+    <span class="actions-title">{{ actionsItem?.add }}</span>
   </span>
 </template>
 
@@ -35,16 +36,17 @@ export default {
 .actionsItem {
   display: inline-block;
   padding: 5px 5px;
-  background-color: var(--ti-lowcode-canvas-wrap-bg);
-  &:not(:last-child) {
-    border-right: 1px solid var(--ti-lowcode-optionitem-border-color);
+  &:hover {
+    cursor: pointer;
   }
   .tiny-svg {
-    color: var(--ti-lowcode-toolbar-icon-color);
+    color: var(--ti-lowcode-add-table-column-color);
     font-size: 16px;
-    &:hover {
-      cursor: pointer;
-    }
+  }
+  .actions-title {
+    margin-left: 2px;
+    vertical-align: middle;
+    color: var(--ti-lowcode-add-table-column-color);
   }
 }
 </style>

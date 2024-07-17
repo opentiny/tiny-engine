@@ -1,0 +1,12 @@
+<svg width="16.000000" height="16.000000" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<desc>
+			Created with Pixso.
+	</desc>
+	<defs/>
+	<mask id="mask413_10231" mask-type="alpha" maskUnits="userSpaceOnUse" x="0.000000" y="0.000000" width="16.000000" height="16.000000">
+		<rect id="移动-move" width="16.000000" height="16.000000" fill="#000000" fill-opacity="1.000000"/>
+	</mask>
+	<g mask="url(#mask413_10231)">
+		<path id="Fill" d="M6 3C6.55 3 7 3.43 7 4C7 4.55 6.55 5 6 5C5.43 5 5 4.55 5 4C5 3.43 5.43 3 6 3ZM10 3C10.55 3 11 3.43 11 4C11 4.55 10.55 5 10 5C9.43 5 9 4.55 9 4C9 3.43 9.43 3 10 3ZM6 7C6.55 7 7 7.43 7 8C7 8.55 6.55 9 6 9C5.43 9 5 8.55 5 8C5 7.43 5.43 7 6 7ZM10 7C10.55 7 11 7.43 11 8C11 8.55 10.55 9 10 9C9.43 9 9 8.55 9 8C9 7.43 9.43 7 10 7ZM6 11C6.55 11 7 11.43 7 12C7 12.55 6.55 13 6 13C5.43 13 5 12.55 5 12C5 11.43 5.43 11 6 11ZM10 11C10.55 11 11 11.43 11 12C11 12.55 10.55 13 10 13C9.43 13 9 12.55 9 12C9 11.43 9.43 11 10 11Z" fill="#191919" fill-opacity="1.000000" fill-rule="evenodd"/>
+	</g>
+</svg>

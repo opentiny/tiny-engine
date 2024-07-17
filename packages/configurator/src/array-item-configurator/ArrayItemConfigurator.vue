@@ -26,7 +26,7 @@
               @editItem="editItem"
             >
               <template #content>
-                <span>{{ translate(item[itemsOptions.textField]) || item.type }}</span>
+                <span @click="editItem({ index })">{{ translate(item[itemsOptions.textField]) || item.type }}</span>
               </template>
               <template #metaForm>
                 <meta-child-item
@@ -87,7 +87,8 @@ export default {
         {
           title: '新增',
           type: 'add',
-          icon: IconPlus()
+          icon: IconPlus(),
+          add: '新增一列'
         }
       ]
     }

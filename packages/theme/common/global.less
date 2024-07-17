@@ -340,9 +340,11 @@
     }
 
     &.fixed-left {
-      top: 24px !important;
+      top: 150px !important;
       transform: translateX(calc(4px - var(--base-right-panel-width)));
-      height: calc(100% - 36px);
+      max-height: 660px;
+      overflow: auto;
+      padding: 0 0 16px 6px;
     }
   }
 

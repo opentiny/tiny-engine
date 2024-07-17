@@ -2,7 +2,7 @@
   <div :class="['item-content', { 'active-item': currentIndex === index }]" @click="openEdit">
     <div class="option-input">
       <div class="left">
-        <icon-more class="tiny-svg-size icon-more"></icon-more>
+        <svg-icon name="drag"></svg-icon>
         <slot name="content" :data="item"></slot>
       </div>
       <div class="right">
@@ -16,7 +16,7 @@
                 :popper-class="['option-popper', { 'fixed-left': expand }]"
                 :visible-arrow="!expand"
                 title=""
-                width="267"
+                width="290"
                 trigger="manual"
                 @hide="hide(item)"
               >
@@ -32,28 +32,19 @@
                         @confirm="formConfirm"
                       ></meta-form>
                     </slot>
-                    <slot name="footer"></slot></div
-                ></template>
+                    <slot name="footer"></slot>
+                  </div>
+                </template>
 
                 <template #reference>
-                  <tiny-tooltip class="item" effect="dark" :content="item.title" placement="top">
-                    <icon-edit class="tiny-svg-size icon-edit" @click="btnClick($event, item.type)"></icon-edit>
-                  </tiny-tooltip>
+                  <svg-icon name="edit" @click="btnClick($event, item.type)"></svg-icon>
                 </template>
               </tiny-popover>
             </template>
             <template v-else>
-              <tiny-tooltip
-                class="item"
-                effect="dark"
-                :content="item.title"
-                placement="top"
-                @click="btnClick($event, item.type)"
-              >
-                <span class="item-icon">
-                  <component :is="item.icon"></component>
-                </span>
-              </tiny-tooltip>
+              <span class="item-icon">
+                <svg-icon name="delete" @click.stop="btnClick($event, item.type)"></svg-icon>
+              </span>
             </template>
           </template>
         </slot>
@@ -86,25 +77,18 @@
 
 <script>
 import { reactive, watchEffect, ref, onMounted } from 'vue'
-import { Tooltip, Input, FormItem, Form, Popover, DialogBox, Button } from '@opentiny/vue'
-import { iconDel, iconEdit, iconMore, iconClose } from '@opentiny/vue-icon'
+import { Popover, DialogBox, Button } from '@opentiny/vue'
+import { iconClose } from '@opentiny/vue-icon'
 import MaskModal from './MaskModal.vue'
 import MetaForm from './MetaForm.vue'
 
 export default {
   components: {
-    TinyTooltip: Tooltip,
-    TinyInput: Input,
-    TinyFormItem: FormItem,
-    TinyForm: Form,
     TinyPopover: Popover,
     TinyDialogBox: DialogBox,
     TinyButton: Button,
     MetaForm,
     MaskModal,
-    IconDel: iconDel(),
-    IconEdit: iconEdit(),
-    IconMore: iconMore(),
     IconClose: iconClose()
   },
   inheritAttrs: false,
@@ -208,16 +192,13 @@ export default {
       itemData.valueField = props.dataScource.valueField
       itemData.label = props.dataScource.label
       itemData.index = props.index
-
       if (props.currentIndex !== props.index) {
         cancel()
       }
     })
 
     const openEdit = () => {
-      if (props.itemClick && !isShow.value) {
-        editList()
-      }
+      editList()
     }
 
     const closeMask = () => {
@@ -256,25 +237,34 @@ export default {
 
 <style lang="less" scoped>
 .item-content {
+  height: 24px;
   border: 1px solid var(--ti-lowcode-meta-list-item-border-color);
   border-left: none;
   border-right: none;
   background: var(--ti-lowcode-meta-list-item-bg-color);
   margin-bottom: -1px;
-  color: var(--ti-lowcode-toolbar-breadcrumb-color);
+  color: var(--ti-lowcode-base-primary-color-1);
+  &:hover {
+    background-color: var(--ti-lowcode-tabs-active-bg);
+  }
+
   &.active-item {
     background-color: var(--ti-lowcode-tabs-active-bg);
   }
+
   .option-input {
     display: flex;
     padding: 2px;
+
     & > div {
       overflow: hidden;
+
       .tiny-svg {
         margin-right: 5px;
         font-size: 12px;
         opacity: 0.4;
         color: var(--ti-lowcode-toolbar-breadcrumb-color);
+
         &:hover {
           cursor: pointer;
           opacity: 1;
@@ -285,35 +275,52 @@ export default {
         flex: 1;
         display: flex;
         align-items: center;
-        .icon-more {
-          font-size: 14px;
-          flex-shrink: 0;
-          cursor: move;
-        }
+
         :deep(span) {
+          width: 100%;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
         }
+
+        .icon-drag {
+          visibility: hidden;
+          font-size: 14px;
+          color: var(--ti-locode-table-column-icon-color);
+        }
+
+        &:hover .icon-drag {
+          visibility: visible;
+        }
       }
+
       &.right {
         float: left;
         text-align: right;
+        :deep(.svg-icon) {
+          font-size: 14px;
+          margin-left: 8px;
+          color: var(--ti-locode-table-column-icon-color);
+        }
       }
     }
   }
 }
-.tiny-popover {
+
+.fixed-left {
   .icon-close {
     float: right;
   }
 }
+
 .add-options {
   overflow-y: scroll;
   height: 100%;
+
   &::-webkit-scrollbar-track-piece {
     background: var(--ti-lowcode-toolbar-bg);
   }
+
   &::-webkit-scrollbar {
     width: 5px;
   }

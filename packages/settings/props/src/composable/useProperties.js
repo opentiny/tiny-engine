@@ -32,7 +32,8 @@ const otherBaseKey = {
     widget: {
       component: 'InputConfigurator',
       props: {}
-    }
+    },
+    labelPosition: 'left'
   },
   id: {
     property: 'id',
@@ -48,7 +49,8 @@ const otherBaseKey = {
     widget: {
       component: 'InputConfigurator',
       props: {}
-    }
+    },
+    labelPosition: 'left'
   },
   ref: {
     property: 'ref',
@@ -64,7 +66,8 @@ const otherBaseKey = {
     widget: {
       component: 'InputConfigurator',
       props: {}
-    }
+    },
+    labelPosition: 'left'
   }
 }
 

@@ -2771,7 +2771,8 @@
                     },
                     "description": {
                       "zh_CN": ""
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "title",
@@ -2790,7 +2791,8 @@
                     },
                     "description": {
                       "zh_CN": ""
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "indicator-position",
@@ -2820,7 +2822,8 @@
                     },
                     "description": {
                       "zh_CN": ""
-                    }
+                    },
+                    "labelPosition": "left"
                   }
                 ]
               }
@@ -2920,7 +2923,8 @@
                     },
                     "description": {
                       "zh_CN": ""
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "autoplay",
@@ -2980,7 +2984,8 @@
                     },
                     "description": {
                       "zh_CN": ""
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "indicator-position",
@@ -3010,7 +3015,8 @@
                     },
                     "description": {
                       "zh_CN": ""
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "initial-index",
@@ -3029,7 +3035,8 @@
                     },
                     "description": {
                       "zh_CN": ""
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "interval",
@@ -3048,7 +3055,8 @@
                     },
                     "description": {
                       "zh_CN": ""
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "loop",
@@ -3116,7 +3124,8 @@
                     },
                     "description": {
                       "zh_CN": ""
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "type",
@@ -3150,7 +3159,8 @@
                     },
                     "description": {
                       "zh_CN": ""
-                    }
+                    },
+                    "labelPosition":"left"
                   }
                 ]
               }
@@ -4676,7 +4686,8 @@
                     },
                     "description": {
                       "zh_CN": ""
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "plain",
@@ -4830,7 +4841,8 @@
                     },
                     "description": {
                       "zh_CN": ""
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "flex",
@@ -4865,7 +4877,8 @@
                     },
                     "description": {
                       "zh_CN": ""
-                    }
+                    },
+                    "labelPosition":"left"
                   }
                 ]
               }
@@ -5026,7 +5039,8 @@
                     },
                     "description": {
                       "zh_CN": "表单中标签后缀"
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "label-position",
@@ -5060,7 +5074,8 @@
                     },
                     "description": {
                       "zh_CN": "表单中标签的布局位置"
-                    }
+                    },
+                    "labelPosition":"left"
                   }
                 ]
               },
@@ -5087,8 +5102,7 @@
                     },
                     "description": {
                       "zh_CN": "表单数据对象"
-                    },
-                    "labelPosition": "left"
+                    }
                   },
                   {
                     "property": "rules",
@@ -5459,7 +5473,8 @@
                     },
                     "description": {
                       "zh_CN": "当一行分为12格时，一列可占位多少格"
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "move",
@@ -5481,7 +5496,8 @@
                     },
                     "description": {
                       "zh_CN": "栅格左右移动格数（正数向右，负数向左）"
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "no",
@@ -5502,7 +5518,8 @@
                     },
                     "description": {
                       "zh_CN": "排序编号（row中启用order生效）"
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "offset",
@@ -5524,7 +5541,8 @@
                     },
                     "description": {
                       "zh_CN": "栅格左侧的间隔格数"
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "xs",
@@ -5546,7 +5564,8 @@
                     },
                     "description": {
                       "zh_CN": "<768px 响应式栅格数"
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "sm",
@@ -5568,7 +5587,8 @@
                     },
                     "description": {
                       "zh_CN": "≥768px 响应式栅格数"
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "md",
@@ -5590,7 +5610,8 @@
                     },
                     "description": {
                       "zh_CN": "≥992px 响应式栅格数"
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "lg",
@@ -5612,7 +5633,8 @@
                     },
                     "description": {
                       "zh_CN": "≥1200px 响应式栅格数"
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "xl",
@@ -5634,7 +5656,8 @@
                     },
                     "description": {
                       "zh_CN": "≥1920px 响应式栅格数"
-                    }
+                    },
+                    "labelPosition":"left"
                   }
                 ]
               }
@@ -5721,7 +5744,8 @@
                     },
                     "description": {
                       "zh_CN": ""
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "size",
@@ -5762,7 +5786,8 @@
                     },
                     "description": {
                       "zh_CN": ""
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "disabled",
@@ -5896,7 +5921,8 @@
                     },
                     "description": {
                       "zh_CN": "设置禁用时间，防止重复提交，单位毫秒"
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "circle",
@@ -6089,7 +6115,8 @@
                     },
                     "description": {
                       "zh_CN": "设置input框的type属性"
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "rows",
@@ -6103,7 +6130,8 @@
                     },
                     "description": {
                       "zh_CN": "输入框行数，只对 type='textarea' 有效"
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "placeholder",
@@ -6196,7 +6224,8 @@
                     },
                     "description": {
                       "zh_CN": "输入框尺寸。该属性的可选值为 medium / small / mini"
-                    }
+                    },
+                    "labelPosition":"left"
                   }
                 ]
               },
@@ -6473,7 +6502,8 @@
                     },
                     "description": {
                       "zh_CN": ""
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "label",
@@ -6491,7 +6521,8 @@
                     },
                     "description": {
                       "zh_CN": ""
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "modelValue",
@@ -6510,7 +6541,8 @@
                     },
                     "description": {
                       "zh_CN": "双向绑定的当前选中值"
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "disabled",
@@ -6577,7 +6609,8 @@
                     },
                     "description": {
                       "zh_CN": ""
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "name",
@@ -6596,7 +6629,8 @@
                     },
                     "description": {
                       "zh_CN": ""
-                    }
+                    },
+                    "labelPosition":"left"
                   }
                 ]
               }
@@ -7140,7 +7174,8 @@
                     },
                     "description": {
                       "zh_CN": "绑定默认值"
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "true-value",
@@ -7707,7 +7742,8 @@
                     },
                     "description": {
                       "zh_CN": "没有选中时的值"
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "true-label",
@@ -7726,7 +7762,8 @@
                     },
                     "description": {
                       "zh_CN": "选中时的值"
-                    }
+                    },
+                    "labelPosition":"left"
                   }
                 ],
                 "description": {
@@ -8978,7 +9015,8 @@
                     "widget": {
                       "component": "InputConfigurator",
                       "props": {}
-                    }
+                    },
+                    "labelPosition":"left"
                   }
                 ]
               }
@@ -9452,7 +9490,8 @@
                             "widget": {
                               "component": "I18nConfigurator",
                               "props": {}
-                            }
+                            },
+                            "labelPosition": "left"
                           },
                           {
                             "property": "field",
@@ -9466,7 +9505,8 @@
                             "widget": {
                               "component": "InputConfigurator",
                               "props": {}
-                            }
+                            },
+                            "labelPosition": "left"
                           },
                           {
                             "property": "sortable",
@@ -9480,7 +9520,8 @@
                             "widget": {
                               "component": "SwitchConfigurator",
                               "props": {}
-                            }
+                            },
+                            "labelPosition": "left"
                           },
                           {
                             "property": "width",
@@ -9494,7 +9535,8 @@
                             "widget": {
                               "component": "NumberConfigurator",
                               "props": {}
-                            }
+                            },
+                            "labelPosition": "left"
                           },
                           {
                             "property": "formatText",
@@ -9547,7 +9589,8 @@
                                   }
                                 ]
                               }
-                            }
+                            },
+                            "labelPosition": "left"
                           },
                           {
                             "property": "renderer",
@@ -9563,7 +9606,8 @@
                               "props": {
                                 "dataType": "JSFunction"
                               }
-                            }
+                            },
+                            "labelPosition": "left"
                           },
                           {
                             "property": "slots",
@@ -9663,7 +9707,8 @@
                             },
                             "description": {
                               "zh_CN": "设置表格列的筛选配置信息。默认值为 false 不配置筛选信息"
-                            }
+                            },
+                            "labelPosition": "left"
                           },
                           {
                             "property": "showOverflow",
@@ -9831,8 +9876,7 @@
                     },
                     "description": {
                       "zh_CN": "表格行数据复选框配置项"
-                    },
-                    "labelPosition": "left"
+                    }
                   },
                   {
                     "property": "edit-rules",
@@ -9851,8 +9895,7 @@
                     },
                     "description": {
                       "zh_CN": "表格校验规则配置项"
-                    },
-                    "labelPosition": "left"
+                    }
                   },
                   {
                     "property": "edit-config",
@@ -9890,8 +9933,7 @@
                     },
                     "description": {
                       "zh_CN": "复选框配置项"
-                    },
-                    "labelPosition": "left"
+                    }
                   },
                   {
                     "property": "sortable",
@@ -10046,8 +10088,7 @@
                     },
                     "description": {
                       "zh_CN": "给行附加 className，也可以是函数 Function({seq, row, rowIndex, $rowIndex})"
-                    },
-                    "labelPosition": "left"
+                    }
                   },
                   {
                     "property": "max-height",
@@ -10086,8 +10127,7 @@
                     },
                     "description": {
                       "zh_CN": "设置行合并,该属性仅适用于普通表格，不可与 tree-config 同时使用"
-                    },
-                    "labelPosition": "left"
+                    }
                   }
                 ]
               }
@@ -11010,12 +11050,13 @@
                       "component": "InputConfigurator",
                       "props": {
                         "disabled": true,
-                        "placeholder": "请使用变量绑定来绑定函数"
+                        "placeholder": "请使用变量绑定函数"
                       }
                     },
                     "description": {
                       "zh_CN": "树节点的内容区的渲染函数"
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "icon-trigger-click-node",
@@ -11579,12 +11620,13 @@
                       "component": "InputConfigurator",
                       "props": {
                         "disabled": true,
-                        "placeholder": "请使用变量绑定来绑定函数"
+                        "placeholder": "请使用变量绑定函数"
                       }
                     },
                     "description": {
                       "zh_CN": "自定义渲染函数，返回需要渲染的节点内容"
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "modelValue",
@@ -11822,7 +11864,8 @@
                     },
                     "description": {
                       "zh_CN": "触发方式，该属性的可选值为 click / focus / hover / manual，该属性的默认值为 click"
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "popper-class",
@@ -11899,7 +11942,8 @@
                     },
                     "description": {
                       "zh_CN": "箭头的位置偏移，该属性的默认值为 0"
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "close-delay",
@@ -11918,7 +11962,8 @@
                     },
                     "description": {
                       "zh_CN": "触发方式为 hover 时的隐藏延迟，单位为毫秒"
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "content",
@@ -11937,7 +11982,8 @@
                     },
                     "description": {
                       "zh_CN": "显示的内容，也可以通过 slot 传入 DOM"
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "disabled",
@@ -11975,7 +12021,8 @@
                     },
                     "description": {
                       "zh_CN": "出现位置的偏移量"
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "open-delay",
@@ -11994,7 +12041,8 @@
                     },
                     "description": {
                       "zh_CN": "触发方式为 hover 时的显示延迟，单位为毫秒"
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "popper-options",
@@ -12013,7 +12061,8 @@
                     },
                     "description": {
                       "zh_CN": "popper.js 的参数"
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "title",
@@ -12032,7 +12081,8 @@
                     },
                     "description": {
                       "zh_CN": "标题"
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "transform-origin",
@@ -12070,7 +12120,8 @@
                     },
                     "description": {
                       "zh_CN": "该属性的默认值为 fade-in-linear"
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "width",
@@ -12089,7 +12140,8 @@
                     },
                     "description": {
                       "zh_CN": "宽度"
-                    }
+                    },
+                    "labelPosition":"left"
                   }
                 ]
               }
@@ -12237,7 +12289,8 @@
                     },
                     "description": {
                       "zh_CN": "设置日期框的type属性"
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "placeholder",
@@ -12349,7 +12402,8 @@
                     },
                     "description": {
                       "zh_CN": "日期框尺寸。该属性的可选值为 medium / small / mini"
-                    }
+                    },
+                    "labelPosition":"left"
                   }
                 ]
               },
@@ -12707,7 +12761,8 @@
                     },
                     "description": {
                       "zh_CN": "输入框尺寸。该属性的可选值为 medium / small / mini"
-                    }
+                    },
+                    "labelPosition":"left"
                   },
                   {
                     "property": "controls",

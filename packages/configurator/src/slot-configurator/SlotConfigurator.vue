@@ -169,13 +169,13 @@ export default {
 .e__switch-core {
   margin: 0;
   position: relative;
-  width: 40px;
+  width: 38px;
   height: 20px;
   border: 1px solid var(--ti-lowcode-base-bg);
   outline: 0;
   border-radius: 10px;
   box-sizing: border-box;
-  background: var(--ti-lowcode-base-bg);
+  background: var(--ti-lowcode-base-gray-40);
   transition: border-color 0.3s, background-color 0.3s;
   vertical-align: middle;
 }

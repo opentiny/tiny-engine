@@ -6,7 +6,8 @@
         <svg-icon class="edit-icon" name="edit"></svg-icon>
       </div>
       <tiny-button v-else class="edit-btn" @click="open">
-        {{ buttonLabel }}
+        <svg-icon name="edit-code"></svg-icon>
+        <span>{{ buttonLabel }}</span>
       </tiny-button>
     </slot>
     <tiny-dialog-box
@@ -255,11 +256,20 @@ export default {
 .editor-wrap {
   width: 100%;
   .edit-btn {
+    width: 100%;
     color: var(--ti-lowcode-meta-codeEditor-color);
     border-color: var(--ti-lowcode-meta-codeEditor-border-color);
     &:hover {
       color: var(--ti-lowcode-meta-codeEditor-hover-color);
       border-color: var(--ti-lowcode-meta-codeEditor-border-hover-color);
+    }
+    .icon-edit-code {
+      margin-right: 4px;
+      font-size: 14px;
+      color: var(--ti-locode-property-panel-tips-text-color);
+    }
+    span {
+      vertical-align: middle;
     }
   }
 }

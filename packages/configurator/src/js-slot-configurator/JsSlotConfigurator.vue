@@ -9,11 +9,6 @@
             <div :class="['e__switch', { 'e_is-checked': slot.bind }]">
               <span class="e__switch-core" @click="toggleSlot(index, slot)"></span>
             </div>
-            <tiny-tooltip effect="dark" :content="state.currentComponent?.content" placement="top">
-              <span class="item-icon">
-                <component :is="state.currentComponent?.icon"></component>
-              </span>
-            </tiny-tooltip>
           </div>
           <tiny-form-item
             :prop="paramsPropPath(index)"
@@ -27,6 +22,7 @@
             ></tiny-input>
           </tiny-form-item>
         </div>
+        <div class="use-slot-title">{{ state.currentComponent?.content }}</div>
       </div>
     </tiny-form>
   </div>
@@ -34,7 +30,7 @@
 
 <script>
 import { ref, inject, watchEffect, reactive } from 'vue'
-import { Input, Tooltip, Form, FormItem } from '@opentiny/vue'
+import { Input, Form, FormItem } from '@opentiny/vue'
 import { useProperties, useCanvas, useModal } from '@opentiny/tiny-engine-meta-register'
 import SvgICons from '@opentiny/vue-icon'
 import { verifyJsVarName } from '@opentiny/tiny-engine-common/js/verification'
@@ -43,8 +39,7 @@ export default {
   components: {
     TinyInput: Input,
     TinyForm: Form,
-    TinyFormItem: FormItem,
-    TinyTooltip: Tooltip
+    TinyFormItem: FormItem
   },
   props: {
     modelValue: {
@@ -70,8 +65,7 @@ export default {
     )
     const componentsMap = {
       TinyGrid: {
-        content:
-          '暴露给插槽使用的变量，为解构的参数，可以使用多个用逗号分隔，如：row(行数据)，column(列数据)，$table(内部表格实例)，seq(序号)，cell(单元格)，columnIndex(列索引),rowIndex(行索引)',
+        content: '暴露给插槽使用的变量，为解构的参数，可以使用多个用逗号分隔，如：row(行数据)，column(列数据)',
         icon: SvgICons['IconUnknow']()
       }
     }
@@ -171,6 +165,7 @@ export default {
 
 <style lang="less" scoped>
 .meta-slot-container {
+  font-size: 12px;
   text-align: left;
   color: var(--lowcode-meta-js-slot-color);
 }
@@ -190,7 +185,12 @@ export default {
   }
 
   .use-slot-switch-wrap {
+    width: 110px;
     display: flex;
+  }
+  .use-slot-title {
+    font-size: 11px;
+    color: var(--ti-locode-property-panel-tips-text-color);
   }
 
   &-item-name {
@@ -210,7 +210,13 @@ export default {
   }
 
   .slot-name-form-item {
+    width: 100%;
+    margin-right: 0;
     margin-bottom: 0;
+    :deep(.tiny-form-item__content) {
+      width: 100%;
+      padding-right: 5px;
+    }
   }
 
   .item-icon {
@@ -230,15 +236,15 @@ export default {
 }
 
 .e__switch-core {
-  margin: 0;
+  margin-top: 6px;
   position: relative;
-  width: 60px;
+  width: 38px;
   height: 20px;
   border: 1px solid var(--ti-lowcode-base-bg);
   outline: 0;
   border-radius: 10px;
   box-sizing: border-box;
-  background: var(--ti-lowcode-base-bg);
+  background: var(--ti-lowcode-base-gray-40);
   transition: border-color 0.3s, background-color 0.3s;
   vertical-align: middle;
 }
