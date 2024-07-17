@@ -17,13 +17,17 @@
         <close-icon v-if="!isCloseLeft" :name="name" @close="closePanel"></close-icon>
       </div>
     </div>
-    <slot name="content"></slot>
-    <div class="resizer" @mousedown="onMouseDown"></div>
+    <div class="scroll-content">
+      <slot name="content"></slot>
+    </div>
+
+    <div class="resizer-right" @mousedown="onMouseDownRight"></div>
+    <div class="resizer-left" @mousedown="onMouseDownLeft"></div>
   </div>
 </template>
 
 <script>
-import { inject, ref } from 'vue'
+import { inject, ref, watch } from 'vue'
 import { useLayout } from '@opentiny/tiny-engine-controller'
 import CloseIcon from './CloseIcon.vue'
 import SvgButton from './SvgButton.vue'
@@ -62,7 +66,7 @@ export default {
      */
     fixedName: {
       type: String
-    },
+    }
   },
   emits: ['close'],
   setup(props, { emit }) {
@@ -71,36 +75,6 @@ export default {
     const closePanel = () => {
       useLayout().closePlugin()
       emit('close')
-    }
-
-    const fixPanel = () => {
-      panelState.emitEvent('fixPanel', props.fixedName)
-    }
-    const MIN_WIDTH = 300 // 固定的最小宽度值
-    const MAX_WIDTH = 1000 // 固定的最大宽度值
-    const panel = ref(null)
-    const panelWidth = ref(pluginWidth[props.fixedName]) // 使用默认宽度
-    let startX = 0
-    let startWidth = 0
-
-    const onMouseDown = (event) => {
-      startX = event.clientX
-      startWidth = panel.value.offsetWidth
-      document.addEventListener('mousemove', throttledMouseMove)
-      document.addEventListener('mouseup', onMouseUp)
-    }
-
-    const onMouseMove = (event) => {
-      const newWidth = startWidth + (event.clientX - startX)
-      panelWidth.value = Math.max(MIN_WIDTH, Math.min(newWidth, MAX_WIDTH)) // 设置最小和最大宽度
-      pluginWidth[props.fixedName]=panelWidth.value//修改hook中插件宽度
-    }
-
-    const throttledMouseMove = throttle(onMouseMove, 50) // 50ms的节流
-
-    const onMouseUp = () => {
-      document.removeEventListener('mousemove', throttledMouseMove)
-      document.removeEventListener('mouseup', onMouseUp)
     }
 
     //节流
@@ -124,12 +98,65 @@ export default {
       }
     }
 
+    const fixPanel = () => {
+      panelState.emitEvent('fixPanel', props.fixedName)
+    }
+    const MIN_WIDTH = 300 // 固定的最小宽度值
+    const MAX_WIDTH = 1000 // 固定的最大宽度值
+    const panel = ref(null)
+    const panelWidth = ref(pluginWidth[props.fixedName]) // 使用默认宽度
+    watch(pluginWidth, (newWidth) => {
+      panelWidth.value = newWidth[props.fixedName]
+    })
+    let startX = 0
+    let startWidth = 0
+
+    const onMouseMoveRight = (event) => {
+      const newWidth = startWidth + (event.clientX - startX)
+      panelWidth.value = Math.max(MIN_WIDTH, Math.min(newWidth, MAX_WIDTH))
+      pluginWidth[props.fixedName] = panelWidth.value
+    }
+
+    const onMouseMoveLeft = (event) => {
+      const newWidth = startWidth - (event.clientX - startX)
+      panelWidth.value = Math.max(MIN_WIDTH, Math.min(newWidth, MAX_WIDTH))
+      pluginWidth[props.fixedName] = panelWidth.value
+    }
+
+    const throttledMouseMoveRight = throttle(onMouseMoveRight, 50)
+    const throttledMouseMoveLeft = throttle(onMouseMoveLeft, 50)
+
+    const onMouseUpRight = () => {
+      document.removeEventListener('mousemove', throttledMouseMoveRight)
+      document.removeEventListener('mouseup', onMouseUpRight)
+    }
+
+    const onMouseUpLeft = () => {
+      document.removeEventListener('mousemove', throttledMouseMoveLeft)
+      document.removeEventListener('mouseup', onMouseUpLeft)
+    }
+
+    const onMouseDownRight = (event) => {
+      startX = event.clientX
+      startWidth = panel.value.offsetWidth
+      document.addEventListener('mousemove', throttledMouseMoveRight)
+      document.addEventListener('mouseup', onMouseUpRight)
+    }
+
+    const onMouseDownLeft = (event) => {
+      startX = event.clientX
+      startWidth = panel.value.offsetWidth
+      document.addEventListener('mousemove', throttledMouseMoveLeft)
+      document.addEventListener('mouseup', onMouseUpLeft)
+    }
+
     return {
       closePanel,
       fixPanel,
       panel,
       panelWidth,
-      onMouseDown,
+      onMouseDownRight,
+      onMouseDownLeft,
       pluginWidth
     }
   }
@@ -178,8 +205,8 @@ export default {
     }
   }
 }
-//拖拽线
-.resizer {
+// 右边拖拽线
+.resizer-right {
   position: absolute;
   top: 0;
   right: 0;
@@ -189,8 +216,33 @@ export default {
   background-color: rgba(0, 0, 0, 0.1);
   transition: width 0.3s ease;
 }
-.resizer:hover {
+.resizer-right:hover {
   width: 8px;
   background-color: var(--ti-base-color-brand-7);
+}
+// 左边拖拽线
+.resizer-left {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  cursor: ew-resize;
+  background-color: rgba(0, 0, 0, 0.1);
+  transition: width 0.3s ease;
+}
+.resizer-left:hover {
+  width: 8px;
+  background-color: var(--ti-base-color-brand-7);
+}
+.scroll-content {
+  height: 100%;
+  overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scroll-content::-webkit-scrollbar {
+  display: none;
 }
 </style>

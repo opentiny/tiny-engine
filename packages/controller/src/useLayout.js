@@ -31,7 +31,7 @@ const PLUGIN_NAME = {
   I18n: 'I18n',
   Script: 'PageController',
   Data: 'DataSource',
-  Schema: 'Schema',
+  Schema: 'Schema'
 }
 const SETTING_NAME = {
   Event: 'event',
@@ -49,9 +49,9 @@ const pluginWidth = reactive({
   PageController: '1000',
   DataSource: '300',
   Schema: '1000',
-  Props: '300',
-  Styles: '300',
-  Events: '300',
+  props: '320',
+  style: '320',
+  event: '320'
 })
 const pluginState = reactive({
   pluginEvent: 'all'

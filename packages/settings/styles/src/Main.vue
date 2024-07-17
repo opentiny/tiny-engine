@@ -1,71 +1,69 @@
 <template>
   <plugin-panel title="样式" :fixed-panels="fixedPanels" :fixed-name="SETTING_NAME.Style" @close="$emit('close')">
     <template #content>
-      <div style="overflow-y: auto; max-height: 100vh">
-        <div class="style-editor">
-          <div class="line-style">
-            <span class="line-text"> 行内样式 </span>
-            <div class="inline-style">
-              <meta-code-editor
-                v-if="state.lineStyleDisable"
-                :buttonShowContent="true"
-                :modelValue="state.styleContent"
-                title="编辑行内样式"
-                :button-text="state.inlineBtnText"
-                language="css"
-                single
-                @save="save"
-              />
-              <div v-if="!state.lineStyleDisable">
-                <tiny-input v-model="state.propertiesList" class="inline-bind-style"> </tiny-input>
-              </div>
-              <meta-bind-variable
-                ref="bindVariable"
-                :model-value="state.bindModelValue"
-                name="advance"
-                @update:modelValue="setConfig"
-              >
-              </meta-bind-variable>
+      <div class="style-editor">
+        <div class="line-style">
+          <span class="line-text"> 行内样式 </span>
+          <div class="inline-style">
+            <meta-code-editor
+              v-if="state.lineStyleDisable"
+              :buttonShowContent="true"
+              :modelValue="state.styleContent"
+              title="编辑行内样式"
+              :button-text="state.inlineBtnText"
+              language="css"
+              single
+              @save="save"
+            />
+            <div v-if="!state.lineStyleDisable">
+              <tiny-input v-model="state.propertiesList" class="inline-bind-style"> </tiny-input>
             </div>
+            <meta-bind-variable
+              ref="bindVariable"
+              :model-value="state.bindModelValue"
+              name="advance"
+              @update:modelValue="setConfig"
+            >
+            </meta-bind-variable>
           </div>
         </div>
-        <class-names-container></class-names-container>
-        <tiny-collapse v-model="activeNames">
-          <tiny-collapse-item title="布局" name="layout">
-            <layout-group :display="state.style.display" @update="updateStyle" />
-            <flex-box v-if="state.style.display === 'flex'" :style="state.style" @update="updateStyle"></flex-box>
-            <grid-box v-if="state.style.display === 'grid'" :style="state.style" @update="updateStyle"></grid-box>
-          </tiny-collapse-item>
-
-          <tiny-collapse-item title="间距" name="spacing">
-            <spacing-group :style="state.style" @update="updateStyle" />
-          </tiny-collapse-item>
-
-          <tiny-collapse-item title="尺寸" name="size">
-            <size-group :style="state.style" @update="updateStyle" />
-          </tiny-collapse-item>
-
-          <tiny-collapse-item title="定位" name="position">
-            <position-group :style="state.style" @update="updateStyle" />
-          </tiny-collapse-item>
-
-          <tiny-collapse-item title="文本" name="typography">
-            <typography-group :style="state.style" @update="updateStyle" />
-          </tiny-collapse-item>
-
-          <tiny-collapse-item title="背景" name="backgrounds">
-            <background-group :style="state.style" @update="updateStyle" />
-          </tiny-collapse-item>
-
-          <tiny-collapse-item title="边框" name="borders">
-            <border-group :style="state.style" @update="updateStyle" />
-          </tiny-collapse-item>
-
-          <tiny-collapse-item title="效果" name="effects" class="effects-style">
-            <effect-group :style="state.style" @update="updateStyle" />
-          </tiny-collapse-item>
-        </tiny-collapse>
       </div>
+      <class-names-container></class-names-container>
+      <tiny-collapse v-model="activeNames">
+        <tiny-collapse-item title="布局" name="layout">
+          <layout-group :display="state.style.display" @update="updateStyle" />
+          <flex-box v-if="state.style.display === 'flex'" :style="state.style" @update="updateStyle"></flex-box>
+          <grid-box v-if="state.style.display === 'grid'" :style="state.style" @update="updateStyle"></grid-box>
+        </tiny-collapse-item>
+
+        <tiny-collapse-item title="间距" name="spacing">
+          <spacing-group :style="state.style" @update="updateStyle" />
+        </tiny-collapse-item>
+
+        <tiny-collapse-item title="尺寸" name="size">
+          <size-group :style="state.style" @update="updateStyle" />
+        </tiny-collapse-item>
+
+        <tiny-collapse-item title="定位" name="position">
+          <position-group :style="state.style" @update="updateStyle" />
+        </tiny-collapse-item>
+
+        <tiny-collapse-item title="文本" name="typography">
+          <typography-group :style="state.style" @update="updateStyle" />
+        </tiny-collapse-item>
+
+        <tiny-collapse-item title="背景" name="backgrounds">
+          <background-group :style="state.style" @update="updateStyle" />
+        </tiny-collapse-item>
+
+        <tiny-collapse-item title="边框" name="borders">
+          <border-group :style="state.style" @update="updateStyle" />
+        </tiny-collapse-item>
+
+        <tiny-collapse-item title="效果" name="effects" class="effects-style">
+          <effect-group :style="state.style" @update="updateStyle" />
+        </tiny-collapse-item>
+      </tiny-collapse>
     </template>
   </plugin-panel>
 </template>
@@ -92,7 +90,7 @@ import {
 import { CSS_TYPE } from './js/cssType'
 import useStyle from './js/useStyle'
 import { styleStrRemoveRoot } from './js/cssConvert'
-import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
+import { PluginPanel } from '@opentiny/tiny-engine-common'
 import { useLayout } from '@opentiny/tiny-engine-controller'
 
 export default {
@@ -113,8 +111,7 @@ export default {
     TinyCollapseItem: CollapseItem,
     TinyInput: Input,
     MetaBindVariable,
-    PluginPanel,
-    SvgButton
+    PluginPanel
   },
   props: {
     fixedPanels: {

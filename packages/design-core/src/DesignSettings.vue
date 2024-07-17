@@ -1,7 +1,6 @@
-<!-- 右侧插件栏,需要将下方的tabs改成DesignPlugins里插件菜单的方式 -->
 <template>
-    <!-- 插件面板 -->
-    <div
+  <!-- 插件面板 -->
+  <div
     v-show="renderPanel && components[renderPanel]"
     id="tiny-engine-right-panel"
     :class="[renderPanel, { 'is-fixed': settingsState.fixedPanels.includes(renderPanel) }]"
@@ -81,6 +80,10 @@ export default {
       leftList: settings.filter((item) => item.align === 'left')
     })
 
+    const setRender = (curName) => {
+      settingsState.render = curName
+    }
+
     //点击右侧菜单icon按钮
     const clickMenu = ({ item }) => {
       if (settingsState.render == item.name) {
@@ -95,9 +98,6 @@ export default {
       useLayout().closeSetting(true)
     }
 
-    const setRender = (curName) => {
-      settingsState.render = curName
-    }
     watch(renderPanel, (n) => {
       setRender(n)
     })
@@ -117,7 +117,6 @@ export default {
       components,
       iconComponents,
       clickMenu,
-      renderPanel,
       close,
       fixPanel
     }
@@ -127,7 +126,6 @@ export default {
 
 <style lang="less" scoped>
 #tiny-engine-right-panel {
-  width: var(--base-right-panel-width);
   height: calc(100vh - var(--base-top-panel-height));
   border-left: 1px solid var(--ti-lowcode-plugin-panel-border-right-color);
   background: var(--ti-lowcode-common-component-bg);
@@ -259,4 +257,3 @@ export default {
   }
 }
 </style>
-

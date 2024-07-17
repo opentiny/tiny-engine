@@ -125,7 +125,7 @@
 </template>
 
 <script lang="jsx">
-import { computed, ref, watchEffect, reactive, onMounted, nextTick, resolveComponent,provide } from 'vue'
+import { computed, ref, watchEffect, reactive, onMounted, nextTick, resolveComponent, provide } from 'vue'
 import useClipboard from 'vue-clipboard3'
 import { Grid, GridColumn, Input, Popover, Button, FileUpload, Loading, Tooltip, Select } from '@opentiny/vue'
 import { iconLoadingShadow } from '@opentiny/vue-icon'
@@ -135,7 +135,6 @@ import { utils } from '@opentiny/tiny-engine-utils'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { BASE_URL } from '@opentiny/tiny-engine-controller/js/environments'
 import { useLayout } from '@opentiny/tiny-engine-controller'
-
 
 export default {
   components: {
@@ -574,7 +573,6 @@ export default {
   height: calc(100% - 48px);
   flex: 1;
   padding: 0 16px;
-  overflow-y: scroll;
 
   .operation-column {
     display: flex;

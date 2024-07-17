@@ -31,7 +31,7 @@
 import { onBeforeUnmount, reactive, provide } from 'vue'
 import { Button } from '@opentiny/vue'
 import { PluginPanel } from '@opentiny/tiny-engine-common'
-import { VueMonaco, CloseIcon, LinkButton } from '@opentiny/tiny-engine-common'
+import { VueMonaco, LinkButton } from '@opentiny/tiny-engine-common'
 import { useHelp } from '@opentiny/tiny-engine-controller'
 import { initCompletion } from '@opentiny/tiny-engine-controller/js/completion'
 import { initLinter } from '@opentiny/tiny-engine-controller/js/linter'
@@ -50,7 +50,6 @@ export default {
   components: {
     MonacoEditor: VueMonaco,
     TinyButton: Button,
-    CloseIcon,
     LinkButton,
     PluginPanel
   },
@@ -181,7 +180,7 @@ export default {
 
   .code-edit-content {
     padding: 12px 20px;
-    height: calc(100% - 54px);
+    height: 100%;
 
     & > div {
       border: 1px solid var(--ti-lowcode-code-edit-content-border-color);

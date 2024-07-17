@@ -1,8 +1,7 @@
 <template>
   <plugin-panel title="属性" :fixed-panels="fixedPanels" :fixed-name="SETTING_NAME.Props" @close="$emit('close')">
     <template #content>
-      <div class="scroll-content">
-        <!-- 在属性面板渲染设置的属性的入口 -->
+      <div>
         <config-render :data="properties">
           <template #prefix="{ data }">
             <block-link-field v-if="isBlock" :data="data"></block-link-field>
@@ -21,7 +20,7 @@ import { computed, watchEffect, ref, reactive, provide } from 'vue'
 import { ConfigRender, BlockDescription, BlockLinkField } from '@opentiny/tiny-engine-common'
 import { useCanvas, useProperty } from '@opentiny/tiny-engine-controller'
 import Empty from './components/Empty.vue'
-import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
+import { PluginPanel } from '@opentiny/tiny-engine-common'
 import { useLayout } from '@opentiny/tiny-engine-controller'
 
 export default {
@@ -30,8 +29,7 @@ export default {
     BlockLinkField,
     BlockDescription,
     Empty,
-    PluginPanel,
-    SvgButton
+    PluginPanel
   },
   props: {
     fixedPanels: {

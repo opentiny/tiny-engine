@@ -30,7 +30,7 @@
       </tiny-tooltip> -->
     </template>
     <template #content>
-      <div class="tree-wrap lowcode-scrollbar">
+      <div class="tree-wrap">
         <tiny-grid
           ref="gridRef"
           :data="state.pageSchema"
@@ -70,9 +70,9 @@
 </template>
 
 <script>
-import { reactive, watch, ref, onActivated, computed , provide } from 'vue'
+import { reactive, watch, ref, onActivated, computed, provide } from 'vue'
 import { Grid, GridColumn } from '@opentiny/vue'
-import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
+import { PluginPanel } from '@opentiny/tiny-engine-common'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { IconChevronDown, iconEyeopen, iconEyeclose } from '@opentiny/vue-icon'
 // import Sortable from 'sortablejs'
@@ -86,7 +86,6 @@ export default {
     TinyGrid: Grid,
     TinyGridColumn: GridColumn,
     PluginPanel,
-    SvgButton,
     IconEyeopen: iconEyeopen(),
     IconEyeclose: iconEyeclose()
   },
@@ -312,7 +311,6 @@ export default {
   overflow: hidden;
   .tree-wrap {
     height: calc(100% - 38px);
-    overflow-y: scroll;
 
     .tree-handle svg {
       color: var(--ti-lowcode-tree-icon-color);

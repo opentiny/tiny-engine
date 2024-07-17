@@ -41,9 +41,9 @@
 </template>
 
 <script lang="jsx">
-import { nextTick, reactive, getCurrentInstance, onActivated, ref,provide } from 'vue'
+import { nextTick, reactive, getCurrentInstance, onActivated, ref, provide } from 'vue'
 import { Popover } from '@opentiny/vue'
-import { VueMonaco, CloseIcon } from '@opentiny/tiny-engine-common'
+import { VueMonaco } from '@opentiny/tiny-engine-common'
 import { PluginPanel } from '@opentiny/tiny-engine-common'
 import { useCanvas, useModal, useHistory, useNotify } from '@opentiny/tiny-engine-controller'
 import { obj2String, string2Obj, theme } from '@opentiny/tiny-engine-controller/adapter'
@@ -54,7 +54,6 @@ export default {
   components: {
     MonacoEditor: VueMonaco,
     TinyPopover: Popover,
-    CloseIcon,
     PluginPanel,
     IconSave: iconSave(),
     IconDownloadLink: iconDownloadLink()
@@ -72,7 +71,7 @@ export default {
     const panelState = reactive({
       emitEvent: emit
     })
-    provide('panelState', panelState) 
+    provide('panelState', panelState)
 
     const state = reactive({
       pageData: obj2String(pageState.pageSchema)
@@ -168,7 +167,7 @@ export default {
 <style lang="less" scoped>
 #source-code {
   width: 45vw;
-  height: calc(100% - var(--base-top-panel-height));
+  height: 100%;
   padding: 12px;
   background: var(--ti-lowcode-common-component-bg);
   box-shadow: 2px 2px 6px rgb(0 0 0 / 60%);
@@ -220,7 +219,7 @@ export default {
     }
   }
   .source-code-content {
-    height: calc(100% - 42px);
+    height: 100%;
     border: 1px solid var(--ti-lowcode-toolbar-border-color);
     box-shadow: 0px 0px 4px rgb(0 0 0 / 20%);
   }
