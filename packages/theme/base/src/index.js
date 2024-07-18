@@ -1,18 +1,7 @@
+// 提供engine主题包的样式定义引入
 import './base.less'
-import './dark'
+import './common.less'
+// 须提供变量区分亮暗两套主题，再引入引入dark和light，达到提供tinyvue组件亮暗色两套样式定义引入
+// import './dark'
 import './light'
 import './component-common.less'
-
-// export const tinyEngineThemeLight = {
-//     id: 'tiny-engine-light-theme',
-//     name: 'EngineLightTheme',
-//     cnName: 'EngineLightTheme',
-//     data: { ...concatThemeLight }
-// }
-
-// export const tinyEngineThemeDark = {
-//     id: 'tiny-engine-dark-theme',
-//     name: 'EngineDarkTheme',
-//     cnName: 'EngineDarkTheme',
-//     data: { ...concatThemeDark }
-// }
