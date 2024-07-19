@@ -26,7 +26,7 @@
 
 <script>
 import { computed } from 'vue'
-import ResetButton from '../inputs/ResetButton.vue'
+import { ResetButton } from '@opentiny/tiny-engine-common'
 import NumericSelect from '../inputs/NumericSelect.vue'
 import useEvent from '../../js/useEvent'
 import { SPACING_PROPERTY, POSITION_PROPERTY } from '../../js/styleProperty'
@@ -61,6 +61,10 @@ export default {
       props.property.value?.indexOf('px') > -1 ? Number.parseInt(props.property.value) : props.property.value
     )
 
+    const updateStyle = (value) => {
+      emit('update', { [props.property.name]: value })
+    }
+
     const sliderChange = () => {
       if (sliderFlag) {
         updateStyle(`${sliderValue.value}px`)
@@ -84,10 +88,6 @@ export default {
     const reset = () => {
       sliderFlag = false
       updateStyle('')
-    }
-
-    const updateStyle = (value) => {
-      emit('update', { [props.property.name]: value })
     }
 
     const inputChange = (property) => {

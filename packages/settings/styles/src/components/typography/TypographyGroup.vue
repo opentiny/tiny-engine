@@ -206,8 +206,7 @@ import { ColorConfigurator, SelectConfigurator } from '@opentiny/tiny-engine-con
 import { TYPO_PROPERTY } from '../../js/styleProperty'
 import useEvent from '../../js/useEvent'
 import { useProperties } from '../../js/useStyle'
-import ModalMask, { useModal } from '../inputs/ModalMask.vue'
-import ResetButton from '../inputs/ResetButton.vue'
+import { ModalMask, useModalMask, ResetButton } from '@opentiny/tiny-engine-common'
 
 export default {
   components: {
@@ -240,7 +239,7 @@ export default {
       names: Object.values(TYPO_PROPERTY),
       parseNumber: true
     })
-    const { setPosition } = useModal()
+    const { setPosition } = useModalMask()
 
     const fontFamilyOptions = [
       {

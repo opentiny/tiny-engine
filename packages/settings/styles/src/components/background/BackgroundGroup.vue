@@ -86,8 +86,7 @@ import { Tooltip } from '@opentiny/vue'
 import { ColorConfigurator, SelectConfigurator } from '@opentiny/tiny-engine-configurator'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { iconPlus } from '@opentiny/vue-icon'
-import ModalMask, { useModal } from '../inputs/ModalMask.vue'
-import ResetButton from '../inputs/ResetButton.vue'
+import { ModalMask, useModalMask, ResetButton } from '@opentiny/tiny-engine-common'
 import BackgroundImageSetting from './BackgroundImageSetting.vue'
 import { useProperties } from '../../js/useStyle'
 import { BACKGROUND_PROPERTY, TYPE_TEXT, PROPERTY_DEFAULT_VALUE } from '../../js/styleProperty'
@@ -147,7 +146,7 @@ export default {
       names: Object.values(BACKGROUND_PROPERTY),
       parseNumber: true
     })
-    const { setPosition } = useModal()
+    const { setPosition } = useModalMask()
     const { getCurrentSchema } = useCanvas()
 
     watch(

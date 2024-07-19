@@ -227,9 +227,8 @@
 <script>
 import { computed, reactive, watch } from 'vue'
 import { Tooltip } from '@opentiny/vue'
-import ModalMask, { useModal } from '../inputs/ModalMask.vue'
+import { ModalMask, useModalMask, ResetButton } from '@opentiny/tiny-engine-common'
 import NumericSelect from '../inputs/NumericSelect.vue'
-import ResetButton from '../inputs/ResetButton.vue'
 import { ColorConfigurator, SliderConfigurator } from '@opentiny/tiny-engine-configurator'
 import useEvent from '../../js/useEvent'
 import { useProperties } from '../../js/useStyle'
@@ -295,7 +294,7 @@ export default {
       isUpdateFromProps: false
     })
 
-    const { setPosition } = useModal()
+    const { setPosition } = useModalMask()
 
     const { getProperty, getSettingFlag, getPropertyValue } = useProperties({
       names: Object.values({ ...BORDER_RADIUS_PROPERTY, ...BORDER_PROPERTY }),

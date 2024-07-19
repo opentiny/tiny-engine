@@ -16,8 +16,7 @@ import { ref, watch } from 'vue'
 import { DISPLAY_TYPE } from '../../js/cssType'
 import { RadioConfigurator } from '@opentiny/tiny-engine-configurator'
 import useEvent from '../../js/useEvent'
-import ResetButton from '../inputs/ResetButton.vue'
-import ModalMask, { useModal } from '../inputs/ModalMask.vue'
+import { ModalMask, useModalMask, ResetButton } from '@opentiny/tiny-engine-common'
 
 export default {
   components: {
@@ -45,7 +44,7 @@ export default {
   },
   emits: useEvent(),
   setup(props, { emit }) {
-    const { setPosition } = useModal()
+    const { setPosition } = useModalMask()
 
     const picked = ref(props.display)
     const showModal = ref(false)

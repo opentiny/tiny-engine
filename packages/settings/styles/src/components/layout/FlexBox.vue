@@ -24,8 +24,7 @@
 import { ref, watchEffect } from 'vue'
 import { RadioConfigurator } from '@opentiny/tiny-engine-configurator'
 import { utils } from '@opentiny/tiny-engine-utils'
-import ModalMask, { useModal } from '../inputs/ModalMask.vue'
-import ResetButton from '../inputs/ResetButton.vue'
+import { ModalMask, useModalMask, ResetButton } from '@opentiny/tiny-engine-common'
 import { useProperties } from '../../js/useStyle'
 import { FLEX_PROPERTY } from '../../js/styleProperty'
 
@@ -174,7 +173,7 @@ export default {
         ]
       }
     ])
-    const { setPosition } = useModal()
+    const { setPosition } = useModalMask()
     const showModal = ref(false)
 
     const { getSettingFlag } = useProperties({

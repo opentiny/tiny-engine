@@ -133,8 +133,7 @@ import { MetaListItems, MaskModal } from '@opentiny/tiny-engine-common'
 import { RadioConfigurator } from '@opentiny/tiny-engine-configurator'
 import { iconHelpSolid, iconCopy, iconDel } from '@opentiny/vue-icon'
 import { remove } from '@opentiny/vue-renderless/common/array'
-import ModalMask, { useModal } from '../inputs/ModalMask.vue'
-import ResetButton from '../inputs/ResetButton.vue'
+import { ModalMask, useModalMask, ResetButton } from '@opentiny/tiny-engine-common'
 import NumericSelect from '../inputs/NumericSelect.vue'
 import { useProperties } from '../../js/useStyle'
 import { GRID_PROPERTY } from '../../js/styleProperty'
@@ -162,7 +161,7 @@ export default {
   setup(props, { emit }) {
     let activedName = []
 
-    const { setPosition } = useModal()
+    const { setPosition } = useModalMask()
 
     const state = reactive({
       showModal: false,

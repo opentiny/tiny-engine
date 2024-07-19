@@ -32,14 +32,15 @@ export default {
 <style lang="less" scoped>
 .reset-btn.tiny-button {
   display: block;
-  width: 100%;
+  width: 70px;
+  height: 24px;
   max-width: 100%;
-  border: 0;
+  border-radius: 16px;
   border: 1px solid var(--ti-lowcode-toolbar-border-color);
 }
 .reset-desc {
   display: block;
-  padding: 8px 4px;
+  padding: 4px;
   text-align: center;
   color: var(--ti-lowcode-common-third-text-color);
 }

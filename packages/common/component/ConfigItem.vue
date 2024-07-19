@@ -28,7 +28,12 @@
           </div>
           <template #reference>
             <div>
-              <div :class="[{ 'pro-underline': propDescription && propDescription !== propLabel }]">
+              <div
+                :class="[
+                  { 'pro-underline': propDescription && propDescription !== propLabel, 'pro-bind': showBindState }
+                ]"
+                @click="openReset($event)"
+              >
                 <span>{{ propLabel }}</span>
               </div>
             </div>
@@ -53,7 +58,7 @@
             :is="component"
             v-show="!hidden"
             v-bind="widget.props"
-            :model-value="bindValue"
+            :model-value="bindValue || verification.defaultValue"
             :language="currentLanguage"
             :meta="property"
             :label="propLabel"
@@ -75,7 +80,7 @@
             v-if="showCodeEditIcon"
             ref="editorModalRef"
             v-bind="widget.props"
-            :model-value="bindValue"
+            :model-value="bindValue || verification.defaultValue"
             :meta="property"
             :label="propLabel"
             language="json"
@@ -89,6 +94,7 @@
           </component>
           <component
             :is="VariableConfigurator"
+            ref="variable"
             v-if="isTopLayer && !onlyEdit && property.bindState !== false && !isRelatedComponents(widget.component)"
             :model-value="widget.props.modelValue"
             :name="widget.props.name"
@@ -98,6 +104,9 @@
       </div>
     </div>
   </div>
+  <modal-mask v-if="verification.showModal">
+    <reset-button @reset="reset" />
+  </modal-mask>
 </template>
 
 <script>
@@ -105,6 +114,8 @@ import { inject, computed, watch, ref, reactive, provide } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
 import { IconWriting, IconHelpCircle, IconPlusCircle } from '@opentiny/vue-icon'
 import { typeOf } from '@opentiny/vue-renderless/common/type'
+import ModalMask, { useModalMask } from './ModalMask.vue'
+import ResetButton from './ResetButton.vue'
 import {
   useHistory,
   useProperties,
@@ -134,7 +145,9 @@ export default {
     TinyTooltip: Tooltip,
     IconWriting: IconWriting(),
     IconPlusCircle: IconPlusCircle(),
-    IconHelpCircle: IconHelpCircle()
+    IconHelpCircle: IconHelpCircle(),
+    ModalMask,
+    ResetButton
   },
   props: {
     properties: {
@@ -174,10 +187,13 @@ export default {
     const { t, locale } = i18n.global
 
     const verification = reactive({
+      showModal: false,
       failed: false,
       message: '',
-      hasRule: computed(() => hasRule(props.property?.required, props.property?.rules))
+      hasRule: computed(() => hasRule(props.property?.required, props.property?.rules)),
+      defaultValue: props.property?.widget?.props?.modelValue
     })
+    const variable = ref(null)
     const editorModalRef = ref(null)
     const currentProperty = inject('currentProperty', null)
     const propsObj = inject('propsObj', null)
@@ -468,10 +484,23 @@ export default {
     const showBindState = computed(
       () => !props.onlyEdit && (isBindingState.value || isLinked.value) && !isRelatedComponents(widget.value.component)
     )
+    const { setPosition } = useModalMask()
+
+    const openReset = (event) => {
+      if (showBindState.value) {
+        setPosition(event)
+        verification.showModal = true
+      }
+    }
+    const reset = () => {
+      variable.value.remove()
+      verification.showModal = false
+    }
 
     return {
       CodeConfigurator,
       VariableConfigurator,
+      variable,
       verification,
       showCodeEditIcon,
       editorModalRef,
@@ -496,7 +525,9 @@ export default {
       handleBlur,
       isFocus,
       isRelatedComponents,
-      labelPosition
+      labelPosition,
+      openReset,
+      reset
     }
   }
 }
@@ -548,9 +579,11 @@ export default {
         color: var(--ti-lowcode-meta-config-item-bind-color);
         background: var(--ti-lowcode-meta-config-item-bind-bg);
         padding: 4px 12px;
+        display: block;
         overflow: hidden;
         text-overflow: ellipsis;
-        border-radius: 6px;
+        white-space: nowrap;
+        border-radius: 4px;
       }
       &:has(.tiny-switch) {
         text-align: right;
@@ -623,6 +656,12 @@ export default {
       &:hover {
         border-bottom: 1px dashed;
       }
+    }
+    .pro-bind {
+      padding: 2px;
+      color: var(--ti-lowcode-meta-config-item-bind-color);
+      background: var(--ti-lowcode-meta-config-labe-item-bind-bg), 0.08;
+      cursor: pointer;
     }
     &.multiType {
       border-bottom: 1px solid var(--ti-lowcode-toolbar-active-bg);

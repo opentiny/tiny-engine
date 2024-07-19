@@ -390,7 +390,7 @@
 <script>
 import { computed, reactive } from 'vue'
 import SpacingSetting from './SpacingSetting.vue'
-import ModalMask, { useModal } from '../inputs/ModalMask.vue'
+import { ModalMask, useModalMask } from '@opentiny/tiny-engine-common'
 import useEvent from '../../js/useEvent'
 import { SPACING_PROPERTY } from '../../js/styleProperty'
 
@@ -407,7 +407,7 @@ export default {
   },
   emits: useEvent(),
   setup(props, { emit }) {
-    const { setPosition } = useModal()
+    const { setPosition } = useModalMask()
 
     const state = reactive({
       className: '',

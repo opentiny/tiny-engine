@@ -222,9 +222,8 @@ import { reactive, watchEffect } from 'vue'
 import { Tooltip } from '@opentiny/vue'
 import { SelectConfigurator } from '@opentiny/tiny-engine-configurator'
 import { push } from '@opentiny/vue-renderless/common/array'
-import ModalMask, { useModal } from '../inputs/ModalMask.vue'
+import { ModalMask, useModalMask, ResetButton } from '@opentiny/tiny-engine-common'
 import SpacingSetting from '../spacing/SpacingSetting.vue'
-import ResetButton from '../inputs/ResetButton.vue'
 import NumericSelect from '../inputs/NumericSelect.vue'
 import { useProperties } from '../../js/useStyle'
 import { POSITION_PROPERTY } from '../../js/styleProperty'
@@ -346,7 +345,7 @@ export default {
     watchEffect(() => {
       state.selectValue = props.style?.position || 'static'
     })
-    const { setPosition } = useModal()
+    const { setPosition } = useModalMask()
 
     const updateStyle = (property) => {
       emit('update', property)

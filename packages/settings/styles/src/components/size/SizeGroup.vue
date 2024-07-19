@@ -216,8 +216,7 @@ import { Tooltip, Popover, Input } from '@opentiny/vue'
 import { MaskModal } from '@opentiny/tiny-engine-common'
 import { SelectConfigurator } from '@opentiny/tiny-engine-configurator'
 import { iconEllipsis } from '@opentiny/vue-icon'
-import ModalMask, { useModal } from '../inputs/ModalMask.vue'
-import ResetButton from '../inputs/ResetButton.vue'
+import { ModalMask, useModalMask, ResetButton } from '@opentiny/tiny-engine-common'
 import NumericSelect from '../inputs/NumericSelect.vue'
 import useEvent from '../../js/useEvent'
 import { useProperties } from '../../js/useStyle'
@@ -332,7 +331,7 @@ export default {
       }
     ]
     const showModal = ref(false)
-    const { setPosition } = useModal()
+    const { setPosition } = useModalMask()
     const state = reactive({
       flag: false,
       disabled: false,
