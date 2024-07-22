@@ -23,9 +23,36 @@ const PLUGIN_NAME = {
   Lock: 'Lock',
   Tutorial: 'Tutorial',
   OutlineTree: 'OutlineTree',
-  save: 'save'
+  save: 'save',
+  Page: 'AppManage',
+  Block: 'BlockManage',
+  Datasource: 'Collections',
+  Bridge: 'Bridge',
+  I18n: 'I18n',
+  Script: 'PageController',
+  Data: 'DataSource',
+  Schema: 'Schema'
 }
-
+const SETTING_NAME = {
+  Event: 'event',
+  Style: 'style',
+  Props: 'props'
+}
+const pluginWidth = reactive({
+  Materials: '300',
+  OutlineTree: '300',
+  AppManage: '300',
+  BlockManage: '300',
+  Collections: '300',
+  Bridge: '300',
+  I18n: '620',
+  PageController: '1000',
+  DataSource: '300',
+  Schema: '1000',
+  props: '320',
+  style: '320',
+  event: '320'
+})
 const pluginState = reactive({
   pluginEvent: 'all'
 })
@@ -47,7 +74,8 @@ const layoutState = reactive({
     api: {} // 插件需要注册交互API到这里
   },
   settings: {
-    render: 'props',
+    fixedPanels: [],
+    render: null,
     api: null,
     activating: false, // 右侧面版激活提示状态
     showDesignSettings: true
@@ -77,6 +105,13 @@ const activeSetting = (name) => {
     }, 1000)
   })
 }
+// 关闭右侧setting插件面板
+const closeSetting = (forceClose) => {
+  const { settings } = layoutState
+  if (forceClose) {
+    settings.render = null
+  }
+}
 
 // 获取当前插件注册的Api
 const getPluginApi = (pluginName) => {
@@ -98,7 +133,7 @@ const activePlugin = (name, noActiveRender) => {
   })
 }
 
-// 关闭插件面板
+// 关闭左侧plugin插件面板
 const closePlugin = (forceClose) => {
   const { plugins } = layoutState
   if (!plugins.fixedPanels.includes(plugins.render) || forceClose) {
@@ -119,9 +154,11 @@ const isEmptyPage = () => layoutState.pageStatus?.state === PAGE_STATUS.Empty
 export default () => {
   return {
     PLUGIN_NAME,
+    SETTING_NAME,
     activeSetting,
     activePlugin,
     closePlugin,
+    closeSetting,
     layoutState,
     getScale,
     setDimension,
@@ -130,6 +167,7 @@ export default () => {
     getPluginApi,
     getPluginState,
     pluginState,
-    isEmptyPage
+    isEmptyPage,
+    pluginWidth
   }
 }
