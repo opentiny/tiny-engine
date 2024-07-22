@@ -29,6 +29,8 @@ import {
   CanvasPlaceholder
 } from '../builtin'
 import { NODE_UID as DESIGN_UIDKEY, NODE_TAG as DESIGN_TAGKEY, NODE_LOOP as DESIGN_LOOPID } from '../common'
+import { applyPureReactInVue } from 'veaury'
+import * as Antd from 'antd'
 
 const { BROADCAST_CHANNEL } = constants
 const { hyphenateRE } = utils
@@ -345,7 +347,23 @@ export const wrapCustomElement = (componentName) => {
   return customElements[componentName]
 }
 
+const antdComponents = {
+  ...Object.keys(Antd).reduce((acc, cur) => {
+    const componentMap = { [`Antd${cur}`]: Antd[cur] }
+    const subNames = ['Item', 'Group', 'Button']
+    subNames.forEach((subName) => {
+      if (Antd[cur][subName]) {
+        componentMap[`Antd${cur}${subName}`] = Antd[cur][subName]
+      }
+    })
+    return { ...acc, ...componentMap }
+  })
+}
+
 export const getComponent = (name) => {
+  if (name.startsWith('Antd') && antdComponents[name]) {
+    return applyPureReactInVue(antdComponents[name])
+  }
   return (
     Mapper[name] ||
     getNative(name) ||
@@ -504,6 +522,11 @@ const stopEvent = (event) => {
   return false
 }
 
+const stopNotPreventEvent = (event) => {
+  event.stopPropagation?.()
+  return false
+}
+
 const generateSlotGroup = (children, isCustomElm, schema) => {
   const slotGroup = {}
 
@@ -558,7 +581,7 @@ const getBindProps = (schema, scope) => {
     ...parseData(schema.props, scope),
     [DESIGN_UIDKEY]: id,
     [DESIGN_TAGKEY]: componentName,
-    onMoseover: stopEvent,
+    onMouseOver: stopEvent,
     onFocus: stopEvent
   }
   if (scope) {
@@ -568,6 +591,7 @@ const getBindProps = (schema, scope) => {
   // 在捕获阶段阻止事件的传播
   if (clickCapture(componentName)) {
     bindProps.onClickCapture = stopEvent
+    bindProps.onMouseDownCapture = stopNotPreventEvent // AntdSelect 使用 mouseDown 展开下来和输入
   }
 
   if (Mapper[componentName]) {
@@ -575,8 +599,10 @@ const getBindProps = (schema, scope) => {
   }
 
   // 绑定组件属性时需要将 className 重命名为 class，防止覆盖组件内置 class
-  bindProps.class = bindProps.className
-  delete bindProps.className
+  if (!componentName.startsWith('Antd')) {
+    bindProps.class = bindProps.className
+    delete bindProps.className
+  }
 
   // 使画布中元素可拖拽
   bindProps.draggable = true

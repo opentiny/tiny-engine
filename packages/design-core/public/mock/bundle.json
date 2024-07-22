@@ -7,6 +7,1562 @@
           "id": 1,
           "version": "2.4.2",
           "name": {
+            "zh_CN": "表单"
+          },
+          "component": "AntdForm",
+          "icon": "form",
+          "description": "表单包含 输入框, 单选框, 下拉选择, 多选框 等用户输入的组件。 使用表单，您可以收集、验证和提交数据。",
+          "doc_url": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "group": "表单组件",
+          "category": "antd",
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "isPopper": false,
+            "nestingRule": {
+              "childWhitelist": ["AntdFormItem"],
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": ["inline", "label-width"]
+            },
+            "contextMenu": {
+              "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+              "disable": []
+            },
+            "invalidity": [""],
+            "clickCapture": true,
+            "framework": "Vue"
+          },
+          "schema": {
+            "properties": [
+              {
+                "name": "0",
+                "label": {
+                  "zh_CN": "基础属性"
+                },
+                "content": [
+                  {
+                    "property": "model",
+                    "label": {
+                      "text": {
+                        "zh_CN": "model"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "表单数据对象"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "object",
+                    "widget": {
+                      "component": "MetaCodeEditor",
+                      "props": {
+                        "language": "json"
+                      }
+                    }
+                  },
+                  {
+                    "property": "rules",
+                    "label": {
+                      "text": {
+                        "zh_CN": "rules"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "表单验证规则"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "object",
+                    "widget": {
+                      "component": "MetaCodeEditor",
+                      "props": {
+                        "language": "json"
+                      }
+                    }
+                  },
+                  {
+                    "property": "inline",
+                    "label": {
+                      "text": {
+                        "zh_CN": "inline"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "行内表单模式"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "boolean",
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "label-position",
+                    "label": {
+                      "text": {
+                        "zh_CN": "label-position"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "表单域标签的位置， 当设置为 left 或 right 时，则也需要设置 label-width 属性"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "string",
+                    "defaultValue": "right",
+                    "widget": {
+                      "component": "MetaSelect",
+                      "props": {
+                        "options": [
+                          {
+                            "label": "left",
+                            "value": "left"
+                          },
+                          {
+                            "label": "right",
+                            "value": "right"
+                          },
+                          {
+                            "label": "top",
+                            "value": "top"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "property": "label-width",
+                    "label": {
+                      "text": {
+                        "zh_CN": "label-width"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "标签的长度，例如 '50px'。 作为 Form 直接子元素的 form-item 会继承该值。 可以使用 auto。"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "string",
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    },
+                    "device": []
+                  },
+                  {
+                    "property": "label-suffix",
+                    "label": {
+                      "text": {
+                        "zh_CN": "label-suffix"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "表单域标签的后缀"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "string",
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    },
+                    "device": []
+                  },
+                  {
+                    "property": "hide-required-asterisk",
+                    "label": {
+                      "text": {
+                        "zh_CN": "hide-required-asterisk"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否隐藏必填字段标签旁边的红色星号"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "boolean",
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "require-asterisk-position",
+                    "label": {
+                      "text": {
+                        "zh_CN": "星号的位置"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "星号的位置"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "string",
+                    "defaultValue": "left",
+                    "widget": {
+                      "component": "MetaSelect",
+                      "props": {
+                        "options": [
+                          {
+                            "label": "left",
+                            "value": "left"
+                          },
+                          {
+                            "label": "right",
+                            "value": "right"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "property": "show-message",
+                    "label": {
+                      "text": {
+                        "zh_CN": "show-message"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否显示校验错误信息"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "defaultValue": true,
+                    "type": "boolean",
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "inline-message",
+                    "label": {
+                      "text": {
+                        "zh_CN": "inline-message"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否以行内形式展示校验信息"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "defaultValue": false,
+                    "type": "boolean",
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "status-icon",
+                    "label": {
+                      "text": {
+                        "zh_CN": "status-icon"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否在输入框中显示校验结果反馈图标"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "defaultValue": false,
+                    "type": "boolean",
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "validate-on-rule-change",
+                    "label": {
+                      "text": {
+                        "zh_CN": "validate-on-rule-change"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否在 rules 属性改变后立即触发一次验证"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "defaultValue": true,
+                    "type": "boolean",
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "size",
+                    "label": {
+                      "text": {
+                        "zh_CN": "size"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "用于控制该表单内组件的尺寸"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "string",
+                    "defaultValue": "default",
+                    "widget": {
+                      "component": "MetaSelect",
+                      "props": {
+                        "options": [
+                          {
+                            "label": "large",
+                            "value": "large"
+                          },
+                          {
+                            "label": "default",
+                            "value": "default"
+                          },
+                          {
+                            "label": "small",
+                            "value": "small"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "property": "disabled",
+                    "label": {
+                      "text": {
+                        "zh_CN": "disabled"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否禁用该表单内的所有组件。 如果设置为 true, 它将覆盖内部组件的 disabled 属性"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "defaultValue": false,
+                    "type": "boolean",
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    },
+                    "device": []
+                  },
+                  {
+                    "property": "scroll-to-error",
+                    "label": {
+                      "text": {
+                        "zh_CN": "scroll-to-error"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "当校验失败时，滚动到第一个错误表单项"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "defaultValue": false,
+                    "type": "boolean",
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    },
+                    "device": []
+                  }
+                ],
+                "description": {
+                  "zh_CN": ""
+                }
+              }
+            ],
+            "events": {
+              "onValidate": {
+                "label": {
+                  "zh_CN": "任一表单项被校验后触发"
+                },
+                "description": {
+                  "zh_CN": "任一表单项被校验后触发"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [],
+                  "returns": {}
+                },
+                "defaultValue": ""
+              }
+            },
+            "slots": {}
+          }
+        },
+        {
+          "id": 1,
+          "version": "2.4.2",
+          "name": {
+            "zh_CN": "表单子项"
+          },
+          "component": "AntdFormItem",
+          "icon": "formItem",
+          "description": "表单包含 输入框, 单选框, 下拉选择, 多选框 等用户输入的组件。 使用表单，您可以收集、验证和提交数据。",
+          "doc_url": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "group": "表单组件",
+          "category": "antd",
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "isPopper": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": ["inline", "label-width"]
+            },
+            "contextMenu": {
+              "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+              "disable": []
+            },
+            "invalidity": [""],
+            "clickCapture": true,
+            "framework": "Vue"
+          },
+          "schema": {
+            "properties": [
+              {
+                "name": "0",
+                "label": {
+                  "zh_CN": "基础属性"
+                },
+                "content": [
+                  {
+                    "property": "prop",
+                    "label": {
+                      "text": {
+                        "zh_CN": "prop"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "model 的键名。 它可以是一个属性的值(如 a.b.0 或 [a', 'b', '0'])。 在定义了 validate、resetFields 的方法时，该属性是必填的"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "string",
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "label",
+                    "label": {
+                      "text": {
+                        "zh_CN": "label"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "标签文本"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "string",
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "label-width",
+                    "label": {
+                      "text": {
+                        "zh_CN": "label-width"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "标签宽度，例如 '50px'。 可以使用 auto"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "string",
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "required",
+                    "label": {
+                      "text": {
+                        "zh_CN": "required"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否为必填项，如不设置，则会根据校验规则确认"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "boolean",
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "rules",
+                    "label": {
+                      "text": {
+                        "zh_CN": "rules"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "表单验证规则, 更多内容可以参考async-validator"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "object",
+                    "widget": {
+                      "component": "MetaCodeEditor",
+                      "props": {
+                        "language": "json"
+                      }
+                    }
+                  },
+                  {
+                    "property": "error",
+                    "label": {
+                      "text": {
+                        "zh_CN": "error"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "表单域验证错误时的提示信息。设置该值会导致表单验证状态变为 error，并显示该错误信息"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "string",
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "show-message",
+                    "label": {
+                      "text": {
+                        "zh_CN": "show-message"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否显示校验错误信息"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "boolean",
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "inline-message",
+                    "label": {
+                      "text": {
+                        "zh_CN": "inline-message"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否在行内显示校验信息"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "boolean",
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "size",
+                    "label": {
+                      "text": {
+                        "zh_CN": "size"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "用于控制该表单内组件的尺寸"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "string",
+                    "defaultValue": "default",
+                    "widget": {
+                      "component": "MetaSelect",
+                      "props": {
+                        "options": [
+                          {
+                            "label": "large",
+                            "value": "large"
+                          },
+                          {
+                            "label": "default",
+                            "value": "default"
+                          },
+                          {
+                            "label": "small",
+                            "value": "small"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "property": "for",
+                    "label": {
+                      "text": {
+                        "zh_CN": "for"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "和原生标签相同能力"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "string",
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "validate-status",
+                    "label": {
+                      "text": {
+                        "zh_CN": "validate-status"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "formItem 校验的状态"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "string",
+                    "widget": {
+                      "component": "MetaSelect",
+                      "props": {
+                        "options": [
+                          {
+                            "label": "error",
+                            "value": "error"
+                          },
+                          {
+                            "label": "validating",
+                            "value": "validating"
+                          },
+                          {
+                            "label": "success",
+                            "value": "success"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "description": {
+                  "zh_CN": ""
+                }
+              }
+            ],
+            "events": {},
+            "slots": {
+              "label": {
+                "label": {
+                  "zh_CN": "label"
+                },
+                "description": {
+                  "zh_CN": "标签位置显示的内容"
+                }
+              },
+              "error": {
+                "label": {
+                  "zh_CN": "error"
+                },
+                "description": {
+                  "zh_CN": "验证错误信息的显示内容"
+                }
+              }
+            }
+          }
+        },
+        {
+          "id": 1,
+          "version": "2.4.2",
+          "name": {
+            "zh_CN": "步骤条"
+          },
+          "component": "AntdSteps",
+          "icon": "formItem",
+          "description": "步骤条组件",
+          "doc_url": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "group": "表单组件",
+          "category": "antd",
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "isPopper": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": ["inline", "label-width"]
+            },
+            "contextMenu": {
+              "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+              "disable": []
+            },
+            "invalidity": [""],
+            "clickCapture": true,
+            "framework": "Vue"
+          },
+          "schema": {
+            "properties": [
+              {
+                "name": "0",
+                "label": {
+                  "zh_CN": "基础属性"
+                },
+                "content": [
+                  {
+                    "property": "current",
+                    "label": {
+                      "text": {
+                        "zh_CN": "current"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "当前选中的步骤"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "string",
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "items",
+                    "label": {
+                      "text": {
+                        "zh_CN": "items"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "数据"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "string",
+                    "widget": {
+                      "component": "MetaCodeEditor",
+                      "props": {
+                        "language": "json"
+                      }
+                    }
+                  }
+                ],
+                "description": {
+                  "zh_CN": ""
+                }
+              }
+            ],
+            "events": {},
+            "slots": {
+              "label": {
+                "label": {
+                  "zh_CN": "label"
+                },
+                "description": {
+                  "zh_CN": "标签位置显示的内容"
+                }
+              },
+              "error": {
+                "label": {
+                  "zh_CN": "error"
+                },
+                "description": {
+                  "zh_CN": "验证错误信息的显示内容"
+                }
+              }
+            }
+          }
+        },
+        {
+          "id": 1,
+          "version": "2.4.2",
+          "name": {
+            "zh_CN": "表单"
+          },
+          "component": "AntdTable",
+          "icon": "table",
+          "description": "用于展示多条结构类似的数据， 可对数据进行排序、筛选、对比或其他自定义操作",
+          "doc_url": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "group": "数据展示",
+          "category": "antd",
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "isPopper": false,
+            "nestingRule": {
+              "childWhitelist": [],
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": ["inline", "label-width"]
+            },
+            "contextMenu": {
+              "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+              "disable": []
+            },
+            "invalidity": [""],
+            "clickCapture": true,
+            "framework": "Vue"
+          },
+          "schema": {
+            "properties": [
+              {
+                "name": "0",
+                "label": {
+                  "zh_CN": "基础属性"
+                },
+                "content": [
+                  {
+                    "property": "dataSource",
+                    "label": {
+                      "text": {
+                        "zh_CN": "dataSource"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "显示的数据"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "array",
+                    "widget": {
+                      "component": "MetaCodeEditor",
+                      "props": {
+                        "language": "json"
+                      }
+                    }
+                  },
+                  {
+                    "property": "columns",
+                    "label": {
+                      "text": {
+                        "zh_CN": "表格列"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "MetaCodeEditor",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "表格列的配置信息"
+                    },
+                    "labelPosition": "top"
+                  },
+                  {
+                    "property": "max-height",
+                    "label": {
+                      "text": {
+                        "zh_CN": "max-height"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "Table 的最大高度。"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "number",
+                    "widget": {
+                      "component": "MetaNumberic",
+                      "props": {}
+                    },
+                    "device": []
+                  },
+                  {
+                    "property": "height",
+                    "label": {
+                      "text": {
+                        "zh_CN": "height"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "Table 的高度， 默认为自动高度。 这个高度会设置为 Table 的 style.height 的值，Table 的高度会受控于外部样式。"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "string",
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    },
+                    "device": []
+                  },
+                  {
+                    "property": "stripe",
+                    "label": {
+                      "text": {
+                        "zh_CN": "stripe"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否为斑马纹 table"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "defaultValue": false,
+                    "type": "boolean",
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "border",
+                    "label": {
+                      "text": {
+                        "zh_CN": "border"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否带有纵向边框"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "defaultValue": false,
+                    "type": "boolean",
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "size",
+                    "label": {
+                      "text": {
+                        "zh_CN": "size"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "Table 的尺寸"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "string",
+                    "defaultValue": "default",
+                    "widget": {
+                      "component": "MetaSelect",
+                      "props": {
+                        "options": [
+                          {
+                            "label": "large",
+                            "value": "large"
+                          },
+                          {
+                            "label": "default",
+                            "value": "default"
+                          },
+                          {
+                            "label": "small",
+                            "value": "small"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "property": "fit",
+                    "label": {
+                      "text": {
+                        "zh_CN": "fit"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "列的宽度是否自撑开"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "defaultValue": true,
+                    "type": "boolean",
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "show-header",
+                    "label": {
+                      "text": {
+                        "zh_CN": "show-header"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否显示表头"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "defaultValue": true,
+                    "type": "boolean",
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "highlight-current-row",
+                    "label": {
+                      "text": {
+                        "zh_CN": "highlight-current-row"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否要高亮当前行"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "defaultValue": false,
+                    "type": "boolean",
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "current-row-key",
+                    "label": {
+                      "text": {
+                        "zh_CN": "current-row-key"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "当前行的 key，只写属性"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "type": "string",
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    },
+                    "device": []
+                  },
+                  {
+                    "property": "row-class-name",
+                    "label": {
+                      "text": {
+                        "zh_CN": "row-class-name"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "行的 className"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    },
+                    "device": []
+                  },
+                  {
+                    "property": "row-key",
+                    "label": {
+                      "text": {
+                        "zh_CN": "row-key"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "行数据的 Key，用来优化 Table 的渲染； 在使用reserve-selection功能与显示树形数据时，该属性是必填的。 类型为 String 时，支持多层访问：user.info.id，但不支持 user.info[0].id，此种情况请使用 Function"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "widget": {
+                      "component": "MetaCodeEditor",
+                      "props": {}
+                    },
+                    "device": []
+                  },
+                  {
+                    "property": "empty-text",
+                    "label": {
+                      "text": {
+                        "zh_CN": "empty-text"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "空数据时显示的文本内容"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {}
+                    },
+                    "device": []
+                  },
+                  {
+                    "property": "table-layout",
+                    "label": {
+                      "text": {
+                        "zh_CN": "table-layout"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "设置表格单元、行和列的布局方式"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "defaultValue": "fixed",
+                    "widget": {
+                      "component": "MetaInput",
+                      "props": {
+                        "options": [
+                          {
+                            "label": "fixed",
+                            "value": "fixed"
+                          },
+                          {
+                            "label": "auto",
+                            "value": "auto"
+                          }
+                        ]
+                      }
+                    },
+                    "device": []
+                  },
+                  {
+                    "property": "scrollbar-always-on",
+                    "label": {
+                      "text": {
+                        "zh_CN": "scrollbar-always-on"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "总是显示滚动条"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "defaultValue": false,
+                    "type": "boolean",
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "flexible",
+                    "label": {
+                      "text": {
+                        "zh_CN": "flexible"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "确保主轴的最小尺寸，以便不超过内容"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "top",
+                    "defaultValue": false,
+                    "type": "boolean",
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    }
+                  }
+                ],
+                "description": {
+                  "zh_CN": ""
+                }
+              }
+            ],
+            "events": {
+              "onSelect": {
+                "label": {
+                  "zh_CN": "勾选数据行的 Checkbox 时触发"
+                },
+                "description": {
+                  "zh_CN": "当用户手动勾选数据行的 Checkbox 时触发的事件"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "selection",
+                      "type": "Object",
+                      "defaultValue": "",
+                      "description": {
+                        "zh_CN": "当前选中项"
+                      }
+                    },
+                    {
+                      "name": "row",
+                      "type": "Object",
+                      "defaultValue": "",
+                      "description": {
+                        "zh_CN": "当前行"
+                      }
+                    }
+                  ],
+                  "returns": {}
+                }
+              },
+              "onSelectAll": {
+                "label": {
+                  "zh_CN": "勾选全选时触发"
+                },
+                "description": {
+                  "zh_CN": "当用户手动勾选全选 Checkbox 时触发的事件"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "selection",
+                      "type": "Object",
+                      "defaultValue": "",
+                      "description": {
+                        "zh_CN": "当前选中项"
+                      }
+                    }
+                  ],
+                  "returns": {}
+                }
+              },
+              "onSelectionChange": {
+                "label": {
+                  "zh_CN": "选择项发生变化时会触发"
+                },
+                "description": {
+                  "zh_CN": "当选择项发生变化时会触发该事件"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "selection",
+                      "type": "Object",
+                      "defaultValue": "",
+                      "description": {
+                        "zh_CN": "当前选中项"
+                      }
+                    }
+                  ],
+                  "returns": {}
+                }
+              },
+              "onCellMouseEnter": {
+                "label": {
+                  "zh_CN": "单元格 hover 时会触发"
+                },
+                "description": {
+                  "zh_CN": "当单元格 hover 进入时会触发该事件"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "row",
+                      "type": "Object",
+                      "defaultValue": "",
+                      "description": {
+                        "zh_CN": "当前行"
+                      }
+                    },
+                    {
+                      "name": "column",
+                      "type": "Object",
+                      "defaultValue": "",
+                      "description": {
+                        "zh_CN": "当前列"
+                      }
+                    },
+                    {
+                      "name": "cell",
+                      "type": "Object",
+                      "defaultValue": "",
+                      "description": {
+                        "zh_CN": "当前单元格"
+                      }
+                    },
+                    {
+                      "name": "event",
+                      "type": "Object",
+                      "defaultValue": "",
+                      "description": {
+                        "zh_CN": "原生事件 event"
+                      }
+                    }
+                  ],
+                  "returns": {}
+                }
+              },
+              "onCellMouseLeave": {
+                "label": {
+                  "zh_CN": "单元格 hover 退出时会触发"
+                },
+                "description": {
+                  "zh_CN": "当单元格 hover 退出时会触发该事件"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "row",
+                      "type": "Object",
+                      "defaultValue": "",
+                      "description": {
+                        "zh_CN": "当前行"
+                      }
+                    },
+                    {
+                      "name": "column",
+                      "type": "Object",
+                      "defaultValue": "",
+                      "description": {
+                        "zh_CN": "当前列"
+                      }
+                    },
+                    {
+                      "name": "cell",
+                      "type": "Object",
+                      "defaultValue": "",
+                      "description": {
+                        "zh_CN": "当前单元格"
+                      }
+                    },
+                    {
+                      "name": "event",
+                      "type": "Object",
+                      "defaultValue": "",
+                      "description": {
+                        "zh_CN": "原生事件 event"
+                      }
+                    }
+                  ],
+                  "returns": {}
+                }
+              }
+            },
+            "slots": {
+              "empty": {
+                "label": {
+                  "zh_CN": "empty"
+                },
+                "description": {
+                  "zh_CN": "当数据为空时自定义的内容"
+                }
+              },
+              "append": {
+                "label": {
+                  "zh_CN": "append"
+                },
+                "description": {
+                  "zh_CN": "插入至表格最后一行之后的内容， 如果需要对表格的内容进行无限滚动操作，可能需要用到这个 slot。 若表格有合计行，该 slot 会位于合计行之上。"
+                }
+              }
+            }
+          }
+        },
+        {
+          "id": 1,
+          "version": "2.4.2",
+          "name": {
             "zh_CN": "输入框"
           },
           "component": "ElInput",
@@ -13009,6 +14565,159 @@
       ],
       "blocks": [],
       "snippets": [
+        {
+          "group": "antd",
+          "children": [
+            {
+              "name": {
+                "zh_CN": "步骤条"
+              },
+              "icon": "timeline",
+              "screenshot": "",
+              "snippetName": "AntdSteps",
+              "schema": {
+                "props": {
+                  "current": 0,
+                  "items": [
+                    {
+                      "title": "基础配置",
+                      "description": ""
+                    },
+                    {
+                      "title": "网络配置",
+                      "description": ""
+                    },
+                    {
+                      "title": "高级配置",
+                      "description": ""
+                    },
+                    {
+                      "title": "确认配置",
+                      "description": ""
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "表单"
+              },
+              "icon": "form",
+              "screenshot": "",
+              "snippetName": "AntdForm",
+              "schema": {
+                "props": {
+                  "labelCol": {
+                    "span": 8
+                  },
+                  "labelAlign": "left",
+                  "wrapperCol": {
+                    "span": 16
+                  },
+                  "initialValues": {
+                    "remember": true
+                  },
+                  "autoComplete": "off"
+                },
+                "children": [
+                  {
+                    "componentName": "AntdFormItem",
+                    "props": {
+                      "label": "账号",
+                      "name": "account"
+                    },
+                    "children": [
+                      {
+                        "componentName": "AntdInput",
+                        "props": {}
+                      }
+                    ]
+                  },
+                  {
+                    "componentName": "AntdFormItem",
+                    "props": {
+                      "label": "密码",
+                      "name": "password"
+                    },
+                    "children": [
+                      {
+                        "componentName": "AntdInput",
+                        "props": {}
+                      }
+                    ]
+                  },
+                  {
+                    "componentName": "AntdFormItem",
+                    "props": {},
+                    "children": [
+                      {
+                        "componentName": "AntdButton",
+                        "props": {
+                          "type": "primary"
+                        },
+                        "children": "提交"
+                      },
+                      {
+                        "componentName": "AntdButton",
+                        "props": {
+                          "type": "primary"
+                        },
+                        "children": "重置"
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "表格"
+              },
+              "icon": "grid",
+              "screenshot": "",
+              "snippetName": "AntdTable",
+              "schema": {
+                "props": {
+                  "dataSource": [
+                    {
+                      "key": "1",
+                      "name": "规格1",
+                      "memory": "8U32G",
+                      "cpu": "通用计算型"
+                    },
+                    {
+                      "key": "1",
+                      "name": "规格2",
+                      "memory": "16U32G",
+                      "cpu": "GPU加速型"
+                    }
+                  ],
+                  "columns": [
+                    {
+                      "title": "规格名称",
+                      "dataIndex": "name",
+                      "key": "name"
+                    },
+                    {
+                      "title": "vCPUs|内存(GiB)",
+                      "dataIndex": "memory",
+                      "key": "memory"
+                    },
+                    {
+                      "title": "CPU",
+                      "dataIndex": "cpu",
+                      "key": "cpu"
+                    }
+                  ],
+                  "pagination": {
+                    "position": ["none", "none"]
+                  }
+                }
+              }
+            }
+          ]
+        },
         {
           "group": "element-plus",
           "children": [

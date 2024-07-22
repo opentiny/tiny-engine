@@ -24,7 +24,7 @@
 
           <tiny-collapse-item
             class="base-setting"
-            v-if="pageSettingState.currentPageData.group !== 'public'"
+            v-if="pageSettingState.currentPageData.group !== 'public' && moduleDisplayStatus[dslMode].page"
             title="输入输出"
             :name="PAGE_SETTING_SESSION.inputOutput"
           >
@@ -55,7 +55,15 @@
 import { reactive, ref } from 'vue'
 import { Button, Collapse, CollapseItem, Input } from '@opentiny/vue'
 import { PluginSetting, ButtonGroup, SvgButton, LifeCycles } from '@opentiny/tiny-engine-common'
-import { useLayout, usePage, useCanvas, useModal, useApp, useNotify } from '@opentiny/tiny-engine-controller'
+import {
+  useLayout,
+  usePage,
+  useCanvas,
+  useModal,
+  useApp,
+  useNotify,
+  getGlobalConfig
+} from '@opentiny/tiny-engine-controller'
 import { extend, isEqual } from '@opentiny/vue-renderless/common/object'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
@@ -109,6 +117,8 @@ export default {
   },
   emits: ['openNewPage'],
   setup(props, { emit }) {
+    const dslMode = getGlobalConfig()?.dslMode
+    const moduleDisplayStatus = getGlobalConfig()?.moduleDisplayStatus
     const { requestCreatePage, requestDeletePage } = http
     const { appInfoState } = useApp()
     const {
@@ -369,7 +379,9 @@ export default {
       closePageSettingPanel,
       updatePageLifeCycles,
       restorePage,
-      PAGE_SETTING_SESSION
+      PAGE_SETTING_SESSION,
+      dslMode,
+      moduleDisplayStatus
     }
   }
 }

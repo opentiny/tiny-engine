@@ -128,17 +128,21 @@ export default {
         let isScrolling = false
 
         // 以下是内部iframe监听的事件
-        win.addEventListener('mousedown', (event) => {
-          // html元素使用scroll和mouseup事件处理
-          if (event.target === doc.documentElement) {
-            isScrolling = false
-            return
-          }
+        win.addEventListener(
+          'mousedown',
+          (event) => {
+            // html元素使用scroll和mouseup事件处理
+            if (event.target === doc.documentElement) {
+              isScrolling = false
+              return
+            }
 
-          insertPosition.value = false
-          setCurrentNode(event)
-          target.value = event.target
-        })
+            insertPosition.value = false
+            setCurrentNode(event)
+            target.value = event.target
+          },
+          true
+        )
 
         win.addEventListener('scroll', () => {
           isScrolling = true
