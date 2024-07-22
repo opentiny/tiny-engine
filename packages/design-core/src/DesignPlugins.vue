@@ -1,5 +1,7 @@
-<template>
+ <!-- 左侧插件栏,修改右侧菜单时参照这个文件来写 -->
+ <template>
   <div id="tiny-engine-nav-panel" :style="{ 'pointer-events': pluginState.pluginEvent }">
+    <!-- 图标菜单上侧区域（主要icon） -->
     <ul class="nav-panel-lists top">
       <li
         v-for="(item, index) in state.topNavLists"
@@ -12,6 +14,7 @@
         }"
         :title="item.title"
         @click="clickMenu({ item, index })"
+        @contextmenu.prevent="showContextMenu($event, item, index)"
       >
         <div>
           <span class="item-icon">
@@ -25,8 +28,23 @@
         </div>
       </li>
     </ul>
+    <!-- 下拉菜单 -->
+    <ul
+      v-if="contextMenu.visible"
+      class="context-menu"
+      :style="{ top: contextMenu.y + 'px', left: contextMenu.x + 'px' }"
+    >
+      <li class="context-menu-header">{{ contextMenu.item.title }}</li>
+      <li @click="handleContextAction('action1')">隐藏插件</li>
+      <li @click="handleContextAction('action2')">切换到右侧</li>
+      <li @click="handleContextAction('action3')">隐藏左侧活动栏</li>
+    </ul>
+
+    <!-- 图标菜单下侧区域（附加icon） -->
     <ul class="nav-panel-lists bottom">
+      <!-- 与上侧间隔 -->
       <li style="flex: 1" class="list-item"></li>
+      <!-- 下侧具体icon插件菜单遍历渲染 -->
       <li
         v-for="(item, index) in state.bottomNavLists"
         :key="index"
@@ -49,6 +67,7 @@
           </span>
         </div>
       </li>
+      <!-- 其他依赖插件菜单(比如AI机器人插件) -->
       <li
         v-if="state.independence"
         :key="state.bottomNavLists.length + 1"
@@ -65,6 +84,7 @@
     </ul>
   </div>
 
+  <!-- 插件面板 -->
   <div
     v-show="renderPanel && components[renderPanel]"
     id="tiny-engine-left-panel"
@@ -93,7 +113,7 @@
 </template>
 
 <script>
-import { reactive, ref, watch } from 'vue'
+import { reactive, ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
 import { useLayout, usePage } from '@opentiny/tiny-engine-controller'
 import Addons from '@opentiny/tiny-engine-app-addons'
@@ -112,7 +132,7 @@ export default {
   },
   emits: ['click', 'node-click'],
   setup(props, { emit }) {
-    const plugins = Addons.plugins
+    const plugins = Addons.plugins //导入了addons.js中的addons.plugins文件
     const components = {}
     const iconComponents = {}
     const pluginRef = ref(null)
@@ -135,6 +155,46 @@ export default {
           [id]: api
         })
       }
+    })
+
+    const contextMenu = reactive({
+      visible: false,
+      x: 0,
+      y: 0,
+      item: null,
+      index: null
+    })
+
+    const showContextMenu = (event, item, index) => {
+      contextMenu.visible = true
+      contextMenu.x = event.clientX
+      contextMenu.y = event.clientY
+      contextMenu.item = item
+      contextMenu.index = index
+    }
+
+    const hideContextMenu = () => {
+      contextMenu.visible = false
+    }
+
+    const handleContextAction = (action) => {
+      //console.log(`Action ${action} on item`, contextMenu.item)
+      hideContextMenu()
+    }
+
+    // Hide context menu on clicking outside
+    const handleClickOutside = (event) => {
+      if (!event.target.closest('.context-menu')) {
+        hideContextMenu()
+      }
+    }
+
+    onMounted(() => {
+      document.addEventListener('click', handleClickOutside)
+    })
+
+    onBeforeUnmount(() => {
+      document.removeEventListener('click', handleClickOutside)
     })
 
     const completed = ref(false)
@@ -194,6 +254,7 @@ export default {
       useLayout().closePlugin(true)
     }
 
+    //切换面板状态
     const fixPanel = (pluginName) => {
       pluginsState.fixedPanels = pluginsState.fixedPanels?.includes(pluginName)
         ? pluginsState.fixedPanels?.filter((item) => item !== pluginName)
@@ -214,7 +275,12 @@ export default {
       iconComponents,
       completed,
       doCompleted,
-      pluginState
+      pluginState,
+      contextMenu,
+      showContextMenu,
+      hideContextMenu,
+      handleContextAction,
+      clickMenu
     }
   }
 }
@@ -222,7 +288,7 @@ export default {
 
 <style lang="less" scoped>
 #tiny-engine-left-panel {
-  width: var(--base-left-panel-width);
+  // width: var(--base-left-panel-width);//让该组件宽度自适应子组件宽度
   height: calc(100vh - var(--base-top-panel-height));
   border-right: 1px solid var(--ti-lowcode-plugin-panel-border-right-color);
   background: var(--ti-lowcode-common-component-bg);
@@ -244,8 +310,8 @@ export default {
   }
 
   .left-panel-wrap {
-    width: 100%;
     height: 100%;
+    max-width: 100vw; /* 确保父组件宽度不超出视口宽度 */
     position: relative;
 
     :deep(.tiny-tabs__nav.is-show-active-bar) .tiny-tabs__item {
@@ -355,5 +421,33 @@ export default {
 
 :deep(.svg-icon.icon-plugin-icon-plugin-help) {
   font-size: 22px;
+}
+
+.context-menu {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 130px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.context-menu-header {
+  padding: 8px 12px;
+  font-weight: bold;
+  cursor: default;
+  background: #f5f5f5;
+  border-bottom: 1px solid #ccc;
+}
+
+.context-menu li {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.context-menu li:hover {
+  background: #f0f0f0;
 }
 </style>
