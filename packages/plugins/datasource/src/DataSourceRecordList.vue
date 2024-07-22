@@ -650,7 +650,7 @@ export default {
     color: var(--ti-lowcode-datasource-common-empty-color);
   }
   .add-column {
-    color: var(--ti-lowcode-datasource-json-border-colorr);
+    color: var(--ti-lowcode-datasource-json-border-color);
     cursor: pointer;
   }
 }

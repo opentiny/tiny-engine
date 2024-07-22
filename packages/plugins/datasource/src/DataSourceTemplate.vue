@@ -79,7 +79,7 @@ export default {
       }
     }
     .blue::before {
-      border: 1px solid var(--ti-lowcode-datasource-json-border-colorr);
+      border: 1px solid var(--ti-lowcode-datasource-json-border-color);
     }
 
     .green::before {

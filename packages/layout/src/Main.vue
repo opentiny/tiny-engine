@@ -87,7 +87,7 @@ export default {
 #tiny-engine {
   display: flex;
   flex-flow: column;
-  min-width: var(--base-min-width);
+  min-width: var(--ti-common-min-width);
   height: 100vh;
   overflow: hidden;
   .tiny-engine-main {
