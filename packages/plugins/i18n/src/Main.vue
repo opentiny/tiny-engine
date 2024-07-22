@@ -1,5 +1,11 @@
 <template>
-  <plugin-panel title="国际化资源" :isCloseLeft="false" class="plugin-panel-i18n">
+  <plugin-panel
+    title="国际化资源"
+    :isCloseLeft="false"
+    :fixed-panels="fixedPanels"
+    :fixed-name="PLUGIN_NAME.I18n"
+    class="plugin-panel-i18n"
+  >
     <template #header>
       <link-button :href="docsUrl"></link-button>
     </template>
@@ -119,7 +125,7 @@
 </template>
 
 <script lang="jsx">
-import { computed, ref, watchEffect, reactive, onMounted, nextTick, resolveComponent } from 'vue'
+import { computed, ref, watchEffect, reactive, onMounted, nextTick, resolveComponent, provide } from 'vue'
 import useClipboard from 'vue-clipboard3'
 import { Grid, GridColumn, Input, Popover, Button, FileUpload, Loading, Tooltip, Select } from '@opentiny/vue'
 import { iconLoadingShadow } from '@opentiny/vue-icon'
@@ -128,6 +134,7 @@ import { useTranslate, useApp, useModal, getGlobalConfig, useHelp } from '@opent
 import { utils } from '@opentiny/tiny-engine-utils'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { BASE_URL } from '@opentiny/tiny-engine-controller/js/environments'
+import { useLayout } from '@opentiny/tiny-engine-controller'
 
 export default {
   components: {
@@ -143,7 +150,13 @@ export default {
     TinyFileUpload: FileUpload,
     SearchEmpty
   },
-  setup() {
+  props: {
+    fixedPanels: {
+      type: Array
+    }
+  },
+  emits: ['fix-panel'],
+  setup(props, { emit }) {
     // 组件库iconLoadingShadow图标不能切换颜色，因此不同主题用不同icon
     const SvgIcon = resolveComponent('SvgIcon')
     const lightSpinnerIcon = iconLoadingShadow()
@@ -151,6 +164,11 @@ export default {
     const isLightTheme = getGlobalConfig().theme === 'light'
     const { getLangs, i18nResource, currentLanguage, getI18nData } = useTranslate()
     const { toClipboard } = useClipboard()
+    const panelState = reactive({
+      emitEvent: emit
+    })
+    provide('panelState', panelState)
+
     const fullLangList = computed(() => {
       const langs = getLangs()
 
@@ -394,6 +412,7 @@ export default {
         })
     }
 
+    const { PLUGIN_NAME } = useLayout()
     return {
       sortTypeChanges,
       currentSearchType,
@@ -422,7 +441,8 @@ export default {
       isEditMode,
       editingRow,
       batchDelete,
-      docsUrl
+      docsUrl,
+      PLUGIN_NAME
     }
   }
 }
@@ -553,7 +573,6 @@ export default {
   height: calc(100% - 48px);
   flex: 1;
   padding: 0 16px;
-  overflow-y: scroll;
 
   .operation-column {
     display: flex;
