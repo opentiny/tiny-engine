@@ -107,6 +107,7 @@
     "assert": "^2.0.0",
     "buffer": "^6.0.3",
     "cross-env": "^7.0.3",
+    "esbuild": "^0.21.5",
     "esbuild-plugin-copy": "^2.1.1",
     "eslint": "^8.38.0",
     "eslint-plugin-vue": "^8.0.0",
