@@ -5,13 +5,17 @@
       <design-toolbars></design-toolbars>
       <div class="tiny-engine-main">
         <div class="tiny-engine-left-wrap">
-          <div class="tiny-engine-content-wrap">
-            <design-plugins :render-panel="plugins.render" @click="toggleNav"></design-plugins>
-            <design-canvas></design-canvas>
-          </div>
+          <design-plugins :render-panel="plugins.render" @click="toggleNav"></design-plugins>
+        </div>
+        <div class="tiny-engine-content-wrap">
+          <design-canvas></design-canvas>
         </div>
         <div class="tiny-engine-right-wrap">
-          <design-settings :render-panel="settings.render" v-show="layoutState.settings.showDesignSettings" ref="right"></design-settings>
+          <design-settings
+            :render-panel="settings.render"
+            v-show="layoutState.settings.showDesignSettings"
+            ref="right"
+          ></design-settings>
         </div>
       </div>
     </div>
@@ -164,18 +168,20 @@ export default {
     overflow-y: hidden;
   }
   .tiny-engine-left-wrap {
-    flex: 1 1 0;
     display: flex;
-    flex-flow: column nowrap;
+    flex-flow: row nowrap;
     z-index: 4;
-    .tiny-engine-content-wrap {
-      display: flex;
-      max-width: 100vw;
-      flex: 1;
-    }
+  }
+
+  .tiny-engine-content-wrap {
+    display: flex;
+    max-width: 100vw;
+    flex: 1;
+    position: relative;
   }
   .tiny-engine-right-wrap {
-    position: relative;
+    display: flex;
+    flex-flow: row nowrap;
     z-index: 4;
   }
   :deep(.monaco-editor .suggest-widget) {
