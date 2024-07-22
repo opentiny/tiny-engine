@@ -47,7 +47,7 @@ const layoutState = reactive({
     api: {} // 插件需要注册交互API到这里
   },
   settings: {
-    render: 'props',
+    render: null,
     api: null,
     activating: false, // 右侧面版激活提示状态
     showDesignSettings: true
@@ -76,6 +76,13 @@ const activeSetting = (name) => {
       settings.activating = false
     }, 1000)
   })
+}
+// 关闭右侧插件面板
+const closeSetting = (forceClose) => {
+  const { settings } = layoutState
+  if (forceClose) {
+    settings.render = null
+  }
 }
 
 // 获取当前插件注册的Api
@@ -122,6 +129,7 @@ export default () => {
     activeSetting,
     activePlugin,
     closePlugin,
+    closeSetting,
     layoutState,
     getScale,
     setDimension,

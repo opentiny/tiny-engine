@@ -1,4 +1,5 @@
 <template>
+  <!-- 在App.vue中进行整体的组装 -->
   <tiny-config-provider :design="designSmbConfig">
     <div id="tiny-engine">
       <design-toolbars></design-toolbars>
@@ -10,7 +11,7 @@
           </div>
         </div>
         <div class="tiny-engine-right-wrap">
-          <design-settings v-show="layoutState.settings.showDesignSettings" ref="right"></design-settings>
+          <design-settings :render-panel="settings.render" v-show="layoutState.settings.showDesignSettings" ref="right"></design-settings>
         </div>
       </div>
     </div>
@@ -72,7 +73,7 @@ export default {
     })
 
     const { layoutState } = useLayout()
-    const { plugins } = layoutState
+    const { plugins, settings } = layoutState
     const right = ref(null)
 
     // 此处接收画布内部的错误和警告提示
@@ -140,6 +141,7 @@ export default {
       state,
       right,
       plugins,
+      settings,
       toggleNav,
       addons,
       layoutState,
