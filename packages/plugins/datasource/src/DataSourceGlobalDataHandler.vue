@@ -1,6 +1,11 @@
 <template>
   <div v-if="isOpen">
-    <plugin-setting title="全局设置" @cancel="close" @save="saveGlobalDataHandle">
+    <plugin-setting
+      title="全局设置"
+      @cancel="close"
+      @save="saveGlobalDataHandle"
+      :style="{ marginLeft: leftMargin + 'px' }"
+    >
       <template #content>
         <tiny-collapse v-model="activeNames">
           <tiny-collapse-item title="请求参数处理函数（willFetch）" name="willFetch">
@@ -20,7 +25,8 @@
 
 <script>
 import DataHandlerEditor from './RemoteDataAdapterForm.vue'
-import { watch, ref, nextTick, reactive } from 'vue'
+import { watch, ref, nextTick, reactive, computed } from 'vue'
+import { useLayout } from '@opentiny/tiny-engine-controller'
 import { requestGlobalDataHandler } from './js/http'
 import { useApp, useModal, useResource } from '@opentiny/tiny-engine-controller'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
@@ -29,7 +35,8 @@ import { constants } from '@opentiny/tiny-engine-utils'
 
 const { DEFAULT_INTERCEPTOR } = constants
 const isOpen = ref(false)
-
+const { pluginWidth, PLUGIN_NAME } = useLayout()
+const leftMargin = computed(() => pluginWidth[PLUGIN_NAME['Datasource']])
 export const open = () => {
   isOpen.value = true
 }
@@ -89,7 +96,8 @@ export default {
       isOpen,
       close,
       saveGlobalDataHandle,
-      state
+      state,
+      leftMargin
     }
   }
 }

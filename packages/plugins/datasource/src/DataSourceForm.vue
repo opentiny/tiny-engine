@@ -1,5 +1,5 @@
 <template>
-  <plugin-setting v-if="isOpen" title="设置数据源">
+  <plugin-setting v-if="isOpen" title="设置数据源" :style="{ marginLeft: leftMargin + 'px' }">
     <template #header>
       <button-group>
         <tiny-button class="field-save" type="primary" @click="save">保存</tiny-button>
@@ -29,7 +29,8 @@
 </template>
 
 <script lang="jsx">
-import { reactive, ref, watch } from 'vue'
+import { reactive, ref, watch, computed } from 'vue'
+import { useLayout } from '@opentiny/tiny-engine-controller'
 import { Form, Button } from '@opentiny/vue'
 import { ButtonGroup, PluginSetting, SvgButton } from '@opentiny/tiny-engine-common'
 import DataSourceType from './DataSourceType.vue'
@@ -47,6 +48,8 @@ import { useModal, useApp, useDataSource } from '@opentiny/tiny-engine-controlle
 import { extend } from '@opentiny/vue-renderless/common/object'
 
 let isOpen = ref(false)
+const { pluginWidth, PLUGIN_NAME } = useLayout()
+const leftMargin = computed(() => pluginWidth[PLUGIN_NAME['Datasource']])
 
 export const open = () => {
   isOpen.value = true
@@ -253,7 +256,8 @@ export default {
       closeAllPanel,
       openRemotePanel,
       selectDataSourceTemplate,
-      deleteDataSource
+      deleteDataSource,
+      leftMargin
     }
   }
 }
