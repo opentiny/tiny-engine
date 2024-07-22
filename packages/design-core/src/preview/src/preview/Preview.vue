@@ -86,11 +86,17 @@ export default {
         .map((name) => fetchBlockSchema(name))
 
       const schemaList = await Promise.allSettled(promiseList)
+      const extraList = []
 
       schemaList.forEach((item) => {
         if (item.status === 'fulfilled' && item.value?.[0]?.content) {
           res.push(item.value[0].content)
-          res.push(...getBlocksSchema(item.value[0].content, blockSet))
+          extraList.push(getBlocksSchema(item.value[0].content, blockSet))
+        }
+      })
+      ;(await Promise.allSettled(extraList)).forEach((item) => {
+        if (item.status === 'fulfilled' && item.value) {
+          res.push(...item.value)
         }
       })
 
@@ -136,11 +142,10 @@ export default {
         },
         ...(blocks || []).map((blockSchema) => {
           return {
-            panelName: blockSchema.fileName,
+            panelName: `${blockSchema.fileName}.vue`,
             panelValue:
               genSFCWithDefaultPlugin(blockSchema, appData?.componentsMap || [], { blockRelativePath: './' }) || '',
-            panelType: 'vue',
-            index: true
+            panelType: 'vue'
           }
         })
       ]
