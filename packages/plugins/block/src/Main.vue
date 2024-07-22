@@ -1,5 +1,12 @@
 <template>
-  <plugin-panel class="block-manage" title="区块管理" :isCloseLeft="false" @close="closePanel">
+  <plugin-panel
+    class="block-manage"
+    title="区块管理"
+    :fixed-panels="fixedPanels"
+    :fixed-name="PLUGIN_NAME.Block"
+    :isCloseLeft="false"
+    @close="closePanel"
+  >
     <template #header>
       <link-button :href="docsUrl"></link-button>
       <svg-button name="add-page" placement="bottom" tips="新建区块" @click="openBlockAdd"></svg-button>
@@ -104,7 +111,7 @@
 </template>
 
 <script lang="jsx">
-import { ref, reactive, computed, watch } from 'vue'
+import { ref, reactive, computed, watch, provide  } from 'vue'
 import {
   Search as TinySearch,
   Select as TinySelect,
@@ -188,8 +195,13 @@ export default {
     TinyPopover,
     TinyButton
   },
-
-  setup() {
+  props: {
+    fixedPanels: {
+      type: Array
+    }
+  },
+  emits: ['fix-panel'],
+  setup(props, { emit }) {
     const { getBlockList, sort } = useBlock()
     const { isSaved } = useCanvas()
     const { confirm } = useModal()
@@ -198,6 +210,12 @@ export default {
       path: '',
       nameCn: ''
     })
+
+    const panelState = reactive({
+      emitEvent: emit
+    })
+
+    provide('panelState', panelState)
 
     const state = reactive({
       searchKey: '',
@@ -386,7 +404,8 @@ export default {
     const handleSelectVisibleChange = (visible) => {
       handleChangeDeletePopoverVisible(visible)
     }
-
+    
+    const { PLUGIN_NAME } = useLayout()
     return {
       state,
       groupSelect,
@@ -409,7 +428,8 @@ export default {
       handleChangeDeletePopoverVisible,
       handleSelectVisibleChange,
       externalBlock,
-      docsUrl
+      docsUrl,
+      PLUGIN_NAME
     }
   }
 }
