@@ -1,5 +1,5 @@
 <template>
-  <plugin-panel title="数据源">
+  <plugin-panel title="数据源" :fixed-panels="fixedPanels" :fixed-name="PLUGIN_NAME.Datasource">
     <template #header>
       <link-button :href="docsUrl"></link-button>
       <svg-button
@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { reactive, watch } from 'vue'
+import { reactive, watch, provide } from 'vue'
 import DataSourceList, { refresh as refreshDataSourceList, clearActive } from './DataSourceList.vue'
 import DataSourceRemotePanel, {
   close as closeRemotePanel,
@@ -63,7 +63,7 @@ import DataSourceGlobalDataHandler, {
   open as openGlobalDataHander,
   close as closeGlobalDataHandler
 } from './DataSourceGlobalDataHandler.vue'
-
+import { useLayout } from '@opentiny/tiny-engine-controller'
 export default {
   components: {
     DataSourceList,
@@ -75,7 +75,13 @@ export default {
     SvgButton,
     LinkButton
   },
-  setup() {
+  props: {
+    fixedPanels: {
+      type: Array
+    }
+  },
+  emits: ['fix-panel'],
+  setup(props, { emit }) {
     const docsUrl = useHelp().getDocsUrl('datasource')
     const state = reactive({
       editable: true,
@@ -85,6 +91,12 @@ export default {
     })
 
     const { dataSourceState, saveDataSource } = useDataSource()
+
+    const panelState = reactive({
+      emitEvent: emit
+    })
+
+    provide('panelState', panelState)
 
     watch(
       () => state.remoteFields,
@@ -133,6 +145,7 @@ export default {
       closeRemotePanel()
     }
 
+    const { PLUGIN_NAME } = useLayout()
     return {
       state,
       open,
@@ -142,7 +155,8 @@ export default {
       getRomoteReponseData,
       refreshDataSource,
       openGlobalDataHanderPanel,
-      docsUrl
+      docsUrl,
+      PLUGIN_NAME
     }
   }
 }
