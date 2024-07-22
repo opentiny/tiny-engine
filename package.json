@@ -24,6 +24,7 @@
     "buildMaterials": "node ./scripts/buildMaterials.mjs"
   },
   "devDependencies": {
+    "esbuild": "^0.21.5",
     "@babel/eslint-parser": "^7.21.3",
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
