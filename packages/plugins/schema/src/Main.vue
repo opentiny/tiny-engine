@@ -1,63 +1,78 @@
 <template>
-  <div id="source-code">
-    <div class="source-code-header">
-      <div class="title">页面Schema</div>
-      <div class="header-title">
-        <!-- 暂时放开schema录入功能，等画布功能完善后，再打开下面一行的注释 -->
-        <!-- <tiny-popover v-if="isEdit" placement="bottom" trigger="hover" append-to-body content="保存"> -->
-        <tiny-popover placement="bottom" trigger="hover" append-to-body content="保存">
-          <template #reference>
-            <span class="icon-wrap" @click="saveSchema">
-              <i v-show="!showRed" class="red"></i>
-              <icon-save></icon-save>
-            </span>
-          </template>
-        </tiny-popover>
-        <tiny-popover v-show="false" placement="bottom" trigger="hover" append-to-body content="导入 Schema">
-          <template #reference>
-            <span class="icon-wrap">
-              <icon-download-link></icon-download-link>
-            </span>
-          </template>
-        </tiny-popover>
-        <close-icon @close="close"></close-icon>
+  <plugin-panel
+    title="页面Schema"
+    :fixed-panels="fixedPanels"
+    :fixed-name="PLUGIN_NAME.Schema"
+    @close="$emit('close')"
+    id="source-code"
+  >
+    <template #header>
+      <tiny-popover placement="bottom" trigger="hover" append-to-body content="保存">
+        <template #reference>
+          <span class="icon-wrap" style="margin-right: 5px; margin-bottom: 3px" @click="saveSchema">
+            <i v-show="!showRed" class="red"></i>
+            <icon-save></icon-save>
+          </span>
+        </template>
+      </tiny-popover>
+      <tiny-popover v-show="false" placement="bottom" trigger="hover" append-to-body content="导入 Schema">
+        <template #reference>
+          <span class="icon-wrap">
+            <icon-download-link></icon-download-link>
+          </span>
+        </template>
+      </tiny-popover>
+    </template>
+    <template #content>
+      <div class="source-code-content">
+        <monaco-editor
+          ref="container"
+          class="code-edit-content"
+          :value="state.pageData"
+          :options="options"
+          @change="editorChange"
+        ></monaco-editor>
       </div>
-    </div>
-    <div class="source-code-content">
-      <monaco-editor
-        ref="container"
-        class="code-edit-content"
-        :value="state.pageData"
-        :options="options"
-        @change="editorChange"
-      ></monaco-editor>
-    </div>
-    <div class="source-code-footer">
-      <button>导入 Schema</button>
-    </div>
-  </div>
+      <div class="source-code-footer">
+        <button>导入 Schema</button>
+      </div>
+    </template>
+  </plugin-panel>
 </template>
 
 <script lang="jsx">
-import { nextTick, reactive, getCurrentInstance, onActivated, ref } from 'vue'
+import { nextTick, reactive, getCurrentInstance, onActivated, ref, provide } from 'vue'
 import { Popover } from '@opentiny/vue'
-import { VueMonaco, CloseIcon } from '@opentiny/tiny-engine-common'
+import { VueMonaco } from '@opentiny/tiny-engine-common'
+import { PluginPanel } from '@opentiny/tiny-engine-common'
 import { useCanvas, useModal, useHistory, useNotify } from '@opentiny/tiny-engine-controller'
 import { obj2String, string2Obj, theme } from '@opentiny/tiny-engine-controller/adapter'
 import { iconSave, iconDownloadLink } from '@opentiny/vue-icon'
+import { useLayout } from '@opentiny/tiny-engine-controller'
 
 export default {
   components: {
     MonacoEditor: VueMonaco,
     TinyPopover: Popover,
-    CloseIcon,
+    PluginPanel,
     IconSave: iconSave(),
     IconDownloadLink: iconDownloadLink()
   },
+  props: {
+    fixedPanels: {
+      type: Array
+    }
+  },
+  emits: ['fix-panel'],
   setup(props, { emit }) {
     const app = getCurrentInstance()
     const { pageState } = useCanvas()
     const { confirm } = useModal()
+    const panelState = reactive({
+      emitEvent: emit
+    })
+    provide('panelState', panelState)
+
     const state = reactive({
       pageData: obj2String(pageState.pageSchema)
     })
@@ -121,6 +136,7 @@ export default {
       })
     })
 
+    const { PLUGIN_NAME } = useLayout()
     return {
       state,
       isEdit,
@@ -128,6 +144,7 @@ export default {
       editorChange,
       close,
       showRed,
+      PLUGIN_NAME,
       options: {
         roundedSelection: true,
         automaticLayout: true,
@@ -150,11 +167,8 @@ export default {
 <style lang="less" scoped>
 #source-code {
   width: 45vw;
-  height: calc(100% - var(--base-top-panel-height));
+  height: 100%;
   padding: 12px;
-  position: fixed;
-  top: var(--base-top-panel-height);
-  left: 41px;
   background: var(--ti-lowcode-common-component-bg);
   box-shadow: 2px 2px 6px rgb(0 0 0 / 60%);
   z-index: 1000;
@@ -205,7 +219,7 @@ export default {
     }
   }
   .source-code-content {
-    height: calc(100% - 42px);
+    height: 100%;
     border: 1px solid var(--ti-lowcode-toolbar-border-color);
     box-shadow: 0px 0px 4px rgb(0 0 0 / 20%);
   }
