@@ -39,4 +39,4 @@ export { default as defaultRegistry } from './registry'
 
 export * from '@opentiny/tiny-engine-meta-register'
 
-export { EditorInfoService, AppService, GenerateCodeService } from '@opentiny/tiny-engine-common'
+export { GenerateCodeService } from '@opentiny/tiny-engine-common'

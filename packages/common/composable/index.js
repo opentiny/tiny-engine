@@ -4,6 +4,7 @@ import useApp from './useApp'
 import useEditorInfo from './useEditorInfo'
 
 export { GenerateCodeService } from './generateCode'
+export { initData } from './initData'
 
 export const AppService = {
   id: 'engine.service.app',
