@@ -40,7 +40,6 @@ import {
   Styles,
   Layout,
   Canvas,
-  EditorInfoService,
   AppService,
   GenerateCodeService
 } from '@opentiny/tiny-engine'
@@ -50,7 +49,6 @@ export default {
   root: {
     id: 'engine.root',
     metas: [
-      EditorInfoService,
       AppService,
       GenerateCodeService
     ]

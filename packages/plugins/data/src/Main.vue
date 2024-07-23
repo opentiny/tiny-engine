@@ -72,12 +72,12 @@ import { Button, Search, Tabs, TabItem } from '@opentiny/vue'
 import {
   useCanvas,
   useHistory,
-  useEditorInfo,
   useResource,
   useNotify,
   useHelp,
   getMetaApi,
-  META_APP
+  META_APP,
+  useStore
 } from '@opentiny/tiny-engine-meta-register'
 import { getCommentByKey } from '@opentiny/tiny-engine-common/js/comment'
 import { iconSearch } from '@opentiny/vue-icon'
@@ -240,7 +240,7 @@ export default {
         Object.assign(state.dataSource, store)
         const storeList = Object.values(state.dataSource)
 
-        const { id } = useEditorInfo().useInfo()
+        const { id } = useStore('globalService').store.getBaseInfo()
         updateGlobalState(id, { global_state: storeList }).then((res) => {
           isPanelShow.value = false
           setGlobalState(res.global_state || [])
@@ -305,7 +305,7 @@ export default {
       const { setGlobalState } = useCanvas().canvasApi.value
 
       if (index !== -1) {
-        const { id } = useEditorInfo().useInfo()
+        const { id } = useStore('globalService').store.getBaseInfo()
 
         storeListt.splice(index, 1)
         updateGlobalState(id, { global_state: storeListt }).then((res) => {

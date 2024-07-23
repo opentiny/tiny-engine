@@ -22,10 +22,10 @@ import {
   useCanvas,
   useNotify,
   useLayout,
-  useEditorInfo,
   getMetaApi,
   META_APP,
-  getMergeMeta
+  getMergeMeta,
+  useStore
 } from '@opentiny/tiny-engine-meta-register'
 import { Button } from '@opentiny/vue'
 import { fs } from '@opentiny/tiny-engine-utils'
@@ -106,7 +106,7 @@ export default {
 
     const getPreGenerateInfo = async () => {
       const params = getParams()
-      const { id } = useEditorInfo().useInfo()
+      const { id } = useStore('globalService').store.getBaseInfo()
       const promises = [
         useHttp().get(`/app-center/v1/api/apps/schema/${id}`),
         fetchMetaData(params),

@@ -18,14 +18,7 @@ import { injectGlobalComponents, setGlobalMonacoEditorTheme, Modal, Notify } fro
 import { initHttp } from '@opentiny/tiny-engine-http'
 import TinyThemeTool from '@opentiny/vue-theme/theme-tool'
 import { tinyEngineThemeLight } from '@opentiny/tiny-engine-theme-base'
-import {
-  defineEntry,
-  mergeRegistry,
-  getMergeMeta,
-  initHook,
-  HOOK_NAME,
-  useEditorInfo
-} from '@opentiny/tiny-engine-meta-register'
+import { defineEntry, mergeRegistry, getMergeMeta, initHook, HOOK_NAME } from '@opentiny/tiny-engine-meta-register'
 import App from './App.vue'
 import defaultRegistry from '../registry.js'
 import { registerConfigurators } from './registerConfigurators'
@@ -71,18 +64,22 @@ const defaultLifeCycles = {
   }
 }
 
-export const init = ({ selector = '#app', registry = defaultRegistry, lifeCycles = {}, configurators = {} } = {}) => {
+export const init = async ({
+  selector = '#app',
+  registry = defaultRegistry,
+  lifeCycles = {},
+  configurators = {}
+} = {}) => {
   const { beforeAppCreate, appCreated, appMounted } = lifeCycles
 
   registerConfigurators(configurators)
 
-  defaultLifeCycles.beforeAppCreate({ registry })
-  beforeAppCreate?.({ registry })
+  await defaultLifeCycles.beforeAppCreate({ registry })
+  await beforeAppCreate?.({ registry })
   const app = createApp(App)
   defaultLifeCycles.appCreated({ app })
-  appCreated?.({ app })
+  await appCreated?.({ app })
 
   app.mount(selector)
-  appMounted?.({ app })
-  useEditorInfo().getUserInfo()
+  await appMounted?.({ app })
 }
