@@ -1,6 +1,5 @@
 export const HOOK_NAME = {
   useLayout: 'layout',
-  useApp: 'app',
   useCanvas: 'canvas',
   useResource: 'resource',
   useHistory: 'history',
@@ -23,7 +22,6 @@ export const HOOK_NAME = {
 
 const hooksState = {
   [HOOK_NAME.useLayout]: {},
-  [HOOK_NAME.useApp]: {},
   [HOOK_NAME.useCanvas]: {},
   [HOOK_NAME.useResource]: {},
   [HOOK_NAME.useHistory]: {},
@@ -53,7 +51,6 @@ const getHook = (hookName, args) => {
 
 export const useLayout = (...args) => getHook(HOOK_NAME.useLayout, args)
 export const useCanvas = (...args) => getHook(HOOK_NAME.useCanvas, args)
-export const useApp = (...args) => getHook(HOOK_NAME.useApp, args)
 export const useResource = (...args) => getHook(HOOK_NAME.useResource, args)
 export const useHistory = (...args) => getHook(HOOK_NAME.useHistory, args)
 export const useProperties = (...args) => getHook(HOOK_NAME.useProperties, args)

@@ -30,7 +30,7 @@
 import { reactive, ref } from 'vue'
 import { Button, Collapse, CollapseItem } from '@opentiny/vue'
 import { PluginSetting, SvgButton, ButtonGroup } from '@opentiny/tiny-engine-common'
-import { usePage, useModal, useApp, useNotify, getMergeRegistry } from '@opentiny/tiny-engine-meta-register'
+import { usePage, useModal, useNotify, getMergeRegistry, getServiceState } from '@opentiny/tiny-engine-meta-register'
 import { isEqual } from '@opentiny/vue-renderless/common/object'
 import throttle from '@opentiny/vue-renderless/common/deps/throttle'
 import meta from '../meta'
@@ -70,7 +70,6 @@ export default {
       title: '文件夹设置'
     })
     const { requestCreatePage, requestUpdatePage, requestDeletePage } = http
-    const { appInfoState } = useApp()
     const { pageSettingState, changeTreeData } = usePage()
     const { confirm } = useModal()
     const registry = getMergeRegistry(meta.type, meta.id)
@@ -99,7 +98,7 @@ export default {
       const data = pageSettingState.currentPageData
       const createParams = {
         ...data,
-        app: appInfoState.selectedId,
+        app: getServiceState('engine.service.globalService').appInfo.appId,
         isPage: false
       }
 

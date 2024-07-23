@@ -35,10 +35,18 @@
 </template>
 
 <script lang="jsx">
-import { reactive, ref, watchEffect, nextTick } from 'vue'
+import { reactive, ref, nextTick } from 'vue'
 import { Search, Tree, Collapse, CollapseItem } from '@opentiny/vue'
 import { IconFolderOpened, IconFolderClosed, IconSearch } from '@opentiny/vue-icon'
-import { useCanvas, useApp, useModal, usePage, useBreadcrumb, useLayout } from '@opentiny/tiny-engine-meta-register'
+import {
+  useCanvas,
+  useModal,
+  usePage,
+  useBreadcrumb,
+  useLayout,
+  useMessage,
+  getServiceState
+} from '@opentiny/tiny-engine-meta-register'
 import { isEqual } from '@opentiny/vue-renderless/common/object'
 import { getCanvasStatus } from '@opentiny/tiny-engine-common/js/canvas'
 import { constants } from '@opentiny/tiny-engine-utils'
@@ -64,7 +72,6 @@ export default {
   },
   emits: ['openSettingPanel', 'add'],
   setup(props, { emit }) {
-    const { appInfoState } = useApp()
     const { confirm } = useModal()
     const { initData, pageState, isBlock, isSaved } = useCanvas()
     const { pageSettingState, changeTreeData, isCurrentDataSame, STATIC_PAGE_GROUP_ID, COMMON_PAGE_GROUP_ID } =
@@ -73,6 +80,7 @@ export default {
     const { setBreadcrumbPage } = useBreadcrumb()
     const pageTreeRefs = ref([])
     const ROOT_ID = pageSettingState.ROOT_ID
+    const getAppId = () => getServiceState('engine.service.globalService').appInfo.appId
 
     const state = reactive({
       pageSearchValue: '',
@@ -150,7 +158,7 @@ export default {
     }
 
     pageSettingState.updateTreeData = async () => {
-      const pageList = await refreshPageList(appInfoState.selectedId)
+      const pageList = await refreshPageList(getAppId())
       return pageList
     }
 
@@ -301,9 +309,10 @@ export default {
       )
     }
 
-    watchEffect(() => {
-      if (appInfoState.selectedId) {
-        refreshPageList(appInfoState.selectedId)
+    useMessage().subscribe({
+      topic: 'app_id_changed',
+      callback: (appId) => {
+        refreshPageList(appId)
       }
     })
 

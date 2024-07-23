@@ -143,7 +143,7 @@ import {
   Popover
 } from '@opentiny/vue'
 import { iconYes, iconClose, iconError } from '@opentiny/vue-icon'
-import { useApp, useBlock, useModal } from '@opentiny/tiny-engine-meta-register'
+import { useBlock, useModal, getServiceState } from '@opentiny/tiny-engine-meta-register'
 import { SvgButton } from '@opentiny/tiny-engine-common'
 import { requestCreateGroup, requestDeleteGroup, fetchGroups, requestUpdateGroup } from './http'
 import { setBlockPanelVisible } from './js/usePanel'
@@ -176,7 +176,7 @@ export default {
     const groupSelect = ref(null)
     const editFormRef = ref(null)
     const editFormItemRef = ref(null)
-    const appId = useApp().appInfoState.selectedId
+    const getAppId = () => getServiceState('engine.service.globalService').appInfo.appId
 
     const createGroupForm = ref(null)
 
@@ -219,7 +219,7 @@ export default {
       const exec = () => {
         requestDeleteGroup(groupId)
           .then(() => {
-            fetchGroups(appId).then((data) => {
+            fetchGroups(getAppId()).then((data) => {
               state.groups = addDefaultGroup(data)
               if (selectedGroup.value.groupId === groupId) {
                 groupChange(state.groups[0].value)
@@ -245,8 +245,8 @@ export default {
         if (!valid) {
           return
         }
-        requestUpdateGroup({ id: state.currentEditId, name: state.groupNameModel.value, app: appId })
-          .then(() => fetchGroups(appId))
+        requestUpdateGroup({ id: state.currentEditId, name: state.groupNameModel.value, app: getAppId() })
+          .then(() => fetchGroups(getAppId()))
           .catch((error) => {
             message({ message: `更新区块分组失败: ${error.message || error}`, status: 'error' })
           })
@@ -299,10 +299,10 @@ export default {
           return
         }
 
-        requestCreateGroup({ name: state.createGroupForm.groupName, app: appId })
+        requestCreateGroup({ name: state.createGroupForm.groupName, app: getAppId() })
           .then((data) => {
             state.showCreateGroupForm = false
-            fetchGroups(appId).then((groups) => {
+            fetchGroups(getAppId()).then((groups) => {
               state.groups = addDefaultGroup(groups)
             })
             groupChange(data)
@@ -320,7 +320,7 @@ export default {
       requestDeleteGroup(groupId)
         .then(() => {
           state.currentDeleteGroupId = null
-          fetchGroups(appId).then((data) => {
+          fetchGroups(getAppId()).then((data) => {
             state.groups = addDefaultGroup(data)
             if (selectedGroup.value.groupId === groupId) {
               groupChange(state.groups[0].value)
