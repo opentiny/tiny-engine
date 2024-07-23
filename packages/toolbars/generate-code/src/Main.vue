@@ -20,8 +20,7 @@ import {
   useLayout,
   getMetaApi,
   META_APP,
-  getMergeMeta,
-  useStore
+  getMergeMeta
 } from '@opentiny/tiny-engine-meta-register'
 import { fs } from '@opentiny/tiny-engine-utils'
 import { useHttp } from '@opentiny/tiny-engine-http'
@@ -102,7 +101,7 @@ export default {
 
     const getPreGenerateInfo = async () => {
       const params = getParams()
-      const { id } = useStore('globalService').store.getBaseInfo()
+      const { id } = getMetaApi('engine.service.globalService').getBaseInfo()
       const promises = [
         useHttp().get(`/app-center/v1/api/apps/schema/${id}`),
         fetchMetaData(params),

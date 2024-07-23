@@ -23,14 +23,15 @@ import {
   mergeRegistry,
   getMergeMeta,
   initHook,
-  HOOK_NAME
+  HOOK_NAME,
+  useMessage
 } from '@opentiny/tiny-engine-meta-register'
 import App from './App.vue'
 import defaultRegistry from '../registry.js'
 import { registerConfigurators } from './registerConfigurators'
 
 const defaultLifeCycles = {
-  beforeAppCreate: ({ registry }) => {
+  beforeAppCreate: async ({ registry }) => {
     // 合并用户自定义注册表
     const newRegistry = mergeRegistry(registry, defaultRegistry)
     if (process.env.NODE_ENV === 'development') {
@@ -62,7 +63,7 @@ const defaultLifeCycles = {
     // 这里暴露到 window 是为了让 canvas 可以读取
     window.TinyGlobalConfig = newRegistry.config || {}
   },
-  appCreated: ({ app }) => {
+  appCreated: async ({ app }) => {
     initSvgs(app)
     window.lowcodeI18n = i18n
     app.use(i18n).use(injectGlobalComponents)
@@ -72,11 +73,32 @@ const defaultLifeCycles = {
   }
 }
 
+const subscribeSignalFinish = (createAppSignal) => {
+  return new Promise((resolve) => {
+    let finishCount = new Set()
+    const len = createAppSignal.length
+
+    createAppSignal.forEach((name) => {
+      useMessage().subscribe({
+        topic: name,
+        callback: () => {
+          finishCount.add(name)
+
+          if (finishCount.size === len) {
+            resolve()
+          }
+        }
+      })
+    })
+  })
+}
+
 export const init = async ({
   selector = '#app',
   registry = defaultRegistry,
   lifeCycles = {},
-  configurators = {}
+  configurators = {},
+  createAppSignal = []
 } = {}) => {
   const { beforeAppCreate, appCreated, appMounted } = lifeCycles
 
@@ -84,8 +106,13 @@ export const init = async ({
 
   await defaultLifeCycles.beforeAppCreate({ registry })
   await beforeAppCreate?.({ registry })
+
+  if (createAppSignal.length) {
+    await subscribeSignalFinish(createAppSignal)
+  }
+
   const app = createApp(App)
-  defaultLifeCycles.appCreated({ app })
+  await defaultLifeCycles.appCreated({ app })
   await appCreated?.({ app })
 
   app.mount(selector)

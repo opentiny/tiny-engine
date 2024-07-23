@@ -23,8 +23,7 @@ import {
   useBlock,
   useMaterial,
   getMetaApi,
-  META_APP,
-  useStore
+  META_APP
 } from '@opentiny/tiny-engine-meta-register'
 
 const { COMPONENT_NAME, DEFAULT_INTERCEPTOR } = constants
@@ -83,7 +82,7 @@ const initBlock = async (blockId) => {
 }
 
 const initPageOrBlock = async () => {
-  const { pageId, blockId } = useStore('globalService').store.getBaseInfo()
+  const { pageId, blockId } = getMetaApi('engine.service.globalService').getBaseInfo()
   const { setBreadcrumbPage } = useBreadcrumb()
 
   if (pageId) {
@@ -114,7 +113,7 @@ const initPageOrBlock = async () => {
 }
 
 const handlePopStateEvent = async () => {
-  const { id, type } = useStore('globalService').store.getBaseInfo()
+  const { id, type } = getMetaApi('engine.service.globalService').getBaseInfo()
 
   await initPageOrBlock()
 
@@ -123,7 +122,7 @@ const handlePopStateEvent = async () => {
 }
 
 const fetchResource = async ({ isInit = true } = {}) => {
-  const { id, type } = useStore('globalService').store.getBaseInfo()
+  const { id, type } = getMetaApi('engine.service.globalService').getBaseInfo()
   useApp().appInfoState.selectedId = id
   const appData = await useHttp().get(`/app-center/v1/api/apps/schema/${id}`)
   resState.pageTree = appData.componentsTree
