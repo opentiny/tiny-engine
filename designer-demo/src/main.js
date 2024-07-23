@@ -14,14 +14,11 @@
 import { init } from '@opentiny/tiny-engine'
 import { registry } from './defineEntry.js'
 import { configurators } from './configurators/'
-import { beforeAppCreate } from './lifeCycles.js'
 import 'virtual:svg-icons-register'
 import '@opentiny/tiny-engine-theme'
 
 init({
   registry,
   configurators,
-  lifeCycles: {
-    beforeAppCreate
-  }
+  createAppSignal: ['global_service_init_finish']
 })

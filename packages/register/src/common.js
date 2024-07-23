@@ -10,6 +10,7 @@
  *
  */
 
+import { readonly } from 'vue'
 import { initHook } from './hooks'
 
 const vueLifeHook = [
@@ -46,7 +47,7 @@ export const templateHashMap = {}
  */
 export const layoutHashMap = {}
 
-export const metasHashMap = {}
+export const metaHashMap = {}
 
 export const apisMap = {}
 export const optionsMap = {}
@@ -61,6 +62,16 @@ export const getMetaApi = (id, key) => {
   }
 
   return apisMap[id]
+}
+
+export const getServiceState = (id) => {
+  if (!metaHashMap[id]) {
+    return
+  }
+
+  if (metaHashMap[id].state) {
+    return readonly(metaHashMap[id].state)
+  }
 }
 
 export const getOptions = (id) => {
@@ -159,23 +170,31 @@ export const preprocessRegistry = (registry) => {
     })
 }
 
+// 调用 service init 方法
+const initService = (registry) => {
+  if (registry?.type === 'MetaService' && typeof registry?.init === 'function') {
+    registry.init()
+  }
+}
+
 export const generateRegistry = (registry) => {
-  Object.entries(registry).forEach(([key, value]) => {
+  Object.entries(registry).forEach(async ([key, value]) => {
     if (typeof value === 'object' && value) {
       const { id } = value
       // 如果匹配到了id，说明是元服务配置，对元服务配置做读取和写入
       if (id && key !== 'metaData') {
         handleRegistryProp(id, value)
-        metasHashMap[id] = value
+        metaHashMap[id] = value
       } else {
         // TODO: 其他类型配置处理
       }
 
+      initService(value)
       generateRegistry(value)
     }
   })
 }
 
 export const getMergeMeta = (id) => {
-  return metasHashMap[id]
+  return metaHashMap[id]
 }
