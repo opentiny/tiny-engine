@@ -40,7 +40,6 @@ import {
   Styles,
   Layout,
   Canvas,
-  AppService,
   GenerateCodeService,
   globalService
 } from '@opentiny/tiny-engine'
@@ -49,11 +48,7 @@ import engineConfig from './engine.config'
 export default {
   root: {
     id: 'engine.root',
-    metas: [
-      AppService,
-      GenerateCodeService,
-      globalService
-    ]
+    metas: [GenerateCodeService, globalService]
   },
   config: engineConfig,
   layout: Layout,

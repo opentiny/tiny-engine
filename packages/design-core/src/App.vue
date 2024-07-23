@@ -8,10 +8,10 @@ import {
   getMergeRegistry,
   getMetaApi,
   useModal,
-  useApp,
   useNotify,
   useResource,
-  useCanvas
+  useCanvas,
+  useMessage
 } from '@opentiny/tiny-engine-meta-register'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import { useBroadcastChannel } from '@vueuse/core'
@@ -32,19 +32,23 @@ export default {
     watch(data, (options) => useNotify(options))
 
     if (isVsCodeEnv) {
-      const appId = useApp().appInfoState.selectedId
-      materialsApi
-        .fetchGroups(appId)
-        .then((groups) => {
-          const blocks = []
-          groups.forEach((group) => {
-            blocks.push(...group.blocks)
-          })
-          blockApi.requestInitBlocks(blocks)
-        })
-        .catch((error) => {
-          message({ message: error.message, status: 'error' })
-        })
+      useMessage().subscribe({
+        topic: 'app_id_changed',
+        callback: (appId) => {
+          materialsApi
+            .fetchGroups(appId)
+            .then((groups) => {
+              const blocks = []
+              groups.forEach((group) => {
+                blocks.push(...group.blocks)
+              })
+              blockApi.requestInitBlocks(blocks)
+            })
+            .catch((error) => {
+              message({ message: error.message, status: 'error' })
+            })
+        }
+      })
     }
 
     const handlePopStateEvent = () => {

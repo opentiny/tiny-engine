@@ -43,7 +43,7 @@ import {
   requestDeleteDataSource,
   requestGenerateDataSource
 } from './js/http'
-import { useModal, useApp, useDataSource } from '@opentiny/tiny-engine-meta-register'
+import { useModal, useDataSource, getServiceState } from '@opentiny/tiny-engine-meta-register'
 import { extend } from '@opentiny/vue-renderless/common/object'
 
 let isOpen = ref(false)
@@ -80,7 +80,6 @@ export default {
   emits: ['update:modelValue', 'save'],
   setup(props, { emit }) {
     const { confirm, message } = useModal()
-    const { appInfoState } = useApp()
     const { dataSourceState } = useDataSource()
 
     const state = reactive({
@@ -142,12 +141,14 @@ export default {
       closeRemotePanel()
     }
 
+    const getAppId = () => getServiceState('engine.service.globalService').appInfo.appId
+
     const deleteDataSource = () => {
       const execDelete = () =>
         requestDeleteDataSource(state.dataSource.id)
           .then((data) => {
             if (data) {
-              requestGenerateDataSource(appInfoState.selectedId)
+              requestGenerateDataSource(getAppId())
               confirm({
                 title: '提示',
                 message: { render: () => <span>数据源删除成功</span> },
@@ -189,7 +190,7 @@ export default {
               name: state.dataSource.name,
               data: Object.assign(state.dataSource.data, { columns, ...dataSourceState.remoteConfig })
             }).then(() => {
-              requestGenerateDataSource(appInfoState.selectedId)
+              requestGenerateDataSource(getAppId())
               // 修改dataSource成功
               confirm({
                 title: '提示',
@@ -204,7 +205,7 @@ export default {
           } else {
             requestAddDataSource({
               name: state.dataSource.name,
-              app: appInfoState.selectedId,
+              app: getAppId(),
               data: {
                 columns,
                 data: [],
@@ -213,7 +214,7 @@ export default {
               }
             })
               .then(() => {
-                requestGenerateDataSource(appInfoState.selectedId)
+                requestGenerateDataSource(getAppId())
                 confirm({
                   title: '提示',
                   message: { render: () => <span>数据源新增成功</span> },

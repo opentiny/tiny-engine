@@ -15,7 +15,6 @@ import { useHttp } from '@opentiny/tiny-engine-http'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { getCanvasStatus } from '@opentiny/tiny-engine-common/js/canvas'
 import {
-  useApp,
   useCanvas,
   useTranslate,
   useBreadcrumb,
@@ -23,7 +22,8 @@ import {
   useBlock,
   useMaterial,
   getMetaApi,
-  META_APP
+  META_APP,
+  useMessage
 } from '@opentiny/tiny-engine-meta-register'
 
 const { COMPONENT_NAME, DEFAULT_INTERCEPTOR } = constants
@@ -123,7 +123,7 @@ const handlePopStateEvent = async () => {
 
 const fetchResource = async ({ isInit = true } = {}) => {
   const { id, type } = getMetaApi('engine.service.globalService').getBaseInfo()
-  useApp().appInfoState.selectedId = id
+  useMessage().publish({ topic: 'app_id_changed', data: id })
   const appData = await useHttp().get(`/app-center/v1/api/apps/schema/${id}`)
   resState.pageTree = appData.componentsTree
   resState.dataSource = appData.dataSource?.list
