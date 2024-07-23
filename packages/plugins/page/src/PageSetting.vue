@@ -62,9 +62,9 @@ import {
   usePage,
   useCanvas,
   useModal,
-  useApp,
   useNotify,
-  getMergeRegistry
+  getMergeRegistry,
+  getServiceState
 } from '@opentiny/tiny-engine-meta-register'
 import { extend, isEqual } from '@opentiny/vue-renderless/common/object'
 import { constants } from '@opentiny/tiny-engine-utils'
@@ -123,7 +123,6 @@ export default {
   emits: ['openNewPage'],
   setup(props, { emit }) {
     const { requestCreatePage, requestDeletePage } = http
-    const { appInfoState } = useApp()
     const {
       DEFAULT_PAGE,
       pageSettingState,
@@ -174,7 +173,7 @@ export default {
           ...page_content_state,
           fileName: pageSettingState.currentPageData.name
         },
-        app: appInfoState.selectedId,
+        app: getServiceState('engine.service.globalService').appInfo.appId,
         isPage: true
       }
 

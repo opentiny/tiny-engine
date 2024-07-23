@@ -1,6 +1,6 @@
-import { reactive } from 'vue'
 import { useHttp } from '@opentiny/tiny-engine-http'
-import { useModal, useMessage } from '@opentiny/tiny-engine-meta-register'
+import { useMessage, useModal } from '@opentiny/tiny-engine-meta-register'
+import { reactive } from 'vue'
 
 const getBaseInfo = () => {
   const paramsMap = new URLSearchParams(location.search)
@@ -19,11 +19,36 @@ const getBaseInfo = () => {
   }
 }
 
-const state = reactive({})
+const state = reactive({
+  userInfo: null,
+  appInfo: {
+    // 应用列表
+    list: [],
+    // 当前应用
+    app: {
+      id: '',
+      name: '',
+      app_desc: '',
+      app_website: '',
+      obs_url: null,
+      published_at: '',
+      created_at: '',
+      updated_at: '',
+      platform: '',
+      state: null,
+      published: false,
+      tenant: null,
+      editor_url: ''
+    },
+    get appId() {
+      return this.app.id
+    }
+  }
+})
 
-const getUserInfo = () => {
+const getUserInfo = async () => {
   // 获取登录用户信息
-  useHttp()
+  await useHttp()
     .get('/platform-center/api/user/me')
     .then((data) => {
       if (data) {
@@ -35,9 +60,41 @@ const getUserInfo = () => {
     })
 }
 
-export const initData = async () => {
+// 获取当前应用的信息
+const fetchAppInfo = (appId) => useHttp().get(`/app-center/api/apps/detail/${appId}`)
+
+// 获取应用列表
+const fetchAppList = (platformId) => useHttp().get(`/app-center/api/apps/list/${platformId}`)
+
+const { subscribe, publish } = useMessage()
+
+subscribe({
+  topic: 'app_id_changed',
+  callback: (appId) => {
+    fetchAppInfo(appId).then((app) => {
+      state.appInfo.app = app
+      // 监听应用 ID 变化，根据应用名称设置网页 title
+      document.title = `${app.name} —— TinyEditor 前端可视化设计器`
+
+      publish({ topic: 'app_info_changed' })
+    })
+  }
+})
+
+subscribe({
+  topic: 'platform_id_changed',
+  callback: (platformId) => {
+    fetchAppList(platformId).then((list) => {
+      state.appInfo.list = list
+
+      publish({ topic: 'app_list_changed' })
+    })
+  }
+})
+
+const initData = async () => {
   await getUserInfo()
-  useMessage().publish({ topic: 'global_service_init_finish' })
+  publish({ topic: 'global_service_init_finish' })
 }
 
 export default {
