@@ -11,13 +11,13 @@
  */
 
 import { PAGE_STATUS } from './constants'
-import { useResource, useStore } from '@opentiny/tiny-engine-meta-register'
+import { useResource, getServiceState } from '@opentiny/tiny-engine-meta-register'
 
 export const getCanvasStatus = (data) => {
-  const { store } = useStore('globalService')
+  const globalState = getServiceState('engine.service.globalService')
   // 写死ID 待删除
   let isDemo = useResource().resState.isDemo
-  const { resetPasswordToken } = store.userInfo
+  const { resetPasswordToken } = globalState.userInfo
 
   if (isDemo && [PAGE_STATUS.Developer, PAGE_STATUS.SuperAdmin].includes(resetPasswordToken)) {
     isDemo = false
@@ -30,7 +30,7 @@ export const getCanvasStatus = (data) => {
   } else if (!data) {
     state = PAGE_STATUS.Release
   } else {
-    state = store.userInfo.id === data.id ? PAGE_STATUS.Occupy : PAGE_STATUS.Lock
+    state = globalState.userInfo.id === data.id ? PAGE_STATUS.Occupy : PAGE_STATUS.Lock
   }
 
   return {

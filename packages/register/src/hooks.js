@@ -7,7 +7,6 @@ export const HOOK_NAME = {
   useProperties: 'properties',
   useProperty: 'property',
   useSaveLocal: 'saveLocal',
-  useEditorInfo: 'editorInfo',
   useBlock: 'block',
   useTranslate: 'translate',
   usePage: 'page',
@@ -31,7 +30,6 @@ const hooksState = {
   [HOOK_NAME.useProperties]: {},
   [HOOK_NAME.useProperty]: {},
   [HOOK_NAME.useSaveLocal]: {},
-  [HOOK_NAME.useEditorInfo]: {},
   [HOOK_NAME.useBlock]: {},
   [HOOK_NAME.useTranslate]: {},
   [HOOK_NAME.usePage]: {},
@@ -60,7 +58,6 @@ export const useResource = (...args) => getHook(HOOK_NAME.useResource, args)
 export const useHistory = (...args) => getHook(HOOK_NAME.useHistory, args)
 export const useProperties = (...args) => getHook(HOOK_NAME.useProperties, args)
 export const useSaveLocal = (...args) => getHook(HOOK_NAME.useSaveLocal, args)
-export const useEditorInfo = (...args) => getHook(HOOK_NAME.useEditorInfo, args)
 export const useBlock = (...args) => getHook(HOOK_NAME.useBlock, args)
 export const useTranslate = (...args) => getHook(HOOK_NAME.useTranslate, args)
 export const usePage = (...args) => getHook(HOOK_NAME.usePage, args)

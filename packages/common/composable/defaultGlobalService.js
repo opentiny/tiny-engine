@@ -1,5 +1,6 @@
+import { reactive } from 'vue'
 import { useHttp } from '@opentiny/tiny-engine-http'
-import { useStore, useModal } from '@opentiny/tiny-engine-meta-register'
+import { useModal, useMessage } from '@opentiny/tiny-engine-meta-register'
 
 const getBaseInfo = () => {
   const paramsMap = new URLSearchParams(location.search)
@@ -18,15 +19,15 @@ const getBaseInfo = () => {
   }
 }
 
-const getUserInfo = () => {
-  const { patchStore } = useStore('globalService')
+const state = reactive({})
 
+const getUserInfo = () => {
   // 获取登录用户信息
   useHttp()
     .get('/platform-center/api/user/me')
     .then((data) => {
       if (data) {
-        patchStore({ userInfo: data })
+        state.userInfo = data
       }
     })
     .catch((error) => {
@@ -35,11 +36,18 @@ const getUserInfo = () => {
 }
 
 export const initData = async () => {
-  const { store, patchStore } = useStore('globalService')
-
-  patchStore({ getBaseInfo })
-
   await getUserInfo()
+  useMessage().publish({ topic: 'global_service_init_finish' })
+}
 
-  patchStore({ isAdmin: () => store.userInfo.resetPasswordToken === 'p_webcenter' })
+export default {
+  id: 'engine.service.globalService',
+  type: 'MetaService',
+  options: {},
+  state,
+  apis: {
+    getBaseInfo,
+    isAdmin: () => state.userInfo.resetPasswordToken === 'p_webcenter'
+  },
+  init: initData
 }
