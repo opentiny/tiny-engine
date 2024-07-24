@@ -216,7 +216,6 @@ export default {
     })
 
     const tokenDialogVisible = ref(false)
-    let accessToken = ref(localStorage.getItem('accessToken'))
     const sendRequest = () => {
       http
         .post('/app-center/api/ai/chat', getSendSeesionProcess(), { timeout: 600000 })
@@ -391,11 +390,8 @@ export default {
       }
     }
 
-    watch([recognizedText, accessToken.value], (newInputContent, accessToken) => {
+    watch([recognizedText], (newInputContent) => {
       inputContent.value = newInputContent
-      if (!accessToken) {
-        tokenDialogVisible.value = true
-      }
     })
 
     return {

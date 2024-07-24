@@ -54,17 +54,11 @@ export default {
       keyFormVisible.value = false
       emit('dialog-status', false)
     }
-    function setOrUpdateLocalStorage(key, value) {
-      if (localStorage.getItem(key) !== null) {
-        localStorage.setItem(key, value)
-      } else {
-        localStorage.setItem(key, value)
-      }
-    }
+
     const submitKeyForm = () => {
       keyFormRef.value.validate((valid) => {
         if (valid) {
-          setOrUpdateLocalStorage('accessToken', keyForm.value.accessToken)
+          localStorage.setItem('accessToken', keyForm.value.accessToken)
           closeKeyFormDialog()
         }
       })
