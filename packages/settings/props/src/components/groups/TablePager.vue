@@ -36,7 +36,7 @@ export default {
     }
   },
 
-  setup(props, { emit }) {
+  setup(props) {
     const state = reactive({
       values: props.modelValue
     })

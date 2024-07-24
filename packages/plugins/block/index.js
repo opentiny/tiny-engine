@@ -16,7 +16,7 @@ import { BlockService } from './src/composable'
 
 export default {
   ...metaData,
-  api,
+  apis: api,
   entry,
   metas: [BlockService]
 }

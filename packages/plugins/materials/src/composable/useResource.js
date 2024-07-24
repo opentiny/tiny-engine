@@ -22,7 +22,9 @@ import {
   useBreadcrumb,
   useLayout,
   useBlock,
-  useMaterial
+  useMaterial,
+  getMetaApi,
+  META_APP
 } from '@opentiny/tiny-engine-meta-register'
 
 const { COMPONENT_NAME, DEFAULT_INTERCEPTOR } = constants
@@ -67,8 +69,7 @@ const initPage = (pageInfo) => {
  * @param {string} blockId 区块 id
  */
 const initBlock = async (blockId) => {
-  const { PLUGIN_NAME, getPluginApi } = useLayout()
-  const blockApi = getPluginApi(PLUGIN_NAME.BlockManage)
+  const blockApi = getMetaApi(META_APP.BlockManage)
   const blockContent = await blockApi.getBlockById(blockId)
 
   if (blockContent.public_scope_tenants.length) {
@@ -86,8 +87,7 @@ const initPageOrBlock = async () => {
   const { setBreadcrumbPage } = useBreadcrumb()
 
   if (pageId) {
-    const { PLUGIN_NAME, getPluginApi } = useLayout()
-    const pagePluginApi = getPluginApi(PLUGIN_NAME.AppManage)
+    const pagePluginApi = getMetaApi(META_APP.AppManage)
 
     const data = await pagePluginApi.getPageById(pageId)
 
