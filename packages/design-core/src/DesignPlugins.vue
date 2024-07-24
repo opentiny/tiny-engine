@@ -1,4 +1,4 @@
- <!-- 左侧插件栏,修改右侧菜单时参照这个文件来写 -->
+<!-- 左侧插件栏,修改右侧菜单时参照这个文件来写 -->
 <template>
   <div id="tiny-engine-nav-panel" :style="{ 'pointer-events': pluginState.pluginEvent }">
     <!-- 图标菜单上侧区域（主要icon） -->
@@ -14,7 +14,6 @@
         }"
         :title="item.title"
         @click="clickMenu({ item, index })"
-        @contextmenu.prevent="showContextMenu($event, item, index)"
       >
         <div>
           <span class="item-icon">
@@ -27,17 +26,6 @@
           </span>
         </div>
       </li>
-    </ul>
-    <!-- 下拉菜单 -->
-    <ul
-      v-if="contextMenu.visible"
-      class="context-menu"
-      :style="{ top: contextMenu.y + 'px', left: contextMenu.x + 'px' }"
-    >
-      <li class="context-menu-header">{{ contextMenu.item.title }}</li>
-      <li @click="handleContextAction('action1')">隐藏插件</li>
-      <li @click="handleContextAction('action2')">切换到右侧</li>
-      <li @click="handleContextAction('action3')">隐藏左侧活动栏</li>
     </ul>
 
     <!-- 图标菜单下侧区域（附加icon） -->
@@ -113,7 +101,7 @@
 </template>
 
 <script>
-import { reactive, ref, watch, onMounted, onBeforeUnmount } from 'vue'
+import { reactive, ref, watch } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
 import { useLayout, usePage } from '@opentiny/tiny-engine-controller'
 import Addons from '@opentiny/tiny-engine-app-addons'
@@ -155,46 +143,6 @@ export default {
           [id]: api
         })
       }
-    })
-
-    const contextMenu = reactive({
-      visible: false,
-      x: 0,
-      y: 0,
-      item: null,
-      index: null
-    })
-
-    const showContextMenu = (event, item, index) => {
-      contextMenu.visible = true
-      contextMenu.x = event.clientX
-      contextMenu.y = event.clientY
-      contextMenu.item = item
-      contextMenu.index = index
-    }
-
-    const hideContextMenu = () => {
-      contextMenu.visible = false
-    }
-
-    const handleContextAction = (action) => {
-      //console.log(`Action ${action} on item`, contextMenu.item)
-      hideContextMenu()
-    }
-
-    // Hide context menu on clicking outside
-    const handleClickOutside = (event) => {
-      if (!event.target.closest('.context-menu')) {
-        hideContextMenu()
-      }
-    }
-
-    onMounted(() => {
-      document.addEventListener('click', handleClickOutside)
-    })
-
-    onBeforeUnmount(() => {
-      document.removeEventListener('click', handleClickOutside)
     })
 
     const completed = ref(false)
@@ -275,12 +223,7 @@ export default {
       iconComponents,
       completed,
       doCompleted,
-      pluginState,
-      contextMenu,
-      showContextMenu,
-      hideContextMenu,
-      handleContextAction,
-      clickMenu
+      pluginState
     }
   }
 }
@@ -421,33 +364,5 @@ export default {
 
 :deep(.svg-icon.icon-plugin-icon-plugin-help) {
   font-size: 22px;
-}
-
-.context-menu {
-  position: absolute;
-  background: white;
-  border: 1px solid #ccc;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  width: 130px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-}
-
-.context-menu-header {
-  padding: 8px 12px;
-  font-weight: bold;
-  cursor: default;
-  background: #f5f5f5;
-  border-bottom: 1px solid #ccc;
-}
-
-.context-menu li {
-  padding: 8px 12px;
-  cursor: pointer;
-}
-
-.context-menu li:hover {
-  background: #f0f0f0;
 }
 </style>
