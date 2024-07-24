@@ -55,7 +55,7 @@ export default {
     })
 
     const saveGlobalDataHandle = () => {
-      const id = getServiceState('engine.service.globalService').appInfo.appId
+      const id = getServiceState('engine.service.globalService').appInfo.id
 
       const handler = {
         dataHandler: { type: 'JSFunction', value: state.dataHandlerValue || DEFAULT_INTERCEPTOR.dataHandler.value },

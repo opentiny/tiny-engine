@@ -57,7 +57,7 @@ export default {
     const panelState = inject('panelState', {})
     const displayType = inject('displayType')
     const { message, confirm } = useModal()
-    const getAppId = () => getServiceState('engine.service.globalService').appInfo.appId
+    const getAppId = () => getServiceState('engine.service.globalService').appInfo.id
 
     const openVersionPanel = async ({ item }) => {
       selectedBlock.value = item

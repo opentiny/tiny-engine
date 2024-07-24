@@ -148,7 +148,7 @@ const state = reactive({
     canCreateNewBranch: false
   },
   title: computed(() => (state.showPreview ? '发布应用' : '保存历史版本')),
-  appName: computed(() => getServiceState('engine.service.globalService').appInfo.app.name),
+  appName: computed(() => getServiceState('engine.service.globalService').appInfo.name),
   leaveTimeoutId: null,
   overTimeoutId: null
 })
@@ -168,7 +168,7 @@ const getTargetUrl = (centerName) => {
   return `/#/${centerName}/`
 }
 
-const getAppId = () => getServiceState('engine.service.globalService').appInfo.appId
+const getAppId = () => getServiceState('engine.service.globalService').appInfo.id
 
 const actions = {
   pageManagement() {

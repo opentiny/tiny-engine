@@ -361,7 +361,7 @@ export default {
       })
     }
     const handleChange = (data) => {
-      const appId = getServiceState('engine.service.globalService').appInfo.appId
+      const appId = getServiceState('engine.service.globalService').appInfo.id
       const action = `/app-center/api/apps/${appId}/i18n/entries/update`
 
       const loadingTarget = notEmpty.value ? '#boxeight' : '#empty-loading-box'

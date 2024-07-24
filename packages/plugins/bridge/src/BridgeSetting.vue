@@ -209,7 +209,7 @@ export default {
         category: getType(),
         type: getCategory(),
         name: state.name,
-        app: getServiceState('engine.service.globalService').appInfo.appId,
+        app: getServiceState('engine.service.globalService').appInfo.id,
         content: state.category
           ? state.content
           : {

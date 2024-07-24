@@ -176,7 +176,7 @@ export default {
     const groupSelect = ref(null)
     const editFormRef = ref(null)
     const editFormItemRef = ref(null)
-    const getAppId = () => getServiceState('engine.service.globalService').appInfo.appId
+    const getAppId = () => getServiceState('engine.service.globalService').appInfo.id
 
     const createGroupForm = ref(null)
 

@@ -80,7 +80,7 @@ export default {
     const { setBreadcrumbPage } = useBreadcrumb()
     const pageTreeRefs = ref([])
     const ROOT_ID = pageSettingState.ROOT_ID
-    const getAppId = () => getServiceState('engine.service.globalService').appInfo.appId
+    const getAppId = () => getServiceState('engine.service.globalService').appInfo.id
 
     const state = reactive({
       pageSearchValue: '',

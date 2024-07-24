@@ -94,7 +94,7 @@ export const requestUpdateGroup = ({ id, name, app, blocks }) =>
 
 // 更新区块版本
 export const requestGroupBlockVersion = async ({ groupId, blockId, blockVersion }) => {
-  const app = getServiceState('engine.service.globalService').appInfo.appId
+  const app = getServiceState('engine.service.globalService').appInfo.id
   let blocks = await fetchGroupBlocksById({ groupId })
 
   blocks = blocks.map((block) => ({

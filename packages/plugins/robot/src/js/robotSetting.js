@@ -59,7 +59,7 @@ export const initBlockList = async () => {
   if (state.blockList?.length) {
     return
   }
-  const appId = getServiceState('engine.service.globalService').appInfo.appId
+  const appId = getServiceState('engine.service.globalService').appInfo.id
   try {
     const list = await useHttp().get('/material-center/api/blocks', { params: { appId } })
     setBlocks(list)

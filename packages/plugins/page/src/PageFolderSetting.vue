@@ -98,7 +98,7 @@ export default {
       const data = pageSettingState.currentPageData
       const createParams = {
         ...data,
-        app: getServiceState('engine.service.globalService').appInfo.appId,
+        app: getServiceState('engine.service.globalService').appInfo.id,
         isPage: false
       }
 
