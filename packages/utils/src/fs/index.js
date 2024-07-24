@@ -1,16 +1,22 @@
 /**
-* Copyright (c) 2023 - present TinyEngine Authors.
-* Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
-*
-* Use of this source code is governed by an MIT-style license.
-*
-* THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
-* BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
-* A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
-*
-*/
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
+ *
+ * Use of this source code is governed by an MIT-style license.
+ *
+ * THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
+ * BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
+ * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
+ *
+ */
 
 // browser File System Access API encapsulation
+
+import { createZip, writeZip } from './fszip'
+
+// 支持file system api的条件：存在这个方法 && 不处于iframe中
+export const isSupportFileSystemAccess =
+  Object.prototype.hasOwnProperty.call(window, 'showDirectoryPicker') && window.self === window.top
 
 /**
  * 获取用户选择并授权的文件夹根路径
@@ -20,7 +26,8 @@
  */
 export const getUserBaseDirHandle = async (options = {}) => {
   if (!window.showOpenFilePicker) {
-    throw new Error('不支持的浏览器!')
+    const zipHandle = await createZip()
+    return zipHandle
   }
   const dirHandle = await window.showDirectoryPicker({ mode: 'readwrite', ...options })
   return dirHandle
@@ -172,10 +179,15 @@ export const writeFiles = async (baseDirHandle, filesInfo) => {
     return
   }
 
+  if (!isSupportFileSystemAccess) {
+    await writeZip(baseDirHandle, filesInfo)
+    return
+  }
+
   let directoryHandle = baseDirHandle
   if (!directoryHandle) {
     directoryHandle = await window.showDirectoryPicker({ mode: 'readwrite' })
   }
 
-  await Promise.all(filesInfo.map((fileInfo) => writeFile(baseDirHandle, fileInfo)))
+  await Promise.all(filesInfo.map((fileInfo) => writeFile(directoryHandle, fileInfo)))
 }
