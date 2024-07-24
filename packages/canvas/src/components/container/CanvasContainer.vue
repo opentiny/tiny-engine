@@ -50,12 +50,12 @@ import {
   updateRect,
   getElement,
   dragStart,
-  getOffset,
   selectNode,
   initCanvas,
   clearLineState,
   querySelectById,
-  getCurrent
+  getCurrent,
+  canvasApi
 } from './container'
 
 export default {
@@ -100,10 +100,12 @@ export default {
 
         // 如果是点击右键则打开右键菜单
         if (event.button === 2) {
-          openMenu(getOffset(event.target), event)
+          openMenu(event)
         }
       }
     }
+
+    useCanvas().initCanvasApi(canvasApi)
 
     const beforeCanvasReady = () => {
       if (iframe.value) {
@@ -119,7 +121,6 @@ export default {
         iframeMonitoring()
 
         initCanvas({ emit, renderer: detail, iframe: iframe.value, controller: props.controller })
-        useCanvas().renderer.value = { ...detail, ...window.canvasApi }
 
         const doc = iframe.value.contentDocument
         const win = iframe.value.contentWindow

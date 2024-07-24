@@ -82,8 +82,7 @@ import {
   FormItem as TinyFormItem
 } from '@opentiny/vue'
 import { theme } from '@opentiny/tiny-engine-controller/adapter'
-import { useLayout, useNotify } from '@opentiny/tiny-engine-controller'
-import { getSchema, setSchema } from '@opentiny/tiny-engine-canvas'
+import { useLayout, useNotify, useCanvas } from '@opentiny/tiny-engine-controller'
 import { constants } from '@opentiny/tiny-engine-utils'
 import VueMonaco from './VueMonaco.vue'
 
@@ -188,9 +187,10 @@ export default {
         const remote = await api.getBlockById(block?.id)
         const originalObj = remote?.content || {}
         state.originalCode = JSON.stringify(originalObj, null, 2)
+        const getSchema = useCanvas().canvasApi.value.getSchema
 
         // 转为普通对象，和线上代码顺序保持一致
-        const pageSchema = getSchema() || {}
+        const pageSchema = getSchema?.() || {}
         if (pageSchema.componentName === 'Block') {
           state.code = JSON.stringify(pageSchema, null, 2)
         } else {
@@ -220,7 +220,8 @@ export default {
       }
       try {
         const pageSchema = JSON.parse(state.newCode)
-        setSchema({ ...pageSchema, componentName: COMPONENT_NAME.Block })
+        const setSchema = useCanvas().canvasApi.value.setSchema
+        setSchema?.({ ...pageSchema, componentName: COMPONENT_NAME.Block })
         close()
       } catch (err) {
         useNotify({

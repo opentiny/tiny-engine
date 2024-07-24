@@ -25,8 +25,6 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.21.3",
-    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
-    "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
     "@types/node": "^18.0.0",
     "@vitejs/plugin-vue": "^4.2.3",
     "@vitejs/plugin-vue-jsx": "^3.1.0",

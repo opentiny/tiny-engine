@@ -1787,7 +1787,7 @@
       },
       {
         "componentName": "TinyPlusFrozenPage",
-        "package": "@opentiny/vuee",
+        "package": "@opentiny/vue",
         "exportName": "FrozenPage",
         "destructuring": true,
         "version": "3.4.1"
@@ -1919,6 +1919,13 @@
         "version": "0.1.17"
       },
       {
+        "componentName": "TinyCheckbox",
+        "package": "@opentiny/vue",
+        "exportName": "Checkbox",
+        "destructuring": true,
+        "version": "3.14.0"
+      },
+      {
         "componentName": "TinySelect",
         "package": "@opentiny/vue",
         "exportName": "Select",
@@ -1973,6 +1980,76 @@
         "exportName": "ChartHistogram",
         "destructuring": true,
         "version": "0.1.16"
+      },
+      {
+        "componentName": "TinyCollapse",
+        "package": "@opentiny/vue",
+        "exportName": "Collapse",
+        "destructuring": true,
+        "version": "3.14.0"
+      },
+      {
+        "componentName": "TinyCollapseItem",
+        "package": "@opentiny/vue",
+        "exportName": "CollapseItem",
+        "destructuring": true,
+        "version": "3.14.0"
+      },
+      {
+        "componentName": "TinyBreadcrumb",
+        "package": "@opentiny/vue",
+        "exportName": "Breadcrumb",
+        "destructuring": true,
+        "version": "3.14.0"
+      },
+      {
+        "componentName": "TinyBreadcrumbItem",
+        "package": "@opentiny/vue",
+        "exportName": "BreadcrumbItem",
+        "destructuring": true,
+        "version": "3.14.0"
+      },
+      {
+        "componentName": "ElInput",
+        "package": "element-plus",
+        "exportName": "ElInput",
+        "destructuring": true,
+        "version": "2.4.2"
+      },
+      {
+        "componentName": "ElButton",
+        "package": "element-plus",
+        "exportName": "ElButton",
+        "destructuring": true,
+        "version": "2.4.2"
+      },
+      {
+        "componentName": "ElForm",
+        "package": "element-plus",
+        "exportName": "ElForm",
+        "destructuring": true,
+        "version": "2.4.2"
+      },
+      {
+        "componentName": "ElFormItem",
+        "package": "element-plus",
+        "exportName": "ElFormItem",
+        "destructuring": true,
+        "version": "2.4.2"
+      },
+      {
+        "componentName": "ElTable",
+        "package": "element-plus",
+        "exportName": "ElTable",
+        "destructuring": true,
+        "version": "2.4.2"
+      },
+      {
+        "componentName": "ElTableColumn",
+        "package": "element-plus",
+        "exportName": "ElTableColumn",
+        "destructuring": true,
+        "version": "2.4.2"
       },
       {
         "componentName": "PortalHome",

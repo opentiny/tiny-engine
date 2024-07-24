@@ -68,9 +68,7 @@
 import { ref, watch } from 'vue'
 import { Collapse, CollapseItem, Input } from '@opentiny/vue'
 import { useHistory, useCanvas, useProperties } from '@opentiny/tiny-engine-controller'
-import { getSchema as getCanvasPageSchema, updateRect } from '@opentiny/tiny-engine-canvas'
 import { MetaCodeEditor, MetaBindVariable } from '@opentiny/tiny-engine-common'
-import { formatString } from '@opentiny/tiny-engine-controller/js/ast'
 import {
   SizeGroup,
   LayoutGroup,
@@ -126,9 +124,10 @@ export default {
 
     // 保存编辑器内容，并回写到 schema
     const save = ({ content }) => {
+      const { getSchema: getCanvasPageSchema, updateRect } = useCanvas().canvasApi.value
       const pageSchema = getCanvasPageSchema()
       const schema = getSchema() || pageSchema
-      const styleString = formatString(styleStrRemoveRoot(content), 'css')
+      const styleString = styleStrRemoveRoot(content)
       const currentSchema = getCurrentSchema() || pageSchema
 
       state.styleContent = content
@@ -148,9 +147,11 @@ export default {
     }
 
     const setConfig = (value) => {
+      const { getSchema: getCanvasPageSchema, updateRect } = useCanvas().canvasApi.value
       const pageSchema = getCanvasPageSchema()
       const currentSchema = getCurrentSchema() || pageSchema
       const schema = getSchema() || pageSchema
+
       if (value !== '') {
         schema.props.style = value
         currentSchema.props.style = value

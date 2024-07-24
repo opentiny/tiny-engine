@@ -20,6 +20,9 @@ import {
   NODE_LOOP
 } from '../common'
 import { useCanvas, useLayout, useResource, useTranslate } from '@opentiny/tiny-engine-controller'
+import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
+import Builtin from '../builtin/builtin.json'
+
 export const POSITION = Object.freeze({
   TOP: 'top',
   BOTTOM: 'bottom',
@@ -27,7 +30,6 @@ export const POSITION = Object.freeze({
   RIGHT: 'right',
   IN: 'in'
 })
-import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
 
 const initialDragState = {
   keydown: false,
@@ -346,16 +348,13 @@ const setSelectRect = (element) => {
   element = element || getDocument().body
 
   const { left, height, top, width } = getRect(element)
-  const { x, y } = getOffset(element)
-  const siteCanvasRect = document.querySelector('.site-canvas').getBoundingClientRect()
   const componentName = getCurrent().schema?.componentName || ''
-  const scale = useLayout().getScale()
   clearHover()
   Object.assign(selectState, {
-    width: width * scale,
-    height: height * scale,
-    top: top * scale + y - siteCanvasRect.y,
-    left: left * scale + x - siteCanvasRect.x,
+    width,
+    height,
+    top,
+    left,
     componentName,
     doc: getDocument()
   })
@@ -479,9 +478,6 @@ const setHoverRect = (element, data) => {
   const configure = getConfigure(componentName)
   const rect = getRect(element)
   const { left, height, top, width } = rect
-  const { x, y } = getOffset(element)
-  const siteCanvasRect = document.querySelector('.site-canvas').getBoundingClientRect()
-  const scale = useLayout().getScale()
 
   hoverState.configure = configure
 
@@ -510,23 +506,22 @@ const setHoverRect = (element, data) => {
     if (childEle) {
       const childRect = getRect(childEle)
       const { left, height, top, width } = childRect
-      const { x, y } = getOffset(childEle)
       const posLine = getPosLine(childRect, lineState.configure)
       Object.assign(lineState, {
-        width: width * scale,
-        height: height * scale,
-        top: top * scale + y - siteCanvasRect.y,
-        left: left * scale + x - siteCanvasRect.x,
+        width,
+        height,
+        top,
+        left,
         position: canvasState.type === 'absolute' || posLine.type,
         forbidden: posLine.forbidden
       })
     } else {
       const posLine = getPosLine(rect, configure)
       Object.assign(lineState, {
-        width: width * scale,
-        height: height * scale,
-        top: top * scale + y - siteCanvasRect.y,
-        left: left * scale + x - siteCanvasRect.x,
+        width,
+        height,
+        top,
+        left,
         position: canvasState.type === 'absolute' || posLine.type,
         forbidden: posLine.forbidden
       })
@@ -537,10 +532,10 @@ const setHoverRect = (element, data) => {
 
   // 设置元素hover状态
   Object.assign(hoverState, {
-    width: width * scale,
-    height: height * scale,
-    top: top * scale + y - siteCanvasRect.y,
-    left: left * scale + x - siteCanvasRect.x,
+    width,
+    height,
+    top,
+    left,
     componentName
   })
   return undefined
@@ -851,6 +846,49 @@ export const canvasDispatch = (name, data, doc = getDocument()) => {
   if (!doc) return
 
   doc.dispatchEvent(new CustomEvent(name, data))
+}
+
+export const canvasApi = {
+  dragStart,
+  updateRect,
+  getContext,
+  getNodePath,
+  dragMove,
+  setLocales,
+  setState,
+  deleteState,
+  getRenderer,
+  clearSelect,
+  selectNode,
+  hoverNode,
+  insertNode,
+  removeNode,
+  addComponent,
+  setPageCss,
+  addScript,
+  addStyle,
+  getNode,
+  getCurrent,
+  setSchema,
+  setUtils,
+  updateUtils,
+  deleteUtils,
+  getSchema,
+  setI18n,
+  getCanvasType,
+  setCanvasType,
+  setProps,
+  setGlobalState,
+  getGlobalState,
+  getDocument,
+  canvasDispatch,
+  Builtin,
+  setDataSourceMap: (...args) => {
+    return canvasState.renderer.setDataSourceMap(...args)
+  },
+  getDataSourceMap: (...args) => {
+    return canvasState.renderer.getDataSourceMap(...args)
+  }
 }
 
 export const initCanvas = ({ renderer, iframe, emit, controller }) => {

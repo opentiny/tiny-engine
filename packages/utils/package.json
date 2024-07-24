@@ -28,12 +28,11 @@
   "homepage": "https://opentiny.design/tiny-engine",
   "devDependencies": {
     "vite": "^4.3.7",
-    "vitest": "^0.34.6"
+    "vitest": "^1.4.0"
   },
-  "dependencies": {
-    "@opentiny/vue-renderless": "~3.10.0"
-  },
+  "dependencies": {},
   "peerDependencies": {
+    "@opentiny/vue-renderless": "^3.14.0",
     "vue": "^3.4.15"
   }
 }

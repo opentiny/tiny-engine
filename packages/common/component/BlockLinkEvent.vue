@@ -21,7 +21,6 @@ import { capitalize } from '@vue/shared'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { Input as TinyInput, Form as TinyForm, FormItem as TinyFormItem, Popover as TinyPopover } from '@opentiny/vue'
 import { useLayout, useModal, useCanvas, useBlock } from '@opentiny/tiny-engine-controller'
-import { getSchema, getCurrent } from '@opentiny/tiny-engine-canvas'
 
 export default {
   components: {
@@ -38,7 +37,8 @@ export default {
     const { pageState } = useCanvas()
     const { addBlockEvent, removeEventLink, getCurrentBlock, appendEventEmit } = useBlock()
     const { PLUGIN_NAME, activePlugin } = useLayout()
-    const { schema } = getSchema()
+
+    const { schema } = useCanvas().canvasApi.value?.getSchema?.() || {}
     const events = schema?.events || []
     const eventsList = Object.entries(events).map(([key, value]) => {
       return {
@@ -88,7 +88,7 @@ export default {
 
           const {
             schema: { id, componentName }
-          } = getCurrent()
+          } = useCanvas().canvasApi.value?.getCurrent?.() || {}
 
           const newEvent = extend(true, {}, data.metaEvent, {
             linked: {
@@ -117,7 +117,7 @@ export default {
     const editEvent = (item, data) => {
       const {
         schema: { id, componentName }
-      } = getCurrent()
+      } = useCanvas().canvasApi.value?.getCurrent?.() || {}
 
       const oldEventName = data.linkedEventName
 

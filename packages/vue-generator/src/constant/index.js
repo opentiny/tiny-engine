@@ -2174,26 +2174,26 @@ const DEFAULT_COMPONENTS_MAP = [
 ]
 
 // 内置组件映射关系
-const BUILTIN_COMPONENTS_MAP = [
+export const BUILTIN_COMPONENTS_MAP = [
   {
     componentName: 'CanvasRow',
     exportName: 'CanvasRow',
     package: '@opentiny/tiny-engine-builtin-component',
-    version: '^0.1.0',
+    version: '^1.0.1',
     destructuring: true
   },
   {
     componentName: 'CanvasCol',
     exportName: 'CanvasCol',
     package: '@opentiny/tiny-engine-builtin-component',
-    version: '^0.1.0',
+    version: '^1.0.1',
     destructuring: true
   },
   {
     componentName: 'CanvasRowColContainer',
     exportName: 'CanvasRowColContainer',
     package: '@opentiny/tiny-engine-builtin-component',
-    version: '^0.1.0',
+    version: '^1.0.1',
     destructuring: true
   }
 ]
@@ -2211,6 +2211,25 @@ const BUILTIN_COMPONENT_NAME = {
   ICON: 'Icon'
 }
 
+export const BUILTIN_COMPONENT_NAME_MAP = {
+  Text: 'span',
+  Collection: 'div',
+  Block: 'div',
+  Img: 'img'
+}
+
+export const INSERT_POSITION = {
+  AFTER_IMPORT: 'AFTER_IMPORT',
+  BEFORE_PROPS: 'BEFORE_PROPS',
+  AFTER_PROPS: 'AFTER_PROPS',
+  BEFORE_EMIT: 'BEFORE_EMIT',
+  AFTER_EMIT: 'AFTER_EMIT',
+  BEFORE_STATE: 'BEFORE_STATE',
+  AFTER_STATE: 'AFTER_STATE',
+  BEFORE_METHODS: 'BEFORE_METHODS',
+  AFTER_METHODS: 'AFTER_METHODS'
+}
+
 /**
  * 图标组件名，统一前缀为 TinyIcon，与从组件库引入的方法名 iconXxx 区分开
  */
@@ -2224,6 +2243,8 @@ const UNWRAP_QUOTES = {
   end: '#QUOTES_END#'
 }
 
+export const SPECIAL_UTILS_TYPE = ['utils', 'bridge']
+
 /**
  * 协议中的类型
  */
@@ -2235,4 +2256,4 @@ export const [JS_EXPRESSION, JS_FUNCTION, JS_I18N, JS_RESOURCE, JS_SLOT] = [
   'JSSlot'
 ]
 
-export { DEFAULT_COMPONENTS_MAP, BUILTIN_COMPONENT_NAME, TINY_ICON, UNWRAP_QUOTES, BUILTIN_COMPONENTS_MAP }
+export { DEFAULT_COMPONENTS_MAP, BUILTIN_COMPONENT_NAME, TINY_ICON, UNWRAP_QUOTES }

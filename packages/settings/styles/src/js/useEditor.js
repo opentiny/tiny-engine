@@ -11,8 +11,7 @@
  */
 
 import { reactive, watch } from 'vue'
-import { useHistory } from '@opentiny/tiny-engine-controller'
-import { setPageCss } from '@opentiny/tiny-engine-canvas'
+import { useHistory, useCanvas } from '@opentiny/tiny-engine-controller'
 import { obj2StyleStr, styleStrRemoveRoot } from './cssConvert'
 import { CSS_TYPE } from './cssType'
 
@@ -57,6 +56,8 @@ export default ({ style, pageState }) => {
       }
     } else if (editor.type === CSS_TYPE.Css) {
       pageState.pageSchema.css = content
+      const { setPageCss } = useCanvas().canvasApi.value
+
       setPageCss(content)
       addHistory()
     }

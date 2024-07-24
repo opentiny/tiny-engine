@@ -37,3 +37,5 @@ export const fetchMetaData = async ({ platform, app, type, id, history, tenant }
 
 // 获取页面列表
 export const fetchPageList = (appId) => http.get(`/app-center/api/pages/list/${appId}`)
+
+export const fetchBlockSchema = async (blockName) => http.get(`/material-center/api/block?label=${blockName}`)

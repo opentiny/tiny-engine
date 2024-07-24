@@ -104,7 +104,6 @@
 <script setup>
 import { computed, reactive, ref, nextTick, watch, watchEffect } from 'vue'
 import { Select as TinySelect } from '@opentiny/vue'
-import { setPageCss, getSchema as getCanvasPageSchema, updateRect } from '@opentiny/tiny-engine-canvas'
 import { useProperties, useCanvas, useHistory, useHelp } from '@opentiny/tiny-engine-controller'
 import { MetaCodeEditor, LinkButton } from '@opentiny/tiny-engine-common'
 import { formatString } from '@opentiny/tiny-engine-controller/js/ast'
@@ -171,6 +170,7 @@ watch(
 )
 
 const setSelectorProps = (type, value) => {
+  const { getSchema: getCanvasPageSchema } = useCanvas().canvasApi.value
   const schema = getSchema() || getCanvasPageSchema()
 
   if (!schema.props) {
@@ -183,6 +183,7 @@ const setSelectorProps = (type, value) => {
 
 // 编辑 className 新增、删除、或修改
 const editClassName = (curClassName, optionType = OPTION_TYPE.ADD, oldSelector = '') => {
+  const { getSchema: getCanvasPageSchema } = useCanvas().canvasApi.value
   const schema = getSchema() || getCanvasPageSchema()
   let type = ''
 
@@ -441,6 +442,7 @@ const save = ({ content }) => {
   const cssString = formatString(content.replace(/"/g, "'"), 'css')
   const { getPageSchema } = useCanvas()
   const { addHistory } = useHistory()
+  const { updateRect, setPageCss, getSchema: getCanvasPageSchema } = useCanvas().canvasApi.value
   getPageSchema().css = cssString
   getCanvasPageSchema().css = cssString
   setPageCss(cssString)

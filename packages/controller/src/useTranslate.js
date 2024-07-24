@@ -101,7 +101,7 @@ const ensureI18n = (obj, send) => {
       }
     })
 
-    useCanvas().renderer.value?.setLocales(messages, true)
+    useCanvas().canvasApi.value?.setLocales(messages, true)
   } catch (e) {
     // 不需要处理，有报错的词条会在画布初始化的时候统一调setLocales这个方法
   }
@@ -171,7 +171,7 @@ const initAppI18n = async (appId) => {
       host: appId,
       hostType: HOST_TYPE.App
     })
-    useCanvas().renderer.value?.setLocales(i18nResource.messages)
+    useCanvas().canvasApi.value?.setLocales(i18nResource.messages)
   }
 }
 
@@ -181,7 +181,7 @@ const initBlockI18n = async (blockId) => {
       host: blockId,
       hostType: HOST_TYPE.Block
     })
-    useCanvas().renderer.value?.setLocales(i18nResource.messages)
+    useCanvas().canvasApi.value?.setLocales(i18nResource.messages)
   }
 }
 
@@ -192,7 +192,7 @@ const initBlockLocalI18n = async (langs = {}) => {
     hostType: HOST_TYPE.Block,
     local: true
   })
-  useCanvas().renderer.value?.setLocales(i18nResource.messages)
+  useCanvas().canvasApi.value?.setLocales(i18nResource.messages)
 }
 
 const format = (str = '', params = {}) => str.replace(/\$\{(.+?)\}/g, (substr, key) => params[key] || '')
