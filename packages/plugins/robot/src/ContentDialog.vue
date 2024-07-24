@@ -3,51 +3,53 @@
 </template>
 
 <script>
-import { ref, onMounted, watch, nextTick } from 'vue';
+import { ref, onMounted, watch } from 'vue'
 import useMarkdown from './js/useDialogContent'
 
 export default {
   props: {
-    markdownContent: String,
+    markdownContent: String
   },
   setup(props) {
-    const renderedMarkdown = ref('');
-    const { md, initClipboard } = useMarkdown();
+    const renderedMarkdown = ref('')
+    const { md, initClipboard } = useMarkdown()
+
+    const render = (text) => {
+      renderedMarkdown.value = md.render(text)
+      initClipboard()
+    }
+
     watch(
       () => props.markdownContent,
       (newValue) => {
-      render(newValue)
-    });
+        render(newValue)
+      }
+    )
 
     onMounted(() => {
       render(props.markdownContent)
-    });
-
-    const render = (text) =>{
-      renderedMarkdown.value = md.render(text);
-      initClipboard();
-    }
+    })
 
     return {
-      renderedMarkdown,
-    };
-  },
-};
+      renderedMarkdown
+    }
+  }
+}
 </script>
 <style lang="less">
-.code-block{
+.code-block {
   position: relative;
 }
 .code-block:hover .copy-btn {
   opacity: 1;
-  transition: opacity .3s ease, transform .3s ease;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
-.code-container{
-  padding:10px;
+.code-container {
+  padding: 10px;
   border-radius: 5px;
 }
 .copy-btn {
-  width:56px;
+  width: 56px;
   font-size: 12px;
   background-color: #ccc;
   border: none;
@@ -57,7 +59,7 @@ export default {
   top: 5px;
   right: 5px;
   border-radius: 3px;
-  transition: all .3s;
+  transition: all 0.3s;
   opacity: 0;
 }
 </style>

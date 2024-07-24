@@ -55,7 +55,7 @@
                   : 'chat-content-ai'
               ]"
             >
-              <dialog-content :markdownContent="item.content"/>
+              <dialog-content :markdownContent="item.content" />
             </div>
           </tiny-col>
         </tiny-row>
@@ -72,13 +72,19 @@
           <svg-icon name="chat-message" class="common-svg"></svg-icon>
         </template>
         <template #suffix>
-          <svg-icon name="chat-microphone" class="common-svg microphone" :class="{ 'microphone-svg': speechStatus }" @click="speechRecognition"></svg-icon>
+          <svg-icon
+            name="chat-microphone"
+            class="common-svg microphone"
+            :class="{ 'microphone-svg': speechStatus }"
+            @click="speechRecognition"
+          ></svg-icon>
         </template>
       </tiny-input>
       <tiny-button @click="endContent">重新发起会话</tiny-button>
       <tiny-button @click="sendContent(inputContent, false)">发送</tiny-button>
     </footer>
   </div>
+  <token-dialog :dialog-visible="tokenDialogVisible" @dialog-status="getTokenDialogStatus"></token-dialog>
 </template>
 
 <script>
@@ -93,15 +99,16 @@ import {
   Loading,
   Dropdown as TinyDropdown,
   DropdownMenu as TinyDropdownMenu,
-  DropdownItem as TinyDropdownItem,
+  DropdownItem as TinyDropdownItem
 } from '@opentiny/vue'
 import { useCanvas, useHistory, usePage, useModal } from '@opentiny/tiny-engine-controller'
 import { iconChevronDown } from '@opentiny/vue-icon'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { getBlockContent, initBlockList, AIModelOptions } from './js/robotSetting'
-import DialogContent from './DialogContent.vue';
-import useSpeechRecognition from './js/useSpeechRecognition';
+import DialogContent from './ContentDialog.vue'
+import useSpeechRecognition from './js/useSpeechRecognition'
+import TokenDialog from './TokenDialog.vue'
 
 export default {
   components: {
@@ -115,9 +122,10 @@ export default {
     TinyDropdownItem,
     IconChevronDown: iconChevronDown(),
     DialogContent,
+    TokenDialog
   },
-  emits: ['close-chat','keyVisible'],
-  setup(props, {emit}) {
+  emits: ['close-chat'],
+  setup() {
     const { initData, isBlock, isSaved, clearCurrentState } = useCanvas()
     const avatarUrl = ref('')
     const chatWindowOpened = ref(true)
@@ -174,28 +182,28 @@ export default {
       useHistory().addHistory()
     }
 
-//     const codeRules = `
-//     请扮演一名前端开发专家，生成代码时遵从以下几条要求:
-// ###
-// 1. 只使用element-ui组件库完成代码编写
-// 2. 使用vue2技术栈
-// 3. 回复中只能有一个代码块
-// 4. el-table标签内不得出现el-table-column
-// ###
-//   `
-
-    const codeRules = ''
+    const codeRules = `
+      从现在开始，请扮演一名前端专家。如果需要生成前端代码，代码中的所有组件必须使用 Vue 3 框架和 TinyVue 组件库进行编写。例如，如果你想使用按钮组件，应该使用 TinyVue 组件库中的 \`tiny-button\`。
+      以下是 TinyVue 组件库的文档，请通读并遵循其中的指导来生成代码：[TinyVue 组件库文档](https://opentiny.design/tiny-vue/zh-CN/os-theme/overview)
+      生成代码时遵从以下几条要求:
+      ###
+      1. 回复中只能有一个代码块
+      2. 所有生成的代码都是基于 Vue 3 框架
+      3. 所有组件都来自 TinyVue 组件库，避免使用原生组件或其他第三方库
+      4. 参考并遵循 TinyVue 文档中的组件使用方式
+      ###
+    // `
     // 在每一次发送请求之前，都把引入区块的内容，给放到第一条消息中
     // 为了不污染存储在localstorage里的用户的原始消息，这里进行了简单的对象拷贝
     // 引入区块不存放在localstorage的原因：因为区块是可以变化的，用户可能在同一个会话中，对区块进行了删除和创建。那么存放的数据就不是即时数据了。
     const getSendSeesionProcess = () => {
-      const accessToken = localStorage.getItem('accessToken');
-      const sendProcess = { ...sessionProcess, accessToken}
+      const accessToken = localStorage.getItem('accessToken')
+      const sendProcess = { ...sessionProcess, accessToken }
       const firstMessage = sendProcess.messages[0]
       firstMessage.content
       sendProcess.messages = [
         { ...firstMessage, content: `${getBlockContent()}\n${codeRules}\n${firstMessage.content}` },
-        ...sendProcess.messages.slice(1),
+        ...sendProcess.messages.slice(1)
       ]
       delete sendProcess.displayMessages
       return sendProcess
@@ -207,16 +215,21 @@ export default {
       name: 'AI'
     })
 
+    const tokenDialogVisible = ref(false)
+    let accessToken = ref(localStorage.getItem('accessToken'))
     const sendRequest = () => {
       http
         .post('/app-center/api/ai/chat', getSendSeesionProcess(), { timeout: 600000 })
         .then((res) => {
-          const { originalResponse, schema, replyWithoutCode } = res
+          const { originalResponse, schema } = res
           const responseMessage = getAiRespMessage(
             originalResponse.choices?.[0]?.message.role,
             originalResponse.choices?.[0]?.message.content
           )
-          const respDisplayMessage = getAiRespMessage(originalResponse.choices?.[0]?.message.role, originalResponse.choices?.[0]?.message.content)
+          const respDisplayMessage = getAiRespMessage(
+            originalResponse.choices?.[0]?.message.role,
+            originalResponse.choices?.[0]?.message.content
+          )
           sessionProcess.messages.push(responseMessage)
           sessionProcess.displayMessages.push(respDisplayMessage)
           messages.value[messages.value.length - 1].content = originalResponse.choices?.[0]?.message.content
@@ -228,8 +241,9 @@ export default {
           connectedFailed.value = false
         })
         .catch((error) => {
-          if(error.code==='CM001'){
-            emit('keyVisible', true)
+          if (error.code === 'CM001') {
+            localStorage.removeItem('accessToken')
+            tokenDialogVisible.value = true
           }
           messages.value[messages.value.length - 1].content = '连接失败'
           localStorage.removeItem('aiChat')
@@ -237,6 +251,11 @@ export default {
           connectedFailed.value = false
         })
     }
+
+    const getTokenDialogStatus = (value) => {
+      tokenDialogVisible.value = value
+    }
+
     const scrollContent = async () => {
       await sleep(100)
       let scrollElement = document.getElementById('chatgpt-window')
@@ -325,6 +344,9 @@ export default {
     }
 
     onMounted(async () => {
+      if (!localStorage.getItem('accessToken')) {
+        tokenDialogVisible.value = true
+      }
       const loadingInstance = Loading.service({
         text: '初始化中，请稍等...',
         customClass: 'chat-loading',
@@ -357,29 +379,24 @@ export default {
       }
     }
 
-    const {
-      startRecognition,
-      stopRecognition,
-      recognizedText
-    } = useSpeechRecognition();
+    const { startRecognition, stopRecognition, recognizedText } = useSpeechRecognition()
 
     const speechStatus = ref(false)
-    const speechRecognition = () =>{
+    const speechRecognition = () => {
       speechStatus.value = !speechStatus.value
-      console.log(speechStatus)
-      if(speechStatus.value){
+      if (speechStatus.value) {
         startRecognition()
-      }else{
+      } else {
         stopRecognition()
       }
     }
 
-    watch(
-      ()=>recognizedText.value,
-      (newInputContent) =>{
-        inputContent.value = newInputContent
+    watch([recognizedText, accessToken.value], (newInputContent, accessToken) => {
+      inputContent.value = newInputContent
+      if (!accessToken) {
+        tokenDialogVisible.value = true
       }
-    )
+    })
 
     return {
       speechStatus,
@@ -394,7 +411,9 @@ export default {
       resizeChatWindow,
       AIModelOptions,
       selectedModel,
-      changeModel
+      changeModel,
+      tokenDialogVisible,
+      getTokenDialogStatus
     }
   }
 }
@@ -506,7 +525,7 @@ export default {
     .microphone {
       font-size: 18px;
     }
-    .microphone-svg{
+    .microphone-svg {
       color: var(--ti-lowcode-base-blue-6);
     }
   }
