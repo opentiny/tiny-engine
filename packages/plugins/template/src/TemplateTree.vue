@@ -110,8 +110,8 @@ export default {
     }
 
     templateSettingState.updateTreeData = async () => {
-      const pageList = await refreshTemplateList(appInfoState.selectedId)
-      return pageList
+      const templateList = await refreshTemplateList(appInfoState.selectedId)
+      return templateList
     }
     const clearCurrentState = () => {
       pageState.currentVm = null
