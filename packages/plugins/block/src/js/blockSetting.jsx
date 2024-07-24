@@ -583,7 +583,7 @@ export const publishBlock = (params) => {
   }
 }
 
-const getAppId = () => getServiceState('engine.service.globalService').appInfo.appId
+const getAppId = () => getServiceState('engine.service.globalService').appInfo.id
 
 const getCategories = () => {
   const appId = getAppId()

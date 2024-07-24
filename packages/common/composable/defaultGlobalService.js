@@ -21,29 +21,24 @@ const getBaseInfo = () => {
 
 const state = reactive({
   userInfo: null,
+  // 当前应用
   appInfo: {
-    // 应用列表
-    list: [],
-    // 当前应用
-    app: {
-      id: '',
-      name: '',
-      app_desc: '',
-      app_website: '',
-      obs_url: null,
-      published_at: '',
-      created_at: '',
-      updated_at: '',
-      platform: '',
-      state: null,
-      published: false,
-      tenant: null,
-      editor_url: ''
-    },
-    get appId() {
-      return this.app.id
-    }
-  }
+    id: '',
+    name: '',
+    app_desc: '',
+    app_website: '',
+    obs_url: null,
+    published_at: '',
+    created_at: '',
+    updated_at: '',
+    platform: '',
+    state: null,
+    published: false,
+    tenant: null,
+    editor_url: ''
+  },
+  // 应用列表
+  appList: []
 })
 
 const getUserInfo = async () => {
@@ -72,7 +67,7 @@ subscribe({
   topic: 'app_id_changed',
   callback: (appId) => {
     fetchAppInfo(appId).then((app) => {
-      state.appInfo.app = app
+      state.appInfo = app
       // 监听应用 ID 变化，根据应用名称设置网页 title
       document.title = `${app.name} —— TinyEditor 前端可视化设计器`
 
@@ -85,7 +80,7 @@ subscribe({
   topic: 'platform_id_changed',
   callback: (platformId) => {
     fetchAppList(platformId).then((list) => {
-      state.appInfo.list = list
+      state.appList = list
 
       publish({ topic: 'app_list_changed' })
     })

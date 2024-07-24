@@ -49,7 +49,7 @@ export default {
 
     const fetchDataSourceList = (appId) => http.get(`/app-center/api/sources/list/${appId}`)
 
-    const appId = getServiceState('engine.service.globalService').appInfo.appId
+    const appId = getServiceState('engine.service.globalService').appInfo.id
     fetchDataSourceList(appId).then((data) => {
       options.value = data
     })

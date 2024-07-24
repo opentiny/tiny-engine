@@ -141,7 +141,7 @@ export default {
       closeRemotePanel()
     }
 
-    const getAppId = () => getServiceState('engine.service.globalService').appInfo.appId
+    const getAppId = () => getServiceState('engine.service.globalService').appInfo.id
 
     const deleteDataSource = () => {
       const execDelete = () =>

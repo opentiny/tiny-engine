@@ -1,7 +1,7 @@
 <template>
-  <tiny-select v-model="app.id" placeholder="应用名称" @change="appChange">
+  <tiny-select v-model="globalState.appInfo.id" placeholder="应用名称" @change="appChange">
     <tiny-option
-      v-for="item in appInfoState.list"
+      v-for="item in globalState.appList"
       :key="`app-${item.name}-${item.id}`"
       :label="item.name"
       :value="item.id"
@@ -19,14 +19,14 @@ export default {
     TinyOption: Option
   },
   setup() {
-    const app = getServiceState('engine.service.globalService').appInfo.app
+    const globalState = getServiceState('engine.service.globalService')
 
     const appChange = (appId) => {
       useMessage().publish({ topic: 'app_id_changed', data: appId })
     }
 
     return {
-      app,
+      globalState,
       appChange
     }
   }

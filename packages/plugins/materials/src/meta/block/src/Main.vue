@@ -42,7 +42,7 @@ export default {
     const { addDefaultGroup, isDefaultGroupId, isAllGroupId, isRefresh, selectedGroup } = useBlock()
     const { materialState } = useMaterial()
     const { message } = useModal()
-    const getAppId = () => getServiceState('engine.service.globalService').appInfo.appId
+    const getAppId = () => getServiceState('engine.service.globalService').appInfo.id
 
     const state = reactive({
       searchValue: '',

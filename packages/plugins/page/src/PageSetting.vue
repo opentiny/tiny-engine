@@ -165,7 +165,7 @@ export default {
           ...page_content_state,
           fileName: pageSettingState.currentPageData.name
         },
-        app: getServiceState('engine.service.globalService').appInfo.appId,
+        app: getServiceState('engine.service.globalService').appInfo.id,
         isPage: true
       }
 
