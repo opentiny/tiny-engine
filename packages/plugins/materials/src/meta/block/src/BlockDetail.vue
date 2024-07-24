@@ -82,7 +82,7 @@ export default {
               .filter((item) => item.id !== blockId)
               .map((item) => ({ id: item.id, version: item.current_version }))
 
-            const appId = getServiceState('engine.service.globalService').appInfo.appId
+            const appId = getServiceState('engine.service.globalService').appInfo.id
             requestUpdateGroup({ id: groupId, blocks, app: appId }).then(() => {
               isRefresh.value = true
               emit('close')

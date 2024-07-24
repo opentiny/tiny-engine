@@ -116,7 +116,7 @@ export const ACTION_TYPE = {
   Edit: 'edit'
 }
 
-const getAppId = () => getServiceState('engine.service.globalService').appInfo.appId
+const getAppId = () => getServiceState('engine.service.globalService').appInfo.id
 
 export const getResources = () => {
   const id = getAppId()
