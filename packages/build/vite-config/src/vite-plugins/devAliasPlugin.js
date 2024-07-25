@@ -71,7 +71,8 @@ const getThemePath = (theme, useSourceAlias) => {
   }
 
   if (useSourceAlias) {
-    return path.resolve(process.cwd(), `../packages/theme/${theme}/index.less`)
+    const basePath = useSourceAlias.basePath || path.resolve(process.cwd(), '..')
+    return path.resolve(basePath, `packages/theme/${theme}/index.less`)
   }
 
   return path.resolve(process.cwd(), `./node_modules/@opentiny/tiny-engine-theme-${theme}/dist/style.css`)
