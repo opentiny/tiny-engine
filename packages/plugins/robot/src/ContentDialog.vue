@@ -1,22 +1,27 @@
 <template>
-  <div v-html="renderedMarkdown" />
+  <div v-html="cleanRenderedMarkdown" />
 </template>
 
 <script>
 import { ref, onMounted, watch } from 'vue'
 import useMarkdown from './js/useDialogContent'
+import DOMPurify from 'dompurify'
 
 export default {
   props: {
     markdownContent: String
   },
   setup(props) {
-    const renderedMarkdown = ref('')
+    const cleanRenderedMarkdown = ref('')
     const { md, initClipboard } = useMarkdown()
 
+    let clipboardInitialized = false
     const render = (text) => {
-      renderedMarkdown.value = md.render(text)
-      initClipboard()
+      cleanRenderedMarkdown.value = DOMPurify.sanitize(md.render(text))
+      if (!clipboardInitialized) {
+        initClipboard()
+        clipboardInitialized = true
+      }
     }
 
     watch(
@@ -31,7 +36,7 @@ export default {
     })
 
     return {
-      renderedMarkdown
+      cleanRenderedMarkdown
     }
   }
 }

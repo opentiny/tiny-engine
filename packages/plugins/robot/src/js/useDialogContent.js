@@ -23,7 +23,8 @@ export default function useMarkdown() {
       } else {
         highlighted = md.utils.escapeHtml(str)
       }
-      return `<div class="code-block"><pre class="hljs code-container"><code>${highlighted}</code></pre><button class="copy-btn" >复制</button></div>`
+      const copyButtonText = '复制' // Make this configurable
+      return `<div class="code-block"><pre class="hljs code-container"><code>${highlighted}</code></pre><button class="copy-btn">${copyButtonText}</button></div>`
     }
   })
 
@@ -36,7 +37,8 @@ export default function useMarkdown() {
 
     clipboard.on('success', function (e) {
       const originalText = '复制'
-      e.trigger.textContent = '已复制'
+      const copiedText = '已复制'
+      e.trigger.textContent = copiedText
       setTimeout(() => {
         e.trigger.textContent = originalText
       }, 3000)

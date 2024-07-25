@@ -64,7 +64,6 @@
     <article class="chat-tips">
       <span @click="sendContent('需要一个注册表单？', true)">需要一个注册表单？</span>
       <span @click="sendContent('如何将表单嵌进我的网站？', true)">如何将表单嵌进我的网站？</span>
-      <span @click="sendContent('需要一个注册表单？', true)">需要一个注册表单？</span>
     </article>
     <footer class="chat-submit">
       <tiny-input placeholder="告诉我，你想做什么..." v-model="inputContent">
