@@ -15,7 +15,7 @@
       v-if="!loading"
       id="canvas"
       ref="iframe"
-      :src="canvasSrc"
+      :srcdoc="canvasSrc"
       style="border: none; width: 100%; height: 100%"
     ></iframe>
     <div v-else class="datainit-tip">应用数据初始化中...</div>

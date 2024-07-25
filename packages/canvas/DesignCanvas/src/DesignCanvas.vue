@@ -29,16 +29,12 @@ import {
 import materials from '@opentiny/tiny-engine-plugin-materials'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { isVsCodeEnv, isDevelopEnv } from '@opentiny/tiny-engine-controller/js/environments'
 import * as ast from '@opentiny/tiny-engine-controller/js/ast'
 import { getMergeRegistry } from '@opentiny/tiny-engine-entry'
+import { initCanvas } from '../../init-canvas/init-canvas'
+import { importMap } from './importMap'
 
 const { PAGE_STATUS } = constants
-const tenant = new URLSearchParams(location.search).get('tenant') || ''
-const canvasUrl =
-  isVsCodeEnv || isDevelopEnv
-    ? `canvas.html?tenant=${tenant}`
-    : window.location.origin + window.location.pathname + `/canvas?tenant=${tenant}`
 
 const componentType = {
   Block: '区块',
@@ -160,6 +156,8 @@ export default {
       document.removeEventListener('canvasResize', useCanvas().canvasApi.value.updateRect)
       canvasResizeObserver?.disconnect?.()
     })
+
+    const { html: canvasUrl } = initCanvas(importMap)
 
     return {
       removeNode,

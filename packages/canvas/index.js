@@ -10,7 +10,6 @@
  *
  */
 import CanvasBreadcrumb from './breadcrumb'
-export { createRender } from './render'
 export { CanvasDragItem } from './drag-drop'
 
 // meta app

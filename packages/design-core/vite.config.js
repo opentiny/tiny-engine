@@ -27,6 +27,15 @@ export default defineConfig({
       ]
     }
   },
+  base: './',
+  define: {
+    'import.meta.env': 'import.meta.env',
+    'import.meta.env.MODE': 'import.meta.env.MODE',
+    'import.meta.env.PROD': 'import.meta.env.PROD',
+    'import.meta.env.BASE_URL': 'import.meta.env.BASE_URL',
+    'import.meta.env.VITE_ORIGIN': 'import.meta.env.VITE_ORIGIN',
+    'import.meta.env.VITE_CDN_DOMAIN': 'import.meta.env.VITE_CDN_DOMAIN'
+  },
   build: {
     commonjsOptions: {
       transformMixedEsModules: true,
@@ -36,8 +45,7 @@ export default defineConfig({
     sourcemap: true,
     lib: {
       entry: {
-        index: path.resolve(__dirname, 'index.js'),
-        canvas: path.resolve(__dirname, './src/canvas/canvas.js')
+        index: path.resolve(__dirname, 'index.js')
       },
       name: 'tiny-engine',
       fileName: (_, entryName) => `${entryName}.js`,
