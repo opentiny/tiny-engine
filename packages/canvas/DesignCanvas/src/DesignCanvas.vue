@@ -32,7 +32,7 @@ import { constants } from '@opentiny/tiny-engine-utils'
 import * as ast from '@opentiny/tiny-engine-controller/js/ast'
 import { getMergeRegistry } from '@opentiny/tiny-engine-entry'
 import { initCanvas } from '../../init-canvas/init-canvas'
-import { importMap } from './importMap'
+import { importMap, importStyles } from './importMap'
 
 const { PAGE_STATUS } = constants
 
@@ -157,7 +157,7 @@ export default {
       canvasResizeObserver?.disconnect?.()
     })
 
-    const { html: canvasUrl } = initCanvas(importMap)
+    const { html: canvasUrl } = initCanvas(importMap, importStyles)
 
     return {
       removeNode,

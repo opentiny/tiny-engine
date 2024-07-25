@@ -16,3 +16,5 @@ export const importMap = {
     echarts: `${VITE_CDN_DOMAIN}/echarts@5.4.1/dist/echarts.esm.js`
   }
 }
+
+export const importStyles = [`${VITE_CDN_DOMAIN}/@opentiny/vue-theme@${importMapVersions.tinyVue}/index.css`]
