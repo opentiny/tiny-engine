@@ -20,8 +20,8 @@
           "npm": {
             "package": "element-plus",
             "version": "2.4.2",
-            "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
-            "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
+            "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
+            "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css",
             "dependencies": null,
             "exportName": "ElInput"
           },
@@ -300,8 +300,8 @@
           "npm": {
             "package": "element-plus",
             "version": "2.4.2",
-            "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
-            "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
+            "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
+            "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css",
             "dependencies": null,
             "exportName": "ElButton"
           },
@@ -621,8 +621,8 @@
           "npm": {
             "package": "element-plus",
             "version": "2.4.2",
-            "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
-            "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
+            "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
+            "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css",
             "dependencies": null,
             "exportName": "ElForm"
           },
@@ -1078,8 +1078,8 @@
           "npm": {
             "package": "element-plus",
             "version": "2.4.2",
-            "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
-            "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
+            "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
+            "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css",
             "dependencies": null,
             "exportName": "ElFormItem"
           },
@@ -1428,8 +1428,8 @@
           "npm": {
             "package": "element-plus",
             "version": "2.4.2",
-            "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
-            "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
+            "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
+            "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css",
             "dependencies": null,
             "exportName": "ElTable"
           },
@@ -2666,8 +2666,8 @@
           "npm": {
             "package": "element-plus",
             "version": "2.4.2",
-            "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
-            "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
+            "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
+            "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css",
             "dependencies": null,
             "exportName": "ElTableColumn"
           },

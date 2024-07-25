@@ -129,7 +129,7 @@ const config = {
 }
 
 export default defineConfig(({ command = 'serve', mode = 'serve' }, extOptions) => {
-  const { VITE_CDN_DOMAIN = 'https://npm.onmicrosoft.cn', VITE_LOCAL_IMPORT_MAPS, VITE_LOCAL_BUNDLE_DEPS } = extOptions
+  const { VITE_CDN_DOMAIN = 'https://unpkg.com', VITE_LOCAL_IMPORT_MAPS, VITE_LOCAL_BUNDLE_DEPS } = extOptions
 
   const isLocalImportMap = VITE_LOCAL_IMPORT_MAPS === 'true' // true公共依赖库使用本地打包文件，false公共依赖库使用公共CDN
   const isCopyBundleDeps = VITE_LOCAL_BUNDLE_DEPS === 'true' // true bundle里的cdn依赖处理成本地依赖， false 不处理
