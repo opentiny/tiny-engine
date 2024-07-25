@@ -1,6 +1,6 @@
 import path from 'node:path'
 import { defineConfig, mergeConfig, loadEnv } from 'vite'
-import { getDefaultConfig } from '@opentiny/tiny-engine-vite-config'
+import { canvasDevExternal, getDefaultConfig } from '@opentiny/tiny-engine-vite-config'
 
 export default defineConfig((options) => {
   const envDir = path.resolve(process.cwd(), 'env')
@@ -63,21 +63,31 @@ export default defineConfig((options) => {
     '@opentiny/tiny-engine-layout': path.resolve(__dirname, '../packages/layout/index.js'),
     '@opentiny/tiny-engine-configurator': path.resolve(__dirname, '../packages/configurator/src/index.js'),
     '@opentiny/tiny-engine-theme': ['light', 'dark'].includes(extOptions.VITE_THEME)
-    ? path.resolve(process.cwd(), `../packages/theme/${extOptions.VITE_THEME}/index.less`)
-    // ? path.resolve(process.cwd(), `./node_modules/@opentiny/tiny-engine-theme-${extOptions.VITE_THEME}/dist/style.css`)
-    : ''
+      ? path.resolve(process.cwd(), `../packages/theme/${extOptions.VITE_THEME}/index.less`)
+      // ? path.resolve(process.cwd(), `./node_modules/@opentiny/tiny-engine-theme-${extOptions.VITE_THEME}/dist/style.css`)
+      : ''
   }
 
-  const config = {
+  const prodAlias = {
+    '@opentiny/tiny-engine-theme': ['light', 'dark'].includes(extOptions.VITE_THEME)
+      ? path.resolve(process.cwd(), `../packages/theme/${extOptions.VITE_THEME}/index.less`)
+      // ? path.resolve(process.cwd(), `./node_modules/@opentiny/tiny-engine-theme-${extOptions.VITE_THEME}/dist/style.css`)
+      : ''
+  }
+
+  const config = defineConfig({
     envDir,
     publicDir: path.resolve(__dirname, './public'),
     server: {
       port: 8090
     },
     resolve: {
-      alias: devAlias
-    }
-  }
-  
+      alias: options.command === 'serve' ? devAlias : prodAlias
+    },
+    plugins: [
+      options.command === 'serve' && devAlias['@opentiny/tiny-engine-canvas'] ? canvasDevExternal() : null,
+    ]
+  })
+
   return mergeConfig(defaultConfig, config)
 })
