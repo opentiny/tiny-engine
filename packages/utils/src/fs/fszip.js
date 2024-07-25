@@ -18,9 +18,9 @@ import JSZIP from 'jszip'
  * @param {Blob} blobData 文件二进制数据
  * @param {string} fileName 文件名
  */
-export function saveAsZip(blobData, fileName) {
+export function saveAs(blobData, fileName) {
   const zipLink = document.createElement('a')
-  zipLink.download = `${fileName}.zip`
+  zipLink.download = fileName
   zipLink.style.display = 'none'
   zipLink.href = URL.createObjectURL(blobData)
   document.body.appendChild(zipLink)
@@ -37,10 +37,14 @@ export const createZip = () => {
 
 /**
  * 往zip里面写入文件夹和文件
- * @param {JSZIP} zipHandle 创建好的zip句柄
- * @param {array} filesInfo 文件信息
+ * @param {Array<FileInfo>} filesInfo 文件信息
+ *          FileInfo.filePath 文件相对路径，以'/'相连
+ *          FileInfo.fileContent 文件内容
+ * @param {ZipExtraInfo} ZipExtraInfo zip额外信息
+ *  {string} zipName 打出来的zip名称
+ *  {JSZIP} zipHandle 创建好的zip句柄，可以不传，不传就用新的
  */
-export const writeZip = (zipHandle, filesInfo) => {
+export const writeZip = (filesInfo, { zipHandle, zipName } = {}) => {
   let zip = zipHandle
   if (!zipHandle) {
     zip = createZip()
@@ -55,10 +59,9 @@ export const writeZip = (zipHandle, filesInfo) => {
       zip.file(fileName, fileContent)
     }
   })
-
   // 把打包的内容一部转成blob二进制格式
   return zip.generateAsync({ type: 'blob' }).then((content) => {
     // content就是blob数据
-    saveAsZip(content, 'tiny-engine-generate-code')
+    saveAs(content, `${zipName}.zip`)
   })
 }

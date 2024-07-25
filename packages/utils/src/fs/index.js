@@ -26,8 +26,7 @@ export const isSupportFileSystemAccess =
  */
 export const getUserBaseDirHandle = async (options = {}) => {
   if (!window.showOpenFilePicker) {
-    const zipHandle = await createZip()
-    return zipHandle
+    return createZip()
   }
   const dirHandle = await window.showDirectoryPicker({ mode: 'readwrite', ...options })
   return dirHandle
@@ -173,14 +172,22 @@ export const writeFile = async (handle, { filePath, fileContent }) => {
  * @param {Array<FileInfo>} filesInfo 文件信息
  *          FileInfo.filePath 文件相对路径
  *          FileInfo.fileContent 文件内容
+ * @param {Boolean} supportZipCache 是否支持zip缓存，zip缓存可能会导致文件不能及时更新，默认不缓存
+ *
  */
-export const writeFiles = async (baseDirHandle, filesInfo) => {
+export const writeFiles = async (
+  baseDirHandle,
+  filesInfo,
+  zipName = 'tiny-engine-generate-code',
+  supportZipCache = false
+) => {
   if (!filesInfo?.length) {
     return
   }
 
   if (!isSupportFileSystemAccess) {
-    await writeZip(baseDirHandle, filesInfo)
+    const zipInfo = { zipName, zipHandle: supportZipCache && baseDirHandle }
+    await writeZip(filesInfo, zipInfo)
     return
   }
 
