@@ -1,6 +1,6 @@
 import path from 'node:path'
 import { defineConfig, mergeConfig } from 'vite'
-import { canvasDevExternal, useTinyEngineBaseConfig } from '@opentiny/tiny-engine-vite-config'
+import { useTinyEngineBaseConfig } from '@opentiny/tiny-engine-vite-config'
 
 export default defineConfig((configEnv) => {
   const baseConfig = useTinyEngineBaseConfig({
@@ -17,10 +17,7 @@ export default defineConfig((configEnv) => {
     publicDir: path.resolve(__dirname, './public'),
     server: {
       port: 8090
-    },
-    plugins: [
-      configEnv.command === 'serve' ? canvasDevExternal() : null,
-    ]
+    }
   }
 
   return mergeConfig(baseConfig, customConfig)
