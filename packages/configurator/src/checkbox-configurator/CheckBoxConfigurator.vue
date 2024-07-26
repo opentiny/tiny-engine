@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="checkbox-configurator">
     <tiny-checkbox v-model="checked"><slot></slot></tiny-checkbox>
   </div>
 </template>
@@ -26,3 +26,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+.checkbox-configurator {
+  line-height: 0;
+}
+</style>

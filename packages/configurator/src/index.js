@@ -27,6 +27,7 @@ import SlotConfigurator from './slot-configurator/SlotConfigurator.vue'
 import SwitchConfigurator from './switch-configurator/SwitchConfigurator.vue'
 import TableColumnsConfigurator from './table-columns-configurator/TableColumnsConfigurator.vue'
 import VariableConfigurator from './variable-configurator/VariableConfigurator.vue'
+import MultPropertyConfigurator from './mult-property-configurator/MultPropertyConfigurator.vue'
 
 import { I18nInput, MetaCodeEditor } from '@opentiny/tiny-engine-common'
 
@@ -61,6 +62,7 @@ export {
   TableColumnsConfigurator,
   VariableConfigurator,
   MetaCodeEditor,
+  MultPropertyConfigurator,
   I18nInput as I18nConfigurator,
   MetaCodeEditor as CodeConfigurator,
   // 暂时保留Meta开头的旧组件名

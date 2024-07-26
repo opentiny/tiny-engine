@@ -14,7 +14,7 @@ import { ButtonGroup } from '@opentiny/vue'
 import i18n from '@opentiny/tiny-engine-common/js/i18n'
 
 export default {
-  name: 'ButtonGroupConfigurator',
+  name: 'MultPropertyConfigurator',
   components: {
     TinyButtonGroup: ButtonGroup
   },
@@ -34,7 +34,7 @@ export default {
 
     const getLocaledOptions = (options) => {
       if (!options || !options.length) return []
-      return options.map(({ label, ...rest }) => ({ ...rest, text: label[locale.value] ?? label }))
+      return options.map(({ label, ...rest }) => ({ ...rest, text: label[locale.value] ?? label, isChange: false }))
     }
 
     const optionsData = ref(getLocaledOptions(props.options))
@@ -45,7 +45,10 @@ export default {
     })
 
     const change = (val) => {
-      emit('update:modelValue', val)
+      optionsData.value.map((item) => {
+        item.isChange = item.value === val ? true : false
+      })
+      emit('update:modelValue', optionsData.value)
     }
 
     return {
