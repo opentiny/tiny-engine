@@ -13,7 +13,6 @@
   </plugin-panel>
 </template>
 
-<!-- event插件界面 -->
 <script>
 import { ref, reactive, provide } from 'vue'
 import { Collapse as TinyCollapse, CollapseItem as TinyCollapseItem } from '@opentiny/vue'
