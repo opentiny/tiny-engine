@@ -12,6 +12,13 @@ export function canvasDevExternal(override = {}) {
     },
     importStyles: [`${prefix}/@opentiny/vue-theme/index.css`]
   }
+  // 以下内容由于物料协议不支持声明子依赖而@opentiny/vue需要依赖所以需要补充
+  const tinyVueRequire = {
+    imports: {
+      '@opentiny/vue-common': `${prefix}/node_modules/@opentiny/vue/runtime/tiny-vue-common.mjs`,
+      '@opentiny/vue-locale': `${prefix}/node_modules/@opentiny/vue/runtime/tiny-vue-locale.mjs`
+    }
+  }
   return [
     vitePluginExternalize({ externals: [/^vue$/, /^vue-i18n$/, ...blockRequire.externals] }),
     genImportMapPlugin(
@@ -20,6 +27,7 @@ export function canvasDevExternal(override = {}) {
           vue: `${prefix}/node_modules/vue/dist/vue.runtime.esm-browser.js`,
           'vue-i18n': `${prefix}/node_modules/vue-i18n/dist/vue-i18n.esm-browser.js`,
           ...blockRequire.imports,
+          ...tinyVueRequire.imports,
           ...override
         }
       },
