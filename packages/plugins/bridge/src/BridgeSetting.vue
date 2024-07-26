@@ -112,7 +112,7 @@ import {
   getResourceNamesByType
 } from './js/resource'
 import { VueMonaco as MonacoEditor, PluginSetting, SvgButton } from '@opentiny/tiny-engine-common'
-import { useModal, useNotify, getServiceState } from '@opentiny/tiny-engine-meta-register'
+import { useModal, useNotify, getMetaApi } from '@opentiny/tiny-engine-meta-register'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 
 const isOpen = ref(false)
@@ -209,7 +209,7 @@ export default {
         category: getType(),
         type: getCategory(),
         name: state.name,
-        app: getServiceState('engine.service.globalService').appInfo.id,
+        app: getMetaApi('engine.service.globalService').getState().appInfo.id,
         content: state.category
           ? state.content
           : {

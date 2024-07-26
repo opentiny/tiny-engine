@@ -39,7 +39,7 @@ import {
   useResource,
   useMaterial,
   useNotify,
-  getServiceState
+  getMetaApi
 } from '@opentiny/tiny-engine-meta-register'
 import BlockGroupTransfer from './BlockGroupTransfer.vue'
 import BlockGroupFilters from './BlockGroupFilters.vue'
@@ -79,7 +79,7 @@ export default {
     const { isDefaultGroupId, isRefresh, selectedGroup, selectedBlockArray, getGroupList } = useBlock()
     const { panel, closePanel } = useGroupPanel()
     const { message } = useModal()
-    const getAppId = () => getServiceState('engine.service.globalService').appInfo.id
+    const getAppId = () => getMetaApi('engine.service.globalService').getState().appInfo.id
     const panelState = inject('panelState', {})
     const blockUsers = ref([])
     provide('blockUsers', blockUsers)

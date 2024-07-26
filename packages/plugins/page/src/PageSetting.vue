@@ -64,7 +64,7 @@ import {
   useModal,
   useNotify,
   getMergeRegistry,
-  getServiceState
+  getMetaApi
 } from '@opentiny/tiny-engine-meta-register'
 import { extend, isEqual } from '@opentiny/vue-renderless/common/object'
 import { constants } from '@opentiny/tiny-engine-utils'
@@ -173,7 +173,7 @@ export default {
           ...page_content_state,
           fileName: pageSettingState.currentPageData.name
         },
-        app: getServiceState('engine.service.globalService').appInfo.id,
+        app: getMetaApi('engine.service.globalService').getState().appInfo.id,
         isPage: true
       }
 

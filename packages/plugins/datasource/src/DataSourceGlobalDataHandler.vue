@@ -22,7 +22,7 @@
 import DataHandlerEditor from './RemoteDataAdapterForm.vue'
 import { watch, ref, nextTick, reactive } from 'vue'
 import { requestGlobalDataHandler } from './js/http'
-import { useModal, useResource, getServiceState } from '@opentiny/tiny-engine-meta-register'
+import { useModal, useResource, getMetaApi } from '@opentiny/tiny-engine-meta-register'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
 import { Collapse, CollapseItem } from '@opentiny/vue'
 import { constants } from '@opentiny/tiny-engine-utils'
@@ -55,7 +55,7 @@ export default {
     })
 
     const saveGlobalDataHandle = () => {
-      const id = getServiceState('engine.service.globalService').appInfo.id
+      const id = getMetaApi('engine.service.globalService').getState().appInfo.id
 
       const handler = {
         dataHandler: { type: 'JSFunction', value: state.dataHandlerValue || DEFAULT_INTERCEPTOR.dataHandler.value },
