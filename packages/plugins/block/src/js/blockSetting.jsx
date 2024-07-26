@@ -22,7 +22,7 @@ import {
   useNotify,
   useHistory,
   useMaterial,
-  getServiceState
+  getMetaApi
 } from '@opentiny/tiny-engine-meta-register'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import { getCanvasStatus } from '@opentiny/tiny-engine-common/js/canvas'
@@ -583,7 +583,7 @@ export const publishBlock = (params) => {
   }
 }
 
-const getAppId = () => getServiceState('engine.service.globalService').appInfo.id
+const getAppId = () => getMetaApi('engine.service.globalService').getState().appInfo.id
 
 const getCategories = () => {
   const appId = getAppId()

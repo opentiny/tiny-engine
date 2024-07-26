@@ -30,7 +30,7 @@
 import { reactive, ref } from 'vue'
 import { Button, Collapse, CollapseItem } from '@opentiny/vue'
 import { PluginSetting, SvgButton, ButtonGroup } from '@opentiny/tiny-engine-common'
-import { usePage, useModal, useNotify, getServiceState } from '@opentiny/tiny-engine-meta-register'
+import { usePage, useModal, useNotify, getMetaApi } from '@opentiny/tiny-engine-meta-register'
 import { isEqual } from '@opentiny/vue-renderless/common/object'
 import throttle from '@opentiny/vue-renderless/common/deps/throttle'
 import PageGeneral from './PageGeneral.vue'
@@ -97,7 +97,7 @@ export default {
       const data = pageSettingState.currentPageData
       const createParams = {
         ...data,
-        app: getServiceState('engine.service.globalService').appInfo.id,
+        app: getMetaApi('engine.service.globalService').getState().appInfo.id,
         isPage: false
       }
 

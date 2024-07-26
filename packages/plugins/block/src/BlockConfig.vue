@@ -105,7 +105,7 @@ import { Input, Tag, Button, Form, FormItem, Radio, Select, Option } from '@open
 import { constants } from '@opentiny/tiny-engine-utils'
 import { remove } from '@opentiny/vue-renderless/common/array'
 import { getEditBlock } from './js/blockSetting'
-import { useBlock, getServiceState } from '@opentiny/tiny-engine-meta-register'
+import { useBlock, getMetaApi } from '@opentiny/tiny-engine-meta-register'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 
 const { BLOCK_OPENNESS } = constants
@@ -127,7 +127,7 @@ export default {
     const state = reactive({
       inputVisible: false,
       inputValue: '',
-      publicOptions: getServiceState('engine.service.globalService').userInfo.tenants
+      publicOptions: getMetaApi('engine.service.globalService').getState().userInfo.tenants
     })
 
     const groupSelect = ref(null)

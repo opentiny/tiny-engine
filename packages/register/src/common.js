@@ -10,8 +10,8 @@
  *
  */
 
-import { readonly } from 'vue'
 import { initHook } from './hooks'
+import { useState } from './useState'
 
 const vueLifeHook = [
   'onMounted',
@@ -62,16 +62,6 @@ export const getMetaApi = (id, key) => {
   }
 
   return apisMap[id]
-}
-
-export const getServiceState = (id) => {
-  if (!metaHashMap[id]) {
-    return
-  }
-
-  if (metaHashMap[id].state) {
-    return readonly(metaHashMap[id].state)
-  }
 }
 
 export const getOptions = (id) => {
@@ -143,6 +133,15 @@ const handleRegistryProp = (id, value) => {
 
   if (apis) {
     apisMap[id] = apis
+
+    if (value.type === 'MetaService') {
+      const [state, setState] = useState(id)
+      Object.assign(apisMap[id], {
+        getState: () => state,
+        setState
+      })
+    }
+
     if (composable?.name) {
       initHook(composable.name, apis)
     }

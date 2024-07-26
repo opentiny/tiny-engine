@@ -11,7 +11,7 @@
  */
 
 import { reactive } from 'vue'
-import { getServiceState } from '@opentiny/tiny-engine-meta-register'
+import { getMetaApi } from '@opentiny/tiny-engine-meta-register'
 import { useHttp } from '@opentiny/tiny-engine-http'
 
 export const AIModelOptions = [
@@ -59,7 +59,7 @@ export const initBlockList = async () => {
   if (state.blockList?.length) {
     return
   }
-  const appId = getServiceState('engine.service.globalService').appInfo.id
+  const appId = getMetaApi('engine.service.globalService').getState().appInfo.id
   try {
     const list = await useHttp().get('/material-center/api/blocks', { params: { appId } })
     setBlocks(list)

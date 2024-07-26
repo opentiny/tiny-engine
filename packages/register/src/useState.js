@@ -1,43 +1,32 @@
-import { computed, isReactive, reactive } from 'vue'
+import { isReactive, reactive, readonly } from 'vue'
+
+const store = {}
 
 /**
- * @type {Record<string, Record<string, any>>}
+ *
+ * @param {string | Symbol} id
+ * @template {Record<string, any>} T
+ * @param {T} initialState
+ * @returns {[(import 'vue').DeepReadonly<(import 'vue').UnwrapNestedRefs<T>>, (value: Partial<T>) => void]}
  */
-const stores = {}
-
-/**
- * @param {string} name
- * @returns
- */
-export const useStore = (name) => {
-  if (!isReactive(stores[name])) {
-    stores[name] = reactive({})
+export const useState = (id, initialState) => {
+  if (!isReactive(store[id])) {
+    store[id] = reactive({})
   }
 
-  const store = stores[name]
+  /**
+   * @type {T}
+   */
+  const state = store[id]
 
-  return {
-    store,
-    /**
-     * @param {Record<string, any>} kv
-     * @returns
-     */
-    patchStore: (kv) => {
-      return Object.assign(store, kv)
-    },
-    /**
-     * @param {string} key
-     * @returns {[(import 'vue').ComputedRef<any>, (value: any) => void]}
-     */
-    useState: (key) => {
-      return [
-        computed(() => store[key]),
-        (value) => {
-          store[key] = value
-        }
-      ]
+  if (typeof initialState === 'object' && initialState !== null) {
+    Object.assign(state, initialState)
+  }
+
+  return [
+    readonly(state),
+    (kv) => {
+      Object.assign(state, kv)
     }
-  }
+  ]
 }
-
-export const { useState } = useStore('_defaultGlobal')

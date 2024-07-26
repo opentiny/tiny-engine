@@ -1,5 +1,5 @@
 <template>
-  <tiny-select v-model="globalState.appInfo.id" placeholder="应用名称" @change="appChange">
+  <tiny-select :model-value="globalState.appInfo.id" placeholder="应用名称" @change="appChange">
     <tiny-option
       v-for="item in globalState.appList"
       :key="`app-${item.name}-${item.id}`"
@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { useMessage, getServiceState } from '@opentiny/tiny-engine-meta-register'
+import { useMessage, getMetaApi } from '@opentiny/tiny-engine-meta-register'
 import { Select, Option } from '@opentiny/vue'
 
 export default {
@@ -19,7 +19,7 @@ export default {
     TinyOption: Option
   },
   setup() {
-    const globalState = getServiceState('engine.service.globalService')
+    const globalState = getMetaApi('engine.service.globalService').getState()
 
     const appChange = (appId) => {
       useMessage().publish({ topic: 'app_id_changed', data: appId })
