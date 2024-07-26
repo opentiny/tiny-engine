@@ -1,6 +1,8 @@
 import { useHttp } from '@opentiny/tiny-engine-http'
-import { useMessage, useModal } from '@opentiny/tiny-engine-meta-register'
-import { reactive } from 'vue'
+import { useMessage, useModal, useState } from '@opentiny/tiny-engine-meta-register'
+import { watch } from 'vue'
+
+const serviceId = 'engine.service.globalService'
 
 const getBaseInfo = () => {
   const paramsMap = new URLSearchParams(location.search)
@@ -19,7 +21,7 @@ const getBaseInfo = () => {
   }
 }
 
-const state = reactive({
+const [state, setState] = useState(serviceId, {
   userInfo: null,
   // 当前应用
   appInfo: {
@@ -41,13 +43,29 @@ const state = reactive({
   appList: []
 })
 
+const { subscribe, publish } = useMessage()
+
+watch(
+  () => state.appInfo,
+  (appInfo) => {
+    publish({ topic: 'app_info_changed', data: appInfo })
+  }
+)
+
+watch(
+  () => state.appList,
+  (appList) => {
+    publish({ topic: 'app_list_changed', data: appList })
+  }
+)
+
 const getUserInfo = async () => {
   // 获取登录用户信息
   await useHttp()
     .get('/platform-center/api/user/me')
     .then((data) => {
       if (data) {
-        state.userInfo = data
+        setState({ userInfo: data })
       }
     })
     .catch((error) => {
@@ -61,17 +79,13 @@ const fetchAppInfo = (appId) => useHttp().get(`/app-center/api/apps/detail/${app
 // 获取应用列表
 const fetchAppList = (platformId) => useHttp().get(`/app-center/api/apps/list/${platformId}`)
 
-const { subscribe, publish } = useMessage()
-
 subscribe({
   topic: 'app_id_changed',
   callback: (appId) => {
     fetchAppInfo(appId).then((app) => {
-      state.appInfo = app
+      setState({ appInfo: app })
       // 监听应用 ID 变化，根据应用名称设置网页 title
       document.title = `${app.name} —— TinyEditor 前端可视化设计器`
-
-      publish({ topic: 'app_info_changed' })
     })
   }
 })
@@ -80,9 +94,7 @@ subscribe({
   topic: 'platform_id_changed',
   callback: (platformId) => {
     fetchAppList(platformId).then((list) => {
-      state.appList = list
-
-      publish({ topic: 'app_list_changed' })
+      setState({ appList: list })
     })
   }
 })
@@ -93,10 +105,9 @@ const initData = async () => {
 }
 
 export default {
-  id: 'engine.service.globalService',
+  id: serviceId,
   type: 'MetaService',
   options: {},
-  state,
   apis: {
     getBaseInfo,
     isAdmin: () => state.userInfo.resetPasswordToken === 'p_webcenter'

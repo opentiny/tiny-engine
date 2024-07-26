@@ -43,7 +43,7 @@ import {
   requestDeleteDataSource,
   requestGenerateDataSource
 } from './js/http'
-import { useModal, useApp, useDataSource, useNotify, getServiceState } from '@opentiny/tiny-engine-meta-register'
+import { useModal, useApp, useDataSource, useNotify, getMetaApi } from '@opentiny/tiny-engine-meta-register'
 import { extend } from '@opentiny/vue-renderless/common/object'
 
 let isOpen = ref(false)
@@ -141,7 +141,7 @@ export default {
       closeRemotePanel()
     }
 
-    const getAppId = () => getServiceState('engine.service.globalService').appInfo.id
+    const getAppId = () => getMetaApi('engine.service.globalService').getState().appInfo.id
 
     const deleteDataSource = () => {
       const execDelete = () =>

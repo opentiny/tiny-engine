@@ -18,7 +18,7 @@
 
 <script lang="jsx">
 import { computed, inject, reactive, ref } from 'vue'
-import { useBlock, useMaterial, useModal, useCanvas, getServiceState } from '@opentiny/tiny-engine-meta-register'
+import { useBlock, useMaterial, useModal, useCanvas, getMetaApi } from '@opentiny/tiny-engine-meta-register'
 import { PluginBlockList } from '@opentiny/tiny-engine-common'
 import { requestUpdateGroup, fetchGroupBlocksById } from './http'
 import { setBlockPanelVisible, setBlockVersionPanelVisible } from './js/usePanel'
@@ -57,7 +57,7 @@ export default {
     const panelState = inject('panelState', {})
     const displayType = inject('displayType')
     const { message, confirm } = useModal()
-    const getAppId = () => getServiceState('engine.service.globalService').appInfo.id
+    const getAppId = () => getMetaApi('engine.service.globalService').getState().appInfo.id
 
     const openVersionPanel = async ({ item }) => {
       selectedBlock.value = item

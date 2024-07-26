@@ -10,12 +10,12 @@
  *
  */
 
-export { getMergeMeta, getMetaApi, getOptions, getServiceState } from './common'
+export { getMergeMeta, getMetaApi, getOptions } from './common'
 export { useCompile } from './templateHash'
 export { defineEntry, callEntry, beforeCallEntry, afterCallEntry, mergeRegistry, getMergeRegistry } from './entryHash'
 export { getLayoutComponent } from './layoutHash'
 export { default as useMessage } from './useMessage'
-export { useState, useStore } from './useState'
+export { useState } from './useState'
 export { getConfigurator, addConfigurator } from './configurators'
 export * from './hooks'
 export { META_APP, META_SERVICE } from './constants'

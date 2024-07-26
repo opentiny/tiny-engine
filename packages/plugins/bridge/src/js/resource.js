@@ -11,7 +11,7 @@
  */
 
 import { reactive } from 'vue'
-import { useResource, useNotify, useCanvas, getServiceState } from '@opentiny/tiny-engine-meta-register'
+import { useResource, useNotify, useCanvas, getMetaApi } from '@opentiny/tiny-engine-meta-register'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import {
   fetchResourceList,
@@ -116,7 +116,7 @@ export const ACTION_TYPE = {
   Edit: 'edit'
 }
 
-const getAppId = () => getServiceState('engine.service.globalService').appInfo.id
+const getAppId = () => getMetaApi('engine.service.globalService').getState().appInfo.id
 
 export const getResources = () => {
   const id = getAppId()
@@ -183,6 +183,7 @@ export const saveResource = (data, callback, emit) => {
     requestUpdateReSource(data).then((result) => {
       if (result) {
         const index = useResource().resState[data.category].findIndex((item) => item.name === result.name)
+        // useResource修改
         useResource().resState[data.category][index] = result
 
         // 更新画布工具函数环境，保证渲染最新工具类返回值, 并触发画布的强制刷新
@@ -202,6 +203,7 @@ export const saveResource = (data, callback, emit) => {
   } else {
     requestAddReSource(data).then((result) => {
       if (result) {
+        // useResource修改
         useResource().resState[data.category].push(result)
 
         // 更新画布工具函数环境，保证渲染最新工具类返回值, 并触发画布的强制刷新
@@ -226,6 +228,7 @@ export const deleteData = (name, callback, emit) => {
   requestDeleteReSource(params).then((data) => {
     if (data) {
       const index = useResource().resState[state.type].findIndex((item) => item.name === data.name)
+      // useResource修改
       useResource().resState[state.type].splice(index, 1)
 
       deleteUtils([data])
