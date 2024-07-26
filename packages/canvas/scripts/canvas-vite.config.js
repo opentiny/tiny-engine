@@ -48,7 +48,13 @@ export default defineConfig({
     cssCodeSplit: true,
     rollupOptions: {
       plugins: [nodePolyfill({ include: null })],
-      external: ['vue', 'vue-i18n', /@opentiny\/vue.*/]
+      external: [
+        'vue',
+        'vue-i18n',
+        // 以下内容由于区块和物料公用需要external
+        '@opentiny/vue',
+        '@opentiny/vue-icon'
+      ]
     },
     minify: true
   }
