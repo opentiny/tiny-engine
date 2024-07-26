@@ -10,7 +10,7 @@ export function canvasDevExternal(override = {}) {
       '@opentiny/vue': `${prefix}/node_modules/@opentiny/vue/runtime/tiny-vue.mjs`,
       '@opentiny/vue-icon': `${prefix}/node_modules/@opentiny/vue/runtime/tiny-vue-icon.mjs`
     },
-    importStyles: [`${prefix}/@opentiny/vue-theme/index.css`]
+    importStyles: [`${prefix}/node_modules/@opentiny/vue-theme/index.css`]
   }
   // 以下内容由于物料协议不支持声明子依赖而@opentiny/vue需要依赖所以需要补充
   const tinyVueRequire = {

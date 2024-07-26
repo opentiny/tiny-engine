@@ -1,4 +1,4 @@
-import { VITE_CDN_DOMAIN } from '@opentiny/tiny-engine-controller/js/environments'
+import { VITE_CDN_DOMAIN } from '@opentiny/tiny-engine-common/js/environments'
 
 export function getImportMapData(overrideVersions = {}) {
   const importMapVersions = Object.assign(
