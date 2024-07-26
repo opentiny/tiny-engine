@@ -158,7 +158,7 @@
                     "labelPosition": "top",
                     "type": "string",
                     "widget": {
-                      "component": "MetaBindI18n",
+                      "component": "I18nConfigurator",
                       "props": {}
                     },
                     "device": []
@@ -680,7 +680,7 @@
                     "labelPosition": "top",
                     "type": "object",
                     "widget": {
-                      "component": "MetaCodeEditor",
+                      "component": "CodeConfigurator",
                       "props": {
                         "language": "json"
                       }
@@ -703,7 +703,7 @@
                     "labelPosition": "top",
                     "type": "object",
                     "widget": {
-                      "component": "MetaCodeEditor",
+                      "component": "CodeConfigurator",
                       "props": {
                         "language": "json"
                       }
@@ -1221,7 +1221,7 @@
                     "labelPosition": "top",
                     "type": "object",
                     "widget": {
-                      "component": "MetaCodeEditor",
+                      "component": "CodeConfigurator",
                       "props": {
                         "language": "json"
                       }
@@ -1487,7 +1487,7 @@
                     "labelPosition": "top",
                     "type": "array",
                     "widget": {
-                      "component": "MetaCodeEditor",
+                      "component": "CodeConfigurator",
                       "props": {
                         "language": "json"
                       }
@@ -1559,7 +1559,7 @@
                               }
                             },
                             "widget": {
-                              "component": "MetaCodeEditor",
+                              "component": "CodeConfigurator",
                               "props": {}
                             }
                           },
@@ -1722,7 +1722,7 @@
                               }
                             },
                             "widget": {
-                              "component": "MetaCodeEditor",
+                              "component": "CodeConfigurator",
                               "props": {}
                             }
                           },
@@ -1741,7 +1741,7 @@
                               }
                             },
                             "widget": {
-                              "component": "MetaCodeEditor",
+                              "component": "CodeConfigurator",
                               "props": {
                                 "language": "json"
                               }
@@ -1762,7 +1762,7 @@
                               }
                             },
                             "widget": {
-                              "component": "MetaCodeEditor",
+                              "component": "CodeConfigurator",
                               "props": {
                                 "language": "json"
                               }
@@ -1804,7 +1804,7 @@
                               }
                             },
                             "widget": {
-                              "component": "MetaCodeEditor",
+                              "component": "CodeConfigurator",
                               "props": {
                                 "dataType": "JSFunction"
                               }
@@ -1956,7 +1956,7 @@
                               }
                             },
                             "widget": {
-                              "component": "MetaCodeEditor",
+                              "component": "CodeConfigurator",
                               "props": {}
                             }
                           },
@@ -1996,7 +1996,7 @@
                               }
                             },
                             "widget": {
-                              "component": "MetaCodeEditor",
+                              "component": "CodeConfigurator",
                               "props": {
                                 "language": "json"
                               }
@@ -2057,7 +2057,7 @@
                               }
                             },
                             "widget": {
-                              "component": "MetaCodeEditor",
+                              "component": "CodeConfigurator",
                               "props": {}
                             }
                           },
@@ -2077,7 +2077,7 @@
                               }
                             },
                             "widget": {
-                              "component": "MetaCodeEditor",
+                              "component": "CodeConfigurator",
                               "props": {
                                 "language": "json"
                               }
@@ -2352,7 +2352,7 @@
                     "cols": 12,
                     "labelPosition": "top",
                     "widget": {
-                      "component": "MetaCodeEditor",
+                      "component": "CodeConfigurator",
                       "props": {}
                     },
                     "device": []
@@ -2732,8 +2732,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "CarouselItem",
-            "version": "",
-            "destructuring": true
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
           },
           "group": "component",
           "category": "容器组件",
@@ -2866,8 +2868,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "Carousel",
-            "version": "",
-            "destructuring": true
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
           },
           "group": "component",
           "category": "容器组件",
@@ -4601,8 +4605,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "ButtonGroup",
-            "version": "",
-            "destructuring": true
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
           },
           "group": "component",
           "category": "general",
@@ -4635,7 +4641,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaCodeEditor",
+                      "component": "CodeConfigurator",
                       "props": {
                         "language": "json"
                       }
@@ -4760,8 +4766,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "Row",
-            "version": "",
-            "destructuring": true
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
           },
           "group": "component",
           "priority": 5,
@@ -4910,8 +4918,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "Form",
-            "version": "",
-            "destructuring": true
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
           },
           "group": "component",
           "priority": 5,
@@ -5082,7 +5092,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaCodeEditor",
+                      "component": "CodeConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -5102,7 +5112,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaCodeEditor",
+                      "component": "CodeConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -5263,8 +5273,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "FormItem",
-            "version": "",
-            "destructuring": true
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
           },
           "group": "component",
           "priority": 12,
@@ -5398,8 +5410,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "Col",
-            "version": "",
-            "destructuring": true
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
           },
           "group": "component",
           "priority": 2,
@@ -5680,8 +5694,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "Button",
-            "version": "",
-            "destructuring": true
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
           },
           "group": "component",
           "priority": 2,
@@ -5716,7 +5732,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "widget": {
-                      "component": "MetaBindI18n",
+                      "component": "I18nConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -6020,8 +6036,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "Input",
-            "version": "",
-            "destructuring": true
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
           },
           "group": "component",
           "priority": 1,
@@ -6053,7 +6071,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaBindI18n",
+                      "component": "I18nConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -6117,7 +6135,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaBindI18n",
+                      "component": "I18nConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -6435,8 +6453,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "Radio",
-            "version": "",
-            "destructuring": true
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
           },
           "group": "component",
           "priority": 3,
@@ -6674,8 +6694,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "Select",
-            "version": "",
-            "destructuring": true
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
           },
           "group": "component",
           "priority": 8,
@@ -6806,7 +6828,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaCodeEditor",
+                      "component": "CodeConfigurator",
                       "props": {
                         "language": "json"
                       }
@@ -7082,8 +7104,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "Switch",
-            "version": "",
-            "destructuring": true
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
           },
           "group": "component",
           "priority": 9,
@@ -7284,8 +7308,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "Search",
-            "version": "",
-            "destructuring": true
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
           },
           "group": "component",
           "priority": 2,
@@ -7563,8 +7589,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "Checkbox",
-            "version": "",
-            "destructuring": true
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
           },
           "group": "component",
           "priority": 4,
@@ -7822,8 +7850,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "CheckboxButton",
-            "version": "",
-            "destructuring": true
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
           },
           "group": "component",
           "priority": 1,
@@ -8013,8 +8043,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "CheckboxGroup",
-            "version": "",
-            "destructuring": true
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
           },
           "group": "component",
           "priority": 2,
@@ -8095,7 +8127,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaCodeEditor",
+                      "component": "CodeConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -8224,8 +8256,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "DialogBox",
-            "version": "",
-            "destructuring": true
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
           },
           "group": "component",
           "priority": 4,
@@ -8504,8 +8538,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "Tabs",
-            "version": "",
-            "destructuring": true
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
           },
           "group": "component",
           "priority": 10,
@@ -8789,8 +8825,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "TabItem",
-            "version": "",
-            "destructuring": true
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
           },
           "group": "component",
           "priority": 2,
@@ -8902,8 +8940,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "Select",
-            "version": "",
-            "destructuring": true
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
           },
           "group": "component",
           "priority": 1,
@@ -8955,7 +8995,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaCodeEditor",
+                      "component": "CodeConfigurator",
                       "props": {
                         "language": "json"
                       }
@@ -9040,8 +9080,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "BreadcrumbItem",
-            "version": "",
-            "destructuring": true
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
           },
           "group": "component",
           "priority": 1,
@@ -9133,8 +9175,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "Collapse",
-            "version": "",
-            "destructuring": true
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
           },
           "group": "component",
           "priority": 3,
@@ -9265,8 +9309,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "CollapseItem",
-            "version": "",
-            "destructuring": true
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
           },
           "group": "component",
           "priority": 2,
@@ -9380,8 +9426,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "Grid",
-            "version": "",
-            "destructuring": true
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
           },
           "group": "component",
           "priority": 2,
@@ -9413,7 +9461,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaCodeEditor",
+                      "component": "CodeConfigurator",
                       "props": {
                         "language": "json"
                       }
@@ -9450,7 +9498,7 @@
                               }
                             },
                             "widget": {
-                              "component": "MetaBindI18n",
+                              "component": "I18nConfigurator",
                               "props": {}
                             }
                           },
@@ -9559,7 +9607,7 @@
                               }
                             },
                             "widget": {
-                              "component": "MetaCodeEditor",
+                              "component": "CodeConfigurator",
                               "props": {
                                 "dataType": "JSFunction"
                               }
@@ -9634,7 +9682,7 @@
                             "disabled": false,
                             "cols": 12,
                             "widget": {
-                              "component": "MetaCodeEditor",
+                              "component": "CodeConfigurator",
                               "props": {
                                 "language": "json"
                               }
@@ -9656,7 +9704,7 @@
                             "disabled": false,
                             "cols": 12,
                             "widget": {
-                              "component": "MetaCodeEditor",
+                              "component": "CodeConfigurator",
                               "props": {
                                 "language": "json"
                               }
@@ -9733,7 +9781,7 @@
                     "onChange": "this.delProp('data')",
                     "cols": 12,
                     "widget": {
-                      "component": "MetaCodeEditor",
+                      "component": "CodeConfigurator",
                       "props": {
                         "name": "fetchData",
                         "dataType": "JSExpression"
@@ -9760,7 +9808,7 @@
                       }
                     },
                     "widget": {
-                      "component": "MetaCodeEditor",
+                      "component": "CodeConfigurator",
                       "props": {
                         "name": "pager",
                         "dataType": "JSExpression"
@@ -9824,7 +9872,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaCodeEditor",
+                      "component": "CodeConfigurator",
                       "props": {
                         "dataType": "JSExpression"
                       }
@@ -9846,7 +9894,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaCodeEditor",
+                      "component": "CodeConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -9866,7 +9914,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaCodeEditor",
+                      "component": "CodeConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -9885,7 +9933,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaCodeEditor",
+                      "component": "CodeConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -10041,7 +10089,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaCodeEditor",
+                      "component": "CodeConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -10081,7 +10129,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaCodeEditor",
+                      "component": "CodeConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -10302,8 +10350,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "Pager",
-            "version": "",
-            "destructuring": true
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
           },
           "group": "component",
           "priority": 1,
@@ -10375,7 +10425,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaCodeEditor",
+                      "component": "CodeConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -10539,8 +10589,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "PopEditor",
-            "version": "",
-            "destructuring": true
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
           },
           "group": "component",
           "priority": 6,
@@ -10679,7 +10731,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaCodeEditor",
+                      "component": "CodeConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -10699,7 +10751,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaCodeEditor",
+                      "component": "CodeConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -10719,7 +10771,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaCodeEditor",
+                      "component": "CodeConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -10905,8 +10957,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "Tree",
-            "version": "",
-            "destructuring": true
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
           },
           "group": "component",
           "priority": 12,
@@ -10968,7 +11022,7 @@
                     ],
                     "cols": 12,
                     "widget": {
-                      "component": "MetaCodeEditor",
+                      "component": "CodeConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -11049,7 +11103,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaCodeEditor",
+                      "component": "CodeConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -11069,7 +11123,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaCodeEditor",
+                      "component": "CodeConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -11117,7 +11171,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaCodeEditor",
+                      "component": "CodeConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -11243,8 +11297,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "TimeLine",
-            "version": "",
-            "destructuring": true
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
           },
           "group": "component",
           "priority": 3,
@@ -11366,7 +11422,7 @@
                     ],
                     "cols": 12,
                     "widget": {
-                      "component": "MetaCodeEditor",
+                      "component": "CodeConfigurator",
                       "props": {
                         "language": "json"
                       }
@@ -11452,8 +11508,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "Tooltip",
-            "version": "",
-            "destructuring": true
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
           },
           "group": "component",
           "priority": 11,
@@ -11674,8 +11732,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "Popover",
-            "version": "",
-            "destructuring": true
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
           },
           "group": "component",
           "priority": 7,
@@ -12008,7 +12068,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaCodeEditor",
+                      "component": "CodeConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -12160,8 +12220,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "DatePicker",
-            "version": "",
-            "destructuring": true
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
           },
           "group": "component",
           "priority": 1,
@@ -12193,7 +12255,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaBindI18n",
+                      "component": "I18nConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -12251,7 +12313,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaBindI18n",
+                      "component": "I18nConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -12576,8 +12638,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "Numeric",
-            "version": "",
-            "destructuring": true
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
           },
           "group": "component",
           "priority": 1,
@@ -12608,7 +12672,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "widget": {
-                      "component": "MetaBindI18n",
+                      "component": "I18nConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -12628,7 +12692,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaBindI18n",
+                      "component": "I18nConfigurator",
                       "props": {}
                     },
                     "description": {
