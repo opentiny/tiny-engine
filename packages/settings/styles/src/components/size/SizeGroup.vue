@@ -138,7 +138,11 @@
       适应
     </div>
     <div class="fit-select">
-      <meta-select :modelValue="state.value" :options="selectOptions" @update:modelValue="selectFit"></meta-select>
+      <select-configurator
+        :modelValue="state.value"
+        :options="selectOptions"
+        @update:modelValue="selectFit"
+      ></select-configurator>
     </div>
     <tiny-tooltip :effect="effect" :disabled="state.disabled" :placement="placement" content="Object position 设置">
       <tiny-popover
@@ -209,7 +213,8 @@
 <script>
 import { reactive, ref } from 'vue'
 import { Tooltip, Popover, Input } from '@opentiny/vue'
-import { MetaSelect, MaskModal } from '@opentiny/tiny-engine-common'
+import { MaskModal } from '@opentiny/tiny-engine-common'
+import { SelectConfigurator } from '@opentiny/tiny-engine-configurator'
 import { iconEllipsis } from '@opentiny/vue-icon'
 import ModalMask, { useModal } from '../inputs/ModalMask.vue'
 import ResetButton from '../inputs/ResetButton.vue'
@@ -224,7 +229,7 @@ export default {
     ModalMask,
     ResetButton,
     NumericSelect,
-    MetaSelect,
+    SelectConfigurator,
     MaskModal,
     TinyPopover: Popover,
     TinyInput: Input,

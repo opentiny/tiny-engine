@@ -25,10 +25,8 @@
   "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
     "@opentiny/tiny-engine-configurator": "workspace:*",
-    "@opentiny/tiny-engine-canvas": "workspace:*",
-    "@opentiny/tiny-engine-entry": "workspace:*",
+    "@opentiny/tiny-engine-meta-register": "workspace:*",
     "@opentiny/tiny-engine-common": "workspace:*",
-    "@opentiny/tiny-engine-controller": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*"
   },
   "devDependencies": {

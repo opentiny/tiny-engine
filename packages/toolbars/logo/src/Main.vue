@@ -3,7 +3,6 @@
     <h1 class="logo-wrap" @click.stop="handleTitleClick">
       <div class="menu-icon-wrapper">
         <svg-icon name="menu"></svg-icon>
-        <span class="menu-title" :title="state.appName">{{ state.appName }}</span>
       </div>
     </h1>
     <div v-if="state.showMenu" class="main-menu">
@@ -111,10 +110,10 @@ import {
   Tooltip as TinyTooltip
 } from '@opentiny/vue'
 import { iconHelpCircle } from '@opentiny/vue-icon'
-import { useLayout, useApp, useModal } from '@opentiny/tiny-engine-controller'
-import { getMergeMeta } from '@opentiny/tiny-engine-entry'
+import { useLayout, useApp, useModal } from '@opentiny/tiny-engine-meta-register'
+import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { useHttp } from '@opentiny/tiny-engine-http'
-import { isDevelopEnv } from '@opentiny/tiny-engine-controller/js/environments'
+import { isDevelopEnv } from '@opentiny/tiny-engine-common/js/environments'
 
 const http = useHttp()
 
@@ -312,7 +311,8 @@ onUnmounted(() => {
 <style lang="less" scoped>
 .top-panel-logo {
   --menu-title-max-width: 300px;
-  position: relative;
+  width: 39px;
+  border-right: 1px solid var(--ti-lowcode-canvas-wrap-bg);
   order: -1;
   height: var(--base-top-panel-height);
   display: flex;
@@ -323,8 +323,7 @@ onUnmounted(() => {
     color: var(--ti-lowcode-toolbar-title-color);
     &:active,
     &:hover {
-      .menu-icon-wrapper .icon-menu,
-      .menu-title {
+      .menu-icon-wrapper .icon-menu {
         text-decoration: underline;
       }
     }
@@ -340,15 +339,6 @@ onUnmounted(() => {
       .icon-menu {
         font-size: 20px;
       }
-    }
-    .menu-title {
-      margin-left: 4px;
-      font-size: 14px;
-      min-width: 48px;
-      max-width: var(--menu-title-max-width);
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
     }
   }
 

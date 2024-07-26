@@ -12,7 +12,7 @@
 
 import { toRaw, nextTick, shallowReactive, ref } from 'vue'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { useCanvas, useResource, useTranslate } from '@opentiny/tiny-engine-entry'
+import { useCanvas, useMaterial, useTranslate } from '@opentiny/tiny-engine-meta-register'
 
 const { COMPONENT_NAME } = constants
 const propsUpdateKey = ref(0)
@@ -30,7 +30,7 @@ const otherBaseKey = {
     cols: 12,
     rules: [],
     widget: {
-      component: 'MetaInput',
+      component: 'InputConfigurator',
       props: {}
     }
   },
@@ -46,7 +46,7 @@ const otherBaseKey = {
     cols: 12,
     rules: [],
     widget: {
-      component: 'MetaInput',
+      component: 'InputConfigurator',
       props: {}
     }
   },
@@ -62,7 +62,7 @@ const otherBaseKey = {
     cols: 12,
     rules: [],
     widget: {
-      component: 'MetaInput',
+      component: 'InputConfigurator',
       props: {}
     }
   }
@@ -92,7 +92,7 @@ const getSlotSwitch = (properties, slots = {}) => {
           labelPosition: 'none',
           bindState: false,
           widget: {
-            component: 'MetaSlot',
+            component: 'SlotConfigurator',
             props: {
               slots
             }
@@ -160,7 +160,7 @@ const getProps = (schema, parent) => {
       schema: metaSchema,
       content,
       properties
-    } = useResource().getMaterial(isPageOrBlock(schema) ? 'div' : componentName)
+    } = useMaterial().getMaterial(isPageOrBlock(schema) ? 'div' : componentName) || {}
     const schemaProps = properties || metaSchema?.properties || content?.schema?.properties || []
     const propGroups = [...schemaProps]
 

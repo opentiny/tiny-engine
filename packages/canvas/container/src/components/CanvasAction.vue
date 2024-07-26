@@ -128,7 +128,7 @@ import {
   dragStart,
   getCurrentElement
 } from '../container'
-import { useLayout, useResource } from '@opentiny/tiny-engine-controller'
+import { useLayout, useMaterial } from '@opentiny/tiny-engine-meta-register'
 import { Popover } from '@opentiny/vue'
 import shortCutPopover from './shortCutPopover.vue'
 
@@ -236,7 +236,7 @@ export default {
     const showToParent = computed(() => getCurrent().parent !== getSchema())
 
     const isModal = computed(() => {
-      const config = useResource().getMaterial(props.selectState.componentName)
+      const config = useMaterial().getMaterial(props.selectState.componentName)
       return config?.configure?.isModal
     })
 

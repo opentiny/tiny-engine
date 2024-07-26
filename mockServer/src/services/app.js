@@ -25,7 +25,7 @@ export default class AppService {
 
   // 获取应用预览数据
   getAppPreviewMetaData() {
-    const appMetaData = require('./appinfo.json')
+    const appMetaData = require('../assets/json/appinfo.json')
 
     const { i18n: i18nEntries, source = [], extension = [], app } = appMetaData
     // 拼装数据源

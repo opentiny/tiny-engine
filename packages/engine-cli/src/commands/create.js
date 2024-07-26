@@ -14,13 +14,51 @@ import { cwd } from 'node:process'
 import path from 'node:path'
 import fs from 'fs-extra'
 import chalk from 'chalk'
+import { generateConfig, generatePackageJson } from './generateConfig'
 
-export default function (name) {
-  const sourcePath = path.join(__dirname, '../template/designer/')
+const logger = console
+
+const defaultOptions = {
+  theme: 'light',
+  platformId: 918,
+  material: ['/mock/bundle.json'],
+  scripts: [],
+  styles: []
+}
+
+export function createPlatform(name, options = {}) {
+  if (fs.pathExistsSync(path.join(cwd(), name))) {
+    logger.log(chalk.red(`create failed, because the ${name} folder already exists. 创建失败，${name} 文件夹已存在。`))
+    return
+  }
+
+  const mergedOptions = {
+    ...defaultOptions,
+    ...options
+  }
+
+  const templatePath = path.join(__dirname, '../template/designer/')
+  const destPath = path.join(cwd(), name)
+
+  fs.copySync(templatePath, destPath)
+
+  const configContent = generateConfig(mergedOptions)
+  const pkgContent = generatePackageJson(name, mergedOptions, templatePath)
+
+  fs.outputFileSync(path.resolve(destPath, 'engine.config.js'), configContent)
+  fs.outputJSONSync(path.resolve(destPath, 'package.json'), pkgContent)
+
+  logger.log(
+    chalk.green(`create finish, run the follow command to start project: \ncd ${name} && npm install && npm run dev`)
+  )
+}
+
+export function createPlugin(name) {
+  const sourcePath = path.join(__dirname, '../template/plugin/')
   const destPath = path.join(cwd(), name)
   fs.copySync(sourcePath, destPath)
-  // eslint-disable-next-line no-console
-  console.log(
+
+  logger.log(
     chalk.green(`create finish, run the follow command to start project: \ncd ${name} && npm install && npm run dev`)
   )
 }

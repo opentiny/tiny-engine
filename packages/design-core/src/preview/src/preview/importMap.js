@@ -10,7 +10,7 @@
  *
  */
 
-import { useEnv } from '@opentiny/tiny-engine-entry'
+import { useEnv } from '@opentiny/tiny-engine-meta-register'
 import { getSearchParams } from './http'
 import importMapJSON from './importMap.json'
 

@@ -20,11 +20,12 @@ import {
   useTranslate,
   useApp,
   useLayout,
-  useNotify
-} from '@opentiny/tiny-engine-controller'
-import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
-import { getCanvasStatus } from '@opentiny/tiny-engine-controller/js/canvas'
-import { useHistory, useResource } from '@opentiny/tiny-engine-controller'
+  useNotify,
+  useHistory,
+  useMaterial
+} from '@opentiny/tiny-engine-meta-register'
+import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
+import { getCanvasStatus } from '@opentiny/tiny-engine-common/js/canvas'
 import html2canvas from 'html2canvas'
 
 import {
@@ -43,14 +44,9 @@ import {
   deleteCategory
 } from './http'
 import { constants, utils } from '@opentiny/tiny-engine-utils'
-import { generateBlock } from '@opentiny/tiny-engine-controller/js/vscodeGenerateFile'
+import { generateBlock } from '@opentiny/tiny-engine-common/js/vscodeGenerateFile'
 
 const { HOST_TYPE } = constants
-const { getBlockList, setBlockList, setCategoryList, getCurrentBlock, addBlockEvent, addBlockProperty } = useBlock()
-const { batchCreateI18n } = useTranslate()
-const { message, confirm } = useModal()
-const { setSaved } = useCanvas()
-const { getMaterial } = useResource()
 
 const STRING_SLOT = ['Slot', 'slot']
 
@@ -94,24 +90,29 @@ export const META_TYPES_OPTIONS = Object.entries(META_TYPES).map(([key, value]) 
 
 // 组件的枚举
 export const META_COMPONENTS_ENUM = {
-  MetaCodeEditor: 'MetaCodeEditor',
-  MetaArrayItem: 'MetaArrayItem',
-  MetaInput: 'MetaInput',
-  MetaSelect: 'MetaSelect',
-  MetaBindI18n: 'MetaBindI18n',
-  MetaNumber: 'MetaNumber',
-  MetaJsSlot: 'MetaJsSlot',
+  CodeConfigurator: 'CodeConfigurator',
+  ArrayItemConfigurator: 'ArrayItemConfigurator',
+  InputConfigurator: 'InputConfigurator',
+  SelectConfigurator: 'SelectConfigurator',
+  I18nConfigurator: 'I18nConfigurator',
+  NumberConfigurator: 'NumberConfigurator',
+  JsSlotConfigurator: 'JsSlotConfigurator',
   SwitchConfigurator: 'SwitchConfigurator'
 }
 
 // 每个值类型可选的编辑器类型
 export const META_COMPONENT_LIST = {
-  [META_TYPES.array]: ['MetaCodeEditor', 'MetaArrayItem', 'MetaRelatedColumns', 'MetaRelatedEditor'],
-  [META_TYPES.string]: ['MetaInput', 'MetaSelect', 'MetaBindI18n'],
-  [META_TYPES.number]: ['MetaNumber'],
-  [META_TYPES.object]: ['MetaCodeEditor', 'MetaJsSlot'],
+  [META_TYPES.array]: [
+    'CodeConfigurator',
+    'ArrayItemConfigurator',
+    'RelatedColumnsConfigurator',
+    'RelatedEditorConfigurator'
+  ],
+  [META_TYPES.string]: ['InputConfigurator', 'SelectConfigurator', 'I18nConfigurator'],
+  [META_TYPES.number]: ['NumberConfigurator'],
+  [META_TYPES.object]: ['CodeConfigurator', 'JsSlotConfigurator'],
   [META_TYPES.boolean]: ['SwitchConfigurator'],
-  [META_TYPES.function]: ['MetaCodeEditor']
+  [META_TYPES.function]: ['CodeConfigurator']
 }
 
 // 数组类型 item 的配置
@@ -127,7 +128,7 @@ export const DEFAULT_ARRAY_CONFIG = [
     },
     labelPosition: 'top',
     widget: {
-      component: 'MetaInput',
+      component: 'InputConfigurator',
       props: {
         modelValue: ''
       }
@@ -144,7 +145,7 @@ export const DEFAULT_ARRAY_CONFIG = [
     },
     labelPosition: 'top',
     widget: {
-      component: 'MetaSelect',
+      component: 'SelectConfigurator',
       props: {
         options: META_TYPES_OPTIONS,
         modelValue: ''
@@ -154,7 +155,7 @@ export const DEFAULT_ARRAY_CONFIG = [
   {
     property: 'component',
     type: META_TYPES.string,
-    defaultValue: 'MetaInput',
+    defaultValue: 'InputConfigurator',
     label: {
       text: {
         zh_CN: '设计器'
@@ -162,10 +163,10 @@ export const DEFAULT_ARRAY_CONFIG = [
     },
     labelPosition: 'top',
     widget: {
-      component: 'MetaSelect',
+      component: 'SelectConfigurator',
       props: {
         options: META_COMPONENT_LIST[META_TYPES.string],
-        modelValue: 'MetaInput'
+        modelValue: 'InputConfigurator'
       }
     }
   },
@@ -180,7 +181,7 @@ export const DEFAULT_ARRAY_CONFIG = [
     },
     labelPosition: 'top',
     widget: {
-      component: 'MetaCodeEditor',
+      component: 'CodeConfigurator',
       props: {
         modelValue: '{}',
         language: 'json'
@@ -198,7 +199,7 @@ export const DEFAULT_ARRAY_CONFIG = [
     },
     labelPosition: 'top',
     widget: {
-      component: 'MetaCodeEditor',
+      component: 'CodeConfigurator',
       props: {
         modelValue: ''
       }
@@ -215,7 +216,7 @@ export const DEFAULT_ARRAY_CONFIG = [
     },
     labelPosition: 'top',
     widget: {
-      component: 'MetaInput',
+      component: 'InputConfigurator',
       props: {
         modelValue: ''
       }
@@ -235,12 +236,12 @@ export const META_DEFAULT_VALUE = {
 
 // 区块暴露属性和事件各类型对应的默认编辑器
 export const META_COMPONENTS = {
-  [META_TYPES.array]: 'MetaCodeEditor',
-  [META_TYPES.string]: 'MetaInput',
-  [META_TYPES.number]: 'MetaNumber',
-  [META_TYPES.object]: 'MetaCodeEditor',
+  [META_TYPES.array]: 'CodeConfigurator',
+  [META_TYPES.string]: 'InputConfigurator',
+  [META_TYPES.number]: 'NumberConfigurator',
+  [META_TYPES.object]: 'CodeConfigurator',
   [META_TYPES.boolean]: 'SwitchConfigurator',
-  [META_TYPES.function]: 'MetaCodeEditor'
+  [META_TYPES.function]: 'CodeConfigurator'
 }
 
 // 区块默认的属性schema
@@ -322,7 +323,7 @@ export const setEditProperty = (property) => {
   state.property = property
 
   state.arrayConfig = (property?.properties?.[0]?.content || []).map(
-    ({ property, type, defaultValue, label, widget: { props = {}, component = 'MetaInput' } = {} }) => ({
+    ({ property, type, defaultValue, label, widget: { props = {}, component = 'InputConfigurator' } = {} }) => ({
       property,
       type,
       defaultValue,
@@ -340,7 +341,7 @@ export const getEditBlockEvents = () => state.block?.content?.schema?.events
 export const addBlockCustomProperty = () => {
   const defaultProperty = extend(true, {}, DEFAULT_PROPERTY)
 
-  addBlockProperty(defaultProperty, getEditBlock())
+  useBlock().addBlockProperty(defaultProperty, getEditBlock())
 
   return defaultProperty
 }
@@ -354,7 +355,7 @@ export const addBlockCustomEvent = () => {
     event: defaultEvent
   }
 
-  addBlockEvent(event, getEditBlock())
+  useBlock().addBlockEvent(event, getEditBlock())
 
   return event
 }
@@ -377,16 +378,15 @@ export const renameBlockEventName = (name, oldName) => {
   delete events[oldName]
 }
 
-export const initEditBlock = (block = getCurrentBlock()) => {
+export const initEditBlock = (block) => {
+  const currentBlock = useBlock().getCurrentBlock()
   // 如果当前点击的区块和画布中的区块是同一区块，则直接获取最新的区块数据
-  if (block?.id && block?.id === getCurrentBlock()?.id) {
-    const currentBlock = getCurrentBlock()
-
+  if (block?.id && block.id === currentBlock?.id) {
     // 这里需要做一次合并，保证区块列表中的数据引用地址和getEditBlock获取的是一样的
     Object.assign(block, currentBlock)
   }
 
-  setEditBlock(block)
+  setEditBlock(block || currentBlock)
   setEditProperty(null)
   setEditEvent(null)
 }
@@ -410,6 +410,8 @@ export const getBlockBase64 = () => {
 }
 
 export const delBlock = (closePanel) => () => {
+  const { getBlockList } = useBlock()
+  const { message } = useModal()
   const block = getEditBlock()
   const blockId = block?.id
 
@@ -534,7 +536,7 @@ export const getDeployProgress = (taskId, block) => {
         getDeployProgress(taskId, block)
       }, INTERVAL_PROGRESS)
     } else if (block.deployStatus === DEPLOY_STATUS.Stopped) {
-      message({
+      useModal().message({
         title: '异常提示',
         status: 'error',
         message: {
@@ -553,7 +555,7 @@ export const getDeployProgress = (taskId, block) => {
 const validBlockSlotsName = (block) => {
   const slotsTips = configureSlots(block.content)
   if (slotsTips) {
-    confirm({
+    useModal().confirm({
       title: '插槽名称不能重复!!!',
       message: `${slotsTips.slice(0, -1)}。`
     })
@@ -575,7 +577,7 @@ export const publishBlock = (params) => {
         getDeployProgress(data.id, block)
       })
       .catch((error) => {
-        message({ message: error.message, status: 'error' })
+        useModal().message({ message: error.message, status: 'error' })
         setDeployFailed(block)
       })
   }
@@ -584,13 +586,14 @@ export const publishBlock = (params) => {
 const getCategories = () => {
   const appId = useApp().appInfoState.selectedId
   fetchCategories({ appId }).then((res) => {
-    setCategoryList(res)
+    useBlock().setCategoryList(res)
   })
 }
 
 // 新建区块
 const createBlock = (block = {}) => {
   const { appInfoState } = useApp()
+  const { message } = useModal()
   const { selectedId: created_app } = appInfoState
   const params = { ...block, created_app }
 
@@ -607,8 +610,8 @@ const createBlock = (block = {}) => {
     .then((data) => {
       // 后台获取区块id后保存id信息
       block.id = data.id
-      batchCreateI18n({ host: block.id, hostType: HOST_TYPE.Block })
-      setSaved(true)
+      useTranslate().batchCreateI18n({ host: block.id, hostType: HOST_TYPE.Block })
+      useCanvas().setSaved(true)
       // 新建区块成功后需要同步更新画布上的区块数据ctx上下文环境
       useBlock().initBlock(data, {}, true)
       message({ message: '新建区块成功！', status: 'success' })
@@ -658,10 +661,10 @@ const updateBlock = (block = {}) => {
     }
   )
     .then((data) => {
-      setSaved(true)
+      useCanvas().setSaved(true)
       useBlock().initBlock(data, {}, true)
       // 弹出保存区块成功
-      message({ message: '保存区块成功！', status: 'success' })
+      useModal().message({ message: '保存区块成功！', status: 'success' })
       // 本地生成区块服务
       if (isVsCodeEnv) {
         generateBlock({ schema: data.content, blockPath: data.path })
@@ -670,7 +673,7 @@ const updateBlock = (block = {}) => {
       getCategories()
     })
     .catch((error) => {
-      message({ message: error.message, status: 'error' })
+      useModal().message({ message: error.message, status: 'error' })
     })
 }
 
@@ -682,7 +685,7 @@ const updateBlock = (block = {}) => {
  */
 const generateBlockDeps = (children, deps = { scripts: [], styles: new Set() }) => {
   children.forEach((child) => {
-    const component = getMaterial(child.componentName)
+    const component = useMaterial().getMaterial(child.componentName)
 
     if (!component) return
 
@@ -735,7 +738,7 @@ export const updateBlockList = (params) => {
   const appId = useApp().appInfoState.selectedId
   fetchBlockList({ appId, ...params }).then((data) => {
     const blockListDescByUpdateAt = data.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
-    setBlockList(blockListDescByUpdateAt)
+    useBlock().setBlockList(blockListDescByUpdateAt)
   })
 }
 

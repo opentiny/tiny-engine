@@ -8,7 +8,7 @@
     ></tiny-alert>
     <tiny-form label-position="left" class="input-output-form">
       <tiny-form-item label="输入配置" class="item-wrap">
-        <code-configurator
+        <meta-code-editor
           :modelValue="inputValue"
           title="输入配置"
           button-text="输入配置"
@@ -16,10 +16,10 @@
           :buttonShowContent="hasContent(inputValue)"
           single
           @save="saveInputValue"
-        ></code-configurator>
+        ></meta-code-editor>
       </tiny-form-item>
       <tiny-form-item label="输出配置" class="item-wrap">
-        <code-configurator
+        <meta-code-editor
           :modelValue="outputValue"
           title="输出配置"
           button-text="输出配置"
@@ -27,7 +27,7 @@
           :buttonShowContent="hasContent(outputValue)"
           single
           @save="saveOutputValue"
-        ></code-configurator>
+        ></meta-code-editor>
       </tiny-form-item>
       <tiny-form-item label="根元素设置" class="page-root-form-item">
         <tiny-switch v-model="pageSettingState.currentPageData.isBody"></tiny-switch>
@@ -40,12 +40,12 @@
 <script>
 import { ref, watchEffect, computed } from 'vue'
 import { Form, FormItem, Switch, Alert } from '@opentiny/vue'
-import { CodeConfigurator } from '@opentiny/tiny-engine-configurator'
-import { usePage, useNotify } from '@opentiny/tiny-engine-controller'
+import { MetaCodeEditor } from '@opentiny/tiny-engine-common'
+import { usePage, useNotify } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
-    CodeConfigurator,
+    MetaCodeEditor,
     TinyForm: Form,
     TinyFormItem: FormItem,
     TinySwitch: Switch,

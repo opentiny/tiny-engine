@@ -39,7 +39,7 @@
 import { Button } from '@opentiny/vue'
 import { IconDel, iconDoubleRight } from '@opentiny/vue-icon'
 import { inject } from 'vue'
-import { useApp, useBlock, useModal } from '@opentiny/tiny-engine-controller'
+import { useApp, useBlock, useModal } from '@opentiny/tiny-engine-meta-register'
 import { requestUpdateGroup, fetchGroupBlocksById } from './http'
 import { setHistoryPanelVisible } from './js/usePanel'
 

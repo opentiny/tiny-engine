@@ -84,7 +84,7 @@
 import { reactive, watch } from 'vue'
 import { Tooltip } from '@opentiny/vue'
 import { ColorConfigurator, SelectConfigurator } from '@opentiny/tiny-engine-configurator'
-import { useCanvas } from '@opentiny/tiny-engine-controller'
+import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { iconPlus } from '@opentiny/vue-icon'
 import ModalMask, { useModal } from '../inputs/ModalMask.vue'
 import ResetButton from '../inputs/ResetButton.vue'

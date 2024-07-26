@@ -12,7 +12,7 @@
 
 import { createApp } from 'vue'
 import { addScript, addStyle, dynamicImportComponents, updateDependencies } from '../../common'
-import TinyI18nHost, { I18nInjectionKey } from '@opentiny/tiny-engine-controller/js/i18n'
+import TinyI18nHost, { I18nInjectionKey } from '@opentiny/tiny-engine-common/js/i18n'
 import Main, { api } from './RenderMain'
 import lowcode from './lowcode'
 import { supportUmdBlock } from './supportUmdBlock'

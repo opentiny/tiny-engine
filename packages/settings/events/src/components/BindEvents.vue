@@ -87,11 +87,19 @@
 <script>
 import { computed, reactive, watchEffect } from 'vue'
 import { Popover, Button } from '@opentiny/vue'
-import { useCanvas, useModal, useLayout, useBlock, useResource } from '@opentiny/tiny-engine-controller'
+import {
+  useModal,
+  getMergeMeta,
+  useCanvas,
+  useLayout,
+  useBlock,
+  useMaterial,
+  getMetaApi,
+  META_APP
+} from '@opentiny/tiny-engine-meta-register'
 import { BlockLinkEvent, SvgButton } from '@opentiny/tiny-engine-common'
 import { iconHelpQuery, iconChevronDown } from '@opentiny/vue-icon'
 import BindEventsDialog, { open as openDialog } from './BindEventsDialog.vue'
-import { commonEvents } from '../commonjs/events.js'
 import AddEventsDialog from './AddEventsDialog.vue'
 
 export default {
@@ -107,13 +115,15 @@ export default {
   },
   inheritAttrs: false,
   setup() {
-    const { PLUGIN_NAME, activePlugin, getPluginApi } = useLayout()
+    const { PLUGIN_NAME, activePlugin } = useLayout()
     const { pageState } = useCanvas()
     const { getBlockEvents, getCurrentBlock, removeEventLink } = useBlock()
-    const { getMaterial } = useResource()
+    const { getMaterial } = useMaterial()
     const { confirm } = useModal()
 
-    const { highlightMethod } = getPluginApi(PLUGIN_NAME.PageController)
+    const { highlightMethod } = getMetaApi(META_APP.Page)
+
+    const { commonEvents = {} } = getMergeMeta('engine.setting.event').options
 
     const state = reactive({
       eventName: '', // 事件名称
@@ -131,7 +141,7 @@ export default {
       const componentName = pageState?.currentSchema?.componentName
       const componentSchema = getMaterial(componentName)
       state.componentEvent = componentSchema?.content?.schema?.events || componentSchema?.schema?.events || {}
-      Object.assign(state.componentEvents, state.componentEvent)
+      state.componentEvents = { ...commonEvents, ...state.componentEvent }
       const props = pageState?.currentSchema?.props || {}
       const keys = Object.keys(props)
       state.bindActions = {}
@@ -210,7 +220,7 @@ export default {
 
     const openCodePanel = (action) => {
       if (action) {
-        activePlugin(PLUGIN_NAME.PageController).then(() => {
+        activePlugin(PLUGIN_NAME.Page).then(() => {
           if (highlightMethod) {
             highlightMethod(action.ref)
           }

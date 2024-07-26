@@ -43,7 +43,7 @@ import {
   requestDeleteDataSource,
   requestGenerateDataSource
 } from './js/http'
-import { useModal, useApp, useDataSource } from '@opentiny/tiny-engine-controller'
+import { useModal, useApp, useDataSource } from '@opentiny/tiny-engine-meta-register'
 import { extend } from '@opentiny/vue-renderless/common/object'
 
 let isOpen = ref(false)

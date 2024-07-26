@@ -1,7 +1,7 @@
 export { init } from './src/init'
 
 // reexport all plugin, user can import ondemand
-export { default as Breadcrumb } from '@opentiny/tiny-engine-toolbar-breadcrumb'
+export { default as Breadcrumb, BreadcrumbService } from '@opentiny/tiny-engine-toolbar-breadcrumb'
 export { default as Fullscreen } from '@opentiny/tiny-engine-toolbar-fullscreen'
 export { default as Lang } from '@opentiny/tiny-engine-toolbar-lang'
 export { default as Checkinout } from '@opentiny/tiny-engine-toolbar-checkinout'
@@ -15,7 +15,7 @@ export { default as GenerateVue, SaveLocalService } from '@opentiny/tiny-engine-
 export { default as Refresh } from '@opentiny/tiny-engine-toolbar-refresh'
 export { default as Collaboration } from '@opentiny/tiny-engine-toolbar-collaboration'
 export { default as Setting } from '@opentiny/tiny-engine-toolbar-setting'
-export { default as Materials, ResourceService } from '@opentiny/tiny-engine-plugin-materials'
+export { default as Materials, ResourceService, MaterialService } from '@opentiny/tiny-engine-plugin-materials'
 export { default as Data } from '@opentiny/tiny-engine-plugin-data'
 export { default as Script } from '@opentiny/tiny-engine-plugin-script'
 export { default as Tree } from '@opentiny/tiny-engine-plugin-tree'
@@ -30,12 +30,13 @@ export { default as Robot } from '@opentiny/tiny-engine-plugin-robot'
 export { default as Props, PropertiesService, PropertyService } from '@opentiny/tiny-engine-setting-props'
 export { default as Events } from '@opentiny/tiny-engine-setting-events'
 export { default as Styles } from '@opentiny/tiny-engine-setting-styles'
-export { default as Layout } from '@opentiny/tiny-engine-layout'
+export { default as Layout, LayoutService } from '@opentiny/tiny-engine-layout'
 export { default as Canvas } from '@opentiny/tiny-engine-canvas'
 export { initPreview } from './src/preview/src/main'
+export { GenerateCodeService, PluginPanel } from '@opentiny/tiny-engine-common'
 
 export { default as defaultRegistry } from './registry'
 
-export * from '@opentiny/tiny-engine-entry'
+export * from '@opentiny/tiny-engine-meta-register'
 
-export { EditorInfoService, AppService } from '@opentiny/tiny-engine-controller'
+export { EditorInfoService, AppService } from '@opentiny/tiny-engine-common'

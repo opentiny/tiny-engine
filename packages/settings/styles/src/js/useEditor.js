@@ -11,7 +11,7 @@
  */
 
 import { reactive, watch } from 'vue'
-import { useHistory, useCanvas } from '@opentiny/tiny-engine-controller'
+import { useHistory, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { obj2StyleStr, styleStrRemoveRoot } from './cssConvert'
 import { CSS_TYPE } from './cssType'
 

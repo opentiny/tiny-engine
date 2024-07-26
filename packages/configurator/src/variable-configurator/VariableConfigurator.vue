@@ -120,12 +120,18 @@
 </template>
 
 <script>
-import { VueMonaco as MonacoEditor, SvgButton } from '../components' // TODO 等 common 包移除了 configurator 依赖后再更换成 @opentiny/tiny-engine-common
-import { useApp, useCanvas, useLayout, useProperties, useResource } from '@opentiny/tiny-engine-controller'
-import { getCommentByKey } from '@opentiny/tiny-engine-controller/js/comment'
-import { theme } from '@opentiny/tiny-engine-controller/js/monaco'
-import { formatString, generate, parse, traverse } from '@opentiny/tiny-engine-controller/js/ast'
-import { DEFAULT_LOOP_NAME } from '@opentiny/tiny-engine-controller/js/constants'
+import { VueMonaco as MonacoEditor, SvgButton } from '@opentiny/tiny-engine-common'
+import {
+  useApp,
+  useCanvas,
+  useProperties,
+  useResource,
+  getMetaApi,
+  META_APP
+} from '@opentiny/tiny-engine-meta-register'
+import { getCommentByKey } from '@opentiny/tiny-engine-common/js/comment'
+import { formatString, generate, parse, traverse } from '@opentiny/tiny-engine-common/js/ast'
+import { DEFAULT_LOOP_NAME } from '@opentiny/tiny-engine-common/js/constants'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { Alert, Button, DialogBox, Input, Search, Switch, Tooltip } from '@opentiny/vue'
@@ -267,13 +273,7 @@ export default {
     const bindKey = computed(() => props.modelValue?.value?.replace?.('this.state.', '') || '')
 
     const editorOptions = {
-      theme: theme(),
-      tabSize: 2,
       language: 'javascript',
-      autoIndent: true,
-      formatOnPaste: true,
-      automaticLayout: true,
-      roundedSelection: true,
       lineNumbers: false,
       minimap: {
         enabled: false
@@ -467,8 +467,7 @@ export default {
 
       if (item.id === 'function') {
         state.bindPrefix = CONSTANTS.THIS
-        const { PLUGIN_NAME, getPluginApi } = useLayout()
-        const { getMethods } = getPluginApi(PLUGIN_NAME.PageController)
+        const { getMethods } = getMetaApi(META_APP.Page)
         state.variables = { ...getMethods?.() }
       } else if (item.id === 'bridge' || item.id === 'utils') {
         state.bindPrefix = `${CONSTANTS.THIS}${item.id}.`

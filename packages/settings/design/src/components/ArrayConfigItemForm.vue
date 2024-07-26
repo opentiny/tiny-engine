@@ -52,9 +52,14 @@
 <script>
 import { computed } from 'vue'
 import { Input as TinyInput, Form as TinyForm, FormItem as TinyFormItem, Select as TinySelect } from '@opentiny/vue'
-import { ConfigItem, MetaNumber } from '@opentiny/tiny-engine-common'
-import { CodeConfigurator, SwitchConfigurator, InputConfigurator } from '@opentiny/tiny-engine-configurator'
-import { useNotify } from '@opentiny/tiny-engine-controller'
+import { ConfigItem } from '@opentiny/tiny-engine-common'
+import {
+  CodeConfigurator,
+  SwitchConfigurator,
+  InputConfigurator,
+  NumberConfigurator
+} from '@opentiny/tiny-engine-configurator'
+import { useNotify } from '@opentiny/tiny-engine-meta-register'
 import { iconChevronLeft } from '@opentiny/vue-icon'
 import store, { META_TYPES_ENUM, META_TYPES_OPTIONS } from '../store'
 import { widgetNames } from './widgets'
@@ -150,7 +155,7 @@ export default {
       }
 
       if (type === 'number') {
-        return MetaNumber
+        return NumberConfigurator
       }
 
       if (type === 'boolean') {

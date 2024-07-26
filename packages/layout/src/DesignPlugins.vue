@@ -49,19 +49,6 @@
           </span>
         </div>
       </li>
-      <li
-        v-if="state.independence"
-        :key="state.bottomNavLists.length + 1"
-        :class="['list-item']"
-        :title="state.independence.title"
-        @click="openAIRobot"
-      >
-        <div>
-          <span class="item-icon">
-            <img class="chatgpt-icon" src="../assets/AI.png" />
-          </span>
-        </div>
-      </li>
     </ul>
   </div>
 
@@ -82,20 +69,12 @@
       </keep-alive>
     </div>
   </div>
-  <!--  AI 悬浮窗  -->
-  <Teleport to="body">
-    <div v-if="robotVisible" class="robot-dialog">
-      <keep-alive>
-        <component :is="robotComponent" @close-chat="robotVisible = false"></component>
-      </keep-alive>
-    </div>
-  </Teleport>
 </template>
 
 <script>
 import { reactive, ref, watch } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
-import { useLayout, usePage } from '@opentiny/tiny-engine-controller'
+import { useLayout, usePage } from '@opentiny/tiny-engine-meta-register'
 import { PublicIcon } from '@opentiny/tiny-engine-common'
 
 export default {
@@ -118,28 +97,18 @@ export default {
     const components = {}
     const iconComponents = {}
     const pluginRef = ref(null)
-    const robotVisible = ref(false)
-    const robotComponent = ref(null)
     const { isTemporaryPage } = usePage()
 
     const {
       PLUGIN_NAME,
       pluginState,
-      registerPluginApi,
       layoutState: { plugins: pluginsState }
     } = useLayout()
 
-    props.plugins.forEach(({ id, entry, api, icon }) => {
+    props.plugins.forEach(({ id, entry, icon }) => {
       components[id] = entry
       iconComponents[id] = icon
-      if (api) {
-        registerPluginApi({
-          [id]: api
-        })
-      }
     })
-
-    const completed = ref(false)
 
     const state = reactive({
       prevIdex: -2,
@@ -148,15 +117,9 @@ export default {
       independence: props.plugins.find((item) => item.align === 'independence')
     })
 
-    const doCompleted = () => {
-      if (!completed.value) {
-        completed.value = true
-        useLayout().closePlugin()
-      }
-    }
-
     const clickMenu = ({ item, index }) => {
-      if (item.id === PLUGIN_NAME.EditorHelp) return
+      if (item.id === PLUGIN_NAME.EditorHelp || item.id === PLUGIN_NAME.Robot) return
+
       state.prevIdex = index
 
       // 切换插件与关闭插件时确认
@@ -177,6 +140,7 @@ export default {
         })
       }
     }
+
     watch(isTemporaryPage, () => {
       if (isTemporaryPage.saved) {
         const pagePanel = state.topNavLists?.find((item) => item.id === PLUGIN_NAME.AppManage) || null
@@ -187,10 +151,6 @@ export default {
       }
     })
 
-    const openAIRobot = () => {
-      robotComponent.value = components[PLUGIN_NAME.Robot]
-      robotVisible.value = !robotVisible.value
-    }
     const close = () => {
       state.prevIdex = -2
       useLayout().closePlugin(true)
@@ -205,17 +165,12 @@ export default {
     return {
       state,
       clickMenu,
-      openAIRobot,
       pluginRef,
-      robotVisible,
-      robotComponent,
       close,
       fixPanel,
       pluginsState,
       components,
       iconComponents,
-      completed,
-      doCompleted,
       pluginState
     }
   }
@@ -280,7 +235,7 @@ export default {
 
     &.bottom {
       flex: 1;
-      padding-bottom: 36px;
+      padding-bottom: 20px;
     }
 
     .list-item {
@@ -288,7 +243,7 @@ export default {
       padding: 3px 0;
 
       &:first-child {
-        padding-top: 16px;
+        padding-top: 12px;
       }
 
       cursor: pointer;
@@ -300,7 +255,7 @@ export default {
       &.active {
         .item-icon {
           background: var(--ti-lowcode-left-panel-active-bg);
-          border-radius: 6px;
+          border-radius: 4px;
         }
       }
 
@@ -323,39 +278,21 @@ export default {
       align-items: center;
       color: var(--ti-lowcode-design-plugin-color);
       font-size: 22px;
-      width: 32px;
-      height: 32px;
+      width: 26px;
+      height: 26px;
 
       svg {
-        font-size: 22px;
-      }
-
-      .chatgpt-icon {
-        width: 18px;
-        height: 18px;
+        font-size: 18px;
       }
     }
   }
 }
 
-.robot-dialog {
-  position: fixed;
-  width: 700px;
-  z-index: 5;
-  right: 40px;
-  bottom: 40px;
-  background-color: var(--ti-lowcode-common-component-bg);
-  box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.15);
-  border: 1px solid #dbdbdb;
-  padding: 10px 20px 30px;
-  border-radius: 12px;
-}
-
 :deep(.panel-svg) {
-  font-size: 22px;
+  font-size: 18px;
 }
 
 :deep(.svg-icon.icon-plugin-icon-plugin-help) {
-  font-size: 22px;
+  font-size: 18px;
 }
 </style>

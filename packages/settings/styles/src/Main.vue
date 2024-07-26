@@ -67,9 +67,9 @@
 <script>
 import { ref, watch } from 'vue'
 import { Collapse, CollapseItem, Input } from '@opentiny/vue'
-import { useHistory, useCanvas, useProperties } from '@opentiny/tiny-engine-controller'
+import { useHistory, useCanvas, useProperties } from '@opentiny/tiny-engine-meta-register'
 import { CodeConfigurator, VariableConfigurator } from '@opentiny/tiny-engine-configurator'
-import { formatString } from '@opentiny/tiny-engine-controller/js/ast'
+import { formatString } from '@opentiny/tiny-engine-common/js/ast'
 import {
   SizeGroup,
   LayoutGroup,
@@ -205,16 +205,17 @@ export default {
 <style lang="less" scoped>
 .style-editor {
   justify-content: space-around;
-  padding: 8px 16px 0;
+  padding: 8px 0 0;
   column-gap: 8px;
   .line-style {
+    padding: 0 8px 0 12px;
     display: block;
     color: var(--ti-lowcode-setting-style-font-color);
     font-size: 12px;
     .line-text {
       display: block;
       margin-bottom: 8px;
-      font-size: 14px;
+      font-size: 12px;
       color: var(--ti-lowcode-setting-style-title-color);
     }
   }

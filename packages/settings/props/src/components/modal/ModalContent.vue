@@ -19,7 +19,7 @@
 <script>
 import { computed } from 'vue'
 import { utils } from '@opentiny/tiny-engine-utils'
-import { useResource } from '@opentiny/tiny-engine-controller'
+import { useResource } from '@opentiny/tiny-engine-meta-register'
 import Components from '../../components'
 
 const { getEnumData, camelize } = utils

@@ -70,7 +70,8 @@
 
         <div class="action-icon">
           <slot name="suffix"></slot>
-          <code-configurator
+          <component
+            :is="CodeConfigurator"
             v-if="showCodeEditIcon"
             ref="editorModalRef"
             v-bind="widget.props"
@@ -85,13 +86,14 @@
                 <icon-writing class="code-icon" @click="editorModalRef?.open && editorModalRef.open()"></icon-writing>
               </tiny-tooltip>
             </template>
-          </code-configurator>
-          <variable-configurator
+          </component>
+          <component
+            :is="VariableConfigurator"
             v-if="isTopLayer && !onlyEdit && property.bindState !== false && !isRelatedComponents(widget.component)"
             :model-value="widget.props.modelValue"
             :name="widget.props.name"
             @update:modelValue="onModelUpdate"
-          ></variable-configurator>
+          ></component>
         </div>
       </div>
     </div>
@@ -103,13 +105,18 @@ import { inject, computed, watch, ref, reactive, provide } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
 import { IconWriting, IconHelpCircle, IconPlusCircle } from '@opentiny/vue-icon'
 import { typeOf } from '@opentiny/vue-renderless/common/type'
-import i18n from '@opentiny/tiny-engine-controller/js/i18n'
-import { CodeConfigurator, VariableConfigurator } from '@opentiny/tiny-engine-configurator'
-import MultiTypeSelector from './MultiTypeSelector.vue'
-import { useHistory, useProperties, useResource, useLayout, useCanvas } from '@opentiny/tiny-engine-controller'
-import { SCHEMA_DATA_TYPE, PAGE_STATUS, TYPES } from '@opentiny/tiny-engine-controller/js/constants'
-import { getConfigurator } from '@opentiny/tiny-engine-entry'
+import {
+  useHistory,
+  useProperties,
+  useMaterial,
+  useLayout,
+  useCanvas,
+  getConfigurator
+} from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
+import i18n from '../js/i18n'
+import MultiTypeSelector from './MultiTypeSelector.vue'
+import { SCHEMA_DATA_TYPE, PAGE_STATUS, TYPES } from '../js/constants'
 
 const { parseFunction: generateFunction } = utils
 
@@ -123,8 +130,6 @@ const hasRule = (required, rules) => {
 export default {
   components: {
     MultiTypeSelector,
-    CodeConfigurator,
-    VariableConfigurator,
     TinyPopover: Popover,
     TinyTooltip: Tooltip,
     IconWriting: IconWriting(),
@@ -163,6 +168,9 @@ export default {
   },
   emits: ['update:modelValue'],
   setup(props, { emit }) {
+    const CodeConfigurator = getConfigurator('CodeConfigurator')
+    const VariableConfigurator = getConfigurator('VariableConfigurator')
+
     const { t, locale } = i18n.global
 
     const verification = reactive({
@@ -193,7 +201,9 @@ export default {
         !props.onlyEdit &&
         propLabel.value &&
         (isBindingState.value ||
-          !['MetaGroupItem', 'MetaArrayItem', 'MetaRelatedColumns'].includes(widget.value.component)) &&
+          !['GroupItemConfigurator', 'ArrayItemConfigurator', 'RelatedColumnsConfigurator'].includes(
+            widget.value.component
+          )) &&
         !multiType.value
     )
     const propDescription = computed(
@@ -238,7 +248,7 @@ export default {
         return props.property.labelPosition
       }
 
-      if (['MetaSwitch', 'SwitchConfigurator'].includes(props.property.widget?.component)) {
+      if (['SwitchConfigurator', 'SwitchConfigurator'].includes(props.property.widget?.component)) {
         return 'left'
       }
 
@@ -254,7 +264,7 @@ export default {
         const currentComponent = useProperties().getSchema().componentName
         const {
           schema: { events = {} }
-        } = useResource().getMaterial(currentComponent)
+        } = useMaterial().getMaterial(currentComponent)
 
         if (Object.keys(events).includes(`onUpdate:${property}`)) {
           // 默认情况下，v-model 在组件上都是使用 modelValue 作为 prop，并以 update:modelValue 作为对应的事件。
@@ -276,7 +286,7 @@ export default {
 
         if (
           property !== 'name' &&
-          ['SelectIconConfigurator', 'MetaSelectIcon'].includes(props.property.widget.component)
+          ['SelectIconConfigurator', 'SelectIconConfigurator'].includes(props.property.widget.component)
         ) {
           // icon以组件形式传入，实现类似:icon="IconPlus"的图标配置（排除Icon组件本身）
           value = {
@@ -452,13 +462,16 @@ export default {
       }
     }
 
-    const isRelatedComponents = (component) => ['MetaRelatedEditor', 'MetaRelatedColumns'].includes(component)
+    const isRelatedComponents = (component) =>
+      ['RelatedEditorConfigurator', 'RelatedColumnsConfigurator'].includes(component)
 
     const showBindState = computed(
       () => !props.onlyEdit && (isBindingState.value || isLinked.value) && !isRelatedComponents(widget.value.component)
     )
 
     return {
+      CodeConfigurator,
+      VariableConfigurator,
       verification,
       showCodeEditIcon,
       editorModalRef,

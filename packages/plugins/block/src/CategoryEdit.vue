@@ -41,8 +41,8 @@ import {
   Button as TinyButton,
   DialogBox as TinyDialogBox
 } from '@opentiny/vue'
-import { useBlock } from '@opentiny/tiny-engine-controller'
-import { REGEXP_GROUP_NAME } from '@opentiny/tiny-engine-controller/js/verification'
+import { useBlock } from '@opentiny/tiny-engine-meta-register'
+import { REGEXP_GROUP_NAME } from '@opentiny/tiny-engine-common/js/verification'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { createOrUpdateCategory } from './js/blockSetting'
 

@@ -62,7 +62,7 @@
 <script>
 import { computed } from 'vue'
 import { VueDraggableNext } from 'vue-draggable-next'
-import { useResource } from '@opentiny/tiny-engine-controller'
+import { useResource } from '@opentiny/tiny-engine-meta-register'
 import MetaListItem from './MetaListItem.vue'
 
 export default {

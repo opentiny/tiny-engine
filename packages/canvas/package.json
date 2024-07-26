@@ -27,14 +27,14 @@
   "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
     "@babel/core": "7.18.13",
+    "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-builtin-component": "workspace:*",
-    "@opentiny/tiny-engine-controller": "workspace:*",
-    "@opentiny/tiny-engine-entry": "workspace:*",
-    "@opentiny/tiny-engine-http": "workspace:*",
+    "@opentiny/tiny-engine-meta-register": "workspace:*",
     "@opentiny/tiny-engine-i18n-host": "workspace:*",
     "@opentiny/tiny-engine-plugin-materials": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
     "@opentiny/tiny-engine-webcomponent-core": "workspace:*",
+    "@opentiny/tiny-engine-http": "workspace:*",
     "@vue/babel-plugin-jsx": "1.1.1",
     "@vue/shared": "^3.3.4",
     "@vueuse/core": "^9.6.0"

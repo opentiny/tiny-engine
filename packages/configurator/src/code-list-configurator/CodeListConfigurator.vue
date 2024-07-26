@@ -43,8 +43,7 @@
 import { getCurrentInstance, reactive, ref, watchEffect } from 'vue'
 import { Button, Tabs, TabItem, Input, ButtonGroup, Switch, Select } from '@opentiny/vue'
 import { IconClose } from '@opentiny/vue-icon'
-import { theme } from '@opentiny/tiny-engine-controller/js/monaco'
-import { VueMonaco } from '../components'
+import { VueMonaco } from '@opentiny/tiny-engine-common'
 
 export default {
   components: {
@@ -182,13 +181,7 @@ export default {
       value,
       editorMode,
       options: {
-        theme: theme(),
-        tabSize: 2,
         language: props.language,
-        autoIndent: true,
-        formatOnPaste: true,
-        automaticLayout: true,
-        roundedSelection: true,
         minimap: {
           enabled: false
         }

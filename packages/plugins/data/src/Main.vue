@@ -75,10 +75,11 @@ import {
   useEditorInfo,
   useResource,
   useNotify,
-  useLayout,
-  useHelp
-} from '@opentiny/tiny-engine-controller'
-import { getCommentByKey } from '@opentiny/tiny-engine-controller/js/comment'
+  useHelp,
+  getMetaApi,
+  META_APP
+} from '@opentiny/tiny-engine-meta-register'
+import { getCommentByKey } from '@opentiny/tiny-engine-common/js/comment'
 import { iconSearch } from '@opentiny/vue-icon'
 import { CloseIcon, LinkButton } from '@opentiny/tiny-engine-common'
 import DataSourceList from './DataSourceList.vue'
@@ -113,8 +114,7 @@ export default {
     const activeName = ref(STATE.CURRENT_STATE)
     const isBlock = computed(() => useCanvas().isBlock())
     const { setSaved } = useCanvas()
-    const { PLUGIN_NAME, getPluginApi } = useLayout()
-    const { openCommon } = getPluginApi(PLUGIN_NAME.save)
+    const { openCommon } = getMetaApi(META_APP.Save)
     const docsUrl = useHelp().getDocsUrl('data')
     const state = reactive({
       dataSource: {},

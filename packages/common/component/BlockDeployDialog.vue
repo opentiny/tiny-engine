@@ -81,8 +81,7 @@ import {
   Popover as TinyPopover,
   FormItem as TinyFormItem
 } from '@opentiny/vue'
-import { theme } from '@opentiny/tiny-engine-controller/js/monaco'
-import { useLayout, useNotify, useCanvas } from '@opentiny/tiny-engine-controller'
+import { useNotify, useCanvas, getMetaApi, META_APP } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 import VueMonaco from './VueMonaco.vue'
 
@@ -133,14 +132,8 @@ export default {
 
     const editor = ref(null)
     const editorOptions = {
-      theme: theme(),
-      tabSize: 2,
       language: 'javascript',
-      autoIndent: true,
       lineNumbers: true,
-      formatOnPaste: true,
-      automaticLayout: true,
-      roundedSelection: true,
       minimap: {
         enabled: false
       }
@@ -159,8 +152,7 @@ export default {
 
     const deployBlock = async () => {
       deployBlockRef.value.validate((valid) => {
-        const { PLUGIN_NAME, getPluginApi } = useLayout()
-        const { getEditBlock, publishBlock } = getPluginApi(PLUGIN_NAME.BlockManage)
+        const { getEditBlock, publishBlock } = getMetaApi(META_APP.BlockManage)
         if (valid) {
           const params = {
             block: getEditBlock(),
@@ -179,11 +171,9 @@ export default {
     }
 
     const changeCompare = async (value) => {
-      const { PLUGIN_NAME, getPluginApi } = useLayout()
-      const { getEditBlock } = getPluginApi(PLUGIN_NAME.BlockManage)
+      const api = getMetaApi(META_APP.BlockManage)
       if (value) {
-        const api = getPluginApi(PLUGIN_NAME.BlockManage)
-        const block = getEditBlock()
+        const block = api.getEditBlock()
         const remote = await api.getBlockById(block?.id)
         const originalObj = remote?.content || {}
         state.originalCode = JSON.stringify(originalObj, null, 2)

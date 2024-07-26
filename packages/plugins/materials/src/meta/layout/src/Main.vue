@@ -18,7 +18,7 @@
 <script>
 import { reactive, provide, ref } from 'vue'
 import { Tabs, TabItem } from '@opentiny/vue'
-import { getMergeMeta } from '@opentiny/tiny-engine-entry'
+import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { PluginPanel } from '@opentiny/tiny-engine-common'
 
 export default {
@@ -50,15 +50,16 @@ export default {
 
     const pluginRegistryData = ref(props.registryData)
     const rightPanelRef = ref(null)
-    const tabComponentIds = pluginRegistryData.value.options.tabComponentIds || []
-    const headerComponent = getMergeMeta(pluginRegistryData.value.components?.header)
-    const onlyShowDefault = ref(tabComponentIds.length === 1)
+    const displayComponentIds = pluginRegistryData.value.options.displayComponentIds || []
+    const headerComponent = pluginRegistryData.value.components?.header
+    const onlyShowDefault = ref(displayComponentIds.length === 1)
     const activeTabId =
-      tabComponentIds.find((item) => item === pluginRegistryData.value.options?.defaultTabId) || tabComponentIds[0]
+      displayComponentIds.find((item) => item === pluginRegistryData.value.options?.defaultTabId) ||
+      displayComponentIds[0]
 
     const activeName = ref(activeTabId)
     const defaultComponent = getMergeMeta(activeName.value)?.entry
-    const tabComponents = tabComponentIds.map((id) => {
+    const tabComponents = displayComponentIds.map((id) => {
       const itemMeta = getMergeMeta(id)
       return {
         id,
@@ -98,6 +99,7 @@ export default {
   flex: 1;
   overflow-y: scroll;
   padding: 0;
+  margin: 0px;
   & > div {
     height: 100%;
   }

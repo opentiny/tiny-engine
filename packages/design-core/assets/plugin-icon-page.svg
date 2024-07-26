@@ -1,15 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 26.0.2, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill-rule:evenodd;clip-rule:evenodd;}
-</style>
-<g>
-	<path class="st0" d="M14,2L14,2L14,2C14,2,14,2,14,2z"/>
-	<path class="st0" d="M20,8c0-0.2-0.1-0.4-0.2-0.5l-5.2-5.2c0,0-0.1-0.1-0.1-0.1c0,0,0,0,0,0c0,0,0,0,0,0c0,0,0,0,0,0c0,0,0,0-0.1,0
-		c0,0,0,0,0,0c0,0,0,0-0.1,0c0,0,0,0,0,0c0,0-0.1,0-0.1,0H7C5.4,2,4,3.4,4,5v14c0,1.7,1.3,3,3,3H17c1.7,0,3-1.3,3-3v-7.3v-1.2L20,8
-		L20,8z M14.8,4.6l2.7,2.7h-1.9c-0.4,0-0.8-0.3-0.8-0.8V4.6z M18.5,19c0,0.8-0.7,1.5-1.5,1.5H7c-0.8,0-1.5-0.7-1.5-1.5V5
-		c0-0.8,0.7-1.5,1.5-1.5l6.2,0l0,3c0,1.2,1,2.2,2.2,2.2h3v1.7v1.2V19z"/>
-</g>
+<svg width="18.000000" height="18.000000" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<desc>
+			Created with Pixso.
+	</desc>
+	<defs/>
+	<mask id="mask439_9929" mask-type="alpha" maskUnits="userSpaceOnUse" x="0.000000" y="0.000000" width="18.000000" height="18.000000">
+		<rect id="开发文档-development" width="18.000000" height="18.000000" fill="#000000" fill-opacity="1.000000"/>
+	</mask>
+	<g mask="url(#mask439_9929)">
+		<path id="path" d="M12.93 16.87L5.06 16.87C3.49 16.87 2.25 15.61 2.25 14.06L2.25 3.93C2.25 2.37 3.49 1.12 5.06 1.12L10.68 1.12C10.83 1.12 10.98 1.18 11.08 1.29L15.58 5.79C15.67 5.89 15.75 6.03 15.75 6.18L15.75 14.06C15.75 15.61 14.49 16.87 12.93 16.87ZM5.06 2.25C4.12 2.25 3.37 3 3.37 3.93L3.37 14.06C3.37 14.99 4.12 15.75 5.06 15.75L12.93 15.75C13.87 15.75 14.62 14.99 14.62 14.06L14.62 6.42L10.43 2.25L5.06 2.25Z" fill="#191919" fill-opacity="1.000000" fill-rule="nonzero"/>
+	</g>
 </svg>

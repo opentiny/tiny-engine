@@ -8,7 +8,7 @@
 </template>
 <script setup>
 import { computed } from 'vue'
-import { useLayout } from '@opentiny/tiny-engine-controller'
+import { useLayout } from '@opentiny/tiny-engine-meta-register'
 
 const siteCanvasStyle = computed(() => {
   const { scale } = useLayout().getDimension()
@@ -18,3 +18,22 @@ const siteCanvasStyle = computed(() => {
   }
 })
 </script>
+
+<style lang="less" scoped>
+#canvas-wrap {
+  background: var(--ti-lowcode-canvas-wrap-bg);
+  flex: 1 1 0;
+  border: none;
+  display: flex;
+  justify-content: center;
+  position: relative;
+
+  .site-canvas {
+    background: var(--ti-lowcode-breadcrumb-hover-bg);
+    position: absolute;
+    overflow: hidden;
+    margin: 18px 0;
+    transform-origin: top;
+  }
+}
+</style>

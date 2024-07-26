@@ -11,12 +11,8 @@
     "dist"
   ],
   "dependencies": {
-    "@opentiny/tiny-engine-entry": "workspace:*",
+    "@opentiny/tiny-engine-meta-register": "workspace:*",
     "@opentiny/tiny-engine-common": "workspace:*",
-    "@opentiny/tiny-engine-controller": "workspace:*",
-    "@opentiny/tiny-engine-plugin-block": "workspace:*",
-    "@opentiny/tiny-engine-plugin-materials": "workspace:*",
-    "@opentiny/tiny-engine-plugin-page": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
     "vue": "3.2.45",
     "@opentiny/vue": "~3.14.0",

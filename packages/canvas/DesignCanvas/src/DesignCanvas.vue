@@ -11,7 +11,7 @@
       ></component>
     </template>
     <template #footer>
-      <component :is="CanvasBreadcrumb" :data="footData" @click="selectFooterNode"></component>
+      <component :is="CanvasBreadcrumb" :data="footData"></component>
     </template>
   </component>
 </template>
@@ -22,14 +22,15 @@ import {
   useProperties,
   useCanvas,
   useLayout,
-  useResource,
+  useMaterial,
   useHistory,
-  useModal
-} from '@opentiny/tiny-engine-controller'
-import materials from '@opentiny/tiny-engine-plugin-materials'
+  useModal,
+  getMergeRegistry,
+  getMergeMeta
+} from '@opentiny/tiny-engine-meta-register'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { constants } from '@opentiny/tiny-engine-utils'
-import * as ast from '@opentiny/tiny-engine-controller/js/ast'
+import * as ast from '@opentiny/tiny-engine-common/js/ast'
 import { getMergeRegistry } from '@opentiny/tiny-engine-entry'
 import { initCanvas } from '../../init-canvas/init-canvas'
 import { importMap, importStyles } from './importMap'
@@ -44,6 +45,7 @@ const componentType = {
 export default {
   setup() {
     const registry = getMergeRegistry('canvas')
+    const materialsPanel = getMergeMeta('engine.plugins.materials')?.entry
     const { CanvasBreadcrumb } = registry.components
     const CanvasLayout = registry.layout.entry
     const [CanvasContainer] = registry.metas
@@ -164,13 +166,13 @@ export default {
       canvasUrl,
       nodeSelected,
       footData,
-      materialsPanel: materials.entry,
+      materialsPanel,
       showMask,
       controller: {
         // 需要在canvas/render或内置组件里使用的方法
-        getMaterial: useResource().getMaterial,
+        getMaterial: useMaterial().getMaterial,
         addHistory: useHistory().addHistory,
-        registerBlock: useResource().registerBlock,
+        registerBlock: useMaterial().registerBlock,
         request: useHttp(),
         ast
       },
@@ -182,22 +184,3 @@ export default {
   }
 }
 </script>
-
-<style lang="less" scoped>
-#canvas-wrap {
-  background: var(--ti-lowcode-canvas-wrap-bg);
-  flex: 1 1 0;
-  border: none;
-  display: flex;
-  justify-content: center;
-  position: relative;
-
-  .site-canvas {
-    background: var(--ti-lowcode-breadcrumb-hover-bg);
-    position: absolute;
-    overflow: hidden;
-    margin: 18px 0;
-    transform-origin: top;
-  }
-}
-</style>

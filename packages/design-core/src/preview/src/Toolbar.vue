@@ -14,23 +14,11 @@
 </template>
 
 <script lang="jsx">
-import { defineAsyncComponent } from 'vue'
-import { useBreadcrumb } from '@opentiny/tiny-engine-controller'
-import { getMergeRegistry } from '@opentiny/tiny-engine-entry'
+import { useBreadcrumb, getMergeRegistry } from '@opentiny/tiny-engine-meta-register'
 import { Switch as TinySwitch } from '@opentiny/vue'
 import { getSearchParams } from './preview/http'
 import { BROADCAST_CHANNEL } from '../src/preview/srcFiles/constant'
 import { injectDebugSwitch } from './preview/debugSwitch'
-import BreadcrumbPlugin from '@opentiny/tiny-engine-toolbar-breadcrumb'
-import LangPlugin from '@opentiny/tiny-engine-toolbar-lang'
-import MediaPlugin from '@opentiny/tiny-engine-toolbar-media'
-
-const _getToolbars = (pluginId) => {
-  return defineAsyncComponent(() =>
-    // FIXME: preview 这里其实有单独的入口，拿到的注册表是空的
-    Promise.resolve(getMergeRegistry('toolbars')?.find((t) => t.id === pluginId)?.component || <span></span>)
-  )
-}
 
 export default {
   components: {
@@ -38,12 +26,9 @@ export default {
   },
   setup() {
     const debugSwitch = injectDebugSwitch()
-    const _tools = ['breadcrumb', 'lang', 'media']
-    const [Breadcrumb, ChangeLang, ToolbarMedia] = [
-      BreadcrumbPlugin.component,
-      LangPlugin.component,
-      MediaPlugin.component
-    ]
+    const Breadcrumb = getMergeRegistry('toolbars', 'engine.toolbars.breadcrumb')?.entry
+    const ChangeLang = getMergeRegistry('toolbars', 'engine.toolbars.lang')?.entry
+    const ToolbarMedia = null // TODO: Media plugin rely on layout/canvas. Further processing is required.
 
     const { setBreadcrumbPage } = useBreadcrumb()
     const { pageInfo } = getSearchParams()

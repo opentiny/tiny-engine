@@ -9,8 +9,7 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-import CanvasBreadcrumb from './breadcrumb'
-export { CanvasDragItem } from './drag-drop'
+import { CanvasBreadcrumb } from './breadcrumb'
 
 // meta app
 import CanvasContainer from './container'
@@ -22,8 +21,8 @@ export { CanvasContainer, CanvasLayout, DesignCanvas }
 export default {
   ...DesignCanvas,
   components: {
-    CanvasBreadcrumb: CanvasBreadcrumb.entry
+    CanvasBreadcrumb
   },
   layout: CanvasLayout,
-  metas: [CanvasContainer, CanvasBreadcrumb]
+  metas: [CanvasContainer]
 }
