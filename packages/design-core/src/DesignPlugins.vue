@@ -1,5 +1,7 @@
+<!-- 左侧插件栏,修改右侧菜单时参照这个文件来写 -->
 <template>
   <div id="tiny-engine-nav-panel" :style="{ 'pointer-events': pluginState.pluginEvent }">
+    <!-- 图标菜单上侧区域（主要icon） -->
     <ul class="nav-panel-lists top">
       <li
         v-for="(item, index) in state.topNavLists"
@@ -25,8 +27,12 @@
         </div>
       </li>
     </ul>
+
+    <!-- 图标菜单下侧区域（附加icon） -->
     <ul class="nav-panel-lists bottom">
+      <!-- 与上侧间隔 -->
       <li style="flex: 1" class="list-item"></li>
+      <!-- 下侧具体icon插件菜单遍历渲染 -->
       <li
         v-for="(item, index) in state.bottomNavLists"
         :key="index"
@@ -49,6 +55,7 @@
           </span>
         </div>
       </li>
+      <!-- 其他依赖插件菜单(比如AI机器人插件) -->
       <li
         v-if="state.independence"
         :key="state.bottomNavLists.length + 1"
@@ -65,6 +72,7 @@
     </ul>
   </div>
 
+  <!-- 插件面板 -->
   <div
     v-show="renderPanel && components[renderPanel]"
     id="tiny-engine-left-panel"
@@ -112,7 +120,7 @@ export default {
   },
   emits: ['click', 'node-click'],
   setup(props, { emit }) {
-    const plugins = Addons.plugins
+    const plugins = Addons.plugins //导入了addons.js中的addons.plugins文件
     const components = {}
     const iconComponents = {}
     const pluginRef = ref(null)
@@ -194,6 +202,7 @@ export default {
       useLayout().closePlugin(true)
     }
 
+    //切换面板状态
     const fixPanel = (pluginName) => {
       pluginsState.fixedPanels = pluginsState.fixedPanels?.includes(pluginName)
         ? pluginsState.fixedPanels?.filter((item) => item !== pluginName)
@@ -222,7 +231,7 @@ export default {
 
 <style lang="less" scoped>
 #tiny-engine-left-panel {
-  width: var(--base-left-panel-width);
+  // width: var(--base-left-panel-width);//让该组件宽度自适应子组件宽度
   height: calc(100vh - var(--base-top-panel-height));
   border-right: 1px solid var(--ti-lowcode-plugin-panel-border-right-color);
   background: var(--ti-lowcode-common-component-bg);
@@ -244,8 +253,8 @@ export default {
   }
 
   .left-panel-wrap {
-    width: 100%;
     height: 100%;
+    max-width: 100vw; /* 确保父组件宽度不超出视口宽度 */
     position: relative;
 
     :deep(.tiny-tabs__nav.is-show-active-bar) .tiny-tabs__item {

@@ -1,6 +1,12 @@
 <template>
   <div>
-    <plugin-setting title="获取远程字段" :isSecond="true" @cancel="closePanel" @save="saveRemote">
+    <plugin-setting
+      title="获取远程字段"
+      :isSecond="true"
+      @cancel="closePanel"
+      @save="saveRemote"
+      :style="{ marginLeft: leftMargin + 'px' }"
+    >
       <template #content>
         <div class="create-config">
           <data-source-remote-form
@@ -37,9 +43,10 @@
 </template>
 
 <script>
-import { reactive, watch, ref } from 'vue'
+import { reactive, watch, ref, computed } from 'vue'
 import { Collapse, CollapseItem, Tabs, TabItem } from '@opentiny/vue'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
+import { useLayout } from '@opentiny/tiny-engine-controller'
 import DataSourceRemoteForm, { getServiceForm } from './DataSourceRemoteForm.vue'
 import DataSourceRemoteParameter from './DataSourceRemoteParameter.vue'
 import DataSourceRemoteAutoload from './DataSourceRemoteAutoload.vue'
@@ -52,7 +59,8 @@ import { obj2String, string2Obj } from '@opentiny/tiny-engine-controller/adapter
 import { getRequest } from './js/datasource'
 
 export const isOpen = ref(false)
-
+const { pluginWidth, PLUGIN_NAME } = useLayout()
+const leftMargin = computed(() => pluginWidth[PLUGIN_NAME['Datasource']] - 280)
 export const open = () => {
   isOpen.value = true
 }
@@ -206,7 +214,8 @@ export default {
       closePanel: close,
       saveRemote,
       sendRequest,
-      isOpen
+      isOpen,
+      leftMargin
     }
   }
 }

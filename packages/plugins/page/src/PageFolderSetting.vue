@@ -1,5 +1,10 @@
 <template>
-  <plugin-setting v-if="isShow" :title="state.title" class="pageFolder-plugin-setting">
+  <plugin-setting
+    v-if="isShow"
+    :title="state.title"
+    class="pageFolder-plugin-setting"
+    :style="{ marginLeft: leftMargin + 'px' }"
+  >
     <template #header>
       <button-group>
         <tiny-button type="primary" @click="saveFolderSetting">保存</tiny-button>
@@ -27,8 +32,9 @@
 </template>
 
 <script>
-import { reactive, ref } from 'vue'
+import { reactive, ref, computed } from 'vue'
 import { Button, Collapse, CollapseItem } from '@opentiny/vue'
+import { useLayout } from '@opentiny/tiny-engine-controller'
 import { PluginSetting, SvgButton, ButtonGroup } from '@opentiny/tiny-engine-common'
 import { usePage, useModal, useApp, useNotify } from '@opentiny/tiny-engine-controller'
 import { isEqual } from '@opentiny/vue-renderless/common/object'
@@ -37,6 +43,9 @@ import PageGeneral from './PageGeneral.vue'
 import http from './http.js'
 
 let isShow = ref(false)
+const { pluginWidth, PLUGIN_NAME } = useLayout()
+const leftMargin = computed(() => pluginWidth[PLUGIN_NAME['AppManage']])
+
 export const openFolderSettingPanel = () => {
   isShow.value = true
 }
@@ -197,7 +206,8 @@ export default {
       isShow,
       state,
       pageSettingState,
-      closeFolderSetting
+      closeFolderSetting,
+      leftMargin
     }
   }
 }

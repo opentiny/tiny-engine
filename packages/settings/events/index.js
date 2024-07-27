@@ -16,7 +16,7 @@ export default {
   id: 'SettingEvents',
   name: 'event',
   title: '高级',
-  icon: '',
+  icon: 'target',
   align: 'left',
   component
 }

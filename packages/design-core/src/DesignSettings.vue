@@ -1,93 +1,245 @@
 <template>
-  <div id="tiny-right-panel">
-    <tiny-tabs v-model="layoutState.settings.render" tab-style="button-card">
-      <tiny-tab-item v-for="(setting, index) in settings" :key="index" :title="setting.title" :name="setting.name">
-        <component :is="setting.component"></component>
-        <div v-show="activating" class="active"></div>
-      </tiny-tab-item>
-    </tiny-tabs>
+  <!-- 插件面板 -->
+  <div
+    v-show="renderPanel && components[renderPanel]"
+    id="tiny-engine-right-panel"
+    :class="[renderPanel, { 'is-fixed': settingsState.fixedPanels.includes(renderPanel) }]"
+  >
+    <div class="right-panel-wrap">
+      <component
+        :is="components[renderPanel]"
+        :fixed-panels="settingsState.fixedPanels"
+        @close="close"
+        @fixPanel="fixPanel"
+      ></component>
+      <div v-show="activating" class="active2" />
+    </div>
+  </div>
+  <div id="tiny-engine-nav-panel">
+    <!-- 图标菜单 -->
+    <ul class="nav-panel-lists">
+      <li
+        v-for="(item, index) in state.leftList"
+        :key="index"
+        :class="{
+          'list-item': true,
+          'first-item': index === 0,
+          active: item.name === renderPanel
+        }"
+        :title="item.title"
+        @click="clickMenu({ item, index })"
+      >
+        <div>
+          <span class="item-icon">
+            <svg-icon v-if="iconComponents[item.name]" :name="iconComponents[item.name]" class="panel-icon"></svg-icon>
+            <component v-else :is="iconComponents[item.name]" class="panel-icon"></component>
+          </span>
+        </div>
+      </li>
+    </ul>
   </div>
 </template>
 
 <script>
-import { computed, ref } from 'vue'
+import { computed, ref, toRefs, watch, reactive } from 'vue'
+import { Popover, Tooltip } from '@opentiny/vue'
 import { Tabs, TabItem } from '@opentiny/vue'
 import { useLayout } from '@opentiny/tiny-engine-controller'
-import addons from '@opentiny/tiny-engine-app-addons'
+import Addons from '@opentiny/tiny-engine-app-addons'
 
 export default {
   components: {
     TinyTabs: Tabs,
-    TinyTabItem: TabItem
+    TinyTabItem: TabItem,
+    TinyPopover: Popover,
+    TinyTooltip: Tooltip
+  },
+  props: {
+    renderPanel: {
+      type: String
+    }
   },
 
-  setup() {
-    const { layoutState } = useLayout()
-    const settings = addons && addons.settings
-    const activating = computed(() => layoutState.settings.activating)
+  setup(props) {
+    const { renderPanel } = toRefs(props)
+    const {
+      layoutState: { settings: settingsState }
+    } = useLayout()
+    const settings = Addons && Addons.settings
+    const components = {}
+    const iconComponents = {}
+    const activating = computed(() => settingsState.activating) //高亮显示
     const showMask = ref(true)
 
+    Addons.settings.forEach(({ name, component, icon }) => {
+      components[name] = component
+      iconComponents[name] = icon
+    })
+
+    const state = reactive({
+      leftList: settings.filter((item) => item.align === 'left')
+    })
+
+    const setRender = (curName) => {
+      settingsState.render = curName
+    }
+
+    //点击右侧菜单icon按钮
+    const clickMenu = ({ item }) => {
+      if (settingsState.render == item.name) {
+        setRender(null)
+        return
+      }
+      setRender(item.name)
+    }
+
+    //待setting组件封装完 备用
+    const close = () => {
+      useLayout().closeSetting(true)
+    }
+
+    watch(renderPanel, (n) => {
+      setRender(n)
+    })
+
+    const fixPanel = (pluginName) => {
+      settingsState.fixedPanels = settingsState.fixedPanels?.includes(pluginName)
+        ? settingsState.fixedPanels?.filter((item) => item !== pluginName)
+        : [...settingsState.fixedPanels, pluginName]
+    }
+
     return {
+      state,
       showMask,
       settings,
       activating,
-      layoutState
+      settingsState,
+      components,
+      iconComponents,
+      clickMenu,
+      close,
+      fixPanel
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-#tiny-right-panel {
-  width: var(--base-right-panel-width);
-  height: 100%;
-  transition: 0.3s linear;
-  position: relative;
-  border-left: 1px solid var(--ti-lowcode-plugin-setting-panel-border-left-color);
-  padding-top: 20px;
-  background-color: var(--ti-lowcode-setting-panel-bg-color);
+#tiny-engine-right-panel {
+  height: calc(100vh - var(--base-top-panel-height));
+  border-left: 1px solid var(--ti-lowcode-plugin-panel-border-right-color);
+  background: var(--ti-lowcode-common-component-bg);
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: var(--base-top-panel-height);
+  right: var(--base-nav-panel-width);
+  z-index: 999;
 
-  .tiny-tabs {
+  &.I18n {
+    width: auto;
+  }
+
+  &.is-fixed {
+    position: relative;
+    top: 0;
+    right: 0;
+  }
+
+  .right-panel-wrap {
+    width: 100%;
     height: 100%;
-  }
-  :deep(.tiny-tabs) {
-    display: flex;
-    flex-direction: column;
-    // 居中显示
-    .tiny-tabs__nav-scroll {
-      text-align: center;
-      .tiny-tabs__nav {
-        display: inline-flex;
-        justify-content: center;
-        float: none;
-      }
+    position: relative;
+    :deep(.tiny-tabs__nav.is-show-active-bar) .tiny-tabs__item {
+      margin-right: 0;
     }
-    .tiny-tabs__header {
-      padding-bottom: 12px;
-    }
-    .tiny-tabs__content {
-      flex: 1;
-      overflow-y: scroll;
-      padding: 0;
-      margin-top: 0;
-    }
-    .tiny-tabs__item {
-      color: var(--ti-lowcode-setting-panel-tabs-item-title-color);
-      &:hover {
-        color: var(--ti-lowcode-setting-panel-tabs-item-title-hover-color);
-      }
-      &.is-active {
-        color: var(--ti-lowcode-setting-panel-tabs-item-title-active-color);
-      }
-    }
-  }
-
-  :deep(.tiny-collapse-item__content) {
-    padding: 8px 16px;
   }
 }
 
-.active {
+#tiny-engine-nav-panel {
+  display: none;
+  width: var(--base-nav-panel-width);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: var(--ti-lowcode-common-layout-bg);
+  box-sizing: border-box;
+  z-index: 1000;
+  border-left: 1px solid var(--ti-lowcode-plugin-panel-border-right-color);
+
+  &.completed {
+    display: block;
+  }
+
+  .nav-panel-lists {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+
+    .list-item {
+      width: 100%;
+      padding: 3px 0;
+
+      &:first-child {
+        padding-top: 16px;
+      }
+
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &:hover,
+      &.active {
+        .item-icon {
+          background: var(--ti-lowcode-left-panel-active-bg);
+          border-radius: 6px;
+        }
+      }
+
+      &.active {
+        position: relative;
+
+        .item-icon {
+          color: var(--ti-lowcode-common-primary-color);
+        }
+      }
+
+      &.prev {
+        border-bottom-color: var(--ti-lowcode-left-panel-active-border-color);
+      }
+    }
+
+    .item-icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--ti-lowcode-design-plugin-color);
+      font-size: 22px;
+      width: 32px;
+      height: 32px;
+
+      svg {
+        font-size: 22px;
+      }
+
+      .chatgpt-icon {
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+}
+
+:deep(.svg-icon.icon-plugin-icon-plugin-help) {
+  font-size: 22px;
+}
+
+//高亮显示动画
+.active2 {
   width: 100%;
   height: 100%;
   position: absolute;

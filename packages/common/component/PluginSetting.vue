@@ -125,8 +125,8 @@ export default {
 <style lang="less" scoped>
 .plugin-setting {
   position: absolute;
-  left: calc(var(--base-left-panel-width) - 6px);
   top: 0;
+  z-index: 10;
   width: var(--base-collection-panel-width);
   height: 100%;
   border-right: 1px solid var(--ti-lowcode-toolbar-border-color);

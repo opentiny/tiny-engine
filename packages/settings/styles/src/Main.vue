@@ -1,71 +1,76 @@
 <template>
-  <div class="style-editor">
-    <div class="line-style">
-      <span class="line-text"> 行内样式 </span>
-      <div class="inline-style">
-        <meta-code-editor
-          v-if="state.lineStyleDisable"
-          :buttonShowContent="true"
-          :modelValue="state.styleContent"
-          title="编辑行内样式"
-          :button-text="state.inlineBtnText"
-          language="css"
-          single
-          @save="save"
-        />
-        <div v-if="!state.lineStyleDisable">
-          <tiny-input v-model="state.propertiesList" class="inline-bind-style"> </tiny-input>
+  <plugin-panel title="样式" :fixed-panels="fixedPanels" :fixed-name="SETTING_NAME.Style" @close="$emit('close')">
+    <template #content>
+      <div class="style-editor">
+        <div class="line-style">
+          <span class="line-text"> 行内样式 </span>
+          <div class="inline-style">
+            <meta-code-editor
+              v-if="state.lineStyleDisable"
+              :buttonShowContent="true"
+              :modelValue="state.styleContent"
+              title="编辑行内样式"
+              :button-text="state.inlineBtnText"
+              language="css"
+              single
+              @save="save"
+            />
+            <div v-if="!state.lineStyleDisable">
+              <tiny-input v-model="state.propertiesList" class="inline-bind-style"> </tiny-input>
+            </div>
+            <meta-bind-variable
+              ref="bindVariable"
+              :model-value="state.bindModelValue"
+              name="advance"
+              @update:modelValue="setConfig"
+            >
+            </meta-bind-variable>
+          </div>
         </div>
-        <meta-bind-variable
-          ref="bindVariable"
-          :model-value="state.bindModelValue"
-          name="advance"
-          @update:modelValue="setConfig"
-        >
-        </meta-bind-variable>
       </div>
-    </div>
-  </div>
-  <class-names-container></class-names-container>
-  <tiny-collapse v-model="activeNames">
-    <tiny-collapse-item title="布局" name="layout">
-      <layout-group :display="state.style.display" @update="updateStyle" />
-      <flex-box v-if="state.style.display === 'flex'" :style="state.style" @update="updateStyle"></flex-box>
-      <grid-box v-if="state.style.display === 'grid'" :style="state.style" @update="updateStyle"></grid-box>
-    </tiny-collapse-item>
+      <class-names-container></class-names-container>
+      <tiny-collapse v-model="activeNames">
+        <tiny-collapse-item title="布局" name="layout">
+          <layout-group :display="state.style.display" @update="updateStyle" />
+          <flex-box v-if="state.style.display === 'flex'" :style="state.style" @update="updateStyle"></flex-box>
+          <grid-box v-if="state.style.display === 'grid'" :style="state.style" @update="updateStyle"></grid-box>
+        </tiny-collapse-item>
 
-    <tiny-collapse-item title="间距" name="spacing">
-      <spacing-group :style="state.style" @update="updateStyle" />
-    </tiny-collapse-item>
+        <tiny-collapse-item title="间距" name="spacing">
+          <spacing-group :style="state.style" @update="updateStyle" />
+        </tiny-collapse-item>
 
-    <tiny-collapse-item title="尺寸" name="size">
-      <size-group :style="state.style" @update="updateStyle" />
-    </tiny-collapse-item>
+        <tiny-collapse-item title="尺寸" name="size">
+          <size-group :style="state.style" @update="updateStyle" />
+        </tiny-collapse-item>
 
-    <tiny-collapse-item title="定位" name="position">
-      <position-group :style="state.style" @update="updateStyle" />
-    </tiny-collapse-item>
+        <tiny-collapse-item title="定位" name="position">
+          <position-group :style="state.style" @update="updateStyle" />
+        </tiny-collapse-item>
 
-    <tiny-collapse-item title="文本" name="typography">
-      <typography-group :style="state.style" @update="updateStyle" />
-    </tiny-collapse-item>
+        <tiny-collapse-item title="文本" name="typography">
+          <typography-group :style="state.style" @update="updateStyle" />
+        </tiny-collapse-item>
 
-    <tiny-collapse-item title="背景" name="backgrounds">
-      <background-group :style="state.style" @update="updateStyle" />
-    </tiny-collapse-item>
+        <tiny-collapse-item title="背景" name="backgrounds">
+          <background-group :style="state.style" @update="updateStyle" />
+        </tiny-collapse-item>
 
-    <tiny-collapse-item title="边框" name="borders">
-      <border-group :style="state.style" @update="updateStyle" />
-    </tiny-collapse-item>
+        <tiny-collapse-item title="边框" name="borders">
+          <border-group :style="state.style" @update="updateStyle" />
+        </tiny-collapse-item>
 
-    <tiny-collapse-item title="效果" name="effects" class="effects-style">
-      <effect-group :style="state.style" @update="updateStyle" />
-    </tiny-collapse-item>
-  </tiny-collapse>
+        <tiny-collapse-item title="效果" name="effects" class="effects-style">
+          <effect-group :style="state.style" @update="updateStyle" />
+        </tiny-collapse-item>
+      </tiny-collapse>
+    </template>
+  </plugin-panel>
 </template>
 
+<!-- style插件界面 -->
 <script>
-import { ref, watch } from 'vue'
+import { ref, watch, reactive, provide } from 'vue'
 import { Collapse, CollapseItem, Input } from '@opentiny/vue'
 import { useHistory, useCanvas, useProperties } from '@opentiny/tiny-engine-controller'
 import { MetaCodeEditor, MetaBindVariable } from '@opentiny/tiny-engine-common'
@@ -85,6 +90,8 @@ import {
 import { CSS_TYPE } from './js/cssType'
 import useStyle from './js/useStyle'
 import { styleStrRemoveRoot } from './js/cssConvert'
+import { PluginPanel } from '@opentiny/tiny-engine-common'
+import { useLayout } from '@opentiny/tiny-engine-controller'
 
 export default {
   components: {
@@ -103,9 +110,17 @@ export default {
     TinyCollapse: Collapse,
     TinyCollapseItem: CollapseItem,
     TinyInput: Input,
-    MetaBindVariable
+    MetaBindVariable,
+    PluginPanel
   },
-  setup() {
+  props: {
+    fixedPanels: {
+      type: Array
+    }
+  },
+  emits: ['close'],
+  setup(props, { emit }) {
+    const { SETTING_NAME } = useLayout()
     const activeNames = ref([
       'layout',
       'spacing',
@@ -116,6 +131,12 @@ export default {
       'borders',
       'effects'
     ])
+
+    const panelState = reactive({
+      emitEvent: emit
+    })
+    provide('panelState', panelState)
+
     const { getCurrentSchema } = useCanvas()
     // 获取当前节点 style 对象
     const { state, updateStyle } = useStyle() // updateStyle
@@ -188,6 +209,7 @@ export default {
     )
 
     return {
+      SETTING_NAME,
       state,
       activeNames,
       CSS_TYPE,

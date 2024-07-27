@@ -1,5 +1,5 @@
 <template>
-  <plugin-panel :title="title" @close="pluginPanelClosed">
+  <plugin-panel :title="title" :fixed-panels="fixedPanels" :fixed-name="PLUGIN_NAME.Page" @close="pluginPanelClosed">
     <template #header>
       <link-button :href="docsUrl"></link-button>
       <svg-button
@@ -42,6 +42,7 @@ import PageSetting, { openPageSettingPanel, closePageSettingPanel } from './Page
 import PageFolderSetting, { openFolderSettingPanel, closeFolderSettingPanel } from './PageFolderSetting.vue'
 import PageTree from './PageTree.vue'
 import { fetchPageDetail } from './http'
+import { useLayout } from '@opentiny/tiny-engine-controller'
 
 export const api = {
   getPageById: async (id) => {
@@ -67,9 +68,13 @@ export default {
     title: {
       type: String,
       default: '页面管理'
+    },
+    fixedPanels: {
+      type: Array
     }
   },
-  setup() {
+  emits: ['fix-panel'],
+  setup(props, { emit }) {
     const { appInfoState } = useApp()
     const { pageState } = useCanvas()
     const { pageSettingState, DEFAULT_PAGE, isTemporaryPage, initCurrentPageData } = usePage()
@@ -77,10 +82,15 @@ export default {
     const pageTreeRef = ref(null)
     const ROOT_ID = pageSettingState.ROOT_ID
     const docsUrl = useHelp().getDocsUrl('page')
-
     const state = reactive({
       isFolder: false
     })
+
+    const panelState = reactive({
+      emitEvent: emit
+    })
+
+    provide('panelState', panelState)
 
     const createNewPage = (group) => {
       closeFolderSettingPanel()
@@ -143,6 +153,7 @@ export default {
       pageTreeRef.value.switchPage(data)
     }
 
+    const { PLUGIN_NAME } = useLayout()
     return {
       state,
       resState,
@@ -154,7 +165,8 @@ export default {
       openSettingPanel,
       createNewFolder,
       createNewPage,
-      docsUrl
+      docsUrl,
+      PLUGIN_NAME
     }
   }
 }

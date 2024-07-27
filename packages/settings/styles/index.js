@@ -16,7 +16,7 @@ export default {
   id: 'SettingStyles',
   name: 'style',
   title: '样式',
-  icon: '',
+  icon: 'display-inline',
   align: 'left',
   component
 }
