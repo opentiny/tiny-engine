@@ -8,7 +8,6 @@
           class="common-svg"
           @click="resizeChatWindow"
         ></svg-icon>
-        <SettingOutlined />
         <icon-setting class="common-svg" @click="setToken"></icon-setting>
       </div>
     </section>
@@ -75,8 +74,7 @@
         <template #suffix>
           <svg-icon
             name="chat-microphone"
-            class="common-svg microphone"
-            :class="{ 'microphone-svg': speechStatus }"
+            :class="['common-svg', 'microphone', { 'microphone-svg': speechStatus }]"
             @click="speechRecognition"
           ></svg-icon>
         </template>
@@ -233,16 +231,20 @@ export default {
           sessionProcess.displayMessages.push(respDisplayMessage)
           messages.value[messages.value.length - 1].content = originalResponse.choices?.[0]?.message.content
           setContextSession()
-          // if (schema?.schema) {
-          //   createNewPage(schema.schema)
-          // }
+          if (schema?.schema) {
+            createNewPage(schema.schema)
+          }
           inProcesing.value = false
           connectedFailed.value = false
         })
         .catch((error) => {
-          if (error.code === 'CM001') {
-            localStorage.removeItem('accessToken')
-            tokenDialogVisible.value = true
+          switch (error.code) {
+            case 'CM001':
+              localStorage.removeItem('accessToken')
+              tokenDialogVisible.value = true
+              break
+            default:
+              break
           }
           messages.value[messages.value.length - 1].content = '连接失败'
           localStorage.removeItem('aiChat')
