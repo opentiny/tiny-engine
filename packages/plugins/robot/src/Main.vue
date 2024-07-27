@@ -8,6 +8,8 @@
           class="common-svg"
           @click="resizeChatWindow"
         ></svg-icon>
+        <SettingOutlined />
+        <icon-setting class="common-svg" @click="setToken"></icon-setting>
       </div>
     </section>
     <header class="chat-title">
@@ -101,7 +103,7 @@ import {
   DropdownItem as TinyDropdownItem
 } from '@opentiny/vue'
 import { useCanvas, useHistory, usePage, useModal } from '@opentiny/tiny-engine-controller'
-import { iconChevronDown } from '@opentiny/vue-icon'
+import { iconChevronDown, iconSetting } from '@opentiny/vue-icon'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { getBlockContent, initBlockList, AIModelOptions } from './js/robotSetting'
@@ -119,6 +121,7 @@ export default {
     TinyDropdown,
     TinyDropdownMenu,
     TinyDropdownItem,
+    IconSetting: iconSetting(),
     IconChevronDown: iconChevronDown(),
     DialogContent,
     TokenDialog
@@ -182,16 +185,14 @@ export default {
     }
 
     const codeRules = `
-      从现在开始，请扮演一名前端专家。如果需要生成前端代码，代码中的所有组件必须使用 Vue 3 框架和 TinyVue 组件库进行编写。例如，如果你想使用按钮组件，应该使用 TinyVue 组件库中的 \`tiny-button\`。
-      以下是 TinyVue 组件库的文档，请通读并遵循其中的指导来生成代码：[TinyVue 组件库文档](https://opentiny.design/tiny-vue/zh-CN/os-theme/overview)
-      生成代码时遵从以下几条要求:
-      ###
-      1. 回复中只能有一个代码块
-      2. 所有生成的代码都是基于 Vue 3 框架
-      3. 所有组件都来自 TinyVue 组件库，避免使用原生组件或其他第三方库
-      4. 参考并遵循 TinyVue 文档中的组件使用方式
-      ###
-    // `
+     我想让你充当 Stackoverflow 的帖子。我将提出与编程有关的问题，你将回答答案是什么。我希望你只回答给定的答案，在没有足够的细节时写出解释。
+     每次回复请遵循以下准则：
+        1. 如果需要展示代码，确保回复中只包含一个代码块。
+        2. 所有代码必须基于 Vue 3 框架编写。
+        3. 所有使用的组件必须来自 TinyVue 组件库，严禁使用 Element UI 等其他第三方组件库或原生组件。例如，想使用输入框组件，应该使用TinyVue组件库中的 \`tiny-input\`;想使用按钮组件，应该使用 TinyVue 组件库中的 \`tiny-button\`。
+        4. 仔细阅读并遵循 [TinyVue 组件库文档](https://opentiny.design/tiny-vue/zh-CN/os-theme/overview) 中的指导，确保代码的准确性和一致性。
+     请根据上述准则，使用 TinyVue 组件库生成高质量的前端代码。
+     `
     // 在每一次发送请求之前，都把引入区块的内容，给放到第一条消息中
     // 为了不污染存储在localstorage里的用户的原始消息，这里进行了简单的对象拷贝
     // 引入区块不存放在localstorage的原因：因为区块是可以变化的，用户可能在同一个会话中，对区块进行了删除和创建。那么存放的数据就不是即时数据了。
@@ -232,9 +233,9 @@ export default {
           sessionProcess.displayMessages.push(respDisplayMessage)
           messages.value[messages.value.length - 1].content = originalResponse.choices?.[0]?.message.content
           setContextSession()
-          if (schema?.schema) {
-            createNewPage(schema.schema)
-          }
+          // if (schema?.schema) {
+          //   createNewPage(schema.schema)
+          // }
           inProcesing.value = false
           connectedFailed.value = false
         })
@@ -268,6 +269,10 @@ export default {
     const resizeChatWindow = async () => {
       chatWindowOpened.value = !chatWindowOpened.value
       await resetContent()
+    }
+
+    const setToken = () => {
+      tokenDialogVisible.value = true
     }
 
     const getMessage = (content) => ({
@@ -404,6 +409,7 @@ export default {
       sendContent,
       endContent,
       resizeChatWindow,
+      setToken,
       AIModelOptions,
       selectedModel,
       changeModel,
