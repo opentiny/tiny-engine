@@ -34,7 +34,7 @@
 </template>
 
 <script lang="jsx">
-import { reactive, ref, watchEffect, provide,watch } from 'vue'
+import { reactive, ref, watchEffect, provide } from 'vue'
 import { useCanvas, useApp, useResource, usePage, useHelp } from '@opentiny/tiny-engine-controller'
 import { PluginPanel, SvgButton, LinkButton } from '@opentiny/tiny-engine-common'
 import { extend } from '@opentiny/vue-renderless/common/object'
@@ -152,7 +152,6 @@ export default {
     const openNewPage = (data) => {
       pageTreeRef.value.switchPage(data)
     }
-
 
     const { PLUGIN_NAME } = useLayout()
     return {

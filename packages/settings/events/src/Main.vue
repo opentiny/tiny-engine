@@ -1,5 +1,11 @@
 <template>
-  <plugin-panel title="高级" :fixed-panels="fixedPanels" :fixed-name="SETTING_NAME.Event" :defaultWidth="320"  @close="$emit('close')">
+  <plugin-panel
+    title="高级"
+    :fixed-panels="fixedPanels"
+    :fixed-name="SETTING_NAME.Event"
+    :defaultWidth="320"
+    @close="$emit('close')"
+  >
     <template #content>
       <tiny-collapse v-model="activeNames">
         <tiny-collapse-item title="事件绑定" name="bindEvent">
@@ -13,17 +19,17 @@
   </plugin-panel>
 </template>
 
+<!-- event插件界面 -->
 <script>
 import { ref, reactive, provide } from 'vue'
 import { Collapse as TinyCollapse, CollapseItem as TinyCollapseItem } from '@opentiny/vue'
 import BindEvents from './components/BindEvents.vue'
 import AdvanceConfig from './components/AdvanceConfig.vue'
-import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
+import { PluginPanel } from '@opentiny/tiny-engine-common'
 import { useLayout } from '@opentiny/tiny-engine-controller'
 export default {
   components: {
     PluginPanel,
-    SvgButton,
     BindEvents,
     AdvanceConfig,
     TinyCollapse,
