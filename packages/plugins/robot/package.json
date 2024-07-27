@@ -27,7 +27,12 @@
     "@opentiny/tiny-engine-canvas": "workspace:*",
     "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-controller": "workspace:*",
-    "@opentiny/tiny-engine-http": "workspace:*"
+    "@opentiny/tiny-engine-http": "workspace:*",
+    "clipboard": "^2.0.11",
+    "dompurify": "^3.1.6",
+    "highlight.js": "^11.10.0",
+    "markdown-it": "^14.1.0",
+    "markdown-it-highlightjs": "^4.1.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
