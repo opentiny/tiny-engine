@@ -55,6 +55,7 @@ export default {
   setup(props, { emit }) {
     const getTableTreeData = (data) => {
       const dataMap = {}
+      console.log(data, 'data')
       data.forEach((item) => {
         if (!dataMap[item.fileType]) {
           dataMap[item.fileType] = { fileType: item.fileType, children: [] }
