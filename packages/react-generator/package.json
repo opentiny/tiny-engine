@@ -5,6 +5,7 @@
     "access": "public"
   },
   "main": "dist/tiny-engine-dsl-react.cjs.js",
+  "module": "dist/tiny-engine-dsl-react.es.js",
   "files": [
     "dist"
   ],
@@ -34,9 +35,10 @@
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.1",
+    "@types/node": "^18.0.0",
     "@vue/eslint-config-prettier": "^7.0.0",
     "eslint": "^8.12.0",
-        "eslint-plugin-vue": "^8.6.0",
+    "eslint-plugin-vue": "^8.6.0",
     "fs-extra": "^10.0.1",
     "prettier": "^2.6.1",
     "vite": "^2.8.6",

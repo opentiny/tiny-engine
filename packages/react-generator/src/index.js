@@ -10,6 +10,7 @@
 // *
 // */
 
-import { generateCode, generateBlocksCode, generatePageCode } from './generator'
+import { generateCode, generateBlocksCode, generatePageCode, generateApp, CodeGenerator } from './generator'
 
-export { generateCode, generateBlocksCode, generatePageCode }
+export { generateCode, generateBlocksCode, generatePageCode, generateApp, CodeGenerator }
+
