@@ -46,7 +46,11 @@ const renderer = {
   ...api
 }
 
-const create = () => {
+const create = async (config) => {
+  const { beforeAppCreate, appCreated } = config.lifeCycles || {}
+  if (typeof beforeAppCreate === 'function') {
+    await beforeAppCreate()
+  }
   App && App.unmount()
   App = null
 
@@ -61,6 +65,9 @@ const create = () => {
   App = createApp(Main).use(TinyI18nHost).provide(I18nInjectionKey, TinyI18nHost)
   App.config.globalProperties.lowcodeConfig = window.parent.TinyGlobalConfig
   App.mount(document.querySelector('#app'))
+  if (typeof appCreated === 'function') {
+    await appCreated(App)
+  }
 
   new ResizeObserver(() => {
     dispatch('canvasResize')
@@ -78,5 +85,5 @@ export const createRender = (config) => {
   Promise.all([
     ...thirdScripts.map(dynamicImportComponents),
     ...scripts.map((src) => addScript(src)).concat([...thirdStyles, ...styles].map((src) => addStyle(src)))
-  ]).finally(create)
+  ]).finally(() => create(config))
 }
