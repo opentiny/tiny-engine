@@ -38,7 +38,6 @@ const getDevAlias = (useSourceAlias) => {
     '@opentiny/tiny-engine-toolbar-lang': path.resolve(basePath, 'packages/toolbars/lang/index.js'),
     '@opentiny/tiny-engine-toolbar-layout': path.resolve(basePath, 'packages/toolbars/layout/index.js'),
     '@opentiny/tiny-engine-toolbar-checkinout': path.resolve(basePath, 'packages/toolbars/lock/index.js'),
-    '@opentiny/tiny-engine-toolbar-lock': path.resolve(basePath, 'packages/toolbars/lock/index.js'),
     '@opentiny/tiny-engine-toolbar-logo': path.resolve(basePath, 'packages/toolbars/logo/index.js'),
     '@opentiny/tiny-engine-toolbar-logout': path.resolve(basePath, 'packages/toolbars/logout/index.js'),
     '@opentiny/tiny-engine-toolbar-media': path.resolve(basePath, 'packages/toolbars/media/index.js'),
