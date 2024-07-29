@@ -109,9 +109,11 @@ const renderer = {
   ...api
 }
 
-const create = (config) => {
+const create = async (config) => {
   const { beforeAppCreate, appCreated } = config.lifeCycles || {}
-  beforeAppCreate?.()
+  if (typeof beforeAppCreate === 'function') {
+    await beforeAppCreate()
+  }
   App && App.unmount()
   App = null
 
@@ -126,7 +128,9 @@ const create = (config) => {
   App = Vue.createApp(Main).use(TinyI18nHost).provide(I18nInjectionKey, TinyI18nHost)
   App.config.globalProperties.lowcodeConfig = window.parent.TinyGlobalConfig
   App.mount(document.querySelector('#app'))
-  appCreated?.(App)
+  if (typeof appCreated === 'function') {
+    await appCreated(App)
+  }
 
   new ResizeObserver(() => {
     dispatch('canvasResize')
