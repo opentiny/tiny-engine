@@ -122,7 +122,7 @@ const handlePopStateEvent = async () => {
   await useTranslate().initI18n({ host: id, hostType: type })
 }
 
-const fetchResource = async ({ isInit = true } = {}) => {
+const fetchResource = async () => {
   const { id, type } = useEditorInfo().useInfo()
   useApp().appInfoState.selectedId = id
   const appData = await useHttp().get(`/app-center/v1/api/apps/schema/${id}`)
@@ -137,8 +137,6 @@ const fetchResource = async ({ isInit = true } = {}) => {
   resState.isDemo = appData.meta?.is_demo
   resState.globalState = appData?.meta.global_state
 
-  useMaterial().initMaterial({ isInit, appData })
-
   // 词条语言为空时使用默认的语言
   const defaultLocales = [
     { lang: 'zh_CN', label: 'zh_CN' },
@@ -151,15 +149,19 @@ const fetchResource = async ({ isInit = true } = {}) => {
     locales,
     messages: appData.i18n
   }
-
   try {
-    await useMaterial().fetchMaterial()
-
-    if (isInit) {
-      await initPageOrBlock()
-    }
-
     await useTranslate().initI18n({ host: id, hostType: type, init: true })
+  } catch (error) {
+    console.log(error) // eslint-disable-line
+  }
+  return appData
+}
+
+const initResource = async () => {
+  const appData = await fetchResource()
+  try {
+    await useMaterial().initMaterialModule(appData)
+    await initPageOrBlock()
   } catch (error) {
     console.log(error) // eslint-disable-line
   }
@@ -168,8 +170,8 @@ const fetchResource = async ({ isInit = true } = {}) => {
 export default function () {
   return {
     resState,
-    fetchResource,
-    initPageOrBlock,
+    initResource, // 初始化资源
+    fetchResource, // 请求资源
     handlePopStateEvent
   }
 }

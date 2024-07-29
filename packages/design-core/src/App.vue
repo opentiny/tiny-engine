@@ -61,7 +61,7 @@ export default {
       useCanvas().isCanvasApiReady,
       (ready) => {
         if (ready) {
-          useResource().fetchResource()
+          useResource().initResource()
         }
       },
       {

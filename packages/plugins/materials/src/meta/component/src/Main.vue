@@ -9,7 +9,7 @@
           <template v-for="child in item.children" :key="child.component">
             <canvas-drag-item
               v-if="!child.hidden && (child.name?.zh_CN || child.name)"
-              :data="generateNode({ component: child.snippetName || child.component })"
+              :data="generateSchemaNode({ component: child.snippetName || child.component })"
               @click="componentClick"
             >
               <li class="component-item">
@@ -48,7 +48,7 @@ export default {
   setup() {
     const COMPONENT_PANEL_COLUMNS = '1fr 1fr 1fr'
     const SHORTCUT_PANEL_COLUMNS = '1fr 1fr 1fr 1fr 1fr 1fr'
-    const { generateNode, materialState } = useMaterial()
+    const { generateSchemaNode, materialState } = useMaterial()
     const gridTemplateColumns = ref(COMPONENT_PANEL_COLUMNS)
     const panelState = inject('panelState', {})
     const { components } = materialState
@@ -111,7 +111,7 @@ export default {
       gridTemplateColumns,
       state,
       change,
-      generateNode,
+      generateSchemaNode,
       componentClick
     }
   }
