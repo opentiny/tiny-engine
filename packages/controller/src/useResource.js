@@ -312,7 +312,6 @@ const initPageOrBlock = async () => {
     const pagePluginApi = getPluginApi(PLUGIN_NAME.AppManage)
 
     const data = await pagePluginApi.getPageById(pageId)
-    console.log(data, pageId, '11111')
     useLayout().layoutState.pageStatus = getCanvasStatus(data.occupier)
     useCanvas().initData(data.page_content, data)
     setBreadcrumbPage([data.name])
