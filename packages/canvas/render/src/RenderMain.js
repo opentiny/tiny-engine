@@ -15,7 +15,7 @@ import { I18nInjectionKey } from 'vue-i18n'
 import { useBroadcastChannel } from '@vueuse/core'
 import { constants, utils as commonUtils } from '@opentiny/tiny-engine-utils'
 import renderer, { parseData, setConfigure, setController, globalNotify, isStateAccessor } from './render'
-import { getNode as getNodeById, clearNodes, getRoot, setContext, getContext, setCondition, context } from './context'
+import { getNode as getNodeById, clearNodes, getRoot, setContext, getContext, setCondition, context, setNode } from './context'
 import CanvasEmpty from './CanvasEmpty.vue'
 
 const { BROADCAST_CHANNEL } = constants
@@ -422,5 +422,6 @@ export const api = {
   getGlobalState,
   getDataSourceMap,
   setDataSourceMap,
-  setGlobalState
+  setGlobalState,
+  setNode,
 }

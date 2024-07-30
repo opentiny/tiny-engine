@@ -345,6 +345,7 @@ export default function () {
     materialState, // 存放着组件、物料侧区块、第三方依赖信息
     initMaterial, // 物料模块初始化
     fetchMaterial, // 请求物料并进行处理
+    addMaterials, // 解析bundle.json，添加多个物料
     getMaterialsRes, // 获取物料，并返回符合物料协议的bundle.json内容，getMaterialsRes: () =>  Promise<Materials>
     generateNode, // 根据 包含{ type, componentName }的组件信息生成组件schema节点，结构：
     clearMaterials, // 清空物料
