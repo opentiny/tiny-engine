@@ -183,7 +183,6 @@ export const saveResource = (data, callback, emit) => {
     requestUpdateReSource(data).then((result) => {
       if (result) {
         const index = useResource().resState[data.category].findIndex((item) => item.name === result.name)
-        // useResource修改
         useResource().resState[data.category][index] = result
 
         // 更新画布工具函数环境，保证渲染最新工具类返回值, 并触发画布的强制刷新
@@ -203,7 +202,6 @@ export const saveResource = (data, callback, emit) => {
   } else {
     requestAddReSource(data).then((result) => {
       if (result) {
-        // useResource修改
         useResource().resState[data.category].push(result)
 
         // 更新画布工具函数环境，保证渲染最新工具类返回值, 并触发画布的强制刷新
@@ -228,7 +226,6 @@ export const deleteData = (name, callback, emit) => {
   requestDeleteReSource(params).then((data) => {
     if (data) {
       const index = useResource().resState[state.type].findIndex((item) => item.name === data.name)
-      // useResource修改
       useResource().resState[state.type].splice(index, 1)
 
       deleteUtils([data])

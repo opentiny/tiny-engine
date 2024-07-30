@@ -43,22 +43,6 @@ const [state, setState] = useState(serviceId, {
   appList: []
 })
 
-const { subscribe, publish } = useMessage()
-
-watch(
-  () => state.appInfo,
-  (appInfo) => {
-    publish({ topic: 'app_info_changed', data: appInfo })
-  }
-)
-
-watch(
-  () => state.appList,
-  (appList) => {
-    publish({ topic: 'app_list_changed', data: appList })
-  }
-)
-
 const getUserInfo = async () => {
   // 获取登录用户信息
   await useHttp()
@@ -79,29 +63,48 @@ const fetchAppInfo = (appId) => useHttp().get(`/app-center/api/apps/detail/${app
 // 获取应用列表
 const fetchAppList = (platformId) => useHttp().get(`/app-center/api/apps/list/${platformId}`)
 
-subscribe({
-  topic: 'app_id_changed',
-  callback: (appId) => {
-    fetchAppInfo(appId).then((app) => {
-      setState({ appInfo: app })
-      // 监听应用 ID 变化，根据应用名称设置网页 title
-      document.title = `${app.name} —— TinyEditor 前端可视化设计器`
-    })
-  }
-})
+const { subscribe, publish } = useMessage()
 
-subscribe({
-  topic: 'platform_id_changed',
-  callback: (platformId) => {
-    fetchAppList(platformId).then((list) => {
-      setState({ appList: list })
-    })
-  }
-})
+const init = () => {
+  watch(
+    () => state.appInfo,
+    (appInfo) => {
+      publish({ topic: 'app_info_changed', data: appInfo })
+    }
+  )
 
-const initData = async () => {
-  await getUserInfo()
-  publish({ topic: 'global_service_init_finish' })
+  watch(
+    () => state.appList,
+    (appList) => {
+      publish({ topic: 'app_list_changed', data: appList })
+    }
+  )
+
+  subscribe({
+    topic: 'app_id_changed',
+    callback: (appId) => {
+      fetchAppInfo(appId).then((app) => {
+        setState({ appInfo: app })
+        // 监听应用 ID 变化，根据应用名称设置网页 title
+        document.title = `${app.name} —— TinyEditor 前端可视化设计器`
+      })
+    }
+  })
+
+  subscribe({
+    topic: 'platform_id_changed',
+    callback: (platformId) => {
+      fetchAppList(platformId).then((list) => {
+        setState({ appList: list })
+      })
+    }
+  })
+}
+
+const start = () => {
+  getUserInfo().then(() => {
+    publish({ topic: 'global_service_init_finish' })
+  })
 }
 
 export default {
@@ -112,5 +115,6 @@ export default {
     getBaseInfo,
     isAdmin: () => state.userInfo.resetPasswordToken === 'p_webcenter'
   },
-  init: initData
+  init,
+  start
 }
