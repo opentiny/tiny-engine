@@ -19,7 +19,7 @@
 <script>
 import { computed } from 'vue'
 import { utils } from '@opentiny/tiny-engine-utils'
-import { useResource } from '@opentiny/tiny-engine-meta-register'
+import { useAppData } from '@opentiny/tiny-engine-meta-register'
 import Components from '../../components'
 
 const { getEnumData, camelize } = utils
@@ -45,7 +45,7 @@ export default {
     }
   },
   setup(props) {
-    const { resState } = useResource()
+    const { appDataState } = useAppData()
 
     const propertyList = computed(() => {
       const properties = JSON.parse(JSON.stringify(props.properties))
@@ -65,9 +65,9 @@ export default {
 
       if (props.values.title && props.values.title.i18nKey) {
         const i18nKey = props.values.title.i18nKey
-        title = resState.langs[i18nKey]
-          ? resState.langs[i18nKey][resState.currentLang]
-          : props.values.title[resState.currentLang]
+        title = appDataState.langs[i18nKey]
+          ? appDataState.langs[i18nKey][appDataState.currentLang]
+          : props.values.title[appDataState.currentLang]
       } else {
         title = props.values.title
       }

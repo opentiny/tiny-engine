@@ -337,7 +337,7 @@ const initBuiltinMaterial = () => {
  * @param {*} param
  *  isInit 是否
  */
-const initMaterialModule = async (appData) => {
+const initMaterial = async (appData) => {
   initBuiltinMaterial()
   componentState.componentsMap = {}
   appData.componentsMap?.forEach((component) => {
@@ -352,7 +352,7 @@ const initMaterialModule = async (appData) => {
 export default function () {
   return {
     materialState, // 存放着组件、物料侧区块、第三方依赖信息
-    initMaterialModule, // 物料模块初始化
+    initMaterial, // 物料模块初始化
     fetchUserMaterialData, // 获取物料，并返回符合物料协议的bundle.json内容，getMaterialsRes: () =>  Promise<Materials>
     generateSchemaNode, // 根据 包含{ type, componentName }的组件信息生成组件schema节点
     getMaterial, // 获取单个物料，(property) getMaterial: (name: string) => Material

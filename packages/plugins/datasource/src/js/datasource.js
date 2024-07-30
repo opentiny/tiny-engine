@@ -11,7 +11,7 @@
  */
 
 import axios from 'axios'
-import { useResource } from '@opentiny/tiny-engine-meta-register'
+import { useAppData } from '@opentiny/tiny-engine-meta-register'
 import { isMock } from '@opentiny/tiny-engine-common/js/environments'
 import { utils as commonUtils, constants } from '@opentiny/tiny-engine-utils'
 import { read, utils, writeFileXLSX } from 'xlsx'
@@ -54,16 +54,16 @@ const defaultWillFetch = createFn(DEFAULT_INTERCEPTOR.willFetch.value)
 const defaultErrorHandler = createFn(DEFAULT_INTERCEPTOR.errorHandler.value)
 
 export const getRequest = (config) => {
-  const globalDataHandle = useResource().resState.dataHandler
-    ? createFn(useResource().resState.dataHandler.value)
+  const globalDataHandle = useAppData().appDataState.dataHandler
+    ? createFn(useAppData().appDataState.dataHandler.value)
     : defaultDataHandler
 
-  const globalErrorHandler = useResource().resState.errorHandler
-    ? createFn(useResource().resState.errorHandler.value)
+  const globalErrorHandler = useAppData().appDataState.errorHandler
+    ? createFn(useAppData().appDataState.errorHandler.value)
     : defaultErrorHandler
 
-  const globalWillFetch = useResource().resState.willFetch
-    ? createFn(useResource().resState.willFetch.value)
+  const globalWillFetch = useAppData().appDataState.willFetch
+    ? createFn(useAppData().appDataState.willFetch.value)
     : defaultWillFetch
 
   const http = axios.create()

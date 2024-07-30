@@ -6,7 +6,6 @@ export const META_SERVICE = {
   Breadcrumb: 'engine.service.breadcrumb',
   SaveLocal: 'engine.service.savelocal',
   History: 'engine.service.history',
-  Resource: 'engine.service.resource',
   Material: 'engine.service.material',
   Page: 'engine.service.page',
   Block: 'engine.service.block',
@@ -14,7 +13,9 @@ export const META_SERVICE = {
   Translate: 'engine.service.translate',
   Help: 'engine.service.help',
   Property: 'engine.service.property',
-  Properties: 'engine.service.properties'
+  Properties: 'engine.service.properties',
+  AppData: 'engine.service.appData',
+  PageBlockSchema: 'engine.service.pageBlockSchema'
 }
 
 export const META_APP = {

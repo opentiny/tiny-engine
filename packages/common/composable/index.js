@@ -2,6 +2,7 @@ import { HOOK_NAME } from '@opentiny/tiny-engine-meta-register'
 
 import useApp from './useApp'
 import useEditorInfo from './useEditorInfo'
+import useAppData from './useAppData'
 
 export { GenerateCodeService } from './generateCode'
 
@@ -20,5 +21,14 @@ export const EditorInfoService = {
   apis: useEditorInfo(),
   composable: {
     name: HOOK_NAME.useEditorInfo
+  }
+}
+
+export const AppDataService = {
+  id: 'engine.service.appData',
+  type: 'MetaService',
+  apis: useAppData(),
+  composable: {
+    name: HOOK_NAME.useAppData
   }
 }

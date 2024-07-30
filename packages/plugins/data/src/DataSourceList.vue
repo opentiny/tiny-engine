@@ -21,7 +21,7 @@
 
 <script lang="jsx">
 import { computed } from 'vue'
-import { useModal, useResource } from '@opentiny/tiny-engine-meta-register'
+import { useModal, useAppData } from '@opentiny/tiny-engine-meta-register'
 import { findExpressionInAppSchema } from '@opentiny/tiny-engine-common/js/ast'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { SvgButton, SearchEmpty } from '@opentiny/tiny-engine-common'
@@ -67,7 +67,7 @@ export default {
     }
 
     const removeStoreConfirm = (key) => {
-      const appPages = useResource().resState.pageTree.filter(
+      const appPages = useAppData().appDataState.pageTree.filter(
         (page) => page.componentName === COMPONENT_NAME.Page && page?.meta?.group !== 'publicPages'
       )
       const expression = `stores.${key}`

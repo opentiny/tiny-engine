@@ -17,7 +17,7 @@ import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { generateI18n } from '@opentiny/tiny-engine-common/js/vscodeGenerateFile'
 import { PROP_DATA_TYPE } from '@opentiny/tiny-engine-common/js/constants'
-import { useResource, useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { useAppData, useCanvas } from '@opentiny/tiny-engine-meta-register'
 
 const { HOST_TYPE } = constants
 const state = reactive({
@@ -117,10 +117,10 @@ const getI18nData = () => {
 }
 
 const getI18n = async ({ init, local }) => {
-  const { resState } = useResource()
+  const { appDataState } = useAppData()
 
   if (local) {
-    const locales = resState?.langs?.locales || []
+    const locales = appDataState?.langs?.locales || []
     const messages = {}
     const langs = getLangs()
 
@@ -136,7 +136,7 @@ const getI18n = async ({ init, local }) => {
 
     return { locales, messages }
   } else {
-    const i18n = init ? resState.langs : await getI18nData
+    const i18n = init ? appDataState.langs : await getI18nData
 
     return i18n
   }

@@ -73,7 +73,7 @@ import {
   useCanvas,
   useHistory,
   useEditorInfo,
-  useResource,
+  useAppData,
   useNotify,
   useHelp,
   getMetaApi,
@@ -300,7 +300,7 @@ export default {
     }
 
     const removeStore = (key) => {
-      const storeListt = [...useResource().resState.globalState] || []
+      const storeListt = [...useAppData().appDataState.globalState] || []
       const index = storeListt.findIndex((store) => store.id === key)
       const { setGlobalState } = useCanvas().canvasApi.value
 
