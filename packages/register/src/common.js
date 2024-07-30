@@ -11,7 +11,6 @@
  */
 
 import { initHook } from './hooks'
-import { useState } from './useState'
 
 const vueLifeHook = [
   'onMounted',
@@ -133,15 +132,6 @@ const handleRegistryProp = (id, value) => {
 
   if (apis) {
     apisMap[id] = apis
-
-    if (value.type === 'MetaService') {
-      const [state, setState] = useState(id)
-      Object.assign(apisMap[id], {
-        getState: () => state,
-        setState
-      })
-    }
-
     if (composable?.name) {
       initHook(composable.name, apis)
     }
@@ -170,7 +160,7 @@ export const preprocessRegistry = (registry) => {
 }
 
 export const generateRegistry = (registry) => {
-  Object.entries(registry).forEach(async ([key, value]) => {
+  Object.entries(registry).forEach(([key, value]) => {
     if (typeof value === 'object' && value) {
       const { id } = value
       // 如果匹配到了id，说明是元服务配置，对元服务配置做读取和写入
