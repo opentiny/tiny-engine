@@ -1,5 +1,5 @@
 import { useHttp } from '@opentiny/tiny-engine-http'
-import { useMessage, useModal, useState } from '@opentiny/tiny-engine-meta-register'
+import { useMessage, useModal, defineService } from '@opentiny/tiny-engine-meta-register'
 import { watch } from 'vue'
 
 const serviceId = 'engine.service.globalService'
@@ -21,7 +21,7 @@ const getBaseInfo = () => {
   }
 }
 
-const [state, setState] = useState(serviceId, {
+const initialState = {
   userInfo: null,
   // 当前应用
   appInfo: {
@@ -41,17 +41,12 @@ const [state, setState] = useState(serviceId, {
   },
   // 应用列表
   appList: []
-})
+}
 
-const getUserInfo = async () => {
+const getUserInfo = () => {
   // 获取登录用户信息
-  await useHttp()
+  return useHttp()
     .get('/platform-center/api/user/me')
-    .then((data) => {
-      if (data) {
-        setState({ userInfo: data })
-      }
-    })
     .catch((error) => {
       useModal().message({ message: error.message, status: 'error' })
     })
@@ -65,56 +60,57 @@ const fetchAppList = (platformId) => useHttp().get(`/app-center/api/apps/list/${
 
 const { subscribe, publish } = useMessage()
 
-const init = () => {
-  watch(
-    () => state.appInfo,
-    (appInfo) => {
-      publish({ topic: 'app_info_changed', data: appInfo })
-    }
-  )
-
-  watch(
-    () => state.appList,
-    (appList) => {
-      publish({ topic: 'app_list_changed', data: appList })
-    }
-  )
-
-  subscribe({
-    topic: 'app_id_changed',
-    callback: (appId) => {
-      fetchAppInfo(appId).then((app) => {
-        setState({ appInfo: app })
-        // 监听应用 ID 变化，根据应用名称设置网页 title
-        document.title = `${app.name} —— TinyEditor 前端可视化设计器`
-      })
-    }
-  })
-
-  subscribe({
-    topic: 'platform_id_changed',
-    callback: (platformId) => {
-      fetchAppList(platformId).then((list) => {
-        setState({ appList: list })
-      })
-    }
-  })
-}
-
-const start = () => {
-  getUserInfo().then(() => {
-    publish({ topic: 'global_service_init_finish' })
-  })
-}
-
-export default {
+export default defineService({
   id: serviceId,
   type: 'MetaService',
   options: {},
-  apis: {
+  initialState,
+  init: ({ state, setState }) => {
+    watch(
+      () => state.appInfo,
+      (appInfo) => {
+        publish({ topic: 'app_info_changed', data: appInfo })
+      }
+    )
+
+    watch(
+      () => state.appList,
+      (appList) => {
+        publish({ topic: 'app_list_changed', data: appList })
+      }
+    )
+
+    subscribe({
+      topic: 'app_id_changed',
+      callback: (appId) => {
+        fetchAppInfo(appId).then((app) => {
+          setState({ appInfo: app })
+          // 监听应用 ID 变化，根据应用名称设置网页 title
+          document.title = `${app.name} —— TinyEditor 前端可视化设计器`
+        })
+      }
+    })
+
+    subscribe({
+      topic: 'platform_id_changed',
+      callback: (platformId) => {
+        fetchAppList(platformId).then((list) => {
+          setState({ appList: list })
+        })
+      }
+    })
+  },
+
+  start: ({ setState }) => {
+    getUserInfo().then((data) => {
+      if (data) {
+        setState({ userInfo: data })
+      }
+      publish({ topic: 'global_service_init_finish' })
+    })
+  },
+  apis: ({ state }) => ({
     getBaseInfo,
     isAdmin: () => state.userInfo.resetPasswordToken === 'p_webcenter'
-  },
-  init,
-  start
-}
+  })
+})
