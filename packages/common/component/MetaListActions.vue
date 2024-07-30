@@ -3,7 +3,7 @@
     <tiny-tooltip class="item" effect="dark" :content="actionsItem.title" placement="top">
       <component :is="actionsItem.icon"></component>
     </tiny-tooltip>
-    <span class="actions-title">{{ actionsItem?.add }}</span>
+    <span class="actions-title">{{ actionsItem?.title }}</span>
   </span>
 </template>
 

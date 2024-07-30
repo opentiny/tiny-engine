@@ -257,8 +257,8 @@ export default {
   width: 100%;
   .edit-btn {
     width: 100%;
-    color: var(--ti-lowcode-meta-codeEditor-color);
-    border-color: var(--ti-lowcode-meta-codeEditor-border-color);
+    color: var(--button-text-color);
+    border-color: var(--button-border-color);
     &:hover {
       color: var(--ti-lowcode-meta-codeEditor-hover-color);
       border-color: var(--ti-lowcode-meta-codeEditor-border-hover-color);

@@ -85,10 +85,9 @@ export default {
     const actionsOptions = {
       actions: [
         {
-          title: '新增',
+          title: '新增一列',
           type: 'add',
-          icon: IconPlus(),
-          add: '新增一列'
+          icon: IconPlus()
         }
       ]
     }

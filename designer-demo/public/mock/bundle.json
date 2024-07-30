@@ -2924,7 +2924,7 @@
                     "description": {
                       "zh_CN": ""
                     },
-                    "labelPosition":"left"
+                    "labelPosition": "left"
                   },
                   {
                     "property": "autoplay",
@@ -5040,7 +5040,7 @@
                     "description": {
                       "zh_CN": "表单中标签后缀"
                     },
-                    "labelPosition":"left"
+                    "labelPosition": "left"
                   },
                   {
                     "property": "label-position",
