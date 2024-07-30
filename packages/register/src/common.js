@@ -169,13 +169,6 @@ export const preprocessRegistry = (registry) => {
     })
 }
 
-// 调用 service init 方法
-const initService = (registry) => {
-  if (registry?.type === 'MetaService' && typeof registry?.init === 'function') {
-    registry.init()
-  }
-}
-
 export const generateRegistry = (registry) => {
   Object.entries(registry).forEach(async ([key, value]) => {
     if (typeof value === 'object' && value) {
@@ -188,7 +181,6 @@ export const generateRegistry = (registry) => {
         // TODO: 其他类型配置处理
       }
 
-      initService(value)
       generateRegistry(value)
     }
   })

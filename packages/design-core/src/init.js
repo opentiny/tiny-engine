@@ -22,6 +22,7 @@ import {
   defineEntry,
   mergeRegistry,
   getMergeMeta,
+  initServices,
   initHook,
   HOOK_NAME,
   useMessage
@@ -31,7 +32,7 @@ import defaultRegistry from '../registry.js'
 import { registerConfigurators } from './registerConfigurators'
 
 const defaultLifeCycles = {
-  beforeAppCreate: async ({ registry }) => {
+  beforeAppCreate: ({ registry }) => {
     // 合并用户自定义注册表
     const newRegistry = mergeRegistry(registry, defaultRegistry)
     if (process.env.NODE_ENV === 'development') {
@@ -41,6 +42,9 @@ const defaultLifeCycles = {
 
     // 在common层注入合并后的注册表
     defineEntry(newRegistry)
+
+    // 初始化所有服务
+    initServices()
 
     initHook(HOOK_NAME.useEnv, import.meta.env)
     initHook(HOOK_NAME.useNotify, Notify, { useDefaultExport: true })
@@ -63,7 +67,7 @@ const defaultLifeCycles = {
     // 这里暴露到 window 是为了让 canvas 可以读取
     window.TinyGlobalConfig = newRegistry.config || {}
   },
-  appCreated: async ({ app }) => {
+  appCreated: ({ app }) => {
     initSvgs(app)
     window.lowcodeI18n = i18n
     app.use(i18n).use(injectGlobalComponents)
@@ -104,17 +108,17 @@ export const init = async ({
 
   registerConfigurators(configurators)
 
-  await defaultLifeCycles.beforeAppCreate({ registry })
-  await beforeAppCreate?.({ registry })
+  defaultLifeCycles.beforeAppCreate({ registry })
+  beforeAppCreate?.({ registry })
 
   if (createAppSignal.length) {
     await subscribeSignalFinish(createAppSignal)
   }
 
   const app = createApp(App)
-  await defaultLifeCycles.appCreated({ app })
-  await appCreated?.({ app })
+  defaultLifeCycles.appCreated({ app })
+  appCreated?.({ app })
 
   app.mount(selector)
-  await appMounted?.({ app })
+  appMounted?.({ app })
 }

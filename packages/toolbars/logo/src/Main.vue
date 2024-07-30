@@ -114,7 +114,7 @@ import {
   Tooltip as TinyTooltip
 } from '@opentiny/vue'
 import { iconHelpCircle } from '@opentiny/vue-icon'
-import { useLayout, useModal, getServiceState } from '@opentiny/tiny-engine-meta-register'
+import { useLayout, useModal, getMetaApi } from '@opentiny/tiny-engine-meta-register'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
@@ -133,6 +133,8 @@ const { PLUGIN_NAME, activePlugin } = useLayout()
 
 const IconHelp = iconHelpCircle()
 
+const globalState = getMetaApi('engine.service.globalService').getState()
+
 const state = reactive({
   hoverState: false,
   showMenu: false,
@@ -148,7 +150,7 @@ const state = reactive({
     canCreateNewBranch: false
   },
   title: computed(() => (state.showPreview ? '发布应用' : '保存历史版本')),
-  appName: computed(() => getServiceState('engine.service.globalService').appInfo.name),
+  appName: computed(() => globalState.appInfo.name),
   leaveTimeoutId: null,
   overTimeoutId: null
 })
@@ -167,8 +169,6 @@ const repalceTrim = (e) => {
 const getTargetUrl = (centerName) => {
   return `/#/${centerName}/`
 }
-
-const getAppId = () => getServiceState('engine.service.globalService').appInfo.id
 
 const actions = {
   pageManagement() {
@@ -202,7 +202,7 @@ const actions = {
     state.showPreview = true
   },
   previewApp() {
-    const appId = getAppId()
+    const appId = globalState.appInfo.id
     // 获取租户 id
     const getTenant = () => new URLSearchParams(location.search).get('tenant')
     const tenantId = getTenant() || ''
@@ -215,7 +215,7 @@ const actions = {
 }
 
 const confirm = () => {
-  const appId = getAppId()
+  const appId = globalState.appInfo.id
 
   form.value.validate((valid) => {
     if (valid) {
