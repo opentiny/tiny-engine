@@ -430,6 +430,7 @@ export default function () {
     clearBlockResources, // 清空区块缓存，以便更新最新版区块
     getMaterial, // 获取单个物料，(property) getMaterial: (name: string) => Material
     setMaterial, // 设置单个物料 (property) setMaterial: (name: string, data: Material) => void
+    addMaterials, // 添加多个物料
     registerBlock, // 注册新的区块
     updateCanvasDependencies, //传入新的区块，获取新增区块的依赖，更新画布中的组件依赖
     getConfigureMap // 获取物料组件的配置信息
