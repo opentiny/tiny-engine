@@ -23,7 +23,7 @@
 import { reactive, computed } from 'vue'
 import { Breadcrumb, BreadcrumbItem, Button } from '@opentiny/vue'
 import { useBreadcrumb, useLayout } from '@opentiny/tiny-engine-meta-register'
-import lock from '../../lock'
+import lock from '@opentiny/tiny-engine-toolbar-checkinout'
 import { BlockDeployDialog } from '@opentiny/tiny-engine-common'
 export default {
   components: {
@@ -33,7 +33,7 @@ export default {
     TinyButton: Button
   },
   setup() {
-    const PLUGINSID = {
+    const PLUGINS_ID = {
       PAGEID: 'engine.plugins.appmanage',
       BLOCKID: 'engine.plugins.blockmanage'
     }
@@ -70,7 +70,7 @@ export default {
     })
 
     const open = () => {
-      plugins.render = breadcrumbData.value[0] === CONSTANTS.PAGETEXT ? PLUGINSID.PAGEID : PLUGINSID.BLOCKID
+      plugins.render = breadcrumbData.value[0] === CONSTANTS.PAGETEXT ? PLUGINS_ID.PAGEID : PLUGINS_ID.BLOCKID
     }
 
     return {
