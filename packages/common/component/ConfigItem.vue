@@ -58,7 +58,7 @@
             :is="component"
             v-show="!hidden"
             v-bind="widget.props"
-            :model-value="bindValue || verification.defaultValue"
+            :model-value="bindValue"
             :language="currentLanguage"
             :meta="property"
             :label="propLabel"
@@ -80,7 +80,7 @@
             v-if="showCodeEditIcon"
             ref="editorModalRef"
             v-bind="widget.props"
-            :model-value="bindValue || verification.defaultValue"
+            :model-value="bindValue"
             :meta="property"
             :label="propLabel"
             language="json"
@@ -190,8 +190,7 @@ export default {
       showModal: false,
       failed: false,
       message: '',
-      hasRule: computed(() => hasRule(props.property?.required, props.property?.rules)),
-      defaultValue: props.property?.widget?.props?.modelValue
+      hasRule: computed(() => hasRule(props.property?.required, props.property?.rules))
     })
     const variable = ref(null)
     const editorModalRef = ref(null)
@@ -487,7 +486,7 @@ export default {
     const { setPosition } = useModalMask()
 
     const openReset = (event) => {
-      if (showBindState.value) {
+      if (showBindState.value && variable.value) {
         setPosition(event)
         verification.showModal = true
       }
@@ -660,7 +659,7 @@ export default {
     .pro-bind {
       padding: 2px;
       color: var(--ti-lowcode-meta-config-item-bind-color);
-      background: var(--ti-lowcode-meta-config-labe-item-bind-bg), 0.08;
+      background-color: var(--ti-lowcode-meta-config-labe-item-bind-bg);
       cursor: pointer;
     }
     &.multiType {
