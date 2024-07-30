@@ -248,15 +248,11 @@ watch(
     if (!classNameList) {
       return
     }
-    if (state.styleObject[classNameList].pureSelector) {
-      const matchStyles = Object.values(state.styleObject).filter((value) => {
-        value.pureSelector === classNameList && value.mouseState === mouseState
-      })
-      const style = matchStyles.length ? matchStyles[0].rules : {}
-      state.style = style
-    } else {
-      state.style = state.styleObject[classNameList].rules
-    }
+    const matchStyles = Object.values(state.styleObject).filter(
+      (value) => value.pureSelector === classNameList && value.mouseState === mouseState
+    )
+    const style = matchStyles.length ? matchStyles[0].rules : {}
+    state.style = style
   },
   {
     deep: true
