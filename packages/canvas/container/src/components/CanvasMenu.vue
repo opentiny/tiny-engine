@@ -27,14 +27,14 @@
         </ul>
       </li>
     </ul>
-    <SaveNewBlock :boxVisibility="boxVisibility" fromCanvas @close="close"></SaveNewBlock>
+    <SaveNewBlock v-if="hasBlock" :boxVisibility="boxVisibility" fromCanvas @close="close"></SaveNewBlock>
   </div>
 </template>
 
 <script lang="jsx">
 import { ref, reactive, nextTick } from 'vue'
 import { canvasState, getConfigure, getController, getCurrent, copyNode, removeNodeById } from '../container'
-import { useLayout, useModal, useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { useLayout, useModal, useCanvas, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { iconRight } from '@opentiny/vue-icon'
 
 const menuState = reactive({
@@ -227,6 +227,7 @@ export default {
     }
 
     return {
+      hasBlock: getMetaApi(META_SERVICE.Block),
       menuState,
       menus,
       doOperation,
