@@ -6,39 +6,45 @@ import { metaHashMap } from './common'
  * @template K
  * @typedef {Object} Context
  * @property {K} options
- * @property {(import 'vue').DeepReadonly<(import 'vue').UnwrapNestedRefs<T>>} state
- * @property {(value: Partial<T>) => void} setState
+ * @property {(import 'vue').UnwrapNestedRefs<T>} state
  */
 
 /**
  * @template T
  * @template K
- * @typedef {Object} Service
+ * @typedef {Object} ServiceOptions
  * @property {string} id
- * @property {string} type
- * @property {K} options
- * @property {Record<string, any> | (context: Context<T, K>) => Record<string, any>} apis
+ * @property {'MetaService'} type
  * @property {T} initialState
+ * @property {K} options
  * @property {(context: Context<T, K>) => void} init
  * @property {(context: Context<T, K>) => void} start
+ * @property {Record<string, any> | (context: Context<T, K>) => Record<string, any>} apis
  */
 
 /**
  * @template T
  * @template K
- * @param {Service<T, K>} service
+ * @typedef {()=> (import 'vue').DeepReadonly<(import 'vue').UnwrapNestedRefs<T>>} GetState
+ * @typedef {(kv: Partial<T>) => void} SetState
+ * @typedef {Pick<ServiceOptions<T, K>, 'id' | 'type' | 'options'> & {
+ *   apis: { getState: GetState; setState: SetState } & Record<string, Function>
+ * }} Service
+ */
+
+/**
+ * @template T
+ * @template K
+ * @param {ServiceOptions<T, K>} service
  * @returns {Service<T, K>}
  */
 export const defineService = (service) => {
   const { initialState, options, init, start } = service
 
-  const state = reactive(initialState)
-  const setState = (kv) => {
-    Object.assign(state, kv)
-  }
+  const state = reactive(initialState || {})
 
   if (typeof service.apis === 'function') {
-    service.apis = service.apis({ state, setState, options })
+    service.apis = service.apis({ state, options })
   }
 
   if (typeof service.apis !== 'object' || service.apis === null) {
@@ -47,15 +53,17 @@ export const defineService = (service) => {
 
   Object.assign(service.apis, {
     getState: () => readonly(state),
-    setState
+    setState: (kv) => {
+      Object.assign(state, kv)
+    }
   })
 
   Object.assign(service, {
     _init: () => {
-      init({ state, setState, options })
+      init({ state, options: options || {} })
     },
     _start: () => {
-      start({ state, setState, options })
+      start({ state, options: options || {} })
     }
   })
 

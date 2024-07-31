@@ -65,7 +65,7 @@ export default defineService({
   type: 'MetaService',
   options: {},
   initialState,
-  init: ({ state, setState }) => {
+  init: ({ state }) => {
     watch(
       () => state.appInfo,
       (appInfo) => {
@@ -84,7 +84,7 @@ export default defineService({
       topic: 'app_id_changed',
       callback: (appId) => {
         fetchAppInfo(appId).then((app) => {
-          setState({ appInfo: app })
+          state.appInfo = app
           // 监听应用 ID 变化，根据应用名称设置网页 title
           document.title = `${app.name} —— TinyEditor 前端可视化设计器`
         })
@@ -95,16 +95,16 @@ export default defineService({
       topic: 'platform_id_changed',
       callback: (platformId) => {
         fetchAppList(platformId).then((list) => {
-          setState({ appList: list })
+          state.appList = list
         })
       }
     })
   },
 
-  start: ({ setState }) => {
+  start: ({ state }) => {
     getUserInfo().then((data) => {
       if (data) {
-        setState({ userInfo: data })
+        state.userInfo = data
       }
       publish({ topic: 'global_service_init_finish' })
     })
