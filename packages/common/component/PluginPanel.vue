@@ -170,7 +170,6 @@ export default {
   display: flex;
   flex-direction: column;
   position: relative;
-  overflow: hidden;
 
   .plugin-panel-header {
     display: flex;
