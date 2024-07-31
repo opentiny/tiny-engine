@@ -39,15 +39,13 @@ const globalState = ref([])
 const stores = shallowReactive({})
 const dataSourceMap = shallowReactive({})
 
-const Func = Function
-
 watchEffect(() => {
   reset(stores)
   globalState.value.forEach(({ id, state = {}, getters = {} }) => {
     const computedGetters = Object.keys(getters).reduce(
       (acc, key) => ({
         ...acc,
-        [key]: new Func('return ' + getters[key].value)().call(acc, state)
+        [key]: parseData(getters[key], state, acc)
       }),
       {}
     )
