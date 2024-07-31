@@ -5,6 +5,7 @@
     :showIfFullScreen="true"
     title="静态数据管理"
     class="datasource-record-list"
+    :style="{ marginLeft: leftMargin + 'px' }"
     @cancel="closeRecordList"
     @save="saveRecordList"
     @fullScreenChange="fullScreenChange"
@@ -106,6 +107,8 @@ import { downloadFn, handleImportedData, overrideOrMergeData, getDataAfterPage }
 import DataSourceRecordUpload from './DataSourceRecordUpload.vue'
 
 let isOpen = ref(false)
+const { pluginWidth, PLUGIN_NAME } = useLayout()
+const leftMargin = computed(() => pluginWidth[PLUGIN_NAME['Datasource']])
 
 export const open = () => {
   isOpen.value = true
@@ -595,7 +598,8 @@ export default {
       handleSizeChange,
       handleBeforeChange,
       overrideData,
-      mergeData
+      mergeData,
+      leftMargin
     }
   }
 }
