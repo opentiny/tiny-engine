@@ -1,5 +1,5 @@
 <template>
-  <plugin-setting v-if="isOpen">
+  <plugin-setting v-if="isOpen" :style="{ marginLeft: leftMargin + 'px' }">
     <template #title>
       <div class="title-wrap">
         <span>{{ state.title }}</span>
@@ -122,10 +122,12 @@ import {
   getResourceNamesByType
 } from './js/resource'
 import { VueMonaco as MonacoEditor, PluginSetting, SvgButton } from '@opentiny/tiny-engine-common'
-import { useApp, getGlobalConfig, useModal, useNotify } from '@opentiny/tiny-engine-controller'
+import { useLayout, useApp, getGlobalConfig, useModal, useNotify } from '@opentiny/tiny-engine-controller'
 import { theme } from '@opentiny/tiny-engine-controller/adapter'
 
 const isOpen = ref(false)
+const { pluginWidth, PLUGIN_NAME } = useLayout()
+const leftMargin = computed(() => pluginWidth[PLUGIN_NAME['Bridge']])
 
 export const openPanel = () => {
   isOpen.value = true
@@ -306,7 +308,8 @@ export default {
       deleteReSource,
       options: monacoOptions,
       handleChangeType,
-      RESOURCE_CATEGORY
+      RESOURCE_CATEGORY,
+      leftMargin
     }
   }
 }
