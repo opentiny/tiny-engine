@@ -333,12 +333,10 @@ const initBuiltinMaterial = () => {
 }
 
 /**
- *
- * @param {*} param
- *  isInit 是否
+ * 设置组件全局map
+ * @param {*} appData
  */
-const initMaterial = async (appData) => {
-  initBuiltinMaterial()
+const initComponentMap = async (appData) => {
   componentState.componentsMap = {}
   appData.componentsMap?.forEach((component) => {
     if (component.dependencies) {
@@ -346,6 +344,15 @@ const initMaterial = async (appData) => {
     }
     componentState.componentsMap[component.componentName] = component
   })
+}
+
+/**
+ * 物料模块初始化
+ * @param {*} appData
+ */
+const initMaterial = async (appData) => {
+  initBuiltinMaterial()
+  initComponentMap(appData)
   await initUserMaterial()
 }
 
