@@ -41,7 +41,7 @@
           @removeStore="removeStore"
         />
       </div>
-      <div v-if="isPanelShow" class="data-source-right-panel">
+      <div v-if="isPanelShow" class="data-source-right-panel" :style="{ marginLeft: leftMargin + 'px' }">
         <div class="header">
           <span>{{ addDataSource }}</span>
           <span class="options-wrap">
@@ -127,12 +127,14 @@ export default {
     const activeName = ref(STATE.CURRENT_STATE)
     const isBlock = computed(() => useCanvas().isBlock())
     const { setSaved } = useCanvas()
-    const { PLUGIN_NAME, getPluginApi } = useLayout()
+    const { PLUGIN_NAME, getPluginApi, pluginWidth } = useLayout()
     const { openCommon } = getPluginApi(PLUGIN_NAME.save)
     const docsUrl = useHelp().getDocsUrl('data')
     const panelState = reactive({
       emitEvent: emit
     })
+    const leftMargin = computed(() => pluginWidth[PLUGIN_NAME['Data']])
+
     provide('panelState', panelState)
 
     const state = reactive({
@@ -394,7 +396,8 @@ export default {
       OPTION_TYPE,
       open,
       docsUrl,
-      PLUGIN_NAME
+      PLUGIN_NAME,
+      leftMargin
     }
   }
 }
@@ -453,7 +456,6 @@ export default {
     border-right: 1px solid var(--ti-lowcode-toolbar-border-color);
     background: var(--ti-lowcode-common-component-bg);
     position: absolute;
-    left: var(--base-left-panel-width);
     top: 0;
 
     .header {
