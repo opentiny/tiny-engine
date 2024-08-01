@@ -1,9 +1,20 @@
 // 提供engine主题包的样式定义引入
 import './base.less'
 import './common.less'
-if (import.meta.env.VITE_THEME === 'light') {
-  import('./light/light-common.less')
-} else {
-  import('./dark/dark-common.less')
-}
+import { tinyDarkTheme } from './dark/dark-common'
+import { tinyLightTheme } from './light/light-common'
 import './component-common.less'
+
+export const tinyThemeLightVars = {
+  id: 'tiny-light-theme',
+  name: 'tinyLightTheme',
+  cnName: '',
+  data: { ...tinyLightTheme }
+}
+
+export const tinyThemeDarkVars = {
+  id: 'tiny-dark-theme',
+  name: 'tinyDarkTheme',
+  cnName: '',
+  data: { ...tinyDarkTheme }
+}

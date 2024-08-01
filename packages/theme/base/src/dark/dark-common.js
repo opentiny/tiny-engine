@@ -1,3 +1,2 @@
 // tinyvue组件的暗色主题
-:root {
-}
+export const tinyDarkTheme = {}
