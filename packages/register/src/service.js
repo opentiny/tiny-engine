@@ -5,8 +5,8 @@ import { metaHashMap } from './common'
  * @template T
  * @template K
  * @typedef {Object} Context
- * @property {K} options
  * @property {(import 'vue').UnwrapNestedRefs<T>} state
+ * @property {K} options
  */
 
 /**
@@ -19,7 +19,7 @@ import { metaHashMap } from './common'
  * @property {K} options
  * @property {(context: Context<T, K>) => void} init
  * @property {(context: Context<T, K>) => void} start
- * @property {Record<string, any> | (context: Context<T, K>) => Record<string, any>} apis
+ * @property {Record<string, Function> | (context: Context<T, K>) => Record<string, Function>} apis
  */
 
 /**
@@ -35,44 +35,69 @@ import { metaHashMap } from './common'
 /**
  * @template T
  * @template K
- * @param {ServiceOptions<T, K>} service
+ * @type {WeakMap<Service<T, K>, {state: T} & Pick<ServiceOptions<T, K>, 'init' | 'start'>>}
+ */
+const servicesMap = new WeakMap()
+
+/**
+ * @template T
+ * @template K
+ * @param {ServiceOptions<T, K>} serviceOptions
  * @returns {Service<T, K>}
  */
-export const defineService = (service) => {
-  const { initialState, options, init, start } = service
+export const defineService = (serviceOptions) => {
+  const { id, type, initialState, options, init, start, apis } = serviceOptions
+
+  /**
+   * @type {Service<T, K>}
+   */
+  const resultService = {
+    id,
+    type,
+    options,
+    apis: {}
+  }
 
   const state = reactive(initialState || {})
 
-  if (typeof service.apis === 'function') {
-    service.apis = service.apis({ state, options })
+  if (typeof apis === 'object' && apis) {
+    resultService.apis = apis
+  } else if (typeof apis === 'function') {
+    resultService.apis = apis({ state, options })
   }
 
-  if (typeof service.apis !== 'object' || service.apis === null) {
-    service.apis = {}
+  resultService.apis.getState = () => readonly(state)
+  resultService.apis.setState = (kv) => {
+    Object.assign(state, kv)
   }
 
-  Object.assign(service.apis, {
-    getState: () => readonly(state),
-    setState: (kv) => {
-      Object.assign(state, kv)
-    }
+  servicesMap.set(resultService, {
+    state,
+    init: typeof init === 'function' ? init : () => {},
+    start: typeof start === 'function' ? start : () => {}
   })
 
-  Object.assign(service, {
-    _init: () => {
-      init({ state, options: options || {} })
-    },
-    _start: () => {
-      start({ state, options: options || {} })
-    }
-  })
-
-  return service
+  return resultService
 }
 
 export const initServices = () => {
   const services = Object.values(metaHashMap).filter((service) => service.type === 'MetaService')
 
-  services.filter((service) => typeof service.init === 'function').forEach((service) => service._init())
-  services.filter((service) => typeof service.start === 'function').forEach((service) => service._start())
+  services.forEach((service) => {
+    const context = servicesMap.get(service)
+    if (context) {
+      const { state, init } = context
+      const { options } = service
+      init({ state, options })
+    }
+  })
+
+  services.forEach((service) => {
+    const context = servicesMap.get(service)
+    if (context) {
+      const { state, start } = context
+      const { options } = service
+      start({ state, options })
+    }
+  })
 }
