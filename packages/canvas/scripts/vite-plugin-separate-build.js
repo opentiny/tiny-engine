@@ -14,7 +14,7 @@ function saveEmitBundleAssets(config, asset) {
 }
 
 async function bundleBuildEntry(config, options) {
-  const viteConfigFile = config.customBuildConfig[options.buildConfig]
+  const viteConfigFile = options.customBuildConfig[options.buildConfig]
   const {
     output: [outputChunk, ...outputChunks]
   } = await build({
@@ -44,7 +44,7 @@ async function bundleBuildEntry(config, options) {
     } else if (assets.type === 'chunk') {
       saveEmitBundleAssets(config, {
         fileName: assets.fileName,
-        code: assets.code
+        source: assets.code
       })
     }
   })
@@ -83,7 +83,8 @@ export async function vitePluginBuildEntry(customBuildConfig) {
         return
       }
       const file = cleanUrl(id)
-      const { code } = await bundleBuildEntry(Object.assign({}, config, { customBuildConfig }), {
+      const { code } = await bundleBuildEntry(config, {
+        customBuildConfig,
         buildConfig: match.groups.name,
         entries: [file]
       })
@@ -104,12 +105,13 @@ export async function vitePluginBuildEntry(customBuildConfig) {
           if (isSameContent(content, asset.source)) {
             return
           }
-          this.emitFile({
-            type: 'asset',
-            fileName: asset.fileName,
-            source: asset.source
-          })
         }
+        this.emitFile({
+          type: 'asset',
+          fileName: asset.fileName,
+          source: asset.source
+        })
+        bundleMap.assets.clear()
       })
     }
   }
