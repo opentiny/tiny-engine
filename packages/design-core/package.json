@@ -48,6 +48,7 @@
     "@opentiny/tiny-engine-plugin-i18n": "workspace:*",
     "@opentiny/tiny-engine-plugin-materials": "workspace:*",
     "@opentiny/tiny-engine-plugin-page": "workspace:*",
+    "@opentiny/tiny-engine-plugin-template": "workspace:*",
     "@opentiny/tiny-engine-plugin-robot": "workspace:*",
     "@opentiny/tiny-engine-plugin-schema": "workspace:*",
     "@opentiny/tiny-engine-plugin-script": "workspace:*",

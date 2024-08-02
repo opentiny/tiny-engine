@@ -3,7 +3,6 @@
  * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
  *
  * Use of this source code is governed by an MIT-style license.
- *
  * THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
  * BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
@@ -91,6 +90,31 @@ router.get('/app-center/api/pages/detail/:id', async (ctx) => {
 router.get('/app-center/api/pages/delete/:id', async (ctx) => {
   const { id } = ctx.params
   ctx.body = await mockService.pageService.delete(id)
+})
+
+router.post('/app-center/api/templates/create', async (ctx) => {
+  ctx.body = await mockService.templateService.create(ctx.request.body)
+})
+
+router.post('/app-center/api/templates/update/:id', async (ctx) => {
+  const { id } = ctx.params
+  const { body } = ctx.request
+  ctx.body = await mockService.templateService.update(id, body)
+})
+
+router.get('/app-center/api/templates/list/:appId', async (ctx) => {
+  const { appId } = ctx.params
+  ctx.body = await mockService.templateService.list(appId)
+})
+
+router.get('/app-center/api/templates/detail/:id', async (ctx) => {
+  const { id } = ctx.params
+  ctx.body = await mockService.templateService.detail(id)
+})
+
+router.get('/app-center/api/templates/delete/:id', async (ctx) => {
+  const { id } = ctx.params
+  ctx.body = await mockService.templateService.delete(id)
 })
 
 router.get('/material-center/api/block/detail/:id', async (ctx) => {
