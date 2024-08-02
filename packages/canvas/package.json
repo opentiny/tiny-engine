@@ -31,7 +31,6 @@
     "@opentiny/tiny-engine-builtin-component": "workspace:*",
     "@opentiny/tiny-engine-meta-register": "workspace:*",
     "@opentiny/tiny-engine-i18n-host": "workspace:*",
-    "@opentiny/tiny-engine-plugin-materials": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
     "@opentiny/tiny-engine-webcomponent-core": "workspace:*",
     "@opentiny/tiny-engine-http": "workspace:*",
