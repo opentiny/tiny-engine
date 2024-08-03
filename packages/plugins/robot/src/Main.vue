@@ -245,7 +245,7 @@ export default {
         .catch((error) => {
           switch (error.code) {
             case 'CM001':
-              // localStorage.removeItem(selectedModel.value.localKey)
+              localStorage.removeItem(selectedModel.value.localKey)
               tokenDialogVisible.value = true
               break
             default:
@@ -337,10 +337,14 @@ export default {
 
     const initChat = () => {
       const aiChatSession = localStorage.getItem('aiChat')
-      if (!aiChatSession) {
-        setContextSession()
+      if (localStorage.getItem(selectedModel.value.localKey)) {
+        if (!aiChatSession) {
+          setContextSession()
+        } else {
+          initCurrentModel(aiChatSession) // 如果当前缓存有值，那么则需要根据缓存里的内容去初始化当前选择的模型
+        }
       } else {
-        initCurrentModel(aiChatSession) // 如果当前缓存有值，那么则需要根据缓存里的内容去初始化当前选择的模型
+        tokenDialogVisible.value = true
       }
       sessionProcess = JSON.parse(localStorage.getItem('aiChat'))
       messages.value = [...(sessionProcess?.displayMessages || [])]
