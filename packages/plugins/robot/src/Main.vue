@@ -83,7 +83,12 @@
       <tiny-button @click="sendContent(inputContent, false)">发送</tiny-button>
     </footer>
   </div>
-  <token-dialog :dialog-visible="tokenDialogVisible" @dialog-status="getTokenDialogStatus"></token-dialog>
+  <token-dialog
+    :dialog-visible="tokenDialogVisible"
+    :current-model="currentModel"
+    @dialog-status="getTokenDialogStatus"
+    @token-status="updateTokenStatus"
+  ></token-dialog>
 </template>
 
 <script>
@@ -154,7 +159,8 @@ export default {
           : JSON.stringify({
               foundationModel: {
                 manufacturer: selectedModel.value.manufacturer,
-                model: selectedModel.value.value
+                model: selectedModel.value.value,
+                token: localStorage.getItem(selectedModel.value.localKey)
               },
               messages: [],
               displayMessages: [] // 专门用来进行展示的消息，非原始消息，仅作为展示但是不作为请求的发送
@@ -195,8 +201,7 @@ export default {
     // 为了不污染存储在localstorage里的用户的原始消息，这里进行了简单的对象拷贝
     // 引入区块不存放在localstorage的原因：因为区块是可以变化的，用户可能在同一个会话中，对区块进行了删除和创建。那么存放的数据就不是即时数据了。
     const getSendSeesionProcess = () => {
-      const accessToken = localStorage.getItem('accessToken')
-      const sendProcess = { ...sessionProcess, accessToken }
+      const sendProcess = { ...sessionProcess }
       const firstMessage = sendProcess.messages[0]
       firstMessage.content
       sendProcess.messages = [
@@ -240,7 +245,7 @@ export default {
         .catch((error) => {
           switch (error.code) {
             case 'CM001':
-              localStorage.removeItem('accessToken')
+              // localStorage.removeItem(selectedModel.value.localKey)
               tokenDialogVisible.value = true
               break
             default:
@@ -348,10 +353,11 @@ export default {
       resetContent()
     }
 
+    const updateTokenStatus = () => {
+      initChat()
+    }
+
     onMounted(async () => {
-      if (!localStorage.getItem('accessToken')) {
-        tokenDialogVisible.value = true
-      }
       const loadingInstance = Loading.service({
         text: '初始化中，请稍等...',
         customClass: 'chat-loading',
@@ -383,9 +389,20 @@ export default {
         })
       }
     }
+    const currentModel = ref(selectedModel.value)
+    watch(
+      () => selectedModel.value.value,
+      () => {
+        if (!localStorage.getItem(selectedModel.value.localKey)) {
+          currentModel.value = selectedModel.value
+          tokenDialogVisible.value = true
+        } else {
+          tokenDialogVisible.value = false
+        }
+      }
+    )
 
     const { startRecognition, stopRecognition, recognizedText } = useSpeechRecognition()
-
     const speechStatus = ref(false)
     const speechRecognition = () => {
       speechStatus.value = !speechStatus.value
@@ -416,7 +433,9 @@ export default {
       selectedModel,
       changeModel,
       tokenDialogVisible,
-      getTokenDialogStatus
+      currentModel,
+      getTokenDialogStatus,
+      updateTokenStatus
     }
   }
 }
