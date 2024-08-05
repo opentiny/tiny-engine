@@ -1,5 +1,5 @@
 <template>
-  <plugin-panel title="样式" :fixed-panels="fixedPanels" :fixed-name="SETTING_NAME.Style" @close="$emit('close')">
+  <plugin-panel title="样式" :fixed-panels="fixedPanels" :fixed-name="PLUGIN_NAME.Style" @close="$emit('close')">
     <template #content>
       <div class="style-editor">
         <div class="line-style">
@@ -120,7 +120,7 @@ export default {
   },
   emits: ['close'],
   setup(props, { emit }) {
-    const { SETTING_NAME } = useLayout()
+    const { PLUGIN_NAME } = useLayout()
     const activeNames = ref([
       'layout',
       'spacing',
@@ -209,7 +209,7 @@ export default {
     )
 
     return {
-      SETTING_NAME,
+      PLUGIN_NAME,
       state,
       activeNames,
       CSS_TYPE,

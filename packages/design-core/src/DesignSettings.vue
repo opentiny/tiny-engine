@@ -1,3 +1,4 @@
+<!-- 右侧插件栏-->
 <template>
   <!-- 插件面板 -->
   <div
@@ -24,15 +25,15 @@
         :class="{
           'list-item': true,
           'first-item': index === 0,
-          active: item.name === renderPanel
+          active: item.id === renderPanel
         }"
         :title="item.title"
         @click="clickMenu({ item, index })"
       >
         <div>
           <span class="item-icon">
-            <svg-icon v-if="iconComponents[item.name]" :name="iconComponents[item.name]" class="panel-icon"></svg-icon>
-            <component v-else :is="iconComponents[item.name]" class="panel-icon"></component>
+            <svg-icon v-if="iconComponents[item.id]" :name="iconComponents[item.id]" class="panel-icon"></svg-icon>
+            <component v-else :is="iconComponents[item.id]" class="panel-icon"></component>
           </span>
         </div>
       </li>
@@ -71,29 +72,28 @@ export default {
     const activating = computed(() => settingsState.activating) //高亮显示
     const showMask = ref(true)
 
-    Addons.settings.forEach(({ name, component, icon }) => {
-      components[name] = component
-      iconComponents[name] = icon
+    Addons.settings.forEach(({ id, component, icon }) => {
+      components[id] = component
+      iconComponents[id] = icon
     })
 
     const state = reactive({
-      leftList: settings.filter((item) => item.align === 'left')
+      leftList: settings
     })
 
-    const setRender = (curName) => {
-      settingsState.render = curName
+    const setRender = (curId) => {
+      settingsState.render = curId
     }
 
     //点击右侧菜单icon按钮
     const clickMenu = ({ item }) => {
-      if (settingsState.render == item.name) {
-        setRender(null)
+      if (settingsState.render == item.id) {
+        useLayout().closeSetting(true)
         return
       }
-      setRender(item.name)
+      setRender(item.id)
     }
 
-    //待setting组件封装完 备用
     const close = () => {
       useLayout().closeSetting(true)
     }
@@ -102,6 +102,7 @@ export default {
       setRender(n)
     })
 
+    //切换面板状态
     const fixPanel = (pluginName) => {
       settingsState.fixedPanels = settingsState.fixedPanels?.includes(pluginName)
         ? settingsState.fixedPanels?.filter((item) => item !== pluginName)

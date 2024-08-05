@@ -2,7 +2,7 @@
   <plugin-panel
     title="高级"
     :fixed-panels="fixedPanels"
-    :fixed-name="SETTING_NAME.Event"
+    :fixed-name="PLUGIN_NAME.Event"
     :defaultWidth="320"
     @close="$emit('close')"
   >
@@ -42,7 +42,7 @@ export default {
   },
   emits: ['close'],
   setup(props, { emit }) {
-    const { SETTING_NAME } = useLayout()
+    const { PLUGIN_NAME } = useLayout()
     const activeNames = ref(['bindEvent', 'advancedConfig'])
 
     const panelState = reactive({
@@ -51,7 +51,7 @@ export default {
     provide('panelState', panelState)
 
     return {
-      SETTING_NAME,
+      PLUGIN_NAME,
       activeNames
     }
   }

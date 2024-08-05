@@ -31,12 +31,10 @@ const PLUGIN_NAME = {
   I18n: 'I18n',
   Script: 'PageController',
   Data: 'DataSource',
-  Schema: 'Schema'
-}
-const SETTING_NAME = {
-  Event: 'event',
-  Style: 'style',
-  Props: 'props'
+  Schema: 'Schema',
+  Event: 'SettingEvents',
+  Style: 'SettingStyles',
+  Props: 'SettingProps'
 }
 const pluginWidth = reactive({
   Materials: '300',
@@ -49,9 +47,9 @@ const pluginWidth = reactive({
   PageController: '1000',
   DataSource: '300',
   Schema: '1000',
-  props: '320',
-  style: '320',
-  event: '320'
+  SettingProps: '320',
+  SettingStyles: '320',
+  SettingEvents: '320'
 })
 const pluginState = reactive({
   pluginEvent: 'all'
@@ -71,7 +69,9 @@ const layoutState = reactive({
   plugins: {
     fixedPanels: [PLUGIN_NAME.Materials],
     render: null,
-    api: {} // 插件需要注册交互API到这里
+    api: {}, // 插件需要注册交互API到这里
+    activating: false, // 右侧面版激活提示状态
+    showDesignSettings: true
   },
   settings: {
     fixedPanels: [],
@@ -108,7 +108,7 @@ const activeSetting = (name) => {
 // 关闭右侧setting插件面板
 const closeSetting = (forceClose) => {
   const { settings } = layoutState
-  if (forceClose) {
+  if (!settings.fixedPanels.includes(settings.render) || forceClose) {
     settings.render = null
   }
 }
@@ -154,7 +154,6 @@ const isEmptyPage = () => layoutState.pageStatus?.state === PAGE_STATUS.Empty
 export default () => {
   return {
     PLUGIN_NAME,
-    SETTING_NAME,
     activeSetting,
     activePlugin,
     closePlugin,
