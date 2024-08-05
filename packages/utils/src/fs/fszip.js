@@ -59,7 +59,7 @@ export const writeZip = (filesInfo, { zipHandle, zipName } = {}) => {
       zip.file(fileName, fileContent)
     }
   })
-  // 把打包的内容一部转成blob二进制格式
+  // 把打包的内容异步转成blob二进制格式
   return zip.generateAsync({ type: 'blob' }).then((content) => {
     // content就是blob数据
     saveAs(content, `${zipName}.zip`)
