@@ -89,7 +89,6 @@
     "eslint-linter-browserify": "8.57.0",
     "file-saver": "^2.0.5",
     "html2canvas": "^1.4.1",
-    "jszip": "^3.10.1",
     "monaco-editor": "0.33.0",
     "prettier": "2.7.1",
     "sortablejs": "^1.14.0",
