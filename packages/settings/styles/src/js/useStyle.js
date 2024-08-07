@@ -15,7 +15,7 @@ import { useBroadcastChannel } from '@vueuse/core'
 import { useCanvas, useHistory, useProperties as useProps } from '@opentiny/tiny-engine-controller'
 import { formatString } from '@opentiny/tiny-engine-controller/js/ast'
 import { constants, utils } from '@opentiny/tiny-engine-utils'
-import { parser, stringify, getSelectorArr } from './parser'
+import { parser, stringify, getSelectorArr, styleRulesStringify } from './parser'
 
 const { BROADCAST_CHANNEL, EXPRESSION_TYPE } = constants
 const { generateRandomLetters, parseExpression } = utils
@@ -165,7 +165,14 @@ watch(
       state.style = {}
     }
 
-    state.styleContent = formatString(`:root {\n ${schema?.props?.style || ''}\n}`, 'css')
+    if (typeof schema?.props?.style === 'string') {
+      state.styleContent = formatString(`:root {\n ${schema?.props?.style || ''}\n}`, 'css')
+    } else if (
+      typeof schema?.props?.style === 'object' &&
+      ![EXPRESSION_TYPE.JS_EXPRESSION, EXPRESSION_TYPE.JS_FUNCTION].includes(schema.props.style?.type)
+    ) {
+      state.styleContent = formatString(`:root {\n ${styleRulesStringify(schema.props.style)} \n}`, 'css')
+    }
   },
   {
     immediate: true,

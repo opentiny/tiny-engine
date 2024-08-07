@@ -65,6 +65,26 @@ const nodeHandlerMap = {
   comment: handleComments
 }
 
+export const parseInlineRules = (css) => {
+  const ast = postcss().process(css).sync().root
+  const res = {}
+
+  const rootSelector = ast.nodes.filter((node) => node.selector === ':root' && node.type === 'rule')
+
+  if (rootSelector?.[0]) {
+    const declarations = rootSelector[0].nodes || []
+
+    declarations.forEach(({ prop, value, important, type }) => {
+      // 行内样式仅处理规则声明，忽略 注释
+      if (type === 'decl') {
+        res[prop] = `${value}${important ? '!important' : ''}`
+      }
+    })
+  }
+
+  return res
+}
+
 /**
  * 将 css 字符串解析成 css 对象
  * @param {string} css css 字符串
@@ -200,6 +220,27 @@ const getFinalSelector = (config = {}) => {
   }
 
   return finalSelector
+}
+
+/**
+ * 将 css 规则 obj 转化成字符串
+ * e.g: input: { position: 'absolute', left: '10px', right: '10px' }
+ * output: 'position: absolute;\nleft: 10px;right:10px;'
+ * @param {Object} rules
+ * @returns String
+ */
+export const styleRulesStringify = (rules) => {
+  if (typeof rules !== 'object' || !rules) {
+    return ''
+  }
+
+  let str = ''
+
+  for (const [declKey, declValue] of Object.entries(rules)) {
+    str += `${declKey}: ${declValue};\n`
+  }
+
+  return str
 }
 
 /**

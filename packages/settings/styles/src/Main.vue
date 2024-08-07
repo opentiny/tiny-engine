@@ -85,6 +85,7 @@ import {
 import { CSS_TYPE } from './js/cssType'
 import useStyle from './js/useStyle'
 import { styleStrRemoveRoot } from './js/cssConvert'
+import { parseInlineRules } from './js/parser'
 
 export default {
   components: {
@@ -132,12 +133,19 @@ export default {
 
       state.styleContent = content
       schema.props = schema.props || {}
-      schema.props.style = styleString
 
       currentSchema.props = currentSchema.props || {}
 
       if (styleString) {
-        currentSchema.props.style = styleString
+        if (typeof currentSchema.props.style === 'string') {
+          currentSchema.props.style = styleString
+          schema.props.style = styleString
+        } else {
+          // 绝对布局， style 直接以 object 的方式存在
+          const res = parseInlineRules(content)
+
+          currentSchema.props.style = res
+        }
       } else {
         delete currentSchema.props.style
       }
