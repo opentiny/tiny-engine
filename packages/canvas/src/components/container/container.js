@@ -716,11 +716,7 @@ export const onMouseUp = () => {
       if (absolute) {
         targetNode.node = getSchema()
         data.props = data.props || {}
-        data.props.style = {
-          position: 'absolute',
-          top: dragState.mouse.y + 'px',
-          left: dragState.mouse.x + 'px'
-        }
+        data.props.style = `position: absolute; top: ${dragState.mouse.y}px; left: ${dragState.mouse.x}px`
       }
 
       insertNode(targetNode, position)
