@@ -88,9 +88,9 @@ gantt
 dateFormat YYYY-MM-DD
 axisFormat %Y-%m-%d
 
-	1.0.0-beta.x version : 2023-09-25, 2024-05-20
-	1.0.0-rc version(refactor version) : 2024-10-01
-	1.0.0 version : 2024-11-01
+1.0.0-beta.x version : 2023-09-25, 2024-05-20
+1.0.0-rc version(refactor version) : 2024-10-01
+1.0.0 version : 2024-11-01
 
 ```
 
