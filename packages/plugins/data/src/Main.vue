@@ -127,14 +127,13 @@ export default {
     const activeName = ref(STATE.CURRENT_STATE)
     const isBlock = computed(() => useCanvas().isBlock())
     const { setSaved } = useCanvas()
-    const { PLUGIN_NAME, getPluginApi, pluginWidth } = useLayout()
+    const { PLUGIN_NAME, getPluginApi, getPluginWidth } = useLayout()
     const { openCommon } = getPluginApi(PLUGIN_NAME.save)
     const docsUrl = useHelp().getDocsUrl('data')
     const panelState = reactive({
       emitEvent: emit
     })
-    const leftMargin = computed(() => pluginWidth[PLUGIN_NAME['Data']])
-
+    const leftMargin = computed(() => getPluginWidth(PLUGIN_NAME['Data']))
     provide('panelState', panelState)
 
     const state = reactive({

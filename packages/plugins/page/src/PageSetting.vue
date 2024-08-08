@@ -73,8 +73,8 @@ import http from './http.js'
 
 const { COMPONENT_NAME } = constants
 const isShow = ref(false)
-const { pluginWidth,PLUGIN_NAME } = useLayout()
-const leftMargin = computed(() => pluginWidth[PLUGIN_NAME["AppManage"]])
+const { getPluginWidth, PLUGIN_NAME } = useLayout()
+const leftMargin = computed(() => getPluginWidth(PLUGIN_NAME['AppManage']))
 
 export const openPageSettingPanel = () => {
   isShow.value = true

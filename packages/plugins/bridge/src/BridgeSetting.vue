@@ -126,8 +126,8 @@ import { useLayout, useApp, getGlobalConfig, useModal, useNotify } from '@openti
 import { theme } from '@opentiny/tiny-engine-controller/adapter'
 
 const isOpen = ref(false)
-const { pluginWidth, PLUGIN_NAME } = useLayout()
-const leftMargin = computed(() => pluginWidth[PLUGIN_NAME['Bridge']])
+const { getPluginWidth, PLUGIN_NAME } = useLayout()
+const leftMargin = computed(() => getPluginWidth(PLUGIN_NAME['Bridge']))
 
 export const openPanel = () => {
   isOpen.value = true

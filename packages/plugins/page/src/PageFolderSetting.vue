@@ -43,8 +43,8 @@ import PageGeneral from './PageGeneral.vue'
 import http from './http.js'
 
 let isShow = ref(false)
-const { pluginWidth, PLUGIN_NAME } = useLayout()
-const leftMargin = computed(() => pluginWidth[PLUGIN_NAME['AppManage']])
+const { getPluginWidth, PLUGIN_NAME } = useLayout()
+const leftMargin = computed(() => getPluginWidth(PLUGIN_NAME['AppManage']))
 
 export const openFolderSettingPanel = () => {
   isShow.value = true

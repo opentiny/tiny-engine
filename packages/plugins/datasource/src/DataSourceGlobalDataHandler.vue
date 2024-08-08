@@ -35,8 +35,8 @@ import { constants } from '@opentiny/tiny-engine-utils'
 
 const { DEFAULT_INTERCEPTOR } = constants
 const isOpen = ref(false)
-const { pluginWidth, PLUGIN_NAME } = useLayout()
-const leftMargin = computed(() => pluginWidth[PLUGIN_NAME['Datasource']])
+const { getPluginWidth, PLUGIN_NAME } = useLayout()
+const leftMargin = computed(() => getPluginWidth(PLUGIN_NAME['Datasource']))
 export const open = () => {
   isOpen.value = true
 }

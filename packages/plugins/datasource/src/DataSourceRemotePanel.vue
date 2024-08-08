@@ -59,8 +59,8 @@ import { obj2String, string2Obj } from '@opentiny/tiny-engine-controller/adapter
 import { getRequest } from './js/datasource'
 
 export const isOpen = ref(false)
-const { pluginWidth, PLUGIN_NAME } = useLayout()
-const leftMargin = computed(() => pluginWidth[PLUGIN_NAME['Datasource']] - 280)
+const { getPluginWidth, PLUGIN_NAME } = useLayout()
+const leftMargin = computed(() => getPluginWidth(PLUGIN_NAME['Datasource']) - 280)
 export const open = () => {
   isOpen.value = true
 }

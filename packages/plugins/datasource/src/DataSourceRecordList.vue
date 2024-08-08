@@ -107,8 +107,8 @@ import { downloadFn, handleImportedData, overrideOrMergeData, getDataAfterPage }
 import DataSourceRecordUpload from './DataSourceRecordUpload.vue'
 
 let isOpen = ref(false)
-const { pluginWidth, PLUGIN_NAME } = useLayout()
-const leftMargin = computed(() => pluginWidth[PLUGIN_NAME['Datasource']])
+const { getPluginWidth, PLUGIN_NAME } = useLayout()
+const leftMargin = computed(() => getPluginWidth(PLUGIN_NAME['Datasource']))
 
 export const open = () => {
   isOpen.value = true
