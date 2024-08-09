@@ -24,7 +24,7 @@ import { nextTick, reactive, watch, inject } from 'vue'
 import { Search } from '@opentiny/vue'
 import { iconSearch } from '@opentiny/vue-icon'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
-import { useApp, useBlock, useModal, useResource, useMaterial } from '@opentiny/tiny-engine-meta-register'
+import { useApp, useBlock, useModal, useAppData, useMaterial } from '@opentiny/tiny-engine-meta-register'
 import BlockGroupTransfer from './BlockGroupTransfer.vue'
 import BlockGroupFilters from './BlockGroupFilters.vue'
 
@@ -118,7 +118,7 @@ export default {
             isRefresh.value = true
             state.searchValue = ''
             selectedBlockArray.value.length = 0
-            useResource().fetchResource({ isInit: false }) // 添加区块分组，不需要重新init页面或者区块。
+            useAppData().initAppData() // 添加区块分组，不需要重新init页面或者区块。
           })
         })
         .catch((error) => {

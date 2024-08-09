@@ -62,7 +62,7 @@
 <script>
 import { computed } from 'vue'
 import { VueDraggableNext } from 'vue-draggable-next'
-import { useResource } from '@opentiny/tiny-engine-meta-register'
+import { useAppData } from '@opentiny/tiny-engine-meta-register'
 import MetaListItem from './MetaListItem.vue'
 
 export default {
@@ -103,7 +103,7 @@ export default {
   },
   setup(props, { emit }) {
     const listItemOption = computed(() => props)
-    const { resState } = useResource()
+    const { appDataState } = useAppData()
 
     const changeItem = (params) => {
       const optionsList = [...props.optionsList]
@@ -159,7 +159,7 @@ export default {
         if (item[props.textField]) {
           if (item[props.textField].i18nKey) {
             let i18nKey = item[props.textField].i18nKey
-            text = resState.langs[i18nKey][resState.currentLang]
+            text = appDataState.langs[i18nKey][appDataState.currentLang]
           } else {
             text = item[props.textField]
           }

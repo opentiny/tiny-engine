@@ -22,7 +22,7 @@
 import DataHandlerEditor from './RemoteDataAdapterForm.vue'
 import { watch, ref, nextTick, reactive } from 'vue'
 import { requestGlobalDataHandler } from './js/http'
-import { useApp, useModal, useResource } from '@opentiny/tiny-engine-meta-register'
+import { useApp, useModal, useAppData } from '@opentiny/tiny-engine-meta-register'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
 import { Collapse, CollapseItem } from '@opentiny/vue'
 import { constants } from '@opentiny/tiny-engine-utils'
@@ -49,9 +49,9 @@ export default {
     const { confirm } = useModal()
 
     const state = reactive({
-      dataHandlerValue: useResource().resState?.dataHandler?.value,
-      willFetchValue: useResource().resState.willFetch?.value,
-      errorHandlerValue: useResource().resState?.errorHandler?.value
+      dataHandlerValue: useAppData().appDataState?.dataHandler?.value,
+      willFetchValue: useAppData().appDataState.willFetch?.value,
+      errorHandlerValue: useAppData().appDataState?.errorHandler?.value
     })
 
     const saveGlobalDataHandle = () => {
@@ -65,9 +65,9 @@ export default {
 
       requestGlobalDataHandler(id, { data_source_global: handler }).then((data) => {
         if (data) {
-          useResource().resState.dataHandler = { type: 'JSFunction', value: state.dataHandlerValue }
-          useResource().resState.willFetch = { type: 'JSFunction', value: state.willFetchValue }
-          useResource().resState.errorHandler = { type: 'JSFunction', value: state.errorHandlerValue }
+          useAppData().appDataState.dataHandler = { type: 'JSFunction', value: state.dataHandlerValue }
+          useAppData().appDataState.willFetch = { type: 'JSFunction', value: state.willFetchValue }
+          useAppData().appDataState.errorHandler = { type: 'JSFunction', value: state.errorHandlerValue }
           confirm({
             title: '提示',
             message: '全局请求处理函数设置成功'

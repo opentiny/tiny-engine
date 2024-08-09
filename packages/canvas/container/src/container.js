@@ -19,7 +19,7 @@ import {
   NODE_TAG,
   NODE_LOOP
 } from '../../common'
-import { useCanvas, useLayout, useResource, useTranslate, useMaterial } from '@opentiny/tiny-engine-meta-register'
+import { useCanvas, useLayout, useAppData, useTranslate, useMaterial } from '@opentiny/tiny-engine-meta-register'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import Builtin from '../../render/src/builtin/builtin.json' //TODO 画布内外应该分开
 
@@ -790,7 +790,7 @@ export const deleteState = (variable) => {
 }
 
 export const setGlobalState = (state) => {
-  useResource().resState.globalState = state
+  useAppData().appDataState.globalState = state
   getRenderer().setGlobalState(state)
 }
 
@@ -911,10 +911,10 @@ export const initCanvas = ({ renderer, iframe, emit, controller }) => {
     senterMessage({ type: 'i18nReady', value: true }, '*')
   }
 
-  setGlobalState(useResource().resState.globalState)
-  renderer.setDataSourceMap(useResource().resState.dataSource)
+  setGlobalState(useAppData().appDataState.globalState)
+  renderer.setDataSourceMap(useAppData().appDataState.dataSource)
   // 设置画布全局的utils工具类上下文环境
-  setUtils(useResource().resState.utils)
+  setUtils(useAppData().appDataState.utils)
   setSchema(schema)
   setConfigure(useMaterial().getConfigureMap())
   canvasDispatch('updateDependencies', { detail: useMaterial().materialState.thirdPartyDeps })

@@ -12,7 +12,7 @@
 
 import entry from './src/Main.vue'
 import metaData from './meta.js'
-import { ResourceService, MaterialService } from './src/composable'
+import { MaterialService, PageBlockSchemaService } from './src/composable'
 import MaterialLayout from './src/meta/layout'
 import MaterialBlock from './src/meta/block'
 import MaterialComponent from './src/meta/component'
@@ -30,7 +30,7 @@ export default {
     header: MaterialHeader
   },
   apis: { ...MaterialBlock.apis },
-  metas: [MaterialBlock, MaterialComponent, ResourceService, MaterialService]
+  metas: [MaterialBlock, MaterialComponent, MaterialService, PageBlockSchemaService]
 }
 
-export { entry, ResourceService, MaterialService }
+export { entry, MaterialService, PageBlockSchemaService }

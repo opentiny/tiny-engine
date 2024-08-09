@@ -10,32 +10,20 @@
  *
  */
 
-import { reactive } from 'vue'
-import { useHttp } from '@opentiny/tiny-engine-http'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { getCanvasStatus } from '@opentiny/tiny-engine-common/js/canvas'
 import {
-  useApp,
   useCanvas,
   useTranslate,
   useEditorInfo,
   useBreadcrumb,
   useLayout,
   useBlock,
-  useMaterial,
   getMetaApi,
   META_APP
 } from '@opentiny/tiny-engine-meta-register'
 
-const { COMPONENT_NAME, DEFAULT_INTERCEPTOR } = constants
-
-const resState = reactive({
-  dataSource: [],
-  pageTree: [],
-  langs: {},
-  utils: {},
-  globalState: []
-})
+const { COMPONENT_NAME } = constants
 
 const initPage = (pageInfo) => {
   try {
@@ -82,7 +70,7 @@ const initBlock = async (blockId) => {
   useBlock().initBlock(blockContent, {}, true)
 }
 
-const initPageOrBlock = async () => {
+const initPageOrBlock = async (pageTree) => {
   const { pageId, blockId } = useEditorInfo().useInfo()
   const { setBreadcrumbPage } = useBreadcrumb()
 
@@ -104,72 +92,24 @@ const initPageOrBlock = async () => {
   }
 
   // url 没有 pageid 或 blockid，到页面首页或第一页
-  const pageInfo = resState.pageTree.find((page) => page?.meta?.isHome) ||
-    resState.pageTree.find(
-      (page) => page.componentName === COMPONENT_NAME.Page && page?.meta?.group !== 'publicPages'
-    ) || {
+  const pageInfo = pageTree.find((page) => page?.meta?.isHome) ||
+    pageTree.find((page) => page.componentName === COMPONENT_NAME.Page && page?.meta?.group !== 'publicPages') || {
       componentName: COMPONENT_NAME.Page
     }
   initPage(pageInfo)
 }
 
-const handlePopStateEvent = async () => {
+const handlePopStateEvent = async (pageTree) => {
   const { id, type } = useEditorInfo().useInfo()
-
-  await initPageOrBlock()
+  await initPageOrBlock(pageTree)
 
   // 国际化貌似有 app 和区块之分，但是目前其实都存到了 app 里面，需要确认是否需要修复
   await useTranslate().initI18n({ host: id, hostType: type })
 }
 
-const fetchResource = async ({ isInit = true } = {}) => {
-  const { id, type } = useEditorInfo().useInfo()
-  useApp().appInfoState.selectedId = id
-  const appData = await useHttp().get(`/app-center/v1/api/apps/schema/${id}`)
-  resState.pageTree = appData.componentsTree
-  resState.dataSource = appData.dataSource?.list
-  resState.dataHandler = appData.dataSource?.dataHandler || DEFAULT_INTERCEPTOR.dataHandler
-  resState.willFetch = appData.dataSource?.willFetch || DEFAULT_INTERCEPTOR.willFetch
-  resState.errorHandler = appData.dataSource?.errorHandler || DEFAULT_INTERCEPTOR.errorHandler
-
-  resState.bridge = appData.bridge
-  resState.utils = appData.utils
-  resState.isDemo = appData.meta?.is_demo
-  resState.globalState = appData?.meta.global_state
-
-  useMaterial().initMaterial({ isInit, appData })
-
-  // 词条语言为空时使用默认的语言
-  const defaultLocales = [
-    { lang: 'zh_CN', label: 'zh_CN' },
-    { lang: 'en_US', label: 'en_US' }
-  ]
-  const locales = Object.keys(appData.i18n).length
-    ? Object.keys(appData.i18n).map((key) => ({ lang: key, label: key }))
-    : defaultLocales
-  resState.langs = {
-    locales,
-    messages: appData.i18n
-  }
-
-  try {
-    await useMaterial().fetchMaterial()
-
-    if (isInit) {
-      await initPageOrBlock()
-    }
-
-    await useTranslate().initI18n({ host: id, hostType: type, init: true })
-  } catch (error) {
-    console.log(error) // eslint-disable-line
-  }
-}
-
 export default function () {
   return {
-    resState,
-    fetchResource,
-    initPageOrBlock,
-    handlePopStateEvent
+    handlePopStateEvent,
+    initPageOrBlock
   }
 }

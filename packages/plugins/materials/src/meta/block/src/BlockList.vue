@@ -49,7 +49,7 @@ export default {
   },
   emits: ['check', 'close'],
   setup(props, { emit }) {
-    const { generateNode, registerBlock } = useMaterial()
+    const { generateSchemaNode, registerBlock } = useMaterial()
     const { isDefaultGroupId, isAllGroupId, selectedBlock, selectedGroup, isRefresh, getBlockAssetsByVersion } =
       useBlock()
     const blockRef = ref(null)
@@ -91,7 +91,7 @@ export default {
 
       registerBlock(block).then(() => {
         const blockName = block.component || block.blockName
-        const node = generateNode({ type: 'block', component: blockName })
+        const node = generateSchemaNode({ type: 'block', component: blockName })
         const { addComponent, dragStart } = useCanvas().canvasApi.value
         if (isShortcutPanel) {
           emitEvent('close')

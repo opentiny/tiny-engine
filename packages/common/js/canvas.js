@@ -11,11 +11,11 @@
  */
 
 import { PAGE_STATUS } from './constants'
-import { useEditorInfo, useResource } from '@opentiny/tiny-engine-meta-register'
+import { useEditorInfo, useAppData } from '@opentiny/tiny-engine-meta-register'
 
 export const getCanvasStatus = (data) => {
   // 写死ID 待删除
-  let isDemo = useResource().resState.isDemo
+  let isDemo = useAppData().appDataState.isDemo
   const { resetPasswordToken } = useEditorInfo().userInfo.value
 
   if (isDemo && [PAGE_STATUS.Developer, PAGE_STATUS.SuperAdmin].includes(resetPasswordToken)) {

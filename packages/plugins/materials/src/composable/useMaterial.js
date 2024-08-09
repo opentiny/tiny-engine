@@ -14,7 +14,7 @@ import { reactive } from 'vue'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { utils, constants } from '@opentiny/tiny-engine-utils'
 import { meta as BuiltinComponentMaterials } from '@opentiny/tiny-engine-builtin-component'
-import { getMergeMeta, useNotify, useCanvas, useBlock } from '@opentiny/tiny-engine-meta-register'
+import { getMergeMeta, useNotify, useCanvas, useBlock, useMessage } from '@opentiny/tiny-engine-meta-register'
 
 const { camelize, capitalize } = utils
 const { MATERIAL_TYPE } = constants
@@ -36,6 +36,13 @@ const materialState = reactive({
 const componentState = reactive({
   componentsMap: {}
 })
+
+const publishMessage = (topicContent) => {
+  const topic = `lowcode.materials.${topicContent}`
+  const { publish } = useMessage()
+  publish({ topic })
+}
+
 const getSnippet = (component) => {
   let schema = {}
   materialState.components.some(({ children }) => {
@@ -50,7 +57,11 @@ const getSnippet = (component) => {
   return schema
 }
 
-const generateNode = ({ type, component }) => {
+/**
+ * 生成组件的schema节点
+ * @returns schema
+ */
+const generateSchemaNode = ({ type, component }) => {
   const snippet = getSnippet(component) || {}
   const schema = {
     componentName: component,
@@ -153,12 +164,6 @@ const registerBlock = async (data, notFetchResouce) => {
   return block
 }
 
-const clearMaterials = () => {
-  materialState.components = []
-  materialState.blocks = []
-  resource.clear()
-}
-
 const clearBlockResources = () => blockResource.clear()
 
 /**
@@ -218,7 +223,6 @@ const addMaterials = (materials = {}) => {
   materials.components.forEach(registerComponentToResource)
 
   const promises = materials?.blocks?.map((item) => registerBlock(item, true))
-
   Promise.allSettled(promises).then((blocks) => {
     if (!blocks?.length) {
       return
@@ -252,25 +256,23 @@ const getMaterial = (name) => {
   }
 }
 
-const setMaterial = (name, data) => {
-  resource.set(name, data)
-}
-
 /**
  * 获取物料，并返回符合物料协议的bundle.json内容
- * @returns getMaterialsRes: () =>  Promise<Materials>
+ * @returns fetchUserMaterialData: () =>  Promise<Materials>
  */
-export const getMaterialsRes = async () => {
+export const fetchUserMaterialData = async () => {
   const bundleUrls = getMergeMeta('engine.config')?.material || []
   const materials = await Promise.allSettled(bundleUrls.map((url) => http.get(url)))
   return materials
 }
 
-const fetchMaterial = async () => {
-  const materials = await getMaterialsRes()
+const initUserMaterial = async () => {
+  publishMessage('beginFetchMaterialData')
+  const materials = await fetchUserMaterialData()
 
   materials.forEach((response) => {
     if (response.status === 'fulfilled' && response.value.materials) {
+      publishMessage('endFetchMaterialData')
       addMaterials(response.value.materials)
     }
   })
@@ -314,6 +316,9 @@ const updateCanvasDependencies = (blocks) => {
   useCanvas().canvasApi.value?.canvasDispatch('updateDependencies', { detail: materialState.thirdPartyDeps })
 }
 
+/**
+ * 初始化内置组件
+ */
 const initBuiltinMaterial = () => {
   const { Builtin } = useCanvas().canvasApi.value
   Builtin.data.materials.components[0].children.forEach(registerComponentToResource)
@@ -327,31 +332,39 @@ const initBuiltinMaterial = () => {
   materialState.components.push(builtinSnippets)
 }
 
-const initMaterial = ({ isInit = true, appData = {} } = {}) => {
+/**
+ * 设置组件全局map
+ * @param {*} appData
+ */
+const initComponentMap = async (appData) => {
+  componentState.componentsMap = {}
+  appData.componentsMap?.forEach((component) => {
+    if (component.dependencies) {
+      getBlockDeps(component.dependencies)
+    }
+    componentState.componentsMap[component.componentName] = component
+  })
+}
+
+/**
+ * 物料模块初始化
+ * @param {*} appData
+ */
+const initMaterial = async (appData) => {
   initBuiltinMaterial()
-  if (isInit) {
-    componentState.componentsMap = {}
-    appData.componentsMap?.forEach((component) => {
-      if (component.dependencies) {
-        getBlockDeps(component.dependencies)
-      }
-      componentState.componentsMap[component.componentName] = component
-    })
-  }
+  initComponentMap(appData)
+  await initUserMaterial()
 }
 
 export default function () {
   return {
     materialState, // 存放着组件、物料侧区块、第三方依赖信息
     initMaterial, // 物料模块初始化
-    fetchMaterial, // 请求物料并进行处理
-    getMaterialsRes, // 获取物料，并返回符合物料协议的bundle.json内容，getMaterialsRes: () =>  Promise<Materials>
-    generateNode, // 根据 包含{ type, componentName }的组件信息生成组件schema节点，结构：
-    clearMaterials, // 清空物料
-    clearBlockResources, // 清空区块缓存，以便更新最新版区块
+    fetchUserMaterialData, // 获取物料，并返回符合物料协议的bundle.json内容，getMaterialsRes: () =>  Promise<Materials>
+    generateSchemaNode, // 根据 包含{ type, componentName }的组件信息生成组件schema节点
     getMaterial, // 获取单个物料，(property) getMaterial: (name: string) => Material
-    setMaterial, // 设置单个物料 (property) setMaterial: (name: string, data: Material) => void
     registerBlock, // 注册新的区块
+    clearBlockResources, // 清空区块缓存，以便更新最新版区块
     updateCanvasDependencies, //传入新的区块，获取新增区块的依赖，更新画布中的组件依赖
     getConfigureMap // 获取物料组件的配置信息
   }

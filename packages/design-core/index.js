@@ -15,7 +15,7 @@ export { default as GenerateVue, SaveLocalService } from '@opentiny/tiny-engine-
 export { default as Refresh } from '@opentiny/tiny-engine-toolbar-refresh'
 export { default as Collaboration } from '@opentiny/tiny-engine-toolbar-collaboration'
 export { default as Setting } from '@opentiny/tiny-engine-toolbar-setting'
-export { default as Materials, ResourceService, MaterialService } from '@opentiny/tiny-engine-plugin-materials'
+export { default as Materials, MaterialService, PageBlockSchemaService } from '@opentiny/tiny-engine-plugin-materials'
 export { default as Data } from '@opentiny/tiny-engine-plugin-data'
 export { default as Script } from '@opentiny/tiny-engine-plugin-script'
 export { default as Tree } from '@opentiny/tiny-engine-plugin-tree'
@@ -39,4 +39,4 @@ export { default as defaultRegistry } from './registry'
 
 export * from '@opentiny/tiny-engine-meta-register'
 
-export { EditorInfoService, AppService } from '@opentiny/tiny-engine-common'
+export { EditorInfoService, AppService, AppDataService } from '@opentiny/tiny-engine-common'

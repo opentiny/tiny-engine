@@ -10,8 +10,10 @@ import {
   useModal,
   useApp,
   useNotify,
-  useResource,
-  useCanvas
+  useCanvas,
+  useAppData,
+  useMaterial,
+  usePageBlockSchema
 } from '@opentiny/tiny-engine-meta-register'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import { useBroadcastChannel } from '@vueuse/core'
@@ -48,7 +50,7 @@ export default {
     }
 
     const handlePopStateEvent = () => {
-      useResource().handlePopStateEvent()
+      usePageBlockSchema().handlePopStateEvent(useAppData().appDataState.pageTree)
     }
 
     window.addEventListener('popstate', handlePopStateEvent)
@@ -59,9 +61,15 @@ export default {
 
     watch(
       useCanvas().isCanvasApiReady,
-      (ready) => {
+      async (ready) => {
         if (ready) {
-          useResource().fetchResource()
+          const appData = await useAppData().initAppData()
+          try {
+            await useMaterial().initMaterial(appData)
+            await usePageBlockSchema().initPageOrBlock(appData?.componentsTree)
+          } catch (error) {
+            console.log(error) // eslint-disable-line
+          }
         }
       },
       {

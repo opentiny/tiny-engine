@@ -11,7 +11,7 @@
  */
 
 import { reactive } from 'vue'
-import { useApp, useResource, useNotify, useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { useApp, useAppData, useNotify, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import {
   fetchResourceList,
@@ -180,8 +180,8 @@ export const saveResource = (data, callback, emit) => {
     data.id = state.resource.id
     requestUpdateReSource(data).then((result) => {
       if (result) {
-        const index = useResource().resState[data.category].findIndex((item) => item.name === result.name)
-        useResource().resState[data.category][index] = result
+        const index = useAppData().appDataState[data.category].findIndex((item) => item.name === result.name)
+        useAppData().appDataState[data.category][index] = result
 
         // 更新画布工具函数环境，保证渲染最新工具类返回值, 并触发画布的强制刷新
         updateUtils([result])
@@ -200,7 +200,7 @@ export const saveResource = (data, callback, emit) => {
   } else {
     requestAddReSource(data).then((result) => {
       if (result) {
-        useResource().resState[data.category].push(result)
+        useAppData().appDataState[data.category].push(result)
 
         // 更新画布工具函数环境，保证渲染最新工具类返回值, 并触发画布的强制刷新
         updateUtils([result])
@@ -223,8 +223,8 @@ export const deleteData = (name, callback, emit) => {
 
   requestDeleteReSource(params).then((data) => {
     if (data) {
-      const index = useResource().resState[state.type].findIndex((item) => item.name === data.name)
-      useResource().resState[state.type].splice(index, 1)
+      const index = useAppData().appDataState[state.type].findIndex((item) => item.name === data.name)
+      useAppData().appDataState[state.type].splice(index, 1)
 
       deleteUtils([data])
       generateBridgeUtil(useApp().appInfoState.selectedId)

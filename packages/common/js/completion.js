@@ -10,7 +10,7 @@
  *
  */
 
-import { useCanvas, useResource } from '@opentiny/tiny-engine-meta-register'
+import { useCanvas, useAppData } from '@opentiny/tiny-engine-meta-register'
 
 const keyWords = [
   'state',
@@ -71,7 +71,7 @@ const getSnippetsSuggestions = (monaco, range, wordContent) =>
     .filter(({ insertText }) => insertText.indexOf(wordContent) === 0)
 
 const getUserWords = () => {
-  const { bridge = [], dataSource = [], utils = [], globalState = [] } = useResource().resState
+  const { bridge = [], dataSource = [], utils = [], globalState = [] } = useAppData().appDataState
 
   return {
     state: {
