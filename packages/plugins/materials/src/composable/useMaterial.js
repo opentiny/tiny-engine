@@ -90,10 +90,16 @@ const patchBaseProps = (schemaProperties) => {
   const { properties = [], insertPosition = 'end' } = getOptions(meta.id).basePropertyOptions || {}
 
   for (const basePropGroup of properties) {
-    const group = schemaProperties.find(
-      (item) =>
+    const group = schemaProperties.find((item) => {
+      // 如果存在了包含'其他'字符串的分组，统一为'其他'分组
+      if (item.label.zh_CN.includes('其他')) {
+        item.label.zh_CN = '其他'
+      }
+
+      return (
         (basePropGroup.group && basePropGroup.group === item.group) || basePropGroup.label.zh_CN === item.label.zh_CN
-    )
+      )
+    })
 
     if (group) {
       if (insertPosition === 'start') {
