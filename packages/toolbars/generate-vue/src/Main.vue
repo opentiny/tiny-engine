@@ -141,9 +141,6 @@ export default {
       return res
     }
 
-    console.log(state.value, 'valueCurrent')
-    // const instance = state.value === 'React' ? generateReactApp() : generateVueApp()
-
     const getAllPageDetails = async (pageList) => {
       const detailPromise = pageList.map(({ id }) => useLayout().getPluginApi('AppManage').getPageById(id))
       const detailList = await Promise.allSettled(detailPromise)
