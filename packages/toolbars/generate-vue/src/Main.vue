@@ -10,6 +10,7 @@
       <span class="icon" @click="generate">
         <svg-icon :name="icon"></svg-icon>
       </span>
+      <tiny-select title="请选择出码产物" :options="state.options" v-model="state.value" size="small" style="width: 80px"></tiny-select>
     </template>
   </tiny-popover>
   <generate-file-selector
@@ -22,7 +23,7 @@
 
 <script>
 import { reactive } from 'vue'
-import { Popover } from '@opentiny/vue'
+import { Popover, Select } from '@opentiny/vue'
 import {
   getGlobalConfig,
   useBlock,
@@ -33,14 +34,15 @@ import {
 } from '@opentiny/tiny-engine-controller'
 import { fs } from '@opentiny/tiny-engine-utils'
 import { useHttp } from '@opentiny/tiny-engine-http'
-import { parseRequiredBlocks } from '@opentiny/tiny-engine-dsl-vue'
-import { generateApp } from '@opentiny/tiny-engine-dsl-react'
+import { parseRequiredBlocks, generateApp as generateVueApp } from '@opentiny/tiny-engine-dsl-vue'
+import { generateApp as generateReactApp } from '@opentiny/tiny-engine-dsl-react'
 import { fetchMetaData, fetchPageList, fetchBlockSchema } from './http'
 import FileSelector from './FileSelector.vue'
 
 export default {
   components: {
     TinyPopover: Popover,
+    TinySelect: Select,
     GenerateFileSelector: FileSelector
   },
   props: {
@@ -57,7 +59,19 @@ export default {
       dirHandle: null,
       generating: false,
       showDialogbox: false,
-      saveFilesInfo: []
+      saveFilesInfo: [],
+      value: '',
+      instance: null,
+      options: [
+        {
+          value: 'React',
+          label: 'React'
+        },
+        {
+          value: 'Vue',
+          label: 'Vue'
+        }
+      ]
     })
 
     const getParams = () => {
@@ -127,7 +141,8 @@ export default {
       return res
     }
 
-    const instance = generateApp()
+    console.log(state.value, 'valueCurrent')
+    // const instance = state.value === 'React' ? generateReactApp() : generateVueApp()
 
     const getAllPageDetails = async (pageList) => {
       const detailPromise = pageList.map(({ id }) => useLayout().getPluginApi('AppManage').getPageById(id))
@@ -197,7 +212,8 @@ export default {
       }
 
       console.log(appSchema, 'appSchema')
-      const res = await instance.generate(appSchema)
+      state.instance = state.value === 'React' ? generateReactApp() : generateVueApp()
+      const res = await state.instance.generate(appSchema)
 
       console.log(res, 'res')
 
@@ -233,6 +249,7 @@ export default {
     }
 
     const generate = async () => {
+      console.log(state.value, 'value>>>>>')
       const { isEmptyPage } = useLayout()
 
       if (isEmptyPage()) {
