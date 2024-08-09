@@ -70,24 +70,24 @@ class CodeGenerator {
      * 转换开始的钩子，在正式开始转换前，用户可以做一些预处理的动作
      * @param {*} plugins
      */
-    // async transformStart() {
-    //   for (const pluginItem of this.plugins.transformStart) {
-    //     if (typeof pluginItem.run !== 'function') {
-    //       continue
-    //     }
+    async transformStart() {
+      for (const pluginItem of this.plugins.transformStart) {
+        if (typeof pluginItem.run !== 'function') {
+          continue
+        }
   
-    //     try {
-    //       await pluginItem.run.apply(this.contextApi, [this.schema, this.getContext()])
-    //     } catch (error) {
-    //       const err = { message: error.message, stack: error.stack, plugin: pluginItem.name }
-    //       this.error.push(err)
+        try {
+          await pluginItem.run.apply(this.contextApi, [this.schema, this.getContext()])
+        } catch (error) {
+          const err = { message: error.message, stack: error.stack, plugin: pluginItem.name }
+          this.error.push(err)
   
-    //       if (!this.tolerateError) {
-    //         throw new Error(`[${pluginItem.name}] throws error`, { cause: error })
-    //       }
-    //     }
-    //   }
-    // }
+          if (!this.tolerateError) {
+            throw new Error(`[${pluginItem.name}] throws error`, { cause: error })
+          }
+        }
+      }
+    }
     async transform() {
       for (const pluginItem of this.plugins.transform) {
         if (typeof pluginItem.run !== 'function') {
@@ -116,40 +116,40 @@ class CodeGenerator {
         }
       }
     }
-    // async transformEnd() {
-    //   for (const pluginItem of this.plugins.transformEnd) {
-    //     if (typeof pluginItem.run !== 'function') {
-    //       continue
-    //     }
+    async transformEnd() {
+      for (const pluginItem of this.plugins.transformEnd) {
+        if (typeof pluginItem.run !== 'function') {
+          continue
+        }
   
-    //     try {
-    //       await pluginItem.run.apply(this.contextApi, [this.schema, this.getContext()])
-    //     } catch (error) {
-    //       const err = { message: error.message, stack: error.stack, plugin: pluginItem.name }
-    //       this.error.push(err)
+        try {
+          await pluginItem.run.apply(this.contextApi, [this.schema, this.getContext()])
+        } catch (error) {
+          const err = { message: error.message, stack: error.stack, plugin: pluginItem.name }
+          this.error.push(err)
   
-    //       if (!this.tolerateError) {
-    //         throw new Error(`[${pluginItem.name}] throws error`, { cause: error })
-    //       }
-    //     }
-    //   }
-    // }
+          if (!this.tolerateError) {
+            throw new Error(`[${pluginItem.name}] throws error`, { cause: error })
+          }
+        }
+      }
+    }
 
-    // parseSchema(schema) {
-    //   if (!schema) {
-    //     throw new Error(
-    //       '[codeGenerator][generate] parseSchema error, schema is not valid, should be json object or json string.'
-    //     )
-    //   }
+    parseSchema(schema) {
+      if (!schema) {
+        throw new Error(
+          '[codeGenerator][generate] parseSchema error, schema is not valid, should be json object or json string.'
+        )
+      }
   
-    //   try {
-    //     return typeof schema === 'string' ? JSON.parse(schema) : schema
-    //   } catch (error) {
-    //     throw new Error(
-    //       '[codeGenerator][generate] parseSchema error, schema is not valid, please check the input params.'
-    //     )
-    //   }
-    // }
+      try {
+        return typeof schema === 'string' ? JSON.parse(schema) : schema
+      } catch (error) {
+        throw new Error(
+          '[codeGenerator][generate] parseSchema error, schema is not valid, please check the input params.'
+        )
+      }
+    }
     /**
      * 写入 log
      * @param {*} log

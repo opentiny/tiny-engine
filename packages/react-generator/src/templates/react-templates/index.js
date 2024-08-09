@@ -1,6 +1,6 @@
 import readmeFile from './template-files/README.md?raw'
-import genViteConfig from './template-files/genViteConfig.js'
-import getPackageJson from './template-files/packageJson?raw'
+import genViteConfig from './template-files/genViteConfig'
+import getPackageJson from './template-files/packageJson'
 import gitIgnoreFile from './template-files/.gitignore?raw'
 import entryHTMLFile from './template-files/index.html?raw'
 // import mainJSFile from './template-files/src/main.js?raw'

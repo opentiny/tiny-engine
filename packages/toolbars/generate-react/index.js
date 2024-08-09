@@ -10,7 +10,9 @@
  *
  */
 
-import component from './src/Main.vue'
+import component from '../generate-vue/src/Main.vue'
+// import component from './src/Main.vue'
+
 
 export default {
   id: 'genarate-vue',

@@ -55,6 +55,7 @@ export default {
   setup(props, { emit }) {
     const getTableTreeData = (data) => {
       const res = []
+      console.log(data, 'data')
       data.forEach((item) => {
         const folder = item.filePath.split('/').slice(0, -1)
 

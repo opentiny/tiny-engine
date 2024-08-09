@@ -33,7 +33,8 @@ import {
 } from '@opentiny/tiny-engine-controller'
 import { fs } from '@opentiny/tiny-engine-utils'
 import { useHttp } from '@opentiny/tiny-engine-http'
-import { generateApp, parseRequiredBlocks } from '@opentiny/tiny-engine-dsl-vue'
+import { parseRequiredBlocks } from '@opentiny/tiny-engine-dsl-vue'
+import { generateApp } from '@opentiny/tiny-engine-dsl-react'
 import { fetchMetaData, fetchPageList, fetchBlockSchema } from './http'
 import FileSelector from './FileSelector.vue'
 
@@ -150,11 +151,14 @@ export default {
         fetchPageList(params.app)
       ]
 
+      console.log(promises, 'promises')
+
       if (!state.dirHandle) {
         promises.push(fs.getUserBaseDirHandle())
       }
 
       const [appData, metaData, pageList, dirHandle] = await Promise.all(promises)
+      console.log(appData, 'appData', metaData, 'metaData', pageList, 'pageList', dirHandle, 'dirHandle')
       const pageDetailList = await getAllPageDetails(pageList)
 
       const blockSet = new Set()
@@ -192,7 +196,10 @@ export default {
         }
       }
 
+      console.log(appSchema, 'appSchema')
       const res = await instance.generate(appSchema)
+
+      console.log(res, 'res')
 
       const { genResult = [] } = res || {}
       const fileRes = genResult.map(({ fileContent, fileName, path, fileType }) => {
@@ -246,6 +253,7 @@ export default {
         // 保存代码前置任务：调用接口生成代码并获取用户本地文件夹授权
         const [dirHandle, fileRes] = await getPreGenerateInfo()
 
+        console.log(fileRes, 'fileRes')
         // 暂存待生成代码文件信息
         state.saveFilesInfo = fileRes
 
