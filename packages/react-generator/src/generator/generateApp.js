@@ -3,7 +3,7 @@ import {
     // genDataSourcePlugin,
     // genDependenciesPlugin,
     genI18nPlugin,
-    // genPagePlugin,
+    genPagePlugin,
     // genRouterPlugin,
     genTemplatePlugin,
     // genUtilsPlugin,
@@ -23,7 +23,7 @@ import {
     const defaultPlugins = {
       template: genTemplatePlugin(config.pluginConfig?.template || {}),
     //   block: genBlockPlugin(config.pluginConfig?.block || {}),
-    //   page: genPagePlugin(config.pluginConfig?.page || {}),
+      page: genPagePlugin(config.pluginConfig?.page || {}),
     //   dataSource: genDataSourcePlugin(config.pluginConfig?.dataSource || {}),
     //   dependencies: genDependenciesPlugin(config.pluginConfig?.dependencies || {}),
     //   globalState: genGlobalState(config.pluginConfig?.globalState || {}),
@@ -38,7 +38,7 @@ import {
     const {
       template,
     //   block,
-    //   page,
+      page,
     //   dataSource,
     //   dependencies,
       i18n,
@@ -54,7 +54,7 @@ import {
     const mergeWithDefaultPlugin = {
       template: template || defaultPlugins.template,
     //   block: block || defaultPlugins.block,
-    //   page: page || defaultPlugins.page,
+      page: page || defaultPlugins.page,
     //   dataSource: dataSource || defaultPlugins.dataSource,
     //   dependencies: dependencies || defaultPlugins.dependencies,
       i18n: i18n || defaultPlugins.i18n,
