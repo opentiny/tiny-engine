@@ -34,12 +34,12 @@ export default {
         callback()
       }
     }
-    const rules = ref({
+    const rules = {
       token: [
         { required: true, message: '该项不能为空', trigger: 'blur' },
         { validator: tokenValidate, trigger: 'blur' }
       ]
-    })
+    }
 
     watch(
       () => props.dialogVisible,

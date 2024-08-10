@@ -22,7 +22,7 @@
             <tiny-dropdown-item
               v-for="item in AIModelOptions"
               :key="item.label"
-              :class="{ 'selected-model': selectedModel.value === item.value }"
+              :class="{ 'selected-model': unrefSelectedModel === item.value }"
               @click="changeModel(item)"
               >{{ item.label }}</tiny-dropdown-item
             >
@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import { ref, onMounted, watch, watchEffect } from 'vue'
+import { ref, unref, onMounted, watch, watchEffect } from 'vue'
 import {
   Layout,
   Row,
@@ -142,6 +142,7 @@ export default {
     const inputContent = ref('')
     const inProcesing = ref(false)
     const selectedModel = ref(AIModelOptions[0])
+    let unrefSelectedModel = unref(AIModelOptions[0])
     const { confirm } = useModal()
 
     const { pageSettingState, DEFAULT_PAGE } = usePage()
@@ -158,9 +159,9 @@ export default {
           ? JSON.stringify(sessionProcess)
           : JSON.stringify({
               foundationModel: {
-                manufacturer: selectedModel.value.manufacturer,
-                model: selectedModel.value.value,
-                token: localStorage.getItem(selectedModel.value.localKey)
+                manufacturer: unrefSelectedModel.manufacturer,
+                model: unrefSelectedModel.value,
+                token: localStorage.getItem(unrefSelectedModel.localKey)
               },
               messages: [],
               displayMessages: [] // 专门用来进行展示的消息，非原始消息，仅作为展示但是不作为请求的发送
@@ -246,7 +247,7 @@ export default {
         .catch((error) => {
           switch (error.code) {
             case 'CM001':
-              localStorage.removeItem(selectedModel.value.localKey)
+              localStorage.removeItem(unrefSelectedModel.localKey)
               tokenDialogVisible.value = true
               break
             default:
@@ -333,12 +334,12 @@ export default {
     // 根据localstorage初始化AI大模型
     const initCurrentModel = (aiSession) => {
       const currentModelValue = JSON.parse(aiSession)?.foundationModel?.model
-      selectedModel.value = AIModelOptions.find((item) => item.value === currentModelValue)
+      unrefSelectedModel = AIModelOptions.find((item) => item.value === currentModelValue)
     }
 
     const initChat = () => {
       const aiChatSession = localStorage.getItem('aiChat')
-      if (localStorage.getItem(selectedModel.value.localKey)) {
+      if (localStorage.getItem(unrefSelectedModel.localKey)) {
         if (!aiChatSession) {
           setContextSession()
         } else {
@@ -383,7 +384,7 @@ export default {
     }
 
     const changeModel = (model) => {
-      if (selectedModel.value.value !== model.value) {
+      if (unrefSelectedModel.value !== model.value) {
         confirm({
           title: '切换AI大模型',
           message: '切换AI大模型将导致当前会话被清空，重新开启新会话，是否继续？',
@@ -398,8 +399,9 @@ export default {
     watch(
       () => selectedModel.value.value,
       () => {
-        if (!localStorage.getItem(selectedModel.value.localKey)) {
-          currentModel.value = selectedModel.value
+        unrefSelectedModel = selectedModel.value
+        if (!localStorage.getItem(unrefSelectedModel.localKey)) {
+          currentModel.value = unrefSelectedModel
           tokenDialogVisible.value = true
         } else {
           tokenDialogVisible.value = false
@@ -436,6 +438,7 @@ export default {
       setToken,
       AIModelOptions,
       selectedModel,
+      unrefSelectedModel,
       changeModel,
       tokenDialogVisible,
       currentModel,
