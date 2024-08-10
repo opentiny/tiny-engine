@@ -1,5 +1,5 @@
 <template>
-  <plugin-panel title="属性" :fixed-panels="fixedPanels" :fixed-name="SETTING_NAME.Props" @close="$emit('close')">
+  <plugin-panel title="属性" :fixed-panels="fixedPanels" :fixed-name="PLUGIN_NAME.Props" @close="$emit('close')">
     <template #content>
       <div>
         <config-render :data="properties">
@@ -38,7 +38,7 @@ export default {
   },
   emits: ['close', 'fix-panel'],
   setup(props, { emit }) {
-    const { SETTING_NAME } = useLayout()
+    const { PLUGIN_NAME } = useLayout()
     const { pageState } = useCanvas()
 
     const panelState = reactive({
@@ -57,7 +57,7 @@ export default {
     })
 
     return {
-      SETTING_NAME,
+      PLUGIN_NAME,
       isBlock,
       properties,
       showEmptyTips

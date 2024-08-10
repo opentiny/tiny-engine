@@ -1,4 +1,4 @@
-<!-- 左侧插件栏,修改右侧菜单时参照这个文件来写 -->
+<!-- 左侧插件栏-->
 <template>
   <div id="tiny-engine-nav-panel" :style="{ 'pointer-events': pluginState.pluginEvent }">
     <!-- 图标菜单上侧区域（主要icon） -->
@@ -120,7 +120,7 @@ export default {
   },
   emits: ['click', 'node-click'],
   setup(props, { emit }) {
-    const plugins = Addons.plugins //导入了addons.js中的addons.plugins文件
+    const plugins = Addons && Addons.plugins
     const components = {}
     const iconComponents = {}
     const pluginRef = ref(null)
