@@ -3,6 +3,9 @@ export default {
   title: 'setting',
   type: 'toolbars',
   align: 'right',
-  icon: '',
-  collapsed: true
+  icon: {
+    default: 'setting'
+  },
+  collapsed: true,
+  text: '设置'
 }
