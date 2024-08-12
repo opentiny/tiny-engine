@@ -17,8 +17,9 @@ import { useHttp } from '@opentiny/tiny-engine-http'
 const { getBlockList } = useBlock()
 
 export const AIModelOptions = [
-  { label: 'ChatGPT：gpt-3.5-turbo', value: 'gpt-3.5-turbo', manufacturer: 'openai', localKey: '' },
-  { label: '文心一言：ERNIE-Bot-turbo', value: 'ERNIE-Bot-turbo', manufacturer: 'baiduai', localKey: 'ACCESS_TOKEN' },
+  // 暂时不能使用，预留模型信息
+  // { label: 'ChatGPT：gpt-3.5-turbo', value: 'gpt-3.5-turbo', manufacturer: 'openai', localKey: '' },
+  // { label: '文心一言：ERNIE-Bot-turbo', value: 'ERNIE-Bot-turbo', manufacturer: 'baiduai', localKey: 'ACCESS_TOKEN' },
   { label: 'Kimi：moonshot-v1-8k', value: 'moonshot-v1-8k', manufacturer: 'kimi', localKey: 'MOONSHOT_API_KEY' }
 ]
 
