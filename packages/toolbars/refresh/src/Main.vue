@@ -8,11 +8,11 @@
     :disabled="true"
   >
     <template #reference>
-      <div @click="refresh">
+      <div class="icon" @click="refresh">
         <span class="icon-hides">
-          <svg-icon :name="icon"></svg-icon>
+          <svg-icon :name="icon.default"></svg-icon>
         </span>
-        <span class="operate-title">画布刷新</span>
+        <slot name="text"></slot>
       </div>
     </template>
   </tiny-popover>
@@ -28,8 +28,7 @@ export default {
   },
   props: {
     icon: {
-      type: String,
-      default: 'refresh'
+      type: Object
     }
   },
   setup() {

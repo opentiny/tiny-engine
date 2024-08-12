@@ -1,7 +1,7 @@
 <template>
   <div class="toolbar-save">
-    <tiny-button class="save-button" @click="openApi">
-      <svg-icon :name="icon"></svg-icon>
+    <tiny-button v-if="render === 'default'" class="save-button" @click="openApi">
+      <svg-icon :name="icon.default"></svg-icon>
       <span class="save-title">{{ isLoading ? '保存中' : '保存' }}</span>
       <span @click.stop="state.saveVisible = !state.saveVisible">
         <tiny-popover v-model="state.saveVisible" :visible-arrow="false" width="203" trigger="manual">
@@ -24,6 +24,21 @@
         </tiny-popover>
       </span>
     </tiny-button>
+    <tiny-popover
+      v-if="render === 'icon'"
+      trigger="hover"
+      :open-delay="1000"
+      popper-class="toolbar-right-popover"
+      append-to-body
+      :content="isLoading ? '保存中' : '保存'"
+    >
+      <template #reference>
+        <span :id="`${isLoading ? 'saving' : ''}`" class="icon" @click="openApi">
+          <span v-show="!isSaved()" class="dots"></span>
+          <svg-icon :name="icon.default"></svg-icon>
+        </span>
+      </template>
+    </tiny-popover>
   </div>
   <tiny-dialog-box
     class="dialog-box"
@@ -54,6 +69,7 @@
 import { reactive, ref, onUnmounted } from 'vue'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
 import { Button, Popover, DialogBox, Checkbox, Select } from '@opentiny/vue'
+import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { openCommon, saveCommon } from './js/index'
 import { isLoading } from './js/index'
 export const api = {
@@ -71,15 +87,18 @@ export default {
   },
   props: {
     icon: {
-      type: String,
-      default: 'save'
+      type: Object
     },
     iconExpand: {
       type: String,
       default: 'down-arrow'
+    },
+    render: {
+      type: String
     }
   },
-  setup() {
+  setup(props) {
+    const { isSaved } = useCanvas()
     const options = [
       { value: 5, label: '5分钟' },
       { value: 10, label: '10分钟' },
@@ -95,6 +114,7 @@ export default {
       checked: false,
       preservationTime: null
     })
+    const buttonProps = ref(props.button?.properties || {})
 
     const editor = ref(null)
 
@@ -144,9 +164,11 @@ export default {
 
     return {
       state,
+      buttonProps,
       editor,
       editorOptions,
       isLoading,
+      isSaved,
       close,
       openApi,
       saveApi,

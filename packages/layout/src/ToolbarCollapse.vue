@@ -9,7 +9,11 @@
       <div class="empty-bar" v-for="item in collapseBar" :key="item.id">
         <div v-if="item.splitLine" class="empty-line"></div>
         <div class="toolbar-list-button">
-          <component :is="item.entry"></component>
+          <component :is="item.entry" v-bind="item">
+            <template #text>
+              <span class="operate-title"> {{ item.text }} </span>
+            </template>
+          </component>
         </div>
       </div>
     </tiny-popover>

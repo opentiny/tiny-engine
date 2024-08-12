@@ -2,7 +2,11 @@ export default {
   id: 'engine.toolbars.fullscreen',
   type: 'toolbars',
   title: 'fullscreen',
-  icon: '',
+  icon: {
+    fullScreen: 'full-screen',
+    cancelFullScreen: 'cancel-full-screen'
+  },
   align: 'right',
-  collapsed: true
+  collapsed: true,
+  text: '切换全屏'
 }

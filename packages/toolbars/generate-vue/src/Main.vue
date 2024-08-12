@@ -1,9 +1,9 @@
 <template>
   <div class="toolbar-generate">
-    <tiny-button @click="generate">
+    <tiny-button v-bind="button.properties" :style="button.style" @click="generate">
       <span>
-        <svg-icon :name="icon"></svg-icon>
-        <span class="button-title">出码</span>
+        <svg-icon :name="icon.default" color="#fff"></svg-icon>
+        <span class="button-title">{{ button.text }}</span>
       </span>
     </tiny-button>
   </div>
@@ -40,8 +40,17 @@ export default {
   },
   props: {
     icon: {
-      type: String,
-      default: 'generate-code'
+      type: Object
+    },
+    button: {
+      type: Object,
+      default: () => {
+        return {
+          properties: {},
+          style: '',
+          text: '出码'
+        }
+      }
     }
   },
   setup() {

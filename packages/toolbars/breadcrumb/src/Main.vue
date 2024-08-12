@@ -4,7 +4,7 @@
       <tiny-breadcrumb separator="：" @select="open">
         <tiny-breadcrumb-item v-for="item in breadcrumbData.slice(0, 2)" :key="item">{{ item }} </tiny-breadcrumb-item>
       </tiny-breadcrumb>
-      <component :is="state.pageLock.entry"></component>
+      <component :is="state.pageLock.entry" v-bind="state.pageLock"></component>
     </div>
 
     <tiny-button
@@ -23,7 +23,7 @@
 import { reactive, computed } from 'vue'
 import { Breadcrumb, BreadcrumbItem, Button } from '@opentiny/vue'
 import { useBreadcrumb, useLayout } from '@opentiny/tiny-engine-meta-register'
-import lock from '../../lock'
+import lock from '@opentiny/tiny-engine-toolbar-checkinout'
 import { BlockDeployDialog } from '@opentiny/tiny-engine-common'
 export default {
   components: {

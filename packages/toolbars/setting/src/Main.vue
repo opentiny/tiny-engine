@@ -10,7 +10,7 @@
     >
       <template #reference>
         <span class="icon-hides" @click="openSetting">
-          <svg-icon :name="icon"></svg-icon>
+          <svg-icon :name="icon.default"></svg-icon>
         </span>
         <span>{{ isBlock() ? '区块设置' : '页面设置' }}</span>
       </template>
@@ -30,8 +30,7 @@ export default {
   },
   props: {
     icon: {
-      type: String,
-      default: 'setting'
+      type: Object
     }
   },
   setup() {

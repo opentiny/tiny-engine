@@ -9,7 +9,7 @@
     >
       <template #reference>
         <span :class="['icon-wrap', 'undo', { disabled: !historyState.back }]" @click="back">
-          <svg-icon :name="undoIcon"></svg-icon>
+          <svg-icon :name="icon.undo"></svg-icon>
         </span>
       </template>
     </tiny-popover>
@@ -22,7 +22,7 @@
     >
       <template #reference>
         <span :class="['icon-wrap', 'redo', !historyState.forward ? 'disabled' : '']" @click="forward">
-          <svg-icon :name="redoIcon"></svg-icon>
+          <svg-icon :name="icon.redo"></svg-icon>
         </span>
       </template>
     </tiny-popover>
@@ -38,13 +38,8 @@ export default {
     TinyPopover: Popover
   },
   props: {
-    undoIcon: {
-      type: String,
-      default: 'undo'
-    },
-    redoIcon: {
-      type: String,
-      default: 'redo'
+    icon: {
+      type: Object
     }
   },
   setup() {

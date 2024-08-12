@@ -1,14 +1,14 @@
 <template>
   <div class="tiny-engine-toolbar">
     <div class="toolbar-left">
-      <component :is="item.entry" v-for="item in leftBar" :key="item.id"></component>
+      <component :is="item.entry" v-for="item in leftBar" v-bind="item" :key="item.id"></component>
     </div>
     <div class="toolbar-center">
-      <component :is="item.entry" v-for="item in centerBar" :key="item.id"></component>
+      <component :is="item.entry" v-for="item in centerBar" v-bind="item" :key="item.id"></component>
     </div>
     <div class="toolbar-right">
-      <component :is="item.entry" v-for="item in rightBar" :key="item.id"></component>
-      <toolbar-collapse :collapseBar="collapseBar"></toolbar-collapse>
+      <component :is="item.entry" v-for="item in rightBar" v-bind="item" :key="item.id"></component>
+      <toolbar-collapse v-if="collapseBar.length" :collapseBar="collapseBar"></toolbar-collapse>
     </div>
   </div>
   <div class="progress">

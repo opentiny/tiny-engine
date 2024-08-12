@@ -32,9 +32,9 @@
           <template #reference>
             <div class="icon collaboration-wrap">
               <span class="icon-hides">
-                <svg-icon v-if="state.url" name="user"></svg-icon>
+                <svg-icon v-if="state.url" :name="icon.default"></svg-icon>
               </span>
-              <span class="operate-title">多人协作</span>
+              <slot name="text"></slot>
             </div>
           </template>
         </tiny-popover>
@@ -51,6 +51,11 @@ import { useLayout } from '@opentiny/tiny-engine-meta-register'
 export default {
   components: {
     TinyPopover: Popover
+  },
+  props: {
+    icon: {
+      type: Object
+    }
   },
   setup() {
     const { layoutState } = useLayout()

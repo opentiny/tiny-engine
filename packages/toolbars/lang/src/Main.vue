@@ -8,11 +8,11 @@
     :disabled="true"
   >
     <template #reference>
-      <div @click="changeLang">
+      <div class="icon" @click="changeLang">
         <span class="icon-hides">
-          <svg-icon :name="langSvgIconNameMap[langVal]"></svg-icon>
+          <svg-icon :name="icon[langVal]"></svg-icon>
         </span>
-        <span class="operate-title">中英文切换</span>
+        <slot name="text"></slot>
       </div>
     </template>
   </tiny-popover>
@@ -32,6 +32,9 @@ export default {
     TinyPopover: Popover
   },
   props: {
+    icon: {
+      type: Object
+    },
     langChannel: {
       type: String,
       default: BROADCAST_CHANNEL.CanvasLang
@@ -44,11 +47,6 @@ export default {
     watch(data, () => {
       langVal.value = data.value
     })
-
-    const langSvgIconNameMap = {
-      zh_CN: 'cn',
-      en_US: 'en'
-    }
 
     const options = [
       {
@@ -67,8 +65,7 @@ export default {
     return {
       options,
       langVal,
-      changeLang,
-      langSvgIconNameMap
+      changeLang
     }
   }
 }

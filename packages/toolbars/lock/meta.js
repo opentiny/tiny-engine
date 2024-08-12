@@ -2,7 +2,12 @@ export default {
   id: 'engine.toolbars.lock',
   title: 'lock',
   type: 'toolbars',
-  icon: '',
+  icon: {
+    locked: 'locked',
+    userLocked: 'user-locked',
+    unlocked: 'unlocked'
+  },
   align: 'right',
-  collapsed: true
+  collapsed: true,
+  text: '锁定页面'
 }

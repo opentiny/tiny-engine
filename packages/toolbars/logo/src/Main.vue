@@ -2,7 +2,7 @@
   <div class="top-panel-logo">
     <h1 class="logo-wrap" @click.stop="handleTitleClick">
       <div class="menu-icon-wrapper">
-        <svg-icon name="menu"></svg-icon>
+        <svg-icon :name="icon.default"></svg-icon>
       </div>
     </h1>
     <div v-if="state.showMenu" class="main-menu">
@@ -98,7 +98,7 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref, nextTick, onUnmounted } from 'vue'
+import { computed, reactive, ref, nextTick, onUnmounted, defineProps } from 'vue'
 import {
   DialogBox as TinyDialogBox,
   Input as TinyInput,
@@ -114,6 +114,12 @@ import { useLayout, useApp, useModal } from '@opentiny/tiny-engine-meta-register
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { isDevelopEnv } from '@opentiny/tiny-engine-common/js/environments'
+
+defineProps({
+  icon: {
+    type: Object
+  }
+})
 
 const http = useHttp()
 

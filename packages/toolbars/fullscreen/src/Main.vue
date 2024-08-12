@@ -8,11 +8,11 @@
     :disabled="true"
   >
     <template #reference>
-      <div>
+      <div class="icon">
         <span class="icon-hides" @click="fullscreen">
           <svg-icon :name="iconName"></svg-icon>
         </span>
-        <span class="operate-title">切换全屏</span>
+        <slot name="text"></slot>
       </div>
     </template>
   </tiny-popover>
@@ -28,17 +28,16 @@ export default {
   },
   props: {
     icon: {
-      type: String,
-      default: 'full-screen'
+      type: Object
     }
   },
   setup(props) {
     const isFullscreen = ref(false)
-    const iconName = ref(props.icon)
+    const iconName = ref(props.icon.fullScreen)
 
     const fullscreen = () => {
       isFullscreen.value = !isFullscreen.value
-      iconName.value = isFullscreen.value ? 'cancel-full-screen' : 'full-screen'
+      iconName.value = isFullscreen.value ? props.icon.cancelFullScreen : props.icon.fullScreen
       document.webkitFullscreenElement
         ? document.webkitExitFullscreen()
         : document.documentElement.webkitRequestFullScreen()

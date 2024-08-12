@@ -8,7 +8,7 @@
   >
     <template #reference>
       <span class="icon" @click="preview">
-        <svg-icon :name="icon"></svg-icon>
+        <svg-icon :name="icon.default"></svg-icon>
       </span>
     </template>
   </tiny-popover>
@@ -26,8 +26,7 @@ export default {
   },
   props: {
     icon: {
-      type: String,
-      default: 'preview'
+      type: Object
     }
   },
   setup() {

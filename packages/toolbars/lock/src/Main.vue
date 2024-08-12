@@ -12,6 +12,7 @@
         <span class="icon-hides">
           <svg-icon :name="iconName" @click="lockOrUnlock"></svg-icon>
         </span>
+        <slot name="text"></slot>
       </template>
     </tiny-popover>
   </span>
@@ -53,7 +54,12 @@ export default {
   components: {
     TinyPopover: Popover
   },
-  setup() {
+  props: {
+    icon: {
+      type: Object
+    }
+  },
+  setup(props) {
     const { pageState } = useCanvas()
     const { layoutState } = useLayout()
     const { getCurrentBlock } = useBlock()
@@ -68,11 +74,11 @@ export default {
     const iconName = computed(() => {
       switch (state.status) {
         case PAGE_STATUS.Occupy:
-          return 'locked'
+          return props.icon.locked
         case PAGE_STATUS.Lock:
-          return 'user-locked'
+          return props.icon.userLocked
         default:
-          return 'unlocked'
+          return props.icon.unlocked
       }
     })
 
