@@ -1,43 +1,45 @@
 <!-- 右侧插件栏-->
 <template>
-  <!-- 插件面板 -->
-  <div
-    v-show="renderPanel && components[renderPanel]"
-    id="tiny-engine-right-panel"
-    :class="[renderPanel, { 'is-fixed': settingsState.fixedPanels.includes(renderPanel) }]"
-  >
-    <div class="right-panel-wrap">
-      <component
-        :is="components[renderPanel]"
-        :fixed-panels="settingsState.fixedPanels"
-        @close="close"
-        @fixPanel="fixPanel"
-      ></component>
-      <div v-show="activating" class="active2" />
+  <div>
+    <!-- 插件面板 -->
+    <div
+      v-show="renderPanel && components[renderPanel]"
+      id="tiny-engine-right-panel"
+      :class="[renderPanel, { 'is-fixed': settingsState.fixedPanels.includes(renderPanel) }]"
+    >
+      <div class="right-panel-wrap">
+        <component
+          :is="components[renderPanel]"
+          :fixed-panels="settingsState.fixedPanels"
+          @close="close"
+          @fixPanel="fixPanel"
+        ></component>
+        <div v-show="activating" class="active2" />
+      </div>
     </div>
-  </div>
-  <div id="tiny-engine-nav-panel">
-    <!-- 图标菜单 -->
-    <ul class="nav-panel-lists">
-      <li
-        v-for="(item, index) in state.leftList"
-        :key="index"
-        :class="{
-          'list-item': true,
-          'first-item': index === 0,
-          active: item.id === renderPanel
-        }"
-        :title="item.title"
-        @click="clickMenu({ item, index })"
-      >
-        <div>
-          <span class="item-icon">
-            <svg-icon v-if="iconComponents[item.id]" :name="iconComponents[item.id]" class="panel-icon"></svg-icon>
-            <component v-else :is="iconComponents[item.id]" class="panel-icon"></component>
-          </span>
-        </div>
-      </li>
-    </ul>
+    <div id="tiny-engine-nav-panel">
+      <!-- 图标菜单 -->
+      <ul class="nav-panel-lists">
+        <li
+          v-for="(item, index) in state.leftList"
+          :key="index"
+          :class="{
+            'list-item': true,
+            'first-item': index === 0,
+            active: item.id === renderPanel
+          }"
+          :title="item.title"
+          @click="clickMenu({ item, index })"
+        >
+          <div>
+            <span class="item-icon">
+              <svg-icon v-if="iconComponents[item.id]" :name="iconComponents[item.id]" class="panel-icon"></svg-icon>
+              <component v-else :is="iconComponents[item.id]" class="panel-icon"></component>
+            </span>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
