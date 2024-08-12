@@ -36,8 +36,9 @@ import { fs } from '@opentiny/tiny-engine-utils'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { parseRequiredBlocks, generateApp as generateVueApp } from '@opentiny/tiny-engine-dsl-vue'
 import { generateApp as generateReactApp } from '@opentiny/tiny-engine-dsl-react'
-import { fetchMetaData, fetchPageList, fetchBlockSchema } from './http'
+import { fetchMetaData, fetchPageList, fetchCode as fetchBlockSchema } from './http'
 import FileSelector from './FileSelector.vue'
+import { generateVuePage } from './generateCode'
 
 export default {
   components: {
@@ -157,8 +158,10 @@ export default {
     const getPreGenerateInfo = async () => {
       const params = getParams()
       const { id } = useEditorInfo().useInfo()
+      console.log(params, 'params')
       const promises = [
-        useHttp().get(`/app-center/v1/api/apps/schema/${id}`),
+        // useHttp().get(`/app-center/v1/api/apps/schema/${id}`),
+        fetchBlockSchema(params),
         fetchMetaData(params),
         fetchPageList(params.app)
       ]
@@ -170,6 +173,14 @@ export default {
       }
 
       const [appData, metaData, pageList, dirHandle] = await Promise.all(promises)
+      // 如果是React，其appData数据的格式与Vue中的appData不一致，React是（一般有两个文件，第一个文件是Jsx文件，第二个文件是Css文件）：
+      // error: Array<T
+      // filePath: string
+      // index: boolean
+      // panelName: string // 文件名
+      // panelType: string // 出码类型
+      // panelValue: string // 文件内容
+      // prettierOpts: Object // 格式化参数
       console.log(appData, 'appData', metaData, 'metaData', pageList, 'pageList', dirHandle, 'dirHandle')
       const pageDetailList = await getAllPageDetails(pageList)
 
@@ -201,15 +212,18 @@ export default {
         }),
         blockSchema,
         // 物料数据
+        // componentsMap: [...(appData.componentsMap || [])],由于React在调用fetchcode的时候就已经调用了react-dsl里面的函数，
+        // 所以在这直接调用./generateCode里面的函数直接格式化返回的React的代码就可以了
         componentsMap: [...(appData.componentsMap || [])],
-
         meta: {
           ...(appData.meta || {})
-        }
+        },
+        reactData: state.value === 'React' ? [...(appData || [])] : []
       }
 
       console.log(appSchema, 'appSchema')
       state.instance = state.value === 'React' ? generateReactApp() : generateVueApp()
+
       const res = await state.instance.generate(appSchema)
 
       console.log(res, 'res')

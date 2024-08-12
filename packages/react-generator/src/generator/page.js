@@ -423,6 +423,7 @@ const getFilePath = (type = 'page', name = '', componentsMap) => {
 }
 
 const generatePageCode = ({ pageInfo, componentsMap, isEntry = true }) => {
+  console.log(pageInfo, 'pageInfo>>>>>>>>>>>>')
   const { schema: originSchema, name } = pageInfo
 
   // 深拷贝，避免副作用改变传入的 schema 值

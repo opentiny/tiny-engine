@@ -36,6 +36,7 @@ class CodeGenerator {
       }
     }
     async generate(schema) {
+      console.log(schema, 'ReactSchema>>>>>>>>')
       this.schema = this.parseSchema(schema)
       this.error = []
       this.genResult = []
@@ -96,6 +97,8 @@ class CodeGenerator {
   
         try {
           const transformRes = await pluginItem.run.apply(this.contextApi, [this.schema, this.getContext()])
+
+          console.log(transformRes, 'transFormRes>>>>')
   
           if (!transformRes) {
             continue

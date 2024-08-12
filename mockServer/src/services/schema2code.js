@@ -52,6 +52,7 @@ export default class Schema2CodeServcice {
 
     const { generateCode } = require('@opentiny/tiny-engine-dsl-react')
     let code
+    console.log(schema, 'service>>>>>>SCHEMA')
     try {
       code = generateCode({
         pageInfo: { schema, name },
