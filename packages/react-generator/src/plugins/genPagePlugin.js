@@ -19,7 +19,8 @@ function genPagePlugin(options = {}) {
    * 
    * @param {} codeList 
    */
-  const prettierCode = (codeList) => {
+  const prettierCode = (codeList, pagePath = '') => {
+    console.log('你进来没有啊我草')
     const pageFiles = []
 
     const formatTypePluginMap = {
@@ -34,14 +35,16 @@ function genPagePlugin(options = {}) {
     }
   
     const blockList = codeList.filter((item) => item.type === 'Block').map((item) => item.panelName)
-    codeList.forEach(({ panelName, panelValue = '', prettierOpts, type }) => {
+    codeList.forEach(async ({ panelName, panelValue = '', prettierOpts, type }) => {
       if (panelName) {
         if (prettierOpts?.parser && formatTypePluginMap[prettierOpts.parser]) {
-          panelValue = prettier.format(panelValue, {
-            ...prettierOpts,
-            plugins: formatTypePluginMap[prettierOpts.parser]
-          })
+          // 格式必须可供解析时才能运行，否则会堵塞本地运行
+          // panelValue = prettier.format(panelValue, {
+            // ...prettierOpts,
+            // plugins: formatTypePluginMap[prettierOpts.parser]
+          // })
         }
+
         if (type === 'Page' && blockList.length) {
           blockList.forEach((blockName) => {
             panelValue = panelValue.replace(`./${blockName}`, `${basePaths.blocks.replace('src/', '@/')}${blockName}`)
@@ -56,6 +59,8 @@ function genPagePlugin(options = {}) {
         })
       }
     })
+
+    console.log(pageFiles, 'pageFiles>>>')
   
     return pageFiles
   }
@@ -70,10 +75,13 @@ function genPagePlugin(options = {}) {
      */
     run(schema) {
       // 先做一点小改造, 后面再改回来
-      // const pages = schema.pageSchema
       const pages = schema.reactData
 
-      return prettierCode(pages)
+      console.log(pages, 'pages>>>>>')
+
+      console.log(prettierCode(pages, pageBasePath), 'prettierCode>>>>')
+      const pageFiles = prettierCode(pages, pageBasePath)
+      return pageFiles
     }
   }
 }

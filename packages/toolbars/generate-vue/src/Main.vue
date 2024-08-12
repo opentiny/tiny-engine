@@ -35,7 +35,10 @@ import {
 import { fs } from '@opentiny/tiny-engine-utils'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { parseRequiredBlocks, generateApp as generateVueApp } from '@opentiny/tiny-engine-dsl-vue'
-import { generateApp as generateReactApp } from '@opentiny/tiny-engine-dsl-react'
+// import { generateApp as generateReactApp } from '@opentiny/tiny-engine-dsl-react'
+// 初期，方便调试
+import { generateApp as generateReactApp } from '../../../react-generator/src/index'
+
 import { fetchMetaData, fetchPageList, fetchCode as fetchBlockSchema } from './http'
 import FileSelector from './FileSelector.vue'
 import { generateVuePage } from './generateCode'
@@ -162,6 +165,7 @@ export default {
       const promises = [
         // useHttp().get(`/app-center/v1/api/apps/schema/${id}`),
         fetchBlockSchema(params),
+        // state.value === 'React' ? fetchBlockSchema(params) : useHttp().get(`/app-center/v1/api/apps/schema/${id}`),
         fetchMetaData(params),
         fetchPageList(params.app)
       ]

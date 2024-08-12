@@ -384,10 +384,11 @@ const generateReactCode = ({ schema, name, type, componentsMap }) => {
 
   const { imports } = generateReactImports(description, name, type, componentsMap)
 
+  console.log(getters.join('\n'), '\n', arrowMethods.join('\n'), '\n', lifecycles.join('\n'), '\n', jsxNode, '\n', 'current>>>>>>')
   // 生成模板
   const result = `${imports.join('\n')}
 
-  export default class ${name} extends React.Component {
+  export default ${name} = () => {
     ${stateStatement}
 
     ${getters.join('\n')}
@@ -423,7 +424,6 @@ const getFilePath = (type = 'page', name = '', componentsMap) => {
 }
 
 const generatePageCode = ({ pageInfo, componentsMap, isEntry = true }) => {
-  console.log(pageInfo, 'pageInfo>>>>>>>>>>>>')
   const { schema: originSchema, name } = pageInfo
 
   // 深拷贝，避免副作用改变传入的 schema 值
