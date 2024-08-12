@@ -17,6 +17,7 @@ import MaterialLayout from './src/meta/layout'
 import MaterialBlock from './src/meta/block'
 import MaterialComponent from './src/meta/component'
 import MaterialHeader from './src/components/header/Main.vue'
+import { basePropertyOptions } from './src/js/options'
 
 export default {
   ...metaData,
@@ -24,7 +25,8 @@ export default {
   layout: MaterialLayout,
   options: {
     defaultTabId: 'engine.plugins.materials.component',
-    displayComponentIds: ['engine.plugins.materials.component', 'engine.plugins.materials.block']
+    displayComponentIds: ['engine.plugins.materials.component', 'engine.plugins.materials.block'],
+    basePropertyOptions
   },
   components: {
     header: MaterialHeader

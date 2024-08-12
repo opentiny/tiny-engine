@@ -14,7 +14,8 @@ import { reactive } from 'vue'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { utils, constants } from '@opentiny/tiny-engine-utils'
 import { meta as BuiltinComponentMaterials } from '@opentiny/tiny-engine-builtin-component'
-import { getMergeMeta, useNotify, useCanvas, useBlock } from '@opentiny/tiny-engine-meta-register'
+import { getMergeMeta, getOptions, useNotify, useCanvas, useBlock } from '@opentiny/tiny-engine-meta-register'
+import meta from '../../meta'
 
 const { camelize, capitalize } = utils
 const { MATERIAL_TYPE } = constants
@@ -77,10 +78,48 @@ const getConfigureMap = () => {
 }
 
 /**
+ * 附加基础属性，基础属性可以通过注册表配置
+ * @param {any[]} schemaProperties
+ * @returns
+ */
+const patchBaseProps = (schemaProperties) => {
+  if (!Array.isArray(schemaProperties)) {
+    return
+  }
+
+  const { properties = [], insertPosition = 'end' } = getOptions(meta.id).basePropertyOptions || {}
+
+  for (const basePropGroup of properties) {
+    const group = schemaProperties.find((item) => {
+      // 如果存在了包含'其他'字符串的分组，统一为'其他'分组
+      if (item.label.zh_CN.includes('其他')) {
+        item.label.zh_CN = '其他'
+      }
+
+      return (
+        (basePropGroup.group && basePropGroup.group === item.group) || basePropGroup.label.zh_CN === item.label.zh_CN
+      )
+    })
+
+    if (group) {
+      if (insertPosition === 'start') {
+        group.content.splice(0, 0, ...basePropGroup.content)
+      } else {
+        group.content.push(...basePropGroup.content)
+      }
+    } else {
+      schemaProperties.push(basePropGroup)
+    }
+  }
+}
+
+/**
  * 将component里的内容注册到resource变量中
  * @param {*} data
  */
 const registerComponentToResource = (data) => {
+  patchBaseProps(data.schema?.properties)
+
   if (Array.isArray(data.component)) {
     const { component, ...others } = data
     component.forEach((item) => {
