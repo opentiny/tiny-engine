@@ -36,4 +36,18 @@ const unwrapExpression = (slotsValue) =>
     p1.replace(/\\"/g, '"').replace(/\\r\\n|\\r|\\n/g, '')
   )
 
-export { traverse, unwrapExpression }
+  /**
+   * 
+   * @param {Object} state 
+   */
+  const translateHookState = (state) => {
+    const map = new Map()
+    for (const item in state) {
+      map.set(item, state[item])
+    }
+
+    console.log(map, 'map>>>>')
+    return map
+  }
+
+export { traverse, unwrapExpression, translateHookState }

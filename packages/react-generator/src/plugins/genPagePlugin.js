@@ -39,10 +39,10 @@ function genPagePlugin(options = {}) {
       if (panelName) {
         if (prettierOpts?.parser && formatTypePluginMap[prettierOpts.parser]) {
           // 格式必须可供解析时才能运行，否则会堵塞本地运行
-          // panelValue = prettier.format(panelValue, {
-            // ...prettierOpts,
-            // plugins: formatTypePluginMap[prettierOpts.parser]
-          // })
+          panelValue = prettier.format(panelValue, {
+            ...prettierOpts,
+            plugins: formatTypePluginMap[prettierOpts.parser]
+          })
         }
 
         if (type === 'Page' && blockList.length) {

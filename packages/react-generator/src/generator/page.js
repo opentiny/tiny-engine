@@ -23,7 +23,7 @@ import {
   getFunctionInfo
 } from '../utils'
 // import { validateByParse, validateByCompile } from '../utils/vue-sfc-validator'
-import { traverse as traverseState, unwrapExpression } from '../parser/state'
+import { traverse as traverseState, unwrapExpression, translateHookState } from '../parser/state'
 import { preProcess } from '../pre-processor'
 import {
   DEFAULT_COMPONENTS_MAP,
@@ -363,7 +363,12 @@ const generateReactCode = ({ schema, name, type, componentsMap }) => {
   // 转换 state 中的特殊类型
   traverseState(state, description)
 
-  const stateStatement = `state = ${unwrapExpression(JSON.stringify(state, null, 2))}`
+  const statementMap = translateHookState(state)
+  let statement = ''
+  for (const [key, value] of statementMap) {
+    statement += `[${key}, set${key}] = React.useState(${JSON.stringify(value)}) \n`
+  }
+  const stateStatement = `${unwrapExpression(JSON.stringify(state, null, 2))}`
 
   const getters = description.getters.map((getter) => {
     const { type, params, body } = getFunctionInfo(getter.accessor.getter.value)
@@ -384,28 +389,33 @@ const generateReactCode = ({ schema, name, type, componentsMap }) => {
 
   const { imports } = generateReactImports(description, name, type, componentsMap)
 
-  console.log(getters.join('\n'), '\n', arrowMethods.join('\n'), '\n', lifecycles.join('\n'), '\n', jsxNode, '\n', 'current>>>>>>')
+  console.log(getters.join('\n'), 'current>>>>>>')
+
+  console.log(arrowMethods.join('\n'), 'arrowMethod>>>>>>')
+
+  console.log(lifecycles.join('\n'), 'lifecycles>>>>>>')
+
+  console.log(statement, 'stateStatement>>>>>>')
+
   // 生成模板
   const result = `${imports.join('\n')}
 
   export default ${name} = () => {
-    ${stateStatement}
+    ${statement}
 
     ${getters.join('\n')}
 
-    utils = {}
-    constructor(props) {
-      super(props)
-      this.utils = utils
-    }
+    const utils = {}
   
     ${lifecycles.join('\n')}
   
     ${arrowMethods.join('\n')}
   
-    render() {
-      return (${jsxNode})
-    }
+    return (
+      <>
+        ${jsxNode}
+      </>
+    )
   }
 `
 
