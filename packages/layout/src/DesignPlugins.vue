@@ -102,18 +102,12 @@ export default {
     const {
       PLUGIN_NAME,
       pluginState,
-      registerPluginApi,
       layoutState: { plugins: pluginsState }
     } = useLayout()
 
-    props.plugins.forEach(({ id, entry, api, icon }) => {
+    props.plugins.forEach(({ id, entry, icon }) => {
       components[id] = entry
       iconComponents[id] = icon
-      if (api) {
-        registerPluginApi({
-          [id]: api
-        })
-      }
     })
 
     const state = reactive({

@@ -23,8 +23,6 @@ import { constants } from '@opentiny/tiny-engine-utils'
 import { Popover } from '@opentiny/vue'
 import { requestBlockPage } from './http'
 
-export const api = {}
-
 const { COMPONENT_NAME, PAGE_STATUS } = constants
 
 const componentType = {

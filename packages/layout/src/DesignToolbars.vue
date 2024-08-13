@@ -30,7 +30,7 @@
 
 <script>
 import { reactive, nextTick } from 'vue'
-import { useLayout, getMergeRegistry } from '@opentiny/tiny-engine-meta-register'
+import { getMergeRegistry } from '@opentiny/tiny-engine-meta-register'
 import { ProgressBar } from '@opentiny/tiny-engine-common'
 import ToolbarCollapse from './ToolbarCollapse.vue'
 import { utils } from '@opentiny/tiny-engine-utils'
@@ -84,12 +84,6 @@ export default {
         state.centerBar.push(item.id)
       } else {
         state.leftBar.push(item.id)
-      }
-      if (item.id === 'lock') {
-        useLayout().registerPluginApi({ Lock: item.api })
-      }
-      if (item.id === 'save') {
-        useLayout().registerPluginApi({ save: item.api })
       }
     })
 

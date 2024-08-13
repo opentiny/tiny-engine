@@ -26,9 +26,7 @@
 </template>
 
 <script>
-import { reactive } from 'vue'
 import { useLayout, getMergeRegistry } from '@opentiny/tiny-engine-meta-register'
-import AppManage from '@opentiny/tiny-engine-plugin-page'
 import DesignToolbars from './DesignToolbars.vue'
 import DesignPlugins from './DesignPlugins.vue'
 import DesignSettings from './DesignSettings.vue'
@@ -56,18 +54,11 @@ export default {
     const configProvider = layoutRegistry.options.configProvider
     const configProviderDesign = layoutRegistry.options.configProviderDesign
 
-    const state = reactive({
-      preNode: AppManage
-    })
-
     const { layoutState } = useLayout()
     const { plugins } = layoutState
 
-    const toggleNav = ({ item, navLists }) => {
-      if (navLists) state.preNode = navLists
-
+    const toggleNav = ({ item }) => {
       if (!item.id) return
-
       plugins.render = plugins.render === item.id ? null : item.id
     }
 
@@ -75,7 +66,6 @@ export default {
       layoutRegistry,
       configProvider,
       configProviderDesign,
-      state,
       plugins,
       toggleNav,
       layoutState

@@ -16,7 +16,7 @@ import { PageService } from './src/composable'
 
 export default {
   ...metaData,
-  api,
+  apis: api,
   entry,
   metas: [PageService]
 }

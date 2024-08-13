@@ -17,66 +17,6 @@ import { useCanvas, useMaterial, useTranslate } from '@opentiny/tiny-engine-meta
 const { COMPONENT_NAME } = constants
 const propsUpdateKey = ref(0)
 
-const otherBaseKey = {
-  className: {
-    property: 'className',
-    type: 'string',
-    defaultValue: '',
-    label: {
-      text: {
-        zh_CN: '样式类'
-      }
-    },
-    cols: 12,
-    rules: [],
-    widget: {
-      component: 'InputConfigurator',
-      props: {}
-    }
-  },
-  id: {
-    property: 'id',
-    type: 'string',
-    defaultValue: '',
-    label: {
-      text: {
-        zh_CN: '元素id值'
-      }
-    },
-    cols: 12,
-    rules: [],
-    widget: {
-      component: 'InputConfigurator',
-      props: {}
-    }
-  },
-  ref: {
-    property: 'ref',
-    type: 'string',
-    defaultValue: '',
-    label: {
-      text: {
-        zh_CN: 'ref引用类'
-      }
-    },
-    cols: 12,
-    rules: [],
-    widget: {
-      component: 'InputConfigurator',
-      props: {}
-    }
-  }
-}
-
-const patchOtherName = (content = []) => {
-  const otherName = ['ref', 'className', 'id']
-  otherName.forEach((e) => {
-    if (!content.find(({ property }) => property === e)) {
-      content.unshift(JSON.parse(JSON.stringify(otherBaseKey[e])))
-    }
-  })
-}
-
 const getSlotSwitch = (properties, slots = {}) => {
   if (Object.keys(slots).length) {
     properties.push({
@@ -164,7 +104,6 @@ const getProps = (schema, parent) => {
     const schemaProps = properties || metaSchema?.properties || content?.schema?.properties || []
     const propGroups = [...schemaProps]
 
-    patchOtherName(propGroups[0]?.content)
     getSlotSwitch(propGroups, metaSchema?.slots)
     useCanvas().pageState.properties = mergeProps(toRaw(props), propGroups)
   } else if (!schema) {

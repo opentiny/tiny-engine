@@ -15,6 +15,6 @@ import metaData from './meta.js'
 
 export default {
   ...metaData,
-  api,
+  apis: api,
   entry
 }

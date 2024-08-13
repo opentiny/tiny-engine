@@ -17,9 +17,17 @@
 
 <script>
 import { reactive } from 'vue'
+import {
+  useBlock,
+  useCanvas,
+  useNotify,
+  useLayout,
+  useEditorInfo,
+  getMetaApi,
+  META_APP,
+  getMergeMeta
+} from '@opentiny/tiny-engine-meta-register'
 import { Button } from '@opentiny/vue'
-import { useBlock, useCanvas, useNotify, useLayout, useEditorInfo } from '@opentiny/tiny-engine-meta-register'
-import { getMergeMeta, getMetaApi } from '@opentiny/tiny-engine-meta-register'
 import { fs } from '@opentiny/tiny-engine-utils'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { fetchMetaData, fetchPageList, fetchBlockSchema } from './http'
@@ -84,8 +92,7 @@ export default {
     const { getAllNestedBlocksSchema, generateAppCode } = getMetaApi('engine.service.generateCode')
 
     const getAllPageDetails = async (pageList) => {
-      const { PLUGIN_NAME, getPluginApi } = useLayout()
-      const detailPromise = pageList.map(({ id }) => getPluginApi(PLUGIN_NAME.AppManage).getPageById(id))
+      const detailPromise = pageList.map(({ id }) => getMetaApi(META_APP.AppManage).getPageById(id))
       const detailList = await Promise.allSettled(detailPromise)
 
       return detailList
