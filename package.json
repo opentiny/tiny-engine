@@ -55,7 +55,8 @@
     "vite": "^4.3.7",
     "vite-plugin-monaco-editor": "^1.0.10",
     "vite-plugin-svg-icons": "^2.0.1",
-    "vue-eslint-parser": "^8.0.1"
+    "vue-eslint-parser": "^8.0.1",
+    "@vueuse/core": "^9.6.0"
   },
   "browserslist": [
     "> 1%",
