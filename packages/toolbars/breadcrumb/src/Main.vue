@@ -4,7 +4,6 @@
       <tiny-breadcrumb separator="：" @select="open">
         <tiny-breadcrumb-item v-for="item in breadcrumbData.slice(0, 2)" :key="item">{{ item }} </tiny-breadcrumb-item>
       </tiny-breadcrumb>
-      <component :is="state.pageLock.entry"></component>
     </div>
 
     <tiny-button
@@ -23,7 +22,6 @@
 import { reactive, computed } from 'vue'
 import { Breadcrumb, BreadcrumbItem, Button } from '@opentiny/vue'
 import { useBreadcrumb, useLayout } from '@opentiny/tiny-engine-meta-register'
-import lock from '../../lock'
 import { BlockDeployDialog } from '@opentiny/tiny-engine-common'
 export default {
   components: {
@@ -42,8 +40,7 @@ export default {
     const { plugins } = layoutState
 
     const state = reactive({
-      showDeployBlock: false,
-      pageLock: lock
+      showDeployBlock: false
     })
     const { CONSTANTS, getBreadcrumbData } = useBreadcrumb()
     const breadcrumbData = getBreadcrumbData()
@@ -94,15 +91,20 @@ export default {
   align-items: center;
   width: auto;
   height: 100%;
+  margin-right: 3px;
+  cursor: pointer;
   &-title {
     height: 24px;
     padding: 0 8px;
-    background-color: var(--ti-lowcode-toolbar-button-bg);
+    background-color: var(--ti-lowcode-toolbar-breadcrumb-bg);
     display: flex;
     border-radius: 4px;
     :deep(.reference-wrapper) {
       line-height: 22px;
     }
+  }
+  &-title:hover {
+    background-color: var(--ti-lowcode-toolbar-breadcrumb-bg-hover);
   }
 
   .tiny-breadcrumb {
@@ -121,7 +123,7 @@ export default {
     user-select: none;
 
     :deep(.tiny-breadcrumb__inner) {
-      color: var(--ti-lowcode-toolbar-title-color);
+      color: var(--ti-lowcode-toolbar-breadcrumb-left-color);
       text-decoration: none;
     }
 
@@ -132,7 +134,7 @@ export default {
 
     &:last-child :deep(.tiny-breadcrumb__inner) {
       font-weight: normal;
-      color: var(--ti-lowcode-toolbar-title-color);
+      color: var(--ti-lowcode-toolbar-breadcrumb-left-color);
     }
   }
 }

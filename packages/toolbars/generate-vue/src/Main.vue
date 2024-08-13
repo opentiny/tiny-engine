@@ -262,6 +262,9 @@ export default {
     border-radius: 4px;
     background-color: var(--ti-lowcode-toolbar-button-bg);
     border: none;
+    &:not(.disabled):hover {
+      background-color: var(--ti-lowcode-toolbar-button-bg);
+    }
     .button-title {
       margin-left: 4px;
     }

@@ -1,14 +1,26 @@
 <template>
   <div class="tiny-engine-toolbar">
     <div class="toolbar-left">
-      <component :is="item.entry" v-for="item in leftBar" :key="item.id"></component>
+      <component :is="item.entry" v-for="item in state.leftBar" :key="item.id"></component>
     </div>
     <div class="toolbar-center">
-      <component :is="item.entry" v-for="item in centerBar" :key="item.id"></component>
+      <component :is="item.entry" v-for="item in state.centerBar" :key="item.id"></component>
     </div>
     <div class="toolbar-right">
-      <component :is="item.entry" v-for="item in rightBar" :key="item.id"></component>
-      <toolbar-collapse :collapseBar="collapseBar"></toolbar-collapse>
+      <div class="toolbar-right-content">
+        <div class="toolbar-right-item" v-for="(item, idx) in state.rightBar" :key="idx">
+          <div class="toolbar-right-item-comp" v-for="comp in item" :key="comp">
+            <component :is="getMergeRegistry(REGISTRY_NAME, comp).entry"></component>
+          </div>
+
+          <span class="toolbar-right-line" v-if="layoutRegistry.options.isShowLine">|</span>
+        </div>
+      </div>
+      <toolbar-collapse
+        :collapseBar="state.collapseBar"
+        :registry="REGISTRY_NAME"
+        v-if="layoutRegistry.options.isShowCollapse"
+      ></toolbar-collapse>
     </div>
   </div>
   <div class="progress">
@@ -18,9 +30,12 @@
 
 <script>
 import { reactive, nextTick } from 'vue'
-import { useLayout } from '@opentiny/tiny-engine-meta-register'
+import { useLayout, getMergeRegistry } from '@opentiny/tiny-engine-meta-register'
 import { ProgressBar } from '@opentiny/tiny-engine-common'
 import ToolbarCollapse from './ToolbarCollapse.vue'
+import { utils } from '@opentiny/tiny-engine-utils'
+
+const { deepClone } = utils
 
 export default {
   components: {
@@ -31,24 +46,44 @@ export default {
     toolbars: {
       type: Array,
       default: () => []
+    },
+    layoutRegistry: {
+      type: Object,
+      default: () => {}
     }
   },
   setup(props) {
-    const leftBar = []
-    const rightBar = []
-    const centerBar = []
-    const collapseBar = []
+    const REGISTRY_NAME = 'toolbars'
+    const registryToolbars = deepClone(props.layoutRegistry?.options?.toolbars)
+    const registryRightFlat = registryToolbars.right.flat()
+    const registryCollapseFlat = registryToolbars.collapse.flat()
+
     const state = reactive({
-      showDeployBlock: false
+      showDeployBlock: false,
+      leftBar: [],
+      rightBar: [],
+      centerBar: [],
+      collapseBar: []
     })
+
+    const getNewRes = (arr, newArr) => {
+      let res = []
+      newArr.forEach((id) => {
+        if (arr.indexOf(id) === -1) {
+          res.push(id)
+        }
+      })
+
+      return res
+    }
 
     props.toolbars.forEach((item) => {
       if (item.align === 'right') {
-        item?.collapsed ? collapseBar.push(item) : rightBar.push(item)
+        item?.collapsed ? state.collapseBar.push(item.id) : state.rightBar.push(item.id)
       } else if (item.align === 'center') {
-        centerBar.push(item)
+        state.centerBar.push(item.id)
       } else {
-        leftBar.push(item)
+        state.leftBar.push(item.id)
       }
       if (item.id === 'lock') {
         useLayout().registerPluginApi({ Lock: item.api })
@@ -57,16 +92,32 @@ export default {
         useLayout().registerPluginApi({ save: item.api })
       }
     })
+
+    state.leftBar = Array.from(new Set([...registryToolbars.left, ...state.leftBar])).map((id) =>
+      getMergeRegistry(REGISTRY_NAME, id)
+    )
+    state.centerBar = Array.from(new Set([...registryToolbars.center, ...state.centerBar])).map((id) =>
+      getMergeRegistry(REGISTRY_NAME, id)
+    )
+
+    const rightRes = getNewRes(registryRightFlat, state.rightBar)
+    registryToolbars.right[0] = registryToolbars.right[0] ? [...registryToolbars.right[0], ...rightRes] : state.rightBar
+    state.rightBar = registryToolbars.right
+
+    const collapseRes = getNewRes(registryCollapseFlat, state.collapseBar)
+    registryToolbars.collapse[0] = registryToolbars.collapse[0]
+      ? [...registryToolbars.collapse[0], ...collapseRes]
+      : state.collapseBar
+    state.collapseBar = registryToolbars.collapse
+
     nextTick(() => {
       state.showDeployBlock = true
     })
 
     return {
-      leftBar,
-      rightBar,
-      centerBar,
-      state,
-      collapseBar
+      REGISTRY_NAME,
+      getMergeRegistry,
+      state
     }
   }
 }
@@ -95,15 +146,9 @@ export default {
     justify-content: space-between;
     align-items: center;
   }
-  .toolbar-left {
-    margin: 0 1px;
-  }
 
+  .toolbar-left,
   .toolbar-right {
-    margin: 0 6px;
-    margin-right: 24px;
-    column-gap: 6px;
-    align-items: center;
     :deep(.icon) {
       display: inline-flex;
       justify-content: center;
@@ -118,6 +163,27 @@ export default {
         font-size: 20px;
         color: var(--ti-lowcode-toolbar-title-color);
       }
+    }
+  }
+
+  .toolbar-left {
+    margin: 0 1px;
+    :deep(.icon) {
+      background: var(--ti-lowcode-toolbar-view-active-bg);
+      svg {
+        font-size: 16px;
+      }
+      &:not(.disabled):hover {
+        background: var(--ti-lowcode-toolbar-left-icon-bg-hover);
+      }
+    }
+  }
+
+  .toolbar-right {
+    margin: 0 6px;
+    margin-right: 24px;
+    align-items: center;
+    :deep(.icon) {
       &:not(.disabled):hover {
         background: var(--ti-lowcode-toolbar-view-active-bg);
       }
@@ -127,6 +193,23 @@ export default {
       &.disabled {
         cursor: not-allowed;
       }
+    }
+    .toolbar-right-content {
+      display: flex;
+      .toolbar-right-item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 2px;
+        .toolbar-right-item-comp {
+          margin-right: 6px;
+        }
+      }
+    }
+
+    .toolbar-right-line {
+      color: var(--ti-lowcode-toolbar-right-line);
+      margin: 0 6px;
     }
     .tiny-locales {
       height: 35px;
@@ -146,6 +229,11 @@ export default {
         }
       }
     }
+  }
+}
+.toolbar-right-content .toolbar-right-item:last-child {
+  .toolbar-right-line {
+    display: none;
   }
 }
 

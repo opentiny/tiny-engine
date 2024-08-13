@@ -180,6 +180,9 @@ export default {
     line-height: 24px;
     padding: 0 8px;
     border-radius: 4px;
+    &:not(.disabled):hover {
+      background-color: var(--ti-lowcode-toolbar-button-bg);
+    }
 
     .save-title {
       margin: 0 6px;

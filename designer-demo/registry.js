@@ -15,6 +15,7 @@ import {
   Fullscreen,
   Lang,
   Logo,
+  Lock,
   Media,
   Redoundo,
   Save,
@@ -48,11 +49,7 @@ import {
 export default {
   root: {
     id: 'engine.root',
-    metas: [
-      EditorInfoService,
-      AppService,
-      GenerateCodeService
-    ]
+    metas: [EditorInfoService, AppService, GenerateCodeService]
   },
   config: {
     id: 'engine.config',
@@ -61,7 +58,28 @@ export default {
     scripts: [],
     styles: []
   },
-  layout: Layout,
+  layout: {
+    ...Layout,
+    options: {
+      ...Layout.options,
+      isShowLine: true,
+      isShowCollapse: true,
+      toolbars: {
+        left: ['engine.toolbars.breadcrumb', 'engine.toolbars.lock', 'engine.toolbars.logo'],
+        center: ['engine.toolbars.media'],
+        right: [
+          ['engine.toolbars.clean'],
+          ['engine.toolbars.preview'],
+          ['engine.toolbars.generate-vue', 'engine.toolbars.save']
+        ],
+        collapse: [
+          ['engine.toolbars.collaboration'],
+          ['engine.toolbars.refresh', 'engine.toolbars.fullscreen'],
+          ['engine.toolbars.lang']
+        ]
+      }
+    }
+  },
   themes: [
     {
       id: 'engine.theme.light'
@@ -73,6 +91,7 @@ export default {
   toolbars: [
     Logo,
     Breadcrumb,
+    Lock,
     Media,
     Redoundo,
     Collaboration,
