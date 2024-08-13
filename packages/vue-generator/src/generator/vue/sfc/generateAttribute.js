@@ -523,7 +523,7 @@ export const handleBindUtilsHooks = (schemaData, globalHooks, config) => {
  * @param {*} config
  */
 export const handleJsxModelValueUpdate = (schemaData, globalHooks, config) => {
-  const { attributes, schema: { props = {} } = {} } = schemaData || {}
+  const { schema: { props = {} } = {} } = schemaData || {}
   const isJSX = config.isJSX
 
   if (!isJSX) {
@@ -536,12 +536,7 @@ export const handleJsxModelValueUpdate = (schemaData, globalHooks, config) => {
 
   // jsx 形式的 modelvalue, 如果 schema 没有声明，出码需要同时声明 onUpdate:modelValue，否则更新失效
   if (modelValue && !hasUpdateModelValue) {
-    const updateBinding = handleEventBinding(
-      `onUpdate:${modelValue?.[0]}`,
-      { type: JS_EXPRESSION, value: `(value) => ${modelValue[1].value}=value` },
-      isJSX
-    )
-
-    attributes.push(updateBinding)
+    // 添加 onUpdate:modelKey 事件，让后续钩子生成 对应的事件声明
+    props[`onUpdate:${modelValue?.[0]}`] = { type: JS_EXPRESSION, value: `(value) => ${modelValue[1].value}=value` }
   }
 }
