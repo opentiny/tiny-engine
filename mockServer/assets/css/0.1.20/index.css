@@ -476,6 +476,7 @@
   --ti-base-size-height-small: 28px;
   --ti-base-size-height-minor: 30px;
   --ti-base-size-height-mini: 24px;
+  --ti-date-picker-width: 280px;
 }
 :root {
   --ti-errortips-box-background: var(--ti-base-color-light);
