@@ -16,7 +16,7 @@ function genI18nPlugin(options = {}) {
     name: 'tinyEngine-generateCode-plugin-i18n',
     description: 'transform i18n schema to i18n code plugin',
     /**
-     * 将国际化 schema 转换成 i18n 高代码
+     * 将国际化 schema 转换成 i18n 高代码.
      * @param {tinyEngineDslVue.IAppSchema} schema
      * @returns
      */
