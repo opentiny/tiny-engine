@@ -72,6 +72,7 @@
           <svg-icon name="chat-message" class="common-svg"></svg-icon>
         </template>
         <template #suffix>
+          <icon-picture class="common-svg upload-image" @click="openFilePicker"></icon-picture>
           <svg-icon
             name="chat-microphone"
             :class="['common-svg', 'microphone', { 'microphone-svg': speechStatus }]"
@@ -82,6 +83,7 @@
       <tiny-button @click="endContent">重新发起会话</tiny-button>
       <tiny-button @click="sendContent(inputContent, false)">发送</tiny-button>
     </footer>
+    <input type="file" ref="fileInput" style="display: none" @change="handleFileChange" />
   </div>
   <token-dialog
     :dialog-visible="tokenDialogVisible"
@@ -106,7 +108,7 @@ import {
   DropdownItem as TinyDropdownItem
 } from '@opentiny/vue'
 import { useCanvas, useHistory, usePage, useModal } from '@opentiny/tiny-engine-controller'
-import { iconChevronDown, iconSetting } from '@opentiny/vue-icon'
+import { iconChevronDown, iconSetting, iconPicture } from '@opentiny/vue-icon'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { getBlockContent, initBlockList, AIModelOptions } from './js/robotSetting'
@@ -124,6 +126,7 @@ export default {
     TinyDropdown,
     TinyDropdownMenu,
     TinyDropdownItem,
+    IconPicture: iconPicture(),
     IconSetting: iconSetting(),
     IconChevronDown: iconChevronDown(),
     DialogContent,
@@ -283,6 +286,66 @@ export default {
       tokenDialogVisible.value = true
     }
 
+    /*
+      文件上传(仅图片，后续可需求可添加上传类型）
+     */
+    const fileInput = ref(null)
+    const openFilePicker = () => {
+      if (fileInput.value) {
+        fileInput.value.click()
+      }
+    }
+
+    const uploadFile = (file) => {
+      const formData = new FormData()
+      const foundationModelData = JSON.stringify({
+        foundationModel: {
+          manufacturer: selectedModel.value.manufacturer,
+          model: selectedModel.value.value,
+          token: localStorage.getItem(selectedModel.value.localKey)
+        }
+      })
+      formData.append('foundationModel', foundationModelData)
+      formData.append('file', file)
+      http
+        .post('/app-center/api/ai/files', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          },
+          timeout: 600000
+        })
+        .then((response) => {
+          // TODO: 处理响应
+          // eslint-disable-next-line
+          console.log('文件上传成功', response)
+        })
+        .catch((error) => {
+          // TODO: 处理错误
+          // eslint-disable-next-line
+          console.error('文件上传失败', error)
+        })
+    }
+
+    const handleFileChange = (event) => {
+      const files = event.target.files
+      if (!files.length) {
+        return
+      }
+      /*
+         TODO：在这里添加图片预览
+       */
+      const file = files[0]
+      const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg']
+      if (!validImageTypes.includes(file.type)) {
+        alert('请上传有效的图片文件（.jpeg, .png, .jpg）！')
+        event.target.value = '' // 清空文件输入
+        return
+      }
+
+      // 如果文件类型正确，执行上传逻辑
+      uploadFile(file)
+    }
+
     const getMessage = (content) => ({
       role: 'user',
       content,
@@ -433,6 +496,9 @@ export default {
       endContent,
       resizeChatWindow,
       setToken,
+      openFilePicker,
+      handleFileChange,
+      fileInput,
       AIModelOptions,
       selectedModel,
       currentModel,
@@ -547,6 +613,9 @@ export default {
     svg {
       font-size: 16px;
       color: var(--ti-lowcode-chat-model-input-icon);
+    }
+    .upload-image {
+      margin-right: 7px;
     }
     .microphone {
       font-size: 18px;
