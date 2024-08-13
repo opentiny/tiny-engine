@@ -61,7 +61,7 @@ export default {
     const submitKeyForm = () => {
       keyFormRef.value.validate((valid) => {
         if (valid) {
-          localStorage.setItem(props.currentModel.localKey, keyForm.value.token)
+          localStorage.setItem(props.currentModel.modelKey, keyForm.value.token)
           emit('token-status', true)
           closeKeyFormDialog()
         }
@@ -94,12 +94,12 @@ export default {
       <tiny-alert
         :icon="TinyIconCommission"
         :closable="false"
-        :description="`尝试用自己的${model.localKey}开启AI对话功能吧！`"
+        :description="`尝试用自己的${model.modelKey}开启AI对话功能吧！`"
       ></tiny-alert>
       <tiny-form-item label="" prop="token">
         <tiny-input
           v-model="keyForm.token"
-          :placeholder="`点击这里输入你的${model.localKey}`"
+          :placeholder="`点击这里输入你的${model.modelKey}`"
           validate-event
         ></tiny-input>
       </tiny-form-item>
