@@ -77,6 +77,9 @@ export default {
       return res
     }
 
+    const getNewBar = (registryData, stataData) =>
+      Array.from(new Set([...registryData, ...stataData])).map((id) => getMergeRegistry(REGISTRY_NAME, id))
+
     props.toolbars.forEach((item) => {
       if (item.align === 'right') {
         item?.collapsed ? state.collapseBar.push(item.id) : state.rightBar.push(item.id)
@@ -87,12 +90,8 @@ export default {
       }
     })
 
-    state.leftBar = Array.from(new Set([...registryToolbars.left, ...state.leftBar])).map((id) =>
-      getMergeRegistry(REGISTRY_NAME, id)
-    )
-    state.centerBar = Array.from(new Set([...registryToolbars.center, ...state.centerBar])).map((id) =>
-      getMergeRegistry(REGISTRY_NAME, id)
-    )
+    state.leftBar = getNewBar(registryToolbars.left, state.leftBar)
+    state.centerBar = getNewBar(registryToolbars.center, state.centerBar)
 
     const rightRes = getNewRes(registryRightFlat, state.rightBar)
     registryToolbars.right[0] = registryToolbars.right[0] ? [...registryToolbars.right[0], ...rightRes] : state.rightBar

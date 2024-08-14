@@ -16,13 +16,7 @@ import { META_APP as PLUGIN_NAME, getMetaApi } from '@opentiny/tiny-engine-meta-
 
 const { PAGE_STATUS } = constants
 
-const pluginState = reactive({
-  pluginEvent: 'all'
-})
-
 const layoutState = reactive({
-  deviceType: 'desktop',
-  iframeWidth: '1200px',
   dimension: {
     deviceType: 'desktop',
     width: '',
@@ -33,7 +27,8 @@ const layoutState = reactive({
   },
   plugins: {
     fixedPanels: [PLUGIN_NAME.Materials],
-    render: null
+    render: null,
+    pluginEvent: 'all'
   },
   settings: {
     render: 'props',
@@ -48,6 +43,14 @@ const layoutState = reactive({
 })
 
 const getScale = () => layoutState.dimension.scale
+
+const getPluginState = () => layoutState.plugins
+
+const getDimension = () => layoutState.dimension
+
+const setDimension = (data) => {
+  Object.assign(layoutState.dimension, data)
+}
 
 // 激活setting面板并高亮提示
 const activeSetting = (name) => {
@@ -84,14 +87,6 @@ const closePlugin = (forceClose) => {
   }
 }
 
-const setDimension = (data) => {
-  Object.assign(layoutState.dimension, data)
-}
-
-const getDimension = () => layoutState.dimension
-
-const getPluginState = () => layoutState.plugins
-
 const isEmptyPage = () => layoutState.pageStatus?.state === PAGE_STATUS.Empty
 
 export default () => {
@@ -105,7 +100,6 @@ export default () => {
     setDimension,
     getDimension,
     getPluginState,
-    pluginState,
     isEmptyPage
   }
 }
