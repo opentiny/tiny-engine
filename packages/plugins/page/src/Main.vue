@@ -66,7 +66,7 @@ export default {
   props: {
     title: {
       type: String,
-      default: '页面管理'
+      default: '页面'
     }
   },
   setup() {
@@ -161,7 +161,7 @@ export default {
 <style lang="less" scoped>
 :deep(.help-box) {
   position: absolute;
-  left: 72px;
+  left: 40px;
   top: 3px;
 }
 </style>

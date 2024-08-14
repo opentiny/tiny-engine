@@ -78,8 +78,6 @@ export default {
     padding: 0 12px;
     color: var(--ti-lowcode-plugin-panel-title-color);
     font-weight: var(--ti-lowcode-plugin-panel-title-font-weight);
-    border-bottom: 1px solid var(--ti-lowcode-plugin-panel-header-border-bottom-color);
-    margin-bottom: 16px;
     .plugin-panel-title {
       display: flex;
       align-items: center;
