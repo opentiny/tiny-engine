@@ -97,7 +97,19 @@ const layoutState = reactive({
   },
   pageStatus: ''
 })
+const leftFixedPanelsStorage = useStorage('leftFixedPanels', layoutState.plugins.fixedPanels)
+const rightFixedPanelsStorage = useStorage('rightFixedPanels', layoutState.settings.fixedPanels)
 
+const changeLeftFixedPanels = (pluginName) => {
+  leftFixedPanelsStorage.value = leftFixedPanelsStorage.value?.includes(pluginName)
+    ? leftFixedPanelsStorage.value?.filter((item) => item !== pluginName)
+    : [...leftFixedPanelsStorage.value, pluginName]
+}
+const changeRightFixedPanels = (pluginName) => {
+  rightFixedPanelsStorage.value = rightFixedPanelsStorage.value?.includes(pluginName)
+    ? rightFixedPanelsStorage.value?.filter((item) => item !== pluginName)
+    : [...rightFixedPanelsStorage.value, pluginName]
+}
 const registerPluginApi = (api) => {
   Object.assign(layoutState.plugins.api, api)
 }
@@ -180,6 +192,10 @@ export default () => {
     pluginState,
     isEmptyPage,
     getPluginWidth,
-    changePluginWidth
+    changePluginWidth,
+    leftFixedPanelsStorage,
+    rightFixedPanelsStorage,
+    changeLeftFixedPanels,
+    changeRightFixedPanels
   }
 }
