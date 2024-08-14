@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="box">
     <plugin-setting
       title="获取远程字段"
       :isSecond="true"
@@ -57,10 +57,8 @@ import { useDataSource, useNotify } from '@opentiny/tiny-engine-controller'
 import { isEmptyObject } from '@opentiny/vue-renderless/common/type'
 import { obj2String, string2Obj } from '@opentiny/tiny-engine-controller/adapter'
 import { getRequest } from './js/datasource'
-
 export const isOpen = ref(false)
-const { pluginWidth, PLUGIN_NAME } = useLayout()
-const leftMargin = computed(() => pluginWidth[PLUGIN_NAME['Datasource']] - 280)
+
 export const open = () => {
   isOpen.value = true
 }
@@ -103,6 +101,10 @@ export default {
   setup(props, { emit }) {
     const dataSourceRemoteAdapteRef = ref(null)
     const { dataSourceState } = useDataSource()
+    const { getPluginWidth, PLUGIN_NAME } = useLayout()
+
+    const panelWidth = window.getComputedStyle(document.body).getPropertyValue('--base-left-panel-width')
+    const leftMargin = computed(() => getPluginWidth(PLUGIN_NAME['Datasource']) - parseInt(panelWidth))
 
     const state = reactive({
       remoteData: { options: {} },

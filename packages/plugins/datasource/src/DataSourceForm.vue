@@ -48,8 +48,6 @@ import { useModal, useApp, useDataSource } from '@opentiny/tiny-engine-controlle
 import { extend } from '@opentiny/vue-renderless/common/object'
 
 let isOpen = ref(false)
-const { pluginWidth, PLUGIN_NAME } = useLayout()
-const leftMargin = computed(() => pluginWidth[PLUGIN_NAME['Datasource']])
 
 export const open = () => {
   isOpen.value = true
@@ -85,7 +83,8 @@ export default {
     const { confirm, message } = useModal()
     const { appInfoState } = useApp()
     const { dataSourceState } = useDataSource()
-
+    const { getPluginWidth, PLUGIN_NAME } = useLayout()
+    const leftMargin = computed(() => getPluginWidth(PLUGIN_NAME['Datasource']))
     const state = reactive({
       dataSource: {}
     })

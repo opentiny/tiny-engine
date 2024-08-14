@@ -126,8 +126,6 @@ import { useLayout, useApp, getGlobalConfig, useModal, useNotify } from '@openti
 import { theme } from '@opentiny/tiny-engine-controller/adapter'
 
 const isOpen = ref(false)
-const { pluginWidth, PLUGIN_NAME } = useLayout()
-const leftMargin = computed(() => pluginWidth[PLUGIN_NAME['Bridge']])
 
 export const openPanel = () => {
   isOpen.value = true
@@ -155,6 +153,8 @@ export default {
     SvgButton
   },
   setup(props, { emit }) {
+    const { getPluginWidth, PLUGIN_NAME } = useLayout()
+    const leftMargin = computed(() => getPluginWidth(PLUGIN_NAME['Bridge']))
     const monacoOptions = {
       theme: theme(),
       roundedSelection: true,

@@ -12,6 +12,7 @@
 
 import { reactive, nextTick } from 'vue'
 import { constants } from '@opentiny/tiny-engine-utils'
+import { useStorage } from '@vueuse/core'
 
 const { PAGE_STATUS } = constants
 
@@ -36,7 +37,8 @@ const PLUGIN_NAME = {
   Style: 'SettingStyles',
   Props: 'SettingProps'
 }
-const pluginWidth = reactive({
+
+const pluginWidth = {
   Materials: '300',
   OutlineTree: '300',
   AppManage: '300',
@@ -50,7 +52,17 @@ const pluginWidth = reactive({
   SettingProps: '320',
   SettingStyles: '320',
   SettingEvents: '320'
-})
+}
+const pluginWidthStorage = useStorage('pluginWidth', pluginWidth)
+const getPluginWidth = (name) => {
+  return pluginWidthStorage.value[name]
+}
+const changePluginWidth = (name, width) => {
+  if (Object.prototype.hasOwnProperty.call(pluginWidthStorage.value, name)) {
+    pluginWidthStorage.value[name] = width
+  }
+}
+
 const pluginState = reactive({
   pluginEvent: 'all'
 })
@@ -167,6 +179,7 @@ export default () => {
     getPluginState,
     pluginState,
     isEmptyPage,
-    pluginWidth
+    getPluginWidth,
+    changePluginWidth
   }
 }

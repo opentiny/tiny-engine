@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { inject, ref, watch } from 'vue'
+import { inject, ref } from 'vue'
 import { useLayout } from '@opentiny/tiny-engine-controller'
 import CloseIcon from './CloseIcon.vue'
 import SvgButton from './SvgButton.vue'
@@ -70,7 +70,7 @@ export default {
   },
   emits: ['close'],
   setup(props, { emit }) {
-    const { pluginWidth } = useLayout()
+    const { getPluginWidth, changePluginWidth } = useLayout()
     const panelState = inject('panelState')
     const closePanel = () => {
       useLayout().closePlugin()
@@ -104,23 +104,20 @@ export default {
     const MIN_WIDTH = 300 // 固定的最小宽度值
     const MAX_WIDTH = 1000 // 固定的最大宽度值
     const panel = ref(null)
-    const panelWidth = ref(pluginWidth[props.fixedName]) // 使用默认宽度
-    watch(pluginWidth, (newWidth) => {
-      panelWidth.value = newWidth[props.fixedName]
-    })
+    const panelWidth = ref(getPluginWidth(props.fixedName)) // 使用默认宽度
     let startX = 0
     let startWidth = 0
 
     const onMouseMoveRight = (event) => {
       const newWidth = startWidth + (event.clientX - startX)
       panelWidth.value = Math.max(MIN_WIDTH, Math.min(newWidth, MAX_WIDTH))
-      pluginWidth[props.fixedName] = panelWidth.value
+      changePluginWidth(props.fixedName, panelWidth.value)
     }
 
     const onMouseMoveLeft = (event) => {
       const newWidth = startWidth - (event.clientX - startX)
       panelWidth.value = Math.max(MIN_WIDTH, Math.min(newWidth, MAX_WIDTH))
-      pluginWidth[props.fixedName] = panelWidth.value
+      changePluginWidth(props.fixedName, panelWidth.value)
     }
 
     const throttledMouseMoveRight = throttle(onMouseMoveRight, 50)
@@ -156,8 +153,7 @@ export default {
       panel,
       panelWidth,
       onMouseDownRight,
-      onMouseDownLeft,
-      pluginWidth
+      onMouseDownLeft
     }
   }
 }

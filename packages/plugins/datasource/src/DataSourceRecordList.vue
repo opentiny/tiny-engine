@@ -107,8 +107,6 @@ import { downloadFn, handleImportedData, overrideOrMergeData, getDataAfterPage }
 import DataSourceRecordUpload from './DataSourceRecordUpload.vue'
 
 let isOpen = ref(false)
-const { pluginWidth, PLUGIN_NAME } = useLayout()
-const leftMargin = computed(() => pluginWidth[PLUGIN_NAME['Datasource']])
 
 export const open = () => {
   isOpen.value = true
@@ -139,6 +137,8 @@ export default {
     const { confirm } = useModal()
     const { toClipboard } = useClipboard()
     const { layoutState } = useLayout()
+    const { getPluginWidth, PLUGIN_NAME } = useLayout()
+    const leftMargin = computed(() => getPluginWidth(PLUGIN_NAME['Datasource']))
 
     const state = reactive({
       totalData: [],

@@ -73,8 +73,6 @@ import http from './http.js'
 
 const { COMPONENT_NAME } = constants
 const isShow = ref(false)
-const { pluginWidth,PLUGIN_NAME } = useLayout()
-const leftMargin = computed(() => pluginWidth[PLUGIN_NAME["AppManage"]])
 
 export const openPageSettingPanel = () => {
   isShow.value = true
@@ -130,6 +128,8 @@ export default {
     const { pageState, initData } = useCanvas()
     const { confirm } = useModal()
     const pageGeneralRef = ref(null)
+    const { getPluginWidth, PLUGIN_NAME } = useLayout()
+    const leftMargin = computed(() => getPluginWidth(PLUGIN_NAME['AppManage']))
 
     const state = reactive({
       activeName: Object.values(PAGE_SETTING_SESSION),

@@ -35,8 +35,7 @@ import { constants } from '@opentiny/tiny-engine-utils'
 
 const { DEFAULT_INTERCEPTOR } = constants
 const isOpen = ref(false)
-const { pluginWidth, PLUGIN_NAME } = useLayout()
-const leftMargin = computed(() => pluginWidth[PLUGIN_NAME['Datasource']])
+
 export const open = () => {
   isOpen.value = true
 }
@@ -54,7 +53,8 @@ export default {
   },
   setup() {
     const { confirm } = useModal()
-
+    const { getPluginWidth, PLUGIN_NAME } = useLayout()
+    const leftMargin = computed(() => getPluginWidth(PLUGIN_NAME['Datasource']))
     const state = reactive({
       dataHandlerValue: useResource().resState?.dataHandler?.value,
       willFetchValue: useResource().resState.willFetch?.value,
