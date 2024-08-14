@@ -22,7 +22,7 @@
             <tiny-dropdown-item
               v-for="item in AIModelOptions"
               :key="item.label"
-              :class="{ 'selected-model': selectedModel.value === item.value }"
+              :class="{ 'selected-model': currentModel === item.value }"
               @click="changeModel(item)"
               >{{ item.label }}</tiny-dropdown-item
             >
@@ -83,7 +83,12 @@
       <tiny-button @click="sendContent(inputContent, false)">发送</tiny-button>
     </footer>
   </div>
-  <token-dialog :dialog-visible="tokenDialogVisible" @dialog-status="getTokenDialogStatus"></token-dialog>
+  <token-dialog
+    :dialog-visible="tokenDialogVisible"
+    :current-model="selectedModel"
+    @dialog-status="getTokenDialogStatus"
+    @token-status="updateTokenStatus"
+  ></token-dialog>
 </template>
 
 <script>
@@ -137,6 +142,7 @@ export default {
     const inputContent = ref('')
     const inProcesing = ref(false)
     const selectedModel = ref(AIModelOptions[0])
+    let currentModel = AIModelOptions[0]
     const { confirm } = useModal()
 
     const { pageSettingState, DEFAULT_PAGE } = usePage()
@@ -153,8 +159,9 @@ export default {
           ? JSON.stringify(sessionProcess)
           : JSON.stringify({
               foundationModel: {
-                manufacturer: selectedModel.value.manufacturer,
-                model: selectedModel.value.value
+                manufacturer: currentModel.manufacturer,
+                model: currentModel.value,
+                token: localStorage.getItem(currentModel.modelKey)
               },
               messages: [],
               displayMessages: [] // 专门用来进行展示的消息，非原始消息，仅作为展示但是不作为请求的发送
@@ -195,8 +202,7 @@ export default {
     // 为了不污染存储在localstorage里的用户的原始消息，这里进行了简单的对象拷贝
     // 引入区块不存放在localstorage的原因：因为区块是可以变化的，用户可能在同一个会话中，对区块进行了删除和创建。那么存放的数据就不是即时数据了。
     const getSendSeesionProcess = () => {
-      const accessToken = localStorage.getItem('accessToken')
-      const sendProcess = { ...sessionProcess, accessToken }
+      const sendProcess = { ...sessionProcess }
       const firstMessage = sendProcess.messages[0]
       firstMessage.content
       sendProcess.messages = [
@@ -240,7 +246,7 @@ export default {
         .catch((error) => {
           switch (error.code) {
             case 'CM001':
-              localStorage.removeItem('accessToken')
+              localStorage.removeItem(currentModel.modelKey)
               tokenDialogVisible.value = true
               break
             default:
@@ -327,15 +333,19 @@ export default {
     // 根据localstorage初始化AI大模型
     const initCurrentModel = (aiSession) => {
       const currentModelValue = JSON.parse(aiSession)?.foundationModel?.model
-      selectedModel.value = AIModelOptions.find((item) => item.value === currentModelValue)
+      currentModel = AIModelOptions.find((item) => item.value === currentModelValue)
     }
 
     const initChat = () => {
       const aiChatSession = localStorage.getItem('aiChat')
-      if (!aiChatSession) {
-        setContextSession()
+      if (localStorage.getItem(currentModel.modelKey)) {
+        if (!aiChatSession) {
+          setContextSession()
+        } else {
+          initCurrentModel(aiChatSession) // 如果当前缓存有值，那么则需要根据缓存里的内容去初始化当前选择的模型
+        }
       } else {
-        initCurrentModel(aiChatSession) // 如果当前缓存有值，那么则需要根据缓存里的内容去初始化当前选择的模型
+        tokenDialogVisible.value = true
       }
       sessionProcess = JSON.parse(localStorage.getItem('aiChat'))
       messages.value = [...(sessionProcess?.displayMessages || [])]
@@ -348,10 +358,11 @@ export default {
       resetContent()
     }
 
+    const updateTokenStatus = () => {
+      initChat()
+    }
+
     onMounted(async () => {
-      if (!localStorage.getItem('accessToken')) {
-        tokenDialogVisible.value = true
-      }
       const loadingInstance = Loading.service({
         text: '初始化中，请稍等...',
         customClass: 'chat-loading',
@@ -372,7 +383,7 @@ export default {
     }
 
     const changeModel = (model) => {
-      if (selectedModel.value.value !== model.value) {
+      if (currentModel.value !== model.value) {
         confirm({
           title: '切换AI大模型',
           message: '切换AI大模型将导致当前会话被清空，重新开启新会话，是否继续？',
@@ -383,9 +394,19 @@ export default {
         })
       }
     }
+    watch(
+      () => selectedModel.value.value,
+      () => {
+        currentModel = selectedModel.value
+        if (!localStorage.getItem(currentModel.modelKey)) {
+          tokenDialogVisible.value = true
+        } else {
+          tokenDialogVisible.value = false
+        }
+      }
+    )
 
     const { startRecognition, stopRecognition, recognizedText } = useSpeechRecognition()
-
     const speechStatus = ref(false)
     const speechRecognition = () => {
       speechStatus.value = !speechStatus.value
@@ -414,9 +435,11 @@ export default {
       setToken,
       AIModelOptions,
       selectedModel,
+      currentModel,
       changeModel,
       tokenDialogVisible,
-      getTokenDialogStatus
+      getTokenDialogStatus,
+      updateTokenStatus
     }
   }
 }

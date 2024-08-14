@@ -15,34 +15,37 @@ export default {
     TinyFormItem: FormItem
   },
   props: {
-    dialogVisible: Boolean
+    dialogVisible: Boolean,
+    currentModel: Object
   },
-  emits: ['dialog-status'],
+  emits: ['dialog-status', 'token-status'],
   setup(props, { emit }) {
+    const model = ref(props.currentModel)
     const keyFormVisible = ref(props.dialogVisible)
     const keyFormRef = ref(null)
     const keyForm = ref({
-      accessToken: ''
+      token: ''
     })
-    const accessTokenReg = /^[A-Za-z0-9\-.]+$/
-    const accessTokenValidate = (rule, value, callback) => {
-      if (value.length > 100 || !accessTokenReg.test(value)) {
+    const tokenReg = /^[A-Za-z0-9\-.]+$/
+    const tokenValidate = (rule, value, callback) => {
+      if (value.length > 100 || !tokenReg.test(value)) {
         callback(new Error('参数错误，请输入小于100位的英文数字字符串'))
       } else {
         callback()
       }
     }
-    const rules = ref({
-      accessToken: [
-        { required: true, message: '你的ACCESS_TOKEN不能为空', trigger: 'blur' },
-        { validator: accessTokenValidate, trigger: 'blur' }
+    const rules = {
+      token: [
+        { required: true, message: '该项不能为空', trigger: 'blur' },
+        { validator: tokenValidate, trigger: 'blur' }
       ]
-    })
+    }
 
     watch(
       () => props.dialogVisible,
-      (newValue) => {
-        keyFormVisible.value = newValue
+      (newVisibleState) => {
+        keyFormVisible.value = newVisibleState
+        model.value = props.currentModel
       }
     )
 
@@ -58,7 +61,8 @@ export default {
     const submitKeyForm = () => {
       keyFormRef.value.validate((valid) => {
         if (valid) {
-          localStorage.setItem('accessToken', keyForm.value.accessToken)
+          localStorage.setItem(props.currentModel.modelKey, keyForm.value.token)
+          emit('token-status', true)
           closeKeyFormDialog()
         }
       })
@@ -71,6 +75,7 @@ export default {
       closeKeyFormDialog,
       submitKeyForm,
       keyFormVisible,
+      model,
       TinyIconAssociation: iconAssociation(),
       TinyIconCommission: iconCommission()
     }
@@ -84,17 +89,17 @@ export default {
       <tiny-alert
         :icon="TinyIconAssociation"
         :closable="false"
-        description="当前AI大模型为使用文心一言：ERNIE-Bot-turbo"
+        :description="`当前AI大模型为使用${model.label}`"
       ></tiny-alert>
       <tiny-alert
         :icon="TinyIconCommission"
         :closable="false"
-        description="尝试用自己的ACCESS_TOKEN开启AI对话功能吧！"
+        :description="`尝试用自己的${model.modelKey}开启AI对话功能吧！`"
       ></tiny-alert>
-      <tiny-form-item label="" prop="accessToken">
+      <tiny-form-item label="" prop="token">
         <tiny-input
-          v-model="keyForm.accessToken"
-          placeholder="点击这里输入你的access_token"
+          v-model="keyForm.token"
+          :placeholder="`点击这里输入你的${model.modelKey}`"
           validate-event
         ></tiny-input>
       </tiny-form-item>
