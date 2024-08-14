@@ -271,6 +271,7 @@ export default {
 #tiny-engine-nav-panel {
   display: none;
   width: var(--base-nav-panel-width);
+  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -292,7 +293,7 @@ export default {
 
     &.bottom {
       flex: 1;
-      padding-bottom: 36px;
+      padding-bottom: 80px;
     }
 
     .list-item {
