@@ -39,19 +39,19 @@ const PLUGIN_NAME = {
 }
 
 const pluginWidth = {
-  Materials: '300',
-  OutlineTree: '300',
-  AppManage: '300',
-  BlockManage: '300',
-  Collections: '300',
-  Bridge: '300',
-  I18n: '620',
-  PageController: '1000',
-  DataSource: '300',
-  Schema: '1000',
-  SettingProps: '320',
-  SettingStyles: '320',
-  SettingEvents: '320'
+  Materials: 300,
+  OutlineTree: 300,
+  AppManage: 300,
+  BlockManage: 300,
+  Collections: 300,
+  Bridge: 300,
+  I18n: 620,
+  PageController: 1000,
+  DataSource: 300,
+  Schema: 1000,
+  SettingProps: 320,
+  SettingStyles: 320,
+  SettingEvents: 32
 }
 const pluginWidthStorage = useStorage('pluginWidth', pluginWidth)
 const getPluginWidth = (name) => {
