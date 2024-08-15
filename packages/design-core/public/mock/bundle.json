@@ -23,7 +23,8 @@
             "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
             "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
             "dependencies": null,
-            "exportName": "ElInput"
+            "exportName": "ElInput",
+            "destructuring": true
           },
           "group": "表单组件",
           "category": "element-plus",
@@ -303,7 +304,8 @@
             "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
             "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
             "dependencies": null,
-            "exportName": "ElButton"
+            "exportName": "ElButton",
+            "destructuring": true
           },
           "group": "基础组件",
           "category": "element-plus",
@@ -624,6 +626,7 @@
             "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
             "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
             "dependencies": null,
+            "destructuring": true,
             "exportName": "ElForm"
           },
           "group": "表单组件",
@@ -1081,6 +1084,7 @@
             "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
             "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
             "dependencies": null,
+            "destructuring": true,
             "exportName": "ElFormItem"
           },
           "group": "表单组件",
@@ -1431,6 +1435,7 @@
             "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
             "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
             "dependencies": null,
+            "destructuring": true,
             "exportName": "ElTable"
           },
           "group": "数据展示",
@@ -2669,6 +2674,7 @@
             "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
             "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
             "dependencies": null,
+            "destructuring": true,
             "exportName": "ElTableColumn"
           },
           "group": "表单组件",
@@ -8901,7 +8907,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Select",
+            "exportName": "Breadcrumb",
             "version": "",
             "destructuring": true
           },
@@ -14007,20 +14013,10 @@
               "schema": {
                 "componentName": "TinyBreadcrumb",
                 "props": {
-                  "options": [
-                    {
-                      "to": "{ path: '/' }",
-                      "label": "首页"
-                    },
-                    {
-                      "to": "{ path: '/breadcrumb' }",
-                      "label": "产品"
-                    },
-                    {
-                      "replace": "true",
-                      "label": "软件"
-                    }
-                  ]
+                  "options": {
+                    "type": "JSExpression",
+                    "value": "[{to: { path: '/' },label: '首页'},{to: { path: '/breadcrumb' },label: '产品'},{'replace': true,'label': '软件'}]"
+                  }
                 }
               }
             },
@@ -14275,7 +14271,7 @@
               "schema": {
                 "componentName": "TinyTimeLine",
                 "props": {
-                  "active": "2",
+                  "active": 2,
                   "data": [
                     {
                       "name": "已下单"
