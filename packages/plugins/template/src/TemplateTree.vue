@@ -25,12 +25,17 @@
           </tiny-dropdown>
         </div>
       </template>
+      <template #prefix="{ node }">
+        <div class="prefix-folder-icon" v-if="!node.data.isTemplate && !node.data.children.length">
+          <SvgIcon name="text-page-folder-closed" class="folder-icon"></SvgIcon>
+        </div>
+      </template>
     </tiny-tree>
   </div>
 </template>
 
 <script lang="jsx">
-import { reactive, ref, watchEffect, nextTick } from 'vue'
+import { reactive, ref, watchEffect } from 'vue'
 import { Search, Tree } from '@opentiny/vue'
 import {
   Dropdown as TinyDropdown,
@@ -95,13 +100,7 @@ export default {
       return tree;
     }
     const searchTemplateData = (value) => {
-      if (Array.isArray(templateTreeRefs?.value)) {
-        nextTick(() => {
-          templateTreeRefs.value.forEach((item) => {
-            item?.filter(value)
-          })
-        })
-      }
+      templateTreeRefs.value.filter(value)
     }
     const refreshTemplateList = async (appId, data) => {
       const templateData = data ? data : await fetchTemplateList(appId)
@@ -319,6 +318,13 @@ export default {
 
       .folder-icon {
         color: var(--ti-lowcode-page-manage-content-tips-color);
+      }
+
+      .prefix-folder-icon {
+        position: relative;
+        top: -2px;
+        left: -8px;
+
       }
     }
 

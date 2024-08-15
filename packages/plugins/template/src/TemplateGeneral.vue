@@ -8,7 +8,7 @@
           模板类别
         </tiny-radio>
         <tiny-radio v-model="templateSettingState.currentTemplateData.type" class="page-type-radio" label="template">
-          模板实例
+          模板
         </tiny-radio>
       </tiny-form-item>
       <tiny-form-item prop="name" label="名称">
