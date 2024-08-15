@@ -15,7 +15,7 @@
 import { createZip, writeZip } from './fszip'
 
 // 支持file system api的条件：存在这个方法 && 不处于iframe中
-export const isSupportFileSystemAccess =
+export const isSupportFileSystemAccess = () =>
   Object.prototype.hasOwnProperty.call(window, 'showDirectoryPicker') && window.self === window.top
 
 /**
@@ -25,7 +25,7 @@ export const isSupportFileSystemAccess =
  * @returns dirHandle 目录句柄
  */
 export const getUserBaseDirHandle = async (options = {}) => {
-  if (!window.showOpenFilePicker) {
+  if (!isSupportFileSystemAccess()) {
     return createZip()
   }
   const dirHandle = await window.showDirectoryPicker({ mode: 'readwrite', ...options })
@@ -81,7 +81,7 @@ export async function getFileHandle(baseDirHandle, filePath, { create = false } 
  * @returns fileHandle 文件句柄
  */
 export const getUserFileHandle = async (options = {}) => {
-  if (!window.showOpenFilePicker) {
+  if (!isSupportFileSystemAccess()) {
     throw new Error('不支持的浏览器!')
   }
   const [fileHandle] = await window.showOpenFilePicker({ mode: 'readwrite', ...options })
@@ -185,7 +185,7 @@ export const writeFiles = async (
     return
   }
 
-  if (!isSupportFileSystemAccess) {
+  if (!isSupportFileSystemAccess()) {
     const zipInfo = { zipName, zipHandle: supportZipCache && baseDirHandle }
     await writeZip(filesInfo, zipInfo)
     return
