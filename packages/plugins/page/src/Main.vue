@@ -164,4 +164,7 @@ export default {
   left: 40px;
   top: 3px;
 }
+:deep(.tiny-button) {
+  border-radius: 4px;
+}
 </style>

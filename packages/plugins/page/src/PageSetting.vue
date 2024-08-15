@@ -3,7 +3,6 @@
     <template #header>
       <button-group>
         <tiny-button type="primary" @click="savePageSetting">保存</tiny-button>
-        <svg-button v-if="!pageSettingState.isNew" name="delete" tips="删除页面" @click="deletePage"></svg-button>
         <svg-button
           v-if="!pageSettingState.isNew"
           name="text-copy-page"
@@ -11,6 +10,7 @@
           tips="复制页面"
           @click="copyPage"
         ></svg-button>
+        <svg-button v-if="!pageSettingState.isNew" name="delete" tips="删除页面" @click="deletePage"></svg-button>
       </button-group>
       <svg-button class="close-plugin-setting-icon" name="close" @click="cancelPageSetting"></svg-button>
     </template>
@@ -390,13 +390,23 @@ export default {
 
 .page-plugin-setting {
   :deep(.plugin-setting-header) {
+    border: 0;
+    .button-group {
+      column-gap: 6px;
+      .tiny-button {
+        width: 40px;
+        padding: 0;
+        min-width: 40px;
+        margin-right: 2px;
+      }
+    }
     .close-plugin-setting-icon {
-      margin-left: 16px;
+      margin-left: 4px;
     }
   }
 
   :deep(.plugin-setting-content) {
-    padding: 16px 0;
+    padding: 0 0 16px 0;
   }
 }
 

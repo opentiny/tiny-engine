@@ -1,11 +1,10 @@
 <template>
   <div class="app-manage-search">
-    <tiny-search
-      v-model="state.pageSearchValue"
-      clearable
-      placeholder="搜索页面"
-      @update:modelValue="searchPageData"
-    ></tiny-search>
+    <tiny-search v-model="state.pageSearchValue" clearable placeholder="搜索" @update:modelValue="searchPageData">
+      <template #prefix>
+        <tiny-icon-search />
+      </template>
+    </tiny-search>
   </div>
 
   <tiny-collapse v-model="state.collapseValue" class="page-manage-collapse lowcode-scrollbar">
@@ -38,7 +37,7 @@
 <script lang="jsx">
 import { reactive, ref, watchEffect, nextTick } from 'vue'
 import { Search, Tree, Collapse, CollapseItem } from '@opentiny/vue'
-import { IconFolderOpened, IconFolderClosed } from '@opentiny/vue-icon'
+import { IconFolderOpened, IconFolderClosed, IconSearch } from '@opentiny/vue-icon'
 import { useCanvas, useApp, useModal, usePage, useBreadcrumb, useLayout } from '@opentiny/tiny-engine-meta-register'
 import { isEqual } from '@opentiny/vue-renderless/common/object'
 import { getCanvasStatus } from '@opentiny/tiny-engine-common/js/canvas'
@@ -54,7 +53,8 @@ export default {
     TinySearch: Search,
     TinyTree: Tree,
     TinyCollapse: Collapse,
-    TinyCollapseItem: CollapseItem
+    TinyCollapseItem: CollapseItem,
+    TinyIconSearch: IconSearch()
   },
   props: {
     isFolder: {
@@ -351,7 +351,6 @@ export default {
 <style lang="less" scoped>
 .app-manage-search {
   padding: 8px 10px;
-  border-bottom: 1px solid var(--ti-lowcode-page-manage-search-border-color);
 }
 
 .page-manage-collapse {

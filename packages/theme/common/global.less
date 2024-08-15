@@ -1802,11 +1802,12 @@ button {
 
   .tiny-collapse-item__header {
     color: var(--ti-lowcode-collapse-item-header-color);
-    background: var(--ti-lowcode-collapse-item-header-bg-color);
     position: relative;
     min-height: 32px;
     padding-top: 5px;
     padding-bottom: 5px;
+    font-weight: 700;
+    border-top: 1px solid var(--ti-lowcode-base-invalidate-color);
 
     &:hover,
     &.is-active {
@@ -1814,7 +1815,10 @@ button {
     }
 
     .tiny-collapse-item__arrow {
+      color: var(--ti-lowcode-life-cycle-alert-color);
       line-height: 14px;
+      position: absolute;
+      right: 0;
     }
   }
 
