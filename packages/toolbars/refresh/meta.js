@@ -7,6 +7,8 @@ export default {
   },
   align: 'right',
   collapsed: true,
-  splitLine: true,
-  text: '画布刷新'
+  options: {
+    splitLine: true,
+    text: '画布刷新'
+  }
 }

@@ -7,5 +7,7 @@ export default {
     default: 'setting'
   },
   collapsed: true,
-  text: '设置'
+  options: {
+    text: '设置'
+  }
 }

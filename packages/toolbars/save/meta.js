@@ -6,5 +6,9 @@ export default {
     default: 'save'
   },
   align: 'right',
-  render: 'default'
+  options: {
+    render: 'button',
+    props: {},
+    style: ''
+  }
 }

@@ -9,5 +9,7 @@ export default {
   },
   align: 'right',
   collapsed: true,
-  text: '锁定页面'
+  options: {
+    text: '锁定页面'
+  }
 }

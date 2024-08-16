@@ -1,6 +1,12 @@
 <template>
   <div class="toolbar-save">
-    <tiny-button v-if="render === 'default'" class="save-button" @click="openApi">
+    <tiny-button
+      v-if="options?.render === 'button'"
+      v-bind="options?.props || {}"
+      :style="options?.style || ''"
+      class="save-button"
+      @click="openApi"
+    >
       <svg-icon :name="icon.default"></svg-icon>
       <span class="save-title">{{ isLoading ? '保存中' : '保存' }}</span>
       <span @click.stop="state.saveVisible = !state.saveVisible">
@@ -13,7 +19,7 @@
             <tiny-checkbox v-model="state.checked" name="tiny-checkbox">自动保存</tiny-checkbox>
             <div class="save-time">
               <div>保存间隔</div>
-              <tiny-select v-model="state.timeValue" :options="options" :disabled="!state.checked" autocomplete>
+              <tiny-select v-model="state.timeValue" :options="delayOptions" :disabled="!state.checked" autocomplete>
               </tiny-select>
             </div>
             <div class="save-button-group">
@@ -25,7 +31,7 @@
       </span>
     </tiny-button>
     <tiny-popover
-      v-if="render === 'icon'"
+      v-if="options?.render === 'icon'"
       trigger="hover"
       :open-delay="1000"
       popper-class="toolbar-right-popover"
@@ -93,13 +99,13 @@ export default {
       type: String,
       default: 'down-arrow'
     },
-    render: {
-      type: String
+    options: {
+      type: Object
     }
   },
-  setup(props) {
+  setup() {
     const { isSaved } = useCanvas()
-    const options = [
+    const delayOptions = [
       { value: 5, label: '5分钟' },
       { value: 10, label: '10分钟' },
       { value: 15, label: '15分钟' }
@@ -114,7 +120,6 @@ export default {
       checked: false,
       preservationTime: null
     })
-    const buttonProps = ref(props.button?.properties || {})
 
     const editor = ref(null)
 
@@ -164,7 +169,6 @@ export default {
 
     return {
       state,
-      buttonProps,
       editor,
       editorOptions,
       isLoading,
@@ -172,7 +176,7 @@ export default {
       close,
       openApi,
       saveApi,
-      options,
+      delayOptions,
       cancel,
       autoSave
     }

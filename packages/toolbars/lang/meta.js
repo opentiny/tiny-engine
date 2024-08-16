@@ -8,6 +8,8 @@ export default {
     en_US: 'en'
   },
   collapsed: true,
-  splitLine: true,
-  text: '中英文切换'
+  options: {
+    splitLine: true,
+    text: '中英文切换'
+  }
 }

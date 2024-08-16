@@ -7,11 +7,11 @@
         </span>
       </template>
       <div class="empty-bar" v-for="item in collapseBar" :key="item.id">
-        <div v-if="item.splitLine" class="empty-line"></div>
+        <div v-if="item.options.splitLine" class="empty-line"></div>
         <div class="toolbar-list-button">
-          <component :is="item.entry" v-bind="item">
+          <component :is="item.entry" :icon="item.icon" :options="item.options">
             <template #text>
-              <span class="operate-title"> {{ item.text }} </span>
+              <span class="operate-title"> {{ item.options.text }} </span>
             </template>
           </component>
         </div>

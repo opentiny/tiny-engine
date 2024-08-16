@@ -8,5 +8,7 @@ export default {
   },
   align: 'right',
   collapsed: true,
-  text: '切换全屏'
+  options: {
+    text: '切换全屏'
+  }
 }

@@ -31,6 +31,9 @@ export default {
   props: {
     icon: {
       type: Object
+    },
+    options: {
+      type: Object
     }
   },
   setup() {

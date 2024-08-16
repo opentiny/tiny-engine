@@ -38,6 +38,9 @@ export default {
     langChannel: {
       type: String,
       default: BROADCAST_CHANNEL.CanvasLang
+    },
+    options: {
+      type: Object
     }
   },
   setup(props) {
@@ -48,7 +51,7 @@ export default {
       langVal.value = data.value
     })
 
-    const options = [
+    const langOptions = [
       {
         value: 'zh_CN',
         label: '中文'
@@ -59,11 +62,11 @@ export default {
       }
     ]
     const changeLang = () => {
-      langVal.value = langVal.value === options[0].value ? options[1].value : options[0].value
+      langVal.value = langVal.value === langOptions[0].value ? langOptions[1].value : langOptions[0].value
       post(langVal.value)
     }
     return {
-      options,
+      langOptions,
       langVal,
       changeLang
     }

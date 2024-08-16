@@ -1,13 +1,31 @@
 <template>
   <div class="tiny-engine-toolbar">
     <div class="toolbar-left">
-      <component :is="item.entry" v-for="item in leftBar" v-bind="item" :key="item.id"></component>
+      <component
+        :is="item.entry"
+        v-for="item in leftBar"
+        :icon="item.icon"
+        :options="item.options"
+        :key="item.id"
+      ></component>
     </div>
     <div class="toolbar-center">
-      <component :is="item.entry" v-for="item in centerBar" v-bind="item" :key="item.id"></component>
+      <component
+        :is="item.entry"
+        v-for="item in centerBar"
+        :icon="item.icon"
+        :options="item.options"
+        :key="item.id"
+      ></component>
     </div>
     <div class="toolbar-right">
-      <component :is="item.entry" v-for="item in rightBar" v-bind="item" :key="item.id"></component>
+      <component
+        :is="item.entry"
+        v-for="item in rightBar"
+        :icon="item.icon"
+        :options="item.options"
+        :key="item.id"
+      ></component>
       <toolbar-collapse v-if="collapseBar.length" :collapseBar="collapseBar"></toolbar-collapse>
     </div>
   </div>

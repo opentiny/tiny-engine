@@ -7,5 +7,7 @@ export default {
   },
   align: 'right',
   collapsed: true,
-  text: '多人协作'
+  options: {
+    text: '多人协作'
+  }
 }
