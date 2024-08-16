@@ -16,6 +16,7 @@ import useCanvas from '../src/useCanvas'
 import useNotify from '../src/useNotify'
 import { isVsCodeEnv } from './environments'
 import { generateRouter, generatePage } from './vscodeGenerateFile'
+import useTemplate from '../src/useTemplate'
 
 const http = useHttp()
 
@@ -68,6 +69,23 @@ export const handlePageUpdate = (pageId, params, routerChange) => {
 
       // 更新 页面状态 标志
       setSaved(true)
+      return res
+    })
+    .catch((err) => {
+      useNotify({ title: '保存失败', message: `${err?.message || ''}`, type: 'error' })
+    })
+}
+export const handleTemplateUpdate = (templateId, params) => {
+  return http
+    .post(`/app-center/api/templates/update/${templateId}`, params)
+    .then((res) => {
+      const { templateSettingState } = useTemplate()
+      const { setTemplateSaved } = useCanvas()
+
+      templateSettingState.isNew = false
+      useNotify({ message: '保存成功!', type: 'success' })
+
+      setTemplateSaved(true)
       return res
     })
     .catch((err) => {

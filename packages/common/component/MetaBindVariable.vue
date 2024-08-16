@@ -403,10 +403,10 @@ export default {
     const confirm = () => {
       let variableContent = state.isEditorEditMode ? editor.value?.getEditor().getValue() : state.variable
 
-      const { setSaved, canvasApi } = useCanvas()
+      const { setSaved, canvasApi, isTemplate, setTemplateSaved } = useCanvas()
       // 如果新旧值不一样就显示未保存状态
       if (oldValue !== variableContent) {
-        setSaved(false)
+        !isTemplate.value ? setSaved(false) : setTemplateSaved(false)
         variableContent = formatString(variableContent, 'javascript')
       }
 

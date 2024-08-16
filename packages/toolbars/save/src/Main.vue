@@ -8,7 +8,7 @@
   >
     <template #reference>
       <span :id="`${isLoading ? 'saving' : ''}`" class="icon" @click="openApi">
-        <span v-show="!isSaved()" class="dots"></span>
+        <span v-show="showDots" class="dots"></span>
         <svg-icon :name="icon"></svg-icon>
       </span>
     </template>
@@ -39,16 +39,18 @@
 </template>
 
 <script>
-import { reactive, ref, onBeforeMount } from 'vue'
+import { reactive, ref, onBeforeMount, computed } from 'vue'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
 import { Button, Popover, DialogBox } from '@opentiny/vue'
 import { useCanvas } from '@opentiny/tiny-engine-controller'
 import { theme } from '@opentiny/tiny-engine-controller/adapter'
-import { openCommon, saveCommon } from './js/index'
+import { openCommon, saveCommon, openTemplateCommon, saveTemplateCommon } from './js/index'
 import { isLoading } from './js/index'
 export const api = {
   saveCommon,
-  openCommon
+  openCommon,
+  saveTemplateCommon,
+  openTemplateCommon
 }
 export default {
   components: {
@@ -65,7 +67,7 @@ export default {
   },
   setup() {
     // 获取当前页面的全量信息
-    const { isSaved } = useCanvas()
+    const { isSaved, isTemplate, isTemplateSaved } = useCanvas()
 
     const state = reactive({
       visible: false,
@@ -83,11 +85,11 @@ export default {
     }
     const openApi = () => {
       if (!isLoading.value) {
-        openCommon()
+        !isTemplate.value ? openCommon() : openTemplateCommon()
       }
     }
     const saveApi = () => {
-      saveCommon()
+      !isTemplate.value ? saveCommon() : saveTemplateCommon()
     }
     // 保存或新建区块
     const editorOptions = {
@@ -108,6 +110,10 @@ export default {
       clearTimeout(state.timer)
     })
 
+    const showDots = computed(() => {
+      return !isTemplate.value ? !isSaved() : !isTemplateSaved()
+    })
+
     return {
       state,
       editor,
@@ -116,7 +122,10 @@ export default {
       close,
       isSaved,
       openApi,
-      saveApi
+      saveApi,
+      isTemplate,
+      isTemplateSaved,
+      showDots
     }
   }
 }

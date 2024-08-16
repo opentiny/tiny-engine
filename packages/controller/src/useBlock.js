@@ -272,7 +272,7 @@ const getBlockPageSchema = (block) => {
 }
 
 const initBlock = async (block = {}, _langs = {}, isEdit) => {
-  const { resetBlockCanvasState, setSaved } = useCanvas()
+  const { resetBlockCanvasState, setSaved, isTemplate, setTemplateSaved } = useCanvas()
   const { setBreadcrumbBlock } = useBreadcrumb()
 
   // 把区块的schema传递给画布
@@ -289,7 +289,7 @@ const initBlock = async (block = {}, _langs = {}, isEdit) => {
     block.occupier = useEditorInfo().userInfo
     useLayout().layoutState.pageStatus = getCanvasStatus(block.occupier)
     addBlock(block)
-    setSaved(false)
+    !isTemplate ? setSaved(false) : setTemplateSaved(false)
   }
 }
 

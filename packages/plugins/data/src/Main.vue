@@ -112,7 +112,7 @@ export default {
     const addDataSource = ref('添加变量')
     const activeName = ref(STATE.CURRENT_STATE)
     const isBlock = computed(() => useCanvas().isBlock())
-    const { setSaved } = useCanvas()
+    const { setSaved, isTemplate, setTemplateSaved } = useCanvas()
     const { PLUGIN_NAME, getPluginApi } = useLayout()
     const { openCommon } = getPluginApi(PLUGIN_NAME.save)
     const docsUrl = useHelp().getDocsUrl('data')
@@ -209,7 +209,7 @@ export default {
         // 保存数据
         add(name, variable)
         isPanelShow.value = false
-        setSaved(false)
+        !isTemplate.value ? setSaved(true) : setTemplateSaved(true)
 
         // 触发画布渲染
         setState({ [name]: variable })
@@ -284,7 +284,7 @@ export default {
         isPanelShow.value = false
       }
 
-      setSaved(false)
+      !isTemplate.value ? setSaved(true) : setTemplateSaved(true)
     }
 
     const setGlobalStateToDataSource = () => {

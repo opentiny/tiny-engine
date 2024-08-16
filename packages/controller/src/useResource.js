@@ -304,8 +304,8 @@ const initBlock = async (blockId) => {
 }
 
 const initPageOrBlock = async () => {
-  const { pageId, blockId } = useEditorInfo().useInfo()
-  const { setBreadcrumbPage } = useBreadcrumb()
+  const { pageId, blockId, templateId } = useEditorInfo().useInfo()
+  const { setBreadcrumbPage, setBreadcrumbTemplate } = useBreadcrumb()
 
   if (pageId) {
     const { PLUGIN_NAME, getPluginApi } = useLayout()
@@ -315,6 +315,17 @@ const initPageOrBlock = async () => {
     useLayout().layoutState.pageStatus = getCanvasStatus(data.occupier)
     useCanvas().initData(data.page_content, data)
     setBreadcrumbPage([data.name])
+    return
+  }
+
+  if (templateId) {
+    const { PLUGIN_NAME, getPluginApi } = useLayout()
+    const templatePluginApi = getPluginApi(PLUGIN_NAME.TemplateManage)
+
+    const data = await templatePluginApi.getTemplateById(templateId)
+    useLayout().layoutState.pageStatus = getCanvasStatus(data.occupier)
+    useCanvas().initData(data.template_content, data)
+    setBreadcrumbTemplate([data.name])
     return
   }
 

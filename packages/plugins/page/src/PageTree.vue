@@ -39,7 +39,7 @@
 import { reactive, ref, watchEffect, nextTick } from 'vue'
 import { Search, Tree, Collapse, CollapseItem } from '@opentiny/vue'
 import { IconFolderOpened, IconFolderClosed } from '@opentiny/vue-icon'
-import { useCanvas, useApp, useModal, usePage, useBreadcrumb, useLayout } from '@opentiny/tiny-engine-controller'
+import { useCanvas, useApp, useModal, usePage, useBreadcrumb, useLayout, useTemplate } from '@opentiny/tiny-engine-controller'
 import { isEqual } from '@opentiny/vue-renderless/common/object'
 import { getCanvasStatus } from '@opentiny/tiny-engine-controller/js/canvas'
 import { constants } from '@opentiny/tiny-engine-utils'
@@ -66,9 +66,9 @@ export default {
   setup(props, { emit }) {
     const { appInfoState } = useApp()
     const { confirm } = useModal()
-    const { initData, pageState, isBlock, isSaved } = useCanvas()
-    const { pageSettingState, changeTreeData, isCurrentDataSame, STATIC_PAGE_GROUP_ID, COMMON_PAGE_GROUP_ID } =
-      usePage()
+    const { initData, pageState, isBlock, isSaved, isTemplateSaved, setTemplateSaved } = useCanvas()
+    const { pageSettingState, changeTreeData, isCurrentDataSame, STATIC_PAGE_GROUP_ID, COMMON_PAGE_GROUP_ID } = usePage()
+    const { resetTemplateData } = useTemplate()
     const { fetchPageList, fetchPageDetail } = http
     const { setBreadcrumbPage } = useBreadcrumb()
     const pageTreeRefs = ref([])
@@ -165,7 +165,9 @@ export default {
       const url = new URL(window.location)
 
       url.searchParams.delete('blockid')
+      url.searchParams.delete('templateid')
       url.searchParams.set('pageid', id)
+
       window.history.pushState({}, '', url)
     }
 
@@ -193,6 +195,9 @@ export default {
     }
 
     const switchPage = (data) => {
+      // 切换页面时清空模板数据，防止点击同样的模板页面画布不改变
+      resetTemplateData()
+
       pageState.hoverVm = null
       state.currentNodeData = data
 
@@ -213,17 +218,20 @@ export default {
       const { id, isPage } = node.data
 
       // 区块切换回页面需要重新加载页面
-      if ((!isBlock() && id === state?.currentNodeData?.id) || !isPage) {
+      if ((!isBlock() && id === pageSettingState.currentPageData?.id) || !isPage) {
         return
       }
 
-      if (isSaved() && isCurrentDataSame()) {
+      if ( isTemplateSaved() && isSaved() && isCurrentDataSame()) {
         switchPage(node.data)
       } else {
+        const text = isBlock() ? '区块' : (!isTemplateSaved() ? '模板' : '页面')
+
         confirm({
           title: '提示',
-          message: `${isBlock() ? '区块' : '页面'}尚未保存，是否要继续切换?`,
+          message: `${text}尚未保存，是否要继续切换?`,
           exec: () => {
+            setTemplateSaved(true)
             changeTreeData(pageSettingState.oldParentId, pageSettingState.currentPageData.parentId)
             Object.assign(pageSettingState.currentPageData, pageSettingState.currentPageDataCopy)
             switchPage(node.data)
