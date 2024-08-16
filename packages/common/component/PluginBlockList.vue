@@ -8,12 +8,7 @@
       v-for="(item, index) in state.data"
       :key="item.blockName"
       :draggable="!isBlockManage && showSettingIcon"
-      :class="[
-        'block-item',
-        { 'is-active': state.activeIndex === index },
-        { 'is-disabled': showBlockDetail },
-        { 'block-item-small-list': blockStyle === 'mini' }
-      ]"
+      :class="['block-item', { 'is-disabled': showBlockDetail }, { 'block-item-small-list': blockStyle === 'mini' }]"
       :title="getTitle(item)"
       @mouseover.stop="openBlockShotPanel(item, $event)"
       @mouseleave="handleBlockItemLeave"
