@@ -88,6 +88,7 @@ export default {
   padding-bottom: 16px;
   :deep(.tiny-button) {
     margin-right: 5px;
+    border: 1px solid var(--ti-lowcode-base-default-button-border-disable-color);
   }
   .plus-icon {
     width: 16px;

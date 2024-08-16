@@ -75,6 +75,9 @@ export default {
   margin-left: 8px;
 }
 .add-button {
-  padding: 8px 0;
+  padding: 0 0 8px 0;
+  :deep(.tiny-button) {
+    border: 1px solid var(--ti-lowcode-base-default-button-border-disable-color);
+  }
 }
 </style>

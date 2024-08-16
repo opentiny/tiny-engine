@@ -25,7 +25,7 @@
     <tiny-checkbox class="selectHome" v-model="pageSettingState.currentPageData.isBody"
       ><span>设为根元素为Body</span>
     </tiny-checkbox>
-    <p class="input-output-div">默认为div</p>
+    <div class="input-output-div">默认为div</div>
   </div>
 </template>
 

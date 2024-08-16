@@ -5,7 +5,7 @@
       <svg-button name="add-page" placement="bottom" tips="新建区块" @click="openBlockAdd"></svg-button>
     </template>
     <template #content>
-      <div class="app-manage-search">
+      <div class="app-manage-type">
         <tiny-select
           ref="groupSelect"
           v-model="state.categoryId"
@@ -65,10 +65,14 @@
             </div>
           </tiny-option>
         </tiny-select>
-        <svg-button class="add-group-btn" tips="新建分类" name="add-page" @click="createCategory"></svg-button>
+        <!-- <svg-button class="add-group-btn" tips="新建分类" name="add-page" @click="createCategory"></svg-button> -->
       </div>
       <div class="app-manage-search">
-        <tiny-search v-model="state.searchKey" placeholder="请输入关键字搜索"></tiny-search>
+        <tiny-search v-model="state.searchKey" placeholder="搜索">
+          <template #prefix>
+            <tiny-icon-search />
+          </template>
+        </tiny-search>
       </div>
       <plugin-block-list
         class="plugin-block-list"
@@ -114,6 +118,7 @@ import {
   Popover as TinyPopover,
   Button as TinyButton
 } from '@opentiny/vue'
+import { IconSearch } from '@opentiny/vue-icon'
 import { PluginPanel, PluginBlockList, SvgButton, SaveNewBlock, LinkButton } from '@opentiny/tiny-engine-common'
 import { useBlock, useModal, useLayout, useCanvas, useHelp } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
@@ -185,7 +190,8 @@ export default {
     CategoryEdit,
     PluginBlockList,
     TinyPopover,
-    TinyButton
+    TinyButton,
+    TinyIconSearch: IconSearch()
   },
 
   setup() {
@@ -416,7 +422,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.app-manage-search {
+.app-manage-type {
   padding: 0 10px;
   margin: 12px 0;
   display: flex;
@@ -435,6 +441,10 @@ export default {
     border: var(--ti-lowcode-component-block-list-add-group-btn-border);
     border-radius: var(--ti-lowcode-component-block-list-add-group-btn-border-radius);
   }
+}
+.app-manage-search {
+  padding: 0 10px 12px 10px;
+  border-bottom: 1px solid var(--ti-lowcode-plugin-panel-header-border-bottom-color);
 }
 .block-popper {
   .block-group-option-item {
@@ -489,8 +499,12 @@ export default {
 
 :deep(.help-box) {
   position: absolute;
-  left: 72px;
+  left: 62px;
   top: 3px;
+}
+:deep(.tiny-button) {
+  border-radius: 4px;
+  height: 24px;
 }
 </style>
 

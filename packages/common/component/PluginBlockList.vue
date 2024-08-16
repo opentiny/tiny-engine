@@ -15,19 +15,20 @@
         { 'block-item-small-list': blockStyle === 'mini' }
       ]"
       :title="getTitle(item)"
-      @mousedown.stop.left="blockClick({ event: $event, item, index })"
       @mouseover.stop="openBlockShotPanel(item, $event)"
       @mouseleave="handleBlockItemLeave"
     >
       <slot :data="item">
-        <img
-          v-if="item.screenshot"
-          class="item-image"
-          :src="item.screenshot || defaultImg"
-          draggable="false"
-          @error="$event.target.src = defaultImg"
-        />
-        <svg-icon v-else class="item-image item-default-img" name="block-default-img"></svg-icon>
+        <div class="block-item-img">
+          <img
+            v-if="item.screenshot"
+            class="item-image"
+            :src="item.screenshot || defaultImg"
+            draggable="false"
+            @error="$event.target.src = defaultImg"
+          />
+          <svg-icon v-else class="item-image item-default-img" name="block-default-img"></svg-icon>
+        </div>
         <div class="item-text">
           <div class="item-name">{{ item.name_cn || item.label || item.content?.fileName }}</div>
           <div v-if="blockStyle === 'list'" class="item-description">{{ item.description }}</div>
@@ -45,13 +46,48 @@
         <div v-if="isBlockManage && !item.is_published" class="publish-flag">未发布</div>
 
         <div v-if="isBlockManage" class="block-detail">
-          <tiny-tooltip effect="dark" :content="defaultIconTip" placement="top">
+          <!-- <tiny-tooltip effect="dark" :content="defaultIconTip" placement="top">
             <icon-setting
               class="block-detail-icon"
               @mouseover.stop="iconSettingMove"
               @mousedown.stop.prevent="iconClick({ event: $event, item, index })"
             ></icon-setting>
-          </tiny-tooltip>
+          </tiny-tooltip> -->
+          <tiny-popover
+            placement="bottom-end"
+            width="151"
+            append-to-body
+            trigger="manual"
+            :modelValue="state.hoverItemId === item.id && state.currentShowMenuId === item.id"
+            :visible-arrow="false"
+            popper-class="popper-options block-setting-popover"
+          >
+            <template #reference>
+              <svg-button
+                name="ellipsis"
+                class="block-detail-icon"
+                @click="handleShowVersionMenu(item)"
+                @mouseover.stop="iconSettingMove"
+                @mousedown.stop.prevent=""
+              ></svg-button>
+            </template>
+            <template #default>
+              <div class="setting-menu" @mouseover.stop="handleSettingMouseOver" @mouseleave="handleBlockItemLeave">
+                <ul class="list">
+                  <li
+                    class="list-item"
+                    @mouseover.stop="iconSettingMove"
+                    @mousedown.stop.prevent="iconClick({ event: $event, item, index })"
+                  >
+                    <span>设置</span>
+                  </li>
+                  <li class="list-item" @mousedown.stop.left="blockClick({ event: $event, item, index })">
+                    <span>编辑</span>
+                  </li>
+                </ul>
+              </div>
+            </template>
+          </tiny-popover>
         </div>
         <div
           v-else-if="showSettingIcon"
@@ -128,8 +164,8 @@
 
 <script>
 import { computed, watch, inject, reactive } from 'vue'
-import { iconSetting, iconPlus } from '@opentiny/vue-icon'
-import { Tooltip, Progress, Popover } from '@opentiny/vue'
+import { iconPlus } from '@opentiny/vue-icon'
+import { Progress, Popover } from '@opentiny/vue'
 import SearchEmpty from './SearchEmpty.vue'
 import SvgButton from './SvgButton.vue'
 
@@ -139,8 +175,6 @@ const defaultImg =
 export default {
   components: {
     TinyProgress: Progress,
-    TinyTooltip: Tooltip,
-    IconSetting: iconSetting(),
     IconPlus: iconPlus(),
     TinyPopover: Popover,
     SvgButton,
@@ -385,6 +419,7 @@ export default {
   overflow-y: auto;
   overflow-x: hidden;
   color: var(--ti-lowcode-common-secondary-text-color);
+  margin: 12px 0 0 12px;
 
   &.is-small-list {
     grid-template-columns: 100%;
@@ -395,14 +430,17 @@ export default {
     flex-direction: column;
     align-items: center;
     position: relative;
-    height: 96px;
-    padding: 10px;
-    border-right: 1px solid var(--ti-lowcode-component-block-list-border-color);
-    border-bottom: 1px solid var(--ti-lowcode-component-block-list-border-color);
+    height: 105px;
     text-align: center;
     user-select: none;
-    &:nth-child(-n + 2) {
-      border-top: 1px solid var(--ti-lowcode-component-block-list-border-color);
+    margin-right: 12px;
+    margin-bottom: 12px;
+    .block-item-img {
+      line-height: 82px;
+      width: 106px;
+      height: 82px;
+      border-radius: 4px;
+      background-color: var(--ti-lowcode-component-block-list-item-active-bg);
     }
     &.block-item-small-list:nth-child(2) {
       border-top: none;
@@ -436,6 +474,7 @@ export default {
         text-align: left;
         margin-top: 0;
         margin-left: 4px;
+        color: var(--ti-lowcode-base-text-color-4);
       }
       .publish-flag {
         position: static;
@@ -487,7 +526,6 @@ export default {
     }
 
     &:not(.is-disabled):hover {
-      background-color: var(--ti-lowcode-component-block-list-item-active-bg);
       cursor: pointer;
 
       .block-detail,
@@ -548,14 +586,14 @@ export default {
       visibility: hidden;
       position: absolute;
       top: 4px;
-      right: 4px;
+      right: 8px;
       z-index: 9;
       &.is-current-visible-icon {
         visibility: visible;
       }
 
       .block-detail-icon {
-        color: var(--ti-lowcode-component-block-list-setting-btn-color);
+        color: var(--ti-lowcode-base-gray-50);
         &:hover {
           cursor: pointer;
           color: var(--ti-lowcode-component-block-list-setting-btn-hover-color);

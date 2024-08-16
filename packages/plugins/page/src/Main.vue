@@ -166,5 +166,6 @@ export default {
 }
 :deep(.tiny-button) {
   border-radius: 4px;
+  height: 24px;
 }
 </style>

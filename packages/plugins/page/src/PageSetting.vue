@@ -36,10 +36,12 @@
             title="页面生命周期配置"
             :name="PAGE_SETTING_SESSION.lifeCycles"
           >
-            <life-cycles
-              :bindLifeCycles="pageSettingState.currentPageData.page_content?.lifeCycles"
-              @updatePageLifeCycles="updatePageLifeCycles"
-            ></life-cycles>
+            <div class="life-cycles-container">
+              <life-cycles
+                :bindLifeCycles="pageSettingState.currentPageData.page_content?.lifeCycles"
+                @updatePageLifeCycles="updatePageLifeCycles"
+              ></life-cycles>
+            </div>
           </tiny-collapse-item>
 
           <tiny-collapse-item class="history-source" title="历史备份" :name="PAGE_SETTING_SESSION.history">
@@ -408,6 +410,10 @@ export default {
   :deep(.plugin-setting-content) {
     padding: 0 0 16px 0;
   }
+}
+
+.life-cycles-container {
+  padding: 0 0 12px 0;
 }
 
 .page-setting-collapse {

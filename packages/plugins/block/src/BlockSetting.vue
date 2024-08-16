@@ -2,7 +2,7 @@
   <plugin-setting
     v-if="isOpen"
     class="plugin-block-setting"
-    title="设置"
+    title="区块设置"
     @mouseleave="onMouseLeave"
     @click="handleClick"
   >
@@ -15,6 +15,7 @@
         @click="showDeployBlockDialog"
         >发布
       </tiny-button>
+      <svg-button name="text-copy-page" placement="bottom" tips="复制区块"></svg-button>
       <svg-button name="delete" tips="删除" placement="top" @click="deleteBlock"></svg-button>
       <close-icon @click="closePanel"></close-icon>
     </template>
@@ -26,7 +27,7 @@
         <tiny-collapse-item name="attribute">
           <template #title>
             <div class="title-wrapper">
-              <span>设置区块暴露属性</span>
+              <span>属性设置</span>
             </div>
           </template>
           <div class="block-attribute">
@@ -285,6 +286,18 @@ export default {
 
 <style lang="less" scoped>
 .plugin-block-setting {
+  :deep(.plugin-setting-header) {
+    border: 0;
+    .tiny-button {
+      width: 40px;
+      padding: 0;
+      min-width: 40px;
+      margin-right: 2px;
+    }
+    .close-plugin-setting-icon {
+      margin-left: 4px;
+    }
+  }
   .publish-btn {
     margin-right: 8px;
   }
@@ -299,7 +312,7 @@ export default {
     }
   }
   :deep(.plugin-setting-content) {
-    padding: 16px 0;
+    padding: 0 0 16px 0;
   }
 
   :deep(.icon-wrap) {
@@ -322,13 +335,13 @@ export default {
   }
 
   .life-cycles-container {
-    padding: 16px;
+    padding: 0 0 12px 0;
   }
 
   .block-attribute,
   .block-event {
     position: relative;
-    padding: 16px;
+    padding: 0 12px;
     :deep(.tiny-col) {
       position: inherit;
     }

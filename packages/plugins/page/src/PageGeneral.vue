@@ -236,7 +236,6 @@ export default {
       color: var(--ti-lowcode-page-manage-input-head-text-color);
     }
     :deep(.tiny-form-item) {
-      padding: 0 12px;
       margin-bottom: 16px;
       .tiny-input-group__prepend {
         border: 1px solid var(--ti-lowcode-page-manage-input-group-border-color);
@@ -247,7 +246,7 @@ export default {
         color: var(--ti-lowcode-page-manage-title-background-text-color);
       }
       .tiny-form-item__label {
-        font-size: 14px;
+        font-size: 12px;
         color: var(--ti-lowcode-page-manage-text-color);
       }
       .tiny-form-item__error {
