@@ -19,13 +19,13 @@ import JSZIP from 'jszip'
  * @param {string} fileName 文件名
  */
 export function saveAs(blobData, fileName) {
-  const zipLink = document.createElement('a')
-  zipLink.download = fileName
-  zipLink.style.display = 'none'
-  zipLink.href = URL.createObjectURL(blobData)
-  document.body.appendChild(zipLink)
-  zipLink.click()
-  document.body.removeChild(zipLink)
+  const downloadLink = document.createElement('a')
+  downloadLink.download = fileName
+  downloadLink.style.display = 'none'
+  downloadLink.href = URL.createObjectURL(blobData)
+  document.body.appendChild(downloadLink)
+  downloadLink.click()
+  document.body.removeChild(downloadLink)
 }
 
 /**

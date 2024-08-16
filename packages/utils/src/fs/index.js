@@ -25,7 +25,7 @@ export const isSupportFileSystemAccess =
  * @returns dirHandle 目录句柄
  */
 export const getUserBaseDirHandle = async (options = {}) => {
-  if (!window.showOpenFilePicker) {
+  if (!isSupportFileSystemAccess) {
     return createZip()
   }
   const dirHandle = await window.showDirectoryPicker({ mode: 'readwrite', ...options })
@@ -81,8 +81,8 @@ export async function getFileHandle(baseDirHandle, filePath, { create = false } 
  * @returns fileHandle 文件句柄
  */
 export const getUserFileHandle = async (options = {}) => {
-  if (!window.showOpenFilePicker) {
-    throw new Error('不支持的浏览器!')
+  if (!isSupportFileSystemAccess) {
+    throw new Error('不支持的浏览器或处于iframe中')
   }
   const [fileHandle] = await window.showOpenFilePicker({ mode: 'readwrite', ...options })
   return fileHandle
