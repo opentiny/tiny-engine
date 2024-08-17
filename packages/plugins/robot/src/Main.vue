@@ -37,15 +37,16 @@
           :key="index"
           :flex="true"
           :order="item.role === 'user' ? 'des' : 'asc'"
-          :justify="item.role === 'user' ? 'end' : 'start'"
+          :justify="item.role === 'assistant' ? 'start' : 'end'"
           class="chat-message-row"
         >
-          <tiny-col :span="1" :no="1" class="chat-avatar-wrap">
+          <tiny-col v-if="item.role !== 'system'" :span="1" :no="1" class="chat-avatar-wrap">
             <img v-if="item.role !== 'user'" class="chat-avatar chat-avatar-ai" src="../assets/AI.png" />
             <img v-else class="chat-avatar" :src="avatarUrl" />
           </tiny-col>
           <tiny-col :span="22" :no="2">
             <div
+              v-if="item.role !== 'system'"
               :class="[
                 'chat-content',
                 chatWindowOpened ? '' : 'hidden-text',
@@ -57,6 +58,9 @@
               ]"
             >
               <dialog-content :markdownContent="item.content" />
+            </div>
+            <div v-else class="chat-message-image">
+              <img class="image" :src="item.content" alt="" />
             </div>
           </tiny-col>
         </tiny-row>
@@ -84,6 +88,10 @@
       <tiny-button @click="sendContent(inputContent, false)">发送</tiny-button>
     </footer>
     <input type="file" ref="fileInput" style="display: none" @change="handleFileChange" />
+    <div class="preview-image" v-if="imageUrl !== ''" :data-animated="imageDeleting ? 'out' : ''">
+      <img class="image" :src="imageUrl" alt="" />
+      <icon-error class="delete-image" @click="handleDelete"></icon-error>
+    </div>
   </div>
   <token-dialog
     :dialog-visible="tokenDialogVisible"
@@ -94,7 +102,7 @@
 </template>
 
 <script>
-import { ref, onMounted, watch, watchEffect } from 'vue'
+import { ref, onMounted, watch, nextTick, watchEffect } from 'vue'
 import {
   Layout,
   Row,
@@ -108,7 +116,7 @@ import {
   DropdownItem as TinyDropdownItem
 } from '@opentiny/vue'
 import { useCanvas, useHistory, usePage, useModal } from '@opentiny/tiny-engine-controller'
-import { iconChevronDown, iconSetting, iconPicture } from '@opentiny/vue-icon'
+import { iconChevronDown, iconSetting, iconPicture, iconError } from '@opentiny/vue-icon'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { getBlockContent, initBlockList, AIModelOptions } from './js/robotSetting'
@@ -129,6 +137,7 @@ export default {
     IconPicture: iconPicture(),
     IconSetting: iconSetting(),
     IconChevronDown: iconChevronDown(),
+    IconError: iconError(),
     DialogContent,
     TokenDialog
   },
@@ -287,7 +296,7 @@ export default {
     }
 
     /*
-      文件上传(仅图片，后续可需求可添加上传类型）
+      文件上传(仅支持图片，后续根据需求可添加上传类型）
      */
     const fileInput = ref(null)
     const openFilePicker = () => {
@@ -296,6 +305,8 @@ export default {
       }
     }
 
+    let imageUrl = ref('')
+    let imageContent = ref()
     const uploadFile = (file) => {
       const formData = new FormData()
       const foundationModelData = JSON.stringify({
@@ -314,15 +325,21 @@ export default {
           },
           timeout: 600000
         })
-        .then((response) => {
-          // TODO: 处理响应
-          // eslint-disable-next-line
-          console.log('文件上传成功', response)
+        .then((res) => {
+          imageContent.value = res.originalResponse
+          const reader = new FileReader()
+          reader.readAsDataURL(file)
+          reader.onload = () => {
+            imageUrl.value = reader.result
+          }
         })
-        .catch((error) => {
-          // TODO: 处理错误
-          // eslint-disable-next-line
-          console.error('文件上传失败', error)
+        .catch(() => {
+          Notify({
+            type: 'error',
+            message: '上传图片失败',
+            position: 'top-right',
+            duration: 5000
+          })
         })
     }
 
@@ -331,23 +348,34 @@ export default {
       if (!files.length) {
         return
       }
-      /*
-         TODO：在这里添加图片预览
-       */
       const file = files[0]
       const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg']
       if (!validImageTypes.includes(file.type)) {
         alert('请上传有效的图片文件（.jpeg, .png, .jpg）！')
-        event.target.value = '' // 清空文件输入
+        event.target.value = ''
         return
       }
-
-      // 如果文件类型正确，执行上传逻辑
+      event.target.value = ''
       uploadFile(file)
     }
 
-    const getMessage = (content) => ({
-      role: 'user',
+    const imageDeleting = ref(false)
+    const handleDelete = () => {
+      imageDeleting.value = true
+      setTimeout(() => {
+        imageUrl.value = ''
+        imageContent.value = ''
+        imageDeleting.value = false
+        nextTick(() => {
+          if (fileInput.value) {
+            fileInput.value.value = ''
+          }
+        })
+      }, 500)
+    }
+
+    const getMessage = (content, role) => ({
+      role,
       content,
       name: 'John'
     })
@@ -376,14 +404,19 @@ export default {
         if (chatWindowOpened.value === false) {
           await resizeChatWindow()
         }
-        const message = getMessage(realContent)
+        const message = getMessage(realContent, 'user')
         inProcesing.value = true
-
         messages.value.push(message)
         sessionProcess?.messages.push(message)
         sessionProcess?.displayMessages.push(message)
+        if (imageContent.value) {
+          messages.value.push(getMessage(imageUrl.value, 'system'))
+          sessionProcess?.messages.push(getMessage(JSON.stringify(imageContent.value), 'system'))
+          sessionProcess?.displayMessages.push(getMessage(imageUrl.value, 'system'))
+        }
         if (!isModel) {
           inputContent.value = ''
+          imageUrl.value = ''
         }
         await scrollContent()
         await sleep(1000)
@@ -393,7 +426,7 @@ export default {
       }
     }
 
-    // 根据localstorage初始化AI大模型
+    // 根据localstorage初始化AI大模型s
     const initCurrentModel = (aiSession) => {
       const currentModelValue = JSON.parse(aiSession)?.foundationModel?.model
       currentModel = AIModelOptions.find((item) => item.value === currentModelValue)
@@ -498,7 +531,10 @@ export default {
       setToken,
       openFilePicker,
       handleFileChange,
+      imageDeleting,
+      handleDelete,
       fileInput,
+      imageUrl,
       AIModelOptions,
       selectedModel,
       currentModel,
@@ -514,6 +550,70 @@ export default {
 <style lang="less" scope>
 .common-svg {
   color: var(--ti-lowcode-chat-model-common-icon);
+}
+.chat-message-image {
+  margin-right: 45px;
+  margin-top: -10px;
+  max-width: 100%;
+  border-radius: 5px;
+  border: 1px solid var(--ti-lowcode-chat-model-user-text-border);
+  .image {
+    width: 100px;
+    border-radius: 5px;
+  }
+}
+
+.preview-image {
+  position: fixed;
+  bottom: 12px;
+  right: 635px;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  border-radius: 5px;
+  max-width: 100%;
+  height: auto;
+  animation: slideDown 0.5s ease-out forwards;
+  border: 1px solid var(--ti-lowcode-chat-model-user-text-border);
+  .image {
+    border-radius: 5px;
+    width: 100px;
+    height: auto;
+    display: block;
+    position: relative;
+    border: #1a1a1a;
+  }
+  .delete-image {
+    color: red;
+    position: absolute;
+    top: -4px;
+    right: -3px;
+    cursor: pointer;
+    z-index: 1001;
+  }
+}
+.preview-image[data-animated='out'] {
+  animation: slideUp 0.5s ease-out forwards;
+}
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
 }
 
 .chat-title-icons {
