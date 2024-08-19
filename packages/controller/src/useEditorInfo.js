@@ -21,7 +21,7 @@ const _getWebData = () => {
   const pageId = paramsMap.get('pageid')
   const type = paramsMap.get('type')
   const version = paramsMap.get('version')
-  const templateId = paramsMap.get('templateId')
+  const templateId = paramsMap.get('templateid')
 
   return {
     type: type || 'app',
