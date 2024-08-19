@@ -209,7 +209,7 @@ export default {
         // 保存数据
         add(name, variable)
         isPanelShow.value = false
-        !isTemplate.value ? setSaved(true) : setTemplateSaved(true)
+        isTemplate.value ? setTemplateSaved(false) : setSaved(false)
 
         // 触发画布渲染
         setState({ [name]: variable })
@@ -284,7 +284,7 @@ export default {
         isPanelShow.value = false
       }
 
-      !isTemplate.value ? setSaved(true) : setTemplateSaved(true)
+      isTemplate.value ? setTemplateSaved(false) : setSaved(false)
     }
 
     const setGlobalStateToDataSource = () => {

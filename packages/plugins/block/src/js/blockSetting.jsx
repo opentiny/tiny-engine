@@ -608,7 +608,7 @@ const createBlock = (block = {}) => {
       // 后台获取区块id后保存id信息
       block.id = data.id
       batchCreateI18n({ host: block.id, hostType: HOST_TYPE.Block })
-      !isTemplate.value ? setSaved(true) : setTemplateSaved(true)
+      isTemplate.value ? setTemplateSaved(false) : setSaved(false)
       // 新建区块成功后需要同步更新画布上的区块数据ctx上下文环境
       useBlock().initBlock(data, {}, true)
       message({ message: '新建区块成功！', status: 'success' })
@@ -658,7 +658,7 @@ const updateBlock = (block = {}) => {
     }
   )
     .then((data) => {
-      !isTemplate.value ? setSaved(true) : setTemplateSaved(true)
+      isTemplate.value ? setTemplateSaved(false) : setSaved(false)
       useBlock().initBlock(data, {}, true)
       // 弹出保存区块成功
       message({ message: '保存区块成功！', status: 'success' })

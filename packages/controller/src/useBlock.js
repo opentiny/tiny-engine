@@ -289,7 +289,7 @@ const initBlock = async (block = {}, _langs = {}, isEdit) => {
     block.occupier = useEditorInfo().userInfo
     useLayout().layoutState.pageStatus = getCanvasStatus(block.occupier)
     addBlock(block)
-    !isTemplate ? setSaved(false) : setTemplateSaved(false)
+    isTemplate.value ? setTemplateSaved(false) : setSaved(false)
   }
 }
 

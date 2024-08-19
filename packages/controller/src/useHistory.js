@@ -96,7 +96,7 @@ const clear = () => {
 const addHistory = (schema) => {
   if (!schema) {
     const { setSaved, isTemplate, setTemplateSaved, canvasApi } = useCanvas()
-    !isTemplate.value ? setSaved(false) : setTemplateSaved(false)
+    isTemplate.value ? setTemplateSaved(false) : setSaved(false)
 
     push(canvasApi.value?.getSchema())
   } else {

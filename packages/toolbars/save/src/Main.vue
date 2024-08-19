@@ -85,11 +85,11 @@ export default {
     }
     const openApi = () => {
       if (!isLoading.value) {
-        !isTemplate.value ? openCommon() : openTemplateCommon()
+        isTemplate.value ? openTemplateCommon() : openCommon()
       }
     }
     const saveApi = () => {
-      !isTemplate.value ? saveCommon() : saveTemplateCommon()
+      isTemplate.value ? saveTemplateCommon() : saveCommon()
     }
     // 保存或新建区块
     const editorOptions = {
@@ -111,7 +111,7 @@ export default {
     })
 
     const showDots = computed(() => {
-      return !isTemplate.value ? !isSaved() : !isTemplateSaved()
+      return isTemplate.value ? !isTemplateSaved() : !isSaved()
     })
 
     return {

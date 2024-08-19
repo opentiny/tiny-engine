@@ -14,8 +14,23 @@
 import { reactive, ref } from 'vue'
 import { constants } from '@opentiny/tiny-engine-utils'
 import useHistory from './useHistory'
+import useTemplateCanvas from './useTemplateCanvas'
 
 const { COMPONENT_NAME } = constants
+
+const {
+  templateState,
+  isTemplateBlock,
+  isTemplateSaved,
+  isTemplateLoading,
+  getTemplateSchema,
+  setCurrentTemplateSchema,
+  getCurrentTemplateSchema,
+  getCurrentTemplate,
+  clearCurrentTemplateState,
+  setTemplateSaved,
+  isTemplate
+} = useTemplateCanvas()
 
 const defaultPageState = {
   currentVm: null,
@@ -54,10 +69,6 @@ const defaultTemplateState = {
   ...defaultPageState
 }
 
-const defaultTemplateSchema = {
-  ...defaultSchema,
-  componentName: 'Template'
-}
 
 const canvasApi = ref({})
 const isCanvasApiReady = ref(false)
@@ -68,9 +79,7 @@ const initCanvasApi = (newCanvasApi) => {
 }
 
 const pageState = reactive({ ...defaultPageState, loading: true })
-const templateState = reactive({ ...defaultTemplateState, loading: true })
 
-const isTemplate = ref(false)
 
 // 重置画布数据
 const resetCanvasState = async (state = {}) => {
@@ -106,10 +115,6 @@ const setSaved = (flag = false) => {
   pageState.isSaved = flag
 }
 
-const setTemplateSaved = (flag = false) => {
-  templateState.isSaved = flag
-}
-
 // 清空画布
 const clearCanvas = () => {
   pageState.properties = null
@@ -126,7 +131,6 @@ const clearCanvas = () => {
 }
 
 const isBlock = () => pageState.isBlock
-const isTemplateBlock = () => templateState.isBlock
 
 // 初始化页面数据, 当为模板内容时，currentPage也保存当前模板数据
 const initData = (schema = { ...defaultSchema }, currentPage) => {
@@ -147,27 +151,18 @@ const initData = (schema = { ...defaultSchema }, currentPage) => {
 }
 
 const isSaved = () => pageState.isSaved
-const isTemplateSaved = () => templateState.isSaved
 
 const isLoading = () => pageState.loading
-const isTemplateLoading = () => templateState.loading
 
 const getPageSchema = () => {
   return pageState.pageSchema || {}
-}
-const getTemplateSchema = () => {
-  return templateState.pageSchema || {}
 }
 
 const setCurrentSchema = (schema) => {
   pageState.currentSchema = schema
 }
-const setCurrentTemplateSchema = (schema) => {
-  templateState.currentSchema = schema
-}
 
 const getCurrentSchema = () => pageState.currentSchema
-const getCurrentTemplateSchema = () => templateState.currentSchema
 
 const clearCurrentState = () => {
   pageState.currentVm = null
@@ -175,15 +170,8 @@ const clearCurrentState = () => {
   pageState.properties = {}
   pageState.pageSchema = null
 }
-const clearCurrentTemplateState = () => {
-  templateState.currentVm = null
-  templateState.hoverVm = null
-  templateState.properties = {}
-  templateState.pageSchema = null
-}
 
 const getCurrentPage = () => pageState.currentPage
-const getCurrentTemplate = () => templateState.currentPage
 
 export default function () {
   return {
@@ -204,7 +192,6 @@ export default function () {
     initCanvasApi,
     canvasApi,
     isCanvasApiReady,
-    defaultTemplateSchema,
     templateState,
     isTemplateBlock,
     isTemplateSaved,

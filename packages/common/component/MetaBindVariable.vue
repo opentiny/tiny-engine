@@ -406,7 +406,7 @@ export default {
       const { setSaved, canvasApi, isTemplate, setTemplateSaved } = useCanvas()
       // 如果新旧值不一样就显示未保存状态
       if (oldValue !== variableContent) {
-        !isTemplate.value ? setSaved(false) : setTemplateSaved(false)
+        isTemplate.value ? setTemplateSaved(false) : setSaved(false)
         variableContent = formatString(variableContent, 'javascript')
       }
 
