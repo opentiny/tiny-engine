@@ -1,6 +1,4 @@
 import { reactive, ref } from 'vue'
-import useHistory from './useHistory'
-
 
 const defaultTemplateState = {
   currentVm: null,
@@ -65,6 +63,8 @@ const getCurrentTemplate = () => templateState.currentPage
 
 export default function () {
   return {
+    defaultTemplateState,
+    defaultTemplateSchema,
     templateState,
     isTemplateBlock,
     isTemplateSaved,

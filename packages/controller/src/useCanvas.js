@@ -19,6 +19,7 @@ import useTemplateCanvas from './useTemplateCanvas'
 const { COMPONENT_NAME } = constants
 
 const {
+  defaultTemplateState,
   templateState,
   isTemplateBlock,
   isTemplateSaved,
@@ -29,7 +30,7 @@ const {
   getCurrentTemplate,
   clearCurrentTemplateState,
   setTemplateSaved,
-  isTemplate
+  isTemplate,
 } = useTemplateCanvas()
 
 const defaultPageState = {
@@ -65,10 +66,6 @@ const defaultSchema = {
   inputs: [],
   outputs: []
 }
-const defaultTemplateState = {
-  ...defaultPageState
-}
-
 
 const canvasApi = ref({})
 const isCanvasApiReady = ref(false)
