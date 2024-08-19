@@ -155,4 +155,5 @@ async function main() {
     console.error('Error in main function:', error)
   }
 }
+
 main()

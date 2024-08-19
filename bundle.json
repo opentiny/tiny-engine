@@ -1,0 +1,2710 @@
+{
+  "data": {
+    "framework": "Vue",
+    "materials": {
+      "components": [
+        {
+          "id": 1,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "按钮"
+          },
+          "component": "Button 按钮",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Button 按钮",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 2,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "边框"
+          },
+          "component": "Border 边框",
+          "icon": "",
+          "description": "",
+          "doc_url": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Border 边框",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 3,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "色彩"
+          },
+          "component": "Color 色彩",
+          "icon": "",
+          "description": "",
+          "doc_url": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Color 色彩",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 4,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "布局容器"
+          },
+          "component": "Container 布局容器",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Container 布局容器",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 5,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "图标"
+          },
+          "component": "Icon 图标",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Icon 图标",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 6,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "布局"
+          },
+          "component": "Layout 布局",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Layout 布局",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 7,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "链接"
+          },
+          "component": "Link 链接",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Link 链接",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 8,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "文本2.3.0"
+          },
+          "component": "Text 文本2.3.0",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Text 文本2.3.0",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 9,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "滚动条"
+          },
+          "component": "Scrollbar 滚动条",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Scrollbar 滚动条",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 10,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "间距"
+          },
+          "component": "Space 间距",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Space 间距",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 11,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "排版"
+          },
+          "component": "Typography 排版",
+          "icon": "",
+          "description": "",
+          "doc_url": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Typography 排版",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 12,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "Provider 全局配置"
+          },
+          "component": "Config Provider 全局配置",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Config Provider 全局配置",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 13,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "自动补全输入框"
+          },
+          "component": "Autocomplete 自动补全输入框",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Autocomplete 自动补全输入框",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 14,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "级联选择器"
+          },
+          "component": "Cascader 级联选择器",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Cascader 级联选择器",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 15,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "多选框"
+          },
+          "component": "Checkbox 多选框",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Checkbox 多选框",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 16,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "Picker 取色器"
+          },
+          "component": "Color Picker 取色器",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Color Picker 取色器",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 17,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "Picker 日期选择器"
+          },
+          "component": "Date Picker 日期选择器",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Date Picker 日期选择器",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 18,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "Picker 日期时间选择器"
+          },
+          "component": "DateTime Picker 日期时间选择器",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "DateTime Picker 日期时间选择器",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 19,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "表单"
+          },
+          "component": "Form 表单",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Form 表单",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 20,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "输入框"
+          },
+          "component": "Input 输入框",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Input 输入框",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 21,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "Number 数字输入框"
+          },
+          "component": "Input Number 数字输入框",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Input Number 数字输入框",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 22,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "提及2.8.0"
+          },
+          "component": "Mention 提及2.8.0",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Mention 提及2.8.0",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 23,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "单选框"
+          },
+          "component": "Radio 单选框",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Radio 单选框",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 24,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "评分"
+          },
+          "component": "Rate 评分",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Rate 评分",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 25,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "选择器"
+          },
+          "component": "Select 选择器",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Select 选择器",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 26,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "Select 虚拟化选择器"
+          },
+          "component": "Virtualized Select 虚拟化选择器",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Virtualized Select 虚拟化选择器",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 27,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "滑块"
+          },
+          "component": "Slider 滑块",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Slider 滑块",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 28,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "开关"
+          },
+          "component": "Switch 开关",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Switch 开关",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 29,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "Picker 时间选择器"
+          },
+          "component": "Time Picker 时间选择器",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Time Picker 时间选择器",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 30,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "Select 时间选择"
+          },
+          "component": "Time Select 时间选择",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Time Select 时间选择",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 31,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "穿梭框"
+          },
+          "component": "Transfer 穿梭框",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Transfer 穿梭框",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 32,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "树形选择2.1.8"
+          },
+          "component": "TreeSelect 树形选择2.1.8",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "TreeSelect 树形选择2.1.8",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 33,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "上传"
+          },
+          "component": "Upload 上传",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Upload 上传",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 34,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "头像"
+          },
+          "component": "Avatar 头像",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Avatar 头像",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 35,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "徽章"
+          },
+          "component": "Badge 徽章",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Badge 徽章",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 36,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "日历"
+          },
+          "component": "Calendar 日历",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Calendar 日历",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 37,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "卡片"
+          },
+          "component": "Card 卡片",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Card 卡片",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 38,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "走马灯"
+          },
+          "component": "Carousel 走马灯",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Carousel 走马灯",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 39,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "折叠面板"
+          },
+          "component": "Collapse 折叠面板",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Collapse 折叠面板",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 40,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "描述列表"
+          },
+          "component": "Descriptions 描述列表",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Descriptions 描述列表",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 41,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "空状态"
+          },
+          "component": "Empty 空状态",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Empty 空状态",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 42,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "图片"
+          },
+          "component": "Image 图片",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Image 图片",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 43,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "Scroll 无限滚动"
+          },
+          "component": "Infinite Scroll 无限滚动",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Infinite Scroll 无限滚动",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 44,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "分页"
+          },
+          "component": "Pagination 分页",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Pagination 分页",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 45,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "进度条"
+          },
+          "component": "Progress 进度条",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Progress 进度条",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 46,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "结果"
+          },
+          "component": "Result 结果",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Result 结果",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 47,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "骨架屏"
+          },
+          "component": "Skeleton 骨架屏",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Skeleton 骨架屏",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 48,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "表格"
+          },
+          "component": "Table 表格",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Table 表格",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 49,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "Table 虚拟化表格2.2.0"
+          },
+          "component": "Virtualized Table 虚拟化表格2.2.0",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Virtualized Table 虚拟化表格2.2.0",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 50,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "标签"
+          },
+          "component": "Tag 标签",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Tag 标签",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 51,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "时间线"
+          },
+          "component": "Timeline 时间线",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Timeline 时间线",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 52,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "漫游式引导2.5.0"
+          },
+          "component": "Tour 漫游式引导2.5.0",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Tour 漫游式引导2.5.0",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 53,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "树形控件"
+          },
+          "component": "Tree 树形控件",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Tree 树形控件",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 54,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "Tree 虚拟化树形控件"
+          },
+          "component": "Virtualized Tree 虚拟化树形控件",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Virtualized Tree 虚拟化树形控件",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 55,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "统计组件2.2.30"
+          },
+          "component": "Statistic 统计组件2.2.30",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Statistic 统计组件2.2.30",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 56,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "分段控制器2.7.0"
+          },
+          "component": "Segmented 分段控制器2.7.0",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Segmented 分段控制器2.7.0",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 57,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "固钉"
+          },
+          "component": "Affix 固钉",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Affix 固钉",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 58,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "锚点2.6.0"
+          },
+          "component": "Anchor 锚点2.6.0",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Anchor 锚点2.6.0",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 59,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "回到顶部"
+          },
+          "component": "Backtop 回到顶部",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Backtop 回到顶部",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 60,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "面包屑"
+          },
+          "component": "Breadcrumb 面包屑",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Breadcrumb 面包屑",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 61,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "下拉菜单"
+          },
+          "component": "Dropdown 下拉菜单",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Dropdown 下拉菜单",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 62,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "菜单"
+          },
+          "component": "Menu 菜单",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Menu 菜单",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 63,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "Header 页头"
+          },
+          "component": "Page Header 页头",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Page Header 页头",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 64,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "步骤条"
+          },
+          "component": "Steps 步骤条",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Steps 步骤条",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 65,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "标签页"
+          },
+          "component": "Tabs 标签页",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Tabs 标签页",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 66,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "提示"
+          },
+          "component": "Alert 提示",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Alert 提示",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 67,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "对话框"
+          },
+          "component": "Dialog 对话框",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Dialog 对话框",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 68,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "抽屉"
+          },
+          "component": "Drawer 抽屉",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Drawer 抽屉",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 69,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "加载"
+          },
+          "component": "Loading 加载",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Loading 加载",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 70,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "消息提示"
+          },
+          "component": "Message 消息提示",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Message 消息提示",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 71,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "Box 消息弹出框"
+          },
+          "component": "Message Box 消息弹出框",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Message Box 消息弹出框",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 72,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "通知"
+          },
+          "component": "Notification 通知",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Notification 通知",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 73,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "气泡确认框"
+          },
+          "component": "Popconfirm 气泡确认框",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Popconfirm 气泡确认框",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 74,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "弹出框"
+          },
+          "component": "Popover 弹出框",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Popover 弹出框",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 75,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "文字提示"
+          },
+          "component": "Tooltip 文字提示",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Tooltip 文字提示",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 76,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "分割线"
+          },
+          "component": "Divider 分割线",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Divider 分割线",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        },
+        {
+          "id": 77,
+          "version": "2.7.8",
+          "name": {
+            "zh_CN": "水印 2.4.0"
+          },
+          "component": "Watermark 水印 2.4.0",
+          "icon": "",
+          "description": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "version": "2.7.8",
+            "exportName": "Watermark 水印 2.4.0",
+            "main": "lib/index.js",
+            "destructuring": true,
+            "subName": ""
+          },
+          "group": "",
+          "category": "element-plus",
+          "configure": {},
+          "schema": {}
+        }
+      ],
+      "blocks": [],
+      "snippets": [
+        {
+          "id": 1,
+          "name": {
+            "zh_CN": "使用Button 按钮"
+          },
+          "description": "如何在Vue中使用Button 按钮",
+          "code": "<template>\n  <Button 按钮></Button 按钮>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 2,
+          "name": {
+            "zh_CN": "使用Border 边框"
+          },
+          "description": "如何在Vue中使用Border 边框",
+          "code": "<template>\n  <Border 边框></Border 边框>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 3,
+          "name": {
+            "zh_CN": "使用Color 色彩"
+          },
+          "description": "如何在Vue中使用Color 色彩",
+          "code": "<template>\n  <Color 色彩></Color 色彩>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 4,
+          "name": {
+            "zh_CN": "使用Container 布局容器"
+          },
+          "description": "如何在Vue中使用Container 布局容器",
+          "code": "<template>\n  <Container 布局容器></Container 布局容器>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 5,
+          "name": {
+            "zh_CN": "使用Icon 图标"
+          },
+          "description": "如何在Vue中使用Icon 图标",
+          "code": "<template>\n  <Icon 图标></Icon 图标>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 6,
+          "name": {
+            "zh_CN": "使用Layout 布局"
+          },
+          "description": "如何在Vue中使用Layout 布局",
+          "code": "<template>\n  <Layout 布局></Layout 布局>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 7,
+          "name": {
+            "zh_CN": "使用Link 链接"
+          },
+          "description": "如何在Vue中使用Link 链接",
+          "code": "<template>\n  <Link 链接></Link 链接>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 8,
+          "name": {
+            "zh_CN": "使用Text 文本2.3.0"
+          },
+          "description": "如何在Vue中使用Text 文本2.3.0",
+          "code": "<template>\n  <Text 文本2.3.0></Text 文本2.3.0>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 9,
+          "name": {
+            "zh_CN": "使用Scrollbar 滚动条"
+          },
+          "description": "如何在Vue中使用Scrollbar 滚动条",
+          "code": "<template>\n  <Scrollbar 滚动条></Scrollbar 滚动条>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 10,
+          "name": {
+            "zh_CN": "使用Space 间距"
+          },
+          "description": "如何在Vue中使用Space 间距",
+          "code": "<template>\n  <Space 间距></Space 间距>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 11,
+          "name": {
+            "zh_CN": "使用Typography 排版"
+          },
+          "description": "如何在Vue中使用Typography 排版",
+          "code": "<template>\n  <Typography 排版></Typography 排版>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 12,
+          "name": {
+            "zh_CN": "使用Config Provider 全局配置"
+          },
+          "description": "如何在Vue中使用Config Provider 全局配置",
+          "code": "<template>\n  <Config Provider 全局配置></Config Provider 全局配置>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 13,
+          "name": {
+            "zh_CN": "使用Autocomplete 自动补全输入框"
+          },
+          "description": "如何在Vue中使用Autocomplete 自动补全输入框",
+          "code": "<template>\n  <Autocomplete 自动补全输入框></Autocomplete 自动补全输入框>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 14,
+          "name": {
+            "zh_CN": "使用Cascader 级联选择器"
+          },
+          "description": "如何在Vue中使用Cascader 级联选择器",
+          "code": "<template>\n  <Cascader 级联选择器></Cascader 级联选择器>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 15,
+          "name": {
+            "zh_CN": "使用Checkbox 多选框"
+          },
+          "description": "如何在Vue中使用Checkbox 多选框",
+          "code": "<template>\n  <Checkbox 多选框></Checkbox 多选框>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 16,
+          "name": {
+            "zh_CN": "使用Color Picker 取色器"
+          },
+          "description": "如何在Vue中使用Color Picker 取色器",
+          "code": "<template>\n  <Color Picker 取色器></Color Picker 取色器>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 17,
+          "name": {
+            "zh_CN": "使用Date Picker 日期选择器"
+          },
+          "description": "如何在Vue中使用Date Picker 日期选择器",
+          "code": "<template>\n  <Date Picker 日期选择器></Date Picker 日期选择器>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 18,
+          "name": {
+            "zh_CN": "使用DateTime Picker 日期时间选择器"
+          },
+          "description": "如何在Vue中使用DateTime Picker 日期时间选择器",
+          "code": "<template>\n  <DateTime Picker 日期时间选择器></DateTime Picker 日期时间选择器>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 19,
+          "name": {
+            "zh_CN": "使用Form 表单"
+          },
+          "description": "如何在Vue中使用Form 表单",
+          "code": "<template>\n  <Form 表单></Form 表单>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 20,
+          "name": {
+            "zh_CN": "使用Input 输入框"
+          },
+          "description": "如何在Vue中使用Input 输入框",
+          "code": "<template>\n  <Input 输入框></Input 输入框>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 21,
+          "name": {
+            "zh_CN": "使用Input Number 数字输入框"
+          },
+          "description": "如何在Vue中使用Input Number 数字输入框",
+          "code": "<template>\n  <Input Number 数字输入框></Input Number 数字输入框>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 22,
+          "name": {
+            "zh_CN": "使用Mention 提及2.8.0"
+          },
+          "description": "如何在Vue中使用Mention 提及2.8.0",
+          "code": "<template>\n  <Mention 提及2.8.0></Mention 提及2.8.0>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 23,
+          "name": {
+            "zh_CN": "使用Radio 单选框"
+          },
+          "description": "如何在Vue中使用Radio 单选框",
+          "code": "<template>\n  <Radio 单选框></Radio 单选框>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 24,
+          "name": {
+            "zh_CN": "使用Rate 评分"
+          },
+          "description": "如何在Vue中使用Rate 评分",
+          "code": "<template>\n  <Rate 评分></Rate 评分>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 25,
+          "name": {
+            "zh_CN": "使用Select 选择器"
+          },
+          "description": "如何在Vue中使用Select 选择器",
+          "code": "<template>\n  <Select 选择器></Select 选择器>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 26,
+          "name": {
+            "zh_CN": "使用Virtualized Select 虚拟化选择器"
+          },
+          "description": "如何在Vue中使用Virtualized Select 虚拟化选择器",
+          "code": "<template>\n  <Virtualized Select 虚拟化选择器></Virtualized Select 虚拟化选择器>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 27,
+          "name": {
+            "zh_CN": "使用Slider 滑块"
+          },
+          "description": "如何在Vue中使用Slider 滑块",
+          "code": "<template>\n  <Slider 滑块></Slider 滑块>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 28,
+          "name": {
+            "zh_CN": "使用Switch 开关"
+          },
+          "description": "如何在Vue中使用Switch 开关",
+          "code": "<template>\n  <Switch 开关></Switch 开关>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 29,
+          "name": {
+            "zh_CN": "使用Time Picker 时间选择器"
+          },
+          "description": "如何在Vue中使用Time Picker 时间选择器",
+          "code": "<template>\n  <Time Picker 时间选择器></Time Picker 时间选择器>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 30,
+          "name": {
+            "zh_CN": "使用Time Select 时间选择"
+          },
+          "description": "如何在Vue中使用Time Select 时间选择",
+          "code": "<template>\n  <Time Select 时间选择></Time Select 时间选择>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 31,
+          "name": {
+            "zh_CN": "使用Transfer 穿梭框"
+          },
+          "description": "如何在Vue中使用Transfer 穿梭框",
+          "code": "<template>\n  <Transfer 穿梭框></Transfer 穿梭框>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 32,
+          "name": {
+            "zh_CN": "使用TreeSelect 树形选择2.1.8"
+          },
+          "description": "如何在Vue中使用TreeSelect 树形选择2.1.8",
+          "code": "<template>\n  <TreeSelect 树形选择2.1.8></TreeSelect 树形选择2.1.8>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 33,
+          "name": {
+            "zh_CN": "使用Upload 上传"
+          },
+          "description": "如何在Vue中使用Upload 上传",
+          "code": "<template>\n  <Upload 上传></Upload 上传>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 34,
+          "name": {
+            "zh_CN": "使用Avatar 头像"
+          },
+          "description": "如何在Vue中使用Avatar 头像",
+          "code": "<template>\n  <Avatar 头像></Avatar 头像>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 35,
+          "name": {
+            "zh_CN": "使用Badge 徽章"
+          },
+          "description": "如何在Vue中使用Badge 徽章",
+          "code": "<template>\n  <Badge 徽章></Badge 徽章>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 36,
+          "name": {
+            "zh_CN": "使用Calendar 日历"
+          },
+          "description": "如何在Vue中使用Calendar 日历",
+          "code": "<template>\n  <Calendar 日历></Calendar 日历>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 37,
+          "name": {
+            "zh_CN": "使用Card 卡片"
+          },
+          "description": "如何在Vue中使用Card 卡片",
+          "code": "<template>\n  <Card 卡片></Card 卡片>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 38,
+          "name": {
+            "zh_CN": "使用Carousel 走马灯"
+          },
+          "description": "如何在Vue中使用Carousel 走马灯",
+          "code": "<template>\n  <Carousel 走马灯></Carousel 走马灯>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 39,
+          "name": {
+            "zh_CN": "使用Collapse 折叠面板"
+          },
+          "description": "如何在Vue中使用Collapse 折叠面板",
+          "code": "<template>\n  <Collapse 折叠面板></Collapse 折叠面板>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 40,
+          "name": {
+            "zh_CN": "使用Descriptions 描述列表"
+          },
+          "description": "如何在Vue中使用Descriptions 描述列表",
+          "code": "<template>\n  <Descriptions 描述列表></Descriptions 描述列表>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 41,
+          "name": {
+            "zh_CN": "使用Empty 空状态"
+          },
+          "description": "如何在Vue中使用Empty 空状态",
+          "code": "<template>\n  <Empty 空状态></Empty 空状态>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 42,
+          "name": {
+            "zh_CN": "使用Image 图片"
+          },
+          "description": "如何在Vue中使用Image 图片",
+          "code": "<template>\n  <Image 图片></Image 图片>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 43,
+          "name": {
+            "zh_CN": "使用Infinite Scroll 无限滚动"
+          },
+          "description": "如何在Vue中使用Infinite Scroll 无限滚动",
+          "code": "<template>\n  <Infinite Scroll 无限滚动></Infinite Scroll 无限滚动>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 44,
+          "name": {
+            "zh_CN": "使用Pagination 分页"
+          },
+          "description": "如何在Vue中使用Pagination 分页",
+          "code": "<template>\n  <Pagination 分页></Pagination 分页>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 45,
+          "name": {
+            "zh_CN": "使用Progress 进度条"
+          },
+          "description": "如何在Vue中使用Progress 进度条",
+          "code": "<template>\n  <Progress 进度条></Progress 进度条>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 46,
+          "name": {
+            "zh_CN": "使用Result 结果"
+          },
+          "description": "如何在Vue中使用Result 结果",
+          "code": "<template>\n  <Result 结果></Result 结果>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 47,
+          "name": {
+            "zh_CN": "使用Skeleton 骨架屏"
+          },
+          "description": "如何在Vue中使用Skeleton 骨架屏",
+          "code": "<template>\n  <Skeleton 骨架屏></Skeleton 骨架屏>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 48,
+          "name": {
+            "zh_CN": "使用Table 表格"
+          },
+          "description": "如何在Vue中使用Table 表格",
+          "code": "<template>\n  <Table 表格></Table 表格>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 49,
+          "name": {
+            "zh_CN": "使用Virtualized Table 虚拟化表格2.2.0"
+          },
+          "description": "如何在Vue中使用Virtualized Table 虚拟化表格2.2.0",
+          "code": "<template>\n  <Virtualized Table 虚拟化表格2.2.0></Virtualized Table 虚拟化表格2.2.0>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 50,
+          "name": {
+            "zh_CN": "使用Tag 标签"
+          },
+          "description": "如何在Vue中使用Tag 标签",
+          "code": "<template>\n  <Tag 标签></Tag 标签>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 51,
+          "name": {
+            "zh_CN": "使用Timeline 时间线"
+          },
+          "description": "如何在Vue中使用Timeline 时间线",
+          "code": "<template>\n  <Timeline 时间线></Timeline 时间线>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 52,
+          "name": {
+            "zh_CN": "使用Tour 漫游式引导2.5.0"
+          },
+          "description": "如何在Vue中使用Tour 漫游式引导2.5.0",
+          "code": "<template>\n  <Tour 漫游式引导2.5.0></Tour 漫游式引导2.5.0>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 53,
+          "name": {
+            "zh_CN": "使用Tree 树形控件"
+          },
+          "description": "如何在Vue中使用Tree 树形控件",
+          "code": "<template>\n  <Tree 树形控件></Tree 树形控件>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 54,
+          "name": {
+            "zh_CN": "使用Virtualized Tree 虚拟化树形控件"
+          },
+          "description": "如何在Vue中使用Virtualized Tree 虚拟化树形控件",
+          "code": "<template>\n  <Virtualized Tree 虚拟化树形控件></Virtualized Tree 虚拟化树形控件>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 55,
+          "name": {
+            "zh_CN": "使用Statistic 统计组件2.2.30"
+          },
+          "description": "如何在Vue中使用Statistic 统计组件2.2.30",
+          "code": "<template>\n  <Statistic 统计组件2.2.30></Statistic 统计组件2.2.30>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 56,
+          "name": {
+            "zh_CN": "使用Segmented 分段控制器2.7.0"
+          },
+          "description": "如何在Vue中使用Segmented 分段控制器2.7.0",
+          "code": "<template>\n  <Segmented 分段控制器2.7.0></Segmented 分段控制器2.7.0>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 57,
+          "name": {
+            "zh_CN": "使用Affix 固钉"
+          },
+          "description": "如何在Vue中使用Affix 固钉",
+          "code": "<template>\n  <Affix 固钉></Affix 固钉>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 58,
+          "name": {
+            "zh_CN": "使用Anchor 锚点2.6.0"
+          },
+          "description": "如何在Vue中使用Anchor 锚点2.6.0",
+          "code": "<template>\n  <Anchor 锚点2.6.0></Anchor 锚点2.6.0>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 59,
+          "name": {
+            "zh_CN": "使用Backtop 回到顶部"
+          },
+          "description": "如何在Vue中使用Backtop 回到顶部",
+          "code": "<template>\n  <Backtop 回到顶部></Backtop 回到顶部>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 60,
+          "name": {
+            "zh_CN": "使用Breadcrumb 面包屑"
+          },
+          "description": "如何在Vue中使用Breadcrumb 面包屑",
+          "code": "<template>\n  <Breadcrumb 面包屑></Breadcrumb 面包屑>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 61,
+          "name": {
+            "zh_CN": "使用Dropdown 下拉菜单"
+          },
+          "description": "如何在Vue中使用Dropdown 下拉菜单",
+          "code": "<template>\n  <Dropdown 下拉菜单></Dropdown 下拉菜单>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 62,
+          "name": {
+            "zh_CN": "使用Menu 菜单"
+          },
+          "description": "如何在Vue中使用Menu 菜单",
+          "code": "<template>\n  <Menu 菜单></Menu 菜单>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 63,
+          "name": {
+            "zh_CN": "使用Page Header 页头"
+          },
+          "description": "如何在Vue中使用Page Header 页头",
+          "code": "<template>\n  <Page Header 页头></Page Header 页头>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 64,
+          "name": {
+            "zh_CN": "使用Steps 步骤条"
+          },
+          "description": "如何在Vue中使用Steps 步骤条",
+          "code": "<template>\n  <Steps 步骤条></Steps 步骤条>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 65,
+          "name": {
+            "zh_CN": "使用Tabs 标签页"
+          },
+          "description": "如何在Vue中使用Tabs 标签页",
+          "code": "<template>\n  <Tabs 标签页></Tabs 标签页>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 66,
+          "name": {
+            "zh_CN": "使用Alert 提示"
+          },
+          "description": "如何在Vue中使用Alert 提示",
+          "code": "<template>\n  <Alert 提示></Alert 提示>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 67,
+          "name": {
+            "zh_CN": "使用Dialog 对话框"
+          },
+          "description": "如何在Vue中使用Dialog 对话框",
+          "code": "<template>\n  <Dialog 对话框></Dialog 对话框>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 68,
+          "name": {
+            "zh_CN": "使用Drawer 抽屉"
+          },
+          "description": "如何在Vue中使用Drawer 抽屉",
+          "code": "<template>\n  <Drawer 抽屉></Drawer 抽屉>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 69,
+          "name": {
+            "zh_CN": "使用Loading 加载"
+          },
+          "description": "如何在Vue中使用Loading 加载",
+          "code": "<template>\n  <Loading 加载></Loading 加载>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 70,
+          "name": {
+            "zh_CN": "使用Message 消息提示"
+          },
+          "description": "如何在Vue中使用Message 消息提示",
+          "code": "<template>\n  <Message 消息提示></Message 消息提示>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 71,
+          "name": {
+            "zh_CN": "使用Message Box 消息弹出框"
+          },
+          "description": "如何在Vue中使用Message Box 消息弹出框",
+          "code": "<template>\n  <Message Box 消息弹出框></Message Box 消息弹出框>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 72,
+          "name": {
+            "zh_CN": "使用Notification 通知"
+          },
+          "description": "如何在Vue中使用Notification 通知",
+          "code": "<template>\n  <Notification 通知></Notification 通知>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 73,
+          "name": {
+            "zh_CN": "使用Popconfirm 气泡确认框"
+          },
+          "description": "如何在Vue中使用Popconfirm 气泡确认框",
+          "code": "<template>\n  <Popconfirm 气泡确认框></Popconfirm 气泡确认框>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 74,
+          "name": {
+            "zh_CN": "使用Popover 弹出框"
+          },
+          "description": "如何在Vue中使用Popover 弹出框",
+          "code": "<template>\n  <Popover 弹出框></Popover 弹出框>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 75,
+          "name": {
+            "zh_CN": "使用Tooltip 文字提示"
+          },
+          "description": "如何在Vue中使用Tooltip 文字提示",
+          "code": "<template>\n  <Tooltip 文字提示></Tooltip 文字提示>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 76,
+          "name": {
+            "zh_CN": "使用Divider 分割线"
+          },
+          "description": "如何在Vue中使用Divider 分割线",
+          "code": "<template>\n  <Divider 分割线></Divider 分割线>\n</template>",
+          "language": "Vue"
+        },
+        {
+          "id": 77,
+          "name": {
+            "zh_CN": "使用Watermark 水印 2.4.0"
+          },
+          "description": "如何在Vue中使用Watermark 水印 2.4.0",
+          "code": "<template>\n  <Watermark 水印 2.4.0></Watermark 水印 2.4.0>\n</template>",
+          "language": "Vue"
+        }
+      ]
+    }
+  }
+}
