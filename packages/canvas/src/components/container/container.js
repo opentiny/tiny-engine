@@ -185,6 +185,8 @@ export const dragEnd = () => {
   if (element && canvasState.type === 'absolute') {
     data.props = data.props || {}
     data.props.style = element.style.cssText
+
+    getController().addHistory()
   }
 
   // 重置拖拽状态
@@ -541,6 +543,8 @@ const setHoverRect = (element, data) => {
   return undefined
 }
 
+let moveUpdateTimer = null
+
 // 绝对布局
 const absoluteMove = (event, element) => {
   const { clientX, clientY } = event
@@ -572,6 +576,19 @@ const absoluteMove = (event, element) => {
       element.style.height = `${clientY - y}px`
     }
   }
+
+  clearTimeout(moveUpdateTimer)
+
+  const { data } = dragState
+  data.props = data.props || {}
+
+  // 防抖更新位置信息到 schema
+  moveUpdateTimer = setTimeout(() => {
+    data.props.style = element.style.cssText
+
+    getController().addHistory()
+  }, 100)
+
   updateRect()
 }
 
