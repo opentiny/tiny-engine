@@ -32,7 +32,7 @@
 
 <script>
 import { onMounted, reactive, ref } from 'vue'
-import { useApp, useDataSource, useResource, useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { useDataSource, useResource, useCanvas, getMetaApi } from '@opentiny/tiny-engine-meta-register'
 import { close as closeRemotePanel } from './DataSourceRemotePanel.vue'
 import { close as closeDataSourceForm } from './DataSourceForm.vue'
 import DataSourceRecordList, { open as openRecordList } from './DataSourceRecordList.vue'
@@ -45,10 +45,8 @@ const dataSourceList = ref([])
 const activeIndex = ref(-1)
 
 export const refresh = () => {
-  const { appInfoState } = useApp()
-
   const url = new URLSearchParams(location.search)
-  const selectedId = appInfoState.selectedId || url.get('id')
+  const selectedId = getMetaApi('engine.service.globalService').getState().appInfo.id || url.get('id')
   fetchDataSourceList(selectedId).then((data) => {
     dataSourceList.value = data
     useCanvas().canvasApi.value.setDataSourceMap(data)

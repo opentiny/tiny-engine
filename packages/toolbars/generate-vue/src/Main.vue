@@ -22,7 +22,6 @@ import {
   useCanvas,
   useNotify,
   useLayout,
-  useEditorInfo,
   getMetaApi,
   META_APP,
   getMergeMeta
@@ -106,7 +105,7 @@ export default {
 
     const getPreGenerateInfo = async () => {
       const params = getParams()
-      const { id } = useEditorInfo().useInfo()
+      const { id } = getMetaApi('engine.service.globalService').getBaseInfo()
       const promises = [
         useHttp().get(`/app-center/v1/api/apps/schema/${id}`),
         fetchMetaData(params),

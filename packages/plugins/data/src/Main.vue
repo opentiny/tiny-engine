@@ -72,7 +72,6 @@ import { Button, Search, Tabs, TabItem } from '@opentiny/vue'
 import {
   useCanvas,
   useHistory,
-  useEditorInfo,
   useResource,
   useNotify,
   useHelp,
@@ -240,7 +239,7 @@ export default {
         Object.assign(state.dataSource, store)
         const storeList = Object.values(state.dataSource)
 
-        const { id } = useEditorInfo().useInfo()
+        const { id } = getMetaApi('engine.service.globalService').getBaseInfo()
         updateGlobalState(id, { global_state: storeList }).then((res) => {
           isPanelShow.value = false
           setGlobalState(res.global_state || [])
@@ -305,7 +304,7 @@ export default {
       const { setGlobalState } = useCanvas().canvasApi.value
 
       if (index !== -1) {
-        const { id } = useEditorInfo().useInfo()
+        const { id } = getMetaApi('engine.service.globalService').getBaseInfo()
 
         storeListt.splice(index, 1)
         updateGlobalState(id, { global_state: storeListt }).then((res) => {

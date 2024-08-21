@@ -23,7 +23,6 @@ import { getCssObjectFromStyleStr } from '@opentiny/tiny-engine-common/js/css'
 import {
   useCanvas,
   useTranslate,
-  useEditorInfo,
   useBreadcrumb,
   useLayout,
   getMetaApi,
@@ -290,7 +289,7 @@ const initBlock = async (block = {}, _langs = {}, isEdit) => {
   // 如果是点击区块管理列表进来的则不需要执行以下操作
   if (!isEdit) {
     // 非编辑状态即为新增，新增默认锁定画布
-    block.occupier = useEditorInfo().userInfo.value
+    block.occupier = getMetaApi('engine.service.globalService').getState().userInfo
     useLayout().layoutState.pageStatus = getCanvasStatus(block.occupier)
     addBlock(block)
     setSaved(false)
