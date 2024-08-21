@@ -18,5 +18,8 @@ export default {
   title: '高级',
   icon: 'target',
   align: 'top',
+  options: {
+    width: 320
+  },
   component
 }

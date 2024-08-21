@@ -38,31 +38,6 @@ const PLUGIN_NAME = {
   Props: 'SettingProps'
 }
 
-const pluginWidth = {
-  Materials: 300,
-  OutlineTree: 300,
-  AppManage: 300,
-  BlockManage: 300,
-  Collections: 300,
-  Bridge: 300,
-  I18n: 620,
-  PageController: 1000,
-  DataSource: 300,
-  Schema: 1000,
-  SettingProps: 320,
-  SettingStyles: 320,
-  SettingEvents: 32
-}
-const pluginWidthStorage = useStorage('pluginWidth', pluginWidth)
-const getPluginWidth = (name) => {
-  return pluginWidthStorage.value[name]
-}
-const changePluginWidth = (name, width) => {
-  if (Object.prototype.hasOwnProperty.call(pluginWidthStorage.value, name)) {
-    pluginWidthStorage.value[name] = width
-  }
-}
-
 const pluginState = reactive({
   pluginEvent: 'all'
 })
@@ -97,8 +72,8 @@ const layoutState = reactive({
   },
   pageStatus: ''
 })
-const leftFixedPanelsStorage = useStorage('leftFixedPanels', layoutState.plugins.fixedPanels)
-const rightFixedPanelsStorage = useStorage('rightFixedPanels', layoutState.settings.fixedPanels)
+const leftFixedPanelsStorage = useStorage('leftPanels', layoutState.plugins.fixedPanels)
+const rightFixedPanelsStorage = useStorage('rightPanels', layoutState.settings.fixedPanels)
 
 const changeLeftFixedPanels = (pluginName) => {
   leftFixedPanelsStorage.value = leftFixedPanelsStorage.value?.includes(pluginName)
@@ -176,6 +151,26 @@ const getPluginState = () => layoutState.plugins
 const isEmptyPage = () => layoutState.pageStatus?.state === PAGE_STATUS.Empty
 
 export default () => {
+  let theLocalStorage = '{}'
+  const myLocalStorage = localStorage.getItem('plugin')
+  if (typeof myLocalStorage === 'string' && myLocalStorage.toString !== 'undefined') {
+    theLocalStorage = myLocalStorage
+  }
+  theLocalStorage = JSON.parse(theLocalStorage)
+
+  const pluginWidthStorage = useStorage('plugin', theLocalStorage)
+
+  const getPluginWidth = (name) => {
+    let width = pluginWidthStorage.value[name]?.width || 300
+    return width
+  }
+
+  const changePluginWidth = (name, width) => {
+    if (Object.prototype.hasOwnProperty.call(pluginWidthStorage.value, name)) {
+      pluginWidthStorage.value[name].width = width
+    }
+  }
+
   return {
     PLUGIN_NAME,
     activeSetting,
