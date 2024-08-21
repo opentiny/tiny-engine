@@ -39,19 +39,19 @@ const PLUGIN_NAME = {
 }
 
 const pluginWidth = {
-  Materials: '300',
-  OutlineTree: '300',
-  AppManage: '300',
-  BlockManage: '300',
-  Collections: '300',
-  Bridge: '300',
-  I18n: '620',
-  PageController: '1000',
-  DataSource: '300',
-  Schema: '1000',
-  SettingProps: '320',
-  SettingStyles: '320',
-  SettingEvents: '320'
+  Materials: 300,
+  OutlineTree: 300,
+  AppManage: 300,
+  BlockManage: 300,
+  Collections: 300,
+  Bridge: 300,
+  I18n: 620,
+  PageController: 1000,
+  DataSource: 300,
+  Schema: 1000,
+  SettingProps: 320,
+  SettingStyles: 320,
+  SettingEvents: 32
 }
 const pluginWidthStorage = useStorage('pluginWidth', pluginWidth)
 const getPluginWidth = (name) => {
@@ -97,7 +97,19 @@ const layoutState = reactive({
   },
   pageStatus: ''
 })
+const leftFixedPanelsStorage = useStorage('leftFixedPanels', layoutState.plugins.fixedPanels)
+const rightFixedPanelsStorage = useStorage('rightFixedPanels', layoutState.settings.fixedPanels)
 
+const changeLeftFixedPanels = (pluginName) => {
+  leftFixedPanelsStorage.value = leftFixedPanelsStorage.value?.includes(pluginName)
+    ? leftFixedPanelsStorage.value?.filter((item) => item !== pluginName)
+    : [...leftFixedPanelsStorage.value, pluginName]
+}
+const changeRightFixedPanels = (pluginName) => {
+  rightFixedPanelsStorage.value = rightFixedPanelsStorage.value?.includes(pluginName)
+    ? rightFixedPanelsStorage.value?.filter((item) => item !== pluginName)
+    : [...rightFixedPanelsStorage.value, pluginName]
+}
 const registerPluginApi = (api) => {
   Object.assign(layoutState.plugins.api, api)
 }
@@ -180,6 +192,10 @@ export default () => {
     pluginState,
     isEmptyPage,
     getPluginWidth,
-    changePluginWidth
+    changePluginWidth,
+    leftFixedPanelsStorage,
+    rightFixedPanelsStorage,
+    changeLeftFixedPanels,
+    changeRightFixedPanels
   }
 }

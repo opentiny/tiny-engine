@@ -1,45 +1,46 @@
 <!-- 右侧插件栏-->
 <template>
+  <!-- 插件面板 -->
   <div>
-    <!-- 插件面板 -->
     <div
       v-show="renderPanel && components[renderPanel]"
       id="tiny-engine-right-panel"
-      :class="[renderPanel, { 'is-fixed': settingsState.fixedPanels.includes(renderPanel) }]"
+      :class="[renderPanel, { 'is-fixed': rightFixedPanelsStorage.includes(renderPanel) }]"
     >
       <div class="right-panel-wrap">
         <component
           :is="components[renderPanel]"
-          :fixed-panels="settingsState.fixedPanels"
+          :fixed-panels="rightFixedPanelsStorage"
           @close="close"
           @fixPanel="fixPanel"
         ></component>
         <div v-show="activating" class="active2" />
       </div>
     </div>
-    <div id="tiny-engine-nav-panel">
-      <!-- 图标菜单 -->
-      <ul class="nav-panel-lists">
-        <li
-          v-for="(item, index) in state.leftList"
-          :key="index"
-          :class="{
-            'list-item': true,
-            'first-item': index === 0,
-            active: item.id === renderPanel
-          }"
-          :title="item.title"
-          @click="clickMenu({ item, index })"
-        >
-          <div>
-            <span class="item-icon">
-              <svg-icon v-if="iconComponents[item.id]" :name="iconComponents[item.id]" class="panel-icon"></svg-icon>
-              <component v-else :is="iconComponents[item.id]" class="panel-icon"></component>
-            </span>
-          </div>
-        </li>
-      </ul>
-    </div>
+  </div>
+
+  <div id="tiny-engine-nav-panel">
+    <!-- 图标菜单 -->
+    <ul class="nav-panel-lists">
+      <li
+        v-for="(item, index) in state.leftList"
+        :key="index"
+        :class="{
+          'list-item': true,
+          'first-item': index === 0,
+          active: item.id === renderPanel
+        }"
+        :title="item.title"
+        @click="clickMenu({ item, index })"
+      >
+        <div>
+          <span class="item-icon">
+            <svg-icon v-if="iconComponents[item.id]" :name="iconComponents[item.id]" class="panel-icon"></svg-icon>
+            <component v-else :is="iconComponents[item.id]" class="panel-icon"></component>
+          </span>
+        </div>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -66,6 +67,8 @@ export default {
   setup(props) {
     const { renderPanel } = toRefs(props)
     const {
+      rightFixedPanelsStorage,
+      changeRightFixedPanels,
       layoutState: { settings: settingsState }
     } = useLayout()
     const settings = Addons && Addons.settings
@@ -106,9 +109,7 @@ export default {
 
     //切换面板状态
     const fixPanel = (pluginName) => {
-      settingsState.fixedPanels = settingsState.fixedPanels?.includes(pluginName)
-        ? settingsState.fixedPanels?.filter((item) => item !== pluginName)
-        : [...settingsState.fixedPanels, pluginName]
+      changeRightFixedPanels(pluginName)
     }
 
     return {
@@ -121,7 +122,8 @@ export default {
       iconComponents,
       clickMenu,
       close,
-      fixPanel
+      fixPanel,
+      rightFixedPanelsStorage
     }
   }
 }

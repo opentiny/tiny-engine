@@ -79,14 +79,14 @@
     <div
       v-show="renderPanel && components[renderPanel]"
       id="tiny-engine-left-panel"
-      :class="[renderPanel, { 'is-fixed': pluginsState.fixedPanels.includes(renderPanel) }]"
+      :class="[renderPanel, { 'is-fixed': leftFixedPanelsStorage.includes(renderPanel) }]"
     >
       <div class="left-panel-wrap">
         <keep-alive>
           <component
             :is="components[renderPanel]"
             ref="pluginRef"
-            :fixed-panels="pluginsState.fixedPanels"
+            :fixed-panels="leftFixedPanelsStorage"
             @close="close"
             @fixPanel="fixPanel"
           ></component>
@@ -134,11 +134,7 @@ export default {
     const { isTemporaryPage } = usePage()
     const HELP_PLUGIN_ID = 'EditorHelp'
 
-    const {
-      pluginState,
-      registerPluginApi,
-      layoutState: { plugins: pluginsState }
-    } = useLayout()
+    const { pluginState, registerPluginApi, changeLeftFixedPanels, leftFixedPanelsStorage } = useLayout()
 
     Addons.plugins.forEach(({ id, component, api, icon }) => {
       components[id] = component
@@ -209,9 +205,7 @@ export default {
 
     //切换面板状态
     const fixPanel = (pluginName) => {
-      pluginsState.fixedPanels = pluginsState.fixedPanels?.includes(pluginName)
-        ? pluginsState.fixedPanels?.filter((item) => item !== pluginName)
-        : [...pluginsState.fixedPanels, pluginName]
+      changeLeftFixedPanels(pluginName)
     }
 
     return {
@@ -223,12 +217,12 @@ export default {
       robotComponent,
       close,
       fixPanel,
-      pluginsState,
       components,
       iconComponents,
       completed,
       doCompleted,
-      pluginState
+      pluginState,
+      leftFixedPanelsStorage
     }
   }
 }
