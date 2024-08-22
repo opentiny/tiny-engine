@@ -11,6 +11,7 @@
   "files": [
     "dist"
   ],
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/opentiny/tiny-engine",
@@ -25,7 +26,7 @@
   "dependencies": {},
   "devDependencies": {
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
-    "rimraf": "^3.0.2",
-    "vite": "^4.3.7"
+    "rimraf": "^6.0.1",
+    "vite": "^5.4.2"
   }
 }

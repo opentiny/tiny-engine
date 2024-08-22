@@ -11,6 +11,7 @@
   "files": [
     "dist"
   ],
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/opentiny/tiny-engine",
@@ -24,7 +25,6 @@
   "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {},
   "devDependencies": {
-    "rimraf": "^3.0.2",
-    "vite": "^4.3.7"
+    "vite": "^5.4.2"
   }
 }

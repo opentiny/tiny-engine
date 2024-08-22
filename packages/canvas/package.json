@@ -14,6 +14,7 @@
   "files": [
     "dist"
   ],
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/opentiny/tiny-engine",
@@ -40,10 +41,10 @@
   },
   "devDependencies": {
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
-    "@vitejs/plugin-vue": "^4.2.3",
-    "@vitejs/plugin-vue-jsx": "^3.1.0",
+    "@vitejs/plugin-vue": "^5.1.2",
+    "@vitejs/plugin-vue-jsx": "^4.0.1",
     "rollup-plugin-terser": "^7.0.2",
-    "vite": "^4.3.7"
+    "vite": "^5.4.2"
   },
   "peerDependencies": {
     "@opentiny/vue": "^3.14.0",

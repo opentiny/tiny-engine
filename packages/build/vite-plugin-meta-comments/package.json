@@ -13,7 +13,7 @@
     "test": "node ./src/test/index.js"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.0.4",
+    "@vitejs/plugin-vue": "^5.1.2",
     "vite": "^5.2.7",
     "@babel/parser": "^7.18.13",
     "@babel/traverse": "^7.18.13",

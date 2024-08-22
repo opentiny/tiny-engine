@@ -21,9 +21,9 @@
     "@opentiny/vue-theme": "~3.14.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.0.4",
+    "@vitejs/plugin-vue": "^5.1.2",
     "cross-env": "^7.0.3",
-    "vite": "^5.2.7",
+    "vite": "^5.4.2",
     "@opentiny/tiny-engine-vite-config": "workspace:^",
     "@opentiny/tiny-engine-mock": "workspace:^"
   }
