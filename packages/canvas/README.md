@@ -3,22 +3,22 @@
 ## build
 
 Note: tiny-engine-canvas module contains two parts， *canvas-container* and *canvas*, and canvas is rendered in iframe window
-In build phase, they are separately build. The build product of them use different external strategy, and the product of *canvas*  will embed with base64 format in the product of *canvas-container*,
+During the build phase, they are built separately. The build products use different external strategies, and the *canvas* product will be embedded in base64 format within the *canvas-container* product,
 since the library-mode-build now only supports embed dependent assets in base64 format, and the embedded base64 format is more general for other build and pack tools.
-You should notice the difference between the product of *canvas-container* and *canvas*. The product of  *canvas-container* work fine with other *tiny-engine-\** packages with unfixed versions. And the product of *canvas* only external `vue` and `vue-i18n`, the rest of dependent packages will be packed and won't be replaceable to other version. (That means you will not be able to joint-debug the dependent packages inside *canvas* product code. You should join-debug using canvas module source code.)
+You should notice the difference between the products of *canvas-container* and *canvas*. The product of *canvas-container* works fine with other *tiny-engine-\** packages with unfixed versions. The product of *canvas* only externalizes `vue` and `vue-i18n`; the rest of the dependent packages will be packed and won't be replaceable with other versions. (This means you will not be able to joint-debug the dependent packages inside the *canvas* product code. You should joint-debug using the canvas module source code.)
 
-Develop and debug canvas module in development mode needs:
+Develop and debug the canvas module in development mode requires:
 
-1) set vite config with devAlias(`resolve.alias`) which makes canvas package name pointed to canvas module source code
-2) use canvas-dev-external plugin
+1) Setting the Vite config with `devAlias` (`resolve.alias`), which points the canvas package name to the canvas module source code.
+2) Using the `canvas-dev-external` plugin.
 
-Vite use esbuild in development, devAlias configuration makes the source code of canvas module work and able to joint debug.
-But esbuild won't perceive the external configuration for rollup, it will resolve `vue` and other dependencies (that we originally wanted to exclude and let they naturally point to the package addresses in the `importmap`) to `node_modules`.
+Vite uses esbuild in development. The `devAlias` configuration makes the source code of the canvas module work and allows for joint debugging.
+However, esbuild won't perceive the external configuration for rollup; it will resolve `vue` and other dependencies (that we originally wanted to exclude and let them naturally point to the package addresses in the `importmap`) to `node_modules`.
 For this reason, we need the `canvas-dev-external` plugin. It can externalize the dependencies specified in the `importmap` of *canvas* for esbuild.
-On the other hand, externalizing the dependencies will affect all other package in the same runtime, this plugin will generate another `impoartmap` that point all effected dependencies to `node_modules` to eliminate the side effects.
+On the other hand, externalizing the dependencies will affect all other packages in the same runtime. This plugin will generate another `importmap` that points all affected dependencies to `node_modules` to eliminate the side effects.
 
-Finally, modules inside and outside the *canvas* iframe can joint debug well, and we accomplish the goal of decoupling the versions of `vue` and other dependencies inside and outside the *canvas*. (That is, we can use complete different version of `vue` inside or outside the *canvas*， we don‘t need to synchronize the version.
-In some cases, we may want to use the lower or higher version for better support.)
+Finally, modules inside and outside the *canvas* iframe can joint-debug well, and we accomplish the goal of decoupling the versions of `vue` and other dependencies inside and outside the *canvas*. (That is, we can use completely different versions of `vue` inside or outside the *canvas*; we don’t need to synchronize the versions.
+In some cases, we may want to use a lower or higher version for better support.)
 
 ## 构建
 
