@@ -55,14 +55,14 @@
   <div
     v-show="renderPanel && components[renderPanel]"
     id="tiny-engine-left-panel"
-    :class="[renderPanel, { 'is-fixed': pluginsState.fixedPanels.includes(renderPanel) }]"
+    :class="[renderPanel, { 'is-fixed': pluginState.fixedPanels.includes(renderPanel) }]"
   >
     <div class="left-panel-wrap">
       <keep-alive>
         <component
           :is="components[renderPanel]"
           ref="pluginRef"
-          :fixed-panels="pluginsState.fixedPanels"
+          :fixed-panels="pluginState.fixedPanels"
           @close="close"
           @fixPanel="fixPanel"
         ></component>
@@ -74,7 +74,7 @@
 <script>
 import { reactive, ref, watch } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
-import { useLayout, usePage } from '@opentiny/tiny-engine-meta-register'
+import { useLayout, usePage, META_APP } from '@opentiny/tiny-engine-meta-register'
 import { PublicIcon } from '@opentiny/tiny-engine-common'
 
 export default {
@@ -98,12 +98,7 @@ export default {
     const iconComponents = {}
     const pluginRef = ref(null)
     const { isTemporaryPage } = usePage()
-
-    const {
-      PLUGIN_NAME,
-      pluginState,
-      layoutState: { plugins: pluginsState }
-    } = useLayout()
+    const pluginState = useLayout().getPluginState()
 
     props.plugins.forEach(({ id, entry, icon }) => {
       components[id] = entry
@@ -113,12 +108,11 @@ export default {
     const state = reactive({
       prevIdex: -2,
       topNavLists: props.plugins.filter((item) => item.align === 'top'),
-      bottomNavLists: props.plugins.filter((item) => item.align === 'bottom'),
-      independence: props.plugins.find((item) => item.align === 'independence')
+      bottomNavLists: props.plugins.filter((item) => item.align === 'bottom')
     })
 
     const clickMenu = ({ item, index }) => {
-      if (item.id === PLUGIN_NAME.EditorHelp || item.id === PLUGIN_NAME.Robot) return
+      if (item.id === META_APP.EditorHelp || item.id === META_APP.Robot) return
 
       state.prevIdex = index
 
@@ -143,8 +137,8 @@ export default {
 
     watch(isTemporaryPage, () => {
       if (isTemporaryPage.saved) {
-        const pagePanel = state.topNavLists?.find((item) => item.id === PLUGIN_NAME.AppManage) || null
-        const pageIndex = state.topNavLists?.findIndex((item) => item.id === PLUGIN_NAME.AppManage) || -1
+        const pagePanel = state.topNavLists?.find((item) => item.id === META_APP.AppManage) || null
+        const pageIndex = state.topNavLists?.findIndex((item) => item.id === META_APP.AppManage) || -1
         if (pagePanel !== props.renderPanel) {
           clickMenu({ item: pagePanel, index: pageIndex })
         }
@@ -157,9 +151,9 @@ export default {
     }
 
     const fixPanel = (pluginName) => {
-      pluginsState.fixedPanels = pluginsState.fixedPanels?.includes(pluginName)
-        ? pluginsState.fixedPanels?.filter((item) => item !== pluginName)
-        : [...pluginsState.fixedPanels, pluginName]
+      pluginState.fixedPanels = pluginState.fixedPanels?.includes(pluginName)
+        ? pluginState.fixedPanels?.filter((item) => item !== pluginName)
+        : [...pluginState.fixedPanels, pluginName]
     }
 
     return {
@@ -168,10 +162,9 @@ export default {
       pluginRef,
       close,
       fixPanel,
-      pluginsState,
+      pluginState,
       components,
-      iconComponents,
-      pluginState
+      iconComponents
     }
   }
 }

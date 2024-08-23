@@ -9,7 +9,10 @@ export default {
   component,
   options: {
     configProvider: TinyConfigProvider,
-    configProviderDesign: designSmbConfig
+    configProviderDesign: designSmbConfig,
+    isShowLine: true,
+    isShowCollapse: true,
+    toolbars: {}
   },
   metas: [LayoutService]
 }
