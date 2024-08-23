@@ -14,57 +14,44 @@ import { defineConfig } from 'vite'
 import path from 'path'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
-import { terser } from 'rollup-plugin-terser'
 import generateComments from '@opentiny/tiny-engine-vite-plugin-meta-comments'
+import { vitePluginBuildEntry } from './scripts/vite-plugin-separate-build'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, 'src')
-    }
-  },
+  base: './',
+
   plugins: [
-    vue({
-      template: {
-        compilerOptions: {
-          isCustomElement: (tag) => tag.startsWith('tiny-i18n-host')
-        }
-      }
-    }),
+    vue(),
     vueJsx(),
-    { ...terser({ module: true }), enforce: 'post' },
-    {
-      apply: 'build',
-      enforce: 'post',
-      generateBundle(_, bundle) {
-        const cssFileName = 'style.css'
-        const jsFileName = 'index.js'
-        const { [cssFileName]: cssBundle } = bundle
-        let IIFEcss = ''
-
-        if (cssBundle) {
-          IIFEcss = `(function() {try {var elementStyle = document.createElement('style');elementStyle.innerText = ${JSON.stringify(
-            cssBundle.source
-          )};document.head.appendChild(elementStyle);} catch(error) {console.error(error, 'unable to concat style inside the bundled file')}})()`
-          delete bundle[cssFileName]
-        }
-
-        bundle[jsFileName].code += IIFEcss
-      }
-    },
-    generateComments()
+    generateComments(),
+    vitePluginBuildEntry({
+      canvas: path.resolve(__dirname, './scripts/canvas-vite.config.js')
+    })
   ],
   publicDir: false,
   build: {
-    cssCodeSplit: false,
+    cssCodeSplit: true,
     lib: {
-      entry: path.resolve(__dirname, './index.js'),
+      entry: {
+        index: path.resolve(__dirname, './index.js')
+      },
       name: 'canvas',
       fileName: () => 'index.js',
       formats: ['es']
     },
     rollupOptions: {
+      output: {
+        entryFileNames: '[name].js',
+        chunkFileNames: '[name].js',
+        assetFileNames: '[name].[ext]',
+        banner: (chunk) => {
+          if (['index'].includes(chunk.name)) {
+            return `import "./${chunk.name}.css"`
+          }
+          return ''
+        }
+      },
       external: ['vue', '@vueuse/core', 'vue-i18n', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/]
     },
     minify: true
