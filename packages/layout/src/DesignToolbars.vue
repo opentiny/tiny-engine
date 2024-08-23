@@ -1,26 +1,14 @@
 <template>
   <div class="tiny-engine-toolbar">
     <div class="toolbar-left">
-      <component :is="item.entry" v-for="item in state.leftBar" :key="item.id"></component>
+      <component :is="item.entry" v-for="item in leftBar" :key="item.id"></component>
     </div>
     <div class="toolbar-center">
-      <component :is="item.entry" v-for="item in state.centerBar" :key="item.id"></component>
+      <component :is="item.entry" v-for="item in centerBar" :key="item.id"></component>
     </div>
     <div class="toolbar-right">
-      <div class="toolbar-right-content">
-        <div class="toolbar-right-item" v-for="(item, idx) in state.rightBar" :key="idx">
-          <div class="toolbar-right-item-comp" v-for="comp in item" :key="comp">
-            <component :is="getMergeRegistry(REGISTRY_NAME, comp).entry"></component>
-          </div>
-
-          <span class="toolbar-right-line" v-if="layoutRegistry.options.isShowLine">|</span>
-        </div>
-      </div>
-      <toolbar-collapse
-        :collapseBar="state.collapseBar"
-        :registry="REGISTRY_NAME"
-        v-if="layoutRegistry.options.isShowCollapse"
-      ></toolbar-collapse>
+      <component :is="item.entry" v-for="item in rightBar" :key="item.id"></component>
+      <toolbar-collapse :collapseBar="collapseBar"></toolbar-collapse>
     </div>
   </div>
   <div class="progress">
@@ -30,12 +18,9 @@
 
 <script>
 import { reactive, nextTick } from 'vue'
-import { getMergeRegistry } from '@opentiny/tiny-engine-meta-register'
+import { useLayout } from '@opentiny/tiny-engine-meta-register'
 import { ProgressBar } from '@opentiny/tiny-engine-common'
 import ToolbarCollapse from './ToolbarCollapse.vue'
-import { utils } from '@opentiny/tiny-engine-utils'
-
-const { deepClone } = utils
 
 export default {
   components: {
@@ -46,71 +31,42 @@ export default {
     toolbars: {
       type: Array,
       default: () => []
-    },
-    layoutRegistry: {
-      type: Object,
-      default: () => {}
     }
   },
   setup(props) {
-    const REGISTRY_NAME = 'toolbars'
-    const registryToolbars = deepClone(props.layoutRegistry?.options?.toolbars)
-    const registryRightFlat = registryToolbars.right.flat()
-    const registryCollapseFlat = registryToolbars.collapse.flat()
-
+    const leftBar = []
+    const rightBar = []
+    const centerBar = []
+    const collapseBar = []
     const state = reactive({
-      showDeployBlock: false,
-      leftBar: [],
-      rightBar: [],
-      centerBar: [],
-      collapseBar: []
+      showDeployBlock: false
     })
-
-    const getNewRes = (arr, newArr) => {
-      let res = []
-      newArr.forEach((id) => {
-        if (arr.indexOf(id) === -1) {
-          res.push(id)
-        }
-      })
-
-      return res
-    }
-
-    const getNewBar = (registryData, stataData) =>
-      Array.from(new Set([...registryData, ...stataData])).map((id) => getMergeRegistry(REGISTRY_NAME, id))
 
     props.toolbars.forEach((item) => {
       if (item.align === 'right') {
-        item?.collapsed ? state.collapseBar.push(item.id) : state.rightBar.push(item.id)
+        item?.collapsed ? collapseBar.push(item) : rightBar.push(item)
       } else if (item.align === 'center') {
-        state.centerBar.push(item.id)
+        centerBar.push(item)
       } else {
-        state.leftBar.push(item.id)
+        leftBar.push(item)
+      }
+      if (item.id === 'lock') {
+        useLayout().registerPluginApi({ Lock: item.api })
+      }
+      if (item.id === 'save') {
+        useLayout().registerPluginApi({ save: item.api })
       }
     })
-
-    state.leftBar = getNewBar(registryToolbars.left, state.leftBar)
-    state.centerBar = getNewBar(registryToolbars.center, state.centerBar)
-
-    const rightRes = getNewRes(registryRightFlat, state.rightBar)
-    registryToolbars.right[0] = registryToolbars.right[0] ? [...registryToolbars.right[0], ...rightRes] : state.rightBar
-    state.rightBar = registryToolbars.right
-
-    const collapseRes = getNewRes(registryCollapseFlat, state.collapseBar)
-    registryToolbars.collapse[0] = registryToolbars.collapse[0]
-      ? [...registryToolbars.collapse[0], ...collapseRes]
-      : state.collapseBar
-    state.collapseBar = registryToolbars.collapse
-
     nextTick(() => {
       state.showDeployBlock = true
     })
 
     return {
-      REGISTRY_NAME,
-      getMergeRegistry,
-      state
+      leftBar,
+      rightBar,
+      centerBar,
+      state,
+      collapseBar
     }
   }
 }

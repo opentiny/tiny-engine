@@ -6,11 +6,11 @@
           <svg-icon name="ellipsis"></svg-icon>
         </span>
       </template>
-      <div class="empty-bar" v-for="(item, idx) in collapseBar" :key="idx">
-        <div class="toolbar-list-button" v-for="comp in item" :key="comp">
-          <component :is="getMergeRegistry(registry, comp)?.entry"></component>
+      <div class="empty-bar" v-for="item in collapseBar" :key="item.id">
+        <div v-if="item.splitLine" class="empty-line"></div>
+        <div class="toolbar-list-button">
+          <component :is="item.entry"></component>
         </div>
-        <div class="empty-line"></div>
       </div>
     </tiny-popover>
   </div>
@@ -19,7 +19,6 @@
 <script>
 import { Popover } from '@opentiny/vue'
 import { IconPopup } from '@opentiny/vue-icon'
-import { getMergeRegistry } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
@@ -30,15 +29,6 @@ export default {
     collapseBar: {
       type: Array,
       default: () => []
-    },
-    registry: {
-      type: String,
-      default: ''
-    }
-  },
-  setup() {
-    return {
-      getMergeRegistry
     }
   }
 }

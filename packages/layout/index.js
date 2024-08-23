@@ -12,12 +12,7 @@ export default {
     configProviderDesign: designSmbConfig,
     isShowLine: true,
     isShowCollapse: true,
-    toolbars: {
-      left: [],
-      center: [],
-      right: [],
-      collapse: []
-    }
+    toolbars: {}
   },
   metas: [LayoutService]
 }

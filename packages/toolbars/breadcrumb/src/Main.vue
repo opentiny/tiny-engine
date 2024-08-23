@@ -12,7 +12,7 @@
       @click="publishBlock()"
       type="primary"
       size="small"
-      >发布区块</tiny-button
+      >区块</tiny-button
     >
   </div>
   <block-deploy-dialog v-model:visible="state.showDeployBlock" :nextVersion="nextVersion"></block-deploy-dialog>
@@ -94,7 +94,7 @@ export default {
   margin-right: 3px;
   cursor: pointer;
   &-title {
-    height: 24px;
+    height: 28px;
     padding: 0 8px;
     background-color: var(--ti-lowcode-toolbar-breadcrumb-bg);
     display: flex;
@@ -108,7 +108,6 @@ export default {
   }
 
   .tiny-breadcrumb {
-    height: 17px;
     line-height: var(--base-top-panel-breadcrumb-line-height);
     padding-right: 4px;
     text-overflow: ellipsis;
@@ -125,6 +124,7 @@ export default {
     :deep(.tiny-breadcrumb__inner) {
       color: var(--ti-lowcode-toolbar-breadcrumb-left-color);
       text-decoration: none;
+      cursor: pointer;
     }
 
     :deep(.tiny-breadcrumb__separator) {
@@ -136,6 +136,12 @@ export default {
       font-weight: normal;
       color: var(--ti-lowcode-toolbar-breadcrumb-left-color);
     }
+  }
+
+  .publish {
+    margin-left: 8px;
+    height: 28px;
+    line-height: 28px;
   }
 }
 </style>
