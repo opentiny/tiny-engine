@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "cross-env VITE_THEME=light vite",
     "build:alpha": "cross-env NODE_OPTIONS=--max-old-space-size=8192 VITE_THEME=light vite build --mode alpha",
-    "build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 VITE_THEME=light vite build --mode prod"
+    "build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 VITE_THEME=light vite build"
   },
   "dependencies": {
     "vue": "^3.4.21",

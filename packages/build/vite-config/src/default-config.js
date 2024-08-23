@@ -8,12 +8,12 @@ import nodeModulesPolyfillPluginCjs from '@esbuild-plugins/node-modules-polyfill
 import nodePolyfill from 'rollup-plugin-polyfill-node'
 import esbuildCopy from 'esbuild-plugin-copy'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
-import { importmapPlugin } from './externalDeps.js'
 import visualizerCjs from 'rollup-plugin-visualizer'
 import generateComment from '@opentiny/tiny-engine-vite-plugin-meta-comments'
-import { getBaseUrlFromCli, copyBundleDeps, copyPreviewImportMap, copyLocalImportMap } from './localCdnFile/index.js'
+import { getBaseUrlFromCli, copyBundleDeps, copyPreviewImportMap } from './localCdnFile/index.js'
 import { devAliasPlugin } from './vite-plugins/devAliasPlugin.js'
 import { htmlUpgradeHttpsPlugin } from './vite-plugins/upgradeHttpsPlugin.js'
+import { canvasDevExternal } from './canvas-dev-external.js'
 
 const monacoEditorPlugin = monacoEditorPluginCjs.default
 const nodeGlobalsPolyfillPlugin = nodeGlobalsPolyfillPluginCjs.default
@@ -108,7 +108,6 @@ const getDefaultConfig = (engineConfig) => {
         plugins: [nodePolyfill({ include: null })], // 使用@rollup/plugin-inject的默认值{include: null}, 即在所有代码中生效
         input: {
           index: path.resolve(process.cwd(), './index.html'),
-          canvas: path.resolve(process.cwd(), './canvas.html'),
           preview: path.resolve(process.cwd(), './preview.html')
         },
         output: {
@@ -131,21 +130,11 @@ const getDefaultConfig = (engineConfig) => {
   }
 }
 
-const defaultImportMapVersions = {
-  prettier: '2.7.1',
-  vue: '3.4.23',
-  tinyVue: '~3.14'
-}
-
 export function useTinyEngineBaseConfig(engineConfig) {
-  const importMapVersions = {
-    ...defaultImportMapVersions,
-    ...(engineConfig.importMapVersions || {})
-  }
   const { envDir = '', viteConfigEnv } = engineConfig
   const { command = 'serve', mode = 'serve' } = viteConfigEnv
   const env = loadEnv(mode, envDir)
-  const { VITE_CDN_DOMAIN = 'https://npm.onmicrosoft.cn', VITE_LOCAL_IMPORT_MAPS, VITE_LOCAL_BUNDLE_DEPS } = env
+  const { VITE_CDN_DOMAIN = 'https://unpkg.com', VITE_LOCAL_IMPORT_MAPS, VITE_LOCAL_BUNDLE_DEPS } = env
   const isLocalImportMap = VITE_LOCAL_IMPORT_MAPS === 'true' // true公共依赖库使用本地打包文件，false公共依赖库使用公共CDN
   const isCopyBundleDeps = VITE_LOCAL_BUNDLE_DEPS === 'true' // true bundle里的cdn依赖处理成本地依赖， false 不处理
   const monacoPublicPath = 'editor/monaco-workers'
@@ -156,45 +145,6 @@ export function useTinyEngineBaseConfig(engineConfig) {
   })
   const config = getDefaultConfig(engineConfig)
 
-  if (command === 'serve') {
-    const devVueAlias = {
-      find: /^vue$/,
-      replacement: `${VITE_CDN_DOMAIN}/vue@${importMapVersions.vue}/dist/vue.runtime.esm-browser.js`
-    }
-
-    config.resolve.alias = [...(isLocalImportMap ? [] : [devVueAlias])]
-  } else {
-    // command === 'build'
-    if (mode === 'prod') {
-      config.build.minify = true
-      config.build.sourcemap = false
-    }
-  }
-
-  const importmap = {
-    imports: {
-      prettier: `${VITE_CDN_DOMAIN}/prettier@${importMapVersions.prettier}/esm/standalone.mjs`,
-      'prettier/': `${VITE_CDN_DOMAIN}/prettier@${importMapVersions.prettier}/esm/`,
-      'prettier/parser-typescript': `${VITE_CDN_DOMAIN}/prettier@${importMapVersions.prettier}/esm/parser-typescript.mjs`,
-      'prettier/parser-html': `${VITE_CDN_DOMAIN}/prettier@${importMapVersions.prettier}/esm/parser-html.mjs`,
-      'prettier/parser-postcss': `${VITE_CDN_DOMAIN}/prettier@${importMapVersions.prettier}/esm/parser-postcss.mjs`,
-      'prettier/parser-babel': `${VITE_CDN_DOMAIN}/prettier@${importMapVersions.prettier}/esm/parser-babel.mjs`,
-
-      vue: `${VITE_CDN_DOMAIN}/vue@${importMapVersions.vue}/dist/vue.runtime.esm-browser${
-        command === 'build' ? '.prod' : ''
-      }.js`,
-      '@opentiny/vue': `${VITE_CDN_DOMAIN}/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue.mjs`,
-      '@opentiny/vue-icon': `${VITE_CDN_DOMAIN}/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue-icon.mjs`,
-      '@opentiny/vue-common': `${VITE_CDN_DOMAIN}/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue-common.mjs`,
-      '@opentiny/vue-locale': `${VITE_CDN_DOMAIN}/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue-locale.mjs`,
-      '@opentiny/vue-design-smb': `${VITE_CDN_DOMAIN}/@opentiny/vue-design-smb@${importMapVersions.tinyVue}/index.js`,
-      '@opentiny/vue-theme/theme-tool': `${VITE_CDN_DOMAIN}/@opentiny/vue-theme@${importMapVersions.tinyVue}/theme-tool.js`,
-      '@opentiny/vue-theme/theme': `${VITE_CDN_DOMAIN}/@opentiny/vue-theme@${importMapVersions.tinyVue}/theme/index.js`
-    }
-  }
-
-  const importMapStyles = [`${VITE_CDN_DOMAIN}/@opentiny/vue-theme@${importMapVersions.tinyVue}/index.css`]
-
   config.plugins.push(
     createSvgIconsPlugin({
       iconDirs: engineConfig.iconDirs || [],
@@ -203,19 +153,6 @@ export function useTinyEngineBaseConfig(engineConfig) {
     }),
     monacoEditorPluginInstance,
     htmlUpgradeHttpsPlugin(mode),
-    isLocalImportMap
-      ? copyLocalImportMap({
-          importMap: importmap,
-          styleUrls: importMapStyles,
-          originCdnPrefix: VITE_CDN_DOMAIN,
-          base: getBaseUrlFromCli(config.base),
-          packageCopy: [
-            // 这两个包的js存在相对路径引用，不能单独拷贝一个文件，需要整个包拷贝
-            '@opentiny/vue-theme/theme-tool',
-            '@opentiny/vue-theme/theme'
-          ]
-        })
-      : importmapPlugin(importmap, importMapStyles),
     isCopyBundleDeps
       ? copyBundleDeps({
           bundleFile: 'public/mock/bundle.json',
@@ -240,6 +177,10 @@ export function useTinyEngineBaseConfig(engineConfig) {
   )
 
   config.plugins.push(devAliasPlugin(env, engineConfig.useSourceAlias))
+
+  if (engineConfig.useSourceAlias && command === 'serve') {
+    config.plugins.push(canvasDevExternal())
+  }
 
   return config
 }
