@@ -41,6 +41,7 @@ export default {
   height: 24px;
   border-radius: 4px;
   line-height: 24px;
+  margin-left: 4px;
 
   &:hover {
     background: var(--ti-lowcode-toolbar-view-active-bg);
