@@ -1,7 +1,7 @@
 <template>
   <div class="toolbar-generate">
     <tiny-button @click="generate">
-      <span>
+      <span class="toolbar-generate-btn">
         <svg-icon :name="icon"></svg-icon>
         <span class="button-title">出码</span>
       </span>
@@ -261,14 +261,21 @@ export default {
 </script>
 <style lang="less" scoped>
 .toolbar-generate {
+  margin-right: 4px;
+  .toolbar-generate-btn {
+    display: flex;
+    align-items: center;
+  }
   :deep(.tiny-button--default) {
     min-width: 58px;
     height: 26px;
     padding: 0 8px;
-    line-height: 24px;
     border-radius: 4px;
     background-color: var(--ti-lowcode-toolbar-button-bg);
     border: none;
+    &:not(.disabled):hover {
+      background-color: var(--ti-lowcode-toolbar-button-bg);
+    }
     .button-title {
       margin-left: 4px;
     }
