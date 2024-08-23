@@ -53,15 +53,7 @@ export default {
     metas: [EditorInfoService, AppService, GenerateCodeService]
   },
   config: engineConfig,
-  layout: {
-    ...Layout,
-    options: {
-      ...Layout.options,
-      isShowLine: true,
-      isShowCollapse: true,
-      toolbars: {}
-    }
-  },
+  layout: Layout,
   themes: [
     {
       id: 'engine.theme.light'
