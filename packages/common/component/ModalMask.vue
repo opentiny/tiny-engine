@@ -68,7 +68,7 @@ export default {
     right: 0;
     bottom: 0;
     left: 0;
-    background: var(--lowcode-base-mode-mask-background);
+    background: var(--ti-lowcode-base-mode-mask-background);
     opacity: 0.5;
     z-index: 9999;
   }
@@ -82,7 +82,7 @@ export default {
     color: var(--ti-lowcode-toolbar-breadcrumb-color);
     box-shadow: 0px 0px 20px 0px var(--lowcode-base-mode-mask-shadow);
     border-radius: 6px;
-    background-color: var(--lowcode-base-mode-mask-background);
+    background-color: var(--ti-lowcode-base-mode-mask-background);
     overflow: auto;
     max-height: 100%;
     box-sizing: border-box;
