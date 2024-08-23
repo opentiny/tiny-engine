@@ -123,7 +123,7 @@ export default {
   .data-source-list-item {
     &.selected,
     &:hover {
-      background: var(--ti-lowcode-common-component-hover-bg);
+      background: var(--ti-lowcode-common-component-bg-25);
     }
   }
 

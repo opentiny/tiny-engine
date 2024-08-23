@@ -3,12 +3,36 @@ html {
 }
 
 body {
-  padding: 0;
-  margin: 0;
-  font-family: Microsoft YaHei, Microsoft YaHei-Normal;
-}
+  *,
+  .lowcode-scrollbar,
+  .lowcode-scrollbar-thin {
+    &::-webkit-scrollbar-track,
+    &::-webkit-scrollbar-track-piece,
+    &::-webkit-scrollbar-corner {
+      background-color: transparent;
+    }
 
-body {
+    &::-webkit-scrollbar-thumb {
+      background-color: #dbdbdb;
+
+      &:hover {
+        background-color: #c2c2c2;
+      }
+    }
+  }
+  *,
+  .lowcode-scrollbar {
+    &::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+  }
+  .lowcode-scrollbar-thin {
+    &::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+  }
   --base-left-panel-width: 280px;
   --base-right-panel-width: 280px;
   --base-top-panel-height: 40px;
@@ -23,6 +47,9 @@ body {
   );
   -webkit-font-smoothing: subpixel-antialiased;
   background: #f9f9f9;
+  padding: 0;
+  margin: 0;
+  font-family: Microsoft YaHei, Microsoft YaHei-Normal;
 }
 
 ol,
@@ -66,45 +93,8 @@ td {
   outline: none;
 }
 
-.text-ellipsis-multiple {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: var(--ellipsis-line, 2);
-  -webkit-box-orient: vertical;
-}
-
-body {
-  *,
-  .lowcode-scrollbar,
-  .lowcode-scrollbar-thin {
-    &::-webkit-scrollbar-track,
-    &::-webkit-scrollbar-track-piece,
-    &::-webkit-scrollbar-corner {
-      background-color: transparent;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background-color: #dbdbdb;
-
-      &:hover {
-        background-color: #c2c2c2;
-      }
-    }
-  }
-  *,
-  .lowcode-scrollbar {
-    &::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
-    }
-  }
-  .lowcode-scrollbar-thin {
-    &::-webkit-scrollbar {
-      width: 4px;
-      height: 4px;
-    }
-  }
+#tiny-engine .svg-icon {
+  fill: #808080;
 }
 
 // support for not webkit browser and won't override ::webkit-scrollbar-* selector
@@ -128,4 +118,16 @@ body {
   &::-webkit-scrollbar {
     display: none;
   }
+}
+
+.global-desc-info {
+  color: var(--ti-lowcode-common-text-desc-color);
+}
+
+.text-ellipsis-multiple {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }

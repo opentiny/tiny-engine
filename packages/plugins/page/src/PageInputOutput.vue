@@ -106,7 +106,6 @@ export default {
 <style lang="less" scoped>
 .input-or-output {
   color: var(--ti-lowcode-page-manage-icon-text-color);
-  margin-top: -20px;
   padding: 20px;
   .life-cycle-alert {
     color: var(--ti-lowcode-life-cycle-alert-color);
@@ -137,7 +136,6 @@ export default {
     }
   }
   .page-root-form-item {
-    margin-bottom: -10px;
     :deep(.tiny-form-item__content) {
       display: flex;
       .tiny-switch {

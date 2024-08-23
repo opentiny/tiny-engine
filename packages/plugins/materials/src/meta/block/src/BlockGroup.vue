@@ -428,7 +428,7 @@ export default {
   .add-group-btn {
     font-size: 16px;
     width: 32px;
-    height: 32px;
+    height: 24px;
     border-radius: 6px;
     border-color: var(--ti-lowcode-materials-border-icon-border-color);
     background-color: var(--ti-lowcode-materials-border-icon-bg-color);
@@ -499,7 +499,7 @@ export default {
     .popper__arrow {
       &,
       &::after {
-        border-right-color: var(--ti-lowcode-common-component-hover-bg);
+        border-right-color: var(--ti-lowcode-common-component-bg-25);
       }
     }
   }

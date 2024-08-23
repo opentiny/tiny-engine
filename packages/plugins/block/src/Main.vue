@@ -431,7 +431,6 @@ export default {
     border-color: transparent;
     background-color: var(--ti-lowcode-component-block-list-add-group-btn-bg);
     width: 30px;
-    height: 30px;
     border: var(--ti-lowcode-component-block-list-add-group-btn-border);
     border-radius: var(--ti-lowcode-component-block-list-add-group-btn-border-radius);
   }
@@ -506,7 +505,7 @@ export default {
     .popper__arrow {
       &,
       &::after {
-        border-right-color: var(--ti-lowcode-common-component-hover-bg);
+        border-right-color: var(--ti-lowcode-common-component-bg-25);
       }
     }
   }

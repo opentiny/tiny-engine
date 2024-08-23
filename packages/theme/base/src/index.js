@@ -1,4 +1,5 @@
 // 提供engine主题包的样式定义引入
+import './page/base-config-page.less'
 import './base.less'
 import './common.less'
 import { tinyDarkTheme } from './dark/dark-common'

@@ -17,7 +17,7 @@
   --ti-lowcode-common-component-bg-13: var(--ti-lowcode-base-bg-1);
   --ti-lowcode-common-component-bg-14: var(--ti-lowcode-base-red-16);
   --ti-lowcode-common-component-bg-15: var(--ti-lowcode-base-gray-8);
-  --ti-lowcode-common-component-bg-16: var(--ti-base-color-inherit);
+  --ti-lowcode-common-component-bg-16: var(--ti-lowcode-base-color-inherit);
   --ti-lowcode-common-component-bg-17: var(--ti-lowcode-base-rgba-3);
   --ti-lowcode-common-component-bg-18: var(--ti-lowcode-base-rgba-4);
   --ti-lowcode-common-component-bg-19: var(--ti-lowcode-base-gray-11);
@@ -83,6 +83,9 @@
   --ti-lowcode-common-component-bg-79: var(--ti-lowcode-base-dark-5);
   --ti-lowcode-common-component-bg-80: var(--ti-lowcode-base-rgba-21);
   --ti-lowcode-common-component-bg-81: var(--ti-lowcode-base-rgba-20);
+  --ti-lowcode-common-component-bg-82: var(--ti-lowcode-base-gray-31);
+  --ti-lowcode-common-component-bg-83: var(--ti-lowcode-base-gray-36);
+  --ti-lowcode-common-component-bg-84: var(--ti-lowcode-base-gray-18);
 
   // 文本
   --ti-lowcode-common-primary-text-color: var(--ti-lowcode-base-dark-5);
@@ -104,7 +107,7 @@
   --ti-lowcode-common-text-color-10: var(--ti-lowcode-base-text-link-color-3);
   --ti-lowcode-common-text-color-11: var(--ti-lowcode-base-gray-37);
   --ti-lowcode-common-text-color-12: var(--ti-lowcode-base-yellow-14);
-  --ti-lowcode-common-text-color-13: var(--ti-base-color-inherit);
+  --ti-lowcode-common-text-color-13: var(--ti-lowcode-base-color-inherit);
   --ti-lowcode-common-text-color-14: var(--ti-lowcode-base-gray-44);
   --ti-lowcode-common-text-color-15: var(--ti-lowcode-base-dark-11);
   --ti-lowcode-common-text-color-16: var(--ti-lowcode-base-blue-19);
@@ -129,7 +132,7 @@
   --ti-lowcode-common-text-color-35: var(--ti-lowcode-base-gray-21);
   --ti-lowcode-common-text-color-36: var(--ti-lowcode-base-blue-24);
   --ti-lowcode-common-text-color-37: var(--ti-lowcode-base-gray-61);
-  --ti-lowcode-common-text-color-38: var(--ti-base-color-transparent);
+  --ti-lowcode-common-text-color-38: var(--ti-lowcode-base-color-transparent);
   --ti-lowcode-common-text-color-39: var(--ti-lowcode-base-gray-11);
   --ti-lowcode-common-text-color-40: var(--ti-lowcode-base-gray-45);
   --ti-lowcode-common-text-color-41: var(--ti-lowcode-base-dark-text-color);
@@ -175,7 +178,7 @@
   --ti-lowcode-common-border-color-15: var(--ti-lowcode-base-dark-5);
   --ti-lowcode-common-border-color-16: var(--ti-lowcode-base-gray-46);
   --ti-lowcode-common-border-color-17: var(--ti-lowcode-base-dark-20);
-  --ti-lowcode-common-border-color-18: var(--ti-base-color-transparent);
+  --ti-lowcode-common-border-color-18: var(--ti-lowcode-base-color-transparent);
   --ti-lowcode-common-border-color-19: var(--ti-lowcode-base-gray-1);
   --ti-lowcode-common-border-color-20: var(--ti-lowcode-base-gray-30);
   --ti-lowcode-common-border-color-21: var(--ti-lowcode-base-gray-48);
@@ -235,15 +238,25 @@
   --ti-lowcode-common-svg-button-active-bg-color: var(--ti-lowcode-base-bg-1);
 
   // 圆角
-  --ti-lowcode-common-radius-6: var(--ti-common-border-radius-2);
+  --ti-lowcode-common-radius-4: var(--ti-lowcode-base-border-radius-1);
+  --ti-lowcode-common-radius-6: var(--ti-lowcode-base-border-radius-2);
+  --ti-lowcode-common-radius-normal: var(--ti-lowcode-base-border-radius-normal);
 
   //状态
   --ti-lowcode-common-status-error: var(--ti-lowcode-base-error-color);
   --ti-lowcode-common-status-success: var(--ti-lowcode-base-success-color);
+  --ti-lowcode-common-status-prompt: var(--ti-lowcode-base-prompt-color);
+  --ti-lowcode-common-status-warning: var(--ti-lowcode-base-warn-color);
 
   // 权重值
   --ti-lowcode-common-font-weight-normal: var(--ti-lowcode-base-font-weight-bold);
   --ti-lowcode-common-font-weight-400: var(--ti-lowcode-base-font-weight-4);
+
+  // 字体
+  --ti-lowcode-common-font-size-11: var(--ti-lowcode-base-font-size);
+  --ti-lowcode-common-font-size-12: var(--ti-lowcode-base-font-size-base);
+  --ti-lowcode-common-font-size-14: var(--ti-lowcode-base-font-size-1);
+  --ti-lowcode-common-font-size-16: var(--ti-lowcode-base-font-size-2);
 
   // 其他
   --ti-lowcode-common-dark-1: var(--ti-lowcode-base-dark-1);
@@ -256,12 +269,14 @@
   --ti-lowcode-common-gray-53: var(--ti-lowcode-base-gray-53);
   --ti-lowcode-common-gray-54: var(--ti-lowcode-base-gray-54);
   --ti-lowcode-common-blue-22: var(--ti-lowcode-base-blue-22);
-  --ti-lowcode-common-bg-0: var(--ti-base-color-transparent);
+  --ti-lowcode-common-bg-0: var(--ti-lowcode-base-color-transparent);
   --ti-lowcode-common-layout-bg: var(--ti-lowcode-base-gray-1);
   --ti-lowcode-common-header-bg: var(--ti-lowcode-base-gray-8);
   --ti-lowcode-common-text-hover: var(--ti-lowcode-base-blue-17);
-  --ti-lowcode-common-component-hover-bg: var(--ti-lowcode-base-gray-5);
   --ti-lowcode-common-rgba-1: var(--ti-lowcode-base-rgba-1);
   --ti-lowcode-common-rgba-10: var(--ti-lowcode-base-rgba-10);
-  --ti-lowcode-common-color-unset: var(--ti-base-color-unset);
+  --ti-lowcode-common-rgba-23: var(--ti-lowcode-base-rgba-23);
+  --ti-lowcode-common-rgba-24: var(--ti-lowcode-base-rgba-24);
+  --ti-lowcode-common-rgb-1: var(--ti-lowcode-base-rgb-1);
+  --ti-lowcode-common-color-unset: var(--ti-lowcode-base-color-unset);
 }

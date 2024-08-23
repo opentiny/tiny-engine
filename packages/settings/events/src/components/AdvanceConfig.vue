@@ -260,7 +260,7 @@ export default {
       height: 30px;
       line-height: 22px;
       padding: 4px 8px;
-      --ellipsis-line: 1;
+      -webkit-line-clamp: 1;
       border-radius: 6px;
     }
 

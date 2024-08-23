@@ -73,15 +73,6 @@ export default {
       padding: 0;
       margin: 0;
     }
-    .tiny-tabs__item {
-      color: var(--ti-lowcode-setting-panel-tabs-item-title-color);
-      &:hover {
-        color: var(--ti-lowcode-setting-panel-tabs-item-title-hover-color);
-      }
-      &.is-active {
-        color: var(--ti-lowcode-setting-panel-tabs-item-title-active-color);
-      }
-    }
   }
 
   :deep(.tiny-collapse-item__content) {

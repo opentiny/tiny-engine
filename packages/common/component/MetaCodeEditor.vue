@@ -283,7 +283,7 @@ export default {
     border-color: var(--ti-lowcode-meta-codeEditor-border-hover-color);
   }
   .text-content {
-    --ellipsis-line: 1;
+    -webkit-line-clamp: 1;
   }
   &.empty-color {
     color: var(--ti-lowcode-common-text-desc-color);

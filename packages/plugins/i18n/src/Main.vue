@@ -570,9 +570,6 @@ export default {
     .tiny-input {
       margin: 12px 0;
       margin-left: 8px;
-      :deep(.tiny-input__prefix) {
-        left: 8px;
-      }
     }
     .tiny-select {
       margin: 12px 0;
