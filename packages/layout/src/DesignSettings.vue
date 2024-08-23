@@ -1,6 +1,6 @@
 <template>
   <div id="tiny-right-panel">
-    <tiny-tabs v-model="layoutState.settings.render" tab-style="button-card">
+    <tiny-tabs v-model="layoutState.settings.render">
       <tiny-tab-item v-for="(setting, index) in settings" :key="index" :title="setting.title" :name="setting.name">
         <component :is="setting.entry"></component>
         <div v-show="activating" class="active"></div>
@@ -46,7 +46,7 @@ export default {
   transition: 0.3s linear;
   position: relative;
   border-left: 1px solid var(--ti-lowcode-plugin-setting-panel-border-left-color);
-  padding-top: 20px;
+  padding-top: 12px;
   background-color: var(--ti-lowcode-setting-panel-bg-color);
 
   .tiny-tabs {
@@ -55,13 +55,20 @@ export default {
   :deep(.tiny-tabs) {
     display: flex;
     flex-direction: column;
-    // 居中显示
     .tiny-tabs__nav-scroll {
-      text-align: center;
+      margin-left: 12px;
       .tiny-tabs__nav {
         display: inline-flex;
         justify-content: center;
         float: none;
+      }
+      .tiny-tabs__active-bar {
+        width: 40px !important;
+        height: 2px;
+        background-color: var(--ti-lowcode-setting-panel-tabs-item-title-active-color);
+      }
+      .tiny-tabs__item__title {
+        margin-left: 6px;
       }
     }
     .tiny-tabs__header {
@@ -74,6 +81,7 @@ export default {
       margin: 0;
     }
     .tiny-tabs__item {
+      margin-right: 26px;
       color: var(--ti-lowcode-setting-panel-tabs-item-title-color);
       &:hover {
         color: var(--ti-lowcode-setting-panel-tabs-item-title-hover-color);
