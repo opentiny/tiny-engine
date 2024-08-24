@@ -40,13 +40,13 @@ const validateComponent = (file, component) => {
   const requiredList = requiredFields.filter((field) => !fields.includes(field))
 
   if (requiredList.length) {
-    logger.error(`组件文件 ${file} 缺少必要字段：${requiredList.join('、')}。`)
+    logger.error(`missing required fields: ${requiredList.join(',')} at ${file}.`)
 
     return false
   }
 
   if (!component.npm) {
-    logger.warn(`组件文件 ${file} 缺少 npm 字段，出码时将不能通过import语句导入组件。`)
+    logger.warn(`missing the \`npm\` field, and it cannot be imported when coding at ${file}.`)
 
     return false
   }
@@ -66,7 +66,7 @@ const validateBlock = (file, block) => {
   const requiredList = requiredFields.filter((field) => !fields.includes(field))
 
   if (requiredList.length) {
-    logger.error(`区块文件 ${file} 缺少必要字段：${requiredList.join('、')}。`)
+    logger.error(`missing required fields: ${requiredList.join(',')} at ${file}.`)
 
     return false
   }
@@ -84,7 +84,7 @@ const generateComponents = () => {
   try {
     fg([`${materialsDir}/**/*.json`]).then((files) => {
       if (!files.length) {
-        logger.warn('物料文件夹为空，请先执行`pnpm splitMaterials`命令拆分物料资产包')
+        logger.warn('please execute `pnpm splitMaterials` first to split the materials.')
       }
 
       const bundle = {
@@ -108,7 +108,7 @@ const generateComponents = () => {
         if (!material) {
           const fileFullPath = path.join(process.cwd(), file)
 
-          logger.error(`文件格式有误 (${fileFullPath})`)
+          logger.error(`incorrect file format at ${fileFullPath}.`)
 
           return
         }
@@ -178,9 +178,9 @@ const generateComponents = () => {
       write(bundle)
     })
 
-    logger.success('物料资产包构建成功')
+    logger.success('materials built.')
   } catch (error) {
-    logger.error(`物料资产包构建失败：${error}`)
+    logger.error(`failed to build materials: ${error}.`)
   }
 }
 
@@ -189,13 +189,13 @@ const watcher = chokidar.watch(`${materialsDir}/**/*.json`, { ignoreInitial: tru
 
 watcher.on('all', (event, file) => {
   const eventMap = {
-    add: '新增',
-    change: '更新',
-    unlink: '删除'
+    add: 'added',
+    change: 'changed',
+    unlink: 'deleted'
   }
   const fileFullPath = path.join(process.cwd(), file)
 
-  logger.info(`${eventMap[event]}组件文件 (${fileFullPath})`)
+  logger.info(`${fileFullPath} ${eventMap[event]}, rebuilding materials...`)
 
   // 监听物料文件变化，更新物料资产包
   generateComponents()
