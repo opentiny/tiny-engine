@@ -102,6 +102,7 @@ export default {
         const resetState = () => {
           useHistory().go(-1, false)
           useCanvas().setSaved(true)
+          useCanvas().setTemplateSaved(true)
           removeNode()
         }
 

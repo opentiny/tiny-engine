@@ -14,8 +14,24 @@
 import { reactive, ref } from 'vue'
 import { constants } from '@opentiny/tiny-engine-utils'
 import useHistory from './useHistory'
+import useTemplateCanvas from './useTemplateCanvas'
 
 const { COMPONENT_NAME } = constants
+
+const {
+  defaultTemplateState,
+  templateState,
+  isTemplateBlock,
+  isTemplateSaved,
+  isTemplateLoading,
+  getTemplateSchema,
+  setCurrentTemplateSchema,
+  getCurrentTemplateSchema,
+  getCurrentTemplate,
+  clearCurrentTemplateState,
+  setTemplateSaved,
+  isTemplate,
+} = useTemplateCanvas()
 
 const defaultPageState = {
   currentVm: null,
@@ -60,11 +76,17 @@ const initCanvasApi = (newCanvasApi) => {
 }
 
 const pageState = reactive({ ...defaultPageState, loading: true })
+
+
 // 重置画布数据
 const resetCanvasState = async (state = {}) => {
-  Object.assign(pageState, defaultPageState, state)
+  isTemplate.value = state.pageSchema?.componentName === 'Template'
+  const targetState = isTemplate.value ? templateState : pageState
+  const defaultState = isTemplate.value ? defaultTemplateState : defaultPageState
 
-  await canvasApi.value?.setSchema(pageState.pageSchema)
+  Object.assign(targetState, defaultState, state)
+
+  await canvasApi.value?.setSchema(targetState.pageSchema)
 }
 
 // 页面重置画布数据
@@ -93,19 +115,21 @@ const setSaved = (flag = false) => {
 // 清空画布
 const clearCanvas = () => {
   pageState.properties = null
+  templateState.properties = null
 
-  const { fileName, componentName } = pageState.pageSchema || {}
+  const { fileName, componentName } = isTemplate.value ? templateState.pageSchema || {} : pageState.pageSchema || {}
 
   resetCanvasState({
     pageSchema: { ...getDefaultSchema(componentName, fileName) }
   })
 
   setSaved(false)
+  setTemplateSaved(false)
 }
 
 const isBlock = () => pageState.isBlock
 
-// 初始化页面数据
+// 初始化页面数据, 当为模板内容时，currentPage也保存当前模板数据
 const initData = (schema = { ...defaultSchema }, currentPage) => {
   if (schema.componentName === COMPONENT_NAME.Block) {
     resetBlockCanvasState({
@@ -143,6 +167,7 @@ const clearCurrentState = () => {
   pageState.properties = {}
   pageState.pageSchema = null
 }
+
 const getCurrentPage = () => pageState.currentPage
 
 export default function () {
@@ -163,6 +188,17 @@ export default function () {
     getCurrentPage,
     initCanvasApi,
     canvasApi,
-    isCanvasApiReady
+    isCanvasApiReady,
+    templateState,
+    isTemplateBlock,
+    isTemplateSaved,
+    isTemplateLoading,
+    getTemplateSchema,
+    setCurrentTemplateSchema,
+    getCurrentTemplateSchema,
+    getCurrentTemplate,
+    clearCurrentTemplateState,
+    setTemplateSaved,
+    isTemplate
   }
 }

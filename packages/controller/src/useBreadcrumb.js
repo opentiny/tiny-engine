@@ -15,7 +15,8 @@ import { ref } from 'vue'
 let breadcrumbData = ref([])
 const CONSTANTS = {
   PAGETEXT: '页面',
-  BLOCKTEXT: '区块'
+  BLOCKTEXT: '区块',
+  TEMPLATE: '模板'
 }
 
 const setBreadcrumbPage = (value) => {
@@ -27,6 +28,10 @@ const setBreadcrumbBlock = (value, histories = []) => {
   breadcrumbData.value = [CONSTANTS.BLOCKTEXT, ...value, histories]
 }
 
+const setBreadcrumbTemplate = (value) => {
+  breadcrumbData.value = [CONSTANTS.TEMPLATE, ...value]
+  sessionStorage.setItem('pageInfo', value) // 用于canvas右键菜单
+}
 const getBreadcrumbData = () => breadcrumbData
 
 export default () => {
@@ -34,6 +39,7 @@ export default () => {
     CONSTANTS,
     setBreadcrumbPage,
     setBreadcrumbBlock,
-    getBreadcrumbData
+    getBreadcrumbData,
+    setBreadcrumbTemplate
   }
 }

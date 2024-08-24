@@ -79,6 +79,7 @@ const back = () => {
 const forward = () => {
   if (historyState.forward) {
     go(1)
+
     useCanvas().setSaved(historyState.index === list.length - 1)
   }
 }
@@ -94,8 +95,10 @@ const clear = () => {
 
 const addHistory = (schema) => {
   if (!schema) {
-    useCanvas().setSaved(false)
-    push(useCanvas().canvasApi.value?.getSchema())
+    const { setSaved, isTemplate, setTemplateSaved, canvasApi } = useCanvas()
+    isTemplate.value ? setTemplateSaved(false) : setSaved(false)
+
+    push(canvasApi.value?.getSchema())
   } else {
     clear()
     // 初始 schema 需要设置为第一条历史记录

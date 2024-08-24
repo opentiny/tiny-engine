@@ -55,7 +55,8 @@ export const LOCALE = {
 export const COMPONENT_NAME = {
   Page: 'Page',
   Block: 'Block',
-  Folder: 'Folder'
+  Folder: 'Folder',
+  Template: 'Template'
 }
 
 export const ELEMENT_TAG = {

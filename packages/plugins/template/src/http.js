@@ -18,30 +18,32 @@ const http = useHttp()
 export const fetchTemplateList = (appId) => http.get(`/app-center/api/templates/list/${appId}`)
 
 // 模板管理 -- 获取模板详情
-export const fetchTemplateDetail = (pageId) => http.get(`/app-center/api/templates/detail/${pageId}`)
+export const fetchTemplateDetail = (templateId) => http.get(`/app-center/api/templates/detail/${templateId}`)
 
 // 模板管理 -- 删除模板
-export const requestDeleteTemplate = (pageId) => http.get(`/app-center/api/templates/delete/${pageId}`)
+export const requestDeleteTemplate = (templateId) => http.get(`/app-center/api/templates/delete/${templateId}`)
 
 // 模板管理 -- 新增模板
 export const requestCreateTemplate = (params) => http.post('/app-center/api/templates/create', params)
 
 // 模板管理 -- 保存模板
-export const handleRouteHomeUpdate = (pageId, params) => http.post(`/app-center/api/templates/update/${pageId}`, params)
+export const handleRouteHomeUpdate = (templateId, params) =>
+  http.post(`/app-center/api/templates/update/${templateId}`, params)
 
 // 模板管理 -- 复制模板
 export const requestCopyTemplate = (params) => http.post('/app-center/api/templates/copy', params)
 
 // 模板管理 -- 获取模板历史备份列表
-export const fetchTemplateHistory = (pageId) => http.get(`/app-center/api/templates/histories?page=${pageId}`)
+export const fetchTemplateHistory = (templateId) => http.get(`/app-center/api/templates/histories?page=${templateId}`)
 
 // 模板管理 -- 还原历史备份
 export const requestRestoreTemplateHistory = (params) => http.post('/app-center/api/templateHistory/restore', params)
 
 // 模板管理 -- 查看历史备份详情
-export const fetchHistoryDetail = (pageId) => http.get(`/app-center/api/templates/histories/${pageId}`)
+export const fetchHistoryDetail = (templateId) => http.get(`/app-center/api/templates/histories/${templateId}`)
 
-export const requestUpdateTemplate = (pageId, params) => http.post(`/app-center/api/templates/update/${pageId}`, params)
+export const requestUpdateTemplate = (templateId, params) =>
+  http.post(`/app-center/api/templates/update/${templateId}`, params)
 
 export default {
   fetchTemplateList,

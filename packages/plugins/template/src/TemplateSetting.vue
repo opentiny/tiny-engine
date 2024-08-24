@@ -4,8 +4,7 @@
       <button-group>
         <tiny-button v-if="operateType !== 'generate'" type="primary" @click="saveTemplateSetting">保存</tiny-button>
         <tiny-button v-else-if="operateType !== 'add'" type="primary" @click="generatePage">生成页面</tiny-button>
-        <svg-button v-if="operateType === 'edit'" name="delete" placement="bottom" tips="删除"
-          @click="deleteTemplate"></svg-button>
+        <svg-button v-if="operateType === 'edit'" name="delete" placement="bottom" tips="删除" @click="deleteTemplate"></svg-button>
         <svg-button class="close-plugin-setting-icon" name="close" @click="closeTemplateSetting"></svg-button>
       </button-group>
     </template>
@@ -22,7 +21,7 @@
 import { reactive, ref, computed } from 'vue'
 import { Button } from '@opentiny/vue'
 import { PluginSetting, SvgButton, ButtonGroup } from '@opentiny/tiny-engine-common'
-import { useModal, useApp, useNotify, useTemplate } from '@opentiny/tiny-engine-controller'
+import { useModal, useApp, useNotify, useTemplate, useCanvas } from '@opentiny/tiny-engine-controller'
 import { isEqual } from '@opentiny/vue-renderless/common/object'
 import throttle from '@opentiny/vue-renderless/common/deps/throttle'
 import TemplateGeneral from './TemplateGeneral.vue'
@@ -38,10 +37,10 @@ export const openTemplateSettingPanel = (node = null, type = 'add') => {
   node && (node.value = node)
 }
 
+const { resetTemplateData, initCurrentTemplateData } = useTemplate()
+
 export const closeTemplateSettingPanel = () => {
   isShow.value = false
-
-  const { resetTemplateData } = useTemplate()
 
   resetTemplateData()
 }
@@ -54,9 +53,7 @@ export default {
     SvgButton,
     ButtonGroup
   },
-  props: {
-
-  },
+  props: {},
   setup() {
     const state = reactive({
       activeName: ['templateGeneralRef']
@@ -64,7 +61,7 @@ export default {
     const templateGeneralRef = ref(null)
     const { requestCreateTemplate, requestUpdateTemplate, requestDeleteTemplate } = http
     const { appInfoState } = useApp()
-    const { templateSettingState, changeTreeData } = useTemplate()
+    const { templateSettingState, changeTreeData, DEFAULT_TEMPLATE } = useTemplate()
     const { confirm } = useModal()
 
     const title = computed(() => {
@@ -90,13 +87,24 @@ export default {
     }
 
     const createTemplate = () => {
-      const data = templateSettingState.currentTemplateData
+      const { template_content, ...other } = DEFAULT_TEMPLATE
+      const { template_content: template_content_state, ...templateSettingStateOther } =
+        templateSettingState.currentTemplateData
       const createParams = {
-        ...data,
+        ...other,
+        ...templateSettingStateOther,
+        template_content: {
+          ...template_content,
+          ...template_content_state,
+          fileName: templateSettingState.currentTemplateData.name
+        },
         app: appInfoState.selectedId,
-        isTemplate: data.type === 'template',
-        id: undefined,
-        _id: undefined
+        isTemplate: true
+      }
+
+      if (createParams.id) {
+        delete createParams.id
+        delete createParams._id
       }
 
       requestCreateTemplate(createParams)
@@ -118,18 +126,22 @@ export default {
         })
     }
 
-    const updateTemplate = () => {
-      const { id } = templateSettingState.currentTemplateData
+    const updateTemplate = (id, params) => {
+      return requestUpdateTemplate(id, params)
+        .then((res) => {
+          const { setTemplateSaved } = useCanvas()
 
-      requestUpdateTemplate(id, { ...templateSettingState.currentTemplateData, template_content: null })
-        .then(() => {
           templateSettingState.updateTreeData()
           templateSettingState.isNew = false
+
           closeTemplateSettingPanel()
+          setTemplateSaved(true)
+
           useNotify({
             type: 'success',
             message: '更新成功!'
           })
+          return res
         })
         .catch((error) => {
           useNotify({
@@ -140,12 +152,27 @@ export default {
         })
     }
 
+    const editTemplate = async () => {
+      // 更新模板
+      const { id, name, template_content } = templateSettingState.currentTemplateData
+      const params = {
+        ...templateSettingState.currentTemplateData,
+        template_content: {
+          ...template_content,
+          fileName: name
+        }
+      }
+
+      const res = await updateTemplate(id, params)
+
+      initCurrentTemplateData(res)
+    }
     const saveTemplateSetting = () => {
       templateGeneralRef.value.validGeneralForm().then(() => {
         if (templateSettingState.isNew) {
           createTemplate()
         } else {
-          updateTemplate()
+          editTemplate()
         }
       })
     }
@@ -159,7 +186,9 @@ export default {
 
         return
       }
-      const message = templateSettingState.currentTemplateData.isTemplate ? '您是否要删除该模板?' : '您是否要删除该模板类型?'
+      const message = templateSettingState.currentTemplateData.isTemplate
+        ? '您是否要删除该模板?'
+        : '您是否要删除该模板类型?'
       confirm({
         title: '提示',
         message,
@@ -183,8 +212,6 @@ export default {
             })
         }
       })
-
-
     }
     const generatePage = () => {
       alert('开发中。。。')

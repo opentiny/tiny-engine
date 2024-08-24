@@ -49,7 +49,7 @@ const { HOST_TYPE } = constants
 const { getBlockList, setBlockList, setCategoryList, getCurrentBlock, addBlockEvent, addBlockProperty } = useBlock()
 const { batchCreateI18n } = useTranslate()
 const { message, confirm } = useModal()
-const { setSaved } = useCanvas()
+const { setSaved, isTemplate, setTemplateSaved } = useCanvas()
 const { getMaterial } = useResource()
 
 const STRING_SLOT = ['Slot', 'slot']
@@ -608,7 +608,7 @@ const createBlock = (block = {}) => {
       // 后台获取区块id后保存id信息
       block.id = data.id
       batchCreateI18n({ host: block.id, hostType: HOST_TYPE.Block })
-      setSaved(true)
+      isTemplate.value ? setTemplateSaved(false) : setSaved(false)
       // 新建区块成功后需要同步更新画布上的区块数据ctx上下文环境
       useBlock().initBlock(data, {}, true)
       message({ message: '新建区块成功！', status: 'success' })
@@ -658,7 +658,7 @@ const updateBlock = (block = {}) => {
     }
   )
     .then((data) => {
-      setSaved(true)
+      isTemplate.value ? setTemplateSaved(false) : setSaved(false)
       useBlock().initBlock(data, {}, true)
       // 弹出保存区块成功
       message({ message: '保存区块成功！', status: 'success' })

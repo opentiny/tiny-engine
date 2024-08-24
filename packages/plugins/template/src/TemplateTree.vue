@@ -8,7 +8,7 @@
     <tiny-tree ref="templateTreeRefs" :data="templateSettingState.templates" node-key="id" highlight-current
       current-node-key="1-1" :props="{ children: 'children', label: 'name' }"
       :filter-node-method="filterTemplateTreeData" :expand-on-click-node="false" :shrink-icon="shrinkIcon"
-      :expand-icon="expandIcon" @current-change="currentChange" default-expand-all>
+      :expand-icon="expandIcon" @current-change="handleCurrentChange" default-expand-all>
       <template #operation="{ node }">
         <div style="width: 80px; text-align: right">
           <tiny-dropdown size="mini" trigger="click" :show-icon="false" :visible-arrow="true">
@@ -43,7 +43,7 @@ import {
   DropdownItem as TinyDropdownItem
 } from '@opentiny/vue'
 import { IconFolderOpened, IconFolderClosed } from '@opentiny/vue-icon'
-import { useCanvas, useApp, useModal, useTemplate, useBreadcrumb, useLayout, useNotify } from '@opentiny/tiny-engine-controller'
+import { useCanvas, useApp, useModal, useTemplate, useBreadcrumb, useLayout, useNotify, usePage } from '@opentiny/tiny-engine-controller'
 import { getCanvasStatus } from '@opentiny/tiny-engine-controller/js/canvas'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { closeTemplateSettingPanel } from './TemplateSetting.vue'
@@ -59,45 +59,43 @@ export default {
     TinyDropdownMenu,
     TinyDropdownItem
   },
-  props: {
-
-  },
+  props: {},
   emits: ['openSettingPanel', 'add'],
   setup(props, { emit }) {
     const { appInfoState } = useApp()
     const { confirm } = useModal()
-    const { initData, pageState } = useCanvas()
-    const { templateSettingState } =
-      useTemplate()
+    const { initData, templateState, isBlock, isTemplateSaved, isSaved, setSaved } = useCanvas()
+    const { templateSettingState, isCurrentDataSame, changeTreeData } = useTemplate()
     const { fetchTemplateList, fetchTemplateDetail } = http
-    const { setBreadcrumbPage } = useBreadcrumb()
+    const { setBreadcrumbTemplate } = useBreadcrumb()
     const templateTreeRefs = ref([])
+    const { resetPageData } = usePage()
 
     const state = reactive({
       templateSearchValue: '',
       currentNodeData: {}
     })
     const formatTreeData = (data) => {
-      const map = {};
-      const tree = [];
+      const map = {}
+      const tree = []
 
-      data.forEach(item => {
-        map[item.id] = { ...item, children: [] };
-      });
+      data.forEach((item) => {
+        map[item.id] = { ...item, children: [] }
+      })
 
-      data.forEach(item => {
+      data.forEach((item) => {
         if (item.parentId) {
-          const parent = map[item.parentId];
+          const parent = map[item.parentId]
           if (parent) {
-            parent.children.push(map[item.id]);
+            parent.children.push(map[item.id])
           }
         } else {
-          tree.push(map[item.id]);
+          tree.push(map[item.id])
         }
-      });
+      })
       templateSettingState.treeDataMapping = map
 
-      return tree;
+      return tree
     }
     const searchTemplateData = (value) => {
       templateTreeRefs.value.filter(value)
@@ -113,16 +111,18 @@ export default {
       return templateList
     }
     const clearCurrentState = () => {
-      pageState.currentVm = null
-      pageState.hoverVm = null
-      pageState.properties = {}
-      pageState.pageSchema = null
+      templateState.currentVm = null
+      templateState.hoverVm = null
+      templateState.properties = {}
+      templateState.pageSchema = null
     }
     const updateUrlTemplateId = (id) => {
       const url = new URL(window.location)
 
       url.searchParams.delete('blockid')
-      url.searchParams.set('pageid', id)
+      url.searchParams.delete('pageid')
+      url.searchParams.set('templateid', id)
+
       window.history.pushState({}, '', url)
     }
     const getTemplateDetail = (templateId) => {
@@ -142,29 +142,26 @@ export default {
         closeTemplateSettingPanel()
         useLayout().closePlugin()
         useLayout().layoutState.pageStatus = getCanvasStatus(data.occupier)
-        initData(data['page_content'], data)
+        initData(data['template_content'], data)
       })
     }
 
     const switchTemplate = (data) => {
-      pageState.hoverVm = null
+      resetPageData()
+
+      templateState.hoverVm = null
       state.currentNodeData = data
 
-      let pageName = ''
+      let templateName = ''
       if (data.isTemplate) {
-        pageName = data?.name || ''
+        templateName = data?.name || ''
       }
-      setBreadcrumbPage([pageName])
+      setBreadcrumbTemplate([templateName])
 
       // 切换页面时清空 选中节点信息状态
       clearCurrentState()
       getTemplateDetail(data.id)
     }
-
-
-
-
-
 
     watchEffect(() => {
       if (appInfoState.selectedId) {
@@ -184,29 +181,34 @@ export default {
       }
     }
 
-
     const expandIcon = <SvgIcon name="text-page-folder-closed" class="folder-icon"></SvgIcon>
 
     const shrinkIcon = <SvgIcon name="text-page-folder" class="folder-icon"></SvgIcon>
 
+    function handleCurrentChange(data, _currentNode) {
+      const { id, isTemplate } = data
 
-    function getResultById(id) {
-      // 节点数据
-      const data = templateTreeRefs.value.getCurrentNode()
-      // 节点对象
-      const node = templateTreeRefs.value.getNode(id)
-      // 节点node-key
-      const nodeKey = templateTreeRefs.value.getCurrentKey()
-      // 组件内部生成的节点唯一键值
-      const innerKey = templateTreeRefs.value.getNodeKey(node)
-      // 整个路径上节点数据的数组
-      const nodePath = templateTreeRefs.value.getNodePath(id)
-      // eslint-disable-next-line no-console
-      console.log('当前高亮节点的信息为：', { data, node, nodeKey, innerKey, nodePath })
-    }
-    // 事件
-    function currentChange(data, _currentNode) {
-      getResultById(data.id)
+      // 区块切换回页面需要重新加载页面
+      if ((!isBlock() && id === templateSettingState.currentTemplateData?.id) || !isTemplate) {
+        return
+      }
+
+      if (isSaved() && isTemplateSaved() && isCurrentDataSame()) {
+        switchTemplate(data)
+      } else {
+        const text = isBlock() ? '区块' : (!isSaved() ? '页面' : '模板')
+
+        confirm({
+          title: '提示',
+          message: `${text}尚未保存，是否要继续切换?`,
+          exec: () => {
+            setSaved(true)
+            changeTreeData(templateSettingState.oldParentId, templateSettingState.currentTemplateData.parentId)
+            Object.assign(templateSettingState.currentTemplateData, templateSettingState.currentTemplateDataCopy)
+            switchTemplate(data)
+          }
+        })
+      }
     }
 
     const addTemplate = (node) => {
@@ -218,7 +220,6 @@ export default {
     }
 
     const deleteTemplate = (node) => {
-
       if (!node.data?.isTemplate && node.data?.children?.length) {
         useNotify({
           type: 'error',
@@ -269,7 +270,7 @@ export default {
       shrinkIcon,
       expandIcon,
       templateTreeRefs,
-      currentChange,
+      handleCurrentChange,
       addTemplate,
       editTemplate,
       deleteTemplate,
@@ -285,7 +286,6 @@ export default {
   border-bottom: 1px solid var(--ti-lowcode-page-manage-search-border-color);
 }
 
-
 .tree-container {
   height: calc(100% - 95px);
   // padding: 4px 10px;
@@ -294,11 +294,6 @@ export default {
 }
 
 .app-manage-tree {
-  :deep(.label) {
-    // margin-right: 10px;
-    // margin-left: 20px;
-  }
-
   :deep(.tiny-tree) {
     .tiny-tree-node__label {
       width: 100%;

@@ -13,9 +13,9 @@
 import { reactive, ref } from 'vue'
 import { useBlock, useCanvas, useLayout, useNotify, usePage } from '@opentiny/tiny-engine-controller'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { handlePageUpdate } from '@opentiny/tiny-engine-controller/js/http'
+import { handlePageUpdate, handleTemplateUpdate } from '@opentiny/tiny-engine-controller/js/http'
 
-const { pageState, isSaved, isBlock, canvasApi } = useCanvas()
+const { pageState, isSaved, isBlock, canvasApi, isTemplateSaved, templateState } = useCanvas()
 const { PLUGIN_NAME, getPluginApi } = useLayout()
 const { getCurrentBlock } = useBlock()
 const { PAGE_STATUS } = constants
@@ -54,7 +54,16 @@ const savePage = async (pageSchema) => {
   await handlePageUpdate(currentPage.id, { ...currentPage, ...params })
   isLoading.value = false
 }
+const saveTemplate = async (pageSchema) => {
+  const { currentPage } = templateState
+  const params = {
+    template_content: pageSchema
+  }
 
+  isLoading.value = true
+  await handleTemplateUpdate(currentPage.id, { ...currentPage, ...params })
+  isLoading.value = false
+}
 export const saveCommon = (value) => {
   const pageSchema = JSON.parse(value)
   const { setSchema, selectNode } = canvasApi.value
@@ -129,6 +138,35 @@ export const openCommon = async () => {
    */
 
   saveCommon(state.code).finally(() => {
+    state.disabled = false
+  })
+}
+export const saveTemplateCommon = (value) => {
+  const pageSchema = JSON.parse(value)
+  const { setSchema, selectNode } = canvasApi.value
+
+  templateState.pageSchema = pageSchema
+  // setSchema 是异步，保存直接传递当前 schema
+  setSchema(pageSchema)
+
+  // 选中画布中的页面，关闭插件、属性配置
+  selectNode(null)
+  return isBlock() ? saveBlock(pageSchema) : saveTemplate(pageSchema)
+}
+
+export const openTemplateCommon = async () => {
+  if (isTemplateSaved() || state.disabled) {
+    return
+  }
+
+  state.disabled = true
+
+  const { getSchema } = canvasApi.value
+  const pageSchema = getSchema()
+
+  state.code = JSON.stringify(pageSchema || {}, null, 2)
+
+  saveTemplateCommon(state.code).finally(() => {
     state.disabled = false
   })
 }
