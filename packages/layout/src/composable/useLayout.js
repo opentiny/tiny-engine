@@ -12,34 +12,11 @@
 
 import { reactive, nextTick } from 'vue'
 import { constants } from '@opentiny/tiny-engine-utils'
+import { META_APP as PLUGIN_NAME, getMetaApi } from '@opentiny/tiny-engine-meta-register'
 
 const { PAGE_STATUS } = constants
 
-const PLUGIN_NAME = {
-  Materials: 'engine.plugins.materials',
-  AppManage: 'engine.plugins.appmanage',
-  BlockManage: 'engine.plugins.blockmanage',
-  Bridge: 'engine.plugins.bridge',
-  State: 'engine.plugins.state',
-  Collections: 'engine.plugins.collections',
-  EditorHelp: 'engine.plugins.editorhelp',
-  I18n: 'engine.plugins.i18n',
-  Robot: 'engine.plugins.robot',
-  Schema: 'engine.plugins.schema',
-  PageController: 'engine.plugins.pagecontroller',
-  OutlineTree: 'engine.plugins.outlinetree',
-  Tutorial: 'engine.plugins.tutorial',
-  Lock: 'Lock',
-  save: 'save'
-}
-
-const pluginState = reactive({
-  pluginEvent: 'all'
-})
-
 const layoutState = reactive({
-  deviceType: 'desktop',
-  iframeWidth: '1200px',
   dimension: {
     deviceType: 'desktop',
     width: '',
@@ -51,7 +28,7 @@ const layoutState = reactive({
   plugins: {
     fixedPanels: [PLUGIN_NAME.Materials],
     render: null,
-    api: {} // 插件需要注册交互API到这里
+    pluginEvent: 'all'
   },
   settings: {
     render: 'props',
@@ -65,11 +42,15 @@ const layoutState = reactive({
   pageStatus: ''
 })
 
-const registerPluginApi = (api) => {
-  Object.assign(layoutState.plugins.api, api)
-}
-
 const getScale = () => layoutState.dimension.scale
+
+const getPluginState = () => layoutState.plugins
+
+const getDimension = () => layoutState.dimension
+
+const setDimension = (data) => {
+  Object.assign(layoutState.dimension, data)
+}
 
 // 激活setting面板并高亮提示
 const activeSetting = (name) => {
@@ -85,13 +66,6 @@ const activeSetting = (name) => {
   })
 }
 
-// 获取当前插件注册的Api
-const getPluginApi = (pluginName) => {
-  const { plugins } = layoutState
-
-  return plugins.api[pluginName] || plugins.api
-}
-
 // 激活plugin面板并返回当前插件注册的Api
 const activePlugin = (name, noActiveRender) => {
   const { plugins } = layoutState
@@ -101,7 +75,7 @@ const activePlugin = (name, noActiveRender) => {
   }
 
   return new Promise((resolve) => {
-    nextTick(() => resolve(getPluginApi(name)))
+    nextTick(() => resolve(getMetaApi(name)))
   })
 }
 
@@ -112,14 +86,6 @@ const closePlugin = (forceClose) => {
     plugins.render = null
   }
 }
-
-const setDimension = (data) => {
-  Object.assign(layoutState.dimension, data)
-}
-
-const getDimension = () => layoutState.dimension
-
-const getPluginState = () => layoutState.plugins
 
 const isEmptyPage = () => layoutState.pageStatus?.state === PAGE_STATUS.Empty
 
@@ -133,10 +99,7 @@ export default () => {
     getScale,
     setDimension,
     getDimension,
-    registerPluginApi,
-    getPluginApi,
     getPluginState,
-    pluginState,
     isEmptyPage
   }
 }

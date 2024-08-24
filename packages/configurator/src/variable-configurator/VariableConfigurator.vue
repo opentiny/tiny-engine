@@ -121,7 +121,14 @@
 
 <script>
 import { VueMonaco as MonacoEditor, SvgButton } from '@opentiny/tiny-engine-common'
-import { useApp, useCanvas, useLayout, useProperties, useResource } from '@opentiny/tiny-engine-meta-register'
+import {
+  useApp,
+  useCanvas,
+  useProperties,
+  useResource,
+  getMetaApi,
+  META_APP
+} from '@opentiny/tiny-engine-meta-register'
 import { getCommentByKey } from '@opentiny/tiny-engine-common/js/comment'
 import { formatString, generate, parse, traverse } from '@opentiny/tiny-engine-common/js/ast'
 import { DEFAULT_LOOP_NAME } from '@opentiny/tiny-engine-common/js/constants'
@@ -460,8 +467,7 @@ export default {
 
       if (item.id === 'function') {
         state.bindPrefix = CONSTANTS.THIS
-        const { PLUGIN_NAME, getPluginApi } = useLayout()
-        const { getMethods } = getPluginApi(PLUGIN_NAME.PageController)
+        const { getMethods } = getMetaApi(META_APP.Page)
         state.variables = { ...getMethods?.() }
       } else if (item.id === 'bridge' || item.id === 'utils') {
         state.bindPrefix = `${CONSTANTS.THIS}${item.id}.`

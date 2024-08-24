@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "cross-env VITE_THEME=light vite",
-    "build:alpha": "cross-env VITE_THEME=light vite build --mode alpha",
-    "build": "cross-env VITE_THEME=light vite build --mode prod"
+    "build:alpha": "cross-env NODE_OPTIONS=--max-old-space-size=8192 VITE_THEME=light vite build --mode alpha",
+    "build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 VITE_THEME=light vite build"
   },
   "dependencies": {
     "vue": "^3.4.21",
@@ -15,6 +15,7 @@
     "@opentiny/tiny-engine-theme-light": "workspace:*",
     "@opentiny/vue": "~3.14.0",
     "@opentiny/vue-icon": "~3.14.0",
+    "@opentiny/vue-locale": "~3.14.0",
     "@opentiny/vue-design-smb": "~3.14.0",
     "@opentiny/vue-renderless": "~3.14.0",
     "@opentiny/vue-theme": "~3.14.0"

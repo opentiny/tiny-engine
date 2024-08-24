@@ -48,7 +48,7 @@
 import { reactive, onMounted, ref } from 'vue'
 import { Guide, Tooltip } from '@opentiny/vue'
 import { IconClose } from '@opentiny/vue-icon'
-import { useLayout } from '@opentiny/tiny-engine-meta-register'
+import { useLayout, META_APP } from '@opentiny/tiny-engine-meta-register'
 
 const GUIDE_VERSION = '1.0.0-20230818'
 const GUIDE_STORAGE_KEY = 'tinyengine_guide'
@@ -59,7 +59,9 @@ export default {
     TinyGuide: Guide
   },
   setup() {
-    const { activePlugin, PLUGIN_NAME, pluginState } = useLayout()
+    const { activePlugin, getPluginState } = useLayout()
+    const pluginState = getPluginState()
+
     const tinyGuideRef = ref()
     const toolTipContent = '点击这里，再次查看新手指引'
     const helpTitle = '帮助'
@@ -133,7 +135,7 @@ export default {
         ],
         beforeShow: () => {
           closeHelpBox()
-          activePlugin(PLUGIN_NAME.Materials)
+          activePlugin(META_APP.Materials)
           closeToolTip()
           pluginState.pluginEvent = 'none'
         }

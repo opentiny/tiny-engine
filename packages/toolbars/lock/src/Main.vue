@@ -6,10 +6,9 @@
       popper-class="toolbar-right-popover"
       append-to-body
       :content="statusMessageMap[state.status]?.nextOptName"
-      :disabled="true"
     >
       <template #reference>
-        <span class="icon-hides">
+        <span class="icon">
           <svg-icon :name="iconName" @click="lockOrUnlock"></svg-icon>
         </span>
       </template>
@@ -23,8 +22,6 @@ import { useCanvas, useLayout, useBlock, useNotify } from '@opentiny/tiny-engine
 import { constants } from '@opentiny/tiny-engine-utils'
 import { Popover } from '@opentiny/vue'
 import { requestBlockPage } from './http'
-
-export const api = {}
 
 const { COMPONENT_NAME, PAGE_STATUS } = constants
 

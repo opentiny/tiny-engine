@@ -1,7 +1,7 @@
 <template>
   <div class="toolbar-generate">
     <tiny-button @click="generate">
-      <span>
+      <span class="toolbar-generate-btn">
         <svg-icon :name="icon"></svg-icon>
         <span class="button-title">出码</span>
       </span>
@@ -17,9 +17,17 @@
 
 <script>
 import { reactive } from 'vue'
+import {
+  useBlock,
+  useCanvas,
+  useNotify,
+  useLayout,
+  useEditorInfo,
+  getMetaApi,
+  META_APP,
+  getMergeMeta
+} from '@opentiny/tiny-engine-meta-register'
 import { Button } from '@opentiny/vue'
-import { useBlock, useCanvas, useNotify, useLayout, useEditorInfo } from '@opentiny/tiny-engine-meta-register'
-import { getMergeMeta, getMetaApi } from '@opentiny/tiny-engine-meta-register'
 import { fs } from '@opentiny/tiny-engine-utils'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { fetchMetaData, fetchPageList, fetchBlockSchema } from './http'
@@ -84,8 +92,7 @@ export default {
     const { getAllNestedBlocksSchema, generateAppCode } = getMetaApi('engine.service.generateCode')
 
     const getAllPageDetails = async (pageList) => {
-      const { PLUGIN_NAME, getPluginApi } = useLayout()
-      const detailPromise = pageList.map(({ id }) => getPluginApi(PLUGIN_NAME.AppManage).getPageById(id))
+      const detailPromise = pageList.map(({ id }) => getMetaApi(META_APP.AppManage).getPageById(id))
       const detailList = await Promise.allSettled(detailPromise)
 
       return detailList
@@ -254,14 +261,21 @@ export default {
 </script>
 <style lang="less" scoped>
 .toolbar-generate {
+  margin-right: 4px;
+  .toolbar-generate-btn {
+    display: flex;
+    align-items: center;
+  }
   :deep(.tiny-button--default) {
     min-width: 58px;
     height: 26px;
     padding: 0 8px;
-    line-height: 24px;
     border-radius: 4px;
     background-color: var(--ti-lowcode-toolbar-button-bg);
     border: none;
+    &:not(.disabled):hover {
+      background-color: var(--ti-lowcode-toolbar-button-bg);
+    }
     .button-title {
       margin-left: 4px;
     }

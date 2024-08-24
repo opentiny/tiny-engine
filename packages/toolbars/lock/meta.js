@@ -3,6 +3,5 @@ export default {
   title: 'lock',
   type: 'toolbars',
   icon: '',
-  align: 'right',
-  collapsed: true
+  align: 'left'
 }
