@@ -379,7 +379,8 @@ export default {
     // 渲染画布增加根节点，与出码和预览保持一致
     const rootChildrenSchema = {
       componentName: 'div',
-      props: schema.props,
+      // 手动添加一个唯一的属性，后续在画布选中此节点时方便处理额外的逻辑。由于没有修改schema，不会影响出码
+      props: { ...schema.props, 'data-id': 'root-container' },
       children: schema.children
     }
 
