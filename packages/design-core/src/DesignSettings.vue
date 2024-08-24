@@ -61,7 +61,7 @@ export default {
     renderPanel: {
       type: String
     },
-    Addons: {
+    addons: {
       type: Array
     }
   },
@@ -73,13 +73,13 @@ export default {
       changeRightFixedPanels,
       layoutState: { settings: settingsState }
     } = useLayout()
-    const settings = props.Addons && props.Addons.settings
+    const settings = props.addons && props.addons.settings
     const components = {}
     const iconComponents = {}
     const activating = computed(() => settingsState.activating) //高亮显示
     const showMask = ref(true)
 
-    props.Addons.settings.forEach(({ id, component, icon }) => {
+    props.addons.settings.forEach(({ id, component, icon }) => {
       components[id] = component
       iconComponents[id] = icon
     })

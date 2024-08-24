@@ -151,19 +151,19 @@ const getPluginState = () => layoutState.plugins
 const isEmptyPage = () => layoutState.pageStatus?.state === PAGE_STATUS.Empty
 
 export default () => {
-  let theLocalStorage = '{}'
-  const myLocalStorage = localStorage.getItem('plugin')
-  if (typeof myLocalStorage === 'string' && myLocalStorage.toString !== 'undefined') {
-    theLocalStorage = myLocalStorage
+  let plugin = ''
+  const pluginStorage = localStorage.getItem('plugin')
+  if (pluginStorage !== 'undefined') {
+    plugin = pluginStorage
   }
-  theLocalStorage = JSON.parse(theLocalStorage)
-
-  const pluginWidthStorage = useStorage('plugin', theLocalStorage)
-
-  const getPluginWidth = (name) => {
-    let width = pluginWidthStorage.value[name]?.width || 300
-    return width
+  try {
+    plugin = JSON.parse(plugin)
+  } catch (error) {
+    throw new Error(error)
   }
+  const pluginWidthStorage = useStorage('plugin', plugin)
+
+  const getPluginWidth = (name) => pluginWidthStorage.value[name]?.width || 300
 
   const changePluginWidth = (name, width) => {
     if (Object.prototype.hasOwnProperty.call(pluginWidthStorage.value, name)) {

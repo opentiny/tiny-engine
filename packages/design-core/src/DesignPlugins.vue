@@ -121,13 +121,13 @@ export default {
     renderPanel: {
       type: String
     },
-    Addons: {
+    addons: {
       type: Array
     }
   },
   emits: ['click', 'node-click'],
   setup(props, { emit }) {
-    const plugins = props.Addons && props.Addons.plugins
+    const plugins = props.addons && props.addons.plugins
     const components = {}
     const iconComponents = {}
     const pluginRef = ref(null)
@@ -138,7 +138,7 @@ export default {
 
     const { pluginState, registerPluginApi, changeLeftFixedPanels, leftFixedPanelsStorage } = useLayout()
 
-    props.Addons.plugins.forEach(({ id, component, api, icon }) => {
+    props.addons.plugins.forEach(({ id, component, api, icon }) => {
       components[id] = component
       iconComponents[id] = icon
       if (api) {
