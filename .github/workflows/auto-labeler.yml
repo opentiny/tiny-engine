@@ -1,15 +1,23 @@
 name: Pull Request Auto Labeler
 
 on:
-  pull_request:
+  pull_request_target:
     types: [opened, edited]
+
+permissions:
+  # Setting up permissions in the workflow to limit the scope of what it can do. Optional!
+  contents: read # the config file
+  issues: write # for labeling issues (on: issues)
+  pull-requests: write # for labeling pull requests (on: pull_request_target or on: pull_request)
+  statuses: write # to generate status
+  checks: write # to generate status
 
 jobs:
   label:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: fuxingloh/multi-labeler@v4 # v4
+      - uses: actions/checkout@v3
+      - uses: fuxingloh/multi-labeler@v4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }} # optional, default to '${{ github.token }}'
           config-path: .github/auto-labeler.yml # optional, default to '.github/labeler.yml'
