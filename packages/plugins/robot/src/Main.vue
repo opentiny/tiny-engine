@@ -361,7 +361,6 @@ export default {
       event.target.value = ''
       uploadFile(file)
     }
-
     const imageDeleting = ref(false)
     const handleDelete = () => {
       imageDeleting.value = true
