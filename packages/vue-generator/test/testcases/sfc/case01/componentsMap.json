@@ -28,6 +28,13 @@
     "destructuring": true
   },
   {
+    "componentName": "TinyGridColumn",
+    "exportName": "GridColumn",
+    "package": "@opentiny/vue",
+    "version": "^3.10.0",
+    "destructuring": true
+  },
+  {
     "componentName": "TinyInput",
     "exportName": "Input",
     "package": "@opentiny/vue",
