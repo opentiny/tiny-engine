@@ -57,7 +57,7 @@
                   : 'chat-content-ai'
               ]"
             >
-              <dialog-content :markdownContent="item.content" />
+              <dialog-content :markdown-content="item.content" />
             </div>
             <div v-else class="chat-message-image">
               <img class="image" :src="item.content" alt="" />
@@ -102,7 +102,7 @@
 </template>
 
 <script>
-import { ref, onMounted, watch, nextTick, watchEffect } from 'vue'
+import { ref, onMounted, watch, unref, watchEffect } from 'vue'
 import {
   Layout,
   Row,
@@ -181,6 +181,8 @@ export default {
       )
     }
 
+    // TODO：返回schema格式的代码
+    // eslint-disable-next-line no-unused-vars
     const createNewPage = (schema) => {
       if (!(pageSettingState.isNew && pageSettingState.isAIPage)) {
         pageSettingState.isNew = true
@@ -236,7 +238,7 @@ export default {
       http
         .post('/app-center/api/ai/chat', getSendSeesionProcess(), { timeout: 600000 })
         .then((res) => {
-          const { originalResponse, schema } = res
+          const { originalResponse } = res
           const responseMessage = getAiRespMessage(
             originalResponse.choices?.[0]?.message.role,
             originalResponse.choices?.[0]?.message.content
@@ -249,9 +251,10 @@ export default {
           sessionProcess.displayMessages.push(respDisplayMessage)
           messages.value[messages.value.length - 1].content = originalResponse.choices?.[0]?.message.content
           setContextSession()
-          if (schema?.schema) {
-            createNewPage(schema.schema)
-          }
+          // TODO：返回schema格式的代码
+          // if (schema?.schema) {
+          //   createNewPage(schema.schema)
+          // }
           inProcesing.value = false
           connectedFailed.value = false
         })
@@ -300,8 +303,8 @@ export default {
      */
     const fileInput = ref(null)
     const openFilePicker = () => {
-      if (fileInput.value) {
-        fileInput.value.click()
+      if (unref(fileInput)) {
+        unref(fileInput).click()
       }
     }
 
@@ -366,11 +369,9 @@ export default {
         imageUrl.value = ''
         imageContent.value = ''
         imageDeleting.value = false
-        nextTick(() => {
-          if (fileInput.value) {
-            fileInput.value.value = ''
-          }
-        })
+        if (unref(fileInput)) {
+          unref(fileInput).value = ''
+        }
       }, 500)
     }
 
@@ -559,14 +560,14 @@ export default {
   border: 1px solid var(--ti-lowcode-chat-model-user-text-border);
   .image {
     width: 100px;
+    height: 70px;
     border-radius: 5px;
   }
 }
 
 .preview-image {
   position: fixed;
-  bottom: 12px;
-  right: 635px;
+  bottom: 5px;
   transform: translate(-50%, -50%);
   z-index: 1000;
   border-radius: 5px;
@@ -577,7 +578,7 @@ export default {
   .image {
     border-radius: 5px;
     width: 100px;
-    height: auto;
+    height: 60px;
     display: block;
     position: relative;
     border: #1a1a1a;
