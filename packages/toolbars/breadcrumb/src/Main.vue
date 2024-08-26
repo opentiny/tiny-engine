@@ -4,7 +4,6 @@
       <tiny-breadcrumb separator="：" @select="open">
         <tiny-breadcrumb-item v-for="item in breadcrumbData.slice(0, 2)" :key="item">{{ item }} </tiny-breadcrumb-item>
       </tiny-breadcrumb>
-      <component :is="state.pageLock.entry"></component>
     </div>
 
     <tiny-button
@@ -13,7 +12,7 @@
       @click="publishBlock()"
       type="primary"
       size="small"
-      >发布区块</tiny-button
+      >区块</tiny-button
     >
   </div>
   <block-deploy-dialog v-model:visible="state.showDeployBlock" :nextVersion="nextVersion"></block-deploy-dialog>
@@ -23,7 +22,6 @@
 import { reactive, computed } from 'vue'
 import { Breadcrumb, BreadcrumbItem, Button } from '@opentiny/vue'
 import { useBreadcrumb, useLayout } from '@opentiny/tiny-engine-meta-register'
-import lock from '../../lock'
 import { BlockDeployDialog } from '@opentiny/tiny-engine-common'
 export default {
   components: {
@@ -33,7 +31,7 @@ export default {
     TinyButton: Button
   },
   setup() {
-    const CONTENTS = {
+    const PLUGINS_ID = {
       PAGEID: 'engine.plugins.appmanage',
       BLOCKID: 'engine.plugins.blockmanage'
     }
@@ -42,8 +40,7 @@ export default {
     const { plugins } = layoutState
 
     const state = reactive({
-      showDeployBlock: false,
-      pageLock: lock
+      showDeployBlock: false
     })
     const { CONSTANTS, getBreadcrumbData } = useBreadcrumb()
     const breadcrumbData = getBreadcrumbData()
@@ -70,7 +67,7 @@ export default {
     })
 
     const open = () => {
-      plugins.render = breadcrumbData.value[0] === CONSTANTS.PAGETEXT ? CONTENTS.PAGEID : CONTENTS.BLOCKID
+      plugins.render = breadcrumbData.value[0] === CONSTANTS.PAGETEXT ? PLUGINS_ID.PAGEID : PLUGINS_ID.BLOCKID
     }
 
     return {
@@ -94,19 +91,23 @@ export default {
   align-items: center;
   width: auto;
   height: 100%;
+  margin-right: 3px;
+  cursor: pointer;
   &-title {
-    height: 24px;
+    height: 28px;
     padding: 0 8px;
-    background-color: var(--ti-lowcode-toolbar-button-bg);
+    background-color: var(--ti-lowcode-toolbar-breadcrumb-bg);
     display: flex;
     border-radius: 4px;
     :deep(.reference-wrapper) {
       line-height: 22px;
     }
   }
+  &-title:hover {
+    background-color: var(--ti-lowcode-toolbar-breadcrumb-bg-hover);
+  }
 
   .tiny-breadcrumb {
-    height: 17px;
     line-height: var(--base-top-panel-breadcrumb-line-height);
     padding-right: 4px;
     text-overflow: ellipsis;
@@ -121,8 +122,9 @@ export default {
     user-select: none;
 
     :deep(.tiny-breadcrumb__inner) {
-      color: var(--ti-lowcode-toolbar-title-color);
+      color: var(--ti-lowcode-toolbar-breadcrumb-left-color);
       text-decoration: none;
+      cursor: pointer;
     }
 
     :deep(.tiny-breadcrumb__separator) {
@@ -132,8 +134,14 @@ export default {
 
     &:last-child :deep(.tiny-breadcrumb__inner) {
       font-weight: normal;
-      color: var(--ti-lowcode-toolbar-title-color);
+      color: var(--ti-lowcode-toolbar-breadcrumb-left-color);
     }
+  }
+
+  .publish {
+    margin-left: 8px;
+    height: 28px;
+    line-height: 28px;
   }
 }
 </style>

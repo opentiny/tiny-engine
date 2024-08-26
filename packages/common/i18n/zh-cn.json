@@ -40,6 +40,7 @@
     "passwordTip2": "通过加密参数来配置密码数据。",
     "createEncryption": "创建加密参数",
     "expandExample": "展开示例",
-    "collapseExample": "收起示例"
+    "collapseExample": "收起示例",
+    "exampleCode": "示例代码"
   }
 }

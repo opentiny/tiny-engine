@@ -1,7 +1,7 @@
 <template>
   <component :is="configProvider" :design="configProviderDesign">
     <div id="tiny-engine">
-      <design-toolbars :toolbars="registry.toolbars"></design-toolbars>
+      <design-toolbars :toolbars="registry.toolbars" :layoutRegistry="layoutRegistry"></design-toolbars>
       <div class="tiny-engine-main">
         <div class="tiny-engine-left-wrap">
           <div class="tiny-engine-content-wrap">
@@ -63,6 +63,7 @@ export default {
     }
 
     return {
+      layoutRegistry,
       configProvider,
       configProviderDesign,
       plugins,

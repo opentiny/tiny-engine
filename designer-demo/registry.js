@@ -15,6 +15,7 @@ import {
   Fullscreen,
   Lang,
   Logo,
+  Lock,
   Media,
   Redoundo,
   Save,
@@ -49,11 +50,7 @@ import engineConfig from './engine.config'
 export default {
   root: {
     id: 'engine.root',
-    metas: [
-      EditorInfoService,
-      AppService,
-      GenerateCodeService
-    ]
+    metas: [EditorInfoService, AppService, GenerateCodeService]
   },
   config: engineConfig,
   layout: Layout,
@@ -68,6 +65,7 @@ export default {
   toolbars: [
     Logo,
     Breadcrumb,
+    Lock,
     Media,
     Redoundo,
     Collaboration,

@@ -20,28 +20,28 @@
       <div class="source-code">
         <div v-if="editorTipsTitle" class="header-tips-container">
           <span class="header-tips-title" :title="editorTipsTitle">{{ editorTipsTitle }}</span>
-          <div
-            v-if="editorTipsDemo"
-            class="header-tips-showdemo"
-            @click="editorState.showEditorDemo = !editorState.showEditorDemo"
-          >
-            <span>{{ editorState.showEditorDemo ? $t('common.collapseExample') : $t('common.expandExample') }}</span>
-            <icon-chevron-up v-if="editorState.showEditorDemo" class="collapse-icon"></icon-chevron-up>
-            <icon-chevron-down v-else class="collapse-icon"></icon-chevron-down>
-          </div>
         </div>
-        <div v-if="editorState.showEditorDemo" class="header-tips-demo">
-          <div class="header-tips-demo-content lowcode-scrollbar-thin">
-            <pre><code>{{ editorTipsDemo }}</code></pre>
-          </div>
+        <div class="source-code-split-panel-wrapper">
+          <tiny-split v-model="editorState.splitWidth">
+            <template #left>
+              <monaco-editor
+                ref="editor"
+                class="source-code-content"
+                :value="value"
+                :options="options"
+                @editorDidMount="editorDidMount"
+              ></monaco-editor>
+            </template>
+            <template #right>
+              <div v-if="editorTipsDemo" class="source-code-split-panel-wrapper-right">
+                <div class="header-tips-demo-content lowcode-scrollbar-thin">
+                  <span>{{ $t('common.exampleCode') }}</span>
+                  <pre><code>{{ editorTipsDemo }}</code></pre>
+                </div>
+              </div>
+            </template>
+          </tiny-split>
         </div>
-        <monaco-editor
-          ref="editor"
-          class="source-code-content"
-          :value="value"
-          :options="options"
-          @editorDidMount="editorDidMount"
-        ></monaco-editor>
         <div v-if="showErrorMsg" class="error-msg">{{ editorState.errorMsg }}</div>
       </div>
       <template #footer>
@@ -67,19 +67,17 @@
 
 <script>
 import { computed, nextTick, reactive, ref, watchEffect } from 'vue'
-import { Button, DialogBox } from '@opentiny/vue'
-import { iconChevronDown, iconChevronUp } from '@opentiny/vue-icon'
-import { formatString } from '@opentiny/tiny-engine-common/js/ast'
-import i18n from '@opentiny/tiny-engine-common/js/i18n'
+import { Button, DialogBox, Split } from '@opentiny/vue'
 import VueMonaco from './VueMonaco.vue'
+import { formatString } from '../js/ast'
+import i18n from '../js/i18n'
 
 export default {
   components: {
+    TinySplit: Split,
     MonacoEditor: VueMonaco,
     TinyButton: Button,
-    TinyDialogBox: DialogBox,
-    IconChevronDown: iconChevronDown(),
-    IconChevronUp: iconChevronUp()
+    TinyDialogBox: DialogBox
   },
   props: {
     buttonText: {
@@ -96,7 +94,7 @@ export default {
     },
     title: {
       type: [String, Object],
-      default: ''
+      default: '编辑代码'
     },
     language: {
       type: String,
@@ -131,9 +129,9 @@ export default {
       show: false,
       created: false,
       errorMsg: '',
-      showEditorDemo: false
+      showEditorDemo: false,
+      splitWidth: props.tips?.demo ? 0.7 : 1
     })
-
     const value = ref('')
     const editor = ref(null)
 
@@ -254,22 +252,27 @@ export default {
 <style lang="less" scoped>
 .editor-wrap {
   width: 100%;
+
   .edit-btn {
     color: var(--ti-lowcode-meta-codeEditor-color);
     border-color: var(--ti-lowcode-meta-codeEditor-border-color);
+
     &:hover {
       color: var(--ti-lowcode-meta-codeEditor-hover-color);
       border-color: var(--ti-lowcode-meta-codeEditor-border-hover-color);
     }
   }
 }
+
 .btn-box {
   display: flex;
   justify-content: flex-end;
+
   &:has(.format-btn) {
     justify-content: space-between;
   }
 }
+
 .full-width {
   display: flex;
   justify-content: space-between;
@@ -279,15 +282,19 @@ export default {
   padding: 4px 8px;
   border: 1px solid var(--ti-lowcode-meta-codeEditor-border-color);
   border-radius: 6px;
+
   &:hover {
     border-color: var(--ti-lowcode-meta-codeEditor-border-hover-color);
   }
+
   .text-content {
     -webkit-line-clamp: 1;
   }
+
   &.empty-color {
     color: var(--ti-lowcode-common-text-desc-color);
   }
+
   .edit-icon {
     margin-left: 4px;
     flex-shrink: 0;
@@ -295,60 +302,62 @@ export default {
     color: var(--ti-lowcode-common-text-main-color);
   }
 }
+:deep(.tiny-dialog-box__header) {
+  padding-bottom: 15px;
+}
+
+:deep(.tiny-dialog-box__title) {
+  font-size: 14px;
+}
+
+:deep(.view-line) {
+  font-size: 12px;
+}
+
 .source-code {
   height: 50vh;
   display: flex;
   flex-direction: column;
+
   .header-tips-container {
     display: flex;
     height: 17px;
     margin-bottom: 10px;
     color: var(--ti-lowcode-meta-code-editor-header-tips-container-color);
+
     .header-tips-title {
+      color: var(--ti-lowcode-base-text-color-3);
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
-    }
-    .header-tips-showdemo {
-      display: flex;
-      align-items: center;
-      margin-left: 10px;
-      white-space: nowrap;
-      cursor: pointer;
-      &:hover {
-        .collapse-icon {
-          color: var(--ti-lowcode-meta-code-editor-header-collapse-icon-hover-color);
-        }
-      }
-      .collapse-icon {
-        margin-left: 4px;
-        color: var(--ti-lowcode-meta-code-editor-header-collapse-icon-color);
-      }
-    }
-  }
-  .header-tips-demo {
-    overflow: hidden;
-    margin-bottom: 12px;
-    padding: 8px 12px;
-    border-radius: 8px;
-    color: var(--ti-lowcode-meta-code-editor-header-tips-demo-color);
-    background-color: var(--ti-lowcode-meta-code-editor-header-tips-demo-bg-color);
-    .header-tips-demo-content {
-      max-height: 98px;
-      overflow-y: auto;
-    }
-    pre {
-      margin: 0px;
-    }
-    code {
-      font-family: Consolas, Menlo, Monaco, Courier New, monospace, serif;
     }
   }
 
   .source-code-content {
     overflow-y: auto;
+    height: 100%;
     flex: 1;
-    border: 1px solid var(--ti-lowcode-meta-code-editor-source-code-content-border-color);
+  }
+
+  .source-code-split-panel-wrapper {
+    height: 100%;
+
+    :deep(.tiny-split-trigger) {
+      width: 2px;
+    }
+
+    &-right {
+      padding: 16px 0 0 16px;
+
+      pre {
+        margin: 8px;
+      }
+
+      code {
+        font-family: Microsoft YaHei, Microsoft YaHei-Normal;
+        color: var(--ti-lowcode-base-text-color-3);
+      }
+    }
   }
 
   .error-msg {

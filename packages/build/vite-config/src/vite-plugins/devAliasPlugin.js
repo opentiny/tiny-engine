@@ -1,63 +1,68 @@
 import path from 'node:path'
 
-const devAlias = {
-  '@opentiny/tiny-engine/canvas': path.resolve(process.cwd(), '../packages/design-core/src/canvas/canvas.js'),
-  '@opentiny/tiny-engine': path.resolve(process.cwd(), '../packages/design-core/index.js'),
-  '@opentiny/tiny-engine-common/component': path.resolve(process.cwd(), '../packages/common/component'),
-  '@opentiny/tiny-engine-common/js': path.resolve(process.cwd(), '../packages/common/js'),
-  '@opentiny/tiny-engine-common': path.resolve(process.cwd(), '../packages/common/index.js'),
-  '@opentiny/tiny-engine-plugin-materials': path.resolve(process.cwd(), '../packages/plugins/materials/index.js'),
-  '@opentiny/tiny-engine-plugin-block': path.resolve(process.cwd(), '../packages/plugins/block/index.js'),
-  '@opentiny/tiny-engine-plugin-data': path.resolve(process.cwd(), '../packages/plugins/data/index.js'),
-  '@opentiny/tiny-engine-plugin-datasource': path.resolve(process.cwd(), '../packages/plugins/datasource/index.js'),
-  '@opentiny/tiny-engine-plugin-script': path.resolve(process.cwd(), '../packages/plugins/script/index.js'),
-  '@opentiny/tiny-engine-plugin-tree': path.resolve(process.cwd(), '../packages/plugins/tree/index.js'),
-  '@opentiny/tiny-engine-plugin-help': path.resolve(process.cwd(), '../packages/plugins/help/index.js'),
-  '@opentiny/tiny-engine-plugin-schema': path.resolve(process.cwd(), '../packages/plugins/schema/index.js'),
-  '@opentiny/tiny-engine-plugin-page': path.resolve(process.cwd(), '../packages/plugins/page/index.js'),
-  '@opentiny/tiny-engine-plugin-i18n': path.resolve(process.cwd(), '../packages/plugins/i18n/index.js'),
-  '@opentiny/tiny-engine-plugin-bridge': path.resolve(process.cwd(), '../packages/plugins/bridge/index.js'),
-  '@opentiny/tiny-engine-plugin-tutorial': path.resolve(process.cwd(), '../packages/plugins/tutorial/index.js'),
-  '@opentiny/tiny-engine-plugin-robot': path.resolve(process.cwd(), '../packages/plugins/robot/index.js'),
-  '@opentiny/tiny-engine-settings-panel': path.resolve(process.cwd(), '../packages/settings/panel/index.js'),
-  '@opentiny/tiny-engine-setting-events': path.resolve(process.cwd(), '../packages/settings/events/index.js'),
-  '@opentiny/tiny-engine-setting-props': path.resolve(process.cwd(), '../packages/settings/props/index.js'),
-  '@opentiny/tiny-engine-setting-styles': path.resolve(process.cwd(), '../packages/settings/styles/index.js'),
-  '@opentiny/tiny-engine-toolbar-breadcrumb': path.resolve(process.cwd(), '../packages/toolbars/breadcrumb/index.js'),
-  '@opentiny/tiny-engine-toolbar-fullscreen': path.resolve(process.cwd(), '../packages/toolbars/fullscreen/index.js'),
-  '@opentiny/tiny-engine-toolbar-lang': path.resolve(process.cwd(), '../packages/toolbars/lang/index.js'),
-  '@opentiny/tiny-engine-toolbar-layout': path.resolve(process.cwd(), '../packages/toolbars/layout/index.js'),
-  '@opentiny/tiny-engine-toolbar-checkinout': path.resolve(process.cwd(), '../packages/toolbars/lock/index.js'),
-  '@opentiny/tiny-engine-toolbar-logo': path.resolve(process.cwd(), '../packages/toolbars/logo/index.js'),
-  '@opentiny/tiny-engine-toolbar-logout': path.resolve(process.cwd(), '../packages/toolbars/logout/index.js'),
-  '@opentiny/tiny-engine-toolbar-media': path.resolve(process.cwd(), '../packages/toolbars/media/index.js'),
-  '@opentiny/tiny-engine-toolbar-preview': path.resolve(process.cwd(), '../packages/toolbars/preview/index.js'),
-  '@opentiny/tiny-engine-toolbar-generate-vue': path.resolve(
-    process.cwd(),
-    '../packages/toolbars/generate-vue/index.js'
-  ),
-  '@opentiny/tiny-engine-toolbar-refresh': path.resolve(process.cwd(), '../packages/toolbars/refresh/index.js'),
-  '@opentiny/tiny-engine-toolbar-redoundo': path.resolve(process.cwd(), '../packages/toolbars/redoundo/index.js'),
-  '@opentiny/tiny-engine-toolbar-clean': path.resolve(process.cwd(), '../packages/toolbars/clean/index.js'),
-  '@opentiny/tiny-engine-toolbar-save': path.resolve(process.cwd(), '../packages/toolbars/save/index.js'),
-  '@opentiny/tiny-engine-toolbar-setting': path.resolve(process.cwd(), '../packages/toolbars/setting/index.js'),
-  '@opentiny/tiny-engine-toolbar-collaboration': path.resolve(
-    process.cwd(),
-    '../packages/toolbars/collaboration/index.js'
-  ),
-  '@opentiny/tiny-engine-theme-dark': path.resolve(process.cwd(), '../packages/theme/dark/index.less'),
-  '@opentiny/tiny-engine-theme-light': path.resolve(process.cwd(), '../packages/theme/light/index.less'),
-  '@opentiny/tiny-engine-theme-base': path.resolve(process.cwd(), '../packages/theme/base/src/index.js'),
-  '@opentiny/tiny-engine-svgs': path.resolve(process.cwd(), '../packages/svgs/index.js'),
-  '@opentiny/tiny-engine-http': path.resolve(process.cwd(), '../packages/http/src/index.js'),
-  '@opentiny/tiny-engine-canvas': path.resolve(process.cwd(), '../packages/canvas/index.js'),
-  '@opentiny/tiny-engine-utils': path.resolve(process.cwd(), '../packages/utils/src/index.js'),
-  '@opentiny/tiny-engine-webcomponent-core': path.resolve(process.cwd(), '../packages/webcomponent/src/lib.js'),
-  '@opentiny/tiny-engine-i18n-host': path.resolve(process.cwd(), '../packages/i18n/src/lib.js'),
-  '@opentiny/tiny-engine-builtin-component': path.resolve(process.cwd(), '../packages/builtinComponent/index.js'),
-  '@opentiny/tiny-engine-meta-register': path.resolve(process.cwd(), '../packages/register/src/index.js'),
-  '@opentiny/tiny-engine-layout': path.resolve(process.cwd(), '../packages/layout/index.js'),
-  '@opentiny/tiny-engine-configurator': path.resolve(process.cwd(), '../packages/configurator/src/index.js')
+/**
+ * 获取开发态npm包Alias
+ * @param {boolean|Object} useSourceAlias  alias配置
+ * @param {string} useSourceAlias.basePath 基础路径
+ * @returns alias
+ */
+const getDevAlias = (useSourceAlias) => {
+  if (!useSourceAlias) return {}
+  const defaultBasePath = path.resolve(process.cwd(), '..') // parent path
+  const basePath = useSourceAlias.basePath || defaultBasePath
+  return {
+    '@opentiny/tiny-engine/canvas': path.resolve(basePath, 'packages/design-core/src/canvas/canvas.js'),
+    '@opentiny/tiny-engine': path.resolve(basePath, 'packages/design-core/index.js'),
+    '@opentiny/tiny-engine-common/component': path.resolve(basePath, 'packages/common/component'),
+    '@opentiny/tiny-engine-common/js': path.resolve(basePath, 'packages/common/js'),
+    '@opentiny/tiny-engine-common': path.resolve(basePath, 'packages/common/index.js'),
+    '@opentiny/tiny-engine-plugin-materials': path.resolve(basePath, 'packages/plugins/materials/index.js'),
+    '@opentiny/tiny-engine-plugin-block': path.resolve(basePath, 'packages/plugins/block/index.js'),
+    '@opentiny/tiny-engine-plugin-data': path.resolve(basePath, 'packages/plugins/data/index.js'),
+    '@opentiny/tiny-engine-plugin-datasource': path.resolve(basePath, 'packages/plugins/datasource/index.js'),
+    '@opentiny/tiny-engine-plugin-script': path.resolve(basePath, 'packages/plugins/script/index.js'),
+    '@opentiny/tiny-engine-plugin-tree': path.resolve(basePath, 'packages/plugins/tree/index.js'),
+    '@opentiny/tiny-engine-plugin-help': path.resolve(basePath, 'packages/plugins/help/index.js'),
+    '@opentiny/tiny-engine-plugin-schema': path.resolve(basePath, 'packages/plugins/schema/index.js'),
+    '@opentiny/tiny-engine-plugin-page': path.resolve(basePath, 'packages/plugins/page/index.js'),
+    '@opentiny/tiny-engine-plugin-i18n': path.resolve(basePath, 'packages/plugins/i18n/index.js'),
+    '@opentiny/tiny-engine-plugin-bridge': path.resolve(basePath, 'packages/plugins/bridge/index.js'),
+    '@opentiny/tiny-engine-plugin-tutorial': path.resolve(basePath, 'packages/plugins/tutorial/index.js'),
+    '@opentiny/tiny-engine-plugin-robot': path.resolve(basePath, 'packages/plugins/robot/index.js'),
+    '@opentiny/tiny-engine-settings-panel': path.resolve(basePath, 'packages/settings/panel/index.js'),
+    '@opentiny/tiny-engine-setting-events': path.resolve(basePath, 'packages/settings/events/index.js'),
+    '@opentiny/tiny-engine-setting-props': path.resolve(basePath, 'packages/settings/props/index.js'),
+    '@opentiny/tiny-engine-setting-styles': path.resolve(basePath, 'packages/settings/styles/index.js'),
+    '@opentiny/tiny-engine-toolbar-breadcrumb': path.resolve(basePath, 'packages/toolbars/breadcrumb/index.js'),
+    '@opentiny/tiny-engine-toolbar-fullscreen': path.resolve(basePath, 'packages/toolbars/fullscreen/index.js'),
+    '@opentiny/tiny-engine-toolbar-lang': path.resolve(basePath, 'packages/toolbars/lang/index.js'),
+    '@opentiny/tiny-engine-toolbar-layout': path.resolve(basePath, 'packages/toolbars/layout/index.js'),
+    '@opentiny/tiny-engine-toolbar-checkinout': path.resolve(basePath, 'packages/toolbars/lock/index.js'),
+    '@opentiny/tiny-engine-toolbar-logo': path.resolve(basePath, 'packages/toolbars/logo/index.js'),
+    '@opentiny/tiny-engine-toolbar-logout': path.resolve(basePath, 'packages/toolbars/logout/index.js'),
+    '@opentiny/tiny-engine-toolbar-media': path.resolve(basePath, 'packages/toolbars/media/index.js'),
+    '@opentiny/tiny-engine-toolbar-preview': path.resolve(basePath, 'packages/toolbars/preview/index.js'),
+    '@opentiny/tiny-engine-toolbar-generate-vue': path.resolve(basePath, 'packages/toolbars/generate-vue/index.js'),
+    '@opentiny/tiny-engine-toolbar-refresh': path.resolve(basePath, 'packages/toolbars/refresh/index.js'),
+    '@opentiny/tiny-engine-toolbar-redoundo': path.resolve(basePath, 'packages/toolbars/redoundo/index.js'),
+    '@opentiny/tiny-engine-toolbar-clean': path.resolve(basePath, 'packages/toolbars/clean/index.js'),
+    '@opentiny/tiny-engine-toolbar-save': path.resolve(basePath, 'packages/toolbars/save/index.js'),
+    '@opentiny/tiny-engine-toolbar-setting': path.resolve(basePath, 'packages/toolbars/setting/index.js'),
+    '@opentiny/tiny-engine-toolbar-collaboration': path.resolve(basePath, 'packages/toolbars/collaboration/index.js'),
+    '@opentiny/tiny-engine-theme-dark': path.resolve(basePath, 'packages/theme/dark/index.less'),
+    '@opentiny/tiny-engine-theme-light': path.resolve(basePath, 'packages/theme/light/index.less'),
+    '@opentiny/tiny-engine-theme-base': path.resolve(basePath, 'packages/theme/base/src/index.js'),
+    '@opentiny/tiny-engine-svgs': path.resolve(basePath, 'packages/svgs/index.js'),
+    '@opentiny/tiny-engine-http': path.resolve(basePath, 'packages/http/src/index.js'),
+    '@opentiny/tiny-engine-canvas': path.resolve(basePath, 'packages/canvas/index.js'),
+    '@opentiny/tiny-engine-utils': path.resolve(basePath, 'packages/utils/src/index.js'),
+    '@opentiny/tiny-engine-webcomponent-core': path.resolve(basePath, 'packages/webcomponent/src/lib.js'),
+    '@opentiny/tiny-engine-i18n-host': path.resolve(basePath, 'packages/i18n/src/lib.js'),
+    '@opentiny/tiny-engine-builtin-component': path.resolve(basePath, 'packages/builtinComponent/index.js'),
+    '@opentiny/tiny-engine-meta-register': path.resolve(basePath, 'packages/register/src/index.js'),
+    '@opentiny/tiny-engine-layout': path.resolve(basePath, 'packages/layout/index.js'),
+    '@opentiny/tiny-engine-configurator': path.resolve(basePath, 'packages/configurator/src/index.js')
+  }
 }
 
 const getThemePath = (theme, useSourceAlias) => {
@@ -66,7 +71,8 @@ const getThemePath = (theme, useSourceAlias) => {
   }
 
   if (useSourceAlias) {
-    return path.resolve(process.cwd(), `../packages/theme/${theme}/index.less`)
+    const basePath = useSourceAlias.basePath || path.resolve(process.cwd(), '..')
+    return path.resolve(basePath, `packages/theme/${theme}/index.less`)
   }
 
   return path.resolve(process.cwd(), `./node_modules/@opentiny/tiny-engine-theme-${theme}/dist/style.css`)
@@ -87,7 +93,7 @@ export const devAliasPlugin = (env, useSourceAlias) => {
         return {
           resolve: {
             alias: {
-              ...(useSourceAlias ? devAlias : {}),
+              ...getDevAlias(useSourceAlias),
               '@opentiny/tiny-engine-theme': getThemePath(env.VITE_THEME, useSourceAlias)
             }
           }
