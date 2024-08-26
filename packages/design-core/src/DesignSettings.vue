@@ -49,7 +49,6 @@ import { computed, ref, toRefs, watch, reactive } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
 import { Tabs, TabItem } from '@opentiny/vue'
 import { useLayout } from '@opentiny/tiny-engine-controller'
-import Addons from '@opentiny/tiny-engine-app-addons'
 
 export default {
   components: {
@@ -61,6 +60,9 @@ export default {
   props: {
     renderPanel: {
       type: String
+    },
+    addons: {
+      type: Array
     }
   },
 
@@ -71,13 +73,13 @@ export default {
       changeRightFixedPanels,
       layoutState: { settings: settingsState }
     } = useLayout()
-    const settings = Addons && Addons.settings
+    const settings = props.addons && props.addons.settings
     const components = {}
     const iconComponents = {}
     const activating = computed(() => settingsState.activating) //高亮显示
     const showMask = ref(true)
 
-    Addons.settings.forEach(({ id, component, icon }) => {
+    props.addons.settings.forEach(({ id, component, icon }) => {
       components[id] = component
       iconComponents[id] = icon
     })

@@ -18,5 +18,8 @@ export default {
   title: '样式',
   icon: 'display-inline',
   align: 'top',
+  options: {
+    width: 320
+  },
   component
 }

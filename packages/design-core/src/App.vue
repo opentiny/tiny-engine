@@ -5,7 +5,7 @@
       <design-toolbars></design-toolbars>
       <div class="tiny-engine-main">
         <div class="tiny-engine-left-wrap">
-          <design-plugins :render-panel="plugins.render" @click="toggleNav"></design-plugins>
+          <design-plugins :render-panel="plugins.render" :addons="addons" @click="toggleNav"></design-plugins>
         </div>
         <div class="tiny-engine-content-wrap">
           <design-canvas></design-canvas>
@@ -14,6 +14,7 @@
           <design-settings
             :render-panel="settings.render"
             v-show="layoutState.settings.showDesignSettings"
+            :addons="addons"
             ref="right"
           ></design-settings>
         </div>
@@ -46,7 +47,6 @@ import blockPlugin from '@opentiny/tiny-engine-plugin-block'
 import materials from '@opentiny/tiny-engine-plugin-materials'
 import { useBroadcastChannel } from '@vueuse/core'
 import { constants } from '@opentiny/tiny-engine-utils'
-
 const { message } = useModal()
 const { requestInitBlocks } = blockPlugin.api
 const { fetchGroups } = materials.api
@@ -75,6 +75,15 @@ export default {
       preNode: AppManage,
       jsClose: null
     })
+
+    const plugin = {}
+    addons.plugins.forEach((item) => {
+      plugin[item.id] = { width: item.options?.width || 300 }
+    })
+    addons.settings.forEach((item) => {
+      plugin[item.id] = { width: item.options?.width || 320 }
+    })
+    localStorage.setItem('plugin', JSON.stringify(plugin))
 
     const { layoutState } = useLayout()
     const { plugins, settings } = layoutState

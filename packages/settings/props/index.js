@@ -11,7 +11,6 @@
  */
 
 import component from './src/Main.vue'
-
 import Components from './src/components'
 
 export { Components }
@@ -22,5 +21,8 @@ export default {
   title: '属性',
   icon: 'form',
   align: 'top',
+  options: {
+    width: 320
+  },
   component
 }
