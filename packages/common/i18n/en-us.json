@@ -40,6 +40,7 @@
     "passwordTip2": " to add an encrypted parameter to configure the value.",
     "createEncryption": "Create Encrypted Parameter",
     "expandExample": "Show Example",
-    "collapseExample": "Hide Example"
+    "collapseExample": "Hide Example",
+    "exampleCode": "Example Code"
   }
 }
