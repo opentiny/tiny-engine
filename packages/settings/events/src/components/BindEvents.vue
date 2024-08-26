@@ -28,7 +28,7 @@
         </template>
         <ul class="bind-event-list">
           <li
-            v-for="(event, name) in state.componentEvents"
+            v-for="(event, name) in renderEventList"
             :key="name"
             :class="['bind-event-list-item', { 'bind-event-list-item-notallow': state.bindActions[name] }]"
             @click="openActionDialog({ eventName: name }, true)"
@@ -43,7 +43,7 @@
         <div class="action-item bind-action-item">
           <div class="binding-name" @click="openActionDialog(action)">
             <div>
-              {{ action.eventName }}<span>{{ state.componentEvents[action.eventName].label.zh_CN }}</span>
+              {{ action.eventName }}<span>{{ renderEventList[action.eventName].label.zh_CN }}</span>
             </div>
             <div :class="{ linked: action.linked }">{{ action.linkedEventName }}</div>
             <span class="event-bind">{{ action.ref }}</span>
@@ -78,7 +78,7 @@
   <bind-events-dialog :eventBinding="state.eventBinding"></bind-events-dialog>
   <add-events-dialog
     :visible="state.showBindEventDialog"
-    :componentEvents="state.componentEvents"
+    :componentEvents="renderEventList"
     @closeDialog="handleToggleAddEventDialog(false)"
     @addEvent="handleAddEvent"
   ></add-events-dialog>
@@ -126,18 +126,18 @@ export default {
 
     const isBlock = computed(() => Boolean(pageState.isBlock))
     const isEmpty = computed(() => Object.keys(state.bindActions).length === 0)
+    const renderEventList = computed(() => ({ ...state.componentEvent, ...state.componentEvents }))
 
     watchEffect(() => {
       const componentName = pageState?.currentSchema?.componentName
       const componentSchema = getMaterial(componentName)
       state.componentEvent = componentSchema?.content?.schema?.events || componentSchema?.schema?.events || {}
-      Object.assign(state.componentEvents, state.componentEvent)
       const props = pageState?.currentSchema?.props || {}
       const keys = Object.keys(props)
       state.bindActions = {}
 
       // 遍历组件事件元数据
-      Object.entries(state.componentEvents).forEach(([eventName, componentEvent]) => {
+      Object.entries(renderEventList.value).forEach(([eventName, componentEvent]) => {
         // 查找组件已添加的事件
         if (keys.indexOf(eventName) > -1) {
           const event = props[eventName]
@@ -253,7 +253,8 @@ export default {
       openCodePanel,
       openActionDialog,
       handleAddEvent,
-      handleToggleAddEventDialog
+      handleToggleAddEventDialog,
+      renderEventList
     }
   }
 }
