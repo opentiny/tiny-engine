@@ -1,0 +1,19 @@
+version: v1
+
+labels:
+  - label: 'enhancement'
+    sync: true
+    matcher:
+      title: '^feat:.*'
+  - label: 'document'
+    sync: true
+    matcher:
+      title: '^docs:.*'
+  - label: 'bug'
+    sync: true
+    matcher:
+      title: '^fix:.*'
+  - label: 'ospp-2024'
+    sync: true
+    matcher:
+      baseBranch: '^ospp-2024/.*'
