@@ -43,7 +43,7 @@
         <div class="action-item bind-action-item">
           <div class="binding-name" @click="openActionDialog(action)">
             <div>
-              {{ action.eventName }}<span>{{ renderEventList[action.eventName].label.zh_CN }}</span>
+              {{ action.eventName }}<span>{{ renderEventList[action.eventName]?.label?.zh_CN }}</span>
             </div>
             <div :class="{ linked: action.linked }">{{ action.linkedEventName }}</div>
             <span class="event-bind">{{ action.ref }}</span>
