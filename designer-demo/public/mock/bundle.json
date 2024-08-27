@@ -13010,11 +13010,160 @@
       "blocks": [],
       "snippets": [
         {
-          "group": "basic",
+          "group": "layout",
           "label": {
-            "zh_CN": "基础"
+            "zh_CN": "布局与容器"
           },
           "children": [
+            {
+              "name": {
+                "zh_CN": "栅格布局"
+              },
+              "icon": "row",
+              "screenshot": "",
+              "snippetName": "TinyLayout",
+              "schema": {
+                "componentName": "TinyLayout",
+                "props": {},
+                "children": [
+                  {
+                    "componentName": "TinyRow",
+                    "props": {
+                      "style": "padding: 10px;"
+                    },
+                    "children": [
+                      {
+                        "componentName": "TinyCol",
+                        "props": {
+                          "span": 3
+                        }
+                      },
+                      {
+                        "componentName": "TinyCol",
+                        "props": {
+                          "span": 3
+                        }
+                      },
+                      {
+                        "componentName": "TinyCol",
+                        "props": {
+                          "span": 3
+                        }
+                      },
+                      {
+                        "componentName": "TinyCol",
+                        "props": {
+                          "span": 3
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "componentName": "TinyRow",
+                    "props": {
+                      "style": "padding: 10px;"
+                    },
+                    "children": [
+                      {
+                        "componentName": "TinyCol",
+                        "props": {
+                          "span": 3
+                        }
+                      },
+                      {
+                        "componentName": "TinyCol",
+                        "props": {
+                          "span": 3
+                        }
+                      },
+                      {
+                        "componentName": "TinyCol",
+                        "props": {
+                          "span": 3
+                        }
+                      },
+                      {
+                        "componentName": "TinyCol",
+                        "props": {
+                          "span": 3
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "group": "basic",
+          "label": {
+            "zh_CN": "基础元素"
+          },
+          "children": [
+            {
+              "name": {
+                "zh_CN": "段落"
+              },
+              "icon": "paragraph",
+              "screenshot": "",
+              "snippetName": "p",
+              "schema": {
+                "componentName": "p",
+                "children": "TinyEngine 前端可视化设计器致力于通过友好的用户交互提升业务应用的开发效率。"
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "链接"
+              },
+              "icon": "link",
+              "screenshot": "",
+              "snippetName": "a",
+              "schema": {
+                "componentName": "a",
+                "children": "链接"
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "分隔线"
+              },
+              "icon": "hr",
+              "screenshot": "",
+              "snippetName": "hr",
+              "schema": {}
+            },
+            {
+              "name": {
+                "zh_CN": "标题"
+              },
+              "icon": "h16",
+              "screenshot": "",
+              "snippetName": "h1",
+              "schema": {
+                "componentName": "h1",
+                "props": {},
+                "children": "Heading"
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "视频"
+              },
+              "icon": "video",
+              "screenshot": "",
+              "snippetName": "video",
+              "schema": {
+                "componentName": "video",
+                "props": {
+                  "src": "img/webNova.jpg",
+                  "width": "200",
+                  "height": "100",
+                  "style": "border:1px solid #ccc"
+                }
+              }
+            },
             {
               "name": {
                 "zh_CN": "按钮"
@@ -13119,7 +13268,7 @@
         {
           "group": "form",
           "label": {
-            "zh_CN": "表单"
+            "zh_CN": "表单类型"
           },
           "children": [
             {
@@ -13366,7 +13515,7 @@
         {
           "group": "table",
           "label": {
-            "zh_CN": "表格"
+            "zh_CN": "表格类型"
           },
           "children": [
             {
@@ -13447,73 +13596,9 @@
           ]
         },
         {
-          "group": "layout",
-          "label": {
-            "zh_CN": "布局与容器"
-          },
-          "children": [
-            {
-              "name": {
-                "zh_CN": "Row"
-              },
-              "icon": "row",
-              "screenshot": "",
-              "snippetName": "TinyRow",
-              "schema": {
-                "componentName": "TinyRow",
-                "props": {},
-                "children": [
-                  {
-                    "componentName": "TinyCol",
-                    "props": {
-                      "span": 3
-                    }
-                  },
-                  {
-                    "componentName": "TinyCol",
-                    "props": {
-                      "span": 3
-                    }
-                  },
-                  {
-                    "componentName": "TinyCol",
-                    "props": {
-                      "span": 3
-                    }
-                  },
-                  {
-                    "componentName": "TinyCol",
-                    "props": {
-                      "span": 3
-                    }
-                  }
-                ]
-              }
-            },
-            {
-              "name": {
-                "zh_CN": "Col"
-              },
-              "icon": "col",
-              "screenshot": "",
-              "snippetName": "TinyCol",
-              "schema": {
-                "componentName": "TinyCol",
-                "props": {
-                  "span": 12,
-                  "style": {
-                    "height": "30px",
-                    "border": "1px solid #ccc"
-                  }
-                }
-              }
-            }
-          ]
-        },
-        {
           "group": "data-display",
           "label": {
-            "zh_CN": "数据展示"
+            "zh_CN": "数据展示类"
           },
           "children": [
             {
@@ -13852,7 +13937,7 @@
         {
           "group": "navigation",
           "label": {
-            "zh_CN": "导航"
+            "zh_CN": "导航类型"
           },
           "children": [
             {
@@ -13950,215 +14035,6 @@
                         }
                       }
                     ]
-                  }
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "group": "html",
-          "label": {
-            "zh_CN": "HTML组件"
-          },
-          "children": [
-            {
-              "name": {
-                "zh_CN": "段落"
-              },
-              "icon": "paragraph",
-              "screenshot": "",
-              "snippetName": "p",
-              "schema": {
-                "componentName": "p",
-                "children": "TinyEngine 前端可视化设计器致力于通过友好的用户交互提升业务应用的开发效率。"
-              }
-            },
-            {
-              "name": {
-                "zh_CN": "链接"
-              },
-              "icon": "link",
-              "screenshot": "",
-              "snippetName": "a",
-              "schema": {
-                "componentName": "a",
-                "children": "链接"
-              }
-            },
-            {
-              "name": {
-                "zh_CN": "分隔线"
-              },
-              "icon": "hr",
-              "screenshot": "",
-              "snippetName": "hr",
-              "schema": {}
-            },
-            {
-              "name": {
-                "zh_CN": "标题"
-              },
-              "icon": "h16",
-              "screenshot": "",
-              "snippetName": "h1",
-              "schema": {
-                "componentName": "h1",
-                "props": {},
-                "children": "Heading"
-              }
-            },
-            {
-              "name": {
-                "zh_CN": "输入框"
-              },
-              "icon": "input",
-              "screenshot": "",
-              "snippetName": "input",
-              "schema": {
-                "componentName": "input",
-                "props": {
-                  "type": "text",
-                  "placeholder": "请输入"
-                }
-              }
-            },
-            {
-              "name": {
-                "zh_CN": "视频"
-              },
-              "icon": "video",
-              "screenshot": "",
-              "snippetName": "video",
-              "schema": {
-                "componentName": "video",
-                "props": {
-                  "src": "img/webNova.jpg",
-                  "width": "200",
-                  "height": "100",
-                  "style": "border:1px solid #ccc"
-                }
-              }
-            },
-            {
-              "name": {
-                "zh_CN": "图片"
-              },
-              "icon": "Image",
-              "screenshot": "",
-              "snippetName": "img",
-              "schema": {
-                "componentName": "img",
-                "props": {
-                  "src": "img/webNova.jpg",
-                  "width": "200",
-                  "height": "100"
-                }
-              }
-            },
-            {
-              "name": {
-                "zh_CN": "按钮"
-              },
-              "icon": "button",
-              "screenshot": "",
-              "snippetName": "button",
-              "schema": {
-                "componentName": "button",
-                "props": {},
-                "children": [
-                  {
-                    "componentName": "Text",
-                    "props": {
-                      "text": "按钮文案"
-                    }
-                  }
-                ]
-              }
-            },
-            {
-              "name": {
-                "zh_CN": "表格"
-              },
-              "icon": "table",
-              "screenshot": "",
-              "snippetName": "table",
-              "schema": {
-                "componentName": "table",
-                "props": {
-                  "border": "1"
-                },
-                "children": [
-                  {
-                    "componentName": "tr",
-                    "children": [
-                      {
-                        "componentName": "td",
-                        "children": "Month"
-                      },
-                      {
-                        "componentName": "td",
-                        "children": "Savings"
-                      }
-                    ]
-                  },
-                  {
-                    "componentName": "tr",
-                    "children": [
-                      {
-                        "componentName": "td",
-                        "children": "January"
-                      },
-                      {
-                        "componentName": "td",
-                        "children": "100"
-                      }
-                    ]
-                  }
-                ]
-              }
-            },
-            {
-              "name": {
-                "zh_CN": "表单"
-              },
-              "icon": "form",
-              "screenshot": "",
-              "snippetName": "form",
-              "schema": {
-                "componentName": "form",
-                "props": {
-                  "action": "action"
-                },
-                "children": [
-                  {
-                    "componentName": "label",
-                    "props": {
-                      "for": "male"
-                    },
-                    "children": "male"
-                  },
-                  {
-                    "componentName": "input",
-                    "props": {
-                      "type": "text"
-                    }
-                  },
-                  {
-                    "componentName": "br"
-                  },
-                  {
-                    "componentName": "label",
-                    "props": {
-                      "for": "Female"
-                    },
-                    "children": "Female"
-                  },
-                  {
-                    "componentName": "input",
-                    "props": {
-                      "type": "text"
-                    }
                   }
                 ]
               }
