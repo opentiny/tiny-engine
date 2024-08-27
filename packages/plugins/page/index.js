@@ -17,7 +17,9 @@ export default {
   title: '页面管理',
   icon: 'plugin-icon-page',
   align: 'top',
-  option: {},
+  option: {
+    align: 'leftTop'
+  },
   api,
   component
 }

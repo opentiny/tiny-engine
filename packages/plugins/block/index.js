@@ -17,7 +17,9 @@ export default {
   title: '区块管理',
   icon: 'plugin-icon-symbol',
   align: 'top',
-  option: {},
+  option: {
+    align: 'leftTop'
+  },
   api,
   component
 }

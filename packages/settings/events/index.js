@@ -19,7 +19,8 @@ export default {
   icon: 'target',
   align: 'top',
   options: {
-    width: 320
+    width: 320,
+    align: 'rightTop'
   },
   component
 }

@@ -18,7 +18,8 @@ export default {
   icon: 'plugin-icon-language',
   align: 'top',
   options: {
-    width: 620
+    width: 620,
+    align: 'leftTop'
   },
   component
 }

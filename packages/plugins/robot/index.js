@@ -17,6 +17,8 @@ export default {
   title: 'AI对话框',
   icon: 'plugin-icon-robot',
   align: 'independence',
-  option: {},
+  options: {
+    align: 'independence'
+  },
   component
 }

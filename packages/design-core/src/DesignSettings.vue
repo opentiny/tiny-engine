@@ -49,6 +49,7 @@ import { computed, ref, toRefs, watch, reactive } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
 import { Tabs, TabItem } from '@opentiny/vue'
 import { useLayout } from '@opentiny/tiny-engine-controller'
+import { getPlugin } from '../config/addons.js'
 
 export default {
   components: {
@@ -60,32 +61,37 @@ export default {
   props: {
     renderPanel: {
       type: String
-    },
-    addons: {
-      type: Array
     }
   },
 
   setup(props) {
+    const components = {}
+    const iconComponents = {}
     const { renderPanel } = toRefs(props)
     const {
       rightFixedPanelsStorage,
+      registerPluginApi,
       changeRightFixedPanels,
+      getPluginLayout,
       layoutState: { settings: settingsState }
     } = useLayout()
-    const settings = props.addons && props.addons.settings
-    const components = {}
-    const iconComponents = {}
+
+    const plugins = getPluginLayout('all').map((pluginName) => getPlugin(pluginName))
+    plugins.forEach(({ id, component, api, icon }) => {
+      components[id] = component
+      iconComponents[id] = icon
+      if (api) {
+        registerPluginApi({
+          [id]: api
+        })
+      }
+    })
+
     const activating = computed(() => settingsState.activating) //高亮显示
     const showMask = ref(true)
 
-    props.addons.settings.forEach(({ id, component, icon }) => {
-      components[id] = component
-      iconComponents[id] = icon
-    })
-
     const state = reactive({
-      leftList: settings
+      leftList: getPluginLayout('rightTop').map((pluginName) => getPlugin(pluginName))
     })
 
     const setRender = (curId) => {
@@ -117,7 +123,6 @@ export default {
     return {
       state,
       showMask,
-      settings,
       activating,
       settingsState,
       components,

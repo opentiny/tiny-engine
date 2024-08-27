@@ -17,6 +17,8 @@ export default {
   title: '资源管理',
   icon: 'plugin-icon-sresources',
   align: 'top',
-  option: {},
+  option: {
+    align: 'leftTop'
+  },
   component
 }

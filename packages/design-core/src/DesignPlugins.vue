@@ -110,7 +110,7 @@ import { reactive, ref, watch } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
 import { useLayout, usePage } from '@opentiny/tiny-engine-controller'
 import { PublicIcon } from '@opentiny/tiny-engine-common'
-
+import { getPlugin } from '../config/addons.js'
 export default {
   components: {
     TinyPopover: Popover,
@@ -120,14 +120,10 @@ export default {
   props: {
     renderPanel: {
       type: String
-    },
-    addons: {
-      type: Array
     }
   },
   emits: ['click', 'node-click'],
   setup(props, { emit }) {
-    const plugins = props.addons && props.addons.plugins
     const components = {}
     const iconComponents = {}
     const pluginRef = ref(null)
@@ -136,9 +132,11 @@ export default {
     const { isTemporaryPage } = usePage()
     const HELP_PLUGIN_ID = 'EditorHelp'
 
-    const { pluginState, registerPluginApi, changeLeftFixedPanels, leftFixedPanelsStorage } = useLayout()
+    const { pluginState, registerPluginApi, changeLeftFixedPanels, leftFixedPanelsStorage, getPluginLayout } =
+      useLayout()
 
-    props.addons.plugins.forEach(({ id, component, api, icon }) => {
+    const plugins = getPluginLayout('all').map((pluginName) => getPlugin(pluginName))
+    plugins.forEach(({ id, component, api, icon }) => {
       components[id] = component
       iconComponents[id] = icon
       if (api) {
@@ -152,9 +150,9 @@ export default {
 
     const state = reactive({
       prevIdex: -2,
-      topNavLists: plugins.filter((item) => item.align === 'top'),
-      bottomNavLists: plugins.filter((item) => item.align === 'bottom'),
-      independence: plugins.find((item) => item.align === 'independence')
+      topNavLists: getPluginLayout('leftTop').map((pluginName) => getPlugin(pluginName)),
+      bottomNavLists: getPluginLayout('leftBottom').map((pluginName) => getPlugin(pluginName)),
+      independence: getPluginLayout('independence').map((pluginName) => getPlugin(pluginName))
     })
 
     const doCompleted = () => {

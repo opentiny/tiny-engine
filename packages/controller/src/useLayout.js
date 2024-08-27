@@ -161,14 +161,31 @@ export default () => {
   } catch (error) {
     throw new Error(error)
   }
-  const pluginWidthStorage = useStorage('plugin', plugin)
+  const pluginStorageReactive = useStorage('plugin', plugin)
 
-  const getPluginWidth = (name) => pluginWidthStorage.value[name]?.width || 300
+  const getPluginWidth = (name) => pluginStorageReactive.value[name]?.width || 300
 
   const changePluginWidth = (name, width) => {
-    if (Object.prototype.hasOwnProperty.call(pluginWidthStorage.value, name)) {
-      pluginWidthStorage.value[name].width = width
+    if (Object.prototype.hasOwnProperty.call(pluginStorageReactive.value, name)) {
+      pluginStorageReactive.value[name].width = width
     }
+  }
+
+  //获取某个布局（左上/左下/右上）的插件名称列表
+  const getPluginLayout = (layout) => {
+    const targetLayout = []
+    // 遍历对象并将 align 值分类到不同的数组中
+    for (const key in pluginStorageReactive.value) {
+      if (pluginStorageReactive.value[key].align === layout || layout === 'all') {
+        targetLayout.push(key)
+      }
+    }
+    return targetLayout //这里返回的是只有名字的数组
+  }
+
+  //修改某个插件的布局
+  const changePluginLayout = (name, layout) => {
+    pluginStorageReactive.value[name].align = layout
   }
 
   return {
@@ -191,6 +208,8 @@ export default () => {
     leftFixedPanelsStorage,
     rightFixedPanelsStorage,
     changeLeftFixedPanels,
-    changeRightFixedPanels
+    changeRightFixedPanels,
+    getPluginLayout,
+    changePluginLayout
   }
 }

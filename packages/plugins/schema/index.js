@@ -18,6 +18,7 @@ export default {
   icon: 'plugin-icon-page-schema',
   align: 'bottom',
   options: {
+    align: 'leftBottom',
     width: 1000
   },
   component
