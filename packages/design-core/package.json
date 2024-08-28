@@ -52,7 +52,7 @@
     "@opentiny/tiny-engine-i18n-host": "workspace:*",
     "@opentiny/tiny-engine-plugin-block": "workspace:*",
     "@opentiny/tiny-engine-plugin-bridge": "workspace:*",
-    "@opentiny/tiny-engine-plugin-data": "workspace:*",
+    "@opentiny/tiny-engine-plugin-state": "workspace:*",
     "@opentiny/tiny-engine-plugin-datasource": "workspace:*",
     "@opentiny/tiny-engine-plugin-help": "workspace:*",
     "@opentiny/tiny-engine-plugin-i18n": "workspace:*",

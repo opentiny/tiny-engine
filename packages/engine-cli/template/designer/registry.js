@@ -26,7 +26,7 @@ import {
   Collaboration,
   Setting,
   Materials,
-  Data,
+  State,
   Script,
   Tree,
   Help,
@@ -79,7 +79,7 @@ export default {
     Setting,
     Lang
   ],
-  plugins: [Materials, Tree, Page, Block, Datasource, Bridge, I18n, Script, Data, Schema, Help, Robot],
+  plugins: [Materials, Tree, Page, Block, Datasource, Bridge, I18n, Script, State, Schema, Help, Robot],
   dsls: [{ id: 'engine.dsls.dslvue' }],
   settings: [Props, Styles, Events],
   canvas: Canvas

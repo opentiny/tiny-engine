@@ -18,7 +18,7 @@ const getDevAlias = (useSourceAlias) => {
     '@opentiny/tiny-engine-common': path.resolve(basePath, 'packages/common/index.js'),
     '@opentiny/tiny-engine-plugin-materials': path.resolve(basePath, 'packages/plugins/materials/index.js'),
     '@opentiny/tiny-engine-plugin-block': path.resolve(basePath, 'packages/plugins/block/index.js'),
-    '@opentiny/tiny-engine-plugin-data': path.resolve(basePath, 'packages/plugins/data/index.js'),
+    '@opentiny/tiny-engine-plugin-state': path.resolve(basePath, 'packages/plugins/state/index.js'),
     '@opentiny/tiny-engine-plugin-datasource': path.resolve(basePath, 'packages/plugins/datasource/index.js'),
     '@opentiny/tiny-engine-plugin-script': path.resolve(basePath, 'packages/plugins/script/index.js'),
     '@opentiny/tiny-engine-plugin-tree': path.resolve(basePath, 'packages/plugins/tree/index.js'),
