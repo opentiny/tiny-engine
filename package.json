@@ -70,5 +70,9 @@
     "patchedDependencies": {
       "@vue/repl@2.9.0": "patches/@vue__repl@2.9.0.patch"
     }
+  },
+  "dependencies": {
+    "axios": "~0.28.0",
+    "cheerio": "1.0.0-rc.12"
   }
 }

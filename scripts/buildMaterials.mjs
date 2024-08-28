@@ -12,7 +12,10 @@ const materialsDir = 'materials'
 const bundlePath = path.join(process.cwd(), '/packages/design-core/public/mock/bundle.json')
 // mockServer应用数据
 const appInfoPath = path.join(process.cwd(), '/mockServer/src/services/appinfo.json')
+const appSchemaPath = path.join(process.cwd(), 'mockServer/src/mock/get/app-center/v1/apps/schema/918.json')
+
 const appInfo = fsExtra.readJSONSync(appInfoPath)
+const appSchema = fsExtra.readJSONSync(appSchemaPath)
 
 const connection = new MysqlConnection()
 
@@ -22,6 +25,7 @@ const connection = new MysqlConnection()
 const write = (bundle) => {
   fsExtra.outputJSONSync(bundlePath, bundle, { spaces: 2 })
   fsExtra.outputJSONSync(appInfoPath, appInfo, { spaces: 2 })
+  fsExtra.outputJSONSync(appSchemaPath, appSchema, { spaces: 2 })
 }
 
 /**
@@ -95,6 +99,7 @@ const generateComponents = () => {
       }
       const { components = [], snippets = [], blocks = [] } = bundle.data.materials
       const componentsMap = []
+      const packagesMap = []
       const appInfoBlocksLabels = appInfo.blockHistories.map((item) => item.label)
 
       files.forEach((file) => {
@@ -151,8 +156,26 @@ const generateComponents = () => {
 
         appInfo.materialHistory.components = componentsMap
 
-        write(bundle)
+        const { package: packageName = '', version = '', exportName = '' } = npm || {}
+
+        const mapItem = {
+          componentName: component,
+          package: packageName,
+          version,
+          exportName
+        }
+
+        if (typeof npm.destructuring === 'boolean') {
+          mapItem.destructuring = npm.destructuring
+        }
+
+        if (npm.package) {
+          packagesMap.push(mapItem)
+        }
       })
+
+      appSchema.data.componentsMap = packagesMap
+      write(bundle)
     })
 
     logger.success('物料资产包构建成功')
