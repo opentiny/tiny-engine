@@ -74,7 +74,7 @@ addons.settings.forEach((item) => {
 })
 
 export const getPlugin = (pluginName) => {
-  return plugin[pluginName]
+  return plugin[pluginName] || null
 }
 
 export default addons

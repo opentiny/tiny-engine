@@ -173,7 +173,7 @@ export default () => {
 
   //获取某个布局（左上/左下/右上）的插件名称列表
   const getPluginLayout = (layout) => {
-    const targetLayout = []
+    const targetLayout = layout ? [] : null
     // 遍历对象并将 align 值分类到不同的数组中
     for (const key in pluginStorageReactive.value) {
       if (pluginStorageReactive.value[key].align === layout || layout === 'all') {
@@ -185,7 +185,9 @@ export default () => {
 
   //修改某个插件的布局
   const changePluginLayout = (name, layout) => {
-    pluginStorageReactive.value[name].align = layout
+    if (pluginStorageReactive.value[name]) {
+      pluginStorageReactive.value[name].align = layout
+    }
   }
 
   return {

@@ -77,10 +77,14 @@ export default {
 
     const plugin = {}
     addons.plugins.forEach((item) => {
-      plugin[item.id] = { width: item.options?.width || 300, align: item.options?.align || 'leftTop' }
+      if (item.id) {
+        plugin[item.id] = { width: item.options?.width || 300, align: item.options?.align || 'leftTop' }
+      }
     })
     addons.settings.forEach((item) => {
-      plugin[item.id] = { width: item.options?.width || 320, align: item.options?.align || 'leftTop' }
+      if (item.id) {
+        plugin[item.id] = { width: item.options?.width || 320, align: item.options?.align || 'leftTop' }
+      }
     })
     localStorage.setItem('plugin', JSON.stringify(plugin))
 
