@@ -77,7 +77,7 @@
     "@opentiny/tiny-engine-toolbar-clean": "workspace:*",
     "@opentiny/tiny-engine-toolbar-collaboration": "workspace:*",
     "@opentiny/tiny-engine-toolbar-fullscreen": "workspace:*",
-    "@opentiny/tiny-engine-toolbar-generate-vue": "workspace:*",
+    "@opentiny/tiny-engine-toolbar-generate-code": "workspace:*",
     "@opentiny/tiny-engine-toolbar-lang": "workspace:*",
     "@opentiny/tiny-engine-toolbar-layout": "workspace:*",
     "@opentiny/tiny-engine-toolbar-logo": "workspace:*",

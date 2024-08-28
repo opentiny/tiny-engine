@@ -21,7 +21,7 @@ import {
   Save,
   Clean,
   Preview,
-  GenerateVue,
+  GenerateCode,
   Refresh,
   Collaboration,
   Materials,
@@ -72,7 +72,7 @@ export default {
     Clean,
     Preview,
     Refresh,
-    GenerateVue,
+    GenerateCode,
     Save,
     Fullscreen,
     Lang

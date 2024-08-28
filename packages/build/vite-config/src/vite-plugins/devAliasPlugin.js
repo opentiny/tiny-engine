@@ -42,7 +42,7 @@ const getDevAlias = (useSourceAlias) => {
     '@opentiny/tiny-engine-toolbar-logout': path.resolve(basePath, 'packages/toolbars/logout/index.js'),
     '@opentiny/tiny-engine-toolbar-media': path.resolve(basePath, 'packages/toolbars/media/index.js'),
     '@opentiny/tiny-engine-toolbar-preview': path.resolve(basePath, 'packages/toolbars/preview/index.js'),
-    '@opentiny/tiny-engine-toolbar-generate-vue': path.resolve(basePath, 'packages/toolbars/generate-vue/index.js'),
+    '@opentiny/tiny-engine-toolbar-generate-code': path.resolve(basePath, 'packages/toolbars/generate-code/index.js'),
     '@opentiny/tiny-engine-toolbar-refresh': path.resolve(basePath, 'packages/toolbars/refresh/index.js'),
     '@opentiny/tiny-engine-toolbar-redoundo': path.resolve(basePath, 'packages/toolbars/redoundo/index.js'),
     '@opentiny/tiny-engine-toolbar-clean': path.resolve(basePath, 'packages/toolbars/clean/index.js'),
