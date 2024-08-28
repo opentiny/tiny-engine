@@ -1,5 +1,5 @@
 {
-  "name": "@opentiny/tiny-engine-toolbar-checkinout",
+  "name": "@opentiny/tiny-engine-toolbar-lock",
   "version": "1.0.3",
   "publishConfig": {
     "access": "public"

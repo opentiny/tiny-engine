@@ -14,7 +14,7 @@ import {
   Breadcrumb,
   Fullscreen,
   Lang,
-  Checkinout,
+  Lock,
   Logo,
   Media,
   Redoundo,
@@ -75,7 +75,7 @@ export default {
     Preview,
     Redoundo,
     Fullscreen,
-    Checkinout,
+    Lock,
     Setting,
     Lang
   ],

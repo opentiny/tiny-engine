@@ -73,7 +73,7 @@
     "@opentiny/tiny-engine-theme-light": "workspace:*",
     "@opentiny/tiny-engine-theme-base": "workspace:*",
     "@opentiny/tiny-engine-toolbar-breadcrumb": "workspace:*",
-    "@opentiny/tiny-engine-toolbar-checkinout": "workspace:*",
+    "@opentiny/tiny-engine-toolbar-lock": "workspace:*",
     "@opentiny/tiny-engine-toolbar-clean": "workspace:*",
     "@opentiny/tiny-engine-toolbar-collaboration": "workspace:*",
     "@opentiny/tiny-engine-toolbar-fullscreen": "workspace:*",
