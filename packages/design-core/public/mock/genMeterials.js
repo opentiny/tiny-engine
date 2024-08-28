@@ -289,8 +289,8 @@ async function generateMaterial(params) {
 async function main() {
   try {
     const menus = await loadMenuData()
-    const onlyFirst = menus.slice(0, 1)
-    const x = await loadBaseDataByMenus(onlyFirst)
+    //const onlyFirst = menus.slice(0, 20)
+    const x = await loadBaseDataByMenus(menus)
     const m = await generateMaterial(x)
     generateJSONFile({ data: m }, 'bundle.json', './')
   } catch (error) {
