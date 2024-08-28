@@ -60,7 +60,7 @@ function genElementPlusStyleDeps(options = {}) {
 
       // 引入 element-plus 样式依赖
       if (lastImport) {
-        lastImport.insertAfter(parse("import 'elemetn-plus/dist/index.css'", { sourceType: 'module' }).program.body[0])
+        lastImport.insertAfter(parse("import 'element-plus/dist/index.css'", { sourceType: 'module' }).program.body[0])
       }
 
       const newFileContent = generate(ast).code
