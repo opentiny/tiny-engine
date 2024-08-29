@@ -1,14 +1,10 @@
 <template>
   <div class="right-item">
     <span class="title">
-      <span class="title"
-        >数据源字段<tiny-button class="newJsonBtn" @click="openNewFieldForm">新建字段</tiny-button></span
-      >
-
+      <span class="title">数据源字段</span>
       <div class="btn">
-        <tiny-button type="text" @click="$emit('openRemotePanel')">{{
-          editable ? '修改远程配置' : '获取远程字段'
-        }}</tiny-button>
+        <tiny-button @click="openNewFieldForm">添加字段</tiny-button>
+        <tiny-button @click="$emit('openRemotePanel')">{{ editable ? '修改远程配置' : '获取远程字段' }}</tiny-button>
       </div>
     </span>
     <div class="section">
@@ -145,18 +141,16 @@ export default {
 .right-item {
   padding: 0px 10px;
   color: var(--ti-lowcode-datasource-toolbar-icon-color);
+
   .title {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
     font-size: 14px;
     line-height: 22px;
     font-weight: normal;
     margin-bottom: 10px;
     color: var(--ti-lowcode-datasource-label-color);
-    .newJsonBtn {
-      margin-left: 32px;
-    }
+
     :deep(.tiny-button--text:hover) {
       text-decoration: underline;
       font-weight: normal;
@@ -164,18 +158,22 @@ export default {
   }
 
   .section {
+    margin-top: 54px;
     svg {
       color: var(--ti-lowcode-datasource-toolbar-icon-color);
     }
+
     .group {
       font-size: 14px;
       line-height: 16px;
       font-weight: 600;
     }
+
     .field-list {
       margin-top: 8px;
       margin-bottom: 16px;
       border-radius: 3px;
+
       .field-row {
         display: flex;
         flex-wrap: wrap;
@@ -187,22 +185,27 @@ export default {
 
         &.field-row-add {
           color: var(--ti-lowcode-datasource-json-border-colorr);
+
           svg {
             color: var(--ti-lowcode-datasource-json-border-colorr);
           }
         }
       }
+
       .icon-and-text {
         display: flex;
         align-items: center;
+
         .field-cell-type {
           width: 20px;
           height: 20px;
           display: flex;
           align-items: center;
         }
+
         .field-cell-name {
           margin-left: 5px;
+
           .description {
             color: var(--ti-lowcode-datasource-input-icon-color);
             margin-left: 5px;

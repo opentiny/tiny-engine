@@ -3,26 +3,20 @@
     <template #header>
       <link-button :href="docsUrl"></link-button>
       <svg-button
-        class="add-page"
-        tips="新建数据源"
-        name="text-source-list-add"
-        @click="openDataSourceFormPanel()"
-        placement="top"
-      ></svg-button>
-      <svg-button
-        class="set-page"
+        class="set-data-source"
         tips="全局设置"
         name="text-source-setting"
         @click="openGlobalDataHanderPanel"
       ></svg-button>
       <svg-button
-        class="refresh-page"
+        class="refresh-data-source"
         tips="刷新数据源"
         name="text-source-list-ref"
         @click="refreshDataSource"
       ></svg-button>
     </template>
     <template #content>
+      <tiny-button class="add-data-source" @click="openDataSourceFormPanel()"> 添加数据源 </tiny-button>
       <data-source-list @edit="openDataSourceFormPanel"></data-source-list>
     </template>
   </plugin-panel>
@@ -47,6 +41,7 @@
 
 <script>
 import { reactive, watch } from 'vue'
+import { Button } from '@opentiny/vue'
 import DataSourceList, { refresh as refreshDataSourceList, clearActive } from './DataSourceList.vue'
 import DataSourceRemotePanel, {
   close as closeRemotePanel,
@@ -66,6 +61,7 @@ import DataSourceGlobalDataHandler, {
 
 export default {
   components: {
+    TinyButton: Button,
     DataSourceList,
     DataSourceRemotePanel,
     DataSourceRemoteMapping,
@@ -148,12 +144,23 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.add-page,
-.set-page,
-.refresh-page {
+.set-data-source,
+.refresh-data-source {
   width: 16px;
   margin-right: 6px !important;
   color: var(--ti-lowcode-datasource-btn-click-color);
+}
+:deep(button.tiny-button.tiny-button--default) {
+  border-color: var(--ti-lowcode-data-source-border-color);
+}
+.add-data-source {
+  margin: 0 12px 12px 12px;
+  color: var(--ti-lowcode-data-source-color);
+
+  &:hover {
+    color: var(--ti-lowcode-meta-codeEditor-hover-color);
+    border-color: var(--ti-lowcode-meta-codeEditor-border-hover-color);
+  }
 }
 :deep(.help-box) {
   position: absolute;

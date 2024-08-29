@@ -3,27 +3,33 @@
     <plugin-setting title="获取远程字段" :isSecond="true" @cancel="closePanel" @save="saveRemote">
       <template #content>
         <div class="create-config">
-          <data-source-remote-form
-            v-model="state.remoteData.options"
-            @sendRequest="sendRequest"
-          ></data-source-remote-form>
-          <data-source-remote-autoload v-model="state.remoteData.options.isSync"></data-source-remote-autoload>
-          <div class="tabBox">
-            <tiny-tabs v-model="state.activeNameTabs">
-              <tiny-tab-item class="json-tab" title="请求JSON参数" name="jsonsTab">
-                <data-source-remote-parameter v-model="state.remoteData.options.params"></data-source-remote-parameter>
-              </tiny-tab-item>
-              <tiny-tab-item title="请求处理" name="responseTab">
-                <data-source-remote-adapter
-                  ref="dataSourceRemoteAdapteRef"
-                  v-model="state.responseData"
-                  @sendRequst="sendRequest"
-                ></data-source-remote-adapter>
-              </tiny-tab-item>
-            </tiny-tabs>
-          </div>
           <div>
             <tiny-collapse v-model="state.activeName">
+              <tiny-collapse-item name="excute">
+                <template #title>请求信息</template>
+                <data-source-remote-form
+                  v-model="state.remoteData.options"
+                  @sendRequest="sendRequest"
+                ></data-source-remote-form>
+                <data-source-remote-autoload v-model="state.remoteData.options.isSync"></data-source-remote-autoload>
+                <div class="tabBox">
+                  <tiny-tabs v-model="state.activeNameTabs" tab-style="button-card">
+                    <tiny-tab-item class="json-tab" title="请求JSON参数" name="jsonsTab">
+                      <data-source-remote-parameter
+                        v-model="state.remoteData.options.params"
+                      ></data-source-remote-parameter>
+                    </tiny-tab-item>
+                    <tiny-tab-item title="请求处理" name="responseTab">
+                      <data-source-remote-adapter
+                        ref="dataSourceRemoteAdapteRef"
+                        v-model="state.responseData"
+                        @sendRequst="sendRequest"
+                      ></data-source-remote-adapter>
+                    </tiny-tab-item>
+                  </tiny-tabs>
+                </div>
+                <tiny-button type="primary" @click.stop="sendRequest" class="send"> 获取数据</tiny-button>
+              </tiny-collapse-item>
               <tiny-collapse-item name="result">
                 <template #title>请求结果</template>
                 <data-srouce-remote-data-result v-model="state.remoteData.result"></data-srouce-remote-data-result>
@@ -38,7 +44,7 @@
 
 <script>
 import { reactive, watch, ref } from 'vue'
-import { Collapse, CollapseItem, Tabs, TabItem } from '@opentiny/vue'
+import { Collapse, CollapseItem, Tabs, TabItem, Button } from '@opentiny/vue'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
 import DataSourceRemoteForm, { getServiceForm } from './DataSourceRemoteForm.vue'
 import DataSourceRemoteParameter from './DataSourceRemoteParameter.vue'
@@ -66,6 +72,7 @@ export const close = () => {
 export default {
   components: {
     TinyCollapse: Collapse,
+    TinyButton: Button,
     TinyCollapseItem: CollapseItem,
     TinyTabs: Tabs,
     TinyTabItem: TabItem,
@@ -229,7 +236,9 @@ export default {
     border-top: 1px solid var(--ti-lowcode-datasource-tabs-border-color);
     color: var(--ti-lowcode-datasource-toolbar-breadcrumb-color);
   }
-
+  .send {
+    margin-bottom: 14px;
+  }
   .tip-dot {
     padding-left: 4px;
     color: var(--ti-lowcode-datasource-description-error-color);
@@ -277,8 +286,13 @@ export default {
     height: 500px;
     box-sizing: border-box;
     overflow-y: scroll;
+    :deep(.tiny-tabs.tiny-tabs--button-card .tiny-tabs__item) {
+      border-radius: 4px;
+    }
+    :deep(.tiny-tabs__content) {
+      margin: 12px 0;
+    }
     :deep(.is-active) {
-      border-bottom: 2px solid var(--ti-lowcode-datasource-tabs-bottom-border-color) !important;
       .tiny-tabs__item__title {
         color: var(--ti-lowcode-datasource-tabs-bottom-border-color);
       }

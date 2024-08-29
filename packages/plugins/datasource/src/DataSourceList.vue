@@ -129,14 +129,15 @@ export default {
   overflow-x: hidden;
   .datasource-list {
     flex-grow: 1;
+    padding-top: 12px;
+    border-top: 1px solid var(--ti-lowcode-data-source-border-color);
   }
   .datasource-list-item {
     box-shadow: var(--ti-lowcode-datasource-tabs-border-color) 0, -1px;
-    height: 40px;
+    height: 24px;
     align-items: center;
     display: grid;
-    padding-left: 4px;
-    padding-right: 12px;
+    padding: 2px 12px 2px 4px;
     position: relative;
     color: var(--ti-lowcode-datasource-common-text-main-color);
     cursor: pointer;
@@ -148,7 +149,9 @@ export default {
       overflow: hidden;
       text-overflow: ellipsis;
       margin-left: 10px;
+      line-height: 20px;
       display: flex;
+      align-items: center;
       justify-content: space-between;
     }
     .item-handler {
