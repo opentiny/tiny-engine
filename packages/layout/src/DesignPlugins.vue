@@ -183,7 +183,7 @@ export default {
   left: var(--base-nav-panel-width);
   z-index: 999;
 
-  &.I18n {
+  &[class~='engine.plugins.i18n'] {
     width: auto;
   }
 
