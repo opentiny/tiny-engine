@@ -17,7 +17,7 @@ export default {
   title: '大纲树',
   icon: 'plugin-icon-tree',
   align: 'top',
-  option: {
+  options: {
     align: 'leftTop'
   },
   component

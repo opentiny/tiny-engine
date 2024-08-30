@@ -49,7 +49,7 @@ import { computed, ref, toRefs, watch, reactive } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
 import { Tabs, TabItem } from '@opentiny/vue'
 import { useLayout } from '@opentiny/tiny-engine-controller'
-import { getPlugin } from '../config/addons.js'
+import { getPlugin } from '../config/plugin.js'
 
 export default {
   components: {
@@ -69,14 +69,15 @@ export default {
     const iconComponents = {}
     const { renderPanel } = toRefs(props)
     const {
+      PLUGIN_POSITION,
       rightFixedPanelsStorage,
       registerPluginApi,
       changeRightFixedPanels,
-      getPluginLayout,
+      getPluginsByLayout,
       layoutState: { settings: settingsState }
     } = useLayout()
 
-    const plugins = getPluginLayout('all').map((pluginName) => getPlugin(pluginName))
+    const plugins = getPluginsByLayout().map((pluginName) => getPlugin(pluginName))
     plugins.forEach(({ id, component, api, icon }) => {
       components[id] = component
       iconComponents[id] = icon
@@ -91,7 +92,7 @@ export default {
     const showMask = ref(true)
 
     const state = reactive({
-      leftList: getPluginLayout('rightTop').map((pluginName) => getPlugin(pluginName))
+      leftList: getPluginsByLayout(PLUGIN_POSITION.rightTop).map((pluginName) => getPlugin(pluginName))
     })
 
     const setRender = (curId) => {

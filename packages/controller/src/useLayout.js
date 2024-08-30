@@ -37,6 +37,13 @@ const PLUGIN_NAME = {
   Style: 'SettingStyles',
   Props: 'SettingProps'
 }
+const PLUGIN_POSITION = {
+  leftTop: 'leftTop',
+  leftBottom: 'leftBottom',
+  independence: 'independence',
+  rightTop: 'rightTop',
+  rightBottom: 'rightBottom'
+}
 
 const pluginState = reactive({
   pluginEvent: 'all'
@@ -172,14 +179,11 @@ export default () => {
   }
 
   //获取某个布局（左上/左下/右上）的插件名称列表
-  const getPluginLayout = (layout) => {
-    const targetLayout = layout ? [] : null
+  const getPluginsByLayout = (layout = 'all') => {
     // 遍历对象并将 align 值分类到不同的数组中
-    for (const key in pluginStorageReactive.value) {
-      if (pluginStorageReactive.value[key].align === layout || layout === 'all') {
-        targetLayout.push(key)
-      }
-    }
+    const targetLayout = Object.keys(pluginStorageReactive.value).filter(
+      (key) => pluginStorageReactive.value[key].align === layout || layout === 'all'
+    )
     return targetLayout //这里返回的是只有名字的数组
   }
 
@@ -192,6 +196,7 @@ export default () => {
 
   return {
     PLUGIN_NAME,
+    PLUGIN_POSITION,
     activeSetting,
     activePlugin,
     closePlugin,
@@ -211,7 +216,7 @@ export default () => {
     rightFixedPanelsStorage,
     changeLeftFixedPanels,
     changeRightFixedPanels,
-    getPluginLayout,
+    getPluginsByLayout,
     changePluginLayout
   }
 }
