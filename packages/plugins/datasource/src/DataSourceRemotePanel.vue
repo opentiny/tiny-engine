@@ -1,6 +1,12 @@
 <template>
-  <div>
-    <plugin-setting title="获取远程字段" :isSecond="true" @cancel="closePanel" @save="saveRemote">
+  <div class="remote">
+    <plugin-setting
+      title="获取远程字段"
+      class="remote-setting"
+      :isSecond="true"
+      @cancel="closePanel"
+      @save="saveRemote"
+    >
       <template #content>
         <div class="create-config">
           <div>
@@ -32,7 +38,10 @@
               </tiny-collapse-item>
               <tiny-collapse-item name="result">
                 <template #title>请求结果</template>
-                <data-srouce-remote-data-result v-model="state.remoteData.result"></data-srouce-remote-data-result>
+                <data-srouce-remote-data-result
+                  v-model="state.remoteData.result"
+                  @check="saveRemote"
+                ></data-srouce-remote-data-result>
               </tiny-collapse-item>
             </tiny-collapse>
           </div>
@@ -222,89 +231,96 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.create-config {
-  :deep(.tiny-collapse .tiny-collapse-item__header) {
-    font-size: 14px;
-    font-weight: normal;
-  }
-  :deep(.title) {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 12px;
-    background: var(--ti-lowcode-datasource-toolbar-bg);
-    border-top: 1px solid var(--ti-lowcode-datasource-tabs-border-color);
-    color: var(--ti-lowcode-datasource-toolbar-breadcrumb-color);
-  }
-  .send {
-    margin-bottom: 14px;
-  }
-  .tip-dot {
-    padding-left: 4px;
-    color: var(--ti-lowcode-datasource-description-error-color);
-  }
-
-  .use-service {
-    color: var(--ti-lowcode-datasource-toolbar-breadcrumb-color);
-    font-size: 12px;
-    margin-top: 10px;
-
-    span {
-      color: var(--ti-lowcode-datasource-description-error-color);
+.remote {
+  .remote-setting {
+    :deep(.plugin-save) {
+      display: none;
     }
   }
-
-  :deep(.send-service) {
-    text-align: right;
-    border-top: 1px solid var(--ti-lowcode-datasource-tabs-border-color);
-    padding: 20px 10px;
-    margin-bottom: 10px;
+  .create-config {
+    :deep(.tiny-collapse .tiny-collapse-item__header) {
+      font-size: 14px;
+      font-weight: normal;
+    }
+    :deep(.title) {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      background: var(--ti-lowcode-datasource-toolbar-bg);
+      border-top: 1px solid var(--ti-lowcode-datasource-tabs-border-color);
+      color: var(--ti-lowcode-datasource-toolbar-breadcrumb-color);
+    }
+    .send {
+      margin-bottom: 14px;
+    }
+    .tip-dot {
+      padding-left: 4px;
+      color: var(--ti-lowcode-datasource-description-error-color);
+    }
 
     .use-service {
-      text-align: left;
-      padding-top: 5px;
+      color: var(--ti-lowcode-datasource-toolbar-breadcrumb-color);
+      font-size: 12px;
+      margin-top: 10px;
 
-      div {
-        margin-bottom: 5px;
+      span {
+        color: var(--ti-lowcode-datasource-description-error-color);
       }
     }
 
-    .title {
+    :deep(.send-service) {
+      text-align: right;
+      border-top: 1px solid var(--ti-lowcode-datasource-tabs-border-color);
+      padding: 20px 10px;
       margin-bottom: 10px;
-    }
-  }
 
-  :deep(.send-request) {
-    margin: 12px;
-  }
+      .use-service {
+        text-align: left;
+        padding-top: 5px;
 
-  .monaco-editor {
-    height: 80px;
-    margin-top: 8px;
-  }
-  .tabBox {
-    height: 500px;
-    box-sizing: border-box;
-    overflow-y: scroll;
-    :deep(.tiny-tabs.tiny-tabs--button-card .tiny-tabs__item) {
-      border-radius: 4px;
+        div {
+          margin-bottom: 5px;
+        }
+      }
+
+      .title {
+        margin-bottom: 10px;
+      }
     }
-    :deep(.tiny-tabs__content) {
-      margin: 12px 0;
+
+    :deep(.send-request) {
+      margin: 12px;
     }
-    :deep(.is-active) {
-      .tiny-tabs__item__title {
-        color: var(--ti-lowcode-datasource-tabs-bottom-border-color);
+
+    .monaco-editor {
+      height: 80px;
+      margin-top: 8px;
+    }
+    .tabBox {
+      height: 500px;
+      box-sizing: border-box;
+      overflow-y: scroll;
+      :deep(.tiny-tabs.tiny-tabs--button-card .tiny-tabs__item) {
+        border-radius: 4px;
+      }
+      :deep(.tiny-tabs__content) {
+        margin: 12px 0;
+      }
+      :deep(.is-active) {
+        .tiny-tabs__item__title {
+          color: var(--ti-lowcode-datasource-tabs-bottom-border-color);
+        }
+      }
+      :deep(.tiny-tabs__item__title) {
+        font-size: 14px;
       }
     }
     :deep(.tiny-tabs__item__title) {
-      font-size: 14px;
+      margin-right: 20px;
+      margin-left: 15px;
+      color: var(--ti-lowcode-datasource-label-color);
     }
-  }
-  :deep(.tiny-tabs__item__title) {
-    margin-right: 20px;
-    margin-left: 15px;
-    color: var(--ti-lowcode-datasource-label-color);
   }
 }
 </style>

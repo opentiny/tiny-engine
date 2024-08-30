@@ -14,7 +14,7 @@
             <icon-minscreen v-if="state.isFullScreen" class="icon-minscreen"></icon-minscreen>
             <span class="full-screen-label">{{ getFullScreenLabel(state.isFullScreen) }}</span>
           </div>
-          <tiny-button v-if="!isIconButton" type="info" @click="$emit('save')">保存</tiny-button>
+          <tiny-button v-if="!isIconButton" type="info" @click="$emit('save')" class="plugin-save">保存</tiny-button>
           <tiny-button v-if="isIconButton" :icon="icon" type="info" @click="$emit('add')">
             {{ iconButtonText }}
           </tiny-button>

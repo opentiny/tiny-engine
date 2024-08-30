@@ -11,30 +11,9 @@
   >
     <template #content>
       <div class="actions">
-        <tiny-link
-          type="primary"
-          class="addButton"
-          :underline="false"
-          :disabled="!allowCreate"
-          @click.stop="insertNewData"
-          ><icon-plusCircle class="tiny-svg-size icon-plusCircle"></icon-plusCircle>新增静态数据</tiny-link
-        >
-        <tiny-link
-          type="primary"
-          class="importButton"
-          :underline="false"
-          :disabled="!allowCreate"
-          @click.stop="showImportModal(true)"
-          ><icon-import class="tiny-svg-size icon-import"></icon-import>批量导入</tiny-link
-        >
-        <tiny-link
-          type="primary"
-          class="box-all-delete"
-          :underline="false"
-          :disabled="state.isBatchDeleteDisable"
-          @click.stop="batchDelete"
-          ><span class="all-delete">批量删除</span></tiny-link
-        >
+        <tiny-button plain :disabled="!allowCreate" @click.stop="insertNewData">新增静态数据</tiny-button>
+        <tiny-button plain :disabled="state.isBatchDeleteDisable" @click.stop="batchDelete">删除</tiny-button>
+        <tiny-button plain :disabled="!allowCreate" @click.stop="showImportModal(true)">批量导入</tiny-button>
         <tiny-link type="primary" class="download" :underline="false" @click="download"
           ><icon-download class="tiny-svg-size icon-download"></icon-download>下载导入模板</tiny-link
         >
@@ -95,7 +74,7 @@
 <script lang="jsx">
 import { reactive, ref, watchEffect, watch, computed } from 'vue'
 import { camelize, capitalize } from '@vue/shared'
-import { Grid, Pager, Input, Numeric, DatePicker, Switch, Slider, Link } from '@opentiny/vue'
+import { Grid, Pager, Input, Numeric, DatePicker, Switch, Slider, Link, Button } from '@opentiny/vue'
 import { IconPlusCircle, IconImport } from '@opentiny/vue-icon'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
 import { utils } from '@opentiny/tiny-engine-utils'
@@ -121,7 +100,8 @@ export default {
     PluginSetting,
     TinyPager: Pager,
     DataSourceRecordUpload,
-    TinyLink: Link
+    TinyLink: Link,
+    TinyButton: Button
   },
   props: {
     // 数据源对象

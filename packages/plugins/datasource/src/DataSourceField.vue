@@ -158,7 +158,7 @@ export default {
   }
 
   .section {
-    margin-top: 54px;
+    margin-top: 12px;
     svg {
       color: var(--ti-lowcode-datasource-toolbar-icon-color);
     }

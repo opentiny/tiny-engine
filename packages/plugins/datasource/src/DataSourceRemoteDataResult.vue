@@ -1,12 +1,15 @@
 <template>
   <div class="response-data">
-    <span class="copy-data" title="复制" @click="copyData"><icon-copy></icon-copy></span>
+    <div class="operate">
+      <tiny-button plain @click="check">查看已获取的字段</tiny-button>
+      <tiny-button plain @click="copyData">复制代码</tiny-button>
+    </div>
     <div class="resonse-header">
       <div class="life-cycle-alert">
         仅用于方便地设置数据源字段，从接口的响应数据列表中，选一条对象结构的数据，粘贴至下方的编辑器中，点击右上角“保存”，将会读取该对象的字段，并引导设置是否启用字段。
       </div>
     </div>
-    <div id="remote-data-editor" class="data-editor">
+    <div id="remote-data-editor" class="tor">
       <monaco-editor ref="editor" :value="state.value" class="monaco-editor" :options="state.options" />
     </div>
   </div>
@@ -15,7 +18,8 @@
 <script>
 import { reactive, watchEffect, ref } from 'vue'
 import { VueMonaco as MonacoEditor } from '@opentiny/tiny-engine-common'
-import { iconCopy } from '@opentiny/vue-icon'
+import { Button as TinyButton } from '@opentiny/vue'
+
 import useClipboard from 'vue-clipboard3'
 
 const editor = ref(null)
@@ -25,7 +29,7 @@ export const getResponseData = () => editor.value.getEditor().getValue()
 export default {
   components: {
     MonacoEditor,
-    iconCopy: iconCopy()
+    TinyButton
   },
   props: {
     modelValue: {
@@ -38,7 +42,7 @@ export default {
       value: '',
       options: {
         language: 'json',
-        minimap: { enabled: false }
+        minimap: { enabled: true }
       }
     })
 
@@ -57,10 +61,13 @@ export default {
 
       emit('copy', state.value)
     }
-
+    const check = () => {
+      emit('check')
+    }
     return {
       state,
       copyData,
+      check,
       editor
     }
   }
@@ -72,6 +79,8 @@ export default {
   position: relative;
   .resonse-header {
     padding: 10px;
+    margin-bottom: 16px;
+
     .life-cycle-alert {
       font-size: 11px;
       color: var(--ti-lowcode-datasource-tip-color);
@@ -85,23 +94,14 @@ export default {
     }
   }
 
-  .copy-data {
+  .operate {
     position: absolute;
     right: 20px;
-    top: 80px;
+    top: 32px;
     z-index: 9999;
-
-    svg {
-      width: 23px;
-      height: 23px;
-      padding: 5px;
-      color: var(--ti-lowcode-datasource-toolbar-breadcrumb-color);
-      cursor: pointer;
-
-      &:hover {
-        background: var(--ti-lowcode-datasource-dialog-demo-border-color);
-        border-radius: 2px;
-      }
+    .tiny-button {
+      border-radius: 4px;
+      border-color: var(--ti-lowcode-button-default-border-color);
     }
   }
 

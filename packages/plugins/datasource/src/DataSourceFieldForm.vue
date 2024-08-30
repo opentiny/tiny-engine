@@ -1,5 +1,5 @@
 <template>
-  <div v-if="state.isOpen" class="step-select-second">
+  <div v-if="state.isOpen" class="step-select-second" :id="setId()">
     <div class="field-row">
       <slot>
         <div class="icon-and-text">
@@ -62,6 +62,10 @@ export default {
       type: Boolean,
       default: false
     },
+    isRow: {
+      type: Boolean,
+      default: false
+    },
     isOpen: {
       type: Boolean,
       default: true
@@ -97,7 +101,11 @@ export default {
     const close = () => {
       state.isOpen = false
     }
-
+    const setId = () => {
+      if (props.isRow && !props.editable) {
+        return 'default-item'
+      }
+    }
     const handleCancel = () => {
       emit('cancel')
     }
@@ -134,6 +142,7 @@ export default {
       saveField,
       open,
       close,
+      setId,
       form,
       rules: {
         title: [{ required: true, message: '必填', trigger: 'change' }, { validator: validateIsReserveValue }],
@@ -174,6 +183,7 @@ export default {
   border: 1px solid var(--ti-lowcode-data-source-border-color);
   border-radius: 4px;
   padding: 12px;
+  margin-bottom: 16px;
   .field-row {
     display: flex;
     flex-wrap: wrap;
@@ -206,5 +216,24 @@ export default {
   svg {
     color: var(--ti-lowcode-datasource-toolbar-icon-color);
   }
+}
+#default-item {
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-top: 1px solid var(--ti-lowcode-data-source-border-color);
+  margin-bottom: 0;
+  border-radius: 0;
+  .field-row {
+    margin-bottom: 0;
+    height: 24px;
+    .field-operation {
+      display: none;
+    }
+  }
+}
+
+#default-item:last-child {
+  border-bottom: 1px solid var(--ti-lowcode-data-source-border-color);
 }
 </style>
