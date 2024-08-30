@@ -4,7 +4,7 @@
     :open-delay="1000"
     popper-class="toolbar-right-popover"
     append-to-body
-    content="生成当前页面/区块的Vue代码到本地文件"
+    content="生成当前页面/区块的React代码到本地文件"
   >
     <template #reference>
       <span class="icon" @click="generate">
@@ -25,7 +25,8 @@ import { reactive } from 'vue'
 import { Popover } from '@opentiny/vue'
 import { getGlobalConfig, useBlock, useCanvas, useNotify, useLayout } from '@opentiny/tiny-engine-controller'
 import { fs } from '@opentiny/tiny-engine-utils'
-import { generateVuePage, generateVueBlock } from './generateCode'
+import { generateApp } from '@opentiny/tiny-engine-dsl-react'
+// import {generateVuePage, generateVueBlock} from './generateCode'
 import { fetchCode, fetchMetaData, fetchPageList } from './http'
 import FileSelector from './FileSelector.vue'
 
@@ -99,10 +100,13 @@ export default {
 
     const getToSaveFilesInfo = ({ params, codeList, metaData, pageList }) => {
       const handlers = {
-        Block: generateVueBlock,
-        Page: generateVuePage
+        // Block: generateVueBlock,
+        // Page: generateVuePage
+        Page: generateApp
       }
       const filesInfo = handlers[params.type]({ params, codeList, metaData, pageList })
+
+      console.log(filesInfo, 'current>>>')
 
       return filesInfo
     }

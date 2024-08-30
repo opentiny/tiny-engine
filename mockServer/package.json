@@ -25,8 +25,8 @@
     "lint": "eslint --fix ."
   },
   "dependencies": {
-    "@opentiny/tiny-engine-dsl-react": "workspace:*",
-    "@opentiny/tiny-engine-dsl-vue": "workspace:*",
+    "@opentiny/tiny-engine-dsl-react": "^0.1.0",
+    "@opentiny/tiny-engine-dsl-vue": "^1.0.3",
     "@seald-io/nedb": "^4.0.2",
     "fs-extra": "^11.1.1",
     "glob": "^10.3.4",

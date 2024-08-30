@@ -10,6 +10,7 @@
       <span class="icon" @click="generate">
         <svg-icon :name="icon"></svg-icon>
       </span>
+      <tiny-select title="请选择出码产物" :options="state.options" v-model="state.value" size="small" style="width: 80px"></tiny-select>
     </template>
   </tiny-popover>
   <generate-file-selector
@@ -22,7 +23,7 @@
 
 <script>
 import { reactive } from 'vue'
-import { Popover } from '@opentiny/vue'
+import { Popover, Select } from '@opentiny/vue'
 import {
   getGlobalConfig,
   useBlock,
@@ -33,13 +34,19 @@ import {
 } from '@opentiny/tiny-engine-controller'
 import { fs } from '@opentiny/tiny-engine-utils'
 import { useHttp } from '@opentiny/tiny-engine-http'
-import { generateApp, parseRequiredBlocks } from '@opentiny/tiny-engine-dsl-vue'
-import { fetchMetaData, fetchPageList, fetchBlockSchema } from './http'
+import { parseRequiredBlocks, generateApp as generateVueApp } from '@opentiny/tiny-engine-dsl-vue'
+// import { generateApp as generateReactApp } from '@opentiny/tiny-engine-dsl-react'
+// 初期，方便调试
+import { generateApp as generateReactApp } from '../../../react-generator/src/index'
+
+import { fetchMetaData, fetchPageList, fetchCode as fetchBlockSchema } from './http'
 import FileSelector from './FileSelector.vue'
+import { generateVuePage } from './generateCode'
 
 export default {
   components: {
     TinyPopover: Popover,
+    TinySelect: Select,
     GenerateFileSelector: FileSelector
   },
   props: {
@@ -56,7 +63,19 @@ export default {
       dirHandle: null,
       generating: false,
       showDialogbox: false,
-      saveFilesInfo: []
+      saveFilesInfo: [],
+      value: '',
+      instance: null,
+      options: [
+        {
+          value: 'React',
+          label: 'React'
+        },
+        {
+          value: 'Vue',
+          label: 'Vue'
+        }
+      ]
     })
 
     const getParams = () => {
@@ -126,8 +145,6 @@ export default {
       return res
     }
 
-    const instance = generateApp()
-
     const getAllPageDetails = async (pageList) => {
       const detailPromise = pageList.map(({ id }) => useLayout().getPluginApi('AppManage').getPageById(id))
       const detailList = await Promise.allSettled(detailPromise)
@@ -144,17 +161,31 @@ export default {
     const getPreGenerateInfo = async () => {
       const params = getParams()
       const { id } = useEditorInfo().useInfo()
+      console.log(params, 'params')
       const promises = [
-        useHttp().get(`/app-center/v1/api/apps/schema/${id}`),
+        // useHttp().get(`/app-center/v1/api/apps/schema/${id}`),
+        fetchBlockSchema(params),
+        // state.value === 'React' ? fetchBlockSchema(params) : useHttp().get(`/app-center/v1/api/apps/schema/${id}`),
         fetchMetaData(params),
         fetchPageList(params.app)
       ]
+
+      console.log(promises, 'promises')
 
       if (!state.dirHandle) {
         promises.push(fs.getUserBaseDirHandle())
       }
 
       const [appData, metaData, pageList, dirHandle] = await Promise.all(promises)
+      // 如果是React，其appData数据的格式与Vue中的appData不一致，React是（一般有两个文件，第一个文件是Jsx文件，第二个文件是Css文件）：
+      // error: Array<T
+      // filePath: string
+      // index: boolean
+      // panelName: string // 文件名
+      // panelType: string // 出码类型
+      // panelValue: string // 文件内容
+      // prettierOpts: Object // 格式化参数
+      console.log(appData, 'appData', metaData, 'metaData', pageList, 'pageList', dirHandle, 'dirHandle')
       const pageDetailList = await getAllPageDetails(pageList)
 
       const blockSet = new Set()
@@ -185,14 +216,21 @@ export default {
         }),
         blockSchema,
         // 物料数据
+        // componentsMap: [...(appData.componentsMap || [])],由于React在调用fetchcode的时候就已经调用了react-dsl里面的函数，
+        // 所以在这直接调用./generateCode里面的函数直接格式化返回的React的代码就可以了
         componentsMap: [...(appData.componentsMap || [])],
-
         meta: {
           ...(appData.meta || {})
-        }
+        },
+        reactData: state.value === 'React' ? [...(appData || [])] : []
       }
 
-      const res = await instance.generate(appSchema)
+      console.log(appSchema, 'appSchema')
+      state.instance = state.value === 'React' ? generateReactApp() : generateVueApp()
+
+      const res = await state.instance.generate(appSchema)
+
+      console.log(res, 'res')
 
       const { genResult = [] } = res || {}
       const fileRes = genResult.map(({ fileContent, fileName, path, fileType }) => {
@@ -226,6 +264,7 @@ export default {
     }
 
     const generate = async () => {
+      console.log(state.value, 'value>>>>>')
       const { isEmptyPage } = useLayout()
 
       if (isEmptyPage()) {
@@ -246,6 +285,7 @@ export default {
         // 保存代码前置任务：调用接口生成代码并获取用户本地文件夹授权
         const [dirHandle, fileRes] = await getPreGenerateInfo()
 
+        console.log(fileRes, 'fileRes')
         // 暂存待生成代码文件信息
         state.saveFilesInfo = fileRes
 
