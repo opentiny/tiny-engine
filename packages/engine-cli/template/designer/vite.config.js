@@ -6,7 +6,7 @@ export default defineConfig((configEnv) => {
   const baseConfig = useTinyEngineBaseConfig({
     viteConfigEnv: configEnv,
     root: __dirname,
-    iconDirs: [path.resolve(__dirname, './node_modules/@opentiny/tiny-engine/assets/')],
+    iconDirs: [path.resolve(__dirname, './node_modules/@opentiny/tiny-engine/res/')],
     envDir: './env'
   })
 
