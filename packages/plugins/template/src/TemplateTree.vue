@@ -99,7 +99,7 @@ export default {
       })
       templateSettingState.treeDataMapping = map
 
-      return tree;
+      return tree
     }
 
     const searchTemplateData = (value) => {
@@ -162,7 +162,6 @@ export default {
 
       let templateName = ''
       if (data.isTemplate) {
-        templateName = data?.name || ''
         templateName = data?.name || ''
       }
       setBreadcrumbTemplate([templateName])
