@@ -56,7 +56,7 @@
     "svg-sprite-loader": "^6.0.11",
     "vite": "^4.3.7",
     "vite-plugin-monaco-editor": "^1.0.10",
-    "vite-plugin-svg-icons": "^2.0.1",
+    "vite-plugin-svg-icons": "2.0.1",
     "vue-eslint-parser": "^8.0.1",
     "vue-i18n": "^9.9.0"
   },
@@ -71,7 +71,8 @@
   },
   "pnpm": {
     "patchedDependencies": {
-      "@vue/repl@2.9.0": "patches/@vue__repl@2.9.0.patch"
+      "@vue/repl@2.9.0": "patches/@vue__repl@2.9.0.patch",
+      "vite-plugin-svg-icons@2.0.1": "patches/vite-plugin-svg-icons@2.0.1.patch"
     }
   }
 }
