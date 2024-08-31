@@ -500,7 +500,7 @@ export default {
 :deep(.help-box) {
   position: absolute;
   left: 62px;
-  top: 3px;
+  top: 12px;
 }
 :deep(.tiny-button) {
   border-radius: 4px;

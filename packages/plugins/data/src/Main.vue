@@ -22,9 +22,10 @@
         </template>
       </tiny-search>
       <div class="add-btn">
-        <tiny-button @click="openPanel(OPTION_TYPE.ADD)">{{
-          activeName === STATE.CURRENT_STATE ? '添加变量' : '添加全局变量'
-        }}</tiny-button>
+        <tiny-button @click="openPanel(OPTION_TYPE.ADD)"
+          ><icon-plus class="icon-plus"></icon-plus
+          >{{ activeName === STATE.CURRENT_STATE ? '添加变量' : '添加全局变量' }}</tiny-button
+        >
       </div>
       <data-source-list
         :modelValue="Object.keys(state.dataSource)"
@@ -40,7 +41,7 @@
       <div class="header">
         <span>{{ addDataSource }}</span>
         <span class="options-wrap">
-          <tiny-button type="danger" @click="confirm">保存</tiny-button>
+          <tiny-button type="primary" @click="confirm">保存</tiny-button>
           <close-icon @close="cancel"></close-icon>
         </span>
       </div>
@@ -79,6 +80,7 @@ import {
   getMetaApi,
   META_APP
 } from '@opentiny/tiny-engine-meta-register'
+import { iconPlus } from '@opentiny/vue-icon'
 import { getCommentByKey } from '@opentiny/tiny-engine-common/js/comment'
 import { iconSearch } from '@opentiny/vue-icon'
 import { CloseIcon, LinkButton } from '@opentiny/tiny-engine-common'
@@ -100,7 +102,8 @@ export default {
     TinyTabItem: TabItem,
     CreateStore,
     LinkButton,
-    TinyIconSearch: iconSearch()
+    TinyIconSearch: iconSearch(),
+    IconPlus: iconPlus()
   },
   setup(props, { emit }) {
     const variableRef = ref(null)
@@ -390,8 +393,17 @@ export default {
     display: flex;
     flex-direction: column;
     .add-btn {
-      margin: 10px 0px 0px 10px;
-      max-width: none;
+      margin: 12px 0;
+      padding: 0 10px;
+      width: 100%;
+      .tiny-button {
+        width: 100%;
+        border-color: var(--ti-lowcode-data-source-border-color);
+      }
+      .icon-plus {
+        margin-right: 4px;
+        stroke: var(--ti-lowcode-chat-model-button-text);
+      }
     }
 
     .title {
@@ -441,13 +453,24 @@ export default {
       align-items: center;
       height: 45px;
       padding: 0 12px;
-      color: var(--ti-lowcode-toolbar-icon-color);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ti-lowcode-data-source-color);
       background: var(--ti-lowcode-common-component-bg);
       border-bottom: 1px solid var(--ti-lowcode-data-header-border-bottom-color);
       .options-wrap {
         display: flex;
         column-gap: 16px;
         align-items: center;
+        :deep(button.tiny-button.tiny-button--primary) {
+          display: flex;
+          align-items: center;
+          min-width: 40px;
+          justify-content: center;
+          height: 24px;
+          padding: 0;
+          border-radius: 4px;
+        }
       }
     }
   }
@@ -494,7 +517,7 @@ export default {
   :deep(.help-box) {
     position: absolute;
     left: 70px;
-    top: 11px;
+    top: 12px;
   }
 }
 </style>

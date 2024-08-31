@@ -20,7 +20,7 @@
         :model="state"
         validate-type="text"
         :inline-message="true"
-        label-position="left"
+        label-position="top"
         :label-align="true"
       >
         <div class="right-item">
@@ -34,18 +34,18 @@
               </tiny-radio>
             </tiny-radio-group>
           </tiny-form-item>
-          <tiny-form-item v-if="!state.status" label="名称" prop="name">
+          <tiny-form-item v-if="!state.status" label="工具名称" prop="name">
             <tiny-input v-model="state.name" placeholder="请输入工具类名称"></tiny-input>
           </tiny-form-item>
           <div v-if="state.category">
-            <tiny-form-item label="包名" prop="content.package">
+            <tiny-form-item label="npm包名" prop="content.package">
               <tiny-input v-model="state.content.package" placeholder="请输入npm包名称"></tiny-input>
             </tiny-form-item>
-            <tiny-form-item label="导出名称" prop="content.exportName">
+            <tiny-form-item label="npm包导出名" prop="content.exportName">
               <tiny-input v-model="state.content.exportName" placeholder="请输入npm包的导出名称"></tiny-input>
             </tiny-form-item>
-            <tiny-form-item label="是否解构">
-              <tiny-switch v-model="state.content.destructuring"></tiny-switch>
+            <tiny-form-item label="">
+              <tiny-checkbox v-model="state.content.destructuring">解构npm包</tiny-checkbox>
             </tiny-form-item>
             <tiny-form-item v-if="state.mode" label="是否作为实例">
               <tiny-checkbox v-model="state.isInstance"></tiny-checkbox>
@@ -63,23 +63,16 @@
               <template #label>
                 <div class="cdn-label-wrap">
                   <span>CDN</span>
-                  <tiny-tooltip
-                    effect="dark"
-                    content="浏览器直接可用的生产包链接，请确保可用，否则可能会造成页面预览失败"
-                    placement="top"
-                  >
-                    <icon-unknow class="cdn-tips-icon"></icon-unknow>
-                  </tiny-tooltip>
                 </div>
               </template>
-              <tiny-input
-                v-model="state.content.cdnLink"
-                placeholder="浏览器直接可用的生产包链接，请确保可用，否则可能会造成页面预览失败"
-              ></tiny-input>
+              <tiny-input v-model="state.content.cdnLink" placeholder="CDN"></tiny-input>
+              <div class="tip">浏览器直接可用的生产包链接，请确保可用，否则可能会造成页面预览失败</div>
             </tiny-form-item>
-            <div class="code-preview">
-              <pre>// <span class="pre-title">生成的</span> utils.js <span class="pre-title">代码预览</span>&#10;{{ codePreview }}</pre>
-            </div>
+            <tiny-form-item label="生成utils.js代码预览">
+              <div class="code-preview">
+                <pre>{{ codePreview }}</pre>
+              </div>
+            </tiny-form-item>
           </div>
           <monaco-editor
             v-else
@@ -101,13 +94,10 @@ import {
   Button as TinyButton,
   Form as TinyForm,
   FormItem as TinyFormItem,
-  Switch as TinySwitch,
   Checkbox as TinyCheckbox,
-  Tooltip,
   Radio,
   RadioGroup
 } from '@opentiny/vue'
-import { iconUnknow } from '@opentiny/vue-icon'
 import {
   ACTION_TYPE,
   RESOURCE_TYPE,
@@ -144,10 +134,7 @@ export default {
     TinyFormItem,
     TinyCheckbox,
     PluginSetting,
-    TinySwitch,
     MonacoEditor,
-    IconUnknow: iconUnknow(),
-    TinyTooltip: Tooltip,
     TinyRadioGroup: RadioGroup,
     TinyRadio: Radio,
     SvgButton
@@ -313,6 +300,12 @@ export default {
     margin-right: 8px;
   }
   .resource-form {
+    .tip {
+      font-size: 11px;
+      line-height: 18px;
+      margin-top: 8px;
+      color: var(--ti-lowcode-datasource-tip-color);
+    }
     :deep(.tiny-form-item__label) {
       .cdn-tips-icon {
         margin-left: 4px;
@@ -321,6 +314,9 @@ export default {
   }
 
   .title-wrap {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ti-lowcode-data-source-color);
     .help-link {
       display: inline-block;
       color: var(--ti-lowcode-common-primary-color);
@@ -336,6 +332,16 @@ export default {
     display: flex;
     align-items: center;
     column-gap: 16px;
+    :deep(button.tiny-button.tiny-button--primary) {
+      display: flex;
+      align-items: center;
+      min-width: 40px;
+      justify-content: center;
+      height: 24px;
+      padding: 0;
+      border-radius: 4px;
+    }
+
     .delete-btn {
       color: var(--ti-lowcode-common-text-color-5);
       &:hover {
@@ -370,7 +376,6 @@ export default {
 .code-preview {
   font-size: 14px;
   line-height: 20px;
-  margin-left: 12px;
   color: var(--ti-lowcode-birdge-code-preview-color);
   background-color: var(--ti-lowcode-birdge-code-preview-bg-color);
   border-radius: 6px;

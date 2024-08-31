@@ -8,7 +8,7 @@
     validate-type="text"
     :inline-message="true"
   >
-    <tiny-form-item label="变量名" prop="name">
+    <tiny-form-item label="变量名" prop="name" class="var">
       <tiny-input
         v-model="state.createData.name"
         placeholder="只能包含数字字母及下划线"
@@ -18,101 +18,123 @@
     <tiny-form-item label="初始值类型" class="var-type-item">
       <tiny-radio-group v-model="state.variableType" :options="VAR_TYPES"></tiny-radio-group>
     </tiny-form-item>
-    <tiny-form-item>
-      <monaco-editor
-        ref="variableEditor"
-        class="variable-editor"
-        :value="editorCode"
-        :showFormatBtn="true"
-        :options="state.editorOptions"
-        @editorDidMount="editorDidMount"
-      >
-        <template #toolbarStart>
-          <div class="label-left-wrap">
-            <div>初始值</div>
-            <tiny-popover placement="bottom-start" effect="dark" trigger="hover" popper-class="state-data-example-tips">
-              <div class="tips-content">
-                <div class="create-content-head">
-                  <div class="create-content-tip">数据写法和JS写法一致</div>
-                </div>
-                <div class="create-content-demo">
-                  <ul>
-                    <li>字符串: "string"</li>
-                    <li>数字: 123</li>
-                    <li>布尔值: true/false</li>
-                    <li>对象: {"name": "xxx"}</li>
-                    <li>数组: ["1", "2"]</li>
-                    <li>空值: null</li>
-                    <li>JS表达式: (需要先选择JS表达式类型)</li>
-                    <li class="ml20">示例1： t('i18nkey1')</li>
-                    <li class="ml20">示例2： function fnName() {}</li>
-                    <li class="ml20">示例3： { getValue: () => {} }</li>
-                  </ul>
-                  <div class="create-content-foot">
-                    <div class="create-content-tip">
-                      注意：使用JS表达式定义state变量的时候无法调用state其他变量定义，<br />另由于JS函数定义在变量之后，也无法调用JS面板定义的函数
+    <tiny-collapse v-model="state.activeName">
+      <tiny-collapse-item title="初始值" name="initValue">
+        <tiny-form-item>
+          <monaco-editor
+            ref="variableEditor"
+            class="variable-editor"
+            :value="editorCode"
+            :showFormatBtn="true"
+            :options="state.editorOptions"
+            @editorDidMount="editorDidMount"
+          >
+            <template #toolbarStart>
+              <div class="label-left-wrap">
+                <tiny-popover
+                  placement="bottom-start"
+                  effect="dark"
+                  trigger="hover"
+                  popper-class="state-data-example-tips"
+                >
+                  <div class="tips-content">
+                    <div class="create-content-head">
+                      <div class="create-content-tip">数据写法和JS写法一致</div>
+                    </div>
+                    <div class="create-content-demo">
+                      <ul>
+                        <li>字符串: "string"</li>
+                        <li>数字: 123</li>
+                        <li>布尔值: true/false</li>
+                        <li>对象: {"name": "xxx"}</li>
+                        <li>数组: ["1", "2"]</li>
+                        <li>空值: null</li>
+                        <li>JS表达式: (需要先选择JS表达式类型)</li>
+                        <li class="ml20">示例1： t('i18nkey1')</li>
+                        <li class="ml20">示例2： function fnName() {}</li>
+                        <li class="ml20">示例3： { getValue: () => {} }</li>
+                      </ul>
+                      <div class="create-content-foot">
+                        <div class="create-content-tip">
+                          注意：使用JS表达式定义state变量的时候无法调用state其他变量定义，<br />另由于JS函数定义在变量之后，也无法调用JS面板定义的函数
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </tiny-popover>
               </div>
-              <template #reference>
-                <div class="create-content-description">查看示例</div>
-              </template>
-            </tiny-popover>
+            </template>
+            <template #buttons>
+              <editor-i18n-tool ref="i18nToolRef" @confirm="insertContent"></editor-i18n-tool>
+            </template>
+          </monaco-editor>
+          <div class="tips">
+            <div>字符串:"string"</div>
+            <div>数字:123</div>
+            <div>布尔值:true/false</div>
+            <div>对象:{"name":"xxx"}</div>
+            <div>数组:["1","2"]</div>
+            <div>空值:null</div>
+            <div>"color":red</div>
+            <div>"background":"blue"</div>
           </div>
-        </template>
-        <template #buttons>
-          <editor-i18n-tool ref="i18nToolRef" @confirm="insertContent"></editor-i18n-tool>
-        </template>
-      </monaco-editor>
-    </tiny-form-item>
-    <tiny-form-item v-if="state.hasAccessor">
-      <monaco-editor ref="getterEditor" class="variable-editor" :options="options" :value="state.getterEditorValue">
-        <template #toolbarStart>
-          <div class="label-left-wrap">
-            <div>getter</div>
-            <tiny-popover placement="bottom-start" trigger="hover" popper-class="state-data-example-tips">
-              <div class="tips-content">
-                <div class="create-content-demo">
-                  <pre><code>{{ getterExample }}</code></pre>
-                </div>
+        </tiny-form-item>
+      </tiny-collapse-item>
+      <tiny-collapse-item title="getter" name="getter">
+        <tiny-form-item>
+          <monaco-editor ref="getterEditor" class="variable-editor" :options="options" :value="state.getterEditorValue">
+            <template #toolbarStart>
+              <div class="label-left-wrap">
+                <tiny-popover placement="bottom-start" trigger="hover" popper-class="state-data-example-tips">
+                  <div class="tips-content">
+                    <div class="create-content-demo">
+                      <pre><code>{{ getterExample }}</code></pre>
+                    </div>
+                  </div>
+                </tiny-popover>
               </div>
-              <template #reference>
-                <div class="create-content-description">查看示例</div>
-              </template>
-            </tiny-popover>
+            </template>
+          </monaco-editor>
+          <div class="tips">
+            <pre><code>{{ getterExample }}</code></pre>
           </div>
-        </template>
-      </monaco-editor>
-    </tiny-form-item>
-    <tiny-form-item v-if="state.hasAccessor">
-      <monaco-editor ref="setterEditor" class="variable-editor" :options="options" :value="state.setterEditorValue">
-        <template #toolbarStart>
-          <div class="label-left-wrap">
-            <div>setter</div>
-            <tiny-popover placement="bottom-start" trigger="hover" popper-class="state-data-example-tips">
-              <div class="tips-content">
-                <div class="create-content-demo">
-                  <pre><code>{{ setterExample }}</code></pre>
-                </div>
+        </tiny-form-item>
+      </tiny-collapse-item>
+      <tiny-collapse-item title="setter" name="setter">
+        <tiny-form-item>
+          <monaco-editor ref="setterEditor" class="variable-editor" :options="options" :value="state.setterEditorValue">
+            <template #toolbarStart>
+              <div class="label-left-wrap">
+                <tiny-popover placement="bottom-start" trigger="hover" popper-class="state-data-example-tips">
+                  <div class="tips-content">
+                    <div class="create-content-demo">
+                      <pre><code>{{ setterExample }}</code></pre>
+                    </div>
+                  </div>
+                </tiny-popover>
               </div>
-              <template #reference>
-                <div class="create-content-description">查看示例</div>
-              </template>
-            </tiny-popover>
+            </template>
+          </monaco-editor>
+          <div class="tips">
+            <pre><code>{{ setterExample }}</code></pre>
           </div>
-        </template>
-      </monaco-editor>
-    </tiny-form-item>
-    <div class="show-advanced" @click="state.hasAccessor = !state.hasAccessor">
-      {{ (state.hasAccessor ? '移除' : '添加') + '高级属性' }}
-    </div>
+        </tiny-form-item>
+      </tiny-collapse-item>
+    </tiny-collapse>
   </tiny-form>
 </template>
 
 <script>
 import { reactive, ref, computed, watch, onBeforeUnmount } from 'vue'
-import { Popover, Form, FormItem, Input, RadioGroup } from '@opentiny/vue'
+import {
+  Popover,
+  Form,
+  FormItem,
+  Input,
+  RadioGroup,
+  Collapse as TinyCollapse,
+  CollapseItem as TinyCollapseItem
+} from '@opentiny/vue'
 import { MonacoEditor } from '@opentiny/tiny-engine-common'
 import { verifyJsVarName } from '@opentiny/tiny-engine-common/js/verification'
 import { initCompletion } from '@opentiny/tiny-engine-common/js/completion'
@@ -128,7 +150,9 @@ export default {
     TinyInput: Input,
     TinyPopover: Popover,
     TinyRadioGroup: RadioGroup,
-    EditorI18nTool
+    EditorI18nTool,
+    TinyCollapse,
+    TinyCollapseItem
   },
   props: {
     createData: {
@@ -178,6 +202,7 @@ export default {
 
     const state = reactive({
       errorMessage: '',
+      activeName: ['initValue', 'getter', 'setter'],
       createData: getPropsCreateData(),
       hasAccessor: isAccessorData(props.createData?.variable),
       variableType: getVarType(),
@@ -405,7 +430,33 @@ export default {
   padding: 12px;
   height: calc(100% - 45px);
   overflow-y: auto;
-
+  .tips {
+    font-size: 11px;
+    line-height: 18px;
+    margin-top: 8px;
+    border-radius: 4px;
+    padding: 8px 14px;
+    background: var(--ti-lowcode-data-source-box-bg);
+    color: var(--ti-lowcode-datasource-tip-color);
+  }
+  :deep(.tiny-collapse .tiny-collapse-item__header) {
+    border-top: none;
+    padding: 12px 12px 5px 0;
+  }
+  :deep(.toolbar) {
+    position: absolute;
+    z-index: 99;
+    right: 4px;
+  }
+  .var {
+    padding: 12px;
+    margin-left: -12px;
+    margin-right: -12px;
+  }
+  .tiny-form-item:first-child {
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--ti-lowcode-data-source-border-color);
+  }
   .tiny-form-item:not(:last-child) {
     margin-bottom: 12px;
   }

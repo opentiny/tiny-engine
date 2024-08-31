@@ -1,18 +1,10 @@
 <template>
   <plugin-panel title="资源管理" :isCloseLeft="false" @close="closePanel">
     <template #header>
-      <link-button :href="docsUrl"></link-button>
       <svg-button name="add-utils" placement="left" :tips="tips" @click="addResource('npm')"></svg-button>
     </template>
     <template #content>
-      <tiny-tabs v-model="activedName" class="tabs full-width-tabs" tab-style="button-card" @click="switchTab">
-        <tiny-tab-item :name="RESOURCE_TYPE.Util" title="工具类">
-          <bridge-manage ref="utilsRef" :name="RESOURCE_TYPE.Util" @open="openBridgePanel"></bridge-manage>
-        </tiny-tab-item>
-        <tiny-tab-item v-if="isVsCodeEnv" :name="RESOURCE_TYPE.Bridge" title="桥接源">
-          <bridge-manage ref="bridge" :name="RESOURCE_TYPE.Bridge" @open="openBridgePanel"></bridge-manage>
-        </tiny-tab-item>
-      </tiny-tabs>
+      <bridge-manage ref="utilsRef" :name="RESOURCE_TYPE.Util" @open="openBridgePanel"></bridge-manage>
       <bridge-setting @refresh="refreshList"></bridge-setting>
     </template>
   </plugin-panel>
@@ -20,8 +12,7 @@
 
 <script>
 import { ref, computed } from 'vue'
-import { Tabs, TabItem } from '@opentiny/vue'
-import { PluginPanel, SvgButton, LinkButton } from '@opentiny/tiny-engine-common'
+import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
 import { useHelp } from '@opentiny/tiny-engine-meta-register'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import { RESOURCE_TYPE } from './js/resource'
@@ -31,13 +22,10 @@ import { setType, RESOURCE_TIP } from './js/resource'
 
 export default {
   components: {
-    TinyTabs: Tabs,
-    TinyTabItem: TabItem,
     PluginPanel,
     SvgButton,
     BridgeManage,
-    BridgeSetting,
-    LinkButton
+    BridgeSetting
   },
   setup() {
     const activedName = ref(RESOURCE_TYPE.Util)
@@ -107,6 +95,6 @@ export default {
 :deep(.help-box) {
   position: absolute;
   left: 72px;
-  top: 3px;
+  top: 12px;
 }
 </style>
