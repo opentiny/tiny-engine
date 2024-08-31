@@ -8,7 +8,7 @@
             <span class="name">{{ key }}</span>
           </div>
           <div class="item-head-right">
-            <svg-button name="edit" tips="编辑" @click="openPanel(OPTION_TYPE.UPDATE, key)"></svg-button>
+            <svg-button name="to-edit" tips="编辑" @click="openPanel(OPTION_TYPE.UPDATE, key)"></svg-button>
             <svg-button name="copy" tips="复制" @click="openPanel(OPTION_TYPE.COPY, key)"></svg-button>
             <svg-button name="delete" tips="删除" @click="confirmClick(key)"></svg-button>
           </div>

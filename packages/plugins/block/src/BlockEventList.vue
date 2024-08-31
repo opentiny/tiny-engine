@@ -9,7 +9,7 @@
       </div>
     </template>
     <template #operate="{ data }">
-      <svg-button name="edit" tips="编辑" placement="top" @click="setEdit(data)"></svg-button>
+      <svg-button name="to-edit" tips="编辑" placement="top" @click="setEdit(data)"></svg-button>
       <svg-button name="delete" tips="删除" placement="top" @click="delBlockEvent(data.name)"></svg-button>
     </template>
   </meta-list-items>

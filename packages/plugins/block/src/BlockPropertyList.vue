@@ -11,7 +11,7 @@
       </div>
     </template>
     <template #operate="{ data }">
-      <svg-button name="edit" tips="编辑" placement="top" @click="handleEdit(data)"></svg-button>
+      <svg-button name="to-edit" tips="编辑" placement="top" @click="handleEdit(data)"></svg-button>
       <svg-button name="delete" tips="删除" placement="top" @click="del(data)"></svg-button>
     </template>
   </meta-list-items>

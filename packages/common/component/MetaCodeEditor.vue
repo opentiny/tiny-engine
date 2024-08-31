@@ -3,7 +3,7 @@
     <slot :open="open">
       <div v-if="buttonShowContent" :class="['full-width', { 'empty-color': value === '' }]" @click="open">
         <span class="text-content text-ellipsis-multiple">{{ value === '' ? buttonLabel : value }}</span>
-        <svg-icon class="edit-icon" name="edit"></svg-icon>
+        <svg-icon class="edit-icon" name="to-edit"></svg-icon>
       </div>
       <tiny-button v-else class="edit-btn" @click="open">
         {{ buttonLabel }}

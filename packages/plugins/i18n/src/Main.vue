@@ -4,8 +4,21 @@
       <link-button :href="docsUrl"></link-button>
     </template>
     <template #content>
+      <div class="language-search-box">
+        <tiny-select v-model="currentSearchType" :options="i18nSearchTypes"></tiny-select>
+        <tiny-input v-model="searchKey" class="plugin-i18n-search" placeholder="请输入关键字" type="text" clearable>
+          <template #prefix>
+            <span class="icon">
+              <svg-icon name="basic-search"></svg-icon>
+            </span>
+          </template>
+        </tiny-input>
+      </div>
       <div class="btn-box">
-        <tiny-button @click="openEditor($event, {})">新增词条</tiny-button>
+        <tiny-button @click="openEditor($event, {})"><icon-plus class="btn-icon"></icon-plus>添加词条</tiny-button>
+        <tiny-button @click="batchDelete" :disabled="!selectedRowLength"
+          ><svg-icon class="btn-icon" name="delete"></svg-icon>删除</tiny-button
+        >
         <tiny-file-upload
           ref="upload"
           size="small"
@@ -15,29 +28,15 @@
           @change="handleChange"
         >
           <template #trigger>
-            <tiny-button>批量上传</tiny-button>
+            <tiny-button><icon-upload class="btn-icon"></icon-upload>批量上传</tiny-button>
           </template>
         </tiny-file-upload>
-        <tiny-button @click="batchDelete" :disabled="!selectedRowLength">批量删除</tiny-button>
-        <div class="download-btn" @click="downloadFile">
-          <svg-icon name="generate-code"></svg-icon>
-          <tiny-button type="text"> 下载导入模板 </tiny-button>
-        </div>
+        <a class="download-btn" @click="downloadFile"> 下载导入模板 </a>
         <p v-show="isLoading && notEmpty">
           <span id="boxeight" class="i18n-loading"></span><span>正在导入，请稍后...</span>
         </p>
       </div>
       <div class="language-plugin-table">
-        <div class="language-search-box">
-          <tiny-select v-model="currentSearchType" :options="i18nSearchTypes"></tiny-select>
-          <tiny-input v-model="searchKey" class="plugin-i18n-search" placeholder="请输入关键字" type="text" clearable>
-            <template #prefix>
-              <span class="icon">
-                <svg-icon name="basic-search"></svg-icon>
-              </span>
-            </template>
-          </tiny-input>
-        </div>
         <tiny-grid
           ref="i18nTable"
           :data="langList"
@@ -76,7 +75,7 @@
               <div v-if="editingRow !== data.row" class="i18n-opera">
                 <tiny-tooltip class="item" effect="dark" placement="bottom" content="编辑" :open-delay="500">
                   <span class="icon">
-                    <svg-icon name="edit" @click.stop="openEditor($event, data.row)"></svg-icon>
+                    <svg-icon name="to-edit" @click.stop="openEditor($event, data.row)"></svg-icon>
                   </span>
                 </tiny-tooltip>
                 <tiny-tooltip class="item" effect="dark" placement="bottom" :open-delay="500">
@@ -122,7 +121,7 @@
 import { computed, ref, watchEffect, reactive, onMounted, nextTick, resolveComponent } from 'vue'
 import useClipboard from 'vue-clipboard3'
 import { Grid, GridColumn, Input, Popover, Button, FileUpload, Loading, Tooltip, Select } from '@opentiny/vue'
-import { iconLoadingShadow } from '@opentiny/vue-icon'
+import { iconLoadingShadow, iconPlus, iconUpload } from '@opentiny/vue-icon'
 import { PluginPanel, LinkButton, SearchEmpty } from '@opentiny/tiny-engine-common'
 import { useTranslate, useApp, useModal, useHelp } from '@opentiny/tiny-engine-meta-register'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
@@ -142,7 +141,9 @@ export default {
     LinkButton,
     TinySelect: Select,
     TinyFileUpload: FileUpload,
-    SearchEmpty
+    SearchEmpty,
+    IconPlus: iconPlus(),
+    IconUpload: iconUpload()
   },
   setup() {
     // 组件库iconLoadingShadow图标不能切换颜色，因此不同主题用不同icon
@@ -430,80 +431,83 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.plugin-panel-i18n {
+  width: 38vw;
+}
 .stripe-tiny-grid {
   word-wrap: break-word;
-  :deep(.tiny-grid) {
-    .tiny-grid__header-wrapper {
-      .tiny-grid-header__column {
-        height: 32px;
-      }
-      .tiny-grid-cell {
-        padding: 0;
-        .tiny-grid-required-icon {
-          display: none;
-        }
-      }
-      .tiny-grid__repair {
-        border-color: var(--ti-lowcode-tabs-border-color);
-      }
+  // :deep(.tiny-grid) {
+  //   .tiny-grid__header-wrapper {
+  //     .tiny-grid-header__column {
+  //       height: 32px;
+  //     }
+  //     .tiny-grid-cell {
+  //       padding: 0;
+  //       .tiny-grid-required-icon {
+  //         display: none;
+  //       }
+  //     }
+  //     .tiny-grid__repair {
+  //       border-color: var(--ti-lowcode-tabs-border-color);
+  //     }
 
-      .tiny-grid-resizable.is__line:before {
-        background-color: var(--ti-lowcode-toolbar-border-color);
-      }
-    }
+  //     .tiny-grid-resizable.is__line:before {
+  //       background-color: var(--ti-lowcode-toolbar-border-color);
+  //     }
+  //   }
 
-    .tiny-grid__body-wrapper {
-      &::-webkit-scrollbar {
-        height: 10px;
-      }
-      .tiny-grid-body__column {
-        height: 36px;
-        .tiny-grid-cell {
-          padding: 8px 0;
-        }
-        .i18n-opera svg {
-          color: var(--ti-lowcode-i18n-operate-svg-color);
-        }
+  //   .tiny-grid__body-wrapper {
+  //     &::-webkit-scrollbar {
+  //       height: 10px;
+  //     }
+  //     .tiny-grid-body__column {
+  //       height: 36px;
+  //       .tiny-grid-cell {
+  //         padding: 8px 0;
+  //       }
+  //       .i18n-opera svg {
+  //         color: var(--ti-lowcode-i18n-operate-svg-color);
+  //       }
 
-        .copy-data {
-          svg {
-            margin-left: 5px;
-          }
-        }
-      }
+  //       .copy-data {
+  //         svg {
+  //           margin-left: 5px;
+  //         }
+  //       }
+  //     }
 
-      .tiny-grid-body__row,
-      .tiny-grid-body__row:not(.row__hover):nth-child(2n) {
-        background-image: linear-gradient(
-          -180deg,
-          var(--ti-lowcode-tabs-border-color),
-          var(--ti-lowcode-tabs-border-color)
-        );
-        background-repeat: no-repeat;
-        background-size: 100% 1px;
-        background-position: 100% 100%;
-        &.row__current {
-          background-color: var(--ti-lowcode-toolbar-view-hover-bg);
-        }
-      }
+  //     .tiny-grid-body__row,
+  //     .tiny-grid-body__row:not(.row__hover):nth-child(2n) {
+  //       background-image: linear-gradient(
+  //         -180deg,
+  //         var(--ti-lowcode-tabs-border-color),
+  //         var(--ti-lowcode-tabs-border-color)
+  //       );
+  //       background-repeat: no-repeat;
+  //       background-size: 100% 1px;
+  //       background-position: 100% 100%;
+  //       &.row__current {
+  //         background-color: var(--ti-lowcode-toolbar-view-hover-bg);
+  //       }
+  //     }
 
-      .tiny-grid-body__row {
-        &.row__selected {
-          .tiny-grid-checkbox__icon {
-            svg {
-              color: var(--ti-lowcode-common-primary-color);
-              width: 100%;
-              height: 100%;
-            }
-          }
-        }
-      }
-    }
+  //     .tiny-grid-body__row {
+  //       &.row__selected {
+  //         .tiny-grid-checkbox__icon {
+  //           svg {
+  //             color: var(--ti-lowcode-common-primary-color);
+  //             width: 100%;
+  //             height: 100%;
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
 
-    .tiny-grid__empty-text {
-      color: var(--ti-lowcode-toolbar-breadcrumb-color);
-    }
-  }
+  //   .tiny-grid__empty-text {
+  //     color: var(--ti-lowcode-toolbar-breadcrumb-color);
+  //   }
+  // }
   #empty-loading-box {
     width: 100%;
     color: red;
@@ -527,13 +531,40 @@ export default {
     }
   }
 }
+
+.language-search-box {
+  padding: 0 12px;
+  margin-bottom: 12px;
+  display: flex;
+  .tiny-input {
+    margin-left: 8px;
+  }
+  .tiny-select {
+    width: 210px;
+  }
+}
+
 .btn-box {
-  color: var(--ti-lowcode-toolbar-breadcrumb-color);
-  font-size: 14px;
-  padding-left: 10px;
+  color: var(--ti-lowcode-i18n-button-color);
+  font-size: 12px;
+  margin-bottom: 12px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  .btn-icon {
+    margin-right: 6px;
+    color: var(--ti-lowcode-i18n-icon-color);
+  }
   :deep(.tiny-file-upload) {
-    display: inline-block;
-    margin: 0 10px;
+    margin: 0 8px;
+  }
+  :deep(.tiny-button--default) {
+    height: 24px;
+    line-height: 24px;
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--ti-lowcode-i18n-button-border-color);
+    border-radius: 4px;
   }
   span {
     padding-left: 12px;
@@ -548,12 +579,28 @@ export default {
       stroke: var(--ti-lowcode-toolbar-breadcrumb-color);
     }
   }
+  .download-btn {
+    cursor: pointer;
+    text-decoration: underline;
+    display: inline-block;
+    font-size: 12px;
+    text-align: left;
+    padding: 0;
+    color: var(--ti-lowcode-base-text-color);
+    svg {
+      font-size: 16px;
+    }
+    .tiny-button.tiny-button--text {
+      color: var(--ti-lowcode-base-text-color);
+    }
+  }
 }
 
 .language-plugin-table {
   height: calc(100% - 48px);
   flex: 1;
-  padding: 0 16px;
+  padding: 12px;
+  border-top: 1px solid var(--ti-lowcode-i18n-border-color);
   overflow-y: scroll;
 
   .operation-column {
@@ -563,20 +610,6 @@ export default {
 
     svg {
       font-size: 14px;
-    }
-  }
-  .language-search-box {
-    display: flex;
-    .tiny-input {
-      margin: 12px 0;
-      margin-left: 8px;
-      :deep(.tiny-input__prefix) {
-        left: 8px;
-      }
-    }
-    .tiny-select {
-      margin: 12px 0;
-      width: 240px;
     }
   }
 }
@@ -624,21 +657,6 @@ export default {
   }
 }
 
-.download-btn {
-  cursor: pointer;
-  display: inline-block;
-  font-size: 12px;
-  text-align: left;
-  padding: 0;
-  margin-left: 8px;
-  color: var(--ti-lowcode-base-text-color);
-  svg {
-    font-size: 16px;
-  }
-  .tiny-button.tiny-button--text {
-    color: var(--ti-lowcode-base-text-color);
-  }
-}
 :deep(.help-box) {
   position: absolute;
   left: 86px;

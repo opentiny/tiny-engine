@@ -29,7 +29,7 @@
             <div class="block-item">
               <span>{{ item.name }}</span>
               <div class="item-btns">
-                <svg-button class="item-icon" name="edit" title="编辑" @click.stop="editCategory(item)"></svg-button>
+                <svg-button class="item-icon" name="to-edit" title="编辑" @click.stop="editCategory(item)"></svg-button>
                 <tiny-popover
                   :modelValue="state.currentDeleteGroupId === item.id"
                   placement="right"

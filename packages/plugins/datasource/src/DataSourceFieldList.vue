@@ -20,7 +20,7 @@
     </div>
     <div class="field-operation" v-if="!field.editable">
       <div class="field-handler" @click="openFieldForm(index)">
-        <svg-button name="edit" tips="编辑" placement="top" @click="handleEdit(data)"></svg-button>
+        <svg-button name="to-edit" tips="编辑" placement="top" @click="handleEdit(data)"></svg-button>
       </div>
       <div class="field-handler" @click="deleteField($event, field)">
         <svg-button tips="删除" name="text-source-delete"></svg-button>
