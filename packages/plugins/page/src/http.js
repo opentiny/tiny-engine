@@ -43,6 +43,9 @@ export const fetchHistoryDetail = (pageId) => http.get(`/app-center/api/pages/hi
 
 export const requestUpdatePage = (pageId, params) => http.post(`/app-center/api/pages/update/${pageId}`, params)
 
+// 批量新增页面
+export const requestBatchCreatePage = (params) => http.post('/app-center/api/pages/batch-create', params)
+
 export default {
   fetchPageList,
   fetchPageDetail,
@@ -53,5 +56,6 @@ export default {
   fetchHistoryDetail,
   handleRouteHomeUpdate,
   requestRestorePageHistory,
-  requestUpdatePage
+  requestUpdatePage,
+  requestBatchCreatePage
 }

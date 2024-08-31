@@ -71,6 +71,11 @@ router.post('/app-center/api/pages/create', async (ctx) => {
   ctx.body = await mockService.pageService.create(ctx.request.body)
 })
 
+// batch create pages
+router.post('/app-center/api/pages/batch-create', async (ctx) => {
+  ctx.body = await mockService.pageService.createBatch(ctx.request.body)
+})
+
 router.post('/app-center/api/pages/update/:id', async (ctx) => {
   const { id } = ctx.params
   const { body } = ctx.request

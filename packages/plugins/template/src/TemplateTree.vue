@@ -10,7 +10,7 @@
       :filter-node-method="filterTemplateTreeData" :expand-on-click-node="false" :shrink-icon="shrinkIcon"
       :expand-icon="expandIcon" @current-change="handleCurrentChange" default-expand-all>
       <template #operation="{ node }">
-        <div style="width: 80px; text-align: right">
+        <div style="width: 80px; text-align: right" @click.stop>
           <tiny-dropdown size="mini" trigger="click" :show-icon="false" :visible-arrow="true">
             <SvgIcon name="setting" class="setting"></SvgIcon>
             <template #dropdown>
@@ -19,7 +19,7 @@
                 <tiny-dropdown-item @click="editTemplate(node)">编辑</tiny-dropdown-item>
                 <tiny-dropdown-item v-if="node.data.id !== '0000000000000000'"
                   @click="deleteTemplate(node)">删除</tiny-dropdown-item>
-                <tiny-dropdown-item @click="generatePage(node)">生成页面</tiny-dropdown-item>
+                <tiny-dropdown-item @click="generatePageFromTemplate(node)">生成页面</tiny-dropdown-item>
               </tiny-dropdown-menu>
             </template>
           </tiny-dropdown>
@@ -48,6 +48,9 @@ import { getCanvasStatus } from '@opentiny/tiny-engine-controller/js/canvas'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { closeTemplateSettingPanel } from './TemplateSetting.vue'
 import http, { requestDeleteTemplate } from './http.js'
+import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
+import { handleCreatePage } from '@opentiny/tiny-engine-controller/js/http'
+import { generatePage } from '@opentiny/tiny-engine-controller/js/vscodeGenerateFile'
 
 const { COMPONENT_NAME } = constants
 
@@ -69,7 +72,7 @@ export default {
     const { fetchTemplateList, fetchTemplateDetail } = http
     const { setBreadcrumbTemplate } = useBreadcrumb()
     const templateTreeRefs = ref([])
-    const { resetPageData } = usePage()
+    const { resetPageData, DEFAULT_PAGE, STATIC_PAGE_GROUP_ID, pageSettingState } = usePage()
 
     const state = reactive({
       templateSearchValue: '',
@@ -252,11 +255,56 @@ export default {
         }
       })
     }
-    const generatePage = (node) => {
-      // todo: 生成页面逻辑
-      if (node.isLeaf) return
-      emit('openSettingPanel', { node, type: 'generate' })
+
+    const createPage = (data) => {
+      const { page_content, ...other } = DEFAULT_PAGE
+      const createParams = {
+        ...other,
+        page_content: {
+          ...page_content,
+          ...data.template_content,
+          componentName: COMPONENT_NAME.Page,
+          fileName: data.template_content.fileName
+        },
+        app: appInfoState.selectedId,
+        isPage: true,
+        parentId: STATIC_PAGE_GROUP_ID + '',
+        name: data.name,
+        route: data.name.toLowerCase()
+      }
+
+      if (createParams.id) {
+        delete createParams.id
+        delete createParams._id
+      }
+      console.log('createParams', createParams)
+      handleCreatePage(createParams)
+        .then((data) => {
+          useNotify({
+            type: 'success',
+            message: '生成页面成功，请去页面管理中查看!'
+          })
+          pageSettingState.updateTreeData()
+          if (isVsCodeEnv) {
+            generatePage(data)
+          }
+        })
+        .catch((err) => {
+          useNotify({
+            type: 'error',
+            title: '生成页面失败',
+            message: JSON.stringify(err?.message || err)
+          })
+        })
     }
+    const generatePageFromTemplate = (node) => {
+      if (node.isLeaf) {
+        createPage(node.data)
+      } else {
+        emit('openSettingPanel', { node, type: 'generate' })
+      }
+    }
+
     return {
       state,
       switchTemplate,
@@ -274,7 +322,7 @@ export default {
       addTemplate,
       editTemplate,
       deleteTemplate,
-      generatePage
+      generatePageFromTemplate
     }
   }
 }

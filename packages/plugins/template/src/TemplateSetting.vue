@@ -3,8 +3,8 @@
     <template #header>
       <button-group>
         <tiny-button v-if="operateType !== 'generate'" type="primary" @click="saveTemplateSetting">保存</tiny-button>
-        <tiny-button v-else-if="operateType !== 'add'" type="primary" @click="generatePage">生成页面</tiny-button>
-        <svg-button v-if="operateType === 'edit'" name="delete" placement="bottom" tips="删除" @click="deleteTemplate"></svg-button>
+        <svg-button v-if="operateType === 'edit'" name="delete" placement="bottom" tips="删除"
+          @click="deleteTemplate"></svg-button>
         <svg-button class="close-plugin-setting-icon" name="close" @click="closeTemplateSetting"></svg-button>
       </button-group>
     </template>

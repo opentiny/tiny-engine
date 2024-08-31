@@ -84,11 +84,30 @@ export const handleTemplateUpdate = (templateId, params) => {
 
       templateSettingState.isNew = false
       useNotify({ message: '保存成功!', type: 'success' })
-
+      templateSettingState.updateTreeData()
       setTemplateSaved(true)
       return res
     })
     .catch((err) => {
       useNotify({ title: '保存失败', message: `${err?.message || ''}`, type: 'error' })
     })
+}
+
+/**
+ * 添加页面
+ * @param { json } params 页面信息
+ * @returns { Promise }
+ */
+
+export const handleCreatePage = (params) => {
+  return http.post('/app-center/api/pages/create', params)
+}
+
+/**
+ * 批量添加页面
+ * @param { json } params 页面数组信息
+ * @returns { Promise }
+ */
+export const handleBatchCreatePage = (params) => {
+  return http.post('/app-center/api/pages/batch-create', params)
 }
