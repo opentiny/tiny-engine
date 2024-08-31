@@ -5,7 +5,8 @@
     :showIfFullScreen="true"
     title="静态数据管理"
     class="datasource-record-list"
-    :style="{ marginLeft: leftMargin + 'px' }"
+    :style="computedStyle"
+    :align="align"
     @cancel="closeRecordList"
     @save="saveRecordList"
     @fullScreenChange="fullScreenChange"
@@ -137,8 +138,14 @@ export default {
     const { confirm } = useModal()
     const { toClipboard } = useClipboard()
     const { layoutState } = useLayout()
-    const { getPluginWidth, PLUGIN_NAME } = useLayout()
-    const leftMargin = computed(() => getPluginWidth(PLUGIN_NAME['Datasource']))
+    const { getPluginWidth, PLUGIN_NAME, getPluginByLayout } = useLayout()
+
+    const align = computed(() => getPluginByLayout(PLUGIN_NAME['Datasource']))
+    const margin = computed(() => getPluginWidth(PLUGIN_NAME['Datasource']))
+    // 计算样式
+    const computedStyle = computed(() => {
+      return align.value.includes('left') ? { marginLeft: margin.value + 'px' } : { marginRight: margin.value + 'px' }
+    })
 
     const state = reactive({
       totalData: [],
@@ -599,7 +606,8 @@ export default {
       handleBeforeChange,
       overrideData,
       mergeData,
-      leftMargin
+      computedStyle,
+      align
     }
   }
 }

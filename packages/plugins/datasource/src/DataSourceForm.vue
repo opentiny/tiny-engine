@@ -1,5 +1,5 @@
 <template>
-  <plugin-setting v-if="isOpen" title="设置数据源" :style="{ marginLeft: leftMargin + 'px' }">
+  <plugin-setting v-if="isOpen" title="设置数据源" :style="computedStyle" :align="align">
     <template #header>
       <button-group>
         <tiny-button class="field-save" type="primary" @click="save">保存</tiny-button>
@@ -83,8 +83,12 @@ export default {
     const { confirm, message } = useModal()
     const { appInfoState } = useApp()
     const { dataSourceState } = useDataSource()
-    const { getPluginWidth, PLUGIN_NAME } = useLayout()
-    const leftMargin = computed(() => getPluginWidth(PLUGIN_NAME['Datasource']))
+    const { getPluginWidth, PLUGIN_NAME, getPluginByLayout } = useLayout()
+    const align = computed(() => getPluginByLayout(PLUGIN_NAME['Datasource']))
+    const margin = computed(() => getPluginWidth(PLUGIN_NAME['Datasource']))
+    const computedStyle = computed(() => {
+      return align.value.includes('left') ? { marginLeft: margin.value + 'px' } : { marginRight: margin.value + 'px' }
+    })
     const state = reactive({
       dataSource: {}
     })
@@ -256,7 +260,8 @@ export default {
       openRemotePanel,
       selectDataSourceTemplate,
       deleteDataSource,
-      leftMargin
+      computedStyle,
+      align
     }
   }
 }

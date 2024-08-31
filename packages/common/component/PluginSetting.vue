@@ -1,6 +1,7 @@
 <template>
   <div
-    :class="['plugin-setting', { 'second-panel': isSecond }, { 'full-screen': state.isFullScreen }]"
+    :style="{ right: align.includes('right') ? 0 : null }"
+    :class="['plugin-setting', { 'second-panel': isSecond }, { 'full-screen': state.isFullScreen }, 'shadowClass']"
     @click="$emit('click')"
   >
     <div class="plugin-setting-header">
@@ -30,7 +31,7 @@
 </template>
 
 <script>
-import { reactive, watchEffect } from 'vue'
+import { reactive, watchEffect, computed } from 'vue'
 import { Button } from '@opentiny/vue'
 import { iconPlus, iconFullscreen, iconMinscreen, iconClose } from '@opentiny/vue-icon'
 
@@ -89,6 +90,10 @@ export default {
     icon: {
       type: Object,
       default: iconPlus()
+    },
+    align: {
+      type: String,
+      default: 'leftTop'
     }
   },
   emits: [EVENTS.FULL_SCREEN_CHANGE, EVENTS.SAVE, EVENTS.CANCEL, EVENTS.ADD, EVENTS.CLICK],
@@ -109,14 +114,22 @@ export default {
     const getFullScreenLabel = (isFullScreen) => {
       return isFullScreen ? '收起' : '全屏查看'
     }
-
+    // 计算属性用于确定阴影类
+    const shadowClass = computed(() => {
+      if (props.align.includes('right')) {
+        return !props.isSecond ? 'shadow-right' : ''
+      } else {
+        return !props.isSecond ? 'shadow-left' : ''
+      }
+    })
     return {
       state,
       fullScreen,
       getFullScreenLabel,
       IconFullscreen: iconFullscreen(),
       IconMinscreen: iconMinscreen(),
-      IconClose: iconClose()
+      IconClose: iconClose(),
+      shadowClass
     }
   }
 }
@@ -133,10 +146,22 @@ export default {
   background: var(--ti-lowcode-plugin-setting-panel-bg, --ti-lowcode-toolbar-bg);
   overflow: hidden;
   border-left: 1px solid var(--ti-lowcode-plugin-panel-header-border-bottom-color);
+
   &:not(.second-panel) {
-    box-shadow: 6px 0px 3px 0px rgba(0, 0, 0, 0.05);
-    border-right: none;
+    &.shadow-right {
+      box-shadow: 6px 0px 3px 0px rgba(0, 0, 0, 0.05);
+      border-right: none;
+    }
+
+    &.shadow-left {
+      box-shadow: -6px 0px 3px 0px rgba(0, 0, 0, 0.05);
+      border-left: none;
+    }
   }
+  // &:not(.second-panel) {
+  //   box-shadow: 6px 0px 3px 0px rgba(0, 0, 0, 0.05);
+  //   border-right: none;
+  // }
   &.full-screen {
     width: var(--base-collection-panel-full-screen-width);
   }

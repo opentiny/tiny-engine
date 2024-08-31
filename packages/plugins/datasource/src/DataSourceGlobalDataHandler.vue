@@ -1,11 +1,6 @@
 <template>
   <div v-if="isOpen">
-    <plugin-setting
-      title="全局设置"
-      @cancel="close"
-      @save="saveGlobalDataHandle"
-      :style="{ marginLeft: leftMargin + 'px' }"
-    >
+    <plugin-setting title="全局设置" @cancel="close" @save="saveGlobalDataHandle" :style="computedStyle" :align="align">
       <template #content>
         <tiny-collapse v-model="activeNames">
           <tiny-collapse-item title="请求参数处理函数（willFetch）" name="willFetch">
@@ -53,8 +48,15 @@ export default {
   },
   setup() {
     const { confirm } = useModal()
-    const { getPluginWidth, PLUGIN_NAME } = useLayout()
-    const leftMargin = computed(() => getPluginWidth(PLUGIN_NAME['Datasource']))
+    const { getPluginWidth, PLUGIN_NAME, getPluginByLayout } = useLayout()
+
+    const align = computed(() => getPluginByLayout(PLUGIN_NAME['Datasource']))
+    const margin = computed(() => getPluginWidth(PLUGIN_NAME['Datasource']))
+    // 计算样式
+    const computedStyle = computed(() => {
+      return align.value.includes('left') ? { marginLeft: margin.value + 'px' } : { marginRight: margin.value + 'px' }
+    })
+
     const state = reactive({
       dataHandlerValue: useResource().resState?.dataHandler?.value,
       willFetchValue: useResource().resState.willFetch?.value,
@@ -97,7 +99,8 @@ export default {
       close,
       saveGlobalDataHandle,
       state,
-      leftMargin
+      computedStyle,
+      align
     }
   }
 }

@@ -1,10 +1,5 @@
 <template>
-  <plugin-setting
-    v-if="isShow"
-    :title="state.title"
-    class="page-plugin-setting"
-    :style="{ marginLeft: leftMargin + 'px' }"
-  >
+  <plugin-setting v-if="isShow" :title="state.title" class="page-plugin-setting" :style="computedStyle" :align="align">
     <template #header>
       <button-group>
         <tiny-button type="primary" @click="savePageSetting">保存</tiny-button>
@@ -128,8 +123,13 @@ export default {
     const { pageState, initData } = useCanvas()
     const { confirm } = useModal()
     const pageGeneralRef = ref(null)
-    const { getPluginWidth, PLUGIN_NAME } = useLayout()
-    const leftMargin = computed(() => getPluginWidth(PLUGIN_NAME['AppManage']))
+    const { getPluginWidth, PLUGIN_NAME, getPluginByLayout } = useLayout()
+
+    const align = computed(() => getPluginByLayout(PLUGIN_NAME['AppManage']))
+    const margin = computed(() => getPluginWidth(PLUGIN_NAME['AppManage']))
+    const computedStyle = computed(() => {
+      return align.value.includes('left') ? { marginLeft: margin.value + 'px' } : { marginRight: margin.value + 'px' }
+    })
 
     const state = reactive({
       activeName: Object.values(PAGE_SETTING_SESSION),
@@ -377,7 +377,8 @@ export default {
       updatePageLifeCycles,
       restorePage,
       PAGE_SETTING_SESSION,
-      leftMargin
+      computedStyle,
+      align
     }
   }
 }
