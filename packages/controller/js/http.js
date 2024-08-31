@@ -85,6 +85,7 @@ export const handleTemplateUpdate = (templateId, params) => {
       templateSettingState.isNew = false
       useNotify({ message: '保存成功!', type: 'success' })
       templateSettingState.updateTreeData()
+
       setTemplateSaved(true)
       return res
     })

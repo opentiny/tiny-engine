@@ -78,6 +78,7 @@ export default {
       templateSearchValue: '',
       currentNodeData: {}
     })
+
     const formatTreeData = (data) => {
       const map = {}
       const tree = []
@@ -98,11 +99,13 @@ export default {
       })
       templateSettingState.treeDataMapping = map
 
-      return tree
+      return tree;
     }
+
     const searchTemplateData = (value) => {
       templateTreeRefs.value.filter(value)
     }
+
     const refreshTemplateList = async (appId, data) => {
       const templateData = data ? data : await fetchTemplateList(appId)
       templateSettingState.templates = formatTreeData(templateData)
@@ -113,12 +116,14 @@ export default {
       const templateList = await refreshTemplateList(appInfoState.selectedId)
       return templateList
     }
+
     const clearCurrentState = () => {
       templateState.currentVm = null
       templateState.hoverVm = null
       templateState.properties = {}
       templateState.pageSchema = null
     }
+
     const updateUrlTemplateId = (id) => {
       const url = new URL(window.location)
 
@@ -157,6 +162,7 @@ export default {
 
       let templateName = ''
       if (data.isTemplate) {
+        templateName = data?.name || ''
         templateName = data?.name || ''
       }
       setBreadcrumbTemplate([templateName])
@@ -277,7 +283,6 @@ export default {
         delete createParams.id
         delete createParams._id
       }
-      console.log('createParams', createParams)
       handleCreatePage(createParams)
         .then((data) => {
           useNotify({
@@ -297,6 +302,7 @@ export default {
           })
         })
     }
+
     const generatePageFromTemplate = (node) => {
       if (node.isLeaf) {
         createPage(node.data)
