@@ -47,7 +47,7 @@
     "vite-plugin-externalize-dependencies": "^1.0.1",
     "vite-plugin-monaco-editor": "^1.1.0",
     "vite-plugin-static-copy": "^0.16.0",
-    "vite-plugin-svg-icons": "2.0.1",
+    "vite-plugin-svg-icons": "^2.0.1",
     "vue-eslint-parser": "^8.0.1"
   },
   "keywords": [],

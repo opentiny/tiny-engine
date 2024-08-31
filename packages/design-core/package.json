@@ -16,8 +16,7 @@
   "main": "index.js",
   "files": [
     "dist",
-    "assets",
-    "res"
+    "assets"
   ],
   "exports": {
     ".": "./dist/index.js",
