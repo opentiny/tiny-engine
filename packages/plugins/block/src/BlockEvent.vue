@@ -1,5 +1,10 @@
 <template>
-  <tiny-alert type="simple" description="了解有关事件设置的更多信息" class="block-alert"></tiny-alert>
+  <tiny-alert
+    v-show="showVideo"
+    type="simple"
+    description="了解有关事件设置的更多信息"
+    class="block-alert"
+  ></tiny-alert>
   <tiny-row>
     <tiny-col :span="6">
       <block-event-list></block-event-list>

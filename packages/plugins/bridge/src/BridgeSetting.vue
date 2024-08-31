@@ -7,8 +7,8 @@
     </template>
     <template #header>
       <div class="header-wrap">
-        <svg-button v-show="state.status" class="delete-btn" name="delete" @click="deleteReSource"></svg-button>
         <tiny-button class="save-btn" type="primary" @click="save">保存</tiny-button>
+        <svg-button v-show="state.status" class="delete-btn" name="delete" @click="deleteReSource"></svg-button>
         <svg-button class="close-btn" name="close" @click="closePanel"></svg-button>
       </div>
     </template>
@@ -331,22 +331,12 @@ export default {
   .header-wrap {
     display: flex;
     align-items: center;
-    column-gap: 16px;
-    :deep(button.tiny-button.tiny-button--primary) {
-      display: flex;
-      align-items: center;
-      min-width: 40px;
-      justify-content: center;
-      height: 24px;
+    column-gap: 6px;
+    .tiny-button {
+      width: 40px;
       padding: 0;
-      border-radius: 4px;
-    }
-
-    .delete-btn {
-      color: var(--ti-lowcode-common-text-color-5);
-      &:hover {
-        color: var(--ti-lowcode-common-primary-text-color);
-      }
+      min-width: 40px;
+      margin-right: 2px;
     }
   }
 

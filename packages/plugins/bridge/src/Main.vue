@@ -97,4 +97,9 @@ export default {
   left: 72px;
   top: 12px;
 }
+:deep(.tiny-button) {
+  border-radius: 4px;
+  height: 24px;
+  line-height: 24px;
+}
 </style>

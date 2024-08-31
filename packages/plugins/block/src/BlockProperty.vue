@@ -1,5 +1,10 @@
 <template>
-  <tiny-alert type="simple" description="了解有关属性设置的更多信息" class="block-alert"></tiny-alert>
+  <tiny-alert
+    v-show="showVideo"
+    type="simple"
+    description="了解有关属性设置的更多信息"
+    class="block-alert"
+  ></tiny-alert>
   <div class="property-container">
     <block-property-list v-if="!isEdit"></block-property-list>
     <block-property-form v-else></block-property-form>

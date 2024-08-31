@@ -1,6 +1,7 @@
 <template>
   <div class="add-button">
     <tiny-button @click="addProperty">
+      <icon-plus class="icon-plus"></icon-plus>
       <span>添加</span>
     </tiny-button>
   </div>
@@ -20,6 +21,7 @@
 <script>
 import { computed } from 'vue'
 import { Button as TinyButton } from '@opentiny/vue'
+import { iconPlus } from '@opentiny/vue-icon'
 import { remove } from '@opentiny/vue-renderless/common/array'
 import { MetaListItems, SvgButton } from '@opentiny/tiny-engine-common'
 import {
@@ -34,7 +36,8 @@ export default {
   components: {
     TinyButton,
     SvgButton,
-    MetaListItems
+    MetaListItems,
+    IconPlus: iconPlus()
   },
   setup() {
     const list = computed(() => getEditBlockPropertyList() || [])
@@ -87,6 +90,8 @@ export default {
   display: flex;
   padding-bottom: 16px;
   :deep(.tiny-button) {
+    padding: 0 12px;
+    width: 66px;
     margin-right: 5px;
     border: 1px solid var(--ti-lowcode-base-default-button-border-disable-color);
   }
@@ -96,6 +101,10 @@ export default {
   }
   .editorWarp {
     display: inline-block;
+  }
+  .icon-plus {
+    margin-right: 6px;
+    stroke: var(--ti-lowcode-base-text-color-3);
   }
 }
 </style>

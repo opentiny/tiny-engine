@@ -1,6 +1,6 @@
 <template>
   <div class="add-button">
-    <tiny-button @click="addEvent">添加</tiny-button>
+    <tiny-button @click="addEvent"> <icon-plus class="icon-plus"></icon-plus>添加</tiny-button>
   </div>
   <meta-list-items class="list" :optionsList="list" :draggable="false">
     <template #content="{ data }">
@@ -18,6 +18,7 @@
 <script>
 import { computed } from 'vue'
 import { Button as TinyButton } from '@opentiny/vue'
+import { iconPlus } from '@opentiny/vue-icon'
 import { MetaListItems, SvgButton } from '@opentiny/tiny-engine-common'
 import {
   getEditBlockEvents,
@@ -32,7 +33,8 @@ export default {
   components: {
     TinyButton,
     MetaListItems,
-    SvgButton
+    SvgButton,
+    IconPlus: iconPlus()
   },
   setup() {
     const list = computed(() => Object.entries(getEditBlockEvents() || {}).map(([name, event]) => ({ name, event })))
@@ -78,6 +80,10 @@ export default {
   padding: 0 0 8px 0;
   :deep(.tiny-button) {
     border: 1px solid var(--ti-lowcode-base-default-button-border-disable-color);
+  }
+  .icon-plus {
+    margin-right: 6px;
+    stroke: var(--ti-lowcode-base-text-color-3);
   }
 }
 </style>

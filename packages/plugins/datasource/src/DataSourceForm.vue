@@ -1,10 +1,10 @@
 <template>
-  <plugin-setting v-if="isOpen" title="设置数据源">
+  <plugin-setting v-if="isOpen" title="设置数据源" class="data-source-form">
     <template #header>
       <button-group>
         <tiny-button class="field-save" type="primary" @click="save">保存</tiny-button>
         <div class="field-handler" @click="deleteDataSource" v-if="editable" tips="删除">
-          <svg-button name="text-source-delete"></svg-button>
+          <svg-button name="delete"></svg-button>
         </div>
       </button-group>
       <svg-button class="close-plugin-setting-icon" name="close" @click="closeAllPanel"></svg-button>
@@ -259,6 +259,19 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.data-source-form {
+  .button-group {
+    column-gap: 6px;
+    .tiny-button {
+      width: 40px;
+      padding: 0;
+      min-width: 40px;
+    }
+  }
+  .close-plugin-setting-icon {
+    margin-left: 4px;
+  }
+}
 .datasource-form-footer {
   padding: 12px;
   .tiny-svg {
@@ -268,10 +281,5 @@ export default {
   .del:hover {
     background-color: var(--ti-lowcode-datasource-delete-button-hover-bg);
   }
-}
-.field-handler {
-  cursor: pointer;
-  margin: 2px 10px 4px 10px;
-  font-size: 16px;
 }
 </style>

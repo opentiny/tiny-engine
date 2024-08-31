@@ -142,9 +142,12 @@ export default {
       align-items: center;
 
       .save-btn {
-        position: relative;
-        overflow: visible;
-        margin-right: 12px;
+        width: 40px;
+        padding: 0;
+        min-width: 40px;
+        margin-right: 2px;
+        height: 24px;
+        line-height: 24px;
         .dots {
           width: 10px;
           height: 10px;

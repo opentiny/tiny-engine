@@ -6,11 +6,18 @@
         :key="item.id"
         :class="['datasource-list-item', index === activeIndex ? 'active' : '']"
         @mouseenter="showSettingIcon(index)"
-        @mousedown.stop="openRecordListPanel(item, index)"
       >
         <div class="item-label">
           {{ item.name }}
           <div class="item-handler">
+            <svg-button
+              class="set-page"
+              tips="编辑静态数据"
+              name="to-edit"
+              v-if="index === state.hoverIndex"
+              @mousedown.stop.prevent="openRecordListPanel(item, index)"
+            >
+            </svg-button>
             <svg-button
               class="set-page"
               tips="设置数据源"
@@ -155,7 +162,10 @@ export default {
       justify-content: space-between;
     }
     .item-handler {
-      svg {
+      .svg-button {
+        width: 14px;
+        height: 14px;
+        margin-top: 6px;
         color: var(--ti-lowcode-datasource-toolbar-more-hover-color);
       }
     }

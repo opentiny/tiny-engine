@@ -401,6 +401,9 @@ export default {
         & > .tiny-tree-node__content-left {
           font-weight: 700;
         }
+        .tree-node-icon {
+          width: 0;
+        }
       }
     }
     .tiny-tree-node__label {
@@ -409,6 +412,7 @@ export default {
       justify-content: space-between;
       height: 30px;
       line-height: 30px;
+      color: var(--ti-lowcode-page-manage-tree-node-label-color);
       .page-edit-icon {
         font-size: 16px;
       }

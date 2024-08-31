@@ -6,6 +6,7 @@
         <svg-icon class="edit-icon" name="to-edit"></svg-icon>
       </div>
       <tiny-button v-else class="edit-btn" @click="open">
+        <svg-icon v-if="shouBtnIcon" class="edit-btn-icon" :name="svgName"></svg-icon>
         {{ buttonLabel }}
       </tiny-button>
     </slot>
@@ -122,6 +123,14 @@ export default {
       // 代码编辑器上方提示：title显示简短的文字描述，demo为显示的示例，点击 “展开示例” 可查看
       type: Object,
       default: () => ({ title: '', demo: '' })
+    },
+    shouBtnIcon: {
+      type: Boolean,
+      default: false
+    },
+    svgName: {
+      type: String,
+      default: 'to-edit'
     }
   },
   emits: ['save', 'open'],
@@ -257,9 +266,15 @@ export default {
   .edit-btn {
     color: var(--ti-lowcode-meta-codeEditor-color);
     border-color: var(--ti-lowcode-meta-codeEditor-border-color);
+    display: flex;
+    align-items: center;
     &:hover {
       color: var(--ti-lowcode-meta-codeEditor-hover-color);
       border-color: var(--ti-lowcode-meta-codeEditor-border-hover-color);
+    }
+    .edit-btn-icon {
+      color: var(--ti-lowcode-common-text-main-color);
+      margin-right: 4px;
     }
   }
 }

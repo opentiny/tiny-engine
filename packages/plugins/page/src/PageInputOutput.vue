@@ -1,11 +1,17 @@
 <template>
   <div class="input-or-output">
-    <tiny-alert type="simple" description="了解有关输入输出设置的更多信息" class="life-cycle-alert"></tiny-alert>
+    <tiny-alert
+      v-if="false"
+      type="simple"
+      description="了解有关输入输出设置的更多信息"
+      class="life-cycle-alert"
+    ></tiny-alert>
     <meta-code-editor
       :modelValue="inputValue"
       title="输入配置"
       button-text="输入配置"
       language="json"
+      :shouBtnIcon="true"
       :buttonShowContent="hasContent(inputValue)"
       single
       @save="saveInputValue"
@@ -16,6 +22,7 @@
       title="输出配置"
       button-text="输出配置"
       language="json"
+      :shouBtnIcon="true"
       :buttonShowContent="hasContent(outputValue)"
       single
       @save="saveOutputValue"

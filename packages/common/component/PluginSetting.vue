@@ -171,7 +171,7 @@ export default {
     font-size: 14px;
     line-height: 18px;
     color: var(--ti-lowcode-plugin-panel-title-color);
-    padding: 0 20px;
+    padding: 0 12px;
     border-bottom: 1px solid var(--ti-lowcode-plugin-panel-header-border-bottom-color);
     margin-bottom: -6px;
     .plugin-setting-header-title {
