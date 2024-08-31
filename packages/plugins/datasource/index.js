@@ -18,7 +18,9 @@ export default {
   title: '数据源',
   icon: 'plugin-icon-data',
   align: 'top',
-  option: {},
+  options: {
+    align: 'leftTop'
+  },
   component
 }
 

@@ -17,6 +17,8 @@ export default {
   title: '状态管理',
   icon: 'plugin-icon-var',
   align: 'top',
-  option: {},
+  options: {
+    align: 'leftTop'
+  },
   component
 }

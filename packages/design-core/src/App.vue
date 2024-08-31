@@ -5,7 +5,7 @@
       <design-toolbars></design-toolbars>
       <div class="tiny-engine-main">
         <div class="tiny-engine-left-wrap">
-          <design-plugins :render-panel="plugins.render" :addons="addons" @click="toggleNav"></design-plugins>
+          <design-plugins :render-panel="plugins.render" @click="toggleNav"></design-plugins>
         </div>
         <div class="tiny-engine-content-wrap">
           <design-canvas></design-canvas>
@@ -14,7 +14,6 @@
           <design-settings
             :render-panel="settings.render"
             v-show="layoutState.settings.showDesignSettings"
-            :addons="addons"
             ref="right"
           ></design-settings>
         </div>
@@ -78,10 +77,14 @@ export default {
 
     const plugin = {}
     addons.plugins.forEach((item) => {
-      plugin[item.id] = { width: item.options?.width || 300 }
+      if (item.id) {
+        plugin[item.id] = { width: item.options?.width || 300, align: item.options?.align || 'rightTop' }
+      }
     })
     addons.settings.forEach((item) => {
-      plugin[item.id] = { width: item.options?.width || 320 }
+      if (item.id) {
+        plugin[item.id] = { width: item.options?.width || 320, align: item.options?.align || 'rightTop' }
+      }
     })
     localStorage.setItem('plugin', JSON.stringify(plugin))
 

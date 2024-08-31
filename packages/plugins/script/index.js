@@ -18,7 +18,8 @@ export default {
   icon: 'plugin-icon-js',
   align: 'top',
   options: {
-    width: 1000
+    width: 1000,
+    align: 'leftTop'
   },
   api,
   component,

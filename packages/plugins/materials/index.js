@@ -17,7 +17,9 @@ export default {
   title: '物料',
   icon: 'plugin-icon-materials',
   align: 'top',
-  options: {},
+  options: {
+    align: 'leftTop'
+  },
   component,
   api
 }

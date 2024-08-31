@@ -16,6 +16,8 @@ export default {
   id: 'EditorHelp',
   title: '',
   icon: HelpIcon,
-  option: {},
+  options: {
+    align: 'leftBottom'
+  },
   align: 'bottom'
 }
