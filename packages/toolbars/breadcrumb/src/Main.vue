@@ -5,7 +5,6 @@
         <tiny-breadcrumb-item v-for="item in breadcrumbData.slice(0, 2)" :key="item">{{ item }} </tiny-breadcrumb-item>
       </tiny-breadcrumb>
     </div>
-
     <tiny-button
       class="publish"
       v-if="breadcrumbData[0] === CONSTANTS.BLOCKTEXT"
@@ -23,6 +22,7 @@ import { reactive, computed } from 'vue'
 import { Breadcrumb, BreadcrumbItem, Button } from '@opentiny/vue'
 import { useBreadcrumb, useLayout } from '@opentiny/tiny-engine-meta-register'
 import { BlockDeployDialog } from '@opentiny/tiny-engine-common'
+
 export default {
   components: {
     TinyBreadcrumb: Breadcrumb,
@@ -37,7 +37,7 @@ export default {
     }
 
     const { layoutState } = useLayout()
-    const { plugins } = layoutState
+    const { plugins } = layoutState || {}
 
     const state = reactive({
       showDeployBlock: false
@@ -67,6 +67,7 @@ export default {
     })
 
     const open = () => {
+      if (!plugins) return
       plugins.render = breadcrumbData.value[0] === CONSTANTS.PAGETEXT ? PLUGINS_ID.PAGEID : PLUGINS_ID.BLOCKID
     }
 
