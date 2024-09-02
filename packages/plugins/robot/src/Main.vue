@@ -15,7 +15,7 @@
       <tiny-dropdown trigger="click" :show-icon="false">
         <span>
           <span>{{ selectedModel.label }}</span>
-          <icon-chevron-down class="ml8"></icon-chevron-down>
+          <icon-chevron-down class="ml8 arrow-down"></icon-chevron-down>
         </span>
         <template #dropdown>
           <tiny-dropdown-menu popper-class="chat-model-popover" placement="bottom" :visible-arrow="false">
@@ -204,15 +204,14 @@ export default {
     }
 
     const codeRules = `
-    请扮演一名前端开发专家，生成代码时遵从以下几条要求:
-###
-1. 只使用element-ui组件库完成代码编写
-2. 使用vue2技术栈
-3. 回复中只能有一个代码块
-4. el-table标签内不得出现el-table-column
-###
-  `
-
+     我想让你充当 Stackoverflow 的帖子。我将提出与编程有关的问题，你将回答答案是什么。我希望你只回答给定的答案，在没有足够的细节时写出解释。
+     每次回复请遵循以下准则：
+        1. 如果需要展示代码，确保回复中只包含一个代码块。
+        2. 所有代码必须基于 Vue 3 框架编写。
+        3. 所有使用的组件必须来自 TinyVue 组件库，严禁使用 Element UI 等其他第三方组件库或原生组件。例如，想使用输入框组件，应该使用TinyVue组件库中的 \`tiny-input\`;想使用按钮组件，应该使用 TinyVue 组件库中的 \`tiny-button\`。
+        4. 仔细阅读并遵循 [TinyVue 组件库文档](https://opentiny.design/tiny-vue/zh-CN/os-theme/overview) 中的指导，确保代码的准确性和一致性。
+     请根据上述准则，使用 TinyVue 组件库生成高质量的前端代码。
+     `
     // 在每一次发送请求之前，都把引入区块的内容，给放到第一条消息中
     // 为了不污染存储在localstorage里的用户的原始消息，这里进行了简单的对象拷贝
     // 引入区块不存放在localstorage的原因：因为区块是可以变化的，用户可能在同一个会话中，对区块进行了删除和创建。那么存放的数据就不是即时数据了。
@@ -305,7 +304,7 @@ export default {
     const fileInput = ref(null)
     const openFilePicker = () => {
       if (unref(fileInput)) {
-        unref(fileInput).click()
+        unref(fileInput)?.click()
       }
     }
 
@@ -315,9 +314,9 @@ export default {
       const formData = new FormData()
       const foundationModelData = JSON.stringify({
         foundationModel: {
-          manufacturer: selectedModel.value.manufacturer,
-          model: selectedModel.value.value,
-          token: localStorage.getItem(selectedModel.value.localKey)
+          manufacturer: currentModel.manufacturer,
+          model: currentModel.value,
+          token: localStorage.getItem(currentModel.modelKey)
         }
       })
       formData.append('foundationModel', foundationModelData)
@@ -487,6 +486,7 @@ export default {
           message: '切换AI大模型将导致当前会话被清空，重新开启新会话，是否继续？',
           exec() {
             selectedModel.value = model
+            currentModel = model
             endContent()
           }
         })
@@ -635,6 +635,13 @@ export default {
   font-size: 14px;
   margin-bottom: 20px;
   color: var(--ti-lowcode-chat-model-title);
+
+  .arrow-down {
+    margin-left: 5px;
+  }
+}
+.tiny-dropdown .tiny-dropdown__trigger:not(.tiny-button) .tiny-svg {
+  vertical-align: middle;
 }
 .chat-window {
   max-height: 400px;
