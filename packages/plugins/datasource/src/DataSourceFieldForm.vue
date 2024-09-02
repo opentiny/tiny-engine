@@ -4,7 +4,7 @@
       <slot>
         <div class="icon-and-text">
           <div class="field-cell-type">
-            <icon-arrow-down></icon-arrow-down>
+            <svg-icon :name="field.icon" class="type-icon" />
           </div>
           <div class="field-cell-name">
             <span>新字段</span>
@@ -37,7 +37,6 @@
 import { reactive, watchEffect, ref, provide } from 'vue'
 import { Button, Input, FormItem, Form } from '@opentiny/vue'
 import { ButtonGroup, I18nInput } from '@opentiny/tiny-engine-common'
-import { iconArrowDown } from '@opentiny/vue-icon'
 import DataSourceFieldCheck from './DataSourceFieldCheck.vue'
 
 export const formDataInjectionSymbols = Symbol('DataSourceFieldFormData')
@@ -49,7 +48,6 @@ export default {
     TinyInput: Input,
     TinyForm: Form,
     TinyFormItem: FormItem,
-    iconArrowDown: iconArrowDown(),
     I18nInput,
     DataSourceFieldCheck
   },
@@ -192,6 +190,13 @@ export default {
     box-shadow: none;
     justify-content: space-between;
     align-items: center;
+    .tiny-button {
+      width: 40px;
+      padding: 0;
+      min-width: 40px;
+      margin-right: 2px;
+      border: 1px solid var(--ti-lowcode-data-source-color);
+    }
   }
 
   .icon-and-text {

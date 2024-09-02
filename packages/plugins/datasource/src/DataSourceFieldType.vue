@@ -9,9 +9,7 @@
           <span>选择字段类型</span>
         </div>
       </div>
-      <span class="btn">
-        <tiny-button type="text" @click="cancelSelectType">取消</tiny-button>
-      </span>
+      <span class="btn" @click="cancelSelectType"> 取消 </span>
     </div>
     <div class="type-list">
       <div v-for="fieldType in state.fieldTypes" :key="fieldType.name" class="type-item" @click="selectType(fieldType)">
@@ -25,7 +23,6 @@
 <script>
 import { reactive, ref } from 'vue'
 import { iconArrowDown } from '@opentiny/vue-icon'
-import { Button } from '@opentiny/vue'
 import fieldTypes from './config'
 
 let isOpen = ref(false)
@@ -40,7 +37,6 @@ export const close = () => {
 
 export default {
   components: {
-    TinyButton: Button,
     iconArrowDown: iconArrowDown()
   },
   emits: ['cancel', 'select'],
@@ -95,7 +91,6 @@ export default {
     display: flex;
     align-items: center;
     .field-cell-type {
-      width: 20px;
       height: 20px;
       display: flex;
       align-items: center;
@@ -107,6 +102,11 @@ export default {
         margin-left: 5px;
       }
     }
+  }
+  .btn {
+    color: var(--ti-lowcode-data-source-color);
+    font-size: 12px;
+    cursor: pointer;
   }
 }
 
@@ -124,7 +124,7 @@ export default {
     flex-direction: column;
     cursor: pointer;
     background-color: var(--ti-lowcode-data-source-box-bg);
-    border-radius: 4x;
+    border-radius: 4px;
     color: var(--ti-lowcode-datasource-dialog-font-color);
     .type-icon {
       font-size: 20px;

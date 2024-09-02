@@ -73,7 +73,8 @@ export default {
         title: '',
         name: '',
         type: '',
-        format
+        format,
+        icon: ''
       }
     })
 
@@ -93,6 +94,7 @@ export default {
     const selectFieldType = (fieldType) => {
       fieldForm.value.open()
       state.field.type = fieldType.type
+      state.field.icon = fieldType.icon
       state.field.format = format
     }
 

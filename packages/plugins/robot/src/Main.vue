@@ -18,8 +18,8 @@
           </section>
           <header class="chat-title">
             <tiny-dropdown trigger="click" :show-icon="false">
-              <span>
-                <span>{{ selectedModel.label }}</span>
+              <span class="chat-title-dropdown">
+                <span class="chat-title-label">{{ selectedModel.label }}</span>
                 <icon-chevron-down class="ml8"></icon-chevron-down>
               </span>
               <template #dropdown>
@@ -418,7 +418,7 @@ export default {
 .chat-title-icons {
   font-size: 16px;
   height: 16px;
-  margin-bottom: 14px;
+  margin-bottom: 20px;
   svg {
     float: right;
     margin: 0 4px;
@@ -435,14 +435,19 @@ export default {
   left: 28px;
   font-weight: bold;
   color: var(--ti-lowcode-chat-model-text);
-  :deep(.tiny-dropdown) {
+  .chat-title-dropdown {
+    display: flex;
+    align-items: center;
+    height: 24px;
+  }
+  .chat-title-label,
+  .ml8 {
     color: var(--ti-lowcode-chat-model-text);
-    .tiny-dropdown__trigger {
-      .tiny-dropdown__title {
-        font-size: 16px;
-        color: var(--ti-lowcode-chat-model-text);
-      }
-    }
+    font-weight: 700;
+    font-size: 16px;
+  }
+  .ml8 {
+    margin-left: 10px;
   }
 }
 

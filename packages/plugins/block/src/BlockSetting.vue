@@ -7,17 +7,19 @@
     @click="handleClick"
   >
     <template #header>
-      <tiny-button @click="updateBlock">保存 </tiny-button>
-      <tiny-button
-        type="primary"
-        :disabled="globalConfig.dslMode === 'Angular'"
-        class="publish-btn"
-        @click="showDeployBlockDialog"
-        >发布
-      </tiny-button>
-      <svg-button name="text-copy-page" placement="bottom" tips="复制区块"></svg-button>
-      <svg-button name="delete" tips="删除" placement="top" @click="deleteBlock"></svg-button>
-      <close-icon @click="closePanel"></close-icon>
+      <button-group>
+        <tiny-button @click="updateBlock">保存 </tiny-button>
+        <tiny-button
+          type="primary"
+          :disabled="globalConfig.dslMode === 'Angular'"
+          class="publish-btn"
+          @click="showDeployBlockDialog"
+          >发布
+        </tiny-button>
+        <svg-button name="text-copy-page" placement="bottom" tips="复制区块"></svg-button>
+        <svg-button name="delete" tips="删除" placement="top" @click="deleteBlock"></svg-button>
+        <close-icon @click="closePanel"></close-icon>
+      </button-group>
     </template>
     <template #content>
       <tiny-collapse v-model="state.activeName">
@@ -81,7 +83,7 @@ import { reactive, ref, watch, watchEffect, computed } from 'vue'
 import { Button as TinyButton, Collapse as TinyCollapse, CollapseItem as TinyCollapseItem } from '@opentiny/vue'
 import { useModal } from '@opentiny/tiny-engine-meta-register'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
-import { BlockHistoryList, PluginSetting, CloseIcon, SvgButton } from '@opentiny/tiny-engine-common'
+import { BlockHistoryList, PluginSetting, CloseIcon, SvgButton, ButtonGroup } from '@opentiny/tiny-engine-common'
 import { previewBlock } from '@opentiny/tiny-engine-common/js/preview'
 import { LifeCycles } from '@opentiny/tiny-engine-common'
 import BlockEvent from './BlockEvent.vue'
@@ -123,7 +125,8 @@ export default {
     LifeCycles,
     CloseIcon,
     BlockDeployDialog,
-    SvgButton
+    SvgButton,
+    ButtonGroup
   },
   props: {
     modelValue: {
@@ -288,6 +291,9 @@ export default {
 .plugin-block-setting {
   :deep(.plugin-setting-header) {
     border: 0;
+    .button-group {
+      column-gap: 2px;
+    }
     .tiny-button {
       width: 40px;
       padding: 0;
@@ -313,10 +319,6 @@ export default {
   }
   :deep(.plugin-setting-content) {
     padding: 0 0 16px 0;
-  }
-
-  :deep(.icon-wrap) {
-    margin-right: 8px;
   }
 
   :deep(.tiny-col) {
