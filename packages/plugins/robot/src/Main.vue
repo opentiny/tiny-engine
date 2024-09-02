@@ -400,7 +400,7 @@ export default {
         })
         return
       }
-      const realContent = content.trim()
+      const realContent = String(content).trim()
       if (realContent) {
         if (chatWindowOpened.value === false) {
           await resizeChatWindow()
