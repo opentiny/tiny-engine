@@ -41,6 +41,7 @@ export default {
   height: 24px;
   border-radius: 4px;
   line-height: 24px;
+  margin-left: 4px;
 
   &:hover {
     background: var(--ti-lowcode-toolbar-view-active-bg);
@@ -53,7 +54,6 @@ export default {
   .toolbar-list-button {
     padding-top: 4px;
     box-sizing: border-box;
-    height: 24px;
 
     &:hover {
       background-color: var(--ti-lowcode-toolbar-ellipsis-hover-bg);

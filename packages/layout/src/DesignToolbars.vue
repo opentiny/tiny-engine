@@ -88,15 +88,9 @@ export default {
     justify-content: space-between;
     align-items: center;
   }
-  .toolbar-left {
-    margin: 0 1px;
-  }
 
+  .toolbar-left,
   .toolbar-right {
-    margin: 0 6px;
-    margin-right: 24px;
-    column-gap: 6px;
-    align-items: center;
     :deep(.icon) {
       display: inline-flex;
       justify-content: center;
@@ -106,11 +100,33 @@ export default {
       height: 26px;
       border-radius: 4px;
       position: relative;
+      margin-right: 4px;
       svg {
         cursor: pointer;
         font-size: 20px;
         color: var(--ti-lowcode-toolbar-title-color);
       }
+    }
+  }
+
+  .toolbar-left {
+    margin: 0 1px;
+    :deep(.icon) {
+      background: var(--ti-lowcode-toolbar-view-active-bg);
+      svg {
+        font-size: 16px;
+      }
+      &:not(.disabled):hover {
+        background: var(--ti-lowcode-toolbar-left-icon-bg-hover);
+      }
+    }
+  }
+
+  .toolbar-right {
+    margin: 0 6px;
+    margin-right: 24px;
+    align-items: center;
+    :deep(.icon) {
       &:not(.disabled):hover {
         background: var(--ti-lowcode-toolbar-view-active-bg);
       }
@@ -120,6 +136,23 @@ export default {
       &.disabled {
         cursor: not-allowed;
       }
+    }
+    .toolbar-right-content {
+      display: flex;
+      .toolbar-right-item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 2px;
+        .toolbar-right-item-comp {
+          margin-right: 6px;
+        }
+      }
+    }
+
+    .toolbar-right-line {
+      color: var(--ti-lowcode-toolbar-right-line);
+      margin: 0 6px;
     }
     .tiny-locales {
       height: 35px;
@@ -139,6 +172,11 @@ export default {
         }
       }
     }
+  }
+}
+.toolbar-right-content .toolbar-right-item:last-child {
+  .toolbar-right-line {
+    display: none;
   }
 }
 

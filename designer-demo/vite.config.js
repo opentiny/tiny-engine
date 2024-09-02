@@ -11,7 +11,6 @@ export default defineConfig((configEnv) => {
     envDir: './env'
   })
 
-
   const customConfig = {
     envDir: './env',
     publicDir: path.resolve(__dirname, './public'),

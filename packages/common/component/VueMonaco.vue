@@ -74,7 +74,13 @@ export default {
     const initMonaco = (monaco) => {
       emit('editorWillMount', vueMonaco.monaco)
 
-      const options = { ...defaultOptions, ...props, theme: globalMonacoEditorTheme.value }
+      const options = {
+        ...defaultOptions,
+        value: props.value,
+        theme: globalMonacoEditorTheme.value,
+        language: props.language,
+        ...props.options
+      }
 
       if (props.diffEditor) {
         vueMonaco.editor = monaco.editor.createDiffEditor(monacoRef.value, options)

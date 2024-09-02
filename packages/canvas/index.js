@@ -10,7 +10,6 @@
  *
  */
 import { CanvasBreadcrumb } from './breadcrumb'
-export { createRender } from './render'
 
 // meta app
 import CanvasContainer from './container'

@@ -9,7 +9,6 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-
-import { createRender } from '@opentiny/tiny-engine/canvas'
+import { createRender } from '../render'
 
 createRender(window.parent.TinyGlobalConfig)
