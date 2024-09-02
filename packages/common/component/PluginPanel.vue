@@ -21,8 +21,8 @@
       <slot name="content"></slot>
     </div>
 
-    <div class="resizer-right" @mousedown="onMouseDownRight"></div>
-    <div class="resizer-left" @mousedown="onMouseDownLeft"></div>
+    <div class="resizer-right" v-if="isLeftResizer" @mousedown="onMouseDownRight"></div>
+    <div class="resizer-left" v-if="isRightResizer" @mousedown="onMouseDownLeft"></div>
   </div>
 </template>
 
@@ -70,7 +70,7 @@ export default {
   },
   emits: ['close'],
   setup(props, { emit }) {
-    const { getPluginWidth, changePluginWidth } = useLayout()
+    const { getPluginWidth, changePluginWidth, getPluginByLayout } = useLayout()
     const panelState = inject('panelState')
     const closePanel = () => {
       useLayout().closePlugin()
@@ -107,6 +107,11 @@ export default {
     const panelWidth = ref(getPluginWidth(props.fixedName)) // 使用默认宽度
     let startX = 0
     let startWidth = 0
+
+    //滚动条位置
+    const align = ref(getPluginByLayout(props.fixedName))
+    const isLeftResizer = ref(align.value.includes('left'))
+    const isRightResizer = ref(align.value.includes('right'))
 
     const onMouseMoveRight = (event) => {
       const newWidth = startWidth + (event.clientX - startX)
@@ -153,7 +158,9 @@ export default {
       panel,
       panelWidth,
       onMouseDownRight,
-      onMouseDownLeft
+      onMouseDownLeft,
+      isLeftResizer,
+      isRightResizer
     }
   }
 }

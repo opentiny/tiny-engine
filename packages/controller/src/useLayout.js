@@ -170,13 +170,17 @@ export default () => {
   }
   const pluginStorageReactive = useStorage('plugin', plugin)
 
+  //获取插件宽度
   const getPluginWidth = (name) => pluginStorageReactive.value[name]?.width || 300
 
+  //修改插件宽度
   const changePluginWidth = (name, width) => {
     if (Object.prototype.hasOwnProperty.call(pluginStorageReactive.value, name)) {
       pluginStorageReactive.value[name].width = width
     }
   }
+  //获取插件布局
+  const getPluginByLayout = (name) => pluginStorageReactive.value[name]?.align || 'leftTop'
 
   //获取某个布局（左上/左下/右上）的插件名称列表
   const getPluginsByLayout = (layout = 'all') => {
@@ -217,6 +221,7 @@ export default () => {
     changeLeftFixedPanels,
     changeRightFixedPanels,
     getPluginsByLayout,
-    changePluginLayout
+    changePluginLayout,
+    getPluginByLayout
   }
 }

@@ -65,16 +65,4 @@ const addons = {
   settings: [Props, Styles, Events]
 }
 
-const plugin = {}
-addons.plugins.forEach((item) => {
-  plugin[item.id] = item
-})
-addons.settings.forEach((item) => {
-  plugin[item.id] = item
-})
-
-export const getPlugin = (pluginName) => {
-  return plugin[pluginName] || null
-}
-
 export default addons
