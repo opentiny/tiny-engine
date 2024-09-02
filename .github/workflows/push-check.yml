@@ -12,12 +12,13 @@ jobs:
     
     steps:
     - uses: actions/checkout@v4
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: 9
     - uses: actions/setup-node@v4
       with:
         node-version: 18
-        
-    - name: Install pnpm
-      run: npm i -g pnpm
 
     - name: Install dependencies
       run: pnpm i
@@ -33,4 +34,10 @@ jobs:
     - name: Run ESLint
       run: npx eslint ${{steps.get_changed_files.outputs.all_changed_files}}
     - name: Run Build
-      run: pnpm run build:plugin && pnpm run build:alpha
+      run: pnpm run build:plugin && pnpm run build:alpha > build-alpha.log 2>&1
+
+    - name: Upload build logs
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-alpha-log
+        path: build-alpha.log
