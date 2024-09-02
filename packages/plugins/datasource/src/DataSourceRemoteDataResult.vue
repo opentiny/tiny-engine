@@ -1,15 +1,15 @@
 <template>
   <div class="response-data">
-    <div class="operate">
-      <tiny-button plain @click="check">查看已获取的字段</tiny-button>
-      <tiny-button plain @click="copyData">复制代码</tiny-button>
-    </div>
     <div class="resonse-header">
       <div class="life-cycle-alert">
         仅用于方便地设置数据源字段，从接口的响应数据列表中，选一条对象结构的数据，粘贴至下方的编辑器中，点击右上角“保存”，将会读取该对象的字段，并引导设置是否启用字段。
       </div>
     </div>
     <div id="remote-data-editor" class="tor">
+      <div class="operate">
+        <tiny-button plain @click="check">查看已获取的字段</tiny-button>
+        <tiny-button plain @click="copyData">复制代码</tiny-button>
+      </div>
       <monaco-editor ref="editor" :value="state.value" class="monaco-editor" :options="state.options" />
     </div>
   </div>
@@ -94,10 +94,14 @@ export default {
     }
   }
 
+  #remote-data-editor {
+    position: relative;
+  }
+
   .operate {
     position: absolute;
-    right: 20px;
-    top: 32px;
+    right: 8px;
+    top: 8px;
     z-index: 9999;
     .tiny-button {
       border-radius: 4px;
@@ -108,6 +112,8 @@ export default {
   .monaco-editor {
     height: 120px;
     margin-top: 8px;
+    border: 1px solid var(--ti-lowcode-base-gray-101);
+    border-radius: 4px;
   }
 }
 </style>

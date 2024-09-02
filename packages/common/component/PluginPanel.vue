@@ -2,7 +2,9 @@
   <div class="plugin-panel">
     <div class="plugin-panel-header">
       <div class="plugin-panel-title">
-        <span class="title">{{ title }}</span>
+        <span class="title"
+          >{{ title }}<link-button class="link" v-if="isShowDocsIcon" :href="docsUrl"></link-button
+        ></span>
         <close-icon v-if="isCloseLeft" :name="name" @close="closePanel"></close-icon>
       </div>
       <div class="plugin-panel-icon">
@@ -16,10 +18,12 @@
 
 <script>
 import { useLayout } from '@opentiny/tiny-engine-meta-register'
+import LinkButton from './LinkButton.vue'
 import CloseIcon from './CloseIcon.vue'
 
 export default {
   components: {
+    LinkButton,
     CloseIcon
   },
   props: {
@@ -40,6 +44,14 @@ export default {
     name: {
       type: String,
       default: 'cross'
+    },
+    docsUrl: {
+      type: String,
+      default: ''
+    },
+    isShowDocsIcon: {
+      type: Boolean,
+      default: false
     }
   },
   emits: ['close'],
@@ -82,6 +94,11 @@ export default {
       align-items: center;
       .title + .icon-wrap {
         margin-left: 10px;
+      }
+      .title {
+        display: flex;
+        align-items: center;
+        margin-right: 5px;
       }
     }
 

@@ -41,16 +41,9 @@
         <div v-if="isBlockManage && !item.is_published" class="publish-flag">未发布</div>
 
         <div v-if="isBlockManage" class="block-detail">
-          <!-- <tiny-tooltip effect="dark" :content="defaultIconTip" placement="top">
-            <icon-setting
-              class="block-detail-icon"
-              @mouseover.stop="iconSettingMove"
-              @mousedown.stop.prevent="iconClick({ event: $event, item, index })"
-            ></icon-setting>
-          </tiny-tooltip> -->
           <tiny-popover
             placement="bottom-end"
-            width="151"
+            width="120"
             append-to-body
             trigger="manual"
             :modelValue="state.hoverItemId === item.id && state.currentShowMenuId === item.id"
@@ -66,6 +59,7 @@
                 @mousedown.stop.prevent=""
               ></svg-button>
             </template>
+
             <template #default>
               <div class="setting-menu" @mouseover.stop="handleSettingMouseOver" @mouseleave="handleBlockItemLeave">
                 <ul class="list">
@@ -74,10 +68,11 @@
                     @mouseover.stop="iconSettingMove"
                     @mousedown.stop.prevent="iconClick({ event: $event, item, index })"
                   >
+                    <svg-button class="list-item-svg" name="text-source-setting"> </svg-button>
                     <span>设置</span>
                   </li>
                   <li class="list-item" @mousedown.stop.left="blockClick({ event: $event, item, index })">
-                    <span>编辑</span>
+                    <svg-button class="list-item-svg" name="to-edit"> </svg-button><span>编辑</span>
                   </li>
                 </ul>
               </div>
@@ -753,6 +748,9 @@ export default {
     }
     .list-item-icon {
       font-size: 14px;
+    }
+    .list-item-svg:hover {
+      background-color: var(--ti-lowcode-component-block-setting-item-hover-bg);
     }
   }
 }

@@ -1,8 +1,11 @@
 <template>
-  <plugin-panel title="国际化资源" :isCloseLeft="false" class="plugin-panel-i18n">
-    <template #header>
-      <link-button :href="docsUrl"></link-button>
-    </template>
+  <plugin-panel
+    title="国际化资源"
+    :docsUrl="docsUrl"
+    :isShowDocsIcon="true"
+    :isCloseLeft="false"
+    class="plugin-panel-i18n"
+  >
     <template #content>
       <div class="language-search-box">
         <tiny-select v-model="currentSearchType" :options="i18nSearchTypes"></tiny-select>
@@ -122,7 +125,7 @@ import { computed, ref, watchEffect, reactive, onMounted, nextTick, resolveCompo
 import useClipboard from 'vue-clipboard3'
 import { Grid, GridColumn, Input, Popover, Button, FileUpload, Loading, Tooltip, Select } from '@opentiny/vue'
 import { iconLoadingShadow, iconPlus, iconUpload } from '@opentiny/vue-icon'
-import { PluginPanel, LinkButton, SearchEmpty } from '@opentiny/tiny-engine-common'
+import { PluginPanel, SearchEmpty } from '@opentiny/tiny-engine-common'
 import { useTranslate, useApp, useModal, useHelp } from '@opentiny/tiny-engine-meta-register'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
@@ -138,7 +141,6 @@ export default {
     TinyGrid: Grid,
     TinyGridColumn: GridColumn,
     PluginPanel,
-    LinkButton,
     TinySelect: Select,
     TinyFileUpload: FileUpload,
     SearchEmpty,
@@ -655,11 +657,5 @@ export default {
       }
     }
   }
-}
-
-:deep(.help-box) {
-  position: absolute;
-  left: 86px;
-  top: 12px;
 }
 </style>

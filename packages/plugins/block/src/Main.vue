@@ -1,7 +1,13 @@
 <template>
-  <plugin-panel class="block-manage" title="区块管理" :isCloseLeft="false" @close="closePanel">
+  <plugin-panel
+    class="block-manage"
+    title="区块管理"
+    :docsUrl="docsUrl"
+    :isShowDocsIcon="true"
+    :isCloseLeft="false"
+    @close="closePanel"
+  >
     <template #header>
-      <link-button :href="docsUrl"></link-button>
       <svg-button name="add-page" placement="bottom" tips="新建区块" @click="openBlockAdd"></svg-button>
     </template>
     <template #content>
@@ -14,6 +20,8 @@
           filterable
           :filter-method="categoryFilter"
           clearable
+          top-create
+          @top-create-click="createCategory"
           @change="changeCategory"
           @clear="changeCategory"
           @visible-change="handleSelectVisibleChange"
@@ -65,7 +73,6 @@
             </div>
           </tiny-option>
         </tiny-select>
-        <!-- <svg-button class="add-group-btn" tips="新建分类" name="add-page" @click="createCategory"></svg-button> -->
       </div>
       <div class="app-manage-search">
         <tiny-search v-model="state.searchKey" placeholder="搜索">
@@ -119,7 +126,7 @@ import {
   Button as TinyButton
 } from '@opentiny/vue'
 import { IconSearch } from '@opentiny/vue-icon'
-import { PluginPanel, PluginBlockList, SvgButton, SaveNewBlock, LinkButton } from '@opentiny/tiny-engine-common'
+import { PluginPanel, PluginBlockList, SvgButton, SaveNewBlock } from '@opentiny/tiny-engine-common'
 import { useBlock, useModal, useLayout, useCanvas, useHelp } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 import BlockSetting, { openPanel, closePanel } from './BlockSetting.vue'
@@ -180,7 +187,6 @@ export default {
     TinySelect,
     TinyOption,
     SvgButton,
-    LinkButton,
     TinyDropdown,
     TinyDropdownMenu,
     PluginPanel,
@@ -495,12 +501,6 @@ export default {
   .ml8 {
     margin-left: 8px;
   }
-}
-
-:deep(.help-box) {
-  position: absolute;
-  left: 62px;
-  top: 12px;
 }
 :deep(.tiny-button) {
   border-radius: 4px;

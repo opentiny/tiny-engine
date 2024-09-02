@@ -8,7 +8,10 @@
         @mouseenter="showSettingIcon(index)"
       >
         <div class="item-label">
-          {{ item.name }}
+          <div class="item-name">
+            <svg-button name="plugin-icon-data"> </svg-button>
+            {{ item.name }}
+          </div>
           <div class="item-handler">
             <svg-button
               class="set-page"
@@ -160,6 +163,11 @@ export default {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      color: var(--ti-lowcode-base-gray-90);
+      .item-name {
+        display: flex;
+        align-items: center;
+      }
     }
     .item-handler {
       .svg-button {

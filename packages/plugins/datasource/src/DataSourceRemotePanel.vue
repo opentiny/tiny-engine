@@ -298,7 +298,6 @@ export default {
       margin-top: 8px;
     }
     .tabBox {
-      height: 500px;
       box-sizing: border-box;
       overflow-y: scroll;
       :deep(.tiny-tabs.tiny-tabs--button-card .tiny-tabs__item) {

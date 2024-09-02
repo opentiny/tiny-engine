@@ -154,8 +154,8 @@ export default {
           background: var(--ti-lowcode-warning-color-1);
           border-radius: 50%;
           position: absolute;
-          top: -4px;
-          right: -4px;
+          top: 5px;
+          right: 40px;
         }
       }
     }
@@ -166,7 +166,8 @@ export default {
     height: calc(100% - 54px);
 
     & > div {
-      border: 1px solid var(--ti-lowcode-code-edit-content-border-color);
+      border: 1px solid var(--ti-lowcode-base-gray-101);
+      border-radius: 4px;
       height: 100%;
     }
   }
@@ -174,7 +175,7 @@ export default {
 :deep(.help-box) {
   height: auto;
   #help-icon {
-    margin-left: 8px;
+    margin-left: 5px;
   }
 }
 </style>

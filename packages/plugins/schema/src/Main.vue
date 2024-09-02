@@ -192,8 +192,8 @@ export default {
   }
   .source-code-content {
     height: calc(100% - 42px);
-    border: 1px solid var(--ti-lowcode-toolbar-border-color);
-    box-shadow: 0px 0px 4px rgb(0 0 0 / 20%);
+    border: 1px solid var(--ti-lowcode-base-gray-101);
+    border-radius: 4px;
   }
   .code-edit-content {
     height: 100%;
