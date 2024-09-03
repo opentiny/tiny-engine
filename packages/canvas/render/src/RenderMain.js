@@ -17,7 +17,16 @@ import * as TinyVueIcon from '@opentiny/vue-icon'
 import { useBroadcastChannel } from '@vueuse/core'
 import { constants, utils as commonUtils } from '@opentiny/tiny-engine-utils'
 import renderer, { parseData, setConfigure, setController, globalNotify, isStateAccessor } from './render'
-import { getNode as getNodeById, clearNodes, getRoot, setContext, getContext, setCondition, context, setNode } from './context'
+import {
+  getNode as getNodeById,
+  clearNodes,
+  getRoot,
+  setContext,
+  getContext,
+  setCondition,
+  context,
+  setNode
+} from './context'
 import CanvasEmpty from './CanvasEmpty.vue'
 
 const { BROADCAST_CHANNEL } = constants
@@ -347,7 +356,7 @@ const getNode = (id, parent) => (id ? getNodeById(id, parent) : schema)
 
 let canvasRenderer = null
 
-const defaultRenderer = function() {
+const defaultRenderer = function () {
   // 渲染画布增加根节点，与出码和预览保持一致
   const rootChildrenSchema = {
     componentName: 'div',
@@ -371,14 +380,6 @@ const getRenderer = () => canvasRenderer || defaultRenderer
 
 const setRenderer = (fn) => {
   canvasRenderer = fn
-}
-
-let rendererMounted
-
-const getRendererMounted = () => rendererMounted || function() {}
-
-const setRendererMounted = (fn) => {
-  rendererMounted = fn
 }
 
 export default {
@@ -445,7 +446,5 @@ export const api = {
   setGlobalState,
   setNode,
   getRenderer,
-  setRenderer,
-  getRendererMounted,
-  setRendererMounted
+  setRenderer
 }
