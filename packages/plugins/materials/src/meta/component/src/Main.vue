@@ -4,11 +4,16 @@
       <template #prefix> <icon-search /> </template>
     </tiny-search>
     <tiny-collapse v-model="state.activeName" class="lowcode-scrollbar">
-      <tiny-collapse-item v-for="(item, index) in state.components" :key="item.group" :title="item.group" :name="index">
+      <tiny-collapse-item
+        v-for="(item, index) in state.components"
+        :key="item.group"
+        :title="item.label?.[locale] || item.group"
+        :name="index"
+      >
         <ul class="component-group" :style="{ gridTemplateColumns }">
           <template v-for="child in item.children" :key="child.component">
             <canvas-drag-item
-              v-if="!child.hidden && (child.name?.zh_CN || child.name)"
+              v-if="!child.hidden && (child.name?.[locale] || child.name)"
               :data="generateNode({ component: child.snippetName || child.component })"
               @click="componentClick"
             >
@@ -16,8 +21,8 @@
                 <div class="component-item-component">
                   <svg-icon :name="child?.icon?.toLowerCase() || 'row'"></svg-icon>
                 </div>
-                <span class="component-item-name" :title="child.name?.zh_CN || child.name">{{
-                  child.name?.zh_CN || child.name
+                <span class="component-item-name" :title="child.name?.[locale] || child.name">{{
+                  child.name?.[locale] || child.name
                 }}</span>
               </li>
             </canvas-drag-item>
@@ -33,6 +38,7 @@
 import { inject, onMounted, reactive, ref } from 'vue'
 import { Collapse, CollapseItem, Search } from '@opentiny/vue'
 import { SearchEmpty, CanvasDragItem } from '@opentiny/tiny-engine-common'
+import i18n from '@opentiny/tiny-engine-common/js/i18n'
 import { iconSearch } from '@opentiny/vue-icon'
 import { useMaterial, useCanvas } from '@opentiny/tiny-engine-meta-register'
 
@@ -52,6 +58,7 @@ export default {
     const gridTemplateColumns = ref(COMPONENT_PANEL_COLUMNS)
     const panelState = inject('panelState', {})
     const { components } = materialState
+    const { locale } = i18n.global
 
     const fetchComponents = (components, name) => {
       if (!name) {
@@ -63,7 +70,7 @@ export default {
         const children = []
 
         component.children.forEach((child) => {
-          if (child.name?.zh_CN?.toLowerCase().indexOf(name.toLowerCase()) > -1) {
+          if (child.name?.[locale.value]?.toLowerCase().indexOf(name.toLowerCase()) > -1) {
             children.push(child)
           }
         })
@@ -108,6 +115,7 @@ export default {
     })
 
     return {
+      locale,
       gridTemplateColumns,
       state,
       change,
