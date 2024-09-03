@@ -26,7 +26,7 @@ export const META_APP = {
   Clean: 'engine.toolbars.clean',
   Refresh: 'engine.toolbars.refresh',
   Save: 'engine.toolbars.save',
-  GenerateVue: 'engine.toolbars.generate-vue',
+  GenerateCode: 'engine.toolbars.generate-code',
   Preview: 'engine.toolbars.preview',
   RedoUndo: 'engine.toolbars.redoundo',
   Fullscreen: 'engine.toolbars.fullscreen',
