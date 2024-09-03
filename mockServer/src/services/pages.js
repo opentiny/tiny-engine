@@ -78,6 +78,19 @@ export default class PageService {
     return getResponseData(result)
   }
 
+  async createBatch(paramsArray) {
+    const pageDataArray = paramsArray.map((params) => {
+      const model = params.isPage ? this.pageModel : this.folderModel
+      return { ...model, ...params }
+    })
+
+    const results = await this.db.insertAsync(pageDataArray)
+
+    await Promise.all(results.map((result) => this.db.updateAsync({ _id: result._id }, { $set: { id: result._id } })))
+
+    return getResponseData(results)
+  }
+
   async update(id, params) {
     await this.db.updateAsync({ _id: id }, { $set: params })
     const result = await this.db.findOneAsync({ _id: id })

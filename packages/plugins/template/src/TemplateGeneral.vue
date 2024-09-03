@@ -1,8 +1,9 @@
 <template>
   <div class="general-config">
     <tiny-form v-if="type !== 'generate'" ref="generalForm" :model="templateSettingState.currentTemplateData"
-      :rules="templateRules" label-width="120px" validate-type="text" :inline-message="true" :label-align="true"
-      label-position="left" class="general-config-form">
+      :rules="templateSettingState.currentTemplateData.type === 'template' ? templateRules : categoryRules"
+      label-width="120px" validate-type="text" :inline-message="true" :label-align="true" label-position="left"
+      class="general-config-form">
       <tiny-form-item v-if="type === 'add'" prop="type" label="新增" class="form-item-page-type">
         <tiny-radio v-model="templateSettingState.currentTemplateData.type" class="page-type-radio" label="category">
           模板类别
@@ -23,9 +24,10 @@
     </tiny-form>
     <div v-else>
       <p>请勾选模版生成页面</p>
-      <tiny-tree :props="{ children: 'children', label: 'name' }" ref="treeRef" show-checkbox check-strictly
+      <tiny-tree :props="{ children: 'children', label: 'name' }" ref="treeRef" show-checkbox :check-strictly="false"
         :data="treeData" node-key="id" current-node-key="1-1" default-expand-all>
       </tiny-tree>
+      <tiny-button class="generate-page-btn" type="primary" @click="generatePage">生成页面</tiny-button>
     </div>
   </div>
 </template>
@@ -33,7 +35,12 @@
 <script lang="jsx">
 import { ref, computed, watchEffect } from 'vue'
 import { Form, FormItem, Input, Select, Radio, Tree } from '@opentiny/vue'
-import { useTemplate } from '@opentiny/tiny-engine-controller'
+import { useTemplate, usePage, useApp, useNotify } from '@opentiny/tiny-engine-controller'
+import { constants } from '@opentiny/tiny-engine-utils'
+import { Button } from '@opentiny/vue'
+import { handleBatchCreatePage } from '@opentiny/tiny-engine-controller/js/http'
+import { REGEXP_PAGE_NAME } from '@opentiny/tiny-engine-controller/js/verification'
+
 
 export default {
   components: {
@@ -42,7 +49,8 @@ export default {
     TinyInput: Input,
     TinySelect: Select,
     TinyRadio: Radio,
-    TinyTree: Tree
+    TinyTree: Tree,
+    TinyButton: Button
   },
   props: {
     modelValue: {
@@ -59,6 +67,11 @@ export default {
     const ROOT_ID = templateSettingState.ROOT_ID
     const oldParentId = ref(templateSettingState.currentTemplateData.parentId)
 
+    const treeRef = ref(null)
+    const { DEFAULT_PAGE, STATIC_PAGE_GROUP_ID, pageSettingState } = usePage()
+    const { COMPONENT_NAME } = constants
+    const { appInfoState } = useApp()
+
     watchEffect(() => {
       oldParentId.value = templateSettingState.oldParentId
     })
@@ -68,13 +81,21 @@ export default {
     const templateRules = {
       name: [
         { required: true, message: '请输入名称' },
-        // {
-        //   pattern: REGEXP_FOLDER_NAME,
-        //   message: '只允许包含英文字母、数字、下横线_、中横线-, 且以英文字母开头'
-        // },
+        {
+          pattern: REGEXP_PAGE_NAME,
+          message: '只允许包含英文字母，且为大写开头驼峰格式, 如DemoPage'
+        },
         { min: 3, max: 25, message: '长度在 3 到 25 个字符' }
       ],
 
+      type: [{ required: true, message: '必须选择新增类型' }]
+    }
+
+    const categoryRules = {
+      name: [
+        { required: true, message: '请输入名称' },
+        { min: 2, max: 25, message: '长度在 2 到 25 个字符' }
+      ],
       type: [{ required: true, message: '必须选择新增类型' }]
     }
 
@@ -142,15 +163,65 @@ export default {
       oldParentId.value = value.id
     }
 
+    const transTemplateToPage = (template) => {
+      const { page_content, ...other } = DEFAULT_PAGE
+      const createParams = {
+        ...other,
+        page_content: {
+          ...page_content,
+          ...template.template_content,
+          componentName: COMPONENT_NAME.Page,
+          fileName: template.template_content.fileName
+        },
+        app: appInfoState.selectedId,
+        isPage: true,
+        parentId: STATIC_PAGE_GROUP_ID + '',
+        name: template.name,
+        route: template.name.toLowerCase()
+      }
+
+      if (createParams.id) {
+        delete createParams.id
+        delete createParams._id
+      }
+
+      return createParams
+    }
+
+    const generatePage = () => {
+      const checkedNodes = treeRef.value.getCheckedNodes()
+      const templates = checkedNodes.filter((node) => node.isTemplate)
+      const pagesArr = templates.map((template) => transTemplateToPage(template))
+
+      handleBatchCreatePage(pagesArr)
+        .then(() => {
+          useNotify({
+            type: 'success',
+            message: '生成页面成功，请去页面管理中查看!'
+          })
+          pageSettingState.updateTreeData()
+        })
+        .catch((err) => {
+          useNotify({
+            type: 'error',
+            title: '生成页面失败',
+            message: JSON.stringify(err?.message || err)
+          })
+        })
+    }
+
 
     return {
       templateRules,
+      categoryRules,
       templateSettingState,
       generalForm,
       validGeneralForm,
       treeFolderOp,
       changeParentForderId,
-      treeData
+      treeData,
+      treeRef,
+      generatePage
     }
   }
 }
@@ -209,6 +280,10 @@ export default {
       color: var(--ti-lowcode-page-manage-btn-text-color);
     }
   }
+}
+
+.generate-page-btn {
+  margin-top: 20px;
 }
 </style>
 <style lang="less">
