@@ -1,5 +1,5 @@
 {
-  "components": {
+  "component": {
     "icon": "Box",
     "name": {
       "zh_CN": "CanvasCol"

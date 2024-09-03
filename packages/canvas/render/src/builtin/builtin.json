@@ -3,446 +3,444 @@
     "materials": {
       "components": [
         {
-          "group": "内置组件",
-          "children": [
-            {
-              "icon": "Box",
-              "name": {
-                "zh_CN": "Box"
-              },
-              "component": "div",
-              "schema": {
-                "slots": {},
-                "properties": [
-                  {
-                    "label": {
-                      "zh_CN": "基础信息"
-                    },
-                    "description": {
-                      "zh_CN": "基础信息"
-                    },
-                    "collapse": {
-                      "number": 6,
-                      "text": {
-                        "zh_CN": "显示更多"
-                      }
-                    },
-                    "content": []
-                  }
-                ],
-                "events": {
-                  "onClick": {
-                    "label": {
-                      "zh_CN": "点击事件"
-                    },
-                    "description": {
-                      "zh_CN": "点击时触发的回调函数"
-                    },
-                    "type": "event",
-                    "functionInfo": {
-                      "params": [],
-                      "returns": {}
-                    },
-                    "defaultValue": ""
+          "icon": "Box",
+          "name": {
+            "zh_CN": "Box"
+          },
+          "component": "div",
+          "schema": {
+            "slots": {},
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "collapse": {
+                  "number": 6,
+                  "text": {
+                    "zh_CN": "显示更多"
                   }
                 },
-                "shortcuts": {
-                  "properties": []
+                "content": []
+              }
+            ],
+            "events": {
+              "onClick": {
+                "label": {
+                  "zh_CN": "点击事件"
                 },
-                "contentMenu": {
-                  "actions": []
-                }
-              },
-              "configure": {
-                "loop": true,
-                "isContainer": true,
-                "nestingRule": {
-                  "childWhitelist": [],
-                  "descendantBlacklist": []
-                }
+                "description": {
+                  "zh_CN": "点击时触发的回调函数"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [],
+                  "returns": {}
+                },
+                "defaultValue": ""
               }
             },
-            {
-              "icon": "slot",
-              "name": {
-                "zh_CN": "Slot"
-              },
-              "component": "Slot",
-              "schema": {
-                "properties": [
-                  {
-                    "label": {
-                      "zh_CN": "基础信息"
-                    },
-                    "description": {
-                      "zh_CN": "基础信息"
-                    },
-                    "collapse": {
-                      "number": 6,
-                      "text": {
-                        "zh_CN": "显示更多"
-                      }
-                    },
-                    "content": [
-                      {
-                        "property": "name",
-                        "type": "String",
-                        "label": {
-                          "text": {
-                            "zh_CN": "插槽名称"
-                          }
-                        },
-                        "cols": 12,
-                        "widget": {
-                          "component": "InputConfigurator",
-                          "props": {}
-                        }
-                      },
-                      {
-                        "property": "params",
-                        "type": "String",
-                        "defaultValue": "",
-                        "label": {
-                          "text": {
-                            "zh_CN": "作用域参数"
-                          }
-                        },
-                        "widget": {
-                          "component": "CodeConfigurator",
-                          "props": {
-                            "language": "json",
-                            "tips": {
-                              "title": { "zh_CN": "提示：数据为数组类型" },
-                              "demo": {
-                                "zh_CN": "示例：\n[\n  {\n    \"name\": \"text\",\n    \"value\": {\n      \"type\": \"JSExpression\",\n      \"value\": \"this.state.greetingMessage\"\n    }\n  },\n  {\n    \"name\": \"count\",\n    \"value\": 1\n  }\n]"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    ]
-                  }
-                ],
-                "events": {},
-                "shortcuts": {
-                  "properties": []
-                },
-                "contentMenu": {
-                  "actions": []
-                }
-              },
-              "configure": {
-                "isContainer": true
-              }
+            "shortcuts": {
+              "properties": []
             },
-            {
-              "icon": "Collection",
-              "name": {
-                "zh_CN": "Collection"
-              },
-              "component": "Collection",
-              "schema": {
-                "slots": {},
-                "properties": [
-                  {
-                    "label": {
-                      "zh_CN": "基础信息"
-                    },
-                    "description": {
-                      "zh_CN": "基础信息"
-                    },
-                    "collapse": {
-                      "number": 6,
-                      "text": {
-                        "zh_CN": "显示更多"
-                      }
-                    },
-                    "content": [
-                      {
-                        "property": "condition",
-                        "type": "Boolean",
-                        "defaultValue": true,
-                        "label": {
-                          "text": {
-                            "zh_CN": "是否渲染"
-                          }
-                        },
-                        "cols": 12,
-                        "rules": [],
-                        "widget": {
-                          "component": "SwitchConfigurator",
-                          "props": {}
-                        }
-                      },
-                      {
-                        "property": "style",
-                        "type": "String",
-                        "defaultValue": "",
-                        "label": {
-                          "text": {
-                            "zh_CN": "样式"
-                          }
-                        },
-                        "cols": 12,
-                        "rules": [],
-                        "widget": {
-                          "component": "CodeConfigurator",
-                          "props": {}
-                        }
-                      },
-                      {
-                        "property": "dataSource",
-                        "type": "String",
-                        "defaultValue": "",
-                        "bindState": false,
-                        "label": {
-                          "text": {
-                            "zh_CN": "数据源"
-                          }
-                        },
-                        "cols": 12,
-                        "rules": [],
-                        "widget": {
-                          "component": "CollectionConfigurator",
-                          "props": {}
-                        }
-                      }
-                    ]
-                  }
-                ],
-                "events": {},
-                "shortcuts": {
-                  "properties": []
-                },
-                "contentMenu": {
-                  "actions": []
-                }
-              },
-              "configure": {
-                "isContainer": true
-              }
-            },
-            {
-              "icon": "Text",
-              "name": {
-                "zh_CN": "Text"
-              },
-              "component": "Text",
-              "schema": {
-                "properties": [
-                  {
-                    "label": {
-                      "zh_CN": "基础信息"
-                    },
-                    "description": {
-                      "zh_CN": "基础信息"
-                    },
-                    "collapse": {
-                      "number": 6,
-                      "text": {
-                        "zh_CN": "显示更多"
-                      }
-                    },
-                    "content": [
-                      {
-                        "property": "text",
-                        "type": "String",
-                        "defaultValue": "TinyEngine 前端可视化设计器，为设计器开发者提供定制服务，在线构建出自己专属的设计器。",
-                        "label": {
-                          "text": {
-                            "zh_CN": "文本内容"
-                          }
-                        },
-                        "cols": 12,
-                        "rules": [],
-                        "widget": {
-                          "component": "InputConfigurator",
-                          "props": {
-                            "type": "textarea",
-                            "autosize": true
-                          }
-                        }
-                      }
-                    ]
-                  }
-                ],
-                "events": {
-                  "onClick": {
-                    "label": {
-                      "zh_CN": "点击事件"
-                    },
-                    "description": {
-                      "zh_CN": "点击时触发的回调函数"
-                    },
-                    "type": "event",
-                    "functionInfo": {
-                      "params": [],
-                      "returns": {}
-                    },
-                    "defaultValue": ""
-                  }
-                },
-                "shortcuts": {
-                  "properties": ["text"]
-                },
-                "contentMenu": {
-                  "actions": []
-                }
-              },
-              "configure": {
-                "loop": true
-              }
-            },
-            {
-              "icon": "icon",
-              "name": {
-                "zh_CN": "Icon"
-              },
-              "component": "Icon",
-              "container": false,
-              "schema": {
-                "properties": [
-                  {
-                    "label": {
-                      "zh_CN": "基础信息"
-                    },
-                    "description": {
-                      "zh_CN": "基础信息"
-                    },
-                    "collapse": {
-                      "number": 6,
-                      "text": {
-                        "zh_CN": "显示更多"
-                      }
-                    },
-                    "content": [
-                      {
-                        "property": "name",
-                        "type": "String",
-                        "defaultValue": "IconDel",
-                        "bindState": true,
-                        "label": {
-                          "text": {
-                            "zh_CN": "图标类型"
-                          }
-                        },
-                        "cols": 12,
-                        "rules": [],
-                        "widget": {
-                          "component": "SelectIconConfigurator",
-                          "props": {}
-                        }
-                      }
-                    ]
-                  }
-                ],
-                "events": {
-                  "onClick": {
-                    "label": {
-                      "zh_CN": "点击事件"
-                    },
-                    "description": {
-                      "zh_CN": "点击时触发的回调函数"
-                    },
-                    "type": "event",
-                    "functionInfo": {
-                      "params": [],
-                      "returns": {}
-                    },
-                    "defaultValue": ""
-                  }
-                },
-                "shortcuts": {
-                  "properties": ["name"]
-                },
-                "contentMenu": {
-                  "actions": []
-                }
-              },
-              "configure": {
-                "loop": true
-              }
-            },
-            {
-              "icon": "Image",
-              "name": {
-                "zh_CN": "Img"
-              },
-              "component": "Img",
-              "container": false,
-              "schema": {
-                "properties": [
-                  {
-                    "label": {
-                      "zh_CN": "基础信息"
-                    },
-                    "description": {
-                      "zh_CN": "基础信息"
-                    },
-                    "collapse": {
-                      "number": 6,
-                      "text": {
-                        "zh_CN": "显示更多"
-                      }
-                    },
-                    "content": [
-                      {
-                        "property": "src",
-                        "type": "String",
-                        "defaultValue": "",
-                        "bindState": true,
-                        "label": {
-                          "text": {
-                            "zh_CN": "src路径"
-                          }
-                        },
-                        "cols": 12,
-                        "rules": [],
-                        "widget": {
-                          "component": "InputConfigurator",
-                          "props": {}
-                        }
-                      }
-                    ]
-                  }
-                ],
-                "events": {
-                  "onClick": {
-                    "label": {
-                      "zh_CN": "点击事件"
-                    },
-                    "description": {
-                      "zh_CN": "点击时触发的回调函数"
-                    },
-                    "type": "event",
-                    "functionInfo": {
-                      "params": [],
-                      "returns": {}
-                    },
-                    "defaultValue": ""
-                  }
-                },
-                "shortcuts": {
-                  "properties": ["src"]
-                },
-                "contentMenu": {
-                  "actions": []
-                }
-              },
-              "configure": {
-                "loop": true
-              }
+            "contentMenu": {
+              "actions": []
             }
-          ]
+          },
+          "configure": {
+            "loop": true,
+            "isContainer": true,
+            "nestingRule": {
+              "childWhitelist": [],
+              "descendantBlacklist": []
+            }
+          }
+        },
+        {
+          "icon": "slot",
+          "name": {
+            "zh_CN": "Slot"
+          },
+          "component": "Slot",
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "collapse": {
+                  "number": 6,
+                  "text": {
+                    "zh_CN": "显示更多"
+                  }
+                },
+                "content": [
+                  {
+                    "property": "name",
+                    "type": "String",
+                    "label": {
+                      "text": {
+                        "zh_CN": "插槽名称"
+                      }
+                    },
+                    "cols": 12,
+                    "widget": {
+                      "component": "InputConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "params",
+                    "type": "String",
+                    "defaultValue": "",
+                    "label": {
+                      "text": {
+                        "zh_CN": "作用域参数"
+                      }
+                    },
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json",
+                        "tips": {
+                          "title": { "zh_CN": "提示：数据为数组类型" },
+                          "demo": {
+                            "zh_CN": "示例：\n[\n  {\n    \"name\": \"text\",\n    \"value\": {\n      \"type\": \"JSExpression\",\n      \"value\": \"this.state.greetingMessage\"\n    }\n  },\n  {\n    \"name\": \"count\",\n    \"value\": 1\n  }\n]"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            ],
+            "events": {},
+            "shortcuts": {
+              "properties": []
+            },
+            "contentMenu": {
+              "actions": []
+            }
+          },
+          "configure": {
+            "isContainer": true
+          }
+        },
+        {
+          "icon": "Collection",
+          "name": {
+            "zh_CN": "Collection"
+          },
+          "component": "Collection",
+          "schema": {
+            "slots": {},
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "collapse": {
+                  "number": 6,
+                  "text": {
+                    "zh_CN": "显示更多"
+                  }
+                },
+                "content": [
+                  {
+                    "property": "condition",
+                    "type": "Boolean",
+                    "defaultValue": true,
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否渲染"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "widget": {
+                      "component": "SwitchConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "style",
+                    "type": "String",
+                    "defaultValue": "",
+                    "label": {
+                      "text": {
+                        "zh_CN": "样式"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "dataSource",
+                    "type": "String",
+                    "defaultValue": "",
+                    "bindState": false,
+                    "label": {
+                      "text": {
+                        "zh_CN": "数据源"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "widget": {
+                      "component": "CollectionConfigurator",
+                      "props": {}
+                    }
+                  }
+                ]
+              }
+            ],
+            "events": {},
+            "shortcuts": {
+              "properties": []
+            },
+            "contentMenu": {
+              "actions": []
+            }
+          },
+          "configure": {
+            "isContainer": true
+          }
+        },
+        {
+          "icon": "Text",
+          "name": {
+            "zh_CN": "Text"
+          },
+          "component": "Text",
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "collapse": {
+                  "number": 6,
+                  "text": {
+                    "zh_CN": "显示更多"
+                  }
+                },
+                "content": [
+                  {
+                    "property": "text",
+                    "type": "String",
+                    "defaultValue": "TinyEngine 前端可视化设计器，为设计器开发者提供定制服务，在线构建出自己专属的设计器。",
+                    "label": {
+                      "text": {
+                        "zh_CN": "文本内容"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "widget": {
+                      "component": "InputConfigurator",
+                      "props": {
+                        "type": "textarea",
+                        "autosize": true
+                      }
+                    }
+                  }
+                ]
+              }
+            ],
+            "events": {
+              "onClick": {
+                "label": {
+                  "zh_CN": "点击事件"
+                },
+                "description": {
+                  "zh_CN": "点击时触发的回调函数"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [],
+                  "returns": {}
+                },
+                "defaultValue": ""
+              }
+            },
+            "shortcuts": {
+              "properties": ["text"]
+            },
+            "contentMenu": {
+              "actions": []
+            }
+          },
+          "configure": {
+            "loop": true
+          }
+        },
+        {
+          "icon": "icon",
+          "name": {
+            "zh_CN": "Icon"
+          },
+          "component": "Icon",
+          "container": false,
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "collapse": {
+                  "number": 6,
+                  "text": {
+                    "zh_CN": "显示更多"
+                  }
+                },
+                "content": [
+                  {
+                    "property": "name",
+                    "type": "String",
+                    "defaultValue": "IconDel",
+                    "bindState": true,
+                    "label": {
+                      "text": {
+                        "zh_CN": "图标类型"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "widget": {
+                      "component": "SelectIconConfigurator",
+                      "props": {}
+                    }
+                  }
+                ]
+              }
+            ],
+            "events": {
+              "onClick": {
+                "label": {
+                  "zh_CN": "点击事件"
+                },
+                "description": {
+                  "zh_CN": "点击时触发的回调函数"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [],
+                  "returns": {}
+                },
+                "defaultValue": ""
+              }
+            },
+            "shortcuts": {
+              "properties": ["name"]
+            },
+            "contentMenu": {
+              "actions": []
+            }
+          },
+          "configure": {
+            "loop": true
+          }
+        },
+        {
+          "icon": "Image",
+          "name": {
+            "zh_CN": "Img"
+          },
+          "component": "Img",
+          "container": false,
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "collapse": {
+                  "number": 6,
+                  "text": {
+                    "zh_CN": "显示更多"
+                  }
+                },
+                "content": [
+                  {
+                    "property": "src",
+                    "type": "String",
+                    "defaultValue": "",
+                    "bindState": true,
+                    "label": {
+                      "text": {
+                        "zh_CN": "src路径"
+                      }
+                    },
+                    "cols": 12,
+                    "rules": [],
+                    "widget": {
+                      "component": "InputConfigurator",
+                      "props": {}
+                    }
+                  }
+                ]
+              }
+            ],
+            "events": {
+              "onClick": {
+                "label": {
+                  "zh_CN": "点击事件"
+                },
+                "description": {
+                  "zh_CN": "点击时触发的回调函数"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [],
+                  "returns": {}
+                },
+                "defaultValue": ""
+              }
+            },
+            "shortcuts": {
+              "properties": ["src"]
+            },
+            "contentMenu": {
+              "actions": []
+            }
+          },
+          "configure": {
+            "loop": true
+          }
         }
       ],
       "snippets": [
         {
-          "group": "内置组件",
+          "group": "layout",
+          "label": {
+            "zh_CN": "布局与容器"
+          },
           "children": [
             {
               "name": {
-                "zh_CN": "Box"
+                "zh_CN": "盒子容器"
               },
               "screenshot": "",
               "snippetName": "Box",
@@ -451,34 +449,18 @@
                 "componentName": "div",
                 "props": {}
               }
-            },
+            }
+          ]
+        },
+        {
+          "group": "basic",
+          "label": {
+            "zh_CN": "基础元素"
+          },
+          "children": [
             {
               "name": {
-                "zh_CN": "Slot"
-              },
-              "screenshot": "",
-              "snippetName": "Slot",
-              "icon": "slot",
-              "schema": {
-                "componentName": "Slot",
-                "props": {}
-              }
-            },
-            {
-              "name": {
-                "zh_CN": "Collection"
-              },
-              "screenshot": "",
-              "snippetName": "Collection",
-              "icon": "Collection",
-              "schema": {
-                "componentName": "Collection",
-                "props": {}
-              }
-            },
-            {
-              "name": {
-                "zh_CN": "Text"
+                "zh_CN": "文本"
               },
               "screenshot": "",
               "snippetName": "Text",
@@ -492,7 +474,7 @@
             },
             {
               "name": {
-                "zh_CN": "Icon"
+                "zh_CN": "图标"
               },
               "screenshot": "",
               "snippetName": "Icon",
@@ -506,7 +488,7 @@
             },
             {
               "name": {
-                "zh_CN": "Img"
+                "zh_CN": "图片"
               },
               "screenshot": "",
               "snippetName": "Img",
@@ -516,6 +498,38 @@
                 "props": {
                   "src": "https://tinyengine-assets.obs.cn-north-4.myhuaweicloud.com/files/designer-default-icon.jpg"
                 }
+              }
+            }
+          ]
+        },
+        {
+          "group": "advanced",
+          "label": {
+            "zh_CN": "高级元素"
+          },
+          "children": [
+            {
+              "name": {
+                "zh_CN": "插槽"
+              },
+              "screenshot": "",
+              "snippetName": "Slot",
+              "icon": "slot",
+              "schema": {
+                "componentName": "Slot",
+                "props": {}
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "数据源容器"
+              },
+              "screenshot": "",
+              "snippetName": "Collection",
+              "icon": "Collection",
+              "schema": {
+                "componentName": "Collection",
+                "props": {}
               }
             }
           ]

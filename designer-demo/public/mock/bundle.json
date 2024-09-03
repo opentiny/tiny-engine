@@ -13074,170 +13074,96 @@
       "blocks": [],
       "snippets": [
         {
-          "group": "element-plus",
+          "group": "layout",
+          "label": {
+            "zh_CN": "布局与容器"
+          },
           "children": [
             {
               "name": {
-                "zh_CN": "输入框"
+                "zh_CN": "栅格布局"
               },
-              "icon": "input",
+              "icon": "row",
               "screenshot": "",
-              "snippetName": "ElInput",
-              "schema": {}
-            },
-            {
-              "name": {
-                "zh_CN": "按钮"
-              },
-              "icon": "button",
-              "screenshot": "",
-              "snippetName": "ElButton",
+              "snippetName": "TinyLayout",
               "schema": {
+                "componentName": "TinyLayout",
+                "props": {},
                 "children": [
                   {
-                    "componentName": "Text",
+                    "componentName": "TinyRow",
                     "props": {
-                      "text": "按钮文本"
-                    }
-                  }
-                ]
-              }
-            },
-            {
-              "name": {
-                "zh_CN": "表单"
-              },
-              "icon": "form",
-              "screenshot": "",
-              "snippetName": "ElForm",
-              "schema": {
-                "children": [
-                  {
-                    "componentName": "ElFormItem",
-                    "props": {
-                      "label": "账号",
-                      "prop": "account"
+                      "style": "padding: 10px;"
                     },
                     "children": [
                       {
-                        "componentName": "ElInput",
+                        "componentName": "TinyCol",
                         "props": {
-                          "modelValue": "",
-                          "placeholder": "请输入账号"
+                          "span": 3
                         }
-                      }
-                    ]
-                  },
-                  {
-                    "componentName": "ElFormItem",
-                    "props": {
-                      "label": "密码",
-                      "prop": "password"
-                    },
-                    "children": [
-                      {
-                        "componentName": "ElInput",
-                        "props": {
-                          "modelValue": "",
-                          "placeholder": "请输入密码",
-                          "type": "password"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "componentName": "ElFormItem",
-                    "props": {},
-                    "children": [
-                      {
-                        "componentName": "ElButton",
-                        "props": {
-                          "type": "primary",
-                          "style": "margin-right: 10px"
-                        },
-                        "children": [
-                          {
-                            "componentName": "Text",
-                            "props": {
-                              "text": "提交"
-                            }
-                          }
-                        ]
                       },
                       {
-                        "componentName": "ElButton",
+                        "componentName": "TinyCol",
                         "props": {
-                          "type": "primary"
-                        },
-                        "children": [
-                          {
-                            "componentName": "Text",
-                            "props": {
-                              "text": "重置"
-                            }
-                          }
-                        ]
+                          "span": 3
+                        }
+                      },
+                      {
+                        "componentName": "TinyCol",
+                        "props": {
+                          "span": 3
+                        }
+                      },
+                      {
+                        "componentName": "TinyCol",
+                        "props": {
+                          "span": 3
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "componentName": "TinyRow",
+                    "props": {
+                      "style": "padding: 10px;"
+                    },
+                    "children": [
+                      {
+                        "componentName": "TinyCol",
+                        "props": {
+                          "span": 3
+                        }
+                      },
+                      {
+                        "componentName": "TinyCol",
+                        "props": {
+                          "span": 3
+                        }
+                      },
+                      {
+                        "componentName": "TinyCol",
+                        "props": {
+                          "span": 3
+                        }
+                      },
+                      {
+                        "componentName": "TinyCol",
+                        "props": {
+                          "span": 3
+                        }
                       }
                     ]
                   }
                 ]
-              }
-            },
-            {
-              "name": {
-                "zh_CN": "表格"
-              },
-              "icon": "grid",
-              "screenshot": "",
-              "snippetName": "ElTable",
-              "schema": {
-                "props": {
-                  "data": [
-                    {
-                      "date": "2016-05-03",
-                      "name": "Tom",
-                      "address": "No. 189, Grove St, Los Angeles"
-                    },
-                    {
-                      "date": "2016-05-02",
-                      "name": "Tom",
-                      "address": "No. 189, Grove St, Los Angeles"
-                    },
-                    {
-                      "date": "2016-05-04",
-                      "name": "Tom",
-                      "address": "No. 189, Grove St, Los Angeles"
-                    },
-                    {
-                      "date": "2016-05-01",
-                      "name": "Tom",
-                      "address": "No. 189, Grove St, Los Angeles"
-                    }
-                  ],
-                  "columns": [
-                    {
-                      "type": "index"
-                    },
-                    {
-                      "label": "Date",
-                      "prop": "date"
-                    },
-                    {
-                      "label": "Name",
-                      "prop": "name"
-                    },
-                    {
-                      "label": "Address",
-                      "prop": "address"
-                    }
-                  ]
-                }
               }
             }
           ]
         },
         {
-          "group": "html",
+          "group": "basic",
+          "label": {
+            "zh_CN": "基础元素"
+          },
           "children": [
             {
               "name": {
@@ -13287,21 +13213,6 @@
             },
             {
               "name": {
-                "zh_CN": "输入框"
-              },
-              "icon": "input",
-              "screenshot": "",
-              "snippetName": "input",
-              "schema": {
-                "componentName": "input",
-                "props": {
-                  "type": "text",
-                  "placeholder": "请输入"
-                }
-              }
-            },
-            {
-              "name": {
                 "zh_CN": "视频"
               },
               "icon": "video",
@@ -13319,170 +13230,111 @@
             },
             {
               "name": {
-                "zh_CN": "图片"
+                "zh_CN": "按钮"
               },
-              "icon": "Image",
+              "icon": "button",
               "screenshot": "",
-              "snippetName": "img",
+              "snippetName": "TinyButton",
               "schema": {
-                "componentName": "img",
+                "componentName": "TinyButton",
                 "props": {
-                  "src": "img/webNova.jpg",
-                  "width": "200",
-                  "height": "100"
+                  "text": "按钮文案"
                 }
               }
             },
             {
               "name": {
-                "zh_CN": "按钮"
+                "zh_CN": "按钮组"
               },
-              "icon": "button",
+              "icon": "buttons",
+              "snippetName": "TinyButtons",
               "screenshot": "",
-              "snippetName": "button",
               "schema": {
-                "componentName": "button",
+                "componentName": "div",
                 "props": {},
                 "children": [
                   {
-                    "componentName": "Text",
+                    "componentName": "TinyButton",
                     "props": {
-                      "text": "按钮文案"
+                      "text": "提交",
+                      "type": "primary",
+                      "style": {
+                        "margin": "0 5px 0 5px"
+                      }
+                    }
+                  },
+                  {
+                    "componentName": "TinyButton",
+                    "props": {
+                      "text": "重置",
+                      "style": {
+                        "margin": "0 5px 0 5px"
+                      }
+                    }
+                  },
+                  {
+                    "componentName": "TinyButton",
+                    "props": {
+                      "text": "取消"
                     }
                   }
                 ]
+              },
+              "configure": {
+                "isContainer": true
               }
             },
             {
               "name": {
-                "zh_CN": "表格"
+                "zh_CN": "互斥按钮组"
               },
-              "icon": "table",
+              "icon": "buttons",
+              "snippetName": "TinyButtonGroup",
               "screenshot": "",
-              "snippetName": "table",
               "schema": {
-                "componentName": "table",
+                "componentName": "TinyButtonGroup",
                 "props": {
-                  "border": "1"
-                },
-                "children": [
-                  {
-                    "componentName": "tr",
-                    "children": [
-                      {
-                        "componentName": "td",
-                        "children": "Month"
-                      },
-                      {
-                        "componentName": "td",
-                        "children": "Savings"
-                      }
-                    ]
-                  },
-                  {
-                    "componentName": "tr",
-                    "children": [
-                      {
-                        "componentName": "td",
-                        "children": "January"
-                      },
-                      {
-                        "componentName": "td",
-                        "children": "100"
-                      }
-                    ]
-                  }
-                ]
+                  "data": [
+                    {
+                      "text": "Button1",
+                      "value": "1"
+                    },
+                    {
+                      "text": "Button2",
+                      "value": "2"
+                    },
+                    {
+                      "text": "Button3",
+                      "value": "3"
+                    }
+                  ],
+                  "modelValue": "1"
+                }
               }
             },
             {
               "name": {
-                "zh_CN": "表单"
+                "zh_CN": "搜索框"
               },
-              "icon": "form",
+              "icon": "search",
               "screenshot": "",
-              "snippetName": "form",
+              "snippetName": "TinySearch",
               "schema": {
-                "componentName": "form",
+                "componentName": "TinySearch",
                 "props": {
-                  "action": "action"
-                },
-                "children": [
-                  {
-                    "componentName": "label",
-                    "props": {
-                      "for": "male"
-                    },
-                    "children": "male"
-                  },
-                  {
-                    "componentName": "input",
-                    "props": {
-                      "type": "text"
-                    }
-                  },
-                  {
-                    "componentName": "br"
-                  },
-                  {
-                    "componentName": "label",
-                    "props": {
-                      "for": "Female"
-                    },
-                    "children": "Female"
-                  },
-                  {
-                    "componentName": "input",
-                    "props": {
-                      "type": "text"
-                    }
-                  }
-                ]
+                  "modelValue": "",
+                  "placeholder": "输入关键词"
+                }
               }
             }
           ]
         },
         {
-          "group": "content",
+          "group": "form",
+          "label": {
+            "zh_CN": "表单类型"
+          },
           "children": [
-            {
-              "name": {
-                "zh_CN": "走马灯"
-              },
-              "screenshot": "",
-              "snippetName": "tiny-carousel",
-              "icon": "carousel",
-              "schema": {
-                "componentName": "TinyCarousel",
-                "props": {
-                  "height": "180px"
-                },
-                "children": [
-                  {
-                    "componentName": "TinyCarouselItem",
-                    "children": [
-                      {
-                        "componentName": "div",
-                        "props": {
-                          "style": "margin:10px 0 0 30px"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "componentName": "TinyCarouselItem",
-                    "children": [
-                      {
-                        "componentName": "div",
-                        "props": {
-                          "style": "margin:10px 0 0 30px"
-                        }
-                      }
-                    ]
-                  }
-                ]
-              }
-            },
             {
               "name": {
                 "zh_CN": "表单"
@@ -13648,124 +13500,88 @@
             },
             {
               "name": {
-                "zh_CN": "对话框"
+                "zh_CN": "输入框"
               },
+              "icon": "input",
               "screenshot": "",
-              "snippetName": "TinyDialogBox",
-              "icon": "dialogbox",
+              "snippetName": "TinyInput",
               "schema": {
-                "componentName": "TinyDialogBox",
+                "componentName": "TinyInput",
                 "props": {
-                  "visible": true,
-                  "show-close": true,
-                  "title": "dialogBox title"
-                },
-                "children": [
-                  {
-                    "componentName": "div"
-                  }
-                ]
+                  "placeholder": "请输入",
+                  "modelValue": ""
+                }
               }
             },
             {
               "name": {
-                "zh_CN": "标签页"
+                "zh_CN": "单选"
               },
-              "icon": "tabs",
+              "icon": "radio",
               "screenshot": "",
-              "group": true,
-              "snippetName": "TinyTabs",
+              "snippetName": "TinyRadio",
               "schema": {
-                "componentName": "TinyTabs",
+                "componentName": "TinyRadio",
                 "props": {
-                  "modelValue": "first"
-                },
-                "children": [
-                  {
-                    "componentName": "TinyTabItem",
-                    "props": {
-                      "title": "标签页1",
-                      "name": "first"
-                    },
-                    "children": [
-                      {
-                        "componentName": "div",
-                        "props": {
-                          "style": "margin:10px 0 0 30px"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "componentName": "TinyTabItem",
-                    "props": {
-                      "title": "标签页2",
-                      "name": "second"
-                    },
-                    "children": [
-                      {
-                        "componentName": "div",
-                        "props": {
-                          "style": "margin:10px 0 0 30px"
-                        }
-                      }
-                    ]
-                  }
-                ]
+                  "label": "1",
+                  "text": "单选文本"
+                }
               }
             },
             {
               "name": {
-                "zh_CN": "折叠面板"
+                "zh_CN": "复选框"
               },
+              "icon": "checkbox",
               "screenshot": "",
-              "snippetName": "TinyCollapse",
-              "icon": "collapse",
+              "snippetName": "TinyCheckbox",
               "schema": {
-                "componentName": "TinyCollapse",
+                "componentName": "TinyCheckbox",
                 "props": {
-                  "modelValue": "collapse1"
-                },
-                "children": [
-                  {
-                    "componentName": "TinyCollapseItem",
-                    "props": {
-                      "name": "collapse1",
-                      "title": "折叠项1"
-                    },
-                    "children": [
-                      {
-                        "componentName": "div"
-                      }
-                    ]
-                  },
-                  {
-                    "componentName": "TinyCollapseItem",
-                    "props": {
-                      "name": "collapse2",
-                      "title": "折叠项2"
-                    },
-                    "children": [
-                      {
-                        "componentName": "div"
-                      }
-                    ]
-                  },
-                  {
-                    "componentName": "TinyCollapseItem",
-                    "props": {
-                      "name": "collapse3",
-                      "title": "折叠项3"
-                    },
-                    "children": [
-                      {
-                        "componentName": "div"
-                      }
-                    ]
-                  }
-                ]
+                  "text": "复选框文案"
+                }
               }
             },
+            {
+              "name": {
+                "zh_CN": "日期选择"
+              },
+              "icon": "datepick",
+              "screenshot": "",
+              "snippetName": "TinyDatePicker",
+              "schema": {
+                "componentName": "TinyDatePicker",
+                "props": {
+                  "placeholder": "请输入",
+                  "modelValue": ""
+                }
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "数字输入框"
+              },
+              "icon": "numeric",
+              "screenshot": "",
+              "snippetName": "TinyNumeric",
+              "schema": {
+                "componentName": "TinyNumeric",
+                "props": {
+                  "allow-empty": true,
+                  "placeholder": "请输入",
+                  "controlsPosition": "right",
+                  "step": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "group": "table",
+          "label": {
+            "zh_CN": "表格类型"
+          },
+          "children": [
             {
               "name": {
                 "zh_CN": "表格"
@@ -13822,6 +13638,142 @@
                     }
                   ]
                 }
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "分页"
+              },
+              "icon": "pager",
+              "screenshot": "",
+              "snippetName": "TinyPager",
+              "schema": {
+                "componentName": "TinyPager",
+                "props": {
+                  "layout": "total, sizes, prev, pager, next",
+                  "total": 100,
+                  "pageSize": 10,
+                  "currentPage": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "group": "data-display",
+          "label": {
+            "zh_CN": "数据展示类"
+          },
+          "children": [
+            {
+              "name": {
+                "zh_CN": "走马灯"
+              },
+              "screenshot": "",
+              "snippetName": "tiny-carousel",
+              "icon": "carousel",
+              "schema": {
+                "componentName": "TinyCarousel",
+                "props": {
+                  "height": "180px"
+                },
+                "children": [
+                  {
+                    "componentName": "TinyCarouselItem",
+                    "children": [
+                      {
+                        "componentName": "div",
+                        "props": {
+                          "style": "margin:10px 0 0 30px"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "componentName": "TinyCarouselItem",
+                    "children": [
+                      {
+                        "componentName": "div",
+                        "props": {
+                          "style": "margin:10px 0 0 30px"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "对话框"
+              },
+              "screenshot": "",
+              "snippetName": "TinyDialogBox",
+              "icon": "dialogbox",
+              "schema": {
+                "componentName": "TinyDialogBox",
+                "props": {
+                  "visible": true,
+                  "show-close": true,
+                  "title": "dialogBox title"
+                },
+                "children": [
+                  {
+                    "componentName": "div"
+                  }
+                ]
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "折叠面板"
+              },
+              "screenshot": "",
+              "snippetName": "TinyCollapse",
+              "icon": "collapse",
+              "schema": {
+                "componentName": "TinyCollapse",
+                "props": {
+                  "modelValue": "collapse1"
+                },
+                "children": [
+                  {
+                    "componentName": "TinyCollapseItem",
+                    "props": {
+                      "name": "collapse1",
+                      "title": "折叠项1"
+                    },
+                    "children": [
+                      {
+                        "componentName": "div"
+                      }
+                    ]
+                  },
+                  {
+                    "componentName": "TinyCollapseItem",
+                    "props": {
+                      "name": "collapse2",
+                      "title": "折叠项2"
+                    },
+                    "children": [
+                      {
+                        "componentName": "div"
+                      }
+                    ]
+                  },
+                  {
+                    "componentName": "TinyCollapseItem",
+                    "props": {
+                      "name": "collapse3",
+                      "title": "折叠项3"
+                    },
+                    "children": [
+                      {
+                        "componentName": "div"
+                      }
+                    ]
+                  }
+                ]
               }
             },
             {
@@ -14043,21 +13995,37 @@
                   }
                 ]
               }
-            },
+            }
+          ]
+        },
+        {
+          "group": "navigation",
+          "label": {
+            "zh_CN": "导航类型"
+          },
+          "children": [
             {
               "name": {
-                "zh_CN": "分页"
+                "zh_CN": "时间线"
               },
-              "icon": "pager",
+              "icon": "timeline",
               "screenshot": "",
-              "snippetName": "TinyPager",
+              "snippetName": "TinyTimeLine",
               "schema": {
-                "componentName": "TinyPager",
+                "componentName": "TinyTimeLine",
                 "props": {
-                  "layout": "total, sizes, prev, pager, next",
-                  "total": 100,
-                  "pageSize": 10,
-                  "currentPage": 1
+                  "active": "2",
+                  "data": [
+                    {
+                      "name": "已下单"
+                    },
+                    {
+                      "name": "运输中"
+                    },
+                    {
+                      "name": "已签收"
+                    }
+                  ]
                 }
               }
             },
@@ -14090,96 +14058,67 @@
             },
             {
               "name": {
-                "zh_CN": "日期选择"
+                "zh_CN": "标签页"
               },
-              "icon": "datepick",
+              "icon": "tabs",
               "screenshot": "",
-              "snippetName": "TinyDatePicker",
+              "group": true,
+              "snippetName": "TinyTabs",
               "schema": {
-                "componentName": "TinyDatePicker",
+                "componentName": "TinyTabs",
                 "props": {
-                  "placeholder": "请输入",
-                  "modelValue": ""
-                }
-              }
-            },
-            {
-              "name": {
-                "zh_CN": "数字输入框"
-              },
-              "icon": "numeric",
-              "screenshot": "",
-              "snippetName": "TinyNumeric",
-              "schema": {
-                "componentName": "TinyNumeric",
-                "props": {
-                  "allow-empty": true,
-                  "placeholder": "请输入",
-                  "controlsPosition": "right",
-                  "step": 1
-                }
+                  "modelValue": "first"
+                },
+                "children": [
+                  {
+                    "componentName": "TinyTabItem",
+                    "props": {
+                      "title": "标签页1",
+                      "name": "first"
+                    },
+                    "children": [
+                      {
+                        "componentName": "div",
+                        "props": {
+                          "style": "margin:10px 0 0 30px"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "componentName": "TinyTabItem",
+                    "props": {
+                      "title": "标签页2",
+                      "name": "second"
+                    },
+                    "children": [
+                      {
+                        "componentName": "div",
+                        "props": {
+                          "style": "margin:10px 0 0 30px"
+                        }
+                      }
+                    ]
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "group": "general",
+          "group": "element-plus",
+          "label": {
+            "zh_CN": "Element Plus组件"
+          },
           "children": [
             {
               "name": {
-                "zh_CN": "Row"
+                "zh_CN": "输入框"
               },
-              "icon": "row",
+              "icon": "input",
               "screenshot": "",
-              "snippetName": "TinyRow",
-              "schema": {
-                "componentName": "TinyRow",
-                "props": {},
-                "children": [
-                  {
-                    "componentName": "TinyCol",
-                    "props": {
-                      "span": 3
-                    }
-                  },
-                  {
-                    "componentName": "TinyCol",
-                    "props": {
-                      "span": 3
-                    }
-                  },
-                  {
-                    "componentName": "TinyCol",
-                    "props": {
-                      "span": 3
-                    }
-                  },
-                  {
-                    "componentName": "TinyCol",
-                    "props": {
-                      "span": 3
-                    }
-                  }
-                ]
-              }
-            },
-            {
-              "name": {
-                "zh_CN": "Col"
-              },
-              "icon": "col",
-              "screenshot": "",
-              "snippetName": "TinyCol",
-              "schema": {
-                "componentName": "TinyCol",
-                "props": {
-                  "span": 12,
-                  "style": {
-                    "height": "30px",
-                    "border": "1px solid #ccc"
-                  }
-                }
-              }
+              "snippetName": "ElInput",
+              "schema": {}
             },
             {
               "name": {
@@ -14187,168 +14126,144 @@
               },
               "icon": "button",
               "screenshot": "",
-              "snippetName": "TinyButton",
+              "snippetName": "ElButton",
               "schema": {
-                "componentName": "TinyButton",
-                "props": {
-                  "text": "按钮文案"
-                }
-              }
-            },
-            {
-              "name": {
-                "zh_CN": "按钮组"
-              },
-              "icon": "buttons",
-              "snippetName": "TinyButtons",
-              "screenshot": "",
-              "schema": {
-                "componentName": "div",
-                "props": {},
                 "children": [
                   {
-                    "componentName": "TinyButton",
+                    "componentName": "Text",
                     "props": {
-                      "text": "提交",
-                      "type": "primary",
-                      "style": {
-                        "margin": "0 5px 0 5px"
-                      }
-                    }
-                  },
-                  {
-                    "componentName": "TinyButton",
-                    "props": {
-                      "text": "重置",
-                      "style": {
-                        "margin": "0 5px 0 5px"
-                      }
-                    }
-                  },
-                  {
-                    "componentName": "TinyButton",
-                    "props": {
-                      "text": "取消"
+                      "text": "按钮文本"
                     }
                   }
                 ]
-              },
-              "configure": {
-                "isContainer": true
               }
             },
             {
               "name": {
-                "zh_CN": "互斥按钮组"
+                "zh_CN": "表单"
               },
-              "icon": "buttons",
-              "snippetName": "TinyButtonGroup",
+              "icon": "form",
               "screenshot": "",
+              "snippetName": "ElForm",
               "schema": {
-                "componentName": "TinyButtonGroup",
+                "children": [
+                  {
+                    "componentName": "ElFormItem",
+                    "props": {
+                      "label": "账号",
+                      "prop": "account"
+                    },
+                    "children": [
+                      {
+                        "componentName": "ElInput",
+                        "props": {
+                          "modelValue": "",
+                          "placeholder": "请输入账号"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "componentName": "ElFormItem",
+                    "props": {
+                      "label": "密码",
+                      "prop": "password"
+                    },
+                    "children": [
+                      {
+                        "componentName": "ElInput",
+                        "props": {
+                          "modelValue": "",
+                          "placeholder": "请输入密码",
+                          "type": "password"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "componentName": "ElFormItem",
+                    "props": {},
+                    "children": [
+                      {
+                        "componentName": "ElButton",
+                        "props": {
+                          "type": "primary",
+                          "style": "margin-right: 10px"
+                        },
+                        "children": [
+                          {
+                            "componentName": "Text",
+                            "props": {
+                              "text": "提交"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "componentName": "ElButton",
+                        "props": {
+                          "type": "primary"
+                        },
+                        "children": [
+                          {
+                            "componentName": "Text",
+                            "props": {
+                              "text": "重置"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "表格"
+              },
+              "icon": "grid",
+              "screenshot": "",
+              "snippetName": "ElTable",
+              "schema": {
                 "props": {
                   "data": [
                     {
-                      "text": "Button1",
-                      "value": "1"
+                      "date": "2016-05-03",
+                      "name": "Tom",
+                      "address": "No. 189, Grove St, Los Angeles"
                     },
                     {
-                      "text": "Button2",
-                      "value": "2"
+                      "date": "2016-05-02",
+                      "name": "Tom",
+                      "address": "No. 189, Grove St, Los Angeles"
                     },
                     {
-                      "text": "Button3",
-                      "value": "3"
+                      "date": "2016-05-04",
+                      "name": "Tom",
+                      "address": "No. 189, Grove St, Los Angeles"
+                    },
+                    {
+                      "date": "2016-05-01",
+                      "name": "Tom",
+                      "address": "No. 189, Grove St, Los Angeles"
                     }
                   ],
-                  "modelValue": "1"
-                }
-              }
-            },
-            {
-              "name": {
-                "zh_CN": "输入框"
-              },
-              "icon": "input",
-              "screenshot": "",
-              "snippetName": "TinyInput",
-              "schema": {
-                "componentName": "TinyInput",
-                "props": {
-                  "placeholder": "请输入",
-                  "modelValue": ""
-                }
-              }
-            },
-            {
-              "name": {
-                "zh_CN": "单选"
-              },
-              "icon": "radio",
-              "screenshot": "",
-              "snippetName": "TinyRadio",
-              "schema": {
-                "componentName": "TinyRadio",
-                "props": {
-                  "label": "1",
-                  "text": "单选文本"
-                }
-              }
-            },
-            {
-              "name": {
-                "zh_CN": "复选框"
-              },
-              "icon": "checkbox",
-              "screenshot": "",
-              "snippetName": "TinyCheckbox",
-              "schema": {
-                "componentName": "TinyCheckbox",
-                "props": {
-                  "text": "复选框文案"
-                }
-              }
-            }
-          ]
-        },
-        {
-          "group": "navigation",
-          "children": [
-            {
-              "name": {
-                "zh_CN": "搜索框"
-              },
-              "icon": "search",
-              "screenshot": "",
-              "snippetName": "TinySearch",
-              "schema": {
-                "componentName": "TinySearch",
-                "props": {
-                  "modelValue": "",
-                  "placeholder": "输入关键词"
-                }
-              }
-            },
-            {
-              "name": {
-                "zh_CN": "时间线"
-              },
-              "icon": "timeline",
-              "screenshot": "",
-              "snippetName": "TinyTimeLine",
-              "schema": {
-                "componentName": "TinyTimeLine",
-                "props": {
-                  "active": "2",
-                  "data": [
+                  "columns": [
                     {
-                      "name": "已下单"
+                      "type": "index"
                     },
                     {
-                      "name": "运输中"
+                      "label": "Date",
+                      "prop": "date"
                     },
                     {
-                      "name": "已签收"
+                      "label": "Name",
+                      "prop": "name"
+                    },
+                    {
+                      "label": "Address",
+                      "prop": "address"
                     }
                   ]
                 }

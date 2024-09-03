@@ -3,16 +3,14 @@ import CanvasRow from './CanvasRow.json'
 import CanvasRowColContainer from './CanvasRowColContainer.json'
 
 export default {
-  components: [
-    {
-      group: '内置组件',
-      children: [{ ...CanvasCol.components }, { ...CanvasRow.components }, { ...CanvasRowColContainer.components }]
-    }
-  ],
+  components: [CanvasCol.component, CanvasRow.component, CanvasRowColContainer.component],
   snippets: [
     {
-      group: '内置组件',
-      children: [{ ...CanvasRowColContainer.snippets }]
+      group: 'layout',
+      label: {
+        zh_CN: '布局与容器'
+      },
+      children: [CanvasRowColContainer.snippet]
     }
   ]
 }
