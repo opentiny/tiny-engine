@@ -308,8 +308,8 @@ export default {
       }
     }
 
-    let imageUrl = ref('')
-    let imageContent = ref()
+    const imageUrl = ref('')
+    const imageContent = ref()
     const uploadFile = (file) => {
       const formData = new FormData()
       const foundationModelData = JSON.stringify({
