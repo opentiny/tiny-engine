@@ -128,7 +128,7 @@ export default {
     const align = computed(() => getPluginByLayout(PLUGIN_NAME['AppManage']))
     const margin = computed(() => getPluginWidth(PLUGIN_NAME['AppManage']))
     const computedStyle = computed(() => {
-      return align.value.includes('left') ? { marginLeft: margin.value + 'px' } : { marginRight: margin.value + 'px' }
+      return { [align.value.includes('left') ? 'marginLeft' : 'marginRight']: margin.value + 'px' }
     })
 
     const state = reactive({

@@ -108,7 +108,7 @@ export default {
     const panelWidth = window.getComputedStyle(document.body).getPropertyValue('--base-left-panel-width')
     const margin = computed(() => getPluginWidth(PLUGIN_NAME['Datasource']) - parseInt(panelWidth))
     const computedStyle = computed(() => {
-      return align.value.includes('left') ? { marginLeft: margin.value + 'px' } : { marginRight: margin.value + 'px' }
+      return { [align.value.includes('left') ? 'marginLeft' : 'marginRight']: margin.value + 'px' }
     })
 
     const state = reactive({

@@ -1,7 +1,12 @@
 <template>
   <div
-    :style="{ right: align.includes('right') ? 0 : null }"
-    :class="['plugin-setting', { 'second-panel': isSecond }, { 'full-screen': state.isFullScreen }, 'shadowClass']"
+    :class="[
+      'plugin-setting',
+      { 'second-panel': isSecond },
+      { 'full-screen': state.isFullScreen },
+      { 'align-right': align.includes('right') },
+      'shadowClass'
+    ]"
     @click="$emit('click')"
   >
     <div class="plugin-setting-header">
@@ -116,19 +121,13 @@ export default {
     }
     // 计算属性用于确定阴影类
     const shadowClass = computed(() => {
-      if (props.align.includes('right')) {
-        return !props.isSecond ? 'shadow-right' : ''
-      } else {
-        return !props.isSecond ? 'shadow-left' : ''
-      }
+      if (props.isSecond) return ''
+      return props.align.includes('right') ? 'shadow-right' : 'shadow-left'
     })
     return {
       state,
       fullScreen,
       getFullScreenLabel,
-      IconFullscreen: iconFullscreen(),
-      IconMinscreen: iconMinscreen(),
-      IconClose: iconClose(),
       shadowClass
     }
   }
@@ -158,10 +157,7 @@ export default {
       border-left: none;
     }
   }
-  // &:not(.second-panel) {
-  //   box-shadow: 6px 0px 3px 0px rgba(0, 0, 0, 0.05);
-  //   border-right: none;
-  // }
+
   &.full-screen {
     width: var(--base-collection-panel-full-screen-width);
   }
@@ -213,5 +209,8 @@ export default {
     display: flex;
     align-items: center;
   }
+}
+.align-right {
+  right: 0;
 }
 </style>

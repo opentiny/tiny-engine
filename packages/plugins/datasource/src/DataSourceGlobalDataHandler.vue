@@ -54,7 +54,7 @@ export default {
     const margin = computed(() => getPluginWidth(PLUGIN_NAME['Datasource']))
     // 计算样式
     const computedStyle = computed(() => {
-      return align.value.includes('left') ? { marginLeft: margin.value + 'px' } : { marginRight: margin.value + 'px' }
+      return { [align.value.includes('left') ? 'marginLeft' : 'marginRight']: margin.value + 'px' }
     })
 
     const state = reactive({

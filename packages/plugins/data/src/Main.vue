@@ -135,7 +135,7 @@ export default {
     })
 
     const align = computed(() => getPluginByLayout(PLUGIN_NAME['Data']))
-    const margin = computed(() => getPluginWidth(PLUGIN_NAME['Bridge']))
+    const margin = computed(() => getPluginWidth(PLUGIN_NAME['Data']))
     // 计算样式
     const computedStyle = computed(() => {
       return align.value.includes('left')
