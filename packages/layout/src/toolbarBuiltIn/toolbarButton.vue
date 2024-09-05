@@ -1,0 +1,81 @@
+<template>
+  <tiny-button v-bind="options.props" :style="options.style" :class="[options?.useDefaultClass ? 'toolbar-button' : '']">
+    <span class="svg-wrap">
+      <svg-icon :name="icon"></svg-icon>
+      <span v-if="!isSaved() && options?.showDots" class="dots"></span>
+    </span>
+    <span class="save-title">{{ content }}</span>
+    <slot name="button-extends"></slot>
+  </tiny-button>
+</template>
+<script>
+import { Button } from '@opentiny/vue'
+import { useCanvas } from '@opentiny/tiny-engine-meta-register'
+
+export default {
+  components: {
+    TinyButton: Button
+  },
+  props: {
+    icon: {
+      type: String,
+      default: ''
+    },
+    content: {
+      type: String,
+      default: ''
+    },
+    options: {
+      type: Object,
+      default: () => {}
+    }
+  },
+  setup() {
+    const { isSaved } = useCanvas();
+    return {
+      isSaved
+    }
+  }
+}
+</script>
+<style lang="less" scoped>
+.dots {
+  width: 6px;
+  height: 6px;
+  background: var(--ti-lowcode-toolbar-dot-color);
+  border-radius: 50%;
+  display: inline-block;
+  position: absolute;
+  top: 4px;
+  right: 3px;
+  z-index: 100;
+}
+.toolbar-button {
+  background-color: var(--ti-lowcode-toolbar-button-bg) !important;
+  border: none;
+  min-width: 70px;
+  height: 26px;
+  line-height: 24px;
+  padding: 0 8px;
+  border-radius: 4px;
+}
+
+.svg-wrap {
+  position: relative;
+  .dots {
+    width: 6px;
+    height: 6px;
+    background: var(--ti-lowcode-toolbar-dot-color);
+    border-radius: 50%;
+    display: inline-block;
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    z-index: 100;
+  }
+}
+
+.save-title {
+  margin: 0 6px;
+}
+</style>

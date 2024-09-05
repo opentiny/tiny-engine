@@ -1,27 +1,19 @@
 <template>
-  <tiny-popover
-    trigger="hover"
-    :open-delay="1000"
-    popper-class="toolbar-right-popover"
-    append-to-body
+  <toolbar-base-component
+    :type="type"
     content="画布中英文切换"
-    :disabled="true"
+    :icon="icon[langVal]"
+    :options="options"
+    @click-api="changeLang"
   >
-    <template #reference>
-      <div class="icon" @click="changeLang">
-        <span class="icon-hides">
-          <svg-icon :name="icon[langVal]"></svg-icon>
-        </span>
-        <slot name="text"></slot>
-      </div>
-    </template>
-  </tiny-popover>
+  </toolbar-base-component>
 </template>
 
 <script>
 import { ref, watch } from 'vue'
 import { useBroadcastChannel } from '@vueuse/core'
 import { Popover } from '@opentiny/vue'
+import { ToolbarBaseComponent } from '@opentiny/tiny-engine-layout'
 
 import { constants } from '@opentiny/tiny-engine-utils'
 
@@ -29,9 +21,14 @@ const { BROADCAST_CHANNEL } = constants
 
 export default {
   components: {
-    TinyPopover: Popover
+    TinyPopover: Popover,
+    ToolbarBaseComponent
   },
   props: {
+    type: {
+      type: String,
+      default: ''
+    },
     icon: {
       type: Object
     },

@@ -6,8 +6,8 @@ export default {
     default: 'user'
   },
   align: 'right',
-  collapsed: true,
+  renderType: 'slot',
   options: {
-    text: '多人协作'
+    collapsed: true
   }
 }

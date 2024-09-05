@@ -2,8 +2,9 @@
   <div class="tiny-engine-toolbar">
     <div class="toolbar-left">
       <component
-        :is="item.entry"
         v-for="item in leftBar"
+        :is="item.entry"
+        :type="item.renderType"
         :icon="item.icon"
         :options="item.options"
         :key="item.id"
@@ -11,8 +12,9 @@
     </div>
     <div class="toolbar-center">
       <component
-        :is="item.entry"
         v-for="item in centerBar"
+        :is="item.entry"
+        :type="item.renderType"
         :icon="item.icon"
         :options="item.options"
         :key="item.id"
@@ -20,8 +22,9 @@
     </div>
     <div class="toolbar-right">
       <component
-        :is="item.entry"
         v-for="item in rightBar"
+        :is="item.entry"
+        :type="item.renderType"
         :icon="item.icon"
         :options="item.options"
         :key="item.id"
@@ -61,7 +64,7 @@ export default {
 
     props.toolbars.forEach((item) => {
       if (item.align === 'right') {
-        item?.collapsed ? collapseBar.push(item) : rightBar.push(item)
+        item?.options?.collapsed ? collapseBar.push(item) : rightBar.push(item)
       } else if (item.align === 'center') {
         centerBar.push(item)
       } else {

@@ -1,18 +1,13 @@
 <template>
   <div class="toolbar-itm-clean">
-    <tiny-popover
-      trigger="hover"
-      :open-delay="1000"
-      popper-class="toolbar-right-popover"
-      append-to-body
+    <toolbar-base-component
+      :type="type"
       content="清除屏幕"
+      :icon="icon.default"
+      :options="options"
+      @click-api="clean"
     >
-      <template #reference>
-        <span :class="['icon', { disabled: isLock }]" @click="clean">
-          <svg-icon :name="icon.default"></svg-icon>
-        </span>
-      </template>
-    </tiny-popover>
+    </toolbar-base-component>
   </div>
 </template>
 
@@ -21,15 +16,25 @@ import { ref, watch, getCurrentInstance } from 'vue'
 import { Popover, Modal } from '@opentiny/vue'
 import { useCanvas, useLayout } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
+import { ToolbarBaseComponent } from '@opentiny/tiny-engine-layout'
 
 const { PAGE_STATUS } = constants
 export default {
   components: {
-    TinyPopover: Popover
+    TinyPopover: Popover,
+    ToolbarBaseComponent
   },
   props: {
+    type: {
+      type: String,
+      default: ''
+    },
     icon: {
       type: Object
+    },
+    options: {
+      type: Object,
+      default: () => {}
     }
   },
   setup() {

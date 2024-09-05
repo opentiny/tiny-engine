@@ -1,18 +1,14 @@
 <template>
-  <div class="toolbar-generate">
-    <tiny-button v-bind="options?.props || {}" :style="options?.style || ''" @click="generate">
-      <span>
-        <svg-icon :name="icon.default" color="#fff"></svg-icon>
-        <span class="button-title">{{ options?.text }}</span>
-      </span>
-    </tiny-button>
-  </div>
-  <generate-file-selector
-    :visible="state.showDialogbox"
-    :data="state.saveFilesInfo"
-    @confirm="confirm"
-    @cancel="cancel"
-  ></generate-file-selector>
+  <toolbar-base-component :type="type" content="出码" :icon="icon.default" :options="options" @click-api="generate">
+    <template #extends>
+      <generate-file-selector
+        :visible="state.showDialogbox"
+        :data="state.saveFilesInfo"
+        @confirm="confirm"
+        @cancel="cancel"
+      ></generate-file-selector>
+    </template>
+  </toolbar-base-component>
 </template>
 
 <script>
@@ -30,20 +26,27 @@ import {
 import { Button } from '@opentiny/vue'
 import { fs } from '@opentiny/tiny-engine-utils'
 import { useHttp } from '@opentiny/tiny-engine-http'
+import { ToolbarBaseComponent } from '@opentiny/tiny-engine-layout'
 import { fetchMetaData, fetchPageList, fetchBlockSchema } from './http'
 import FileSelector from './FileSelector.vue'
 
 export default {
   components: {
     TinyButton: Button,
-    GenerateFileSelector: FileSelector
+    GenerateFileSelector: FileSelector,
+    ToolbarBaseComponent
   },
   props: {
+    type: {
+      type: String,
+      default: ''
+    },
     icon: {
       type: Object
     },
     options: {
-      type: Object
+      type: Object,
+      default: () => {}
     }
   },
   setup() {

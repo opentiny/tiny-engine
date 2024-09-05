@@ -1,39 +1,37 @@
 <template>
-  <div class="toolbar-itm-clean">
-    <tiny-popover
-      trigger="hover"
-      :open-delay="1000"
-      popper-class="toolbar-right-popover"
-      append-to-body
-      :content="isBlock() ? '区块设置' : '页面设置'"
-      :disabled="true"
-    >
-      <template #reference>
-        <span class="icon-hides" @click="openSetting">
-          <svg-icon :name="icon.default"></svg-icon>
-        </span>
-        <span>{{ isBlock() ? '区块设置' : '页面设置' }}</span>
-      </template>
-    </tiny-popover>
-  </div>
+  <toolbar-base-component
+    :type="type"
+    :content="isBlock() ? '区块设置' : '页面设置'"
+    :icon="icon.default"
+    :options="options"
+    @click-api="openSetting"
+  >
+  </toolbar-base-component>
 </template>
 
 <script lang="jsx">
 import { Popover } from '@opentiny/vue'
 import { useCanvas, useLayout, useBlock, usePage, useModal, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
+import { ToolbarBaseComponent } from '@opentiny/tiny-engine-layout'
 
 const { PAGE_STATUS } = constants
 export default {
   components: {
-    TinyPopover: Popover
+    TinyPopover: Popover,
+    ToolbarBaseComponent
   },
   props: {
+    type: {
+      type: String,
+      default: ''
+    },
     icon: {
       type: Object
     },
     options: {
-      type: Object
+      type: Object,
+      default: () => {}
     }
   },
   setup() {

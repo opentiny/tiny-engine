@@ -6,8 +6,8 @@ export default {
   icon: {
     default: 'setting'
   },
-  collapsed: true,
+  renderType: 'icon',
   options: {
-    text: '设置'
+    collapsed: true
   }
 }

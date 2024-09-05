@@ -1,37 +1,35 @@
 <template>
-  <tiny-popover
-    trigger="hover"
-    :open-delay="1000"
-    popper-class="toolbar-right-popover"
-    append-to-body
+  <toolbar-base-component
+    :type="type"
     :content="!isFullscreen ? '全屏' : '退出全屏'"
-    :disabled="true"
+    :icon="iconName"
+    :options="options"
+    @click-api="fullscreen"
   >
-    <template #reference>
-      <div class="icon">
-        <span class="icon-hides" @click="fullscreen">
-          <svg-icon :name="iconName"></svg-icon>
-        </span>
-        <slot name="text"></slot>
-      </div>
-    </template>
-  </tiny-popover>
+  </toolbar-base-component>
 </template>
 
 <script>
 import { ref } from 'vue'
 import { Popover } from '@opentiny/vue'
+import { ToolbarBaseComponent } from '@opentiny/tiny-engine-layout'
 
 export default {
   components: {
-    TinyPopover: Popover
+    TinyPopover: Popover,
+    ToolbarBaseComponent
   },
   props: {
+    type: {
+      type: String,
+      default: ''
+    },
     icon: {
       type: Object
     },
     options: {
-      type: Object
+      type: Object,
+      default: () => {}
     }
   },
   setup(props) {

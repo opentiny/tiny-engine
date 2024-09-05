@@ -5,5 +5,7 @@ export default {
   icon: {
     default: ''
   },
-  align: 'left'
+  align: 'left',
+  renderType: 'slot',
+  options: {}
 }

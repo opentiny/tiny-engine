@@ -6,8 +6,10 @@ export default {
     default: 'save'
   },
   align: 'right',
+  renderType: 'button',
   options: {
-    render: 'button',
+    showDots: true,
+    useDefaultClass: true,
     props: {},
     style: ''
   }

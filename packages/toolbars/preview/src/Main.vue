@@ -1,17 +1,14 @@
 <template>
-  <tiny-popover
-    trigger="hover"
-    :open-delay="1000"
-    popper-class="toolbar-right-popover"
-    append-to-body
-    content="预览页面"
-  >
-    <template #reference>
-      <span class="icon" @click="preview">
-        <svg-icon :name="icon.default"></svg-icon>
-      </span>
-    </template>
-  </tiny-popover>
+  <div class="toolbar-save">
+    <toolbar-base-component
+      :type="type"
+      content="预览页面"
+      :icon="icon.default"
+      :options="options"
+      @click-api="preview"
+    >
+    </toolbar-base-component>
+  </div>
 </template>
 
 <script>
@@ -19,14 +16,24 @@ import { Popover } from '@opentiny/vue'
 import { previewPage, previewBlock } from '@opentiny/tiny-engine-common/js/preview'
 import { useBlock, useCanvas, useLayout, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
+import { ToolbarBaseComponent } from '@opentiny/tiny-engine-layout'
 
 export default {
   components: {
-    TinyPopover: Popover
+    TinyPopover: Popover,
+    ToolbarBaseComponent
   },
   props: {
+    type: {
+      type: String,
+      default: ''
+    },
     icon: {
       type: Object
+    },
+    options: {
+      type: Object,
+      default: () => {}
     }
   },
   setup() {

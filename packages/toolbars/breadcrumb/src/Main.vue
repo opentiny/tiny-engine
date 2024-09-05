@@ -1,28 +1,35 @@
 <template>
-  <div class="top-panel-breadcrumb">
-    <div class="top-panel-breadcrumb-title">
-      <tiny-breadcrumb separator="：" @select="open">
-        <tiny-breadcrumb-item v-for="item in breadcrumbData.slice(0, 2)" :key="item">{{ item }} </tiny-breadcrumb-item>
-      </tiny-breadcrumb>
-      <component :is="state.pageLock.entry" v-bind="state.pageLock"></component>
-    </div>
+  <toolbar-base-component :type="type">
+    <template #extends>
+      <div class="top-panel-breadcrumb">
+        <div class="top-panel-breadcrumb-title">
+          <tiny-breadcrumb separator="：" @select="open">
+            <tiny-breadcrumb-item v-for="item in breadcrumbData.slice(0, 2)" :key="item"
+              >{{ item }}
+            </tiny-breadcrumb-item>
+          </tiny-breadcrumb>
+          <component :is="state.pageLock.entry" v-bind="state.pageLock" :type="state.pageLock.renderType"></component>
+        </div>
 
-    <tiny-button
-      class="publish"
-      v-if="breadcrumbData[0] === CONSTANTS.BLOCKTEXT"
-      @click="publishBlock()"
-      type="primary"
-      size="small"
-      >发布区块</tiny-button
-    >
-  </div>
-  <block-deploy-dialog v-model:visible="state.showDeployBlock" :nextVersion="nextVersion"></block-deploy-dialog>
+        <tiny-button
+          class="publish"
+          v-if="breadcrumbData[0] === CONSTANTS.BLOCKTEXT"
+          @click="publishBlock()"
+          type="primary"
+          size="small"
+          >发布区块</tiny-button
+        >
+      </div>
+      <block-deploy-dialog v-model:visible="state.showDeployBlock" :nextVersion="nextVersion"></block-deploy-dialog>
+    </template>
+  </toolbar-base-component>
 </template>
 
 <script>
 import { reactive, computed } from 'vue'
 import { Breadcrumb, BreadcrumbItem, Button } from '@opentiny/vue'
 import { useBreadcrumb, useLayout } from '@opentiny/tiny-engine-meta-register'
+import { ToolbarBaseComponent } from '@opentiny/tiny-engine-layout'
 import lock from '@opentiny/tiny-engine-toolbar-checkinout'
 import { BlockDeployDialog } from '@opentiny/tiny-engine-common'
 export default {
@@ -30,7 +37,21 @@ export default {
     TinyBreadcrumb: Breadcrumb,
     TinyBreadcrumbItem: BreadcrumbItem,
     BlockDeployDialog,
-    TinyButton: Button
+    TinyButton: Button,
+    ToolbarBaseComponent
+  },
+  props: {
+    type: {
+      type: String,
+      default: ''
+    },
+    icon: {
+      type: Object
+    },
+    options: {
+      type: Object,
+      default: () => {}
+    }
   },
   setup() {
     const CONTENTS = {

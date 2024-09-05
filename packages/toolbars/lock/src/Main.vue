@@ -1,21 +1,12 @@
 <template>
-  <span v-if="!state.isGuest">
-    <tiny-popover
-      trigger="hover"
-      :open-delay="1000"
-      popper-class="toolbar-right-popover"
-      append-to-body
-      :content="statusMessageMap[state.status]?.nextOptName"
-      :disabled="true"
-    >
-      <template #reference>
-        <span class="icon-hides">
-          <svg-icon :name="iconName" @click="lockOrUnlock"></svg-icon>
-        </span>
-        <slot name="text"></slot>
-      </template>
-    </tiny-popover>
-  </span>
+  <toolbar-base-component
+    v-if="!state.isGuest"
+    :type="type"
+    :icon="iconName"
+    :content="statusMessageMap[state.status]?.nextOptName"
+    @click-api="lockOrUnlock"
+  >
+  </toolbar-base-component>
 </template>
 
 <script>
@@ -23,6 +14,7 @@ import { computed, reactive } from 'vue'
 import { useCanvas, useLayout, useBlock, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { Popover } from '@opentiny/vue'
+import { ToolbarBaseComponent } from '@opentiny/tiny-engine-layout'
 import { requestBlockPage } from './http'
 
 const { COMPONENT_NAME, PAGE_STATUS } = constants
@@ -52,9 +44,14 @@ const statusMessageMap = {
 
 export default {
   components: {
-    TinyPopover: Popover
+    TinyPopover: Popover,
+    ToolbarBaseComponent
   },
   props: {
+    type: {
+      type: String,
+      default: ''
+    },
     icon: {
       type: Object
     },
@@ -63,6 +60,7 @@ export default {
     }
   },
   setup(props) {
+    console.log(props);
     const { pageState } = useCanvas()
     const { layoutState } = useLayout()
     const { getCurrentBlock } = useBlock()

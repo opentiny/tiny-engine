@@ -7,8 +7,8 @@ export default {
     cancelFullScreen: 'cancel-full-screen'
   },
   align: 'right',
-  collapsed: true,
+  renderType: 'icon',
   options: {
-    text: '切换全屏'
+    collapsed: true
   }
 }

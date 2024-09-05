@@ -6,9 +6,9 @@ export default {
     default: 'refresh'
   },
   align: 'right',
-  collapsed: true,
+  renderType: 'icon',
   options: {
-    splitLine: true,
-    text: '画布刷新'
+    collapsed: true,
+    splitLine: true
   }
 }

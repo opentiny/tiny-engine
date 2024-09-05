@@ -8,8 +8,8 @@ export default {
     unlocked: 'unlocked'
   },
   align: 'right',
-  collapsed: true,
+  renderType: 'icon',
   options: {
-    text: '锁定页面'
+    collapsed: true
   }
 }

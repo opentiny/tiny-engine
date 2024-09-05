@@ -5,5 +5,7 @@ export default {
   icon: {
     default: 'preview'
   },
-  align: 'right'
+  align: 'right',
+  renderType: 'icon',
+  options: {}
 }

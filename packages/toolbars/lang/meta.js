@@ -7,9 +7,9 @@ export default {
     zh_CN: 'cn',
     en_US: 'en'
   },
-  collapsed: true,
+  renderType: 'icon',
   options: {
-    splitLine: true,
-    text: '中英文切换'
+    collapsed: true,
+    splitLine: true
   }
 }

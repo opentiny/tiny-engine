@@ -1,74 +1,55 @@
 <template>
   <div class="toolbar-save">
-    <tiny-button
-      v-if="options?.render === 'button'"
-      v-bind="options?.props || {}"
-      :style="options?.style || ''"
-      class="save-button"
-      @click="openApi"
-    >
-      <svg-icon :name="icon.default"></svg-icon>
-      <span class="save-title">{{ isLoading ? '保存中' : '保存' }}</span>
-      <span @click.stop="state.saveVisible = !state.saveVisible">
-        <tiny-popover v-model="state.saveVisible" :visible-arrow="false" width="203" trigger="manual">
-          <template #reference>
-            <svg-icon :name="iconExpand"></svg-icon>
-          </template>
-          <div class="save-style">
-            <div class="save-setting">保存设置</div>
-            <tiny-checkbox v-model="state.checked" name="tiny-checkbox">自动保存</tiny-checkbox>
-            <div class="save-time">
-              <div>保存间隔</div>
-              <tiny-select v-model="state.timeValue" :options="delayOptions" :disabled="!state.checked" autocomplete>
-              </tiny-select>
+    <toolbar-base-component :type="type" :content="isLoading ? '保存中' : '保存'" :icon="icon.default" :options="options" @click-api="openApi">
+      <template #button-extends>
+        <span @click.stop="state.saveVisible = !state.saveVisible">
+          <tiny-popover v-model="state.saveVisible" :visible-arrow="false" width="203" trigger="manual">
+            <template #reference>
+              <svg-icon :name="iconExpand"></svg-icon>
+            </template>
+            <div class="save-style">
+              <div class="save-setting">保存设置</div>
+              <tiny-checkbox v-model="state.checked" name="tiny-checkbox">自动保存</tiny-checkbox>
+              <div class="save-time">
+                <div>保存间隔</div>
+                <tiny-select v-model="state.timeValue" :options="delayOptions" :disabled="!state.checked" autocomplete>
+                </tiny-select>
+              </div>
+              <div class="save-button-group">
+                <tiny-button @click="cancel">取消</tiny-button>
+                <tiny-button type="primary" @click="autoSave">设置并保存</tiny-button>
+              </div>
             </div>
-            <div class="save-button-group">
-              <tiny-button @click="cancel">取消</tiny-button>
-              <tiny-button type="primary" @click="autoSave">设置并保存</tiny-button>
-            </div>
-          </div>
-        </tiny-popover>
-      </span>
-    </tiny-button>
-    <tiny-popover
-      v-if="options?.render === 'icon'"
-      trigger="hover"
-      :open-delay="1000"
-      popper-class="toolbar-right-popover"
-      append-to-body
-      :content="isLoading ? '保存中' : '保存'"
-    >
-      <template #reference>
-        <span :id="`${isLoading ? 'saving' : ''}`" class="icon" @click="openApi">
-          <span v-show="!isSaved()" class="dots"></span>
-          <svg-icon :name="icon.default"></svg-icon>
+          </tiny-popover>
         </span>
       </template>
-    </tiny-popover>
+      <template #extends>
+        <tiny-dialog-box
+          class="dialog-box"
+          :modal="false"
+          :fullscreen="true"
+          :append-to-body="true"
+          :visible="state.visible"
+          title="Schema 本地与线上差异"
+          @update:visible="state.visible = $event"
+        >
+          <vue-monaco
+            v-if="state.visible"
+            ref="editor"
+            class="monaco-editor"
+            :diffEditor="true"
+            :options="editorOptions"
+            :value="state.code"
+            :original="state.originalCode"
+          ></vue-monaco>
+          <template #footer>
+            <tiny-button @click="close">取 消</tiny-button>
+            <tiny-button type="primary" @click="saveApi">保 存</tiny-button>
+          </template>
+        </tiny-dialog-box>
+      </template>
+    </toolbar-base-component>
   </div>
-  <tiny-dialog-box
-    class="dialog-box"
-    :modal="false"
-    :fullscreen="true"
-    :append-to-body="true"
-    :visible="state.visible"
-    title="Schema 本地与线上差异"
-    @update:visible="state.visible = $event"
-  >
-    <vue-monaco
-      v-if="state.visible"
-      ref="editor"
-      class="monaco-editor"
-      :diffEditor="true"
-      :options="editorOptions"
-      :value="state.code"
-      :original="state.originalCode"
-    ></vue-monaco>
-    <template #footer>
-      <tiny-button @click="close">取 消</tiny-button>
-      <tiny-button type="primary" @click="saveApi">保 存</tiny-button>
-    </template>
-  </tiny-dialog-box>
 </template>
 
 <script>
@@ -76,6 +57,7 @@ import { reactive, ref, onUnmounted } from 'vue'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
 import { Button, Popover, DialogBox, Checkbox, Select } from '@opentiny/vue'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { ToolbarBaseComponent } from '@opentiny/tiny-engine-layout'
 import { openCommon, saveCommon } from './js/index'
 import { isLoading } from './js/index'
 export const api = {
@@ -89,9 +71,14 @@ export default {
     TinyPopover: Popover,
     TinyDialogBox: DialogBox,
     TinyCheckbox: Checkbox,
-    TinySelect: Select
+    TinySelect: Select,
+    ToolbarBaseComponent
   },
   props: {
+    type: {
+      type: String,
+      default: ''
+    },
     icon: {
       type: Object
     },
