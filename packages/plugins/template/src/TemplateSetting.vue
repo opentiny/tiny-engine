@@ -99,7 +99,7 @@ export default {
           fileName: templateSettingState.currentTemplateData.name
         },
         app: appInfoState.selectedId,
-        isTemplate: templateSettingState.currentTemplateData.type === 'template' ? true : false
+        isTemplate: templateSettingState.currentTemplateData.type === 'template'
       }
 
       if (createParams.id) {
