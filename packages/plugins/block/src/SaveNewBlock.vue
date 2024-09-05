@@ -44,7 +44,7 @@
 import { reactive, computed, ref } from 'vue'
 import { Input, Form, FormItem, Button, DialogBox, Select } from '@opentiny/vue'
 import { useBlock, useLayout, useCanvas, useModal } from '@opentiny/tiny-engine-meta-register'
-import { REGEXP_BLOCK_NAME } from '../js/verification'
+import { REGEXP_BLOCK_NAME } from '@opentiny/tiny-engine-common/js/verification'
 
 export default {
   components: {
