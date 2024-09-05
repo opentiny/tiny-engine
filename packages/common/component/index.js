@@ -12,7 +12,6 @@
 
 import ConfigGroup from './ConfigGroup.vue'
 import ConfigItem from './ConfigItem.vue'
-import SaveNewBlock from './SaveNewBlock.vue'
 export { default as PluginSetting } from './PluginSetting.vue'
 export { default as PluginPanel } from './PluginPanel.vue'
 export { default as SvgButton } from './SvgButton.vue'
@@ -56,12 +55,11 @@ export { default as I18nInput } from './I18nInput.vue'
 export { default as CanvasDragItem } from './CanvasDragItem.vue'
 export { default as Modal } from './Modal.jsx'
 export { default as Notify } from './Notify.jsx'
-export { ConfigGroup, ConfigItem, SaveNewBlock }
+export { ConfigGroup, ConfigItem }
 
 export const injectGlobalComponents = {
   install: (app) => {
     const globalComponents = {
-      SaveNewBlock,
       ConfigGroup,
       ConfigItem
     }
