@@ -14,7 +14,7 @@ import { importmapPlugin } from './scripts/externalDeps'
 import visualizer from 'rollup-plugin-visualizer'
 import { getBaseUrlFromCli, copyBundleDeps, copyPreviewImportMap, copyLocalImportMap } from './scripts/localCdnFile'
 
-const origin = 'http://localhost:9090/'
+const origin = 'http://localhost:7011/'
 
 const config = {
   base: './',
@@ -23,6 +23,7 @@ const config = {
     extensions: ['.js', '.jsx', '.vue'],
     alias: {}
   },
+
   server: {
     // 这里保证本地启动服务是localhost,支持js多线程和谷歌浏览器读写本地文件api
     port: 8080,
