@@ -1,5 +1,5 @@
 <template>
-  <plugin-setting v-if="isOpen" :style="{ marginLeft: leftMargin + 'px' }">
+  <plugin-setting v-if="isOpen" :style="computedStyle" :align="align">
     <template #title>
       <div class="title-wrap">
         <span>{{ state.title }}</span>
@@ -153,8 +153,14 @@ export default {
     SvgButton
   },
   setup(props, { emit }) {
-    const { getPluginWidth, PLUGIN_NAME } = useLayout()
-    const leftMargin = computed(() => getPluginWidth(PLUGIN_NAME['Bridge']))
+    const { getPluginWidth, PLUGIN_NAME, getPluginByLayout } = useLayout()
+    const align = computed(() => getPluginByLayout(PLUGIN_NAME['Bridge']))
+    const margin = computed(() => getPluginWidth(PLUGIN_NAME['Bridge']))
+    // 计算样式
+    const computedStyle = computed(() => {
+      return { [align.value.includes('left') ? 'marginLeft' : 'marginRight']: margin.value + 'px' }
+    })
+
     const monacoOptions = {
       theme: theme(),
       roundedSelection: true,
@@ -309,7 +315,8 @@ export default {
       options: monacoOptions,
       handleChangeType,
       RESOURCE_CATEGORY,
-      leftMargin
+      computedStyle,
+      align
     }
   }
 }

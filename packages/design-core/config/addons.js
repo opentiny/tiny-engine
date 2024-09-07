@@ -45,7 +45,23 @@ import Styles from '@opentiny/tiny-engine-setting-styles'
 import '@opentiny/tiny-engine-theme'
 
 const addons = {
-  plugins: [Materials, Tree, Page, Block, Datasource, Bridge, I18n, Script, Data, Schema, Help, Robot],
+  plugins: [
+    Materials,
+    Tree,
+    Page,
+    Block,
+    Datasource,
+    Bridge,
+    I18n,
+    Script,
+    Data,
+    Schema,
+    Help,
+    Robot,
+    Props,
+    Styles,
+    Events
+  ],
   toolbars: [
     Logo,
     Breadcrumb,
@@ -61,8 +77,7 @@ const addons = {
     Checkinout,
     Setting,
     Lang
-  ],
-  settings: [Props, Styles, Events]
+  ]
 }
 
 export default addons

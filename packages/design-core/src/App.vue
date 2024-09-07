@@ -81,11 +81,6 @@ export default {
         plugin[item.id] = { width: item.options?.width || 300, align: item.options?.align || 'rightTop' }
       }
     })
-    addons.settings.forEach((item) => {
-      if (item.id) {
-        plugin[item.id] = { width: item.options?.width || 320, align: item.options?.align || 'rightTop' }
-      }
-    })
     localStorage.setItem('plugin', JSON.stringify(plugin))
 
     const { layoutState } = useLayout()

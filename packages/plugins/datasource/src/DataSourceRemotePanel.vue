@@ -5,7 +5,8 @@
       :isSecond="true"
       @cancel="closePanel"
       @save="saveRemote"
-      :style="{ marginLeft: leftMargin + 'px' }"
+      :style="computedStyle"
+      :align="align"
     >
       <template #content>
         <div class="create-config">
@@ -101,10 +102,14 @@ export default {
   setup(props, { emit }) {
     const dataSourceRemoteAdapteRef = ref(null)
     const { dataSourceState } = useDataSource()
-    const { getPluginWidth, PLUGIN_NAME } = useLayout()
+    const { getPluginWidth, PLUGIN_NAME, getPluginByLayout } = useLayout()
 
+    const align = computed(() => getPluginByLayout(PLUGIN_NAME['Datasource']))
     const panelWidth = window.getComputedStyle(document.body).getPropertyValue('--base-left-panel-width')
-    const leftMargin = computed(() => getPluginWidth(PLUGIN_NAME['Datasource']) - parseInt(panelWidth))
+    const margin = computed(() => getPluginWidth(PLUGIN_NAME['Datasource']) - parseInt(panelWidth))
+    const computedStyle = computed(() => {
+      return { [align.value.includes('left') ? 'marginLeft' : 'marginRight']: margin.value + 'px' }
+    })
 
     const state = reactive({
       remoteData: { options: {} },
@@ -217,7 +222,8 @@ export default {
       saveRemote,
       sendRequest,
       isOpen,
-      leftMargin
+      computedStyle,
+      align
     }
   }
 }

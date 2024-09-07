@@ -3,7 +3,8 @@
     v-if="isShow"
     :title="state.title"
     class="pageFolder-plugin-setting"
-    :style="{ marginLeft: leftMargin + 'px' }"
+    :style="computedStyle"
+    :align="align"
   >
     <template #header>
       <button-group>
@@ -82,8 +83,12 @@ export default {
     const { appInfoState } = useApp()
     const { pageSettingState, changeTreeData } = usePage()
     const { confirm } = useModal()
-    const { getPluginWidth, PLUGIN_NAME } = useLayout()
-    const leftMargin = computed(() => getPluginWidth(PLUGIN_NAME['AppManage']))
+    const { getPluginWidth, PLUGIN_NAME, getPluginByLayout } = useLayout()
+    const align = computed(() => getPluginByLayout(PLUGIN_NAME['AppManage']))
+    const margin = computed(() => getPluginWidth(PLUGIN_NAME['AppManage']))
+    const computedStyle = computed(() => {
+      return { [align.value.includes('left') ? 'marginLeft' : 'marginRight']: margin.value + 'px' }
+    })
 
     const closeFolderSetting = () => {
       if (isEqual(pageSettingState.currentPageData, pageSettingState.currentPageDataCopy)) {
@@ -207,7 +212,8 @@ export default {
       state,
       pageSettingState,
       closeFolderSetting,
-      leftMargin
+      computedStyle,
+      align
     }
   }
 }

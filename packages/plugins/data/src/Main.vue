@@ -41,7 +41,7 @@
           @removeStore="removeStore"
         />
       </div>
-      <div v-if="isPanelShow" class="data-source-right-panel" :style="{ marginLeft: leftMargin + 'px' }">
+      <div v-if="isPanelShow" class="data-source-right-panel" :style="computedStyle">
         <div class="header">
           <span>{{ addDataSource }}</span>
           <span class="options-wrap">
@@ -127,13 +127,22 @@ export default {
     const activeName = ref(STATE.CURRENT_STATE)
     const isBlock = computed(() => useCanvas().isBlock())
     const { setSaved } = useCanvas()
-    const { PLUGIN_NAME, getPluginApi, getPluginWidth } = useLayout()
+    const { PLUGIN_NAME, getPluginApi, getPluginWidth, getPluginByLayout } = useLayout()
     const { openCommon } = getPluginApi(PLUGIN_NAME.save)
     const docsUrl = useHelp().getDocsUrl('data')
     const panelState = reactive({
       emitEvent: emit
     })
-    const leftMargin = computed(() => getPluginWidth(PLUGIN_NAME['Data']))
+
+    const align = computed(() => getPluginByLayout(PLUGIN_NAME['Data']))
+    const margin = computed(() => getPluginWidth(PLUGIN_NAME['Data']))
+    // 计算样式
+    const computedStyle = computed(() => {
+      return align.value.includes('left')
+        ? { marginLeft: margin.value + 'px', borderRight: '1px solid var(--ti-lowcode-toolbar-border-color)' }
+        : { marginRight: margin.value + 'px', right: 0, borderLeft: '1px solid var(--ti-lowcode-toolbar-border-color)' }
+    })
+
     provide('panelState', panelState)
 
     const state = reactive({
@@ -396,7 +405,8 @@ export default {
       open,
       docsUrl,
       PLUGIN_NAME,
-      leftMargin
+      computedStyle,
+      align
     }
   }
 }
@@ -452,7 +462,6 @@ export default {
   .data-source-right-panel {
     width: 492px;
     height: 100%;
-    border-right: 1px solid var(--ti-lowcode-toolbar-border-color);
     background: var(--ti-lowcode-common-component-bg);
     position: absolute;
     top: 0;
