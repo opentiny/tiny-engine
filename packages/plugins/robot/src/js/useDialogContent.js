@@ -23,22 +23,47 @@ export default function useMarkdown() {
       } else {
         highlighted = md.utils.escapeHtml(str)
       }
-      const copyButtonText = '复制' // Make this configurable
-      return `<div class="code-block"><pre class="hljs code-container"><code>${highlighted}</code></pre><button class="copy-btn">${copyButtonText}</button></div>`
+      const copyButtonText = '复制'
+      const generateButtonText = '生成schema'
+      return `<div class="code-block"><pre class="hljs code-container"><code>${highlighted}</code></pre><button class="generate-btn code-block-btn">${generateButtonText}</button><button class="copy-btn code-block-btn">${copyButtonText}</button></div>`
     }
   })
 
   function initClipboard() {
+    const generate = new ClipboardJS('.generate-btn', {
+      text: function (trigger) {
+        if (trigger.classList.contains('generate-schema-btn')) {
+          // 处理生成 schema 的逻辑
+          Notify({
+            type: 'success',
+            message: '已生成',
+            position: 'top-right',
+            duration: 3000
+          })
+          return '' // 不需要复制的内容
+        }
+        return '生成schema了'
+      }
+    })
+
+    generate.on('success', function (e) {
+      const originalText = '生成schema'
+      e.trigger.textContent = '已生成'
+      setTimeout(() => {
+        e.trigger.textContent = originalText
+      }, 3000)
+      e.clearSelection()
+    })
+
     const clipboard = new ClipboardJS('.copy-btn', {
       text: function (trigger) {
-        return trigger.previousElementSibling.textContent
+        return trigger.closest('.code-block').querySelector('.hljs').textContent
       }
     })
 
     clipboard.on('success', function (e) {
       const originalText = '复制'
-      const copiedText = '已复制'
-      e.trigger.textContent = copiedText
+      e.trigger.textContent = '已复制'
       setTimeout(() => {
         e.trigger.textContent = originalText
       }, 3000)

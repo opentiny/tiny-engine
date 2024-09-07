@@ -45,24 +45,36 @@ export default {
 .code-block {
   position: relative;
 }
-.code-block:hover .copy-btn {
+
+.code-block:hover .code-block-btn {
   opacity: 1;
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
+
 .code-container {
   padding: 10px;
   border-radius: 5px;
 }
+
+.generate-btn {
+  right: 75px;
+}
+
 .copy-btn {
   width: 56px;
   font-size: 12px;
+  right: 8px;
+}
+
+.code-block-btn {
+  cursor: pointer;
+  position: absolute;
+  top: 8px;
+  font-size: 12px;
+  line-height: 12px;
   background-color: #ccc;
   border: none;
   padding: 5px 10px;
-  cursor: pointer;
-  position: absolute;
-  top: 5px;
-  right: 5px;
   border-radius: 3px;
   transition: all 0.3s;
   opacity: 0;

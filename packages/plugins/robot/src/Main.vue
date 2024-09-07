@@ -24,8 +24,8 @@
               :key="item.label"
               :class="{ 'selected-model': currentModel === item.value }"
               @click="changeModel(item)"
-              >{{ item.label }}</tiny-dropdown-item
-            >
+              >{{ item.label }}
+            </tiny-dropdown-item>
           </tiny-dropdown-menu>
         </template>
       </tiny-dropdown>
@@ -189,15 +189,69 @@ export default {
       useHistory().addHistory()
     }
 
-    const codeRules = `
-    请扮演一名前端开发专家，生成代码时遵从以下几条要求:
-###
-1. 只使用element-ui组件库完成代码编写
-2. 使用vue2技术栈
-3. 回复中只能有一个代码块
-4. el-table标签内不得出现el-table-column
-###
-  `
+    const codeRules = `请生成一个JSON格式的schema代码，确保它完全符合以下提供的模板。请严格按照模板的结构和属性来构建代码，不要添加任何额外的属性或元素，也不要省略任何必要的部分。以下是您需要遵循的模板：
+{
+  "componentName": "div",
+  "props": {
+    "class": "home"
+  },
+  "children": [
+    {
+      "componentName": "div",
+      "props": {
+        "style": "display: flex"
+      },
+      "children": [
+        {
+          "componentName": "div",
+          "props": {
+            "class": "homeTitle"
+          },
+          "text": "主页设置"
+        },
+        {
+          "componentName": "tiny-checkbox",
+          "props": {
+            "class": "selectHome",
+            "v-model": "state.checked",
+            "disabled": "state.selectDisable"
+          },
+          "events": {
+            "change": "settingHome"
+          }
+        },
+        {
+          "componentName": "div",
+          "props": {
+            "class": "tip"
+          },
+          "children": [
+            {
+              "componentName": "span",
+              "text": "当前主页是"
+            },
+            {
+              "componentName": "span",
+              "props": {
+                "class": "home-page"
+              },
+              "text": "【{{ homePage }}】"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "state": {
+    "checked": false,
+    "selectDisable": false
+  },
+  "methods": {
+    "settingHome": "function(event) { /* ... */ }"
+  },
+  "css": ".home { /* ... */ } .home-title { /* ... */ } .selectHome { /* ... */ } .tip { /* ... */ } .home-page { /* ... */ }",
+  "fileName": "HomePageSettings"
+}`
 
     // 在每一次发送请求之前，都把引入区块的内容，给放到第一条消息中
     // 为了不污染存储在localstorage里的用户的原始消息，这里进行了简单的对象拷贝
@@ -390,6 +444,7 @@ export default {
           message: '切换AI大模型将导致当前会话被清空，重新开启新会话，是否继续？',
           exec() {
             selectedModel.value = model
+            currentModel = model
             endContent()
           }
         })
@@ -454,26 +509,32 @@ export default {
 .chat-title-icons {
   font-size: 16px;
   height: 16px;
+
   svg {
     float: right;
     margin: 0 4px;
     cursor: pointer;
+
     &:hover {
       opacity: 0.8;
     }
   }
 }
+
 .chat-title {
   font-weight: bold;
   font-size: 14px;
   margin-bottom: 20px;
   color: var(--ti-lowcode-chat-model-title);
 }
+
 .chat-window {
   max-height: 400px;
   overflow: scroll;
+
   .chat-avatar-wrap {
     width: 46px;
+
     .chat-avatar {
       width: 28px;
       height: 28px;
@@ -482,10 +543,12 @@ export default {
       border: 1px solid var(--ti-lowcode-chat-model-avatar-border);
       border-radius: 50px;
     }
+
     .chat-avatar-ai {
       border: none;
     }
   }
+
   .chat-content {
     max-width: 568px;
     border-radius: 8px;
@@ -500,6 +563,7 @@ export default {
       color: var(--ti-lowcode-chat-model-user-text);
     }
   }
+
   .chat-message-row {
     margin-bottom: 20px;
   }
@@ -522,6 +586,7 @@ export default {
   font-size: 12px;
   margin-top: 10px;
   color: var(--ti-lowcode-chat-model-text);
+
   span {
     display: inline-block;
     line-height: 32px;
@@ -530,32 +595,40 @@ export default {
     border: 1px solid var(--ti-lowcode-chat-model-text-border);
     border-radius: 20px;
     cursor: pointer;
+
     &:hover {
       border-color: var(--ti-lowcode-chat-model-text);
     }
   }
 }
+
 .chat-submit {
   margin-top: 14px;
   font-size: 14px;
+
   .tiny-input {
     width: calc(100% - 236px);
+
     .tiny-input__inner {
       height: 40px;
       background-color: var(--ti-lowcode-chat-model-input-bg);
       border: none;
     }
+
     svg {
       font-size: 16px;
       color: var(--ti-lowcode-chat-model-input-icon);
     }
+
     .microphone {
       font-size: 18px;
     }
+
     .microphone-svg {
       color: var(--ti-lowcode-base-blue-6);
     }
   }
+
   .tiny-button {
     background-color: var(--ti-lowcode-chat-model-button-bg) !important;
     border: 1px solid var(--ti-lowcode-chat-model-button-border) !important;
@@ -565,11 +638,13 @@ export default {
     border-radius: 12px !important;
     float: right;
     margin-right: 5px;
+
     &:hover {
       opacity: 0.8;
     }
   }
 }
+
 .hidden-text {
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -579,18 +654,23 @@ export default {
 .chat-loading .tiny-loading__spinner svg {
   fill: var(--ti-lowcode-chat-loading-svg-color);
 }
+
 .chat-loading .tiny-loading__spinner .tiny-loading__text {
   color: var(--ti-lowcode-chat-loading-text-color);
 }
+
 .chat-model-popover {
   background-color: var(--ti-lowcode-chat-model-popover-bg);
+
   .tiny-dropdown-item {
     color: var(--ti-lowcode-chat-model-popover-color);
+
     &:hover {
       color: var(--ti-lowcode-chat-model-popover-active-color);
       background-color: var(--ti-lowcode-chat-model-popover-active-bg);
     }
   }
+
   .selected-model {
     color: var(--ti-lowcode-chat-model-popover-active-color);
     background-color: var(--ti-lowcode-chat-model-popover-active-bg);
