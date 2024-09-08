@@ -105,7 +105,7 @@ import {
   DropdownMenu as TinyDropdownMenu,
   DropdownItem as TinyDropdownItem
 } from '@opentiny/vue'
-import { useCanvas, useHistory, usePage, useModal } from '@opentiny/tiny-engine-controller'
+import { useCanvas, useHistory, usePage, useModal, useLayout } from '@opentiny/tiny-engine-controller'
 import { iconChevronDown, iconSetting } from '@opentiny/vue-icon'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { useHttp } from '@opentiny/tiny-engine-http'
@@ -140,7 +140,7 @@ export default {
     const activeMessages = ref([])
     const connectedFailed = ref(false)
     const inputContent = ref('')
-    const inProcesing = ref(false)
+    const inProcessing = ref(false)
     const selectedModel = ref(AIModelOptions[0])
     let currentModel = AIModelOptions[0]
     const { confirm } = useModal()
@@ -185,73 +185,26 @@ export default {
       pageSettingState.currentPageDataCopy = extend(true, {}, pageSettingState.currentPageData)
       clearCurrentState()
       // 已经创建过临时页面只更新schema
+      useLayout().layoutState.pageStatus = {
+        state: 'empty',
+        data: {}
+      }
       initData(pageSettingState.currentPageData['page_content'], pageSettingState.currentPageData)
       useHistory().addHistory()
     }
 
-    const codeRules = `请生成一个JSON格式的schema代码，确保它完全符合以下提供的模板。请严格按照模板的结构和属性来构建代码，不要添加任何额外的属性或元素，也不要省略任何必要的部分。以下是您需要遵循的模板：
-{
-  "componentName": "div",
-  "props": {
-    "class": "home"
-  },
-  "children": [
-    {
-      "componentName": "div",
-      "props": {
-        "style": "display: flex"
-      },
-      "children": [
-        {
-          "componentName": "div",
-          "props": {
-            "class": "homeTitle"
-          },
-          "text": "主页设置"
-        },
-        {
-          "componentName": "tiny-checkbox",
-          "props": {
-            "class": "selectHome",
-            "v-model": "state.checked",
-            "disabled": "state.selectDisable"
-          },
-          "events": {
-            "change": "settingHome"
-          }
-        },
-        {
-          "componentName": "div",
-          "props": {
-            "class": "tip"
-          },
-          "children": [
-            {
-              "componentName": "span",
-              "text": "当前主页是"
-            },
-            {
-              "componentName": "span",
-              "props": {
-                "class": "home-page"
-              },
-              "text": "【{{ homePage }}】"
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "state": {
-    "checked": false,
-    "selectDisable": false
-  },
-  "methods": {
-    "settingHome": "function(event) { /* ... */ }"
-  },
-  "css": ".home { /* ... */ } .home-title { /* ... */ } .selectHome { /* ... */ } .tip { /* ... */ } .home-page { /* ... */ }",
-  "fileName": "HomePageSettings"
-}`
+    const codeRules = `
+      从现在开始，请扮演一名前端专家。如果需要生成前端代码，代码中的所有组件必须使用 Vue 3 框架和 TinyVue 组件库进行编写。例如，如果你想使用按钮组件，应该使用 TinyVue 组件库中的 \`TinyButton\`。
+      以下是 TinyVue 组件库的文档，请通读并遵循其中的指导来生成代码：[TinyVue 组件库文档](https://opentiny.design/tiny-vue/zh-CN/os-theme/overview)
+      生成代码时遵从以下几条要求:
+      ###
+      1. 回复中只能有一个代码块
+      2. 所有生成的代码都是基于 Vue 3 框架
+      3. 所有组件都来自 TinyVue 组件库，避免使用原生组件或其他第三方库
+      4. 参考并遵循 TinyVue 文档中的组件使用方式
+      5. 所有的组件都遵循了首字母大写的命名约定，例如用TinyForm、TinyFormItem、Text等。
+      ###
+    `
 
     // 在每一次发送请求之前，都把引入区块的内容，给放到第一条消息中
     // 为了不污染存储在localstorage里的用户的原始消息，这里进行了简单的对象拷贝
@@ -295,7 +248,7 @@ export default {
           if (schema?.schema) {
             createNewPage(schema.schema)
           }
-          inProcesing.value = false
+          inProcessing.value = false
           connectedFailed.value = false
         })
         .catch((error) => {
@@ -309,7 +262,7 @@ export default {
           }
           messages.value[messages.value.length - 1].content = '连接失败'
           localStorage.removeItem('aiChat')
-          inProcesing.value = false
+          inProcessing.value = false
           connectedFailed.value = false
         })
     }
@@ -354,7 +307,7 @@ export default {
         })
         return
       }
-      if (inProcesing.value) {
+      if (inProcessing.value) {
         Notify({
           type: 'error',
           message: '请等待当前会话完成后再试!',
@@ -369,7 +322,7 @@ export default {
           await resizeChatWindow()
         }
         const message = getMessage(realContent)
-        inProcesing.value = true
+        inProcessing.value = true
 
         messages.value.push(message)
         sessionProcess?.messages.push(message)
