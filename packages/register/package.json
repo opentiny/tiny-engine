@@ -1,9 +1,22 @@
 {
   "name": "@opentiny/tiny-engine-meta-register",
-  "version": "1.0.0",
+  "version": "2.0.0-alpha.1",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.js",
+  "author": "OpenTiny Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/opentiny/tiny-engine/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/opentiny/tiny-engine",
+    "directory": "packages/register"
+  },
   "files": [
     "dist"
   ],
@@ -19,7 +32,5 @@
   "devDependencies": {
     "vitest": "^1.4.0"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "keywords": []
 }

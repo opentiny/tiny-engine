@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-configurator",
-  "version": "1.0.0",
+  "version": "2.0.0-alpha.1",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -26,8 +26,8 @@
   },
   "dependencies": {
     "@opentiny/tiny-engine-common": "workspace:*",
-    "@opentiny/tiny-engine-meta-register": "workspace:*",
     "@opentiny/tiny-engine-http": "workspace:*",
+    "@opentiny/tiny-engine-meta-register": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
     "@vue/shared": "^3.3.4",
     "monaco-editor": "0.33.0",
