@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-toolbar-media",
-  "version": "1.0.3",
+  "version": "2.0.0-alpha.0",
   "publishConfig": {
     "access": "public"
   },
@@ -27,10 +27,10 @@
     "@opentiny/tiny-engine-meta-register": "workspace:*"
   },
   "devDependencies": {
+    "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
     "@vitejs/plugin-vue": "^4.2.3",
     "@vitejs/plugin-vue-jsx": "^3.1.0",
-    "vite": "^4.3.7",
-    "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*"
+    "vite": "^4.3.7"
   },
   "peerDependencies": {
     "@opentiny/vue": "^3.14.0",

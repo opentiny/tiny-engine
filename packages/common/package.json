@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-common",
-  "version": "1.0.2",
+  "version": "2.0.0-alpha.0",
   "publishConfig": {
     "access": "public"
   },
@@ -33,9 +33,9 @@
     "@babel/parser": "~7.23.2",
     "@babel/traverse": "~7.23.2",
     "@opentiny/tiny-engine-dsl-vue": "workspace:*",
-    "@opentiny/tiny-engine-meta-register": "workspace:*",
     "@opentiny/tiny-engine-http": "workspace:*",
     "@opentiny/tiny-engine-i18n-host": "workspace:*",
+    "@opentiny/tiny-engine-meta-register": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
     "@vue/shared": "^3.3.4",
     "css-tree": "^2.3.1",
@@ -53,8 +53,8 @@
   },
   "peerDependencies": {
     "@opentiny/vue": "^3.14.0",
-    "@opentiny/vue-locale": "^3.14.0",
     "@opentiny/vue-icon": "^3.14.0",
+    "@opentiny/vue-locale": "^3.14.0",
     "@opentiny/vue-renderless": "^3.14.0",
     "vue": "^3.4.15",
     "vue-i18n": "^9.9.0"

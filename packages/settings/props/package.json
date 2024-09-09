@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-setting-props",
-  "version": "1.0.3",
+  "version": "2.0.0-alpha.0",
   "publishConfig": {
     "access": "public"
   },
@@ -38,8 +38,8 @@
   },
   "peerDependencies": {
     "@opentiny/vue": "^3.14.0",
-    "@opentiny/vue-renderless": "^3.14.0",
     "@opentiny/vue-icon": "^3.14.0",
+    "@opentiny/vue-renderless": "^3.14.0",
     "vue": "^3.4.15"
   }
 }

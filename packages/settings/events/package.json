@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-setting-events",
-  "version": "1.0.3",
+  "version": "2.0.0-alpha.0",
   "publishConfig": {
     "access": "public"
   },
@@ -24,9 +24,9 @@
   "license": "MIT",
   "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
+    "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-configurator": "workspace:*",
     "@opentiny/tiny-engine-meta-register": "workspace:*",
-    "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*"
   },
   "devDependencies": {
