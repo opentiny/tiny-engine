@@ -116,16 +116,6 @@ export default {
       draggable: true
     }))
 
-    const actionEvents = (item) => {
-      switch (item.type) {
-        case 'add':
-          addItem()
-          break
-        default:
-          break
-      }
-    }
-
     const state = reactive({
       currentIndex: -1
     })
@@ -134,13 +124,18 @@ export default {
       state.currentIndex = data.index
     }
 
+    const updatedColumns = () => {
+      emit('update:modelValue', [...columnsList.value])
+    }
+
     const addItem = () => {
       const defaultValue = props.meta.defaultValue?.[0] || null
       const newOption = ['string', 'boolean', 'number'].includes(props.meta.widget.props.type)
         ? defaultValue
-        : { ...defaultValue }
+        : { ...defaultValue, title: props.meta.properties[0].content[0].defaultValue }
 
       columnsList.value.push(newOption)
+
       state.currentIndex = columnsList.value.length - 1
       updatedColumns()
     }
@@ -155,8 +150,14 @@ export default {
       updatedColumns()
     }
 
-    const updatedColumns = () => {
-      emit('update:modelValue', [...columnsList.value])
+    const actionEvents = (item) => {
+      switch (item.type) {
+        case 'add':
+          addItem()
+          break
+        default:
+          break
+      }
     }
 
     const onValueChange = (index, { propertyKey, propertyValue }) => {
