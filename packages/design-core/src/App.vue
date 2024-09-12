@@ -81,7 +81,7 @@ export default {
 
     pluginList.forEach((item) => {
       if (item.id) {
-        const align = item.options?.align || 'rightTop'
+        const align = item.options?.align || 'leftTop'
         if (!alignGroups[align]) {
           alignGroups[align] = []
         }
@@ -93,7 +93,7 @@ export default {
     const plugin = {}
     pluginList.forEach((item) => {
       if (item.id) {
-        const align = item.options?.align || 'rightTop'
+        const align = item.options?.align || 'leftTop'
         const index = alignGroups[align].indexOf(item.id)
 
         plugin[item.id] = {

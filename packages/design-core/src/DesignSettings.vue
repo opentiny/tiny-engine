@@ -24,8 +24,7 @@
       <div
         v-for="item in state.leftList"
         :key="item.id"
-        class="list-item"
-        :class="{ 'first-item': item === state.leftList[0], active: item.id === renderPanel }"
+        :class="['list-item', { 'first-item': item === state.leftList[0], active: item.id === renderPanel }]"
         :title="item.title"
         @click="clickMenu({ item, index: state.leftList.indexOf(item) })"
       >
@@ -70,7 +69,7 @@ export default {
       registerPluginApi,
       changeRightFixedPanels,
       getPluginsByLayout,
-      dargPluginLayout,
+      dragPluginLayout,
       isSameSide,
       layoutState: { settings: settingsState }
     } = useLayout()
@@ -122,7 +121,7 @@ export default {
     //监听拖拽结束事件
     const onEnd = (e) => {
       if (!isSameSide(e.from.id, e.to.id)) close()
-      dargPluginLayout(e.from.id, e.to.id, e.oldIndex, e.newIndex)
+      dragPluginLayout(e.from.id, e.to.id, e.oldIndex, e.newIndex)
     }
 
     return {

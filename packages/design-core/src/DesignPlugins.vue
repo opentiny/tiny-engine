@@ -170,7 +170,7 @@ export default {
       leftFixedPanelsStorage,
       getPluginsByLayout,
       PLUGIN_POSITION,
-      dargPluginLayout,
+      dragPluginLayout,
       isSameSide
     } = useLayout()
 
@@ -253,7 +253,7 @@ export default {
     //监听拖拽结束事件
     const onEnd = (e) => {
       if (!isSameSide(e.from.id, e.to.id)) close()
-      dargPluginLayout(e.from.id, e.to.id, e.oldIndex, e.newIndex)
+      dragPluginLayout(e.from.id, e.to.id, e.oldIndex, e.newIndex)
     }
 
     return {

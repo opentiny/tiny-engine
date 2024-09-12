@@ -204,7 +204,7 @@ export default () => {
   }
 
   //拖拽后改变插件位置
-  const dargPluginLayout = (from, to, oldIndex, newIndex) => {
+  const dragPluginLayout = (from, to, oldIndex, newIndex) => {
     if (from === to && oldIndex === newIndex) return
 
     const items = Object.values(pluginStorageReactive.value)
@@ -249,8 +249,8 @@ export default () => {
 
   //判断是否在同一侧
   const isSameSide = (from, to) => {
-    const leftSide = ['leftTop', 'leftBottom']
-    const rightSide = ['rightTop', 'rightBottom']
+    const leftSide = [PLUGIN_POSITION.leftTop, PLUGIN_POSITION.leftBottom]
+    const rightSide = [PLUGIN_POSITION.rightTop, PLUGIN_POSITION.rightBottom]
 
     const isLeft = leftSide.includes(from) && leftSide.includes(to)
     const isRight = rightSide.includes(from) && rightSide.includes(to)
@@ -283,7 +283,7 @@ export default () => {
     getPluginsByLayout,
     changePluginLayout,
     getPluginByLayout,
-    dargPluginLayout,
+    dragPluginLayout,
     isSameSide
   }
 }
