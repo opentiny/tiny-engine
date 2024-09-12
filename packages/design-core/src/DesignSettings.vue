@@ -20,7 +20,7 @@
   </div>
   <!-- 图标菜单 -->
   <div id="tiny-engine-nav-panel">
-    <VueDraggable id="rightTop" v-model="state.leftList" class="nav-panel-lists" group="plugins" @end="onEnd">
+    <vue-draggable-next id="rightTop" v-model="state.leftList" class="nav-panel-lists" group="plugins" @end="onEnd">
       <div
         v-for="item in state.leftList"
         :key="item.id"
@@ -33,7 +33,7 @@
           <component v-else :is="iconComponents[item.id]" class="panel-icon"></component>
         </span>
       </div>
-    </VueDraggable>
+    </vue-draggable-next>
   </div>
 </template>
 
@@ -43,7 +43,7 @@ import { Popover, Tooltip } from '@opentiny/vue'
 import { Tabs, TabItem } from '@opentiny/vue'
 import { useLayout } from '@opentiny/tiny-engine-controller'
 import { getPlugin } from '../config/plugin.js'
-import { VueDraggable } from 'vue-draggable-plus'
+import { VueDraggableNext } from 'vue-draggable-next'
 
 export default {
   components: {
@@ -51,7 +51,7 @@ export default {
     TinyTabItem: TabItem,
     TinyPopover: Popover,
     TinyTooltip: Tooltip,
-    VueDraggable
+    VueDraggableNext
   },
   props: {
     renderPanel: {

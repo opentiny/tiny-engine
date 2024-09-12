@@ -3,7 +3,7 @@
   <div>
     <div id="tiny-engine-nav-panel" :style="{ 'pointer-events': pluginState.pluginEvent }">
       <!-- 图标菜单上侧区域（主要icon） -->
-      <VueDraggable
+      <vue-draggable-next
         v-model="state.topNavLists"
         filter="EditorHelp"
         class="nav-panel-lists top"
@@ -34,12 +34,12 @@
             </span>
           </div>
         </div>
-      </VueDraggable>
+      </vue-draggable-next>
 
       <!-- 图标菜单下侧区域（附加icon） -->
       <div class="nav-panel-lists bottom">
         <div style="flex: 1" class="list-item"></div>
-        <VueDraggable id="leftBottom" v-model="state.bottomNavLists" group="plugins" @end="onEnd">
+        <vue-draggable-next id="leftBottom" v-model="state.bottomNavLists" group="plugins" @end="onEnd">
           <div
             v-for="(item, index) in state.bottomNavLists"
             :key="index"
@@ -62,7 +62,7 @@
               </span>
             </div>
           </div>
-        </VueDraggable>
+        </vue-draggable-next>
         <div
           v-for="(item, index) in state.fixedNavLists"
           :key="index"
@@ -139,14 +139,14 @@ import { Popover, Tooltip } from '@opentiny/vue'
 import { useLayout, usePage } from '@opentiny/tiny-engine-controller'
 import { PublicIcon } from '@opentiny/tiny-engine-common'
 import { getPlugin } from '../config/plugin.js'
-import { VueDraggable } from 'vue-draggable-plus'
+import { VueDraggableNext } from 'vue-draggable-next'
 
 export default {
   components: {
     TinyPopover: Popover,
     TinyTooltip: Tooltip,
     PublicIcon,
-    VueDraggable
+    VueDraggableNext
   },
   props: {
     renderPanel: {
