@@ -17,7 +17,7 @@ export default {
   title: '',
   icon: HelpIcon,
   options: {
-    align: 'leftBottom'
+    align: 'fixed'
   },
   align: 'bottom'
 }

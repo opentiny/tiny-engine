@@ -75,10 +75,32 @@ export default {
       jsClose: null
     })
 
-    const plugin = {}
-    addons.plugins.forEach((item) => {
+    // Step 1: 收集插件的 align 信息
+    const alignGroups = {}
+    const pluginList = addons.plugins
+
+    pluginList.forEach((item) => {
       if (item.id) {
-        plugin[item.id] = { width: item.options?.width || 300, align: item.options?.align || 'rightTop' }
+        const align = item.options?.align || 'leftTop'
+        if (!alignGroups[align]) {
+          alignGroups[align] = []
+        }
+        alignGroups[align].push(item.id)
+      }
+    })
+
+    // Step 2: 为每个插件分配 index 值
+    const plugin = {}
+    pluginList.forEach((item) => {
+      if (item.id) {
+        const align = item.options?.align || 'leftTop'
+        const index = alignGroups[align].indexOf(item.id)
+
+        plugin[item.id] = {
+          width: item.options?.width || 300,
+          align: align,
+          index: index
+        }
       }
     })
     localStorage.setItem('plugin', JSON.stringify(plugin))

@@ -18,29 +18,22 @@
       </div>
     </div>
   </div>
-
+  <!-- 图标菜单 -->
   <div id="tiny-engine-nav-panel">
-    <!-- 图标菜单 -->
-    <ul class="nav-panel-lists">
-      <li
-        v-for="(item, index) in state.leftList"
-        :key="index"
-        :class="{
-          'list-item': true,
-          'first-item': index === 0,
-          active: item.id === renderPanel
-        }"
+    <vue-draggable-next id="rightTop" v-model="state.leftList" class="nav-panel-lists" group="plugins" @end="onEnd">
+      <div
+        v-for="item in state.leftList"
+        :key="item.id"
+        :class="['list-item', { 'first-item': item === state.leftList[0], active: item.id === renderPanel }]"
         :title="item.title"
-        @click="clickMenu({ item, index })"
+        @click="clickMenu({ item, index: state.leftList.indexOf(item) })"
       >
-        <div>
-          <span class="item-icon">
-            <svg-icon v-if="iconComponents[item.id]" :name="iconComponents[item.id]" class="panel-icon"></svg-icon>
-            <component v-else :is="iconComponents[item.id]" class="panel-icon"></component>
-          </span>
-        </div>
-      </li>
-    </ul>
+        <span class="item-icon">
+          <svg-icon v-if="iconComponents[item.id]" :name="iconComponents[item.id]" class="panel-icon"></svg-icon>
+          <component v-else :is="iconComponents[item.id]" class="panel-icon"></component>
+        </span>
+      </div>
+    </vue-draggable-next>
   </div>
 </template>
 
@@ -50,13 +43,15 @@ import { Popover, Tooltip } from '@opentiny/vue'
 import { Tabs, TabItem } from '@opentiny/vue'
 import { useLayout } from '@opentiny/tiny-engine-controller'
 import { getPlugin } from '../config/plugin.js'
+import { VueDraggableNext } from 'vue-draggable-next'
 
 export default {
   components: {
     TinyTabs: Tabs,
     TinyTabItem: TabItem,
     TinyPopover: Popover,
-    TinyTooltip: Tooltip
+    TinyTooltip: Tooltip,
+    VueDraggableNext
   },
   props: {
     renderPanel: {
@@ -74,6 +69,8 @@ export default {
       registerPluginApi,
       changeRightFixedPanels,
       getPluginsByLayout,
+      dragPluginLayout,
+      isSameSide,
       layoutState: { settings: settingsState }
     } = useLayout()
 
@@ -121,6 +118,12 @@ export default {
       changeRightFixedPanels(pluginName)
     }
 
+    //监听拖拽结束事件
+    const onEnd = (e) => {
+      if (!isSameSide(e.from.id, e.to.id)) close()
+      dragPluginLayout(e.from.id, e.to.id, e.oldIndex, e.newIndex)
+    }
+
     return {
       state,
       showMask,
@@ -131,7 +134,8 @@ export default {
       clickMenu,
       close,
       fixPanel,
-      rightFixedPanelsStorage
+      rightFixedPanelsStorage,
+      onEnd
     }
   }
 }
@@ -268,5 +272,10 @@ export default {
   100% {
     box-shadow: inset 0px 0px 14px var(--ti-lowcode-canvas-handle-hover-bg);
   }
+}
+
+.ghost {
+  opacity: 0.5;
+  background: #f2f2f2;
 }
 </style>
