@@ -19,7 +19,7 @@
       <div class="page-setting-content">
         <tiny-collapse v-model="state.activeName" class="page-setting-collapse">
           <tiny-collapse-item title="基本设置" :name="PAGE_SETTING_SESSION.general">
-            <page-general ref="pageGeneralRef" :isFolder="isFolder"></page-general>
+            <component :is="pageGeneral" ref="pageGeneralRef" :isFolder="isFolder"></component>
           </tiny-collapse-item>
 
           <tiny-collapse-item
@@ -55,15 +55,23 @@
 import { reactive, ref } from 'vue'
 import { Button, Collapse, CollapseItem, Input } from '@opentiny/vue'
 import { PluginSetting, ButtonGroup, SvgButton, LifeCycles } from '@opentiny/tiny-engine-common'
-import { useLayout, usePage, useCanvas, useModal, useApp, useNotify } from '@opentiny/tiny-engine-meta-register'
+import {
+  useLayout,
+  usePage,
+  useCanvas,
+  useModal,
+  useApp,
+  useNotify,
+  getMergeRegistry
+} from '@opentiny/tiny-engine-meta-register'
 import { extend, isEqual } from '@opentiny/vue-renderless/common/object'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import { handlePageUpdate } from '@opentiny/tiny-engine-common/js/http'
 import { generatePage } from '@opentiny/tiny-engine-common/js/vscodeGenerateFile'
-import PageGeneral from './PageGeneral.vue'
 import PageHistory from './PageHistory.vue'
 import PageInputOutput from './PageInputOutput.vue'
+import meta from '../meta'
 import http from './http.js'
 
 const { COMPONENT_NAME } = constants
@@ -95,7 +103,6 @@ export default {
     TinyCollapseItem: CollapseItem,
     PageInputOutput,
     LifeCycles,
-    PageGeneral,
     PageHistory,
     PluginSetting,
     SvgButton,
@@ -122,6 +129,8 @@ export default {
     } = usePage()
     const { pageState, initData } = useCanvas()
     const { confirm } = useModal()
+    const registry = getMergeRegistry(meta.type, meta.id)
+    const pageGeneral = registry.components.PageGeneral
     const pageGeneralRef = ref(null)
 
     const state = reactive({
@@ -363,6 +372,7 @@ export default {
       savePageSetting,
       copyPage,
       pageSettingState,
+      pageGeneral,
       pageGeneralRef,
       deletePage,
       cancelPageSetting,
