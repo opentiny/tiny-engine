@@ -1,5 +1,9 @@
 <template>
-  <tiny-button v-bind="options.props" :style="options.style" :class="[options?.useDefaultClass ? 'toolbar-button' : '']">
+  <tiny-button
+    v-bind="options.props"
+    :style="options.style"
+    :class="[options?.useDefaultClass ? 'toolbar-button' : '']"
+  >
     <span class="svg-wrap">
       <svg-icon :name="icon"></svg-icon>
       <span v-if="!isSaved() && options?.showDots" class="dots"></span>
@@ -31,7 +35,7 @@ export default {
     }
   },
   setup() {
-    const { isSaved } = useCanvas();
+    const { isSaved } = useCanvas()
     return {
       isSaved
     }
@@ -58,6 +62,7 @@ export default {
   line-height: 24px;
   padding: 0 8px;
   border-radius: 4px;
+  margin-right: 4px;
 }
 
 .svg-wrap {

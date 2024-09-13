@@ -8,7 +8,6 @@
               >{{ item }}
             </tiny-breadcrumb-item>
           </tiny-breadcrumb>
-          <component :is="state.pageLock.entry" v-bind="state.pageLock" :type="state.pageLock.renderType"></component>
         </div>
 
         <tiny-button
