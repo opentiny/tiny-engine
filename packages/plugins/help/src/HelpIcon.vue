@@ -12,7 +12,8 @@
       </div>
       <div class="help-plugin-box-body">
         <a :href="courseUrl" target="_blank" class="help-plugin-box-item">
-          <span><svg-icon class="svg-icon" name="user-guide"></svg-icon>使用手册</span><icon-fillet-external-link />
+          <span><svg-icon class="svg-icon" name="user-guide"></svg-icon>使用手册</span
+          ><icon-fillet-external-link class="icon-fillet-external-link" />
         </a>
         <tiny-tooltip v-model="state.showTooltip" :manual="true" effect="light" placement="right-end">
           <template #content>
@@ -30,7 +31,7 @@
         <div class="help-plugin-box-title help-plugin-box-ques-title">{{ questionTitle }}</div>
         <a v-for="(item, idx) in questionList" :key="idx" :href="item.url" target="_blank" class="help-plugin-box-item">
           <span> {{ idx + 1 }}.{{ item.label }} </span>
-          <icon-fillet-external-link />
+          <icon-fillet-external-link class="icon-fillet-external-link" />
         </a>
       </div>
     </div>
@@ -333,7 +334,7 @@ div.tiny-guide.shepherd-element {
   background-color: var(--ti-lowcode-help-box-bg-color);
   border-radius: 6px;
   box-shadow: var(--ti-lowcode-help-box-shadow);
-  padding: 12px 0;
+  padding: 16px 0;
   &-top {
     text-align: right;
   }
@@ -353,8 +354,8 @@ div.tiny-guide.shepherd-element {
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
-    height: 24px;
-    line-height: 24px;
+    height: 28px;
+    line-height: 28px;
     font-size: 12px;
     color: var(--ti-lowcode-help-box-item-text-color);
     span {
@@ -367,6 +368,7 @@ div.tiny-guide.shepherd-element {
   }
   &-item:hover {
     background: var(--ti-lowcode-help-box-item-hover-bg-color);
+    color: var(--ti-lowcode-help-box-title-text-color);
   }
 
   &-ques {
@@ -374,6 +376,11 @@ div.tiny-guide.shepherd-element {
       padding-top: 8px;
       border-top: 1px solid var(--ti-lowcode-help-box-question-border-top);
     }
+  }
+
+  .icon-fillet-external-link {
+    width: 16px;
+    height: 16px;
   }
 }
 </style>
