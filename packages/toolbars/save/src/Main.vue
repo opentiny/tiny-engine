@@ -1,6 +1,12 @@
 <template>
   <div class="toolbar-save">
-    <toolbar-base-component :type="type" :content="isLoading ? '保存中' : '保存'" :icon="icon.default" :options="options" @click-api="openApi">
+    <toolbar-base-component
+      :type="type"
+      :content="isLoading ? '保存中' : '保存'"
+      :icon="icon.default"
+      :options="options"
+      @click-api="openApi"
+    >
       <template #button-extends>
         <span @click.stop="state.saveVisible = !state.saveVisible">
           <tiny-popover v-model="state.saveVisible" :visible-arrow="false" width="203" trigger="manual">
@@ -190,9 +196,13 @@ export default {
     border: none;
     min-width: 70px;
     height: 26px;
-    line-height: 24px;
+    display: flex;
+    align-items: center;
     padding: 0 8px;
     border-radius: 4px;
+    &:not(.disabled):hover {
+      background-color: var(--ti-lowcode-toolbar-button-bg);
+    }
 
     .save-title {
       margin: 0 6px;

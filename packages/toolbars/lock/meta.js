@@ -7,7 +7,7 @@ export default {
     userLocked: 'user-locked',
     unlocked: 'unlocked'
   },
-  align: 'right',
+  align: 'left',
   renderType: 'icon',
   options: {
     collapsed: true

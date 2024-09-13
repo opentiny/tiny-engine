@@ -21,8 +21,8 @@ export default {
     TinyProgress
   },
   setup() {
-    const { getEditBlock } = getMetaApi(META_APP.BlockManage)
-    const editBlock = computed(getEditBlock)
+    const { getEditBlock } = getMetaApi(META_APP.BlockManage) || {}
+    const editBlock = getEditBlock ? computed(getEditBlock) : null
 
     return {
       editBlock

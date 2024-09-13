@@ -15,16 +15,17 @@ import {
   Fullscreen,
   Lang,
   Logo,
+  Lock,
   Media,
   Redoundo,
   Save,
   Clean,
   Preview,
-  GenerateVue,
+  GenerateCode,
   Refresh,
   Collaboration,
   Materials,
-  Data,
+  State,
   Script,
   Tree,
   Help,
@@ -49,11 +50,7 @@ import engineConfig from './engine.config'
 export default {
   root: {
     id: 'engine.root',
-    metas: [
-      EditorInfoService,
-      AppService,
-      GenerateCodeService
-    ]
+    metas: [EditorInfoService, AppService, GenerateCodeService]
   },
   config: engineConfig,
   layout: Layout,
@@ -68,18 +65,19 @@ export default {
   toolbars: [
     Logo,
     Breadcrumb,
+    Lock,
     Media,
     Redoundo,
     Collaboration,
     Clean,
     Preview,
     Refresh,
-    GenerateVue,
+    GenerateCode,
     Save,
     Fullscreen,
     Lang
   ],
-  plugins: [Materials, Tree, Page, Block, Datasource, Bridge, I18n, Script, Data, Schema, Help, Robot],
+  plugins: [Materials, Tree, Page, Block, Datasource, Bridge, I18n, Script, State, Schema, Help, Robot],
   dsls: [{ id: 'engine.dsls.dslvue' }],
   settings: [Props, Styles, Events],
   canvas: Canvas

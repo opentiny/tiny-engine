@@ -24,7 +24,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, './index.js'),
-      name: 'toolbar-checkinout',
+      name: 'toolbar-lock',
       fileName: () => 'index.js',
       formats: ['es']
     },

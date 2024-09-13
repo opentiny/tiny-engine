@@ -13,12 +13,16 @@
 import entry, { api } from './src/Main.vue'
 import metaData from './meta.js'
 import { BlockService } from './src/composable'
+import SaveNewBlock from './src/SaveNewBlock.vue'
 
 export default {
   ...metaData,
   apis: api,
   entry,
-  metas: [BlockService]
+  metas: [BlockService],
+  components: {
+    SaveNewBlock
+  }
 }
 
 export { BlockService }

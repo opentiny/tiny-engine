@@ -13,7 +13,6 @@
 import { computed, reactive } from 'vue'
 import { useCanvas, useLayout, useBlock, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { Popover } from '@opentiny/vue'
 import { ToolbarBaseComponent } from '@opentiny/tiny-engine-layout'
 import { requestBlockPage } from './http'
 
@@ -44,7 +43,6 @@ const statusMessageMap = {
 
 export default {
   components: {
-    TinyPopover: Popover,
     ToolbarBaseComponent
   },
   props: {
@@ -60,7 +58,6 @@ export default {
     }
   },
   setup(props) {
-    console.log(props);
     const { pageState } = useCanvas()
     const { layoutState } = useLayout()
     const { getCurrentBlock } = useBlock()
