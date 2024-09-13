@@ -4,6 +4,7 @@
       <li v-for="key in filteredKey" :key="key" :class="['data-source-list-item', { selected: key === selectedKey }]">
         <div class="item-head">
           <div class="item-head-left">
+            <svg-button name="plugin-icon-var"></svg-button>
             <span class="protocal"> {{ stateScope === STATE.CURRENT_STATE ? 'state.' : 'stores.' }}</span>
             <span class="name">{{ key }}</span>
           </div>

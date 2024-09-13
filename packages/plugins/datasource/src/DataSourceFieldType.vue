@@ -111,7 +111,7 @@ export default {
 }
 
 .type-list {
-  display: grid;
+  display: flex;
   gap: 8px;
   grid-template-columns: repeat(6, 1fr);
   .type-item {
