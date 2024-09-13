@@ -17,7 +17,16 @@ import * as TinyVueIcon from '@opentiny/vue-icon'
 import { useBroadcastChannel } from '@vueuse/core'
 import { constants, utils as commonUtils } from '@opentiny/tiny-engine-utils'
 import renderer, { parseData, setConfigure, setController, globalNotify, isStateAccessor } from './render'
-import { getNode as getNodeById, clearNodes, getRoot, setContext, getContext, setCondition, context } from './context'
+import {
+  getNode as getNodeById,
+  clearNodes,
+  getRoot,
+  setContext,
+  getContext,
+  setCondition,
+  context,
+  setNode
+} from './context'
 import CanvasEmpty from './CanvasEmpty.vue'
 
 const { BROADCAST_CHANNEL } = constants
@@ -39,15 +48,13 @@ const globalState = ref([])
 const stores = shallowReactive({})
 const dataSourceMap = shallowReactive({})
 
-const Func = Function
-
 watchEffect(() => {
   reset(stores)
   globalState.value.forEach(({ id, state = {}, getters = {} }) => {
     const computedGetters = Object.keys(getters).reduce(
       (acc, key) => ({
         ...acc,
-        [key]: new Func('return ' + getters[key].value)().call(acc, state)
+        [key]: parseData(getters[key], state, acc)
       }),
       {}
     )
@@ -347,6 +354,34 @@ const setSchema = async (data) => {
 
 const getNode = (id, parent) => (id ? getNodeById(id, parent) : schema)
 
+let canvasRenderer = null
+
+const defaultRenderer = function () {
+  // 渲染画布增加根节点，与出码和预览保持一致
+  const rootChildrenSchema = {
+    componentName: 'div',
+    props: schema.props,
+    children: schema.children
+  }
+
+  return h(
+    'tiny-i18n-host',
+    {
+      locale: 'zh_CN',
+      key: refreshKey.value,
+      ref: 'page',
+      className: 'design-page'
+    },
+    schema.children?.length ? h(renderer, { schema: rootChildrenSchema, parent: schema }) : [h(CanvasEmpty)]
+  )
+}
+
+const getRenderer = () => canvasRenderer || defaultRenderer
+
+const setRenderer = (fn) => {
+  canvasRenderer = fn
+}
+
 export default {
   setup() {
     provide('rootSchema', schema)
@@ -378,23 +413,7 @@ export default {
     )
   },
   render() {
-    // 渲染画布增加根节点，与出码和预览保持一致
-    const rootChildrenSchema = {
-      componentName: 'div',
-      props: schema.props,
-      children: schema.children
-    }
-
-    return h(
-      'tiny-i18n-host',
-      {
-        locale: 'zh_CN',
-        key: refreshKey.value,
-        ref: 'page',
-        className: 'design-page'
-      },
-      schema.children?.length ? h(renderer, { schema: rootChildrenSchema, parent: schema }) : [h(CanvasEmpty)]
-    )
+    return getRenderer().call(this)
   }
 }
 
@@ -424,5 +443,8 @@ export const api = {
   getGlobalState,
   getDataSourceMap,
   setDataSourceMap,
-  setGlobalState
+  setGlobalState,
+  setNode,
+  getRenderer,
+  setRenderer
 }

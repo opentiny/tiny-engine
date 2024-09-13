@@ -27,14 +27,14 @@
         </ul>
       </li>
     </ul>
-    <SaveNewBlock :boxVisibility="boxVisibility" fromCanvas @close="close"></SaveNewBlock>
+    <component :is="SaveNewBlock" :boxVisibility="boxVisibility" fromCanvas @close="close"></component>
   </div>
 </template>
 
 <script lang="jsx">
 import { ref, reactive, nextTick } from 'vue'
 import { canvasState, getConfigure, getController, getCurrent, copyNode, removeNodeById } from '../container'
-import { useLayout, useModal, useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { useLayout, useModal, useCanvas, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { iconRight } from '@opentiny/vue-icon'
 
 const menuState = reactive({
@@ -112,9 +112,14 @@ export default {
       },
       { name: '删除', code: 'del' },
       { name: '复制', code: 'copy' },
-      { name: '绑定事件', code: 'bindEvent' },
-      { name: '新建区块', code: 'createBlock' }
+      { name: '绑定事件', code: 'bindEvent' }
     ])
+
+    // 通过画布右键快捷新建区块
+    const { SaveNewBlock } = getMergeMeta('engine.plugins.blockmanage')?.components || {}
+    if (SaveNewBlock) {
+      menus.value.push({ name: '新建区块', code: 'createBlock' })
+    }
 
     const boxVisibility = ref(false)
 
@@ -227,6 +232,7 @@ export default {
     }
 
     return {
+      SaveNewBlock,
       menuState,
       menus,
       doOperation,
