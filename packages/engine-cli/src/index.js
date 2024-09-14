@@ -18,7 +18,7 @@ const program = new Command()
 program
   .command('create-platform <name>')
   .description('create a new tiny-engine platform 创建一个新的tiny-engine低代码平台')
-  .addOption(new Option('-t, --theme <theme>', 'platform theme 平台主题', 'light').choices(['light', 'dark']))
+  .addOption(new Option('-t, --theme <theme>', 'platform theme 平台主题').choices(['light', 'dark']).default('light'))
   .option('-pid, --platformId <platformId>', 'platform id 平台主题', 918)
   .option('-m, --material [material...]', 'material address 物料地址', ['/mock/bundle.json'])
   .option('--scripts [script...]', '物料 script', [])
@@ -30,8 +30,14 @@ program
 program
   .command('create-plugin <name>')
   .description('create a new tiny-engine plugin 创建一个新的 tiny-engine 插件')
-  .action((name) => {
-    createPlugin(name)
+  .addOption(new Option('-t, --type <type>', '插件类型').choices(['plugins', 'toolbars']).default('plugins'))
+  .addOption(new Option('-a, --align <align>', '插件对其位置').choices(['top', 'bottom', 'left', 'center', 'right']))
+  .action((name, options) => {
+    if (!options.align) {
+      options.align = options.type === 'plugins' ? 'top' : 'left'
+    }
+
+    createPlugin(name, options)
   })
 
 program
