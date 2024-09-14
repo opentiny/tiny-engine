@@ -25,6 +25,7 @@
   "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
     "@opentiny/tiny-engine-utils": "workspace:*",
+    "@opentiny/tiny-engine-layout": "workspace:*",
     "@vueuse/core": "^9.6.0"
   },
   "devDependencies": {

@@ -24,7 +24,8 @@
   "license": "MIT",
   "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
-    "@opentiny/tiny-engine-common": "workspace:*"
+    "@opentiny/tiny-engine-common": "workspace:*",
+    "@opentiny/tiny-engine-layout": "workspace:*"
   },
   "devDependencies": {
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
