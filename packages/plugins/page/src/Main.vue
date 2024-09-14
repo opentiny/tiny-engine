@@ -28,7 +28,7 @@
     </template>
   </plugin-panel>
 
-  <page-setting :isFolder="state.isFolder" @openNewPage="openNewPage"></page-setting>
+  <page-setting :isFolder="state.isFolder" @openNewPage="openNewPage" @queryPage="queryPage"></page-setting>
 
   <page-folder-setting :isFolder="state.isFolder"></page-folder-setting>
 </template>
@@ -142,6 +142,9 @@ export default {
     const openNewPage = (data) => {
       pageTreeRef.value.switchPage(data)
     }
+    const queryPage = () => {
+      pageTreeRef.value.pageSettingState.updateTreeData()
+    }
 
     return {
       state,
@@ -154,7 +157,8 @@ export default {
       openSettingPanel,
       createNewFolder,
       createNewPage,
-      docsUrl
+      docsUrl,
+      queryPage
     }
   }
 }

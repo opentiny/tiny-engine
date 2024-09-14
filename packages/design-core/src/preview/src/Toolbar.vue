@@ -39,7 +39,8 @@ export default {
 
     const { setBreadcrumbPage } = useBreadcrumb()
     const { pageInfo } = getSearchParams()
-    setBreadcrumbPage([pageInfo?.name])
+
+    setBreadcrumbPage([pageInfo?.name, pageInfo?.id])
 
     const setViewPort = (item) => {
       const iframe = document.getElementsByClassName('iframe-container')[0]

@@ -200,7 +200,7 @@ export default {
       if (data.isPage) {
         pageName = data?.name || ''
       }
-      setBreadcrumbPage([pageName])
+      setBreadcrumbPage([pageName, data?.id])
 
       // 切换页面时清空 选中节点信息状态
       clearCurrentState()

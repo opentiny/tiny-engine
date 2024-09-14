@@ -38,6 +38,9 @@ export default {
     }
 
     const nextVersion = computed(() => {
+      if (getBreadcrumbData().value[0] === CONSTANTS.PAGETEXT) {
+        return
+      }
       const backupList = getBreadcrumbData().value[2] || []
 
       let latestVersion = '1.0.0'

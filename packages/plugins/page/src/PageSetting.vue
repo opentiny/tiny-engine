@@ -55,7 +55,15 @@
 import { reactive, ref } from 'vue'
 import { Button, Collapse, CollapseItem, Input } from '@opentiny/vue'
 import { PluginSetting, ButtonGroup, SvgButton, LifeCycles } from '@opentiny/tiny-engine-common'
-import { useLayout, usePage, useCanvas, useModal, useApp, useNotify } from '@opentiny/tiny-engine-controller'
+import {
+  useLayout,
+  usePage,
+  useCanvas,
+  useModal,
+  useApp,
+  useNotify,
+  useBreadcrumb
+} from '@opentiny/tiny-engine-controller'
 import { extend, isEqual } from '@opentiny/vue-renderless/common/object'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-controller/js/environments'
@@ -107,7 +115,7 @@ export default {
       default: false
     }
   },
-  emits: ['openNewPage'],
+  emits: ['openNewPage', 'queryPage'],
   setup(props, { emit }) {
     const { requestCreatePage, requestDeletePage } = http
     const { appInfoState } = useApp()
@@ -121,6 +129,7 @@ export default {
       STATIC_PAGE_GROUP_ID
     } = usePage()
     const { pageState, initData } = useCanvas()
+    const { setBreadcrumbPage, getBreadcrumbData } = useBreadcrumb()
     const { confirm } = useModal()
     const pageGeneralRef = ref(null)
 
@@ -229,8 +238,12 @@ export default {
           fileName: name
         }
       }
-
       const res = await updatePage(id, params)
+      if (id === getBreadcrumbData().value[2]) {
+        setBreadcrumbPage([name, id])
+      }
+
+      emit('queryPage')
 
       initCurrentPageData(res)
     }

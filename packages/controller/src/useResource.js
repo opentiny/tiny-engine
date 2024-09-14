@@ -281,7 +281,7 @@ const initPage = (pageInfo) => {
     id,
     name: pageInfo?.fileName
   })
-  useBreadcrumb().setBreadcrumbPage([pageInfo.fileName])
+  useBreadcrumb().setBreadcrumbPage([pageInfo.fileName, id])
 }
 
 /**
@@ -315,7 +315,7 @@ const initPageOrBlock = async () => {
 
     useLayout().layoutState.pageStatus = getCanvasStatus(data.occupier)
     useCanvas().initData(data.page_content, data)
-    setBreadcrumbPage([data.name])
+    setBreadcrumbPage([data.name, data.id])
     return
   }
 
