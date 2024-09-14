@@ -79,8 +79,8 @@ export default {
         previewPage(params)
       }
 
-      if (typeof previewed === 'function') {
-        await previewed()
+      if (typeof afterPreview === 'function') {
+        await afterPreview()
       }
     }
 
