@@ -18,7 +18,8 @@
 import { Popover } from '@opentiny/vue'
 import { previewPage, previewBlock } from '@opentiny/tiny-engine-common/js/preview'
 import { useBlock, useCanvas, useLayout, useNotify } from '@opentiny/tiny-engine-meta-register'
-import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
+import { getMergeMeta, getOptions } from '@opentiny/tiny-engine-meta-register'
+import meta from '../meta'
 
 export default {
   components: {
@@ -34,7 +35,21 @@ export default {
     const { isBlock, getCurrentPage, canvasApi } = useCanvas()
     const { getCurrentBlock } = useBlock()
 
-    const preview = () => {
+    const preview = async () => {
+      const { beforePreview, previewMethod, afterPreview } = getOptions(meta.id)
+
+      if (typeof beforePreview === 'function') {
+        await beforePreview()
+      }
+      
+      if (typeof previewMethod === 'function') {
+        const stop = await previewMethod()
+
+        if(stop) {
+          return
+        }
+      }
+
       if (useLayout().isEmptyPage()) {
         useNotify({
           type: 'warning',
@@ -62,6 +77,10 @@ export default {
         params.id = page?.id
         params.pageInfo.name = page?.name
         previewPage(params)
+      }
+
+      if (typeof previewed === 'function') {
+        await previewed()
       }
     }
 

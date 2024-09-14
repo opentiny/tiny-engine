@@ -54,8 +54,10 @@
 import { reactive, ref, onUnmounted } from 'vue'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
 import { Button, Popover, DialogBox, Checkbox, Select } from '@opentiny/vue'
+import { getOptions } from '@opentiny/tiny-engine-meta-register'
 import { openCommon, saveCommon } from './js/index'
 import { isLoading } from './js/index'
+import meta from '../meta'
 export const api = {
   saveCommon,
   openCommon
@@ -102,9 +104,29 @@ export default {
       state.visible = false
       state.originalCode = ''
     }
-    const openApi = () => {
-      if (!isLoading.value) {
-        openCommon()
+    const openApi = async () => {
+      if (isLoading.value) {
+        return
+      }
+
+      const { beforeSave, saveMethod, saved } = getOptions(meta.id)
+
+      if (typeof beforeSave === 'function') {
+        await beforeSave()
+      }
+
+      let stop = false
+
+      if (typeof saveMethod === 'function') {
+        stop = await saveMethod()
+      }
+
+      if (!stop) {
+        await openCommon()
+      }
+
+      if (typeof saved === 'function') {
+        await saved()
       }
     }
     const saveApi = () => {

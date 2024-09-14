@@ -1,6 +1,6 @@
 <template>
   <tiny-dialog-box
-    v-show="dialogVisible"
+    :visible="dialogVisible"
     title="事件绑定"
     width="50%"
     :append-to-body="true"
@@ -8,7 +8,7 @@
     @opened="openedDialog"
   >
     <div class="bind-event-dialog-content">
-      <component :is="BindEventsDialogSidebar" :eventBinding="eventBinding"></component>
+      <component :is="BindEventsDialogSidebar" :dialogVisible="dialogVisible" :eventBinding="eventBinding"></component>
       <component :is="BindEventsDialogContent" :dialogVisible="dialogVisible"></component>
     </div>
     <template #footer>
@@ -27,6 +27,7 @@ import {
   useCanvas,
   useHistory,
   useLayout,
+  getOptions,
   getMetaApi,
   META_APP
 } from '@opentiny/tiny-engine-meta-register'
@@ -167,7 +168,7 @@ export default {
       })
     }
 
-    const confirm = () => {
+    const confirm = async () => {
       if (state.tipError) {
         return
       }
@@ -189,13 +190,20 @@ export default {
 
       // 需要在bindMethod之后
       const functionBody = getFunctionBody()
-
-      saveMethod?.({
-        name: state.bindMethodInfo.name,
+      const { name } = state.bindMethodInfo
+      const method = {
+        name,
         content: state.enableExtraParams
-          ? `function ${state.bindMethodInfo.name}(eventArgs,${formatParams}) ${functionBody}`
-          : `function ${state.bindMethodInfo.name}(${formatParams})  ${functionBody}`
-      })
+          ? `function ${name}(eventArgs,${formatParams}) ${functionBody}`
+          : `function ${name}(${formatParams})  ${functionBody}`
+      }
+      const { beforeSaveMethod } = getOptions(meta.id)
+
+      if (typeof beforeSaveMethod === 'function') {
+        await beforeSaveMethod(method, state.bindMethodInfo)
+      }
+
+      saveMethod?.(method)
 
       activePagePlugin()
       close()
