@@ -51,3 +51,5 @@ export const getContext = () => context
 export const setCondition = (id, visible = false) => {
   conditions[id] = visible
 }
+
+export const getCondition = () => conditions
