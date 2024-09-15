@@ -61,9 +61,13 @@ export default {
     const submitKeyForm = () => {
       keyFormRef.value.validate((valid) => {
         if (valid) {
-          localStorage.setItem(props.currentModel.modelKey, keyForm.value.token)
-          emit('token-status', true)
-          closeKeyFormDialog()
+          try {
+            localStorage.setItem(props.currentModel.modelKey, keyForm.value.token)
+            emit('token-status', true)
+            closeKeyFormDialog()
+          } catch (error) {
+            emit('token-status', false)
+          }
         }
       })
     }
