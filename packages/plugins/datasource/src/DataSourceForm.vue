@@ -43,7 +43,7 @@ import {
   requestDeleteDataSource,
   requestGenerateDataSource
 } from './js/http'
-import { useModal, useApp, useDataSource } from '@opentiny/tiny-engine-meta-register'
+import { useModal, useApp, useDataSource, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { extend } from '@opentiny/vue-renderless/common/object'
 
 let isOpen = ref(false)
@@ -79,7 +79,7 @@ export default {
   },
   emits: ['update:modelValue', 'save'],
   setup(props, { emit }) {
-    const { confirm, message } = useModal()
+    const { message } = useModal()
     const { appInfoState } = useApp()
     const { dataSourceState } = useDataSource()
 
@@ -148,14 +148,12 @@ export default {
           .then((data) => {
             if (data) {
               requestGenerateDataSource(appInfoState.selectedId)
-              confirm({
-                title: '提示',
-                message: { render: () => <span>数据源删除成功</span> },
-                exec: () => {
-                  close()
-                  emit('save')
-                }
+              useNotify({
+                title: '数据源删除成功',
+                type: 'success'
               })
+              close()
+              emit('save')
             }
           })
           .catch((error) => {
@@ -191,15 +189,13 @@ export default {
             }).then(() => {
               requestGenerateDataSource(appInfoState.selectedId)
               // 修改dataSource成功
-              confirm({
-                title: '提示',
-                message: { render: () => <span>数据源修改成功</span> },
-                exec: () => {
-                  emit('save')
-                  dataSourceState.dataSourceColumn = {}
-                  dataSourceState.dataSourceColumnCopies = {}
-                }
+              useNotify({
+                title: '数据源修改成功',
+                type: 'success'
               })
+              emit('save')
+              dataSourceState.dataSourceColumn = {}
+              dataSourceState.dataSourceColumnCopies = {}
             })
           } else {
             requestAddDataSource({
@@ -214,15 +210,13 @@ export default {
             })
               .then(() => {
                 requestGenerateDataSource(appInfoState.selectedId)
-                confirm({
-                  title: '提示',
-                  message: { render: () => <span>数据源新增成功</span> },
-                  exec: () => {
-                    emit('save')
-                    dataSourceState.dataSourceColumn = {}
-                    dataSourceState.dataSourceColumnCopies = {}
-                  }
+                useNotify({
+                  title: '数据源新增成功',
+                  type: 'success'
                 })
+                emit('save')
+                dataSourceState.dataSourceColumn = {}
+                dataSourceState.dataSourceColumnCopies = {}
               })
               .catch((error) => {
                 message({ message: `数据源保存失败：${error?.message || ''}`, status: 'error' })

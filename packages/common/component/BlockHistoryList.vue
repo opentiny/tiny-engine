@@ -12,9 +12,7 @@
       </span>
     </li>
   </ul>
-  <empty-tip v-if="!history.length">
-    <template #content>记录为空</template>
-  </empty-tip>
+  <div v-if="!history.length" class="empty">暂无数据</div>
 </template>
 
 <script setup>
@@ -23,7 +21,6 @@ import { SvgButton } from '../index'
 
 // 引入组件在template上使用
 import BlockHistoryTemplate from './BlockHistoryTemplate.vue'
-import EmptyTip from './EmptyTip.vue'
 
 defineProps({
   history: {
@@ -91,5 +88,10 @@ defineEmits(['preview', 'restore'])
       margin-left: 4px;
     }
   }
+}
+
+.empty {
+  margin-left: 12px;
+  color: var(--ti-lowcode-common-empty-text-color);
 }
 </style>

@@ -227,7 +227,6 @@ export default {
 
 <style lang="less" scoped>
 .store-form {
-  padding: 12px;
   height: calc(100% - 45px);
   overflow-y: auto;
   .tips {
@@ -239,9 +238,8 @@ export default {
     background: var(--ti-lowcode-data-source-box-bg);
     color: var(--ti-lowcode-datasource-tip-color);
   }
-  :deep(.tiny-collapse .tiny-collapse-item__header) {
-    border-top: none;
-    padding: 12px 12px 5px 0;
+  :deep(.tiny-collapse-item__wrap) {
+    padding: 0 12px;
   }
   :deep(.toolbar) {
     position: absolute;
@@ -250,12 +248,6 @@ export default {
   }
   .stores {
     padding: 12px;
-    margin-left: -12px;
-    margin-right: -12px;
-  }
-  .tiny-form-item:first-child {
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--ti-lowcode-data-source-border-color);
   }
   .tiny-form-item:not(:last-child) {
     margin-bottom: 12px;

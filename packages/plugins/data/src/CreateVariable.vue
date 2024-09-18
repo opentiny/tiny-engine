@@ -427,7 +427,6 @@ export default {
 
 <style lang="less" scoped>
 .create-form {
-  padding: 12px;
   height: calc(100% - 45px);
   overflow-y: auto;
   .tips {
@@ -439,10 +438,6 @@ export default {
     background: var(--ti-lowcode-data-source-box-bg);
     color: var(--ti-lowcode-datasource-tip-color);
   }
-  :deep(.tiny-collapse .tiny-collapse-item__header) {
-    border-top: none;
-    padding: 12px 12px 5px 0;
-  }
   :deep(.toolbar) {
     position: absolute;
     z-index: 99;
@@ -450,12 +445,12 @@ export default {
   }
   .var {
     padding: 12px;
-    margin-left: -12px;
-    margin-right: -12px;
+  }
+  .var-type-item {
+    padding: 0 12px;
   }
   .tiny-form-item:first-child {
     padding-bottom: 12px;
-    border-bottom: 1px solid var(--ti-lowcode-data-source-border-color);
   }
   .tiny-form-item:not(:last-child) {
     margin-bottom: 12px;
@@ -468,6 +463,9 @@ export default {
   .label-left-wrap {
     color: var(--ti-lowcode-toolbar-icon-color);
     display: flex;
+  }
+  :deep(.tiny-collapse-item__wrap) {
+    padding: 0 12px;
   }
 }
 

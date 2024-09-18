@@ -237,10 +237,12 @@ export default {
       display: none;
     }
   }
+  :deep(.plugin-setting-content) {
+    padding: 0;
+  }
   .create-config {
-    :deep(.tiny-collapse .tiny-collapse-item__header) {
-      font-size: 14px;
-      font-weight: normal;
+    :deep(.tiny-collapse-item__wrap) {
+      padding: 0 12px;
     }
     :deep(.title) {
       display: flex;
