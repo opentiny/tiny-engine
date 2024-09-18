@@ -71,12 +71,60 @@ program
       }
     })
 
+    const options = {}
+
+    if (type === 'platform') {
+      const theme = await select({
+        message: 'select theme type 选择主题类型',
+        choices: [
+          {
+            name: 'light',
+            value: 'light'
+          },
+          {
+            name: 'dark',
+            value: 'dark'
+          }
+        ]
+      })
+
+      Object.assign(options, { theme })
+    } else if (type === 'plugin') {
+      const pluginType = await select({
+        message: 'select the plugin type. 请选择插件类型',
+        choices: [
+          {
+            name: 'plugins',
+            value: 'plugins',
+            description: 'create a sidebar plugin 创建一个侧边栏插件'
+          },
+          {
+            name: 'toolbars',
+            value: 'toolbars',
+            description: 'create a toolbar plugin 创建一个工具栏插件'
+          }
+        ]
+      })
+
+      const alignMap = {
+        plugins: ['top', 'bottom'],
+        toolbars: ['left', 'center', 'right']
+      }
+
+      const align = await select({
+        message: 'select the align value. 请选择对齐位置',
+        choices: alignMap[pluginType].map((item) => ({ name: item, value: item }))
+      })
+
+      Object.assign(options, { type: pluginType, align })
+    }
+
     const typeMapper = {
       platform: createPlatform,
       plugin: createPlugin
     }
 
-    typeMapper[type](projectName)
+    typeMapper[type](projectName, options)
   })
 
 program.parse(process.argv)
