@@ -350,7 +350,7 @@ export default {
 
 <style lang="less" scoped>
 .app-manage-search {
-  padding: 8px 10px;
+  padding: 0 12px 12px 12px;
 }
 
 .page-manage-collapse {
@@ -410,8 +410,8 @@ export default {
       width: 100%;
       display: flex;
       justify-content: space-between;
-      height: 30px;
-      line-height: 30px;
+      height: 24px;
+      line-height: 24px;
       color: var(--ti-lowcode-page-manage-tree-node-label-color);
       .page-edit-icon {
         font-size: 16px;

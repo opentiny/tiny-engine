@@ -229,7 +229,7 @@ export default {
 
 <style lang="less" scoped>
 .general-config {
-  padding: 12px;
+  padding: 0 12px;
 
   .general-config-form {
     .input-head {
@@ -246,6 +246,8 @@ export default {
         color: var(--ti-lowcode-page-manage-title-background-text-color);
       }
       .tiny-form-item__label {
+        height: 24px;
+        line-height: 18px;
         font-size: 12px;
         color: var(--ti-lowcode-page-manage-text-color);
       }
@@ -257,10 +259,12 @@ export default {
   }
   .tip {
     color: var(--ti-lowcode-page-manage-tip-border-color);
-    font-size: 14px;
+    font-size: 12px;
     border-radius: 3px;
     display: flex;
     align-items: center;
+    height: 16px;
+    margin-top: 4px;
     .icon {
       color: var(--ti-lowcode-page-manage-icon-text-color);
     }

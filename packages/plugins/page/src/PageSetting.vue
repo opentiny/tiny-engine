@@ -429,14 +429,5 @@ export default {
       margin-right: 6px;
     }
   }
-  .base-setting {
-    margin-top: -22px;
-  }
-  .input-output {
-    margin-top: -28px;
-  }
-  .history-source {
-    margin-top: 7px;
-  }
 }
 </style>
