@@ -7,5 +7,7 @@ export default {
   },
   align: 'right',
   renderType: 'icon',
-  options: {}
+  options: {
+    useDefaultClass: true
+  }
 }

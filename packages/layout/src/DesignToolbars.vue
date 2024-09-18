@@ -111,6 +111,7 @@ export default {
   }
 
   .toolbar-left,
+  .toolbar-center,
   .toolbar-right {
     :deep(.icon) {
       display: inline-flex;
