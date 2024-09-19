@@ -22,27 +22,57 @@
   <div id="tiny-engine-nav-panel">
     <vue-draggable-next id="rightTop" v-model="state.leftList" class="nav-panel-lists" group="plugins" @end="onEnd">
       <div
-        v-for="item in state.leftList"
-        :key="item.id"
+        v-for="(item, index) in state.leftList"
+        :key="index"
         :class="['list-item', { 'first-item': item === state.leftList[0], active: item.id === renderPanel }]"
         :title="item.title"
-        @click="clickMenu({ item, index: state.leftList.indexOf(item) })"
+        @click="clickMenu({ item, index })"
+        @contextmenu.prevent="showContextMenu($event, true, item, index, PLUGIN_POSITION.rightTop)"
       >
-        <span class="item-icon">
+        <span class="item-icon" v-if="getPluginShown(item.id)">
           <svg-icon v-if="iconComponents[item.id]" :name="iconComponents[item.id]" class="panel-icon"></svg-icon>
           <component v-else :is="iconComponents[item.id]" class="panel-icon"></component>
         </span>
       </div>
+      <div style="flex: 1" class="list-item" @contextmenu.prevent="showContextMenu($event, false)"></div>
     </vue-draggable-next>
   </div>
+
+  <!-- 右键菜单 -->
+  <ul
+    v-if="contextMenu.visible"
+    class="context-menu"
+    :style="{ top: contextMenu.y + 'px', left: contextMenu.x + 'px' }"
+  >
+    <template v-if="contextMenu.type">
+      <li class="context-menu-header">{{ contextMenu.item.title }}</li>
+      <li v-for="action in actions" :key="action.method" @click="handleContextAction(action.method)">
+        {{ action.label }}
+      </li>
+    </template>
+
+    <template v-else>
+      <li
+        v-for="(item, index) in state.leftList"
+        :key="index"
+        @click.stop="changeShowState(item.id)"
+        class="menu-item-wrapper"
+      >
+        <span class="check-mark">
+          <span v-show="getPluginShown(item.id)">√</span>
+        </span>
+        <span>{{ item.title }}</span>
+      </li>
+    </template>
+  </ul>
 </template>
 
 <script>
-import { computed, ref, toRefs, watch, reactive } from 'vue'
+import { computed, ref, toRefs, watch, reactive, onMounted, onBeforeUnmount } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
 import { Tabs, TabItem } from '@opentiny/vue'
 import { useLayout } from '@opentiny/tiny-engine-controller'
-import { getPlugin } from '../config/plugin.js'
+import { getPlugin, getPluginById } from '../config/plugin.js'
 import { VueDraggableNext } from 'vue-draggable-next'
 
 export default {
@@ -58,8 +88,8 @@ export default {
       type: String
     }
   },
-
-  setup(props) {
+  emits: ['changeRightAlign'],
+  setup(props, { emit }) {
     const components = {}
     const iconComponents = {}
     const { renderPanel } = toRefs(props)
@@ -71,8 +101,12 @@ export default {
       getPluginsByLayout,
       dragPluginLayout,
       isSameSide,
+      getPluginShown,
+      changePluginShown,
+      changeMenuShown,
       layoutState: { settings: settingsState }
     } = useLayout()
+    const contextMenuWidth = 130
 
     const plugins = getPluginsByLayout().map((pluginName) => getPlugin(pluginName))
     plugins.forEach(({ id, component, api, icon }) => {
@@ -85,12 +119,95 @@ export default {
       }
     })
 
-    const activating = computed(() => settingsState.activating) //高亮显示
-    const showMask = ref(true)
-
     const state = reactive({
       leftList: getPluginsByLayout(PLUGIN_POSITION.rightTop).map((pluginName) => getPlugin(pluginName))
     })
+
+    const close = () => {
+      useLayout().closeSetting(true)
+    }
+
+    const actions = [
+      { label: '隐藏插件', method: 'hidePlugin' },
+      { label: '切换到左侧', method: 'switchToLeft' },
+      { label: '隐藏右侧活动栏', method: 'hideRightSidebar' }
+    ]
+
+    const contextMenu = reactive({
+      type: true,
+      visible: false,
+      x: 0,
+      y: 0,
+      item: null,
+      index: null,
+      list: null
+    })
+
+    const showContextMenu = (event, type, item, index, align) => {
+      contextMenu.type = type
+      contextMenu.visible = true
+      contextMenu.x = event.clientX - contextMenuWidth
+      contextMenu.y = event.clientY
+      if (type) {
+        contextMenu.item = item
+        contextMenu.index = index
+        contextMenu.list = align
+      }
+    }
+
+    const hideContextMenu = () => {
+      contextMenu.visible = false
+    }
+
+    const handleContextAction = (action) => {
+      switch (action) {
+        case 'hidePlugin': {
+          close()
+          changePluginShown(contextMenu.item.id)
+          break
+        }
+        case 'switchToLeft': {
+          close()
+          state.leftList.splice(contextMenu.index, 1)
+          emit('changeRightAlign', contextMenu.item.id)
+          dragPluginLayout(contextMenu.list, PLUGIN_POSITION.leftTop, contextMenu.index, 0)
+          break
+        }
+        case 'hideRightSidebar': {
+          changeMenuShown('right')
+          break
+        }
+        default: {
+          break
+        }
+      }
+      hideContextMenu()
+    }
+
+    const changeShowState = (pluginName) => {
+      changePluginShown(pluginName)
+    }
+    const handleClickOutside = (event) => {
+      if (!event.target.closest('.context-menu')) {
+        hideContextMenu()
+      }
+    }
+
+    onMounted(() => {
+      document.addEventListener('click', handleClickOutside)
+    })
+
+    onBeforeUnmount(() => {
+      document.removeEventListener('click', handleClickOutside)
+    })
+
+    const activating = computed(() => settingsState.activating) //高亮显示
+    const showMask = ref(true)
+
+    const changeAlign = (pluginId) => {
+      const item = getPluginById(pluginId)
+      state.leftList.unshift(item)
+    }
 
     const setRender = (curId) => {
       settingsState.render = curId
@@ -103,10 +220,6 @@ export default {
         return
       }
       setRender(item.id)
-    }
-
-    const close = () => {
-      useLayout().closeSetting(true)
     }
 
     watch(renderPanel, (n) => {
@@ -135,7 +248,16 @@ export default {
       close,
       fixPanel,
       rightFixedPanelsStorage,
-      onEnd
+      onEnd,
+      contextMenu,
+      showContextMenu,
+      hideContextMenu,
+      handleContextAction,
+      changeAlign,
+      PLUGIN_POSITION,
+      getPluginShown,
+      changeShowState,
+      actions
     }
   }
 }
@@ -277,5 +399,44 @@ export default {
 .ghost {
   opacity: 0.5;
   background: #f2f2f2;
+}
+.context-menu {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  list-style: none;
+  width: 135px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.context-menu-header {
+  padding: 8px 12px;
+  font-weight: bold;
+  cursor: default;
+  background: #f5f5f5;
+  border-bottom: 1px solid #ccc;
+}
+
+.context-menu li {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.context-menu li:hover {
+  background: #f0f0f0;
+}
+.menu-item-wrapper {
+  display: flex;
+  flex-grow: 1;
+  border-bottom: 1px solid rgb(231, 231, 231);
+  padding: 10px 0;
+}
+.menu-item-wrapper:last-child {
+  border-bottom: none;
+}
+.check-mark {
+  width: 20px;
+  text-align: left;
 }
 </style>

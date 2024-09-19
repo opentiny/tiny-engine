@@ -62,6 +62,7 @@ const layoutState = reactive({
     height: '100%'
   },
   plugins: {
+    isShow: true,
     fixedPanels: [PLUGIN_NAME.Materials],
     render: null,
     api: {}, // 插件需要注册交互API到这里
@@ -69,6 +70,7 @@ const layoutState = reactive({
     showDesignSettings: true
   },
   settings: {
+    isShow: true,
     fixedPanels: [],
     render: null,
     api: null,
@@ -80,6 +82,20 @@ const layoutState = reactive({
   },
   pageStatus: ''
 })
+const leftMenuShownStorage = useStorage('leftMenuShown', layoutState.plugins.isShow)
+const rightMenuShownStorage = useStorage('rightMenuShown', layoutState.settings.isShow)
+const changeMenuShown = (menuName) => {
+  switch (menuName) {
+    case 'left': {
+      leftMenuShownStorage.value = !leftMenuShownStorage.value
+      break
+    }
+    case 'right': {
+      rightMenuShownStorage.value = !rightMenuShownStorage.value
+      break
+    }
+  }
+}
 const leftFixedPanelsStorage = useStorage('leftPanels', layoutState.plugins.fixedPanels)
 const rightFixedPanelsStorage = useStorage('rightPanels', layoutState.settings.fixedPanels)
 
@@ -258,6 +274,13 @@ export default () => {
     return isLeft || isRight
   }
 
+  //获取插件显示状态
+  const getPluginShown = (name) => pluginStorageReactive.value[name]?.isShow
+
+  //修改插件显示状态
+  const changePluginShown = (name) => {
+    pluginStorageReactive.value[name].isShow = !pluginStorageReactive.value[name].isShow
+  }
   return {
     PLUGIN_NAME,
     PLUGIN_POSITION,
@@ -278,12 +301,17 @@ export default () => {
     changePluginWidth,
     leftFixedPanelsStorage,
     rightFixedPanelsStorage,
+    leftMenuShownStorage,
+    rightMenuShownStorage,
     changeLeftFixedPanels,
     changeRightFixedPanels,
     getPluginsByLayout,
     changePluginLayout,
     getPluginByLayout,
     dragPluginLayout,
-    isSameSide
+    isSameSide,
+    getPluginShown,
+    changePluginShown,
+    changeMenuShown
   }
 }
