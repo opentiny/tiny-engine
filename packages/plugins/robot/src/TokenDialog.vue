@@ -30,7 +30,7 @@ export default {
     const tokenReg = /^[A-Za-z0-9\-.]+$/
     const tokenValidate = (rule, value, callback) => {
       if (value.length > 100 || !tokenReg.test(value)) {
-        callback(new Error('参数错误，请输入小于100位的英文数字字符串'))
+        callback(new Error('参数错误，请输入小于100位的英文、数字、连字符或点号的字符串'))
       } else {
         callback()
       }
