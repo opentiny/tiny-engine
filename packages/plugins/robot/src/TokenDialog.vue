@@ -21,6 +21,7 @@ export default {
   emits: ['dialog-status', 'token-status'],
   setup(props, { emit }) {
     const model = ref(props.currentModel)
+    const modelName = props.currentModel.label.split('：')[0]
     const keyFormVisible = ref(props.dialogVisible)
     const keyFormRef = ref(null)
     const keyForm = ref({
@@ -76,6 +77,7 @@ export default {
       submitKeyForm,
       keyFormVisible,
       model,
+      modelName,
       TinyIconAssociation: iconAssociation(),
       TinyIconCommission: iconCommission()
     }
@@ -89,17 +91,17 @@ export default {
       <tiny-alert
         :icon="TinyIconAssociation"
         :closable="false"
-        :description="`当前AI大模型为使用${model.label}`"
+        :description="`当前AI大模型为使用 ${modelName}`"
       ></tiny-alert>
       <tiny-alert
         :icon="TinyIconCommission"
         :closable="false"
-        :description="`尝试用自己的${model.modelKey}开启AI对话功能吧！`"
+        :description="`尝试用自己的 ${model.modelKey} 开启AI对话功能吧！`"
       ></tiny-alert>
       <tiny-form-item label="" prop="token">
         <tiny-input
           v-model="keyForm.token"
-          :placeholder="`点击这里输入你的${model.modelKey}`"
+          :placeholder="`点击这里输入你的 ${model.modelKey}`"
           validate-event
         ></tiny-input>
       </tiny-form-item>
