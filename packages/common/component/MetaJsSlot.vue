@@ -23,7 +23,7 @@
             <tiny-input
               v-model="slot.params"
               class="use-slot-params"
-              @change="validParmas(slot, paramsPropPath(index))"
+              @change="validParmas(index, paramsPropPath(index), slot)"
             ></tiny-input>
           </tiny-form-item>
         </div>
@@ -92,7 +92,7 @@ export default {
       }
     }
 
-    const toggleSlot = (idx, { bind, name, params = '' }) => {
+    const toggleSlot = (idx, { bind, name, params = '' }, isSetParams = false) => {
       const slotInfo = {
         [name]: {
           type: 'JSSlot',
@@ -111,7 +111,8 @@ export default {
       } else {
         delete slotData[name].params
       }
-      if (bind) {
+
+      if (bind && !isSetParams) {
         useModal().confirm({
           title: '提示',
           message: '关闭后插槽内的内容将被清空，是否继续？',
@@ -120,11 +121,7 @@ export default {
             slotList.value[idx].bind = false
             delete slotData[name]
             emit('update:modelValue', slotData)
-            const [propsName] = path.split('.')
-            const schema = useProperties().getSchema()
-            schema.props[propsName] = JSON.parse(JSON.stringify(schema.props[propsName]))
-          },
-          cancel: () => {}
+          }
         })
       } else {
         slotList.value[idx].bind = true
@@ -137,14 +134,14 @@ export default {
       schema.props[propsName] = JSON.parse(JSON.stringify(schema.props[propsName]))
     }
 
-    const setParams = (slot) => {
-      slot.bind && toggleSlot(true, slot)
+    const setParams = (slot, idx) => {
+      slot.bind && toggleSlot(idx, slot, true)
     }
 
-    const validParmas = (slot, parmasPath) => {
+    const validParmas = (idx, parmasPath, slot) => {
       slotRef.value.validateField([parmasPath], (tips) => {
         if (!tips) {
-          setParams(slot)
+          setParams(slot, idx)
         }
       })
     }
