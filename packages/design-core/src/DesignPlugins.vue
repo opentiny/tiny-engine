@@ -203,7 +203,8 @@ export default {
       isSameSide,
       getPluginShown,
       changePluginShown,
-      changeMenuShown
+      changeMenuShown,
+      closePlugin
     } = useLayout()
 
     const plugins = getPluginsByLayout().map((pluginName) => getPlugin(pluginName))
@@ -227,7 +228,7 @@ export default {
 
     const close = () => {
       state.prevIdex = -2
-      useLayout().closePlugin(true)
+      closePlugin(true)
     }
 
     const actions = [
@@ -316,7 +317,7 @@ export default {
     const doCompleted = () => {
       if (!completed.value) {
         completed.value = true
-        useLayout().closePlugin()
+        closePlugin()
       }
     }
 

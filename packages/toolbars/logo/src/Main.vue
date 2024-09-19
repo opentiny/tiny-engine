@@ -189,8 +189,6 @@ const getTargetUrl = (centerName) => {
   return `/#/${centerName}/`
 }
 const changeShowState = (item) => {
-  state.showMenu = true
-  state.showSubMenu = true
   item.isShow = !item.isShow
   changeMenuShown(item.code)
 }
@@ -235,9 +233,6 @@ const actions = {
       ? `./previewApp.html?appid=${appId}&tenant=${tenantId}`
       : `${href}/previewApp?appid=${appId}&tenant=${tenantId}`
     window.open(openUrl)
-  },
-  showSubMenu() {
-    state.showSubMenu = true
   }
 }
 
