@@ -1,8 +1,7 @@
 <template>
   <toolbar-base-component
-    :type="type"
     content="画布中英文切换"
-    :icon="icon[langVal]"
+    :icon="options.icon[langVal]"
     :options="options"
     @click-api="changeLang"
   >
@@ -12,7 +11,6 @@
 <script>
 import { ref, watch } from 'vue'
 import { useBroadcastChannel } from '@vueuse/core'
-import { Popover } from '@opentiny/vue'
 import { ToolbarBaseComponent } from '@opentiny/tiny-engine-layout'
 
 import { constants } from '@opentiny/tiny-engine-utils'
@@ -21,23 +19,16 @@ const { BROADCAST_CHANNEL } = constants
 
 export default {
   components: {
-    TinyPopover: Popover,
     ToolbarBaseComponent
   },
   props: {
-    type: {
-      type: String,
-      default: ''
-    },
-    icon: {
-      type: Object
-    },
     langChannel: {
       type: String,
       default: BROADCAST_CHANNEL.CanvasLang
     },
     options: {
-      type: Object
+      type: Object,
+      default: () => ({})
     }
   },
   setup(props) {

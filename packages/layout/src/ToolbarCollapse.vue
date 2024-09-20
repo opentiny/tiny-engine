@@ -9,7 +9,7 @@
       <div class="empty-bar" v-for="item in collapseBar" :key="item.id">
         <div v-if="item.options.splitLine" class="empty-line"></div>
         <div class="toolbar-list-button">
-          <component :is="item.entry" :type="item.renderType" :icon="item.icon" :options="item.options"></component>
+          <component :is="item.entry" :options="item.options"></component>
         </div>
       </div>
     </tiny-popover>

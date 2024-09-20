@@ -1,8 +1,7 @@
 <template>
   <toolbar-base-component
-    :type="type"
     :content="isBlock() ? '区块设置' : '页面设置'"
-    :icon="icon.default"
+    :icon="options.icon.default"
     :options="options"
     @click-api="openSetting"
   >
@@ -10,7 +9,6 @@
 </template>
 
 <script lang="jsx">
-import { Popover } from '@opentiny/vue'
 import { useCanvas, useLayout, useBlock, usePage, useModal, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { ToolbarBaseComponent } from '@opentiny/tiny-engine-layout'
@@ -18,20 +16,12 @@ import { ToolbarBaseComponent } from '@opentiny/tiny-engine-layout'
 const { PAGE_STATUS } = constants
 export default {
   components: {
-    TinyPopover: Popover,
     ToolbarBaseComponent
   },
   props: {
-    type: {
-      type: String,
-      default: ''
-    },
-    icon: {
-      type: Object
-    },
     options: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     }
   },
   setup() {

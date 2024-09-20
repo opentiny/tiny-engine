@@ -1,6 +1,6 @@
 <template>
-  <toolbar-base-component :type="type" content="出码" :icon="icon.default" :options="options" @click-api="generate">
-    <template #extends>
+  <toolbar-base-component content="出码" :icon="options.icon.default" :options="options" @click-api="generate">
+    <template #default>
       <generate-file-selector
         :visible="state.showDialogbox"
         :data="state.saveFilesInfo"
@@ -35,16 +35,9 @@ export default {
     ToolbarBaseComponent
   },
   props: {
-    type: {
-      type: String,
-      default: ''
-    },
-    icon: {
-      type: Object
-    },
     options: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     }
   },
   setup() {

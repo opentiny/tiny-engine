@@ -1,34 +1,13 @@
 <template>
   <div class="tiny-engine-toolbar">
     <div class="toolbar-left">
-      <component
-        v-for="item in leftBar"
-        :is="item.entry"
-        :type="item.renderType"
-        :icon="item.icon"
-        :options="item.options"
-        :key="item.id"
-      ></component>
+      <component v-for="item in leftBar" :is="item.entry" :options="item.options" :key="item.id"></component>
     </div>
     <div class="toolbar-center">
-      <component
-        v-for="item in centerBar"
-        :is="item.entry"
-        :type="item.renderType"
-        :icon="item.icon"
-        :options="item.options"
-        :key="item.id"
-      ></component>
+      <component v-for="item in centerBar" :is="item.entry" :options="item.options" :key="item.id"></component>
     </div>
     <div class="toolbar-right">
-      <component
-        v-for="item in rightBar"
-        :is="item.entry"
-        :type="item.renderType"
-        :icon="item.icon"
-        :options="item.options"
-        :key="item.id"
-      ></component>
+      <component v-for="item in rightBar" :is="item.entry" :options="item.options" :key="item.id"></component>
       <toolbar-collapse v-if="collapseBar.length" :collapseBar="collapseBar"></toolbar-collapse>
     </div>
   </div>
@@ -63,9 +42,9 @@ export default {
     })
 
     props.toolbars.forEach((item) => {
-      if (item.align === 'right') {
+      if (item.options.align === 'right') {
         item?.options?.collapsed ? collapseBar.push(item) : rightBar.push(item)
-      } else if (item.align === 'center') {
+      } else if (item.options.align === 'center') {
         centerBar.push(item)
       } else {
         leftBar.push(item)

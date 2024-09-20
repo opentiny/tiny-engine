@@ -2,13 +2,12 @@ export default {
   id: 'engine.toolbars.save',
   type: 'toolbars',
   title: 'save',
-  icon: {
-    default: 'save'
-  },
-  align: 'right',
-  renderType: 'button',
   options: {
-    showDots: true,
+    icon: {
+      default: 'save'
+    },
+    renderType: 'button',
+    align: 'right',
     useDefaultClass: true,
     props: {},
     style: ''

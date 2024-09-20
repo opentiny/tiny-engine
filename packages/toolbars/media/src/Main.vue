@@ -1,6 +1,6 @@
 <template>
-  <toolbar-base-component :type="type">
-    <template #extends>
+  <toolbar-base-component :options="options">
+    <template #default>
       <div class="toolbar-wrap">
         <div class="toolbar-icon-wrap">
           <span
@@ -116,16 +116,9 @@ export default {
       type: Boolean,
       default: true
     },
-    type: {
-      type: String,
-      default: ''
-    },
-    icon: {
-      type: Object
-    },
     options: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     }
   },
   setup(props, { emit }) {

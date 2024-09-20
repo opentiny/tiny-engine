@@ -1,13 +1,12 @@
 <template>
   <div class="toolbar-save">
     <toolbar-base-component
-      :type="type"
       :content="isLoading ? '保存中' : '保存'"
-      :icon="icon.default"
-      :options="options"
+      :icon="options.icon.default"
+      :options="{ ...options, showDots: !isSaved() }"
       @click-api="openApi"
     >
-      <template #button-extends>
+      <template #button>
         <span @click.stop="state.saveVisible = !state.saveVisible">
           <tiny-popover v-model="state.saveVisible" :visible-arrow="false" width="203" trigger="manual">
             <template #reference>
@@ -29,7 +28,7 @@
           </tiny-popover>
         </span>
       </template>
-      <template #extends>
+      <template #default>
         <tiny-dialog-box
           class="dialog-box"
           :modal="false"
@@ -81,19 +80,13 @@ export default {
     ToolbarBaseComponent
   },
   props: {
-    type: {
-      type: String,
-      default: ''
-    },
-    icon: {
-      type: Object
-    },
     iconExpand: {
       type: String,
       default: 'down-arrow'
     },
     options: {
-      type: Object
+      type: Object,
+      default: () => ({})
     }
   },
   setup() {

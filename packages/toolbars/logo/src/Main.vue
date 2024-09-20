@@ -1,10 +1,10 @@
 <template>
-  <toolbar-base-component :type="type">
-    <template #extends>
+  <toolbar-base-component :options="options">
+    <template #default>
       <div class="top-panel-logo">
         <h1 class="logo-wrap" @click.stop="handleTitleClick">
           <div class="menu-icon-wrapper">
-            <svg-icon :name="icon.default"></svg-icon>
+            <svg-icon :name="options.icon.default"></svg-icon>
           </div>
         </h1>
         <div v-if="state.showMenu" class="main-menu">
@@ -121,15 +121,9 @@ import { ToolbarBaseComponent } from '@opentiny/tiny-engine-layout'
 import { isDevelopEnv } from '@opentiny/tiny-engine-common/js/environments'
 
 defineProps({
-  type: {
-    type: String,
-    default: ''
-  },
-  icon: {
-    type: Object
-  },
   options: {
-    type: Object
+    type: Object,
+    default: () => ({})
   }
 })
 

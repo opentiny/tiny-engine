@@ -1,6 +1,6 @@
 <template>
-  <toolbar-base-component :type="type">
-    <template #extends>
+  <toolbar-base-component :options="options">
+    <template #default>
       <span class="collaboration-container">
         <tiny-popover
           v-model="state.outsideVisible"
@@ -33,7 +33,7 @@
               <template #reference>
                 <span class="icon collaboration-wrap">
                   <span class="icon-hides">
-                    <svg-icon v-if="state.url" :name="icon.default"></svg-icon>
+                    <svg-icon v-if="state.url" :name="options.icon.default"></svg-icon>
                   </span>
                   <span v-if="options?.collapsed">多人协作</span>
                 </span>
@@ -58,16 +58,9 @@ export default {
     ToolbarBaseComponent
   },
   props: {
-    type: {
-      type: String,
-      default: ''
-    },
-    icon: {
-      type: Object
-    },
     options: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     }
   },
   setup() {

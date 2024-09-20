@@ -2,12 +2,12 @@ export default {
   id: 'engine.toolbars.setting',
   title: 'setting',
   type: 'toolbars',
-  align: 'right',
-  icon: {
-    default: 'setting'
-  },
-  renderType: 'icon',
   options: {
+    align: 'right',
+    icon: {
+      default: 'setting'
+    },
+    renderType: 'icon',
     collapsed: true
   }
 }

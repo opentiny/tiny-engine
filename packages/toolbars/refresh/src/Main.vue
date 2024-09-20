@@ -1,35 +1,20 @@
 <template>
-  <toolbar-base-component
-    :type="type"
-    content="刷新画布"
-    :icon="icon.default"
-    :options="options"
-    @click-api="refresh"
-  >
+  <toolbar-base-component content="刷新画布" :icon="options.icon.default" :options="options" @click-api="refresh">
   </toolbar-base-component>
 </template>
 
 <script>
-import { Popover } from '@opentiny/vue'
 import { useMaterial, useCanvas, useModal, useLayout, useBlock } from '@opentiny/tiny-engine-meta-register'
 import { ToolbarBaseComponent } from '@opentiny/tiny-engine-layout'
 
 export default {
   components: {
-    TinyPopover: Popover,
     ToolbarBaseComponent
   },
   props: {
-    type: {
-      type: String,
-      default: ''
-    },
-    icon: {
-      type: Object
-    },
     options: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     }
   },
   setup() {

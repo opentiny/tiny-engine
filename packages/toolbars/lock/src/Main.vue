@@ -1,9 +1,9 @@
 <template>
   <toolbar-base-component
     v-if="!state.isGuest"
-    :type="type"
     :icon="iconName"
     :content="statusMessageMap[state.status]?.nextOptName"
+    :options="options"
     @click-api="lockOrUnlock"
   >
   </toolbar-base-component>
@@ -46,15 +46,9 @@ export default {
     ToolbarBaseComponent
   },
   props: {
-    type: {
-      type: String,
-      default: ''
-    },
-    icon: {
-      type: Object
-    },
     options: {
-      type: Object
+      type: Object,
+      default: () => ({})
     }
   },
   setup(props) {
@@ -72,11 +66,11 @@ export default {
     const iconName = computed(() => {
       switch (state.status) {
         case PAGE_STATUS.Occupy:
-          return props.icon.locked
+          return props.options.icon.locked
         case PAGE_STATUS.Lock:
-          return props.icon.userLocked
+          return props.options.icon.userLocked
         default:
-          return props.icon.unlocked
+          return props.options.icon.unlocked
       }
     })
 

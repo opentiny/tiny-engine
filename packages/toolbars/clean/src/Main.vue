@@ -1,19 +1,13 @@
 <template>
   <div class="toolbar-itm-clean">
-    <toolbar-base-component
-      :type="type"
-      content="清除屏幕"
-      :icon="icon.default"
-      :options="options"
-      @click-api="clean"
-    >
+    <toolbar-base-component content="清除屏幕" :icon="options.icon.default" :options="options" @click-api="clean">
     </toolbar-base-component>
   </div>
 </template>
 
 <script lang="jsx">
 import { ref, watch, getCurrentInstance } from 'vue'
-import { Popover, Modal } from '@opentiny/vue'
+import { Modal } from '@opentiny/vue'
 import { useCanvas, useLayout } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { ToolbarBaseComponent } from '@opentiny/tiny-engine-layout'
@@ -21,20 +15,12 @@ import { ToolbarBaseComponent } from '@opentiny/tiny-engine-layout'
 const { PAGE_STATUS } = constants
 export default {
   components: {
-    TinyPopover: Popover,
     ToolbarBaseComponent
   },
   props: {
-    type: {
-      type: String,
-      default: ''
-    },
-    icon: {
-      type: Object
-    },
     options: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     }
   },
   setup() {

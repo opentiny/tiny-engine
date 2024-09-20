@@ -1,6 +1,6 @@
 <template>
-  <toolbar-base-component :type="type">
-    <template #extends>
+  <toolbar-base-component :options="options">
+    <template #default>
       <div class="top-panel-breadcrumb">
         <div class="top-panel-breadcrumb-title">
           <tiny-breadcrumb separator="：" @select="open">
@@ -40,13 +40,6 @@ export default {
     ToolbarBaseComponent
   },
   props: {
-    type: {
-      type: String,
-      default: ''
-    },
-    icon: {
-      type: Object
-    },
     options: {
       type: Object,
       default: () => {}

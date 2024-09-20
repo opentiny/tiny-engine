@@ -1,11 +1,11 @@
 <template>
-  <span class="toolbar-item-wrap" @click="handelClick">
+  <span class="toolbar-item-wrap" @click="click">
     <component :is="getRender()" v-bind="state">
-      <template #button-extends>
-        <slot name="button-extends"></slot>
+      <template #default>
+        <slot name="button"></slot>
       </template>
     </component>
-    <slot name="extends"></slot>
+    <slot></slot>
     <span v-if="state.options?.collapsed" class="operate-title">{{ state.content }}</span>
   </span>
   <span class="split-line" v-if="state.options?.separate">|</span>
@@ -13,8 +13,8 @@
 
 <script>
 import { reactive, computed } from 'vue'
-import ToolbarIcon from './toolbarBuiltIn/toolbarIcon.vue'
-import ToolbarButton from './toolbarBuiltIn/toolbarButton.vue'
+import ToolbarIcon from './toolbar-built-in/ToolbarIcon.vue'
+import ToolbarButton from './toolbar-built-in/ToolbarButton.vue'
 
 export default {
   components: {
@@ -22,10 +22,6 @@ export default {
     ToolbarButton
   },
   props: {
-    type: {
-      type: String,
-      default: 'icon'
-    },
     icon: {
       type: String,
       default: ''
@@ -46,13 +42,13 @@ export default {
       content: computed(() => props.content),
       options: computed(() => props.options)
     })
-    
-    const handelClick = () => {
+
+    const click = () => {
       emit('click-api')
     }
 
     const getRender = () => {
-      switch (props.type) {
+      switch (props.options.renderType) {
         case 'button':
           return ToolbarButton
         case 'icon':
@@ -64,7 +60,7 @@ export default {
 
     return {
       state,
-      handelClick,
+      click,
       getRender
     }
   }
@@ -73,7 +69,8 @@ export default {
 <style scoped>
 .split-line {
   color: var(--ti-lowcode-toolbar-border-color);
-  margin-left: 6px;
+  margin: 0 4px;
+  font-size: 14px;
 }
 .toolbar-item-wrap div {
   display: inline-block;

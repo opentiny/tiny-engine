@@ -10,7 +10,7 @@
       <span class="icon">
         <span :class="[options?.useDefaultClass ? 'icon-hides' : '']">
           <svg-icon :name="icon"></svg-icon>
-          <span v-if="!isSaved() && options?.showDots" class="dots"></span>
+          <span v-if="options?.showDots" class="dots"></span>
         </span>
       </span>
     </template>
@@ -18,7 +18,6 @@
 </template>
 <script>
 import { Popover } from '@opentiny/vue'
-import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
@@ -38,12 +37,7 @@ export default {
       default: () => {}
     }
   },
-  setup() {
-    const { isSaved } = useCanvas();
-    return {
-      isSaved
-    }
-  }
+  setup() {}
 }
 </script>
 
