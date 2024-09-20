@@ -6007,6 +6007,91 @@
         },
         {
           "name": {
+            "zh_CN": "导航菜单"
+          },
+          "component": "TinyNavMenu",
+          "icon": "menu",
+          "description": "主要用于定义页面顶部导航的菜单",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "package": "@opentiny/vue",
+            "exportName": "NavMenu",
+            "version": "",
+            "destructuring": true
+          },
+          "group": "component",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "collapse": {
+                  "number": 6,
+                  "text": {
+                    "zh_CN": "显示更多"
+                  }
+                },
+                "content": [
+                  {
+                    "property": "data",
+                    "label": {
+                      "text": {
+                        "zh_CN": "菜单数据"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "MetaCodeEditor",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "设置菜单的数据"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": ["text", "size"]
+            },
+            "contextMenu": {
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
+            }
+          }
+        },
+        {
+          "name": {
             "zh_CN": "输入框"
           },
           "component": "TinyInput",
@@ -13381,6 +13466,37 @@
         {
           "group": "content",
           "children": [
+            {
+              "name": {
+                "zh_CN": "导航菜单"
+              },
+              "screenshot": "",
+              "snippetName": "tiny-nav-menu",
+              "icon": "menu",
+              "schema": {
+                "componentName": "TinyNavMenu",
+                "props": {
+                  "data": [
+                      {
+                          "title": "文档",
+                          "url": ""
+                      },
+                      {
+                          "title": "案例",
+                          "url": ""
+                      },
+                      {
+                          "title": "关于",
+                          "url": ""
+                      },
+                      {
+                          "title": "联系我们",
+                          "url": ""
+                      }
+                  ]
+                }
+              }
+            },
             {
               "name": {
                 "zh_CN": "走马灯"
