@@ -5680,6 +5680,95 @@
           }
         },
         {
+          "icon": "layout",
+          "name": {
+            "zh_CN": "layout"
+          },
+          "component": "TinyLayout",
+          "description": "栅格布局",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "package": "@opentiny/vue",
+            "exportName": "Layout",
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+          },
+          "group": "component",
+          "priority": 5,
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "collapse": {
+                  "number": 6,
+                  "text": {
+                    "zh_CN": "显示更多"
+                  }
+                },
+                "content": [
+                  {
+                    "property": "cols",
+                    "label": {
+                      "text": {
+                        "zh_CN": "总栅格数"
+                      }
+                    },
+                    "cols": 12,
+                    "defaultValue": 12,
+                    "widget": {
+                      "component": "RadioGroupConfigurator",
+                      "props": {
+                        "options": [
+                          { "label": "12", "text": 12 },
+                          { "label": "24", "text": 24 }
+                        ],
+                        "type": "button"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "总栅格数，该属性的可选值为 12/24"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": [],
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": ["cols"]
+            },
+            "contextMenu": {
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
+            }
+          }
+        },
+        {
           "name": {
             "zh_CN": "按钮"
           },
