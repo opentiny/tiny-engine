@@ -61,6 +61,10 @@ export default {
       props.property.value?.indexOf('px') > -1 ? Number.parseInt(props.property.value) : props.property.value
     )
 
+    const updateStyle = (value) => {
+      emit('update', { [props.property.name]: value })
+    }
+
     const sliderChange = () => {
       if (sliderFlag) {
         updateStyle(`${sliderValue.value}px`)
@@ -83,11 +87,7 @@ export default {
 
     const reset = () => {
       sliderFlag = false
-      updateStyle('')
-    }
-
-    const updateStyle = (value) => {
-      emit('update', { [props.property.name]: value })
+      updateStyle(null)
     }
 
     const inputChange = (property) => {

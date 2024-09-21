@@ -47,7 +47,7 @@
     "fs-extra": "^10.0.1",
     "prettier": "^2.6.1",
     "vite": "^4.3.7",
-    "vite-plugin-static-copy": "^1.0.4",
+    "vite-plugin-static-copy": "^0.16.0",
     "vitest": "^1.4.0",
     "winston": "^3.10.0"
   },
