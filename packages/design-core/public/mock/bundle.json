@@ -6205,7 +6205,7 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["text", "size"]
+              "properties": ["data", "overflow"]
             },
             "contextMenu": {
               "actions": ["create symbol"],
