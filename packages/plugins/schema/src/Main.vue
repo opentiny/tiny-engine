@@ -5,14 +5,10 @@
       <div class="header-title">
         <!-- 暂时放开schema录入功能，等画布功能完善后，再打开下面一行的注释 -->
         <!-- <tiny-popover v-if="isEdit" placement="bottom" trigger="hover" append-to-body content="保存"> -->
-        <tiny-popover placement="bottom" trigger="hover" append-to-body content="保存">
-          <template #reference>
-            <span class="icon-wrap" @click="saveSchema">
-              <i v-show="!showRed" class="red"></i>
-              <icon-save></icon-save>
-            </span>
-          </template>
-        </tiny-popover>
+        <span class="icon-wrap" @click="saveSchema">
+          <i v-show="!showRed" class="red"></i>
+          <tiny-button type="primary">保存</tiny-button>
+        </span>
         <tiny-popover v-show="false" placement="bottom" trigger="hover" append-to-body content="导入 Schema">
           <template #reference>
             <span class="icon-wrap">
@@ -40,11 +36,11 @@
 
 <script lang="jsx">
 import { nextTick, reactive, getCurrentInstance, onActivated, ref } from 'vue'
-import { Popover } from '@opentiny/vue'
+import { Popover, Button } from '@opentiny/vue'
 import { VueMonaco, CloseIcon } from '@opentiny/tiny-engine-common'
 import { useCanvas, useModal, useHistory, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
-import { iconSave, iconDownloadLink } from '@opentiny/vue-icon'
+import { iconDownloadLink } from '@opentiny/vue-icon'
 
 const { reactiveObj2String: obj2String, string2Obj } = utils
 
@@ -52,8 +48,8 @@ export default {
   components: {
     MonacoEditor: VueMonaco,
     TinyPopover: Popover,
+    TinyButton: Button,
     CloseIcon,
-    IconSave: iconSave(),
     IconDownloadLink: iconDownloadLink()
   },
   setup(props, { emit }) {
@@ -157,6 +153,8 @@ export default {
   .source-code-header {
     display: flex;
     justify-content: space-between;
+    border-bottom: 1px solid var(--ti-lowcode-toolbar-border-color);
+    margin-bottom: 12px;
   }
   .title {
     color: var(--ti-lowcode-plugin-panel-title-color);
@@ -166,23 +164,15 @@ export default {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    padding: 4px 0 8px 0;
-    margin-bottom: 8px;
-    border-bottom: 1px solid var(--ti-lowcode-toolbar-border-color);
+    margin-bottom: 10px;
     .icon-wrap {
-      width: 20px;
-      height: 20px;
-      color: var(--ti-lowcode-text-color);
-      font-size: 16px;
-      border-radius: 2px;
-      cursor: pointer;
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      transition: 0.3s;
-      position: relative;
-      &:hover {
-        color: var(--ti-lowcode-toolbar-icon-color);
+      .tiny-button {
+        width: 40px;
+        padding: 0;
+        min-width: 40px;
+        margin-right: 2px;
+        height: 24px;
+        line-height: 24px;
       }
       .red {
         width: 5px;
@@ -202,8 +192,8 @@ export default {
   }
   .source-code-content {
     height: calc(100% - 42px);
-    border: 1px solid var(--ti-lowcode-toolbar-border-color);
-    box-shadow: 0px 0px 4px rgb(0 0 0 / 20%);
+    border: 1px solid var(--ti-lowcode-base-gray-101);
+    border-radius: 4px;
   }
   .code-edit-content {
     height: 100%;

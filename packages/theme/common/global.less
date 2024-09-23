@@ -1771,6 +1771,7 @@ button {
 
 .tiny-form {
   .tiny-form-item__label {
+    font-size: 12px;
     padding-right: 8px;
     color: var(--ti-lowcode-input-label-color);
   }
@@ -1787,13 +1788,7 @@ button {
   border-bottom: none;
   .tiny-collapse-item {
     border: none;
-    // 第一项的外边距会与其他元素外边距相加形成最终外边距，因此第一项外边距不调整
-    + .tiny-collapse-item {
-      margin-top: 4px;
-    }
-    .tiny-collapse-item__header {
-      padding-left: 16px;
-    }
+    margin-top: 0;
     .components-items {
       .item {
         cursor: pointer;
@@ -1803,11 +1798,11 @@ button {
 
   .tiny-collapse-item__header {
     color: var(--ti-lowcode-collapse-item-header-color);
-    background: var(--ti-lowcode-collapse-item-header-bg-color);
     position: relative;
     min-height: 32px;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding: 12px;
+    font-weight: 700;
+    border-top: 1px solid var(--ti-lowcode-base-invalidate-color);
 
     &:hover,
     &.is-active {
@@ -1815,7 +1810,10 @@ button {
     }
 
     .tiny-collapse-item__arrow {
+      color: var(--ti-lowcode-life-cycle-alert-color);
       line-height: 14px;
+      position: absolute;
+      right: 0;
     }
   }
 
@@ -1828,6 +1826,7 @@ button {
     color: var(--ti-lowcode-collapse-item-content-color);
     padding: 0;
     border: none;
+    margin-bottom: 12px;
   }
 
   .tiny-collapse-item__wrap {

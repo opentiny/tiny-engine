@@ -2,7 +2,7 @@
   <tiny-form
     ref="serviceFormRef"
     class="create-form"
-    label-position="left"
+    label-position="top"
     label-width="15%"
     :model="state.serviceForm"
     :rules="rules"
@@ -18,12 +18,11 @@
         >
         </tiny-select>
         <tiny-input class="border-input" v-model="state.serviceForm.uri" resize="none" placeholder="请输入">
-          <template #append><a class="requestBtn" type="info" @click="$emit('sendRequest')">发送请求</a></template>
         </tiny-input>
       </div>
     </tiny-form-item>
     <tiny-form-item label="请求描述" prop="description">
-      <tiny-input v-model="state.serviceForm.description" placeholder="请输入"></tiny-input>
+      <tiny-input type="textarea" v-model="state.serviceForm.description" placeholder="请输入"></tiny-input>
     </tiny-form-item>
   </tiny-form>
 </template>

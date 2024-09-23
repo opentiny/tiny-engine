@@ -9,11 +9,6 @@
               <span>{{ item.name }}</span>
             </div>
             <div class="item-body">
-              <tiny-input v-model="item.title" placeholder="输入相应的 label 名称"></tiny-input>
-              <div>
-                <tiny-switch v-model="item.status" @change="change(item)"></tiny-switch>
-                <span class="tip">启用该字段</span>
-              </div>
               <tiny-select
                 v-if="item.status"
                 v-model="item.type"
@@ -22,6 +17,11 @@
                 text-field="name"
                 value-field="type"
               ></tiny-select>
+              <tiny-input v-model="item.title" placeholder="输入相应的 label 名称"></tiny-input>
+              <div class="open">
+                <tiny-checkbox v-model="item.status" name="tiny-checkbox" @change="change(item)"></tiny-checkbox>
+                <span class="tip">启用该字段</span>
+              </div>
             </div>
           </div>
         </div>
@@ -32,7 +32,7 @@
 
 <script>
 import { reactive, watchEffect, ref } from 'vue'
-import { Input, Select, Switch } from '@opentiny/vue'
+import { Input, Select, Checkbox } from '@opentiny/vue'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
 import mappingType from './config.js'
 
@@ -50,7 +50,7 @@ export default {
   components: {
     TinySelect: Select,
     TinyInput: Input,
-    TinySwitch: Switch,
+    TinyCheckbox: Checkbox,
     PluginSetting
   },
   props: {
@@ -135,7 +135,7 @@ export default {
     .item-body {
       display: grid;
       align-items: center;
-      grid-template-columns: 3fr 1.5fr 3fr;
+      grid-template-columns: 3fr 3fr 1.5fr;
       column-gap: 10px;
       :deep(.tiny-input .tiny-input__inner) {
         color: var(--ti-lowcode-datasource-toolbar-breadcrumb-color);
@@ -145,6 +145,10 @@ export default {
         color: var(--ti-lowcode-datasource-toolbar-breadcrumb-color);
         padding-left: 3px;
         font-size: 12px;
+      }
+      .open {
+        display: flex;
+        align-items: center;
       }
     }
   }
