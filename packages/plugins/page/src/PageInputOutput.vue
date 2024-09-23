@@ -1,11 +1,5 @@
 <template>
   <div class="input-or-output">
-    <tiny-alert
-      v-if="false"
-      type="simple"
-      description="了解有关输入输出设置的更多信息"
-      class="life-cycle-alert"
-    ></tiny-alert>
     <meta-code-editor
       :modelValue="inputValue"
       title="输入配置"
@@ -38,14 +32,13 @@
 
 <script>
 import { ref, watchEffect, computed } from 'vue'
-import { Alert, Checkbox } from '@opentiny/vue'
+import { Checkbox } from '@opentiny/vue'
 import { MetaCodeEditor } from '@opentiny/tiny-engine-common'
 import { usePage, useNotify } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
     MetaCodeEditor,
-    TinyAlert: Alert,
     TinyCheckbox: Checkbox
   },
   setup() {
