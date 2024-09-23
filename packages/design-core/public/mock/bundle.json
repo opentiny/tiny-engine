@@ -6061,6 +6061,129 @@
                     "description": {
                       "zh_CN": "设置菜单的数据"
                     }
+                  },
+                  {
+                    "property": "overflow",
+                    "label": {
+                      "text": {
+                        "zh_CN": "内容超出时展示方式"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "default": "auto",
+                    "cols": 12,
+                    "widget": {
+                      "component": "MetaSelect",
+                      "props": {
+                        "options": [
+                          {
+                            "label": "auto",
+                            "value": "auto"
+                          },
+                          {
+                            "label": "retract",
+                            "value": "retract"
+                          },
+                          {
+                            "label": "fixed",
+                            "value": "fixed"
+                          },
+                          {
+                            "label": "hidden",
+                            "value": "hidden"
+                          }
+                        ]
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "设置一级菜单无法在当前菜单容器里显示完全时的展示方式"
+                    }
+                  },
+                  {
+                    "property": "fields",
+                    "label": {
+                      "text": {
+                        "zh_CN": "数据映射"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "default": { "textField": "title", "urlField": "url", "key": "id" },
+                    "cols": 12,
+                    "widget": {
+                      "component": "MetaCodeEditor",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "自定义菜单数据的映射"
+                    }
+                  },
+                  {
+                    "property": "prevent",
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否阻止默认跳转"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "default": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "MetaSwitch",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": ""
+                    }
+                  },
+                  {
+                    "property": "before-skip",
+                    "type": "function",
+                    "labelPosition": "top",
+                    "label": {
+                      "text": {
+                        "zh_CN": "before-skip钩子函数"
+                      }
+                    },
+                    "description": {
+                      "text": {
+                        "zh_CN": "点击菜单跳转前的钩子函数，返回 false 将无法跳转"
+                      }
+                    },
+                    "widget": {
+                      "component": "MetaCodeEditor",
+                      "props": {
+                        "dataType": "JSFunction"
+                      }
+                    }
+                  },
+                  {
+                    "property": "fetch-menu-data",
+                    "type": "function",
+                    "labelPosition": "top",
+                    "label": {
+                      "text": {
+                        "zh_CN": "fetch-menu-data"
+                      }
+                    },
+                    "description": {
+                      "text": {
+                        "zh_CN": "自定义菜单数据加载服务，返回一个Promise对象"
+                      }
+                    },
+                    "widget": {
+                      "component": "MetaCodeEditor",
+                      "props": {
+                        "dataType": "JSFunction"
+                      }
+                    }
                   }
                 ]
               }
