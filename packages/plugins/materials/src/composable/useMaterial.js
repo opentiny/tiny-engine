@@ -460,7 +460,7 @@ const a = [
     name: '输入框',
     category: 'element-plus',
     component: 'ElInput',
-    label: 'modelValue',
+    label: '绑定值',
     description: '绑定值',
     property: 'modelValue'
   },
@@ -468,7 +468,7 @@ const a = [
     name: '输入框',
     category: 'element-plus',
     component: 'ElInput',
-    label: 'size',
+    label: '尺寸',
     description: '尺寸',
     property: 'size'
   },
@@ -476,7 +476,7 @@ const a = [
     name: '输入框',
     category: 'element-plus',
     component: 'ElInput',
-    label: 'type',
+    label: '类型',
     description: '类型',
     property: 'type'
   },
@@ -484,7 +484,7 @@ const a = [
     name: '输入框',
     category: 'element-plus',
     component: 'ElInput',
-    label: 'placeholder',
+    label: '占位文本',
     description: '输入框占位文本',
     property: 'placeholder'
   },
@@ -492,7 +492,7 @@ const a = [
     name: '输入框',
     category: 'element-plus',
     component: 'ElInput',
-    label: 'maxlength',
+    label: '最大长度',
     description: '最大输入长度',
     property: 'maxlength'
   },
@@ -500,7 +500,7 @@ const a = [
     name: '输入框',
     category: 'element-plus',
     component: 'ElInput',
-    label: 'disabled',
+    label: '是否禁用',
     description: '是否禁用',
     property: 'disabled'
   },
@@ -508,7 +508,7 @@ const a = [
     name: '按钮',
     category: 'element-plus',
     component: 'ElButton',
-    label: 'size',
+    label: '尺寸',
     description: '尺寸',
     property: 'size'
   },
@@ -516,7 +516,7 @@ const a = [
     name: '按钮',
     category: 'element-plus',
     component: 'ElButton',
-    label: 'type',
+    label: '类型',
     description: '类型',
     property: 'type'
   },
@@ -524,7 +524,7 @@ const a = [
     name: '按钮',
     category: 'element-plus',
     component: 'ElButton',
-    label: 'plain',
+    label: '朴素按钮',
     description: '是否为朴素按钮',
     property: 'plain'
   },
@@ -532,7 +532,7 @@ const a = [
     name: '按钮',
     category: 'element-plus',
     component: 'ElButton',
-    label: 'text',
+    label: '文字按钮',
     description: '是否为文字按钮',
     property: 'text'
   },
@@ -540,7 +540,7 @@ const a = [
     name: '按钮',
     category: 'element-plus',
     component: 'ElButton',
-    label: 'bg',
+    label: '背景颜色',
     description: '是否显示文字按钮背景颜色',
     property: 'bg'
   },
@@ -548,7 +548,7 @@ const a = [
     name: '按钮',
     category: 'element-plus',
     component: 'ElButton',
-    label: 'link',
+    label: '链接按钮',
     description: '是否为链接按钮',
     property: 'link'
   },
@@ -556,7 +556,7 @@ const a = [
     name: '按钮',
     category: 'element-plus',
     component: 'ElButton',
-    label: 'round',
+    label: '圆角按钮',
     description: '是否为圆角按钮',
     property: 'round'
   },
@@ -564,7 +564,7 @@ const a = [
     name: '按钮',
     category: 'element-plus',
     component: 'ElButton',
-    label: 'circle',
+    label: '圆形按钮',
     description: '是否为圆形按钮',
     property: 'circle'
   },
@@ -572,7 +572,7 @@ const a = [
     name: '按钮',
     category: 'element-plus',
     component: 'ElButton',
-    label: 'loading',
+    label: '加载中状态',
     description: '是否为加载中状态',
     property: 'loading'
   },
@@ -580,7 +580,7 @@ const a = [
     name: '按钮',
     category: 'element-plus',
     component: 'ElButton',
-    label: 'disabled',
+    label: '禁用',
     description: '是否禁用',
     property: 'disabled'
   },
@@ -588,7 +588,7 @@ const a = [
     name: '表单',
     category: 'element-plus',
     component: 'ElForm',
-    label: 'model',
+    label: '数据对象',
     description: '表单数据对象',
     property: 'model'
   },
@@ -596,7 +596,7 @@ const a = [
     name: '表单',
     category: 'element-plus',
     component: 'ElForm',
-    label: 'rules',
+    label: '验证规则',
     description: '表单验证规则',
     property: 'rules'
   },
@@ -604,7 +604,7 @@ const a = [
     name: '表单',
     category: 'element-plus',
     component: 'ElForm',
-    label: 'inline',
+    label: '行内模式',
     description: '行内表单模式',
     property: 'inline'
   },
@@ -612,15 +612,15 @@ const a = [
     name: '表单',
     category: 'element-plus',
     component: 'ElForm',
-    label: 'label-position',
-    description: '表单域标签的位置， 当设置为 left 或 right 时，则也需要设置 label-width 属性',
+    label: '标签位置',
+    description: '表单域标签的位置， 当设置为 left 或 right 时，则也需要设置标签宽度属性',
     property: 'label-position'
   },
   {
     name: '表单',
     category: 'element-plus',
     component: 'ElForm',
-    label: 'label-width',
+    label: '标签宽度',
     description: "标签的长度，例如 '50px'。 作为 Form 直接子元素的 form-item 会继承该值。 可以使用 auto。",
     property: 'label-width'
   },
@@ -628,7 +628,7 @@ const a = [
     name: '表单',
     category: 'element-plus',
     component: 'ElForm',
-    label: 'label-suffix',
+    label: '标签后缀',
     description: '表单域标签的后缀',
     property: 'label-suffix'
   },
@@ -636,7 +636,7 @@ const a = [
     name: '表单',
     category: 'element-plus',
     component: 'ElForm',
-    label: 'hide-required-asterisk',
+    label: '隐藏必填星号',
     description: '是否隐藏必填字段标签旁边的红色星号',
     property: 'hide-required-asterisk'
   },
@@ -644,7 +644,7 @@ const a = [
     name: '表单',
     category: 'element-plus',
     component: 'ElForm',
-    label: '星号的位置',
+    label: '星号位置',
     description: '星号的位置',
     property: 'require-asterisk-position'
   },
@@ -652,7 +652,7 @@ const a = [
     name: '表单',
     category: 'element-plus',
     component: 'ElForm',
-    label: 'show-message',
+    label: '显示校验信息',
     description: '是否显示校验错误信息',
     property: 'show-message'
   },
@@ -660,7 +660,7 @@ const a = [
     name: '表单',
     category: 'element-plus',
     component: 'ElForm',
-    label: 'inline-message',
+    label: '行内显示校验信息',
     description: '是否以行内形式展示校验信息',
     property: 'inline-message'
   },
@@ -668,7 +668,7 @@ const a = [
     name: '表单',
     category: 'element-plus',
     component: 'ElForm',
-    label: 'status-icon',
+    label: '显示校验结果图标',
     description: '是否在输入框中显示校验结果反馈图标',
     property: 'status-icon'
   },
@@ -676,7 +676,7 @@ const a = [
     name: '表单',
     category: 'element-plus',
     component: 'ElForm',
-    label: 'validate-on-rule-change',
+    label: '触发验证',
     description: '是否在 rules 属性改变后立即触发一次验证',
     property: 'validate-on-rule-change'
   },
@@ -684,7 +684,7 @@ const a = [
     name: '表单',
     category: 'element-plus',
     component: 'ElForm',
-    label: 'size',
+    label: '尺寸',
     description: '用于控制该表单内组件的尺寸',
     property: 'size'
   },
@@ -692,7 +692,7 @@ const a = [
     name: '表单',
     category: 'element-plus',
     component: 'ElForm',
-    label: 'disabled',
+    label: '禁用',
     description: '是否禁用该表单内的所有组件。 如果设置为 true, 它将覆盖内部组件的 disabled 属性',
     property: 'disabled'
   },
@@ -700,7 +700,7 @@ const a = [
     name: '表单',
     category: 'element-plus',
     component: 'ElForm',
-    label: 'scroll-to-error',
+    label: '滚动到错误项',
     description: '当校验失败时，滚动到第一个错误表单项',
     property: 'scroll-to-error'
   },
@@ -708,7 +708,7 @@ const a = [
     name: '表单子项',
     category: 'element-plus',
     component: 'ElFormItem',
-    label: 'prop',
+    label: '键名',
     description:
       "model 的键名。 它可以是一个属性的值(如 a.b.0 或 [a', 'b', '0'])。 在定义了 validate、resetFields 的方法时，该属性是必填的",
     property: 'prop'
@@ -717,7 +717,7 @@ const a = [
     name: '表单子项',
     category: 'element-plus',
     component: 'ElFormItem',
-    label: 'label',
+    label: '标签文本',
     description: '标签文本',
     property: 'label'
   },
@@ -725,7 +725,7 @@ const a = [
     name: '表单子项',
     category: 'element-plus',
     component: 'ElFormItem',
-    label: 'label-width',
+    label: '标签宽度',
     description: "标签宽度，例如 '50px'。 可以使用 auto",
     property: 'label-width'
   },
@@ -733,7 +733,7 @@ const a = [
     name: '表单子项',
     category: 'element-plus',
     component: 'ElFormItem',
-    label: 'required',
+    label: '必填项',
     description: '是否为必填项，如不设置，则会根据校验规则确认',
     property: 'required'
   },
@@ -741,7 +741,7 @@ const a = [
     name: '表单子项',
     category: 'element-plus',
     component: 'ElFormItem',
-    label: 'rules',
+    label: '验证规则',
     description: '表单验证规则, 更多内容可以参考async-validator',
     property: 'rules'
   },
@@ -749,7 +749,7 @@ const a = [
     name: '表单子项',
     category: 'element-plus',
     component: 'ElFormItem',
-    label: 'error',
+    label: '错误信息',
     description: '表单域验证错误时的提示信息。设置该值会导致表单验证状态变为 error，并显示该错误信息',
     property: 'error'
   },
@@ -757,7 +757,7 @@ const a = [
     name: '表单子项',
     category: 'element-plus',
     component: 'ElFormItem',
-    label: 'show-message',
+    label: '显示错误信息',
     description: '是否显示校验错误信息',
     property: 'show-message'
   },
@@ -765,7 +765,7 @@ const a = [
     name: '表单子项',
     category: 'element-plus',
     component: 'ElFormItem',
-    label: 'inline-message',
+    label: '行内显示错误信息',
     description: '是否在行内显示校验信息',
     property: 'inline-message'
   },
@@ -773,7 +773,7 @@ const a = [
     name: '表单子项',
     category: 'element-plus',
     component: 'ElFormItem',
-    label: 'size',
+    label: '尺寸',
     description: '用于控制该表单内组件的尺寸',
     property: 'size'
   },
@@ -789,7 +789,7 @@ const a = [
     name: '表单子项',
     category: 'element-plus',
     component: 'ElFormItem',
-    label: 'validate-status',
+    label: '校验状态',
     description: 'formItem 校验的状态',
     property: 'validate-status'
   },
@@ -797,7 +797,7 @@ const a = [
     name: '表单',
     category: 'element-plus',
     component: 'ElTable',
-    label: 'data',
+    label: '数据',
     description: '显示的数据',
     property: 'data'
   },
@@ -805,7 +805,7 @@ const a = [
     name: '表单',
     category: 'element-plus',
     component: 'ElTable',
-    label: '表格列',
+    label: '表格列配置',
     description: '表格列的配置信息',
     property: 'columns'
   },
@@ -813,7 +813,7 @@ const a = [
     name: '表单',
     category: 'element-plus',
     component: 'ElTable',
-    label: 'max-height',
+    label: '最大高度',
     description: 'Table 的最大高度。',
     property: 'max-height'
   },
@@ -821,7 +821,7 @@ const a = [
     name: '表单',
     category: 'element-plus',
     component: 'ElTable',
-    label: 'height',
+    label: '表格高度',
     description:
       'Table 的高度， 默认为自动高度。 这个高度会设置为 Table 的 style.height 的值，Table 的高度会受控于外部样式。',
     property: 'height'
@@ -830,7 +830,7 @@ const a = [
     name: '表单',
     category: 'element-plus',
     component: 'ElTable',
-    label: 'stripe',
+    label: '斑马纹',
     description: '是否为斑马纹 table',
     property: 'stripe'
   },
@@ -838,7 +838,7 @@ const a = [
     name: '表单',
     category: 'element-plus',
     component: 'ElTable',
-    label: 'border',
+    label: '纵向边框',
     description: '是否带有纵向边框',
     property: 'border'
   },
@@ -846,7 +846,7 @@ const a = [
     name: '表单',
     category: 'element-plus',
     component: 'ElTable',
-    label: 'size',
+    label: '表格尺寸',
     description: 'Table 的尺寸',
     property: 'size'
   },
@@ -854,7 +854,7 @@ const a = [
     name: '表单',
     category: 'element-plus',
     component: 'ElTable',
-    label: 'fit',
+    label: '列宽自撑开',
     description: '列的宽度是否自撑开',
     property: 'fit'
   },
@@ -862,7 +862,7 @@ const a = [
     name: '表单',
     category: 'element-plus',
     component: 'ElTable',
-    label: 'show-header',
+    label: '显示表头',
     description: '是否显示表头',
     property: 'show-header'
   },
@@ -870,7 +870,7 @@ const a = [
     name: '表单',
     category: 'element-plus',
     component: 'ElTable',
-    label: 'highlight-current-row',
+    label: '高亮当前行',
     description: '是否要高亮当前行',
     property: 'highlight-current-row'
   },
@@ -878,7 +878,7 @@ const a = [
     name: '表单',
     category: 'element-plus',
     component: 'ElTable',
-    label: 'current-row-key',
+    label: '当前行的 key',
     description: '当前行的 key，只写属性',
     property: 'current-row-key'
   },
@@ -886,7 +886,7 @@ const a = [
     name: '表单',
     category: 'element-plus',
     component: 'ElTable',
-    label: 'row-class-name',
+    label: '行的类名',
     description: '行的 className',
     property: 'row-class-name'
   },
@@ -894,7 +894,7 @@ const a = [
     name: '表单',
     category: 'element-plus',
     component: 'ElTable',
-    label: 'row-key',
+    label: '行数据的 Key',
     description:
       '行数据的 Key，用来优化 Table 的渲染； 在使用reserve-selection功能与显示树形数据时，该属性是必填的。 类型为 String 时，支持多层访问：user.info.id，但不支持 user.info[0].id，此种情况请使用 Function',
     property: 'row-key'
@@ -903,7 +903,7 @@ const a = [
     name: '表单',
     category: 'element-plus',
     component: 'ElTable',
-    label: 'empty-text',
+    label: '空数据文本',
     description: '空数据时显示的文本内容',
     property: 'empty-text'
   },
@@ -911,7 +911,7 @@ const a = [
     name: '表单',
     category: 'element-plus',
     component: 'ElTable',
-    label: 'table-layout',
+    label: '表格布局方式',
     description: '设置表格单元、行和列的布局方式',
     property: 'table-layout'
   },
@@ -919,7 +919,7 @@ const a = [
     name: '表单',
     category: 'element-plus',
     component: 'ElTable',
-    label: 'scrollbar-always-on',
+    label: '显示滚动条',
     description: '总是显示滚动条',
     property: 'scrollbar-always-on'
   },
@@ -927,7 +927,7 @@ const a = [
     name: '表单',
     category: 'element-plus',
     component: 'ElTable',
-    label: 'flexible',
+    label: '主轴最小尺寸',
     description: '确保主轴的最小尺寸，以便不超过内容',
     property: 'flexible'
   },
@@ -935,40 +935,40 @@ const a = [
     name: '走马灯子项',
     category: '容器组件',
     component: 'TinyCarouselItem',
-    label: '幻灯片的名字，可用作 setActiveItem 的参数',
-    description: '',
+    label: '名称',
+    description: '幻灯片的名字，可用作 setActiveItem 的参数',
     property: 'name'
   },
   {
     name: '走马灯子项',
     category: '容器组件',
     component: 'TinyCarouselItem',
-    label: '幻灯片的标题',
-    description: '',
+    label: '标题',
+    description: '幻灯片的标题',
     property: 'title'
   },
   {
     name: '走马灯子项',
     category: '容器组件',
     component: 'TinyCarouselItem',
-    label: '指示器的位置',
-    description: '',
+    label: '指示器位置',
+    description: '指示器的位置',
     property: 'indicator-position'
   },
   {
     name: '走马灯',
     category: '容器组件',
     component: 'TinyCarousel',
-    label: '切换箭头的显示时机',
-    description: '',
+    label: '箭头显示时机',
+    description: '切换箭头的显示时机',
     property: 'arrow'
   },
   {
     name: '走马灯',
     category: '容器组件',
     component: 'TinyCarousel',
-    label: '是否自动切换',
-    description: '',
+    label: '自动切换',
+    description: '是否自动切换',
     property: 'autoplay'
   },
   {
@@ -976,99 +976,99 @@ const a = [
     category: '容器组件',
     component: 'TinyCarousel',
     label: '选项卡',
-    description: 'tabs',
+    description: 'tabs 选项卡',
     property: 'tabs'
   },
   {
     name: '走马灯',
     category: '容器组件',
     component: 'TinyCarousel',
-    label: '走马灯的高度',
-    description: '',
+    label: '高度',
+    description: '走马灯的高度',
     property: 'height'
   },
   {
     name: '走马灯',
     category: '容器组件',
     component: 'TinyCarousel',
-    label: '指示器的位置',
-    description: '',
+    label: '位置',
+    description: '指示器的位置',
     property: 'indicator-position'
   },
   {
     name: '走马灯',
     category: '容器组件',
     component: 'TinyCarousel',
-    label: '初始状态激活的幻灯片的索引，从 0 开始 ',
-    description: '',
+    label: '初始索引',
+    description: '初始状态激活的幻灯片的索引，从 0 开始 ',
     property: 'initial-index'
   },
   {
     name: '走马灯',
     category: '容器组件',
     component: 'TinyCarousel',
-    label: '自动切换的时间间隔，单位为毫秒',
-    description: '',
+    label: '自动切换间隔',
+    description: '自动切换的时间间隔，单位为毫秒',
     property: 'interval'
   },
   {
     name: '走马灯',
     category: '容器组件',
     component: 'TinyCarousel',
-    label: '是否循环显示',
-    description: '',
+    label: '循环显示',
+    description: '是否循环显示',
     property: 'loop'
   },
   {
     name: '走马灯',
     category: '容器组件',
     component: 'TinyCarousel',
-    label: '是否显示标题',
-    description: '',
+    label: '显示标题',
+    description: '是否显示标题',
     property: 'show-title'
   },
   {
     name: '走马灯',
     category: '容器组件',
     component: 'TinyCarousel',
-    label: '指示器的触发方式，默认为 hover',
-    description: '',
+    label: '触发方式',
+    description: '指示器的触发方式，默认为 hover',
     property: 'trigger'
   },
   {
     name: '走马灯',
     category: '容器组件',
     component: 'TinyCarousel',
-    label: '走马灯的类型',
-    description: '',
+    label: '类型',
+    description: '走马灯的类型',
     property: 'type'
   },
   {
     name: '提示框',
     component: 'a',
     label: '类型',
-    description: '',
+    description: '类型',
     property: 'children'
   },
   {
     name: '提示框',
     component: 'a',
-    label: '跳转链接',
-    description: '链接',
+    label: '链接',
+    description: '指定链接的 URL',
     property: 'href'
   },
   {
     name: '提示框',
     component: 'a',
-    label: '页面目标',
-    description: '链接',
+    label: '打开方式',
+    description: '指定链接的打开方式，例如在当前窗口中打开或在新窗口中打开。',
     property: 'target'
   },
   {
     name: '提示框',
     component: 'a',
     label: '原生属性',
-    description: '',
+    description: '原生属性',
     property: 'attributes3'
   },
   {
@@ -1076,7 +1076,7 @@ const a = [
     category: 'html',
     component: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
     label: '类型',
-    description: '',
+    description: '类型',
     property: 'children'
   },
   {
@@ -1084,7 +1084,7 @@ const a = [
     category: 'html',
     component: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
     label: '原生属性',
-    description: '',
+    description: '原生属性',
     property: 'attributes3'
   },
   {
@@ -1092,7 +1092,7 @@ const a = [
     category: 'html',
     component: 'p',
     label: '类型',
-    description: '',
+    description: '类型',
     property: 'children'
   },
   {
@@ -1100,7 +1100,7 @@ const a = [
     category: 'html',
     component: 'p',
     label: '原生属性',
-    description: '',
+    description: '原生属性',
     property: 'attributes3'
   },
   {
@@ -1108,7 +1108,7 @@ const a = [
     category: 'html',
     component: 'input',
     label: '类型',
-    description: '',
+    description: '类型',
     property: 'type'
   },
   {
@@ -1116,7 +1116,7 @@ const a = [
     category: 'html',
     component: 'input',
     label: '占位符',
-    description: '',
+    description: '占位符',
     property: 'placeholder'
   },
   {
@@ -1124,47 +1124,47 @@ const a = [
     category: 'html',
     component: 'input',
     label: '原生属性',
-    description: '',
+    description: '原生属性',
     property: 'attributes3'
   },
   {
     name: '视频',
     category: 'html',
     component: 'video',
-    label: '视频的 URL',
-    description: '',
+    label: '资源',
+    description: '视频的 URL',
     property: 'src'
   },
   {
     name: '视频',
     category: 'html',
     component: 'video',
-    label: '视频播放器的宽度',
-    description: '',
+    label: '播放器宽度',
+    description: '视频播放器的宽度',
     property: 'width'
   },
   {
     name: '视频',
     category: 'html',
     component: 'video',
-    label: '视频播放器的高度',
-    description: '',
+    label: '播放器高度',
+    description: '视频播放器的高度',
     property: 'height'
   },
   {
     name: '视频',
     category: 'html',
     component: 'video',
-    label: '是否显示控件',
-    description: '',
+    label: '显示控件',
+    description: '是否显示控件',
     property: 'controls'
   },
   {
     name: '视频',
     category: 'html',
     component: 'video',
-    label: '是否马上播放',
-    description: '',
+    label: '马上播放',
+    description: '是否马上播放',
     property: 'autoplay'
   },
   {
@@ -1172,14 +1172,15 @@ const a = [
     category: 'html',
     component: 'video',
     label: '原生属性',
-    description: '',
+    description: '原生属性',
     property: 'attributes3'
   },
   {
     name: 'Img',
     category: 'html',
     component: 'Img',
-    label: 'src路径',
+    label: '资源',
+    description: 'src路径',
     property: 'src'
   },
   {
@@ -1187,7 +1188,7 @@ const a = [
     category: 'html',
     component: 'Img',
     label: '原生属性',
-    description: '',
+    description: '原生属性',
     property: 'attributes3'
   },
   {
@@ -1195,23 +1196,23 @@ const a = [
     category: 'html',
     component: 'button',
     label: '原生属性',
-    description: '',
+    description: '原生属性',
     property: 'attributes3'
   },
   {
     name: '表格',
     category: 'html',
     component: 'table',
-    label: '表格的宽度',
-    description: '',
+    label: '宽度',
+    description: '表格的宽度',
     property: 'width'
   },
   {
     name: '表格',
     category: 'html',
     component: 'table',
-    label: '表格边框的宽度',
-    description: '',
+    label: '边框宽度',
+    description: '表格边框的宽度',
     property: 'border'
   },
   {
@@ -1219,23 +1220,23 @@ const a = [
     category: 'html',
     component: 'table',
     label: '原生属性',
-    description: '',
+    description: '原生属性',
     property: 'attributes3'
   },
   {
     name: '表格单元格',
     category: 'html',
     component: 'td',
-    label: '单元格可横跨的列数',
-    description: '',
+    label: '合并列',
+    description: '单元格可横跨的列数',
     property: 'colspan'
   },
   {
     name: '表格单元格',
     category: 'html',
     component: 'td',
-    label: '单元格可横跨的行数',
-    description: '',
+    label: '合并行',
+    description: '单元格可横跨的行数',
     property: 'rowspan'
   },
   {
@@ -1243,71 +1244,71 @@ const a = [
     category: 'html',
     component: 'td',
     label: '原生属性',
-    description: '',
+    description: '原生属性',
     property: 'attributes3'
   },
   {
     name: '表单',
     category: 'html',
     component: 'form',
-    label: '表单的名称',
-    description: '',
+    label: '名称',
+    description: '表单的名称',
     property: 'name'
   },
   {
     name: '表单',
     category: 'html',
     component: 'form',
-    label: '提交表单时向何处发送表单数据',
-    description: '',
+    label: '提交地址',
+    description: '提交表单时向何处发送表单数据',
     property: 'action'
   },
   {
     name: '表单',
     category: 'html',
     component: 'form',
-    label: '用于发送 form-data 的 HTTP 方法',
-    description: '',
+    label: 'HTTP方法',
+    description: '用于发送 form-data 的 HTTP 方法',
     property: 'method'
   },
   {
     name: '表单标签',
     category: 'html',
     component: 'label',
-    label: 'label 绑定到哪个表单元素',
-    description: '',
+    label: 'label绑定表单元素',
+    description: 'label 绑定到哪个表单元素',
     property: 'for'
   },
   {
     name: '表单标签',
     category: 'html',
     component: 'label',
-    label: 'label 字段所属的一个或多个表单',
-    description: '',
+    label: 'label字段所属表单',
+    description: 'label 字段所属的一个或多个表单',
     property: 'form'
   },
   {
     name: '按钮组',
     category: 'general',
     component: 'TinyButtonGroup',
-    label: '按钮组数据',
-    description: '',
+    label: '数据',
+    description: '配置按钮组数据',
     property: 'data'
   },
   {
     name: '按钮组',
     category: 'general',
     component: 'TinyButtonGroup',
-    label: '组件大小',
-    description: '',
+    label: '大小',
+    description: '组件大小',
     property: 'size'
   },
   {
     name: '按钮组',
     category: 'general',
     component: 'TinyButtonGroup',
-    label: '是否是朴素按钮',
-    description: '',
+    label: '朴素按钮',
+    description: '是否是朴素按钮',
     property: 'plain'
   },
   {
@@ -1315,41 +1316,42 @@ const a = [
     category: 'general',
     component: 'TinyButtonGroup',
     label: '禁用',
-    description: '',
+    description: '是否禁用',
     property: 'disabled'
   },
   {
     name: 'row',
     component: 'TinyRow',
-    label: 'layout',
-    description: 'layout',
+    label: '布局',
+    description: '选择布局方式',
     property: 'layout'
   },
   {
     name: 'row',
     component: 'TinyRow',
-    label: 'align',
-    description: '',
+    label: '子项对齐方式',
+    description: '子项的副轴对齐方向，可取值：top, middle, bottom',
     property: 'align'
   },
   {
     name: 'row',
     component: 'TinyRow',
-    label: 'flex',
+    label: 'flex容器',
+    description: '是否为flex容器',
     property: 'flex'
   },
   {
     name: 'row',
     component: 'TinyRow',
-    label: 'gutter',
-    description: '',
+    label: '子项间隔',
+    description: '子项的间隔的像素',
     property: 'gutter'
   },
   {
     name: '表单',
     component: 'TinyForm',
-    label: '是否禁用',
-    description: '',
+    label: '禁用',
+    description: '是否禁用',
     property: 'disabled'
   },
   {
@@ -1369,7 +1371,7 @@ const a = [
   {
     name: '表单',
     component: 'TinyForm',
-    label: '必填标识是否占位',
+    label: '必填标识占位',
     description: '必填标识 * 是否占位',
     property: 'label-align'
   },
@@ -1390,7 +1392,7 @@ const a = [
   {
     name: '表单',
     component: 'TinyForm',
-    label: '表单校验对象',
+    label: '数据对象',
     description: '表单数据对象',
     property: 'model'
   },
@@ -1432,7 +1434,7 @@ const a = [
   {
     name: 'col',
     component: 'TinyCol',
-    label: '栅格左右移动格数',
+    label: '栅格移动格数',
     description: '栅格左右移动格数（正数向右，负数向左）',
     property: 'move'
   },
@@ -1489,14 +1491,14 @@ const a = [
     name: '按钮',
     component: 'TinyButton',
     label: '按钮文字',
-    description: '',
+    description: '按钮文字',
     property: 'text'
   },
   {
     name: '按钮',
     component: 'TinyButton',
     label: '大小',
-    description: '',
+    description: '按钮大小',
     property: 'size'
   },
   {
@@ -1537,21 +1539,21 @@ const a = [
   {
     name: '按钮',
     component: 'TinyButton',
-    label: '圆角',
+    label: '圆形按钮',
     description: '是否圆形按钮',
     property: 'circle'
   },
   {
     name: '按钮',
     component: 'TinyButton',
-    label: '聚焦',
+    label: '自动聚焦',
     description: '是否默认聚焦',
     property: 'autofocus'
   },
   {
     name: '按钮',
     component: 'TinyButton',
-    label: '加载中',
+    label: '加载中样式',
     description: '是否展示位加载中样式',
     property: 'loading'
   },
@@ -1593,8 +1595,8 @@ const a = [
   {
     name: '输入框',
     component: 'TinyInput',
-    label: '是否禁用',
-    description: '',
+    label: '禁用',
+    description: '是否禁用',
     property: 'disabled'
   },
   {
@@ -1607,29 +1609,29 @@ const a = [
   {
     name: '输入框',
     component: 'TinyInput',
-    label: '最大长度',
+    label: '最大输入长度',
     description: '设置 input 框的maxLength',
     property: 'maxlength'
   },
   {
     name: '输入框',
     component: 'TinyInput',
-    label: '聚焦',
+    label: '自动聚焦',
     description: '自动获取焦点',
     property: 'autofocus'
   },
   {
     name: '单选',
     component: 'TinyRadio',
-    label: '文本',
-    description: '',
+    label: '文本内容',
+    description: '单选框文本内容',
     property: 'text'
   },
   {
     name: '单选',
     component: 'TinyRadio',
-    label: '单选框的值',
-    description: '',
+    label: '选中值',
+    description: 'radio 选中时的值',
     property: 'label'
   },
   {
@@ -1643,28 +1645,28 @@ const a = [
     name: '单选',
     component: 'TinyRadio',
     label: '禁用',
-    description: '',
+    description: '是否禁用',
     property: 'disabled'
   },
   {
     name: '单选',
     component: 'TinyRadio',
     label: '显示边框',
-    description: '',
+    description: '是否显示边框',
     property: 'border'
   },
   {
     name: '单选',
     component: 'TinyRadio',
-    label: '单选框的尺寸',
-    description: '',
+    label: '尺寸',
+    description: '单选框的尺寸，仅在 border 为true时有效',
     property: 'size'
   },
   {
     name: '单选',
     component: 'TinyRadio',
-    label: '原生 name 属性',
-    description: '',
+    label: '原生name属性',
+    description: '原生 name 属性',
     property: 'name'
   },
   {
@@ -1691,21 +1693,21 @@ const a = [
   {
     name: '下拉框',
     component: 'TinySelect',
-    label: '下拉面板可搜索',
+    label: '下拉可搜索',
     description: '下拉面板是否可搜索',
     property: 'searchable'
   },
   {
     name: '下拉框',
     component: 'TinySelect',
-    label: '是否禁用',
-    description: '',
+    label: '禁用',
+    description: '是否禁用',
     property: 'disabled'
   },
   {
     name: '下拉框',
     component: 'TinySelect',
-    label: '下拉数据',
+    label: '选项数据',
     description: '配置 Select 下拉数据项',
     property: 'options'
   },
@@ -1726,7 +1728,7 @@ const a = [
   {
     name: '下拉框',
     component: 'TinySelect',
-    label: '下拉框的类名',
+    label: '下拉框类名',
     description: '设置下拉框自定义的类名',
     property: 'popper-class'
   },
@@ -1754,14 +1756,14 @@ const a = [
   {
     name: '开关',
     component: 'TinySwitch',
-    label: '打开时的值',
+    label: '设置打开值',
     description: '设置打开时的值(Boolean / String / Number)',
     property: 'true-value'
   },
   {
     name: '开关',
     component: 'TinySwitch',
-    label: '关闭时的值',
+    label: '设置关闭值',
     description: '设置关闭时的值(Boolean / String / Number)',
     property: 'false-value'
   },
@@ -1789,7 +1791,7 @@ const a = [
   {
     name: '搜索框',
     component: 'TinySearch',
-    label: '占位文本 ',
+    label: '占位文本',
     description: '输入框内的提示占位文本',
     property: 'placeholder'
   },
@@ -1803,7 +1805,7 @@ const a = [
   {
     name: '搜索框',
     component: 'TinySearch',
-    label: '是否Enter键触发search事件',
+    label: 'Enter键触发',
     description: '是否在按下键盘Enter键的时候触发search事件',
     property: 'isEnterSearch'
   },
@@ -1831,8 +1833,8 @@ const a = [
   {
     name: '复选框',
     component: 'TinyCheckbox',
-    label: '是否禁用',
-    description: '',
+    label: '禁用',
+    description: '是否禁用',
     property: 'disabled'
   },
   {
@@ -1880,8 +1882,8 @@ const a = [
   {
     name: '复选按钮',
     component: 'TinyCheckboxButton',
-    label: '是否禁用',
-    description: '',
+    label: '禁用',
+    description: '是否禁用',
     property: 'disabled'
   },
   {
@@ -1908,14 +1910,14 @@ const a = [
   {
     name: '复选按钮组',
     component: 'TinyCheckboxGroup',
-    label: '是否禁用',
-    description: '',
+    label: '禁用',
+    description: '是否禁用',
     property: 'disabled'
   },
   {
     name: '复选按钮组',
     component: 'TinyCheckboxGroup',
-    label: '数据列表',
+    label: '选项列表',
     description: 'checkbox组件列表',
     property: 'options'
   },
@@ -1964,14 +1966,14 @@ const a = [
   {
     name: '对话框',
     component: 'TinyDialogBox',
-    label: '自定义类',
+    label: '自定义类名',
     description: '自定义配置弹窗类名',
     property: 'dialog-class'
   },
   {
     name: '对话框',
     component: 'TinyDialogBox',
-    label: '插入到 Body ',
+    label: '插入到Body',
     description: 'DialogBox 本身是否插入到 body 上，嵌套的 Dialog 必须指定该属性并赋值为 true',
     property: 'append-to-body'
   },
@@ -1985,7 +1987,7 @@ const a = [
   {
     name: '标签页',
     component: 'TinyTabs',
-    label: '显示编辑ICON ',
+    label: '显示编辑图标',
     description: '是否显示标题后编辑 ICON',
     property: 'showEditIcon'
   },
@@ -1993,7 +1995,7 @@ const a = [
     name: '标签页',
     component: 'TinyTabs',
     label: '选项卡',
-    description: 'tabs',
+    description: 'tabs 选项卡',
     property: 'tabs'
   },
   {
@@ -2006,7 +2008,7 @@ const a = [
   {
     name: '标签页',
     component: 'TinyTabs',
-    label: '可新增',
+    label: '标签新增',
     description: '标签是否可增加',
     property: 'with-add'
   },
@@ -2027,8 +2029,8 @@ const a = [
   {
     name: 'tab页签',
     component: 'TinyTabItem',
-    label: '唯一表示',
-    description: '唯一表示',
+    label: '唯一标识',
+    description: '唯一标识',
     property: 'name'
   },
   {
@@ -2048,41 +2050,42 @@ const a = [
   {
     name: '面包屑',
     component: 'TinyBreadcrumb',
-    label: 'options',
-    description: '',
+    label: '配置数据',
+    description: '单独使用 Breadcrumb，通过 option 配置生成面包屑',
     property: 'options'
   },
   {
     name: '面包屑',
     component: 'TinyBreadcrumb',
-    label: 'textField',
+    label: '键值',
+    description: '指定面包屑的显示键值，结合 options 使用',
     property: 'textField'
   },
   {
     name: '面包屑项',
     component: 'TinyBreadcrumbItem',
-    label: '路由路径',
-    description: '面包屑项',
+    label: '路由跳转',
+    description: '路由跳转对象，同 vue-router 的 to',
     property: 'to'
   },
   {
     name: '折叠面板',
     component: 'TinyCollapse',
-    label: '当前激活的面板',
+    label: '当前激活面板',
     description: '双向绑定当前激活的面板',
     property: 'modelValue'
   },
   {
     name: '折叠面板项',
     component: 'TinyCollapseItem',
-    label: '唯一标志符',
-    description: '唯一标志符;String | Number',
+    label: '唯一标识符',
+    description: '唯一标识符： String | Number',
     property: 'name'
   },
   {
     name: '折叠面板项',
     component: 'TinyCollapseItem',
-    label: '面板标题',
+    label: '标题',
     description: '面板标题',
     property: 'title'
   },
@@ -2103,7 +2106,7 @@ const a = [
   {
     name: '表格',
     component: 'TinyGrid',
-    label: '服务端数据',
+    label: '服务端查询',
     description: '服务端数据查询方法',
     property: 'fetchData'
   },
@@ -2111,7 +2114,7 @@ const a = [
     name: '表格',
     component: 'TinyGrid',
     label: '分页配置',
-    description: '分页配置',
+    description: '分页配置，需结合fetchData使用',
     property: 'pager'
   },
   {
@@ -2124,14 +2127,14 @@ const a = [
   {
     name: '表格',
     component: 'TinyGrid',
-    label: '行数据唯一标识的字段名',
-    description: '行数据唯一标识的字段名',
+    label: '行数据主键',
+    description: '自定义行数据唯一主键的字段名（行数据必须要有唯一主键，默认自动生成）',
     property: 'row-id'
   },
   {
     name: '表格',
     component: 'TinyGrid',
-    label: '复选框配置',
+    label: '行复选框配置',
     description: '表格行数据复选框配置项',
     property: 'select-config'
   },
@@ -2152,8 +2155,8 @@ const a = [
   {
     name: '表格',
     component: 'TinyGrid',
-    label: '复选框配置项',
-    description: '复选框配置项',
+    label: '展开行配置',
+    description: '展开行配置项',
     property: 'expand-config'
   },
   {
@@ -2166,8 +2169,8 @@ const a = [
   {
     name: '表格',
     component: 'TinyGrid',
-    label: '可排序',
-    description: '是否允许列数据排序。默认为 true 可排序',
+    label: '响应式监听',
+    description: '表格属性设置 autoResize 属性开启响应式表格宽高的同时，将高度height设置为auto就可以自动跟随父容器高度。',
     property: 'auto-resize'
   },
   {
@@ -2194,21 +2197,21 @@ const a = [
   {
     name: '表格',
     component: 'TinyGrid',
-    label: 'hover 时候高亮',
+    label: '移入行高亮',
     description: '鼠标移到行是否要高亮显示',
     property: 'highlight-hover-row'
   },
   {
     name: '表格',
     component: 'TinyGrid',
-    label: 'hover 高亮',
+    label: '设置行高亮',
     description: '给行附加 className，也可以是函数 Function({seq, row, rowIndex, $rowIndex})',
     property: 'row-class-name'
   },
   {
     name: '表格',
     component: 'TinyGrid',
-    label: '最大高度',
+    label: '内容最大高度',
     description: '设置表格内容区域（不含表格头部，底部）的最大高度。',
     property: 'max-height'
   },
@@ -2278,8 +2281,8 @@ const a = [
   {
     name: '弹出编辑',
     component: 'TinyPopeditor',
-    label: '是否禁用',
-    description: '',
+    label: '禁用',
+    description: '是否禁用',
     property: 'disabled'
   },
   {
@@ -2299,7 +2302,7 @@ const a = [
   {
     name: '弹出编辑',
     component: 'TinyPopeditor',
-    label: '表格配置',
+    label: '面板表格配置',
     description: '设置弹出面板中表格组件的配置信息',
     property: 'grid-op'
   },
@@ -2355,7 +2358,7 @@ const a = [
   {
     name: '树',
     component: 'TinyTree',
-    label: '触发NodeClick 事件',
+    label: '触发NodeClick事件',
     description: '点击图标展开节点时是否触发 node-click 事件',
     property: 'icon-trigger-click-node'
   },
@@ -2411,7 +2414,7 @@ const a = [
   {
     name: '时间线',
     component: 'TinyTimeLine',
-    label: '数据',
+    label: '步骤条数据',
     description: '时间线步骤条数据',
     property: 'data'
   },
@@ -2461,7 +2464,7 @@ const a = [
     name: '提示框',
     component: 'TinyPopover',
     label: '位置',
-    description: '',
+    description: '提示框位置',
     property: 'placement'
   },
   {
@@ -2502,7 +2505,7 @@ const a = [
   {
     name: '提示框',
     component: 'TinyPopover',
-    label: '隐藏延迟',
+    label: '延迟隐藏',
     description: '触发方式为 hover 时的隐藏延迟，单位为毫秒',
     property: 'close-delay'
   },
@@ -2537,7 +2540,7 @@ const a = [
   {
     name: '提示框',
     component: 'TinyPopover',
-    label: 'popper.js的参数',
+    label: '弹出层参数',
     description: 'popper.js 的参数',
     property: 'popper-options'
   },
@@ -2545,7 +2548,7 @@ const a = [
     name: '提示框',
     component: 'TinyPopover',
     label: '标题',
-    description: '标题',
+    description: '提示内容标题',
     property: 'title'
   },
   {
@@ -2558,7 +2561,7 @@ const a = [
   {
     name: '提示框',
     component: 'TinyPopover',
-    label: '定义渐变动画',
+    label: '渐变动画',
     description: '该属性的默认值为 fade-in-linear',
     property: 'transition'
   },
@@ -2601,14 +2604,14 @@ const a = [
     name: '日期选择',
     component: 'TinyDatePicker',
     label: '禁用',
-    description: '禁用',
+    description: '是否禁用',
     property: 'disabled'
   },
   {
     name: '日期选择',
     component: 'TinyDatePicker',
-    label: '是否只读',
-    description: '',
+    label: '只读',
+    description: '是否只读',
     property: 'readonly'
   },
   {
@@ -2621,7 +2624,7 @@ const a = [
   {
     name: '日期选择',
     component: 'TinyDatePicker',
-    label: '最大长度',
+    label: '输入最大长度',
     description: '设置 input 框的maxLength',
     property: 'maxlength'
   },
@@ -2657,7 +2660,7 @@ const a = [
     name: '数字输入框',
     component: 'TinyNumeric',
     label: '禁用',
-    description: '禁用',
+    description: '是否禁用',
     property: 'disabled'
   },
   {
@@ -2670,8 +2673,8 @@ const a = [
   {
     name: '数字输入框',
     component: 'TinyNumeric',
-    label: '是否使用加减按钮',
-    description: '',
+    label: '加减按钮',
+    description: '是否使用加减按钮',
     property: 'controls'
   },
   {
@@ -2684,7 +2687,7 @@ const a = [
   {
     name: '数字输入框',
     component: 'TinyNumeric',
-    label: '数值精度',
+    label: '精度',
     description: '数值精度',
     property: 'precision'
   },
@@ -2698,14 +2701,14 @@ const a = [
   {
     name: '数字输入框',
     component: 'TinyNumeric',
-    label: '可输入的最大数值',
+    label: '最大数值',
     description: '可输入的最大数值',
     property: 'max'
   },
   {
     name: '数字输入框',
     component: 'TinyNumeric',
-    label: '可输入的最小数值',
+    label: '最小数值',
     description: '可输入的最大数值',
     property: 'min'
   }
