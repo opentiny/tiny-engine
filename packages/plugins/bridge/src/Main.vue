@@ -13,12 +13,10 @@
 <script>
 import { ref, computed } from 'vue'
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
-import { useHelp } from '@opentiny/tiny-engine-meta-register'
-import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import { RESOURCE_TYPE } from './js/resource'
 import BridgeManage from './BridgeManage.vue'
 import BridgeSetting, { openPanel, closePanel } from './BridgeSetting.vue'
-import { setType, RESOURCE_TIP } from './js/resource'
+import { RESOURCE_TIP } from './js/resource'
 
 export default {
   components: {
@@ -29,74 +27,36 @@ export default {
   },
   setup() {
     const activedName = ref(RESOURCE_TYPE.Util)
-    const bridge = ref(null)
     const utilsRef = ref(null)
     const tips = computed(() => RESOURCE_TIP[activedName.value])
-    const docsUrl = useHelp().getDocsUrl('bridge')
-
-    const switchTab = (tab) => {
-      closePanel()
-      setType(tab.name)
-    }
-
-    const openUtilPanel = () => {
-      closePanel()
-    }
 
     const openBridgePanel = () => {
       openPanel()
     }
 
     const refreshList = (type) => {
-      type === RESOURCE_TYPE.Util ? utilsRef.value.refresh(type) : bridge.value.refresh(type)
+      type == utilsRef.value.refresh(type)
     }
 
     const addResource = (type) => {
-      activedName.value === RESOURCE_TYPE.Util ? utilsRef.value.add(type) : bridge.value.add(type)
+      activedName.value == utilsRef.value.add(type)
     }
 
     return {
       addResource,
       RESOURCE_TYPE,
       activedName,
-      switchTab,
       openBridgePanel,
       closePanel,
-      openUtilPanel,
       refreshList,
-      bridge,
-      docsUrl,
       utilsRef,
-      tips,
-      isVsCodeEnv
+      tips
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-.tabs {
-  height: calc(100% - 46px);
-}
-
-:deep(.tiny-tabs__header) {
-  padding: 8px;
-  border-bottom: 1px solid var(--ti-lowcode-tabs-border-color);
-}
-
-:deep(.tiny-tabs__content) {
-  height: calc(100% - 45px);
-  padding: 0;
-  margin: 0;
-  & > div {
-    height: 100%;
-  }
-}
-:deep(.help-box) {
-  position: absolute;
-  left: 72px;
-  top: 12px;
-}
 :deep(.tiny-button) {
   border-radius: 4px;
   height: 24px;

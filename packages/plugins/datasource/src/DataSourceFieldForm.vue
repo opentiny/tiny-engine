@@ -1,5 +1,5 @@
 <template>
-  <div v-if="state.isOpen" class="step-select-second" :id="setId()">
+  <div v-if="state.isOpen" class="step-select-second" :id="defaultStyle">
     <div class="field-row">
       <slot>
         <div class="icon-and-text">
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { reactive, watchEffect, ref, provide } from 'vue'
+import { reactive, watchEffect, ref, provide, computed } from 'vue'
 import { Button, Input, FormItem, Form } from '@opentiny/vue'
 import { ButtonGroup, I18nInput } from '@opentiny/tiny-engine-common'
 import DataSourceFieldCheck from './DataSourceFieldCheck.vue'
@@ -92,6 +92,8 @@ export default {
       state.isOpen = props.isOpen === undefined ? true : props.isOpen
     })
 
+    const defaultStyle = computed(() => (props.isRow && !props.editable ? 'default-item' : ''))
+
     const open = () => {
       state.isOpen = true
     }
@@ -99,11 +101,7 @@ export default {
     const close = () => {
       state.isOpen = false
     }
-    const setId = () => {
-      if (props.isRow && !props.editable) {
-        return 'default-item'
-      }
-    }
+
     const handleCancel = () => {
       emit('cancel')
     }
@@ -140,7 +138,7 @@ export default {
       saveField,
       open,
       close,
-      setId,
+      defaultStyle,
       form,
       rules: {
         title: [{ required: true, message: '必填', trigger: 'change' }, { validator: validateIsReserveValue }],

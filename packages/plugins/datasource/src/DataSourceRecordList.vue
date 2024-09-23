@@ -81,7 +81,7 @@
 import { reactive, ref, watchEffect, watch, computed } from 'vue'
 import { camelize, capitalize } from '@vue/shared'
 import { Grid, Pager, Input, Numeric, DatePicker, Switch, Slider, Link, Button } from '@opentiny/vue'
-import { IconPlusCircle, IconImport, iconPlus, iconUpload } from '@opentiny/vue-icon'
+import { iconPlus, iconUpload } from '@opentiny/vue-icon'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { useModal, useLayout, useNotify, useCanvas } from '@opentiny/tiny-engine-meta-register'
@@ -569,8 +569,6 @@ export default {
       saveRecordFormData,
       getGridData,
       saveRecordList,
-      IconPlusCircle: IconPlusCircle(),
-      IconImport: IconImport(),
       download,
       showImportModal,
       batchDelete,
@@ -623,22 +621,6 @@ export default {
     padding: 0;
     color: var(--ti-lowcode-base-text-color);
     .icon-download {
-      margin: 0 1px 4px 0;
-      font-size: 16px;
-    }
-  }
-  .addButton {
-    margin: 0 12px;
-    font-size: 14px;
-    .icon-plusCircle {
-      margin: 0 1px 4px 0;
-      font-size: 16px;
-    }
-  }
-  .importButton {
-    margin: 0 12px;
-    font-size: 14px;
-    .icon-import {
       margin: 0 1px 4px 0;
       font-size: 16px;
     }

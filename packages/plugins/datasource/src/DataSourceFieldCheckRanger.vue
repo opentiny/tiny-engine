@@ -30,14 +30,14 @@
 
 <script>
 import { inject } from 'vue'
-import { Numeric, FormItem, Row as TinyRow, Col as TinyCol } from '@opentiny/vue'
+import { Numeric, FormItem, Row, Col } from '@opentiny/vue'
 import { formDataInjectionSymbols } from './DataSourceFieldForm.vue'
 export default {
   components: {
     TinyNumeric: Numeric,
     TinyFormItem: FormItem,
-    TinyRow,
-    TinyCol
+    TinyRow: Row,
+    TinyCol: Col
   },
   props: {
     type: {
