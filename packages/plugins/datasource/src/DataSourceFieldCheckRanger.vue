@@ -1,36 +1,43 @@
 <!--录入数据的字符范围-->
 <template>
   <div class="collection-field-num">
-    <div class="collection-field-item">
-      <tiny-form-item
-        prop="format.min"
-        :label="type === 'string' ? '最少输入字符数（包含空格）' : '最小值'"
-        label-width="300px"
-      >
-        <tiny-numeric v-model="formData.format.min"></tiny-numeric>
-      </tiny-form-item>
-    </div>
-
-    <div class="collection-field-item">
-      <tiny-form-item
-        prop="format.max"
-        :label="type === 'string' ? '最多输入字符数（包含空格）' : '最大值'"
-        label-width="300px"
-      >
-        <tiny-numeric v-model="formData.format.max"></tiny-numeric>
-      </tiny-form-item>
-    </div>
+    <tiny-row gutter="0">
+      <tiny-col :span="6">
+        <div class="collection-field-item">
+          <tiny-form-item
+            prop="format.min"
+            :label="type === 'string' ? '最少输入字符数（包含空格）' : '最小值'"
+            label-width="300px"
+          >
+            <tiny-numeric v-model="formData.format.min" controls-position="right"></tiny-numeric>
+          </tiny-form-item>
+        </div>
+      </tiny-col>
+      <tiny-col :span="6">
+        <div class="collection-field-item">
+          <tiny-form-item
+            prop="format.max"
+            :label="type === 'string' ? '最多输入字符数（包含空格）' : '最大值'"
+            label-width="300px"
+          >
+            <tiny-numeric v-model="formData.format.max" controls-position="right"></tiny-numeric>
+          </tiny-form-item>
+        </div>
+      </tiny-col>
+    </tiny-row>
   </div>
 </template>
 
 <script>
 import { inject } from 'vue'
-import { Numeric, FormItem } from '@opentiny/vue'
+import { Numeric, FormItem, Row, Col } from '@opentiny/vue'
 import { formDataInjectionSymbols } from './DataSourceFieldForm.vue'
 export default {
   components: {
     TinyNumeric: Numeric,
-    TinyFormItem: FormItem
+    TinyFormItem: FormItem,
+    TinyRow: Row,
+    TinyCol: Col
   },
   props: {
     type: {
@@ -57,6 +64,9 @@ export default {
     padding-top: 5px;
     font-size: 12px;
   }
+}
+.collection-field-item:first-child {
+  margin-right: 12px;
 }
 .collection-field-item-label {
   color: var(--ti-lowcode-datasource-dialog-font-color);

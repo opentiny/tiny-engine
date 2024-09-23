@@ -1,12 +1,8 @@
 <template>
-  <tiny-alert type="info" :description="lifeCycleTips" :closable="false" class="life-cycle-alert"></tiny-alert>
   <div class="life-cycle">
     <tiny-popover v-model="state.showPopover" placement="bottom-end" trigger="hover" popperClass="option-popper">
       <template #reference>
-        <div class="add-life-cycle-wrap">
-          <svg-icon name="plus-circle"></svg-icon>
-          <p class="desc">添加页面生命周期</p>
-        </div>
+        <tiny-button class="life-cycle-btn"><icon-plus class="icon-plus"></icon-plus>添加页面生命周期 </tiny-button>
       </template>
       <div class="popover-list">
         <ul>
@@ -22,6 +18,7 @@
       </div>
     </tiny-popover>
   </div>
+  <div class="life-cycle-tips">{{ lifeCycleTips }}</div>
   <meta-list-items :optionsList="Object.keys(state.bindLifeCycles)" :draggable="false">
     <template #content="{ data }">
       <div>
@@ -71,11 +68,11 @@
 
 <script lang="jsx">
 import { reactive, ref, watchEffect, onBeforeUnmount } from 'vue'
-import { Button, DialogBox, Popover, Search, Alert } from '@opentiny/vue'
+import { Button, DialogBox, Popover, Search } from '@opentiny/vue'
 import { useModal, usePage, useNotify, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import MetaListItems from './MetaListItems.vue'
-import { iconYes } from '@opentiny/vue-icon'
+import { iconYes, iconPlus } from '@opentiny/vue-icon'
 import VueMonaco from './VueMonaco.vue'
 import { initCompletion } from '../js/completion'
 import { initLinter, lint } from '../js/linter'
@@ -89,9 +86,9 @@ export default {
     TinyButton: Button,
     MonacoEditor: VueMonaco,
     SvgButton,
-    TinyAlert: Alert,
     MetaListItems,
-    IconYes: iconYes()
+    IconYes: iconYes(),
+    IconPlus: iconPlus()
   },
 
   props: {
@@ -246,11 +243,29 @@ export default {
 <style lang="less" scoped>
 .life-cycle {
   display: flex; // 决定了鼠标移入后的弹窗位置
-  padding: 10px;
-  margin-top: -10px;
+  padding: 0 12px;
+  margin-top: 10px;
   svg {
     outline: none;
   }
+  .life-cycle-btn {
+    color: var(--ti-lowcode-meta-codeEditor-color);
+    border-color: var(--ti-lowcode-meta-codeEditor-border-color);
+    &:hover {
+      color: var(--ti-lowcode-meta-codeEditor-hover-color);
+      border-color: var(--ti-lowcode-meta-codeEditor-border-hover-color);
+    }
+    .icon-plus {
+      margin-right: 6px;
+      stroke: var(--ti-lowcode-meta-codeEditor-icon-color);
+    }
+  }
+}
+.life-cycle-tips {
+  color: var(--ti-lowcode-life-cycle-alert-color);
+  margin: 4px 0 12px 20px;
+  height: 16px;
+  line-height: 16px;
 }
 .popover-list {
   ul li:first-child {
@@ -264,16 +279,6 @@ export default {
   color: var(--ti-lowcode-life-cycle-alert-color);
   margin-left: 20px;
   margin-right: 20px;
-}
-.add-life-cycle-wrap {
-  display: flex;
-  font-size: 16px;
-  margin-left: 10px;
-  align-items: center;
-  .desc {
-    margin: 0;
-    margin-left: 8px;
-  }
 }
 
 .popover-list {

@@ -30,7 +30,6 @@ export default {
 <style lang="less" scoped>
 .help-box {
   width: 24px;
-  height: 42px;
 
   #help-icon {
     :deep(.svg-icon.icon-plugin-icon-plugin-help) {

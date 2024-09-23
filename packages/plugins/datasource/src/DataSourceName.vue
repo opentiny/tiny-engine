@@ -3,7 +3,7 @@
     <tiny-form
       ref="dataSourceNameRef"
       :rules="rules"
-      label-position="left"
+      label-position="top"
       label-width="55%"
       validate-type="text"
       :model="state.dataSource"
@@ -81,7 +81,6 @@ export default {
   padding: 0px 9px;
   color: var(--ti-lowcode-datasource-toolbar-icon-color);
   .title {
-    margin-left: -10px;
     font-size: 14px;
     color: var(--ti-lowcode-datasource-label-color);
   }
