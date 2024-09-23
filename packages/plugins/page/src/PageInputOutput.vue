@@ -11,7 +11,7 @@
       title="输入配置"
       button-text="输入配置"
       language="json"
-      :shouBtnIcon="true"
+      :showBtnIcon="true"
       :buttonShowContent="hasContent(inputValue)"
       single
       @save="saveInputValue"
@@ -22,7 +22,7 @@
       title="输出配置"
       button-text="输出配置"
       language="json"
-      :shouBtnIcon="true"
+      :showBtnIcon="true"
       :buttonShowContent="hasContent(outputValue)"
       single
       @save="saveOutputValue"

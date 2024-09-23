@@ -6,7 +6,7 @@
         <svg-icon class="edit-icon" name="to-edit"></svg-icon>
       </div>
       <tiny-button v-else class="edit-btn" @click="open">
-        <svg-icon v-if="shouBtnIcon" class="edit-btn-icon" :name="svgName"></svg-icon>
+        <svg-icon v-if="showBtnIcon" class="edit-btn-icon" :name="svgName"></svg-icon>
         {{ buttonLabel }}
       </tiny-button>
     </slot>
@@ -122,7 +122,7 @@ export default {
       type: Object,
       default: () => ({ title: '', demo: '' })
     },
-    shouBtnIcon: {
+    showBtnIcon: {
       type: Boolean,
       default: false
     },
