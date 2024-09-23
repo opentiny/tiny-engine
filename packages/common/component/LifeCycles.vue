@@ -129,7 +129,7 @@ export default {
     })
 
     watchEffect(() => {
-      state.bindLifeCycles = props.bindLifeCycles || useCanvas().canvasApi.value?.getSchema()?.lifeCycles || {}
+      state.bindLifeCycles = props.bindLifeCycles || {}
     })
 
     const searchLifeCyclesList = (value) => {
