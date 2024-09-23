@@ -104,3 +104,54 @@ export function createPlugin(name, options) {
 
   logger.log(chalk.green(`create finish, run the follow command to start project: \ncd ${name} && npm install`))
 }
+
+/**
+ *
+ * @param {string} dirpath
+ * @returns
+ */
+function findDir(dirpath) {
+  try {
+    const files = fs.readdirSync(dirpath)
+
+    if (!dirpath.includes(path.sep)) {
+      return null
+    }
+
+    if (
+      ['engine.config.js', 'registry.js'].every((n) => files.includes(n)) &&
+      fs.statSync(path.join(dirpath, 'src/configurators/index.js')).isFile()
+    ) {
+      return path.join(dirpath, 'src/configurators')
+    }
+    return findDir(dirpath.slice(0, dirpath.lastIndexOf(path.sep)))
+  } catch {
+    return null
+  }
+}
+
+export function createConfigurator(name) {
+  name = name.endsWith('.vue') ? name : `${name}.vue`
+
+  const configuratorDir = findDir(cwd())
+
+  if (!configuratorDir) {
+    logger.log(chalk.red(`current path is not in the low-code project directory. 当前路径不在低代码项目目录下`))
+    return
+  }
+
+  const destPath = path.join(configuratorDir, name)
+  if (fs.pathExistsSync(path.join(configuratorDir, name))) {
+    logger.log(chalk.red(`create failed, because the ${name} file already exists. 创建失败，${name} 文件已存在。`))
+    return
+  }
+
+  const templateConfiguratorPath = path.join(
+    __dirname,
+    '../template/designer/src/configurators/MyInputConfigurator.vue'
+  )
+  const configuratorContent = generateText(templateConfiguratorPath, [
+    { find: 'MyInputConfigurator', replacement: name.replace(/.vue$/, '') }
+  ])
+  fs.outputFileSync(destPath, configuratorContent)
+}

@@ -11,7 +11,7 @@
  */
 import { Command, Option } from 'commander'
 import { input, select } from '@inquirer/prompts'
-import { createPlatform, createPlugin } from './commands/create.js'
+import { createPlatform, createPlugin, createConfigurator } from './commands/create.js'
 
 const program = new Command()
 
@@ -56,15 +56,26 @@ program
           name: 'plugin',
           value: 'plugin',
           description: 'create a new tiny-engine plugin 创建一个新的 tiny-engine 插件'
+        },
+        {
+          name: 'configurator',
+          value: 'configurator',
+          description: 'create a new tiny-engine configurator 创建一个新的 tiny-engine 属性面板设置器'
         }
       ]
     })
 
+    const nameDesc = {
+      platform: '项目',
+      plugin: '插件',
+      configurator: '设置器'
+    }
+
     const projectName = await input({
-      message: 'please enter the project name. 请输入项目名称',
+      message: `please enter name. 请输入${nameDesc[type]}名称`,
       validate: (inputName) => {
         if (!inputName) {
-          return 'project name can not be empty. 项目名称不允许为空。'
+          return `name can not be empty. ${nameDesc[type]}名称不允许为空。`
         }
 
         return true
@@ -121,7 +132,8 @@ program
 
     const typeMapper = {
       platform: createPlatform,
-      plugin: createPlugin
+      plugin: createPlugin,
+      configurator: createConfigurator
     }
 
     typeMapper[type](projectName, options)
