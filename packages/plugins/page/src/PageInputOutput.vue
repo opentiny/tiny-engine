@@ -5,22 +5,28 @@
       title="输入配置"
       button-text="输入配置"
       language="json"
-      :showBtnIcon="true"
       :buttonShowContent="hasContent(inputValue)"
       single
       @save="saveInputValue"
-    ></meta-code-editor>
+    >
+      <template #icon>
+        <svg-icon class="edit-btn-icon" name="to-edit"></svg-icon>
+      </template>
+    </meta-code-editor>
     <div class="input-output-tips">传递给页面的参数(类似组件的输入属性)</div>
     <meta-code-editor
       :modelValue="outputValue"
       title="输出配置"
       button-text="输出配置"
       language="json"
-      :showBtnIcon="true"
       :buttonShowContent="hasContent(outputValue)"
       single
       @save="saveOutputValue"
-    ></meta-code-editor>
+    >
+      <template #icon>
+        <svg-icon class="edit-btn-icon" name="to-edit"></svg-icon>
+      </template>
+    </meta-code-editor>
     <div class="input-output-div">页面传递出的事件(类似组件触发的输出事件)</div>
 
     <tiny-checkbox class="selectHome" v-model="pageSettingState.currentPageData.isBody"
@@ -119,6 +125,10 @@ export default {
   }
   .input-output-tips {
     margin-bottom: 12px;
+  }
+  .edit-btn-icon {
+    color: var(--ti-lowcode-common-text-main-color);
+    margin-right: 6px;
   }
 }
 </style>
