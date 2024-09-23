@@ -10,19 +10,13 @@
  *
  */
 
-import entry, { api } from './src/Main.vue'
-import metaData from './meta.js'
-import { BlockService } from './src/composable'
-import SaveNewBlock from './src/SaveNewBlock.vue'
-
-export default {
-  ...metaData,
-  apis: api,
-  entry,
-  metas: [BlockService],
-  components: {
-    SaveNewBlock
-  }
+export const STATE = {
+  CURRENT_STATE: 'current',
+  GLOBAL_STATE: 'global'
 }
 
-export { BlockService }
+export const OPTION_TYPE = {
+  ADD: 'add',
+  UPDATE: 'update',
+  COPY: 'copy'
+}

@@ -126,12 +126,13 @@ import {
   Button as TinyButton
 } from '@opentiny/vue'
 import { IconSearch } from '@opentiny/vue-icon'
-import { PluginPanel, PluginBlockList, SvgButton, SaveNewBlock } from '@opentiny/tiny-engine-common'
+import { PluginPanel, PluginBlockList, SvgButton } from '@opentiny/tiny-engine-common'
 import { useBlock, useModal, useLayout, useCanvas, useHelp } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 import BlockSetting, { openPanel, closePanel } from './BlockSetting.vue'
 import BlockGroupArrange from './BlockGroupArrange.vue'
 import CategoryEdit from './CategoryEdit.vue'
+import SaveNewBlock from './SaveNewBlock.vue'
 import {
   saveBlock,
   initEditBlock,
