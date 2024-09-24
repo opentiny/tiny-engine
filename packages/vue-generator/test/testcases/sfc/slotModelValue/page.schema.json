@@ -1,0 +1,150 @@
+{
+  "state": {},
+  "methods": {
+    "onChangeInput": {
+      "type": "JSFunction",
+      "value": "function onChangeInput(eventArgs,args0,args1,args2) {\n  console.log('onChangeInput', eventArgs);\n}"
+    },
+    "onChangeNumber": {
+      "type": "JSFunction",
+      "value": "function onChangeNumber(eventArgs, args0, args1, args2) {\n  console.log('onChangeNumber', eventArgs)\n}"
+    }
+  },
+  "componentName": "Page",
+  "css": "",
+  "props": {},
+  "lifeCycles": {},
+  "children": [
+    {
+      "componentName": "div",
+      "props": {},
+      "id": "85375559",
+      "children": [
+        {
+          "componentName": "TinyGrid",
+          "props": {
+            "editConfig": {
+              "trigger": "click",
+              "mode": "cell",
+              "showStatus": true
+            },
+            "columns": [
+              {
+                "type": "index",
+                "width": 60
+              },
+              {
+                "type": "selection",
+                "width": 60
+              },
+              {
+                "field": "employees",
+                "title": "员工数",
+                "slots": {
+                  "default": {
+                    "type": "JSSlot",
+                    "value": [
+                      {
+                        "componentName": "div",
+                        "id": "44523622",
+                        "children": [
+                          {
+                            "componentName": "TinyNumeric",
+                            "props": {
+                              "allow-empty": true,
+                              "placeholder": "请输入",
+                              "controlsPosition": "right",
+                              "step": 1,
+                              "modelValue": {
+                                "type": "JSExpression",
+                                "value": "row.employees",
+                                "model": true
+                              },
+                              "onChange": {
+                                "type": "JSExpression",
+                                "value": "this.onChangeNumber",
+                                "params": ["row", "column", "rowIndex"]
+                              }
+                            },
+                            "id": "62166343"
+                          }
+                        ]
+                      }
+                    ],
+                    "params": ["row", "column", "rowIndex"]
+                  }
+                }
+              },
+              {
+                "field": "created_date",
+                "title": "创建日期"
+              },
+              {
+                "field": "city",
+                "title": "城市",
+                "slots": {
+                  "default": {
+                    "type": "JSSlot",
+                    "value": [
+                      {
+                        "componentName": "div",
+                        "id": "66326314",
+                        "children": [
+                          {
+                            "componentName": "TinyInput",
+                            "props": {
+                              "placeholder": "请输入",
+                              "modelValue": {
+                                "type": "JSExpression",
+                                "value": "row.city",
+                                "model": true
+                              },
+                              "onChange": {
+                                "type": "JSExpression",
+                                "value": "this.onChangeInput",
+                                "params": ["row", "column", "rowIndex"]
+                              }
+                            },
+                            "id": "22396a2a"
+                          }
+                        ]
+                      }
+                    ],
+                    "params": ["row", "column", "rowIndex"]
+                  }
+                }
+              }
+            ],
+            "data": [
+              {
+                "id": "1",
+                "name": "GFD科技有限公司",
+                "city": "福州",
+                "employees": 800,
+                "created_date": "2014-04-30 00:56:00",
+                "boole": false
+              },
+              {
+                "id": "2",
+                "name": "WWW科技有限公司",
+                "city": "深圳",
+                "employees": 300,
+                "created_date": "2016-07-08 12:36:22",
+                "boole": true
+              }
+            ]
+          },
+          "id": "63623253"
+        }
+      ]
+    }
+  ],
+  "dataSource": {
+    "list": []
+  },
+  "utils": [],
+  "bridge": [],
+  "inputs": [],
+  "outputs": [],
+  "fileName": "slotModelValueTest"
+}

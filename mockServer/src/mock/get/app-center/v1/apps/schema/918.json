@@ -1919,6 +1919,13 @@
         "version": "0.1.17"
       },
       {
+        "componentName": "TinyCheckbox",
+        "package": "@opentiny/vue",
+        "exportName": "Checkbox",
+        "destructuring": true,
+        "version": "3.14.0"
+      },
+      {
         "componentName": "TinySelect",
         "package": "@opentiny/vue",
         "exportName": "Select",
@@ -1973,6 +1980,34 @@
         "exportName": "ChartHistogram",
         "destructuring": true,
         "version": "0.1.16"
+      },
+      {
+        "componentName": "TinyCollapse",
+        "package": "@opentiny/vue",
+        "exportName": "Collapse",
+        "destructuring": true,
+        "version": "3.14.0"
+      },
+      {
+        "componentName": "TinyCollapseItem",
+        "package": "@opentiny/vue",
+        "exportName": "CollapseItem",
+        "destructuring": true,
+        "version": "3.14.0"
+      },
+      {
+        "componentName": "TinyBreadcrumb",
+        "package": "@opentiny/vue",
+        "exportName": "Breadcrumb",
+        "destructuring": true,
+        "version": "3.14.0"
+      },
+      {
+        "componentName": "TinyBreadcrumbItem",
+        "package": "@opentiny/vue",
+        "exportName": "BreadcrumbItem",
+        "destructuring": true,
+        "version": "3.14.0"
       },
       {
         "componentName": "ElInput",
