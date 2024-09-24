@@ -41,6 +41,13 @@ program
   })
 
 program
+  .command('create-configurator <name>')
+  .description('create a new tiny-engine configurator 创建一个新的 tiny-engine 设置器')
+  .action((name, options) => {
+    createConfigurator(name, options)
+  })
+
+program
   .command('create')
   .description('create a new tiny-engine platform or plugin by prompt 根据提示创建一个新的 tiny-engine 插件')
   .action(async () => {
@@ -60,7 +67,7 @@ program
         {
           name: 'configurator',
           value: 'configurator',
-          description: 'create a new tiny-engine configurator 创建一个新的 tiny-engine 属性面板设置器'
+          description: 'create a new tiny-engine configurator 创建一个新的 tiny-engine 设置器'
         }
       ]
     })

@@ -52,9 +52,12 @@ export function createPlatform(name, options = {}) {
 
   const configContent = generateConfig(mergedOptions)
   const pkgContent = generatePackageJson(name, mergedOptions, templatePath)
+  const readmePath = path.join(destPath, 'README.md')
+  const readmeContent = generateText(readmePath, [{ find: '#PROJECT_NAME#', replacement: name }])
 
   fs.outputFileSync(path.resolve(destPath, 'engine.config.js'), configContent)
   fs.outputJSONSync(path.resolve(destPath, 'package.json'), pkgContent)
+  fs.outputFileSync(readmePath, readmeContent)
 
   logger.log(
     chalk.green(`create finish, run the follow command to start project: \ncd ${name} && npm install && npm run dev`)
@@ -154,4 +157,5 @@ export function createConfigurator(name) {
     { find: 'MyInputConfigurator', replacement: name.replace(/.vue$/, '') }
   ])
   fs.outputFileSync(destPath, configuratorContent)
+  logger.log(`file created: ${destPath}`)
 }
