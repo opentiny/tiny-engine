@@ -347,7 +347,6 @@ const setMaterial = (name, data) => {
 export const getMaterialsRes = async () => {
   const bundleUrls = getMergeMeta('engine.config')?.material || []
   const materials = await Promise.allSettled(bundleUrls.map((url) => http.get(url)))
-
   return materials
 }
 
