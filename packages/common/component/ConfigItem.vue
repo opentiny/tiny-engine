@@ -186,7 +186,7 @@ export default {
     const hidden = computed(() => props.hidden)
     const widget = computed(() => props.property?.widget || {})
     const propLabel = computed(
-      () => props.property.property || props.property?.label?.text?.[locale.value] || props.property?.label?.text
+      () => props.property?.label?.text?.[locale.value] || props.property?.label?.text || props.property.property
     )
     const multiType = computed(() => Array.isArray(widget.value.component))
     const isBindingState = ref(false) // 当前是否是绑定到状态变量state
