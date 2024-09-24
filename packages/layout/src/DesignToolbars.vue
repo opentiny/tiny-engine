@@ -10,9 +10,8 @@
       <div class="toolbar-right-content">
         <div class="toolbar-right-item" v-for="(item, idx) in state.rightBar" :key="idx">
           <div class="toolbar-right-item-comp" v-for="comp in item" :key="comp">
-            <component :is="getMergeRegistry(REGISTRY_NAME, comp).entry"></component>
+            <component :is="getMergeMeta(comp)?.entry"></component>
           </div>
-
           <span class="toolbar-right-line" v-if="layoutRegistry.options.isShowLine">|</span>
         </div>
       </div>
@@ -30,7 +29,7 @@
 
 <script>
 import { reactive, nextTick } from 'vue'
-import { getMergeRegistry } from '@opentiny/tiny-engine-meta-register'
+import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { ProgressBar } from '@opentiny/tiny-engine-common'
 import ToolbarCollapse from './ToolbarCollapse.vue'
 import { utils } from '@opentiny/tiny-engine-utils'
@@ -78,7 +77,7 @@ export default {
     }
 
     const getNewBar = (registryData, stataData) =>
-      Array.from(new Set([...registryData, ...stataData])).map((id) => getMergeRegistry(REGISTRY_NAME, id))
+      Array.from(new Set([...registryData, ...stataData])).map((id) => getMergeMeta(id))
 
     props.toolbars.forEach((item) => {
       if (item.align === 'right') {
@@ -109,7 +108,7 @@ export default {
 
     return {
       REGISTRY_NAME,
-      getMergeRegistry,
+      getMergeMeta,
       state
     }
   }
@@ -178,6 +177,7 @@ export default {
     margin-right: 24px;
     align-items: center;
     :deep(.icon) {
+      margin-right: 0;
       &:not(.disabled):hover {
         background: var(--ti-lowcode-toolbar-view-active-bg);
       }
@@ -195,9 +195,6 @@ export default {
         justify-content: center;
         align-items: center;
         margin: 0 2px;
-        .toolbar-right-item-comp {
-          margin-right: 6px;
-        }
       }
     }
 

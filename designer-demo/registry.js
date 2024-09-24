@@ -65,7 +65,7 @@ export default {
         right: [
           ['engine.toolbars.clean'],
           ['engine.toolbars.preview'],
-          ['engine.toolbars.generate-vue', 'engine.toolbars.save']
+          ['engine.toolbars.generate-code', 'engine.toolbars.save']
         ],
         collapse: [
           ['engine.toolbars.collaboration'],
