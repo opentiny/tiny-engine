@@ -46,8 +46,7 @@ export default defineConfig({
     sourcemap: true,
     lib: {
       entry: {
-        index: path.resolve(__dirname, 'index.js'),
-        canvas: path.resolve(__dirname, './src/canvas/canvas.js')
+        index: path.resolve(__dirname, 'index.js')
       },
       name: 'tiny-engine',
       fileName: (_, entryName) => `${entryName}.js`,

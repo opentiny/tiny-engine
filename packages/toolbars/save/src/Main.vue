@@ -177,7 +177,8 @@ export default {
     border: none;
     min-width: 70px;
     height: 26px;
-    line-height: 24px;
+    display: flex;
+    align-items: center;
     padding: 0 8px;
     border-radius: 4px;
     &:not(.disabled):hover {

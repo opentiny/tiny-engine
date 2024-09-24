@@ -5,14 +5,13 @@
         <tiny-breadcrumb-item v-for="item in breadcrumbData.slice(0, 2)" :key="item">{{ item }} </tiny-breadcrumb-item>
       </tiny-breadcrumb>
     </div>
-
     <tiny-button
       class="publish"
       v-if="breadcrumbData[0] === CONSTANTS.BLOCKTEXT"
       @click="publishBlock()"
       type="primary"
       size="small"
-      >发布区块</tiny-button
+      >区块</tiny-button
     >
   </div>
   <block-deploy-dialog v-model:visible="state.showDeployBlock" :nextVersion="nextVersion"></block-deploy-dialog>
@@ -23,6 +22,7 @@ import { reactive, computed } from 'vue'
 import { Breadcrumb, BreadcrumbItem, Button } from '@opentiny/vue'
 import { useBreadcrumb, useLayout } from '@opentiny/tiny-engine-meta-register'
 import { BlockDeployDialog } from '@opentiny/tiny-engine-common'
+
 export default {
   components: {
     TinyBreadcrumb: Breadcrumb,
@@ -31,13 +31,13 @@ export default {
     TinyButton: Button
   },
   setup() {
-    const CONTENTS = {
+    const PLUGINS_ID = {
       PAGEID: 'engine.plugins.appmanage',
       BLOCKID: 'engine.plugins.blockmanage'
     }
 
     const { layoutState } = useLayout()
-    const { plugins } = layoutState
+    const { plugins } = layoutState || {}
 
     const state = reactive({
       showDeployBlock: false
@@ -67,7 +67,8 @@ export default {
     })
 
     const open = () => {
-      plugins.render = breadcrumbData.value[0] === CONSTANTS.PAGETEXT ? CONTENTS.PAGEID : CONTENTS.BLOCKID
+      if (!plugins) return
+      plugins.render = breadcrumbData.value[0] === CONSTANTS.PAGETEXT ? PLUGINS_ID.PAGEID : PLUGINS_ID.BLOCKID
     }
 
     return {
@@ -94,7 +95,7 @@ export default {
   margin-right: 3px;
   cursor: pointer;
   &-title {
-    height: 24px;
+    height: 28px;
     padding: 0 8px;
     background-color: var(--ti-lowcode-toolbar-breadcrumb-bg);
     display: flex;
@@ -108,7 +109,6 @@ export default {
   }
 
   .tiny-breadcrumb {
-    height: 17px;
     line-height: var(--base-top-panel-breadcrumb-line-height);
     padding-right: 4px;
     text-overflow: ellipsis;
@@ -125,6 +125,7 @@ export default {
     :deep(.tiny-breadcrumb__inner) {
       color: var(--ti-lowcode-toolbar-breadcrumb-left-color);
       text-decoration: none;
+      cursor: pointer;
     }
 
     :deep(.tiny-breadcrumb__separator) {
@@ -136,6 +137,12 @@ export default {
       font-weight: normal;
       color: var(--ti-lowcode-toolbar-breadcrumb-left-color);
     }
+  }
+
+  .publish {
+    margin-left: 8px;
+    height: 28px;
+    line-height: 28px;
   }
 }
 </style>

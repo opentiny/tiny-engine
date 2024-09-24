@@ -10,6 +10,13 @@
  *
  */
 
-import { createRender } from '@opentiny/tiny-engine/canvas'
+export const STATE = {
+  CURRENT_STATE: 'current',
+  GLOBAL_STATE: 'global'
+}
 
-createRender(window.parent.TinyGlobalConfig)
+export const OPTION_TYPE = {
+  ADD: 'add',
+  UPDATE: 'update',
+  COPY: 'copy'
+}

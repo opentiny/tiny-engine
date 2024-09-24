@@ -151,6 +151,7 @@ export default {
       height: 26px;
       border-radius: 4px;
       position: relative;
+      margin-right: 4px;
       svg {
         cursor: pointer;
         font-size: 20px;
