@@ -444,7 +444,6 @@ export default {
     border-color: transparent;
     background-color: var(--ti-lowcode-component-block-list-add-group-btn-bg);
     width: 30px;
-    height: 30px;
     border: var(--ti-lowcode-component-block-list-add-group-btn-border);
     border-radius: var(--ti-lowcode-component-block-list-add-group-btn-border-radius);
   }
@@ -484,7 +483,7 @@ export default {
   left: -6px;
   right: 0;
   padding: 10px 16px;
-  background-color: var(--ti-lowcode-component-search-bg);
+  background-color: var(--ti-lowcode-common-search-bg);
   color: var(--ti-lowcode-component-block-list-item-color);
   display: flex;
   justify-content: space-between;
@@ -521,7 +520,7 @@ export default {
     .popper__arrow {
       &,
       &::after {
-        border-right-color: var(--ti-lowcode-common-component-hover-bg);
+        border-right-color: var(--ti-lowcode-common-component-bg-25);
       }
     }
   }
@@ -534,7 +533,7 @@ export default {
     font-size: 12px;
     color: var(--ti-lowcode-materials-block-group-delete-popover-title-color);
     .icon {
-      color: var(--ti-lowcode-warning-color);
+      color: var(--ti-lowcode-common-warning-color);
       width: 16px;
       height: 16px;
     }

@@ -290,7 +290,7 @@ export default {
   }
 
   .text-content {
-    --ellipsis-line: 1;
+    -webkit-line-clamp: 1;
   }
 
   &.empty-color {

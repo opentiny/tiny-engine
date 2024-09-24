@@ -45,7 +45,7 @@ export default {
   width: 24px;
   height: 24px;
   font-size: 16px;
-  color: var(--ti-lowcode-component-svg-button-color);
+  color: var(--ti-lowcode-common-svg-button-color);
   border: 1px solid transparent;
   border-radius: 4px;
   display: inline-flex;
@@ -53,12 +53,12 @@ export default {
   align-items: center;
   cursor: pointer;
   &:hover {
-    color: var(--ti-lowcode-component-svg-button-hover-color);
-    background-color: var(--ti-lowcode-component-svg-button-hover-bg-color);
+    color: var(--ti-lowcode-common-svg-button-hover-color);
+    background-color: var(--ti-lowcode-common-svg-button-hover-bg-color);
   }
   &.active {
-    color: var(--ti-lowcode-component-svg-button-active-color);
-    background-color: var(--ti-lowcode-component-svg-button-active-bg-color);
+    color: var(--ti-lowcode-common-svg-button-active-color);
+    background-color: var(--ti-lowcode-common-svg-button-active-bg-color);
   }
 
   & + .svg-button {

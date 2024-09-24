@@ -17,7 +17,8 @@ import { initMonitor } from '@opentiny/tiny-engine-common/js/monitor'
 import { injectGlobalComponents, setGlobalMonacoEditorTheme, Modal, Notify } from '@opentiny/tiny-engine-common'
 import { initHttp } from '@opentiny/tiny-engine-http'
 import TinyThemeTool from '@opentiny/vue-theme/theme-tool'
-import { tinyEngineThemeLight } from '@opentiny/tiny-engine-theme-base'
+import { tinyThemeLightVars } from '@opentiny/tiny-engine-theme-base'
+
 import {
   defineEntry,
   mergeRegistry,
@@ -52,7 +53,7 @@ const defaultLifeCycles = {
     initHttp({ env: import.meta.env })
 
     // eslint-disable-next-line no-new
-    new TinyThemeTool(tinyEngineThemeLight, 'tinyEngineTheme') // 初始化主题
+    new TinyThemeTool(tinyThemeLightVars, 'tinyThemeLightVars')
 
     if (import.meta.env.VITE_ERROR_MONITOR === 'true' && import.meta.env.VITE_ERROR_MONITOR_URL) {
       initMonitor(import.meta.env.VITE_ERROR_MONITOR_URL)

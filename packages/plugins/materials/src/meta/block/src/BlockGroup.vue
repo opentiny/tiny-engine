@@ -428,7 +428,7 @@ export default {
   .add-group-btn {
     font-size: 16px;
     width: 32px;
-    height: 32px;
+    height: 24px;
     border-radius: 6px;
     border-color: var(--ti-lowcode-materials-border-icon-border-color);
     background-color: var(--ti-lowcode-materials-border-icon-bg-color);
@@ -458,7 +458,7 @@ export default {
       margin-left: 0;
     }
     :deep(svg) {
-      color: var(--ti-lowcode-component-svg-button-color);
+      color: var(--ti-lowcode-common-svg-button-color);
     }
   }
   &.show-underline {
@@ -499,7 +499,7 @@ export default {
     .popper__arrow {
       &,
       &::after {
-        border-right-color: var(--ti-lowcode-common-component-hover-bg);
+        border-right-color: var(--ti-lowcode-common-component-bg-25);
       }
     }
   }
@@ -512,7 +512,7 @@ export default {
     font-size: 12px;
     color: var(--ti-lowcode-materials-block-group-delete-popover-title-color);
     .icon {
-      color: var(--ti-lowcode-warning-color);
+      color: var(--ti-lowcode-common-warning-color);
       width: 16px;
       height: 16px;
     }

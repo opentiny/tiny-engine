@@ -17,3 +17,22 @@ export default {
   }
 }
 </script>
+<style lang="less" scoped>
+.empty-wrap {
+  text-align: center;
+  margin-top: 20px;
+
+  .empty-icon {
+    width: 64px;
+    height: 64px;
+    color: var(--ti-lowcode-empty-icon-color);
+  }
+
+  .empty-text {
+    margin-top: 6px;
+    margin-bottom: 0;
+    font-size: 12px;
+    color: var(--ti-lowcode-empty-text-color);
+  }
+}
+</style>

@@ -548,7 +548,7 @@ export default {
   padding: 20px;
   svg {
     font-size: 20px;
-    color: var(--ti-lowcode-warning-color);
+    color: var(--ti-lowcode-common-warning-color);
   }
   .delete-tip {
     margin-left: 5px;

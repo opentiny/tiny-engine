@@ -314,72 +314,14 @@ export default {
 
     .tree-handle svg {
       color: var(--ti-lowcode-tree-icon-color);
-
-      &:hover {
-        color: var(--ti-lowcode-tree-hover-icon-color);
-      }
     }
   }
   :deep(.tiny-grid) {
-    background-color: unset;
-
-    .tiny-grid-tree-wrapper {
-      margin-right: 8px;
-
-      .tiny-grid-tree__node-btn {
-        width: 14px;
-        height: 14px;
-        margin-bottom: 2px;
-
-        &:hover {
-          color: var(--ti-lowcode-tree-icon-hover-color);
-        }
-      }
-    }
     .high-light-node {
       .tree-handle svg {
         color: var(--ti-lowcode-tree-selected-color);
       }
     }
-  }
-
-  :deep(.tiny-grid .tiny-grid__body-wrapper .tiny-grid-body__row) {
-    background-color: var(--ti-lowcode-common-component-bg);
-    &:hover {
-      background-color: var(--ti-lowcode-common-component-hover-bg);
-    }
-  }
-  :deep(.tiny-grid .tiny-grid__body-wrapper .tiny-grid-body__row:not(.row__hover):nth-child(2n)) {
-    background-color: var(--ti-lowcode-common-component-bg);
-    &:hover {
-      background-color: var(--ti-lowcode-common-component-hover-bg);
-    }
-  }
-  :deep(.tiny-grid-body__row.nav-tree .tiny-grid-cell) {
-    line-height: inherit;
-  }
-  :deep(.high-light-node) {
-    background: var(--ti-lowcode-tree-selected-bg) !important;
-
-    :deep(.eyeOpen) {
-      display: block !important;
-    }
-  }
-  :deep(.tiny-grid .tiny-grid__body-wrapper .tiny-grid-body__column) {
-    color: var(--ti-lowcode-tree-color);
-    padding: 0 12px;
-    height: 24px !important;
-    line-height: 24px;
-    .tree-content {
-      font-size: 12px;
-    }
-  }
-  :deep(.tiny-grid .tiny-grid__body-wrapper .high-light-node .tiny-grid-body__column) {
-    color: var(--ti-lowcode-tree-selected-color);
-    font-weight: bold;
-  }
-  :deep(.tiny-grid .tiny-grid__body-wrapper .high-light-node .tiny-grid-body__column .tiny-grid-tree__node-btn) {
-    color: var(--ti-lowcode-tree-selected-color);
   }
 }
 </style>
