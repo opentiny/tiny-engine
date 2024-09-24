@@ -63,7 +63,7 @@
             <svg-button
               id="updateGroupName"
               class="option-btn"
-              name="edit"
+              name="to-edit"
               tips="编辑"
               @click.stop="updateGroup(item.value)"
             ></svg-button>

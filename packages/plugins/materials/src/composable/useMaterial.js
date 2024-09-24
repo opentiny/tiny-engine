@@ -248,15 +248,51 @@ const setThirdPartyDeps = (components) => {
 }
 
 /**
- * 获取到符合物料协议的bundle.json之后，对其进行处理的函数
- * @param {*} materials
+ * 添加组件snippets(分组相同则合并)
+ * @param {*} componentsSnippets 待添加的组件snippets
+ * @param {*} snippetsData 当前snippets
+ * @returns {*} snippetsData 合并后的snippets
  */
-const addMaterials = (materials = {}) => {
-  setThirdPartyDeps(materials.components)
-  materialState.components.push(...materials.snippets)
-  materials.components.forEach(registerComponentToResource)
+const addComponentSnippets = (componentSnippets, snippetsData) => {
+  if (!componentSnippets) return
 
-  const promises = materials?.blocks?.map((item) => registerBlock(item, true))
+  const snippetsMap = new Map()
+  snippetsData.forEach((snippetGroup) => snippetsMap.set(snippetGroup.group, snippetGroup))
+  componentSnippets.forEach((snippetGroup) => {
+    if (snippetsMap.has(snippetGroup.group)) {
+      snippetsMap.get(snippetGroup.group).children.push(...snippetGroup.children)
+    } else {
+      snippetsData.push(snippetGroup)
+    }
+  })
+
+  return snippetsData
+}
+
+/**
+ * 添加物料Bundle文件中的组件类型物料
+ * @param {*} materialBundle 物料包Bundle.json文件对象
+ * @returns null
+ */
+const addComponents = (materialBundle) => {
+  const { snippets, components } = materialBundle
+  // 解析组件三方依赖
+  setThirdPartyDeps(components)
+  // 注册组件到map中
+  components.forEach(registerComponentToResource)
+  // 添加组件snippets
+  addComponentSnippets(snippets, materialState.components)
+}
+
+/**
+ * 添加物料Bundle文件中的区块类型物料
+ * @param {*} blocks 物料包Bundle.json文件中blocks对象
+ */
+const addBlocks = (blocks) => {
+  if (!Array.isArray(blocks) || !blocks.length) {
+    return
+  }
+  const promises = blocks?.map((item) => registerBlock(item, true))
 
   Promise.allSettled(promises).then((blocks) => {
     if (!blocks?.length) {
@@ -274,6 +310,15 @@ const addMaterials = (materials = {}) => {
       ...blocks.filter((res) => res.status === 'fulfilled').map((res) => res.value)
     )
   })
+}
+
+/**
+ * 获取到符合物料协议的bundle.json之后，处理组件与区块物料
+ * @param {*} materials
+ */
+const addMaterials = (materials = {}) => {
+  addComponents(materials)
+  addBlocks(materials.blocks)
 }
 
 const getMaterial = (name) => {
@@ -355,15 +400,10 @@ const updateCanvasDependencies = (blocks) => {
 
 const initBuiltinMaterial = () => {
   const { Builtin } = useCanvas().canvasApi.value
-  Builtin.data.materials.components[0].children.forEach(registerComponentToResource)
-  BuiltinComponentMaterials.components[0].children.forEach(registerComponentToResource)
-
-  const builtinSnippets = {
-    group: '内置组件',
-    children: [...Builtin.data.materials.snippets[0].children, ...BuiltinComponentMaterials.snippets[0].children]
-  }
-
-  materialState.components.push(builtinSnippets)
+  // 添加画布物料
+  addMaterials(Builtin.data.materials)
+  // 添加builtin-component NPM包物料
+  addMaterials(BuiltinComponentMaterials)
 }
 
 const initMaterial = ({ isInit = true, appData = {} } = {}) => {
@@ -390,6 +430,7 @@ export default function () {
     clearBlockResources, // 清空区块缓存，以便更新最新版区块
     getMaterial, // 获取单个物料，(property) getMaterial: (name: string) => Material
     setMaterial, // 设置单个物料 (property) setMaterial: (name: string, data: Material) => void
+    addMaterials, // 添加多个物料
     registerBlock, // 注册新的区块
     updateCanvasDependencies, //传入新的区块，获取新增区块的依赖，更新画布中的组件依赖
     getConfigureMap // 获取物料组件的配置信息

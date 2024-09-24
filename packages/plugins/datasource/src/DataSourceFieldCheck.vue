@@ -60,8 +60,6 @@ export default {
 
 <style scoped lang="less">
 .collection-field-item {
-  margin-left: -70px;
-  margin-top: -10px;
   .tiny-checkbox {
     color: var(--ti-lowcode-datasource-dialog-font-color);
   }

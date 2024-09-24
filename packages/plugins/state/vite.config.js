@@ -24,7 +24,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, './index.js'),
-      name: 'plugin-data',
+      name: 'plugin-state',
       fileName: () => 'index.js',
       formats: ['es']
     },

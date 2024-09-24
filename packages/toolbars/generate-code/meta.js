@@ -1,7 +1,7 @@
 export default {
-  id: 'engine.toolbars.generate-vue',
+  id: 'engine.toolbars.generate-code',
   type: 'toolbars',
-  title: 'generate-vue',
+  title: 'generate-code',
   icon: '',
   align: 'right'
 }

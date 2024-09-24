@@ -309,6 +309,8 @@ export default {
   .tree-wrap {
     height: calc(100% - 38px);
     overflow-y: scroll;
+    padding-top: 12px;
+    border-top: 1px solid var(--ti-lowcode-tree-border-color);
 
     .tree-handle svg {
       color: var(--ti-lowcode-tree-icon-color);

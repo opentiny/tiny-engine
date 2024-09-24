@@ -3,9 +3,10 @@
     <slot :open="open">
       <div v-if="buttonShowContent" :class="['full-width', { 'empty-color': value === '' }]" @click="open">
         <span class="text-content text-ellipsis-multiple">{{ value === '' ? buttonLabel : value }}</span>
-        <svg-icon class="edit-icon" name="edit"></svg-icon>
+        <svg-icon class="edit-icon" name="to-edit"></svg-icon>
       </div>
       <tiny-button v-else class="edit-btn" @click="open">
+        <slot name="icon"></slot>
         {{ buttonLabel }}
       </tiny-button>
     </slot>
@@ -256,7 +257,8 @@ export default {
   .edit-btn {
     color: var(--ti-lowcode-meta-codeEditor-color);
     border-color: var(--ti-lowcode-meta-codeEditor-border-color);
-
+    display: flex;
+    align-items: center;
     &:hover {
       color: var(--ti-lowcode-meta-codeEditor-hover-color);
       border-color: var(--ti-lowcode-meta-codeEditor-border-hover-color);

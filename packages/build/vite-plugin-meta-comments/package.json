@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-vite-plugin-meta-comments",
-  "version": "1.0.0",
+  "version": "2.0.0-alpha.1",
   "description": "",
   "type": "module",
   "main": "dist/index.cjs",
@@ -13,13 +13,13 @@
     "test": "node ./src/test/index.js"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.0.4",
-    "vite": "^5.2.7",
-    "@babel/parser": "^7.18.13",
-    "@babel/traverse": "^7.18.13",
     "@babel/generator": "^7.18.13",
+    "@babel/parser": "^7.18.13",
     "@babel/template": "^7.18.13",
-    "@vue/compiler-sfc": "^3.4.21"
+    "@babel/traverse": "^7.18.13",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "@vue/compiler-sfc": "^3.4.21",
+    "vite": "^5.2.7"
   },
   "keywords": [],
   "publishConfig": {

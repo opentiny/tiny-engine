@@ -10,7 +10,7 @@
  *
  */
 
-import { createApp } from 'vue'
+import { createApp, h } from 'vue'
 import { addScript, addStyle, dynamicImportComponents, updateDependencies } from '../../common'
 import TinyI18nHost, { I18nInjectionKey } from '@opentiny/tiny-engine-common/js/i18n'
 import Main, { api } from './RenderMain'
@@ -46,7 +46,11 @@ const renderer = {
   ...api
 }
 
-const create = () => {
+const create = async (config) => {
+  const { beforeAppCreate, appCreated } = config.lifeCycles || {}
+  if (typeof beforeAppCreate === 'function') {
+    await beforeAppCreate({ Vue: { h }, canvasWin: window, api })
+  }
   App && App.unmount()
   App = null
 
@@ -59,6 +63,11 @@ const create = () => {
   dispatch('canvasReady', { detail: renderer })
 
   App = createApp(Main).use(TinyI18nHost).provide(I18nInjectionKey, TinyI18nHost)
+
+  if (typeof appCreated === 'function') {
+    await appCreated(App)
+  }
+
   App.config.globalProperties.lowcodeConfig = window.parent.TinyGlobalConfig
   App.mount(document.querySelector('#app'))
 
@@ -78,5 +87,5 @@ export const createRender = (config) => {
   Promise.all([
     ...thirdScripts.map(dynamicImportComponents),
     ...scripts.map((src) => addScript(src)).concat([...thirdStyles, ...styles].map((src) => addStyle(src)))
-  ]).finally(create)
+  ]).finally(() => create(config))
 }
