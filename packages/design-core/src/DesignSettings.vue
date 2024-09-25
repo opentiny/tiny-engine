@@ -38,42 +38,22 @@
     </vue-draggable-next>
   </div>
 
-  <!-- 右键菜单 -->
-  <ul
-    v-if="contextMenu.visible"
-    class="context-menu"
-    :style="{ top: contextMenu.y + 'px', left: contextMenu.x + 'px' }"
-  >
-    <template v-if="contextMenu.type">
-      <li class="context-menu-header">{{ contextMenu.item.title }}</li>
-      <li v-for="action in actions" :key="action.method" @click="handleContextAction(action.method)">
-        {{ action.label }}
-      </li>
-    </template>
-
-    <template v-else>
-      <li
-        v-for="(item, index) in state.leftList"
-        :key="index"
-        @click.stop="changeShowState(item.id)"
-        class="menu-item-wrapper"
-      >
-        <span class="check-mark">
-          <span v-show="getPluginShown(item.id)">√</span>
-        </span>
-        <span>{{ item.title }}</span>
-      </li>
-    </template>
-  </ul>
+  <right-menu
+    ref="rightMenu"
+    :list="state.leftList"
+    :align="PLUGIN_POSITION.rightTop"
+    @switchAlign="switchAlign"
+  ></right-menu>
 </template>
 
 <script>
-import { computed, ref, toRefs, watch, reactive, onMounted, onBeforeUnmount } from 'vue'
+import { computed, ref, toRefs, watch, reactive } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
 import { Tabs, TabItem } from '@opentiny/vue'
 import { useLayout } from '@opentiny/tiny-engine-controller'
 import { getPlugin, getPluginById } from '../config/plugin.js'
 import { VueDraggableNext } from 'vue-draggable-next'
+import RightMenu from './RightMenu.vue'
 
 export default {
   components: {
@@ -81,7 +61,8 @@ export default {
     TinyTabItem: TabItem,
     TinyPopover: Popover,
     TinyTooltip: Tooltip,
-    VueDraggableNext
+    VueDraggableNext,
+    RightMenu
   },
   props: {
     renderPanel: {
@@ -102,11 +83,17 @@ export default {
       dragPluginLayout,
       isSameSide,
       getPluginShown,
-      changePluginShown,
-      changeMenuShown,
       layoutState: { settings: settingsState }
     } = useLayout()
-    const contextMenuWidth = 130
+
+    const rightMenu = ref(null)
+    const showContextMenu = (event, type, item, index, align) => {
+      if (!type) {
+        rightMenu.value.showContextMenu(event.clientX, event.clientY, type)
+      } else {
+        rightMenu.value.showContextMenu(event.clientX, event.clientY, type, item, index, align)
+      }
+    }
 
     const plugins = getPluginsByLayout().map((pluginName) => getPlugin(pluginName))
     plugins.forEach(({ id, component, api, icon }) => {
@@ -127,80 +114,11 @@ export default {
       useLayout().closeSetting(true)
     }
 
-    const actions = [
-      { label: '隐藏插件', method: 'hidePlugin' },
-      { label: '切换到左侧', method: 'switchToLeft' },
-      { label: '隐藏右侧活动栏', method: 'hideRightSidebar' }
-    ]
-
-    const contextMenu = reactive({
-      type: true,
-      visible: false,
-      x: 0,
-      y: 0,
-      item: null,
-      index: null,
-      list: null
-    })
-
-    const showContextMenu = (event, type, item, index, align) => {
-      contextMenu.type = type
-      contextMenu.visible = true
-      contextMenu.x = event.clientX - contextMenuWidth
-      contextMenu.y = event.clientY
-      if (type) {
-        contextMenu.item = item
-        contextMenu.index = index
-        contextMenu.list = align
-      }
+    const switchAlign = (index, id, list, align) => {
+      state.leftList.splice(index, 1)
+      emit('changeRightAlign', id)
+      dragPluginLayout(list, align, index, 0)
     }
-
-    const hideContextMenu = () => {
-      contextMenu.visible = false
-    }
-
-    const handleContextAction = (action) => {
-      switch (action) {
-        case 'hidePlugin': {
-          close()
-          changePluginShown(contextMenu.item.id)
-          break
-        }
-        case 'switchToLeft': {
-          close()
-          state.leftList.splice(contextMenu.index, 1)
-          emit('changeRightAlign', contextMenu.item.id)
-          dragPluginLayout(contextMenu.list, PLUGIN_POSITION.leftTop, contextMenu.index, 0)
-          break
-        }
-        case 'hideRightSidebar': {
-          changeMenuShown('right')
-          break
-        }
-        default: {
-          break
-        }
-      }
-      hideContextMenu()
-    }
-
-    const changeShowState = (pluginName) => {
-      changePluginShown(pluginName)
-    }
-    const handleClickOutside = (event) => {
-      if (!event.target.closest('.context-menu')) {
-        hideContextMenu()
-      }
-    }
-
-    onMounted(() => {
-      document.addEventListener('click', handleClickOutside)
-    })
-
-    onBeforeUnmount(() => {
-      document.removeEventListener('click', handleClickOutside)
-    })
-
     const activating = computed(() => settingsState.activating) //高亮显示
     const showMask = ref(true)
 
@@ -249,15 +167,12 @@ export default {
       fixPanel,
       rightFixedPanelsStorage,
       onEnd,
-      contextMenu,
       showContextMenu,
-      hideContextMenu,
-      handleContextAction,
       changeAlign,
       PLUGIN_POSITION,
       getPluginShown,
-      changeShowState,
-      actions
+      switchAlign,
+      rightMenu
     }
   }
 }
@@ -399,44 +314,5 @@ export default {
 .ghost {
   opacity: 0.5;
   background: #f2f2f2;
-}
-.context-menu {
-  position: absolute;
-  background: white;
-  border: 1px solid #ccc;
-  list-style: none;
-  width: 135px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
-}
-
-.context-menu-header {
-  padding: 8px 12px;
-  font-weight: bold;
-  cursor: default;
-  background: #f5f5f5;
-  border-bottom: 1px solid #ccc;
-}
-
-.context-menu li {
-  padding: 8px 12px;
-  cursor: pointer;
-}
-
-.context-menu li:hover {
-  background: #f0f0f0;
-}
-.menu-item-wrapper {
-  display: flex;
-  flex-grow: 1;
-  border-bottom: 1px solid rgb(231, 231, 231);
-  padding: 10px 0;
-}
-.menu-item-wrapper:last-child {
-  border-bottom: none;
-}
-.check-mark {
-  width: 20px;
-  text-align: left;
 }
 </style>
