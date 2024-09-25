@@ -8,7 +8,7 @@
   >
     <template #reference>
       <span class="icon">
-        <span :class="[options?.useDefaultClass ? 'icon-hides' : '']">
+        <span class="icon-hides" v-bind="extendAttrs">
           <svg-icon :name="icon"></svg-icon>
           <span v-if="options?.showDots" class="dots"></span>
         </span>
@@ -17,6 +17,7 @@
   </tiny-popover>
 </template>
 <script>
+import { inject } from 'vue'
 import { Popover } from '@opentiny/vue'
 
 export default {
@@ -37,7 +38,12 @@ export default {
       default: () => {}
     }
   },
-  setup() {}
+  setup() {
+    const extendAttrs = inject('extend-attributes') || {}
+    return {
+      extendAttrs
+    }
+  }
 }
 </script>
 

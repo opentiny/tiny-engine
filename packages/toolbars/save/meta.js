@@ -7,9 +7,6 @@ export default {
       default: 'save'
     },
     renderType: 'button',
-    align: 'right',
-    useDefaultClass: true,
-    props: {},
-    style: ''
+    align: 'right'
   }
 }

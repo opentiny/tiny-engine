@@ -91,6 +91,7 @@ export default {
   },
   setup() {
     const { isSaved } = useCanvas()
+
     const delayOptions = [
       { value: 5, label: '5分钟' },
       { value: 10, label: '10分钟' },

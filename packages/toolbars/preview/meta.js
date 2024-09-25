@@ -7,7 +7,6 @@ export default {
       default: 'preview'
     },
     align: 'right',
-    renderType: 'icon',
-    useDefaultClass: true
+    renderType: 'icon'
   }
 }
