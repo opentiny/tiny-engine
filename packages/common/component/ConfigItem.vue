@@ -600,7 +600,7 @@ export default {
 
   .prop-description {
     margin-top: 8px;
-    color: var(--ti-lowcode-common-text-desc-color);
+    color: var(--te-common-text-weaken);
   }
   .label-tip {
     padding: 2px 0;

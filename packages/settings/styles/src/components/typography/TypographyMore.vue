@@ -199,7 +199,6 @@ export default {
 
           &:hover {
             color: var(--ti-lowcode-toolbar-icon-color);
-            background-color: var(--ti-lowcode-button-hover-bg);
           }
 
           &:not(:last-child)::after {

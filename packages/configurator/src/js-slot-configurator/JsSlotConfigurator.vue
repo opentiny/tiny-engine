@@ -234,11 +234,11 @@ export default {
   position: relative;
   width: 60px;
   height: 20px;
-  border: 1px solid var(--ti-lowcode-base-bg);
+  border: 1px solid var(--te-common-bg-container);
   outline: 0;
   border-radius: 10px;
   box-sizing: border-box;
-  background: var(--ti-lowcode-base-bg);
+  background: var(--te-common-bg-container);
   transition: border-color 0.3s, background-color 0.3s;
   vertical-align: middle;
 }

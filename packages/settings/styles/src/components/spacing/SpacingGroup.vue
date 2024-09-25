@@ -583,10 +583,6 @@ export default {
     .reference-wrapper {
       & > div {
         padding: 2px;
-
-        &.active {
-          background: var(--ti-lowcode-button-hover-bg);
-        }
       }
     }
   }
