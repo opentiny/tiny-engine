@@ -1,5 +1,5 @@
 <template>
-  <div :class="['radius-row', { 'show-border': isRaduisSelected(RADIUS_SETTING.Single) }]">
+  <div class="radius-row item-row">
     <div
       :class="['radius-label', { 'is-setting': isRadiusSetting() }]"
       @click="openSetting(BORDER_RADIUS_PROPERTY.BorderRadius, $event)"
@@ -95,7 +95,7 @@
     </div>
   </div>
 
-  <div class="border-label">
+  <div class="border-label item-row">
     <span
       :class="{ 'is-setting': isBorderSetting(), 'set-border-style': true }"
       @click="openSetting(BORDER_PROPERTY.Border, $event)"
@@ -145,7 +145,7 @@
   </div>
   <div class="border-input">
     <div class="border-input-right">
-      <div class="border-row">
+      <div class="border-row item-row">
         <div class="border-label">
           <span
             :class="{ 'is-setting': isBorderColorSetting() }"
@@ -215,7 +215,6 @@
           </tiny-tooltip>
         </div>
       </div>
-      <div class="border-row"></div>
     </div>
   </div>
 
@@ -560,7 +559,6 @@ export default {
 <style lang="less" scoped>
 .border-row {
   display: flex;
-
   .border-col {
     flex: 1;
     display: flex;
@@ -579,22 +577,13 @@ export default {
     color: var(--ti-lowcode-toolbar-breadcrumb-color);
   }
 }
-
+.item-row {
+  margin-bottom: 8px;
+}
 .radius-row {
   display: flex;
   align-items: center;
-  padding-bottom: 8px;
   position: relative;
-  &.show-border::after {
-    content: '';
-    height: 1px;
-    width: calc(100% + 32px);
-    background: var(--ti-lowcode-toolbar-border-color);
-    position: absolute;
-    bottom: 0;
-    left: -16px;
-  }
-
   svg {
     color: var(--ti-lowcode-input-icon-color);
     font-size: 16px;
@@ -622,6 +611,7 @@ export default {
     .radius-content-svg {
       &:hover,
       &.selected {
+        color: var(--ti-lowcode-property-active-color);
         svg {
           color: var(--ti-lowcode-property-active-color);
         }
@@ -694,7 +684,6 @@ export default {
 
 .border-label {
   width: 100%;
-  margin: 10px 0 5px 0;
   color: var(--ti-lowcode-component-setting-panel-label-color);
   .set-border-style {
     line-height: 24px;
@@ -717,8 +706,6 @@ export default {
     }
   }
   .row-item {
-    padding: 5px;
-    border-radius: 3px;
     &:hover {
       svg {
         color: var(--ti-lowcode-toolbar-icon-color);
@@ -726,7 +713,7 @@ export default {
     }
 
     &.selected {
-      // background-color: var(--ti-lowcode-tabs-bg);
+      color: var(--ti-lowcode-property-active-color);
       svg {
         color: var(--ti-lowcode-property-active-color);
       }
@@ -747,8 +734,6 @@ export default {
     .border-row {
       display: flex;
       align-items: center;
-      margin: 5px 0;
-
       .border-label {
         flex: 0 0 40px;
       }
@@ -764,6 +749,7 @@ export default {
           justify-content: center;
           &.selected,
           &:hover {
+            color: var(--ti-lowcode-property-active-color);
             svg {
               color: var(--ti-lowcode-property-active-color);
             }

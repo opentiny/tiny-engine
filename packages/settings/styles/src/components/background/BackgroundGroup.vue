@@ -532,7 +532,6 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 4px 0 12px;
     position: relative;
     .background-image-icon {
       font-size: 16px;

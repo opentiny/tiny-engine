@@ -253,12 +253,14 @@ export default {
 <style lang="less" scoped>
 .editor-wrap {
   width: 100%;
-
+  display: flex;
+  text-align: center;
   .edit-btn {
     color: var(--ti-lowcode-meta-codeEditor-color);
     border-color: var(--ti-lowcode-meta-codeEditor-border-color);
-    display: flex;
-    align-items: center;
+    flex: 1;
+    text-align: center;
+    margin-right: 0;
     &:hover {
       color: var(--ti-lowcode-meta-codeEditor-hover-color);
       border-color: var(--ti-lowcode-meta-codeEditor-border-hover-color);

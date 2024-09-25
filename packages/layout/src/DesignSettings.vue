@@ -91,7 +91,7 @@ export default {
   }
 
   :deep(.tiny-collapse-item__content) {
-    padding: 8px 8px 8px 12px;
+    padding: 0 8px 12px 12px; // 这里的bottom为4px + 内部行元素与底部的距离为8px = 12px
   }
 }
 
