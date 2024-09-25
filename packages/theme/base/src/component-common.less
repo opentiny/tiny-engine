@@ -735,7 +735,8 @@
 
 // 22、开关
 .tiny-switch {
-  background-color: var(--te-common-bg-disabled); // 待确认是用背景色 还是线条色
+  background-color: var(--te-common-bg-switch);
+  border: none;
   &.tiny-switch-checked {
     background-color: var(--te-common-bg-primary-checked);
   }
@@ -747,7 +748,7 @@
 // 23、下拉菜单
 .tiny-dropdown {
   &__trigger {
-    color: var(--te-common-text-primary); // 待确认
+    color: var(--te-common-text-primary);
     &:not(&__caret-button):hover {
       color: var(--te-common-text-weaken);
     }
