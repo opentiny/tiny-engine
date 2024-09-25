@@ -16,6 +16,32 @@ const defaultOption = {
   }
 }
 
+// const checkHasElementStyleImport = (code) => {
+//   try {
+//     const ast = parse(code, { sourceType: 'module', plugins: ['jsx'] })
+//     let res = false
+
+//     traverse(ast, {
+//       ImportDeclaration(path) {
+
+//       }
+//       JSXElement(path) {
+//         res = true
+//         path.stop()
+//       },
+//       JSXFragment(path) {
+//         res = true
+//         path.stop()
+//       }
+//     })
+
+//     return res
+//   } catch (error) {
+//     // 解析失败则认为不存在 jsx
+//     return false
+//   }
+// }
+
 function genElementPlusStyleDeps(options = {}) {
   const realOptions = mergeOptions(defaultOption, options)
 
@@ -51,12 +77,22 @@ function genElementPlusStyleDeps(options = {}) {
 
       const ast = parse(mainJsFile.fileContent, { sourceType: 'module' })
       let lastImport = null
+      let hasElementPlusStyleImport = false
 
       traverse(ast, {
         ImportDeclaration(path) {
           lastImport = path
+
+          if (path.node.source.value === 'element-plus/dist/index.css') {
+            hasElementPlusStyleImport = true
+          }
         }
       })
+
+      // 已经存在 element-plus 的 import，不再插入
+      if (hasElementPlusStyleImport) {
+        return
+      }
 
       // 引入 element-plus 样式依赖
       if (lastImport) {
