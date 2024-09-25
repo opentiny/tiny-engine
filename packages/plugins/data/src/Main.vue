@@ -40,7 +40,7 @@
       <div class="header">
         <span>{{ addDataSource }}</span>
         <span class="options-wrap">
-          <tiny-button type="danger" @click="confirm">保存</tiny-button>
+          <tiny-button type="info" @click="confirm">保存</tiny-button>
           <close-icon @close="cancel"></close-icon>
         </span>
       </div>

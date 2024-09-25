@@ -14,6 +14,7 @@ import PluginSetting from './component/PluginSetting.vue'
 import PluginPanel from './component/PluginPanel.vue'
 import SvgButton from './component/SvgButton.vue'
 import LinkButton from './component/LinkButton.vue'
+import LoadingButton from './component/LoadingButton.vue'
 
 import ConfigCollapse from './component/ConfigCollapse.vue'
 import ConfigGroup from './component/ConfigGroup.vue'
@@ -187,6 +188,7 @@ export {
   VideoGuide,
   SvgButton,
   LinkButton,
+  LoadingButton,
   BlockHistoryList,
   BlockHistoryTemplate,
   BlockLinkField,

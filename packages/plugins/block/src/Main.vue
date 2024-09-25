@@ -121,6 +121,7 @@ import BlockSetting, { openPanel, closePanel } from './BlockSetting.vue'
 import BlockGroupArrange from './BlockGroupArrange.vue'
 import CategoryEdit from './CategoryEdit.vue'
 import {
+  releaseBlockState,
   saveBlock,
   initEditBlock,
   mountedHook,
@@ -155,6 +156,7 @@ const openSettingPanel = async ({ isOpen = true, item: block = {} }) => {
 }
 
 export const api = {
+  releaseBlockState,
   fetchBlockList,
   openSettingPanel,
   saveBlock,

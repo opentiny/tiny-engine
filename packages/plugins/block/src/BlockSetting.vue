@@ -8,13 +8,12 @@
   >
     <template #header>
       <tiny-button @click="updateBlock">保存 </tiny-button>
-      <tiny-button
-        type="primary"
+      <loading-button
+        :loading="releaseBlockState"
         :disabled="globalConfig.dslMode === 'Angular'"
-        class="publish-btn"
-        @click="showDeployBlockDialog"
-        >发布
-      </tiny-button>
+        text="发布"
+        @save="showDeployBlockDialog"
+      ></loading-button>
       <svg-button name="delete" tips="删除" placement="top" @click="deleteBlock"></svg-button>
       <close-icon @click="closePanel"></close-icon>
     </template>
@@ -79,13 +78,14 @@
 import { reactive, ref, watch, watchEffect, computed } from 'vue'
 import { Button as TinyButton, Collapse as TinyCollapse, CollapseItem as TinyCollapseItem } from '@opentiny/vue'
 import { getGlobalConfig, useModal } from '@opentiny/tiny-engine-controller'
-import { BlockHistoryList, PluginSetting, CloseIcon, SvgButton } from '@opentiny/tiny-engine-common'
+import { BlockHistoryList, PluginSetting, CloseIcon, SvgButton, LoadingButton } from '@opentiny/tiny-engine-common'
 import { previewBlock } from '@opentiny/tiny-engine-controller/js/preview'
 import { LifeCycles } from '@opentiny/tiny-engine-common'
 import BlockEvent from './BlockEvent.vue'
 import BlockConfig from './BlockConfig.vue'
 import BlockProperty from './BlockProperty.vue'
 import {
+  releaseBlockState,
   getEditBlock,
   delBlock,
   saveBlock,
@@ -121,7 +121,8 @@ export default {
     LifeCycles,
     CloseIcon,
     BlockDeployDialog,
-    SvgButton
+    SvgButton,
+    LoadingButton
   },
   props: {
     modelValue: {
@@ -264,6 +265,7 @@ export default {
       state,
       isOpen,
       nextVersion,
+      releaseBlockState,
       showDeployBlockDialog,
       closePanel,
       deleteBlock,
