@@ -281,7 +281,7 @@ export default {
   align-items: center;
   width: 100%;
   height: 32px;
-  padding: 4px 8px;
+  padding: 4px;
   border: 1px solid var(--ti-lowcode-meta-codeEditor-border-color);
   border-radius: 6px;
 
@@ -328,7 +328,7 @@ export default {
     color: var(--ti-lowcode-meta-code-editor-header-tips-container-color);
 
     .header-tips-title {
-      color: var();
+      color: var(--te-common-text-weaken);
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
@@ -357,7 +357,7 @@ export default {
 
       code {
         font-family: Microsoft YaHei, Microsoft YaHei-Normal;
-        color: var();
+        color: var(--te-common-text-weaken);
       }
     }
   }

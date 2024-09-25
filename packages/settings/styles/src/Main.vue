@@ -205,7 +205,7 @@ export default {
 <style lang="less" scoped>
 .style-editor {
   justify-content: space-around;
-  padding: 8px 0 0;
+  padding: 12px 0 0;
   column-gap: 8px;
   .line-style {
     padding: 0 8px 0 12px;
