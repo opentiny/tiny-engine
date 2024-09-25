@@ -4,6 +4,10 @@
     :class="['block-list', 'lowcode-scrollbar', { 'is-small-list': blockStyle === 'mini' }, { isShortcutPanel }]"
     @mouseleave="state.hover = false"
   >
+    <li v-if="state.showAddButton" class="block-item block-plus" @click="$emit('add')">
+      <span class="block-plus-icon"><icon-plus></icon-plus></span>
+      <div class="item-text">添加区块</div>
+    </li>
     <li
       v-for="(item, index) in state.data"
       :key="item.blockName"
@@ -131,9 +135,6 @@
           {{ deployTips[item.deployStatus] }}
         </div>
       </slot>
-    </li>
-    <li v-if="state.showAddButton" class="block-item block-plus" @click="$emit('add')">
-      <span class="block-plus-icon"><icon-plus></icon-plus></span>
     </li>
     <div v-if="showBlockShot && state.hover && state.currentBlock.screenshot" class="block-shortcut">
       <div class="block-shortcut-title">{{ state.currentBlock.label }}预览图</div>
@@ -409,7 +410,7 @@ export default {
   overflow-y: auto;
   overflow-x: hidden;
   color: var(--ti-lowcode-common-secondary-text-color);
-  margin: 12px 0 0 12px;
+  margin: 12px;
 
   &.is-small-list {
     grid-template-columns: 100%;
@@ -420,14 +421,14 @@ export default {
     flex-direction: column;
     align-items: center;
     position: relative;
-    height: 105px;
+    height: 108px;
     text-align: center;
     user-select: none;
-    margin-right: 12px;
+    margin-right: 6px;
     margin-bottom: 12px;
     .block-item-img {
       line-height: 82px;
-      width: 106px;
+      width: 100%;
       height: 82px;
       border-radius: 4px;
       background-color: var(--ti-lowcode-component-block-list-item-active-bg);
@@ -529,9 +530,18 @@ export default {
     }
 
     &.block-plus {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      .block-plus-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 82px;
+        border: 1px dashed var(--te-common-border-hover);
+        border-radius: 4px;
+      }
+      .item-text {
+        font-size: 12px;
+      }
       .tiny-svg {
         font-size: 24px;
         color: var(--ti-lowcode-component-svg-button-color);
@@ -595,7 +605,10 @@ export default {
       top: 0;
     }
   }
-
+  .block-item:nth-child(even) {
+    margin-right: 0;
+    margin-left: 6px;
+  }
   .deploy {
     position: absolute;
     top: 10px;
