@@ -293,7 +293,7 @@ const initBlock = async (blockId) => {
   const blockApi = getPluginApi(PLUGIN_NAME.BlockManage)
   const blockContent = await blockApi.getBlockById(blockId)
 
-  if (blockContent.public_scope_tenants.length) {
+  if (blockContent?.public_scope_tenants?.length) {
     blockContent.public_scope_tenants = blockContent.public_scope_tenants.map((e) => e.id)
   }
 
