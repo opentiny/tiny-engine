@@ -13,10 +13,10 @@ body {
     }
 
     &::-webkit-scrollbar-thumb {
-      background-color: #dbdbdb;
+      background-color: var(--te-common-border-default);
 
       &:hover {
-        background-color: #c2c2c2;
+        background-color: var(--te-common-border-hover);
       }
     }
   }
@@ -46,7 +46,6 @@ body {
     (100vw - (var(--base-left-panel-width) + var(--base-right-panel-width) + var(--base-nav-panel-width) - 1px))
   );
   -webkit-font-smoothing: subpixel-antialiased;
-  background: #f9f9f9;
   padding: 0;
   margin: 0;
   font-family: Microsoft YaHei, Microsoft YaHei-Normal;
@@ -102,7 +101,7 @@ td {
   body {
     * {
       scrollbar-width: thin;
-      scrollbar-color: #dbdbdb transparent;
+      scrollbar-color: var(--te-common-border-default) transparent;
     }
   }
 }
@@ -121,7 +120,7 @@ td {
 }
 
 .global-desc-info {
-  color: #808080;
+  color: var(--te-common-text-weaken);
 }
 
 .text-ellipsis-multiple {
