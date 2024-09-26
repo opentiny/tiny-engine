@@ -4,9 +4,6 @@
       <template #title>
         <label>{{ meta.label?.text?.zh_CN }}</label>
       </template>
-      <template #actions>
-        <meta-list-actions v-bind="actionsOptions" @actionEvents="actionEvents"></meta-list-actions>
-      </template>
       <template #items>
         <vue-draggable-next
           :list="itemsOptions.optionsList"
@@ -41,6 +38,13 @@
           </div>
         </vue-draggable-next>
       </template>
+      <template #bottom>
+        <div class="add" @click="addItem">
+          <!-- TODO 这里需要加上图标 -->
+          <span class="add-icon"></span>
+          <span>新增一列</span>
+        </div>
+      </template>
     </meta-list>
   </div>
 </template>
@@ -48,7 +52,7 @@
 <script>
 import { computed, reactive } from 'vue'
 import { IconDel, IconEdit, IconPlus } from '@opentiny/vue-icon'
-import { MetaList, MetaListActions, MetaListItem, MetaChildItem } from '@opentiny/tiny-engine-common'
+import { MetaList, MetaListItem, MetaChildItem } from '@opentiny/tiny-engine-common'
 import { useTranslate } from '@opentiny/tiny-engine-meta-register'
 import { VueDraggableNext } from 'vue-draggable-next'
 
@@ -57,7 +61,6 @@ export default {
   components: {
     MetaList,
     MetaListItem,
-    MetaListActions,
     MetaChildItem,
     VueDraggableNext
   },
@@ -191,5 +194,17 @@ export default {
 .meta-array-wrap {
   font-size: 12px;
   display: block;
+}
+.add {
+  color: var(--te-common-text-emphasize);
+  &:hover {
+    cursor: pointer;
+  }
+}
+.add-icon {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 5px;
 }
 </style>

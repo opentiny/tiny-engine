@@ -60,21 +60,35 @@ export default {
 <style lang="less" scoped>
 .meta-button-group.tiny-button-group {
   margin-top: 0px;
+  width: 100%;
   :deep(ul.tiny-group-item) {
+    width: 100%;
+    display: flex;
+    li {
+      margin: 0;
+      flex: 1;
+    }
+    li:first-child {
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+    }
+    li:last-child {
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px;
+    }
     li.active button:not(.disabled) {
-      background: var(--ti-button-group-item-active-bg-color);
-      color: var(--ti-button-group-item-active-text-color);
-      border-color: var(--ti-button-group-item-active-border-color);
+      background: var(--te-common-bg-prompt);
+      color: var(--te-common-text-primary);
       outline: 0;
     }
     li button:not(.disabled) {
-      background: var(--ti-button-group-item-bg-color);
-    }
-    li:not(:last-child) {
-      margin-right: 2px;
+      background: var(--te-common-bg-container);
+      color: var(--te-common-text-secondary);
     }
     li button {
-      min-width: 48px;
+      min-width: 0px;
+      width: 100%;
+      border-radius: 4px;
       padding: 0px 12px;
       max-width: 300px;
       line-height: 28px;

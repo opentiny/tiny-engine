@@ -88,10 +88,10 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
-                      "component": "MyInputConfigurator",
+                      "component": "InputConfigurator",
                       "props": {}
                     }
                   },
@@ -109,7 +109,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "defaultValue": "default",
                     "widget": {
@@ -146,7 +146,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
                       "component": "InputConfigurator",
@@ -167,7 +167,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
                       "component": "I18nConfigurator",
@@ -189,7 +189,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "number",
                     "widget": {
                       "component": "NumberConfigurator",
@@ -211,7 +211,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "defaultValue": false,
                     "type": "boolean",
                     "widget": {
@@ -380,7 +380,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "defaultValue": "default",
                     "widget": {
@@ -417,7 +417,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
                       "component": "InputConfigurator",
@@ -438,7 +438,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
                       "component": "SwitchConfigurator",
@@ -460,7 +460,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
                       "component": "SwitchConfigurator",
@@ -482,7 +482,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
                       "component": "SwitchConfigurator",
@@ -504,7 +504,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
                       "component": "SwitchConfigurator",
@@ -526,7 +526,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
                       "component": "SwitchConfigurator",
@@ -548,7 +548,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
                       "component": "SwitchConfigurator",
@@ -570,7 +570,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
                       "component": "SwitchConfigurator",
@@ -592,7 +592,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "defaultValue": false,
                     "type": "boolean",
                     "widget": {
@@ -761,7 +761,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "boolean",
                     "widget": {
                       "component": "SwitchConfigurator",
@@ -782,7 +782,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "defaultValue": "right",
                     "widget": {
@@ -819,7 +819,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
                       "component": "InputConfigurator",
@@ -841,7 +841,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
                       "component": "InputConfigurator",
@@ -884,11 +884,11 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "defaultValue": "left",
                     "widget": {
-                      "component": "SelectConfigurator",
+                      "component": "ButtonGroupConfigurator",
                       "props": {
                         "options": [
                           {
@@ -983,7 +983,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "defaultValue": true,
                     "type": "boolean",
                     "widget": {
@@ -1005,7 +1005,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "defaultValue": "default",
                     "widget": {
@@ -1042,7 +1042,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "defaultValue": false,
                     "type": "boolean",
                     "widget": {
@@ -1184,7 +1184,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
                       "component": "InputConfigurator",
@@ -1205,7 +1205,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
                       "component": "InputConfigurator",
@@ -1226,7 +1226,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
                       "component": "InputConfigurator",
@@ -1247,7 +1247,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "boolean",
                     "widget": {
                       "component": "SwitchConfigurator",
@@ -1268,7 +1268,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "object",
                     "widget": {
                       "component": "CodeConfigurator",
@@ -1291,7 +1291,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
                       "component": "InputConfigurator",
@@ -1354,7 +1354,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "defaultValue": "default",
                     "widget": {
@@ -1391,7 +1391,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
                       "component": "InputConfigurator",
@@ -1412,7 +1412,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
                       "component": "SelectConfigurator",
@@ -1548,7 +1548,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "array",
                     "widget": {
                       "component": "CodeConfigurator",
@@ -2180,7 +2180,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "number",
                     "widget": {
                       "component": "NumberConfigurator",
@@ -2202,7 +2202,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
                       "component": "InputConfigurator",
@@ -2224,7 +2224,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "defaultValue": false,
                     "type": "boolean",
                     "widget": {
@@ -2246,7 +2246,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "defaultValue": false,
                     "type": "boolean",
                     "widget": {
@@ -2268,7 +2268,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "defaultValue": "default",
                     "widget": {
@@ -2305,7 +2305,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "defaultValue": true,
                     "type": "boolean",
                     "widget": {
@@ -2327,7 +2327,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "defaultValue": true,
                     "type": "boolean",
                     "widget": {
@@ -2349,7 +2349,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "defaultValue": false,
                     "type": "boolean",
                     "widget": {
@@ -2393,7 +2393,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "widget": {
                       "component": "InputConfigurator",
                       "props": {}
@@ -2435,7 +2435,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "widget": {
                       "component": "InputConfigurator",
                       "props": {}
@@ -2489,7 +2489,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "defaultValue": false,
                     "type": "boolean",
                     "widget": {
@@ -5157,8 +5157,7 @@
                     },
                     "description": {
                       "zh_CN": "必填标识 * 是否占位"
-                    },
-                    "labelPosition": "left"
+                    }
                   },
                   {
                     "property": "label-suffix",
@@ -5177,7 +5176,8 @@
                     },
                     "description": {
                       "zh_CN": "表单中标签后缀"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "label-position",
@@ -5211,7 +5211,8 @@
                     },
                     "description": {
                       "zh_CN": "表单中标签的布局位置"
-                    }
+                    },
+                    "labelPosition": "left"
                   }
                 ]
               },
@@ -5258,7 +5259,8 @@
                     },
                     "description": {
                       "zh_CN": "表单验证规则"
-                    }
+                    },
+                    "labelPosition": "left"
                   }
                 ],
                 "description": {
@@ -5483,7 +5485,8 @@
                     },
                     "description": {
                       "zh_CN": "表单域 model 字段，在使用 validate、resetFields 方法的情况下，该属性是必填的"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "required",
@@ -5904,7 +5907,8 @@
                     },
                     "description": {
                       "zh_CN": "按钮文字"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "size",
@@ -5945,7 +5949,8 @@
                     },
                     "description": {
                       "zh_CN": "按钮大小"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "disabled",
@@ -6079,7 +6084,8 @@
                     },
                     "description": {
                       "zh_CN": "设置禁用时间，防止重复提交，单位毫秒"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "circle",
@@ -6282,7 +6288,8 @@
                     },
                     "description": {
                       "zh_CN": "设置input框的type属性"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "rows",
@@ -6296,7 +6303,8 @@
                     },
                     "description": {
                       "zh_CN": "输入框行数，只对 type='textarea' 有效"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "placeholder",
@@ -6389,7 +6397,8 @@
                     },
                     "description": {
                       "zh_CN": "输入框尺寸。该属性的可选值为 medium / small / mini"
-                    }
+                    },
+                    "labelPosition": "left"
                   }
                 ]
               },
@@ -6416,8 +6425,7 @@
                     },
                     "description": {
                       "zh_CN": "设置 input 框的maxLength"
-                    },
-                    "labelPosition": "left"
+                    }
                   },
                   {
                     "property": "autofocus",
@@ -7363,7 +7371,8 @@
                     },
                     "description": {
                       "zh_CN": "绑定默认值"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "true-value",
@@ -7950,7 +7959,8 @@
                     },
                     "description": {
                       "zh_CN": "没有选中时的值"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "true-label",
@@ -7969,7 +7979,8 @@
                     },
                     "description": {
                       "zh_CN": "选中时的值"
-                    }
+                    },
+                    "labelPosition": "left"
                   }
                 ],
                 "description": {
@@ -8363,7 +8374,8 @@
                     },
                     "description": {
                       "zh_CN": "checkbox组件列表"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "type",
@@ -8825,8 +8837,7 @@
                     },
                     "description": {
                       "zh_CN": "是否显示标题后编辑 ICON"
-                    },
-                    "labelPosition": "left"
+                    }
                   },
                   {
                     "property": "tabs",
@@ -9269,7 +9280,8 @@
                     },
                     "description": {
                       "zh_CN": "单独使用 Breadcrumb，通过 option 配置生成面包屑"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "textField",
@@ -9288,7 +9300,8 @@
                     },
                     "description": {
                       "zh_CN": "指定面包屑的显示键值，结合 options 使用"
-                    }
+                    },
+                    "labelPosition": "left"
                   }
                 ]
               }
@@ -9503,8 +9516,7 @@
                     },
                     "description": {
                       "zh_CN": "双向绑定当前激活的面板"
-                    },
-                    "labelPosition": "left"
+                    }
                   }
                 ]
               }
@@ -9773,7 +9785,8 @@
                     "onChange": "this.delProp('fetchData')",
                     "description": {
                       "zh_CN": "设置表格的数据"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "columns",
@@ -10096,7 +10109,8 @@
                     },
                     "description": {
                       "zh_CN": "服务端数据查询方法"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "pager",
@@ -10123,7 +10137,8 @@
                     },
                     "description": {
                       "zh_CN": "分页配置，需结合fetchData使用"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "resizable",
@@ -10186,8 +10201,7 @@
                     },
                     "description": {
                       "zh_CN": "表格行数据复选框配置项"
-                    },
-                    "labelPosition": "left"
+                    }
                   },
                   {
                     "property": "edit-rules",
@@ -10226,7 +10240,8 @@
                     },
                     "description": {
                       "zh_CN": "表格编辑配置项"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "expand-config",
@@ -10421,8 +10436,7 @@
                     },
                     "description": {
                       "zh_CN": "设置表格内容区域（不含表格头部，底部）的最大高度。"
-                    },
-                    "labelPosition": "left"
+                    }
                   },
                   {
                     "property": "row-span",
@@ -11084,8 +11098,7 @@
                     },
                     "description": {
                       "zh_CN": "设置弹出面板中表格组件的配置信息"
-                    },
-                    "labelPosition": "left"
+                    }
                   },
                   {
                     "property": "pager-op",
@@ -11363,7 +11376,8 @@
                     },
                     "description": {
                       "zh_CN": "可配置静态数据源和动态数据源"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "node-key",
@@ -11424,8 +11438,7 @@
                     },
                     "description": {
                       "zh_CN": "点击图标展开节点时是否触发 node-click 事件"
-                    },
-                    "labelPosition": "left"
+                    }
                   },
                   {
                     "property": "expand-icon",
@@ -11492,8 +11505,7 @@
                     },
                     "description": {
                       "zh_CN": "是否在点击节点的时候选中节点，默认值为 false，即只有在点击复选框时才会选中节点"
-                    },
-                    "labelPosition": "left"
+                    }
                   },
                   {
                     "property": "filter-node-method",
@@ -11972,7 +11984,8 @@
                     },
                     "description": {
                       "zh_CN": "显示的内容，也可以通过 slot#content 传入 DOM"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "render-content",
@@ -12242,7 +12255,8 @@
                     },
                     "description": {
                       "zh_CN": "触发方式，该属性的可选值为 click / focus / hover / manual，该属性的默认值为 click"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "popper-class",
@@ -12338,7 +12352,8 @@
                     },
                     "description": {
                       "zh_CN": "触发方式为 hover 时的隐藏延迟，单位为毫秒"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "content",
@@ -12357,7 +12372,8 @@
                     },
                     "description": {
                       "zh_CN": "显示的内容，也可以通过 slot 传入 DOM"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "disabled",
@@ -12395,7 +12411,8 @@
                     },
                     "description": {
                       "zh_CN": "出现位置的偏移量"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "open-delay",
@@ -12414,7 +12431,8 @@
                     },
                     "description": {
                       "zh_CN": "触发方式为 hover 时的显示延迟，单位为毫秒"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "popper-options",
@@ -12433,7 +12451,8 @@
                     },
                     "description": {
                       "zh_CN": "popper.js 的参数"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "title",
@@ -12452,7 +12471,8 @@
                     },
                     "description": {
                       "zh_CN": "提示内容标题"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "transform-origin",
@@ -12490,7 +12510,8 @@
                     },
                     "description": {
                       "zh_CN": "该属性的默认值为 fade-in-linear"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "width",
@@ -12509,7 +12530,8 @@
                     },
                     "description": {
                       "zh_CN": "宽度"
-                    }
+                    },
+                    "labelPosition": "left"
                   }
                 ]
               }
@@ -12667,7 +12689,8 @@
                     },
                     "description": {
                       "zh_CN": "设置日期框的type属性"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "placeholder",
@@ -12779,7 +12802,8 @@
                     },
                     "description": {
                       "zh_CN": "日期框尺寸。该属性的可选值为 medium / small / mini"
-                    }
+                    },
+                    "labelPosition": "left"
                   }
                 ]
               },
@@ -12806,8 +12830,7 @@
                     },
                     "description": {
                       "zh_CN": "设置 input 框的maxLength"
-                    },
-                    "labelPosition": "left"
+                    }
                   },
                   {
                     "property": "autofocus",
@@ -13147,7 +13170,8 @@
                     },
                     "description": {
                       "zh_CN": "输入框尺寸。该属性的可选值为 medium / small / mini"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "controls",
@@ -13196,8 +13220,7 @@
                     },
                     "description": {
                       "zh_CN": "加减按钮位置"
-                    },
-                    "labelPosition": "left"
+                    }
                   },
                   {
                     "property": "precision",
