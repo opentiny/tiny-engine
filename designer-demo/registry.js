@@ -63,7 +63,7 @@ export default {
         left: ['engine.toolbars.breadcrumb', 'engine.toolbars.lock', 'engine.toolbars.logo'],
         center: ['engine.toolbars.media'],
         right: [
-          ['engine.toolbars.clean'],
+          ['engine.toolbars.redoundo', 'engine.toolbars.clean'],
           ['engine.toolbars.preview'],
           ['engine.toolbars.generate-code', 'engine.toolbars.save']
         ],

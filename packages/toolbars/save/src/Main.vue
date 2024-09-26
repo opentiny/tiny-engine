@@ -4,7 +4,7 @@
       <svg-icon :name="icon"></svg-icon>
       <span class="save-title">{{ isLoading ? '保存中' : '保存' }}</span>
       <span @click.stop="state.saveVisible = !state.saveVisible">
-        <tiny-popover v-model="state.saveVisible" :visible-arrow="false" width="203" trigger="manual">
+        <tiny-popover v-model="state.saveVisible" :visible-arrow="false" width="203" trigger="click">
           <template #reference>
             <svg-icon :name="iconExpand"></svg-icon>
           </template>

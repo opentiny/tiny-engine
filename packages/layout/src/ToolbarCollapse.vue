@@ -1,25 +1,25 @@
 <template>
-  <div>
-    <tiny-popover width="140" trigger="click" popper-class="toolbar-collapse-popover">
-      <template #reference>
-        <span class="toolbar-ellipsis">
-          <svg-icon name="ellipsis"></svg-icon>
-        </span>
-      </template>
+  <tiny-popover width="140" trigger="click">
+    <template #reference>
+      <span class="toolbar-ellipsis">
+        <svg-icon name="ellipsis"></svg-icon>
+      </span>
+    </template>
+    <div class="collapse-content">
       <div class="empty-bar" v-for="(item, idx) in collapseBar" :key="idx">
         <div class="toolbar-list-button" v-for="comp in item" :key="comp">
-          <component :is="getMergeRegistry(registry, comp)?.entry"></component>
+          <component :is="getMergeMeta(comp)?.entry"></component>
         </div>
         <div class="empty-line"></div>
       </div>
-    </tiny-popover>
-  </div>
+    </div>
+  </tiny-popover>
 </template>
 
 <script>
 import { Popover } from '@opentiny/vue'
 import { IconPopup } from '@opentiny/vue-icon'
-import { getMergeRegistry } from '@opentiny/tiny-engine-meta-register'
+import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
@@ -30,15 +30,11 @@ export default {
     collapseBar: {
       type: Array,
       default: () => []
-    },
-    registry: {
-      type: String,
-      default: ''
     }
   },
   setup() {
     return {
-      getMergeRegistry
+      getMergeMeta
     }
   }
 }
@@ -86,6 +82,12 @@ export default {
 
   .icon-hides {
     margin-right: 8px;
+  }
+}
+.collapse-content .empty-bar:last-child {
+  margin-bottom: 4px;
+  .empty-line {
+    display: none;
   }
 }
 </style>
