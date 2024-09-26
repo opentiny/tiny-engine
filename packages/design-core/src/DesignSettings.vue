@@ -22,19 +22,28 @@
   <div id="tiny-engine-nav-panel">
     <vue-draggable-next id="rightTop" v-model="state.leftList" class="nav-panel-lists" group="plugins" @end="onEnd">
       <div
-        v-for="item in state.leftList"
-        :key="item.id"
+        v-for="(item, index) in state.leftList"
+        :key="index"
         :class="['list-item', { 'first-item': item === state.leftList[0], active: item.id === renderPanel }]"
         :title="item.title"
-        @click="clickMenu({ item, index: state.leftList.indexOf(item) })"
+        @click="clickMenu({ item, index })"
+        @contextmenu.prevent="showContextMenu($event, true, item, index, PLUGIN_POSITION.rightTop)"
       >
-        <span class="item-icon">
+        <span class="item-icon" v-if="getPluginShown(item.id)">
           <svg-icon v-if="iconComponents[item.id]" :name="iconComponents[item.id]" class="panel-icon"></svg-icon>
           <component v-else :is="iconComponents[item.id]" class="panel-icon"></component>
         </span>
       </div>
+      <div style="flex: 1" class="list-item" @contextmenu.prevent="showContextMenu($event, false)"></div>
     </vue-draggable-next>
   </div>
+
+  <right-menu
+    ref="rightMenu"
+    :list="state.leftList"
+    :align="PLUGIN_POSITION.rightTop"
+    @switchAlign="switchAlign"
+  ></right-menu>
 </template>
 
 <script>
@@ -42,8 +51,9 @@ import { computed, ref, toRefs, watch, reactive } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
 import { Tabs, TabItem } from '@opentiny/vue'
 import { useLayout } from '@opentiny/tiny-engine-controller'
-import { getPlugin } from '../config/plugin.js'
+import { getPlugin, getPluginById } from '../config/plugin.js'
 import { VueDraggableNext } from 'vue-draggable-next'
+import RightMenu from './RightMenu.vue'
 
 export default {
   components: {
@@ -51,15 +61,16 @@ export default {
     TinyTabItem: TabItem,
     TinyPopover: Popover,
     TinyTooltip: Tooltip,
-    VueDraggableNext
+    VueDraggableNext,
+    RightMenu
   },
   props: {
     renderPanel: {
       type: String
     }
   },
-
-  setup(props) {
+  emits: ['changeRightAlign'],
+  setup(props, { emit }) {
     const components = {}
     const iconComponents = {}
     const { renderPanel } = toRefs(props)
@@ -71,8 +82,18 @@ export default {
       getPluginsByLayout,
       dragPluginLayout,
       isSameSide,
+      getPluginShown,
       layoutState: { settings: settingsState }
     } = useLayout()
+
+    const rightMenu = ref(null)
+    const showContextMenu = (event, type, item, index, align) => {
+      if (!type) {
+        rightMenu.value.showContextMenu(event.clientX, event.clientY, type)
+      } else {
+        rightMenu.value.showContextMenu(event.clientX, event.clientY, type, item, index, align)
+      }
+    }
 
     const plugins = getPluginsByLayout().map((pluginName) => getPlugin(pluginName))
     plugins.forEach(({ id, component, api, icon }) => {
@@ -85,12 +106,26 @@ export default {
       }
     })
 
-    const activating = computed(() => settingsState.activating) //高亮显示
-    const showMask = ref(true)
-
     const state = reactive({
       leftList: getPluginsByLayout(PLUGIN_POSITION.rightTop).map((pluginName) => getPlugin(pluginName))
     })
+
+    const close = () => {
+      useLayout().closeSetting(true)
+    }
+
+    const switchAlign = (index, id, list, align) => {
+      state.leftList.splice(index, 1)
+      emit('changeRightAlign', id)
+      dragPluginLayout(list, align, index, 0)
+    }
+    const activating = computed(() => settingsState.activating) //高亮显示
+    const showMask = ref(true)
+
+    const changeAlign = (pluginId) => {
+      const item = getPluginById(pluginId)
+      state.leftList.unshift(item)
+    }
 
     const setRender = (curId) => {
       settingsState.render = curId
@@ -103,10 +138,6 @@ export default {
         return
       }
       setRender(item.id)
-    }
-
-    const close = () => {
-      useLayout().closeSetting(true)
     }
 
     watch(renderPanel, (n) => {
@@ -135,7 +166,13 @@ export default {
       close,
       fixPanel,
       rightFixedPanelsStorage,
-      onEnd
+      onEnd,
+      showContextMenu,
+      changeAlign,
+      PLUGIN_POSITION,
+      getPluginShown,
+      switchAlign,
+      rightMenu
     }
   }
 }

@@ -22,8 +22,9 @@
           }"
           :title="item.title"
           @click="clickMenu({ item, index })"
+          @contextmenu.prevent="showContextMenu($event, true, item, index, PLUGIN_POSITION.leftTop)"
         >
-          <div>
+          <div v-if="getPluginShown(item.id)">
             <span class="item-icon">
               <svg-icon
                 v-if="typeof iconComponents[item.id] === 'string'"
@@ -38,7 +39,7 @@
 
       <!-- 图标菜单下侧区域（附加icon） -->
       <div class="nav-panel-lists bottom">
-        <div style="flex: 1" class="list-item"></div>
+        <div style="flex: 1" class="list-item" @contextmenu.prevent="showContextMenu($event, false)"></div>
         <vue-draggable-next id="leftBottom" v-model="state.bottomNavLists" group="plugins" @end="onEnd">
           <div
             v-for="(item, index) in state.bottomNavLists"
@@ -49,8 +50,9 @@
             ]"
             :title="item.title"
             @click="clickMenu({ item, index })"
+            @contextmenu.prevent="showContextMenu($event, true, item, index, PLUGIN_POSITION.leftBottom)"
           >
-            <div :class="{ 'is-show': renderPanel }">
+            <div :class="{ 'is-show': renderPanel }" v-if="getPluginShown(item.id)">
               <span class="item-icon">
                 <public-icon
                   v-if="typeof iconComponents[item.id] === 'string'"
@@ -131,6 +133,13 @@
       </keep-alive>
     </div>
   </Teleport>
+
+  <right-menu
+    ref="rightMenu"
+    :list="[...state.topNavLists, ...state.bottomNavLists]"
+    :align="left"
+    @switchAlign="switchAlign"
+  ></right-menu>
 </template>
 
 <script>
@@ -138,22 +147,24 @@ import { reactive, ref, watch } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
 import { useLayout, usePage } from '@opentiny/tiny-engine-controller'
 import { PublicIcon } from '@opentiny/tiny-engine-common'
-import { getPlugin } from '../config/plugin.js'
+import { getPlugin, getPluginById } from '../config/plugin.js'
 import { VueDraggableNext } from 'vue-draggable-next'
+import RightMenu from './RightMenu.vue'
 
 export default {
   components: {
     TinyPopover: Popover,
     TinyTooltip: Tooltip,
     PublicIcon,
-    VueDraggableNext
+    VueDraggableNext,
+    RightMenu
   },
   props: {
     renderPanel: {
       type: String
     }
   },
-  emits: ['click', 'node-click'],
+  emits: ['click', 'node-click', 'changeLeftAlign'],
   setup(props, { emit }) {
     const components = {}
     const iconComponents = {}
@@ -171,8 +182,19 @@ export default {
       getPluginsByLayout,
       PLUGIN_POSITION,
       dragPluginLayout,
-      isSameSide
+      isSameSide,
+      getPluginShown,
+      closePlugin
     } = useLayout()
+
+    const rightMenu = ref(null)
+    const showContextMenu = (event, type, item, index, align) => {
+      if (!type) {
+        rightMenu.value.showContextMenu(event.clientX, event.clientY, type)
+      } else {
+        rightMenu.value.showContextMenu(event.clientX, event.clientY, type, item, index, align)
+      }
+    }
 
     const plugins = getPluginsByLayout().map((pluginName) => getPlugin(pluginName))
     plugins.forEach(({ id, component, api, icon }) => {
@@ -185,8 +207,6 @@ export default {
       }
     })
 
-    const completed = ref(false)
-
     const state = reactive({
       prevIdex: -2,
       topNavLists: getPluginsByLayout(PLUGIN_POSITION.leftTop).map((pluginName) => getPlugin(pluginName)),
@@ -195,10 +215,28 @@ export default {
       fixedNavLists: getPluginsByLayout(PLUGIN_POSITION.fixed).map((pluginName) => getPlugin(pluginName))
     })
 
+    const close = () => {
+      state.prevIdex = -2
+      closePlugin(true)
+    }
+
+    const switchAlign = (index, id, list, align) => {
+      list === PLUGIN_POSITION.leftTop ? state.topNavLists.splice(index, 1) : state.bottomNavLists.splice(index, 1)
+      emit('changeLeftAlign', id)
+      dragPluginLayout(list, align, index, 0)
+    }
+
+    const completed = ref(false)
+
+    const changeAlign = (pluginId) => {
+      const item = getPluginById(pluginId)
+      state.topNavLists.unshift(item)
+    }
+
     const doCompleted = () => {
       if (!completed.value) {
         completed.value = true
-        useLayout().closePlugin()
+        closePlugin()
       }
     }
 
@@ -240,11 +278,6 @@ export default {
       robotVisible.value = !robotVisible.value
     }
 
-    const close = () => {
-      state.prevIdex = -2
-      useLayout().closePlugin(true)
-    }
-
     //切换面板状态
     const fixPanel = (pluginName) => {
       changeLeftFixedPanels(pluginName)
@@ -271,7 +304,13 @@ export default {
       doCompleted,
       pluginState,
       leftFixedPanelsStorage,
-      onEnd
+      onEnd,
+      showContextMenu,
+      changeAlign,
+      PLUGIN_POSITION,
+      getPluginShown,
+      switchAlign,
+      rightMenu
     }
   }
 }

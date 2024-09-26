@@ -243,6 +243,9 @@ export default {
 </script>
 
 <style scoped lang="less">
+#help-plugin {
+  z-index: 1000;
+}
 .help-plugin-tooltip-close {
   margin-left: 20px;
   cursor: pointer;

@@ -8,8 +8,25 @@
     </h1>
     <div v-if="state.showMenu" class="main-menu">
       <ul>
-        <li v-for="(item, index) in menus" :key="index" @click="handleClick(item)">
+        <li v-if="!(getGlobalConfig()?.dslMode === 'Angular')" @click="handleClick({ code: 'publishApp' })">
+          <span class="menu-item">发布应用</span>
+        </li>
+        <li @mouseenter="state.showSubMenu = true" @mouseleave="state.showSubMenu = false" @click.stop>
+          <span class="menu-item">布局设置</span>
+          <icon-right></icon-right>
+        </li>
+      </ul>
+    </div>
+    <div
+      v-if="state.showMenu && state.showSubMenu"
+      class="sub-menu"
+      @mouseenter="state.showSubMenu = true"
+      @mouseleave="state.showSubMenu = false"
+    >
+      <ul>
+        <li v-for="(item, index) in subMenus" :key="index" @click.stop="changeShowState(item)">
           <span class="menu-item">{{ item.name }}</span>
+          <span v-show="item.isShow">√</span>
         </li>
       </ul>
     </div>
@@ -99,7 +116,7 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref, nextTick, onUnmounted } from 'vue'
+import { computed, reactive, ref, nextTick, onUnmounted, watch } from 'vue'
 import {
   DialogBox as TinyDialogBox,
   Input as TinyInput,
@@ -110,20 +127,22 @@ import {
   Switch as TinySwitch,
   Tooltip as TinyTooltip
 } from '@opentiny/vue'
-import { iconHelpCircle } from '@opentiny/vue-icon'
+import { iconHelpCircle, iconChevronRight } from '@opentiny/vue-icon'
 import { useLayout, useApp, getGlobalConfig, useModal } from '@opentiny/tiny-engine-controller'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { isDevelopEnv } from '@opentiny/tiny-engine-controller/js/environments'
 
 const http = useHttp()
 
-const { activePlugin } = useLayout()
+const { activePlugin, changeMenuShown, leftMenuShownStorage, rightMenuShownStorage } = useLayout()
 
 const IconHelp = iconHelpCircle()
+const IconRight = iconChevronRight()
 
 const state = reactive({
   hoverState: false,
   showMenu: false,
+  showSubMenu: false,
   show: false,
   showPreview: false,
   formData: {
@@ -144,10 +163,24 @@ const state = reactive({
 const tipBoxVisibility = ref(false)
 let tipText = ref('发布成功')
 const form = ref(null)
-const menus = ref(
-  getGlobalConfig()?.dslMode === 'Angular' ? [] : [{ name: '应用发布', code: 'publishApp', icon: 'news' }]
-)
+const subMenus = ref([
+  { name: '左侧活动栏', code: 'left', isShow: true },
+  { name: '右侧活动栏', code: 'right', isShow: true }
+])
 
+watch(leftMenuShownStorage, (newValue) => {
+  const leftMenu = subMenus.value.find((menu) => menu.code === 'left')
+  if (leftMenu) {
+    leftMenu.isShow = newValue
+  }
+})
+
+watch(rightMenuShownStorage, (newValue) => {
+  const rightMenu = subMenus.value.find((menu) => menu.code === 'right')
+  if (rightMenu) {
+    rightMenu.isShow = newValue
+  }
+})
 const repalceTrim = (e) => {
   const val = e.target.value.replaceAll(/^\s*/g, '')
   state.formData.commitMsg = val
@@ -155,7 +188,10 @@ const repalceTrim = (e) => {
 const getTargetUrl = (centerName) => {
   return `/#/${centerName}/`
 }
-
+const changeShowState = (item) => {
+  item.isShow = !item.isShow
+  changeMenuShown(item.code)
+}
 const actions = {
   pageManagement() {
     activePlugin('AppManage')
@@ -290,6 +326,7 @@ const saveRule = {
 
 const handleCloseMenu = () => {
   state.showMenu = false
+  state.showSubMenu = false
   window.removeEventListener('click', handleCloseMenu)
 }
 
@@ -356,43 +393,49 @@ onUnmounted(() => {
     top: var(--base-top-panel-height);
     left: 10px;
     color: var(--ti-lowcode-toolbar-icon-color);
-    ul {
-      min-width: 130px;
-      border: 1px solid transparent;
-      border-radius: 6px;
-      background-color: var(--ti-lowcode-main-menu-bg);
-      box-shadow: 0 1px 15px 0 rgb(0 0 0 / 20%);
-      padding: 8px 0;
+  }
+  .sub-menu {
+    position: absolute;
+    top: var(--base-top-panel-height);
+    left: 125px;
+    color: var(--ti-lowcode-toolbar-icon-color);
+  }
+  ul {
+    min-width: 120px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    background-color: var(--ti-lowcode-main-menu-bg);
+    box-shadow: 0 1px 15px 0 rgb(0 0 0 / 20%);
+    padding: 8px 0;
+    display: flex;
+    flex-direction: column;
+    li {
+      font-size: 14px;
+      color: var(--ti-lowcode-toolbar-title-color);
+      cursor: pointer;
+      height: 32px;
+      width: 100%;
       display: flex;
-      flex-direction: column;
-      li {
-        font-size: 14px;
-        color: var(--ti-lowcode-toolbar-title-color);
-        cursor: pointer;
-        height: 32px;
-        width: 100%;
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        .tiny-svg {
-          margin: 0 9px;
-          font-size: 16px;
-        }
-        &:hover {
-          background: var(--ti-lowcode-toolbar-hover-color);
-        }
+      justify-content: flex-start;
+      align-items: center;
+      .tiny-svg {
+        margin: 0 9px;
+        font-size: 16px;
+      }
+      &:hover {
+        background: var(--ti-lowcode-toolbar-hover-color);
+      }
 
-        &:first-child {
-          border-radius: 2px 2px 0 0;
-        }
+      &:first-child {
+        border-radius: 2px 2px 0 0;
+      }
 
-        &:last-child {
-          border-radius: 0 0 2px 2px;
-        }
-        .menu-item {
-          margin: 0 16px;
-          line-height: 20px;
-        }
+      &:last-child {
+        border-radius: 0 0 2px 2px;
+      }
+      .menu-item {
+        margin: 0 12px;
+        line-height: 20px;
       }
     }
   }

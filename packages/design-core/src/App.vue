@@ -5,16 +5,24 @@
       <design-toolbars></design-toolbars>
       <div class="tiny-engine-main">
         <div class="tiny-engine-left-wrap">
-          <design-plugins :render-panel="plugins.render" @click="toggleNav"></design-plugins>
+          <design-plugins
+            ref="left"
+            v-if="leftMenuShownStorage"
+            :render-panel="plugins.render"
+            @changeLeftAlign="changeLeftAlign"
+            @click="toggleNav"
+          ></design-plugins>
         </div>
         <div class="tiny-engine-content-wrap">
           <design-canvas></design-canvas>
         </div>
         <div class="tiny-engine-right-wrap">
           <design-settings
+            ref="right"
+            v-if="rightMenuShownStorage"
             :render-panel="settings.render"
             v-show="layoutState.settings.showDesignSettings"
-            ref="right"
+            @changeRightAlign="changeRightAlign"
           ></design-settings>
         </div>
       </div>
@@ -99,15 +107,24 @@ export default {
         plugin[item.id] = {
           width: item.options?.width || 300,
           align: align,
-          index: index
+          index: index,
+          isShow: true
         }
       }
     })
     localStorage.setItem('plugin', JSON.stringify(plugin))
 
-    const { layoutState } = useLayout()
+    const { layoutState, leftMenuShownStorage, rightMenuShownStorage } = useLayout()
     const { plugins, settings } = layoutState
+    const left = ref(null)
     const right = ref(null)
+
+    const changeLeftAlign = (pluginId) => {
+      right.value.changeAlign(pluginId)
+    }
+    const changeRightAlign = (pluginId) => {
+      left.value.changeAlign(pluginId)
+    }
 
     // 此处接收画布内部的错误和警告提示
     const { data } = useBroadcastChannel({ name: BROADCAST_CHANNEL.Notify })
@@ -170,16 +187,20 @@ export default {
     onUnmounted(() => {
       window.removeEventListener('popstate', handlePopStateEvent)
     })
-
     return {
       state,
+      left,
       right,
       plugins,
       settings,
       toggleNav,
       addons,
       layoutState,
-      designSmbConfig
+      designSmbConfig,
+      changeLeftAlign,
+      changeRightAlign,
+      leftMenuShownStorage,
+      rightMenuShownStorage
     }
   }
 }
