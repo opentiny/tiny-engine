@@ -79,7 +79,11 @@
             </article>
 
             <footer class="chat-submit">
-              <tiny-input placeholder="请输入问题或“/”唤起指令，支持粘贴文档" v-model="inputContent">
+              <tiny-input
+                @keydown.enter="sendContent(inputContent, false)"
+                placeholder="请输入问题或“/”唤起指令，支持粘贴文档"
+                v-model="inputContent"
+              >
                 <template #suffix>
                   <svg-icon name="chat-send" class="common-svg" @click="sendContent(inputContent, false)"></svg-icon>
                 </template>
@@ -543,6 +547,7 @@ export default {
   display: flex;
   .tiny-input {
     .tiny-input__inner {
+      padding-left: 12px;
       color: var(--ti-lowcode-chat-model-helper-text);
       height: 40px;
       border: 2px solid;
