@@ -16,13 +16,13 @@
             <div class="toolbar-right-item-comp" v-for="comp in item" :key="comp">
               <component :is="getMergeMeta(comp)?.entry"></component>
             </div>
-            <span class="toolbar-right-line" v-if="layoutRegistry.options.isShowLine">|</span>
+            <span class="toolbar-right-line" v-if="layoutRegistry.options?.isShowLine">|</span>
           </div>
         </div>
       </div>
       <toolbar-collapse
         :collapseBar="state.collapseBar"
-        v-if="layoutRegistry.options.isShowCollapse"
+        v-if="layoutRegistry.options?.isShowCollapse"
       ></toolbar-collapse>
     </div>
   </div>
