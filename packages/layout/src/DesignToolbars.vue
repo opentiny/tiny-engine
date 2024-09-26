@@ -9,10 +9,15 @@
     <div class="toolbar-right">
       <div class="toolbar-right-content">
         <div class="toolbar-right-item" v-for="(item, idx) in state.rightBar" :key="idx">
-          <div class="toolbar-right-item-comp" v-for="comp in item" :key="comp">
-            <component :is="getMergeMeta(comp)?.entry"></component>
+          <div v-if="typeof item === 'string'">
+            <component :is="getMergeMeta(item)?.entry"></component>
           </div>
-          <span class="toolbar-right-line" v-if="layoutRegistry.options.isShowLine">|</span>
+          <div class="toolbar-right-item-arr" v-if="Array.isArray(item)">
+            <div class="toolbar-right-item-comp" v-for="comp in item" :key="comp">
+              <component :is="getMergeMeta(comp)?.entry"></component>
+            </div>
+            <span class="toolbar-right-line" v-if="layoutRegistry.options.isShowLine">|</span>
+          </div>
         </div>
       </div>
       <toolbar-collapse
@@ -137,12 +142,18 @@ export default {
         cursor: not-allowed;
       }
     }
+    .toolbar-right-main {
+      display: flex;
+    }
     .toolbar-right-content {
       display: flex;
+      .toolbar-right-item-arr,
       .toolbar-right-item {
         display: flex;
         justify-content: center;
         align-items: center;
+      }
+      .toolbar-right-item {
         margin: 0 2px;
       }
     }

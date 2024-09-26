@@ -7,10 +7,15 @@
     </template>
     <div class="collapse-content">
       <div class="empty-bar" v-for="(item, idx) in collapseBar" :key="idx">
-        <div class="toolbar-list-button" v-for="comp in item" :key="comp">
-          <component :is="getMergeMeta(comp)?.entry"></component>
+        <div class="toolbar-list-button" v-if="typeof item === 'string'">
+          <component :is="getMergeMeta(item)?.entry"></component>
         </div>
-        <div class="empty-line"></div>
+        <div v-if="Array.isArray(item)">
+          <div class="toolbar-list-button" v-for="comp in item" :key="comp">
+            <component :is="getMergeMeta(comp)?.entry"></component>
+          </div>
+          <div class="empty-line"></div>
+        </div>
       </div>
     </div>
   </tiny-popover>
