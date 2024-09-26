@@ -16700,8 +16700,8 @@
         "npm": {
           "package": "element-plus",
           "version": "2.4.2",
-          "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
-          "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css",
+          "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
+          "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
           "dependencies": null,
           "exportName": "ElInput"
         },
@@ -16980,8 +16980,8 @@
         "npm": {
           "package": "element-plus",
           "version": "2.4.2",
-          "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
-          "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css",
+          "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
+          "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
           "dependencies": null,
           "exportName": "ElButton"
         },
@@ -16991,7 +16991,7 @@
           "loop": true,
           "condition": true,
           "styles": true,
-          "isContainer": false,
+          "isContainer": true,
           "isModal": false,
           "isPopper": false,
           "nestingRule": {
@@ -17301,8 +17301,8 @@
         "npm": {
           "package": "element-plus",
           "version": "2.4.2",
-          "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
-          "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css",
+          "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
+          "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
           "dependencies": null,
           "exportName": "ElForm"
         },
@@ -17312,7 +17312,7 @@
           "loop": true,
           "condition": true,
           "styles": true,
-          "isContainer": false,
+          "isContainer": true,
           "isModal": false,
           "isPopper": false,
           "nestingRule": {
@@ -17758,8 +17758,8 @@
         "npm": {
           "package": "element-plus",
           "version": "2.4.2",
-          "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
-          "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css",
+          "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
+          "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
           "dependencies": null,
           "exportName": "ElFormItem"
         },
@@ -17769,7 +17769,7 @@
           "loop": true,
           "condition": true,
           "styles": true,
-          "isContainer": false,
+          "isContainer": true,
           "isModal": false,
           "isPopper": false,
           "nestingRule": {
@@ -18108,12 +18108,12 @@
         "npm": {
           "package": "element-plus",
           "version": "2.4.2",
-          "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
-          "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css",
+          "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
+          "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
           "dependencies": null,
           "exportName": "ElTable"
         },
-        "group": "表单组件",
+        "group": "数据展示",
         "category": "element-plus",
         "configure": {
           "loop": true,
@@ -18485,7 +18485,9 @@
                           },
                           "widget": {
                             "component": "MetaCodeEditor",
-                            "props": {}
+                            "props": {
+                              "dataType": "JSFunction"
+                            }
                           }
                         },
                         {
@@ -18768,7 +18770,7 @@
                     "component": "MetaTableColumns",
                     "props": {
                       "type": "object",
-                      "textField": "title",
+                      "textField": "label",
                       "language": "json",
                       "buttonText": "编辑列配置",
                       "title": "编辑列配置",
@@ -19344,8 +19346,8 @@
         "npm": {
           "package": "element-plus",
           "version": "2.4.2",
-          "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
-          "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css",
+          "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
+          "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
           "dependencies": null,
           "exportName": "ElTableColumn"
         },
@@ -19874,6 +19876,7 @@
         "devMode": "proCode",
         "group": "component",
         "priority": 7,
+        "npm": {},
         "schema": {
           "properties": [
             {
@@ -20816,6 +20819,9 @@
           "contentMenu": {
             "actions": []
           }
+        },
+        "configure": {
+          "isContainer": true
         }
       },
       {
@@ -21174,6 +21180,9 @@
           "contentMenu": {
             "actions": []
           }
+        },
+        "configure": {
+          "isContainer": true
         }
       },
       {
@@ -22656,7 +22665,7 @@
           "loop": true,
           "condition": true,
           "styles": true,
-          "isContainer": true,
+          "isContainer": false,
           "isModal": false,
           "nestingRule": {
             "childWhitelist": "",
@@ -22669,6 +22678,214 @@
           "rootSelector": "",
           "shortcuts": {
             "properties": ["text", "size"]
+          },
+          "contextMenu": {
+            "actions": ["create symbol"],
+            "disable": ["copy", "remove"]
+          }
+        }
+      },
+      {
+        "name": {
+          "zh_CN": "导航菜单"
+        },
+        "component": "TinyNavMenu",
+        "icon": "menu",
+        "description": "主要用于定义页面顶部导航的菜单",
+        "docUrl": "",
+        "screenshot": "",
+        "tags": "",
+        "keywords": "",
+        "devMode": "proCode",
+        "npm": {
+          "package": "@opentiny/vue",
+          "exportName": "NavMenu",
+          "version": "",
+          "destructuring": true
+        },
+        "group": "component",
+        "priority": 2,
+        "schema": {
+          "properties": [
+            {
+              "label": {
+                "zh_CN": "基础信息"
+              },
+              "description": {
+                "zh_CN": "基础信息"
+              },
+              "collapse": {
+                "number": 6,
+                "text": {
+                  "zh_CN": "显示更多"
+                }
+              },
+              "content": [
+                {
+                  "property": "data",
+                  "label": {
+                    "text": {
+                      "zh_CN": "菜单数据"
+                    }
+                  },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": {
+                    "component": "MetaCodeEditor",
+                    "props": {
+                      "language": "json"
+                    }
+                  },
+                  "description": {
+                    "zh_CN": "设置菜单的数据"
+                  }
+                },
+                {
+                  "property": "overflow",
+                  "label": {
+                    "text": {
+                      "zh_CN": "内容超出时展示方式"
+                    }
+                  },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "default": "auto",
+                  "cols": 12,
+                  "widget": {
+                    "component": "MetaSelect",
+                    "props": {
+                      "options": [
+                        {
+                          "label": "auto",
+                          "value": "auto"
+                        },
+                        {
+                          "label": "retract",
+                          "value": "retract"
+                        },
+                        {
+                          "label": "fixed",
+                          "value": "fixed"
+                        },
+                        {
+                          "label": "hidden",
+                          "value": "hidden"
+                        }
+                      ]
+                    }
+                  },
+                  "description": {
+                    "zh_CN": "设置一级菜单无法在当前菜单容器里显示完全时的展示方式"
+                  }
+                },
+                {
+                  "property": "fields",
+                  "label": {
+                    "text": {
+                      "zh_CN": "数据映射"
+                    }
+                  },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "default": { "textField": "title", "urlField": "url", "key": "id" },
+                  "cols": 12,
+                  "widget": {
+                    "component": "MetaCodeEditor",
+                    "props": {
+                      "language": "json"
+                    }
+                  },
+                  "description": {
+                    "zh_CN": "自定义菜单数据的映射"
+                  }
+                },
+                {
+                  "property": "prevent",
+                  "label": {
+                    "text": {
+                      "zh_CN": "是否阻止默认跳转"
+                    }
+                  },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "default": false,
+                  "cols": 12,
+                  "widget": {
+                    "component": "MetaSwitch",
+                    "props": {}
+                  },
+                  "description": {
+                    "zh_CN": ""
+                  }
+                },
+                {
+                  "property": "before-skip",
+                  "type": "function",
+                  "labelPosition": "top",
+                  "label": {
+                    "text": {
+                      "zh_CN": "before-skip钩子函数"
+                    }
+                  },
+                  "description": {
+                    "text": {
+                      "zh_CN": "点击菜单跳转前的钩子函数，返回 false 将无法跳转"
+                    }
+                  },
+                  "widget": {
+                    "component": "MetaCodeEditor",
+                    "props": {
+                      "dataType": "JSFunction"
+                    }
+                  }
+                },
+                {
+                  "property": "fetch-menu-data",
+                  "type": "function",
+                  "labelPosition": "top",
+                  "label": {
+                    "text": {
+                      "zh_CN": "fetch-menu-data"
+                    }
+                  },
+                  "description": {
+                    "text": {
+                      "zh_CN": "自定义菜单数据加载服务，返回一个Promise对象"
+                    }
+                  },
+                  "widget": {
+                    "component": "MetaCodeEditor",
+                    "props": {
+                      "dataType": "JSFunction"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "configure": {
+          "loop": true,
+          "condition": true,
+          "styles": true,
+          "isContainer": false,
+          "isModal": false,
+          "nestingRule": {
+            "childWhitelist": "",
+            "parentWhitelist": "",
+            "descendantBlacklist": "",
+            "ancestorWhitelist": ""
+          },
+          "isNullNode": false,
+          "isLayout": false,
+          "rootSelector": "",
+          "shortcuts": {
+            "properties": ["data", "overflow"]
           },
           "contextMenu": {
             "actions": ["create symbol"],
@@ -23071,7 +23288,7 @@
           "loop": true,
           "condition": true,
           "styles": true,
-          "isContainer": true,
+          "isContainer": false,
           "isModal": false,
           "nestingRule": {
             "childWhitelist": "",
@@ -24860,7 +25077,7 @@
           "loop": true,
           "condition": true,
           "styles": true,
-          "isContainer": true,
+          "isContainer": false,
           "isModal": false,
           "nestingRule": {
             "childWhitelist": "",
@@ -25627,7 +25844,9 @@
                   "cols": 12,
                   "widget": {
                     "component": "MetaCodeEditor",
-                    "props": {}
+                    "props": {
+                      "language": "json"
+                    }
                   },
                   "description": {
                     "zh_CN": ""
@@ -25673,7 +25892,7 @@
           "loop": true,
           "condition": true,
           "styles": true,
-          "isContainer": true,
+          "isContainer": false,
           "clickCapture": false,
           "isModal": false,
           "nestingRule": {
@@ -27589,7 +27808,7 @@
                 "zh_CN": "基础信息"
               },
               "collapse": {
-                "number": 6,
+                "number": 10,
                 "text": {
                   "zh_CN": "显示更多"
                 }
@@ -27663,6 +27882,28 @@
                     "zh_CN": "节点唯一标识属性名称"
                   },
                   "labelPosition": "left"
+                },
+                {
+                  "property": "render-content",
+                  "label": {
+                    "text": {
+                      "zh_CN": "渲染函数"
+                    }
+                  },
+                  "required": false,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": {
+                    "component": "MetaInput",
+                    "props": {
+                      "disabled": true,
+                      "placeholder": "请使用变量绑定来绑定函数"
+                    }
+                  },
+                  "description": {
+                    "zh_CN": "树节点的内容区的渲染函数"
+                  }
                 },
                 {
                   "property": "icon-trigger-click-node",
@@ -28209,6 +28450,28 @@
                   },
                   "description": {
                     "zh_CN": "显示的内容，也可以通过 slot#content 传入 DOM"
+                  }
+                },
+                {
+                  "property": "render-content",
+                  "label": {
+                    "text": {
+                      "zh_CN": "渲染函数"
+                    }
+                  },
+                  "required": false,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": {
+                    "component": "MetaInput",
+                    "props": {
+                      "disabled": true,
+                      "placeholder": "请使用变量绑定来绑定函数"
+                    }
+                  },
+                  "description": {
+                    "zh_CN": "自定义渲染函数，返回需要渲染的节点内容"
                   }
                 },
                 {
@@ -29629,6 +29892,828 @@
             "actions": ["create symbol"],
             "disable": ["copy", "remove"]
           }
+        }
+      },
+      {
+        "name": { "zh_CN": "饼图" },
+        "component": "TinyChartPie",
+        "icon": "pie",
+        "description": "基于 eCharts 封装的饼图",
+        "doc_url": "",
+        "screenshot": "",
+        "tags": "",
+        "keywords": "",
+        "dev_mode": "proCode",
+        "npm": {
+          "package": "@opentiny/vue",
+          "exportName": "ChartPie",
+          "version": "3.14.0",
+          "destructuring": true,
+          "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+          "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+        },
+        "group": "component",
+        "configure": {
+          "loop": true,
+          "condition": true,
+          "styles": true,
+          "isContainer": false,
+          "isModal": false,
+          "isPopper": false,
+          "nestingRule": {
+            "childWhitelist": "",
+            "parentWhitelist": "",
+            "descendantBlacklist": "",
+            "ancestorWhitelist": ""
+          },
+          "isNullNode": false,
+          "isLayout": false,
+          "rootSelector": "",
+          "shortcuts": { "properties": [""] },
+          "contextMenu": {
+            "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+            "disable": []
+          },
+          "invalidity": [""],
+          "clickCapture": true,
+          "framework": "Vue"
+        },
+        "schema": {
+          "properties": [
+            {
+              "name": "0",
+              "label": { "zh_CN": "基础信息" },
+              "content": [
+                {
+                  "property": "data",
+                  "label": { "text": { "zh_CN": "图表数据" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaCodeEditor", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "settings",
+                  "label": { "text": { "zh_CN": "图表配置" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaCodeEditor", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "width",
+                  "label": { "text": { "zh_CN": "图表容器的宽度" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaInput", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "height",
+                  "label": { "text": { "zh_CN": "图表容器的高度" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaInput", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "extend",
+                  "label": { "text": { "zh_CN": "图表扩展配置，参考eCharts" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaCodeEditor", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "events",
+                  "label": { "text": { "zh_CN": "事件绑定" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaCodeEditor", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "loading",
+                  "label": { "text": { "zh_CN": "显示loading" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaSwitch", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "data-empty",
+                  "label": { "text": { "zh_CN": "暂无数据" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaSwitch", "props": {} },
+                  "description": { "zh_CN": "" }
+                }
+              ],
+              "description": { "zh_CN": "" }
+            }
+          ],
+          "events": []
+        }
+      },
+      {
+        "name": { "zh_CN": "折线图" },
+        "component": "TinyChartLine",
+        "icon": "line",
+        "description": "基于 eCharts 封装的折线图",
+        "doc_url": "",
+        "screenshot": "",
+        "tags": "",
+        "keywords": "",
+        "dev_mode": "proCode",
+        "npm": {
+          "package": "@opentiny/vue",
+          "exportName": "ChartLine",
+          "version": "3.14.0",
+          "destructuring": true,
+          "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+          "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+        },
+        "group": "component",
+        "configure": {
+          "loop": true,
+          "condition": true,
+          "styles": true,
+          "isContainer": false,
+          "isModal": false,
+          "isPopper": false,
+          "nestingRule": {
+            "childWhitelist": "",
+            "parentWhitelist": "",
+            "descendantBlacklist": "",
+            "ancestorWhitelist": ""
+          },
+          "isNullNode": false,
+          "isLayout": false,
+          "rootSelector": "",
+          "shortcuts": { "properties": [""] },
+          "contextMenu": {
+            "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+            "disable": []
+          },
+          "invalidity": [""],
+          "clickCapture": true,
+          "framework": "Vue"
+        },
+        "schema": {
+          "properties": [
+            {
+              "name": "0",
+              "label": { "zh_CN": "基础信息" },
+              "content": [
+                {
+                  "property": "data",
+                  "label": { "text": { "zh_CN": "图表数据" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaCodeEditor", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "settings",
+                  "label": { "text": { "zh_CN": "图表配置" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaCodeEditor", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "events",
+                  "label": { "text": { "zh_CN": "事件绑定" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaCodeEditor", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "extend",
+                  "label": { "text": { "zh_CN": "图表扩展配置，参考eCharts" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaCodeEditor", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "height",
+                  "label": { "text": { "zh_CN": "图表容器的高度" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaInput", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "width",
+                  "label": { "text": { "zh_CN": "图表容器的宽度" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaInput", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "loading",
+                  "label": { "text": { "zh_CN": "显示loading" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaSwitch", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "data-empty",
+                  "label": { "text": { "zh_CN": "暂无数据" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaSwitch", "props": {} },
+                  "description": { "zh_CN": "" }
+                }
+              ],
+              "description": { "zh_CN": "" }
+            }
+          ],
+          "events": []
+        }
+      },
+      {
+        "name": { "zh_CN": "柱状图" },
+        "component": "TinyChartHistogram",
+        "icon": "histogram ",
+        "description": "基于 eCharts 封装的柱状图",
+        "doc_url": "",
+        "screenshot": "",
+        "tags": "",
+        "keywords": "",
+        "dev_mode": "proCode",
+        "npm": {
+          "package": "@opentiny/vue",
+          "exportName": "ChartHistogram",
+          "version": "3.14.0",
+          "destructuring": true,
+          "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+          "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+        },
+        "group": "component",
+        "configure": {
+          "loop": true,
+          "condition": true,
+          "styles": true,
+          "isContainer": false,
+          "isModal": false,
+          "isPopper": false,
+          "nestingRule": {
+            "childWhitelist": "",
+            "parentWhitelist": "",
+            "descendantBlacklist": "",
+            "ancestorWhitelist": ""
+          },
+          "isNullNode": false,
+          "isLayout": false,
+          "rootSelector": "",
+          "shortcuts": { "properties": [""] },
+          "contextMenu": {
+            "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+            "disable": []
+          },
+          "invalidity": [""],
+          "clickCapture": true,
+          "framework": "Vue"
+        },
+        "schema": {
+          "properties": [
+            {
+              "name": "0",
+              "label": { "zh_CN": "基础信息" },
+              "content": [
+                {
+                  "property": "data",
+                  "label": { "text": { "zh_CN": "图表数据" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaCodeEditor", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "settings",
+                  "label": { "text": { "zh_CN": "图表配置" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaCodeEditor", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "extend",
+                  "label": { "text": { "zh_CN": "图表扩展配置，参考eChart" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaCodeEditor", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "height",
+                  "label": { "text": { "zh_CN": "图表容器的高度" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaInput", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "width",
+                  "label": { "text": { "zh_CN": "图表容器的宽度" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaInput", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "events",
+                  "label": { "text": { "zh_CN": "事件绑定" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaCodeEditor", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "loading",
+                  "label": { "text": { "zh_CN": "显示loading" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaSwitch", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "data-empty",
+                  "label": { "text": { "zh_CN": "暂无数据" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaSwitch", "props": {} },
+                  "description": { "zh_CN": "" }
+                }
+              ],
+              "description": { "zh_CN": "" }
+            }
+          ],
+          "events": []
+        }
+      },
+      {
+        "name": { "zh_CN": "条形图" },
+        "component": "TinyChartBar",
+        "icon": "bar",
+        "description": "基于 eCharts 封装的条形图",
+        "doc_url": "",
+        "screenshot": "",
+        "tags": "",
+        "keywords": "",
+        "dev_mode": "proCode",
+        "npm": {
+          "package": "@opentiny/vue",
+          "exportName": "ChartBar",
+          "version": "3.14.0",
+          "destructuring": true,
+          "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+          "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+        },
+        "group": "component",
+        "configure": {
+          "loop": true,
+          "condition": true,
+          "styles": true,
+          "isContainer": false,
+          "isModal": false,
+          "isPopper": false,
+          "nestingRule": {
+            "childWhitelist": "",
+            "parentWhitelist": "",
+            "descendantBlacklist": "",
+            "ancestorWhitelist": ""
+          },
+          "isNullNode": false,
+          "isLayout": false,
+          "rootSelector": "",
+          "shortcuts": { "properties": [""] },
+          "contextMenu": {
+            "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+            "disable": []
+          },
+          "invalidity": [""],
+          "clickCapture": true,
+          "framework": "Vue"
+        },
+        "schema": {
+          "properties": [
+            {
+              "name": "0",
+              "label": { "zh_CN": "基础信息" },
+              "content": [
+                {
+                  "property": "data",
+                  "label": { "text": { "zh_CN": "图表数据" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaCodeEditor", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "settings",
+                  "label": { "text": { "zh_CN": "图表配置" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaCodeEditor", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "events",
+                  "label": { "text": { "zh_CN": "事件绑定" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaCodeEditor", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "extend",
+                  "label": { "text": { "zh_CN": "图表扩展配置，参考eCharts" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaCodeEditor", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "height",
+                  "label": { "text": { "zh_CN": "图表容器的高度" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaInput", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "width",
+                  "label": { "text": { "zh_CN": "图表容器的宽度" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaInput", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "loading",
+                  "label": { "text": { "zh_CN": "显示loading" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaSwitch", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "data-empty",
+                  "label": { "text": { "zh_CN": "暂无数据" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaSwitch", "props": {} },
+                  "description": { "zh_CN": "" }
+                }
+              ],
+              "description": { "zh_CN": "" }
+            }
+          ],
+          "events": []
+        }
+      },
+      {
+        "name": { "zh_CN": "雷达图" },
+        "component": "TinyChartRadar",
+        "icon": "radar",
+        "description": "基于 eCharts 封装的雷达图",
+        "doc_url": "",
+        "screenshot": "",
+        "tags": "",
+        "keywords": "",
+        "dev_mode": "proCode",
+        "npm": {
+          "package": "@opentiny/vue",
+          "exportName": "ChartRadar",
+          "version": "3.14.0",
+          "destructuring": true,
+          "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+          "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+        },
+        "group": "component",
+        "configure": {
+          "loop": true,
+          "condition": true,
+          "styles": true,
+          "isContainer": false,
+          "isModal": false,
+          "isPopper": false,
+          "nestingRule": {
+            "childWhitelist": "",
+            "parentWhitelist": "",
+            "descendantBlacklist": "",
+            "ancestorWhitelist": ""
+          },
+          "isNullNode": false,
+          "isLayout": false,
+          "rootSelector": "",
+          "shortcuts": { "properties": [""] },
+          "contextMenu": {
+            "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+            "disable": []
+          },
+          "invalidity": [""],
+          "clickCapture": true,
+          "framework": "Vue"
+        },
+        "schema": {
+          "properties": [
+            {
+              "name": "0",
+              "label": { "zh_CN": "基础信息" },
+              "content": [
+                {
+                  "property": "data",
+                  "label": { "text": { "zh_CN": "图表数据" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaCodeEditor", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "settings",
+                  "label": { "text": { "zh_CN": "图表配置" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaCodeEditor", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "width",
+                  "label": { "text": { "zh_CN": "图表容器的宽度" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaInput", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "height",
+                  "label": { "text": { "zh_CN": "图表容器的高度" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaInput", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "extend",
+                  "label": { "text": { "zh_CN": "图表扩展配置，参考eCharts" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaCodeEditor", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "events",
+                  "label": { "text": { "zh_CN": "事件绑定" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaCodeEditor", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "loading",
+                  "label": { "text": { "zh_CN": "显示loading" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaSwitch", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "data-empty",
+                  "label": { "text": { "zh_CN": "暂无数据" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaSwitch", "props": {} },
+                  "description": { "zh_CN": "" }
+                }
+              ],
+              "description": { "zh_CN": "" }
+            }
+          ],
+          "events": []
+        }
+      },
+      {
+        "name": { "zh_CN": "环图" },
+        "component": "TinyChartRing",
+        "icon": "ring",
+        "description": "基于 eCharts 封装的环图",
+        "doc_url": "",
+        "screenshot": "",
+        "tags": "",
+        "keywords": "",
+        "dev_mode": "proCode",
+        "npm": {
+          "package": "@opentiny/vue",
+          "exportName": "ChartRing",
+          "version": "3.14.0",
+          "destructuring": true,
+          "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+          "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+        },
+        "group": "component",
+        "configure": {
+          "loop": true,
+          "condition": true,
+          "styles": true,
+          "isContainer": false,
+          "isModal": false,
+          "isPopper": false,
+          "nestingRule": {
+            "childWhitelist": "",
+            "parentWhitelist": "",
+            "descendantBlacklist": "",
+            "ancestorWhitelist": ""
+          },
+          "isNullNode": false,
+          "isLayout": false,
+          "rootSelector": "",
+          "shortcuts": { "properties": [""] },
+          "contextMenu": {
+            "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+            "disable": []
+          },
+          "invalidity": [""],
+          "clickCapture": true,
+          "framework": "Vue"
+        },
+        "schema": {
+          "properties": [
+            {
+              "name": "0",
+              "label": { "zh_CN": "基础信息" },
+              "content": [
+                {
+                  "property": "data",
+                  "label": { "text": { "zh_CN": "图表数据" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaCodeEditor", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "settings",
+                  "label": { "text": { "zh_CN": "图表配置" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaCodeEditor", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "width",
+                  "label": { "text": { "zh_CN": "图表容器的宽度" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaInput", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "height",
+                  "label": { "text": { "zh_CN": "图表容器的高度" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaInput", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "extend",
+                  "label": { "text": { "zh_CN": "图表扩展配置，参考eCharts" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaCodeEditor", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "events",
+                  "label": { "text": { "zh_CN": "事件绑定" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaCodeEditor", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "loading",
+                  "label": { "text": { "zh_CN": "显示loading" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaSwitch", "props": {} },
+                  "description": { "zh_CN": "" }
+                },
+                {
+                  "property": "data-empty",
+                  "label": { "text": { "zh_CN": "暂无数据" } },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": { "component": "MetaSwitch", "props": {} },
+                  "description": { "zh_CN": "" }
+                }
+              ],
+              "description": { "zh_CN": "" }
+            }
+          ],
+          "events": []
         }
       }
     ]
