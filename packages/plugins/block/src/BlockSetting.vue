@@ -78,7 +78,7 @@
 <script lang="jsx">
 import { reactive, ref, watch, watchEffect, computed } from 'vue'
 import { Button as TinyButton, Collapse as TinyCollapse, CollapseItem as TinyCollapseItem } from '@opentiny/vue'
-import { getGlobalConfig, useModal } from '@opentiny/tiny-engine-controller'
+import { getGlobalConfig, useModal, useBlock } from '@opentiny/tiny-engine-controller'
 import { BlockHistoryList, PluginSetting, CloseIcon, SvgButton } from '@opentiny/tiny-engine-common'
 import { previewBlock } from '@opentiny/tiny-engine-controller/js/preview'
 import { LifeCycles } from '@opentiny/tiny-engine-common'
@@ -212,8 +212,11 @@ export default {
           status,
           message,
           exec: async () => {
-            // 获取区块截图
-            block.screenshot = await getBlockBase64()
+            const currentId = useBlock().getCurrentBlock()?.id
+            if (block.id === currentId) {
+              // 获取区块截图
+              block.screenshot = await getBlockBase64()
+            }
             saveBlock(block)
           }
         })
