@@ -68,7 +68,6 @@ export default {
 <style lang="less" scoped>
 .background-image {
   width: 100%;
-
   .icon {
     font-size: 20px;
     color: var(--ti-lowcode-toolbar-breadcrumb-color);
