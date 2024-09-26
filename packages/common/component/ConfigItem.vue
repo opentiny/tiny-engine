@@ -510,6 +510,10 @@ export default {
   justify-content: space-between;
   position: relative;
   align-items: center;
+  padding-bottom: 8px;
+  &:last-child {
+    padding-bottom: 0;
+  }
   &.active {
     background: var(--ti-lowcode-meta-config-item-active-bg);
   }
@@ -597,7 +601,7 @@ export default {
 
   .prop-description {
     margin-top: 8px;
-    color: var(--ti-lowcode-common-text-desc-color);
+    color: var(--te-common-text-weaken);
   }
   .label-tip {
     padding: 2px 0;
@@ -614,7 +618,7 @@ export default {
     display: flex;
     width: 100%;
     align-items: center;
-    padding: 8px 0;
+
     .pro-underline {
       border-bottom: 1px dashed transparent;
       &:hover {

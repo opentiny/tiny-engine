@@ -519,8 +519,10 @@ export default {
   gap: 8px;
   grid-template-columns: 44px auto;
   align-items: center;
-  padding: 8px 0;
-
+  margin-bottom: 8px;
+  &:last-child {
+    margin-bottom: 0;
+  }
   .opacity-label,
   .outline-label,
   .cursor-label {

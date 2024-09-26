@@ -105,7 +105,7 @@ export default {
     z-index: 9999;
     .tiny-button {
       border-radius: 4px;
-      border-color: var(--ti-lowcode-button-default-border-color);
+      border-color: var(--te-common-border-default);
     }
   }
 

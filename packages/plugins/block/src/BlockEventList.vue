@@ -83,7 +83,7 @@ export default {
   }
   .icon-plus {
     margin-right: 6px;
-    stroke: var(--ti-lowcode-base-text-color-3);
+    stroke: var(--te-common-text-weaken);
   }
 }
 </style>
