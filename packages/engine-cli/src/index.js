@@ -11,14 +11,14 @@
  */
 import { Command, Option } from 'commander'
 import { input, select } from '@inquirer/prompts'
-import { createPlatform, createPlugin } from './commands/create.js'
+import { createPlatform, createPlugin, createConfigurator } from './commands/create.js'
 
 const program = new Command()
 
 program
   .command('create-platform <name>')
   .description('create a new tiny-engine platform 创建一个新的tiny-engine低代码平台')
-  .addOption(new Option('-t, --theme <theme>', 'platform theme 平台主题', 'light').choices(['light', 'dark']))
+  .addOption(new Option('-t, --theme <theme>', 'platform theme 平台主题').choices(['light', 'dark']).default('light'))
   .option('-pid, --platformId <platformId>', 'platform id 平台主题', 918)
   .option('-m, --material [material...]', 'material address 物料地址', ['/mock/bundle.json'])
   .option('--scripts [script...]', '物料 script', [])
@@ -30,8 +30,21 @@ program
 program
   .command('create-plugin <name>')
   .description('create a new tiny-engine plugin 创建一个新的 tiny-engine 插件')
-  .action((name) => {
-    createPlugin(name)
+  .addOption(new Option('-t, --type <type>', '插件类型').choices(['plugins', 'toolbars']).default('plugins'))
+  .addOption(new Option('-a, --align <align>', '插件对其位置').choices(['top', 'bottom', 'left', 'center', 'right']))
+  .action((name, options) => {
+    if (!options.align) {
+      options.align = options.type === 'plugins' ? 'top' : 'left'
+    }
+
+    createPlugin(name, options)
+  })
+
+program
+  .command('create-configurator <name>')
+  .description('create a new tiny-engine configurator 创建一个新的 tiny-engine 设置器')
+  .action((name, options) => {
+    createConfigurator(name, options)
   })
 
 program
@@ -50,27 +63,87 @@ program
           name: 'plugin',
           value: 'plugin',
           description: 'create a new tiny-engine plugin 创建一个新的 tiny-engine 插件'
+        },
+        {
+          name: 'configurator',
+          value: 'configurator',
+          description: 'create a new tiny-engine configurator 创建一个新的 tiny-engine 设置器'
         }
       ]
     })
 
+    const nameDesc = {
+      platform: '项目',
+      plugin: '插件',
+      configurator: '设置器'
+    }
+
     const projectName = await input({
-      message: 'please enter the project name. 请输入项目名称',
+      message: `please enter name. 请输入${nameDesc[type]}名称`,
       validate: (inputName) => {
         if (!inputName) {
-          return 'project name can not be empty. 项目名称不允许为空。'
+          return `name can not be empty. ${nameDesc[type]}名称不允许为空。`
         }
 
         return true
       }
     })
 
-    const typeMapper = {
-      platform: createPlatform,
-      plugin: createPlugin
+    const options = {}
+
+    if (type === 'platform') {
+      const theme = await select({
+        message: 'select theme type 选择主题类型',
+        choices: [
+          {
+            name: 'light',
+            value: 'light'
+          },
+          {
+            name: 'dark',
+            value: 'dark'
+          }
+        ]
+      })
+
+      Object.assign(options, { theme })
+    } else if (type === 'plugin') {
+      const pluginType = await select({
+        message: 'select the plugin type. 请选择插件类型',
+        choices: [
+          {
+            name: 'plugins',
+            value: 'plugins',
+            description: 'create a sidebar plugin 创建一个侧边栏插件'
+          },
+          {
+            name: 'toolbars',
+            value: 'toolbars',
+            description: 'create a toolbar plugin 创建一个工具栏插件'
+          }
+        ]
+      })
+
+      const alignMap = {
+        plugins: ['top', 'bottom'],
+        toolbars: ['left', 'center', 'right']
+      }
+
+      const align = await select({
+        message: 'select the align value. 请选择对齐位置',
+        choices: alignMap[pluginType].map((item) => ({ name: item, value: item }))
+      })
+
+      Object.assign(options, { type: pluginType, align })
     }
 
-    typeMapper[type](projectName)
+    const typeMapper = {
+      platform: createPlatform,
+      plugin: createPlugin,
+      configurator: createConfigurator
+    }
+
+    typeMapper[type](projectName, options)
   })
 
 program.parse(process.argv)

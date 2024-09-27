@@ -19,23 +19,84 @@ export default {
   return configContent
 }
 
+/**
+ *
+ * @param {Record<string,any>} obj
+ * @param {string} path
+ * @param {*} valueOrSetter
+ * @returns
+ */
+const setObjectNestedValue = (obj, path, valueOrSetter) => {
+  if (!path.includes('.')) {
+    if (typeof valueOrSetter === 'function') {
+      obj[path] = valueOrSetter(obj[path])
+    } else {
+      obj[path] = valueOrSetter
+    }
+    return
+  }
+
+  const [prop, restPath] = path.split('.', 2)
+
+  if (obj[prop] === undefined) {
+    obj[prop] = {}
+  }
+
+  if (obj[prop] && typeof obj[prop] === 'object') {
+    setObjectNestedValue(obj[prop], restPath, valueOrSetter)
+  }
+}
+
+/**
+ *
+ * @param {string} templatePath
+ * @param {{find: string; replacement: any}[]} replacements
+ */
+export const generateJSON = (templatePath, replacements) => {
+  const json = fs.readJSONSync(templatePath)
+
+  for (const { find, replacement } of replacements) {
+    setObjectNestedValue(json, find, replacement)
+  }
+
+  return json
+}
+
+/**
+ *
+ * @param {string} templatePath
+ * @param {{find: string; replacement: any}[]} replacements
+ */
+export const generateText = (templatePath, replacements) => {
+  let text = fs.readFileSync(templatePath).toString()
+
+  for (const { find, replacement } of replacements) {
+    text = text.replace(find, replacement)
+  }
+
+  return text
+}
+
 // 根据参数修改 package.json
 export const generatePackageJson = (name, options, templatePath) => {
-  const templatePackageJson = fs.readJSONSync(path.resolve(templatePath, 'package.json'))
+  const replacements = [
+    {
+      find: 'name',
+      replacement: name
+    },
+    {
+      find: 'scripts.serve:frontend',
+      replacement: (s) => s.replace(/VITE_THEME=[^\s]+/, `VITE_THEME=${options.theme}`)
+    },
+    {
+      find: 'scripts.build',
+      replacement: (s) => s.replace(/VITE_THEME=[^\s]+/, `VITE_THEME=${options.theme}`)
+    },
+    {
+      find: 'scripts.build:alpha',
+      replacement: (s) => s.replace(/VITE_THEME=[^\s]+/, `VITE_THEME=${options.theme}`)
+    }
+  ]
 
-  templatePackageJson.name = name
-  templatePackageJson.scripts['serve:frontend'] = templatePackageJson.scripts['serve:frontend'].replace(
-    /VITE_THEME=[^\s]+/,
-    `VITE_THEME=${options.theme}`
-  )
-  templatePackageJson.scripts.build = templatePackageJson.scripts.build.replace(
-    /VITE_THEME=[^\s]+/,
-    `VITE_THEME=${options.theme}`
-  )
-  templatePackageJson.scripts['build:alpha'] = templatePackageJson.scripts['build:alpha'].replace(
-    /VITE_THEME=[^\s]+/,
-    `VITE_THEME=${options.theme}`
-  )
-
-  return templatePackageJson
+  return generateJSON(path.resolve(templatePath, 'package.json'), replacements)
 }
