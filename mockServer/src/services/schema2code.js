@@ -17,8 +17,7 @@ export default class Schema2CodeServcice {
     this.blockHistories = appInfo.blockHistories
     this.components = appInfo.materialHistory.components
   }
-  // @deprecated
   schema2code(pageInfo, type = 'page') {
-    return { data: null, code: 299, message: 'deprecated api, please use `@opentiny/tiny-engine-dsl-vue` directly.' }
+    return { data: null, code: 410, message: 'deprecated api, please use `@opentiny/tiny-engine-dsl-vue` directly.' }
   }
 }
