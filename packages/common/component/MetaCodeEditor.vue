@@ -271,7 +271,9 @@ export default {
 .btn-box {
   display: flex;
   justify-content: flex-end;
-
+  .format-btn {
+    margin-right: 8px;
+  }
   &:has(.format-btn) {
     justify-content: space-between;
   }

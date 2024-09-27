@@ -712,6 +712,9 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    .left {
+      margin-right: 8px;
+    }
   }
 }
 </style>

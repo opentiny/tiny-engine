@@ -235,7 +235,9 @@ export default {
 <style lang="less" scoped>
 .advanced-config-container {
   .advnce-config {
-    padding: 10px;
+    &:not(:last-child) {
+      margin-bottom: 8px;
+    }
     align-items: center;
     display: flex;
     column-gap: 12px;
