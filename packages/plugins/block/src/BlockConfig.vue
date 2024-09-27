@@ -1,5 +1,5 @@
 <template>
-  <tiny-form ref="blockForm" class="block-setting-content" :model="formData" :rules="rules">
+  <tiny-form ref="blockForm" class="block-setting-content" label-position="top" :model="formData" :rules="rules">
     <tiny-form-item label="区块名称" prop="name_cn">
       <div>
         <tiny-input
@@ -273,14 +273,23 @@ export default {
 
 <style lang="less" scoped>
 .block-setting-content {
-  padding: 16px 20px 16px 0;
+  padding: 6px 12px 6px 12px;
   :deep(.tiny-form-item__error) {
     display: none;
+  }
+  :deep(.tiny-form-item) {
+    margin-bottom: 10px;
+  }
+  :deep(.tiny-form-item__label) {
+    font-size: 12px;
   }
 
   .description {
     margin-top: 10px;
     font-size: 12px;
+  }
+  .global-desc-info {
+    font-size: 11px;
   }
 }
 
@@ -296,10 +305,11 @@ export default {
   }
 
   .tiny-button.button-new-tag {
-    height: 28px;
+    height: 24px;
     line-height: 20px;
     padding-top: 0;
     padding-bottom: 0;
+    border: 1px solid var(--ti-lowcode-base-default-button-border-disable-color);
   }
 
   .tiny-input {
@@ -318,7 +328,7 @@ export default {
     }
   }
   :deep(.tiny-input__inner) {
-    height: 26px;
+    height: 24px;
   }
 }
 .block-openness {

@@ -2,7 +2,12 @@
   <toolbar-base-component :options="options">
     <template #default>
       <div class="top-panel-breadcrumb">
-        <div class="top-panel-breadcrumb-title">
+        <div
+          :class="[
+            'top-panel-breadcrumb-title',
+            { 'top-panel-breadcrumb-title-block': breadcrumbData[0] === CONSTANTS.BLOCKTEXT }
+          ]"
+        >
           <tiny-breadcrumb separator="：" @select="open">
             <tiny-breadcrumb-item v-for="item in breadcrumbData.slice(0, 2)" :key="item"
               >{{ item }}
@@ -112,15 +117,12 @@ export default {
   &-title {
     height: 28px;
     padding: 0 8px;
-    background-color: var(--ti-lowcode-toolbar-breadcrumb-bg);
+    background-color: var(--ti-lowcode-toolbar-button-bg);
     display: flex;
     border-radius: 4px;
     :deep(.reference-wrapper) {
       line-height: 22px;
     }
-  }
-  &-title:hover {
-    background-color: var(--ti-lowcode-toolbar-breadcrumb-bg-hover);
   }
 
   .tiny-breadcrumb {
@@ -138,7 +140,7 @@ export default {
     user-select: none;
 
     :deep(.tiny-breadcrumb__inner) {
-      color: var(--ti-lowcode-toolbar-breadcrumb-left-color);
+      color: var(--ti-lowcode-media-popover-title-color);
       text-decoration: none;
       cursor: pointer;
     }
@@ -150,8 +152,24 @@ export default {
 
     &:last-child :deep(.tiny-breadcrumb__inner) {
       font-weight: normal;
-      color: var(--ti-lowcode-toolbar-breadcrumb-left-color);
+      color: var(--ti-lowcode-media-popover-title-color);
     }
+  }
+
+  &-title-block {
+    background-color: var(--ti-lowcode-toolbar-breadcrumb-bg);
+    .tiny-breadcrumb__item {
+      :deep(.tiny-breadcrumb__inner) {
+        color: var(--ti-lowcode-toolbar-breadcrumb-left-color);
+      }
+      &:last-child :deep(.tiny-breadcrumb__inner) {
+        color: var(--ti-lowcode-toolbar-breadcrumb-left-color);
+      }
+    }
+  }
+
+  &-title-block:hover {
+    background-color: var(--ti-lowcode-toolbar-breadcrumb-bg-hover);
   }
 
   .publish {

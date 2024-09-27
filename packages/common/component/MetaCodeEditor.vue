@@ -3,9 +3,10 @@
     <slot :open="open">
       <div v-if="buttonShowContent" :class="['full-width', { 'empty-color': value === '' }]" @click="open">
         <span class="text-content text-ellipsis-multiple">{{ value === '' ? buttonLabel : value }}</span>
-        <svg-icon class="edit-icon" name="edit"></svg-icon>
+        <svg-icon class="edit-icon" name="to-edit"></svg-icon>
       </div>
       <tiny-button v-else class="edit-btn" @click="open">
+        <slot name="icon"></slot>
         {{ buttonLabel }}
       </tiny-button>
     </slot>
@@ -252,11 +253,14 @@ export default {
 <style lang="less" scoped>
 .editor-wrap {
   width: 100%;
-
+  display: flex;
+  text-align: center;
   .edit-btn {
     color: var(--ti-lowcode-meta-codeEditor-color);
     border-color: var(--ti-lowcode-meta-codeEditor-border-color);
-
+    flex: 1;
+    text-align: center;
+    margin-right: 0;
     &:hover {
       color: var(--ti-lowcode-meta-codeEditor-hover-color);
       border-color: var(--ti-lowcode-meta-codeEditor-border-hover-color);
@@ -279,7 +283,7 @@ export default {
   align-items: center;
   width: 100%;
   height: 32px;
-  padding: 4px 8px;
+  padding: 4px;
   border: 1px solid var(--ti-lowcode-meta-codeEditor-border-color);
   border-radius: 6px;
 
@@ -292,7 +296,7 @@ export default {
   }
 
   &.empty-color {
-    color: var(--ti-lowcode-common-text-desc-color);
+    color: var(--te-common-text-weaken);
   }
 
   .edit-icon {
@@ -326,7 +330,7 @@ export default {
     color: var(--ti-lowcode-meta-code-editor-header-tips-container-color);
 
     .header-tips-title {
-      color: var(--ti-lowcode-base-text-color-3);
+      color: var(--te-common-text-weaken);
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
@@ -355,7 +359,7 @@ export default {
 
       code {
         font-family: Microsoft YaHei, Microsoft YaHei-Normal;
-        color: var(--ti-lowcode-base-text-color-3);
+        color: var(--te-common-text-weaken);
       }
     }
   }

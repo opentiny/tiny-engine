@@ -186,7 +186,7 @@ export default {
     const hidden = computed(() => props.hidden)
     const widget = computed(() => props.property?.widget || {})
     const propLabel = computed(
-      () => props.property.property || props.property?.label?.text?.[locale.value] || props.property?.label?.text
+      () => props.property?.label?.text?.[locale.value] || props.property?.label?.text || props.property.property
     )
     const multiType = computed(() => Array.isArray(widget.value.component))
     const isBindingState = ref(false) // 当前是否是绑定到状态变量state
@@ -310,16 +310,13 @@ export default {
       result.message = typeof message === 'string' ? message : message?.[locale.value]
     }
 
+    const isEmptyInputValue = (value) => {
+      // 通过 value == null 做隐式类型转换
+      // 空值约定为 undefined | null | ''
+      return value == null || (typeOf(value) === TYPES.StringType && value.trim() === '')
+    }
     const verifyRequired = (value) => {
-      if (typeOf(value) === TYPES.BooleanType) {
-        return true
-      }
-
-      if (typeOf(value) === TYPES.StringType) {
-        return value.trim()
-      }
-
-      return value
+      return !isEmptyInputValue(value)
     }
 
     const verifyValue = (value = '', rules = []) => {
@@ -513,6 +510,10 @@ export default {
   justify-content: space-between;
   position: relative;
   align-items: center;
+  padding-bottom: 8px;
+  &:last-child {
+    padding-bottom: 0;
+  }
   &.active {
     background: var(--ti-lowcode-meta-config-item-active-bg);
   }
@@ -600,7 +601,7 @@ export default {
 
   .prop-description {
     margin-top: 8px;
-    color: var(--ti-lowcode-common-text-desc-color);
+    color: var(--te-common-text-weaken);
   }
   .label-tip {
     padding: 2px 0;
@@ -617,7 +618,7 @@ export default {
     display: flex;
     width: 100%;
     align-items: center;
-    padding: 8px 0;
+
     .pro-underline {
       border-bottom: 1px dashed transparent;
       &:hover {

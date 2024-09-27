@@ -1,12 +1,10 @@
 <template>
   <div class="send-service">
     <div class="use-service">
-      <tiny-alert
-        type="info"
-        description="* 如果接口存在跨域、鉴权等情况，则请手动将响应数据，粘贴至下方的“请求结果”编辑器中。* 如果不存在上述情况，完善以上信息，点击此按钮，编辑器将请求该接口，响应的数据，将自动填充至下方的“请求结果”编辑器中。"
-        :closable="false"
-        class="life-cycle-alert"
-      ></tiny-alert>
+      <div class="life-cycle-alert">
+        如果接口存在跨域、鉴权等情况，则请手动将响应数据，粘贴至下方的“请求结果”编辑器中。*
+        如果不存在上述情况，完善以上信息，点击此按钮，编辑器将请求该接口，响应的数据，将自动填充至下方的“请求结果”编辑器中。
+      </div>
     </div>
   </div>
   <div>
@@ -38,7 +36,7 @@
 
 <script>
 import { reactive, ref, watch } from 'vue'
-import { Popover, Alert } from '@opentiny/vue'
+import { Popover } from '@opentiny/vue'
 import { iconHelpCircle } from '@opentiny/vue-icon'
 import { constants } from '@opentiny/tiny-engine-utils'
 import RemoteDataAdapterForm from './RemoteDataAdapterForm.vue'
@@ -54,7 +52,6 @@ export default {
   components: {
     TinyPopover: Popover,
     IconHelpCircle: iconHelpCircle(),
-    TinyAlert: Alert,
     RemoteDataAdapterForm
   },
   props: {
@@ -109,7 +106,8 @@ export default {
     }
   }
   .life-cycle-alert {
-    margin-top: -10px;
+    font-size: 11px;
+    color: var(--ti-lowcode-datasource-tip-color);
   }
 }
 </style>

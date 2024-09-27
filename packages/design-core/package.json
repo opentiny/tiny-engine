@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-alpha.2",
   "type": "module",
   "description": "TinyEngine enables developers to customize low-code platforms, build low-bit platforms online in real time, and support secondary development or integration of low-bit platform capabilities.",
   "homepage": "https://opentiny.design/tiny-engine",
@@ -97,7 +97,6 @@
     "eslint-linter-browserify": "8.57.0",
     "file-saver": "^2.0.5",
     "html2canvas": "^1.4.1",
-    "jszip": "^3.10.1",
     "monaco-editor": "0.33.0",
     "prettier": "2.7.1",
     "sortablejs": "^1.14.0",

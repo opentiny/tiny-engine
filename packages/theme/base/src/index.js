@@ -1,15 +1,26 @@
-import { tinyBaseTheme, concatThemeLight, concatThemeDark } from './base'
+// 提供engine主题包的样式定义引入
+import './base.less'
+import './common.less'
+import { tinyThemeDark } from './dark/dark-common'
+import { tinyThemeLight } from './light/light-common'
+import './page/base-config-page.less'
+import './component-common.less'
 
-export const tinyEngineThemeLight = {
-  id: 'tiny-engine-light-theme',
-  name: 'EngineLightTheme',
-  cnName: 'EngineLightTheme',
-  data: { ...tinyBaseTheme, ...concatThemeLight }
+export const tinyThemeLightVars = {
+  id: 'tiny-theme-light',
+  name: 'tinyThemeLight',
+  cnName: '',
+  data: { ...tinyThemeLight }
 }
 
-export const tinyEngineThemeDark = {
-  id: 'tiny-engine-dark-theme',
-  name: 'EngineDarkTheme',
-  cnName: 'EngineDarkTheme',
-  data: { ...tinyBaseTheme, ...concatThemeDark }
+export const tinyThemeDarkVars = {
+  id: 'tiny-theme-dark',
+  name: 'tinyThemeDark',
+  cnName: '',
+  data: { ...tinyThemeDark }
+}
+
+export const defaultThemeList = {
+  light: tinyThemeLightVars,
+  dark: tinyThemeDarkVars
 }

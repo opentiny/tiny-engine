@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isOpen">
+  <div v-if="isOpen" class="global-data-handler">
     <plugin-setting title="全局设置" @cancel="close" @save="saveGlobalDataHandle">
       <template #content>
         <tiny-collapse v-model="activeNames">
@@ -95,8 +95,18 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.plugin-setting :deep(.monaco-editor) {
-  height: calc(100% - 54px);
+.global-data-handler {
+  :deep(.plugin-setting) {
+    .monaco-editor {
+      height: calc(100% - 54px);
+    }
+    .plugin-setting-content {
+      padding: 0;
+    }
+    .tiny-collapse-item__wrap {
+      padding: 0 12px;
+    }
+  }
 }
 .tiny-collapse {
   height: 100%;
@@ -105,14 +115,5 @@ export default {
 }
 .is-active {
   flex-grow: 2;
-}
-.tiny-collapse-item {
-  margin-bottom: 3px;
-  :deep(.tiny-collapse-item__wrap) {
-    height: 100%;
-    .tiny-collapse-item__content {
-      height: 100%;
-    }
-  }
 }
 </style>

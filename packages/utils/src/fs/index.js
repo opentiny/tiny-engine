@@ -1,16 +1,22 @@
 /**
-* Copyright (c) 2023 - present TinyEngine Authors.
-* Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
-*
-* Use of this source code is governed by an MIT-style license.
-*
-* THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
-* BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
-* A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
-*
-*/
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
+ *
+ * Use of this source code is governed by an MIT-style license.
+ *
+ * THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
+ * BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
+ * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
+ *
+ */
 
 // browser File System Access API encapsulation
+
+import { createZip, writeZip } from './fszip'
+
+// 支持file system api的条件：存在这个方法 && 不处于iframe中
+export const isSupportFileSystemAccess =
+  Object.prototype.hasOwnProperty.call(window, 'showDirectoryPicker') && window.self === window.top
 
 /**
  * 获取用户选择并授权的文件夹根路径
@@ -19,8 +25,8 @@
  * @returns dirHandle 目录句柄
  */
 export const getUserBaseDirHandle = async (options = {}) => {
-  if (!window.showOpenFilePicker) {
-    throw new Error('不支持的浏览器!')
+  if (!isSupportFileSystemAccess) {
+    return createZip()
   }
   const dirHandle = await window.showDirectoryPicker({ mode: 'readwrite', ...options })
   return dirHandle
@@ -75,8 +81,8 @@ export async function getFileHandle(baseDirHandle, filePath, { create = false } 
  * @returns fileHandle 文件句柄
  */
 export const getUserFileHandle = async (options = {}) => {
-  if (!window.showOpenFilePicker) {
-    throw new Error('不支持的浏览器!')
+  if (!isSupportFileSystemAccess) {
+    throw new Error('不支持的浏览器或处于iframe中')
   }
   const [fileHandle] = await window.showOpenFilePicker({ mode: 'readwrite', ...options })
   return fileHandle
@@ -166,9 +172,22 @@ export const writeFile = async (handle, { filePath, fileContent }) => {
  * @param {Array<FileInfo>} filesInfo 文件信息
  *          FileInfo.filePath 文件相对路径
  *          FileInfo.fileContent 文件内容
+ * @param {Boolean} supportZipCache 是否支持zip缓存，zip缓存可能会导致文件不能及时更新，默认不缓存
+ *
  */
-export const writeFiles = async (baseDirHandle, filesInfo) => {
+export const writeFiles = async (
+  baseDirHandle,
+  filesInfo,
+  zipName = 'tiny-engine-generate-code',
+  supportZipCache = false
+) => {
   if (!filesInfo?.length) {
+    return
+  }
+
+  if (!isSupportFileSystemAccess) {
+    const zipInfo = { zipName, zipHandle: supportZipCache && baseDirHandle }
+    await writeZip(filesInfo, zipInfo)
     return
   }
 
@@ -177,5 +196,5 @@ export const writeFiles = async (baseDirHandle, filesInfo) => {
     directoryHandle = await window.showDirectoryPicker({ mode: 'readwrite' })
   }
 
-  await Promise.all(filesInfo.map((fileInfo) => writeFile(baseDirHandle, fileInfo)))
+  await Promise.all(filesInfo.map((fileInfo) => writeFile(directoryHandle, fileInfo)))
 }

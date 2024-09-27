@@ -1,0 +1,143 @@
+{
+  "state": {},
+  "methods": {},
+  "componentName": "Page",
+  "fileName": "createVm",
+  "css": "",
+  "props": {},
+  "lifeCycles": {},
+  "children": [
+    {
+      "componentName": "TinyTree",
+      "props": {
+        "data": [
+          {
+            "label": "一级 1",
+            "children": [
+              {
+                "label": "二级 1-1",
+                "children": [
+                  {
+                    "label": "三级 1-1-1"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "label": "一级 2",
+            "children": [
+              {
+                "label": "二级 2-1",
+                "children": [
+                  {
+                    "label": "三级 2-1-1"
+                  }
+                ]
+              },
+              {
+                "label": "二级 2-2",
+                "children": [
+                  {
+                    "label": "三级 2-2-1"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "id": "33f52342",
+      "children": [
+        {
+          "componentName": "Template",
+          "props": {
+            "slot": {
+              "name": "default",
+              "params": ["data"]
+            }
+          },
+          "children": [
+            {
+              "componentName": "Text",
+              "props": {
+                "text": {
+                  "type": "JSExpression",
+                  "value": "data.label"
+                }
+              },
+              "id": "c225d165"
+            }
+          ],
+          "id": "415d5f65"
+        }
+      ]
+    },
+    {
+      "componentName": "TinyTree",
+      "props": {
+        "data": [
+          {
+            "label": "一级 1",
+            "children": [
+              {
+                "label": "二级 1-1",
+                "children": [
+                  {
+                    "label": "三级 1-1-1"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "label": "一级 2",
+            "children": [
+              {
+                "label": "二级 2-1",
+                "children": [
+                  {
+                    "label": "三级 2-1-1"
+                  }
+                ]
+              },
+              {
+                "label": "二级 2-2",
+                "children": [
+                  {
+                    "label": "三级 2-2-1"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "id": "33f52342",
+      "children": [
+        {
+          "componentName": "Template",
+          "props": {
+            "slot": {
+              "name": "default",
+              "params": "data"
+            }
+          },
+          "children": [
+            {
+              "componentName": "Text",
+              "props": {
+                "text": {
+                  "type": "JSExpression",
+                  "value": "data.label"
+                }
+              },
+              "id": "c225d165"
+            }
+          ],
+          "id": "415d5f65"
+        }
+      ]
+    }
+  ]
+}

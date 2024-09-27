@@ -324,7 +324,6 @@ onUnmounted(() => {
 .top-panel-logo {
   --menu-title-max-width: 300px;
   width: 39px;
-  border-right: 1px solid var(--ti-lowcode-canvas-wrap-bg);
   order: -1;
   height: var(--base-top-panel-height);
   display: flex;

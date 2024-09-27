@@ -9,60 +9,59 @@
     validate-type="text"
     :inline-message="true"
   >
-    <tiny-form-item label="stores" prop="name">
+    <tiny-form-item label="stores" prop="name" class="stores">
       <tiny-input v-model="state.storeData.name" placeholder="只能包含数字字母及下划线"></tiny-input>
     </tiny-form-item>
-    <tiny-form-item prop="state">
-      <monaco-editor
-        ref="variableEditor"
-        class="store-editor"
-        :value="editorCode"
-        :showFormatBtn="true"
-        :options="{
-          language: 'json',
-          // 禁用滚动条边边一直显示的边框
-          overviewRulerBorder: false,
-          renderLineHighlightOnlyWhenFocus: true
-        }"
-        @editorDidMount="editorDidMount"
-        @change="editorDidMount"
-      >
-        <template #toolbarStart>
-          <div class="label-left-wrap">
-            <span>state</span>
-            <tiny-popover placement="bottom-start" effect="dark" trigger="hover" popper-class="state-data-example-tips">
-              <div class="tips-content">
-                <div class="create-content-demo">
-                  <ul>
-                    <li>state为对象(一个对象内可包含多个属性): {"name": "xxx"}</li>
-                    <li>actions/getters为函数(可写多个函数): function count(){}</li>
-                  </ul>
-                </div>
-              </div>
-              <template #reference>
-                <div class="create-content-description">查看示例</div>
-              </template>
-            </tiny-popover>
+    <tiny-collapse v-model="state.activeName">
+      <tiny-collapse-item title="state" name="state">
+        <tiny-form-item prop="state">
+          <monaco-editor
+            ref="variableEditor"
+            class="store-editor"
+            :value="editorCode"
+            :showFormatBtn="true"
+            :options="{
+              language: 'json',
+              // 禁用滚动条边边一直显示的边框
+              overviewRulerBorder: false,
+              renderLineHighlightOnlyWhenFocus: true
+            }"
+            @editorDidMount="editorDidMount"
+            @change="editorDidMount"
+          >
+            <template #toolbarStart>
+              <div class="label-left-wrap"></div>
+            </template>
+          </monaco-editor>
+          <div class="tips">
+            <div>字符串:"string"</div>
+            <div>数字:123</div>
+            <div>布尔值:true/false</div>
+            <div>对象:{"name":"xxx"}</div>
+            <div>数组:["1","2"]</div>
+            <div>空值:null</div>
+            <div>"color":red</div>
+            <div>"background":"blue"</div>
           </div>
-        </template>
-      </monaco-editor>
-    </tiny-form-item>
-    <tiny-form-item prop="getters">
-      <monaco-editor ref="gettersEditor" class="store-editor" :options="options" :value="getters">
-        <template #toolbarStart><label>getters</label></template>
-      </monaco-editor>
-    </tiny-form-item>
-    <tiny-form-item prop="actions">
-      <monaco-editor ref="actionsEditor" class="store-editor" :options="options" :value="actions">
-        <template #toolbarStart><label>actions</label></template>
-      </monaco-editor>
-    </tiny-form-item>
+        </tiny-form-item>
+      </tiny-collapse-item>
+      <tiny-collapse-item title="getters" name="getters">
+        <tiny-form-item prop="getters">
+          <monaco-editor ref="gettersEditor" class="store-editor" :options="options" :value="getters"> </monaco-editor>
+        </tiny-form-item>
+      </tiny-collapse-item>
+      <tiny-collapse-item title="actions" name="actions">
+        <tiny-form-item prop="actions">
+          <monaco-editor ref="actionsEditor" class="store-editor" :options="options" :value="actions"> </monaco-editor>
+        </tiny-form-item>
+      </tiny-collapse-item>
+    </tiny-collapse>
   </tiny-form>
 </template>
 
 <script>
 import { getCurrentInstance, reactive, ref, computed, watch } from 'vue'
-import { Form, FormItem, Input, Popover } from '@opentiny/vue'
+import { Form, FormItem, Input, Collapse as TinyCollapse, CollapseItem as TinyCollapseItem } from '@opentiny/vue'
 import { MonacoEditor } from '@opentiny/tiny-engine-common'
 import { string2Ast, ast2String, insertName } from '@opentiny/tiny-engine-common/js/ast'
 import { verifyJsVarName } from '@opentiny/tiny-engine-common/js/verification'
@@ -73,7 +72,8 @@ export default {
     TinyForm: Form,
     TinyFormItem: FormItem,
     TinyInput: Input,
-    TinyPopover: Popover
+    TinyCollapse,
+    TinyCollapseItem
   },
   props: {
     storeData: {
@@ -96,7 +96,8 @@ export default {
     const actionsEditor = ref(null)
     const variableEditor = ref(null)
     const state = reactive({
-      storeData: props.storeData
+      storeData: props.storeData,
+      activeName: ['state', 'getters', 'actions']
     })
 
     const options = {
@@ -226,10 +227,28 @@ export default {
 
 <style lang="less" scoped>
 .store-form {
-  padding: 12px;
   height: calc(100% - 45px);
   overflow-y: auto;
-
+  .tips {
+    font-size: 11px;
+    line-height: 18px;
+    margin-top: 8px;
+    border-radius: 4px;
+    padding: 8px 14px;
+    background: var(--ti-lowcode-data-source-box-bg);
+    color: var(--ti-lowcode-datasource-tip-color);
+  }
+  :deep(.tiny-collapse-item__wrap) {
+    padding: 0 12px;
+  }
+  :deep(.toolbar) {
+    position: absolute;
+    z-index: 99;
+    right: 4px;
+  }
+  .stores {
+    padding: 12px;
+  }
   .tiny-form-item:not(:last-child) {
     margin-bottom: 12px;
   }
