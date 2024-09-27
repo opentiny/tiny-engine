@@ -7,7 +7,6 @@ export default {
       undo: 'undo',
       redo: 'redo'
     },
-    align: 'right',
     renderType: 'slot'
   }
 }

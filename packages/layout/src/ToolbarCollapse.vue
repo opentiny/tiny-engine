@@ -70,10 +70,6 @@ export default {
       background-color: var(--ti-lowcode-toolbar-ellipsis-hover-bg);
       cursor: pointer;
     }
-
-    .reference-wrapper {
-      padding-left: 8px;
-    }
   }
 
   .empty-line {

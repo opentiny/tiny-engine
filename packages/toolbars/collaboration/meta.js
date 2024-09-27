@@ -6,7 +6,6 @@ export default {
     icon: {
       default: 'user'
     },
-    align: 'right',
     renderType: 'slot',
     collapsed: true
   }

@@ -6,7 +6,6 @@ export default {
     icon: {
       default: 'preview'
     },
-    align: 'right',
     renderType: 'icon'
   }
 }

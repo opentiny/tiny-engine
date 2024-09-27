@@ -3,7 +3,6 @@ export default {
   title: 'setting',
   type: 'toolbars',
   options: {
-    align: 'right',
     icon: {
       default: 'setting'
     },

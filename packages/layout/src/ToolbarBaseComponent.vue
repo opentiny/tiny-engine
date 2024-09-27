@@ -6,9 +6,8 @@
       </template>
     </component>
     <slot></slot>
-    <span v-if="state.options?.collapsed" class="operate-title">{{ state.content }}</span>
+    <span v-if="state.options?.collapsed">{{ state.content }}</span>
   </span>
-  <span class="split-line" v-if="state.options?.separate">|</span>
 </template>
 
 <script>
@@ -74,9 +73,5 @@ export default {
 }
 .toolbar-item-wrap div {
   display: inline-block;
-}
-.operate-title {
-  vertical-align: middle;
-  padding-left: 8px;
 }
 </style>

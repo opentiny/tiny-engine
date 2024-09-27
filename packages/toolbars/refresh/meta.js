@@ -6,9 +6,7 @@ export default {
     icon: {
       default: 'refresh'
     },
-    align: 'right',
     renderType: 'icon',
-    collapsed: true,
-    splitLine: true
+    collapsed: true
   }
 }

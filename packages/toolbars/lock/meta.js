@@ -8,8 +8,6 @@ export default {
       userLocked: 'user-locked',
       unlocked: 'unlocked'
     },
-    align: 'left',
-    renderType: 'icon',
-    collapsed: true
+    renderType: 'icon'
   }
 }

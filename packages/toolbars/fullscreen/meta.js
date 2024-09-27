@@ -7,7 +7,6 @@ export default {
       fullScreen: 'full-screen',
       cancelFullScreen: 'cancel-full-screen'
     },
-    align: 'right',
     renderType: 'icon',
     collapsed: true
   }

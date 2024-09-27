@@ -6,7 +6,6 @@ export default {
     icon: {
       default: 'save'
     },
-    renderType: 'button',
-    align: 'right'
+    renderType: 'button'
   }
 }

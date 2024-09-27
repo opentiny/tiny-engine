@@ -3,7 +3,6 @@ export default {
   type: 'toolbars',
   title: 'logo',
   options: {
-    align: 'left',
     icon: {
       default: 'logo'
     },
