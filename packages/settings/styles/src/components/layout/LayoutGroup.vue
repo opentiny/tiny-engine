@@ -2,7 +2,11 @@
   <div class="display-row">
     <div :class="['display-label', { selected: display }]" @click="openDisplayModal($event)">排布</div>
     <div class="display-content">
-      <radio-configurator :options="layoutOpts" :value="picked" @pickedChange="select"></radio-configurator>
+      <tabs-group-configurator
+        :options="layoutOpts"
+        :value="picked"
+        @update:modelValue="select"
+      ></tabs-group-configurator>
     </div>
   </div>
 
@@ -13,15 +17,15 @@
 
 <script>
 import { ref, watch } from 'vue'
-import { DISPLAY_TYPE } from '../../js/cssType'
-import { RadioConfigurator } from '@opentiny/tiny-engine-configurator'
+import { DISPLAY_TYPE, DISPLAY_TEXT } from '../../js/cssType'
+import { TabsGroupConfigurator } from '@opentiny/tiny-engine-configurator'
 import useEvent from '../../js/useEvent'
 import ResetButton from '../inputs/ResetButton.vue'
 import ModalMask, { useModal } from '../inputs/ModalMask.vue'
 
 export default {
   components: {
-    RadioConfigurator,
+    TabsGroupConfigurator,
     ModalMask,
     ResetButton
   },
@@ -80,39 +84,47 @@ export default {
     const layoutOpts = ref([
       {
         value: DISPLAY_TYPE.Block,
+        label: DISPLAY_TEXT.Block,
         title: '',
         tip: 'block-块级布局',
         icon: 'display-block'
       },
       {
         value: DISPLAY_TYPE.Flex,
+        label: DISPLAY_TEXT.Flex,
         title: '',
         tip: 'flex-弹性布局',
         icon: 'display-flex'
       },
       {
         value: DISPLAY_TYPE.Grid,
+        label: DISPLAY_TEXT.Grid,
         title: '',
         tip: 'grid-网格布局',
-        icon: 'display-grid'
-      },
-      {
-        value: DISPLAY_TYPE.InlineBlock,
-        title: '',
-        tip: 'inline-block-内联块级',
-        icon: 'display-inline-block'
-      },
-      {
-        value: DISPLAY_TYPE.Inline,
-        title: '',
-        tip: 'inline-内联',
-        icon: 'display-inline'
-      },
-      {
-        value: DISPLAY_TYPE.Invisible,
-        title: '',
-        tip: 'eye-invisible-隐藏',
-        icon: 'eye-invisible'
+        icon: 'display-grid',
+        children: [
+          {
+            value: DISPLAY_TYPE.InlineBlock,
+            label: DISPLAY_TEXT.InlineBlock,
+            title: '',
+            tip: 'inline-block-内联块级',
+            icon: 'display-inline-block'
+          },
+          {
+            value: DISPLAY_TYPE.Inline,
+            label: DISPLAY_TEXT.Inline,
+            title: '',
+            tip: 'inline-内联',
+            icon: 'display-inline'
+          },
+          {
+            value: DISPLAY_TYPE.Invisible,
+            label: DISPLAY_TEXT.Invisible,
+            title: '',
+            tip: 'eye-invisible-隐藏',
+            icon: 'eye-invisible'
+          }
+        ]
       }
     ])
 
