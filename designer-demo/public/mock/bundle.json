@@ -44,13 +44,25 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["type", "size"]
+              "properties": [
+                "type",
+                "size"
+              ]
             },
             "contextMenu": {
-              "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+              "actions": [
+                "copy",
+                "remove",
+                "insert",
+                "updateAttr",
+                "bindEevent",
+                "createBlock"
+              ],
               "disable": []
             },
-            "invalidity": [""],
+            "invalidity": [
+              ""
+            ],
             "clickCapture": true,
             "framework": "Vue"
           },
@@ -66,7 +78,7 @@
                     "property": "modelValue",
                     "label": {
                       "text": {
-                        "zh_CN": "modelValue"
+                        "zh_CN": "绑定值"
                       }
                     },
                     "description": {
@@ -87,7 +99,7 @@
                     "property": "size",
                     "label": {
                       "text": {
-                        "zh_CN": "size"
+                        "zh_CN": "尺寸"
                       }
                     },
                     "description": {
@@ -124,7 +136,7 @@
                     "property": "type",
                     "label": {
                       "text": {
-                        "zh_CN": "type"
+                        "zh_CN": "类型"
                       }
                     },
                     "description": {
@@ -145,7 +157,7 @@
                     "property": "placeholder",
                     "label": {
                       "text": {
-                        "zh_CN": "placeholder"
+                        "zh_CN": "占位文本"
                       }
                     },
                     "description": {
@@ -167,7 +179,7 @@
                     "property": "maxlength",
                     "label": {
                       "text": {
-                        "zh_CN": "maxlength"
+                        "zh_CN": "最大长度"
                       }
                     },
                     "description": {
@@ -189,7 +201,7 @@
                     "property": "disabled",
                     "label": {
                       "text": {
-                        "zh_CN": "disabled"
+                        "zh_CN": "是否禁用"
                       }
                     },
                     "description": {
@@ -324,13 +336,25 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["type", "size"]
+              "properties": [
+                "type",
+                "size"
+              ]
             },
             "contextMenu": {
-              "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+              "actions": [
+                "copy",
+                "remove",
+                "insert",
+                "updateAttr",
+                "bindEevent",
+                "createBlock"
+              ],
               "disable": []
             },
-            "invalidity": [""],
+            "invalidity": [
+              ""
+            ],
             "clickCapture": true,
             "framework": "Vue"
           },
@@ -346,7 +370,7 @@
                     "property": "size",
                     "label": {
                       "text": {
-                        "zh_CN": "size"
+                        "zh_CN": "尺寸"
                       }
                     },
                     "description": {
@@ -383,7 +407,7 @@
                     "property": "type",
                     "label": {
                       "text": {
-                        "zh_CN": "type"
+                        "zh_CN": "类型"
                       }
                     },
                     "description": {
@@ -404,7 +428,7 @@
                     "property": "plain",
                     "label": {
                       "text": {
-                        "zh_CN": "plain"
+                        "zh_CN": "朴素按钮"
                       }
                     },
                     "description": {
@@ -426,7 +450,7 @@
                     "property": "text",
                     "label": {
                       "text": {
-                        "zh_CN": "text"
+                        "zh_CN": "文字按钮"
                       }
                     },
                     "description": {
@@ -448,7 +472,7 @@
                     "property": "bg",
                     "label": {
                       "text": {
-                        "zh_CN": "bg"
+                        "zh_CN": "背景颜色"
                       }
                     },
                     "description": {
@@ -470,7 +494,7 @@
                     "property": "link",
                     "label": {
                       "text": {
-                        "zh_CN": "link"
+                        "zh_CN": "链接按钮"
                       }
                     },
                     "description": {
@@ -492,7 +516,7 @@
                     "property": "round",
                     "label": {
                       "text": {
-                        "zh_CN": "round"
+                        "zh_CN": "圆角按钮"
                       }
                     },
                     "description": {
@@ -514,7 +538,7 @@
                     "property": "circle",
                     "label": {
                       "text": {
-                        "zh_CN": "circle"
+                        "zh_CN": "圆形按钮"
                       }
                     },
                     "description": {
@@ -536,7 +560,7 @@
                     "property": "loading",
                     "label": {
                       "text": {
-                        "zh_CN": "loading"
+                        "zh_CN": "加载中状态"
                       }
                     },
                     "description": {
@@ -558,7 +582,7 @@
                     "property": "disabled",
                     "label": {
                       "text": {
-                        "zh_CN": "disabled"
+                        "zh_CN": "禁用"
                       }
                     },
                     "description": {
@@ -636,7 +660,9 @@
             "isModal": false,
             "isPopper": false,
             "nestingRule": {
-              "childWhitelist": ["ElFormItem"],
+              "childWhitelist": [
+                "ElFormItem"
+              ],
               "parentWhitelist": "",
               "descendantBlacklist": "",
               "ancestorWhitelist": ""
@@ -645,13 +671,25 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["inline", "label-width"]
+              "properties": [
+                "inline",
+                "label-width"
+              ]
             },
             "contextMenu": {
-              "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+              "actions": [
+                "copy",
+                "remove",
+                "insert",
+                "updateAttr",
+                "bindEevent",
+                "createBlock"
+              ],
               "disable": []
             },
-            "invalidity": [""],
+            "invalidity": [
+              ""
+            ],
             "clickCapture": true,
             "framework": "Vue"
           },
@@ -667,7 +705,7 @@
                     "property": "model",
                     "label": {
                       "text": {
-                        "zh_CN": "model"
+                        "zh_CN": "数据对象"
                       }
                     },
                     "description": {
@@ -690,7 +728,7 @@
                     "property": "rules",
                     "label": {
                       "text": {
-                        "zh_CN": "rules"
+                        "zh_CN": "验证规则"
                       }
                     },
                     "description": {
@@ -713,7 +751,7 @@
                     "property": "inline",
                     "label": {
                       "text": {
-                        "zh_CN": "inline"
+                        "zh_CN": "行内模式"
                       }
                     },
                     "description": {
@@ -734,11 +772,11 @@
                     "property": "label-position",
                     "label": {
                       "text": {
-                        "zh_CN": "label-position"
+                        "zh_CN": "标签位置"
                       }
                     },
                     "description": {
-                      "zh_CN": "表单域标签的位置， 当设置为 left 或 right 时，则也需要设置 label-width 属性"
+                      "zh_CN": "表单域标签的位置， 当设置为 left 或 right 时，则也需要设置标签宽度属性"
                     },
                     "required": true,
                     "readOnly": false,
@@ -771,7 +809,7 @@
                     "property": "label-width",
                     "label": {
                       "text": {
-                        "zh_CN": "label-width"
+                        "zh_CN": "标签宽度"
                       }
                     },
                     "description": {
@@ -793,7 +831,7 @@
                     "property": "label-suffix",
                     "label": {
                       "text": {
-                        "zh_CN": "label-suffix"
+                        "zh_CN": "标签后缀"
                       }
                     },
                     "description": {
@@ -815,7 +853,7 @@
                     "property": "hide-required-asterisk",
                     "label": {
                       "text": {
-                        "zh_CN": "hide-required-asterisk"
+                        "zh_CN": "隐藏必填星号"
                       }
                     },
                     "description": {
@@ -836,7 +874,7 @@
                     "property": "require-asterisk-position",
                     "label": {
                       "text": {
-                        "zh_CN": "星号的位置"
+                        "zh_CN": "星号位置"
                       }
                     },
                     "description": {
@@ -869,7 +907,7 @@
                     "property": "show-message",
                     "label": {
                       "text": {
-                        "zh_CN": "show-message"
+                        "zh_CN": "显示校验信息"
                       }
                     },
                     "description": {
@@ -891,7 +929,7 @@
                     "property": "inline-message",
                     "label": {
                       "text": {
-                        "zh_CN": "inline-message"
+                        "zh_CN": "行内显示校验信息"
                       }
                     },
                     "description": {
@@ -913,7 +951,7 @@
                     "property": "status-icon",
                     "label": {
                       "text": {
-                        "zh_CN": "status-icon"
+                        "zh_CN": "显示校验结果图标"
                       }
                     },
                     "description": {
@@ -935,7 +973,7 @@
                     "property": "validate-on-rule-change",
                     "label": {
                       "text": {
-                        "zh_CN": "validate-on-rule-change"
+                        "zh_CN": "触发验证"
                       }
                     },
                     "description": {
@@ -957,7 +995,7 @@
                     "property": "size",
                     "label": {
                       "text": {
-                        "zh_CN": "size"
+                        "zh_CN": "尺寸"
                       }
                     },
                     "description": {
@@ -994,7 +1032,7 @@
                     "property": "disabled",
                     "label": {
                       "text": {
-                        "zh_CN": "disabled"
+                        "zh_CN": "禁用"
                       }
                     },
                     "description": {
@@ -1017,7 +1055,7 @@
                     "property": "scroll-to-error",
                     "label": {
                       "text": {
-                        "zh_CN": "scroll-to-error"
+                        "zh_CN": "滚动到错误项"
                       }
                     },
                     "description": {
@@ -1102,13 +1140,25 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["inline", "label-width"]
+              "properties": [
+                "inline",
+                "label-width"
+              ]
             },
             "contextMenu": {
-              "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+              "actions": [
+                "copy",
+                "remove",
+                "insert",
+                "updateAttr",
+                "bindEevent",
+                "createBlock"
+              ],
               "disable": []
             },
-            "invalidity": [""],
+            "invalidity": [
+              ""
+            ],
             "clickCapture": true,
             "framework": "Vue"
           },
@@ -1124,7 +1174,7 @@
                     "property": "prop",
                     "label": {
                       "text": {
-                        "zh_CN": "prop"
+                        "zh_CN": "键名"
                       }
                     },
                     "description": {
@@ -1145,7 +1195,7 @@
                     "property": "label",
                     "label": {
                       "text": {
-                        "zh_CN": "label"
+                        "zh_CN": "标签文本"
                       }
                     },
                     "description": {
@@ -1166,7 +1216,7 @@
                     "property": "label-width",
                     "label": {
                       "text": {
-                        "zh_CN": "label-width"
+                        "zh_CN": "标签宽度"
                       }
                     },
                     "description": {
@@ -1187,7 +1237,7 @@
                     "property": "required",
                     "label": {
                       "text": {
-                        "zh_CN": "required"
+                        "zh_CN": "必填项"
                       }
                     },
                     "description": {
@@ -1208,7 +1258,7 @@
                     "property": "rules",
                     "label": {
                       "text": {
-                        "zh_CN": "rules"
+                        "zh_CN": "验证规则"
                       }
                     },
                     "description": {
@@ -1231,7 +1281,7 @@
                     "property": "error",
                     "label": {
                       "text": {
-                        "zh_CN": "error"
+                        "zh_CN": "错误信息"
                       }
                     },
                     "description": {
@@ -1252,7 +1302,7 @@
                     "property": "show-message",
                     "label": {
                       "text": {
-                        "zh_CN": "show-message"
+                        "zh_CN": "显示错误信息"
                       }
                     },
                     "description": {
@@ -1273,7 +1323,7 @@
                     "property": "inline-message",
                     "label": {
                       "text": {
-                        "zh_CN": "inline-message"
+                        "zh_CN": "行内显示错误信息"
                       }
                     },
                     "description": {
@@ -1294,7 +1344,7 @@
                     "property": "size",
                     "label": {
                       "text": {
-                        "zh_CN": "size"
+                        "zh_CN": "尺寸"
                       }
                     },
                     "description": {
@@ -1352,7 +1402,7 @@
                     "property": "validate-status",
                     "label": {
                       "text": {
-                        "zh_CN": "validate-status"
+                        "zh_CN": "校验状态"
                       }
                     },
                     "description": {
@@ -1443,7 +1493,9 @@
             "isModal": false,
             "isPopper": false,
             "nestingRule": {
-              "childWhitelist": ["ElTableColumn"],
+              "childWhitelist": [
+                "ElTableColumn"
+              ],
               "parentWhitelist": "",
               "descendantBlacklist": "",
               "ancestorWhitelist": ""
@@ -1452,13 +1504,25 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["inline", "label-width"]
+              "properties": [
+                "inline",
+                "label-width"
+              ]
             },
             "contextMenu": {
-              "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+              "actions": [
+                "copy",
+                "remove",
+                "insert",
+                "updateAttr",
+                "bindEevent",
+                "createBlock"
+              ],
               "disable": []
             },
-            "invalidity": [""],
+            "invalidity": [
+              ""
+            ],
             "clickCapture": true,
             "framework": "Vue"
           },
@@ -1474,7 +1538,7 @@
                     "property": "data",
                     "label": {
                       "text": {
-                        "zh_CN": "data"
+                        "zh_CN": "数据"
                       }
                     },
                     "description": {
@@ -1497,7 +1561,7 @@
                     "property": "columns",
                     "label": {
                       "text": {
-                        "zh_CN": "表格列"
+                        "zh_CN": "表格列配置"
                       }
                     },
                     "required": true,
@@ -2106,7 +2170,7 @@
                     "property": "max-height",
                     "label": {
                       "text": {
-                        "zh_CN": "max-height"
+                        "zh_CN": "最大高度"
                       }
                     },
                     "description": {
@@ -2128,7 +2192,7 @@
                     "property": "height",
                     "label": {
                       "text": {
-                        "zh_CN": "height"
+                        "zh_CN": "表格高度"
                       }
                     },
                     "description": {
@@ -2150,7 +2214,7 @@
                     "property": "stripe",
                     "label": {
                       "text": {
-                        "zh_CN": "stripe"
+                        "zh_CN": "斑马纹"
                       }
                     },
                     "description": {
@@ -2172,7 +2236,7 @@
                     "property": "border",
                     "label": {
                       "text": {
-                        "zh_CN": "border"
+                        "zh_CN": "纵向边框"
                       }
                     },
                     "description": {
@@ -2194,7 +2258,7 @@
                     "property": "size",
                     "label": {
                       "text": {
-                        "zh_CN": "size"
+                        "zh_CN": "表格尺寸"
                       }
                     },
                     "description": {
@@ -2231,7 +2295,7 @@
                     "property": "fit",
                     "label": {
                       "text": {
-                        "zh_CN": "fit"
+                        "zh_CN": "列宽自撑开"
                       }
                     },
                     "description": {
@@ -2253,7 +2317,7 @@
                     "property": "show-header",
                     "label": {
                       "text": {
-                        "zh_CN": "show-header"
+                        "zh_CN": "显示表头"
                       }
                     },
                     "description": {
@@ -2275,7 +2339,7 @@
                     "property": "highlight-current-row",
                     "label": {
                       "text": {
-                        "zh_CN": "highlight-current-row"
+                        "zh_CN": "高亮当前行"
                       }
                     },
                     "description": {
@@ -2297,7 +2361,7 @@
                     "property": "current-row-key",
                     "label": {
                       "text": {
-                        "zh_CN": "current-row-key"
+                        "zh_CN": "当前行的 key"
                       }
                     },
                     "description": {
@@ -2319,7 +2383,7 @@
                     "property": "row-class-name",
                     "label": {
                       "text": {
-                        "zh_CN": "row-class-name"
+                        "zh_CN": "行的类名"
                       }
                     },
                     "description": {
@@ -2340,7 +2404,7 @@
                     "property": "row-key",
                     "label": {
                       "text": {
-                        "zh_CN": "row-key"
+                        "zh_CN": "行数据的 Key"
                       }
                     },
                     "description": {
@@ -2361,7 +2425,7 @@
                     "property": "empty-text",
                     "label": {
                       "text": {
-                        "zh_CN": "empty-text"
+                        "zh_CN": "空数据文本"
                       }
                     },
                     "description": {
@@ -2382,7 +2446,7 @@
                     "property": "table-layout",
                     "label": {
                       "text": {
-                        "zh_CN": "table-layout"
+                        "zh_CN": "表格布局方式"
                       }
                     },
                     "description": {
@@ -2415,7 +2479,7 @@
                     "property": "scrollbar-always-on",
                     "label": {
                       "text": {
-                        "zh_CN": "scrollbar-always-on"
+                        "zh_CN": "显示滚动条"
                       }
                     },
                     "description": {
@@ -2437,7 +2501,7 @@
                     "property": "flexible",
                     "label": {
                       "text": {
-                        "zh_CN": "flexible"
+                        "zh_CN": "主轴最小尺寸"
                       }
                     },
                     "description": {
@@ -2690,13 +2754,25 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["inline", "label-width"]
+              "properties": [
+                "inline",
+                "label-width"
+              ]
             },
             "contextMenu": {
-              "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+              "actions": [
+                "copy",
+                "remove",
+                "insert",
+                "updateAttr",
+                "bindEevent",
+                "createBlock"
+              ],
               "disable": []
             },
-            "invalidity": [""],
+            "invalidity": [
+              ""
+            ],
             "clickCapture": true,
             "framework": "Vue"
           },
@@ -2760,7 +2836,7 @@
                     "property": "name",
                     "label": {
                       "text": {
-                        "zh_CN": "幻灯片的名字，可用作 setActiveItem 的参数"
+                        "zh_CN": "名称"
                       }
                     },
                     "required": true,
@@ -2772,14 +2848,14 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "幻灯片的名字，可用作 setActiveItem 的参数"
                     }
                   },
                   {
                     "property": "title",
                     "label": {
                       "text": {
-                        "zh_CN": "幻灯片的标题"
+                        "zh_CN": "标题"
                       }
                     },
                     "required": true,
@@ -2791,14 +2867,14 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "幻灯片的标题"
                     }
                   },
                   {
                     "property": "indicator-position",
                     "label": {
                       "text": {
-                        "zh_CN": "指示器的位置"
+                        "zh_CN": "指示器位置"
                       }
                     },
                     "required": true,
@@ -2821,7 +2897,7 @@
                       }
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "指示器的位置"
                     }
                   }
                 ]
@@ -2845,11 +2921,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["disabled", "size"]
+              "properties": [
+                "disabled",
+                "size"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -2896,7 +2980,7 @@
                     "property": "arrow",
                     "label": {
                       "text": {
-                        "zh_CN": "切换箭头的显示时机"
+                        "zh_CN": "箭头显示时机"
                       }
                     },
                     "required": true,
@@ -2923,14 +3007,14 @@
                       }
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "切换箭头的显示时机"
                     }
                   },
                   {
                     "property": "autoplay",
                     "label": {
                       "text": {
-                        "zh_CN": "是否自动切换"
+                        "zh_CN": "自动切换"
                       }
                     },
                     "required": true,
@@ -2942,7 +3026,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "是否自动切换"
                     }
                   },
                   {
@@ -2963,7 +3047,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": "tabs"
+                      "zh_CN": "tabs 选项卡"
                     },
                     "labelPosition": "none"
                   },
@@ -2971,7 +3055,7 @@
                     "property": "height",
                     "label": {
                       "text": {
-                        "zh_CN": "走马灯的高度"
+                        "zh_CN": "高度"
                       }
                     },
                     "required": true,
@@ -2983,14 +3067,14 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "走马灯的高度"
                     }
                   },
                   {
                     "property": "indicator-position",
                     "label": {
                       "text": {
-                        "zh_CN": "指示器的位置"
+                        "zh_CN": "位置"
                       }
                     },
                     "required": true,
@@ -3013,14 +3097,14 @@
                       }
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "指示器的位置"
                     }
                   },
                   {
                     "property": "initial-index",
                     "label": {
                       "text": {
-                        "zh_CN": "初始状态激活的幻灯片的索引，从 0 开始 "
+                        "zh_CN": "初始索引"
                       }
                     },
                     "required": true,
@@ -3032,14 +3116,14 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "初始状态激活的幻灯片的索引，从 0 开始 "
                     }
                   },
                   {
                     "property": "interval",
                     "label": {
                       "text": {
-                        "zh_CN": "自动切换的时间间隔，单位为毫秒"
+                        "zh_CN": "自动切换间隔"
                       }
                     },
                     "required": true,
@@ -3051,14 +3135,14 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "自动切换的时间间隔，单位为毫秒"
                     }
                   },
                   {
                     "property": "loop",
                     "label": {
                       "text": {
-                        "zh_CN": "是否循环显示"
+                        "zh_CN": "循环显示"
                       }
                     },
                     "required": true,
@@ -3070,14 +3154,14 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "是否循环显示"
                     }
                   },
                   {
                     "property": "show-title",
                     "label": {
                       "text": {
-                        "zh_CN": "是否显示标题"
+                        "zh_CN": "显示标题"
                       }
                     },
                     "required": true,
@@ -3089,14 +3173,14 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "是否显示标题"
                     }
                   },
                   {
                     "property": "trigger",
                     "label": {
                       "text": {
-                        "zh_CN": "指示器的触发方式，默认为 hover"
+                        "zh_CN": "触发方式"
                       }
                     },
                     "required": true,
@@ -3119,14 +3203,14 @@
                       }
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "指示器的触发方式，默认为 hover"
                     }
                   },
                   {
                     "property": "type",
                     "label": {
                       "text": {
-                        "zh_CN": "走马灯的类型"
+                        "zh_CN": "类型"
                       }
                     },
                     "required": true,
@@ -3153,7 +3237,7 @@
                       }
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "走马灯的类型"
                     }
                   }
                 ]
@@ -3169,7 +3253,9 @@
             "clickCapture": false,
             "isModal": false,
             "nestingRule": {
-              "childWhitelist": ["TinyCarouselItem"],
+              "childWhitelist": [
+                "TinyCarouselItem"
+              ],
               "parentWhitelist": "",
               "descendantBlacklist": "",
               "ancestorWhitelist": ""
@@ -3178,11 +3264,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["disabled", "size"]
+              "properties": [
+                "disabled",
+                "size"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -3233,7 +3327,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "类型"
                     },
                     "labelPosition": "none"
                   },
@@ -3241,7 +3335,7 @@
                     "property": "href",
                     "label": {
                       "text": {
-                        "zh_CN": "跳转链接"
+                        "zh_CN": "链接"
                       }
                     },
                     "required": true,
@@ -3253,14 +3347,14 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": "链接"
+                      "zh_CN": "指定链接的 URL"
                     }
                   },
                   {
                     "property": "target",
                     "label": {
                       "text": {
-                        "zh_CN": "页面目标"
+                        "zh_CN": "打开方式"
                       }
                     },
                     "required": true,
@@ -3283,7 +3377,7 @@
                       }
                     },
                     "description": {
-                      "zh_CN": "链接"
+                      "zh_CN": "指定链接的打开方式，例如在当前窗口中打开或在新窗口中打开。"
                     }
                   },
                   {
@@ -3302,7 +3396,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "原生属性"
                     },
                     "labelPosition": "none"
                   }
@@ -3339,7 +3433,14 @@
           "name": {
             "zh_CN": "标题"
           },
-          "component": ["h1", "h2", "h3", "h4", "h5", "h6"],
+          "component": [
+            "h1",
+            "h2",
+            "h3",
+            "h4",
+            "h5",
+            "h6"
+          ],
           "icon": "h16",
           "description": "标题",
           "docUrl": "",
@@ -3430,11 +3531,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["disabled", "size"]
+              "properties": [
+                "disabled",
+                "size"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -3486,7 +3595,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "类型"
                     },
                     "labelPosition": "none"
                   },
@@ -3506,7 +3615,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "原生属性"
                     },
                     "labelPosition": "none"
                   }
@@ -3670,7 +3779,7 @@
                       }
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "类型"
                     }
                   },
                   {
@@ -3689,7 +3798,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "占位符"
                     }
                   },
                   {
@@ -3708,7 +3817,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "原生属性"
                     },
                     "labelPosition": "none"
                   }
@@ -3803,11 +3912,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["disabled", "size"]
+              "properties": [
+                "disabled",
+                "size"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -3847,7 +3964,7 @@
                     "property": "src",
                     "label": {
                       "text": {
-                        "zh_CN": "视频的 URL"
+                        "zh_CN": "资源"
                       }
                     },
                     "required": true,
@@ -3859,14 +3976,14 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "视频的 URL"
                     }
                   },
                   {
                     "property": "width",
                     "label": {
                       "text": {
-                        "zh_CN": "视频播放器的宽度"
+                        "zh_CN": "播放器宽度"
                       }
                     },
                     "required": true,
@@ -3878,14 +3995,14 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "视频播放器的宽度"
                     }
                   },
                   {
                     "property": "height",
                     "label": {
                       "text": {
-                        "zh_CN": "视频播放器的高度"
+                        "zh_CN": "播放器高度"
                       }
                     },
                     "required": true,
@@ -3897,14 +4014,14 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "视频播放器的高度"
                     }
                   },
                   {
                     "property": "controls",
                     "label": {
                       "text": {
-                        "zh_CN": "是否显示控件"
+                        "zh_CN": "显示控件"
                       }
                     },
                     "required": true,
@@ -3916,14 +4033,14 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "是否显示控件"
                     }
                   },
                   {
                     "property": "autoplay",
                     "label": {
                       "text": {
-                        "zh_CN": "是否马上播放"
+                        "zh_CN": "马上播放"
                       }
                     },
                     "required": true,
@@ -3935,7 +4052,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "是否马上播放"
                     }
                   },
                   {
@@ -3954,7 +4071,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "原生属性"
                     },
                     "labelPosition": "none"
                   }
@@ -4025,7 +4142,7 @@
                     "bindState": true,
                     "label": {
                       "text": {
-                        "zh_CN": "src路径"
+                        "zh_CN": "资源"
                       }
                     },
                     "cols": 12,
@@ -4033,6 +4150,9 @@
                     "widget": {
                       "component": "InputConfigurator",
                       "props": {}
+                    },
+                    "description": {
+                      "zh_CN": "src路径"
                     }
                   },
                   {
@@ -4051,7 +4171,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "原生属性"
                     },
                     "labelPosition": "none"
                   }
@@ -4060,7 +4180,9 @@
             ],
             "events": {},
             "shortcuts": {
-              "properties": ["src"]
+              "properties": [
+                "src"
+              ]
             },
             "contentMenu": {
               "actions": []
@@ -4114,7 +4236,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "原生属性"
                     },
                     "labelPosition": "none"
                   }
@@ -4183,7 +4305,7 @@
                     "property": "width",
                     "label": {
                       "text": {
-                        "zh_CN": "表格的宽度"
+                        "zh_CN": "宽度"
                       }
                     },
                     "required": true,
@@ -4195,14 +4317,14 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "表格的宽度"
                     }
                   },
                   {
                     "property": "border",
                     "label": {
                       "text": {
-                        "zh_CN": "表格边框的宽度"
+                        "zh_CN": "边框宽度"
                       }
                     },
                     "required": true,
@@ -4214,7 +4336,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "表格边框的宽度"
                     }
                   },
                   {
@@ -4233,7 +4355,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "原生属性"
                     },
                     "labelPosition": "none"
                   }
@@ -4299,7 +4421,7 @@
                     "property": "colspan",
                     "label": {
                       "text": {
-                        "zh_CN": "单元格可横跨的列数"
+                        "zh_CN": "合并列"
                       }
                     },
                     "required": true,
@@ -4311,14 +4433,14 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "单元格可横跨的列数"
                     }
                   },
                   {
                     "property": "rowspan",
                     "label": {
                       "text": {
-                        "zh_CN": "单元格可横跨的行数"
+                        "zh_CN": "合并行"
                       }
                     },
                     "required": true,
@@ -4330,7 +4452,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "单元格可横跨的行数"
                     }
                   },
                   {
@@ -4349,7 +4471,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "原生属性"
                     },
                     "labelPosition": "none"
                   }
@@ -4415,7 +4537,7 @@
                     "property": "name",
                     "label": {
                       "text": {
-                        "zh_CN": "表单的名称"
+                        "zh_CN": "名称"
                       }
                     },
                     "required": true,
@@ -4427,14 +4549,14 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "表单的名称"
                     }
                   },
                   {
                     "property": "action",
                     "label": {
                       "text": {
-                        "zh_CN": "提交表单时向何处发送表单数据"
+                        "zh_CN": "提交地址"
                       }
                     },
                     "required": true,
@@ -4446,14 +4568,14 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "提交表单时向何处发送表单数据"
                     }
                   },
                   {
                     "property": "method",
                     "label": {
                       "text": {
-                        "zh_CN": "用于发送 form-data 的 HTTP 方法"
+                        "zh_CN": "HTTP方法"
                       }
                     },
                     "required": true,
@@ -4476,7 +4598,7 @@
                       }
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "用于发送 form-data 的 HTTP 方法"
                     }
                   }
                 ]
@@ -4544,7 +4666,7 @@
                     "property": "for",
                     "label": {
                       "text": {
-                        "zh_CN": "label 绑定到哪个表单元素"
+                        "zh_CN": "label绑定表单元素"
                       }
                     },
                     "required": true,
@@ -4556,14 +4678,14 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "label 绑定到哪个表单元素"
                     }
                   },
                   {
                     "property": "form",
                     "label": {
                       "text": {
-                        "zh_CN": "label 字段所属的一个或多个表单"
+                        "zh_CN": "label字段所属表单"
                       }
                     },
                     "required": true,
@@ -4575,7 +4697,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "label 字段所属的一个或多个表单"
                     }
                   }
                 ]
@@ -4633,7 +4755,7 @@
                     "property": "data",
                     "label": {
                       "text": {
-                        "zh_CN": "按钮组数据"
+                        "zh_CN": "数据"
                       }
                     },
                     "required": true,
@@ -4647,14 +4769,14 @@
                       }
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "配置按钮组数据"
                     }
                   },
                   {
                     "property": "size",
                     "label": {
                       "text": {
-                        "zh_CN": "组件大小"
+                        "zh_CN": "大小"
                       }
                     },
                     "required": true,
@@ -4681,14 +4803,14 @@
                       }
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "组件大小"
                     }
                   },
                   {
                     "property": "plain",
                     "label": {
                       "text": {
-                        "zh_CN": "是否是朴素按钮"
+                        "zh_CN": "朴素按钮"
                       }
                     },
                     "required": true,
@@ -4700,7 +4822,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "是否是朴素按钮"
                     }
                   },
                   {
@@ -4719,7 +4841,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "是否禁用"
                     }
                   }
                 ]
@@ -4743,11 +4865,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["disabled", "size"]
+              "properties": [
+                "disabled",
+                "size"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -4793,7 +4923,7 @@
                     "property": "layout",
                     "label": {
                       "text": {
-                        "zh_CN": "layout"
+                        "zh_CN": "布局"
                       }
                     },
                     "cols": 12,
@@ -4802,7 +4932,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": "layout"
+                      "zh_CN": "选择布局方式"
                     },
                     "labelPosition": "none"
                   },
@@ -4810,7 +4940,7 @@
                     "property": "align",
                     "label": {
                       "text": {
-                        "zh_CN": "align"
+                        "zh_CN": "子项对齐方式"
                       }
                     },
                     "required": true,
@@ -4837,14 +4967,14 @@
                       }
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "子项的副轴对齐方向，可取值：top, middle, bottom"
                     }
                   },
                   {
                     "property": "flex",
                     "label": {
                       "text": {
-                        "zh_CN": "flex"
+                        "zh_CN": "flex容器"
                       }
                     },
                     "required": true,
@@ -4854,13 +4984,16 @@
                     "widget": {
                       "component": "SwitchConfigurator",
                       "props": {}
+                    },
+                    "description": {
+                      "zh_CN": "是否为flex容器"
                     }
                   },
                   {
                     "property": "gutter",
                     "label": {
                       "text": {
-                        "zh_CN": "gutter"
+                        "zh_CN": "子项间隔"
                       }
                     },
                     "required": true,
@@ -4872,7 +5005,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "子项的间隔的像素"
                     }
                   }
                 ]
@@ -4895,11 +5028,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["label-width", "disabled"]
+              "properties": [
+                "label-width",
+                "disabled"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -4945,7 +5086,7 @@
                     "property": "disabled",
                     "label": {
                       "text": {
-                        "zh_CN": "是否禁用"
+                        "zh_CN": "禁用"
                       }
                     },
                     "required": true,
@@ -4957,7 +5098,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "是否禁用"
                     }
                   },
                   {
@@ -5003,7 +5144,7 @@
                     "property": "label-align",
                     "label": {
                       "text": {
-                        "zh_CN": "必填标识是否占位"
+                        "zh_CN": "必填标识占位"
                       }
                     },
                     "required": true,
@@ -5084,7 +5225,7 @@
                     "property": "model",
                     "label": {
                       "text": {
-                        "zh_CN": "表单校验对象"
+                        "zh_CN": "数据对象"
                       }
                     },
                     "required": true,
@@ -5250,11 +5391,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["label-width", "disabled"]
+              "properties": [
+                "label-width",
+                "disabled"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -5379,7 +5528,9 @@
             "isModal": false,
             "nestingRule": {
               "childWhitelist": "",
-              "parentWhitelist": ["TinyForm"],
+              "parentWhitelist": [
+                "TinyForm"
+              ],
               "descendantBlacklist": "",
               "ancestorWhitelist": ""
             },
@@ -5387,11 +5538,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["label", "rules"]
+              "properties": [
+                "label",
+                "rules"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -5479,7 +5638,7 @@
                     "property": "move",
                     "label": {
                       "text": {
-                        "zh_CN": "栅格左右移动格数"
+                        "zh_CN": "栅格移动格数"
                       }
                     },
                     "required": true,
@@ -5671,11 +5830,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["label", "rules"]
+              "properties": [
+                "label",
+                "rules"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -5736,7 +5903,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "按钮文字"
                     }
                   },
                   {
@@ -5777,7 +5944,7 @@
                       }
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "按钮大小"
                     }
                   },
                   {
@@ -5918,7 +6085,7 @@
                     "property": "circle",
                     "label": {
                       "text": {
-                        "zh_CN": "圆角"
+                        "zh_CN": "圆形按钮"
                       }
                     },
                     "required": true,
@@ -5938,7 +6105,7 @@
                     "property": "autofocus",
                     "label": {
                       "text": {
-                        "zh_CN": "聚焦"
+                        "zh_CN": "自动聚焦"
                       }
                     },
                     "required": true,
@@ -5958,7 +6125,7 @@
                     "property": "loading",
                     "label": {
                       "text": {
-                        "zh_CN": "加载中"
+                        "zh_CN": "加载中样式"
                       }
                     },
                     "required": true,
@@ -6013,11 +6180,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["text", "size"]
+              "properties": [
+                "text",
+                "size"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -6167,7 +6342,7 @@
                     "property": "disabled",
                     "label": {
                       "text": {
-                        "zh_CN": "是否禁用"
+                        "zh_CN": "禁用"
                       }
                     },
                     "required": true,
@@ -6179,7 +6354,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "是否禁用"
                     }
                   },
                   {
@@ -6228,7 +6403,7 @@
                     "property": "maxlength",
                     "label": {
                       "text": {
-                        "zh_CN": "最大长度"
+                        "zh_CN": "最大输入长度"
                       }
                     },
                     "required": true,
@@ -6248,7 +6423,7 @@
                     "property": "autofocus",
                     "label": {
                       "text": {
-                        "zh_CN": "聚焦"
+                        "zh_CN": "自动聚焦"
                       }
                     },
                     "required": true,
@@ -6430,11 +6605,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["value", "disabled"]
+              "properties": [
+                "value",
+                "disabled"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -6480,7 +6663,7 @@
                     "property": "text",
                     "label": {
                       "text": {
-                        "zh_CN": "文本"
+                        "zh_CN": "文本内容"
                       }
                     },
                     "required": true,
@@ -6492,14 +6675,14 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "单选框文本内容"
                     }
                   },
                   {
                     "property": "label",
                     "label": {
                       "text": {
-                        "zh_CN": "单选框的值"
+                        "zh_CN": "选中值"
                       }
                     },
                     "required": true,
@@ -6510,7 +6693,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "radio 选中时的值"
                     }
                   },
                   {
@@ -6548,7 +6731,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "是否禁用"
                     }
                   }
                 ]
@@ -6577,14 +6760,14 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "是否显示边框"
                     }
                   },
                   {
                     "property": "size",
                     "label": {
                       "text": {
-                        "zh_CN": "单选框的尺寸"
+                        "zh_CN": "尺寸"
                       }
                     },
                     "required": true,
@@ -6596,14 +6779,14 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "单选框的尺寸，仅在 border 为true时有效"
                     }
                   },
                   {
                     "property": "name",
                     "label": {
                       "text": {
-                        "zh_CN": "原生 name 属性"
+                        "zh_CN": "原生name属性"
                       }
                     },
                     "required": true,
@@ -6615,7 +6798,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "原生 name 属性"
                     }
                   }
                 ]
@@ -6671,11 +6854,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["visible", "width"]
+              "properties": [
+                "visible",
+                "width"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -6781,7 +6972,7 @@
                     "property": "searchable",
                     "label": {
                       "text": {
-                        "zh_CN": "下拉面板可搜索"
+                        "zh_CN": "下拉可搜索"
                       }
                     },
                     "required": false,
@@ -6801,7 +6992,7 @@
                     "property": "disabled",
                     "label": {
                       "text": {
-                        "zh_CN": "是否禁用"
+                        "zh_CN": "禁用"
                       }
                     },
                     "required": true,
@@ -6813,14 +7004,14 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "是否禁用"
                     }
                   },
                   {
                     "property": "options",
                     "label": {
                       "text": {
-                        "zh_CN": "下拉数据"
+                        "zh_CN": "选项数据"
                       }
                     },
                     "required": true,
@@ -6890,7 +7081,7 @@
                     "property": "popper-class",
                     "label": {
                       "text": {
-                        "zh_CN": "下拉框的类名"
+                        "zh_CN": "下拉框类名"
                       }
                     },
                     "required": true,
@@ -7081,11 +7272,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["multiple", "options"]
+              "properties": [
+                "multiple",
+                "options"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -7170,7 +7369,7 @@
                     "property": "true-value",
                     "label": {
                       "text": {
-                        "zh_CN": "打开时的值"
+                        "zh_CN": "设置打开值"
                       }
                     },
                     "required": true,
@@ -7190,7 +7389,7 @@
                     "property": "false-value",
                     "label": {
                       "text": {
-                        "zh_CN": "关闭时的值"
+                        "zh_CN": "设置关闭值"
                       }
                     },
                     "required": true,
@@ -7285,11 +7484,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["disabled", "mini"]
+              "properties": [
+                "disabled",
+                "mini"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -7375,7 +7582,7 @@
                     "property": "placeholder",
                     "label": {
                       "text": {
-                        "zh_CN": "占位文本 "
+                        "zh_CN": "占位文本"
                       }
                     },
                     "required": true,
@@ -7415,7 +7622,7 @@
                     "property": "isEnterSearch",
                     "label": {
                       "text": {
-                        "zh_CN": "是否Enter键触发search事件"
+                        "zh_CN": "Enter键触发"
                       }
                     },
                     "required": true,
@@ -7566,11 +7773,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["clearable", "mini"]
+              "properties": [
+                "clearable",
+                "mini"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -7636,7 +7851,7 @@
                     "property": "disabled",
                     "label": {
                       "text": {
-                        "zh_CN": "是否禁用"
+                        "zh_CN": "禁用"
                       }
                     },
                     "required": true,
@@ -7648,7 +7863,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "是否禁用"
                     }
                   },
                   {
@@ -7827,11 +8042,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["border", "disabled"]
+              "properties": [
+                "border",
+                "disabled"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -7897,7 +8120,7 @@
                     "property": "disabled",
                     "label": {
                       "text": {
-                        "zh_CN": "是否禁用"
+                        "zh_CN": "禁用"
                       }
                     },
                     "required": true,
@@ -7909,7 +8132,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "是否禁用"
                     }
                   },
                   {
@@ -8020,11 +8243,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["text", "size"]
+              "properties": [
+                "text",
+                "size"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -8092,7 +8323,7 @@
                     "property": "disabled",
                     "label": {
                       "text": {
-                        "zh_CN": "是否禁用"
+                        "zh_CN": "禁用"
                       }
                     },
                     "required": true,
@@ -8104,14 +8335,14 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "是否禁用"
                     }
                   },
                   {
                     "property": "options",
                     "label": {
                       "text": {
-                        "zh_CN": "数据列表"
+                        "zh_CN": "选项列表"
                       }
                     },
                     "defaultValue": [
@@ -8233,11 +8464,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["disabled", "type"]
+              "properties": [
+                "disabled",
+                "type"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -8382,7 +8621,7 @@
                     "property": "dialog-class",
                     "label": {
                       "text": {
-                        "zh_CN": "自定义类"
+                        "zh_CN": "自定义类名"
                       }
                     },
                     "required": true,
@@ -8402,7 +8641,7 @@
                     "property": "append-to-body",
                     "label": {
                       "text": {
-                        "zh_CN": "插入到 Body "
+                        "zh_CN": "插入到Body"
                       }
                     },
                     "required": true,
@@ -8515,11 +8754,19 @@
             "isLayout": false,
             "rootSelector": ".tiny-dialog-box",
             "shortcuts": {
-              "properties": ["visible", "width"]
+              "properties": [
+                "visible",
+                "width"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -8565,7 +8812,7 @@
                     "property": "showEditIcon",
                     "label": {
                       "text": {
-                        "zh_CN": "显示编辑ICON "
+                        "zh_CN": "显示编辑图标"
                       }
                     },
                     "required": true,
@@ -8599,7 +8846,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": "tabs"
+                      "zh_CN": "tabs 选项卡"
                     },
                     "labelPosition": "none"
                   },
@@ -8627,7 +8874,7 @@
                     "property": "with-add",
                     "label": {
                       "text": {
-                        "zh_CN": "可新增"
+                        "zh_CN": "标签新增"
                       }
                     },
                     "required": true,
@@ -8793,7 +9040,9 @@
             "clickCapture": false,
             "isModal": false,
             "nestingRule": {
-              "childWhitelist": ["TinyTabItem"],
+              "childWhitelist": [
+                "TinyTabItem"
+              ],
               "parentWhitelist": [],
               "descendantBlacklist": [],
               "ancestorWhitelist": []
@@ -8802,11 +9051,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["size", "tab-style"]
+              "properties": [
+                "size",
+                "tab-style"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -8852,7 +9109,7 @@
                     "property": "name",
                     "label": {
                       "text": {
-                        "zh_CN": "唯一表示"
+                        "zh_CN": "唯一标识"
                       }
                     },
                     "required": true,
@@ -8864,7 +9121,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": "唯一表示"
+                      "zh_CN": "唯一标识"
                     }
                   },
                   {
@@ -8909,7 +9166,9 @@
             "isModal": false,
             "nestingRule": {
               "childWhitelist": "",
-              "parentWhitelist": ["TinyTab"],
+              "parentWhitelist": [
+                "TinyTab"
+              ],
               "descendantBlacklist": "",
               "ancestorWhitelist": ""
             },
@@ -8917,11 +9176,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["name", "title"]
+              "properties": [
+                "name",
+                "title"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -8987,7 +9254,7 @@
                     "property": "options",
                     "label": {
                       "text": {
-                        "zh_CN": "options"
+                        "zh_CN": "配置数据"
                       }
                     },
                     "required": true,
@@ -9001,14 +9268,14 @@
                       }
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "单独使用 Breadcrumb，通过 option 配置生成面包屑"
                     }
                   },
                   {
                     "property": "textField",
                     "label": {
                       "text": {
-                        "zh_CN": "textField"
+                        "zh_CN": "键值"
                       }
                     },
                     "required": true,
@@ -9018,6 +9285,9 @@
                     "widget": {
                       "component": "InputConfigurator",
                       "props": {}
+                    },
+                    "description": {
+                      "zh_CN": "指定面包屑的显示键值，结合 options 使用"
                     }
                   }
                 ]
@@ -9048,7 +9318,9 @@
             "clickCapture": false,
             "isModal": false,
             "nestingRule": {
-              "childWhitelist": ["TinyBreadcrumbItem"],
+              "childWhitelist": [
+                "TinyBreadcrumbItem"
+              ],
               "parentWhitelist": [],
               "descendantBlacklist": [],
               "ancestorWhitelist": []
@@ -9057,11 +9329,18 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["separator"]
+              "properties": [
+                "separator"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -9107,7 +9386,7 @@
                     "property": "to",
                     "label": {
                       "text": {
-                        "zh_CN": "路由路径"
+                        "zh_CN": "路由跳转"
                       }
                     },
                     "required": true,
@@ -9119,7 +9398,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": "面包屑项"
+                      "zh_CN": "路由跳转对象，同 vue-router 的 to"
                     }
                   }
                 ]
@@ -9144,7 +9423,9 @@
             "isModal": false,
             "nestingRule": {
               "childWhitelist": "",
-              "parentWhitelist": ["TinyBreadcrumb"],
+              "parentWhitelist": [
+                "TinyBreadcrumb"
+              ],
               "descendantBlacklist": "",
               "ancestorWhitelist": ""
             },
@@ -9152,11 +9433,18 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["to"]
+              "properties": [
+                "to"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -9202,7 +9490,7 @@
                     "property": "modelValue",
                     "label": {
                       "text": {
-                        "zh_CN": "当前激活的面板"
+                        "zh_CN": "当前激活面板"
                       }
                     },
                     "required": true,
@@ -9286,11 +9574,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["label-width", "disabled"]
+              "properties": [
+                "label-width",
+                "disabled"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -9336,7 +9632,7 @@
                     "property": "name",
                     "label": {
                       "text": {
-                        "zh_CN": "唯一标志符"
+                        "zh_CN": "唯一标识符"
                       }
                     },
                     "required": true,
@@ -9348,7 +9644,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": "唯一标志符;String | Number"
+                      "zh_CN": "唯一标识符： String | Number"
                     },
                     "labelPosition": "left"
                   },
@@ -9356,7 +9652,7 @@
                     "property": "title",
                     "label": {
                       "text": {
-                        "zh_CN": "面板标题"
+                        "zh_CN": "标题"
                       }
                     },
                     "required": true,
@@ -9403,11 +9699,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["label-width", "disabled"]
+              "properties": [
+                "label-width",
+                "disabled"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -9626,7 +9930,10 @@
                             "widget": {
                               "component": "JsSlotConfigurator",
                               "props": {
-                                "slots": ["header", "default"]
+                                "slots": [
+                                  "header",
+                                  "default"
+                                ]
                               }
                             }
                           },
@@ -9772,7 +10079,7 @@
                     "property": "fetchData",
                     "label": {
                       "text": {
-                        "zh_CN": "服务端数据"
+                        "zh_CN": "服务端查询"
                       }
                     },
                     "required": true,
@@ -9815,7 +10122,7 @@
                       }
                     },
                     "description": {
-                      "zh_CN": "分页配置"
+                      "zh_CN": "分页配置，需结合fetchData使用"
                     }
                   },
                   {
@@ -9842,7 +10149,7 @@
                     "property": "row-id",
                     "label": {
                       "text": {
-                        "zh_CN": "行数据唯一标识的字段名"
+                        "zh_CN": "行数据主键"
                       }
                     },
                     "required": false,
@@ -9856,7 +10163,7 @@
                       }
                     },
                     "description": {
-                      "zh_CN": "行数据唯一标识的字段名"
+                      "zh_CN": "自定义行数据唯一主键的字段名（行数据必须要有唯一主键，默认自动生成）"
                     },
                     "labelPosition": "left"
                   },
@@ -9864,7 +10171,7 @@
                     "property": "select-config",
                     "label": {
                       "text": {
-                        "zh_CN": "复选框配置"
+                        "zh_CN": "行复选框配置"
                       }
                     },
                     "required": false,
@@ -9925,7 +10232,7 @@
                     "property": "expand-config",
                     "label": {
                       "text": {
-                        "zh_CN": "复选框配置项"
+                        "zh_CN": "展开行配置"
                       }
                     },
                     "required": true,
@@ -9937,7 +10244,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": "复选框配置项"
+                      "zh_CN": "展开行配置项"
                     },
                     "labelPosition": "left"
                   },
@@ -9981,7 +10288,7 @@
                     "property": "auto-resize",
                     "label": {
                       "text": {
-                        "zh_CN": "可排序"
+                        "zh_CN": "响应式监听"
                       }
                     },
                     "required": true,
@@ -9993,7 +10300,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": "是否允许列数据排序。默认为 true 可排序"
+                      "zh_CN": "表格属性设置 autoResize 属性开启响应式表格宽高的同时，将高度height设置为auto就可以自动跟随父容器高度。"
                     },
                     "labelPosition": "left"
                   },
@@ -10061,7 +10368,7 @@
                     "property": "highlight-hover-row",
                     "label": {
                       "text": {
-                        "zh_CN": "hover 时候高亮"
+                        "zh_CN": "移入行高亮"
                       }
                     },
                     "required": true,
@@ -10081,7 +10388,7 @@
                     "property": "row-class-name",
                     "label": {
                       "text": {
-                        "zh_CN": "hover 高亮"
+                        "zh_CN": "设置行高亮"
                       }
                     },
                     "required": true,
@@ -10101,7 +10408,7 @@
                     "property": "max-height",
                     "label": {
                       "text": {
-                        "zh_CN": "最大高度"
+                        "zh_CN": "内容最大高度"
                       }
                     },
                     "required": true,
@@ -10304,10 +10611,15 @@
               }
             },
             "shortcuts": {
-              "properties": ["sortable", "columns"]
+              "properties": [
+                "sortable",
+                "columns"
+              ]
             },
             "contentMenu": {
-              "actions": ["create symbol"]
+              "actions": [
+                "create symbol"
+              ]
             },
             "onBeforeMount": "console.log('table on load'); this.pager = source.pager; this.fetchData = source.fetchData; this.data = source.data ;this.columns = source.columns"
           },
@@ -10327,11 +10639,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["sortable", "columns"]
+              "properties": [
+                "sortable",
+                "columns"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -10566,11 +10886,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["currentPage", "total"]
+              "properties": [
+                "currentPage",
+                "total"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -10676,7 +11004,7 @@
                     "property": "disabled",
                     "label": {
                       "text": {
-                        "zh_CN": "是否禁用"
+                        "zh_CN": "禁用"
                       }
                     },
                     "required": true,
@@ -10688,7 +11016,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "是否禁用"
                     }
                   }
                 ]
@@ -10743,7 +11071,7 @@
                     "property": "grid-op",
                     "label": {
                       "text": {
-                        "zh_CN": "表格配置"
+                        "zh_CN": "面板表格配置"
                       }
                     },
                     "required": true,
@@ -10934,11 +11262,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["modelValue", "disabled"]
+              "properties": [
+                "modelValue",
+                "disabled"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -11075,7 +11411,7 @@
                     "property": "icon-trigger-click-node",
                     "label": {
                       "text": {
-                        "zh_CN": "触发NodeClick 事件"
+                        "zh_CN": "触发NodeClick事件"
                       }
                     },
                     "required": true,
@@ -11274,11 +11610,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["data", "show-checkbox"]
+              "properties": [
+                "data",
+                "show-checkbox"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -11400,7 +11744,7 @@
                     "property": "data",
                     "label": {
                       "text": {
-                        "zh_CN": "数据"
+                        "zh_CN": "步骤条数据"
                       }
                     },
                     "required": true,
@@ -11485,11 +11829,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["active", "data"]
+              "properties": [
+                "active",
+                "data"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -11709,11 +12061,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["disabled", "content"]
+              "properties": [
+                "disabled",
+                "content"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -11842,7 +12202,7 @@
                       }
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "提示框位置"
                     },
                     "labelPosition": "left"
                   },
@@ -11965,7 +12325,7 @@
                     "property": "close-delay",
                     "label": {
                       "text": {
-                        "zh_CN": "隐藏延迟"
+                        "zh_CN": "延迟隐藏"
                       }
                     },
                     "required": true,
@@ -12060,7 +12420,7 @@
                     "property": "popper-options",
                     "label": {
                       "text": {
-                        "zh_CN": "popper.js的参数"
+                        "zh_CN": "弹出层参数"
                       }
                     },
                     "required": true,
@@ -12091,7 +12451,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": "标题"
+                      "zh_CN": "提示内容标题"
                     }
                   },
                   {
@@ -12117,7 +12477,7 @@
                     "property": "transition",
                     "label": {
                       "text": {
-                        "zh_CN": "定义渐变动画"
+                        "zh_CN": "渐变动画"
                       }
                     },
                     "required": true,
@@ -12197,11 +12557,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["visible", "width"]
+              "properties": [
+                "visible",
+                "width"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -12357,14 +12725,14 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": "禁用"
+                      "zh_CN": "是否禁用"
                     }
                   },
                   {
                     "property": "readonly",
                     "label": {
                       "text": {
-                        "zh_CN": "是否只读"
+                        "zh_CN": "只读"
                       }
                     },
                     "required": true,
@@ -12376,7 +12744,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "是否只读"
                     }
                   },
                   {
@@ -12425,7 +12793,7 @@
                     "property": "maxlength",
                     "label": {
                       "text": {
-                        "zh_CN": "最大长度"
+                        "zh_CN": "输入最大长度"
                       }
                     },
                     "required": true,
@@ -12615,11 +12983,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["value", "disabled"]
+              "properties": [
+                "value",
+                "disabled"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -12736,7 +13112,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": "禁用"
+                      "zh_CN": "是否禁用"
                     }
                   },
                   {
@@ -12777,7 +13153,7 @@
                     "property": "controls",
                     "label": {
                       "text": {
-                        "zh_CN": "是否使用加减按钮"
+                        "zh_CN": "加减按钮"
                       }
                     },
                     "required": false,
@@ -12789,7 +13165,7 @@
                       "props": {}
                     },
                     "description": {
-                      "zh_CN": ""
+                      "zh_CN": "是否使用加减按钮"
                     }
                   },
                   {
@@ -12827,7 +13203,7 @@
                     "property": "precision",
                     "label": {
                       "text": {
-                        "zh_CN": "数值精度"
+                        "zh_CN": "精度"
                       }
                     },
                     "required": false,
@@ -12871,7 +13247,7 @@
                     "property": "max",
                     "label": {
                       "text": {
-                        "zh_CN": "可输入的最大数值"
+                        "zh_CN": "最大数值"
                       }
                     },
                     "required": false,
@@ -12893,7 +13269,7 @@
                     "property": "min",
                     "label": {
                       "text": {
-                        "zh_CN": "可输入的最小数值"
+                        "zh_CN": "最小数值"
                       }
                     },
                     "required": false,
@@ -13062,11 +13438,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["value", "disabled"]
+              "properties": [
+                "value",
+                "disabled"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         }
@@ -13455,7 +13839,10 @@
               "schema": {
                 "componentName": "TinyCheckboxGroup",
                 "props": {
-                  "modelValue": ["name1", "name2"],
+                  "modelValue": [
+                    "name1",
+                    "name2"
+                  ],
                   "type": "checkbox",
                   "options": [
                     {

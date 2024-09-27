@@ -2,7 +2,9 @@
   <div class="plugin-panel">
     <div class="plugin-panel-header">
       <div class="plugin-panel-title">
-        <span class="title">{{ title }}</span>
+        <span class="title"
+          >{{ title }}<link-button class="link" v-if="isShowDocsIcon" :href="docsUrl"></link-button
+        ></span>
         <close-icon v-if="isCloseLeft" :name="name" @close="closePanel"></close-icon>
       </div>
       <div class="plugin-panel-icon">
@@ -16,10 +18,12 @@
 
 <script>
 import { useLayout } from '@opentiny/tiny-engine-meta-register'
+import LinkButton from './LinkButton.vue'
 import CloseIcon from './CloseIcon.vue'
 
 export default {
   components: {
+    LinkButton,
     CloseIcon
   },
   props: {
@@ -40,6 +44,14 @@ export default {
     name: {
       type: String,
       default: 'cross'
+    },
+    docsUrl: {
+      type: String,
+      default: ''
+    },
+    isShowDocsIcon: {
+      type: Boolean,
+      default: false
     }
   },
   emits: ['close'],
@@ -70,21 +82,23 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    line-height: 48px;
     font-size: 12px;
     font-weight: var(--ti-lowcode-plugin-panel-title-font-weight);
     font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
       'Helvetica Neue', sans-serif;
-    padding: 0 12px;
+    padding: 12px;
     color: var(--ti-lowcode-plugin-panel-title-color);
     font-weight: var(--ti-lowcode-plugin-panel-title-font-weight);
-    border-bottom: 1px solid var(--ti-lowcode-plugin-panel-header-border-bottom-color);
-    margin-bottom: 16px;
     .plugin-panel-title {
       display: flex;
       align-items: center;
       .title + .icon-wrap {
         margin-left: 10px;
+      }
+      .title {
+        display: flex;
+        align-items: center;
+        margin-right: 5px;
       }
     }
 

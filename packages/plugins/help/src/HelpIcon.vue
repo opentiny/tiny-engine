@@ -11,7 +11,10 @@
         {{ helpTitle }}
       </div>
       <div class="help-plugin-box-body">
-        <a class="help-plugin-box-body-item" :href="courseUrl" target="_blank">使用手册</a>
+        <a :href="courseUrl" target="_blank" class="help-plugin-box-item">
+          <span><svg-icon class="svg-icon" name="user-guide"></svg-icon>使用手册</span
+          ><icon-fillet-external-link class="icon-fillet-external-link" />
+        </a>
         <tiny-tooltip v-model="state.showTooltip" :manual="true" effect="light" placement="right-end">
           <template #content>
             <div>
@@ -19,19 +22,16 @@
               <svg-icon name="close" class="help-plugin-tooltip-close" @click="closeToolTip"></svg-icon>
             </div>
           </template>
-          <div class="help-plugin-box-body-item help-plugin-box-body-guide" @click="toShowStep">新手引导</div>
+          <div class="help-plugin-box-item" @click="toShowStep">
+            <span><svg-icon class="svg-icon" name="beginner-guide"></svg-icon>新手引导</span>
+          </div>
         </tiny-tooltip>
       </div>
       <div class="help-plugin-box-ques">
-        <div class="help-plugin-box-ques-title">{{ questionTitle }}</div>
-        <a
-          v-for="(item, idx) in questionList"
-          :key="idx"
-          :href="item.url"
-          target="_blank"
-          class="help-plugin-box-ques-item"
-        >
-          {{ idx + 1 }}.{{ item.label }}
+        <div class="help-plugin-box-title help-plugin-box-ques-title">{{ questionTitle }}</div>
+        <a v-for="(item, idx) in questionList" :key="idx" :href="item.url" target="_blank" class="help-plugin-box-item">
+          <span> {{ idx + 1 }}.{{ item.label }} </span>
+          <icon-fillet-external-link class="icon-fillet-external-link" />
         </a>
       </div>
     </div>
@@ -47,7 +47,7 @@
 <script>
 import { reactive, onMounted, ref } from 'vue'
 import { Guide, Tooltip } from '@opentiny/vue'
-import { IconClose } from '@opentiny/vue-icon'
+import { IconFilletExternalLink } from '@opentiny/vue-icon'
 import { useLayout, META_APP } from '@opentiny/tiny-engine-meta-register'
 
 const GUIDE_VERSION = '1.0.0-20230818'
@@ -56,7 +56,8 @@ const GUIDE_STORAGE_KEY = 'tinyengine_guide'
 export default {
   components: {
     TinyTooltip: Tooltip,
-    TinyGuide: Guide
+    TinyGuide: Guide,
+    IconFilletExternalLink: IconFilletExternalLink()
   },
   setup() {
     const { activePlugin, getPluginState } = useLayout()
@@ -227,7 +228,6 @@ export default {
 
     return {
       tinyGuideRef,
-      IconClose: IconClose(),
       toolTipContent,
       helpTitle,
       questionTitle,
@@ -252,11 +252,9 @@ export default {
 .help-plugin-close {
   cursor: pointer;
   position: absolute;
-  right: 20px;
-  top: 20px;
-}
-a:hover {
-  text-decoration: underline;
+  right: 16px;
+  top: 14px;
+  font-size: 12px;
 }
 </style>
 
@@ -332,53 +330,57 @@ div.tiny-guide.shepherd-element {
   position: absolute;
   left: var(--base-nav-panel-width);
   bottom: 68px;
-  width: 260px;
+  width: 208px;
   background-color: var(--ti-lowcode-help-box-bg-color);
   border-radius: 6px;
   box-shadow: var(--ti-lowcode-help-box-shadow);
-  padding: 28px 32px;
+  padding: 16px 0;
   &-top {
     text-align: right;
   }
   &-title {
     color: var(--ti-lowcode-help-box-title-text-color);
-    font-size: 20px;
+    font-size: 12px;
     font-weight: 600;
-    margin-bottom: 16px;
+    line-height: 18px;
+    margin: 0 16px 8px 16px;
   }
   &-body {
-    &-item {
-      display: block;
-      cursor: pointer;
-      width: 60px;
-      font-size: 14px;
-      color: var(--ti-lowcode-help-box-item-text-color);
-      margin-bottom: 12px;
+    padding-bottom: 8px;
+  }
+  &-item {
+    padding: 0 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    height: 28px;
+    line-height: 28px;
+    font-size: 12px;
+    color: var(--ti-lowcode-help-box-item-text-color);
+    span {
+      display: flex;
+      align-items: center;
+      .svg-icon {
+        margin-right: 4px;
+      }
     }
-    &-item:hover {
-      text-decoration: underline;
-    }
-    &-guide:hover {
-      text-decoration: none;
-    }
+  }
+  &-item:hover {
+    background: var(--ti-lowcode-help-box-item-hover-bg-color);
+    color: var(--ti-lowcode-help-box-title-text-color);
   }
 
   &-ques {
-    border-top: 1px solid var(--ti-lowcode-help-box-question-border-top);
-    padding-top: 12px;
     &-title {
-      color: var(--ti-lowcode-help-box-title-text-color);
-      font-size: 20px;
-      font-weight: 600;
-      margin-bottom: 16px;
+      padding-top: 8px;
+      border-top: 1px solid var(--ti-lowcode-help-box-question-border-top);
     }
-    &-item {
-      display: inline-block;
-      color: var(--ti-lowcode-help-box-question-item-text-color);
-      cursor: pointer;
-      font-size: 14px;
-      margin-bottom: 12px;
-    }
+  }
+
+  .icon-fillet-external-link {
+    width: 16px;
+    height: 16px;
   }
 }
 </style>

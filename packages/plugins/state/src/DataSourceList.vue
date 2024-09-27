@@ -4,11 +4,12 @@
       <li v-for="key in filteredKey" :key="key" :class="['data-source-list-item', { selected: key === selectedKey }]">
         <div class="item-head">
           <div class="item-head-left">
+            <svg-button name="plugin-icon-var"></svg-button>
             <span class="protocal"> {{ stateScope === STATE.CURRENT_STATE ? 'state.' : 'stores.' }}</span>
             <span class="name">{{ key }}</span>
           </div>
           <div class="item-head-right">
-            <svg-button name="edit" tips="编辑" @click="openPanel(OPTION_TYPE.UPDATE, key)"></svg-button>
+            <svg-button name="to-edit" tips="编辑" @click="openPanel(OPTION_TYPE.UPDATE, key)"></svg-button>
             <svg-button name="copy" tips="复制" @click="openPanel(OPTION_TYPE.COPY, key)"></svg-button>
             <svg-button name="delete" tips="删除" @click="confirmClick(key)"></svg-button>
           </div>
@@ -115,7 +116,8 @@ export default {
 
 <style lang="less" scoped>
 .data-source-list {
-  margin: 12px 0 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--ti-lowcode-data-source-border-color);
   overflow-y: scroll;
   .data-source-list-blank {
     font-size: 12px;
@@ -124,11 +126,29 @@ export default {
     &.selected,
     &:hover {
       background: var(--ti-lowcode-common-component-hover-bg);
+      .item-head-right {
+        display: flex;
+        justify-content: flex-end;
+        width: 30%;
+        .svg-button {
+          color: var(--ti-lowcode-toolbar-breadcrumb-color);
+          font-size: 14px;
+          cursor: pointer;
+
+          &:not(:last-child) {
+            margin-right: 4px;
+          }
+
+          &:hover {
+            color: var(--ti-lowcode-toolbar-icon-color);
+          }
+        }
+      }
     }
   }
 
   .item-head {
-    height: 42px;
+    height: 24px;
     padding: 0 10px;
     color: var(--ti-lowcode-data-list-color);
     display: flex;
@@ -153,7 +173,6 @@ export default {
       }
 
       .protocal {
-        color: #5e7ce0;
         margin-right: 4px;
         font-size: 12px;
         flex-shrink: 0;
@@ -171,22 +190,7 @@ export default {
     }
 
     .item-head-right {
-      display: flex;
-      justify-content: flex-end;
-      width: 30%;
-      .svg-button {
-        color: var(--ti-lowcode-toolbar-breadcrumb-color);
-        font-size: 14px;
-        cursor: pointer;
-
-        &:not(:last-child) {
-          margin-right: 4px;
-        }
-
-        &:hover {
-          color: var(--ti-lowcode-toolbar-icon-color);
-        }
-      }
+      display: none;
     }
   }
 
