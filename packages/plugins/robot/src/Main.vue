@@ -550,14 +550,14 @@ export default {
       padding-left: 12px;
       color: var(--ti-lowcode-chat-model-helper-text);
       height: 40px;
-      border: 2px solid;
-      border-image: linear-gradient(
-          to bottom right,
-          var(--ti-lowcode-chat-model-button-bg-1),
-          var(--ti-lowcode-chat-model-button-bg-2),
-          var(--ti-lowcode-chat-model-button-bg-3)
-        )
-        1;
+      border: 2px solid var(--ti-lowcode-chat-model-input-border);
+      border-radius: 8px;
+    }
+    .tiny-input__inner:hover {
+      border-color: var(--ti-lowcode-chat-model-input-border);
+    }
+    .tiny-input__inner:focus {
+      border-color: var(--ti-lowcode-chat-model-input-border);
     }
     clip-path: inset(0 0 round 2px);
     svg {
