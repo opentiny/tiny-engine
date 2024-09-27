@@ -384,15 +384,15 @@ export default {
     flex-direction: column;
     align-items: center;
     position: relative;
-    height: 106px;
+    height: 110px;
     text-align: center;
     user-select: none;
     margin-right: 6px;
     margin-bottom: 12px;
     .block-item-img {
-      line-height: 82px;
+      line-height: 86px;
       width: 100%;
-      height: 82px;
+      height: 86px;
       border-radius: 4px;
       background-color: var(--ti-lowcode-component-block-list-item-active-bg);
     }
@@ -498,7 +498,7 @@ export default {
         justify-content: center;
         align-items: center;
         width: 100%;
-        height: 82px;
+        height: 86px;
         border: 1px dashed var(--te-common-border-hover);
         border-radius: 4px;
       }
