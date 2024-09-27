@@ -107,7 +107,7 @@
 
     <template #footer>
       <div class="bind-dialog-footer">
-        <div class="left">
+        <div>
           <tiny-button type="danger" plain @click="remove">移除绑定</tiny-button>
         </div>
         <div class="right">
@@ -712,9 +712,6 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    .left {
-      margin-right: 8px;
-    }
   }
 }
 </style>

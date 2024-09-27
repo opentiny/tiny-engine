@@ -247,8 +247,15 @@
     padding: 0;
     display: flex;
     flex-direction: row-reverse;
-    button:not(:first-child) {
+    .tiny-button {
+      margin: 0;
+    }
+    .tiny-button--danger {
       margin-right: 8px;
+    }
+    .tiny-button--primary,
+    .tiny-button--info {
+      margin-left: 8px;
     }
   }
 }
@@ -265,6 +272,7 @@
     border: 1px solid var(--te-common-border-secondary);
     color: var(--te-common-text-primary);
     background-color: var(--te-common-bg-default);
+    margin-right: 8px;
     &:hover {
       border: 1px solid var(--te-common-border-hover);
     }

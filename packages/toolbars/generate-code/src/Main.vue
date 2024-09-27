@@ -261,7 +261,6 @@ export default {
 </script>
 <style lang="less" scoped>
 .toolbar-generate {
-  margin-right: 6px;
   .toolbar-generate-btn {
     display: flex;
     align-items: center;

@@ -253,6 +253,7 @@ export default {
     .advanced-config-form-item {
       display: grid;
       grid-template-columns: 1fr auto;
+      flex: 1;
     }
     .binding-state {
       box-sizing: border-box;
