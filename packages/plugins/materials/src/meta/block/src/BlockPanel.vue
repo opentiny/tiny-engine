@@ -6,7 +6,7 @@
     </tiny-search>
     <block-list v-model:blockList="filterBlocks" :show-add-button="true" :show-block-shot="true"></block-list>
   </div>
-  <teleport to=".material-right-panel" v-if="rightPanelRef">
+  <teleport defer :to="rightPanelClassName">
     <block-group-panel></block-group-panel>
     <block-version-select></block-version-select>
   </teleport>
@@ -35,8 +35,14 @@ export default {
     BlockVersionSelect
   },
   props: {
-    activeTabName: String,
-    rightPanelRef: Object
+    activeTabName: {
+      type: String,
+      default: ''
+    },
+    rightPanelClassName: {
+      type: String,
+      default: ''
+    }
   },
   setup(props) {
     const { addDefaultGroup, isDefaultGroupId, isAllGroupId, isRefresh, selectedGroup } = useBlock()

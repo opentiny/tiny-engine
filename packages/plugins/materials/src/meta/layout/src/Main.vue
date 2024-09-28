@@ -6,11 +6,15 @@
     <template #content>
       <tiny-tabs v-model="activeName" tab-style="button-card" class="full-width-tabs" v-if="!onlyShowDefault">
         <tiny-tab-item :key="item.id" v-for="item in tabComponents" :title="item.title" :name="item.id">
-          <component :is="item.component" :activeTabName="activeName" :rightPanelRef="rightPanelRef"></component>
+          <component
+            :is="item.component"
+            :activeTabName="activeName"
+            :rightPanelClassName="`.${rightPanelClassName}`"
+          ></component>
         </tiny-tab-item>
       </tiny-tabs>
       <component :is="defaultComponent" v-if="onlyShowDefault"></component>
-      <div class="material-right-panel" ref="rightPanelRef"></div>
+      <div :class="rightPanelClassName"></div>
     </template>
   </plugin-panel>
 </template>
@@ -20,6 +24,8 @@ import { reactive, provide, ref } from 'vue'
 import { Tabs, TabItem } from '@opentiny/vue'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { PluginPanel } from '@opentiny/tiny-engine-common'
+
+const rightPanelClassName = 'material-right-panel'
 
 export default {
   components: {
@@ -49,7 +55,6 @@ export default {
     provide('panelState', panelState) // 使用provide传给子组件,后续可能会有调整，先暂定
 
     const pluginRegistryData = ref(props.registryData)
-    const rightPanelRef = ref(null)
     const displayComponentIds = pluginRegistryData.value.options.displayComponentIds || []
     const headerComponent = pluginRegistryData.value.components?.header
     const onlyShowDefault = ref(displayComponentIds.length === 1)
@@ -77,7 +82,7 @@ export default {
       defaultComponent,
       onlyShowDefault,
       tabComponents,
-      rightPanelRef
+      rightPanelClassName
     }
   }
 }

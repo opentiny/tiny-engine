@@ -1,6 +1,6 @@
 <template>
   <ul
-    v-if="state.data.length"
+    v-if="state.data.length || showAddButton"
     :class="['block-list', 'lowcode-scrollbar', { 'is-small-list': blockStyle === 'mini' }, { isShortcutPanel }]"
     @mouseleave="state.hover = false"
   >
@@ -10,6 +10,7 @@
       :draggable="!isBlockManage && showSettingIcon"
       :class="['block-item', { 'is-disabled': showBlockDetail }, { 'block-item-small-list': blockStyle === 'mini' }]"
       :title="getTitle(item)"
+      @mousedown.stop.left="blockClick({ item, index })"
       @mouseover.stop="openBlockShotPanel(item, $event)"
       @mouseleave="handleBlockItemLeave"
     >
@@ -71,7 +72,7 @@
                     <svg-button class="list-item-svg" name="text-source-setting"> </svg-button>
                     <span>设置</span>
                   </li>
-                  <li class="list-item" @mousedown.stop.left="blockClick({ event: $event, item, index })">
+                  <li class="list-item" @mousedown.stop.left="editBlock({ event: $event, item, index })">
                     <svg-button class="list-item-svg" name="to-edit"> </svg-button><span>编辑</span>
                   </li>
                 </ul>
@@ -132,7 +133,7 @@
         </div>
       </slot>
     </li>
-    <li v-if="state.showAddButton" class="block-item block-plus" @click="$emit('add')">
+    <li v-if="showAddButton" class="block-item block-plus" @click="$emit('add')">
       <span class="block-plus-icon"><icon-plus></icon-plus></span>
     </li>
     <div v-if="showBlockShot && state.hover && state.currentBlock.screenshot" class="block-shortcut">
@@ -149,7 +150,7 @@
       </div>
     </div>
   </ul>
-  <search-empty :isShow="!state.data.length" />
+  <search-empty :isShow="!state.data.length && !showAddButton" />
 </template>
 
 <script>
@@ -228,13 +229,12 @@ export default {
       default: null
     }
   },
-  emits: ['click', 'iconClick', 'add', 'deleteBlock', 'openVersionPanel'],
+  emits: ['click', 'iconClick', 'add', 'deleteBlock', 'openVersionPanel', 'editBlock'],
   setup(props, { emit }) {
     const panelState = inject('panelState', {})
     const state = reactive({
       activeIndex: -1,
       data: computed(() => props.data),
-      showAddButton: computed(() => props.showAddButton),
       top: 0,
       hover: false,
       currentBlock: {},
@@ -263,12 +263,16 @@ export default {
       }
     }
 
-    const blockClick = ({ event, item, index }) => {
+    const blockClick = ({ item }) => {
+      emit('click', item)
+    }
+
+    const editBlock = ({ event, item, index }) => {
       if (props.isBlockManage) {
         state.activeIndex = index
       }
 
-      emit('click', item)
+      emit('editBlock', item)
       // 点击区块并不打开设置面板
       emit('iconClick', { event, item, index, isOpen: false })
     }
@@ -361,7 +365,8 @@ export default {
       defaultImg,
       handleBlockItemLeave,
       handleSettingMouseOver,
-      handleShowVersionMenu
+      handleShowVersionMenu,
+      editBlock
     }
   }
 }
