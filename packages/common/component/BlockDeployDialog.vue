@@ -219,7 +219,7 @@ export default {
         return
       }
       try {
-        const pageSchema = state.newCode ?? JSON.parse(state.newCode)
+        const pageSchema = JSON.parse(state.newCode)
         const setSchema = useCanvas().canvasApi.value.setSchema
         setSchema?.({ ...pageSchema, componentName: COMPONENT_NAME.Block })
         close()
