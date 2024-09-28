@@ -85,7 +85,7 @@ export default {
     const paramsPropPath = (index) => `${index}.params`
 
     const paramsStringValidator = (rule, value, callback) => {
-      if (value && value.split(',').some((parma) => !verifyJsVarName(parma))) {
+      if (value && value.split(',').some((param) => !verifyJsVarName(param))) {
         callback(new Error('仅支持JavaScript中有效的变量名'))
       } else {
         callback()
