@@ -89,7 +89,7 @@
         :blockStyle="state.layout"
         default-icon-tip="查看区块"
         :externalBlock="externalBlock"
-        @click="editBlock"
+        @editBlock="editBlock"
         @iconClick="openSettingPanel"
       ></plugin-block-list>
       <block-setting></block-setting>
