@@ -361,7 +361,7 @@ export default {
 
     const executeRelationAction = (value, preValue) => {
       const { onChange, rules } = props.property
-      const { setProp, delProp } = useProperties()
+      const { setProp, delProp, setPropertyProps } = useProperties()
 
       // 关联
       if (onChange && propsObj) {
@@ -371,6 +371,7 @@ export default {
             config: {
               ...widget.value?.props
             },
+            setPropertyProps,
             setProp: setProp,
             delProp
           })

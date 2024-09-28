@@ -7047,7 +7047,7 @@
                 "defaultValue": ""
               }
             },
-            "onBeforeMount": "console.log('table on load'); this.options = source.data"
+            "onBeforeMount": "this.options = source.data"
           },
           "configure": {
             "loop": true,
@@ -8541,6 +8541,7 @@
                     "required": true,
                     "readOnly": false,
                     "disabled": false,
+                    "labelPosition": "top",
                     "cols": 12,
                     "widget": {
                       "component": "MetaSwitch",
@@ -8548,8 +8549,7 @@
                     },
                     "description": {
                       "zh_CN": "是否显示标题后编辑 ICON"
-                    },
-                    "labelPosition": "left"
+                    }
                   },
                   {
                     "property": "tabs",
@@ -8561,6 +8561,7 @@
                     "required": true,
                     "readOnly": false,
                     "disabled": false,
+                    "onChange": "function(val) { this.setPropertyProps('modelValue', { 'options': val }) }",
                     "defaultValue": "",
                     "cols": 12,
                     "bindState": false,
@@ -8571,7 +8572,7 @@
                     "description": {
                       "zh_CN": "tabs"
                     },
-                    "labelPosition": "none"
+                    "labelPosition": "top"
                   },
                   {
                     "property": "modelValue",
@@ -8585,13 +8586,25 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "MetaInput",
-                      "props": {}
+                      "component": "MetaSelect",
+                      "props": {
+                        "clearable": false,
+                        "options": [
+                          {
+                            "label": "标签页1",
+                            "value": "first"
+                          },
+                          {
+                            "label": "标签页2",
+                            "value": "second"
+                          }
+                        ]
+                      }
                     },
                     "description": {
                       "zh_CN": "绑定值，选中选项卡的 name"
                     },
-                    "labelPosition": "left"
+                    "labelPosition": "top"
                   },
                   {
                     "property": "with-add",
@@ -10267,7 +10280,7 @@
             "contentMenu": {
               "actions": ["create symbol"]
             },
-            "onBeforeMount": "console.log('table on load'); this.pager = source.pager; this.fetchData = source.fetchData; this.data = source.data ;this.columns = source.columns"
+            "onBeforeMount": "this.pager = source.pager; this.fetchData = source.fetchData; this.data = source.data ;this.columns = source.columns"
           },
           "configure": {
             "loop": true,
@@ -13620,7 +13633,17 @@
               "schema": {
                 "componentName": "TinyTabs",
                 "props": {
-                  "modelValue": "first"
+                  "modelValue": "first",
+                  "tabs": [
+                    {
+                      "label": "标签页1",
+                      "value": "first"
+                    },
+                    {
+                      "label": "标签页2",
+                      "value": "second"
+                    }
+                  ]
                 },
                 "children": [
                   {

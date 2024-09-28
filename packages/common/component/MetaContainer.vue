@@ -4,7 +4,7 @@
       <template #content="{ data }">
         <div class="item-text">
           <div class="tiny-input">
-            <input v-model="data.props.title" class="tiny-input__inner" />
+            <input v-model="data.props.title" @input="labelChange" class="tiny-input__inner" />
           </div>
         </div>
       </template>
@@ -20,7 +20,7 @@
   </div>
 </template>
 <script>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import MetaListItems from './MetaListItems.vue'
 import { useProperties, useResource, useHistory } from '@opentiny/tiny-engine-controller'
 import { utils } from '@opentiny/tiny-engine-utils'
@@ -31,7 +31,13 @@ export default {
     MetaListItems,
     IconDel: iconDel()
   },
-  setup() {
+  props: {
+    modelValue: Array,
+    default: () => []
+  },
+  emits: ['update:modelValue'],
+  setup(props, { emit }) {
+    const tabsOptions = ref([])
     const { children: schemaChildren, componentName } = useProperties().getSchema()
     const configureMap = useResource().getConfigureMap()
     const childComponentName =
@@ -63,6 +69,7 @@ export default {
 
     const delChildren = (data) => {
       schemaChildren.splice(children.value.indexOf(data), 1)
+      tabsOptions.value = tabsOptions.value.filter((option) => option.value !== data.props.name)
       children.value = [...schemaChildren]
       useHistory().addHistory()
     }
@@ -81,7 +88,29 @@ export default {
       children.value = [...list]
     }
 
-    return { children, addChildren, delChildren, dragEnd }
+    const updateTabsOptions = (schema) => {
+      tabsOptions.value = schema.map((item) => {
+        return {
+          label: item.props.title,
+          value: item.props.name
+        }
+      })
+      emit('update:modelValue', tabsOptions.value)
+    }
+
+    const labelChange = () => {
+      updateTabsOptions(children.value)
+    }
+
+    watch(
+      () => children.value,
+      (value) => {
+        updateTabsOptions(value)
+      },
+      { deep: true, immediate: true }
+    )
+
+    return { children, addChildren, delChildren, labelChange, dragEnd }
   }
 }
 </script>

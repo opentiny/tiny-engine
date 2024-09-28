@@ -12,6 +12,7 @@
 
 import { isRef, isProxy, unref, toRaw } from 'vue'
 import { isObject, isArray } from '@opentiny/vue-renderless/grid/static'
+import { isEmptyObject } from '@opentiny/vue-renderless/common/type'
 
 export const fun_ctor = Function
 
@@ -46,6 +47,54 @@ export function parseFunction(rawCode, context = {}) {
 
     return null
   }
+}
+
+/**
+ * 判断传入的值是否可以过滤
+ * @param {any} value
+ * @param {boolean} keepRef 是否过滤空数组或空对象，默认false
+ * @returns boolean
+ */
+export const isOmitValue = (value, keepRef = false) => {
+  if (Array.isArray(value) && value.length === 0 && !keepRef) {
+    return true
+  }
+  if (typeof value === 'object' && isEmptyObject(value) && !keepRef) {
+    return true
+  }
+
+  return ['', null, undefined].includes(value)
+}
+
+/**
+ * 过滤对象属性、数组的空值
+ * 过滤的空值包括： []、{}、''、null、undefined
+ * @param {object | Array<any>} obj
+ * @param {{deep: boolean; keepRef: boolean}} deep 是否深度过滤; keepRef 是否过滤空数组或空对象
+ * @returns 过滤的对象
+ */
+export const delNullKey = (obj = {}, options = {}) => {
+  if (!(obj instanceof Object)) {
+    return obj
+  }
+
+  const { deep = true, keepRef = false } = options
+  if (Array.isArray(obj)) {
+    return obj.map((item) => delNullKey(item, deep)).filter((value) => !isOmitValue(value))
+  }
+
+  const newObj = {}
+  for (let [key, value] of Object.entries(obj)) {
+    if (typeof value === 'object' && value !== null) {
+      const trimValue = deep ? delNullKey(value, deep, keepRef) : value
+      if (!isOmitValue(trimValue, keepRef)) {
+        newObj[key] = trimValue
+      }
+    } else if (!isOmitValue(value)) {
+      newObj[key] = value
+    }
+  }
+  return newObj
 }
 
 /**

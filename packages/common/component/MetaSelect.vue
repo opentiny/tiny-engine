@@ -4,7 +4,7 @@
     :multiple="multi"
     :is-drop-inherit-width="true"
     :show-alloption="false"
-    :clearable="true"
+    :clearable="clearable"
     @change="handleChange"
   >
     <template v-if="groups?.length">
@@ -70,6 +70,10 @@ export default {
     options: {
       type: Array,
       default: () => []
+    },
+    clearable: {
+      type: Boolean,
+      default: true
     }
   },
   emits: ['update:modelValue'],
@@ -98,7 +102,12 @@ export default {
     }
 
     watchEffect(() => {
-      state.selected = props.modelValue ?? ''
+      if (!props.options.find((item) => item.value === props.modelValue)) {
+        state.selected = props.options[0].value || ''
+        emit('update:modelValue', state.selected)
+      } else {
+        state.selected = props.modelValue ?? ''
+      }
     })
 
     return {
