@@ -1,6 +1,7 @@
 <template>
   <div class="block-add-transfer">
     <div class="block-add-transfer-footer">
+      <slot name="search"></slot>
       <tiny-select v-model="state.selectedSort" class="transfer-order-select" placeholder="请选择">
         <tiny-option v-for="item in state.sortList" :key="item.id" :label="item.text" :value="item.id"></tiny-option>
       </tiny-select>
