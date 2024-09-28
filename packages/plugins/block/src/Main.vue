@@ -276,10 +276,11 @@ export default {
       boxVisibility.value = false
     }
     const editBlock = async (block) => {
-      const isEdite = true
+      const isEdit = true
+
       if (isSaved()) {
         await refreshBlockData(block)
-        useBlock().initBlock(block, {}, isEdite)
+        useBlock().initBlock(block, {}, isEdit)
         useLayout().closePlugin()
         closePanel()
         const url = new URL(window.location)
@@ -291,7 +292,7 @@ export default {
           message: '当前画布内容尚未保存，是否要继续切换?',
           exec: async () => {
             await refreshBlockData(block)
-            useBlock().initBlock(block, {}, isEdite)
+            useBlock().initBlock(block, {}, isEdit)
             useLayout().closePlugin()
             closePanel()
           }
