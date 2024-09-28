@@ -22,10 +22,11 @@
     "@opentiny/vue-theme": "~3.14.0"
   },
   "devDependencies": {
+    "@opentiny/tiny-engine-vite-config": "latest",
+    "@opentiny/tiny-engine-mock": "latest",
     "@vitejs/plugin-vue": "^5.1.2",
     "cross-env": "^7.0.3",
-    "vite": "^5.4.2",
-    "@opentiny/tiny-engine-vite-config": "latest",
-    "@opentiny/tiny-engine-mock": "latest"
+    "concurrently": "^8.2.0",
+    "vite": "^5.4.2"
   }
 }
