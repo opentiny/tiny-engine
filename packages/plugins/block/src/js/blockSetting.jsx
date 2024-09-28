@@ -664,6 +664,13 @@ const updateBlock = (block = {}) => {
   )
     .then((data) => {
       useCanvas().setSaved(true)
+      const currentId = useBlock().getCurrentBlock()?.id
+
+      // 如果是当前正在编辑的区块，需要同步更新画布
+      if (currentId === id) {
+        useBlock().initBlock(data, {}, true)
+      }
+
       useBlock().initBlock(data, {}, true)
       // 弹出保存区块成功
       useModal().message({ message: '保存区块成功！', status: 'success' })
