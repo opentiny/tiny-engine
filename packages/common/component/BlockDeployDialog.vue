@@ -82,7 +82,7 @@ import {
   FormItem as TinyFormItem
 } from '@opentiny/vue'
 import { theme } from '@opentiny/tiny-engine-controller/adapter'
-import { useLayout, useNotify, useCanvas } from '@opentiny/tiny-engine-controller'
+import { useLayout, useNotify, useCanvas, useBlock } from '@opentiny/tiny-engine-controller'
 import { constants } from '@opentiny/tiny-engine-utils'
 import VueMonaco from './VueMonaco.vue'
 
@@ -163,7 +163,7 @@ export default {
         const { getEditBlock, publishBlock } = getPluginApi(PLUGIN_NAME.BlockManage)
         if (valid) {
           const params = {
-            block: getEditBlock(),
+            block: getEditBlock() || useBlock().getCurrentBlock(),
             is_compile: true,
             deploy_info: formState.deployInfo,
             version: formState.version,
