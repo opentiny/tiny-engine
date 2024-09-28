@@ -51,7 +51,7 @@ const savePage = async (pageSchema) => {
   }
 
   isLoading.value = true
-  await handlePageUpdate(currentPage.id, { ...currentPage, ...params })
+  await handlePageUpdate(currentPage.id, { ...currentPage, ...params }, false, true)
   isLoading.value = false
 }
 
