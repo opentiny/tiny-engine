@@ -23,7 +23,7 @@
             <tiny-input
               v-model="slot.params"
               class="use-slot-params"
-              @change="validParams(index, paramsPropPath(index), slot)"
+              @change="validParams(paramsPropPath(index), slot)"
             ></tiny-input>
           </tiny-form-item>
         </div>
@@ -95,7 +95,7 @@ export default {
     const updateSlotParams = (slotData) => {
       emit('update:modelValue', slotData)
 
-      // 更新当前选中组件的根属性，不根新在jsslot中的数据非响应式
+      // 更新当前选中组件的根属性，不更新在jsslot中的数据非响应式
       const [propsName] = path.split('.')
       const schema = useProperties().getSchema()
       schema.props[propsName] = JSON.parse(JSON.stringify(schema.props[propsName]))
@@ -155,7 +155,7 @@ export default {
       updateSlotParams({ ...(props.modelValue || {}), ...slotInfo })
     }
 
-    const validParams = (idx, paramsPath, slot) => {
+    const validParams = (paramsPath, slot) => {
       slotRef.value.validateField([paramsPath], (error) => {
         if (!error) {
           slot.bind && setSlotParams(slot)
