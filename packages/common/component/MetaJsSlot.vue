@@ -17,13 +17,13 @@
           </div>
           <tiny-form-item
             :prop="paramsPropPath(index)"
-            :rules="[{ validator: parmasStringValidator, trigger: 'blur' }]"
+            :rules="[{ validator: paramsStringValidator, trigger: 'blur' }]"
             class="slot-name-form-item"
           >
             <tiny-input
               v-model="slot.params"
               class="use-slot-params"
-              @change="validParmas(index, paramsPropPath(index), slot)"
+              @change="validParams(index, paramsPropPath(index), slot)"
             ></tiny-input>
           </tiny-form-item>
         </div>
@@ -84,7 +84,7 @@ export default {
 
     const paramsPropPath = (index) => `${index}.params`
 
-    const parmasStringValidator = (rule, value, callback) => {
+    const paramsStringValidator = (rule, value, callback) => {
       if (value && value.split(',').some((parma) => !verifyJsVarName(parma))) {
         callback(new Error('仅支持JavaScript中有效的变量名'))
       } else {
@@ -92,7 +92,51 @@ export default {
       }
     }
 
-    const toggleSlot = (idx, { bind, name, params = '' }, isSetParams = false) => {
+    const updateSlotParams = (slotData) => {
+      emit('update:modelValue', slotData)
+
+      // 更新当前选中组件的根属性，不根新在jsslot中的数据非响应式
+      const [propsName] = path.split('.')
+      const schema = useProperties().getSchema()
+      schema.props[propsName] = JSON.parse(JSON.stringify(schema.props[propsName]))
+    }
+
+    const setSlotParams = ({ name, params = '' }) => {
+      if (!props.modelValue?.[name]) {
+        return
+      }
+
+      const slotData = { ...(props.modelValue || {}) }
+
+      if (params.length) {
+        slotData[name].params = params.split(',')
+      } else {
+        delete slotData[name].params
+      }
+
+      updateSlotParams(slotData)
+    }
+
+    const toggleSlot = (idx, { bind, name, params = '' }) => {
+      // 原本绑定的，解除绑定
+      if (bind) {
+        useModal().confirm({
+          title: '提示',
+          message: '关闭后插槽内的内容将被清空，是否继续？',
+          status: 'info',
+          exec: () => {
+            slotList.value[idx].bind = false
+            const { [name]: _deleted, ...rest } = { ...(props.modelValue || {}) }
+            updateSlotParams(rest)
+          }
+        })
+
+        return
+      }
+
+      // 未绑定的，新增绑定
+      slotList.value[idx].bind = true
+
       const slotInfo = {
         [name]: {
           type: 'JSSlot',
@@ -104,44 +148,17 @@ export default {
         }
       }
 
-      const slotData = { ...slotInfo, ...(props.modelValue || {}) }
-
       if (params.length) {
-        slotData[name].params = params.split(',')
-      } else {
-        delete slotData[name].params
+        slotInfo[name].params = params.split(',')
       }
 
-      if (bind && !isSetParams) {
-        useModal().confirm({
-          title: '提示',
-          message: '关闭后插槽内的内容将被清空，是否继续？',
-          status: 'info',
-          exec: () => {
-            slotList.value[idx].bind = false
-            delete slotData[name]
-            emit('update:modelValue', slotData)
-          }
-        })
-      } else {
-        slotList.value[idx].bind = true
-      }
-      emit('update:modelValue', slotData)
-
-      // 更新当前选中组件的根属性，不根新在jsslot中的数据非响应式
-      const [propsName] = path.split('.')
-      const schema = useProperties().getSchema()
-      schema.props[propsName] = JSON.parse(JSON.stringify(schema.props[propsName]))
+      updateSlotParams({ ...(props.modelValue || {}), ...slotInfo })
     }
 
-    const setParams = (slot, idx) => {
-      slot.bind && toggleSlot(idx, slot, true)
-    }
-
-    const validParmas = (idx, parmasPath, slot) => {
-      slotRef.value.validateField([parmasPath], (tips) => {
-        if (!tips) {
-          setParams(slot, idx)
+    const validParams = (idx, paramsPath, slot) => {
+      slotRef.value.validateField([paramsPath], (error) => {
+        if (!error) {
+          slot.bind && setSlotParams(slot)
         }
       })
     }
@@ -156,9 +173,8 @@ export default {
       slotList,
       paramsPropPath,
       slotRef,
-      parmasStringValidator,
-      validParmas,
-      setParams,
+      paramsStringValidator,
+      validParams,
       state,
       componentsMap
     }
