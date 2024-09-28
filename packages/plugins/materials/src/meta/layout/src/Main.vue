@@ -92,12 +92,11 @@ export default {
 }
 
 :deep(.tiny-tabs__header) {
-  padding: 8px;
+  padding: 0 12px;
 }
 
 :deep(.tiny-tabs__content) {
   flex: 1;
-  overflow-y: scroll;
   padding: 0;
   margin: 0px;
   & > div {

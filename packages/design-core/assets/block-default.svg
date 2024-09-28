@@ -1,0 +1,19 @@
+<svg width="84.000000" height="38.080017" viewBox="0 0 84 38.08" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<desc>
+			Created with Pixso.
+	</desc>
+	<defs>
+		<linearGradient x1="38.214962" y1="0.000000" x2="38.214962" y2="38.080006" id="paint_linear_1189_16831_0" gradientUnits="userSpaceOnUse">
+			<stop stop-color="#69ACFE"/>
+			<stop offset="1.000000" stop-color="#3B90FF"/>
+		</linearGradient>
+	</defs>
+	<rect id="矩形备份" rx="4.000000" width="84.000023" height="38.080006" fill="url(#paint_linear_1189_16831_0)" fill-opacity="1.000000"/>
+	<rect id="矩形备份" rx="4.000000" width="84.000023" height="38.080006" stroke="#000000" stroke-opacity="0" stroke-width="1.000000"/>
+	<rect id="矩形" x="38.080078" y="11.200073" rx="2.240001" width="36.959999" height="4.480001" fill="#FFFFFF" fill-opacity="1.000000"/>
+	<rect id="矩形" x="38.080078" y="11.200073" rx="2.240001" width="36.959999" height="4.480001" stroke="#000000" stroke-opacity="0" stroke-width="1.000000"/>
+	<rect id="矩形备份-13" x="38.080078" y="21.280029" rx="2.167201" width="22.400005" height="4.334401" fill="#FFFFFF" fill-opacity="1.000000"/>
+	<rect id="矩形备份-13" x="38.080078" y="21.280029" rx="2.167201" width="22.400005" height="4.334401" stroke="#000000" stroke-opacity="0" stroke-width="1.000000"/>
+	<ellipse id="椭圆形" cx="19.600098" cy="19.600098" rx="9.520000" ry="9.520001" fill="#000000" fill-opacity="0"/>
+	<ellipse id="椭圆形" cx="19.600098" cy="19.600098" rx="9.520000" ry="9.520001" stroke="#FFFFFF" stroke-opacity="1.000000" stroke-width="4.000000"/>
+</svg>

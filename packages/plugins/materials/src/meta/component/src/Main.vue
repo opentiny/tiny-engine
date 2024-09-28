@@ -133,7 +133,7 @@ export default {
   flex-direction: column;
 
   .tiny-search {
-    padding: 0 8px 12px;
+    padding: 12px;
   }
 
   .component-group {
@@ -143,8 +143,6 @@ export default {
 
     .component-item {
       padding: 12px 0;
-      border-right: 1px solid var(--ti-lowcode-material-component-list-border-color);
-      border-bottom: 1px solid var(--ti-lowcode-material-component-list-border-color);
       text-align: center;
       user-select: none;
       cursor: move;
@@ -152,6 +150,7 @@ export default {
 
       &:hover {
         background: var(--ti-lowcode-material-component-list-hover-bg);
+        border-radius: 4px;
       }
 
       .component-item-component {
@@ -185,7 +184,7 @@ export default {
 
   .tiny-collapse {
     flex: 1;
-    overflow-y: scroll;
+    overflow-y: auto;
     .tiny-collapse-item.is-active + .tiny-collapse-item {
       margin-top: 0;
     }

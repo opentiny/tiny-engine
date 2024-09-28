@@ -8,13 +8,16 @@
   >
     <template #content>
       <div class="block-add-content">
-        <tiny-search v-model="state.searchValue" placeholder="请输入关键词" @update:modelValue="searchBlocks">
-          <template #prefix>
-            <tiny-icon-search />
-          </template>
-        </tiny-search>
         <block-group-filters :filters="state.filters" @search="searchBlocks"></block-group-filters>
-        <block-group-transfer v-model:blockList="state.blockList"></block-group-transfer>
+        <block-group-transfer v-model:blockList="state.blockList">
+          <template #search>
+            <tiny-search v-model="state.searchValue" placeholder="请输入关键词" @update:modelValue="searchBlocks">
+              <template #prefix>
+                <tiny-icon-search />
+              </template>
+            </tiny-search>
+          </template>
+        </block-group-transfer>
       </div>
     </template>
   </plugin-setting>
