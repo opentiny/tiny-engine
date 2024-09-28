@@ -6,7 +6,8 @@
     </tiny-search>
     <block-list v-model:blockList="filterBlocks" :show-add-button="true" :show-block-shot="true"></block-list>
   </div>
-  <teleport defer :to="rightPanelClassName">
+  <!-- TODO: vue 版本升级到 3.5+ 之后，支持 defer，就不需要 rightPanelRef 了 -->
+  <teleport defer to=".material-right-panel" v-if="rightPanelRef">
     <block-group-panel></block-group-panel>
     <block-version-select></block-version-select>
   </teleport>
@@ -39,10 +40,7 @@ export default {
       type: String,
       default: ''
     },
-    rightPanelClassName: {
-      type: String,
-      default: ''
-    }
+    rightPanelRef: Object
   },
   setup(props) {
     const { addDefaultGroup, isDefaultGroupId, isAllGroupId, isRefresh, selectedGroup } = useBlock()
