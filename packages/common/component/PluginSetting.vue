@@ -186,7 +186,7 @@ export default {
     height: calc(100% - 46px);
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 16px 20px;
+    padding: 12px;
   }
 
   .button-group-wrap {
