@@ -435,7 +435,7 @@ export const refreshBlockData = async (block = {}) => {
     const newBlock = await fetchBlockContent(block.id)
 
     if (newBlock) {
-      if (newBlock.public_scope_tenants.length) {
+      if (newBlock?.public_scope_tenants?.length) {
         newBlock.public_scope_tenants = newBlock.public_scope_tenants.map((e) => e.id)
       }
       Object.assign(block, newBlock)
