@@ -106,8 +106,9 @@
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
     "@types/node": "^18.0.0",
-    "@vitejs/plugin-vue": "^4.2.3",
-    "@vitejs/plugin-vue-jsx": "^3.1.0",
+    "@vitejs/plugin-vue": "^5.1.2",
+    "@vitejs/plugin-vue-jsx": "^4.0.1",
+    "vite": "^5.4.2",
     "cross-env": "^7.0.3",
     "eslint": "^8.38.0",
     "eslint-plugin-vue": "^8.0.0",
@@ -115,7 +116,8 @@
     "husky": "^8.0.0",
     "lerna": "^7.2.0",
     "less": "^4.1.2",
-    "lint-staged": "^13.2.0"
+    "lint-staged": "^13.2.0",
+    "rollup-plugin-polyfill-node": "^0.13.0"
   },
   "peerDependencies": {
     "@opentiny/vue": "^3.14.0",
