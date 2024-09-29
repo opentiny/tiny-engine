@@ -1,7 +1,7 @@
 <template>
   <div class="toolbar-save">
-    <toolbar-base-component content="预览页面" :icon="options.icon.default" :options="options" @click-api="preview">
-    </toolbar-base-component>
+    <toolbar-base content="预览页面" :icon="options.icon.default" :options="options" @click-api="preview">
+    </toolbar-base>
   </div>
 </template>
 
@@ -9,11 +9,11 @@
 import { previewPage, previewBlock } from '@opentiny/tiny-engine-common/js/preview'
 import { useBlock, useCanvas, useLayout, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
-import { ToolbarBaseComponent } from '@opentiny/tiny-engine-layout'
+import { ToolbarBase } from '@opentiny/tiny-engine-common'
 
 export default {
   components: {
-    ToolbarBaseComponent
+    ToolbarBase
   },
   props: {
     options: {

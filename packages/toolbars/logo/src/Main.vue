@@ -1,5 +1,5 @@
 <template>
-  <toolbar-base-component :options="options">
+  <toolbar-base :options="options">
     <template #default>
       <div class="top-panel-logo">
         <h1 class="logo-wrap" @click.stop="handleTitleClick">
@@ -98,7 +98,7 @@
         </tiny-dialog-box>
       </div>
     </template>
-  </toolbar-base-component>
+  </toolbar-base>
 </template>
 
 <script setup>
@@ -117,7 +117,7 @@ import { iconHelpCircle } from '@opentiny/vue-icon'
 import { useLayout, useApp, useModal } from '@opentiny/tiny-engine-meta-register'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { useHttp } from '@opentiny/tiny-engine-http'
-import { ToolbarBaseComponent } from '@opentiny/tiny-engine-layout'
+import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import { isDevelopEnv } from '@opentiny/tiny-engine-common/js/environments'
 
 defineProps({

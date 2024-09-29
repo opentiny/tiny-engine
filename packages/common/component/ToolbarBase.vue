@@ -12,13 +12,13 @@
 
 <script>
 import { reactive, computed } from 'vue'
-import ToolbarIcon from './toolbar-built-in/ToolbarIcon.vue'
-import ToolbarButton from './toolbar-built-in/ToolbarButton.vue'
+import ToolbarBaseIcon from './toolbar-built-in/ToolbarBaseIcon.vue'
+import ToolbarBaseButton from './toolbar-built-in/ToolbarBaseButton.vue'
 
 export default {
   components: {
-    ToolbarIcon,
-    ToolbarButton
+    ToolbarBaseIcon,
+    ToolbarBaseButton
   },
   props: {
     icon: {
@@ -49,9 +49,9 @@ export default {
     const getRender = () => {
       switch (props.options.renderType) {
         case 'button':
-          return ToolbarButton
+          return ToolbarBaseButton
         case 'icon':
-          return ToolbarIcon
+          return ToolbarBaseIcon
         default:
           return false
       }

@@ -1,5 +1,5 @@
 <template>
-  <toolbar-base-component :options="options">
+  <toolbar-base :options="options">
     <template #default>
       <div class="toolbar-wrap">
         <div class="toolbar-icon-wrap">
@@ -90,7 +90,7 @@
         </tiny-popover>
       </div>
     </template>
-  </toolbar-base-component>
+  </toolbar-base>
 </template>
 
 <script>
@@ -98,14 +98,14 @@ import { ref, reactive, computed, toRaw, watchEffect, onMounted, onUnmounted, wa
 import { Popover, Input, Switch } from '@opentiny/vue'
 import { IconWebPlus } from '@opentiny/vue-icon'
 import { useLayout, useCanvas } from '@opentiny/tiny-engine-meta-register'
-import { ToolbarBaseComponent } from '@opentiny/tiny-engine-layout'
+import { ToolbarBase } from '@opentiny/tiny-engine-common'
 
 export default {
   components: {
     TinyPopover: Popover,
     TinyInput: Input,
     TinySwitch: Switch,
-    ToolbarBaseComponent
+    ToolbarBase
   },
   props: {
     data: {

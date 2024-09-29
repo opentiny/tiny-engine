@@ -1,20 +1,20 @@
 <template>
-  <toolbar-base-component
+  <toolbar-base
     :content="!isFullscreen ? '全屏' : '退出全屏'"
     :icon="iconName"
     :options="options"
     @click-api="fullscreen"
   >
-  </toolbar-base-component>
+  </toolbar-base>
 </template>
 
 <script>
 import { ref } from 'vue'
-import { ToolbarBaseComponent } from '@opentiny/tiny-engine-layout'
+import { ToolbarBase } from '@opentiny/tiny-engine-common'
 
 export default {
   components: {
-    ToolbarBaseComponent
+    ToolbarBase
   },
   props: {
     options: {

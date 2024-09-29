@@ -1,5 +1,5 @@
 <template>
-  <toolbar-base-component :options="options">
+  <toolbar-base :options="options">
     <template #default>
       <span class="redo-undo-wrap">
         <tiny-popover
@@ -30,18 +30,18 @@
         </tiny-popover>
       </span>
     </template>
-  </toolbar-base-component>
+  </toolbar-base>
 </template>
 
 <script>
 import { Popover } from '@opentiny/vue'
 import { useHistory } from '@opentiny/tiny-engine-meta-register'
-import { ToolbarBaseComponent } from '@opentiny/tiny-engine-layout'
+import { ToolbarBase } from '@opentiny/tiny-engine-common'
 
 export default {
   components: {
     TinyPopover: Popover,
-    ToolbarBaseComponent
+    ToolbarBase
   },
   props: {
     options: {

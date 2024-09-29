@@ -1,7 +1,6 @@
 <template>
   <div class="toolbar-itm-clean">
-    <toolbar-base-component content="清除屏幕" :icon="options.icon.default" :options="options" @click-api="clean">
-    </toolbar-base-component>
+    <toolbar-base content="清除屏幕" :icon="options.icon.default" :options="options" @click-api="clean"> </toolbar-base>
   </div>
 </template>
 
@@ -10,12 +9,12 @@ import { ref, watch, getCurrentInstance } from 'vue'
 import { Modal } from '@opentiny/vue'
 import { useCanvas, useLayout } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { ToolbarBaseComponent } from '@opentiny/tiny-engine-layout'
+import { ToolbarBase } from '@opentiny/tiny-engine-common'
 
 const { PAGE_STATUS } = constants
 export default {
   components: {
-    ToolbarBaseComponent
+    ToolbarBase
   },
   props: {
     options: {

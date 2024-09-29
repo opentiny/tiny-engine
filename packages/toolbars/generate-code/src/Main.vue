@@ -1,5 +1,5 @@
 <template>
-  <toolbar-base-component content="出码" :icon="options.icon.default" :options="options" @click-api="generate">
+  <toolbar-base content="出码" :icon="options.icon.default" :options="options" @click-api="generate">
     <template #default>
       <generate-file-selector
         :visible="state.showDialogbox"
@@ -8,7 +8,7 @@
         @cancel="cancel"
       ></generate-file-selector>
     </template>
-  </toolbar-base-component>
+  </toolbar-base>
 </template>
 
 <script>
@@ -25,14 +25,14 @@ import {
 } from '@opentiny/tiny-engine-meta-register'
 import { fs } from '@opentiny/tiny-engine-utils'
 import { useHttp } from '@opentiny/tiny-engine-http'
-import { ToolbarBaseComponent } from '@opentiny/tiny-engine-layout'
+import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import { fetchMetaData, fetchPageList, fetchBlockSchema } from './http'
 import FileSelector from './FileSelector.vue'
 
 export default {
   components: {
     GenerateFileSelector: FileSelector,
-    ToolbarBaseComponent
+    ToolbarBase
   },
   props: {
     options: {

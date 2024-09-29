@@ -1,17 +1,12 @@
 <template>
-  <toolbar-base-component
-    content="画布中英文切换"
-    :icon="options.icon[langVal]"
-    :options="options"
-    @click-api="changeLang"
-  >
-  </toolbar-base-component>
+  <toolbar-base content="画布中英文切换" :icon="options.icon[langVal]" :options="options" @click-api="changeLang">
+  </toolbar-base>
 </template>
 
 <script>
 import { ref, watch } from 'vue'
 import { useBroadcastChannel } from '@vueuse/core'
-import { ToolbarBaseComponent } from '@opentiny/tiny-engine-layout'
+import { ToolbarBase } from '@opentiny/tiny-engine-common'
 
 import { constants } from '@opentiny/tiny-engine-utils'
 
@@ -19,7 +14,7 @@ const { BROADCAST_CHANNEL } = constants
 
 export default {
   components: {
-    ToolbarBaseComponent
+    ToolbarBase
   },
   props: {
     langChannel: {

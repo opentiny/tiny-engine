@@ -1,5 +1,5 @@
 <template>
-  <toolbar-base-component :options="options">
+  <toolbar-base :options="options">
     <template #default>
       <span class="collaboration-container">
         <tiny-popover
@@ -43,19 +43,19 @@
         </tiny-popover>
       </span>
     </template>
-  </toolbar-base-component>
+  </toolbar-base>
 </template>
 
 <script>
 import { reactive, watchEffect } from 'vue'
 import { Popover } from '@opentiny/vue'
 import { useLayout } from '@opentiny/tiny-engine-meta-register'
-import { ToolbarBaseComponent } from '@opentiny/tiny-engine-layout'
+import { ToolbarBase } from '@opentiny/tiny-engine-common'
 
 export default {
   components: {
     TinyPopover: Popover,
-    ToolbarBaseComponent
+    ToolbarBase
   },
   props: {
     options: {

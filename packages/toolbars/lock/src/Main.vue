@@ -1,19 +1,19 @@
 <template>
-  <toolbar-base-component
+  <toolbar-base
     v-if="!state.isGuest"
     :icon="iconName"
     :content="statusMessageMap[state.status]?.nextOptName"
     :options="options"
     @click-api="lockOrUnlock"
   >
-  </toolbar-base-component>
+  </toolbar-base>
 </template>
 
 <script>
 import { computed, reactive } from 'vue'
 import { useCanvas, useLayout, useBlock, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { ToolbarBaseComponent } from '@opentiny/tiny-engine-layout'
+import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import { requestBlockPage } from './http'
 
 const { COMPONENT_NAME, PAGE_STATUS } = constants
@@ -43,7 +43,7 @@ const statusMessageMap = {
 
 export default {
   components: {
-    ToolbarBaseComponent
+    ToolbarBase
   },
   props: {
     options: {

@@ -1,6 +1,5 @@
 import component from './src/Main.vue'
 import metaData from './meta'
-import ToolbarBaseComponent from './src/ToolbarBaseComponent.vue'
 import { LayoutService } from './src/composable'
 import designSmbConfig from '@opentiny/vue-design-smb'
 import { ConfigProvider as TinyConfigProvider } from '@opentiny/vue'
@@ -31,4 +30,4 @@ export default {
   metas: [LayoutService]
 }
 
-export { ToolbarBaseComponent, LayoutService }
+export { LayoutService }

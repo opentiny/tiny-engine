@@ -1,15 +1,14 @@
 <template>
-  <toolbar-base-component content="刷新画布" :icon="options.icon.default" :options="options" @click-api="refresh">
-  </toolbar-base-component>
+  <toolbar-base content="刷新画布" :icon="options.icon.default" :options="options" @click-api="refresh"> </toolbar-base>
 </template>
 
 <script>
 import { useMaterial, useCanvas, useModal, useLayout, useBlock } from '@opentiny/tiny-engine-meta-register'
-import { ToolbarBaseComponent } from '@opentiny/tiny-engine-layout'
+import { ToolbarBase } from '@opentiny/tiny-engine-common'
 
 export default {
   components: {
-    ToolbarBaseComponent
+    ToolbarBase
   },
   props: {
     options: {

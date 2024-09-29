@@ -1,6 +1,6 @@
 <template>
   <div class="toolbar-save">
-    <toolbar-base-component
+    <toolbar-base
       :content="isLoading ? '保存中' : '保存'"
       :icon="options.icon.default"
       :options="{ ...options, showDots: !isSaved() }"
@@ -53,7 +53,7 @@
           </template>
         </tiny-dialog-box>
       </template>
-    </toolbar-base-component>
+    </toolbar-base>
   </div>
 </template>
 
@@ -62,7 +62,7 @@ import { reactive, ref, onUnmounted } from 'vue'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
 import { Button, Popover, DialogBox, Checkbox, Select } from '@opentiny/vue'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
-import { ToolbarBaseComponent } from '@opentiny/tiny-engine-layout'
+import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import { openCommon, saveCommon } from './js/index'
 import { isLoading } from './js/index'
 export const api = {
@@ -77,7 +77,7 @@ export default {
     TinyDialogBox: DialogBox,
     TinyCheckbox: Checkbox,
     TinySelect: Select,
-    ToolbarBaseComponent
+    ToolbarBase
   },
   props: {
     iconExpand: {

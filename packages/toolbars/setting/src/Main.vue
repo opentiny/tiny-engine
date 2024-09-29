@@ -1,22 +1,22 @@
 <template>
-  <toolbar-base-component
+  <toolbar-base
     :content="isBlock() ? '区块设置' : '页面设置'"
     :icon="options.icon.default"
     :options="options"
     @click-api="openSetting"
   >
-  </toolbar-base-component>
+  </toolbar-base>
 </template>
 
 <script lang="jsx">
 import { useCanvas, useLayout, useBlock, usePage, useModal, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { ToolbarBaseComponent } from '@opentiny/tiny-engine-layout'
+import { ToolbarBase } from '@opentiny/tiny-engine-common'
 
 const { PAGE_STATUS } = constants
 export default {
   components: {
-    ToolbarBaseComponent
+    ToolbarBase
   },
   props: {
     options: {

@@ -1,5 +1,5 @@
 <template>
-  <toolbar-base-component :options="options">
+  <toolbar-base :options="options">
     <template #default>
       <div class="top-panel-breadcrumb">
         <div
@@ -26,14 +26,14 @@
       </div>
       <block-deploy-dialog v-model:visible="state.showDeployBlock" :nextVersion="nextVersion"></block-deploy-dialog>
     </template>
-  </toolbar-base-component>
+  </toolbar-base>
 </template>
 
 <script>
 import { reactive, computed } from 'vue'
 import { Breadcrumb, BreadcrumbItem, Button } from '@opentiny/vue'
 import { useBreadcrumb, useLayout } from '@opentiny/tiny-engine-meta-register'
-import { ToolbarBaseComponent } from '@opentiny/tiny-engine-layout'
+import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import { BlockDeployDialog } from '@opentiny/tiny-engine-common'
 
 export default {
@@ -42,7 +42,7 @@ export default {
     TinyBreadcrumbItem: BreadcrumbItem,
     BlockDeployDialog,
     TinyButton: Button,
-    ToolbarBaseComponent
+    ToolbarBase
   },
   props: {
     options: {

@@ -20,7 +20,7 @@
       <div class="toolbar-right-content">
         <div class="toolbar-right-item" v-for="(item, idx) in state.rightBar" :key="idx">
           <div v-if="typeof item === 'string'">
-            <component :is="getMergeMeta(item)?.entry" :options="getMergeMeta(comp)?.options"></component>
+            <component :is="getMergeMeta(item)?.entry" :options="getMergeMeta(item)?.options"></component>
           </div>
           <div class="toolbar-right-item-arr" v-if="Array.isArray(item)">
             <div class="toolbar-right-item-comp" v-for="comp in item" :key="comp">
