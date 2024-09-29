@@ -4,7 +4,7 @@
     :class="['block-list', 'lowcode-scrollbar', { 'is-small-list': blockStyle === 'mini' }, { isShortcutPanel }]"
     @mouseleave="state.hover = false"
   >
-    <li v-if="state.showAddButton" class="block-item block-plus" @click="$emit('add')">
+    <li v-if="showAddButton" class="block-item block-plus" @click="$emit('add')">
       <span class="block-plus-icon"><icon-plus></icon-plus></span>
       <div class="item-text">添加区块</div>
     </li>
@@ -99,9 +99,6 @@
           {{ deployTips[item.deployStatus] }}
         </div>
       </slot>
-    </li>
-    <li v-if="showAddButton" class="block-item block-plus" @click="$emit('add')">
-      <span class="block-plus-icon"><icon-plus></icon-plus></span>
     </li>
     <div v-if="showBlockShot && state.hover && state.currentBlock.screenshot" class="block-shortcut">
       <div class="block-shortcut-title">{{ state.currentBlock.label }}预览图</div>
