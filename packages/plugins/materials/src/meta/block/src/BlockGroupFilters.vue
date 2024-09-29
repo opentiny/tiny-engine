@@ -3,13 +3,12 @@
     <div v-for="filter in filters" :key="filter.id" class="block-add-filters-item">
       <div class="block-filters-item-label">{{ filter.name }}</div>
       <div class="block-filters-item-value">
-        <tiny-checkbox-group v-model="state.checkGroup" type="checkbox">
-          <tiny-checkbox
-            @change="getFilters(filter.id, filter.children)"
-            v-for="item in filter.children"
-            :key="item.name"
-            :label="item.name"
-          ></tiny-checkbox>
+        <tiny-checkbox-group
+          v-model="state.checkGroup"
+          type="checkbox"
+          @change="getFilters(filter.id, filter.children)"
+        >
+          <tiny-checkbox v-for="item in filter.children" :key="item.name" :label="item.name"></tiny-checkbox>
         </tiny-checkbox-group>
       </div>
     </div>
@@ -48,7 +47,6 @@ export default {
           }
         })
       }
-
       emit('search', null, filters)
     }
 
