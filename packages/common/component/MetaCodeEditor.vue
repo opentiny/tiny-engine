@@ -16,8 +16,7 @@
       width="50vw"
       class="meta-code-editor-dialog-box"
       append-to-body
-      :close-on-click-modal="false"
-    >
+      :close-on-click-modal="false">
       <div class="source-code">
         <div v-if="editorTipsTitle" class="header-tips-container">
           <span class="header-tips-title" :title="editorTipsTitle">{{ editorTipsTitle }}</span>
@@ -30,8 +29,7 @@
                 class="source-code-content"
                 :value="value"
                 :options="options"
-                @editorDidMount="editorDidMount"
-              ></monaco-editor>
+                @editorDidMount="editorDidMount"></monaco-editor>
             </template>
             <template #right>
               <div v-if="editorTipsDemo" class="source-code-split-panel-wrapper-right">
@@ -52,8 +50,7 @@
             class="format-btn"
             plain
             type="danger"
-            @click="formatCode"
-          >
+            @click="formatCode">
             {{ $t('common.format') }}
           </tiny-button>
           <div>
@@ -256,14 +253,16 @@ export default {
   display: flex;
   text-align: center;
   .edit-btn {
-    color: var(--ti-lowcode-meta-codeEditor-color);
-    border-color: var(--ti-lowcode-meta-codeEditor-border-color);
+    color: var(--te-common-text-primary);
+    border-color: var(--te-common-border-default);
     flex: 1;
     text-align: center;
     margin-right: 0;
     &:hover {
-      color: var(--ti-lowcode-meta-codeEditor-hover-color);
-      border-color: var(--ti-lowcode-meta-codeEditor-border-hover-color);
+      border-color: var(--te-common-border-active);
+    }
+    &:focus {
+      border-color: var(--te-common-border-active);
     }
   }
 }

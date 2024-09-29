@@ -4,8 +4,7 @@
     type="mini"
     v-model="value"
     :data="optionsData"
-    @update:modelValue="change"
-  ></tiny-button-group>
+    @update:modelValue="change"></tiny-button-group>
 </template>
 
 <script>
@@ -89,9 +88,10 @@ export default {
       min-width: 0px;
       width: 100%;
       border-radius: 4px;
-      padding: 0px 12px;
+      padding: 0px 8px;
       max-width: 300px;
-      line-height: 28px;
+      height: 24px;
+      line-height: 24px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
