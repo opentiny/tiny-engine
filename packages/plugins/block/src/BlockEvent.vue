@@ -57,9 +57,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.form {
-  margin-top: 45px;
-}
 .block-alert {
   color: var(--ti-lowcode-life-cycle-alert-color);
   height: 28px;
