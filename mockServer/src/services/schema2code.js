@@ -10,13 +10,8 @@
  *
  */
 
-import appInfo from '../assets/json/appinfo.json'
-
 export default class Schema2CodeServcice {
-  constructor() {
-    this.blockHistories = appInfo.blockHistories
-    this.components = appInfo.materialHistory.components
-  }
+  constructor() {}
   schema2code(pageInfo, type = 'page') {
     return { data: null, code: 410, message: 'deprecated api, please use `@opentiny/tiny-engine-dsl-vue` directly.' }
   }
