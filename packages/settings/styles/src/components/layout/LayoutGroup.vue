@@ -1,6 +1,8 @@
 <template>
   <div class="display-row">
-    <div :class="['display-label', { selected: display }]" @click="openDisplayModal($event)">排布</div>
+    <div :class="['display-label', { selected: display }]" @click="openDisplayModal($event)">
+      <span>排布</span>
+    </div>
     <div class="display-content">
       <tabs-group-configurator
         :options="layoutOpts"
@@ -84,45 +86,27 @@ export default {
     const layoutOpts = ref([
       {
         value: DISPLAY_TYPE.Block,
-        label: DISPLAY_TEXT.Block,
-        title: '',
-        tip: 'block-块级布局',
-        icon: 'display-block'
+        label: DISPLAY_TEXT.Block
       },
       {
         value: DISPLAY_TYPE.Flex,
-        label: DISPLAY_TEXT.Flex,
-        title: '',
-        tip: 'flex-弹性布局',
-        icon: 'display-flex'
+        label: DISPLAY_TEXT.Flex
       },
       {
         value: DISPLAY_TYPE.Grid,
         label: DISPLAY_TEXT.Grid,
-        title: '',
-        tip: 'grid-网格布局',
-        icon: 'display-grid',
         children: [
           {
             value: DISPLAY_TYPE.InlineBlock,
-            label: DISPLAY_TEXT.InlineBlock,
-            title: '',
-            tip: 'inline-block-内联块级',
-            icon: 'display-inline-block'
+            label: DISPLAY_TEXT.InlineBlock
           },
           {
             value: DISPLAY_TYPE.Inline,
-            label: DISPLAY_TEXT.Inline,
-            title: '',
-            tip: 'inline-内联',
-            icon: 'display-inline'
+            label: DISPLAY_TEXT.Inline
           },
           {
             value: DISPLAY_TYPE.Invisible,
-            label: DISPLAY_TEXT.Invisible,
-            title: '',
-            tip: 'eye-invisible-隐藏',
-            icon: 'eye-invisible'
+            label: DISPLAY_TEXT.Invisible
           }
         ]
       }
@@ -151,6 +135,12 @@ export default {
     line-height: 24px;
 
     &.selected {
+      span {
+        cursor: pointer;
+        padding: 2px;
+        color: var(--ti-lowcode-base-text-color-2);
+        background: var(--ti-lowcode-className-selector-container-label-bg-color);
+      }
     }
   }
 

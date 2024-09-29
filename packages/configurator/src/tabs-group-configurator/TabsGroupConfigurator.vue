@@ -5,26 +5,34 @@
       :key="item.label"
       :class="['tab-item', picked === item.value ? 'active-tab' : '']"
       :style="{ width: getItemWidth(item) + 'px' }"
-      @click="change(item.value)"
+      @click.stop="change(item.value)"
     >
       <span :class="['label-text', index < options.length - 1 ? 'border-right' : '']">
-        {{ item.label }}
+        <span v-if="item.label">{{ item.label }}</span>
+        <svg-icon v-if="item.icon" :name="item.icon"></svg-icon>
         <tiny-popover
           v-if="item.children"
+          v-model="showMore"
           placement="bottom-start"
           :visible-arrow="false"
-          :width="getItemWidth(item.value)"
+          :width="getItemWidth(item)"
+          trigger="manual"
         >
           <template #reference>
-            <svg-icon name="down-arrow" color="#DBDBDB"></svg-icon>
+            <svg-icon
+              name="down-arrow"
+              color="var(--ti-lowcode-base-default-button-border-disable-color)"
+              @click.stop="showMore = !showMore"
+            ></svg-icon>
           </template>
           <div
             v-for="collapseItem in item.children"
             :class="['collapse-item', picked === item.value ? 'active-tab' : '']"
             :key="collapseItem.label"
-            @click="change(collapseItem.value)"
+            @click.stop="change(collapseItem.value)"
           >
-            {{ collapseItem.label }}
+            <span v-if="collapseItem.label">{{ collapseItem.label }}</span>
+            <svg-icon v-if="collapseItem.icon" :name="collapseItem.icon"></svg-icon>
           </div>
         </tiny-popover>
       </span>
@@ -56,6 +64,7 @@ export default {
   emits: ['update:modelValue'],
   setup(props, { emit }) {
     const picked = ref(props.value)
+    const showMore = ref(false)
 
     const getItemWidth = (item) => {
       return `${parseInt(props.labelWidth, 10) + (item.children ? 20 : 0)}`
@@ -66,6 +75,7 @@ export default {
     }
     return {
       picked,
+      showMore,
       getItemWidth,
       change
     }
@@ -91,7 +101,7 @@ export default {
       height: 16px;
     }
     &:hover {
-      background-color: #e6e6e6;
+      background-color: var(--ti-lowcode-base-gray-101);
       border-radius: 4px;
     }
   }
@@ -107,17 +117,17 @@ export default {
   cursor: pointer;
 
   &:hover {
-    background-color: #e6e6e6;
+    background-color: var(--ti-lowcode-base-gray-101);
     border-radius: 4px;
   }
 }
 
 .active-tab {
-  background-color: #e6e6e6;
+  background-color: var(--ti-lowcode-base-gray-101);
   border-radius: 4px;
 }
 
 .border-right {
-  border-right: 1px solid #dbdbdb;
+  border-right: 1px solid var(--ti-lowcode-base-default-button-border-disable-color);
 }
 </style>
