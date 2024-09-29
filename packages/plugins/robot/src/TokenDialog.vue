@@ -100,7 +100,7 @@ export default {
       <tiny-alert
         :icon="TinyIconCommission"
         :closable="false"
-        :description="`尝试用自己的 ${model.modelKey} 开启AI对话功能吧！`"
+        :description="`尝试用自己的 ${model.modelKey} 开启 AI 对话功能吧！`"
       ></tiny-alert>
       <tiny-form-item label="" prop="token">
         <tiny-input

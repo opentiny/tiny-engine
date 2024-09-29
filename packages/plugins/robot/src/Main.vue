@@ -196,9 +196,10 @@ export default {
       pageSettingState.currentPageData['page_content'] = schema
       pageSettingState.currentPageDataCopy = extend(true, {}, pageSettingState.currentPageData)
       clearCurrentState()
+
       // 已经创建过临时页面只更新schema
       useLayout().layoutState.pageStatus = {
-        state: 'empty',
+        state: useLayout().layoutState.pageStatus.state,
         data: {}
       }
       initData(pageSettingState.currentPageData['page_content'], pageSettingState.currentPageData)
@@ -206,7 +207,7 @@ export default {
     }
 
     const codeRules = `
-      从现在开始，请扮演一名前端专家。如果需要生成前端代码，代码中的所有组件必须使用 Vue 3 框架和 TinyVue 组件库进行编写。例如，如果你想使用按钮组件，应该使用 TinyVue 组件库中的 \`TinyButton\`。
+      从现在开始，请扮演一名前端专家。如果需要根据图片或者描述生成前端代码，代码中的所有组件必须使用 Vue 3 框架和 TinyVue 组件库进行编写。例如，如果你想使用按钮组件，应该使用 TinyVue 组件库中的 \`TinyButton\`。
       以下是 TinyVue 组件库的文档，请通读并遵循其中的指导来生成代码：[TinyVue 组件库文档](https://opentiny.design/tiny-vue/zh-CN/os-theme/overview)
       生成代码时遵从以下几条要求:
       ###
@@ -424,6 +425,7 @@ export default {
         if (!isModel) {
           inputContent.value = ''
           imageUrl.value = ''
+          imageContent.value = ''
         }
         await scrollContent()
         await sleep(1000)
@@ -564,11 +566,12 @@ export default {
   margin-top: -10px;
   max-width: 100%;
   border-radius: 5px;
-  border: 1px solid var(--ti-lowcode-chat-model-user-text-border);
+
   .image {
     width: 100px;
-    height: 70px;
+    height: 100%;
     border-radius: 5px;
+    border: 1px solid var(--ti-lowcode-chat-model-user-text-border);
   }
 }
 
