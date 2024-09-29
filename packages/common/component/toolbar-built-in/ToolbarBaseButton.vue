@@ -41,7 +41,7 @@ export default {
 <style lang="less" scoped>
 .toolbar-button {
   background-color: var(--ti-lowcode-toolbar-button-bg) !important;
-  border: none;
+  border: none !important;
   min-width: 70px;
   height: 26px;
   line-height: 24px;
