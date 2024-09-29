@@ -40,8 +40,7 @@
       </template>
       <template #bottom>
         <div class="add" @click="addItem">
-          <!-- TODO 这里需要加上图标 -->
-          <span class="add-icon"></span>
+          <svg-icon name="plus"></svg-icon>
           <span>新增一列</span>
         </div>
       </template>
@@ -196,15 +195,16 @@ export default {
   display: block;
 }
 .add {
+  display: flex;
+  align-items: center;
   color: var(--te-common-text-emphasize);
   &:hover {
     cursor: pointer;
   }
-}
-.add-icon {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  margin-right: 5px;
+
+  & .icon-plus {
+    font-size: 14px;
+    margin-right: 5px;
+  }
 }
 </style>
