@@ -3,13 +3,24 @@
     <div
       v-for="(item, index) in options"
       :key="item.label"
-      :class="['tab-item', picked === item.value ? 'active-tab' : '']"
+      :class="['tab-item', { selected: picked === item.value }]"
       :style="{ width: getItemWidth(item) + 'px' }"
       @click.stop="change(item.value)"
     >
       <span :class="['label-text', index < options.length - 1 ? 'border-right' : '']">
         <span v-if="item.label">{{ item.label }}</span>
-        <svg-icon v-if="item.icon" :name="item.icon"></svg-icon>
+        <tiny-popover
+          v-if="item?.icon"
+          :effect="effect"
+          :placement="placement"
+          :visible-arrow="false"
+          :content="item.content"
+          trigger="hover"
+        >
+          <template #reference>
+            <svg-icon v-if="item.icon" :name="item.icon"></svg-icon>
+          </template>
+        </tiny-popover>
         <tiny-popover
           v-if="item.children"
           v-model="showMore"
@@ -40,7 +51,7 @@
   </div>
 </template>
 <script>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { Popover } from '@opentiny/vue'
 
 export default {
@@ -51,6 +62,14 @@ export default {
     value: {
       type: String,
       default: ''
+    },
+    effect: {
+      type: String,
+      default: 'dark'
+    },
+    placement: {
+      type: String,
+      default: 'top'
     },
     labelWidth: {
       type: String,
@@ -63,7 +82,7 @@ export default {
   },
   emits: ['update:modelValue'],
   setup(props, { emit }) {
-    const picked = ref(props.value)
+    const picked = computed(() => props.value)
     const showMore = ref(false)
 
     const getItemWidth = (item) => {
@@ -100,6 +119,11 @@ export default {
       width: 100%;
       height: 16px;
     }
+
+    &.selected {
+      background-color: var(--ti-lowcode-base-gray-101);
+      border-radius: 4px;
+    }
     &:hover {
       background-color: var(--ti-lowcode-base-gray-101);
       border-radius: 4px;
@@ -120,11 +144,6 @@ export default {
     background-color: var(--ti-lowcode-base-gray-101);
     border-radius: 4px;
   }
-}
-
-.active-tab {
-  background-color: var(--ti-lowcode-base-gray-101);
-  border-radius: 4px;
 }
 
 .border-right {

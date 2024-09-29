@@ -86,47 +86,19 @@
 
   <div class="overflow-row">
     <div
-      :class="['overflow-label', { 'is-setting': getSettingFlag(SIZE_PROPERTY.Overflow) }]"
+      :class="['overflow-label', { 'is-setting': getSettingFlag(SIZE_PROPERTY.Overflow), selected: selectedOverflow }]"
       @click="openSetting(SIZE_PROPERTY.Overflow, $event)"
     >
-      溢出
+      <span>溢出</span>
     </div>
-    <div class="overflow-content">
-      <tiny-tooltip :effect="effect" :placement="placement" content="visible 溢出可见">
-        <div
-          :class="['overflow-content-item', { selected: isOverflowSelected(OVERFLOW_TYPE.Visible) }]"
-          @click="selectOverflow(OVERFLOW_TYPE.Visible)"
-        >
-          <svg-icon name="eye" class="overflow-svg"></svg-icon>
-        </div>
-      </tiny-tooltip>
-
-      <tiny-tooltip :effect="effect" :placement="placement" content="hidden 溢出隐藏">
-        <div
-          :class="['overflow-content-item', { selected: isOverflowSelected(OVERFLOW_TYPE.Hidden) }]"
-          @click="selectOverflow(OVERFLOW_TYPE.Hidden)"
-        >
-          <svg-icon name="eye-invisible" class="overflow-svg"></svg-icon>
-        </div>
-      </tiny-tooltip>
-
-      <tiny-tooltip :effect="effect" :placement="placement" content="overflow 溢出滚动">
-        <div
-          :class="['overflow-content-item', { selected: isOverflowSelected(OVERFLOW_TYPE.Scroll) }]"
-          @click="selectOverflow(OVERFLOW_TYPE.Scroll)"
-        >
-          <svg-icon name="overflow-scroll" class="overflow-svg"></svg-icon>
-        </div>
-      </tiny-tooltip>
-      <tiny-tooltip :effect="effect" :placement="placement" content="auto 溢出才自动滚动">
-        <div
-          :class="['overflow-content-item', { selected: isOverflowSelected(OVERFLOW_TYPE.Auto) }]"
-          @click="selectOverflow(OVERFLOW_TYPE.Auto)"
-        >
-          <div class="overflow-auto">Auto</div>
-        </div>
-      </tiny-tooltip>
-    </div>
+    <tabs-group-configurator
+      :options="overflowOpt"
+      :value="selectedOverflow"
+      :label-width="50"
+      :effect="effect"
+      :placement="placement"
+      @update:modelValue="selectOverflow"
+    ></tabs-group-configurator>
   </div>
 
   <div class="fit-row">
@@ -211,10 +183,10 @@
 </template>
 
 <script>
-import { reactive, ref } from 'vue'
+import { reactive, ref, computed } from 'vue'
 import { Tooltip, Popover, Input } from '@opentiny/vue'
 import { MaskModal } from '@opentiny/tiny-engine-common'
-import { SelectConfigurator } from '@opentiny/tiny-engine-configurator'
+import { SelectConfigurator, TabsGroupConfigurator } from '@opentiny/tiny-engine-configurator'
 import { iconEllipsis } from '@opentiny/vue-icon'
 import ModalMask, { useModal } from '../inputs/ModalMask.vue'
 import ResetButton from '../inputs/ResetButton.vue'
@@ -230,6 +202,7 @@ export default {
     ResetButton,
     NumericSelect,
     SelectConfigurator,
+    TabsGroupConfigurator,
     MaskModal,
     TinyPopover: Popover,
     TinyInput: Input,
@@ -331,6 +304,28 @@ export default {
         top: '100'
       }
     ]
+    const overflowOpt = [
+      {
+        icon: 'eye',
+        content: 'visible 溢出可见',
+        value: OVERFLOW_TYPE.Visible
+      },
+      {
+        icon: 'eye-invisible',
+        content: 'hidden 溢出隐藏',
+        value: OVERFLOW_TYPE.Hidden
+      },
+      {
+        icon: 'overflow-scroll',
+        content: 'overflow 溢出滚动',
+        value: OVERFLOW_TYPE.Scroll
+      },
+      {
+        label: 'Auto',
+        content: 'auto 溢出才自动滚动',
+        value: OVERFLOW_TYPE.Auto
+      }
+    ]
     const showModal = ref(false)
     const { setPosition } = useModal()
     const state = reactive({
@@ -346,6 +341,10 @@ export default {
     const { getProperty, getSettingFlag, getPropertyValue } = useProperties({
       names: Object.values(SIZE_PROPERTY),
       parseNumber: true
+    })
+
+    const selectedOverflow = computed(() => {
+      return getPropertyValue(SIZE_PROPERTY.Overflow)
     })
 
     const updateStyle = (property) => {
@@ -379,8 +378,6 @@ export default {
         updateStyle({ overflow: type })
       }
     }
-
-    const isOverflowSelected = (type) => type === getPropertyValue(SIZE_PROPERTY.Overflow)
 
     const showPopover = () => {
       state.flag = true
@@ -425,6 +422,8 @@ export default {
       SIZE_PROPERTY,
       selectOptions,
       originOptions,
+      overflowOpt,
+      selectedOverflow,
       reset,
       showModal,
       updateStyle,
@@ -432,7 +431,6 @@ export default {
       getProperty,
       getSettingFlag,
       selectOverflow,
-      isOverflowSelected,
       showPopover,
       hidePopover,
       selectOrigin,
@@ -480,45 +478,14 @@ export default {
     flex: 0 0 54px;
     padding: 0 2px;
     line-height: 24px;
-
-    &.selected {
-      color: var(--ti-lowcode-style-setting-label-color);
-      background-color: var(--ti-lowcode-style-setting-label-bg);
+    span {
+      cursor: pointer;
+      padding: 2px;
     }
-  }
-
-  .overflow-content {
-    display: flex;
-
-    .overflow-content-item {
-      min-width: 30px;
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 4px 0;
-      font-size: 16px;
-      color: var(--ti-lowcode-component-setting-panel-icon-color);
-      position: relative;
-
-      &:hover {
-        color: var(--ti-lowcode-property-hover-color);
-      }
-
-      &.selected {
-        color: var(--ti-lowcode-property-active-color);
-      }
-
-      .overflow-svg {
-        margin: auto;
-      }
-
-      .overflow-auto {
-        cursor: default;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        text-align: center;
-        font-size: 14px;
+    &.selected {
+      span {
+        color: var(--ti-lowcode-style-setting-label-color);
+        background-color: var(--ti-lowcode-style-setting-label-bg);
       }
     }
   }

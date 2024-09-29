@@ -1,6 +1,6 @@
 <template>
   <div class="display-row">
-    <div :class="['display-label', { selected: display }]" @click="openDisplayModal($event)">
+    <div :class="['display-label', { selected: picked }]" @click="openDisplayModal($event)">
       <span>排布</span>
     </div>
     <div class="display-content">
@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { ref, watch } from 'vue'
+import { ref, computed } from 'vue'
 import { DISPLAY_TYPE, DISPLAY_TEXT } from '../../js/cssType'
 import { TabsGroupConfigurator } from '@opentiny/tiny-engine-configurator'
 import useEvent from '../../js/useEvent'
@@ -53,15 +53,10 @@ export default {
   setup(props, { emit }) {
     const { setPosition } = useModal()
 
-    const picked = ref(props.display)
+    const picked = computed(() => {
+      return props.display
+    })
     const showModal = ref(false)
-
-    watch(
-      () => props.display,
-      () => {
-        picked.value = props.display
-      }
-    )
 
     const select = (type) => {
       picked.value = type
@@ -78,8 +73,8 @@ export default {
     }
 
     const reset = () => {
-      picked.value = ''
-      emit('update', { display: '' })
+      picked.value = null
+      emit('update', { display: null })
       showModal.value = false
     }
 
@@ -134,12 +129,14 @@ export default {
     padding: 0 3px;
     line-height: 24px;
 
+    span {
+      cursor: pointer;
+      padding: 2px;
+    }
     &.selected {
       span {
-        cursor: pointer;
-        padding: 2px;
-        color: var(--ti-lowcode-base-text-color-2);
-        background: var(--ti-lowcode-className-selector-container-label-bg-color);
+        color: var(--ti-lowcode-style-setting-label-color);
+        background-color: var(--ti-lowcode-style-setting-label-bg);
       }
     }
   }
