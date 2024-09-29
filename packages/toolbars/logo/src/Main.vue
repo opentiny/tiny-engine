@@ -4,7 +4,7 @@
       <div class="top-panel-logo">
         <h1 class="logo-wrap" @click.stop="handleTitleClick">
           <div class="menu-icon-wrapper">
-            <svg-icon :name="options.icon.default"></svg-icon>
+            <svg-icon :name="options.icon.default || options.icon"></svg-icon>
           </div>
         </h1>
         <div v-if="state.showMenu" class="main-menu">

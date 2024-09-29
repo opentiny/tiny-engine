@@ -1,5 +1,6 @@
 <template>
-  <toolbar-base content="刷新画布" :icon="options.icon.default" :options="options" @click-api="refresh"> </toolbar-base>
+  <toolbar-base content="刷新画布" :icon="options.icon.default || options.icon" :options="options" @click-api="refresh">
+  </toolbar-base>
 </template>
 
 <script>

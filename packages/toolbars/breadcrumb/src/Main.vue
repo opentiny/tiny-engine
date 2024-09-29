@@ -21,8 +21,8 @@
           @click="publishBlock()"
           type="primary"
           size="small"
-          >发布区块</tiny-button
-        >
+          >发布区块
+        </tiny-button>
       </div>
       <block-deploy-dialog v-model:visible="state.showDeployBlock" :nextVersion="nextVersion"></block-deploy-dialog>
     </template>
@@ -47,7 +47,7 @@ export default {
   props: {
     options: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     }
   },
   setup() {

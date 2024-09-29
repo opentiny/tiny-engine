@@ -1,6 +1,7 @@
 <template>
   <div class="toolbar-itm-clean">
-    <toolbar-base content="清除屏幕" :icon="options.icon.default" :options="options" @click-api="clean"> </toolbar-base>
+    <toolbar-base content="清除屏幕" :icon="options.icon.default || options.icon" :options="options" @click-api="clean">
+    </toolbar-base>
   </div>
 </template>
 

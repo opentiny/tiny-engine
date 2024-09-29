@@ -1,6 +1,11 @@
 <template>
   <div class="toolbar-save">
-    <toolbar-base content="预览页面" :icon="options.icon.default" :options="options" @click-api="preview">
+    <toolbar-base
+      content="预览页面"
+      :icon="options.icon.default || options.icon"
+      :options="options"
+      @click-api="preview"
+    >
     </toolbar-base>
   </div>
 </template>

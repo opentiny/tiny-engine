@@ -2,7 +2,7 @@
   <div class="toolbar-save">
     <toolbar-base
       :content="isLoading ? '保存中' : '保存'"
-      :icon="options.icon.default"
+      :icon="options.icon.default || options.icon"
       :options="{ ...options, showDots: !isSaved() }"
       @click-api="openApi"
     >

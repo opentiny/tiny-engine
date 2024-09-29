@@ -1,5 +1,5 @@
 <template>
-  <toolbar-base content="出码" :icon="options.icon.default" :options="options" @click-api="generate">
+  <toolbar-base content="出码" :icon="options.icon.default || options.icon" :options="options" @click-api="generate">
     <template #default>
       <generate-file-selector
         :visible="state.showDialogbox"

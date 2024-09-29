@@ -1,7 +1,7 @@
 <template>
   <toolbar-base
     :content="isBlock() ? '区块设置' : '页面设置'"
-    :icon="options.icon.default"
+    :icon="options.icon.default || options.icon"
     :options="options"
     @click-api="openSetting"
   >

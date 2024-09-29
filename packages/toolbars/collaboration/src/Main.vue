@@ -33,7 +33,7 @@
               <template #reference>
                 <span class="icon collaboration-wrap">
                   <span class="icon-hides">
-                    <svg-icon v-if="state.url" :name="options.icon.default"></svg-icon>
+                    <svg-icon v-if="state.url" :name="options.icon.default || options.icon"></svg-icon>
                   </span>
                   <span v-if="options?.collapsed">多人协作</span>
                 </span>

@@ -1,7 +1,7 @@
 <template>
   <tiny-button v-bind="extendAttrs" class="toolbar-button">
     <span class="svg-wrap">
-      <svg-icon :name="icon"></svg-icon>
+      <svg-icon v-if="icon" :name="icon"></svg-icon>
       <span v-if="options?.showDots" class="dots"></span>
     </span>
     <span class="save-title">{{ content }}</span>
