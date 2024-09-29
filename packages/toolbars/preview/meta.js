@@ -2,5 +2,10 @@ export default {
   id: 'engine.toolbars.preview',
   type: 'toolbars',
   title: 'preview',
-  icon: ''
+  options: {
+    icon: {
+      default: 'preview'
+    },
+    renderType: 'icon'
+  }
 }

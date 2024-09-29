@@ -8,11 +8,11 @@
     <div class="collapse-content">
       <div class="empty-bar" v-for="(item, idx) in collapseBar" :key="idx">
         <div class="toolbar-list-button" v-if="typeof item === 'string'">
-          <component :is="getMergeMeta(item)?.entry"></component>
+          <component :is="getMergeMeta(item)?.entry" :options="getMergeMeta(comp).options"></component>
         </div>
         <div v-if="Array.isArray(item)">
           <div class="toolbar-list-button" v-for="comp in item" :key="comp">
-            <component :is="getMergeMeta(comp)?.entry"></component>
+            <component :is="getMergeMeta(comp)?.entry" :options="getMergeMeta(comp).options"></component>
           </div>
           <div class="empty-line"></div>
         </div>
@@ -69,14 +69,6 @@ export default {
     &:hover {
       background-color: var(--ti-lowcode-toolbar-ellipsis-hover-bg);
       cursor: pointer;
-    }
-
-    .operate-title {
-      vertical-align: middle;
-    }
-
-    .reference-wrapper {
-      padding-left: 8px;
     }
   }
 
