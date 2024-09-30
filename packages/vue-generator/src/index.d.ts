@@ -39,7 +39,7 @@ declare module '@opentiny/tiny-engine-dsl-vue' {
   export function generateApp(config?: IConfig): codeGenInstance
 
   export interface codeGenInstance {
-    generate(IAppSchema): ICodeGenResult
+    generate(schema: IAppSchema): ICodeGenResult
   }
 
   export interface ICodeGenResult {
