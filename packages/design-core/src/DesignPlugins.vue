@@ -166,6 +166,7 @@ export default {
   },
   emits: ['click', 'node-click', 'changeLeftAlign'],
   setup(props, { emit }) {
+    // TODO：后续优化
     const components = {}
     const iconComponents = {}
     const pluginRef = ref(null)
