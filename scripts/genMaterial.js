@@ -108,7 +108,7 @@ function createWidget(type, key) {
       break;
   }
   if (component === EMPTY_VALUE) {
-    console.log(type, key)
+    // console.log(type, key)
   }
   return {
     component,
@@ -278,7 +278,7 @@ async function createSchema(params) {
         continue
       }
       if (labelName === EMPTY_VALUE) {
-        console.log(key, Component.name)
+        // console.log(key, Component.name)
       }
 
       const contentObject = {
@@ -480,9 +480,10 @@ function generateJSONFile(jsonData, fileName = 'output.json', filePath = './') {
   const jsonString = JSON.stringify(jsonData, null, 2)
   const fullFilePath = filePath.endsWith('/') ? filePath + fileName : filePath + '/' + fileName
   fs.writeFile(fullFilePath, jsonString, 'utf8', (err) => {
-    // if (err) {
-    //   console.error('写入文件时出错：', err)
-    // } else {
+    if (err) {
+      console.error('写入文件时出错：', err)
+    } 
+    // else {
     //   console.log(`JSON 数据已成功写入到文件 ${fullFilePath}`)
     // }
   })
