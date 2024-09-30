@@ -248,11 +248,15 @@ export default {
         return props.property.labelPosition
       }
 
-      if (['SwitchConfigurator', 'SwitchConfigurator'].includes(props.property.widget?.component)) {
+      if (['CheckBoxConfigurator', 'SwitchConfigurator'].includes(props.property.widget?.component)) {
         return 'left'
       }
 
-      return 'top'
+      if (props.property.widget?.component === 'CodeConfigurator') {
+        return 'top'
+      }
+
+      return 'auto'
     })
 
     const updateValue = (value) => {
@@ -519,11 +523,9 @@ export default {
   }
 
   .item-label {
-    width: 30%;
     color: var(--ti-lowcode-meta-config-item-label-color);
     font-size: 14px;
     display: flex;
-    margin-right: 5px;
     line-height: 18px;
   }
 
@@ -532,7 +534,6 @@ export default {
   }
 
   .item-input {
-    flex: 1;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -616,8 +617,8 @@ export default {
 
   .item-warp {
     display: flex;
+    gap: 8px;
     width: 100%;
-    align-items: center;
 
     .pro-underline {
       border-bottom: 1px dashed transparent;
@@ -629,24 +630,29 @@ export default {
       border-bottom: 1px solid var(--ti-lowcode-toolbar-active-bg);
       border-top: 1px solid var(--ti-lowcode-toolbar-active-bg);
     }
-    &.top,
-    &.bottom {
-      flex-direction: column;
+    &.auto {
+      flex-wrap: wrap;
+      align-items: center;
       .item-label {
-        width: 100%;
-        text-align: center;
+        min-width: 30%;
       }
       .item-input {
-        width: 100%;
-        display: flex;
+        width: calc(70% - 8px);
+        flex-grow: 1;
+      }
+    }
+    &.left {
+      flex-wrap: wrap;
+      align-items: center;
+      .item-label {
+        width: 30%;
+      }
+      .item-input {
+        width: calc(70% - 8px);
       }
     }
     &.top {
       flex-direction: column;
-      align-items: flex-start;
-      .item-label {
-        margin-bottom: 8px;
-      }
     }
     &.bottom {
       flex-direction: column-reverse;
@@ -654,6 +660,9 @@ export default {
     &.none {
       .item-label {
         display: none;
+      }
+      .item-input {
+        flex-grow: 1;
       }
     }
   }
