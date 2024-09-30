@@ -25,7 +25,7 @@ function genDependenciesPlugin(options = {}) {
     description: 'transform schema to globalState',
     /**
      * 转换 globalState
-     * @param {tinyEngineDslVue.IAppSchema} schema
+     * @param {import('@opentiny/tiny-engine-dsl-vue').IAppSchema} schema
      * @returns
      */
     run(schema) {
