@@ -19,7 +19,7 @@
       </div>
       <div class="btn-box">
         <tiny-button @click="openEditor($event, {})"><icon-plus class="btn-icon"></icon-plus>添加词条</tiny-button>
-        <tiny-button @click="batchDelete" :disabled="!selectedRowLength"
+        <tiny-button class="middle-btn" @click="batchDelete" :disabled="!selectedRowLength"
           ><svg-icon class="btn-icon" name="delete"></svg-icon>删除</tiny-button
         >
         <tiny-file-upload
@@ -485,8 +485,11 @@ export default {
     margin-right: 6px;
     color: var(--ti-lowcode-i18n-icon-color);
   }
+  .middle-btn {
+    margin-left: 0;
+  }
   :deep(.tiny-file-upload) {
-    margin: 0 8px;
+    margin-right: 8px;
   }
   :deep(.tiny-button--default) {
     height: 24px;

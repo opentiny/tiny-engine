@@ -247,6 +247,16 @@
     padding: 0;
     display: flex;
     flex-direction: row-reverse;
+    .tiny-button {
+      margin: 0;
+    }
+    .tiny-button--danger {
+      margin-right: 8px;
+    }
+    .tiny-button--primary,
+    .tiny-button--info {
+      margin-left: 8px;
+    }
   }
 }
 
@@ -259,11 +269,10 @@
   line-height: 24px;
   // 默认按钮
   &.tiny-button--default {
-    margin-right: 8px;
-    margin-left: 0px;
     border: 1px solid var(--te-common-border-secondary);
     color: var(--te-common-text-primary);
     background-color: var(--te-common-bg-default);
+    margin-right: 8px;
     &:hover {
       border: 1px solid var(--te-common-border-hover);
     }
@@ -581,6 +590,7 @@
       color: var(--te-common-text-primary);
       font-size: var(--te-base-font-size-base);
       padding: 12px;
+      border: 1px solid var(--te-common-border-default);
       &[x-placement^='top'] {
         .popper__arrow {
           &.popper__arrow::after {
