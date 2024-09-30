@@ -10,7 +10,7 @@
  *
  */
 
-import { createApp, h } from 'vue'
+import { createApp, h, reactive } from 'vue'
 import { addScript, addStyle, dynamicImportComponents, updateDependencies } from '../../common'
 import TinyI18nHost, { I18nInjectionKey } from '@opentiny/tiny-engine-common/js/i18n'
 import Main, { api } from './RenderMain'
@@ -49,7 +49,7 @@ const renderer = {
 const create = async (config) => {
   const { beforeAppCreate, appCreated } = config.lifeCycles || {}
   if (typeof beforeAppCreate === 'function') {
-    await beforeAppCreate({ Vue: { h }, canvasWin: window, api })
+    await beforeAppCreate({ Vue: { h, reactive }, canvasWin: window, api })
   }
   App && App.unmount()
   App = null
