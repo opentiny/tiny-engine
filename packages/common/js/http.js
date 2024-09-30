@@ -58,7 +58,8 @@ export const handlePageUpdate = (pageId, params, routerChange, isCurEditPage) =>
         }
       }
 
-      pageSettingState.updateTreeData()
+      // 更新页面管理的列表，如果不存在，说明还没有打开过页面管理面板
+      pageSettingState.updateTreeData?.()
       pageSettingState.isNew = false
       useNotify({ message: '保存成功!', type: 'success' })
 
