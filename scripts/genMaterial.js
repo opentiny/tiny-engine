@@ -7,6 +7,17 @@ const ElementPlus = require('element-plus')
 const EMPTY_VALUE = "<null>"
 const SCRIPT = 'https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs';
 
+const getName = (str) => {
+
+  function isAllEnglishLetters(str) {
+    // 使用正则表达式检查字符串是否全是英语字母
+    const regex = /^[A-Za-z]+$/;
+    return regex.test(str);
+  }
+  return str.split(' ').filter((s) => isAllEnglishLetters(s)).join("")
+};
+
+
 function snakeToCamel(str) {
   return str
     .split('-') // 将字符串按下划线分割
@@ -476,17 +487,6 @@ function generateJSONFile(jsonData, fileName = 'output.json', filePath = './') {
     }
   })
 }
-
-const getName = (str) => {
-
-  function isAllEnglishLetters(str) {
-    // 使用正则表达式检查字符串是否全是英语字母
-    const regex = /^[A-Za-z]+$/;
-    return regex.test(str);
-  }
-  return str.split(' ').filter((s) => isAllEnglishLetters(s)).join("")
-};
-
 
 async function generateComponent(params) {
   const components = []
