@@ -335,9 +335,9 @@ async function createSchema(params) {
     const list = extractSlotNames(Component.setup);
     for (const key of list) {
       let desc = tableNames?.find(({ key: k }) => k === key)?.value || EMPTY_VALUE;
-      if (desc === EMPTY_VALUE) {
-        console.log(key, Component.name, "setup")
-      }
+      // if (desc === EMPTY_VALUE) {
+      //   console.log(key, Component.name, "setup")
+      // }
       result.slots[key] = {
         label: {
           zh_CN: desc
@@ -378,7 +378,7 @@ async function createComponent(param) {
 async function loadMenuData() {
   const url = 'https://element-plus.org/zh-CN/component/overview.html'
   const response = await axios.get(url)
-  console.log("根节节点请求成功")
+  // console.log("根节节点请求成功")
   const html = response.data
   const $ = cheerio.load(html)
   const sidebarItems = $('.sidebar-group')
@@ -417,7 +417,7 @@ async function loadBaseDataByMenus(menus, concurrency) {
   const fetchMenuData = async (menu, retries = 3) => {
     try {
       const response = await axios.get(menu.link, { timeout: 2000 }); // 设置超时时间
-      console.log(menu.text + " 加载成功...");
+      // console.log(menu.text + " 加载成功...");
       const html = response.data;
       const $ = cheerio.load(html);
       const sidebarItems = $('.vp-table');
@@ -455,9 +455,9 @@ async function loadBaseDataByMenus(menus, concurrency) {
       return objName;
 
     } catch (error) {
-      console.error(`${menu.text} 加载失败: ${error.message}`);
+      // console.error(`${menu.text} 加载失败: ${error.message}`);
       if (retries > 0) {
-        console.log(`重试 ${menu.text}... (${3 - retries + 1})`);
+        // console.log(`重试 ${menu.text}... (${3 - retries + 1})`);
         return fetchMenuData(menu, retries - 1); // 递归调用以重试
       } else {
         throw new Error(`${menu.text} 加载失败，已重试 ${3} 次`);
@@ -480,11 +480,11 @@ function generateJSONFile(jsonData, fileName = 'output.json', filePath = './') {
   const jsonString = JSON.stringify(jsonData, null, 2)
   const fullFilePath = filePath.endsWith('/') ? filePath + fileName : filePath + '/' + fileName
   fs.writeFile(fullFilePath, jsonString, 'utf8', (err) => {
-    if (err) {
-      console.error('写入文件时出错：', err)
-    } else {
-      console.log(`JSON 数据已成功写入到文件 ${fullFilePath}`)
-    }
+    // if (err) {
+    //   console.error('写入文件时出错：', err)
+    // } else {
+    //   console.log(`JSON 数据已成功写入到文件 ${fullFilePath}`)
+    // }
   })
 }
 
@@ -615,7 +615,7 @@ async function main() {
     const m = await generateMaterial(newMenus)
     generateJSONFile({ data: m }, 'bundle.json', './')
   } catch (error) {
-    console.error('Error in main function:', error)
+    // console.error('Error in main function:', error)
   }
 }
 
