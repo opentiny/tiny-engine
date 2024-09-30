@@ -11,13 +11,22 @@
   <canvas-divider :selectState="selectState"></canvas-divider>
   <canvas-resize-border :iframe="iframe"></canvas-resize-border>
   <canvas-resize>
-    <iframe
-      v-if="!loading"
-      id="canvas"
-      ref="iframe"
-      :srcdoc="canvasSrc"
-      style="border: none; width: 100%; height: 100%"
-    ></iframe>
+    <template v-if="!loading">
+      <iframe
+        v-if="canvasSrc"
+        id="canvas"
+        ref="iframe"
+        :src="canvasSrc"
+        style="border: none; width: 100%; height: 100%"
+      ></iframe>
+      <iframe
+        v-else
+        id="canvas"
+        ref="iframe"
+        :srcdoc="canvasSrcDoc"
+        style="border: none; width: 100%; height: 100%"
+      ></iframe>
+    </template>
     <div v-else class="datainit-tip">应用数据初始化中...</div>
   </canvas-resize>
   <canvas-menu @insert="insertComponent"></canvas-menu>
@@ -63,6 +72,7 @@ export default {
   props: {
     controller: Object,
     canvasSrc: String,
+    canvasSrcDoc: String,
     materialsPanel: Object
   },
   emits: ['selected', 'remove'],

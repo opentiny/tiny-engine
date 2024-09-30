@@ -15,8 +15,9 @@ import { CanvasBreadcrumb } from './breadcrumb'
 import CanvasContainer from './container'
 import CanvasLayout from './layout'
 import DesignCanvas from './DesignCanvas'
+import { createRender } from './render'
 
-export { CanvasContainer, CanvasLayout, DesignCanvas }
+export { CanvasContainer, CanvasLayout, DesignCanvas, createRender }
 
 export default {
   ...DesignCanvas,
