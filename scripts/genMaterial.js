@@ -349,6 +349,7 @@ async function createComponent(param) {
     version: VERSION,
     name: { zh_CN: cleanedName },
     component: param.component_name,
+    // TODO icon 很多不生效需要特殊处理
     icon: String(name).toLowerCase(),
     description: param.desc,
     doc_url: '',
@@ -495,6 +496,7 @@ async function generateComponent(params) {
     let param = params[i]
 
     const c = await createComponent(param)
+    // TODO 有子组件的需要特殊处理
     const component = {
       id: components.length + 1,
       ...c,
@@ -544,16 +546,6 @@ async function generateMaterial(params) {
   }
   return result
 }
-
-// function mergeParamTables(to, from, param, params) {
-//   if (param.component_name === to) {
-//     const waitParam = params.find(({ component_name }) => component_name === from);
-//     if (waitParam) {
-//       param.tables = [...param.tables, ...waitParam.tables]
-//     }
-//   }
-//   return param
-// }
 
 async function mergeComponent(params) {
   const newArr = []
