@@ -2,5 +2,11 @@ export default {
   id: 'engine.toolbars.setting',
   title: 'setting',
   type: 'toolbars',
-  icon: ''
+  options: {
+    icon: {
+      default: 'setting'
+    },
+    renderType: 'icon',
+    collapsed: true
+  }
 }

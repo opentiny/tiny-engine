@@ -1,56 +1,67 @@
 <template>
-  <div class="collaboration-container">
-    <tiny-popover
-      v-model="state.outsideVisible"
-      trigger="click"
-      width="260"
-      append-to-body
-      popper-class="toolbar-right-popover collaborator"
-    >
-      <div class="collaborators-list">
-        <div v-for="(list, index) in state.userLists" :key="index" class="collaborators-list-group">
-          <span class="page-name">{{ list.pageName }}</span>
-          <ul>
-            <li v-for="(userItem, index) in list.users" :key="index" class="user-item">
-              <img class="user-item-head" :src="userItem.userHead" alt="" />
-              <span class="user-item-name">{{ userItem.userName }}</span>
-              <span class="user-item-status">正在{{ userItem.status }}</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <template #reference>
+  <toolbar-base :options="options">
+    <template #default>
+      <span class="collaboration-container">
         <tiny-popover
-          v-model="state.insideVisible"
-          class="toolbar-right-user"
-          trigger="hover"
-          :open-delay="1000"
-          popper-class="collaboration-popover toolbar-right-popover"
+          v-model="state.outsideVisible"
+          trigger="click"
+          width="260"
           append-to-body
-          :content="`该项目共有 ${state.userLists.length} 位用户在编辑`"
+          popper-class="toolbar-right-popover collaborator"
         >
-          <template #reference>
-            <div class="icon collaboration-wrap">
-              <span class="icon-hides">
-                <svg-icon v-if="state.url" name="user"></svg-icon>
-              </span>
-              <span class="operate-title">多人协作</span>
+          <div class="collaborators-list">
+            <div v-for="(list, index) in state.userLists" :key="index" class="collaborators-list-group">
+              <span class="page-name">{{ list.pageName }}</span>
+              <ul>
+                <li v-for="(userItem, index) in list.users" :key="index" class="user-item">
+                  <img class="user-item-head" :src="userItem.userHead" alt="" />
+                  <span class="user-item-name">{{ userItem.userName }}</span>
+                  <span class="user-item-status">正在{{ userItem.status }}</span>
+                </li>
+              </ul>
             </div>
+          </div>
+          <template #reference>
+            <tiny-popover
+              class="toolbar-right-user"
+              trigger="hover"
+              :open-delay="1000"
+              popper-class="collaboration-popover toolbar-right-popover"
+              append-to-body
+              :content="`该项目共有 ${state.userLists.length} 位用户在编辑`"
+            >
+              <template #reference>
+                <span class="icon collaboration-wrap">
+                  <span class="icon-hides">
+                    <svg-icon v-if="state.url" :name="options.icon.default || options.icon"></svg-icon>
+                  </span>
+                  <span v-if="options?.collapsed">多人协作</span>
+                </span>
+              </template>
+            </tiny-popover>
           </template>
         </tiny-popover>
-      </template>
-    </tiny-popover>
-  </div>
+      </span>
+    </template>
+  </toolbar-base>
 </template>
 
 <script>
 import { reactive, watchEffect } from 'vue'
 import { Popover } from '@opentiny/vue'
 import { useLayout } from '@opentiny/tiny-engine-meta-register'
+import { ToolbarBase } from '@opentiny/tiny-engine-common'
 
 export default {
   components: {
-    TinyPopover: Popover
+    TinyPopover: Popover,
+    ToolbarBase
+  },
+  props: {
+    options: {
+      type: Object,
+      default: () => ({})
+    }
   },
   setup() {
     const { layoutState } = useLayout()

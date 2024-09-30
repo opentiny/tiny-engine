@@ -1,59 +1,68 @@
 <template>
   <div class="toolbar-save">
-    <tiny-button class="save-button" @click="openApi">
-      <svg-icon :name="icon"></svg-icon>
-      <span class="save-title">{{ isLoading ? '保存中' : '保存' }}</span>
-      <span @click.stop="state.saveVisible = !state.saveVisible">
-        <tiny-popover v-model="state.saveVisible" :visible-arrow="false" width="203" trigger="click">
-          <template #reference>
-            <svg-icon :name="iconExpand"></svg-icon>
+    <toolbar-base
+      :content="isLoading ? '保存中' : '保存'"
+      :icon="options.icon.default || options.icon"
+      :options="{ ...options, showDots: !isSaved() }"
+      @click-api="openApi"
+    >
+      <template #button>
+        <span @click.stop="state.saveVisible = !state.saveVisible">
+          <tiny-popover v-model="state.saveVisible" :visible-arrow="false" width="203" trigger="manual">
+            <template #reference>
+              <svg-icon :name="iconExpand"></svg-icon>
+            </template>
+            <div class="save-style">
+              <div class="save-setting">保存设置</div>
+              <tiny-checkbox v-model="state.checked" name="tiny-checkbox">自动保存</tiny-checkbox>
+              <div class="save-time">
+                <div>保存间隔</div>
+                <tiny-select v-model="state.timeValue" :options="delayOptions" :disabled="!state.checked" autocomplete>
+                </tiny-select>
+              </div>
+              <div class="save-button-group">
+                <tiny-button @click="cancel">取消</tiny-button>
+                <tiny-button type="primary" @click="autoSave">设置并保存</tiny-button>
+              </div>
+            </div>
+          </tiny-popover>
+        </span>
+      </template>
+      <template #default>
+        <tiny-dialog-box
+          class="dialog-box"
+          :modal="false"
+          :fullscreen="true"
+          :append-to-body="true"
+          :visible="state.visible"
+          title="Schema 本地与线上差异"
+          @update:visible="state.visible = $event"
+        >
+          <vue-monaco
+            v-if="state.visible"
+            ref="editor"
+            class="monaco-editor"
+            :diffEditor="true"
+            :options="editorOptions"
+            :value="state.code"
+            :original="state.originalCode"
+          ></vue-monaco>
+          <template #footer>
+            <tiny-button @click="close">取 消</tiny-button>
+            <tiny-button type="primary" @click="saveApi">保 存</tiny-button>
           </template>
-          <div class="save-style">
-            <div class="save-setting">保存设置</div>
-            <tiny-checkbox v-model="state.checked" name="tiny-checkbox">自动保存</tiny-checkbox>
-            <div class="save-time">
-              <div>保存间隔</div>
-              <tiny-select v-model="state.timeValue" :options="options" :disabled="!state.checked" autocomplete>
-              </tiny-select>
-            </div>
-            <div class="save-button-group">
-              <tiny-button @click="cancel">取消</tiny-button>
-              <tiny-button type="primary" @click="autoSave">设置并保存</tiny-button>
-            </div>
-          </div>
-        </tiny-popover>
-      </span>
-    </tiny-button>
+        </tiny-dialog-box>
+      </template>
+    </toolbar-base>
   </div>
-  <tiny-dialog-box
-    class="dialog-box"
-    :modal="false"
-    :fullscreen="true"
-    :append-to-body="true"
-    :visible="state.visible"
-    title="Schema 本地与线上差异"
-    @update:visible="state.visible = $event"
-  >
-    <vue-monaco
-      v-if="state.visible"
-      ref="editor"
-      class="monaco-editor"
-      :diffEditor="true"
-      :options="editorOptions"
-      :value="state.code"
-      :original="state.originalCode"
-    ></vue-monaco>
-    <template #footer>
-      <tiny-button @click="close">取 消</tiny-button>
-      <tiny-button type="primary" @click="saveApi">保 存</tiny-button>
-    </template>
-  </tiny-dialog-box>
 </template>
 
 <script>
 import { reactive, ref, onUnmounted } from 'vue'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
 import { Button, Popover, DialogBox, Checkbox, Select } from '@opentiny/vue'
+import { useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import { openCommon, saveCommon } from './js/index'
 import { isLoading } from './js/index'
 export const api = {
@@ -67,20 +76,23 @@ export default {
     TinyPopover: Popover,
     TinyDialogBox: DialogBox,
     TinyCheckbox: Checkbox,
-    TinySelect: Select
+    TinySelect: Select,
+    ToolbarBase
   },
   props: {
-    icon: {
-      type: String,
-      default: 'save'
-    },
     iconExpand: {
       type: String,
       default: 'down-arrow'
+    },
+    options: {
+      type: Object,
+      default: () => ({})
     }
   },
   setup() {
-    const options = [
+    const { isSaved } = useCanvas()
+
+    const delayOptions = [
       { value: 5, label: '5分钟' },
       { value: 10, label: '10分钟' },
       { value: 15, label: '15分钟' }
@@ -147,10 +159,11 @@ export default {
       editor,
       editorOptions,
       isLoading,
+      isSaved,
       close,
       openApi,
       saveApi,
-      options,
+      delayOptions,
       cancel,
       autoSave
     }

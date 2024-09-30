@@ -17,9 +17,9 @@
     "@babel/parser": "^7.18.13",
     "@babel/template": "^7.18.13",
     "@babel/traverse": "^7.18.13",
-    "@vitejs/plugin-vue": "^5.0.4",
+    "@vitejs/plugin-vue": "^5.1.2",
     "@vue/compiler-sfc": "^3.4.21",
-    "vite": "^5.2.7"
+    "vite": "^5.4.2"
   },
   "keywords": [],
   "publishConfig": {

@@ -2,5 +2,10 @@ export default {
   id: 'engine.toolbars.breadcrumb',
   type: 'toolbars',
   title: 'breadcrumb',
-  icon: ''
+  options: {
+    icon: {
+      default: ''
+    },
+    renderType: 'slot'
+  }
 }

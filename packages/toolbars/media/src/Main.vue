@@ -1,86 +1,96 @@
 <template>
-  <div class="toolbar-wrap">
-    <div class="toolbar-icon-wrap">
-      <span
-        v-for="(item, index) in state.media"
-        :key="index"
-        :class="['icon', { active: state.activeIndex === index, 'is-rotate': item.view === 'lanMobile' }]"
-        @click="setViewPort(item)"
-      >
-        <tiny-popover trigger="hover" width="225" append-to-body :open-delay="1000" popper-class="media-icon-popover">
-          <div class="media-content">
-            <div class="media-title">
-              <div>{{ item.title }}</div>
-              <div v-if="item.subTitle" class="sub-title">
-                （<svg-icon v-if="item.view === 'desktop'" name="stars"></svg-icon> <span>{{ item.subTitle }}</span
-                >）
+  <toolbar-base :options="options">
+    <template #default>
+      <div class="toolbar-wrap">
+        <div class="toolbar-icon-wrap">
+          <span
+            v-for="(item, index) in state.media"
+            :key="index"
+            :class="['icon', { active: state.activeIndex === index, 'is-rotate': item.view === 'lanMobile' }]"
+            @click="setViewPort(item)"
+          >
+            <tiny-popover
+              trigger="hover"
+              width="225"
+              append-to-body
+              :open-delay="1000"
+              popper-class="media-icon-popover"
+            >
+              <div class="media-content">
+                <div class="media-title">
+                  <div>{{ item.title }}</div>
+                  <div v-if="item.subTitle" class="sub-title">
+                    （<svg-icon v-if="item.view === 'desktop'" name="stars"></svg-icon> <span>{{ item.subTitle }}</span
+                    >）
+                  </div>
+                </div>
+                <div class="content">{{ item.content }}</div>
+              </div>
+              <template #reference>
+                <svg-icon :name="item.liked" class="media-icon"></svg-icon>
+              </template>
+            </tiny-popover>
+          </span>
+        </div>
+        <tiny-popover v-if="isCanvas" width="290" trigger="click" popper-class="toolbar-media-popper">
+          <template #reference>
+            <tiny-popover
+              trigger="hover"
+              :open-delay="1000"
+              popper-class="toolbar-right-popover"
+              append-to-body
+              content="画布设置"
+            >
+              <template #reference>
+                <span class="reference-text">
+                  <span>
+                    <span>{{ parseInt(state.width) }}</span>
+                    <span class="symbol">PX</span>
+                  </span>
+                  <span>
+                    <span>{{ scale.toFixed(2) }}</span>
+                    <span class="symbol">%</span>
+                  </span>
+                </span>
+              </template>
+            </tiny-popover>
+          </template>
+          <div class="content-wrap text-content">
+            <span class="title text-title">{{ state.textData.title }}</span>
+            <div class="setting">
+              <div>
+                <label for="">{{ state.textData.width }}</label>
+                <tiny-input v-model="state.width" @change="widthChange">
+                  <template #suffix>
+                    <span>PX</span>
+                  </template>
+                </tiny-input>
+              </div>
+              <div>
+                <label for="">{{ state.textData.scale }}</label>
+                <tiny-input v-model="state.scaleValue" :readonly="state.readonly" @change="scaleChange">
+                  <template #suffix>
+                    <span>%</span>
+                  </template>
+                </tiny-input>
               </div>
             </div>
-            <div class="content">{{ item.content }}</div>
-          </div>
-          <template #reference>
-            <svg-icon :name="item.liked" class="media-icon"></svg-icon>
-          </template>
-        </tiny-popover>
-      </span>
-    </div>
-    <tiny-popover v-if="isCanvas" width="290" trigger="click" popper-class="toolbar-media-popper">
-      <template #reference>
-        <tiny-popover
-          trigger="hover"
-          :open-delay="1000"
-          popper-class="toolbar-right-popover"
-          append-to-body
-          content="画布设置"
-        >
-          <template #reference>
-            <span class="reference-text">
-              <span>
-                <span>{{ parseInt(state.width) }}</span>
-                <span class="symbol">PX</span>
-              </span>
-              <span>
-                <span>{{ scale.toFixed(2) }}</span>
-                <span class="symbol">%</span>
-              </span>
-            </span>
-          </template>
-        </tiny-popover>
-      </template>
-      <div class="content-wrap text-content">
-        <span class="title text-title">{{ state.textData.title }}</span>
-        <div class="setting">
-          <div>
-            <label for="">{{ state.textData.width }}</label>
-            <tiny-input v-model="state.width" @change="widthChange">
-              <template #suffix>
-                <span>PX</span>
-              </template>
-            </tiny-input>
-          </div>
-          <div>
-            <label for="">{{ state.textData.scale }}</label>
-            <tiny-input v-model="state.scaleValue" :readonly="state.readonly" @change="scaleChange">
-              <template #suffix>
-                <span>%</span>
-              </template>
-            </tiny-input>
-          </div>
-        </div>
 
-        <ul class="more-setting">
-          <li>
-            <div>
-              <span>{{ '自由布局' }}</span>
-            </div>
-            <div>
-              <tiny-switch v-model="isAbsolute" @change="changeCanvasType"></tiny-switch>
-            </div>
-          </li>
-        </ul>
+            <ul class="more-setting">
+              <li>
+                <div>
+                  <span>{{ '自由布局' }}</span>
+                </div>
+                <div>
+                  <tiny-switch v-model="isAbsolute" @change="changeCanvasType"></tiny-switch>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </tiny-popover>
       </div>
-    </tiny-popover>
-  </div>
+    </template>
+  </toolbar-base>
 </template>
 
 <script>
@@ -88,12 +98,14 @@ import { ref, reactive, computed, toRaw, watchEffect, onMounted, onUnmounted, wa
 import { Popover, Input, Switch } from '@opentiny/vue'
 import { IconWebPlus } from '@opentiny/vue-icon'
 import { useLayout, useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { ToolbarBase } from '@opentiny/tiny-engine-common'
 
 export default {
   components: {
     TinyPopover: Popover,
     TinyInput: Input,
-    TinySwitch: Switch
+    TinySwitch: Switch,
+    ToolbarBase
   },
   props: {
     data: {
@@ -103,6 +115,10 @@ export default {
     isCanvas: {
       type: Boolean,
       default: true
+    },
+    options: {
+      type: Object,
+      default: () => ({})
     }
   },
   setup(props, { emit }) {
