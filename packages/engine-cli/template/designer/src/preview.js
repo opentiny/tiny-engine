@@ -10,7 +10,7 @@
  *
  */
 
-import { initHook, HOOK_NAME, generateCodeService } from '@opentiny/tiny-engine'
+import { initHook, HOOK_NAME, GenerateCodeService, Breadcrumb, Media, Lang } from '@opentiny/tiny-engine'
 import { initPreview } from '@opentiny/tiny-engine'
 import 'virtual:svg-icons-register'
 import '@opentiny/tiny-engine-theme'
@@ -23,9 +23,10 @@ initPreview({
   registry: {
     root: {
       id: 'engine.root',
-      metas: [generateCodeService]
+      metas: [GenerateCodeService]
     },
-    config: { id: 'engine.config', theme: 'light' }
+    config: { id: 'engine.config', theme: 'light' },
+    toolbars: [Breadcrumb, Media, Lang]
   },
   lifeCycles: {
     beforeAppCreate
