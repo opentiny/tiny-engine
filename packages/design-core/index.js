@@ -37,6 +37,8 @@ export { GenerateCodeService, PluginPanel } from '@opentiny/tiny-engine-common'
 
 export { default as defaultRegistry } from './registry'
 
+export { default as http } from '@opentiny/tiny-engine-http'
+
 export * from '@opentiny/tiny-engine-meta-register'
 
 export { EditorInfoService, AppService } from '@opentiny/tiny-engine-common'

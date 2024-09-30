@@ -43,9 +43,11 @@ import {
   Canvas,
   EditorInfoService,
   AppService,
-  GenerateCodeService
+  GenerateCodeService,
+  http
 } from '@opentiny/tiny-engine'
 import engineConfig from './engine.config'
+import { httpConfig } from './src/http'
 
 export default {
   root: {
@@ -101,5 +103,6 @@ export default {
   plugins: [Materials, Tree, Page, Block, Datasource, Bridge, I18n, Script, State, Schema, Help, Robot],
   dsls: [{ id: 'engine.dsls.dslvue' }],
   settings: [Props, Styles, Events],
-  canvas: Canvas
+  canvas: Canvas,
+  http: [http, { options: httpConfig }]
 }
