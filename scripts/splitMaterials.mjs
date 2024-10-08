@@ -51,9 +51,9 @@ const splitMaterials = () => {
       fs.outputJsonSync(blockPath, block, { spaces: 2 })
     })
 
-    logger.success('拆分物料资产包完成')
+    logger.success('materials splitted.')
   } catch (error) {
-    logger.error(`拆分物料资产包失败： ${error}`)
+    logger.error(`failed to split materials: ${error}.`)
   }
 }
 

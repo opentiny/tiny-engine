@@ -6,18 +6,16 @@
           <icon-arrow-down></icon-arrow-down>
         </div>
         <div class="field-cell-name">
-          <span>请选择类型</span>
+          <span>选择字段类型</span>
         </div>
       </div>
-      <span class="btn">
-        <tiny-button @click="cancelSelectType">取消</tiny-button>
-      </span>
+      <span class="btn" @click="cancelSelectType"> 取消 </span>
     </div>
-    <div class="field-content type-list">
-      <a v-for="fieldType in state.fieldTypes" :key="fieldType.name" class="type-item" @click="selectType(fieldType)">
+    <div class="type-list">
+      <div v-for="fieldType in state.fieldTypes" :key="fieldType.name" class="type-item" @click="selectType(fieldType)">
         <svg-icon :name="fieldType.icon" class="type-icon" />
         <span>{{ fieldType.name }}</span>
-      </a>
+      </div>
     </div>
   </div>
 </template>
@@ -25,7 +23,6 @@
 <script>
 import { reactive, ref } from 'vue'
 import { iconArrowDown } from '@opentiny/vue-icon'
-import { Button } from '@opentiny/vue'
 import fieldTypes from './config'
 
 let isOpen = ref(false)
@@ -40,7 +37,6 @@ export const close = () => {
 
 export default {
   components: {
-    TinyButton: Button,
     iconArrowDown: iconArrowDown()
   },
   emits: ['cancel', 'select'],
@@ -71,7 +67,10 @@ export default {
 
 <style lang="less" scoped>
 .step-select-first {
-  border-bottom: 1px solid var(--ti-lowcode-datasource-list-bottom-border-color);
+  border: 1px solid var(--ti-lowcode-data-source-border-color);
+  border-radius: 4px;
+  padding: 12px;
+  margin-bottom: 46px;
   svg {
     color: var(--ti-lowcode-datasource-toolbar-icon-color);
   }
@@ -79,7 +78,7 @@ export default {
 .field-row {
   display: flex;
   flex-wrap: wrap;
-  padding: 8px 10px;
+  margin-bottom: 12px;
   -webkit-box-shadow: none;
   box-shadow: none;
   border-bottom: 2px solid var(--ti-lowcode-datasource-dialog-demo-border-color);
@@ -92,7 +91,6 @@ export default {
     display: flex;
     align-items: center;
     .field-cell-type {
-      width: 20px;
       height: 20px;
       display: flex;
       align-items: center;
@@ -105,23 +103,31 @@ export default {
       }
     }
   }
+  .btn {
+    color: var(--ti-lowcode-data-source-color);
+    font-size: 12px;
+    cursor: pointer;
+  }
 }
-.field-content {
-  padding: 8px 10px;
-}
+
 .type-list {
-  display: grid;
-  gap: 10px;
-  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  display: flex;
+  gap: 8px;
+  grid-template-columns: repeat(6, 1fr);
   .type-item {
-    display: grid;
-    grid-template-rows: 60px 24px;
-    place-items: center;
-    background-color: var(--ti-lowcode-datasource-canvas-wrap-bg);
-    border-radius: 2px;
+    width: 70px;
+    height: 70px;
+    padding: 12px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+    cursor: pointer;
+    background-color: var(--ti-lowcode-data-source-box-bg);
+    border-radius: 4px;
     color: var(--ti-lowcode-datasource-dialog-font-color);
     .type-icon {
-      font-size: 25px;
+      font-size: 20px;
     }
   }
 }

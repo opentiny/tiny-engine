@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-common",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-alpha.2",
   "publishConfig": {
     "access": "public"
   },
@@ -9,6 +9,7 @@
   },
   "main": "dist/index.js",
   "module": "dist/index.js",
+  "type": "module",
   "exports": {
     ".": "./dist/index.js",
     "./js/": "./dist/js/"
@@ -46,10 +47,10 @@
   },
   "devDependencies": {
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
-    "@vitejs/plugin-vue": "^4.2.3",
-    "@vitejs/plugin-vue-jsx": "^3.1.0",
+    "@vitejs/plugin-vue": "^5.1.2",
+    "@vitejs/plugin-vue-jsx": "^4.0.1",
     "glob": "^10.3.4",
-    "vite": "^4.3.7"
+    "vite": "^5.4.2"
   },
   "peerDependencies": {
     "@opentiny/vue": "^3.14.0",

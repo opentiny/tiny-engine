@@ -43,7 +43,7 @@
             <div class="operate-right-container">
               <tiny-tooltip class="item" effect="dark" content="编辑" placement="top">
                 <span class="item-icon" @click.stop="handleEdit(data)">
-                  <svg-icon name="edit"></svg-icon>
+                  <svg-icon name="to-edit"></svg-icon>
                 </span>
               </tiny-tooltip>
               <tiny-tooltip class="item" effect="dark" content="删除" placement="top">

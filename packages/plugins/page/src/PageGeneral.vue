@@ -8,10 +8,10 @@
       validate-type="text"
       :inline-message="true"
       :label-align="true"
-      label-position="left"
+      label-position="top"
       class="general-config-form"
     >
-      <tiny-form-item v-if="!isFolder" prop="group" label="选择页面类型" class="form-item-page-type">
+      <tiny-form-item v-if="!isFolder" prop="group" label="页面类型" class="form-item-page-type">
         <tiny-radio v-model="pageSettingState.currentPageData.group" class="page-type-radio" label="staticPages">
           静态页面
         </tiny-radio>
@@ -19,18 +19,14 @@
           公共页面
         </tiny-radio>
       </tiny-form-item>
-      <tiny-form-item prop="name" :label="`${isFolder ? '文件夹' : '页面'}ID`">
+      <tiny-form-item prop="name" :label="`${isFolder ? '文件夹' : '页面'}名称`">
         <tiny-input
           v-model="pageSettingState.currentPageData.name"
-          :placeholder="`请设置${isFolder ? '文件夹' : '页面'}ID`"
+          :placeholder="`请设置${isFolder ? '文件夹' : '页面'}名称`"
         ></tiny-input>
       </tiny-form-item>
 
-      <tiny-form-item
-        v-if="pageSettingState.currentPageData.group !== 'publicPages'"
-        label="选择父文件夹"
-        prop="parentId"
-      >
+      <tiny-form-item v-if="pageSettingState.currentPageData.group !== 'publicPages'" label="父文件夹" prop="parentId">
         <tiny-select
           v-model="pageSettingState.currentPageData.parentId"
           value-field="id"
@@ -43,12 +39,9 @@
         ></tiny-select>
       </tiny-form-item>
 
-      <tiny-form-item label="路由" prop="route">
-        <tiny-input v-model="pageSettingState.currentPageData.route" placeholder="请设置路由">
-          <template #prepend><span class="input-head">website.com</span></template>
-        </tiny-input>
+      <tiny-form-item label="页面路由" prop="route">
+        <tiny-input v-model="pageSettingState.currentPageData.route" placeholder="请设置路由"> </tiny-input>
         <div class="tip">
-          <svg-button class="icon" name="text-page-link"></svg-button>
           <span class="text" v-if="!pageSettingState.currentPageData.route">路由将以website.com开头</span>
           <span class="route-text" v-else>
             <span class="text">website.com/</span>
@@ -68,12 +61,10 @@ import { ref, computed, watchEffect } from 'vue'
 import { Form, FormItem, Input, Select, Radio } from '@opentiny/vue'
 import { usePage } from '@opentiny/tiny-engine-meta-register'
 import { REGEXP_PAGE_NAME, REGEXP_FOLDER_NAME, REGEXP_ROUTE } from '@opentiny/tiny-engine-common/js/verification'
-import { SvgButton } from '@opentiny/tiny-engine-common'
 import PageHome from './PageHome.vue'
 
 export default {
   components: {
-    SvgButton,
     TinyForm: Form,
     TinyFormItem: FormItem,
     TinyInput: Input,
@@ -238,14 +229,14 @@ export default {
 
 <style lang="less" scoped>
 .general-config {
-  padding: 20px;
+  padding: 0 12px;
 
   .general-config-form {
     .input-head {
       color: var(--ti-lowcode-page-manage-input-head-text-color);
     }
     :deep(.tiny-form-item) {
-      padding: 0 12px;
+      margin-bottom: 16px;
       .tiny-input-group__prepend {
         border: 1px solid var(--ti-lowcode-page-manage-input-group-border-color);
         background: var(--ti-lowcode-page-manage-input-group-color);
@@ -255,7 +246,9 @@ export default {
         color: var(--ti-lowcode-page-manage-title-background-text-color);
       }
       .tiny-form-item__label {
-        font-size: 14px;
+        height: 24px;
+        line-height: 18px;
+        font-size: 12px;
         color: var(--ti-lowcode-page-manage-text-color);
       }
       .tiny-form-item__error {
@@ -266,10 +259,12 @@ export default {
   }
   .tip {
     color: var(--ti-lowcode-page-manage-tip-border-color);
-    font-size: 14px;
+    font-size: 12px;
     border-radius: 3px;
     display: flex;
     align-items: center;
+    height: 16px;
+    margin-top: 4px;
     .icon {
       color: var(--ti-lowcode-page-manage-icon-text-color);
     }
@@ -277,7 +272,7 @@ export default {
       color: var(--ti-lowcode-page-manage-btn-text-color);
     }
     .text-dim {
-      color: var(--ti-lowcode-page-manage-btn-text-color);
+      color: var(--ti-lowcode-plugin-panel-title-color);
     }
   }
 }

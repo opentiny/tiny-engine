@@ -1,9 +1,10 @@
 {
   "name": "@opentiny/tiny-engine-builtin-component",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-alpha.2",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.js",
+  "type": "module",
   "publishConfig": {
     "access": "public"
   },
@@ -23,9 +24,9 @@
     "vite-plugin-css-injected-by-js": "^3.3.1"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^4.2.3",
-    "@vitejs/plugin-vue-jsx": "^3.1.0",
-    "vite": "^4.5.0"
+    "@vitejs/plugin-vue": "^5.1.2",
+    "@vitejs/plugin-vue-jsx": "^4.0.1",
+    "vite": "^5.4.2"
   },
   "peerDependencies": {
     "vue": "^3.4.15"

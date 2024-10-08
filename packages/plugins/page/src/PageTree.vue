@@ -1,11 +1,10 @@
 <template>
   <div class="app-manage-search">
-    <tiny-search
-      v-model="state.pageSearchValue"
-      clearable
-      placeholder="搜索页面"
-      @update:modelValue="searchPageData"
-    ></tiny-search>
+    <tiny-search v-model="state.pageSearchValue" clearable placeholder="搜索" @update:modelValue="searchPageData">
+      <template #prefix>
+        <tiny-icon-search />
+      </template>
+    </tiny-search>
   </div>
 
   <tiny-collapse v-model="state.collapseValue" class="page-manage-collapse lowcode-scrollbar">
@@ -38,7 +37,7 @@
 <script lang="jsx">
 import { reactive, ref, watchEffect, nextTick } from 'vue'
 import { Search, Tree, Collapse, CollapseItem } from '@opentiny/vue'
-import { IconFolderOpened, IconFolderClosed } from '@opentiny/vue-icon'
+import { IconFolderOpened, IconFolderClosed, IconSearch } from '@opentiny/vue-icon'
 import { useCanvas, useApp, useModal, usePage, useBreadcrumb, useLayout } from '@opentiny/tiny-engine-meta-register'
 import { isEqual } from '@opentiny/vue-renderless/common/object'
 import { getCanvasStatus } from '@opentiny/tiny-engine-common/js/canvas'
@@ -54,7 +53,8 @@ export default {
     TinySearch: Search,
     TinyTree: Tree,
     TinyCollapse: Collapse,
-    TinyCollapseItem: CollapseItem
+    TinyCollapseItem: CollapseItem,
+    TinyIconSearch: IconSearch()
   },
   props: {
     isFolder: {
@@ -350,8 +350,7 @@ export default {
 
 <style lang="less" scoped>
 .app-manage-search {
-  padding: 8px 10px;
-  border-bottom: 1px solid var(--ti-lowcode-page-manage-search-border-color);
+  padding: 0 12px 12px 12px;
 }
 
 .page-manage-collapse {
@@ -402,14 +401,18 @@ export default {
         & > .tiny-tree-node__content-left {
           font-weight: 700;
         }
+        .tree-node-icon {
+          width: 0;
+        }
       }
     }
     .tiny-tree-node__label {
       width: 100%;
       display: flex;
       justify-content: space-between;
-      height: 30px;
-      line-height: 30px;
+      height: 24px;
+      line-height: 24px;
+      color: var(--ti-lowcode-page-manage-tree-node-label-color);
       .page-edit-icon {
         font-size: 16px;
       }

@@ -1,6 +1,6 @@
 <template>
   <ul
-    v-if="state.data.length"
+    v-if="state.data.length || showAddButton"
     :class="['block-list', 'lowcode-scrollbar', { 'is-small-list': blockStyle === 'mini' }, { isShortcutPanel }]"
     @mouseleave="state.hover = false"
   >
@@ -8,26 +8,23 @@
       v-for="(item, index) in state.data"
       :key="item.blockName"
       :draggable="!isBlockManage && showSettingIcon"
-      :class="[
-        'block-item',
-        { 'is-active': state.activeIndex === index },
-        { 'is-disabled': showBlockDetail },
-        { 'block-item-small-list': blockStyle === 'mini' }
-      ]"
+      :class="['block-item', { 'is-disabled': showBlockDetail }, { 'block-item-small-list': blockStyle === 'mini' }]"
       :title="getTitle(item)"
-      @mousedown.stop.left="blockClick({ event: $event, item, index })"
+      @mousedown.stop.left="blockClick({ item, index })"
       @mouseover.stop="openBlockShotPanel(item, $event)"
       @mouseleave="handleBlockItemLeave"
     >
       <slot :data="item">
-        <img
-          v-if="item.screenshot"
-          class="item-image"
-          :src="item.screenshot || defaultImg"
-          draggable="false"
-          @error="$event.target.src = defaultImg"
-        />
-        <svg-icon v-else class="item-image item-default-img" name="block-default-img"></svg-icon>
+        <div class="block-item-img">
+          <img
+            v-if="item.screenshot"
+            class="item-image"
+            :src="item.screenshot || defaultImg"
+            draggable="false"
+            @error="$event.target.src = defaultImg"
+          />
+          <svg-icon v-else class="item-image item-default-img" name="block-default-img"></svg-icon>
+        </div>
         <div class="item-text">
           <div class="item-name">{{ item.name_cn || item.label || item.content?.fileName }}</div>
           <div v-if="blockStyle === 'list'" class="item-description">{{ item.description }}</div>
@@ -45,13 +42,43 @@
         <div v-if="isBlockManage && !item.is_published" class="publish-flag">未发布</div>
 
         <div v-if="isBlockManage" class="block-detail">
-          <tiny-tooltip effect="dark" :content="defaultIconTip" placement="top">
-            <icon-setting
-              class="block-detail-icon"
-              @mouseover.stop="iconSettingMove"
-              @mousedown.stop.prevent="iconClick({ event: $event, item, index })"
-            ></icon-setting>
-          </tiny-tooltip>
+          <tiny-popover
+            placement="bottom-end"
+            width="120"
+            append-to-body
+            trigger="manual"
+            :modelValue="state.hoverItemId === item.id && state.currentShowMenuId === item.id"
+            :visible-arrow="false"
+            popper-class="popper-options block-setting-popover"
+          >
+            <template #reference>
+              <svg-button
+                name="ellipsis"
+                class="block-detail-icon"
+                @click="handleShowVersionMenu(item)"
+                @mouseover.stop="iconSettingMove"
+                @mousedown.stop.prevent=""
+              ></svg-button>
+            </template>
+
+            <template #default>
+              <div class="setting-menu" @mouseover.stop="handleSettingMouseOver" @mouseleave="handleBlockItemLeave">
+                <ul class="list">
+                  <li
+                    class="list-item"
+                    @mouseover.stop="iconSettingMove"
+                    @mousedown.stop.prevent="iconClick({ event: $event, item, index })"
+                  >
+                    <svg-button class="list-item-svg" name="text-source-setting"> </svg-button>
+                    <span>设置</span>
+                  </li>
+                  <li class="list-item" @mousedown.stop.left="editBlock({ event: $event, item, index })">
+                    <svg-button class="list-item-svg" name="to-edit"> </svg-button><span>编辑</span>
+                  </li>
+                </ul>
+              </div>
+            </template>
+          </tiny-popover>
         </div>
         <div
           v-else-if="showSettingIcon"
@@ -106,7 +133,7 @@
         </div>
       </slot>
     </li>
-    <li v-if="state.showAddButton" class="block-item block-plus" @click="$emit('add')">
+    <li v-if="showAddButton" class="block-item block-plus" @click="$emit('add')">
       <span class="block-plus-icon"><icon-plus></icon-plus></span>
     </li>
     <div v-if="showBlockShot && state.hover && state.currentBlock.screenshot" class="block-shortcut">
@@ -123,13 +150,13 @@
       </div>
     </div>
   </ul>
-  <search-empty :isShow="!state.data.length" />
+  <search-empty :isShow="!state.data.length && !showAddButton" />
 </template>
 
 <script>
 import { computed, watch, inject, reactive } from 'vue'
-import { iconSetting, iconPlus } from '@opentiny/vue-icon'
-import { Tooltip, Progress, Popover } from '@opentiny/vue'
+import { iconPlus } from '@opentiny/vue-icon'
+import { Progress, Popover } from '@opentiny/vue'
 import SearchEmpty from './SearchEmpty.vue'
 import SvgButton from './SvgButton.vue'
 
@@ -139,8 +166,6 @@ const defaultImg =
 export default {
   components: {
     TinyProgress: Progress,
-    TinyTooltip: Tooltip,
-    IconSetting: iconSetting(),
     IconPlus: iconPlus(),
     TinyPopover: Popover,
     SvgButton,
@@ -204,13 +229,12 @@ export default {
       default: null
     }
   },
-  emits: ['click', 'iconClick', 'add', 'deleteBlock', 'openVersionPanel'],
+  emits: ['click', 'iconClick', 'add', 'deleteBlock', 'openVersionPanel', 'editBlock'],
   setup(props, { emit }) {
     const panelState = inject('panelState', {})
     const state = reactive({
       activeIndex: -1,
       data: computed(() => props.data),
-      showAddButton: computed(() => props.showAddButton),
       top: 0,
       hover: false,
       currentBlock: {},
@@ -239,12 +263,16 @@ export default {
       }
     }
 
-    const blockClick = ({ event, item, index }) => {
+    const blockClick = ({ item }) => {
+      emit('click', item)
+    }
+
+    const editBlock = ({ event, item, index }) => {
       if (props.isBlockManage) {
         state.activeIndex = index
       }
 
-      emit('click', item)
+      emit('editBlock', item)
       // 点击区块并不打开设置面板
       emit('iconClick', { event, item, index, isOpen: false })
     }
@@ -337,7 +365,8 @@ export default {
       defaultImg,
       handleBlockItemLeave,
       handleSettingMouseOver,
-      handleShowVersionMenu
+      handleShowVersionMenu,
+      editBlock
     }
   }
 }
@@ -385,6 +414,7 @@ export default {
   overflow-y: auto;
   overflow-x: hidden;
   color: var(--ti-lowcode-common-secondary-text-color);
+  margin: 12px 0 0 12px;
 
   &.is-small-list {
     grid-template-columns: 100%;
@@ -395,14 +425,17 @@ export default {
     flex-direction: column;
     align-items: center;
     position: relative;
-    height: 96px;
-    padding: 10px;
-    border-right: 1px solid var(--ti-lowcode-component-block-list-border-color);
-    border-bottom: 1px solid var(--ti-lowcode-component-block-list-border-color);
+    height: 105px;
     text-align: center;
     user-select: none;
-    &:nth-child(-n + 2) {
-      border-top: 1px solid var(--ti-lowcode-component-block-list-border-color);
+    margin-right: 12px;
+    margin-bottom: 12px;
+    .block-item-img {
+      line-height: 82px;
+      width: 106px;
+      height: 82px;
+      border-radius: 4px;
+      background-color: var(--ti-lowcode-component-block-list-item-active-bg);
     }
     &.block-item-small-list:nth-child(2) {
       border-top: none;
@@ -436,6 +469,7 @@ export default {
         text-align: left;
         margin-top: 0;
         margin-left: 4px;
+        color: var(--ti-lowcode-base-text-color-4);
       }
       .publish-flag {
         position: static;
@@ -487,7 +521,6 @@ export default {
     }
 
     &:not(.is-disabled):hover {
-      background-color: var(--ti-lowcode-component-block-list-item-active-bg);
       cursor: pointer;
 
       .block-detail,
@@ -548,14 +581,14 @@ export default {
       visibility: hidden;
       position: absolute;
       top: 4px;
-      right: 4px;
+      right: 8px;
       z-index: 9;
       &.is-current-visible-icon {
         visibility: visible;
       }
 
       .block-detail-icon {
-        color: var(--ti-lowcode-component-block-list-setting-btn-color);
+        color: var(--ti-lowcode-base-gray-50);
         &:hover {
           cursor: pointer;
           color: var(--ti-lowcode-component-block-list-setting-btn-hover-color);
@@ -720,6 +753,9 @@ export default {
     }
     .list-item-icon {
       font-size: 14px;
+    }
+    .list-item-svg:hover {
+      background-color: var(--ti-lowcode-component-block-setting-item-hover-bg);
     }
   }
 }

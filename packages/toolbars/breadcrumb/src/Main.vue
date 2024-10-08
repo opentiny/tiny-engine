@@ -1,26 +1,39 @@
 <template>
-  <div class="top-panel-breadcrumb">
-    <div class="top-panel-breadcrumb-title">
-      <tiny-breadcrumb separator="：" @select="open">
-        <tiny-breadcrumb-item v-for="item in breadcrumbData.slice(0, 2)" :key="item">{{ item }} </tiny-breadcrumb-item>
-      </tiny-breadcrumb>
-    </div>
-    <tiny-button
-      class="publish"
-      v-if="breadcrumbData[0] === CONSTANTS.BLOCKTEXT"
-      @click="publishBlock()"
-      type="primary"
-      size="small"
-      >区块</tiny-button
-    >
-  </div>
-  <block-deploy-dialog v-model:visible="state.showDeployBlock" :nextVersion="nextVersion"></block-deploy-dialog>
+  <toolbar-base :options="options">
+    <template #default>
+      <div class="top-panel-breadcrumb">
+        <div
+          :class="[
+            'top-panel-breadcrumb-title',
+            { 'top-panel-breadcrumb-title-block': breadcrumbData[0] === CONSTANTS.BLOCKTEXT }
+          ]"
+        >
+          <tiny-breadcrumb separator="：" @select="open">
+            <tiny-breadcrumb-item v-for="item in breadcrumbData.slice(0, 2)" :key="item"
+              >{{ item }}
+            </tiny-breadcrumb-item>
+          </tiny-breadcrumb>
+        </div>
+
+        <tiny-button
+          class="publish"
+          v-if="breadcrumbData[0] === CONSTANTS.BLOCKTEXT"
+          @click="publishBlock()"
+          type="primary"
+          size="small"
+          >发布区块
+        </tiny-button>
+      </div>
+      <block-deploy-dialog v-model:visible="state.showDeployBlock" :nextVersion="nextVersion"></block-deploy-dialog>
+    </template>
+  </toolbar-base>
 </template>
 
 <script>
 import { reactive, computed } from 'vue'
 import { Breadcrumb, BreadcrumbItem, Button } from '@opentiny/vue'
 import { useBreadcrumb, useLayout } from '@opentiny/tiny-engine-meta-register'
+import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import { BlockDeployDialog } from '@opentiny/tiny-engine-common'
 
 export default {
@@ -28,7 +41,14 @@ export default {
     TinyBreadcrumb: Breadcrumb,
     TinyBreadcrumbItem: BreadcrumbItem,
     BlockDeployDialog,
-    TinyButton: Button
+    TinyButton: Button,
+    ToolbarBase
+  },
+  props: {
+    options: {
+      type: Object,
+      default: () => ({})
+    }
   },
   setup() {
     const PLUGINS_ID = {
@@ -97,15 +117,12 @@ export default {
   &-title {
     height: 28px;
     padding: 0 8px;
-    background-color: var(--ti-lowcode-toolbar-breadcrumb-bg);
+    background-color: var(--ti-lowcode-toolbar-button-bg);
     display: flex;
     border-radius: 4px;
     :deep(.reference-wrapper) {
       line-height: 22px;
     }
-  }
-  &-title:hover {
-    background-color: var(--ti-lowcode-toolbar-breadcrumb-bg-hover);
   }
 
   .tiny-breadcrumb {
@@ -123,7 +140,7 @@ export default {
     user-select: none;
 
     :deep(.tiny-breadcrumb__inner) {
-      color: var(--ti-lowcode-toolbar-breadcrumb-left-color);
+      color: var(--ti-lowcode-media-popover-title-color);
       text-decoration: none;
       cursor: pointer;
     }
@@ -135,8 +152,24 @@ export default {
 
     &:last-child :deep(.tiny-breadcrumb__inner) {
       font-weight: normal;
-      color: var(--ti-lowcode-toolbar-breadcrumb-left-color);
+      color: var(--ti-lowcode-media-popover-title-color);
     }
+  }
+
+  &-title-block {
+    background-color: var(--ti-lowcode-toolbar-breadcrumb-bg);
+    .tiny-breadcrumb__item {
+      :deep(.tiny-breadcrumb__inner) {
+        color: var(--ti-lowcode-toolbar-breadcrumb-left-color);
+      }
+      &:last-child :deep(.tiny-breadcrumb__inner) {
+        color: var(--ti-lowcode-toolbar-breadcrumb-left-color);
+      }
+    }
+  }
+
+  &-title-block:hover {
+    background-color: var(--ti-lowcode-toolbar-breadcrumb-bg-hover);
   }
 
   .publish {

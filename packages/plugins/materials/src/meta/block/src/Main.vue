@@ -10,10 +10,7 @@ export default {
   components: {
     BlockPanel
   },
-  props: {
-    activeTabName: String,
-    rightPanelRef: Object
-  },
+  props: {},
   setup() {
     const existBlockModule = getMergeMeta('engine.plugins.blockmanage')
 

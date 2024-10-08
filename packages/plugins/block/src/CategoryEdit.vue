@@ -103,7 +103,7 @@ const handleChangeName = (value) => {
   formData.categoryId = id
 }
 
-const title = computed(() => `${isEdit.value ? '编辑' : '新建'}分类`)
+const title = computed(() => `${isEdit.value ? '编辑' : '新增'}分类`)
 
 const closeDialog = () => {
   emit('update:modelValue', false)

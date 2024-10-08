@@ -1,12 +1,7 @@
 <template>
   <div class="manage-panel">
     <div class="manage-panel-search">
-      <tiny-search
-        v-model="state.searchValue"
-        clearable
-        placeholder="请输入关键字搜索"
-        @update:modelValue="searchBridgeData"
-      >
+      <tiny-search v-model="state.searchValue" clearable placeholder="搜索" @update:modelValue="searchBridgeData">
         <template #prefix>
           <tiny-icon-search />
         </template>
@@ -133,7 +128,7 @@ export default {
   position: relative;
 
   .manage-panel-search {
-    padding: 8px;
+    padding: 0 12px 12px 12px;
   }
 
   .add-button {

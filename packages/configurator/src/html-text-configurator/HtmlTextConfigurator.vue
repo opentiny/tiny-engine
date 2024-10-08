@@ -10,7 +10,7 @@
     </div>
   </div>
   <div class="head-content">
-    <input-configurator v-model="state.text" type="textarea" @change="change"></input-configurator>
+    <input-configurator v-model="state.text" type="textarea" @update:modelValue="change"></input-configurator>
   </div>
 </template>
 <script>

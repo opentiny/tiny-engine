@@ -1,7 +1,6 @@
 <template>
-  <plugin-panel :title="title" @close="pluginPanelClosed">
+  <plugin-panel :title="title" @close="pluginPanelClosed" :docsUrl="docsUrl" :isShowDocsIcon="true">
     <template #header>
-      <link-button :href="docsUrl"></link-button>
       <svg-button
         class="add-folder-icon"
         name="add-folder"
@@ -36,7 +35,7 @@
 <script lang="jsx">
 import { reactive, ref, watchEffect, provide } from 'vue'
 import { useCanvas, useApp, usePage, useHelp } from '@opentiny/tiny-engine-meta-register'
-import { PluginPanel, SvgButton, LinkButton } from '@opentiny/tiny-engine-common'
+import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import PageSetting, { openPageSettingPanel, closePageSettingPanel } from './PageSetting.vue'
 import PageFolderSetting, { openFolderSettingPanel, closeFolderSettingPanel } from './PageFolderSetting.vue'
@@ -60,13 +59,12 @@ export default {
     PluginPanel,
     SvgButton,
     PageFolderSetting,
-    PageTree,
-    LinkButton
+    PageTree
   },
   props: {
     title: {
       type: String,
-      default: '页面管理'
+      default: '页面'
     }
   },
   setup() {
@@ -159,9 +157,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-:deep(.help-box) {
-  position: absolute;
-  left: 72px;
-  top: 3px;
+:deep(.tiny-button) {
+  border-radius: 4px;
+  height: 24px;
+  line-height: 24px;
 }
 </style>

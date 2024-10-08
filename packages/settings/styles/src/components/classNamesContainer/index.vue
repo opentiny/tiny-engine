@@ -14,7 +14,7 @@
         @save="save"
       >
         <div class="edit-global-css" title="编辑全局样式" @click="scope.open">
-          <svg-icon name="edit"></svg-icon>
+          <svg-icon name="to-edit"></svg-icon>
         </div>
       </code-configurator>
       <div class="selector-right-container">
@@ -43,7 +43,7 @@
                   v-if="!classNameState.curSelectorIsEditing && classNameState.curSelectorEditable"
                   class="edit-wrap"
                 >
-                  <svg-icon name="edit" title="编辑" class="edit-btn" @click.stop="handleEditCurSelector"></svg-icon>
+                  <svg-icon name="to-edit" title="编辑" class="edit-btn" @click.stop="handleEditCurSelector"></svg-icon>
                   <svg-icon name="close" title="删除" class="delete-btn" @click.stop="handleDelSelector"></svg-icon>
                 </div>
               </div>
@@ -475,7 +475,7 @@ const handleDeleteCurSelector = () => {
   ::-webkit-scrollbar {
     display: block;
   }
-  padding: 12px 8px 11px 12px;
+  padding: 12px 8px 12px 12px;
 }
 .title {
   margin: 0;

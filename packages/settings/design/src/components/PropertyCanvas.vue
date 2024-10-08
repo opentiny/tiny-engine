@@ -23,7 +23,7 @@
           <div>
             <tiny-tooltip class="option-tips" effect="dark" content="编辑分组信息" placement="top">
               <span class="item-icon">
-                <svg-icon name="edit" class="option-icon" @click.stop="handleEditGroup(titleProps.group)"></svg-icon>
+                <svg-icon name="to-edit" class="option-icon" @click.stop="handleEditGroup(titleProps.group)"></svg-icon>
               </span>
             </tiny-tooltip>
             <tiny-tooltip class="option-tips" effect="dark" content="删除分组" placement="top">
@@ -59,7 +59,7 @@ export default {
   },
   props: {
     schema: {
-      type: Array,
+      type: Object,
       default: () => ({})
     },
     design: {

@@ -134,9 +134,11 @@ export default {
 <style lang="less" scoped>
 .slot-list {
   display: flex;
-  margin: 5px 0;
   justify-content: center;
   align-items: center;
+  &:not(:last-child) {
+    margin-bottom: 8px;
+  }
   .slot-name {
     width: 30%;
     color: var(--ti-lowcode-dialog-font-color);
@@ -171,11 +173,11 @@ export default {
   position: relative;
   width: 40px;
   height: 20px;
-  border: 1px solid var(--ti-lowcode-base-bg);
+  border: none;
   outline: 0;
   border-radius: 10px;
   box-sizing: border-box;
-  background: var(--ti-lowcode-base-bg);
+  background-color: var(--te-common-bg-switch);
   transition: border-color 0.3s, background-color 0.3s;
   vertical-align: middle;
 }
@@ -189,12 +191,11 @@ export default {
   transition: all 0.3s;
   width: 16px;
   height: 16px;
-  background-color: #ffffff;
+  background-color: var(--te-common-bg-default);
 }
 
 .e__switch.e_is-checked .e__switch-core {
-  border-color: var(--ti-lowcode-base-blue-6);
-  background-color: var(--ti-lowcode-base-blue-6);
+  background-color: var(--te-common-bg-primary-checked);
 }
 
 .e__switch.e_is-checked .e__switch-core::after {

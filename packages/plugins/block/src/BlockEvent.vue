@@ -1,4 +1,10 @@
 <template>
+  <tiny-alert
+    v-show="showVideo"
+    type="simple"
+    description="了解有关事件设置的更多信息"
+    class="block-alert"
+  ></tiny-alert>
   <tiny-row>
     <tiny-col :span="6">
       <block-event-list></block-event-list>
@@ -16,7 +22,7 @@
 
 <script>
 import { computed, reactive } from 'vue'
-import { Row as TinyRow, Col as TinyCol } from '@opentiny/vue'
+import { Row as TinyRow, Col as TinyCol, Alert as TinyAlert } from '@opentiny/vue'
 import BlockGuide from './BlockGuide.vue'
 import BlockEventList from './BlockEventList.vue'
 import BlockEventForm from './BlockEventForm.vue'
@@ -26,6 +32,7 @@ export default {
   components: {
     TinyRow,
     TinyCol,
+    TinyAlert,
     BlockGuide,
     BlockEventList,
     BlockEventForm
@@ -52,5 +59,16 @@ export default {
 <style lang="less" scoped>
 .form {
   margin-top: 45px;
+}
+.block-alert {
+  color: var(--ti-lowcode-life-cycle-alert-color);
+  height: 28px;
+  padding: 6px;
+  border: 0;
+  font-size: 11px;
+  margin-bottom: 12px;
+  :deep(.tiny-alert__close) {
+    top: 7px;
+  }
 }
 </style>

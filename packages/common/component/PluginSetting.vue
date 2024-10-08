@@ -5,7 +5,7 @@
   >
     <div class="plugin-setting-header">
       <slot name="title">
-        <span>{{ title }}</span>
+        <span class="plugin-setting-header-title">{{ title }}</span>
       </slot>
       <div class="button-group-wrap">
         <slot name="header">
@@ -14,7 +14,7 @@
             <icon-minscreen v-if="state.isFullScreen" class="icon-minscreen"></icon-minscreen>
             <span class="full-screen-label">{{ getFullScreenLabel(state.isFullScreen) }}</span>
           </div>
-          <tiny-button v-if="!isIconButton" type="info" @click="$emit('save')">保存</tiny-button>
+          <tiny-button v-if="!isIconButton" type="info" @click="$emit('save')" class="plugin-save">保存</tiny-button>
           <tiny-button v-if="isIconButton" :icon="icon" type="info" @click="$emit('add')">
             {{ iconButtonText }}
           </tiny-button>
@@ -166,12 +166,18 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 49px;
+    height: 40px;
+    line-height: 40px;
     font-size: 14px;
     line-height: 18px;
     color: var(--ti-lowcode-plugin-panel-title-color);
-    padding: 0 20px;
+    padding: 0 12px;
     border-bottom: 1px solid var(--ti-lowcode-plugin-panel-header-border-bottom-color);
+    margin-bottom: -6px;
+    .plugin-setting-header-title {
+      font-size: 12px;
+      font-weight: 700;
+    }
     :deep(.svg-button + .svg-button) {
       margin: 0;
     }

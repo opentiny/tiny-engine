@@ -6,11 +6,21 @@
         :key="item.id"
         :class="['datasource-list-item', index === activeIndex ? 'active' : '']"
         @mouseenter="showSettingIcon(index)"
-        @mousedown.stop="openRecordListPanel(item, index)"
       >
         <div class="item-label">
-          {{ item.name }}
+          <div class="item-name">
+            <svg-button name="plugin-icon-data"> </svg-button>
+            {{ item.name }}
+          </div>
           <div class="item-handler">
+            <svg-button
+              class="set-page"
+              tips="编辑静态数据"
+              name="to-edit"
+              v-if="index === state.hoverIndex"
+              @mousedown.stop.prevent="openRecordListPanel(item, index)"
+            >
+            </svg-button>
             <svg-button
               class="set-page"
               tips="设置数据源"
@@ -129,14 +139,15 @@ export default {
   overflow-x: hidden;
   .datasource-list {
     flex-grow: 1;
+    padding-top: 12px;
+    border-top: 1px solid var(--ti-lowcode-data-source-border-color);
   }
   .datasource-list-item {
     box-shadow: var(--ti-lowcode-datasource-tabs-border-color) 0, -1px;
-    height: 40px;
+    height: 24px;
     align-items: center;
     display: grid;
-    padding-left: 4px;
-    padding-right: 12px;
+    padding: 2px 12px 2px 4px;
     position: relative;
     color: var(--ti-lowcode-datasource-common-text-main-color);
     cursor: pointer;
@@ -148,11 +159,21 @@ export default {
       overflow: hidden;
       text-overflow: ellipsis;
       margin-left: 10px;
+      line-height: 20px;
       display: flex;
+      align-items: center;
       justify-content: space-between;
+      color: var(--ti-lowcode-base-gray-90);
+      .item-name {
+        display: flex;
+        align-items: center;
+      }
     }
     .item-handler {
-      svg {
+      .svg-button {
+        width: 14px;
+        height: 14px;
+        margin-top: 6px;
         color: var(--ti-lowcode-datasource-toolbar-more-hover-color);
       }
     }

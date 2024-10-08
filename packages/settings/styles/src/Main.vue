@@ -69,7 +69,6 @@ import { ref, watch } from 'vue'
 import { Collapse, CollapseItem, Input } from '@opentiny/vue'
 import { useHistory, useCanvas, useProperties } from '@opentiny/tiny-engine-meta-register'
 import { CodeConfigurator, VariableConfigurator } from '@opentiny/tiny-engine-configurator'
-import { formatString } from '@opentiny/tiny-engine-common/js/ast'
 import {
   SizeGroup,
   LayoutGroup,
@@ -128,7 +127,7 @@ export default {
       const { getSchema: getCanvasPageSchema, updateRect } = useCanvas().canvasApi.value
       const pageSchema = getCanvasPageSchema()
       const schema = getSchema() || pageSchema
-      const styleString = formatString(styleStrRemoveRoot(content), 'css')
+      const styleString = styleStrRemoveRoot(content)
       const currentSchema = getCurrentSchema() || pageSchema
 
       state.styleContent = content
@@ -205,7 +204,7 @@ export default {
 <style lang="less" scoped>
 .style-editor {
   justify-content: space-around;
-  padding: 8px 0 0;
+  padding: 12px 0 0;
   column-gap: 8px;
   .line-style {
     padding: 0 8px 0 12px;

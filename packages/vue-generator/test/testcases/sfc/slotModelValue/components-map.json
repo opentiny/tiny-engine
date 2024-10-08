@@ -1,0 +1,23 @@
+[
+  {
+    "componentName": "TinyGrid",
+    "exportName": "Grid",
+    "package": "@opentiny/vue",
+    "version": "^3.10.0",
+    "destructuring": true
+  },
+  {
+    "componentName": "TinyNumeric",
+    "exportName": "Numeric",
+    "package": "@opentiny/vue",
+    "version": "^3.10.0",
+    "destructuring": true
+  },
+  {
+    "componentName": "TinyInput",
+    "exportName": "Input",
+    "package": "@opentiny/vue",
+    "version": "^3.10.0",
+    "destructuring": true
+  }
+]

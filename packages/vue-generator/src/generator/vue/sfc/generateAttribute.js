@@ -229,7 +229,7 @@ export const handleSlotBindAttrHook = (schemaData) => {
   let paramsValue = ''
 
   if (Array.isArray(params)) {
-    paramsValue = `={ ${params.join(',')} }`
+    paramsValue = `="{ ${params.join(',')} }"`
   } else if (typeof params === 'string') {
     paramsValue = `="${params}"`
   }
@@ -514,4 +514,29 @@ export const handleBindUtilsHooks = (schemaData, globalHooks, config) => {
       specialTypeHandler[JS_RESOURCE](value, globalHooks, config)
     }
   })
+}
+
+/**
+ * 为 modelvalue 绑定自动生成 onUpdate:modelValue 事件绑定
+ * @param {*} schemaData
+ * @param {*} globalHooks
+ * @param {*} config
+ */
+export const handleJsxModelValueUpdate = (schemaData, globalHooks, config) => {
+  const { schema: { props = {} } = {} } = schemaData || {}
+  const isJSX = config.isJSX
+
+  if (!isJSX) {
+    return
+  }
+
+  const propsEntries = Object.entries(props)
+  const modelValue = propsEntries.find(([_key, value]) => value?.type === JS_EXPRESSION && value?.model === true)
+  const hasUpdateModelValue = propsEntries.find(([key]) => isOn(key) && key.startsWith(`onUpdate:${modelValue?.[0]}`))
+
+  // jsx 形式的 modelvalue, 如果 schema 没有声明，出码需要同时声明 onUpdate:modelValue，否则更新失效
+  if (modelValue && !hasUpdateModelValue) {
+    // 添加 onUpdate:modelKey 事件，让后续钩子生成 对应的事件声明
+    props[`onUpdate:${modelValue?.[0]}`] = { type: JS_EXPRESSION, value: `(value) => ${modelValue[1].value}=value` }
+  }
 }

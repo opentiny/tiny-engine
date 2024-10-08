@@ -177,19 +177,21 @@ watch(
 )
 
 // 监听全局样式的变化，重新解析
-watch(
-  () => useCanvas().getPageSchema?.()?.css,
-  (value) => {
-    state.cssContent = value || ''
+setTimeout(() => {
+  watch(
+    () => useCanvas().getPageSchema?.()?.css,
+    (value) => {
+      state.cssContent = value || ''
 
-    // 解析css
-    const { parseList, selectors, styleObject } = parser(value)
+      // 解析css
+      const { parseList, selectors, styleObject } = parser(value)
 
-    state.cssParseList = parseList
-    state.selectors = selectors
-    state.styleObject = styleObject
-  }
-)
+      state.cssParseList = parseList
+      state.selectors = selectors
+      state.styleObject = styleObject
+    }
+  )
+}, 0) // 这里需要延时，不然页面初始化的时候，watch不到实际的对象，会使得这里失效
 
 // 计算当前类名下拉列表
 watch(

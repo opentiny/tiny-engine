@@ -1,18 +1,17 @@
 <template>
   <div class="request-load">
-    <div class="loadTitle">请求加载</div>
-    <tiny-switch v-model="state.value" class="send-requesNew" @change="change"></tiny-switch>
+    <tiny-checkbox v-model="state.value" class="send-requesNew" @change="change"></tiny-checkbox>
     <div class="use-service">页面初始化时是否加载该服务</div>
   </div>
 </template>
 
 <script>
 import { reactive } from 'vue'
-import { Switch } from '@opentiny/vue'
+import { Checkbox } from '@opentiny/vue'
 
 export default {
   components: {
-    TinySwitch: Switch
+    TinyCheckbox: Checkbox
   },
   props: {
     modelValue: {
@@ -42,19 +41,12 @@ export default {
   display: flex;
   margin-bottom: 15px;
   margin-top: -10px;
-  .loadTitle {
-    margin-left: 12px;
-    color: var(--ti-lowcode-datasource-label-color);
-  }
-  :deep(.send-requesNew) {
-    margin-left: 28px;
-    margin-top: -1px;
-  }
+
   .use-service {
-    color: var(--ti-lowcode-datasource-description-minor-color);
+    color: var(--ti-lowcode-data-source-color);
     font-size: 12px;
     margin-top: 2px;
-    padding-left: 15px;
+    padding-left: 8px;
 
     span {
       color: var(--ti-lowcode-datasource-description-warning-color);

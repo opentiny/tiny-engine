@@ -447,13 +447,14 @@ export default {
 <style lang="less" scoped>
 .size-row {
   display: flex;
-
+  margin-bottom: 8px;
+  &:last-child {
+    margin-bottom: 0;
+  }
   .size-col {
     flex: 1;
     display: flex;
     align-items: center;
-    padding: 5px 0;
-
     &:not(:last-child) {
       margin-right: 8px;
     }
@@ -471,7 +472,10 @@ export default {
 .overflow-row {
   display: flex;
   align-items: center;
-
+  margin-bottom: 8px;
+  &:last-child {
+    margin-bottom: 0;
+  }
   .overflow-label {
     flex: 0 0 54px;
     padding: 0 2px;
@@ -554,7 +558,10 @@ export default {
 .fit-row {
   display: flex;
   align-items: center;
-  padding: 5px 0;
+  margin-bottom: 8px;
+  &:last-child {
+    margin-bottom: 0;
+  }
   .fit-label {
     flex: 0 0 54px;
     padding: 0 2px;

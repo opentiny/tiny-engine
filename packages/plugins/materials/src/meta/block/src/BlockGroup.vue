@@ -63,7 +63,7 @@
             <svg-button
               id="updateGroupName"
               class="option-btn"
-              name="edit"
+              name="to-edit"
               tips="编辑"
               @click.stop="updateGroup(item.value)"
             ></svg-button>
@@ -408,23 +408,6 @@ export default {
     width: calc(100% - 36px);
   }
 
-  .blocks-header-icon {
-    width: 28px;
-    height: 28px;
-    font-size: 16px;
-    color: var(--ti-lowcode-toolbar-breadcrumb-color);
-    background: var(--ti-lowcode-canvas-wrap-bg);
-    border: 1px solid var(--ti-lowcode-toolbar-border-color);
-    border-radius: 2px;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    &:hover {
-      color: var(--ti-lowcode-toolbar-icon-color);
-      background: var(--ti-lowcode-button-hover-bg);
-    }
-  }
   .add-group-btn {
     font-size: 16px;
     width: 32px;

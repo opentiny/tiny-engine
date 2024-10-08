@@ -169,13 +169,13 @@ export default {
     .row-content {
       flex: auto;
       display: flex;
-      border: 1px solid var(--ti-lowcode-tabs-border-color);
-
+      border: 1px solid var(--te-common-border-default);
+      color: var(--te-common-text-primary);
       .row-content-item {
         flex: 1;
         padding: 4px 0;
-        color: var(--ti-lowcode-toolbar-breadcrumb-color);
-        background: var(--ti-lowcode-canvas-wrap-bg);
+        color: var(--te-common-text-secondary);
+        background: var(--te-common-bg-container);
         position: relative;
         display: flex;
         justify-content: center;
@@ -194,13 +194,13 @@ export default {
         }
 
         &:hover {
-          color: var(--ti-lowcode-toolbar-icon-color);
-          background-color: var(--ti-lowcode-button-hover-bg);
+          color: var(--te-common-text-primary);
+          background-color: var(--te-common-bg-container);
         }
 
         &.selected {
-          color: var(--ti-lowcode-toolbar-icon-color);
-          background-color: var(--ti-lowcode-radio-button-active-bg);
+          color: var(--te-common-text-primary);
+          background-color: var(--te-common-bg-prompt);
         }
 
         .overflow-svg {

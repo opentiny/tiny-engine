@@ -1,24 +1,21 @@
 <template>
   <div class="right-item">
     <span class="title">数据源类型</span>
-    <div class="item-radio-box">
-      <span
-        v-for="(item, index) in state.dataType"
-        :key="item.name"
-        :class="['item-type', { 'is-checked': state.checkedIndex === index }, { 'not-allowed': editable }]"
-        @click="selectDataType(item, index)"
-      >
-        <svg-icon :name="item.icon"></svg-icon>
-        <span>{{ item.name }}</span>
-      </span>
-    </div>
+    <tiny-radio-group v-model="state.value" @change="handleChange">
+      <tiny-radio v-for="item in state.dataType" :key="item.value" :label="item.name" :disabled="editable"></tiny-radio>
+    </tiny-radio-group>
   </div>
 </template>
 
 <script>
 import { reactive, watchEffect } from 'vue'
+import { RadioGroup, Radio } from '@opentiny/vue'
 
 export default {
+  components: {
+    TinyRadioGroup: RadioGroup,
+    TinyRadio: Radio
+  },
   props: {
     modelValue: {
       type: String,
@@ -33,6 +30,7 @@ export default {
   setup(props, { emit }) {
     const state = reactive({
       checkedIndex: 0,
+      value: 'array',
       dataType: [
         {
           name: '对象数组',
@@ -52,6 +50,12 @@ export default {
       state.checkedIndex = index > -1 ? index : 0
     })
 
+    const handleChange = () => {
+      if (props.editable) {
+        return
+      }
+      emit('update:modelValue', state.value)
+    }
     const selectDataType = (item, index) => {
       if (props.editable) {
         return
@@ -62,7 +66,8 @@ export default {
 
     return {
       state,
-      selectDataType
+      selectDataType,
+      handleChange
     }
   }
 }
@@ -73,6 +78,7 @@ export default {
   padding: 16px 12px;
   color: var(--ti-lowcode-datasource-toolbar-icon-color);
   display: flex;
+  flex-direction: column;
   .title {
     display: flex;
     justify-content: space-between;
@@ -110,9 +116,6 @@ export default {
       color: var(--ti-lowcode-datasource-input-icon-color);
       margin-right: 8px;
     }
-  }
-  .item-radio-box {
-    margin-left: 30px;
   }
 }
 </style>

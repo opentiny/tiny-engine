@@ -676,7 +676,43 @@ export const appSchemaDemo01 = {
       value: 'function dataHanlder(res){\n return res;\n}'
     }
   },
-  globalState: [],
+  globalState: [
+    {
+      id: 'testState',
+      state: {
+        name: 'testName',
+        license: '',
+        age: 18,
+        food: ['apple', 'orange', 'banana', 19],
+        desc: {
+          description: 'hello world',
+          money: 100,
+          other: '',
+          rest: ['a', 'b', 'c', 20]
+        }
+      },
+      getters: {
+        getAge: {
+          type: 'JSFunction',
+          value: 'function getAge() {\n return this.age \n}'
+        },
+        getName: {
+          type: 'JSFunction',
+          value: 'function getName() {\n return this.name \n}'
+        }
+      },
+      actions: {
+        setAge: {
+          type: 'JSFunction',
+          value: 'function setAge(age) {\n this.age = age; \n}'
+        },
+        setName: {
+          type: 'JSFunction',
+          value: 'function setName(name) {\n this.name = name; \n}'
+        }
+      }
+    }
+  ],
   utils: [
     {
       name: 'axios',

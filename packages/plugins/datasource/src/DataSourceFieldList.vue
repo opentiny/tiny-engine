@@ -4,22 +4,27 @@
     v-for="(field, index) in state.fields"
     :key="field.name"
     :field="field"
+    :isRow="true"
     :editable="field.editable"
     @cancel="closeFieldForm(index)"
     @save="saveFieldForm"
-    @click="openFieldForm(index)"
   >
     <div class="icon-and-text">
       <div class="field-cell-type">
         <component :is="getFieldType(field.type, 'icon')"></component>
       </div>
       <div class="field-cell-name">
-        <span>{{ field.name }}</span>
+        <span class="field-name">{{ field.name }}</span>
         <span class="description">({{ getFieldType(field.type, 'name') }})</span>
       </div>
     </div>
-    <div class="field-handler" v-if="!field.editable" @click="deleteField($event, field)">
-      <svg-button tips="删除" name="text-source-delete"></svg-button>
+    <div class="field-operation" v-if="!field.editable">
+      <div class="field-handler" @click="openFieldForm(index)">
+        <svg-button name="to-edit" tips="编辑" placement="top" @click="handleEdit(data)"></svg-button>
+      </div>
+      <div class="field-handler" @click="deleteField($event, field)">
+        <svg-button tips="删除" name="text-source-delete"></svg-button>
+      </div>
     </div>
   </data-source-field-form>
 </template>
@@ -118,7 +123,7 @@ export default {
 
 <style lang="less" scoped>
 .form-item-border {
-  border-bottom: 1px solid var(--ti-lowcode-datasource-list-bottom-border-color);
+  margin-bottom: 8px;
   .icon-and-text {
     display: flex;
     align-items: center;
@@ -132,8 +137,11 @@ export default {
     }
     .field-cell-name {
       margin-left: 5px;
+      .field-name {
+        color: var(--ti-lowcode-data-source-color);
+      }
       .description {
-        color: var(--ti-lowcode-datasource-input-icon-color);
+        color: var(--ti-lowcode-datasource-tip-color);
         margin-left: 5px;
       }
     }
@@ -142,8 +150,25 @@ export default {
     }
   }
 }
-.field-handler {
-  cursor: pointer;
-  font-size: 16px;
+.field-operation {
+  display: none;
+
+  .field-handler {
+    cursor: pointer;
+    font-size: 16px;
+  }
+}
+.form-item-border:hover {
+  background: var(--ti-lowcode-data-source-box-bg);
+  .field-operation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .field-handler {
+      cursor: pointer;
+      font-size: 16px;
+    }
+  }
 }
 </style>

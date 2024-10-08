@@ -2,7 +2,11 @@ export default {
   id: 'engine.toolbars.collaboration',
   type: 'toolbars',
   title: 'collaboration',
-  icon: '',
-  align: 'right',
-  collapsed: true
+  options: {
+    icon: {
+      default: 'user'
+    },
+    renderType: 'slot',
+    collapsed: true
+  }
 }

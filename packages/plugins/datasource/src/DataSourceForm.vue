@@ -1,10 +1,10 @@
 <template>
-  <plugin-setting v-if="isOpen" title="设置数据源">
+  <plugin-setting v-if="isOpen" title="设置数据源" class="data-source-form">
     <template #header>
       <button-group>
         <tiny-button class="field-save" type="primary" @click="save">保存</tiny-button>
         <div class="field-handler" @click="deleteDataSource" v-if="editable" tips="删除">
-          <svg-button name="text-source-delete"></svg-button>
+          <svg-button name="delete"></svg-button>
         </div>
       </button-group>
       <svg-button class="close-plugin-setting-icon" name="close" @click="closeAllPanel"></svg-button>
@@ -43,7 +43,7 @@ import {
   requestDeleteDataSource,
   requestGenerateDataSource
 } from './js/http'
-import { useModal, useApp, useDataSource } from '@opentiny/tiny-engine-meta-register'
+import { useModal, useApp, useDataSource, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { extend } from '@opentiny/vue-renderless/common/object'
 
 let isOpen = ref(false)
@@ -79,7 +79,7 @@ export default {
   },
   emits: ['update:modelValue', 'save'],
   setup(props, { emit }) {
-    const { confirm, message } = useModal()
+    const { message } = useModal()
     const { appInfoState } = useApp()
     const { dataSourceState } = useDataSource()
 
@@ -148,14 +148,12 @@ export default {
           .then((data) => {
             if (data) {
               requestGenerateDataSource(appInfoState.selectedId)
-              confirm({
-                title: '提示',
-                message: { render: () => <span>数据源删除成功</span> },
-                exec: () => {
-                  close()
-                  emit('save')
-                }
+              useNotify({
+                title: '数据源删除成功',
+                type: 'success'
               })
+              close()
+              emit('save')
             }
           })
           .catch((error) => {
@@ -191,15 +189,13 @@ export default {
             }).then(() => {
               requestGenerateDataSource(appInfoState.selectedId)
               // 修改dataSource成功
-              confirm({
-                title: '提示',
-                message: { render: () => <span>数据源修改成功</span> },
-                exec: () => {
-                  emit('save')
-                  dataSourceState.dataSourceColumn = {}
-                  dataSourceState.dataSourceColumnCopies = {}
-                }
+              useNotify({
+                title: '数据源修改成功',
+                type: 'success'
               })
+              emit('save')
+              dataSourceState.dataSourceColumn = {}
+              dataSourceState.dataSourceColumnCopies = {}
             })
           } else {
             requestAddDataSource({
@@ -214,15 +210,13 @@ export default {
             })
               .then(() => {
                 requestGenerateDataSource(appInfoState.selectedId)
-                confirm({
-                  title: '提示',
-                  message: { render: () => <span>数据源新增成功</span> },
-                  exec: () => {
-                    emit('save')
-                    dataSourceState.dataSourceColumn = {}
-                    dataSourceState.dataSourceColumnCopies = {}
-                  }
+                useNotify({
+                  title: '数据源新增成功',
+                  type: 'success'
                 })
+                emit('save')
+                dataSourceState.dataSourceColumn = {}
+                dataSourceState.dataSourceColumnCopies = {}
               })
               .catch((error) => {
                 message({ message: `数据源保存失败：${error?.message || ''}`, status: 'error' })
@@ -259,6 +253,19 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.data-source-form {
+  .button-group {
+    column-gap: 6px;
+    .tiny-button {
+      width: 40px;
+      padding: 0;
+      min-width: 40px;
+    }
+  }
+  .close-plugin-setting-icon {
+    margin-left: 4px;
+  }
+}
 .datasource-form-footer {
   padding: 12px;
   .tiny-svg {
@@ -268,10 +275,5 @@ export default {
   .del:hover {
     background-color: var(--ti-lowcode-datasource-delete-button-hover-bg);
   }
-}
-.field-handler {
-  cursor: pointer;
-  margin: 2px 10px 4px 10px;
-  font-size: 16px;
 }
 </style>

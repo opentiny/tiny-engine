@@ -2,21 +2,24 @@
   <plugin-setting
     v-if="isOpen"
     class="plugin-block-setting"
-    title="设置"
+    title="区块设置"
     @mouseleave="onMouseLeave"
     @click="handleClick"
   >
     <template #header>
-      <tiny-button @click="updateBlock">保存 </tiny-button>
-      <tiny-button
-        type="primary"
-        :disabled="globalConfig.dslMode === 'Angular'"
-        class="publish-btn"
-        @click="showDeployBlockDialog"
-        >发布
-      </tiny-button>
-      <svg-button name="delete" tips="删除" placement="top" @click="deleteBlock"></svg-button>
-      <close-icon @click="closePanel"></close-icon>
+      <button-group>
+        <tiny-button @click="updateBlock">保存 </tiny-button>
+        <tiny-button
+          type="primary"
+          :disabled="globalConfig.dslMode === 'Angular'"
+          class="publish-btn"
+          @click="showDeployBlockDialog"
+          >发布
+        </tiny-button>
+        <svg-button name="text-copy-page" placement="bottom" tips="复制区块"></svg-button>
+        <svg-button name="delete" tips="删除" placement="top" @click="deleteBlock"></svg-button>
+        <close-icon @click="closePanel"></close-icon>
+      </button-group>
     </template>
     <template #content>
       <tiny-collapse v-model="state.activeName">
@@ -26,7 +29,7 @@
         <tiny-collapse-item name="attribute">
           <template #title>
             <div class="title-wrapper">
-              <span>设置区块暴露属性</span>
+              <span>属性设置</span>
             </div>
           </template>
           <div class="block-attribute">
@@ -80,7 +83,7 @@ import { reactive, ref, watch, watchEffect, computed } from 'vue'
 import { Button as TinyButton, Collapse as TinyCollapse, CollapseItem as TinyCollapseItem } from '@opentiny/vue'
 import { useModal } from '@opentiny/tiny-engine-meta-register'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
-import { BlockHistoryList, PluginSetting, CloseIcon, SvgButton } from '@opentiny/tiny-engine-common'
+import { BlockHistoryList, PluginSetting, CloseIcon, SvgButton, ButtonGroup } from '@opentiny/tiny-engine-common'
 import { previewBlock } from '@opentiny/tiny-engine-common/js/preview'
 import { LifeCycles } from '@opentiny/tiny-engine-common'
 import BlockEvent from './BlockEvent.vue'
@@ -122,7 +125,8 @@ export default {
     LifeCycles,
     CloseIcon,
     BlockDeployDialog,
-    SvgButton
+    SvgButton,
+    ButtonGroup
   },
   props: {
     modelValue: {
@@ -285,6 +289,21 @@ export default {
 
 <style lang="less" scoped>
 .plugin-block-setting {
+  :deep(.plugin-setting-header) {
+    border: 0;
+    .button-group {
+      column-gap: 2px;
+    }
+    .tiny-button {
+      width: 40px;
+      padding: 0;
+      min-width: 40px;
+      margin-right: 2px;
+    }
+    .close-plugin-setting-icon {
+      margin-left: 4px;
+    }
+  }
   .publish-btn {
     margin-right: 8px;
   }
@@ -299,11 +318,7 @@ export default {
     }
   }
   :deep(.plugin-setting-content) {
-    padding: 16px 0;
-  }
-
-  :deep(.icon-wrap) {
-    margin-right: 8px;
+    padding: 0 0 16px 0;
   }
 
   :deep(.tiny-col) {
@@ -322,13 +337,13 @@ export default {
   }
 
   .life-cycles-container {
-    padding: 16px;
+    padding: 0 0 12px 0;
   }
 
   .block-attribute,
   .block-event {
     position: relative;
-    padding: 16px;
+    padding: 0 12px;
     :deep(.tiny-col) {
       position: inherit;
     }

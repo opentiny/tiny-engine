@@ -1,50 +1,52 @@
 <template>
-  <span class="redo-undo-wrap">
-    <tiny-popover
-      trigger="hover"
-      :open-delay="1000"
-      popper-class="toolbar-right-popover"
-      append-to-body
-      :content="historyState.back ? '撤销' : '没有要撤销的'"
-    >
-      <template #reference>
-        <span :class="['icon-wrap', 'undo', { disabled: !historyState.back }]" @click="back">
-          <svg-icon :name="undoIcon"></svg-icon>
-        </span>
-      </template>
-    </tiny-popover>
-    <tiny-popover
-      trigger="hover"
-      :open-delay="1000"
-      popper-class="toolbar-right-popover"
-      append-to-body
-      :content="historyState.forward ? '恢复' : '没有要恢复的'"
-    >
-      <template #reference>
-        <span :class="['icon-wrap', 'redo', !historyState.forward ? 'disabled' : '']" @click="forward">
-          <svg-icon :name="redoIcon"></svg-icon>
-        </span>
-      </template>
-    </tiny-popover>
-  </span>
+  <toolbar-base :options="options">
+    <template #default>
+      <span class="redo-undo-wrap">
+        <tiny-popover
+          trigger="hover"
+          :open-delay="1000"
+          popper-class="toolbar-right-popover"
+          append-to-body
+          :content="historyState.back ? '撤销' : '没有要撤销的'"
+        >
+          <template #reference>
+            <span :class="['icon-wrap', 'undo', { disabled: !historyState.back }]" @click="back">
+              <svg-icon :name="options.icon.undo"></svg-icon>
+            </span>
+          </template>
+        </tiny-popover>
+        <tiny-popover
+          trigger="hover"
+          :open-delay="1000"
+          popper-class="toolbar-right-popover"
+          append-to-body
+          :content="historyState.forward ? '恢复' : '没有要恢复的'"
+        >
+          <template #reference>
+            <span :class="['icon-wrap', 'redo', !historyState.forward ? 'disabled' : '']" @click="forward">
+              <svg-icon :name="options.icon.redo"></svg-icon>
+            </span>
+          </template>
+        </tiny-popover>
+      </span>
+    </template>
+  </toolbar-base>
 </template>
 
 <script>
 import { Popover } from '@opentiny/vue'
 import { useHistory } from '@opentiny/tiny-engine-meta-register'
+import { ToolbarBase } from '@opentiny/tiny-engine-common'
 
 export default {
   components: {
-    TinyPopover: Popover
+    TinyPopover: Popover,
+    ToolbarBase
   },
   props: {
-    undoIcon: {
-      type: String,
-      default: 'undo'
-    },
-    redoIcon: {
-      type: String,
-      default: 'redo'
+    options: {
+      type: Object,
+      default: () => ({})
     }
   },
   setup() {

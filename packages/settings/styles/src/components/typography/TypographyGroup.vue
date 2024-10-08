@@ -34,7 +34,7 @@
       </div>
     </div>
 
-    <div class="typography-row split line">
+    <div class="typography-row split">
       <div class="left typography-col">
         <label
           :class="['typography-label', { 'is-setting': getSettingFlag(TYPO_PROPERTY.LineHeight) }]"
@@ -474,19 +474,8 @@ export default {
     grid-template-columns: 15px 1fr;
     align-items: center;
     margin-bottom: 8px;
-
-    &.line {
-      position: relative;
-      padding-bottom: 10px;
-      &::after {
-        content: '';
-        height: 1px;
-        width: calc(100% + 32px);
-        background: var(--ti-lowcode-toolbar-border-color);
-        position: absolute;
-        bottom: 0;
-        left: -16px;
-      }
+    &:last-child {
+      margin-bottom: 0;
     }
 
     &.split {

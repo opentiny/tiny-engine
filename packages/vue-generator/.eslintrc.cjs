@@ -1,3 +1,5 @@
+const { rules } = require('../../.eslintrc')
+
 /* eslint-env node */
 require('@rushstack/eslint-patch/modern-module-resolution')
 
@@ -17,5 +19,6 @@ module.exports = {
     }
   },
   // 忽略 expected 中的内容
-  ignorePatterns: ['**/**/expected/*', '**/**.ts']
+  ignorePatterns: ['**/**/expected/*', '**/**.ts'],
+  rules
 }

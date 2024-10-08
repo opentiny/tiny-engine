@@ -231,7 +231,7 @@ export const stringify = (originParseList, styleObject, config = {}) => {
         if (key.includes('comment')) {
           str += `${value.value}\n`
         } else {
-          str += `${key}: ${value.value};\n`
+          str += `${key}: ${value.value === '' ? "''" : value.value};\n`
         }
       }
     } else {
@@ -249,7 +249,7 @@ export const stringify = (originParseList, styleObject, config = {}) => {
       // 在 styleObject  的，可能有改动，所以需要用 styleObject 拼接
       for (const [key, value] of Object.entries(styleObject[item.selectors].rules)) {
         if (![null, undefined].includes(value)) {
-          str += `${key}: ${value};\n`
+          str += `${key}: ${value === '' ? "''" : value};\n`
         }
       }
     }
@@ -266,7 +266,7 @@ export const stringify = (originParseList, styleObject, config = {}) => {
     str += `${selector} {\n`
 
     for (const [declKey, declValue] of Object.entries(value.rules)) {
-      str += `${declKey}: ${declValue};\n`
+      str += `${declKey}: ${declValue === '' ? "''" : declValue};\n`
     }
 
     str += '}\n'

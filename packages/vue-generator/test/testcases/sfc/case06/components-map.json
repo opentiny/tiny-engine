@@ -1,0 +1,9 @@
+[
+  {
+    "componentName": "TinyTree",
+    "exportName": "Tree",
+    "package": "@opentiny/vue",
+    "version": "^3.10.0",
+    "destructuring": true
+  }
+]

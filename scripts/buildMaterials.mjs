@@ -12,7 +12,10 @@ const materialsDir = 'materials'
 const bundlePath = path.join(process.cwd(), '/packages/design-core/public/mock/bundle.json')
 // mockServer应用数据
 const appInfoPath = path.join(process.cwd(), '/mockServer/src/services/appinfo.json')
+const appSchemaPath = path.join(process.cwd(), 'mockServer/src/mock/get/app-center/v1/apps/schema/918.json')
+
 const appInfo = fsExtra.readJSONSync(appInfoPath)
+const appSchema = fsExtra.readJSONSync(appSchemaPath)
 
 const connection = new MysqlConnection()
 
@@ -22,6 +25,7 @@ const connection = new MysqlConnection()
 const write = (bundle) => {
   fsExtra.outputJSONSync(bundlePath, bundle, { spaces: 2 })
   fsExtra.outputJSONSync(appInfoPath, appInfo, { spaces: 2 })
+  fsExtra.outputJSONSync(appSchemaPath, appSchema, { spaces: 2 })
 }
 
 /**
@@ -36,13 +40,13 @@ const validateComponent = (file, component) => {
   const requiredList = requiredFields.filter((field) => !fields.includes(field))
 
   if (requiredList.length) {
-    logger.error(`组件文件 ${file} 缺少必要字段：${requiredList.join('、')}。`)
+    logger.error(`missing required fields: ${requiredList.join(',')} at ${file}.`)
 
     return false
   }
 
   if (!component.npm) {
-    logger.warn(`组件文件 ${file} 缺少 npm 字段，出码时将不能通过import语句导入组件。`)
+    logger.warn(`missing the \`npm\` field, and it cannot be imported when coding at ${file}.`)
 
     return false
   }
@@ -62,7 +66,7 @@ const validateBlock = (file, block) => {
   const requiredList = requiredFields.filter((field) => !fields.includes(field))
 
   if (requiredList.length) {
-    logger.error(`区块文件 ${file} 缺少必要字段：${requiredList.join('、')}。`)
+    logger.error(`missing required fields: ${requiredList.join(',')} at ${file}.`)
 
     return false
   }
@@ -80,7 +84,7 @@ const generateComponents = () => {
   try {
     fg([`${materialsDir}/**/*.json`]).then((files) => {
       if (!files.length) {
-        logger.warn('物料文件夹为空，请先执行`pnpm splitMaterials`命令拆分物料资产包')
+        logger.warn('please execute `pnpm splitMaterials` first to split the materials.')
       }
 
       const bundle = {
@@ -95,6 +99,7 @@ const generateComponents = () => {
       }
       const { components = [], snippets = [], blocks = [] } = bundle.data.materials
       const componentsMap = []
+      const packagesMap = []
       const appInfoBlocksLabels = appInfo.blockHistories.map((item) => item.label)
 
       files.forEach((file) => {
@@ -103,7 +108,7 @@ const generateComponents = () => {
         if (!material) {
           const fileFullPath = path.join(process.cwd(), file)
 
-          logger.error(`文件格式有误 (${fileFullPath})`)
+          logger.error(`incorrect file format at ${fileFullPath}.`)
 
           return
         }
@@ -151,13 +156,31 @@ const generateComponents = () => {
 
         appInfo.materialHistory.components = componentsMap
 
-        write(bundle)
+        const { package: packageName = '', version = '', exportName = '' } = npm || {}
+
+        const mapItem = {
+          componentName: component,
+          package: packageName,
+          version,
+          exportName
+        }
+
+        if (typeof npm.destructuring === 'boolean') {
+          mapItem.destructuring = npm.destructuring
+        }
+
+        if (npm.package) {
+          packagesMap.push(mapItem)
+        }
       })
+
+      appSchema.data.componentsMap = packagesMap
+      write(bundle)
     })
 
-    logger.success('物料资产包构建成功')
+    logger.success('materials built.')
   } catch (error) {
-    logger.error(`物料资产包构建失败：${error}`)
+    logger.error(`failed to build materials: ${error}.`)
   }
 }
 
@@ -166,13 +189,13 @@ const watcher = chokidar.watch(`${materialsDir}/**/*.json`, { ignoreInitial: tru
 
 watcher.on('all', (event, file) => {
   const eventMap = {
-    add: '新增',
-    change: '更新',
-    unlink: '删除'
+    add: 'added',
+    change: 'changed',
+    unlink: 'deleted'
   }
   const fileFullPath = path.join(process.cwd(), file)
 
-  logger.info(`${eventMap[event]}组件文件 (${fileFullPath})`)
+  logger.info(`${fileFullPath} ${eventMap[event]}, rebuilding materials...`)
 
   // 监听物料文件变化，更新物料资产包
   generateComponents()
