@@ -37,11 +37,11 @@ export default {
       if (typeof beforePreview === 'function') {
         await beforePreview()
       }
-      
+
       if (typeof previewMethod === 'function') {
         const stop = await previewMethod()
 
-        if(stop) {
+        if (stop) {
           return
         }
       }
