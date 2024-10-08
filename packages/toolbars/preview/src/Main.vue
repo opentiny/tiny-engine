@@ -33,16 +33,25 @@ export default {
 
     const preview = async () => {
       const { beforePreview, previewMethod, afterPreview } = getOptions(meta.id)
+      const printer = console
 
       if (typeof beforePreview === 'function') {
-        await beforePreview()
+        try {
+          await beforePreview()
+        } catch (error) {
+          printer.log('Error in beforePreview:', error)
+        }
       }
 
       if (typeof previewMethod === 'function') {
-        const stop = await previewMethod()
+        try {
+          const stop = await previewMethod()
 
-        if (stop) {
-          return
+          if (stop) {
+            return
+          }
+        } catch (error) {
+          printer.log('Error in previewMethod:', error)
         }
       }
 
@@ -76,7 +85,11 @@ export default {
       }
 
       if (typeof afterPreview === 'function') {
-        await afterPreview()
+        try {
+          await afterPreview()
+        } catch (error) {
+          printer.log('Error in afterPreview:', error)
+        }
       }
     }
 

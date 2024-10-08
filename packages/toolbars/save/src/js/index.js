@@ -98,19 +98,26 @@ export const openCommon = async () => {
   }
 
   const { beforeSave, saveMethod, saved } = getOptions(meta.id)
+  const printer = console
 
   if (typeof beforeSave === 'function') {
-    await beforeSave()
+    try {
+      await beforeSave()
+    } catch (error) {
+      printer.log('Error in beforeSave:', error)
+    }
   }
-
-  let stop = false
 
   if (typeof saveMethod === 'function') {
-    stop = await saveMethod()
-  }
+    try {
+      const stop = await saveMethod()
 
-  if (!stop) {
-    await openCommon()
+      if (stop) {
+        return
+      }
+    } catch (error) {
+      printer.log('Error in saveMethod:', error)
+    }
   }
 
   const pageStatus = useLayout().layoutState?.pageStatus
@@ -158,7 +165,11 @@ export const openCommon = async () => {
     state.disabled = false
 
     if (typeof saved === 'function') {
-      saved()
+      try {
+        saved()
+      } catch (error) {
+        printer.log('Error in saved:', error)
+      }
     }
   })
 }
