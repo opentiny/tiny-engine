@@ -13,17 +13,9 @@
   <canvas-resize>
     <template v-if="!loading">
       <iframe
-        v-if="canvasSrc"
         id="canvas"
         ref="iframe"
-        :src="canvasSrc"
-        style="border: none; width: 100%; height: 100%"
-      ></iframe>
-      <iframe
-        v-else
-        id="canvas"
-        ref="iframe"
-        :srcdoc="canvasSrcDoc"
+        :[srcAttrName]="canvasSrc || canvasSrcDoc"
         style="border: none; width: 100%; height: 100%"
       ></iframe>
     </template>
@@ -83,6 +75,7 @@ export default {
     const loading = computed(() => useCanvas().isLoading())
     let showSettingModel = ref(false)
     let target = ref(null)
+    const srcAttrName = computed(() => (props.canvasSrc ? 'src' : 'srcdoc'))
 
     const setCurrentNode = async (event) => {
       const { clientX, clientY } = event
@@ -251,7 +244,8 @@ export default {
       target,
       showSettingModel,
       insertPosition,
-      loading
+      loading,
+      srcAttrName
     }
   }
 }
