@@ -235,7 +235,9 @@ export default {
 <style lang="less" scoped>
 .advanced-config-container {
   .advnce-config {
-    padding: 10px;
+    &:not(:last-child) {
+      margin-bottom: 8px;
+    }
     align-items: center;
     display: flex;
     column-gap: 12px;
@@ -251,6 +253,7 @@ export default {
     .advanced-config-form-item {
       display: grid;
       grid-template-columns: 1fr auto;
+      flex: 1;
     }
     .binding-state {
       box-sizing: border-box;

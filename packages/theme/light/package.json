@@ -1,12 +1,13 @@
 {
   "name": "@opentiny/tiny-engine-theme-light",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-alpha.2",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "build": "vite build && rimraf dist/index.js"
   },
+  "type": "module",
   "main": "dist/style.css",
   "files": [
     "dist"
@@ -24,7 +25,7 @@
   "homepage": "https://opentiny.design/tiny-engine",
   "devDependencies": {
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
-    "rimraf": "^3.0.2",
-    "vite": "^4.3.7"
+    "rimraf": "^6.0.1",
+    "vite": "^5.4.2"
   }
 }

@@ -84,13 +84,13 @@ pnpm run build:alpha  或 build:prod
 ## 里程碑
 
 ```mermaid
-gantt
+gantt 
 dateFormat YYYY-MM-DD
 axisFormat %Y-%m-%d
 
-	1.0.0-beta.x version	:active,2023-09-25, 2024-03-31
-	1.0.0-rc	version    :       2024-04-01, 2024-06-30
-	1.0.0 version   :          2024-07-01, 2024-07-31
+1.0.0-beta.x version : 2023-09-25, 2024-05-20
+1.0.0-rc version(refactor version) : 2024-10-01
+1.0.0 version : 2024-11-01
 
 ```
 

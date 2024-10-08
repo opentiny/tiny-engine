@@ -73,5 +73,7 @@ export default {
   min-height: 120px;
   height: 100%;
   margin-top: 8px;
+  border: 1px solid var(--ti-lowcode-base-gray-101);
+  border-radius: 4px;
 }
 </style>

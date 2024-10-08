@@ -186,7 +186,7 @@ export default {
     const hidden = computed(() => props.hidden)
     const widget = computed(() => props.property?.widget || {})
     const propLabel = computed(
-      () => props.property.property || props.property?.label?.text?.[locale.value] || props.property?.label?.text
+      () => props.property?.label?.text?.[locale.value] || props.property?.label?.text || props.property.property
     )
     const multiType = computed(() => Array.isArray(widget.value.component))
     const isBindingState = ref(false) // 当前是否是绑定到状态变量state
@@ -248,11 +248,15 @@ export default {
         return props.property.labelPosition
       }
 
-      if (['SwitchConfigurator', 'SwitchConfigurator'].includes(props.property.widget?.component)) {
+      if (['CheckBoxConfigurator', 'SwitchConfigurator'].includes(props.property.widget?.component)) {
         return 'left'
       }
 
-      return 'top'
+      if (props.property.widget?.component === 'CodeConfigurator') {
+        return 'top'
+      }
+
+      return 'auto'
     })
 
     const updateValue = (value) => {
@@ -310,16 +314,13 @@ export default {
       result.message = typeof message === 'string' ? message : message?.[locale.value]
     }
 
+    const isEmptyInputValue = (value) => {
+      // 通过 value == null 做隐式类型转换
+      // 空值约定为 undefined | null | ''
+      return value == null || (typeOf(value) === TYPES.StringType && value.trim() === '')
+    }
     const verifyRequired = (value) => {
-      if (typeOf(value) === TYPES.BooleanType) {
-        return true
-      }
-
-      if (typeOf(value) === TYPES.StringType) {
-        return value.trim()
-      }
-
-      return value
+      return !isEmptyInputValue(value)
     }
 
     const verifyValue = (value = '', rules = []) => {
@@ -513,16 +514,18 @@ export default {
   justify-content: space-between;
   position: relative;
   align-items: center;
+  padding-bottom: 8px;
+  &:last-child {
+    padding-bottom: 0;
+  }
   &.active {
     background: var(--ti-lowcode-meta-config-item-active-bg);
   }
 
   .item-label {
-    width: 30%;
     color: var(--ti-lowcode-meta-config-item-label-color);
     font-size: 14px;
     display: flex;
-    margin-right: 5px;
     line-height: 18px;
   }
 
@@ -531,7 +534,6 @@ export default {
   }
 
   .item-input {
-    flex: 1;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -600,7 +602,7 @@ export default {
 
   .prop-description {
     margin-top: 8px;
-    color: var(--ti-lowcode-common-text-desc-color);
+    color: var(--te-common-text-weaken);
   }
   .label-tip {
     padding: 2px 0;
@@ -615,9 +617,9 @@ export default {
 
   .item-warp {
     display: flex;
+    gap: 8px;
     width: 100%;
-    align-items: center;
-    padding: 8px 0;
+
     .pro-underline {
       border-bottom: 1px dashed transparent;
       &:hover {
@@ -628,24 +630,29 @@ export default {
       border-bottom: 1px solid var(--ti-lowcode-toolbar-active-bg);
       border-top: 1px solid var(--ti-lowcode-toolbar-active-bg);
     }
-    &.top,
-    &.bottom {
-      flex-direction: column;
+    &.auto {
+      flex-wrap: wrap;
+      align-items: center;
       .item-label {
-        width: 100%;
-        text-align: center;
+        min-width: 30%;
       }
       .item-input {
-        width: 100%;
-        display: flex;
+        width: calc(70% - 8px);
+        flex-grow: 1;
+      }
+    }
+    &.left {
+      flex-wrap: wrap;
+      align-items: center;
+      .item-label {
+        width: 30%;
+      }
+      .item-input {
+        width: calc(70% - 8px);
       }
     }
     &.top {
       flex-direction: column;
-      align-items: flex-start;
-      .item-label {
-        margin-bottom: 8px;
-      }
     }
     &.bottom {
       flex-direction: column-reverse;
@@ -653,6 +660,9 @@ export default {
     &.none {
       .item-label {
         display: none;
+      }
+      .item-input {
+        flex-grow: 1;
       }
     }
   }

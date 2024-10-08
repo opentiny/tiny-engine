@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-configurator",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-alpha.2",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -17,7 +17,9 @@
   },
   "homepage": "https://opentiny.design/tiny-engine",
   "devDependencies": {
-    "vite": "^4.3.7"
+    "@vitejs/plugin-vue": "^5.1.2",
+    "@vitejs/plugin-vue-jsx": "^4.0.1",
+    "vite": "^5.4.2"
   },
   "peerDependencies": {
     "@opentiny/vue": "^3.14.0",

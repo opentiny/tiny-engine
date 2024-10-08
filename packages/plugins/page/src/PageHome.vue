@@ -1,14 +1,11 @@
 <template>
   <div class="home">
-    <div style="display: flex">
-      <div class="homeTitle">主页设置</div>
-      <tiny-checkbox class="selectHome" v-model="state.checked" :disabled="state.selectDisable" @change="settingHome"
-        >设为主页</tiny-checkbox
-      >
-      <div class="tip">
-        <span>当前主页是</span>
-        <span class="home-page">【{{ homePage }}】</span>
-      </div>
+    <tiny-checkbox class="selectHome" v-model="state.checked" :disabled="state.selectDisable" @change="settingHome"
+      >设为主页</tiny-checkbox
+    >
+    <div class="tip">
+      <span>当前主页是</span>
+      <span class="home-page">【{{ homePage }}】</span>
     </div>
   </div>
 </template>
@@ -102,29 +99,25 @@ export default {
 <style lang="less" scoped>
 .home {
   color: var(--ti-lowcode-page-manage-text-color);
-  padding: 8px 12px;
+  padding: 8px 0;
   line-height: 24px;
-  margin: -27px 0 -25px 8px;
+  margin: -27px 0 -25px 0;
   .homeTitle {
     margin: 10px 0 0 5px;
     display: inline-block;
   }
-  .selectHome {
-    margin: 10px 10px 10px 45px;
-  }
 
   .tip {
     color: var(--ti-lowcode-page-manage-btn-text-color);
-    margin-top: 10px;
-    opacity: 0.6;
-    font-size: 14px;
+    margin-top: 4px;
+    margin-bottom: 12px;
+    font-size: 11px;
+    line-height: 16px;
     span {
-      margin-left: 4px;
       color: var(--ti-lowcode-page-manage-btn-text-color);
     }
     .home-page {
       display: inline-block;
-      margin-bottom: 10px;
     }
   }
   .tiny-button {

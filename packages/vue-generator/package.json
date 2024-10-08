@@ -1,11 +1,12 @@
 {
   "name": "@opentiny/tiny-engine-dsl-vue",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-alpha.2",
   "publishConfig": {
     "access": "public"
   },
-  "main": "dist/tiny-engine-dsl-vue.js",
-  "module": "dist/tiny-engine-dsl-vue.mjs",
+  "type": "module",
+  "main": "dist/tiny-engine-dsl-vue.cjs",
+  "module": "dist/tiny-engine-dsl-vue.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
@@ -46,8 +47,8 @@
     "eslint-plugin-vue": "^8.6.0",
     "fs-extra": "^10.0.1",
     "prettier": "^2.6.1",
-    "vite": "^4.3.7",
-    "vite-plugin-static-copy": "^1.0.4",
+    "vite": "^5.4.2",
+    "vite-plugin-static-copy": "^1.0.6",
     "vitest": "^1.4.0",
     "winston": "^3.10.0"
   },

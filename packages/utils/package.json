@@ -1,10 +1,11 @@
 {
   "name": "@opentiny/tiny-engine-utils",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-alpha.2",
   "publishConfig": {
     "access": "public"
   },
   "description": "",
+  "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "files": [
@@ -27,8 +28,11 @@
   "license": "MIT",
   "homepage": "https://opentiny.design/tiny-engine",
   "devDependencies": {
-    "vite": "^4.3.7",
+    "vite": "^5.4.2",
     "vitest": "^1.4.0"
+  },
+  "dependencies": {
+    "jszip": "^3.10.1"
   },
   "peerDependencies": {
     "@opentiny/vue-renderless": "^3.14.0",

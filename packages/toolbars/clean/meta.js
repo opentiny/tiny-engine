@@ -2,6 +2,10 @@ export default {
   id: 'engine.toolbars.clean',
   type: 'toolbars',
   title: 'clean',
-  icon: '',
-  align: 'right'
+  options: {
+    icon: {
+      default: 'clear'
+    },
+    renderType: 'icon'
+  }
 }

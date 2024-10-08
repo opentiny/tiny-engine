@@ -2,6 +2,11 @@ export default {
   id: 'engine.toolbars.redoundo',
   type: 'toolbars',
   title: 'redoundo',
-  icon: '',
-  align: 'right'
+  options: {
+    icon: {
+      undo: 'undo',
+      redo: 'redo'
+    },
+    renderType: 'slot'
+  }
 }

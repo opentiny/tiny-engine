@@ -1,30 +1,30 @@
 <template>
-  <div v-if="state.isOpen" class="step-select-second">
+  <div v-if="state.isOpen" class="step-select-second" :id="defaultStyle">
     <div class="field-row">
       <slot>
         <div class="icon-and-text">
           <div class="field-cell-type">
-            <icon-arrow-down></icon-arrow-down>
+            <svg-icon :name="field.icon" class="type-icon" />
           </div>
           <div class="field-cell-name">
-            <span>新增字段</span>
+            <span>新字段</span>
           </div>
         </div>
       </slot>
       <span v-if="editable">
         <button-group>
-          <tiny-button type="text" @click.stop="saveField">保存</tiny-button>
-          <svg-button class="close-plugin-setting-icon" name="close" @click.stop="handleCancel"></svg-button>
+          <tiny-button plain @click.stop="handleCancel">取消</tiny-button>
+          <tiny-button type="primary" @click.stop="saveField">确定</tiny-button>
         </button-group>
       </span>
     </div>
-    <div v-if="editable" class="field-content">
-      <tiny-form ref="form" label-position="left" :rules="rules" :model="state.field" validate-type="text">
+    <div v-if="editable">
+      <tiny-form ref="form" label-position="top" :rules="rules" :model="state.field" validate-type="text">
         <tiny-form-item class="title-content" prop="title" label="字段名称" label-width="150px">
           <i18n-input v-model="state.field.title"></i18n-input>
         </tiny-form-item>
-        <tiny-form-item class="name-content" prop="name" label="字段唯一标识" label-width="150px">
-          <tiny-input class="filedName" v-model="state.field.name"></tiny-input>
+        <tiny-form-item class="name-content" prop="name" label="字段ID" label-width="150px">
+          <tiny-input class="filedName" v-model="state.field.name" placeholder="字段唯一标识"></tiny-input>
         </tiny-form-item>
         <!--不同的字段类型对应不同的校验规则-->
         <data-source-field-check :type="state.field.type"></data-source-field-check>
@@ -34,10 +34,9 @@
 </template>
 
 <script>
-import { reactive, watchEffect, ref, provide } from 'vue'
+import { reactive, watchEffect, ref, provide, computed } from 'vue'
 import { Button, Input, FormItem, Form } from '@opentiny/vue'
-import { ButtonGroup, SvgButton, I18nInput } from '@opentiny/tiny-engine-common'
-import { iconArrowDown } from '@opentiny/vue-icon'
+import { ButtonGroup, I18nInput } from '@opentiny/tiny-engine-common'
 import DataSourceFieldCheck from './DataSourceFieldCheck.vue'
 
 export const formDataInjectionSymbols = Symbol('DataSourceFieldFormData')
@@ -45,12 +44,10 @@ export const formDataInjectionSymbols = Symbol('DataSourceFieldFormData')
 export default {
   components: {
     ButtonGroup,
-    SvgButton,
     TinyButton: Button,
     TinyInput: Input,
     TinyForm: Form,
     TinyFormItem: FormItem,
-    iconArrowDown: iconArrowDown(),
     I18nInput,
     DataSourceFieldCheck
   },
@@ -60,6 +57,10 @@ export default {
       default: () => ({})
     },
     editable: {
+      type: Boolean,
+      default: false
+    },
+    isRow: {
       type: Boolean,
       default: false
     },
@@ -90,6 +91,8 @@ export default {
     watchEffect(() => {
       state.isOpen = props.isOpen === undefined ? true : props.isOpen
     })
+
+    const defaultStyle = computed(() => (props.isRow && !props.editable ? 'default-item' : ''))
 
     const open = () => {
       state.isOpen = true
@@ -135,6 +138,7 @@ export default {
       saveField,
       open,
       close,
+      defaultStyle,
       form,
       rules: {
         title: [{ required: true, message: '必填', trigger: 'change' }, { validator: validateIsReserveValue }],
@@ -172,18 +176,27 @@ export default {
 
 <style lang="less" scoped>
 .step-select-second {
+  border: 1px solid var(--ti-lowcode-data-source-border-color);
+  border-radius: 4px;
+  padding: 12px;
+  margin-bottom: 16px;
   .field-row {
     display: flex;
     flex-wrap: wrap;
-    padding: 8px 10px;
+    margin-bottom: 12px;
     -webkit-box-shadow: none;
     box-shadow: none;
     justify-content: space-between;
     align-items: center;
+    .tiny-button {
+      width: 40px;
+      padding: 0;
+      min-width: 40px;
+      margin-right: 2px;
+      border: 1px solid var(--ti-lowcode-data-source-color);
+    }
   }
-  .field-content {
-    padding: 8px 10px;
-  }
+
   .icon-and-text {
     display: flex;
     align-items: center;
@@ -206,5 +219,24 @@ export default {
   svg {
     color: var(--ti-lowcode-datasource-toolbar-icon-color);
   }
+}
+#default-item {
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-top: 1px solid var(--ti-lowcode-data-source-border-color);
+  margin-bottom: 0;
+  border-radius: 0;
+  .field-row {
+    margin-bottom: 0;
+    height: 24px;
+    .field-operation {
+      display: none;
+    }
+  }
+}
+
+#default-item:last-child {
+  border-bottom: 1px solid var(--ti-lowcode-data-source-border-color);
 }
 </style>

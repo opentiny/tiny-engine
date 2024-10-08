@@ -1,7 +1,7 @@
 {
   "name": "designer-demo",
   "private": true,
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-alpha.2",
   "type": "module",
   "scripts": {
     "dev": "cross-env VITE_THEME=light vite",
@@ -23,8 +23,8 @@
   "devDependencies": {
     "@opentiny/tiny-engine-mock": "workspace:^",
     "@opentiny/tiny-engine-vite-config": "workspace:^",
-    "@vitejs/plugin-vue": "^5.0.4",
+    "@vitejs/plugin-vue": "^5.1.2",
     "cross-env": "^7.0.3",
-    "vite": "^5.2.7"
+    "vite": "^5.4.2"
   }
 }

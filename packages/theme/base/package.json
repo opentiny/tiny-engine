@@ -1,12 +1,13 @@
 {
   "name": "@opentiny/tiny-engine-theme-base",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-alpha.2",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "build": "vite build"
   },
+  "type": "module",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -22,8 +23,8 @@
   "author": "OpenTiny Team",
   "license": "MIT",
   "homepage": "https://opentiny.design/tiny-engine",
+  "dependencies": {},
   "devDependencies": {
-    "rimraf": "^3.0.2",
-    "vite": "^4.3.7"
+    "vite": "^5.4.2"
   }
 }
