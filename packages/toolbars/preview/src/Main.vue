@@ -35,24 +35,20 @@ export default {
       const { beforePreview, previewMethod, afterPreview } = getOptions(meta.id)
       const printer = console
 
-      if (typeof beforePreview === 'function') {
-        try {
+      try {
+        if (typeof beforePreview === 'function') {
           await beforePreview()
-        } catch (error) {
-          printer.log('Error in beforePreview:', error)
         }
-      }
 
-      if (typeof previewMethod === 'function') {
-        try {
+        if (typeof previewMethod === 'function') {
           const stop = await previewMethod()
 
           if (stop) {
             return
           }
-        } catch (error) {
-          printer.log('Error in previewMethod:', error)
         }
+      } catch (error) {
+        printer.log(error)
       }
 
       if (useLayout().isEmptyPage()) {
