@@ -1,6 +1,7 @@
 {
   "name": "tiny-engine",
   "private": true,
+  "type": "module",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "dev": "pnpm run setup && concurrently 'pnpm:serve:backend' 'pnpm:dev:demo:frontend'",
