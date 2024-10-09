@@ -14,7 +14,7 @@
       :draggable="!isBlockManage && showSettingIcon"
       :class="['block-item', { 'is-disabled': showBlockDetail }, { 'block-item-small-list': blockStyle === 'mini' }]"
       :title="getTitle(item)"
-      @mousedown.stop.left="blockClick({ item, index })"
+      @mousedown.stop.left="blockClick({ event: $event, item, index })"
       @mouseover.stop="openBlockShotPanel(item, $event)"
       @mouseleave="handleBlockItemLeave"
     >
@@ -227,18 +227,20 @@ export default {
       }
     }
 
-    const blockClick = ({ item }) => {
-      emit('click', item)
-    }
-
     const editBlock = ({ event, item, index }) => {
-      if (props.isBlockManage) {
-        state.activeIndex = index
-      }
+      state.activeIndex = index
 
       emit('editBlock', item)
       // 点击区块并不打开设置面板
       emit('iconClick', { event, item, index, isOpen: false })
+    }
+
+    const blockClick = ({ event, item, index }) => {
+      if (props.isBlockManage) {
+        editBlock({ event, item, index })
+      }
+
+      emit('click', item)
     }
 
     const iconClick = ({ event, item, index }) => {
