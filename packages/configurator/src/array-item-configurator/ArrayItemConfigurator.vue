@@ -50,7 +50,7 @@
 
 <script>
 import { computed, reactive } from 'vue'
-import { IconDel, IconEdit, IconPlus } from '@opentiny/vue-icon'
+import { IconDel, IconEdit } from '@opentiny/vue-icon'
 import { MetaList, MetaListItem, MetaChildItem } from '@opentiny/tiny-engine-common'
 import { useTranslate } from '@opentiny/tiny-engine-meta-register'
 import { VueDraggableNext } from 'vue-draggable-next'
@@ -83,16 +83,6 @@ export default {
     const columnsList = computed(() => {
       return props.meta.widget.props.modelValue?.value || props.meta.widget.props.modelValue || []
     })
-
-    const actionsOptions = {
-      actions: [
-        {
-          title: '新增',
-          type: 'add',
-          icon: IconPlus()
-        }
-      ]
-    }
 
     const itemsOptions = computed(() => ({
       valueField: 'field',
@@ -161,19 +151,8 @@ export default {
       updatedColumns()
     }
 
-    const actionEvents = (item) => {
-      switch (item.type) {
-        case 'add':
-          addItem()
-          break
-        default:
-          break
-      }
-    }
-
     return {
       state,
-      actionsOptions,
       itemsOptions,
       columnsList,
       editItem,
@@ -181,7 +160,6 @@ export default {
       deleteItem,
       changeItem,
       onValueChange,
-      actionEvents,
       translate: useTranslate().translate,
       dragEnd
     }
