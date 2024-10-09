@@ -10,12 +10,12 @@
       <div class="radius-btn-group">
         <button-group
           :options="radiusOptions"
-          :modelValue="raduisSelected"
-          @update:modelValue="(value) => selectRaduis(value)"
+          :modelValue="radiusSelected"
+          @update:modelValue="(value) => selectRadius(value)"
         ></button-group>
       </div>
 
-      <div v-show="isRaduisSelected(RADIUS_SETTING.Single)" class="radius-content-input">
+      <div v-show="isRadiusSelected(RADIUS_SETTING.Single)" class="radius-content-input">
         <slider-configurator
           :modelValue="borderRadius.BorderRadius"
           class="adjust-vertical"
@@ -26,7 +26,7 @@
         ></slider-configurator>
       </div>
 
-      <div v-show="isRaduisSelected(RADIUS_SETTING.Multiple)" class="radius-multiple">
+      <div v-show="isRadiusSelected(RADIUS_SETTING.Multiple)" class="radius-multiple">
         <div class="radius-content">
           <tiny-tooltip :effect="effect" :placement="placement" content="top left corner">
             <!-- <div class="radius-content-svg">
@@ -312,9 +312,9 @@ export default {
       { icon: 'border-radius-multiple', value: RADIUS_SETTING.Multiple, tip: '分别定义' }
     ]
 
-    const raduisSelected = computed(() => state.activedRadius)
+    const radiusSelected = computed(() => state.activedRadius)
 
-    const selectRaduis = (type) => {
+    const selectRadius = (type) => {
       if (type) {
         state.activedRadius = type
 
@@ -334,7 +334,7 @@ export default {
       }
     }
 
-    const isRaduisSelected = (type) => type === state.activedRadius
+    const isRadiusSelected = (type) => type === state.activedRadius
 
     const isRadiusSetting = () => {
       let isSetting = false
@@ -508,13 +508,13 @@ export default {
       styleValue,
       borderRadius,
       radiusOptions,
-      raduisSelected,
+      radiusSelected,
       updateStyle,
       openSetting,
       getProperty,
       getSettingFlag,
-      selectRaduis,
-      isRaduisSelected,
+      selectRadius,
+      isRadiusSelected,
       isRadiusSetting,
       updateRadiusSingle,
       isBorderSetting,
