@@ -4,7 +4,9 @@
     type="mini"
     v-model="value"
     :data="optionsData"
-    @update:modelValue="change"></tiny-button-group>
+    @update:modelValue="change"
+  >
+  </tiny-button-group>
 </template>
 
 <script>
@@ -95,6 +97,21 @@ export default {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+    li:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      width: 1px;
+      height: 50%;
+      background-color: var(--te-common-border-default);
+      right: 0;
+      top: 50%;
+      transform: translate(50%, -50%);
+      z-index: 100;
+    }
+    li:has(+ li.active)::after,
+    li.active::after {
+      content: none;
     }
     border: 0px;
   }

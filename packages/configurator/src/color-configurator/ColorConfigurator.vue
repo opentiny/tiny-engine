@@ -73,7 +73,6 @@ export default {
       padding-left: 24px;
       padding-right: 8px;
       background-color: transparent;
-      border: none;
     }
   }
 }

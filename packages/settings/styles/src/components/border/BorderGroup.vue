@@ -7,23 +7,13 @@
       圆角
     </div>
     <div class="radius-content">
-      <tiny-tooltip :effect="effect" :placement="placement" content="所有边框">
-        <div
-          :class="['radius-content-svg', { selected: isRaduisSelected(RADIUS_SETTING.Single) }]"
-          @click="selectRaduis(RADIUS_SETTING.Single)"
-        >
-          <svg-icon name="border-radius-single" class="bem-svg"></svg-icon>
-        </div>
-      </tiny-tooltip>
-
-      <tiny-tooltip :effect="effect" :placement="placement" content="分别定义">
-        <div
-          :class="['radius-content-svg', { selected: isRaduisSelected(RADIUS_SETTING.Multiple) }]"
-          @click="selectRaduis(RADIUS_SETTING.Multiple)"
-        >
-          <svg-icon name="border-radius-multiple" class="bem-svg"></svg-icon>
-        </div>
-      </tiny-tooltip>
+      <div class="radius-btn-group">
+        <button-group
+          :options="radiusOptions"
+          :modelValue="raduisSelected"
+          @update:modelValue="(value) => selectRaduis(value)"
+        ></button-group>
+      </div>
 
       <div v-show="isRaduisSelected(RADIUS_SETTING.Single)" class="radius-content-input">
         <slider-configurator
@@ -95,125 +85,96 @@
     </div>
   </div>
 
-  <div class="border-label item-row">
+  <div class="item-row">
     <span
+      class="border-label"
       :class="{ 'is-setting': isBorderSetting(), 'set-border-style': true }"
       @click="openSetting(BORDER_PROPERTY.Border, $event)"
       >边框</span
     >
-    <div class="border-input-left">
+  </div>
+  <div class="border-container">
+    <div class="position-selector">
       <div
+        class="svg-wrap center"
         :class="['row-item', { selected: isBorderSelected(BORDER_SETTING.All) }]"
         title="全边框"
         @click="selectBorder(BORDER_SETTING.All)"
       >
-        <svg-icon name="border-all" class="bem-svg"></svg-icon>
+        <svg-icon name="border-all"></svg-icon>
       </div>
       <div
+        class="svg-wrap left"
         :class="['row-item', { selected: isBorderSelected(BORDER_SETTING.Left) }]"
         title="左边框"
         @click="selectBorder(BORDER_SETTING.Left)"
       >
-        <svg-icon name="border-left" class="bem-svg"></svg-icon>
+        <svg-icon name="border-left"></svg-icon>
       </div>
-
       <div
+        class="svg-wrap top"
         :class="['row-item', { selected: isBorderSelected(BORDER_SETTING.Top) }]"
         title="上边框"
         @click="selectBorder(BORDER_SETTING.Top)"
       >
-        <svg-icon name="border-top" class="bem-svg"></svg-icon>
+        <svg-icon name="border-top"></svg-icon>
       </div>
-
       <div
+        class="svg-wrap bottom"
         :class="['row-item', { selected: isBorderSelected(BORDER_SETTING.Bottom) }]"
         title="下边框"
         @click="selectBorder(BORDER_SETTING.Bottom)"
       >
-        <svg-icon name="border-bottom" class="bem-svg"></svg-icon>
+        <svg-icon name="border-bottom"></svg-icon>
       </div>
 
       <div
+        class="svg-wrap right"
         :class="['row-item', { selected: isBorderSelected(BORDER_SETTING.Right) }]"
         title="右边框"
         @click="selectBorder(BORDER_SETTING.Right)"
       >
-        <svg-icon name="border-right" class="bem-svg"></svg-icon>
+        <svg-icon name="border-right"></svg-icon>
       </div>
-      <div class="row-item"></div>
     </div>
-  </div>
-  <div class="border-input">
-    <div class="border-input-right">
-      <div class="border-row item-row">
-        <div class="border-label">
-          <span
-            :class="{ 'is-setting': isBorderColorSetting() }"
-            @click="openSetting(BORDER_PROPERTY.BorderColor, $event)"
-            >颜色</span
-          >
-        </div>
-        <div class="border-content">
-          <color-configurator :modelValue="borderColorValue" @change="changeBorderColor"></color-configurator>
+    <div class="inputs">
+      <div class="input-row">
+        <span
+          class="border-label"
+          :class="{ 'is-setting': isBorderStyleSetting() }"
+          @click="openSetting(BORDER_PROPERTY.BorderStyle, $event)"
+          >样式</span
+        >
+        <div class="styles-container">
+          <button-group
+            :options="styleOptions"
+            :modelValue="styleValue"
+            @update:modelValue="(value) => selectBorderStyle(value)"
+          ></button-group>
         </div>
       </div>
-      <div class="border-row">
-        <div class="border-label">
-          <span
-            :class="{ 'is-setting': isBorderWidthSetting() }"
-            @click="openSetting(BORDER_PROPERTY.BorderWidth, $event)"
-            >宽度</span
-          >
-        </div>
-        <div class="border-content border-width">
-          <numeric-select
-            :name="borderWidthValue.name"
-            :numericalText="borderWidthValue.text"
-            :property="borderWidthValue"
-            @update="updateStyle"
-          />
-        </div>
-        <div class="border-label">
-          <span
-            :class="{ 'is-setting': isBorderStyleSetting() }"
-            @click="openSetting(BORDER_PROPERTY.BorderStyle, $event)"
-            >样式</span
-          >
-        </div>
-        <div class="border-content style">
-          <tiny-tooltip :effect="effect" :placement="placement" content="none-无">
-            <div
-              :class="['border-content-svg', { selected: isBorderStyleSelected(BORDER_STYLE_TYPE.None) }]"
-              @click="selectBorderStyle(BORDER_STYLE_TYPE.None)"
-            >
-              <svg-icon name="cross" class="bem-svg"></svg-icon>
-            </div>
-          </tiny-tooltip>
-          <tiny-tooltip :effect="effect" :placement="placement" content="solid-实线">
-            <div
-              :class="['border-content-svg', { selected: isBorderStyleSelected(BORDER_STYLE_TYPE.Solid) }]"
-              @click="selectBorderStyle(BORDER_STYLE_TYPE.Solid)"
-            >
-              <svg-icon name="border-style-solid" class="bem-svg"></svg-icon>
-            </div>
-          </tiny-tooltip>
-          <tiny-tooltip :effect="effect" :placement="placement" content="dashed-虚线">
-            <div
-              :class="['border-content-svg', { selected: isBorderStyleSelected(BORDER_STYLE_TYPE.Dashed) }]"
-              @click="selectBorderStyle(BORDER_STYLE_TYPE.Dashed)"
-            >
-              <svg-icon name="border-style-dashed" class="bem-svg"></svg-icon>
-            </div>
-          </tiny-tooltip>
-          <tiny-tooltip :effect="effect" :placement="placement" content="dotted-圆点">
-            <div
-              :class="['border-content-svg', { selected: isBorderStyleSelected(BORDER_STYLE_TYPE.Dotted) }]"
-              @click="selectBorderStyle(BORDER_STYLE_TYPE.Dotted)"
-            >
-              <svg-icon name="border-style-dotted" class="bem-svg"></svg-icon>
-            </div>
-          </tiny-tooltip>
-        </div>
+      <div class="input-row">
+        <span
+          class="border-label"
+          :class="{ 'is-setting': isBorderWidthSetting() }"
+          @click="openSetting(BORDER_PROPERTY.BorderWidth, $event)"
+          >宽度</span
+        >
+        <numeric-select
+          :name="borderWidthValue.name"
+          :numericalText="borderWidthValue.text"
+          :property="borderWidthValue"
+          @update="updateStyle"
+        />
+      </div>
+      <div class="input-row">
+        <span
+          class="border-label"
+          :class="{ 'is-setting': isBorderColorSetting() }"
+          @click="openSetting(BORDER_PROPERTY.BorderColor, $event)"
+          >颜色</span
+        >
+        <color-configurator :modelValue="borderColorValue" @change="changeBorderColor"></color-configurator>
       </div>
     </div>
   </div>
@@ -229,6 +190,7 @@ import { Tooltip } from '@opentiny/vue'
 import ModalMask, { useModal } from '../inputs/ModalMask.vue'
 import NumericSelect from '../inputs/NumericSelect.vue'
 import ResetButton from '../inputs/ResetButton.vue'
+import ButtonGroup from '../buttons/ButtonGroup'
 import { ColorConfigurator, SliderConfigurator } from '@opentiny/tiny-engine-configurator'
 import useEvent from '../../js/useEvent'
 import { useProperties } from '../../js/useStyle'
@@ -266,6 +228,7 @@ export default {
     ResetButton,
     ColorConfigurator,
     NumericSelect,
+    ButtonGroup,
     TinyTooltip: Tooltip
   },
   props: {
@@ -343,6 +306,13 @@ export default {
       },
       { immediate: true }
     )
+
+    const radiusOptions = [
+      { icon: 'border-radius-single', value: RADIUS_SETTING.Single, tip: '所有边框' },
+      { icon: 'border-radius-multiple', value: RADIUS_SETTING.Multiple, tip: '分别定义' }
+    ]
+
+    const raduisSelected = computed(() => state.activedRadius)
 
     const selectRaduis = (type) => {
       if (type) {
@@ -429,6 +399,18 @@ export default {
       return isSetting
     }
 
+    const styleOptions = [
+      { icon: 'cross', value: BORDER_STYLE_TYPE.None, tip: 'none-无' },
+      { icon: 'border-style-solid', value: BORDER_STYLE_TYPE.Solid, tip: 'solid-实线' },
+      { icon: 'border-style-dashed', value: BORDER_STYLE_TYPE.Dashed, tip: 'dashed-虚线' },
+      { icon: 'border-style-dotted', value: BORDER_STYLE_TYPE.Dotted, tip: 'dotted-圆点' }
+    ]
+
+    const styleValue = computed(() => {
+      const propertyName = BORDER_STYLE[state.activedBorder]
+      return getPropertyValue(propertyName)
+    })
+
     const selectBorderStyle = (type) => {
       if (type) {
         const propertyName = BORDER_STYLE[state.activedBorder]
@@ -437,17 +419,6 @@ export default {
           updateStyle({ [propertyName]: type })
         }
       }
-    }
-
-    const isBorderStyleSelected = (type) => {
-      let flag = false
-      const propertyName = BORDER_STYLE[state.activedBorder]
-
-      if (propertyName) {
-        flag = type === getPropertyValue(propertyName)
-      }
-
-      return flag
     }
 
     const borderWidthValue = computed(() => {
@@ -533,7 +504,11 @@ export default {
       BORDER_RADIUS_PROPERTY,
       state,
       reset,
+      styleOptions,
+      styleValue,
       borderRadius,
+      radiusOptions,
+      raduisSelected,
       updateStyle,
       openSetting,
       getProperty,
@@ -547,7 +522,6 @@ export default {
       isBorderSelected,
       isBorderStyleSetting,
       selectBorderStyle,
-      isBorderStyleSelected,
       isBorderWidthSetting,
       isBorderColorSetting,
       changeBorderColor
@@ -583,6 +557,7 @@ export default {
 .radius-row {
   display: flex;
   align-items: center;
+  gap: 8px;
   position: relative;
   svg {
     color: var(--ti-lowcode-input-icon-color);
@@ -590,12 +565,12 @@ export default {
   }
 
   .radius-label {
-    flex: 0 0 45px;
+    flex: 0 0 48px;
     padding: 0 2px;
     line-height: 24px;
     color: var(--ti-lowcode-component-setting-panel-label-color);
 
-    &.selected {
+    &.is-setting {
       color: var(--ti-lowcode-style-setting-label-color);
       background: var(--ti-lowcode-style-setting-label-bg);
     }
@@ -604,9 +579,12 @@ export default {
   .radius-content {
     flex: auto;
     align-items: center;
-    display: grid;
-    grid-template-columns: 16px 16px 1fr;
-    column-gap: 4px;
+    display: flex;
+    gap: 4px;
+
+    .radius-btn-group:deep(ul) {
+      width: 48px;
+    }
 
     .radius-content-svg {
       &:hover,
@@ -683,89 +661,66 @@ export default {
 }
 
 .border-label {
-  width: 100%;
-  color: var(--ti-lowcode-component-setting-panel-label-color);
-  .set-border-style {
-    line-height: 24px;
-    float: left;
-  }
+  color: var(--te-common-text-secondary);
+  flex-shrink: 0;
 }
-.border-input-left {
+.border-container {
   display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding-right: 5px;
-  font-size: 16px;
-
-  .border-input-left__row {
-    text-align: center;
+  flex-direction: row;
+  gap: 12px;
+  & .position-selector {
+    width: 82px;
+    height: 82px;
+    background-color: var(--te-common-bg-container);
+    border-radius: 4px;
+    padding: 4px;
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+  }
+  & .svg-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    & > .svg-icon {
+      font-size: 14px;
+    }
     &.center {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+      grid-area: 2 / 2;
     }
-  }
-  .row-item {
-    &:hover {
-      svg {
-        color: var(--ti-lowcode-toolbar-icon-color);
-      }
+    &.left {
+      grid-area: 2 / 1;
     }
-
+    &.right {
+      grid-area: 2 / 3;
+    }
+    &.top {
+      grid-area: 1 / 2;
+    }
+    &.bottom {
+      grid-area: 3 / 2;
+    }
     &.selected {
-      color: var(--ti-lowcode-property-active-color);
-      svg {
-        color: var(--ti-lowcode-property-active-color);
-      }
+      background-color: var(--te-common-bg-prompt);
+      border-radius: 4px;
     }
   }
-}
-.border-input {
-  // display: flex;
-  // justify-content: flex-start;
-  // align-items: center;
-
-  svg {
-    color: var(--ti-lowcode-toolbar-breadcrumb-color);
-    font-size: 16px;
-  }
-
-  .border-input-right {
-    .border-row {
+  & .inputs {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    & .input-row {
       display: flex;
       align-items: center;
-      .border-label {
-        flex: 0 0 40px;
-      }
-      .border-content {
-        flex: 1;
-        display: flex;
-
-        .border-content-svg {
-          flex: 1;
-          padding: 4px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          &.selected,
-          &:hover {
-            color: var(--ti-lowcode-property-active-color);
-            svg {
-              color: var(--ti-lowcode-property-active-color);
-            }
-          }
-
-          .bem-svg {
-            margin: auto;
-          }
-        }
-      }
-      .border-width {
-        width: 50px;
-        flex: none;
-        margin-right: 15px;
-      }
+      gap: 12px;
+      height: 24px;
     }
+  }
+  & .styles-container {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
   }
 }
 
