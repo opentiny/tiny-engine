@@ -73,12 +73,12 @@
           <div class="setting-menu" @mouseover.stop="handleSettingMouseOver" @mouseleave="handleBlockItemLeave">
             <ul class="list">
               <tiny-tooltip content="版本列表" placement="top">
-                <li class="list-item" @click="$emit('openVersionPanel', { item, index })">
+                <li class="list-item" @click.stop="$emit('openVersionPanel', { item, index })">
                   <svg-button class="list-item-svg" name="versions"> </svg-button>
                 </li>
               </tiny-tooltip>
               <tiny-tooltip content="移除" placement="top">
-                <li class="list-item" @click="$emit('deleteBlock', item)">
+                <li class="list-item" @click.stop="$emit('deleteBlock', item)">
                   <svg-button class="list-item-svg" name="remove"> </svg-button>
                 </li>
               </tiny-tooltip>
@@ -529,7 +529,7 @@ export default {
     .item-default-img {
       width: 84px;
       height: 50px;
-      color: var(--te-common-bg-defaut);
+      color: var(--te-common-bg-default);
     }
 
     .item-text {
