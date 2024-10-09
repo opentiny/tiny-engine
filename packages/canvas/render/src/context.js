@@ -52,4 +52,6 @@ export const setCondition = (id, visible = false) => {
   conditions[id] = visible
 }
 
-export const getCondition = () => conditions
+export const getCondition = (id) => conditions[id] !== false
+
+export const getConditions = () => conditions

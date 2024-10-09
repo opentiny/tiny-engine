@@ -25,6 +25,7 @@ import {
   getContext,
   setCondition,
   getCondition,
+  getConditions,
   context,
   setNode
 } from './context'
@@ -443,6 +444,7 @@ export const api = {
   setPagecss,
   setCondition,
   getCondition,
+  getConditions,
   getGlobalState,
   getDataSourceMap,
   setDataSourceMap,
