@@ -18,69 +18,68 @@
       <div v-show="isRadiusSelected(RADIUS_SETTING.Single)" class="radius-content-input">
         <slider-configurator
           :modelValue="borderRadius.BorderRadius"
-          class="adjust-vertical"
           :controls="false"
           :showUnit="true"
           :selectedUnit="'px'"
           @update:modelValue="updateRadiusSingle"
         ></slider-configurator>
       </div>
-
-      <div v-show="isRadiusSelected(RADIUS_SETTING.Multiple)" class="radius-multiple">
-        <div class="radius-content">
-          <tiny-tooltip :effect="effect" :placement="placement" content="top left corner">
-            <!-- <div class="radius-content-svg">
-              <svg-icon name="border-radius-topleft" class="bem-svg"></svg-icon>
-            </div> -->
-            <div class="radius-content-input">
-              <numeric-select
-                :name="getProperty(BORDER_RADIUS_PROPERTY.BorderTopLeftRadius).name"
-                :numericalText="borderRadius.BorderTopLeftRadius"
-                :placeholder="0"
-                @update="updateStyle"
-              />
-            </div>
-          </tiny-tooltip>
-        </div>
-
-        <div class="radius-content">
-          <tiny-tooltip :effect="effect" :placement="placement" content="top right corner">
-            <div class="radius-content-input">
-              <numeric-select
-                :name="getProperty(BORDER_RADIUS_PROPERTY.BorderTopRightRadius).name"
-                :numericalText="borderRadius.BorderTopRightRadius"
-                :placeholder="0"
-                @update="updateStyle"
-              />
-            </div>
-          </tiny-tooltip>
-        </div>
-
-        <div class="radius-content">
-          <tiny-tooltip :effect="effect" :placement="placement" content="bottom left corner">
-            <div class="radius-content-input">
-              <numeric-select
-                :name="getProperty(BORDER_RADIUS_PROPERTY.BorderBottomLeftRadius).name"
-                :numericalText="borderRadius.BorderBottomLeftRadius"
-                :placeholder="0"
-                @update="updateStyle"
-              />
-            </div>
-          </tiny-tooltip>
-        </div>
-
-        <div class="radius-content">
-          <tiny-tooltip :effect="effect" :placement="placement" content="bottom right corner">
-            <div class="radius-content-input">
-              <numeric-select
-                :name="getProperty(BORDER_RADIUS_PROPERTY.BorderBottomRightRadius).name"
-                :placeholder="0"
-                :numericalText="borderRadius.BorderBottomRightRadius"
-                @update="updateStyle"
-              />
-            </div>
-          </tiny-tooltip>
-        </div>
+    </div>
+  </div>
+  <div v-show="isRadiusSelected(RADIUS_SETTING.Multiple)" class="radius-row item-row">
+    <div class="radius-label"></div>
+    <div class="radius-multiple-container">
+      <div>
+        <tiny-tooltip :effect="effect" :placement="placement" content="top left corner">
+          <span>
+            <svg-icon name="border-radius-topleft"></svg-icon>
+          </span>
+        </tiny-tooltip>
+        <numeric-select
+          :name="getProperty(BORDER_RADIUS_PROPERTY.BorderTopLeftRadius).name"
+          :numericalText="borderRadius.BorderTopLeftRadius"
+          :placeholder="0"
+          @update="updateStyle"
+        />
+      </div>
+      <div>
+        <tiny-tooltip :effect="effect" :placement="placement" content="top right corner">
+          <span>
+            <svg-icon name="border-radius-topright"></svg-icon>
+          </span>
+        </tiny-tooltip>
+        <numeric-select
+          :name="getProperty(BORDER_RADIUS_PROPERTY.BorderTopRightRadius).name"
+          :numericalText="borderRadius.BorderTopRightRadius"
+          :placeholder="0"
+          @update="updateStyle"
+        />
+      </div>
+      <div>
+        <tiny-tooltip :effect="effect" :placement="placement" content="bottom left corner">
+          <span>
+            <svg-icon name="border-radius-bottomleft"></svg-icon>
+          </span>
+        </tiny-tooltip>
+        <numeric-select
+          :name="getProperty(BORDER_RADIUS_PROPERTY.BorderBottomLeftRadius).name"
+          :numericalText="borderRadius.BorderBottomLeftRadius"
+          :placeholder="0"
+          @update="updateStyle"
+        />
+      </div>
+      <div>
+        <tiny-tooltip :effect="effect" :placement="placement" content="bottom right corner">
+          <span>
+            <svg-icon name="border-radius-bottomright"></svg-icon>
+          </span>
+        </tiny-tooltip>
+        <numeric-select
+          :name="getProperty(BORDER_RADIUS_PROPERTY.BorderBottomRightRadius).name"
+          :placeholder="0"
+          :numericalText="borderRadius.BorderBottomRightRadius"
+          @update="updateStyle"
+        />
       </div>
     </div>
   </div>
@@ -610,6 +609,15 @@ export default {
     .radius-content-input {
       margin-left: 4px;
 
+      :deep(.slider-container) {
+        grid-template-columns: 64px 1fr;
+        column-gap: 8px;
+      }
+
+      :deep(.meta-numeric-input) {
+        width: 70px;
+      }
+
       :deep(.tiny-input__suffix) {
         right: 0;
       }
@@ -617,46 +625,19 @@ export default {
   }
 }
 
-.radius-multiple {
-  display: flex;
-  flex-wrap: wrap;
-  position: relative;
-  &::after {
-    content: '';
-    height: 1px;
-    width: calc(100% + 32px);
-    background: var(--ti-lowcode-toolbar-border-color);
-    position: absolute;
-    bottom: 0;
-    left: -16px;
-  }
-
-  svg {
-    color: var(--ti-lowcode-toolbar-breadcrumb-color);
-    font-size: 16px;
-  }
-
-  .radius-content {
-    flex: 1;
+.radius-multiple-container {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  row-gap: 6px;
+  column-gap: 18px;
+  & > div {
     display: flex;
     align-items: center;
-    margin: 5px 0;
-
-    .radius-content-svg {
-      flex: 0 0 24px;
-      padding: 4px;
-      margin: 0 1px;
-    }
-    :deep(.tiny-input__inner) {
-      background: var(--ti-lowcode-tabs-active-bg);
-      padding: 0 20px 0 0;
-      border-radius: 0;
-      border-width: 0;
-      &:hover,
-      &:focus {
-        border-bottom: 1px solid var(--ti-lowcode-property-active-color);
-      }
-    }
+    gap: 6px;
+  }
+  svg {
+    font-size: 14px;
   }
 }
 
@@ -722,10 +703,6 @@ export default {
     display: flex;
     justify-content: space-between;
   }
-}
-
-.adjust-vertical {
-  margin-top: 5px;
 }
 
 .is-setting {
