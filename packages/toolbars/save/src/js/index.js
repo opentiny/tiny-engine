@@ -93,7 +93,6 @@ export const saveCommon = (value) => {
 }
 export const openCommon = async () => {
   const { isSaved, canvasApi } = useCanvas()
-
   if (isSaved() || state.disabled) {
     return
   }
