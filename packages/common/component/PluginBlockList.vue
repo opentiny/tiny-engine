@@ -372,7 +372,6 @@ export default {
 .block-list {
   display: grid;
   grid-template-columns: 50% 50%;
-  grid-template-rows: repeat(auto-fill, 96px);
   position: relative;
   flex: 1;
   overflow-y: auto;
