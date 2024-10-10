@@ -17,7 +17,6 @@ import CanvasLayout from './layout'
 import DesignCanvas from './DesignCanvas'
 
 export { CanvasContainer, CanvasLayout, DesignCanvas }
-export { createRender } from './render/index'
 
 export default {
   ...DesignCanvas,

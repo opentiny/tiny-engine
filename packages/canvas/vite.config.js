@@ -34,7 +34,8 @@ export default defineConfig({
     cssCodeSplit: true,
     lib: {
       entry: {
-        index: path.resolve(__dirname, './index.js')
+        index: path.resolve(__dirname, './index.js'),
+        render: path.resolve(__dirname, './render/index.js'),
       },
       name: 'canvas',
       fileName: () => 'index.js',
