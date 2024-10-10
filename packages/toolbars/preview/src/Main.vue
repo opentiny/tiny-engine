@@ -33,7 +33,6 @@ export default {
 
     const preview = async () => {
       const { beforePreview, previewMethod, afterPreview } = getOptions(meta.id)
-      const printer = console
 
       try {
         if (typeof beforePreview === 'function') {
@@ -48,7 +47,10 @@ export default {
           }
         }
       } catch (error) {
-        printer.log(error)
+        useNotify({
+          type: 'error',
+          message: `Error in previewing: ${error}`
+        })
       }
 
       if (useLayout().isEmptyPage()) {
@@ -85,6 +87,10 @@ export default {
           await afterPreview()
         } catch (error) {
           printer.log('Error in afterPreview:', error)
+          useNotify({
+            type: 'error',
+            message: `Error in afterPreview: ${error}`
+          })
         }
       }
     }
