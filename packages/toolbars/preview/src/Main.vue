@@ -86,7 +86,6 @@ export default {
         try {
           await afterPreview()
         } catch (error) {
-          printer.log('Error in afterPreview:', error)
           useNotify({
             type: 'error',
             message: `Error in afterPreview: ${error}`
