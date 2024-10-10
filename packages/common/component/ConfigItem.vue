@@ -8,7 +8,8 @@
       {
         active: property === currentProperty
       }
-    ]">
+    ]"
+  >
     <div :class="['item-warp', labelPosition, property.className, { multiType }]">
       <div v-if="showLabel" :class="['item-label', { linked: isLinked }]">
         <tiny-popover
@@ -17,7 +18,8 @@
           trigger="hover"
           popper-class="prop-label-tips-container"
           :open-delay="500"
-          :disabled="!propDescription || propDescription === propLabel">
+          :disabled="!propDescription || propDescription === propLabel"
+        >
           <div class="prop-content">
             <div class="prop-title">{{ property.property }}</div>
             <div class="prop-description">
@@ -41,7 +43,8 @@
             {
               'verify-failed': verification.failed
             }
-          ]">
+          ]"
+        >
           <div v-if="showBindState" class="binding-state text-ellipsis-multiple">
             {{ '已绑定：' + widget.props.modelValue?.value }}
           </div>
@@ -57,7 +60,8 @@
             :metaComponents="metaComponents"
             @update:modelValue="onModelUpdate"
             @focus="handleFocus"
-            @blur="handleBlur"></component>
+            @blur="handleBlur"
+          ></component>
           <div v-if="showErrorPopup" class="error-tips-container">
             <svg-icon name="notify-failure" class="error-icon"></svg-icon>
             <span class="error-desc">{{ verification.message }}</span>
@@ -75,7 +79,8 @@
             :meta="property"
             :label="propLabel"
             language="json"
-            @update:modelValue="onModelUpdate">
+            @update:modelValue="onModelUpdate"
+          >
             <template #default>
               <tiny-tooltip class="item" effect="dark" content="源码编辑" placement="left">
                 <icon-writing class="code-icon" @click="editorModalRef?.open && editorModalRef.open()"></icon-writing>
@@ -87,7 +92,8 @@
             v-if="isTopLayer && !onlyEdit && property.bindState !== false && !isRelatedComponents(widget.component)"
             :model-value="widget.props.modelValue"
             :name="widget.props.name"
-            @update:modelValue="onModelUpdate"></component>
+            @update:modelValue="onModelUpdate"
+          ></component>
         </div>
       </div>
     </div>
@@ -238,6 +244,10 @@ export default {
     })
 
     const labelPosition = computed(() => {
+      if (!showLabel.value) {
+        return 'none'
+      }
+
       if (props.property.labelPosition) {
         return props.property.labelPosition
       }
