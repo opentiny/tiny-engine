@@ -2,5 +2,10 @@ export default {
   id: 'engine.toolbars.logo',
   type: 'toolbars',
   title: 'logo',
-  icon: ''
+  options: {
+    icon: {
+      default: 'logo'
+    },
+    renderType: 'slot'
+  }
 }

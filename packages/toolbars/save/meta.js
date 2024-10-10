@@ -2,5 +2,10 @@ export default {
   id: 'engine.toolbars.save',
   type: 'toolbars',
   title: 'save',
-  icon: ''
+  options: {
+    icon: {
+      default: 'save'
+    },
+    renderType: 'button'
+  }
 }

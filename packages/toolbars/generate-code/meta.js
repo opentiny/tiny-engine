@@ -2,5 +2,10 @@ export default {
   id: 'engine.toolbars.generate-code',
   type: 'toolbars',
   title: 'generate-code',
-  icon: ''
+  options: {
+    icon: {
+      default: 'generate-code'
+    },
+    renderType: 'button'
+  }
 }

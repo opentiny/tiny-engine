@@ -13,7 +13,7 @@
 export const commonEvents = {
   onClick: {
     label: {
-      zh_CN: '鼠标单击时触发'
+      zh_CN: '点击事件'
     },
     description: {
       zh_CN: '鼠标单击时触发的回调函数'

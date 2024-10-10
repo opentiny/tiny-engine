@@ -1,104 +1,108 @@
 <template>
-  <div class="top-panel-logo">
-    <h1 class="logo-wrap" @click.stop="handleTitleClick">
-      <div class="menu-icon-wrapper">
-        <svg-icon name="menu"></svg-icon>
-      </div>
-    </h1>
-    <div v-if="state.showMenu" class="main-menu">
-      <ul>
-        <li v-for="(item, index) in menus" :key="index" @click="handleClick(item)">
-          <span class="menu-item">{{ item.name }}</span>
-        </li>
-      </ul>
-    </div>
-    <tiny-dialog-box v-model:visible="state.show" :title="state.title" width="400px" :append-to-body="true">
-      <tiny-form
-        ref="form"
-        class="publish-app-form"
-        :model="state.formData"
-        :rules="state.showPreview ? rules : saveRule"
-        validate-position="bottom-start"
-        :inline-message="true"
-        validate-type="text"
-        label-position="left"
-        :label-align="true"
-        label-width="110px"
-      >
-        <tiny-form-item v-if="!state.showPreview" prop="version" label="历史版本">
-          <tiny-input v-model="state.formData.version" placeholder="请输入版本号"></tiny-input>
-        </tiny-form-item>
-        <div v-else>
-          <tiny-form-item prop="commitMsg" label="提交日志">
-            <tiny-input
-              v-model="state.formData.commitMsg"
-              placeholder="请输入提交到git库的日志"
-              @blur="repalceTrim"
-            ></tiny-input>
-          </tiny-form-item>
-          <tiny-form-item prop="branch" label="分支名称">
-            <tiny-input v-model="state.formData.branch" placeholder="请输入分支名称"></tiny-input>
-          </tiny-form-item>
-
-          <tiny-form-item prop="canCreateNewBranch">
-            <template #label>创建分支 </template>
-
-            <tiny-switch v-model="state.formData.canCreateNewBranch">
-              <template #open>
-                <span>是</span>
-              </template>
-              <template #close>
-                <span>否</span>
-              </template>
-            </tiny-switch>
-            <tiny-tooltip
-              class="item"
-              effect="dark"
-              content="分支不存在的时候创建分支。若不开启，分支不存在时发布应用会失败。"
-              placement="top"
-              popper-class="help-tooltip"
-            >
-              <icon-help class="tiny-svg-size icon-help"> </icon-help>
-            </tiny-tooltip>
-          </tiny-form-item>
-          <tiny-form-item prop="allGenerate">
-            <template #label>生成工程配置 </template>
-
-            <tiny-switch v-model="state.formData.allGenerate">
-              <template #open>
-                <span>是</span>
-              </template>
-              <template #close>
-                <span>否</span>
-              </template>
-            </tiny-switch>
-            <tiny-tooltip
-              class="item"
-              effect="dark"
-              content="是否生成工程默认配置，如package.json等文件。如选择为否，只生成页面对应代码，不生成配置文件。"
-              placement="top"
-              popper-class="help-tooltip"
-            >
-              <icon-help class="tiny-svg-size icon-help"> </icon-help>
-            </tiny-tooltip>
-          </tiny-form-item>
+  <toolbar-base :options="options">
+    <template #default>
+      <div class="top-panel-logo">
+        <h1 class="logo-wrap" @click.stop="handleTitleClick">
+          <div class="menu-icon-wrapper">
+            <svg-icon :name="options.icon.default || options.icon"></svg-icon>
+          </div>
+        </h1>
+        <div v-if="state.showMenu" class="main-menu">
+          <ul>
+            <li v-for="(item, index) in menus" :key="index" @click="handleClick(item)">
+              <span class="menu-item">{{ item.name }}</span>
+            </li>
+          </ul>
         </div>
-      </tiny-form>
-      <template #footer>
-        <tiny-button type="primary" @click="confirm">确定</tiny-button>
-        <tiny-button @click="state.show = false">取消</tiny-button>
-      </template>
-    </tiny-dialog-box>
+        <tiny-dialog-box v-model:visible="state.show" :title="state.title" width="400px" :append-to-body="true">
+          <tiny-form
+            ref="form"
+            class="publish-app-form"
+            :model="state.formData"
+            :rules="state.showPreview ? rules : saveRule"
+            validate-position="bottom-start"
+            :inline-message="true"
+            validate-type="text"
+            label-position="left"
+            :label-align="true"
+            label-width="110px"
+          >
+            <tiny-form-item v-if="!state.showPreview" prop="version" label="历史版本">
+              <tiny-input v-model="state.formData.version" placeholder="请输入版本号"></tiny-input>
+            </tiny-form-item>
+            <div v-else>
+              <tiny-form-item prop="commitMsg" label="提交日志">
+                <tiny-input
+                  v-model="state.formData.commitMsg"
+                  placeholder="请输入提交到git库的日志"
+                  @blur="repalceTrim"
+                ></tiny-input>
+              </tiny-form-item>
+              <tiny-form-item prop="branch" label="分支名称">
+                <tiny-input v-model="state.formData.branch" placeholder="请输入分支名称"></tiny-input>
+              </tiny-form-item>
 
-    <tiny-dialog-box v-model:visible="tipBoxVisibility" title="消息" width="30%" :modal="false">
-      <span>{{ tipText }}</span>
-      <template #footer> </template>
-    </tiny-dialog-box>
-  </div>
+              <tiny-form-item prop="canCreateNewBranch">
+                <template #label>创建分支 </template>
+
+                <tiny-switch v-model="state.formData.canCreateNewBranch">
+                  <template #open>
+                    <span>是</span>
+                  </template>
+                  <template #close>
+                    <span>否</span>
+                  </template>
+                </tiny-switch>
+                <tiny-tooltip
+                  class="item"
+                  effect="dark"
+                  content="分支不存在的时候创建分支。若不开启，分支不存在时发布应用会失败。"
+                  placement="top"
+                  popper-class="help-tooltip"
+                >
+                  <icon-help class="tiny-svg-size icon-help"> </icon-help>
+                </tiny-tooltip>
+              </tiny-form-item>
+              <tiny-form-item prop="allGenerate">
+                <template #label>生成工程配置 </template>
+
+                <tiny-switch v-model="state.formData.allGenerate">
+                  <template #open>
+                    <span>是</span>
+                  </template>
+                  <template #close>
+                    <span>否</span>
+                  </template>
+                </tiny-switch>
+                <tiny-tooltip
+                  class="item"
+                  effect="dark"
+                  content="是否生成工程默认配置，如package.json等文件。如选择为否，只生成页面对应代码，不生成配置文件。"
+                  placement="top"
+                  popper-class="help-tooltip"
+                >
+                  <icon-help class="tiny-svg-size icon-help"> </icon-help>
+                </tiny-tooltip>
+              </tiny-form-item>
+            </div>
+          </tiny-form>
+          <template #footer>
+            <tiny-button type="primary" @click="confirm">确定</tiny-button>
+            <tiny-button @click="state.show = false">取消</tiny-button>
+          </template>
+        </tiny-dialog-box>
+
+        <tiny-dialog-box v-model:visible="tipBoxVisibility" title="消息" width="30%" :modal="false">
+          <span>{{ tipText }}</span>
+          <template #footer> </template>
+        </tiny-dialog-box>
+      </div>
+    </template>
+  </toolbar-base>
 </template>
 
 <script setup>
-import { computed, reactive, ref, nextTick, onUnmounted } from 'vue'
+import { computed, reactive, ref, nextTick, onUnmounted, defineProps } from 'vue'
 import {
   DialogBox as TinyDialogBox,
   Input as TinyInput,
@@ -113,7 +117,15 @@ import { iconHelpCircle } from '@opentiny/vue-icon'
 import { useLayout, useApp, useModal } from '@opentiny/tiny-engine-meta-register'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { useHttp } from '@opentiny/tiny-engine-http'
+import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import { isDevelopEnv } from '@opentiny/tiny-engine-common/js/environments'
+
+defineProps({
+  options: {
+    type: Object,
+    default: () => ({})
+  }
+})
 
 const http = useHttp()
 

@@ -1,18 +1,14 @@
 <template>
-  <div class="toolbar-generate">
-    <tiny-button @click="generate">
-      <span class="toolbar-generate-btn">
-        <svg-icon :name="icon"></svg-icon>
-        <span class="button-title">出码</span>
-      </span>
-    </tiny-button>
-  </div>
-  <generate-file-selector
-    :visible="state.showDialogbox"
-    :data="state.saveFilesInfo"
-    @confirm="confirm"
-    @cancel="cancel"
-  ></generate-file-selector>
+  <toolbar-base content="出码" :icon="options.icon.default || options.icon" :options="options" @click-api="generate">
+    <template #default>
+      <generate-file-selector
+        :visible="state.showDialogbox"
+        :data="state.saveFilesInfo"
+        @confirm="confirm"
+        @cancel="cancel"
+      ></generate-file-selector>
+    </template>
+  </toolbar-base>
 </template>
 
 <script>
@@ -27,21 +23,21 @@ import {
   META_APP,
   getMergeMeta
 } from '@opentiny/tiny-engine-meta-register'
-import { Button } from '@opentiny/vue'
 import { fs } from '@opentiny/tiny-engine-utils'
 import { useHttp } from '@opentiny/tiny-engine-http'
+import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import { fetchMetaData, fetchPageList, fetchBlockSchema } from './http'
 import FileSelector from './FileSelector.vue'
 
 export default {
   components: {
-    TinyButton: Button,
-    GenerateFileSelector: FileSelector
+    GenerateFileSelector: FileSelector,
+    ToolbarBase
   },
   props: {
-    icon: {
-      type: String,
-      default: 'generate-code'
+    options: {
+      type: Object,
+      default: () => ({})
     }
   },
   setup() {
@@ -261,7 +257,6 @@ export default {
 </script>
 <style lang="less" scoped>
 .toolbar-generate {
-  margin-right: 6px;
   .toolbar-generate-btn {
     display: flex;
     align-items: center;

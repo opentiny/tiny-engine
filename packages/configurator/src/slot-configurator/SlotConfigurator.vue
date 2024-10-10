@@ -136,6 +136,9 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  &:not(:last-child) {
+    margin-bottom: 8px;
+  }
   .slot-name {
     width: 30%;
     color: var(--ti-lowcode-dialog-font-color);
