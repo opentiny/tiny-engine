@@ -13,7 +13,7 @@
       选择已有方法或者添加新方法（点击 确定 之后将在JS面板中创建一个该名称的新方法）。
     </div>
     <div class="bind-event-dialog-content">
-      <component :is="BindEventsDialogSidebar" :eventBinding="eventBinding"></component>
+      <component :is="BindEventsDialogSidebar" :dialogVisible="dialogVisible" :eventBinding="eventBinding"></component>
       <component :is="BindEventsDialogContent" :dialogVisible="dialogVisible"></component>
     </div>
     <template #footer>
@@ -32,6 +32,7 @@ import {
   useCanvas,
   useHistory,
   useLayout,
+  getOptions,
   getMetaApi,
   META_APP
 } from '@opentiny/tiny-engine-meta-register'
@@ -171,7 +172,7 @@ export default {
       })
     }
 
-    const confirm = () => {
+    const confirm = async () => {
       if (state.tipError) {
         return
       }
@@ -193,13 +194,20 @@ export default {
 
       // 需要在bindMethod之后
       const functionBody = getFunctionBody()
-
-      saveMethod?.({
-        name: state.bindMethodInfo.name,
+      const { name } = state.bindMethodInfo
+      const method = {
+        name,
         content: state.enableExtraParams
-          ? `function ${state.bindMethodInfo.name}(eventArgs,${formatParams}) ${functionBody}`
-          : `function ${state.bindMethodInfo.name}(${formatParams})  ${functionBody}`
-      })
+          ? `function ${name}(eventArgs,${formatParams}) ${functionBody}`
+          : `function ${name}(${formatParams})  ${functionBody}`
+      }
+      const { beforeSaveMethod } = getOptions(meta.id)
+
+      if (typeof beforeSaveMethod === 'function') {
+        await beforeSaveMethod(method, state.bindMethodInfo)
+      }
+
+      saveMethod?.(method)
 
       activePagePlugin()
       close()

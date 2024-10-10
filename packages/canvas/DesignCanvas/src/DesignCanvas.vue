@@ -5,7 +5,8 @@
         :is="CanvasContainer.entry"
         :controller="controller"
         :materials-panel="materialsPanel"
-        :canvas-src="canvasUrl"
+        :canvas-src="canvasSrc"
+        :canvas-src-doc="canvasSrcDoc"
         @remove="removeNode"
         @selected="nodeSelected"
       ></component>
@@ -26,13 +27,15 @@ import {
   useHistory,
   useModal,
   getMergeRegistry,
-  getMergeMeta
+  getMergeMeta,
+  getOptions
 } from '@opentiny/tiny-engine-meta-register'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { constants } from '@opentiny/tiny-engine-utils'
 import * as ast from '@opentiny/tiny-engine-common/js/ast'
 import { initCanvas } from '../../init-canvas/init-canvas'
 import { getImportMapData } from './importMap'
+import meta from '../meta'
 
 const { PAGE_STATUS } = constants
 
@@ -52,6 +55,13 @@ export default {
     const showMask = ref(true)
     const canvasRef = ref(null)
     let showModal = false // 弹窗标识
+    const { canvasSrc = '' } = getOptions(meta.id) || {}
+    let canvasSrcDoc = ''
+
+    if (!canvasSrc) {
+      const { importMap, importStyles } = getImportMapData(getMergeMeta('engine.config')?.importMapVersion)
+      canvasSrcDoc = initCanvas(importMap, importStyles)
+    }
 
     const removeNode = (node) => {
       const { pageState } = useCanvas()
@@ -158,12 +168,10 @@ export default {
       canvasResizeObserver?.disconnect?.()
     })
 
-    const { importMap, importStyles } = getImportMapData(getMergeMeta('engine.config')?.importMapVersion)
-    const { html: canvasUrl } = initCanvas(importMap, importStyles)
-
     return {
       removeNode,
-      canvasUrl,
+      canvasSrc,
+      canvasSrcDoc,
       nodeSelected,
       footData,
       materialsPanel,

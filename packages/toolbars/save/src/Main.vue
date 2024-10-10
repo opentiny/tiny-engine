@@ -65,6 +65,7 @@ import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import { openCommon, saveCommon } from './js/index'
 import { isLoading } from './js/index'
+
 export const api = {
   saveCommon,
   openCommon
