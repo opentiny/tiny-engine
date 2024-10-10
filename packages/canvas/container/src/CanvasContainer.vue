@@ -11,13 +11,14 @@
   <canvas-divider :selectState="selectState"></canvas-divider>
   <canvas-resize-border :iframe="iframe"></canvas-resize-border>
   <canvas-resize>
-    <iframe
-      v-if="!loading"
-      id="canvas"
-      ref="iframe"
-      :srcdoc="canvasSrc"
-      style="border: none; width: 100%; height: 100%"
-    ></iframe>
+    <template v-if="!loading">
+      <iframe
+        id="canvas"
+        ref="iframe"
+        :[srcAttrName]="canvasSrc || canvasSrcDoc"
+        style="border: none; width: 100%; height: 100%"
+      ></iframe>
+    </template>
     <div v-else class="datainit-tip">应用数据初始化中...</div>
   </canvas-resize>
   <canvas-menu @insert="insertComponent"></canvas-menu>
@@ -63,6 +64,7 @@ export default {
   props: {
     controller: Object,
     canvasSrc: String,
+    canvasSrcDoc: String,
     materialsPanel: Object
   },
   emits: ['selected', 'remove'],
@@ -73,6 +75,7 @@ export default {
     const loading = computed(() => useCanvas().isLoading())
     let showSettingModel = ref(false)
     let target = ref(null)
+    const srcAttrName = computed(() => (props.canvasSrc ? 'src' : 'srcdoc'))
 
     const setCurrentNode = async (event) => {
       const { clientX, clientY } = event
@@ -241,7 +244,8 @@ export default {
       target,
       showSettingModel,
       insertPosition,
-      loading
+      loading,
+      srcAttrName
     }
   }
 }
