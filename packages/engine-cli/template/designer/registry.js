@@ -14,8 +14,8 @@ import {
   Breadcrumb,
   Fullscreen,
   Lang,
-  Lock,
   Logo,
+  Lock,
   Media,
   Redoundo,
   Save,
@@ -24,7 +24,6 @@ import {
   GenerateCode,
   Refresh,
   Collaboration,
-  Setting,
   Materials,
   State,
   Script,
@@ -54,7 +53,28 @@ export default {
     metas: [EditorInfoService, AppService, GenerateCodeService]
   },
   config: engineConfig,
-  layout: Layout,
+  layout: {
+    ...Layout,
+    options: {
+      ...Layout.options,
+      isShowLine: true,
+      isShowCollapse: true,
+      toolbars: {
+        left: ['engine.toolbars.breadcrumb', 'engine.toolbars.lock', 'engine.toolbars.logo'],
+        center: ['engine.toolbars.media'],
+        right: [
+          ['engine.toolbars.redoundo', 'engine.toolbars.clean'],
+          ['engine.toolbars.preview'],
+          ['engine.toolbars.generate-code', 'engine.toolbars.save']
+        ],
+        collapse: [
+          ['engine.toolbars.collaboration'],
+          ['engine.toolbars.refresh', 'engine.toolbars.fullscreen'],
+          ['engine.toolbars.lang']
+        ]
+      }
+    }
+  },
   themes: [
     {
       id: 'engine.theme.light'
@@ -66,17 +86,16 @@ export default {
   toolbars: [
     Logo,
     Breadcrumb,
+    Lock,
     Media,
+    Redoundo,
     Collaboration,
     Clean,
-    Refresh,
-    Save,
-    GenerateCode,
     Preview,
-    Redoundo,
+    Refresh,
+    GenerateCode,
+    Save,
     Fullscreen,
-    Lock,
-    Setting,
     Lang
   ],
   plugins: [Materials, Tree, Page, Block, Datasource, Bridge, I18n, Script, State, Schema, Help, Robot],

@@ -107,9 +107,7 @@
 
     <template #footer>
       <div class="bind-dialog-footer">
-        <div class="left">
-          <tiny-button type="danger" plain @click="remove">移除绑定</tiny-button>
-        </div>
+        <tiny-button type="danger" plain @click="remove">移除绑定</tiny-button>
         <div class="right">
           <tiny-button @click="cancel">取 消</tiny-button>
           <tiny-button type="info" @click="confirm">确 定</tiny-button>

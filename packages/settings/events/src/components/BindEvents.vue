@@ -1,25 +1,14 @@
 <template>
   <div class="bind-action-list">
     <div class="popover-head">
-      <span class="head-left">
-        <tiny-button
-          class="title add-custom-event-button"
-          :reset-time="0"
-          @click.stop="handleToggleAddEventDialog(true)"
-        >
-          <span class="custom-event-button-text">添加自定义事件</span>
-          <tiny-popover placement="bottom-start" trigger="hover" popperClass="setting-advanced-add-custom-event-tip">
-            <template #reference>
-              <icon-help-query class="icon-help"></icon-help-query>
-            </template>
-            <div class="add-custom-event-tip">
-              支持添加原生 DOM 事件，添加后点击
-              <span class="event-tip-highlight"> 绑定事件 </span> 为画布中所选元素增加事件
-            </div>
-          </tiny-popover>
-        </tiny-button>
-      </span>
-      <tiny-popover popperClass="option-popper setting-advanced-bind-event-list" placement="bottom-end" trigger="hover">
+      <tiny-popover
+        popperClass="option-popper setting-advanced-bind-event-list"
+        placement="bottom-start"
+        trigger="hover"
+        class="bind-action-button-item"
+        width="256"
+        :visible-arrow="false"
+      >
         <template #reference>
           <tiny-button class="bind-event-btn">
             <span>绑定事件</span>
@@ -33,10 +22,17 @@
             :class="['bind-event-list-item', { 'bind-event-list-item-notallow': state.bindActions[name] }]"
             @click="openActionDialog({ eventName: name }, true)"
           >
-            <div>{{ name }}&nbsp;&nbsp;{{ event?.label?.zh_CN || name }}</div>
+            <div>{{ name }}&nbsp; | &nbsp;{{ event?.label?.zh_CN || name }}</div>
           </li>
         </ul>
       </tiny-popover>
+      <tiny-button
+        class="title add-custom-event-button bind-action-button-item"
+        @click="handleToggleAddEventDialog(true)"
+      >
+        <svg-icon name="add" class="custom-event-button-icon"></svg-icon>
+        <span class="custom-event-button-text">添加新事件</span>
+      </tiny-button>
     </div>
     <ul v-show="!isEmpty" class="bind-actions">
       <li v-for="action in state.bindActions" :key="action.eventName">
@@ -71,8 +67,7 @@
       <div class="icon">
         <svg-icon name="empty-action" class="empty-action-icon"></svg-icon>
       </div>
-      <div class="center">元素事件绑定</div>
-      <span class="text"> 点击 <span class="empty-bind-event-tip">绑定事件</span>为画布中所选元素增加事件</span>
+      <div class="center">支持添加原生DOM事件，然后点击 绑定事件 为画布所选元素增加事件</div>
     </div>
   </div>
   <bind-events-dialog :eventBinding="state.eventBinding"></bind-events-dialog>
@@ -98,7 +93,7 @@ import {
   META_APP
 } from '@opentiny/tiny-engine-meta-register'
 import { BlockLinkEvent, SvgButton } from '@opentiny/tiny-engine-common'
-import { iconHelpQuery, iconChevronDown } from '@opentiny/vue-icon'
+import { iconChevronDown } from '@opentiny/vue-icon'
 import BindEventsDialog, { open as openDialog } from './BindEventsDialog.vue'
 import AddEventsDialog from './AddEventsDialog.vue'
 
@@ -108,7 +103,6 @@ export default {
     BindEventsDialog,
     TinyPopover: Popover,
     TinyButton: Button,
-    IconHelpQuery: iconHelpQuery(),
     IconChevronDown: iconChevronDown(),
     SvgButton,
     AddEventsDialog
@@ -145,7 +139,6 @@ export default {
       const props = pageState?.currentSchema?.props || {}
       const keys = Object.keys(props)
       state.bindActions = {}
-
       // 遍历组件事件元数据
       Object.entries(state.componentEvents).forEach(([eventName, componentEvent]) => {
         // 查找组件已添加的事件
@@ -317,28 +310,42 @@ export default {
     display: flex;
     justify-content: space-between;
     margin-top: 12px;
-    .head-left {
-      margin-right: 8px;
-      .add-custom-event-button {
-        padding: 0 16px;
-        font-size: 12px;
-        .custom-event-button-text {
-          margin-right: 4px;
-        }
+    .bind-action-button-item {
+      width: 50%;
+      &:not(:last-child) {
+        margin-right: 8px;
+      }
+    }
+    .add-custom-event-button {
+      padding: 0 16px;
+      font-size: 12px;
+      margin-right: 0;
+      .custom-event-button-text {
+        display: inline-block;
+        vertical-align: middle;
+      }
+      .custom-event-button-icon {
+        display: inline-block;
+        vertical-align: middle;
+        color: var(--ti-lowcode-events-custom-icon-color);
+        font-size: 13px;
       }
     }
     .bind-event-btn {
       padding: 0 16px;
       font-size: 12px;
+      width: 100%;
     }
   }
   .empty-action {
     display: flex;
     flex-direction: column;
     align-items: center;
+    background-color: var(--ti-lowcode-events-empty-action-bg-color);
     color: var(--ti-lowcode-events-empty-action-color);
+    padding: 24px 18px;
+    margin-top: 8px;
     .empty-action-icon {
-      margin-top: 20px;
       font-size: 48px;
     }
     .icon {
@@ -358,6 +365,7 @@ export default {
   }
 }
 .bind-event-list {
+  padding: 8px 0;
   color: var(--ti-lowcode-events-bind-event-list-color);
 }
 .bind-event-list-item-notallow {
@@ -366,8 +374,8 @@ export default {
   color: var(--ti-lowcode-events-bind-event-list-item-disabled-color);
 }
 .bind-event-list-item {
-  padding: 8px 12px;
-
+  padding: 0 12px;
+  line-height: 24px;
   &:hover {
     cursor: pointer;
     background: var(--lowcode-events-bind-event-list-item-hover-bg-color);
