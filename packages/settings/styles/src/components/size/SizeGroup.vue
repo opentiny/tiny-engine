@@ -5,7 +5,7 @@
         :class="['size-label', { 'is-setting': getSettingFlag(SIZE_PROPERTY.Width) }]"
         @click="openSetting(SIZE_PROPERTY.Width, $event)"
       >
-        宽(W)
+        <span>宽度</span>
       </div>
       <numeric-select
         :name="getProperty(SIZE_PROPERTY.Width).name"
@@ -18,7 +18,7 @@
         :class="['size-label', { 'is-setting': getSettingFlag(SIZE_PROPERTY.Height) }]"
         @click="openSetting(SIZE_PROPERTY.Height, $event)"
       >
-        高(H)
+        <span>高度</span>
       </div>
       <numeric-select
         :name="getProperty(SIZE_PROPERTY.Height).name"
@@ -33,7 +33,7 @@
         :class="['size-label', { 'is-setting': getSettingFlag(SIZE_PROPERTY.MinWidth) }]"
         @click="openSetting(SIZE_PROPERTY.MinWidth, $event)"
       >
-        最小宽
+        <span>最小宽</span>
       </div>
       <numeric-select
         :name="getProperty(SIZE_PROPERTY.MinWidth).name"
@@ -46,7 +46,7 @@
         :class="['size-label', { 'is-setting': getSettingFlag(SIZE_PROPERTY.MinHeight) }]"
         @click="openSetting(SIZE_PROPERTY.MinHeight, $event)"
       >
-        最小高
+        <span>最小高</span>
       </div>
       <numeric-select
         :name="getProperty(SIZE_PROPERTY.MinHeight).name"
@@ -61,7 +61,7 @@
         :class="['size-label', { 'is-setting': getSettingFlag(SIZE_PROPERTY.MaxWidth) }]"
         @click="openSetting(SIZE_PROPERTY.MaxWidth, $event)"
       >
-        最大宽
+        <span>最大宽</span>
       </div>
       <numeric-select
         :name="getProperty(SIZE_PROPERTY.MaxWidth).name"
@@ -74,7 +74,7 @@
         :class="['size-label', { 'is-setting': getSettingFlag(SIZE_PROPERTY.MaxHeight) }]"
         @click="openSetting(SIZE_PROPERTY.MaxHeight, $event)"
       >
-        最大高
+        <span>最大高</span>
       </div>
       <numeric-select
         :name="getProperty(SIZE_PROPERTY.MaxHeight).name"
@@ -103,11 +103,14 @@
 
   <div class="fit-row">
     <div
-      :class="['fit-label', { 'is-setting': getSettingFlag(SIZE_PROPERTY.ObjectFit) }]"
+      :class="[
+        'fit-label',
+        { 'is-setting': getSettingFlag(SIZE_PROPERTY.ObjectFit), selected: state.value !== 'object-fit:fill' }
+      ]"
       title="object-fit"
       @click="openSetting(SIZE_PROPERTY.ObjectFit, $event)"
     >
-      适应
+      <span>适应</span>
     </div>
     <div class="fit-select">
       <select-configurator
@@ -443,9 +446,13 @@ export default {
 </script>
 
 <style lang="less" scoped>
+span {
+  padding: 2px;
+}
 .size-row {
   display: flex;
   margin-bottom: 8px;
+
   &:last-child {
     margin-bottom: 0;
   }
@@ -478,18 +485,17 @@ export default {
     flex: 0 0 54px;
     padding: 0 2px;
     line-height: 24px;
-    span {
-      cursor: pointer;
-      padding: 2px;
-    }
-    &.selected {
-      span {
-        color: var(--ti-lowcode-style-setting-label-color);
-        background-color: var(--ti-lowcode-style-setting-label-bg);
-      }
-    }
   }
 }
+
+.is-setting {
+  span {
+    cursor: pointer;
+    color: var(--ti-lowcode-style-setting-label-color);
+    background-color: var(--ti-lowcode-style-setting-label-bg);
+  }
+}
+
 .size-fit-content {
   display: block;
   padding: 10px;
@@ -533,6 +539,16 @@ export default {
     flex: 0 0 54px;
     padding: 0 2px;
     line-height: 28px;
+    span {
+      padding: 2px;
+    }
+    &.selected {
+      span {
+        cursor: pointer;
+        color: var(--ti-lowcode-style-setting-label-color);
+        background-color: var(--ti-lowcode-style-setting-label-bg);
+      }
+    }
   }
   .more-icon-wrap {
     display: flex;
