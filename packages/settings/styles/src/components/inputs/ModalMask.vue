@@ -1,9 +1,9 @@
 <template>
-  <teleport to=".tiny-engine-right-wrap">
+  <teleport :to="teleport">
     <div class="modal-wrapper">
-      <div class="modal-mask" @click="$emit('close')"></div>
+      <div :class="[isAlignBody ? '' : 'modal-mask']" @click="$emit('close')"></div>
 
-      <div :style="{ top: modal.top - 30 + 'px' }" class="modal-content">
+      <div :style="{ top: topStyle + 'px' }" :class="['modal-content', { 'align-body': isAlignBody }]">
         <slot></slot>
       </div>
     </div>
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 
 const modal = reactive({
   left: 0,
@@ -38,9 +38,29 @@ export const useModal = () => {
 }
 
 export default {
-  setup() {
+  props: {
+    teleport: {
+      type: String,
+      default: '.tiny-engine-right-wrap'
+    }
+  },
+  setup(props) {
+    const isAlignBody = ref(props.teleport === 'body')
+    const topStyle = ref(0)
+
+    onMounted(() => {
+      if (isAlignBody.value) {
+        const modalContentEle = document.querySelector('.modal-content')
+        topStyle.value = modal.top < modalContentEle.offsetHeight ? 40 : modal.top - modalContentEle.offsetHeight + 40
+      } else {
+        topStyle.value = modal.top - 34
+      }
+    })
+
     return {
-      modal
+      modal,
+      topStyle,
+      isAlignBody
     }
   }
 }
@@ -55,14 +75,14 @@ export default {
     bottom: 0;
     left: 0;
     background: rgba(0, 0, 0, 0.2);
-    z-index: 9999;
+    z-index: 999;
   }
 
   .modal-content {
     position: absolute;
     top: 0;
     left: 16px;
-    z-index: 10000;
+    z-index: 1000;
     padding: 8px;
     color: var(--ti-lowcode-toolbar-breadcrumb-color);
     border: 1px solid var(--ti-lowcode-tabs-border-color);
@@ -72,6 +92,11 @@ export default {
     overflow: auto;
     max-height: 100%;
     box-sizing: border-box;
+  }
+
+  .align-body {
+    right: 280px;
+    left: calc(100% - 287px - 280px);
   }
 }
 </style>
