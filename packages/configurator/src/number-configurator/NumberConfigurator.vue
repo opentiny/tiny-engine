@@ -181,6 +181,9 @@ export default {
     }
   }
   .meta-numeric-unit {
+    position: absolute;
+    top: 2px;
+    height: 22px;
     span {
       color: var(--ti-lowcode-numeric-unit-text-color);
       font-size: 14px;
@@ -188,8 +191,8 @@ export default {
     }
     :deep(.tiny-select) {
       width: 100%;
-      float: right;
       .tiny-input__inner {
+        height: 100%;
         color: var(--ti-lowcode-numeric-unit-text-color);
         padding: 2px;
         border: none;
