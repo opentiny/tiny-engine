@@ -6,9 +6,20 @@
       @focus="focus = true"
       @blur="focus = false"
       @change="change"
+      @input="input"
     >
       <template #suffix>
-        <span class="suffix">{{ numericalSuffix }}</span>
+        <div class="suffix-wrap">
+          <div class="add-substact-wrap">
+            <div>
+              <svg-icon name="down-arrow" @click="changeNumber()"></svg-icon>
+            </div>
+            <div>
+              <svg-icon name="down-arrow" @click="changeNumber(false)"></svg-icon>
+            </div>
+          </div>
+          <span class="suffix-text">{{ numericalSuffix }}</span>
+        </div>
       </template>
     </tiny-input>
   </div>
@@ -64,10 +75,16 @@ export default {
 
     const focus = ref(false)
 
-    const change = (value) => {
+    const input = (value) => {
+      if (!/^\d+$/.test(value.data)) {
+        numericalModelValue.value = numericalModelValue.value.slice(0, -1)
+      }
+    }
+
+    const change = () => {
       focus.value = false
 
-      if (value.trim().length === 0) {
+      if (numericalModelValue.value.trim().length === 0) {
         emit('update', { [props.name]: null })
       }
 
@@ -83,10 +100,19 @@ export default {
       })
     }
 
+    const changeNumber = (isAdd = true) => {
+      let resNumber = parseInt(numericalModelValue.value, 10) || 0
+      resNumber += isAdd ? 1 : -1
+      numericalModelValue.value = `${resNumber < 0 ? 0 : resNumber}`
+      change()
+    }
+
     return {
       numericalModelValue,
       numericalSuffix,
       focus,
+      input,
+      changeNumber,
       change
     }
   }
@@ -101,12 +127,55 @@ export default {
   border-radius: 3px;
   transition: 0.3s;
   &.focus {
-    border-color: var(--ti-lowcode-canvas-handle-hover-bg);
+    border-color: var(--te-common-border-default);
   }
+  .suffix-wrap {
+    .add-substact-wrap {
+      height: 23px;
+      width: 16px;
+      margin-right: -3px;
+      border-left: 1px solid var(--te-common-border-default);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-radius: 0 4px 4px 0;
+      display: none;
 
-  .suffix {
-    font-size: 12px;
-    color: var(--ti-lowcode-text-color);
+      div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        .svg-icon {
+          height: 11px;
+        }
+
+        &:active {
+          background-color: var(--te-common-border-default);
+        }
+
+        &:first-child {
+          border-bottom: 1px solid var(--te-common-border-default);
+          .svg-icon {
+            transform: scaleY(-1);
+          }
+        }
+      }
+    }
+
+    .suffix-text {
+      font-size: 12px;
+      color: var(--ti-lowcode-text-color);
+    }
+
+    &:hover {
+      .suffix-text {
+        display: none;
+      }
+      .add-substact-wrap {
+        display: flex;
+      }
+    }
   }
 
   :deep(.tiny-input-suffix) {
