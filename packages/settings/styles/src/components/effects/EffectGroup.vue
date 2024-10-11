@@ -3,8 +3,9 @@
     <label
       :class="['opacity-label', { 'is-setting': getSettingFlag(EFFECTS_PROPERTY.Opacity) }]"
       @click="openSetting(EFFECTS_PROPERTY.Opacity, $event)"
-      >透明度</label
     >
+      <span>透明度</span>
+    </label>
     <div>
       <slider-configurator
         :modelValue="state.opacity"
@@ -20,7 +21,7 @@
       :class="['outline-label', { 'is-setting': getSettingFlag(EFFECTS_PROPERTY.Outline) }]"
       @click="openSetting(EFFECTS_PROPERTY.Outline, $event)"
     >
-      轮廓
+      <span>轮廓</span>
     </label>
     <div class="outline-content">
       <tiny-tooltip effect="dark" placement="top" content="none-无">
@@ -85,8 +86,9 @@
     <label
       :class="['cursor-label', { 'is-setting': getSettingFlag(EFFECTS_PROPERTY.Cursor) }]"
       @click="openSetting(EFFECTS_PROPERTY.Cursor, $event)"
-      >光标</label
     >
+      <span>光标</span>
+    </label>
     <div>
       <tiny-select v-model="state.cursorValue" placeholder="请选择" @change="cursorChange">
         <tiny-option-group
@@ -520,6 +522,9 @@ export default {
   grid-template-columns: 44px auto;
   align-items: center;
   margin-bottom: 8px;
+  span {
+    padding: 2px;
+  }
   &:last-child {
     margin-bottom: 0;
   }
@@ -530,8 +535,11 @@ export default {
   }
 
   .is-setting {
-    color: var(--ti-lowcode-style-setting-label-color);
-    background-color: var(--ti-lowcode-style-setting-label-bg);
+    span {
+      cursor: pointer;
+      color: var(--ti-lowcode-style-setting-label-color);
+      background-color: var(--ti-lowcode-style-setting-label-bg);
+    }
   }
 
   :deep(.slider-container) {
@@ -573,6 +581,10 @@ export default {
       gap: 8px;
       align-items: center;
       margin-top: 8px;
+    }
+
+    label {
+      padding-left: 2px;
     }
   }
 }
