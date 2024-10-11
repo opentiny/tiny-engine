@@ -5,8 +5,9 @@
         <label
           :class="['background-label', { 'is-setting': getSettingFlag(BACKGROUND_PROPERTY.BackgroundImage) }]"
           @click="openSetting(BACKGROUND_PROPERTY.BackgroundImage, $event)"
-          >背景图 & 渐变</label
         >
+          <span>背景图 & 渐变</span>
+        </label>
         <tiny-tooltip effect="dark" placement="top" content="添加背景图，线性渐变，径向渐变等">
           <div class="background-image-icon" @click="openBackgroundImageModal($event, { isAdd: true })">
             <icon-plus></icon-plus>
@@ -50,16 +51,18 @@
       <label
         :class="['background-label', { 'is-setting': getSettingFlag(BACKGROUND_PROPERTY.BackgroundColor) }]"
         @click="openSetting(BACKGROUND_PROPERTY.BackgroundColor, $event)"
-        >颜色</label
       >
+        <span>颜色</span>
+      </label>
       <color-configurator :modelValue="getProperty(BACKGROUND_PROPERTY.BackgroundColor).value" @change="changeColor" />
     </div>
     <div class="background-clip">
       <label
         :class="['background-label', { 'is-setting': getSettingFlag(BACKGROUND_PROPERTY.BackgroundClip) }]"
         @click="openSetting(BACKGROUND_PROPERTY.BackgroundClip, $event)"
-        >裁剪</label
       >
+        <span>裁剪</span>
+      </label>
       <div class="position-select">
         <select-configurator
           :modelValue="state.selectValue"
@@ -72,7 +75,11 @@
   <modal-mask v-if="state.showModal" @close="state.showModal = false">
     <reset-button @reset="reset" />
   </modal-mask>
-  <modal-mask v-if="state.showBackgroundImageModal" @close="state.showBackgroundImageModal = false">
+  <modal-mask v-if="state.showBackgroundImageModal" teleport="body">
+    <div class="background-model-title">
+      <span>背景图 & 渐变设置</span>
+      <svg-icon name="close" @click="state.showBackgroundImageModal = false"></svg-icon>
+    </div>
     <background-image-setting
       :style="state.currentBackgroundImage"
       @update:modelValue="updateCurrentBackground"
@@ -384,8 +391,12 @@ export default {
 .background-group {
   display: grid;
   gap: 8px;
-  grid-template-columns: 48px auto auto;
+  grid-template-columns: 35px auto auto;
   align-items: center;
+  position: relative;
+  span {
+    padding: 2px;
+  }
   .background-label {
     color: var(--ti-lowcode-component-setting-panel-label-color);
   }
@@ -395,7 +406,7 @@ export default {
     display: grid;
     gap: 8px;
     grid-column: 1 / -1;
-    grid-template-columns: 48px 1fr;
+    grid-template-columns: 35px 1fr;
   }
 
   .background-image-wrap {
@@ -543,8 +554,26 @@ export default {
   }
 
   .is-setting {
-    color: var(--ti-lowcode-style-setting-label-color);
-    background-color: var(--ti-lowcode-style-setting-label-bg);
+    span {
+      cursor: pointer;
+      color: var(--ti-lowcode-style-setting-label-color);
+      background-color: var(--ti-lowcode-style-setting-label-bg);
+    }
+  }
+}
+
+.background-model-title {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+
+  span {
+    color: #191919;
+    font-weight: 600;
+  }
+
+  .svg-icon {
+    cursor: pointer;
   }
 }
 </style>
