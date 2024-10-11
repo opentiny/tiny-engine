@@ -1,26 +1,19 @@
 <template>
-  <span v-if="!state.isGuest">
-    <tiny-popover
-      trigger="hover"
-      :open-delay="1000"
-      popper-class="toolbar-right-popover"
-      append-to-body
-      :content="statusMessageMap[state.status]?.nextOptName"
-    >
-      <template #reference>
-        <span class="icon">
-          <svg-icon :name="iconName" @click="lockOrUnlock"></svg-icon>
-        </span>
-      </template>
-    </tiny-popover>
-  </span>
+  <toolbar-base
+    v-if="!state.isGuest"
+    :icon="iconName"
+    :content="statusMessageMap[state.status]?.nextOptName"
+    :options="options"
+    @click-api="lockOrUnlock"
+  >
+  </toolbar-base>
 </template>
 
 <script>
 import { computed, reactive } from 'vue'
 import { useCanvas, useLayout, useBlock, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { Popover } from '@opentiny/vue'
+import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import { requestBlockPage } from './http'
 
 const { COMPONENT_NAME, PAGE_STATUS } = constants
@@ -50,9 +43,15 @@ const statusMessageMap = {
 
 export default {
   components: {
-    TinyPopover: Popover
+    ToolbarBase
   },
-  setup() {
+  props: {
+    options: {
+      type: Object,
+      default: () => ({})
+    }
+  },
+  setup(props) {
     const { pageState } = useCanvas()
     const { layoutState } = useLayout()
     const { getCurrentBlock } = useBlock()
@@ -67,11 +66,11 @@ export default {
     const iconName = computed(() => {
       switch (state.status) {
         case PAGE_STATUS.Occupy:
-          return 'locked'
+          return props.options.icon.locked
         case PAGE_STATUS.Lock:
-          return 'user-locked'
+          return props.options.icon.userLocked
         default:
-          return 'unlocked'
+          return props.options.icon.unlocked
       }
     })
 

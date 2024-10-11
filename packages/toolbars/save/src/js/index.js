@@ -17,11 +17,13 @@ import {
   useLayout,
   useNotify,
   usePage,
+  getOptions,
   getMetaApi,
   META_APP
 } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { handlePageUpdate } from '@opentiny/tiny-engine-common/js/http'
+import meta from '../../meta'
 
 const { PAGE_STATUS } = constants
 const state = reactive({
@@ -95,6 +97,27 @@ export const openCommon = async () => {
     return
   }
 
+  const { beforeSave, saveMethod, saved } = getOptions(meta.id)
+
+  try {
+    if (typeof beforeSave === 'function') {
+      await beforeSave()
+    }
+
+    if (typeof saveMethod === 'function') {
+      const stop = await saveMethod()
+
+      if (stop) {
+        return
+      }
+    }
+  } catch (error) {
+    useNotify({
+      type: 'error',
+      message: `Error in saving: ${error}`
+    })
+  }
+
   const pageStatus = useLayout().layoutState?.pageStatus
   const curPageState = pageStatus?.state
   const pageInfo = pageStatus?.data
@@ -138,5 +161,16 @@ export const openCommon = async () => {
 
   saveCommon(state.code).finally(() => {
     state.disabled = false
+
+    if (typeof saved === 'function') {
+      try {
+        saved()
+      } catch (error) {
+        useNotify({
+          type: 'error',
+          message: `Error in saved: ${error}`
+        })
+      }
+    }
   })
 }

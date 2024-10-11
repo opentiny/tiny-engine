@@ -1,20 +1,30 @@
 <template>
   <div class="tiny-engine-toolbar">
     <div class="toolbar-left">
-      <component :is="getMergeMeta(comp).entry" v-for="comp in state.leftBar" :key="comp"></component>
+      <component
+        :is="getMergeMeta(comp).entry"
+        v-for="comp in state.leftBar"
+        :key="comp"
+        :options="getMergeMeta(comp).options"
+      ></component>
     </div>
     <div class="toolbar-center">
-      <component :is="getMergeMeta(comp).entry" v-for="comp in state.centerBar" :key="comp"></component>
+      <component
+        :is="getMergeMeta(comp).entry"
+        v-for="comp in state.centerBar"
+        :key="comp"
+        :options="getMergeMeta(comp).options"
+      ></component>
     </div>
     <div class="toolbar-right">
       <div class="toolbar-right-content">
         <div class="toolbar-right-item" v-for="(item, idx) in state.rightBar" :key="idx">
           <div v-if="typeof item === 'string'">
-            <component :is="getMergeMeta(item)?.entry"></component>
+            <component :is="getMergeMeta(item)?.entry" :options="getMergeMeta(item)?.options"></component>
           </div>
           <div class="toolbar-right-item-arr" v-if="Array.isArray(item)">
             <div class="toolbar-right-item-comp" v-for="comp in item" :key="comp">
-              <component :is="getMergeMeta(comp)?.entry"></component>
+              <component :is="getMergeMeta(comp)?.entry" :options="getMergeMeta(comp)?.options"></component>
             </div>
             <span class="toolbar-right-line" v-if="layoutRegistry.options?.isShowLine">|</span>
           </div>
@@ -94,6 +104,7 @@ export default {
   }
 
   .toolbar-left,
+  .toolbar-center,
   .toolbar-right {
     :deep(.icon) {
       display: inline-flex;
