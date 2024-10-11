@@ -133,7 +133,7 @@ export default {
     padding: 0;
     cursor: pointer;
     border: 0;
-    background: -webkit-linear-gradient(#fff, #fff) no-repeat #999999;
+    background: -webkit-linear-gradient(#fff, #fff) no-repeat #ccc;
     background-size: 0% 100%;
     position: relative;
     outline: 0;
