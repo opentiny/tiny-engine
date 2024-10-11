@@ -1,24 +1,15 @@
 <template>
-  <position-origin class="background-row line" @update="updatePositionOrigin"></position-origin>
+  <position-origin class="background-row line" :is-top="true" @update="updatePositionOrigin"></position-origin>
   <div class="background-row line">
     <label class="row-label">Size</label>
-    <div class="row-content">
-      <tiny-tooltip
-        v-for="item in RADIAL_SIZE_LIST"
-        :key="item.tip"
-        :effect="effect"
-        :placement="placement"
-        :content="item.tip"
-        popper-class="background-type-tooltip"
-      >
-        <div
-          :class="['row-content-item', { selected: state.radialSize === item.value }]"
-          @click="selectRadialSize(item)"
-        >
-          <svg-icon :name="item.icon"></svg-icon>
-        </div>
-      </tiny-tooltip>
-    </div>
+    <tabs-group-configurator
+      :options="RADIAL_SIZE_LIST"
+      :value="state.radialSize"
+      :label-width="52"
+      :effect="effect"
+      :placement="placement"
+      @update:modelValue="selectRadialSize"
+    ></tabs-group-configurator>
   </div>
   <background-image-gradient
     :repeat="state.repeat"
@@ -29,7 +20,7 @@
 
 <script setup>
 import { reactive, defineProps, defineEmits, onMounted } from 'vue'
-import { Tooltip as TinyTooltip } from '@opentiny/vue'
+import { TabsGroupConfigurator } from '@opentiny/tiny-engine-configurator'
 import PositionOrigin from './PositionOrigin.vue'
 import BackgroundImageGradient from './BackgroundImageGradient.vue'
 import { BACKGROUND_PROPERTY, RADIAL_SIZE_LIST } from '../../js/styleProperty'
@@ -68,8 +59,8 @@ const updateStyle = () => {
   emit('updateStyle', property)
 }
 
-const selectRadialSize = (item) => {
-  state.radialSize = item.value
+const selectRadialSize = (value) => {
+  state.radialSize = value
   updateStyle()
 }
 
