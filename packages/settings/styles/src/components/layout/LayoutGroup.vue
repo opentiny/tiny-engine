@@ -90,20 +90,23 @@ export default {
       {
         value: DISPLAY_TYPE.Grid,
         label: DISPLAY_TEXT.Grid,
-        children: [
-          {
-            value: DISPLAY_TYPE.InlineBlock,
-            label: DISPLAY_TEXT.InlineBlock
-          },
-          {
-            value: DISPLAY_TYPE.Inline,
-            label: DISPLAY_TEXT.Inline
-          },
-          {
-            value: DISPLAY_TYPE.Invisible,
-            label: DISPLAY_TEXT.Invisible
-          }
-        ]
+        collapsed: true
+      },
+
+      {
+        value: DISPLAY_TYPE.InlineBlock,
+        label: DISPLAY_TEXT.InlineBlock,
+        collapsed: true
+      },
+      {
+        value: DISPLAY_TYPE.Inline,
+        label: DISPLAY_TEXT.Inline,
+        collapsed: true
+      },
+      {
+        value: DISPLAY_TYPE.Invisible,
+        label: DISPLAY_TEXT.Invisible,
+        collapsed: true
       }
     ])
 
@@ -130,11 +133,11 @@ export default {
     line-height: 24px;
 
     span {
-      cursor: pointer;
       padding: 2px;
     }
     &.selected {
       span {
+        cursor: pointer;
         color: var(--ti-lowcode-style-setting-label-color);
         background-color: var(--ti-lowcode-style-setting-label-bg);
       }
