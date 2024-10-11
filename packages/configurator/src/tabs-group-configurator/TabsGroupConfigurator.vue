@@ -1,14 +1,14 @@
 <template>
   <div class="tab-container">
     <div
-      v-for="(item, index) in options"
+      v-for="(item, index) in commonOptions"
       :key="item.label"
-      :class="['tab-item', { selected: picked === item.value }]"
-      :style="{ width: getItemWidth(item) + 'px' }"
+      :class="['tab-item', { selected: picked === (valueKey ? item.value[valueKey] : item.value) }]"
+      :style="{ width: getItemWidth(index === commonOptions.length - 1) + 'px' }"
       @click.stop="change(item.value)"
     >
-      <span :class="['label-text', index < options.length - 1 ? 'border-right' : '']">
-        <span v-if="item.label">{{ item.label }}</span>
+      <span :class="['label-text', index < commonOptions.length - 1 ? 'border-right' : '']">
+        <span v-if="item?.label">{{ item.label }}</span>
         <tiny-popover
           v-if="item?.icon"
           :effect="effect"
@@ -18,32 +18,33 @@
           trigger="hover"
         >
           <template #reference>
-            <svg-icon v-if="item.icon" :name="item.icon"></svg-icon>
+            <svg-icon v-if="item.icon" :name="item.icon" class="bem-Svg"></svg-icon>
           </template>
         </tiny-popover>
         <tiny-popover
-          v-if="item.children"
+          v-if="index === commonOptions.length - 1"
           v-model="showMore"
           placement="bottom-start"
           :visible-arrow="false"
-          :width="getItemWidth(item)"
+          :width="getItemWidth(true)"
           trigger="manual"
         >
           <template #reference>
             <svg-icon
               name="down-arrow"
+              class="bem-Svg"
               color="var(--ti-lowcode-base-default-button-border-disable-color)"
               @click.stop="showMore = !showMore"
             ></svg-icon>
           </template>
           <div
-            v-for="collapseItem in item.children"
-            :class="['collapse-item', picked === item.value ? 'active-tab' : '']"
-            :key="collapseItem.label"
-            @click.stop="change(collapseItem.value)"
+            v-for="foldsItem in foldsOptions"
+            class="collapse-item"
+            :key="foldsItem.label"
+            @click.stop="change(foldsItem.value)"
           >
-            <span v-if="collapseItem.label">{{ collapseItem.label }}</span>
-            <svg-icon v-if="collapseItem.icon" :name="collapseItem.icon"></svg-icon>
+            <span v-if="foldsItem.label">{{ foldsItem.label }}</span>
+            <svg-icon v-if="foldsItem.icon" :name="foldsItem.icon" class="bem-Svg"></svg-icon>
           </div>
         </tiny-popover>
       </span>
@@ -51,7 +52,7 @@
   </div>
 </template>
 <script>
-import { ref, computed } from 'vue'
+import { ref, watch } from 'vue'
 import { Popover } from '@opentiny/vue'
 
 export default {
@@ -60,6 +61,10 @@ export default {
   },
   props: {
     value: {
+      type: String,
+      default: ''
+    },
+    valueKey: {
       type: String,
       default: ''
     },
@@ -73,7 +78,7 @@ export default {
     },
     labelWidth: {
       type: String,
-      default: '64'
+      default: '60'
     },
     options: {
       type: Array,
@@ -82,18 +87,60 @@ export default {
   },
   emits: ['update:modelValue'],
   setup(props, { emit }) {
-    const picked = computed(() => props.value)
+    const picked = ref()
+    const uncollapsedOptions = ref(props.options.filter((option) => !option.collapsed))
+    const collapsedOptions = ref(props.options.filter((option) => option.collapsed))
+    const commonOptions = ref(
+      collapsedOptions.value.length
+        ? [...uncollapsedOptions.value, collapsedOptions.value[0]]
+        : uncollapsedOptions.value
+    )
+    const foldsOptions = ref(
+      collapsedOptions.value.length <= 1 ? [] : collapsedOptions.value.filter((item, index) => index > 0)
+    )
     const showMore = ref(false)
 
-    const getItemWidth = (item) => {
-      return `${parseInt(props.labelWidth, 10) + (item.children ? 20 : 0)}`
+    const getItemWidth = (collapsed = false) => {
+      return `${parseInt(props.labelWidth, 10) + (collapsed ? 20 : 0)}`
     }
 
+    watch(
+      () => props.value,
+      (value) => {
+        picked.value = value
+        if (collapsedOptions.value.length === 0) {
+          return
+        }
+        if (!value) {
+          commonOptions.value = [...uncollapsedOptions.value, collapsedOptions.value[0]]
+          foldsOptions.value = collapsedOptions.value.filter((item, index) => index > 0)
+        } else {
+          const isFoldsValue = foldsOptions.value.find((item) =>
+            props.valueKey ? item.value[props.valueKey] === value : item.value === value
+          )
+          if (isFoldsValue) {
+            commonOptions.value[commonOptions.value.length - 1] = isFoldsValue
+            foldsOptions.value = collapsedOptions.value.filter((item) =>
+              props.valueKey ? item.value[props.valueKey] !== value : item.value !== value
+            )
+          }
+        }
+      },
+      { immediate: true }
+    )
+
     const change = (val) => {
+      if (picked.value === val) {
+        return
+      }
       emit('update:modelValue', val)
+      showMore.value = false
     }
+
     return {
       picked,
+      commonOptions,
+      foldsOptions,
       showMore,
       getItemWidth,
       change
@@ -104,7 +151,7 @@ export default {
 
 <style scoped lang="less">
 .tab-container {
-  width: 210px;
+  max-width: 210px;
   height: 24px;
   font-size: 12px;
   background-color: #f6f6f6;
@@ -118,8 +165,11 @@ export default {
     .label-text {
       width: 100%;
       height: 16px;
-    }
 
+      .bem-Svg {
+        margin-top: -3px;
+      }
+    }
     &.selected {
       background-color: var(--ti-lowcode-base-gray-101);
       border-radius: 4px;
