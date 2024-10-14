@@ -7,10 +7,11 @@ export default defineConfig((configEnv) => {
     viteConfigEnv: configEnv,
     root: __dirname,
     iconDirs: [path.resolve(__dirname, './node_modules/@opentiny/tiny-engine/assets/')],
+    useSourceAlias: true,
     envDir: './env'
   })
 
-  const config = {
+  const customConfig = {
     envDir: './env',
     publicDir: path.resolve(__dirname, './public'),
     server: {
@@ -18,5 +19,5 @@ export default defineConfig((configEnv) => {
     }
   }
 
-  return mergeConfig(baseConfig, config)
+  return mergeConfig(baseConfig, customConfig)
 })

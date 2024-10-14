@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-toolbar-refresh",
-  "version": "2.0.0-alpha.2",
+  "version": "2.0.0-alpha.3",
   "publishConfig": {
     "access": "public"
   },
@@ -25,8 +25,8 @@
   "license": "MIT",
   "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
-    "@opentiny/tiny-engine-meta-register": "workspace:*",
-    "@opentiny/tiny-engine-common": "workspace:*"
+    "@opentiny/tiny-engine-common": "workspace:*",
+    "@opentiny/tiny-engine-meta-register": "workspace:*"
   },
   "devDependencies": {
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
