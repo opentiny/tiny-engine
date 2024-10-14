@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import { ref, watch } from 'vue'
+import { computed, watch } from 'vue'
 import { Collapse, CollapseItem, Input } from '@opentiny/vue'
 import { useHistory, useCanvas, useProperties } from '@opentiny/tiny-engine-meta-register'
 import { CodeConfigurator, VariableConfigurator } from '@opentiny/tiny-engine-configurator'
@@ -105,17 +105,18 @@ export default {
     TinyInput: Input,
     VariableConfigurator
   },
-  setup() {
-    const activeNames = ref([
-      'layout',
-      'spacing',
-      'size',
-      'position',
-      'typography',
-      'backgrounds',
-      'borders',
-      'effects'
-    ])
+  props: {
+    isCollapsed: {
+      type: Boolean,
+      default: false
+    }
+  },
+  setup(props) {
+    const activeNames = computed(() =>
+      props.isCollapsed
+        ? []
+        : ['layout', 'spacing', 'size', 'position', 'typography', 'backgrounds', 'borders', 'effects']
+    )
     const { getCurrentSchema } = useCanvas()
     // 获取当前节点 style 对象
     const { state, updateStyle } = useStyle() // updateStyle
@@ -245,5 +246,13 @@ export default {
       }
     }
   }
+}
+
+.dots {
+  display: inline-block;
+  margin-left: 4px;
+  vertical-align: middle;
+  border: 2px solid #1476ff;
+  border-radius: 2px;
 }
 </style>
