@@ -1,0 +1,37 @@
+{
+  "name": "@opentiny/tiny-engine-materials",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "node buildMaterials.mjs serve",
+    "build": "node buildMaterials.mjs build",
+    "build:split": "node buildMaterials.mjs build:split"
+  },
+  "keywords": [],
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/opentiny/tiny-engine",
+    "directory": "packages/materials"
+  },
+  "bugs": {
+    "url": "https://github.com/opentiny/tiny-engine/issues"
+  },
+  "author": "OpenTiny Team",
+  "license": "MIT",
+  "homepage": "https://opentiny.design/tiny-engine",
+  "devDependencies": {
+    "chokidar": "^3.5.3",
+    "fast-glob": "^3.3.2",
+    "fs-extra": "^11.2.0",
+    "http-server": "^14.1.1",
+    "portfinder": "^1.0.32"
+  }
+}

@@ -1,0 +1,342 @@
+{
+  "id": 1,
+  "version": "2.4.2",
+  "name": {
+    "zh_CN": "按钮"
+  },
+  "component": "ElButton",
+  "icon": "button",
+  "description": "常用的操作按钮",
+  "doc_url": "",
+  "screenshot": "",
+  "tags": "",
+  "keywords": "",
+  "dev_mode": "proCode",
+  "npm": {
+    "package": "element-plus",
+    "version": "2.4.2",
+    "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
+    "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
+    "dependencies": null,
+    "exportName": "ElButton",
+    "destructuring": true
+  },
+  "group": "基础组件",
+  "category": "element-plus",
+  "configure": {
+    "loop": true,
+    "condition": true,
+    "styles": true,
+    "isContainer": true,
+    "isModal": false,
+    "isPopper": false,
+    "nestingRule": {
+      "childWhitelist": "",
+      "parentWhitelist": "",
+      "descendantBlacklist": "",
+      "ancestorWhitelist": ""
+    },
+    "isNullNode": false,
+    "isLayout": false,
+    "rootSelector": "",
+    "shortcuts": {
+      "properties": ["type", "size"]
+    },
+    "contextMenu": {
+      "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+      "disable": []
+    },
+    "invalidity": [""],
+    "clickCapture": true,
+    "framework": "Vue"
+  },
+  "schema": {
+    "properties": [
+      {
+        "name": "0",
+        "label": {
+          "zh_CN": "基础属性"
+        },
+        "content": [
+          {
+            "property": "size",
+            "label": {
+              "text": {
+                "zh_CN": "size"
+              }
+            },
+            "description": {
+              "zh_CN": "尺寸"
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "labelPosition": "top",
+            "type": "string",
+            "defaultValue": "default",
+            "widget": {
+              "component": "MetaSelect",
+              "props": {
+                "options": [
+                  {
+                    "label": "large",
+                    "value": "large"
+                  },
+                  {
+                    "label": "default",
+                    "value": "default"
+                  },
+                  {
+                    "label": "small",
+                    "value": "small"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "property": "type",
+            "label": {
+              "text": {
+                "zh_CN": "type"
+              }
+            },
+            "description": {
+              "zh_CN": "类型"
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "labelPosition": "top",
+            "type": "string",
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            }
+          },
+          {
+            "property": "plain",
+            "label": {
+              "text": {
+                "zh_CN": "plain"
+              }
+            },
+            "description": {
+              "zh_CN": "是否为朴素按钮"
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "labelPosition": "top",
+            "type": "string",
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "device": []
+          },
+          {
+            "property": "text",
+            "label": {
+              "text": {
+                "zh_CN": "text"
+              }
+            },
+            "description": {
+              "zh_CN": "是否为文字按钮"
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "labelPosition": "top",
+            "type": "string",
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "device": []
+          },
+          {
+            "property": "bg",
+            "label": {
+              "text": {
+                "zh_CN": "bg"
+              }
+            },
+            "description": {
+              "zh_CN": "是否显示文字按钮背景颜色"
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "labelPosition": "top",
+            "type": "string",
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "device": []
+          },
+          {
+            "property": "link",
+            "label": {
+              "text": {
+                "zh_CN": "link"
+              }
+            },
+            "description": {
+              "zh_CN": "是否为链接按钮"
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "labelPosition": "top",
+            "type": "string",
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "device": []
+          },
+          {
+            "property": "round",
+            "label": {
+              "text": {
+                "zh_CN": "round"
+              }
+            },
+            "description": {
+              "zh_CN": "是否为圆角按钮"
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "labelPosition": "top",
+            "type": "string",
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "device": []
+          },
+          {
+            "property": "circle",
+            "label": {
+              "text": {
+                "zh_CN": "circle"
+              }
+            },
+            "description": {
+              "zh_CN": "是否为圆形按钮"
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "labelPosition": "top",
+            "type": "string",
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "device": []
+          },
+          {
+            "property": "loading",
+            "label": {
+              "text": {
+                "zh_CN": "loading"
+              }
+            },
+            "description": {
+              "zh_CN": "是否为加载中状态"
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "labelPosition": "top",
+            "type": "string",
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "device": []
+          },
+          {
+            "property": "disabled",
+            "label": {
+              "text": {
+                "zh_CN": "disabled"
+              }
+            },
+            "description": {
+              "zh_CN": "是否禁用"
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "labelPosition": "top",
+            "defaultValue": false,
+            "type": "boolean",
+            "widget": {
+              "component": "MetaSwitch",
+              "props": {}
+            },
+            "device": []
+          }
+        ],
+        "description": {
+          "zh_CN": ""
+        }
+      }
+    ],
+    "events": {},
+    "slots": {
+      "default": {
+        "label": {
+          "zh_CN": "default"
+        },
+        "description": {
+          "zh_CN": "自定义默认内容"
+        }
+      },
+      "loading": {
+        "label": {
+          "zh_CN": "loading"
+        },
+        "description": {
+          "zh_CN": "自定义加载中组件"
+        }
+      }
+    }
+  },
+  "snippets": [
+    {
+      "name": {
+        "zh_CN": "按钮"
+      },
+      "icon": "button",
+      "screenshot": "",
+      "snippetName": "ElButton",
+      "schema": {
+        "children": [
+          {
+            "componentName": "Text",
+            "props": {
+              "text": "按钮文本"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
