@@ -21,33 +21,30 @@
             <svg-icon v-if="item.icon" :name="item.icon" class="bem-Svg"></svg-icon>
           </template>
         </tiny-popover>
-        <tiny-popover
+        <svg-icon
           v-if="collapsedOptions.length && index === commonOptions.length - 1"
-          v-model="showMore"
-          placement="bottom-start"
-          :visible-arrow="false"
-          :width="getItemWidth(true)"
-          trigger="manual"
-        >
-          <template #reference>
-            <svg-icon
-              name="down-arrow"
-              class="bem-Svg"
-              color="var(--ti-lowcode-base-default-button-border-disable-color)"
-              @click.stop="showMore = !showMore"
-            ></svg-icon>
-          </template>
-          <div
-            v-for="foldsItem in foldsOptions"
-            class="collapse-item"
-            :key="foldsItem.label"
-            @click.stop="change(foldsItem.value)"
-          >
-            <span v-if="foldsItem.label">{{ foldsItem.label }}</span>
-            <svg-icon v-if="foldsItem.icon" :name="foldsItem.icon" class="bem-Svg"></svg-icon>
-          </div>
-        </tiny-popover>
+          name="down-arrow"
+          class="bem-Svg"
+          color="var(--ti-lowcode-base-default-button-border-disable-color)"
+          @click.stop="showMore = !showMore"
+        ></svg-icon>
       </span>
+      <div
+        v-if="collapsedOptions.length && index === commonOptions.length - 1 && showMore"
+        class="more-tabs-wrap"
+        :visible-arrow="false"
+        :style="{ width: getItemWidth(true) }"
+      >
+        <div
+          v-for="foldsItem in foldsOptions"
+          class="collapse-item"
+          :key="foldsItem.label"
+          @click.stop="change(foldsItem.value)"
+        >
+          <span v-if="foldsItem.label">{{ foldsItem.label }}</span>
+          <svg-icon v-if="foldsItem.icon" :name="foldsItem.icon" class="bem-Svg"></svg-icon>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -163,12 +160,39 @@ export default {
     align-items: center;
     text-align: center;
     cursor: pointer;
+    position: relative;
     .label-text {
       width: 100%;
       height: 16px;
 
       .bem-Svg {
         margin-top: -3px;
+      }
+
+      .show-more-tabs {
+        padding: 8px;
+      }
+    }
+    .more-tabs-wrap {
+      padding: 8px 0;
+      position: absolute;
+      top: 24px;
+      right: 0;
+      background-color: #fff;
+      z-index: 2018;
+      border-radius: 4px;
+      box-shadow: 0px 0px 10px 0px rgba(25, 25, 25, 0.15);
+      text-align: left;
+      .collapse-item {
+        padding: 0 8px;
+        font-size: 12px;
+        line-height: 24px;
+        cursor: pointer;
+
+        &:hover {
+          background-color: var(--ti-lowcode-base-gray-101);
+          border-radius: 4px;
+        }
       }
     }
     &.selected {
@@ -183,17 +207,6 @@ export default {
 
   :deep(.icon-down-arrow:focus) {
     outline: none;
-  }
-}
-.collapse-item {
-  font-size: 12px;
-  line-height: 24px;
-  padding-left: 6px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: var(--ti-lowcode-base-gray-101);
-    border-radius: 4px;
   }
 }
 

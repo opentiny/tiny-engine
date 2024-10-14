@@ -3,7 +3,10 @@
     <div class="modal-wrapper">
       <div :class="[isAlignBody ? '' : 'modal-mask']" @click="$emit('close')"></div>
 
-      <div :style="{ top: topStyle + 'px' }" :class="['modal-content', { 'align-body': isAlignBody }]">
+      <div
+        :style="{ top: topStyle + 'px' }"
+        :class="['modal-content', { 'align-body': isAlignBody }, { 'modal-padding': isAlignBody }]"
+      >
         <slot></slot>
       </div>
     </div>
@@ -93,10 +96,12 @@ export default {
     max-height: 100%;
     box-sizing: border-box;
   }
-
+  .modal-padding {
+    padding: 10px 16px;
+  }
   .align-body {
     right: 280px;
-    left: calc(100% - 287px - 280px);
+    left: calc(100% - 287px - 280px - 16px);
   }
 }
 </style>

@@ -165,7 +165,7 @@ export default {
 
     .suffix-text {
       font-size: 12px;
-      color: var(--ti-lowcode-text-color);
+      color: var(--ti-lowcode-common-text-color-5);
     }
 
     &:hover {

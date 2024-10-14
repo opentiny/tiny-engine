@@ -601,7 +601,8 @@ export default {
   .is-setting {
     span {
       cursor: pointer;
-      color: var(--ti-lowcode-style-setting-label-color);
+      border-radius: 2px;
+      color: var(--ti-lowcode-base-text-color-2);
       background-color: var(--ti-lowcode-style-setting-label-bg);
     }
   }
