@@ -60,7 +60,7 @@ export default {
 
     if (!canvasSrc) {
       const { importMap, importStyles } = getImportMapData(getMergeMeta('engine.config')?.importMapVersion)
-      canvasSrcDoc = initCanvas(importMap, importStyles)
+      canvasSrcDoc = initCanvas(importMap, importStyles).html
     }
 
     const removeNode = (node) => {
