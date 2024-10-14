@@ -4,7 +4,7 @@
       v-for="(item, index) in commonOptions"
       :key="item.label"
       :class="['tab-item', { selected: picked === (valueKey ? item.value[valueKey] : item.value) }]"
-      :style="{ width: getItemWidth(index === commonOptions.length - 1) + 'px' }"
+      :style="{ width: getItemWidth(collapsedOptions.length && index === commonOptions.length - 1) + 'px' }"
       @click.stop="change(item.value)"
     >
       <span :class="['label-text', index < commonOptions.length - 1 ? 'border-right' : '']">
@@ -22,7 +22,7 @@
           </template>
         </tiny-popover>
         <tiny-popover
-          v-if="index === commonOptions.length - 1"
+          v-if="collapsedOptions.length && index === commonOptions.length - 1"
           v-model="showMore"
           placement="bottom-start"
           :visible-arrow="false"
@@ -139,6 +139,7 @@ export default {
 
     return {
       picked,
+      collapsedOptions,
       commonOptions,
       foldsOptions,
       showMore,
