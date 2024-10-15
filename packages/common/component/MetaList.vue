@@ -11,6 +11,9 @@
     <div id="options" class="select-options">
       <slot name="items"></slot>
     </div>
+    <div class="bottom">
+      <slot name="bottom"></slot>
+    </div>
   </div>
 </template>
 
@@ -31,6 +34,12 @@
       overflow: hidden;
       border-radius: 4px 4px 0 0;
     }
+  }
+
+  .bottom {
+    display: flex;
+    padding: 2px;
+    margin-top: 4px;
   }
 }
 </style>
