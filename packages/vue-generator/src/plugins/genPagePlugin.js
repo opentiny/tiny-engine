@@ -15,7 +15,7 @@ function genPagePlugin(options = {}) {
     description: 'transform page schema to code',
     /**
      * 将页面 schema 转换成高代码
-     * @param {tinyEngineDslVue.IAppSchema} schema
+     * @param {import('@opentiny/tiny-engine-dsl-vue').IAppSchema} schema
      * @returns
      */
     run(schema) {

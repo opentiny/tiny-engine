@@ -7,7 +7,7 @@ function parseSchema() {
 
     /**
      * 解析schema，预处理 schema
-     * @param {tinyEngineDslVue.IAppSchema} schema
+     * @param {import('@opentiny/tiny-engine-dsl-vue').IAppSchema} schema
      * @returns
      */
     run(schema) {

@@ -1,5 +1,8 @@
-declare namespace tinyEngineDslVue {
-  type defaultPlugins =
+declare module '@opentiny/tiny-engine-dsl-vue' {
+  export function generateCode(param: { pageInfo: any; componentsMap?: Array<any>; blocksData?: Array<any> }): {
+    [key: string]: any
+  }
+  export type defaultPlugins =
     | 'template'
     | 'block'
     | 'page'
@@ -12,9 +15,9 @@ declare namespace tinyEngineDslVue {
     | 'formatCode'
     | 'parseSchema'
 
-  type IPluginFun = (schema: IAppSchema, context: IContext) => void
+  export type IPluginFun = (schema: IAppSchema, context: IContext) => void
 
-  interface IConfig {
+  export interface IConfig {
     customPlugins?: {
       [key in defaultPlugins]?: IPluginFun
     } & {
@@ -26,7 +29,7 @@ declare namespace tinyEngineDslVue {
     customContext?: Record<string, any>
   }
 
-  interface IContext {
+  export interface IContext {
     config: Record<string, any>
     genResult: Array<IFile>
     genLogs: Array<any>
@@ -35,24 +38,24 @@ declare namespace tinyEngineDslVue {
 
   export function generateApp(config?: IConfig): codeGenInstance
 
-  interface codeGenInstance {
-    generate(IAppSchema): ICodeGenResult
+  export interface codeGenInstance {
+    generate(schema: IAppSchema): ICodeGenResult
   }
 
-  interface ICodeGenResult {
+  export interface ICodeGenResult {
     errors: Array<any>
     genResult: Array<IFile>
     genLogs: Array<any>
   }
 
-  interface IFile {
+  export interface IFile {
     fileType: string
     fileName: string
     path: string
     fileContent: string
   }
 
-  interface IAppSchema {
+  export interface IAppSchema {
     i18n: {
       en_US: Record<string, any>
       zh_CN: Record<string, any>
@@ -66,37 +69,37 @@ declare namespace tinyEngineDslVue {
     meta: IMetaInfo
   }
 
-  interface IUtilsItem {
+  export interface IUtilsItem {
     name: string
     type: 'npm' | 'function'
     content: object
   }
 
-  interface IDataSource {
+  export interface IDataSource {
     list: Array<{ id: number; name: string; data: object }>
     dataHandler?: IFuncType
     errorHandler?: IFuncType
     willFetch?: IFuncType
   }
 
-  interface IFuncType {
+  export interface IFuncType {
     type: 'JSFunction'
     value: string
   }
 
-  interface IExpressionType {
+  export interface IExpressionType {
     type: 'JSExpression'
     value: string
   }
 
-  interface IGlobalStateItem {
+  export interface IGlobalStateItem {
     id: string
     state: Record<string, any>
     actions: Record<string, IFuncType>
     getters: Record<string, IFuncType>
   }
 
-  interface IPageSchema {
+  export interface IPageSchema {
     componentName: 'Page' | 'Block'
     css: string
     fileName: string
@@ -120,7 +123,7 @@ declare namespace tinyEngineDslVue {
     }
   }
 
-  interface IFolderItem {
+  export interface IFolderItem {
     componentName: 'Folder'
     depth: number
     folderName: string
@@ -129,14 +132,14 @@ declare namespace tinyEngineDslVue {
     router: string
   }
 
-  interface ISchemaChildrenItem {
+  export interface ISchemaChildrenItem {
     children: Array<ISchemaChildrenItem>
     componentName: string
     id: string
     props: Record<string, any>
   }
 
-  interface IComponentMapItem {
+  export interface IComponentMapItem {
     componentName: string
     destructuring: boolean
     exportName?: string
@@ -144,7 +147,7 @@ declare namespace tinyEngineDslVue {
     version: string
   }
 
-  interface IMetaInfo {
+  export interface IMetaInfo {
     name: string
     description: string
   }

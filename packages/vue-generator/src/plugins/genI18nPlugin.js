@@ -17,7 +17,7 @@ function genI18nPlugin(options = {}) {
     description: 'transform i18n schema to i18n code plugin',
     /**
      * 将国际化 schema 转换成 i18n 高代码
-     * @param {tinyEngineDslVue.IAppSchema} schema
+     * @param {import('@opentiny/tiny-engine-dsl-vue').IAppSchema} schema
      * @returns
      */
     run(schema) {
