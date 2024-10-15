@@ -27,7 +27,7 @@
     </div>
   </div>
   <class-names-container></class-names-container>
-  <tiny-collapse v-model="activeNames">
+  <tiny-collapse v-model="activeNames" @change="handoverGroup">
     <tiny-collapse-item title="布局" name="layout">
       <layout-group :display="state.style.display" @update="updateStyle" />
       <flex-box v-if="state.style.display === 'flex'" :style="state.style" @update="updateStyle"></flex-box>
@@ -112,16 +112,28 @@ export default {
     }
   },
   setup(props) {
-    const activeNames = computed(() =>
-      props.isCollapsed
-        ? []
-        : ['layout', 'spacing', 'size', 'position', 'typography', 'backgrounds', 'borders', 'effects']
-    )
+    const styleCategoryGroup = [
+      'layout',
+      'spacing',
+      'size',
+      'position',
+      'typography',
+      'backgrounds',
+      'borders',
+      'effects'
+    ]
+    const activeNames = computed(() => (props.isCollapsed ? [styleCategoryGroup[0]] : styleCategoryGroup))
     const { getCurrentSchema } = useCanvas()
     // 获取当前节点 style 对象
     const { state, updateStyle } = useStyle() // updateStyle
     const { addHistory } = useHistory()
     const { getSchema } = useProperties()
+
+    const handoverGroup = (actives) => {
+      if (props.isCollapsed) {
+        activeNames.value = actives.length > 1 ? actives.shift() : actives
+      }
+    }
 
     // 保存编辑器内容，并回写到 schema
     const save = ({ content }) => {
@@ -193,6 +205,7 @@ export default {
       activeNames,
       CSS_TYPE,
       open,
+      handoverGroup,
       save,
       close,
       updateStyle,

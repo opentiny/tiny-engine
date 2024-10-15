@@ -171,7 +171,7 @@
             <path
               mode="delta"
               d="
-              m0,0
+              m5,-4
               h168
               l-36,25
               h-71
@@ -189,7 +189,7 @@
             <path
               mode="delta"
               d="
-              m168,0
+              m173,-4
               v70
               l-60,-24
               v-15
@@ -207,7 +207,7 @@
             <path
               mode="delta"
               d="
-              m0,70
+              m5,66
               h168
               l-36,-25
               h-71
@@ -225,7 +225,7 @@
             <path
               mode="delta"
               d="
-              m0,0
+              m5,-4
               v70
               l60,-24
               v-15
@@ -239,7 +239,7 @@
           </g>
         </g>
         <clipPath id="padding-outer">
-          <rect x="0" y="0" width="168" height="70" fill="#E6E6E6" rx="4" ry="4" style="pointer-events: none"></rect>
+          <rect x="5" y="-4" width="168" height="70" fill="#E6E6E6" rx="4" ry="4" style="pointer-events: none"></rect>
         </clipPath>
         <rect
           class="stroke"
@@ -254,7 +254,7 @@
           style="pointer-events: none; stroke-width: 0"
         ></rect>
         <clipPath id="padding-inner">
-          <rect x="60" y="25" width="48" height="20" fill="#FFF" rx="4" ry="4" style="pointer-events: none"></rect>
+          <rect x="65" y="21" width="48" height="20" fill="#FFF" rx="4" ry="4" style="pointer-events: none"></rect>
         </clipPath>
         <rect
           class="stroke"
@@ -477,8 +477,8 @@ export default {
 .spacing-wrap {
   position: relative;
   display: grid;
-  grid-template-columns: 36px 4px 36px 1fr 36px 4px 36px;
-  grid-template-rows: 24px 4px 24px 1fr 24px 4px 24px;
+  grid-template-columns: 45px 0px 60px 1fr 60px 0px 45px;
+  grid-template-rows: 25px 0px 25px 1fr 25px 0px 25px;
   width: 256px;
   height: 120px;
   margin: 0 auto;
@@ -489,7 +489,7 @@ export default {
   .spacing-max-icon {
     grid-area: 1 / 1 / -1 / -1;
     display: grid;
-    grid-template-columns: 30px 1fr 36px;
+    grid-template-columns: 45px 1fr 45px;
     grid-template-rows: 25px minmax(16px, 1fr) 25px;
     justify-items: center;
     width: 256px;
@@ -499,7 +499,7 @@ export default {
   .spacing-min-icon {
     grid-area: 3 / 3 / span 3 / span 3;
     display: grid;
-    grid-template-columns: 38px 1fr 36px;
+    grid-template-columns: 56px 54px 56px;
     grid-template-rows: 25px minmax(16px, 1fr) 25px;
     justify-items: center;
     width: 168px;

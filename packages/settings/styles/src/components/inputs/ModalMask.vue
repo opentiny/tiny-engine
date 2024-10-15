@@ -91,7 +91,7 @@ export default {
     border: 1px solid var(--ti-lowcode-tabs-border-color);
     box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
-    background-color: var(--ti-lowcode-toolbar-bg);
+    background-color: #fff;
     overflow: auto;
     max-height: 100%;
     box-sizing: border-box;

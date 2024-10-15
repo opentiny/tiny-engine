@@ -429,18 +429,17 @@ export default {
     place-items: stretch;
     gap: 1px;
     border-radius: 2px;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #2b2b2b;
-    background-color: #2b2b2b;
-    margin-bottom: 12px;
+    border-top: 1px solid #ebebeb;
+    background-color: #fff;
+    margin: 12px 0;
     .image-list-item {
       display: grid;
       grid-template-columns: 8px 16px minmax(auto, 1fr) auto;
       gap: 8px 4px;
       height: 24px;
       align-items: center;
-      background-color: rgb(54, 54, 54);
+      background-color: #fff;
+      border-bottom: 1px solid #ebebeb;
       pointer-events: all;
       font-size: 11px;
       font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell,

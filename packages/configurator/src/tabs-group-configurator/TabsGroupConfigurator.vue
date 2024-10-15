@@ -184,7 +184,7 @@ export default {
       box-shadow: 0px 0px 10px 0px rgba(25, 25, 25, 0.15);
       text-align: left;
       .collapse-item {
-        padding: 0 8px;
+        padding: 0 16px;
         font-size: 12px;
         line-height: 24px;
         cursor: pointer;
