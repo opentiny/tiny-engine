@@ -21,7 +21,7 @@
     <label class="size-label">大小</label>
     <tabs-group-configurator
       :options="BACKGROUND_SIZE_OPTIONS"
-      :value="state.sizeSelected"
+      :modelValue="state.sizeSelected"
       :label-width="69"
       @update:modelValue="selectSize"
     ></tabs-group-configurator>
@@ -55,7 +55,7 @@
     <label class="row-label">重复</label>
     <tabs-group-configurator
       :options="REPEAT_OPTIONS"
-      :value="state.repeat"
+      :modelValue="state.repeat"
       :label-width="53"
       @update:modelValue="selectRepeat"
     ></tabs-group-configurator>
@@ -64,7 +64,7 @@
     <label class="row-label">固定</label>
     <tabs-group-configurator
       :options="FIXED_OPTIONS"
-      :value="state.fixedSelected"
+      :modelValue="state.fixedSelected"
       :label-width="105"
       @update:modelValue="selectFixed"
     ></tabs-group-configurator>

@@ -52,8 +52,8 @@ export default {
     const topStyle = ref(0)
 
     onMounted(() => {
-      if (isAlignBody.value) {
-        const modalContentEle = document.querySelector('.modal-content')
+      const modalContentEle = document.querySelector('.modal-content')
+      if (isAlignBody.value && modalContentEle) {
         topStyle.value = modal.top < modalContentEle.offsetHeight ? 40 : modal.top - modalContentEle.offsetHeight + 40
       } else {
         topStyle.value = modal.top - 34

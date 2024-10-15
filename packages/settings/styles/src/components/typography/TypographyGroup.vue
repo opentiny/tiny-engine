@@ -92,7 +92,7 @@
         </label>
         <tabs-group-configurator
           :options="alignOptions"
-          :value="selectedAlign"
+          :modelValue="selectedAlign"
           :label-width="54"
           :effect="effect"
           :placement="placement"
@@ -115,7 +115,7 @@
         <div class="style-decoration-wrap">
           <tabs-group-configurator
             :options="styleOptions"
-            :value="selectedFontStyle"
+            :modelValue="selectedFontStyle"
             :label-width="32"
             :effect="effect"
             :placement="placement"
@@ -123,7 +123,7 @@
           ></tabs-group-configurator>
           <tabs-group-configurator
             :options="decorationOptions"
-            :value="selectedTextDecoration"
+            :modelValue="selectedTextDecoration"
             :label-width="32"
             :effect="effect"
             :placement="placement"

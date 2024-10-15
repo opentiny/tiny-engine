@@ -6,7 +6,7 @@
     <div class="display-content">
       <tabs-group-configurator
         :options="layoutOpts"
-        :value="picked"
+        :modelValue="picked"
         @update:modelValue="select"
       ></tabs-group-configurator>
     </div>
@@ -53,9 +53,7 @@ export default {
   setup(props, { emit }) {
     const { setPosition } = useModal()
 
-    const picked = computed(() => {
-      return props.display
-    })
+    const picked = computed(() => props.display)
     const showModal = ref(false)
 
     const select = (type) => {

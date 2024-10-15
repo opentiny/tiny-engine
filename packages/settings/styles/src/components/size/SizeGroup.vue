@@ -93,7 +93,7 @@
     </div>
     <tabs-group-configurator
       :options="overflowOpt"
-      :value="selectedOverflow"
+      :modelValue="selectedOverflow"
       :label-width="50"
       :effect="effect"
       :placement="placement"

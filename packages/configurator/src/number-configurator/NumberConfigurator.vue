@@ -183,7 +183,7 @@ export default {
   .meta-numeric-unit {
     position: absolute;
     top: 2px;
-    height: 22px;
+    height: calc(100% - 2px);
     span {
       color: var(--ti-lowcode-numeric-unit-text-color);
       font-size: 14px;

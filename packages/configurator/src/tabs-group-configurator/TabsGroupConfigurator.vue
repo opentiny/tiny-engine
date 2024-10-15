@@ -2,7 +2,7 @@
   <div class="tab-container">
     <div
       v-for="(item, index) in commonOptions"
-      :key="item.label"
+      :key="item.label || item.icon"
       :class="['tab-item', { selected: picked === (valueKey ? item.value[valueKey] : item.value) }]"
       :style="{ width: getItemWidth(collapsedOptions.length && index === commonOptions.length - 1) + 'px' }"
       @click.stop="change(item.value)"
@@ -32,13 +32,12 @@
       <div
         v-if="collapsedOptions.length && index === commonOptions.length - 1 && showMore"
         class="more-tabs-wrap"
-        :visible-arrow="false"
         :style="{ width: getItemWidth(true) }"
       >
         <div
           v-for="foldsItem in foldsOptions"
           class="collapse-item"
-          :key="foldsItem.label"
+          :key="foldsItem.label || foldsItem.icon"
           @click.stop="change(foldsItem.value)"
         >
           <span v-if="foldsItem.label">{{ foldsItem.label }}</span>
@@ -57,7 +56,7 @@ export default {
     TinyPopover: Popover
   },
   props: {
-    value: {
+    modelValue: {
       type: String,
       default: ''
     },
@@ -74,8 +73,8 @@ export default {
       default: 'top'
     },
     labelWidth: {
-      type: String,
-      default: '60'
+      type: Number,
+      default: 60
     },
     options: {
       type: Array,
@@ -84,17 +83,11 @@ export default {
   },
   emits: ['update:modelValue'],
   setup(props, { emit }) {
-    const picked = ref()
+    const picked = ref(null)
     const uncollapsedOptions = ref(props.options.filter((option) => !option.collapsed))
     const collapsedOptions = ref(props.options.filter((option) => option.collapsed))
-    const commonOptions = ref(
-      collapsedOptions.value.length
-        ? [...uncollapsedOptions.value, collapsedOptions.value[0]]
-        : uncollapsedOptions.value
-    )
-    const foldsOptions = ref(
-      collapsedOptions.value.length <= 1 ? [] : collapsedOptions.value.filter((item, index) => index > 0)
-    )
+    const commonOptions = ref(uncollapsedOptions.value)
+    const foldsOptions = ref()
     const showMore = ref(false)
 
     const getItemWidth = (collapsed = false) => {
@@ -102,7 +95,7 @@ export default {
     }
 
     watch(
-      () => props.value,
+      () => props.modelValue,
       (value) => {
         picked.value = value
         if (collapsedOptions.value.length === 0) {

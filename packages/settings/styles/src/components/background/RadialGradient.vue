@@ -4,7 +4,7 @@
     <label class="row-label">Size</label>
     <tabs-group-configurator
       :options="RADIAL_SIZE_LIST"
-      :value="state.radialSize"
+      :modelValue="state.radialSize"
       :label-width="52"
       :effect="effect"
       :placement="placement"

@@ -4,7 +4,7 @@
       <label class="row-label">类型</label>
       <tabs-group-configurator
         :options="state.typeLists"
-        :value="state.styleComponent"
+        :modelValue="state.styleComponent"
         value-key="styleComponent"
         :label-width="52"
         :effect="effect"
@@ -112,18 +112,18 @@ export default {
       emit('update:modelValue', { ...property, type: state.styleComponent })
     }
 
-    const selectType = (item) => {
+    const selectType = (value) => {
       let styleObj = {}
 
-      if (item.styleComponent === 'ImageSetting') {
+      if (value.styleComponent === 'ImageSetting') {
         styleObj = {
-          [BACKGROUND_PROPERTY.BackgroundImage]: `url(${item.imageUrl})`,
-          [BACKGROUND_PROPERTY.BackgroundPosition]: item.position,
-          [BACKGROUND_PROPERTY.BackgroundSize]: item.size
+          [BACKGROUND_PROPERTY.BackgroundImage]: `url(${value.imageUrl})`,
+          [BACKGROUND_PROPERTY.BackgroundPosition]: value.position,
+          [BACKGROUND_PROPERTY.BackgroundSize]: value.size
         }
       } else {
         styleObj = {
-          [BACKGROUND_PROPERTY.BackgroundImage]: item.imageUrl,
+          [BACKGROUND_PROPERTY.BackgroundImage]: value.imageUrl,
           [BACKGROUND_PROPERTY.BackgroundPosition]: null,
           [BACKGROUND_PROPERTY.BackgroundSize]: null,
           [BACKGROUND_PROPERTY.BackgroundRepeat]: null,
@@ -131,7 +131,7 @@ export default {
         }
       }
 
-      state.styleComponent = item.styleComponent
+      state.styleComponent = value.styleComponent
       updateStyle(styleObj)
     }
 
