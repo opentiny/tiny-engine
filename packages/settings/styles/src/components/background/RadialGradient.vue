@@ -87,7 +87,7 @@ onMounted(() => {
     state[BACKGROUND_PROPERTY.BackgroundImage] = gradientMatch[2]
   }
 
-  const rColor = /\#(?:[a-f0-9]{6}|[a-f0-9]{3})/ // #fff | #fff
+  const rColor = /#(?:[a-f0-9]{6}|[a-f0-9]{3})/ // #fff | #fff
   const rLengthPercentage = /(?:[+-]?\d*\.?\d+)(?:%|[a-z]+)?/ // .5 5px 50%
   const rLinearColorStop = new RegExp(`${rColor.source}(?:\\s+${rLengthPercentage.source})?`)
   const rComma = /\s*,\s*/
