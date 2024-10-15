@@ -15,7 +15,7 @@ function genDataSourcePlugin(options = {}) {
     description: 'transform schema to dataSource plugin',
     /**
      * 转换 dataSource
-     * @param {tinyEngineDslVue.IAppSchema} schema
+     * @param {import('@opentiny/tiny-engine-dsl-vue').IAppSchema} schema
      * @returns
      */
     run(schema) {

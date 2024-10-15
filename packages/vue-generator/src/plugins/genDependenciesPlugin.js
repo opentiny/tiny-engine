@@ -63,7 +63,7 @@ function genDependenciesPlugin(options = {}) {
     description: 'transform dependencies to package.json',
     /**
      * 分析依赖，写入 package.json
-     * @param {tinyEngineDslVue.IAppSchema} schema
+     * @param {import('@opentiny/tiny-engine-dsl-vue').IAppSchema} schema
      * @returns
      */
     run(schema) {
