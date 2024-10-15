@@ -46,7 +46,7 @@ export function createPlatform(name, options = {}) {
   const pkgContent = generatePackageJson(name, mergedOptions, templatePath)
 
   fs.outputFileSync(path.resolve(destPath, 'engine.config.js'), configContent)
-  fs.outputJSONSync(path.resolve(destPath, 'package.json'), pkgContent)
+  fs.outputJSONSync(path.resolve(destPath, 'package.json'), pkgContent, { spaces: 2 })
 
   logger.log(
     chalk.green(`create finish, run the follow command to start project: \ncd ${name} && npm install && npm run dev`)
