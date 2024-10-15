@@ -18,6 +18,7 @@
 
 <script>
 import { computed } from 'vue'
+import { isObject } from '@opentiny/vue-renderless/grid/static'
 import ConfigItem from './ConfigItem.vue'
 import i18n from '../js/i18n'
 
@@ -51,8 +52,9 @@ export default {
       const propsModelValue = props.meta.widget.props?.modelValue || []
       const { title, label, type } = propsModelValue[props.arrayIndex] || {}
       const text = title || label
+      const localizedText = isObject(text) ? text[locale.value] : text
 
-      return text?.[locale.value] || text || type || untitled[locale.value] || untitled.zh_CN
+      return localizedText || type || untitled[locale.value] || untitled.zh_CN
     })
 
     const properties = computed(() => {
