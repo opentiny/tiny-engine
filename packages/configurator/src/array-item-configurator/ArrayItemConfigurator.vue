@@ -4,9 +4,6 @@
       <template #title>
         <label>{{ meta.label?.text?.zh_CN }}</label>
       </template>
-      <template #actions>
-        <meta-list-actions v-bind="actionsOptions" @actionEvents="actionEvents"></meta-list-actions>
-      </template>
       <template #items>
         <vue-draggable-next
           :list="itemsOptions.optionsList"
@@ -41,14 +38,20 @@
           </div>
         </vue-draggable-next>
       </template>
+      <template #bottom>
+        <div class="add" @click="addItem">
+          <svg-icon name="plus"></svg-icon>
+          <span>新增一列</span>
+        </div>
+      </template>
     </meta-list>
   </div>
 </template>
 
 <script>
 import { computed, reactive } from 'vue'
-import { IconDel, IconEdit, IconPlus } from '@opentiny/vue-icon'
-import { MetaList, MetaListActions, MetaListItem, MetaChildItem } from '@opentiny/tiny-engine-common'
+import { iconDel, iconEdit } from '@opentiny/vue-icon'
+import { MetaList, MetaListItem, MetaChildItem } from '@opentiny/tiny-engine-common'
 import { useTranslate } from '@opentiny/tiny-engine-meta-register'
 import { VueDraggableNext } from 'vue-draggable-next'
 
@@ -57,7 +60,6 @@ export default {
   components: {
     MetaList,
     MetaListItem,
-    MetaListActions,
     MetaChildItem,
     VueDraggableNext
   },
@@ -82,16 +84,6 @@ export default {
       return props.meta.widget.props.modelValue?.value || props.meta.widget.props.modelValue || []
     })
 
-    const actionsOptions = {
-      actions: [
-        {
-          title: '新增',
-          type: 'add',
-          icon: IconPlus()
-        }
-      ]
-    }
-
     const itemsOptions = computed(() => ({
       valueField: 'field',
       textField: props.meta.widget.props.textField || 'value',
@@ -99,13 +91,13 @@ export default {
         {
           title: '编辑',
           type: 'edit',
-          icon: IconEdit()
+          icon: iconEdit()
         },
 
         {
           title: '删除',
           type: 'delete',
-          icon: IconDel()
+          icon: iconDel()
         }
       ],
       optionsList: columnsList.value,
@@ -159,19 +151,8 @@ export default {
       updatedColumns()
     }
 
-    const actionEvents = (item) => {
-      switch (item.type) {
-        case 'add':
-          addItem()
-          break
-        default:
-          break
-      }
-    }
-
     return {
       state,
-      actionsOptions,
       itemsOptions,
       columnsList,
       editItem,
@@ -179,7 +160,6 @@ export default {
       deleteItem,
       changeItem,
       onValueChange,
-      actionEvents,
       translate: useTranslate().translate,
       dragEnd
     }
@@ -191,5 +171,18 @@ export default {
 .meta-array-wrap {
   font-size: 12px;
   display: block;
+}
+.add {
+  display: flex;
+  align-items: center;
+  color: var(--te-common-text-emphasize);
+  &:hover {
+    cursor: pointer;
+  }
+
+  & .icon-plus {
+    font-size: 14px;
+    margin-right: 5px;
+  }
 }
 </style>
