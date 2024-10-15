@@ -50,7 +50,7 @@
 
 <script>
 import { computed, reactive } from 'vue'
-import { IconDel, IconEdit } from '@opentiny/vue-icon'
+import { iconDel, iconEdit } from '@opentiny/vue-icon'
 import { MetaList, MetaListItem, MetaChildItem } from '@opentiny/tiny-engine-common'
 import { useTranslate } from '@opentiny/tiny-engine-meta-register'
 import { VueDraggableNext } from 'vue-draggable-next'
@@ -91,13 +91,13 @@ export default {
         {
           title: '编辑',
           type: 'edit',
-          icon: IconEdit()
+          icon: iconEdit()
         },
 
         {
           title: '删除',
           type: 'delete',
-          icon: IconDel()
+          icon: iconDel()
         }
       ],
       optionsList: columnsList.value,

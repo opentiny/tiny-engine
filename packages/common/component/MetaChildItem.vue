@@ -19,6 +19,7 @@
 <script>
 import { computed } from 'vue'
 import ConfigItem from './ConfigItem.vue'
+import i18n from '../js/i18n'
 
 export default {
   components: {
@@ -40,11 +41,18 @@ export default {
     }
   },
   setup(props, { emit }) {
+    const { locale } = i18n.global
+    const untitled = {
+      zh_CN: '未命名标题',
+      en_US: 'Untitled'
+    }
+
     const title = computed(() => {
       const propsModelValue = props.meta.widget.props?.modelValue || []
-      const { title, type } = propsModelValue[props.arrayIndex] || {}
+      const { title, label, type } = propsModelValue[props.arrayIndex] || {}
+      const text = title || label
 
-      return title?.['zh_CN'] || title || type || '未命名标题'
+      return text?.[locale.value] || text || type || untitled[locale.value] || untitled.zh_CN
     })
 
     const properties = computed(() => {
