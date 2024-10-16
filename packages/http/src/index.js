@@ -63,7 +63,7 @@ let environment = import.meta.env // 当前设计器运行环境变量
 const isVsCodeEnv = window.vscodeBridge
 const isMock = () => environment.VITE_API_MOCK === 'mock'
 
-export const createHttp = (options) => {
+export const createHttp = (options = {}) => {
   // 缓存http实例，避免每个请求重新创建实例
   if (http && !options.force) {
     return http
