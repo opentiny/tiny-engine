@@ -7,26 +7,23 @@
       @click-api="openApi"
     >
       <template #button>
-        <span @click.stop="state.saveVisible = !state.saveVisible">
-          <tiny-popover v-model="state.saveVisible" :visible-arrow="false" width="203" trigger="manual">
-            <template #reference>
-              <svg-icon :name="iconExpand"></svg-icon>
-            </template>
-            <div class="save-style">
-              <div class="save-setting">保存设置</div>
-              <tiny-checkbox v-model="state.checked" name="tiny-checkbox">自动保存</tiny-checkbox>
-              <div class="save-time">
-                <div>保存间隔</div>
-                <tiny-select v-model="state.timeValue" :options="delayOptions" :disabled="!state.checked" autocomplete>
-                </tiny-select>
-              </div>
-              <div class="save-button-group">
-                <tiny-button @click="cancel">取消</tiny-button>
-                <tiny-button type="primary" @click="autoSave">设置并保存</tiny-button>
-              </div>
+        <tiny-popover :visible-arrow="false" width="203" trigger="hover">
+          <template #reference>
+            <svg-icon :name="iconExpand"></svg-icon>
+          </template>
+          <div class="save-style">
+            <div class="save-setting">保存设置</div>
+            <tiny-checkbox v-model="state.checked" name="tiny-checkbox">自动保存</tiny-checkbox>
+            <div class="save-time">
+              <div class="save-time-label">保存间隔</div>
+              <tiny-select v-model="state.timeValue" :options="delayOptions" :disabled="!state.checked" autocomplete>
+              </tiny-select>
             </div>
-          </tiny-popover>
-        </span>
+            <div class="save-button-group">
+              <tiny-button type="primary" @click="autoSave">设置并保存</tiny-button>
+            </div>
+          </div>
+        </tiny-popover>
       </template>
       <template #default>
         <tiny-dialog-box
@@ -104,7 +101,6 @@ export default {
       originalCode: '',
       disabled: false,
       timeValue: 5,
-      saveVisible: false,
       checked: false,
       preservationTime: null
     })
@@ -144,11 +140,6 @@ export default {
       } else {
         clearTimeout(state.preservationTime)
       }
-      state.saveVisible = false
-    }
-
-    const cancel = () => {
-      state.saveVisible = false
     }
 
     onUnmounted(() => {
@@ -165,7 +156,6 @@ export default {
       openApi,
       saveApi,
       delayOptions,
-      cancel,
       autoSave
     }
   }
@@ -231,6 +221,9 @@ export default {
   font-size: 12px;
   margin: 13px 0 14px 0;
   display: flex;
+  .save-time-label {
+    width: 60px;
+  }
 
   .tiny-select {
     width: 103px;
