@@ -248,6 +248,4 @@ export default {
 .flex-item :deep(.radio-button) {
   padding: 5px;
 }
-.is-setting {
-}
 </style>

@@ -59,8 +59,8 @@ export default {
       value: '0',
       repeat: false,
       colorValue: '#000',
-      gradientLeftColor: '#000',
-      gradientRightColor: '#fff',
+      gradientLeftColor: '#D6D6D6',
+      gradientRightColor: '#F5F5F5',
       gradientLeftPercent: 0,
       gradientRightPercent: 100
     })
@@ -104,11 +104,11 @@ export default {
 .background-image-gradient {
   padding: 8px 0;
   .slider {
-    height: 16px;
+    height: 12px;
     overflow: visible;
     grid-column: 1 / -1;
     position: relative;
-    border-width: 1px;
+    border-width: 0;
     box-sizing: border-box;
     border-style: solid;
     border-color: rgba(0, 0, 0, 0.8);
@@ -121,8 +121,8 @@ export default {
   }
   .color {
     display: grid;
-    gap: 8px 4px;
-    grid-template-columns: 44px 1fr 54px;
+    gap: 8px 8px;
+    grid-template-columns: 52px 1fr 65px;
     align-items: center;
     .color-input {
       :deep(.tiny-input__inner) {
@@ -133,35 +133,37 @@ export default {
   .slider-inner {
     position: relative;
     width: 100%;
-    height: 100%;
+    height: 16px;
     cursor: default;
   }
   .delta-right {
     position: absolute;
-    height: calc(100% - 2px);
+    height: calc(100% - 7px);
     top: 1px;
     right: 0;
-    width: 6px;
-    border-radius: 1px;
-    background-color: rgb(235, 235, 235);
-    box-shadow: rgb(0 0 0 / 30%) 0px 0px 0px 1px;
+    width: 9px;
+    border-radius: 10px;
+    background-color: rgb(219 219 219);
+    box-shadow: rgb(255 255 255) 0px 0px 0px 1px, rgb(0 0 0 / 10%) 0px 0px 0px 2px,
+      rgb(219 219 219) 0px 0px 0px 0px inset;
     opacity: 1;
     cursor: ew-resize;
   }
   .delta-left {
     position: absolute;
-    height: calc(100% - 2px);
-    top: 1px;
-    width: 8px;
-    border-radius: 1px;
-    left: 1px;
-    box-shadow: rgb(235 235 235) 0px 0px 0px 2px, rgb(0 0 0 / 30%) 0px 0px 0px 3px,
-      rgb(0 0 0 / 30%) 0px 0px 0px 1px inset;
+    height: calc(100% - 4px);
+    width: 12px;
+    border-radius: 10px;
+    left: -1px;
+    background-color: rgb(219 219 219);
+    box-shadow: rgb(255 255 255) 0px 0px 0px 2px, rgb(0 0 0 / 10%) 0px 0px 0px 3px,
+      rgb(219 219 219) 0px 0px 0px 1px inset;
     opacity: 1;
     cursor: ew-resize;
   }
   .delta-inner {
     position: relative;
+    border-radius: 10px;
     top: -4px;
     left: -4px;
     width: calc(100% + 8px);

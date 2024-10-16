@@ -55,7 +55,7 @@ export default {
       type: Array,
       default: () => [
         {
-          label: 'PX',
+          label: 'px',
           value: 'px'
         },
         {
@@ -63,11 +63,11 @@ export default {
           value: '%'
         },
         {
-          label: 'VW',
+          label: 'vw',
           value: 'vw'
         },
         {
-          label: 'VH',
+          label: 'vh',
           value: 'vh'
         }
       ]
@@ -166,14 +166,13 @@ export default {
     .tiny-input__inner {
       color: var(--ti-lowcode-text-color);
       padding: 2px 0;
-      border: none;
       font-size: 12px;
-      height: 24px;
+      border: none;
+      height: 20px;
       text-align: center;
       box-sizing: border-box;
       cursor: pointer;
       &:hover {
-        color: var(--ti-lowcode-tootip-input-color);
         background: var(--ti-lowcode-icon-hover-bg);
       }
     }

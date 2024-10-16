@@ -2,10 +2,15 @@
   <div id="tiny-right-panel">
     <tiny-tabs v-model="layoutState.settings.render">
       <tiny-tab-item v-for="(setting, index) in settings" :key="index" :title="setting.title" :name="setting.name">
-        <component :is="setting.entry"></component>
+        <component :is="setting.entry" :is-collapsed="isCollapsed"></component>
         <div v-show="activating" class="active"></div>
       </tiny-tab-item>
     </tiny-tabs>
+    <div class="tabs-setting">
+      <tiny-tooltip effect="dark" :content="isCollapsed ? '展开' : '折叠'" placement="top" :visible-arrow="false">
+        <template #default> <svg-icon name="setting" @click="isCollapsed = !isCollapsed"></svg-icon> </template>
+      </tiny-tooltip>
+    </div>
   </div>
 </template>
 
@@ -29,9 +34,11 @@ export default {
     const { layoutState } = useLayout()
     const activating = computed(() => layoutState.settings.activating)
     const showMask = ref(true)
+    const isCollapsed = ref(false)
 
     return {
       showMask,
+      isCollapsed,
       activating,
       layoutState
     }
@@ -49,12 +56,22 @@ export default {
   padding-top: 12px;
   background-color: var(--ti-lowcode-setting-panel-bg-color);
 
+  .tabs-setting {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    line-height: 24px;
+    cursor: pointer;
+  }
   .tiny-tabs {
     height: 100%;
   }
   :deep(.tiny-tabs) {
     display: flex;
     flex-direction: column;
+    .tiny-tabs__header .tiny-tabs__nav {
+      width: 60%;
+    }
     .tiny-tabs__nav-scroll {
       margin-left: 12px;
       .tiny-tabs__active-bar {
@@ -73,6 +90,7 @@ export default {
       flex: 1;
       background-color: var(--ti-lowcode-setting-panel-bg-color);
       color: var(--ti-lowcode-setting-panel-tabs-item-title-color);
+      margin-right: 5px;
       &:hover {
         color: var(--ti-lowcode-setting-panel-tabs-item-title-hover-color);
       }

@@ -1,14 +1,14 @@
 /**
-* Copyright (c) 2023 - present TinyEngine Authors.
-* Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
-*
-* Use of this source code is governed by an MIT-style license.
-*
-* THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
-* BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
-* A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
-*
-*/
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
+ *
+ * Use of this source code is governed by an MIT-style license.
+ *
+ * THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
+ * BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
+ * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
+ *
+ */
 
 export const PADDING_PROPERTY = {
   Padding: 'padding',
@@ -157,7 +157,7 @@ export const Style_Property = {
 
 export const UNIT_OPTIONS = [
   {
-    label: 'PX',
+    label: 'px',
     value: 'px'
   },
   {
@@ -165,19 +165,19 @@ export const UNIT_OPTIONS = [
     value: '%'
   },
   {
-    label: 'VW',
+    label: 'vw',
     value: 'vw'
   },
   {
-    label: 'VH',
+    label: 'vh',
     value: 'vh'
   },
   {
-    label: 'EM',
+    label: 'em',
     value: 'em'
   },
   {
-    label: 'REM',
+    label: 'rem',
     value: 'rem'
   },
   {
@@ -214,22 +214,22 @@ export const FIXED_OPTIONS = [
 
 export const REPEAT_OPTIONS = [
   {
-    tip: '水平垂直轴都重复',
+    content: '水平垂直轴都重复',
     icon: 'tile-xy',
     value: 'repeat'
   },
   {
-    tip: '水平轴重复',
+    content: '水平轴重复',
     icon: 'tile-x',
     value: 'repeat-x'
   },
   {
-    tip: '垂直轴重复',
+    content: '垂直轴重复',
     icon: 'tile-y',
     value: 'repeat-y'
   },
   {
-    tip: '不重复',
+    content: '不重复',
     icon: 'close',
     value: 'no-repeat'
   }
@@ -237,24 +237,24 @@ export const REPEAT_OPTIONS = [
 
 export const RADIAL_SIZE_LIST = [
   {
-    tip: 'Closest side extends the gradient from the defined position to the closest side.',
+    content: 'Closest side extends the gradient from the defined position to the closest side.',
     icon: 'closest-side',
     value: 'closest-side'
   },
   {
-    tip: 'Closest corner extends the gradient from the defined position to the closest corner.',
+    content: 'Closest corner extends the gradient from the defined position to the closest corner.',
     icon: 'closest-corner',
     value: 'closest-corner'
   },
   {
-    tip: 'Farthest side extends the gradient from the defined position to the farthest side.',
+    content: 'Farthest side extends the gradient from the defined position to the farthest side.',
     icon: 'farthest-side',
     value: 'farthest-side'
   },
   {
-    tip: 'Farthest corner extends the gradient from the defined position to the farthest corner.',
+    content: 'Farthest corner extends the gradient from the defined position to the farthest corner.',
     icon: 'farthest-corner',
-    value: ''
+    value: 'farthest-corner'
   }
 ]
 

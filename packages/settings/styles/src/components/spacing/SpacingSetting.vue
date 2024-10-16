@@ -21,7 +21,7 @@
       </ul>
     </div>
   </div>
-  <reset-button v-show="isReset" class="reset" @reset="reset" />
+  <reset-button v-show="isReset" @reset="reset" />
 </template>
 
 <script>
@@ -113,6 +113,8 @@ export default {
 
 <style lang="less" scoped>
 .content-wrap {
+  width: 236px;
+  margin-bottom: 10px;
   .content-input {
     display: flex;
     justify-content: flex-start;
@@ -229,9 +231,5 @@ export default {
       }
     }
   }
-}
-
-.reset {
-  margin-top: 10px;
 }
 </style>
