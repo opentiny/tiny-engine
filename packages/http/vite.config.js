@@ -30,9 +30,7 @@ export default defineConfig({
       formats: ['es']
     },
     rollupOptions: {
-      output: {
-        banner: 'import "./style.css"'
-      },
+      output: {},
       external: ['vue', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/]
     }
   }

@@ -9,31 +9,13 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-
-/* eslint-disable no-undef */
-import axios, { globalDefaults } from './axios'
-import { createApp } from 'vue'
 import { useBroadcastChannel } from '@vueuse/core'
-import Login from './Login.vue'
-import { getConfig } from './config'
-import mockData from './mock'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { initHook, HOOK_NAME } from '@opentiny/tiny-engine-meta-register'
+import axios from './axios'
 
 const { BROADCAST_CHANNEL } = constants
 
 const { post: globalNotify } = useBroadcastChannel({ name: BROADCAST_CHANNEL.Notify })
-
-const procession = {
-  promiseLogin: null,
-  mePromise: {}
-}
-
-const LOGIN_EXPIRED_CODE = 401
-
-const loginDom = document.createElement('div')
-document.body.appendChild(loginDom)
-const loginVM = createApp(Login).mount(loginDom)
 
 const showError = (url, message) => {
   globalNotify({
@@ -43,116 +25,75 @@ const showError = (url, message) => {
   })
 }
 
-window.lowcode = {
-  platformCenter: {
-    Session: {
-      rebuiltCallback: function () {
-        loginVM.closeLogin()
+const preResponse = (res) => {
+  if (res.data?.error) {
+    showError(res.config?.url, res?.data?.error?.message)
 
-        procession.mePromise.resolve('login ok')
-        procession.promiseLogin = null
-        procession.mePromise = {}
-      }
-    }
+    return Promise.reject(res.data.error)
   }
+
+  return res.data?.data
 }
 
-let http // 封装axios的http实例
-let environment = import.meta.env // 当前设计器运行环境变量
+const errorResponse = (error) => {
+  // 用户信息失效时，弹窗提示登录
+  const { response } = error
 
-const isVsCodeEnv = window.vscodeBridge
-const isMock = () => environment.VITE_API_MOCK === 'mock'
+  // 默认的 error response 显示接口错误
+  showError(error.config?.url, error?.message)
 
-export const createHttp = (options) => {
-  // 缓存http实例，避免每个请求重新创建实例
-  if (http && !options.force) {
-    return http
-  }
-  const isDevelopEnv = environment.MODE?.includes('dev')
-  const axiosConfig = getConfig(environment)
-  http = axios(axiosConfig)
-
-  // 如果未指定是否启用 mock，则本地开发时默认启用，模拟数据在 public/mock 目录下
-  const { enableMock = isDevelopEnv } = options
-  enableMock && http.mock(mockData)
-
-  const preRequest = (config) => {
-    if (isDevelopEnv && config.url.match(/\/generate\//)) {
-      config.baseURL = ''
-    }
-
-    if (isVsCodeEnv) {
-      config.baseURL = ''
-    }
-
-    return config
-  }
-
-  // 请求拦截器
-  http.interceptors.request.use(preRequest)
-
-  const preResponse = (res) => {
-    if (res.data?.error) {
-      showError(res.config?.url, res?.data?.error?.message)
-
-      return Promise.reject(res.data.error)
-    }
-
-    return res.data?.data
-  }
-
-  const openLogin = () => {
-    return new Promise((resolve, reject) => {
-      if (!procession.promiseLogin) {
-        procession.promiseLogin = loginVM.openLogin(procession, '/api/rebuildSession')
-        procession.promiseLogin.then(() => {
-          http.request(response.config).then(resolve, reject)
-        })
-      }
-    })
-  }
-
-  const errorResponse = (error) => {
-    // 用户信息失效时，弹窗提示登录
-    const { response } = error
-    if (response?.status === LOGIN_EXPIRED_CODE) {
-      // vscode 插件环境弹出输入框提示登录
-      if (window.vscodeBridge) {
-        return Promise.resolve(true)
-      }
-
-      // 浏览器环境弹出小窗登录
-      if (response?.headers['x-login-url']) {
-        return openLogin()
-      }
-    }
-
-    showError(error.config?.url, error?.message)
-
-    return response?.data.error ? Promise.reject(response.data.error) : Promise.reject(error.message)
-  }
-
-  // 响应拦截器
-  http.interceptors.response.use(preResponse, errorResponse)
-
-  return http
+  return response?.data.error ? Promise.reject(response.data.error) : Promise.reject(error.message)
 }
 
-/**
- * 根据环境不同初始化设置http参数
- * @param {*} env: 当前环境变量
- */
-export const initHttp = ({ env }) => {
-  if (Object.keys(env).length) {
-    environment = env
-  }
-  const baseURL = environment.VITE_ORIGIN
-  // 调用初始化方法前可能已经存在已经实例化的http，需要设置baseURL
-  http?.defaults('baseURL', baseURL)
-  globalDefaults('baseURL', baseURL)
-  http = createHttp({ force: true, enableMock: isMock() })
+const initialState = {
+  http: null
 }
 
-export const useHttp = () => createHttp({ enableMock: isMock() })
+export default {
+  id: 'engine.service.http',
+  options: {
+    config: {},
+    interceptors: {
+      request: [],
+      response: [preResponse, errorResponse]
+    },
+    mock: false,
+    mockData: []
+  },
+  type: 'MetaService',
+  initialState,
+  apis: ({ state }) => ({
+    http: state.http,
+    request: state.http.request,
+    get: state.http.get,
+    post: state.http.post,
+    put: state.http.put,
+    delete: state.http.delete
+  }),
+  init: ({ state, options }) => {
+    const { config, mock = false, mockData, interceptors } = options
 
-initHook(HOOK_NAME.useHttp, useHttp, { useDefaultExport: true })
+    let axiosConfig = config
+
+    // config 支持函数
+    if (typeof axiosConfig === 'function') {
+      axiosConfig = axiosConfig()
+    }
+
+    const http = axios(axiosConfig)
+
+    if (mock) {
+      http.mock(mockData)
+    }
+
+    if (Array.isArray(interceptors.request)) {
+      http.interceptors.request.use(...interceptors.request)
+    }
+
+    if (Array.isArray(interceptors.response)) {
+      http.interceptors.request.use(...interceptors.response)
+    }
+
+    state.http = http
+  }
+}
