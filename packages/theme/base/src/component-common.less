@@ -540,6 +540,7 @@
   background-color: var(--te-common-bg-default);
   box-shadow: 0 2px 12px 0 var(--te-base-rgba-24);
   .tiny-notify__icon-zone {
+    height: 24px;
     .tiny-notify__icon-status {
       width: 16px;
       height: 16px;
@@ -555,6 +556,8 @@
   .tiny-notify__message-zone {
     margin: 0 0 0 8px;
     .tiny-notify__title-wrapper {
+      margin-bottom: 0;
+      line-height: 24px;
       font-size: var(--te-base-font-size-1);
       font-weight: var(--te-base-font-weight-4);
       color: var(--te-common-text-primary);
@@ -562,9 +565,11 @@
   }
   .tiny-notify__close-zone {
     padding: 0;
-    &.tiny-notify__icon-close {
+    .tiny-notify__icon-close {
       width: 16px;
       height: 16px;
+      top: 0;
+      right: 0;
     }
   }
   &.tiny-notify--error {
