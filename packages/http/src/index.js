@@ -88,7 +88,17 @@ export const createHttp = (options) => {
     return config
   }
 
-  // 请求拦截器
+  // 请求拦截器，先注册后执行
+  const { requestInterceptors = [] } = options
+  requestInterceptors.forEach((item) => {
+    if (Array.isArray(item)) {
+      http.interceptors.request.use(...item)
+
+      return
+    }
+
+    http.interceptors.request.use(item)
+  })
   http.interceptors.request.use(preRequest)
 
   const preResponse = (res) => {
@@ -132,8 +142,18 @@ export const createHttp = (options) => {
     return response?.data.error ? Promise.reject(response.data.error) : Promise.reject(error.message)
   }
 
-  // 响应拦截器
+  // 响应拦截器，先注册先执行
   http.interceptors.response.use(preResponse, errorResponse)
+  const { responseInterceptors = [] } = options
+  responseInterceptors.forEach((item) => {
+    if (Array.isArray(item)) {
+      http.interceptors.response.use(...item)
+
+      return
+    }
+
+    http.interceptors.response.use(item)
+  })
 
   return http
 }
