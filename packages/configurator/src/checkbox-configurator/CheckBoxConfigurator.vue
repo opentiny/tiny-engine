@@ -1,11 +1,9 @@
 <template>
-  <div>
-    <tiny-checkbox v-model="checked"><slot></slot></tiny-checkbox>
-  </div>
+  <tiny-checkbox v-model="checked" @change="change"></tiny-checkbox>
 </template>
 
 <script>
-import { ref, watch } from 'vue'
+import { ref, watchEffect } from 'vue'
 import { Checkbox } from '@opentiny/vue'
 
 export default {
@@ -15,14 +13,22 @@ export default {
   props: {
     modelValue: { type: Boolean, default: false }
   },
+  inheritAttrs: false,
   setup(props, context) {
     const checked = ref(props.modelValue)
 
-    watch(checked, (newValue) => {
-      context.emit('update:modelValue', newValue)
+    watchEffect(() => {
+      checked.value = props.modelValue
     })
 
-    return { checked }
+    const change = (val) => {
+      context.emit('update:modelValue', val)
+    }
+
+    return {
+      checked,
+      change
+    }
   }
 }
 </script>

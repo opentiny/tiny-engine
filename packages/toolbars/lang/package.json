@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-toolbar-lang",
-  "version": "2.0.0-alpha.2",
+  "version": "2.0.0-alpha.4",
   "publishConfig": {
     "access": "public"
   },
@@ -25,8 +25,8 @@
   "license": "MIT",
   "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
-    "@opentiny/tiny-engine-utils": "workspace:*",
     "@opentiny/tiny-engine-common": "workspace:*",
+    "@opentiny/tiny-engine-utils": "workspace:*",
     "@vueuse/core": "^9.6.0"
   },
   "devDependencies": {

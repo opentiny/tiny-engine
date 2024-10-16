@@ -255,15 +255,17 @@ export default {
   width: 100%;
   display: flex;
   text-align: center;
-  .edit-btn {
-    color: var(--ti-lowcode-meta-codeEditor-color);
-    border-color: var(--ti-lowcode-meta-codeEditor-border-color);
+  .tiny-button.edit-btn {
+    color: var(--te-common-text-primary);
+    border-color: var(--te-common-border-default);
     flex: 1;
     text-align: center;
     margin-right: 0;
     &:hover {
-      color: var(--ti-lowcode-meta-codeEditor-hover-color);
-      border-color: var(--ti-lowcode-meta-codeEditor-border-hover-color);
+      border-color: var(--te-common-border-active);
+    }
+    &:focus {
+      border-color: var(--te-common-border-active);
     }
   }
 }
