@@ -410,11 +410,11 @@ export default {
       } else {
         updateStyle({ [activedName]: null })
       }
-      if (activedName.includes(TYPO_PROPERTY.FontFamily || TYPO_PROPERTY.FontWeight)) {
+      if (activedName.includes(TYPO_PROPERTY.FontFamily) || activedName.includes(TYPO_PROPERTY.FontWeight)) {
         state.value = '400'
         state.fontFamilyValue = 'Arial, "Helvetica Neue", Helvetica'
       }
-      if (activedName.includes(TYPO_PROPERTY.FontStyle || TYPO_PROPERTY.TextDecoration)) {
+      if (activedName.includes(TYPO_PROPERTY.FontStyle) || activedName.includes(TYPO_PROPERTY.TextDecoration)) {
         selectedFontStyle.value = ''
         selectedTextDecoration.value = ''
       }
