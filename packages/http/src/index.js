@@ -63,7 +63,7 @@ let environment = import.meta.env // 当前设计器运行环境变量
 const isVsCodeEnv = window.vscodeBridge
 const isMock = () => environment.VITE_API_MOCK === 'mock'
 
-export const createHttp = (options) => {
+export const createHttp = (options = {}) => {
   // 缓存http实例，避免每个请求重新创建实例
   if (http && !options.force) {
     return http
@@ -88,7 +88,18 @@ export const createHttp = (options) => {
     return config
   }
 
-  // 请求拦截器
+  // 请求拦截器，先注册后执行
+  const { requestInterceptors = [] } = options
+  // requestInterceptors：[ [requestInterceptor1, requestErrorInterceptor1], requestInterceptor2 ]
+  requestInterceptors.forEach((item) => {
+    if (Array.isArray(item)) {
+      http.interceptors.request.use(...item)
+
+      return
+    }
+
+    http.interceptors.request.use(item)
+  })
   http.interceptors.request.use(preRequest)
 
   const preResponse = (res) => {
@@ -132,8 +143,19 @@ export const createHttp = (options) => {
     return response?.data.error ? Promise.reject(response.data.error) : Promise.reject(error.message)
   }
 
-  // 响应拦截器
+  // 响应拦截器，先注册先执行
   http.interceptors.response.use(preResponse, errorResponse)
+  // responseInterceptors：[ [responseInterceptor1, responseErrorInterceptor1], responseInterceptor2 ]
+  const { responseInterceptors = [] } = options
+  responseInterceptors.forEach((item) => {
+    if (Array.isArray(item)) {
+      http.interceptors.response.use(...item)
+
+      return
+    }
+
+    http.interceptors.response.use(item)
+  })
 
   return http
 }

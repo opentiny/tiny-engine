@@ -34,6 +34,7 @@ export { default as Layout, LayoutService } from '@opentiny/tiny-engine-layout'
 export { default as Canvas } from '@opentiny/tiny-engine-canvas'
 export { initPreview } from './src/preview/src/main'
 export { PluginPanel, ToolbarBase } from '@opentiny/tiny-engine-common'
+export { initHttp, createHttp } from '@opentiny/tiny-engine-http'
 
 export { default as defaultRegistry } from './registry'
 
