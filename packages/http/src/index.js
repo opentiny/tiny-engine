@@ -90,6 +90,7 @@ export const createHttp = (options = {}) => {
 
   // 请求拦截器，先注册后执行
   const { requestInterceptors = [] } = options
+  // requestInterceptors：[ [requestInterceptor1, requestErrorInterceptor1], requestInterceptor2 ]
   requestInterceptors.forEach((item) => {
     if (Array.isArray(item)) {
       http.interceptors.request.use(...item)
@@ -144,6 +145,7 @@ export const createHttp = (options = {}) => {
 
   // 响应拦截器，先注册先执行
   http.interceptors.response.use(preResponse, errorResponse)
+  // responseInterceptors：[ [responseInterceptor1, responseErrorInterceptor1], responseInterceptor2 ]
   const { responseInterceptors = [] } = options
   responseInterceptors.forEach((item) => {
     if (Array.isArray(item)) {
