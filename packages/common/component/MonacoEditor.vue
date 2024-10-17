@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { computed, ref, onActivated, onDeactivated, nextTick } from 'vue'
+import { computed, ref, onActivated, onDeactivated } from 'vue'
 import { Tooltip } from '@opentiny/vue'
 import PublicIcon from './PublicIcon.vue'
 import VueMonaco from './VueMonaco.vue'
@@ -108,15 +108,6 @@ export default {
 
     const switchFullScreen = (value) => {
       fullscreen.value = value
-      nextTick(() => {
-        Array.from(document.getElementsByClassName('buttons'))?.forEach((item) => {
-          if (value && !item.classList.toString().includes('fullscreen')) {
-            item.style.display = 'none'
-          } else {
-            item.style.display = 'flex'
-          }
-        })
-      })
     }
 
     return {
@@ -146,7 +137,7 @@ export default {
   bottom: 0;
   left: calc(var(--base-nav-panel-width) + var(--base-left-panel-width));
   right: var(--base-left-panel-width);
-  z-index: 10;
+  z-index: 100;
   padding: 10px 16px 16px 16px;
   background-color: var(--ti-lowcode-common-component-bg);
   height: auto !important;
