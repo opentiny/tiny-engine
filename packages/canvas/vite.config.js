@@ -34,10 +34,9 @@ export default defineConfig({
     cssCodeSplit: true,
     lib: {
       entry: {
-        index: path.resolve(__dirname, './index.js')
+        index: path.resolve(__dirname, './index.js'),
+        render: path.resolve(__dirname, './render/index.js')
       },
-      name: 'canvas',
-      fileName: () => 'index.js',
       formats: ['es']
     },
     rollupOptions: {
@@ -46,7 +45,7 @@ export default defineConfig({
         chunkFileNames: '[name].js',
         assetFileNames: '[name].[ext]',
         banner: (chunk) => {
-          if (['index'].includes(chunk.name)) {
+          if (['index', 'render'].includes(chunk.name)) {
             return `import "./${chunk.name}.css"`
           }
           return ''

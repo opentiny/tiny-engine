@@ -57,23 +57,12 @@ export default {
     flex-direction: column;
     .tiny-tabs__nav-scroll {
       margin-left: 12px;
-      .tiny-tabs__nav {
-        display: inline-flex;
-        justify-content: center;
-        float: none;
-      }
       .tiny-tabs__active-bar {
-        width: 40px !important;
-        height: 2px;
+        height: 3px;
         background-color: var(--ti-lowcode-setting-panel-tabs-item-title-active-color);
       }
-      .tiny-tabs__item__title {
-        margin-left: 6px;
-      }
     }
-    .tiny-tabs__header {
-      padding-bottom: 12px;
-    }
+
     .tiny-tabs__content {
       flex: 1;
       overflow-y: auto;
@@ -81,7 +70,8 @@ export default {
       margin: 0;
     }
     .tiny-tabs__item {
-      margin-right: 26px;
+      flex: 1;
+      background-color: var(--ti-lowcode-setting-panel-bg-color);
       color: var(--ti-lowcode-setting-panel-tabs-item-title-color);
       &:hover {
         color: var(--ti-lowcode-setting-panel-tabs-item-title-hover-color);
@@ -89,11 +79,19 @@ export default {
       &.is-active {
         color: var(--ti-lowcode-setting-panel-tabs-item-title-active-color);
       }
+
+      .tiny-tabs__item__title {
+        padding-bottom: 2px;
+      }
+    }
+
+    .tiny-tabs__nav-wrap-not-separator::after {
+      z-index: 2;
     }
   }
 
   :deep(.tiny-collapse-item__content) {
-    padding: 8px 8px 8px 12px;
+    padding: 0 8px 12px 12px; // 这里的bottom为4px + 内部行元素与底部的距离为8px = 12px
   }
 }
 

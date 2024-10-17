@@ -10,7 +10,7 @@ export default defineConfig((configEnv) => {
     envDir: './env'
   })
 
-  const config = {
+  const customConfig = {
     envDir: './env',
     publicDir: path.resolve(__dirname, './public'),
     server: {
@@ -18,5 +18,5 @@ export default defineConfig((configEnv) => {
     }
   }
 
-  return mergeConfig(baseConfig, config)
+  return mergeConfig(baseConfig, customConfig)
 })

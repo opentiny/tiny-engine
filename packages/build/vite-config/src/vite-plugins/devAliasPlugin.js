@@ -55,6 +55,7 @@ const getDevAlias = (useSourceAlias) => {
     '@opentiny/tiny-engine-svgs': path.resolve(basePath, 'packages/svgs/index.js'),
     '@opentiny/tiny-engine-http': path.resolve(basePath, 'packages/http/src/index.js'),
     '@opentiny/tiny-engine-canvas': path.resolve(basePath, 'packages/canvas/index.js'),
+    '@opentiny/tiny-engine-canvas/render': path.resolve(basePath, 'packages/canvas/render/index.js'),
     '@opentiny/tiny-engine-utils': path.resolve(basePath, 'packages/utils/src/index.js'),
     '@opentiny/tiny-engine-webcomponent-core': path.resolve(basePath, 'packages/webcomponent/src/lib.js'),
     '@opentiny/tiny-engine-i18n-host': path.resolve(basePath, 'packages/i18n/src/lib.js'),

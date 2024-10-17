@@ -11,29 +11,14 @@
   >
     <template #content>
       <div class="actions">
-        <tiny-link
-          type="primary"
-          class="addButton"
-          :underline="false"
-          :disabled="!allowCreate"
-          @click.stop="insertNewData"
-          ><icon-plusCircle class="tiny-svg-size icon-plusCircle"></icon-plusCircle>新增静态数据</tiny-link
+        <tiny-button plain :disabled="!allowCreate" @click.stop="insertNewData"
+          ><icon-plus class="btn-icon"></icon-plus>新增静态数据</tiny-button
         >
-        <tiny-link
-          type="primary"
-          class="importButton"
-          :underline="false"
-          :disabled="!allowCreate"
-          @click.stop="showImportModal(true)"
-          ><icon-import class="tiny-svg-size icon-import"></icon-import>批量导入</tiny-link
+        <tiny-button plain :disabled="state.isBatchDeleteDisable" @click.stop="batchDelete"
+          ><svg-icon class="btn-icon" name="delete"></svg-icon>删除</tiny-button
         >
-        <tiny-link
-          type="primary"
-          class="box-all-delete"
-          :underline="false"
-          :disabled="state.isBatchDeleteDisable"
-          @click.stop="batchDelete"
-          ><span class="all-delete">批量删除</span></tiny-link
+        <tiny-button plain :disabled="!allowCreate" @click.stop="showImportModal(true)"
+          ><icon-upload class="btn-icon"></icon-upload>批量导入</tiny-button
         >
         <tiny-link type="primary" class="download" :underline="false" @click="download"
           ><icon-download class="tiny-svg-size icon-download"></icon-download>下载导入模板</tiny-link
@@ -95,8 +80,8 @@
 <script lang="jsx">
 import { reactive, ref, watchEffect, watch, computed } from 'vue'
 import { camelize, capitalize } from '@vue/shared'
-import { Grid, Pager, Input, Numeric, DatePicker, Switch, Slider, Link } from '@opentiny/vue'
-import { IconPlusCircle, IconImport } from '@opentiny/vue-icon'
+import { Grid, Pager, Input, Numeric, DatePicker, Switch, Slider, Link, Button } from '@opentiny/vue'
+import { iconPlus, iconUpload } from '@opentiny/vue-icon'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { useModal, useLayout, useNotify, useCanvas } from '@opentiny/tiny-engine-meta-register'
@@ -121,7 +106,10 @@ export default {
     PluginSetting,
     TinyPager: Pager,
     DataSourceRecordUpload,
-    TinyLink: Link
+    TinyLink: Link,
+    TinyButton: Button,
+    IconPlus: iconPlus(),
+    IconUpload: iconUpload()
   },
   props: {
     // 数据源对象
@@ -581,8 +569,6 @@ export default {
       saveRecordFormData,
       getGridData,
       saveRecordList,
-      IconPlusCircle: IconPlusCircle(),
-      IconImport: IconImport(),
       download,
       showImportModal,
       batchDelete,
@@ -613,26 +599,28 @@ export default {
       font-size: 14px;
     }
   }
+  :deep(.tiny-button--default) {
+    height: 24px;
+    line-height: 24px;
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--ti-lowcode-i18n-button-border-color);
+    border-radius: 4px;
+  }
+  .btn-icon {
+    margin-right: 6px;
+    color: var(--ti-lowcode-datasource-tip-color);
+    font-size: 12px;
+  }
   .download {
     margin: 0 12px;
-    font-size: 14px;
+    text-decoration: underline;
+    display: inline-block;
+    font-size: 12px;
+    text-align: left;
+    padding: 0;
+    color: var(--ti-lowcode-base-text-color);
     .icon-download {
-      margin: 0 1px 4px 0;
-      font-size: 16px;
-    }
-  }
-  .addButton {
-    margin: 0 12px;
-    font-size: 14px;
-    .icon-plusCircle {
-      margin: 0 1px 4px 0;
-      font-size: 16px;
-    }
-  }
-  .importButton {
-    margin: 0 12px;
-    font-size: 14px;
-    .icon-import {
       margin: 0 1px 4px 0;
       font-size: 16px;
     }

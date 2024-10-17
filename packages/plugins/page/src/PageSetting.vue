@@ -3,7 +3,6 @@
     <template #header>
       <button-group>
         <tiny-button type="primary" @click="savePageSetting">保存</tiny-button>
-        <svg-button v-if="!pageSettingState.isNew" name="delete" tips="删除页面" @click="deletePage"></svg-button>
         <svg-button
           v-if="!pageSettingState.isNew"
           name="text-copy-page"
@@ -11,8 +10,9 @@
           tips="复制页面"
           @click="copyPage"
         ></svg-button>
+        <svg-button v-if="!pageSettingState.isNew" name="delete" tips="删除页面" @click="deletePage"></svg-button>
+        <svg-button class="close-plugin-setting-icon" name="close" @click="cancelPageSetting"></svg-button>
       </button-group>
-      <svg-button class="close-plugin-setting-icon" name="close" @click="cancelPageSetting"></svg-button>
     </template>
 
     <template #content>
@@ -36,10 +36,12 @@
             title="页面生命周期配置"
             :name="PAGE_SETTING_SESSION.lifeCycles"
           >
-            <life-cycles
-              :bindLifeCycles="pageSettingState.currentPageData.page_content?.lifeCycles"
-              @updatePageLifeCycles="updatePageLifeCycles"
-            ></life-cycles>
+            <div class="life-cycles-container">
+              <life-cycles
+                :bindLifeCycles="pageSettingState.currentPageData.page_content?.lifeCycles"
+                @updatePageLifeCycles="updatePageLifeCycles"
+              ></life-cycles>
+            </div>
           </tiny-collapse-item>
 
           <tiny-collapse-item class="history-source" title="历史备份" :name="PAGE_SETTING_SESSION.history">
@@ -400,14 +402,28 @@ export default {
 
 .page-plugin-setting {
   :deep(.plugin-setting-header) {
+    border: 0;
+    .button-group {
+      column-gap: 2px;
+      .tiny-button {
+        width: 40px;
+        padding: 0;
+        min-width: 40px;
+        margin-right: 2px;
+      }
+    }
     .close-plugin-setting-icon {
-      margin-left: 16px;
+      margin-left: 4px;
     }
   }
 
   :deep(.plugin-setting-content) {
-    padding: 16px 0;
+    padding: 0 0 16px 0;
   }
+}
+
+.life-cycles-container {
+  padding: 0 0 12px 0;
 }
 
 .page-setting-collapse {
@@ -422,15 +438,6 @@ export default {
     .svg-icon {
       margin-right: 6px;
     }
-  }
-  .base-setting {
-    margin-top: -22px;
-  }
-  .input-output {
-    margin-top: -28px;
-  }
-  .history-source {
-    margin-top: 7px;
   }
 }
 </style>

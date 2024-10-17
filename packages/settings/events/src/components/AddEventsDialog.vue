@@ -1,7 +1,7 @@
 <template>
   <tiny-dialog-box
     :visible="visible"
-    title="添加自定义事件"
+    title="添加新事件"
     width="400px"
     :append-to-body="true"
     :close-on-click-modal="false"

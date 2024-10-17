@@ -20,7 +20,8 @@ export const basePropertyOptions = {
           widget: {
             component: 'InputConfigurator',
             props: {}
-          }
+          },
+          labelPosition: 'left'
         },
         {
           property: 'className',
@@ -36,7 +37,8 @@ export const basePropertyOptions = {
           widget: {
             component: 'InputConfigurator',
             props: {}
-          }
+          },
+          labelPosition: 'left'
         },
         {
           property: 'ref',
@@ -52,7 +54,8 @@ export const basePropertyOptions = {
           widget: {
             component: 'InputConfigurator',
             props: {}
-          }
+          },
+          labelPosition: 'left'
         }
       ]
     }

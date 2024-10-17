@@ -2,7 +2,12 @@ export default {
   id: 'engine.toolbars.fullscreen',
   type: 'toolbars',
   title: 'fullscreen',
-  icon: '',
-  align: 'right',
-  collapsed: true
+  options: {
+    icon: {
+      fullScreen: 'full-screen',
+      cancelFullScreen: 'cancel-full-screen'
+    },
+    renderType: 'icon',
+    collapsed: true
+  }
 }

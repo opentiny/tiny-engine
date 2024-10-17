@@ -1,35 +1,20 @@
 <template>
-  <tiny-popover
-    trigger="hover"
-    :open-delay="1000"
-    popper-class="toolbar-right-popover"
-    append-to-body
-    content="刷新画布"
-    :disabled="true"
-  >
-    <template #reference>
-      <div @click="refresh">
-        <span class="icon-hides">
-          <svg-icon :name="icon"></svg-icon>
-        </span>
-        <span class="operate-title">画布刷新</span>
-      </div>
-    </template>
-  </tiny-popover>
+  <toolbar-base content="刷新画布" :icon="options.icon.default || options.icon" :options="options" @click-api="refresh">
+  </toolbar-base>
 </template>
 
 <script>
-import { Popover } from '@opentiny/vue'
 import { useMaterial, useCanvas, useModal, useLayout, useBlock } from '@opentiny/tiny-engine-meta-register'
+import { ToolbarBase } from '@opentiny/tiny-engine-common'
 
 export default {
   components: {
-    TinyPopover: Popover
+    ToolbarBase
   },
   props: {
-    icon: {
-      type: String,
-      default: 'refresh'
+    options: {
+      type: Object,
+      default: () => ({})
     }
   },
   setup() {

@@ -1,44 +1,34 @@
 <template>
-  <tiny-popover
-    trigger="hover"
-    :open-delay="1000"
-    popper-class="toolbar-right-popover"
-    append-to-body
+  <toolbar-base
     :content="!isFullscreen ? '全屏' : '退出全屏'"
-    :disabled="true"
+    :icon="iconName"
+    :options="options"
+    @click-api="fullscreen"
   >
-    <template #reference>
-      <div>
-        <span class="icon-hides" @click="fullscreen">
-          <svg-icon :name="iconName"></svg-icon>
-        </span>
-        <span class="operate-title">切换全屏</span>
-      </div>
-    </template>
-  </tiny-popover>
+  </toolbar-base>
 </template>
 
 <script>
 import { ref } from 'vue'
-import { Popover } from '@opentiny/vue'
+import { ToolbarBase } from '@opentiny/tiny-engine-common'
 
 export default {
   components: {
-    TinyPopover: Popover
+    ToolbarBase
   },
   props: {
-    icon: {
-      type: String,
-      default: 'full-screen'
+    options: {
+      type: Object,
+      default: () => ({})
     }
   },
   setup(props) {
     const isFullscreen = ref(false)
-    const iconName = ref(props.icon)
+    const iconName = ref(props.options.icon.fullScreen)
 
     const fullscreen = () => {
       isFullscreen.value = !isFullscreen.value
-      iconName.value = isFullscreen.value ? 'cancel-full-screen' : 'full-screen'
+      iconName.value = isFullscreen.value ? props.options.icon.cancelFullScreen : props.options.icon.fullScreen
       document.webkitFullscreenElement
         ? document.webkitExitFullscreen()
         : document.documentElement.webkitRequestFullScreen()

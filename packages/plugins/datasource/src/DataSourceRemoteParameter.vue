@@ -44,5 +44,7 @@ export default {
 .monaco-editor {
   height: 180px;
   margin-top: 8px;
+  border: 1px solid var(--ti-lowcode-base-gray-101);
+  border-radius: 4px;
 }
 </style>

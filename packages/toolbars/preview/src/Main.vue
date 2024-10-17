@@ -1,40 +1,58 @@
 <template>
-  <tiny-popover
-    trigger="hover"
-    :open-delay="1000"
-    popper-class="toolbar-right-popover"
-    append-to-body
-    content="预览页面"
-  >
-    <template #reference>
-      <span class="icon" @click="preview">
-        <svg-icon :name="icon"></svg-icon>
-      </span>
-    </template>
-  </tiny-popover>
+  <div class="toolbar-save">
+    <toolbar-base
+      content="预览页面"
+      :icon="options.icon.default || options.icon"
+      :options="options"
+      @click-api="preview"
+    >
+    </toolbar-base>
+  </div>
 </template>
 
 <script>
-import { Popover } from '@opentiny/vue'
 import { previewPage, previewBlock } from '@opentiny/tiny-engine-common/js/preview'
 import { useBlock, useCanvas, useLayout, useNotify } from '@opentiny/tiny-engine-meta-register'
-import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
+import { getMergeMeta, getOptions } from '@opentiny/tiny-engine-meta-register'
+import meta from '../meta'
+import { ToolbarBase } from '@opentiny/tiny-engine-common'
 
 export default {
   components: {
-    TinyPopover: Popover
+    ToolbarBase
   },
   props: {
-    icon: {
-      type: String,
-      default: 'preview'
+    options: {
+      type: Object,
+      default: () => ({})
     }
   },
   setup() {
     const { isBlock, getCurrentPage, canvasApi } = useCanvas()
     const { getCurrentBlock } = useBlock()
 
-    const preview = () => {
+    const preview = async () => {
+      const { beforePreview, previewMethod, afterPreview } = getOptions(meta.id)
+
+      try {
+        if (typeof beforePreview === 'function') {
+          await beforePreview()
+        }
+
+        if (typeof previewMethod === 'function') {
+          const stop = await previewMethod()
+
+          if (stop) {
+            return
+          }
+        }
+      } catch (error) {
+        useNotify({
+          type: 'error',
+          message: `Error in previewing: ${error}`
+        })
+      }
+
       if (useLayout().isEmptyPage()) {
         useNotify({
           type: 'warning',
@@ -62,6 +80,17 @@ export default {
         params.id = page?.id
         params.pageInfo.name = page?.name
         previewPage(params)
+      }
+
+      if (typeof afterPreview === 'function') {
+        try {
+          await afterPreview()
+        } catch (error) {
+          useNotify({
+            type: 'error',
+            message: `Error in afterPreview: ${error}`
+          })
+        }
       }
     }
 

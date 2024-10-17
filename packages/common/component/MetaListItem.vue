@@ -263,10 +263,12 @@ export default {
   margin-bottom: -1px;
   color: var(--ti-lowcode-toolbar-breadcrumb-color);
   &.active-item {
-    background-color: var(--ti-lowcode-tabs-active-bg);
+    background-color: var(--te-common-bg-container);
   }
   .option-input {
     display: flex;
+    height: 24px;
+    align-items: center;
     padding: 2px;
     & > div {
       overflow: hidden;

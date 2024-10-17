@@ -12,6 +12,7 @@
 
 export { default as BackgroundGroup } from './background/BackgroundGroup.vue'
 export { default as BorderGroup } from './border/BorderGroup.vue'
+export { default as ButtonGroup } from './buttons/ButtonGroup.vue'
 export { default as EffectGroup } from './effects/EffectGroup.vue'
 export { default as ImageSelect } from './inputs/ImageSelect.vue'
 export { default as ResetButton } from './inputs/ResetButton.vue'

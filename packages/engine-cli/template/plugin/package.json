@@ -9,5 +9,8 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@opentiny/tiny-engine": "^2.0.0-alpha.3"
+  }
 }
