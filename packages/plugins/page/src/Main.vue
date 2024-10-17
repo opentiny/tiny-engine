@@ -71,6 +71,7 @@ export default {
     const { appInfoState } = useApp()
     const { pageState } = useCanvas()
     const { pageSettingState, DEFAULT_PAGE, isTemporaryPage, initCurrentPageData } = usePage()
+
     const pageTreeRef = ref(null)
     const ROOT_ID = pageSettingState.ROOT_ID
     const docsUrl = useHelp().getDocsUrl('page')
