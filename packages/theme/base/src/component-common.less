@@ -606,7 +606,6 @@
       color: var(--te-common-text-primary);
       font-size: var(--te-base-font-size-base);
       padding: 12px;
-      border: 1px solid var(--te-common-border-default);
       &[x-placement^='top'] {
         .popper__arrow {
           &.popper__arrow::after {
@@ -616,6 +615,7 @@
       }
       &[x-placement^='bottom'] {
         .popper__arrow {
+          border-bottom-width: 0;
           &.popper__arrow::after {
             border-bottom-color: var(--te-common-text-inverse);
           }
