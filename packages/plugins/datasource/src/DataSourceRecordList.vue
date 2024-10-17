@@ -373,12 +373,8 @@ export default {
           slots: {
             default: ({ row }) => (
               <div class="option-container">
-                <Button type="text" size="mini" class="option-button" onClick={() => handleCopy(row)}>
-                  复制
-                </Button>
-                <Button type="text" size="mini" class="option-button" onClick={() => handleDelete(row)}>
-                  删除
-                </Button>
+                <svg-icon name="copy" onClick={() => handleCopy(row)}></svg-icon>
+                <svg-icon name="delete" onClick={() => handleDelete(row)}></svg-icon>
               </div>
             )
           }
@@ -591,8 +587,7 @@ export default {
 .actions {
   display: flex;
   justify-content: left;
-  align-items: center;
-  margin: 16px 0 30px 0;
+  margin: 16px 0;
   .box-all-delete {
     margin: 1px 5px 0 5px;
     .all-delete {
@@ -647,86 +642,17 @@ export default {
   width: 642px;
   :deep(.option-container) {
     display: flex;
-    justify-content: center;
-    .option-button {
-      padding: 0;
-    }
-    .option-button + .option-button {
-      margin-left: 6px;
+    align-items: center;
+    .svg-icon {
+      margin-right: 10px;
     }
   }
 }
 
 .record-list-data {
-  margin-top: -20px;
-  :deep(.tiny-grid) {
-    background-color: var(--ti-lowcode-datasource-toolbar-bg);
-    .tiny-grid__header-wrapper {
-      background-color: var(--ti-lowcode-datasource-toolbar-view-hover-bg);
-      .tiny-grid-header__column {
-        color: var(--ti-lowcode-datasource-toolbar-breadcrumb-color);
-        height: 39px;
-      }
-
-      .tiny-grid__repair {
-        border-color: var(--ti-lowcode-datasource-tabs-border-color);
-      }
-
-      .tiny-grid-resizable.is__line:before {
-        background-color: var(--ti-lowcode-datasource-tabs-border-color);
-      }
-      .tiny-grid-checkbox__icon {
-        svg {
-          color: var(--ti-lowcode-datasource-common-primary-color);
-        }
-      }
-    }
-    .tiny-grid__body-wrapper {
-      &::-webkit-scrollbar {
-        height: 10px;
-      }
-      .tiny-grid-body__column {
-        height: 44px;
-        .copy-data {
-          svg {
-            margin-left: 5px;
-          }
-        }
-      }
-
-      .tiny-grid-body__row,
-      .tiny-grid-body__row:not(.row__hover):nth-child(2n) {
-        background-image: linear-gradient(
-          -180deg,
-          var(--ti-lowcode-datasource-tabs-border-color),
-          var(--ti-lowcode-datasource-tabs-border-color)
-        );
-        background-repeat: no-repeat;
-        background-size: 100% 1px;
-        background-position: 100% 100%;
-        &.row__current {
-          background-color: var(--ti-lowcode-datasource-toolbar-view-hover-bg);
-        }
-      }
-
-      .tiny-grid-body__row {
-        &.row__selected {
-          .tiny-grid-checkbox__icon {
-            svg {
-              color: var(--ti-lowcode-datasource-common-primary-color);
-              width: 100%;
-              height: 100%;
-            }
-          }
-        }
-      }
-    }
-
-    .tiny-grid__empty-text {
-      color: var(--ti-lowcode-datasource-toolbar-breadcrumb-color);
-    }
+  :deep(.tiny-grid.tiny-grid-editable .tiny-grid-body__column.col__ellipsis) {
+    padding-left: 8px;
   }
-
   :deep(.data-source-list-pager) {
     padding-right: 8px;
     .tiny-pager__pages {

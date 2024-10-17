@@ -170,7 +170,8 @@ export default {
   display: flex;
   flex-direction: column;
   .tiny-search {
-    padding: 0 8px 12px;
+    padding: 0 12px 12px 12px;
+    border-bottom: 1px solid var(--ti-lowcode-plugin-panel-header-border-bottom-color);
     :deep(.tiny-input__inner) {
       height: 30px;
     }

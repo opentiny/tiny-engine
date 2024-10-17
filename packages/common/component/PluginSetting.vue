@@ -173,7 +173,6 @@ export default {
     color: var(--ti-lowcode-plugin-panel-title-color);
     padding: 0 12px;
     border-bottom: 1px solid var(--ti-lowcode-plugin-panel-header-border-bottom-color);
-    margin-bottom: -6px;
     .plugin-setting-header-title {
       font-size: 12px;
       font-weight: 700;
@@ -187,7 +186,7 @@ export default {
     height: calc(100% - 46px);
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 16px 20px;
+    padding: 12px;
   }
 
   .button-group-wrap {

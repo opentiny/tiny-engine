@@ -8,13 +8,22 @@
   >
     <template #content>
       <div class="block-add-content">
-        <tiny-search v-model="state.searchValue" placeholder="请输入关键词" @update:modelValue="searchBlocks">
-          <template #prefix>
-            <tiny-icon-search />
-          </template>
-        </tiny-search>
+        <div class="block-add-content-title">区块列表</div>
         <block-group-filters :filters="state.filters" @search="searchBlocks"></block-group-filters>
-        <block-group-transfer v-model:blockList="state.blockList"></block-group-transfer>
+        <block-group-transfer v-model:blockList="state.blockList">
+          <template #search>
+            <tiny-search
+              class="transfer-order-search"
+              v-model="state.searchValue"
+              placeholder="请输入关键词"
+              @update:modelValue="searchBlocks"
+            >
+              <template #prefix>
+                <tiny-icon-search />
+              </template>
+            </tiny-search>
+          </template>
+        </block-group-transfer>
       </div>
     </template>
   </plugin-setting>
@@ -234,13 +243,23 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.tiny-search {
-  padding: 10px;
-}
-
 .block-add-content {
   display: flex;
   flex-direction: column;
   height: 100%;
+  .block-add-content-title {
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .transfer-order-search {
+    width: 296px;
+  }
+}
+:deep(.plugin-setting-header) {
+  .tiny-button {
+    width: 40px;
+    padding: 0;
+    min-width: 40px;
+  }
 }
 </style>

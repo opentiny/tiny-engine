@@ -273,7 +273,6 @@ export default {
 
 <style lang="less" scoped>
 .block-setting-content {
-  padding: 6px 12px 6px 12px;
   :deep(.tiny-form-item__error) {
     display: none;
   }

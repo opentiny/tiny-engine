@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 132 132" style="enable-background:new 0 0 132 132;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;}
+	.st1{fill-rule:evenodd;clip-rule:evenodd;fill:currentColor;}
+</style>
+<rect id="size" class="st0" width="132" height="132"/>
+<path id="合并" class="st1" d="M93.5,123.1H35.8c-11.5,0-20.6-9.2-20.6-20.6V28.2c0-11.5,9.2-20.6,20.6-20.6H77
+	c1.1,0,2.1,0.4,2.9,1.2l33,33c0.7,0.7,1.2,1.7,1.2,2.9v57.7C114.2,113.9,104.9,123.1,93.5,123.1z M35.8,15.9
+	c-6.8,0-12.4,5.5-12.4,12.4v74.2c0,6.8,5.5,12.4,12.4,12.4h57.8c6.8,0,12.4-5.5,12.4-12.4v-56L75.2,15.9H35.8z M89.4,69.5
+	c0-2.3-1.9-4.1-4.1-4.1H44c-2.3,0-4.1,1.8-4.1,4.1c0,2.2,1.8,4.1,4.1,4.1h41.3C87.5,73.6,89.4,71.7,89.4,69.5z"/>
+</svg>
