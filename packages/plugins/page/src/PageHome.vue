@@ -99,9 +99,7 @@ export default {
 <style lang="less" scoped>
 .home {
   color: var(--ti-lowcode-page-manage-text-color);
-  padding: 8px 0;
   line-height: 24px;
-  margin: -27px 0 -25px 0;
   .homeTitle {
     margin: 10px 0 0 5px;
     display: inline-block;

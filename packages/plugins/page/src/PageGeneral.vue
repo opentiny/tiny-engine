@@ -229,8 +229,6 @@ export default {
 
 <style lang="less" scoped>
 .general-config {
-  padding: 0 12px;
-
   .general-config-form {
     .input-head {
       color: var(--ti-lowcode-page-manage-input-head-text-color);

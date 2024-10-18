@@ -1,18 +1,12 @@
-<svg
-  data-icon="FontStyleNone"
-  aria-hidden="true"
-  focusable="false"
-  width="16"
-  height="16"
-  viewBox="0 0 16 16"
-  version="1.1"
-  xmlns="http://www.w3.org/2000/svg"
-  style="display: block"
->
-  <path
-    fill-rule="evenodd"
-    clip-rule="evenodd"
-    d="M9 3h2v2H9v6h2v2H5v-2h2V5H5V3h4z"
-    fill="currentColor"
-  ></path>
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 132 132" style="enable-background:new 0 0 132 132;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;}
+	.st1{fill-rule:evenodd;clip-rule:evenodd;fill:currentColor;}
+</style>
+<rect id="size" class="st0" width="132" height="132"/>
+<path id="合并_00000127747805034362261110000017118876383432387210_" class="st1" d="M70.1,27.7h20.6c2.3,0,4.1-1.8,4.1-4.1
+	s-1.8-4.1-4.1-4.1H41.2c-2.3,0-4.1,1.8-4.1,4.1s1.8,4.1,4.1,4.1h20.6V102H41.2c-2.3,0-4.1,1.8-4.1,4.1s1.8,4.1,4.1,4.1h49.5
+	c2.3,0,4.1-1.8,4.1-4.1s-1.8-4.1-4.1-4.1H70.1"/>
 </svg>

@@ -1,14 +1,12 @@
-<svg
-  data-icon="TextDecorationOverline"
-  aria-hidden="true"
-  focusable="false"
-  width="16"
-  height="16"
-  viewBox="0 0 16 16"
-  version="1.1"
-  xmlns="http://www.w3.org/2000/svg"
-  style="display: block"
->
-  <path fill="currentColor" d="M1 1h14v1H1z"></path>
-  <path fill-rule="evenodd" clip-rule="evenodd" d="M12 3H4v2h3v8h2V5h3V3z" fill="currentColor"></path>
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 132 132" style="enable-background:new 0 0 132 132;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;}
+	.st1{fill-rule:evenodd;clip-rule:evenodd;fill:currentColor;}
+</style>
+<rect id="size" class="st0" width="132" height="132"/>
+<path id="合并" class="st1" d="M24.8,16.5c-2.3,0-4.1,1.8-4.1,4.1s1.8,4.1,4.1,4.1h82.5c2.3,0,4.1-1.8,4.1-4.1s-1.8-4.1-4.1-4.1
+	H24.8z M33,41.2c-2.3,0-4.1,1.8-4.1,4.1s1.8,4.1,4.1,4.1h28.9v61.9c0,2.3,1.8,4.1,4.1,4.1c2.3,0,4.1-1.8,4.1-4.1V49.5H99
+	c2.3,0,4.1-1.8,4.1-4.1s-1.8-4.1-4.1-4.1H33z"/>
 </svg>

@@ -343,7 +343,6 @@ export default {
   .block-attribute,
   .block-event {
     position: relative;
-    padding: 0 12px;
     :deep(.tiny-col) {
       position: inherit;
     }

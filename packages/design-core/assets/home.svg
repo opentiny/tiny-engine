@@ -1,11 +1,15 @@
-<svg
-  data-icon="HomeMedium"
-  aria-hidden="true"
-  focusable="false"
-  viewBox="0 0 16 15"
-  version="1.1"
-  xmlns="http://www.w3.org/2000/svg"
-  style="display: inline-block;"
->
-  <path d="M8 1L1 7v1h2v6h3v-3c.216-1.14.87-2 2-2s1.784.86 2 2v3h3V8h2V7L8 1z"></path>
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 132 132" style="enable-background:new 0 0 132 132;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;}
+	.st1{fill:currentColor;}
+</style>
+<rect id="size" class="st0" width="132" height="132"/>
+<path id="路径备份" class="st1" d="M74.4,19.9l0.4,0.4l33.5,34.9c2.2,2.3,3.5,5.5,3.5,8.7v39c0,6.9-5.6,12.6-12.6,12.6H84.7
+	c-6.6,0-12.1-5.2-12.5-11.7l0-0.9l0-13.1c0-3.2-2.4-5.8-5.5-6.1l-0.7,0c-3.4,0-6.1,2.7-6.1,6.1l0,13.1c0,6.9-5.6,12.6-12.6,12.6
+	H32.8c-6.9,0-12.6-5.6-12.6-12.6v-39c0-3.2,1.2-6.3,3.4-8.6l33-34.9C61.4,15.4,69.3,15.2,74.4,19.9z M68.7,25.9
+	c-1.7-1.6-4.5-1.6-6.1,0.2l-33,34.9c-0.8,0.8-1.2,1.9-1.2,3v39c0,2.4,1.9,4.3,4.3,4.3h14.5c2.4,0,4.3-1.9,4.3-4.3l0-13.1
+	c0-7.9,6.4-14.4,14.8-14.4l1.1,0.1c7.3,0.8,12.8,6.9,12.8,14.3l0,12.8l0,0.6c0.2,2.2,2,4,4.3,4h14.5c2.4,0,4.3-1.9,4.3-4.3V64
+	c0-1.1-0.4-2.2-1.2-3L69,26.2L68.7,25.9z"/>
 </svg>

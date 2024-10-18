@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 26.0.2, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="flow-align-right" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 16 16" style="enable-background:new 0 0 16 16;" xml:space="preserve">
-	<path id="flow-align-right-path" fill="currentColor" d="M13.5,1.5c0.4,0,0.7,0.2,0.7,0.7v11.8
-	c0,0.3-0.2,0.6-0.7,0.6s-0.7-0.2-0.7-0.6V2.1C12.9,1.7,13.2,1.5,13.5,1.5z M10.9,8.8c0.5,0,0.8,0.3,0.8,0.8v3.2
-	c0,0.5-0.3,0.8-0.8,0.8H1.9c-0.5,0-0.8-0.3-0.8-0.8V9.6c0-0.5,0.3-0.8,0.8-0.8H10.9z M10.5,10H2.4v2.4h8.1V10z M10.9,2.3
-	c0.5,0,0.8,0.3,0.8,0.8v3.3c0,0.5-0.3,0.8-0.8,0.8H5.2c-0.5,0-0.8-0.3-0.8-0.8V3.1c0-0.5,0.3-0.8,0.8-0.8H10.9z M10.5,3.5H5.6v2.4
-	h4.9V3.5z"/>
+<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 132 132" style="enable-background:new 0 0 132 132;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;}
+	.st1{fill:currentColor;}
+</style>
+<rect id="size" class="st0" width="132" height="132"/>
+<path id="形状结合" class="st1" d="M12.4,82.5c0-6.8,5.5-12.4,12.4-12.4h61.9c6.8,0,12.4,5.5,12.4,12.4V99
+	c0,6.8-5.5,12.4-12.4,12.4H24.8c-6.8,0-12.4-5.5-12.4-12.4V82.5z M20.6,82.5V99c0,2.3,1.8,4.1,4.1,4.1h61.9c2.3,0,4.1-1.8,4.1-4.1
+	V82.5c0-2.3-1.8-4.1-4.1-4.1H24.8C22.5,78.4,20.6,80.2,20.6,82.5z M41.2,33c0-6.8,5.5-12.4,12.4-12.4h33C93.5,20.6,99,26.2,99,33
+	v16.5c0,6.8-5.5,12.4-12.4,12.4h-33c-6.8,0-12.4-5.5-12.4-12.4V33z M49.5,33v16.5c0,2.3,1.8,4.1,4.1,4.1h33c2.3,0,4.1-1.8,4.1-4.1
+	V33c0-2.3-1.8-4.1-4.1-4.1h-33C51.3,28.9,49.5,30.7,49.5,33z M115.5,115.5c0,2.3-1.8,4.1-4.1,4.1s-4.1-1.8-4.1-4.1v-99
+	c0-2.3,1.8-4.1,4.1-4.1s4.1,1.8,4.1,4.1V115.5z"/>
 </svg>

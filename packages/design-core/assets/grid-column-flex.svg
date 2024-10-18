@@ -1,5 +1,15 @@
-<svg data-icon="GridColumnFlex" aria-hidden="true" focusable="false" viewBox="0 0 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg">
-  <g fill="currentColor" fill-rule="evenodd" clip-rule="evenodd">
-    <path opacity=".5" d="M1 0H0v12h1V0zm11 0h-1v12h1V0z"></path><path d="M4 3L1 6l3 3V7h4v2l3-3-3-3v2H4V3z"></path>
-  </g>
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 132 132" style="enable-background:new 0 0 132 132;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;}
+	.st1{fill:currentColor;}
+</style>
+<rect id="size" class="st0" width="132" height="132"/>
+<path id="形状结合" class="st1" d="M91,50.9l11.1,12.4c1.4,1.6,1.4,3.9,0,5.5L91,81.1c-1.5,1.7-4.1,1.8-5.8,0.3
+	c-1.7-1.5-1.8-4.1-0.3-5.8l4.9-5.5H42.2l4.9,5.5c1.4,1.5,1.4,3.8,0.1,5.4l-0.4,0.4c-1.7,1.5-4.3,1.4-5.8-0.3L29.9,68.8
+	c-1.4-1.6-1.4-3.9,0-5.5L41,50.9c1.5-1.7,4.1-1.8,5.8-0.3l0.5,0.5c1.2,1.5,1.2,3.8-0.2,5.3l-4.9,5.5h47.6l-4.9-5.5
+	c-1.4-1.5-1.4-3.7-0.2-5.3l0.5-0.5C86.9,49,89.5,49.2,91,50.9z M24.8,111.4c0,2.3-1.8,4.1-4.1,4.1s-4.1-1.8-4.1-4.1V20.6
+	c0-2.3,1.8-4.1,4.1-4.1s4.1,1.8,4.1,4.1V111.4z M115.5,111.4c0,2.3-1.8,4.1-4.1,4.1s-4.1-1.8-4.1-4.1V20.6c0-2.3,1.8-4.1,4.1-4.1
+	s4.1,1.8,4.1,4.1V111.4z"/>
 </svg>

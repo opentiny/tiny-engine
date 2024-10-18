@@ -137,7 +137,7 @@ export default {
   bottom: 0;
   left: calc(var(--base-nav-panel-width) + var(--base-left-panel-width));
   right: var(--base-left-panel-width);
-  z-index: 10;
+  z-index: 100;
   padding: 10px 16px 16px 16px;
   background-color: var(--ti-lowcode-common-component-bg);
   height: auto !important;
@@ -159,6 +159,7 @@ export default {
     }
   }
   .fullscreen {
+    display: flex;
     margin-right: 20px;
   }
 }

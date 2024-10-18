@@ -1,18 +1,28 @@
 <template>
   <div class="right-item">
-    <span class="title">数据源类型</span>
-    <tiny-radio-group v-model="state.value" @change="handleChange">
-      <tiny-radio v-for="item in state.dataType" :key="item.value" :label="item.name" :disabled="editable"></tiny-radio>
-    </tiny-radio-group>
+    <tiny-form label-position="top">
+      <tiny-form-item prop="name" label="数据源类型">
+        <tiny-radio-group v-model="state.value" @change="handleChange">
+          <tiny-radio
+            v-for="item in state.dataType"
+            :key="item.value"
+            :label="item.name"
+            :disabled="editable"
+          ></tiny-radio>
+        </tiny-radio-group>
+      </tiny-form-item>
+    </tiny-form>
   </div>
 </template>
 
 <script>
 import { reactive, watchEffect } from 'vue'
-import { RadioGroup, Radio } from '@opentiny/vue'
+import { Form, FormItem, RadioGroup, Radio } from '@opentiny/vue'
 
 export default {
   components: {
+    TinyForm: Form,
+    TinyFormItem: FormItem,
     TinyRadioGroup: RadioGroup,
     TinyRadio: Radio
   },
@@ -30,7 +40,7 @@ export default {
   setup(props, { emit }) {
     const state = reactive({
       checkedIndex: 0,
-      value: 'array',
+      value: '对象数组',
       dataType: [
         {
           name: '对象数组',
@@ -75,7 +85,6 @@ export default {
 
 <style lang="less" scoped>
 .right-item {
-  padding: 16px 12px;
   color: var(--ti-lowcode-datasource-toolbar-icon-color);
   display: flex;
   flex-direction: column;

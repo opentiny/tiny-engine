@@ -1,5 +1,4 @@
 <template>
-  <div class="title">请求参数(JSON)</div>
   <monaco-editor :value="modelValue" class="monaco-editor" :options="options" @change="change" />
 </template>
 

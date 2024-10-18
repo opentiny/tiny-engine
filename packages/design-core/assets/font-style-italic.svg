@@ -1,14 +1,12 @@
-<svg
-  data-icon="FontStyleItalic"
-  aria-hidden="true"
-  focusable="false"
-  width="16"
-  height="16"
-  viewBox="0 0 16 16"
-  version="1.1"
-  xmlns="http://www.w3.org/2000/svg"
-  style="display: block"
->
-  <path fill="currentColor" stroke="currentColor" d="M7.5 3.5h5v1h-5zm-4 8h5v1h-5z"></path>
-  <path d="M5.5 12l5-8" stroke="currentColor" stroke-width="2"></path>
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 132 132" style="enable-background:new 0 0 132 132;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;}
+	.st1{fill-rule:evenodd;clip-rule:evenodd;fill:currentColor;}
+</style>
+<rect id="size" class="st0" width="132" height="132"/>
+<path id="合并_00000069358171173940953640000015171712070858685068_" class="st1" d="M77.6,28.9H99c2.3,0,4.1-1.8,4.1-4.1
+	s-1.8-4.1-4.1-4.1H49.5c-2.3,0-4.1,1.8-4.1,4.1s1.8,4.1,4.1,4.1h19.7l-14.9,74.2H33c-2.3,0-4.1,1.8-4.1,4.1s1.8,4.1,4.1,4.1h49.5
+	c2.3,0,4.1-1.8,4.1-4.1s-1.8-4.1-4.1-4.1H62.8"/>
 </svg>
