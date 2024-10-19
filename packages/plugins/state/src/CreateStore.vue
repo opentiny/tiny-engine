@@ -32,27 +32,43 @@
             <template #toolbarStart>
               <div class="label-left-wrap"></div>
             </template>
+            <template #fullscreenHead>
+              <div class="fullscreen-head-content">
+                <span>state</span>
+                <close-icon @close="cancel"></close-icon>
+              </div>
+            </template>
+            <template #fullscreenFooter>
+              <div class="fullscreen-footer-content">
+                <state-tips></state-tips>
+              </div>
+            </template>
           </monaco-editor>
-          <div class="tips">
-            <div>字符串:"string"</div>
-            <div>数字:123</div>
-            <div>布尔值:true/false</div>
-            <div>对象:{"name":"xxx"}</div>
-            <div>数组:["1","2"]</div>
-            <div>空值:null</div>
-            <div>"color":red</div>
-            <div>"background":"blue"</div>
-          </div>
+          <state-tips></state-tips>
         </tiny-form-item>
       </tiny-collapse-item>
       <tiny-collapse-item title="getters" name="getters">
         <tiny-form-item prop="getters">
-          <monaco-editor ref="gettersEditor" class="store-editor" :options="options" :value="getters"> </monaco-editor>
+          <monaco-editor ref="gettersEditor" class="store-editor" :options="options" :value="getters">
+            <template #fullscreenHead>
+              <div class="fullscreen-head-content">
+                <span>getters</span>
+                <close-icon @close="cancel"></close-icon>
+              </div>
+            </template>
+          </monaco-editor>
         </tiny-form-item>
       </tiny-collapse-item>
       <tiny-collapse-item title="actions" name="actions">
         <tiny-form-item prop="actions">
-          <monaco-editor ref="actionsEditor" class="store-editor" :options="options" :value="actions"> </monaco-editor>
+          <monaco-editor ref="actionsEditor" class="store-editor" :options="options" :value="actions">
+            <template #fullscreenHead>
+              <div class="fullscreen-head-content">
+                <span>actions</span>
+                <close-icon @close="cancel"></close-icon>
+              </div>
+            </template>
+          </monaco-editor>
         </tiny-form-item>
       </tiny-collapse-item>
     </tiny-collapse>
@@ -62,13 +78,16 @@
 <script>
 import { getCurrentInstance, reactive, ref, computed, watch } from 'vue'
 import { Form, FormItem, Input, Collapse as TinyCollapse, CollapseItem as TinyCollapseItem } from '@opentiny/vue'
-import { MonacoEditor } from '@opentiny/tiny-engine-common'
+import { MonacoEditor, CloseIcon } from '@opentiny/tiny-engine-common'
 import { string2Ast, ast2String, insertName } from '@opentiny/tiny-engine-common/js/ast'
 import { verifyJsVarName } from '@opentiny/tiny-engine-common/js/verification'
+import StateTips from './StateTips.vue'
 
 export default {
   components: {
     MonacoEditor,
+    CloseIcon,
+    StateTips,
     TinyForm: Form,
     TinyFormItem: FormItem,
     TinyInput: Input,
@@ -89,6 +108,7 @@ export default {
       type: String
     }
   },
+  emits: ['close'],
   setup(props, { emit }) {
     const instance = getCurrentInstance()
     const isDemoShow = ref(false)
@@ -205,6 +225,10 @@ export default {
       return Object.prototype.toString.call(variable) === '[object Object]'
     }
 
+    const cancel = () => {
+      emit('close')
+    }
+
     return {
       isDemoShow,
       state,
@@ -219,7 +243,8 @@ export default {
       actionsEditor,
       editorDidMount,
       variableEditor,
-      actions
+      actions,
+      cancel
     }
   }
 }
@@ -229,15 +254,6 @@ export default {
 .store-form {
   height: calc(100% - 45px);
   overflow-y: auto;
-  .tips {
-    font-size: 11px;
-    line-height: 18px;
-    margin-top: 8px;
-    border-radius: 4px;
-    padding: 8px 14px;
-    background: var(--ti-lowcode-data-source-box-bg);
-    color: var(--ti-lowcode-datasource-tip-color);
-  }
   :deep(.tiny-collapse-item__wrap) {
     padding: 0 12px;
   }
@@ -260,6 +276,16 @@ export default {
   .label-left-wrap {
     color: var(--ti-lowcode-toolbar-icon-color);
     display: flex;
+  }
+
+  .fullscreen-head-content {
+    font-size: 12px;
+    color: var(--te-common-text-primary);
+    height: 30px;
+    line-height: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
   }
 }
 
