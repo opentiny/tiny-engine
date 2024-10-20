@@ -104,7 +104,7 @@
     </div>
   </div>
 
-  <div>
+  <div :class="{ 'not-selected': getMoveDragBarState() }">
     <!-- 插件面板 -->
     <div
       v-show="renderPanel && components[renderPanel]"
@@ -184,7 +184,8 @@ export default {
       dragPluginLayout,
       isSameSide,
       getPluginShown,
-      closePlugin
+      closePlugin,
+      getMoveDragBarState
     } = useLayout()
 
     const rightMenu = ref(null)
@@ -310,7 +311,8 @@ export default {
       PLUGIN_POSITION,
       getPluginShown,
       switchAlign,
-      rightMenu
+      rightMenu,
+      getMoveDragBarState
     }
   }
 }
@@ -452,5 +454,8 @@ export default {
 
 :deep(.svg-icon.icon-plugin-icon-plugin-help) {
   font-size: 22px;
+}
+.not-selected {
+  user-select: none;
 }
 </style>
