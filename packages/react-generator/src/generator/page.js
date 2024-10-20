@@ -267,6 +267,7 @@ const generateReactImports = (description, moduleName, type, componentsMap) => {
     }
   })
 
+  console.log(componentPacks, 'componentPacks>>>>>>>>>>')
   Object.entries(componentPacks).forEach(([pkgName, deps]) => {
     const items = deps.map((dep) => {
       const { componentName, exportName } = dep
