@@ -13,4 +13,3 @@
 import { generateCode, generateBlocksCode, generatePageCode, generateApp, CodeGenerator } from './generator'
 
 export { generateCode, generateBlocksCode, generatePageCode, generateApp, CodeGenerator }
-

@@ -1,24 +1,9 @@
 <template>
-  <tiny-dialog-box
-    class="dialog-box"
-    :visible="visible"
-    :close-on-click-modal="false"
-    :append-to-body="true"
-    width="800"
-    title="请选择生成到本地的文件"
-    @close="$emit('cancel')"
-    @open="openDialog"
-  >
+  <tiny-dialog-box class="dialog-box" :visible="visible" :close-on-click-modal="false" :append-to-body="true"
+    width="800" title="请选择生成到本地的文件" @close="$emit('cancel')" @open="openDialog">
     <div class="dialog-grid">
-      <tiny-grid
-        :data="tableData"
-        ref="gridRef"
-        size="mini"
-        :max-height="500"
-        :tree-config="{ children: 'children' }"
-        :expand-config="{ expandAll: true }"
-        :auto-resize="true"
-      >
+      <tiny-grid :data="tableData" ref="gridRef" size="mini" :max-height="500" :tree-config="{ children: 'children' }"
+        :expand-config="{ expandAll: true }" :auto-resize="true">
         <tiny-grid-column type="selection" width="60" tree-node></tiny-grid-column>
         <tiny-grid-column field="fileType" title="文件类型" width="100"></tiny-grid-column>
         <tiny-grid-column field="filePath" title="文件路径" width="250"></tiny-grid-column>
@@ -55,7 +40,6 @@ export default {
   setup(props, { emit }) {
     const getTableTreeData = (data) => {
       const dataMap = {}
-      console.log(data, 'data')
       data.forEach((item) => {
         if (!dataMap[item.fileType]) {
           dataMap[item.fileType] = { fileType: item.fileType, children: [] }
@@ -126,7 +110,7 @@ export default {
 
     .tiny-dialog-box__footer {
       .tiny-button--primary {
-        background-color: var(--ti-lowcode-common-danger-color, #191919;);
+        background-color: var(--ti-lowcode-common-danger-color, #191919; );
         border: none;
       }
     }
@@ -196,11 +180,9 @@ export default {
 
         .tiny-grid-body__row,
         .tiny-grid-body__row:not(.row__hover):nth-child(2n) {
-          background-image: linear-gradient(
-            -180deg,
-            var(--ti-lowcode-new-table-row-sepline-background),
-            var(--ti-lowcode-new-table-row-sepline-background)
-          );
+          background-image: linear-gradient(-180deg,
+              var(--ti-lowcode-new-table-row-sepline-background),
+              var(--ti-lowcode-new-table-row-sepline-background));
           background-repeat: no-repeat;
           background-size: 100% 1px;
           background-position: 100% 100%;

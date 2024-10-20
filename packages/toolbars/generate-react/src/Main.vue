@@ -1,23 +1,14 @@
 <template>
-  <tiny-popover
-    trigger="hover"
-    :open-delay="1000"
-    popper-class="toolbar-right-popover"
-    append-to-body
-    content="生成当前页面/区块的React代码到本地文件"
-  >
+  <tiny-popover trigger="hover" :open-delay="1000" popper-class="toolbar-right-popover" append-to-body
+    content="生成当前页面/区块的React代码到本地文件">
     <template #reference>
       <span class="icon" @click="generate">
         <svg-icon :name="icon"></svg-icon>
       </span>
     </template>
   </tiny-popover>
-  <generate-file-selector
-    :visible="state.showDialogbox"
-    :data="state.saveFilesInfo"
-    @confirm="confirm"
-    @cancel="cancel"
-  ></generate-file-selector>
+  <generate-file-selector :visible="state.showDialogbox" :data="state.saveFilesInfo" @confirm="confirm"
+    @cancel="cancel"></generate-file-selector>
 </template>
 
 <script>
@@ -105,8 +96,6 @@ export default {
         Page: generateApp
       }
       const filesInfo = handlers[params.type]({ params, codeList, metaData, pageList })
-
-      console.log(filesInfo, 'current>>>')
 
       return filesInfo
     }

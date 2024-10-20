@@ -16,8 +16,8 @@ function genPagePlugin(options = {}) {
   const { pageBasePath, sfcConfig = {} } = realOptions
 
   /**
-   * 
-   * @param {} codeList 
+   *
+   * @param {} codeList
    */
   const prettierCode = (codeList, pagePath = '') => {
     console.log('你进来没有啊我草')
@@ -33,7 +33,7 @@ function genPagePlugin(options = {}) {
       sass: [parseCss],
       json: [parserBabel]
     }
-  
+
     const blockList = codeList.filter((item) => item.type === 'Block').map((item) => item.panelName)
     codeList.forEach(async ({ panelName, panelValue = '', prettierOpts, type }) => {
       if (panelName) {
@@ -61,7 +61,7 @@ function genPagePlugin(options = {}) {
     })
 
     console.log(pageFiles, 'pageFiles>>>')
-  
+
     return pageFiles
   }
 

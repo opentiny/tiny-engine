@@ -30,6 +30,7 @@
     "@opentiny/tiny-engine-builtin-component": "workspace:*",
     "@vue/compiler-sfc": "3.2.45",
     "@vue/shared": "^3.3.4",
+    "react-router-dom": "^6.27.0",
     "vue": "^3.4.15",
     "vue-eslint-parser": "8.3.0"
   },

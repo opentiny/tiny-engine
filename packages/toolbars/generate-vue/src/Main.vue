@@ -1,24 +1,16 @@
 <template>
-  <tiny-popover
-    trigger="hover"
-    :open-delay="1000"
-    popper-class="toolbar-right-popover"
-    append-to-body
-    content="生成当前应用代码到本地文件"
-  >
+  <tiny-popover trigger="hover" :open-delay="1000" popper-class="toolbar-right-popover" append-to-body
+    content="生成当前应用代码到本地文件">
     <template #reference>
       <span class="icon" @click="generate">
         <svg-icon :name="icon"></svg-icon>
       </span>
-      <tiny-select title="请选择出码产物" :options="state.options" v-model="state.value" size="small" style="width: 80px"></tiny-select>
+      <tiny-select title="请选择出码产物" :options="state.options" v-model="state.value" size="small"
+        style="width: 80px"></tiny-select>
     </template>
   </tiny-popover>
-  <generate-file-selector
-    :visible="state.showDialogbox"
-    :data="state.saveFilesInfo"
-    @confirm="confirm"
-    @cancel="cancel"
-  ></generate-file-selector>
+  <generate-file-selector :visible="state.showDialogbox" :data="state.saveFilesInfo" @confirm="confirm"
+    @cancel="cancel"></generate-file-selector>
 </template>
 
 <script>
@@ -41,7 +33,7 @@ import { generateApp as generateReactApp } from '../../../react-generator/src/in
 
 import { fetchMetaData, fetchPageList, fetchCode as fetchBlockSchema } from './http'
 import FileSelector from './FileSelector.vue'
-import { generateVuePage } from './generateCode'
+// import { generateVuePage } from './generateCode'
 
 export default {
   components: {
@@ -136,11 +128,11 @@ export default {
           extraList.push(getBlocksSchema(item.value[0].content, blockSet))
         }
       })
-      ;(await Promise.allSettled(extraList)).forEach((item) => {
-        if (item.status === 'fulfilled' && item.value) {
-          res.push(...item.value)
-        }
-      })
+        ; (await Promise.allSettled(extraList)).forEach((item) => {
+          if (item.status === 'fulfilled' && item.value) {
+            res.push(...item.value)
+          }
+        })
 
       return res
     }

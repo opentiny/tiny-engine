@@ -10,8 +10,4 @@
  *
  */
 
-import { generateCode, generateBlocksCode, generatePageCode } from './page'
-
-export { generateCode, generateBlocksCode, generatePageCode }
-export { generateApp } from './generateApp'
-export { default as CodeGenerator } from './codeGenerator'
+export default () => {}

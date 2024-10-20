@@ -11,7 +11,7 @@
  */
 
 /**
- * 组件映射关系，默认使用 Tiny Vue 组件，支持传入其它组件库的映射关系
+ * 组件映射关系，默认使用 Tiny React 组件，支持传入其它组件库的映射关系
  * @summary 建议：添加时，按照组件名称的字母序排列
  */
 const DEFAULT_COMPONENTS_MAP = [
