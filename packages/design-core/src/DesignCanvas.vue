@@ -135,11 +135,15 @@ export default {
     )
 
     const nodeSelected = (node, parent, type) => {
-      const { toolbars } = useLayout().layoutState
-      if (type !== 'clickTree') {
-        useLayout().closePlugin()
+      const { toolbars, plugins, settings } = useLayout().layoutState
+      const leftPanels = localStorage.getItem('leftPanels')
+      const rightPanels = localStorage.getItem('rightPanels')
+      if (type !== 'clickTree' && plugins.render && !leftPanels.includes(plugins.render)) {
+        useLayout().closePlugin(true)
       }
-
+      if (settings.render && !rightPanels.includes(settings.render)) {
+        useLayout().closeSetting(true)
+      }
       const { getSchema, getNodePath } = useCanvas().canvasApi.value
 
       const schema = getSchema()
