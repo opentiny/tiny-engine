@@ -15,7 +15,7 @@
       <tiny-dropdown trigger="click" :show-icon="false">
         <span>
           <span>{{ selectedModel.label }}</span>
-          <icon-chevron-down class="ml8"></icon-chevron-down>
+          <icon-chevron-down class="ml8 arrow-down"></icon-chevron-down>
         </span>
         <template #dropdown>
           <tiny-dropdown-menu popper-class="chat-model-popover" placement="bottom" :visible-arrow="false">
@@ -24,8 +24,8 @@
               :key="item.label"
               :class="{ 'selected-model': currentModel === item.value }"
               @click="changeModel(item)"
-              >{{ item.label }}</tiny-dropdown-item
-            >
+              >{{ item.label }}
+            </tiny-dropdown-item>
           </tiny-dropdown-menu>
         </template>
       </tiny-dropdown>
@@ -37,15 +37,16 @@
           :key="index"
           :flex="true"
           :order="item.role === 'user' ? 'des' : 'asc'"
-          :justify="item.role === 'user' ? 'end' : 'start'"
+          :justify="item.role === 'assistant' ? 'start' : 'end'"
           class="chat-message-row"
         >
-          <tiny-col :span="1" :no="1" class="chat-avatar-wrap">
+          <tiny-col v-if="item.role !== 'system'" :span="1" :no="1" class="chat-avatar-wrap">
             <img v-if="item.role !== 'user'" class="chat-avatar chat-avatar-ai" src="../assets/AI.png" />
             <img v-else class="chat-avatar" :src="avatarUrl" />
           </tiny-col>
           <tiny-col :span="22" :no="2">
             <div
+              v-if="item.role !== 'system'"
               :class="[
                 'chat-content',
                 chatWindowOpened ? '' : 'hidden-text',
@@ -56,7 +57,10 @@
                   : 'chat-content-ai'
               ]"
             >
-              <dialog-content :markdownContent="item.content" />
+              <dialog-content :markdown-content="item.content" />
+            </div>
+            <div v-else class="chat-message-image">
+              <img class="image" :src="item.content" alt="" />
             </div>
           </tiny-col>
         </tiny-row>
@@ -72,6 +76,7 @@
           <svg-icon name="chat-message" class="common-svg"></svg-icon>
         </template>
         <template #suffix>
+          <icon-picture class="common-svg upload-image" @click="openFilePicker"></icon-picture>
           <svg-icon
             name="chat-microphone"
             :class="['common-svg', 'microphone', { 'microphone-svg': speechStatus }]"
@@ -82,6 +87,11 @@
       <tiny-button @click="endContent">重新发起会话</tiny-button>
       <tiny-button @click="sendContent(inputContent, false)">发送</tiny-button>
     </footer>
+    <input type="file" ref="fileInput" style="display: none" @change="handleFileChange" />
+    <div class="preview-image" v-if="imageUrl !== ''" :data-animated="imageDeleting ? 'out' : ''">
+      <img class="image" :src="imageUrl" alt="" />
+      <icon-error class="delete-image" @click="handleDelete"></icon-error>
+    </div>
   </div>
   <token-dialog
     :dialog-visible="tokenDialogVisible"
@@ -92,7 +102,7 @@
 </template>
 
 <script>
-import { ref, onMounted, watch, watchEffect } from 'vue'
+import { ref, onMounted, watch, unref, watchEffect } from 'vue'
 import {
   Layout,
   Row,
@@ -105,8 +115,8 @@ import {
   DropdownMenu as TinyDropdownMenu,
   DropdownItem as TinyDropdownItem
 } from '@opentiny/vue'
-import { useCanvas, useHistory, usePage, useModal } from '@opentiny/tiny-engine-controller'
-import { iconChevronDown, iconSetting } from '@opentiny/vue-icon'
+import { useCanvas, useHistory, usePage, useModal, useLayout } from '@opentiny/tiny-engine-controller'
+import { iconChevronDown, iconSetting, iconPicture, iconError } from '@opentiny/vue-icon'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { getBlockContent, initBlockList, AIModelOptions } from './js/robotSetting'
@@ -124,8 +134,10 @@ export default {
     TinyDropdown,
     TinyDropdownMenu,
     TinyDropdownItem,
+    IconPicture: iconPicture(),
     IconSetting: iconSetting(),
     IconChevronDown: iconChevronDown(),
+    IconError: iconError(),
     DialogContent,
     TokenDialog
   },
@@ -140,7 +152,7 @@ export default {
     const activeMessages = ref([])
     const connectedFailed = ref(false)
     const inputContent = ref('')
-    const inProcesing = ref(false)
+    const inProcessing = ref(false)
     const selectedModel = ref(AIModelOptions[0])
     let currentModel = AIModelOptions[0]
     const { confirm } = useModal()
@@ -184,20 +196,28 @@ export default {
       pageSettingState.currentPageData['page_content'] = schema
       pageSettingState.currentPageDataCopy = extend(true, {}, pageSettingState.currentPageData)
       clearCurrentState()
+
       // 已经创建过临时页面只更新schema
+      useLayout().layoutState.pageStatus = {
+        state: useLayout().layoutState.pageStatus.state,
+        data: {}
+      }
       initData(pageSettingState.currentPageData['page_content'], pageSettingState.currentPageData)
       useHistory().addHistory()
     }
 
     const codeRules = `
-    请扮演一名前端开发专家，生成代码时遵从以下几条要求:
-###
-1. 只使用element-ui组件库完成代码编写
-2. 使用vue2技术栈
-3. 回复中只能有一个代码块
-4. el-table标签内不得出现el-table-column
-###
-  `
+      从现在开始，请扮演一名前端专家。如果需要根据图片或者描述生成前端代码，代码中的所有组件必须使用 Vue 3 框架和 TinyVue 组件库进行编写。例如，如果你想使用按钮组件，应该使用 TinyVue 组件库中的 \`TinyButton\`。
+      以下是 TinyVue 组件库的文档，请通读并遵循其中的指导来生成代码：[TinyVue 组件库文档](https://opentiny.design/tiny-vue/zh-CN/os-theme/overview)
+      生成代码时遵从以下几条要求:
+      ###
+      1. 回复中只能有一个代码块
+      2. 所有生成的代码都是基于 Vue 3 框架
+      3. 所有组件都来自 TinyVue 组件库，避免使用原生组件或其他第三方库
+      4. 参考并遵循 TinyVue 文档中的组件使用方式
+      5. 所有的组件都遵循了首字母大写的命名约定，例如用TinyForm、TinyFormItem、Text等。
+      ###
+    `
 
     // 在每一次发送请求之前，都把引入区块的内容，给放到第一条消息中
     // 为了不污染存储在localstorage里的用户的原始消息，这里进行了简单的对象拷贝
@@ -241,7 +261,7 @@ export default {
           if (schema?.schema) {
             createNewPage(schema.schema)
           }
-          inProcesing.value = false
+          inProcessing.value = false
           connectedFailed.value = false
         })
         .catch((error) => {
@@ -255,7 +275,7 @@ export default {
           }
           messages.value[messages.value.length - 1].content = '连接失败'
           localStorage.removeItem('aiChat')
-          inProcesing.value = false
+          inProcessing.value = false
           connectedFailed.value = false
         })
     }
@@ -284,8 +304,85 @@ export default {
       tokenDialogVisible.value = true
     }
 
-    const getMessage = (content) => ({
-      role: 'user',
+    /*
+      文件上传(仅支持图片，后续根据需求可添加上传类型）
+     */
+    const fileInput = ref(null)
+    const openFilePicker = () => {
+      if (unref(fileInput)) {
+        unref(fileInput)?.click()
+      }
+    }
+
+    const imageUrl = ref('')
+    const imageContent = ref()
+    const uploadFile = (file) => {
+      const formData = new FormData()
+      const foundationModelData = JSON.stringify({
+        foundationModel: {
+          manufacturer: currentModel.manufacturer,
+          model: currentModel.value,
+          token: localStorage.getItem(currentModel.modelKey)
+        }
+      })
+      formData.append('foundationModel', foundationModelData)
+      formData.append('file', file)
+      http
+        .post('/app-center/api/ai/files', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          },
+          timeout: 600000
+        })
+        .then((res) => {
+          imageContent.value = res.originalResponse
+          const reader = new FileReader()
+          reader.readAsDataURL(file)
+          reader.onload = () => {
+            imageUrl.value = reader.result
+          }
+        })
+        .catch(() => {
+          Notify({
+            type: 'error',
+            message: '上传图片失败',
+            position: 'top-right',
+            duration: 5000
+          })
+        })
+    }
+
+    const handleFileChange = (event) => {
+      const files = event.target.files
+      if (!files.length) {
+        return
+      }
+      const file = files[0]
+      const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg']
+      if (!validImageTypes.includes(file.type)) {
+        alert('请上传有效的图片文件（.jpeg, .png, .jpg）！')
+        event.target.value = ''
+        return
+      }
+      event.target.value = ''
+      uploadFile(file)
+    }
+
+    const imageDeleting = ref(false)
+    const handleDelete = () => {
+      imageDeleting.value = true
+      setTimeout(() => {
+        imageUrl.value = ''
+        imageContent.value = ''
+        imageDeleting.value = false
+        if (unref(fileInput)) {
+          unref(fileInput).value = ''
+        }
+      }, 500)
+    }
+
+    const getMessage = (content, role) => ({
+      role,
       content,
       name: 'John'
     })
@@ -300,7 +397,7 @@ export default {
         })
         return
       }
-      if (inProcesing.value) {
+      if (inProcessing.value) {
         Notify({
           type: 'error',
           message: '请等待当前会话完成后再试!',
@@ -309,19 +406,26 @@ export default {
         })
         return
       }
-      const realContent = content.trim()
+      const realContent = String(content).trim()
       if (realContent) {
         if (chatWindowOpened.value === false) {
           await resizeChatWindow()
         }
-        const message = getMessage(realContent)
-        inProcesing.value = true
+        const message = getMessage(realContent, 'user')
+        inProcessing.value = true
 
         messages.value.push(message)
         sessionProcess?.messages.push(message)
         sessionProcess?.displayMessages.push(message)
+        if (imageContent.value) {
+          messages.value.push(getMessage(imageUrl.value, 'system'))
+          sessionProcess?.messages.push(getMessage(JSON.stringify(imageContent.value), 'system'))
+          sessionProcess?.displayMessages.push(getMessage(imageUrl.value, 'system'))
+        }
         if (!isModel) {
           inputContent.value = ''
+          imageUrl.value = ''
+          imageContent.value = ''
         }
         await scrollContent()
         await sleep(1000)
@@ -390,6 +494,7 @@ export default {
           message: '切换AI大模型将导致当前会话被清空，重新开启新会话，是否继续？',
           exec() {
             selectedModel.value = model
+            currentModel = model
             endContent()
           }
         })
@@ -434,6 +539,12 @@ export default {
       endContent,
       resizeChatWindow,
       setToken,
+      openFilePicker,
+      handleFileChange,
+      imageDeleting,
+      handleDelete,
+      fileInput,
+      imageUrl,
       AIModelOptions,
       selectedModel,
       currentModel,
@@ -450,30 +561,108 @@ export default {
 .common-svg {
   color: var(--ti-lowcode-chat-model-common-icon);
 }
+.chat-message-image {
+  margin-right: 45px;
+  margin-top: -10px;
+  max-width: 100%;
+  border-radius: 5px;
+
+  .image {
+    width: 100px;
+    height: 100%;
+    border-radius: 5px;
+    border: 1px solid var(--ti-lowcode-chat-model-user-text-border);
+  }
+}
+
+.preview-image {
+  position: fixed;
+  bottom: 5px;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  border-radius: 5px;
+  max-width: 100%;
+  height: auto;
+  animation: slideDown 0.5s ease-out forwards;
+  border: 1px solid var(--ti-lowcode-chat-model-user-text-border);
+  .image {
+    border-radius: 5px;
+    width: 100px;
+    height: 60px;
+    display: block;
+    position: relative;
+    border: #1a1a1a;
+  }
+  .delete-image {
+    color: red;
+    position: absolute;
+    top: -4px;
+    right: -3px;
+    cursor: pointer;
+    z-index: 1001;
+  }
+}
+.preview-image[data-animated='out'] {
+  animation: slideUp 0.5s ease-out forwards;
+}
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+}
 
 .chat-title-icons {
   font-size: 16px;
   height: 16px;
+
   svg {
     float: right;
     margin: 0 4px;
     cursor: pointer;
+
     &:hover {
       opacity: 0.8;
     }
   }
 }
+
 .chat-title {
   font-weight: bold;
   font-size: 14px;
   margin-bottom: 20px;
   color: var(--ti-lowcode-chat-model-title);
+
+  .arrow-down {
+    margin-left: 5px;
+  }
 }
+.tiny-dropdown .tiny-dropdown__trigger:not(.tiny-button) .tiny-svg {
+  vertical-align: middle;
+}
+
 .chat-window {
   max-height: 400px;
   overflow: scroll;
+
   .chat-avatar-wrap {
     width: 46px;
+
     .chat-avatar {
       width: 28px;
       height: 28px;
@@ -482,10 +671,12 @@ export default {
       border: 1px solid var(--ti-lowcode-chat-model-avatar-border);
       border-radius: 50px;
     }
+
     .chat-avatar-ai {
       border: none;
     }
   }
+
   .chat-content {
     max-width: 568px;
     border-radius: 8px;
@@ -500,6 +691,7 @@ export default {
       color: var(--ti-lowcode-chat-model-user-text);
     }
   }
+
   .chat-message-row {
     margin-bottom: 20px;
   }
@@ -522,6 +714,7 @@ export default {
   font-size: 12px;
   margin-top: 10px;
   color: var(--ti-lowcode-chat-model-text);
+
   span {
     display: inline-block;
     line-height: 32px;
@@ -530,32 +723,43 @@ export default {
     border: 1px solid var(--ti-lowcode-chat-model-text-border);
     border-radius: 20px;
     cursor: pointer;
+
     &:hover {
       border-color: var(--ti-lowcode-chat-model-text);
     }
   }
 }
+
 .chat-submit {
   margin-top: 14px;
   font-size: 14px;
+
   .tiny-input {
     width: calc(100% - 236px);
+
     .tiny-input__inner {
       height: 40px;
       background-color: var(--ti-lowcode-chat-model-input-bg);
       border: none;
     }
+
     svg {
       font-size: 16px;
       color: var(--ti-lowcode-chat-model-input-icon);
     }
+
+    .upload-image {
+      margin-right: 7px;
+    }
     .microphone {
       font-size: 18px;
     }
+
     .microphone-svg {
       color: var(--ti-lowcode-base-blue-6);
     }
   }
+
   .tiny-button {
     background-color: var(--ti-lowcode-chat-model-button-bg) !important;
     border: 1px solid var(--ti-lowcode-chat-model-button-border) !important;
@@ -565,11 +769,13 @@ export default {
     border-radius: 12px !important;
     float: right;
     margin-right: 5px;
+
     &:hover {
       opacity: 0.8;
     }
   }
 }
+
 .hidden-text {
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -579,18 +785,23 @@ export default {
 .chat-loading .tiny-loading__spinner svg {
   fill: var(--ti-lowcode-chat-loading-svg-color);
 }
+
 .chat-loading .tiny-loading__spinner .tiny-loading__text {
   color: var(--ti-lowcode-chat-loading-text-color);
 }
+
 .chat-model-popover {
   background-color: var(--ti-lowcode-chat-model-popover-bg);
+
   .tiny-dropdown-item {
     color: var(--ti-lowcode-chat-model-popover-color);
+
     &:hover {
       color: var(--ti-lowcode-chat-model-popover-active-color);
       background-color: var(--ti-lowcode-chat-model-popover-active-bg);
     }
   }
+
   .selected-model {
     color: var(--ti-lowcode-chat-model-popover-active-color);
     background-color: var(--ti-lowcode-chat-model-popover-active-bg);
