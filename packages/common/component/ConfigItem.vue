@@ -538,6 +538,8 @@ export default {
     justify-content: space-between;
     align-items: center;
     overflow: hidden;
+    position: relative;
+    overflow: visible;
     &:has(.verify-failed) {
       align-items: flex-start;
     }
