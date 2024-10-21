@@ -99,9 +99,7 @@ export default defineService({
         })
       }
     })
-  },
 
-  start: ({ state }) => {
     getUserInfo().then((data) => {
       if (data) {
         state.userInfo = data
