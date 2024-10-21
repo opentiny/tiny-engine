@@ -33,10 +33,7 @@
               <div class="label-left-wrap"></div>
             </template>
             <template #fullscreenHead>
-              <div class="fullscreen-head-content">
-                <span>state</span>
-                <close-icon @close="cancel"></close-icon>
-              </div>
+              <state-fullscreen-head title="state" @close="cancel"></state-fullscreen-head>
             </template>
             <template #fullscreenFooter>
               <div class="fullscreen-footer-content">
@@ -51,10 +48,7 @@
         <tiny-form-item prop="getters">
           <monaco-editor ref="gettersEditor" class="store-editor" :options="options" :value="getters">
             <template #fullscreenHead>
-              <div class="fullscreen-head-content">
-                <span>getters</span>
-                <close-icon @close="cancel"></close-icon>
-              </div>
+              <state-fullscreen-head title="getters" @close="cancel"></state-fullscreen-head>
             </template>
           </monaco-editor>
         </tiny-form-item>
@@ -63,10 +57,7 @@
         <tiny-form-item prop="actions">
           <monaco-editor ref="actionsEditor" class="store-editor" :options="options" :value="actions">
             <template #fullscreenHead>
-              <div class="fullscreen-head-content">
-                <span>actions</span>
-                <close-icon @close="cancel"></close-icon>
-              </div>
+              <state-fullscreen-head title="actions" @close="cancel"></state-fullscreen-head>
             </template>
           </monaco-editor>
         </tiny-form-item>
@@ -78,16 +69,17 @@
 <script>
 import { getCurrentInstance, reactive, ref, computed, watch } from 'vue'
 import { Form, FormItem, Input, Collapse as TinyCollapse, CollapseItem as TinyCollapseItem } from '@opentiny/vue'
-import { MonacoEditor, CloseIcon } from '@opentiny/tiny-engine-common'
+import { MonacoEditor } from '@opentiny/tiny-engine-common'
 import { string2Ast, ast2String, insertName } from '@opentiny/tiny-engine-common/js/ast'
 import { verifyJsVarName } from '@opentiny/tiny-engine-common/js/verification'
 import StateTips from './StateTips.vue'
+import StateFullscreenHead from './StateFullscreenHead.vue'
 
 export default {
   components: {
     MonacoEditor,
-    CloseIcon,
     StateTips,
+    StateFullscreenHead,
     TinyForm: Form,
     TinyFormItem: FormItem,
     TinyInput: Input,
@@ -276,16 +268,6 @@ export default {
   .label-left-wrap {
     color: var(--ti-lowcode-toolbar-icon-color);
     display: flex;
-  }
-
-  .fullscreen-head-content {
-    font-size: 12px;
-    color: var(--te-common-text-primary);
-    height: 30px;
-    line-height: 20px;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
   }
 }
 

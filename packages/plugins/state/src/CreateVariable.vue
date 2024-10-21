@@ -33,10 +33,7 @@
               <editor-i18n-tool ref="i18nToolRef" @confirm="insertContent"></editor-i18n-tool>
             </template>
             <template #fullscreenHead>
-              <div class="fullscreen-head-content">
-                <span>初始值</span>
-                <close-icon @close="cancel"></close-icon>
-              </div>
+              <state-fullscreen-head title="初始值" @close="cancel"></state-fullscreen-head>
             </template>
             <template #fullscreenFooter>
               <div class="fullscreen-footer-content">
@@ -51,10 +48,7 @@
         <tiny-form-item>
           <monaco-editor ref="getterEditor" class="variable-editor" :options="options" :value="state.getterEditorValue">
             <template #fullscreenHead>
-              <div class="fullscreen-head-content">
-                <span>getter</span>
-                <close-icon @close="cancel"></close-icon>
-              </div>
+              <state-fullscreen-head title="getter" @close="cancel"></state-fullscreen-head>
             </template>
             <template #fullscreenFooter>
               <div class="fullscreen-footer-content">
@@ -73,10 +67,7 @@
         <tiny-form-item>
           <monaco-editor ref="setterEditor" class="variable-editor" :options="options" :value="state.setterEditorValue">
             <template #fullscreenHead>
-              <div class="fullscreen-head-content">
-                <span>setter</span>
-                <close-icon @close="cancel"></close-icon>
-              </div>
+              <state-fullscreen-head title="setter" @close="cancel"></state-fullscreen-head>
             </template>
             <template #fullscreenFooter>
               <div class="fullscreen-footer-content">
@@ -105,19 +96,20 @@ import {
   Collapse as TinyCollapse,
   CollapseItem as TinyCollapseItem
 } from '@opentiny/vue'
-import { MonacoEditor, CloseIcon } from '@opentiny/tiny-engine-common'
+import { MonacoEditor } from '@opentiny/tiny-engine-common'
 import { verifyJsVarName } from '@opentiny/tiny-engine-common/js/verification'
 import { initCompletion } from '@opentiny/tiny-engine-common/js/completion'
 import * as Monaco from 'monaco-editor'
 import { validateMonacoEditorData } from './js/common'
 import EditorI18nTool from './EditorI18nTool.vue'
 import StateTips from './StateTips.vue'
+import StateFullscreenHead from './StateFullscreenHead.vue'
 
 export default {
   components: {
     MonacoEditor,
-    CloseIcon,
     StateTips,
+    StateFullscreenHead,
     TinyForm: Form,
     TinyFormItem: FormItem,
     TinyInput: Input,
@@ -488,15 +480,6 @@ export default {
 
 .variable-editor {
   height: 270px;
-  .fullscreen-head-content {
-    font-size: 12px;
-    color: var(--te-common-text-primary);
-    height: 30px;
-    line-height: 20px;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-  }
 }
 
 .show-advanced {
