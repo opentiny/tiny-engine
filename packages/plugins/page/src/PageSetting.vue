@@ -98,6 +98,10 @@ const PAGE_SETTING_SESSION = {
   history: 'history'
 }
 
+export const api = {
+  beforeCreatePage: async () => {}
+}
+
 export default {
   components: {
     TinyButton: Button,
@@ -159,7 +163,7 @@ export default {
       }
     }
 
-    const createPage = () => {
+    const createPage = async () => {
       const { page_content, ...other } = DEFAULT_PAGE
       const { page_content: page_content_state, ...pageSettingStateOther } = pageSettingState.currentPageData
       const createParams = {
@@ -178,6 +182,7 @@ export default {
         delete createParams.id
         delete createParams._id
       }
+      await api.beforeCreatePage(createParams)
 
       requestCreatePage(createParams)
         .then((data) => {
