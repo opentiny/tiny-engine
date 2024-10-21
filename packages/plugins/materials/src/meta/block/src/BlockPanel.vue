@@ -19,7 +19,7 @@
 import { onMounted, reactive, watch, provide, computed } from 'vue'
 import { Search } from '@opentiny/vue'
 import { iconSearch } from '@opentiny/vue-icon'
-import { useApp, useBlock, useMaterial, useModal } from '@opentiny/tiny-engine-meta-register'
+import { useBlock, useMaterial, useModal, getMetaApi } from '@opentiny/tiny-engine-meta-register'
 import BlockGroup from './BlockGroup.vue'
 import BlockList from './BlockList.vue'
 import BlockGroupPanel from './BlockGroupPanel.vue'
@@ -48,7 +48,7 @@ export default {
     const { addDefaultGroup, isDefaultGroupId, isAllGroupId, isRefresh, selectedGroup } = useBlock()
     const { materialState } = useMaterial()
     const { message } = useModal()
-    const appId = useApp().appInfoState.selectedId
+    const getAppId = () => getMetaApi('engine.service.globalService').getState().appInfo.id
 
     const state = reactive({
       searchValue: '',
@@ -145,7 +145,7 @@ export default {
     )
 
     onMounted(() => {
-      fetchGroups(appId)
+      fetchGroups(getAppId())
         .then((data) => {
           const groups = addDefaultGroup(data)
           state.groups.push(...groups)
