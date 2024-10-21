@@ -18,7 +18,6 @@ import { metaHashMap } from './common'
  * @property {T} initialState
  * @property {K} options
  * @property {(context: Context<T, K>) => void} init
- * @property {(context: Context<T, K>) => void} start
  * @property {Record<string, Function> | (context: Context<T, K>) => Record<string, Function>} apis
  */
 
@@ -35,7 +34,7 @@ import { metaHashMap } from './common'
 /**
  * @template T
  * @template K
- * @type {WeakMap<Service<T, K>, {state: T} & Pick<ServiceOptions<T, K>, 'init' | 'start'>>}
+ * @type {WeakMap<Service<T, K>, {state: T} & Pick<ServiceOptions<T, K>, 'init'>>}
  */
 const servicesMap = new WeakMap()
 
@@ -46,7 +45,7 @@ const servicesMap = new WeakMap()
  * @returns {Service<T, K>}
  */
 export const defineService = (serviceOptions) => {
-  const { id, type, initialState, options, init, start, apis } = serviceOptions
+  const { id, type, initialState, options, init, apis } = serviceOptions
 
   /**
    * @type {Service<T, K>}
@@ -63,7 +62,7 @@ export const defineService = (serviceOptions) => {
   if (typeof apis === 'object' && apis) {
     resultService.apis = apis
   } else if (typeof apis === 'function') {
-    resultService.apis = apis({ state, options })
+    resultService.apis = apis({ state })
   }
 
   resultService.apis.getState = () => readonly(state)
@@ -73,8 +72,7 @@ export const defineService = (serviceOptions) => {
 
   servicesMap.set(resultService, {
     state,
-    init: typeof init === 'function' ? init : () => {},
-    start: typeof start === 'function' ? start : () => {}
+    init: typeof init === 'function' ? init : () => {}
   })
 
   return resultService
@@ -89,15 +87,6 @@ export const initServices = () => {
       const { state, init } = context
       const { options } = service
       init({ state, options })
-    }
-  })
-
-  services.forEach((service) => {
-    const context = servicesMap.get(service)
-    if (context) {
-      const { state, start } = context
-      const { options } = service
-      start({ state, options })
     }
   })
 }

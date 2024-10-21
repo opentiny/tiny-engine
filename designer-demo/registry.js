@@ -42,14 +42,14 @@ import {
   Layout,
   Canvas,
   GenerateCodeService,
-  globalService
+  GlobalService
 } from '@opentiny/tiny-engine'
 import engineConfig from './engine.config'
 
 export default {
   root: {
     id: 'engine.root',
-    metas: [GenerateCodeService, globalService]
+    metas: [GenerateCodeService, GlobalService]
   },
   config: engineConfig,
   layout: {

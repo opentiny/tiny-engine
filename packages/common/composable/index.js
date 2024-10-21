@@ -1,2 +1,2 @@
 export { GenerateCodeService } from './generateCode'
-export { default as globalService } from './defaultGlobalService'
+export { default as GlobalService } from './defaultGlobalService'
