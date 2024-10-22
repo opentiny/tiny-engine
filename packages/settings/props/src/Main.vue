@@ -43,6 +43,6 @@ export default {
 
 <style lang="less" scoped>
 .block-description {
-  margin: 10px;
+  margin: 12px;
 }
 </style>
