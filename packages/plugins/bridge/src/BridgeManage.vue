@@ -14,7 +14,7 @@
         :class="['list-item', index === state.activeIndex ? 'active' : '']"
         @click.stop="openEdit(item, index)"
       >
-        <svg-icon name="resources"></svg-icon>
+        <svg-icon name="plugin-icon-sresources"></svg-icon>
         <div class="item-label">{{ item.name }}</div>
         <svg-icon class="setting-icon" name="setting" @click.stop="openEdit(item, index)"></svg-icon>
       </div>
@@ -140,10 +140,12 @@ export default {
     flex: 1;
     border-top: 1px solid var(--ti-lowcode-tabs-border-color);
     overflow: auto;
+    padding: 12px 0;
   }
 
   .list-item {
-    height: 28px;
+    height: 24px;
+    line-height: 24px;
     display: grid;
     grid-template-columns: 16px 1fr auto;
     column-gap: 8px;
@@ -157,8 +159,13 @@ export default {
     &:hover,
     &.active {
       background: var(--ti-lowcode-bridge-list-bg);
+      .setting-icon {
+        display: block;
+      }
     }
-    svg {
+
+    .setting-icon {
+      display: none;
       color: var(--ti-lowcode-toolbar-more-hover-color);
     }
   }

@@ -164,7 +164,7 @@ export default {
 }
 :deep(.help-box) {
   position: absolute;
-  left: 58px;
+  left: 48px;
   top: 12px;
 }
 :deep(.tiny-button) {
