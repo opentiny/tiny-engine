@@ -5,7 +5,8 @@
     v-model="value"
     :data="optionsData"
     @update:modelValue="change"
-  ></tiny-button-group>
+  >
+  </tiny-button-group>
 </template>
 
 <script>
@@ -60,27 +61,57 @@ export default {
 <style lang="less" scoped>
 .meta-button-group.tiny-button-group {
   margin-top: 0px;
+  width: 100%;
   :deep(ul.tiny-group-item) {
+    width: 100%;
+    display: flex;
+    li {
+      margin: 0;
+      flex: 1;
+    }
+    li:first-child {
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+    }
+    li:last-child {
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px;
+    }
     li.active button:not(.disabled) {
-      background: var(--ti-button-group-item-active-bg-color);
-      color: var(--ti-button-group-item-active-text-color);
-      border-color: var(--ti-button-group-item-active-border-color);
+      background: var(--te-common-bg-prompt);
+      color: var(--te-common-text-primary);
       outline: 0;
     }
     li button:not(.disabled) {
-      background: var(--ti-button-group-item-bg-color);
-    }
-    li:not(:last-child) {
-      margin-right: 2px;
+      background: var(--te-common-bg-container);
+      color: var(--te-common-text-secondary);
     }
     li button {
-      min-width: 48px;
-      padding: 0px 12px;
+      min-width: 0px;
+      width: 100%;
+      border-radius: 4px;
+      padding: 0px 8px;
       max-width: 300px;
-      line-height: 28px;
+      height: 24px;
+      line-height: 24px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+    li:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      width: 1px;
+      height: 50%;
+      background-color: var(--te-common-border-default);
+      right: 0;
+      top: 50%;
+      transform: translate(50%, -50%);
+      z-index: 100;
+    }
+    li:has(+ li.active)::after,
+    li.active::after {
+      content: none;
     }
     border: 0px;
   }

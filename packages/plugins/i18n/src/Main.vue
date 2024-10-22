@@ -433,9 +433,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.plugin-panel-i18n {
-  width: 38vw;
-}
 .stripe-tiny-grid {
   word-wrap: break-word;
   #empty-loading-box {

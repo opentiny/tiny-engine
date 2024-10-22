@@ -1,19 +1,20 @@
-<svg
-  data-icon="BorderRadiusTopright"
-  aria-hidden="true"
-  focusable="false"
-  width="16"
-  height="16"
-  viewBox="0 0 16 16"
-  version="1.1"
-  xmlns="http://www.w3.org/2000/svg"
-  style="display: block"
->
-  <path
-    opacity=".4"
-    fill-rule="evenodd"
-    clip-rule="evenodd"
-    d="M14 9v5H9v-2h3V9h2zm-7 3v2H2V9h2v3h3zM2 2h5v2H4v3H2V2z"
-  ></path>
-  <path fill-rule="evenodd" clip-rule="evenodd" d="M14 5a3 3 0 00-3-3H9v2h2a1 1 0 011 1v2h2V5z"></path>
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 132 132" style="enable-background:new 0 0 132 132;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;}
+	.st1{fill-rule:evenodd;clip-rule:evenodd;fill:#C2C2C2;}
+	.st2{fill-rule:evenodd;clip-rule:evenodd;fill:#191919;}
+</style>
+<rect id="size" class="st0" width="132" height="132"/>
+<path id="矩形_15__x28_边框_x29_" class="st1" d="M53.5,17.1c0,2.3-1.8,4.1-4.1,4.1H20.6v28.7c0,2.3-1.8,4.1-4.1,4.1
+	s-4.1-1.8-4.1-4.1V13h37C51.6,13,53.5,14.7,53.5,17.1z M12.4,120.2h37.2c2.3,0,4.1-1.8,4.1-4.1s-1.8-4.1-4.1-4.1h-29V83
+	c0-2.3-1.8-4.1-4.1-4.1s-4.1,1.8-4.1,4.1V120.2z M111.4,112H82.5c-2.3,0-4.1,1.8-4.1,4.1s1.8,4.1,4.1,4.1h37.1v-37
+	c0-2.3-1.7-4.1-4.1-4.1c-2.3,0-4.1,1.8-4.1,4.1V112z"/>
+<path id="矩形_15__x28_边框_x29__00000002376856160985745190000007121544289866953089_" class="st2" d="M119,35.6
+	c-0.3-1.7-0.9-3.4-1.6-5c-0.7-1.7-1.5-3.1-2.5-4.6c-1.1-1.6-2.3-3.1-3.7-4.5c-1.4-1.4-2.9-2.6-4.5-3.7c-1.5-1-3-1.8-4.6-2.5
+	c-1.6-0.7-3.3-1.2-5-1.6c-2-0.5-4.1-0.7-6.3-0.7h-8.2c-2.3,0-4.1,1.7-4.1,4.1c0,2.3,1.8,4.1,4.1,4.1h8.2c1.7,0,3.1,0.2,4.7,0.5
+	c1.2,0.2,2.2,0.6,3.4,1.1s2.2,1.1,3.2,1.7c1.2,0.7,2.3,1.6,3.3,2.7c1.1,1,2,2.1,2.7,3.3c0.7,1,1.2,2.1,1.7,3.2
+	c0.5,1.2,0.8,2.2,1.1,3.4c0.3,1.6,0.5,3.1,0.5,4.7v8.6c0,2.3,1.8,4.1,4.1,4.1c2.4,0,4.1-1.8,4.1-4.1v-8.6
+	C119.6,39.7,119.5,37.5,119,35.6z"/>
 </svg>

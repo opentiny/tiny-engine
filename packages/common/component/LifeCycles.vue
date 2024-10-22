@@ -243,8 +243,6 @@ export default {
 <style lang="less" scoped>
 .life-cycle {
   display: flex; // 决定了鼠标移入后的弹窗位置
-  padding: 0 12px;
-  margin-top: 10px;
   svg {
     outline: none;
   }
@@ -263,7 +261,7 @@ export default {
 }
 .life-cycle-tips {
   color: var(--ti-lowcode-life-cycle-alert-color);
-  margin: 4px 0 12px 20px;
+  margin: 4px 0 12px 0;
   height: 16px;
   line-height: 16px;
 }

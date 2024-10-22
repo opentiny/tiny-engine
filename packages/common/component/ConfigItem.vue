@@ -244,6 +244,10 @@ export default {
     })
 
     const labelPosition = computed(() => {
+      if (!showLabel.value) {
+        return 'none'
+      }
+
       if (props.property.labelPosition) {
         return props.property.labelPosition
       }
@@ -524,7 +528,7 @@ export default {
 
   .item-label {
     color: var(--ti-lowcode-meta-config-item-label-color);
-    font-size: 14px;
+    font-size: 12px;
     display: flex;
     line-height: 18px;
   }

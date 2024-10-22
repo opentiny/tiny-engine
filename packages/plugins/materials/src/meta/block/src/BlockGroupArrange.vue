@@ -64,10 +64,10 @@ export default {
 
 <style lang="less" scoped>
 :deep(.button-icon-item) {
-  width: 32px;
+  width: 24px;
   text-align: center;
-  height: 32px;
-  line-height: 32px;
+  height: 24px;
+  line-height: 24px;
 }
 .footer-toolbar {
   .icon-wrap {

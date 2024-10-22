@@ -163,6 +163,7 @@ export default {
     }
   }
   .fullscreen {
+    display: flex;
     margin-right: 20px;
   }
 }

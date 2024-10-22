@@ -1,5 +1,5 @@
 <template>
-  <tiny-popover width="140" trigger="click">
+  <tiny-popover width="140" trigger="hover">
     <template #reference>
       <span class="toolbar-ellipsis">
         <svg-icon name="ellipsis"></svg-icon>

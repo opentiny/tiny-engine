@@ -1,59 +1,56 @@
 <template>
   <div class="toolbar-save">
-    <toolbar-base
-      :content="isLoading ? '保存中' : '保存'"
-      :icon="options.icon.default || options.icon"
-      :options="{ ...options, showDots: !isSaved() }"
-      @click-api="openApi"
-    >
-      <template #button>
-        <span @click.stop="state.saveVisible = !state.saveVisible">
-          <tiny-popover v-model="state.saveVisible" :visible-arrow="false" width="203" trigger="manual">
-            <template #reference>
-              <svg-icon :name="iconExpand"></svg-icon>
-            </template>
-            <div class="save-style">
-              <div class="save-setting">保存设置</div>
-              <tiny-checkbox v-model="state.checked" name="tiny-checkbox">自动保存</tiny-checkbox>
-              <div class="save-time">
-                <div>保存间隔</div>
-                <tiny-select v-model="state.timeValue" :options="delayOptions" :disabled="!state.checked" autocomplete>
-                </tiny-select>
-              </div>
-              <div class="save-button-group">
-                <tiny-button @click="cancel">取消</tiny-button>
-                <tiny-button type="primary" @click="autoSave">设置并保存</tiny-button>
-              </div>
-            </div>
-          </tiny-popover>
-        </span>
-      </template>
-      <template #default>
-        <tiny-dialog-box
-          class="dialog-box"
-          :modal="false"
-          :fullscreen="true"
-          :append-to-body="true"
-          :visible="state.visible"
-          title="Schema 本地与线上差异"
-          @update:visible="state.visible = $event"
+    <tiny-popover :visible-arrow="false" width="203" trigger="hover">
+      <template #reference>
+        <toolbar-base
+          :content="isLoading ? '保存中' : '保存'"
+          :icon="options.icon.default || options.icon"
+          :options="{ ...options, showDots: !isSaved() }"
+          @click-api="openApi"
         >
-          <vue-monaco
-            v-if="state.visible"
-            ref="editor"
-            class="monaco-editor"
-            :diffEditor="true"
-            :options="editorOptions"
-            :value="state.code"
-            :original="state.originalCode"
-          ></vue-monaco>
-          <template #footer>
-            <tiny-button @click="close">取 消</tiny-button>
-            <tiny-button type="primary" @click="saveApi">保 存</tiny-button>
+          <template #button>
+            <svg-icon :name="iconExpand"></svg-icon>
           </template>
-        </tiny-dialog-box>
+          <template #default>
+            <tiny-dialog-box
+              class="dialog-box"
+              :modal="false"
+              :fullscreen="true"
+              :append-to-body="true"
+              :visible="state.visible"
+              title="Schema 本地与线上差异"
+              @update:visible="state.visible = $event"
+            >
+              <vue-monaco
+                v-if="state.visible"
+                ref="editor"
+                class="monaco-editor"
+                :diffEditor="true"
+                :options="editorOptions"
+                :value="state.code"
+                :original="state.originalCode"
+              ></vue-monaco>
+              <template #footer>
+                <tiny-button @click="close">取 消</tiny-button>
+                <tiny-button type="primary" @click="saveApi">保 存</tiny-button>
+              </template>
+            </tiny-dialog-box>
+          </template>
+        </toolbar-base>
       </template>
-    </toolbar-base>
+      <div class="save-style">
+        <div class="save-setting">保存设置</div>
+        <tiny-checkbox v-model="state.checked" name="tiny-checkbox">自动保存</tiny-checkbox>
+        <div class="save-time">
+          <div class="save-time-label">保存间隔</div>
+          <tiny-select v-model="state.timeValue" :options="delayOptions" :disabled="!state.checked" autocomplete>
+          </tiny-select>
+        </div>
+        <div class="save-button-group">
+          <tiny-button type="primary" @click="autoSave">设置并保存</tiny-button>
+        </div>
+      </div>
+    </tiny-popover>
   </div>
 </template>
 
@@ -104,7 +101,6 @@ export default {
       originalCode: '',
       disabled: false,
       timeValue: 5,
-      saveVisible: false,
       checked: false,
       preservationTime: null
     })
@@ -144,11 +140,6 @@ export default {
       } else {
         clearTimeout(state.preservationTime)
       }
-      state.saveVisible = false
-    }
-
-    const cancel = () => {
-      state.saveVisible = false
     }
 
     onUnmounted(() => {
@@ -165,7 +156,6 @@ export default {
       openApi,
       saveApi,
       delayOptions,
-      cancel,
       autoSave
     }
   }
@@ -231,6 +221,9 @@ export default {
   font-size: 12px;
   margin: 13px 0 14px 0;
   display: flex;
+  .save-time-label {
+    width: 60px;
+  }
 
   .tiny-select {
     width: 103px;
