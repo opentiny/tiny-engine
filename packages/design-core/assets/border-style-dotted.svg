@@ -1,13 +1,14 @@
-<svg
-  data-icon="BorderStyleDotted"
-  aria-hidden="true"
-  focusable="false"
-  width="16"
-  height="16"
-  viewBox="0 0 16 16"
-  version="1.1"
-  xmlns="http://www.w3.org/2000/svg"
-  style="display: block"
->
-  <path d="M1 7h2v2H1zm4 0h2v2H5zm4 0h2v2H9zm4 0h2v2h-2z"></path>
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 132 132" style="enable-background:new 0 0 132 132;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;}
+	.st1{fill-rule:evenodd;clip-rule:evenodd;fill:currentColor;}
+</style>
+<rect id="size" class="st0" width="132" height="132"/>
+<path id="合并" class="st1" d="M21.4,61.9h6.6c2.3,0,4.1,1.8,4.1,4.1s-1.8,4.1-4.1,4.1h-1h-5.6c-2.3,0-4.1-1.8-4.1-4.1
+	S19.2,61.9,21.4,61.9z M48.7,61.9h-6.6c-2.3,0-4.1,1.8-4.1,4.1s1.8,4.1,4.1,4.1h5.6h1c2.3,0,4.1-1.8,4.1-4.1S51,61.9,48.7,61.9z
+	 M62.7,61.9h6.6c2.3,0,4.1,1.8,4.1,4.1s-1.8,4.1-4.1,4.1h-1h-5.6c-2.3,0-4.1-1.8-4.1-4.1S60.4,61.9,62.7,61.9z M89.9,61.9h-6.6
+	c-2.3,0-4.1,1.8-4.1,4.1s1.8,4.1,4.1,4.1h5.6h1c2.3,0,4.1-1.8,4.1-4.1S92.2,61.9,89.9,61.9z M105,61.9h5.6c2.3,0,4.1,1.8,4.1,4.1
+	s-1.8,4.1-4.1,4.1h-1H104c-2.3,0-4.1-1.8-4.1-4.1s1.8-4.1,4.1-4.1H105z"/>
 </svg>

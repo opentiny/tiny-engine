@@ -8,8 +8,7 @@
       validate-type="text"
       :model="state.dataSource"
     >
-      <tiny-form-item prop="name" label-width="105px">
-        <template #label><span class="title">数据源名称</span></template>
+      <tiny-form-item prop="name" label="数据源名称">
         <tiny-input v-model="state.dataSource.name" placeholder="请输入数据源名称" @input="modifyName"></tiny-input>
       </tiny-form-item>
     </tiny-form>
@@ -75,14 +74,3 @@ export default {
   }
 }
 </script>
-
-<style lang="less" scoped>
-.right-item {
-  padding: 0px 9px;
-  color: var(--ti-lowcode-datasource-toolbar-icon-color);
-  .title {
-    font-size: 14px;
-    color: var(--ti-lowcode-datasource-label-color);
-  }
-}
-</style>

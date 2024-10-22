@@ -1,12 +1,13 @@
-<svg width="16.000000" height="16.000000" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-	<desc>
-			Created with Pixso.
-	</desc>
-	<defs/>
-	<mask id="mask439_9293" mask-type="alpha" maskUnits="userSpaceOnUse" x="0.000000" y="0.000000" width="16.000000" height="16.000000">
-		<rect id="远程登录-telnet" width="16.000000" height="16.000000" fill="#000000" fill-opacity="1.000000"/>
-	</mask>
-	<g mask="url(#mask439_9293)">
-		<path id="形状" d="M12.5 2L3.15 2C2.14 2 1.32 2.81 1.32 3.82L1.32 10.5C1.32 11.51 2.14 12.33 3.15 12.33L12.5 12.33C13.51 12.33 14.33 11.51 14.33 10.5L14.33 3.82C14.33 2.81 13.51 2 12.5 2ZM13.33 10.5C13.33 10.96 12.96 11.33 12.5 11.33L3.15 11.33C2.69 11.33 2.32 10.96 2.32 10.5L2.32 3.82C2.32 3.37 2.69 3 3.15 3L12.5 3C12.96 3 13.33 3.37 13.33 3.82L13.33 10.5ZM12 14.16C12 14.43 11.76 14.66 11.5 14.66L4.15 14.66C3.89 14.66 3.65 14.43 3.65 14.16C3.65 13.89 3.89 13.66 4.15 13.66L11.5 13.66C11.76 13.66 12 13.89 12 14.16Z" fill="#191919" fill-opacity="1.000000" fill-rule="nonzero"/>
-	</g>
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 132 132" style="enable-background:new 0 0 132 132;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;}
+	.st1{fill:currentColor;}
+</style>
+<rect id="size" class="st0" width="132" height="132"/>
+<path id="形状" class="st1" d="M103.1,16.5h-77c-8.3,0-15.1,6.8-15.1,15.1v55c0,8.4,6.8,15.1,15.1,15.1h77
+	c8.4,0,15.1-6.8,15.1-15.1v-55C118.2,23.3,111.5,16.5,103.1,16.5z M110,86.6c0,3.8-3.1,6.9-6.9,6.9h-77c-3.8,0-6.9-3.1-6.9-6.9v-55
+	c0-3.8,3.1-6.9,6.9-6.9h77c3.8,0,6.9,3.1,6.9,6.9V86.6z M99,116.9c0,2.3-1.9,4.1-4.1,4.1H34.4c-2.3,0-4.1-1.9-4.1-4.1
+	s1.9-4.1,4.1-4.1h60.5C97.1,112.8,99,114.6,99,116.9z"/>
 </svg>

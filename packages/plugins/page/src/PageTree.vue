@@ -377,6 +377,12 @@ export default {
   }
 }
 
+.page-manage-collapse.page-manage-collapse {
+  :deep(.tiny-collapse-item__content) {
+    padding-top: 0;
+  }
+}
+
 .app-manage-tree {
   :deep(.label) {
     margin-right: 10px;
@@ -461,6 +467,7 @@ export default {
         max-width: 160px;
         overflow: hidden;
         text-overflow: ellipsis;
+        font-size: 12px;
       }
     }
 

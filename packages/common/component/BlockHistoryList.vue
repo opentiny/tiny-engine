@@ -91,7 +91,6 @@ defineEmits(['preview', 'restore'])
 }
 
 .empty {
-  margin-left: 12px;
   color: var(--ti-lowcode-common-empty-text-color);
 }
 </style>

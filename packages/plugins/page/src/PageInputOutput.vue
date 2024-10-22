@@ -102,8 +102,6 @@ export default {
 <style lang="less" scoped>
 .input-or-output {
   color: var(--ti-lowcode-page-manage-icon-text-color);
-  padding: 12px;
-  margin-top: -8px;
   .life-cycle-alert {
     color: var(--ti-lowcode-life-cycle-alert-color);
     height: 28px;
@@ -126,9 +124,17 @@ export default {
   .input-output-tips {
     margin-bottom: 12px;
   }
+  .selectHome {
+    margin-top: 12px;
+  }
   .edit-btn-icon {
     color: var(--ti-lowcode-common-text-main-color);
     margin-right: 6px;
+  }
+  :deep(.edit-btn) {
+    flex: none;
+    display: flex;
+    align-items: center;
   }
 }
 </style>
