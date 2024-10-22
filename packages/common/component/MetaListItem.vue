@@ -18,7 +18,8 @@
                 title=""
                 width="267"
                 trigger="manual"
-                @hide="hide(item)">
+                @hide="hide(item)"
+              >
                 <template v-if="isVisible">
                   <div ref="addOptions" class="add-options" :style="`left:${itemData.left}px;top:${itemData.top}px`">
                     <icon-close class="tiny-svg-size icon-close" @click="closeEditOption"></icon-close>
@@ -28,7 +29,8 @@
                         footerbtnHide="true"
                         @changeItem="change"
                         @cancel="cancel"
-                        @confirm="formConfirm"></meta-form>
+                        @confirm="formConfirm"
+                      ></meta-form>
                     </slot>
                     <slot name="footer"></slot></div
                 ></template>
@@ -46,7 +48,8 @@
                 effect="dark"
                 :content="item.title"
                 placement="top"
-                @click="btnClick($event, item.type)">
+                @click="btnClick($event, item.type)"
+              >
                 <span class="item-icon">
                   <component :is="item.icon"></component>
                 </span>
@@ -64,7 +67,8 @@
     :visible="isShow"
     title="提示"
     width="20%"
-    @update:visible="isShow = $event">
+    @update:visible="isShow = $event"
+  >
     <span class="switch-tip">
       <span>
         <svg-icon name="warning"></svg-icon>
