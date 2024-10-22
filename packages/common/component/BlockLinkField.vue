@@ -1,5 +1,5 @@
 <template>
-  <tiny-popover class="block-link-field" popper-class="option-popper block-new-attr-popover">
+  <tiny-popover class="block-link-field" popper-class="option-popper block-new-attr-popover" :visible-arrow="false">
     <template #reference>
       <div>
         <span class="icon-wrap bind-prop">

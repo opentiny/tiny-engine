@@ -33,7 +33,7 @@ import { nextTick, reactive, watch, provide, inject, ref } from 'vue'
 import { Search } from '@opentiny/vue'
 import { iconSearch } from '@opentiny/vue-icon'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
-import { useApp, useBlock, useModal, useResource, useMaterial } from '@opentiny/tiny-engine-meta-register'
+import { useApp, useBlock, useModal, useResource, useMaterial, useNotify } from '@opentiny/tiny-engine-meta-register'
 import BlockGroupTransfer from './BlockGroupTransfer.vue'
 import BlockGroupFilters from './BlockGroupFilters.vue'
 
@@ -135,9 +135,9 @@ export default {
             state.searchValue = ''
             selectedBlockArray.value.length = 0
             useResource().fetchResource({ isInit: false }) // 添加区块分组，不需要重新init页面或者区块。
-            message({
-              message: `添加区块成功`,
-              status: 'success'
+            useNotify({
+              message: '添加区块成功',
+              type: 'success'
             })
           })
         })

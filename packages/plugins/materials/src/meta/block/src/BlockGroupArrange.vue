@@ -89,4 +89,9 @@ export default {
     margin-left: 8px;
   }
 }
+.button-icon-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 </style>
