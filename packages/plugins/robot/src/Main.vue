@@ -248,7 +248,7 @@ export default {
       http
         .post('/app-center/api/ai/chat', getSendSeesionProcess(), { timeout: 600000 })
         .then((res) => {
-          const { originalResponse } = res
+          const { originalResponse, schema } = res
           const responseMessage = getAiRespMessage(
             originalResponse.choices?.[0]?.message.role,
             originalResponse.choices?.[0]?.message.content
