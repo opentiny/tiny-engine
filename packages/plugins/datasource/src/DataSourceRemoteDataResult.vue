@@ -10,7 +10,13 @@
       ></tiny-alert>
     </div>
     <div id="remote-data-editor" class="data-editor">
-      <monaco-editor ref="editor" :value="state.value" class="monaco-editor" :options="state.options" />
+      <monaco-editor
+        ref="editor"
+        :value="state.value"
+        class="monaco-editor"
+        :options="state.options"
+        @change="handleChange"
+      />
     </div>
   </div>
 </template>
@@ -68,10 +74,15 @@ export default {
       emit('copy', state.value)
     }
 
+    const handleChange = (val) => {
+      state.value = val
+    }
+
     return {
       state,
       copyData,
-      editor
+      editor,
+      handleChange
     }
   }
 }
