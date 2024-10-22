@@ -64,5 +64,8 @@ export default {
   & + .svg-button {
     margin-left: 8px;
   }
+  .svg-icon {
+    outline: none;
+  }
 }
 </style>

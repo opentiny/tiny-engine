@@ -5,19 +5,17 @@
         v-for="(item, index) in dataSourceList"
         :key="item.id"
         :class="['datasource-list-item', index === activeIndex ? 'active' : '']"
-        @mouseenter="showSettingIcon(index)"
       >
         <div class="item-label">
           <div class="item-name">
-            <svg-button name="plugin-icon-data"> </svg-button>
+            <svg-button name="plugin-icon-data" class="plugin-icon-data"> </svg-button>
             {{ item.name }}
           </div>
           <div class="item-handler">
             <svg-button
               class="set-page"
               tips="编辑静态数据"
-              name="to-edit"
-              v-if="index === state.hoverIndex"
+              name="data-edit"
               @mousedown.stop.prevent="openRecordListPanel(item, index)"
             >
             </svg-button>
@@ -25,7 +23,6 @@
               class="set-page"
               tips="设置数据源"
               name="text-source-setting"
-              v-if="state.showSetting && index === state.hoverIndex"
               @mousedown.stop.prevent="openDataSourceForm(item, index)"
             >
             </svg-button>
@@ -77,8 +74,6 @@ export default {
   emits: ['edit'],
   setup(props, { emit }) {
     const state = reactive({
-      showSetting: false,
-      hoverIndex: 0,
       currentData: { name: '', columns: [], data: [] }
     })
 
@@ -87,11 +82,6 @@ export default {
     onMounted(() => {
       dataSourceList.value = useResource().resState.dataSource
     })
-
-    const showSettingIcon = (itemIndex) => {
-      state.hoverIndex = itemIndex
-      state.showSetting = true
-    }
 
     // 打开新增数据面板
     const openRecordListPanel = (item, index) => {
@@ -119,7 +109,6 @@ export default {
 
     return {
       state,
-      showSettingIcon,
       openRecordListPanel,
       openDataSourceForm,
       dataSourceList,
@@ -145,21 +134,23 @@ export default {
   .datasource-list-item {
     box-shadow: var(--ti-lowcode-datasource-tabs-border-color) 0, -1px;
     height: 24px;
+    line-height: 24px;
     align-items: center;
     display: grid;
-    padding: 2px 12px 2px 4px;
+    padding: 0 12px;
     position: relative;
     color: var(--ti-lowcode-datasource-common-text-main-color);
     cursor: pointer;
     &:hover,
     &.active {
       background: var(--ti-lowcode-datasource-list-hover-color);
+      .item-handler {
+        display: inline-block;
+      }
     }
     .item-label {
       overflow: hidden;
       text-overflow: ellipsis;
-      margin-left: 10px;
-      line-height: 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -168,11 +159,18 @@ export default {
         display: flex;
         align-items: center;
       }
+      .plugin-icon-data {
+        margin-right: 8px;
+        width: 18px;
+      }
     }
     .item-handler {
+      height: 24px;
+      line-height: 24px;
+      display: none;
       .svg-button {
-        width: 14px;
-        height: 14px;
+        width: 16px;
+        height: 16px;
         margin-top: 6px;
         color: var(--ti-lowcode-datasource-toolbar-more-hover-color);
       }

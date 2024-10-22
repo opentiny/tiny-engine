@@ -3,11 +3,13 @@
     <tiny-select
       ref="groupSelect"
       v-model="selectedGroup"
+      v-bind="{ 'top-create': !isShortcutPanel }"
       class="blocks-header-select"
       placeholder="请选择"
       value-key="groupId"
       @change="$emit('changeGroup')"
       @visible-change="handleSelectVisibleChange"
+      @top-create-click="handleAddGroup"
     >
       <tiny-option
         v-for="item in state.groups"
@@ -112,14 +114,6 @@
         </div>
       </tiny-option>
     </tiny-select>
-
-    <svg-button
-      v-if="!isShortcutPanel"
-      class="add-group-btn"
-      tips="新建分组"
-      name="add-page"
-      @click="handleAddGroup"
-    ></svg-button>
   </div>
   <tiny-dialog-box v-model:visible="state.showCreateGroupForm" title="新建分组" width="400px" :append-to-body="true">
     <tiny-form ref="createGroupForm" :model="state.createGroupForm" :rules="state.newGroupRules" validate-type="text">
@@ -402,11 +396,7 @@ export default {
 .blocks-header-wrap {
   display: flex;
   justify-content: space-between;
-  padding: 0 8px 8px;
-
-  .blocks-header-select {
-    width: calc(100% - 36px);
-  }
+  padding: 12px;
 
   .add-group-btn {
     font-size: 16px;

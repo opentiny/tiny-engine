@@ -1,6 +1,11 @@
-<svg version="1.1" id="unfold-outline" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 16 16" style="enable-background:new 0 0 16 16;" xml:space="preserve" width="132px" height="132px">
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 132 132" style="enable-background:new 0 0 132 132;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:currentcolor;}
+	.st0{fill:none;}
+	.st1{fill:currentColor;}
 </style>
-<path id="路径复制-6" class="st0" d="M12.8,10.8c0.3,0.2,0.7,0.2,1,0c0.3-0.2,0.3-0.7,0-0.9L8.5,5.2c-0.3-0.2-0.7-0.2-1,0&#10;&#9;L2.2,9.9c-0.3,0.2-0.3,0.7,0,0.9c0.3,0.2,0.7,0.2,1,0L8,6.5L12.8,10.8z"/>
+<rect id="size" class="st0" width="132" height="132"/>
+<path id="路径" class="st1" d="M61.9,45.7c2.3-2.3,5.9-2.3,8.2,0l33.8,33.8c1.6,1.6,1.6,4.2,0,5.8c-1.6,1.6-4.2,1.6-5.8,0L66,53.3
+	L33.9,85.4c-1.4,1.4-3.7,1.6-5.3,0.5l-0.6-0.5c-1.6-1.6-1.6-4.2,0-5.8L61.9,45.7z"/>
 </svg>

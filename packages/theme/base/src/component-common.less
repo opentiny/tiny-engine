@@ -109,7 +109,7 @@
     color: var(--te-common-text-primary);
     font-weight: var(--te-base-font-weight-7);
     background-color: var(--te-common-bg-default);
-    padding: 0 8px 0 12px;
+    padding: 0 12px;
     border: 0px;
     border-bottom-style: none;
 
@@ -128,7 +128,9 @@
   }
   .tiny-collapse-item {
     border-top-color: var(--te-common-border-bg-divider);
-    border-bottom: 0px;
+    border-bottom: 0;
+    border-left: 0;
+    border-right: 0;
     margin: 0;
   }
   .tiny-collapse-item__content {
@@ -173,6 +175,11 @@
       .is-current:not(.show-checkbox) > .tiny-tree-node__content .tiny-tree-node__content-right {
         background-color: var(--te-common-bg-container);
       }
+    }
+  }
+  .tiny-tree__empty-block {
+    .tiny-tree__empty-text {
+      color: var(--te-common-text-weaken);
     }
   }
 }
@@ -416,8 +423,12 @@
     //加减按钮
     .tiny-numeric__decrease,
     .tiny-numeric__increase {
+      color: var(--te-common-icon-secondary);
       width: 14px;
       border-left: 1px solid var(--te-common-border-default);
+    }
+    .tiny-numeric__increase {
+      border-bottom-color: var(--te-common-border-default);
     }
   }
   .tiny-numeric-base .is-disabled {
@@ -529,6 +540,7 @@
   background-color: var(--te-common-bg-default);
   box-shadow: 0 2px 12px 0 var(--te-base-rgba-24);
   .tiny-notify__icon-zone {
+    height: 24px;
     .tiny-notify__icon-status {
       width: 16px;
       height: 16px;
@@ -544,6 +556,8 @@
   .tiny-notify__message-zone {
     margin: 0 0 0 8px;
     .tiny-notify__title-wrapper {
+      margin-bottom: 0;
+      line-height: 24px;
       font-size: var(--te-base-font-size-1);
       font-weight: var(--te-base-font-weight-4);
       color: var(--te-common-text-primary);
@@ -551,9 +565,11 @@
   }
   .tiny-notify__close-zone {
     padding: 0;
-    &.tiny-notify__icon-close {
+    .tiny-notify__icon-close {
       width: 16px;
       height: 16px;
+      top: 0;
+      right: 0;
     }
   }
   &.tiny-notify--error {
@@ -584,13 +600,12 @@
 // 17、tooltip文字提示
 .tiny-tooltip.tiny-tooltip {
   &.tiny-tooltip__popper {
-    box-shadow: 0 4px 16px 0 var(--te-base-rgba-23);
+    box-shadow: 0 2px 12px 0 var(--te-base-dark-bg-8);
     &[class*='is-'] {
       background: var(--te-common-bg-default);
       color: var(--te-common-text-primary);
       font-size: var(--te-base-font-size-base);
       padding: 12px;
-      border: 1px solid var(--te-common-border-default);
       &[x-placement^='top'] {
         .popper__arrow {
           &.popper__arrow::after {
@@ -600,6 +615,7 @@
       }
       &[x-placement^='bottom'] {
         .popper__arrow {
+          border-bottom-width: 0;
           &.popper__arrow::after {
             border-bottom-color: var(--te-common-text-inverse);
           }
@@ -742,7 +758,6 @@
 // 22、开关
 .tiny-switch.tiny-switch {
   background-color: var(--te-common-bg-switch);
-  border: none;
   &.tiny-switch-checked {
     background-color: var(--te-common-bg-primary-checked);
   }

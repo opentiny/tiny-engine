@@ -46,7 +46,14 @@ export const getMethodContentList = () => Object.values(getMethods()).map((metho
 const getScriptString = () => {
   const list = Object.entries(getMethods()).map(([name, method]) => insertName(name, method.value))
   const script = list.join(`\n`)
-  scriptAst = string2Ast(script)
+  try {
+    scriptAst = string2Ast(script)
+  } catch (error) {
+    useNotify({
+      type: 'error',
+      message: `代码静态检查有错误：${error}`
+    })
+  }
   return script
 }
 

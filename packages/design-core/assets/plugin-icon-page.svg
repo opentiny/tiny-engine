@@ -1,12 +1,12 @@
-<svg width="18.000000" height="18.000000" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-	<desc>
-			Created with Pixso.
-	</desc>
-	<defs/>
-	<mask id="mask439_9929" mask-type="alpha" maskUnits="userSpaceOnUse" x="0.000000" y="0.000000" width="18.000000" height="18.000000">
-		<rect id="开发文档-development" width="18.000000" height="18.000000" fill="#000000" fill-opacity="1.000000"/>
-	</mask>
-	<g mask="url(#mask439_9929)">
-		<path id="path" d="M12.93 16.87L5.06 16.87C3.49 16.87 2.25 15.61 2.25 14.06L2.25 3.93C2.25 2.37 3.49 1.12 5.06 1.12L10.68 1.12C10.83 1.12 10.98 1.18 11.08 1.29L15.58 5.79C15.67 5.89 15.75 6.03 15.75 6.18L15.75 14.06C15.75 15.61 14.49 16.87 12.93 16.87ZM5.06 2.25C4.12 2.25 3.37 3 3.37 3.93L3.37 14.06C3.37 14.99 4.12 15.75 5.06 15.75L12.93 15.75C13.87 15.75 14.62 14.99 14.62 14.06L14.62 6.42L10.43 2.25L5.06 2.25Z" fill="#191919" fill-opacity="1.000000" fill-rule="nonzero"/>
-	</g>
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="_层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 132 132" style="enable-background:new 0 0 132 132;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;}
+	.st1{fill:currentColor;}
+</style>
+<rect id="_形备份" class="st0" width="132" height="132"/>
+<path class="st1" d="M94.9,123.8H37.1c-11.4,0-20.6-9.2-20.6-20.6V28.9c0-11.4,9.2-20.6,20.6-20.6h41.2c1.1,0,2.1,0.4,2.9,1.2l33,33
+	c0.7,0.7,1.2,1.8,1.2,2.9v57.8C115.5,114.5,106.3,123.8,94.9,123.8z M37.1,16.5c-6.8,0-12.4,5.5-12.4,12.4v74.2
+	c0,6.8,5.5,12.4,12.4,12.4h57.8c6.8,0,12.4-5.5,12.4-12.4v-56L76.6,16.5H37.1z"/>
 </svg>

@@ -1,6 +1,6 @@
 <template>
   <div class="background-input">
-    <tiny-input v-model="color" placeholder="color value" @change="change">
+    <tiny-input v-model="color" placeholder="请输入颜色" @change="change">
       <template #prefix>
         <input v-model="color" type="color" class="input-color" @change="changeColor" />
       </template>
@@ -73,7 +73,6 @@ export default {
       padding-left: 24px;
       padding-right: 8px;
       background-color: transparent;
-      border: none;
     }
   }
 }
