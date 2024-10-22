@@ -115,6 +115,7 @@ import {
   DropdownMenu as TinyDropdownMenu,
   DropdownItem as TinyDropdownItem
 } from '@opentiny/vue'
+
 import { useCanvas, useHistory, usePage, useModal, useLayout } from '@opentiny/tiny-engine-controller'
 import { iconChevronDown, iconSetting, iconPicture, iconError } from '@opentiny/vue-icon'
 import { extend } from '@opentiny/vue-renderless/common/object'
@@ -181,6 +182,8 @@ export default {
       )
     }
 
+    // TODO：返回schema格式的代码
+    // eslint-disable-next-line no-unused-vars
     const createNewPage = (schema) => {
       if (!(pageSettingState.isNew && pageSettingState.isAIPage)) {
         pageSettingState.isNew = true
@@ -245,7 +248,7 @@ export default {
       http
         .post('/app-center/api/ai/chat', getSendSeesionProcess(), { timeout: 600000 })
         .then((res) => {
-          const { originalResponse, schema } = res
+          const { originalResponse } = res
           const responseMessage = getAiRespMessage(
             originalResponse.choices?.[0]?.message.role,
             originalResponse.choices?.[0]?.message.content
@@ -414,7 +417,6 @@ export default {
         }
         const message = getMessage(realContent, 'user')
         inProcessing.value = true
-
         messages.value.push(message)
         sessionProcess?.messages.push(message)
         sessionProcess?.displayMessages.push(message)
@@ -436,7 +438,7 @@ export default {
       }
     }
 
-    // 根据localstorage初始化AI大模型
+    // 根据localstorage初始化AI大模型s
     const initCurrentModel = (aiSession) => {
       const currentModelValue = JSON.parse(aiSession)?.foundationModel?.model
       currentModel = AIModelOptions.find((item) => item.value === currentModelValue)
