@@ -18,7 +18,7 @@ import { api as pageSettingApi } from './src/PageSetting.vue'
 
 export default {
   ...metaData,
-  apis: [...api, ...pageSettingApi],
+  apis: { ...api, ...pageSettingApi },
   entry,
   components: {
     PageGeneral
