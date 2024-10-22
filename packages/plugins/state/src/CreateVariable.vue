@@ -19,7 +19,7 @@
       <tiny-radio-group v-model="state.variableType" :options="VAR_TYPES"></tiny-radio-group>
     </tiny-form-item>
     <tiny-collapse v-model="state.activeName">
-      <tiny-collapse-item title="初始值" name="initValue">
+      <tiny-collapse-item :title="INIT" name="initValue">
         <tiny-form-item>
           <monaco-editor
             ref="variableEditor"
@@ -33,7 +33,7 @@
               <editor-i18n-tool ref="i18nToolRef" @confirm="insertContent"></editor-i18n-tool>
             </template>
             <template #fullscreenHead>
-              <state-fullscreen-head title="初始值" @close="cancel"></state-fullscreen-head>
+              <state-fullscreen-head :title="INIT" @close="cancel"></state-fullscreen-head>
             </template>
             <template #fullscreenFooter>
               <div class="fullscreen-footer-content">
@@ -44,11 +44,11 @@
           <state-tips></state-tips>
         </tiny-form-item>
       </tiny-collapse-item>
-      <tiny-collapse-item title="getter" name="getter">
+      <tiny-collapse-item :title="GETTER" :name="GETTER">
         <tiny-form-item>
           <monaco-editor ref="getterEditor" class="variable-editor" :options="options" :value="state.getterEditorValue">
             <template #fullscreenHead>
-              <state-fullscreen-head title="getter" @close="cancel"></state-fullscreen-head>
+              <state-fullscreen-head :title="GETTER" @close="cancel"></state-fullscreen-head>
             </template>
             <template #fullscreenFooter>
               <div class="fullscreen-footer-content">
@@ -63,11 +63,11 @@
           </div>
         </tiny-form-item>
       </tiny-collapse-item>
-      <tiny-collapse-item title="setter" name="setter">
+      <tiny-collapse-item :title="SETTER" :name="SETTER">
         <tiny-form-item>
           <monaco-editor ref="setterEditor" class="variable-editor" :options="options" :value="state.setterEditorValue">
             <template #fullscreenHead>
-              <state-fullscreen-head title="setter" @close="cancel"></state-fullscreen-head>
+              <state-fullscreen-head :title="SETTER" @close="cancel"></state-fullscreen-head>
             </template>
             <template #fullscreenFooter>
               <div class="fullscreen-footer-content">
@@ -134,6 +134,9 @@ export default {
   },
   emits: ['nameInput', 'close'],
   setup(props, { emit }) {
+    const INIT = '初始值'
+    const GETTER = 'getter'
+    const SETTER = 'setter'
     const variableEditor = ref(null)
     const getterEditor = ref(null)
     const setterEditor = ref(null)
@@ -371,6 +374,9 @@ export default {
       "function setter() {\r\n  // const [firstName, lastName] = this.state.name.split(' ')\r\n  // this.emit('update:firstName', firstName)\r\n  // this.emit('update:lastName', lastName)\r\n}" // eslint-disable-line
 
     return {
+      INIT,
+      GETTER,
+      SETTER,
       state,
       VAR_TYPES,
       variableEditor,

@@ -13,8 +13,8 @@
       <tiny-input v-model="state.storeData.name" placeholder="只能包含数字字母及下划线"></tiny-input>
     </tiny-form-item>
     <tiny-collapse v-model="state.activeName">
-      <tiny-collapse-item title="state" name="state">
-        <tiny-form-item prop="state">
+      <tiny-collapse-item :title="STATE" :name="STATE">
+        <tiny-form-item :prop="STATE">
           <monaco-editor
             ref="variableEditor"
             class="store-editor"
@@ -33,7 +33,7 @@
               <div class="label-left-wrap"></div>
             </template>
             <template #fullscreenHead>
-              <state-fullscreen-head title="state" @close="cancel"></state-fullscreen-head>
+              <state-fullscreen-head :title="STATE" @close="cancel"></state-fullscreen-head>
             </template>
             <template #fullscreenFooter>
               <div class="fullscreen-footer-content">
@@ -44,20 +44,20 @@
           <state-tips></state-tips>
         </tiny-form-item>
       </tiny-collapse-item>
-      <tiny-collapse-item title="getters" name="getters">
-        <tiny-form-item prop="getters">
+      <tiny-collapse-item :title="GETTERS" :name="GETTERS">
+        <tiny-form-item :prop="GETTERS">
           <monaco-editor ref="gettersEditor" class="store-editor" :options="options" :value="getters">
             <template #fullscreenHead>
-              <state-fullscreen-head title="getters" @close="cancel"></state-fullscreen-head>
+              <state-fullscreen-head :title="GETTERS" @close="cancel"></state-fullscreen-head>
             </template>
           </monaco-editor>
         </tiny-form-item>
       </tiny-collapse-item>
-      <tiny-collapse-item title="actions" name="actions">
-        <tiny-form-item prop="actions">
+      <tiny-collapse-item :title="ACTIONS" :name="ACTIONS">
+        <tiny-form-item :prop="ACTIONS">
           <monaco-editor ref="actionsEditor" class="store-editor" :options="options" :value="actions">
             <template #fullscreenHead>
-              <state-fullscreen-head title="actions" @close="cancel"></state-fullscreen-head>
+              <state-fullscreen-head :title="ACTIONS" @close="cancel"></state-fullscreen-head>
             </template>
           </monaco-editor>
         </tiny-form-item>
@@ -102,6 +102,9 @@ export default {
   },
   emits: ['close'],
   setup(props, { emit }) {
+    const STATE = 'state'
+    const GETTERS = 'getters'
+    const ACTIONS = 'actions'
     const instance = getCurrentInstance()
     const isDemoShow = ref(false)
     const gettersEditor = ref(null)
@@ -222,6 +225,9 @@ export default {
     }
 
     return {
+      STATE,
+      GETTERS,
+      ACTIONS,
       isDemoShow,
       state,
       getEditor,
