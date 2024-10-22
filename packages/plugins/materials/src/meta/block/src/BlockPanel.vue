@@ -4,7 +4,9 @@
     <tiny-search v-model="state.searchValue" clearable placeholder="请输入关键字搜索">
       <template #prefix> <tiny-icon-search /> </template>
     </tiny-search>
-    <block-list v-model:blockList="filterBlocks" :show-add-button="true" :show-block-shot="true"></block-list>
+    <div class="block-list">
+      <block-list v-model:blockList="filterBlocks" :show-add-button="true" :show-block-shot="true"></block-list>
+    </div>
   </div>
   <!-- TODO: vue 版本升级到 3.5+ 之后，支持 defer，就不需要 rightPanelRef 了 -->
   <teleport defer to=".material-right-panel" v-if="rightPanelRef">
@@ -182,5 +184,10 @@ export default {
       color: #ababab;
     }
   }
+}
+
+.block-list {
+  padding: 12px;
+  overflow-y: auto;
 }
 </style>

@@ -388,6 +388,7 @@ export default {
         margin-right: 4px;
       }
       & .label {
+        font-size: 12px;
         flex: 1;
       }
     }

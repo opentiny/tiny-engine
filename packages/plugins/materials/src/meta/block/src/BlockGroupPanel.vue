@@ -29,7 +29,7 @@
   </plugin-setting>
 </template>
 <script>
-import { nextTick, reactive, watch, inject } from 'vue'
+import { nextTick, reactive, watch, provide, inject, ref } from 'vue'
 import { Search } from '@opentiny/vue'
 import { iconSearch } from '@opentiny/vue-icon'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
@@ -74,6 +74,8 @@ export default {
     const { message } = useModal()
     const appId = useApp().appInfoState.selectedId
     const panelState = inject('panelState', {})
+    const blockUsers = ref([])
+    provide('blockUsers', blockUsers)
 
     const state = reactive({
       searchValue: '',
@@ -220,6 +222,7 @@ export default {
             : []
         state.filters[2].children =
           results[2].status === 'fulfilled' ? results[2].value.map((item) => ({ name: item })) : []
+        blockUsers.value = state.filters[1].children
       })
     }
 
