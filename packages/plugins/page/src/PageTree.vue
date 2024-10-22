@@ -275,7 +275,7 @@ export default {
             {data.isPage && isPageLocked ? (
               <SvgIcon
                 class="page-edit-icon"
-                name="locked-outline"
+                name="locked"
                 onMousedown={(e) => openSettingPanel(e, node, isPageLocked)}
               ></SvgIcon>
             ) : null}
@@ -415,7 +415,7 @@ export default {
     .tiny-tree-node.is-current {
       & > .tiny-tree-node__content {
         & > div > .tiny-tree-node__content-box {
-          font-weight: 700;
+          background-color: var(--te-common-bg-container);
         }
       }
     }

@@ -39,13 +39,14 @@ export default {
   font-size: 12px;
 
   &.wrapper {
-    height: 28px;
+    height: 32px;
     padding: 0 12px;
     border-left: 0;
     box-shadow: none;
     border-radius: 4px;
     display: flex;
     align-items: center;
+    background-color: var(--te-common-bg-container);
   }
 
   .setting-block {

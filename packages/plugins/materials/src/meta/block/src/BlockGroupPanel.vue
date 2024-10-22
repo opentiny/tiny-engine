@@ -114,9 +114,14 @@ export default {
               version: item.latestVersion
             })) || []
 
+          if (selectedBlocks.length === 0) {
+            return
+          }
+
           const blocks = [...resData, ...selectedBlocks]
 
-          requestUpdateGroup({
+          // 这里把异步请求 return，可以让下面的 catch 捕获到错误
+          return requestUpdateGroup({
             id: groupId,
             blocks,
             app: appId
@@ -130,6 +135,10 @@ export default {
             state.searchValue = ''
             selectedBlockArray.value.length = 0
             useResource().fetchResource({ isInit: false }) // 添加区块分组，不需要重新init页面或者区块。
+            message({
+              message: `添加区块成功`,
+              status: 'success'
+            })
           })
         })
         .catch((error) => {
@@ -255,7 +264,7 @@ export default {
     margin-bottom: 12px;
   }
   .transfer-order-search {
-    width: 296px;
+    flex: 1;
   }
 }
 :deep(.plugin-setting-header) {
