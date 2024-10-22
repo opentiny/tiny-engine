@@ -5,7 +5,6 @@
         v-for="(item, index) in dataSourceList"
         :key="item.id"
         :class="['datasource-list-item', index === activeIndex ? 'active' : '']"
-        @mouseenter="showSettingIcon(index)"
       >
         <div class="item-label">
           <div class="item-name">
@@ -17,7 +16,6 @@
               class="set-page"
               tips="编辑静态数据"
               name="data-edit"
-              v-if="index === state.hoverIndex"
               @mousedown.stop.prevent="openRecordListPanel(item, index)"
             >
             </svg-button>
@@ -25,7 +23,6 @@
               class="set-page"
               tips="设置数据源"
               name="text-source-setting"
-              v-if="state.showSetting && index === state.hoverIndex"
               @mousedown.stop.prevent="openDataSourceForm(item, index)"
             >
             </svg-button>
@@ -77,8 +74,6 @@ export default {
   emits: ['edit'],
   setup(props, { emit }) {
     const state = reactive({
-      showSetting: false,
-      hoverIndex: 0,
       currentData: { name: '', columns: [], data: [] }
     })
 
@@ -87,11 +82,6 @@ export default {
     onMounted(() => {
       dataSourceList.value = useResource().resState.dataSource
     })
-
-    const showSettingIcon = (itemIndex) => {
-      state.hoverIndex = itemIndex
-      state.showSetting = true
-    }
 
     // 打开新增数据面板
     const openRecordListPanel = (item, index) => {
@@ -119,7 +109,6 @@ export default {
 
     return {
       state,
-      showSettingIcon,
       openRecordListPanel,
       openDataSourceForm,
       dataSourceList,
@@ -155,6 +144,9 @@ export default {
     &:hover,
     &.active {
       background: var(--ti-lowcode-datasource-list-hover-color);
+      .item-handler {
+        display: inline-block;
+      }
     }
     .item-label {
       overflow: hidden;
@@ -175,6 +167,7 @@ export default {
     .item-handler {
       height: 24px;
       line-height: 24px;
+      display: none;
       .svg-button {
         width: 16px;
         height: 16px;
