@@ -254,6 +254,7 @@ export default {
             originalResponse.choices?.[0]?.message.role,
             originalResponse.choices?.[0]?.message.content
           )
+
           sessionProcess.messages.push(responseMessage)
           sessionProcess.displayMessages.push(respDisplayMessage)
           messages.value[messages.value.length - 1].content = originalResponse.choices?.[0]?.message.content
