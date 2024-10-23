@@ -1,11 +1,6 @@
 <template>
   <div id="canvas-wrap" ref="canvasRef">
-    <div
-      ref="siteCanvas"
-      class="site-canvas"
-      :style="siteCanvasStyle"
-      :class="{ 'not-selected': getMoveDragBarState() }"
-    >
+    <div ref="siteCanvas" class="site-canvas" :style="siteCanvasStyle">
       <canvas-container
         :controller="controller"
         :materials-panel="materialsPanel"
@@ -57,7 +52,6 @@ export default {
     const showMask = ref(true)
     const canvasRef = ref(null)
     let showModal = false // 弹窗标识
-    const { getMoveDragBarState } = useLayout()
 
     const removeNode = (node) => {
       const { pageState } = useCanvas()
@@ -199,8 +193,7 @@ export default {
         ast
       },
       siteCanvasStyle,
-      canvasRef,
-      getMoveDragBarState
+      canvasRef
     }
   }
 }
@@ -222,9 +215,5 @@ export default {
     margin: 18px 0;
     transform-origin: top;
   }
-}
-.not-selected {
-  pointer-events: none;
-  user-select: none;
 }
 </style>

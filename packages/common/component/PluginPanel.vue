@@ -70,7 +70,7 @@ export default {
   },
   emits: ['close'],
   setup(props, { emit }) {
-    const { getPluginWidth, changePluginWidth, getPluginByLayout, changeMoveDragBarState } = useLayout()
+    const { getPluginWidth, changePluginWidth, getPluginByLayout } = useLayout()
     const panelState = inject('panelState')
     const closePanel = () => {
       useLayout().closePlugin()
@@ -129,19 +129,16 @@ export default {
     const throttledMouseMoveLeft = throttle(onMouseMoveLeft, 50)
 
     const onMouseUpRight = () => {
-      changeMoveDragBarState(false)
       document.removeEventListener('mousemove', throttledMouseMoveRight)
       document.removeEventListener('mouseup', onMouseUpRight)
     }
 
     const onMouseUpLeft = () => {
-      changeMoveDragBarState(false)
       document.removeEventListener('mousemove', throttledMouseMoveLeft)
       document.removeEventListener('mouseup', onMouseUpLeft)
     }
 
     const onMouseDownRight = (event) => {
-      changeMoveDragBarState(true)
       startX = event.clientX
       startWidth = panel.value.offsetWidth
       document.addEventListener('mousemove', throttledMouseMoveRight)
@@ -149,7 +146,6 @@ export default {
     }
 
     const onMouseDownLeft = (event) => {
-      changeMoveDragBarState(true)
       startX = event.clientX
       startWidth = panel.value.offsetWidth
       document.addEventListener('mousemove', throttledMouseMoveLeft)

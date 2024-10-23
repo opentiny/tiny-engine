@@ -1,7 +1,7 @@
 <!-- 右侧插件栏-->
 <template>
   <!-- 插件面板 -->
-  <div :class="{ 'not-selected': getMoveDragBarState() }">
+  <div>
     <div
       v-show="renderPanel && components[renderPanel]"
       id="tiny-engine-right-panel"
@@ -83,7 +83,6 @@ export default {
       dragPluginLayout,
       isSameSide,
       getPluginShown,
-      getMoveDragBarState,
       layoutState: { settings: settingsState }
     } = useLayout()
 
@@ -173,8 +172,7 @@ export default {
       PLUGIN_POSITION,
       getPluginShown,
       switchAlign,
-      rightMenu,
-      getMoveDragBarState
+      rightMenu
     }
   }
 }
