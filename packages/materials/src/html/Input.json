@@ -1,0 +1,289 @@
+{
+  "name": {
+    "zh_CN": "输入框"
+  },
+  "component": "input",
+  "icon": "input",
+  "description": "输入框",
+  "docUrl": "",
+  "screenshot": "",
+  "tags": "",
+  "keywords": "",
+  "devMode": "proCode",
+  "npm": {},
+  "group": "component",
+  "category": "html",
+  "priority": 40,
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "collapse": {
+          "number": 6,
+          "text": {
+            "zh_CN": "显示更多"
+          }
+        },
+        "content": [
+          {
+            "property": "type",
+            "label": {
+              "text": {
+                "zh_CN": "类型"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaSelect",
+              "props": {
+                "options": [
+                  {
+                    "label": "checkbox",
+                    "value": "checkbox"
+                  },
+                  {
+                    "label": "color",
+                    "value": "color"
+                  },
+                  {
+                    "label": "date",
+                    "value": "date"
+                  },
+                  {
+                    "label": "button",
+                    "value": "button"
+                  },
+                  {
+                    "label": "email",
+                    "value": "email"
+                  },
+                  {
+                    "label": "file",
+                    "value": "file"
+                  },
+                  {
+                    "label": "hidden",
+                    "value": "hidden"
+                  },
+                  {
+                    "label": "image",
+                    "value": "image"
+                  },
+                  {
+                    "label": "month",
+                    "value": "month"
+                  },
+                  {
+                    "label": "number",
+                    "value": "number"
+                  },
+                  {
+                    "label": "password",
+                    "value": "password"
+                  },
+                  {
+                    "label": "radio",
+                    "value": "radio"
+                  },
+                  {
+                    "label": "range",
+                    "value": "range"
+                  },
+                  {
+                    "label": "reset",
+                    "value": "reset"
+                  },
+                  {
+                    "label": "search",
+                    "value": "search"
+                  },
+                  {
+                    "label": "submit",
+                    "value": "submit"
+                  },
+                  {
+                    "label": "text",
+                    "value": "text"
+                  },
+                  {
+                    "label": "time",
+                    "value": "time"
+                  },
+                  {
+                    "label": "week",
+                    "value": "week"
+                  },
+                  {
+                    "label": "url",
+                    "value": "url"
+                  }
+                ]
+              }
+            },
+            "description": {
+              "zh_CN": ""
+            }
+          },
+          {
+            "property": "placeholder",
+            "label": {
+              "text": {
+                "zh_CN": "占位符"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaInput",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": ""
+            }
+          },
+          {
+            "property": "attributes3",
+            "label": {
+              "text": {
+                "zh_CN": "原生属性"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "MetaHtmlAttributes",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": ""
+            },
+            "labelPosition": "none"
+          }
+        ]
+      }
+    ],
+    "events": {
+      "onBlur": {
+        "label": {
+          "zh_CN": "失去焦点时触发"
+        },
+        "description": {
+          "zh_CN": "在 Input 失去焦点时触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "event",
+              "type": "Object",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "原生 event"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      },
+      "onFocus": {
+        "label": {
+          "zh_CN": "获取焦点时触发"
+        },
+        "description": {
+          "zh_CN": "在 Input 获取焦点时触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "event",
+              "type": "Object",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "原生 event"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      },
+      "onChange": {
+        "label": {
+          "zh_CN": "输入值改变时触发"
+        },
+        "description": {
+          "zh_CN": "在 Input 输入值改变时触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "event",
+              "type": "Object",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "原生 event"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      }
+    }
+  },
+  "configure": {
+    "loop": true,
+    "condition": true,
+    "styles": true,
+    "isContainer": false,
+    "isModal": false,
+    "nestingRule": {
+      "childWhitelist": [],
+      "parentWhitelist": "",
+      "descendantBlacklist": "",
+      "ancestorWhitelist": ""
+    },
+    "isNullNode": false,
+    "isLayout": false,
+    "rootSelector": "",
+    "shortcuts": {
+      "properties": ["disabled", "size"]
+    },
+    "contextMenu": {
+      "actions": ["create symbol"],
+      "disable": ["copy", "remove"]
+    }
+  },
+  "snippets": [
+    {
+      "name": {
+        "zh_CN": "输入框"
+      },
+      "icon": "input",
+      "screenshot": "",
+      "snippetName": "input",
+      "schema": {
+        "componentName": "input",
+        "props": {
+          "type": "text",
+          "placeholder": "请输入"
+        }
+      }
+    }
+  ]
+}
