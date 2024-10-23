@@ -4,6 +4,7 @@
       <div :class="[isAlignBody ? '' : 'modal-mask']" @click="$emit('close')"></div>
 
       <div
+        ref="modalContent"
         :style="{ top: topStyle + 'px' }"
         :class="['modal-content', { 'align-body': isAlignBody }, { 'modal-padding': isAlignBody }]"
       >
@@ -50,6 +51,7 @@ export default {
   setup(props) {
     const isAlignBody = ref(props.teleport === 'body')
     const topStyle = ref(0)
+    const modalContent = ref(null)
 
     const calculateTopStyle = (modalContent) => {
       if (isAlignBody.value && modalContent) {
@@ -59,12 +61,12 @@ export default {
     }
 
     onMounted(() => {
-      const modalContentEle = document.querySelector('.modal-content')
-      topStyle.value = calculateTopStyle(modalContentEle)
+      topStyle.value = calculateTopStyle(modalContent.value)
     })
 
     return {
       modal,
+      modalContent,
       topStyle,
       isAlignBody
     }
@@ -100,11 +102,13 @@ export default {
     box-sizing: border-box;
   }
   .modal-padding {
-    padding: 10px 16px;
+    padding: var(--ti-modal-padding-y, 10px) var(--ti-modal-padding-x, 16px);
   }
   .align-body {
     right: var(--modal-right-offset, 280px);
-    left: calc(100% - var(--modal-right-offset, 287px) - var(--modal-right-offset, 280px) - 16px);
+    left: calc(
+      100% - var(--modal-right-offset, 287px) - var(--modal-right-offset, 280px) - var(--modal-spaceing, 16px)
+    );
   }
 }
 </style>

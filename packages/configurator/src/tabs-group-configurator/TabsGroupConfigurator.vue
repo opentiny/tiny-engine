@@ -4,7 +4,7 @@
       v-for="(item, index) in commonOptions"
       :key="item.label || item.icon"
       :class="['tab-item', { selected: picked === (valueKey ? item.value[valueKey] : item.value) }]"
-      :style="{ width: getItemWidth(collapsedOptions.length && index === commonOptions.length - 1) + 'px' }"
+      :style="{ width: itemWidth(collapsedOptions.length && index === commonOptions.length - 1) }"
       @click.stop="change(item.value)"
     >
       <span :class="['label-text', index < commonOptions.length - 1 ? 'border-right' : '']">
@@ -32,7 +32,7 @@
       <div
         v-if="collapsedOptions.length && index === commonOptions.length - 1 && showMore"
         class="more-tabs-wrap"
-        :style="{ width: getItemWidth(true) }"
+        :style="{ width: itemWidth(true) }"
       >
         <div
           v-for="foldsItem in foldsOptions"
@@ -48,7 +48,7 @@
   </div>
 </template>
 <script setup>
-import { ref, watch, defineProps, defineEmits } from 'vue'
+import { ref, watch, computed, defineProps, defineEmits } from 'vue'
 import { Popover as TinyPopover } from '@opentiny/vue'
 
 const props = defineProps({
@@ -91,26 +91,35 @@ const getItemWidth = (collapsed = false) => {
   return `${parseInt(props.labelWidth, 10) + (collapsed ? 20 : 0)}`
 }
 
+const itemWidth = computed((collapsed) => `${getItemWidth(collapsed)}px`)
+
+const findMatchingFoldValue = (value) =>
+  foldsOptions.value.find((item) => (props.valueKey ? item.value[props.valueKey] === value : item.value === value))
+
+const filterNonMatchingValues = (value) =>
+  collapsedOptions.value.filter((item) =>
+    props.valueKey ? item.value[props.valueKey] === value : item.value === value
+  )
+
+const updateOptionDisplay = (value) => {
+  if (!value) {
+    commonOptions.value = [...uncollapsedOptions.value, collapsedOptions.value[0]]
+    foldsOptions.value = collapsedOptions.value.slice(1)
+    return
+  }
+  const matchingFoldValue = findMatchingFoldValue(value)
+  if (matchingFoldValue) {
+    commonOptions.value[commonOptions.value.length - 1] = matchingFoldValue
+    foldsOptions.value = filterNonMatchingValues(value)
+  }
+}
+
 watch(
   () => props.modelValue,
   (value) => {
     picked.value = value
-    if (collapsedOptions.value.length === 0) {
-      return
-    }
-    if (!value) {
-      commonOptions.value = [...uncollapsedOptions.value, collapsedOptions.value[0]]
-      foldsOptions.value = collapsedOptions.value.filter((item, index) => index > 0)
-    } else {
-      const isFoldsValue = foldsOptions.value.find((item) =>
-        props.valueKey ? item.value[props.valueKey] === value : item.value === value
-      )
-      if (isFoldsValue) {
-        commonOptions.value[commonOptions.value.length - 1] = isFoldsValue
-        foldsOptions.value = collapsedOptions.value.filter((item) =>
-          props.valueKey ? item.value[props.valueKey] !== value : item.value !== value
-        )
-      }
+    if (collapsedOptions.value.length > 0) {
+      updateOptionDisplay(value)
     }
   },
   { immediate: true }
@@ -157,7 +166,7 @@ const change = (val) => {
       top: 24px;
       right: 0;
       background-color: var(--ti-lowcode-base-bg-5);
-      z-index: 2018;
+      z-index: 2200;
       border-radius: 4px;
       box-shadow: 0px 0px 10px 0px rgba(25, 25, 25, 0.15);
       text-align: left;
