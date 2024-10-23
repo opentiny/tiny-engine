@@ -12,9 +12,9 @@
   },
   "dependencies": {
     "vue": "^3.4.21",
-    "@opentiny/tiny-engine": "^2.0.0-alpha.3",
-    "@opentiny/tiny-engine-theme-dark": "^2.0.0-alpha.3",
-    "@opentiny/tiny-engine-theme-light": "^2.0.0-alpha.3",
+    "@opentiny/tiny-engine": "^2.0.0-alpha.5",
+    "@opentiny/tiny-engine-theme-dark": "^2.0.0-alpha.5",
+    "@opentiny/tiny-engine-theme-light": "^2.0.0-alpha.5",
     "@opentiny/vue": "~3.14.0",
     "@opentiny/vue-icon": "~3.14.0",
     "@opentiny/vue-design-smb": "~3.14.0",
@@ -22,8 +22,8 @@
     "@opentiny/vue-theme": "~3.14.0"
   },
   "devDependencies": {
-    "@opentiny/tiny-engine-vite-config": "^2.0.0-alpha.3",
-    "@opentiny/tiny-engine-mock": "^2.0.0-alpha.3",
+    "@opentiny/tiny-engine-vite-config": "^2.0.0-alpha.5",
+    "@opentiny/tiny-engine-mock": "^2.0.0-alpha.5",
     "@vitejs/plugin-vue": "^5.1.2",
     "cross-env": "^7.0.3",
     "concurrently": "^8.2.0",
