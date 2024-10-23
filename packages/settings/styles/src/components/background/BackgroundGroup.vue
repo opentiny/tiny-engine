@@ -429,8 +429,8 @@ export default {
     place-items: stretch;
     gap: 1px;
     border-radius: 2px;
-    border-top: 1px solid var(--ti-lowcode-base-invalidate-color);
-    background-color: var(--ti-lowcode-base-bg-5);
+    border-top: 1px solid var(--te-base-invalidate-color);
+    background-color: var(--te-base-bg-5);
     margin: 12px 0;
     .image-list-item {
       display: grid;
@@ -438,8 +438,8 @@ export default {
       gap: 8px 4px;
       height: 24px;
       align-items: center;
-      background-color: var(--ti-lowcode-base-bg-5);
-      border-bottom: 1px solid var(--ti-lowcode-base-invalidate-color);
+      background-color: var(--te-base-bg-5);
+      border-bottom: 1px solid var(--te-base-invalidate-color);
       pointer-events: all;
       font-size: 11px;
       font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell,
@@ -556,7 +556,7 @@ export default {
     span {
       cursor: pointer;
       border-radius: 2px;
-      color: var(--ti-lowcode-base-text-color-2);
+      color: var(--te-common-text-emphasize);
       background-color: var(--ti-lowcode-style-setting-label-bg);
     }
   }
@@ -568,7 +568,7 @@ export default {
   padding: 6px 0;
 
   span {
-    color: var(--ti-lowcode-base-text-color);
+    color: var(--te-common-bg-prompt);
     font-weight: 600;
   }
 

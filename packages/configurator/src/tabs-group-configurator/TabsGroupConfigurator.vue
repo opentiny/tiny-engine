@@ -25,7 +25,7 @@
           v-if="collapsedOptions.length && index === commonOptions.length - 1"
           name="down-arrow"
           class="bem-Svg"
-          color="var(--ti-lowcode-base-default-button-border-disable-color)"
+          color="var(--te-common-border-default)"
           @click.stop="showMore = !showMore"
         ></svg-icon>
       </span>
@@ -198,6 +198,6 @@ const change = (val) => {
 }
 
 .border-right {
-  border-right: 1px solid var(--ti-lowcode-base-default-button-border-disable-color);
+  border-right: 1px solid var(--te-common-border-default);
 }
 </style>

@@ -538,7 +538,7 @@ export default {
     span {
       cursor: pointer;
       border-radius: 2px;
-      color: var(--ti-lowcode-base-text-color-2);
+      color: var(--te-common-text-emphasize);
       background-color: var(--ti-lowcode-style-setting-label-bg);
     }
   }

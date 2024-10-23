@@ -241,7 +241,7 @@ onMounted(() => {
   border-width: 1px;
   box-sizing: border-box;
   border-style: solid;
-  border: 1px dotted var(--ti-lowcode-base-default-button-border-disable-color);
+  border: 1px dotted var(--te-common-border-default);
   border-radius: 4px;
 }
 .image-inner {
@@ -308,7 +308,7 @@ onMounted(() => {
     }
   }
   .size {
-    color: var(--ti-lowcode-base-text-color-1);
+    color: var(--te-common-text-secondary);
   }
 }
 .choose-image {
@@ -327,7 +327,7 @@ onMounted(() => {
   justify-content: center;
   height: 24px;
   border-radius: 4px;
-  color: var(--ti-lowcode-base-text-color);
+  color: var(--te-common-bg-prompt);
   border-width: 1px;
   border-style: solid;
   align-self: center;

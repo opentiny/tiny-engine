@@ -34,8 +34,8 @@ export default {
   display: block;
   max-width: 100%;
   border: 0;
-  color: var(--ti-lowcode-base-primary-color-1);
-  border: 1px solid var(--ti-lowcode-base-primary-color-1);
+  color: var(--te-common-text-primary);
+  border: 1px solid var(--te-common-text-primary);
 }
 .reset-desc {
   display: block;
