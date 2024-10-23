@@ -9,7 +9,8 @@ import {
   genUtilsPlugin,
   formatCodePlugin,
   parseSchemaPlugin,
-  genGlobalState
+  genGlobalState,
+  appendElePlusStylePlugin
 } from '../plugins'
 import CodeGenerator from './codeGenerator'
 
@@ -61,6 +62,11 @@ export function generateApp(config = {}) {
     router: router || defaultPlugins.router,
     utils: utils || defaultPlugins.utils,
     globalState: globalState || defaultPlugins.globalState
+  }
+
+  // 默认支持 element-plus 注入样式
+  if (config?.customContext?.injectElementPlusStyle !== false) {
+    transformEnd.push(appendElePlusStylePlugin(config?.customContext?.injectElementPlusStyle || {}))
   }
 
   const codeGenInstance = new CodeGenerator({

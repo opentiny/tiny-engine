@@ -54,6 +54,7 @@
   },
   "peerDependencies": {
     "@babel/parser": "^7.18.13",
+    "@babel/generator": "^7.18.13",
     "@babel/traverse": "^7.18.13"
   }
 }
