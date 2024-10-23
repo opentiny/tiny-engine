@@ -1,5 +1,5 @@
 <template>
-  <div v-if="blockStyle === 'mini'" class="header">
+  <div v-if="blockStyle === BlockStyles.Mini" class="header">
     <div class="col-checkbox"></div>
     <div class="col-name">区块名称</div>
     <div class="col-time">创建时间</div>
@@ -7,7 +7,12 @@
   </div>
   <ul
     v-if="state.data.length || showAddButton"
-    :class="['block-list', 'lowcode-scrollbar', { 'is-small-list': blockStyle === 'mini' }, { isShortcutPanel }]"
+    :class="[
+      'block-list',
+      'lowcode-scrollbar',
+      { 'is-small-list': blockStyle === BlockStyles.Mini },
+      { isShortcutPanel }
+    ]"
     @mouseleave="state.hover = false"
   >
     <li v-if="showAddButton" class="block-item block-plus" @click="$emit('add')">
@@ -18,7 +23,11 @@
       v-for="(item, index) in state.data"
       :key="item.blockName"
       :draggable="!isBlockManage && showSettingIcon"
-      :class="['block-item', { 'is-disabled': showBlockDetail }, { 'block-item-small-list': blockStyle === 'mini' }]"
+      :class="[
+        'block-item',
+        { 'is-disabled': showBlockDetail },
+        { 'block-item-small-list': blockStyle === BlockStyles.Mini }
+      ]"
       :title="getTitle(item)"
       @mousedown.stop.left="blockClick({ event: $event, item, index })"
       @mouseover.stop="openBlockShotPanel(item, $event)"
@@ -29,17 +38,17 @@
           :item="item"
           :show-checkbox="showCheckbox"
           :checked="checked.some((block) => block.id === item.id)"
-          :display-table="blockStyle === 'mini'"
+          :display-table="blockStyle === BlockStyles.Mini"
         ></plugin-block-item-img>
         <div class="item-text">
           <div class="item-name">{{ item.name_cn || item.label || item.content?.fileName }}</div>
-          <div v-if="blockStyle === 'list'" class="item-description">{{ item.description }}</div>
+          <div v-if="blockStyle === BlockStyles.List" class="item-description">{{ item.description }}</div>
         </div>
 
-        <div v-if="blockStyle === 'mini'" class="cell cell-time">
+        <div v-if="blockStyle === BlockStyles.Mini" class="cell cell-time">
           <span>{{ format(item.created_at, 'yyyy/MM/dd hh:mm:ss') }}</span>
         </div>
-        <div v-if="blockStyle === 'mini'" class="cell cell-created-by">
+        <div v-if="blockStyle === BlockStyles.Mini" class="cell cell-created-by">
           <span>{{ users.find((user) => user.id === item.createdBy)?.name || item.id }}</span>
         </div>
 
@@ -135,6 +144,12 @@ import PluginBlockItemImg from './PluginBlockItemImg.vue'
 import SearchEmpty from './SearchEmpty.vue'
 import SvgButton from './SvgButton.vue'
 
+const BlockStyles = {
+  Default: 'default',
+  Mini: 'mini',
+  List: 'list'
+}
+
 const defaultImg =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAA11JREFUaEPtmUvIVVUYhp83CIJKpIsOEsSBAxEiEAwqRDGDBCmRkCwhwQQbSANDEbwNgvgzxEIUCwRBEB2EgiQR5MA/RcHImRBKkYhYaAliULzxwT6y3O1zzv735Rx+PN/srP1d3ve7rLX2PmKSiyY5fkYEhl3BUQVGFaiZgQdayPZTwOvA7Jp+2zI/C5yV9FcnQJ7AB8DetqI35HdM0qZuBL4HFjYUqC03pyUteigIPMC0rXSW8Ws77YzSFRgRKJPdMjqtVcD2DOC6pH/LAKmq0zgB2+uAXcCTwD1gs6Q9VQH2s2uDwO/A00ngv4EnJP3TD0zneZaEt4GvJB3uZdcoAdsBPAjkZaakX8sQsP0ecDDR/UhSVLRQGiUQEWzfAKYl0e4CU8rMgu0XgXMFSNdJ+rKIQRsE1gBjwDPAbWCLpH39sm97CvADMLeL7kpJR/PPGieQ9PGzkm72A57oB7i3Ev1vsstjZylmaJmkU6nP1giUBZ613U5gW2LzGzAHiEE+kKz/AbwhaTwhPtyT2PZK4EiO8MuSop1iprYAHyfPrwDLJV3Kng+PgO3ngZ9y4NdL2p9rk93Ah8naj8AKSVdbayHb0c+PASck/VkwfI8CASQd2v2S1nfZbeI8WJU8O53NzLHkmt/MZc72IWB1Fuxi9Lekk7ms5oe27wXR9rfAksTPCWAqsCBbq0/A9qfAxoIsfgJ8Lum67e3AjkQnzo55kq71Gn7bATZ6/oWc7fRGCNgO4EGgm5wJEkB+P18qKbbNvmI73smDxHMFytUrYDtaJlonldgeg9TjPZBtlPRZX+SJgu2XgJiBmKNUqhGw/RpwPBvajsMvJG2wvTQjcf9dNYkYl7X3JwK+o2v7TeDrnO0FSfM7a/mvEoX7bbYVxjDNTJwdlvRuEix2o61xtQYeydbHJb1SBXziN8inB93EKmA7hifA32cNnJIU34/+J7ajCu8AccWOgb5ch0DY2o6DbVbmZ8IEAvyyBMR54FVJd+oCK2tf+SADfgbWJoHid4D/pWzwJvSqEgiQac/fAhZLipN1oFKVQB7kEknfDRR5FqwJAoUvGoMi0wSBQWEtE6f0LlTG2TB0ehKY9J/XJ/cfHMPoh7oxR/9S1s1gXftRBepmsK79qAJ1M1jX/j/bzulAKB9d1wAAAABJRU5ErkJggg=='
 
@@ -157,7 +172,7 @@ export default {
     */
     blockStyle: {
       type: String,
-      default: 'default'
+      default: BlockStyles.Default
     },
     /*
     用于区分是否是区块管理侧的列表
@@ -347,6 +362,7 @@ export default {
     )
 
     return {
+      BlockStyles,
       isShortcutPanel: panelState.isShortcutPanel,
       state,
       users,

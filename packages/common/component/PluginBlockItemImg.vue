@@ -17,50 +17,39 @@
   </div>
 </template>
 
-<script>
-import { Checkbox } from '@opentiny/vue'
-import { computed } from 'vue'
+<script setup>
+import { Checkbox as TinyCheckbox } from '@opentiny/vue'
+import { computed, defineEmits, defineProps } from 'vue'
+
+const props = defineProps({
+  item: {
+    type: Object,
+    default: () => ({})
+  },
+  checked: {
+    type: Boolean,
+    default: false
+  },
+  // 是否显示多选框
+  showCheckbox: {
+    type: Boolean,
+    default: false
+  },
+  displayTable: {
+    type: Boolean,
+    default: false
+  }
+})
+
+const emit = defineEmits(['check'])
 
 const defaultImg =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAA11JREFUaEPtmUvIVVUYhp83CIJKpIsOEsSBAxEiEAwqRDGDBCmRkCwhwQQbSANDEbwNgvgzxEIUCwRBEB2EgiQR5MA/RcHImRBKkYhYaAliULzxwT6y3O1zzv735Rx+PN/srP1d3ve7rLX2PmKSiyY5fkYEhl3BUQVGFaiZgQdayPZTwOvA7Jp+2zI/C5yV9FcnQJ7AB8DetqI35HdM0qZuBL4HFjYUqC03pyUteigIPMC0rXSW8Ws77YzSFRgRKJPdMjqtVcD2DOC6pH/LAKmq0zgB2+uAXcCTwD1gs6Q9VQH2s2uDwO/A00ngv4EnJP3TD0zneZaEt4GvJB3uZdcoAdsBPAjkZaakX8sQsP0ecDDR/UhSVLRQGiUQEWzfAKYl0e4CU8rMgu0XgXMFSNdJ+rKIQRsE1gBjwDPAbWCLpH39sm97CvADMLeL7kpJR/PPGieQ9PGzkm72A57oB7i3Ev1vsstjZylmaJmkU6nP1giUBZ613U5gW2LzGzAHiEE+kKz/AbwhaTwhPtyT2PZK4EiO8MuSop1iprYAHyfPrwDLJV3Kng+PgO3ngZ9y4NdL2p9rk93Ah8naj8AKSVdbayHb0c+PASck/VkwfI8CASQd2v2S1nfZbeI8WJU8O53NzLHkmt/MZc72IWB1Fuxi9Lekk7ms5oe27wXR9rfAksTPCWAqsCBbq0/A9qfAxoIsfgJ8Lum67e3AjkQnzo55kq71Gn7bATZ6/oWc7fRGCNgO4EGgm5wJEkB+P18qKbbNvmI73smDxHMFytUrYDtaJlonldgeg9TjPZBtlPRZX+SJgu2XgJiBmKNUqhGw/RpwPBvajsMvJG2wvTQjcf9dNYkYl7X3JwK+o2v7TeDrnO0FSfM7a/mvEoX7bbYVxjDNTJwdlvRuEix2o61xtQYeydbHJb1SBXziN8inB93EKmA7hifA32cNnJIU34/+J7ajCu8AccWOgb5ch0DY2o6DbVbmZ8IEAvyyBMR54FVJd+oCK2tf+SADfgbWJoHid4D/pWzwJvSqEgiQac/fAhZLipN1oFKVQB7kEknfDRR5FqwJAoUvGoMi0wSBQWEtE6f0LlTG2TB0ehKY9J/XJ/cfHMPoh7oxR/9S1s1gXftRBepmsK79qAJ1M1jX/j/bzulAKB9d1wAAAABJRU5ErkJggg=='
 
-export default {
-  components: {
-    TinyCheckbox: Checkbox
-  },
-  props: {
-    item: {
-      type: Object,
-      default: () => ({})
-    },
-    checked: {
-      type: Boolean,
-      default: false
-    },
-    // 是否显示多选框
-    showCheckbox: {
-      type: Boolean,
-      default: false
-    },
-    displayTable: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: ['check'],
-  setup(props, { emit }) {
-    const computedChecked = computed(() => props.checked)
+const computedChecked = computed(() => props.checked)
 
-    const handleCheck = (v) => {
-      emit('check', v)
-    }
-
-    return {
-      computedChecked,
-      defaultImg,
-      handleCheck
-    }
-  }
+const handleCheck = (v) => {
+  emit('check', v)
 }
 </script>
 

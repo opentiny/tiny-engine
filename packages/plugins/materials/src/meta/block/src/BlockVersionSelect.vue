@@ -1,7 +1,6 @@
 <template>
   <plugin-setting v-if="panel.created" v-show="panel.show" :title="state.title" class="version-list-panel">
     <template #header>
-      <!-- <tiny-button type="primary" @click="selectVersion">确定</tiny-button> -->
       <close-icon class="close-icon" @click="closePanel"></close-icon>
     </template>
     <template #content>

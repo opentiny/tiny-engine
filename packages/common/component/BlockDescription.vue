@@ -1,7 +1,7 @@
 <template>
   <meta-description class="description">
     <template #content>
-      <div @click="openBlockSetting" class="setting-block">
+      <div class="setting-block" @click="openBlockSetting">
         <svg-icon name="block-add-prop"></svg-icon>
         <span>设置区块暴露属性</span>
       </div>
