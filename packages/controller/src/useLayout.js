@@ -51,6 +51,7 @@ const pluginState = reactive({
 })
 
 const layoutState = reactive({
+  isMoveDragBar: false,
   deviceType: 'desktop',
   iframeWidth: '1200px',
   dimension: {
@@ -82,6 +83,12 @@ const layoutState = reactive({
   },
   pageStatus: ''
 })
+const getMoveDragBarState = () => {
+  return layoutState.isMoveDragBar
+}
+const changeMoveDragBarState = (state) => {
+  layoutState.isMoveDragBar = state
+}
 const leftMenuShownStorage = useStorage('leftMenuShown', layoutState.plugins.isShow)
 const rightMenuShownStorage = useStorage('rightMenuShown', layoutState.settings.isShow)
 const changeMenuShown = (menuName) => {
@@ -312,6 +319,8 @@ export default () => {
     isSameSide,
     getPluginShown,
     changePluginShown,
-    changeMenuShown
+    changeMenuShown,
+    getMoveDragBarState,
+    changeMoveDragBarState
   }
 }

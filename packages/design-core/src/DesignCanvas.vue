@@ -1,6 +1,11 @@
 <template>
   <div id="canvas-wrap" ref="canvasRef">
-    <div ref="siteCanvas" class="site-canvas" :style="siteCanvasStyle">
+    <div
+      ref="siteCanvas"
+      class="site-canvas"
+      :style="siteCanvasStyle"
+      :class="{ 'not-selected': getMoveDragBarState() }"
+    >
       <canvas-container
         :controller="controller"
         :materials-panel="materialsPanel"
@@ -52,6 +57,7 @@ export default {
     const showMask = ref(true)
     const canvasRef = ref(null)
     let showModal = false // 弹窗标识
+    const { getMoveDragBarState } = useLayout()
 
     const removeNode = (node) => {
       const { pageState } = useCanvas()
@@ -129,11 +135,15 @@ export default {
     )
 
     const nodeSelected = (node, parent, type) => {
-      const { toolbars } = useLayout().layoutState
-      if (type !== 'clickTree') {
-        useLayout().closePlugin()
+      const { toolbars, plugins, settings } = useLayout().layoutState
+      const leftPanels = localStorage.getItem('leftPanels')
+      const rightPanels = localStorage.getItem('rightPanels')
+      if (type !== 'clickTree' && plugins.render && !leftPanels.includes(plugins.render)) {
+        useLayout().closePlugin(true)
       }
-
+      if (settings.render && !rightPanels.includes(settings.render)) {
+        useLayout().closeSetting(true)
+      }
       const { getSchema, getNodePath } = useCanvas().canvasApi.value
 
       const schema = getSchema()
@@ -189,7 +199,8 @@ export default {
         ast
       },
       siteCanvasStyle,
-      canvasRef
+      canvasRef,
+      getMoveDragBarState
     }
   }
 }
@@ -211,5 +222,9 @@ export default {
     margin: 18px 0;
     transform-origin: top;
   }
+}
+.not-selected {
+  pointer-events: none;
+  user-select: none;
 }
 </style>
