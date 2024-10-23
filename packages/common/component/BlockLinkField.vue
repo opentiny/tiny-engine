@@ -156,7 +156,6 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 100;
   transform: translate(-50%, -50%);
 
   .svg-icon {
@@ -177,7 +176,7 @@ export default {
   &.add-prop {
     z-index: 20;
     &:hover {
-      z-index: 40;
+      z-index: 30;
     }
   }
 }
