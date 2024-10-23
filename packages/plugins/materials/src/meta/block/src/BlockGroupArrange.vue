@@ -65,6 +65,9 @@ export default {
   text-align: center;
   height: 24px;
   line-height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .footer-toolbar {
   .icon-wrap {
@@ -88,10 +91,10 @@ export default {
   .icon-wrap + .icon-wrap {
     margin-left: 8px;
   }
-}
-.button-icon-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+
+  :deep(.tiny-tabs.tiny-tabs .tiny-tabs__item) {
+    width: 24px;
+    height: 24px;
+  }
 }
 </style>
