@@ -1,25 +1,14 @@
-<svg
-  data-icon="CanvasFit"
-  aria-hidden="true"
-  focusable="false"
-  width="16"
-  height="16"
-  viewBox="0 0 16 16"
-  version="1.1"
-  xmlns="http://www.w3.org/2000/svg"
-  style="display: flex"
->
-  <path
-    fill-rule="evenodd"
-    clip-rule="evenodd"
-    d="M10.5 11.5L9 13h4V9l-1.5 1.5L10 9l-1 1 1.5 1.5zM7 3H3v4l1.5-1.5L6 7l1-1-1.5-1.5L7 3z"
-    fill="currentColor"
-  ></path>
-  <path
-    opacity=".3"
-    fill-rule="evenodd"
-    clip-rule="evenodd"
-    d="M16 0H0v16h16V0zm-1 1H1v14h14V1z"
-    fill="currentColor"
-  ></path>
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 132 132" style="enable-background:new 0 0 132 132;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:currentColor;}
+</style>
+<path id="形状结合" class="st0" d="M99,12.4c11.4,0,20.6,9.2,20.6,20.6v66c0,11.4-9.2,20.6-20.6,20.6H33
+	c-11.4,0-20.6-9.2-20.6-20.6V33c0-11.4,9.2-20.6,20.6-20.6H99z M99,20.6H33c-6.8,0-12.4,5.5-12.4,12.4v66c0,6.8,5.5,12.4,12.4,12.4
+	h66c6.8,0,12.4-5.5,12.4-12.4V33C111.4,26.2,105.8,20.6,99,20.6z M68.5,68.4c1.6-1.6,4.2-1.6,5.8,0l20.5,20.5V74.2
+	c0-2,1.5-3.7,3.4-4.1l0.7-0.1c2.3,0,4.1,1.8,4.1,4.1v21.4c0,4.1-3.3,7.4-7.4,7.4H74.2c-2.3,0-4.1-1.8-4.1-4.1s1.8-4.1,4.1-4.1h14.9
+	L68.5,74.2c-1.5-1.5-1.6-3.8-0.4-5.4L68.5,68.4z M57.8,28.9c2.3,0,4.1,1.8,4.1,4.1s-1.8,4.1-4.1,4.1H42.8l20.6,20.6
+	c1.5,1.5,1.6,3.8,0.4,5.4l-0.4,0.5c-1.6,1.6-4.2,1.6-5.8,0L37.1,43.1v14.7c0,2-1.5,3.7-3.4,4.1L33,61.9c-2.3,0-4.1-1.8-4.1-4.1V36.3
+	c0-4.1,3.3-7.4,7.4-7.4H57.8z"/>
 </svg>

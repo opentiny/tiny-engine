@@ -1,6 +1,7 @@
 <template>
   <div class="block-add-transfer">
     <div class="block-add-transfer-footer">
+      <slot name="search"></slot>
       <tiny-select v-model="state.selectedSort" class="transfer-order-select" placeholder="请选择">
         <tiny-option v-for="item in state.sortList" :key="item.id" :label="item.text" :value="item.id"></tiny-option>
       </tiny-select>
@@ -157,7 +158,7 @@ export default {
 
   .block-add-transfer-body {
     min-height: calc(100% - 42px);
-    padding: 10px;
+    padding: 10px 0;
     display: grid;
     grid-template-columns: 48% 48%;
     column-gap: 4%;
@@ -165,13 +166,13 @@ export default {
   }
 
   .block-add-transfer-footer {
-    padding: 10px;
+    margin-top: 14px;
     display: flex;
-    justify-content: flex-end;
     align-items: center;
-    column-gap: 12px;
+    justify-content: space-between;
     .transfer-order-select {
       width: 120px;
+      margin-left: 8px;
     }
     .footer-text {
       color: var(--ti-lowcode-toolbar-breadcrumb-color);
