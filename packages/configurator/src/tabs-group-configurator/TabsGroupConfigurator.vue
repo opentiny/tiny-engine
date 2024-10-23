@@ -98,7 +98,7 @@ const findMatchingFoldValue = (value) =>
 
 const filterNonMatchingValues = (value) =>
   collapsedOptions.value.filter((item) =>
-    props.valueKey ? item.value[props.valueKey] === value : item.value === value
+    props.valueKey ? item.value[props.valueKey] !== value : item.value !== value
   )
 
 const updateOptionDisplay = (value) => {
