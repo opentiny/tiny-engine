@@ -1,7 +1,7 @@
 import { mergeOptions } from '../utils/mergeOptions'
 
 const defaultOption = {
-  fileName: 'index.js',
+  fileName: 'index.jsx',
   path: './src/router'
 }
 
@@ -9,7 +9,7 @@ const parseSchema = (schema) => {
   const { pageSchema } = schema
 
   const routes = pageSchema.map(({ meta: { isHome = false, router = '' } = {}, fileName, path }) => ({
-    filePath: `@/views${path ? `/${path}` : ''}/${fileName}.vue`,
+    filePath: `@/views${path ? `/${path}` : ''}/${fileName}.jsx`,
     fileName,
     isHome,
     path: router?.startsWith?.('/') ? router : `/${router}`
@@ -43,37 +43,48 @@ function genRouterPlugin(options = {}) {
       const routesList = parseSchema(schema)
 
       // TODO: 支持 hash 模式、history 模式
-      const importSnippet = "import { createRouter, createWebHashHistory } from 'vue-router'"
-      const exportSnippet = `
-export default createRouter({
-  history: createWebHashHistory(),
-  routes
-})`
-      const routes = routesList.map(({ fileName, path, redirect, filePath }) => {
-        let pathAttr = `path: '${path}'`
+      const importSnippet =
+        'import { Routes, Route } from "react-router-dom"\n import { useLazy } from "../hooks/uselazy"'
+
+      const lazyPage = routesList.map(({ fileName, filePath }) => {
+        return `
+            const ${fileName} = useLazy(import("${filePath}"))
+          `
+      })
+
+      const routes = routesList.map(({ fileName, path, redirect }) => {
+        let pathAttr = `path='${path}'`
         let redirectAttr = ''
         let componentAttr = ''
 
         if (redirect) {
-          redirectAttr = `redirect: '${redirect}'`
+          redirectAttr = `redirect='${redirect}'`
         }
 
         if (fileName) {
-          componentAttr = `component: () => import('${filePath}')`
+          componentAttr = `element={${fileName}}`
         }
 
-        const res = [pathAttr, redirectAttr, componentAttr].filter((item) => Boolean(item)).join(',')
+        const ans = `<Route ${pathAttr} ${componentAttr} ${redirectAttr}></Route>`
 
-        return `{${res}}`
+        return ans
       })
 
-      const routeSnippets = `const routes = [${routes.join(',')}]`
+      const routeSnippets = `<Routes> \n ${routes} \n </Routes>`
+
+      const exportSnippet = `
+        export const Routers = () => {
+          return (
+            ${routeSnippets}
+          )  
+        }
+      `
 
       const res = {
-        fileType: 'js',
+        fileType: 'jsx',
         fileName,
         path,
-        fileContent: `${importSnippet}\n ${routeSnippets} \n ${exportSnippet}`
+        fileContent: `${importSnippet}\n \n ${lazyPage.join('')} \n ${exportSnippet}`
       }
 
       return res

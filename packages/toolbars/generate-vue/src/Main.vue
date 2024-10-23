@@ -153,7 +153,6 @@ export default {
     const getPreGenerateInfo = async () => {
       const params = getParams()
       const { id } = useEditorInfo().useInfo()
-      console.log(params, 'params')
       const promises = [
         // useHttp().get(`/app-center/v1/api/apps/schema/${id}`),
         fetchBlockSchema(params),
@@ -161,8 +160,6 @@ export default {
         fetchMetaData(params),
         fetchPageList(params.app)
       ]
-
-      console.log(promises, 'promises')
 
       if (!state.dirHandle) {
         promises.push(fs.getUserBaseDirHandle())
@@ -177,7 +174,6 @@ export default {
       // panelType: string // 出码类型
       // panelValue: string // 文件内容
       // prettierOpts: Object // 格式化参数
-      console.log(appData, 'appData', metaData, 'metaData', pageList, 'pageList', dirHandle, 'dirHandle')
       const pageDetailList = await getAllPageDetails(pageList)
 
       const blockSet = new Set()
@@ -217,12 +213,9 @@ export default {
         reactData: state.value === 'React' ? [...(appData || [])] : []
       }
 
-      console.log(appSchema, 'appSchema')
       state.instance = state.value === 'React' ? generateReactApp() : generateVueApp()
 
       const res = await state.instance.generate(appSchema)
-
-      console.log(res, 'res')
 
       const { genResult = [] } = res || {}
       const fileRes = genResult.map(({ fileContent, fileName, path, fileType }) => {
@@ -256,7 +249,6 @@ export default {
     }
 
     const generate = async () => {
-      console.log(state.value, 'value>>>>>')
       const { isEmptyPage } = useLayout()
 
       if (isEmptyPage()) {
@@ -277,7 +269,6 @@ export default {
         // 保存代码前置任务：调用接口生成代码并获取用户本地文件夹授权
         const [dirHandle, fileRes] = await getPreGenerateInfo()
 
-        console.log(fileRes, 'fileRes')
         // 暂存待生成代码文件信息
         state.saveFilesInfo = fileRes
 

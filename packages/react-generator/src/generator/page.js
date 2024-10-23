@@ -64,7 +64,8 @@ const handleJSXEventBinding = (key, item) => {
 
   // vue 事件绑定，仅支持：内联事件处理器 or 方法事件处理器（绑定方法名或对某个方法的调用）
   if (item?.type === 'JSExpression') {
-    const eventHandler = item.value
+    const eventHandler = item.value.replace('this.', '') // 强制 replace 一下
+    console.log(item, 'eventHandler>>>>>.')
 
     // Vue Template 中，为事件处理函数传递额外的参数时，需要使用内联箭头函数
     if (item.params?.length) {
@@ -120,6 +121,7 @@ function handleJSXBinding(props, attrsArr, description, state) {
     // 事件名，协议约定以 on 开头的 camelCase 形式，template 中使用 kebab-case 形式
     if (isOn(key)) {
       const eventBinding = handleJSXEventBinding(key, item)
+      console.log(eventBinding, 'eventBinding>>>>>>>>>>')
 
       return attrsArr.push(eventBinding)
     }
@@ -140,7 +142,6 @@ function generateJSXNode(schema, state, description, isRootNode = false) {
   const elementWrappers = []
   const jsxResult = []
   const { componentName, fileName, loop, loopArgs = ['item'], condition, props = {}, children } = schema
-
   // // 不生成空 div 作为根节点，兼容支持有页面属性的 div 根节点
   // if (isEmptyRoot(isRootNode, props)) {
   //   return recurseChildren(children, description, result)
@@ -159,6 +160,7 @@ function generateJSXNode(schema, state, description, isRootNode = false) {
     description.blockSet.add(fileName)
   } else {
     component = IntrinsicElements.includes(componentName || 'div') ? componentName || 'div' : capitalize(componentName)
+
     description.componentSet.add(componentName)
   }
 
@@ -267,7 +269,6 @@ const generateReactImports = (description, moduleName, type, componentsMap) => {
     }
   })
 
-  console.log(componentPacks, 'componentPacks>>>>>>>>>>')
   Object.entries(componentPacks).forEach(([pkgName, deps]) => {
     const items = deps.map((dep) => {
       const { componentName, exportName } = dep
@@ -369,7 +370,7 @@ const generateReactCode = ({ schema, name, type, componentsMap }) => {
   for (const [key, value] of statementMap) {
     statement += `[${key}, set${key}] = React.useState(${JSON.stringify(value)}) \n`
   }
-  const stateStatement = `${unwrapExpression(JSON.stringify(state, null, 2))}`
+  // const stateStatement = `${unwrapExpression(JSON.stringify(state, null, 2))}`
 
   const getters = description.getters.map((getter) => {
     const { type, params, body } = getFunctionInfo(getter.accessor.getter.value)
@@ -382,19 +383,58 @@ const generateReactCode = ({ schema, name, type, componentsMap }) => {
   const arrowMethods = Object.entries(methods)
     .map(([key, item]) => ({ key, ...getFunctionInfo(item.value) }))
     .filter(({ body }) => Boolean(body))
-    .map(({ key, type, params, body }) => `${key}=${type} (${params.join(',')}) => { ${body} }`)
-  const lifecycles = Object.entries(lifeCycles)
+    .map(({ key, type, params, body }) => `const ${key}=${type} (${params.join(',')}) => { ${body} }`)
+
+  const lifecycle = Object.entries(lifeCycles)
     .map(([key, item]) => ({ key, ...getFunctionInfo(item.value) }))
     .filter(({ body }) => Boolean(body))
-    .map(({ key, type, params, body }) => `${type} ${key}(${params.join(',')}) { ${body} }`)
+    .map(({ key, type, params, body }) => {
+      const ans = {}
+      ans[key] = {
+        body: body,
+        type: type,
+        params: params
+      }
+      return ans
+    })
 
+  const lifecycleMap = {}
+  lifecycle.forEach((item) => {
+    const key = Object.keys(item)[0]
+    lifecycleMap[key] = item[key]
+  })
+
+  const componentDidMount = lifecycleMap['componentDidMount']
+  const componentWillUnmount = lifecycleMap['componentWillUnmount']
+  const componentDidUpdate = lifecycleMap['componentDidUpdate']
+
+  const componentWillMount = lifecycleMap['componentWillMount']
+
+  const shouldComponentUpdate = lifecycleMap['shouldComponentUpdate']
+
+  const stringUseEffect = `
+      useEffect(() => {
+        ${componentDidMount && componentDidMount['body'] ? componentDidMount['body'] : ''}
+        ${componentWillUnmount && componentWillUnmount['body'] ? `return () => {${componentWillUnmount['body']}}` : ''}
+        }, [${componentDidUpdate && componentDidUpdate['params'] ? componentDidUpdate['params'] : ''}])
+    `
+
+  const stringUseLayoutEffect = `
+         useLayoutEffect(() => {
+        ${componentWillMount && componentWillMount['body'] ? componentWillMount['body'] : ''}
+        }, [${componentDidUpdate && componentDidUpdate['params'] ? componentDidUpdate['params'] : ''}])
+  `
+
+  const stringUseMemo = `
+    useMemo(() => {
+      ${shouldComponentUpdate && shouldComponentUpdate['body'] ? shouldComponentUpdate['body'] : ''}
+      }, [${shouldComponentUpdate && shouldComponentUpdate['params'] ? shouldComponentUpdate['params'] : ''}])
+  `
   const { imports } = generateReactImports(description, name, type, componentsMap)
 
   console.log(getters.join('\n'), 'current>>>>>>')
 
   console.log(arrowMethods.join('\n'), 'arrowMethod>>>>>>')
-
-  console.log(lifecycles.join('\n'), 'lifecycles>>>>>>')
 
   console.log(statement, 'stateStatement>>>>>>')
 
@@ -408,7 +448,9 @@ const generateReactCode = ({ schema, name, type, componentsMap }) => {
 
     const utils = {}
   
-    ${lifecycles.join('\n')}
+    ${stringUseEffect}
+    ${stringUseLayoutEffect}
+    ${stringUseMemo}
   
     ${arrowMethods.join('\n')}
   

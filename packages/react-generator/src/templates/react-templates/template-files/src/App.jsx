@@ -1,9 +1,9 @@
-// import { CreateVm } from './views/createVm/createVm.jsx'
+import Routers from './router'
 
 function App() {
   return (
     <>
-      <div>{/* <CreateVm></CreateVm> */}</div>
+      <Routers></Routers>
     </>
   )
 }

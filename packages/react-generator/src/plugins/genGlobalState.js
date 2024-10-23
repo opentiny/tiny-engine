@@ -35,7 +35,7 @@ function genDependenciesPlugin(options = {}) {
       const ids = []
 
       for (const stateItem of globalState) {
-        let importStatement = "import { defineStore } from 'pinia'"
+        let importStatement = "import create from 'zustand'"
         const { id, state, getters, actions } = stateItem
 
         ids.push(id)
@@ -65,6 +65,8 @@ function genDependenciesPlugin(options = {}) {
           .filter((item) => item.value?.type === 'JSFunction')
           .map(([key, value]) => `${key}: ${value.value}`)
           .join(',')
+
+        console.log(getterExpression, actionExpressions, stateExpression, 'expressTion>>>>>')
 
         const storeFiles = `
          ${importStatement}

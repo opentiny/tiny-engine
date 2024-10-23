@@ -20,7 +20,6 @@ function genPagePlugin(options = {}) {
    * @param {} codeList
    */
   const prettierCode = (codeList, pagePath = '') => {
-    console.log('你进来没有啊我草')
     const pageFiles = []
 
     const formatTypePluginMap = {
@@ -59,8 +58,6 @@ function genPagePlugin(options = {}) {
         })
       }
     })
-
-    console.log(pageFiles, 'pageFiles>>>')
 
     return pageFiles
   }

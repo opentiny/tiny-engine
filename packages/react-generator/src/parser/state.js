@@ -46,7 +46,6 @@ const translateHookState = (state) => {
     map.set(item, state[item])
   }
 
-  console.log(map, 'map>>>>')
   return map
 }
 

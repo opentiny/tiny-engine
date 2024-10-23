@@ -92,9 +92,12 @@ export default {
     ],
     HTML: [],
     React: [
+      // 'useEffect',
+      // 'useMemo',
+      // 'useState'
       'componentWillMount',
       'componentDidMount',
-      'componentWillReceiveProps',
+      // 'componentWillReceiveProps', // 被弃用了
       'shouldComponentUpdate',
       'componentWillUpdate',
       'componentDidUpdate',

@@ -369,7 +369,6 @@ export function generateRouter(pages) {
 }
 
 export function generateVuePage({ params, codeList, metaData, pageList }) {
-  console.log(codeList, '现在的数据是什么')
   const pageFiles = generatePageFiles(codeList, getCurrentPagePath(params, pageList))
   const i18nFiles = generateI18n(metaData)
   const utilsFiles = generateUtils(metaData)
