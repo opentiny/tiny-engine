@@ -134,7 +134,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   font-size: 12px;
-  color: #d9d9d9;
+  color: var(--ti-lowcode-common-text-color-2);
   margin-left: 8px;
   white-space: nowrap;
   overflow: hidden;
@@ -154,7 +154,7 @@ onMounted(() => {
     }
   }
   .size {
-    color: #ababab;
+    color: var(--ti-lowcode-common-third-text-color);
   }
 }
 .choose-image {

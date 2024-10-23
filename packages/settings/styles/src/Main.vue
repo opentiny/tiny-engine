@@ -265,7 +265,7 @@ export default {
   display: inline-block;
   margin-left: 4px;
   vertical-align: middle;
-  border: 2px solid #1476ff;
+  border: 2px solid var(--ti-lowcode-setting-style-reset-dot-color);
   border-radius: 2px;
 }
 </style>

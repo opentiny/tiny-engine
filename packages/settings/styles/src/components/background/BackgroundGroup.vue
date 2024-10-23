@@ -429,8 +429,8 @@ export default {
     place-items: stretch;
     gap: 1px;
     border-radius: 2px;
-    border-top: 1px solid #ebebeb;
-    background-color: #fff;
+    border-top: 1px solid var(--ti-lowcode-base-invalidate-color);
+    background-color: var(--ti-lowcode-base-bg-5);
     margin: 12px 0;
     .image-list-item {
       display: grid;
@@ -438,8 +438,8 @@ export default {
       gap: 8px 4px;
       height: 24px;
       align-items: center;
-      background-color: #fff;
-      border-bottom: 1px solid #ebebeb;
+      background-color: var(--ti-lowcode-base-bg-5);
+      border-bottom: 1px solid var(--ti-lowcode-base-invalidate-color);
       pointer-events: all;
       font-size: 11px;
       font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell,
@@ -483,12 +483,12 @@ export default {
         width: 100%;
         height: 3px;
         border-radius: 3px;
-        background-color: #8ac2ff;
+        background-color: var(--ti-lowcode-setting-style-drag-bar-bg);
       }
     }
     .dragger-icon {
       display: inline-flex;
-      color: #757575;
+      color: var(--ti-lowcode-fit-coordinate-origin-color);
       cursor: grab;
       width: 12px;
       opacity: 0;
@@ -500,7 +500,7 @@ export default {
       height: 10px;
       border-radius: 1px;
       margin: 1px;
-      box-shadow: #212121 0px 0px 0px 1px;
+      box-shadow: var(--ti-lowcode-setting-style-bg-box-shadow) 0px 0px 0px 1px;
       align-self: center;
       overflow: hidden;
       .image {
@@ -525,14 +525,14 @@ export default {
         width: 16px;
         max-height: 16px;
         border-width: 0px;
-        color: #757575;
+        color: var(--ti-lowcode-fit-coordinate-origin-color);
         background-color: transparent;
         border-radius: 2px;
         padding-left: 0px;
         padding-right: 0px;
         font-size: 13px;
         &:hover {
-          color: #d9d9d9;
+          color: var(--ti-lowcode-common-text-color-2);
         }
       }
     }
@@ -568,7 +568,7 @@ export default {
   padding: 6px 0;
 
   span {
-    color: #191919;
+    color: var(--ti-lowcode-base-text-color);
     font-weight: 600;
   }
 

@@ -537,7 +537,7 @@ export default {
     }
 
     &.is-show {
-      background-color: #6b6b6b;
+      background-color: var(--ti-lowcode-setting-style-spacing-bg);
     }
 
     &.margin-top,

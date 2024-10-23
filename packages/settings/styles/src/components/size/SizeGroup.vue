@@ -86,7 +86,10 @@
 
   <div class="overflow-row">
     <div
-      :class="['overflow-label', { 'is-setting': getSettingFlag(SIZE_PROPERTY.Overflow), selected: selectedOverflow }]"
+      :class="[
+        'overflow-label',
+        { 'is-setting': getSettingFlag(SIZE_PROPERTY.Overflow), selected: Boolean(selectedOverflow) }
+      ]"
       @click="openSetting(SIZE_PROPERTY.Overflow, $event)"
     >
       <span>溢出</span>
@@ -488,12 +491,16 @@ span {
   }
 }
 
+.selected-label {
+  cursor: pointer;
+  border-radius: 2px;
+  color: var(--ti-lowcode-base-text-color-2);
+  background-color: var(--ti-lowcode-style-setting-label-bg);
+}
+
 .is-setting {
   span {
-    cursor: pointer;
-    border-radius: 2px;
-    color: var(--ti-lowcode-base-text-color-2);
-    background-color: var(--ti-lowcode-style-setting-label-bg);
+    .selected-label();
   }
 }
 
@@ -545,10 +552,7 @@ span {
     }
     &.selected {
       span {
-        cursor: pointer;
-        border-radius: 2px;
-        color: var(--ti-lowcode-base-text-color-2);
-        background-color: var(--ti-lowcode-style-setting-label-bg);
+        .selected-label();
       }
     }
   }
@@ -565,8 +569,7 @@ span {
     &.selected {
       background: var(--ti-lowcode-more-icon-selected-bg);
       &.is-setting {
-        color: var(--ti-lowcode-style-setting-label-color);
-        background-color: var(--ti-lowcode-style-setting-label-bg);
+        .selected-label();
       }
     }
   }

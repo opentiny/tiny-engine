@@ -8,9 +8,9 @@
       @click.stop="change(item.value)"
     >
       <span :class="['label-text', index < commonOptions.length - 1 ? 'border-right' : '']">
-        <span v-if="item?.label">{{ item.label }}</span>
+        <span v-if="item && item.label">{{ item.label }}</span>
         <tiny-popover
-          v-if="item?.icon"
+          v-if="item && item.icon"
           :effect="effect"
           :placement="placement"
           :visible-arrow="false"
@@ -40,103 +40,88 @@
           :key="foldsItem.label || foldsItem.icon"
           @click.stop="change(foldsItem.value)"
         >
-          <span v-if="foldsItem.label">{{ foldsItem.label }}</span>
-          <svg-icon v-if="foldsItem.icon" :name="foldsItem.icon" class="bem-Svg"></svg-icon>
+          <span v-if="foldsItem && foldsItem.label">{{ foldsItem.label }}</span>
+          <svg-icon v-if="foldsItem && foldsItem.icon" :name="foldsItem.icon" class="bem-Svg"></svg-icon>
         </div>
       </div>
     </div>
   </div>
 </template>
-<script>
-import { ref, watch } from 'vue'
-import { Popover } from '@opentiny/vue'
+<script setup>
+import { ref, watch, defineProps, defineEmits } from 'vue'
+import { Popover as TinyPopover } from '@opentiny/vue'
 
-export default {
-  components: {
-    TinyPopover: Popover
+const props = defineProps({
+  modelValue: {
+    type: String,
+    default: ''
   },
-  props: {
-    modelValue: {
-      type: String,
-      default: ''
-    },
-    valueKey: {
-      type: String,
-      default: ''
-    },
-    effect: {
-      type: String,
-      default: 'dark'
-    },
-    placement: {
-      type: String,
-      default: 'top'
-    },
-    labelWidth: {
-      type: Number,
-      default: 60
-    },
-    options: {
-      type: Array,
-      default: () => []
-    }
+  valueKey: {
+    type: String,
+    default: ''
   },
-  emits: ['update:modelValue'],
-  setup(props, { emit }) {
-    const picked = ref(null)
-    const uncollapsedOptions = ref(props.options.filter((option) => !option.collapsed))
-    const collapsedOptions = ref(props.options.filter((option) => option.collapsed))
-    const commonOptions = ref(uncollapsedOptions.value)
-    const foldsOptions = ref()
-    const showMore = ref(false)
-
-    const getItemWidth = (collapsed = false) => {
-      return `${parseInt(props.labelWidth, 10) + (collapsed ? 20 : 0)}`
-    }
-
-    watch(
-      () => props.modelValue,
-      (value) => {
-        picked.value = value
-        if (collapsedOptions.value.length === 0) {
-          return
-        }
-        if (!value) {
-          commonOptions.value = [...uncollapsedOptions.value, collapsedOptions.value[0]]
-          foldsOptions.value = collapsedOptions.value.filter((item, index) => index > 0)
-        } else {
-          const isFoldsValue = foldsOptions.value.find((item) =>
-            props.valueKey ? item.value[props.valueKey] === value : item.value === value
-          )
-          if (isFoldsValue) {
-            commonOptions.value[commonOptions.value.length - 1] = isFoldsValue
-            foldsOptions.value = collapsedOptions.value.filter((item) =>
-              props.valueKey ? item.value[props.valueKey] !== value : item.value !== value
-            )
-          }
-        }
-      },
-      { immediate: true }
-    )
-
-    const change = (val) => {
-      if (picked.value === val) {
-        return
-      }
-      emit('update:modelValue', val)
-      showMore.value = false
-    }
-
-    return {
-      picked,
-      collapsedOptions,
-      commonOptions,
-      foldsOptions,
-      showMore,
-      getItemWidth,
-      change
-    }
+  effect: {
+    type: String,
+    default: 'dark'
+  },
+  placement: {
+    type: String,
+    default: 'top'
+  },
+  labelWidth: {
+    type: Number,
+    default: 60
+  },
+  options: {
+    type: Array,
+    default: () => []
   }
+})
+
+const emit = defineEmits(['update:modelValue'])
+
+const picked = ref(null)
+const uncollapsedOptions = ref(props.options.filter((option) => !option.collapsed))
+const collapsedOptions = ref(props.options.filter((option) => option.collapsed))
+const commonOptions = ref(uncollapsedOptions.value)
+const foldsOptions = ref([])
+const showMore = ref(false)
+
+const getItemWidth = (collapsed = false) => {
+  return `${parseInt(props.labelWidth, 10) + (collapsed ? 20 : 0)}`
+}
+
+watch(
+  () => props.modelValue,
+  (value) => {
+    picked.value = value
+    if (collapsedOptions.value.length === 0) {
+      return
+    }
+    if (!value) {
+      commonOptions.value = [...uncollapsedOptions.value, collapsedOptions.value[0]]
+      foldsOptions.value = collapsedOptions.value.filter((item, index) => index > 0)
+    } else {
+      const isFoldsValue = foldsOptions.value.find((item) =>
+        props.valueKey ? item.value[props.valueKey] === value : item.value === value
+      )
+      if (isFoldsValue) {
+        commonOptions.value[commonOptions.value.length - 1] = isFoldsValue
+        foldsOptions.value = collapsedOptions.value.filter((item) =>
+          props.valueKey ? item.value[props.valueKey] !== value : item.value !== value
+        )
+      }
+    }
+  },
+  { immediate: true }
+)
+
+const change = (val) => {
+  if (picked.value === val) {
+    return
+  }
+  emit('update:modelValue', val)
+  showMore.value = false
 }
 </script>
 
@@ -145,7 +130,7 @@ export default {
   max-width: 210px;
   height: 24px;
   font-size: 12px;
-  background-color: #f6f6f6;
+  background-color: var(--ti-lowcode-setting-style-tab-bg-color);
   display: flex;
   border-radius: 4px;
   .tab-item {
@@ -171,7 +156,7 @@ export default {
       position: absolute;
       top: 24px;
       right: 0;
-      background-color: #fff;
+      background-color: var(--ti-lowcode-base-bg-5);
       z-index: 2018;
       border-radius: 4px;
       box-shadow: 0px 0px 10px 0px rgba(25, 25, 25, 0.15);

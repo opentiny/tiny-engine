@@ -51,13 +51,16 @@ export default {
     const isAlignBody = ref(props.teleport === 'body')
     const topStyle = ref(0)
 
+    const calculateTopStyle = (modalContent) => {
+      if (isAlignBody.value && modalContent) {
+        return modal.top < modalContent.offsetHeight ? 40 : modal.top - modalContent.offsetHeight + 40
+      }
+      return modal.top - 34
+    }
+
     onMounted(() => {
       const modalContentEle = document.querySelector('.modal-content')
-      if (isAlignBody.value && modalContentEle) {
-        topStyle.value = modal.top < modalContentEle.offsetHeight ? 40 : modal.top - modalContentEle.offsetHeight + 40
-      } else {
-        topStyle.value = modal.top - 34
-      }
+      topStyle.value = calculateTopStyle(modalContentEle)
     })
 
     return {
@@ -91,7 +94,7 @@ export default {
     border: 1px solid var(--ti-lowcode-tabs-border-color);
     box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
-    background-color: #fff;
+    background-color: var(--ti-lowcode-base-bg-5);
     overflow: auto;
     max-height: 100%;
     box-sizing: border-box;
@@ -100,8 +103,8 @@ export default {
     padding: 10px 16px;
   }
   .align-body {
-    right: 280px;
-    left: calc(100% - 287px - 280px - 16px);
+    right: var(--modal-right-offset, 280px);
+    left: calc(100% - var(--modal-right-offset, 287px) - var(--modal-right-offset, 280px) - 16px);
   }
 }
 </style>
