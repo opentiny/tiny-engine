@@ -124,6 +124,7 @@ import { getBlockContent, initBlockList, AIModelOptions } from './js/robotSettin
 import DialogContent from './ContentDialog.vue'
 import useSpeechRecognition from './js/useSpeechRecognition'
 import TokenDialog from './TokenDialog.vue'
+import { codeRules as importedCodeRules } from './js/codeRules'
 
 export default {
   components: {
@@ -209,18 +210,8 @@ export default {
       useHistory().addHistory()
     }
 
-    const codeRules = `
-      从现在开始，请扮演一名前端专家。如果需要根据图片或者描述生成前端代码，代码中的所有组件必须使用 Vue 3 框架和 TinyVue 组件库进行编写。例如，如果你想使用按钮组件，应该使用 TinyVue 组件库中的 \`TinyButton\`。
-      以下是 TinyVue 组件库的文档，请通读并遵循其中的指导来生成代码：[TinyVue 组件库文档](https://opentiny.design/tiny-vue/zh-CN/os-theme/overview)
-      生成代码时遵从以下几条要求:
-      ###
-      1. 回复中只能有一个代码块
-      2. 所有生成的代码都是基于 Vue 3 框架
-      3. 所有组件都来自 TinyVue 组件库，避免使用原生组件或其他第三方库
-      4. 参考并遵循 TinyVue 文档中的组件使用方式
-      5. 所有的组件都遵循了首字母大写的命名约定，例如用TinyForm、TinyFormItem、Text等。
-      ###
-    `
+    // prompt
+    const codeRules = ref(importedCodeRules)
 
     // 在每一次发送请求之前，都把引入区块的内容，给放到第一条消息中
     // 为了不污染存储在localstorage里的用户的原始消息，这里进行了简单的对象拷贝
@@ -230,7 +221,7 @@ export default {
       const firstMessage = sendProcess.messages[0]
       firstMessage.content
       sendProcess.messages = [
-        { ...firstMessage, content: `${getBlockContent()}\n${codeRules}\n${firstMessage.content}` },
+        { ...firstMessage, content: `${getBlockContent()}\n${codeRules.value}\n${firstMessage.content}` },
         ...sendProcess.messages.slice(1)
       ]
       delete sendProcess.displayMessages
