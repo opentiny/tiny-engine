@@ -449,7 +449,6 @@ export default {
 .col-checkbox,
 .block-item-small-list:deep(.table-selection) {
   width: 40px;
-  text-align: center;
 }
 .col-checkbox:deep(.tiny-checkbox__label) {
   padding: 0;
@@ -479,7 +478,6 @@ export default {
     align-items: center;
     position: relative;
     height: 110px;
-    text-align: center;
     user-select: none;
     gap: 6px;
     overflow: hidden;
