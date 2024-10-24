@@ -2131,14 +2131,6 @@
         }
       },
       {
-        "name": "npm",
-        "type": "function",
-        "content": {
-          "type": "JSFunction",
-          "value": "''"
-        }
-      },
-      {
         "name": "Pager",
         "type": "npm",
         "content": {
