@@ -133,7 +133,7 @@ export default {
     padding: 0;
     cursor: pointer;
     border: 0;
-    background: -webkit-linear-gradient(#fff, #fff) no-repeat #999999;
+    background: -webkit-linear-gradient(var(--te-base-gray-1), var(--te-base-gray-1)) no-repeat var(--te-base-gray-17);
     background-size: 0% 100%;
     position: relative;
     outline: 0;
@@ -145,7 +145,7 @@ export default {
     height: 10px;
     border-radius: 50%;
     border: 0;
-    background-color: #fff;
+    background-color: var(--te-base-bg-5);
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.21);
     -webkit-transition: border-color 0.15s, background-color 0.15s;
     transition: border-color 0.15s, background-color 0.15s;
@@ -156,7 +156,7 @@ export default {
   }
   input[type='range']::-webkit-slider-thumb:active {
     border: 0;
-    background-color: #fff;
+    background-color: var(--te-base-bg-5);
   }
 }
 </style>

@@ -5,7 +5,7 @@
       title="position"
       @click="openSetting(POSITION_PROPERTY.Position, $event)"
     >
-      定位
+      <span>定位</span>
     </div>
     <div class="position-select">
       <select-configurator
@@ -457,6 +457,11 @@ export default {
   gap: 8px;
   grid-template-columns: 48px 1fr;
   align-items: center;
+
+  span {
+    padding: 2px;
+  }
+
   .position-label {
     color: var(--ti-lowcode-component-setting-panel-label-color);
   }
@@ -594,8 +599,12 @@ export default {
     }
   }
   .is-setting {
-    color: var(--ti-lowcode-style-setting-label-color);
-    background-color: var(--ti-lowcode-style-setting-label-bg);
+    span {
+      cursor: pointer;
+      border-radius: 2px;
+      color: var(--te-common-text-emphasize);
+      background-color: var(--ti-lowcode-style-setting-label-bg);
+    }
   }
   .lr-path-color {
     color: var(--ti-lowcode-spacing-lr-color);
