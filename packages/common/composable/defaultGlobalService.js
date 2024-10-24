@@ -1,8 +1,6 @@
 import { useHttp } from '@opentiny/tiny-engine-http'
-import { useMessage, useModal, defineService } from '@opentiny/tiny-engine-meta-register'
+import { useMessage, useModal, defineService, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { watch } from 'vue'
-
-const serviceId = 'engine.service.globalService'
 
 const getBaseInfo = () => {
   const paramsMap = new URLSearchParams(location.search)
@@ -61,7 +59,7 @@ const fetchAppList = (platformId) => useHttp().get(`/app-center/api/apps/list/${
 const { subscribe, publish } = useMessage()
 
 export default defineService({
-  id: serviceId,
+  id: META_SERVICE.GlobalService,
   type: 'MetaService',
   options: {},
   initialState,

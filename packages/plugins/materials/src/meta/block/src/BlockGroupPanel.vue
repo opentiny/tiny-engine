@@ -33,7 +33,14 @@ import { nextTick, reactive, watch, inject } from 'vue'
 import { Search } from '@opentiny/vue'
 import { iconSearch } from '@opentiny/vue-icon'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
-import { useBlock, useModal, useResource, useMaterial, getMetaApi } from '@opentiny/tiny-engine-meta-register'
+import {
+  useBlock,
+  useModal,
+  useResource,
+  useMaterial,
+  getMetaApi,
+  META_SERVICE
+} from '@opentiny/tiny-engine-meta-register'
 import BlockGroupTransfer from './BlockGroupTransfer.vue'
 import BlockGroupFilters from './BlockGroupFilters.vue'
 
@@ -72,7 +79,7 @@ export default {
     const { isDefaultGroupId, isRefresh, selectedGroup, selectedBlockArray, getGroupList } = useBlock()
     const { panel, closePanel } = useGroupPanel()
     const { message } = useModal()
-    const getAppId = () => getMetaApi('engine.service.globalService').getState().appInfo.id
+    const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id
     const panelState = inject('panelState', {})
 
     const state = reactive({

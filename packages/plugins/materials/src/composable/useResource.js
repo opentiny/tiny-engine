@@ -23,7 +23,8 @@ import {
   useMaterial,
   getMetaApi,
   META_APP,
-  useMessage
+  useMessage,
+  META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
 
 const { COMPONENT_NAME, DEFAULT_INTERCEPTOR } = constants
@@ -82,7 +83,7 @@ const initBlock = async (blockId) => {
 }
 
 const initPageOrBlock = async () => {
-  const { pageId, blockId } = getMetaApi('engine.service.globalService').getBaseInfo()
+  const { pageId, blockId } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
   const { setBreadcrumbPage } = useBreadcrumb()
 
   if (pageId) {
@@ -113,7 +114,7 @@ const initPageOrBlock = async () => {
 }
 
 const handlePopStateEvent = async () => {
-  const { id, type } = getMetaApi('engine.service.globalService').getBaseInfo()
+  const { id, type } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
 
   await initPageOrBlock()
 
@@ -122,7 +123,7 @@ const handlePopStateEvent = async () => {
 }
 
 const fetchResource = async ({ isInit = true } = {}) => {
-  const { id, type } = getMetaApi('engine.service.globalService').getBaseInfo()
+  const { id, type } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
   useMessage().publish({ topic: 'app_id_changed', data: id })
   const appData = await useHttp().get(`/app-center/v1/api/apps/schema/${id}`)
   resState.pageTree = appData.componentsTree

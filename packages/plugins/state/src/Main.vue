@@ -77,7 +77,8 @@ import {
   useNotify,
   useHelp,
   getMetaApi,
-  META_APP
+  META_APP,
+  META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
 import { iconPlus } from '@opentiny/vue-icon'
 import { getCommentByKey } from '@opentiny/tiny-engine-common/js/comment'
@@ -242,7 +243,7 @@ export default {
         Object.assign(state.dataSource, store)
         const storeList = Object.values(state.dataSource)
 
-        const { id } = getMetaApi('engine.service.globalService').getBaseInfo()
+        const { id } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
         updateGlobalState(id, { global_state: storeList }).then((res) => {
           isPanelShow.value = false
           setGlobalState(res.global_state || [])
@@ -307,7 +308,7 @@ export default {
       const { setGlobalState } = useCanvas().canvasApi.value
 
       if (index !== -1) {
-        const { id } = getMetaApi('engine.service.globalService').getBaseInfo()
+        const { id } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
 
         storeListt.splice(index, 1)
         updateGlobalState(id, { global_state: storeListt }).then((res) => {

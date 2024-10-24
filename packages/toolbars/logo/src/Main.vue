@@ -114,7 +114,7 @@ import {
   Tooltip as TinyTooltip
 } from '@opentiny/vue'
 import { iconHelpCircle } from '@opentiny/vue-icon'
-import { useLayout, useModal, getMetaApi } from '@opentiny/tiny-engine-meta-register'
+import { useLayout, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
@@ -133,7 +133,7 @@ const { PLUGIN_NAME, activePlugin } = useLayout()
 
 const IconHelp = iconHelpCircle()
 
-const globalState = getMetaApi('engine.service.globalService').getState()
+const globalState = getMetaApi(META_SERVICE.GlobalService).getState()
 
 const state = reactive({
   hoverState: false,

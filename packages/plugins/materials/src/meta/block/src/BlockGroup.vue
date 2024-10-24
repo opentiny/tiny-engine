@@ -143,7 +143,7 @@ import {
   Popover
 } from '@opentiny/vue'
 import { iconYes, iconClose, iconError } from '@opentiny/vue-icon'
-import { useBlock, useModal, getMetaApi } from '@opentiny/tiny-engine-meta-register'
+import { useBlock, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { SvgButton } from '@opentiny/tiny-engine-common'
 import { requestCreateGroup, requestDeleteGroup, fetchGroups, requestUpdateGroup } from './http'
 import { setBlockPanelVisible } from './js/usePanel'
@@ -176,7 +176,7 @@ export default {
     const groupSelect = ref(null)
     const editFormRef = ref(null)
     const editFormItemRef = ref(null)
-    const getAppId = () => getMetaApi('engine.service.globalService').getState().appInfo.id
+    const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id
 
     const createGroupForm = ref(null)
 
