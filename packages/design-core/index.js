@@ -37,6 +37,8 @@ export { PluginPanel, PluginSetting, ToolbarBase } from '@opentiny/tiny-engine-c
 
 export { default as defaultRegistry } from './registry'
 
+export { default as http } from '@opentiny/tiny-engine-http'
+
 export * from '@opentiny/tiny-engine-meta-register'
 
 export { EditorInfoService, AppService, GenerateCodeService } from '@opentiny/tiny-engine-common'
