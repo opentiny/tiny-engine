@@ -169,11 +169,10 @@ export default {
 
 <style lang="less" scoped>
 .languageContent {
-  width: 254px;
-  border-radius: 5px;
   text-align: center;
   z-index: 99;
   margin-top: 5px;
+  margin-bottom: 16px;
 
   .tiny-svg {
     margin-right: 10px;
@@ -184,7 +183,6 @@ export default {
     }
   }
   .tiny-button {
-    margin-top: 10px;
     max-width: initial;
     padding: 0 12px;
     background-color: var(--ti-lowcode-tabs-border-color);
@@ -196,18 +194,24 @@ export default {
     }
   }
   .addNewLanguage {
-    padding: 0px 5px 5px;
     .tiny-input {
       display: flex;
       margin-bottom: 10px;
+      padding: 0 8px;
       align-items: center;
       label {
-        width: 80px;
+        text-wrap: nowrap;
+        text-align: left;
+        width: 50px;
       }
       display: flex;
     }
+    .tiny-input__inner {
+      flex: 1;
+    }
     .add-btns {
       text-align: right;
+      padding: 0 8px;
     }
   }
 }

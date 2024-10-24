@@ -686,23 +686,17 @@ const sort = (blockList, type) => {
 }
 
 // 在可选区块列表里选择区块
-const check = (blockList, block) => {
-  const index = blockList.indexOf(block)
+const check = (block) => {
+  if (selectedBlockArray.value.some((item) => item.id === block.id)) {
+    return
+  }
 
-  blockList.splice(index, 1)
-  selectedBlockArray.value.push(block)
-
-  return blockList
+  selectedBlockArray.value = selectedBlockArray.value.concat(block)
 }
 
 // 取消选择区块
-const cancelCheck = (blockList, block) => {
-  const index = selectedBlockArray.value.indexOf(block)
-
-  selectedBlockArray.value.splice(index, 1)
-  blockList.push(block)
-
-  return blockList
+const cancelCheck = (block) => {
+  selectedBlockArray.value = selectedBlockArray.value.filter((item) => item.id !== block.id)
 }
 
 const getBlockAssetsByVersion = (block, version) => {

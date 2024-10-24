@@ -7,6 +7,9 @@
     :block-style="state.displayType"
     :show-block-detail="state.showDetailPanel"
     :show-block-shot="state.showShot"
+    :show-checkbox="showCheckbox"
+    :checked="checked"
+    :grid-columns="gridColumns"
     default-icon-tip="查看区块详情信息"
     @click="blockClick"
     @iconClick="openDetail"
@@ -46,6 +49,20 @@ export default {
     showBlockShot: {
       type: Boolean,
       default: true
+    },
+    // 是否显示多选框
+    showCheckbox: {
+      type: Boolean,
+      default: false
+    },
+    // 选中的区块
+    checked: {
+      type: Array,
+      default: () => []
+    },
+    gridColumns: {
+      type: Number,
+      default: 2
     }
   },
   emits: ['check', 'close'],

@@ -81,17 +81,18 @@
           </template>
         </tiny-search>
       </div>
-      <plugin-block-list
-        class="plugin-block-list"
-        :data="state.blockList"
-        :isBlockManage="true"
-        :showBlockShot="true"
-        :blockStyle="state.layout"
-        default-icon-tip="查看区块"
-        :externalBlock="externalBlock"
-        @editBlock="editBlock"
-        @iconClick="openSettingPanel"
-      ></plugin-block-list>
+      <div class="plugin-block-list">
+        <plugin-block-list
+          :data="state.blockList"
+          :isBlockManage="true"
+          :showBlockShot="true"
+          :blockStyle="state.layout"
+          default-icon-tip="查看区块"
+          :externalBlock="externalBlock"
+          @editBlock="editBlock"
+          @iconClick="openSettingPanel"
+        ></plugin-block-list>
+      </div>
       <block-setting></block-setting>
       <div class="block-footer">
         <tiny-dropdown trigger="click" @item-click="changeType">
@@ -477,6 +478,8 @@ export default {
 }
 .plugin-block-list {
   margin-bottom: 40px;
+  padding: 12px;
+  overflow-y: auto;
 }
 .block-footer {
   position: absolute;

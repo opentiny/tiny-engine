@@ -1,7 +1,10 @@
 <template>
-  <meta-description class="description" type="warning">
+  <meta-description class="description">
     <template #content>
-      <div @click="openBlockSetting" class="setting-block"><span class="add-icon">+</span>设置区块暴露属性</div>
+      <div class="setting-block" @click="openBlockSetting">
+        <svg-icon name="block-add-prop"></svg-icon>
+        <span>设置区块暴露属性</span>
+      </div>
     </template>
   </meta-description>
 </template>
@@ -33,17 +36,28 @@ export default {
 
 <style lang="less" scoped>
 .description {
-  border-color: var(--ti-lowcode-description-color);
+  font-size: 12px;
+
+  &.wrapper {
+    height: 32px;
+    padding: 0 12px;
+    border-left: 0;
+    box-shadow: none;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    background-color: var(--te-common-bg-container);
+  }
 
   .setting-block {
+    display: flex;
+    align-items: center;
+    gap: 4px;
     cursor: pointer;
   }
-  .add-icon {
-    padding: 0 3px;
-    margin: 0 5px;
-    color: var(--ti-lowcode-toolbar-icon-color);
-    border-radius: 50%;
-    background-color: var(--ti-lowcode-description-color);
+
+  .svg-icon {
+    font-size: 16px;
   }
 }
 </style>

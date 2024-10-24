@@ -1,20 +1,27 @@
 <template>
   <plugin-setting v-if="panel.created" v-show="panel.show" :title="state.title" class="version-list-panel">
     <template #header>
-      <tiny-button type="primary" @click="selectVersion">确定</tiny-button>
       <close-icon class="close-icon" @click="closePanel"></close-icon>
     </template>
     <template #content>
-      <tiny-grid ref="versionGrid" :data="state.backupList" :show-header="false" class="stripe-tiny-grid">
-        <tiny-grid-column type="radio" width="60"></tiny-grid-column>
-        <tiny-grid-column show-overflow>
+      <tiny-grid ref="versionGrid" :data="state.backupList" :highlight-hover-row="false">
+        <tiny-grid-column field="version" title="版本号"></tiny-grid-column>
+        <tiny-grid-column title="发布时间">
           <template v-slot="{ row }">
-            <block-history-template
-              :is-block-manage="true"
-              :blockHistory="row"
-              :currentVersion="selectedBlock.current_version"
-            ></block-history-template>
+            <span>{{ format(row.updated_at, 'yyyy/MM/dd hh:mm:ss') }}</span>
           </template>
+        </tiny-grid-column>
+        <tiny-grid-column field="message" title="发布描述"></tiny-grid-column>
+        <tiny-grid-column title="操作">
+          <template v-slot="{ row }">
+            <tiny-button
+              type="text"
+              text="回退"
+              class="fallback-btn"
+              :disabled="isCurrentVersion(row)"
+              @click="handleChangeVersion(row)"
+            ></tiny-button
+          ></template>
         </tiny-grid-column>
         <template #empty>
           <search-empty :isShow="true" />
@@ -27,7 +34,8 @@
 <script>
 import { reactive, watch, ref } from 'vue'
 import { Grid, GridColumn, Button } from '@opentiny/vue'
-import { PluginSetting, CloseIcon, BlockHistoryTemplate, SearchEmpty } from '@opentiny/tiny-engine-common'
+import { format } from '@opentiny/vue-renderless/common/date'
+import { PluginSetting, CloseIcon, SearchEmpty } from '@opentiny/tiny-engine-common'
 import { useBlock, useModal } from '@opentiny/tiny-engine-meta-register'
 import { fetchBlockById, requestGroupBlockVersion } from './http'
 import { useVersionSelectPanel } from './js/usePanel'
@@ -38,7 +46,6 @@ export default {
     TinyGridColumn: GridColumn,
     TinyButton: Button,
     PluginSetting,
-    BlockHistoryTemplate,
     CloseIcon,
     SearchEmpty
   },
@@ -64,9 +71,7 @@ export default {
         })
     }
 
-    const selectVersion = () => {
-      const selectedRow = versionGrid.value.getRadioRow()
-
+    const handleChangeVersion = (selectedRow) => {
       if (selectedRow) {
         confirm({
           title: '修改区块版本',
@@ -109,13 +114,19 @@ export default {
       }
     })
 
+    const isCurrentVersion = (blockHistory) => {
+      return blockHistory?.version === selectedBlock.value.current_version
+    }
+
     return {
       state,
       selectedBlock,
-      selectVersion,
       versionGrid,
       panel,
-      closePanel
+      closePanel,
+      format,
+      isCurrentVersion,
+      handleChangeVersion
     }
   }
 }
@@ -127,25 +138,16 @@ export default {
     color: var(--ti-lowcode-component-block-version-list-panel-title-color);
   }
 }
-.stripe-tiny-grid {
-  :deep(.tiny-grid__body-wrapper) {
-    .tiny-grid-body__row {
-      &,
-      &:not(.row__hover):nth-child(2n) {
-        background: var(--ti-lowcode-component-block-version-list-item-bg);
-      }
-      &:last-child {
-        .tiny-grid-body__column {
-          border-bottom: 1px solid var(--ti-lowcode-component-block-version-list-item-border-color);
-        }
-      }
-      .tiny-grid-body__column {
-        border-top: 1px solid var(--ti-lowcode-component-block-version-list-item-border-color);
-      }
-    }
-  }
-}
 .close-icon {
   margin-left: 16px;
+}
+.tiny-button.tiny-button {
+  &.fallback-btn {
+    min-width: unset;
+    padding: 0;
+  }
+  &.tiny-button--text.is-disabled {
+    color: var(--ti-button-text-color-disabled);
+  }
 }
 </style>
