@@ -4,7 +4,7 @@
       v-for="(item, index) in commonOptions"
       :key="item.label || item.icon"
       :class="['tab-item', { selected: picked === (valueKey ? item.value[valueKey] : item.value) }]"
-      :style="{ width: itemWidth(collapsedOptions.length && index === commonOptions.length - 1) }"
+      :style="{ width: getItemWidth(collapsedOptions.length && index === commonOptions.length - 1) + 'px' }"
       @click.stop="change(item.value)"
     >
       <span :class="['label-text', index < commonOptions.length - 1 ? 'border-right' : '']">
@@ -32,7 +32,7 @@
       <div
         v-if="collapsedOptions.length && index === commonOptions.length - 1 && showMore"
         class="more-tabs-wrap"
-        :style="{ width: itemWidth(true) }"
+        :style="{ width: getItemWidth(true) + 'px' }"
       >
         <div
           v-for="foldsItem in foldsOptions"
@@ -48,7 +48,7 @@
   </div>
 </template>
 <script setup>
-import { ref, watch, computed, defineProps, defineEmits } from 'vue'
+import { ref, watch, defineProps, defineEmits } from 'vue'
 import { Popover as TinyPopover } from '@opentiny/vue'
 
 const props = defineProps({
@@ -90,8 +90,6 @@ const showMore = ref(false)
 const getItemWidth = (collapsed = false) => {
   return `${parseInt(props.labelWidth, 10) + (collapsed ? 20 : 0)}`
 }
-
-const itemWidth = computed((collapsed) => `${getItemWidth(collapsed)}px`)
 
 const findMatchingFoldValue = (value) =>
   foldsOptions.value.find((item) => (props.valueKey ? item.value[props.valueKey] === value : item.value === value))
