@@ -2126,7 +2126,7 @@ export const appSchemaDemo01 = {
     description: 'demo应用',
     branch: 'develop',
     is_demo: null,
-    global_state: [],
+    global_state: ['fishThing'],
     appId: '918',
     creator: '',
     gmt_create: '2022-06-08 03:19:01',

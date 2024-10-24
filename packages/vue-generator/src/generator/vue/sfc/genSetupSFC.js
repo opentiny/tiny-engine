@@ -6,7 +6,7 @@ import {
   handleTinyIcon,
   handleExpressionChildren,
   validEmptyTemplateHook
-} from './generateTemplate'
+} from './generateTemplate.js'
 import { generateStyleTag } from './generateStyle'
 import {
   handleConditionAttrHook,
@@ -66,6 +66,8 @@ const defaultStyleConfig = {
 }
 
 const generateSFCFile = (schema, componentsMap, config = {}) => {
+  console.log('到这里了没page>>>>>>>>>>')
+
   const parsedConfig = parseConfig(config)
   const { blockRelativePath, blockSuffix, scriptConfig: initScriptConfig, styleConfig: initStyleConfig } = parsedConfig
   // 前置动作，对 Schema 进行解析初始化相关配置与变量
@@ -95,6 +97,8 @@ const generateSFCFile = (schema, componentsMap, config = {}) => {
     ...defaultStyleConfig,
     ...initStyleConfig
   }
+
+  console.log('到这里了没page>>>>>wuwuwuwuuwuw')
 
   const globalHooks = {
     addStatement: (newStatement) => {
@@ -194,8 +198,11 @@ const generateSFCFile = (schema, componentsMap, config = {}) => {
     }
   }
 
+  console.log('到这里了没page>>>44444444444444444444')
+
   // 解析 template
   const templateStr = genTemplateByHook(schema, globalHooks, { ...parsedConfig, componentsMap: componentsMap })
+  console.log('到这里了没page>>>66666666666666666')
 
   // 生成 script
   const scriptStr = genScriptByHook(schema, globalHooks, { ...parsedConfig, componentsMap: componentsMap })
@@ -203,10 +210,12 @@ const generateSFCFile = (schema, componentsMap, config = {}) => {
   // 生成 style
   const styleStr = generateStyleTag(schema, styleConfig)
 
+  console.log('到这里了没page>>>')
   return `${templateStr}\n${scriptStr}\n${styleStr}`
 }
 
 export const genSFCWithDefaultPlugin = (schema, componentsMap, config = {}) => {
+  console.log('SFC起点page>>>>>>>>>>>')
   const { templateItemValidate = [], genTemplate = [], parseScript = [], genScript = {} } = config.hooks || {}
   const defaultComponentHooks = [handleComponentNameHook, handleTinyIcon]
 
@@ -258,6 +267,7 @@ export const genSFCWithDefaultPlugin = (schema, componentsMap, config = {}) => {
       }
     }
   }
+  console.log('SFC终点page>>>>>>>>>>>')
 
   return generateSFCFile(schema, componentsMap, newConfig)
 }

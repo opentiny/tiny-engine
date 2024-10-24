@@ -57,7 +57,9 @@ function genDependenciesPlugin(options = {}) {
           .join(',')} })`
 
         const getterExpression = Object.entries(getters)
-          .filter((item) => item.value?.type === 'JSFunction')
+          .filter((item) => {
+            return item.value?.type === 'JSFunction'
+          })
           .map(([key, value]) => `${key}: ${value.value}`)
           .join(',')
 

@@ -26,7 +26,8 @@ import {
 } from '@opentiny/tiny-engine-controller'
 import { fs } from '@opentiny/tiny-engine-utils'
 import { useHttp } from '@opentiny/tiny-engine-http'
-import { parseRequiredBlocks, generateApp as generateVueApp } from '@opentiny/tiny-engine-dsl-vue'
+// import { parseRequiredBlocks, generateApp as generateVueApp } from '@opentiny/tiny-engine-dsl-vue'
+import { parseRequiredBlocks, generateApp as generateVueApp } from '../../../vue-generator/src/index'
 // import { generateApp as generateReactApp } from '@opentiny/tiny-engine-dsl-react'
 // 初期，方便调试
 import { generateApp as generateReactApp } from '../../../react-generator/src/index'

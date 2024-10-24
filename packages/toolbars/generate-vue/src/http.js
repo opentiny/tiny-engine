@@ -12,6 +12,7 @@
 
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { generateCode } from '../../../react-generator/src/index'
+// import { generateCode } from '../../../vue-generator/src/index' // 想使用React出码的时候就切换为上方的数据源
 
 const http = useHttp()
 
@@ -27,15 +28,15 @@ const HEADER_LOWCODE_ORG = 'x-lowcode-org'
 //     }
 //   )
 
-  export const fetchCode = async ({ platform, app, pageInfo, tenant } = {}) =>
-  generateCode({platform, app, pageInfo, tenant})
-  // http.post(
-  //   '/app-center/api/schema2code',
-  //   { platform, app, pageInfo },
-  //   {
-  //     headers: { [HEADER_LOWCODE_ORG]: tenant }
-  //   }
-  // )
+export const fetchCode = async ({ platform, app, pageInfo, tenant } = {}) =>
+  generateCode({ platform, app, pageInfo, tenant })
+// http.post(
+//   '/app-center/api/schema2code',
+//   { platform, app, pageInfo },
+//   {
+//     headers: { [HEADER_LOWCODE_ORG]: tenant }
+//   }
+// )
 
 // 获取页面依赖的关联应用数据: i18n/dataSource等
 export const fetchMetaData = async ({ platform, app, type, id, history, tenant } = {}) =>

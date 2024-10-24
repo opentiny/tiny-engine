@@ -74,7 +74,7 @@ function genPagePlugin(options = {}) {
       // 先做一点小改造, 后面再改回来
       const pages = schema.reactData
 
-      console.log(pages, 'pages>>>>>')
+      console.log(schema, 'pages>>>>>')
 
       console.log(prettierCode(pages, pageBasePath), 'prettierCode>>>>')
       const pageFiles = prettierCode(pages, pageBasePath)

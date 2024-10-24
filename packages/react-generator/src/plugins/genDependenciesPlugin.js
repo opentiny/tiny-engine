@@ -45,9 +45,9 @@ const parseSchema = (schema) => {
     }
   }
 
-  // 处理内置 Icon，如果使用了 tinyvue 组件，则默认添加 @opentiny/vue-icon 依赖，且依赖与 @opentiny/vue 依赖版本一致
-  if (resDeps['@opentiny/vue']) {
-    resDeps['@opentiny/vue-icon'] = resDeps['@opentiny/vue']
+  // 处理内置 Icon，如果使用了 tinyreact 组件，则默认添加 @opentiny/react-icon 依赖，且依赖与 @opentiny/react 依赖版本一致
+  if (resDeps['@opentiny/react']) {
+    resDeps['@opentiny/react-icon'] = resDeps['@opentiny/react']
   }
 
   return resDeps

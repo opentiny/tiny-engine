@@ -29,7 +29,54 @@ function genDependenciesPlugin(options = {}) {
      * @returns
      */
     run(schema) {
-      const globalState = parseSchema(schema)
+      let globalState = parseSchema(schema)
+      globalState = [
+        {
+          id: 'counter',
+          state: {
+            count: 0
+          },
+          actions: {
+            increment: {
+              type: 'JSFunction',
+              value: 'function increment() { this.state.count++; }'
+            },
+            decrement: {
+              type: 'JSFunction',
+              value: 'function decrement() { this.state.count--; }'
+            }
+          },
+          getters: {
+            doubleCount: {
+              type: 'JSFunction',
+              value: 'function doubleCount() { return this.state.count * 2; }'
+            }
+          }
+        },
+        {
+          id: 'user',
+          state: {
+            name: 'John Doe',
+            age: 30
+          },
+          actions: {
+            updateName: {
+              type: 'JSFunction',
+              value: 'function updateName(newName) { this.state.name = newName; }'
+            },
+            updateAge: {
+              type: 'JSFunction',
+              value: 'function updateAge(newAge) { this.state.age = newAge; }'
+            }
+          },
+          getters: {
+            fullName: {
+              type: 'JSFunction',
+              value: 'function fullName() { return `${this.state.name} (${this.state.age})`; }'
+            }
+          }
+        }
+      ]
 
       const res = []
       const ids = []
@@ -38,9 +85,11 @@ function genDependenciesPlugin(options = {}) {
         let importStatement = "import create from 'zustand'"
         const { id, state, getters, actions } = stateItem
 
+        console.log(getters)
+
         ids.push(id)
 
-        const stateExpression = `() => ({ ${Object.entries(state)
+        const stateExpression = `${Object.entries(state)
           .map((item) => {
             let [key, value] = item
 
@@ -54,29 +103,46 @@ function genDependenciesPlugin(options = {}) {
 
             return [key, value].join(':')
           })
-          .join(',')} })`
+          .join(',')}`
 
-        const getterExpression = Object.entries(getters)
-          .filter((item) => item.value?.type === 'JSFunction')
-          .map(([key, value]) => `${key}: ${value.value}`)
-          .join(',')
+        // const getterExpression = Object.entries(getters)
+        //   .filter((item) => {
+        //     console.log(item, 'itemexpress>>>>')
+        //     return item[1]?.type === 'JSFunction'
+        //   })
+        //   .map(([key, value]) => `${key}: ${value.value}`)
+        //   .join(',')
 
         const actionExpressions = Object.entries(actions)
-          .filter((item) => item.value?.type === 'JSFunction')
-          .map(([key, value]) => `${key}: ${value.value}`)
+          .filter((item) => item[1]?.type === 'JSFunction')
+          .map(
+            ([key, value]) => `${key}: () => set((state) => {
+              ${value.value.replace('this.', 'state.')}
+            })`
+          )
           .join(',')
 
-        console.log(getterExpression, actionExpressions, stateExpression, 'expressTion>>>>>')
+        // console.log(getterExpression, 'getterExpression>>>>>')
+        console.log(stateExpression, 'stateExpression>>>>>')
+        console.log(actionExpressions, 'actionExpressions>>>>>')
 
         const storeFiles = `
          ${importStatement}
-         export const ${id} = defineStore({
-           id: ${id},
-           state: ${stateExpression},
-           getters: { ${getterExpression} },
-           actions: { ${actionExpressions} }
-         })
+         export const ${id} = create((set) => ({
+          ${stateExpression},
+          ${actionExpressions}
+        }))
         `
+
+        // const storeFiles = `
+        //  ${importStatement}
+        //  export const ${id} = defineStore({
+        //    id: ${id},
+        //    state: ${stateExpression},
+        //    actions: { ${actionExpressions} }
+        //  })
+        // `
+
         res.push({
           fileType: 'js',
           fileName: `${id}.js`,

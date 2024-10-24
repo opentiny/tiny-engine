@@ -3,7 +3,7 @@ import { genSFCWithDefaultPlugin } from '@/generator/vue/sfc'
 import schema from './schema.json'
 import blockSchema from './blocks.schema.json'
 import componentsMap from './componentsMap.json'
-import { formatCode } from '@/utils/formatCode'
+import { formatCode } from '../../../../src/utils/formatCode'
 
 let count = 0
 const mockValue = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]

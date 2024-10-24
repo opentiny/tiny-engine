@@ -14,8 +14,8 @@ export default (schema) => {
     module: 'dist/index.js',
     dependencies: {
       '@opentiny/tiny-engine-i18n-host': '^1.0.0',
-      '@opentiny/vue': 'latest',
-      '@opentiny/vue-icon': 'latest',
+      '@opentiny/react': 'latest',
+      '@opentiny/react-icon': 'latest',
       axios: 'latest',
       'axios-mock-adapter': '^1.19.0',
       react: '^18.3.1',

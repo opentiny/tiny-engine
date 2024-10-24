@@ -121,7 +121,6 @@ function handleJSXBinding(props, attrsArr, description, state) {
     // 事件名，协议约定以 on 开头的 camelCase 形式，template 中使用 kebab-case 形式
     if (isOn(key)) {
       const eventBinding = handleJSXEventBinding(key, item)
-      console.log(eventBinding, 'eventBinding>>>>>>>>>>')
 
       return attrsArr.push(eventBinding)
     }
@@ -188,7 +187,7 @@ function generateJSXNode(schema, state, description, isRootNode = false) {
 
   // 循环渲染 v-for, 循环数据支持：变量表达式、数组/对象字面量
   if (loop) {
-    const loopData = loop.type ? loop.value : JSON.stringify(loop)
+    const loopData = (loop.type ? loop.value : JSON.stringify(loop)).replace('this.state.', '') // 改写类语法
 
     elementWrappers.push({
       type: 'loop',
