@@ -1,9 +1,9 @@
 import { capitalize } from '@vue/shared'
-import { toEventKey, isGetter, isSetter } from '@/utils'
-import { generateImportByPkgName } from '@/utils/generateImportStatement'
-import { INSERT_POSITION } from '@/constant'
+import { toEventKey, isGetter, isSetter } from '../../../utils'
+import { generateImportByPkgName } from '../../../utils/generateImportStatement'
+import { INSERT_POSITION } from '../../../constant'
 import { transformObjType } from './generateAttribute'
-import { hasJsx } from '@/utils/hasJsx'
+import { hasJsx } from '../../../utils/hasJsx'
 
 export const defaultGenImportHook = (schema, globalHooks) => {
   const dependenciesMap = globalHooks.getImport() || {}

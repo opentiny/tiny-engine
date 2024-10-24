@@ -21,10 +21,14 @@ function genPagePlugin(options = {}) {
     run(schema) {
       const pages = schema.pageSchema
 
+      console.log(schema, 'page>>>>>>>>')
+
       const resPage = []
 
       for (const page of pages) {
+        console.log('wujiayupageRes')
         const res = genSFCWithDefaultPlugin(page, schema.componentsMap, sfcConfig)
+        console.log(res, 'pageRes>>>>>>>>>>>>>>>>>')
 
         resPage.push({
           fileType: 'vue',

@@ -130,6 +130,7 @@ function generatePageFiles(codeList, pagePath = '') {
     json: [parserBabel]
   }
 
+  console.log(codeList, 'codeList')
   const blockList = codeList.filter((item) => item.type === 'Block').map((item) => item.panelName)
   codeList.forEach(({ panelName, panelValue = '', prettierOpts, type }) => {
     if (panelName) {

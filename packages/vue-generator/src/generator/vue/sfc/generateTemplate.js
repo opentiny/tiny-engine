@@ -6,10 +6,10 @@ import {
   JS_EXPRESSION,
   JS_I18N,
   JS_RESOURCE
-} from '@/constant'
+} from '../../../constant'
 import { generateTag, HTML_DEFAULT_VOID_ELEMENTS } from './generateTag'
 import { specialTypeHandler } from './generateAttribute'
-import { thisPropsBindRe, thisRegexp } from '@/utils'
+import { thisPropsBindRe, thisRegexp } from '../../../utils'
 
 export const handleComponentNameHook = (optionData) => {
   const { componentName, schema } = optionData
@@ -178,15 +178,18 @@ export const recursiveGenTemplateByHook = (schemaWithRes, globalHooks, config = 
   // 自定义 hooks
   const { genTemplate: genTemplateHooks, templateItemValidate } = hooks
 
+  console.log('到这里了没page>>11111111111111111')
   if (!Array.isArray(schemaChildren)) {
     schemaWithRes.children.push(schemaChildren || '')
 
     return
   }
 
+  console.log('到这里了没page>>>7777777777777')
   const resArr = schemaChildren.map((schemaItem) => {
     for (const validateItem of templateItemValidate) {
       if (!validateItem(schemaItem, globalHooks, config)) {
+        console.log('到这里了没page>>>100000101010')
         return ''
       }
     }
@@ -211,6 +214,7 @@ export const recursiveGenTemplateByHook = (schemaWithRes, globalHooks, config = 
       hookItem(optionData, globalHooks, config)
     }
 
+    console.log('到这里了没page>>>99999999')
     const startTag = generateTag(optionData.componentName, {
       attribute: optionData.attributes.join(' '),
       isVoidElement: optionData.voidElement,

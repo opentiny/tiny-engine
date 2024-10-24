@@ -27,6 +27,7 @@
     "@opentiny/tiny-engine-canvas": "workspace:*",
     "@opentiny/tiny-engine-controller": "workspace:*",
     "@opentiny/tiny-engine-dsl-vue": "workspace:*",
+    "@opentiny/tiny-engine-dsl-react": "workspace:*",
     "@opentiny/tiny-engine-http": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
     "prettier": "2.7.1"

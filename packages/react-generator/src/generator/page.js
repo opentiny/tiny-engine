@@ -23,7 +23,7 @@ import {
   getFunctionInfo
 } from '../utils'
 // import { validateByParse, validateByCompile } from '../utils/vue-sfc-validator'
-import { traverse as traverseState, unwrapExpression } from '../parser/state'
+import { traverse as traverseState, unwrapExpression, translateHookState } from '../parser/state'
 import { preProcess } from '../pre-processor'
 import {
   DEFAULT_COMPONENTS_MAP,
@@ -64,7 +64,8 @@ const handleJSXEventBinding = (key, item) => {
 
   // vue 事件绑定，仅支持：内联事件处理器 or 方法事件处理器（绑定方法名或对某个方法的调用）
   if (item?.type === 'JSExpression') {
-    const eventHandler = item.value
+    const eventHandler = item.value.replace('this.', '') // 强制 replace 一下
+    console.log(item, 'eventHandler>>>>>.')
 
     // Vue Template 中，为事件处理函数传递额外的参数时，需要使用内联箭头函数
     if (item.params?.length) {
@@ -140,7 +141,6 @@ function generateJSXNode(schema, state, description, isRootNode = false) {
   const elementWrappers = []
   const jsxResult = []
   const { componentName, fileName, loop, loopArgs = ['item'], condition, props = {}, children } = schema
-
   // // 不生成空 div 作为根节点，兼容支持有页面属性的 div 根节点
   // if (isEmptyRoot(isRootNode, props)) {
   //   return recurseChildren(children, description, result)
@@ -159,6 +159,7 @@ function generateJSXNode(schema, state, description, isRootNode = false) {
     description.blockSet.add(fileName)
   } else {
     component = IntrinsicElements.includes(componentName || 'div') ? componentName || 'div' : capitalize(componentName)
+
     description.componentSet.add(componentName)
   }
 
@@ -186,7 +187,7 @@ function generateJSXNode(schema, state, description, isRootNode = false) {
 
   // 循环渲染 v-for, 循环数据支持：变量表达式、数组/对象字面量
   if (loop) {
-    const loopData = loop.type ? loop.value : JSON.stringify(loop)
+    const loopData = (loop.type ? loop.value : JSON.stringify(loop)).replace('this.state.', '') // 改写类语法
 
     elementWrappers.push({
       type: 'loop',
@@ -363,7 +364,12 @@ const generateReactCode = ({ schema, name, type, componentsMap }) => {
   // 转换 state 中的特殊类型
   traverseState(state, description)
 
-  const stateStatement = `state = ${unwrapExpression(JSON.stringify(state, null, 2))}`
+  const statementMap = translateHookState(state)
+  let statement = ''
+  for (const [key, value] of statementMap) {
+    statement += `[${key}, set${key}] = React.useState(${JSON.stringify(value)}) \n`
+  }
+  // const stateStatement = `${unwrapExpression(JSON.stringify(state, null, 2))}`
 
   const getters = description.getters.map((getter) => {
     const { type, params, body } = getFunctionInfo(getter.accessor.getter.value)
@@ -376,34 +382,82 @@ const generateReactCode = ({ schema, name, type, componentsMap }) => {
   const arrowMethods = Object.entries(methods)
     .map(([key, item]) => ({ key, ...getFunctionInfo(item.value) }))
     .filter(({ body }) => Boolean(body))
-    .map(({ key, type, params, body }) => `${key}=${type} (${params.join(',')}) => { ${body} }`)
-  const lifecycles = Object.entries(lifeCycles)
+    .map(({ key, type, params, body }) => `const ${key}=${type} (${params.join(',')}) => { ${body} }`)
+
+  const lifecycle = Object.entries(lifeCycles)
     .map(([key, item]) => ({ key, ...getFunctionInfo(item.value) }))
     .filter(({ body }) => Boolean(body))
-    .map(({ key, type, params, body }) => `${type} ${key}(${params.join(',')}) { ${body} }`)
+    .map(({ key, type, params, body }) => {
+      const ans = {}
+      ans[key] = {
+        body: body,
+        type: type,
+        params: params
+      }
+      return ans
+    })
 
+  const lifecycleMap = {}
+  lifecycle.forEach((item) => {
+    const key = Object.keys(item)[0]
+    lifecycleMap[key] = item[key]
+  })
+
+  const componentDidMount = lifecycleMap['componentDidMount']
+  const componentWillUnmount = lifecycleMap['componentWillUnmount']
+  const componentDidUpdate = lifecycleMap['componentDidUpdate']
+
+  const componentWillMount = lifecycleMap['componentWillMount']
+
+  const shouldComponentUpdate = lifecycleMap['shouldComponentUpdate']
+
+  const stringUseEffect = `
+      useEffect(() => {
+        ${componentDidMount && componentDidMount['body'] ? componentDidMount['body'] : ''}
+        ${componentWillUnmount && componentWillUnmount['body'] ? `return () => {${componentWillUnmount['body']}}` : ''}
+        }, [${componentDidUpdate && componentDidUpdate['params'] ? componentDidUpdate['params'] : ''}])
+    `
+
+  const stringUseLayoutEffect = `
+         useLayoutEffect(() => {
+        ${componentWillMount && componentWillMount['body'] ? componentWillMount['body'] : ''}
+        }, [${componentDidUpdate && componentDidUpdate['params'] ? componentDidUpdate['params'] : ''}])
+  `
+
+  const stringUseMemo = `
+    useMemo(() => {
+      ${shouldComponentUpdate && shouldComponentUpdate['body'] ? shouldComponentUpdate['body'] : ''}
+      }, [${shouldComponentUpdate && shouldComponentUpdate['params'] ? shouldComponentUpdate['params'] : ''}])
+  `
   const { imports } = generateReactImports(description, name, type, componentsMap)
 
+  console.log(getters.join('\n'), 'current>>>>>>')
+
+  console.log(arrowMethods.join('\n'), 'arrowMethod>>>>>>')
+
+  console.log(statement, 'stateStatement>>>>>>')
+
+  // 生成模板
   const result = `${imports.join('\n')}
 
-  export default class ${name} extends React.Component {
-    ${stateStatement}
+  export default ${name} = () => {
+    ${statement}
 
     ${getters.join('\n')}
 
-    utils = {}
-    constructor(props) {
-      super(props)
-      this.utils = utils
-    }
+    const utils = {}
   
-    ${lifecycles.join('\n')}
+    ${stringUseEffect}
+    ${stringUseLayoutEffect}
+    ${stringUseMemo}
   
     ${arrowMethods.join('\n')}
   
-    render() {
-      return (${jsxNode})
-    }
+    return (
+      <>
+        ${jsxNode}
+      </>
+    )
   }
 `
 
@@ -422,6 +476,7 @@ const getFilePath = (type = 'page', name = '', componentsMap) => {
 }
 
 const generatePageCode = ({ pageInfo, componentsMap, isEntry = true }) => {
+  console.log(pageInfo, 'wujiayu')
   const { schema: originSchema, name } = pageInfo
 
   // 深拷贝，避免副作用改变传入的 schema 值
@@ -485,6 +540,7 @@ const generateBlocksCode = ({ blocksData, componentsMap }) => {
 }
 
 const generateCode = ({ pageInfo, componentsMap = [], blocksData = [] }) => {
+  console.log(pageInfo, 'pageInfo>>>>>')
   // 过滤外部传入的无效 componentMap，比如：可能传入 HTML 原生标签 package: ''
   // 注意区分区块 package: undefined, main: string（区块路径 main，空字符串表示当前目录，等价于 './'）
   const validComponents = componentsMap.filter(

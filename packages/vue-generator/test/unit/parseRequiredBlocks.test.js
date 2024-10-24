@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { parseRequiredBlocks } from '@/utils/parseRequiredBlocks'
+import { parseRequiredBlocks } from '../../src/utils/parseRequiredBlocks'
 
 test('should return empty array when children is no array', () => {
   expect(parseRequiredBlocks()).toStrictEqual([])

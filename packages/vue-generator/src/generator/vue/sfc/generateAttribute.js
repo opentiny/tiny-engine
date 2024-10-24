@@ -7,7 +7,7 @@ import {
   SPECIAL_UTILS_TYPE,
   INSERT_POSITION,
   TINY_ICON
-} from '@/constant'
+} from '../../../constant'
 import {
   isOn,
   toEventKey,
@@ -18,7 +18,7 @@ import {
   thisRegexp,
   isGetter,
   isSetter
-} from '@/utils'
+} from '../../../utils'
 import { recursiveGenTemplateByHook } from './generateTemplate'
 import { getImportMap } from './parseImport'
 

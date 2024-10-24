@@ -1,5 +1,5 @@
 import { mergeOptions } from '../utils/mergeOptions'
-import { parseImport } from '@/generator/vue/sfc/parseImport'
+import { parseImport } from '../generator/vue/sfc/parseImport'
 
 const defaultOption = {
   fileName: 'package.json',

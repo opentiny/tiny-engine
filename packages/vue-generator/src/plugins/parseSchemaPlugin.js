@@ -1,4 +1,4 @@
-import { BUILTIN_COMPONENTS_MAP } from '@/constant'
+import { BUILTIN_COMPONENTS_MAP } from '../constant'
 
 function parseSchema() {
   return {
