@@ -8,9 +8,9 @@
       @click.stop="change(item.value)"
     >
       <span :class="['label-text', index < commonOptions.length - 1 ? 'border-right' : '']">
-        <span v-if="item && item.label">{{ item.label }}</span>
+        <span v-if="item?.label">{{ item.label }}</span>
         <tiny-popover
-          v-if="item && item.icon"
+          v-if="item?.icon"
           :effect="effect"
           :placement="placement"
           :visible-arrow="false"
@@ -40,8 +40,8 @@
           :key="foldsItem.label || foldsItem.icon"
           @click.stop="change(foldsItem.value)"
         >
-          <span v-if="foldsItem && foldsItem.label">{{ foldsItem.label }}</span>
-          <svg-icon v-if="foldsItem && foldsItem.icon" :name="foldsItem.icon" class="bem-Svg"></svg-icon>
+          <span v-if="foldsItem?.label">{{ foldsItem.label }}</span>
+          <svg-icon v-if="foldsItem.icon" :name="foldsItem.icon" class="bem-Svg"></svg-icon>
         </div>
       </div>
     </div>

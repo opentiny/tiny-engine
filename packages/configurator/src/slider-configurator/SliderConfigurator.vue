@@ -133,8 +133,7 @@ export default {
     padding: 0;
     cursor: pointer;
     border: 0;
-    background: -webkit-linear-gradient(var(--te-base-gray-1), var(--te-base-gray-1)) no-repeat
-      var(--ti-lowcode-breadcrumb-icon-color);
+    background: -webkit-linear-gradient(var(--te-base-gray-1), var(--te-base-gray-1)) no-repeat var(--te-base-gray-17);
     background-size: 0% 100%;
     position: relative;
     outline: 0;
