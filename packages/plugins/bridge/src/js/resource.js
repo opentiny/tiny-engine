@@ -11,7 +11,7 @@
  */
 
 import { reactive } from 'vue'
-import { useResource, useNotify, useCanvas, getMetaApi } from '@opentiny/tiny-engine-meta-register'
+import { useResource, useNotify, useCanvas, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import {
   fetchResourceList,
@@ -116,7 +116,7 @@ export const ACTION_TYPE = {
   Edit: 'edit'
 }
 
-const getAppId = () => getMetaApi('engine.service.globalService').getState().appInfo.id
+const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id
 
 export const getResources = () => {
   const id = getAppId()

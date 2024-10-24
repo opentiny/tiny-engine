@@ -11,10 +11,10 @@
  */
 
 import { PAGE_STATUS } from './constants'
-import { useResource, getMetaApi } from '@opentiny/tiny-engine-meta-register'
+import { useResource, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 export const getCanvasStatus = (data) => {
-  const globalState = getMetaApi('engine.service.globalService').getState()
+  const globalState = getMetaApi(META_SERVICE.GlobalService).getState()
   // 写死ID 待删除
   let isDemo = useResource().resState.isDemo
   const { resetPasswordToken } = globalState.userInfo
