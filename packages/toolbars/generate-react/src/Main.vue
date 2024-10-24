@@ -16,7 +16,8 @@ import { reactive } from 'vue'
 import { Popover } from '@opentiny/vue'
 import { getGlobalConfig, useBlock, useCanvas, useNotify, useLayout } from '@opentiny/tiny-engine-controller'
 import { fs } from '@opentiny/tiny-engine-utils'
-import { generateApp, generateBlocksCode, generateCode } from '@opentiny/tiny-engine-dsl-react'
+// import { generateApp, generateBlocksCode, generateCode } from '@opentiny/tiny-engine-dsl-react'
+import { generateApp, generateBlocksCode, generateCode } from '../../../react-generator/src/index'
 // import { generateVuePage, generateVueBlock } from './generateCode'
 import { fetchCode, fetchMetaData, fetchPageList } from './http'
 import FileSelector from './FileSelector.vue'
@@ -90,10 +91,6 @@ export default {
     }
 
     const getToSaveFilesInfo = ({ params, codeList, metaData, pageList }) => {
-      console.log(codeList, 'codelist>>>>>')
-      console.log(metaData, 'metaData>>>>>')
-      console.log(pageList, 'pageList>>>>>')
-      console.log(params, 'params>>>>>')
 
       const handlers = {
         // Block: generateBlocksCode,

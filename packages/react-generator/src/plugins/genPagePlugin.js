@@ -1,9 +1,5 @@
 import { mergeOptions } from '../utils/mergeOptions'
-import prettier from 'prettier'
-import parserHtml from 'prettier/parser-html'
-import parseCss from 'prettier/parser-postcss'
-import parseTypescript from 'prettier/parser-typescript'
-import parserBabel from 'prettier/parser-babel'
+import { generateCode } from '../generator'
 // import { genSFCWithDefaultPlugin } from '../generator'
 
 const defaultOption = {
@@ -13,54 +9,7 @@ const defaultOption = {
 function genPagePlugin(options = {}) {
   const realOptions = mergeOptions(defaultOption, options)
 
-  const { pageBasePath, sfcConfig = {} } = realOptions
-
-  /**
-   *
-   * @param {} codeList
-   */
-  const prettierCode = (codeList, pagePath = '') => {
-    const pageFiles = []
-
-    const formatTypePluginMap = {
-      babel: [parserBabel],
-      vue: [parserHtml, parserBabel, parseCss],
-      javascript: [parserBabel],
-      typescript: [parseTypescript, parserBabel],
-      css: [parseCss],
-      less: [parseCss],
-      sass: [parseCss],
-      json: [parserBabel]
-    }
-
-    const blockList = codeList.filter((item) => item.type === 'Block').map((item) => item.panelName)
-    codeList.forEach(async ({ panelName, panelValue = '', prettierOpts, type }) => {
-      if (panelName) {
-        if (prettierOpts?.parser && formatTypePluginMap[prettierOpts.parser]) {
-          // 格式必须可供解析时才能运行，否则会堵塞本地运行
-          panelValue = prettier.format(panelValue, {
-            ...prettierOpts,
-            plugins: formatTypePluginMap[prettierOpts.parser]
-          })
-        }
-
-        if (type === 'Page' && blockList.length) {
-          blockList.forEach((blockName) => {
-            panelValue = panelValue.replace(`./${blockName}`, `${basePaths.blocks.replace('src/', '@/')}${blockName}`)
-          })
-        }
-        const [fileName, fileType] = panelName.split('.')
-        pageFiles.push({
-          fileType: `${fileType}`,
-          fileName: `${fileName}.${fileType}`,
-          path: `${pageBasePath}/${fileName || ''}`,
-          fileContent: `${panelValue}`
-        })
-      }
-    })
-
-    return pageFiles
-  }
+  const { pageBasePath } = realOptions
 
   return {
     name: 'tinyEngine-generateCode-plugin-page',
@@ -71,14 +20,28 @@ function genPagePlugin(options = {}) {
      * @returns
      */
     run(schema) {
-      // 先做一点小改造, 后面再改回来
-      const pages = schema.reactData
+      const pages = schema.pageSchema
 
-      console.log(schema, 'pages>>>>>')
+      const resPage = []
 
-      console.log(prettierCode(pages, pageBasePath), 'prettierCode>>>>')
-      const pageFiles = prettierCode(pages, pageBasePath)
-      return pageFiles
+      for (const page of pages) {
+        const pageInfo = {
+          schema: page,
+          name: page.fileName
+        }
+        const res = generateCode({ pageInfo })
+
+        res.forEach((item) => {
+          resPage.push({
+            fileType: item.panelType === 'css' ? 'css' : 'jsx',
+            fileName: `${page.fileName}.${item.panelType === 'css' ? 'css' : 'jsx'}`,
+            path: `${pageBasePath}/${page.fileName}`,
+            fileContent: item.panelValue
+          })
+        })
+      }
+
+      return resPage
     }
   }
 }

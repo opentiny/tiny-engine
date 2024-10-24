@@ -476,6 +476,7 @@ const getFilePath = (type = 'page', name = '', componentsMap) => {
 }
 
 const generatePageCode = ({ pageInfo, componentsMap, isEntry = true }) => {
+  console.log(pageInfo, 'wujiayu')
   const { schema: originSchema, name } = pageInfo
 
   // 深拷贝，避免副作用改变传入的 schema 值
@@ -539,6 +540,7 @@ const generateBlocksCode = ({ blocksData, componentsMap }) => {
 }
 
 const generateCode = ({ pageInfo, componentsMap = [], blocksData = [] }) => {
+  console.log(pageInfo, 'pageInfo>>>>>')
   // 过滤外部传入的无效 componentMap，比如：可能传入 HTML 原生标签 package: ''
   // 注意区分区块 package: undefined, main: string（区块路径 main，空字符串表示当前目录，等价于 './'）
   const validComponents = componentsMap.filter(
