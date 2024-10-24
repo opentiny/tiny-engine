@@ -21,6 +21,7 @@ export default {
   emits: ['dialog-status', 'token-status'],
   setup(props, { emit }) {
     const model = ref(props.currentModel)
+    const modelName = props.currentModel.label.split('：')[0]
     const keyFormVisible = ref(props.dialogVisible)
     const keyFormRef = ref(null)
     const keyForm = ref({
@@ -29,7 +30,7 @@ export default {
     const tokenReg = /^[A-Za-z0-9\-.]+$/
     const tokenValidate = (rule, value, callback) => {
       if (value.length > 100 || !tokenReg.test(value)) {
-        callback(new Error('参数错误，请输入小于100位的英文数字字符串'))
+        callback(new Error('参数错误，请输入小于100位的英文、数字、连字符或点号的字符串'))
       } else {
         callback()
       }
@@ -76,6 +77,7 @@ export default {
       submitKeyForm,
       keyFormVisible,
       model,
+      modelName,
       TinyIconAssociation: iconAssociation(),
       TinyIconCommission: iconCommission()
     }
@@ -89,17 +91,17 @@ export default {
       <tiny-alert
         :icon="TinyIconAssociation"
         :closable="false"
-        :description="`当前AI大模型为使用${model.label}`"
+        :description="`当前AI大模型为使用 ${modelName}`"
       ></tiny-alert>
       <tiny-alert
         :icon="TinyIconCommission"
         :closable="false"
-        :description="`尝试用自己的${model.modelKey}开启AI对话功能吧！`"
+        :description="`尝试用自己的 ${model.modelKey} 开启AI对话功能吧！`"
       ></tiny-alert>
       <tiny-form-item label="" prop="token">
         <tiny-input
           v-model="keyForm.token"
-          :placeholder="`点击这里输入你的${model.modelKey}`"
+          :placeholder="`点击这里输入你的 ${model.modelKey}`"
           validate-event
         ></tiny-input>
       </tiny-form-item>
