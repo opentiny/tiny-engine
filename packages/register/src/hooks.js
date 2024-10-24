@@ -1,13 +1,11 @@
 export const HOOK_NAME = {
   useLayout: 'layout',
-  useApp: 'app',
   useCanvas: 'canvas',
   useResource: 'resource',
   useHistory: 'history',
   useProperties: 'properties',
   useProperty: 'property',
   useSaveLocal: 'saveLocal',
-  useEditorInfo: 'editorInfo',
   useBlock: 'block',
   useTranslate: 'translate',
   usePage: 'page',
@@ -24,14 +22,12 @@ export const HOOK_NAME = {
 
 const hooksState = {
   [HOOK_NAME.useLayout]: {},
-  [HOOK_NAME.useApp]: {},
   [HOOK_NAME.useCanvas]: {},
   [HOOK_NAME.useResource]: {},
   [HOOK_NAME.useHistory]: {},
   [HOOK_NAME.useProperties]: {},
   [HOOK_NAME.useProperty]: {},
   [HOOK_NAME.useSaveLocal]: {},
-  [HOOK_NAME.useEditorInfo]: {},
   [HOOK_NAME.useBlock]: {},
   [HOOK_NAME.useTranslate]: {},
   [HOOK_NAME.usePage]: {},
@@ -55,12 +51,10 @@ const getHook = (hookName, args) => {
 
 export const useLayout = (...args) => getHook(HOOK_NAME.useLayout, args)
 export const useCanvas = (...args) => getHook(HOOK_NAME.useCanvas, args)
-export const useApp = (...args) => getHook(HOOK_NAME.useApp, args)
 export const useResource = (...args) => getHook(HOOK_NAME.useResource, args)
 export const useHistory = (...args) => getHook(HOOK_NAME.useHistory, args)
 export const useProperties = (...args) => getHook(HOOK_NAME.useProperties, args)
 export const useSaveLocal = (...args) => getHook(HOOK_NAME.useSaveLocal, args)
-export const useEditorInfo = (...args) => getHook(HOOK_NAME.useEditorInfo, args)
 export const useBlock = (...args) => getHook(HOOK_NAME.useBlock, args)
 export const useTranslate = (...args) => getHook(HOOK_NAME.useTranslate, args)
 export const usePage = (...args) => getHook(HOOK_NAME.usePage, args)

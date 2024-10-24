@@ -43,7 +43,7 @@ import {
   requestDeleteDataSource,
   requestGenerateDataSource
 } from './js/http'
-import { useModal, useApp, useDataSource, useNotify } from '@opentiny/tiny-engine-meta-register'
+import { useModal, useDataSource, useNotify, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { extend } from '@opentiny/vue-renderless/common/object'
 
 let isOpen = ref(false)
@@ -80,7 +80,6 @@ export default {
   emits: ['update:modelValue', 'save'],
   setup(props, { emit }) {
     const { message } = useModal()
-    const { appInfoState } = useApp()
     const { dataSourceState } = useDataSource()
 
     const state = reactive({
@@ -142,12 +141,14 @@ export default {
       closeRemotePanel()
     }
 
+    const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id
+
     const deleteDataSource = () => {
       const execDelete = () =>
         requestDeleteDataSource(state.dataSource.id)
           .then((data) => {
             if (data) {
-              requestGenerateDataSource(appInfoState.selectedId)
+              requestGenerateDataSource(getAppId())
               useNotify({
                 title: '数据源删除成功',
                 type: 'success'
@@ -187,7 +188,7 @@ export default {
               name: state.dataSource.name,
               data: Object.assign(state.dataSource.data, { columns, ...dataSourceState.remoteConfig })
             }).then(() => {
-              requestGenerateDataSource(appInfoState.selectedId)
+              requestGenerateDataSource(getAppId())
               // 修改dataSource成功
               useNotify({
                 title: '数据源修改成功',
@@ -200,7 +201,7 @@ export default {
           } else {
             requestAddDataSource({
               name: state.dataSource.name,
-              app: appInfoState.selectedId,
+              app: getAppId(),
               data: {
                 columns,
                 data: [],
@@ -209,7 +210,7 @@ export default {
               }
             })
               .then(() => {
-                requestGenerateDataSource(appInfoState.selectedId)
+                requestGenerateDataSource(getAppId())
                 useNotify({
                   title: '数据源新增成功',
                   type: 'success'

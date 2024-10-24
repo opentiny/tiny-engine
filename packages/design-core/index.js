@@ -33,10 +33,14 @@ export { default as Styles } from '@opentiny/tiny-engine-setting-styles'
 export { default as Layout, LayoutService } from '@opentiny/tiny-engine-layout'
 export { default as Canvas } from '@opentiny/tiny-engine-canvas'
 export { initPreview } from './src/preview/src/main'
-export { PluginPanel, PluginSetting, ToolbarBase } from '@opentiny/tiny-engine-common'
+export {
+  GenerateCodeService,
+  PluginPanel,
+  PluginSetting,
+  ToolbarBase,
+  GlobalService
+} from '@opentiny/tiny-engine-common'
 
 export { default as defaultRegistry } from './registry'
 
 export * from '@opentiny/tiny-engine-meta-register'
-
-export { EditorInfoService, AppService, GenerateCodeService } from '@opentiny/tiny-engine-common'

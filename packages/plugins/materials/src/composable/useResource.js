@@ -15,16 +15,16 @@ import { useHttp } from '@opentiny/tiny-engine-http'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { getCanvasStatus } from '@opentiny/tiny-engine-common/js/canvas'
 import {
-  useApp,
   useCanvas,
   useTranslate,
-  useEditorInfo,
   useBreadcrumb,
   useLayout,
   useBlock,
   useMaterial,
   getMetaApi,
-  META_APP
+  META_APP,
+  useMessage,
+  META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
 
 const { COMPONENT_NAME, DEFAULT_INTERCEPTOR } = constants
@@ -83,7 +83,7 @@ const initBlock = async (blockId) => {
 }
 
 const initPageOrBlock = async () => {
-  const { pageId, blockId } = useEditorInfo().useInfo()
+  const { pageId, blockId } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
   const { setBreadcrumbPage } = useBreadcrumb()
 
   if (pageId) {
@@ -114,7 +114,7 @@ const initPageOrBlock = async () => {
 }
 
 const handlePopStateEvent = async () => {
-  const { id, type } = useEditorInfo().useInfo()
+  const { id, type } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
 
   await initPageOrBlock()
 
@@ -123,8 +123,8 @@ const handlePopStateEvent = async () => {
 }
 
 const fetchResource = async ({ isInit = true } = {}) => {
-  const { id, type } = useEditorInfo().useInfo()
-  useApp().appInfoState.selectedId = id
+  const { id, type } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
+  useMessage().publish({ topic: 'app_id_changed', data: id })
   const appData = await useHttp().get(`/app-center/v1/api/apps/schema/${id}`)
   resState.pageTree = appData.componentsTree
   resState.dataSource = appData.dataSource?.list

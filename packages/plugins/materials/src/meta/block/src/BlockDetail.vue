@@ -39,7 +39,7 @@
 import { Button } from '@opentiny/vue'
 import { IconDel, iconDoubleRight } from '@opentiny/vue-icon'
 import { inject } from 'vue'
-import { useApp, useBlock, useModal } from '@opentiny/tiny-engine-meta-register'
+import { useBlock, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { requestUpdateGroup, fetchGroupBlocksById } from './http'
 import { setHistoryPanelVisible } from './js/usePanel'
 
@@ -63,7 +63,6 @@ export default {
     const { isRefresh, isDefaultGroupId, selectedBlock, selectedGroup } = useBlock()
     const { confirm, message } = useModal()
     const panelState = inject('panelState', {})
-    const appId = useApp().appInfoState.selectedId
 
     const closeDetail = () => {
       emit('close')
@@ -83,6 +82,7 @@ export default {
               .filter((item) => item.id !== blockId)
               .map((item) => ({ id: item.id, version: item.current_version }))
 
+            const appId = getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id
             requestUpdateGroup({ id: groupId, blocks, app: appId }).then(() => {
               isRefresh.value = true
               emit('close')

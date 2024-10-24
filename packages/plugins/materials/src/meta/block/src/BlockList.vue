@@ -18,7 +18,14 @@
 
 <script lang="jsx">
 import { computed, inject, reactive, ref } from 'vue'
-import { useBlock, useMaterial, useModal, useApp, useCanvas } from '@opentiny/tiny-engine-meta-register'
+import {
+  useBlock,
+  useMaterial,
+  useModal,
+  useCanvas,
+  getMetaApi,
+  META_SERVICE
+} from '@opentiny/tiny-engine-meta-register'
 import { PluginBlockList } from '@opentiny/tiny-engine-common'
 import { requestUpdateGroup, fetchGroupBlocksById } from './http'
 import { setBlockPanelVisible, setBlockVersionPanelVisible } from './js/usePanel'
@@ -57,7 +64,7 @@ export default {
     const panelState = inject('panelState', {})
     const displayType = inject('displayType')
     const { message, confirm } = useModal()
-    const appId = useApp().appInfoState.selectedId
+    const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id
 
     const openVersionPanel = async ({ item }) => {
       selectedBlock.value = item
@@ -161,7 +168,7 @@ export default {
               ?.filter((item) => item.id !== blockId)
               .map((block) => ({ id: block.id, version: block.current_version }))
 
-            requestUpdateGroup({ id: groupId, blocks, app: appId }).then(() => {
+            requestUpdateGroup({ id: groupId, blocks, app: getAppId() }).then(() => {
               isRefresh.value = true
             })
           })

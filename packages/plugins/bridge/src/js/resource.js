@@ -11,7 +11,7 @@
  */
 
 import { reactive } from 'vue'
-import { useApp, useResource, useNotify, useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { useResource, useNotify, useCanvas, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import {
   fetchResourceList,
@@ -116,8 +116,10 @@ export const ACTION_TYPE = {
   Edit: 'edit'
 }
 
+const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id
+
 export const getResources = () => {
-  const id = useApp().appInfoState.selectedId
+  const id = getAppId()
   state.resources.length ||
     fetchResourceList(id).then((data) => {
       state.resources = data || TempBridge
@@ -131,7 +133,7 @@ export const setResourceNamesByType = (type, names) => {
 }
 
 export const getResourcesByType = (type) => {
-  const id = useApp().appInfoState.selectedId
+  const id = getAppId()
   return fetchResourceList(id, type)
 }
 
@@ -185,7 +187,7 @@ export const saveResource = (data, callback, emit) => {
 
         // 更新画布工具函数环境，保证渲染最新工具类返回值, 并触发画布的强制刷新
         updateUtils([result])
-        generateBridgeUtil(useApp().appInfoState.selectedId)
+        generateBridgeUtil(getAppId())
 
         useNotify({
           type: 'success',
@@ -204,7 +206,7 @@ export const saveResource = (data, callback, emit) => {
 
         // 更新画布工具函数环境，保证渲染最新工具类返回值, 并触发画布的强制刷新
         updateUtils([result])
-        generateBridgeUtil(useApp().appInfoState.selectedId)
+        generateBridgeUtil(getAppId())
         useNotify({
           type: 'success',
           message: '创建成功'
@@ -218,7 +220,7 @@ export const saveResource = (data, callback, emit) => {
 }
 
 export const deleteData = (name, callback, emit) => {
-  const params = `app=${useApp().appInfoState.selectedId}&id=${state.resource?.id}`
+  const params = `app=${getAppId()}&id=${state.resource?.id}`
   const { deleteUtils } = useCanvas().canvasApi.value
 
   requestDeleteReSource(params).then((data) => {
@@ -227,7 +229,7 @@ export const deleteData = (name, callback, emit) => {
       useResource().resState[state.type].splice(index, 1)
 
       deleteUtils([data])
-      generateBridgeUtil(useApp().appInfoState.selectedId)
+      generateBridgeUtil(getAppId())
       useNotify({
         type: 'success',
         message: '删除成功'

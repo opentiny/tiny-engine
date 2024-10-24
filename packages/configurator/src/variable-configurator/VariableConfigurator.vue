@@ -120,12 +120,12 @@
 <script>
 import { VueMonaco as MonacoEditor, SvgButton } from '@opentiny/tiny-engine-common'
 import {
-  useApp,
   useCanvas,
   useProperties,
   useResource,
   getMetaApi,
-  META_APP
+  META_APP,
+  META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
 import { getCommentByKey } from '@opentiny/tiny-engine-common/js/comment'
 import { formatString, generate, parse, traverse } from '@opentiny/tiny-engine-common/js/ast'
@@ -487,9 +487,9 @@ export default {
         state.variables = bindProperties
       } else if (item.id === 'datasource') {
         state.bindPrefix = CONSTANTS.DATASOUCEPREFIX
-        const { appInfoState } = useApp()
         const url = new URLSearchParams(location.search)
-        const selectedId = appInfoState.selectedId || url.get('id')
+        const appId = getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id
+        const selectedId = appId || url.get('id')
 
         // 实时请求数据源列表数据，保证数据源获取最新的数据源数据
         http.get(`/app-center/api/sources/list/${selectedId}`).then((data) => {

@@ -34,7 +34,7 @@
 
 <script lang="jsx">
 import { reactive, ref, watchEffect, provide } from 'vue'
-import { useCanvas, useApp, usePage, useHelp } from '@opentiny/tiny-engine-meta-register'
+import { useCanvas, usePage, useHelp } from '@opentiny/tiny-engine-meta-register'
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import PageSetting, { openPageSettingPanel, closePageSettingPanel } from './PageSetting.vue'
@@ -68,7 +68,6 @@ export default {
     }
   },
   setup() {
-    const { appInfoState } = useApp()
     const { pageState } = useCanvas()
     const { pageSettingState, DEFAULT_PAGE, isTemporaryPage, initCurrentPageData } = usePage()
 
@@ -143,7 +142,6 @@ export default {
 
     return {
       state,
-      appInfoState,
       pageState,
       openNewPage,
       pageTreeRef,

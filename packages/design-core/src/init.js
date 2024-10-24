@@ -22,9 +22,10 @@ import {
   defineEntry,
   mergeRegistry,
   getMergeMeta,
+  initServices,
   initHook,
   HOOK_NAME,
-  useEditorInfo
+  useMessage
 } from '@opentiny/tiny-engine-meta-register'
 import App from './App.vue'
 import defaultRegistry from '../registry.js'
@@ -41,6 +42,9 @@ const defaultLifeCycles = {
 
     // 在common层注入合并后的注册表
     defineEntry(newRegistry)
+
+    // 初始化所有服务
+    initServices()
 
     initHook(HOOK_NAME.useEnv, import.meta.env)
     initHook(HOOK_NAME.useNotify, Notify, { useDefaultExport: true })
@@ -73,18 +77,48 @@ const defaultLifeCycles = {
   }
 }
 
-export const init = ({ selector = '#app', registry = defaultRegistry, lifeCycles = {}, configurators = {} } = {}) => {
+const subscribeSignalFinish = (createAppSignal) => {
+  return new Promise((resolve) => {
+    let finishCount = new Set()
+    const len = createAppSignal.length
+
+    createAppSignal.forEach((name) => {
+      useMessage().subscribe({
+        topic: name,
+        callback: () => {
+          finishCount.add(name)
+
+          if (finishCount.size === len) {
+            resolve()
+          }
+        }
+      })
+    })
+  })
+}
+
+export const init = async ({
+  selector = '#app',
+  registry = defaultRegistry,
+  lifeCycles = {},
+  configurators = {},
+  createAppSignal = []
+} = {}) => {
   const { beforeAppCreate, appCreated, appMounted } = lifeCycles
 
   registerConfigurators(configurators)
 
   defaultLifeCycles.beforeAppCreate({ registry })
   beforeAppCreate?.({ registry })
+
+  if (createAppSignal.length) {
+    await subscribeSignalFinish(createAppSignal)
+  }
+
   const app = createApp(App)
   defaultLifeCycles.appCreated({ app })
   appCreated?.({ app })
 
   app.mount(selector)
   appMounted?.({ app })
-  useEditorInfo().getUserInfo()
 }

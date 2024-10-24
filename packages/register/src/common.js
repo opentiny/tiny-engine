@@ -46,7 +46,7 @@ export const templateHashMap = {}
  */
 export const layoutHashMap = {}
 
-export const metasHashMap = {}
+export const metaHashMap = {}
 
 export const apisMap = {}
 export const optionsMap = {}
@@ -166,7 +166,7 @@ export const generateRegistry = (registry) => {
       // 如果匹配到了id，说明是元服务配置，对元服务配置做读取和写入
       if (id && key !== 'metaData') {
         handleRegistryProp(id, value)
-        metasHashMap[id] = value
+        metaHashMap[id] = value
       } else {
         // TODO: 其他类型配置处理
       }
@@ -177,5 +177,5 @@ export const generateRegistry = (registry) => {
 }
 
 export const getMergeMeta = (id) => {
-  return metasHashMap[id]
+  return metaHashMap[id]
 }

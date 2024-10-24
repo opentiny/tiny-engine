@@ -17,4 +17,8 @@ import { configurators } from './configurators/'
 import 'virtual:svg-icons-register'
 import '@opentiny/tiny-engine-theme'
 
-init({ registry, configurators })
+init({
+  registry,
+  configurators,
+  createAppSignal: ['global_service_init_finish']
+})
