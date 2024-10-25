@@ -53,6 +53,7 @@
         :updateKey="updateKey"
         :createData="state.createData"
         @nameInput="updateName"
+        @close="cancel"
       />
       <create-store
         v-if="activeName === STATE.GLOBAL_STATE"
@@ -62,6 +63,7 @@
         :updateKey="updateKey"
         :storeData="state.createData"
         @nameInput="validName"
+        @close="cancel"
       />
     </div>
   </div>

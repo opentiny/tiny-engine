@@ -19,7 +19,7 @@
       <tiny-radio-group v-model="state.variableType" :options="VAR_TYPES"></tiny-radio-group>
     </tiny-form-item>
     <tiny-collapse v-model="state.activeName">
-      <tiny-collapse-item title="初始值" name="initValue">
+      <tiny-collapse-item :title="INIT" name="initValue">
         <tiny-form-item>
           <monaco-editor
             ref="variableEditor"
@@ -29,69 +29,32 @@
             :options="state.editorOptions"
             @editorDidMount="editorDidMount"
           >
-            <template #toolbarStart>
-              <div class="label-left-wrap">
-                <tiny-popover
-                  placement="bottom-start"
-                  effect="dark"
-                  trigger="hover"
-                  popper-class="state-data-example-tips"
-                >
-                  <div class="tips-content">
-                    <div class="create-content-head">
-                      <div class="create-content-tip">数据写法和JS写法一致</div>
-                    </div>
-                    <div class="create-content-demo">
-                      <ul>
-                        <li>字符串: "string"</li>
-                        <li>数字: 123</li>
-                        <li>布尔值: true/false</li>
-                        <li>对象: {"name": "xxx"}</li>
-                        <li>数组: ["1", "2"]</li>
-                        <li>空值: null</li>
-                        <li>JS表达式: (需要先选择JS表达式类型)</li>
-                        <li class="ml20">示例1： t('i18nkey1')</li>
-                        <li class="ml20">示例2： function fnName() {}</li>
-                        <li class="ml20">示例3： { getValue: () => {} }</li>
-                      </ul>
-                      <div class="create-content-foot">
-                        <div class="create-content-tip">
-                          注意：使用JS表达式定义state变量的时候无法调用state其他变量定义，<br />另由于JS函数定义在变量之后，也无法调用JS面板定义的函数
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </tiny-popover>
-              </div>
-            </template>
             <template #buttons>
               <editor-i18n-tool ref="i18nToolRef" @confirm="insertContent"></editor-i18n-tool>
             </template>
+            <template #fullscreenHead>
+              <state-fullscreen-head :title="INIT" @close="cancel"></state-fullscreen-head>
+            </template>
+            <template #fullscreenFooter>
+              <div class="fullscreen-footer-content">
+                <state-tips></state-tips>
+              </div>
+            </template>
           </monaco-editor>
-          <div class="tips">
-            <div>字符串:"string"</div>
-            <div>数字:123</div>
-            <div>布尔值:true/false</div>
-            <div>对象:{"name":"xxx"}</div>
-            <div>数组:["1","2"]</div>
-            <div>空值:null</div>
-            <div>"color":red</div>
-            <div>"background":"blue"</div>
-          </div>
+          <state-tips></state-tips>
         </tiny-form-item>
       </tiny-collapse-item>
-      <tiny-collapse-item title="getter" name="getter">
+      <tiny-collapse-item :title="GETTER" :name="GETTER">
         <tiny-form-item>
           <monaco-editor ref="getterEditor" class="variable-editor" :options="options" :value="state.getterEditorValue">
-            <template #toolbarStart>
-              <div class="label-left-wrap">
-                <tiny-popover placement="bottom-start" trigger="hover" popper-class="state-data-example-tips">
-                  <div class="tips-content">
-                    <div class="create-content-demo">
-                      <pre><code>{{ getterExample }}</code></pre>
-                    </div>
-                  </div>
-                </tiny-popover>
+            <template #fullscreenHead>
+              <state-fullscreen-head :title="GETTER" @close="cancel"></state-fullscreen-head>
+            </template>
+            <template #fullscreenFooter>
+              <div class="fullscreen-footer-content">
+                <div class="tips">
+                  <pre><code>{{ getterExample }}</code></pre>
+                </div>
               </div>
             </template>
           </monaco-editor>
@@ -100,18 +63,17 @@
           </div>
         </tiny-form-item>
       </tiny-collapse-item>
-      <tiny-collapse-item title="setter" name="setter">
+      <tiny-collapse-item :title="SETTER" :name="SETTER">
         <tiny-form-item>
           <monaco-editor ref="setterEditor" class="variable-editor" :options="options" :value="state.setterEditorValue">
-            <template #toolbarStart>
-              <div class="label-left-wrap">
-                <tiny-popover placement="bottom-start" trigger="hover" popper-class="state-data-example-tips">
-                  <div class="tips-content">
-                    <div class="create-content-demo">
-                      <pre><code>{{ setterExample }}</code></pre>
-                    </div>
-                  </div>
-                </tiny-popover>
+            <template #fullscreenHead>
+              <state-fullscreen-head :title="SETTER" @close="cancel"></state-fullscreen-head>
+            </template>
+            <template #fullscreenFooter>
+              <div class="fullscreen-footer-content">
+                <div class="tips">
+                  <pre><code>{{ setterExample }}</code></pre>
+                </div>
               </div>
             </template>
           </monaco-editor>
@@ -127,7 +89,6 @@
 <script>
 import { reactive, ref, computed, watch, onBeforeUnmount } from 'vue'
 import {
-  Popover,
   Form,
   FormItem,
   Input,
@@ -141,14 +102,17 @@ import { initCompletion } from '@opentiny/tiny-engine-common/js/completion'
 import * as Monaco from 'monaco-editor'
 import { validateMonacoEditorData } from './js/common'
 import EditorI18nTool from './EditorI18nTool.vue'
+import StateTips from './StateTips.vue'
+import StateFullscreenHead from './StateFullscreenHead.vue'
 
 export default {
   components: {
     MonacoEditor,
+    StateTips,
+    StateFullscreenHead,
     TinyForm: Form,
     TinyFormItem: FormItem,
     TinyInput: Input,
-    TinyPopover: Popover,
     TinyRadioGroup: RadioGroup,
     EditorI18nTool,
     TinyCollapse,
@@ -168,8 +132,11 @@ export default {
       type: String
     }
   },
-  emits: ['nameInput'],
-  setup(props) {
+  emits: ['nameInput', 'close'],
+  setup(props, { emit }) {
+    const INIT = '初始值'
+    const GETTER = 'getter'
+    const SETTER = 'setter'
     const variableEditor = ref(null)
     const getterEditor = ref(null)
     const setterEditor = ref(null)
@@ -390,6 +357,10 @@ export default {
       monacoEditor.focus()
     }
 
+    const cancel = () => {
+      emit('close')
+    }
+
     const options = {
       lineNumbers: true,
       language: 'javascript',
@@ -403,6 +374,9 @@ export default {
       "function setter() {\r\n  // const [firstName, lastName] = this.state.name.split(' ')\r\n  // this.emit('update:firstName', firstName)\r\n  // this.emit('update:lastName', lastName)\r\n}" // eslint-disable-line
 
     return {
+      INIT,
+      GETTER,
+      SETTER,
       state,
       VAR_TYPES,
       variableEditor,
@@ -419,7 +393,8 @@ export default {
       editorDidMount,
       validate,
       getFormData,
-      insertContent
+      insertContent,
+      cancel
     }
   }
 }
