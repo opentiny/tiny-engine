@@ -80,10 +80,14 @@ const defaultLifeCycles = {
   }
 }
 
-const subscribeSignalFinish = (createAppSignal) => {
-  return new Promise((resolve) => {
+const subscribeSignalFinish = (createAppSignal, timeout = 30000) => {
+  return new Promise((resolve, reject) => {
     let finishCount = new Set()
-    const len = createAppSignal.length
+    const len = new Set(createAppSignal.length).size
+
+    const initTimeout = setTimeout(() => {
+      reject(new Error(`Signal initialization timeout after ${Math.floor(timeout / 1000)}s.`))
+    }, timeout)
 
     createAppSignal.forEach((name) => {
       const subscriber = `createAppSignal_${name}_${guid}`
@@ -94,12 +98,14 @@ const subscribeSignalFinish = (createAppSignal) => {
         callback: () => {
           finishCount.add(name)
 
+          // 取消订阅
           useMessage().unsubscribe({
             topic: name,
             subscriber
           })
 
           if (finishCount.size === len) {
+            clearTimeout(initTimeout)
             resolve()
           }
         }
@@ -113,7 +119,8 @@ export const init = async ({
   registry = defaultRegistry,
   lifeCycles = {},
   configurators = {},
-  createAppSignal = []
+  createAppSignal = [],
+  initTimeout = 30000
 } = {}) => {
   const { beforeAppCreate, appCreated, appMounted } = lifeCycles
 
@@ -123,7 +130,7 @@ export const init = async ({
   beforeAppCreate?.({ registry })
 
   if (Array.isArray(createAppSignal) && createAppSignal.length) {
-    await subscribeSignalFinish(createAppSignal)
+    await subscribeSignalFinish(createAppSignal, initTimeout)
   }
 
   const app = createApp(App)

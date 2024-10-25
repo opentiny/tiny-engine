@@ -47,6 +47,14 @@ const servicesMap = new WeakMap()
 export const defineService = (serviceOptions) => {
   const { id, type, initialState, options, init, apis } = serviceOptions
 
+  if (!id || !type) {
+    throw new Error('Service id and type are required')
+  }
+
+  if (type !== 'MetaService') {
+    throw new Error('Invalid service type. Expected: MetaService')
+  }
+
   /**
    * @type {Service<T, K>}
    */

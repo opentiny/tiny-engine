@@ -81,6 +81,13 @@ export default defineService({
     subscribe({
       topic: 'app_id_changed',
       callback: (appId) => {
+        if (!appId) {
+          // eslint-disable-next-line no-console
+          console.error('Invalid appId received in app_id_changed event')
+
+          return
+        }
+
         fetchAppInfo(appId).then((app) => {
           state.appInfo = app
           // 监听应用 ID 变化，根据应用名称设置网页 title
@@ -92,6 +99,12 @@ export default defineService({
     subscribe({
       topic: 'platform_id_changed',
       callback: (platformId) => {
+        if (!platformId) {
+          // eslint-disable-next-line no-console
+          console.error('Received platform_id_changed event with no platformId')
+
+          return
+        }
         fetchAppList(platformId).then((list) => {
           state.appList = list
         })
