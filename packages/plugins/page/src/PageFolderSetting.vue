@@ -208,9 +208,25 @@ export default {
 <style lang="less" scoped>
 .pageFolder-plugin-setting {
   :deep(.plugin-setting-header) {
+    border: 0;
     .close-plugin-setting-icon {
       margin-left: 8px;
     }
+    .button-group {
+      column-gap: 2px;
+      .tiny-button {
+        width: 40px;
+        padding: 0;
+        min-width: 40px;
+      }
+    }
+  }
+  :deep(.plugin-setting-content) {
+    padding: 0 0 16px 0;
+  }
+
+  :deep(.tiny-collapse) {
+    border-bottom: 0;
   }
 }
 </style>

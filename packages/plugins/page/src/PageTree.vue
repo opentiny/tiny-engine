@@ -387,6 +387,9 @@ export default {
       & > .svg-icon {
         margin-right: 4px;
       }
+      .svg-icon {
+        color: var(--te-common-icon-secondary);
+      }
       & .label {
         font-size: 12px;
         flex: 1;

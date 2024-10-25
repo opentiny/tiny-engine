@@ -425,6 +425,10 @@ export default {
   :deep(.plugin-setting-content) {
     padding: 0 0 16px 0;
   }
+
+  :deep(.tiny-collapse) {
+    border-bottom: 0;
+  }
 }
 
 .life-cycles-container {
