@@ -265,14 +265,6 @@ export default {
   height: 16px;
   line-height: 16px;
 }
-.popover-list {
-  ul li:first-child {
-    margin-top: 8px;
-  }
-  ul li:last-child {
-    margin-bottom: 8px;
-  }
-}
 .life-cycle-alert {
   color: var(--ti-lowcode-life-cycle-alert-color);
   margin-left: 20px;
@@ -280,8 +272,11 @@ export default {
 }
 
 .popover-list {
+  margin: 8px 0;
   li {
-    padding: 8px 30px 8px 16px;
+    padding: 0 12px;
+    margin: 0 -8px;
+    line-height: 24px;
     cursor: pointer;
     &:hover {
       background: var(--ti-lowcode-life-cycle-item-hover-bg);
