@@ -88,6 +88,7 @@ export default {
 
           subscribe({
             topic: 'app_info_changed',
+            subscriber: 'from_preview',
             callback: (app) => {
               const extendConfig = app?.extend_config || {}
 
@@ -97,12 +98,12 @@ export default {
                 }?appId=${appId}&region=cn-north-7&previewType=app&env=alpha&tenant=${paramsMap.get('tenant')}`
               }
 
+              // 要在 url 改变之前取消监听
+              unsubscribe({ topic: 'app_info_changed', subscriber: 'from_preview' })
+
               // TODO finally 怎么实现
               window.location = openUrl
-
-              unsubscribe({ topic: 'app_info_changed', subscriber: 'from_preview' })
-            },
-            subscriber: 'from_preview'
+            }
           })
 
           publish({ topic: 'app_id_changed', data: appId })

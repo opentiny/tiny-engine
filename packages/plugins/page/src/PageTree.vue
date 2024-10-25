@@ -34,7 +34,7 @@
 </template>
 
 <script lang="jsx">
-import { reactive, ref, nextTick } from 'vue'
+import { reactive, ref, nextTick, onUnmounted } from 'vue'
 import { Search, Tree, Collapse, CollapseItem } from '@opentiny/vue'
 import { IconFolderOpened, IconFolderClosed, IconSearch } from '@opentiny/vue-icon'
 import {
@@ -301,6 +301,7 @@ export default {
 
     useMessage().subscribe({
       topic: 'app_id_changed',
+      subscriber: 'page_tree_app_id_changed',
       callback: (appId) => {
         refreshPageList(appId)
       }
@@ -325,6 +326,13 @@ export default {
     }
 
     const nullIcon = <span></span>
+
+    onUnmounted(() => {
+      useMessage().unsubscribe({
+        topic: 'app_id_changed',
+        subscriber: 'page_tree_app_id_changed'
+      })
+    })
 
     return {
       createPublicPage,

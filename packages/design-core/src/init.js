@@ -27,9 +27,12 @@ import {
   HOOK_NAME,
   useMessage
 } from '@opentiny/tiny-engine-meta-register'
+import { utils } from '@opentiny/tiny-engine-utils'
 import App from './App.vue'
 import defaultRegistry from '../registry.js'
 import { registerConfigurators } from './registerConfigurators'
+
+const { guid } = utils
 
 const defaultLifeCycles = {
   beforeAppCreate: ({ registry }) => {
@@ -83,10 +86,18 @@ const subscribeSignalFinish = (createAppSignal) => {
     const len = createAppSignal.length
 
     createAppSignal.forEach((name) => {
+      const subscriber = `createAppSignal_${name}_${guid}`
+
       useMessage().subscribe({
         topic: name,
+        subscriber,
         callback: () => {
           finishCount.add(name)
+
+          useMessage().unsubscribe({
+            topic: name,
+            subscriber
+          })
 
           if (finishCount.size === len) {
             resolve()
@@ -111,7 +122,7 @@ export const init = async ({
   defaultLifeCycles.beforeAppCreate({ registry })
   beforeAppCreate?.({ registry })
 
-  if (createAppSignal.length) {
+  if (Array.isArray(createAppSignal) && createAppSignal.length) {
     await subscribeSignalFinish(createAppSignal)
   }
 

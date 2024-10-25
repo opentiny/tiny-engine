@@ -245,8 +245,10 @@ export default {
         if (!valid) {
           return
         }
-        requestUpdateGroup({ id: state.currentEditId, name: state.groupNameModel.value, app: getAppId() })
-          .then(() => fetchGroups(getAppId()))
+
+        const appId = getAppId()
+        requestUpdateGroup({ id: state.currentEditId, name: state.groupNameModel.value, app: appId })
+          .then(() => fetchGroups(appId))
           .catch((error) => {
             message({ message: `更新区块分组失败: ${error.message || error}`, status: 'error' })
           })
@@ -299,10 +301,12 @@ export default {
           return
         }
 
-        requestCreateGroup({ name: state.createGroupForm.groupName, app: getAppId() })
+        const appId = getAppId()
+
+        requestCreateGroup({ name: state.createGroupForm.groupName, app: appId })
           .then((data) => {
             state.showCreateGroupForm = false
-            fetchGroups(getAppId()).then((groups) => {
+            fetchGroups(appId).then((groups) => {
               state.groups = addDefaultGroup(groups)
             })
             groupChange(data)
