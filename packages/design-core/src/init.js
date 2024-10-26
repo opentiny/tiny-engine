@@ -83,24 +83,35 @@ const defaultLifeCycles = {
 const subscribeSignalFinish = (createAppSignal, timeout = 30000) => {
   return new Promise((resolve, reject) => {
     let finishCount = new Set()
-    const len = new Set(createAppSignal.length).size
+    const len = new Set(createAppSignal).size
+
+    const signalTopicAndSubscriber = createAppSignal.map((name) => ({
+      topic: name,
+      subscriber: `createAppSignal_${name}_${guid}`
+    }))
 
     const initTimeout = setTimeout(() => {
+      // 取消订阅
+      signalTopicAndSubscriber.forEach(({ topic, subscriber }) => {
+        useMessage().unsubscribe({
+          topic,
+          subscriber
+        })
+      })
+
       reject(new Error(`Signal initialization timeout after ${Math.floor(timeout / 1000)}s.`))
     }, timeout)
 
-    createAppSignal.forEach((name) => {
-      const subscriber = `createAppSignal_${name}_${guid}`
-
+    signalTopicAndSubscriber.forEach(({ topic, subscriber }) => {
       useMessage().subscribe({
-        topic: name,
+        topic,
         subscriber,
         callback: () => {
-          finishCount.add(name)
+          finishCount.add(topic)
 
           // 取消订阅
           useMessage().unsubscribe({
-            topic: name,
+            topic,
             subscriber
           })
 
