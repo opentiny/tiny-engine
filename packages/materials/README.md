@@ -9,6 +9,7 @@ npm run serve
 ```
 
 解释：
+
 1. 会持续监听 src 目录下文件变动，持续构建出来物料产物
 2. 会启动静态服务器。
 
@@ -30,7 +31,7 @@ npm run build:split
 
 ## 添加自己的物料
 
-请先大致了解 TinyEngine 物料协议：https://opentiny.design/tiny-engine#/protocol
+请先大致了解 TinyEngine 物料协议：[TinyEngine物料协议](https://opentiny.design/tiny-engine#/protocol)
 
 src 目录功能约定结构：
 

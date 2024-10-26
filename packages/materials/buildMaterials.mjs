@@ -44,7 +44,6 @@ const validateComponent = (file, component) => {
 const generateComponents = async (entry) => {
   const files = await fg('*.json', { cwd: entry })
   if (!files.length) {
-    // logger.warn('物料文件夹为空，请先执行`pnpm splitMaterials`命令拆分物料资产包')
     return
   }
 
