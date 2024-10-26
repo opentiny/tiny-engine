@@ -141,6 +141,9 @@ export const init = async ({
   beforeAppCreate?.({ registry })
 
   if (Array.isArray(createAppSignal) && createAppSignal.length) {
+    if (typeof initTimeout !== 'number' || initTimeout <= 0) {
+      throw new Error('initTimeout must be a positive number')
+    }
     await subscribeSignalFinish(createAppSignal, initTimeout)
   }
 
