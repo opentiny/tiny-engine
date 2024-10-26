@@ -41,13 +41,14 @@ const getTemplate = (schema, str) => {
 const base64ToBlob = (base64Data) => {
   // Split base64
   const arr = base64Data.split(',')
+
   // Get MIME type
   const mimeMatch = arr[0].match(/:(.*?);/)
+
   if (!mimeMatch) {
-    // throw new Error('Invalid base64 data')
-    // FIXME: vitest 得到的并不是 base64data，所以这里要做容错，而不是直接抛出错误
-    return ''
+    throw new Error('Invalid base64 data')
   }
+
   const mime = mimeMatch[1]
   // Decode base64 string
   let raw
@@ -159,15 +160,21 @@ export function generateTemplate(schema) {
     }
   ]
 
-  const faviconData = base64ToBlob(logoImage)
+  // FIXME: vitest 测试的时候得到的并不是 base64data，所以这里需要跳过文件的出码
+  if (process.env?.NODE_ENV !== 'test') {
+    try {
+      const faviconData = base64ToBlob(logoImage)
 
-  if (faviconData) {
-    res.push({
-      fileType: 'image/x-icon',
-      fileName: 'favicon.ico',
-      path: './public',
-      fileContent: faviconData
-    })
+      res.push({
+        fileType: 'image/x-icon',
+        fileName: 'favicon.ico',
+        path: './public',
+        fileContent: faviconData
+      })
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('generate favicon.ico error', error)
+    }
   }
 
   return res
