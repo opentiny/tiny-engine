@@ -22,13 +22,17 @@ import {
   defineEntry,
   mergeRegistry,
   getMergeMeta,
+  initServices,
   initHook,
   HOOK_NAME,
-  useEditorInfo
+  useMessage
 } from '@opentiny/tiny-engine-meta-register'
+import { utils } from '@opentiny/tiny-engine-utils'
 import App from './App.vue'
 import defaultRegistry from '../registry.js'
 import { registerConfigurators } from './registerConfigurators'
+
+const { guid } = utils
 
 const defaultLifeCycles = {
   beforeAppCreate: ({ registry }) => {
@@ -41,6 +45,9 @@ const defaultLifeCycles = {
 
     // 在common层注入合并后的注册表
     defineEntry(newRegistry)
+
+    // 初始化所有服务
+    initServices()
 
     initHook(HOOK_NAME.useEnv, import.meta.env)
     initHook(HOOK_NAME.useNotify, Notify, { useDefaultExport: true })
@@ -73,18 +80,77 @@ const defaultLifeCycles = {
   }
 }
 
-export const init = ({ selector = '#app', registry = defaultRegistry, lifeCycles = {}, configurators = {} } = {}) => {
+const subscribeSignalFinish = (createAppSignal, timeout = 30000) => {
+  return new Promise((resolve, reject) => {
+    let finishCount = new Set()
+    const len = new Set(createAppSignal).size
+
+    const signalTopicAndSubscriber = createAppSignal.map((name) => ({
+      topic: name,
+      subscriber: `createAppSignal_${name}_${guid}`
+    }))
+
+    const initTimeout = setTimeout(() => {
+      // 取消订阅
+      signalTopicAndSubscriber.forEach(({ topic, subscriber }) => {
+        useMessage().unsubscribe({
+          topic,
+          subscriber
+        })
+      })
+
+      reject(new Error(`Signal initialization timeout after ${Math.floor(timeout / 1000)}s.`))
+    }, timeout)
+
+    signalTopicAndSubscriber.forEach(({ topic, subscriber }) => {
+      useMessage().subscribe({
+        topic,
+        subscriber,
+        callback: () => {
+          finishCount.add(topic)
+
+          // 取消订阅
+          useMessage().unsubscribe({
+            topic,
+            subscriber
+          })
+
+          if (finishCount.size === len) {
+            clearTimeout(initTimeout)
+            resolve()
+          }
+        }
+      })
+    })
+  })
+}
+
+export const init = async ({
+  selector = '#app',
+  registry = defaultRegistry,
+  lifeCycles = {},
+  configurators = {},
+  createAppSignal = [],
+  initTimeout = 30000
+} = {}) => {
   const { beforeAppCreate, appCreated, appMounted } = lifeCycles
 
   registerConfigurators(configurators)
 
   defaultLifeCycles.beforeAppCreate({ registry })
   beforeAppCreate?.({ registry })
+
+  if (Array.isArray(createAppSignal) && createAppSignal.length) {
+    if (typeof initTimeout !== 'number' || initTimeout <= 0) {
+      throw new Error('initTimeout must be a positive number')
+    }
+    await subscribeSignalFinish(createAppSignal, initTimeout)
+  }
+
   const app = createApp(App)
   defaultLifeCycles.appCreated({ app })
   appCreated?.({ app })
 
   app.mount(selector)
   appMounted?.({ app })
-  useEditorInfo().getUserInfo()
 }

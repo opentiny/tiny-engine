@@ -8,13 +8,13 @@
     </div>
     <div class="toolbar-right">
       <span><tiny-switch v-model="debugSwitch"></tiny-switch><span class="toolbar-button-text">调试模式</span></span>
-      <component :is="ChangeLang" :langChannel="previewLangChannel"></component>
+      <component :is="ChangeLang" :langChannel="previewLangChannel" :options="langOptions"></component>
     </div>
   </div>
 </template>
 
 <script lang="jsx">
-import { useBreadcrumb, getMergeRegistry } from '@opentiny/tiny-engine-meta-register'
+import { useBreadcrumb, getMergeRegistry, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { Switch as TinySwitch } from '@opentiny/vue'
 import { getSearchParams } from './preview/http'
 import { BROADCAST_CHANNEL } from '../src/preview/srcFiles/constant'
@@ -28,6 +28,7 @@ export default {
     const debugSwitch = injectDebugSwitch()
     const Breadcrumb = getMergeRegistry('toolbars', 'engine.toolbars.breadcrumb')?.entry
     const ChangeLang = getMergeRegistry('toolbars', 'engine.toolbars.lang')?.entry
+    const langOptions = getMergeMeta('engine.toolbars.lang').options
     const ToolbarMedia = null // TODO: Media plugin rely on layout/canvas. Further processing is required.
 
     const { setBreadcrumbPage } = useBreadcrumb()
@@ -49,6 +50,7 @@ export default {
       previewLangChannel: BROADCAST_CHANNEL.PreviewLang,
       Breadcrumb,
       ChangeLang,
+      langOptions,
       ToolbarMedia,
       setViewPort,
       debugSwitch

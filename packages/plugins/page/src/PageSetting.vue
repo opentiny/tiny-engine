@@ -19,7 +19,7 @@
       <div class="page-setting-content">
         <tiny-collapse v-model="state.activeName" class="page-setting-collapse">
           <tiny-collapse-item title="基本设置" :name="PAGE_SETTING_SESSION.general">
-            <page-general ref="pageGeneralRef" :isFolder="isFolder"></page-general>
+            <component :is="pageGeneral" ref="pageGeneralRef" :isFolder="isFolder"></component>
           </tiny-collapse-item>
 
           <tiny-collapse-item
@@ -57,15 +57,24 @@
 import { reactive, ref } from 'vue'
 import { Button, Collapse, CollapseItem, Input } from '@opentiny/vue'
 import { PluginSetting, ButtonGroup, SvgButton, LifeCycles } from '@opentiny/tiny-engine-common'
-import { useLayout, usePage, useCanvas, useModal, useApp, useNotify } from '@opentiny/tiny-engine-meta-register'
+import {
+  useLayout,
+  usePage,
+  useCanvas,
+  useModal,
+  useNotify,
+  getMergeRegistry,
+  getMetaApi,
+  META_SERVICE
+} from '@opentiny/tiny-engine-meta-register'
 import { extend, isEqual } from '@opentiny/vue-renderless/common/object'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import { handlePageUpdate } from '@opentiny/tiny-engine-common/js/http'
 import { generatePage } from '@opentiny/tiny-engine-common/js/vscodeGenerateFile'
-import PageGeneral from './PageGeneral.vue'
 import PageHistory from './PageHistory.vue'
 import PageInputOutput from './PageInputOutput.vue'
+import meta from '../meta'
 import http from './http.js'
 
 const { COMPONENT_NAME } = constants
@@ -90,6 +99,10 @@ const PAGE_SETTING_SESSION = {
   history: 'history'
 }
 
+export const api = {
+  beforeCreatePage: async () => {}
+}
+
 export default {
   components: {
     TinyButton: Button,
@@ -97,7 +110,6 @@ export default {
     TinyCollapseItem: CollapseItem,
     PageInputOutput,
     LifeCycles,
-    PageGeneral,
     PageHistory,
     PluginSetting,
     SvgButton,
@@ -112,7 +124,6 @@ export default {
   emits: ['openNewPage'],
   setup(props, { emit }) {
     const { requestCreatePage, requestDeletePage } = http
-    const { appInfoState } = useApp()
     const {
       DEFAULT_PAGE,
       pageSettingState,
@@ -124,6 +135,8 @@ export default {
     } = usePage()
     const { pageState, initData } = useCanvas()
     const { confirm } = useModal()
+    const registry = getMergeRegistry(meta.type, meta.id)
+    const pageGeneral = registry.components.PageGeneral
     const pageGeneralRef = ref(null)
 
     const state = reactive({
@@ -150,7 +163,7 @@ export default {
       }
     }
 
-    const createPage = () => {
+    const createPage = async () => {
       const { page_content, ...other } = DEFAULT_PAGE
       const { page_content: page_content_state, ...pageSettingStateOther } = pageSettingState.currentPageData
       const createParams = {
@@ -161,7 +174,7 @@ export default {
           ...page_content_state,
           fileName: pageSettingState.currentPageData.name
         },
-        app: appInfoState.selectedId,
+        app: getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id,
         isPage: true
       }
 
@@ -169,6 +182,7 @@ export default {
         delete createParams.id
         delete createParams._id
       }
+      await api.beforeCreatePage(createParams)
 
       requestCreatePage(createParams)
         .then((data) => {
@@ -365,6 +379,7 @@ export default {
       savePageSetting,
       copyPage,
       pageSettingState,
+      pageGeneral,
       pageGeneralRef,
       deletePage,
       cancelPageSetting,
@@ -409,6 +424,10 @@ export default {
 
   :deep(.plugin-setting-content) {
     padding: 0 0 16px 0;
+  }
+
+  :deep(.tiny-collapse) {
+    border-bottom: 0;
   }
 }
 

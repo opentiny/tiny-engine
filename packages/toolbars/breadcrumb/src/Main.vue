@@ -173,9 +173,11 @@ export default {
   }
 
   .publish {
-    margin-left: 8px;
-    height: 28px;
-    line-height: 28px;
+    margin: 0 8px;
+    height: 24px;
+    line-height: 24px;
+    min-width: 40px;
+    font-size: 12px;
   }
 }
 </style>

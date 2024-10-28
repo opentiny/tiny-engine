@@ -83,8 +83,6 @@ export default {
 
 <style lang="less" scoped>
 .create-form {
-  padding: 12px 0;
-
   .error-tip {
     color: var(--ti-lowcode-datasource-error-tip-color);
     margin-top: 4px;

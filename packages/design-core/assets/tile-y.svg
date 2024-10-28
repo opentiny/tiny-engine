@@ -1,1 +1,14 @@
-<svg data-icon="TileY" aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M6 1h4v4H6zm0 5h4v4H6zm0 5h4v4H6z"></path></svg>
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 132 132" style="enable-background:new 0 0 132 132;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;}
+	.st1{fill-rule:evenodd;clip-rule:evenodd;fill:currentColor;}
+</style>
+<rect id="size" class="st0" width="132" height="132"/>
+<path id="Fill" class="st1" d="M49.5,24.8c4.6,0,8.2,3.7,8.2,8.2s-3.7,8.2-8.2,8.2s-8.2-3.7-8.2-8.2S44.9,24.8,49.5,24.8z
+	 M82.5,24.8c4.6,0,8.2,3.7,8.2,8.2s-3.7,8.2-8.2,8.2s-8.2-3.7-8.2-8.2S77.9,24.8,82.5,24.8z M49.5,57.8c4.6,0,8.2,3.7,8.2,8.2
+	s-3.7,8.2-8.2,8.2s-8.2-3.7-8.2-8.2S44.9,57.8,49.5,57.8z M82.5,57.8c4.6,0,8.2,3.7,8.2,8.2s-3.7,8.2-8.2,8.2s-8.2-3.7-8.2-8.2
+	S77.9,57.8,82.5,57.8z M49.5,90.8c4.6,0,8.2,3.7,8.2,8.2s-3.7,8.2-8.2,8.2s-8.2-3.7-8.2-8.2S44.9,90.8,49.5,90.8z M82.5,90.8
+	c4.6,0,8.2,3.7,8.2,8.2s-3.7,8.2-8.2,8.2s-8.2-3.7-8.2-8.2S77.9,90.8,82.5,90.8z"/>
+</svg>

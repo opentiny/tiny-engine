@@ -1,6 +1,13 @@
-<svg version="1.1" id="folder" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 16 16" style="enable-background:new 0 0 16 16;" xml:space="preserve" width="132px" height="132px">
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 132 132" style="enable-background:new 0 0 132 132;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:currentcolor;}
+	.st0{fill:none;}
+	.st1{fill:currentColor;}
 </style>
-<path id="形状结合" class="st0" d="M4.4,7.9C4,7.9,3.7,7.5,3.7,7.1S4,6.3,4.4,6.3h4c0.4,0,0.8,0.3,0.8,0.8&#10;&#9;c0,0.4-0.3,0.8-0.8,0.8H4.4L4.4,7.9z M8.3,2.2H15c0.4,0,0.8,0.3,0.8,0.8v12c0,0.4-0.3,0.8-0.8,0.8H1c-0.4,0-0.8-0.3-0.8-0.8V1&#10;&#9;c0-0.4,0.3-0.8,0.8-0.8h5c0.2,0,0.4,0.1,0.5,0.2L8.3,2.2z M1.8,14.2h12.5V3.7H8c-0.2,0-0.4-0.1-0.5-0.2L5.7,1.8H1.8V14.2z"/>
+<rect id="size" class="st0" width="132" height="132"/>
+<path id="形状结合" class="st1" d="M43.9,18c1.4,0,2.8,0.5,3.8,1.4l18.1,15.3l40.6,0c6.8,0,12.5,5.2,13.1,11.9l0.1,1.2v45.8
+	c0,12.2-9.9,22.1-22.1,22.1h-63c-12.2,0-22.1-9.9-22.1-22.1V30.9l0.1-1.2c0.7-6.6,6.3-11.7,13-11.7H43.9z M111.4,61H20.6l0,32.5
+	c0,7.4,5.7,13.4,13,13.8l0.9,0h63c7.7,0,13.9-6.2,13.9-13.9L111.4,61z M43,26.2H25.5c-2.5,0-4.6,1.9-4.8,4.1l0,0.8l0,21.7h90.8l0-5
+	c0-2.5-1.9-4.5-4.3-4.8l-0.6,0H65c-1.4,0-2.8-0.5-3.8-1.4L43,26.2z"/>
 </svg>

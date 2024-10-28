@@ -241,9 +241,6 @@ export default {
     padding: 0;
   }
   .create-config {
-    :deep(.tiny-collapse-item__wrap) {
-      padding: 0 12px;
-    }
     :deep(.title) {
       display: flex;
       justify-content: space-between;

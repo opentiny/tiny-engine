@@ -10,7 +10,7 @@
  *
  */
 
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { extend, isEqual } from '@opentiny/vue-renderless/common/object'
 
 const DEFAULT_PAGE = {
@@ -38,6 +38,8 @@ const DEFAULT_PAGE = {
   isBody: false,
   group: 'staticPages'
 }
+
+const selectedTemplateCard = ref(null)
 
 const pageSettingState = reactive({
   currentPageDataCopy: {}, // 记录当前页最开始的状态，当用户点击取消按钮的时候恢复到初始状态
@@ -133,6 +135,7 @@ const COMMON_PAGE_GROUP_ID = 1
 export default () => {
   return {
     DEFAULT_PAGE,
+    selectedTemplateCard,
     pageSettingState,
     isTemporaryPage,
     isCurrentDataSame,

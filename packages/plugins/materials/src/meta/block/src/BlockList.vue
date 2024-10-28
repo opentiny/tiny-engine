@@ -1,11 +1,15 @@
 <template>
   <plugin-block-list
+    class="block-list-wrap"
     ref="blockRef"
     :data="blockList"
     :show-add-button="state.showAddButton"
     :block-style="state.displayType"
     :show-block-detail="state.showDetailPanel"
     :show-block-shot="state.showShot"
+    :show-checkbox="showCheckbox"
+    :checked="checked"
+    :grid-columns="gridColumns"
     default-icon-tip="查看区块详情信息"
     @click="blockClick"
     @iconClick="openDetail"
@@ -17,7 +21,14 @@
 
 <script lang="jsx">
 import { computed, inject, reactive, ref } from 'vue'
-import { useBlock, useMaterial, useModal, useApp, useCanvas } from '@opentiny/tiny-engine-meta-register'
+import {
+  useBlock,
+  useMaterial,
+  useModal,
+  useCanvas,
+  getMetaApi,
+  META_SERVICE
+} from '@opentiny/tiny-engine-meta-register'
 import { PluginBlockList } from '@opentiny/tiny-engine-common'
 import { requestUpdateGroup, fetchGroupBlocksById } from './http'
 import { setBlockPanelVisible, setBlockVersionPanelVisible } from './js/usePanel'
@@ -45,6 +56,20 @@ export default {
     showBlockShot: {
       type: Boolean,
       default: true
+    },
+    // 是否显示多选框
+    showCheckbox: {
+      type: Boolean,
+      default: false
+    },
+    // 选中的区块
+    checked: {
+      type: Array,
+      default: () => []
+    },
+    gridColumns: {
+      type: Number,
+      default: 2
     }
   },
   emits: ['check', 'close'],
@@ -56,7 +81,7 @@ export default {
     const panelState = inject('panelState', {})
     const displayType = inject('displayType')
     const { message, confirm } = useModal()
-    const appId = useApp().appInfoState.selectedId
+    const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id
 
     const openVersionPanel = async ({ item }) => {
       selectedBlock.value = item
@@ -160,7 +185,7 @@ export default {
               ?.filter((item) => item.id !== blockId)
               .map((block) => ({ id: block.id, version: block.current_version }))
 
-            requestUpdateGroup({ id: groupId, blocks, app: appId }).then(() => {
+            requestUpdateGroup({ id: groupId, blocks, app: getAppId() }).then(() => {
               isRefresh.value = true
             })
           })

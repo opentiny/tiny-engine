@@ -1,6 +1,13 @@
-<svg version="1.1" id="plus-circle" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 16 16" style="enable-background:new 0 0 16 16;" xml:space="preserve" width="132px" height="132px">
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 132 132" style="enable-background:new 0 0 132 132;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:currentcolor;}
+	.st0{fill:none;}
+	.st1{fill:currentColor;}
 </style>
-<path id="形状结合" class="st0" d="M8,0c4.4,0,8,3.6,8,8c0,4.4-3.6,8-8,8c-4.4,0-8-3.6-8-8C0,3.6,3.6,0,8,0z M1.5,8&#10;&#9;c0,3.6,2.9,6.5,6.5,6.5c3.6,0,6.5-2.9,6.5-6.5c0-3.6-2.9-6.5-6.5-6.5C4.4,1.5,1.5,4.4,1.5,8z M7.3,7.3V5c0-0.4,0.3-0.7,0.7-0.7&#10;&#9;S8.7,4.6,8.7,5v2.3H11c0.4,0,0.7,0.3,0.7,0.7S11.4,8.7,11,8.7H8.7V11c0,0.4-0.3,0.7-0.7,0.7S7.3,11.4,7.3,11V8.7H5&#10;&#9;C4.6,8.7,4.3,8.4,4.3,8S4.6,7.3,5,7.3H7.3z"/>
+<rect id="size" class="st0" width="132" height="132"/>
+<path id="形状结合" class="st1" d="M66,8.2c31.9,0,57.8,25.9,57.8,57.8S97.9,123.8,66,123.8S8.2,97.9,8.2,66S34.1,8.2,66,8.2z
+	 M66,16.5c-27.3,0-49.5,22.2-49.5,49.5s22.2,49.5,49.5,49.5s49.5-22.2,49.5-49.5S93.3,16.5,66,16.5z M66,33c2.3,0,4.1,1.8,4.1,4.1
+	v24.8h24.8c2.3,0,4.1,1.8,4.1,4.1c0,2.3-1.8,4.1-4.1,4.1H70.1v24.8c0,2.3-1.8,4.1-4.1,4.1c-2.3,0-4.1-1.8-4.1-4.1V70.1H37.1
+	c-2.3,0-4.1-1.8-4.1-4.1c0-2.3,1.8-4.1,4.1-4.1h24.8V37.1C61.9,34.8,63.7,33,66,33z"/>
 </svg>

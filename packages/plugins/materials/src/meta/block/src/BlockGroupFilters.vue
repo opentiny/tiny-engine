@@ -3,21 +3,27 @@
     <div v-for="filter in filters" :key="filter.id" class="block-add-filters-item">
       <div class="block-filters-item-label">{{ filter.name }}</div>
       <div class="block-filters-item-value">
-        <div
-          v-for="item in filter.children"
-          :key="item.name"
-          :class="['block-filters-value-item', { selected: item.selected, 'is-empty': !item.name }]"
-          @click="getFilters(filter.id, item, filter.children)"
+        <tiny-checkbox-group
+          v-model="state.checkGroup"
+          type="checkbox"
+          @change="getFilters(filter.id, filter.children)"
         >
-          {{ item.name }}
-        </div>
+          <tiny-checkbox v-for="item in filter.children" :key="item.name" :label="item.name"></tiny-checkbox>
+        </tiny-checkbox-group>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { reactive } from 'vue'
+import { CheckboxGroup, Checkbox } from '@opentiny/vue'
+
 export default {
+  components: {
+    TinyCheckboxGroup: CheckboxGroup,
+    TinyCheckbox: Checkbox
+  },
   props: {
     filters: {
       type: Array,
@@ -26,35 +32,26 @@ export default {
   },
   setup(props, { emit }) {
     const filters = {}
+    const state = reactive({
+      checkGroup: []
+    })
 
-    const getFilters = (id, item, filtersList) => {
-      filters[id] = filters[id] || []
-      const value = item.id || item.name
-      if (id === 'publicType') {
-        filters[id] = []
-        filtersList.map((e) => {
-          if (e.id === item.id) {
-            e.selected = !e.selected
-          } else {
-            e.selected = false
-          }
-          return e
-        })
+    const getFilters = (id, child) => {
+      filters[id] = []
+      if (id === 'tag') {
+        filters[id] = state.checkGroup
       } else {
-        item.selected = !item.selected
-      }
-
-      if (item.selected && !filters[id].includes(value)) {
-        filters[id].push(value)
-      }
-
-      if (!item.selected && filters[id].includes(value)) {
-        filters[id] = filters[id].filter((i) => i !== value)
+        child.forEach((item) => {
+          if (state.checkGroup.includes(item.name)) {
+            filters[id].push(item.id)
+          }
+        })
       }
       emit('search', null, filters)
     }
 
     return {
+      state,
       getFilters
     }
   }
@@ -63,14 +60,13 @@ export default {
 
 <style lang="less" scoped>
 .block-add-filters {
-  padding: 0 12px 12px;
   color: var(--ti-lowcode-materials-block-filter-text-color);
 
   .block-add-filters-item {
     display: flex;
     justify-content: start;
-    align-items: flex-start;
-    margin-top: 8px;
+    align-items: center;
+    margin-bottom: 2px;
 
     .block-filters-item-label {
       display: flex;
@@ -78,15 +74,14 @@ export default {
       justify-content: flex-start;
       width: 76px;
       height: 28px;
-      color: var(--ti-lowcode-common-primary-text-color);
+      color: var(--te-common-text-secondary);
       border-radius: 2px;
     }
 
     .block-filters-item-value {
       align-items: center;
       flex: 1;
-      margin-left: 12px;
-      padding-top: 5px;
+      color: var(--te-common-text-primary);
       .block-filters-value-item {
         cursor: pointer;
         display: inline-block;
@@ -95,14 +90,6 @@ export default {
         border: 1px solid transparent;
         margin-right: 5px;
         margin-bottom: 5px;
-        &:hover {
-          color: var(--ti-lowcode-materials-block-filter-hover-color);
-          border-color: var(--ti-lowcode-materials-block-filter-selected-text-color);
-        }
-        &.selected {
-          color: var(--ti-lowcode-materials-block-filter-selected-text-color);
-          border-color: var(--ti-lowcode-materials-block-filter-selected-text-color);
-        }
         &.is-empty {
           display: none;
         }

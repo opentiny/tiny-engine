@@ -141,13 +141,13 @@ export default {
 
 <style lang="less" scoped>
 .right-item {
-  padding: 0px 10px;
+  margin-top: 8px;
   color: var(--ti-lowcode-datasource-toolbar-icon-color);
 
   .title {
     display: flex;
     flex-direction: column;
-    font-size: 14px;
+    font-size: 12px;
     line-height: 22px;
     font-weight: normal;
     margin-bottom: 10px;

@@ -533,15 +533,13 @@ export default {
     line-height: 18px;
   }
 
-  .linked {
-    background-color: var(--ti-lowcode-meta-config-item-link-color);
-  }
-
   .item-input {
     display: flex;
     justify-content: space-between;
     align-items: center;
     overflow: hidden;
+    position: relative;
+    overflow: visible;
     &:has(.verify-failed) {
       align-items: flex-start;
     }

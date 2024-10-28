@@ -1,1 +1,20 @@
-<svg data-icon="BackgroundRadialGradient" aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16"><path transform="translate(3 3)" fill="url(#wf-svg-background-radial-gradient-a)" d="M0 0h10v10H0z"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M15 1H1v14h14V1zm-1 1H2v12h12V2z" fill="#D9D9D9"></path><defs><radialGradient id="wf-svg-background-radial-gradient-a" cx=".5" cy=".5" r=".5" gradientUnits="userSpaceOnUse" gradientTransform="matrix(0 10 -10 0 10 0)"><stop stop-color="#D9D9D9" stop-opacity="0"></stop><stop offset=".1" stop-color="#D9D9D9" stop-opacity="0"></stop><stop offset="1" stop-color="#D9D9D9"></stop></radialGradient></defs></svg>
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 132 132" style="enable-background:new 0 0 132 132;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;}
+	.st1{fill-rule:evenodd;clip-rule:evenodd;fill:url(#矩形_193_00000142174758085774660540000017568144431578179737_);}
+	.st2{fill-rule:evenodd;clip-rule:evenodd;fill:#191919;}
+</style>
+<rect id="size" class="st0" width="132" height="132"/>
+<radialGradient id="矩形_193_00000024703597984105095350000000868344388291366042_" cx="54.3016" cy="78.4353" r="8.25" gradientTransform="matrix(3.367779e-16 5.5 6.5 -3.980102e-16 -445 -235)" gradientUnits="userSpaceOnUse">
+	<stop  offset="0" style="stop-color:#C2C2C2;stop-opacity:0"/>
+	<stop  offset="0.8015" style="stop-color:#C2C2C2"/>
+</radialGradient>
+<path id="矩形_193" style="fill-rule:evenodd;clip-rule:evenodd;fill:url(#矩形_193_00000024703597984105095350000000868344388291366042_);" d="
+	M36,10h57.8c13.6,0,24.8,11.1,24.8,24.7v57.8c0,13.6-11.1,24.8-24.8,24.8H36c-13.7,0-24.8-11.1-24.8-24.8V34.8
+	C11.2,21.1,22.3,10,36,10z"/>
+<path id="矩形_193__x28_边框_x29_" class="st2" d="M118.5,34.8c0-13.7-11.1-24.7-24.8-24.7H36c-13.7,0-24.8,11.1-24.8,24.7v57.8
+	c0,13.6,11.1,24.8,24.8,24.8h57.8c13.6,0,24.8-11.1,24.8-24.8V34.8z M110.2,34.8c0-9.2-7.4-16.5-16.5-16.5H36
+	c-9.2,0-16.5,7.3-16.5,16.5v57.8c0,9.1,7.3,16.5,16.5,16.5h57.8c9.1,0,16.5-7.4,16.5-16.5V34.8z"/>
+</svg>

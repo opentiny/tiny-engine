@@ -3,11 +3,13 @@
     <tiny-select
       ref="groupSelect"
       v-model="selectedGroup"
+      v-bind="{ 'top-create': !isShortcutPanel }"
       class="blocks-header-select"
       placeholder="请选择"
       value-key="groupId"
       @change="$emit('changeGroup')"
       @visible-change="handleSelectVisibleChange"
+      @top-create-click="handleAddGroup"
     >
       <tiny-option
         v-for="item in state.groups"
@@ -112,14 +114,6 @@
         </div>
       </tiny-option>
     </tiny-select>
-
-    <svg-button
-      v-if="!isShortcutPanel"
-      class="add-group-btn"
-      tips="新建分组"
-      name="add-page"
-      @click="handleAddGroup"
-    ></svg-button>
   </div>
   <tiny-dialog-box v-model:visible="state.showCreateGroupForm" title="新建分组" width="400px" :append-to-body="true">
     <tiny-form ref="createGroupForm" :model="state.createGroupForm" :rules="state.newGroupRules" validate-type="text">
@@ -149,7 +143,7 @@ import {
   Popover
 } from '@opentiny/vue'
 import { iconYes, iconClose, iconError } from '@opentiny/vue-icon'
-import { useApp, useBlock, useModal } from '@opentiny/tiny-engine-meta-register'
+import { useBlock, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { SvgButton } from '@opentiny/tiny-engine-common'
 import { requestCreateGroup, requestDeleteGroup, fetchGroups, requestUpdateGroup } from './http'
 import { setBlockPanelVisible } from './js/usePanel'
@@ -182,7 +176,7 @@ export default {
     const groupSelect = ref(null)
     const editFormRef = ref(null)
     const editFormItemRef = ref(null)
-    const appId = useApp().appInfoState.selectedId
+    const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id
 
     const createGroupForm = ref(null)
 
@@ -225,7 +219,7 @@ export default {
       const exec = () => {
         requestDeleteGroup(groupId)
           .then(() => {
-            fetchGroups(appId).then((data) => {
+            fetchGroups(getAppId()).then((data) => {
               state.groups = addDefaultGroup(data)
               if (selectedGroup.value.groupId === groupId) {
                 groupChange(state.groups[0].value)
@@ -251,6 +245,8 @@ export default {
         if (!valid) {
           return
         }
+
+        const appId = getAppId()
         requestUpdateGroup({ id: state.currentEditId, name: state.groupNameModel.value, app: appId })
           .then(() => fetchGroups(appId))
           .catch((error) => {
@@ -305,6 +301,8 @@ export default {
           return
         }
 
+        const appId = getAppId()
+
         requestCreateGroup({ name: state.createGroupForm.groupName, app: appId })
           .then((data) => {
             state.showCreateGroupForm = false
@@ -326,7 +324,7 @@ export default {
       requestDeleteGroup(groupId)
         .then(() => {
           state.currentDeleteGroupId = null
-          fetchGroups(appId).then((data) => {
+          fetchGroups(getAppId()).then((data) => {
             state.groups = addDefaultGroup(data)
             if (selectedGroup.value.groupId === groupId) {
               groupChange(state.groups[0].value)
@@ -402,11 +400,7 @@ export default {
 .blocks-header-wrap {
   display: flex;
   justify-content: space-between;
-  padding: 0 8px 8px;
-
-  .blocks-header-select {
-    width: calc(100% - 36px);
-  }
+  padding: 12px;
 
   .add-group-btn {
     font-size: 16px;

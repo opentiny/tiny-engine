@@ -18,7 +18,7 @@
       <div class="page-setting-content">
         <tiny-collapse v-model="state.activeName">
           <tiny-collapse-item title="基本设置" name="folderGeneralRef">
-            <page-general ref="folderGeneralRef" :isFolder="isFolder"></page-general>
+            <component :is="pageGeneral" ref="folderGeneralRef" :isFolder="isFolder"></component>
           </tiny-collapse-item>
         </tiny-collapse>
       </div>
@@ -30,10 +30,17 @@
 import { reactive, ref } from 'vue'
 import { Button, Collapse, CollapseItem } from '@opentiny/vue'
 import { PluginSetting, SvgButton, ButtonGroup } from '@opentiny/tiny-engine-common'
-import { usePage, useModal, useApp, useNotify } from '@opentiny/tiny-engine-meta-register'
+import {
+  usePage,
+  useModal,
+  useNotify,
+  getMergeRegistry,
+  getMetaApi,
+  META_SERVICE
+} from '@opentiny/tiny-engine-meta-register'
 import { isEqual } from '@opentiny/vue-renderless/common/object'
 import throttle from '@opentiny/vue-renderless/common/deps/throttle'
-import PageGeneral from './PageGeneral.vue'
+import meta from '../meta'
 import http from './http.js'
 
 let isShow = ref(false)
@@ -55,7 +62,6 @@ export default {
     TinyCollapse: Collapse,
     TinyCollapseItem: CollapseItem,
     PluginSetting,
-    PageGeneral,
     SvgButton,
     ButtonGroup
   },
@@ -70,11 +76,12 @@ export default {
       activeName: ['folderGeneralRef'],
       title: '文件夹设置'
     })
-    const folderGeneralRef = ref(null)
     const { requestCreatePage, requestUpdatePage, requestDeletePage } = http
-    const { appInfoState } = useApp()
     const { pageSettingState, changeTreeData } = usePage()
     const { confirm } = useModal()
+    const registry = getMergeRegistry(meta.type, meta.id)
+    const pageGeneral = registry.components.PageGeneral
+    const folderGeneralRef = ref(null)
 
     const closeFolderSetting = () => {
       if (isEqual(pageSettingState.currentPageData, pageSettingState.currentPageDataCopy)) {
@@ -98,7 +105,7 @@ export default {
       const data = pageSettingState.currentPageData
       const createParams = {
         ...data,
-        app: appInfoState.selectedId,
+        app: getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id,
         isPage: false
       }
 
@@ -192,6 +199,7 @@ export default {
     return {
       saveFolderSetting,
       deleteFolder: throttle(5000, true, deleteFolder),
+      pageGeneral,
       folderGeneralRef,
       closeFolderSettingPanel,
       isShow,
@@ -206,9 +214,25 @@ export default {
 <style lang="less" scoped>
 .pageFolder-plugin-setting {
   :deep(.plugin-setting-header) {
+    border: 0;
     .close-plugin-setting-icon {
       margin-left: 8px;
     }
+    .button-group {
+      column-gap: 2px;
+      .tiny-button {
+        width: 40px;
+        padding: 0;
+        min-width: 40px;
+      }
+    }
+  }
+  :deep(.plugin-setting-content) {
+    padding: 0 0 16px 0;
+  }
+
+  :deep(.tiny-collapse) {
+    border-bottom: 0;
   }
 }
 </style>

@@ -1,33 +1,55 @@
 <template>
+  <div v-if="blockStyle === BlockStyles.Mini" class="header">
+    <div class="col-checkbox"></div>
+    <div class="col-name">区块名称</div>
+    <div class="col-time">创建时间</div>
+    <div class="col-created-by">创建人</div>
+  </div>
   <ul
     v-if="state.data.length || showAddButton"
-    :class="['block-list', 'lowcode-scrollbar', { 'is-small-list': blockStyle === 'mini' }, { isShortcutPanel }]"
+    :class="[
+      'block-list',
+      'lowcode-scrollbar',
+      { 'is-small-list': blockStyle === BlockStyles.Mini },
+      { isShortcutPanel }
+    ]"
     @mouseleave="state.hover = false"
   >
+    <li v-if="showAddButton" class="block-item block-plus" @click="$emit('add')">
+      <span class="block-plus-icon"><icon-plus></icon-plus></span>
+      <div class="item-text">添加区块</div>
+    </li>
     <li
       v-for="(item, index) in state.data"
       :key="item.blockName"
       :draggable="!isBlockManage && showSettingIcon"
-      :class="['block-item', { 'is-disabled': showBlockDetail }, { 'block-item-small-list': blockStyle === 'mini' }]"
+      :class="[
+        'block-item',
+        { 'is-disabled': showBlockDetail },
+        { 'block-item-small-list': blockStyle === BlockStyles.Mini }
+      ]"
       :title="getTitle(item)"
-      @mousedown.stop.left="blockClick({ item, index })"
+      @mousedown.stop.left="blockClick({ event: $event, item, index })"
       @mouseover.stop="openBlockShotPanel(item, $event)"
       @mouseleave="handleBlockItemLeave"
     >
       <slot :data="item">
-        <div class="block-item-img">
-          <img
-            v-if="item.screenshot"
-            class="item-image"
-            :src="item.screenshot || defaultImg"
-            draggable="false"
-            @error="$event.target.src = defaultImg"
-          />
-          <svg-icon v-else class="item-image item-default-img" name="block-default-img"></svg-icon>
-        </div>
+        <plugin-block-item-img
+          :item="item"
+          :show-checkbox="showCheckbox"
+          :checked="checked.some((block) => block.id === item.id)"
+          :display-table="blockStyle === BlockStyles.Mini"
+        ></plugin-block-item-img>
         <div class="item-text">
           <div class="item-name">{{ item.name_cn || item.label || item.content?.fileName }}</div>
-          <div v-if="blockStyle === 'list'" class="item-description">{{ item.description }}</div>
+          <div v-if="blockStyle === BlockStyles.List" class="item-description">{{ item.description }}</div>
+        </div>
+
+        <div v-if="blockStyle === BlockStyles.Mini" class="cell cell-time">
+          <span>{{ format(item.created_at, 'yyyy/MM/dd hh:mm:ss') }}</span>
+        </div>
+        <div v-if="blockStyle === BlockStyles.Mini" class="cell cell-created-by">
+          <span>{{ users.find((user) => user.id === item.createdBy)?.name || item.id }}</span>
         </div>
 
         <div v-if="item.isShowProgress" class="progress-bar">
@@ -42,81 +64,44 @@
         <div v-if="isBlockManage && !item.is_published" class="publish-flag">未发布</div>
 
         <div v-if="isBlockManage" class="block-detail">
-          <tiny-popover
-            placement="bottom-end"
-            width="120"
-            append-to-body
-            trigger="manual"
-            :modelValue="state.hoverItemId === item.id && state.currentShowMenuId === item.id"
-            :visible-arrow="false"
-            popper-class="popper-options block-setting-popover"
-          >
-            <template #reference>
-              <svg-button
-                name="ellipsis"
-                class="block-detail-icon"
-                @click="handleShowVersionMenu(item)"
-                @mouseover.stop="iconSettingMove"
-                @mousedown.stop.prevent=""
-              ></svg-button>
-            </template>
-
-            <template #default>
-              <div class="setting-menu" @mouseover.stop="handleSettingMouseOver" @mouseleave="handleBlockItemLeave">
-                <ul class="list">
-                  <li
-                    class="list-item"
-                    @mouseover.stop="iconSettingMove"
-                    @mousedown.stop.prevent="iconClick({ event: $event, item, index })"
-                  >
-                    <svg-button class="list-item-svg" name="text-source-setting"> </svg-button>
-                    <span>设置</span>
-                  </li>
-                  <li class="list-item" @mousedown.stop.left="editBlock({ event: $event, item, index })">
-                    <svg-button class="list-item-svg" name="to-edit"> </svg-button><span>编辑</span>
-                  </li>
-                </ul>
-              </div>
-            </template>
-          </tiny-popover>
+          <div class="setting-menu" @mouseover.stop="handleSettingMouseOver" @mouseleave="handleBlockItemLeave">
+            <ul class="list">
+              <tiny-tooltip content="编辑" placement="top">
+                <li class="list-item" @mousedown.stop.left="editBlock({ event: $event, item, index })">
+                  <svg-button class="list-item-svg" name="to-edit"> </svg-button>
+                </li>
+              </tiny-tooltip>
+              <tiny-tooltip content="设置" placement="top">
+                <li
+                  class="list-item"
+                  @mouseover.stop="iconSettingMove"
+                  @mousedown.stop.prevent="iconClick({ event: $event, item, index })"
+                >
+                  <svg-button class="list-item-svg" name="text-source-setting"> </svg-button>
+                </li>
+              </tiny-tooltip>
+            </ul>
+          </div>
         </div>
         <div
           v-else-if="showSettingIcon"
           :class="['block-setting', { 'is-current-visible-icon': state.hoverItemId === item.id }]"
           title=" "
         >
-          <tiny-popover
-            v-if="!item.isDefaultGroup"
-            placement="bottom-end"
-            width="151"
-            append-to-body
-            trigger="manual"
-            :modelValue="state.hoverItemId === item.id && state.currentShowMenuId === item.id"
-            :visible-arrow="false"
-            popper-class="popper-options block-setting-popover"
-          >
-            <template #reference>
-              <svg-button
-                name="ellipsis"
-                class="block-detail-icon"
-                @click="handleShowVersionMenu(item)"
-                @mouseover.stop="iconSettingMove"
-                @mousedown.stop.prevent=""
-              ></svg-button>
-            </template>
-            <template #default>
-              <div class="setting-menu" @mouseover.stop="handleSettingMouseOver" @mouseleave="handleBlockItemLeave">
-                <ul class="list">
-                  <li class="list-item" @click="$emit('openVersionPanel', { item, index })">
-                    <span>版本列表</span>
-                  </li>
-                  <li class="list-item" @click="$emit('deleteBlock', item)">
-                    <span>移除</span>
-                  </li>
-                </ul>
-              </div>
-            </template>
-          </tiny-popover>
+          <div class="setting-menu" @mouseover.stop="handleSettingMouseOver" @mouseleave="handleBlockItemLeave">
+            <ul class="list">
+              <tiny-tooltip content="版本列表" placement="top">
+                <li class="list-item" @click.stop="$emit('openVersionPanel', { item, index })">
+                  <svg-button class="list-item-svg" name="versions"> </svg-button>
+                </li>
+              </tiny-tooltip>
+              <tiny-tooltip content="移除" placement="top">
+                <li class="list-item" @click.stop="$emit('deleteBlock', item)">
+                  <svg-button class="list-item-svg" name="remove"> </svg-button>
+                </li>
+              </tiny-tooltip>
+            </ul>
+          </div>
         </div>
         <div
           v-if="item.isAnimation"
@@ -132,9 +117,6 @@
           {{ deployTips[item.deployStatus] }}
         </div>
       </slot>
-    </li>
-    <li v-if="showAddButton" class="block-item block-plus" @click="$emit('add')">
-      <span class="block-plus-icon"><icon-plus></icon-plus></span>
     </li>
     <div v-if="showBlockShot && state.hover && state.currentBlock.screenshot" class="block-shortcut">
       <div class="block-shortcut-title">{{ state.currentBlock.label }}预览图</div>
@@ -155,10 +137,18 @@
 
 <script>
 import { computed, watch, inject, reactive } from 'vue'
+import { format } from '@opentiny/vue-renderless/common/date'
 import { iconPlus } from '@opentiny/vue-icon'
-import { Progress, Popover } from '@opentiny/vue'
+import { Progress, Tooltip } from '@opentiny/vue'
+import PluginBlockItemImg from './PluginBlockItemImg.vue'
 import SearchEmpty from './SearchEmpty.vue'
 import SvgButton from './SvgButton.vue'
+
+const BlockStyles = {
+  Default: 'default',
+  Mini: 'mini',
+  List: 'list'
+}
 
 const defaultImg =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAA11JREFUaEPtmUvIVVUYhp83CIJKpIsOEsSBAxEiEAwqRDGDBCmRkCwhwQQbSANDEbwNgvgzxEIUCwRBEB2EgiQR5MA/RcHImRBKkYhYaAliULzxwT6y3O1zzv735Rx+PN/srP1d3ve7rLX2PmKSiyY5fkYEhl3BUQVGFaiZgQdayPZTwOvA7Jp+2zI/C5yV9FcnQJ7AB8DetqI35HdM0qZuBL4HFjYUqC03pyUteigIPMC0rXSW8Ws77YzSFRgRKJPdMjqtVcD2DOC6pH/LAKmq0zgB2+uAXcCTwD1gs6Q9VQH2s2uDwO/A00ngv4EnJP3TD0zneZaEt4GvJB3uZdcoAdsBPAjkZaakX8sQsP0ecDDR/UhSVLRQGiUQEWzfAKYl0e4CU8rMgu0XgXMFSNdJ+rKIQRsE1gBjwDPAbWCLpH39sm97CvADMLeL7kpJR/PPGieQ9PGzkm72A57oB7i3Ev1vsstjZylmaJmkU6nP1giUBZ613U5gW2LzGzAHiEE+kKz/AbwhaTwhPtyT2PZK4EiO8MuSop1iprYAHyfPrwDLJV3Kng+PgO3ngZ9y4NdL2p9rk93Ah8naj8AKSVdbayHb0c+PASck/VkwfI8CASQd2v2S1nfZbeI8WJU8O53NzLHkmt/MZc72IWB1Fuxi9Lekk7ms5oe27wXR9rfAksTPCWAqsCBbq0/A9qfAxoIsfgJ8Lum67e3AjkQnzo55kq71Gn7bATZ6/oWc7fRGCNgO4EGgm5wJEkB+P18qKbbNvmI73smDxHMFytUrYDtaJlonldgeg9TjPZBtlPRZX+SJgu2XgJiBmKNUqhGw/RpwPBvajsMvJG2wvTQjcf9dNYkYl7X3JwK+o2v7TeDrnO0FSfM7a/mvEoX7bbYVxjDNTJwdlvRuEix2o61xtQYeydbHJb1SBXziN8inB93EKmA7hifA32cNnJIU34/+J7ajCu8AccWOgb5ch0DY2o6DbVbmZ8IEAvyyBMR54FVJd+oCK2tf+SADfgbWJoHid4D/pWzwJvSqEgiQac/fAhZLipN1oFKVQB7kEknfDRR5FqwJAoUvGoMi0wSBQWEtE6f0LlTG2TB0ehKY9J/XJ/cfHMPoh7oxR/9S1s1gXftRBepmsK79qAJ1M1jX/j/bzulAKB9d1wAAAABJRU5ErkJggg=='
@@ -167,7 +157,8 @@ export default {
   components: {
     TinyProgress: Progress,
     IconPlus: iconPlus(),
-    TinyPopover: Popover,
+    TinyTooltip: Tooltip,
+    PluginBlockItemImg,
     SvgButton,
     SearchEmpty
   },
@@ -181,7 +172,7 @@ export default {
     */
     blockStyle: {
       type: String,
-      default: 'default'
+      default: BlockStyles.Default
     },
     /*
     用于区分是否是区块管理侧的列表
@@ -227,11 +218,26 @@ export default {
     externalBlock: {
       type: Object,
       default: null
+    },
+    // 是否显示多选框
+    showCheckbox: {
+      type: Boolean,
+      default: false
+    },
+    // 选中的区块
+    checked: {
+      type: Array,
+      default: () => []
+    },
+    gridColumns: {
+      type: Number,
+      default: 2
     }
   },
   emits: ['click', 'iconClick', 'add', 'deleteBlock', 'openVersionPanel', 'editBlock'],
   setup(props, { emit }) {
     const panelState = inject('panelState', {})
+    const blockUsers = inject('blockUsers')
     const state = reactive({
       activeIndex: -1,
       data: computed(() => props.data),
@@ -242,6 +248,8 @@ export default {
       currentShowMenuId: null,
       timeoutId: null
     })
+
+    const users = computed(() => blockUsers?.value || [])
 
     const getParentNode = (el) => {
       while (el.nodeName !== 'LI') {
@@ -263,18 +271,20 @@ export default {
       }
     }
 
-    const blockClick = ({ item }) => {
-      emit('click', item)
-    }
-
     const editBlock = ({ event, item, index }) => {
-      if (props.isBlockManage) {
-        state.activeIndex = index
-      }
+      state.activeIndex = index
 
       emit('editBlock', item)
       // 点击区块并不打开设置面板
       emit('iconClick', { event, item, index, isOpen: false })
+    }
+
+    const blockClick = ({ event, item, index }) => {
+      if (props.isBlockManage) {
+        editBlock({ event, item, index })
+      }
+
+      emit('click', item)
     }
 
     const iconClick = ({ event, item, index }) => {
@@ -352,8 +362,10 @@ export default {
     )
 
     return {
+      BlockStyles,
       isShortcutPanel: panelState.isShortcutPanel,
       state,
+      users,
       getTitle,
       blockClick,
       iconClick,
@@ -366,7 +378,8 @@ export default {
       handleBlockItemLeave,
       handleSettingMouseOver,
       handleShowVersionMenu,
-      editBlock
+      editBlock,
+      format
     }
   }
 }
@@ -405,41 +418,70 @@ export default {
   }
 }
 
+.header {
+  display: flex;
+  align-items: center;
+  height: 24px;
+  background-color: var(--te-common-bg-container);
+  color: var(--te-common-text-secondary);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  & > div {
+    padding: 0 8px;
+    position: relative;
+  }
+
+  .col-time::before,
+  .col-created-by::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 10px;
+    background-color: var(--te-common-border-default);
+  }
+}
+
+.col-checkbox,
+.block-item-small-list:deep(.table-selection) {
+  width: 40px;
+}
+.col-checkbox:deep(.tiny-checkbox__label) {
+  padding: 0;
+}
+.col-name {
+  width: 35%;
+}
+.col-time {
+  width: 35%;
+}
+.col-created-by {
+  flex: 1;
+}
+
 .block-list {
   display: grid;
-  grid-template-columns: 50% 50%;
-  grid-template-rows: repeat(auto-fill, 96px);
+  grid-template-columns: repeat(v-bind('gridColumns'), 1fr);
   position: relative;
-  flex: 1;
+  gap: 12px;
   overflow-y: auto;
   overflow-x: hidden;
   color: var(--ti-lowcode-common-secondary-text-color);
-  margin: 12px 0 0 12px;
 
-  &.is-small-list {
-    grid-template-columns: 100%;
-    grid-template-rows: repeat(auto-fill, 30px);
-  }
   .block-item {
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
-    height: 105px;
-    text-align: center;
+    height: 110px;
     user-select: none;
-    margin-right: 12px;
-    margin-bottom: 12px;
-    .block-item-img {
-      line-height: 82px;
-      width: 106px;
-      height: 82px;
-      border-radius: 4px;
-      background-color: var(--ti-lowcode-component-block-list-item-active-bg);
-    }
-    &.block-item-small-list:nth-child(2) {
-      border-top: none;
-    }
+    gap: 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     .publish-flag {
       position: absolute;
@@ -456,20 +498,16 @@ export default {
     }
 
     &.block-item-small-list {
-      flex-direction: row;
-      align-items: center;
-      height: 30px;
-      padding: 4px 10px;
-      .item-image {
-        width: 30px;
-        height: 30px;
-        min-width: 30px;
+      color: var(--te-common-text-primary);
+      gap: 0;
+      &:deep(.block-item-img) {
+        width: 54px;
+        height: 40px;
+        flex: unset;
+        margin-left: 8px;
       }
       .item-text {
-        text-align: left;
-        margin-top: 0;
-        margin-left: 4px;
-        color: var(--ti-lowcode-base-text-color-4);
+        width: calc(35% - 62px);
       }
       .publish-flag {
         position: static;
@@ -534,9 +572,18 @@ export default {
     }
 
     &.block-plus {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      .block-plus-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 86px;
+        border: 1px dashed var(--te-common-border-hover);
+        border-radius: 4px;
+      }
+      .item-text {
+        font-size: 12px;
+      }
       .tiny-svg {
         font-size: 24px;
         color: var(--ti-lowcode-component-svg-button-color);
@@ -548,22 +595,17 @@ export default {
       }
     }
 
-    .item-image {
-      width: 100px;
-      height: 48px;
-      overflow: hidden;
-      object-fit: cover;
-    }
     .item-default-img {
-      width: 50px;
+      width: 84px;
       height: 50px;
+      color: var(--te-common-bg-default);
     }
 
     .item-text {
-      color: var(--ti-lowcode-component-block-list-item-color);
+      color: var(--te-common-text-secondary);
       text-align: center;
-      flex: 1;
-      margin-top: 10px;
+      font-size: 12px;
+      line-height: 1.5;
       overflow: hidden;
       text-overflow: ellipsis;
       max-width: 100%;
@@ -580,8 +622,8 @@ export default {
     .block-setting {
       visibility: hidden;
       position: absolute;
-      top: 4px;
-      right: 8px;
+      top: 1px;
+      right: 6px;
       z-index: 9;
       &.is-current-visible-icon {
         visibility: visible;
@@ -600,7 +642,6 @@ export default {
       top: 0;
     }
   }
-
   .deploy {
     position: absolute;
     top: 10px;
@@ -686,16 +727,10 @@ export default {
 
   &.is-small-list {
     display: block;
-    grid-template-columns: initial;
 
     .block-item {
+      height: 54px;
       flex-direction: row;
-      border-right: none;
-    }
-
-    .item-image {
-      padding: 0;
-      flex-shrink: 0;
     }
 
     .item-text {
@@ -712,21 +747,16 @@ export default {
         font-size: 12px;
       }
     }
-  }
 
-  &.is-small-list {
-    .block-item {
-      height: 38px;
+    .cell {
+      padding: 0 8px;
+      text-align: start;
     }
-
-    .item-image {
-      font-size: 1.5em;
-      width: 27px;
-      height: 22px;
+    .cell-time {
+      width: 35%;
     }
-
-    .item-text {
-      width: calc(100% - 35px);
+    .cell-created-by {
+      flex: 1;
     }
   }
 }
@@ -734,25 +764,21 @@ export default {
   font-size: 12px;
   color: var(--ti-lowcode-component-block-setting-item-text-color);
   .list {
-    margin-top: 6px;
+    display: flex;
   }
   .list-item {
     box-sizing: border-box;
-    padding: 16px 18px;
-    height: 30px;
-    line-height: 30px;
     cursor: pointer;
-    span {
-      margin-left: 8px;
-    }
-    display: flex;
-    align-items: center;
     &:hover {
       background-color: var(--ti-lowcode-component-block-setting-item-hover-bg);
       color: var(--ti-lowcode-common-primary-text-color);
     }
     .list-item-icon {
       font-size: 14px;
+      color: var(--te-common-icon-secondary);
+    }
+    .list-item-svg {
+      color: var(--te-common-icon-secondary);
     }
     .list-item-svg:hover {
       background-color: var(--ti-lowcode-component-block-setting-item-hover-bg);
