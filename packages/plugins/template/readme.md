@@ -33,7 +33,7 @@
 ![alt text](./assets/image-6.png)
 2. “全部类别”不允许删除，没有删除按钮；
 3. 具有子类别或模板时，提示不能删除。
-![alt text](./assets/   image-7.png)
+![alt text](./assets/image-7.png)
 
 **搜索**
 
