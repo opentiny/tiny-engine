@@ -38,7 +38,7 @@
 import { nextTick, reactive, getCurrentInstance, onActivated, ref, onDeactivated } from 'vue'
 import { Popover, Button } from '@opentiny/vue'
 import { VueMonaco, CloseIcon } from '@opentiny/tiny-engine-common'
-import { useCanvas, useModal, useHistory, useNotify, useMessage } from '@opentiny/tiny-engine-meta-register'
+import { useCanvas, useModal, useNotify, useMessage } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { iconDownloadLink } from '@opentiny/vue-icon'
 
@@ -101,8 +101,9 @@ export default {
         componentName: pageState.pageSchema.componentName
       }
 
-      useCanvas().initData(value, pageState.currentPage)
-      useHistory().addHistory()
+      useCanvas().importSchema(value)
+      // TODO: 历史堆栈
+      // useHistory().addHistory()
       state.pageData = ''
 
       nextTick(() => {

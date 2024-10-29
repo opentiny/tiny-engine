@@ -90,8 +90,31 @@ const generateNodesMap = (nodes, parent) => {
   })
 }
 
+const jsondiffpatchInstance = jsondiffpatch.create({
+  objectHash: function (obj, index) {
+    return obj.fileName || obj.id || `$$index:${index}`
+  },
+  arrays: {
+    detectMove: true,
+    includeValueOnMove: false
+  },
+  textDiff: {
+    diffMatchPatch: DiffMatchPatch,
+    minLength: 60
+  },
+  // eslint-disable-next-line no-unused-vars
+  propertyFilter: function (name, context) {
+    return name.slice(0, 1) !== '$'
+  },
+  cloneDiffValues: false
+})
+
+const { publish } = useMessage()
+
 // 重置画布数据
 const resetCanvasState = async (state = {}) => {
+  const previousSchema = JSON.parse(JSON.stringify(pageState.pageSchema))
+
   Object.assign(pageState, defaultPageState, state)
 
   nodesMap.value.clear()
@@ -116,6 +139,10 @@ const resetCanvasState = async (state = {}) => {
   }
 
   await canvasApi.value?.setSchema(pageState.pageSchema)
+
+  const diffPatch = jsondiffpatchInstance.diff(previousSchema, pageState.pageSchema)
+
+  publish({ topic: 'schemaImport', data: { current: pageState.pageSchema, previous: previousSchema, diffPatch } })
 }
 
 // 页面重置画布数据
@@ -244,28 +271,9 @@ const getNode = (id, parent) => {
 //   return Object.prototype.toString.call(obj)
 // }
 
-const jsondiffpatchInstance = jsondiffpatch.create({
-  objectHash: function (obj, index) {
-    return obj.fileName || obj.id || `$$index:${index}`
-  },
-  arrays: {
-    detectMove: true,
-    includeValueOnMove: false
-  },
-  textDiff: {
-    diffMatchPatch: DiffMatchPatch,
-    minLength: 60
-  },
-  // eslint-disable-next-line no-unused-vars
-  propertyFilter: function (name, context) {
-    return name.slice(0, 1) !== '$'
-  },
-  cloneDiffValues: false
-})
-
-const optionTypeMap = {
-  insert: (option) => {
-    const { parentId, newNodeData, position, referTargetNodeId } = option
+const operationTypeMap = {
+  insert: (operation) => {
+    const { parentId, newNodeData, position, referTargetNodeId } = operation
 
     const parentNode = getNode(parentId) || pageState.pageSchema
 
@@ -305,8 +313,8 @@ const optionTypeMap = {
       previous: undefined
     }
   },
-  delete: (option) => {
-    const { id } = option
+  delete: (operation) => {
+    const { id } = operation
     let targetNode = getNode(id, true)
     let { parent, node } = targetNode
 
@@ -322,8 +330,8 @@ const optionTypeMap = {
       previous: node
     }
   },
-  changeProps: (option) => {
-    const { id, value, option: changeOption } = option
+  changeProps: (operation) => {
+    const { id, value, option: changeOption } = operation
     const { node, parent } = getNode(id, true)
     const previous = deepClone(node)
 
@@ -347,22 +355,21 @@ const optionTypeMap = {
 }
 
 const lastUpdateType = ref('')
-const { publish } = useMessage()
 
-const operateNode = (option) => {
-  if (!optionTypeMap[option.type]) {
+const operateNode = (operation) => {
+  if (!operationTypeMap[operation.type]) {
     return
   }
 
   const previousSchema = JSON.parse(JSON.stringify(pageState.pageSchema))
 
-  const { previous, current } = optionTypeMap[option.type](option)
+  const { previous, current } = operationTypeMap[operation.type](operation)
 
   const diffPatch = jsondiffpatchInstance.diff(previousSchema, pageState.pageSchema)
 
-  lastUpdateType.value = option.type
+  lastUpdateType.value = operation.type
 
-  publish({ topic: 'schemaChange', data: { current: deepClone(current), previous, option, diffPatch } })
+  publish({ topic: 'schemaChange', data: { current: deepClone(current), previous, operation, diffPatch } })
 }
 
 const getSchemaDiff = (schema) => {
@@ -373,6 +380,28 @@ const patchLatestSchema = (schema) => {
   const diff = jsondiffpatchInstance.diff(schema, pageState.pageSchema)
 
   jsondiffpatchInstance.patch(schema, diff)
+}
+
+const importSchema = (data) => {
+  let importData = data
+
+  if (typeof data === 'string') {
+    try {
+      importData = JSON.parse(data)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[useCanvas.importSchema] Invalid data')
+    }
+  }
+
+  // JSON 格式校验
+  resetCanvasState({
+    pageSchema: importData
+  })
+}
+
+const exportSchema = () => {
+  return JSON.stringify(pageState.pageSchema)
 }
 
 export default function () {
@@ -404,6 +433,8 @@ export default function () {
     lastUpdateType,
     jsondiffpatchInstance,
     getSchemaDiff,
-    patchLatestSchema
+    patchLatestSchema,
+    importSchema,
+    exportSchema
   }
 }

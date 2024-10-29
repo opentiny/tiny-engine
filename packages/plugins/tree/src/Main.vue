@@ -127,8 +127,8 @@ export default {
       subscribe({
         topic: 'schemaChange',
         subscriber: 'node-tree',
-        callback: ({ option }) => {
-          if (option.type !== 'changeProps') {
+        callback: ({ operation }) => {
+          if (operation.type !== 'changeProps') {
             state.pageSchema = filterSchema(pageState.pageSchema)
           }
         }
