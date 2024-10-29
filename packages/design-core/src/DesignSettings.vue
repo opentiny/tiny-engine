@@ -317,4 +317,7 @@ export default {
   opacity: 0.5;
   background: #f2f2f2;
 }
+.not-selected {
+  user-select: none;
+}
 </style>
