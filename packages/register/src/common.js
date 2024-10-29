@@ -159,7 +159,7 @@ export const preprocessRegistry = (registry) => {
     })
 }
 
-const maxDepth = 100
+const maxDepth = 25
 
 export const generateRegistry = (registry, depth = 1) => {
   if (depth > maxDepth) {

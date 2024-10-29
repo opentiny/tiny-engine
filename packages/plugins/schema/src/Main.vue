@@ -35,10 +35,10 @@
 </template>
 
 <script lang="jsx">
-import { nextTick, reactive, getCurrentInstance, onActivated, ref } from 'vue'
+import { nextTick, reactive, getCurrentInstance, onActivated, ref, onDeactivated } from 'vue'
 import { Popover, Button } from '@opentiny/vue'
 import { VueMonaco, CloseIcon } from '@opentiny/tiny-engine-common'
-import { useCanvas, useModal, useHistory, useNotify } from '@opentiny/tiny-engine-meta-register'
+import { useCanvas, useModal, useHistory, useNotify, useMessage } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { iconDownloadLink } from '@opentiny/vue-icon'
 
@@ -59,6 +59,7 @@ export default {
     const state = reactive({
       pageData: obj2String(pageState.pageSchema)
     })
+    const { subscribe, unsubscribe } = useMessage()
 
     const isEdit = false
     const showRed = ref(true)
@@ -111,11 +112,30 @@ export default {
     }
 
     onActivated(() => {
-      pageState.pageSchema = useCanvas().canvasApi.value?.getSchema?.() || {}
+      // pageState.pageSchema = useCanvas().canvasApi.value?.getSchema?.() || {}
       state.pageData = obj2String(pageState.pageSchema)
       nextTick(() => {
         window.dispatchEvent(new Event('resize'))
         showRed.value = state.pageData === app.refs.container.getEditor().getValue()
+      })
+
+      subscribe({
+        topic: 'schemaChange',
+        subscriber: 'schema-plugin',
+        callback: () => {
+          // if (option.type !== 'changeProps') {
+          //   state.pageSchema = filterSchema(pageState.pageSchema)
+          // }
+          // TODO: 使用节流
+          state.pageData = obj2String(pageState.pageSchema)
+        }
+      })
+    })
+
+    onDeactivated(() => {
+      unsubscribe({
+        topic: 'schemaChange',
+        subscriber: 'schema-plugin'
       })
     })
 

@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { reactive, watch, ref, computed } from 'vue'
+import { reactive, watch, ref, computed, onActivated, onDeactivated } from 'vue'
 import { Grid, GridColumn } from '@opentiny/vue'
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
 import { constants } from '@opentiny/tiny-engine-utils'
@@ -118,22 +118,29 @@ export default {
       }
     })
 
-    const { subscribe } = useMessage()
+    const { subscribe, unsubscribe } = useMessage()
 
-    subscribe({
-      topic: 'schemaChange',
-      subscriber: 'node-tree',
-      callback: ({ option }) => {
-        if (option.type !== 'changeProps') {
-          state.pageSchema = filterSchema(pageState.pageSchema)
+    onActivated(() => {
+      // const { getSchema } = useCanvas().canvasApi.value
+      state.pageSchema = filterSchema(pageState.pageSchema)
+
+      subscribe({
+        topic: 'schemaChange',
+        subscriber: 'node-tree',
+        callback: ({ option }) => {
+          if (option.type !== 'changeProps') {
+            state.pageSchema = filterSchema(pageState.pageSchema)
+          }
         }
-      }
+      })
     })
 
-    // onActivated(() => {
-    //   const { getSchema } = useCanvas().canvasApi.value
-    //   state.pageSchema = filterSchema(getSchema())
-    // })
+    onDeactivated(() => {
+      unsubscribe({
+        topic: 'schemaChange',
+        subscriber: 'node-tree'
+      })
+    })
 
     watch(
       () => pageState.currentSchema,

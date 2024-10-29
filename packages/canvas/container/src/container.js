@@ -32,8 +32,6 @@ export const POSITION = Object.freeze({
   IN: 'in'
 })
 
-const { getNodeWithParentId, pageState, getPageSchema, getNode, operateNode } = useCanvas()
-
 const initialDragState = {
   keydown: false,
   draging: false,
@@ -80,7 +78,7 @@ export const getGlobalState = () => getRenderer().getGlobalState()
 // export const getNode = (id, parent) => getRenderer()?.getNode(id, parent)
 
 // export const getSchema = () => getRenderer()?.getSchema()
-export const getSchema = () => getPageSchema()
+export const getSchema = () => useCanvas().getPageSchema()
 
 export const getContext = () => {
   return getRenderer().getContext()
@@ -259,7 +257,7 @@ const inserAfter = ({ parent, node, data }) => {
     data.id = utils.guid()
   }
 
-  operateNode({
+  useCanvas().operateNode({
     type: 'insert',
     parentId: parent.id,
     newNodeData: data,
@@ -280,7 +278,7 @@ const insertBefore = ({ parent, node, data }) => {
     data.id = utils.guid()
   }
 
-  operateNode({
+  useCanvas().operateNode({
     type: 'insert',
     parentId: parent.id,
     newNodeData: data,
@@ -294,7 +292,7 @@ const insertInner = ({ node, data }, position) => {
     data.id = utils.guid()
   }
 
-  operateNode({
+  useCanvas().operateNode({
     type: 'insert',
     parentId: node.id,
     newNodeData: data,
@@ -331,7 +329,7 @@ export const removeNode = (id) => {
   //   })
   // }
 
-  operateNode({
+  useCanvas().operateNode({
     type: 'delete',
     id
   })
@@ -470,9 +468,9 @@ const isAncestor = (ancestor, descendant) => {
 
   while (descendantId) {
     // const { parent } = getNode(descendantId, true) || {}
-    const { parent } = getNodeWithParentId(descendantId) || {}
+    const { parent } = useCanvas().getNodeWithParentById(descendantId) || {}
 
-    if (parent.id === ancestorId) {
+    if (parent?.id === ancestorId) {
       return true
     }
 
@@ -539,7 +537,7 @@ const setHoverRect = (element, data) => {
 
     // 如果拖拽经过的元素是body或者是带有容器属性的盒子，并且在元素内部插入,则需要特殊处理
     if ((isBodyEl(element) || configure?.isContainer) && rectType === POSITION.IN) {
-      const { node } = isBodyEl(element) ? { node: getSchema() } : getNodeWithParentId(id) || {}
+      const { node } = isBodyEl(element) ? { node: getSchema() } : useCanvas().getNodeWithParentById(id) || {}
       const children = node?.children || []
       if (children.length > 0) {
         // 如果容器盒子有子节点，则以最后一个子节点为拖拽参照物
@@ -694,7 +692,7 @@ export const selectNode = async (id, type) => {
     canvasState.loopId = loopId
   }
   // const { node, parent } = getNode(id, true) || {}
-  const { node, parent } = getNodeWithParentId(id) || {}
+  const { node, parent } = useCanvas().getNodeWithParentById(id) || {}
   let element = querySelectById(id, type)
 
   if (element) {
@@ -720,7 +718,7 @@ export const hoverNode = (id, data) => {
 export const insertNode = (node, position = POSITION.IN, select = true) => {
   if (!node.parent) {
     // insertInner({ node: canvasState.schema, data: node.data }, position)
-    insertInner({ node: pageState.pageSchema, data: node.data }, position)
+    insertInner({ node: useCanvas().pageState.pageSchema, data: node.data }, position)
   } else {
     switch (position) {
       case POSITION.TOP:
@@ -756,7 +754,7 @@ export const copyNode = (id) => {
     return
   }
   // const { node, parent } = getNode(id, true)
-  const { node, parent } = getNodeWithParentId(id)
+  const { node, parent } = useCanvas().getNodeWithParentById(id)
 
   inserAfter({ parent, node, data: copyObject(node) })
   getController().addHistory()
@@ -770,7 +768,7 @@ export const onMouseUp = () => {
   const lineId = lineState.id
 
   if (draging && !forbidden) {
-    const { parent, node } = getNodeWithParentId(lineId) || {} // target
+    const { parent, node } = useCanvas().getNodeWithParentById(lineId) || {} // target
     // const targetNode = { parent, node, data: toRaw(data) }
 
     const insertData = toRaw(data)
@@ -862,7 +860,7 @@ export const setGlobalState = (state) => {
 }
 
 export const getNodePath = (id, nodes = []) => {
-  const { parent, node } = getNodeWithParentId(id) || {}
+  const { parent, node } = useCanvas().getNodeWithParentById(id) || {}
 
   node && nodes.unshift({ name: node.componentName, node: id })
 
@@ -934,7 +932,9 @@ export const canvasApi = {
   setPageCss,
   addScript,
   addStyle,
-  getNode,
+  getNode: () => {
+    return useCanvas().getNode()
+  },
   getCurrent,
   setSchema,
   setUtils,

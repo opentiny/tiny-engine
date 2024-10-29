@@ -391,6 +391,7 @@ const setRenderer = (fn) => {
 let lastUpdateTime = 0
 let timeoutRef = null
 
+// TODO: 简单节流，需要优化
 const throttleUpdateSchema = () => {
   let curTime = Date.now()
 
