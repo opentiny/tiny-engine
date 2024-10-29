@@ -11,10 +11,17 @@
  */
 
 import { reactive } from 'vue'
-import { useHttp } from '@opentiny/tiny-engine-http'
 import { utils, constants } from '@opentiny/tiny-engine-utils'
 import { meta as BuiltinComponentMaterials } from '@opentiny/tiny-engine-builtin-component'
-import { getMergeMeta, getOptions, useNotify, useCanvas, useBlock } from '@opentiny/tiny-engine-meta-register'
+import {
+  getMergeMeta,
+  getOptions,
+  useNotify,
+  useCanvas,
+  useBlock,
+  getMetaApi,
+  META_SERVICE
+} from '@opentiny/tiny-engine-meta-register'
 import meta from '../../meta'
 
 const { camelize, capitalize } = utils
@@ -25,8 +32,6 @@ const resource = new Map()
 
 // 这里涉及到区块发布后的更新问题，所以需要单独缓存区块
 const blockResource = new Map()
-
-const http = useHttp()
 
 const materialState = reactive({
   components: [], // 这里存放的是物料插件面板里所有显示的组件
@@ -133,7 +138,7 @@ const registerComponentToResource = (data) => {
 const fetchBlockDetail = async (blockName) => {
   const { getBlockAssetsByVersion } = useBlock()
   const currentVersion = componentState.componentsMap?.[blockName]?.version
-  const block = (await http.get(`/material-center/api/block?label=${blockName}`))?.[0]
+  const block = (await getMetaApi(META_SERVICE.Http).get(`/material-center/api/block?label=${blockName}`))?.[0]
 
   if (!block) {
     throw new Error(`区块${blockName}不存在！`)
@@ -346,7 +351,7 @@ const setMaterial = (name, data) => {
  */
 export const getMaterialsRes = async () => {
   const bundleUrls = getMergeMeta('engine.config')?.material || []
-  const materials = await Promise.allSettled(bundleUrls.map((url) => http.get(url)))
+  const materials = await Promise.allSettled(bundleUrls.map((url) => getMetaApi(META_SERVICE.Http).get(url)))
   return materials
 }
 

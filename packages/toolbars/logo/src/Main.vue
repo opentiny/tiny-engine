@@ -116,7 +116,6 @@ import {
 import { iconHelpCircle } from '@opentiny/vue-icon'
 import { useLayout, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
-import { useHttp } from '@opentiny/tiny-engine-http'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import { isDevelopEnv } from '@opentiny/tiny-engine-common/js/environments'
 
@@ -126,8 +125,6 @@ defineProps({
     default: () => ({})
   }
 })
-
-const http = useHttp()
 
 const { PLUGIN_NAME, activePlugin } = useLayout()
 
@@ -226,19 +223,21 @@ const confirm = () => {
           target: document.getElementById('tiny-loading'),
           background: 'rgba(0, 0, 0, 0.8)'
         })
-        http.get(`/app-center/api/apps/save/${appId}?version=${state.formData.version}`).then((data) => {
-          state.show = false
-          loading.close()
-          if (data) {
-            useModal().message({
-              message: '保存成功'
-            })
-          } else {
-            useModal().message({
-              message: '保存失败'
-            })
-          }
-        })
+        getMetaApi(META_SERVICE.Http)
+          .get(`/app-center/api/apps/save/${appId}?version=${state.formData.version}`)
+          .then((data) => {
+            state.show = false
+            loading.close()
+            if (data) {
+              useModal().message({
+                message: '保存成功'
+              })
+            } else {
+              useModal().message({
+                message: '保存失败'
+              })
+            }
+          })
       } else {
         const loadingInstance = Loading.service({
           text: '发布中，请稍后...',
@@ -254,7 +253,7 @@ const confirm = () => {
           allGenerate: state.formData.allGenerate
         }
         localStorage.setItem('tinyengine_publishMsg', JSON.stringify(postData))
-        http
+        getMetaApi(META_SERVICE.Http)
           .post(`/app-center/api/apps/publish/${appId}`, postData)
           .then((data) => {
             if (data.code === 200) {

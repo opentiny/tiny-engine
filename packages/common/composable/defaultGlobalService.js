@@ -1,5 +1,4 @@
-import { useHttp } from '@opentiny/tiny-engine-http'
-import { useMessage, useModal, defineService, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { useMessage, useModal, defineService, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { watch } from 'vue'
 
 const getBaseInfo = () => {
@@ -43,7 +42,7 @@ const initialState = {
 
 const getUserInfo = () => {
   // 获取登录用户信息
-  return useHttp()
+  return getMetaApi(META_SERVICE.Http)
     .get('/platform-center/api/user/me')
     .catch((error) => {
       useModal().message({ message: error.message, status: 'error' })
@@ -51,10 +50,10 @@ const getUserInfo = () => {
 }
 
 // 获取当前应用的信息
-const fetchAppInfo = (appId) => useHttp().get(`/app-center/api/apps/detail/${appId}`)
+const fetchAppInfo = (appId) => getMetaApi(META_SERVICE.Http).get(`/app-center/api/apps/detail/${appId}`)
 
 // 获取应用列表
-const fetchAppList = (platformId) => useHttp().get(`/app-center/api/apps/list/${platformId}`)
+const fetchAppList = (platformId) => getMetaApi(META_SERVICE.Http).get(`/app-center/api/apps/list/${platformId}`)
 
 const { subscribe, publish } = useMessage()
 

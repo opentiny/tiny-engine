@@ -129,7 +129,6 @@ import { PluginPanel, SearchEmpty } from '@opentiny/tiny-engine-common'
 import { useTranslate, useModal, useHelp, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
-import { useHttp } from '@opentiny/tiny-engine-http'
 import { BASE_URL } from '@opentiny/tiny-engine-common/js/environments'
 
 export default {
@@ -387,7 +386,7 @@ export default {
       }
       formdata.set(key, data.raw)
 
-      useHttp()
+      getMetaApi(META_SERVICE.Http)
         .post(action, formdata)
         .then(() => {
           handleAvatarSuccess()

@@ -10,10 +10,8 @@
  *
  */
 
-import { useHttp } from '@opentiny/tiny-engine-http'
 import { atou } from '@opentiny/tiny-engine-common/js/preview'
-
-const http = useHttp()
+import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 const HEADER_LOWCODE_ORG = 'x-lowcode-org'
 
@@ -31,21 +29,21 @@ export const getSearchParams = () => {
 
 export const fetchCode = async ({ platform, app, type, id, history, pageInfo, tenant } = {}) =>
   pageInfo
-    ? http.post(
+    ? getMetaApi(META_SERVICE.Http).post(
         '/app-center/api/schema2code',
         { platform, app, pageInfo },
         {
           headers: { [HEADER_LOWCODE_ORG]: tenant }
         }
       )
-    : http.get('/app-center/api/code', {
+    : getMetaApi(META_SERVICE.Http).get('/app-center/api/code', {
         headers: { [HEADER_LOWCODE_ORG]: tenant },
         params: { platform, app, type, id, history }
       })
 
 export const fetchMetaData = async ({ platform, app, type, id, history, tenant } = {}) =>
   id
-    ? http.get('/app-center/api/preview/metadata', {
+    ? getMetaApi(META_SERVICE.Http).get('/app-center/api/preview/metadata', {
         headers: { [HEADER_LOWCODE_ORG]: tenant },
         params: { platform, app, type, id, history }
       })
@@ -56,5 +54,6 @@ export const fetchImportMap = async () => {
   return fetch(new URL('./preview-import-map-static/preview-importmap.json', baseUrl).href).then((res) => res.json())
 }
 
-export const fetchAppSchema = async (id) => http.get(`/app-center/v1/api/apps/schema/${id}`)
-export const fetchBlockSchema = async (blockName) => http.get(`/material-center/api/block?label=${blockName}`)
+export const fetchAppSchema = async (id) => getMetaApi(META_SERVICE.Http).get(`/app-center/v1/api/apps/schema/${id}`)
+export const fetchBlockSchema = async (blockName) =>
+  getMetaApi(META_SERVICE.Http).get(`/material-center/api/block?label=${blockName}`)

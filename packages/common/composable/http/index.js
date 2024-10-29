@@ -58,6 +58,11 @@ export default defineService({
     state.http = http
   },
   apis: ({ state }) => ({
-    getHttp: () => state.http
+    getHttp: () => state.http,
+    get: (...args) => state.http?.get(...args),
+    post: (...args) => state.http?.post(...args),
+    request: (...args) => state.http?.request(...args),
+    put: (...args) => state.http?.put(...args),
+    delete: (...args) => state.http?.delete(...args)
   })
 })

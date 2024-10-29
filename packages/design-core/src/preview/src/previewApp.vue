@@ -20,10 +20,9 @@
 <script>
 import { ref, onMounted } from 'vue'
 import { Progress, Button } from '@opentiny/vue'
-import { useHttp } from '@opentiny/tiny-engine-http'
 import { VITE_ORIGIN } from '@opentiny/tiny-engine-common/js/environments'
 import { EXTEND_CONFIG } from '@opentiny/tiny-engine-common/js/app'
-import { useMessage } from '@opentiny/tiny-engine-meta-register'
+import { useMessage, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
@@ -31,7 +30,6 @@ export default {
     TinyButton: Button
   },
   setup() {
-    const http = useHttp()
     const paramsMap = new URLSearchParams(location.search)
     const appId = paramsMap.get('appid')
     // 轮询默认事件
@@ -72,51 +70,53 @@ export default {
       }
       addPercent()
 
-      http.get(`/app-center/api/tasks/status/${taskId}`).then((data) => {
-        statusText.value = deployTips[data.taskStatus]
-        if (data.taskStatus === taskStatus.RUNNING) {
-          setTimeout(() => {
-            cyclesFetchStatus(taskId)
-          }, INTERVAL_PROGRESS)
-        } else if (data.taskStatus === taskStatus.FINISHED) {
-          progressStatus.value = 'success'
-          percentage.value = 100
+      getMetaApi(META_SERVICE.Http)
+        .get(`/app-center/api/tasks/status/${taskId}`)
+        .then((data) => {
+          statusText.value = deployTips[data.taskStatus]
+          if (data.taskStatus === taskStatus.RUNNING) {
+            setTimeout(() => {
+              cyclesFetchStatus(taskId)
+            }, INTERVAL_PROGRESS)
+          } else if (data.taskStatus === taskStatus.FINISHED) {
+            progressStatus.value = 'success'
+            percentage.value = 100
 
-          let openUrl = `${VITE_ORIGIN}/app-center/entry/${appId}/`
+            let openUrl = `${VITE_ORIGIN}/app-center/entry/${appId}/`
 
-          const { subscribe, publish, unsubscribe } = useMessage()
+            const { subscribe, publish, unsubscribe } = useMessage()
 
-          subscribe({
-            topic: 'app_info_changed',
-            subscriber: 'from_preview',
-            callback: (app) => {
-              const extendConfig = app?.extend_config || {}
+            subscribe({
+              topic: 'app_info_changed',
+              subscriber: 'from_preview',
+              callback: (app) => {
+                const extendConfig = app?.extend_config || {}
 
-              if (extendConfig?.app_type === EXTEND_CONFIG.TYPE.CONSOLE) {
-                openUrl = `${VITE_ORIGIN}/app-service/${extendConfig?.app_type ?? extendConfig?.type}${
-                  extendConfig.business.router
-                }?appId=${appId}&region=cn-north-7&previewType=app&env=alpha&tenant=${paramsMap.get('tenant')}`
+                if (extendConfig?.app_type === EXTEND_CONFIG.TYPE.CONSOLE) {
+                  openUrl = `${VITE_ORIGIN}/app-service/${extendConfig?.app_type ?? extendConfig?.type}${
+                    extendConfig.business.router
+                  }?appId=${appId}&region=cn-north-7&previewType=app&env=alpha&tenant=${paramsMap.get('tenant')}`
+                }
+
+                // 要在 url 改变之前取消监听
+                unsubscribe({ topic: 'app_info_changed', subscriber: 'from_preview' })
+
+                // TODO finally 怎么实现
+                window.location = openUrl
               }
+            })
 
-              // 要在 url 改变之前取消监听
-              unsubscribe({ topic: 'app_info_changed', subscriber: 'from_preview' })
-
-              // TODO finally 怎么实现
-              window.location = openUrl
-            }
-          })
-
-          publish({ topic: 'app_id_changed', data: appId })
-        } else {
-          progressStatus.value = 'exception'
-          percentage.value = 0
-          isBtnShow.value = true
-        }
-      })
+            publish({ topic: 'app_id_changed', data: appId })
+          } else {
+            progressStatus.value = 'exception'
+            percentage.value = 0
+            isBtnShow.value = true
+          }
+        })
     }
 
     const previewApp = () => {
-      http
+      getMetaApi(META_SERVICE.Http)
         .get(`/app-center/api/apps/preview/${appId}`)
         .then((data) => {
           if (data.taskId || data.id) {

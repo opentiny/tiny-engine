@@ -10,12 +10,10 @@
  *
  */
 
-import { useHttp } from '@opentiny/tiny-engine-http'
 import { isVsCodeEnv } from './environments'
 import { generateRouter, generatePage } from './vscodeGenerateFile'
 import { usePage, useCanvas, useNotify } from '@opentiny/tiny-engine-meta-register'
-
-const http = useHttp()
+import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 /**
  * 异常情况埋点上传
@@ -27,7 +25,9 @@ export const requestEvent = (url, params) => {
     return
   }
 
-  return http.post(url, params).catch(() => {})
+  return getMetaApi(META_SERVICE.Http)
+    .post(url, params)
+    .catch(() => {})
 }
 
 /**
@@ -38,7 +38,7 @@ export const requestEvent = (url, params) => {
  *
  */
 export const handlePageUpdate = (pageId, params, routerChange) => {
-  return http
+  return getMetaApi(META_SERVICE.Http)
     .post(`/app-center/api/pages/update/${pageId}`, params)
     .then((res) => {
       const { pageSettingState } = usePage()
