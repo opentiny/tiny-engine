@@ -64,13 +64,19 @@ const savePage = async (pageSchema) => {
 
 export const saveCommon = (value) => {
   const { pageSettingState, isTemporaryPage } = usePage()
-  const { isBlock, canvasApi, pageState } = useCanvas()
+  const { isBlock, canvasApi, pageState, resetBlockCanvasState, resetPageCanvasState } = useCanvas()
   const pageSchema = JSON.parse(value)
-  const { setSchema, selectNode } = canvasApi.value
+  const { selectNode } = canvasApi.value
 
-  pageState.pageSchema = pageSchema
+  // pageState.pageSchema = pageSchema
   // setSchema 是异步，保存直接传递当前 schema
-  setSchema(pageSchema)
+  // setSchema(pageSchema)
+
+  if (isBlock()) {
+    resetBlockCanvasState({ ...pageState, pageSchema })
+  } else {
+    resetPageCanvasState({ ...pageState, pageSchema })
+  }
 
   if (pageSettingState?.isAIPage) {
     if (isTemporaryPage.saved) {

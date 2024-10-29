@@ -130,19 +130,21 @@ export default {
       }
     )
 
-    const nodeSelected = (node, parent, type) => {
+    const nodeSelected = (node, parent, type, id) => {
       const { toolbars } = useLayout().layoutState
       if (type !== 'clickTree') {
         useLayout().closePlugin()
       }
 
       const { getSchema, getNodePath } = useCanvas().canvasApi.value
+      const schemaItem = useCanvas().getNodeById(id)
 
       const schema = getSchema()
       // 如果选中的节点是画布，就设置成默认选中最外层schema
-      useProperties().getProps(node || schema, parent)
-      useCanvas().setCurrentSchema(node || schema)
-      footData.value = getNodePath(node?.id)
+      // TODO: 将 canvas 的 schema 改成 pageState 的 schema
+      useProperties().getProps(schemaItem || schema, parent)
+      useCanvas().setCurrentSchema(schemaItem || schema)
+      footData.value = getNodePath(schemaItem?.id)
       toolbars.visiblePopover = false
     }
 

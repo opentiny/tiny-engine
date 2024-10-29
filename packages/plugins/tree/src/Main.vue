@@ -49,12 +49,12 @@
 </template>
 
 <script>
-import { reactive, watch, ref, onActivated, computed } from 'vue'
+import { reactive, watch, ref, computed } from 'vue'
 import { Grid, GridColumn } from '@opentiny/vue'
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { IconChevronDown, iconEyeopen, iconEyeclose } from '@opentiny/vue-icon'
-import { useCanvas, useMaterial, useLayout } from '@opentiny/tiny-engine-meta-register'
+import { useCanvas, useMaterial, useLayout, useMessage } from '@opentiny/tiny-engine-meta-register'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { typeOf } from '@opentiny/vue-renderless/common/type'
 
@@ -118,10 +118,22 @@ export default {
       }
     })
 
-    onActivated(() => {
-      const { getSchema } = useCanvas().canvasApi.value
-      state.pageSchema = filterSchema(getSchema())
+    const { subscribe } = useMessage()
+
+    subscribe({
+      topic: 'schemaChange',
+      subscriber: 'node-tree',
+      callback: ({ option }) => {
+        if (option.type !== 'changeProps') {
+          state.pageSchema = filterSchema(pageState.pageSchema)
+        }
+      }
     })
+
+    // onActivated(() => {
+    //   const { getSchema } = useCanvas().canvasApi.value
+    //   state.pageSchema = filterSchema(getSchema())
+    // })
 
     watch(
       () => pageState.currentSchema,

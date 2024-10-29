@@ -151,13 +151,15 @@ const CONSTANTS = {
 }
 
 const getJsSlot = () => {
-  const { getNode, getCurrent } = useCanvas().canvasApi.value || {}
+  const { getCurrent } = useCanvas().canvasApi.value || {}
 
-  if (!getNode || !getCurrent) {
+  if (!getCurrent) {
     return [false, {}]
   }
 
-  const jsSlot = getNode(getCurrent()?.parent?.id, true)?.parent
+  const { getNodeWithParentId } = useCanvas()
+
+  const jsSlot = getNodeWithParentId(getCurrent()?.parent?.id, true)?.parent
 
   return [jsSlot?.type === 'JSSlot', jsSlot]
 }

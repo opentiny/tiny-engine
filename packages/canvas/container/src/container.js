@@ -20,6 +20,7 @@ import {
   NODE_LOOP
 } from '../../common'
 import { useCanvas, useLayout, useResource, useTranslate, useMaterial } from '@opentiny/tiny-engine-meta-register'
+import { utils } from '@opentiny/tiny-engine-utils'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import Builtin from '../../render/src/builtin/builtin.json' //TODO 画布内外应该分开
 
@@ -30,6 +31,8 @@ export const POSITION = Object.freeze({
   RIGHT: 'right',
   IN: 'in'
 })
+
+const { getNodeWithParentId, pageState, getPageSchema, getNode, operateNode } = useCanvas()
 
 const initialDragState = {
   keydown: false,
@@ -74,9 +77,10 @@ export const setDesignMode = (mode) => getRenderer()?.setDesignMode(mode)
 
 export const getGlobalState = () => getRenderer().getGlobalState()
 
-export const getNode = (id, parent) => getRenderer()?.getNode(id, parent)
+// export const getNode = (id, parent) => getRenderer()?.getNode(id, parent)
 
-export const getSchema = () => getRenderer()?.getSchema()
+// export const getSchema = () => getRenderer()?.getSchema()
+export const getSchema = () => getPageSchema()
 
 export const getContext = () => {
   return getRenderer().getContext()
@@ -251,48 +255,86 @@ const getRect = (element) => {
 }
 
 const inserAfter = ({ parent, node, data }) => {
-  const parentChildren = parent.children
-  const index = parentChildren.indexOf(node)
-  parent.children.splice(index + 1, 0, data)
+  if (!data.id) {
+    data.id = utils.guid()
+  }
+
+  operateNode({
+    type: 'insert',
+    parentId: parent.id,
+    newNodeData: data,
+    position: 'after',
+    referTargetNodeId: node.id
+  })
+
+  // const parentChildren = parent.children
+  // const index = parentChildren.indexOf(node)
+  // parent.children.splice(index + 1, 0, data)
 }
 
 const insertBefore = ({ parent, node, data }) => {
-  const parentChildren = parent.children
-  const index = parentChildren.indexOf(node)
-  parent.children.splice(index, 0, data)
+  // const parentChildren = parent.children
+  // const index = parentChildren.indexOf(node)
+  // parent.children.splice(index, 0, data)
+  if (!data.id) {
+    data.id = utils.guid()
+  }
+
+  operateNode({
+    type: 'insert',
+    parentId: parent.id,
+    newNodeData: data,
+    position: 'before',
+    referTargetNodeId: node.id
+  })
 }
 
 const insertInner = ({ node, data }, position) => {
-  node.children = node.children || []
-
-  if (position === POSITION.TOP || position === POSITION.LEFT) {
-    node.children.unshift(data)
-  } else {
-    node.children.push(data)
+  if (!data.id) {
+    data.id = utils.guid()
   }
+
+  operateNode({
+    type: 'insert',
+    parentId: node.id,
+    newNodeData: data,
+    position: [POSITION.TOP, POSITION.LEFT].includes(position) ? 'before' : 'after'
+  })
+  // node.children = node.children || []
+
+  // if (position === POSITION.TOP || position === POSITION.LEFT) {
+  //   node.children.unshift(data)
+  // } else {
+  //   node.children.push(data)
+  // }
 }
 
-export const removeNode = ({ parent, node }) => {
-  const parentChildren = parent.children || parent.value
-  const index = parentChildren.indexOf(node)
+export const removeNode = (id) => {
+  // const parentChildren = parent.children || parent.value
+  // const index = parentChildren.indexOf(node)
 
-  if (index > -1) {
-    parentChildren.splice(index, 1)
-  } else {
-    const templates = parentChildren.filter(({ componentName }) => componentName === 'Template')
+  // if (index > -1) {
+  //   parentChildren.splice(index, 1)
+  // } else {
+  //   const templates = parentChildren.filter(({ componentName }) => componentName === 'Template')
 
-    templates.forEach((template) => {
-      const { children } = template
+  //   templates.forEach((template) => {
+  //     const { children } = template
 
-      if (children.length) {
-        children.splice(children.indexOf(node), 1)
-      }
+  //     if (children.length) {
+  //       children.splice(children.indexOf(node), 1)
+  //     }
 
-      if (!children.length) {
-        parentChildren.splice(parentChildren.indexOf(template), 1)
-      }
-    })
-  }
+  //     if (!children.length) {
+  //       parentChildren.splice(parentChildren.indexOf(template), 1)
+  //     }
+  //   })
+  // }
+
+  operateNode({
+    type: 'delete',
+    id
+  })
 }
 
 export const removeNodeById = (id) => {
@@ -300,7 +342,8 @@ export const removeNodeById = (id) => {
     return
   }
 
-  removeNode(getNode(id, true))
+  // removeNode(getNode(id, true))
+  removeNode(id)
   clearSelect()
   getController().addHistory()
   canvasState.emit('remove')
@@ -426,13 +469,14 @@ const isAncestor = (ancestor, descendant) => {
   let descendantId = typeof descendant === 'string' ? descendant : descendant.id
 
   while (descendantId) {
-    const { parent } = getNode(descendantId, true) || {}
+    // const { parent } = getNode(descendantId, true) || {}
+    const { parent } = getNodeWithParentId(descendantId) || {}
 
     if (parent.id === ancestorId) {
       return true
     }
 
-    descendantId = parent.id
+    descendantId = parent?.id
   }
 
   return false
@@ -495,7 +539,7 @@ const setHoverRect = (element, data) => {
 
     // 如果拖拽经过的元素是body或者是带有容器属性的盒子，并且在元素内部插入,则需要特殊处理
     if ((isBodyEl(element) || configure?.isContainer) && rectType === POSITION.IN) {
-      const { node } = isBodyEl(element) ? { node: getSchema() } : getNode(id, true) || {}
+      const { node } = isBodyEl(element) ? { node: getSchema() } : getNodeWithParentId(id) || {}
       const children = node?.children || []
       if (children.length > 0) {
         // 如果容器盒子有子节点，则以最后一个子节点为拖拽参照物
@@ -649,7 +693,8 @@ export const selectNode = async (id, type) => {
     const loopId = type.split('=')[1]
     canvasState.loopId = loopId
   }
-  const { node, parent } = getNode(id, true) || {}
+  // const { node, parent } = getNode(id, true) || {}
+  const { node, parent } = getNodeWithParentId(id) || {}
   let element = querySelectById(id, type)
 
   if (element) {
@@ -662,7 +707,7 @@ export const selectNode = async (id, type) => {
 
   await scrollToNode(element)
   setSelectRect(element)
-  canvasState.emit('selected', node, parent, type)
+  canvasState.emit('selected', node, parent, type, id)
 
   return node
 }
@@ -674,7 +719,8 @@ export const hoverNode = (id, data) => {
 
 export const insertNode = (node, position = POSITION.IN, select = true) => {
   if (!node.parent) {
-    insertInner({ node: canvasState.schema, data: node.data }, position)
+    // insertInner({ node: canvasState.schema, data: node.data }, position)
+    insertInner({ node: pageState.pageSchema, data: node.data }, position)
   } else {
     switch (position) {
       case POSITION.TOP:
@@ -709,7 +755,8 @@ export const copyNode = (id) => {
   if (!id) {
     return
   }
-  const { node, parent } = getNode(id, true)
+  // const { node, parent } = getNode(id, true)
+  const { node, parent } = getNodeWithParentId(id)
 
   inserAfter({ parent, node, data: copyObject(node) })
   getController().addHistory()
@@ -723,13 +770,16 @@ export const onMouseUp = () => {
   const lineId = lineState.id
 
   if (draging && !forbidden) {
-    const { parent, node } = getNode(lineId, true) || {} // target
-    const targetNode = { parent, node, data: toRaw(data) }
+    const { parent, node } = getNodeWithParentId(lineId) || {} // target
+    // const targetNode = { parent, node, data: toRaw(data) }
+
+    const insertData = toRaw(data)
+    const targetNode = { parent, node, data: { ...insertData, children: insertData.children || [] } }
 
     if (sourceId) {
       // 内部拖拽
       if (sourceId !== lineId && !absolute) {
-        removeNode(getNode(sourceId, true))
+        removeNode(sourceId)
         insertNode(targetNode, position)
       }
     } else {
@@ -812,7 +862,7 @@ export const setGlobalState = (state) => {
 }
 
 export const getNodePath = (id, nodes = []) => {
-  const { parent, node } = getNode(id, true) || {}
+  const { parent, node } = getNodeWithParentId(id) || {}
 
   node && nodes.unshift({ name: node.componentName, node: id })
 

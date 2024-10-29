@@ -363,6 +363,7 @@ let canvasRenderer = null
 const defaultRenderer = function () {
   // 渲染画布增加根节点，与出码和预览保持一致
   const rootChildrenSchema = {
+    id: 0,
     componentName: 'div',
     // 手动添加一个唯一的属性，后续在画布选中此节点时方便处理额外的逻辑。由于没有修改schema，不会影响出码
     props: { ...schema.props, 'data-id': 'root-container' },
@@ -387,6 +388,29 @@ const setRenderer = (fn) => {
   canvasRenderer = fn
 }
 
+let lastUpdateTime = 0
+let timeoutRef = null
+
+const throttleUpdateSchema = () => {
+  let curTime = Date.now()
+
+  if (curTime - lastUpdateTime >= 100) {
+    clearTimeout(timeoutRef)
+    lastUpdateTime = curTime
+    window.host.patchLatestSchema(schema)
+
+    return
+  }
+
+  timeoutRef = setTimeout(() => {
+    clearTimeout(timeoutRef)
+
+    lastUpdateTime = curTime
+
+    window.host.patchLatestSchema(schema)
+  }, 100)
+}
+
 export default {
   setup() {
     provide('rootSchema', schema)
@@ -394,6 +418,13 @@ export default {
     const { locale } = inject(I18nInjectionKey).global
     const { data } = useBroadcastChannel({ name: BROADCAST_CHANNEL.CanvasLang })
     const { post } = useBroadcastChannel({ name: BROADCAST_CHANNEL.SchemaLength })
+
+    window.host.subscribe({
+      topic: 'schemaChange',
+      callback: () => {
+        throttleUpdateSchema()
+      }
+    })
 
     watch(data, () => {
       locale.value = data.value

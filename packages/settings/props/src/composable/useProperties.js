@@ -121,15 +121,32 @@ const setProp = (name, value, type) => {
 
   properties.schema.props = properties.schema.props || {}
 
+  const newProps = { ...(properties.schema.props || {}) }
+
+  let overwrite = false
+
   if ((value === '' && type !== 'String') || value === undefined || value === null) {
-    delete properties.schema.props[name]
+    // delete properties.schema.props[name]
+    delete newProps[name]
+    overwrite = true
   } else {
-    properties.schema.props[name] = value
+    // properties.schema.props[name] = value
+    newProps[name] = value
   }
 
+  useCanvas().operateNode({
+    type: 'changeProps',
+    id: properties.schema.id,
+    value: { props: newProps },
+    option: { overwrite }
+  })
+
   // 没有父级，或者不在节点上面，要更新内容。就用setState
-  const { getNode, setState, updateRect } = useCanvas().canvasApi.value || {}
-  getNode(properties.schema.id, true)?.parent || setState(useCanvas().getPageSchema().state)
+  const { setState, updateRect } = useCanvas().canvasApi.value || {}
+  const { getNodeWithParentById } = useCanvas()
+
+  getNodeWithParentById(properties.schema.id)?.parent || setState(useCanvas().getPageSchema().state)
+  // getNode(properties.schema.id, true)?.parent || setState(useCanvas().getPageSchema().state)
   propsUpdateKey.value++
 
   // 更新根节点props不用updateRect
@@ -145,8 +162,19 @@ const getProp = (key) => {
 }
 
 const delProp = (name) => {
-  const props = properties.schema.props || {}
-  delete props[name]
+  // const props = properties.schema.props || {}
+  // delete props[name]
+
+  const newProps = { ...(properties.schema.props || {}) }
+
+  delete newProps[name]
+
+  useCanvas().operateNode({
+    type: 'changeProps',
+    id: properties.schema.id,
+    value: { props: newProps },
+    option: { overwrite: true }
+  })
   propsUpdateKey.value++
 }
 

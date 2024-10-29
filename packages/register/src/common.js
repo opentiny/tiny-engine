@@ -159,7 +159,13 @@ export const preprocessRegistry = (registry) => {
     })
 }
 
-export const generateRegistry = (registry) => {
+const maxDepth = 100
+
+export const generateRegistry = (registry, depth = 1) => {
+  if (depth > maxDepth) {
+    return
+  }
+
   Object.entries(registry).forEach(([key, value]) => {
     if (typeof value === 'object' && value) {
       const { id } = value
@@ -171,7 +177,8 @@ export const generateRegistry = (registry) => {
         // TODO: 其他类型配置处理
       }
 
-      generateRegistry(value)
+      // console.log('value', value)
+      generateRegistry(value, depth + 1)
     }
   })
 }
