@@ -14,7 +14,7 @@ import { h, provide, inject, nextTick, shallowReactive, reactive, ref, watch, wa
 import { I18nInjectionKey } from 'vue-i18n'
 import TinyVue from '@opentiny/vue'
 import * as TinyVueIcon from '@opentiny/vue-icon'
-import { useBroadcastChannel } from '@vueuse/core'
+import { useBroadcastChannel, useThrottleFn } from '@vueuse/core'
 import { constants, utils as commonUtils } from '@opentiny/tiny-engine-utils'
 import renderer, { parseData, setConfigure, setController, globalNotify, isStateAccessor } from './render'
 import {
@@ -388,29 +388,9 @@ const setRenderer = (fn) => {
   canvasRenderer = fn
 }
 
-let lastUpdateTime = 0
-let timeoutRef = null
-
-// TODO: 简单节流，需要优化
-const throttleUpdateSchema = () => {
-  let curTime = Date.now()
-
-  if (curTime - lastUpdateTime >= 100) {
-    clearTimeout(timeoutRef)
-    lastUpdateTime = curTime
-    window.host.patchLatestSchema(schema)
-
-    return
-  }
-
-  timeoutRef = setTimeout(() => {
-    clearTimeout(timeoutRef)
-
-    lastUpdateTime = curTime
-
-    window.host.patchLatestSchema(schema)
-  }, 100)
-}
+const throttleUpdateSchema = useThrottleFn(() => {
+  window.host.patchLatestSchema(schema)
+}, 100)
 
 export default {
   setup() {
@@ -422,9 +402,7 @@ export default {
 
     window.host.subscribe({
       topic: 'schemaChange',
-      callback: () => {
-        throttleUpdateSchema()
-      }
+      callback: throttleUpdateSchema
     })
 
     watch(data, () => {

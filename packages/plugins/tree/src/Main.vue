@@ -121,7 +121,6 @@ export default {
     const { subscribe, unsubscribe } = useMessage()
 
     onActivated(() => {
-      // const { getSchema } = useCanvas().canvasApi.value
       state.pageSchema = filterSchema(pageState.pageSchema)
 
       subscribe({

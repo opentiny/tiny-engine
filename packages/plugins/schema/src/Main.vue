@@ -41,6 +41,7 @@ import { VueMonaco, CloseIcon } from '@opentiny/tiny-engine-common'
 import { useCanvas, useModal, useNotify, useMessage } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { iconDownloadLink } from '@opentiny/vue-icon'
+import { useThrottleFn } from '@vueuse/core'
 
 const { reactiveObj2String: obj2String, string2Obj } = utils
 
@@ -112,8 +113,11 @@ export default {
       })
     }
 
+    const throttleUpdateData = useThrottleFn(() => {
+      state.pageData = obj2String(pageState.pageSchema)
+    }, 100)
+
     onActivated(() => {
-      // pageState.pageSchema = useCanvas().canvasApi.value?.getSchema?.() || {}
       state.pageData = obj2String(pageState.pageSchema)
       nextTick(() => {
         window.dispatchEvent(new Event('resize'))
@@ -123,13 +127,7 @@ export default {
       subscribe({
         topic: 'schemaChange',
         subscriber: 'schema-plugin',
-        callback: () => {
-          // if (option.type !== 'changeProps') {
-          //   state.pageSchema = filterSchema(pageState.pageSchema)
-          // }
-          // TODO: 使用节流
-          state.pageData = obj2String(pageState.pageSchema)
-        }
+        callback: throttleUpdateData
       })
     })
 

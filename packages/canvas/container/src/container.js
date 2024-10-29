@@ -75,9 +75,6 @@ export const setDesignMode = (mode) => getRenderer()?.setDesignMode(mode)
 
 export const getGlobalState = () => getRenderer().getGlobalState()
 
-// export const getNode = (id, parent) => getRenderer()?.getNode(id, parent)
-
-// export const getSchema = () => getRenderer()?.getSchema()
 export const getSchema = () => useCanvas().getPageSchema()
 
 export const getContext = () => {
@@ -264,16 +261,9 @@ const inserAfter = ({ parent, node, data }) => {
     position: 'after',
     referTargetNodeId: node.id
   })
-
-  // const parentChildren = parent.children
-  // const index = parentChildren.indexOf(node)
-  // parent.children.splice(index + 1, 0, data)
 }
 
 const insertBefore = ({ parent, node, data }) => {
-  // const parentChildren = parent.children
-  // const index = parentChildren.indexOf(node)
-  // parent.children.splice(index, 0, data)
   if (!data.id) {
     data.id = utils.guid()
   }
@@ -298,37 +288,9 @@ const insertInner = ({ node, data }, position) => {
     newNodeData: data,
     position: [POSITION.TOP, POSITION.LEFT].includes(position) ? 'before' : 'after'
   })
-  // node.children = node.children || []
-
-  // if (position === POSITION.TOP || position === POSITION.LEFT) {
-  //   node.children.unshift(data)
-  // } else {
-  //   node.children.push(data)
-  // }
 }
 
 export const removeNode = (id) => {
-  // const parentChildren = parent.children || parent.value
-  // const index = parentChildren.indexOf(node)
-
-  // if (index > -1) {
-  //   parentChildren.splice(index, 1)
-  // } else {
-  //   const templates = parentChildren.filter(({ componentName }) => componentName === 'Template')
-
-  //   templates.forEach((template) => {
-  //     const { children } = template
-
-  //     if (children.length) {
-  //       children.splice(children.indexOf(node), 1)
-  //     }
-
-  //     if (!children.length) {
-  //       parentChildren.splice(parentChildren.indexOf(template), 1)
-  //     }
-  //   })
-  // }
-
   useCanvas().operateNode({
     type: 'delete',
     id
@@ -691,7 +653,7 @@ export const selectNode = async (id, type) => {
     const loopId = type.split('=')[1]
     canvasState.loopId = loopId
   }
-  // const { node, parent } = getNode(id, true) || {}
+
   const { node, parent } = useCanvas().getNodeWithParentById(id) || {}
   let element = querySelectById(id, type)
 
@@ -717,7 +679,6 @@ export const hoverNode = (id, data) => {
 
 export const insertNode = (node, position = POSITION.IN, select = true) => {
   if (!node.parent) {
-    // insertInner({ node: canvasState.schema, data: node.data }, position)
     insertInner({ node: useCanvas().pageState.pageSchema, data: node.data }, position)
   } else {
     switch (position) {
@@ -753,7 +714,7 @@ export const copyNode = (id) => {
   if (!id) {
     return
   }
-  // const { node, parent } = getNode(id, true)
+
   const { node, parent } = useCanvas().getNodeWithParentById(id)
 
   inserAfter({ parent, node, data: copyObject(node) })
@@ -769,7 +730,6 @@ export const onMouseUp = () => {
 
   if (draging && !forbidden) {
     const { parent, node } = useCanvas().getNodeWithParentById(lineId) || {} // target
-    // const targetNode = { parent, node, data: toRaw(data) }
 
     const insertData = toRaw(data)
     const targetNode = { parent, node, data: { ...insertData, children: insertData.children || [] } }

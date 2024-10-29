@@ -126,11 +126,9 @@ const setProp = (name, value, type) => {
   let overwrite = false
 
   if ((value === '' && type !== 'String') || value === undefined || value === null) {
-    // delete properties.schema.props[name]
     delete newProps[name]
     overwrite = true
   } else {
-    // properties.schema.props[name] = value
     newProps[name] = value
   }
 
@@ -146,7 +144,6 @@ const setProp = (name, value, type) => {
   const { getNodeWithParentById } = useCanvas()
 
   getNodeWithParentById(properties.schema.id)?.parent || setState(useCanvas().getPageSchema().state)
-  // getNode(properties.schema.id, true)?.parent || setState(useCanvas().getPageSchema().state)
   propsUpdateKey.value++
 
   // 更新根节点props不用updateRect

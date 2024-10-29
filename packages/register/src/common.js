@@ -177,7 +177,6 @@ export const generateRegistry = (registry, depth = 1) => {
         // TODO: 其他类型配置处理
       }
 
-      // console.log('value', value)
       generateRegistry(value, depth + 1)
     }
   })
