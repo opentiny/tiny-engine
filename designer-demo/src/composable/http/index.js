@@ -71,8 +71,8 @@ const openLogin = () => {
   return new Promise((resolve, reject) => {
     if (!procession.promiseLogin) {
       procession.promiseLogin = loginVM.openLogin(procession, '/api/rebuildSession')
-      procession.promiseLogin.then(() => {
-        http.request(response.config).then(resolve, reject)
+      procession.promiseLogin.then((response) => {
+        HttpService.apis.request(response.config).then(resolve, reject)
       })
     }
   })
@@ -118,7 +118,7 @@ const getConfig = (env = import.meta.env) => {
 
 const options = {
   axiosConfig: getConfig(),
-  enableMock: false,
+  enableMock: true,
   mockData,
   interceptors: {
     request: [preRequest],
