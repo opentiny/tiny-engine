@@ -183,6 +183,7 @@ export default {
       )
     }
 
+
     // eslint-disable-next-line no-unused-vars
     const createNewPage = (schema) => {
       if (!(pageSettingState.isNew && pageSettingState.isAIPage)) {
@@ -209,8 +210,10 @@ export default {
       useHistory().addHistory()
     }
 
+
     // prompt
     const codeRules = ref(importedCodeRules)
+
 
     // 在每一次发送请求之前，都把引入区块的内容，给放到第一条消息中
     // 为了不污染存储在localstorage里的用户的原始消息，这里进行了简单的对象拷贝
@@ -239,8 +242,10 @@ export default {
         .post('/app-center/api/ai/chat', getSendSeesionProcess(), { timeout: 600000 })
         .then((res) => {
           const { originalResponse, schema } = res
+
           const responseMessage = getAiRespMessage(originalResponse.role, originalResponse.content)
           const respDisplayMessage = getAiRespMessage(originalResponse.role, originalResponse.content)
+
 
           sessionProcess.messages.push(responseMessage)
           sessionProcess.displayMessages.push(respDisplayMessage)
@@ -257,6 +262,7 @@ export default {
           // 若后续接入的 AI 的 token 有失效则需清除
           // localStorage.removeItem(currentModel.modelKey)
           // tokenDialogVisible.value = true
+
           messages.value[messages.value.length - 1].content = '连接失败'
           localStorage.removeItem('aiChat')
           inProcessing.value = false
@@ -634,6 +640,7 @@ export default {
   .arrow-down {
     margin-left: 5px;
   }
+
 }
 .tiny-dropdown .tiny-dropdown__trigger:not(.tiny-button) .tiny-svg {
   vertical-align: middle;
