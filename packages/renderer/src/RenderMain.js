@@ -37,9 +37,10 @@ import {
   getCondition,
   getConditions,
   context,
-  setNode
+  setNode,
+  getCanvasFlag,
+  setCanvasFlag
 } from './context'
-import CanvasEmpty from './CanvasEmpty.vue'
 
 const { BROADCAST_CHANNEL } = constants
 const { parseFunction: generateFunction } = commonUtils
@@ -366,6 +367,14 @@ const setSchema = async (data) => {
 
 const getNode = (id, parent) => (id ? getNodeById(id, parent) : schema)
 
+let CanvasEmptyComponent = null
+
+const getCanvasEmptyComponent = () => (CanvasEmptyComponent ? h(CanvasEmptyComponent) : null)
+
+const setCanvasEmptyComponent = (component) => {
+  CanvasEmptyComponent = component
+}
+
 let canvasRenderer = null
 
 const defaultRenderer = function () {
@@ -385,7 +394,7 @@ const defaultRenderer = function () {
       ref: 'page',
       className: 'design-page'
     },
-    schema.children?.length ? h(renderer, { schema: rootChildrenSchema, parent: schema }) : [h(CanvasEmpty)]
+    schema.children?.length ? h(renderer, { schema: rootChildrenSchema, parent: schema }) : getCanvasEmptyComponent()
   )
 }
 
@@ -466,5 +475,8 @@ export const api = {
   generateFn,
   getCollectionMethodsMap,
   getBlockSlotDataMap,
-  getComponent
+  getComponent,
+  getCanvasFlag,
+  setCanvasFlag,
+  setCanvasEmptyComponent
 }

@@ -10,7 +10,8 @@
  *
  */
 import Renderer, { api } from './RenderMain'
+import Builtin from './builtin/builtin.json'
 
 export default Renderer
 
-export { api }
+export { api, Builtin }

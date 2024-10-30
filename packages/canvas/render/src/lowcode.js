@@ -12,8 +12,9 @@
 
 import { getCurrentInstance, nextTick, provide, inject } from 'vue'
 import { I18nInjectionKey } from 'vue-i18n'
-import { api } from './RenderMain'
-import { collectionMethodsMap, generateFn, globalNotify } from './render'
+import { api } from '@opentiny/tiny-engine-renderer'
+
+const { getCollectionMethodsMap, generateFn, globalNotify } = api
 
 export const lowcodeWrap = (props, context) => {
   const global = {}
@@ -61,7 +62,7 @@ export const lowcodeWrap = (props, context) => {
       const fnName = fn.name
       if (fn.toString().includes('return this')) {
         return () => global
-      } else if (fnName && collectionMethodsMap[fnName.slice(0, -1)]) {
+      } else if (fnName && getCollectionMethodsMap()[fnName.slice(0, -1)]) {
         // 这里区块打包的时候会在方法名称后面多加一个字符串，所以此处需要截取下函数名称
         fn.realName = fnName.slice(0, -1)
         return generateFn(fn)

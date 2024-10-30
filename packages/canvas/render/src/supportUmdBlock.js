@@ -5,7 +5,9 @@ import * as TinyVueIcon from '@opentiny/vue-icon'
 import TinyVue from '@opentiny/vue'
 import TinyI18nHost from '@opentiny/tiny-engine-common/js/i18n'
 import { camelize, capitalize } from '@vue/shared'
-import { blockSlotDataMap, getComponent } from './render'
+import { api } from '@opentiny/tiny-engine-renderer'
+
+const { getBlockSlotDataMap, getComponent } = api
 
 // 和 @opentiny/tiny-engine-block-build 打包umd方式相适配
 export function supportUmdBlock() {
@@ -33,6 +35,8 @@ export function supportUmdBlock() {
 
       // 如果是作用域插槽，则获取作用域插槽传递过来的参数
       if (slotData) {
+        const blockSlotDataMap = getBlockSlotDataMap()
+
         if (blockSlotDataMap[blockName]) {
           blockSlotDataMap[blockName][slotName] = slotData
         } else {

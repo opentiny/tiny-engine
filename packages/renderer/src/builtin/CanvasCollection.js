@@ -10,8 +10,7 @@
  *
  */
 
-import { getController } from '../render'
-import { api } from '../RenderMain'
+import { api } from '@opentiny/tiny-engine-renderer'
 import { useModal } from '@opentiny/tiny-engine-meta-register'
 
 const NAME_PREFIX = {
@@ -45,7 +44,7 @@ const genRemoteMethodToLifeSetup = (variableName, sourceRef, pageSchema) => {
 const removeState = (pageSchema, variableName) => {
   delete pageSchema.state[variableName]
 
-  const { parse, traverse, generate } = getController().ast
+  const { parse, traverse, generate } = api.getController().ast
   const setupFn = pageSchema.lifeCycles?.setup?.value
 
   try {
@@ -76,7 +75,7 @@ const defaultHandlerTemplate = ({ node, sourceRef, schemaId, pageSchema }) => {
   const genVarName = (schemaId) => `${NAME_PREFIX.loop}${schemaId}`
 
   const updateNode = () => {
-    const { configure } = getController().getMaterial(node?.componentName)
+    const { configure } = api.getController().getMaterial(node?.componentName)
 
     if (!configure?.loop) {
       return

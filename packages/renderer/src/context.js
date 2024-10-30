@@ -19,6 +19,7 @@ export const context = shallowReactive({})
 export const conditions = shallowReactive({})
 
 const nodes = {}
+let canvasFlag = true // 是否表现画布内特征的标志，如拖拽事件、原生事件是否触发等
 
 export const setNode = (schema, parent) => {
   schema.id = schema.id || utils.guid()
@@ -55,3 +56,9 @@ export const setCondition = (id, visible = false) => {
 export const getCondition = (id) => conditions[id] !== false
 
 export const getConditions = () => conditions
+
+export const getCanvasFlag = () => canvasFlag
+
+export const setCanvasFlag = (flag) => {
+  canvasFlag = flag
+}
