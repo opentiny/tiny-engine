@@ -10,7 +10,7 @@
  *
  */
 
-import { api } from '@opentiny/tiny-engine-renderer'
+import { api } from '../RenderMain'
 import { useModal } from '@opentiny/tiny-engine-meta-register'
 
 const NAME_PREFIX = {

@@ -8,7 +8,7 @@
 
 <script>
 import { ref, watch, computed, inject } from 'vue'
-import { api } from '@opentiny/tiny-engine-renderer'
+import { api } from '../RenderMain'
 import CanvasPlaceholder from './CanvasPlaceholder.vue'
 
 import { getHandler } from './CanvasCollection.js'
