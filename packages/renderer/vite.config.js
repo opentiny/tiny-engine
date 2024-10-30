@@ -30,10 +30,7 @@ export default defineConfig({
     },
     rollupOptions: {
       output: {
-        banner: 'import "./style.css"',
-        entryFileNames: '[name].js',
-        chunkFileNames: '[name].js',
-        assetFileNames: '[name].[ext]'
+        banner: 'import "./style.css"'
       },
       external: ['vue', '@vueuse/core', 'vue-i18n', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/]
     },
