@@ -117,6 +117,16 @@ export default {
       }
     }
 
+    const isCanvasEvent = (event, handler) => {
+      const canvasFlag = canvasApi.getRenderer().getCanvasFlag()
+
+      if (!canvasFlag) {
+        return
+      }
+
+      return handler(event)
+    }
+
     const canvasReady = ({ detail }) => {
       if (iframe.value) {
         // 设置monitor报错埋点
@@ -131,22 +141,17 @@ export default {
 
         // 以下是内部iframe监听的事件
         win.addEventListener('mousedown', (event) => {
-          const canvasFlag = canvasApi.getRenderer().getCanvasFlag()
+          isCanvasEvent(event, (e) => {
+            // html元素使用scroll和mouseup事件处理
+            if (e.target === doc.documentElement) {
+              isScrolling = false
+              return
+            }
 
-          // 非画布不触发节点事件
-          if (!canvasFlag) {
-            return
-          }
-
-          // html元素使用scroll和mouseup事件处理
-          if (event.target === doc.documentElement) {
-            isScrolling = false
-            return
-          }
-
-          insertPosition.value = false
-          setCurrentNode(event)
-          target.value = event.target
+            insertPosition.value = false
+            setCurrentNode(e)
+            target.value = e.target
+          })
         })
 
         win.addEventListener('scroll', () => {
@@ -175,14 +180,9 @@ export default {
         })
 
         win.addEventListener('mousemove', (ev) => {
-          const canvasFlag = canvasApi.getRenderer().getCanvasFlag()
-
-          // 非画布不触发节点事件
-          if (!canvasFlag) {
-            return
-          }
-
-          dragMove(ev, true)
+          isCanvasEvent(ev, (e) => {
+            dragMove(e, true)
+          })
         })
 
         // 阻止浏览器默认的右键菜单功能
