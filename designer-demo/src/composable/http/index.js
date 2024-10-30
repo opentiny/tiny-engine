@@ -108,9 +108,9 @@ const getConfig = (env = import.meta.env) => {
 
   return {
     baseURL,
-    withCredentials: false,
+    withCredentials: dev,
     headers: {
-      'x-lowcode-mode': dev ? 'develop' : null,
+      ...(dev && { 'x-lowcode-mode': 'develop' }),
       'x-lowcode-org': getTenant()
     }
   }
@@ -118,7 +118,7 @@ const getConfig = (env = import.meta.env) => {
 
 const options = {
   axiosConfig: getConfig(),
-  enableMock: true,
+  enableMock: import.meta.env.MODE?.includes('dev'),
   mockData,
   interceptors: {
     request: [preRequest],

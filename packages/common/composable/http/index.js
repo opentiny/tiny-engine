@@ -10,6 +10,8 @@ const addInterceptors = ({ data, http, type }) => {
 
   if (Array.isArray(data)) {
     data.forEach((item) => {
+      if (!item) return
+
       if (Array.isArray(item)) {
         http.interceptors[type].use(...item)
 

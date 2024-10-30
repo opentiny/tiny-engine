@@ -40,7 +40,9 @@ export default (config) => {
             axios
               .get(any ? proxy + setting.url + '.json' : proxy, config)
               .then(({ data }) => {
-                typeof handleData === 'function' && (data = handleData(data, setting))
+                if (typeof handleData === 'function') {
+                  data = handleData(data, setting)
+                }
                 resolve([200, data])
               })
               .catch((error) => {

@@ -139,7 +139,7 @@ export default (config) => {
       return mock
     },
     disableMock() {
-      mock && mock.restore()
+      mock?.restore()
       mock = undefined
     },
     isMock() {
