@@ -21,7 +21,7 @@ import {
 } from '../../common'
 import { useCanvas, useLayout, useResource, useTranslate, useMaterial } from '@opentiny/tiny-engine-meta-register'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
-import { Builtin } from '@opentiny/tiny-engine-renderer'
+import { BuiltinBundle } from '@opentiny/tiny-engine-renderer'
 
 export const POSITION = Object.freeze({
   TOP: 'top',
@@ -895,7 +895,7 @@ export const canvasApi = {
   getGlobalState,
   getDocument,
   canvasDispatch,
-  Builtin,
+  BuiltinBundle,
   setDataSourceMap: (...args) => {
     return canvasState.renderer.setDataSourceMap(...args)
   },

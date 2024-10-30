@@ -10,8 +10,8 @@
  *
  */
 import Renderer, { api } from './RenderMain'
-import Builtin from './builtin/builtin.json'
+import BuiltinBundle from './builtin/builtin.json'
 
 export default Renderer
 
-export { api, Builtin }
+export { api, BuiltinBundle }
