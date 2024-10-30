@@ -56,6 +56,20 @@
           </span>
         </div>
       </tiny-form-item>
+
+      <tiny-form-item v-if="!isFolder && pageSettingState.isNew" label="选择模板" prop="template">
+        <tiny-select
+          v-model="pageSettingState.template_content"
+          filterable
+          :filter-method="filterTemplate"
+          clearable
+          value-field="template_content"
+          text-field="name"
+          render-type="tree"
+          popper-class="parent-fold-select-dropdown"
+          :tree-op="treeTemplateOp"
+        ></tiny-select>
+      </tiny-form-item>
     </tiny-form>
     <page-home
       v-if="!isFolder && !pageSettingState.isNew && pageSettingState.currentPageData.group !== 'public'"
@@ -222,6 +236,31 @@ export default {
       oldParentId.value = value.id
     }
 
+    const treeTemplateOp = computed(() => {
+      const processTemplates = (templates) => {
+        return templates.map((template) => {
+          const processedTemplate = { ...template }
+          if (!template.isTemplate) {
+            processedTemplate.disabled = true
+          }
+          if (template.children && template.children.length > 0) {
+            processedTemplate.children = processTemplates(template.children)
+          }
+          return processedTemplate
+        })
+      }
+
+      return {
+        data: processTemplates(pageSettingState.templates)
+      }
+    })
+
+    const filterTemplate = (value, data) => {
+      if (!value) return true
+
+      return data.name?.toLowerCase().indexOf(value?.toLowerCase()) !== -1
+    }
+
     return {
       pageRules,
       folderRules,
@@ -230,7 +269,9 @@ export default {
       validGeneralForm,
       treeFolderOp,
       currentRoute,
-      changeParentForderId
+      changeParentForderId,
+      filterTemplate,
+      treeTemplateOp
     }
   }
 }

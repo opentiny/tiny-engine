@@ -12,6 +12,7 @@
 
 import { reactive } from 'vue'
 import { extend, isEqual } from '@opentiny/vue-renderless/common/object'
+import { useHttp } from '@opentiny/tiny-engine-http'
 
 const DEFAULT_TEMPLATE = {
   app: '',
@@ -128,6 +129,37 @@ const resetTemplateData = () => {
 const isChangeTemplateData = () =>
   !isEqual(templateSettingState.currentTemplateData, templateSettingState.currentTemplateDataCopy)
 
+const http = useHttp()
+
+const formatTreeData = (data) => {
+  const map = {}
+  const tree = []
+
+  data.forEach((item) => {
+    map[item.id] = { ...item, children: [] }
+  })
+
+  data.forEach((item) => {
+    if (item.parentId) {
+      const parent = map[item.parentId]
+      if (parent) {
+        parent.children.push(map[item.id])
+      }
+    } else {
+      tree.push(map[item.id])
+    }
+  })
+  templateSettingState.treeDataMapping = map
+
+  return tree
+}
+
+const refreshTemplateList = async (appId, data) => {
+  const templateData = data ? data : await http.get(`/app-center/api/templates/list/${appId}`)
+  templateSettingState.templates = formatTreeData(templateData)
+  return templateSettingState.templates
+}
+
 export default () => {
   return {
     DEFAULT_TEMPLATE,
@@ -138,6 +170,7 @@ export default () => {
     getTemplateContent,
     resetTemplateData,
     initCurrentTemplateData,
-    isChangeTemplateData
+    isChangeTemplateData,
+    refreshTemplateList
   }
 }

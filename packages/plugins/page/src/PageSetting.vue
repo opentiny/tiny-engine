@@ -150,7 +150,16 @@ export default {
 
     const createPage = () => {
       const { page_content, ...other } = DEFAULT_PAGE
+
+      if (pageSettingState.template_content) {
+        pageSettingState.currentPageData.page_content = {
+          ...pageSettingState.template_content,
+          componentName: page_content.componentName,
+          lifeCycles: pageSettingState.currentPageData.page_content?.lifeCycles || {}
+        }
+      }
       const { page_content: page_content_state, ...pageSettingStateOther } = pageSettingState.currentPageData
+
       const createParams = {
         ...other,
         ...pageSettingStateOther,

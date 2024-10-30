@@ -35,7 +35,7 @@
 
 <script lang="jsx">
 import { reactive, ref, watchEffect, provide } from 'vue'
-import { useCanvas, useApp, useResource, usePage, useHelp } from '@opentiny/tiny-engine-controller'
+import { useCanvas, useApp, useResource, usePage, useHelp, useTemplate } from '@opentiny/tiny-engine-controller'
 import { PluginPanel, SvgButton, LinkButton } from '@opentiny/tiny-engine-common'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import PageSetting, { openPageSettingPanel, closePageSettingPanel } from './PageSetting.vue'
@@ -77,12 +77,13 @@ export default {
     const pageTreeRef = ref(null)
     const ROOT_ID = pageSettingState.ROOT_ID
     const docsUrl = useHelp().getDocsUrl('page')
+    const { refreshTemplateList } = useTemplate()
 
     const state = reactive({
       isFolder: false
     })
 
-    const createNewPage = (group) => {
+    const createNewPage = async (group) => {
       closeFolderSettingPanel()
       pageSettingState.isNew = true
       pageSettingState.currentPageData = {
@@ -97,6 +98,8 @@ export default {
       }
       pageSettingState.currentPageDataCopy = extend(true, {}, pageSettingState.currentPageData)
       state.isFolder = false
+      pageSettingState.templates = await refreshTemplateList(appInfoState.selectedId)
+      pageSettingState.template_content = null
       openPageSettingPanel()
     }
 

@@ -48,7 +48,9 @@ const pageSettingState = reactive({
   isNew: false,
   ROOT_ID: '0', // 根节点ID
   updateTreeData: null,
-  treeDataMapping: {}
+  treeDataMapping: {},
+  template_content: null,
+  templates: []
 })
 
 const isTemporaryPage = reactive({
