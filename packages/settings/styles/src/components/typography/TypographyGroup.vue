@@ -90,15 +90,15 @@
         >
           <span>对齐</span>
         </label>
-        <tabs-group-configurator
-          :options="alignOptions"
-          :modelValue="selectedAlign"
-          :label-width="54"
-          :effect="effect"
-          :placement="placement"
-          @update:modelValue="selectAlign"
-        ></tabs-group-configurator>
       </div>
+      <tabs-group-configurator
+        :options="alignOptions"
+        :modelValue="selectedAlign"
+        :label-width="52"
+        :effect="effect"
+        :placement="placement"
+        @update:modelValue="selectAlign"
+      ></tabs-group-configurator>
     </div>
     <div class="typography-style-row">
       <div class="style-left">
@@ -112,24 +112,24 @@
         >
           <span>样式</span>
         </label>
-        <div class="style-decoration-wrap">
-          <tabs-group-configurator
-            :options="styleOptions"
-            :modelValue="selectedFontStyle"
-            :label-width="32"
-            :effect="effect"
-            :placement="placement"
-            @update:modelValue="selectFontStyle"
-          ></tabs-group-configurator>
-          <tabs-group-configurator
-            :options="decorationOptions"
-            :modelValue="selectedTextDecoration"
-            :label-width="32"
-            :effect="effect"
-            :placement="placement"
-            @update:modelValue="selectTextDecoration"
-          ></tabs-group-configurator>
-        </div>
+      </div>
+      <div class="style-decoration-wrap">
+        <tabs-group-configurator
+          :options="styleOptions"
+          :modelValue="selectedFontStyle"
+          :label-width="32"
+          :effect="effect"
+          :placement="placement"
+          @update:modelValue="selectFontStyle"
+        ></tabs-group-configurator>
+        <tabs-group-configurator
+          :options="decorationOptions"
+          :modelValue="selectedTextDecoration"
+          :label-width="32"
+          :effect="effect"
+          :placement="placement"
+          @update:modelValue="selectTextDecoration"
+        ></tabs-group-configurator>
       </div>
     </div>
     <modal-mask v-if="showModal" @close="showModal = false">

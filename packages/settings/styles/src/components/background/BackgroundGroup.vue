@@ -398,7 +398,7 @@ export default {
     padding: 2px;
   }
   .background-label {
-    color: var(--ti-lowcode-component-setting-panel-label-color);
+    color: var(--te-common-text-primary);
   }
   .background-color,
   .background-clip {
@@ -568,7 +568,6 @@ export default {
   padding: 6px 0;
 
   span {
-    color: var(--te-common-bg-prompt);
     font-weight: 600;
   }
 

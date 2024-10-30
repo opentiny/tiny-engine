@@ -1,55 +1,95 @@
 <template>
   <div class="tab-container">
-    <div
-      v-for="(item, index) in commonOptions"
-      :key="item.label || item.icon"
-      :class="['tab-item', { selected: picked === (valueKey ? item.value[valueKey] : item.value) }]"
-      :style="{ width: getItemWidth(collapsedOptions.length && index === commonOptions.length - 1) + 'px' }"
-      @click.stop="change(item.value)"
-    >
-      <span :class="['label-text', index < commonOptions.length - 1 ? 'border-right' : '']">
-        <span v-if="item?.label">{{ item.label }}</span>
-        <tiny-popover
-          v-if="item?.icon"
-          :effect="effect"
-          :placement="placement"
-          :visible-arrow="false"
-          :content="item.content"
-          trigger="hover"
+    <div class="tabs-wrap">
+      <tiny-button-group>
+        <tiny-button
+          v-for="(item, index) in uncollapsedOptions"
+          :key="item.label || item.icon"
+          :style="{ width: getItemWidth() + 'px' }"
+          :class="['tab-item', { selected: picked === (valueKey ? item.value[valueKey] : item.value) }]"
+          @click.stop="change(item)"
         >
-          <template #reference>
-            <svg-icon v-if="item.icon" :name="item.icon" class="bem-Svg"></svg-icon>
-          </template>
-        </tiny-popover>
-        <svg-icon
-          v-if="collapsedOptions.length && index === commonOptions.length - 1"
-          name="down-arrow"
-          class="bem-Svg"
-          color="var(--te-common-border-default)"
-          @click.stop="showMore = !showMore"
-        ></svg-icon>
-      </span>
-      <div
-        v-if="collapsedOptions.length && index === commonOptions.length - 1 && showMore"
-        class="more-tabs-wrap"
-        :style="{ width: getItemWidth(true) + 'px' }"
-      >
-        <div
-          v-for="foldsItem in foldsOptions"
-          class="collapse-item"
-          :key="foldsItem.label || foldsItem.icon"
-          @click.stop="change(foldsItem.value)"
+          <span
+            :class="[
+              'label-text',
+              { 'border-right': collapsedOptions.length || index < uncollapsedOptions.length - 1 }
+            ]"
+          >
+            <span v-if="item?.label">{{ item.label }}</span>
+            <tiny-popover
+              v-if="item?.icon"
+              :effect="effect"
+              :placement="placement"
+              :visible-arrow="false"
+              :content="item.content"
+              trigger="hover"
+            >
+              <template #reference>
+                <svg-icon v-if="item.icon" :name="item.icon" class="bem-Svg"></svg-icon>
+              </template>
+            </tiny-popover>
+          </span>
+        </tiny-button>
+        <tiny-dropdown
+          v-if="collapsedOptions.length"
+          trigger="click"
+          :class="[
+            'drop-down-options',
+            { selected: collapsedOptions.find((item) => picked === (valueKey ? item.value[valueKey] : item.value)) }
+          ]"
+          :style="{ width: getItemWidth(true) + 'px' }"
         >
-          <span v-if="foldsItem?.label">{{ foldsItem.label }}</span>
-          <svg-icon v-if="foldsItem.icon" :name="foldsItem.icon" class="bem-Svg"></svg-icon>
-        </div>
-      </div>
+          <span class="selected-option" @click.stop="change(selectedCollapsedOption)">
+            <span v-if="selectedCollapsedOption?.label">{{ selectedCollapsedOption.label }}</span>
+            <tiny-popover
+              v-if="selectedCollapsedOption?.icon"
+              :effect="effect"
+              :placement="placement"
+              :visible-arrow="false"
+              :content="item.content"
+              trigger="hover"
+            >
+              <template #reference>
+                <svg-icon
+                  v-if="selectedCollapsedOption.icon"
+                  :name="selectedCollapsedOption.icon"
+                  class="bem-Svg"
+                ></svg-icon>
+              </template>
+            </tiny-popover>
+          </span>
+          <tiny-dropdown-menu>
+            <tiny-dropdown-item v-for="item in foldsOptions" :key="item.label || item.icon" @click.stop="change(item)">
+              <span v-if="item?.label">{{ item.label }}</span>
+              <tiny-popover
+                v-if="item?.icon"
+                :effect="effect"
+                :placement="placement"
+                :visible-arrow="false"
+                :content="item.content"
+                trigger="hover"
+              >
+                <template #reference>
+                  <svg-icon v-if="item.icon" :name="item.icon" class="bem-Svg"></svg-icon>
+                </template>
+              </tiny-popover>
+            </tiny-dropdown-item>
+          </tiny-dropdown-menu>
+        </tiny-dropdown>
+      </tiny-button-group>
     </div>
   </div>
 </template>
 <script setup>
 import { ref, watch, defineProps, defineEmits } from 'vue'
-import { Popover as TinyPopover } from '@opentiny/vue'
+import {
+  Popover as TinyPopover,
+  ButtonGroup as TinyButtonGroup,
+  Button as TinyButton,
+  Dropdown as TinyDropdown,
+  DropdownMenu as TinyDropdownMenu,
+  DropdownItem as TinyDropdownItem
+} from '@opentiny/vue'
 
 const props = defineProps({
   modelValue: {
@@ -70,7 +110,7 @@ const props = defineProps({
   },
   labelWidth: {
     type: Number,
-    default: 60
+    default: 63
   },
   options: {
     type: Array,
@@ -83,16 +123,19 @@ const emit = defineEmits(['update:modelValue'])
 const picked = ref(null)
 const uncollapsedOptions = ref(props.options.filter((option) => !option.collapsed))
 const collapsedOptions = ref(props.options.filter((option) => option.collapsed))
-const commonOptions = ref(uncollapsedOptions.value)
 const foldsOptions = ref([])
-const showMore = ref(false)
+const selectedCollapsedOption = ref(null)
+const isCollapsedSelected = ref(false)
 
 const getItemWidth = (collapsed = false) => {
-  return `${parseInt(props.labelWidth, 10) + (collapsed ? 20 : 0)}`
+  return `${parseInt(props.labelWidth, 10) + (collapsed ? 15 : 0)}`
 }
 
-const findMatchingFoldValue = (value) =>
-  foldsOptions.value.find((item) => (props.valueKey ? item.value[props.valueKey] === value : item.value === value))
+const findMatchingFoldValue = (value) => {
+  selectedCollapsedOption.value =
+    foldsOptions.value.find((item) => (props.valueKey ? item.value[props.valueKey] === value : item.value === value)) ??
+    selectedCollapsedOption.value
+}
 
 const filterNonMatchingValues = (value) =>
   collapsedOptions.value.filter((item) =>
@@ -101,13 +144,12 @@ const filterNonMatchingValues = (value) =>
 
 const updateOptionDisplay = (value) => {
   if (!value) {
-    commonOptions.value = [...uncollapsedOptions.value, collapsedOptions.value[0]]
     foldsOptions.value = collapsedOptions.value.slice(1)
+    selectedCollapsedOption.value = collapsedOptions.value[0]
     return
   }
-  const matchingFoldValue = findMatchingFoldValue(value)
-  if (matchingFoldValue) {
-    commonOptions.value[commonOptions.value.length - 1] = matchingFoldValue
+  findMatchingFoldValue(value)
+  if (selectedCollapsedOption.value) {
     foldsOptions.value = filterNonMatchingValues(value)
   }
 }
@@ -123,12 +165,13 @@ watch(
   { immediate: true }
 )
 
-const change = (val) => {
-  if (picked.value === val) {
+const change = (item) => {
+  if (picked.value === item.value) {
     return
   }
-  emit('update:modelValue', val)
-  showMore.value = false
+  isCollapsedSelected.value = Boolean(item.collapsed)
+
+  emit('update:modelValue', item.value)
 }
 </script>
 
@@ -140,61 +183,94 @@ const change = (val) => {
   background-color: var(--ti-lowcode-setting-style-tab-bg-color);
   display: flex;
   border-radius: 4px;
-  .tab-item {
-    display: flex;
-    align-items: center;
-    text-align: center;
-    cursor: pointer;
-    position: relative;
-    .label-text {
-      width: 100%;
-      height: 16px;
 
-      .bem-Svg {
-        margin-top: -3px;
+  .tabs-wrap {
+    display: flex;
+    justify-content: space-between;
+    .tiny-button.tiny-button.tiny-button--default {
+      margin: 0;
+      padding: 0;
+      border: none;
+      background-color: var(--ti-lowcode-base-bg-5);
+      line-height: 14px;
+      --ti-button-size-normal-min-width: 20px;
+      --ti-button-size-normal-max-width: 80px;
+
+      &:hover {
+        background-color: var(--ti-lowcode-base-gray-101);
+        border-radius: 4px;
       }
 
-      .show-more-tabs {
-        padding: 8px;
+      &.selected {
+        background-color: var(--ti-lowcode-base-gray-101);
+        border-radius: 4px;
       }
     }
-    .more-tabs-wrap {
-      padding: 8px 0;
-      position: absolute;
-      top: 24px;
-      right: 0;
-      background-color: var(--ti-lowcode-base-bg-5);
-      z-index: 2200;
-      border-radius: 4px;
-      box-shadow: 0px 0px 10px 0px rgba(25, 25, 25, 0.15);
-      text-align: left;
-      .collapse-item {
-        padding: 0 16px;
-        font-size: 12px;
-        line-height: 24px;
-        cursor: pointer;
+    .tab-item {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      cursor: pointer;
+      position: relative;
+      .label-text {
+        width: 100%;
+        height: 12px;
 
-        &:hover {
-          background-color: var(--ti-lowcode-base-gray-101);
-          border-radius: 4px;
+        .bem-Svg {
+          margin-top: -3px;
         }
       }
     }
-    &.selected {
-      background-color: var(--ti-lowcode-base-gray-101);
-      border-radius: 4px;
+    .tiny-dropdown {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 24px;
+      background-color: var(--ti-lowcode-base-bg-5);
+      --ti-dropdown-text-color: var(--te-common-text-primary);
+      &.selected {
+        background-color: var(--ti-lowcode-base-gray-101);
+        border-radius: 4px;
+      }
+      :deep(.tiny-dropdown__title) {
+        margin: 0;
+        line-height: 12px;
+        .selected-option {
+          text-align: center;
+        }
+      }
+
+      :deep(.tiny-dropdown__suffix-inner) {
+        width: 20px;
+        display: flex;
+        justify-content: center;
+      }
+
+      &:hover {
+        background-color: var(--ti-lowcode-base-gray-101);
+        border-radius: 4px;
+        --ti-dropdown-text-color-hover: var(--te-common-text-primary);
+      }
     }
+  }
+}
+.tiny-dropdown-menu {
+  padding: 8px 0px;
+  margin: 0px 0px 0px 20px;
+  background-color: rgb(255, 255, 255);
+  z-index: 9999;
+  --ti-dropdown-menu-arrow-margin-top: 0;
+
+  :deep(.tiny-dropdown-item__wrap) {
+    padding: 4px 12px;
+
     &:hover {
       background-color: var(--ti-lowcode-base-gray-101);
       border-radius: 4px;
+      color: var(--te-common-text-primary);
     }
   }
-
-  :deep(.icon-down-arrow:focus) {
-    outline: none;
-  }
 }
-
 .border-right {
   border-right: 1px solid var(--te-common-border-default);
 }
