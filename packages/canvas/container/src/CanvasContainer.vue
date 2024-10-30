@@ -131,6 +131,13 @@ export default {
 
         // 以下是内部iframe监听的事件
         win.addEventListener('mousedown', (event) => {
+          const canvasFlag = canvasApi.getRenderer().getCanvasFlag()
+
+          // 非画布不触发节点事件
+          if (!canvasFlag) {
+            return
+          }
+
           // html元素使用scroll和mouseup事件处理
           if (event.target === doc.documentElement) {
             isScrolling = false
@@ -168,6 +175,13 @@ export default {
         })
 
         win.addEventListener('mousemove', (ev) => {
+          const canvasFlag = canvasApi.getRenderer().getCanvasFlag()
+
+          // 非画布不触发节点事件
+          if (!canvasFlag) {
+            return
+          }
+
           dragMove(ev, true)
         })
 
