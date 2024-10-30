@@ -23,8 +23,8 @@ export default function useMarkdown() {
       } else {
         highlighted = md.utils.escapeHtml(str)
       }
-      const copyButtonText = '复制' // Make this configurable
-      return `<div class="code-block"><pre class="hljs code-container"><code>${highlighted}</code></pre><button class="copy-btn">${copyButtonText}</button></div>`
+      const copyButtonText = '复制'
+      return `<div class="code-block"><pre class="hljs code-container"><code>${highlighted}</code></pre><button class="copy-btn code-block-btn">${copyButtonText}</button></div>`
     }
   })
 
