@@ -1,14 +1,27 @@
 <template>
-  <tiny-popover class="block-link-field" popper-class="option-popper block-new-attr-popover">
+  <tiny-popover class="block-link-field" popper-class="option-popper block-new-attr-popover" :visible-arrow="false">
     <template #reference>
-      <span class="link-icon">+</span>
+      <div>
+        <span class="icon-wrap bind-prop">
+          <svg-icon name="block-bind-prop"></svg-icon>
+        </span>
+        <span class="icon-wrap add-prop">
+          <svg-icon name="block-add-prop"></svg-icon>
+        </span>
+      </div>
     </template>
     <ul class="context-menu">
       <li v-if="isLinked" class="menu-item" @click="unLink(data)">取消关联</li>
-      <li v-else class="menu-item" @click="addProperty(data)">+ 新建属性</li>
-      <li class="menu-item" @click="openBlockSetting">管理属性</li>
-      <li v-for="item in properties" :key="item.property" class="menu-item">
-        {{ item.property }}
+      <li v-else class="menu-item" @click="addProperty(data)">
+        <svg-icon name="plus-circle"></svg-icon>
+        <span>创建并链接新属性</span>
+      </li>
+      <li class="menu-item" @click="openBlockSetting">
+        <svg-icon name="setting"></svg-icon>
+        <span>打开属性面板</span>
+      </li>
+      <li v-for="item in properties" :key="item.property" class="menu-item property">
+        <span>{{ item.property }}</span>
         <span v-if="item.property !== data?.linked?.blockProperty" class="link-item" @click="editProperty(item)">
           关联
         </span>
@@ -51,14 +64,12 @@ export default {
       state.newPropertyName = ''
 
       confirm({
-        title: '新建区块属性',
+        title: '属性名称',
         status: 'custom',
         message: {
           render() {
             return (
               <div>
-                <div>此新字段将自动链接到此属性</div>
-                <br />
                 <TinyInput placeholder="请输入字段名称" v-model={state.newPropertyName}></TinyInput>
               </div>
             )
@@ -141,49 +152,68 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.link-icon {
-  width: 16px;
-  height: 16px;
-  margin: 0 5px;
-  border-radius: 50%;
-  line-height: 16px;
-  text-align: center;
-  color: var(--ti-lowcode-block-link-field-link-icon-color);
-  background-color: var(--ti-lowcode-block-link-field-link-icon-bg-color);
-  cursor: pointer;
-  &:hover {
-    transform: scale(1.2);
+.icon-wrap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);
+
+  .svg-icon {
+    font-size: 14px;
+  }
+
+  &:hover .svg-icon {
+    transform: scale(1.25);
+  }
+
+  &.bind-prop {
+    z-index: 30;
+    &:hover {
+      z-index: 10;
+    }
+  }
+
+  &.add-prop {
+    z-index: 20;
+    &:hover {
+      z-index: 30;
+    }
   }
 }
 
 .context-menu {
   width: 200px;
-  padding: 3px 0;
+  padding: 8px 0;
   border-radius: 3px;
   display: flex;
   flex-direction: column;
   .menu-item {
+    line-height: 18px;
     color: var(--ti-lowcode-attr-popover-menu-item-color);
     display: flex;
-    justify-content: space-between;
-    padding: 6px 15px;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
     cursor: pointer;
     &:hover {
       background: var(--ti-lowcode-attr-popover-menu-item-hover-bg-color);
     }
-
+    &.property {
+      justify-content: space-between;
+    }
     .link-item {
       cursor: pointer;
-      background-color: var(--ti-lowcode-attr-popover-menu-item-link-item-bg-color);
-      color: var(--ti-lowcode-attr-popover-menu-item-link-item-color);
-      padding: 2px 6px;
-      border-radius: 2px;
+      color: var(--te-common-text-emphasize);
     }
+  }
+
+  .svg-icon {
+    font-size: 16px;
   }
 }
 </style>
 <style lang="less">
-.tiny-popover.tiny-popper.block-new-attr-popover {
+.tiny-popover.tiny-popper.tiny-popper.block-new-attr-popover[x-placement] {
   // 这里不知为啥要添加 max-height，后续确认无用可删除
   max-height: 65vh;
   padding: 0;

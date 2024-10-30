@@ -18,11 +18,12 @@ import {
   useModal,
   useCanvas,
   useTranslate,
-  useApp,
   useLayout,
   useNotify,
   useHistory,
-  useMaterial
+  useMaterial,
+  getMetaApi,
+  META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import { getCanvasStatus } from '@opentiny/tiny-engine-common/js/canvas'
@@ -583,8 +584,10 @@ export const publishBlock = (params) => {
   }
 }
 
+const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id
+
 const getCategories = () => {
-  const appId = useApp().appInfoState.selectedId
+  const appId = getAppId()
   fetchCategories({ appId }).then((res) => {
     useBlock().setCategoryList(res)
   })
@@ -592,9 +595,8 @@ const getCategories = () => {
 
 // 新建区块
 const createBlock = (block = {}) => {
-  const { appInfoState } = useApp()
   const { message } = useModal()
-  const { selectedId: created_app } = appInfoState
+  const created_app = getAppId()
   const params = { ...block, created_app }
 
   if (isVsCodeEnv) {
@@ -656,7 +658,7 @@ const updateBlock = (block = {}) => {
     },
     {
       params: {
-        appId: useApp().appInfoState.selectedId
+        appId: getAppId()
       }
     }
   )
@@ -735,7 +737,7 @@ export const saveBlock = async (block) => {
 }
 
 export const updateBlockList = (params) => {
-  const appId = useApp().appInfoState.selectedId
+  const appId = getAppId()
   fetchBlockList({ appId, ...params }).then((data) => {
     const blockListDescByUpdateAt = data.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
     useBlock().setBlockList(blockListDescByUpdateAt)
@@ -743,9 +745,7 @@ export const updateBlockList = (params) => {
 }
 
 export const fetchMaterialId = () => {
-  const { appInfoState } = useApp()
-
-  fetchComponentsMap(appInfoState.selectedId).then((data) => {
+  fetchComponentsMap(getAppId()).then((data) => {
     setMaterialHistory(data?.materialHistory)
   })
 }
@@ -775,7 +775,7 @@ export const getBlockById = async (id) => {
 }
 
 export const createOrUpdateCategory = async ({ categoryId, ...params }, isEdit) => {
-  const appId = useApp().appInfoState.selectedId
+  const appId = getAppId()
   params.app = Number(appId)
   let requestFunc = updateCategory
 

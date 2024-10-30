@@ -29,11 +29,19 @@
   </plugin-setting>
 </template>
 <script>
-import { nextTick, reactive, watch, inject } from 'vue'
+import { nextTick, reactive, watch, provide, inject, ref } from 'vue'
 import { Search } from '@opentiny/vue'
 import { iconSearch } from '@opentiny/vue-icon'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
-import { useApp, useBlock, useModal, useResource, useMaterial } from '@opentiny/tiny-engine-meta-register'
+import {
+  useBlock,
+  useModal,
+  useResource,
+  useMaterial,
+  useNotify,
+  getMetaApi,
+  META_SERVICE
+} from '@opentiny/tiny-engine-meta-register'
 import BlockGroupTransfer from './BlockGroupTransfer.vue'
 import BlockGroupFilters from './BlockGroupFilters.vue'
 
@@ -72,8 +80,10 @@ export default {
     const { isDefaultGroupId, isRefresh, selectedGroup, selectedBlockArray, getGroupList } = useBlock()
     const { panel, closePanel } = useGroupPanel()
     const { message } = useModal()
-    const appId = useApp().appInfoState.selectedId
+    const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id
     const panelState = inject('panelState', {})
+    const blockUsers = ref([])
+    provide('blockUsers', blockUsers)
 
     const state = reactive({
       searchValue: '',
@@ -112,12 +122,17 @@ export default {
               version: item.latestVersion
             })) || []
 
+          if (selectedBlocks.length === 0) {
+            return
+          }
+
           const blocks = [...resData, ...selectedBlocks]
 
-          requestUpdateGroup({
+          // 这里把异步请求 return，可以让下面的 catch 捕获到错误
+          return requestUpdateGroup({
             id: groupId,
             blocks,
-            app: appId
+            app: getAppId()
           }).then((res) => {
             const selectedId = selectedBlockArray.value.map((b) => b.id)
             const addedBlocks = res.blocks.filter((item) => selectedId.includes(item.id))
@@ -128,6 +143,10 @@ export default {
             state.searchValue = ''
             selectedBlockArray.value.length = 0
             useResource().fetchResource({ isInit: false }) // 添加区块分组，不需要重新init页面或者区块。
+            useNotify({
+              message: '添加区块成功',
+              type: 'success'
+            })
           })
         })
         .catch((error) => {
@@ -220,6 +239,7 @@ export default {
             : []
         state.filters[2].children =
           results[2].status === 'fulfilled' ? results[2].value.map((item) => ({ name: item })) : []
+        blockUsers.value = state.filters[1].children
       })
     }
 
@@ -252,7 +272,7 @@ export default {
     margin-bottom: 12px;
   }
   .transfer-order-search {
-    width: 296px;
+    flex: 1;
   }
 }
 :deep(.plugin-setting-header) {

@@ -126,7 +126,7 @@ import useClipboard from 'vue-clipboard3'
 import { Grid, GridColumn, Input, Popover, Button, FileUpload, Loading, Tooltip, Select } from '@opentiny/vue'
 import { iconLoadingShadow, iconPlus, iconUpload } from '@opentiny/vue-icon'
 import { PluginPanel, SearchEmpty } from '@opentiny/tiny-engine-common'
-import { useTranslate, useApp, useModal, useHelp } from '@opentiny/tiny-engine-meta-register'
+import { useTranslate, useModal, useHelp, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { useHttp } from '@opentiny/tiny-engine-http'
@@ -361,7 +361,7 @@ export default {
       })
     }
     const handleChange = (data) => {
-      const appId = useApp().appInfoState.selectedId
+      const appId = getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id
       const action = `/app-center/api/apps/${appId}/i18n/entries/update`
 
       const loadingTarget = notEmpty.value ? '#boxeight' : '#empty-loading-box'

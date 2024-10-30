@@ -4,7 +4,9 @@
     <tiny-search v-model="state.searchValue" clearable placeholder="请输入关键字搜索">
       <template #prefix> <tiny-icon-search /> </template>
     </tiny-search>
-    <block-list v-model:blockList="filterBlocks" :show-add-button="true" :show-block-shot="true"></block-list>
+    <div class="block-list">
+      <block-list v-model:blockList="filterBlocks" :show-add-button="true" :show-block-shot="true"></block-list>
+    </div>
   </div>
   <!-- TODO: vue 版本升级到 3.5+ 之后，支持 defer，就不需要 rightPanelRef 了 -->
   <teleport defer to=".material-right-panel" v-if="rightPanelRef">
@@ -17,7 +19,7 @@
 import { onMounted, reactive, watch, provide, computed } from 'vue'
 import { Search } from '@opentiny/vue'
 import { iconSearch } from '@opentiny/vue-icon'
-import { useApp, useBlock, useMaterial, useModal } from '@opentiny/tiny-engine-meta-register'
+import { useBlock, useMaterial, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import BlockGroup from './BlockGroup.vue'
 import BlockList from './BlockList.vue'
 import BlockGroupPanel from './BlockGroupPanel.vue'
@@ -46,7 +48,7 @@ export default {
     const { addDefaultGroup, isDefaultGroupId, isAllGroupId, isRefresh, selectedGroup } = useBlock()
     const { materialState } = useMaterial()
     const { message } = useModal()
-    const appId = useApp().appInfoState.selectedId
+    const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id
 
     const state = reactive({
       searchValue: '',
@@ -143,7 +145,7 @@ export default {
     )
 
     onMounted(() => {
-      fetchGroups(appId)
+      fetchGroups(getAppId())
         .then((data) => {
           const groups = addDefaultGroup(data)
           state.groups.push(...groups)
@@ -182,5 +184,10 @@ export default {
       color: #ababab;
     }
   }
+}
+
+.block-list {
+  padding: 12px;
+  overflow-y: auto;
 }
 </style>

@@ -23,7 +23,7 @@ import { Progress, Button } from '@opentiny/vue'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { VITE_ORIGIN } from '@opentiny/tiny-engine-common/js/environments'
 import { EXTEND_CONFIG } from '@opentiny/tiny-engine-common/js/app'
-import { useApp } from '@opentiny/tiny-engine-meta-register'
+import { useMessage } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
@@ -84,21 +84,29 @@ export default {
 
           let openUrl = `${VITE_ORIGIN}/app-center/entry/${appId}/`
 
-          const { appInfoState, updateApp } = useApp()
+          const { subscribe, publish, unsubscribe } = useMessage()
 
-          updateApp(appId)
-            .then(() => {
-              const extendConfig = appInfoState.selectedApp?.extend_config || {}
+          subscribe({
+            topic: 'app_info_changed',
+            subscriber: 'from_preview',
+            callback: (app) => {
+              const extendConfig = app?.extend_config || {}
 
               if (extendConfig?.app_type === EXTEND_CONFIG.TYPE.CONSOLE) {
                 openUrl = `${VITE_ORIGIN}/app-service/${extendConfig?.app_type ?? extendConfig?.type}${
                   extendConfig.business.router
                 }?appId=${appId}&region=cn-north-7&previewType=app&env=alpha&tenant=${paramsMap.get('tenant')}`
               }
-            })
-            .finally(() => {
+
+              // 要在 url 改变之前取消监听
+              unsubscribe({ topic: 'app_info_changed', subscriber: 'from_preview' })
+
+              // TODO finally 怎么实现
               window.location = openUrl
-            })
+            }
+          })
+
+          publish({ topic: 'app_id_changed', data: appId })
         } else {
           progressStatus.value = 'exception'
           percentage.value = 0

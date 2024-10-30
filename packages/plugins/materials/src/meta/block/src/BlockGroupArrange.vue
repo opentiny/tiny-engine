@@ -3,11 +3,9 @@
     <tiny-tabs v-model="state.type" tab-style="button-card">
       <tiny-tab-item v-for="item in state.arrangeList" :key="item.id" :name="item.id">
         <template #title>
-          <tiny-tooltip effect="dark" :content="item.name" placement="top">
-            <span class="button-icon-item" @click="typeClick(item.id)">
-              <svg-icon :name="item.svgName"></svg-icon>
-            </span>
-          </tiny-tooltip>
+          <span class="button-icon-item" @click="typeClick(item.id)">
+            <svg-icon :name="item.svgName"></svg-icon>
+          </span>
         </template>
       </tiny-tab-item>
     </tiny-tabs>
@@ -16,11 +14,10 @@
 
 <script>
 import { reactive, inject } from 'vue'
-import { Tooltip, Tabs, TabItem } from '@opentiny/vue'
+import { Tabs, TabItem } from '@opentiny/vue'
 
 export default {
   components: {
-    TinyTooltip: Tooltip,
     TinyTabs: Tabs,
     TinyTabItem: TabItem
   },
@@ -68,6 +65,9 @@ export default {
   text-align: center;
   height: 24px;
   line-height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .footer-toolbar {
   .icon-wrap {
@@ -90,6 +90,11 @@ export default {
   }
   .icon-wrap + .icon-wrap {
     margin-left: 8px;
+  }
+
+  :deep(.tiny-tabs.tiny-tabs .tiny-tabs__item) {
+    width: 24px;
+    height: 24px;
   }
 }
 </style>

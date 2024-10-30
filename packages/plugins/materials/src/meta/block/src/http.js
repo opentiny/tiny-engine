@@ -10,7 +10,7 @@
  *
  */
 
-import { useApp } from '@opentiny/tiny-engine-meta-register'
+import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { useHttp } from '@opentiny/tiny-engine-http'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 const http = useHttp()
@@ -94,7 +94,7 @@ export const requestUpdateGroup = ({ id, name, app, blocks }) =>
 
 // 更新区块版本
 export const requestGroupBlockVersion = async ({ groupId, blockId, blockVersion }) => {
-  const app = useApp().appInfoState.selectedId
+  const app = getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id
   let blocks = await fetchGroupBlocksById({ groupId })
 
   blocks = blocks.map((block) => ({

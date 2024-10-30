@@ -1,7 +1,18 @@
 <template>
+  <div v-if="blockStyle === BlockStyles.Mini" class="header">
+    <div class="col-checkbox"></div>
+    <div class="col-name">区块名称</div>
+    <div class="col-time">创建时间</div>
+    <div class="col-created-by">创建人</div>
+  </div>
   <ul
     v-if="state.data.length || showAddButton"
-    :class="['block-list', 'lowcode-scrollbar', { 'is-small-list': blockStyle === 'mini' }, { isShortcutPanel }]"
+    :class="[
+      'block-list',
+      'lowcode-scrollbar',
+      { 'is-small-list': blockStyle === BlockStyles.Mini },
+      { isShortcutPanel }
+    ]"
     @mouseleave="state.hover = false"
   >
     <li v-if="showAddButton" class="block-item block-plus" @click="$emit('add')">
@@ -12,26 +23,33 @@
       v-for="(item, index) in state.data"
       :key="item.blockName"
       :draggable="!isBlockManage && showSettingIcon"
-      :class="['block-item', { 'is-disabled': showBlockDetail }, { 'block-item-small-list': blockStyle === 'mini' }]"
+      :class="[
+        'block-item',
+        { 'is-disabled': showBlockDetail },
+        { 'block-item-small-list': blockStyle === BlockStyles.Mini }
+      ]"
       :title="getTitle(item)"
       @mousedown.stop.left="blockClick({ event: $event, item, index })"
       @mouseover.stop="openBlockShotPanel(item, $event)"
       @mouseleave="handleBlockItemLeave"
     >
       <slot :data="item">
-        <div class="block-item-img">
-          <img
-            v-if="item.screenshot"
-            class="item-image"
-            :src="item.screenshot || defaultImg"
-            draggable="false"
-            @error="$event.target.src = defaultImg"
-          />
-          <svg-icon v-else class="item-image item-default-img" name="block-default"></svg-icon>
-        </div>
+        <plugin-block-item-img
+          :item="item"
+          :show-checkbox="showCheckbox"
+          :checked="checked.some((block) => block.id === item.id)"
+          :display-table="blockStyle === BlockStyles.Mini"
+        ></plugin-block-item-img>
         <div class="item-text">
           <div class="item-name">{{ item.name_cn || item.label || item.content?.fileName }}</div>
-          <div v-if="blockStyle === 'list'" class="item-description">{{ item.description }}</div>
+          <div v-if="blockStyle === BlockStyles.List" class="item-description">{{ item.description }}</div>
+        </div>
+
+        <div v-if="blockStyle === BlockStyles.Mini" class="cell cell-time">
+          <span>{{ format(item.created_at, 'yyyy/MM/dd hh:mm:ss') }}</span>
+        </div>
+        <div v-if="blockStyle === BlockStyles.Mini" class="cell cell-created-by">
+          <span>{{ users.find((user) => user.id === item.createdBy)?.name || item.id }}</span>
         </div>
 
         <div v-if="item.isShowProgress" class="progress-bar">
@@ -119,10 +137,18 @@
 
 <script>
 import { computed, watch, inject, reactive } from 'vue'
+import { format } from '@opentiny/vue-renderless/common/date'
 import { iconPlus } from '@opentiny/vue-icon'
 import { Progress, Tooltip } from '@opentiny/vue'
+import PluginBlockItemImg from './PluginBlockItemImg.vue'
 import SearchEmpty from './SearchEmpty.vue'
 import SvgButton from './SvgButton.vue'
+
+const BlockStyles = {
+  Default: 'default',
+  Mini: 'mini',
+  List: 'list'
+}
 
 const defaultImg =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAA11JREFUaEPtmUvIVVUYhp83CIJKpIsOEsSBAxEiEAwqRDGDBCmRkCwhwQQbSANDEbwNgvgzxEIUCwRBEB2EgiQR5MA/RcHImRBKkYhYaAliULzxwT6y3O1zzv735Rx+PN/srP1d3ve7rLX2PmKSiyY5fkYEhl3BUQVGFaiZgQdayPZTwOvA7Jp+2zI/C5yV9FcnQJ7AB8DetqI35HdM0qZuBL4HFjYUqC03pyUteigIPMC0rXSW8Ws77YzSFRgRKJPdMjqtVcD2DOC6pH/LAKmq0zgB2+uAXcCTwD1gs6Q9VQH2s2uDwO/A00ngv4EnJP3TD0zneZaEt4GvJB3uZdcoAdsBPAjkZaakX8sQsP0ecDDR/UhSVLRQGiUQEWzfAKYl0e4CU8rMgu0XgXMFSNdJ+rKIQRsE1gBjwDPAbWCLpH39sm97CvADMLeL7kpJR/PPGieQ9PGzkm72A57oB7i3Ev1vsstjZylmaJmkU6nP1giUBZ613U5gW2LzGzAHiEE+kKz/AbwhaTwhPtyT2PZK4EiO8MuSop1iprYAHyfPrwDLJV3Kng+PgO3ngZ9y4NdL2p9rk93Ah8naj8AKSVdbayHb0c+PASck/VkwfI8CASQd2v2S1nfZbeI8WJU8O53NzLHkmt/MZc72IWB1Fuxi9Lekk7ms5oe27wXR9rfAksTPCWAqsCBbq0/A9qfAxoIsfgJ8Lum67e3AjkQnzo55kq71Gn7bATZ6/oWc7fRGCNgO4EGgm5wJEkB+P18qKbbNvmI73smDxHMFytUrYDtaJlonldgeg9TjPZBtlPRZX+SJgu2XgJiBmKNUqhGw/RpwPBvajsMvJG2wvTQjcf9dNYkYl7X3JwK+o2v7TeDrnO0FSfM7a/mvEoX7bbYVxjDNTJwdlvRuEix2o61xtQYeydbHJb1SBXziN8inB93EKmA7hifA32cNnJIU34/+J7ajCu8AccWOgb5ch0DY2o6DbVbmZ8IEAvyyBMR54FVJd+oCK2tf+SADfgbWJoHid4D/pWzwJvSqEgiQac/fAhZLipN1oFKVQB7kEknfDRR5FqwJAoUvGoMi0wSBQWEtE6f0LlTG2TB0ehKY9J/XJ/cfHMPoh7oxR/9S1s1gXftRBepmsK79qAJ1M1jX/j/bzulAKB9d1wAAAABJRU5ErkJggg=='
@@ -132,6 +158,7 @@ export default {
     TinyProgress: Progress,
     IconPlus: iconPlus(),
     TinyTooltip: Tooltip,
+    PluginBlockItemImg,
     SvgButton,
     SearchEmpty
   },
@@ -145,7 +172,7 @@ export default {
     */
     blockStyle: {
       type: String,
-      default: 'default'
+      default: BlockStyles.Default
     },
     /*
     用于区分是否是区块管理侧的列表
@@ -191,11 +218,26 @@ export default {
     externalBlock: {
       type: Object,
       default: null
+    },
+    // 是否显示多选框
+    showCheckbox: {
+      type: Boolean,
+      default: false
+    },
+    // 选中的区块
+    checked: {
+      type: Array,
+      default: () => []
+    },
+    gridColumns: {
+      type: Number,
+      default: 2
     }
   },
   emits: ['click', 'iconClick', 'add', 'deleteBlock', 'openVersionPanel', 'editBlock'],
   setup(props, { emit }) {
     const panelState = inject('panelState', {})
+    const blockUsers = inject('blockUsers')
     const state = reactive({
       activeIndex: -1,
       data: computed(() => props.data),
@@ -206,6 +248,8 @@ export default {
       currentShowMenuId: null,
       timeoutId: null
     })
+
+    const users = computed(() => blockUsers?.value || [])
 
     const getParentNode = (el) => {
       while (el.nodeName !== 'LI') {
@@ -318,8 +362,10 @@ export default {
     )
 
     return {
+      BlockStyles,
       isShortcutPanel: panelState.isShortcutPanel,
       state,
+      users,
       getTitle,
       blockClick,
       iconClick,
@@ -332,7 +378,8 @@ export default {
       handleBlockItemLeave,
       handleSettingMouseOver,
       handleShowVersionMenu,
-      editBlock
+      editBlock,
+      format
     }
   }
 }
@@ -371,40 +418,70 @@ export default {
   }
 }
 
+.header {
+  display: flex;
+  align-items: center;
+  height: 24px;
+  background-color: var(--te-common-bg-container);
+  color: var(--te-common-text-secondary);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  & > div {
+    padding: 0 8px;
+    position: relative;
+  }
+
+  .col-time::before,
+  .col-created-by::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 10px;
+    background-color: var(--te-common-border-default);
+  }
+}
+
+.col-checkbox,
+.block-item-small-list:deep(.table-selection) {
+  width: 40px;
+}
+.col-checkbox:deep(.tiny-checkbox__label) {
+  padding: 0;
+}
+.col-name {
+  width: 35%;
+}
+.col-time {
+  width: 35%;
+}
+.col-created-by {
+  flex: 1;
+}
+
 .block-list {
   display: grid;
-  grid-template-columns: 50% 50%;
+  grid-template-columns: repeat(v-bind('gridColumns'), 1fr);
   position: relative;
-  flex: 1;
+  gap: 12px;
   overflow-y: auto;
   overflow-x: hidden;
   color: var(--ti-lowcode-common-secondary-text-color);
-  margin: 12px;
 
-  &.is-small-list {
-    grid-template-columns: 100%;
-    grid-template-rows: repeat(auto-fill, 30px);
-  }
   .block-item {
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
     height: 110px;
-    text-align: center;
     user-select: none;
-    margin-right: 6px;
-    margin-bottom: 12px;
-    .block-item-img {
-      line-height: 86px;
-      width: 100%;
-      height: 86px;
-      border-radius: 4px;
-      background-color: var(--ti-lowcode-component-block-list-item-active-bg);
-    }
-    &.block-item-small-list:nth-child(2) {
-      border-top: none;
-    }
+    gap: 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     .publish-flag {
       position: absolute;
@@ -421,20 +498,16 @@ export default {
     }
 
     &.block-item-small-list {
-      flex-direction: row;
-      align-items: center;
-      height: 30px;
-      padding: 4px 10px;
-      .item-image {
-        width: 30px;
-        height: 30px;
-        min-width: 30px;
+      color: var(--te-common-text-primary);
+      gap: 0;
+      &:deep(.block-item-img) {
+        width: 54px;
+        height: 40px;
+        flex: unset;
+        margin-left: 8px;
       }
       .item-text {
-        text-align: left;
-        margin-top: 0;
-        margin-left: 4px;
-        color: var(--ti-lowcode-base-text-color-4);
+        width: calc(35% - 62px);
       }
       .publish-flag {
         position: static;
@@ -522,12 +595,6 @@ export default {
       }
     }
 
-    .item-image {
-      width: 100px;
-      height: 48px;
-      overflow: hidden;
-      object-fit: cover;
-    }
     .item-default-img {
       width: 84px;
       height: 50px;
@@ -535,10 +602,10 @@ export default {
     }
 
     .item-text {
-      color: var(--ti-lowcode-component-block-list-item-color);
+      color: var(--te-common-text-secondary);
       text-align: center;
-      flex: 1;
-      margin-top: 10px;
+      font-size: 12px;
+      line-height: 1.5;
       overflow: hidden;
       text-overflow: ellipsis;
       max-width: 100%;
@@ -574,10 +641,6 @@ export default {
       right: 0px;
       top: 0;
     }
-  }
-  .block-item:nth-child(even) {
-    margin-right: 0;
-    margin-left: 6px;
   }
   .deploy {
     position: absolute;
@@ -664,16 +727,10 @@ export default {
 
   &.is-small-list {
     display: block;
-    grid-template-columns: initial;
 
     .block-item {
+      height: 54px;
       flex-direction: row;
-      border-right: none;
-    }
-
-    .item-image {
-      padding: 0;
-      flex-shrink: 0;
     }
 
     .item-text {
@@ -690,21 +747,16 @@ export default {
         font-size: 12px;
       }
     }
-  }
 
-  &.is-small-list {
-    .block-item {
-      height: 38px;
+    .cell {
+      padding: 0 8px;
+      text-align: start;
     }
-
-    .item-image {
-      font-size: 1.5em;
-      width: 27px;
-      height: 22px;
+    .cell-time {
+      width: 35%;
     }
-
-    .item-text {
-      width: calc(100% - 35px);
+    .cell-created-by {
+      flex: 1;
     }
   }
 }

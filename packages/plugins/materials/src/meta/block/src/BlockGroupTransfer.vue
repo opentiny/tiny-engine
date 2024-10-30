@@ -8,18 +8,17 @@
       <block-group-arrange v-model="state.displayType" :arrangeList="state.arrangeList"></block-group-arrange>
     </div>
     <div class="block-add-transfer-body">
-      <block-group-transfer-panel
-        title="可选区块列表"
-        :selectedNums="state.blockList.length"
+      <block-list
+        v-bind="$attrs"
         :blockList="state.blockList"
-        @check="leftCheck"
-      ></block-group-transfer-panel>
-      <block-group-transfer-panel
-        title="已选区块列表"
-        :selectedNums="state.selectedBlocks.length"
-        :blockList="state.selectedBlocks"
-        @check="rightCheck"
-      ></block-group-transfer-panel>
+        :trigger-check="true"
+        :show-block-shot="false"
+        :showSettingIcon="false"
+        :show-checkbox="true"
+        :checked="selectedBlockArray"
+        :grid-columns="6"
+        @check="checkBlock"
+      ></block-list>
     </div>
   </div>
 </template>
@@ -27,14 +26,14 @@
 <script>
 import { computed, onMounted, provide, reactive, watch } from 'vue'
 import { useBlock, useModal } from '@opentiny/tiny-engine-meta-register'
-import BlockGroupTransferPanel from './BlockGroupTransferPanel.vue'
+import BlockList from './BlockList.vue'
 import BlockGroupArrange from './BlockGroupArrange.vue'
 import { Select, Option } from '@opentiny/vue'
 import { fetchBlockById } from './http.js'
 
 export default {
   components: {
-    BlockGroupTransferPanel,
+    BlockList,
     BlockGroupArrange,
     TinySelect: Select,
     TinyOption: Option
@@ -45,7 +44,7 @@ export default {
       default: () => []
     }
   },
-  setup(props, { emit }) {
+  setup(props) {
     const { cancelCheck, check, selectedBlockArray, sort } = useBlock()
 
     const sortList = [
@@ -82,7 +81,6 @@ export default {
       displayType: 'grid',
       selectedSort: sortList[0].id,
       blockList: props.blockList,
-      selectedBlocks: selectedBlockArray.value,
       sortList,
       arrangeList
     })
@@ -96,7 +94,12 @@ export default {
       state.blockList = sort(state.blockList, type)
     }
 
-    const leftCheck = (block) => {
+    const checkBlock = (block) => {
+      if (selectedBlockArray.value.some((item) => item.id === block.id)) {
+        cancelCheck(block)
+        return
+      }
+
       // 添加区块时，默认添加区块最新版本
       if (!block.latestVersion) {
         fetchBlockById(block.id).then((blockDetail) => {
@@ -106,18 +109,12 @@ export default {
             message({ message: `${blockDetail.label}区块缺少历史记录，请重新发布区块`, status: 'error' })
           } else {
             block.latestVersion = blockDetail?.histories[historyLength - 1]?.version
-            emit('update:blockList', check(state.blockList, block))
+            check(block)
           }
         })
       } else {
-        emit('update:blockList', check(state.blockList, block))
+        check(block)
       }
-    }
-
-    const rightCheck = (block) => {
-      const blockList = cancelCheck(state.blockList, block)
-
-      emit('update:blockList', blockList)
     }
 
     watch(
@@ -141,8 +138,8 @@ export default {
 
     return {
       state,
-      leftCheck,
-      rightCheck
+      selectedBlockArray,
+      checkBlock
     }
   }
 }
@@ -158,11 +155,8 @@ export default {
 
   .block-add-transfer-body {
     min-height: calc(100% - 42px);
-    padding: 10px 0;
-    display: grid;
-    grid-template-columns: 48% 48%;
-    column-gap: 4%;
-    overflow: hidden;
+    margin-top: 12px;
+    overflow-y: auto;
   }
 
   .block-add-transfer-footer {

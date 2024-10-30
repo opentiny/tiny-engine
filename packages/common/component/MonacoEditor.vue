@@ -1,32 +1,36 @@
 <template>
   <div :class="['editor-container', { 'editor-container-full': fullscreen }]">
-    <div class="toolbar">
-      <div class="toolbar-start">
-        <slot name="toolbarStart"></slot>
-      </div>
-      <div :class="['buttons', { fullscreen: fullscreen }]">
-        <slot name="buttons"></slot>
-        <tiny-tooltip v-if="showFormatBtn && options.language === 'json'" content="格式化" placement="top">
-          <public-icon name="json" @click="formatCode"></public-icon>
-        </tiny-tooltip>
-        <span v-if="showFullScreenBtn">
-          <tiny-tooltip v-if="!fullscreen" content="全屏" placement="top">
-            <public-icon name="full-screen" @click="switchFullScreen(true)"></public-icon>
+    <slot v-if="fullscreen" name="fullscreenHead"></slot>
+    <div class="editor-container-content">
+      <div class="toolbar">
+        <div class="toolbar-start">
+          <slot name="toolbarStart"></slot>
+        </div>
+        <div :class="['buttons', { fullscreen: fullscreen }]">
+          <slot name="buttons"></slot>
+          <tiny-tooltip v-if="showFormatBtn && options.language === 'json'" content="格式化" placement="top">
+            <public-icon name="json" @click="formatCode"></public-icon>
           </tiny-tooltip>
-          <tiny-tooltip v-else content="退出全屏" placement="top">
-            <public-icon name="cancel-full-screen" @click="switchFullScreen(false)"></public-icon>
-          </tiny-tooltip>
-        </span>
+          <span v-if="showFullScreenBtn">
+            <tiny-tooltip v-if="!fullscreen" content="全屏" placement="top">
+              <public-icon name="full-screen" @click="switchFullScreen(true)"></public-icon>
+            </tiny-tooltip>
+            <tiny-tooltip v-else content="退出全屏" placement="top">
+              <public-icon name="cancel-full-screen" @click="switchFullScreen(false)"></public-icon>
+            </tiny-tooltip>
+          </span>
+        </div>
       </div>
+      <monaco-editor
+        ref="editor"
+        class="editor"
+        :value="value"
+        :options="editorOptions"
+        language="javascript"
+        @editorDidMount="$emit('editorDidMount', $event)"
+      ></monaco-editor>
     </div>
-    <monaco-editor
-      ref="editor"
-      class="editor"
-      :value="value"
-      :options="editorOptions"
-      language="javascript"
-      @editorDidMount="$emit('editorDidMount', $event)"
-    ></monaco-editor>
+    <slot v-if="fullscreen" name="fullscreenFooter"></slot>
   </div>
 </template>
 
@@ -162,6 +166,11 @@ export default {
     display: flex;
     margin-right: 20px;
   }
+}
+
+.editor-container-content {
+  flex: 1;
+  overflow: hidden;
 }
 
 .editor {
