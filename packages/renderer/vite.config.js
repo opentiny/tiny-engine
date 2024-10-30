@@ -15,31 +15,22 @@ import path from 'path'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import generateComments from '@opentiny/tiny-engine-vite-plugin-meta-comments'
-import { vitePluginBuildEntry } from './scripts/vite-plugin-separate-build'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: './',
-
-  plugins: [
-    vue(),
-    vueJsx(),
-    generateComments(),
-    vitePluginBuildEntry({
-      canvas: path.resolve(__dirname, './scripts/canvas-vite.config.js')
-    })
-  ],
+  plugins: [vue(), vueJsx(), generateComments()],
   publicDir: false,
   build: {
     cssCodeSplit: true,
     lib: {
-      entry: {
-        index: path.resolve(__dirname, './index.js')
-      },
+      entry: path.resolve(__dirname, './src/index.js'),
+      name: 'renderer',
+      fileName: () => 'index.js',
       formats: ['es']
     },
     rollupOptions: {
       output: {
+        banner: 'import "./style.css"',
         entryFileNames: '[name].js',
         chunkFileNames: '[name].js',
         assetFileNames: '[name].[ext]'
