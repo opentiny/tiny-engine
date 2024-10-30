@@ -45,11 +45,12 @@ import {
   GlobalService
 } from '@opentiny/tiny-engine'
 import engineConfig from './engine.config'
+import { HttpService } from './src/composable'
 
 export default {
   root: {
     id: 'engine.root',
-    metas: [GenerateCodeService, GlobalService]
+    metas: [HttpService, GenerateCodeService, GlobalService]
   },
   config: engineConfig,
   layout: {
