@@ -1,14 +1,14 @@
 /**
-* Copyright (c) 2023 - present TinyEngine Authors.
-* Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
-*
-* Use of this source code is governed by an MIT-style license.
-*
-* THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
-* BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
-* A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
-*
-*/
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
+ *
+ * Use of this source code is governed by an MIT-style license.
+ *
+ * THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
+ * BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
+ * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
+ *
+ */
 
 const arrData = []
 const blockList = []
@@ -513,18 +513,10 @@ export default [
       // 只有奇数区块可以保存成功
       if (blockId % 2) {
         const block = JSON.parse(config.data)
-        let blockData = null
+        const blockData = arrData.find((item) => Number(item.id) === Number(blockId))
 
-        for (let i = 0; i < arrData.length; i++) {
-          if (Number(arrData[i].id) === Number(blockId)) {
-            blockData = arrData[i]
-
-            Object.entries(block).forEach(([key, value]) => {
-              blockData[key] = value
-            })
-
-            break
-          }
+        if (blockData) {
+          Object.assign(blockData, block)
         }
 
         return new Promise((resolve) => {
@@ -560,18 +552,15 @@ export default [
     response(config) {
       const url = config.url
       const blockId = url.substr(url.lastIndexOf('/') + 1)
-      let data = []
 
       // 只有 ID 为奇数的区块才能删除，否则抛出错误信息
       if (blockId % 2) {
-        arrData.some((item, index) => {
-          if (String(item.id) === blockId) {
-            data = item
-            arrData.splice(index, 1)
-            return true
-          }
-          return false
-        })
+        const index = arrData.findIndex((item) => String(item.id) === blockId)
+        let data = []
+
+        if (index > -1) {
+          data = arrData.splice(index, 1)[0]
+        }
 
         return new Promise((resolve) => {
           setTimeout(() => {
@@ -702,10 +691,11 @@ export default [
       const blocks = await getAvailable()
       const tags = []
 
-      blocks &&
-        blocks.forEach((block) => {
-          block.tags && tags.push(...block.tags)
-        })
+      blocks?.forEach((block) => {
+        if (block.tags?.length) {
+          tags.push(...block.tags)
+        }
+      })
 
       return new Promise((resolve) => {
         setTimeout(() => {
@@ -750,10 +740,9 @@ export default [
       const blocks = await getAvailable()
       const tenants = []
 
-      blocks &&
-        blocks.forEach((block) => {
-          block.tenant && tenants.push(block.tenant)
-        })
+      blocks?.forEach((block) => {
+        block.tenant && tenants.push(block.tenant)
+      })
 
       return new Promise((resolve) => {
         setTimeout(() => {
@@ -771,15 +760,8 @@ export default [
       const params = new URLSearchParams(query)
       const groupId = params.get('groups')
       const value = params.get('label_contains')
-      let groupData = []
-
-      for (let i = 0; i < blockList.length; i++) {
-        if (String(blockList[i].id) === groupId) {
-          groupData = blockList[i].blocks
-
-          break
-        }
-      }
+      const group = blockList.find((item) => String(item.id) === groupId)
+      let groupData = group ? group.blocks : []
 
       groupData = value ? groupData.filter((item) => item.label.indexOf(value) > -1) : groupData
 
