@@ -41,6 +41,7 @@ import {
   getCanvasFlag,
   setCanvasFlag
 } from './context'
+import CanvasEmpty from './CanvasEmpty.vue'
 
 const { BROADCAST_CHANNEL } = constants
 const { parseFunction: generateFunction } = commonUtils
@@ -367,14 +368,7 @@ const setSchema = async (data) => {
 
 const getNode = (id, parent) => (id ? getNodeById(id, parent) : schema)
 
-let CanvasEmptyComponent = null
-
-const getCanvasEmptyComponent = () => (CanvasEmptyComponent ? h(CanvasEmptyComponent) : null)
-
-const setCanvasEmptyComponent = (component) => {
-  CanvasEmptyComponent = component
-}
-
+// 设置自定义渲染器
 let canvasRenderer = null
 
 const defaultRenderer = function () {
@@ -394,7 +388,7 @@ const defaultRenderer = function () {
       ref: 'page',
       className: 'design-page'
     },
-    schema.children?.length ? h(renderer, { schema: rootChildrenSchema, parent: schema }) : getCanvasEmptyComponent()
+    schema.children?.length ? h(renderer, { schema: rootChildrenSchema, parent: schema }) : [h(CanvasEmpty)]
   )
 }
 
@@ -477,6 +471,5 @@ export const api = {
   getBlockSlotDataMap,
   getComponent,
   getCanvasFlag,
-  setCanvasFlag,
-  setCanvasEmptyComponent
+  setCanvasFlag
 }
