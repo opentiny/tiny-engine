@@ -5,7 +5,7 @@
     <tabs-group-configurator
       :options="RADIAL_SIZE_LIST"
       :modelValue="state.radialSize"
-      :label-width="52"
+      label-width="50"
       :effect="effect"
       :placement="placement"
       @update:modelValue="selectRadialSize"

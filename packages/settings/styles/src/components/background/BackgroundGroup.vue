@@ -565,6 +565,7 @@ export default {
 .background-model-title {
   display: flex;
   justify-content: space-between;
+  position: relative;
   padding: 6px 0;
 
   span {
@@ -572,7 +573,10 @@ export default {
   }
 
   .svg-icon {
+    position: absolute;
     cursor: pointer;
+    top: 0px;
+    right: -4px;
   }
 }
 </style>

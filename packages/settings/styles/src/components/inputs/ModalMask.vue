@@ -102,7 +102,7 @@ export default {
     box-sizing: border-box;
   }
   .modal-padding {
-    padding: var(--ti-modal-padding-y, 10px) var(--ti-modal-padding-x, 16px);
+    padding: var(--ti-modal-padding-y, 14px) var(--ti-modal-padding-x, 20px);
   }
   .align-body {
     right: var(--modal-right-offset, 280px);

@@ -22,7 +22,7 @@
     <tabs-group-configurator
       :options="BACKGROUND_SIZE_OPTIONS"
       :modelValue="state.sizeSelected"
-      :label-width="69"
+      label-width="65"
       @update:modelValue="selectSize"
     ></tabs-group-configurator>
   </div>
@@ -56,7 +56,7 @@
     <tabs-group-configurator
       :options="REPEAT_OPTIONS"
       :modelValue="state.repeat"
-      :label-width="53"
+      label-width="50"
       @update:modelValue="selectRepeat"
     ></tabs-group-configurator>
   </div>
@@ -65,7 +65,7 @@
     <tabs-group-configurator
       :options="FIXED_OPTIONS"
       :modelValue="state.fixedSelected"
-      :label-width="105"
+      label-width="98"
       @update:modelValue="selectFixed"
     ></tabs-group-configurator>
   </div>

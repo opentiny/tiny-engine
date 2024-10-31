@@ -328,17 +328,7 @@
       height="100%"
       style="grid-area: 3 / 3 / span 3 / span 3; pointer-events: none"
     >
-      <text
-        x="11"
-        y="6"
-        fill="#808080"
-        font-style="italic"
-        font-weight="normal"
-        font-size="10"
-        dominant-baseline="hanging"
-      >
-        Padding
-      </text>
+      <text x="11" y="6" fill="#808080" font-weight="normal" font-size="10" dominant-baseline="hanging">Padding</text>
     </svg>
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -346,17 +336,7 @@
       height="100%"
       style="grid-area: 1 / 1 / -1 / -1; pointer-events: none"
     >
-      <text
-        x="12"
-        y="4"
-        fill="#808080"
-        font-style="italic"
-        font-weight="normal"
-        font-size="10"
-        dominant-baseline="hanging"
-      >
-        Margin
-      </text>
+      <text x="12" y="4" fill="#808080" font-weight="normal" font-size="10" dominant-baseline="hanging">Margin</text>
     </svg>
   </div>
 

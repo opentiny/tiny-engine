@@ -58,9 +58,9 @@ export default {
 
   .tabs-setting {
     position: absolute;
-    top: 12px;
-    right: 16px;
-    line-height: 24px;
+    top: 10px;
+    right: 18px;
+    line-height: 26px;
     cursor: pointer;
   }
   .tiny-tabs {
@@ -85,6 +85,9 @@ export default {
       overflow-y: auto;
       padding: 0;
       margin: 0;
+    }
+    .tiny-tabs__nav.is-show-active-bar .tiny-tabs__item {
+      margin-right: 8px;
     }
     .tiny-tabs__item {
       flex: 1;
