@@ -11,7 +11,10 @@ export const parseView = (views) => {
 
   // 使用正则表达式删除所有 import 语句
   const noImportContent =
-    code.replace(/^import\s+.*$/gm, '').replace(/export\s+default\s+[A-Za-z0-9_]+\s*/, '') + `\n render(<${name}/>)`
+    code
+      .replace(/^import\s+\{[^}]+\}\s+from\s+['"][^'"]+['"];?$/gm, '')
+      .replace(/^import\s+.*$/gm, '')
+      .replace(/export\s+default\s+[A-Za-z0-9_]+\s*/, '') + `\n render(<${name}/>)`
 
   return noImportContent
 }
