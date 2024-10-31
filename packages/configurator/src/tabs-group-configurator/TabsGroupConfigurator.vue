@@ -58,30 +58,36 @@
               </template>
             </tiny-popover>
           </span>
-          <tiny-dropdown-menu>
-            <tiny-dropdown-item v-for="item in foldsOptions" :key="item.label || item.icon" @click.stop="change(item)">
-              <span v-if="item?.label">{{ item.label }}</span>
-              <tiny-popover
-                v-if="item?.icon"
-                :effect="effect"
-                :placement="placement"
-                :visible-arrow="false"
-                :content="item.content"
-                trigger="hover"
+          <template #dropdown>
+            <tiny-dropdown-menu>
+              <tiny-dropdown-item
+                v-for="item in foldsOptions"
+                :key="item.label || item.icon"
+                @click.stop="change(item)"
               >
-                <template #reference>
-                  <svg-icon v-if="item.icon" :name="item.icon" class="bem-Svg"></svg-icon>
-                </template>
-              </tiny-popover>
-            </tiny-dropdown-item>
-          </tiny-dropdown-menu>
+                <span v-if="item?.label">{{ item.label }}</span>
+                <tiny-popover
+                  v-if="item?.icon"
+                  :effect="effect"
+                  :placement="placement"
+                  :visible-arrow="false"
+                  :content="item.content"
+                  trigger="hover"
+                >
+                  <template #reference>
+                    <svg-icon v-if="item.icon" :name="item.icon" class="bem-Svg"></svg-icon>
+                  </template>
+                </tiny-popover>
+              </tiny-dropdown-item>
+            </tiny-dropdown-menu>
+          </template>
         </tiny-dropdown>
       </tiny-button-group>
     </div>
   </div>
 </template>
 <script setup>
-import { ref, watch, defineProps, defineEmits } from 'vue'
+import { ref, computed, watch, defineProps, defineEmits } from 'vue'
 import {
   Popover as TinyPopover,
   ButtonGroup as TinyButtonGroup,
@@ -121,8 +127,8 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 
 const picked = ref(null)
-const uncollapsedOptions = ref(props.options.filter((option) => !option.collapsed))
-const collapsedOptions = ref(props.options.filter((option) => option.collapsed))
+const uncollapsedOptions = computed(() => props.options.filter((option) => !option.collapsed))
+const collapsedOptions = computed(() => props.options.filter((option) => option.collapsed))
 const foldsOptions = ref([])
 const selectedCollapsedOption = ref(null)
 const isCollapsedSelected = ref(false)
@@ -162,11 +168,11 @@ watch(
       updateOptionDisplay(value)
     }
   },
-  { immediate: true }
+  { immediate: true, deep: true }
 )
 
 const change = (item) => {
-  if (picked.value === item.value) {
+  if (props.valueKey ? picked.value[props.valueKey] === item.value[props.valueKey] : picked.value === item.value) {
     return
   }
   isCollapsedSelected.value = Boolean(item.collapsed)

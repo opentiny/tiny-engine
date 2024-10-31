@@ -471,7 +471,7 @@ span {
       padding-left: 2px;
       margin-right: 2px;
       line-height: 28px;
-      color: var(--ti-lowcode-component-setting-panel-label-color);
+      color: var(--te-common-text-secondary);
     }
   }
 }
@@ -524,7 +524,7 @@ span {
         .size-label {
           padding-right: 5px;
           display: inline-block;
-          color: var(--ti-lowcode-toolbar-breadcrumb-color);
+          color: var(--te-common-text-secondary);
         }
 
         :deep(.tiny-input) {

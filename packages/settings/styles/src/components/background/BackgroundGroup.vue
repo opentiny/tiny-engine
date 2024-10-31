@@ -429,8 +429,8 @@ export default {
     place-items: stretch;
     gap: 1px;
     border-radius: 2px;
-    border-top: 1px solid var(--te-base-invalidate-color);
-    background-color: var(--te-base-bg-5);
+    border-top: 1px solid var(--te-common-border-divider);
+    background-color: var(--te-common-bg-default);
     margin: 12px 0;
     .image-list-item {
       display: grid;
@@ -438,8 +438,8 @@ export default {
       gap: 8px 4px;
       height: 24px;
       align-items: center;
-      background-color: var(--te-base-bg-5);
-      border-bottom: 1px solid var(--te-base-invalidate-color);
+      background-color: var(--te-common-bg-default);
+      border-bottom: 1px solid var(--te-common-border-divider);
       pointer-events: all;
       font-size: 11px;
       font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell,

@@ -35,12 +35,12 @@ export default {
   max-width: 100%;
   border: 0;
   color: var(--te-common-text-primary);
-  border: 1px solid var(--te-common-text-primary);
+  border: 1px solid var(--te-common-border-active);
 }
 .reset-desc {
   display: block;
   padding: 8px 4px;
   text-align: center;
-  color: var(--ti-lowcode-radio-button-active-bg);
+  color: var(--te-common-text-description);
 }
 </style>

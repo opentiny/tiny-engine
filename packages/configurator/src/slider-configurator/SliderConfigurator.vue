@@ -145,7 +145,7 @@ export default {
     height: 10px;
     border-radius: 50%;
     border: 0;
-    background-color: var(--te-base-bg-5);
+    background-color: var(--te-common-bg-default);
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.21);
     -webkit-transition: border-color 0.15s, background-color 0.15s;
     transition: border-color 0.15s, background-color 0.15s;
@@ -158,7 +158,7 @@ export default {
   }
   input[type='range']::-webkit-slider-thumb:active {
     border: 0;
-    background-color: var(--te-base-bg-5);
+    background-color: var(--te-common-bg-default);
   }
 }
 </style>
