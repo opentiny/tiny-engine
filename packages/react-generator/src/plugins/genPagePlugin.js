@@ -1,6 +1,4 @@
 import { mergeOptions } from '../utils/mergeOptions'
-import { generateCode } from '../generator'
-// import { genSFCWithDefaultPlugin } from '../generator'
 
 const defaultOption = {
   pageBasePath: './src/views'
