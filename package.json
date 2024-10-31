@@ -3,8 +3,9 @@
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "dev": "pnpm run setup && concurrently 'pnpm:serve:backend' 'pnpm:serve:frontend'",
+    "dev": "pnpm run setup && concurrently 'pnpm:serve:backend' 'pnpm:serve:frontend' 'pnpm:serve:design-core'",
     "dev:mock": "pnpm --filter @opentiny/tiny-engine dev",
+    "serve:design-core": "pnpm --filter ./packages/design-core/src/previewReact run dev",
     "serve:frontend": "pnpm --filter @opentiny/tiny-engine serve",
     "serve:backend": "pnpm --filter @opentiny/tiny-engine-mock dev",
     "build:plugin": "pnpm --filter @opentiny/tiny-engine-* build",
