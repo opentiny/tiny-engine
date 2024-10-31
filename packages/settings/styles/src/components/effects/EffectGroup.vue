@@ -521,7 +521,7 @@ export default {
   gap: 8px;
   grid-template-columns: 44px auto;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: var(--te-common-vertical-item-spacing-normal);
   span {
     padding: 2px;
   }

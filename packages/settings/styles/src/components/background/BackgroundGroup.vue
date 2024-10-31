@@ -390,8 +390,8 @@ export default {
 <style lang="less" scoped>
 .background-group {
   display: grid;
-  gap: 8px;
-  grid-template-columns: 35px auto auto;
+  gap: 12px 8px;
+  grid-template-columns: 48px auto auto;
   align-items: center;
   position: relative;
   span {

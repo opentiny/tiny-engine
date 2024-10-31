@@ -146,7 +146,7 @@ export default {
   }
   .content-right-top .content-right-title,
   .content-right-bottom .content-right-title {
-    margin-bottom: 8px;
+    margin-bottom: var(--te-common-vertical-item-spacing-normal);
     .set-params-tip {
       margin-top: 6px;
       font-weight: 400;

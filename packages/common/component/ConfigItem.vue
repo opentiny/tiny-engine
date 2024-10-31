@@ -518,7 +518,7 @@ export default {
   justify-content: space-between;
   position: relative;
   align-items: center;
-  padding-bottom: 8px;
+  padding-bottom: var(--te-common-vertical-item-spacing-normal);
   &:last-child {
     padding-bottom: 0;
   }
