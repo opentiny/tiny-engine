@@ -10,11 +10,11 @@
  *
  */
 
-import appVue from './srcFiles/App.jsx?raw'
+import AppJsx from './srcFiles/App.jsx?raw'
 import injectGlobalJS from './srcFiles/injectGlobal.js?raw'
 import constantJS from './srcFiles/constant/index.js?raw'
 import appJS from './srcFiles/app.js?raw'
-import mainVue from './srcFiles/Main.jsx?raw'
+import MainJsx from './srcFiles/Main.jsx?raw'
 import lowcodeJS from './srcFiles/lowcode.js?raw'
 import dataSourceMapJS from './srcFiles/dataSourceMap.js?raw'
 import dataSourceJS from './srcFiles/dataSource.js?raw'
@@ -26,8 +26,8 @@ import storesHelperJS from './srcFiles/storesHelper.js?raw'
 
 const srcFiles = {}
 
-srcFiles['App.jsx'] = appVue
-srcFiles['Main.jsx'] = mainVue
+srcFiles['App.jsx'] = AppJsx
+srcFiles['Main.jsx'] = MainJsx
 srcFiles['constant.js'] = constantJS
 srcFiles['app.js'] = appJS.replace(/VITE_CDN_DOMAIN/g, import.meta.env.VITE_CDN_DOMAIN)
 srcFiles['injectGlobal.js'] = injectGlobalJS

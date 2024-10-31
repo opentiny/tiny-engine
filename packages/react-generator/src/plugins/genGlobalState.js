@@ -36,9 +36,7 @@ function genDependenciesPlugin(options = {}) {
 
       for (const stateItem of globalState) {
         let importStatement = "import create from 'zustand'"
-        const { id, state, getters, actions } = stateItem
-
-        console.log(getters)
+        const { id, state, actions } = stateItem
 
         ids.push(id)
 
