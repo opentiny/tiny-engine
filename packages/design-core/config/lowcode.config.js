@@ -15,7 +15,7 @@ export default {
   theme: 'light',
 
   // 当前面板技术栈类型，DSL转义参数， 其取值有: Angular、React、HTML、Vue、Flowchart
-  dslMode: 'Vue',
+  dslMode: 'React',
 
   // DSL 代码转换的服务地址
   dslHost: '',

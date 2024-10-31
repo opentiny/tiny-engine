@@ -4,7 +4,7 @@ on:
   push:
     branches: []
   pull_request:
-    branches: [develop,main,ospp-2024/*]
+    branches: [develop,main]
 
 jobs:
   push-check:

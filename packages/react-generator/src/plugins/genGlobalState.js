@@ -30,53 +30,6 @@ function genDependenciesPlugin(options = {}) {
      */
     run(schema) {
       let globalState = parseSchema(schema)
-      globalState = [
-        {
-          id: 'counter',
-          state: {
-            count: 0
-          },
-          actions: {
-            increment: {
-              type: 'JSFunction',
-              value: 'function increment() { this.state.count++; }'
-            },
-            decrement: {
-              type: 'JSFunction',
-              value: 'function decrement() { this.state.count--; }'
-            }
-          },
-          getters: {
-            doubleCount: {
-              type: 'JSFunction',
-              value: 'function doubleCount() { return this.state.count * 2; }'
-            }
-          }
-        },
-        {
-          id: 'user',
-          state: {
-            name: 'John Doe',
-            age: '七十岁'
-          },
-          actions: {
-            updateName: {
-              type: 'JSFunction',
-              value: 'function updateName(newName) { this.state.name = newName; }'
-            },
-            updateAge: {
-              type: 'JSFunction',
-              value: 'function updateAge(newAge) { this.state.age = newAge; }'
-            }
-          },
-          getters: {
-            fullName: {
-              type: 'JSFunction',
-              value: 'function fullName() { return `${this.state.name} (${this.state.age})`; }'
-            }
-          }
-        }
-      ]
 
       const res = []
       const ids = []
