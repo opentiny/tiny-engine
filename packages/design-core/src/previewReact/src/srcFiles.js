@@ -10,11 +10,11 @@
  *
  */
 
-import AppJsx from './srcFiles/App.jsx?raw'
+import AppJsx from './srcFiles/app.jsx?raw'
 import injectGlobalJS from './srcFiles/injectGlobal.js?raw'
 import constantJS from './srcFiles/constant/index.js?raw'
 import appJS from './srcFiles/app.js?raw'
-import MainJsx from './srcFiles/Main.jsx?raw'
+import MainJsx from './srcFiles/main.jsx?raw'
 import lowcodeJS from './srcFiles/lowcode.js?raw'
 import dataSourceMapJS from './srcFiles/dataSourceMap.js?raw'
 import dataSourceJS from './srcFiles/dataSource.js?raw'
@@ -45,7 +45,7 @@ export const genPreviewTemplate = () => {
     {
       fileName: 'App.jsx',
       path: '',
-      fileContent: appVue
+      fileContent: AppJsx
     },
     {
       fileName: 'constant.js',
