@@ -205,9 +205,8 @@ export default {
 
     const updatePage = (id, params) => {
       const routerChange = pageSettingState.currentPageDataCopy.route !== pageSettingState.currentPageData.route
-      const isCurEditPage = pageState?.currentPage?.id === id
 
-      return handlePageUpdate(id, params, routerChange, isCurEditPage)
+      return handlePageUpdate(id, params, routerChange)
     }
 
     const restorePage = (pageData) => {

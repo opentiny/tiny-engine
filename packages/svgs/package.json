@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-svgs",
-  "version": "1.0.7",
+  "version": "1.0.4",
   "publishConfig": {
     "access": "public"
   },
@@ -23,6 +23,7 @@
   "author": "OpenTiny Team",
   "license": "MIT",
   "homepage": "https://opentiny.design/tiny-engine",
+  "dependencies": {},
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
     "@vitejs/plugin-vue-jsx": "^3.1.0",

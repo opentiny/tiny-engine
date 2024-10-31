@@ -1,5 +1,5 @@
-import { BUILTIN_COMPONENT_NAME } from '@/constant'
-import { generateImportByPkgName } from '@/utils/generateImportStatement'
+import { BUILTIN_COMPONENT_NAME } from '../../../constant'
+import { generateImportByPkgName } from '../../../utils/generateImportStatement'
 
 export const parseImport = (children) => {
   let components = []

@@ -14,7 +14,7 @@
 </template>
 
 <script lang="jsx">
-import { defineAsyncComponent } from 'vue'
+import { defineAsyncComponent, ref } from 'vue'
 import { useBreadcrumb } from '@opentiny/tiny-engine-controller'
 import { Switch as TinySwitch } from '@opentiny/vue'
 import { getSearchParams } from './preview/http'
@@ -33,7 +33,7 @@ export default {
     TinySwitch
   },
   setup() {
-    const debugSwitch = injectDebugSwitch()
+    const debugSwitch = ref(injectDebugSwitch())
     const tools = ['breadcrumb', 'lang', 'media']
     const [Breadcrumb, ChangeLang, ToolbarMedia] = tools.map(getToolbars)
 
@@ -42,6 +42,7 @@ export default {
     setBreadcrumbPage([pageInfo?.name])
 
     const setViewPort = (item) => {
+
       const iframe = document.getElementsByClassName('iframe-container')[0]
       const app = document.getElementById('app')
       iframe.style.width = item
@@ -76,17 +77,20 @@ export default {
   z-index: 1001;
   border-bottom: 1px solid var(--ti-lowcode-toolbar-border-bottom-color);
 }
+
 .toolbar-left,
 .toolbar-right {
   margin: 0 12px;
   display: flex;
   gap: 12px;
 }
+
 .toolbar-button-text {
   color: var(--ti-lowcode-toolbar-title-color);
   margin-left: 4px;
   font-size: 12px;
 }
+
 :deep(.top-panel-breadcrumb) {
   width: auto;
 }

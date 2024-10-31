@@ -3,7 +3,7 @@ import { genSFCWithDefaultPlugin } from '@/generator/vue/sfc'
 import schema from './page.schema.json'
 import componentsMap from './components-map.json'
 import blockSchema from './blocks.schema.json'
-import { formatCode } from '@/utils/formatCode'
+import { formatCode } from '../../../../src/utils/formatCode'
 
 test('should generate use prop accessor correctly', async () => {
   const res = genSFCWithDefaultPlugin(schema, componentsMap)

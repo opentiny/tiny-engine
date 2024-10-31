@@ -38,10 +38,10 @@ class MysqlConnection {
     return new Promise((resolve, reject) => {
       this.connection.connect((error) => {
         if (error) {
-          logger.warn('unable to connect to the database, please check the database configuration is correct.')
+          logger.warn('未能连接到数据库，请查看数据库配置是否正确')
           reject()
         } else {
-          logger.success('database connected.')
+          logger.success('数据库连接成功')
           this.connected = true
           resolve()
         }
@@ -100,11 +100,11 @@ class MysqlConnection {
    * @returns boolean 校验组件字段是否失败，false-有字段出错
    */
   isValid(component, file) {
-    const longTextFields = ['name', 'npm', 'snippets', 'schema_fragment', 'configure', 'component_metadata']
+    const longtextFields = ['name', 'npm', 'snippets', 'schema_fragment', 'configure', 'component_metadata']
 
     return Object.entries(component).every(([key, value]) => {
-      if (longTextFields.includes(key) && value !== null && typeof value !== 'object') {
-        logger.error(`the value of "${key}" is not valid JSON at ${file}.`)
+      if (longtextFields.includes(key) && value !== null && typeof value !== 'object') {
+        logger.error(`"${key}" 的值不是有效的JSON (${file})`)
 
         return false
       }
@@ -193,10 +193,10 @@ class MysqlConnection {
 
     this.query(sqlContent, component.component)
       .then(() => {
-        logger.success(`${component.component} updated.`)
+        logger.success(`组件 ${component.component} 数据更新成功`)
       })
       .catch((error) => {
-        logger.error(`failed to update ${component.component}: ${error}.`)
+        logger.error(`组件 ${component.component} 数据更新失败 ${error}`)
       })
   }
 
@@ -322,11 +322,11 @@ class MysqlConnection {
       .then((result) => {
         const id = result.insertId
 
-        logger.success(`${component.component} added.`)
+        logger.success(`组件 ${component.component} 数据新增成功`)
         this.relationMaterialHistory(id)
       })
       .catch((error) => {
-        logger.error(`add ${component.component} failed：${error}.`)
+        logger.success(`组件 ${component.component} 数据新增失败：${error}`)
       })
   }
 
@@ -344,7 +344,7 @@ class MysqlConnection {
         }
       })
       .catch((error) => {
-        logger.error(`query ${component.component} failed：${error}.`)
+        logger.success(`查询组件 ${component.component} 失败：${error}`)
       })
   }
 
@@ -395,11 +395,11 @@ class MysqlConnection {
     return new Promise((resolve, reject) => {
       this.query(sqlContent)
         .then((result) => {
-          logger.success(`table ${componentsTableName} created.`)
+          logger.success(`表 ${componentsTableName} 创建成功`)
           resolve(result)
         })
         .catch((error) => {
-          logger.error(`create table ${componentsTableName} failed：${error}.`)
+          logger.success(`表 ${componentsTableName} 创建失败：${error}`)
           reject(error)
         })
     })

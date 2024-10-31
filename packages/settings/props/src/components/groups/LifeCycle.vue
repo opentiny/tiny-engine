@@ -29,15 +29,8 @@
     </li>
   </ul>
 
-  <tiny-dialog-box
-    :visible="state.showDialog"
-    :title="state.title"
-    width="48%"
-    :append-to-body="true"
-    @update:visible="state.showDialog = $event"
-    @close="cancel"
-    @opened="open"
-  >
+  <tiny-dialog-box :visible="state.showDialog" :title="state.title" width="48%" :append-to-body="true"
+    @update:visible="state.showDialog = $event" @close="cancel" @opened="open">
     <div class="dialog-content">
       <div class="dialog-content-left">
         <tiny-search v-model="value" placeholder="搜索" @update:modelValue="search"></tiny-search>
@@ -51,13 +44,8 @@
         </ul>
       </div>
       <div class="dialog-content-right">
-        <monaco-editor
-          v-if="state.showEditor"
-          ref="editor"
-          style="height: 100%"
-          :options="state.options"
-          :value="state.editorValue"
-        />
+        <monaco-editor v-if="state.showEditor" ref="editor" style="height: 100%" :options="state.options"
+          :value="state.editorValue" />
       </div>
     </div>
 
@@ -129,7 +117,7 @@ export default {
       state.title = item
       state.editorValue =
         (state.bindLifeCycles[state.title] && state.bindLifeCycles[state.title].source) ||
-        `function ${state.title} () {} `
+        `${state.title} (() => {}, [])`
       state.showDialog = true
     }
 
@@ -216,6 +204,7 @@ export default {
 .popover-list {
   li {
     padding: 4px 12px;
+
     &:hover {
       background: var(--ti-lowcode-canvas-wrap-bg);
       cursor: pointer;
@@ -236,6 +225,7 @@ export default {
     svg {
       color: var(--ti-lowcode-toolbar-breadcrumb-color);
     }
+
     .icon {
       margin-right: 8px;
 
@@ -285,6 +275,7 @@ export default {
       &:hover {
         color: var(--ti-lowcode-toolbar-icon-color);
         background: var(--ti-lowcode-canvas-wrap-bg);
+
         .life-cycle-selected {
           opacity: 1;
         }

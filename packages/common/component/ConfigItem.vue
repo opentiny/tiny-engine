@@ -295,13 +295,16 @@ export default {
       result.message = typeof message === 'string' ? message : message?.[locale.value]
     }
 
-    const isEmptyInputValue = (value) => {
-      // 通过 value == null 做隐式类型转换
-      // 空值约定为 undefined | null | ''
-      return value == null || (typeOf(value) === TYPES.StringType && value.trim() === '')
-    }
     const verifyRequired = (value) => {
-      return !isEmptyInputValue(value)
+      if (typeOf(value) === TYPES.BooleanType) {
+        return true
+      }
+
+      if (typeOf(value) === TYPES.StringType) {
+        return value.trim()
+      }
+
+      return value
     }
 
     const verifyValue = (value = '', rules = []) => {

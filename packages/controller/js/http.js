@@ -14,7 +14,6 @@ import { useHttp } from '@opentiny/tiny-engine-http'
 import usePage from '../src/usePage'
 import useCanvas from '../src/useCanvas'
 import useNotify from '../src/useNotify'
-import useBreadcrumb from '../src/useBreadcrumb'
 import { isVsCodeEnv } from './environments'
 import { generateRouter, generatePage } from './vscodeGenerateFile'
 
@@ -40,7 +39,7 @@ export const requestEvent = (url, params) => {
  * @returns { Promise }
  *
  */
-export const handlePageUpdate = (pageId, params, routerChange, isCurEditPage) => {
+export const handlePageUpdate = (pageId, params, routerChange) => {
   return http
     .post(`/app-center/api/pages/update/${pageId}`, params)
     .then((res) => {
@@ -61,19 +60,14 @@ export const handlePageUpdate = (pageId, params, routerChange, isCurEditPage) =>
         }
       }
 
-      // 更新页面管理的列表，如果不存在，说明还没有打开过页面管理面板
-      pageSettingState.updateTreeData?.()
+      if (routerChange) {
+        pageSettingState.updateTreeData()
+      }
       pageSettingState.isNew = false
       useNotify({ message: '保存成功!', type: 'success' })
 
       // 更新 页面状态 标志
       setSaved(true)
-
-      if (isCurEditPage) {
-        const { setBreadcrumbPage } = useBreadcrumb()
-        setBreadcrumbPage([params.name])
-      }
-
       return res
     })
     .catch((err) => {

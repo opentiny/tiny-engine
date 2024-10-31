@@ -1,5 +1,5 @@
 import { mergeOptions } from '../utils/mergeOptions'
-import { parseImport } from '@/generator/vue/sfc/parseImport'
+import { parseImport } from '../generator/vue/sfc/parseImport'
 
 const defaultOption = {
   fileName: 'package.json',
@@ -63,7 +63,7 @@ function genDependenciesPlugin(options = {}) {
     description: 'transform dependencies to package.json',
     /**
      * 分析依赖，写入 package.json
-     * @param {import('@opentiny/tiny-engine-dsl-vue').IAppSchema} schema
+     * @param {tinyEngineDslVue.IAppSchema} schema
      * @returns
      */
     run(schema) {

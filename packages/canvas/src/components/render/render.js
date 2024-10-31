@@ -581,7 +581,7 @@ const getBindProps = (schema, scope) => {
     ...parseData(schema.props, scope),
     [DESIGN_UIDKEY]: id,
     [DESIGN_TAGKEY]: componentName,
-    onMouseover: stopEvent,
+    onMouseOver: stopEvent,
     onFocus: stopEvent
   }
   if (scope) {

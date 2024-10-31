@@ -4,13 +4,8 @@
       <div class="preview-title">
         温馨提示：预览页面默认打开的是根路由对应的页面，如果没有配置根路由页面，则需要补全URL后面的路由
       </div>
-      <tiny-progress
-        class="progress"
-        :text-inside="true"
-        :stroke-width="30"
-        :percentage="percentage"
-        :status="progressStatus"
-      ></tiny-progress>
+      <tiny-progress class="progress" :text-inside="true" :stroke-width="30" :percentage="percentage"
+        :status="progressStatus"></tiny-progress>
       <div>{{ statusText }}</div>
       <tiny-button v-if="isBtnShow" class="preview-btn" type="primary" @click="rebuildApp">重新构建</tiny-button>
     </div>
@@ -91,9 +86,8 @@ export default {
               const extendConfig = appInfoState.selectedApp?.extend_config || {}
 
               if (extendConfig?.app_type === EXTEND_CONFIG.TYPE.CONSOLE) {
-                openUrl = `${VITE_ORIGIN}/app-service/${extendConfig?.app_type ?? extendConfig?.type}${
-                  extendConfig.business.router
-                }?appId=${appId}&region=cn-north-7&previewType=app&env=alpha&tenant=${paramsMap.get('tenant')}`
+                openUrl = `${VITE_ORIGIN}/app-service/${extendConfig?.app_type ?? extendConfig?.type}${extendConfig.business.router
+                  }?appId=${appId}&region=cn-north-7&previewType=app&env=alpha&tenant=${paramsMap.get('tenant')}`
               }
             })
             .finally(() => {

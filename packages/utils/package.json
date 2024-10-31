@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-utils",
-  "version": "1.0.7",
+  "version": "1.0.4",
   "publishConfig": {
     "access": "public"
   },
@@ -30,9 +30,7 @@
     "vite": "^4.3.7",
     "vitest": "^1.4.0"
   },
-  "dependencies": {
-    "jszip": "^3.10.1"
-  },
+  "dependencies": {},
   "peerDependencies": {
     "@opentiny/vue-renderless": "^3.14.0",
     "vue": "^3.4.15"

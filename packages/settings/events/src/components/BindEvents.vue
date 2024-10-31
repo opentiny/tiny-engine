@@ -28,12 +28,12 @@
         </template>
         <ul class="bind-event-list">
           <li
-            v-for="(event, name) in renderEventList"
+            v-for="(event, name) in state.componentEvents"
             :key="name"
             :class="['bind-event-list-item', { 'bind-event-list-item-notallow': state.bindActions[name] }]"
             @click="openActionDialog({ eventName: name }, true)"
           >
-            <div>{{ name }}&nbsp;&nbsp;{{ event?.label?.[locale] || name }}</div>
+            <div>{{ name }}&nbsp;&nbsp;{{ event?.label?.zh_CN || name }}</div>
           </li>
         </ul>
       </tiny-popover>
@@ -43,7 +43,7 @@
         <div class="action-item bind-action-item">
           <div class="binding-name" @click="openActionDialog(action)">
             <div>
-              {{ action.eventName }}<span>{{ renderEventList[action.eventName]?.label?.[locale] }}</span>
+              {{ action.eventName }}<span>{{ state.componentEvents[action.eventName].label.zh_CN }}</span>
             </div>
             <div :class="{ linked: action.linked }">{{ action.linkedEventName }}</div>
             <span class="event-bind">{{ action.ref }}</span>
@@ -78,7 +78,7 @@
   <bind-events-dialog :eventBinding="state.eventBinding"></bind-events-dialog>
   <add-events-dialog
     :visible="state.showBindEventDialog"
-    :componentEvents="renderEventList"
+    :componentEvents="state.componentEvents"
     @closeDialog="handleToggleAddEventDialog(false)"
     @addEvent="handleAddEvent"
   ></add-events-dialog>
@@ -88,7 +88,6 @@
 import { computed, reactive, watchEffect } from 'vue'
 import { Popover, Button } from '@opentiny/vue'
 import { useCanvas, useModal, useLayout, useBlock, useResource } from '@opentiny/tiny-engine-controller'
-import i18n from '@opentiny/tiny-engine-controller/js/i18n'
 import { BlockLinkEvent, SvgButton } from '@opentiny/tiny-engine-common'
 import { iconHelpQuery, iconChevronDown } from '@opentiny/vue-icon'
 import BindEventsDialog, { open as openDialog } from './BindEventsDialog.vue'
@@ -113,7 +112,6 @@ export default {
     const { getBlockEvents, getCurrentBlock, removeEventLink } = useBlock()
     const { getMaterial } = useResource()
     const { confirm } = useModal()
-    const locale = i18n.global.locale.value
 
     const { highlightMethod } = getPluginApi(PLUGIN_NAME.PageController)
 
@@ -121,25 +119,25 @@ export default {
       eventName: '', // 事件名称
       eventBinding: null, // 事件绑定的处理方法对象
       componentEvent: {},
-      customEvents: commonEvents,
+      componentEvents: commonEvents,
       bindActions: {},
       showBindEventDialog: false
     })
 
     const isBlock = computed(() => Boolean(pageState.isBlock))
     const isEmpty = computed(() => Object.keys(state.bindActions).length === 0)
-    const renderEventList = computed(() => ({ ...state.componentEvent, ...state.customEvents }))
 
     watchEffect(() => {
       const componentName = pageState?.currentSchema?.componentName
       const componentSchema = getMaterial(componentName)
       state.componentEvent = componentSchema?.content?.schema?.events || componentSchema?.schema?.events || {}
+      Object.assign(state.componentEvents, state.componentEvent)
       const props = pageState?.currentSchema?.props || {}
       const keys = Object.keys(props)
       state.bindActions = {}
 
       // 遍历组件事件元数据
-      Object.entries(renderEventList.value).forEach(([eventName, componentEvent]) => {
+      Object.entries(state.componentEvents).forEach(([eventName, componentEvent]) => {
         // 查找组件已添加的事件
         if (keys.indexOf(eventName) > -1) {
           const event = props[eventName]
@@ -227,7 +225,7 @@ export default {
     const handleAddEvent = (params) => {
       const { eventName, eventDescription } = params
 
-      Object.assign(state.customEvents, {
+      Object.assign(state.componentEvents, {
         [eventName]: {
           label: {
             zh_CN: eventDescription
@@ -255,9 +253,7 @@ export default {
       openCodePanel,
       openActionDialog,
       handleAddEvent,
-      handleToggleAddEventDialog,
-      renderEventList,
-      locale
+      handleToggleAddEventDialog
     }
   }
 }

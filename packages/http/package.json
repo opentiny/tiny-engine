@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-http",
-  "version": "1.0.5",
+  "version": "1.0.2",
   "publishConfig": {
     "access": "public"
   },

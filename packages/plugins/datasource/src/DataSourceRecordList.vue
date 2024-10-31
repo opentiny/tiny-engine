@@ -489,7 +489,6 @@ export default {
           grid.value.removeSelecteds()
           state.totalData = state.totalData.filter(({ _id }) => !selectedData.includes(_id))
           fetchData()
-          state.isBatchDeleteDisable = true
         }
       })
     }

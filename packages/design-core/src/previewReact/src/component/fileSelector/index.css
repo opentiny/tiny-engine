@@ -1,0 +1,9 @@
+.button-group {
+    display: flex;
+}
+
+.each-button {
+    height: 20px;
+    padding: 10px;
+    border: 1px solid green;
+}

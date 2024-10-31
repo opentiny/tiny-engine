@@ -6,10 +6,10 @@ import {
   JS_EXPRESSION,
   JS_I18N,
   JS_RESOURCE
-} from '@/constant'
+} from '../../../constant'
 import { generateTag, HTML_DEFAULT_VOID_ELEMENTS } from './generateTag'
 import { specialTypeHandler } from './generateAttribute'
-import { thisPropsBindRe, thisRegexp } from '@/utils'
+import { thisPropsBindRe, thisRegexp } from '../../../utils'
 
 export const handleComponentNameHook = (optionData) => {
   const { componentName, schema } = optionData

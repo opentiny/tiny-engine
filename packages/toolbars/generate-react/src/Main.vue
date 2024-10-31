@@ -1,23 +1,14 @@
 <template>
-  <tiny-popover
-    trigger="hover"
-    :open-delay="1000"
-    popper-class="toolbar-right-popover"
-    append-to-body
-    content="生成当前页面/区块的Vue代码到本地文件"
-  >
+  <tiny-popover trigger="hover" :open-delay="1000" popper-class="toolbar-right-popover" append-to-body
+    content="生成当前页面/区块的React代码到本地文件">
     <template #reference>
       <span class="icon" @click="generate">
         <svg-icon :name="icon"></svg-icon>
       </span>
     </template>
   </tiny-popover>
-  <generate-file-selector
-    :visible="state.showDialogbox"
-    :data="state.saveFilesInfo"
-    @confirm="confirm"
-    @cancel="cancel"
-  ></generate-file-selector>
+  <generate-file-selector :visible="state.showDialogbox" :data="state.saveFilesInfo" @confirm="confirm"
+    @cancel="cancel"></generate-file-selector>
 </template>
 
 <script>
@@ -25,6 +16,8 @@ import { reactive } from 'vue'
 import { Popover } from '@opentiny/vue'
 import { getGlobalConfig, useBlock, useCanvas, useNotify, useLayout } from '@opentiny/tiny-engine-controller'
 import { fs } from '@opentiny/tiny-engine-utils'
+// import { generateApp, generateBlocksCode, generateCode } from '@opentiny/tiny-engine-dsl-react'
+// import { generateApp, generateBlocksCode, generateCode } from '../../../react-generator/src/index'
 import { generateVuePage, generateVueBlock } from './generateCode'
 import { fetchCode, fetchMetaData, fetchPageList } from './http'
 import FileSelector from './FileSelector.vue'
@@ -98,9 +91,12 @@ export default {
     }
 
     const getToSaveFilesInfo = ({ params, codeList, metaData, pageList }) => {
+
       const handlers = {
         Block: generateVueBlock,
         Page: generateVuePage
+        // Page: generateApp
+        // Page: generateCode
       }
       const filesInfo = handlers[params.type]({ params, codeList, metaData, pageList })
 

@@ -17,13 +17,13 @@
           </div>
           <tiny-form-item
             :prop="paramsPropPath(index)"
-            :rules="[{ validator: paramsStringValidator, trigger: 'blur' }]"
+            :rules="[{ validator: parmasStringValidator, trigger: 'blur' }]"
             class="slot-name-form-item"
           >
             <tiny-input
               v-model="slot.params"
               class="use-slot-params"
-              @change="validParams(paramsPropPath(index), slot)"
+              @change="validParmas(slot, paramsPropPath(index))"
             ></tiny-input>
           </tiny-form-item>
         </div>
@@ -84,59 +84,15 @@ export default {
 
     const paramsPropPath = (index) => `${index}.params`
 
-    const paramsStringValidator = (rule, value, callback) => {
-      if (value && value.split(',').some((param) => !verifyJsVarName(param))) {
+    const parmasStringValidator = (rule, value, callback) => {
+      if (value && value.split(',').some((parma) => !verifyJsVarName(parma))) {
         callback(new Error('仅支持JavaScript中有效的变量名'))
       } else {
         callback()
       }
     }
 
-    const updateSlotParams = (slotData) => {
-      emit('update:modelValue', slotData)
-
-      // 更新当前选中组件的根属性，不更新在jsslot中的数据非响应式
-      const [propsName] = path.split('.')
-      const schema = useProperties().getSchema()
-      schema.props[propsName] = JSON.parse(JSON.stringify(schema.props[propsName]))
-    }
-
-    const setSlotParams = ({ name, params = '' }) => {
-      if (!props.modelValue?.[name]) {
-        return
-      }
-
-      const slotData = { ...(props.modelValue || {}) }
-
-      if (params.length) {
-        slotData[name].params = params.split(',')
-      } else {
-        delete slotData[name].params
-      }
-
-      updateSlotParams(slotData)
-    }
-
     const toggleSlot = (idx, { bind, name, params = '' }) => {
-      // 原本绑定的，解除绑定
-      if (bind) {
-        useModal().confirm({
-          title: '提示',
-          message: '关闭后插槽内的内容将被清空，是否继续？',
-          status: 'info',
-          exec: () => {
-            slotList.value[idx].bind = false
-            const { [name]: _deleted, ...rest } = { ...(props.modelValue || {}) }
-            updateSlotParams(rest)
-          }
-        })
-
-        return
-      }
-
-      // 未绑定的，新增绑定
-      slotList.value[idx].bind = true
-
       const slotInfo = {
         [name]: {
           type: 'JSSlot',
@@ -148,17 +104,47 @@ export default {
         }
       }
 
-      if (params.length) {
-        slotInfo[name].params = params.split(',')
-      }
+      const slotData = { ...slotInfo, ...(props.modelValue || {}) }
 
-      updateSlotParams({ ...(props.modelValue || {}), ...slotInfo })
+      if (params.length) {
+        slotData[name].params = params.split(',')
+      } else {
+        delete slotData[name].params
+      }
+      if (bind) {
+        useModal().confirm({
+          title: '提示',
+          message: '关闭后插槽内的内容将被清空，是否继续？',
+          status: 'info',
+          exec: () => {
+            slotList.value[idx].bind = false
+            delete slotData[name]
+            emit('update:modelValue', slotData)
+            const [propsName] = path.split('.')
+            const schema = useProperties().getSchema()
+            schema.props[propsName] = JSON.parse(JSON.stringify(schema.props[propsName]))
+          },
+          cancel: () => {}
+        })
+      } else {
+        slotList.value[idx].bind = true
+      }
+      emit('update:modelValue', slotData)
+
+      // 更新当前选中组件的根属性，不根新在jsslot中的数据非响应式
+      const [propsName] = path.split('.')
+      const schema = useProperties().getSchema()
+      schema.props[propsName] = JSON.parse(JSON.stringify(schema.props[propsName]))
     }
 
-    const validParams = (paramsPath, slot) => {
-      slotRef.value.validateField([paramsPath], (error) => {
-        if (!error) {
-          slot.bind && setSlotParams(slot)
+    const setParams = (slot) => {
+      slot.bind && toggleSlot(true, slot)
+    }
+
+    const validParmas = (slot, parmasPath) => {
+      slotRef.value.validateField([parmasPath], (tips) => {
+        if (!tips) {
+          setParams(slot)
         }
       })
     }
@@ -173,8 +159,9 @@ export default {
       slotList,
       paramsPropPath,
       slotRef,
-      paramsStringValidator,
-      validParams,
+      parmasStringValidator,
+      validParmas,
+      setParams,
       state,
       componentsMap
     }

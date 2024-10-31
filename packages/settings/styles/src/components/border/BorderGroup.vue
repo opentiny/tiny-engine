@@ -290,7 +290,9 @@ export default {
     const state = reactive({
       showModal: false,
       activedRadius: RADIUS_SETTING.Single,
-      activedBorder: BORDER_SETTING.All
+      activedBorder: BORDER_SETTING.All,
+      // 标记是否从 props 来的更新
+      isUpdateFromProps: false
     })
 
     const { setPosition } = useModal()
@@ -334,13 +336,12 @@ export default {
     watch(
       () => props.style,
       () => {
-        borderRadius.BorderRadius = parseInt(props.style[BORDER_RADIUS_PROPERTY.BorderRadius] || 0)
-        borderRadius.BorderTopLeftRadius = parseInt(props.style[BORDER_RADIUS_PROPERTY.BorderTopLeftRadius] || 0)
-        borderRadius.BorderTopRightRadius = parseInt(props.style[BORDER_RADIUS_PROPERTY.BorderTopRightRadius] || 0)
-        borderRadius.BorderBottomLeftRadius = parseInt(props.style[BORDER_RADIUS_PROPERTY.BorderBottomLeftRadius] || 0)
-        borderRadius.BorderBottomRightRadius = parseInt(
-          props.style[BORDER_RADIUS_PROPERTY.BorderBottomRightRadius] || 0
-        )
+        state.isUpdateFromProps = true
+        borderRadius.BorderRadius = parseInt(props.style.borderRadius || 0)
+        borderRadius.BorderTopLeftRadius = parseInt(props.style.borderTopLeftRadius || 0)
+        borderRadius.BorderTopRightRadius = parseInt(props.style.borderTopRightRadius || 0)
+        borderRadius.BorderBottomLeftRadius = parseInt(props.style.borderBottomLeftRadius || 0)
+        borderRadius.BorderBottomRightRadius = parseInt(props.style.borderBottomRightRadius || 0)
       },
       { immediate: true }
     )
@@ -385,13 +386,12 @@ export default {
        * 1. 用户在 monacoEditor 更新了样式 border-radius: 9px 然后保存，该组件接收并同步改值
        * 2. 用户在 monacoEditor 删除了 border-radius: 9px 的样式，然后 watch 函数（props.style），重新计算得到值 0
        * 3. 0 更新后，会再触发改函数更新，导致自动加上了 border-radius: 0px 的样式
-       * 所以从如果当前值为 0 且  props.style[BORDER_RADIUS_PROPERTY.BorderRadius] 不存在值，不需要触发更新
+       * 所以从 props 来的更新不需要再调用一遍 updateStyle（更新 props 数据）
        */
-
-      if (!value && !props.style[BORDER_RADIUS_PROPERTY.BorderRadius]) {
+      if (state.isUpdateFromProps) {
+        state.isUpdateFromProps = false
         return
       }
-
       borderRadius.BorderRadius = value
 
       updateStyle({

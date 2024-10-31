@@ -10,12 +10,8 @@
       </template>
       <div class="popover-list">
         <ul>
-          <li
-            v-for="(item, index) in state.lifeCycles"
-            :key="index"
-            :class="{ existed: state.bindLifeCycles.hasOwnProperty(item) }"
-            @click="openLifeCyclesPanel(item)"
-          >
+          <li v-for="(item, index) in state.lifeCycles" :key="index"
+            :class="{ existed: state.bindLifeCycles.hasOwnProperty(item) }" @click="openLifeCyclesPanel(item)">
             <div>{{ item }}</div>
           </li>
         </ul>
@@ -47,22 +43,15 @@
         </ul>
       </div>
       <div class="dialog-content-right">
-        <monaco-editor
-          ref="editorRef"
-          class="life-cycle-editor"
-          :options="{
-            roundedSelection: true,
-            automaticLayout: true,
-            autoIndent: true,
-            language: 'javascript',
-            formatOnPaste: true,
-            tabSize: 2,
-            theme: theme()
-          }"
-          :value="state.editorValue"
-          @change="handleEditorChange"
-          @editorDidMount="editorDidMount"
-        />
+        <monaco-editor ref="editorRef" class="life-cycle-editor" :options="{
+          roundedSelection: true,
+          automaticLayout: true,
+          autoIndent: true,
+          language: 'javascript',
+          formatOnPaste: true,
+          tabSize: 2,
+          theme: theme()
+        }" :value="state.editorValue" @change="handleEditorChange" @editorDidMount="editorDidMount" />
       </div>
     </div>
 
@@ -129,7 +118,7 @@ export default {
     })
 
     watchEffect(() => {
-      state.bindLifeCycles = props.bindLifeCycles || {}
+      state.bindLifeCycles = props.bindLifeCycles || useCanvas().canvasApi.value?.getSchema()?.lifeCycles || {}
     })
 
     const searchLifeCyclesList = (value) => {
@@ -255,28 +244,34 @@ export default {
   display: flex; // 决定了鼠标移入后的弹窗位置
   padding: 10px;
   margin-top: -10px;
+
   svg {
     outline: none;
   }
 }
+
 .popover-list {
   ul li:first-child {
     margin-top: 8px;
   }
+
   ul li:last-child {
     margin-bottom: 8px;
   }
 }
+
 .life-cycle-alert {
   color: var(--ti-lowcode-life-cycle-alert-color);
   margin-left: 20px;
   margin-right: 20px;
 }
+
 .add-life-cycle-wrap {
   display: flex;
   font-size: 16px;
   margin-left: 10px;
   align-items: center;
+
   .desc {
     margin: 0;
     margin-left: 8px;
@@ -287,10 +282,12 @@ export default {
   li {
     padding: 8px 30px 8px 16px;
     cursor: pointer;
+
     &:hover {
       background: var(--ti-lowcode-life-cycle-item-hover-bg);
     }
   }
+
   .existed {
     cursor: not-allowed;
     pointer-events: none;
@@ -305,6 +302,7 @@ export default {
 .dialog-content {
   display: flex;
   height: 100%;
+
   .dialog-content-left {
     width: 200px;
     margin-right: 20px;
@@ -342,6 +340,7 @@ export default {
 
   .dialog-content-right {
     flex: 1;
+
     .life-cycle-editor {
       border: 1px solid var(--ti-lowcode-life-cycle-editor-border);
       height: 100%;

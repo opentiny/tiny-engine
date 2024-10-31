@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { hasJsx } from '@/utils/hasJsx'
+import { hasJsx } from '../../src/utils/hasJsx'
 
 describe('normal case', () => {
   test('raw jsx should be true', () => {

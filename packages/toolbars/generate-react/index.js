@@ -10,11 +10,12 @@
  *
  */
 
-import component from './src/Main.vue'
+import component from '../generate-vue/src/Main.vue'
+// import component from './src/Main.vue'
 
 export default {
-  id: 'genarate-vue',
-  title: 'genarate-vue',
+  id: 'genarate-react',
+  title: 'genarate-react',
   icon: '',
   align: 'right',
   component

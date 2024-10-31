@@ -72,8 +72,7 @@ export default class BlockService {
 
   async detail(blockId) {
     const result = await this.db.findOneAsync({ _id: blockId })
-
-    return getResponseData(result)
+    return result
   }
 
   async delete(blockId) {

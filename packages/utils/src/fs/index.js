@@ -12,12 +12,6 @@
 
 // browser File System Access API encapsulation
 
-import { createZip, writeZip } from './fszip'
-
-// 支持file system api的条件：存在这个方法 && 不处于iframe中
-export const isSupportFileSystemAccess =
-  Object.prototype.hasOwnProperty.call(window, 'showDirectoryPicker') && window.self === window.top
-
 /**
  * 获取用户选择并授权的文件夹根路径
  * @param {*} options
@@ -25,8 +19,8 @@ export const isSupportFileSystemAccess =
  * @returns dirHandle 目录句柄
  */
 export const getUserBaseDirHandle = async (options = {}) => {
-  if (!isSupportFileSystemAccess) {
-    return createZip()
+  if (!window.showOpenFilePicker) {
+    throw new Error('不支持的浏览器!')
   }
   const dirHandle = await window.showDirectoryPicker({ mode: 'readwrite', ...options })
   return dirHandle
@@ -81,8 +75,8 @@ export async function getFileHandle(baseDirHandle, filePath, { create = false } 
  * @returns fileHandle 文件句柄
  */
 export const getUserFileHandle = async (options = {}) => {
-  if (!isSupportFileSystemAccess) {
-    throw new Error('不支持的浏览器或处于iframe中')
+  if (!window.showOpenFilePicker) {
+    throw new Error('不支持的浏览器!')
   }
   const [fileHandle] = await window.showOpenFilePicker({ mode: 'readwrite', ...options })
   return fileHandle
@@ -172,22 +166,9 @@ export const writeFile = async (handle, { filePath, fileContent }) => {
  * @param {Array<FileInfo>} filesInfo 文件信息
  *          FileInfo.filePath 文件相对路径
  *          FileInfo.fileContent 文件内容
- * @param {Boolean} supportZipCache 是否支持zip缓存，zip缓存可能会导致文件不能及时更新，默认不缓存
- *
  */
-export const writeFiles = async (
-  baseDirHandle,
-  filesInfo,
-  zipName = 'tiny-engine-generate-code',
-  supportZipCache = false
-) => {
+export const writeFiles = async (baseDirHandle, filesInfo) => {
   if (!filesInfo?.length) {
-    return
-  }
-
-  if (!isSupportFileSystemAccess) {
-    const zipInfo = { zipName, zipHandle: supportZipCache && baseDirHandle }
-    await writeZip(filesInfo, zipInfo)
     return
   }
 
@@ -196,5 +177,5 @@ export const writeFiles = async (
     directoryHandle = await window.showDirectoryPicker({ mode: 'readwrite' })
   }
 
-  await Promise.all(filesInfo.map((fileInfo) => writeFile(directoryHandle, fileInfo)))
+  await Promise.all(filesInfo.map((fileInfo) => writeFile(baseDirHandle, fileInfo)))
 }

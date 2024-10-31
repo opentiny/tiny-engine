@@ -1,15 +1,8 @@
 <template>
   <div :class="['vue-repl-container', debugSwitch ? 'preview-debug-mode' : '']">
-    <Repl
-      :editor="editorComponent"
-      :store="store"
-      :sfcOptions="sfcOptions"
-      :showCompileOutput="false"
-      :showTsConfig="false"
-      :showImportMap="true"
-      :clearConsole="false"
-      :autoResize="false"
-    />
+    <!-- <IframeVue :src="iframeSrc" :show="showIframe" :onMessage="handleIframeMessage" :initialMessage="srcFiles" /> -->
+    <Repl :editor="editorComponent" :store="store" :sfcOptions="sfcOptions" :showCompileOutput="false"
+      :showTsConfig="false" :showImportMap="true" :clearConsole="false" :autoResize="false" />
   </div>
 </template>
 
@@ -18,13 +11,16 @@ import { defineComponent, computed, defineAsyncComponent } from 'vue'
 import { Repl, ReplStore } from '@vue/repl'
 import vueJsx from '@vue/babel-plugin-jsx'
 import { transformSync } from '@babel/core'
+import Config from '../../../../config/lowcode.config.js'
 import { genSFCWithDefaultPlugin, parseRequiredBlocks } from '@opentiny/tiny-engine-dsl-vue'
 import importMap from './importMap'
 import srcFiles from './srcFiles'
+import { ref } from 'vue'
 import generateMetaFiles, { processAppJsCode } from './generate'
 import { getSearchParams, fetchMetaData, fetchImportMap, fetchAppSchema, fetchBlockSchema } from './http'
 import { PanelType, PreviewTips } from '../constant'
 import { injectDebugSwitch } from './debugSwitch'
+// import IframeVue from '../iframe/index.vue'
 import '@vue/repl/style.css'
 
 const Monaco = defineAsyncComponent(() => import('@vue/repl/monaco-editor')) // 异步组件实现懒加载，打开debug后再加载
@@ -37,12 +33,16 @@ const EmptyEditor = defineComponent({
 
 export default {
   components: {
-    Repl
+    Repl,
+    // IframeVue
   },
   setup() {
     const debugSwitch = injectDebugSwitch()
     const editorComponent = computed(() => (debugSwitch?.value ? Monaco : EmptyEditor))
     const store = new ReplStore()
+
+    const showIframe = ref(Config.dslMode === 'React');
+    const iframeSrc = 'http://127.0.0.1:5173/'; // 你想要嵌入的 URL
 
     const sfcOptions = {
       script: {
@@ -86,17 +86,11 @@ export default {
         .map((name) => fetchBlockSchema(name))
 
       const schemaList = await Promise.allSettled(promiseList)
-      const extraList = []
 
       schemaList.forEach((item) => {
         if (item.status === 'fulfilled' && item.value?.[0]?.content) {
           res.push(item.value[0].content)
-          extraList.push(getBlocksSchema(item.value[0].content, blockSet))
-        }
-      })
-      ;(await Promise.allSettled(extraList)).forEach((item) => {
-        if (item.status === 'fulfilled' && item.value) {
-          res.push(...item.value)
+          res.push(...getBlocksSchema(item.value[0].content, blockSet))
         }
       })
 
@@ -142,10 +136,11 @@ export default {
         },
         ...(blocks || []).map((blockSchema) => {
           return {
-            panelName: `${blockSchema.fileName}.vue`,
+            panelName: blockSchema.fileName,
             panelValue:
               genSFCWithDefaultPlugin(blockSchema, appData?.componentsMap || [], { blockRelativePath: './' }) || '',
-            panelType: 'vue'
+            panelType: 'vue',
+            index: true
           }
         })
       ]
@@ -155,7 +150,7 @@ export default {
       const fixScriptLang = (generatedCode) => {
         const fixedCode = { ...generatedCode }
 
-        if (generatedCode.panelType === PanelType.VUE) {
+        if (generatedCode.panelType === PanelType.REACT) {
           fixedCode.panelValue = generatedCode.panelValue.replace(langReg, '')
         }
 
@@ -210,13 +205,22 @@ export default {
       store,
       sfcOptions,
       editorComponent,
-      debugSwitch
+      debugSwitch,
+      showIframe,
+      iframeSrc,
+      // handleIframeMessage,
+      srcFiles
     }
   }
 }
 </script>
 
 <style lang="less">
+.iframe {
+  width: 100%;
+  height: 100vh
+}
+
 .vue-repl {
   height: 100%;
 
@@ -242,13 +246,17 @@ export default {
     }
   }
 }
+
 .vue-repl-container {
   height: calc(100vh - 48px);
+
   &.preview-debug-mode .vue-repl .split-pane {
+
     .left,
     .right .tab-buttons {
       display: block;
     }
+
     .right .output-container {
       height: calc(100% - 38px);
     }

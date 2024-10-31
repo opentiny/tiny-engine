@@ -42,7 +42,7 @@ function genUtilsPlugin(options = {}) {
     description: 'transform utils schema to utils code',
     /**
      * 生成 utils 源码
-     * @param {import('@opentiny/tiny-engine-dsl-vue').IAppSchema} schema
+     * @param {tinyEngineDslVue.IAppSchema} schema
      * @returns
      */
     run(schema) {

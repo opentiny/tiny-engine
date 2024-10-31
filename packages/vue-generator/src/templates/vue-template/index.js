@@ -3,7 +3,6 @@ import genViteConfig from './templateFiles/genViteConfig'
 import getPackageJson from './templateFiles/packageJson'
 import gitIgnoreFile from './templateFiles/.gitignore?raw'
 import entryHTMLFile from './templateFiles/index.html?raw'
-import logoImage from './templateFiles/public/favicon.ico'
 import mainJSFile from './templateFiles/src/main.js?raw'
 import appVueFile from './templateFiles/src/App.vue?raw'
 import bridgeFile from './templateFiles/src/lowcodeConfig/bridge.js?raw'
@@ -34,47 +33,11 @@ const getTemplate = (schema, str) => {
 }
 
 /**
- * 图片的 base64 转 Blob 对象，用于生成本地图片
- * @param {*} base64 String
- * @returns Blob
- */
-const base64ToBlob = (base64Data) => {
-  // Split base64
-  const arr = base64Data.split(',')
-
-  // Get MIME type
-  const mimeMatch = arr[0].match(/:(.*?);/)
-
-  if (!mimeMatch) {
-    throw new Error('Invalid base64 data')
-  }
-
-  const mime = mimeMatch[1]
-  // Decode base64 string
-  let raw
-
-  try {
-    raw = window.atob(arr[1])
-  } catch (e) {
-    throw new Error('Failed to decode base64 string')
-  }
-
-  const rawLength = raw.length
-  // Convert to Blob
-  const uInt8Array = new Uint8Array(rawLength)
-  for (let i = 0; i < rawLength; i++) {
-    uInt8Array[i] = raw.charCodeAt(i)
-  }
-
-  return new Blob([uInt8Array], { type: mime })
-}
-
-/**
  * get project template
  * @returns
  */
 export function generateTemplate(schema) {
-  const res = [
+  return [
     {
       fileType: 'md',
       fileName: 'README.md',
@@ -159,23 +122,4 @@ export function generateTemplate(schema) {
       fileContent: httpEntryFile
     }
   ]
-
-  // FIXME: vitest 测试的时候得到的并不是 base64data，所以这里需要跳过文件的出码
-  if (process.env?.NODE_ENV !== 'test') {
-    try {
-      const faviconData = base64ToBlob(logoImage)
-
-      res.push({
-        fileType: 'image/x-icon',
-        fileName: 'favicon.ico',
-        path: './public',
-        fileContent: faviconData
-      })
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('generate favicon.ico error', error)
-    }
-  }
-
-  return res
 }

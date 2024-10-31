@@ -229,10 +229,7 @@ export default {
     }
 
     const showAction = computed(() => {
-      const { schema, parent } = getCurrent()
-      if (schema?.props?.['data-id'] === 'root-container') {
-        return false
-      }
+      const { parent } = getCurrent()
       return !props.resize && parent && parent?.type !== 'JSSlot'
     })
 
