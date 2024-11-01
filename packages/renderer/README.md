@@ -9,7 +9,7 @@ A Vue3 renderer for tiny-engine.
 ```javascript
 // xxx.vue
 import { h } from 'vue'
-import Main, { api } from '@open/tiny-engine-renderer'
+import Main, { api } from '@opentiny/tiny-engine-renderer'
 
 export default {
   render() {
