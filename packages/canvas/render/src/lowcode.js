@@ -14,7 +14,7 @@ import { getCurrentInstance, nextTick, provide, inject } from 'vue'
 import { I18nInjectionKey } from 'vue-i18n'
 import { api } from '@opentiny/tiny-engine-renderer'
 
-const { getCollectionMethodsMap, generateFn, globalNotify } = api
+const { getCollectionMethodsMap, generateFn, globalNotify, getUtils, getDataSourceMap } = api
 
 export const lowcodeWrap = (props, context) => {
   const global = {}
@@ -50,10 +50,10 @@ export const lowcodeWrap = (props, context) => {
     location: { get: location },
     history: { get: history },
     utils: {
-      get: api.getUtils
+      get: getUtils
     },
     bridge: { get: () => ({}) },
-    dataSourceMap: { get: api.getDataSourceMap },
+    dataSourceMap: { get: getDataSourceMap },
     $: { get: () => ref }
   })
 
