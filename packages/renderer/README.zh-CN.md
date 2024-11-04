@@ -22,7 +22,7 @@ export default {
     // 数据源
     const dataSourceMap = reactive({})
 
-    schema.children.length ? h(Main, { schema, utils, globalState, dataSourceList }) : null
+    return schema.children.length ? h(Main, { schema, utils, globalState, dataSourceList }) : null
   }
 }
 ```
