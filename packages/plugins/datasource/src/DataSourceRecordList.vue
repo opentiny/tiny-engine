@@ -419,7 +419,7 @@ export default {
         }
 
         const key = `datasource${capitalize(camelize(name))}`
-        const pageSchema = useCanvas().canvasApi.value.getSchema()
+        const pageSchema = useCanvas().getSchema()
 
         if (pageSchema.state[key]) {
           pageSchema.state[key] = data.map(({ _id, ...other }) => other)

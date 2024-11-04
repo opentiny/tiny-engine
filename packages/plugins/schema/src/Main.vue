@@ -113,9 +113,13 @@ export default {
       })
     }
 
-    const throttleUpdateData = useThrottleFn(() => {
-      state.pageData = obj2String(pageState.pageSchema)
-    }, 100)
+    const throttleUpdateData = useThrottleFn(
+      () => {
+        state.pageData = obj2String(pageState.pageSchema)
+      },
+      100,
+      true
+    )
 
     onActivated(() => {
       state.pageData = obj2String(pageState.pageSchema)

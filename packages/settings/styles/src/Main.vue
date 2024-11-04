@@ -137,7 +137,8 @@ export default {
 
     // 保存编辑器内容，并回写到 schema
     const save = ({ content }) => {
-      const { getSchema: getCanvasPageSchema, updateRect } = useCanvas().canvasApi.value
+      const { updateRect } = useCanvas().canvasApi.value
+      const { getSchema: getCanvasPageSchema } = useCanvas()
       const pageSchema = getCanvasPageSchema()
       const schema = getSchema() || pageSchema
       const styleString = styleStrRemoveRoot(content)
@@ -160,7 +161,8 @@ export default {
     }
 
     const setConfig = (value) => {
-      const { getSchema: getCanvasPageSchema, updateRect } = useCanvas().canvasApi.value
+      const { updateRect } = useCanvas().canvasApi.value
+      const { getSchema: getCanvasPageSchema } = useCanvas()
       const pageSchema = getCanvasPageSchema()
       const currentSchema = getCurrentSchema() || pageSchema
       const schema = getSchema() || pageSchema

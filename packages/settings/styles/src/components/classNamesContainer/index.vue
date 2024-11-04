@@ -171,7 +171,7 @@ watch(
 )
 
 const setSelectorProps = (type, value) => {
-  const { getSchema: getCanvasPageSchema } = useCanvas().canvasApi.value
+  const { getSchema: getCanvasPageSchema } = useCanvas()
   const schema = getSchema() || getCanvasPageSchema()
 
   if (!schema.props) {
@@ -184,7 +184,7 @@ const setSelectorProps = (type, value) => {
 
 // 编辑 className 新增、删除、或修改
 const editClassName = (curClassName, optionType = OPTION_TYPE.ADD, oldSelector = '') => {
-  const { getSchema: getCanvasPageSchema } = useCanvas().canvasApi.value
+  const { getSchema: getCanvasPageSchema } = useCanvas()
   const schema = getSchema() || getCanvasPageSchema()
   let type = ''
 
@@ -443,7 +443,8 @@ const save = ({ content }) => {
   const cssString = formatString(content.replace(/"/g, "'"), 'css')
   const { getPageSchema } = useCanvas()
   const { addHistory } = useHistory()
-  const { updateRect, setPageCss, getSchema: getCanvasPageSchema } = useCanvas().canvasApi.value
+  const { updateRect, setPageCss } = useCanvas().canvasApi.value
+  const { getSchema: getCanvasPageSchema } = useCanvas()
   getPageSchema().css = cssString
   getCanvasPageSchema().css = cssString
   setPageCss(cssString)

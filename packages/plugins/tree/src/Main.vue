@@ -144,7 +144,7 @@ export default {
     watch(
       () => pageState.currentSchema,
       () => {
-        const { getSchema } = useCanvas().canvasApi.value
+        const { getSchema } = useCanvas()
         state.pageSchema = filterSchema(getSchema())
       }
     )

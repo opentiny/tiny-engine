@@ -95,7 +95,7 @@ const clear = () => {
 const addHistory = (schema) => {
   if (!schema) {
     useCanvas().setSaved(false)
-    push(useCanvas().canvasApi.value?.getSchema())
+    push(useCanvas().getSchema())
   } else {
     clear()
     // 初始 schema 需要设置为第一条历史记录

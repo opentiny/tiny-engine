@@ -98,7 +98,7 @@ export const saveCommon = (value) => {
   return isBlock() ? saveBlock(pageSchema) : savePage(pageSchema)
 }
 export const openCommon = async () => {
-  const { isSaved, canvasApi } = useCanvas()
+  const { isSaved, getSchema } = useCanvas()
   if (isSaved() || state.disabled) {
     return
   }
@@ -127,7 +127,6 @@ export const openCommon = async () => {
   const pageStatus = useLayout().layoutState?.pageStatus
   const curPageState = pageStatus?.state
   const pageInfo = pageStatus?.data
-  const { getSchema } = canvasApi.value
   const ERR_MSG = {
     [PAGE_STATUS.Release]: '当前页面未锁定，请先锁定再保存',
     [PAGE_STATUS.Empty]: '当前应用无页面，请先新建页面再保存',

@@ -175,7 +175,7 @@ export default {
         const remote = await api.getBlockById(block?.id)
         const originalObj = remote?.content || {}
         state.originalCode = JSON.stringify(originalObj, null, 2)
-        const getSchema = useCanvas().canvasApi.value.getSchema
+        const getSchema = useCanvas().getSchema
 
         // 转为普通对象，和线上代码顺序保持一致
         const pageSchema = getSchema?.() || {}

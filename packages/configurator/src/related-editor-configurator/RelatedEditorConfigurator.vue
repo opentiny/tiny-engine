@@ -90,7 +90,7 @@ export default {
       let newValue = value
 
       if (value?.type === CONSTANT.JSEXPRESSION) {
-        const pageSchema = useCanvas().canvasApi.value.getSchema()
+        const pageSchema = useCanvas().getSchema()
         const stateName = value?.value?.replace(CONSTANT.STATE, '')
         newValue = pageSchema?.state?.[stateName]
       }

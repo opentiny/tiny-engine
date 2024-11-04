@@ -33,7 +33,7 @@ const monaco = ref(null)
 let scriptAst = null
 
 export const getMethods = () => {
-  const pageSchema = useCanvas().canvasApi.value.getSchema?.() || {}
+  const pageSchema = useCanvas().getSchema?.() || {}
 
   pageSchema.methods = pageSchema?.methods || {}
   return pageSchema.methods
@@ -103,7 +103,7 @@ const saveMethods = () => {
 
   const editorContent = monaco.value.getEditor().getValue()
   const ast = string2Ast(editorContent)
-  useCanvas().canvasApi.value.getSchema().methods = {}
+  useCanvas().getSchema().methods = {}
 
   ast.program.body.forEach((declaration, index) => {
     const name = declaration?.id?.name

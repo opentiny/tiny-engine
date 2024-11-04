@@ -138,15 +138,15 @@ watch(
     useCanvas().getCurrentSchema?.(),
     state.schemaUpdateKey,
     useProps().propsUpdateKey?.value,
-    useCanvas().canvasApi?.value?.getSchema?.(),
+    useCanvas()?.getSchema?.(),
     schemaLength
   ],
   ([curSchema], [oldCurSchema] = []) => {
-    const { getCurrentSchema, canvasApi } = useCanvas()
+    const { getCurrentSchema, getSchema } = useCanvas()
     let schema = getCurrentSchema()
 
     if (!schema || Object.keys(schema).length === 0) {
-      schema = canvasApi.value?.getSchema?.()
+      schema = getSchema?.()
     }
 
     if (!schema) {
@@ -263,9 +263,9 @@ watch(
 )
 
 export const updateGlobalStyleStr = (styleStr) => {
-  const { getPageSchema, canvasApi } = useCanvas()
+  const { getSchema, getPageSchema, canvasApi } = useCanvas()
   const pageSchema = getPageSchema()
-  const { getSchema, setPageCss } = canvasApi.value
+  const { setPageCss } = canvasApi.value
 
   pageSchema.css = styleStr
   getSchema().css = styleStr
@@ -302,10 +302,10 @@ const updateGlobalStyle = (newSelector) => {
 
 // 更新 style 对象到 schema
 const updateStyle = (properties) => {
-  const { canvasApi } = useCanvas()
+  const { canvasApi, getSchema: getCanvasPageSchema } = useCanvas()
   const { getSchema } = useProps()
   const { addHistory } = useHistory()
-  const { getSchema: getCanvasPageSchema, updateRect } = canvasApi.value
+  const { updateRect } = canvasApi.value
   const schema = getSchema() || getCanvasPageSchema()
   const pageOptions = getOptions('engine.plugins.appmanage')
   const materialsOptions = getOptions('engine.plugins.materials')

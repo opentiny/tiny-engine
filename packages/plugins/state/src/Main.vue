@@ -163,7 +163,7 @@ export default {
     }
 
     const add = (name, variable) => {
-      const { getSchema } = useCanvas().canvasApi.value
+      const { getSchema } = useCanvas()
 
       if (getSchema()) {
         if (updateKey.value !== name && flag.value === OPTION_TYPE.UPDATE) {
@@ -261,7 +261,8 @@ export default {
     }
 
     const remove = (key) => {
-      const { deleteState, getSchema } = useCanvas().canvasApi.value
+      const { deleteState } = useCanvas().canvasApi.value
+      const { getSchema } = useCanvas()
 
       delete state.dataSource[key]
       // 删除变量也需要同步触发画布渲染
@@ -328,7 +329,7 @@ export default {
     }
 
     const initDataSource = (tabsName = activeName.value) => {
-      const { getSchema } = useCanvas().canvasApi.value
+      const { getSchema } = useCanvas()
 
       if (tabsName === STATE.GLOBAL_STATE) {
         setGlobalStateToDataSource()

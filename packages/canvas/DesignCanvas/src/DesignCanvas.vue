@@ -136,7 +136,8 @@ export default {
         useLayout().closePlugin()
       }
 
-      const { getSchema, getNodePath } = useCanvas().canvasApi.value
+      const { getNodePath } = useCanvas().canvasApi.value
+      const { getSchema } = useCanvas()
       const schemaItem = useCanvas().getNodeById(id)
 
       const schema = getSchema()

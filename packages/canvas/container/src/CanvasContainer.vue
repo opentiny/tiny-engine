@@ -115,10 +115,11 @@ export default {
         const win = iframe.value.contentWindow
         win.thirdPartyDeps = useMaterial().materialState.thirdPartyDeps
 
-        const { subscribe } = useMessage()
+        const { subscribe, unsubscribe } = useMessage()
         const { getSchemaDiff, patchLatestSchema } = useCanvas()
 
         iframe.value.contentWindow.host = {
+          unsubscribe,
           subscribe,
           getSchemaDiff,
           patchLatestSchema

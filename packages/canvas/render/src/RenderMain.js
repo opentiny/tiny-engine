@@ -10,7 +10,7 @@
  *
  */
 
-import { h, provide, inject, nextTick, shallowReactive, reactive, ref, watch, watchEffect } from 'vue'
+import { h, provide, inject, nextTick, shallowReactive, reactive, ref, watch, watchEffect, onUnmounted } from 'vue'
 import { I18nInjectionKey } from 'vue-i18n'
 import TinyVue from '@opentiny/vue'
 import * as TinyVueIcon from '@opentiny/vue-icon'
@@ -388,9 +388,13 @@ const setRenderer = (fn) => {
   canvasRenderer = fn
 }
 
-const throttleUpdateSchema = useThrottleFn(() => {
-  window.host.patchLatestSchema(schema)
-}, 100)
+const throttleUpdateSchema = useThrottleFn(
+  () => {
+    window.host.patchLatestSchema(schema)
+  },
+  100,
+  true
+)
 
 export default {
   setup() {
@@ -402,6 +406,7 @@ export default {
 
     window.host.subscribe({
       topic: 'schemaChange',
+      subscriber: 'canvasRenderer',
       callback: throttleUpdateSchema
     })
 
@@ -426,6 +431,13 @@ export default {
         deep: true
       }
     )
+
+    onUnmounted(() => {
+      window.host.unsubscribe({
+        topic: 'schemaChange',
+        subscriber: 'canvasRenderer'
+      })
+    })
   },
   render() {
     return getRenderer().call(this)

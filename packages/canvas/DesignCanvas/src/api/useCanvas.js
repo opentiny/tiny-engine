@@ -255,22 +255,6 @@ const getNode = (id, parent) => {
   return parent ? nodesMap.value.get(id) : nodesMap.value.get(id)?.node
 }
 
-// const SIMPLE_TYPE = ['bigint', 'boolean', 'function', 'number', 'string', 'symbol', 'undefined']
-
-// const getType = (obj) => {
-//   const type = typeof obj
-
-//   if (SIMPLE_TYPE.includes(type)) {
-//     return type
-//   }
-
-//   if (!obj) {
-//     return 'null'
-//   }
-
-//   return Object.prototype.toString.call(obj)
-// }
-
 const operationTypeMap = {
   insert: (operation) => {
     const { parentId, newNodeData, position, referTargetNodeId } = operation
@@ -377,9 +361,12 @@ const getSchemaDiff = (schema) => {
 }
 
 const patchLatestSchema = (schema) => {
-  const diff = jsondiffpatchInstance.diff(schema, pageState.pageSchema)
+  // 这里 pageSchema 需要反序列化一下，不然 patch 的时候，会 patch 成同一个引用，造成画布无法更新
+  const diff = jsondiffpatchInstance.diff(schema, JSON.parse(JSON.stringify(pageState.pageSchema)))
 
-  jsondiffpatchInstance.patch(schema, diff)
+  if (diff) {
+    jsondiffpatchInstance.patch(schema, diff)
+  }
 }
 
 const importSchema = (data) => {
@@ -402,6 +389,10 @@ const importSchema = (data) => {
 
 const exportSchema = () => {
   return JSON.stringify(pageState.pageSchema)
+}
+
+const getSchema = () => {
+  return pageState.pageSchema || {}
 }
 
 export default function () {
@@ -431,10 +422,10 @@ export default function () {
     getNode,
     operateNode,
     lastUpdateType,
-    jsondiffpatchInstance,
     getSchemaDiff,
     patchLatestSchema,
     importSchema,
-    exportSchema
+    exportSchema,
+    getSchema
   }
 }

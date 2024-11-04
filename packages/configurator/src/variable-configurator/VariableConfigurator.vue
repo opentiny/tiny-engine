@@ -399,7 +399,7 @@ export default {
     const confirm = () => {
       let variableContent = state.isEditorEditMode ? editor.value?.getEditor().getValue() : state.variable
 
-      const { setSaved, canvasApi } = useCanvas()
+      const { setSaved, canvasApi, getSchema } = useCanvas()
       // 如果新旧值不一样就显示未保存状态
       if (oldValue !== variableContent) {
         setSaved(false)
@@ -411,7 +411,7 @@ export default {
 
       if (variableContent) {
         if (state.bindPrefix === CONSTANTS.DATASOUCEPREFIX) {
-          const pageSchema = canvasApi.value.getSchema()
+          const pageSchema = getSchema()
           const stateName = state.variable.replace(`${CONSTANTS.STATE}`, '')
           const staticData = state.variableContent.map(({ _id, ...other }) => other)
 
@@ -453,7 +453,7 @@ export default {
       state.isVisible = true
       state.variableName = bindKey.value
       state.variable = getInitVariable()
-      state.variables = useCanvas().canvasApi.value.getSchema()?.state || {}
+      state.variables = useCanvas().getSchema()?.state || {}
       state.bindPrefix = CONSTANTS.STATE
       state.variableContent = state.variables[bindKey.value]
       nextTick(() => window.dispatchEvent(new Event('resize')))
@@ -461,7 +461,7 @@ export default {
 
     const selectItem = (item) => {
       state.active = item.id
-      const { canvasApi } = useCanvas()
+      const { canvasApi, getSchema } = useCanvas()
 
       if (item.id === 'function') {
         state.bindPrefix = CONSTANTS.THIS
@@ -477,7 +477,7 @@ export default {
         state.variables = bridge
       } else if (item.id === 'props') {
         state.bindPrefix = CONSTANTS.PROPS
-        const properties = canvasApi.value.getSchema()?.schema?.properties
+        const properties = getSchema()?.schema?.properties
         const bindProperties = {}
         properties?.forEach(({ content }) => {
           content.forEach(({ property }) => {

@@ -51,7 +51,7 @@ export default {
     })
 
     const getParams = () => {
-      const { getSchema } = useCanvas().canvasApi.value
+      const { getSchema } = useCanvas()
       const params = {
         framework: getMergeMeta('engine.config')?.dslMode,
         platform: getMergeMeta('engine.config')?.platformId,
