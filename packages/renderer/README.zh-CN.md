@@ -8,21 +8,21 @@
 
 ```javascript
 // xxx.vue
-import { h } from 'vue'
-import Main, { api } from '@opentiny/tiny-engine-renderer'
+import { h, reactive } from 'vue'
+import Main from '@opentiny/tiny-engine-renderer'
 
 export default {
   render() {
-    // 工具类
-    api.setUtils(utils)
-    // 全局状态
-    api.setGlobalState(globalState)
-    // 数据源
-    api.setDataSourceMap(dataSourceList)
     // 页面schema
-    api.setSchema(schema)
+    const schema = reactive({})
+    // 工具类
+    const utils = reactive({})
+    // 全局状态
+    const globalState = reactive([])
+    // 数据源
+    const dataSourceMap = reactive({})
 
-    return h(Main)
+    schema.children.length ? h(Main, { schema, utils, globalState, dataSourceList }) : null
   }
 }
 ```

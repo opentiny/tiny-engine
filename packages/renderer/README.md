@@ -8,22 +8,21 @@ A Vue3 renderer for tiny-engine.
 
 ```javascript
 // xxx.vue
-import { h } from 'vue'
-import Main, { api } from '@opentiny/tiny-engine-renderer'
+import { h, reactive } from 'vue'
+import Main from '@opentiny/tiny-engine-renderer'
 
 export default {
   render() {
     // utils
-    api.setUtils(utils)
+    const utils = reactive({})
     // globalState
-    api.setGlobalState(globalState)
+    const globalState = reactive([])
     // dataSource
-    api.setDataSourceMap(dataSourceList)
+    const dataSourceMap = reactive({})
     // schema
-    api.setSchema(schema)
+    const schema = reactive({})
 
-    return h(Main)
+    return schema.children.length ? h(Main, { schema, utils, globalState, dataSourceList }) : null
   }
 }
 ```
-
