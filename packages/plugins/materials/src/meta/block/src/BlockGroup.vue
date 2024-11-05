@@ -143,7 +143,7 @@ import {
   Popover
 } from '@opentiny/vue'
 import { iconYes, iconClose, iconError } from '@opentiny/vue-icon'
-import { useApp, useBlock, useModal } from '@opentiny/tiny-engine-meta-register'
+import { useBlock, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { SvgButton } from '@opentiny/tiny-engine-common'
 import { requestCreateGroup, requestDeleteGroup, fetchGroups, requestUpdateGroup } from './http'
 import { setBlockPanelVisible } from './js/usePanel'
@@ -176,7 +176,7 @@ export default {
     const groupSelect = ref(null)
     const editFormRef = ref(null)
     const editFormItemRef = ref(null)
-    const appId = useApp().appInfoState.selectedId
+    const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id
 
     const createGroupForm = ref(null)
 
@@ -219,7 +219,7 @@ export default {
       const exec = () => {
         requestDeleteGroup(groupId)
           .then(() => {
-            fetchGroups(appId).then((data) => {
+            fetchGroups(getAppId()).then((data) => {
               state.groups = addDefaultGroup(data)
               if (selectedGroup.value.groupId === groupId) {
                 groupChange(state.groups[0].value)
@@ -245,6 +245,8 @@ export default {
         if (!valid) {
           return
         }
+
+        const appId = getAppId()
         requestUpdateGroup({ id: state.currentEditId, name: state.groupNameModel.value, app: appId })
           .then(() => fetchGroups(appId))
           .catch((error) => {
@@ -299,6 +301,8 @@ export default {
           return
         }
 
+        const appId = getAppId()
+
         requestCreateGroup({ name: state.createGroupForm.groupName, app: appId })
           .then((data) => {
             state.showCreateGroupForm = false
@@ -320,7 +324,7 @@ export default {
       requestDeleteGroup(groupId)
         .then(() => {
           state.currentDeleteGroupId = null
-          fetchGroups(appId).then((data) => {
+          fetchGroups(getAppId()).then((data) => {
             state.groups = addDefaultGroup(data)
             if (selectedGroup.value.groupId === groupId) {
               groupChange(state.groups[0].value)

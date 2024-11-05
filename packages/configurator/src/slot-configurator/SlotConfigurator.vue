@@ -137,7 +137,7 @@ export default {
   justify-content: center;
   align-items: center;
   &:not(:last-child) {
-    margin-bottom: 8px;
+    margin-bottom: var(--te-common-vertical-item-spacing-normal);
   }
   .slot-name {
     width: 30%;

@@ -1,21 +1,21 @@
 <template>
   <div class="footer-toolbar">
-    <tiny-tooltip v-for="item in state.arrangeList" :key="item.id" effect="dark" :content="item.name" placement="top">
-      <span :class="['icon-wrap', { active: state.type === item.id }]" @click="typeClick(item.id)">
-        <svg-icon :name="item.svgName"></svg-icon>
-      </span>
-    </tiny-tooltip>
+    <span
+      v-for="item in state.arrangeList"
+      :key="item.id"
+      :class="['icon-wrap', { active: state.type === item.id }]"
+      @click="typeClick(item.id)"
+    >
+      <svg-icon :name="item.svgName"></svg-icon>
+    </span>
   </div>
 </template>
 
 <script>
 import { reactive } from 'vue'
-import { Tooltip } from '@opentiny/vue'
 
 export default {
-  components: {
-    TinyTooltip: Tooltip
-  },
+  components: {},
   props: {
     modelValue: {
       type: String,

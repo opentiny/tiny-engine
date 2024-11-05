@@ -114,7 +114,7 @@
     border-bottom-style: none;
 
     .tiny-collapse-item__word-overflow {
-      margin: 12px 0px;
+      margin: var(--te-common-vertical-item-spacing-normal) 0px;
       width: 100%;
       line-height: var(--te-base-line-height-4);
     }
@@ -209,6 +209,9 @@
         background-color: var(--te-common-bg-default);
         border-radius: var(--te-base-border-radius-1);
       }
+    }
+    .tiny-tabs__nav-wrap-not-separator::after {
+      background-color: var(--te-common-border-divider);
     }
   }
 }
@@ -457,9 +460,7 @@
   font-size: var(--te-base-font-size-base);
   color: var(--te-common-text-primary);
   background-color: var(--te-common-bg-default);
-
   height: auto;
-  line-height: 28px;
 }
 
 // 13、tag标签
@@ -600,7 +601,9 @@
 // 17、tooltip文字提示
 .tiny-tooltip.tiny-tooltip {
   &.tiny-tooltip__popper {
-    box-shadow: 0 2px 12px 0 var(--te-base-dark-bg-8);
+    background: var(--te-common-bg-default);
+    color: var(--te-common-text-primary);
+    box-shadow: 0 0 20px 0 var(--te-base-dark-bg-8);
     &[class*='is-'] {
       background: var(--te-common-bg-default);
       color: var(--te-common-text-primary);
@@ -608,6 +611,7 @@
       padding: 12px;
       &[x-placement^='top'] {
         .popper__arrow {
+          border-top-color: var(--te-common-text-inverse);
           &.popper__arrow::after {
             border-top-color: var(--te-common-text-inverse);
           }
@@ -615,7 +619,7 @@
       }
       &[x-placement^='bottom'] {
         .popper__arrow {
-          border-bottom-width: 0;
+          border-bottom-color: var(--te-common-text-inverse);
           &.popper__arrow::after {
             border-bottom-color: var(--te-common-text-inverse);
           }
@@ -623,6 +627,7 @@
       }
       &[x-placement^='left'] {
         .popper__arrow {
+          border-left-color: var(--te-common-text-inverse);
           &.popper__arrow::after {
             border-left-color: var(--te-common-text-inverse);
           }
@@ -630,6 +635,7 @@
       }
       &[x-placement^='right'] {
         .popper__arrow {
+          border-right-color: var(--te-common-text-inverse);
           &.popper__arrow::after {
             border-right-color: var(--te-common-text-inverse);
           }

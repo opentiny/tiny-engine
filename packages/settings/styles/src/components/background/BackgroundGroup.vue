@@ -383,7 +383,7 @@ export default {
 <style lang="less" scoped>
 .background-group {
   display: grid;
-  gap: 8px;
+  gap: 12px 8px;
   grid-template-columns: 48px auto auto;
   align-items: center;
   .background-label {

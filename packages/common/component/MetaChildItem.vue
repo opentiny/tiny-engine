@@ -93,15 +93,19 @@ export default {
   color: var(--te-common-text-primary);
   padding: 0 10px;
   font-weight: bold;
+  margin-bottom: 16px;
 }
 .items-container {
   width: 100%;
   display: flex;
-  flex-wrap: wrap;
   flex-direction: column;
+  height: calc(100% - 34px); // 34为头部+底部的高度
+  overflow-y: auto;
+
   .meta-config-item {
     flex: 1;
     padding: 0 10px;
+    margin-bottom: var(--te-common-vertical-item-spacing-normal);
   }
 }
 </style>

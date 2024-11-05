@@ -53,6 +53,7 @@
         :updateKey="updateKey"
         :createData="state.createData"
         @nameInput="updateName"
+        @close="cancel"
       />
       <create-store
         v-if="activeName === STATE.GLOBAL_STATE"
@@ -62,6 +63,7 @@
         :updateKey="updateKey"
         :storeData="state.createData"
         @nameInput="validName"
+        @close="cancel"
       />
     </div>
   </div>
@@ -73,12 +75,12 @@ import { Button, Search, Tabs, TabItem } from '@opentiny/vue'
 import {
   useCanvas,
   useHistory,
-  useEditorInfo,
   useResource,
   useNotify,
   useHelp,
   getMetaApi,
-  META_APP
+  META_APP,
+  META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
 import { iconPlus } from '@opentiny/vue-icon'
 import { getCommentByKey } from '@opentiny/tiny-engine-common/js/comment'
@@ -243,7 +245,7 @@ export default {
         Object.assign(state.dataSource, store)
         const storeList = Object.values(state.dataSource)
 
-        const { id } = useEditorInfo().useInfo()
+        const { id } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
         updateGlobalState(id, { global_state: storeList }).then((res) => {
           isPanelShow.value = false
           setGlobalState(res.global_state || [])
@@ -308,7 +310,7 @@ export default {
       const { setGlobalState } = useCanvas().canvasApi.value
 
       if (index !== -1) {
-        const { id } = useEditorInfo().useInfo()
+        const { id } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
 
         storeListt.splice(index, 1)
         updateGlobalState(id, { global_state: storeListt }).then((res) => {

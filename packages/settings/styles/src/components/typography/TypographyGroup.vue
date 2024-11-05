@@ -473,7 +473,7 @@ export default {
     gap: 4px 20px;
     grid-template-columns: 15px 1fr;
     align-items: center;
-    margin-bottom: 8px;
+    margin-bottom: var(--te-common-vertical-item-spacing-normal);
     &:last-child {
       margin-bottom: 0;
     }
@@ -488,8 +488,7 @@ export default {
 
     .typography-label {
       margin-right: -16px;
-      align-self: flex-start;
-      line-height: 26px;
+      line-height: 16px;
       color: var(--ti-lowcode-component-setting-panel-label-color);
     }
 
@@ -498,7 +497,7 @@ export default {
       display: flex;
 
       .typography-content-item {
-        padding: 4px 5px;
+        padding: 0 5px;
         font-size: 16px;
         color: var(--ti-lowcode-component-setting-panel-icon-color);
         position: relative;

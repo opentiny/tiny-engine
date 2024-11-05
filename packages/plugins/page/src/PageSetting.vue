@@ -62,9 +62,10 @@ import {
   usePage,
   useCanvas,
   useModal,
-  useApp,
   useNotify,
-  getMergeRegistry
+  getMergeRegistry,
+  getMetaApi,
+  META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
 import { extend, isEqual } from '@opentiny/vue-renderless/common/object'
 import { constants } from '@opentiny/tiny-engine-utils'
@@ -98,10 +99,6 @@ const PAGE_SETTING_SESSION = {
   history: 'history'
 }
 
-export const api = {
-  beforeCreatePage: async () => {}
-}
-
 export default {
   components: {
     TinyButton: Button,
@@ -123,7 +120,6 @@ export default {
   emits: ['openNewPage'],
   setup(props, { emit }) {
     const { requestCreatePage, requestDeletePage } = http
-    const { appInfoState } = useApp()
     const {
       DEFAULT_PAGE,
       pageSettingState,
@@ -137,6 +133,7 @@ export default {
     const { confirm } = useModal()
     const registry = getMergeRegistry(meta.type, meta.id)
     const pageGeneral = registry.components.PageGeneral
+    const beforeCreatePage = registry?.options?.beforeCreatePage
     const pageGeneralRef = ref(null)
 
     const state = reactive({
@@ -174,7 +171,7 @@ export default {
           ...page_content_state,
           fileName: pageSettingState.currentPageData.name
         },
-        app: appInfoState.selectedId,
+        app: getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id,
         isPage: true
       }
 
@@ -182,7 +179,9 @@ export default {
         delete createParams.id
         delete createParams._id
       }
-      await api.beforeCreatePage(createParams)
+      if (beforeCreatePage) {
+        await beforeCreatePage(createParams)
+      }
 
       requestCreatePage(createParams)
         .then((data) => {
@@ -424,6 +423,10 @@ export default {
 
   :deep(.plugin-setting-content) {
     padding: 0 0 16px 0;
+  }
+
+  :deep(.tiny-collapse) {
+    border-bottom: 0;
   }
 }
 

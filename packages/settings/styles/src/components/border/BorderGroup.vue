@@ -551,13 +551,14 @@ export default {
   }
 }
 .item-row {
-  margin-bottom: 8px;
+  margin-bottom: var(--te-common-vertical-form-label-spacing);
 }
 .radius-row {
   display: flex;
   align-items: center;
   gap: 8px;
   position: relative;
+  margin-bottom: var(--te-common-vertical-item-spacing-normal);
   svg {
     color: var(--ti-lowcode-input-icon-color);
     font-size: 16px;

@@ -6,7 +6,7 @@
 import { ref, watchEffect } from 'vue'
 import { BlockHistoryList } from '@opentiny/tiny-engine-common'
 import { previewPage } from '@opentiny/tiny-engine-common/js/preview'
-import { usePage, useBlock, useEditorInfo, useModal } from '@opentiny/tiny-engine-meta-register'
+import { usePage, useBlock, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { fetchPageHistory } from './http.js'
 
@@ -28,7 +28,7 @@ export default {
     const list = ref([])
 
     const getHistoryList = (pageId) => {
-      const { id, version } = useEditorInfo().useInfo()
+      const { id, version } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
       const params = version ? `&app=${id}&version=${version}` : ''
 
       if (pageId) {
