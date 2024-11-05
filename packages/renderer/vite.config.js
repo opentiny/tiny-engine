@@ -30,7 +30,7 @@ export default defineConfig({
     },
     rollupOptions: {
       output: {
-        banner: 'import "./style.css"'
+        banner: 'import "./index.css"'
       },
       external: ['vue', '@vueuse/core', 'vue-i18n', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/]
     },
