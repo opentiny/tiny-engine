@@ -14,7 +14,6 @@ import {
   getCurrent,
   insertNode,
   selectNode,
-  getSchema,
   POSITION,
   removeNodeById,
   allowInsert,
@@ -22,7 +21,7 @@ import {
   clearHover,
   hoverState
 } from './container'
-import { useHistory } from '@opentiny/tiny-engine-meta-register'
+import { useHistory, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { copyObject } from '../../common'
 import { getClipboardSchema, setClipboardSchema } from './utils'
 
@@ -63,7 +62,7 @@ const handlerArrow = (keyCode) => {
   if (schema) {
     index = parent.children.indexOf(schema)
   } else {
-    schema = getSchema()
+    schema = useCanvas().getSchema()
   }
 
   let obj = {

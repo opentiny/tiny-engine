@@ -68,10 +68,6 @@ export const saveCommon = (value) => {
   const pageSchema = JSON.parse(value)
   const { selectNode } = canvasApi.value
 
-  // pageState.pageSchema = pageSchema
-  // setSchema 是异步，保存直接传递当前 schema
-  // setSchema(pageSchema)
-
   if (isBlock()) {
     resetBlockCanvasState({ ...pageState, pageSchema })
   } else {

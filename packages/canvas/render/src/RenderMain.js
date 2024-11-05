@@ -268,8 +268,6 @@ const initProps = (properties = []) => {
   return accessorFunctions
 }
 
-const getSchema = () => schema
-
 const setPagecss = (css = '') => {
   const id = 'page-css'
   let element = document.getElementById(id)
@@ -455,7 +453,6 @@ export const api = {
   setMethods,
   setController,
   setConfigure,
-  getSchema,
   setSchema,
   getState,
   deleteState,

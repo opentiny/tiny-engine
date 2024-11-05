@@ -488,6 +488,7 @@ const setHoverRect = (element, data) => {
   const configure = getConfigure(componentName)
   const rect = getRect(element)
   const { left, height, top, width } = rect
+  const { getSchema, getNodeWithParentById } = useCanvas()
 
   hoverState.configure = configure
 
@@ -499,7 +500,7 @@ const setHoverRect = (element, data) => {
 
     // 如果拖拽经过的元素是body或者是带有容器属性的盒子，并且在元素内部插入,则需要特殊处理
     if ((isBodyEl(element) || configure?.isContainer) && rectType === POSITION.IN) {
-      const { node } = isBodyEl(element) ? { node: getSchema() } : useCanvas().getNodeWithParentById(id) || {}
+      const { node } = isBodyEl(element) ? { node: getSchema() } : getNodeWithParentById(id) || {}
       const children = node?.children || []
       if (children.length > 0) {
         // 如果容器盒子有子节点，则以最后一个子节点为拖拽参照物
@@ -727,9 +728,10 @@ export const onMouseUp = () => {
   const absolute = canvasState.type === 'absolute'
   const sourceId = data?.id
   const lineId = lineState.id
+  const { getNodeWithParentById, getSchema } = useCanvas()
 
   if (draging && !forbidden) {
-    const { parent, node } = useCanvas().getNodeWithParentById(lineId) || {} // target
+    const { parent, node } = getNodeWithParentById(lineId) || {} // target
 
     const insertData = toRaw(data)
     const targetNode = { parent, node, data: { ...insertData, children: insertData.children || [] } }
@@ -900,7 +902,6 @@ export const canvasApi = {
   setUtils,
   updateUtils,
   deleteUtils,
-  getSchema,
   setI18n,
   getCanvasType,
   setCanvasType,
@@ -921,10 +922,11 @@ export const canvasApi = {
 }
 
 export const initCanvas = ({ renderer, iframe, emit, controller }) => {
+  const { getSchema, getPageSchema } = useCanvas()
   const currentSchema = getSchema()
 
   // 在点击刷新按钮的情况下继续保留最新的schema.json
-  const schema = currentSchema ? currentSchema : useCanvas().getPageSchema()
+  const schema = currentSchema ? currentSchema : getPageSchema()
 
   canvasState.iframe = iframe
   canvasState.emit = emit

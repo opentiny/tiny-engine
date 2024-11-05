@@ -208,8 +208,7 @@ export default {
       }
       try {
         const pageSchema = JSON.parse(state.newCode)
-        const setSchema = useCanvas().canvasApi.value.setSchema
-        setSchema?.({ ...pageSchema, componentName: COMPONENT_NAME.Block })
+        useCanvas().importSchema({ ...pageSchema, componentName: COMPONENT_NAME.Block })
         close()
       } catch (err) {
         useNotify({
