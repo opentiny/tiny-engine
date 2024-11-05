@@ -99,10 +99,6 @@ const PAGE_SETTING_SESSION = {
   history: 'history'
 }
 
-export const api = {
-  beforeCreatePage: async () => {}
-}
-
 export default {
   components: {
     TinyButton: Button,
@@ -137,6 +133,7 @@ export default {
     const { confirm } = useModal()
     const registry = getMergeRegistry(meta.type, meta.id)
     const pageGeneral = registry.components.PageGeneral
+    const beforeCreatePage = registry?.options?.beforeCreatePage
     const pageGeneralRef = ref(null)
 
     const state = reactive({
@@ -182,7 +179,9 @@ export default {
         delete createParams.id
         delete createParams._id
       }
-      await api.beforeCreatePage(createParams)
+      if (beforeCreatePage) {
+        await beforeCreatePage(createParams)
+      }
 
       requestCreatePage(createParams)
         .then((data) => {

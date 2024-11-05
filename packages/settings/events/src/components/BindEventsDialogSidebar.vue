@@ -113,7 +113,7 @@ export default {
     border: 1px solid var(--ti-lowcode-bind-event-dialog-content-left-border-color);
     border-radius: 4px;
     height: 300px;
-    margin-top: 8px;
+    margin-top: var(--te-common-vertical-item-spacing-normal);
     display: flex;
     flex: 1;
 

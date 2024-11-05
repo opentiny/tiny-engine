@@ -128,17 +128,17 @@ export default {
   }
   input[type='range'] {
     height: 4px;
-    border-radius: 8px;
+    border-radius: 10px;
     margin: 0.8em 0;
     padding: 0;
     cursor: pointer;
     border: 0;
-    background: -webkit-linear-gradient(#fff, #fff) no-repeat #999999;
-    background-size: 0% 100%;
+    background-color: transparent;
     position: relative;
     outline: 0;
-    top: -1px;
-    -webkit-appearance: none !important;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
   }
   input[type='range']::-webkit-slider-thumb {
     width: 10px;
@@ -152,7 +152,9 @@ export default {
     cursor: pointer;
     background-clip: padding-box;
     box-sizing: border-box;
-    -webkit-appearance: none !important;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
   }
   input[type='range']::-webkit-slider-thumb:active {
     border: 0;

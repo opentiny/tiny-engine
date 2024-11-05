@@ -313,7 +313,7 @@ export default {
     .bind-action-button-item {
       width: 50%;
       &:not(:last-child) {
-        margin-right: 8px;
+        margin-right: 12px;
       }
     }
     .add-custom-event-button {
@@ -344,7 +344,7 @@ export default {
     background-color: var(--ti-lowcode-events-empty-action-bg-color);
     color: var(--ti-lowcode-events-empty-action-color);
     padding: 24px 18px;
-    margin-top: 8px;
+    margin-top: var(--te-common-vertical-item-spacing-normal);
     .empty-action-icon {
       font-size: 48px;
     }
@@ -365,7 +365,7 @@ export default {
   }
 }
 .bind-event-list {
-  padding: 8px 0;
+  padding: var(--te-common-vertical-item-spacing-normal) 0;
   color: var(--ti-lowcode-events-bind-event-list-color);
 }
 .bind-event-list-item-notallow {
