@@ -3,7 +3,6 @@ import { HttpService } from '@opentiny/tiny-engine'
 import { useBroadcastChannel } from '@vueuse/core'
 import { constants } from '@opentiny/tiny-engine-utils'
 import Login from './Login.vue'
-import mockData from './mock'
 
 const LOGIN_EXPIRED_CODE = 401
 const { BROADCAST_CHANNEL } = constants
