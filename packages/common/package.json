@@ -34,7 +34,6 @@
     "@babel/parser": "~7.23.2",
     "@babel/traverse": "~7.23.2",
     "@opentiny/tiny-engine-dsl-vue": "workspace:*",
-    "@opentiny/tiny-engine-http": "workspace:*",
     "@opentiny/tiny-engine-i18n-host": "workspace:*",
     "@opentiny/tiny-engine-meta-register": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",

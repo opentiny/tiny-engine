@@ -118,8 +118,6 @@ const getConfig = (env = import.meta.env) => {
 
 const options = {
   axiosConfig: getConfig(),
-  enableMock: import.meta.env.MODE?.includes('dev'),
-  mockData,
   interceptors: {
     request: [preRequest],
     response: [[preResponse, errorResponse]]

@@ -45,7 +45,6 @@
     "@opentiny/tiny-engine-canvas": "workspace:*",
     "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-configurator": "workspace:*",
-    "@opentiny/tiny-engine-http": "workspace:*",
     "@opentiny/tiny-engine-i18n-host": "workspace:*",
     "@opentiny/tiny-engine-layout": "workspace:~",
     "@opentiny/tiny-engine-meta-register": "workspace:*",

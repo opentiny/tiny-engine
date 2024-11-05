@@ -1,7 +1,9 @@
 import { defineService, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
-import axios from './axios'
+import axios from 'axios'
 
-const addInterceptors = ({ data, http, type }) => {
+let http = null
+
+const addInterceptors = ({ data, type }) => {
   if (typeof data === 'function') {
     http.interceptors[type].use(data)
 
@@ -28,9 +30,6 @@ const addInterceptors = ({ data, http, type }) => {
 export default defineService({
   id: META_SERVICE.Http,
   type: 'MetaService',
-  initialState: {
-    http: null
-  },
   options: {
     axiosConfig: {
       // axios 配置
@@ -38,33 +37,27 @@ export default defineService({
       withCredentials: false, // 跨域请求时是否需要使用凭证
       headers: {} // 请求头
     },
-    enableMock: false, // 是否启用 mock
-    mockData: {}, // mock 数据
     interceptors: {
       // 拦截器
       request: [], // 支持配置多个请求拦截器，先注册后执行
       response: [] // 支持配置多个响应拦截器，先注册先执行
     }
   },
-  init: ({ state, options = {} }) => {
-    const { axiosConfig = {}, interceptors = {}, enableMock, mockData } = options
-    const http = axios(axiosConfig)
-
-    enableMock && http.mock(mockData)
-
+  init: ({ options = {} }) => {
+    const { axiosConfig = {}, interceptors = {} } = options
     const { request = [], response = [] } = interceptors
 
-    addInterceptors({ data: request, http, type: 'request' })
-    addInterceptors({ data: response, http, type: 'response' })
+    http = axios.create(axiosConfig)
 
-    state.http = http
+    addInterceptors({ data: request, type: 'request' })
+    addInterceptors({ data: response, type: 'response' })
   },
-  apis: ({ state }) => ({
-    getHttp: () => state.http,
-    get: (...args) => state.http?.get(...args),
-    post: (...args) => state.http?.post(...args),
-    request: (...args) => state.http?.request(...args),
-    put: (...args) => state.http?.put(...args),
-    delete: (...args) => state.http?.delete(...args)
+  apis: () => ({
+    getHttp: () => http,
+    get: (...args) => http?.get(...args),
+    post: (...args) => http?.post(...args),
+    request: (...args) => http?.request(...args),
+    put: (...args) => http?.put(...args),
+    delete: (...args) => http?.delete(...args)
   })
 })

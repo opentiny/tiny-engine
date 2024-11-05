@@ -26,7 +26,6 @@
   "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
     "@opentiny/tiny-engine-common": "workspace:*",
-    "@opentiny/tiny-engine-http": "workspace:*",
     "@opentiny/tiny-engine-meta-register": "workspace:*"
   },
   "devDependencies": {

@@ -27,7 +27,6 @@
   "dependencies": {
     "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-configurator": "workspace:*",
-    "@opentiny/tiny-engine-http": "workspace:*",
     "@opentiny/tiny-engine-meta-register": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
     "@vueuse/core": "^9.6.0",

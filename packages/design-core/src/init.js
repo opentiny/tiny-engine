@@ -15,7 +15,6 @@ import initSvgs from '@opentiny/tiny-engine-svgs'
 import i18n from '@opentiny/tiny-engine-common/js/i18n'
 import { initMonitor } from '@opentiny/tiny-engine-common/js/monitor'
 import { injectGlobalComponents, setGlobalMonacoEditorTheme, Modal, Notify } from '@opentiny/tiny-engine-common'
-import { initHttp } from '@opentiny/tiny-engine-http'
 import TinyThemeTool from '@opentiny/vue-theme/theme-tool'
 import { defaultThemeList } from '@opentiny/tiny-engine-theme-base'
 import {
@@ -55,8 +54,6 @@ const defaultLifeCycles = {
 
     // 加载主题样式，尽早加载
     // import(`./theme/${newRegistry.config.theme}.js`)
-
-    initHttp({ env: import.meta.env })
 
     const theme = newRegistry.config.theme || 'light'
     // eslint-disable-next-line no-new
