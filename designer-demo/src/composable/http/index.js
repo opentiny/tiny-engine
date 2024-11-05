@@ -9,29 +9,6 @@ const { BROADCAST_CHANNEL } = constants
 
 const { post: globalNotify } = useBroadcastChannel({ name: BROADCAST_CHANNEL.Notify })
 
-const procession = {
-  promiseLogin: null,
-  mePromise: {}
-}
-
-const loginDom = document.createElement('div')
-document.body.appendChild(loginDom)
-const loginVM = createApp(Login).mount(loginDom)
-
-window.lowcode = {
-  platformCenter: {
-    Session: {
-      rebuiltCallback: function () {
-        loginVM.closeLogin()
-
-        procession.mePromise.resolve('login ok')
-        procession.promiseLogin = null
-        procession.mePromise = {}
-      }
-    }
-  }
-}
-
 const showError = (url, message) => {
   globalNotify({
     type: 'error',
@@ -67,6 +44,29 @@ const preResponse = (res) => {
 }
 
 const openLogin = () => {
+  const procession = {
+    promiseLogin: null,
+    mePromise: {}
+  }
+
+  const loginDom = document.createElement('div')
+  document.body.appendChild(loginDom)
+  const loginVM = createApp(Login).mount(loginDom)
+
+  window.lowcode = {
+    platformCenter: {
+      Session: {
+        rebuiltCallback: function () {
+          loginVM.closeLogin()
+
+          procession.mePromise.resolve('login ok')
+          procession.promiseLogin = null
+          procession.mePromise = {}
+        }
+      }
+    }
+  }
+
   return new Promise((resolve, reject) => {
     if (!procession.promiseLogin) {
       procession.promiseLogin = loginVM.openLogin(procession, '/api/rebuildSession')
