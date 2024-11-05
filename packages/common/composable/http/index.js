@@ -3,29 +3,31 @@ import axios from 'axios'
 
 let http = null
 
-const addInterceptors = ({ data, type }) => {
-  if (typeof data === 'function') {
-    http.interceptors[type].use(data)
+const createInterceptorHandler =
+  (http) =>
+  ({ data, type }) => {
+    if (typeof data === 'function') {
+      http.interceptors[type].use(data)
 
-    return
+      return
+    }
+
+    if (Array.isArray(data)) {
+      data.forEach((item) => {
+        if (!item) return
+
+        if (Array.isArray(item)) {
+          http.interceptors[type].use(...item)
+
+          return
+        }
+
+        if (typeof item === 'function') {
+          http.interceptors[type].use(item)
+        }
+      })
+    }
   }
-
-  if (Array.isArray(data)) {
-    data.forEach((item) => {
-      if (!item) return
-
-      if (Array.isArray(item)) {
-        http.interceptors[type].use(...item)
-
-        return
-      }
-
-      if (typeof item === 'function') {
-        http.interceptors[type].use(item)
-      }
-    })
-  }
-}
 
 export default defineService({
   id: META_SERVICE.Http,
@@ -48,7 +50,7 @@ export default defineService({
     const { request = [], response = [] } = interceptors
 
     http = axios.create(axiosConfig)
-
+    const addInterceptors = createInterceptorHandler(http)
     addInterceptors({ data: request, type: 'request' })
     addInterceptors({ data: response, type: 'response' })
   },
