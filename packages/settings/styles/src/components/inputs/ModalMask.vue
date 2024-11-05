@@ -5,7 +5,7 @@
 
       <div
         ref="modalContent"
-        :style="{ top: topStyle + 'px' }"
+        :style="{ top: `${topStyle}px` }"
         :class="['modal-content', { 'align-body': isAlignBody }, { 'modal-padding': isAlignBody }]"
       >
         <slot></slot>
@@ -49,12 +49,12 @@ export default {
     }
   },
   setup(props) {
-    const isAlignBody = ref(props.teleport === 'body')
+    const isAlignBody = props.teleport === 'body'
     const topStyle = ref(0)
     const modalContent = ref(null)
 
     const calculateTopStyle = (modalContent) => {
-      if (isAlignBody.value && modalContent) {
+      if (isAlignBody && modalContent) {
         return modal.top < modalContent.offsetHeight ? 40 : modal.top - modalContent.offsetHeight + 40
       }
       return modal.top - 34

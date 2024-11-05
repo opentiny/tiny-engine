@@ -1,38 +1,29 @@
 <template>
   <div :class="['style-numeric', { focus: focus }]">
-    <tiny-input
+    <tiny-numeric
       v-model="numericalModelValue"
       :placeholder="placeholder"
+      controls-position="right"
+      :unit="numericalSuffix"
+      @mouseover="isNumericHover = true"
+      @mouseleave="isNumericHover = false"
       @focus="focus = true"
       @blur="focus = false"
       @change="change"
       @input="input"
     >
-      <template #suffix>
-        <div class="suffix-wrap">
-          <div class="add-substact-wrap">
-            <div>
-              <svg-icon name="down-arrow" @click="changeNumber()"></svg-icon>
-            </div>
-            <div>
-              <svg-icon name="down-arrow" @click="changeNumber(false)"></svg-icon>
-            </div>
-          </div>
-          <span class="suffix-text">{{ numericalSuffix }}</span>
-        </div>
-      </template>
-    </tiny-input>
+    </tiny-numeric>
   </div>
 </template>
 
 <script>
 import { computed, ref, watch } from 'vue'
-import { Input } from '@opentiny/vue'
+import { Numeric } from '@opentiny/vue'
 import useEvent from '../../js/useEvent'
 
 export default {
   components: {
-    TinyInput: Input
+    TinyNumeric: Numeric
   },
   props: {
     name: {
@@ -59,10 +50,15 @@ export default {
   emits: useEvent(),
   setup(props, { emit }) {
     const numericalModelValue = ref(String(props.numericalText || ''))
+    const isNumericHover = ref(false)
+    const focus = ref(false)
 
     const percentageReg = (val) => /^\d+(.\d+)?%$/.test(val)
     const numericalSuffix = computed(() => {
       const val = String(numericalModelValue.value).toLowerCase()
+      if (isNumericHover.value) {
+        return ''
+      }
       return val === 'auto' || val === 'none' || percentageReg(val) ? '-' : props.suffix
     })
 
@@ -73,8 +69,6 @@ export default {
       }
     )
 
-    const focus = ref(false)
-
     const input = (value) => {
       if (!/^\d+$/.test(value.data)) {
         numericalModelValue.value = numericalModelValue.value.slice(0, -1)
@@ -83,7 +77,7 @@ export default {
 
     const change = () => {
       focus.value = false
-
+      numericalModelValue.value = String(numericalModelValue.value)
       if (numericalModelValue.value.trim().length === 0) {
         emit('update', { [props.name]: null })
       }
@@ -100,19 +94,12 @@ export default {
       })
     }
 
-    const changeNumber = (isAdd = true) => {
-      let resNumber = parseInt(numericalModelValue.value, 10) || 0
-      resNumber += isAdd ? 1 : -1
-      numericalModelValue.value = `${resNumber < 0 ? 0 : resNumber}`
-      change()
-    }
-
     return {
       numericalModelValue,
       numericalSuffix,
+      isNumericHover,
       focus,
       input,
-      changeNumber,
       change
     }
   }
@@ -129,40 +116,19 @@ export default {
   &.focus {
     border-color: var(--te-common-border-default);
   }
-  .suffix-wrap {
-    .add-substact-wrap {
-      height: 23px;
-      width: 16px;
-      margin-right: -3px;
-      border-left: 1px solid var(--te-common-border-default);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      border-radius: 0 4px 4px 0;
-      display: none;
-
-      div {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-        .svg-icon {
-          height: 11px;
-        }
-
-        &:active {
-          background-color: var(--te-common-border-default);
-        }
-
-        &:first-child {
-          border-bottom: 1px solid var(--te-common-border-default);
-          .svg-icon {
-            transform: scaleY(-1);
-          }
-        }
-      }
+  :deep(.tiny-numeric) {
+    width: 100%;
+    .tiny-numeric__input-inner {
+      padding-right: 22px;
     }
 
+    .tiny-numeric__unit {
+      font-size: 12px;
+      color: var(--te-common-text-weaken);
+      background-color: var(--te-common-bg-default);
+    }
+  }
+  .suffix-wrap {
     .suffix-text {
       font-size: 12px;
       color: var(--te-common-text-weaken);
@@ -172,18 +138,6 @@ export default {
       .suffix-text {
         display: none;
       }
-      .add-substact-wrap {
-        display: flex;
-      }
-    }
-  }
-
-  :deep(.tiny-input-suffix) {
-    .tiny-input__inner {
-      padding: 0 20px 0 4px;
-    }
-    .tiny-input__suffix {
-      right: 4px;
     }
   }
 }

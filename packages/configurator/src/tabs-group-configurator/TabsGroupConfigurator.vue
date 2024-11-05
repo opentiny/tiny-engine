@@ -15,9 +15,9 @@
               { 'border-right': collapsedOptions.length || index < uncollapsedOptions.length - 1 }
             ]"
           >
-            <span v-if="item?.label">{{ item.label }}</span>
+            <span v-if="item?.label && !item?.content">{{ item.label }}</span>
             <tiny-popover
-              v-if="item?.icon"
+              v-if="item?.content"
               :effect="effect"
               :placement="placement"
               :visible-arrow="false"
@@ -25,7 +25,8 @@
               trigger="hover"
             >
               <template #reference>
-                <svg-icon v-if="item.icon" :name="item.icon" class="bem-Svg"></svg-icon>
+                <span v-if="item?.label">{{ item.label }}</span>
+                <svg-icon v-if="item?.icon" :name="item.icon" class="bem-Svg"></svg-icon>
               </template>
             </tiny-popover>
           </span>
@@ -40,18 +41,21 @@
           :style="{ width: getItemWidth(true) + 'px' }"
         >
           <span class="selected-option" @click.stop="change(selectedCollapsedOption)">
-            <span v-if="selectedCollapsedOption?.label">{{ selectedCollapsedOption.label }}</span>
+            <span v-if="selectedCollapsedOption?.label && !selectedCollapsedOption?.content">{{
+              selectedCollapsedOption.label
+            }}</span>
             <tiny-popover
-              v-if="selectedCollapsedOption?.icon"
+              v-if="selectedCollapsedOption?.content"
               :effect="effect"
               :placement="placement"
               :visible-arrow="false"
-              :content="item.content"
+              :content="selectedCollapsedOption.content"
               trigger="hover"
             >
               <template #reference>
+                <span v-if="selectedCollapsedOption?.label">{{ selectedCollapsedOption.label }}</span>
                 <svg-icon
-                  v-if="selectedCollapsedOption.icon"
+                  v-if="selectedCollapsedOption?.icon"
                   :name="selectedCollapsedOption.icon"
                   class="bem-Svg"
                 ></svg-icon>
@@ -65,9 +69,9 @@
                 :key="item.label || item.icon"
                 @click.stop="change(item)"
               >
-                <span v-if="item?.label">{{ item.label }}</span>
+                <span v-if="item?.label && !item?.content">{{ item.label }}</span>
                 <tiny-popover
-                  v-if="item?.icon"
+                  v-if="item?.content"
                   :effect="effect"
                   :placement="placement"
                   :visible-arrow="false"
@@ -75,7 +79,8 @@
                   trigger="hover"
                 >
                   <template #reference>
-                    <svg-icon v-if="item.icon" :name="item.icon" class="bem-Svg"></svg-icon>
+                    <span v-if="item?.label">{{ item.label }}</span>
+                    <svg-icon v-if="item?.icon" :name="item.icon" class="bem-Svg"></svg-icon>
                   </template>
                 </tiny-popover>
               </tiny-dropdown-item>
