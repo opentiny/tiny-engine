@@ -9,6 +9,12 @@ const { BROADCAST_CHANNEL } = constants
 
 const { post: globalNotify } = useBroadcastChannel({ name: BROADCAST_CHANNEL.Notify })
 
+const procession = {
+  promiseLogin: null,
+  mePromise: {}
+}
+let loginVM = null
+
 const showError = (url, message) => {
   globalNotify({
     type: 'error',
@@ -44,24 +50,21 @@ const preResponse = (res) => {
 }
 
 const openLogin = () => {
-  const procession = {
-    promiseLogin: null,
-    mePromise: {}
-  }
+  if (!window.lowcode) {
+    const loginDom = document.createElement('div')
+    document.body.appendChild(loginDom)
+    loginVM = createApp(Login).mount(loginDom)
 
-  const loginDom = document.createElement('div')
-  document.body.appendChild(loginDom)
-  const loginVM = createApp(Login).mount(loginDom)
+    window.lowcode = {
+      platformCenter: {
+        Session: {
+          rebuiltCallback: function () {
+            loginVM.closeLogin()
 
-  window.lowcode = {
-    platformCenter: {
-      Session: {
-        rebuiltCallback: function () {
-          loginVM.closeLogin()
-
-          procession.mePromise.resolve('login ok')
-          procession.promiseLogin = null
-          procession.mePromise = {}
+            procession.mePromise.resolve('login ok')
+            procession.promiseLogin = null
+            procession.mePromise = {}
+          }
         }
       }
     }
