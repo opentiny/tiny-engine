@@ -118,14 +118,18 @@ const getConfig = (env = import.meta.env) => {
   }
 }
 
-const options = {
-  axiosConfig: getConfig(),
-  interceptors: {
-    request: [preRequest],
-    response: [[preResponse, errorResponse]]
+const customizeHttpService = () => {
+  const options = {
+    axiosConfig: getConfig(),
+    interceptors: {
+      request: [preRequest],
+      response: [[preResponse, errorResponse]]
+    }
   }
+
+  HttpService.apis.setOptions(options)
+
+  return HttpService
 }
 
-HttpService.apis.setOptions(options)
-
-export default HttpService
+export default customizeHttpService()
