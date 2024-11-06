@@ -58,7 +58,7 @@ export const initBlockList = async () => {
   if (state.blockList?.length) {
     return
   }
-  const appId = getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id
+  const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
   try {
     const list = await getMetaApi(META_SERVICE.Http).get('/material-center/api/blocks', { params: { appId } })
     setBlocks(list)

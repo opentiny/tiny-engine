@@ -93,7 +93,7 @@ export const requestUpdateGroup = ({ id, name, app, blocks }) =>
 
 // 更新区块版本
 export const requestGroupBlockVersion = async ({ groupId, blockId, blockVersion }) => {
-  const app = getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id
+  const app = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
   let blocks = await fetchGroupBlocksById({ groupId })
 
   blocks = blocks.map((block) => ({

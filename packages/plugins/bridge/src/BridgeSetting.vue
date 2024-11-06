@@ -209,7 +209,7 @@ export default {
         category: getType(),
         type: getCategory(),
         name: state.name,
-        app: getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id,
+        app: getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id,
         content: state.category
           ? state.content
           : {

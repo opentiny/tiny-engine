@@ -47,7 +47,7 @@ export default {
 
     const fetchDataSourceList = (appId) => getMetaApi(META_SERVICE.Http).get(`/app-center/api/sources/list/${appId}`)
 
-    const appId = getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id
+    const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
     fetchDataSourceList(appId).then((data) => {
       options.value = data
     })

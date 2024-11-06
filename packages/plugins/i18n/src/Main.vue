@@ -360,7 +360,7 @@ export default {
       })
     }
     const handleChange = (data) => {
-      const appId = getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id
+      const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
       const action = `/app-center/api/apps/${appId}/i18n/entries/update`
 
       const loadingTarget = notEmpty.value ? '#boxeight' : '#empty-loading-box'

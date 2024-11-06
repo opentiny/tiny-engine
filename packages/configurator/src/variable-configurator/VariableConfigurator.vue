@@ -486,7 +486,7 @@ export default {
       } else if (item.id === 'datasource') {
         state.bindPrefix = CONSTANTS.DATASOUCEPREFIX
         const url = new URLSearchParams(location.search)
-        const appId = getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id
+        const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
         const selectedId = appId || url.get('id')
 
         // 实时请求数据源列表数据，保证数据源获取最新的数据源数据
