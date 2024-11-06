@@ -223,6 +223,7 @@ const change = (item) => {
       text-align: center;
       cursor: pointer;
       position: relative;
+      background-color: var(--te-common-bg-container);
       .label-text {
         width: 100%;
         height: 12px;
@@ -270,6 +271,7 @@ const change = (item) => {
   margin: 0px 0px 0px 20px;
   background-color: rgb(255, 255, 255);
   z-index: 9999;
+  box-shadow: 0 0 10px 0 rgba(25, 25, 25, 0.15);
   --ti-dropdown-menu-arrow-margin-top: 0;
 
   :deep(.tiny-dropdown-item__wrap) {

@@ -254,12 +254,12 @@
           style="pointer-events: none; stroke-width: 0"
         ></rect>
         <clipPath id="padding-inner">
-          <rect x="65" y="21" width="48" height="20" fill="#FFF" rx="4" ry="4" style="pointer-events: none"></rect>
+          <rect x="64" y="25" width="48" height="20" fill="#FFF" rx="4" ry="4" style="pointer-events: none"></rect>
         </clipPath>
         <rect
           class="stroke"
           clip-path="url(#padding-inner)"
-          x="60"
+          x="64"
           y="25"
           width="48"
           height="20"
@@ -328,7 +328,7 @@
       height="100%"
       style="grid-area: 3 / 3 / span 3 / span 3; pointer-events: none"
     >
-      <text x="11" y="6" fill="#808080" font-weight="normal" font-size="10" dominant-baseline="hanging">Padding</text>
+      <text x="12" y="4" fill="#808080" font-weight="normal" font-size="10" dominant-baseline="hanging">Padding</text>
     </svg>
     <svg
       xmlns="http://www.w3.org/2000/svg"

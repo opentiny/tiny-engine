@@ -24,60 +24,41 @@
       <span>轮廓</span>
     </label>
     <div class="outline-content">
-      <tiny-tooltip effect="dark" placement="top" content="none-无">
-        <div
-          :class="['outline-content-svg', { selected: isOutlineStyleSelected(BORDER_STYLE_TYPE.None) }]"
-          @click="selectOutlineStyle(BORDER_STYLE_TYPE.None)"
-        >
-          <svg-icon name="cross"></svg-icon>
-        </div>
-      </tiny-tooltip>
-      <tiny-tooltip effect="dark" placement="top" content="solid-实线">
-        <div
-          :class="['outline-content-svg', { selected: isOutlineStyleSelected(BORDER_STYLE_TYPE.Solid) }]"
-          @click="selectOutlineStyle(BORDER_STYLE_TYPE.Solid)"
-        >
-          <svg-icon name="border-style-solid"></svg-icon>
-        </div>
-      </tiny-tooltip>
-      <tiny-tooltip effect="dark" placement="top" content="dashed-虚线">
-        <div
-          :class="['outline-content-svg', { selected: isOutlineStyleSelected(BORDER_STYLE_TYPE.Dashed) }]"
-          @click="selectOutlineStyle(BORDER_STYLE_TYPE.Dashed)"
-        >
-          <svg-icon name="border-style-dashed"></svg-icon>
-        </div>
-      </tiny-tooltip>
-      <tiny-tooltip effect="dark" placement="top" content="dotted-圆点">
-        <div
-          :class="['outline-content-svg', { selected: isOutlineStyleSelected(BORDER_STYLE_TYPE.Dotted) }]"
-          @click="selectOutlineStyle(BORDER_STYLE_TYPE.Dotted)"
-        >
-          <svg-icon name="border-style-dotted"></svg-icon>
-        </div>
-      </tiny-tooltip>
+      <tabs-group-configurator
+        :options="outlineOptions"
+        :modelValue="state.activedType"
+        label-width="52"
+        effect="dark"
+        placement="top"
+        @update:modelValue="selectOutlineStyle"
+      ></tabs-group-configurator>
     </div>
     <div v-if="state.activedType && state.activedType !== 'none'" class="outline-setting">
-      <div class="outline-width">
-        <label>宽度</label>
-        <input-select
-          :modelValue="state.outlineWidth"
-          :suffixValue="state.outlineWidthSuffix"
-          :options="outlineSuffixOptions"
-          @input-change="outlineWidthChange"
-          @select-change="outlineWidthSuffixChange"
-        ></input-select>
-        <label>偏移</label>
-        <input-select
-          :modelValue="state.outlineOffset"
-          :suffixValue="state.outlineOffsetSuffix"
-          :options="outlineSuffixOptions"
-          @input-change="outlineOffsetChange"
-          @select-change="outlineOffsetSuffixChange"
-        ></input-select>
+      <div class="outline-row-wrap">
+        <div class="left outline-width">
+          <label class="outline-label"><span>宽度</span></label>
+          <input-select
+            :modelValue="state.outlineWidth"
+            :suffixValue="state.outlineWidthSuffix"
+            :options="outlineSuffixOptions"
+            @input-change="outlineWidthChange"
+            @select-change="outlineWidthSuffixChange"
+          ></input-select>
+        </div>
+        <div class="right outline-width">
+          <label class="outline-label"><span>偏移</span></label>
+          <input-select
+            :modelValue="state.outlineOffset"
+            :suffixValue="state.outlineOffsetSuffix"
+            :options="outlineSuffixOptions"
+            @input-change="outlineOffsetChange"
+            @select-change="outlineOffsetSuffixChange"
+          ></input-select>
+        </div>
       </div>
+
       <div class="outline-color">
-        <label>颜色</label>
+        <label class="outline-label"><span>颜色</span></label>
         <color-configurator :modelValue="state.outlineColor" @change="changeOutlineColor" />
       </div>
     </div>
@@ -114,8 +95,8 @@
 
 <script>
 import { reactive } from 'vue'
-import { Select, Option, OptionGroup, Tooltip } from '@opentiny/vue'
-import { ColorConfigurator, SliderConfigurator } from '@opentiny/tiny-engine-configurator'
+import { Select, Option, OptionGroup } from '@opentiny/vue'
+import { ColorConfigurator, SliderConfigurator, TabsGroupConfigurator } from '@opentiny/tiny-engine-configurator'
 import ModalMask, { useModal } from '../inputs/ModalMask.vue'
 import ResetButton from '../inputs/ResetButton.vue'
 import InputSelect from '../inputs/InputSelect.vue'
@@ -128,9 +109,9 @@ export default {
     TinySelect: Select,
     TinyOption: Option,
     TinyOptionGroup: OptionGroup,
-    TinyTooltip: Tooltip,
     SliderConfigurator,
     ColorConfigurator,
+    TabsGroupConfigurator,
     ModalMask,
     ResetButton,
     InputSelect
@@ -348,6 +329,29 @@ export default {
       }
     ]
 
+    const outlineOptions = [
+      {
+        icon: 'cross',
+        value: BORDER_STYLE_TYPE.None,
+        content: 'none-无'
+      },
+      {
+        icon: 'border-style-solid',
+        value: BORDER_STYLE_TYPE.Solid,
+        content: 'solid-实线'
+      },
+      {
+        icon: 'border-style-dashed',
+        value: BORDER_STYLE_TYPE.Dashed,
+        content: 'dashed-虚线'
+      },
+      {
+        icon: 'border-style-dotted',
+        value: BORDER_STYLE_TYPE.Dotted,
+        content: 'dotted-圆点'
+      }
+    ]
+
     const outlineSuffixOptions = [
       {
         label: 'PX',
@@ -437,10 +441,6 @@ export default {
       })
     }
 
-    const isOutlineStyleSelected = (type) => {
-      return state.activedType === type
-    }
-
     const selectOutlineStyle = (type) => {
       state.activedType = type
 
@@ -494,6 +494,7 @@ export default {
     return {
       state,
       cursorGroup,
+      outlineOptions,
       EFFECTS_PROPERTY,
       BORDER_STYLE_TYPE,
       outlineSuffixOptions,
@@ -502,7 +503,6 @@ export default {
       openSetting,
       reset,
       cursorChange,
-      isOutlineStyleSelected,
       selectOutlineStyle,
       outlineWidthChange,
       outlineWidthSuffixChange,
@@ -519,7 +519,7 @@ export default {
 .effect-group {
   display: grid;
   gap: 8px;
-  grid-template-columns: 44px auto;
+  grid-template-columns: 36px auto;
   align-items: center;
   margin-bottom: var(--te-common-vertical-item-spacing-normal);
   span {
@@ -570,23 +570,47 @@ export default {
   }
   .outline-setting {
     grid-column: 1 / -1;
-    .outline-width {
+
+    .outline-row-wrap {
       display: grid;
-      grid-template-columns: 44px 1fr 1fr 1fr;
-      gap: 8px;
+      gap: 4px 20px;
+      grid-template-columns: 15px 1fr;
       align-items: center;
+      margin-bottom: var(--te-common-vertical-item-spacing-normal);
+      grid-template-columns: 45% auto;
+      .left {
+        display: grid;
+        align-items: center;
+        gap: 4px 20px;
+        grid-template-columns: 23px 1fr;
+      }
+      .right {
+        display: grid;
+        align-items: center;
+        gap: 4px 8px;
+        grid-template-columns: 40px 1fr;
+      }
     }
+
     .outline-color {
       display: grid;
-      grid-template-columns: 44px auto;
+      grid-template-columns: 36px auto;
       gap: 8px;
       align-items: center;
       margin-top: 8px;
     }
-
-    label {
-      padding-left: 2px;
+    .outline-label {
+      margin-right: -16px;
+      line-height: 16px;
+      color: var(--ti-lowcode-component-setting-panel-label-color);
+      span {
+        padding: 2px;
+      }
     }
   }
+}
+
+.opacity-wrap {
+  grid-template-columns: 40px auto;
 }
 </style>

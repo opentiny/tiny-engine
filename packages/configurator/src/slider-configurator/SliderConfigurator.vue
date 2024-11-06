@@ -133,20 +133,21 @@ export default {
     padding: 0;
     cursor: pointer;
     border: 0;
-    background-color: transparent;
+    background-color: var(--te-common-border-bg-divider);
     position: relative;
     outline: 0;
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
   }
+
   input[type='range']::-webkit-slider-thumb {
     width: 10px;
     height: 10px;
     border-radius: 50%;
     border: 0;
     background-color: var(--te-common-bg-default);
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.21);
+    box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.4);
     -webkit-transition: border-color 0.15s, background-color 0.15s;
     transition: border-color 0.15s, background-color 0.15s;
     cursor: pointer;

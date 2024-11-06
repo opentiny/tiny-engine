@@ -490,6 +490,7 @@ const handleDeleteCurSelector = () => {
 .selector-container {
   display: flex;
   margin-top: 10px;
+  height: 24px;
   color: var(--ti-lowcode-className-selector-container-color);
 
   .selector-right-container {
@@ -502,17 +503,18 @@ const handleDeleteCurSelector = () => {
   }
   .selector-right-container-wrap {
     display: flex;
+    height: 24px;
   }
   .className-selector-wrap {
     max-width: 180px;
     min-width: 0;
   }
   :deep(.editor-wrap) {
-    width: 30px;
+    width: 24px;
   }
   .edit-global-css {
     display: flex;
-    padding: 7px;
+    padding: 3px;
     border: 1px solid var(--ti-lowcode-className-selector-container-border-color);
     border-radius: 6px;
     cursor: pointer;
@@ -522,7 +524,6 @@ const handleDeleteCurSelector = () => {
     display: flex;
     row-gap: 2px;
     align-items: center;
-    flex-wrap: wrap;
     max-width: 180px;
     min-width: 0;
     padding: 1px 10px;
@@ -555,9 +556,9 @@ const handleDeleteCurSelector = () => {
         align-items: center;
         background-color: var(--ti-lowcode-className-selector-container-label-bg-color);
         color: var(--ti-lowcode-className-selector-container-label-color);
-        padding: 1px 4px;
+        padding: 0 4px;
         border-radius: 4px;
-        line-height: 26px;
+        line-height: 18px;
         .selector-label-text {
           outline: none;
           overflow: hidden;
@@ -591,7 +592,7 @@ const handleDeleteCurSelector = () => {
       color: var(--ti-lowcode-className-selector-container-color);
       min-width: 0;
       flex: 0 0 0;
-      line-height: 28px;
+      line-height: 24px;
       z-index: 1;
       border: none;
       outline: none;
@@ -635,7 +636,7 @@ const handleDeleteCurSelector = () => {
     .selector-dropdown-list-tips {
       font-size: 12px;
       padding: 0 10px;
-      line-height: 32px;
+      line-height: 24px;
       color: var(--ti-lowcode-className-selector-dropdown-list-tips-color);
     }
 
@@ -648,7 +649,7 @@ const handleDeleteCurSelector = () => {
 
     .exist-class-item {
       cursor: pointer;
-      height: 32px;
+      height: 24px;
       padding: 0 16px;
       display: flex;
       align-items: center;
@@ -677,6 +678,11 @@ const handleDeleteCurSelector = () => {
       padding-right: 30px;
       border: none;
       font-size: 12px;
+      height: 22px;
+      border-radius: 6px;
+    }
+    :deep(.tiny-input__suffix) {
+      top: 10px;
     }
   }
 }

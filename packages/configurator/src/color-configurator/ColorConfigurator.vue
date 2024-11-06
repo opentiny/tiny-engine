@@ -23,7 +23,7 @@ export default {
     },
     modelValue: {
       type: String,
-      default: ''
+      default: '#FFFFFF'
     }
   },
   emits: ['change', 'update:modelValue'],
@@ -57,7 +57,7 @@ export default {
   width: 100%;
 
   .input-color {
-    width: 22px;
+    width: 20px;
     height: 24px;
     border: none;
     background: transparent;
@@ -68,6 +68,10 @@ export default {
   :deep(.tiny-input-prefix) {
     .tiny-input__prefix {
       left: 2px;
+
+      input[type='color' i] {
+        border-color: red;
+      }
     }
     .tiny-input__inner {
       padding-left: 24px;

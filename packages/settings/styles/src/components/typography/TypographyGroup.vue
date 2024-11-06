@@ -640,6 +640,7 @@ export default {
     grid-template-columns: 15px 1fr;
     align-items: center;
     margin-bottom: 8px;
+    color: var(--ti-lowcode-component-setting-panel-label-color);
 
     .style-left {
       display: grid;

@@ -298,7 +298,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: 32px;
+  height: 24px;
   padding: 4px;
   border: 1px solid var(--ti-lowcode-meta-codeEditor-border-color);
   border-radius: 6px;
