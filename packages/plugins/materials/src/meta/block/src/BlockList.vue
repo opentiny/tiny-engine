@@ -81,7 +81,7 @@ export default {
     const panelState = inject('panelState', {})
     const displayType = inject('displayType')
     const { message, confirm } = useModal()
-    const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id
+    const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
 
     const openVersionPanel = async ({ item }) => {
       selectedBlock.value = item

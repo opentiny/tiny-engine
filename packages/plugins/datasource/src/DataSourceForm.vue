@@ -141,7 +141,7 @@ export default {
       closeRemotePanel()
     }
 
-    const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id
+    const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
 
     const deleteDataSource = () => {
       const execDelete = () =>

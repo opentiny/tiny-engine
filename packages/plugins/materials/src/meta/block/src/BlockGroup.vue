@@ -176,7 +176,7 @@ export default {
     const groupSelect = ref(null)
     const editFormRef = ref(null)
     const editFormItemRef = ref(null)
-    const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id
+    const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
 
     const createGroupForm = ref(null)
 
