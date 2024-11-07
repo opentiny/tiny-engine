@@ -171,7 +171,7 @@ export default {
           ...page_content_state,
           fileName: pageSettingState.currentPageData.name
         },
-        app: getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id,
+        app: getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id,
         isPage: true
       }
 

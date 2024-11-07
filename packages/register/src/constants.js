@@ -1,6 +1,7 @@
 export const META_SERVICE = {
   GlobalService: 'engine.service.globalService',
   EditorInfo: 'engine.service.editorInfo',
+  Http: 'engine.service.http',
   App: 'engine.service.app',
   GenerateCode: 'engine.service.generateCode',
   Layout: 'engine.service.layout',

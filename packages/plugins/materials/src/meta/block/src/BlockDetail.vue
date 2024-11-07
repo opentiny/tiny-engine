@@ -82,7 +82,7 @@ export default {
               .filter((item) => item.id !== blockId)
               .map((item) => ({ id: item.id, version: item.current_version }))
 
-            const appId = getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id
+            const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
             requestUpdateGroup({ id: groupId, blocks, app: appId }).then(() => {
               isRefresh.value = true
               emit('close')

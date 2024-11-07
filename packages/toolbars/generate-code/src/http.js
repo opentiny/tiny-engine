@@ -10,15 +10,13 @@
  *
  */
 
-import { useHttp } from '@opentiny/tiny-engine-http'
-
-const http = useHttp()
+import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 const HEADER_LOWCODE_ORG = 'x-lowcode-org'
 
 // 获取页面/区块预览的代码
 export const fetchCode = async ({ platform, app, pageInfo, tenant } = {}) =>
-  http.post(
+  getMetaApi(META_SERVICE.Http).post(
     '/app-center/api/schema2code',
     { platform, app, pageInfo },
     {
@@ -29,13 +27,14 @@ export const fetchCode = async ({ platform, app, pageInfo, tenant } = {}) =>
 // 获取页面依赖的关联应用数据: i18n/dataSource等
 export const fetchMetaData = async ({ platform, app, type, id, history, tenant } = {}) =>
   id
-    ? http.get('/app-center/api/preview/metadata', {
+    ? getMetaApi(META_SERVICE.Http).get('/app-center/api/preview/metadata', {
         headers: { [HEADER_LOWCODE_ORG]: tenant },
         params: { platform, app, type, id, history }
       })
     : {}
 
 // 获取页面列表
-export const fetchPageList = (appId) => http.get(`/app-center/api/pages/list/${appId}`)
+export const fetchPageList = (appId) => getMetaApi(META_SERVICE.Http).get(`/app-center/api/pages/list/${appId}`)
 
-export const fetchBlockSchema = async (blockName) => http.get(`/material-center/api/block?label=${blockName}`)
+export const fetchBlockSchema = async (blockName) =>
+  getMetaApi(META_SERVICE.Http).get(`/material-center/api/block?label=${blockName}`)

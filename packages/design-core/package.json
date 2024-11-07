@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine",
-  "version": "2.0.0-rc.0",
+  "version": "2.0.0-rc.1",
   "type": "module",
   "description": "TinyEngine enables developers to customize low-code platforms, build low-bit platforms online in real time, and support secondary development or integration of low-bit platform capabilities.",
   "homepage": "https://opentiny.design/tiny-engine",
@@ -45,7 +45,6 @@
     "@opentiny/tiny-engine-canvas": "workspace:*",
     "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-configurator": "workspace:*",
-    "@opentiny/tiny-engine-http": "workspace:*",
     "@opentiny/tiny-engine-i18n-host": "workspace:*",
     "@opentiny/tiny-engine-layout": "workspace:~",
     "@opentiny/tiny-engine-meta-register": "workspace:*",

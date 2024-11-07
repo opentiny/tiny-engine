@@ -53,7 +53,7 @@ const activeIndex = ref(-1)
 
 export const refresh = () => {
   const url = new URLSearchParams(location.search)
-  const selectedId = getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id || url.get('id')
+  const selectedId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id || url.get('id')
   fetchDataSourceList(selectedId).then((data) => {
     dataSourceList.value = data
     useCanvas().canvasApi.value.setDataSourceMap(data)

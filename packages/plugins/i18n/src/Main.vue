@@ -129,7 +129,6 @@ import { PluginPanel, SearchEmpty } from '@opentiny/tiny-engine-common'
 import { useTranslate, useModal, useHelp, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
-import { useHttp } from '@opentiny/tiny-engine-http'
 import { BASE_URL } from '@opentiny/tiny-engine-common/js/environments'
 
 export default {
@@ -361,7 +360,7 @@ export default {
       })
     }
     const handleChange = (data) => {
-      const appId = getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id
+      const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
       const action = `/app-center/api/apps/${appId}/i18n/entries/update`
 
       const loadingTarget = notEmpty.value ? '#boxeight' : '#empty-loading-box'
@@ -387,7 +386,7 @@ export default {
       }
       formdata.set(key, data.raw)
 
-      useHttp()
+      getMetaApi(META_SERVICE.Http)
         .post(action, formdata)
         .then(() => {
           handleAvatarSuccess()

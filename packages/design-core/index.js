@@ -38,7 +38,8 @@ export {
   PluginPanel,
   PluginSetting,
   ToolbarBase,
-  GlobalService
+  GlobalService,
+  HttpService
 } from '@opentiny/tiny-engine-common'
 
 export { default as defaultRegistry } from './registry'

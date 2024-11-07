@@ -11,13 +11,12 @@
  */
 
 import { reactive, ref } from 'vue'
-import { useHttp } from '@opentiny/tiny-engine-http'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { generateI18n } from '@opentiny/tiny-engine-common/js/vscodeGenerateFile'
 import { PROP_DATA_TYPE } from '@opentiny/tiny-engine-common/js/constants'
-import { useResource, useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { useResource, useCanvas, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 const { HOST_TYPE } = constants
 const state = reactive({
@@ -48,7 +47,7 @@ const removeI18n = (key = []) => {
     delete langs[element]
   })
 
-  useHttp().post(`${i18nApi}/bulk/delete`, {
+  getMetaApi(META_SERVICE.Http).post(`${i18nApi}/bulk/delete`, {
     ...globalParams,
     key_in: key
   })
@@ -71,7 +70,7 @@ const ensureI18n = (obj, send) => {
     const exist = langs[key]
 
     globalParams.host &&
-      useHttp().post(`${i18nApi}/${exist ? 'update' : 'create'}`, {
+      getMetaApi(META_SERVICE.Http).post(`${i18nApi}/${exist ? 'update' : 'create'}`, {
         ...globalParams,
         key,
         contents
@@ -111,7 +110,7 @@ const ensureI18n = (obj, send) => {
 }
 
 const getI18nData = () => {
-  return useHttp().get(i18nApi, {
+  return getMetaApi(META_SERVICE.Http).get(i18nApi, {
     params: { ...globalParams, _limit: -1 }
   })
 }
@@ -228,7 +227,7 @@ const batchCreateI18n = ({ host, hostType }) => {
     contents: Object.fromEntries(locales.map(({ lang }) => [lang, message[lang]]))
   }))
 
-  useHttp().post(`${i18nApi}/batch/create`, {
+  getMetaApi(META_SERVICE.Http).post(`${i18nApi}/batch/create`, {
     ...globalParams,
     entries
   })

@@ -105,7 +105,7 @@ export default {
       const data = pageSettingState.currentPageData
       const createParams = {
         ...data,
-        app: getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id,
+        app: getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id,
         isPage: false
       }
 

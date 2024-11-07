@@ -35,7 +35,6 @@
       "@opentiny/tiny-engine-theme-dark": ["packages/theme/dark/index.less"],
       "@opentiny/tiny-engine-theme-light": ["packages/theme/light/index.less"],
       "@opentiny/tiny-engine-svgs": ["packages/svgs/index"],
-      "@opentiny/tiny-engine-http": ["packages/http/index"],
       "@opentiny/tiny-engine-plugin-materials/*": ["packages/plugins/materials/*"],
       "@opentiny/tiny-engine-plugin-state/*": ["packages/plugins/state/*"],
       "@opentiny/tiny-engine-plugin-script/*": ["packages/plugins/script/*"],
@@ -62,7 +61,6 @@
       "@opentiny/tiny-engine-theme-dark/*": ["packages/theme/dark/*"],
       "@opentiny/tiny-engine-theme-light/*": ["packages/theme/light/*"],
       "@opentiny/tiny-engine-svgs/*": ["packages/svgs/*"],
-      "@opentiny/tiny-engine-http/*": ["packages/http/*"],
       "@opentiny/tiny-engine-utils": ["packages/utils/src/index.js"],
       "@opentiny/tiny-engine-webcomponent-core": ["packages/webcomponent/src/lib"],
       "@opentiny/tiny-engine-i18n-host": ["packages/i18n/src/lib"]

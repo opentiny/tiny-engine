@@ -11,7 +11,6 @@
  */
 
 import { reactive } from 'vue'
-import { useHttp } from '@opentiny/tiny-engine-http'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { getCanvasStatus } from '@opentiny/tiny-engine-common/js/canvas'
 import {
@@ -125,7 +124,7 @@ const handlePopStateEvent = async () => {
 const fetchResource = async ({ isInit = true } = {}) => {
   const { id, type } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
   useMessage().publish({ topic: 'app_id_changed', data: id })
-  const appData = await useHttp().get(`/app-center/v1/api/apps/schema/${id}`)
+  const appData = await getMetaApi(META_SERVICE.Http).get(`/app-center/v1/api/apps/schema/${id}`)
   resState.pageTree = appData.componentsTree
   resState.dataSource = appData.dataSource?.list
   resState.dataHandler = appData.dataSource?.dataHandler || DEFAULT_INTERCEPTOR.dataHandler
