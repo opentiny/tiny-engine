@@ -8,7 +8,6 @@
     "@vueuse/core": "${VITE_CDN_DOMAIN}/@vueuse/core@9.6.0/index.mjs",
     "@vueuse/shared": "${VITE_CDN_DOMAIN}/@vueuse/shared@9.6.0/index.mjs",
     "axios": "${VITE_CDN_DOMAIN}/axios@1.0.0/dist/esm/axios.js",
-    "axios-mock-adapter": "${VITE_CDN_DOMAIN}/axios-mock-adapter@1.21.1/dist/axios-mock-adapter.js",
     "@opentiny/tiny-engine-webcomponent-core": "${VITE_CDN_DOMAIN}/@opentiny/tiny-engine-webcomponent-core@1/dist/tiny-engine-webcomponent-core.es.js",
     "@opentiny/tiny-engine-i18n-host": "${VITE_CDN_DOMAIN}/@opentiny/tiny-engine-i18n-host@1/dist/lowcode-design-i18n-host.es.js",
     "@opentiny/tiny-engine-builtin-component": "${VITE_CDN_DOMAIN}/@opentiny/tiny-engine-builtin-component@1/dist/index.js",
