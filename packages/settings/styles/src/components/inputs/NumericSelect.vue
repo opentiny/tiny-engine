@@ -5,12 +5,13 @@
       :placeholder="placeholder"
       controls-position="right"
       :unit="numericalSuffix"
+      :empty-value="null"
+      allow-empty
       @mouseover="isNumericHover = true"
       @mouseleave="isNumericHover = false"
       @focus="focus = true"
       @blur="focus = false"
       @change="change"
-      @input="input"
     >
     </tiny-numeric>
   </div>
@@ -49,7 +50,7 @@ export default {
   },
   emits: useEvent(),
   setup(props, { emit }) {
-    const numericalModelValue = ref(String(props.numericalText || ''))
+    const numericalModelValue = ref(props.numericalText || null)
     const isNumericHover = ref(false)
     const focus = ref(false)
 
@@ -65,15 +66,9 @@ export default {
     watch(
       () => props.numericalText,
       (newValue) => {
-        numericalModelValue.value = String(newValue || '')
+        numericalModelValue.value = newValue || null
       }
     )
-
-    const input = (value) => {
-      if (!/^\d+$/.test(value.data)) {
-        numericalModelValue.value = numericalModelValue.value.slice(0, -1)
-      }
-    }
 
     const change = () => {
       focus.value = false
@@ -99,7 +94,6 @@ export default {
       numericalSuffix,
       isNumericHover,
       focus,
-      input,
       change
     }
   }
