@@ -2,7 +2,7 @@
   <div class="background-input">
     <tiny-input v-model="color" placeholder="请输入颜色" @change="change">
       <template #prefix>
-        <input :value="inputColor" type="color" class="input-color" @change="changeColor" />
+        <input v-model="inputColor" type="color" class="input-color" @change="changeColor" />
       </template>
     </tiny-input>
   </div>
