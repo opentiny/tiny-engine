@@ -49,7 +49,6 @@
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
     "@vitejs/plugin-vue": "^5.1.2",
     "@vitejs/plugin-vue-jsx": "^4.0.1",
-    "axios-mock-adapter": "^1.21.5",
     "glob": "^10.3.4",
     "vite": "^5.4.2"
   },
