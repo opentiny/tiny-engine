@@ -269,9 +269,9 @@ const change = (item) => {
 .tiny-dropdown-menu {
   padding: 8px 0px;
   margin: 0px 0px 0px 20px;
-  background-color: rgb(255, 255, 255);
+  background-color: var(--te-common-bg-default);
   z-index: 9999;
-  box-shadow: 0 0 10px 0 rgba(25, 25, 25, 0.15);
+  box-shadow: 0 0 10px 0 var(--te-common-border-default);
   --ti-dropdown-menu-arrow-margin-top: 0;
 
   :deep(.tiny-dropdown-item__wrap) {

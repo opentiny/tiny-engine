@@ -147,7 +147,7 @@ export default {
     border-radius: 50%;
     border: 0;
     background-color: var(--te-common-bg-default);
-    box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 2px 0 var(--te-common-border-default);
     -webkit-transition: border-color 0.15s, background-color 0.15s;
     transition: border-color 0.15s, background-color 0.15s;
     cursor: pointer;

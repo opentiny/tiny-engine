@@ -2,7 +2,9 @@
   <div class="editor-wrap">
     <slot :open="open">
       <div v-if="buttonShowContent" :class="['full-width', { 'empty-color': value === '' }]" @click="open">
-        <span class="text-content text-ellipsis-multiple">{{ value === '' ? buttonLabel : value }}</span>
+        <span class="text-content text-ellipsis-multiple text-line-clamp">{{
+          value === '' ? buttonLabel : value
+        }}</span>
         <svg-icon class="edit-icon" name="to-edit"></svg-icon>
       </div>
       <tiny-button v-else class="edit-btn" @click="open">
@@ -321,6 +323,10 @@ export default {
     cursor: pointer;
     color: var(--ti-lowcode-common-text-main-color);
   }
+}
+
+.text-line-clamp {
+  -webkit-line-clamp: 1;
 }
 :deep(.tiny-dialog-box__header) {
   padding-bottom: 15px;
