@@ -8,7 +8,7 @@
     </tiny-tabs>
     <div class="tabs-setting">
       <tiny-tooltip effect="dark" :content="isCollapsed ? '展开' : '折叠'" placement="top" :visible-arrow="false">
-        <template #default> <svg-icon name="setting" @click="isCollapsed = !isCollapsed"></svg-icon> </template>
+        <template #default> <svg-icon :name="settingIcon" @click="isCollapsed = !isCollapsed"></svg-icon> </template>
       </tiny-tooltip>
     </div>
   </div>
@@ -35,11 +35,13 @@ export default {
     const activating = computed(() => layoutState.settings.activating)
     const showMask = ref(true)
     const isCollapsed = ref(false)
+    const settingIcon = computed(() => (isCollapsed.value ? 'style-panel-collapsed' : 'style-panel-expand'))
 
     return {
       showMask,
       isCollapsed,
       activating,
+      settingIcon,
       layoutState
     }
   }
