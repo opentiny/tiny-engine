@@ -77,10 +77,6 @@ export const getGlobalState = () => getRenderer().getGlobalState()
 
 export const getSchema = () => useCanvas().getPageSchema()
 
-export const getContext = () => {
-  return getRenderer().getContext()
-}
-
 // 记录拖拽状态
 export const dragState = reactive({
   ...initialDragState
@@ -302,7 +298,6 @@ export const removeNodeById = (id) => {
     return
   }
 
-  // removeNode(getNode(id, true))
   removeNode(id)
   clearSelect()
   getController().addHistory()
@@ -429,7 +424,6 @@ const isAncestor = (ancestor, descendant) => {
   let descendantId = typeof descendant === 'string' ? descendant : descendant.id
 
   while (descendantId) {
-    // const { parent } = getNode(descendantId, true) || {}
     const { parent } = useCanvas().getNodeWithParentById(descendantId) || {}
 
     if (parent?.id === ancestorId) {
@@ -758,26 +752,6 @@ export const onMouseUp = () => {
   dragEnd()
 }
 
-export const setPageCss = (css = '') => {
-  const id = 'page-css'
-  const document = getDocument()
-  let element = document.getElementById(id)
-  const head = document.querySelector('head')
-
-  document.body.setAttribute('style', '')
-
-  if (!element) {
-    element = document.createElement('style')
-    element.setAttribute('type', 'text/css')
-    element.setAttribute('id', id)
-
-    element.innerHTML = css
-    head.appendChild(element)
-  } else {
-    element.innerHTML = css
-  }
-}
-
 export const addStyle = (href) => appendStyle(href, getDocument())
 
 export const addScript = (src) => appendScript(src, getDocument())
@@ -796,10 +770,6 @@ export const setLocales = (messages, merge) => {
   })
 }
 
-export const setState = (state) => {
-  getRenderer().setState(state)
-}
-
 export const setUtils = (utils, clear, isForceRefresh) => {
   getRenderer().setUtils(utils, clear, isForceRefresh)
 }
@@ -812,27 +782,9 @@ export const deleteUtils = (utils) => {
   getRenderer().deleteUtils(utils)
 }
 
-export const deleteState = (variable) => {
-  getRenderer().deleteState(variable)
-}
-
 export const setGlobalState = (state) => {
   useResource().resState.globalState = state
   getRenderer().setGlobalState(state)
-}
-
-export const getNodePath = (id, nodes = []) => {
-  const { parent, node } = useCanvas().getNodeWithParentById(id) || {}
-
-  node && nodes.unshift({ name: node.componentName, node: id })
-
-  if (parent) {
-    parent && getNodePath(parent.id, nodes)
-  } else {
-    nodes.unshift({ name: 'BODY', node: id })
-  }
-
-  return nodes
 }
 
 export const setSchema = async (schema) => {
@@ -846,8 +798,6 @@ export const setSchema = async (schema) => {
 export const setConfigure = (configure) => {
   getRenderer().setConfigure(configure)
 }
-
-export const setProps = (data) => getRenderer()?.setProps(data)
 
 export const setI18n = (data) => {
   const messages = data || useTranslate().getData()
@@ -878,12 +828,8 @@ export const canvasDispatch = (name, data, doc = getDocument()) => {
 export const canvasApi = {
   dragStart,
   updateRect,
-  getContext,
-  getNodePath,
   dragMove,
   setLocales,
-  setState,
-  deleteState,
   getRenderer,
   clearSelect,
   selectNode,
@@ -891,12 +837,8 @@ export const canvasApi = {
   insertNode,
   removeNode,
   addComponent,
-  setPageCss,
   addScript,
   addStyle,
-  getNode: () => {
-    return useCanvas().getNode()
-  },
   getCurrent,
   setSchema,
   setUtils,
@@ -905,7 +847,6 @@ export const canvasApi = {
   setI18n,
   getCanvasType,
   setCanvasType,
-  setProps,
   setGlobalState,
   getGlobalState,
   getDesignMode,

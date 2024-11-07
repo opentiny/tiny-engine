@@ -191,7 +191,8 @@ export default {
 
     const confirm = () => {
       const { name } = state.createData
-      const { setState, setGlobalState } = useCanvas().canvasApi.value
+      const { setGlobalState } = useCanvas().canvasApi.value
+      const { getSchema, updateSchema } = useCanvas()
 
       if (!name || errorMessage.value) {
         notifySaveError('变量名未填写或名称不符合规范，请按照提示修改后重试。')
@@ -214,8 +215,9 @@ export default {
         isPanelShow.value = false
         setSaved(false)
 
-        // 触发画布渲染
-        setState({ [name]: variable })
+        const schema = getSchema()
+        updateSchema({ state: { ...(schema.state || {}), [name]: variable } })
+
         useHistory().addHistory()
       } else {
         const validateResult = validateMonacoEditorData(storeRef.value.getEditor(), 'state字段', { required: true })
@@ -261,12 +263,13 @@ export default {
     }
 
     const remove = (key) => {
-      const { deleteState } = useCanvas().canvasApi.value
-      const { getSchema } = useCanvas()
+      const { getSchema, updateSchema } = useCanvas()
 
       delete state.dataSource[key]
-      // 删除变量也需要同步触发画布渲染
-      deleteState(key)
+
+      const schema = getSchema()
+      let { lifeCycles } = schema
+      const { [key]: deletedKey, ...restState } = schema.state
 
       if (key.startsWith('datasource')) {
         const pageSchema = getSchema()
@@ -279,8 +282,10 @@ export default {
          */
         const pattern = new RegExp(`([\\s\\n]*\\/\\*\\* ${start} \\*\\/[\\s\\S]*\\/\\*\\* ${end} \\*\\/)`)
 
-        pageSchema.lifeCycles.setup.value = pageSchema.lifeCycles.setup.value.replace(pattern, '')
+        lifeCycles.setup.value = pageSchema.lifeCycles.setup.value.replace(pattern, '')
       }
+
+      updateSchema({ state: restState, lifeCycles })
 
       // 如果删除的是当前编辑的状态变量，则需要关闭二级面板
       if (state.createData.name === key) {
@@ -336,7 +341,6 @@ export default {
       } else {
         const pageSchema = getSchema() || {}
 
-        pageSchema.state = pageSchema?.state || {}
         state.dataSource = pageSchema.state
       }
     }

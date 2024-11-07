@@ -441,13 +441,11 @@ watchEffect(() => {
 
 const save = ({ content }) => {
   const cssString = formatString(content.replace(/"/g, "'"), 'css')
-  const { getPageSchema } = useCanvas()
   const { addHistory } = useHistory()
-  const { updateRect, setPageCss } = useCanvas().canvasApi.value
-  const { getSchema: getCanvasPageSchema } = useCanvas()
-  getPageSchema().css = cssString
-  getCanvasPageSchema().css = cssString
-  setPageCss(cssString)
+  const { updateRect } = useCanvas().canvasApi.value
+  const { updateSchema } = useCanvas()
+
+  updateSchema({ css: cssString })
   state.schemaUpdateKey++
 
   addHistory()

@@ -263,13 +263,9 @@ watch(
 )
 
 export const updateGlobalStyleStr = (styleStr) => {
-  const { getSchema, getPageSchema, canvasApi } = useCanvas()
-  const pageSchema = getPageSchema()
-  const { setPageCss } = canvasApi.value
+  const { updateSchema } = useCanvas()
 
-  pageSchema.css = styleStr
-  getSchema().css = styleStr
-  setPageCss(styleStr)
+  updateSchema({ css: styleStr })
   state.schemaUpdateKey++
 }
 

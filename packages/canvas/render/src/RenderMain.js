@@ -17,20 +17,7 @@ import * as TinyVueIcon from '@opentiny/vue-icon'
 import { useBroadcastChannel, useThrottleFn } from '@vueuse/core'
 import { constants, utils as commonUtils } from '@opentiny/tiny-engine-utils'
 import renderer, { parseData, setConfigure, setController, globalNotify, isStateAccessor } from './render'
-import {
-  getNode as getNodeById,
-  clearNodes,
-  getRoot,
-  setContext,
-  getContext,
-  setCondition,
-  getCondition,
-  getConditions,
-  context,
-  setNode,
-  getDesignMode,
-  setDesignMode
-} from './context'
+import { clearNodes, setContext, getContext, setCondition, context, getDesignMode, setDesignMode } from './context'
 import CanvasEmpty from './CanvasEmpty.vue'
 
 const { BROADCAST_CHANNEL } = constants
@@ -121,7 +108,7 @@ const setBridge = (data, clear) => {
 
 const getBridge = () => bridge
 
-const getMethods = () => methods
+// const getMethods = () => methods
 
 const setMethods = (data = {}, clear) => {
   clear && reset(methods)
@@ -137,11 +124,9 @@ const setMethods = (data = {}, clear) => {
   setContext(methods)
 }
 
-const getState = () => state
-
-const deleteState = (variable) => {
-  delete state[variable]
-}
+// const deleteState = (variable) => {
+//   delete state[variable]
+// }
 
 const generateAccessor = (type, accessor, property) => {
   const accessorFn = generateFunction(accessor[type].value, context)
@@ -179,10 +164,19 @@ const generateStateAccessors = (type, accessor, key) => {
   )
 }
 
-const setState = (data, clear) => {
-  clear && reset(state)
-  if (!schema.state) {
-    schema.state = data
+const getDeletedKeys = (objA, objB) => {
+  const keyA = Object.keys(objA)
+  const keyB = new Set(Object.keys(objB))
+
+  return keyA.filter((item) => !keyB.has(item))
+}
+
+const setState = (data) => {
+  const deletedKeys = getDeletedKeys(state, data)
+
+  // 同步删除的 key
+  for (const key of deletedKeys) {
+    delete state[key]
   }
 
   Object.assign(state, parseData(data, {}, getContext()) || {})
@@ -240,8 +234,6 @@ const setProps = (data, clear) => {
   Object.assign(props, data)
 }
 
-const getProps = () => props
-
 const initProps = (properties = []) => {
   const props = {}
   const accessorFunctions = []
@@ -268,7 +260,7 @@ const initProps = (properties = []) => {
   return accessorFunctions
 }
 
-const setPagecss = (css = '') => {
+const setPageCss = (css = '') => {
   const id = 'page-css'
   let element = document.getElementById(id)
   const head = document.querySelector('head')
@@ -329,7 +321,7 @@ const setSchema = async (data) => {
   setState(newSchema.state, true)
   clearNodes()
   await nextTick()
-  setPagecss(data.css)
+  setPageCss(data.css)
   Object.assign(schema, newSchema)
 
   // 当上下文环境设置完成之后再去处理区块属性访问器的watchEffect
@@ -353,8 +345,6 @@ const setSchema = async (data) => {
 
   return schema
 }
-
-const getNode = (id, parent) => (id ? getNodeById(id, parent) : schema)
 
 let canvasRenderer = null
 
@@ -408,6 +398,13 @@ export default {
       callback: throttleUpdateSchema
     })
 
+    onUnmounted(() => {
+      window.host.unsubscribe({
+        topic: 'schemaChange',
+        subscriber: 'canvasRenderer'
+      })
+    })
+
     watch(data, () => {
       locale.value = data.value
     })
@@ -430,12 +427,22 @@ export default {
       }
     )
 
-    onUnmounted(() => {
-      window.host.unsubscribe({
-        topic: 'schemaChange',
-        subscriber: 'canvasRenderer'
-      })
-    })
+    watch(
+      () => schema.css,
+      (value) => {
+        setPageCss(value)
+      }
+    )
+
+    watch(
+      () => schema.state,
+      (value) => {
+        setState(value)
+      },
+      {
+        deep: true
+      }
+    )
   },
   render() {
     return getRenderer().call(this)
@@ -443,34 +450,27 @@ export default {
 }
 
 export const api = {
+  // 用于 lowcode.js 获取 utils 工具类
   getUtils,
   setUtils,
   updateUtils,
   deleteUtils,
   getBridge,
   setBridge,
-  getMethods,
-  setMethods,
-  setController,
-  setConfigure,
-  setSchema,
-  getState,
-  deleteState,
-  setState,
-  getProps,
-  setProps,
-  getContext,
-  getNode,
-  getRoot,
-  setPagecss,
-  setCondition,
-  getCondition,
-  getConditions,
-  getGlobalState,
   getDataSourceMap,
   setDataSourceMap,
+  getGlobalState,
   setGlobalState,
-  setNode,
+
+  // setState 需要把 collection 的引用解开
+  setState,
+
+  setController,
+  // 设置物料
+  setConfigure,
+  setSchema,
+  // 用于大纲树临时性隐藏
+  setCondition,
   getRenderer,
   setRenderer,
   getDesignMode,

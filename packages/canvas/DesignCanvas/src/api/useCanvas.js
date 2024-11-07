@@ -345,17 +345,14 @@ const operateNode = (operation) => {
     return
   }
 
-  const previousSchema = JSON.parse(JSON.stringify(pageState.pageSchema))
-
-  const { previous, current } = operationTypeMap[operation.type](operation)
-
-  const diffPatch = jsondiffpatchInstance.diff(previousSchema, pageState.pageSchema)
+  operationTypeMap[operation.type](operation)
 
   lastUpdateType.value = operation.type
 
-  publish({ topic: 'schemaChange', data: { current: deepClone(current), previous, operation, diffPatch } })
+  publish({ topic: 'schemaChange', data: { operation } })
 }
 
+// 获取传入的 schema 与最新 schema 的 diff
 const getSchemaDiff = (schema) => {
   return jsondiffpatchInstance.diff(schema, pageState.pageSchema)
 }
@@ -395,6 +392,26 @@ const getSchema = () => {
   return pageState.pageSchema || {}
 }
 
+const getNodePath = (id, nodes = []) => {
+  const { parent, node } = getNodeWithParentById(id) || {}
+
+  node && nodes.unshift({ name: node.componentName, node: id })
+
+  if (parent) {
+    parent && getNodePath(parent.id, nodes)
+  } else {
+    nodes.unshift({ name: 'BODY', node: id })
+  }
+
+  return nodes
+}
+
+const updateSchema = (data) => {
+  Object.assign(pageState.pageSchema, data)
+
+  publish({ topic: 'schemaChange', data: {} })
+}
+
 export default function () {
   return {
     pageState,
@@ -426,6 +443,8 @@ export default function () {
     patchLatestSchema,
     importSchema,
     exportSchema,
-    getSchema
+    getSchema,
+    getNodePath,
+    updateSchema
   }
 }

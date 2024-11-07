@@ -139,11 +139,11 @@ const setProp = (name, value, type) => {
     option: { overwrite }
   })
 
-  // 没有父级，或者不在节点上面，要更新内容。就用setState
-  const { setState, updateRect } = useCanvas().canvasApi.value || {}
-  const { getNodeWithParentById } = useCanvas()
+  const { updateRect } = useCanvas().canvasApi.value || {}
 
-  getNodeWithParentById(properties.schema.id)?.parent || setState(useCanvas().getPageSchema().state)
+  // 没有父级，或者不在节点上面，要更新内容。就用setState
+  // TODO: 确认相关场景还有没有用，没用删除
+  // getNodeWithParentById(properties.schema.id)?.parent || setState(useCanvas().getPageSchema().state)
   propsUpdateKey.value++
 
   // 更新根节点props不用updateRect

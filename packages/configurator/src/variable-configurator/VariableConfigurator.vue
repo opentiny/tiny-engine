@@ -157,9 +157,9 @@ const getJsSlot = () => {
     return [false, {}]
   }
 
-  const { getNodeWithParentId } = useCanvas()
+  const { getNodeWithParentById } = useCanvas()
 
-  const jsSlot = getNodeWithParentId(getCurrent()?.parent?.id, true)?.parent
+  const jsSlot = getNodeWithParentById(getCurrent()?.parent?.id, true)?.parent
 
   return [jsSlot?.type === 'JSSlot', jsSlot]
 }
@@ -399,7 +399,7 @@ export default {
     const confirm = () => {
       let variableContent = state.isEditorEditMode ? editor.value?.getEditor().getValue() : state.variable
 
-      const { setSaved, canvasApi, getSchema } = useCanvas()
+      const { setSaved, getSchema, updateSchema } = useCanvas()
       // 如果新旧值不一样就显示未保存状态
       if (oldValue !== variableContent) {
         setSaved(false)
@@ -415,10 +415,7 @@ export default {
           const stateName = state.variable.replace(`${CONSTANTS.STATE}`, '')
           const staticData = state.variableContent.map(({ _id, ...other }) => other)
 
-          pageSchema.state[stateName] = staticData
-
-          // 设置画布上下文环境，让画布触发更新渲染
-          canvasApi.value.setState({ [stateName]: staticData })
+          updateSchema({ ...pageSchema.state, [stateName]: staticData })
 
           // 这里在setup生命周期函数内部处理用户真实环境中的数据源请求
           genRemoteMethodToLifeSetup(stateName, state.dataSouce, pageSchema)
