@@ -544,7 +544,7 @@ export default {
       font-size: 16px;
       padding: 4px;
       &:hover svg {
-        color: var(--ti-lowcode-toolbar-icon-color);
+        color: var(--te-common-icon-secondary);
       }
     }
   }

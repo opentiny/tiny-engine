@@ -6,7 +6,7 @@
         :options="state.typeLists"
         :modelValue="state.styleComponent"
         value-key="styleComponent"
-        label-width="49"
+        label-width="50"
         :effect="effect"
         :placement="placement"
         @update:modelValue="selectType"

@@ -60,9 +60,10 @@ export default {
 
   .tabs-setting {
     position: absolute;
-    top: 10px;
+    top: 9px;
     right: 18px;
     line-height: 26px;
+    color: var(--te-common-icon-secondary);
     cursor: pointer;
   }
   .tiny-tabs {

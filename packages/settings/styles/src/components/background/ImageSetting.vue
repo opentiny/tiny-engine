@@ -22,7 +22,7 @@
     <tabs-group-configurator
       :options="BACKGROUND_SIZE_OPTIONS"
       :modelValue="state.sizeSelected"
-      label-width="65"
+      label-width="67"
       @update:modelValue="selectSize"
     ></tabs-group-configurator>
   </div>

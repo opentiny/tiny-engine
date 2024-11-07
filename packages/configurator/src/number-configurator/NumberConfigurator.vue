@@ -169,7 +169,9 @@ export default {
     :deep(.tiny-numeric__input-inner) {
       text-align: left;
     }
-
+    :deep(.is-disabled) {
+      background-color: var(--te-common-bg-default);
+    }
     &.is-without-controls {
       :deep(.tiny-numeric__input-inner) {
         padding-left: 8px;
@@ -203,7 +205,7 @@ export default {
         display: none;
       }
       .tiny-input.is-disabled .tiny-input__inner {
-        background: var(--ti-lowcode-input-bg);
+        background-color: var(--te-common-bg-disabled);
       }
     }
   }
