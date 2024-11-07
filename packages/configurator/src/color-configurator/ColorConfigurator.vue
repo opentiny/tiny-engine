@@ -32,7 +32,6 @@ export default {
     const inputColor = computed(() => color.value || '#FFFFFF')
 
     const change = (value) => {
-      inputColor.value = value
       emit('update:modelValue', value)
       emit('change', value)
     }
