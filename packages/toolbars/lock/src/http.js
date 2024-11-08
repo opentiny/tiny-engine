@@ -10,9 +10,8 @@
  *
  */
 
-import { useHttp } from '@opentiny/tiny-engine-http'
-
-const http = useHttp()
+import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 // 锁定页面
-export const requestBlockPage = (params) => http.get(`app-center/api/apps/canvas/lock?${params}`)
+export const requestBlockPage = (params) =>
+  getMetaApi(META_SERVICE.Http).get(`app-center/api/apps/canvas/lock?${params}`)

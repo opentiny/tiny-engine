@@ -80,7 +80,7 @@ export default {
     const { isDefaultGroupId, isRefresh, selectedGroup, selectedBlockArray, getGroupList } = useBlock()
     const { panel, closePanel } = useGroupPanel()
     const { message } = useModal()
-    const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id
+    const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
     const panelState = inject('panelState', {})
     const blockUsers = ref([])
     provide('blockUsers', blockUsers)

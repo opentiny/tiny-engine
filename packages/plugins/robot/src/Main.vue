@@ -113,10 +113,9 @@ import {
   DropdownMenu as TinyDropdownMenu,
   DropdownItem as TinyDropdownItem
 } from '@opentiny/vue'
-import { useCanvas, useHistory, usePage, useModal } from '@opentiny/tiny-engine-meta-register'
+import { useCanvas, useHistory, usePage, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { iconChevronDown, iconPlus } from '@opentiny/vue-icon'
 import { extend } from '@opentiny/vue-renderless/common/object'
-import { useHttp } from '@opentiny/tiny-engine-http'
 import { getBlockContent, initBlockList, AIModelOptions } from './js/robotSetting'
 
 export default {
@@ -138,7 +137,6 @@ export default {
     const robotVisible = ref(false)
     const avatarUrl = ref('')
     const chatWindowOpened = ref(true)
-    const http = useHttp()
     let sessionProcess = null
     const messages = ref([])
     const activeMessages = ref([])
@@ -222,7 +220,7 @@ export default {
       name: 'AI'
     })
     const sendRequest = () => {
-      http
+      getMetaApi(META_SERVICE.Http)
         .post('/app-center/api/ai/chat', getSendSeesionProcess(), { timeout: 600000 })
         .then((res) => {
           const { originalResponse, schema, replyWithoutCode } = res

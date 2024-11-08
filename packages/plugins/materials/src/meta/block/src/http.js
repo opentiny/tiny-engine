@@ -11,9 +11,7 @@
  */
 
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
-import { useHttp } from '@opentiny/tiny-engine-http'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
-const http = useHttp()
 
 const getParams = (obj) => {
   let result = ''
@@ -31,11 +29,12 @@ const getParams = (obj) => {
 }
 
 // 区块消费侧 -- 获取区块分组列表
-export const fetchGroups = (appId) => http.get(`/material-center/api/block-groups?app=${appId}`)
+export const fetchGroups = (appId) =>
+  getMetaApi(META_SERVICE.Http).get(`/material-center/api/block-groups?app=${appId}`)
 
 // 根据区块分组ID获取该分组下的区块
 export const fetchGroupBlocks = ({ groupId, value }) =>
-  http.get(
+  getMetaApi(META_SERVICE.Http).get(
     `/material-center/api/block${getParams({
       groups: groupId,
       framework: getMergeMeta('engine.config')?.dslMode,
@@ -44,7 +43,7 @@ export const fetchGroupBlocks = ({ groupId, value }) =>
   )
 
 export const fetchGroupBlocksByIds = async ({ groupIds }) => {
-  const blockGroups = await http.get(
+  const blockGroups = await getMetaApi(META_SERVICE.Http).get(
     `/material-center/api/block-groups${getParams({
       id: groupIds
     })}`
@@ -69,7 +68,7 @@ export const fetchGroupBlocksByIds = async ({ groupIds }) => {
 }
 
 export const fetchGroupBlocksById = async ({ groupId }) => {
-  const blockGroup = await http.get(
+  const blockGroup = await getMetaApi(META_SERVICE.Http).get(
     `/material-center/api/block-groups${getParams({
       id: groupId
     })}`
@@ -86,15 +85,15 @@ export const fetchGroupBlocksById = async ({ groupId }) => {
 
 // 创建区块分组信息
 export const requestCreateGroup = ({ name, app }) =>
-  http.post('/material-center/api/block-groups/create', { name, app })
+  getMetaApi(META_SERVICE.Http).post('/material-center/api/block-groups/create', { name, app })
 
 // 更新分组:修改分组名字/向分组里添加、删除区块
 export const requestUpdateGroup = ({ id, name, app, blocks }) =>
-  http.post(`/material-center/api/block-groups/update/${id}`, { name, app, blocks })
+  getMetaApi(META_SERVICE.Http).post(`/material-center/api/block-groups/update/${id}`, { name, app, blocks })
 
 // 更新区块版本
 export const requestGroupBlockVersion = async ({ groupId, blockId, blockVersion }) => {
-  const app = getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id
+  const app = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
   let blocks = await fetchGroupBlocksById({ groupId })
 
   blocks = blocks.map((block) => ({
@@ -106,17 +105,20 @@ export const requestGroupBlockVersion = async ({ groupId, blockId, blockVersion 
 }
 
 // 根据区块分组ID删除区块分组信息
-export const requestDeleteGroup = (groupId) => http.get(`/material-center/api/block-groups/delete/${groupId}`)
+export const requestDeleteGroup = (groupId) =>
+  getMetaApi(META_SERVICE.Http).get(`/material-center/api/block-groups/delete/${groupId}`)
 
 // 根据区块ID获取区块历史备份列表
-export const fetchBackupList = (blockId) => http.get(`/material-center/api/block-history?block=${blockId}`)
+export const fetchBackupList = (blockId) =>
+  getMetaApi(META_SERVICE.Http).get(`/material-center/api/block-history?block=${blockId}`)
 
 // 获取区块详情
-export const fetchBlockById = (blockId) => http.get(`/material-center/api/block/detail/${blockId}`)
+export const fetchBlockById = (blockId) =>
+  getMetaApi(META_SERVICE.Http).get(`/material-center/api/block/detail/${blockId}`)
 
 // 根据分组ID获取当前分组可以添加的区块
 export const fetchAvailableBlocks = ({ groupId, label_contains, author, tag, publicType }) =>
-  http.get(
+  getMetaApi(META_SERVICE.Http).get(
     `/material-center/api/block/notgroup/${groupId}${getParams({
       label_contains,
       createdBy: author,
@@ -126,14 +128,14 @@ export const fetchAvailableBlocks = ({ groupId, label_contains, author, tag, pub
   )
 
 // 获取区块所有标签
-export const fetchTags = () => http.get(`/material-center/api/block/tags`)
+export const fetchTags = () => getMetaApi(META_SERVICE.Http).get(`/material-center/api/block/tags`)
 
 // 获取区块所有作者
-export const fetchUsers = () => http.get(`/material-center/api/block/users`)
+export const fetchUsers = () => getMetaApi(META_SERVICE.Http).get(`/material-center/api/block/users`)
 
 // 获取区块所有tag
-export const fetchTenants = () => http.get(`/material-center/api/block/tenants`)
+export const fetchTenants = () => getMetaApi(META_SERVICE.Http).get(`/material-center/api/block/tenants`)
 
 // 恢复区块某一历史备份
 export const requestRestoreBackup = ({ blockId, backupId }) =>
-  http.post(`/material-center/api/block/update/${blockId}`, { current_history: backupId })
+  getMetaApi(META_SERVICE.Http).post(`/material-center/api/block/update/${blockId}`, { current_history: backupId })

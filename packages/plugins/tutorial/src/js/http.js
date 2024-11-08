@@ -10,11 +10,11 @@
  *
  */
 
-import { useHttp } from '@opentiny/tiny-engine-http'
-
-const http = useHttp()
+import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 // 获取课程列表
-export const fetchTutorialList = (params) => http.get('platform-center/api/courses', { params })
+export const fetchTutorialList = (params) =>
+  getMetaApi(META_SERVICE.Http).get('platform-center/api/courses', { params })
 // 获取课程详情
-export const fetchTutorialDetail = (courseId) => http.get(`platform-center/api/courses/${courseId}`)
+export const fetchTutorialDetail = (courseId) =>
+  getMetaApi(META_SERVICE.Http).get(`platform-center/api/courses/${courseId}`)

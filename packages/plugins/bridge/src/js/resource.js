@@ -116,7 +116,7 @@ export const ACTION_TYPE = {
   Edit: 'edit'
 }
 
-const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id
+const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
 
 export const getResources = () => {
   const id = getAppId()

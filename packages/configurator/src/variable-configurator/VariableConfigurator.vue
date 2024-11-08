@@ -130,7 +130,6 @@ import {
 import { getCommentByKey } from '@opentiny/tiny-engine-common/js/comment'
 import { formatString, generate, parse, traverse } from '@opentiny/tiny-engine-common/js/ast'
 import { DEFAULT_LOOP_NAME } from '@opentiny/tiny-engine-common/js/constants'
-import { useHttp } from '@opentiny/tiny-engine-http'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { Alert, Button, DialogBox, Input, Search, Switch, Tooltip } from '@opentiny/vue'
 import { camelize, capitalize } from '@vue/shared'
@@ -198,7 +197,6 @@ export default {
   },
   setup(props, { emit }) {
     const editor = ref(null)
-    const http = useHttp()
     let oldValue = ''
 
     const list = [
@@ -488,17 +486,19 @@ export default {
       } else if (item.id === 'datasource') {
         state.bindPrefix = CONSTANTS.DATASOUCEPREFIX
         const url = new URLSearchParams(location.search)
-        const appId = getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id
+        const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
         const selectedId = appId || url.get('id')
 
         // 实时请求数据源列表数据，保证数据源获取最新的数据源数据
-        http.get(`/app-center/api/sources/list/${selectedId}`).then((data) => {
-          const sourceData = {}
-          data.forEach((res) => {
-            sourceData[res.name] = res
+        getMetaApi(META_SERVICE.Http)
+          .get(`/app-center/api/sources/list/${selectedId}`)
+          .then((data) => {
+            const sourceData = {}
+            data.forEach((res) => {
+              sourceData[res.name] = res
+            })
+            state.variables = sourceData
           })
-          state.variables = sourceData
-        })
       } else if (item.id === 'store') {
         state.bindPrefix = CONSTANTS.STORE
         state.variables = {}

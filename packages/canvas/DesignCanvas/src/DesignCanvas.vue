@@ -28,9 +28,10 @@ import {
   useModal,
   getMergeRegistry,
   getMergeMeta,
-  getOptions
+  getOptions,
+  getMetaApi,
+  META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
-import { useHttp } from '@opentiny/tiny-engine-http'
 import { constants } from '@opentiny/tiny-engine-utils'
 import * as ast from '@opentiny/tiny-engine-common/js/ast'
 import { initCanvas } from '../../init-canvas/init-canvas'
@@ -181,7 +182,7 @@ export default {
         getMaterial: useMaterial().getMaterial,
         addHistory: useHistory().addHistory,
         registerBlock: useMaterial().registerBlock,
-        request: useHttp(),
+        request: getMetaApi(META_SERVICE.Http).getHttp(),
         ast
       },
       CanvasLayout,

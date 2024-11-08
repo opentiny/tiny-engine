@@ -55,7 +55,7 @@ export default {
     })
 
     const saveGlobalDataHandle = () => {
-      const id = getMetaApi(META_SERVICE.GlobalService).getState().appInfo.id
+      const id = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
 
       const handler = {
         dataHandler: { type: 'JSFunction', value: state.dataHandlerValue || DEFAULT_INTERCEPTOR.dataHandler.value },

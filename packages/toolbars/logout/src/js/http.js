@@ -10,9 +10,7 @@
  *
  */
 
-import { useHttp } from '@opentiny/tiny-engine-http'
-
-const http = useHttp()
+import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 // 注销
-export const requestLogout = () => http.post(`platform-center/api/logout`)
+export const requestLogout = () => getMetaApi(META_SERVICE.Http).post(`platform-center/api/logout`)

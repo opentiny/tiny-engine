@@ -12,7 +12,7 @@
 
 import { createApp } from 'vue'
 import initSvgs from '@opentiny/tiny-engine-svgs'
-import { defineEntry, mergeRegistry } from '@opentiny/tiny-engine-meta-register'
+import { defineEntry, mergeRegistry, initServices } from '@opentiny/tiny-engine-meta-register'
 import defaultRegistry from '../../../registry.js'
 import App from './App.vue'
 
@@ -22,6 +22,8 @@ export const initPreview = ({ registry, lifeCycles = {} }) => {
 
   beforeAppCreate?.()
   defineEntry(mergedRegistry)
+
+  initServices()
 
   // TODO: 后续需要方案
   // import(`../../theme/${mergedRegistry.config.theme || 'light'}.js`)

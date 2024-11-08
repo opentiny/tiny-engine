@@ -24,7 +24,6 @@ import {
   META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
 import { fs } from '@opentiny/tiny-engine-utils'
-import { useHttp } from '@opentiny/tiny-engine-http'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import { fetchMetaData, fetchPageList, fetchBlockSchema } from './http'
 import FileSelector from './FileSelector.vue'
@@ -104,7 +103,7 @@ export default {
       const params = getParams()
       const { id } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
       const promises = [
-        useHttp().get(`/app-center/v1/api/apps/schema/${id}`),
+        getMetaApi(META_SERVICE.Http).get(`/app-center/v1/api/apps/schema/${id}`),
         fetchMetaData(params),
         fetchPageList(params.app)
       ]

@@ -10,9 +10,7 @@
  *
  */
 
-import { useHttp } from '@opentiny/tiny-engine-http'
-
-const http = useHttp()
+import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 /**
  * vscode生成路由文件
@@ -26,7 +24,7 @@ const http = useHttp()
  * @returns { string }
  */
 
-const generateRouter = (params) => http.post('/generate/api/generateRouter', params)
+const generateRouter = (params) => getMetaApi(META_SERVICE.Http).post('/generate/api/generateRouter', params)
 
 /**
  * vscode生成本地国际化词条
@@ -43,7 +41,7 @@ const generateRouter = (params) => http.post('/generate/api/generateRouter', par
  * @returns { string }
  */
 
-const generateI18n = (params) => http.post('/generate/api/generateI18n', params)
+const generateI18n = (params) => getMetaApi(META_SERVICE.Http).post('/generate/api/generateI18n', params)
 
 /**
  * vscode生成区块
@@ -57,7 +55,7 @@ const generateI18n = (params) => http.post('/generate/api/generateI18n', params)
  * @returns { string }
  */
 
-const generateBlock = (params) => http.post('/generate/api/generateBlock', params)
+const generateBlock = (params) => getMetaApi(META_SERVICE.Http).post('/generate/api/generateBlock', params)
 
 /**
  * vscode生成页面
@@ -70,7 +68,7 @@ const generateBlock = (params) => http.post('/generate/api/generateBlock', param
   }
  * @returns { string }
  */
-const generatePage = (params) => http.post('/generate/api/generatePage', params)
+const generatePage = (params) => getMetaApi(META_SERVICE.Http).post('/generate/api/generatePage', params)
 
 /**
  * vscode生成数据源
@@ -86,7 +84,7 @@ const generatePage = (params) => http.post('/generate/api/generatePage', params)
 }
  * @returns { string }
  */
-const generateDataSource = (params) => http.post('/generate/api/generateDataSource', params)
+const generateDataSource = (params) => getMetaApi(META_SERVICE.Http).post('/generate/api/generateDataSource', params)
 
 /**
  * vscode生成桥接源
@@ -98,7 +96,7 @@ const generateDataSource = (params) => http.post('/generate/api/generateDataSour
   }
  * @returns { string }
  */
-const generateBridge = (params) => http.post('/generate/api/generateBridge', params)
+const generateBridge = (params) => getMetaApi(META_SERVICE.Http).post('/generate/api/generateBridge', params)
 
 /**
  * vscode生成工具类
@@ -110,6 +108,6 @@ const generateBridge = (params) => http.post('/generate/api/generateBridge', par
   }
  * @returns { string }
  */
-const generateUtil = (params) => http.post('/generate/api/generateUtil', params)
+const generateUtil = (params) => getMetaApi(META_SERVICE.Http).post('/generate/api/generateUtil', params)
 
 export { generateRouter, generateI18n, generateBlock, generatePage, generateDataSource, generateBridge, generateUtil }

@@ -1,4 +1,5 @@
 import { reactive, readonly } from 'vue'
+import { merge } from 'lodash-es'
 import { metaHashMap } from './common'
 
 /**
@@ -71,6 +72,10 @@ export const defineService = (serviceOptions) => {
     resultService.apis = apis
   } else if (typeof apis === 'function') {
     resultService.apis = apis({ state })
+  }
+
+  resultService.apis.setOptions = (kv) => {
+    resultService.options = merge({}, options, kv)
   }
 
   resultService.apis.getState = () => readonly(state)
