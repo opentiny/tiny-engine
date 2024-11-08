@@ -201,8 +201,8 @@ const change = (item) => {
       border: none;
       background-color: var(--te-common-bg-container);
       line-height: 14px;
-      --ti-button-size-normal-min-width: 20px;
-      --ti-button-size-normal-max-width: 80px;
+      min-width: 20px;
+      max-width: 80px;
       color: var(--te-common-text-weaken);
 
       &:hover {
@@ -239,7 +239,6 @@ const change = (item) => {
       align-items: center;
       height: 24px;
       background-color: var(--ti-lowcode-base-bg-5);
-      --ti-dropdown-text-color: var(--te-common-text-primary);
       color: var(--te-common-text-weaken);
       &.selected {
         background-color: var(--ti-lowcode-base-gray-101);
@@ -263,7 +262,7 @@ const change = (item) => {
       &:hover {
         background-color: var(--ti-lowcode-base-gray-101);
         border-radius: 4px;
-        --ti-dropdown-text-color-hover: var(--te-common-text-primary);
+        color: var(--te-common-text-primary);
       }
     }
   }
