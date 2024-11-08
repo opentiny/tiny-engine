@@ -88,7 +88,7 @@ import {
 const props = defineProps({
   style: {
     type: Object,
-    default: () => {}
+    default: () => ({})
   },
   effect: {
     type: String,
