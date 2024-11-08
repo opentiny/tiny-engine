@@ -4,8 +4,17 @@
 </template>
 
 <script>
-import { useMaterial, useCanvas, useModal, useLayout, useBlock } from '@opentiny/tiny-engine-meta-register'
+import {
+  useMaterial,
+  useCanvas,
+  useModal,
+  useLayout,
+  useBlock,
+  useNotify,
+  getOptions
+} from '@opentiny/tiny-engine-meta-register'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
+import meta from '../meta'
 
 export default {
   components: {
@@ -22,12 +31,24 @@ export default {
     const { isBlock, isSaved, pageState, initData } = useCanvas()
     const { PLUGIN_NAME, activePlugin, isEmptyPage } = useLayout()
     const { getCurrentBlock, initBlock } = useBlock()
+    const { beforeRefresh, refreshMethod, afterRefresh } = getOptions(meta.id)
 
     const refreshResouce = () => {
       // 清空区块缓存(不能清空组件缓存)，保证画布刷新后可以重新注册最新的区块资源
       useMaterial().clearBlockResources()
       // 因为webcomponents无法重复注册，所以需要刷新内部iframe
       useCanvas().canvasApi.value.getDocument().location.reload()
+
+      if (typeof afterRefresh === 'function') {
+        try {
+          afterRefresh()
+        } catch (error) {
+          useNotify({
+            type: 'error',
+            message: `Error in afterRefresh: ${error}`
+          })
+        }
+      }
     }
 
     const refreshBlock = async () => {
@@ -51,7 +72,26 @@ export default {
       refreshResouce()
     }
 
-    const refresh = () => {
+    const refresh = async () => {
+      try {
+        if (typeof beforeRefresh === 'function') {
+          await beforeRefresh()
+        }
+
+        if (typeof refreshMethod === 'function') {
+          const stop = await refreshMethod()
+
+          if (stop) {
+            return
+          }
+        }
+      } catch (error) {
+        useNotify({
+          type: 'error',
+          message: `Error in refreshing: ${error}`
+        })
+      }
+
       if (isSaved()) {
         isBlock() ? refreshBlock() : refreshPage()
       } else {
