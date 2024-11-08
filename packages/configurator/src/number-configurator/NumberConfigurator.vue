@@ -170,7 +170,7 @@ export default {
       text-align: left;
     }
     :deep(.is-disabled) {
-      background-color: var(--te-common-bg-default);
+      background-color: var(--te-common-bg-disabled);
     }
     &.is-without-controls {
       :deep(.tiny-numeric__input-inner) {
@@ -205,7 +205,7 @@ export default {
         display: none;
       }
       .tiny-input.is-disabled .tiny-input__inner {
-        background-color: var(--te-common-bg-disabled);
+        background-color: var(--te-common-bg-container);
       }
     }
   }

@@ -103,26 +103,27 @@ import {
 } from '@opentiny/vue'
 
 const props = defineProps({
+  // tab选中值，用于默认选中的tab
   modelValue: {
     type: String,
     default: ''
   },
+  // tab选中值如果是对象，valueKey是对象内的某个key
   valueKey: {
     type: String,
     default: ''
   },
-  effect: {
-    type: String,
-    default: 'dark'
-  },
+  // 提示内容位置
   placement: {
     type: String,
     default: 'top'
   },
+  // tabItem宽度
   labelWidth: {
     type: Number,
     default: 63
   },
+  // tab的选项，如果选项中包含collapsed，则会折叠为下拉
   options: {
     type: Array,
     default: () => []
