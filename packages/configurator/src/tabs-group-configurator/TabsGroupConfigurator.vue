@@ -18,7 +18,6 @@
             <span v-if="item?.label && !item?.content">{{ item.label }}</span>
             <tiny-popover
               v-if="item?.content"
-              :effect="effect"
               :placement="placement"
               :visible-arrow="false"
               :content="item.content"
@@ -46,7 +45,6 @@
             }}</span>
             <tiny-popover
               v-if="selectedCollapsedOption?.content"
-              :effect="effect"
               :placement="placement"
               :visible-arrow="false"
               :content="selectedCollapsedOption.content"
@@ -72,7 +70,6 @@
                 <span v-if="item?.label && !item?.content">{{ item.label }}</span>
                 <tiny-popover
                   v-if="item?.content"
-                  :effect="effect"
                   :placement="placement"
                   :visible-arrow="false"
                   :content="item.content"
