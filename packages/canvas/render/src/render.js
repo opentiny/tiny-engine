@@ -20,7 +20,7 @@ import i18nHost from '@opentiny/tiny-engine-i18n-host'
 import { CanvasRow, CanvasCol, CanvasRowColContainer } from '@opentiny/tiny-engine-builtin-component'
 
 import { NODE_UID as DESIGN_UIDKEY, NODE_TAG as DESIGN_TAGKEY, NODE_LOOP as DESIGN_LOOPID } from '../../common'
-import { context, conditions, setNode } from './context'
+import { context, conditions, setNode, getCanvasFlag } from './context'
 import {
   CanvasBox,
   CanvasCollection,
@@ -558,16 +558,20 @@ const getBindProps = (schema, scope) => {
   const bindProps = {
     ...parseData(schema.props, scope),
     [DESIGN_UIDKEY]: id,
-    [DESIGN_TAGKEY]: componentName,
-    onMouseover: stopEvent,
-    onFocus: stopEvent
+    [DESIGN_TAGKEY]: componentName
   }
+
+  if (getCanvasFlag()) {
+    bindProps.onMouseover = stopEvent
+    bindProps.onFocus = stopEvent
+  }
+
   if (scope) {
     bindProps[DESIGN_LOOPID] = scope.index === undefined ? scope.idx : scope.index
   }
 
   // 在捕获阶段阻止事件的传播
-  if (clickCapture(componentName)) {
+  if (clickCapture(componentName) && getCanvasFlag()) {
     bindProps.onClickCapture = stopEvent
   }
 
