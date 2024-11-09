@@ -24,7 +24,8 @@ const updateColumns = (columns) => {
     }
   })
 
-  useProperties().getSchema().children = children
+  useCanvas().operateNode({ type: 'updateAttributes', id: useProperties().getSchema().id, value: { children } })
+
   nextTick(useCanvas().canvasApi.value.updateRect)
 }
 

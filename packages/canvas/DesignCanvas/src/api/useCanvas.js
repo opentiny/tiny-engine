@@ -179,7 +179,7 @@ const clearCanvas = () => {
   const { fileName, componentName } = pageState.pageSchema || {}
 
   resetCanvasState({
-    pageSchema: { ...getDefaultSchema(componentName, fileName) }
+    pageSchema: { ...deepClone(getDefaultSchema(componentName, fileName)) }
   })
 
   setSaved(false)
@@ -254,6 +254,7 @@ const getNode = (id, parent) => {
 }
 
 const operationTypeMap = {
+  // TODO:insert 场景，要支持递归 insert
   insert: (operation) => {
     const { parentId, newNodeData, position, referTargetNodeId } = operation
 
@@ -295,16 +296,34 @@ const operationTypeMap = {
       previous: undefined
     }
   },
+  // TODO: 递归 delete
   delete: (operation) => {
     const { id } = operation
-    let targetNode = getNode(id, true)
-    let { parent, node } = targetNode
+    const targetNode = getNode(id, true)
+    const { parent, node } = targetNode
 
     const index = parent.children.indexOf(node)
 
     if (index > -1) {
       parent.children.splice(index, 1)
       nodesMap.value.delete(node.id)
+    }
+
+    let children = [...(node.children || [])]
+
+    // 递归清理 nodesMap
+    while (children?.length) {
+      const len = children.length
+      children.forEach((item) => {
+        const nodeItem = getNode(item.id)
+        nodesMap.value.delete(item.id)
+
+        if (Array.isArray(nodeItem.children) && nodeItem.children.length) {
+          children.push(...nodeItem.children)
+        }
+      })
+
+      children = children.slice(len)
     }
 
     return {
@@ -333,6 +352,61 @@ const operationTypeMap = {
       current: node,
       previous
     }
+  },
+  updateAttributes: (operation) => {
+    const { id, value } = operation
+    const { id: _id, children, ...restAttr } = value
+
+    const node = getNode(id)
+
+    // 其他属性直接浅  merge
+    Object.assign(node, deepClone(restAttr))
+
+    if (!Array.isArray(children)) {
+      return
+    }
+
+    // 传了 children 进来，需要找出来被删除的、新增的，剩下的是修改的。
+    const originChildrenIds = (node.children || []).map(({ id }) => id)
+    const originChildrenSet = new Set(originChildrenIds)
+    const newChildren = children.map((item) => {
+      if (!item.id) {
+        return {
+          id: utils.guid(),
+          ...item
+        }
+      }
+
+      return item
+    })
+
+    const newChildrenSet = new Set(newChildren.map(({ id }) => id))
+    // 被删除的项
+    const deletedIds = originChildrenIds.filter((id) => !newChildrenSet.has(id))
+    const deletedIdsSet = new Set(deletedIds)
+
+    for (const id of deletedIds) {
+      operationTypeMap.delete({ id })
+    }
+
+    // 筛选出来新增的和修改的
+    const changedChildren = newChildren.filter(({ id }) => !deletedIdsSet.has(id))
+
+    changedChildren.forEach((childItem, index) => {
+      // 新增
+      if (!originChildrenSet.has(childItem.id)) {
+        operationTypeMap.insert({
+          parentId: id,
+          newNodeData: childItem,
+          position: 'after',
+          referTargetNodeId: changedChildren?.[index]?.id
+        })
+        return
+      }
+
+      // 递归修改
+      operationTypeMap.updateAttributes({ id: childItem.id, value: childItem })
+    })
   }
 }
 
