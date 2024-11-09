@@ -33,7 +33,7 @@ export default {
     const { getCurrentBlock, initBlock } = useBlock()
     const { beforeRefresh, refreshMethod, afterRefresh } = getOptions(meta.id)
 
-    const refreshResouce = () => {
+    const refreshResource = () => {
       // 清空区块缓存(不能清空组件缓存)，保证画布刷新后可以重新注册最新的区块资源
       useMaterial().clearBlockResources()
       // 因为webcomponents无法重复注册，所以需要刷新内部iframe
@@ -57,7 +57,7 @@ export default {
       const api = await activePlugin(PLUGIN_NAME.BlockManage, true)
       await api.refreshBlockData(block)
       await initBlock(block, {}, true)
-      refreshResouce()
+      refreshResource()
     }
 
     const refreshPage = async () => {
@@ -69,7 +69,7 @@ export default {
       const api = await activePlugin(PLUGIN_NAME.AppManage, true)
       const page = await api.getPageById(currentPage.id)
       await initData(page['page_content'], page)
-      refreshResouce()
+      refreshResource()
     }
 
     const refresh = async () => {
