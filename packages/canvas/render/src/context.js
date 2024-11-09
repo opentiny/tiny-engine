@@ -57,10 +57,10 @@ export const getCondition = (id) => conditions[id] !== false
 export const getConditions = () => conditions
 
 // 是否表现画布内特征的标志，用来控制是否允许拖拽、原生事件是否触发等
-let canvasFlag = true
+let isDesignMode = true
 
-export const getCanvasFlag = () => canvasFlag
+export const getDesignMode = () => isDesignMode
 
-export const setCanvasFlag = (flag) => {
-  canvasFlag = flag
+export const setDesignMode = (flag) => {
+  isDesignMode = flag
 }

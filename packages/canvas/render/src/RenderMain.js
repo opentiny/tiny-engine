@@ -28,8 +28,8 @@ import {
   getConditions,
   context,
   setNode,
-  getCanvasFlag,
-  setCanvasFlag
+  getDesignMode,
+  setDesignMode
 } from './context'
 import CanvasEmpty from './CanvasEmpty.vue'
 
@@ -454,6 +454,6 @@ export const api = {
   setNode,
   getRenderer,
   setRenderer,
-  getCanvasFlag,
-  setCanvasFlag
+  getDesignMode,
+  setDesignMode
 }

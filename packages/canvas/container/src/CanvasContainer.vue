@@ -117,10 +117,10 @@ export default {
       }
     }
 
-    const isCanvasEvent = (event, handler) => {
-      const canvasFlag = canvasApi.getRenderer().getCanvasFlag()
+    const handleCanvasEvent = (event, handler) => {
+      const isDesignMode = canvasApi.getRenderer().getDesignMode()
 
-      if (!canvasFlag) {
+      if (!isDesignMode) {
         return
       }
 
@@ -141,7 +141,7 @@ export default {
 
         // 以下是内部iframe监听的事件
         win.addEventListener('mousedown', (event) => {
-          isCanvasEvent(event, () => {
+          handleCanvasEvent(event, () => {
             // html元素使用scroll和mouseup事件处理
             if (event.target === doc.documentElement) {
               isScrolling = false
@@ -180,7 +180,7 @@ export default {
         })
 
         win.addEventListener('mousemove', (ev) => {
-          isCanvasEvent(ev, (e) => {
+          handleCanvasEvent(ev, (e) => {
             dragMove(e, true)
           })
         })
