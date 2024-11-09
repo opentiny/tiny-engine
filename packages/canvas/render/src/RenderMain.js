@@ -17,7 +17,7 @@ import * as TinyVueIcon from '@opentiny/vue-icon'
 import { useBroadcastChannel, useThrottleFn } from '@vueuse/core'
 import { constants, utils as commonUtils } from '@opentiny/tiny-engine-utils'
 import renderer, { parseData, setConfigure, setController, globalNotify, isStateAccessor } from './render'
-import { clearNodes, setContext, getContext, setCondition, context, getDesignMode, setDesignMode } from './context'
+import { setContext, getContext, setCondition, context, getDesignMode, setDesignMode } from './context'
 import CanvasEmpty from './CanvasEmpty.vue'
 
 const { BROADCAST_CHANNEL } = constants
@@ -293,7 +293,7 @@ const setSchema = async (data) => {
 
   // 这里setState（会触发画布渲染），是因为状态管理里面的变量会用到props、utils、bridge、stores、methods
   setState(newSchema.state, true)
-  clearNodes()
+
   await nextTick()
   setPageCss(data.css)
   Object.assign(schema, newSchema)

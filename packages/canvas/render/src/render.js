@@ -26,7 +26,7 @@ import {
 } from '@opentiny/tiny-engine-builtin-component'
 
 import { NODE_UID as DESIGN_UIDKEY, NODE_TAG as DESIGN_TAGKEY, NODE_LOOP as DESIGN_LOOPID } from '../../common'
-import { context, conditions, setNode, getDesignMode, DESIGN_MODE } from './context'
+import { context, conditions, getDesignMode, DESIGN_MODE } from './context'
 import {
   CanvasBox,
   CanvasCollection,
@@ -625,7 +625,7 @@ const injectPlaceHolder = (componentName, children) => {
   return children
 }
 
-const renderGroup = (children, scope, parent) => {
+const renderGroup = (children, scope) => {
   return children.map?.((schema) => {
     const { componentName, children, loop, loopArgs, condition, id } = schema
     const loopList = parseData(loop, scope)
@@ -637,8 +637,6 @@ const renderGroup = (children, scope, parent) => {
         item,
         loopArgs
       })
-
-      setNode(schema, parent)
 
       if (conditions[id] === false || !parseCondition(condition, mergeScope)) {
         return null
@@ -673,7 +671,7 @@ const getChildren = (schema, mergeScope) => {
       return renderDefault(renderChildren, mergeScope, schema)
     } else {
       return isGroup
-        ? renderGroup(renderChildren, mergeScope, schema)
+        ? renderGroup(renderChildren, mergeScope)
         : renderSlot(renderChildren, mergeScope, schema, isCustomElm)
     }
   } else {
@@ -723,9 +721,6 @@ export const renderer = {
         const slotData = blockSlotDataMap[blockName]?.[slotName] || {}
         mergeScope = mergeScope ? { ...mergeScope, ...slotData } : slotData
       }
-
-      // 给每个节点设置schema.id，并缓存起来
-      setNode(schema, parent)
 
       if (conditions[schema.id] === false || !parseCondition(condition, mergeScope)) {
         return null
