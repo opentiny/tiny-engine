@@ -89,8 +89,7 @@ if (typeof sessionStorage !== 'undefined') {
 
 export const BROADCAST_CHANNEL = {
   CanvasLang: `tiny-lowcode-canvas-lang-${CHANNEL_UID}`,
-  Notify: `global-notify-${CHANNEL_UID}`,
-  SchemaLength: `schema-length-${CHANNEL_UID}`
+  Notify: `global-notify-${CHANNEL_UID}`
 }
 
 export const STORAGE_KEY_FIXED_PANELS = `tiny-engine-fixed-panels-${CHANNEL_UID}`

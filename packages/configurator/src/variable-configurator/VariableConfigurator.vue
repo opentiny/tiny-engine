@@ -467,7 +467,7 @@ export default {
       } else if (item.id === 'bridge' || item.id === 'utils') {
         state.bindPrefix = `${CONSTANTS.THIS}${item.id}.`
         const bridge = {}
-        useResource().resState[item.id]?.forEach((res) => {
+        useResource().appSchemaState[item.id]?.forEach((res) => {
           bridge[res.name] = `${item.id}.${res.content.exportName}`
         })
 
@@ -502,7 +502,7 @@ export default {
         state.bindPrefix = CONSTANTS.STORE
         state.variables = {}
 
-        const stores = canvasApi.value.getGlobalState()
+        const stores = useResource().appSchemaState.globalState
         stores.forEach(({ id, state: storeState = {}, getters = {} }) => {
           const loadProp = (prop) => {
             const propBinding = `${id}.${prop}`

@@ -19,7 +19,7 @@ import {
   NODE_TAG,
   NODE_LOOP
 } from '../../common'
-import { useCanvas, useLayout, useResource, useTranslate, useMaterial } from '@opentiny/tiny-engine-meta-register'
+import { useCanvas, useLayout, useTranslate, useMaterial } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import Builtin from '../../render/src/builtin/builtin.json' //TODO 画布内外应该分开
@@ -72,8 +72,6 @@ export const getCurrent = () => {
 export const getDesignMode = () => getRenderer()?.getDesignMode()
 
 export const setDesignMode = (mode) => getRenderer()?.setDesignMode(mode)
-
-export const getGlobalState = () => getRenderer().getGlobalState()
 
 export const getSchema = () => useCanvas().getPageSchema()
 
@@ -770,31 +768,6 @@ export const setLocales = (messages, merge) => {
   })
 }
 
-export const setUtils = (utils, clear, isForceRefresh) => {
-  getRenderer().setUtils(utils, clear, isForceRefresh)
-}
-
-export const updateUtils = (utils) => {
-  getRenderer().updateUtils(utils)
-}
-
-export const deleteUtils = (utils) => {
-  getRenderer().deleteUtils(utils)
-}
-
-export const setGlobalState = (state) => {
-  useResource().resState.globalState = state
-  getRenderer().setGlobalState(state)
-}
-
-export const setSchema = async (schema) => {
-  clearHover()
-  clearSelect()
-  canvasState.schema = await getRenderer()?.setSchema(schema)
-
-  return canvasState.schema
-}
-
 export const setConfigure = (configure) => {
   getRenderer().setConfigure(configure)
 }
@@ -840,35 +813,17 @@ export const canvasApi = {
   addScript,
   addStyle,
   getCurrent,
-  setSchema,
-  setUtils,
-  updateUtils,
-  deleteUtils,
   setI18n,
   getCanvasType,
   setCanvasType,
-  setGlobalState,
-  getGlobalState,
   getDesignMode,
   setDesignMode,
   getDocument,
   canvasDispatch,
-  Builtin,
-  setDataSourceMap: (...args) => {
-    return canvasState.renderer.setDataSourceMap(...args)
-  },
-  getDataSourceMap: (...args) => {
-    return canvasState.renderer.getDataSourceMap(...args)
-  }
+  Builtin
 }
 
 export const initCanvas = ({ renderer, iframe, emit, controller }) => {
-  const { getSchema, getPageSchema } = useCanvas()
-  const currentSchema = getSchema()
-
-  // 在点击刷新按钮的情况下继续保留最新的schema.json
-  const schema = currentSchema ? currentSchema : getPageSchema()
-
   canvasState.iframe = iframe
   canvasState.emit = emit
   // 存放画布外层传进来的插件api
@@ -883,11 +838,6 @@ export const initCanvas = ({ renderer, iframe, emit, controller }) => {
     senterMessage({ type: 'i18nReady', value: true }, '*')
   }
 
-  setGlobalState(useResource().resState.globalState)
-  renderer.setDataSourceMap(useResource().resState.dataSource)
-  // 设置画布全局的utils工具类上下文环境
-  setUtils(useResource().resState.utils)
-  setSchema(schema)
   setConfigure(useMaterial().getConfigureMap())
   canvasDispatch('updateDependencies', { detail: useMaterial().materialState.thirdPartyDeps })
   canvasState.loading = false

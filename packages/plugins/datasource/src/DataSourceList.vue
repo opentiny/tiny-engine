@@ -39,7 +39,7 @@
 
 <script>
 import { onMounted, reactive, ref } from 'vue'
-import { useDataSource, useResource, useCanvas, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { useDataSource, useResource, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { close as closeRemotePanel } from './DataSourceRemotePanel.vue'
 import { close as closeDataSourceForm } from './DataSourceForm.vue'
 import DataSourceRecordList, { open as openRecordList } from './DataSourceRecordList.vue'
@@ -56,7 +56,8 @@ export const refresh = () => {
   const selectedId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id || url.get('id')
   fetchDataSourceList(selectedId).then((data) => {
     dataSourceList.value = data
-    useCanvas().canvasApi.value.setDataSourceMap(data)
+
+    useResource().appSchemaState.dataSource = data
   })
 }
 
@@ -78,7 +79,7 @@ export default {
     const { dataSourceState, saveDataSource } = useDataSource()
 
     onMounted(() => {
-      dataSourceList.value = useResource().resState.dataSource
+      dataSourceList.value = useResource().appSchemaState.dataSource
     })
 
     // 打开新增数据面板

@@ -371,7 +371,7 @@ const fetchMaterial = async () => {
 }
 
 /**
- * 获取区块保存的依赖信息，合并到resState.thirdPartyDeps
+ * 获取区块保存的依赖信息，合并到appSchemaState.thirdPartyDeps
  * @param {object} dependencies 区块保存的依赖信息
  */
 const getBlockDeps = (dependencies = {}) => {

@@ -138,8 +138,6 @@ const resetCanvasState = async (state = {}) => {
     generateNodesMap(pageState.pageSchema.children, pageState.pageSchema)
   }
 
-  await canvasApi.value?.setSchema(pageState.pageSchema)
-
   const diffPatch = jsondiffpatchInstance.diff(previousSchema, pageState.pageSchema)
 
   publish({ topic: 'schemaImport', data: { current: pageState.pageSchema, previous: previousSchema, diffPatch } })

@@ -11,16 +11,13 @@
  */
 
 import { computed, reactive, watch } from 'vue'
-import { useBroadcastChannel } from '@vueuse/core'
 import { useCanvas, useHistory, useProperties as useProps, getOptions } from '@opentiny/tiny-engine-meta-register'
 import { formatString } from '@opentiny/tiny-engine-common/js/ast'
 import { constants, utils } from '@opentiny/tiny-engine-utils'
 import { parser, stringify, getSelectorArr } from './parser'
 
-const { BROADCAST_CHANNEL, EXPRESSION_TYPE } = constants
+const { EXPRESSION_TYPE } = constants
 const { generateRandomLetters, parseExpression } = utils
-
-const { data: schemaLength } = useBroadcastChannel({ name: BROADCAST_CHANNEL.SchemaLength })
 
 const state = reactive({
   // 当前选中节点的  style，解析成对象返回
@@ -138,8 +135,7 @@ watch(
     useCanvas().getCurrentSchema?.(),
     state.schemaUpdateKey,
     useProps().propsUpdateKey?.value,
-    useCanvas()?.getSchema?.(),
-    schemaLength
+    useCanvas()?.getSchema?.()
   ],
   ([curSchema], [oldCurSchema] = []) => {
     const { getCurrentSchema, getSchema } = useCanvas()

@@ -3,11 +3,8 @@
 </template>
 
 <script>
-import { ref, watchEffect } from 'vue'
-import { useBroadcastChannel } from '@vueuse/core'
-import { constants } from '@opentiny/tiny-engine-utils'
-
-const { BROADCAST_CHANNEL } = constants
+import { ref, watch } from 'vue'
+import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 
 const EMPTY_COMPONENT = '您还未拖拽组件至画布中'
 const EMPTY_SELECTION = '请在画布中选择组件'
@@ -21,11 +18,14 @@ export default {
   },
   setup() {
     const tipsDesc = ref(EMPTY_COMPONENT)
-    const { data: schemaLength } = useBroadcastChannel({ name: BROADCAST_CHANNEL.SchemaLength })
+    const { getSchema } = useCanvas()
 
-    watchEffect(() => {
-      tipsDesc.value = schemaLength.value ? EMPTY_SELECTION : EMPTY_COMPONENT
-    })
+    watch(
+      () => getSchema()?.children?.length,
+      (len) => {
+        tipsDesc.value = len ? EMPTY_SELECTION : EMPTY_COMPONENT
+      }
+    )
 
     return {
       tipsDesc

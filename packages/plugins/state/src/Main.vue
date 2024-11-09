@@ -191,7 +191,6 @@ export default {
 
     const confirm = () => {
       const { name } = state.createData
-      const { setGlobalState } = useCanvas().canvasApi.value
       const { getSchema, updateSchema } = useCanvas()
 
       if (!name || errorMessage.value) {
@@ -248,7 +247,7 @@ export default {
         const { id } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
         updateGlobalState(id, { global_state: storeList }).then((res) => {
           isPanelShow.value = false
-          setGlobalState(res.global_state || [])
+          useResource().appSchemaState.globalState = res.global_state || []
         })
       }
       openCommon()
@@ -296,8 +295,7 @@ export default {
     }
 
     const setGlobalStateToDataSource = () => {
-      const { getGlobalState } = useCanvas().canvasApi.value
-      const globalState = getGlobalState()
+      const globalState = useResource().appSchemaState.globalState
 
       if (!globalState) {
         state.dataSource = {}
@@ -305,20 +303,19 @@ export default {
         return
       }
 
-      state.dataSource = getGlobalState().reduce((acc, store) => ({ ...acc, [store.id]: store }), {})
+      state.dataSource = globalState.reduce((acc, store) => ({ ...acc, [store.id]: store }), {})
     }
 
     const removeStore = (key) => {
-      const storeListt = [...useResource().resState.globalState] || []
-      const index = storeListt.findIndex((store) => store.id === key)
-      const { setGlobalState } = useCanvas().canvasApi.value
+      const storeList = [...useResource().appSchemaState.globalState] || []
+      const index = storeList.findIndex((store) => store.id === key)
 
       if (index !== -1) {
         const { id } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
 
-        storeListt.splice(index, 1)
-        updateGlobalState(id, { global_state: storeListt }).then((res) => {
-          setGlobalState(res.global_state)
+        storeList.splice(index, 1)
+        updateGlobalState(id, { global_state: storeList }).then((res) => {
+          useResource().appSchemaState.globalState = res.global_state || []
           setGlobalStateToDataSource()
         })
 

@@ -68,7 +68,7 @@ export default {
     }
 
     const removeStoreConfirm = (key) => {
-      const appPages = useResource().resState.pageTree.filter(
+      const appPages = useResource().appSchemaState.pageTree.filter(
         (page) => page.componentName === COMPONENT_NAME.Page && page?.meta?.group !== 'publicPages'
       )
       const expression = `stores.${key}`

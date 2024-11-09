@@ -103,7 +103,7 @@ export default {
   },
   setup(props, { emit }) {
     const listItemOption = computed(() => props)
-    const { resState } = useResource()
+    const { appSchemaState } = useResource()
 
     const changeItem = (params) => {
       const optionsList = [...props.optionsList]
@@ -159,7 +159,7 @@ export default {
         if (item[props.textField]) {
           if (item[props.textField].i18nKey) {
             let i18nKey = item[props.textField].i18nKey
-            text = resState.langs[i18nKey][resState.currentLang]
+            text = appSchemaState.langs[i18nKey][appSchemaState.currentLang]
           } else {
             text = item[props.textField]
           }
