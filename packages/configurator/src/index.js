@@ -26,6 +26,7 @@ import SliderConfigurator from './slider-configurator/SliderConfigurator.vue'
 import SlotConfigurator from './slot-configurator/SlotConfigurator.vue'
 import SwitchConfigurator from './switch-configurator/SwitchConfigurator.vue'
 import TableColumnsConfigurator from './table-columns-configurator/TableColumnsConfigurator.vue'
+import TabsGroupConfigurator from './tabs-group-configurator/TabsGroupConfigurator.vue'
 import VariableConfigurator from './variable-configurator/VariableConfigurator.vue'
 
 import { I18nInput, MetaCodeEditor } from '@opentiny/tiny-engine-common'
@@ -59,6 +60,7 @@ export {
   SlotConfigurator,
   SwitchConfigurator,
   TableColumnsConfigurator,
+  TabsGroupConfigurator,
   VariableConfigurator,
   MetaCodeEditor,
   I18nInput as I18nConfigurator,

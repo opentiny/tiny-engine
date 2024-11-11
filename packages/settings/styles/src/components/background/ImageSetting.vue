@@ -6,9 +6,8 @@
         <div class="image-inner"></div>
       </div>
       <div class="text-wrap">
-        <span>background-image.svg</span>
-        <span class="size">250 * 250</span>
-        <span class="size">3.4 KB</span>
+        <span class="size">background-image.svg</span>
+        <span class="size">250 * 250 3.4 KB</span>
         <span>
           <tiny-checkbox v-model="state.checked" @change="imageSizeChange">@2x</tiny-checkbox>
         </span>
@@ -19,76 +18,63 @@
     </div>
   </div>
   <div class="background-row line">
-    <label class="size-label top">大小</label>
-    <div class="size-content">
-      <div class="row-content">
-        <div
-          v-for="item in BACKGROUND_SIZE_OPTIONS"
-          :key="item.value"
-          :class="['row-content-item image-size-item', { selected: state.sizeSelected === item.value }]"
-          @click="selectSize(item)"
-        >
-          <span>{{ item.label }}</span>
-        </div>
-      </div>
-      <div class="dim-wrap">
-        <input-select
-          :modelValue="state.width"
-          :suffixValue="state.widthSuffix"
-          :options="UNIT_OPTIONS"
-          :disabled="state.sizeSelected !== 'custom'"
-          @input-change="sizeWidthChange"
-          @select-change="suffixWidthChange"
-        ></input-select>
-        <input-select
-          :modelValue="state.height"
-          :suffixValue="state.heightSuffix"
-          :options="UNIT_OPTIONS"
-          :disabled="state.sizeSelected !== 'custom'"
-          @input-change="sizeHeightChange"
-          @select-change="suffixHeightChange"
-        ></input-select>
-        <span>宽度</span>
-        <span>高度</span>
-      </div>
+    <label class="size-label">大小</label>
+    <tabs-group-configurator
+      :options="BACKGROUND_SIZE_OPTIONS"
+      :modelValue="state.sizeSelected"
+      label-width="67"
+      @update:modelValue="selectSize"
+    ></tabs-group-configurator>
+  </div>
+  <div class="size-row">
+    <div class="size-col">
+      <label class="size-label">宽度</label>
+      <input-select
+        :modelValue="state.width"
+        :suffixValue="state.widthSuffix"
+        :options="UNIT_OPTIONS"
+        :disabled="state.sizeSelected !== 'custom'"
+        @input-change="sizeWidthChange"
+        @select-change="suffixWidthChange"
+      ></input-select>
+    </div>
+    <div class="size-col">
+      <label class="size-label">高度</label>
+      <input-select
+        :modelValue="state.height"
+        :suffixValue="state.heightSuffix"
+        :options="UNIT_OPTIONS"
+        :disabled="state.sizeSelected !== 'custom'"
+        @input-change="sizeHeightChange"
+        @select-change="suffixHeightChange"
+      ></input-select>
     </div>
   </div>
-  <position-origin class="background-row line" @update="updateStyle"></position-origin>
+  <position-origin class="background-row line" :is-top="true" @update="updateStyle"></position-origin>
   <div class="background-row tile-wrap">
     <label class="row-label">重复</label>
-    <div class="row-content">
-      <tiny-tooltip
-        v-for="item in REPEAT_OPTIONS"
-        :key="item.tip"
-        :effect="effect"
-        :placement="placement"
-        :content="item.tip"
-        popper-class="background-type-tooltip"
-      >
-        <div :class="['row-content-item', { selected: state.repeat === item.value }]" @click="selectRepeat(item)">
-          <svg-icon :name="item.icon"></svg-icon>
-        </div>
-      </tiny-tooltip>
-    </div>
+    <tabs-group-configurator
+      :options="REPEAT_OPTIONS"
+      :modelValue="state.repeat"
+      label-width="50"
+      @update:modelValue="selectRepeat"
+    ></tabs-group-configurator>
   </div>
   <div class="background-row fixed-wrap">
     <label class="row-label">固定</label>
-    <div class="row-content">
-      <div
-        v-for="item in FIXED_OPTIONS"
-        :key="item.value"
-        :class="['row-content-item', { selected: state.fixedSelected === item.value }]"
-        @click="selectFixed(item)"
-      >
-        <span>{{ item.label }}</span>
-      </div>
-    </div>
+    <tabs-group-configurator
+      :options="FIXED_OPTIONS"
+      :modelValue="state.fixedSelected"
+      label-width="98"
+      @update:modelValue="selectFixed"
+    ></tabs-group-configurator>
   </div>
 </template>
 
 <script setup>
 import { reactive, defineProps, defineEmits, onMounted } from 'vue'
-import { Tooltip as TinyTooltip, Checkbox as TinyCheckbox } from '@opentiny/vue'
+import { Checkbox as TinyCheckbox } from '@opentiny/vue'
+import { TabsGroupConfigurator } from '@opentiny/tiny-engine-configurator'
 import PositionOrigin from './PositionOrigin.vue'
 import InputSelect from '../inputs/InputSelect.vue'
 import {
@@ -102,7 +88,7 @@ import {
 const props = defineProps({
   style: {
     type: Object,
-    default: () => {}
+    default: () => ({})
   },
   effect: {
     type: String,
@@ -141,21 +127,32 @@ const imageSizeChange = (val) => {
     : updateStyle({ [BACKGROUND_PROPERTY.BackgroundSize]: null })
 }
 
-const selectSize = (item) => {
-  if (item.value !== 'auto') {
+const selectSize = (value) => {
+  if (value !== 'auto') {
     state.width = 'Auto'
     state.widthSuffix = 'auto'
     state.height = 'Auto'
     state.heightSuffix = 'auto'
   }
   state.checked = false
-  state.sizeSelected = item.value
-  updateStyle({ [BACKGROUND_PROPERTY.BackgroundSize]: item.value })
+  state.sizeSelected = value
+  updateStyle({ [BACKGROUND_PROPERTY.BackgroundSize]: value })
 }
 
 const isNum = (num) => {
   const reg = /^[0-9]+(.[0-9]+)?$/
   return reg.test(num)
+}
+
+const setBackgroundSize = () => {
+  const isAutoWidth = state.width.toLocaleLowerCase() === 'auto'
+  const isAutoHeight = state.height.toLocaleLowerCase() === 'auto'
+  const width = isAutoWidth ? state.width.toLocaleLowerCase() : `${state.width.toLocaleLowerCase() + state.widthSuffix}`
+  const height = isAutoHeight
+    ? state.height.toLocaleLowerCase()
+    : `${state.height.toLocaleLowerCase() + state.heightSuffix}`
+
+  updateStyle({ [BACKGROUND_PROPERTY.BackgroundSize]: `${width} ${height}` })
 }
 
 const sizeWidthChange = (val) => {
@@ -190,25 +187,14 @@ const suffixHeightChange = (val) => {
   setBackgroundSize()
 }
 
-const setBackgroundSize = () => {
-  const isAutoWidth = state.width.toLocaleLowerCase() === 'auto'
-  const isAutoHeight = state.height.toLocaleLowerCase() === 'auto'
-  const width = isAutoWidth ? state.width.toLocaleLowerCase() : `${state.width.toLocaleLowerCase() + state.widthSuffix}`
-  const height = isAutoHeight
-    ? state.height.toLocaleLowerCase()
-    : `${state.height.toLocaleLowerCase() + state.heightSuffix}`
-
-  updateStyle({ [BACKGROUND_PROPERTY.BackgroundSize]: `${width} ${height}` })
+const selectRepeat = (value) => {
+  state.repeat = value
+  updateStyle({ [BACKGROUND_PROPERTY.BackgroundRepeat]: value })
 }
 
-const selectRepeat = (item) => {
-  state.repeat = item.value
-  updateStyle({ [BACKGROUND_PROPERTY.BackgroundRepeat]: item.value })
-}
-
-const selectFixed = (item) => {
-  state.fixedSelected = item.value
-  updateStyle({ [BACKGROUND_PROPERTY.BackgroundAttachment]: item.value })
+const selectFixed = (value) => {
+  state.fixedSelected = value
+  updateStyle({ [BACKGROUND_PROPERTY.BackgroundAttachment]: value })
 }
 
 onMounted(() => {
@@ -254,10 +240,9 @@ onMounted(() => {
   height: 64px;
   border-width: 1px;
   box-sizing: border-box;
-  background-color: rgb(43, 43, 43);
   border-style: solid;
-  border-color: rgb(33, 33, 33);
-  border-radius: 2px;
+  border: 1px dotted var(--te-common-border-default);
+  border-radius: 4px;
 }
 .image-inner {
   width: 100%;
@@ -267,11 +252,43 @@ onMounted(() => {
   background-repeat: no-repeat;
   background-position: 50% 50%;
 }
+.size-row {
+  display: flex;
+  padding: 6px 0;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+  .size-col {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    &:not(:last-child) {
+      margin-right: 8px;
+    }
+    .input-select {
+      width: 70px;
+    }
+    .size-label {
+      flex: 0 0 55px;
+      margin-right: 6px;
+      line-height: 28px;
+      color: var(--ti-lowcode-component-setting-panel-label-color);
+    }
+    &:last-child {
+      .size-label {
+        flex: 0 0 48px;
+        margin-right: 10px;
+        text-align: right;
+      }
+    }
+  }
+}
 .text-wrap {
   display: flex;
   flex-direction: column;
   font-size: 12px;
-  color: #d9d9d9;
+  color: var(--ti-lowcode-common-text-color-2);
   margin-left: 8px;
   white-space: nowrap;
   overflow: hidden;
@@ -291,11 +308,11 @@ onMounted(() => {
     }
   }
   .size {
-    color: #ababab;
+    color: var(--te-common-text-secondary);
   }
 }
 .choose-image {
-  border-color: rgb(54, 54, 54);
+  border-color: var(--ti-lowcode-component-setting-panel-label-color);
   outline: 0px;
   cursor: default;
   user-select: none;
@@ -309,9 +326,8 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   height: 24px;
-  border-radius: 2px;
-  color: rgb(217, 217, 217);
-  background: rgb(94, 94, 94);
+  border-radius: 4px;
+  color: var(--te-common-bg-prompt);
   border-width: 1px;
   border-style: solid;
   align-self: center;

@@ -2,7 +2,7 @@
   <div class="background-input">
     <tiny-input v-model="color" placeholder="请输入颜色" @change="change">
       <template #prefix>
-        <input v-model="color" type="color" class="input-color" @change="changeColor" />
+        <input v-model="inputColor" type="color" class="input-color" @change="changeColor" />
       </template>
     </tiny-input>
   </div>
@@ -10,7 +10,7 @@
 
 <script>
 import { Input } from '@opentiny/vue'
-import { ref, watchEffect } from 'vue'
+import { ref, computed, watchEffect } from 'vue'
 
 export default {
   components: {
@@ -29,6 +29,7 @@ export default {
   emits: ['change', 'update:modelValue'],
   setup(props, { emit }) {
     const color = ref(props.modelValue)
+    const inputColor = computed(() => color.value || '#FFFFFF')
 
     const change = (value) => {
       emit('update:modelValue', value)
@@ -45,6 +46,7 @@ export default {
 
     return {
       color,
+      inputColor,
       change,
       changeColor
     }
@@ -57,7 +59,7 @@ export default {
   width: 100%;
 
   .input-color {
-    width: 22px;
+    width: 20px;
     height: 24px;
     border: none;
     background: transparent;

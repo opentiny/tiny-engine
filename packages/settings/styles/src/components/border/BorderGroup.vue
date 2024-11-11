@@ -4,7 +4,7 @@
       :class="['radius-label', { 'is-setting': isRadiusSetting() }]"
       @click="openSetting(BORDER_RADIUS_PROPERTY.BorderRadius, $event)"
     >
-      圆角
+      <span>圆角</span>
     </div>
     <div class="radius-content">
       <div class="radius-btn-group">
@@ -85,12 +85,13 @@
   </div>
 
   <div class="item-row">
-    <span
+    <label
       class="border-label"
       :class="{ 'is-setting': isBorderSetting(), 'set-border-style': true }"
       @click="openSetting(BORDER_PROPERTY.Border, $event)"
-      >边框</span
     >
+      <span class="border-title">边框</span>
+    </label>
   </div>
   <div class="border-container">
     <div class="position-selector">
@@ -138,27 +139,32 @@
     </div>
     <div class="inputs">
       <div class="input-row">
-        <span
+        <label
           class="border-label"
           :class="{ 'is-setting': isBorderStyleSetting() }"
           @click="openSetting(BORDER_PROPERTY.BorderStyle, $event)"
-          >样式</span
         >
+          <span>样式</span>
+        </label>
         <div class="styles-container">
-          <button-group
+          <tabs-group-configurator
             :options="styleOptions"
             :modelValue="styleValue"
+            label-width="30"
+            :effect="effect"
+            :placement="placement"
             @update:modelValue="(value) => selectBorderStyle(value)"
-          ></button-group>
+          ></tabs-group-configurator>
         </div>
       </div>
       <div class="input-row">
-        <span
+        <label
           class="border-label"
           :class="{ 'is-setting': isBorderWidthSetting() }"
           @click="openSetting(BORDER_PROPERTY.BorderWidth, $event)"
-          >宽度</span
         >
+          <span>宽度</span>
+        </label>
         <numeric-select
           :name="borderWidthValue.name"
           :numericalText="borderWidthValue.text"
@@ -167,12 +173,13 @@
         />
       </div>
       <div class="input-row">
-        <span
+        <label
           class="border-label"
           :class="{ 'is-setting': isBorderColorSetting() }"
           @click="openSetting(BORDER_PROPERTY.BorderColor, $event)"
-          >颜色</span
         >
+          <span>颜色</span>
+        </label>
         <color-configurator :modelValue="borderColorValue" @change="changeBorderColor"></color-configurator>
       </div>
     </div>
@@ -190,7 +197,7 @@ import ModalMask, { useModal } from '../inputs/ModalMask.vue'
 import NumericSelect from '../inputs/NumericSelect.vue'
 import ResetButton from '../inputs/ResetButton.vue'
 import ButtonGroup from '../buttons/ButtonGroup.vue'
-import { ColorConfigurator, SliderConfigurator } from '@opentiny/tiny-engine-configurator'
+import { ColorConfigurator, SliderConfigurator, TabsGroupConfigurator } from '@opentiny/tiny-engine-configurator'
 import useEvent from '../../js/useEvent'
 import { useProperties } from '../../js/useStyle'
 import { RADIUS_SETTING, BORDER_SETTING, BORDER_STYLE_TYPE } from '../../js/cssType'
@@ -223,6 +230,7 @@ const BORDER_COLOR = {
 export default {
   components: {
     SliderConfigurator,
+    TabsGroupConfigurator,
     ModalMask,
     ResetButton,
     ColorConfigurator,
@@ -399,10 +407,10 @@ export default {
     }
 
     const styleOptions = [
-      { icon: 'cross', value: BORDER_STYLE_TYPE.None, tip: 'none-无' },
-      { icon: 'border-style-solid', value: BORDER_STYLE_TYPE.Solid, tip: 'solid-实线' },
-      { icon: 'border-style-dashed', value: BORDER_STYLE_TYPE.Dashed, tip: 'dashed-虚线' },
-      { icon: 'border-style-dotted', value: BORDER_STYLE_TYPE.Dotted, tip: 'dotted-圆点' }
+      { icon: 'cross', value: BORDER_STYLE_TYPE.None, content: 'none-无' },
+      { icon: 'border-style-solid', value: BORDER_STYLE_TYPE.Solid, content: 'solid-实线' },
+      { icon: 'border-style-dashed', value: BORDER_STYLE_TYPE.Dashed, content: 'dashed-虚线' },
+      { icon: 'border-style-dotted', value: BORDER_STYLE_TYPE.Dotted, content: 'dotted-圆点' }
     ]
 
     const styleValue = computed(() => {
@@ -569,11 +577,6 @@ export default {
     padding: 0 2px;
     line-height: 24px;
     color: var(--ti-lowcode-component-setting-panel-label-color);
-
-    &.is-setting {
-      color: var(--ti-lowcode-style-setting-label-color);
-      background: var(--ti-lowcode-style-setting-label-bg);
-    }
   }
 
   .radius-content {
@@ -626,6 +629,13 @@ export default {
   }
 }
 
+.border-label,
+.radius-label {
+  span {
+    padding: 2px;
+  }
+}
+
 .radius-multiple-container {
   flex: 1;
   display: grid;
@@ -645,6 +655,10 @@ export default {
 .border-label {
   color: var(--te-common-text-secondary);
   flex-shrink: 0;
+
+  .border-title {
+    margin-left: 2px;
+  }
 }
 .border-container {
   display: flex;
@@ -707,8 +721,11 @@ export default {
 }
 
 .is-setting {
-  color: var(--ti-lowcode-style-setting-label-color);
-  background: var(--ti-lowcode-style-setting-label-bg);
-  padding: 2px;
+  span {
+    border-radius: 2px;
+    color: var(--ti-lowcode-style-setting-label-color);
+    background: var(--ti-lowcode-style-setting-label-bg);
+    cursor: pointer;
+  }
 }
 </style>

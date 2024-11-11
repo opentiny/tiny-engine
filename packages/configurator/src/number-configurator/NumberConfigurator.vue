@@ -169,7 +169,9 @@ export default {
     :deep(.tiny-numeric__input-inner) {
       text-align: left;
     }
-
+    :deep(.is-disabled) {
+      background-color: var(--te-common-bg-disabled);
+    }
     &.is-without-controls {
       :deep(.tiny-numeric__input-inner) {
         padding-left: 8px;
@@ -181,6 +183,9 @@ export default {
     }
   }
   .meta-numeric-unit {
+    position: absolute;
+    top: 2px;
+    height: calc(100% - 2px);
     span {
       color: var(--ti-lowcode-numeric-unit-text-color);
       font-size: 14px;
@@ -188,8 +193,8 @@ export default {
     }
     :deep(.tiny-select) {
       width: 100%;
-      float: right;
       .tiny-input__inner {
+        height: 100%;
         color: var(--ti-lowcode-numeric-unit-text-color);
         padding: 2px;
         border: none;
@@ -200,7 +205,7 @@ export default {
         display: none;
       }
       .tiny-input.is-disabled .tiny-input__inner {
-        background: var(--ti-lowcode-input-bg);
+        background-color: var(--te-common-bg-container);
       }
     }
   }

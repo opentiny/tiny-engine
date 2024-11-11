@@ -5,8 +5,9 @@
         <label
           :class="['background-label', { 'is-setting': getSettingFlag(BACKGROUND_PROPERTY.BackgroundImage) }]"
           @click="openSetting(BACKGROUND_PROPERTY.BackgroundImage, $event)"
-          >背景图 & 渐变</label
         >
+          <span>背景图 & 渐变</span>
+        </label>
         <tiny-tooltip effect="dark" placement="top" content="添加背景图，线性渐变，径向渐变等">
           <div class="background-image-icon" @click="openBackgroundImageModal($event, { isAdd: true })">
             <icon-plus></icon-plus>
@@ -50,16 +51,18 @@
       <label
         :class="['background-label', { 'is-setting': getSettingFlag(BACKGROUND_PROPERTY.BackgroundColor) }]"
         @click="openSetting(BACKGROUND_PROPERTY.BackgroundColor, $event)"
-        >颜色</label
       >
+        <span>颜色</span>
+      </label>
       <color-configurator :modelValue="getProperty(BACKGROUND_PROPERTY.BackgroundColor).value" @change="changeColor" />
     </div>
     <div class="background-clip">
       <label
         :class="['background-label', { 'is-setting': getSettingFlag(BACKGROUND_PROPERTY.BackgroundClip) }]"
         @click="openSetting(BACKGROUND_PROPERTY.BackgroundClip, $event)"
-        >裁剪</label
       >
+        <span>裁剪</span>
+      </label>
       <div class="position-select">
         <select-configurator
           :modelValue="state.selectValue"
@@ -72,7 +75,11 @@
   <modal-mask v-if="state.showModal" @close="state.showModal = false">
     <reset-button @reset="reset" />
   </modal-mask>
-  <modal-mask v-if="state.showBackgroundImageModal" @close="state.showBackgroundImageModal = false">
+  <modal-mask v-if="state.showBackgroundImageModal" teleport="body">
+    <div class="background-model-title">
+      <span>背景图 & 渐变设置</span>
+      <svg-icon name="close" @click="state.showBackgroundImageModal = false"></svg-icon>
+    </div>
     <background-image-setting
       :style="state.currentBackgroundImage"
       @update:modelValue="updateCurrentBackground"
@@ -386,8 +393,12 @@ export default {
   gap: 12px 8px;
   grid-template-columns: 48px auto auto;
   align-items: center;
+  position: relative;
+  span {
+    padding: 2px;
+  }
   .background-label {
-    color: var(--ti-lowcode-component-setting-panel-label-color);
+    color: var(--te-common-text-primary);
   }
   .background-color,
   .background-clip {
@@ -395,7 +406,7 @@ export default {
     display: grid;
     gap: 8px;
     grid-column: 1 / -1;
-    grid-template-columns: 48px 1fr;
+    grid-template-columns: 35px 1fr;
   }
 
   .background-image-wrap {
@@ -418,18 +429,17 @@ export default {
     place-items: stretch;
     gap: 1px;
     border-radius: 2px;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #2b2b2b;
-    background-color: #2b2b2b;
-    margin-bottom: 12px;
+    border-top: 1px solid var(--te-common-border-divider);
+    background-color: var(--te-common-bg-default);
+    margin: 12px 0;
     .image-list-item {
       display: grid;
       grid-template-columns: 8px 16px minmax(auto, 1fr) auto;
       gap: 8px 4px;
       height: 24px;
       align-items: center;
-      background-color: rgb(54, 54, 54);
+      background-color: var(--te-common-bg-default);
+      border-bottom: 1px solid var(--te-common-border-divider);
       pointer-events: all;
       font-size: 11px;
       font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell,
@@ -441,6 +451,7 @@ export default {
       position: relative;
       overflow: visible;
       &:hover {
+        background-color: var(--te-common-bg-container);
         .dragger-icon,
         .icon-wrap {
           opacity: 1;
@@ -457,8 +468,7 @@ export default {
           right: 0;
           top: 0;
           bottom: 0;
-          background-color: rgb(43, 43, 43);
-          box-shadow: rgba(0, 0, 0, 0.2) 0 1px 3px inset;
+          background-color: var(--ti-lowcode-setting-style-drag-bar-bg);
         }
       }
       &.image-list-item-invisible {
@@ -473,12 +483,12 @@ export default {
         width: 100%;
         height: 3px;
         border-radius: 3px;
-        background-color: #8ac2ff;
+        background-color: var(--ti-lowcode-setting-style-drag-bar-bg);
       }
     }
     .dragger-icon {
       display: inline-flex;
-      color: #757575;
+      color: var(--te-common-icon-secondary);
       cursor: grab;
       width: 12px;
       opacity: 0;
@@ -490,7 +500,7 @@ export default {
       height: 10px;
       border-radius: 1px;
       margin: 1px;
-      box-shadow: #212121 0px 0px 0px 1px;
+      box-shadow: var(--te-common-border-default) 0px 0px 0px 1px;
       align-self: center;
       overflow: hidden;
       .image {
@@ -515,15 +525,12 @@ export default {
         width: 16px;
         max-height: 16px;
         border-width: 0px;
-        color: #757575;
+        color: var(--te-common-icon-secondary);
         background-color: transparent;
         border-radius: 2px;
         padding-left: 0px;
         padding-right: 0px;
         font-size: 13px;
-        &:hover {
-          color: #d9d9d9;
-        }
       }
     }
   }
@@ -537,14 +544,36 @@ export default {
       font-size: 16px;
       padding: 4px;
       &:hover svg {
-        color: var(--ti-lowcode-toolbar-icon-color);
+        color: var(--te-common-icon-secondary);
       }
     }
   }
 
   .is-setting {
-    color: var(--ti-lowcode-style-setting-label-color);
-    background-color: var(--ti-lowcode-style-setting-label-bg);
+    span {
+      cursor: pointer;
+      border-radius: 2px;
+      color: var(--te-common-text-emphasize);
+      background-color: var(--ti-lowcode-style-setting-label-bg);
+    }
+  }
+}
+
+.background-model-title {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  padding: 6px 0;
+
+  span {
+    font-weight: 600;
+  }
+
+  .svg-icon {
+    position: absolute;
+    cursor: pointer;
+    top: 0px;
+    right: -4px;
   }
 }
 </style>

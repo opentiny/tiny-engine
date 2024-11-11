@@ -1,9 +1,13 @@
 <template>
-  <teleport to=".tiny-engine-right-wrap">
+  <teleport :to="teleport">
     <div class="modal-wrapper">
-      <div class="modal-mask" @click="$emit('close')"></div>
+      <div :class="[isAlignBody ? '' : 'modal-mask']" @click="$emit('close')"></div>
 
-      <div :style="{ top: modal.top - 30 + 'px' }" class="modal-content">
+      <div
+        ref="modalContent"
+        :style="{ top: `${topStyle}px` }"
+        :class="['modal-content', { 'align-body': isAlignBody }, { 'modal-padding': isAlignBody }]"
+      >
         <slot></slot>
       </div>
     </div>
@@ -11,7 +15,7 @@
 </template>
 
 <script>
-import { reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 
 const modal = reactive({
   left: 0,
@@ -38,9 +42,33 @@ export const useModal = () => {
 }
 
 export default {
-  setup() {
+  props: {
+    teleport: {
+      type: String,
+      default: '.tiny-engine-right-wrap'
+    }
+  },
+  setup(props) {
+    const isAlignBody = props.teleport === 'body'
+    const topStyle = ref(0)
+    const modalContent = ref(null)
+
+    const calculateTopStyle = (modalContent) => {
+      if (isAlignBody && modalContent) {
+        return modal.top < modalContent.offsetHeight ? 40 : modal.top - modalContent.offsetHeight + 40
+      }
+      return modal.top - 34
+    }
+
+    onMounted(() => {
+      topStyle.value = calculateTopStyle(modalContent.value)
+    })
+
     return {
-      modal
+      modal,
+      modalContent,
+      topStyle,
+      isAlignBody
     }
   }
 }
@@ -55,23 +83,32 @@ export default {
     bottom: 0;
     left: 0;
     background: rgba(0, 0, 0, 0.2);
-    z-index: 9999;
+    z-index: 999;
   }
 
   .modal-content {
     position: absolute;
     top: 0;
     left: 16px;
-    z-index: 10000;
+    z-index: 1000;
     padding: 8px;
     color: var(--ti-lowcode-toolbar-breadcrumb-color);
     border: 1px solid var(--ti-lowcode-tabs-border-color);
     box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
-    background-color: var(--ti-lowcode-toolbar-bg);
+    background-color: var(--te-common-bg-default);
     overflow: auto;
     max-height: 100%;
     box-sizing: border-box;
+  }
+  .modal-padding {
+    padding: var(--ti-modal-padding-y, 14px) var(--ti-modal-padding-x, 20px);
+  }
+  .align-body {
+    right: var(--modal-right-offset, 280px);
+    left: calc(
+      100% - var(--modal-right-offset, 287px) - var(--modal-right-offset, 280px) - var(--modal-spaceing, 16px)
+    );
   }
 }
 </style>

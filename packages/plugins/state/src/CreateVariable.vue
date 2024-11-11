@@ -416,7 +416,7 @@ export default {
   :deep(.toolbar) {
     position: absolute;
     z-index: 99;
-    right: 4px;
+    right: 20px;
   }
   .var {
     padding: 12px;

@@ -211,23 +211,3 @@ export default {
   }
 }
 </script>
-<style lang="less" scoped>
-:deep(.monaco-editor) {
-  background: var(--ti-lowcode-base-bg-2);
-  .monaco-scrollable-element {
-    left: 12px !important;
-    width: 100% !important;
-  }
-  .monaco-editor,
-  .monaco-editor-background {
-    background: var(--ti-lowcode-base-bg-2) !important;
-  }
-  .margin {
-    display: none;
-    width: 0;
-  }
-  .minimap {
-    display: none !important;
-  }
-}
-</style>

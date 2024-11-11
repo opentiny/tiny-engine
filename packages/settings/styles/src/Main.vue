@@ -27,7 +27,7 @@
     </div>
   </div>
   <class-names-container></class-names-container>
-  <tiny-collapse v-model="activeNames">
+  <tiny-collapse v-model="activeNames" @change="handoverGroup">
     <tiny-collapse-item title="布局" name="layout">
       <layout-group :display="state.style.display" @update="updateStyle" />
       <flex-box v-if="state.style.display === 'flex'" :style="state.style" @update="updateStyle"></flex-box>
@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import { ref, watch } from 'vue'
+import { computed, watch } from 'vue'
 import { Collapse, CollapseItem, Input } from '@opentiny/vue'
 import { useHistory, useCanvas, useProperties } from '@opentiny/tiny-engine-meta-register'
 import { CodeConfigurator, VariableConfigurator } from '@opentiny/tiny-engine-configurator'
@@ -105,8 +105,14 @@ export default {
     TinyInput: Input,
     VariableConfigurator
   },
-  setup() {
-    const activeNames = ref([
+  props: {
+    isCollapsed: {
+      type: Boolean,
+      default: false
+    }
+  },
+  setup(props) {
+    const styleCategoryGroup = [
       'layout',
       'spacing',
       'size',
@@ -115,12 +121,19 @@ export default {
       'backgrounds',
       'borders',
       'effects'
-    ])
+    ]
+    const activeNames = computed(() => (props.isCollapsed ? [styleCategoryGroup[0]] : styleCategoryGroup))
     const { getCurrentSchema } = useCanvas()
     // 获取当前节点 style 对象
     const { state, updateStyle } = useStyle() // updateStyle
     const { addHistory } = useHistory()
     const { getSchema } = useProperties()
+
+    const handoverGroup = (actives) => {
+      if (props.isCollapsed) {
+        activeNames.value = actives.length > 1 ? actives.shift() : actives
+      }
+    }
 
     // 保存编辑器内容，并回写到 schema
     const save = ({ content }) => {
@@ -192,6 +205,7 @@ export default {
       activeNames,
       CSS_TYPE,
       open,
+      handoverGroup,
       save,
       close,
       updateStyle,
@@ -245,5 +259,13 @@ export default {
       }
     }
   }
+}
+
+.dots {
+  display: inline-block;
+  margin-left: 4px;
+  vertical-align: middle;
+  border: 2px solid var(--te-common-border-checked);
+  border-radius: 2px;
 }
 </style>

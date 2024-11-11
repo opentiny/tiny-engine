@@ -14,7 +14,7 @@
             viewBox="0 0 22 22"
             class="rotate-svg"
           >
-            <circle cx="11" cy="11" r="11" fill="currentColor"></circle>
+            <circle cx="11" cy="11" r="11" fill="#C2C2C2"></circle>
             <circle cx="11" cy="4" r="2" fill="#EEE"></circle>
           </svg>
           <svg
@@ -30,8 +30,8 @@
             <circle cx="11" cy="11" r="11" fill="currentColor"></circle>
           </svg>
         </div>
-        <span @click="counterclockwiseRotate"><svg-icon name="clock-wise-counter"></svg-icon></span>
-        <span @click="clockwiseRotate"><svg-icon name="clock-wise"></svg-icon></span>
+        <span @click="counterclockwiseRotate"><svg-icon name="clock-wise-counter" color="#808080"></svg-icon></span>
+        <span @click="clockwiseRotate"><svg-icon name="clock-wise" color="#808080"></svg-icon></span>
       </div>
       <input-select
         :modelValue="state.angle"

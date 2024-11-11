@@ -14,20 +14,24 @@
         </div>
       </div>
       <div class="input-wrap">
-        <input-select
-          :modelValue="state.leftValue"
-          :suffixValue="state.leftSuffix"
-          @input-change="leftChange"
-          @select-change="suffixLeftChange"
-        ></input-select>
-        <input-select
-          :modelValue="state.topValue"
-          :suffixValue="state.topSuffix"
-          @input-change="topChange"
-          @select-change="suffixTopChange"
-        ></input-select>
-        <span class="left">左侧</span>
-        <span class="top">上侧</span>
+        <div class="input-item-wrap">
+          <label class="input-label">左侧</label>
+          <input-select
+            :modelValue="state.leftValue"
+            :suffixValue="state.leftSuffix"
+            @input-change="leftChange"
+            @select-change="suffixLeftChange"
+          ></input-select>
+        </div>
+        <div class="input-item-wrap">
+          <label class="input-label">上侧</label>
+          <input-select
+            :modelValue="state.topValue"
+            :suffixValue="state.topSuffix"
+            @input-change="topChange"
+            @select-change="suffixTopChange"
+          ></input-select>
+        </div>
       </div>
     </div>
   </div>
@@ -177,7 +181,7 @@ export default {
 .position-origin {
   .position-content {
     place-items: start center;
-    height: 64px;
+    height: 68px;
     display: grid;
     gap: 4px 8px;
     grid-template-columns: auto auto;
@@ -186,8 +190,8 @@ export default {
   .coordinate {
     grid-column-start: 1;
     grid-row: 1 / span 3;
-    width: 64px;
-    height: 64px;
+    width: 68px;
+    height: 68px;
     background: var(--ti-lowcode-fit-coordinate-bg);
     display: inline-grid;
     overflow: hidden;
@@ -196,7 +200,7 @@ export default {
     box-sizing: border-box;
     border-style: solid;
     border-color: var(--ti-lowcode-fit-coordinate-border-color);
-    border-radius: 2px;
+    border-radius: 4px;
     gap: 0px;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
@@ -205,39 +209,29 @@ export default {
     background-color: var(--ti-lowcode-fit-coordinate-bg);
     transition: color 0.1s ease 0s;
     color: var(--ti-lowcode-fit-coordinate-origin-color);
-    font-size: 19px;
+    font-size: 14px;
     &:hover,
     &.selected {
       color: var(--ti-lowcode-fit-label-color);
     }
   }
   .input-wrap {
-    grid-column-end: span 1;
-    grid-row-start: 2;
-    align-items: center;
-    box-sizing: border-box;
-    display: grid;
-    gap: 4px 8px;
-    grid-template-columns: auto auto;
-    .left-input {
-      grid-column-start: 1;
-    }
-    .top-input {
-      grid-column-start: 2;
-    }
-    .left {
-      color: var(--ti-lowcode-fit-label-color);
-      justify-self: center;
-      grid-column-start: 1;
-    }
-    .top {
-      color: var(--ti-lowcode-fit-label-color);
-      justify-self: center;
-      grid-column-start: 2;
-    }
-    :deep(.tiny-select) {
-      width: auto;
-      max-width: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    .input-item-wrap {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 4px 0;
+      margin-right: 2px;
+
+      .input-label {
+        flex: 0 0 51px;
+        margin-right: 10px;
+        text-align: right;
+      }
     }
   }
   .top {

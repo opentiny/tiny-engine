@@ -2,26 +2,15 @@
   <div class="background-image-setting">
     <div class="background-row line">
       <label class="row-label">类型</label>
-      <div class="row-content">
-        <tiny-tooltip
-          v-for="item in state.typeLists"
-          :key="item.tipContent"
-          :effect="effect"
-          :placement="placement"
-          :content="item.tipContent"
-          popper-class="background-type-tooltip"
-        >
-          <div
-            :class="[
-              'row-content-item background-type-item',
-              { selected: state.styleComponent === item.styleComponent }
-            ]"
-            @click="selectType(item)"
-          >
-            <svg-icon :name="item.iconName"></svg-icon>
-          </div>
-        </tiny-tooltip>
-      </div>
+      <tabs-group-configurator
+        :options="state.typeLists"
+        :modelValue="state.styleComponent"
+        value-key="styleComponent"
+        label-width="50"
+        :effect="effect"
+        :placement="placement"
+        @update:modelValue="selectType"
+      ></tabs-group-configurator>
     </div>
     <div class="background-image-content">
       <component
@@ -38,7 +27,7 @@
 <script>
 import { reactive, onMounted } from 'vue'
 import { Tooltip, Checkbox } from '@opentiny/vue'
-import { ColorConfigurator } from '@opentiny/tiny-engine-configurator'
+import { ColorConfigurator, TabsGroupConfigurator } from '@opentiny/tiny-engine-configurator'
 import InputSelect from '../inputs/InputSelect.vue'
 import PositionOrigin from './PositionOrigin.vue'
 import ImageSetting from './ImageSetting.vue'
@@ -54,6 +43,7 @@ export default {
     TinyCheckbox: Checkbox,
     InputSelect,
     ColorConfigurator,
+    TabsGroupConfigurator,
     PositionOrigin,
     ImageSetting,
     LinearGradient,
@@ -82,32 +72,38 @@ export default {
       styleComponent: 'ImageSetting',
       typeLists: [
         {
-          tipContent: '背景图',
-          styleComponent: 'ImageSetting',
-          iconName: 'background-image',
+          content: '背景图',
+          icon: 'background-image',
           value: {
+            styleComponent: 'ImageSetting',
             imageUrl: 'img/bgcModal.png',
             position: '0px 0px',
             size: 'auto'
           }
         },
         {
-          tipContent: '线性渐变',
-          styleComponent: 'LinearGradient',
-          iconName: 'linear-gradient',
-          value: 'linear-gradient(#000, #fff)'
+          content: '线性渐变',
+          icon: 'linear-gradient',
+          value: {
+            styleComponent: 'LinearGradient',
+            imageUrl: 'linear-gradient(#000, #fff)'
+          }
         },
         {
-          tipContent: '径向渐变',
-          styleComponent: 'RadialGradient',
-          iconName: 'radial-gradient',
-          value: 'radial-gradient(circle at 50% 50%, #000, #fff)'
+          content: '径向渐变',
+          icon: 'radial-gradient',
+          value: {
+            styleComponent: 'RadialGradient',
+            imageUrl: 'radial-gradient(circle at 50% 50%, #000, #fff)'
+          }
         },
         {
-          tipContent: '颜色叠加',
-          styleComponent: 'ColorOverlay',
-          iconName: 'background-color',
-          value: 'linear-gradient(#000, #000)'
+          content: '颜色叠加',
+          icon: 'background-color',
+          value: {
+            styleComponent: 'ColorOverlay',
+            imageUrl: 'linear-gradient(#000, #000)'
+          }
         }
       ]
     })
@@ -116,18 +112,18 @@ export default {
       emit('update:modelValue', { ...property, type: state.styleComponent })
     }
 
-    const selectType = (item) => {
+    const selectType = (value) => {
       let styleObj = {}
 
-      if (item.styleComponent === 'ImageSetting') {
+      if (value.styleComponent === 'ImageSetting') {
         styleObj = {
-          [BACKGROUND_PROPERTY.BackgroundImage]: `url(${item.value.imageUrl})`,
-          [BACKGROUND_PROPERTY.BackgroundPosition]: item.value.position,
-          [BACKGROUND_PROPERTY.BackgroundSize]: item.value.size
+          [BACKGROUND_PROPERTY.BackgroundImage]: `url(${value.imageUrl})`,
+          [BACKGROUND_PROPERTY.BackgroundPosition]: value.position,
+          [BACKGROUND_PROPERTY.BackgroundSize]: value.size
         }
       } else {
         styleObj = {
-          [BACKGROUND_PROPERTY.BackgroundImage]: item.value,
+          [BACKGROUND_PROPERTY.BackgroundImage]: value.imageUrl,
           [BACKGROUND_PROPERTY.BackgroundPosition]: null,
           [BACKGROUND_PROPERTY.BackgroundSize]: null,
           [BACKGROUND_PROPERTY.BackgroundRepeat]: null,
@@ -135,7 +131,7 @@ export default {
         }
       }
 
-      state.styleComponent = item.styleComponent
+      state.styleComponent = value.styleComponent
       updateStyle(styleObj)
     }
 
@@ -217,7 +213,7 @@ export default {
     }
   }
   :deep(.line) {
-    padding: 8px 0;
+    padding: 6px 0;
     position: relative;
     &::after {
       content: '';

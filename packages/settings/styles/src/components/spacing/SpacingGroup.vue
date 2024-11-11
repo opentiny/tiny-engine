@@ -1,18 +1,23 @@
 <template>
   <div class="spacing-wrap">
     <div class="spacing-max-icon">
-      <svg xmlns="http://www.w3.org/2000/svg" width="224" height="120" style="grid-area: 1 / 1 / -1 / -1">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="#F5F5F5"
+        width="256"
+        height="120"
+        style="grid-area: 1 / 1 / -1 / -1"
+      >
         <g>
           <g>
             <path
               mode="delta"
-              fill="currentColor"
               d="
-              m1,1
-              h223
-              l-36,24
+              m0,0
+              h256
+              l-36,25
               h-151
-              l-36,-24z
+              l-36,-25z
             "
               data-automation-id="margin-top-button"
               aria-label="Margin top button"
@@ -25,13 +30,12 @@
           <g>
             <path
               mode="delta"
-              fill="currentColor"
               d="
-              m223,1
-              v119
-              l-36,-24
+              m256,0
+              v120
+              l-45,-24
               v-71
-              l36,-24z
+              l45,-24z
             "
               data-automation-id="margin-right-button"
               aria-label="Margin right button"
@@ -44,13 +48,12 @@
           <g>
             <path
               mode="delta"
-              fill="currentColor"
               d="
-              m1,119
-              h223
-              l-36,-24
+              m0,120
+              h256
+              l-36,-25
               h-151
-              l-36,24z
+              l-36,25z
             "
               data-automation-id="margin-bottom-button"
               aria-label="Margin bottom button"
@@ -63,13 +66,12 @@
           <g>
             <path
               mode="delta"
-              fill="currentColor"
               d="
-              m1,1
-              v119
-              l36,-24
+              m0,0
+              v120
+              l45,-24
               v-71
-              l-36,-24z
+              l-45,-24z
             "
               data-automation-id="margin-left-button"
               aria-label="Margin left button"
@@ -79,52 +81,34 @@
           </g>
         </g>
         <clipPath id="margin-outer">
-          <rect
-            x="0"
-            y="0"
-            width="224"
-            height="120"
-            fill="transparent"
-            rx="2"
-            ry="2"
-            style="pointer-events: none"
-          ></rect>
+          <rect x="0" y="0" width="256" height="120" fill="#F5F5F5" rx="4" ry="4" style="pointer-events: none"></rect>
         </clipPath>
         <rect
           class="stroke"
           clip-path="url(#margin-outer)"
           x="0"
           y="0"
-          width="224"
+          width="256"
           height="120"
-          fill="transparent"
-          rx="2"
-          ry="2"
-          style="pointer-events: none; stroke-width: 2px"
+          fill="#F5F5F5"
+          rx="4"
+          ry="4"
+          style="pointer-events: none; stroke-width: 0"
         ></rect>
         <clipPath id="margin-inner">
-          <rect
-            x="36"
-            y="24"
-            width="152"
-            height="72"
-            fill="transparent"
-            rx="2"
-            ry="2"
-            style="pointer-events: none"
-          ></rect>
+          <rect x="45" y="25" width="168" height="70" fill="#E6E6E6" rx="4" ry="4" style="pointer-events: none"></rect>
         </clipPath>
         <rect
           class="stroke"
           clip-path="url(#margin-inner)"
-          x="36"
-          y="24"
-          width="152"
-          height="72"
-          fill="transparent"
-          rx="2"
-          ry="2"
-          style="pointer-events: none; stroke-width: 2px"
+          x="45"
+          y="25"
+          width="168"
+          height="70"
+          fill="#E6E6E6"
+          rx="4"
+          ry="4"
+          style="pointer-events: none; stroke-width: 0"
         ></rect>
       </svg>
       <div
@@ -181,18 +165,17 @@
       </div>
     </div>
     <div class="spacing-min-icon">
-      <svg xmlns="http://www.w3.org/2000/svg" width="144" height="64" style="grid-area: 1 / 1 / -1 / -1">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="#F5F5F5" width="168" height="70" style="grid-area: 1 / 1 / -1 / -1">
         <g>
           <g>
             <path
               mode="delta"
-              fill="currentColor"
               d="
-              m1,1
-              h143
-              l-36,24
+              m5,-4
+              h168
+              l-36,25
               h-71
-              l-36,-24z
+              l-36,-25z
             "
               data-automation-id="padding-top-button"
               aria-label="Padding top button"
@@ -205,13 +188,12 @@
           <g>
             <path
               mode="delta"
-              fill="currentColor"
               d="
-              m143,1
-              v63
-              l-36,-24
+              m173,-4
+              v70
+              l-60,-24
               v-15
-              l36,-24z
+              l60,-24z
             "
               data-automation-id="padding-right-button"
               aria-label="Padding right button"
@@ -224,13 +206,12 @@
           <g>
             <path
               mode="delta"
-              fill="currentColor"
               d="
-              m1,63
-              h143
-              l-36,-24
+              m5,66
+              h168
+              l-36,-25
               h-71
-              l-36,24z
+              l-36,25z
             "
               data-automation-id="padding-bottom-button"
               aria-label="Padding bottom button"
@@ -243,13 +224,12 @@
           <g>
             <path
               mode="delta"
-              fill="currentColor"
               d="
-              m1,1
-              v63
-              l36,-24
+              m5,-4
+              v70
+              l60,-24
               v-15
-              l-36,-24z
+              l-60,-24z
             "
               data-automation-id="padding-left-button"
               aria-label="Padding left button"
@@ -259,52 +239,34 @@
           </g>
         </g>
         <clipPath id="padding-outer">
-          <rect
-            x="0"
-            y="0"
-            width="144"
-            height="64"
-            fill="transparent"
-            rx="2"
-            ry="2"
-            style="pointer-events: none"
-          ></rect>
+          <rect x="5" y="-4" width="168" height="70" fill="#E6E6E6" rx="4" ry="4" style="pointer-events: none"></rect>
         </clipPath>
         <rect
           class="stroke"
           clip-path="url(#padding-outer)"
           x="0"
           y="0"
-          width="144"
-          height="64"
-          fill="transparent"
-          rx="2"
-          ry="2"
-          style="pointer-events: none; stroke-width: 2px"
+          width="168"
+          height="70"
+          fill="#E6E6E6"
+          rx="4"
+          ry="4"
+          style="pointer-events: none; stroke-width: 0"
         ></rect>
         <clipPath id="padding-inner">
-          <rect
-            x="36"
-            y="24"
-            width="72"
-            height="16"
-            fill="transparent"
-            rx="2"
-            ry="2"
-            style="pointer-events: none"
-          ></rect>
+          <rect x="64" y="25" width="48" height="20" fill="#FFF" rx="4" ry="4" style="pointer-events: none"></rect>
         </clipPath>
         <rect
           class="stroke"
           clip-path="url(#padding-inner)"
-          x="36"
-          y="24"
-          width="72"
-          height="16"
-          fill="transparent"
-          rx="2"
-          ry="2"
-          style="pointer-events: none; stroke-width: 2px"
+          x="64"
+          y="25"
+          width="48"
+          height="20"
+          fill="#FFF"
+          rx="4"
+          ry="4"
+          style="pointer-events: none; stroke-width: 0"
         ></rect>
       </svg>
       <div
@@ -366,9 +328,7 @@
       height="100%"
       style="grid-area: 3 / 3 / span 3 / span 3; pointer-events: none"
     >
-      <text x="6" y="4" fill="#a6a6a6" font-style="italic" font-weight="bold" font-size="8" dominant-baseline="hanging">
-        padding
-      </text>
+      <text x="12" y="4" fill="#808080" font-weight="normal" font-size="10" dominant-baseline="hanging">Padding</text>
     </svg>
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -376,9 +336,7 @@
       height="100%"
       style="grid-area: 1 / 1 / -1 / -1; pointer-events: none"
     >
-      <text x="6" y="4" fill="#a6a6a6" font-style="italic" font-weight="bold" font-size="8" dominant-baseline="hanging">
-        margin
-      </text>
+      <text x="12" y="4" fill="#808080" font-weight="normal" font-size="10" dominant-baseline="hanging">Margin</text>
     </svg>
   </div>
 
@@ -499,9 +457,9 @@ export default {
 .spacing-wrap {
   position: relative;
   display: grid;
-  grid-template-columns: 36px 4px 36px 1fr 36px 4px 36px;
-  grid-template-rows: 24px 4px 24px 1fr 24px 4px 24px;
-  width: 224px;
+  grid-template-columns: 45px 0px 60px 1fr 60px 0px 45px;
+  grid-template-rows: 25px 0px 25px 1fr 25px 0px 25px;
+  width: 256px;
   height: 120px;
   margin: 0 auto;
   outline-style: none;
@@ -511,21 +469,21 @@ export default {
   .spacing-max-icon {
     grid-area: 1 / 1 / -1 / -1;
     display: grid;
-    grid-template-columns: 36px 1fr 36px;
-    grid-template-rows: 24px minmax(16px, 1fr) 24px;
+    grid-template-columns: 45px 1fr 45px;
+    grid-template-rows: 25px minmax(16px, 1fr) 25px;
     justify-items: center;
-    width: 224px;
+    width: 256px;
     height: 120px;
   }
 
   .spacing-min-icon {
     grid-area: 3 / 3 / span 3 / span 3;
     display: grid;
-    grid-template-columns: 36px 1fr 36px;
-    grid-template-rows: 24px minmax(16px, 1fr) 24px;
+    grid-template-columns: 56px 54px 56px;
+    grid-template-rows: 25px minmax(16px, 1fr) 25px;
     justify-items: center;
-    width: 144px;
-    height: 64px;
+    width: 168px;
+    height: 70px;
   }
 
   .spacing-edit {
@@ -534,14 +492,14 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-size: 10px;
+    font-size: 12px;
     font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell,
       'Helvetica Neue', Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
     font-weight: 400;
     line-height: 10px;
     letter-spacing: -0.2px;
     display: flex;
-    color: var(--ti-lowcode-toolbar-breadcrumb-color);
+    color: var(--te-base-text-color);
     background: transparent;
     padding: 2px 4px;
     margin-left: -2px;
@@ -559,7 +517,7 @@ export default {
     }
 
     &.is-show {
-      background-color: #6b6b6b;
+      background-color: var(--ti-lowcode-setting-style-spacing-bg);
     }
 
     &.margin-top,

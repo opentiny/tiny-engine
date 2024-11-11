@@ -1,27 +1,31 @@
 <template>
   <div :class="['style-numeric', { focus: focus }]">
-    <tiny-input
+    <tiny-numeric
       v-model="numericalModelValue"
       :placeholder="placeholder"
+      controls-position="right"
+      :unit="numericalSuffix"
+      :empty-value="null"
+      min="0"
+      allow-empty
+      @mouseover="isNumericHover = true"
+      @mouseleave="isNumericHover = false"
       @focus="focus = true"
       @blur="focus = false"
       @change="change"
     >
-      <template #suffix>
-        <span class="suffix">{{ numericalSuffix }}</span>
-      </template>
-    </tiny-input>
+    </tiny-numeric>
   </div>
 </template>
 
 <script>
 import { computed, ref, watch } from 'vue'
-import { Input } from '@opentiny/vue'
+import { Numeric } from '@opentiny/vue'
 import useEvent from '../../js/useEvent'
 
 export default {
   components: {
-    TinyInput: Input
+    TinyNumeric: Numeric
   },
   props: {
     name: {
@@ -47,27 +51,30 @@ export default {
   },
   emits: useEvent(),
   setup(props, { emit }) {
-    const numericalModelValue = ref(String(props.numericalText || ''))
+    const numericalModelValue = ref(props.numericalText || null)
+    const isNumericHover = ref(false)
+    const focus = ref(false)
 
     const percentageReg = (val) => /^\d+(.\d+)?%$/.test(val)
     const numericalSuffix = computed(() => {
       const val = String(numericalModelValue.value).toLowerCase()
+      if (isNumericHover.value) {
+        return ''
+      }
       return val === 'auto' || val === 'none' || percentageReg(val) ? '-' : props.suffix
     })
 
     watch(
       () => props.numericalText,
       (newValue) => {
-        numericalModelValue.value = String(newValue || '')
+        numericalModelValue.value = newValue || null
       }
     )
 
-    const focus = ref(false)
-
-    const change = (value) => {
+    const change = () => {
       focus.value = false
-
-      if (value.trim().length === 0) {
+      numericalModelValue.value = String(numericalModelValue.value)
+      if (numericalModelValue.value.trim().length === 0) {
         emit('update', { [props.name]: null })
       }
 
@@ -86,6 +93,7 @@ export default {
     return {
       numericalModelValue,
       numericalSuffix,
+      isNumericHover,
       focus,
       change
     }
@@ -101,20 +109,30 @@ export default {
   border-radius: 3px;
   transition: 0.3s;
   &.focus {
-    border-color: var(--ti-lowcode-canvas-handle-hover-bg);
+    border-color: var(--te-common-border-default);
   }
-
-  .suffix {
-    font-size: 12px;
-    color: var(--ti-lowcode-text-color);
-  }
-
-  :deep(.tiny-input-suffix) {
-    .tiny-input__inner {
-      padding: 0 20px 0 4px;
+  :deep(.tiny-numeric) {
+    width: 100%;
+    .tiny-numeric__input-inner {
+      padding-right: 22px;
     }
-    .tiny-input__suffix {
-      right: 4px;
+
+    .tiny-numeric__unit {
+      font-size: 12px;
+      color: var(--te-common-text-weaken);
+      background-color: var(--te-common-bg-default);
+    }
+  }
+  .suffix-wrap {
+    .suffix-text {
+      font-size: 12px;
+      color: var(--te-common-text-weaken);
+    }
+
+    &:hover {
+      .suffix-text {
+        display: none;
+      }
     }
   }
 }
