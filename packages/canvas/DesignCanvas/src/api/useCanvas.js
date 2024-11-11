@@ -440,9 +440,11 @@ const operateNode = async (operation) => {
 
   publish({ topic: 'schemaChange', data: { operation } })
 
-  setTimeout(() => {
-    canvasApi.value.updateRect?.()
-  }, 0)
+  if (operation.type !== 'insert') {
+    setTimeout(() => {
+      canvasApi.value.updateRect?.()
+    }, 0)
+  }
 }
 
 // 获取传入的 schema 与最新 schema 的 diff
