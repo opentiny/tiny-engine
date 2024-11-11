@@ -397,24 +397,6 @@ const setRenderer = (fn) => {
 }
 
 export default {
-  props: {
-    schema: {
-      type: Object,
-      default: () => ({})
-    },
-    utils: {
-      type: Object,
-      default: () => ({})
-    },
-    dataSource: {
-      type: Object,
-      default: () => ({})
-    },
-    globalState: {
-      type: Object,
-      default: () => ({})
-    }
-  },
   setup() {
     provide('rootSchema', schema)
 
@@ -443,13 +425,6 @@ export default {
         deep: true
       }
     )
-
-    watchEffect(() => {
-      setUtils(props.utils)
-      setGlobalState(props.globalState)
-      setDataSourceMap(props.dataSource)
-      setSchema(props.schema)
-    })
   },
   render() {
     return getRenderer().call(this)
