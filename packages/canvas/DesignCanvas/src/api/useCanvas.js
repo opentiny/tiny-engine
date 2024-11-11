@@ -183,6 +183,9 @@ const clearCanvas = () => {
   })
 
   setSaved(false)
+
+  canvasApi.value?.clearSelect?.()
+  canvasApi.value?.updateRect?.()
 }
 
 const isBlock = () => pageState.isBlock
@@ -254,7 +257,6 @@ const getNode = (id, parent) => {
 }
 
 const operationTypeMap = {
-  // TODO:insert 场景，要支持递归 insert
   insert: (operation) => {
     const { parentId, newNodeData, position, referTargetNodeId } = operation
 
@@ -265,6 +267,10 @@ const operationTypeMap = {
     }
 
     parentNode.children = parentNode.children || []
+
+    if (!newNodeData.id) {
+      newNodeData.id = utils.guid()
+    }
 
     if (referTargetNodeId) {
       const referenceNode = getNode(referTargetNodeId)
@@ -280,6 +286,12 @@ const operationTypeMap = {
 
       setNode(newNodeData, parentNode)
 
+      // 递归构建 nodeMap
+      if (Array.isArray(newNodeData?.children) && newNodeData.children.length) {
+        const newNode = getNode(newNodeData.id)
+        generateNodesMap(newNodeData.children, newNode)
+      }
+
       return {
         current: newNodeData,
         previous: undefined
@@ -289,6 +301,12 @@ const operationTypeMap = {
     if (position === 'after') {
       parentNode.children.push(newNodeData)
       setNode(newNodeData, parentNode)
+
+      // 递归构建 nodeMap
+      if (Array.isArray(newNodeData?.children) && newNodeData.children.length) {
+        const newNode = getNode(newNodeData.id)
+        generateNodesMap(newNodeData.children, newNode)
+      }
     }
 
     return {
@@ -296,7 +314,6 @@ const operationTypeMap = {
       previous: undefined
     }
   },
-  // TODO: 递归 delete
   delete: (operation) => {
     const { id } = operation
     const targetNode = getNode(id, true)
@@ -412,7 +429,7 @@ const operationTypeMap = {
 
 const lastUpdateType = ref('')
 
-const operateNode = (operation) => {
+const operateNode = async (operation) => {
   if (!operationTypeMap[operation.type]) {
     return
   }
@@ -422,6 +439,10 @@ const operateNode = (operation) => {
   lastUpdateType.value = operation.type
 
   publish({ topic: 'schemaChange', data: { operation } })
+
+  setTimeout(() => {
+    canvasApi.value.updateRect?.()
+  }, 0)
 }
 
 // 获取传入的 schema 与最新 schema 的 diff

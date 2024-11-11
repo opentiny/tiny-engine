@@ -648,9 +648,10 @@ export const selectNode = async (id, type) => {
   }
 
   const { node, parent } = useCanvas().getNodeWithParentById(id) || {}
+
   let element = querySelectById(id, type)
 
-  if (element) {
+  if (element && node) {
     const { rootSelector } = getConfigure(node.componentName)
     element = rootSelector ? element.querySelector(rootSelector) : element
   }
