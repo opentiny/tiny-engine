@@ -8,21 +8,38 @@ A Vue3 renderer for tiny-engine.
 
 ```javascript
 // xxx.vue
-import { h, reactive } from 'vue'
-import Main from '@opentiny/tiny-engine-renderer'
+import { h } from 'vue'
+import Main, { api } from '@opentiny/tiny-engine-renderer'
+
+const getSchema = () => {
+  return newPromise((resolve) => {
+    setTimeout(() => {
+      const data = {
+        state: {},
+        children: [
+          {
+            componentName: 'Text',
+            props: {
+              text: 'Title'
+            }
+          }
+        ]
+      }
+      resolve(data)
+    }, 100)
+  })
+}
 
 export default {
-  render() {
-    // utils
-    const utils = reactive({})
-    // globalState
-    const globalState = reactive([])
-    // dataSource
-    const dataSourceMap = reactive({})
-    // schema
-    const schema = reactive({})
+  setup() {
+    onMounted(async () => {
+      const schema = await getSchema()
 
-    return schema.children.length ? h(Main, { schema, utils, globalState, dataSourceList }) : null
+      api.setSchema(schema)
+    })
+  },
+  render() {
+    return h(Main)
   }
 }
 ```

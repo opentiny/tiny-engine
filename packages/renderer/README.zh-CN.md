@@ -8,21 +8,38 @@
 
 ```javascript
 // xxx.vue
-import { h, reactive } from 'vue'
-import Main from '@opentiny/tiny-engine-renderer'
+import { h } from 'vue'
+import Main, { api } from '@opentiny/tiny-engine-renderer'
+
+const getSchema = () => {
+  return newPromise((resolve) => {
+    setTimeout(() => {
+      const data = {
+        state: {},
+        children: [
+          {
+            componentName: 'Text',
+            props: {
+              text: '标题'
+            }
+          }
+        ]
+      }
+      resolve(data)
+    }, 100)
+  })
+}
 
 export default {
-  render() {
-    // 页面schema
-    const schema = reactive({})
-    // 工具类
-    const utils = reactive({})
-    // 全局状态
-    const globalState = reactive([])
-    // 数据源
-    const dataSourceMap = reactive({})
+  setup() {
+    onMounted(async () => {
+      const schema = await getSchema()
 
-    return schema.children.length ? h(Main, { schema, utils, globalState, dataSourceList }) : null
+      api.setSchema(schema)
+    })
+  },
+  render() {
+    return h(Main)
   }
 }
 ```
