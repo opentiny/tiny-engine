@@ -11,6 +11,7 @@ import {
   useLayout,
   useBlock,
   useNotify,
+  useMessage,
   getOptions
 } from '@opentiny/tiny-engine-meta-register'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
@@ -31,24 +32,16 @@ export default {
     const { isBlock, isSaved, pageState, initData } = useCanvas()
     const { PLUGIN_NAME, activePlugin, isEmptyPage } = useLayout()
     const { getCurrentBlock, initBlock } = useBlock()
-    const { beforeRefresh, refreshMethod, afterRefresh } = getOptions(meta.id)
+    const { beforeRefresh } = getOptions(meta.id)
+    const { publish } = useMessage()
 
     const refreshResource = () => {
       // 清空区块缓存(不能清空组件缓存)，保证画布刷新后可以重新注册最新的区块资源
       useMaterial().clearBlockResources()
       // 因为webcomponents无法重复注册，所以需要刷新内部iframe
       useCanvas().canvasApi.value.getDocument().location.reload()
-
-      if (typeof afterRefresh === 'function') {
-        try {
-          afterRefresh()
-        } catch (error) {
-          useNotify({
-            type: 'error',
-            message: `Error in afterRefresh: ${error}`
-          })
-        }
-      }
+      // 通知画布更新完成
+      publish({ topic: 'canvas_refreshed' })
     }
 
     const refreshBlock = async () => {
@@ -75,11 +68,7 @@ export default {
     const refresh = async () => {
       try {
         if (typeof beforeRefresh === 'function') {
-          await beforeRefresh()
-        }
-
-        if (typeof refreshMethod === 'function') {
-          const stop = await refreshMethod()
+          const stop = await beforeRefresh()
 
           if (stop) {
             return
@@ -88,7 +77,7 @@ export default {
       } catch (error) {
         useNotify({
           type: 'error',
-          message: `Error in refreshing: ${error}`
+          message: `Error in beforeRefresh: ${error}`
         })
       }
 

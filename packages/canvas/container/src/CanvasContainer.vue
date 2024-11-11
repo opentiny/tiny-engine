@@ -31,6 +31,7 @@
 <script>
 import { onMounted, ref, computed, onUnmounted } from 'vue'
 import { iframeMonitoring } from '@opentiny/tiny-engine-common/js/monitor'
+import { DESIGN_MODE } from '@opentiny/tiny-engine-common/js/constants'
 import { useTranslate, useCanvas, useMaterial } from '@opentiny/tiny-engine-meta-register'
 import { NODE_UID, NODE_LOOP } from '../../common'
 import { registerHostkeyEvent, removeHostkeyEvent } from './keyboard'
@@ -117,14 +118,14 @@ export default {
       }
     }
 
-    const handleCanvasEvent = (event, handler) => {
-      const isDesignMode = canvasApi.getRenderer().getDesignMode()
+    const handleCanvasEvent = (handler) => {
+      const designMode = canvasApi.getDesignMode()
 
-      if (!isDesignMode) {
+      if (designMode !== DESIGN_MODE.DESIGN) {
         return
       }
 
-      return handler(event)
+      return handler()
     }
 
     const canvasReady = ({ detail }) => {
@@ -141,7 +142,7 @@ export default {
 
         // 以下是内部iframe监听的事件
         win.addEventListener('mousedown', (event) => {
-          handleCanvasEvent(event, () => {
+          handleCanvasEvent(() => {
             // html元素使用scroll和mouseup事件处理
             if (event.target === doc.documentElement) {
               isScrolling = false
@@ -180,8 +181,8 @@ export default {
         })
 
         win.addEventListener('mousemove', (ev) => {
-          handleCanvasEvent(ev, (e) => {
-            dragMove(e, true)
+          handleCanvasEvent(() => {
+            dragMove(ev, true)
           })
         })
 

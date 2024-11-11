@@ -68,6 +68,10 @@ export const getCurrent = () => {
   }
 }
 
+export const getDesignMode = () => getRenderer()?.getDesignMode()
+
+export const setDesignMode = (mode) => getRenderer()?.setDesignMode(mode)
+
 export const getGlobalState = () => getRenderer().getGlobalState()
 
 export const getNode = (id, parent) => getRenderer()?.getNode(id, parent)
@@ -893,6 +897,8 @@ export const canvasApi = {
   setProps,
   setGlobalState,
   getGlobalState,
+  getDesignMode,
+  setDesignMode,
   getDocument,
   canvasDispatch,
   Builtin,
