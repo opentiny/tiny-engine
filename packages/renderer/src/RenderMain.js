@@ -37,9 +37,7 @@ import {
   getCondition,
   getConditions,
   context,
-  setNode,
-  getCanvasFlag,
-  setCanvasFlag
+  setNode
 } from './context'
 import CanvasEmpty from './CanvasEmpty.vue'
 
@@ -494,7 +492,5 @@ export const api = {
   generateFn,
   getCollectionMethodsMap,
   getBlockSlotDataMap,
-  getComponent,
-  getCanvasFlag,
-  setCanvasFlag
+  getComponent
 }
