@@ -95,8 +95,3 @@ export const PROP_DATA_TYPE = {
   JSRESOURCE: 'JSResource',
   JSSLOT: 'JSSlot'
 }
-
-export const DESIGN_MODE = {
-  DESIGN: 'design', // 设计态
-  RUNTIME: 'runtime' // 运行态
-}
