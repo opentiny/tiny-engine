@@ -32,7 +32,7 @@
 import { onMounted, ref, computed, onUnmounted } from 'vue'
 import { iframeMonitoring } from '@opentiny/tiny-engine-common/js/monitor'
 import { useTranslate, useCanvas, useMaterial } from '@opentiny/tiny-engine-meta-register'
-import { NODE_UID, NODE_LOOP } from '../../common'
+import { NODE_UID, NODE_LOOP, DESIGN_MODE } from '../../common'
 import { registerHostkeyEvent, removeHostkeyEvent } from './keyboard'
 import CanvasMenu, { closeMenu, openMenu } from './components/CanvasMenu.vue'
 import CanvasAction from './components/CanvasAction.vue'
@@ -117,6 +117,16 @@ export default {
       }
     }
 
+    const handleCanvasEvent = (handler) => {
+      const designMode = canvasApi.getDesignMode()
+
+      if (designMode !== DESIGN_MODE.DESIGN) {
+        return
+      }
+
+      return handler()
+    }
+
     const canvasReady = ({ detail }) => {
       if (iframe.value) {
         // 设置monitor报错埋点
@@ -131,15 +141,17 @@ export default {
 
         // 以下是内部iframe监听的事件
         win.addEventListener('mousedown', (event) => {
-          // html元素使用scroll和mouseup事件处理
-          if (event.target === doc.documentElement) {
-            isScrolling = false
-            return
-          }
+          handleCanvasEvent(() => {
+            // html元素使用scroll和mouseup事件处理
+            if (event.target === doc.documentElement) {
+              isScrolling = false
+              return
+            }
 
-          insertPosition.value = false
-          setCurrentNode(event)
-          target.value = event.target
+            insertPosition.value = false
+            setCurrentNode(event)
+            target.value = event.target
+          })
         })
 
         win.addEventListener('scroll', () => {
@@ -168,7 +180,9 @@ export default {
         })
 
         win.addEventListener('mousemove', (ev) => {
-          dragMove(ev, true)
+          handleCanvasEvent(() => {
+            dragMove(ev, true)
+          })
         })
 
         // 阻止浏览器默认的右键菜单功能

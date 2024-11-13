@@ -37,7 +37,9 @@ import {
   getCondition,
   getConditions,
   context,
-  setNode
+  setNode,
+  getDesignMode,
+  setDesignMode
 } from './context'
 import CanvasEmpty from './CanvasEmpty.vue'
 
@@ -467,5 +469,7 @@ export const api = {
   generateFn,
   getCollectionMethodsMap,
   getBlockSlotDataMap,
-  getComponent
+  getComponent,
+  getDesignMode,
+  setDesignMode
 }

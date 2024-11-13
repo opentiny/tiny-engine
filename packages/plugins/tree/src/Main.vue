@@ -47,8 +47,8 @@
                 class="tree-box"
                 :schemaId="data.row?.id"
                 :type="data.row.componentName"
-                @mouseover="mouseover(data.row, $event)"
-                @mouseleave="mouseleave(data.row, $event)"
+                @mouseover="mouseover(data.row)"
+                @mouseleave="mouseleave(data.row)"
                 @click="checkElement(data.row)"
               >
                 <span class="tree-content">
@@ -57,7 +57,7 @@
                   </span> -->
                   <span>{{ data.row.componentName }}</span>
                 </span>
-                <span v-show="!data.row.show" class="tree-handle" @mouseup="showNode(data.row)">
+                <span v-show="data.row.showEye" class="tree-handle" @mouseup="showNode(data.row)">
                   <icon-eyeopen v-show="data.row.show"></icon-eyeopen>
                   <icon-eyeclose v-show="!data.row.show"></icon-eyeclose>
                 </span>
@@ -105,6 +105,7 @@ export default {
       const translateChild = (data) => {
         data.forEach((item) => {
           item.show = pageState.nodesStatus[item.id] !== false
+          item.showEye = !item.show
           const child = item.children
           if (typeOf(child) !== 'array') {
             delete item.children
@@ -171,7 +172,7 @@ export default {
       return component.icon || 'IconAssociation'
     }
 
-    const mouseover = (data, event) => {
+    const mouseover = (data) => {
       if (state.isLock) {
         return
       }
@@ -179,15 +180,14 @@ export default {
       const { hoverNode } = useCanvas().canvasApi.value
 
       hoverNode(data.id)
-      const handleEl = event.target.querySelector('.tree-handle')
-      handleEl && (handleEl.style.display = 'block')
+      data.showEye = true
     }
 
-    const mouseleave = (data, event) => {
+    const mouseleave = (data) => {
       if (data && !data.show) {
         return
       }
-      event.target.querySelector('.tree-handle').style.display = 'none'
+      data.showEye = false
     }
 
     const checkElement = (row) => {
@@ -312,16 +312,23 @@ export default {
     padding-top: 12px;
     border-top: 1px solid var(--ti-lowcode-tree-border-color);
 
-    .tree-handle svg {
-      color: var(--ti-lowcode-tree-icon-color);
+    .tree-handle {
+      svg {
+        color: var(--ti-lowcode-tree-icon-color);
 
-      &:hover {
-        color: var(--ti-lowcode-tree-hover-icon-color);
+        &:hover {
+          color: var(--ti-lowcode-tree-hover-icon-color);
+        }
       }
     }
   }
   :deep(.tiny-grid) {
     background-color: unset;
+    .tree-box {
+      display: flex;
+      width: 200px;
+      justify-content: space-between;
+    }
 
     .tiny-grid-tree-wrapper {
       margin-right: 8px;
