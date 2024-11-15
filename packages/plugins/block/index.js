@@ -20,6 +20,9 @@ export default {
   apis: api,
   entry,
   metas: [BlockService],
+  options: {
+    mergeCategoriesAndGroups: false
+  },
   components: {
     SaveNewBlock
   }

@@ -16,7 +16,7 @@
           ref="groupSelect"
           v-model="state.categoryId"
           popper-class="block-popper"
-          placeholder="默认展示全部分类"
+          :placeholder="groupLabels.selectPlaceholder"
           filterable
           :filter-method="categoryFilter"
           clearable
@@ -48,7 +48,7 @@
                   <div class="popper-confirm" @mousedown.stop="">
                     <div class="popper-confirm-header">
                       <svg-icon class="icon" name="warning"></svg-icon>
-                      <span class="title">您确定删除该区块分类吗？</span>
+                      <span class="title">{{ groupLabels.deletePrompt }}</span>
                     </div>
                     <div class="popper-confirm-footer">
                       <tiny-button class="confirm-btn" size="small" type="primary" @click="delCategory(item.id)"
@@ -327,8 +327,20 @@ export default {
       }
     }
 
+    const groupLabels = useBlock().shouldReplaceCategoryWithGroup()
+      ? {
+          selectPlaceholder: '默认展示全部分组',
+          deletePrompt: '您确定删除该区块分组吗？',
+          deleteTitle: '删除分组'
+        }
+      : {
+          selectPlaceholder: '默认展示全部分类',
+          deletePrompt: '您确定删除该区块分类吗？',
+          deleteTitle: '删除分类'
+        }
+
     const changeCategory = (val) => {
-      let params = { categoryId: val }
+      let params = useBlock().shouldReplaceCategoryWithGroup() ? { groupId: val } : { categoryId: val }
 
       if (!val) {
         params = {}
@@ -349,7 +361,7 @@ export default {
 
     const deleteItem = (item) => {
       confirm({
-        title: '删除分类',
+        title: groupLabels.deleteTitle,
         status: 'custom',
         message: {
           render() {
@@ -423,7 +435,8 @@ export default {
       handleChangeDeletePopoverVisible,
       handleSelectVisibleChange,
       externalBlock,
-      docsUrl
+      docsUrl,
+      groupLabels
     }
   }
 }

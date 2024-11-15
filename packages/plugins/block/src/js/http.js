@@ -75,3 +75,22 @@ export const createCategory = (params) =>
 // 删除区块分类
 export const deleteCategory = (id) =>
   getMetaApi(META_SERVICE.Http).delete(`/material-center/api/block-categories/${id}`)
+
+// 下面是区块分组的增删查改接口
+// 当 Block 插件的 options.mergeCategoriesAndGroups 为 true 时，将分类的接口全部替换成分组的接口
+
+// 区块分组列表
+export const fetchGroups = (params) =>
+  getMetaApi(META_SERVICE.Http).get(`/material-center/api/block-groups`, { params })
+
+// 更新区块分组
+export const updateGroup = ({ id, ...params }) =>
+  getMetaApi(META_SERVICE.Http).post(`/material-center/api/block-groups/update/${id}`, params)
+
+// 新建区块分组
+export const createGroup = (params) =>
+  getMetaApi(META_SERVICE.Http).post('/material-center/api/block-groups/create', { ...params, from: 'block' })
+
+// 删除区块分组
+export const deleteGroup = (groupId) =>
+  getMetaApi(META_SERVICE.Http).get(`/material-center/api/block-groups/delete/${groupId}`)

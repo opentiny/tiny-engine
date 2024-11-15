@@ -27,8 +27,10 @@ import {
   getMetaApi,
   META_APP,
   getMergeMeta,
+  getOptions,
   META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
+import meta from '../../meta'
 
 const { SORT_TYPE, SCHEMA_DATA_TYPE, BLOCK_OPENNESS } = constants
 
@@ -715,6 +717,11 @@ const getBlockAssetsByVersion = (block, version) => {
   return assets
 }
 
+const shouldReplaceCategoryWithGroup = () => {
+  const { mergeCategoriesAndGroups } = getOptions(meta.id)
+  return mergeCategoriesAndGroups
+}
+
 export default function () {
   return {
     NODE_TYPE_PAGE,
@@ -758,6 +765,7 @@ export default function () {
     removePropertyLink,
     getBlockProperties,
     getBlockPageSchema,
-    getDateFromNow
+    getDateFromNow,
+    shouldReplaceCategoryWithGroup
   }
 }

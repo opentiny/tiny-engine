@@ -17,10 +17,15 @@
       label-position="left"
       validate-type="text"
     >
-      <tiny-form-item label="分类名称" prop="name">
-        <tiny-input v-model="formData.name" placeholder="请输入分类名称" @change="handleChangeName"></tiny-input>
+      <tiny-form-item :label="groupLabels.nameInput" prop="name">
+        <tiny-input
+          v-model="formData.name"
+          :placeholder="groupLabels.nameInputPlaceholder"
+          @change="handleChangeName"
+        ></tiny-input>
       </tiny-form-item>
-      <tiny-form-item label="分类ID" prop="categoryId">
+      <!-- 分组不需要填写表单id字段 -->
+      <tiny-form-item v-if="!shouldReplaceCategoryWithGroup()" label="分类ID" prop="categoryId">
         <tiny-input v-model="formData.categoryId" placeholder="请输入分类ID" :disabled="isEdit"></tiny-input>
       </tiny-form-item>
     </tiny-form>
@@ -46,7 +51,7 @@ import { REGEXP_GROUP_NAME } from '@opentiny/tiny-engine-common/js/verification'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { createOrUpdateCategory } from './js/blockSetting'
 
-const { getGroupList } = useBlock()
+const { getGroupList, shouldReplaceCategoryWithGroup } = useBlock()
 
 const props = defineProps({
   modelValue: Boolean,
@@ -54,6 +59,20 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:modelValue'])
+
+const groupLabels = shouldReplaceCategoryWithGroup()
+  ? {
+      text: '分组',
+      nameInput: '分组名称',
+      nameInputPlaceholder: '请输入分组名称',
+      validateErrMsg: '分组名称不能重复！'
+    }
+  : {
+      text: '分类',
+      nameInput: '分类名称',
+      nameInputPlaceholder: '请输入分类名称',
+      validateErrMsg: '分类名称不能重复！'
+    }
 
 const state = reactive({
   visible: false
@@ -69,7 +88,7 @@ const formData = reactive({ name: '', categoryId: '' })
 const validateGroup = (rule, value, callback) => {
   const isRepeat = props.initialValue?.name !== value && groupList.value.some((group) => group.name === value)
   if (isRepeat) {
-    callback(new Error('分类名称不能重复！'))
+    callback(new Error(groupLabels.validateErrMsg))
     return
   }
   callback()
@@ -85,6 +104,11 @@ const rules = reactive({
   ],
   categoryId: [{ required: true, message: '必填', trigger: 'blur' }]
 })
+
+// 分组不需要填写表单id字段
+if (shouldReplaceCategoryWithGroup()) {
+  rules.categoryId = []
+}
 
 const handleChangeName = (value) => {
   if (isEdit.value) {
@@ -103,7 +127,7 @@ const handleChangeName = (value) => {
   formData.categoryId = id
 }
 
-const title = computed(() => `${isEdit.value ? '编辑' : '新增'}分类`)
+const title = computed(() => `${isEdit.value ? '编辑' : '新增'}${groupLabels.text}`)
 
 const closeDialog = () => {
   emit('update:modelValue', false)
