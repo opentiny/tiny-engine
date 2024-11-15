@@ -9,9 +9,9 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-import Renderer, { api } from './RenderMain'
+import Renderer, { api, generateContext } from './RenderMain'
 import BuiltinBundle from './builtin/builtin.json'
 
 export default Renderer
 
-export { api, BuiltinBundle }
+export { api, BuiltinBundle, generateContext }
