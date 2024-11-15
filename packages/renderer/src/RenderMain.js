@@ -506,8 +506,18 @@ export const api = {
  */
 export const generateContext = async (schema, metaData) => {
   const { globalState, utils, dataSource } = metaData
-  setGlobalState(globalState)
-  await setUtils(utils)
-  setDataSourceMap(dataSource.list)
+
+  if (Array.isArray(globalState)) {
+    setGlobalState(globalState)
+  }
+
+  if (Array.isArray(utils)) {
+    await setUtils(utils)
+  }
+
+  if (Array.isArray(dataSource.list)) {
+    await setDataSourceMap(dataSource.list)
+  }
+
   await setSchema(schema)
 }
