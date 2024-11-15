@@ -159,9 +159,6 @@ const getProp = (key) => {
 }
 
 const delProp = (name) => {
-  // const props = properties.schema.props || {}
-  // delete props[name]
-
   const newProps = { ...(properties.schema.props || {}) }
 
   delete newProps[name]

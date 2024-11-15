@@ -111,7 +111,7 @@ import { formatString } from '@opentiny/tiny-engine-common/js/ast'
 import useStyle, { updateGlobalStyleStr } from '../../js/useStyle'
 import { stringify, getSelectorArr } from '../../js/parser'
 
-const { getSchema, propsUpdateKey } = useProperties()
+const { getSchema, propsUpdateKey, setProp } = useProperties()
 
 const stateOptions = [
   { label: 'None', value: '' },
@@ -171,14 +171,19 @@ watch(
 )
 
 const setSelectorProps = (type, value) => {
-  const { getSchema: getCanvasPageSchema } = useCanvas()
-  const schema = getSchema() || getCanvasPageSchema()
+  const schema = getSchema()
 
-  if (!schema.props) {
-    schema.props = {}
+  if (schema) {
+    setProp(type, value)
+    propsUpdateKey.value++
+
+    return
   }
 
-  schema.props[type] = value
+  const { getSchema: getCanvasPageSchema, updateSchema } = useCanvas()
+  const pageSchema = getCanvasPageSchema()
+
+  updateSchema({ props: { ...(pageSchema.props || {}), [type]: value } })
   propsUpdateKey.value++
 }
 

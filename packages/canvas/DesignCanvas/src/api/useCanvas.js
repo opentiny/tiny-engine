@@ -259,7 +259,6 @@ const getNode = (id, parent) => {
 const operationTypeMap = {
   insert: (operation) => {
     const { parentId, newNodeData, position, referTargetNodeId } = operation
-
     const parentNode = getNode(parentId) || pageState.pageSchema
 
     if (!parentNode) {
@@ -317,6 +316,11 @@ const operationTypeMap = {
   delete: (operation) => {
     const { id } = operation
     const targetNode = getNode(id, true)
+
+    if (!targetNode) {
+      return
+    }
+
     const { parent, node } = targetNode
 
     const index = parent.children.indexOf(node)
@@ -350,9 +354,8 @@ const operationTypeMap = {
   },
   changeProps: (operation) => {
     const { id, value, option: changeOption } = operation
-    const { node, parent } = getNode(id, true)
+    const { node } = getNode(id, true)
     const previous = deepClone(node)
-
     const { overwrite = false } = changeOption || {}
 
     if (!node) {
@@ -360,7 +363,7 @@ const operationTypeMap = {
     }
 
     if (overwrite) {
-      setNode({ id, ...value }, parent)
+      node.props = value.props
     } else {
       Object.assign(node, value || {})
     }
@@ -371,31 +374,45 @@ const operationTypeMap = {
     }
   },
   updateAttributes: (operation) => {
-    const { id, value } = operation
+    const { id, value, overwrite } = operation
     const { id: _id, children, ...restAttr } = value
-
     const node = getNode(id)
 
     // 其他属性直接浅  merge
-    Object.assign(node, deepClone(restAttr))
+    Object.assign(node, restAttr)
+
+    // 配置了 overwrite，需要将没有传入的属性进行删除（不包括 children）
+    if (overwrite) {
+      const { id: _unUsedId, children: _unUsedChildren, ...restOrigin } = node
+      const originKeys = Object.keys(restOrigin)
+      const newKeysSet = new Set(Object.keys(restAttr))
+
+      originKeys.forEach((key) => {
+        if (!newKeysSet.has(key)) {
+          delete node[key]
+        }
+      })
+    }
 
     if (!Array.isArray(children)) {
+      // 非数组类型的 children，比如是直接的字符串作为 children
+      if (children || typeof children === 'string') {
+        node.children = children
+      }
+
       return
     }
 
-    // 传了 children 进来，需要找出来被删除的、新增的，剩下的是修改的。
-    const originChildrenIds = (node.children || []).map(({ id }) => id)
-    const originChildrenSet = new Set(originChildrenIds)
     const newChildren = children.map((item) => {
       if (!item.id) {
-        return {
-          id: utils.guid(),
-          ...item
-        }
+        item.id = utils.guid()
       }
 
       return item
     })
+    // 传了 children 进来，需要找出来被删除的、新增的，剩下的是修改的。
+    const originChildrenIds = (node.children || []).filter(({ id }) => id).map(({ id }) => id)
+    const originChildrenSet = new Set(originChildrenIds)
 
     const newChildrenSet = new Set(newChildren.map(({ id }) => id))
     // 被删除的项
@@ -419,6 +436,17 @@ const operationTypeMap = {
           referTargetNodeId: changedChildren?.[index]?.id
         })
         return
+      }
+
+      // 直接改引用插入进来，但是没有构建对应的 Map，需要构建Map
+      if (!getNode(childItem.id)) {
+        setNode(childItem, node)
+
+        // 递归构建 nodeMap
+        if (Array.isArray(childItem?.children) && childItem.children.length) {
+          const newNode = getNode(childItem.id)
+          generateNodesMap(childItem.children, newNode)
+        }
       }
 
       // 递归修改

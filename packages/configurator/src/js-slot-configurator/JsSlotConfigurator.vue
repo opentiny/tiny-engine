@@ -14,7 +14,7 @@
         <div class="use-slot-item-content">
           <div class="use-slot-switch-wrap">
             <div :class="['e__switch', { 'e_is-checked': slot.bind }]">
-              <span class="e__switch-core" @click="toggleSlot(index, slot)"></span>
+              <span class="e__switch-core" @click="updateSlot(index, slot)"></span>
             </div>
           </div>
           <tiny-form-item
@@ -25,7 +25,7 @@
             <tiny-input
               v-model="slot.params"
               class="use-slot-params"
-              @change="validParams(paramsPropPath(index), slot)"
+              @change="validParams(slot, paramsPropPath(index))"
             ></tiny-input>
           </tiny-form-item>
         </div>
@@ -94,51 +94,7 @@ export default {
       }
     }
 
-    const updateSlotParams = (slotData) => {
-      emit('update:modelValue', slotData)
-
-      // 更新当前选中组件的根属性，不更新在jsslot中的数据非响应式
-      const [propsName] = path.split('.')
-      const schema = useProperties().getSchema()
-      schema.props[propsName] = JSON.parse(JSON.stringify(schema.props[propsName]))
-    }
-
-    const setSlotParams = ({ name, params = '' }) => {
-      if (!props.modelValue?.[name]) {
-        return
-      }
-
-      const slotData = { ...(props.modelValue || {}) }
-
-      if (params.length) {
-        slotData[name].params = params.split(',')
-      } else {
-        delete slotData[name].params
-      }
-
-      updateSlotParams(slotData)
-    }
-
-    const toggleSlot = (idx, { bind, name, params = '' }) => {
-      // 原本绑定的，解除绑定
-      if (bind) {
-        useModal().confirm({
-          title: '提示',
-          message: '关闭后插槽内的内容将被清空，是否继续？',
-          status: 'info',
-          exec: () => {
-            slotList.value[idx].bind = false
-            const { [name]: _deleted, ...rest } = { ...(props.modelValue || {}) }
-            updateSlotParams(rest)
-          }
-        })
-
-        return
-      }
-
-      // 未绑定的，新增绑定
-      slotList.value[idx].bind = true
-
+    const updateSlot = (idx, { bind, name, params = '' }, isToggleSlot = true) => {
       const slotInfo = {
         [name]: {
           type: 'JSSlot',
@@ -150,17 +106,71 @@ export default {
         }
       }
 
+      const slotData = { ...slotInfo, ...(props.modelValue || {}) }
+      const { setProp } = useProperties()
+      const { setNode, operateNode } = useCanvas()
+
       if (params.length) {
-        slotInfo[name].params = params.split(',')
+        slotData[name].params = params.split(',')
+      } else {
+        delete slotData[name].params
       }
 
-      updateSlotParams({ ...(props.modelValue || {}), ...slotInfo })
+      if (bind && isToggleSlot) {
+        useModal().confirm({
+          title: '提示',
+          message: '关闭后插槽内的内容将被清空，是否继续？',
+          status: 'info',
+          exec: () => {
+            slotList.value[idx].bind = false
+            operateNode({ type: 'delete', id: slotData[name].value[0].id })
+
+            delete slotData[name]
+            emit('update:modelValue', slotData)
+            const [propsName] = path.split('.')
+
+            const schema = useProperties().getSchema()
+
+            setProp(propsName, schema.props[propsName])
+          }
+        })
+      } else {
+        slotList.value[idx].bind = true
+      }
+
+      emit('update:modelValue', slotData)
+
+      // 更新当前选中组件的根属性，不根新在jsslot中的数据非响应式
+      const [propsName] = path.split('.')
+      const schema = useProperties().getSchema()
+
+      for (const data of Object.values(slotData)) {
+        if (data.value?.[0] && !data.value[0]?.id) {
+          // 手动设置节点
+          setNode(data.value[0], schema)
+        }
+      }
+
+      setProp(propsName, schema.props[propsName])
     }
 
-    const validParams = (paramsPath, slot) => {
+    const setParams = (slot) => {
+      if (slot.bind) {
+        const slotData = props.modelValue
+        const { params, name } = slot
+
+        if (params.length) {
+          slotData[name].params = params.split(',')
+        } else {
+          delete slotData[name].params
+        }
+      }
+    }
+
+    const validParams = (slot, paramsPath) => {
       slotRef.value.validateField([paramsPath], (error) => {
         if (!error) {
-          slot.bind && setSlotParams(slot)
+          setParams(slot)
         }
       })
     }
@@ -171,12 +181,13 @@ export default {
     })
 
     return {
-      toggleSlot,
+      updateSlot,
       slotList,
       paramsPropPath,
       slotRef,
       paramsStringValidator,
       validParams,
+      setParams,
       state,
       componentsMap
     }

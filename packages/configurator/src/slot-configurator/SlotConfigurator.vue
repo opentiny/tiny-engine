@@ -65,12 +65,7 @@ export default {
     })
     const toggleSlot = ({ name = 'default', params, bind }, i) => {
       const schema = useProperties().getSchema()
-
-      if (!schema.children) {
-        schema.children = []
-      }
-
-      const children = schema.children
+      const { operateNode } = useCanvas()
 
       if (!bind) {
         slotList.value[i].bind = !slotList.value[i].bind
@@ -90,7 +85,11 @@ export default {
           template.props.slot.params = params
         }
 
-        children.push(template)
+        operateNode({
+          type: 'updateAttributes',
+          id: schema.id,
+          value: { children: [...(schema.children || []), template] }
+        })
       } else {
         useModal().confirm({
           title: '提示',
@@ -99,11 +98,12 @@ export default {
           exec: () => {
             slotList.value[i].bind = !slotList.value[i].bind
 
-            const nodeIdex = children.findIndex(
+            const newChildren = schema.children.filter(
               ({ componentName, props }) =>
-                componentName === 'Template' && (props?.slot === name || props?.slot?.name === name)
+                componentName !== 'Template' || (props?.slot !== name && props?.slot?.name !== name)
             )
-            children.splice(nodeIdex, 1)
+
+            operateNode({ type: 'updateAttributes', id: schema.id, value: { children: [...newChildren] } })
           },
           cancel: () => {}
         })
