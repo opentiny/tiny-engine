@@ -336,10 +336,6 @@ export default {
   font-size: 14px;
 }
 
-:deep(.view-line) {
-  font-size: 12px;
-}
-
 .source-code {
   height: 50vh;
   display: flex;
