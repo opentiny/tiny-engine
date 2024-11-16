@@ -1,0 +1,44 @@
+{
+  "name": "@opentiny/tiny-engine-block-compiler",
+  "version": "2.0.0-rc.2",
+  "publishConfig": {
+    "access": "public"
+  },
+  "description": "block runtime compiler",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/opentiny/tiny-engine",
+    "directory": "packages/block-compiler"
+  },
+  "bugs": {
+    "url": "https://github.com/opentiny/tiny-engine/issues"
+  },
+  "author": "OpenTiny Team",
+  "license": "MIT",
+  "homepage": "https://opentiny.design/tiny-engine",
+  "dependencies": {
+    "@vue/shared": "^3.3.4"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.14.0",
+    "@typescript-eslint/parser": "^8.14.0",
+    "@vitejs/plugin-vue": "^5.1.2",
+    "eslint": "8",
+    "typescript": "~5.6.2",
+    "vite": "^5.4.2",
+    "vue-tsc": "^2.1.8"
+  },
+  "peerDependencies": {
+    "vue": "^3.4.15"
+  }
+}
