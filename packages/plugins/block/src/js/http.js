@@ -81,7 +81,7 @@ export const deleteCategory = (id) =>
 
 // 区块分组列表
 export const fetchGroups = (params) =>
-  getMetaApi(META_SERVICE.Http).get(`/material-center/api/block-groups`, { params })
+  getMetaApi(META_SERVICE.Http).get(`/material-center/api/block-groups`, { params: { ...params, from: 'block' } })
 
 // 更新区块分组
 export const updateGroup = ({ id, ...params }) =>
@@ -89,7 +89,7 @@ export const updateGroup = ({ id, ...params }) =>
 
 // 新建区块分组
 export const createGroup = (params) =>
-  getMetaApi(META_SERVICE.Http).post('/material-center/api/block-groups/create', { ...params, from: 'block' })
+  getMetaApi(META_SERVICE.Http).post('/material-center/api/block-groups/create', params)
 
 // 删除区块分组
 export const deleteGroup = (groupId) =>
