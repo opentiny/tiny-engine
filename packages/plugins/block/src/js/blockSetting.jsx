@@ -603,7 +603,17 @@ const getCategories = () => {
 const createBlock = (block = {}) => {
   const { message } = useModal()
   const created_app = getAppId()
-  const params = { ...block, created_app }
+
+  const { categories, ...rest } = block
+  const extraParams = {}
+
+  if (useBlock().shouldReplaceCategoryWithGroup()) {
+    extraParams.groups = categories
+  } else {
+    extraParams.categories = categories
+  }
+
+  const params = { ...rest, ...extraParams, created_app }
 
   if (isVsCodeEnv) {
     const id = getMaterialHistory()?.id
