@@ -16,7 +16,17 @@ import TinyVue from '@opentiny/vue'
 import * as TinyVueIcon from '@opentiny/vue-icon'
 import { useBroadcastChannel } from '@vueuse/core'
 import { constants, utils as commonUtils } from '@opentiny/tiny-engine-utils'
-import renderer, { parseData, setConfigure, setController, globalNotify, isStateAccessor } from './render'
+import renderer, {
+  parseData,
+  setConfigure,
+  setController,
+  globalNotify,
+  isStateAccessor,
+  generateFn,
+  getCollectionMethodsMap,
+  getBlockSlotDataMap,
+  getComponent
+} from './render'
 import {
   getNode as getNodeById,
   clearNodes,
@@ -43,7 +53,7 @@ const reset = (obj) => {
 const refreshKey = ref(0)
 const methods = {}
 const schema = reactive({})
-const state = shallowReactive({})
+const state = reactive({})
 const bridge = {}
 const utils = {}
 const props = {}
@@ -67,13 +77,27 @@ watchEffect(() => {
   })
 })
 
+const dynamicImport = async ({ name, content }) => {
+  const { cdnLink, destructuring, exportName } = content
+
+  if (!cdnLink) return
+
+  const module = await import(/* @vite-ignore */ cdnLink)
+
+  return {
+    name,
+    module: destructuring ? module[exportName] : module
+  }
+}
+
 const getUtils = () => utils
 
-const setUtils = (data, clear, isForceRefresh) => {
+const setUtils = async (data, clear, isForceRefresh) => {
   if (clear) {
     reset(utils)
   }
   const utilsCollection = {}
+  const npmUtilPromises = []
   // 目前画布还不具备远程加载utils工具类的功能，目前只能加载TinyVue组件库中的组件工具
   data?.forEach((item) => {
     const util = TinyVue[item.content.exportName]
@@ -92,7 +116,18 @@ const setUtils = (data, clear, isForceRefresh) => {
       const defaultFn = () => {}
       utilsCollection[item.name] = generateFunction(item.content.value, context) || defaultFn
     }
+
+    if (item.type === 'npm' && item.content.cdnLink) {
+      npmUtilPromises.push(dynamicImport(item))
+    }
   })
+
+  const npmUtils = await Promise.all(npmUtilPromises)
+
+  npmUtils.forEach(({ name, module }) => {
+    utilsCollection[name] = module
+  })
+
   Object.assign(utils, utilsCollection)
 
   // 因为工具类并不具有响应式行为，所以需要通过修改key来强制刷新画布
@@ -358,6 +393,7 @@ const setSchema = async (data) => {
 
 const getNode = (id, parent) => (id ? getNodeById(id, parent) : schema)
 
+// 设置自定义渲染器
 let canvasRenderer = null
 
 const defaultRenderer = function () {
@@ -441,6 +477,7 @@ export const api = {
   getProps,
   setProps,
   getContext,
+  setContext,
   getNode,
   getRoot,
   setPagecss,
@@ -454,6 +491,34 @@ export const api = {
   setNode,
   getRenderer,
   setRenderer,
+  globalNotify,
+  generateFn,
+  getCollectionMethodsMap,
+  getBlockSlotDataMap,
+  getComponent,
   getDesignMode,
   setDesignMode
+}
+
+/**
+ * schema和元数据组装context
+ * @param {*} schema
+ * @param {*} metaData
+ */
+export const generateContext = async (schema, metaData) => {
+  const { globalState, utils, dataSource } = metaData
+
+  if (Array.isArray(globalState)) {
+    setGlobalState(globalState)
+  }
+
+  if (Array.isArray(utils)) {
+    await setUtils(utils)
+  }
+
+  if (Array.isArray(dataSource.list)) {
+    await setDataSourceMap(dataSource.list)
+  }
+
+  await setSchema(schema)
 }

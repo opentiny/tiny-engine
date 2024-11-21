@@ -19,7 +19,7 @@ import { transformSync } from '@babel/core'
 import i18nHost from '@opentiny/tiny-engine-i18n-host'
 import { CanvasRow, CanvasCol, CanvasRowColContainer } from '@opentiny/tiny-engine-builtin-component'
 
-import { NODE_UID as DESIGN_UIDKEY, NODE_TAG as DESIGN_TAGKEY, NODE_LOOP as DESIGN_LOOPID } from '../../common'
+import { NODE_UID as DESIGN_UIDKEY, NODE_TAG as DESIGN_TAGKEY, NODE_LOOP as DESIGN_LOOPID } from './constants'
 import { context, conditions, setNode, getDesignMode, DESIGN_MODE } from './context'
 import {
   CanvasBox,
@@ -57,6 +57,8 @@ const transformJSX = (code) => {
 
 export const blockSlotDataMap = reactive({})
 
+export const getBlockSlotDataMap = () => blockSlotDataMap
+
 const Mapper = {
   Icon: CanvasIcon,
   Text: CanvasText,
@@ -79,6 +81,8 @@ export const globalNotify = (options) => post(options)
 
 export const collectionMethodsMap = {}
 
+export const getCollectionMethodsMap = () => collectionMethodsMap
+
 const getNative = (name) => {
   return window.TinyLowcodeComponent?.[name]
 }
@@ -94,7 +98,7 @@ export const setConfigure = (configureData) => {
   Object.assign(configure, configureData)
 }
 
-export const setController = (controllerData) => {
+export function setController(controllerData) {
   Object.assign(controller, controllerData)
 }
 
@@ -584,7 +588,9 @@ const getBindProps = (schema, scope) => {
   delete bindProps.className
 
   // 使画布中元素可拖拽
-  bindProps.draggable = true
+  if (getDesignMode() === DESIGN_MODE.DESIGN) {
+    bindProps.draggable = true
+  }
 
   // 过滤在门户网站上配置的画布丢弃的属性
   invalidity.forEach((prop) => delete bindProps[prop])

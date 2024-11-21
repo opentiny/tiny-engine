@@ -21,7 +21,7 @@ import {
 } from '../../common'
 import { useCanvas, useLayout, useResource, useTranslate, useMaterial } from '@opentiny/tiny-engine-meta-register'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
-import Builtin from '../../render/src/builtin/builtin.json' //TODO 画布内外应该分开
+import { BuiltinBundle } from '@opentiny/tiny-engine-renderer'
 
 export const POSITION = Object.freeze({
   TOP: 'top',
@@ -901,7 +901,7 @@ export const canvasApi = {
   setDesignMode,
   getDocument,
   canvasDispatch,
-  Builtin,
+  BuiltinBundle,
   setDataSourceMap: (...args) => {
     return canvasState.renderer.setDataSourceMap(...args)
   },

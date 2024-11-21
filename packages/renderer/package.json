@@ -1,6 +1,6 @@
 {
-  "name": "@opentiny/tiny-engine-canvas",
-  "version": "2.0.0-rc.2",
+  "name": "@opentiny/tiny-engine-renderer",
+  "version": "2.0.0-alpha.4",
   "publishConfig": {
     "access": "public"
   },
@@ -17,15 +17,12 @@
   "exports": {
     ".": {
       "import": "./dist/index.js"
-    },
-    "./render": {
-      "import": "./dist/render.js"
     }
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/opentiny/tiny-engine",
-    "directory": "packages/canvas"
+    "directory": "packages/renderer"
   },
   "bugs": {
     "url": "https://github.com/opentiny/tiny-engine/issues"
@@ -36,12 +33,10 @@
   "type": "module",
   "dependencies": {
     "@babel/core": "7.18.13",
-    "@opentiny/tiny-engine-common": "workspace:*",
+    "@opentiny/tiny-engine-builtin-component": "workspace:*",
     "@opentiny/tiny-engine-i18n-host": "workspace:*",
     "@opentiny/tiny-engine-meta-register": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
-    "@opentiny/tiny-engine-webcomponent-core": "workspace:*",
-    "@opentiny/tiny-engine-renderer": "workspace:*",
     "@vue/babel-plugin-jsx": "1.1.1",
     "@vue/shared": "^3.3.4",
     "@vueuse/core": "^9.6.0"

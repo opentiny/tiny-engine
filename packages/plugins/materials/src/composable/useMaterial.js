@@ -404,9 +404,9 @@ const updateCanvasDependencies = (blocks) => {
 }
 
 const initBuiltinMaterial = () => {
-  const { Builtin } = useCanvas().canvasApi.value
+  const { BuiltinBundle } = useCanvas().canvasApi.value
   // 添加画布物料
-  addMaterials(Builtin.data.materials)
+  addMaterials(BuiltinBundle.data.materials)
   // 添加builtin-component NPM包物料
   addMaterials(BuiltinComponentMaterials)
 }

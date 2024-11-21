@@ -8,13 +8,13 @@
 
 <script>
 import { ref, watch, computed, inject } from 'vue'
-import { getController } from '../render'
+import { api } from '../RenderMain'
 import CanvasPlaceholder from './CanvasPlaceholder.vue'
 
 import { getHandler } from './CanvasCollection.js'
 
 export const fetchDataSourceDetail = (dataSourceId) =>
-  getController().request.get(`/app-center/api/sources/detail/${dataSourceId}`) // TODO: 强行耦合了
+  api.getController().request.get(`/app-center/api/sources/detail/${dataSourceId}`) // TODO: 强行耦合了
 
 export default {
   components: {
