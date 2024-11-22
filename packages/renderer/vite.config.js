@@ -32,7 +32,7 @@ export default defineConfig({
       output: {
         banner: 'import "./index.css"'
       },
-      external: ['vue', '@vueuse/core', 'vue-i18n', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/]
+      external: ['vue', 'vue-i18n', /@opentiny\/vue.*/]
     },
     minify: true
   }
