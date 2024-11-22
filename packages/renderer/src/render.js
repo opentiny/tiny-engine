@@ -588,7 +588,9 @@ const getBindProps = (schema, scope) => {
   delete bindProps.className
 
   // 使画布中元素可拖拽
-  bindProps.draggable = true
+  if (getDesignMode() === DESIGN_MODE.DESIGN) {
+    bindProps.draggable = true
+  }
 
   // 过滤在门户网站上配置的画布丢弃的属性
   invalidity.forEach((prop) => delete bindProps[prop])

@@ -53,7 +53,7 @@ const reset = (obj) => {
 const refreshKey = ref(0)
 const methods = {}
 const schema = reactive({})
-const state = shallowReactive({})
+const state = reactive({})
 const bridge = {}
 const utils = {}
 const props = {}
@@ -477,6 +477,7 @@ export const api = {
   getProps,
   setProps,
   getContext,
+  setContext,
   getNode,
   getRoot,
   setPagecss,
