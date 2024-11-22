@@ -182,7 +182,9 @@ export default {
         addHistory: useHistory().addHistory,
         registerBlock: useMaterial().registerBlock,
         request: getMetaApi(META_SERVICE.Http).getHttp(),
-        ast
+        ast,
+        getBlockByName: useMaterial().getBlockByName,
+        preBuildBlock: useMaterial().preBuildBlock
       },
       CanvasLayout,
       canvasRef,

@@ -1,6 +1,7 @@
 <template>
   <div>
     <h1 class="head-title">这里是头部</h1>
+    <block-menu></block-menu>
   </div>
 </template>
 

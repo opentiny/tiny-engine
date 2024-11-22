@@ -23,6 +23,7 @@ import {
   META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
 import meta from '../../meta'
+import { preBuildBlock, getBlockByName } from './block-compile'
 
 const { camelize, capitalize } = utils
 const { MATERIAL_TYPE } = constants
@@ -443,6 +444,8 @@ export default function () {
     addMaterials, // 添加多个物料
     registerBlock, // 注册新的区块
     updateCanvasDependencies, //传入新的区块，获取新增区块的依赖，更新画布中的组件依赖
-    getConfigureMap // 获取物料组件的配置信息
+    getConfigureMap, // 获取物料组件的配置信息
+    getBlockByName,
+    preBuildBlock
   }
 }

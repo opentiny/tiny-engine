@@ -126,6 +126,7 @@ const fetchResource = async ({ isInit = true } = {}) => {
   useMessage().publish({ topic: 'app_id_changed', data: id })
   const appData = await getMetaApi(META_SERVICE.Http).get(`/app-center/v1/api/apps/schema/${id}`)
   resState.pageTree = appData.componentsTree
+  resState.componentsMap = appData.componentsMap
   resState.dataSource = appData.dataSource?.list
   resState.dataHandler = appData.dataSource?.dataHandler || DEFAULT_INTERCEPTOR.dataHandler
   resState.willFetch = appData.dataSource?.willFetch || DEFAULT_INTERCEPTOR.willFetch

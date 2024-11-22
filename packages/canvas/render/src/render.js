@@ -10,7 +10,7 @@
  *
  */
 
-import { h, provide, reactive } from 'vue'
+import { defineAsyncComponent, h, provide, reactive } from 'vue'
 import { isHTMLTag, hyphenate } from '@vue/shared'
 import { useBroadcastChannel } from '@vueuse/core'
 import { constants, utils } from '@opentiny/tiny-engine-utils'
@@ -354,13 +354,52 @@ export const wrapCustomElement = (componentName) => {
   return customElements[componentName]
 }
 
+const blockComponentsMap = {}
+
+const getBlockComponent = (name) => {
+  if (blockComponentsMap[name]) {
+    return blockComponentsMap[name]
+  }
+
+  const comp = defineAsyncComponent(async () => {
+    // TODO: 加载中提示
+    // TODO: 加载错误提示
+    const blocksBlob = await getController().getBlockByName(name)
+
+    // TODO: 验证一下 嵌套子区块是不是不需要注册异步组件也可以
+    for (const [fileName, value] of Object.entries(blocksBlob)) {
+      // 注册异步组件
+      blockComponentsMap[fileName] = defineAsyncComponent(() => import(value.blobURL))
+
+      if (!value.style) {
+        continue
+      }
+
+      // 注册 CSS，以区块为维度
+      const stylesheet = document.querySelector(`#${fileName}`)
+
+      if (stylesheet) {
+        stylesheet.innerHTML = value.style
+      } else {
+        const newStylesheet = document.createElement('style')
+        newStylesheet.innerHTML = value.style
+        document.head.appendChild(newStylesheet)
+      }
+    }
+
+    return blockComponentsMap[name]
+  })
+
+  return comp
+}
+
 export const getComponent = (name) => {
   return (
     Mapper[name] ||
     getNative(name) ||
     getBlock(name) ||
-    customElements[name] ||
-    (isHTMLTag(name) ? name : wrapCustomElement(name))
+    // customElements[name] ||
+    (isHTMLTag(name) ? name : getBlockComponent(name))
   )
 }
 

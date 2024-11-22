@@ -25,6 +25,7 @@
   "license": "MIT",
   "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
+    "@opentiny/tiny-engine-block-compiler": "workspace:*",
     "@opentiny/tiny-engine-builtin-component": "workspace:*",
     "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-meta-register": "workspace:*",
