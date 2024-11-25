@@ -141,7 +141,7 @@ const registerComponentToResource = (data) => {
   }
 }
 
-const fetchBlockDetail = async (blockName) => {
+export const fetchBlockDetail = async (blockName) => {
   const { getBlockAssetsByVersion } = useBlock()
   const currentVersion = componentState.componentsMap?.[blockName]?.version
   const block = (await getMetaApi(META_SERVICE.Http).get(`/material-center/api/block?label=${blockName}`))?.[0]

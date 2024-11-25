@@ -369,7 +369,7 @@ const getBlockComponent = (name) => {
     // TODO: 验证一下 嵌套子区块是不是不需要注册异步组件也可以
     for (const [fileName, value] of Object.entries(blocksBlob)) {
       // 注册异步组件
-      blockComponentsMap[fileName] = defineAsyncComponent(() => import(value.blobURL))
+      blockComponentsMap[fileName] = defineAsyncComponent(() => import(/* @vite-ignore */ value.blobURL))
 
       if (!value.style) {
         continue

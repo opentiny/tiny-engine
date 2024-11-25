@@ -76,7 +76,7 @@ export default {
   },
   emits: ['check', 'close', 'checkAll', 'cancelCheckAll'],
   setup(props, { emit }) {
-    const { generateNode, registerBlock } = useMaterial()
+    const { generateNode, getBlockByName } = useMaterial()
     const { isDefaultGroupId, isAllGroupId, selectedBlock, selectedGroup, isRefresh, getBlockAssetsByVersion } =
       useBlock()
     const blockRef = ref(null)
@@ -116,7 +116,7 @@ export default {
 
       block.assets = getBlockAssetsByVersion(block, block.current_version)
 
-      registerBlock(block).then(() => {
+      getBlockByName(block.label).then(() => {
         const blockName = block.component || block.blockName
         const node = generateNode({ type: 'block', component: blockName })
         const { addComponent, dragStart } = useCanvas().canvasApi.value
