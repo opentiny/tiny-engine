@@ -459,9 +459,6 @@ export const api = {
   getUtils,
   getDataSourceMap,
 
-  // setState 需要把 collection 的引用解开
-  setState,
-
   // 用于调用区块获取、注册、以及 CanvasCollection 的相关逻辑调用
   setController,
   // 设置物料

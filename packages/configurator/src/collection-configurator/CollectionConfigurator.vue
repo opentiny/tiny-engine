@@ -4,22 +4,30 @@
       <tiny-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id"> </tiny-option>
     </tiny-select>
     <tiny-tooltip class="item" effect="dark" content="刷新数据源" placement="top">
-      <icon-conment-refresh @click="refreshData"></icon-conment-refresh>
+      <icon-common-refresh @click="refreshData"></icon-common-refresh>
     </tiny-tooltip>
   </div>
 </template>
 
 <script lang="jsx">
-import { useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { nextTick, ref, onMounted, watch, computed } from 'vue'
 import { Option, Select, Tooltip } from '@opentiny/vue'
-import { IconConmentRefresh } from '@opentiny/vue-icon'
-import { nextTick, ref } from 'vue'
+import { iconConmentRefresh as iconCommonRefresh } from '@opentiny/vue-icon'
+import {
+  useModal,
+  getMetaApi,
+  META_SERVICE,
+  useCanvas,
+  useProperties,
+  useMessage
+} from '@opentiny/tiny-engine-meta-register'
+import { getHandler } from './collection'
 
 export default {
   components: {
     TinySelect: Select,
     TinyOption: Option,
-    IconConmentRefresh: IconConmentRefresh(),
+    IconCommonRefresh: iconCommonRefresh(),
     TinyTooltip: Tooltip
   },
   props: {
@@ -28,6 +36,7 @@ export default {
   setup(props, { emit }) {
     const options = ref([])
     const selected = ref(Array.isArray(props.modelValue) ? props.modelValue[0] : props.modelValue)
+    const { publish } = useMessage()
 
     const sourceChange = (value) => {
       if (props.modelValue) {
@@ -47,9 +56,13 @@ export default {
 
     const fetchDataSourceList = (appId) => getMetaApi(META_SERVICE.Http).get(`/app-center/api/sources/list/${appId}`)
 
-    const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
-    fetchDataSourceList(appId).then((data) => {
-      options.value = data
+    onMounted(() => {
+      const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
+
+      // 获取数据源列表
+      fetchDataSourceList(appId).then((data) => {
+        options.value = data
+      })
     })
 
     const refreshData = () => {
@@ -69,6 +82,85 @@ export default {
         }
       })
     }
+
+    const source = ref(null)
+
+    const fetchDataSourceDetail = (dataSourceId) =>
+      getMetaApi(META_SERVICE.Http).get(`/app-center/api/sources/detail/${dataSourceId}`)
+
+    let handler = null
+
+    watch(
+      () => props.modelValue,
+      async (value) => {
+        if (value) {
+          source.value = await fetchDataSourceDetail(value)
+
+          const pageSchema = useCanvas().getPageSchema()
+          const currentSchema = useProperties().getSchema()
+
+          if (currentSchema?.children[0]) {
+            handler = getHandler({
+              sourceRef: source,
+              node: currentSchema?.children[0],
+              schemaId: currentSchema.id,
+              pageSchema
+            })
+          }
+
+          handler?.updateNode()
+
+          publish({ topic: 'schemaChange', data: {} })
+        }
+      },
+      {
+        deep: true
+      }
+    )
+
+    const isEmpty = computed(() => {
+      const { children } = useProperties().getSchema() || {}
+
+      return Array.isArray(children) ? !children.length : !children
+    })
+
+    watch(
+      () => isEmpty.value,
+      (value) => {
+        const pageSchema = useCanvas().getPageSchema()
+        const currentSchema = useProperties().getSchema()
+
+        if (value) {
+          // 清除自动创建的state,method与setup逻辑
+          if (handler) {
+            handler.clearBindVar()
+          } else {
+            const schemaId = currentSchema?.id
+
+            // 当页面初始化时handler是不存在的，所以需要通过数据源的schemaId（唯一性），去删除对应的方法
+            Object.keys(pageSchema.methods || {})?.some((item) => {
+              if (item.includes(schemaId)) {
+                delete pageSchema.methods[item]
+                return true
+              }
+              return false
+            })
+          }
+        } else {
+          if (currentSchema?.children[0]) {
+            handler = getHandler({
+              sourceRef: source,
+              node: currentSchema?.children[0],
+              schemaId: currentSchema.id,
+              pageSchema
+            })
+            handler.updateNode()
+          }
+        }
+
+        publish({ topic: 'schemaChange', data: {} })
+      }
+    )
 
     return {
       options,

@@ -9,10 +9,9 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-
-import { getController } from '../render'
-import { api } from '../RenderMain'
-import { useModal } from '@opentiny/tiny-engine-meta-register'
+// import { api } from '../RenderMain'
+import * as ast from '@opentiny/tiny-engine-common/js/ast'
+import { useModal, useMaterial } from '@opentiny/tiny-engine-meta-register'
 
 const NAME_PREFIX = {
   loop: 'loop',
@@ -45,7 +44,7 @@ const genRemoteMethodToLifeSetup = (variableName, sourceRef, pageSchema) => {
 const removeState = (pageSchema, variableName) => {
   delete pageSchema.state[variableName]
 
-  const { parse, traverse, generate } = getController().ast
+  const { parse, traverse, generate } = ast
   const setupFn = pageSchema.lifeCycles?.setup?.value
 
   try {
@@ -64,7 +63,8 @@ const removeState = (pageSchema, variableName) => {
 }
 
 const setStateWithSourceRef = (pageSchema, variableName, sourceRef, data) => {
-  api.setState({ [variableName]: data })
+  // TODO: 更新 state
+  // api.setState({ [variableName]: data })
   pageSchema.state[variableName] = data
 
   if (sourceRef.value.data?.option?.isSync) {
@@ -76,7 +76,7 @@ const defaultHandlerTemplate = ({ node, sourceRef, schemaId, pageSchema }) => {
   const genVarName = (schemaId) => `${NAME_PREFIX.loop}${schemaId}`
 
   const updateNode = () => {
-    const { configure } = getController().getMaterial(node?.componentName)
+    const { configure } = useMaterial().getMaterial(node?.componentName)
 
     if (!configure?.loop) {
       return
@@ -104,7 +104,7 @@ const defaultHandlerTemplate = ({ node, sourceRef, schemaId, pageSchema }) => {
   }
 }
 
-const generateAssginColumns = (newColumns, oldColumns) => {
+const generateAssignColumns = (newColumns, oldColumns) => {
   newColumns.forEach((item) => {
     const targetColumn = oldColumns.find((value) => value.field === item.field)
     if (targetColumn) {
@@ -118,9 +118,9 @@ const askShouldImportData = ({ node, sourceRef }) => {
   useModal().confirm({
     message: '检测到表格存在配置的数据，是否需要引入？',
     exec() {
-      const sourceColums = sourceRef.value?.data?.columns?.map(({ title, field }) => ({ title, field })) || []
+      const sourceColumns = sourceRef.value?.data?.columns?.map(({ title, field }) => ({ title, field })) || []
       // 这里需要找到对应列，然后进行列合并
-      node.props.columns = generateAssginColumns(sourceColums, node.props.columns)
+      node.props.columns = generateAssignColumns(sourceColumns, node.props.columns)
     },
     cancel() {
       node.props.columns = [...(sourceRef.value.data?.columns || [])]
