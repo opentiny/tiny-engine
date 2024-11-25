@@ -1,4 +1,4 @@
-import { getMetaApi, META_SERVICE, useResource } from '@opentiny/tiny-engine'
+import { getMetaApi, META_SERVICE, useResource } from '@opentiny/tiny-engine-meta-register'
 // TODO: 封装成元服务
 import { compile as blockCompiler } from '@opentiny/tiny-engine-block-compiler'
 
@@ -13,14 +13,7 @@ export const preBuildBlock = async (schema) => {
 
   // TODO: 如何得到子区块的 版本？
   const blocks = await generateCodeService.getAllNestedBlocksSchema(schema, fetchBlockSchema)
-
-  // const hasCircularDeps =
-  // if () {
-  // }
-
   const componentsMap = useResource().resState.componentsMap
-
-  // const mainSourceCode = generateCodeService.generatePageCode(blockSchema, componentsMap || [], { blockRelativePath: './' })
 
   // 调用 api 得到页面出码结果
   const blocksSourceCode = [schema, ...blocks].map((blockSchema) => {

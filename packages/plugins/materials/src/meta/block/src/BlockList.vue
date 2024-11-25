@@ -117,7 +117,7 @@ export default {
       block.assets = getBlockAssetsByVersion(block, block.current_version)
 
       getBlockByName(block.label).then(() => {
-        const blockName = block.component || block.blockName
+        const blockName = block.component || block.blockName || block.label
         const node = generateNode({ type: 'block', component: blockName })
         const { addComponent, dragStart } = useCanvas().canvasApi.value
         if (isShortcutPanel) {

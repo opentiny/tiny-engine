@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "@opentiny/tiny-engine-common": "workspace:*",
+    "@opentiny/tiny-engine-meta-register": "workspace:*",
     "@typescript-eslint/eslint-plugin": "^8.14.0",
     "@typescript-eslint/parser": "^8.14.0",
     "@vitejs/plugin-vue": "^5.1.2",

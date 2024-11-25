@@ -5,10 +5,7 @@ import path from 'node:path'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [
-    dts({ rollupTypes: true }),
-    vue()
-  ],
+  plugins: [dts({ rollupTypes: true }), vue()],
   build: {
     lib: {
       entry: path.resolve(__dirname, './src/index.ts'),
@@ -17,7 +14,7 @@ export default defineConfig({
       formats: ['es']
     },
     rollupOptions: {
-      external: ['vue', 'vue/compiler-sfc']
+      external: ['vue', 'vue/compiler-sfc', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/]
     }
   }
 })
