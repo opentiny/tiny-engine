@@ -354,7 +354,7 @@ const operationTypeMap = {
   },
   changeProps: (operation) => {
     const { id, value, option: changeOption } = operation
-    const { node } = getNode(id, true)
+    const { node } = getNode(id, true) || {}
     const previous = deepClone(node)
     const { overwrite = false } = changeOption || {}
 

@@ -9720,7 +9720,7 @@
                     "required": true,
                     "readOnly": false,
                     "disabled": false,
-                    "onChange": "this.delProp('data')",
+                    "onChange": "function () { this.delProp('data') } ",
                     "cols": 12,
                     "widget": {
                       "component": "CodeConfigurator",

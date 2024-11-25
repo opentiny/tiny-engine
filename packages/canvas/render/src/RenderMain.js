@@ -197,6 +197,10 @@ const setDataSourceMap = (list) => {
 
     return dMap
   }, {})
+
+  Object.defineProperty(context, 'dataSourceMap', {
+    get: getDataSourceMap
+  })
 }
 
 const setGlobalState = (data = []) => {

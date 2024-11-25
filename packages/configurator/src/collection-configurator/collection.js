@@ -11,7 +11,7 @@
  */
 // import { api } from '../RenderMain'
 import * as ast from '@opentiny/tiny-engine-common/js/ast'
-import { useModal, useMaterial } from '@opentiny/tiny-engine-meta-register'
+import { useModal, useMaterial, useMessage } from '@opentiny/tiny-engine-meta-register'
 
 const NAME_PREFIX = {
   loop: 'loop',
@@ -115,15 +115,21 @@ const generateAssignColumns = (newColumns, oldColumns) => {
 }
 
 const askShouldImportData = ({ node, sourceRef }) => {
+  const { publish } = useMessage()
+
   useModal().confirm({
     message: '检测到表格存在配置的数据，是否需要引入？',
     exec() {
       const sourceColumns = sourceRef.value?.data?.columns?.map(({ title, field }) => ({ title, field })) || []
       // 这里需要找到对应列，然后进行列合并
       node.props.columns = generateAssignColumns(sourceColumns, node.props.columns)
+
+      publish({ topic: 'schemaChange', data: {} })
     },
     cancel() {
       node.props.columns = [...(sourceRef.value.data?.columns || [])]
+
+      publish({ topic: 'schemaChange', data: {} })
     }
   })
 }
