@@ -9,7 +9,6 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-// import { api } from '../RenderMain'
 import * as ast from '@opentiny/tiny-engine-common/js/ast'
 import { useModal, useMaterial, useMessage } from '@opentiny/tiny-engine-meta-register'
 
@@ -63,8 +62,6 @@ const removeState = (pageSchema, variableName) => {
 }
 
 const setStateWithSourceRef = (pageSchema, variableName, sourceRef, data) => {
-  // TODO: 更新 state
-  // api.setState({ [variableName]: data })
   pageSchema.state[variableName] = data
 
   if (sourceRef.value.data?.option?.isSync) {

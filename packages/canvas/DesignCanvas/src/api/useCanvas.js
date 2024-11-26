@@ -469,6 +469,7 @@ const operateNode = async (operation) => {
   publish({ topic: 'schemaChange', data: { operation } })
 
   if (operation.type !== 'insert') {
+    // 这里 setTimeout 延时是需要等画布更新渲染完成，然后再更新，才能得到正确的组件 offset
     setTimeout(() => {
       canvasApi.value.updateRect?.()
     }, 0)
@@ -481,8 +482,8 @@ const getSchemaDiff = (schema) => {
 }
 
 const patchLatestSchema = (schema) => {
-  // 这里 pageSchema 需要反序列化一下，不然 patch 的时候，会 patch 成同一个引用，造成画布无法更新
-  const diff = jsondiffpatchInstance.diff(schema, JSON.parse(JSON.stringify(pageState.pageSchema)))
+  // 这里 pageSchema 需要 deepClone，不然 patch 的时候，会 patch 成同一个引用，造成画布无法更新
+  const diff = jsondiffpatchInstance.diff(schema, deepClone(pageState.pageSchema))
 
   if (diff) {
     jsondiffpatchInstance.patch(schema, diff)
