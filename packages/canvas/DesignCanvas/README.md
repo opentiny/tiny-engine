@@ -1,4 +1,23 @@
-# schema 元服务相关API（初版）
+# schema 元服务相关API（Experimental）
+
+## 直接修改 schema 引用 & 调用通知更新
+
+使用示例：
+
+```javascript
+import { useCanvas, useMessage } from '@opentiny/tiny-engine-meta-register'
+
+const pageSchema = useCanvas().getPageSchema()
+
+pageSchema.css = "xxxx"
+
+useMessage().publish({ topic: 'schemaChange' })
+```
+
+注意：直接修改 schema 引用当前不能涉及到节点的增加、删除，不然会节点树 nodesMap 无法更新，导致画布无法选中新增的组件。
+
+
+> 注意：以下所有 API 皆为 Experimental 实验 API，请不要用在生产阶段
 
 ## 导入/导出 schema
 
