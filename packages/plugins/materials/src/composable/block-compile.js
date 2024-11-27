@@ -1,5 +1,4 @@
 import { getMetaApi, META_SERVICE, useResource } from '@opentiny/tiny-engine-meta-register'
-// TODO: 封装成元服务
 import { compile as blockCompiler } from '@opentiny/tiny-engine-block-compiler'
 
 const blockBlobMap = new Map()
@@ -8,7 +7,7 @@ export const fetchBlockSchema = async (blockName) =>
   getMetaApi(META_SERVICE.Http).get(`/material-center/api/block?label=${blockName}`)
 
 // 预构建 block
-export const preBuildBlock = async (schema) => {
+export const getBlockCompileRes = async (schema) => {
   const generateCodeService = getMetaApi('engine.service.generateCode')
 
   // TODO: 如何得到子区块的 版本？
@@ -17,7 +16,6 @@ export const preBuildBlock = async (schema) => {
 
   // 调用 api 得到页面出码结果
   const blocksSourceCode = [schema, ...blocks].map((blockSchema) => {
-    // TODO: 计算 hash map，避免重复出码&重复编译
     const sourceCode = generateCodeService.generatePageCode(blockSchema, componentsMap || [], {
       blockRelativePath: './'
     })
@@ -28,9 +26,14 @@ export const preBuildBlock = async (schema) => {
     }
   })
 
+  /**
+   * TODO: 编译缓存
+   * 1. 区块锁定版本情况下，以主区块版本号确定是否需要重新编译
+   * 2. 区块版本为latest 情况下，以 schema 是否变化来确定是否重新编译
+   */
   const compiledResult = blockCompiler(blocksSourceCode, {})
 
-  // TODO: 将编译结果存入到 blockBlobMap
+  // 将编译结果存入到 blockBlobMap
   blockBlobMap.set(schema.fileName, compiledResult)
 
   return compiledResult
@@ -42,12 +45,12 @@ export const getBlockByName = async (name) => {
     return blockBlobMap.get(name)
   }
 
-  // TODO: 没有的时候，找到对应区块的 schema，调用 preBuildBlock 方法编译区块
+  // 没有的时候，找到对应区块的 schema，调用 getBlockCompileRes 方法编译区块
   const block = await fetchBlockSchema(name)
 
   if (!block?.[0]?.content) {
     return
   }
 
-  return preBuildBlock(block[0].content)
+  return getBlockCompileRes(block[0].content)
 }
