@@ -11,8 +11,8 @@
  */
 
 /* eslint-disable no-new-func */
-import { reactive, ref } from 'vue'
-import * as jsondiffpatch from 'jsondiffpatch'
+import { reactive, ref, toRaw } from 'vue'
+import * as jsonDiffPatch from 'jsondiffpatch'
 import DiffMatchPatch from 'diff-match-patch'
 import { constants, utils } from '@opentiny/tiny-engine-utils'
 import { useHistory, getMetaApi, useMessage } from '@opentiny/tiny-engine-meta-register'
@@ -90,7 +90,7 @@ const generateNodesMap = (nodes, parent) => {
   })
 }
 
-const jsondiffpatchInstance = jsondiffpatch.create({
+const jsonDiffPatchInstance = jsonDiffPatch.create({
   objectHash: function (obj, index) {
     return obj.fileName || obj.id || `$$index:${index}`
   },
@@ -138,7 +138,7 @@ const resetCanvasState = async (state = {}) => {
     generateNodesMap(pageState.pageSchema.children, pageState.pageSchema)
   }
 
-  const diffPatch = jsondiffpatchInstance.diff(previousSchema, pageState.pageSchema)
+  const diffPatch = jsonDiffPatchInstance.diff(previousSchema, pageState.pageSchema)
 
   publish({ topic: 'schemaImport', data: { current: pageState.pageSchema, previous: previousSchema, diffPatch } })
 }
@@ -194,12 +194,12 @@ const isBlock = () => pageState.isBlock
 const initData = (schema = { ...defaultSchema }, currentPage) => {
   if (schema.componentName === COMPONENT_NAME.Block) {
     resetBlockCanvasState({
-      pageSchema: schema,
+      pageSchema: toRaw(schema),
       loading: false
     })
   } else {
     resetPageCanvasState({
-      pageSchema: schema,
+      pageSchema: toRaw(schema),
       currentPage,
       loading: false
     })
@@ -478,15 +478,15 @@ const operateNode = async (operation) => {
 
 // 获取传入的 schema 与最新 schema 的 diff
 const getSchemaDiff = (schema) => {
-  return jsondiffpatchInstance.diff(schema, pageState.pageSchema)
+  return jsonDiffPatchInstance.diff(schema, pageState.pageSchema)
 }
 
 const patchLatestSchema = (schema) => {
   // 这里 pageSchema 需要 deepClone，不然 patch 的时候，会 patch 成同一个引用，造成画布无法更新
-  const diff = jsondiffpatchInstance.diff(schema, deepClone(pageState.pageSchema))
+  const diff = jsonDiffPatchInstance.diff(schema, deepClone(pageState.pageSchema))
 
   if (diff) {
-    jsondiffpatchInstance.patch(schema, diff)
+    jsonDiffPatchInstance.patch(schema, diff)
   }
 }
 

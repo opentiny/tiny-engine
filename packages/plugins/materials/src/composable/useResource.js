@@ -10,7 +10,7 @@
  *
  */
 
-import { reactive } from 'vue'
+import { reactive, toRaw } from 'vue'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { getCanvasStatus } from '@opentiny/tiny-engine-common/js/canvas'
 import {
@@ -109,7 +109,7 @@ const initPageOrBlock = async () => {
     ) || {
       componentName: COMPONENT_NAME.Page
     }
-  initPage(pageInfo)
+  initPage(toRaw(pageInfo))
 }
 
 const handlePopStateEvent = async () => {
