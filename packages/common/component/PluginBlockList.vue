@@ -47,15 +47,6 @@
           <div v-if="blockStyle === BlockStyles.List" class="item-description">{{ item.description }}</div>
         </div>
 
-        <div v-if="item.isShowProgress" class="progress-bar">
-          <tiny-progress
-            :text-inside="true"
-            :stroke-width="8"
-            :percentage="item.publishProgress"
-            status="success"
-          ></tiny-progress>
-        </div>
-
         <div v-if="isBlockManage && !item.is_published" class="publish-flag">未发布</div>
 
         <div v-if="isBlockManage" class="block-detail">
@@ -94,19 +85,6 @@
             </ul>
           </div>
         </div>
-        <div
-          v-if="item.isAnimation"
-          :class="[
-            'deploy',
-            { success: item.deployStatus === taskStatus.FINISHED },
-            {
-              error: item.deployStatus === taskStatus.STOPPED
-            }
-          ]"
-          @mouseover.stop="item.isAnimation = false"
-        >
-          {{ deployTips[item.deployStatus] }}
-        </div>
       </slot>
     </li>
     <div v-if="showBlockShot && state.hover && state.currentBlock.screenshot" class="block-shortcut">
@@ -129,7 +107,7 @@
 <script>
 import { computed, watch, inject, reactive } from 'vue'
 import { format } from '@opentiny/vue-renderless/common/date'
-import { Progress, Tooltip } from '@opentiny/vue'
+import { Tooltip } from '@opentiny/vue'
 import PluginBlockItemImg from './PluginBlockItemImg.vue'
 import SearchEmpty from './SearchEmpty.vue'
 import SvgButton from './SvgButton.vue'
@@ -146,7 +124,6 @@ const defaultImg =
 
 export default {
   components: {
-    TinyProgress: Progress,
     TinyTooltip: Tooltip,
     PluginBlockItemImg,
     SvgButton,
@@ -289,19 +266,6 @@ export default {
       state.activeIndex = -1
     }
 
-    // 区块发布任务说明
-    const taskStatus = {
-      RUNNING: 1,
-      STOPPED: 2,
-      FINISHED: 3
-    }
-
-    const deployTips = {
-      1: '正在发布中',
-      2: '发布失败，请重新发布',
-      3: '发布完成'
-    }
-
     const iconSettingMove = () => {
       state.hover = false
     }
@@ -369,8 +333,6 @@ export default {
       blockClick,
       iconClick,
       clearActive,
-      taskStatus,
-      deployTips,
       openBlockShotPanel,
       iconSettingMove,
       defaultImg,

@@ -33,7 +33,6 @@ import {
   fetchBlockList,
   requestDeleteBlock,
   requestDeployBlock,
-  fetchDeployProgress,
   requestUpdateBlock,
   requestCreateBlock,
   fetchBlockContent,
@@ -54,28 +53,6 @@ import { generateBlock } from '@opentiny/tiny-engine-common/js/vscodeGenerateFil
 const { HOST_TYPE } = constants
 
 const STRING_SLOT = ['Slot', 'slot']
-
-// 轮询查询发布进度，目前设置为3s，后续可根据实际业务时间调整
-const INTERVAL_PROGRESS = 3000
-
-// 区块发布的状态
-const DEPLOY_STATUS = readonly({
-  Init: 0,
-  Running: 1, // 发布中
-  Stopped: 2, // 发布失败
-  Finished: 3 // 发布成功
-})
-
-export const DEPLOY_TIPS = {
-  1: '正在发布中',
-  2: '发布失败，请重新发布',
-  3: '发布完成'
-}
-
-const PROGRESS = readonly({
-  Start: 0,
-  End: 100
-})
 
 // 区块暴露属性和事件的类型
 export const META_TYPES = {
@@ -450,28 +427,6 @@ export const refreshBlockData = async (block = {}) => {
   }
 }
 
-const setDeployFailed = (block) => {
-  block.isAnimation = true
-  block.isShowProgress = false
-  block.publishProgress = PROGRESS.Start
-  block.deployStatus = DEPLOY_STATUS.Stopped
-}
-
-const setDeployFinished = (block) => {
-  block.isAnimation = true
-  block.isShowProgress = false
-  block.publishProgress = PROGRESS.Finished
-  block.deployStatus = DEPLOY_STATUS.Finished
-  refreshBlockData(block)
-}
-
-const setDeployStarted = (block) => {
-  block.isAnimation = false
-  block.isShowProgress = true
-  block.publishProgress = PROGRESS.Start
-  block.deployStatus = DEPLOY_STATUS.Running
-}
-
 export const findTree = (schema = {}, find) => {
   const children = schema.children
 
@@ -526,37 +481,6 @@ const configureSlots = (blockSchema = {}) => {
   return slotsTips
 }
 
-export const getDeployProgress = (taskId, block) => {
-  fetchDeployProgress(taskId).then((data) => {
-    block.deployStatus = data.taskStatus
-    block.publishProgress = data.progress_percent
-    block.taskResult = data.taskResult
-
-    if (block.publishProgress === PROGRESS.End) {
-      block.deployStatus = DEPLOY_STATUS.Finished
-    }
-
-    if (block.deployStatus === DEPLOY_STATUS.Running || block.deployStatus === DEPLOY_STATUS.Init) {
-      setTimeout(() => {
-        getDeployProgress(taskId, block)
-      }, INTERVAL_PROGRESS)
-    } else if (block.deployStatus === DEPLOY_STATUS.Stopped) {
-      useModal().message({
-        title: '异常提示',
-        status: 'error',
-        message: {
-          render: () => <span style="max-height:276px;overflow:auto;">{`区块发布失败: ${block.taskResult}`}</span>
-        },
-        width: '550'
-      })
-      setDeployFailed(block)
-    } else {
-      setDeployFinished(block)
-      useNotify({ message: '区块发布成功!', type: 'success' })
-    }
-  })
-}
-
 const validBlockSlotsName = (block) => {
   const slotsTips = configureSlots(block.content)
   if (slotsTips) {
@@ -574,16 +498,13 @@ export const publishBlock = (params) => {
 
   // 校验区块插槽名称
   if (block && validBlockSlotsName(block)) {
-    // 查询发布进度之前，先将动画状态初始化
-    setDeployStarted(block)
-
     requestDeployBlock(params)
-      .then((data) => {
-        getDeployProgress(data.id, block)
+      .then(() => {
+        refreshBlockData(block)
+        useNotify({ message: '区块发布成功!', type: 'success' })
       })
       .catch((error) => {
         useModal().message({ message: error.message, status: 'error' })
-        setDeployFailed(block)
       })
   }
 }

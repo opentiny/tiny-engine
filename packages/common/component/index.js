@@ -45,7 +45,6 @@ export { default as VueMonaco, setGlobalMonacoEditorTheme } from './VueMonaco.vu
 export { default as PublicIcon } from './PublicIcon.vue'
 export { default as BindI18n } from './BindI18n.vue'
 export { default as BlockDeployDialog } from './BlockDeployDialog.vue'
-export { default as ProgressBar } from './ProgressBar.vue'
 export { default as SearchEmpty } from './SearchEmpty.vue'
 export { default as MetaDescription } from './MetaDescription.vue'
 export { default as MetaList } from './MetaList.vue'
