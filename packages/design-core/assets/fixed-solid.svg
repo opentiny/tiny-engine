@@ -1,13 +1,5 @@
 <svg width="16.000000" height="16.000000" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
 	xmlns:xlink="http://www.w3.org/1999/xlink">
-	<desc>
-		Created with Pixso.
-	</desc>
-	<defs>
-		<clipPath id="clip2032_29707">
-			<rect id="固定" width="16.000000" height="16.000000" fill="white" fill-opacity="0" />
-		</clipPath>
-	</defs>
 	<rect id="固定" width="16.000000" height="16.000000" fill="#FFFFFF" fill-opacity="0" />
 	<g clip-path="url(#clip2032_29707)">
 		<path id="形状结合"
