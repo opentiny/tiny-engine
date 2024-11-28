@@ -74,8 +74,10 @@
 <script>
 import { reactive, ref, watch } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
-import { useLayout, usePage, META_APP } from '@opentiny/tiny-engine-meta-register'
+import { useLayout, usePage, useModal, META_APP } from '@opentiny/tiny-engine-meta-register'
 import { PublicIcon } from '@opentiny/tiny-engine-common'
+
+const STORAGE_KEY = 'tiny-engine-fixed-panels'
 
 export default {
   components: {
@@ -98,6 +100,7 @@ export default {
     const iconComponents = {}
     const pluginRef = ref(null)
     const { isTemporaryPage } = usePage()
+    const { message } = useModal()
     const pluginState = useLayout().getPluginState()
 
     props.plugins.forEach(({ id, entry, icon }) => {
@@ -155,10 +158,28 @@ export default {
         ? pluginState.fixedPanels?.filter((item) => item !== pluginName)
         : [...pluginState.fixedPanels, pluginName]
 
-      localStorage.setItem('fixedPanels', pluginState.fixedPanels)
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(pluginState.fixedPanels))
+      } catch (error) {
+        message({ message: `'Failed to persist fixed panels state:'${error}`, status: 'error' })
+      }
     }
 
-    pluginState.fixedPanels = localStorage.getItem('fixedPanels') || []
+    const restoreFixedPanels = () => {
+      try {
+        const storedPanels = localStorage.getItem(STORAGE_KEY)
+        pluginState.fixedPanels = storedPanels ? JSON.parse(storedPanels) : []
+
+        if (!Array.isArray(pluginState.fixedPanels)) {
+          pluginState.fixedPanels = []
+        }
+      } catch (error) {
+        message({ message: `'Failed to restore fixed panels state:'${error}`, status: 'error' })
+        pluginState.fixedPanels = []
+      }
+    }
+
+    restoreFixedPanels()
 
     return {
       state,
