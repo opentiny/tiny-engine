@@ -154,7 +154,11 @@ export default {
       pluginState.fixedPanels = pluginState.fixedPanels?.includes(pluginName)
         ? pluginState.fixedPanels?.filter((item) => item !== pluginName)
         : [...pluginState.fixedPanels, pluginName]
+
+      localStorage.setItem('fixedPanels', pluginState.fixedPanels)
     }
+
+    pluginState.fixedPanels = localStorage.getItem('fixedPanels') || []
 
     return {
       state,
