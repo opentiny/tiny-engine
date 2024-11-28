@@ -27,9 +27,6 @@ export const requestUpdateBlock = (blockId, params, config = {}) =>
 export const requestDeployBlock = (params) =>
   getMetaApi(META_SERVICE.Http).post('/material-center/api/block/deploy/', params)
 
-// 区块管理 -- 查询区块发布进度
-export const fetchDeployProgress = (taskId) => getMetaApi(META_SERVICE.Http).get(`/material-center/api/tasks/${taskId}`)
-
 // 区块管理 -- 根据关键字搜索区块
 export const requestSearchBlock = (searchKey) =>
   getMetaApi(META_SERVICE.Http).get(`/material-center/api/block?label_contains=${searchKey}`)
