@@ -11,9 +11,9 @@
  */
 
 import { defineAsyncComponent, h, provide, reactive } from 'vue'
-import { isHTMLTag, hyphenate } from '@vue/shared'
+import { isHTMLTag } from '@vue/shared'
 import { useBroadcastChannel } from '@vueuse/core'
-import { constants, utils } from '@opentiny/tiny-engine-utils'
+import { constants } from '@opentiny/tiny-engine-utils'
 import babelPluginJSX from '@vue/babel-plugin-jsx'
 import { transformSync } from '@babel/core'
 import i18nHost from '@opentiny/tiny-engine-i18n-host'
@@ -38,7 +38,6 @@ import {
 } from './builtin'
 
 const { BROADCAST_CHANNEL } = constants
-const { hyphenateRE } = utils
 const customElements = {}
 
 const transformJSX = (code) => {
@@ -263,32 +262,6 @@ const parseFunctionString = (fnStr) => {
   return null
 }
 
-const getPlainProps = (object = {}) => {
-  const { slot, ...rest } = object
-  const props = {}
-
-  if (slot) {
-    rest.slot = slot.name || slot
-  }
-
-  Object.entries(rest).forEach(([key, value]) => {
-    let renderKey = key
-
-    // html 标签属性会忽略大小写，所以传递包含大写的 props 需要转换为 kebab 形式的 props
-    if (!/on[A-Z]/.test(renderKey) && hyphenateRE.test(renderKey)) {
-      renderKey = hyphenate(renderKey)
-    }
-
-    if (['boolean', 'string', 'number'].includes(typeof value)) {
-      props[renderKey] = value
-    } else {
-      // 如果传给webcomponent标签的是对象或者数组需要使用.prop修饰符，转化成h函数就是如下写法
-      props[`.${renderKey}`] = value
-    }
-  })
-  return props
-}
-
 const generateCollection = (schema) => {
   if (schema.componentName === 'Collection' && schema.props?.dataSource && schema.children) {
     schema.children.forEach((item) => {
@@ -301,57 +274,6 @@ const generateCollection = (schema) => {
       }
     })
   }
-}
-
-const generateBlockContent = (schema) => {
-  if (schema?.componentName === 'Collection') {
-    generateCollection(schema)
-  }
-  if (Array.isArray(schema?.children)) {
-    schema.children.forEach((item) => {
-      generateBlockContent(item)
-    })
-  }
-}
-
-const registerBlock = (componentName) => {
-  getController()
-    .registerBlock?.(componentName)
-    .then((res) => {
-      const blockSchema = res.content
-
-      // 拿到区块数据，建立区块中数据源的映射关系
-      generateBlockContent(blockSchema)
-
-      // 如果区块的根节点有百分比高度，则需要特殊处理，把高度百分比传递下去,适配大屏应用
-      if (/height:\s*?[\d|.]+?%/.test(blockSchema?.props?.style)) {
-        const blockDoms = document.querySelectorAll(hyphenate(componentName))
-        blockDoms.forEach((item) => {
-          item.style.height = '100%'
-        })
-      }
-    })
-}
-
-export const wrapCustomElement = (componentName) => {
-  const material = getController().getMaterial(componentName)
-
-  if (!Object.keys(material).length) {
-    registerBlock(componentName)
-  }
-
-  customElements[componentName] = {
-    name: componentName + '.ce',
-    render() {
-      return h(
-        hyphenate(componentName),
-        window.parent.TinyGlobalConfig.dslMode === 'Vue' ? getPlainProps(this.$attrs) : this.$attrs,
-        this.$slots.default?.()
-      )
-    }
-  }
-
-  return customElements[componentName]
 }
 
 const blockComponentsMap = {}

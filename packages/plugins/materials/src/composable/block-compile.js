@@ -1,4 +1,4 @@
-import { getMetaApi, META_SERVICE, useResource } from '@opentiny/tiny-engine-meta-register'
+import { getMetaApi, META_SERVICE, useMaterial, useResource } from '@opentiny/tiny-engine-meta-register'
 import { compile as blockCompiler } from '@opentiny/tiny-engine-block-compiler'
 
 const blockBlobMap = new Map()
@@ -51,6 +51,8 @@ export const getBlockByName = async (name) => {
   if (!block?.[0]?.content) {
     return
   }
+
+  useMaterial().addBlockResources(name, block[0].content)
 
   return getBlockCompileRes(block[0].content)
 }
