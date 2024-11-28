@@ -3,7 +3,7 @@
     class="item icon-sidebar"
     :name="panelFixed ? 'fixed-solid' : 'fixed'"
     :tips="panelFixed ? '解除固定面板' : '固定面板'"
-    @click="$emit('fixPanel', PLUGIN_NAME.Materials)"
+    @click="$emit('fix-panel', PLUGIN_NAME.Materials)"
   ></svg-button>
 </template>
 

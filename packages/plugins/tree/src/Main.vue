@@ -5,7 +5,7 @@
         class="item icon-sidebar"
         :name="panelFixed ? 'fixed-solid' : 'fixed'"
         :tips="panelFixed ? '解除固定面板' : '固定面板'"
-        @click="$emit('fixPanel', PLUGIN_NAME.OutlineTree)"
+        @click="$emit('fix-panel', PLUGIN_NAME.OutlineTree)"
       ></svg-button>
     </template>
     <template #content>
@@ -54,7 +54,6 @@ import { Grid, GridColumn } from '@opentiny/vue'
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { IconChevronDown, iconEyeopen, iconEyeclose } from '@opentiny/vue-icon'
-// import Sortable from 'sortablejs'
 import { useCanvas, useMaterial, useLayout } from '@opentiny/tiny-engine-meta-register'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { typeOf } from '@opentiny/vue-renderless/common/type'
