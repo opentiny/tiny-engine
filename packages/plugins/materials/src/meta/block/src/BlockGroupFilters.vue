@@ -4,25 +4,43 @@
       <div class="block-filters-item-label">{{ filter.name }}</div>
       <div class="block-filters-item-value">
         <tiny-checkbox-group
-          v-model="state.checkGroup"
+          v-if="!filter.usingSelect"
+          v-model="state.checkGroup[filter.id]"
           type="checkbox"
-          @change="getFilters(filter.id, filter.children)"
+          @change="getFilters($event, filter.id, filter.children)"
         >
-          <tiny-checkbox v-for="item in filter.children" :key="item.name" :label="item.name"></tiny-checkbox>
+          <tiny-checkbox v-for="item in filter.children" :key="item.value" :label="item.name"></tiny-checkbox>
         </tiny-checkbox-group>
+        <tiny-select
+          v-else
+          v-model="state.checkGroup[filter.id]"
+          size="mini"
+          multiple
+          hover-expand
+          @change="getFilters($event, filter.id)"
+        >
+          <tiny-option
+            v-for="item in selectOptions[filter.id]"
+            :key="item.name"
+            :label="item.name"
+            :value="item"
+          ></tiny-option>
+        </tiny-select>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { reactive } from 'vue'
-import { CheckboxGroup, Checkbox } from '@opentiny/vue'
+import { computed, reactive } from 'vue'
+import { CheckboxGroup, Checkbox, Select, Option } from '@opentiny/vue'
 
 export default {
   components: {
     TinyCheckboxGroup: CheckboxGroup,
-    TinyCheckbox: Checkbox
+    TinyCheckbox: Checkbox,
+    TinySelect: Select,
+    TinyOption: Option
   },
   props: {
     filters: {
@@ -33,25 +51,48 @@ export default {
   setup(props, { emit }) {
     const filters = {}
     const state = reactive({
-      checkGroup: []
+      checkGroup: props.filters.reduce(
+        (result, filter) => ({
+          ...result,
+          [filter.id]: []
+        }),
+        {}
+      )
     })
 
-    const getFilters = (id, child) => {
+    // 这里重新计算selectOptions的原因：tiny-option的value属性如果是一个对象，那么此对象内部需要有value属性
+    const selectOptions = computed(() => {
+      return props.filters.reduce(
+        (result, filter) => ({
+          ...result,
+          [filter.id]: filter.children.map((item) => ({
+            ...item,
+            value: item.id || item.name
+          }))
+        }),
+        {}
+      )
+    })
+
+    const getFilters = (checked, id, child) => {
       filters[id] = []
-      if (id === 'tag') {
-        filters[id] = state.checkGroup
-      } else {
+
+      // tiny-checkbox-group的选中值是一个字符串数组
+      if (typeof checked.at(0) === 'string') {
         child.forEach((item) => {
-          if (state.checkGroup.includes(item.name)) {
+          if (checked.includes(item.name)) {
             filters[id].push(item.id)
           }
         })
+      } else {
+        filters[id] = checked.map((item) => item.value)
       }
       emit('search', null, filters)
     }
 
     return {
       state,
+      selectOptions,
       getFilters
     }
   }
@@ -61,6 +102,12 @@ export default {
 <style lang="less" scoped>
 .block-add-filters {
   color: var(--ti-lowcode-materials-block-filter-text-color);
+  & > div {
+    height: 24px;
+  }
+  & > div + div {
+    margin-top: 12px;
+  }
 
   .block-add-filters-item {
     display: flex;
@@ -73,13 +120,11 @@ export default {
       align-items: center;
       justify-content: flex-start;
       width: 76px;
-      height: 28px;
       color: var(--te-common-text-secondary);
       border-radius: 2px;
     }
 
     .block-filters-item-value {
-      align-items: center;
       flex: 1;
       color: var(--te-common-text-primary);
       .block-filters-value-item {
@@ -93,6 +138,14 @@ export default {
         &.is-empty {
           display: none;
         }
+      }
+      &:has(.tiny-select) {
+        align-self: flex-start;
+      }
+      :deep(.tiny-select.tiny-select .tiny-select__tags .tiny-tag) {
+        height: 20px;
+        line-height: 20px;
+        background-color: var(--te-common-bg-container);
       }
     }
   }

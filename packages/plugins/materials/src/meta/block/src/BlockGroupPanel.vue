@@ -97,12 +97,14 @@ export default {
         {
           id: 'author',
           name: '按作者',
-          children: []
+          children: [],
+          usingSelect: true
         },
         {
           id: 'tag',
           name: '按标签',
-          children: []
+          children: [],
+          usingSelect: true
         }
       ]
     })
