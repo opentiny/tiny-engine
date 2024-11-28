@@ -15,23 +15,14 @@
 <script setup>
 import * as vue from 'vue'
 import { defineProps, defineEmits } from 'vue'
-// import { I18nInjectionKey } from 'vue-i18n'
 import { Input as TinyInput, Popover as TinyPopover, Button as TinyButton } from '@opentiny/vue'
 
 const props = defineProps({ testSlot: { type: Object, default: () => ({}) } })
 const emit = defineEmits([])
 
-// const { t, lowcodeWrap, stores } = vue.inject(I18nInjectionKey).lowcode()
-// const wrap = lowcodeWrap(props, { emit }, t)
-
 const state = vue.reactive({
   title: 'test slot params'
 })
-
-// wrap({
-//   stores,
-//   state
-// })
 </script>
 
 <style scoped>

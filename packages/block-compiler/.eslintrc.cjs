@@ -1,4 +1,3 @@
-
 const { rules } = require('../../.eslintrc')
 
 module.exports = {
@@ -15,5 +14,6 @@ module.exports = {
     es2015: true,
     node: true
   },
-  rules: [...rules]
+  rules,
+  ignorePatterns: ['test/sample/*.vue']
 }

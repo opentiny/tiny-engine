@@ -114,7 +114,7 @@ const compileFile = (file: IParsedFileItem, resultMap: IResultMap): Omit<compile
   const hasScoped = descriptor.styles.some((styleItem) => styleItem.scoped)
 
   if (hasScoped) {
-    componentCode += `\n${DEFAULT_COMPONENT_NAME}.__scopedId='data-v-${file.fileName}'`
+    componentCode += `\n${DEFAULT_COMPONENT_NAME}.__scopeId='data-v-${file.fileName}'`
   }
 
   // 编译 style
