@@ -76,8 +76,9 @@ import { reactive, ref, watch } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
 import { useLayout, usePage, useModal, META_APP } from '@opentiny/tiny-engine-meta-register'
 import { PublicIcon } from '@opentiny/tiny-engine-common'
+import { constants } from '@opentiny/tiny-engine-utils'
 
-const STORAGE_KEY = 'tiny-engine-fixed-panels'
+const { STORAGE_KEY_FIXED_PANELS } = constants
 
 export default {
   components: {
@@ -159,22 +160,22 @@ export default {
         : [...pluginState.fixedPanels, pluginName]
 
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(pluginState.fixedPanels))
+        localStorage.setItem(STORAGE_KEY_FIXED_PANELS, JSON.stringify(pluginState.fixedPanels))
       } catch (error) {
-        message({ message: `'Failed to persist fixed panels state:'${error}`, status: 'error' })
+        message({ message: `'存储固定面板数据失败:'${error}`, status: 'error' })
       }
     }
 
     const restoreFixedPanels = () => {
       try {
-        const storedPanels = localStorage.getItem(STORAGE_KEY)
+        const storedPanels = localStorage.getItem(STORAGE_KEY_FIXED_PANELS)
         pluginState.fixedPanels = storedPanels ? JSON.parse(storedPanels) : []
 
         if (!Array.isArray(pluginState.fixedPanels)) {
           pluginState.fixedPanels = []
         }
       } catch (error) {
-        message({ message: `'Failed to restore fixed panels state:'${error}`, status: 'error' })
+        message({ message: `'读取固定面板数据失败:'${error}`, status: 'error' })
         pluginState.fixedPanels = []
       }
     }
