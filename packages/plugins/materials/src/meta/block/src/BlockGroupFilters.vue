@@ -16,7 +16,6 @@
           v-model="state.checkGroup[filter.id]"
           size="mini"
           multiple
-          hover-expand
           @change="getFilters($event, filter.id)"
         >
           <tiny-option
@@ -103,7 +102,7 @@ export default {
 .block-add-filters {
   color: var(--ti-lowcode-materials-block-filter-text-color);
   & > div {
-    height: 24px;
+    min-height: 24px;
   }
   & > div + div {
     margin-top: 12px;
@@ -143,8 +142,6 @@ export default {
         align-self: flex-start;
       }
       :deep(.tiny-select.tiny-select .tiny-select__tags .tiny-tag) {
-        height: 20px;
-        line-height: 20px;
         background-color: var(--te-common-bg-container);
       }
     }
