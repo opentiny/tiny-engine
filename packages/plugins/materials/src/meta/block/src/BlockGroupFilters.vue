@@ -138,9 +138,6 @@ export default {
           display: none;
         }
       }
-      &:has(.tiny-select) {
-        align-self: flex-start;
-      }
       :deep(.tiny-select.tiny-select .tiny-select__tags .tiny-tag) {
         background-color: var(--te-common-bg-container);
       }
