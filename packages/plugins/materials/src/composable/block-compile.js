@@ -9,8 +9,6 @@ export const fetchBlockSchema = async (blockName) =>
 // 预构建 block
 export const getBlockCompileRes = async (schema) => {
   const generateCodeService = getMetaApi('engine.service.generateCode')
-
-  // TODO: 如何得到子区块的 版本？
   const blocks = await generateCodeService.getAllNestedBlocksSchema(schema, fetchBlockSchema)
   const componentsMap = useResource().resState.componentsMap
 
@@ -47,12 +45,28 @@ export const getBlockByName = async (name) => {
 
   // 没有的时候，找到对应区块的 schema，调用 getBlockCompileRes 方法编译区块
   const block = await fetchBlockSchema(name)
+  const blockItem = block?.[0]
 
-  if (!block?.[0]?.content) {
+  if (!blockItem) {
     return
   }
 
-  useMaterial().addBlockResources(name, block[0].content)
+  const historyId = blockItem?.current_history
+  const historySchema = blockItem?.histories?.find?.((historyItem) => historyItem?.id === historyId)
 
-  return getBlockCompileRes(block[0].content)
+  let schemaContent = null
+
+  if (historyId && historySchema?.content) {
+    schemaContent = historySchema.content
+  } else {
+    schemaContent = blockItem?.content
+  }
+
+  if (!schemaContent) {
+    return
+  }
+
+  useMaterial().addBlockResources(name, schemaContent)
+
+  return getBlockCompileRes(schemaContent)
 }
