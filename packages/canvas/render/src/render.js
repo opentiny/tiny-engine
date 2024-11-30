@@ -24,7 +24,6 @@ import {
   CanvasFlexBox,
   CanvasSection
 } from '@opentiny/tiny-engine-builtin-component'
-
 import { NODE_UID as DESIGN_UIDKEY, NODE_TAG as DESIGN_TAGKEY, NODE_LOOP as DESIGN_LOOPID } from '../../common'
 import { context, conditions, setNode, getDesignMode, DESIGN_MODE } from './context'
 import {
@@ -38,7 +37,6 @@ import {
 } from './builtin'
 
 const { BROADCAST_CHANNEL } = constants
-const customElements = {}
 
 const transformJSX = (code) => {
   const res = transformSync(code, {
@@ -46,8 +44,7 @@ const transformJSX = (code) => {
       [
         babelPluginJSX,
         {
-          pragma: 'h',
-          isCustomElement: (name) => customElements[name]
+          pragma: 'h'
         }
       ]
     ]
@@ -83,8 +80,6 @@ const { post } = useBroadcastChannel({ name: BROADCAST_CHANNEL.Notify })
 
 // 此处向外层window传递notify配置参数
 export const globalNotify = (options) => post(options)
-
-export const collectionMethodsMap = {}
 
 const getNative = (name) => {
   return window.TinyLowcodeComponent?.[name]
@@ -204,43 +199,38 @@ const parseJSSlot = (data, scope) => {
 export const generateFn = (innerFn, context) => {
   return (...args) => {
     // 如果有数据源标识，则表格的fetchData返回数据源的静态数据
-    const sourceId = collectionMethodsMap[innerFn.realName || innerFn.name]
-    if (sourceId) {
-      return innerFn.call(context, ...args)
-    } else {
-      let result = null
+    let result = null
 
-      // 这里是为了兼容用户写法报错导致画布异常，但无法捕获promise内部的异常
-      try {
-        result = innerFn.call(context, ...args)
-      } catch (error) {
-        globalNotify({
-          type: 'warning',
-          title: `函数:${innerFn.name}执行报错`,
-          message: error?.message || `函数:${innerFn.name}执行报错，请检查语法`
-        })
-      }
+    // 这里是为了兼容用户写法报错导致画布异常，但无法捕获promise内部的异常
+    try {
+      result = innerFn.call(context, ...args)
+    } catch (error) {
+      globalNotify({
+        type: 'warning',
+        title: `函数:${innerFn.name}执行报错`,
+        message: error?.message || `函数:${innerFn.name}执行报错，请检查语法`
+      })
+    }
 
-      // 这里注意如果innerFn返回的是一个promise则需要捕获异常，重新返回默认一条空数据
-      if (result.then) {
-        result = new Promise((resolve) => {
-          result.then(resolve).catch((error) => {
-            globalNotify({
-              type: 'warning',
-              title: '异步函数执行报错',
-              message: error?.message || '异步函数执行报错，请检查语法'
-            })
-            // 这里需要至少返回一条空数据，方便用户使用表格默认插槽
-            resolve({
-              result: [{}],
-              page: { total: 1 }
-            })
+    // 这里注意如果innerFn返回的是一个promise则需要捕获异常，重新返回默认一条空数据
+    if (result.then) {
+      result = new Promise((resolve) => {
+        result.then(resolve).catch((error) => {
+          globalNotify({
+            type: 'warning',
+            title: '异步函数执行报错',
+            message: error?.message || '异步函数执行报错，请检查语法'
+          })
+          // 这里需要至少返回一条空数据，方便用户使用表格默认插槽
+          resolve({
+            result: [{}],
+            page: { total: 1 }
           })
         })
-      }
-
-      return result
+      })
     }
+
+    return result
   }
 }
 
@@ -260,20 +250,6 @@ const parseFunctionString = (fnStr) => {
     }
   }
   return null
-}
-
-const generateCollection = (schema) => {
-  if (schema.componentName === 'Collection' && schema.props?.dataSource && schema.children) {
-    schema.children.forEach((item) => {
-      const fetchData = item.props?.fetchData
-      const methodMatch = fetchData?.value?.match(/this\.(.+?)}/)
-      if (fetchData && methodMatch?.[1]) {
-        const methodName = methodMatch[1].trim()
-        // 缓存表格fetchData对应的数据源信息
-        collectionMethodsMap[methodName] = schema.props.dataSource
-      }
-    })
-  }
 }
 
 const blockComponentsMap = {}
@@ -316,13 +292,7 @@ const getBlockComponent = (name) => {
 }
 
 export const getComponent = (name) => {
-  return (
-    Mapper[name] ||
-    getNative(name) ||
-    getBlock(name) ||
-    // customElements[name] ||
-    (isHTMLTag(name) ? name : getBlockComponent(name))
-  )
+  return Mapper[name] || getNative(name) || getBlock(name) || (isHTMLTag(name) ? name : getBlockComponent(name))
 }
 
 // 解析JSX字符串为可执行函数
@@ -474,7 +444,7 @@ const stopEvent = (event) => {
   return false
 }
 
-const generateSlotGroup = (children, isCustomElm, schema) => {
+const generateSlotGroup = (children, schema) => {
   const slotGroup = {}
 
   children.forEach((child) => {
@@ -482,7 +452,6 @@ const generateSlotGroup = (children, isCustomElm, schema) => {
     const slot = child.slot || props?.slot?.name || props?.slot || 'default'
     const isNotEmptyTemplate = componentName === 'Template' && children.length
 
-    isCustomElm && (child.props.slot = 'slot') // CE下需要给子节点加上slot标识
     slotGroup[slot] = slotGroup[slot] || {
       value: [],
       params,
@@ -495,9 +464,9 @@ const generateSlotGroup = (children, isCustomElm, schema) => {
   return slotGroup
 }
 
-const renderSlot = (children, scope, schema, isCustomElm) => {
+const renderSlot = (children, scope, schema) => {
   if (children.some((a) => a.componentName === 'Template')) {
-    const slotGroup = generateSlotGroup(children, isCustomElm, schema)
+    const slotGroup = generateSlotGroup(children, schema)
     const slots = {}
 
     Object.keys(slotGroup).forEach((slotName) => {
@@ -626,16 +595,13 @@ const getChildren = (schema, mergeScope) => {
 
   const component = getComponent(componentName)
   const isNative = typeof component === 'string'
-  const isCustomElm = customElements[componentName]
   const isGroup = checkGroup(componentName)
 
   if (Array.isArray(renderChildren)) {
-    if (isNative || isCustomElm) {
+    if (isNative) {
       return renderDefault(renderChildren, mergeScope, schema)
     } else {
-      return isGroup
-        ? renderGroup(renderChildren, mergeScope, schema)
-        : renderSlot(renderChildren, mergeScope, schema, isCustomElm)
+      return isGroup ? renderGroup(renderChildren, mergeScope, schema) : renderSlot(renderChildren, mergeScope, schema)
     }
   } else {
     return parseData(renderChildren, mergeScope)
@@ -655,9 +621,6 @@ export const renderer = {
   render() {
     const { scope, schema, parent } = this
     const { componentName, loop, loopArgs, condition } = schema
-
-    // 处理数据源和表格fetchData的映射关系
-    generateCollection(schema)
 
     if (!componentName) {
       return parseData(schema, scope)
