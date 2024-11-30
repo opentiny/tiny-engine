@@ -138,8 +138,11 @@ export default {
           display: none;
         }
       }
-      :deep(.tiny-select.tiny-select .tiny-select__tags .tiny-tag) {
-        background-color: var(--te-common-bg-container);
+      :deep(.tiny-select.tiny-select .tiny-select__tags) {
+        max-width: calc(100% - 24px) !important;
+        .tiny-tag {
+          background-color: var(--te-common-bg-container);
+        }
       }
     }
   }
