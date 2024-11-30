@@ -198,10 +198,8 @@ export const compile = (fileList: IFileList, config) => {
     // TODO: 3. 检查 template lang，当前不支持任何 template lang
     // TODO: 4. 检查 script lang，当前仅支持 js， jsx 晚点支持
 
-    // TODO: 解析依赖的文件
+    // 解析依赖的文件
     const importedFiles = parseImportedFiles(descriptor)
-
-    // console.log('importedFiles', importedFiles)
 
     return {
       fileName,
@@ -218,7 +216,7 @@ export const compile = (fileList: IFileList, config) => {
   const compiledFilesSet: Set<string> = new Set()
   const resultMap: IResultMap = {}
 
-  // TODO:根据依赖顺序编译文件。优先编译 0 依赖的文件。
+  // 根据依赖顺序编译文件。优先编译 0 依赖的文件。
   let nextCompileFile = filterNextCompileFiles(parsedFileList, compiledFilesSet)
 
   while (nextCompileFile.length) {

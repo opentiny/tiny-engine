@@ -292,14 +292,7 @@ const getBlockComponent = (name) => {
     }
   })
 
-  return h(
-    Suspense,
-    {},
-    {
-      default: () => h(BlockComp),
-      fallback: () => h(BlockLoading, { name })
-    }
-  )
+  return BlockComp
 }
 
 export const getComponent = (name) => {
@@ -638,7 +631,6 @@ export const renderer = {
     }
 
     const component = getComponent(componentName)
-
     const loopList = parseData(loop, scope)
 
     const renderElement = (item, index) => {
@@ -666,7 +658,21 @@ export const renderer = {
         return null
       }
 
-      return h(component, getBindProps(schema, mergeScope), getChildren(schema, mergeScope))
+      const Ele = h(component, getBindProps(schema, mergeScope), getChildren(schema, mergeScope))
+
+      // 区块加上 suspense 渲染，就可以在网络延时的时候显示加载中的字样或者动画，优化体验
+      if (schema.componentType === 'Block') {
+        return h(
+          Suspense,
+          {},
+          {
+            default: () => Ele,
+            fallback: () => h(BlockLoading, { name: componentName })
+          }
+        )
+      }
+
+      return Ele
     }
 
     return loopList?.length ? loopList.map(renderElement) : renderElement()
