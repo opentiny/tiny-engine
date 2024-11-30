@@ -10,7 +10,7 @@
  *
  */
 
-import { defineAsyncComponent, h, provide, reactive } from 'vue'
+import { defineAsyncComponent, h, provide, reactive, Suspense } from 'vue'
 import { isHTMLTag } from '@vue/shared'
 import { useBroadcastChannel } from '@vueuse/core'
 import { constants } from '@opentiny/tiny-engine-utils'
@@ -35,6 +35,8 @@ import {
   CanvasImg,
   CanvasPlaceholder
 } from './builtin'
+import BlockLoadError from './BlockLoadError.vue'
+import BlockLoading from './BlockLoading.vue'
 
 const { BROADCAST_CHANNEL } = constants
 
@@ -259,36 +261,45 @@ const getBlockComponent = (name) => {
     return blockComponentsMap[name]
   }
 
-  const comp = defineAsyncComponent(async () => {
-    // TODO: 加载中提示
-    // TODO: 加载错误提示
-    const blocksBlob = await getController().getBlockByName(name)
+  const BlockComp = defineAsyncComponent(async () => {
+    try {
+      const blocksBlob = await getController().getBlockByName(name)
 
-    // TODO: 验证一下 嵌套子区块是不是不需要注册异步组件也可以
-    for (const [fileName, value] of Object.entries(blocksBlob)) {
-      // 注册异步组件
-      blockComponentsMap[fileName] = defineAsyncComponent(() => import(/* @vite-ignore */ value.blobURL))
+      for (const [fileName, value] of Object.entries(blocksBlob)) {
+        // 注册异步组件
+        blockComponentsMap[fileName] = defineAsyncComponent(() => import(/* @vite-ignore */ value.blobURL))
 
-      if (!value.style) {
-        continue
+        if (!value.style) {
+          continue
+        }
+
+        // 注册 CSS，以区块为维度
+        const stylesheet = document.querySelector(`#${fileName}`)
+
+        if (stylesheet) {
+          stylesheet.innerHTML = value.style
+        } else {
+          const newStylesheet = document.createElement('style')
+          newStylesheet.innerHTML = value.style
+          document.head.appendChild(newStylesheet)
+        }
       }
 
-      // 注册 CSS，以区块为维度
-      const stylesheet = document.querySelector(`#${fileName}`)
-
-      if (stylesheet) {
-        stylesheet.innerHTML = value.style
-      } else {
-        const newStylesheet = document.createElement('style')
-        newStylesheet.innerHTML = value.style
-        document.head.appendChild(newStylesheet)
-      }
+      return blockComponentsMap[name]
+    } catch (error) {
+      // 加载错误提示
+      return h(BlockLoadError, { name })
     }
-
-    return blockComponentsMap[name]
   })
 
-  return comp
+  return h(
+    Suspense,
+    {},
+    {
+      default: () => h(BlockComp),
+      fallback: () => h(BlockLoading, { name })
+    }
+  )
 }
 
 export const getComponent = (name) => {
