@@ -20,36 +20,40 @@ export const getBlockCompileRes = async (schema) => {
   const versionDepsStr = JSON.stringify(blockDepsVersion)
   const schemaStr = JSON.stringify(schema)
 
+  // 调用 api 得到页面出码结果
+  let blocksSourceCode = null
+
   try {
     const cache = JSON.parse(localStorage.getItem(`${BLOCK_COMPILE_CACHE_PREFIX}_${schema.fileName}`))
 
     // 有缓存，返回缓存
-    if (cache.versionDeps === versionDepsStr && cache.schema === schemaStr && cache.compileResult) {
-      return cache.compileResult
+    if (cache.versionDeps === versionDepsStr && cache.schema === schemaStr && cache.blocksSourceCode) {
+      blocksSourceCode = cache.blocksSourceCode
     }
   } catch (error) {
-    // 获取缓存失败，继续走编译逻辑
+    // cache miss
   }
 
-  // 调用 api 得到页面出码结果
-  const blocksSourceCode = [schema, ...blocks].map((blockSchema) => {
-    const sourceCode = generateCodeService.generatePageCode(blockSchema, componentsMap || [], {
-      blockRelativePath: './'
+  if (!blocksSourceCode) {
+    blocksSourceCode = [schema, ...blocks].map((blockSchema) => {
+      const sourceCode = generateCodeService.generatePageCode(blockSchema, componentsMap || [], {
+        blockRelativePath: './'
+      })
+
+      return {
+        fileName: blockSchema.fileName,
+        sourceCode
+      }
     })
+  }
 
-    return {
-      fileName: blockSchema.fileName,
-      sourceCode
-    }
-  })
-
-  const compiledResult = blockCompiler(blocksSourceCode, {})
-
-  // 将编译结果缓存到 localstorage
+  // 将出码结果缓存到 localstorage
   localStorage.setItem(
     `${BLOCK_COMPILE_CACHE_PREFIX}_${schema.fileName}`,
-    JSON.stringify({ versionDeps: versionDepsStr, schema: schemaStr, compileResult: compiledResult })
+    JSON.stringify({ versionDeps: versionDepsStr, schema: schemaStr, blocksSourceCode })
   )
+
+  const compiledResult = blockCompiler(blocksSourceCode, {})
 
   return compiledResult
 }
