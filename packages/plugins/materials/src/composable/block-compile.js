@@ -6,11 +6,30 @@ const blockBlobMap = new Map()
 export const fetchBlockSchema = async (blockName) =>
   getMetaApi(META_SERVICE.Http).get(`/material-center/api/block?label=${blockName}`)
 
+// TODO: 需要支持配置，比如前缀加上租户 id，防止多租户的场景下同名同版本号的区块内容不一致却命中缓存的场景
+const BLOCK_COMPILE_CACHE_PREFIX = 'block_compile_cache'
+
 // 预构建 block
 export const getBlockCompileRes = async (schema) => {
   const generateCodeService = getMetaApi('engine.service.generateCode')
   const blocks = await generateCodeService.getAllNestedBlocksSchema(schema, fetchBlockSchema)
   const componentsMap = useResource().resState.componentsMap
+  const blockDepsVersion = blocks
+    .map(({ fileName, version }) => ({ fileName, version }))
+    .sort((a, b) => a.fileName - b.fileName)
+  const versionDepsStr = JSON.stringify(blockDepsVersion)
+  const schemaStr = JSON.stringify(schema)
+
+  try {
+    const cache = JSON.parse(localStorage.getItem(`${BLOCK_COMPILE_CACHE_PREFIX}_${schema.fileName}`))
+
+    // 有缓存，返回缓存
+    if (cache.versionDeps === versionDepsStr && cache.schema === schemaStr && cache.compileResult) {
+      return cache.compileResult
+    }
+  } catch (error) {
+    // 获取缓存失败，继续走编译逻辑
+  }
 
   // 调用 api 得到页面出码结果
   const blocksSourceCode = [schema, ...blocks].map((blockSchema) => {
@@ -24,15 +43,13 @@ export const getBlockCompileRes = async (schema) => {
     }
   })
 
-  /**
-   * TODO: 编译缓存
-   * 1. 区块锁定版本情况下，以主区块版本号确定是否需要重新编译
-   * 2. 区块版本为latest 情况下，以 schema 是否变化来确定是否重新编译
-   */
   const compiledResult = blockCompiler(blocksSourceCode, {})
 
-  // 将编译结果存入到 blockBlobMap
-  blockBlobMap.set(schema.fileName, compiledResult)
+  // 将编译结果缓存到 localstorage
+  localStorage.setItem(
+    `${BLOCK_COMPILE_CACHE_PREFIX}_${schema.fileName}`,
+    JSON.stringify({ versionDeps: versionDepsStr, schema: schemaStr, compileResult: compiledResult })
+  )
 
   return compiledResult
 }

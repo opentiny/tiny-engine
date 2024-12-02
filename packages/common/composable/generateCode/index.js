@@ -70,6 +70,9 @@ const getAllNestedBlocksSchema = async (pageSchema, fetchBlockSchemaApi, blockSe
       return
     }
 
+    // 区块 schema 中加上当前版本号，让后续数据支持缓存或更丰富的操作
+    schemaContent.version = historyId || ''
+
     res.push(schemaContent)
 
     extraList.push(getAllNestedBlocksSchema(schemaContent, fetchBlockSchemaApi, blockSet))
