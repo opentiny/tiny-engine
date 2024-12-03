@@ -14,9 +14,14 @@ export function getImportMapData(overrideVersions = {}) {
   const blockRequire = {
     imports: {
       '@opentiny/vue': `${VITE_CDN_DOMAIN}/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue.mjs`,
-      '@opentiny/vue-icon': `${VITE_CDN_DOMAIN}/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue-icon.mjs`
+      '@opentiny/vue-icon': `${VITE_CDN_DOMAIN}/@opentiny/vue@${importMapVersions.tinyVue}/runtime/tiny-vue-icon.mjs`,
+      'element-plus': `${VITE_CDN_DOMAIN}/element-plus@2.4.2/dist/index.full.mjs`,
+      '@opentiny/tiny-engine-builtin-component': `${VITE_CDN_DOMAIN}/@opentiny/tiny-engine-builtin-component@^2.0.0/dist/index.mjs`
     },
-    importStyles: [`${VITE_CDN_DOMAIN}/@opentiny/vue-theme@${importMapVersions.tinyVue}/index.css`]
+    importStyles: [
+      `${VITE_CDN_DOMAIN}/@opentiny/vue-theme@${importMapVersions.tinyVue}/index.css`,
+      `${VITE_CDN_DOMAIN}/element-plus@2.4.2/dist/index.css`
+    ]
   }
 
   // 以下内容由于物料协议不支持声明子依赖而@opentiny/vue需要依赖所以需要补充
