@@ -139,11 +139,11 @@ export default {
       const { getSchema, getNodePath } = useCanvas()
       const schemaItem = useCanvas().getNodeById(id)
 
-      const schema = getSchema()
+      const pageSchema = getSchema()
+
       // 如果选中的节点是画布，就设置成默认选中最外层schema
-      // TODO: 将 canvas 的 schema 改成 pageState 的 schema
-      useProperties().getProps(schemaItem || schema, parent)
-      useCanvas().setCurrentSchema(schemaItem || schema)
+      useProperties().getProps(schemaItem || pageSchema, parent)
+      useCanvas().setCurrentSchema(schemaItem || pageSchema)
       footData.value = getNodePath(schemaItem?.id)
       toolbars.visiblePopover = false
     }

@@ -354,12 +354,12 @@ const operationTypeMap = {
   },
   changeProps: (operation) => {
     const { id, value, option: changeOption } = operation
-    const { node } = getNode(id, true) || {}
+    let { node } = getNode(id, true) || {}
     const previous = deepClone(node)
     const { overwrite = false } = changeOption || {}
 
     if (!node) {
-      return
+      node = pageState.pageSchema
     }
 
     if (overwrite) {
@@ -457,6 +457,11 @@ const operationTypeMap = {
 
 const lastUpdateType = ref('')
 
+/**
+ * @experimental
+ * @param {*} operation
+ * @returns
+ */
 const operateNode = async (operation) => {
   if (!operationTypeMap[operation.type]) {
     return

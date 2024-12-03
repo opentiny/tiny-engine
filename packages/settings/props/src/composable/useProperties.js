@@ -10,7 +10,7 @@
  *
  */
 
-import { toRaw, nextTick, shallowReactive, ref } from 'vue'
+import { toRaw, shallowReactive, ref } from 'vue'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { useCanvas, useMaterial, useTranslate } from '@opentiny/tiny-engine-meta-register'
 
@@ -139,19 +139,7 @@ const setProp = (name, value, type) => {
     option: { overwrite }
   })
 
-  const { updateRect } = useCanvas().canvasApi.value || {}
-
-  // 没有父级，或者不在节点上面，要更新内容。就用setState
-  // TODO: 确认相关场景还有没有用，没用删除
-  // getNodeWithParentById(properties.schema.id)?.parent || setState(useCanvas().getPageSchema().state)
   propsUpdateKey.value++
-
-  // 更新根节点props不用updateRect
-  if (!properties.schema.id) {
-    return
-  }
-
-  nextTick(updateRect)
 }
 
 const getProp = (key) => {

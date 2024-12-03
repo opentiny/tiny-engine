@@ -383,13 +383,6 @@ export default {
       }
     })
 
-    onUnmounted(() => {
-      window.host.unsubscribe({
-        topic: 'schemaChange',
-        subscriber: 'canvasRenderer'
-      })
-    })
-
     watch(data, () => {
       locale.value = data.value
     })
@@ -422,35 +415,54 @@ export default {
       }
     )
 
-    window.host.watch(
+    const utilsWatchCanceler = window.host.watch(
       () => window.host.appSchema?.utils,
       (data) => {
         setUtils(data)
       },
       {
-        immediate: true
+        immediate: true,
+        deep: true
       }
     )
 
-    window.host.watch(
+    const dataSourceWatchCanceler = window.host.watch(
       () => window.host.appSchema?.dataSource,
       (data) => {
         setDataSourceMap(data)
       },
       {
-        immediate: true
+        immediate: true,
+        deep: true
       }
     )
 
-    window.host.watch(
+    const globalStateWatchCanceler = window.host.watch(
       () => window.host.appSchema?.globalState,
       (data) => {
         setGlobalState(data)
       },
       {
-        immediate: true
+        immediate: true,
+        deep: true
       }
     )
+
+    onUnmounted(() => {
+      window.host.unsubscribe({
+        topic: 'schemaChange',
+        subscriber: 'canvasRenderer'
+      })
+
+      window.host.unsubscribe({
+        topic: 'schemaImport',
+        subscriber: 'canvasRenderer'
+      })
+
+      utilsWatchCanceler()
+      dataSourceWatchCanceler()
+      globalStateWatchCanceler()
+    })
   },
 
   render() {
