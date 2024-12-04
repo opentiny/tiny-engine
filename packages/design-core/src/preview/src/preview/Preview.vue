@@ -113,8 +113,7 @@ export default {
           return {
             panelName: `${blockSchema.fileName}.vue`,
             panelValue: generatePageCode(blockSchema, appData?.componentsMap || [], { blockRelativePath: './' }) || '',
-            panelType: 'vue',
-            index: true
+            panelType: 'vue'
           }
         })
       ]
