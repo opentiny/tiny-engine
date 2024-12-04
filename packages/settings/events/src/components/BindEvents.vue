@@ -92,7 +92,7 @@ import {
   getMetaApi,
   META_APP
 } from '@opentiny/tiny-engine-meta-register'
-import i18n from '@opentiny/tiny-engine-controller/js/i18n'
+import i18n from '@opentiny/tiny-engine-common/js/i18n'
 import { BlockLinkEvent, SvgButton } from '@opentiny/tiny-engine-common'
 import { iconChevronDown } from '@opentiny/vue-icon'
 import BindEventsDialog, { open as openDialog } from './BindEventsDialog.vue'
