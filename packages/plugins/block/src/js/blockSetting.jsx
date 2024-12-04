@@ -671,7 +671,6 @@ const updateBlock = (block = {}) => {
         useBlock().initBlock(data, {}, true)
       }
 
-      useBlock().initBlock(data, {}, true)
       // 弹出保存区块成功
       useModal().message({ message: '保存区块成功！', status: 'success' })
       // 本地生成区块服务
