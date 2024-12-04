@@ -136,6 +136,24 @@ export const handleTinyGrid = (schemaData, globalHooks, config) => {
   })
 }
 
+export const handleSlotParams = (schemaData) => {
+  const { componentName, props } = schemaData.schema
+
+  if (componentName !== 'Slot' || !Array.isArray(props.params)) {
+    return
+  }
+
+  props.params.forEach((paramItem) => {
+    const { name, value } = paramItem || {}
+
+    if (name && value) {
+      props[name] = value
+    }
+  })
+
+  delete props.params
+}
+
 export const handleExpressionChildren = (schemaData = {}, globalHooks, config) => {
   const { children, schema } = schemaData
   const type = schema?.children?.type
