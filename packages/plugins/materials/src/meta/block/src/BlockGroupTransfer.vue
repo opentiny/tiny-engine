@@ -1,6 +1,9 @@
 <template>
   <div class="block-add-transfer">
     <div class="block-add-transfer-footer">
+      <tiny-checkbox class="block-select-all" :indeterminate="isIndeterminate" v-model="selectedAll">
+        全选</tiny-checkbox
+      >
       <slot name="search"></slot>
       <tiny-select v-model="state.selectedSort" class="transfer-order-select" placeholder="请选择">
         <tiny-option v-for="item in state.sortList" :key="item.id" :label="item.text" :value="item.id"></tiny-option>
@@ -28,13 +31,14 @@ import { computed, onMounted, provide, reactive, watch } from 'vue'
 import { useBlock, useModal } from '@opentiny/tiny-engine-meta-register'
 import BlockList from './BlockList.vue'
 import BlockGroupArrange from './BlockGroupArrange.vue'
-import { Select, Option } from '@opentiny/vue'
+import { Checkbox, Select, Option } from '@opentiny/vue'
 import { fetchBlockById } from './http.js'
 
 export default {
   components: {
     BlockList,
     BlockGroupArrange,
+    TinyCheckbox: Checkbox,
     TinySelect: Select,
     TinyOption: Option
   },
@@ -45,7 +49,7 @@ export default {
     }
   },
   setup(props) {
-    const { cancelCheck, check, selectedBlockArray, sort } = useBlock()
+    const { check, cancelCheck, checkAll, cancelCheckAll, selectedBlockArray, sort } = useBlock()
 
     const sortList = [
       {
@@ -94,6 +98,25 @@ export default {
       state.blockList = sort(state.blockList, type)
     }
 
+    const selectedAll = computed({
+      get() {
+        return state.blockList.length > 0 && state.blockList.length === selectedBlockArray.value.length
+      },
+      set(value) {
+        if (value) {
+          checkAll(state.blockList)
+        } else {
+          cancelCheckAll()
+        }
+      }
+    })
+
+    const isIndeterminate = computed({
+      get() {
+        return selectedBlockArray.value.length > 0 && selectedBlockArray.value.length !== state.blockList.length
+      }
+    })
+
     const checkBlock = (block) => {
       if (selectedBlockArray.value.some((item) => item.id === block.id)) {
         cancelCheck(block)
@@ -139,6 +162,8 @@ export default {
     return {
       state,
       selectedBlockArray,
+      selectedAll,
+      isIndeterminate,
       checkBlock
     }
   }
@@ -164,6 +189,9 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    .block-select-all {
+      margin-right: 20px;
+    }
     .transfer-order-select {
       width: 120px;
       margin-left: 8px;

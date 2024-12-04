@@ -699,6 +699,14 @@ const cancelCheck = (block) => {
   selectedBlockArray.value = selectedBlockArray.value.filter((item) => item.id !== block.id)
 }
 
+const checkAll = (blockList) => {
+  selectedBlockArray.value = blockList
+}
+
+const cancelCheckAll = () => {
+  selectedBlockArray.value = []
+}
+
 const getBlockAssetsByVersion = (block, version) => {
   let assets = block.assets
 
@@ -737,6 +745,8 @@ export default function () {
     sort,
     check,
     cancelCheck,
+    checkAll,
+    cancelCheckAll,
     getBlockList,
     setBlockList,
     getBlockI18n,
