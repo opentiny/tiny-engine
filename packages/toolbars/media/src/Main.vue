@@ -45,7 +45,7 @@
                 <span class="reference-text">
                   <span>
                     <span>{{ parseInt(state.width) }}</span>
-                    <span class="symbol">PX</span>
+                    <span class="symbol">px</span>
                   </span>
                   <span>
                     <span>{{ scale.toFixed(2) }}</span>
@@ -62,7 +62,7 @@
                 <label for="">{{ state.textData.width }}</label>
                 <tiny-input v-model="state.width" @change="widthChange">
                   <template #suffix>
-                    <span>PX</span>
+                    <span>px</span>
                   </template>
                 </tiny-input>
               </div>

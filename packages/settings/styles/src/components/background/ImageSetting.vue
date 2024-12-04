@@ -327,7 +327,7 @@ onMounted(() => {
   justify-content: center;
   height: 24px;
   border-radius: 4px;
-  color: var(--te-common-bg-prompt);
+  color: var(--te-common-text-primary);
   border-width: 1px;
   border-style: solid;
   align-self: center;

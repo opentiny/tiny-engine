@@ -5,7 +5,7 @@
       <div v-for="(slot, index) in slotList" :key="slot.name" class="use-slot">
         <div class="use-slot-item-name">
           {{ slot.name }}
-          <tiny-tooltip effect="dark" :content="state.currentComponent?.content" placement="top">
+          <tiny-tooltip effect="dark" :content="state.currentComponent?.content" placement="bottom" width="260">
             <span class="item-icon">
               <component :is="state.currentComponent?.icon"></component>
             </span>
@@ -74,7 +74,7 @@ export default {
       TinyGrid: {
         content:
           '暴露给插槽使用的变量，为解构的参数，可以使用多个用逗号分隔，如：row(行数据)，column(列数据)，$table(内部表格实例)，seq(序号)，cell(单元格)，columnIndex(列索引),rowIndex(行索引)',
-        icon: SvgICons['IconUnknow']()
+        icon: SvgICons['IconHelpCircle']()
       }
     }
 
@@ -189,6 +189,7 @@ export default {
 
   .use-slot-item-content {
     display: flex;
+    justify-content: space-between;
   }
 
   .use-slot-switch-wrap {
@@ -214,6 +215,7 @@ export default {
 
   .slot-name-form-item {
     margin-bottom: 0;
+    margin-right: 6px;
   }
 
   .item-icon {
@@ -227,6 +229,7 @@ export default {
   position: relative;
   font-size: 14px;
   line-height: 20px;
+  width: 40px;
   height: 20px;
   vertical-align: middle;
   cursor: pointer;
@@ -249,7 +252,7 @@ export default {
 .e__switch-core::after {
   content: '';
   position: absolute;
-  top: 1px;
+  top: 2px;
   left: 1px;
   border-radius: 100%;
   transition: all 0.3s;

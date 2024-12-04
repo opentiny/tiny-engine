@@ -46,7 +46,7 @@ export default {
     },
     suffix: {
       type: String,
-      default: 'PX'
+      default: 'px'
     }
   },
   emits: useEvent(),

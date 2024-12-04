@@ -567,6 +567,7 @@ export default {
 
   span {
     font-weight: 600;
+    color: var(--te-common-text-primary);
   }
 
   .svg-icon {

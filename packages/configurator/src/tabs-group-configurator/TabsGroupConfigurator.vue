@@ -202,7 +202,6 @@ const change = (item) => {
       background-color: var(--te-common-bg-container);
       line-height: 14px;
       min-width: 20px;
-      max-width: 80px;
       color: var(--te-common-text-weaken);
 
       &:hover {
@@ -238,8 +237,18 @@ const change = (item) => {
       justify-content: center;
       align-items: center;
       height: 24px;
-      background-color: var(--ti-lowcode-base-bg-5);
+      background-color: var(--te-common-bg-container);
       color: var(--te-common-text-weaken);
+
+      &:hover {
+        background-color: var(--ti-lowcode-base-gray-101);
+        border-radius: 4px;
+      }
+      .selected-option {
+        span:hover {
+          color: var(--te-common-text-primary);
+        }
+      }
       &.selected {
         background-color: var(--ti-lowcode-base-gray-101);
         color: var(--te-common-text-primary);
@@ -257,12 +266,6 @@ const change = (item) => {
         width: 20px;
         display: flex;
         justify-content: center;
-      }
-
-      &:hover {
-        background-color: var(--ti-lowcode-base-gray-101);
-        border-radius: 4px;
-        color: var(--te-common-text-primary);
       }
     }
   }
