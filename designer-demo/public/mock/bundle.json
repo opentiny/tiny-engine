@@ -13441,18 +13441,14 @@
                     "props": {
                       "text": "提交",
                       "type": "primary",
-                      "style": {
-                        "margin": "0 5px 0 5px"
-                      }
+                      "style": "margin: 0 5px 0 5px;"
                     }
                   },
                   {
                     "componentName": "TinyButton",
                     "props": {
                       "text": "重置",
-                      "style": {
-                        "margin": "0 5px 0 5px"
-                      }
+                      "style": "margin: 0 5px 0 5px;"
                     }
                   },
                   {
@@ -13866,6 +13862,9 @@
                 "children": [
                   {
                     "componentName": "TinyCarouselItem",
+                    "props": {
+                      "title": "carousel-item-a"
+                    },
                     "children": [
                       {
                         "componentName": "div",
@@ -13877,6 +13876,9 @@
                   },
                   {
                     "componentName": "TinyCarouselItem",
+                    "props": {
+                      "title": "carousel-item-b"
+                    },
                     "children": [
                       {
                         "componentName": "div",
