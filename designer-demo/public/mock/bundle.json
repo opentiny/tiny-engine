@@ -9823,8 +9823,7 @@
                             },
                             "description": {
                               "zh_CN": "单元格编辑渲染配置项，也可以是函数 Function(h, params)"
-                            },
-                            "labelPosition": "left"
+                            }
                           },
                           {
                             "property": "filter",
