@@ -228,5 +228,7 @@ export default {
 <style>
 .select-i18n-drop {
   max-width: 300px;
+  padding: 8px 0;
+  border-radius: 4px;
 }
 </style>
