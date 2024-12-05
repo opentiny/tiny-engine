@@ -7,6 +7,7 @@
         placeholder="请选择多语言文案"
         filterable
         :filter-method="filterMethod"
+        popper-class="select-i18n-drop"
         @change="selectI18n"
       >
         <tiny-option v-for="item in langData" :key="item.key" :label="item[currentLang]" :value="item.key">
@@ -221,5 +222,11 @@ export default {
   flex-direction: row-reverse;
   margin-top: 16px;
   gap: 8px;
+}
+</style>
+
+<style>
+.select-i18n-drop {
+  max-width: 300px;
 }
 </style>
