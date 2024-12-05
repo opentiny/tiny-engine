@@ -510,6 +510,7 @@ export default {
       align-items: center;
       justify-content: space-between;
       label {
+        color: var(--te-common-text-secondary);
         min-width: 64px;
       }
       &:last-child {
