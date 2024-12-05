@@ -241,7 +241,7 @@ const change = (item) => {
       color: var(--te-common-text-weaken);
 
       &:hover {
-        background-color: var(--ti-lowcode-base-gray-101);
+        background-color: var(--te-common-bg-prompt);
         border-radius: 4px;
       }
       .selected-option {
@@ -250,7 +250,7 @@ const change = (item) => {
         }
       }
       &.selected {
-        background-color: var(--ti-lowcode-base-gray-101);
+        background-color: var(--te-common-bg-prompt);
         color: var(--te-common-text-primary);
         border-radius: 4px;
       }
@@ -288,7 +288,7 @@ const change = (item) => {
     background-color: var(--te-common-bg-default);
 
     &:hover {
-      background-color: var(--ti-lowcode-base-gray-101);
+      background-color: var(--te-common-bg-prompt);
       border-radius: 4px;
       color: var(--te-common-text-primary);
     }
