@@ -11,17 +11,20 @@
           >
             <tiny-popover
               trigger="hover"
-              width="225"
+              width="260"
               append-to-body
               :open-delay="1000"
               popper-class="media-icon-popover"
             >
               <div class="media-content">
                 <div class="media-title">
-                  <div>{{ item.title }}</div>
-                  <div v-if="item.subTitle" class="sub-title">
-                    （<svg-icon v-if="item.view === 'desktop'" name="stars"></svg-icon> <span>{{ item.subTitle }}</span
-                    >）
+                  <div>
+                    {{ item.title }}
+                    <span v-if="item.subTitle" class="sub-title">
+                      （<svg-icon v-if="item.view === 'desktop'" name="stars"></svg-icon>
+                      <span>{{ item.subTitle }}</span
+                      >）
+                    </span>
                   </div>
                 </div>
                 <div class="content">{{ item.content }}</div>
@@ -32,15 +35,10 @@
             </tiny-popover>
           </span>
         </div>
-        <tiny-popover v-if="isCanvas" width="290" trigger="click" popper-class="toolbar-media-popper">
+        <tiny-popover v-if="isCanvas" width="200" trigger="click" popper-class="toolbar-media-popper">
           <template #reference>
-            <tiny-popover
-              trigger="hover"
-              :open-delay="1000"
-              popper-class="toolbar-right-popover"
-              append-to-body
-              content="画布设置"
-            >
+            <tiny-popover trigger="hover" :open-delay="1000" popper-class="toolbar-right-popover" append-to-body>
+              <div class="setting-content">{{ '画布设置' }}</div>
               <template #reference>
                 <span class="reference-text">
                   <span>
@@ -56,7 +54,7 @@
             </tiny-popover>
           </template>
           <div class="content-wrap text-content">
-            <span class="title text-title">{{ state.textData.title }}</span>
+            <div class="title text-title">{{ state.textData.title }}</div>
             <div class="setting">
               <div>
                 <label for="">{{ state.textData.width }}</label>
@@ -74,18 +72,11 @@
                   </template>
                 </tiny-input>
               </div>
+              <div>
+                <label for="">{{ '自由布局' }}</label>
+                <tiny-switch v-model="isAbsolute" @change="changeCanvasType"></tiny-switch>
+              </div>
             </div>
-
-            <ul class="more-setting">
-              <li>
-                <div>
-                  <span>{{ '自由布局' }}</span>
-                </div>
-                <div>
-                  <tiny-switch v-model="isAbsolute" @change="changeCanvasType"></tiny-switch>
-                </div>
-              </li>
-            </ul>
           </div>
         </tiny-popover>
       </div>
@@ -456,7 +447,6 @@ export default {
     flex-wrap: nowrap;
     align-items: center;
     gap: 6px;
-
     .icon {
       width: 24px;
       height: 24px;
@@ -485,12 +475,46 @@ export default {
       }
     }
   }
-
   .more-setting {
     .setting-item {
       display: flex;
       justify-content: space-between;
       padding: 12px;
+    }
+  }
+}
+.media-content {
+  padding: 12px 8px;
+  line-height: 18px;
+  .media-title {
+    font-weight: 600;
+  }
+}
+.setting-content {
+  padding: 12px 8px;
+}
+
+.content-wrap {
+  padding: 20px 12px;
+  .title {
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+
+  .setting {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    div {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      label {
+        min-width: 64px;
+      }
+      &:last-child {
+        justify-content: flex-start;
+      }
     }
   }
 }
