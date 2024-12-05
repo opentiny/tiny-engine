@@ -81,7 +81,7 @@ import {
   Popover as TinyPopover,
   FormItem as TinyFormItem
 } from '@opentiny/vue'
-import { useNotify, useCanvas, getMetaApi, META_APP } from '@opentiny/tiny-engine-meta-register'
+import { useNotify, useCanvas, getMetaApi, META_APP, useBlock } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 import VueMonaco from './VueMonaco.vue'
 
@@ -155,7 +155,7 @@ export default {
         const { getEditBlock, publishBlock } = getMetaApi(META_APP.BlockManage)
         if (valid) {
           const params = {
-            block: getEditBlock(),
+            block: getEditBlock() || useBlock().getCurrentBlock(),
             is_compile: true,
             deploy_info: formState.deployInfo,
             version: formState.version,

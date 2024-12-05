@@ -1,7 +1,7 @@
 {
   "name": "designer-demo",
   "private": true,
-  "version": "2.0.0-rc.3",
+  "version": "2.0.0-rc.4",
   "type": "module",
   "scripts": {
     "dev": "cross-env VITE_THEME=light vite",
