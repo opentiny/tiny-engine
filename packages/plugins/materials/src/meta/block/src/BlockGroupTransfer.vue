@@ -1,9 +1,14 @@
 <template>
   <div class="block-add-transfer">
     <div class="block-add-transfer-footer">
-      <tiny-checkbox class="block-select-all" :indeterminate="isIndeterminate" v-model="selectedAll">
-        全选</tiny-checkbox
-      >
+      <select-all
+        v-if="state.displayType === 'grid'"
+        class="block-select-all"
+        :items="state.blockList"
+        :selected="selectedBlockArray"
+        @select-all="checkAll"
+        @deselect-all="cancelCheckAll"
+      ></select-all>
       <slot name="search"></slot>
       <tiny-select v-model="state.selectedSort" class="transfer-order-select" placeholder="请选择">
         <tiny-option v-for="item in state.sortList" :key="item.id" :label="item.text" :value="item.id"></tiny-option>
@@ -21,6 +26,8 @@
         :checked="selectedBlockArray"
         :grid-columns="6"
         @check="checkBlock"
+        @checkAll="checkAll"
+        @cancelCheckAll="cancelCheckAll"
       ></block-list>
     </div>
   </div>
@@ -29,16 +36,17 @@
 <script>
 import { computed, onMounted, provide, reactive, watch } from 'vue'
 import { useBlock, useModal } from '@opentiny/tiny-engine-meta-register'
+import { SelectAll } from '@opentiny/tiny-engine-common'
 import BlockList from './BlockList.vue'
 import BlockGroupArrange from './BlockGroupArrange.vue'
-import { Checkbox, Select, Option } from '@opentiny/vue'
+import { Select, Option } from '@opentiny/vue'
 import { fetchBlockById } from './http.js'
 
 export default {
   components: {
     BlockList,
     BlockGroupArrange,
-    TinyCheckbox: Checkbox,
+    SelectAll,
     TinySelect: Select,
     TinyOption: Option
   },
@@ -98,25 +106,6 @@ export default {
       state.blockList = sort(state.blockList, type)
     }
 
-    const selectedAll = computed({
-      get() {
-        return state.blockList.length > 0 && state.blockList.length === selectedBlockArray.value.length
-      },
-      set(value) {
-        if (value) {
-          checkAll(state.blockList)
-        } else {
-          cancelCheckAll()
-        }
-      }
-    })
-
-    const isIndeterminate = computed({
-      get() {
-        return selectedBlockArray.value.length > 0 && selectedBlockArray.value.length !== state.blockList.length
-      }
-    })
-
     const checkBlock = (block) => {
       if (selectedBlockArray.value.some((item) => item.id === block.id)) {
         cancelCheck(block)
@@ -162,9 +151,9 @@ export default {
     return {
       state,
       selectedBlockArray,
-      selectedAll,
-      isIndeterminate,
-      checkBlock
+      checkBlock,
+      checkAll,
+      cancelCheckAll
     }
   }
 }

@@ -1,6 +1,14 @@
 <template>
   <div v-if="blockStyle === BlockStyles.Mini" class="header">
-    <div class="col-checkbox"></div>
+    <div class="col-checkbox" v-if="showCheckbox">
+      <select-all
+        :items="data"
+        :selected="checked"
+        :hidden-label="true"
+        @select-all="(items) => handleSelectAll(items)"
+        @deselect-all="handleDeselectAll"
+      ></select-all>
+    </div>
     <div class="col-name">区块名称</div>
     <div class="col-time">创建时间</div>
     <div class="col-created-by">创建人</div>
@@ -143,6 +151,7 @@ import { Progress, Tooltip } from '@opentiny/vue'
 import PluginBlockItemImg from './PluginBlockItemImg.vue'
 import SearchEmpty from './SearchEmpty.vue'
 import SvgButton from './SvgButton.vue'
+import SelectAll from './SelectAll.vue'
 
 const BlockStyles = {
   Default: 'default',
@@ -160,7 +169,8 @@ export default {
     TinyTooltip: Tooltip,
     PluginBlockItemImg,
     SvgButton,
-    SearchEmpty
+    SearchEmpty,
+    SelectAll
   },
   props: {
     data: {
@@ -234,7 +244,7 @@ export default {
       default: 2
     }
   },
-  emits: ['click', 'iconClick', 'add', 'deleteBlock', 'openVersionPanel', 'editBlock'],
+  emits: ['click', 'iconClick', 'add', 'deleteBlock', 'openVersionPanel', 'editBlock', 'checkAll', 'cancelCheckAll'],
   setup(props, { emit }) {
     const panelState = inject('panelState', {})
     const blockUsers = inject('blockUsers')
@@ -361,6 +371,14 @@ export default {
       }
     )
 
+    const handleSelectAll = (items) => {
+      emit('checkAll', items)
+    }
+
+    const handleDeselectAll = () => {
+      emit('cancelCheckAll')
+    }
+
     return {
       BlockStyles,
       isShortcutPanel: panelState.isShortcutPanel,
@@ -379,7 +397,9 @@ export default {
       handleSettingMouseOver,
       handleShowVersionMenu,
       editBlock,
-      format
+      format,
+      handleSelectAll,
+      handleDeselectAll
     }
   }
 }
@@ -446,6 +466,11 @@ export default {
   }
 }
 
+.col-checkbox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .col-checkbox,
 .block-item-small-list:deep(.table-selection) {
   width: 40px;
