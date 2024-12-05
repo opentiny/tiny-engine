@@ -189,7 +189,7 @@ export default {
     border-color: var(--ti-lowcode-tootip-input-border-color);
     color: var(--ti-lowcode-toolbar-icon-color);
     &:hover {
-      background-color: var(--ti-lowcode-canvas-wrap-bg);
+      background-color: var(--te-common-bg-container);
       border-color: var(--ti-lowcode-tabs-border-color);
     }
   }

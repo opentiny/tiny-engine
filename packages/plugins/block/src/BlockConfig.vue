@@ -308,7 +308,7 @@ export default {
     line-height: 20px;
     padding-top: 0;
     padding-bottom: 0;
-    border: 1px solid var(--ti-lowcode-base-default-button-border-disable-color);
+    border: 1px solid var(--te-common-border-default);
   }
 
   .tiny-input {

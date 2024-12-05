@@ -129,7 +129,7 @@ export default {
     flex: 0 0 50px;
     padding: 0 3px;
     line-height: 24px;
-
+    color: var(--te-common-text-secondary);
     span {
       padding: 2px;
     }
@@ -146,50 +146,6 @@ export default {
   .display-content {
     flex: auto;
     display: flex;
-
-    .display-content-item {
-      flex: 1;
-      padding: 4px 0;
-      font-size: 16px;
-      background: var(--ti-lowcode-canvas-wrap-bg);
-      position: relative;
-      color: var(--ti-lowcode-component-setting-panel-icon-color);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      &:not(:last-child)::after {
-        content: '';
-        width: 1px;
-        height: 100%;
-        background: var(--ti-lowcode-tabs-border-color);
-        display: inline-block;
-        position: absolute;
-        top: 0;
-        right: 0;
-      }
-
-      &:hover {
-        color: var(--ti-lowcode-property-hover-color);
-      }
-
-      &.selected {
-        color: var(--ti-lowcode-toolbar-icon-color);
-        background-color: var(--ti-lowcode-tabs-bg);
-      }
-
-      &.disabled {
-        background-color: var(--ti-lowcode-error-tip-color);
-
-        &:hover {
-          cursor: not-allowed;
-        }
-      }
-
-      .display-svg {
-        margin: auto;
-      }
-    }
   }
 }
 </style>

@@ -497,6 +497,7 @@ export default {
 <style lang="less" scoped>
 .typography-wrap {
   span {
+    color: var(--te-common-text-secondary);
     padding: 2px;
   }
   .typography-row {

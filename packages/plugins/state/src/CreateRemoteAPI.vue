@@ -190,7 +190,7 @@ export default {
   padding: 12px;
 
   .error-tip {
-    color: var(--ti-lowcode-error-tip-color);
+    color: var(--te-common-color-error);
     margin-top: 4px;
     font-size: 12px;
   }
@@ -240,24 +240,24 @@ export default {
     align-items: center;
     padding: 8px 12px;
     background: var(--ti-lowcode-toolbar-bg);
-    border-top: 1px solid var(--ti-lowcode-toolbar-border-color);
-    border-bottom: 1px solid var(--ti-lowcode-toolbar-border-color);
-    color: var(--ti-lowcode-toolbar-breadcrumb-color);
+    border-top: 1px solid var(--te-common-border-default);
+    border-bottom: 1px solid var(--te-common-border-default);
+    color: var(--te-common-text-secondary);
   }
 
   .use-service {
-    color: var(--ti-lowcode-toolbar-breadcrumb-color);
+    color: var(--te-common-text-secondary);
     font-size: 12px;
     margin-top: 10px;
 
     span {
-      color: var(--ti-lowcode-description-error-color);
+      color: var(--te-common-color-error);
     }
   }
 
   .send-service {
     text-align: right;
-    border-top: 1px solid var(--ti-lowcode-toolbar-border-color);
+    border-top: 1px solid var(--te-common-border-default);
     padding: 20px 10px;
     margin-bottom: 10px;
 
@@ -297,7 +297,7 @@ export default {
     .icon {
       width: 20px;
       height: 20px;
-      color: var(--ti-lowcode-toolbar-breadcrumb-color);
+      color: var(--te-common-text-secondary);
       font-size: 16px;
       border-radius: 2px;
       margin-right: 8px;

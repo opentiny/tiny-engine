@@ -476,7 +476,7 @@ export default {
     .popper__arrow {
       &,
       &::after {
-        border-right-color: var(--ti-lowcode-common-component-hover-bg);
+        border-right-color: var(--te-common-bg-container);
       }
     }
   }
@@ -489,7 +489,7 @@ export default {
     font-size: 12px;
     color: var(--ti-lowcode-materials-block-group-delete-popover-title-color);
     .icon {
-      color: var(--ti-lowcode-warning-color);
+      color: var(--te-common-color-warning);
       width: 16px;
       height: 16px;
     }

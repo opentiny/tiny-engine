@@ -22,7 +22,7 @@ export default {
 
   span,
   a {
-    color: var(--ti-lowcode-toolbar-breadcrumb-color);
+    color: var(--te-common-text-secondary);
   }
 }
 </style>

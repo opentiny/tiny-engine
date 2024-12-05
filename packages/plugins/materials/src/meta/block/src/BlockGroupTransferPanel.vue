@@ -44,7 +44,7 @@ export default {
 <style lang="less" scoped>
 .block-add-transfer-panel {
   height: 100%;
-  border: 1px solid var(--ti-lowcode-component-block-list-border-color);
+  border: 1px solid var(--te-common-border-default);
   border-radius: 6px;
   overflow: hidden;
   background-color: var(--ti-lowcode-materials-block-transfer-bg-color);

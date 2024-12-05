@@ -288,7 +288,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   font-size: 12px;
-  color: var(--ti-lowcode-common-text-color-2);
+  color: var(--te-common-text-secondary);
   margin-left: 8px;
   white-space: nowrap;
   overflow: hidden;
@@ -312,7 +312,7 @@ onMounted(() => {
   }
 }
 .choose-image {
-  border-color: var(--ti-lowcode-component-setting-panel-label-color);
+  border-color: var(--te-common-border-default);
   outline: 0px;
   cursor: default;
   user-select: none;
@@ -327,7 +327,7 @@ onMounted(() => {
   justify-content: center;
   height: 24px;
   border-radius: 4px;
-  color: var(--te-common-bg-prompt);
+  color: var(--te-common-text-primary);
   border-width: 1px;
   border-style: solid;
   align-self: center;

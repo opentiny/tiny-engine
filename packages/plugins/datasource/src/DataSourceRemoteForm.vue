@@ -100,18 +100,6 @@ export default {
       width: 100px;
       border: none;
     }
-    :deep(.tiny-input-group__prepend) {
-      background: var(--ti-lowcode-datasource-respones-select-color-bg);
-      border-color: var(--ti-lowcode-datasource-select-border-color);
-      .tiny-input-suffix {
-        .tiny-input-display-only {
-          .tiny-input__inner {
-            border-color: var(--ti-lowcode-datasource-select-border-right-color-bg);
-            border-left: none;
-          }
-        }
-      }
-    }
     :deep(.tiny-input-suffix) {
       width: 100px;
       .tiny-input__inner {
@@ -122,9 +110,6 @@ export default {
     :deep(.tiny-input-group__append) {
       border: none;
       background: var(--ti-lowcode-datasource-respones-color-bg);
-    }
-    .requestBtn {
-      color: var(--ti-lowcode-datasource-respones-border-color-bg);
     }
     :deep(.border-input) {
       input {

@@ -50,7 +50,7 @@ export default {
 
 <style lang="less" scoped>
 .block-guide {
-  color: var(--ti-lowcode-toolbar-breadcrumb-color);
+  color: var(--te-common-text-secondary);
   line-height: 2;
   border: none;
   border-color: var(--ti-lowcode-block-video-tip-color);

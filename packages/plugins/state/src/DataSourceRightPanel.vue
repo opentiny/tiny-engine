@@ -113,7 +113,7 @@ export default {
 .data-source-right-panel {
   width: 442px;
   height: 100%;
-  border-right: 1px solid var(--ti-lowcode-toolbar-border-color);
+  border-right: 1px solid var(--te-common-border-default);
   background: var(--ti-lowcode-toolbar-bg);
   position: absolute;
   left: calc(var(--base-left-panel-width) - 6px);
@@ -126,7 +126,7 @@ export default {
     height: 45px;
     padding: 0 12px;
     color: var(--ti-lowcode-toolbar-icon-color);
-    background: var(--ti-lowcode-toolbar-view-hover-bg);
+    background: var(--te-common-bg-container);
     border-bottom: 1px solid var(--ti-lowcode-tabs-border-color);
   }
 }

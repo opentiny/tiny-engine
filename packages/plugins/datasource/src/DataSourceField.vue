@@ -186,10 +186,10 @@ export default {
         align-items: center;
 
         &.field-row-add {
-          color: var(--ti-lowcode-datasource-json-border-colorr);
+          color: var(--ti-lowcode-datasource-json-border-color);
 
           svg {
-            color: var(--ti-lowcode-datasource-json-border-colorr);
+            color: var(--ti-lowcode-datasource-json-border-color);
           }
         }
       }

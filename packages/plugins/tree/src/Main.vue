@@ -295,7 +295,6 @@ export default {
     .tree-handle {
       svg {
         color: var(--ti-lowcode-tree-icon-color);
-
         &:hover {
           color: var(--ti-lowcode-tree-hover-icon-color);
         }
@@ -317,10 +316,6 @@ export default {
         width: 14px;
         height: 14px;
         margin-bottom: 2px;
-
-        &:hover {
-          color: var(--ti-lowcode-tree-icon-hover-color);
-        }
       }
     }
     .high-light-node {
@@ -331,15 +326,15 @@ export default {
   }
 
   :deep(.tiny-grid .tiny-grid__body-wrapper .tiny-grid-body__row) {
-    background-color: var(--ti-lowcode-common-component-bg);
+    background-color: var(--te-common-bg-default);
     &:hover {
-      background-color: var(--ti-lowcode-common-component-hover-bg);
+      background-color: var(--te-common-bg-container);
     }
   }
   :deep(.tiny-grid .tiny-grid__body-wrapper .tiny-grid-body__row:not(.row__hover):nth-child(2n)) {
-    background-color: var(--ti-lowcode-common-component-bg);
+    background-color: var(--te-common-bg-default);
     &:hover {
-      background-color: var(--ti-lowcode-common-component-hover-bg);
+      background-color: var(--te-common-bg-container);
     }
   }
   :deep(.tiny-grid-body__row.nav-tree .tiny-grid-cell) {

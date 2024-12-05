@@ -92,34 +92,34 @@ export default {
   padding-block: 4px;
   padding-inline: 11px 8px;
   width: auto;
-  color: var(--ti-lowcode-toolbar-breadcrumb-color);
-  background-color: var(--ti-lowcode-toolbar-view-hover-bg);
+  color: var(--te-common-text-secondary);
+  background-color: var(--te-common-bg-container);
   box-shadow: 0px 0px 6px 2px rgba(0, 0, 0, 0.3);
   &.warning {
-    color: var(--ti-lowcode-description-warning-color);
+    color: var(--te-common-color-warning);
   }
   &.error {
-    color: var(--ti-lowcode-description-error-color);
+    color: var(--te-common-color-error);
   }
 
   &.border {
-    border-top: 1px solid var(--ti-lowcode-collapse-active-border-color);
-    border-right: 1px solid var(--ti-lowcode-collapse-active-border-color);
-    border-bottom: 1px solid var(--ti-lowcode-collapse-active-border-color);
+    border-top: 1px solid var(--te-common-border-default);
+    border-right: 1px solid var(--te-common-border-default);
+    border-bottom: 1px solid var(--te-common-border-default);
   }
   .content {
-    color: var(--ti-lowcode-toolbar-breadcrumb-color);
+    color: var(--te-common-text-secondary);
   }
   .footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: var(--ti-lowcode-toolbar-breadcrumb-color);
+    color: var(--te-common-text-secondary);
     .footer-text {
       cursor: pointer;
       &.link {
         display: block;
-        color: var(--ti-lowcode-text-link-color);
+        color: var(--te-common-text-link);
         &:hover {
           text-decoration: underline;
         }

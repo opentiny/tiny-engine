@@ -95,13 +95,13 @@ export default {
   }
 
   .content {
-    color: var(--ti-lowcode-toolbar-breadcrumb-color);
+    color: var(--te-common-text-secondary);
     line-height: 25px;
     text-indent: 24px;
     padding-top: 20px;
   }
   :deep(.md) {
-    color: var(--ti-lowcode-toolbar-breadcrumb-color);
+    color: var(--te-common-text-secondary);
     ul {
       padding-left: 20px;
     }

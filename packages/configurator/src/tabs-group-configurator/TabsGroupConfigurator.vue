@@ -203,17 +203,17 @@ const change = (item) => {
       line-height: 14px;
       min-width: 20px;
       max-width: 80px;
-      color: var(--te-common-text-weaken);
+      color: var(--te-common-text-secondary);
 
       &:hover {
-        background-color: var(--ti-lowcode-base-gray-101);
-        color: var(--te-common-text-primary);
+        background-color: var(--te-common-bg-prompt);
+        color: var(--te-common-text-secondary);
         border-radius: 4px;
       }
 
       &.selected {
-        background-color: var(--ti-lowcode-base-gray-101);
-        color: var(--te-common-text-primary);
+        background-color: var(--te-common-bg-prompt);
+        color: var(--te-common-text-secondary);
         border-radius: 4px;
       }
     }
@@ -238,11 +238,11 @@ const change = (item) => {
       justify-content: center;
       align-items: center;
       height: 24px;
-      background-color: var(--ti-lowcode-base-bg-5);
-      color: var(--te-common-text-weaken);
+      background-color: var(--te-common-bg-container);
+      color: var(--te-common-text-secondary);
       &.selected {
-        background-color: var(--ti-lowcode-base-gray-101);
-        color: var(--te-common-text-primary);
+        background-color: var(--te-common-bg-prompt);
+        color: var(--te-common-text-secondary);
         border-radius: 4px;
       }
       :deep(.tiny-dropdown__title) {
@@ -260,9 +260,12 @@ const change = (item) => {
       }
 
       &:hover {
-        background-color: var(--ti-lowcode-base-gray-101);
+        background-color: var(--te-common-bg-prompt);
+        color: var(--te-common-text-secondary);
         border-radius: 4px;
-        color: var(--te-common-text-primary);
+      }
+      :deep(.tiny-dropdown__trigger:not(.tiny-dropdown__caret-button):not(.is-disabled)):hover {
+        color: var(--te-common-text-secondary);
       }
     }
   }
@@ -270,8 +273,7 @@ const change = (item) => {
 .tiny-dropdown-menu {
   padding: 8px 0px;
   margin: 0px 0px 0px 20px;
-  background-color: var(--te-common-bg-default);
-  color: var(--te-common-text-weaken);
+  color: var(--te-common-text-secondary);
   z-index: 9999;
   box-shadow: 0 0 10px 0 var(--te-common-border-default);
   --ti-dropdown-menu-arrow-margin-top: 0;
@@ -283,11 +285,10 @@ const change = (item) => {
   :deep(.tiny-dropdown-item__wrap) {
     padding: 4px 12px;
     background-color: var(--te-common-bg-default);
-
     &:hover {
-      background-color: var(--ti-lowcode-base-gray-101);
+      background-color: var(--te-common-bg-prompt);
+      color: var(--te-common-text-secondary);
       border-radius: 4px;
-      color: var(--te-common-text-primary);
     }
   }
 }

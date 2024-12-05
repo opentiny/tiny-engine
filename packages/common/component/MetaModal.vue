@@ -74,7 +74,7 @@ export default {
 
   .modal-content {
     padding: 8px;
-    color: var(--ti-lowcode-toolbar-breadcrumb-color);
+    color: var(--te-common-text-secondary);
     border: 1px solid var(--ti-lowcode-tabs-border-color);
     border-radius: 4px;
     background-color: var(--ti-lowcode-toolbar-bg);

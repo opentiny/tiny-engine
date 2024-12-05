@@ -95,7 +95,7 @@ export default {
     height: 3px;
     width: 100%;
     border-radius: 2px;
-    background-color: var(--ti-lowcode-canvas-wrap-bg);
+    background-color: var(--te-common-bg-container);
     .tiny-slider__handle {
       width: 10px;
       height: 10px;
@@ -103,14 +103,14 @@ export default {
       border-radius: 50%;
       border: none;
       cursor: ew-resize;
-      background-color: var(--ti-lowcode-toolbar-breadcrumb-color);
+      background-color: var(--te-common-text-secondary);
       box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 1px, rgba(0, 0, 0, 0.3) 0px 0px 0px 0.5px;
     }
     .tiny-slider__range {
       height: 3px;
       border-radius: 3px;
       margin-top: 0;
-      background: var(--ti-lowcode-canvas-wrap-bg);
+      background: var(--te-common-bg-container);
     }
 
     .tiny-slider__tips {

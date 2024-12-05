@@ -89,7 +89,7 @@ export default {
   width: 100%;
   height: var(--base-top-panel-height);
   text-align: center;
-  background-color: var(--ti-lowcode-common-layout-bg);
+  background-color: var(--te-common-bg-default);
   position: relative;
   z-index: 1001;
   border-bottom: 1px solid var(--ti-lowcode-toolbar-border-bottom-color);
@@ -147,7 +147,7 @@ export default {
         background: var(--ti-lowcode-toolbar-view-active-bg);
       }
       &.active {
-        color: var(--ti-lowcode-common-primary-color);
+        color: var(--te-common-text-checked);
       }
       &.disabled {
         cursor: not-allowed;

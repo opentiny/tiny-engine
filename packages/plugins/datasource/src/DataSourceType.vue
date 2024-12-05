@@ -117,7 +117,7 @@ export default {
     &.is-checked {
       color: var(--ti-lowcode-datasource-toolbar-breadcrumb-color);
       .svg-icon {
-        color: var(--ti-lowcode-datasource-common-primary-color);
+        color: var(--ti-lowcode-datasource-common-border-primary-color);
       }
     }
     .svg-icon {

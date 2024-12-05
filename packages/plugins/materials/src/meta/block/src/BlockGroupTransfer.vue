@@ -169,7 +169,7 @@ export default {
       margin-left: 8px;
     }
     .footer-text {
-      color: var(--ti-lowcode-toolbar-breadcrumb-color);
+      color: var(--te-common-text-secondary);
     }
   }
 }

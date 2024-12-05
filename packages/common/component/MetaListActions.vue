@@ -35,7 +35,7 @@ export default {
 .actionsItem {
   display: inline-block;
   padding: 5px 5px;
-  background-color: var(--ti-lowcode-canvas-wrap-bg);
+  background-color: var(--te-common-bg-container);
   &:not(:last-child) {
     border-right: 1px solid var(--ti-lowcode-optionitem-border-color);
   }

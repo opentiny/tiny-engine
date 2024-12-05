@@ -76,7 +76,7 @@ export default {
 
     .empty-line {
       margin: 4px 0px;
-      border-top: 1px solid var(--ti-lowcode-canvas-wrap-bg);
+      border-top: 1px solid var(--te-common-bg-container);
     }
 
     .icon-hides {

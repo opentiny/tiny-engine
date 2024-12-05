@@ -470,7 +470,7 @@ export default {
   gap: 12px;
   overflow-y: auto;
   overflow-x: hidden;
-  color: var(--ti-lowcode-common-secondary-text-color);
+  color: var(--te-common-text-secondary);
 
   .block-item {
     display: flex;
@@ -489,7 +489,7 @@ export default {
       top: 2px;
       text-align: center;
       display: block;
-      color: var(--ti-lowcode-common-secondary-text-color);
+      color: var(--te-common-text-secondary);
       font-size: 12px;
       background-color: var(--ti-lowcode-component-block-list-item-tag-bg);
       padding: 2px;
@@ -548,7 +548,7 @@ export default {
     }
 
     &.is-active {
-      background: var(--ti-lowcode-component-block-list-item-active-bg, --ti-lowcode-canvas-wrap-bg);
+      background: var(--ti-lowcode-component-block-list-item-active-bg, --te-common-bg-container);
     }
 
     &.is-disabled {
@@ -630,7 +630,7 @@ export default {
       }
 
       .block-detail-icon {
-        color: var(--ti-lowcode-base-gray-50);
+        color: var(--te-common-icon-secondary);
         &:hover {
           cursor: pointer;
           color: var(--ti-lowcode-component-block-list-setting-btn-hover-color);
@@ -771,7 +771,7 @@ export default {
     cursor: pointer;
     &:hover {
       background-color: var(--ti-lowcode-component-block-setting-item-hover-bg);
-      color: var(--ti-lowcode-common-primary-text-color);
+      color: var(--te-common-text-primary);
     }
     .list-item-icon {
       font-size: 14px;

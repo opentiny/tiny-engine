@@ -229,7 +229,7 @@ export default {
       display: block;
       margin-bottom: 8px;
       font-size: 12px;
-      color: var(--ti-lowcode-setting-style-title-color);
+      color: var(--te-common-text-secondary);
     }
   }
   .inline-style {

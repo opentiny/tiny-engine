@@ -120,7 +120,7 @@ export default {
     width: 100%;
     font-size: 14px;
     padding: 12px 20px;
-    color: var(--ti-lowcode-toolbar-breadcrumb-color);
+    color: var(--te-common-text-secondary);
     line-height: 18px;
     font-weight: 600;
   }
@@ -142,7 +142,7 @@ export default {
 
     .user-item-name {
       font-size: 14px;
-      color: var(--ti-lowcode-dialog-font-color);
+      color: var(--te-common-text-primary);
       line-height: 16px;
       font-weight: 400;
       margin: 0 4px 0 8px;
@@ -167,17 +167,6 @@ export default {
     margin-right: 8px;
     z-index: 9;
     border: 1px solid var(--ti-lowcode-toolbar-user-img-border-color);
-  }
-
-  .user-count {
-    height: 20px;
-    width: 20px;
-    color: var(--ti-lowcode-toolbar-icon-color);
-    background-color: var(--ti-lowcode-user-header-bg);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 }
 </style>

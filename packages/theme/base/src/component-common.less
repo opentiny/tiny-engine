@@ -29,6 +29,7 @@
 }
 
 .tiny-select-dropdown.tiny-select-dropdown {
+  background-color: var(--te-common-bg-default);
   // 下拉新增列
   .tiny-select__top-create {
     margin: 8px 12px 4px 12px;
@@ -85,6 +86,7 @@
     height: 24px;
     border-color: var(--te-common-border-default);
     color: var(--te-common-text-primary);
+    background-color: transparent;
     font-size: var(--te-base-font-size-base);
     &:hover {
       border-color: var(--te-common-border-active);
@@ -103,6 +105,7 @@
 // 3、折叠框
 .tiny-collapse.tiny-collapse {
   border-top: 0;
+  border-bottom: 0;
   .tiny-collapse-item__header {
     flex-direction: row-reverse;
     font-size: var(--te-base-font-size-base);
@@ -128,6 +131,7 @@
   }
   .tiny-collapse-item {
     border-top-color: var(--te-common-border-bg-divider);
+    border-bottom-color: var(--te-common-border-bg-divider);
     border-bottom: 0;
     border-left: 0;
     border-right: 0;
@@ -162,7 +166,9 @@
         height: 24px;
         .tiny-tree-node__content-left {
           padding: 0 12px;
+          background-color: var(--te-common-bg-default);
           .tiny-tree-node__content-box {
+            color: var(--te-common-text-primary);
             padding: 0 12px 0 4px;
             background-color: var(--te-common-bg-default);
             &:hover {
@@ -242,10 +248,15 @@
 // 7、dialog组件
 .tiny-dialog-box.tiny-dialog-box {
   padding: 20px;
+  background-color: var(--te-common-bg-popover);
   .tiny-dialog-box__header {
     font-size: var(--te-base-font-size-1);
     color: var(--te-common-text-primary);
     padding: 0;
+    background-color: var(--te-common-bg-popover);
+    .tiny-dialog-box__close {
+      color: var(--te-common-text-primary);
+    }
   }
   .tiny-dialog-box__body {
     color: var(--te-common-text-secondary);
@@ -359,7 +370,7 @@
 .tiny-modal__box.tiny-modal__box {
   padding: 20px;
   border-radius: var(--te-base-border-radius-1);
-  box-shadow: 0 0 10px 0 var(--te-base-rgba-23);
+  box-shadow: 0 0 10px 0 var(--te-base-box-shadow-rgba-1);
   .tiny-modal__header {
     padding: 0;
     font-size: var(--te-base-font-size-1);
@@ -391,7 +402,7 @@
 .tiny-modal.tiny-modal.tiny-modal__wrapper.type__message {
   .tiny-modal__box {
     border-radius: var(--te-base-border-radius-2);
-    box-shadow: 0 2px 12px 0 var(--te-base-rgba-24);
+    box-shadow: 0 2px 12px 0 var(--te-base-box-shadow-rgba-2);
     padding: 0;
     height: 38px;
     .tiny-modal__body {
@@ -418,6 +429,7 @@
     color: var(--te-common-text-primary);
     border-color: var(--te-common-border-default);
     text-align: left;
+    background-color: var(--te-common-bg-default);
   }
   &.is-controls-right {
     .tiny-numeric__input-inner {
@@ -459,9 +471,9 @@
   padding: 0px 8px;
   font-size: var(--te-base-font-size-base);
   color: var(--te-common-text-primary);
-  background-color: var(--te-common-bg-default);
+  background-color: var(--te-common-bg-popover);
   border: 0;
-  box-shadow: 0 8px 24px 0 var(--te-base-rgba-27);
+  box-shadow: 0 8px 24px 0 var(--te-base-box-shadow-rgba-2);
 
   height: auto;
 }
@@ -541,14 +553,18 @@
 .tiny-notify.tiny-notify {
   border-radius: var(--te-base-border-radius-2);
   padding: 12px;
-  background-color: var(--te-common-bg-default);
-  box-shadow: 0 2px 12px 0 var(--te-base-rgba-24);
+  background-color: var(--te-common-bg-popover);
+  color: var(--te-common-text-primary);
+  box-shadow: 0 2px 12px 0 var(--te-base-box-shadow-rgba-2);
   .tiny-notify__icon-zone {
     height: 24px;
     .tiny-notify__icon-status {
       width: 16px;
       height: 16px;
     }
+  }
+  .tiny-notify__title {
+    color: var(--te-common-text-primary);
   }
   .tiny-notify__content {
     color: var(--te-common-text-secondary);
@@ -604,11 +620,11 @@
 // 17、tooltip文字提示
 .tiny-tooltip.tiny-tooltip {
   &.tiny-tooltip__popper {
-    background: var(--te-common-bg-default);
+    background: var(--te-common-bg-popover);
     color: var(--te-common-text-primary);
-    box-shadow: 0 0 20px 0 var(--te-base-dark-bg-8);
+    box-shadow: 0 0 20px 0 var(--te-base-box-shadow-rgba-2);
     &[class*='is-'] {
-      background: var(--te-common-bg-default);
+      background: var(--te-common-bg-popover);
       color: var(--te-common-text-primary);
       font-size: var(--te-base-font-size-base);
       padding: 12px;
@@ -683,6 +699,7 @@
       .tiny-grid__header {
         .tiny-grid-header__row {
           .tiny-grid-header__column {
+            color: var(--te-common-text-primary);
             height: 24px;
             &.col__center {
               text-align: left;
@@ -715,6 +732,7 @@
       }
       .tiny-grid__body {
         .tiny-grid-body__row {
+          background-color: var(--te-common-bg-default);
           &.nav-tree .tiny-grid-cell {
             line-height: inherit;
           }
@@ -781,6 +799,24 @@
     color: var(--te-common-text-primary);
     &:not(&__caret-button):hover {
       color: var(--te-common-text-weaken);
+    }
+  }
+}
+
+// 指引弹窗
+
+.tiny-guide.tiny-guide {
+  background-color: var(--te-common-bg-popover);
+  .shepherd-content .shepherd-header,
+  .shepherd-arrow:before {
+    background-color: var(--te-common-bg-popover);
+  }
+  &.shepherd-has-title[data-popper-placement^='bottom'],
+  &.shepherd-has-title[data-popper-placement^='top'],
+  &.shepherd-has-title[data-popper-placement^='left'],
+  &.shepherd-has-title[data-popper-placement^='right'] {
+    .shepherd-arrow:before {
+      background-color: var(--te-common-bg-popover);
     }
   }
 }

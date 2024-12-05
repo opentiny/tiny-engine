@@ -115,7 +115,7 @@ export default {
 <style lang="less" scoped>
 .block-detail-panel {
   width: 228px;
-  background-color: var(--ti-lowcode-toolbar-view-hover-bg);
+  background-color: var(--te-common-bg-container);
   border-radius: 3px;
 
   .block-detail-title {
@@ -125,14 +125,14 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--ti-lowcode-toolbar-popover-color);
+    border-bottom: 1px solid var(--te-common-border-default);
 
     .block-detail-icon {
       width: 20px;
       height: 20px;
       color: var(--ti-lowcode-toolbar-title-color);
-      background: var(--ti-lowcode-canvas-wrap-bg);
-      border: 1px solid var(--ti-lowcode-toolbar-border-color);
+      background: var(--te-common-bg-container);
+      border: 1px solid var(--te-common-border-default);
       font-size: 12px;
       cursor: pointer;
       display: inline-flex;
@@ -152,7 +152,7 @@ export default {
 
   .block-detail-content {
     &:not(:last-child) {
-      border-bottom: 1px solid var(--ti-lowcode-toolbar-border-color);
+      border-bottom: 1px solid var(--te-common-border-default);
     }
 
     .block-detail-history {
@@ -161,9 +161,8 @@ export default {
 
     .block-detail-item {
       padding: 8px 12px;
-      color: var(--ti-lowcode-dialog-font-color);
+      color: var(--te-common-text-primary);
       font-size: 12px;
-
       span {
         margin-right: 4px;
       }

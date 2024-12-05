@@ -398,7 +398,7 @@ export default {
     padding: 2px;
   }
   .background-label {
-    color: var(--te-common-text-primary);
+    color: var(--te-common-text-secondary);
   }
   .background-color,
   .background-clip {

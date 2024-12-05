@@ -152,7 +152,7 @@ export default {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      color: var(--ti-lowcode-base-gray-90);
+      color: var(--te-common-text-primary);
       .item-name {
         display: flex;
         align-items: center;

@@ -123,7 +123,7 @@ export default {
       .tiny-collapse-item__header {
         height: 24px;
         line-height: 24px;
-        background-color: var(--ti-lowcode-toolbar-view-hover-bg);
+        background-color: var(--te-common-bg-container);
         justify-content: center;
         transition: 0.3s;
 
@@ -141,7 +141,6 @@ export default {
 
         &:hover {
           color: var(--ti-lowcode-toolbar-icon-color);
-          background-color: var(--ti-lowcode-more-collapse-header-hover-color);
 
           svg {
             color: var(--ti-lowcode-toolbar-icon-color);
@@ -191,8 +190,8 @@ export default {
           flex: 1;
           padding: 4px 0;
           font-size: 16px;
-          color: var(--ti-lowcode-toolbar-breadcrumb-color);
-          background: var(--ti-lowcode-canvas-wrap-bg);
+          color: var(--te-common-text-secondary);
+          background: var(--te-common-bg-container);
           position: relative;
           display: flex;
           justify-content: center;
@@ -229,7 +228,7 @@ export default {
 
       svg {
         font-size: 14px;
-        color: var(--ti-lowcode-toolbar-breadcrumb-color);
+        color: var(--te-common-text-secondary);
       }
     }
   }

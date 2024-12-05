@@ -527,6 +527,7 @@ export default {
       }
     }
   }
+
   .grid-item-wrap {
     grid-column: 1 / -1;
     grid-row-start: 3;
@@ -558,5 +559,9 @@ export default {
     width: 100%;
     display: inline-block;
   }
+}
+.grid-edit-spacing {
+  padding-top: 12px;
+  padding-bottom: 12px;
 }
 </style>

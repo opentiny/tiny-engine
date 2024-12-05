@@ -441,7 +441,7 @@ export default {
     height: var(--base-top-panel-height);
     line-height: var(--base-top-panel-height);
     padding: 0 7px;
-    color: var(--ti-lowcode-toolbar-breadcrumb-color);
+    color: var(--te-common-text-secondary);
     display: inline-block;
 
     & > span {
@@ -480,7 +480,7 @@ export default {
       }
       &.active {
         svg {
-          color: var(--ti-lowcode-common-primary-color);
+          color: var(--te-common-text-checked);
         }
       }
     }

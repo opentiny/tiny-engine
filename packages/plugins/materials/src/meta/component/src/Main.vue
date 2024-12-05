@@ -146,7 +146,7 @@ export default {
       text-align: center;
       user-select: none;
       cursor: move;
-      background: var(--ti-lowcode-common-component-bg);
+      background: var(--te-common-bg-default);
 
       &:hover {
         background: var(--ti-lowcode-material-component-list-hover-bg);
@@ -159,7 +159,7 @@ export default {
         svg {
           font-size: 40px;
           vertical-align: middle;
-          color: var(--ti-lowcode-component-icon-color);
+          color: var(--te-common-icon-secondary);
           overflow: hidden;
         }
       }

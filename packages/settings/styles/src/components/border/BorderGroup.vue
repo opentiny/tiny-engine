@@ -555,7 +555,7 @@ export default {
     }
   }
   svg {
-    color: var(--ti-lowcode-toolbar-breadcrumb-color);
+    color: var(--te-common-text-secondary);
   }
 }
 .item-row {

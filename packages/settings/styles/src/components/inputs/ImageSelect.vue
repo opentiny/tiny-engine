@@ -70,7 +70,7 @@ export default {
   width: 100%;
   .icon {
     font-size: 20px;
-    color: var(--ti-lowcode-toolbar-breadcrumb-color);
+    color: var(--te-common-text-secondary);
     margin-right: 4px;
   }
 }
