@@ -7,9 +7,14 @@
           v-if="!filter.usingSelect"
           v-model="state.checkGroup[filter.id]"
           type="checkbox"
-          @change="getFilters($event, filter.id, filter.children)"
+          @change="getFilters($event, filter.id)"
         >
-          <tiny-checkbox v-for="item in filter.children" :key="item.value" :label="item.name"></tiny-checkbox>
+          <tiny-checkbox
+            v-for="item in selectOptions[filter.id]"
+            :key="item.value"
+            :text="item.name"
+            :label="item.value"
+          ></tiny-checkbox>
         </tiny-checkbox-group>
         <tiny-select
           v-else
@@ -20,9 +25,9 @@
         >
           <tiny-option
             v-for="item in selectOptions[filter.id]"
-            :key="item.name"
+            :key="item.value"
             :label="item.name"
-            :value="item"
+            :value="item.value"
           ></tiny-option>
         </tiny-select>
       </div>
@@ -59,7 +64,7 @@ export default {
       )
     })
 
-    // 这里重新计算selectOptions的原因：tiny-option的value属性如果是一个对象，那么此对象内部需要有value属性
+    // 不同的filter，值所在的字段可能是id或者name。这里把实际的值都映射到value字段
     const selectOptions = computed(() => {
       return props.filters.reduce(
         (result, filter) => ({
@@ -73,19 +78,9 @@ export default {
       )
     })
 
-    const getFilters = (checked, id, child) => {
-      filters[id] = []
+    const getFilters = (checked, id) => {
+      filters[id] = checked
 
-      // tiny-checkbox-group的选中值是一个字符串数组
-      if (typeof checked.at(0) === 'string') {
-        child.forEach((item) => {
-          if (checked.includes(item.name)) {
-            filters[id].push(item.id)
-          }
-        })
-      } else {
-        filters[id] = checked.map((item) => item.value)
-      }
       emit('search', null, filters)
     }
 
