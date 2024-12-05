@@ -4,7 +4,7 @@
       <tiny-select
         ref="selectRef"
         v-model="selectValue"
-        placeholder="请根据显示值搜索"
+        placeholder="请选择多语言文案"
         filterable
         :filter-method="filterMethod"
         @change="selectI18n"
@@ -17,18 +17,19 @@
         </tiny-option>
       </tiny-select>
       <div v-if="paramsForm.length" class="params-form">
-        <label>国际化参数配置</label>
+        <div class="label">国际化参数配置</div>
         <div v-for="param in paramsForm" :key="param.name" class="params-item">
           <label>{{ param.name }}</label>
           <tiny-input v-model="param.value" @update:modelValue="paramsChange"></tiny-input>
         </div>
       </div>
       <slot name="suffix">
-        <tiny-button type="info" @click="openCreateForm">
-          <icon-plus class="icon-plus"></icon-plus>
-          <span>创建新的多语言文案</span>
-        </tiny-button>
-        <tiny-button v-if="isBind" type="info" @click="unbindI18n"> 解除关联 </tiny-button>
+        <div class="bottom-buttons">
+          <tiny-button type="primary" @click="openCreateForm">
+            <span>创建新的多语言文案</span>
+          </tiny-button>
+          <tiny-button v-if="isBind" @click="unbindI18n">解除关联</tiny-button>
+        </div>
       </slot>
     </div>
     <div v-show="showEditItem" class="addNewLanguage">
@@ -43,9 +44,9 @@
           <input v-model="editForm[locale.lang]" class="tiny-input__inner" />
         </div>
       </div>
-      <div class="add-btns">
-        <tiny-button type="info" @click="activeI18n">国际化管理 </tiny-button>
-        <tiny-button type="info" @click="addBindI18n">添加并关联 </tiny-button>
+      <div class="bottom-buttons">
+        <tiny-button type="primary" @click="addBindI18n">添加并关联</tiny-button>
+        <tiny-button @click="activeI18n">国际化管理</tiny-button>
       </div>
     </div>
   </div>
@@ -57,15 +58,13 @@ import { useLayout, useTranslate } from '@opentiny/tiny-engine-meta-register'
 import { PROP_DATA_TYPE } from '../js/constants'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { Select, Option, Button, Input } from '@opentiny/vue'
-import { iconPlus } from '@opentiny/vue-icon'
 
 export default {
   components: {
     TinySelect: Select,
     TinyOption: Option,
     TinyButton: Button,
-    TinyInput: Input,
-    IconPlus: iconPlus()
+    TinyInput: Input
   },
   inheritAttrs: false,
   props: {
@@ -169,10 +168,7 @@ export default {
 
 <style lang="less" scoped>
 .languageContent {
-  text-align: center;
   z-index: 99;
-  margin-top: 5px;
-  margin-bottom: 16px;
 
   .tiny-svg {
     margin-right: 10px;
@@ -182,16 +178,8 @@ export default {
       color: #ccc;
     }
   }
-  .tiny-button {
-    max-width: initial;
-    padding: 0 12px;
-    background-color: var(--ti-lowcode-tabs-border-color);
-    border-color: var(--ti-lowcode-tootip-input-border-color);
-    color: var(--ti-lowcode-toolbar-icon-color);
-    &:hover {
-      background-color: var(--ti-lowcode-canvas-wrap-bg);
-      border-color: var(--ti-lowcode-tabs-border-color);
-    }
+  .tiny-button.tiny-button.tiny-button--default {
+    margin: 0;
   }
   .addNewLanguage {
     .tiny-input {
@@ -209,15 +197,16 @@ export default {
     .tiny-input__inner {
       flex: 1;
     }
-    .add-btns {
-      text-align: right;
-      padding: 0 8px;
-    }
   }
 }
 .params-form {
-  & > label {
-    line-height: 30px;
+  .label {
+    margin: 16px 0;
+    font-size: 12px;
+    line-height: 18px;
+  }
+  .params-item + .params-item {
+    margin-top: 12px;
   }
   .params-item {
     display: flex;
@@ -225,7 +214,12 @@ export default {
     label {
       width: 80px;
     }
-    margin-bottom: 10px;
   }
+}
+.bottom-buttons {
+  display: flex;
+  flex-direction: row-reverse;
+  margin-top: 16px;
+  gap: 8px;
 }
 </style>
