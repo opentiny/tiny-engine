@@ -17,7 +17,7 @@
                 :visible-arrow="!expand"
                 title=""
                 width="295"
-                height="706"
+                height="auto"
                 trigger="manual"
                 @hide="hide(item)"
               >
