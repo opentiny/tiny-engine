@@ -21,7 +21,7 @@ const siteCanvasStyle = computed(() => {
 
 <style lang="less" scoped>
 #canvas-wrap {
-  background: var(--ti-lowcode-canvas-wrap-bg);
+  background: var(--te-common-bg-container);
   flex: 1 1 0;
   border: none;
   display: flex;
