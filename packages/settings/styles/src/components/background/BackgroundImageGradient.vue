@@ -12,9 +12,9 @@
     </div>
     <div class="repeat">
       <div>
-        <tiny-checkbox v-model="state.repeat" @change="changeRepeat">Repeat</tiny-checkbox>
+        <tiny-checkbox v-model="state.repeat" @change="changeRepeat">调整列宽</tiny-checkbox>
       </div>
-      <span><svg-icon name="clock-small"></svg-icon></span>
+      <span><svg-icon name="重启"></svg-icon></span>
     </div>
     <div class="color">
       <label for="">Color</label>

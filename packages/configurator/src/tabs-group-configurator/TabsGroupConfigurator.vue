@@ -19,6 +19,7 @@
             <tiny-popover
               v-if="item?.content"
               :placement="placement"
+              :open-delay="1000"
               :visible-arrow="false"
               :content="item.content"
               trigger="hover"
@@ -46,6 +47,7 @@
             <tiny-popover
               v-if="selectedCollapsedOption?.content"
               :placement="placement"
+              :open-delay="1000"
               :visible-arrow="false"
               :content="selectedCollapsedOption.content"
               trigger="hover"
@@ -70,6 +72,7 @@
                 <span v-if="item?.label && !item?.content">{{ item.label }}</span>
                 <tiny-popover
                   v-if="item?.content"
+                  :open-delay="1000"
                   :placement="placement"
                   :visible-arrow="false"
                   :content="item.content"
@@ -243,36 +246,36 @@ const change = (item) => {
       &:hover {
         background-color: var(--te-common-bg-prompt);
         border-radius: 4px;
-      }
-      .selected-option {
-        span:hover {
-          color: var(--te-common-text-primary);
-        }
+        color: var(--te-common-text-primary);
       }
       &.selected {
         background-color: var(--te-common-bg-prompt);
         color: var(--te-common-text-primary);
         border-radius: 4px;
       }
-      :deep(.tiny-dropdown__title) {
-        margin: 0;
-        line-height: 12px;
-        .selected-option {
-          text-align: center;
-        }
+    }
+    :deep(.tiny-dropdown__title) {
+      margin: 0;
+      line-height: 12px;
+      .selected-option {
+        text-align: center;
       }
-
-      :deep(.tiny-dropdown__suffix-inner) {
-        width: 20px;
-        display: flex;
-        justify-content: center;
-      }
+    }
+    :deep(.tiny-dropdown__suffix-inner) {
+      width: 20px;
+      display: flex;
+      justify-content: center;
+    }
+    :deep(.tiny-dropdown .tiny-dropdown__trigger:not(.tiny-dropdown__caret-button):not(.is-disabled)):hover {
+      color: var(--te-common-text-primary);
     }
   }
 }
 .tiny-dropdown-menu {
   padding: 8px 0px;
-  margin: 0px 0px 0px 20px;
+  margin-left: 20px;
+  margin-top: 4px !important;
+  border-radius: 4px;
   background-color: var(--te-common-bg-default);
   color: var(--te-common-text-weaken);
   z-index: 9999;
@@ -288,7 +291,7 @@ const change = (item) => {
     background-color: var(--te-common-bg-default);
 
     &:hover {
-      background-color: var(--te-common-bg-prompt);
+      background-color: var(--te-common-bg-container);
       border-radius: 4px;
       color: var(--te-common-text-primary);
     }

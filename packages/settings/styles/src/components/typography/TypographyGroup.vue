@@ -520,7 +520,7 @@ export default {
     .typography-label {
       margin-right: -16px;
       line-height: 16px;
-      color: var(--ti-lowcode-component-setting-panel-label-color);
+      color: var(--te-common-text-secondary);
 
       .font-family-col {
         width: 118px;

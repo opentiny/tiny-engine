@@ -129,6 +129,7 @@ export default {
     flex: 0 0 50px;
     padding: 0 3px;
     line-height: 24px;
+    color: var(--te-common-text-secondary);
 
     span {
       padding: 2px;

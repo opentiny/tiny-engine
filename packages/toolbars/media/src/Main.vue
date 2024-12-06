@@ -187,8 +187,8 @@ export default {
           maxWidth: '1920px',
           title: '大屏',
           subTitle: '1200px 及以上',
-          content: '此处添加的样式将适用于 1200 像素及以上，除非它们在更大的断点处进行编辑',
-          enContent: 'Style added here will apply at 1200px and up,unless they′re edited at a larger breakpoint'
+          content: '此处添加的样式将适用于 1200 像素及以上，除非它们在更大的断点处进行编辑。',
+          enContent: 'Style added here will apply at 1200px and up,unless they′re edited at a larger breakpoint.'
         },
         {
           idx: 1,
@@ -488,6 +488,9 @@ export default {
   line-height: 18px;
   .media-title {
     font-weight: 600;
+  }
+  .content {
+    color: var(--te-common-text-secondary);
   }
 }
 .setting-content {

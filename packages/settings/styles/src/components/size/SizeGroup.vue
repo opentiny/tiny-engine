@@ -487,6 +487,7 @@ span {
     flex: 0 0 54px;
     padding: 0 2px;
     line-height: 24px;
+    color: var(--te-common-text-secondary);
   }
 }
 
@@ -546,6 +547,7 @@ span {
     flex: 0 0 54px;
     padding: 0 2px;
     line-height: 28px;
+    color: var(--te-common-text-secondary);
     span {
       padding: 2px;
     }
