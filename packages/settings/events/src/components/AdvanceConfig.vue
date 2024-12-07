@@ -173,16 +173,20 @@ export default {
     }
 
     const setConfig = (value) => {
-      const { getSchema, setProp } = useProperties()
+      const { getSchema } = useProperties()
       const schema = getSchema()
+
       if (!schema) {
         return
       }
 
+      const { operateNode } = useCanvas()
+
       if (value === false || value?.type) {
-        setProp('condition', value)
+        operateNode({ type: 'updateAttributes', id: schema.id, value: { condition: value } })
       } else {
-        setProp('condition', '')
+        const { condition: _schemaCondition, children, ...rest } = schema
+        operateNode({ type: 'updateAttributes', id: schema.id, value: { ...rest }, overwrite: true })
       }
 
       useCanvas().canvasApi.value.updateRect()

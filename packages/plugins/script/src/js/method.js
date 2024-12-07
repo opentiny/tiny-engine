@@ -76,14 +76,12 @@ export const saveMethod = ({ name, content }) => {
 
   const methods = getMethods()
 
-  if (!methods[name]) {
-    methods[name] = {
-      type: SCHEMA_DATA_TYPE.JSFunction,
-      value: ''
-    }
+  const methodItem = {
+    type: SCHEMA_DATA_TYPE.JSFunction,
+    value: content
   }
 
-  methods[name].value = content
+  useCanvas().updateSchema({ methods: { ...methods, [name]: methodItem } })
 }
 
 const saveMethods = () => {
@@ -103,7 +101,7 @@ const saveMethods = () => {
 
   const editorContent = monaco.value.getEditor().getValue()
   const ast = string2Ast(editorContent)
-  useCanvas().getSchema().methods = {}
+  const newMethods = {}
 
   ast.program.body.forEach((declaration, index) => {
     const name = declaration?.id?.name
@@ -118,8 +116,15 @@ const saveMethods = () => {
 
     const content = formatString(ast2String(declaration).trim(), 'javascript')
 
-    saveMethod({ name, content })
+    if (name) {
+      newMethods[name] = {
+        type: SCHEMA_DATA_TYPE.JSFunction,
+        value: content
+      }
+    }
   })
+
+  useCanvas().updateSchema({ methods: newMethods })
   useCanvas().setSaved(false)
   state.isChanged = false
   useNotify({

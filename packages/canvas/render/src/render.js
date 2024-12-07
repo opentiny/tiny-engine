@@ -726,7 +726,13 @@ export const renderer = {
         return null
       }
 
-      return h(component, getBindProps(schema, mergeScope), getChildren(schema, mergeScope))
+      const children = getChildren(schema, mergeScope)
+
+      return h(
+        component,
+        getBindProps(schema, mergeScope),
+        Array.isArray(children) && !children.length ? null : children
+      )
     }
 
     return loopList?.length ? loopList.map(renderElement) : renderElement()

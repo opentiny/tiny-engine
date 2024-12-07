@@ -146,7 +146,7 @@ const fetchAppState = async () => {
 
   appSchemaState.langs = {
     locales,
-    messages: appSchemaState.i18n
+    messages: appData.i18n
   }
 
   return appData

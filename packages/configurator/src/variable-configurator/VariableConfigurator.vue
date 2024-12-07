@@ -458,7 +458,7 @@ export default {
 
     const selectItem = (item) => {
       state.active = item.id
-      const { canvasApi, getSchema } = useCanvas()
+      const { getSchema } = useCanvas()
 
       if (item.id === 'function') {
         state.bindPrefix = CONSTANTS.THIS
@@ -523,7 +523,7 @@ export default {
         state.variables = params.reduce((variables, param) => ({ ...variables, [param]: param }), {})
       } else {
         state.bindPrefix = CONSTANTS.STATE
-        state.variables = canvasApi.value.getSchema()?.[item.id]
+        state.variables = getSchema()?.[item.id]
       }
     }
 
