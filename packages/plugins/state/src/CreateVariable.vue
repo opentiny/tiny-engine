@@ -253,18 +253,24 @@ export default {
 
     const getFormData = () => {
       const defaultValue = getDefaultValue()
-      if (!state.hasAccessor) return defaultValue
 
       const getter = getterEditor.value.getEditor().getValue()
       const setter = setterEditor.value.getEditor().getValue()
       if (!getter && !setter) return defaultValue
 
       const result = { defaultValue }
+
       if (getter && getter !== DEFAULT_GETTER) {
         result.accessor = { ...result.accessor, getter: { type: 'JSFunction', value: getter } }
       }
+
       if (setter && setter !== DEFAULT_SETTER) {
         result.accessor = { ...result.accessor, setter: { type: 'JSFunction', value: setter } }
+      }
+
+      // 没有设置 getter setter，需要直接返回 defaultValue
+      if (!result.accessor) {
+        return defaultValue
       }
 
       return result
