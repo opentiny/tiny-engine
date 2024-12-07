@@ -16,32 +16,6 @@ const defaultOption = {
   }
 }
 
-// const checkHasElementStyleImport = (code) => {
-//   try {
-//     const ast = parse(code, { sourceType: 'module', plugins: ['jsx'] })
-//     let res = false
-
-//     traverse(ast, {
-//       ImportDeclaration(path) {
-
-//       }
-//       JSXElement(path) {
-//         res = true
-//         path.stop()
-//       },
-//       JSXFragment(path) {
-//         res = true
-//         path.stop()
-//       }
-//     })
-
-//     return res
-//   } catch (error) {
-//     // 解析失败则认为不存在 jsx
-//     return false
-//   }
-// }
-
 function genElementPlusStyleDeps(options = {}) {
   const realOptions = mergeOptions(defaultOption, options)
 
