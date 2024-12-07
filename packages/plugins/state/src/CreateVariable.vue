@@ -171,7 +171,6 @@ export default {
       errorMessage: '',
       activeName: ['initValue', 'getter', 'setter'],
       createData: getPropsCreateData(),
-      hasAccessor: isAccessorData(props.createData?.variable),
       variableType: getVarType(),
       getterEditorValue: props.createData.variable?.accessor?.getter?.value || DEFAULT_GETTER,
       setterEditorValue: props.createData.variable?.accessor?.setter?.value || DEFAULT_SETTER,
@@ -199,7 +198,6 @@ export default {
       () => props.createData.variable,
       () => {
         state.errorMessage = ''
-        state.hasAccessor = isAccessorData(props.createData?.variable)
         state.getterEditorValue = props.createData.variable?.accessor?.getter?.value || DEFAULT_GETTER
         state.setterEditorValue = props.createData.variable?.accessor?.setter?.value || DEFAULT_SETTER
         state.variableType = getVarType()
