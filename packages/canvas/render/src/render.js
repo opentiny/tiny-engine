@@ -667,16 +667,21 @@ const getChildren = (schema, mergeScope) => {
   const isGroup = checkGroup(componentName)
 
   if (Array.isArray(renderChildren)) {
+    // children 空的场景，不能返回空数组，因为有部分组件会误以为使用了自定义插槽，从而无法渲染默认插槽内容，比如 TinyTree 组件
+    if (!renderChildren.length) {
+      return null
+    }
+
     if (isNative || isCustomElm) {
       return renderDefault(renderChildren, mergeScope, schema)
-    } else {
-      return isGroup
-        ? renderGroup(renderChildren, mergeScope)
-        : renderSlot(renderChildren, mergeScope, schema, isCustomElm)
     }
-  } else {
-    return parseData(renderChildren, mergeScope)
+
+    return isGroup
+      ? renderGroup(renderChildren, mergeScope)
+      : renderSlot(renderChildren, mergeScope, schema, isCustomElm)
   }
+
+  return parseData(renderChildren, mergeScope)
 }
 
 export const renderer = {
