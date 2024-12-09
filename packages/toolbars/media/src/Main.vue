@@ -37,21 +37,16 @@
         </div>
         <tiny-popover v-if="isCanvas" width="200" trigger="click" popper-class="toolbar-media-popper">
           <template #reference>
-            <tiny-popover trigger="hover" :open-delay="1000" popper-class="toolbar-right-popover" append-to-body>
-              <div class="setting-content">{{ '画布设置' }}</div>
-              <template #reference>
-                <span class="reference-text">
-                  <span>
-                    <span>{{ parseInt(state.width) }}</span>
-                    <span class="symbol">px</span>
-                  </span>
-                  <span>
-                    <span>{{ scale.toFixed(2) }}</span>
-                    <span class="symbol">%</span>
-                  </span>
-                </span>
-              </template>
-            </tiny-popover>
+            <span class="reference-text" title="画布设置">
+              <span>
+                <span>{{ parseInt(state.width) }}</span>
+                <span class="symbol">px</span>
+              </span>
+              <span>
+                <span>{{ scale.toFixed(2) }}</span>
+                <span class="symbol">%</span>
+              </span>
+            </span>
           </template>
           <div class="content-wrap text-content">
             <div class="title text-title">{{ state.textData.title }}</div>

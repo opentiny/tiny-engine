@@ -8,21 +8,11 @@
             :class="['tab-item', { selected: picked === (valueKey ? item.value[valueKey] : item.value) }]"
             @click.stop="change(item)"
           >
-            <span :class="['label-text']">
-              <span v-if="item?.label && !item?.content">{{ item.label }}</span>
-              <tiny-popover
-                v-if="item?.content"
-                :placement="placement"
-                :open-delay="1000"
-                :visible-arrow="false"
-                :content="item.content"
-                trigger="hover"
-              >
-                <template #reference>
-                  <span v-if="item?.label">{{ item.label }}</span>
-                  <svg-icon v-if="item?.icon" :name="item.icon" class="bem-Svg"></svg-icon>
-                </template>
-              </tiny-popover>
+            <span class="label-text">
+              <span :title="item?.content">
+                <span v-if="item?.label">{{ item.label }}</span>
+                <svg-icon v-if="item?.icon" :name="item.icon" class="bem-Svg"></svg-icon>
+              </span>
             </span>
           </tiny-button>
           <span :class="[{ 'border-right': collapsedOptions.length || index < uncollapsedOptions.length - 1 }]"></span>
@@ -37,26 +27,14 @@
           :style="{ width: getItemWidth(true) + 'px' }"
         >
           <span class="selected-option" @click.stop="change(selectedCollapsedOption)">
-            <span v-if="selectedCollapsedOption?.label && !selectedCollapsedOption?.content">{{
-              selectedCollapsedOption.label
-            }}</span>
-            <tiny-popover
-              v-if="selectedCollapsedOption?.content"
-              :placement="placement"
-              :open-delay="1000"
-              :visible-arrow="false"
-              :content="selectedCollapsedOption.content"
-              trigger="hover"
-            >
-              <template #reference>
-                <span v-if="selectedCollapsedOption?.label">{{ selectedCollapsedOption.label }}</span>
-                <svg-icon
-                  v-if="selectedCollapsedOption?.icon"
-                  :name="selectedCollapsedOption.icon"
-                  class="bem-Svg"
-                ></svg-icon>
-              </template>
-            </tiny-popover>
+            <span :title="selectedCollapsedOption?.content">
+              <span v-if="selectedCollapsedOption?.label">{{ selectedCollapsedOption.label }}</span>
+              <svg-icon
+                v-if="selectedCollapsedOption?.icon"
+                :name="selectedCollapsedOption.icon"
+                class="bem-Svg"
+              ></svg-icon>
+            </span>
           </span>
           <template #dropdown>
             <tiny-dropdown-menu>
@@ -65,20 +43,10 @@
                 :key="item.label || item.icon"
                 @click.stop="change(item)"
               >
-                <span v-if="item?.label && !item?.content">{{ item.label }}</span>
-                <tiny-popover
-                  v-if="item?.content"
-                  :open-delay="1000"
-                  :placement="placement"
-                  :visible-arrow="false"
-                  :content="item.content"
-                  trigger="hover"
-                >
-                  <template #reference>
-                    <span v-if="item?.label">{{ item.label }}</span>
-                    <svg-icon v-if="item?.icon" :name="item.icon" class="bem-Svg"></svg-icon>
-                  </template>
-                </tiny-popover>
+                <span :title="item?.content">
+                  <span v-if="item?.label">{{ item.label }}</span>
+                  <svg-icon v-if="item?.icon" :name="item.icon" class="bem-Svg"></svg-icon>
+                </span>
               </tiny-dropdown-item>
             </tiny-dropdown-menu>
           </template>
@@ -90,7 +58,6 @@
 <script setup>
 import { ref, computed, watch, defineProps, defineEmits } from 'vue'
 import {
-  Popover as TinyPopover,
   ButtonGroup as TinyButtonGroup,
   Button as TinyButton,
   Dropdown as TinyDropdown,
@@ -108,11 +75,6 @@ const props = defineProps({
   valueKey: {
     type: String,
     default: ''
-  },
-  // 提示内容位置
-  placement: {
-    type: String,
-    default: 'top'
   },
   // tabItem宽度
   labelWidth: {
@@ -234,7 +196,6 @@ const change = (item) => {
       .label-text {
         width: 100%;
         height: 12px;
-
         .bem-Svg {
           margin-top: -3px;
         }
