@@ -21,6 +21,7 @@
           v-model="state.checkGroup[filter.id]"
           size="mini"
           multiple
+          is-drop-inherit-width
           @change="getFilters($event, filter.id)"
         >
           <tiny-option
