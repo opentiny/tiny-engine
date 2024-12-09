@@ -137,7 +137,7 @@ export default {
       :deep(.tiny-select.tiny-select .tiny-select__tags) {
         max-width: calc(100% - 24px) !important;
         .tiny-tag {
-          background-color: var(--te-common-bg-container);
+          background-color: var(--te-common-bg-disabled);
         }
       }
     }
