@@ -6,15 +6,11 @@
         v-model="selectValue"
         placeholder="请选择多语言文案"
         filterable
+        is-drop-inherit-width
         :filter-method="filterMethod"
-        popper-class="select-i18n-drop"
         @change="selectI18n"
       >
-        <tiny-option v-for="item in langData" :key="item.key" :label="item[currentLang]" :value="item.key">
-          <div style="display: flex">
-            <span style="flex: 1">{{ item.key }}</span>
-            <span style="flex: 1">{{ item[currentLang] }}</span>
-          </div>
+        <tiny-option v-for="item in langData" :key="item.key" :label="item.key + item[currentLang]" :value="item.key">
         </tiny-option>
       </tiny-select>
       <div v-if="paramsForm.length" class="params-form">
@@ -26,10 +22,10 @@
       </div>
       <slot name="suffix">
         <div class="bottom-buttons">
+          <tiny-button v-if="isBind" @click="unbindI18n">解除关联</tiny-button>
           <tiny-button type="primary" @click="openCreateForm">
             <span>创建新的多语言文案</span>
           </tiny-button>
-          <tiny-button v-if="isBind" @click="unbindI18n">解除关联</tiny-button>
         </div>
       </slot>
     </div>
@@ -46,8 +42,8 @@
         </div>
       </div>
       <div class="bottom-buttons">
-        <tiny-button type="primary" @click="addBindI18n">添加并关联</tiny-button>
         <tiny-button @click="activeI18n">国际化管理</tiny-button>
+        <tiny-button type="primary" @click="addBindI18n">添加并关联</tiny-button>
       </div>
     </div>
   </div>
@@ -219,16 +215,8 @@ export default {
 }
 .bottom-buttons {
   display: flex;
-  flex-direction: row-reverse;
+  justify-content: flex-end;
   margin-top: 16px;
   gap: 8px;
-}
-</style>
-
-<style>
-.select-i18n-drop {
-  max-width: 300px;
-  padding: 8px 0;
-  border-radius: 4px;
 }
 </style>

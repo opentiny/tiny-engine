@@ -142,7 +142,7 @@ export default {
 </style>
 
 <style>
-.i18n-input-popover {
-  padding: 20px !important;
+.tiny-popover.tiny-popover.tiny-popper[x-placement].i18n-input-popover {
+  padding: 20px;
 }
 </style>
