@@ -1,13 +1,7 @@
 <template>
   <div v-if="blockStyle === BlockStyles.Mini" class="header">
     <div class="col-checkbox" v-if="showCheckbox">
-      <select-all
-        :items="data"
-        :selected="checked"
-        :hidden-label="true"
-        @select-all="(items) => handleSelectAll(items)"
-        @deselect-all="handleDeselectAll"
-      ></select-all>
+      <select-all :allItems="data" :selected="checked" :hidden-label="true" @select-all="handleSelectAll"></select-all>
     </div>
     <div class="col-name">区块名称</div>
     <div class="col-time">创建时间</div>
@@ -372,11 +366,11 @@ export default {
     )
 
     const handleSelectAll = (items) => {
-      emit('checkAll', items)
-    }
-
-    const handleDeselectAll = () => {
-      emit('cancelCheckAll')
+      if (Array.isArray(items)) {
+        emit('checkAll', items)
+      } else {
+        emit('cancelCheckAll')
+      }
     }
 
     return {
@@ -398,8 +392,7 @@ export default {
       handleShowVersionMenu,
       editBlock,
       format,
-      handleSelectAll,
-      handleDeselectAll
+      handleSelectAll
     }
   }
 }

@@ -4,12 +4,12 @@
   </tiny-checkbox>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { Checkbox as TinyCheckbox } from '@opentiny/vue'
 import { computed, defineEmits, defineProps } from 'vue'
 
 const props = defineProps({
-  items: {
+  allItems: {
     type: Array,
     default: () => []
   },
@@ -23,20 +23,20 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['selectAll', 'deselectAll'])
+const emit = defineEmits(['selectAll'])
 
 const selectedAll = computed({
   get() {
-    return props.items.length > 0 && props.items.length === props.selected.length
+    return props.allItems.length > 0 && props.allItems.length === props.selected.length
   },
   set(value) {
     if (value) {
-      emit('selectAll', props.items)
+      emit('selectAll', props.allItems)
     } else {
-      emit('deselectAll')
+      emit('selectAll', null)
     }
   }
 })
 
-const isIndeterminate = computed(() => props.selected.length > 0 && props.selected.length !== props.items.length)
+const isIndeterminate = computed(() => props.selected.length > 0 && props.selected.length !== props.allItems.length)
 </script>

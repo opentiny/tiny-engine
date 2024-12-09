@@ -4,10 +4,9 @@
       <select-all
         v-if="state.displayType === 'grid'"
         class="block-select-all"
-        :items="state.blockList"
+        :allItems="state.blockList"
         :selected="selectedBlockArray"
-        @select-all="checkAll"
-        @deselect-all="cancelCheckAll"
+        @select-all="handleSelectAll"
       ></select-all>
       <slot name="search"></slot>
       <tiny-select v-model="state.selectedSort" class="transfer-order-select" placeholder="请选择">
@@ -148,12 +147,21 @@ export default {
       blockSort(state.selectedSort)
     })
 
+    const handleSelectAll = (items) => {
+      if (Array.isArray(items)) {
+        checkAll(items)
+      } else {
+        cancelCheckAll()
+      }
+    }
+
     return {
       state,
       selectedBlockArray,
       checkBlock,
       checkAll,
-      cancelCheckAll
+      cancelCheckAll,
+      handleSelectAll
     }
   }
 }
