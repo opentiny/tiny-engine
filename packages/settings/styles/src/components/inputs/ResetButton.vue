@@ -41,6 +41,6 @@ export default {
   display: block;
   padding: 8px 4px;
   text-align: center;
-  color: var(--te-common-text-description);
+  color: var(--te-common-text-secondary);
 }
 </style>

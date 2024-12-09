@@ -86,7 +86,7 @@ export default {
   display: flex;
   align-items: center;
   padding: 0 10px;
-  border-bottom: 1px solid var(--ti-lowcode-toolbar-border-color, #333);
+  border-bottom: 1px solid var(--te-common-border-default, #333);
   height: 36px;
 
   div {
@@ -96,7 +96,7 @@ export default {
 
   .icon-setting {
     font-size: 16px;
-    fill: var(--ti-lowcode-toolbar-breadcrumb-color, #d9d9d9);
+    fill: var(--te-common-text-secondary, #d9d9d9);
   }
 
   .icon-wrap {
@@ -111,7 +111,7 @@ export default {
     align-items: center;
     transition: 0.3s;
     &:hover {
-      fill: var(--ti-lowcode-toolbar-icon-color, #fff);
+      fill: var(--te-common-icon-primary, #fff);
       background: var(--ti-lowcode-icon-hover-bg, rgba(255, 255, 255, 0.1));
     }
   }
@@ -164,14 +164,14 @@ export default {
     width: 100%;
     padding: 4px 0;
     display: inline-block;
-    background: var(--ti-lowcode-toolbar-view-hover-bg, #4d4d4d);
+    background: var(--te-common-bg-container, #4d4d4d);
     border-radius: 2px;
     display: flex;
     justify-content: center;
     align-items: center;
   }
   svg {
-    fill: var(--ti-lowcode-toolbar-breadcrumb-color, #d9d9d9);
+    fill: var(--te-common-text-secondary, #d9d9d9);
     margin-left: 4px;
   }
 }

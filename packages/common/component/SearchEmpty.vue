@@ -26,11 +26,10 @@ export default {
   .empty-icon {
     width: 80px;
     height: 80px;
-    color: var(--ti-lowcode-datasource-common-empty-color);
   }
   .empty-text {
     font-size: 12px;
-    color: var(--te-base-text-color-3);
+    color: var(--te-common-text-weaken);
   }
 }
 </style>

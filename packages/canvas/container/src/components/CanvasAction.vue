@@ -671,21 +671,8 @@ export default {
     }
   }
 }
-.short-cut-set.tiny-popper.tiny-popover {
-  background: var(--ti-lowcode-toolbar-bg);
+.short-cut-set.short-cut-set.tiny-popper.tiny-popover {
   padding: 10px;
-  .body label,
-  .header {
-    color: var(--ti-lowcode-dialog-font-color);
-    font-size: 12px;
-  }
-  .tiny-popover__title {
-    color: var(--ti-lowcode-dialog-font-color);
-  }
-}
-
-.short-cut-set.tiny-popper.tiny-popover[x-placement^='bottom'] .popper__arrow::after {
-  border-bottom-color: var(--ti-lowcode-toolbar-bg);
 }
 
 .drag-resize {

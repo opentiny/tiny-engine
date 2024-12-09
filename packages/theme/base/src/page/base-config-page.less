@@ -50,6 +50,7 @@ body {
   margin: 0;
   font-family: 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
     sans-serif;
+  color: var(--te-common-text-primary);
 }
 
 ol,
@@ -133,15 +134,16 @@ td {
 }
 
 .tiny-popover.tiny-popover.option-popper {
-  background: var(--ti-lowcode-popover-bg-color);
-  border: 1px solid var(--ti-lowcode-popover-option-popper-border-color);
-  color: var(--ti-lowcode-toolbar-breadcrumb-color);
+  background: var(--te-common-bg-popover);
+  border: 1px solid transparent;
+  color: var(--te-common-text-secondary);
   padding: 0px 8px 12px;
   &[x-placement^='bottom'] {
     .popper__arrow {
+      border-color: transparent;
       &,
       &::after {
-        border-bottom-color: var(--ti-lowcode-popover-bg-color);
+        border-bottom-color: var(--te-common-bg-popover);
       }
     }
   }
@@ -152,18 +154,19 @@ td {
     .popper__arrow {
       left: -7px;
       border-color: transparent;
-
+      &,
       &::after {
-        border-right-color: var(--ti-lowcode-popover-bg-color);
+        border-right-color: var(--te-common-bg-popover);
       }
     }
   }
 
   &[x-placement^='top'] {
     .popper__arrow {
+      border-color: transparent;
       &,
       &::after {
-        border-top-color: var(--ti-lowcode-popover-bg-color);
+        border-top-color: var(--te-common-bg-popover);
       }
     }
   }
@@ -171,17 +174,17 @@ td {
   &[x-placement^='left'] {
     .popper__arrow {
       right: -7px;
-
+      border-color: transparent;
       &,
       &::after {
-        border-left-color: var(--ti-lowcode-popover-bg-color);
+        border-left-color: var(--te-common-bg-popover);
       }
     }
   }
 
   .add-options {
     &.top {
-      border-bottom: 1px solid var(--ti-lowcode-tabs-border-color);
+      border-bottom: 1px solid var(--te-common-border-default);
       margin-bottom: 15px;
       overflow: hidden;
       display: flex;
@@ -207,16 +210,14 @@ td {
         margin-bottom: 4px;
 
         :deep(.tiny-form-item__label) {
-          color: var(--ti-lowcode-toolbar-breadcrumb-color);
+          color: var(--te-common-text-secondary);
         }
 
         :deep(.tiny-input__inner) {
-          color: var(--ti-lowcode-tootip-input-color);
-          background: var(--ti-lowcode-tootip-input-background-color);
-          border-color: var(--ti-lowcode-tootip-input-border-color);
+          border-color: var(--te-common-border-default);
 
           &:focus {
-            border-color: var(--ti-lowcode-canvas-handle-hover-bg);
+            border-color: var(--te-common-bg-primary-checked);
           }
         }
       }
@@ -247,7 +248,7 @@ td {
       }
 
       &.isBind {
-        color: var(--ti-lowcode-icon-bind-color);
+        color: var(--te-common-text-checked);
       }
     }
   }

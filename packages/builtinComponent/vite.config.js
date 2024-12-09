@@ -23,7 +23,7 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, './index.js'),
       name: 'builtinComponent',
-      fileName: () => 'index.js',
+      fileName: () => 'index.mjs',
       formats: ['es']
     },
     rollupOptions: {
