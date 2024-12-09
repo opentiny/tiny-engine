@@ -175,9 +175,6 @@ export default {
       color: #ccc;
     }
   }
-  .tiny-button.tiny-button.tiny-button--default {
-    margin: 0;
-  }
   .addNewLanguage {
     .tiny-input {
       display: flex;
@@ -218,5 +215,9 @@ export default {
   justify-content: flex-end;
   margin-top: 16px;
   gap: 8px;
+  .tiny-button,
+  .tiny-button.tiny-button--default {
+    margin: 0;
+  }
 }
 </style>
