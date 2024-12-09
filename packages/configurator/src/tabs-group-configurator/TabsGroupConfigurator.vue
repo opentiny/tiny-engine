@@ -2,35 +2,31 @@
   <div class="tab-container">
     <div class="tabs-wrap">
       <tiny-button-group>
-        <tiny-button
-          v-for="(item, index) in uncollapsedOptions"
-          :key="item.label || item.icon"
-          :style="{ width: getItemWidth() + 'px' }"
-          :class="['tab-item', { selected: picked === (valueKey ? item.value[valueKey] : item.value) }]"
-          @click.stop="change(item)"
-        >
-          <span
-            :class="[
-              'label-text',
-              { 'border-right': collapsedOptions.length || index < uncollapsedOptions.length - 1 }
-            ]"
+        <div class="button-wrap" v-for="(item, index) in uncollapsedOptions" :key="item.label || item.icon">
+          <tiny-button
+            :style="{ width: getItemWidth() + 'px' }"
+            :class="['tab-item', { selected: picked === (valueKey ? item.value[valueKey] : item.value) }]"
+            @click.stop="change(item)"
           >
-            <span v-if="item?.label && !item?.content">{{ item.label }}</span>
-            <tiny-popover
-              v-if="item?.content"
-              :placement="placement"
-              :open-delay="1000"
-              :visible-arrow="false"
-              :content="item.content"
-              trigger="hover"
-            >
-              <template #reference>
-                <span v-if="item?.label">{{ item.label }}</span>
-                <svg-icon v-if="item?.icon" :name="item.icon" class="bem-Svg"></svg-icon>
-              </template>
-            </tiny-popover>
-          </span>
-        </tiny-button>
+            <span :class="['label-text']">
+              <span v-if="item?.label && !item?.content">{{ item.label }}</span>
+              <tiny-popover
+                v-if="item?.content"
+                :placement="placement"
+                :open-delay="1000"
+                :visible-arrow="false"
+                :content="item.content"
+                trigger="hover"
+              >
+                <template #reference>
+                  <span v-if="item?.label">{{ item.label }}</span>
+                  <svg-icon v-if="item?.icon" :name="item.icon" class="bem-Svg"></svg-icon>
+                </template>
+              </tiny-popover>
+            </span>
+          </tiny-button>
+          <span :class="[{ 'border-right': collapsedOptions.length || index < uncollapsedOptions.length - 1 }]"></span>
+        </div>
         <tiny-dropdown
           v-if="collapsedOptions.length"
           trigger="click"
@@ -198,13 +194,23 @@ const change = (item) => {
   .tabs-wrap {
     display: flex;
     justify-content: space-between;
+    background-color: var(--te-common-bg-container);
+    border-radius: 4px;
+    .tiny-button-group {
+      display: flex;
+      .button-wrap {
+        display: flex;
+        align-items: center;
+      }
+    }
+
     .tiny-button.tiny-button.tiny-button--default {
       margin: 0;
       padding: 0;
       border: none;
-      background-color: var(--te-common-bg-container);
       line-height: 14px;
       min-width: 20px;
+      background-color: var(--te-common-bg-container);
       color: var(--te-common-text-weaken);
 
       &:hover {
@@ -225,7 +231,6 @@ const change = (item) => {
       text-align: center;
       cursor: pointer;
       position: relative;
-      background-color: var(--te-common-bg-container);
       .label-text {
         width: 100%;
         height: 12px;
@@ -240,7 +245,6 @@ const change = (item) => {
       justify-content: center;
       align-items: center;
       height: 24px;
-      background-color: var(--te-common-bg-container);
       color: var(--te-common-text-weaken);
 
       &:hover {
@@ -290,14 +294,16 @@ const change = (item) => {
     padding: 4px 12px;
     background-color: var(--te-common-bg-default);
 
-    &:hover {
-      background-color: var(--te-common-bg-container);
-      border-radius: 4px;
+    &:hover,
+    &:active {
+      background-color: var(--te-common-bg-prompt);
       color: var(--te-common-text-primary);
     }
   }
 }
 .border-right {
+  display: inline-block;
+  height: 12px;
   border-right: 1px solid var(--te-common-border-default);
 }
 </style>

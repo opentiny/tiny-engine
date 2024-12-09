@@ -150,7 +150,7 @@ export default {
       &:hover,
       &.active {
         color: var(--ti-lowcode-style-setting-label-color);
-        background: var(--ti-lowcode-style-setting-label-bg);
+        background: var(--te-common-bg-text-emphasize);
       }
     }
 
@@ -187,7 +187,7 @@ export default {
         &:hover,
         &.active {
           color: var(--ti-lowcode-style-setting-label-color);
-          background: var(--ti-lowcode-style-setting-label-bg);
+          background: var(--te-common-bg-text-emphasize);
         }
       }
     }

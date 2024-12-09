@@ -127,7 +127,6 @@ export default {
 
   .display-label {
     flex: 0 0 50px;
-    padding: 0 3px;
     line-height: 24px;
     color: var(--te-common-text-secondary);
 
@@ -139,7 +138,7 @@ export default {
         cursor: pointer;
         border-radius: 2px;
         color: var(--te-common-text-emphasize);
-        background-color: var(--ti-lowcode-style-setting-label-bg);
+        background-color: var(--te-common-bg-text-emphasize);
       }
     }
   }

@@ -468,7 +468,6 @@ span {
 
     .size-label {
       flex: 0 0 52px;
-      padding-left: 2px;
       margin-right: 2px;
       line-height: 28px;
       color: var(--te-common-text-secondary);
@@ -485,7 +484,6 @@ span {
   }
   .overflow-label {
     flex: 0 0 54px;
-    padding: 0 2px;
     line-height: 24px;
     color: var(--te-common-text-secondary);
   }
@@ -495,7 +493,7 @@ span {
   cursor: pointer;
   border-radius: 2px;
   color: var(--te-common-text-emphasize);
-  background-color: var(--ti-lowcode-style-setting-label-bg);
+  background-color: var(--te-common-bg-text-emphasize);
 }
 
 .is-setting {
@@ -545,7 +543,6 @@ span {
   }
   .fit-label {
     flex: 0 0 54px;
-    padding: 0 2px;
     line-height: 28px;
     color: var(--te-common-text-secondary);
     span {

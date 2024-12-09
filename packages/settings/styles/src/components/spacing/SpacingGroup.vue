@@ -513,7 +513,7 @@ export default {
     justify-content: center;
 
     &.is-setting {
-      background-color: var(--ti-lowcode-style-setting-label-bg);
+      background-color: var(--te-common-bg-text-emphasize);
     }
 
     &.is-show {

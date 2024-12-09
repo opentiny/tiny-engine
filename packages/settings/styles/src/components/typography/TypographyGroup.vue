@@ -520,7 +520,6 @@ export default {
     .typography-label {
       margin-right: -16px;
       line-height: 16px;
-      color: var(--te-common-text-secondary);
 
       .font-family-col {
         width: 118px;
@@ -663,12 +662,15 @@ export default {
     }
   }
 
+  .typography-label {
+    color: var(--te-common-text-secondary);
+  }
   .is-setting {
     span {
       cursor: pointer;
       border-radius: 2px;
       color: var(--te-common-text-emphasize);
-      background-color: var(--ti-lowcode-style-setting-label-bg);
+      background-color: var(--te-common-bg-text-emphasize);
     }
   }
 }
