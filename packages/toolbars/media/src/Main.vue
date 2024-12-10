@@ -52,7 +52,7 @@
             <div class="title text-title">{{ state.textData.title }}</div>
             <div class="setting">
               <div>
-                <label for="">{{ state.textData.width }}</label>
+                <label>{{ state.textData.width }}</label>
                 <tiny-input v-model="state.width" @change="widthChange">
                   <template #suffix>
                     <span>px</span>
@@ -60,7 +60,7 @@
                 </tiny-input>
               </div>
               <div>
-                <label for="">{{ state.textData.scale }}</label>
+                <label>{{ state.textData.scale }}</label>
                 <tiny-input v-model="state.scaleValue" :readonly="state.readonly" @change="scaleChange">
                   <template #suffix>
                     <span>%</span>
@@ -68,7 +68,7 @@
                 </tiny-input>
               </div>
               <div>
-                <label for="">{{ '自由布局' }}</label>
+                <label>{{ '自由布局' }}</label>
                 <tiny-switch v-model="isAbsolute" @change="changeCanvasType"></tiny-switch>
               </div>
             </div>

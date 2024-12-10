@@ -8,11 +8,9 @@
             :class="['tab-item', { selected: picked === (valueKey ? item.value[valueKey] : item.value) }]"
             @click.stop="change(item)"
           >
-            <span class="label-text">
-              <span :title="item?.content">
-                <span v-if="item?.label">{{ item.label }}</span>
-                <svg-icon v-if="item?.icon" :name="item.icon" class="bem-Svg"></svg-icon>
-              </span>
+            <span class="label-text" :title="item?.content">
+              <span v-if="item?.label">{{ item.label }}</span>
+              <svg-icon v-if="item?.icon" :name="item.icon" class="bem-Svg"></svg-icon>
             </span>
           </tiny-button>
           <span :class="[{ 'border-right': collapsedOptions.length || index < uncollapsedOptions.length - 1 }]"></span>
@@ -26,18 +24,20 @@
           ]"
           :style="{ width: getItemWidth(true) + 'px' }"
         >
-          <span class="selected-option" @click.stop="change(selectedCollapsedOption)">
-            <span :title="selectedCollapsedOption?.content">
-              <span v-if="selectedCollapsedOption?.label">{{ selectedCollapsedOption.label }}</span>
-              <svg-icon
-                v-if="selectedCollapsedOption?.icon"
-                :name="selectedCollapsedOption.icon"
-                class="bem-Svg"
-              ></svg-icon>
-            </span>
+          <span
+            class="selected-option"
+            :title="selectedCollapsedOption?.content"
+            @click.stop="change(selectedCollapsedOption)"
+          >
+            <span v-if="selectedCollapsedOption?.label">{{ selectedCollapsedOption.label }}</span>
+            <svg-icon
+              v-if="selectedCollapsedOption?.icon"
+              :name="selectedCollapsedOption.icon"
+              class="bem-Svg"
+            ></svg-icon>
           </span>
           <template #dropdown>
-            <tiny-dropdown-menu>
+            <tiny-dropdown-menu popper-class="dropdown-menu-list">
               <tiny-dropdown-item
                 v-for="item in foldsOptions"
                 :key="item.label || item.icon"
@@ -201,7 +201,7 @@ const change = (item) => {
         }
       }
     }
-    .tiny-dropdown {
+    :deep(.drop-down-options) {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -218,25 +218,25 @@ const change = (item) => {
         color: var(--te-common-text-primary);
         border-radius: 4px;
       }
-    }
-    :deep(.tiny-dropdown__title) {
-      margin: 0;
-      line-height: 12px;
-      .selected-option {
-        text-align: center;
+      .tiny-dropdown__title {
+        margin: 0;
+        line-height: 12px;
+        .selected-option {
+          text-align: center;
+        }
       }
-    }
-    :deep(.tiny-dropdown__suffix-inner) {
-      width: 20px;
-      display: flex;
-      justify-content: center;
-    }
-    :deep(.tiny-dropdown .tiny-dropdown__trigger:not(.tiny-dropdown__caret-button):not(.is-disabled)):hover {
-      color: var(--te-common-text-primary);
+      .tiny-dropdown__suffix-inner {
+        width: 20px;
+        display: flex;
+        justify-content: center;
+      }
+      .tiny-dropdown__trigger:hover {
+        color: var(--te-common-text-primary);
+      }
     }
   }
 }
-.tiny-dropdown-menu {
+.dropdown-menu-list {
   padding: 8px 0px;
   margin-left: 20px;
   margin-top: 4px !important;
@@ -245,7 +245,6 @@ const change = (item) => {
   color: var(--te-common-text-weaken);
   z-index: 9999;
   box-shadow: 0 0 10px 0 var(--te-common-border-default);
-  --ti-dropdown-menu-arrow-margin-top: 0;
 
   :deep(.focusing) {
     background-color: var(--te-common-bg-default);
