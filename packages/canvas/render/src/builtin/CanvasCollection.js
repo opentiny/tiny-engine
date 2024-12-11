@@ -9,8 +9,8 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-import * as ast from '@opentiny/tiny-engine-common/js/ast'
-import { useModal, useMaterial, useMessage } from '@opentiny/tiny-engine-meta-register'
+
+import { getController } from '../render'
 
 const NAME_PREFIX = {
   loop: 'loop',
@@ -43,7 +43,7 @@ const genRemoteMethodToLifeSetup = (variableName, sourceRef, pageSchema) => {
 const removeState = (pageSchema, variableName) => {
   delete pageSchema.state[variableName]
 
-  const { parse, traverse, generate } = ast
+  const { parse, traverse, generate } = getController().ast
   const setupFn = pageSchema.lifeCycles?.setup?.value
 
   try {
@@ -73,7 +73,7 @@ const defaultHandlerTemplate = ({ node, sourceRef, schemaId, pageSchema }) => {
   const genVarName = (schemaId) => `${NAME_PREFIX.loop}${schemaId}`
 
   const updateNode = () => {
-    const { configure } = useMaterial().getMaterial(node?.componentName)
+    const { configure } = getController().getMaterial(node?.componentName)
 
     if (!configure?.loop) {
       return
@@ -112,23 +112,25 @@ const generateAssignColumns = (newColumns, oldColumns) => {
 }
 
 const askShouldImportData = ({ node, sourceRef }) => {
-  const { publish } = useMessage()
+  const { publish } = getController().useMessage()
 
-  useModal().confirm({
-    message: '检测到表格存在配置的数据，是否需要引入？',
-    exec() {
-      const sourceColumns = sourceRef.value?.data?.columns?.map(({ title, field }) => ({ title, field })) || []
-      // 这里需要找到对应列，然后进行列合并
-      node.props.columns = generateAssignColumns(sourceColumns, node.props.columns)
+  getController()
+    .useModal()
+    .confirm({
+      message: '检测到表格存在配置的数据，是否需要引入？',
+      exec() {
+        const sourceColumns = sourceRef.value?.data?.columns?.map(({ title, field }) => ({ title, field })) || []
+        // 这里需要找到对应列，然后进行列合并
+        node.props.columns = generateAssignColumns(sourceColumns, node.props.columns)
 
-      publish({ topic: 'schemaChange', data: {} })
-    },
-    cancel() {
-      node.props.columns = [...(sourceRef.value.data?.columns || [])]
+        publish({ topic: 'schemaChange', data: {} })
+      },
+      cancel() {
+        node.props.columns = [...(sourceRef.value.data?.columns || [])]
 
-      publish({ topic: 'schemaChange', data: {} })
-    }
-  })
+        publish({ topic: 'schemaChange', data: {} })
+      }
+    })
 }
 
 const updateNodeHandler = ({ node, sourceRef, pageSchema, sourceName, methodName }) => {

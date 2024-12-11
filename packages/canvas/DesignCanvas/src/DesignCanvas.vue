@@ -30,7 +30,8 @@ import {
   getMergeMeta,
   getOptions,
   getMetaApi,
-  META_SERVICE
+  META_SERVICE,
+  useMessage
 } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 import * as ast from '@opentiny/tiny-engine-common/js/ast'
@@ -184,7 +185,9 @@ export default {
         addHistory: useHistory().addHistory,
         registerBlock: useMaterial().registerBlock,
         request: getMetaApi(META_SERVICE.Http).getHttp(),
-        ast
+        ast,
+        useModal,
+        useMessage
       },
       CanvasLayout,
       canvasRef,

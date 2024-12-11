@@ -116,7 +116,7 @@ export default {
         win.thirdPartyDeps = useMaterial().materialState.thirdPartyDeps
 
         const { subscribe, unsubscribe } = useMessage()
-        const { getSchemaDiff, patchLatestSchema, getSchema } = useCanvas()
+        const { getSchemaDiff, patchLatestSchema, getSchema, getNode } = useCanvas()
         const { appSchemaState } = useResource()
 
         iframe.value.contentWindow.host = {
@@ -127,7 +127,11 @@ export default {
           watch,
           watchEffect,
           getSchema,
-          appSchema: appSchemaState
+          appSchema: appSchemaState,
+          schemaUtils: {
+            getSchema,
+            getNode
+          }
         }
       }
     }
