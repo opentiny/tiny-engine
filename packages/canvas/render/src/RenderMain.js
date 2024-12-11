@@ -58,7 +58,7 @@ watchEffect(() => {
     const computedGetters = Object.keys(getters).reduce(
       (acc, key) => ({
         ...acc,
-        [key]: parseData(getters[key], state, acc)
+        [key]: parseData(getters[key], null, acc)?.call?.(acc, state)
       }),
       {}
     )

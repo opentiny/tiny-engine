@@ -17,9 +17,11 @@
     .tiny-tag {
       color: var(--te-common-text-weaken);
       background-color: var(--te-common-bg-tag); // 选择框
+      border-radius: var(--te-base-border-radius-normal);
 
       .tiny-tag__close {
         color: var(--te-common-text-primary);
+        font-size: 12px;
         &:hover {
           color: var(--te-common-text-primary);
         }
@@ -28,7 +30,8 @@
   }
 }
 
-.tiny-select-dropdown.tiny-select-dropdown {
+.tiny-select-dropdown.tiny-select-dropdown,
+.tiny-select-dropdown.tiny-select-dropdown.is-multiple {
   background-color: var(--te-common-bg-default);
   // 下拉新增列
   .tiny-select__top-create {
