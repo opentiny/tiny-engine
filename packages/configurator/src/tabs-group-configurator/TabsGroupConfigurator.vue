@@ -236,7 +236,7 @@ const change = (item) => {
     }
   }
 }
-.dropdown-menu-list.tiny-dropdown-menu {
+.dropdown-menu-list.tiny-popper.tiny-dropdown-menu {
   margin-top: 4px;
 }
 
