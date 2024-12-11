@@ -544,6 +544,7 @@ export default {
       line-height: 24px;
       padding-left: 3px;
       width: 54px;
+      color: var(--te-common-text-secondary);
     }
     .radio-wrap {
       display: grid;

@@ -256,7 +256,7 @@ const change = (item) => {
 
     &:hover,
     &:active {
-      background-color: var(--te-common-bg-prompt);
+      background-color: var(--te-common-bg-container);
       color: var(--te-common-text-primary);
     }
   }

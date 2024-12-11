@@ -244,6 +244,7 @@ export default {
 }
 .title {
   margin-right: 10px;
+  color: var(--te-common-text-secondary);
 }
 .flex-item :deep(.radio-button) {
   padding: 5px;
