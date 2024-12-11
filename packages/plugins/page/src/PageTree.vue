@@ -291,6 +291,40 @@ export default {
       return rowOperations
     }
 
+    const handleClickRow = (node) => {
+      nodeClick(null, node.rawData)
+    }
+
+    const handleClickPageSettings = (node) => {
+      const isPageLocked = getCanvasStatus(node.rawData.occupier).state === PAGE_STATUS.Lock
+      openSettingPanel(null, node.rawData, isPageLocked)
+    }
+
+    const createPage = (node) => {
+      emit('createPage', 'staticPages', node.id)
+    }
+
+    const createFolder = (node) => {
+      emit('createFolder', node.id)
+    }
+
+    const copyPage = () => {
+      // TODO
+    }
+
+    const deleteNode = () => {
+      // TODO
+    }
+
+    const rowOperations = [
+      { type: 'createPage', label: '新建子页面', action: createPage },
+      { type: 'createFolder', label: '新建子文件夹', action: createFolder },
+      { type: 'divider' },
+      { type: 'copy', label: '复制页面', action: copyPage },
+      { type: 'divider' },
+      { type: 'delete', label: '删除', class: ['danger'], action: deleteNode }
+    ]
+
     useMessage().subscribe({
       topic: 'app_id_changed',
       subscriber: 'page_tree_app_id_changed',
