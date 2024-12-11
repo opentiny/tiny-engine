@@ -129,7 +129,7 @@ export default {
       const { operateNode } = useCanvas()
       const id = value.id
 
-      operateNode({ type: 'changeProps', id, value: value.props })
+      operateNode({ type: 'changeProps', id, value: { props: value.props } })
     }
 
     return { children, addChildren, delChildren, dragEnd, onTitleUpdate }

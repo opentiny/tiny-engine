@@ -64,6 +64,10 @@ const getDeletedKeys = (objA, objB) => {
 const getUtils = () => utils
 
 const setUtils = (data) => {
+  if (!Array.isArray(data)) {
+    return
+  }
+
   // 筛选出来已经被删除的 key
   const newKeys = new Set(data.map(({ name }) => name))
   const currentKeys = Object.keys(utils)
@@ -150,6 +154,10 @@ const generateStateAccessors = (type, accessor, key) => {
 }
 
 const setState = (data) => {
+  if (typeof data !== 'object' || data === null) {
+    return
+  }
+
   const deletedKeys = getDeletedKeys(state, data)
 
   // 同步删除的 key

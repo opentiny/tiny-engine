@@ -135,7 +135,7 @@ const getI18n = async ({ init, local }) => {
 
     return { locales, messages }
   } else {
-    const i18n = init ? appSchemaState.langs : await getI18nData
+    const i18n = init ? appSchemaState.langs : await getI18nData()
 
     return i18n
   }

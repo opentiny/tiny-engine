@@ -181,6 +181,16 @@ export const saveResource = (data, callback, emit) => {
     requestUpdateReSource(data).then((result) => {
       if (result) {
         const index = useResource().appSchemaState[data.category].findIndex((item) => item.name === result.name)
+
+        if (index === -1) {
+          useNotify({
+            type: 'error',
+            message: '修改失败'
+          })
+
+          return
+        }
+
         useResource().appSchemaState[data.category][index] = result
 
         // 更新画布工具函数环境，保证渲染最新工具类返回值, 并触发画布的强制刷新
@@ -222,6 +232,16 @@ export const deleteData = (name, callback, emit) => {
   requestDeleteReSource(params).then((data) => {
     if (data) {
       const index = useResource().appSchemaState[state.type].findIndex((item) => item.name === data.name)
+
+      if (index === -1) {
+        useNotify({
+          type: 'error',
+          message: '删除失败'
+        })
+
+        return
+      }
+
       useResource().appSchemaState[state.type].splice(index, 1)
 
       generateBridgeUtil(getAppId())

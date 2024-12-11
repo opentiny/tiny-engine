@@ -119,12 +119,19 @@ const askShouldImportData = ({ node, sourceRef, updateKey }) => {
     .confirm({
       message: '检测到表格存在配置的数据，是否需要引入？',
       exec() {
-        const sourceColumns = sourceRef.value?.data?.columns?.map(({ title, field }) => ({ title, field })) || []
-        // 这里需要找到对应列，然后进行列合并
-        node.props.columns = generateAssignColumns(sourceColumns, node.props.columns)
+        try {
+          const sourceColumns = sourceRef.value?.data?.columns?.map(({ title, field }) => ({ title, field })) || []
+          // 这里需要找到对应列，然后进行列合并
+          node.props.columns = generateAssignColumns(sourceColumns, node.props.columns)
 
-        publish({ topic: 'schemaChange', data: {} })
-        updateKey.value++
+          publish({ topic: 'schemaChange', data: {} })
+          updateKey.value++
+        } catch (error) {
+          getController().useNotify({
+            type: 'error',
+            message: '引入配置数据失败'
+          })
+        }
       },
       cancel() {
         node.props.columns = [...(sourceRef.value.data?.columns || [])]

@@ -362,10 +362,14 @@ const operationTypeMap = {
       node = pageState.pageSchema
     }
 
+    if (!node.props) {
+      node.props = {}
+    }
+
     if (overwrite) {
       node.props = value.props
     } else {
-      Object.assign(node, value || {})
+      Object.assign(node.props, value?.props || {})
     }
 
     return {

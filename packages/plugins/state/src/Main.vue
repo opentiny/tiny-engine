@@ -338,7 +338,7 @@ export default {
       } else {
         const pageSchema = getSchema() || {}
 
-        state.dataSource = pageSchema.state
+        state.dataSource = pageSchema.state || {}
       }
     }
 

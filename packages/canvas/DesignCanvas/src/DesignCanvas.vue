@@ -31,7 +31,8 @@ import {
   getOptions,
   getMetaApi,
   META_SERVICE,
-  useMessage
+  useMessage,
+  useNotify
 } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 import * as ast from '@opentiny/tiny-engine-common/js/ast'
@@ -187,7 +188,8 @@ export default {
         request: getMetaApi(META_SERVICE.Http).getHttp(),
         ast,
         useModal,
-        useMessage
+        useMessage,
+        useNotify
       },
       CanvasLayout,
       canvasRef,
