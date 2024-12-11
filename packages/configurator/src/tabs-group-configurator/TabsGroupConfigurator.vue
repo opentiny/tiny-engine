@@ -236,10 +236,13 @@ const change = (item) => {
     }
   }
 }
+.dropdown-menu-list.tiny-dropdown-menu {
+  margin-top: 4px;
+}
+
 .dropdown-menu-list {
   padding: 8px 0px;
   margin-left: 20px;
-  margin-top: 4px !important;
   border-radius: 4px;
   background-color: var(--te-common-bg-default);
   color: var(--te-common-text-weaken);
