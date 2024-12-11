@@ -197,7 +197,6 @@ export default {
         shrinkIcon: null,
         expandIcon: null,
         renderContent: (_h, { node, data }) => {
-          // TODO 1px #EBEBEB
           return (
             <>
               {getNodeIcon(data)}
