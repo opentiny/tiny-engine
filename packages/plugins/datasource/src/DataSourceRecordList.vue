@@ -118,7 +118,7 @@ export default {
     }
   },
   emits: ['edit'],
-  setup(props) {
+  setup(props, { emit }) {
     const grid = ref(null)
     const { confirm } = useModal()
     const { toClipboard } = useClipboard()
@@ -288,6 +288,8 @@ export default {
       return getGridData({ page: state.pagerConfig, forceUseRemoteData }).then(({ result, page }) => {
         state.tableData = result
         state.pagerConfig.total = page.total
+        // 通知刷新mock数据到 appSchemaState
+        emit('refresh')
       })
     }
 

@@ -111,7 +111,7 @@ const generateAssignColumns = (newColumns, oldColumns) => {
   return newColumns
 }
 
-const askShouldImportData = ({ node, sourceRef }) => {
+const askShouldImportData = ({ node, sourceRef, updateKey }) => {
   const { publish } = getController().useMessage()
 
   getController()
@@ -124,6 +124,7 @@ const askShouldImportData = ({ node, sourceRef }) => {
         node.props.columns = generateAssignColumns(sourceColumns, node.props.columns)
 
         publish({ topic: 'schemaChange', data: {} })
+        updateKey.value++
       },
       cancel() {
         node.props.columns = [...(sourceRef.value.data?.columns || [])]
@@ -133,8 +134,8 @@ const askShouldImportData = ({ node, sourceRef }) => {
     })
 }
 
-const updateNodeHandler = ({ node, sourceRef, pageSchema, sourceName, methodName }) => {
-  if (!node || !node.props) {
+const updateNodeHandler = ({ node, sourceRef, pageSchema, sourceName, methodName, updateKey }) => {
+  if (!node || !node.props || !sourceName) {
     return
   }
 
@@ -142,7 +143,7 @@ const updateNodeHandler = ({ node, sourceRef, pageSchema, sourceName, methodName
   delete node?.props?.data
 
   if (node.props.columns.length) {
-    askShouldImportData({ node, sourceRef })
+    askShouldImportData({ node, sourceRef, updateKey })
   } else {
     node.props.columns = [...(sourceRef.value.data?.columns || [])]
   }
@@ -181,7 +182,7 @@ this.dataSourceMap.${sourceName}.load().then((res) => {
 }
 
 const extraHandlerMap = {
-  TinyGrid: ({ node, sourceRef, schemaId, pageSchema }) => {
+  TinyGrid: ({ node, sourceRef, schemaId, pageSchema, updateKey }) => {
     const sourceName = sourceRef.value?.name
     const methodName = `${NAME_PREFIX.table}${schemaId}`
 
@@ -190,7 +191,7 @@ const extraHandlerMap = {
       value: `{ api: this.${methodName} }`
     }
 
-    const updateNode = () => updateNodeHandler({ node, sourceRef, pageSchema, sourceName, methodName })
+    const updateNode = () => updateNodeHandler({ node, sourceRef, pageSchema, sourceName, methodName, updateKey })
 
     const clearBindVar = () => {
       // 当数据源组件children字段为空时，及时清空创建的methods
@@ -277,7 +278,7 @@ const extraHandlerMap = {
   }
 }
 
-export const getHandler = ({ node, sourceRef, schemaId, pageSchema }) =>
+export const getHandler = ({ node, sourceRef, schemaId, pageSchema, updateKey }) =>
   extraHandlerMap[node.componentName]
-    ? extraHandlerMap[node.componentName]({ node, sourceRef, schemaId, pageSchema })
+    ? extraHandlerMap[node.componentName]({ node, sourceRef, schemaId, pageSchema, updateKey })
     : defaultHandlerTemplate({ node, sourceRef, schemaId, pageSchema })

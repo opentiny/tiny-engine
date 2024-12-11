@@ -1,5 +1,5 @@
 <template>
-  <component :is="tag" v-bind="$attrs">
+  <component :is="tag" v-bind="$attrs" :key="updateKey">
     <slot>
       <canvas-placeholder></canvas-placeholder>
     </slot>
@@ -33,6 +33,8 @@ export default {
   },
   setup(props) {
     const source = ref(null)
+    // 这里 key 的作用是：触发组件更新，这样就能触发 tiny-grid 表格组件重新触发 fetchData 方法，进而刷新数据显示到画布
+    const updateKey = ref(0)
 
     if (props.dataSource) {
       fetchDataSourceDetail(props.dataSource).then((res) => {
@@ -54,10 +56,12 @@ export default {
               sourceRef: source,
               node,
               schemaId: props.schema.id,
-              pageSchema: getSchema()
+              pageSchema: getSchema(),
+              updateKey
             })
           }
           handler?.updateNode()
+          updateKey.value++
         }
       }
     )
@@ -94,7 +98,8 @@ export default {
               sourceRef: source,
               node,
               schemaId: props.schema.id,
-              pageSchema
+              pageSchema,
+              updateKey
             })
             handler.updateNode()
           }
@@ -103,9 +108,10 @@ export default {
         const { publish } = getController().useMessage()
 
         publish({ topic: 'schemaChange', data: {} })
+        updateKey.value++
       }
     )
-    return { source }
+    return { source, updateKey }
   }
 }
 </script>

@@ -34,6 +34,7 @@
   <data-source-record-list
     :data="state.currentData"
     @edit="openDataSourceForm(dataSourceList[activeIndex], activeIndex)"
+    @refresh="refresh()"
   ></data-source-record-list>
 </template>
 
@@ -111,7 +112,8 @@ export default {
       openRecordListPanel,
       openDataSourceForm,
       dataSourceList,
-      activeIndex
+      activeIndex,
+      refresh
     }
   }
 }
