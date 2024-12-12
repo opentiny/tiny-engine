@@ -10,7 +10,7 @@
  *
  */
 
-import { computed, reactive, ref } from 'vue'
+import { reactive, ref } from 'vue'
 import { extend, isEqual } from '@opentiny/vue-renderless/common/object'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'

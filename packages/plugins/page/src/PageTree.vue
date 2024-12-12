@@ -317,13 +317,31 @@ export default {
     }
 
     const rowOperations = [
+      { type: 'settings', label: '设置', action: handleClickPageSettings },
+      { type: 'divider' },
       { type: 'createPage', label: '新建子页面', action: createPage },
       { type: 'createFolder', label: '新建子文件夹', action: createFolder },
       { type: 'divider' },
       { type: 'copy', label: '复制页面', action: copyPage },
-      { type: 'divider' },
       { type: 'delete', label: '删除', class: ['danger'], action: deleteNode }
-    ]
+    ].map((item) => ({
+      ...item,
+      action: (node) => {
+        item.action?.(node)
+        // 点击 action 后，关闭 popover 弹窗
+        popoverRefs[node.id]?.doClose?.()
+      }
+    }))
+
+    const getRowOperations = (groupId, node) => {
+      if (groupId === COMMON_PAGE_GROUP_ID) {
+        return rowOperations.slice(0, 2).concat(rowOperations.slice(5))
+      }
+      if (!node.rawData.isPage) {
+        return rowOperations.filter((item) => item.type !== 'copy')
+      }
+      return rowOperations
+    }
 
     useMessage().subscribe({
       topic: 'app_id_changed',
