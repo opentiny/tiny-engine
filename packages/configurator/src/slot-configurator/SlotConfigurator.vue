@@ -141,7 +141,7 @@ export default {
   }
   .slot-name {
     width: 30%;
-    color: var(--ti-lowcode-dialog-font-color);
+    color: var(--te-common-text-primary);
     font-size: 12px;
     display: flex;
     justify-content: space-between;

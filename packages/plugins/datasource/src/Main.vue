@@ -151,11 +151,11 @@ export default {
   color: var(--ti-lowcode-datasource-btn-click-color);
 }
 :deep(button.tiny-button.tiny-button--default) {
-  border-color: var(--ti-lowcode-data-source-border-color);
+  border-color: var(--ti-lowcode-datasource-border-color);
 }
 .add-data-source {
   margin: 0 12px 12px 12px;
-  color: var(--ti-lowcode-data-source-color);
+  color: var(--ti-lowcode-datasource-color);
 
   &:hover {
     color: var(--ti-lowcode-meta-codeEditor-hover-color);

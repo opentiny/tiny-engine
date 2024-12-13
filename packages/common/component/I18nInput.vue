@@ -4,13 +4,14 @@
       <template #suffix>
         <tiny-popover
           ref="popoverRef"
-          width="260"
+          width="340"
           trigger="click"
           :visible-arrow="false"
-          popper-class="lowcode"
+          popper-class="i18n-input-popover"
           @hide="onHide"
         >
           <div class="popover-content">
+            <h3 class="title">绑定国际化</h3>
             <icon-close class="icon-close" @click="closePopover"></icon-close>
             <bind-i18n
               ref="addI1i8nRef"
@@ -124,9 +125,24 @@ export default {
   }
 }
 .popover-content {
-  text-align: right;
-  .icon-close {
-    margin-right: 5px;
+  position: relative;
+
+  .title {
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-size: 14px;
+    line-height: 20px;
   }
+  .icon-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+}
+</style>
+
+<style>
+.tiny-popover.tiny-popover.tiny-popper[x-placement].i18n-input-popover {
+  padding: 20px;
 }
 </style>

@@ -117,7 +117,7 @@ export default {
 <style lang="less" scoped>
 .data-source-list {
   padding-top: 12px;
-  border-top: 1px solid var(--ti-lowcode-data-source-border-color);
+  border-top: 1px solid var(--te-common-border-divider);
   overflow-y: scroll;
   .data-source-list-blank {
     font-size: 12px;

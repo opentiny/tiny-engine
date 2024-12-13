@@ -67,7 +67,7 @@ export default {
 
 <style lang="less" scoped>
 .step-select-first {
-  border: 1px solid var(--ti-lowcode-data-source-border-color);
+  border: 1px solid var(--ti-lowcode-datasource-border-color);
   border-radius: 4px;
   padding: 12px;
   margin-bottom: 46px;
@@ -104,7 +104,7 @@ export default {
     }
   }
   .btn {
-    color: var(--ti-lowcode-data-source-color);
+    color: var(--ti-lowcode-datasource-color);
     font-size: 12px;
     cursor: pointer;
   }
@@ -123,7 +123,7 @@ export default {
     justify-content: space-between;
     flex-direction: column;
     cursor: pointer;
-    background-color: var(--ti-lowcode-data-source-box-bg);
+    background-color: var(--ti-lowcode-datasource-box-bg);
     border-radius: 4px;
     color: var(--ti-lowcode-datasource-dialog-font-color);
     .type-icon {

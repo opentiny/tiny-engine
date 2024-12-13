@@ -480,7 +480,7 @@ const handleDeleteCurSelector = () => {
 .title {
   margin: 0;
   font-size: 12px;
-  color: var(--ti-lowcode-className-selector-title-color);
+  color: var(--te-common-text-secondary);
   font-weight: normal;
   .help-link {
     vertical-align: middle;

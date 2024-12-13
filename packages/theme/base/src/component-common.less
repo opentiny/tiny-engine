@@ -536,7 +536,8 @@
 // 15、checkbox 复选框适配
 .tiny-checkbox.tiny-checkbox {
   .tiny-checkbox__input {
-    &.is-checked .tiny-checkbox__inner {
+    &.is-checked .tiny-checkbox__inner,
+    &.is-indeterminate .tiny-checkbox__inner {
       background-color: var(--te-common-bg-primary-checked);
       border-color: var(--te-common-border-checked);
     }

@@ -305,19 +305,6 @@ export default {
       :deep(.tiny-tabs__content) {
         margin: 12px 0;
       }
-      :deep(.is-active) {
-        .tiny-tabs__item__title {
-          color: var(--ti-lowcode-datasource-tabs-bottom-border-color);
-        }
-      }
-      :deep(.tiny-tabs__item__title) {
-        font-size: 14px;
-      }
-    }
-    :deep(.tiny-tabs__item__title) {
-      margin-right: 20px;
-      margin-left: 15px;
-      color: var(--ti-lowcode-datasource-label-color);
     }
   }
 }

@@ -228,7 +228,7 @@ export default {
       display: block;
       margin-bottom: 8px;
       font-size: 12px;
-      color: var(--te-common-text-primary);
+      color: var(--te-common-text-secondary);
     }
   }
   .inline-style {

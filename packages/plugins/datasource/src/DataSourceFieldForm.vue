@@ -176,7 +176,7 @@ export default {
 
 <style lang="less" scoped>
 .step-select-second {
-  border: 1px solid var(--ti-lowcode-data-source-border-color);
+  border: 1px solid var(--ti-lowcode-datasource-border-color);
   border-radius: 4px;
   padding: 12px;
   margin-bottom: 16px;
@@ -193,7 +193,7 @@ export default {
       padding: 0;
       min-width: 40px;
       margin-right: 2px;
-      border: 1px solid var(--ti-lowcode-data-source-color);
+      border: 1px solid var(--ti-lowcode-datasource-color);
     }
   }
 
@@ -224,7 +224,7 @@ export default {
   height: 24px;
   padding: 0;
   border: none;
-  border-top: 1px solid var(--ti-lowcode-data-source-border-color);
+  border-top: 1px solid var(--ti-lowcode-datasource-border-color);
   margin-bottom: 0;
   border-radius: 0;
   .field-row {
@@ -237,6 +237,6 @@ export default {
 }
 
 #default-item:last-child {
-  border-bottom: 1px solid var(--ti-lowcode-data-source-border-color);
+  border-bottom: 1px solid var(--ti-lowcode-datasource-border-color);
 }
 </style>

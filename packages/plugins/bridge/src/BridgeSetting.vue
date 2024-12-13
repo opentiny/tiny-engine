@@ -316,7 +316,7 @@ export default {
   .title-wrap {
     font-size: 12px;
     font-weight: 700;
-    color: var(--ti-lowcode-data-source-color);
+    color: var(--te-common-text-primary);
     .help-link {
       display: inline-block;
       color: var(--ti-lowcode-common-primary-color);

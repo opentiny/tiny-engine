@@ -400,7 +400,7 @@ export default {
       width: 100%;
       .tiny-button {
         width: 100%;
-        border-color: var(--ti-lowcode-data-source-border-color);
+        border-color: var(--te-common-border-default);
       }
       .icon-plus {
         margin-right: 4px;
@@ -457,7 +457,7 @@ export default {
       padding: 0 12px;
       font-size: 12px;
       font-weight: 700;
-      color: var(--ti-lowcode-data-source-color);
+      color: var(--te-common-text-primary);
       background: var(--ti-lowcode-common-component-bg);
       border-bottom: 1px solid var(--ti-lowcode-data-header-border-bottom-color);
       .options-wrap {

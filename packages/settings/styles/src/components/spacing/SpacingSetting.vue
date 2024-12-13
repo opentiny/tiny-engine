@@ -121,7 +121,7 @@ export default {
     align-items: center;
     .icon {
       font-size: 16px;
-      color: var(--ti-lowcode-toolbar-breadcrumb-color);
+      color: var(--te-common-text-secondary);
       margin-right: 18px;
     }
 
@@ -142,8 +142,8 @@ export default {
       height: 60px;
       line-height: 60px;
       text-align: center;
-      border: 1px solid var(--ti-lowcode-toolbar-border-color);
-      background: var(--ti-lowcode-canvas-wrap-bg);
+      border: 1px solid var(--te-common-border-default);
+      background: var(--te-common-bg-container);
       cursor: pointer;
       box-sizing: border-box;
 
@@ -178,8 +178,8 @@ export default {
         line-height: 26px;
         margin-left: 3%;
         text-align: center;
-        border: 1px solid var(--ti-lowcode-toolbar-border-color);
-        background: var(--ti-lowcode-canvas-wrap-bg);
+        border: 1px solid var(--te-common-border-default);
+        background: var(--te-common-bg-container);
         cursor: pointer;
         transition: 0.3s;
         box-sizing: border-box;

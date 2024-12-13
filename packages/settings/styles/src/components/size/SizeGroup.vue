@@ -561,7 +561,7 @@ span {
     width: 20px;
     height: 20px;
     font-size: 18px;
-    color: var(--ti-lowcode-description-minor-color);
+    color: var(--te-common-text-secondary);
     margin-left: 4px;
     border-radius: 2px;
     &.selected {

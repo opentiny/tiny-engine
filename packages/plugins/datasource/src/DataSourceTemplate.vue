@@ -79,7 +79,7 @@ export default {
       }
     }
     .blue::before {
-      border: 1px solid var(--ti-lowcode-datasource-json-border-colorr);
+      border: 1px solid var(--ti-lowcode-datasource-json-border-color);
     }
 
     .green::before {
@@ -105,7 +105,7 @@ export default {
     .tiny-button {
       color: var(--ti-lowcode-datasource-toolbar-breadcrumb-color);
       &.tiny-button--primary {
-        border-color: var(--ti-lowcode-datasource-common-primary-color);
+        border-color: var(--ti-lowcode-datasource-common-border-primary-color);
       }
 
       &.tiny-button--success {

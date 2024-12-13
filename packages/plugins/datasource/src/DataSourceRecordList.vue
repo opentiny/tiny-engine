@@ -615,7 +615,7 @@ export default {
     font-size: 12px;
     text-align: left;
     padding: 0;
-    color: var(--ti-lowcode-base-text-color);
+    color: var(--te-common-text-primary);
     .icon-download {
       margin: 0 1px 4px 0;
       font-size: 16px;
@@ -631,10 +631,9 @@ export default {
   .empty-icon {
     width: 50px;
     height: 50px;
-    color: var(--ti-lowcode-datasource-common-empty-color);
   }
   .add-column {
-    color: var(--ti-lowcode-datasource-json-border-colorr);
+    color: var(--ti-lowcode-datasource-json-border-color);
     cursor: pointer;
   }
 }

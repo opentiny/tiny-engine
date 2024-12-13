@@ -18,7 +18,7 @@
   margin-top: 8px;
   border-radius: 4px;
   padding: 8px 14px;
-  background: var(--ti-lowcode-data-source-box-bg);
+  background: var(--te-common-bg-container);
   color: var(--ti-lowcode-datasource-tip-color);
 }
 </style>

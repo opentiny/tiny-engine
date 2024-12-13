@@ -77,7 +77,7 @@ export default {
     TinyIconSearch: iconSearch()
   },
   setup() {
-    const { isDefaultGroupId, isRefresh, selectedGroup, selectedBlockArray, getGroupList } = useBlock()
+    const { isDefaultGroupId, isRefresh, selectedGroup, selectedBlockArray, getGroupList, cancelCheckAll } = useBlock()
     const { panel, closePanel } = useGroupPanel()
     const { message } = useModal()
     const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
@@ -156,6 +156,9 @@ export default {
             message: `添加区块失败: ${error.message || error}`,
             status: 'error'
           })
+        })
+        .finally(() => {
+          cancelCheckAll()
         })
       panelState.isBlockGroupPanel = false
       closePanel()
