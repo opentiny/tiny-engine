@@ -108,6 +108,7 @@ interface IParsedFileItem {
   compilerParseResult: SFCParseResult
   importedFiles: string[]
   fileNameWithRelativePath: string
+  subBlockDeps: string[]
 }
 
 interface IResultMap {
@@ -203,15 +204,20 @@ const getJSBlobURL = (str: string) => {
 export interface IFileItem {
   fileName: string
   sourceCode: string
+  subBlockDeps: string[]
 }
 
 export type IFileList = IFileItem[]
+
+export interface IConfig {
+  compileCache: Map<string, Record<string, any>>
+}
 
 // TODO: 支持 importMap
 // @ts-ignore
 export const compile = (fileList: IFileList, config) => {
   const parsedFileList = fileList.map((fileItem) => {
-    const { fileName, sourceCode } = fileItem
+    const { fileName, sourceCode, subBlockDeps } = fileItem
     // FIXME:这里解析的结果不能重复使用，因为可能会涉及修改引入的依赖
     const { descriptor, errors } = parse(sourceCode, { filename: fileName })
 
@@ -222,7 +228,6 @@ export const compile = (fileList: IFileList, config) => {
     // TODO: 1. 当前仅支持 vue 文件编译，检查文件后缀，如果不是 .vue 结尾的，抛出错误
     // TODO: 2. 检查 style lang，仅支持 css
     // TODO: 3. 检查 template lang，当前不支持任何 template lang
-    // TODO: 4. 检查 script lang，当前仅支持 js， jsx 晚点支持
 
     // 解析依赖的文件
     const importedFiles = parseImportedFiles(descriptor)
@@ -235,26 +240,49 @@ export const compile = (fileList: IFileList, config) => {
         errors
       },
       importedFiles,
-      fileNameWithRelativePath: `./${fileName}.vue`
+      fileNameWithRelativePath: `./${fileName}.vue`,
+      subBlockDeps
     }
   })
 
   const compiledFilesSet: Set<string> = new Set()
   const resultMap: IResultMap = {}
 
+  const compileCache = config?.compileCache || new Map()
+
   // 根据依赖顺序编译文件。优先编译 0 依赖的文件。
   let nextCompileFile = filterNextCompileFiles(parsedFileList, compiledFilesSet)
 
   while (nextCompileFile.length) {
     for (const fileItem of nextCompileFile) {
-      const { js, style } = compileFile(fileItem, resultMap)
+      const fileName = fileItem.fileName
+      const cache = compileCache.get(fileName)
+      let js = ''
+      let style = ''
+
+      // 优先使用缓存
+      if (cache?.compileResult?.js && cache?.compileResult?.style) {
+        js = cache.compileResult.js
+        style = cache.compileResult.style
+      } else {
+        const compileRes = compileFile(fileItem, resultMap)
+
+        js = compileRes.js
+        style = compileRes.style
+      }
+
       const resolvedImportJs = resolveRelativeImport(js, resultMap)
 
-      resultMap[fileItem.fileName] = {
+      resultMap[fileName] = {
         js: resolvedImportJs,
         style,
         blobURL: getJSBlobURL(resolvedImportJs)
       }
+
+      compileCache.set(fileName, {
+        compileResult: resultMap[fileName],
+        subBlockDeps: fileItem.subBlockDeps
+      })
 
       compiledFilesSet.add(fileItem.fileNameWithRelativePath)
     }
