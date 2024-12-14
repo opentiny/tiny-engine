@@ -1,3 +1,4 @@
+const path = require('path')
 const { rules } = require('../../.eslintrc')
 
 module.exports = {
@@ -5,7 +6,7 @@ module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: ['./tsconfig.json'],
+    project: [path.join(__dirname, './tsconfig.json') ],
     ecmaVersion: 'latest',
   },
   plugins: ['@typescript-eslint'],
@@ -15,5 +16,5 @@ module.exports = {
     node: true
   },
   rules,
-  ignorePatterns: ['test/sample/*.vue']
+  ignorePatterns: ['test/sample/*.vue', '.eslintrc.cjs']
 }

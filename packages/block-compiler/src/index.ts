@@ -1,5 +1,6 @@
 import { compileScript, compileTemplate, compileStyle, parse, babelParse, MagicString } from 'vue/compiler-sfc'
-import type { SFCParseResult, SFCDescriptor, BindingMetadata } from 'vue/compiler-sfc'
+import type { SFCParseResult, SFCDescriptor, BindingMetadata, CompilerOptions } from 'vue/compiler-sfc'
+import { testIsJsx, transformVueJsx } from './transformJsx'
 
 const compileBlockStyle = (descriptor: SFCDescriptor, id: string) => {
   const cssResArr = descriptor.styles.map((style) => {
@@ -17,7 +18,14 @@ const compileBlockStyle = (descriptor: SFCDescriptor, id: string) => {
 }
 
 const compileBlockTemplate = (descriptor: SFCDescriptor, id: string, bindingMetadata: BindingMetadata | undefined) => {
-  const { code, errors } = compileTemplate({
+  const isJsx = testIsJsx(descriptor)
+  const expressionPlugins: CompilerOptions['expressionPlugins'] = []
+
+  if (isJsx) {
+    expressionPlugins.push('jsx')
+  }
+
+  let { code, errors } = compileTemplate({
     id,
     ast: descriptor.template?.ast,
     source: descriptor.template?.content!,
@@ -25,16 +33,21 @@ const compileBlockTemplate = (descriptor: SFCDescriptor, id: string, bindingMeta
     scoped: descriptor.styles.some((styleItem) => styleItem.scoped),
     slotted: descriptor.slotted,
     compilerOptions: {
-      bindingMetadata
+      bindingMetadata,
+      expressionPlugins
     }
   })
+
+  if (isJsx) {
+    code = transformVueJsx(code) || ''
+  }
 
   return { code, errors }
 }
 
 const resolveRelativeImport = (code: string, resultMap: IResultMap) => {
   const magicStr = new MagicString(code)
-  const ast = babelParse(code, { sourceType: 'module' }).program.body
+  const ast = babelParse(code, { sourceType: 'module', plugins: ['jsx'] }).program.body
 
   for (const node of ast) {
     if (node.type === 'ImportDeclaration') {
@@ -61,18 +74,30 @@ const compileBlockScript = (
   id: string,
   resultMap: IResultMap
 ): [string, BindingMetadata | undefined] => {
+  const isJsx = testIsJsx(descriptor)
+  const expressionPlugins: CompilerOptions['expressionPlugins'] = []
+
+  if (isJsx) {
+    expressionPlugins.push('jsx')
+  }
+
   // TODO: try catch
   const compiledScript = compileScript(descriptor, {
     genDefaultAs: DEFAULT_COMPONENT_NAME,
     inlineTemplate: true,
-    id
+    id,
+    templateOptions: {
+      compilerOptions: {
+        expressionPlugins
+      }
+    }
   })
 
   let code = compiledScript.content
 
-  // if (compiledScript.bindings) {
-  //   code = `/* Analyzed bindings: ${JSON.stringify(compiledScript.bindings, null, 2)} */\n${code}`
-  // }
+  if (isJsx) {
+    code = transformVueJsx(code) || ''
+  }
 
   return [code, compiledScript.bindings]
 }
@@ -140,7 +165,8 @@ const parseImportedFiles = (descriptor: SFCDescriptor): string[] => {
     return []
   }
 
-  const ast = babelParse(scriptContent, { sourceFilename: descriptor.filename, sourceType: 'module' }).program.body
+  const ast = babelParse(scriptContent, { sourceFilename: descriptor.filename, sourceType: 'module', plugins: ['jsx'] })
+    .program.body
   const res: string[] = []
 
   for (const node of ast) {

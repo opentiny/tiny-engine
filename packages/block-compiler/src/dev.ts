@@ -5,6 +5,7 @@ import BlockFileName from '../test/sample/BlockFileName.vue?raw'
 import BlockHead from '../test/sample/BlockHead.vue?raw'
 import BlockMenu from '../test/sample/BlockMenu.vue?raw'
 import BlockTest from '../test/sample/BlockTest.vue?raw'
+import BlockJsxTest from '../test/sample/slotModelValueTest.vue?raw'
 
 const RenderMain = {
   setup() {
@@ -25,6 +26,10 @@ const RenderMain = {
         {
           fileName: 'BlockTest',
           sourceCode: BlockTest
+        },
+        {
+          fileName: 'BlockJsxTest',
+          sourceCode: BlockJsxTest
         }
       ],
       {}
@@ -63,6 +68,7 @@ const RenderMain = {
     const { blockComponents } = this
 
     return h('div', {}, [
+      h(blockComponents.BlockJsxTest),
       h(blockComponents.BlockTest),
       h(blockComponents.BlockHead),
       h(blockComponents.BlockFileName),
