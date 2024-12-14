@@ -79,11 +79,11 @@ async function createMeeting() {
 
 - 打开数据源面板，新建数据源。点击获取远程数据
 - 设置请求地址、请求方式、请求参数、请求结果回调
-![](./imgs/dataSource1.png)
+![数据源设置](./imgs/dataSource1.png)
 - 请求成功后获取到接口字段信息，填写字段名后，保存后即可生成数据源字段信息
-![](./imgs/dataSource2.png)
-![](./imgs/dataSource3.png)
-![](./imgs/dataSource4.png)
+![请求结果](./imgs/dataSource2.png)
+![字段配置](./imgs/dataSource3.png)
+![保存数据源](./imgs/dataSource4.png)
 
 > 如果接口请求存在跨域、鉴权等情况，无法通过“发送请求”自动填充响应数据时，可以手动将响应数据（比如：JSON 格式数据），粘贴至下方的“请求结果”编辑器中。
 
@@ -112,16 +112,16 @@ function dataHandler(data) {
 
 - 打开数据源面板，选中数据源
 - 点击新增数据，添加数据并保存
-![](./imgs/dataSource5.png)
+![新增数据](./imgs/dataSource5.png)
 
 ## 使用数据源Mock数据
 
 - 拖动一个Collection组件到画布中，在Collection组件属性面板上选择数据源
 - 拖动格组件到Collection中，表格组件将自动生成数据源中的字段
-![](not-found/dataSource6.png)
+![使用数据源Mock数据](not-found/dataSource6.png)
 
 ## 更新数据源到画布
 
 添加完Mock数据后，画布上绑定的数据源不会同步改变，需要手动更新，操作如下：
 选中画布中的数据源，打开属性面板，点击更新数据源
-![](./imgs/dataSource7.png)
+![更新数据源到画布](./imgs/dataSource7.png)
