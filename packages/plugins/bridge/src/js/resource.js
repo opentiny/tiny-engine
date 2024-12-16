@@ -182,48 +182,52 @@ const generateBridgeUtil = (...args) => {
   }
 }
 
-export const saveResource = (data, callback, emit) => {
-  const { updateUtils } = useCanvas().canvasApi.value
+export const saveResource = async (data, callback, emit) => {
+  let result = {}
 
-  if (getActionType() === ACTION_TYPE.Edit) {
-    data.id = state.resource.id
-    requestUpdateReSource(data).then((result) => {
+  try {
+    if (getActionType() === ACTION_TYPE.Edit) {
+      data.id = state.resource.id
+      const result = await requestUpdateReSource(data)
+
       if (result) {
         const index = useResource().resState[data.category].findIndex((item) => item.name === result.name)
         useResource().resState[data.category][index] = result
-
-        // 更新画布import并刷新画布
-        useMaterial().setCanvasDeps()
-        generateBridgeUtil(getAppId())
-
-        useNotify({
-          type: 'success',
-          message: '修改成功'
-        })
-
-        emit('refresh', state.type)
-        state.refresh = true
-        callback()
       }
-    })
-  } else {
-    requestAddReSource(data).then((result) => {
+    } else {
+      const result = await requestAddReSource(data)
+
       if (result) {
         useResource().resState[data.category].push(result)
-
-        // 更新画布工具函数环境，保证渲染最新工具类返回值, 并触发画布的强制刷新
-        updateUtils([result])
-        generateBridgeUtil(getAppId())
-        useNotify({
-          type: 'success',
-          message: '创建成功'
-        })
-        emit('refresh', state.type)
-        state.refresh = true
-        callback()
       }
+    }
+  } catch (error) {
+    useNotify({
+      type: 'error',
+      message: `${getActionType() === ACTION_TYPE.Edit ? '更新' : '创建'}失败：${error}`
     })
+
+    return
   }
+
+  if (data.type === 'npm') {
+    // 更新画布import并刷新画布
+    useMaterial().setCanvasDeps()
+  } else {
+    const { updateUtils } = useCanvas().canvasApi.value
+
+    // 更新画布工具函数环境，保证渲染最新工具类返回值, 并触发画布的强制刷新
+    updateUtils([result])
+  }
+
+  generateBridgeUtil(getAppId())
+  useNotify({
+    type: 'success',
+    message: `${getActionType() === ACTION_TYPE.Edit ? '更新' : '创建'}成功`
+  })
+  emit('refresh', state.type)
+  state.refresh = true
+  callback()
 }
 
 export const deleteData = (name, callback, emit) => {
