@@ -59,17 +59,6 @@ export default {
       store['initTsConfig']() // 触发获取组件d.ts方便调试
     }
 
-    const addUtilsImportMap = (importMap, utils = []) => {
-      const utilsImportMaps = {}
-      utils.forEach(({ type, content: { package: packageName, cdnLink } }) => {
-        if (type === 'npm' && cdnLink) {
-          utilsImportMaps[packageName] = cdnLink
-        }
-      })
-      const newImportMap = { imports: { ...importMap.imports, ...utilsImportMaps } }
-      store.setImportMap(newImportMap)
-    }
-
     const queryParams = getSearchParams()
     const getImportMap = async () => {
       if (import.meta.env.VITE_LOCAL_BUNDLE_DEPS === 'true') {
@@ -91,7 +80,7 @@ export default {
       getImportMap()
     ]
     Promise.all(promiseList).then(async ([appData, metaData, _void, importMapData]) => {
-      addUtilsImportMap(importMapData, metaData.utils || [])
+      store.setImportMap(importMapData)
 
       const { getAllNestedBlocksSchema, generatePageCode } = getMetaApi('engine.service.generateCode')
 

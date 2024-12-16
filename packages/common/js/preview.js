@@ -26,7 +26,7 @@ const open = (params = {}) => {
   params.app = paramsMap.get('id')
   params.tenant = paramsMap.get('tenant')
 
-  const { scripts, styles } = useMaterial().materialState.thirdPartyDeps
+  const { scripts, styles } = useMaterial().materialState.componentsDepsMap
   params.scripts = {}
   scripts
     .filter((item) => item.script)

@@ -56,23 +56,60 @@ export const copyObject = (node) => {
 }
 
 /**
- * 动态导入组件，缓存组件对象
- * @param {object} param0 组件的依赖： { package: 包名，script：js文件cdn, components：组件id和导出组件名的映射关系}
+ * 从页面importmap中获取模块的名称
+ * @returns importmap中模块的名称集合
+ */
+const getImportMapKeys = () => {
+  try {
+    const importMaps = document.querySelector('script[type="importmap"]').textContent
+    const importMapObject = JSON.parse(importMaps)
+
+    return Object.keys(importMapObject.import)
+  } catch (error) {
+    return []
+  }
+}
+
+/**
+ * 动态导入获取组件模块
+ * @param {*} pkg 模块名称
+ * @param {*} script 模块的cdn地址
  * @returns
  */
-export const dynamicImportComponents = async ({ package: pkg, script, components }) => {
-  if (!script) return
-  const scriptUrl = script.startsWith('.') ? new URL(script, location.href).href : script
-
-  if (!window.TinyComponentLibs[pkg]) {
-    const modules = await import(/* @vite-ignore */ scriptUrl)
-
-    window.TinyComponentLibs[pkg] = modules
+const dynamicImportComponents = async (pkg, script) => {
+  if (window.TinyComponentLibs[pkg]) {
+    return window.TinyComponentLibs[pkg]
   }
 
-  Object.entries(components).forEach(([componentId, exportName]) => {
-    const modules = window.TinyComponentLibs[pkg]
+  let modules = {}
 
+  try {
+    // 优先从importmap导入，兼容npm.script字段定义的cdn地址
+    if (getImportMapKeys().includes(pkg)) {
+      modules = await import(/* @vite-ignore */ pkg)
+    } else if (script) {
+      modules = await import(/* @vite-ignore */ script)
+    }
+  } catch (error) {
+    modules = {}
+  }
+
+  window.TinyComponentLibs[pkg] = modules
+
+  return modules
+}
+
+/**
+ * 获取组件对象并缓存，组件渲染时使用
+ * @param {object} param0 组件的依赖： { package： 包名，script：js文件cdn, components：组件id和导出组件名的映射关系}
+ * @returns
+ */
+export const setComponents = async ({ package: pkg, script, components }) => {
+  if (!pkg) return
+
+  const modules = await dynamicImportComponents(pkg, script)
+
+  Object.entries(components).forEach(([componentId, exportName]) => {
     if (!window.TinyLowcodeComponent[componentId]) {
       window.TinyLowcodeComponent[componentId] = modules[exportName]
     }
@@ -85,7 +122,7 @@ export const dynamicImportComponents = async ({ package: pkg, script, components
  */
 export const updateDependencies = ({ detail }) => {
   const { scripts = [], styles = [] } = detail || {}
-  const { styles: canvasStyles } = window.thirdPartyDeps
+  const { styles: canvasStyles } = window.componentsDepsMap
   const newStyles = [...styles].filter((item) => !canvasStyles.has(item))
 
   newStyles.forEach((item) => canvasStyles.add(item))

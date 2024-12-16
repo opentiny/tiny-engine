@@ -26,6 +26,7 @@ import {
   useMaterial,
   useHistory,
   useModal,
+  useMessage,
   getMergeRegistry,
   getMergeMeta,
   getOptions,
@@ -57,12 +58,20 @@ export default {
     const canvasRef = ref(null)
     let showModal = false // 弹窗标识
     const { canvasSrc = '' } = getOptions(meta.id) || {}
-    let canvasSrcDoc = ''
+    const canvasSrcDoc = ref('')
 
-    if (!canvasSrc) {
-      const { importMap, importStyles } = getImportMapData(getMergeMeta('engine.config')?.importMapVersion)
-      canvasSrcDoc = initCanvas(importMap, importStyles).html
-    }
+    useMessage().subscribe({
+      topic: 'init_canvas_deps',
+      callback: (deps) => {
+        if (canvasSrc) {
+          return
+        }
+
+        const { importMap, importStyles } = getImportMapData(getMergeMeta('engine.config')?.importMapVersion, deps)
+
+        canvasSrcDoc.value = initCanvas(importMap, importStyles).html
+      }
+    })
 
     const removeNode = (node) => {
       const { pageState } = useCanvas()

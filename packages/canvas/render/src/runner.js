@@ -11,7 +11,7 @@
  */
 
 import { createApp } from 'vue'
-import { addScript, addStyle, dynamicImportComponents, updateDependencies } from '../../common'
+import { addScript, addStyle, setComponents, updateDependencies } from '../../common'
 import TinyI18nHost, { I18nInjectionKey } from '@opentiny/tiny-engine-common/js/i18n'
 import Main, { api } from './RenderMain'
 import lowcode from './lowcode'
@@ -82,10 +82,10 @@ export const createRender = (config) => {
   initRenderContext()
 
   const { styles = [], scripts = [] } = config.canvasDependencies
-  const { styles: thirdStyles = [], scripts: thirdScripts = [] } = window.thirdPartyDeps || {}
+  const { scripts: componentsScriptsDeps = [], styles: componentsStylesDeps = [] } = window.componentsDepsMap || {}
 
   Promise.all([
-    ...thirdScripts.map(dynamicImportComponents),
-    ...scripts.map((src) => addScript(src)).concat([...thirdStyles, ...styles].map((src) => addStyle(src)))
+    ...componentsScriptsDeps.map(setComponents),
+    ...scripts.map((src) => addScript(src)).concat([...componentsStylesDeps, ...styles].map((src) => addStyle(src)))
   ]).finally(() => create(config))
 }

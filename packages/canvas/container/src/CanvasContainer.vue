@@ -113,7 +113,7 @@ export default {
     const beforeCanvasReady = () => {
       if (iframe.value) {
         const win = iframe.value.contentWindow
-        win.thirdPartyDeps = useMaterial().materialState.thirdPartyDeps
+        win.componentsDepsMap = useMaterial().materialState.componentsDepsMap
       }
     }
 

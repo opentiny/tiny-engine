@@ -145,7 +145,8 @@ export default {
         blockSchema,
         // 物料数据
         componentsMap: [...(appData.componentsMap || [])],
-
+        // 物料依赖
+        packages: [...(appData.packages || [])],
         meta: {
           ...(appData.meta || {})
         }

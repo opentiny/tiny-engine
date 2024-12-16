@@ -12,8 +12,6 @@
 
 import { h, provide, inject, nextTick, shallowReactive, reactive, ref, watch, watchEffect } from 'vue'
 import { I18nInjectionKey } from 'vue-i18n'
-import TinyVue from '@opentiny/vue'
-import * as TinyVueIcon from '@opentiny/vue-icon'
 import { useBroadcastChannel } from '@vueuse/core'
 import { constants, utils as commonUtils } from '@opentiny/tiny-engine-utils'
 import renderer, { parseData, setConfigure, setController, globalNotify, isStateAccessor } from './render'
@@ -69,30 +67,35 @@ watchEffect(() => {
 
 const getUtils = () => utils
 
-const setUtils = (data, clear, isForceRefresh) => {
+const setUtils = async (data, clear, isForceRefresh) => {
   if (clear) {
     reset(utils)
   }
+
   const utilsCollection = {}
-  // 目前画布还不具备远程加载utils工具类的功能，目前只能加载TinyVue组件库中的组件工具
-  data?.forEach((item) => {
-    const util = TinyVue[item.content.exportName]
-    if (util) {
-      utilsCollection[item.name] = util
-    }
 
-    // 此处需要把工具类中的icon图标也加入utils上下文环境
-    const utilIcon = TinyVueIcon[item.content.exportName]
-    if (utilIcon) {
-      utilsCollection[item.name] = utilIcon
-    }
-
-    // 解析函数式的工具类
-    if (item.type === 'function') {
+  data
+    .filter((item) => item.type === 'function')
+    .forEach((item) => {
       const defaultFn = () => {}
       utilsCollection[item.name] = generateFunction(item.content.value, context) || defaultFn
+    })
+
+  const npmUtils = data.filter((item) => item.type === 'npm' && item.content.cdnLink)
+  const results = await Promise.allSettled(npmUtils.map((item) => import(/* @vite-ignore */ item.content.package)))
+
+  results.forEach((res, index) => {
+    if (res.status !== 'fulfilled') {
+      return
     }
+
+    const module = res.value
+    const { name, content } = npmUtils[index]
+    const { exportName, destructuring } = content
+
+    utilsCollection[name] = destructuring ? module[exportName] : module.default
   })
+
   Object.assign(utils, utilsCollection)
 
   // 因为工具类并不具有响应式行为，所以需要通过修改key来强制刷新画布

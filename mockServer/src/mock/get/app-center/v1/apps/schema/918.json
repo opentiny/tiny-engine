@@ -2092,7 +2092,8 @@
           "value": "",
           "package": "axios",
           "destructuring": false,
-          "exportName": "axios"
+          "exportName": "axios",
+          "cdnLink": "https://unpkg.com/browse/axios@1.7.9/dist/esm/axios.min.js"
         }
       },
       {
