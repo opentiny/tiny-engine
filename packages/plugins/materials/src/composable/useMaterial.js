@@ -405,7 +405,7 @@ const fetchMaterial = async () => {
   materials.forEach((response) => {
     if (response.status === 'fulfilled' && response.value.materials) {
       addMaterials(response.value.materials)
-      packages.push(...response.value.materials.packages)
+      packages.push(...(response.value.materials.packages || []))
     }
   })
 
