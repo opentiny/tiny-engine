@@ -254,11 +254,11 @@ const parseFunctionString = (fnStr) => {
   return null
 }
 
-const blockComponentsMap = {}
+const blockComponentsMap = new Map()
 
 const getBlockComponent = (name) => {
-  if (blockComponentsMap[name]) {
-    return blockComponentsMap[name]
+  if (blockComponentsMap.get(name)) {
+    return blockComponentsMap.get(name)
   }
 
   const BlockComp = defineAsyncComponent(async () => {
@@ -267,7 +267,10 @@ const getBlockComponent = (name) => {
 
       for (const [fileName, value] of Object.entries(blocksBlob)) {
         // 注册异步组件
-        blockComponentsMap[fileName] = defineAsyncComponent(() => import(/* @vite-ignore */ value.blobURL))
+        blockComponentsMap.set(
+          fileName,
+          defineAsyncComponent(() => import(/* @vite-ignore */ value.blobURL))
+        )
 
         if (!value.style) {
           continue
@@ -285,7 +288,7 @@ const getBlockComponent = (name) => {
         }
       }
 
-      return blockComponentsMap[name]
+      return blockComponentsMap.get(name)
     } catch (error) {
       // 加载错误提示
       return h(BlockLoadError, { name })
@@ -293,6 +296,12 @@ const getBlockComponent = (name) => {
   })
 
   return BlockComp
+}
+
+export const removeBlockCompsCacheByName = (name) => {
+  if (blockComponentsMap.get(name)) {
+    blockComponentsMap.delete(name)
+  }
 }
 
 export const getComponent = (name) => {

@@ -907,6 +907,12 @@ export const canvasApi = {
   },
   getDataSourceMap: (...args) => {
     return canvasState.renderer.getDataSourceMap(...args)
+  },
+  removeBlockCompsCacheByName: (...args) => {
+    return canvasState.renderer.removeBlockCompsCacheByName(...args)
+  },
+  updateCanvas: (...args) => {
+    return canvasState.renderer.updateCanvas(...args)
   }
 }
 

@@ -23,7 +23,7 @@ import {
   META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
 import meta from '../../meta'
-import { getBlockCompileRes, getBlockByName } from './block-compile'
+import { getBlockCompileRes, getBlockByName, updateBlockCompileCache } from './block-compile'
 
 const { camelize, capitalize } = utils
 const { MATERIAL_TYPE } = constants
@@ -454,6 +454,7 @@ export default function () {
     getConfigureMap, // 获取物料组件的配置信息
     getBlockByName,
     getBlockCompileRes,
-    addBlockResources
+    addBlockResources,
+    updateBlockCompileCache
   }
 }

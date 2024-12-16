@@ -16,7 +16,14 @@ import TinyVue from '@opentiny/vue'
 import * as TinyVueIcon from '@opentiny/vue-icon'
 import { useBroadcastChannel } from '@vueuse/core'
 import { constants, utils as commonUtils } from '@opentiny/tiny-engine-utils'
-import renderer, { parseData, setConfigure, setController, globalNotify, isStateAccessor } from './render'
+import renderer, {
+  parseData,
+  setConfigure,
+  setController,
+  globalNotify,
+  isStateAccessor,
+  removeBlockCompsCacheByName
+} from './render'
 import {
   getNode as getNodeById,
   clearNodes,
@@ -388,6 +395,10 @@ const setRenderer = (fn) => {
   canvasRenderer = fn
 }
 
+const updateCanvas = () => {
+  refreshKey.value++
+}
+
 export default {
   setup() {
     provide('rootSchema', schema)
@@ -456,5 +467,7 @@ export const api = {
   getRenderer,
   setRenderer,
   getDesignMode,
-  setDesignMode
+  setDesignMode,
+  removeBlockCompsCacheByName,
+  updateCanvas
 }

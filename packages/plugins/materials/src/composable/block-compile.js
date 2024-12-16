@@ -1,4 +1,4 @@
-import { getMetaApi, META_SERVICE, useMaterial, useResource } from '@opentiny/tiny-engine-meta-register'
+import { getMetaApi, META_SERVICE, useMaterial, useResource, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { compile as blockCompiler } from '@opentiny/tiny-engine-block-compiler'
 
 const blockCachesMap = new Map()
@@ -36,6 +36,8 @@ export const updateBlockCompileCache = (name) => {
     // 依赖了变更的区块，删除缓存
     if (value.subBlockDeps.includes(name) || key === name) {
       blockCompileCache.delete(key)
+      // 删除画布内的缓存
+      useCanvas().canvasApi.value?.removeBlockCompsCacheByName(key)
     }
   }
 }
