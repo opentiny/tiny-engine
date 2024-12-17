@@ -51,7 +51,6 @@ const pageSettingState = reactive({
   currentPageData: {}, // 当前配置页面的数据
   pages: [],
   oldParentId: null,
-  pageTreeKey: 0,
   isNew: false,
   ROOT_ID: '0', // 根节点ID
   updateTreeData: null,
@@ -105,12 +104,11 @@ const changeTreeData = (newParentId, oldParentId) => {
     const curDataIndex = parentData.children?.findIndex?.(({ id }) => id === currentPageDataId)
 
     if (curDataIndex > -1) {
-      parentData.children.splice(curDataIndex, 1)
+      const splicedPageData = parentData.children.splice(curDataIndex, 1)
       if (!folderData.children) {
         folderData.children = []
       }
-      folderData.children.unshift(pageSettingState.currentPageData)
-      pageSettingState.pageTreeKey++
+      folderData.children.unshift(splicedPageData[0])
     }
   }
 }
