@@ -4,6 +4,11 @@
       :class="['row', { active: active === node.id }]"
       v-for="(node, rowIndex) of filteredNodesWithAncestors"
       :key="node.id"
+      draggable="true"
+      @dragstart="handleDragStart($event, node)"
+      @dragover="handleDragOver($event, node)"
+      @dragenter="handleDragOver($event, node)"
+      @drop="handleDrop($event, node)"
     >
       <div class="content" @click="handleClickRow(node)">
         <layer-lines :line-data="layerLine[rowIndex]" :level="node.level"></layer-lines>
@@ -19,7 +24,7 @@
 </template>
 
 <script setup>
-import { computed, defineEmits, defineProps } from 'vue'
+import { computed, defineEmits, defineProps, ref } from 'vue'
 import LayerLines from './LayerLines.vue'
 
 const props = defineProps({
@@ -52,7 +57,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['clickRow'])
+const emit = defineEmits(['clickRow', 'moveNode'])
 
 const flattenTreeData = (node, parentId, level = 0) => {
   const { idKey, labelKey, childrenKey } = props
@@ -92,28 +97,28 @@ const filteredNodes = computed(() => {
   return nodes.value.filter((node) => node.label.toLowerCase().includes(props.filterValue))
 })
 
-const filteredNodesWithAncestors = computed(() => {
-  /** @type {Set<string>} */
-  const idSet = new Set()
+const getAncestorIds = (nodeId) => {
+  const currentNode = nodesMap.value[nodeId]
 
-  const traverseToTop = (node) => {
-    if (idSet.has(node.id)) {
-      return
-    }
-
-    idSet.add(node.id)
-
-    const parent = nodesMap.value[node.parentId]
-
-    if (!parent) {
-      return
-    }
-
-    traverseToTop(parent)
+  if (!currentNode || !currentNode.parentId) {
+    return []
   }
 
+  const ancestors = getAncestorIds(currentNode.parentId)
+
+  ancestors.push(currentNode.parentId)
+
+  return ancestors
+}
+
+const filteredNodesWithAncestors = computed(() => {
+  const idSet = new Set()
+
   for (const node of filteredNodes.value) {
-    traverseToTop(node)
+    idSet.add(node.id)
+    for (const id of getAncestorIds(node.id)) {
+      idSet.add(id)
+    }
   }
 
   return nodes.value.filter((node) => idSet.has(node.id))
@@ -148,6 +153,39 @@ const layerLine = computed(() => {
 const handleClickRow = (node) => {
   emit('clickRow', node)
 }
+
+const draggedNode = ref(null)
+
+const handleDragStart = (event, node) => {
+  draggedNode.value = node
+}
+
+// dragover和dragenter事件回调函数都为handleDragOver。跨行拖动时，禁止拖拽图标可能会闪一下，所以将dragenter事件也加上回调函数
+const handleDragOver = (event, node) => {
+  const isDescendant = getAncestorIds(node.id).includes(draggedNode.value.id)
+
+  if (!isDescendant) {
+    // 阻止默认行为以允许放置
+    event.preventDefault()
+  }
+}
+
+const handleDrop = (event, node) => {
+  event.preventDefault()
+
+  const dragged = draggedNode.value
+  draggedNode.value = null
+
+  if (!dragged) {
+    return
+  }
+
+  const isDescendant = getAncestorIds(node.id).includes(dragged.id)
+
+  if (!isDescendant && dragged.id !== node.id && dragged.parentId !== node.id) {
+    emit('moveNode', dragged, node)
+  }
+}
 </script>
 
 <style lang="less" scoped>
@@ -165,15 +203,12 @@ const handleClickRow = (node) => {
     &:hover {
       background-color: var(--te-common-bg-container);
     }
+
     .content {
       flex: 1;
       display: flex;
       align-items: center;
       overflow: hidden;
-    }
-    .gap {
-      width: 24px;
-      height: 24px;
     }
     label {
       flex: 1;
