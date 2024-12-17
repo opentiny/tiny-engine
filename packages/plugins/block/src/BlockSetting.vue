@@ -212,7 +212,6 @@ export default {
 
         confirm({
           title,
-          status,
           message,
           exec: async () => {
             const currentId = useBlock().getCurrentBlock()?.id
