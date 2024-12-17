@@ -6,6 +6,7 @@ module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
   parserOptions: {
+    projectService: true,
     project: [path.join(__dirname, './tsconfig.json') ],
     ecmaVersion: 'latest',
   },
@@ -15,6 +16,12 @@ module.exports = {
     es2015: true,
     node: true
   },
-  rules,
+  rules: {
+    ...rules,
+    // 允许 @ts-ignore
+    "@typescript-eslint/ban-ts-comment": "off",
+    // 允许非空断言
+    "@typescript-eslint/no-non-null-asserted-optional-chain": "off"
+  },
   ignorePatterns: ['test/sample/*.vue', '.eslintrc.cjs']
 }

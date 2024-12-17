@@ -12,7 +12,7 @@ const nodeModulesPolyfillPlugin = nodeModulesPolyfillPluginCjs.default
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [dts({ rollupTypes: true }), vue()],
+  plugins: [dts({ rollupTypes: true, tsconfigPath: './tsconfig.json' }), vue()],
   optimizeDeps: {
     esbuildOptions: {
       plugins: [
@@ -28,7 +28,7 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, './src/index.ts'),
       name: 'block-compiler',
-      fileName: () => 'index.js',
+      fileName: (_format, entryName) => `${entryName}.js`,
       formats: ['es']
     },
     rollupOptions: {

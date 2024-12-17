@@ -25,7 +25,7 @@ const compileBlockTemplate = (descriptor: SFCDescriptor, id: string, bindingMeta
     expressionPlugins.push('jsx')
   }
 
-  let { code, errors } = compileTemplate({
+  const compileRes = compileTemplate({
     id,
     ast: descriptor.template?.ast,
     source: descriptor.template?.content!,
@@ -38,11 +38,24 @@ const compileBlockTemplate = (descriptor: SFCDescriptor, id: string, bindingMeta
     }
   })
 
+  const { errors } = compileRes
+  let { code } = compileRes
+
   if (isJsx) {
     code = transformVueJsx(code) || ''
   }
 
   return { code, errors }
+}
+
+interface compiledItem {
+  js: string
+  style: string
+  blobURL: string
+}
+
+interface IResultMap {
+  [key: string]: compiledItem
 }
 
 const resolveRelativeImport = (code: string, resultMap: IResultMap) => {
@@ -69,11 +82,7 @@ const resolveRelativeImport = (code: string, resultMap: IResultMap) => {
 const DEFAULT_COMPONENT_NAME = '__sfc__'
 
 // @ts-ignore
-const compileBlockScript = (
-  descriptor: SFCDescriptor,
-  id: string,
-  resultMap: IResultMap
-): [string, BindingMetadata | undefined] => {
+const compileBlockScript = (descriptor: SFCDescriptor, id: string): [string, BindingMetadata | undefined] => {
   const isJsx = testIsJsx(descriptor)
   const expressionPlugins: CompilerOptions['expressionPlugins'] = []
 
@@ -108,31 +117,21 @@ interface IParsedFileItem {
   compilerParseResult: SFCParseResult
   importedFiles: string[]
   fileNameWithRelativePath: string
-  subBlockDeps: string[]
-}
-
-interface IResultMap {
-  [key: string]: compiledItem
-}
-
-interface compiledItem {
-  js: string
-  style: string
-  blobURL: string
+  subBlockDeps?: string[]
 }
 
 // 依次构建 script、template、style，然后组装成 import
-const compileFile = (file: IParsedFileItem, resultMap: IResultMap): Omit<compiledItem, 'blobURL'> => {
+const compileFile = (file: IParsedFileItem): Omit<compiledItem, 'blobURL'> => {
   const descriptor = file.compilerParseResult.descriptor
 
   // 编译 script
-  const [compiledScript, bindings] = compileBlockScript(descriptor, file.fileName, resultMap)
+  const [compiledScript, bindings] = compileBlockScript(descriptor, file.fileName)
   let componentCode = `${compiledScript}`
 
   // 编译 template
   if (!descriptor.scriptSetup && descriptor.template) {
     // @ts-ignore
-    const { code: compiledTemplate, errors } = compileBlockTemplate(descriptor, file.fileName, bindings)
+    const { code: compiledTemplate } = compileBlockTemplate(descriptor, file.fileName, bindings)
 
     componentCode += `\n ${compiledTemplate} \n ${DEFAULT_COMPONENT_NAME}.render = render`
   }
@@ -204,13 +203,18 @@ const getJSBlobURL = (str: string) => {
 export interface IFileItem {
   fileName: string
   sourceCode: string
-  subBlockDeps: string[]
+  subBlockDeps?: string[]
 }
 
 export type IFileList = IFileItem[]
 
+export interface ICompileCacheItem {
+  compileResult: compiledItem
+  subBlockDeps: string[]
+}
+
 export interface IConfig {
-  compileCache: Map<string, Record<string, any>>
+  compileCache: Map<string, ICompileCacheItem>
 }
 
 // TODO: 支持 importMap
@@ -265,7 +269,7 @@ export const compile = (fileList: IFileList, config) => {
         js = cache.compileResult.js
         style = cache.compileResult.style
       } else {
-        const compileRes = compileFile(fileItem, resultMap)
+        const compileRes = compileFile(fileItem)
 
         js = compileRes.js
         style = compileRes.style

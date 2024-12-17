@@ -35,7 +35,7 @@ const RenderMain = {
       {}
     )
 
-    const blockComponents: { [key: string]: any } = {}
+    const blockComponents: { [key: string]: unknown } = {}
 
     for (const [fileName, value] of Object.entries(componentMap)) {
       blockComponents[fileName] = defineAsyncComponent(() => import(value.blobURL))
