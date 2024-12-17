@@ -1,8 +1,12 @@
 <template>
   <div class="draggable-tree">
-    <div :class="['row', { active: active === node.id }]" v-for="node of list" :key="node.id">
+    <div
+      :class="['row', { active: active === node.id }]"
+      v-for="(node, rowIndex) of filteredNodesWithAncestors"
+      :key="node.id"
+    >
       <div class="content" @click="handleClickRow(node)">
-        <span v-for="i in node.level - 1" :key="i" class="gap"></span>
+        <layer-lines :line-data="layerLine[rowIndex]" :level="node.level"></layer-lines>
         <div class="prefix-icon">
           <svg-icon v-if="node.rawData.isPage" name="text-page-common"></svg-icon>
           <svg-icon v-else name="text-page-folder-closed"></svg-icon>
@@ -15,13 +19,13 @@
 </template>
 
 <script setup>
-import { computed, defineProps, defineEmits } from 'vue'
+import { computed, defineEmits, defineProps } from 'vue'
+import LayerLines from './LayerLines.vue'
 
-// TODO filter 功能
 const props = defineProps({
   data: {
     type: Object,
-    default: () => ({})
+    required: true
   },
   idKey: {
     type: String,
@@ -37,12 +41,18 @@ const props = defineProps({
   },
   active: {
     type: String
+  },
+  filterValue: {
+    type: [String, Object],
+    default: ''
+  },
+  rootId: {
+    type: [String, Number],
+    default: 'root'
   }
 })
 
 const emit = defineEmits(['clickRow'])
-
-const ROOT_ID = '0'
 
 const flattenTreeData = (node, parentId, level = 0) => {
   const { idKey, labelKey, childrenKey } = props
@@ -67,8 +77,72 @@ const flattenTreeData = (node, parentId, level = 0) => {
   return result
 }
 
-const list = computed(() => {
-  return flattenTreeData({ id: ROOT_ID, children: props.data }).slice(1)
+const nodes = computed(() => {
+  return flattenTreeData({ [props.idKey]: props.rootId, [props.childrenKey]: props.data }).slice(1)
+})
+
+const nodesMap = computed(() => {
+  return nodes.value.reduce((result, node) => {
+    result[node.id] = node
+    return result
+  }, {})
+})
+
+const filteredNodes = computed(() => {
+  return nodes.value.filter((node) => node.label.toLowerCase().includes(props.filterValue))
+})
+
+const filteredNodesWithAncestors = computed(() => {
+  /** @type {Set<string>} */
+  const idSet = new Set()
+
+  const traverseToTop = (node) => {
+    if (idSet.has(node.id)) {
+      return
+    }
+
+    idSet.add(node.id)
+
+    const parent = nodesMap.value[node.parentId]
+
+    if (!parent) {
+      return
+    }
+
+    traverseToTop(parent)
+  }
+
+  for (const node of filteredNodes.value) {
+    traverseToTop(node)
+  }
+
+  return nodes.value.filter((node) => idSet.has(node.id))
+})
+
+const lines = {
+  node: 0b01, // └
+  layer: 0b10, // │
+  layerNode: 0b11 // ├
+}
+
+const layerLine = computed(() => {
+  const result = {}
+
+  const nodes = filteredNodesWithAncestors.value
+
+  for (const [index, node] of nodes.entries()) {
+    result[index] = result[index] || {}
+    result[index][node.level - 1] = lines.node
+
+    if (node.parentId !== props.rootId) {
+      const parentIndex = nodes.findIndex((item) => item.id === node.parentId)
+      for (let i = parentIndex + 1; i < index; i++) {
+        result[i][node.level - 1] = (result[i][node.level - 1] || 0) | lines.layer
+      }
+    }
+  }
+
+  return result
 })
 
 const handleClickRow = (node) => {
@@ -98,7 +172,8 @@ const handleClickRow = (node) => {
       overflow: hidden;
     }
     .gap {
-      width: 16px;
+      width: 24px;
+      height: 24px;
     }
     label {
       flex: 1;

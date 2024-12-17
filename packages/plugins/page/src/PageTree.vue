@@ -1,6 +1,6 @@
 <template>
   <div class="app-manage-search">
-    <tiny-search v-model="state.pageSearchValue" clearable placeholder="搜索" @update:modelValue="searchPageData">
+    <tiny-search v-model="state.pageSearchValue" clearable placeholder="搜索">
       <template #prefix>
         <tiny-icon-search />
       </template>
@@ -13,11 +13,13 @@
         <span class="title">{{ groupItem.groupName }}</span>
       </template>
       <div class="app-manage-tree">
-        <!-- TODO 1. filters; 2. lock, home icons; 3. pageTreeKey是否需要？ -->
+        <!-- TODO 1. lock, home icons -->
         <draggble-tree
           :data="groupItem.data"
           label-key="name"
           :active="state.currentNodeData.id"
+          :filter-value="state.pageSearchValue"
+          :root-id="pageSettingState.ROOT_ID"
           @click-row="handleClickRow"
         >
           <template #row-suffix="{ node }">
@@ -108,16 +110,11 @@ export default {
     const state = reactive({
       pageSearchValue: '',
       collapseValue: [STATIC_PAGE_GROUP_ID, COMMON_PAGE_GROUP_ID],
-      currentNodeData: {}
+      currentNodeData: { id: getMetaApi(META_SERVICE.GlobalService).getBaseInfo().pageId }
     })
-
-    const searchPageData = (_value) => {
-      // TODO
-    }
 
     const refreshPageList = async (appId) => {
       const pages = await getPageList(appId)
-      searchPageData(state.pageSearchValue)
 
       return pages
     }
@@ -317,7 +314,6 @@ export default {
       state,
       switchPage,
       pageSettingState,
-      searchPageData,
       setPopoverRef,
       IconFolderOpened: IconFolderOpened(),
       IconFolderClosed: IconFolderClosed(),
