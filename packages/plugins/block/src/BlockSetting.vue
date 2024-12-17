@@ -188,7 +188,7 @@ export default {
       const title = '删除区块'
       const message = '您确认删除该区块吗?'
 
-      confirm({ title, status, message, exec: removeBlock })
+      confirm({ title, message, exec: removeBlock })
     }
 
     const updateBlock = () => {
