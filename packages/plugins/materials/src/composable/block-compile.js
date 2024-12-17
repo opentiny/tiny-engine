@@ -34,7 +34,7 @@ const getBlockDepsIsEq = (curDeps, cacheDeps) => {
 export const updateBlockCompileCache = (name) => {
   for (const [key, value] of blockCompileCache) {
     // 依赖了变更的区块，删除缓存
-    if (value.subBlockDeps.includes(name) || key === name) {
+    if (key === name || (Array.isArray(value.subBlockDeps) && value.subBlockDeps.includes(name))) {
       blockCompileCache.delete(key)
       // 删除画布内的缓存
       useCanvas().canvasApi.value?.removeBlockCompsCacheByName(key)
