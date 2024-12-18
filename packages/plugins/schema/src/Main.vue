@@ -177,14 +177,15 @@ export default {
         line-height: 24px;
       }
       .red {
-        width: 5px;
-        height: 5px;
-        border-radius: 3px;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
         background-color: #f00;
         display: block;
         z-index: 100;
         position: absolute;
-        right: 1px;
+        top: -3px;
+        right: -4px;
       }
     }
     & > span:not(:last-child) {

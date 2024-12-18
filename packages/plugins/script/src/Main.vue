@@ -149,13 +149,13 @@ export default {
         height: 24px;
         line-height: 24px;
         .dots {
-          width: 10px;
-          height: 10px;
+          width: 6px;
+          height: 6px;
           background: var(--ti-lowcode-warning-color-1);
           border-radius: 50%;
           position: absolute;
-          top: 5px;
-          right: 40px;
+          top: 9px;
+          right: 34px;
         }
       }
       .icon-wrap {
