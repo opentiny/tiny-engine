@@ -86,6 +86,10 @@ const setUtils = async (data, clear, isForceRefresh) => {
 
   results.forEach((res, index) => {
     if (res.status !== 'fulfilled') {
+      globalNotify({
+        type: 'error',
+        message: `工具类 ${npmUtils[index].name} 加载失败，请检查CDN地址是否配置正确`
+      })
       return
     }
 

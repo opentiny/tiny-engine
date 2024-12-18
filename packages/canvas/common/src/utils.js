@@ -61,22 +61,28 @@ export const copyObject = (node) => {
  */
 const getImportMapKeys = () => {
   try {
-    const importMaps = document.querySelector('script[type="importmap"]').textContent
+    const importMapElement = document.querySelector('script[type="importmap"]')
+
+    if (!importMapElement) {
+      return []
+    }
+
+    const importMaps = importMapElement.textContent
     const importMapObject = JSON.parse(importMaps)
 
-    return Object.keys(importMapObject.import)
+    return Object.keys(importMapObject.imports)
   } catch (error) {
     return []
   }
 }
 
 /**
- * 动态导入获取组件模块
+ * 动态导入获取组件库模块
  * @param {*} pkg 模块名称
  * @param {*} script 模块的cdn地址
  * @returns
  */
-const dynamicImportComponents = async (pkg, script) => {
+const dynamicImportComponentLib = async ({ pkg, script }) => {
   if (window.TinyComponentLibs[pkg]) {
     return window.TinyComponentLibs[pkg]
   }
@@ -104,10 +110,10 @@ const dynamicImportComponents = async (pkg, script) => {
  * @param {object} param0 组件的依赖： { package： 包名，script：js文件cdn, components：组件id和导出组件名的映射关系}
  * @returns
  */
-export const setComponents = async ({ package: pkg, script, components }) => {
+export const getComponents = async ({ package: pkg, script, components }) => {
   if (!pkg) return
 
-  const modules = await dynamicImportComponents(pkg, script)
+  const modules = await dynamicImportComponentLib({ pkg, script })
 
   Object.entries(components).forEach(([componentId, exportName]) => {
     if (!window.TinyLowcodeComponent[componentId]) {
@@ -127,7 +133,7 @@ export const updateDependencies = ({ detail }) => {
 
   newStyles.forEach((item) => canvasStyles.add(item))
 
-  const promises = [...newStyles].map((src) => addStyle(src)).concat(scripts.map(dynamicImportComponents))
+  const promises = [...newStyles].map((src) => addStyle(src)).concat(scripts.map(getComponents))
 
   Promise.allSettled(promises)
 }
