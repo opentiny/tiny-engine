@@ -167,6 +167,7 @@ export default {
     justify-content: flex-end;
     align-items: center;
     .icon-wrap {
+      position: relative;
       .tiny-button {
         width: 40px;
         padding: 0;
@@ -183,7 +184,6 @@ export default {
         display: block;
         z-index: 100;
         position: absolute;
-        top: 1px;
         right: 1px;
       }
     }
