@@ -38,7 +38,7 @@ const RenderMain = {
     const blockComponents: { [key: string]: unknown } = {}
 
     for (const [fileName, value] of Object.entries(componentMap)) {
-      blockComponents[fileName] = defineAsyncComponent(() => import(value.blobURL))
+      blockComponents[fileName] = defineAsyncComponent(() => import(/* @vite-ignore */ value.blobURL))
     }
 
     const css = Object.values(componentMap)
@@ -57,23 +57,14 @@ const RenderMain = {
       document.head.appendChild(newStyleSheet)
     }
 
-    return {
-      componentMap,
-      blockComponents
-    }
-  },
-  // @ts-ignore
-  render() {
-    // @ts-ignore
-    const { blockComponents } = this
-
-    return h('div', {}, [
-      h(blockComponents.BlockJsxTest),
-      h(blockComponents.BlockTest),
-      h(blockComponents.BlockHead),
-      h(blockComponents.BlockFileName),
-      h('span', {}, 'testtest')
-    ])
+    return () =>
+      h('div', {}, [
+        h(blockComponents.BlockJsxTest),
+        h(blockComponents.BlockTest),
+        h(blockComponents.BlockHead),
+        h(blockComponents.BlockFileName),
+        h('span', {}, 'testtest')
+      ])
   }
 }
 

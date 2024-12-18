@@ -81,7 +81,6 @@ const resolveRelativeImport = (code: string, resultMap: IResultMap) => {
 
 const DEFAULT_COMPONENT_NAME = '__sfc__'
 
-// @ts-ignore
 const compileBlockScript = (descriptor: SFCDescriptor, id: string): [string, BindingMetadata | undefined] => {
   const isJsx = testIsJsx(descriptor)
   const expressionPlugins: CompilerOptions['expressionPlugins'] = []
@@ -130,7 +129,6 @@ const compileFile = (file: IParsedFileItem): Omit<compiledItem, 'blobURL'> => {
 
   // 编译 template
   if (!descriptor.scriptSetup && descriptor.template) {
-    // @ts-ignore
     const { code: compiledTemplate } = compileBlockTemplate(descriptor, file.fileName, bindings)
 
     componentCode += `\n ${compiledTemplate} \n ${DEFAULT_COMPONENT_NAME}.render = render`
@@ -210,16 +208,15 @@ export type IFileList = IFileItem[]
 
 export interface ICompileCacheItem {
   compileResult: compiledItem
-  subBlockDeps: string[]
+  subBlockDeps?: string[]
 }
 
 export interface IConfig {
-  compileCache: Map<string, ICompileCacheItem>
+  compileCache?: Map<string, ICompileCacheItem>
 }
 
 // TODO: 支持 importMap
-// @ts-ignore
-export const compile = (fileList: IFileList, config) => {
+export const compile = (fileList: IFileList, config: IConfig) => {
   const parsedFileList = fileList.map((fileItem) => {
     const { fileName, sourceCode, subBlockDeps } = fileItem
     // FIXME:这里解析的结果不能重复使用，因为可能会涉及修改引入的依赖
