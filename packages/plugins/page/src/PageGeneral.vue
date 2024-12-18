@@ -175,7 +175,6 @@ export default {
       }
     }
 
-    // TODO 遗留问题：无法收缩下拉面板的树目录。如果使用tree自带的icon，无法动态设置expandIcon和shrinkIcon
     const getNodeIcon = (data) => {
       if (data.id === ROOT_ID) {
         return null
