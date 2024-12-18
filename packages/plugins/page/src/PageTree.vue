@@ -21,6 +21,7 @@
           :filter-value="state.pageSearchValue"
           :root-id="pageSettingState.ROOT_ID"
           @click-row="handleClickRow"
+          @move-node="handleMoveNode"
         >
           <template #row-suffix="{ node }">
             <div :class="['actions']">
@@ -62,12 +63,14 @@ import {
   usePage,
   useBreadcrumb,
   useLayout,
+  useNotify,
   useMessage,
   getMetaApi,
   META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
 import { isEqual } from '@opentiny/vue-renderless/common/object'
 import { getCanvasStatus } from '@opentiny/tiny-engine-common/js/canvas'
+import { handlePageUpdate } from '@opentiny/tiny-engine-common/js/http'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { closePageSettingPanel } from './PageSetting.vue'
 import { closeFolderSettingPanel } from './PageFolderSetting.vue'
@@ -100,10 +103,11 @@ export default {
       changeTreeData,
       isCurrentDataSame,
       getPageList,
+      resetPageData,
       STATIC_PAGE_GROUP_ID,
       COMMON_PAGE_GROUP_ID
     } = usePage()
-    const { fetchPageDetail } = http
+    const { fetchPageDetail, requestUpdatePage } = http
     const { setBreadcrumbPage } = useBreadcrumb()
     const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
 
@@ -274,6 +278,7 @@ export default {
       action: (node) => {
         item.action?.(node)
         // 点击 action 后，关闭 popover 弹窗
+        // TODO 这里不符合aria-hidden的规范，控制台会打印错误
         popoverRefs[node.id]?.doClose?.()
       }
     }))
@@ -286,6 +291,73 @@ export default {
         return rowOperations.filter((item) => item.type !== 'copy')
       }
       return rowOperations
+    }
+
+    const updatePage = (pageDetail) => {
+      const { id, name, page_content } = pageDetail
+      const params = {
+        ...pageDetail,
+        page_content: {
+          ...page_content,
+          fileName: name
+        }
+      }
+
+      const isCurEditPage = pageState?.currentPage?.id === id
+
+      return handlePageUpdate(id, params, false, isCurEditPage)
+    }
+
+    const updateFolder = (pageDetail) => {
+      const { id } = pageDetail
+
+      // requestUpdatePage加了then和catch回调函数，而handlePageUpdate没有加，是因为handlePageUpdate内部都已经有了类似逻辑
+      return requestUpdatePage(id, { ...pageDetail, page_content: null })
+        .then(() => {
+          pageSettingState.updateTreeData()
+          useNotify({
+            type: 'success',
+            message: '更新文件夹成功!'
+          })
+        })
+        .catch((error) => {
+          useNotify({
+            type: 'error',
+            title: '更新文件夹失败',
+            message: JSON.stringify(error?.message || error)
+          })
+        })
+    }
+
+    const handleMoveNode = (dragged, newParent) => {
+      if (isEqual(pageSettingState.currentPageData, pageSettingState.currentPageDataCopy)) {
+        closePageSettingPanel()
+        closeFolderSettingPanel()
+        pageSettingState.currentPageData.id = dragged.id
+        changeTreeData(newParent.id, dragged.parentId)
+        resetPageData()
+        // TODO 页面更换父节点后，原来每次变更需要填写变更信息
+        fetchPageDetail(dragged.id).then((pageDetail) => {
+          pageDetail.parentId = newParent.id
+          if (pageDetail.isPage) {
+            updatePage(pageDetail)
+          } else {
+            updateFolder(pageDetail)
+          }
+        })
+      } else {
+        confirm({
+          title: '提示',
+          message: '更改关未保存，是否要放弃这些更改？',
+          exec: () => {
+            if (!pageSettingState.isNew) {
+              changeTreeData(pageSettingState.oldParentId, pageSettingState.currentPageData.parentId)
+              Object.assign(pageSettingState.currentPageData, pageSettingState.currentPageDataCopy)
+            }
+            closePageSettingPanel()
+          }
+        })
+      }
     }
 
     useMessage().subscribe({
@@ -319,6 +391,7 @@ export default {
       IconFolderClosed: IconFolderClosed(),
       getRowOperations,
       handleClickRow,
+      handleMoveNode,
       handleClickPageSettings
     }
   }
