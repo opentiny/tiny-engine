@@ -246,16 +246,6 @@ const generateThirdPartyDeps = (components) => {
 }
 
 /**
- * 设置第三方组件库依赖
- * @param {array} components 组件物料列表
- */
-const setThirdPartyDeps = (components) => {
-  const { scripts = [], styles = [] } = generateThirdPartyDeps(components)
-  materialState.componentsDepsMap.scripts.push(...scripts)
-  styles.forEach((item) => materialState.componentsDepsMap.styles.add(item))
-}
-
-/**
  * 添加组件snippets(分组相同则合并)
  * @param {*} componentsSnippets 待添加的组件snippets
  * @param {*} snippetsData 当前snippets
@@ -277,44 +267,91 @@ const addComponentSnippets = (componentSnippets, snippetsData) => {
   return snippetsData
 }
 
+/**
+ * 解析工具类依赖
+ * @returns
+ */
 const getUtilsDependencies = () => {
   const { utils } = useResource().resState
 
   return utils
     .filter((item) => item.type === 'npm' && item.content.cdnLink)
     .map((item) => {
-      const { package: pkg, cdnLink } = item.content
+      const { package: pkg, version, cdnLink } = item.content
 
       return {
         package: pkg,
+        version,
         script: cdnLink
       }
     })
 }
 
+/**
+ * 组装画布的依赖，通知画布初始化或更新importmap
+ */
 const setCanvasDeps = () => {
-  const allPackages = [...getUtilsDependencies(), ...materialState.dependencies]
-  const deps = allPackages.reduce(
-    ({ scripts, styles }, { package: pkg, script, css }) => {
-      if (scripts.find((item) => item.package === pkg)) {
-        return { scripts, styles }
-      }
+  const { scripts, styles } = useResource().resState.canvasDeps
 
-      scripts.push({ package: pkg, script })
-      css && styles.add(css)
-
-      return { scripts, styles }
-    },
-    {
-      scripts: [],
-      styles: new Set()
+  // 将utils依赖添加到canvasDeps中
+  getUtilsDependencies().forEach((util) => {
+    if (scripts.find((item) => util.package === item.package)) {
+      return
     }
-  )
+
+    scripts.push(util)
+  })
 
   useMessage().publish({
     topic: 'init_canvas_deps',
-    data: { scripts: deps.scripts, styles: [...deps.styles] }
+    data: { scripts: scripts, styles: [...styles] }
   })
+}
+
+//
+const parseMaterialsDependencies = (materialBundle) => {
+  const { packages, components } = materialBundle
+
+  const { scripts: scriptsDeps, styles: stylesDeps } = useResource().resState.canvasDeps
+
+  packages?.forEach((pkg) => {
+    if (scriptsDeps.find((item) => item.package === pkg.package)) {
+      return
+    }
+
+    scriptsDeps.push(pkg)
+
+    if (!pkg.css) {
+      return
+    }
+
+    if (Array.isArray(pkg.css)) {
+      pkg.css.map(stylesDeps.add)
+    } else {
+      stylesDeps.add(pkg.css)
+    }
+  })
+
+  // 解析组件npm字段
+  const { scripts, styles } = generateThirdPartyDeps(components)
+  // 合并到canvasDeps中
+  scripts.forEach((item) => {
+    const dep = scriptsDeps.find((dep) => dep.package === item.package)
+
+    if (dep) {
+      dep.components = { ...dep.components, ...item.components }
+    }
+  })
+
+  if (!styles) {
+    return
+  }
+
+  if (Array.isArray(styles)) {
+    styles.map(stylesDeps.add)
+  } else {
+    stylesDeps.add(styles)
+  }
 }
 
 /**
@@ -324,8 +361,8 @@ const setCanvasDeps = () => {
  */
 const addComponents = (materialBundle) => {
   const { snippets, components } = materialBundle
-  // 解析组件三方依赖
-  setThirdPartyDeps(components)
+  // 解析物料依赖
+  parseMaterialsDependencies(materialBundle)
   // 注册组件到map中
   components.forEach(registerComponentToResource)
   // 添加组件snippets
@@ -400,17 +437,14 @@ export const getMaterialsRes = async () => {
 
 const fetchMaterial = async () => {
   const materials = await getMaterialsRes()
-  const packages = []
 
   materials.forEach((response) => {
     if (response.status === 'fulfilled' && response.value.materials) {
       addMaterials(response.value.materials)
-      packages.push(...(response.value.materials.packages || []))
     }
   })
 
-  materialState.dependencies = packages
-  setCanvasDeps(packages)
+  setCanvasDeps()
 }
 
 /**

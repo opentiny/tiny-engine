@@ -33,7 +33,8 @@ const resState = reactive({
   pageTree: [],
   langs: {},
   utils: {},
-  globalState: []
+  globalState: [],
+  canvasDeps: { scripts: [], styles: new Set() }
 })
 
 const initPage = (pageInfo) => {

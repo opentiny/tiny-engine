@@ -37,7 +37,6 @@ import {
   useBlock,
   useModal,
   useResource,
-  useMaterial,
   useNotify,
   getMetaApi,
   META_SERVICE
@@ -133,12 +132,7 @@ export default {
             id: groupId,
             blocks,
             app: getAppId()
-          }).then((res) => {
-            const selectedId = selectedBlockArray.value.map((b) => b.id)
-            const addedBlocks = res.blocks.filter((item) => selectedId.includes(item.id))
-
-            useMaterial().updateCanvasDependencies(addedBlocks)
-
+          }).then(() => {
             isRefresh.value = true
             state.searchValue = ''
             selectedBlockArray.value.length = 0

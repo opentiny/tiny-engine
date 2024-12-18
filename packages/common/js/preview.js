@@ -12,7 +12,7 @@
 
 import { constants } from '@opentiny/tiny-engine-utils'
 import { isDevelopEnv } from './environments'
-import { useMaterial } from '@opentiny/tiny-engine-meta-register'
+import { useResource } from '@opentiny/tiny-engine-meta-register'
 // prefer old unicode hacks for backward compatibility
 
 const { COMPONENT_NAME } = constants
@@ -26,13 +26,15 @@ const open = (params = {}) => {
   params.app = paramsMap.get('id')
   params.tenant = paramsMap.get('tenant')
 
-  const { scripts, styles } = useMaterial().materialState.componentsDepsMap
+  const { scripts, styles } = useResource().resState.canvasDeps
   params.scripts = {}
+
   scripts
     .filter((item) => item.script)
     .forEach((item) => {
       params.scripts[item.package] = item.script
     })
+
   params.styles = [...styles]
 
   const href = window.location.href.split('?')[0] || './'
