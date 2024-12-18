@@ -54,7 +54,7 @@ interface compiledItem {
   blobURL: string
 }
 
-interface IResultMap {
+export interface IResultMap {
   [key: string]: compiledItem
 }
 
