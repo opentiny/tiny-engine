@@ -255,6 +255,10 @@ const parseFunctionString = (fnStr) => {
 }
 
 const blockComponentsMap = new Map()
+const blockComponentsBlobUrlMap = new Map()
+
+// TODO: 这里的全局 getter 方法名，可以做成配置化
+window.getBlockComponentBlobUrl = (name) => blockComponentsBlobUrlMap.get(name)
 
 const getBlockComponent = (name) => {
   if (blockComponentsMap.get(name)) {
@@ -271,6 +275,8 @@ const getBlockComponent = (name) => {
           fileName,
           defineAsyncComponent(() => import(/* @vite-ignore */ value.blobURL))
         )
+
+        blockComponentsBlobUrlMap.set(fileName, value.blobURL)
 
         if (!value.style) {
           continue

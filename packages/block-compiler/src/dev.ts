@@ -37,6 +37,11 @@ const RenderMain = {
 
     const blockComponents: { [key: string]: unknown } = {}
 
+    // @ts-ignore
+    window.getBlockComponentBlobUrl = (name) => {
+      return componentMap?.[name]?.blobURL
+    }
+
     for (const [fileName, value] of Object.entries(componentMap)) {
       blockComponents[fileName] = defineAsyncComponent(() => import(/* @vite-ignore */ value.blobURL))
     }

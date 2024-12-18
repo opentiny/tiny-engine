@@ -58,21 +58,62 @@ export interface IResultMap {
   [key: string]: compiledItem
 }
 
-const resolveRelativeImport = (code: string, resultMap: IResultMap) => {
+const resolveRelativeImport = (code: string, globalGetterName = 'getBlockComponentBlobUrl') => {
   const magicStr = new MagicString(code)
   const ast = babelParse(code, { sourceType: 'module', plugins: ['jsx'] }).program.body
+
+  let vueImportNode = null
+  let hasDefineAsyncComponent = false
 
   for (const node of ast) {
     if (node.type === 'ImportDeclaration') {
       const source = node.source.value
-
-      if (source.startsWith('./')) {
+      if (source === 'vue' && !node.specifiers.find((spec) => spec.type === 'ImportNamespaceSpecifier')) {
+        vueImportNode = node
+      }
+      // 标识相对路径引入的 .vue 文件为区块，使用异步组件替换
+      if (source.startsWith('./') && node.source.value.endsWith('.vue')) {
+        hasDefineAsyncComponent = true
         const fileName = node.source.value.replace(/^(\.\/+)/, '').slice(0, -4)
+        // 默认导出名
+        const defaultImportId = node.specifiers.find((spec) => spec.type === 'ImportDefaultSpecifier')?.local?.name
 
-        if (resultMap[fileName]) {
-          magicStr.overwrite(node.source.start!, node.source.end!, `'${resultMap[fileName].blobURL}'`)
+        // 不存在默认导出，跳过
+        if (!defaultImportId) {
+          continue
+        }
+
+        // 声明异步组件 const Block = defineAsyncComponent(() => import(getBlockUrl(Block)))
+        magicStr.appendLeft(
+          node.start!,
+          `const ${defaultImportId} = defineAsyncComponent(() => import(window.${globalGetterName}('${fileName}')))`
+        )
+
+        // 移除 import Block from './Block.vue' 语句
+        magicStr.remove(node.start!, node.end!)
+      }
+    }
+  }
+
+  // TODO: 拿到类型声明，拆分到另一个函数
+  if (hasDefineAsyncComponent) {
+    // 存在异步引入组件
+    if (vueImportNode) {
+      const asyncSpec = vueImportNode.specifiers.find(
+        (spec) => spec.type === 'ImportSpecifier' && spec.local.name === 'defineAsyncComponent'
+      )
+
+      if (!asyncSpec) {
+        const firstRelativeSpec = vueImportNode.specifiers.find((spec) => spec.type === 'ImportSpecifier')
+
+        if (firstRelativeSpec) {
+          magicStr.appendLeft(firstRelativeSpec.start!, 'defineAsyncComponent, ')
+        } else {
+          magicStr.appendRight(vueImportNode.specifiers[0].end!, ', { defineAsyncComponent }')
         }
       }
+    } else {
+      magicStr.appendLeft(ast[0].start!, "import { defineAsyncComponent } from 'vue'\n")
     }
   }
 
@@ -116,7 +157,6 @@ interface IParsedFileItem {
   compilerParseResult: SFCParseResult
   importedFiles: string[]
   fileNameWithRelativePath: string
-  subBlockDeps?: string[]
 }
 
 // 依次构建 script、template、style，然后组装成 import
@@ -201,24 +241,23 @@ const getJSBlobURL = (str: string) => {
 export interface IFileItem {
   fileName: string
   sourceCode: string
-  subBlockDeps?: string[]
 }
 
 export type IFileList = IFileItem[]
 
 export interface ICompileCacheItem {
   compileResult: compiledItem
-  subBlockDeps?: string[]
 }
 
 export interface IConfig {
   compileCache?: Map<string, ICompileCacheItem>
+  globalGetterName?: string
 }
 
 // TODO: 支持 importMap
 export const compile = (fileList: IFileList, config: IConfig) => {
   const parsedFileList = fileList.map((fileItem) => {
-    const { fileName, sourceCode, subBlockDeps } = fileItem
+    const { fileName, sourceCode } = fileItem
     // FIXME:这里解析的结果不能重复使用，因为可能会涉及修改引入的依赖
     const { descriptor, errors } = parse(sourceCode, { filename: fileName })
 
@@ -241,8 +280,7 @@ export const compile = (fileList: IFileList, config: IConfig) => {
         errors
       },
       importedFiles,
-      fileNameWithRelativePath: `./${fileName}.vue`,
-      subBlockDeps
+      fileNameWithRelativePath: `./${fileName}.vue`
     }
   })
 
@@ -272,7 +310,7 @@ export const compile = (fileList: IFileList, config: IConfig) => {
         style = compileRes.style
       }
 
-      const resolvedImportJs = resolveRelativeImport(js, resultMap)
+      const resolvedImportJs = resolveRelativeImport(js, config?.globalGetterName)
 
       resultMap[fileName] = {
         js: resolvedImportJs,
@@ -280,10 +318,7 @@ export const compile = (fileList: IFileList, config: IConfig) => {
         blobURL: getJSBlobURL(resolvedImportJs)
       }
 
-      compileCache.set(fileName, {
-        compileResult: resultMap[fileName],
-        subBlockDeps: fileItem.subBlockDeps
-      })
+      compileCache.set(fileName, resultMap[fileName])
 
       compiledFilesSet.add(fileItem.fileNameWithRelativePath)
     }

@@ -1,91 +1,48 @@
 import { getMetaApi, META_SERVICE, useMaterial, useResource, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { compile as blockCompiler } from '@opentiny/tiny-engine-block-compiler'
 
-const blockCachesMap = new Map()
 const blockCompileCache = new Map()
 
 export const fetchBlockSchema = async (blockName) =>
   getMetaApi(META_SERVICE.Http).get(`/material-center/api/block?label=${blockName}`)
 
-const getBlockDepsIsEq = (curDeps, cacheDeps) => {
-  const curDepsKeys = Object.keys(curDeps).sort()
-  const cacheDepsKeys = Object.keys(cacheDeps).sort()
-
-  // 依赖有减少或者增加
-  if (curDepsKeys.length !== cacheDepsKeys.length) {
-    return false
-  }
-
-  for (let i = 0; i++; i < curDepsKeys.length) {
-    // 依赖换了
-    if (curDepsKeys[i] !== cacheDepsKeys[i]) {
-      return false
-    }
-    // 换版本号了
-    if (curDeps[curDepsKeys[i]] !== cacheDeps[cacheDepsKeys[i]]) {
-      return false
-    }
-  }
-
-  return true
-}
-
 // TODO: 待验证
 export const updateBlockCompileCache = (name) => {
-  for (const [key, value] of blockCompileCache) {
-    // 依赖了变更的区块，删除缓存
-    if (key === name || (Array.isArray(value.subBlockDeps) && value.subBlockDeps.includes(name))) {
-      blockCompileCache.delete(key)
-      // 删除画布内的缓存
-      useCanvas().canvasApi.value?.removeBlockCompsCacheByName(key)
-    }
+  if (blockCompileCache.has(name)) {
+    blockCompileCache.delete(name)
+
+    useCanvas().canvasApi.value?.removeBlockCompsCacheByName(name)
   }
 }
 
 // 预构建 block
 export const getBlockCompileRes = async (schema) => {
+  const name = schema.fileName
+
+  if (blockCompileCache.get(name)) {
+    return {
+      [name]: blockCompileCache.get(name)
+    }
+  }
+
   const generateCodeService = getMetaApi('engine.service.generateCode')
   const blocks = await generateCodeService.getAllNestedBlocksSchema(schema, fetchBlockSchema)
   const componentsMap = useResource().resState.componentsMap
-  const blockDepsVersion = Object.fromEntries(blocks.map(({ fileName, version }) => [fileName, version]))
-  const schemaStr = JSON.stringify(schema)
 
   // 调用 api 得到页面出码结果
   let blocksSourceCode = null
+  const blocksWithoutCache = blocks.filter((blockItem) => !blockCompileCache.get(blockItem.fileName))
 
-  try {
-    const cache = blockCachesMap.get(schema.fileName)
-    const isSchemaEq = cache.schema === schemaStr
-    const isDepsEq = getBlockDepsIsEq(blockDepsVersion, cache.blockDepsVersion)
-
-    // 有缓存，且依赖、schema 都没变，直接使用缓存，不再重新出码
-    if (isSchemaEq && isDepsEq && cache.blocksSourceCode) {
-      blocksSourceCode = cache.blocksSourceCode
-    }
-  } catch (error) {
-    // cache miss
-  }
-
-  // 缓存匹配失败，重新出码
-  if (!blocksSourceCode) {
-    blocksSourceCode = [schema, ...blocks].map((blockSchema) => {
-      const sourceCode = generateCodeService.generatePageCode(blockSchema, componentsMap || [], {
-        blockRelativePath: './'
-      })
-
-      return {
-        fileName: blockSchema.fileName,
-        sourceCode,
-        subBlockDeps: blockSchema.subBlockDeps
-      }
+  // 需要出码的区块
+  blocksSourceCode = [schema, ...blocksWithoutCache].map((blockSchema) => {
+    const sourceCode = generateCodeService.generatePageCode(blockSchema, componentsMap || [], {
+      blockRelativePath: './'
     })
-  }
 
-  // 将出码结果缓存到 blockCachesMap
-  blockCachesMap.set(schema.fileName, {
-    blockDepsVersion,
-    schema: schemaStr,
-    blocksSourceCode
+    return {
+      fileName: blockSchema.fileName,
+      sourceCode
+    }
   })
 
   const compiledResult = blockCompiler(blocksSourceCode, {
