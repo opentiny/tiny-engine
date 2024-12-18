@@ -104,11 +104,11 @@ const changeTreeData = (newParentId, oldParentId) => {
     const curDataIndex = parentData.children?.findIndex?.(({ id }) => id === currentPageDataId)
 
     if (curDataIndex > -1) {
-      const splicedPageData = parentData.children.splice(curDataIndex, 1)
+      const splicedPageData = parentData.children.splice(curDataIndex, 1)[0]
       if (!folderData.children) {
         folderData.children = []
       }
-      folderData.children.unshift(splicedPageData[0])
+      folderData.children.unshift(splicedPageData)
     }
   }
 }
