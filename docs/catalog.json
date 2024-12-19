@@ -1,143 +1,199 @@
 {
-  "name": "root",
-  "items": [
+  "chapters": [
     {
-      "name": "新手指引",
-      "items": [{ "name": "简介.md" }, { "name": "快速上手.md" }]
-    },
-    {
-      "name": "基础功能",
-      "items": [
-        { "name": "初识设计器.md" },
-        { "name": "设计前端应用流程.md" },
-        { "name": "设计器界面模块简介.md" },
-        { "name": "页面管理.md" },
-        { "name": "使用组件.md" },
-        { "name": "样式设置.md" },
-        { "name": "使用状态管理和变量绑定.md" },
-        { "name": "行内样式绑定状态变量.md" },
-        { "name": "查看大纲树.md" },
-        { "name": "国际化.md" },
-        { "name": "页面和区块预览.md" }
-      ]
-    },
-    {
-      "name": "进阶功能",
-      "items": [
-        { "name": "区块管理.md" },
-        { "name": "使用JS面板和事件绑定.md" },
-        { "name": "使用工具类方法 utils.md" },
-        { "name": "高级面板设置.md" },
-        { "name": "如何使用插槽.md" },
-        { "name": "循环渲染.md" },
-        { "name": "条件渲染.md" },
-        { "name": "集成ChatGPT搭建简单页面能力.md" },
-        { "name": "数据源和Collection—远程字段.md" },
-        { "name": "数据源和Collection—mock数据.md" },
-        { "name": "数据源和Collection—使用数据源.md" }
-      ]
-    },
-    {
-      "name": "教程",
-      "items": [{ "name": "从零搭建一个页面.md" }, { "name": "第一期2023.10.27.md" }]
-    },
-    {
-      "name": "生态中心",
-      "items": [
-        { "name": "介绍.md" },
-        { "name": "如何导入组件库.md" },
-        { "name": "如何发布区块.md" },
-        { "name": "发布其他生态.md" }
-      ]
-    },
-    {
-      "name": "关于应用",
-      "items": [{ "name": "创建应用（创建空白应用、从模板创建应用）.md" }, { "name": "开发应用.md" }]
-    },
-    {
-      "name": "关于物料",
-      "items": [
-        { "name": "介绍.md" },
-        { "name": "创建物料资产包.md" },
-        { "name": "添加组件库和区块.md" },
-        { "name": "构建物料资产包.md" }
-      ]
-    },
-    {
-      "name": "关于设计器",
-      "items": [
-        { "name": "介绍.md" },
-        { "name": "创建设计器.md" },
-        { "name": "定制物料资产包、主题、DSL、工具栏和插件栏.md" },
-        { "name": "定制设计器.md" }
-      ]
-    },
-    {
-      "name": "开始",
-      "items": [{ "name": "简介.md" }, { "name": "快速上手.md" }]
-    },
-    {
-      "name": "解决方案",
-      "items": [
-        { "name": "服务端部署方案.md" },
-        { "name": "区块发布方案.md" },
-        { "name": "区块局域网发布方案.md" },
-        { "name": "设计器中引入第三方组件库.md" },
-        { "name": "物料同步方案.md" }
-      ]
-    },
-    {
-      "name": "扩展能力介绍",
-      "items": [{ "name": "新架构介绍.md" }, { "name": "注册表.md" }, { "name": "元服务和元应 用.md" }]
-    },
-    {
-      "name": "扩展能力使用教程",
-      "items": [
-        { "name": "如何开发插件.md" },
+      "name": "使用指南",
+      "sections": [
         {
-          "name": "出码功能",
-          "items": [
-            { "name": "出码功能简介与使用.md" },
-            { "name": "如何自定义出码.md" },
-            { "name": "如何自定义出码插件.md" },
-            { "name": "自定义页面出码插件.md" },
-            { "name": "官方出码能力API.md" }
+          "name": "新手指引",
+          "path": "新手指引",
+          "articles": [
+            { "name": "简介", "path": "简介.md" },
+            { "name": "快速上手", "path": "快速上手.md" }
           ]
         },
-        { "name": "定制插件UI.md" },
-        { "name": "定制元服务逻辑.md" },
-        { "name": "开发设置器组件.md" }
-      ]
-    },
-    {
-      "name": "API",
-      "items": [
-        { "name": "API总览.md" },
-        { "name": "主包API.md" },
-        { "name": "画布API.md" },
-        { "name": "全局布局API.md" },
-        { "name": "物料API.md" },
-        { "name": "设置面板API.md" },
         {
-          "name": "后端API",
-          "items": [
-            { "name": "AI功能接口.md" },
-            { "name": "应用管理.md" },
-            { "name": "区块分 类.md" },
-            { "name": "应用工具类管理.md" },
-            { "name": "区块管理.md" },
-            { "name": "数据源管理.md" },
-            { "name": "DSL代码生成.md" },
-            { "name": "物料中心.md" },
-            { "name": "页面管理.md" },
-            { "name": "APP服务.md" }
+          "name": "基础功能",
+          "path": "基础功能",
+          "articles": [
+            { "name": "初识设计器", "path": "初识设计器.md" },
+            { "name": "设计前端应用流程", "path": "设计前端应用流程.md" },
+            { "name": "设计器界面模块简介", "path": "设计器界面模块简介.md" },
+            { "name": "页面管理", "path": "页面管理.md" },
+            { "name": "使用组件", "path": "使用组件.md" },
+            { "name": "样式设置", "path": "样式设置.md" },
+            { "name": "使用状态管理和变量绑定", "path": "使用状态管理和变量绑定.md" },
+            { "name": "行内样式绑定状态变量", "path": "行内样式绑定状态变量.md" },
+            { "name": "查看大纲树", "path": "查看大纲树.md" },
+            { "name": "国际化", "path": "国际化.md" },
+            { "name": "页面和区块预览", "path": "页面和区块预览.md" }
+          ]
+        },
+        {
+          "name": "进阶功能",
+          "path": "进阶功能",
+          "articles": [
+            { "name": "区块管理", "path": "区块管理.md" },
+            { "name": "使用JS面板和事件绑定", "path": "使用JS面板和事件绑定.md" },
+            { "name": "使用工具类方法 utils", "path": "使用工具类方法 utils.md" },
+            { "name": "高级面板设置", "path": "高级面板设置.md" },
+            { "name": "如何使用插槽", "path": "如何使用插槽.md" },
+            { "name": "循环渲染", "path": "循环渲染.md" },
+            { "name": "条件渲染", "path": "条件渲染.md" },
+            { "name": "集成ChatGPT搭建简单页面能力", "path": "集成ChatGPT搭建简单页面能力.md" },
+            { "name": "数据源和Collection—远程字段", "path": "数据源和Collection—远程字段.md" },
+            { "name": "数据源和Collection—mock数据", "path": "数据源和Collection—mock数据.md" },
+            { "name": "数据源和Collection—使用数据源", "path": "数据源和Collection—使用数据源.md" }
+          ]
+        },
+        {
+          "name": "教程",
+          "path": "教程",
+          "articles": [
+            { "name": "从零搭建一个页面", "path": "从零搭建一个页面.md" },
+            { "name": "第一期2023.10.27", "path": "第一期2023.10.27.md" }
           ]
         }
       ]
     },
     {
-      "name": "实战案例",
-      "items": [{ "name": "PDM元数据审批电子流.md" }, { "name": "图元编排设计器.md" }, { "name": "SMB轻量应用服务.md" }]
+      "name": "平台开发指南",
+      "sections": [
+        {
+          "name": "开始",
+          "path": "开始",
+          "articles": [
+            { "name": "简介", "path": "简介.md" },
+            { "name": "快速上手", "path": "快速上手.md" }
+          ]
+        },
+        {
+          "name": "解决方案",
+          "path": "解决方案",
+          "articles": [
+            { "name": "服务端部署方案", "path": "服务端部署方案.md" },
+            { "name": "区块发布方案", "path": "区块发布方案.md" },
+            { "name": "区块局域网发布方案", "path": "区块局域网发布方案.md" },
+            { "name": "设计器中引入第三方组件库", "path": "设计器中引入第三方组件库.md" },
+            { "name": "物料同步方案", "path": "物料同步方案.md" }
+          ]
+        },
+        {
+          "name": "扩展能力介绍",
+          "path": "扩展能力介绍",
+          "articles": [
+            { "name": "新架构介绍", "path": "新架构介绍.md" },
+            { "name": "注册表", "path": "注册表.md" },
+            { "name": "元服务和元应用", "path": "元服务和元应用.md" }
+          ]
+        },
+        {
+          "name": "扩展能力使用教程",
+          "path": "扩展能力使用教程",
+          "articles": [
+            { "name": "如何开发插件", "path": "如何开发插件.md" },
+            {
+              "name": "出码功能",
+              "path": "出码功能",
+              "articles": [
+                { "name": "出码功能简介与使用", "path": "出码功能简介与使用.md" },
+                { "name": "如何自定义出码", "path": "如何自定义出码.md" },
+                { "name": "如何自定义出码插件", "path": "如何自定义出码插件.md" },
+                { "name": "自定义页面出码插件", "path": "自定义页面出码插件.md" },
+                { "name": "官方出码能力API", "path": "官方出码能力API.md" }
+              ]
+            },
+            { "name": "定制插件UI", "path": "定制插件UI.md" },
+            { "name": "定制元服务逻辑", "path": "定制元服务逻辑.md" },
+            { "name": "开发设置器组件", "path": "开发设置器组件.md" }
+          ]
+        },
+        {
+          "name": "API",
+          "path": "API",
+          "articles": [
+            { "name": "API总览", "path": "API总览.md" },
+            { "name": "主包API", "path": "主包API.md" },
+            { "name": "画布API", "path": "画布API.md" },
+            { "name": "全局布局API", "path": "全局布局API.md" },
+            { "name": "物料API", "path": "物料API.md" },
+            { "name": "设置面板API", "path": "设置面板API.md" },
+            {
+              "name": "后端API",
+              "path": "后端API",
+              "articles": [
+                { "name": "AI功能接口", "path": "AI功能接口.md" },
+                { "name": "应用管理", "path": "应用管理.md" },
+                { "name": "区块分类", "path": "区块分类.md" },
+                { "name": "应用工具类管理", "path": "应用工具类管理.md" },
+                { "name": "区块管理", "path": "区块管理.md" },
+                { "name": "数据源管理", "path": "数据源管理.md" },
+                { "name": "DSL代码生成", "path": "DSL代码生成.md" },
+                { "name": "物料中心", "path": "物料中心.md" },
+                { "name": "页面管理", "path": "页面管理.md" },
+                { "name": "APP服务", "path": "APP服务.md" }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "实战案例",
+          "path": "实战案例",
+          "articles": [
+            { "name": "PDM元数据审批电子流", "path": "PDM元数据审批电子流.md" },
+            { "name": "图元编排设计器", "path": "图元编排设计器.md" },
+            { "name": "SMB轻量应用服务", "path": "SMB轻量应用服务.md" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "网站文档",
+      "sections": [
+        {
+          "name": "生态中心",
+          "path": "生态中心",
+          "articles": [
+            { "name": "介绍", "path": "介绍.md" },
+            { "name": "如何导入组件库", "path": "如何导入组件库.md" },
+            { "name": "如何发布区块", "path": "如何发布区块.md" },
+            { "name": "发布其他生态", "path": "发布其他生态.md" }
+          ]
+        },
+        {
+          "name": "关于应用",
+          "path": "关于应用",
+          "articles": [
+            {
+              "name": "创建应用（创建空白应用、从模板创建应用）",
+              "path": "创建应用（创建空白应用、从模板创建应用）.md"
+            },
+            { "name": "开发应用", "path": "开发应用.md" }
+          ]
+        },
+        {
+          "name": "关于物料",
+          "path": "关于物料",
+          "articles": [
+            { "name": "介绍", "path": "介绍.md" },
+            { "name": "创建物料资产包", "path": "创建物料资产包.md" },
+            { "name": "添加组件库和区块", "path": "添加组件库和区块.md" },
+            { "name": "构建物料资产包", "path": "构建物料资产包.md" }
+          ]
+        },
+        {
+          "name": "关于设计器",
+          "path": "关于设计器",
+          "articles": [
+            { "name": "介绍", "path": "介绍.md" },
+            { "name": "创建设计器", "path": "创建设计器.md" },
+            {
+              "name": "定制物料资产包、主题、DSL、工具栏和插件栏",
+              "path": "定制物料资产包、主题、DSL、工具栏和插件栏.md"
+            },
+            { "name": "定制设计器", "path": "定制设计器.md" }
+          ]
+        }
+      ]
     }
   ]
 }
