@@ -19,7 +19,7 @@ export const updateBlockCompileCache = (name) => {
 export const getBlockCompileRes = async (schema) => {
   const name = schema.fileName
 
-  if (blockCompileCache.get(name)) {
+  if (blockCompileCache.has(name)) {
     return {
       [name]: blockCompileCache.get(name)
     }
@@ -31,7 +31,7 @@ export const getBlockCompileRes = async (schema) => {
 
   // 调用 api 得到页面出码结果
   let blocksSourceCode = null
-  const blocksWithoutCache = blocks.filter((blockItem) => !blockCompileCache.get(blockItem.fileName))
+  const blocksWithoutCache = blocks.filter((blockItem) => !blockCompileCache.has(blockItem.fileName))
 
   // 需要出码的区块
   blocksSourceCode = [schema, ...blocksWithoutCache].map((blockSchema) => {
