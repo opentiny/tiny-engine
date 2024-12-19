@@ -203,7 +203,6 @@ const handleDrop = (event, node) => {
     &:hover {
       background-color: var(--te-common-bg-container);
     }
-
     .content {
       flex: 1;
       display: flex;

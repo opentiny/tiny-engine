@@ -9060,7 +9060,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Select",
+            "exportName": "Breadcrumb",
             "version": "3.14.0",
             "destructuring": true,
             "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
@@ -10732,7 +10732,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "PopEditor",
+            "exportName": "Popeditor",
             "version": "3.14.0",
             "destructuring": true,
             "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",

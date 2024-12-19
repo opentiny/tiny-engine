@@ -70,6 +70,7 @@ export default {
   justify-content: center;
 }
 .footer-toolbar {
+  margin-right: -12px;
   .icon-wrap {
     width: 20px;
     height: 20px;
