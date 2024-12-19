@@ -15,7 +15,7 @@ function genBlockPlugin(options = {}) {
     description: 'transform block schema to code',
     /**
      * 将区块 schema 转换成高代码
-     * @param {tinyEngineDslVue.IAppSchema} schema
+     * @param {import('@opentiny/tiny-engine-dsl-vue').IAppSchema} schema
      * @returns
      */
     run(schema) {

@@ -67,7 +67,7 @@ export default {
           state.backupList = data.histories?.reverse?.() || []
         })
         .catch((error) => {
-          message({ message: `获取区块版本失败: ${error.message || error}`, status: 'error' })
+          message({ message: `获取区块版本失败: ${error.message || error}`, title: '区块版本获取失败' })
         })
     }
 
@@ -97,8 +97,8 @@ export default {
               })
               .catch((error) => {
                 message({
-                  message: `${selectedBlock.value.label}区块切换版本失败：${error.message || error}`,
-                  status: 'error'
+                  title: '切换区块版本失败',
+                  message: `${selectedBlock.value.label}区块切换版本失败：${error.message || error}`
                 })
               })
           }

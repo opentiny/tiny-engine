@@ -113,11 +113,11 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--ti-lowcode-plugin-js-head-border-bottom-color);
-    padding: 10px 0;
+    border-bottom: 1px solid var(--te-common-border-divider);
+    padding: 12px 0;
 
     .head-left {
-      padding-left: 15px;
+      padding-left: 12px;
       display: flex;
       align-items: center;
       .title {
@@ -137,7 +137,7 @@ export default {
     }
 
     .head-right {
-      margin-right: 20px;
+      margin-right: 12px;
       display: flex;
       align-items: center;
 
@@ -145,7 +145,7 @@ export default {
         width: 40px;
         padding: 0;
         min-width: 40px;
-        margin-right: 2px;
+        margin-right: 12px;
         height: 24px;
         line-height: 24px;
         .dots {
@@ -158,11 +158,14 @@ export default {
           right: 40px;
         }
       }
+      .icon-wrap {
+        width: auto;
+      }
     }
   }
 
   .code-edit-content {
-    padding: 12px 20px;
+    padding: 12px;
     height: calc(100% - 54px);
 
     & > div {

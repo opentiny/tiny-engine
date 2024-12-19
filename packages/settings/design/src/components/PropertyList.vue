@@ -110,7 +110,7 @@ export default {
   padding: 5px 10px;
   cursor: pointer;
   margin-bottom: 5px;
-  color: var(--ti-lowcode-common-text-title-color);
+  color: var(--te-common-text-primary);
   padding: 7px 7px;
   list-style: none;
   border: 1px solid var(--ti-lowcode-common-border-color);

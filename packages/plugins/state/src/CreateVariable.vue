@@ -53,13 +53,13 @@
             <template #fullscreenFooter>
               <div class="fullscreen-footer-content">
                 <div class="tips">
-                  <pre><code>{{ getterExample }}</code></pre>
+                  <pre>{{ getterExample }}</pre>
                 </div>
               </div>
             </template>
           </monaco-editor>
           <div class="tips">
-            <pre><code>{{ getterExample }}</code></pre>
+            <pre>{{ getterExample }}</pre>
           </div>
         </tiny-form-item>
       </tiny-collapse-item>
@@ -72,13 +72,13 @@
             <template #fullscreenFooter>
               <div class="fullscreen-footer-content">
                 <div class="tips">
-                  <pre><code>{{ setterExample }}</code></pre>
+                  <pre>{{ setterExample }}</pre>
                 </div>
               </div>
             </template>
           </monaco-editor>
           <div class="tips">
-            <pre><code>{{ setterExample }}</code></pre>
+            <pre>{{ setterExample }}</pre>
           </div>
         </tiny-form-item>
       </tiny-collapse-item>
@@ -171,7 +171,6 @@ export default {
       errorMessage: '',
       activeName: ['initValue', 'getter', 'setter'],
       createData: getPropsCreateData(),
-      hasAccessor: isAccessorData(props.createData?.variable),
       variableType: getVarType(),
       getterEditorValue: props.createData.variable?.accessor?.getter?.value || DEFAULT_GETTER,
       setterEditorValue: props.createData.variable?.accessor?.setter?.value || DEFAULT_SETTER,
@@ -199,7 +198,6 @@ export default {
       () => props.createData.variable,
       () => {
         state.errorMessage = ''
-        state.hasAccessor = isAccessorData(props.createData?.variable)
         state.getterEditorValue = props.createData.variable?.accessor?.getter?.value || DEFAULT_GETTER
         state.setterEditorValue = props.createData.variable?.accessor?.setter?.value || DEFAULT_SETTER
         state.variableType = getVarType()
@@ -253,18 +251,24 @@ export default {
 
     const getFormData = () => {
       const defaultValue = getDefaultValue()
-      if (!state.hasAccessor) return defaultValue
 
       const getter = getterEditor.value.getEditor().getValue()
       const setter = setterEditor.value.getEditor().getValue()
       if (!getter && !setter) return defaultValue
 
       const result = { defaultValue }
+
       if (getter && getter !== DEFAULT_GETTER) {
         result.accessor = { ...result.accessor, getter: { type: 'JSFunction', value: getter } }
       }
+
       if (setter && setter !== DEFAULT_SETTER) {
         result.accessor = { ...result.accessor, setter: { type: 'JSFunction', value: setter } }
+      }
+
+      // 没有设置 getter setter，需要直接返回 defaultValue
+      if (!result.accessor) {
+        return defaultValue
       }
 
       return result
@@ -405,13 +409,16 @@ export default {
   height: calc(100% - 45px);
   overflow-y: auto;
   .tips {
-    font-size: 11px;
+    font-size: 12px;
     line-height: 18px;
     margin-top: 8px;
     border-radius: 4px;
     padding: 8px 14px;
-    background: var(--ti-lowcode-data-source-box-bg);
-    color: var(--ti-lowcode-datasource-tip-color);
+    background: var(--te-common-bg-container);
+    color: var(--te-common-text-weaken);
+    & > pre {
+      font-family: Consolas, 'Courier New', monospace;
+    }
   }
   :deep(.toolbar) {
     position: absolute;

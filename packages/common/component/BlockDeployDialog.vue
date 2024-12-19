@@ -10,7 +10,7 @@
     <tiny-form
       ref="deployBlockRef"
       label-position="left"
-      label-width="100px"
+      label-width="84px"
       label-align
       :model="formState"
       :rules="formRules"
@@ -24,7 +24,7 @@
       <tiny-form-item label="保存设置" prop="needToSave" class="form-item-save">
         <tiny-checkbox v-model="formState.needToSave">发布成功后保存最新数据</tiny-checkbox>
       </tiny-form-item>
-      <tiny-form-item label="schema比对">
+      <tiny-form-item label="schema比对" class="schema-compare">
         <tiny-button class="compare-button" type="text" @click="changeCompare"> 查看本次发布的改动点 </tiny-button>
         <tiny-popover
           placement="top"
@@ -34,7 +34,7 @@
           content="区块本地schema和线上新版本schema进行比对"
         >
           <template #reference>
-            <icon-help-circle></icon-help-circle>
+            <svg-icon name="plugin-icon-plugin-help"></svg-icon>
           </template>
         </tiny-popover>
       </tiny-form-item>
@@ -71,7 +71,6 @@
 
 <script>
 import { reactive, ref, watch } from 'vue'
-import { iconHelpCircle } from '@opentiny/vue-icon'
 import {
   Checkbox as TinyCheckbox,
   Input as TinyInput,
@@ -81,14 +80,13 @@ import {
   Popover as TinyPopover,
   FormItem as TinyFormItem
 } from '@opentiny/vue'
-import { useNotify, useCanvas, getMetaApi, META_APP } from '@opentiny/tiny-engine-meta-register'
+import { useNotify, useCanvas, getMetaApi, META_APP, useBlock } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 import VueMonaco from './VueMonaco.vue'
 
 export default {
   components: {
     TinyCheckbox,
-    IconHelpCircle: iconHelpCircle(),
     TinyButton,
     TinyDialogBox,
     TinyForm,
@@ -155,7 +153,7 @@ export default {
         const { getEditBlock, publishBlock } = getMetaApi(META_APP.BlockManage)
         if (valid) {
           const params = {
-            block: getEditBlock(),
+            block: getEditBlock() || useBlock().getCurrentBlock(),
             is_compile: true,
             deploy_info: formState.deployInfo,
             version: formState.version,
@@ -254,7 +252,15 @@ export default {
     line-height: 0;
   }
 }
+.schema-compare {
+  .tiny-button.tiny-button {
+    padding-left: 0;
+    padding-right: 4px;
+    font-size: 12px;
+  }
+}
 .compare-button {
+  font-size: 12px;
   padding-left: 0;
   padding-right: 8px;
   line-height: 28px;

@@ -107,15 +107,15 @@ export default {
   padding-right: 20px;
   width: 136px;
   cursor: pointer;
-  background: var(--ti-lowcode-tabs-bg);
-  color: var(--ti-lowcode-toolbar-breadcrumb-color);
+  background: var(--te-common-bg-prompt);
+  color: var(--te-common-text-secondary);
   border: 1px solid var(--ti-lowcode-tabs-active-bg);
   border-radius: 3px;
   .icon-box {
     border-right: 1px solid var(--ti-lowcode-tabs-active-bg);
     padding: 4px 8px;
     .tiny-svg {
-      color: var(--ti-lowcode-toolbar-breadcrumb-color);
+      color: var(--te-common-text-secondary);
       font-size: 14px;
     }
   }

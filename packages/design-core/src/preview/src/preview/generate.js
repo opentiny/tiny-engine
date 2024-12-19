@@ -134,6 +134,16 @@ const generateUtils = (list) => {
   return strs.join('\n')
 }
 
+const compatibleI18n = (i18n) => {
+  if (!i18n || typeof i18n !== 'object') {
+    return { en_US: {}, zh_CN: {} }
+  }
+  i18n.en_US = i18n.en_US && typeof i18n.en_US === 'object' ? i18n.en_US : {}
+  i18n.zh_CN = i18n.zh_CN && typeof i18n.zh_CN === 'object' ? i18n.zh_CN : {}
+
+  return i18n
+}
+
 /**
  * 处理css文件依赖
  * @param {*} code 源代码
@@ -145,7 +155,7 @@ export const processAppJsCode = (code, cssList) => {
 }
 
 export default (data) => {
-  const locales = generateDefaultExport(data.i18n)
+  const locales = generateDefaultExport(compatibleI18n(data.i18n))
   const dataSource = generateDefaultExport(data.dataSource)
   const stores = generateStores(data.globalState)
   const bridge = generateBridge(data.bridge)

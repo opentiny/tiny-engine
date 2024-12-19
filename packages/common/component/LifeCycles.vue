@@ -2,7 +2,7 @@
   <div class="life-cycle">
     <tiny-popover v-model="state.showPopover" placement="bottom-end" trigger="hover" popperClass="option-popper">
       <template #reference>
-        <tiny-button class="life-cycle-btn"><icon-plus class="icon-plus"></icon-plus>添加页面生命周期 </tiny-button>
+        <tiny-button class="life-cycle-btn"><svg-icon name="add"></svg-icon>添加页面生命周期 </tiny-button>
       </template>
       <div class="popover-list">
         <ul>
@@ -72,7 +72,7 @@ import { Button, DialogBox, Popover, Search } from '@opentiny/vue'
 import { useModal, usePage, useNotify, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import MetaListItems from './MetaListItems.vue'
-import { iconYes, iconPlus } from '@opentiny/vue-icon'
+import { iconYes } from '@opentiny/vue-icon'
 import VueMonaco from './VueMonaco.vue'
 import { initCompletion } from '../js/completion'
 import { initLinter, lint } from '../js/linter'
@@ -87,8 +87,7 @@ export default {
     MonacoEditor: VueMonaco,
     SvgButton,
     MetaListItems,
-    IconYes: iconYes(),
-    IconPlus: iconPlus()
+    IconYes: iconYes()
   },
 
   props: {

@@ -1,14 +1,14 @@
 <template>
   <svg-button
     class="item icon-sidebar"
-    :class="[fixedPanels?.includes(PLUGIN_NAME.Materials) && 'active']"
-    name="fixed"
-    :tips="!fixedPanels?.includes(PLUGIN_NAME.Materials) ? '固定面板' : '解除固定面板'"
-    @click="$emit('fixPanel', PLUGIN_NAME.Materials)"
+    :name="panelFixed ? 'fixed-solid' : 'fixed'"
+    :tips="panelFixed ? '解除固定面板' : '固定面板'"
+    @click="$emit('fix-panel', PLUGIN_NAME.Materials)"
   ></svg-button>
 </template>
 
 <script>
+import { computed } from 'vue'
 import { SvgButton } from '@opentiny/tiny-engine-common'
 import { useLayout } from '@opentiny/tiny-engine-meta-register'
 
@@ -22,11 +22,13 @@ export default {
       type: Array
     }
   },
-  setup() {
+  setup(props) {
     const { PLUGIN_NAME } = useLayout()
+    const panelFixed = computed(() => props.fixedPanels?.includes(PLUGIN_NAME.Materials))
 
     return {
-      PLUGIN_NAME
+      PLUGIN_NAME,
+      panelFixed
     }
   }
 }

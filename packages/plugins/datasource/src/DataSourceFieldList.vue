@@ -138,7 +138,7 @@ export default {
     .field-cell-name {
       margin-left: 5px;
       .field-name {
-        color: var(--ti-lowcode-data-source-color);
+        color: var(--ti-lowcode-datasource-color);
       }
       .description {
         color: var(--ti-lowcode-datasource-tip-color);
@@ -159,7 +159,7 @@ export default {
   }
 }
 .form-item-border:hover {
-  background: var(--ti-lowcode-data-source-box-bg);
+  background: var(--ti-lowcode-datasource-box-bg);
   .field-operation {
     display: flex;
     justify-content: space-between;

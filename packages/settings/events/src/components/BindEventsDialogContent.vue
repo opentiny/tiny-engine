@@ -127,7 +127,7 @@ export default {
         width: 100%;
         height: 216px;
         padding: 12px 8px;
-        color: var(--ti-lowcode-toolbar-breadcrumb-color);
+        color: var(--te-common-text-secondary);
       }
       .mark {
         width: 100%;
@@ -141,7 +141,7 @@ export default {
 
     .params-tip {
       margin: 8px 0;
-      color: var(--ti-lowcode-error-tip-color);
+      color: var(--te-common-color-error);
     }
   }
   .content-right-top .content-right-title,
@@ -156,11 +156,11 @@ export default {
 
   .tip-error {
     .content-right-monaco {
-      border: 1px solid var(--ti-lowcode-error-tip-color);
+      border: 1px solid var(--te-common-color-error);
     }
     .params-tip,
     .new-action-tip {
-      color: var(--ti-lowcode-error-tip-color);
+      color: var(--te-common-color-error);
     }
   }
 }

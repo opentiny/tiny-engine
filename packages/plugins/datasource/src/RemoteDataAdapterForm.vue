@@ -55,12 +55,11 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 8px 12px;
-  background: var(--ti-lowcode-datasource-toolbar-bg);
   margin-top: 12px;
-  font-size: 14px;
+  font-size: 12px;
 
   div {
-    color: var(--ti-lowcode-datasource-toolbar-breadcrumb-color);
+    color: var(--te-common-text-secondary);
   }
 
   .icon-del {
@@ -73,7 +72,7 @@ export default {
   min-height: 120px;
   height: 100%;
   margin-top: 8px;
-  border: 1px solid var(--ti-lowcode-base-gray-101);
+  border: 1px solid var(--te-common-border-divider);
   border-radius: 4px;
 }
 </style>

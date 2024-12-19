@@ -223,13 +223,12 @@ export default {
   .line-style {
     padding: 0 8px 0 12px;
     display: block;
-    color: var(--ti-lowcode-setting-style-font-color);
     font-size: 12px;
     .line-text {
       display: block;
       margin-bottom: 8px;
       font-size: 12px;
-      color: var(--ti-lowcode-setting-style-title-color);
+      color: var(--te-common-text-secondary);
     }
   }
   .inline-style {

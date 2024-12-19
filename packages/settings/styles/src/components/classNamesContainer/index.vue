@@ -480,7 +480,7 @@ const handleDeleteCurSelector = () => {
 .title {
   margin: 0;
   font-size: 12px;
-  color: var(--ti-lowcode-className-selector-title-color);
+  color: var(--te-common-text-secondary);
   font-weight: normal;
   .help-link {
     vertical-align: middle;
@@ -516,7 +516,7 @@ const handleDeleteCurSelector = () => {
     display: flex;
     padding: 3px;
     border: 1px solid var(--ti-lowcode-className-selector-container-border-color);
-    border-radius: 6px;
+    border-radius: var(--te-base-border-radius-1);
     cursor: pointer;
   }
 
@@ -528,7 +528,7 @@ const handleDeleteCurSelector = () => {
     min-width: 0;
     padding: 1px 10px;
     border: 1px solid var(--ti-lowcode-className-selector-container-border-color);
-    border-radius: 6px;
+    border-radius: var(--te-base-border-radius-1);
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     font-size: 12px;
@@ -670,7 +670,7 @@ const handleDeleteCurSelector = () => {
     flex: 4;
     min-width: 84px;
     border: 1px solid var(--ti-lowcode-className-selector-container-border-color);
-    border-radius: 6px;
+    border-radius: var(--te-base-border-radius-1);
     border-left: none;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;

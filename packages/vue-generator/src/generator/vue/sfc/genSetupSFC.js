@@ -6,7 +6,8 @@ import {
   handleTinyGrid,
   handleTinyIcon,
   handleExpressionChildren,
-  validEmptyTemplateHook
+  validEmptyTemplateHook,
+  handleSlotParams
 } from './generateTemplate'
 import { generateStyleTag } from './generateStyle'
 import {
@@ -213,6 +214,7 @@ export const genSFCWithDefaultPlugin = (schema, componentsMap, config = {}) => {
   const defaultComponentHooks = [handleComponentNameHook, handleTinyIcon]
 
   const defaultAttributeHook = [
+    handleSlotParams,
     handleTinyGrid,
     handleJsxModelValueUpdate,
     handleConditionAttrHook,

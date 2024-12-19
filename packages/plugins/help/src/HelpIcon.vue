@@ -9,7 +9,7 @@
       id="help-icon-popover"
     >
       <template #reference>
-        <div title="帮助">
+        <div title="帮助" class="help-plugin-reference">
           <svg-icon name="plugin-icon-plugin-help"></svg-icon>
         </div>
       </template>
@@ -263,6 +263,9 @@ export default {
 .help-plugin-tooltip-close {
   margin-left: 20px;
   cursor: pointer;
+}
+.help-plugin-reference {
+  display: flex;
 }
 </style>
 

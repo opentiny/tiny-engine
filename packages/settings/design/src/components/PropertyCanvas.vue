@@ -177,7 +177,7 @@ export default {
   .empty-group-tips {
     margin-top: 100px;
     text-align: center;
-    color: var(--ti-lowcode-design-plugin-color);
+    color: var(--te-common-text-weaken);
     font-size: 12px;
     .empty-data-icon {
       width: 100px;
@@ -246,11 +246,11 @@ export default {
         align-items: center;
         justify-content: space-between;
         h6 {
-          color: var(--ti-lowcode-common-text-title-color);
+          color: var(--te-common-text-primary);
         }
         .option-icon {
           display: inline-block;
-          color: var(--ti-lowcode-design-plugin-color);
+          color: var(--ti-lowcode-setting-plugin-icon-color);
         }
         .option-tips + .option-tips {
           margin-left: 8px;
@@ -259,12 +259,12 @@ export default {
     }
 
     .tiny-collapse-item__header {
-      color: var(--ti-lowcode-toolbar-breadcrumb-color);
-      background-color: var(--ti-lowcode-tabs-bg);
+      color: var(--te-common-text-secondary);
+      background-color: var(--te-common-bg-prompt);
       font-weight: 600;
 
       svg {
-        color: var(--ti-lowcode-toolbar-breadcrumb-color);
+        color: var(--te-common-text-secondary);
         margin-right: 4px;
       }
     }
@@ -276,7 +276,7 @@ export default {
       background: var(--ti-lowcode-tabs-active-bg);
       border-top: none;
       border-bottom: 1px solid var(--ti-lowcode-tabs-border-color);
-      color: var(--ti-lowcode-toolbar-breadcrumb-color);
+      color: var(--te-common-text-secondary);
 
       .properties-item {
         padding: 3px 10px;
@@ -293,7 +293,7 @@ export default {
         .item-input {
           .meta-array-wrap {
             .top {
-              color: var(--ti-lowcode-toolbar-breadcrumb-color);
+              color: var(--te-common-text-secondary);
             }
             .actions {
               display: none;
@@ -303,7 +303,7 @@ export default {
       }
       .item-container {
         .empty {
-          color: var(--ti-lowcode-common-secondary-text-color);
+          color: var(--te-common-text-secondary);
         }
       }
     }

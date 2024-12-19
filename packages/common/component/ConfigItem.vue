@@ -527,7 +527,7 @@ export default {
   }
 
   .item-label {
-    color: var(--ti-lowcode-meta-config-item-label-color);
+    color: var(--te-common-text-secondary);
     font-size: 12px;
     display: flex;
     line-height: 18px;

@@ -105,7 +105,7 @@ export default {
       }
 
       .tiny-tabs__item__title {
-        padding-bottom: 2px;
+        padding-bottom: 6px;
       }
     }
 

@@ -290,10 +290,11 @@ export default {
       boxVisibility.value = false
     }
     const editBlock = async (block) => {
-      const isEdite = true
+      const isEdit = true
+
       if (isSaved()) {
         await refreshBlockData(block)
-        useBlock().initBlock(block, {}, isEdite)
+        useBlock().initBlock(block, {}, isEdit)
         useLayout().closePlugin()
         closePanel()
         const url = new URL(window.location)
@@ -305,7 +306,7 @@ export default {
           message: '当前画布内容尚未保存，是否要继续切换?',
           exec: async () => {
             await refreshBlockData(block)
-            useBlock().initBlock(block, {}, isEdite)
+            useBlock().initBlock(block, {}, isEdit)
             useLayout().closePlugin()
             closePanel()
           }
@@ -501,9 +502,23 @@ export default {
   right: 0;
   padding: 10px 16px;
   background-color: var(--ti-lowcode-component-search-bg);
+  box-shadow: 0 -2px 12px 0 var(--te-base-box-shadow-rgba-2);
   color: var(--ti-lowcode-component-block-list-item-color);
   display: flex;
   justify-content: space-between;
+  :deep(.tiny-dropdown) {
+    color: var(--te-common-text-primary);
+    .tiny-dropdown__trigger:not(.tiny-dropdown__caret-button):not(.is-disabled):hover {
+      color: var(--te-common-text-primary);
+    }
+    .tiny-dropdown__suffix-inner {
+      color: var(--te-common-icon-secondary);
+      height: 10px;
+    }
+  }
+  :deep(.tiny-dropdown-menu) {
+    padding: var(--te-common-vertical-form-label-spacing) 0;
+  }
   .footer-layout {
     font-size: 12px;
     color: var(--ti-lowcode-component-block-list-item-color);
@@ -523,6 +538,17 @@ export default {
   border-radius: 4px;
   height: 24px;
   line-height: 24px;
+}
+:deep(.tiny-dropdown-item) {
+  &:not(.is-disabled):active,
+  &:not(.is-disabled):hover,
+  &:focus {
+    background-color: var(--te-common-bg-container);
+    color: var(--te-common-text-primary);
+  }
+}
+:deep(.tiny-dropdown-menu.tiny-popper[x-placement^='top']) {
+  padding: var(--te-common-vertical-form-label-spacing) 0;
 }
 </style>
 
@@ -563,5 +589,8 @@ export default {
     text-align: center;
     margin-top: 22px;
   }
+}
+.tiny-dropdown-menu.tiny-dropdown-menu {
+  padding: var(--te-common-vertical-form-label-spacing) 0;
 }
 </style>

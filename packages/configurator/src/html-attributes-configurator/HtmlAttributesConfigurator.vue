@@ -195,8 +195,8 @@ export default {
     width: 24px;
     height: 24px;
     font-size: 16px;
-    color: var(--ti-lowcode-toolbar-breadcrumb-color);
-    background: var(--ti-lowcode-canvas-wrap-bg);
+    color: var(--te-common-text-secondary);
+    background: var(--te-common-bg-container);
     border: 1px solid var(--ti-lowcode-left-button-border-color);
     border-radius: 2px;
     display: inline-flex;
@@ -223,7 +223,7 @@ export default {
     border: 1px solid var(--ti-lowcode-optionitem-border-color);
     background: var(--ti-lowcode-optionitem-background-color);
     margin-bottom: -1px;
-    color: var(--ti-lowcode-toolbar-breadcrumb-color);
+    color: var(--te-common-text-secondary);
     padding: 7px;
     display: grid;
     grid-template-columns: 3fr auto;

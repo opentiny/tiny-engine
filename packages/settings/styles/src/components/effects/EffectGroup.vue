@@ -539,7 +539,7 @@ export default {
       cursor: pointer;
       border-radius: 2px;
       color: var(--te-common-text-emphasize);
-      background-color: var(--ti-lowcode-style-setting-label-bg);
+      background-color: var(--te-common-bg-text-emphasize);
     }
   }
 

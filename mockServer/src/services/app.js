@@ -10,13 +10,13 @@
 *
 */
 
-import { pageService } from '../routes/main-routes'
+import { mockService } from '../routes/main-routes'
 import { getResponseData } from '../tool/Common'
 export default class AppService {
   async lock(query) {
     const { id, state } = query
-    const occupier = state === 'occupy' ? pageService.userInfo : null
-    await pageService.update(id, { occupier })
+    const occupier = state === 'occupy' ? mockService.pageService.userInfo : null
+    await mockService.pageService.update(id, { occupier })
     return getResponseData({
       operate: 'success',
       occupier

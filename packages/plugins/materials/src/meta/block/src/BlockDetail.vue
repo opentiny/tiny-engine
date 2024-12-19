@@ -71,7 +71,6 @@ export default {
     const deleteBlock = (blockId) => {
       const groupId = selectedGroup.value.groupId
       const title = '删除区块'
-      const status = 'custom'
       const messageRender = {
         render: () => <span>{'您确定要删除该区块吗?'}</span>
       }

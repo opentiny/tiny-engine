@@ -12,7 +12,7 @@
       show-message
       :model="formData"
       :rules="rules"
-      label-width="80px"
+      label-width="64px"
       :label-align="true"
       label-position="left"
       validate-type="text"

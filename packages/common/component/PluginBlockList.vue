@@ -1,6 +1,8 @@
 <template>
-  <div v-if="blockStyle === BlockStyles.Mini" class="header">
-    <div class="col-checkbox"></div>
+  <div v-if="blockStyle === BlockStyles.Mini && showCheckbox" class="header">
+    <div class="col-checkbox">
+      <select-all :allItems="data" :selected="checked" :hidden-label="true" @select-all="handleSelectAll"></select-all>
+    </div>
     <div class="col-name">区块名称</div>
     <div class="col-time">创建时间</div>
     <div class="col-created-by">创建人</div>
@@ -16,7 +18,7 @@
     @mouseleave="state.hover = false"
   >
     <li v-if="showAddButton" class="block-item block-plus" @click="$emit('add')">
-      <span class="block-plus-icon"><icon-plus></icon-plus></span>
+      <span class="block-plus-icon"><svg-icon name="add"></svg-icon></span>
       <div class="item-text">添加区块</div>
     </li>
     <li
@@ -45,13 +47,6 @@
           <div v-if="blockStyle === BlockStyles.List" class="item-description">{{ item.description }}</div>
         </div>
 
-        <div v-if="blockStyle === BlockStyles.Mini" class="cell cell-time">
-          <span>{{ format(item.created_at, 'yyyy/MM/dd hh:mm:ss') }}</span>
-        </div>
-        <div v-if="blockStyle === BlockStyles.Mini" class="cell cell-created-by">
-          <span>{{ users.find((user) => user.id === item.createdBy)?.name || item.id }}</span>
-        </div>
-
         <div v-if="item.isShowProgress" class="progress-bar">
           <tiny-progress
             :text-inside="true"
@@ -66,20 +61,16 @@
         <div v-if="isBlockManage" class="block-detail">
           <div class="setting-menu" @mouseover.stop="handleSettingMouseOver" @mouseleave="handleBlockItemLeave">
             <ul class="list">
-              <tiny-tooltip content="编辑" placement="top">
-                <li class="list-item" @mousedown.stop.left="editBlock({ event: $event, item, index })">
-                  <svg-button class="list-item-svg" name="to-edit"> </svg-button>
-                </li>
-              </tiny-tooltip>
-              <tiny-tooltip content="设置" placement="top">
-                <li
-                  class="list-item"
-                  @mouseover.stop="iconSettingMove"
-                  @mousedown.stop.prevent="iconClick({ event: $event, item, index })"
-                >
-                  <svg-button class="list-item-svg" name="text-source-setting"> </svg-button>
-                </li>
-              </tiny-tooltip>
+              <li class="list-item" @mousedown.stop.left="editBlock({ event: $event, item, index })">
+                <svg-button class="list-item-svg" name="to-edit"> </svg-button>
+              </li>
+              <li
+                class="list-item"
+                @mouseover.stop="iconSettingMove"
+                @mousedown.stop.prevent="iconClick({ event: $event, item, index })"
+              >
+                <svg-button class="list-item-svg" name="text-source-setting"> </svg-button>
+              </li>
             </ul>
           </div>
         </div>
@@ -138,11 +129,11 @@
 <script>
 import { computed, watch, inject, reactive } from 'vue'
 import { format } from '@opentiny/vue-renderless/common/date'
-import { iconPlus } from '@opentiny/vue-icon'
 import { Progress, Tooltip } from '@opentiny/vue'
 import PluginBlockItemImg from './PluginBlockItemImg.vue'
 import SearchEmpty from './SearchEmpty.vue'
 import SvgButton from './SvgButton.vue'
+import SelectAll from './SelectAll.vue'
 
 const BlockStyles = {
   Default: 'default',
@@ -156,11 +147,11 @@ const defaultImg =
 export default {
   components: {
     TinyProgress: Progress,
-    IconPlus: iconPlus(),
     TinyTooltip: Tooltip,
     PluginBlockItemImg,
     SvgButton,
-    SearchEmpty
+    SearchEmpty,
+    SelectAll
   },
   props: {
     data: {
@@ -234,7 +225,7 @@ export default {
       default: 2
     }
   },
-  emits: ['click', 'iconClick', 'add', 'deleteBlock', 'openVersionPanel', 'editBlock'],
+  emits: ['click', 'iconClick', 'add', 'deleteBlock', 'openVersionPanel', 'editBlock', 'checkAll', 'cancelCheckAll'],
   setup(props, { emit }) {
     const panelState = inject('panelState', {})
     const blockUsers = inject('blockUsers')
@@ -361,6 +352,14 @@ export default {
       }
     )
 
+    const handleSelectAll = (items) => {
+      if (Array.isArray(items)) {
+        emit('checkAll', items)
+      } else {
+        emit('cancelCheckAll')
+      }
+    }
+
     return {
       BlockStyles,
       isShortcutPanel: panelState.isShortcutPanel,
@@ -379,7 +378,8 @@ export default {
       handleSettingMouseOver,
       handleShowVersionMenu,
       editBlock,
-      format
+      format,
+      handleSelectAll
     }
   }
 }
@@ -446,6 +446,11 @@ export default {
   }
 }
 
+.col-checkbox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .col-checkbox,
 .block-item-small-list:deep(.table-selection) {
   width: 40px;
@@ -485,16 +490,17 @@ export default {
 
     .publish-flag {
       position: absolute;
-      left: 2px;
-      top: 2px;
+      left: 4px;
+      top: 4px;
       text-align: center;
       display: block;
-      color: var(--ti-lowcode-common-secondary-text-color);
+      color: var(--te-common-text-primary);
       font-size: 12px;
-      background-color: var(--ti-lowcode-component-block-list-item-tag-bg);
-      padding: 2px;
-      border-radius: 4px 0 4px 0;
+      background-color: var(--te-common-bg-prompt);
+      padding: 2px 4px;
+      border-radius: 2px;
       transform: scale(0.9);
+      min-width: 45px;
     }
 
     &.block-item-small-list {
@@ -507,7 +513,7 @@ export default {
         margin-left: 8px;
       }
       .item-text {
-        width: calc(35% - 62px);
+        width: 50%;
       }
       .publish-flag {
         position: static;
@@ -526,6 +532,9 @@ export default {
             color: var(--ti-lowcode-component-block-list-setting-btn-hover-color);
           }
         }
+      }
+      &:hover {
+        background-color: var(--te-common-bg-container);
       }
     }
     &:nth-child(even) {
@@ -584,7 +593,7 @@ export default {
       .item-text {
         font-size: 12px;
       }
-      .tiny-svg {
+      .svg-icon {
         font-size: 24px;
         color: var(--ti-lowcode-component-svg-button-color);
       }

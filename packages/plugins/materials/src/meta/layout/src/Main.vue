@@ -1,7 +1,11 @@
 <template>
   <plugin-panel :title="shortcut ? '' : title" @close="$emit('close')">
     <template #header>
-      <component :is="headerComponent" :fixedPanels="fixedPanels"></component>
+      <component
+        :is="headerComponent"
+        :fixedPanels="fixedPanels"
+        @fix-panel="(id) => $emit('fix-panel', id)"
+      ></component>
     </template>
     <template #content>
       <tiny-tabs v-model="activeName" tab-style="button-card" class="full-width-tabs" v-if="!onlyShowDefault">
@@ -102,6 +106,16 @@ export default {
   & > div {
     height: 100%;
   }
+}
+
+:deep(.tiny-tabs__item:first-child) {
+  border-top-left-radius: var(--te-base-border-radius-1);
+  border-bottom-left-radius: var(--te-base-border-radius-1);
+}
+
+:deep(.tiny-tabs__item:last-child) {
+  border-top-right-radius: var(--te-base-border-radius-1);
+  border-bottom-right-radius: var(--te-base-border-radius-1);
 }
 
 .tiny-collapse {

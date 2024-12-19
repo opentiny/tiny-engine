@@ -199,7 +199,7 @@ export default {
   &::after {
     content: '';
     display: block;
-    border: 1px solid var(--ti-lowcode-common-primary-color);
+    border: 1px solid var(--te-common-border-checked);
   }
   &.resize-vertical {
     cursor: ns-resize;

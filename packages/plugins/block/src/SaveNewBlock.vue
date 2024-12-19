@@ -13,7 +13,7 @@
         :model="formData"
         :rules="rules"
         ref="formRef"
-        label-width="120px"
+        label-width="64px"
         :label-align="true"
         label-position="left"
         validate-type="text"
@@ -24,7 +24,7 @@
         <tiny-form-item label="区块ID" prop="label">
           <TinyInput v-model="formData.label" placeholder="请输入区块ID"></TinyInput>
         </tiny-form-item>
-        <tiny-form-item :label="shouldReplaceCategoryWithGroup() ? '请选择区块分组' : '请选择区块分类'" prop="group">
+        <tiny-form-item :label="shouldReplaceCategoryWithGroup() ? '区块分组' : '区块分类'" prop="group">
           <tiny-select v-model="formData.group" :options="categoryList" placeholder="请选择" @change="changeCategory">
           </tiny-select>
         </tiny-form-item>

@@ -268,7 +268,7 @@ export default {
       box-sizing: border-box;
       width: 48px;
       border: 1px solid var(--ti-lowcode-tabs-border-color);
-      background: var(--ti-lowcode-canvas-wrap-bg);
+      background: var(--te-common-bg-container);
       border-radius: 4px;
       padding: 4px;
       margin: 0 4px 4px 4px;
@@ -313,13 +313,13 @@ export default {
     justify-content: center;
     align-items: center;
     display: flex;
-    background: var(--ti-lowcode-canvas-wrap-bg);
-    color: var(--ti-lowcode-toolbar-breadcrumb-color);
+    background: var(--te-common-bg-container);
+    color: var(--te-common-text-secondary);
     transition: none;
   }
 
   :deep(.splitpanes__splitter) {
-    background: var(--ti-lowcode-toolbar-view-hover-bg);
+    background: var(--te-common-bg-container);
     border-left: var(--ti-lowcode-tabs-border-color);
   }
 
@@ -328,7 +328,7 @@ export default {
 
     .customize {
       margin-bottom: 8px;
-      color: var(--ti-lowcode-toolbar-breadcrumb-color);
+      color: var(--te-common-text-secondary);
     }
   }
 }

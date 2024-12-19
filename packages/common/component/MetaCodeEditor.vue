@@ -302,8 +302,9 @@ export default {
   width: 100%;
   height: 24px;
   padding: 4px;
+  padding-left: 10px;
   border: 1px solid var(--ti-lowcode-meta-codeEditor-border-color);
-  border-radius: 6px;
+  border-radius: var(--te-base-border-radius-1);
 
   &:hover {
     border-color: var(--ti-lowcode-meta-codeEditor-border-hover-color);
@@ -334,10 +335,6 @@ export default {
 
 :deep(.tiny-dialog-box__title) {
   font-size: 14px;
-}
-
-:deep(.view-line) {
-  font-size: 12px;
 }
 
 .source-code {

@@ -82,7 +82,7 @@
 import { reactive, ref, watch, watchEffect, computed } from 'vue'
 import { Button as TinyButton, Collapse as TinyCollapse, CollapseItem as TinyCollapseItem } from '@opentiny/vue'
 import { useModal } from '@opentiny/tiny-engine-meta-register'
-import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
+import { getMergeMeta, useBlock } from '@opentiny/tiny-engine-meta-register'
 import { BlockHistoryList, PluginSetting, CloseIcon, SvgButton, ButtonGroup } from '@opentiny/tiny-engine-common'
 import { previewBlock } from '@opentiny/tiny-engine-common/js/preview'
 import { LifeCycles } from '@opentiny/tiny-engine-common'
@@ -186,10 +186,9 @@ export default {
 
     const deleteBlock = () => {
       const title = '删除区块'
-      const status = 'custom'
       const message = '您确认删除该区块吗?'
 
-      confirm({ title, status, message, exec: removeBlock })
+      confirm({ title, message, exec: removeBlock })
     }
 
     const updateBlock = () => {
@@ -209,16 +208,17 @@ export default {
           }
         }
         const title = '保存区块'
-        const status = 'custom'
         const message = '您确认修改并保存该区块吗?'
 
         confirm({
           title,
-          status,
           message,
           exec: async () => {
-            // 获取区块截图
-            block.screenshot = await getBlockBase64()
+            const currentId = useBlock().getCurrentBlock()?.id
+            if (block.id === currentId) {
+              // 获取区块截图
+              block.screenshot = await getBlockBase64()
+            }
             saveBlock(block)
           }
         })

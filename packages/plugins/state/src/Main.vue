@@ -22,10 +22,10 @@
         </template>
       </tiny-search>
       <div class="add-btn">
-        <tiny-button @click="openPanel(OPTION_TYPE.ADD)"
-          ><icon-plus class="icon-plus"></icon-plus
-          >{{ activeName === STATE.CURRENT_STATE ? '添加变量' : '添加全局变量' }}</tiny-button
-        >
+        <tiny-button @click="openPanel(OPTION_TYPE.ADD)">
+          <svg-icon name="add" class="add-btn-icon"></svg-icon>
+          <span class="add-btn-text">{{ activeName === STATE.CURRENT_STATE ? '添加变量' : '添加全局变量' }}</span>
+        </tiny-button>
       </div>
       <data-source-list
         :modelValue="Object.keys(state.dataSource)"
@@ -82,7 +82,6 @@ import {
   META_APP,
   META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
-import { iconPlus } from '@opentiny/vue-icon'
 import { getCommentByKey } from '@opentiny/tiny-engine-common/js/comment'
 import { iconSearch } from '@opentiny/vue-icon'
 import { CloseIcon, LinkButton } from '@opentiny/tiny-engine-common'
@@ -104,8 +103,7 @@ export default {
     TinyTabItem: TabItem,
     CreateStore,
     LinkButton,
-    TinyIconSearch: iconSearch(),
-    IconPlus: iconPlus()
+    TinyIconSearch: iconSearch()
   },
   setup(props, { emit }) {
     const variableRef = ref(null)
@@ -400,11 +398,20 @@ export default {
       width: 100%;
       .tiny-button {
         width: 100%;
-        border-color: var(--ti-lowcode-data-source-border-color);
+        border-color: var(--te-common-border-default);
+        &:hover {
+          border-color: var(--te-common-border-hover);
+        }
       }
-      .icon-plus {
+      .add-btn-icon {
         margin-right: 4px;
+        font-size: 16px;
         stroke: var(--ti-lowcode-chat-model-button-text);
+        color: var(--te-common-icon-secondary);
+        vertical-align: sub;
+      }
+      .add-btn-text {
+        display: inline-block;
       }
     }
 
@@ -421,7 +428,7 @@ export default {
     }
 
     .left-filter {
-      margin-top: 12px;
+      margin-top: 4px;
       padding: 0 10px;
     }
 
@@ -457,7 +464,7 @@ export default {
       padding: 0 12px;
       font-size: 12px;
       font-weight: 700;
-      color: var(--ti-lowcode-data-source-color);
+      color: var(--te-common-text-primary);
       background: var(--ti-lowcode-common-component-bg);
       border-bottom: 1px solid var(--ti-lowcode-data-header-border-bottom-color);
       .options-wrap {

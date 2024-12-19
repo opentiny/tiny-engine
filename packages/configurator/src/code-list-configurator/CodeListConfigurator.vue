@@ -220,7 +220,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     padding: 10px 0;
-    color: var(--ti-lowcode-toolbar-breadcrumb-color);
+    color: var(--te-common-text-secondary);
 
     .header-title {
       font-size: 14px;

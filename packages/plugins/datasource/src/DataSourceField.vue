@@ -3,7 +3,7 @@
     <span class="title">
       <span class="title">数据源字段</span>
       <div class="btn">
-        <tiny-button @click="openNewFieldForm">添加字段</tiny-button>
+        <tiny-button @click="openNewFieldForm"><svg-icon name="add"></svg-icon>添加字段</tiny-button>
         <tiny-button @click="$emit('openRemotePanel')">{{ editable ? '修改远程配置' : '获取远程字段' }}</tiny-button>
       </div>
     </span>
@@ -186,10 +186,10 @@ export default {
         align-items: center;
 
         &.field-row-add {
-          color: var(--ti-lowcode-datasource-json-border-colorr);
+          color: var(--ti-lowcode-datasource-json-border-color);
 
           svg {
-            color: var(--ti-lowcode-datasource-json-border-colorr);
+            color: var(--ti-lowcode-datasource-json-border-color);
           }
         }
       }

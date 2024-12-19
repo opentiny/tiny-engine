@@ -136,6 +136,34 @@ export const handleTinyGrid = (schemaData, globalHooks, config) => {
   })
 }
 
+/**
+ * 解决往插槽传参的场景。
+ * 比如区块设置了插槽，需要往里面传数据，schema 协议会生成如下参数
+ * {
+ *   params: [{ name: "test", value: { type: "JSExpression", value: "this.state.arr" } }]
+ * }
+ * 需要将数组进行解析然后转换，才能进行后续正确出码，
+ * @param {*} schemaData
+ * @returns
+ */
+export const handleSlotParams = (schemaData) => {
+  const { componentName, props } = schemaData.schema
+
+  if (componentName !== 'Slot' || !Array.isArray(props?.params)) {
+    return
+  }
+
+  props.params.forEach((paramItem) => {
+    const { name, value } = paramItem || {}
+
+    if (name && value) {
+      props[name] = value
+    }
+  })
+
+  delete props.params
+}
+
 export const handleExpressionChildren = (schemaData = {}, globalHooks, config) => {
   const { children, schema } = schemaData
   const type = schema?.children?.type

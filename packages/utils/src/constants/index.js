@@ -93,6 +93,8 @@ export const BROADCAST_CHANNEL = {
   SchemaLength: `schema-length-${CHANNEL_UID}`
 }
 
+export const STORAGE_KEY_FIXED_PANELS = `tiny-engine-fixed-panels-${CHANNEL_UID}`
+
 export const TYPES = {
   ErrorType: 'error',
   ObjectType: 'object',

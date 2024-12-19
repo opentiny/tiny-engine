@@ -136,13 +136,18 @@ export default {
     padding: 12px;
   }
 
+  :deep(.tiny-collapse-item__content) {
+    padding: 0 var(--te-common-vertical-form-label-spacing) 4px;
+  }
+
   .component-group {
     display: grid;
     width: 100%;
     color: var(--ti-lowcode-materials-component-list-color);
 
     .component-item {
-      padding: 12px 0;
+      padding: var(--te-common-vertical-form-label-spacing) 0 var(--te-common-vertical-form-label-spacing);
+      margin-bottom: var(--te-common-vertical-form-label-spacing);
       text-align: center;
       user-select: none;
       cursor: move;

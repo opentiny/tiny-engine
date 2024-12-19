@@ -127,7 +127,7 @@ export default {
   .datasource-list {
     flex-grow: 1;
     padding-top: 12px;
-    border-top: 1px solid var(--ti-lowcode-data-source-border-color);
+    border-top: 1px solid var(--ti-lowcode-datasource-border-color);
   }
   .datasource-list-item {
     box-shadow: var(--ti-lowcode-datasource-tabs-border-color) 0, -1px;
@@ -152,7 +152,7 @@ export default {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      color: var(--ti-lowcode-base-gray-90);
+      color: var(--te-common-text-primary);
       .item-name {
         display: flex;
         align-items: center;
@@ -171,6 +171,9 @@ export default {
         height: 16px;
         margin-top: 6px;
         color: var(--ti-lowcode-datasource-toolbar-more-hover-color);
+        &:hover {
+          color: var(--ti-lowcode-toolbar-icon-color);
+        }
       }
     }
   }

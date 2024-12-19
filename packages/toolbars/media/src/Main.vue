@@ -11,17 +11,20 @@
           >
             <tiny-popover
               trigger="hover"
-              width="225"
+              width="260"
               append-to-body
               :open-delay="1000"
               popper-class="media-icon-popover"
             >
               <div class="media-content">
                 <div class="media-title">
-                  <div>{{ item.title }}</div>
-                  <div v-if="item.subTitle" class="sub-title">
-                    （<svg-icon v-if="item.view === 'desktop'" name="stars"></svg-icon> <span>{{ item.subTitle }}</span
-                    >）
+                  <div>
+                    {{ item.title }}
+                    <span v-if="item.subTitle" class="sub-title">
+                      （<svg-icon v-if="item.view === 'desktop'" name="stars"></svg-icon>
+                      <span>{{ item.subTitle }}</span
+                      >）
+                    </span>
                   </div>
                 </div>
                 <div class="content">{{ item.content }}</div>
@@ -32,60 +35,43 @@
             </tiny-popover>
           </span>
         </div>
-        <tiny-popover v-if="isCanvas" width="290" trigger="click" popper-class="toolbar-media-popper">
+        <tiny-popover v-if="isCanvas" width="200" trigger="click" popper-class="toolbar-media-popper">
           <template #reference>
-            <tiny-popover
-              trigger="hover"
-              :open-delay="1000"
-              popper-class="toolbar-right-popover"
-              append-to-body
-              content="画布设置"
-            >
-              <template #reference>
-                <span class="reference-text">
-                  <span>
-                    <span>{{ parseInt(state.width) }}</span>
-                    <span class="symbol">PX</span>
-                  </span>
-                  <span>
-                    <span>{{ scale.toFixed(2) }}</span>
-                    <span class="symbol">%</span>
-                  </span>
-                </span>
-              </template>
-            </tiny-popover>
+            <span class="reference-text" title="画布设置">
+              <span>
+                <span>{{ parseInt(state.width) }}</span>
+                <span class="symbol">px</span>
+              </span>
+              <span>
+                <span>{{ scale.toFixed(2) }}</span>
+                <span class="symbol">%</span>
+              </span>
+            </span>
           </template>
           <div class="content-wrap text-content">
-            <span class="title text-title">{{ state.textData.title }}</span>
+            <div class="title text-title">{{ state.textData.title }}</div>
             <div class="setting">
               <div>
-                <label for="">{{ state.textData.width }}</label>
+                <label>{{ state.textData.width }}</label>
                 <tiny-input v-model="state.width" @change="widthChange">
                   <template #suffix>
-                    <span>PX</span>
+                    <span>px</span>
                   </template>
                 </tiny-input>
               </div>
               <div>
-                <label for="">{{ state.textData.scale }}</label>
+                <label>{{ state.textData.scale }}</label>
                 <tiny-input v-model="state.scaleValue" :readonly="state.readonly" @change="scaleChange">
                   <template #suffix>
                     <span>%</span>
                   </template>
                 </tiny-input>
               </div>
+              <div>
+                <label>{{ '自由布局' }}</label>
+                <tiny-switch v-model="isAbsolute" @change="changeCanvasType"></tiny-switch>
+              </div>
             </div>
-
-            <ul class="more-setting">
-              <li>
-                <div>
-                  <span>{{ '自由布局' }}</span>
-                </div>
-                <div>
-                  <tiny-switch v-model="isAbsolute" @change="changeCanvasType"></tiny-switch>
-                </div>
-              </li>
-            </ul>
           </div>
         </tiny-popover>
       </div>
@@ -196,8 +182,8 @@ export default {
           maxWidth: '1920px',
           title: '大屏',
           subTitle: '1200px 及以上',
-          content: '此处添加的样式将适用于 1200 像素及以上，除非它们在更大的断点处进行编辑',
-          enContent: 'Style added here will apply at 1200px and up,unless they′re edited at a larger breakpoint'
+          content: '此处添加的样式将适用于 1200 像素及以上，除非它们在更大的断点处进行编辑。',
+          enContent: 'Style added here will apply at 1200px and up,unless they′re edited at a larger breakpoint.'
         },
         {
           idx: 1,
@@ -456,7 +442,6 @@ export default {
     flex-wrap: nowrap;
     align-items: center;
     gap: 6px;
-
     .icon {
       width: 24px;
       height: 24px;
@@ -485,12 +470,50 @@ export default {
       }
     }
   }
-
   .more-setting {
     .setting-item {
       display: flex;
       justify-content: space-between;
       padding: 12px;
+    }
+  }
+}
+.media-content {
+  padding: 12px 8px;
+  line-height: 18px;
+  .media-title {
+    font-weight: 600;
+  }
+  .content {
+    color: var(--te-common-text-secondary);
+  }
+}
+.setting-content {
+  padding: 12px 8px;
+}
+
+.content-wrap {
+  padding: 20px 12px;
+  .title {
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+
+  .setting {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    div {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      label {
+        color: var(--te-common-text-secondary);
+        min-width: 64px;
+      }
+      &:last-child {
+        justify-content: flex-start;
+      }
     }
   }
 }

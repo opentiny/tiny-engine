@@ -141,20 +141,22 @@ export default {
 
 <style lang="less" scoped>
 #source-code {
-  width: 45vw;
+  width: 50vw;
   height: calc(100% - var(--base-top-panel-height));
-  padding: 12px;
+  padding: 12px 0;
   position: fixed;
   top: var(--base-top-panel-height);
   left: 41px;
   background: var(--ti-lowcode-common-component-bg);
-  box-shadow: 2px 2px 6px rgb(0 0 0 / 60%);
+  box-shadow: 6px 0px 3px 0px rgba(0, 0, 0, 0.05);
   z-index: 1000;
   .source-code-header {
     display: flex;
     justify-content: space-between;
-    border-bottom: 1px solid var(--ti-lowcode-toolbar-border-color);
+    align-items: center;
+    border-bottom: 1px solid var(--te-common-border-divider);
     margin-bottom: 12px;
+    padding: 0 12px 12px;
   }
   .title {
     color: var(--ti-lowcode-plugin-panel-title-color);
@@ -164,7 +166,6 @@ export default {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    margin-bottom: 10px;
     .icon-wrap {
       .tiny-button {
         width: 40px;
@@ -194,6 +195,7 @@ export default {
     height: calc(100% - 42px);
     border: 1px solid var(--ti-lowcode-base-gray-101);
     border-radius: 4px;
+    margin: 0 12px;
   }
   .code-edit-content {
     height: 100%;

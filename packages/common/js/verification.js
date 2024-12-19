@@ -14,7 +14,7 @@ export const REGEXP_EVENT_NAME = /^[a-z]+([A-Z][a-z]*)*$/
 
 export const verifyEventName = (name) => REGEXP_EVENT_NAME.test(name)
 
-export const REGEXP_BLOCK_NAME = /^([A-Z][A-Za-z0-9]{2,})*?([A-Z][A-Za-z0-9]{2,})*?$/
+export const REGEXP_BLOCK_NAME = /^([A-Z][a-z0-9]*){2,}$/
 
 export const verifyBlockName = (string) => REGEXP_BLOCK_NAME.test(string)
 

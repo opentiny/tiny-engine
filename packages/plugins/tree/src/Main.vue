@@ -1,33 +1,11 @@
 <template>
   <plugin-panel class="outlinebox" title="大纲树" @close="$emit('close')">
     <template #header>
-      <!-- TODO 功能待实现 -->
-      <!-- <tiny-tooltip class="item" effect="dark" :content="state.expandAll ? '收缩' : '展开'" placement="bottom">
-        <span class="icon-ex" @click="toggleTree">
-          <svg-icon v-if="state.expandAll" name="expand"></svg-icon>
-          <svg-icon v-else name="collapse"></svg-icon>
-        </span>
-      </tiny-tooltip> -->
-      <!-- TODO: 保留备份，确认svg-button写法无问题后删除 -->
-      <!-- <tiny-tooltip
-        class="item"
-        effect="dark"
-        :content="!fixedPanels?.includes(PLUGIN_NAME.OutlineTree) ? '固定面板' : '解除固定面板'"
-        placement="bottom"
-      >
-        <span
-          :class="['icon-sidebar', fixedPanels?.includes(PLUGIN_NAME.OutlineTree) && 'active']"
-          @click="$emit('fixPanel', PLUGIN_NAME.OutlineTree)"
-        >
-          <svg-icon name="fixed"></svg-icon>
-        </span>
-      </tiny-tooltip> -->
       <svg-button
         class="item icon-sidebar"
-        :class="[fixedPanels?.includes(PLUGIN_NAME.OutlineTree) && 'active']"
-        :tips="!fixedPanels?.includes(PLUGIN_NAME.OutlineTree) ? '固定面板' : '解除固定面板'"
-        @click="$emit('fixPanel', PLUGIN_NAME.OutlineTree)"
-        name="fixed"
+        :name="panelFixed ? 'fixed-solid' : 'fixed'"
+        :tips="panelFixed ? '解除固定面板' : '固定面板'"
+        @click="$emit('fix-panel', PLUGIN_NAME.OutlineTree)"
       ></svg-button>
     </template>
     <template #content>
@@ -76,7 +54,6 @@ import { Grid, GridColumn } from '@opentiny/vue'
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { IconChevronDown, iconEyeopen, iconEyeclose } from '@opentiny/vue-icon'
-// import Sortable from 'sortablejs'
 import { useCanvas, useMaterial, useLayout } from '@opentiny/tiny-engine-meta-register'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { typeOf } from '@opentiny/vue-renderless/common/type'
@@ -97,9 +74,12 @@ export default {
     }
   },
   emits: ['close', 'fix-panel'],
-  setup() {
+  setup(props) {
     const { pageState, getInstance } = useCanvas()
     const { getMaterial } = useMaterial()
+    const { PLUGIN_NAME } = useLayout()
+
+    const panelFixed = computed(() => props.fixedPanels?.includes(PLUGIN_NAME.OutlineTree))
 
     const filterSchema = (data) => {
       const translateChild = (data) => {
@@ -121,7 +101,6 @@ export default {
 
       return [{ ...translateChild([extend(true, {}, data)])[0], componentName: 'body' }]
     }
-    const { PLUGIN_NAME } = useLayout()
     const state = reactive({
       pageSchema: [],
       expandAll: true,
@@ -285,6 +264,7 @@ export default {
       })
 
     return {
+      panelFixed,
       checkElement,
       mouseover,
       mouseleave,

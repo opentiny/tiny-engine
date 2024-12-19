@@ -62,7 +62,7 @@ export default {
 .colums {
   width: 100%;
   .top {
-    color: var(--ti-lowcode-toolbar-breadcrumb-color);
+    color: var(--te-common-text-secondary);
     display: flex;
     justify-content: space-between;
     margin-bottom: 5px;

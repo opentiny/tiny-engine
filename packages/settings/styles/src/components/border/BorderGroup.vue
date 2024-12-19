@@ -90,7 +90,7 @@
       :class="{ 'is-setting': isBorderSetting(), 'set-border-style': true }"
       @click="openSetting(BORDER_PROPERTY.Border, $event)"
     >
-      <span class="border-title">边框</span>
+      <span>边框</span>
     </label>
   </div>
   <div class="border-container">
@@ -555,7 +555,7 @@ export default {
     }
   }
   svg {
-    color: var(--ti-lowcode-toolbar-breadcrumb-color);
+    color: var(--te-common-text-secondary);
   }
 }
 .item-row {
@@ -574,7 +574,6 @@ export default {
 
   .radius-label {
     flex: 0 0 48px;
-    padding: 0 2px;
     line-height: 24px;
     color: var(--ti-lowcode-component-setting-panel-label-color);
   }
@@ -655,10 +654,6 @@ export default {
 .border-label {
   color: var(--te-common-text-secondary);
   flex-shrink: 0;
-
-  .border-title {
-    margin-left: 2px;
-  }
 }
 .border-container {
   display: flex;
@@ -724,7 +719,7 @@ export default {
   span {
     border-radius: 2px;
     color: var(--ti-lowcode-style-setting-label-color);
-    background: var(--ti-lowcode-style-setting-label-bg);
+    background: var(--te-common-bg-text-emphasize);
     cursor: pointer;
   }
 }

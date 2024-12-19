@@ -3,10 +3,11 @@
     <div class="spacing-max-icon">
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        fill="#F5F5F5"
+        fill="currentColor"
         width="256"
         height="120"
         style="grid-area: 1 / 1 / -1 / -1"
+        class="margin-color"
       >
         <g>
           <g>
@@ -21,7 +22,7 @@
             "
               data-automation-id="margin-top-button"
               aria-label="Margin top button"
-              class="tb-path-color"
+              class="padding-color"
               @click="clickMargin(SPACING_PROPERTY.MarginTop, $event)"
             ></path>
           </g>
@@ -39,7 +40,7 @@
             "
               data-automation-id="margin-right-button"
               aria-label="Margin right button"
-              class="lr-path-color"
+              class="padding-color"
               @click="clickMargin(SPACING_PROPERTY.MarginRight, $event)"
             ></path>
           </g>
@@ -57,7 +58,7 @@
             "
               data-automation-id="margin-bottom-button"
               aria-label="Margin bottom button"
-              class="tb-path-color"
+              class="padding-color"
               @click="clickMargin(SPACING_PROPERTY.MarginBottom, $event)"
             ></path>
           </g>
@@ -75,37 +76,55 @@
             "
               data-automation-id="margin-left-button"
               aria-label="Margin left button"
-              class="lr-path-color"
+              class="margin-color"
               @click="clickMargin(SPACING_PROPERTY.MarginLeft, $event)"
             ></path>
           </g>
         </g>
-        <clipPath id="margin-outer">
-          <rect x="0" y="0" width="256" height="120" fill="#F5F5F5" rx="4" ry="4" style="pointer-events: none"></rect>
+        <clipPath id="margin-outer" class="margin-color">
+          <rect
+            x="0"
+            y="0"
+            width="256"
+            height="120"
+            fill="currentColor"
+            rx="4"
+            ry="4"
+            style="pointer-events: none"
+          ></rect>
         </clipPath>
         <rect
-          class="stroke"
+          class="margin-color"
           clip-path="url(#margin-outer)"
           x="0"
           y="0"
           width="256"
           height="120"
-          fill="#F5F5F5"
+          fill="currentColor"
           rx="4"
           ry="4"
           style="pointer-events: none; stroke-width: 0"
         ></rect>
-        <clipPath id="margin-inner">
-          <rect x="45" y="25" width="168" height="70" fill="#E6E6E6" rx="4" ry="4" style="pointer-events: none"></rect>
+        <clipPath id="margin-inner" class="margin-color">
+          <rect
+            x="45"
+            y="25"
+            width="168"
+            height="70"
+            fill="currentColor"
+            rx="4"
+            ry="4"
+            style="pointer-events: none"
+          ></rect>
         </clipPath>
         <rect
-          class="stroke"
+          class="padding-color"
           clip-path="url(#margin-inner)"
           x="45"
           y="25"
           width="168"
           height="70"
-          fill="#E6E6E6"
+          fill="currentColor"
           rx="4"
           ry="4"
           style="pointer-events: none; stroke-width: 0"
@@ -165,7 +184,14 @@
       </div>
     </div>
     <div class="spacing-min-icon">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="#F5F5F5" width="168" height="70" style="grid-area: 1 / 1 / -1 / -1">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="currentColor"
+        width="168"
+        height="70"
+        style="grid-area: 1 / 1 / -1 / -1"
+        class="margin-color"
+      >
         <g>
           <g>
             <path
@@ -179,7 +205,7 @@
             "
               data-automation-id="padding-top-button"
               aria-label="Padding top button"
-              class="tb-path-color"
+              class="padding-color"
               @click="clickPadding(SPACING_PROPERTY.PaddingTop, $event)"
             ></path>
           </g>
@@ -197,7 +223,7 @@
             "
               data-automation-id="padding-right-button"
               aria-label="Padding right button"
-              class="lr-path-color"
+              class="padding-color"
               @click="clickPadding(SPACING_PROPERTY.PaddingRight, $event)"
             ></path>
           </g>
@@ -215,7 +241,7 @@
             "
               data-automation-id="padding-bottom-button"
               aria-label="Padding bottom button"
-              class="tb-path-color"
+              class="padding-color"
               @click="clickPadding(SPACING_PROPERTY.PaddingBottom, $event)"
             ></path>
           </g>
@@ -233,37 +259,54 @@
             "
               data-automation-id="padding-left-button"
               aria-label="Padding left button"
-              class="lr-path-color"
+              class="margin-color"
               @click="clickPadding(SPACING_PROPERTY.PaddingLeft, $event)"
             ></path>
           </g>
         </g>
-        <clipPath id="padding-outer">
-          <rect x="5" y="-4" width="168" height="70" fill="#E6E6E6" rx="4" ry="4" style="pointer-events: none"></rect>
+        <clipPath id="padding-outer" class="padding-color">
+          <rect
+            x="5"
+            y="-4"
+            width="168"
+            height="70"
+            fill="currentColor"
+            rx="4"
+            ry="4"
+            style="pointer-events: none"
+          ></rect>
         </clipPath>
         <rect
-          class="stroke"
+          class="stroke padding-color"
           clip-path="url(#padding-outer)"
           x="0"
           y="0"
           width="168"
           height="70"
-          fill="#E6E6E6"
+          fill="currentColor"
           rx="4"
           ry="4"
           style="pointer-events: none; stroke-width: 0"
         ></rect>
-        <clipPath id="padding-inner">
-          <rect x="64" y="25" width="48" height="20" fill="#FFF" rx="4" ry="4" style="pointer-events: none"></rect>
+        <clipPath id="padding-inner" class="inner-color">
+          <rect
+            x="64"
+            y="25"
+            width="48"
+            height="20"
+            fill="currentColor"
+            rx="4"
+            ry="4"
+            style="pointer-events: none"
+          ></rect>
         </clipPath>
         <rect
-          class="stroke"
+          class="stroke inner-color"
           clip-path="url(#padding-inner)"
           x="64"
           y="25"
           width="48"
           height="20"
-          fill="#FFF"
           rx="4"
           ry="4"
           style="pointer-events: none; stroke-width: 0"
@@ -465,7 +508,6 @@ export default {
   outline-style: none;
   cursor: default;
   user-select: none;
-
   .spacing-max-icon {
     grid-area: 1 / 1 / -1 / -1;
     display: grid;
@@ -499,7 +541,7 @@ export default {
     line-height: 10px;
     letter-spacing: -0.2px;
     display: flex;
-    color: var(--te-base-text-color);
+    color: var(--te-common-text-primary);
     background: transparent;
     padding: 2px 4px;
     margin-left: -2px;
@@ -513,7 +555,7 @@ export default {
     justify-content: center;
 
     &.is-setting {
-      background-color: var(--ti-lowcode-style-setting-label-bg);
+      background-color: var(--te-common-bg-text-emphasize);
     }
 
     &.is-show {
@@ -545,24 +587,16 @@ export default {
     }
   }
 
-  .lr-path-color {
+  .margin-color {
     cursor: pointer;
-    color: var(--ti-lowcode-spacing-lr-color);
-    &:hover {
-      color: var(--ti-lowcode-spacing-lr-hover-color);
-    }
+    color: var(--ti-lowcode-spacing-margin-color);
   }
-
-  .tb-path-color {
+  .padding-color {
     cursor: pointer;
-    color: var(--ti-lowcode-spacing-tb-color);
-    &:hover {
-      color: var(--ti-lowcode-spacing-tb-hover-color);
-    }
+    color: var(--ti-lowcode-spacing-padding-color);
   }
-
-  .stroke {
-    stroke: var(--ti-lowcode-spacing-border-color);
+  .inner-color {
+    color: var(--te-common-bg-default);
   }
 }
 </style>

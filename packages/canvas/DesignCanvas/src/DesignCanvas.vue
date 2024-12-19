@@ -121,7 +121,6 @@ export default {
         useModal().confirm({
           title: '提示',
           message: renderMsg,
-          status: 'info',
           exec: callback,
           cancel: callback,
           hide: () => {
