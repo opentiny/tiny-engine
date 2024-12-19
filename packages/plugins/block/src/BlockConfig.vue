@@ -247,7 +247,7 @@ export default {
       }
     }
 
-    const groupLabels = shouldReplaceCategoryWithGroup
+    const groupLabels = shouldReplaceCategoryWithGroup()
       ? {
           select: '区块分组',
           selectPlaceholder: '默认分组'
