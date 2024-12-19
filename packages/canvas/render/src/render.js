@@ -261,7 +261,7 @@ const blockComponentsBlobUrlMap = new Map()
 window.getBlockComponentBlobUrl = (name) => blockComponentsBlobUrlMap.get(name)
 
 const getBlockComponent = (name) => {
-  if (blockComponentsMap.get(name)) {
+  if (blockComponentsMap.has(name)) {
     return blockComponentsMap.get(name)
   }
 
@@ -304,9 +304,14 @@ const getBlockComponent = (name) => {
   return BlockComp
 }
 
+// 移除区块缓存
 export const removeBlockCompsCacheByName = (name) => {
-  if (blockComponentsMap.get(name)) {
+  if (blockComponentsMap.has(name)) {
     blockComponentsMap.delete(name)
+  }
+
+  if (blockComponentsBlobUrlMap.has(name)) {
+    blockComponentsBlobUrlMap.delete(name)
   }
 }
 

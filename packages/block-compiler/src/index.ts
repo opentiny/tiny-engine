@@ -221,17 +221,6 @@ const parseImportedFiles = (descriptor: SFCDescriptor): string[] => {
   return res
 }
 
-const filterNextCompileFiles = (files: IParsedFileItem[], compiledFilesSet: Set<string>) => {
-  return files.filter((fileItem) => {
-    // 未被编译
-    return (
-      !compiledFilesSet.has(fileItem.fileNameWithRelativePath) &&
-      // 且子依赖已经被编译
-      !fileItem.importedFiles.some((item) => !compiledFilesSet.has(item))
-    )
-  })
-}
-
 const getJSBlobURL = (str: string) => {
   const blob = new Blob([str], { type: 'application/javascript' })
 
@@ -245,12 +234,8 @@ export interface IFileItem {
 
 export type IFileList = IFileItem[]
 
-export interface ICompileCacheItem {
-  compileResult: compiledItem
-}
-
 export interface IConfig {
-  compileCache?: Map<string, ICompileCacheItem>
+  compileCache?: Map<string, compiledItem>
   globalGetterName?: string
 }
 
@@ -289,41 +274,34 @@ export const compile = (fileList: IFileList, config: IConfig) => {
 
   const compileCache = config?.compileCache || new Map()
 
-  // 根据依赖顺序编译文件。优先编译 0 依赖的文件。
-  let nextCompileFile = filterNextCompileFiles(parsedFileList, compiledFilesSet)
+  for (const fileItem of parsedFileList) {
+    const fileName = fileItem.fileName
+    const cache = compileCache.get(fileName)
+    let js = ''
+    let style = ''
 
-  while (nextCompileFile.length) {
-    for (const fileItem of nextCompileFile) {
-      const fileName = fileItem.fileName
-      const cache = compileCache.get(fileName)
-      let js = ''
-      let style = ''
+    // 优先使用缓存
+    if (cache?.js && cache?.style) {
+      js = cache.js
+      style = cache.style
+    } else {
+      const compileRes = compileFile(fileItem)
 
-      // 优先使用缓存
-      if (cache?.compileResult?.js && cache?.compileResult?.style) {
-        js = cache.compileResult.js
-        style = cache.compileResult.style
-      } else {
-        const compileRes = compileFile(fileItem)
-
-        js = compileRes.js
-        style = compileRes.style
-      }
-
-      const resolvedImportJs = resolveRelativeImport(js, config?.globalGetterName)
-
-      resultMap[fileName] = {
-        js: resolvedImportJs,
-        style,
-        blobURL: getJSBlobURL(resolvedImportJs)
-      }
-
-      compileCache.set(fileName, resultMap[fileName])
-
-      compiledFilesSet.add(fileItem.fileNameWithRelativePath)
+      js = compileRes.js
+      style = compileRes.style
     }
 
-    nextCompileFile = filterNextCompileFiles(parsedFileList, compiledFilesSet)
+    const resolvedImportJs = resolveRelativeImport(js, config?.globalGetterName)
+
+    resultMap[fileName] = {
+      js: resolvedImportJs,
+      style,
+      blobURL: getJSBlobURL(resolvedImportJs)
+    }
+
+    compileCache.set(fileName, resultMap[fileName])
+
+    compiledFilesSet.add(fileItem.fileNameWithRelativePath)
   }
 
   return resultMap
