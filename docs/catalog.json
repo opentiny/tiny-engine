@@ -5,7 +5,7 @@
       "sections": [
         {
           "name": "新手指引",
-          "path": "新手指引",
+          "path": "getting-started",
           "articles": [
             { "name": "简介", "path": "简介.md" },
             { "name": "快速上手", "path": "快速上手.md" }
@@ -13,7 +13,7 @@
         },
         {
           "name": "基础功能",
-          "path": "基础功能",
+          "path": "basic-features",
           "articles": [
             { "name": "初识设计器", "path": "初识设计器.md" },
             { "name": "设计前端应用流程", "path": "设计前端应用流程.md" },
@@ -30,7 +30,7 @@
         },
         {
           "name": "进阶功能",
-          "path": "进阶功能",
+          "path": "advanced-features",
           "articles": [
             { "name": "区块管理", "path": "区块管理.md" },
             { "name": "使用JS面板和事件绑定", "path": "使用JS面板和事件绑定.md" },
@@ -47,7 +47,7 @@
         },
         {
           "name": "教程",
-          "path": "教程",
+          "path": "tutorials",
           "articles": [
             { "name": "从零搭建一个页面", "path": "从零搭建一个页面.md" },
             { "name": "第一期2023.10.27", "path": "第一期2023.10.27.md" }
@@ -60,7 +60,7 @@
       "sections": [
         {
           "name": "开始",
-          "path": "开始",
+          "path": "development-getting-started",
           "articles": [
             { "name": "简介", "path": "简介.md" },
             { "name": "快速上手", "path": "快速上手.md" }
@@ -68,7 +68,7 @@
         },
         {
           "name": "解决方案",
-          "path": "解决方案",
+          "path": "solutions",
           "articles": [
             { "name": "服务端部署方案", "path": "服务端部署方案.md" },
             { "name": "区块发布方案", "path": "区块发布方案.md" },
@@ -79,7 +79,7 @@
         },
         {
           "name": "扩展能力介绍",
-          "path": "扩展能力介绍",
+          "path": "extension-capabilities-overview",
           "articles": [
             { "name": "新架构介绍", "path": "新架构介绍.md" },
             { "name": "注册表", "path": "注册表.md" },
@@ -88,12 +88,12 @@
         },
         {
           "name": "扩展能力使用教程",
-          "path": "扩展能力使用教程",
+          "path": "extension-capabilities-tutorial",
           "articles": [
             { "name": "如何开发插件", "path": "如何开发插件.md" },
             {
               "name": "出码功能",
-              "path": "出码功能",
+              "path": "code-output-function",
               "articles": [
                 { "name": "出码功能简介与使用", "path": "出码功能简介与使用.md" },
                 { "name": "如何自定义出码", "path": "如何自定义出码.md" },
@@ -109,7 +109,7 @@
         },
         {
           "name": "API",
-          "path": "API",
+          "path": "api",
           "articles": [
             { "name": "API总览", "path": "API总览.md" },
             { "name": "主包API", "path": "主包API.md" },
@@ -119,7 +119,7 @@
             { "name": "设置面板API", "path": "设置面板API.md" },
             {
               "name": "后端API",
-              "path": "后端API",
+              "path": "backend-api",
               "articles": [
                 { "name": "AI功能接口", "path": "AI功能接口.md" },
                 { "name": "应用管理", "path": "应用管理.md" },
@@ -137,7 +137,7 @@
         },
         {
           "name": "实战案例",
-          "path": "实战案例",
+          "path": "practical-cases",
           "articles": [
             { "name": "PDM元数据审批电子流", "path": "PDM元数据审批电子流.md" },
             { "name": "图元编排设计器", "path": "图元编排设计器.md" },
@@ -151,7 +151,7 @@
       "sections": [
         {
           "name": "生态中心",
-          "path": "生态中心",
+          "path": "ecosystem-center",
           "articles": [
             { "name": "介绍", "path": "介绍.md" },
             { "name": "如何导入组件库", "path": "如何导入组件库.md" },
@@ -161,7 +161,7 @@
         },
         {
           "name": "关于应用",
-          "path": "关于应用",
+          "path": "about-applications",
           "articles": [
             {
               "name": "创建应用（创建空白应用、从模板创建应用）",
@@ -172,7 +172,7 @@
         },
         {
           "name": "关于物料",
-          "path": "关于物料",
+          "path": "about-materials",
           "articles": [
             { "name": "介绍", "path": "介绍.md" },
             { "name": "创建物料资产包", "path": "创建物料资产包.md" },
@@ -182,7 +182,7 @@
         },
         {
           "name": "关于设计器",
-          "path": "关于设计器",
+          "path": "about-designer",
           "articles": [
             { "name": "介绍", "path": "介绍.md" },
             { "name": "创建设计器", "path": "创建设计器.md" },
