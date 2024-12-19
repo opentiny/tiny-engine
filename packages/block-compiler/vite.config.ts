@@ -32,14 +32,7 @@ export default defineConfig({
       formats: ['es']
     },
     rollupOptions: {
-      external: [
-        'vue',
-        'vue/compiler-sfc',
-        '@babel/core',
-        '@vue/shared',
-        /@opentiny\/tiny-engine.*/,
-        /@opentiny\/vue.*/
-      ]
+      external: ['@babel/core', '@vue/babel-plugin-jsx', 'vue', 'vue/compiler-sfc']
     }
   }
 })

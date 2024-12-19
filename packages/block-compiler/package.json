@@ -27,15 +27,10 @@
   "author": "OpenTiny Team",
   "license": "MIT",
   "homepage": "https://opentiny.design/tiny-engine",
-  "dependencies": {
-    "@vue/babel-plugin-jsx": "^1.2.5",
-    "@vue/shared": "^3.3.4"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
-    "@opentiny/tiny-engine-common": "workspace:*",
-    "@opentiny/tiny-engine-meta-register": "workspace:*",
     "@types/babel__core": "^7.20.5",
     "@typescript-eslint/eslint-plugin": "^8.14.0",
     "@typescript-eslint/parser": "^8.14.0",
@@ -43,11 +38,12 @@
     "eslint": "^8.38.0",
     "typescript": "~5.4.2",
     "vite": "^5.4.2",
-    "vite-plugin-dts": "^4.3.0",
-    "vue-tsc": "^2.1.8"
+    "vite-plugin-dts": "^4.3.0"
   },
   "peerDependencies": {
     "@babel/core": "^7.26.0",
-    "vue": "^3.4.15"
+    "@vue/babel-plugin-jsx": "^1.2.5",
+    "vue": "^3.4.15",
+    "@vue/compiler-sfc": "^3.4.15"
   }
 }

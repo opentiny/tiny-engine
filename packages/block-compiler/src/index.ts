@@ -1,5 +1,5 @@
-import { compileScript, compileTemplate, compileStyle, parse, babelParse, MagicString } from 'vue/compiler-sfc'
-import type { SFCParseResult, SFCDescriptor, BindingMetadata, CompilerOptions } from 'vue/compiler-sfc'
+import { compileScript, compileTemplate, compileStyle, parse, babelParse, MagicString } from '@vue/compiler-sfc'
+import type { SFCParseResult, SFCDescriptor, BindingMetadata, CompilerOptions } from '@vue/compiler-sfc'
 import { testIsJsx, transformVueJsx } from './transformJsx.ts'
 
 const compileBlockStyle = (descriptor: SFCDescriptor, id: string) => {
