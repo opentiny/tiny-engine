@@ -13,7 +13,6 @@
         <span class="title">{{ groupItem.groupName }}</span>
       </template>
       <div class="app-manage-tree">
-        <!-- TODO 1. lock, home icons -->
         <draggble-tree
           :data="groupItem.data"
           label-key="name"
@@ -25,6 +24,8 @@
         >
           <template #row-suffix="{ node }">
             <div :class="['actions']">
+              <svg-icon v-if="isPageLocked(node.rawData)" name="locked"></svg-icon>
+              <svg-icon v-if="node.rawData.isHome" name="home"></svg-icon>
               <tiny-popover
                 :ref="(el) => setPopoverRef(el, node.id)"
                 placement="bottom-start"
@@ -42,7 +43,7 @@
                   </div>
                 </div>
                 <template #reference>
-                  <svg-icon name="ellipsis"></svg-icon>
+                  <svg-icon name="ellipsis" class="auto-hidden"></svg-icon>
                 </template>
               </tiny-popover>
             </div>
@@ -244,9 +245,12 @@ export default {
       nodeClick(null, node.rawData)
     }
 
+    const isPageLocked = (pageData) => {
+      return getCanvasStatus(pageData.occupier).state === PAGE_STATUS.Lock
+    }
+
     const handleClickPageSettings = (node) => {
-      const isPageLocked = getCanvasStatus(node.rawData.occupier).state === PAGE_STATUS.Lock
-      openSettingPanel(null, node.rawData, isPageLocked)
+      openSettingPanel(null, node.rawData, isPageLocked(node.rawData))
     }
 
     const createPage = (node) => {
@@ -257,22 +261,15 @@ export default {
       emit('createFolder', node.id)
     }
 
-    const copyPage = () => {
-      // TODO
-    }
-
-    const deleteNode = () => {
-      // TODO
-    }
-
     const rowOperations = [
       { type: 'settings', label: '设置', action: handleClickPageSettings },
       { type: 'divider' },
       { type: 'createPage', label: '新建子页面', action: createPage },
-      { type: 'createFolder', label: '新建子文件夹', action: createFolder },
-      { type: 'divider' },
-      { type: 'copy', label: '复制页面', action: copyPage },
-      { type: 'delete', label: '删除', class: ['danger'], action: deleteNode }
+      { type: 'createFolder', label: '新建子文件夹', action: createFolder }
+      // TODO 复制和删除的逻辑耦合在其他组件内，暂时屏蔽
+      // { type: 'divider' },
+      // { type: 'copy', label: '复制页面', action: copyPage },
+      // { type: 'delete', label: '删除', class: ['danger'], action: deleteNode }
     ].map((item) => ({
       ...item,
       action: (node) => {
@@ -285,7 +282,7 @@ export default {
 
     const getRowOperations = (groupId, node) => {
       if (groupId === COMMON_PAGE_GROUP_ID) {
-        return rowOperations.slice(0, 2).concat(rowOperations.slice(5))
+        return rowOperations.slice(0, 1)
       }
       if (!node.rawData.isPage) {
         return rowOperations.filter((item) => item.type !== 'copy')
@@ -339,6 +336,7 @@ export default {
         // TODO 页面更换父节点后，原来每次变更需要填写变更信息
         fetchPageDetail(dragged.id).then((pageDetail) => {
           pageDetail.parentId = newParent.id
+          // TOOD 接口失败要回退，原来逻辑没有处理回退
           if (pageDetail.isPage) {
             updatePage(pageDetail)
           } else {
@@ -392,6 +390,7 @@ export default {
       getRowOperations,
       handleClickRow,
       handleMoveNode,
+      isPageLocked,
       handleClickPageSettings
     }
   }
@@ -488,19 +487,19 @@ export default {
     }
   }
   .actions {
-    display: none;
+    display: flex;
     align-items: center;
     gap: 8px;
     svg {
       color: var(--te-common-icon-secondary);
       outline: none;
     }
-    &.show {
-      display: flex;
+    .auto-hidden {
+      display: none;
     }
   }
-  .row:hover .actions {
-    display: flex;
+  .row:hover .actions .auto-hidden {
+    display: unset;
   }
 }
 </style>
@@ -510,6 +509,7 @@ export default {
   padding: 0;
   margin-top: 4px;
   .operation-list {
+    min-width: 110px;
     padding: 8px 0;
     & > div {
       padding: 0 12px;

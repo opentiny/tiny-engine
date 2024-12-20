@@ -2,13 +2,20 @@
   <div class="draggable-tree">
     <div
       v-for="(node, rowIndex) of filteredNodesWithAncestors"
-      :class="['row', { active: active === node.id, hover: hoveringNodeId === node.id }]"
+      :class="[
+        'row',
+        {
+          active: active === node.id,
+          ['hover-border']: hoveringNodeId === node.id
+        }
+      ]"
       :key="node.id"
       draggable="true"
       @dragstart="handleDragStart($event, node)"
       @dragover="handleDragOver($event, node)"
       @dragenter="handleDragOver($event, node)"
       @drop="handleDrop($event, node)"
+      @dragend="handleDragEnd"
     >
       <div class="content" @click="handleClickRow(node)">
         <layer-lines :line-data="layerLine[rowIndex]" :level="node.level"></layer-lines>
@@ -177,7 +184,6 @@ const handleDrop = (event, node) => {
 
   const dragged = draggedNode.value
   draggedNode.value = null
-  hoveringNodeId.value = null
 
   if (!dragged) {
     return
@@ -188,6 +194,10 @@ const handleDrop = (event, node) => {
   if (!isDescendant && dragged.id !== node.id && dragged.parentId !== node.id) {
     emit('moveNode', dragged, node)
   }
+}
+
+const handleDragEnd = () => {
+  hoveringNodeId.value = null
 }
 </script>
 
@@ -236,7 +246,7 @@ const handleDrop = (event, node) => {
         color: var(--te-common-bg-primary-checked);
       }
     }
-    &.hover {
+    &.hover-border {
       border: 1px solid var(--te-common-border-checked);
     }
   }
