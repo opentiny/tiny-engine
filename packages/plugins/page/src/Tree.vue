@@ -1,8 +1,8 @@
 <template>
   <div class="draggable-tree">
     <div
-      :class="['row', { active: active === node.id }]"
       v-for="(node, rowIndex) of filteredNodesWithAncestors"
+      :class="['row', { active: active === node.id, hover: hoveringNodeId === node.id }]"
       :key="node.id"
       draggable="true"
       @dragstart="handleDragStart($event, node)"
@@ -155,6 +155,7 @@ const handleClickRow = (node) => {
 }
 
 const draggedNode = ref(null)
+const hoveringNodeId = ref(null)
 
 const handleDragStart = (event, node) => {
   draggedNode.value = node
@@ -167,6 +168,7 @@ const handleDragOver = (event, node) => {
   if (!isDescendant) {
     // 阻止默认行为以允许放置
     event.preventDefault()
+    hoveringNodeId.value = node.id
   }
 }
 
@@ -175,6 +177,7 @@ const handleDrop = (event, node) => {
 
   const dragged = draggedNode.value
   draggedNode.value = null
+  hoveringNodeId.value = null
 
   if (!dragged) {
     return
@@ -232,6 +235,9 @@ const handleDrop = (event, node) => {
       svg {
         color: var(--te-common-bg-primary-checked);
       }
+    }
+    &.hover {
+      border: 1px solid var(--te-common-border-checked);
     }
   }
 }
