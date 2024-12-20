@@ -25,7 +25,7 @@ import {
   CanvasSection
 } from '@opentiny/tiny-engine-builtin-component'
 import { NODE_UID as DESIGN_UIDKEY, NODE_TAG as DESIGN_TAGKEY, NODE_LOOP as DESIGN_LOOPID } from '../../common'
-import { context, conditions, setNode, getDesignMode, DESIGN_MODE } from './context'
+import { context, conditions, getDesignMode, DESIGN_MODE } from './context'
 import {
   CanvasBox,
   CanvasCollection,
@@ -579,7 +579,7 @@ const injectPlaceHolder = (componentName, children) => {
   return children
 }
 
-const renderGroup = (children, scope, parent) => {
+const renderGroup = (children, scope) => {
   return children.map?.((schema) => {
     const { componentName, children, loop, loopArgs, condition, id } = schema
     const loopList = parseData(loop, scope)
@@ -591,8 +591,6 @@ const renderGroup = (children, scope, parent) => {
         item,
         loopArgs
       })
-
-      setNode(schema, parent)
 
       if (conditions[id] === false || !parseCondition(condition, mergeScope)) {
         return null
@@ -622,14 +620,19 @@ const getChildren = (schema, mergeScope) => {
   const isGroup = checkGroup(componentName)
 
   if (Array.isArray(renderChildren)) {
+    // children 空的场景，不能返回空数组，因为有部分组件会误以为使用了自定义插槽，从而无法渲染默认插槽内容，比如 TinyTree 组件
+    if (!renderChildren.length) {
+      return null
+    }
+
     if (isNative) {
       return renderDefault(renderChildren, mergeScope, schema)
-    } else {
-      return isGroup ? renderGroup(renderChildren, mergeScope, schema) : renderSlot(renderChildren, mergeScope, schema)
     }
-  } else {
-    return parseData(renderChildren, mergeScope)
+
+    return isGroup ? renderGroup(renderChildren, mergeScope) : renderSlot(renderChildren, mergeScope, schema)
   }
+
+  return parseData(renderChildren, mergeScope)
 }
 
 export const renderer = {
@@ -671,14 +674,17 @@ export const renderer = {
         mergeScope = mergeScope ? { ...mergeScope, ...slotData } : slotData
       }
 
-      // 给每个节点设置schema.id，并缓存起来
-      setNode(schema, parent)
-
       if (conditions[schema.id] === false || !parseCondition(condition, mergeScope)) {
         return null
       }
 
-      const Ele = h(component, getBindProps(schema, mergeScope), getChildren(schema, mergeScope))
+      const children = getChildren(schema, mergeScope)
+
+      const Ele = h(
+        component,
+        getBindProps(schema, mergeScope),
+        Array.isArray(children) && !children.length ? null : children
+      )
 
       // 区块加上 suspense 渲染，就可以在网络延时的时候显示加载中的字样或者动画，优化体验
       if (schema.componentType === 'Block') {

@@ -265,11 +265,11 @@ export default {
 
     const updateValue = (value) => {
       const { property, type } = props.property
-      const { setProp } = useProperties()
+      const { setProp, getSchema } = useProperties()
 
       // 是否双向绑定
       if (value?.type === SCHEMA_DATA_TYPE.JSExpression) {
-        const currentComponent = useProperties().getSchema().componentName
+        const currentComponent = getSchema().componentName
         const {
           schema: { events = {} }
         } = useMaterial().getMaterial(currentComponent)
@@ -282,13 +282,13 @@ export default {
         }
       }
 
+      const { operateNode, isSaved } = useCanvas()
+
       if (property === 'children') {
-        useProperties().getSchema().children = value
+        const schema = getSchema()
+        operateNode({ type: 'updateAttributes', id: schema.id, value: { children: value } })
       } else {
-        if (
-          !useCanvas().isSaved() &&
-          ![PAGE_STATUS.Guest, PAGE_STATUS.Occupy].includes(useLayout().layoutState.pageStatus.state)
-        ) {
+        if (!isSaved() && ![PAGE_STATUS.Guest, PAGE_STATUS.Occupy].includes(useLayout().layoutState.pageStatus.state)) {
           return
         }
 

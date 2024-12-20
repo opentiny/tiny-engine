@@ -35,12 +35,13 @@
 </template>
 
 <script lang="jsx">
-import { nextTick, reactive, getCurrentInstance, onActivated, ref } from 'vue'
+import { nextTick, reactive, getCurrentInstance, onActivated, ref, onDeactivated } from 'vue'
 import { Popover, Button } from '@opentiny/vue'
 import { VueMonaco, CloseIcon } from '@opentiny/tiny-engine-common'
-import { useCanvas, useModal, useHistory, useNotify } from '@opentiny/tiny-engine-meta-register'
+import { useCanvas, useModal, useNotify, useMessage } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { iconDownloadLink } from '@opentiny/vue-icon'
+import { useThrottleFn } from '@vueuse/core'
 
 const { reactiveObj2String: obj2String, string2Obj } = utils
 
@@ -59,6 +60,7 @@ export default {
     const state = reactive({
       pageData: obj2String(pageState.pageSchema)
     })
+    const { subscribe, unsubscribe } = useMessage()
 
     const isEdit = false
     const showRed = ref(true)
@@ -100,8 +102,9 @@ export default {
         componentName: pageState.pageSchema.componentName
       }
 
-      useCanvas().initData(value, pageState.currentPage)
-      useHistory().addHistory()
+      useCanvas().importSchema(value)
+      // TODO: 历史堆栈
+      // useHistory().addHistory()
       state.pageData = ''
 
       nextTick(() => {
@@ -110,12 +113,32 @@ export default {
       })
     }
 
+    const throttleUpdateData = useThrottleFn(
+      () => {
+        state.pageData = obj2String(pageState.pageSchema)
+      },
+      100,
+      true
+    )
+
     onActivated(() => {
-      pageState.pageSchema = useCanvas().canvasApi.value?.getSchema?.() || {}
       state.pageData = obj2String(pageState.pageSchema)
       nextTick(() => {
         window.dispatchEvent(new Event('resize'))
         showRed.value = state.pageData === app.refs.container.getEditor().getValue()
+      })
+
+      subscribe({
+        topic: 'schemaChange',
+        subscriber: 'schema-plugin',
+        callback: throttleUpdateData
+      })
+    })
+
+    onDeactivated(() => {
+      unsubscribe({
+        topic: 'schemaChange',
+        subscriber: 'schema-plugin'
       })
     })
 

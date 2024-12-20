@@ -278,13 +278,13 @@ const getBlockPageSchema = (block) => {
 }
 
 const initBlock = async (block = {}, _langs = {}, isEdit) => {
-  const { resetBlockCanvasState, setSaved } = useCanvas()
+  const { resetBlockCanvasState, setSaved, getSchema } = useCanvas()
   const { setBreadcrumbBlock } = useBreadcrumb()
 
   // 把区块的schema传递给画布
   await resetBlockCanvasState({ pageSchema: getBlockPageSchema(block) })
   // 这一步操作很重要，让区块管理面板和画布共同维护同一份区块schema
-  block.content = useCanvas().canvasApi.value?.getSchema()
+  block.content = getSchema()
 
   setCurrentBlock(block)
   setBreadcrumbBlock([block[nameCn] || block.label], block.histories)

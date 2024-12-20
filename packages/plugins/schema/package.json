@@ -27,7 +27,8 @@
   "dependencies": {
     "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-meta-register": "workspace:*",
-    "@opentiny/tiny-engine-utils": "workspace:*"
+    "@opentiny/tiny-engine-utils": "workspace:*",
+    "@vueuse/core": "^9.6.0"
   },
   "devDependencies": {
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",

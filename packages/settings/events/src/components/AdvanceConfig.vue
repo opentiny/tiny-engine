@@ -127,33 +127,35 @@ export default {
 
     const setLoopKey = (value = '') => {
       value = value.replace(/\s*/g, '')
-      const schema = useProperties().getSchema()
+      const { getSchema, setProp } = useProperties()
+      const schema = getSchema()
 
       if (!schema) {
         return
       }
 
       const isNumber = Number(value).toString() !== 'NaN'
-
-      schema.props = schema.props || {}
-      const props = schema.props
+      let newPropsKey = schema.props.key
 
       if (value && !isNumber) {
-        props.key = {
+        newPropsKey = {
           type: PROP_DATA_TYPE.JSEXPRESSION,
           value
         }
       }
+
       if (!value) {
         if (state.isLoop) {
-          props.key = {
+          newPropsKey = {
             type: PROP_DATA_TYPE.JSEXPRESSION,
             value: getIndexName()
           }
         } else {
-          delete props.key
+          newPropsKey = ''
         }
       }
+
+      setProp('key', newPropsKey)
     }
 
     watch([() => state.isLoop, () => state.loopIndex], () => {
@@ -171,14 +173,20 @@ export default {
     }
 
     const setConfig = (value) => {
-      if (!useProperties().getSchema()) {
+      const { getSchema } = useProperties()
+      const schema = getSchema()
+
+      if (!schema) {
         return
       }
 
+      const { operateNode } = useCanvas()
+
       if (value === false || value?.type) {
-        useProperties().getSchema().condition = value
+        operateNode({ type: 'updateAttributes', id: schema.id, value: { condition: value } })
       } else {
-        delete useProperties().getSchema().condition
+        const { condition: _schemaCondition, children, ...rest } = schema
+        operateNode({ type: 'updateAttributes', id: schema.id, value: { ...rest }, overwrite: true })
       }
 
       useCanvas().canvasApi.value.updateRect()
@@ -186,21 +194,34 @@ export default {
     }
 
     const setLoopIndex = (value) => {
-      if (useProperties().getSchema().loopArgs) {
-        useProperties().getSchema().loopArgs[1] = value || DEFAULT_LOOP_NAME.INDEX
+      const schema = useProperties().getSchema()
+      let loopArgs = schema.loopArgs
+      const { operateNode } = useCanvas()
+
+      if (loopArgs) {
+        loopArgs[1] = value || DEFAULT_LOOP_NAME.INDEX
       } else {
-        useProperties().getSchema().loopArgs = [DEFAULT_LOOP_NAME.ITEM, value]
+        loopArgs = [DEFAULT_LOOP_NAME.ITEM, value]
       }
+
+      operateNode({ type: 'updateAttributes', id: schema.id, value: { loopArgs } })
     }
 
     const setLoop = (value) => {
+      const { operateNode } = useCanvas()
+      const { getSchema } = useProperties()
+      const schema = getSchema()
+
       if (value) {
-        useProperties().getSchema().loop = value?.type ? value : string2Obj(value)
+        const newLoop = value?.type ? value : string2Obj(value)
+
+        operateNode({ type: 'updateAttributes', id: schema.id, value: { loop: newLoop } })
         setLoopIndex(DEFAULT_LOOP_NAME.INDEX)
       } else {
         setLoopKey()
-        delete useProperties().getSchema().loop
-        delete useProperties().getSchema().loopArgs
+        const { loop: _loop, loopArgs: _loopArgs, children: _children, ...rest } = schema
+
+        operateNode({ type: 'updateAttributes', id: schema.id, value: rest, overwrite: true })
       }
 
       // 触发更新state
@@ -208,11 +229,17 @@ export default {
     }
 
     const setLoopItem = (value) => {
-      if (useProperties().getSchema().loopArgs) {
-        useProperties().getSchema().loopArgs[0] = value || DEFAULT_LOOP_NAME.ITEM
+      const schema = useProperties().getSchema()
+      let loopArgs = schema.loopArgs
+      const { operateNode } = useCanvas()
+
+      if (loopArgs) {
+        loopArgs[0] = value || DEFAULT_LOOP_NAME.ITEM
       } else {
-        useProperties().getSchema().loopArgs = [value, DEFAULT_LOOP_NAME.INDEX]
+        loopArgs = [value, DEFAULT_LOOP_NAME.INDEX]
       }
+
+      operateNode({ type: 'updateAttributes', id: schema.id, value: { loopArgs } })
     }
 
     return {

@@ -29,9 +29,9 @@
 </template>
 
 <script>
-import { onMounted, ref, computed, onUnmounted } from 'vue'
+import { onMounted, ref, computed, onUnmounted, watch, watchEffect } from 'vue'
 import { iframeMonitoring } from '@opentiny/tiny-engine-common/js/monitor'
-import { useTranslate, useCanvas, useMaterial } from '@opentiny/tiny-engine-meta-register'
+import { useTranslate, useCanvas, useMaterial, useMessage, useResource } from '@opentiny/tiny-engine-meta-register'
 import { NODE_UID, NODE_LOOP, DESIGN_MODE } from '../../common'
 import { registerHostkeyEvent, removeHostkeyEvent } from './keyboard'
 import CanvasMenu, { closeMenu, openMenu } from './components/CanvasMenu.vue'
@@ -114,6 +114,25 @@ export default {
       if (iframe.value) {
         const win = iframe.value.contentWindow
         win.thirdPartyDeps = useMaterial().materialState.thirdPartyDeps
+
+        const { subscribe, unsubscribe } = useMessage()
+        const { getSchemaDiff, patchLatestSchema, getSchema, getNode } = useCanvas()
+        const { appSchemaState } = useResource()
+
+        iframe.value.contentWindow.host = {
+          unsubscribe,
+          subscribe,
+          getSchemaDiff,
+          patchLatestSchema,
+          watch,
+          watchEffect,
+          getSchema,
+          appSchema: appSchemaState,
+          schemaUtils: {
+            getSchema,
+            getNode
+          }
+        }
       }
     }
 

@@ -16,7 +16,7 @@ import { useResource, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-met
 export const getCanvasStatus = (data) => {
   const globalState = getMetaApi(META_SERVICE.GlobalService).getState()
   // 写死ID 待删除
-  let isDemo = useResource().resState.isDemo
+  let isDemo = useResource().appSchemaState.isDemo
   const { resetPasswordToken } = globalState.userInfo
 
   if (isDemo && [PAGE_STATUS.Developer, PAGE_STATUS.SuperAdmin].includes(resetPasswordToken)) {

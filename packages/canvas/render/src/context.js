@@ -11,35 +11,11 @@
  */
 
 import { shallowReactive } from 'vue'
-import { utils } from '@opentiny/tiny-engine-utils'
 
 export const context = shallowReactive({})
 
 // 从大纲树控制隐藏
 export const conditions = shallowReactive({})
-
-const nodes = {}
-
-export const setNode = (schema, parent) => {
-  schema.id = schema.id || utils.guid()
-  nodes[schema.id] = { node: schema, parent }
-}
-
-export const getNode = (id, parent) => {
-  return parent ? nodes[id] : nodes[id].node
-}
-
-export const delNode = (id) => delete nodes[id]
-
-export const clearNodes = () => {
-  Object.keys(nodes).forEach(delNode)
-}
-
-export const getRoot = (id) => {
-  const { parent } = getNode(id, true)
-
-  return parent?.id ? getRoot(parent.id) : parent
-}
 
 export const setContext = (ctx, clear) => {
   clear && Object.keys(context).forEach((key) => delete context[key])

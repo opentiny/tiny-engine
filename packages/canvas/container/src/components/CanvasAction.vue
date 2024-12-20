@@ -124,11 +124,10 @@ import {
   updateRect,
   copyNode,
   getRenderer,
-  getSchema,
   dragStart,
   getCurrentElement
 } from '../container'
-import { useLayout, useMaterial } from '@opentiny/tiny-engine-meta-register'
+import { useLayout, useMaterial, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { Popover } from '@opentiny/vue'
 import shortCutPopover from './shortCutPopover.vue'
 
@@ -236,7 +235,7 @@ export default {
       return !props.resize && parent && parent?.type !== 'JSSlot'
     })
 
-    const showToParent = computed(() => getCurrent().parent !== getSchema())
+    const showToParent = computed(() => getCurrent().parent !== useCanvas().getSchema())
 
     const isModal = computed(() => {
       const config = useMaterial().getMaterial(props.selectState.componentName)

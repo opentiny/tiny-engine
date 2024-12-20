@@ -38,7 +38,7 @@ export default {
     const { addBlockEvent, removeEventLink, getCurrentBlock, appendEventEmit } = useBlock()
     const { PLUGIN_NAME, activePlugin } = useLayout()
 
-    const { schema } = useCanvas().canvasApi.value?.getSchema?.() || {}
+    const { schema } = useCanvas()?.getSchema?.() || {}
     const events = schema?.events || []
     const eventsList = Object.entries(events).map(([key, value]) => {
       return {

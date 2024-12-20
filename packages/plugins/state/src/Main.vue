@@ -163,7 +163,7 @@ export default {
     }
 
     const add = (name, variable) => {
-      const { getSchema } = useCanvas().canvasApi.value
+      const { getSchema } = useCanvas()
 
       if (getSchema()) {
         if (updateKey.value !== name && flag.value === OPTION_TYPE.UPDATE) {
@@ -191,7 +191,7 @@ export default {
 
     const confirm = () => {
       const { name } = state.createData
-      const { setState, setGlobalState } = useCanvas().canvasApi.value
+      const { getSchema, updateSchema } = useCanvas()
 
       if (!name || errorMessage.value) {
         notifySaveError('变量名未填写或名称不符合规范，请按照提示修改后重试。')
@@ -214,8 +214,9 @@ export default {
         isPanelShow.value = false
         setSaved(false)
 
-        // 触发画布渲染
-        setState({ [name]: variable })
+        const schema = getSchema()
+        updateSchema({ state: { ...(schema.state || {}), [name]: variable } })
+
         useHistory().addHistory()
       } else {
         const validateResult = validateMonacoEditorData(storeRef.value.getEditor(), 'state字段', { required: true })
@@ -246,7 +247,7 @@ export default {
         const { id } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
         updateGlobalState(id, { global_state: storeList }).then((res) => {
           isPanelShow.value = false
-          setGlobalState(res.global_state || [])
+          useResource().appSchemaState.globalState = res.global_state || []
         })
       }
       openCommon()
@@ -261,11 +262,13 @@ export default {
     }
 
     const remove = (key) => {
-      const { deleteState, getSchema } = useCanvas().canvasApi.value
+      const { getSchema, updateSchema } = useCanvas()
 
       delete state.dataSource[key]
-      // 删除变量也需要同步触发画布渲染
-      deleteState(key)
+
+      const schema = getSchema()
+      let { lifeCycles } = schema
+      const { [key]: deletedKey, ...restState } = schema.state
 
       if (key.startsWith('datasource')) {
         const pageSchema = getSchema()
@@ -278,8 +281,10 @@ export default {
          */
         const pattern = new RegExp(`([\\s\\n]*\\/\\*\\* ${start} \\*\\/[\\s\\S]*\\/\\*\\* ${end} \\*\\/)`)
 
-        pageSchema.lifeCycles.setup.value = pageSchema.lifeCycles.setup.value.replace(pattern, '')
+        lifeCycles.setup.value = pageSchema.lifeCycles.setup.value.replace(pattern, '')
       }
+
+      updateSchema({ state: restState, lifeCycles })
 
       // 如果删除的是当前编辑的状态变量，则需要关闭二级面板
       if (state.createData.name === key) {
@@ -290,8 +295,7 @@ export default {
     }
 
     const setGlobalStateToDataSource = () => {
-      const { getGlobalState } = useCanvas().canvasApi.value
-      const globalState = getGlobalState()
+      const globalState = useResource().appSchemaState.globalState
 
       if (!globalState) {
         state.dataSource = {}
@@ -299,20 +303,19 @@ export default {
         return
       }
 
-      state.dataSource = getGlobalState().reduce((acc, store) => ({ ...acc, [store.id]: store }), {})
+      state.dataSource = globalState.reduce((acc, store) => ({ ...acc, [store.id]: store }), {})
     }
 
     const removeStore = (key) => {
-      const storeListt = [...useResource().resState.globalState] || []
-      const index = storeListt.findIndex((store) => store.id === key)
-      const { setGlobalState } = useCanvas().canvasApi.value
+      const storeList = [...useResource().appSchemaState.globalState] || []
+      const index = storeList.findIndex((store) => store.id === key)
 
       if (index !== -1) {
         const { id } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
 
-        storeListt.splice(index, 1)
-        updateGlobalState(id, { global_state: storeListt }).then((res) => {
-          setGlobalState(res.global_state)
+        storeList.splice(index, 1)
+        updateGlobalState(id, { global_state: storeList }).then((res) => {
+          useResource().appSchemaState.globalState = res.global_state || []
           setGlobalStateToDataSource()
         })
 
@@ -328,15 +331,14 @@ export default {
     }
 
     const initDataSource = (tabsName = activeName.value) => {
-      const { getSchema } = useCanvas().canvasApi.value
+      const { getSchema } = useCanvas()
 
       if (tabsName === STATE.GLOBAL_STATE) {
         setGlobalStateToDataSource()
       } else {
         const pageSchema = getSchema() || {}
 
-        pageSchema.state = pageSchema?.state || {}
-        state.dataSource = pageSchema.state
+        state.dataSource = pageSchema.state || {}
       }
     }
 

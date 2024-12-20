@@ -64,13 +64,15 @@ const savePage = async (pageSchema) => {
 
 export const saveCommon = (value) => {
   const { pageSettingState, isTemporaryPage } = usePage()
-  const { isBlock, canvasApi, pageState } = useCanvas()
+  const { isBlock, canvasApi, pageState, resetBlockCanvasState, resetPageCanvasState } = useCanvas()
   const pageSchema = JSON.parse(value)
-  const { setSchema, selectNode } = canvasApi.value
+  const { selectNode } = canvasApi.value
 
-  pageState.pageSchema = pageSchema
-  // setSchema 是异步，保存直接传递当前 schema
-  setSchema(pageSchema)
+  if (isBlock()) {
+    resetBlockCanvasState({ ...pageState, pageSchema })
+  } else {
+    resetPageCanvasState({ ...pageState, pageSchema })
+  }
 
   if (pageSettingState?.isAIPage) {
     if (isTemporaryPage.saved) {
@@ -92,7 +94,7 @@ export const saveCommon = (value) => {
   return isBlock() ? saveBlock(pageSchema) : savePage(pageSchema)
 }
 export const openCommon = async () => {
-  const { isSaved, canvasApi } = useCanvas()
+  const { isSaved, getSchema } = useCanvas()
   if (isSaved() || state.disabled) {
     return
   }
@@ -121,7 +123,6 @@ export const openCommon = async () => {
   const pageStatus = useLayout().layoutState?.pageStatus
   const curPageState = pageStatus?.state
   const pageInfo = pageStatus?.data
-  const { getSchema } = canvasApi.value
   const ERR_MSG = {
     [PAGE_STATUS.Release]: '当前页面未锁定，请先锁定再保存',
     [PAGE_STATUS.Empty]: '当前应用无页面，请先新建页面再保存',

@@ -127,7 +127,7 @@ export default {
     // 获取当前节点 style 对象
     const { state, updateStyle } = useStyle() // updateStyle
     const { addHistory } = useHistory()
-    const { getSchema } = useProperties()
+    const { getSchema, setProp } = useProperties()
 
     const handoverGroup = (actives) => {
       if (props.isCollapsed) {
@@ -135,45 +135,45 @@ export default {
       }
     }
 
+    const updateStyleToSchema = (value) => {
+      const schema = getSchema()
+
+      if (schema) {
+        setProp('style', value)
+
+        return
+      }
+
+      const { getSchema: getCanvasPageSchema, updateSchema } = useCanvas()
+      const pageSchema = getCanvasPageSchema()
+
+      // TODO: 当 style 为空时，支持移除 style key
+      updateSchema({ props: { ...(pageSchema.props || {}), style: value } })
+    }
+
     // 保存编辑器内容，并回写到 schema
     const save = ({ content }) => {
-      const { getSchema: getCanvasPageSchema, updateRect } = useCanvas().canvasApi.value
-      const pageSchema = getCanvasPageSchema()
-      const schema = getSchema() || pageSchema
+      const { updateRect } = useCanvas().canvasApi.value
       const styleString = styleStrRemoveRoot(content)
-      const currentSchema = getCurrentSchema() || pageSchema
 
       state.styleContent = content
-      schema.props = schema.props || {}
-      schema.props.style = styleString
 
-      currentSchema.props = currentSchema.props || {}
-
-      if (styleString) {
-        currentSchema.props.style = styleString
-      } else {
-        delete currentSchema.props.style
-      }
+      updateStyleToSchema(styleString)
 
       addHistory()
       updateRect()
     }
 
     const setConfig = (value) => {
-      const { getSchema: getCanvasPageSchema, updateRect } = useCanvas().canvasApi.value
-      const pageSchema = getCanvasPageSchema()
-      const currentSchema = getCurrentSchema() || pageSchema
-      const schema = getSchema() || pageSchema
+      const { updateRect } = useCanvas().canvasApi.value
 
       if (value !== '') {
-        schema.props.style = value
-        currentSchema.props.style = value
+        updateStyleToSchema(value)
         state.propertiesList = `已绑定：${value.value}`
         state.lineStyleDisable = false
         addHistory()
       } else {
-        schema.props.style = ''
-        currentSchema.props.style = ''
+        updateStyleToSchema('')
         state.propertiesList = '编辑行内样式'
         state.lineStyleDisable = true
         addHistory()

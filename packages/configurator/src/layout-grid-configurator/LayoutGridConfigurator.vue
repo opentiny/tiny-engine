@@ -36,7 +36,7 @@
 <script>
 import { reactive, ref, computed } from 'vue'
 import { SplitPanes, Pane } from '@opentiny/tiny-engine-common'
-import { useProperties } from '@opentiny/tiny-engine-meta-register'
+import { useProperties, useCanvas } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
@@ -195,6 +195,18 @@ export default {
       const spans = item.split(':')
       mode.value = item
 
+      const { operateNode } = useCanvas()
+      const schema = useProperties().getSchema()
+
+      if (!schema) {
+        // eslint-disable-next-line no-console
+        console.error('Error! There is no node selected. 错误！当前没有节点被选中。')
+
+        return
+      }
+
+      const cols = [...(schema?.children || [])]
+
       spans.forEach((span, index) => {
         if (cols[index]) {
           cols[index].props.span = span
@@ -217,7 +229,7 @@ export default {
         }
       })
 
-      cols.length = spans.length
+      operateNode({ type: 'updateAttributes', id: schema.id, value: { children: cols.slice(0, spans.length) } })
     }
 
     const modeClick = (index, item) => {

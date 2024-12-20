@@ -131,7 +131,7 @@ export default {
     }
 
     const syncLifeCycle = () => {
-      const currentSchema = useCanvas().canvasApi.value?.getSchema?.()
+      const currentSchema = useCanvas().getSchema()
       const pageContent = getPageContent()
       const { id, fileName } = pageContent
       if (id === currentSchema.id || fileName === currentSchema.fileName) {
@@ -154,8 +154,7 @@ export default {
 
     const openLifeCyclesPanel = (item) => {
       state.title = item
-      const bindLifeCycleSource =
-        props.bindLifeCycles?.[item] || useCanvas().canvasApi.value?.getSchema?.()?.lifeCycles?.[item]
+      const bindLifeCycleSource = props.bindLifeCycles?.[item] || useCanvas().getSchema()?.lifeCycles?.[item]
       state.editorValue =
         bindLifeCycleSource?.value ||
         `function ${item} (${item === 'setup' ? '{ props, state, watch, onMounted }' : ''}) {} `

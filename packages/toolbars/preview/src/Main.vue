@@ -28,7 +28,7 @@ export default {
     }
   },
   setup() {
-    const { isBlock, getCurrentPage, canvasApi } = useCanvas()
+    const { isBlock, getCurrentPage, getSchema } = useCanvas()
     const { getCurrentBlock } = useBlock()
 
     const preview = async () => {
@@ -66,7 +66,7 @@ export default {
         framework: getMergeMeta('engine.config')?.dslMode,
         platform: getMergeMeta('engine.config')?.platformId,
         pageInfo: {
-          schema: canvasApi.value?.getSchema?.()
+          schema: getSchema?.()
         }
       }
 

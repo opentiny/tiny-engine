@@ -44,25 +44,13 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "type",
-                "size"
-              ]
+              "properties": ["type", "size"]
             },
             "contextMenu": {
-              "actions": [
-                "copy",
-                "remove",
-                "insert",
-                "updateAttr",
-                "bindEevent",
-                "createBlock"
-              ],
+              "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
               "disable": []
             },
-            "invalidity": [
-              ""
-            ],
+            "invalidity": [""],
             "clickCapture": true,
             "framework": "Vue"
           },
@@ -336,25 +324,13 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "type",
-                "size"
-              ]
+              "properties": ["type", "size"]
             },
             "contextMenu": {
-              "actions": [
-                "copy",
-                "remove",
-                "insert",
-                "updateAttr",
-                "bindEevent",
-                "createBlock"
-              ],
+              "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
               "disable": []
             },
-            "invalidity": [
-              ""
-            ],
+            "invalidity": [""],
             "clickCapture": true,
             "framework": "Vue"
           },
@@ -660,9 +636,7 @@
             "isModal": false,
             "isPopper": false,
             "nestingRule": {
-              "childWhitelist": [
-                "ElFormItem"
-              ],
+              "childWhitelist": ["ElFormItem"],
               "parentWhitelist": "",
               "descendantBlacklist": "",
               "ancestorWhitelist": ""
@@ -671,25 +645,13 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "inline",
-                "label-width"
-              ]
+              "properties": ["inline", "label-width"]
             },
             "contextMenu": {
-              "actions": [
-                "copy",
-                "remove",
-                "insert",
-                "updateAttr",
-                "bindEevent",
-                "createBlock"
-              ],
+              "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
               "disable": []
             },
-            "invalidity": [
-              ""
-            ],
+            "invalidity": [""],
             "clickCapture": true,
             "framework": "Vue"
           },
@@ -1138,25 +1100,13 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "inline",
-                "label-width"
-              ]
+              "properties": ["inline", "label-width"]
             },
             "contextMenu": {
-              "actions": [
-                "copy",
-                "remove",
-                "insert",
-                "updateAttr",
-                "bindEevent",
-                "createBlock"
-              ],
+              "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
               "disable": []
             },
-            "invalidity": [
-              ""
-            ],
+            "invalidity": [""],
             "clickCapture": true,
             "framework": "Vue"
           },
@@ -1490,9 +1440,7 @@
             "isModal": false,
             "isPopper": false,
             "nestingRule": {
-              "childWhitelist": [
-                "ElTableColumn"
-              ],
+              "childWhitelist": ["ElTableColumn"],
               "parentWhitelist": "",
               "descendantBlacklist": "",
               "ancestorWhitelist": ""
@@ -1501,25 +1449,13 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "inline",
-                "label-width"
-              ]
+              "properties": ["inline", "label-width"]
             },
             "contextMenu": {
-              "actions": [
-                "copy",
-                "remove",
-                "insert",
-                "updateAttr",
-                "bindEevent",
-                "createBlock"
-              ],
+              "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
               "disable": []
             },
-            "invalidity": [
-              ""
-            ],
+            "invalidity": [""],
             "clickCapture": true,
             "framework": "Vue"
           },
@@ -2750,25 +2686,13 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "inline",
-                "label-width"
-              ]
+              "properties": ["inline", "label-width"]
             },
             "contextMenu": {
-              "actions": [
-                "copy",
-                "remove",
-                "insert",
-                "updateAttr",
-                "bindEevent",
-                "createBlock"
-              ],
+              "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
               "disable": []
             },
-            "invalidity": [
-              ""
-            ],
+            "invalidity": [""],
             "clickCapture": true,
             "framework": "Vue"
           },
@@ -2914,19 +2838,11 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "disabled",
-                "size"
-              ]
+              "properties": ["disabled", "size"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -3243,9 +3159,7 @@
             "clickCapture": false,
             "isModal": false,
             "nestingRule": {
-              "childWhitelist": [
-                "TinyCarouselItem"
-              ],
+              "childWhitelist": ["TinyCarouselItem"],
               "parentWhitelist": "",
               "descendantBlacklist": "",
               "ancestorWhitelist": ""
@@ -3254,19 +3168,11 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "disabled",
-                "size"
-              ]
+              "properties": ["disabled", "size"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -3418,14 +3324,7 @@
           "name": {
             "zh_CN": "标题"
           },
-          "component": [
-            "h1",
-            "h2",
-            "h3",
-            "h4",
-            "h5",
-            "h6"
-          ],
+          "component": ["h1", "h2", "h3", "h4", "h5", "h6"],
           "icon": "h16",
           "description": "标题",
           "docUrl": "",
@@ -3510,19 +3409,11 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "disabled",
-                "size"
-              ]
+              "properties": ["disabled", "size"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -3879,19 +3770,11 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "disabled",
-                "size"
-              ]
+              "properties": ["disabled", "size"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -4137,9 +4020,7 @@
             ],
             "events": {},
             "shortcuts": {
-              "properties": [
-                "src"
-              ]
+              "properties": ["src"]
             },
             "contentMenu": {
               "actions": []
@@ -4789,19 +4670,11 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "disabled",
-                "size"
-              ]
+              "properties": ["disabled", "size"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -4947,19 +4820,118 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "label-width",
-                "disabled"
-              ]
+              "properties": ["label-width", "disabled"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
+            }
+          }
+        },
+        {
+          "icon": "row",
+          "name": {
+            "zh_CN": "row"
+          },
+          "component": "TinyLayout",
+          "description": "定义 Layout 的行配置信息",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "package": "@opentiny/vue",
+            "exportName": "Layout",
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+          },
+          "group": "component",
+          "priority": 5,
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "content": [
+                  {
+                    "property": "cols",
+                    "label": {
+                      "text": {
+                        "zh_CN": "总栅格数"
+                      }
+                    },
+                    "cols": 12,
+                    "widget": {
+                      "component": "ButtonGroupConfigurator",
+                      "props": {
+                        "options": [
+                          {
+                            "label": "12",
+                            "value": 12
+                          },
+                          {
+                            "label": "24",
+                            "value": 24
+                          }
+                        ]
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "选择总栅格数"
+                    },
+                    "labelPosition": "none"
+                  },
+                  {
+                    "property": "tag",
+                    "label": {
+                      "text": {
+                        "zh_CN": "layout渲染的标签"
+                      }
+                    },
+                    "required": false,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "InputConfigurator",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": "定义Layout元素渲染后的标签，默认为 div"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": true,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": ["TinyRow", "TinyCol"],
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": ["disabled"]
+            },
+            "contextMenu": {
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -5309,19 +5281,11 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "label-width",
-                "disabled"
-              ]
+              "properties": ["label-width", "disabled"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -5441,9 +5405,7 @@
             "isModal": false,
             "nestingRule": {
               "childWhitelist": "",
-              "parentWhitelist": [
-                "TinyForm"
-              ],
+              "parentWhitelist": ["TinyForm"],
               "descendantBlacklist": "",
               "ancestorWhitelist": ""
             },
@@ -5451,19 +5413,11 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "label",
-                "rules"
-              ]
+              "properties": ["label", "rules"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -5737,19 +5691,11 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "label",
-                "rules"
-              ]
+              "properties": ["label", "rules"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -6084,19 +6030,11 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "text",
-                "size"
-              ]
+              "properties": ["text", "size"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -6506,19 +6444,11 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "value",
-                "disabled"
-              ]
+              "properties": ["value", "disabled"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -6751,19 +6681,11 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "visible",
-                "width"
-              ]
+              "properties": ["visible", "width"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -7164,19 +7086,11 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "multiple",
-                "options"
-              ]
+              "properties": ["multiple", "options"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -7371,19 +7285,11 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "disabled",
-                "mini"
-              ]
+              "properties": ["disabled", "mini"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -7654,19 +7560,11 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "clearable",
-                "mini"
-              ]
+              "properties": ["clearable", "mini"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -7921,19 +7819,11 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "border",
-                "disabled"
-              ]
+              "properties": ["border", "disabled"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -8117,19 +8007,11 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "text",
-                "size"
-              ]
+              "properties": ["text", "size"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -8334,19 +8216,11 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "disabled",
-                "type"
-              ]
+              "properties": ["disabled", "type"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -8620,19 +8494,11 @@
             "isLayout": false,
             "rootSelector": ".tiny-dialog-box",
             "shortcuts": {
-              "properties": [
-                "visible",
-                "width"
-              ]
+              "properties": ["visible", "width"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -8900,9 +8766,7 @@
             "clickCapture": false,
             "isModal": false,
             "nestingRule": {
-              "childWhitelist": [
-                "TinyTabItem"
-              ],
+              "childWhitelist": ["TinyTabItem"],
               "parentWhitelist": [],
               "descendantBlacklist": [],
               "ancestorWhitelist": []
@@ -8911,19 +8775,11 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "size",
-                "tab-style"
-              ]
+              "properties": ["size", "tab-style"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -9020,9 +8876,7 @@
             "isModal": false,
             "nestingRule": {
               "childWhitelist": "",
-              "parentWhitelist": [
-                "TinyTab"
-              ],
+              "parentWhitelist": ["TinyTab"],
               "descendantBlacklist": "",
               "ancestorWhitelist": ""
             },
@@ -9030,19 +8884,11 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "name",
-                "title"
-              ]
+              "properties": ["name", "title"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -9168,9 +9014,7 @@
             "clickCapture": false,
             "isModal": false,
             "nestingRule": {
-              "childWhitelist": [
-                "TinyBreadcrumbItem"
-              ],
+              "childWhitelist": ["TinyBreadcrumbItem"],
               "parentWhitelist": [],
               "descendantBlacklist": [],
               "ancestorWhitelist": []
@@ -9179,18 +9023,11 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "separator"
-              ]
+              "properties": ["separator"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -9267,9 +9104,7 @@
             "isModal": false,
             "nestingRule": {
               "childWhitelist": "",
-              "parentWhitelist": [
-                "TinyBreadcrumb"
-              ],
+              "parentWhitelist": ["TinyBreadcrumb"],
               "descendantBlacklist": "",
               "ancestorWhitelist": ""
             },
@@ -9277,18 +9112,11 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "to"
-              ]
+              "properties": ["to"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -9411,19 +9239,11 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "label-width",
-                "disabled"
-              ]
+              "properties": ["label-width", "disabled"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -9530,19 +9350,11 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "label-width",
-                "disabled"
-              ]
+              "properties": ["label-width", "disabled"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -9757,10 +9569,7 @@
                             "widget": {
                               "component": "JsSlotConfigurator",
                               "props": {
-                                "slots": [
-                                  "header",
-                                  "default"
-                                ]
+                                "slots": ["header", "default"]
                               }
                             }
                           },
@@ -9911,7 +9720,7 @@
                     "required": true,
                     "readOnly": false,
                     "disabled": false,
-                    "onChange": "this.delProp('data')",
+                    "onChange": "function () { this.delProp('data') } ",
                     "cols": 12,
                     "widget": {
                       "component": "CodeConfigurator",
@@ -10432,15 +10241,10 @@
               }
             },
             "shortcuts": {
-              "properties": [
-                "sortable",
-                "columns"
-              ]
+              "properties": ["sortable", "columns"]
             },
             "contentMenu": {
-              "actions": [
-                "create symbol"
-              ]
+              "actions": ["create symbol"]
             },
             "onBeforeMount": "console.log('table on load'); this.pager = source.pager; this.fetchData = source.fetchData; this.data = source.data ;this.columns = source.columns"
           },
@@ -10460,19 +10264,11 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "sortable",
-                "columns"
-              ]
+              "properties": ["sortable", "columns"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -10701,19 +10497,11 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "currentPage",
-                "total"
-              ]
+              "properties": ["currentPage", "total"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -11072,19 +10860,11 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "modelValue",
-                "disabled"
-              ]
+              "properties": ["modelValue", "disabled"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -11415,19 +11195,11 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "data",
-                "show-checkbox"
-              ]
+              "properties": ["data", "show-checkbox"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -11630,19 +11402,11 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "active",
-                "data"
-              ]
+              "properties": ["active", "data"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -11859,19 +11623,11 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "disabled",
-                "content"
-              ]
+              "properties": ["disabled", "content"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -12362,19 +12118,11 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "visible",
-                "width"
-              ]
+              "properties": ["visible", "width"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -12785,19 +12533,11 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "value",
-                "disabled"
-              ]
+              "properties": ["value", "disabled"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         },
@@ -13236,19 +12976,11 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": [
-                "value",
-                "disabled"
-              ]
+              "properties": ["value", "disabled"]
             },
             "contextMenu": {
-              "actions": [
-                "create symbol"
-              ],
-              "disable": [
-                "copy",
-                "remove"
-              ]
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
             }
           }
         }
@@ -13633,10 +13365,7 @@
               "schema": {
                 "componentName": "TinyCheckboxGroup",
                 "props": {
-                  "modelValue": [
-                    "name1",
-                    "name2"
-                  ],
+                  "modelValue": ["name1", "name2"],
                   "type": "checkbox",
                   "options": [
                     {

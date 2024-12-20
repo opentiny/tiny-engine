@@ -118,7 +118,7 @@ export default {
     }
   },
   emits: ['edit'],
-  setup(props) {
+  setup(props, { emit }) {
     const grid = ref(null)
     const { confirm } = useModal()
     const { toClipboard } = useClipboard()
@@ -288,6 +288,8 @@ export default {
       return getGridData({ page: state.pagerConfig, forceUseRemoteData }).then(({ result, page }) => {
         state.tableData = result
         state.pagerConfig.total = page.total
+        // 通知刷新mock数据到 appSchemaState
+        emit('refresh')
       })
     }
 
@@ -419,7 +421,7 @@ export default {
         }
 
         const key = `datasource${capitalize(camelize(name))}`
-        const pageSchema = useCanvas().canvasApi.value.getSchema()
+        const pageSchema = useCanvas().getSchema()
 
         if (pageSchema.state[key]) {
           pageSchema.state[key] = data.map(({ _id, ...other }) => other)
