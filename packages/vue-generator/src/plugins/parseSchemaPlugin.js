@@ -25,9 +25,7 @@ function parseSchema() {
           continue
         }
 
-        const newComponentItem = {
-          ...componentItem
-        }
+        const newComponentItem = structuredClone(componentItem)
         let path = ''
         let curParentId = componentItem.meta.parentId
         let depth = 0
