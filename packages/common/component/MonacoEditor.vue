@@ -28,6 +28,7 @@
         :options="editorOptions"
         language="javascript"
         @editorDidMount="$emit('editorDidMount', $event)"
+        @shortcutSave="$emit('shortcutSave', $event)"
       ></monaco-editor>
     </div>
     <slot v-if="fullscreen" name="fullscreenFooter"></slot>
@@ -60,7 +61,7 @@ export default {
       default: true
     }
   },
-  emits: ['editorDidMount'],
+  emits: ['editorDidMount', 'shortcutSave'],
   setup(props) {
     const editor = ref(null)
     const fullscreen = ref(false)
