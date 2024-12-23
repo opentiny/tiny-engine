@@ -55,7 +55,7 @@ const props = defineProps({
     type: String
   },
   filterValue: {
-    type: [String, Object],
+    type: String,
     default: ''
   },
   rootId: {

@@ -275,7 +275,6 @@ export default {
       action: (node) => {
         item.action?.(node)
         // 点击 action 后，关闭 popover 弹窗
-        // TODO 这里不符合aria-hidden的规范，控制台会打印错误
         popoverRefs[node.id]?.doClose?.()
       }
     }))
@@ -311,7 +310,6 @@ export default {
       // requestUpdatePage加了then和catch回调函数，而handlePageUpdate没有加，是因为handlePageUpdate内部都已经有了类似逻辑
       return requestUpdatePage(id, { ...pageDetail, page_content: null })
         .then(() => {
-          pageSettingState.updateTreeData()
           useNotify({
             type: 'success',
             message: '更新文件夹成功!'
@@ -323,6 +321,10 @@ export default {
             title: '更新文件夹失败',
             message: JSON.stringify(error?.message || error)
           })
+        })
+        .finally(() => {
+          pageSettingState.updateTreeData()
+          pageSettingState.isNew = false
         })
     }
 
@@ -336,7 +338,6 @@ export default {
         // TODO 页面更换父节点后，原来每次变更需要填写变更信息
         fetchPageDetail(dragged.id).then((pageDetail) => {
           pageDetail.parentId = newParent.id
-          // TOOD 接口失败要回退，原来逻辑没有处理回退
           if (pageDetail.isPage) {
             updatePage(pageDetail)
           } else {
