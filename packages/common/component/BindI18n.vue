@@ -13,7 +13,7 @@
         <tiny-option
           v-for="item in langData"
           :key="item.key"
-          :label="`${item.key}  ${item[currentLang]}`"
+          :label="`${item.key}:  ${item[currentLang]}`"
           :value="item.key"
         >
         </tiny-option>
