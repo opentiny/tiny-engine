@@ -6,7 +6,7 @@
         name="add-folder"
         placement="bottom"
         tips="新建文件夹"
-        @click="createNewFolder"
+        @click="createNewFolder()"
       ></svg-button>
       <svg-button
         class="new-page-icon"
