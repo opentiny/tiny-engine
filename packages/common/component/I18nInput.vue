@@ -123,14 +123,6 @@ export default {
       color: var(--ti-lowcode-icon-bind-color);
     }
   }
-  :deep(.tiny-input) {
-    &.tiny-input-suffix {
-      .tiny-input__inner {
-        padding-right: var(--ti-input-suffix-padding-right);
-        padding-left: var(--ti-input-suffix-padding-left);
-      }
-    }
-  }
 }
 .popover-content {
   position: relative;

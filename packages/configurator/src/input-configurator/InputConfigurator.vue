@@ -1,6 +1,6 @@
 <template>
   <tiny-input v-model="value" :type="type" :placeholder="placeholder" :rows="rows" @update:modelValue="change">
-    <template #suffix>
+    <template v-if="suffixIcons?.length" #suffix>
       <div v-for="item in suffixIcons" :key="item.icon">
         <svg-icon v-if="item.icon" :name="item.icon" class="tiny-svg-size" @click="item.onClick.action"></svg-icon>
       </div>
