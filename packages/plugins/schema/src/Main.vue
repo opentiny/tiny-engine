@@ -102,7 +102,11 @@ export default {
         componentName: pageState.pageSchema.componentName
       }
 
-      useCanvas().importSchema(value)
+      const { importSchema, setSaved } = useCanvas()
+
+      importSchema(value)
+      setSaved(false)
+
       // TODO: 历史堆栈
       // useHistory().addHistory()
       state.pageData = ''

@@ -99,7 +99,7 @@ export default {
 
         const showConfirm = !isSaved || pageSchema !== oldPageSchema
 
-        if (!showConfirm || showModal) {
+        if (!showConfirm || showModal || useHistory().historyState?.index === 0) {
           return
         }
 

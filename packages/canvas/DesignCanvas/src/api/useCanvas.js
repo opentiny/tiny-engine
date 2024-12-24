@@ -518,6 +518,8 @@ const importSchema = (data) => {
   resetCanvasState({
     pageSchema: importData
   })
+
+  canvasApi.value?.clearSelect?.()
 }
 
 const exportSchema = () => {
