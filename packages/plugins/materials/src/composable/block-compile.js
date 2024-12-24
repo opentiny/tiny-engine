@@ -27,7 +27,7 @@ export const getBlockCompileRes = async (schema) => {
 
   const generateCodeService = getMetaApi('engine.service.generateCode')
   const blocks = await generateCodeService.getAllNestedBlocksSchema(schema, fetchBlockSchema)
-  const componentsMap = useResource().resState.componentsMap
+  const componentsMap = useResource().appSchemaState.componentsMap
 
   // 调用 api 得到页面出码结果
   let blocksSourceCode = null

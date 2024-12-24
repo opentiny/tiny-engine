@@ -51,9 +51,8 @@ export default {
                 }
               </div>
             ]
-          }
-        }).then((res) => {
-          if (res === 'confirm') {
+          },
+          exec: () => {
             clearCanvas()
           }
         })
