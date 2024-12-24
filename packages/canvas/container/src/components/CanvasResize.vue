@@ -108,10 +108,10 @@ export default {
 
     watch(
       () => sizeStyle.value,
-      async () => {
-        await nextTick()
-
-        useCanvas().canvasApi.value?.updateRect?.()
+      () => {
+        nextTick(() => {
+          useCanvas().canvasApi.value?.updateRect?.()
+        })
       }
     )
 
