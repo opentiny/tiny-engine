@@ -41,7 +41,7 @@ export default {
       default: false
     },
     placeholder: {
-      type: [String],
+      type: String,
       default: ''
     },
     suffix: {
