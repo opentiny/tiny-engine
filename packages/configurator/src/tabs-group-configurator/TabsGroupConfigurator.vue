@@ -78,8 +78,8 @@ const props = defineProps({
   },
   // tabItem宽度
   labelWidth: {
-    type: Number,
-    default: 63
+    type: [Number, String],
+    default: '63'
   },
   // tab的选项，如果选项中包含collapsed，则会折叠为下拉
   options: {

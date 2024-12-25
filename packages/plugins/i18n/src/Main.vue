@@ -114,7 +114,7 @@
           </tiny-grid-column>
           <template #empty>
             <div v-if="isLoading" id="empty-loading-box" class="i18n-loading"></div>
-            <search-empty isShow="!isLoading" />
+            <search-empty v-else />
           </template>
         </tiny-grid>
       </div>

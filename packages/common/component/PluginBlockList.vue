@@ -205,7 +205,7 @@ export default {
   emits: ['click', 'iconClick', 'add', 'deleteBlock', 'openVersionPanel', 'editBlock', 'checkAll', 'cancelCheckAll'],
   setup(props, { emit }) {
     const panelState = inject('panelState', {})
-    const blockUsers = inject('blockUsers')
+    const blockUsers = inject('blockUsers', [])
     const state = reactive({
       activeIndex: -1,
       data: computed(() => props.data),

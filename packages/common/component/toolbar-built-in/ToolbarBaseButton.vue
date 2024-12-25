@@ -1,5 +1,5 @@
 <template>
-  <tiny-button v-bind="extendAttrs" class="toolbar-button">
+  <tiny-button class="toolbar-button">
     <span class="svg-wrap">
       <svg-icon v-if="icon" :name="icon"></svg-icon>
       <span v-if="options?.showDots" class="dots"></span>
@@ -9,7 +9,6 @@
   </tiny-button>
 </template>
 <script>
-import { inject } from 'vue'
 import { Button } from '@opentiny/vue'
 
 export default {
@@ -28,12 +27,6 @@ export default {
     options: {
       type: Object,
       default: () => ({})
-    }
-  },
-  setup() {
-    const extendAttrs = inject('extend-attributes') || {}
-    return {
-      extendAttrs
     }
   }
 }

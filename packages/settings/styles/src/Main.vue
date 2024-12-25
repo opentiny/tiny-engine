@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import { computed, watch } from 'vue'
+import { watch, inject, ref } from 'vue'
 import { Collapse, CollapseItem, Input } from '@opentiny/vue'
 import { useHistory, useCanvas, useProperties } from '@opentiny/tiny-engine-meta-register'
 import { CodeConfigurator, VariableConfigurator } from '@opentiny/tiny-engine-configurator'
@@ -105,13 +105,8 @@ export default {
     TinyInput: Input,
     VariableConfigurator
   },
-  props: {
-    isCollapsed: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props) {
+  props: {},
+  setup() {
     const styleCategoryGroup = [
       'layout',
       'spacing',
@@ -122,7 +117,8 @@ export default {
       'borders',
       'effects'
     ]
-    const activeNames = computed(() => (props.isCollapsed ? [styleCategoryGroup[0]] : styleCategoryGroup))
+    const isCollapsed = inject('isCollapsed')
+    const activeNames = ref(styleCategoryGroup)
     const { getCurrentSchema } = useCanvas()
     // 获取当前节点 style 对象
     const { state, updateStyle } = useStyle() // updateStyle
@@ -130,7 +126,7 @@ export default {
     const { getSchema, setProp } = useProperties()
 
     const handoverGroup = (actives) => {
-      if (props.isCollapsed) {
+      if (isCollapsed.value) {
         activeNames.value = actives.length > 1 ? actives.shift() : actives
       }
     }
@@ -200,6 +196,17 @@ export default {
       }
     )
 
+    watch(
+      () => isCollapsed.value,
+      () => {
+        if (isCollapsed.value) {
+          activeNames.value = [styleCategoryGroup[0]]
+        } else {
+          activeNames.value = styleCategoryGroup
+        }
+      }
+    )
+
     return {
       state,
       activeNames,
@@ -209,7 +216,8 @@ export default {
       save,
       close,
       updateStyle,
-      setConfig
+      setConfig,
+      isCollapsed
     }
   }
 }

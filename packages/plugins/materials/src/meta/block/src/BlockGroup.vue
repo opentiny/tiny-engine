@@ -168,6 +168,7 @@ export default {
       default: () => []
     }
   },
+  emits: ['changeGroup'],
   setup(props) {
     const validateIcon = iconError()
     const panelState = inject('panelState', {})

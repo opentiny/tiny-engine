@@ -2,7 +2,7 @@
   <div id="tiny-right-panel">
     <tiny-tabs v-model="layoutState.settings.render">
       <tiny-tab-item v-for="(setting, index) in settings" :key="index" :title="setting.title" :name="setting.name">
-        <component :is="setting.entry" :is-collapsed="isCollapsed"></component>
+        <component :is="setting.entry"></component>
         <div v-show="activating" class="active"></div>
       </tiny-tab-item>
     </tiny-tabs>
@@ -15,14 +15,15 @@
 </template>
 
 <script>
-import { computed, ref } from 'vue'
-import { Tabs, TabItem } from '@opentiny/vue'
+import { computed, provide, ref } from 'vue'
+import { Tabs, TabItem, Tooltip } from '@opentiny/vue'
 import { useLayout } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
     TinyTabs: Tabs,
-    TinyTabItem: TabItem
+    TinyTabItem: TabItem,
+    TinyTooltip: Tooltip
   },
   props: {
     settings: {
@@ -36,6 +37,8 @@ export default {
     const showMask = ref(true)
     const isCollapsed = ref(false)
     const settingIcon = computed(() => (isCollapsed.value ? 'style-panel-collapsed' : 'style-panel-expand'))
+
+    provide('isCollapsed', isCollapsed)
 
     return {
       showMask,
