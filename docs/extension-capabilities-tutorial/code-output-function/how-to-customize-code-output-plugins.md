@@ -47,11 +47,11 @@ function customPlugin(options) {
   - `this.replaceFile(fileItem)` 从 genResult 中替换指定文件
   - `this.deleteFile(fileItem)` 从 genResult 中删除指定文件
 
-详细 api 说明，可查看 [官方出码能力API](./官方出码能力API.md)
+详细 api 说明，可查看 [官方出码能力API](./official-code-output-api.md)
 
 ## 增加增量插件
 
-在 [如何自定义出码](./如何自定义出码.md)章节中，我们描述了如何替换官方出码插件，但是如果我们并不需要替换官方插件，而是增加插件，则可以往指定的出码阶段增加插件，例如：
+在 [如何自定义出码](./how-to-customize-code-output.md)章节中，我们描述了如何替换官方出码插件，但是如果我们并不需要替换官方插件，而是增加插件，则可以往指定的出码阶段增加插件，例如：
 
 ```javascript
 generateApp({
@@ -71,7 +71,7 @@ generateApp({
 如需对页面出码进行调整，有两种主要方式：
 
 - 自定义页面出码以及区块出码插件，整个页面文件内容可自定转换并且自定义。
-- 对官方当前出码结果进行局部调整，可使用 pluginConfig 往页面出码进行传参，实现局部调整的结果。具体可查看[自定义页面出码插件](./自定义页面出码插件.md)章节
+- 对官方当前出码结果进行局部调整，可使用 pluginConfig 往页面出码进行传参，实现局部调整的结果。具体可查看[自定义页面出码插件](./custom-page-code-output-plugin.md)章节
 
 ## 相关示例
 

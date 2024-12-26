@@ -2,7 +2,7 @@
 
 ## 出码的核心过程
 
-在[出码功能简介与使用](./出码功能简介与使用.md)章节中，我们知道了出码的核心是将符合TinyEngine协议规范的 schema 转换成符合语义的、高质量可读的代码。但是，工程化代码（基础项目代码）、代码风格、具体 schema to code 具体细节等等的情形可能每个团队都有不同的选择，所以也就诞生了自定义出码的需求。下面，我们针对“基于官方出码能力增加出码插件”以及“自定义插件完成 schema to code 的转换”两种情形进行介绍。
+在[出码功能简介与使用](./code-output-overview-and-usage.md)章节中，我们知道了出码的核心是将符合TinyEngine协议规范的 schema 转换成符合语义的、高质量可读的代码。但是，工程化代码（基础项目代码）、代码风格、具体 schema to code 具体细节等等的情形可能每个团队都有不同的选择，所以也就诞生了自定义出码的需求。下面，我们针对“基于官方出码能力增加出码插件”以及“自定义插件完成 schema to code 的转换”两种情形进行介绍。
 
 ## 基于官方出码能力自定义出码
 
@@ -112,7 +112,7 @@ const instance = generateApp({
 const res = await instance.generate(appSchema)
 ```
 
-更多信息请查看 [如何自定义出码插件](./如何自定义出码插件.md) 以及 [官方出码能力API](./官方出码能力API.md) 章节
+更多信息请查看 [如何自定义出码插件](./how-to-customize-code-output-plugins.md) 以及 [官方出码能力API](./official-code-output-api.md) 章节
 
 ## 自定义出码 package 完成 schema to code 的转换
 

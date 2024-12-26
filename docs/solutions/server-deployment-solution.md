@@ -167,7 +167,7 @@ pnpm serve:frontend
 ![TinyEngine](./imgs/backend_deploy_6.png)
 
 
-初次启动后，需要进行一次物料编译初始化编译，前后端同步，具体请查看 [此文档](./物料同步方案.md)
+初次启动后，需要进行一次物料编译初始化编译，前后端同步，具体请查看 [此文档](./material-sync-solution.md)
 
 启动成功后浏览器会自动打开设计器页面
 

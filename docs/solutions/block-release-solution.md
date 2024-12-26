@@ -18,7 +18,7 @@
 
 ![npm包发布](./imgs/npm3.png)
 
-生成token 后， 配置 `NPM_AUTH_TOKEN` 环境变量, 具体配置方法参看 [此文档](./服务端部署方案.md)
+生成token 后， 配置 `NPM_AUTH_TOKEN` 环境变量, 具体配置方法参看 [此文档](./server-deployment-solution.md)
 
 #### 自定义unpkg服务及区块包名
 
@@ -73,7 +73,7 @@ https://registry.npmmirror.com/${包名}/${版本号}/files/${文件路径及文
 
 ### npm 私仓发布
 
-npm 私仓部署更具公司或团体内部的npm仓库呈现形式，获取具有publish 权限 access token, 然后配置 `NPM_AUTH_TOKEN` 环境变量，配置方法可查看 [此文档](./服务端部署方案.md)
+npm 私仓部署更具公司或团体内部的npm仓库呈现形式，获取具有publish 权限 access token, 然后配置 `NPM_AUTH_TOKEN` 环境变量，配置方法可查看 [此文档](./server-deployment-solution.md)
 
 注意：开发者自己公司内部的 npm 私仓需要同时支持unpkg cdn， 否则区块版本浮动功能无法使用, 在区块消费时固定区块包的版本；
 
