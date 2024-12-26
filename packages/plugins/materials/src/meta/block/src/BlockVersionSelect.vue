@@ -88,7 +88,7 @@ export default {
                 isRefresh.value = true
                 closePanel()
                 // 刷新缓存
-                useMaterial().updateBlockCompileCache(selectedRow.content?.fileName)
+                useMaterial().updateBlockCompileCache()
                 // 刷新画布
                 useCanvas().canvasApi.value?.updateCanvas()
               })

@@ -26,13 +26,10 @@ export const fetchBlockSchema = async (blockName) =>
   getMetaApi(META_SERVICE.Http).get(`/material-center/api/block?label=${blockName}`)
 
 // TODO: 待验证
-export const updateBlockCompileCache = (name) => {
+export const updateBlockCompileCache = () => {
   blockVersionMap.clear()
   useCanvas().canvasApi.value?.removeBlockCompsCache()
-
-  if (blockCompileCache.has(name)) {
-    blockCompileCache.delete(name)
-  }
+  blockCompileCache.clear()
 }
 
 // 预构建 block
