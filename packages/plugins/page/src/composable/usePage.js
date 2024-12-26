@@ -13,10 +13,11 @@
 import { reactive, ref } from 'vue'
 import { extend, isEqual } from '@opentiny/vue-renderless/common/object'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { getCanvasStatus } from '@opentiny/tiny-engine-common/js/canvas'
+import { useCanvas, useLayout, useBreadcrumb, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import http from '../http'
 
-const { ELEMENT_TAG } = constants
+const { ELEMENT_TAG, COMPONENT_NAME } = constants
 
 import { useMessage } from '@opentiny/tiny-engine-meta-register'
 const { publish } = useMessage()
@@ -246,6 +247,53 @@ const getAncestors = async (id, withFolders) => {
   return ancestors.filter((item) => item.isPage).map((item) => item.id)
 }
 
+const clearCurrentState = () => {
+  const { pageState } = useCanvas()
+
+  pageState.currentVm = null
+  pageState.hoverVm = null
+  pageState.properties = {}
+  pageState.pageSchema = null
+}
+
+const updateUrlPageId = (id) => {
+  const url = new URL(window.location)
+
+  url.searchParams.delete('blockid')
+  url.searchParams.set('pageid', id)
+  window.history.pushState({}, '', url)
+  postLocationHistoryChanged({ pageId: id })
+}
+
+const switchPage = (pageId) => {
+  // 切换页面时清空 选中节点信息状态
+  clearCurrentState()
+
+  // pageId !== 0 防止 pageId 为 0 的时候判断不出来
+  if (pageId !== 0 && !pageId) {
+    updateUrlPageId('')
+    useCanvas().initData({ componentName: COMPONENT_NAME.Page }, {})
+    useLayout().layoutState.pageStatus = {
+      state: 'empty',
+      data: {}
+    }
+
+    return
+  }
+
+  return http.fetchPageDetail(pageId).then((data) => {
+    if (data.isPage) {
+      // 应该改成让 Breadcrumb 插件去监听变化
+      useBreadcrumb().setBreadcrumbPage([data.name])
+    }
+
+    updateUrlPageId(pageId)
+    useLayout().closePlugin()
+    useLayout().layoutState.pageStatus = getCanvasStatus(data.occupier)
+    useCanvas().initData(data['page_content'], data)
+  })
+}
+
 export default () => {
   return {
     DEFAULT_PAGE,
@@ -261,6 +309,7 @@ export default () => {
     isChangePageData,
     getPageList,
     getAncestors,
+    switchPage,
     STATIC_PAGE_GROUP_ID,
     COMMON_PAGE_GROUP_ID
   }

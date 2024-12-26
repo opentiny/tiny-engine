@@ -55,15 +55,13 @@
 </template>
 
 <script lang="jsx">
-import { reactive, onUnmounted } from 'vue'
+import { reactive, onMounted, onUnmounted } from 'vue'
 import { Search, Collapse, CollapseItem, Popover } from '@opentiny/vue'
 import { IconFolderOpened, IconFolderClosed, IconSearch } from '@opentiny/vue-icon'
 import {
   useCanvas,
   useModal,
   usePage,
-  useBreadcrumb,
-  useLayout,
   useNotify,
   useMessage,
   getMetaApi,
@@ -78,7 +76,7 @@ import { closeFolderSettingPanel } from './PageFolderSetting.vue'
 import http from './http.js'
 import DraggbleTree from './Tree.vue'
 
-const { PAGE_STATUS, COMPONENT_NAME } = constants
+const { PAGE_STATUS } = constants
 
 export default {
   components: {
@@ -98,7 +96,7 @@ export default {
   emits: ['openSettingPanel', 'add', 'createPage', 'createFolder'],
   setup(props, { emit }) {
     const { confirm } = useModal()
-    const { initData, pageState, isBlock, isSaved } = useCanvas()
+    const { pageState, isBlock, isSaved } = useCanvas()
     const {
       pageSettingState,
       changeTreeData,
@@ -107,16 +105,37 @@ export default {
       resetPageData,
       STATIC_PAGE_GROUP_ID,
       COMMON_PAGE_GROUP_ID,
-      postLocationHistoryChanged
+      switchPage: switchPageById
     } = usePage()
     const { fetchPageDetail, requestUpdatePage } = http
-    const { setBreadcrumbPage } = useBreadcrumb()
     const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
 
     const state = reactive({
       pageSearchValue: '',
       collapseValue: [STATIC_PAGE_GROUP_ID, COMMON_PAGE_GROUP_ID],
       currentNodeData: { id: getMetaApi(META_SERVICE.GlobalService).getBaseInfo().pageId }
+    })
+
+    const { subscribe, unsubscribe } = useMessage()
+
+    let subscriber = null
+
+    onMounted(() => {
+      subscriber = subscribe({
+        topic: 'locationHistoryChanged',
+        callback: (data) => {
+          if (data.pageId) {
+            state.currentNodeData = { id: data.pageId }
+          }
+        },
+        subscriber: 'routeBar'
+      })
+    })
+
+    onUnmounted(() => {
+      if (subscriber) {
+        unsubscribe(subscriber)
+      }
     })
 
     const refreshPageList = async (appId) => {
@@ -130,58 +149,13 @@ export default {
       return pageList
     }
 
-    const clearCurrentState = () => {
-      pageState.currentVm = null
-      pageState.hoverVm = null
-      pageState.properties = {}
-      pageState.pageSchema = null
-    }
-
-    const updateUrlPageId = (id) => {
-      const url = new URL(window.location)
-
-      url.searchParams.delete('blockid')
-      url.searchParams.set('pageid', id)
-      window.history.pushState({}, '', url)
-      postLocationHistoryChanged({ pageId: id })
-    }
-
-    const getPageDetail = (pageId) => {
-      // pageId !== 0 防止 pageId 为 0 的时候判断不出来
-      if (pageId !== 0 && !pageId) {
-        updateUrlPageId('')
-        initData({ componentName: COMPONENT_NAME.Page }, {})
-        useLayout().layoutState.pageStatus = {
-          state: 'empty',
-          data: {}
-        }
-
-        return
-      }
-
-      fetchPageDetail(pageId).then((data) => {
-        updateUrlPageId(pageId)
-        closePageSettingPanel()
-        closeFolderSettingPanel()
-        useLayout().closePlugin()
-        useLayout().layoutState.pageStatus = getCanvasStatus(data.occupier)
-        initData(data['page_content'], data)
-      })
-    }
-
     const switchPage = (data) => {
-      pageState.hoverVm = null
       state.currentNodeData = data
 
-      let pageName = ''
-      if (data.isPage) {
-        pageName = data?.name || ''
-      }
-      setBreadcrumbPage([pageName])
-
-      // 切换页面时清空 选中节点信息状态
-      clearCurrentState()
-      getPageDetail(data.id)
+      switchPageById(data.id).then(() => {
+        closePageSettingPanel()
+        closeFolderSettingPanel()
+      })
     }
 
     const nodeClick = (e, pageData) => {
@@ -385,7 +359,6 @@ export default {
     return {
       createPublicPage,
       state,
-      switchPage,
       pageSettingState,
       setPopoverRef,
       IconFolderOpened: IconFolderOpened(),

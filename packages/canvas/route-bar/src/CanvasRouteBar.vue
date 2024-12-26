@@ -12,8 +12,8 @@
 </template>
 
 <script setup>
-import { getMetaApi, META_SERVICE, useLayout, usePage } from '@opentiny/tiny-engine-meta-register'
-import { computed, ref, watch } from 'vue'
+import { getMetaApi, META_SERVICE, useLayout, useMessage, usePage } from '@opentiny/tiny-engine-meta-register'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 
 const sizeStyle = computed(() => {
   const { width, maxWidth, minWidth, scale } = useLayout().getDimension()
@@ -26,10 +26,31 @@ const sizeStyle = computed(() => {
   }
 })
 
-const { pageSettingState, getAncestors } = usePage()
+const { pageSettingState, getAncestors, switchPage } = usePage()
 
-// TODO pageId 需要监听变化
 const pageId = ref(getMetaApi(META_SERVICE.GlobalService).getBaseInfo().pageId)
+
+const { subscribe, unsubscribe } = useMessage()
+
+let subscriber = null
+
+onMounted(() => {
+  subscriber = subscribe({
+    topic: 'locationHistoryChanged',
+    callback: (data) => {
+      if (data.pageId) {
+        pageId.value = data.pageId
+      }
+    },
+    subscriber: 'routeBar'
+  })
+})
+
+onUnmounted(() => {
+  if (subscriber) {
+    unsubscribe(subscriber)
+  }
+})
 
 /**
  * @typedef {Object} Route
@@ -66,9 +87,8 @@ watch(
 /**
  * @param route {Route}
  */
-// eslint-disable-next-line no-unused-vars
 const handleClickRoute = (route) => {
-  // TODO 跳转url？需要一个common api
+  switchPage(route.id)
 }
 </script>
 
