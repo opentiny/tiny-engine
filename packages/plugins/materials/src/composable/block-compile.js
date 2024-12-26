@@ -1,7 +1,26 @@
 import { getMetaApi, META_SERVICE, useMaterial, useResource, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { compile as blockCompiler } from '@opentiny/tiny-engine-block-compiler'
 
+const blockVersionMap = new Map()
 const blockCompileCache = new Map()
+
+// 获取所有区块分组下的所有区块
+const getAllGroupBlocks = async () => {
+  const { fetchGroups, fetchGroupBlocksByIds } = getMetaApi('engine.plugins.materials.block')
+  const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
+
+  const groups = await fetchGroups(appId)
+
+  const groupIds = groups.map((groupItem) => groupItem.id)
+
+  const blocks = await fetchGroupBlocksByIds({ groupIds })
+
+  for (const blockItem of blocks) {
+    if (blockItem?.content?.fileName && blockItem?.current_version) {
+      blockVersionMap.set(blockItem.content.fileName, blockItem.current_version)
+    }
+  }
+}
 
 export const fetchBlockSchema = async (blockName) =>
   getMetaApi(META_SERVICE.Http).get(`/material-center/api/block?label=${blockName}`)
@@ -54,6 +73,11 @@ export const getBlockCompileRes = async (schema) => {
 
 // 获取 blockBlob
 export const getBlockByName = async (name) => {
+  // version map 为空，获取所有区块的版本记录
+  if (blockVersionMap.size === 0) {
+    await getAllGroupBlocks()
+  }
+
   // 找到对应区块的 schema
   const block = await fetchBlockSchema(name)
   const blockItem = block?.[0]
@@ -62,7 +86,7 @@ export const getBlockByName = async (name) => {
     return
   }
 
-  const historyId = blockItem?.current_history
+  const historyId = blockVersionMap.get(name)
   const historySchema = blockItem?.histories?.find?.((historyItem) => historyItem?.id === historyId)
 
   let schemaContent = null
