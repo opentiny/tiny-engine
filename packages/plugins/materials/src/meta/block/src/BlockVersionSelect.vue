@@ -91,13 +91,6 @@ export default {
                 useMaterial().updateBlockCompileCache(selectedRow.content?.fileName)
                 // 刷新画布
                 useCanvas().canvasApi.value?.updateCanvas()
-                // confirm({
-                //   title: '切换区块版本成功',
-                //   message: `${selectedBlock.value.label}区块，已切换为${selectedRow.version}版本，修改版本后需要刷新页面才生效，是否刷新页面？`,
-                //   exec: () => {
-                //     window.location.reload()
-                //   }
-                // })
               })
               .catch((error) => {
                 message({

@@ -254,65 +254,52 @@ const parseFunctionString = (fnStr) => {
   return null
 }
 
-const blockComponentsMap = new Map()
 const blockComponentsBlobUrlMap = new Map()
 
 // TODO: 这里的全局 getter 方法名，可以做成配置化
-window.getBlockComponentBlobUrl = (name) => blockComponentsBlobUrlMap.get(name)
+const loadBlockComponent = async (name) => {
+  try {
+    if (blockComponentsBlobUrlMap.has(name)) {
+      return import(/* @vite-ignore */ blockComponentsBlobUrlMap.get(name))
+    }
 
-const getBlockComponent = (name) => {
-  if (blockComponentsMap.has(name)) {
-    return blockComponentsMap.get(name)
-  }
+    const blocksBlob = await getController().getBlockByName(name)
 
-  const BlockComp = defineAsyncComponent(async () => {
-    try {
-      const blocksBlob = await getController().getBlockByName(name)
+    for (const [fileName, value] of Object.entries(blocksBlob)) {
+      blockComponentsBlobUrlMap.set(fileName, value.blobURL)
 
-      for (const [fileName, value] of Object.entries(blocksBlob)) {
-        // 注册异步组件
-        blockComponentsMap.set(
-          fileName,
-          defineAsyncComponent(() => import(/* @vite-ignore */ value.blobURL))
-        )
-
-        blockComponentsBlobUrlMap.set(fileName, value.blobURL)
-
-        if (!value.style) {
-          continue
-        }
-
-        // 注册 CSS，以区块为维度
-        const stylesheet = document.querySelector(`#${fileName}`)
-
-        if (stylesheet) {
-          stylesheet.innerHTML = value.style
-        } else {
-          const newStylesheet = document.createElement('style')
-          newStylesheet.innerHTML = value.style
-          document.head.appendChild(newStylesheet)
-        }
+      if (!value.style) {
+        continue
       }
 
-      return blockComponentsMap.get(name)
-    } catch (error) {
-      // 加载错误提示
-      return h(BlockLoadError, { name })
-    }
-  })
+      // 注册 CSS，以区块为维度
+      const stylesheet = document.querySelector(`#${fileName}`)
 
-  return BlockComp
+      if (stylesheet) {
+        stylesheet.innerHTML = value.style
+      } else {
+        const newStylesheet = document.createElement('style')
+        newStylesheet.innerHTML = value.style
+        document.head.appendChild(newStylesheet)
+      }
+    }
+
+    return import(/* @vite-ignore */ blockComponentsBlobUrlMap.get(name))
+  } catch (error) {
+    // 加载错误提示
+    return h(BlockLoadError, { name })
+  }
+}
+
+window.loadBlockComponent = loadBlockComponent
+
+const getBlockComponent = (name) => {
+  return defineAsyncComponent(async () => loadBlockComponent(name))
 }
 
 // 移除区块缓存
-export const removeBlockCompsCacheByName = (name) => {
-  if (blockComponentsMap.has(name)) {
-    blockComponentsMap.delete(name)
-  }
-
-  if (blockComponentsBlobUrlMap.has(name)) {
-    blockComponentsBlobUrlMap.delete(name)
-  }
+export const removeBlockCompsCache = () => {
+  blockComponentsBlobUrlMap.clear()
 }
 
 export const getComponent = (name) => {

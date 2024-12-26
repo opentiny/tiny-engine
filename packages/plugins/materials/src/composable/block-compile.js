@@ -27,10 +27,11 @@ export const fetchBlockSchema = async (blockName) =>
 
 // TODO: 待验证
 export const updateBlockCompileCache = (name) => {
+  blockVersionMap.clear()
+  useCanvas().canvasApi.value?.removeBlockCompsCache()
+
   if (blockCompileCache.has(name)) {
     blockCompileCache.delete(name)
-
-    useCanvas().canvasApi.value?.removeBlockCompsCacheByName(name)
   }
 }
 
@@ -45,26 +46,19 @@ export const getBlockCompileRes = async (schema) => {
   }
 
   const generateCodeService = getMetaApi('engine.service.generateCode')
-  const blocks = await generateCodeService.getAllNestedBlocksSchema(schema, fetchBlockSchema)
   const componentsMap = useResource().appSchemaState.componentsMap
 
-  // 调用 api 得到页面出码结果
-  let blocksSourceCode = null
-  const blocksWithoutCache = blocks.filter((blockItem) => !blockCompileCache.has(blockItem.fileName))
-
   // 需要出码的区块
-  blocksSourceCode = [schema, ...blocksWithoutCache].map((blockSchema) => {
-    const sourceCode = generateCodeService.generatePageCode(blockSchema, componentsMap || [], {
-      blockRelativePath: './'
-    })
-
-    return {
-      fileName: blockSchema.fileName,
-      sourceCode
-    }
+  const sourceCode = generateCodeService.generatePageCode(schema, componentsMap || [], {
+    blockRelativePath: './'
   })
 
-  const compiledResult = blockCompiler(blocksSourceCode, {
+  const blocksSourceCode = {
+    fileName: schema.fileName,
+    sourceCode
+  }
+
+  const compiledResult = blockCompiler([blocksSourceCode], {
     compileCache: blockCompileCache
   })
 
@@ -86,13 +80,13 @@ export const getBlockByName = async (name) => {
     return
   }
 
-  const historyId = blockVersionMap.get(name)
-  const historySchema = blockItem?.histories?.find?.((historyItem) => historyItem?.id === historyId)
+  const historyVersion = blockVersionMap.get(name)
+  const historySchema = blockItem?.histories?.find?.((historyItem) => historyItem?.id === historyVersion)
 
   let schemaContent = null
 
   // 有指定的历史版本，优先选用历史版本
-  if (historyId && historySchema?.content) {
+  if (historyVersion && historySchema?.content) {
     schemaContent = historySchema.content
   } else {
     schemaContent = blockItem?.content
