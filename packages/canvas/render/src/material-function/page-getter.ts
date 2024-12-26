@@ -59,7 +59,7 @@ export const wrapPageComponent = (pageId: string) => {
 
       return () => {
         if (active.value || asyncData.value) {
-          h(RenderMain, {
+          return h(RenderMain, {
             cssScopeId: key,
             renderSchema: asyncData.value,
             active: active.value,
