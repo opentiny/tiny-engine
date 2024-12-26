@@ -301,6 +301,7 @@ export default {
         url.searchParams.delete('pageid')
         url.searchParams.set('blockid', block.id)
         window.history.pushState({}, '', url)
+        useBlock().postLocationHistoryChanged({ blockId: block.id })
       } else {
         confirm({
           message: '当前画布内容尚未保存，是否要继续切换?',

@@ -1,11 +1,6 @@
 <template>
-  <component :is="tag" v-bind="$attrs">
-    <slot>
-      <canvas-placeholder :placeholder="$attrs.placeholder"></canvas-placeholder>
-    </slot>
-  </component>
+  <canvas-placeholder :placeholder="'路由占位符'"></canvas-placeholder>
 </template>
-
 <script>
 import CanvasPlaceholder from './CanvasPlaceholder.vue'
 export default {
@@ -13,9 +8,11 @@ export default {
     CanvasPlaceholder
   },
   props: {
-    tag: {
-      type: String,
-      default: 'div'
+    name: {
+      type: String
+    },
+    params: {
+      type: Object
     }
   }
 }

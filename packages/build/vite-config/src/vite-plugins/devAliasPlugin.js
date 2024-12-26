@@ -53,7 +53,7 @@ const getDevAlias = (useSourceAlias) => {
     '@opentiny/tiny-engine-theme-light': path.resolve(basePath, 'packages/theme/light/index.less'),
     '@opentiny/tiny-engine-theme-base': path.resolve(basePath, 'packages/theme/base/src/index.js'),
     '@opentiny/tiny-engine-svgs': path.resolve(basePath, 'packages/svgs/index.js'),
-    '@opentiny/tiny-engine-canvas/render': path.resolve(basePath, 'packages/canvas/render/index.js'),
+    '@opentiny/tiny-engine-canvas/render': path.resolve(basePath, 'packages/canvas/render/index.ts'),
     '@opentiny/tiny-engine-canvas': path.resolve(basePath, 'packages/canvas/index.js'),
     '@opentiny/tiny-engine-utils': path.resolve(basePath, 'packages/utils/src/index.js'),
     '@opentiny/tiny-engine-webcomponent-core': path.resolve(basePath, 'packages/webcomponent/src/lib.js'),

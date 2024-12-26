@@ -18,6 +18,10 @@ import http from '../http'
 
 const { ELEMENT_TAG } = constants
 
+import { useMessage } from '@opentiny/tiny-engine-meta-register'
+const { publish } = useMessage()
+const postLocationHistoryChanged = (data) => publish({ topic: 'locationHistoryChanged', data })
+
 const DEFAULT_PAGE = {
   app: '',
   name: '',
@@ -245,6 +249,7 @@ const getAncestors = async (id, withFolders) => {
 export default () => {
   return {
     DEFAULT_PAGE,
+    postLocationHistoryChanged,
     selectedTemplateCard,
     pageSettingState,
     isTemporaryPage,

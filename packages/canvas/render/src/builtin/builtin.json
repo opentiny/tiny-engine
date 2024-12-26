@@ -5,63 +5,6 @@
         {
           "icon": "Box",
           "name": {
-            "zh_CN": "RouterView"
-          },
-          "component": "RouterView",
-          "schema": {
-            "slots": {},
-            "properties": [
-              {
-                "label": {
-                  "zh_CN": "基础信息"
-                },
-                "description": {
-                  "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
-                },
-                "content": []
-              }
-            ],
-            "events": {
-              "onClick": {
-                "label": {
-                  "zh_CN": "点击事件"
-                },
-                "description": {
-                  "zh_CN": "点击时触发的回调函数"
-                },
-                "type": "event",
-                "functionInfo": {
-                  "params": [],
-                  "returns": {}
-                },
-                "defaultValue": ""
-              }
-            },
-            "shortcuts": {
-              "properties": []
-            },
-            "contentMenu": {
-              "actions": []
-            }
-          },
-          "configure": {
-            "loop": true,
-            "isContainer": true,
-            "nestingRule": {
-              "childWhitelist": [],
-              "descendantBlacklist": []
-            }
-          }
-        },
-        {
-          "icon": "Box",
-          "name": {
             "zh_CN": "Box"
           },
           "component": "div",
@@ -186,6 +129,93 @@
             }
           },
           "configure": {
+            "isContainer": true
+          }
+        },
+        {
+          "icon": "RouterView",
+          "name": {
+            "zh_CN": "RouterView"
+          },
+          "component": "RouterView",
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "content": []
+              }
+            ]
+          }
+        },
+        {
+          "icon": "RouterLink",
+          "name": {
+            "zh_CN": "RouterLink"
+          },
+          "component": "RouterLink",
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "content": [
+                  {
+                    "property": "to",
+                    "type": "String",
+                    "label": {
+                      "text": {
+                        "zh_CN": "跳转页面"
+                      }
+                    },
+                    "cols": 12,
+                    "widget": {
+                      "component": "InputConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "activeClass",
+                    "type": "String",
+                    "label": {
+                      "text": {
+                        "zh_CN": "激活样式类"
+                      }
+                    },
+                    "cols": 12,
+                    "widget": {
+                      "component": "InputConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "exactActiveClass",
+                    "type": "String",
+                    "label": {
+                      "text": {
+                        "zh_CN": "准确激活样式雷"
+                      }
+                    },
+                    "cols": 12,
+                    "widget": {
+                      "component": "InputConfigurator",
+                      "props": {}
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "configure": {
+            "loop": true,
             "isContainer": true
           }
         },
@@ -517,17 +547,6 @@
           "children": [
             {
               "name": {
-                "zh_CN": "RouterView"
-              },
-              "icon": "Box",
-              "screenshot": "",
-              "snippetName": "RouterView",
-              "schema": {
-                "componentName": "RouterView"
-              }
-            },
-            {
-              "name": {
                 "zh_CN": "文本"
               },
               "screenshot": "",
@@ -586,6 +605,40 @@
               "schema": {
                 "componentName": "Slot",
                 "props": {}
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "路由视图"
+              },
+              "screenshot": "",
+              "snippetName": "RouterView",
+              "icon": "RouterView",
+              "schema": {
+                "componentName": "RouterView",
+                "props": {}
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "路由链接"
+              },
+              "screenshot": "",
+              "snippetName": "RouterLink",
+              "icon": "RouterLink",
+              "schema": {
+                "componentName": "RouterLink",
+                "props": {
+                  "to": ""
+                },
+                "children": [
+                  {
+                    "componentName": "Text",
+                    "props": {
+                      "text": "路由文本"
+                    }
+                  }
+                ]
               }
             },
             {

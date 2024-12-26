@@ -5,8 +5,18 @@ import * as TinyVueIcon from '@opentiny/vue-icon'
 import TinyVue from '@opentiny/vue'
 import TinyI18nHost from '@opentiny/tiny-engine-common/js/i18n'
 import { camelize, capitalize } from '@vue/shared'
-import { blockSlotDataMap, getComponent } from './render'
+import { blockSlotDataMap, getComponent } from './material-function'
 
+declare global {
+  interface Window {
+    Vue: typeof Vue
+    VueI18n: typeof VueI18n
+    TinyVue: typeof TinyVue
+    TinyVueIcon: typeof TinyVueIcon
+    TinyI18nHost: typeof TinyI18nHost
+    TinyWebcomponentCore: typeof TinyWebcomponentCore
+  }
+}
 // 和 @opentiny/tiny-engine-block-build 打包umd方式相适配
 export function supportUmdBlock() {
   // 不能采用new Proxy代理Vue的方案，在编译后的vue会报错警告，采用一下方案扩展用于注入一些区块加载逻辑
@@ -27,7 +37,7 @@ export function supportUmdBlock() {
       const instance = Vue.getCurrentInstance()
 
       // 获取当前区块名称
-      const blockName = instance.attrs.dataTag
+      const blockName = instance.attrs.dataTag as string
 
       const [, slotName, slotData] = args
 

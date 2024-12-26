@@ -23,7 +23,8 @@ import {
   getMetaApi,
   META_APP,
   useMessage,
-  META_SERVICE
+  META_SERVICE,
+  usePage
 } from '@opentiny/tiny-engine-meta-register'
 
 const { COMPONENT_NAME, DEFAULT_INTERCEPTOR } = constants
@@ -52,6 +53,12 @@ const initPage = (pageInfo) => {
     pageInfo.id = pageInfo.meta?.id
   } catch (error) {
     console.log(error) // eslint-disable-line
+  } finally {
+    const url = new URL(window.location)
+
+    url.searchParams.set('pageid', pageInfo.id)
+    window.history.pushState({}, '', url)
+    usePage().postLocationHistoryChanged({ pageId: pageInfo.id })
   }
 
   const { id, meta, ...pageSchema } = pageInfo
