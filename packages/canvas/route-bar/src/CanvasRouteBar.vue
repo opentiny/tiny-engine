@@ -1,0 +1,104 @@
+<template>
+  <div id="canvas-route-bar" :style="sizeStyle">
+    <div class="address-bar">
+      <template v-for="route in routes" :key="route.id">
+        <span class="slash">/</span>
+        <span :class="[{ route: route.isPage && route.id !== pageId }]" @click="handleClickRoute(route)">{{
+          route.route
+        }}</span>
+      </template>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { getMetaApi, META_SERVICE, useLayout, usePage } from '@opentiny/tiny-engine-meta-register'
+import { computed, ref, watch } from 'vue'
+
+const sizeStyle = computed(() => {
+  const { width, maxWidth, minWidth, scale } = useLayout().getDimension()
+  return {
+    width,
+    maxWidth,
+    minWidth,
+    height: `calc(32px / ${scale})`,
+    transform: `scale(${scale})`
+  }
+})
+
+const { pageSettingState, getAncestors } = usePage()
+
+// TODO pageId 需要监听变化
+const pageId = ref(getMetaApi(META_SERVICE.GlobalService).getBaseInfo().pageId)
+
+/**
+ * @typedef {Object} Route
+ * @property {string | number} id
+ * @property {string} route
+ * @property {boolean} isPage
+ */
+
+/** @type {import('vue').Ref<Route[]>} */
+const routes = ref([])
+
+watch(
+  pageId,
+  async (value) => {
+    if (!value) {
+      return
+    }
+    const ancestors = await getAncestors(value, true)
+
+    routes.value = ancestors.concat(value).map((id) => {
+      const { route, isPage } = pageSettingState.treeDataMapping[id]
+      return {
+        id,
+        route: route
+          .replace(/\/+/g, '/') // 替换连续的 '/' 为单个 '/'
+          .replace(/^\/|\/$/g, ''), // 去掉开头和结尾的 '/'
+        isPage
+      }
+    })
+  },
+  { immediate: true }
+)
+
+/**
+ * @param route {Route}
+ */
+// eslint-disable-next-line no-unused-vars
+const handleClickRoute = (route) => {
+  // TODO 跳转url？需要一个common api
+}
+</script>
+
+<style lang="less" scoped>
+#canvas-route-bar {
+  position: absolute;
+  top: 18px;
+  background-color: var(--te-base-gray-30);
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+}
+.address-bar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background-color: var(--te-base-gray-10);
+  height: 20px;
+  width: 100%;
+  border-radius: 999px;
+  padding: 0 10px;
+  cursor: default;
+}
+.route {
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+    color: var(--te-common-text-link);
+  }
+}
+</style>

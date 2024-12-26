@@ -1,5 +1,6 @@
 <template>
   <div id="canvas-wrap" ref="canvasRef">
+    <slot name="header"></slot>
     <div ref="siteCanvas" class="site-canvas" :style="siteCanvasStyle">
       <slot name="container"></slot>
     </div>
@@ -13,7 +14,7 @@ import { useLayout } from '@opentiny/tiny-engine-meta-register'
 const siteCanvasStyle = computed(() => {
   const { scale } = useLayout().getDimension()
   return {
-    height: `calc((100% - var(--base-bottom-panel-height, 30px) - 36px) / ${scale})`,
+    height: `calc((100% - var(--base-bottom-panel-height, 30px) - 68px) / ${scale})`,
     transform: `scale(${scale})`
   }
 })
@@ -28,11 +29,13 @@ const siteCanvasStyle = computed(() => {
   justify-content: center;
   position: relative;
 
+  // TODO 是否能改成不用 position: absolute; 避免动态设置height
   .site-canvas {
     background: var(--ti-lowcode-breadcrumb-hover-bg);
     position: absolute;
     overflow: hidden;
-    margin: 18px 0;
+    margin-top: calc(18px + 32px);
+    margin-bottom: 18px;
     transform-origin: top;
   }
 }

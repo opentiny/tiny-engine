@@ -1,5 +1,8 @@
 <template>
   <component :is="CanvasLayout">
+    <template #header>
+      <component :is="CanvasRouteBar"></component>
+    </template>
     <template #container>
       <component
         :is="CanvasContainer.entry"
@@ -49,7 +52,7 @@ export default {
   setup() {
     const registry = getMergeRegistry('canvas')
     const materialsPanel = getMergeMeta('engine.plugins.materials')?.entry
-    const { CanvasBreadcrumb } = registry.components
+    const { CanvasRouteBar, CanvasBreadcrumb } = registry.components
     const CanvasLayout = registry.layout.entry
     const [CanvasContainer] = registry.metas
     const footData = ref([])
@@ -188,6 +191,7 @@ export default {
       CanvasLayout,
       canvasRef,
       CanvasContainer,
+      CanvasRouteBar,
       CanvasBreadcrumb
     }
   }
