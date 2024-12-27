@@ -29,11 +29,11 @@ const siteCanvasStyle = computed(() => {
   justify-content: center;
   position: relative;
 
-  // TODO 是否能改成不用 position: absolute; 避免动态设置height
   .site-canvas {
     background: var(--ti-lowcode-breadcrumb-hover-bg);
     position: absolute;
     overflow: hidden;
+    // TODO 这里的多的32px是route bar的高度，硬编码设置margin-top不适合动态显隐route bar。是否能改成不用 position: absolute;
     margin-top: calc(18px + 32px);
     margin-bottom: 18px;
     transform-origin: top;
