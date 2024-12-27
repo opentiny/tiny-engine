@@ -280,6 +280,7 @@ const loadBlockComponent = async (name) => {
       } else {
         const newStylesheet = document.createElement('style')
         newStylesheet.innerHTML = value.style
+        newStylesheet.setAttribute('id', fileName)
         document.head.appendChild(newStylesheet)
       }
     }
@@ -294,7 +295,7 @@ const loadBlockComponent = async (name) => {
 window.loadBlockComponent = loadBlockComponent
 
 const getBlockComponent = (name) => {
-  return defineAsyncComponent(async () => loadBlockComponent(name))
+  return defineAsyncComponent(() => loadBlockComponent(name))
 }
 
 // 移除区块缓存

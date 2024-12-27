@@ -86,7 +86,7 @@ const resolveRelativeImport = (code: string, globalGetterName = 'loadBlockCompon
         // 声明异步组件 const Block = defineAsyncComponent(() => import(getBlockUrl(Block)))
         magicStr.appendLeft(
           node.start!,
-          `const ${defaultImportId} = defineAsyncComponent(async () => window.${globalGetterName}('${fileName}'))`
+          `const ${defaultImportId} = defineAsyncComponent(() => window.${globalGetterName}('${fileName}'))`
         )
 
         // 移除 import Block from './Block.vue' 语句
