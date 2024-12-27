@@ -179,7 +179,7 @@ const generateTree = (data) => {
 }
 
 const getPageList = async (appId) => {
-  const pagesData = await http.fetchPageList(appId)
+  const pagesData = await http.fetchPageList(appId || getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id)
 
   const firstGroupData = { groupName: '静态页面', groupId: STATIC_PAGE_GROUP_ID, data: [] }
   const secondGroupData = { groupName: '公共页面', groupId: COMMON_PAGE_GROUP_ID, data: [] }
@@ -219,8 +219,7 @@ const getPageList = async (appId) => {
  */
 const getAncestors = async (id, withFolders) => {
   if (pageSettingState.pages.length === 0) {
-    const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
-    await getPageList(appId)
+    await getPageList()
   }
 
   /**

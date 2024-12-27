@@ -178,7 +178,7 @@
                     },
                     "cols": 12,
                     "widget": {
-                      "component": "InputConfigurator",
+                      "component": "RouterSelectConfigurator",
                       "props": {}
                     }
                   },
