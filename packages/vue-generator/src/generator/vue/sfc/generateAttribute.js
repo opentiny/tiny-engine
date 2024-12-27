@@ -379,7 +379,9 @@ export const handleTinyIconPropsHook = (schemaData, globalHooks, config) => {
 
 export const transformObjType = (obj, globalHooks, config) => {
   if (!obj || typeof obj !== 'object') {
-    return obj
+    return {
+      res: obj
+    }
   }
 
   let resStr = []
@@ -413,7 +415,18 @@ export const transformObjType = (obj, globalHooks, config) => {
     }
 
     if (hasAccessor(value?.accessor)) {
-      resStr.push(`${renderKey}${value.defaultValue || "''"}`)
+      if (typeof value.defaultValue === 'string') {
+        resStr.push(`${renderKey}"${value.defaultValue.replaceAll("'", "\\'").replaceAll(/"/g, "'")}"`)
+      } else {
+        const { res: tempRes, shouldBindToState: tempShouldBindToState } =
+          transformObjType(value.defaultValue, globalHooks, config) || {}
+
+        resStr.push(`${renderKey}${tempRes}`)
+
+        if (tempShouldBindToState) {
+          shouldBindToState = true
+        }
+      }
 
       if (isSetter(value?.accessor)) {
         globalHooks.addStatement({
