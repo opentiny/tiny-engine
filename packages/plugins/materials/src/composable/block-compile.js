@@ -78,7 +78,7 @@ export const getBlockByName = async (name) => {
   }
 
   const historyVersion = blockVersionMap.get(name)
-  const historySchema = blockItem?.histories?.find?.((historyItem) => historyItem?.id === historyVersion)
+  const historySchema = blockItem?.histories?.find?.((historyItem) => historyItem?.version === historyVersion)
 
   let schemaContent = null
 
