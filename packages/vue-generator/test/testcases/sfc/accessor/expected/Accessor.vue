@@ -65,5 +65,10 @@ vue.watchEffect(
     this.state.arrVal = `${this.state.firstName} ${this.state.lastName}`
   })
 )
+vue.watchEffect(
+  wrap(function () {
+    this.state.objVal = `${this.state.firstName} ${this.state.lastName}`
+  })
+)
 </script>
 <style scoped></style>

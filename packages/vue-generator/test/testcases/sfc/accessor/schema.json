@@ -91,7 +91,7 @@
       "accessor": {
         "getter": {
           "type": "JSFunction",
-          "value": "function() { this.state.falseVal = `${this.state.firstName} ${this.state.lastName}` }"
+          "value": "function() { this.state.objVal = `${this.state.firstName} ${this.state.lastName}` }"
         }
       }
     }
