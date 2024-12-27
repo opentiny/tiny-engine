@@ -359,6 +359,7 @@ export default {
     return {
       createPublicPage,
       state,
+      switchPage,
       pageSettingState,
       setPopoverRef,
       IconFolderOpened: IconFolderOpened(),
