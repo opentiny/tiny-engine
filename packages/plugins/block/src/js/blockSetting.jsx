@@ -419,10 +419,17 @@ export const refreshBlockData = async (block = {}) => {
       if (newBlock?.public_scope_tenants?.length) {
         newBlock.public_scope_tenants = newBlock.public_scope_tenants.map((e) => e.id)
       }
-      Object.assign(block, newBlock)
-      useLayout().layoutState.pageStatus = getCanvasStatus(newBlock?.occupier)
 
-      useHistory().addHistory(block.content)
+      // 与当前正在画布编辑态的区块相同，需要同步更新
+      if (useBlock().getCurrentBlock()?.id === block.id) {
+        useLayout().layoutState.pageStatus = getCanvasStatus(newBlock?.occupier)
+        useHistory().addHistory(block.content)
+        Object.assign(useBlock().getCurrentBlock(), newBlock)
+      }
+      // 与当前区块管理面板的区块相同，需要同步更新
+      if (getEditBlock()?.id === block.id) {
+        Object.assign(getEditBlock(), newBlock)
+      }
     }
   }
 }

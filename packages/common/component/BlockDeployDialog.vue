@@ -142,7 +142,7 @@ export default {
     }
 
     const getNextVersion = (block) => {
-      const backupList = block.backupList || []
+      const backupList = block.histories || []
 
       let latestVersion = '1.0.0'
       let latestTime = 0
@@ -201,16 +201,7 @@ export default {
         const originalObj = remote?.content || {}
         state.originalCode = JSON.stringify(originalObj, null, 2)
 
-        // const getSchema = useCanvas().getSchema
-        // 转为普通对象，和线上代码顺序保持一致
-        // const pageSchema = getSchema?.() || {}
-        // if (pageSchema.componentName === 'Block') {
-        //   state.code = JSON.stringify(pageSchema, null, 2)
-        // } else {
-        //   // 非区块编辑
-        // }
-
-        state.code = block?.content || {}
+        state.code = JSON.stringify(block?.content || {}, null, 2)
         state.compareVisible = true
       }
     }
@@ -234,7 +225,6 @@ export default {
       }
       try {
         const newSchema = JSON.parse(state.newCode)
-        // useCanvas().importSchema({ ...pageSchema, componentName: COMPONENT_NAME.Block })
         emit('changeSchema', { ...newSchema, componentName: COMPONENT_NAME.Block })
         close()
       } catch (err) {

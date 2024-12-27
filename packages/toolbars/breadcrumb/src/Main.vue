@@ -36,7 +36,7 @@
 <script>
 import { reactive, computed } from 'vue'
 import { Breadcrumb, BreadcrumbItem, Button } from '@opentiny/vue'
-import { useBreadcrumb, useLayout, useBlock, useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { useBreadcrumb, useLayout, useBlock } from '@opentiny/tiny-engine-meta-register'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import { BlockDeployDialog } from '@opentiny/tiny-engine-common'
 
@@ -72,33 +72,15 @@ export default {
       state.showDeployBlock = true
     }
 
-    // const nextVersion = computed(() => {
-    //   const backupList = getBreadcrumbData().value[2] || []
-
-    //   let latestVersion = '1.0.0'
-    //   let latestTime = 0
-    //   backupList.forEach((v) => {
-    //     const vTime = new Date(v.created_at).getTime()
-
-    //     if (vTime > latestTime) {
-    //       latestTime = vTime
-    //       latestVersion = v.version
-    //     }
-    //   })
-
-    //   // version 符合X.Y.Z的字符结构
-    //   return latestVersion.replace(/\d+$/, (match) => Number(match) + 1)
-    // })
-
     const open = () => {
       if (!plugins) return
       plugins.render = breadcrumbData.value[0] === CONSTANTS.PAGETEXT ? PLUGINS_ID.PAGEID : PLUGINS_ID.BLOCKID
     }
 
-    const currentBlock = computed(useBlock().getCurrentBlock())
+    const currentBlock = computed(useBlock().getCurrentBlock)
 
     const handleChangeSchema = (newSchema) => {
-      useCanvas().importSchema(newSchema)
+      useBlock().initBlock({ ...useBlock().getCurrentBlock(), content: newSchema })
     }
 
     return {
