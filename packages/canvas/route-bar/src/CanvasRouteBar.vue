@@ -17,6 +17,7 @@ import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 
 const sizeStyle = computed(() => {
   const { width, maxWidth, minWidth, scale } = useLayout().getDimension()
+  // TODO 缩放非常小时，高度会有问题
   return {
     width,
     maxWidth,
@@ -96,7 +97,7 @@ const handleClickRoute = (route) => {
 #canvas-route-bar {
   position: absolute;
   top: 18px;
-  background-color: var(--te-base-gray-30);
+  background-color: var(--te-common-bg-prompt);
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
   display: flex;
@@ -107,7 +108,7 @@ const handleClickRoute = (route) => {
   display: flex;
   align-items: center;
   gap: 2px;
-  background-color: var(--te-base-gray-10);
+  background-color: var(--te-common-bg-container);
   height: 20px;
   width: 100%;
   border-radius: 999px;
