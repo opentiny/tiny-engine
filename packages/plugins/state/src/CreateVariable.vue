@@ -28,6 +28,7 @@
             :showFormatBtn="true"
             :options="state.editorOptions"
             @editorDidMount="editorDidMount"
+            @fullscreenChange="fullscreenChange"
           >
             <template #buttons>
               <editor-i18n-tool ref="i18nToolRef" @confirm="insertContent"></editor-i18n-tool>
@@ -340,6 +341,10 @@ export default {
       }
     }
 
+    const fullscreenChange = () => {
+      i18nToolRef.value.state.showPopover = false
+    }
+
     onBeforeUnmount(() => {
       state.completionProvider?.forEach((provider) => {
         provider.dispose()
@@ -398,6 +403,7 @@ export default {
       validate,
       getFormData,
       insertContent,
+      fullscreenChange,
       cancel
     }
   }
