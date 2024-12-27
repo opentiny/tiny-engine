@@ -287,7 +287,7 @@ const initBlock = async (block = {}, _langs = {}, isEdit) => {
   block.content = getSchema()
 
   setCurrentBlock(block)
-  setBreadcrumbBlock([block[nameCn] || block.label], block.histories)
+  setBreadcrumbBlock([block[nameCn] || block.label])
 
   // 如果是点击区块管理列表进来的则不需要执行以下操作
   if (!isEdit) {

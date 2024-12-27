@@ -75,14 +75,17 @@
       </tiny-collapse>
     </template>
   </plugin-setting>
-  <block-deploy-dialog v-model:visible="state.showDeployBlock" :nextVersion="nextVersion"></block-deploy-dialog>
+  <block-deploy-dialog
+    v-model:visible="state.showDeployBlock"
+    :block="editBlock"
+    @changeSchema="handleChangeSchema"
+  ></block-deploy-dialog>
 </template>
 
 <script lang="jsx">
 import { reactive, ref, watch, watchEffect, computed } from 'vue'
 import { Button as TinyButton, Collapse as TinyCollapse, CollapseItem as TinyCollapseItem } from '@opentiny/vue'
-import { useModal } from '@opentiny/tiny-engine-meta-register'
-import { getMergeMeta, useBlock } from '@opentiny/tiny-engine-meta-register'
+import { useModal, getMergeMeta, useBlock, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { BlockHistoryList, PluginSetting, CloseIcon, SvgButton, ButtonGroup } from '@opentiny/tiny-engine-common'
 import { previewBlock } from '@opentiny/tiny-engine-common/js/preview'
 import { LifeCycles } from '@opentiny/tiny-engine-common'
@@ -152,22 +155,22 @@ export default {
     })
 
     // 按时间最新提交的版本的修订版本号+1, 提示输入的下一个版本
-    const nextVersion = computed(() => {
-      const backupList = state.backupList || []
+    // const nextVersion = computed(() => {
+    //   const backupList = state.backupList || []
 
-      let latestVersion = '1.0.0'
-      let latestTime = 0
-      backupList.forEach((v) => {
-        const vTime = new Date(v.created_at).getTime()
+    //   let latestVersion = '1.0.0'
+    //   let latestTime = 0
+    //   backupList.forEach((v) => {
+    //     const vTime = new Date(v.created_at).getTime()
 
-        if (vTime > latestTime) {
-          latestTime = vTime
-          latestVersion = v.version
-        }
-      })
-      // version 符合X.Y.Z的字符结构
-      return latestVersion.replace(/\d+$/, (match) => Number(match) + 1)
-    })
+    //     if (vTime > latestTime) {
+    //       latestTime = vTime
+    //       latestVersion = v.version
+    //     }
+    //   })
+    //   // version 符合X.Y.Z的字符结构
+    //   return latestVersion.replace(/\d+$/, (match) => Number(match) + 1)
+    // })
 
     watch(
       () => {
@@ -264,10 +267,17 @@ export default {
       setConfigItemVisible(false)
     }
 
+    const handleChangeSchema = (newSchema) => {
+      // 如果是当前正在画布编辑的区块，需要重新 importSchema
+      if (getEditBlock()?.id === useBlock().getCurrentBlock()?.id) {
+        useCanvas().importSchema(newSchema)
+      }
+    }
+
     return {
       state,
       isOpen,
-      nextVersion,
+      // nextVersion,
       showDeployBlockDialog,
       closePanel,
       deleteBlock,
@@ -279,7 +289,8 @@ export default {
       globalConfig: getMergeMeta('engine.config'),
       onMouseLeave,
       handleClick,
-      handleShowGuide
+      handleShowGuide,
+      handleChangeSchema
     }
   }
 }
