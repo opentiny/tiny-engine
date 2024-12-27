@@ -628,9 +628,7 @@
               "icon": "RouterLink",
               "schema": {
                 "componentName": "RouterLink",
-                "props": {
-                  "to": ""
-                },
+                "props": {},
                 "children": [
                   {
                     "componentName": "Text",

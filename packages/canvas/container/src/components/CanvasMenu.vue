@@ -121,7 +121,7 @@ export default {
       menus.value.push({ name: '新建区块', code: 'createBlock' })
     }
 
-    menus.value.push({
+    menus.value.unshift({
       name: '路由跳转',
       code: 'route',
       show: () => getCurrent().schema?.componentName === 'RouterLink'
