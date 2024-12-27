@@ -5,7 +5,7 @@
       {{ propertyName }}
     </div>
     <tiny-form class="property-form" label-position="left" label-width="110px">
-      <tiny-form-item label="显示值">
+      <tiny-form-item label="属性名称">
         <tiny-input v-model="propertyName"></tiny-input>
       </tiny-form-item>
       <tiny-form-item label="值类型">
@@ -82,7 +82,7 @@
           @update:modelValue="updateDefaultValue"
         ></config-item>
       </tiny-form-item>
-      <tiny-form-item label="描述">
+      <tiny-form-item label="属性显示值">
         <tiny-input v-model="label"></tiny-input>
       </tiny-form-item>
       <tiny-form-item label="获取属性值">
