@@ -17,7 +17,7 @@
 
         <tiny-button
           class="publish"
-          v-if="breadcrumbData[0] === CONSTANTS.BLOCKTEXT"
+          v-if="breadcrumbData[0] === CONSTANTS.BLOCKTEXT && currentBlock?.id"
           @click="publishBlock()"
           type="primary"
           size="small"
