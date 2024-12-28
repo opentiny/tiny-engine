@@ -87,7 +87,6 @@ export default {
       breadcrumbData,
       publishBlock,
       state,
-      // nextVersion,
       CONSTANTS,
       open,
       currentBlock,
