@@ -113,10 +113,14 @@ const patchBaseProps = (schemaProperties) => {
     })
 
     if (group) {
+      const targetInsertContent = basePropGroup.content.filter(
+        (item) => !group.content.some((prop) => prop.property === item.property)
+      )
+
       if (insertPosition === 'start') {
-        group.content.splice(0, 0, ...deepClone(basePropGroup.content))
+        group.content.splice(0, 0, ...deepClone(targetInsertContent))
       } else {
-        group.content.push(...deepClone(basePropGroup.content))
+        group.content.push(...deepClone(targetInsertContent))
       }
     } else {
       schemaProperties.push(deepClone(basePropGroup))
