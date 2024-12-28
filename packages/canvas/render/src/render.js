@@ -300,12 +300,12 @@ const getBlockComponent = (name) => {
 
 // 移除区块缓存
 export const removeBlockCompsCache = () => {
-  blockComponentsBlobUrlMap.clear()
-
   blockComponentsBlobUrlMap.forEach((_, fileName) => {
     const stylesheet = document.querySelector(`#${fileName}`)
     stylesheet?.remove?.()
   })
+
+  blockComponentsBlobUrlMap.clear()
 }
 
 export const getComponent = (name) => {
