@@ -16,15 +16,8 @@ import { getMetaApi, META_SERVICE, useLayout, useMessage, usePage } from '@opent
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 
 const sizeStyle = computed(() => {
-  const { width, maxWidth, minWidth, scale } = useLayout().getDimension()
-  // TODO 缩放非常小时，高度会有问题
-  return {
-    width,
-    maxWidth,
-    minWidth,
-    height: `calc(32px / ${scale})`,
-    transform: `scale(${scale})`
-  }
+  const { width } = useLayout().getDimension()
+  return { width }
 })
 
 const { pageSettingState, getAncestors, switchPage } = usePage()
@@ -97,6 +90,8 @@ const handleClickRoute = (route) => {
 #canvas-route-bar {
   position: absolute;
   top: 18px;
+  height: 32px;
+  max-width: 100%;
   background-color: var(--te-common-bg-prompt);
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;

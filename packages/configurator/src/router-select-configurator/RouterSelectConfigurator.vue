@@ -1,19 +1,20 @@
 <template>
-  <tiny-select v-model="state.selected" :is-drop-inherit-width="true" :clearable="true" @change="handleChange">
-    <tiny-option
-      v-for="item in options"
-      :key="item.value"
-      :label="item.label"
-      :value="item.value"
-      :disabled="item.disabled"
-    >
-    </tiny-option>
+  <tiny-select
+    v-model="state.selected"
+    value-field="id"
+    render-type="tree"
+    :tree-op="treeFolderOp"
+    text-field="name"
+    :clearable="true"
+    popper-class="page-tree-select-dropdown"
+    @change="handleChange"
+  >
   </tiny-select>
 </template>
 
-<script setup>
+<script setup lang="jsx">
 import { usePage } from '@opentiny/tiny-engine-meta-register'
-import { Option as TinyOption, Select as TinySelect } from '@opentiny/vue'
+import { Select as TinySelect } from '@opentiny/vue'
 import { computed, defineEmits, defineProps, reactive, watchEffect } from 'vue'
 
 const props = defineProps({
@@ -41,35 +42,97 @@ if (!Array.isArray(pages.value)) {
   getPageList()
 }
 
-const flattenTreeData = (node, parentId, level = 0) => {
-  const currentNode = {
-    id: node.id,
-    label: node.name,
-    parentId,
-    level,
-    rawData: node
+const pageToTreeData = (page) => {
+  const { id, name, isPage, children } = page
+
+  if (!Array.isArray(children)) {
+    return { id, name, isPage, disabled: !isPage }
   }
-  const result = [currentNode]
 
-  const children = node.children
+  return {
+    id,
+    name,
+    isPage,
+    disabled: !isPage,
+    children: children.map((page) => pageToTreeData(page))
+  }
+}
 
-  if (Array.isArray(children)) {
-    for (const child of children) {
-      result.push(...flattenTreeData(child, currentNode.id, level + 1))
+const getNodeIcon = (data) => {
+  if (data.id === pageSettingState.ROOT_ID) {
+    return null
+  }
+
+  if (data.isPage) {
+    return <SvgIcon name="text-page-common"></SvgIcon>
+  }
+
+  return <SvgIcon name="text-page-folder"></SvgIcon>
+}
+
+const treeFolderOp = computed(() => {
+  const dummyRoot = pageToTreeData({ children: pages.value })
+  const data = dummyRoot.children
+  const options = {
+    data: data,
+    shrinkIcon: null,
+    expandIcon: null,
+    renderContent: (_h, { node, data }) => {
+      return (
+        <>
+          {getNodeIcon(data)}
+          <div>{node.label}</div>
+        </>
+      )
     }
   }
 
-  return result
-}
-
-const options = computed(() => {
-  return flattenTreeData({ id: '', children: pages.value })
-    .slice(1)
-    .filter((node) => node.rawData.isPage)
-    .map((node) => ({ label: node.label, value: node.id }))
+  return options
 })
 
 const handleChange = () => {
   emit('update:modelValue', { name: state.selected })
 }
 </script>
+
+<style lang="less">
+.tiny-select-dropdown.page-tree-select-dropdown {
+  padding: 8px 0;
+
+  .tiny-tree .tiny-tree-node__wrapper .tiny-tree-node {
+    .tiny-tree-node__content {
+      padding: 0;
+      background-color: var(--te-common-bg-default);
+      &:hover {
+        background-color: var(--te-common-bg-container);
+      }
+      // 移除子节点的的背景色，才能保证鼠标hover到.tiny-tree-node__content节点任意位置时，整行都有hover状态的背景色
+      .tiny-tree-node__content-left,
+      .tiny-tree-node__content-left .tiny-tree-node__content-box {
+        background-color: unset;
+        &:hover {
+          background-color: unset;
+        }
+      }
+      .tiny-tree-node__content-left {
+        padding: 0;
+        .tree-node-icon {
+          margin: 0;
+        }
+        .tiny-tree-node__content-box {
+          padding: 0 12px;
+          svg {
+            margin-right: 8px;
+          }
+        }
+        .tiny-tree-node__label {
+          font-size: 12px;
+        }
+      }
+    }
+    &.is-disabled > .tiny-tree-node__content .tiny-tree-node__content-box {
+      color: var(--te-common-text-disabled);
+    }
+  }
+}
+</style>
