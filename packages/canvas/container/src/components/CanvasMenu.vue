@@ -224,7 +224,7 @@ export default {
       route() {
         const target = getCurrent().schema.props.to?.name
         if (target) {
-          usePage().switchPage(target)
+          usePage().switchPageWithConfirm(target)
         }
       }
     }

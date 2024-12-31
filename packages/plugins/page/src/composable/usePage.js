@@ -14,7 +14,14 @@ import { reactive, ref } from 'vue'
 import { extend, isEqual } from '@opentiny/vue-renderless/common/object'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { getCanvasStatus } from '@opentiny/tiny-engine-common/js/canvas'
-import { useCanvas, useLayout, useBreadcrumb, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import {
+  useCanvas,
+  useLayout,
+  useBreadcrumb,
+  useModal,
+  getMetaApi,
+  META_SERVICE
+} from '@opentiny/tiny-engine-meta-register'
 import http from '../http'
 
 const { ELEMENT_TAG, COMPONENT_NAME } = constants
@@ -294,6 +301,35 @@ const switchPage = (pageId) => {
   })
 }
 
+const switchPageWithConfirm = (pageId) => {
+  const checkPageSaved = () => {
+    const { isSaved, isBlock } = useCanvas()
+
+    return new Promise((resolve) => {
+      if (isSaved()) {
+        resolve(true)
+      }
+
+      useModal().confirm({
+        title: '提示',
+        message: `${isBlock() ? '区块' : '页面'}尚未保存，是否要继续切换?`,
+        exec: () => {
+          resolve(true)
+        },
+        cancel: () => {
+          resolve(false)
+        }
+      })
+    })
+  }
+
+  checkPageSaved().then((proceed) => {
+    if (proceed) {
+      switchPage(pageId)
+    }
+  })
+}
+
 export default () => {
   return {
     DEFAULT_PAGE,
@@ -310,6 +346,7 @@ export default () => {
     getPageList,
     getAncestors,
     switchPage,
+    switchPageWithConfirm,
     STATIC_PAGE_GROUP_ID,
     COMMON_PAGE_GROUP_ID
   }

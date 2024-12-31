@@ -20,7 +20,7 @@ const sizeStyle = computed(() => {
   return { width }
 })
 
-const { pageSettingState, getAncestors, switchPage } = usePage()
+const { pageSettingState, getAncestors, switchPageWithConfirm } = usePage()
 
 const pageId = ref(getMetaApi(META_SERVICE.GlobalService).getBaseInfo().pageId)
 
@@ -82,7 +82,7 @@ watch(
  * @param route {Route}
  */
 const handleClickRoute = (route) => {
-  switchPage(route.id)
+  switchPageWithConfirm(route.id)
 }
 </script>
 
