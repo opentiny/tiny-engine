@@ -245,7 +245,7 @@ export default {
     }
 
     watch(
-      () => [fullLangList.value, currentSearchType.value],
+      () => [fullLangList.value, currentSearchType.value, searchKey.value],
       () => {
         langList.value = fullLangList.value.filter((item) => {
           const reg = new RegExp(searchKey.value, 'i')
