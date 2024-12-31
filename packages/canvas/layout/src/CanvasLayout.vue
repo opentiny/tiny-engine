@@ -9,13 +9,18 @@
 </template>
 <script setup>
 import { computed } from 'vue'
-import { useLayout } from '@opentiny/tiny-engine-meta-register'
+import { useCanvas, useLayout } from '@opentiny/tiny-engine-meta-register'
+
+const ROUTE_BAR_HEIGHT = 32
 
 const siteCanvasStyle = computed(() => {
   const { scale } = useLayout().getDimension()
+  const isBlock = useCanvas().isBlock()
+  const routeBarHeight = isBlock ? 0 : ROUTE_BAR_HEIGHT
   return {
-    height: `calc((100% - var(--base-bottom-panel-height, 30px) - 68px) / ${scale})`,
-    transform: `scale(${scale})`
+    height: `calc((100% - var(--base-bottom-panel-height, 30px) - ${36 + routeBarHeight}px) / ${scale})`,
+    transform: `scale(${scale})`,
+    marginTop: `calc(18px + ${routeBarHeight}px)`
   }
 })
 </script>
@@ -33,8 +38,6 @@ const siteCanvasStyle = computed(() => {
     background: var(--ti-lowcode-breadcrumb-hover-bg);
     position: absolute;
     overflow: hidden;
-    // 这里的多的32px是route bar的高度
-    margin-top: calc(18px + 32px);
     margin-bottom: 18px;
     transform-origin: top;
   }

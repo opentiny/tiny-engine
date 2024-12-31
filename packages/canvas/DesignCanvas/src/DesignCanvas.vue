@@ -1,7 +1,7 @@
 <template>
   <component :is="CanvasLayout">
     <template #header>
-      <component :is="CanvasRouteBar"></component>
+      <component v-if="!isBlock" :is="CanvasRouteBar"></component>
     </template>
     <template #container>
       <component
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { ref, watch, onUnmounted, onMounted } from 'vue'
+import { computed, ref, watch, onUnmounted, onMounted } from 'vue'
 import {
   useProperties,
   useCanvas,
@@ -76,6 +76,8 @@ export default {
       pageState.currentSchema = {}
       pageState.properties = null
     }
+
+    const isBlock = computed(() => useCanvas().isBlock())
 
     watch(
       [() => useCanvas().isSaved(), () => useLayout().layoutState.pageStatus, () => useCanvas().getPageSchema()],
@@ -218,6 +220,7 @@ export default {
         addHistoryDataChangedCallback,
         ast
       },
+      isBlock,
       CanvasLayout,
       canvasRef,
       CanvasContainer,
