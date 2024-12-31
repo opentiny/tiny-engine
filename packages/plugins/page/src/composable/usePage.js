@@ -271,7 +271,6 @@ const updateUrlPageId = (id) => {
   postLocationHistoryChanged({ pageId: id })
 }
 
-// TODO 跳转页面前，需要判断画布是否保存了
 const switchPage = (pageId) => {
   // 切换页面时清空 选中节点信息状态
   clearCurrentState()
