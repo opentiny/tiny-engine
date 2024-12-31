@@ -180,7 +180,7 @@ export default {
         width: 6px;
         height: 6px;
         border-radius: 50%;
-        background-color: #f00;
+        background-color: var(--ti-lowcode-common-error-color);
         display: block;
         z-index: 100;
         position: absolute;
