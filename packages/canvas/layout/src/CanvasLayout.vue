@@ -20,7 +20,7 @@ const siteCanvasStyle = computed(() => {
   return {
     height: `calc((100% - var(--base-bottom-panel-height, 30px) - ${36 + routeBarHeight}px) / ${scale})`,
     transform: `scale(${scale})`,
-    marginTop: `calc(18px + ${routeBarHeight}px)`
+    marginTop: `${18 + routeBarHeight}px`
   }
 })
 </script>
