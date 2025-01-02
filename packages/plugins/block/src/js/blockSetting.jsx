@@ -727,15 +727,25 @@ export const getBlockById = async (id) => {
 
 export const createOrUpdateCategory = async ({ categoryId, ...params }, isEdit) => {
   const appId = getAppId()
-  params.app = Number(appId)
   const replaceCategoryWithGroup = useBlock().shouldReplaceCategoryWithGroup()
-  let requestFunc = replaceCategoryWithGroup ? updateGroup : updateCategory
+  let requestFunc
+
+  if (replaceCategoryWithGroup) {
+    params.app = appId
+    requestFunc = updateGroup
+  } else {
+    params.app = Number(appId)
+    requestFunc = updateCategory
+  }
 
   if (!isEdit) {
-    if (!replaceCategoryWithGroup) {
+    // 替换成创建接口
+    if (replaceCategoryWithGroup) {
+      requestFunc = createGroup
+    } else {
+      requestFunc = createCategory
       params.category_id = categoryId
     }
-    requestFunc = replaceCategoryWithGroup ? createGroup : createCategory
   }
 
   const res = await requestFunc(params)
