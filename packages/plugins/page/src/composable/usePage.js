@@ -19,6 +19,7 @@ import {
   useLayout,
   useBreadcrumb,
   useModal,
+  useNotify,
   getMetaApi,
   META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
@@ -288,17 +289,25 @@ const switchPage = (pageId) => {
     return
   }
 
-  return http.fetchPageDetail(pageId).then((data) => {
-    if (data.isPage) {
-      // 应该改成让 Breadcrumb 插件去监听变化
-      useBreadcrumb().setBreadcrumbPage([data.name])
-    }
+  return http
+    .fetchPageDetail(pageId)
+    .then((data) => {
+      if (data.isPage) {
+        // 应该改成让 Breadcrumb 插件去监听变化
+        useBreadcrumb().setBreadcrumbPage([data.name])
+      }
 
-    updateUrlPageId(pageId)
-    useLayout().closePlugin()
-    useLayout().layoutState.pageStatus = getCanvasStatus(data.occupier)
-    useCanvas().initData(data['page_content'], data)
-  })
+      updateUrlPageId(pageId)
+      useLayout().closePlugin()
+      useLayout().layoutState.pageStatus = getCanvasStatus(data.occupier)
+      useCanvas().initData(data['page_content'], data)
+    })
+    .catch(() => {
+      useNotify({
+        type: 'error',
+        message: '切换页面失败，目标页面不存在'
+      })
+    })
 }
 
 const switchPageWithConfirm = (pageId) => {
@@ -308,6 +317,7 @@ const switchPageWithConfirm = (pageId) => {
     return new Promise((resolve) => {
       if (isSaved()) {
         resolve(true)
+        return
       }
 
       useModal().confirm({
@@ -332,8 +342,7 @@ const switchPageWithConfirm = (pageId) => {
 
 const getFamily = async (id) => {
   if (pageSettingState.pages.length === 0) {
-    const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
-    await getPageList(appId)
+    await getPageList()
   }
 
   return getAncestorsRecursively(id)

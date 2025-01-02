@@ -13,10 +13,12 @@ import { useCanvas, useLayout } from '@opentiny/tiny-engine-meta-register'
 
 const ROUTE_BAR_HEIGHT = 32
 
+const { isBlock } = useCanvas()
+const dimension = useLayout().getDimension()
+
 const siteCanvasStyle = computed(() => {
-  const { scale } = useLayout().getDimension()
-  const isBlock = useCanvas().isBlock()
-  const routeBarHeight = isBlock ? 0 : ROUTE_BAR_HEIGHT
+  const { scale } = dimension
+  const routeBarHeight = isBlock() ? 0 : ROUTE_BAR_HEIGHT
   return {
     height: `calc((100% - var(--base-bottom-panel-height, 30px) - ${36 + routeBarHeight}px) / ${scale})`,
     transform: `scale(${scale})`,

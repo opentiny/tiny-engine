@@ -124,7 +124,11 @@ export default {
     menus.value.unshift({
       name: '路由跳转',
       code: 'route',
-      show: () => getCurrent().schema?.componentName === 'RouterLink'
+      show: () => getCurrent()?.schema?.componentName === 'RouterLink',
+      check: () => {
+        const targetPageId = getCurrent().schema.props?.to?.name
+        return typeof targetPageId === 'number' || targetPageId
+      }
     })
 
     const filteredMenus = computed(() =>
@@ -222,14 +226,17 @@ export default {
         }
       },
       route() {
-        const target = getCurrent().schema.props.to?.name
-        if (target) {
-          usePage().switchPageWithConfirm(target)
-        }
+        // check中验证过了 targetPageId 是有效值
+        const targetPageId = getCurrent().schema.props.to.name
+        usePage().switchPageWithConfirm(targetPageId)
       }
     }
 
     const actionDisabled = (actionItem) => {
+      if (typeof actionItem.check === 'function' && !actionItem.check()) {
+        return true
+      }
+
       const actions = ['del', 'copy', 'addParent']
       return actions.includes(actionItem.code) && !getCurrent().schema?.id
     }
@@ -242,7 +249,7 @@ export default {
       boxVisibility.value = false
     }
     const doOperation = (item) => {
-      if ((item.check && !item.check?.()) || actionDisabled(item)) {
+      if (actionDisabled(item)) {
         return
       }
 
