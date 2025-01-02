@@ -10,7 +10,7 @@
       <div class="block-add-content">
         <div class="block-add-content-title">区块列表</div>
         <block-group-filters :filters="state.filters" @search="searchBlocks"></block-group-filters>
-        <block-group-transfer v-model:blockList="filterBlocks">
+        <block-group-transfer :blockList="filteredBlocks">
           <template #search>
             <tiny-search class="transfer-order-search" v-model="state.searchValue" placeholder="请输入关键词">
               <template #prefix>
@@ -37,6 +37,7 @@ import {
   getMetaApi,
   META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
+import { utils } from '@opentiny/tiny-engine-utils'
 import BlockGroupTransfer from './BlockGroupTransfer.vue'
 import BlockGroupFilters from './BlockGroupFilters.vue'
 
@@ -80,6 +81,8 @@ export default {
     const blockUsers = ref([])
     provide('blockUsers', blockUsers)
 
+    const { escapeRegExp } = utils
+
     const state = reactive({
       searchValue: '',
       blockList: [],
@@ -104,12 +107,12 @@ export default {
       ]
     })
 
-    const filterBlocks = computed(() => {
+    const filteredBlocks = computed(() => {
       if (!state.searchValue) {
         return state.blockList
       }
 
-      const pattern = new RegExp(state.searchValue, 'i')
+      const pattern = new RegExp(escapeRegExp(state.searchValue), 'i')
 
       return state.blockList.filter((block) => {
         return pattern.test(block?.name_cn) || pattern.test(block?.label) || pattern.test(block?.description)
@@ -267,7 +270,7 @@ export default {
       selectedGroup,
       state,
       panel,
-      filterBlocks,
+      filteredBlocks,
       closeGroupPanel,
       addBlocks,
       searchBlocks
