@@ -10,14 +10,9 @@
       <div class="block-add-content">
         <div class="block-add-content-title">区块列表</div>
         <block-group-filters :filters="state.filters" @search="searchBlocks"></block-group-filters>
-        <block-group-transfer v-model:blockList="state.blockList">
+        <block-group-transfer v-model:blockList="filterBlocks">
           <template #search>
-            <tiny-search
-              class="transfer-order-search"
-              v-model="state.searchValue"
-              placeholder="请输入关键词"
-              @update:modelValue="searchBlocks"
-            >
+            <tiny-search class="transfer-order-search" v-model="state.searchValue" placeholder="请输入关键词">
               <template #prefix>
                 <tiny-icon-search />
               </template>
@@ -29,7 +24,7 @@
   </plugin-setting>
 </template>
 <script>
-import { nextTick, reactive, watch, provide, inject, ref } from 'vue'
+import { nextTick, reactive, watch, provide, inject, ref, computed } from 'vue'
 import { Search } from '@opentiny/vue'
 import { iconSearch } from '@opentiny/vue-icon'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
@@ -107,6 +102,18 @@ export default {
           usingSelect: true
         }
       ]
+    })
+
+    const filterBlocks = computed(() => {
+      if (!state.searchValue) {
+        return state.blockList
+      }
+
+      const pattern = new RegExp(state.searchValue, 'i')
+
+      return state.blockList.filter((block) => {
+        return pattern.test(block?.name_cn) || pattern.test(block?.label) || pattern.test(block?.description)
+      })
     })
 
     const addBlocks = () => {
@@ -260,6 +267,7 @@ export default {
       selectedGroup,
       state,
       panel,
+      filterBlocks,
       closeGroupPanel,
       addBlocks,
       searchBlocks
