@@ -112,7 +112,8 @@ export default {
         return state.blockList
       }
 
-      const pattern = new RegExp(escapeRegExp(state.searchValue), 'i')
+      const searchValue = state.searchValue.trim()
+      const pattern = new RegExp(escapeRegExp(searchValue), 'i')
 
       return state.blockList.filter((block) => {
         return pattern.test(block?.name_cn) || pattern.test(block?.label) || pattern.test(block?.description)
