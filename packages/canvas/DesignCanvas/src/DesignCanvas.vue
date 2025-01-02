@@ -181,16 +181,22 @@ export default {
       const callbackFns = new Set()
 
       const { subscribe, unsubscribe } = useMessage()
-      const topic = 'locationHistoryChanged'
-      const callback = (value) => callbackFns.forEach((cb) => cb(value))
+      let sub
 
       onMounted(() => {
-        subscribe({ topic, callback })
+        sub = subscribe({
+          topic: 'locationHistoryChanged',
+          subscriber: 'canvas_design_canvas_controller',
+          callback: (value) => callbackFns.forEach((cb) => cb(value))
+        })
       })
 
       onUnmounted(() => {
-        unsubscribe({ topic, callback })
+        if (sub) {
+          unsubscribe(sub)
+        }
       })
+
       function addToCallbackFns(cb) {
         callbackFns.add(cb)
         return () => callbackFns.delete(cb)

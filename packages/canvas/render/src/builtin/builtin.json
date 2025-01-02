@@ -109,7 +109,9 @@
                       "props": {
                         "language": "json",
                         "tips": {
-                          "title": { "zh_CN": "提示：数据为数组类型" },
+                          "title": {
+                            "zh_CN": "提示：数据为数组类型"
+                          },
                           "demo": {
                             "zh_CN": "示例：\n[\n  {\n    \"name\": \"text\",\n    \"value\": {\n      \"type\": \"JSExpression\",\n      \"value\": \"this.state.greetingMessage\"\n    }\n  },\n  {\n    \"name\": \"count\",\n    \"value\": 1\n  }\n]"
                           }
@@ -635,6 +637,212 @@
                     "props": {
                       "text": "路由文本"
                     }
+                  }
+                ]
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "导航条"
+              },
+              "snippetName": "Navigation",
+              "icon": "navigation",
+              "schema": {
+                "componentName": "div",
+                "props": {
+                  "style": "text-align: center; padding: 8px 12px; box-shadow: 0 0 4px #0003;"
+                },
+                "children": [
+                  {
+                    "componentName": "RouterLink",
+                    "props": {
+                      "to": "",
+                      "style": "display: inline-flex; gap: 8px; padding: 10px 20px;"
+                    },
+                    "children": [
+                      {
+                        "componentName": "Icon",
+                        "props": {
+                          "name": "IconPublicHome",
+                          "style": "margin-top: 3px;"
+                        }
+                      },
+                      {
+                        "componentName": "Text",
+                        "props": {
+                          "text": "首页"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "componentName": "RouterLink",
+                    "props": {
+                      "to": "",
+                      "style": "display: inline-flex; gap: 8px; padding: 10px 20px;"
+                    },
+                    "children": [
+                      {
+                        "componentName": "Icon",
+                        "props": {
+                          "name": "IconTaskCooperation",
+                          "style": "margin-top: 3px;"
+                        }
+                      },
+                      {
+                        "componentName": "Text",
+                        "props": {
+                          "text": "介绍"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "componentName": "RouterLink",
+                    "props": {
+                      "to": "",
+                      "style": "display: inline-flex; gap: 8px; padding: 10px 20px;"
+                    },
+                    "children": [
+                      {
+                        "componentName": "Icon",
+                        "props": {
+                          "name": "IconText",
+                          "style": "margin-top: 3px;"
+                        }
+                      },
+                      {
+                        "componentName": "Text",
+                        "props": {
+                          "text": "文档"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "纵向导航"
+              },
+              "snippetName": "NavigationV",
+              "icon": "NavigationV",
+              "schema": {
+                "componentName": "div",
+                "props": {
+                  "style": "padding: 8px 12px; border-right: 1px solid #0003;"
+                },
+                "children": [
+                  {
+                    "componentName": "RouterLink",
+                    "props": {
+                      "to": "",
+                      "style": "display: flex; gap: 8px; padding: 10px 20px;"
+                    },
+                    "children": [
+                      {
+                        "componentName": "Icon",
+                        "props": {
+                          "name": "IconPublicHome",
+                          "style": "margin-top: 3px;"
+                        }
+                      },
+                      {
+                        "componentName": "Text",
+                        "props": {
+                          "text": "首页"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "componentName": "RouterLink",
+                    "props": {
+                      "to": "",
+                      "style": "display: flex; gap: 8px; padding: 10px 20px;"
+                    },
+                    "children": [
+                      {
+                        "componentName": "Icon",
+                        "props": {
+                          "name": "IconTaskCooperation",
+                          "style": "margin-top: 3px;"
+                        }
+                      },
+                      {
+                        "componentName": "Text",
+                        "props": {
+                          "text": "介绍"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "componentName": "RouterLink",
+                    "props": {
+                      "to": "",
+                      "style": "display: flex; gap: 8px; padding: 10px 20px;"
+                    },
+                    "children": [
+                      {
+                        "componentName": "Icon",
+                        "props": {
+                          "name": "IconText",
+                          "style": "margin-top: 3px;"
+                        }
+                      },
+                      {
+                        "componentName": "Text",
+                        "props": {
+                          "text": "文档"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "componentName": "RouterLink",
+                    "props": {
+                      "to": "",
+                      "style": "display: flex; gap: 8px; padding: 10px 20px;"
+                    },
+                    "children": [
+                      {
+                        "componentName": "Icon",
+                        "props": {
+                          "name": "IconText",
+                          "style": "margin-top: 3px;"
+                        }
+                      },
+                      {
+                        "componentName": "Text",
+                        "props": {
+                          "text": "文档"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "componentName": "RouterLink",
+                    "props": {
+                      "to": "",
+                      "style": "display: flex; gap: 8px; padding: 10px 20px;"
+                    },
+                    "children": [
+                      {
+                        "componentName": "Icon",
+                        "props": {
+                          "name": "IconText",
+                          "style": "margin-top: 3px;"
+                        }
+                      },
+                      {
+                        "componentName": "Text",
+                        "props": {
+                          "text": "文档"
+                        }
+                      }
+                    ]
                   }
                 ]
               }

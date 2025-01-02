@@ -67,7 +67,7 @@ const defaultStyleConfig = {
   lang: ''
 }
 
-const generateSFCFile = (schema, componentsMap, config = {}) => {
+const generateSFCFile = (schema, componentsMap, config = {}, nextPage) => {
   const parsedConfig = parseConfig(config)
   const { blockRelativePath, blockSuffix, scriptConfig: initScriptConfig, styleConfig: initStyleConfig } = parsedConfig
   // 前置动作，对 Schema 进行解析初始化相关配置与变量
@@ -197,10 +197,15 @@ const generateSFCFile = (schema, componentsMap, config = {}) => {
   }
 
   // 解析 template
-  const templateStr = genTemplateByHook(schema, globalHooks, { ...parsedConfig, componentsMap: componentsMap })
+  const templateStr = genTemplateByHook(
+    schema,
+    globalHooks,
+    { ...parsedConfig, componentsMap: componentsMap },
+    nextPage
+  )
 
   // 生成 script
-  const scriptStr = genScriptByHook(schema, globalHooks, { ...parsedConfig, componentsMap: componentsMap })
+  const scriptStr = genScriptByHook(schema, globalHooks, { ...parsedConfig, componentsMap: componentsMap }, nextPage)
 
   // 生成 style
   const styleStr = generateStyleTag(schema, styleConfig)
@@ -208,7 +213,7 @@ const generateSFCFile = (schema, componentsMap, config = {}) => {
   return `${templateStr}\n${scriptStr}\n${styleStr}`
 }
 
-export const genSFCWithDefaultPlugin = (schema, componentsMap, config = {}) => {
+export const genSFCWithDefaultPlugin = (schema, componentsMap, config = {}, nextPage) => {
   const { templateItemValidate = [], genTemplate = [], parseScript = [], genScript = {} } = config.hooks || {}
   const defaultComponentHooks = [handleComponentNameHook, handleTinyIcon]
 
@@ -265,7 +270,7 @@ export const genSFCWithDefaultPlugin = (schema, componentsMap, config = {}) => {
   // 兼容单独调用的场景，单独调用时，这里会默认加上 builtInComponents
   const compsMapWithBuiltIn = [...componentsMap, ...BUILTIN_COMPONENTS_MAP]
 
-  return generateSFCFile(schema, compsMapWithBuiltIn, newConfig)
+  return generateSFCFile(schema, compsMapWithBuiltIn, newConfig, nextPage)
 }
 
 export default generateSFCFile
