@@ -25,7 +25,7 @@ const addPropertyLinks = ({ linked, propertyName, componentProperties }) => {
       const property = propertyList[j]
 
       if (property.property === propertyName) {
-        propertyList[j] = Object.assign(property, {
+        Object.assign(property, {
           linked,
           widget: {
             props: {
