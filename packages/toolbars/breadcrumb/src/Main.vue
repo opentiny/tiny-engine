@@ -77,7 +77,7 @@ export default {
       plugins.render = breadcrumbData.value[0] === CONSTANTS.PAGETEXT ? PLUGINS_ID.PAGEID : PLUGINS_ID.BLOCKID
     }
 
-    const currentBlock = computed(useBlock().getCurrentBlock)
+    const currentBlock = computed(() => useBlock?.()?.getCurrentBlock?.())
 
     const handleChangeSchema = (newSchema) => {
       useBlock().initBlock({ ...useBlock().getCurrentBlock(), content: newSchema })
