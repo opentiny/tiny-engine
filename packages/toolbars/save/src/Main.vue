@@ -138,7 +138,12 @@ export default {
       }, state.timeValue * 60 * 1000)
     }
     const autoSave = () => {
-      localStorage.setItem(AUTO_SAVED, JSON.stringify(state.checked))
+      try {
+        localStorage.setItem(AUTO_SAVED, JSON.stringify(state.checked))
+      } catch (error) {
+        return
+      }
+
       if (state.checked) {
         saveSetTimeout()
       } else {
@@ -148,7 +153,12 @@ export default {
 
     const initSaveStatus = () => {
       const autoSaveValue = localStorage.getItem(AUTO_SAVED)
-      state.checked = JSON.parse(autoSaveValue)
+
+      try {
+        state.checked = JSON.parse(autoSaveValue) ?? false
+      } catch (e) {
+        state.checked = false
+      }
     }
 
     onMounted(() => {

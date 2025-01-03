@@ -94,7 +94,7 @@ export const BROADCAST_CHANNEL = {
 
 export const STORAGE_KEY_FIXED_PANELS = `tiny-engine-fixed-panels-${CHANNEL_UID}`
 
-export const AUTO_SAVED = 'auto-saved'
+export const AUTO_SAVED = 'tiny-engine-auto-saved'
 
 export const TYPES = {
   ErrorType: 'error',
