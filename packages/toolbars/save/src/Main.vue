@@ -55,13 +55,16 @@
 </template>
 
 <script>
-import { reactive, ref, onUnmounted } from 'vue'
+import { reactive, ref, onUnmounted, onMounted } from 'vue'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
 import { Button, Popover, DialogBox, Checkbox, Select } from '@opentiny/vue'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import { openCommon, saveCommon } from './js/index'
 import { isLoading } from './js/index'
+import { constants } from '@opentiny/tiny-engine-utils'
+
+const { AUTO_SAVED } = constants
 
 export const api = {
   saveCommon,
@@ -135,12 +138,22 @@ export default {
       }, state.timeValue * 60 * 1000)
     }
     const autoSave = () => {
+      localStorage.setItem(AUTO_SAVED, JSON.stringify(state.checked))
       if (state.checked) {
         saveSetTimeout()
       } else {
         clearTimeout(state.preservationTime)
       }
     }
+
+    const initSaveStatus = () => {
+      const autoSaveValue = localStorage.getItem(AUTO_SAVED)
+      state.checked = JSON.parse(autoSaveValue)
+    }
+
+    onMounted(() => {
+      initSaveStatus()
+    })
 
     onUnmounted(() => {
       clearTimeout(state.preservationTime)
