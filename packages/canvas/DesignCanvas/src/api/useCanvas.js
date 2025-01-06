@@ -140,6 +140,7 @@ const resetCanvasState = async (state = {}) => {
 
   const diffPatch = jsonDiffPatchInstance.diff(previousSchema, pageState.pageSchema)
 
+  canvasApi.value?.clearSelect?.()
   publish({ topic: 'schemaImport', data: { current: pageState.pageSchema, previous: previousSchema, diffPatch } })
 }
 
@@ -518,8 +519,6 @@ const importSchema = (data) => {
   resetCanvasState({
     pageSchema: importData
   })
-
-  canvasApi.value?.clearSelect?.()
 }
 
 const exportSchema = () => {
