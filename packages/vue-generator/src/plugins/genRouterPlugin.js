@@ -9,10 +9,11 @@ const flattenRoutes = (routes, parentPath = '') => {
   return routes.reduce((acc, route) => {
     const fullPath = `${parentPath}${route.path}`
 
-    if (route.path !== '/') {
+    if (route.path !== '') {
       if (route.component) {
         // 如果存在 component，则直接添加路由
         const newRoute = {
+          name: `${route.name}`,
           path: fullPath,
           component: route.component,
           children: flattenRoutes(route.children)
@@ -20,7 +21,7 @@ const flattenRoutes = (routes, parentPath = '') => {
         const redirectChild = route.children.find((item) => item.isDefault)
 
         if (route.children && redirectChild) {
-          newRoute.redirect = `${fullPath}/${redirectChild.path}`
+          newRoute.redirect = { name: `${redirectChild.name}` }
         }
 
         acc.push(newRoute)
@@ -48,8 +49,8 @@ const convertToNestedRoutes = (schema) => {
   pageSchema.forEach((item) => {
     if ((item.meta.isHome || item.meta.isDefault) && !isGetHome) {
       home = {
-        path: '/',
-        redirect: `/${item.meta.router}`
+        path: '',
+        redirect: { name: `${item.meta.id}` }
       }
       isGetHome = true
     }
@@ -79,6 +80,7 @@ const convertToNestedRoutes = (schema) => {
         if (index === parts.length - 1) {
           newNode.component = `() => import('@/views${item.path ? `/${item.path}` : ''}/${item.fileName}.vue')`
           newNode.isDefault = item.meta.isDefault
+          newNode.name = item.meta.id
         }
 
         curretnLevel.push(newNode)
@@ -87,7 +89,7 @@ const convertToNestedRoutes = (schema) => {
     })
   })
 
-  if (home.path) {
+  if (home.redirect) {
     result.unshift(home)
   }
 

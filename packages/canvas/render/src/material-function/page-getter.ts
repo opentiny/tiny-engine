@@ -30,7 +30,6 @@ export const wrapPageComponent = (pageId: string) => {
   const updateSchema = () => {
     fetchPageSchema(pageId).then((data) => {
       asyncData.value = data
-      initStyle(key, data?.css)
     })
   }
   updateSchema() // 保证加载一份非编辑态schema，减少页面跳转渲染时间

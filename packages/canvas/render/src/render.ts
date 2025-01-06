@@ -10,7 +10,7 @@
  *
  */
 
-import { defineComponent, h, inject, provide } from 'vue'
+import { defineComponent, h, inject, provide, Ref } from 'vue'
 
 import { NODE_UID as DESIGN_UIDKEY, NODE_TAG as DESIGN_TAGKEY, NODE_LOOP as DESIGN_LOOPID } from '../../common'
 import { getDesignMode, DESIGN_MODE } from './canvas-function'
@@ -229,16 +229,16 @@ export const renderer = defineComponent({
   setup(props) {
     provide('schema', props.schema)
     const currentPageContext = props.pageContext || inject('pageContext')
+    const ancestors = inject('page-ancestors') as Ref<any[]>
     return {
-      currentPageContext
+      currentPageContext,
+      ancestors
     }
   },
   render() {
-    const { scope, schema, parent } = this
+    const { scope, schema, parent, ancestors } = this
     const { componentName, loop, loopArgs, condition } = schema
     const pageContext = this.currentPageContext
-    const ancestors = inject('page-ancestors') as Ref<any[]>
-
     // 处理数据源和表格fetchData的映射关系
     generateCollection(schema)
 
@@ -248,11 +248,11 @@ export const renderer = defineComponent({
 
     const isPageStart = schema.componentType === 'PageStart'
     const isRouterView = componentName === 'RouterView'
-    if (ancestors.value.length && (isPageStart || isRouterView)) {
+    if (ancestors.length && (isPageStart || isRouterView)) {
       const renderPageId = getRenderPageId(pageContext.pageId, isPageStart)
       if (renderPageId) {
         return h(getPage(renderPageId), {
-          key: ancestors.value,
+          key: ancestors,
           [DESIGN_TAGKEY]: `${componentName}`
         })
       }

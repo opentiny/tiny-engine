@@ -30,7 +30,7 @@ export function useSchema(
   })
 
   const getSchema = () => schema
-  const setSchema = async (data: IPageSchema) => {
+  const setSchema = async (data: IPageSchema, pageId?: string) => {
     const newSchema = JSON.parse(JSON.stringify(data || schema))
     reset(schema)
     // 页面初始化的时候取消所有状态变量的watchEffect监听
@@ -73,7 +73,7 @@ export function useSchema(
     setState(newSchema.state, true)
     clearNodes()
     await nextTick()
-    setPagecss(data.css)
+    setPagecss(data.css, pageId)
     Object.assign(schema, newSchema)
 
     // 当上下文环境设置完成之后再去处理区块属性访问器的watchEffect
