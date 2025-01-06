@@ -222,15 +222,14 @@ const getPageList = async (appId) => {
 
 /**
  * @param {string | number} id
- * @param {(string | number)[]} ancestors
- * @returns {(string | number)[]}
+ * @returns {any[]}
  */
 const getAncestorsRecursively = (id) => {
-  const pageNode = pageSettingState.treeDataMapping[id]
-
-  if (pageNode.id === pageSettingState.ROOT_ID) {
+  if (id === pageSettingState.ROOT_ID) {
     return []
   }
+
+  const pageNode = pageSettingState.treeDataMapping[id]
 
   return [pageNode].concat(getAncestorsRecursively(pageNode.parentId))
 }
@@ -245,14 +244,16 @@ const getAncestors = async (id, withFolders) => {
     await getPageList()
   }
 
+  if (!pageSettingState.treeDataMapping[id]) {
+    return null
+  }
+
   const ancestorsWithSelf = getAncestorsRecursively(id)
   const ancestors = ancestorsWithSelf.slice(1).reverse()
 
-  if (withFolders) {
-    return ancestors.map((item) => item.id)
-  }
+  const predicate = withFolders ? () => true : (item) => item.isPage
 
-  return ancestors.filter((item) => item.isPage).map((item) => item.id)
+  return ancestors.filter(predicate).map((item) => item.id)
 }
 
 const clearCurrentState = () => {

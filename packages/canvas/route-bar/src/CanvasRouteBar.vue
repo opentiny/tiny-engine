@@ -60,6 +60,7 @@ watch(
   pageId,
   async (value) => {
     if (!value) {
+      routes.value = []
       return
     }
     const ancestors = await getAncestors(value, true)

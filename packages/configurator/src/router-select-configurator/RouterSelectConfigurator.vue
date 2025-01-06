@@ -15,7 +15,7 @@
 <script setup lang="jsx">
 import { usePage } from '@opentiny/tiny-engine-meta-register'
 import { Select as TinySelect } from '@opentiny/vue'
-import { computed, defineEmits, defineProps, reactive, watchEffect } from 'vue'
+import { computed, defineEmits, defineProps, reactive, watch } from 'vue'
 
 const props = defineProps({
   modelValue: {
@@ -30,9 +30,12 @@ const state = reactive({
   selected: props.modelValue?.name ?? ''
 })
 
-watchEffect(() => {
-  state.selected = props.modelValue?.name ?? ''
-})
+watch(
+  () => props.modelValue?.name,
+  (value) => {
+    state.selected = value ?? ''
+  }
+)
 
 const { pageSettingState, getPageList, STATIC_PAGE_GROUP_ID } = usePage()
 
@@ -50,7 +53,7 @@ const pageToTreeData = (page) => {
   }
 
   return {
-    id,
+    id: String(id),
     name,
     isPage,
     disabled: !isPage,
