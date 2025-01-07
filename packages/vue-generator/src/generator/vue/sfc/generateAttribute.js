@@ -382,14 +382,14 @@ const genStateAccessor = (value, globalHooks) => {
   if (isSetter(value?.accessor) && value.accessor.setter?.value) {
     globalHooks.addStatement({
       position: INSERT_POSITION.AFTER_METHODS,
-      value: `vue.watchEffect(wrap(${value.accessor.setter?.value}))`
+      value: `vue.watchEffect(wrap(${value.accessor.setter.value}))`
     })
   }
 
   if (isGetter(value?.accessor) && value.accessor.getter?.value) {
     globalHooks.addStatement({
       position: INSERT_POSITION.AFTER_METHODS,
-      value: `vue.watchEffect(wrap(${value.accessor.getter?.value}))`
+      value: `vue.watchEffect(wrap(${value.accessor.getter.value}))`
     })
   }
 }
