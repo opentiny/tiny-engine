@@ -48,17 +48,14 @@ if (!Array.isArray(pages.value)) {
 const pageToTreeData = (page) => {
   const { id, name, isPage, children } = page
 
-  if (!Array.isArray(children)) {
-    return { id, name, isPage, disabled: !isPage }
+  // id 可能为数字，需要转换成字符串
+  const result = { id: String(id), name, isPage, disabled: !isPage }
+
+  if (Array.isArray(children)) {
+    result.children = children.map((page) => pageToTreeData(page))
   }
 
-  return {
-    id: String(id),
-    name,
-    isPage,
-    disabled: !isPage,
-    children: children.map((page) => pageToTreeData(page))
-  }
+  return result
 }
 
 const getNodeIcon = (data) => {
