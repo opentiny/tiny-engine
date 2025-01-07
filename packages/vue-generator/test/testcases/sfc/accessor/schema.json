@@ -94,6 +94,73 @@
           "value": "function() { this.state.objVal = `${this.state.firstName} ${this.state.lastName}` }"
         }
       }
+    },
+    "IconPlusSquare": {
+      "defaultValue": {
+        "type": "JSResource",
+        "value": "this.utils.IconPlusSquare()"
+      },
+      "accessor": {
+        "getter": {
+          "type": "JSFunction",
+          "value": "function() { this.state.IconPlusSquare = `${this.state.firstName} ${this.state.lastName}` }"
+        }
+      }
+    },
+    "editConfig": {
+      "defaultValue": {
+        "trigger": "click",
+        "mode": "cell",
+        "showStatus": true,
+        "activeMethod": {
+          "type": "JSFunction",
+          "value": "function() { return this.props.isEdit }"
+        }
+      },
+      "accessor": {
+        "getter": {
+          "type": "JSFunction",
+          "value": "function() { this.state.editConfig = `${this.state.firstName} ${this.state.lastName}` }"
+        }
+      }
+    },
+    "status": {
+      "defaultValue": {
+        "type": "JSExpression",
+        "value": "this.statusData",
+        "computed": true
+      },
+      "accessor": {
+        "getter": {
+          "type": "JSFunction",
+          "value": "function() { this.state.status = `${this.state.firstName} ${this.state.lastName}` }"
+        }
+      }
+    },
+    "buttons": {
+      "defaultValue": [
+        {
+          "type": "primary",
+          "text": "主要操作"
+        },
+        {
+          "type": "success",
+          "text": "成功操作"
+        },
+        {
+          "type": "danger",
+          "text": {
+            "type": "i18n",
+            "key": "operation.danger"
+          }
+        }
+      ],
+      "accessor": {
+        "getter": {
+          "type": "JSFunction",
+          "value": "function() { this.state.buttons = `${this.state.firstName} ${this.state.lastName}` }"
+        }
+      }
     }
   },
   "lifeCycles": {},

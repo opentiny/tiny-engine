@@ -377,6 +377,50 @@ export const handleTinyIconPropsHook = (schemaData, globalHooks, config) => {
   })
 }
 
+// 生成 watchEffect
+const genStateAccessor = (value, globalHooks) => {
+  if (isSetter(value?.accessor)) {
+    globalHooks.addStatement({
+      position: INSERT_POSITION.AFTER_METHODS,
+      value: `vue.watchEffect(wrap(${value.accessor.setter?.value ?? ''}))`
+    })
+  }
+
+  if (isGetter(value?.accessor)) {
+    globalHooks.addStatement({
+      position: INSERT_POSITION.AFTER_METHODS,
+      value: `vue.watchEffect(wrap(${value.accessor.getter?.value ?? ''}))`
+    })
+  }
+}
+
+// 针对 state 有 getter 的场景进行处理
+export const handleAccessorBinding = (renderKey, value, globalHooks, config) => {
+  genStateAccessor(value, globalHooks)
+
+  const result = { shouldBindToState: false, res: '' }
+
+  if (typeof value.defaultValue === 'string') {
+    result.res = `${renderKey}"${value.defaultValue.replaceAll("'", "\\'").replaceAll(/"/g, "'")}"`
+  } else if (specialTypeHandler[value?.defaultValue?.type]) {
+    const specialVal = specialTypeHandler[value.defaultValue.type](value.defaultValue, globalHooks, config)?.value || ''
+
+    if (specialTypes.includes(value.defaultValue.type)) {
+      result.shouldBindToState = true
+    }
+
+    result.res = `${renderKey}${specialVal}`
+  } else {
+    const { res: tempRes } =
+      // eslint-disable-next-line no-use-before-define
+      transformObjType(value.defaultValue, globalHooks, config) || {}
+
+    result.res = `${renderKey}${tempRes}`
+  }
+
+  return result
+}
+
 export const transformObjType = (obj, globalHooks, config) => {
   if (!obj || typeof obj !== 'object') {
     return {
@@ -415,32 +459,10 @@ export const transformObjType = (obj, globalHooks, config) => {
     }
 
     if (hasAccessor(value?.accessor)) {
-      if (typeof value.defaultValue === 'string') {
-        resStr.push(`${renderKey}"${value.defaultValue.replaceAll("'", "\\'").replaceAll(/"/g, "'")}"`)
-      } else {
-        const { res: tempRes, shouldBindToState: tempShouldBindToState } =
-          transformObjType(value.defaultValue, globalHooks, config) || {}
+      // 递归处理其他类型
+      const { res } = handleAccessorBinding(renderKey, value, globalHooks, config)
 
-        resStr.push(`${renderKey}${tempRes}`)
-
-        if (tempShouldBindToState) {
-          shouldBindToState = true
-        }
-      }
-
-      if (isSetter(value?.accessor)) {
-        globalHooks.addStatement({
-          position: INSERT_POSITION.AFTER_METHODS,
-          value: `vue.watchEffect(wrap(${value.accessor.setter?.value ?? ''}))`
-        })
-      }
-
-      if (isGetter(value?.accessor)) {
-        globalHooks.addStatement({
-          position: INSERT_POSITION.AFTER_METHODS,
-          value: `vue.watchEffect(wrap(${value.accessor.getter?.value ?? ''}))`
-        })
-      }
+      resStr.push(res)
 
       continue
     }
