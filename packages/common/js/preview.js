@@ -42,7 +42,7 @@ const open = (params = {}) => {
 
   openUrl = isDevelopEnv
     ? `./preview.html?tenant=${tenant}#${hashString}`
-    : `${href}/preview?tenant=${tenant}#${hashString}`
+    : `${href.endsWith('/') ? href : `${href}/`}preview?tenant=${tenant}#${hashString}`
 
   const aTag = document.createElement('a')
   aTag.href = openUrl

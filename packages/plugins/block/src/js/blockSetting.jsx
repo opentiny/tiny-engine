@@ -420,6 +420,8 @@ export const refreshBlockData = async (block = {}) => {
         newBlock.public_scope_tenants = newBlock.public_scope_tenants.map((e) => e.id)
       }
 
+      Object.assign(block, newBlock)
+
       // 与当前正在画布编辑态的区块相同，需要同步更新
       if (useBlock().getCurrentBlock()?.id === block.id) {
         useLayout().layoutState.pageStatus = getCanvasStatus(newBlock?.occupier)
