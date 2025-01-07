@@ -394,28 +394,52 @@ const genStateAccessor = (value, globalHooks) => {
   }
 }
 
-// 针对 state 有 getter 的场景进行处理
-export const handleAccessorBinding = (renderKey, value, globalHooks, config) => {
-  genStateAccessor(value, globalHooks)
+const transformObjValue = (renderKey, value, globalHooks, config, transformObjType) => {
+  const result = { shouldBindToState: false, res: null }
 
-  const result = { shouldBindToState: false, res: '' }
+  if (typeof value === 'string') {
+    result.res = `${renderKey}"${value.replaceAll("'", "\\'").replaceAll(/"/g, "'")}"`
 
-  if (typeof value.defaultValue === 'string') {
-    result.res = `${renderKey}"${value.defaultValue.replaceAll("'", "\\'").replaceAll(/"/g, "'")}"`
-  } else if (specialTypeHandler[value?.defaultValue?.type]) {
-    const specialVal = specialTypeHandler[value.defaultValue.type](value.defaultValue, globalHooks, config)?.value || ''
+    return result
+  }
 
-    if (specialTypes.includes(value.defaultValue.type)) {
+  if (typeof value !== 'object' || value === null) {
+    result.res = `${renderKey}${value}`
+
+    return result
+  }
+
+  if (specialTypeHandler[value?.type]) {
+    const specialVal = specialTypeHandler[value.type](value, globalHooks, config)?.value || ''
+    result.res = `${renderKey}${specialVal}`
+
+    if (specialTypes.includes(value.type)) {
       result.shouldBindToState = true
     }
 
-    result.res = `${renderKey}${specialVal}`
-  } else {
-    const { res: tempRes } =
-      // eslint-disable-next-line no-use-before-define
-      transformObjType(value.defaultValue, globalHooks, config) || {}
+    return result
+  }
 
-    result.res = `${renderKey}${tempRes}`
+  if (hasAccessor(value?.accessor)) {
+    // 递归处理其他类型
+    genStateAccessor(value, globalHooks)
+
+    const { res } = transformObjValue(renderKey, value.defaultValue, globalHooks, config, transformObjType)
+
+    if (typeof res === 'string') {
+      result.res = res
+
+      return result
+    } else {
+      const { res: tempRes, shouldBindToState: tempShouldBindToState } =
+        transformObjType(value.defaultValue, globalHooks, config) || {}
+
+      result.res = `${renderKey}${tempRes}`
+
+      if (tempShouldBindToState) {
+        result.shouldBindToState = true
+      }
+    }
   }
 
   return result
@@ -435,38 +459,24 @@ export const transformObjType = (obj, globalHooks, config) => {
   for (const [key, value] of Object.entries(obj)) {
     let renderKey = shouldRenderKey ? `${key}: ` : ''
 
-    if (typeof value === 'string') {
-      resStr.push(`${renderKey}"${value.replaceAll("'", "\\'").replaceAll(/"/g, "'")}"`)
+    const { res, shouldBindToState: tmpShouldBindToState } = transformObjValue(
+      renderKey,
+      value,
+      globalHooks,
+      config,
+      transformObjType
+    )
 
-      continue
+    if (tmpShouldBindToState) {
+      shouldBindToState = true
     }
 
-    if (typeof value !== 'object' || value === null) {
-      resStr.push(`${renderKey}${value}`)
-
-      continue
-    }
-
-    if (specialTypeHandler[value?.type]) {
-      const specialVal = specialTypeHandler[value.type](value, globalHooks, config)?.value || ''
-      resStr.push(`${renderKey}${specialVal}`)
-
-      if (specialTypes.includes(value.type)) {
-        shouldBindToState = true
-      }
-
-      continue
-    }
-
-    if (hasAccessor(value?.accessor)) {
-      // 递归处理其他类型
-      const { res } = handleAccessorBinding(renderKey, value, globalHooks, config)
-
+    if (typeof res === 'string') {
       resStr.push(res)
-
       continue
     }
 
+    // 复杂的 object 类型，需要递归处理
     const { res: tempRes, shouldBindToState: tempShouldBindToState } =
       transformObjType(value, globalHooks, config) || {}
 
