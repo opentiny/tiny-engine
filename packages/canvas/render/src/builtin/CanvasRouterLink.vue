@@ -1,5 +1,6 @@
 <template>
-  <span
+  <a
+    href="javascript:void(0)"
     v-bind="$attrs"
     :class="{
       [activeClass]: active,
@@ -7,7 +8,7 @@
     }"
   >
     <slot :href="to" :isActive="active" :isExactActive="exactActive"></slot>
-  </span>
+  </a>
 </template>
 <script lang="ts">
 import { computed, inject, PropType, Ref } from 'vue'

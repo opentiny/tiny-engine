@@ -203,7 +203,7 @@
                     "type": "String",
                     "label": {
                       "text": {
-                        "zh_CN": "准确激活样式雷"
+                        "zh_CN": "准确激活样式类"
                       }
                     },
                     "cols": 12,
@@ -658,7 +658,7 @@
                     "componentName": "RouterLink",
                     "props": {
                       "to": "",
-                      "style": "display: inline-flex; gap: 8px; padding: 10px 20px;"
+                      "style": "display: inline-flex; gap: 8px; padding: 10px 20px; color: inherit; text-decoration: none;"
                     },
                     "children": [
                       {
@@ -680,7 +680,7 @@
                     "componentName": "RouterLink",
                     "props": {
                       "to": "",
-                      "style": "display: inline-flex; gap: 8px; padding: 10px 20px;"
+                      "style": "display: inline-flex; gap: 8px; padding: 10px 20px; color: inherit; text-decoration: none;"
                     },
                     "children": [
                       {
@@ -702,7 +702,7 @@
                     "componentName": "RouterLink",
                     "props": {
                       "to": "",
-                      "style": "display: inline-flex; gap: 8px; padding: 10px 20px;"
+                      "style": "display: inline-flex; gap: 8px; padding: 10px 20px; color: inherit; text-decoration: none;"
                     },
                     "children": [
                       {
@@ -739,7 +739,7 @@
                     "componentName": "RouterLink",
                     "props": {
                       "to": "",
-                      "style": "display: flex; gap: 8px; padding: 10px 20px;"
+                      "style": "display: flex; gap: 8px; padding: 10px 20px; color: inherit; text-decoration: none;"
                     },
                     "children": [
                       {
@@ -761,7 +761,7 @@
                     "componentName": "RouterLink",
                     "props": {
                       "to": "",
-                      "style": "display: flex; gap: 8px; padding: 10px 20px;"
+                      "style": "display: flex; gap: 8px; padding: 10px 20px; color: inherit; text-decoration: none;"
                     },
                     "children": [
                       {
@@ -783,7 +783,7 @@
                     "componentName": "RouterLink",
                     "props": {
                       "to": "",
-                      "style": "display: flex; gap: 8px; padding: 10px 20px;"
+                      "style": "display: flex; gap: 8px; padding: 10px 20px; color: inherit; text-decoration: none;"
                     },
                     "children": [
                       {
@@ -805,7 +805,7 @@
                     "componentName": "RouterLink",
                     "props": {
                       "to": "",
-                      "style": "display: flex; gap: 8px; padding: 10px 20px;"
+                      "style": "display: flex; gap: 8px; padding: 10px 20px; color: inherit; text-decoration: none;"
                     },
                     "children": [
                       {
@@ -827,7 +827,7 @@
                     "componentName": "RouterLink",
                     "props": {
                       "to": "",
-                      "style": "display: flex; gap: 8px; padding: 10px 20px;"
+                      "style": "display: flex; gap: 8px; padding: 10px 20px; color: inherit; text-decoration: none;"
                     },
                     "children": [
                       {
