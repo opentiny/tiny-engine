@@ -216,10 +216,7 @@ export default {
       })
     }
 
-    const fetchBlocks = () => {
-      const groupId = selectedGroup.value.groupId
-      if (!groupId || isDefaultGroupId(groupId)) return
-
+    const fetchBlocks = (groupId) => {
       fetchAvailableBlocks({ groupId })
         .then((data) => {
           initGruopBlockMap(getGroupList())
@@ -234,10 +231,6 @@ export default {
     }
 
     const getFilters = () => {
-      const groupId = selectedGroup.value.groupId
-      if (!groupId || isDefaultGroupId(groupId)) {
-        return
-      }
       Promise.allSettled([fetchTenants(), fetchUsers(), fetchTags()]).then((results) => {
         state.filters[0].children = [
           {
@@ -262,12 +255,19 @@ export default {
       })
     }
 
-    watch([() => panel.show, () => selectedGroup.value.groupId], (values) => {
-      if (values[0]) {
-        panelState.isBlockGroupPanel = true
-        fetchBlocks()
-        getFilters()
+    watch([() => panel.show, () => selectedGroup.value.groupId], ([show, groupId]) => {
+      if (!show) {
+        return
       }
+
+      if (!groupId || isDefaultGroupId(groupId)) {
+        return
+      }
+
+      panelState.isBlockGroupPanel = true
+      clearSearchParams()
+      fetchBlocks(groupId)
+      getFilters()
     })
 
     return {
