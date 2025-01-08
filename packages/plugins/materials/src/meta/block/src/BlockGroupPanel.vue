@@ -9,14 +9,18 @@
     <template #content>
       <div class="block-add-content">
         <div class="block-add-content-title">区块列表</div>
-        <block-group-filters :filters="state.filters" @search="searchBlocks"></block-group-filters>
+        <block-group-filters
+          ref="groupFiltersRef"
+          :filters="state.filters"
+          @search="searchBlocks"
+        ></block-group-filters>
         <block-group-transfer v-model:blockList="state.blockList">
           <template #search>
             <tiny-search
               class="transfer-order-search"
               v-model="state.searchValue"
               placeholder="请输入关键词"
-              @update:modelValue="searchBlocks"
+              @update:modelValue="searchBlocks(state.filterValues)"
             >
               <template #prefix>
                 <tiny-icon-search />
@@ -106,8 +110,17 @@ export default {
           children: [],
           usingSelect: true
         }
-      ]
+      ],
+      filterValues: {}
     })
+
+    const groupFiltersRef = ref(null)
+
+    const clearSearchParams = () => {
+      state.searchValue = ''
+      state.filterValues = {}
+      groupFiltersRef.value?.clearFilters()
+    }
 
     const addBlocks = () => {
       const groupId = selectedGroup.value.groupId
@@ -142,7 +155,7 @@ export default {
             useMaterial().updateCanvasDependencies(addedBlocks)
 
             isRefresh.value = true
-            state.searchValue = ''
+            clearSearchParams()
             selectedBlockArray.value.length = 0
             useResource().fetchResource({ isInit: false }) // 添加区块分组，不需要重新init页面或者区块。
             useNotify({
@@ -165,7 +178,7 @@ export default {
     }
 
     const closeGroupPanel = () => {
-      state.searchValue = ''
+      clearSearchParams()
       selectedBlockArray.value.length = 0
       panelState.isBlockGroupPanel = false
       closePanel()
@@ -180,7 +193,8 @@ export default {
       return blocks.filter((block) => !isInBlockGroup(block) && !isSelectedBlock(block))
     }
 
-    const searchBlocks = (value, filters) => {
+    const searchBlocks = (filters) => {
+      state.filterValues = filters
       nextTick(() => {
         const params = {
           groupId: selectedGroup.value.groupId,
@@ -259,6 +273,7 @@ export default {
     return {
       selectedGroup,
       state,
+      groupFiltersRef,
       panel,
       closeGroupPanel,
       addBlocks,
