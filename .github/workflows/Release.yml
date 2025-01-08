@@ -1,0 +1,55 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    if: github.repository == '@opentiny/tiny-engine'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'pnpm'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run Build
+        run: pnpm run build:plugin && pnpm run build:alpha > build-alpha.log 2>&1
+
+      - name: Parse Publish tag
+        id: parse_tag
+        run: |
+          tag_name="${GITHUB_REF#refs/tags/}"
+          if [["$tag_name" == *alpha*]]; then
+            echo "dist_tag=alpha" >> $GITHUB_OUTPUT
+          elif [["$tag_name" == *beta*]]; then
+            echo "dist_tag=beta" >> $GITHUB_OUTPUT
+          elif [["$tag_name" == *rc*]]; then
+            echo "dist_tag=rc" >> $GITHUB_OUTPUT
+          else
+            echo "dist_tag=latest" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Publish package to npm
+        run: pnpm lerna publish from-package --pre-dist-tag ${{steps.parse_tag.outputs.dist_tag}} --yes
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
