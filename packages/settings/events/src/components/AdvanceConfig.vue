@@ -135,7 +135,7 @@ export default {
       }
 
       const isNumber = Number(value).toString() !== 'NaN'
-      let newPropsKey = schema.props.key
+      let newPropsKey = schema.props?.key
 
       if (value && !isNumber) {
         newPropsKey = {

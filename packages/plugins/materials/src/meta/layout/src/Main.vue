@@ -2,7 +2,7 @@
   <plugin-panel :title="shortcut ? '' : title" @close="$emit('close')">
     <template #header>
       <component
-        :is="headerComponent"
+        :is="registryData?.components?.header"
         :fixedPanels="fixedPanels"
         @fix-panel="(id) => $emit('fix-panel', id)"
       ></component>
@@ -52,14 +52,11 @@ export default {
     })
     provide('panelState', panelState) // 使用provide传给子组件,后续可能会有调整，先暂定
 
-    const pluginRegistryData = ref(props.registryData)
     const rightPanelRef = ref(null)
-    const displayComponentIds = pluginRegistryData.value.options.displayComponentIds || []
-    const headerComponent = pluginRegistryData.value.components?.header
+    const displayComponentIds = props.registryData?.options?.displayComponentIds || []
     const onlyShowDefault = ref(displayComponentIds.length === 1)
     const activeTabId =
-      displayComponentIds.find((item) => item === pluginRegistryData.value.options?.defaultTabId) ||
-      displayComponentIds[0]
+      displayComponentIds.find((item) => item === props.registryData?.options?.defaultTabId) || displayComponentIds[0]
 
     const activeName = ref(activeTabId)
     const defaultComponent = getMergeMeta(activeName.value)?.entry
@@ -75,7 +72,6 @@ export default {
     const title = ref(props.registryData?.title)
 
     return {
-      headerComponent,
       title,
       activeName,
       defaultComponent,

@@ -102,7 +102,11 @@ export default {
         componentName: pageState.pageSchema.componentName
       }
 
-      useCanvas().importSchema(value)
+      const { importSchema, setSaved } = useCanvas()
+
+      importSchema(value)
+      setSaved(false)
+
       // TODO: 历史堆栈
       // useHistory().addHistory()
       state.pageData = ''
@@ -171,7 +175,7 @@ export default {
   top: var(--base-top-panel-height);
   left: 41px;
   background: var(--ti-lowcode-common-component-bg);
-  box-shadow: 6px 0px 3px 0px rgba(0, 0, 0, 0.05);
+  box-shadow: 6px 0px 3px 0px var(--te-base-box-shadow-rgba-3);
   z-index: 1000;
   .source-code-header {
     display: flex;
@@ -190,6 +194,7 @@ export default {
     justify-content: flex-end;
     align-items: center;
     .icon-wrap {
+      position: relative;
       .tiny-button {
         width: 40px;
         padding: 0;
@@ -199,15 +204,15 @@ export default {
         line-height: 24px;
       }
       .red {
-        width: 5px;
-        height: 5px;
-        border-radius: 3px;
-        background-color: #f00;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background-color: var(--ti-lowcode-common-error-color);
         display: block;
         z-index: 100;
         position: absolute;
-        top: 1px;
-        right: 1px;
+        top: -3px;
+        right: -4px;
       }
     }
     & > span:not(:last-child) {

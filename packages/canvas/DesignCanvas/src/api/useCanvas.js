@@ -297,15 +297,18 @@ const operationTypeMap = {
       }
     }
 
-    if (position === 'after') {
+    if (position === 'before') {
+      parentNode.children.unshift(newNodeData)
+    } else {
       parentNode.children.push(newNodeData)
-      setNode(newNodeData, parentNode)
+    }
 
-      // 递归构建 nodeMap
-      if (Array.isArray(newNodeData?.children) && newNodeData.children.length) {
-        const newNode = getNode(newNodeData.id)
-        generateNodesMap(newNodeData.children, newNode)
-      }
+    setNode(newNodeData, parentNode)
+
+    // 递归构建 nodeMap
+    if (Array.isArray(newNodeData?.children) && newNodeData.children.length) {
+      const newNode = getNode(newNodeData.id)
+      generateNodesMap(newNodeData.children, newNode)
     }
 
     return {
@@ -515,6 +518,8 @@ const importSchema = (data) => {
   resetCanvasState({
     pageSchema: importData
   })
+
+  canvasApi.value?.clearSelect?.()
 }
 
 const exportSchema = () => {

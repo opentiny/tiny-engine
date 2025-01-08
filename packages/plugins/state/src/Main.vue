@@ -454,6 +454,7 @@ export default {
     height: 100%;
     border-right: 1px solid var(--ti-lowcode-toolbar-border-color);
     background: var(--ti-lowcode-common-component-bg);
+    box-shadow: 6px 0px 3px 0px var(--te-base-box-shadow-rgba-3);
     position: absolute;
     left: var(--base-left-panel-width);
     top: 0;

@@ -205,7 +205,7 @@ export default {
   emits: ['click', 'iconClick', 'add', 'deleteBlock', 'openVersionPanel', 'editBlock', 'checkAll', 'cancelCheckAll'],
   setup(props, { emit }) {
     const panelState = inject('panelState', {})
-    const blockUsers = inject('blockUsers')
+    const blockUsers = inject('blockUsers', [])
     const state = reactive({
       activeIndex: -1,
       data: computed(() => props.data),
@@ -741,7 +741,6 @@ export default {
     box-sizing: border-box;
     cursor: pointer;
     &:hover {
-      background-color: var(--ti-lowcode-component-block-setting-item-hover-bg);
       color: var(--ti-lowcode-common-primary-text-color);
     }
     .list-item-icon {
@@ -752,7 +751,7 @@ export default {
       color: var(--te-common-icon-secondary);
     }
     .list-item-svg:hover {
-      background-color: var(--ti-lowcode-component-block-setting-item-hover-bg);
+      background-color: transparent;
     }
   }
 }

@@ -209,7 +209,7 @@ export default {
     .field-cell-name {
       margin-left: 5px;
       font-weight: bold;
-      font-size: 15px;
+      font-size: var(--te-base-font-size-base);
       .description {
         color: var(--ti-lowcode-datasource-input-icon-color);
         margin-left: 5px;

@@ -21,13 +21,18 @@
   <div class="life-cycle-tips">{{ lifeCycleTips }}</div>
   <meta-list-items :optionsList="Object.keys(state.bindLifeCycles)" :draggable="false">
     <template #content="{ data }">
-      <div>
+      <div class="life-cycle-content-item">
         {{ data }}
       </div>
     </template>
     <template #operate="{ data }">
-      <svg-button name="setting-outline" tips="编辑" placement="top" @click="openLifeCyclesPanel(data)"></svg-button>
-      <svg-button name="delete" tips="删除" placement="top" @click="deleteLifeCycle(data)"></svg-button>
+      <svg-button
+        class="opt-button"
+        :hoverBgColor="false"
+        name="text-source-setting"
+        @click="openLifeCyclesPanel(data)"
+      ></svg-button>
+      <svg-button class="opt-button" :hoverBgColor="false" name="delete" @click="deleteLifeCycle(data)"></svg-button>
     </template>
   </meta-list-items>
   <tiny-dialog-box v-model:visible="state.showLifeCyclesDialog" fullscreen :title="state.title" :append-to-body="true">
@@ -268,12 +273,20 @@ export default {
   margin-left: 20px;
   margin-right: 20px;
 }
+.life-cycle-content-item {
+  color: var(--te-common-text-primary);
+}
+.opt-button {
+  width: auto;
+  &:last-child {
+    margin-right: var(--te-base-space-3x);
+  }
+}
 
 .popover-list {
-  margin: 8px 0;
   li {
     padding: 0 12px;
-    margin: 0 -8px;
+    margin: 0 -16px;
     line-height: 24px;
     cursor: pointer;
     &:hover {

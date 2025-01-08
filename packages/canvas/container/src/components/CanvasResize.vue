@@ -11,7 +11,7 @@
 </template>
 <script>
 import { ref, computed, watch, nextTick } from 'vue'
-import { useLayout } from '@opentiny/tiny-engine-meta-register'
+import { useLayout, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { canvasState } from '../container'
 
 export default {
@@ -104,6 +104,15 @@ export default {
         }
       },
       { flush: 'post' }
+    )
+
+    watch(
+      () => sizeStyle.value,
+      () => {
+        nextTick(() => {
+          useCanvas().canvasApi.value?.updateRect?.()
+        })
+      }
     )
 
     return {

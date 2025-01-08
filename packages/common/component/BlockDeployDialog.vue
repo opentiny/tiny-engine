@@ -1,6 +1,6 @@
 <template>
   <tiny-dialog-box
-    :visible="$attrs.visible"
+    :visible="visible"
     title="发布区块"
     width="550px"
     append-to-body
@@ -14,6 +14,7 @@
       label-align
       :model="formState"
       :rules="formRules"
+      validate-type="text"
     >
       <tiny-form-item label="版本号" prop="version">
         <tiny-input v-model="formState.version" placeholder="请输入X.Y.Z格式版本号，如1.0.0"></tiny-input>
@@ -80,7 +81,7 @@ import {
   Popover as TinyPopover,
   FormItem as TinyFormItem
 } from '@opentiny/vue'
-import { useNotify, useCanvas, getMetaApi, META_APP, useBlock } from '@opentiny/tiny-engine-meta-register'
+import { useNotify, getMetaApi, META_APP } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 import VueMonaco from './VueMonaco.vue'
 
@@ -96,13 +97,17 @@ export default {
     VueMonaco
   },
   props: {
-    nextVersion: {
-      type: String,
-      default: ''
+    block: {
+      type: Object,
+      default: () => ({})
+    },
+    visible: {
+      type: Boolean,
+      default: false
     }
   },
-  emits: ['update:visible'],
-  setup(props, { emit, attrs }) {
+  emits: ['update:visible', 'changeSchema'],
+  setup(props, { emit }) {
     const { COMPONENT_NAME } = constants
     const formState = reactive({
       deployInfo: '',
@@ -137,12 +142,31 @@ export default {
       }
     }
 
-    watch(
-      () => attrs.visible,
-      (visible) => {
-        if (visible && !formState.version) {
-          formState.version = props.nextVersion
+    const getNextVersion = (block) => {
+      const backupList = block.histories || []
+
+      let latestVersion = '1.0.0'
+      let latestTime = 0
+      backupList.forEach((v) => {
+        const vTime = new Date(v.created_at).getTime()
+
+        if (vTime > latestTime) {
+          latestTime = vTime
+          latestVersion = v.version
         }
+      })
+      // version 符合X.Y.Z的字符结构
+      return latestVersion.replace(/\d+$/, (match) => Number(match) + 1)
+    }
+
+    watch(
+      () => props.visible,
+      (visible) => {
+        if (!visible) {
+          return
+        }
+
+        formState.version = getNextVersion(props.block)
       }
     )
 
@@ -150,10 +174,11 @@ export default {
 
     const deployBlock = async () => {
       deployBlockRef.value.validate((valid) => {
-        const { getEditBlock, publishBlock } = getMetaApi(META_APP.BlockManage)
+        const { publishBlock } = getMetaApi(META_APP.BlockManage)
+
         if (valid) {
           const params = {
-            block: getEditBlock() || useBlock().getCurrentBlock(),
+            block: props.block,
             is_compile: true,
             deploy_info: formState.deployInfo,
             version: formState.version,
@@ -170,21 +195,14 @@ export default {
 
     const changeCompare = async (value) => {
       const api = getMetaApi(META_APP.BlockManage)
+
       if (value) {
-        const block = api.getEditBlock()
+        const block = props.block
         const remote = await api.getBlockById(block?.id)
         const originalObj = remote?.content || {}
         state.originalCode = JSON.stringify(originalObj, null, 2)
-        const getSchema = useCanvas().getSchema
 
-        // 转为普通对象，和线上代码顺序保持一致
-        const pageSchema = getSchema?.() || {}
-        if (pageSchema.componentName === 'Block') {
-          state.code = JSON.stringify(pageSchema, null, 2)
-        } else {
-          // 非区块编辑
-          state.code = state.originalCode
-        }
+        state.code = JSON.stringify(block?.content || {}, null, 2)
         state.compareVisible = true
       }
     }
@@ -207,8 +225,8 @@ export default {
         return
       }
       try {
-        const pageSchema = JSON.parse(state.newCode)
-        useCanvas().importSchema({ ...pageSchema, componentName: COMPONENT_NAME.Block })
+        const newSchema = JSON.parse(state.newCode)
+        emit('changeSchema', { ...newSchema, componentName: COMPONENT_NAME.Block })
         close()
       } catch (err) {
         useNotify({

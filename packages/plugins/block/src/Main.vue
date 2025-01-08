@@ -37,7 +37,12 @@
             <div class="block-item">
               <span>{{ item.name }}</span>
               <div class="item-btns">
-                <svg-button class="item-icon" name="to-edit" title="编辑" @click.stop="editCategory(item)"></svg-button>
+                <svg-button
+                  class="item-icon"
+                  name="to-edit"
+                  :hoverBgColor="false"
+                  @click.stop="editCategory(item)"
+                ></svg-button>
                 <tiny-popover
                   :modelValue="state.currentDeleteGroupId === item.id"
                   placement="right"
@@ -64,7 +69,7 @@
                       v-if="!item.blocks.length"
                       class="item-icon"
                       name="delete"
-                      title="删除"
+                      :hoverBgColor="false"
                       @click.stop="handleShowDeleteModal(item.id)"
                     ></svg-button>
                   </template>
@@ -500,9 +505,9 @@ export default {
   bottom: 0;
   left: -6px;
   right: 0;
-  padding: 10px 16px;
+  padding: 8px 16px;
   background-color: var(--ti-lowcode-component-search-bg);
-  box-shadow: 0 -2px 12px 0 var(--te-base-box-shadow-rgba-2);
+  border-top: 1px solid var(--te-common-border-divider);
   color: var(--ti-lowcode-component-block-list-item-color);
   display: flex;
   justify-content: space-between;

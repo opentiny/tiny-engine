@@ -14,6 +14,7 @@
           <div class="item-handler">
             <svg-button
               class="set-page"
+              :hoverBgColor="false"
               tips="编辑静态数据"
               name="data-edit"
               @mousedown.stop.prevent="openRecordListPanel(item, index)"
@@ -21,6 +22,7 @@
             </svg-button>
             <svg-button
               class="set-page"
+              :hoverBgColor="false"
               tips="设置数据源"
               name="text-source-setting"
               @mousedown.stop.prevent="openDataSourceForm(item, index)"

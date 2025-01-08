@@ -1,0 +1,101 @@
+{
+  "componentName": "Page",
+  "fileName": "Accessor",
+  "css": "",
+  "props": {},
+  "children": [
+    {
+      "componentName": "Text",
+      "props": {
+        "className": "page-header",
+        "text": "测试 state accessor 出码场景"
+      }
+    }
+  ],
+  "state": {
+    "firstName": "Opentiny",
+    "lastName": "TinyEngine",
+    "nullValue": {
+      "defaultValue": null,
+      "accessor": {
+        "getter": {
+          "type": "JSFunction",
+          "value": "function() { this.state.nullValue = `${this.state.firstName} ${this.state.lastName}` }"
+        }
+      }
+    },
+    "numberValue": {
+      "defaultValue": 0,
+      "accessor": {
+        "getter": {
+          "type": "JSFunction",
+          "value": "function() { this.state.numberValue = `${this.state.firstName} ${this.state.lastName}` }"
+        }
+      }
+    },
+    "emptyStr": {
+      "defaultValue": "",
+      "accessor": {
+        "getter": {
+          "type": "JSFunction",
+          "value": "function() { this.state.emptyStr = `${this.state.firstName} ${this.state.lastName}` }"
+        }
+      }
+    },
+    "strVal": {
+      "defaultValue": "i am str.",
+      "accessor": {
+        "getter": {
+          "type": "JSFunction",
+          "value": "function() { this.state.strVal = `${this.state.firstName} ${this.state.lastName}` }"
+        }
+      }
+    },
+    "trueVal": {
+      "defaultValue": true,
+      "accessor": {
+        "getter": {
+          "type": "JSFunction",
+          "value": "function() { this.state.trueVal = `${this.state.firstName} ${this.state.lastName}` }"
+        }
+      }
+    },
+    "falseVal": {
+      "defaultValue": false,
+      "accessor": {
+        "getter": {
+          "type": "JSFunction",
+          "value": "function() { this.state.falseVal = `${this.state.firstName} ${this.state.lastName}` }"
+        }
+      }
+    },
+    "arrVal": {
+      "defaultValue": [1, "2", { "aaa": "aaa" }, [3, 4], true, false],
+      "accessor": {
+        "getter": {
+          "type": "JSFunction",
+          "value": "function() { this.state.arrVal = `${this.state.firstName} ${this.state.lastName}` }"
+        }
+      }
+    },
+    "objVal": {
+      "defaultValue": {
+        "aaa": "aaa",
+        "arr": [1, "2", true, false, 0],
+        "ccc": { "bbb": "bbb" },
+        "d": 32432,
+        "e": "",
+        "f": null,
+        "g": false
+      },
+      "accessor": {
+        "getter": {
+          "type": "JSFunction",
+          "value": "function() { this.state.objVal = `${this.state.firstName} ${this.state.lastName}` }"
+        }
+      }
+    }
+  },
+  "lifeCycles": {},
+  "methods": {}
+}

@@ -11,19 +11,22 @@
     "build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 VITE_THEME=light vite build --mode prod"
   },
   "dependencies": {
-    "vue": "^3.4.21",
-    "@opentiny/tiny-engine": "^2.0.0-alpha.5",
-    "@opentiny/tiny-engine-theme-dark": "^2.0.0-alpha.5",
-    "@opentiny/tiny-engine-theme-light": "^2.0.0-alpha.5",
+    "@opentiny/tiny-engine": "^2.1.0",
+    "@opentiny/tiny-engine-theme-dark": "^2.1.0",
+    "@opentiny/tiny-engine-theme-light": "^2.1.0",
+    "@opentiny/tiny-engine-utils": "^2.1.0",
     "@opentiny/vue": "~3.14.0",
-    "@opentiny/vue-icon": "~3.14.0",
     "@opentiny/vue-design-smb": "~3.14.0",
+    "@opentiny/vue-icon": "~3.14.0",
+    "@opentiny/vue-locale": "~3.14.0",
     "@opentiny/vue-renderless": "~3.14.0",
-    "@opentiny/vue-theme": "~3.14.0"
+    "@opentiny/vue-theme": "~3.14.0",
+    "@vueuse/core": "^9.6.0",
+    "vue": "^3.4.21"
   },
   "devDependencies": {
-    "@opentiny/tiny-engine-vite-config": "^2.0.0-alpha.5",
-    "@opentiny/tiny-engine-mock": "^2.0.0-alpha.5",
+    "@opentiny/tiny-engine-mock": "^2.1.0",
+    "@opentiny/tiny-engine-vite-config": "^2.1.0",
     "@vitejs/plugin-vue": "^5.1.2",
     "cross-env": "^7.0.3",
     "concurrently": "^8.2.0",

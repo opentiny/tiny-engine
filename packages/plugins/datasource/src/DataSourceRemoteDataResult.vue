@@ -89,12 +89,11 @@ export default {
 .response-data {
   position: relative;
   .resonse-header {
-    padding: 10px;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 
     .life-cycle-alert {
-      font-size: 11px;
-      color: var(--ti-lowcode-datasource-tip-color);
+      font-size: var(--te-base-font-size-base);
+      color: var(--te-common-text-weaken);
     }
     .title {
       color: var(--ti-lowcode-datasource-toolbar-breadcrumb-color);

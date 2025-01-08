@@ -97,6 +97,9 @@ export default {
 
 <style lang="less" scoped>
 .send-service {
+  .use-service {
+    margin-bottom: 0;
+  }
   :deep(.tiny-alert) {
     .tiny-alert__content {
       .tiny-alert__description {
@@ -106,8 +109,8 @@ export default {
     }
   }
   .life-cycle-alert {
-    font-size: 11px;
-    color: var(--ti-lowcode-datasource-tip-color);
+    font-size: var(--te-base-font-size-base);
+    color: var(--te-common-text-weaken);
   }
 }
 </style>

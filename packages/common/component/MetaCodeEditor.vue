@@ -255,7 +255,8 @@ export default {
         minimap: {
           enabled: false
         }
-      }
+      },
+      locale
     }
   }
 }

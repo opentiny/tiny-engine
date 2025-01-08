@@ -54,12 +54,11 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 12px;
-  margin-top: 12px;
-  font-size: 12px;
+  padding: 12px 0;
+  font-size: var(--te-base-font-size-base);
 
   div {
-    color: var(--te-common-text-secondary);
+    color: var(--te-common-text-primary);
   }
 
   .icon-del {
@@ -71,7 +70,6 @@ export default {
 .monaco-editor {
   min-height: 120px;
   height: 100%;
-  margin-top: 8px;
   border: 1px solid var(--te-common-border-divider);
   border-radius: 4px;
 }

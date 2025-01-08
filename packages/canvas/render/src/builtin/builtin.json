@@ -83,7 +83,7 @@
                 "content": [
                   {
                     "property": "name",
-                    "type": "String",
+                    "type": "string",
                     "label": {
                       "text": {
                         "zh_CN": "插槽名称"
@@ -97,7 +97,7 @@
                   },
                   {
                     "property": "params",
-                    "type": "String",
+                    "type": "string",
                     "defaultValue": "",
                     "label": {
                       "text": {
@@ -157,7 +157,7 @@
                 "content": [
                   {
                     "property": "condition",
-                    "type": "Boolean",
+                    "type": "boolean",
                     "defaultValue": true,
                     "label": {
                       "text": {
@@ -173,7 +173,7 @@
                   },
                   {
                     "property": "style",
-                    "type": "String",
+                    "type": "string",
                     "defaultValue": "",
                     "label": {
                       "text": {
@@ -189,7 +189,7 @@
                   },
                   {
                     "property": "dataSource",
-                    "type": "String",
+                    "type": "string",
                     "defaultValue": "",
                     "bindState": false,
                     "label": {
@@ -243,7 +243,7 @@
                 "content": [
                   {
                     "property": "text",
-                    "type": "String",
+                    "type": "string",
                     "defaultValue": "TinyEngine 前端可视化设计器，为设计器开发者提供定制服务，在线构建出自己专属的设计器。",
                     "label": {
                       "text": {
@@ -315,7 +315,7 @@
                 "content": [
                   {
                     "property": "name",
-                    "type": "String",
+                    "type": "string",
                     "defaultValue": "IconDel",
                     "bindState": true,
                     "label": {
@@ -385,7 +385,7 @@
                 "content": [
                   {
                     "property": "src",
-                    "type": "String",
+                    "type": "string",
                     "defaultValue": "",
                     "bindState": true,
                     "label": {
