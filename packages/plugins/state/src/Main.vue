@@ -22,10 +22,10 @@
         </template>
       </tiny-search>
       <div class="add-btn">
-        <tiny-button @click="openPanel(OPTION_TYPE.ADD)"
-          ><icon-plus class="icon-plus"></icon-plus
-          >{{ activeName === STATE.CURRENT_STATE ? '添加变量' : '添加全局变量' }}</tiny-button
-        >
+        <tiny-button @click="openPanel(OPTION_TYPE.ADD)">
+          <svg-icon name="add" class="add-btn-icon"></svg-icon>
+          <span class="add-btn-text">{{ activeName === STATE.CURRENT_STATE ? '添加变量' : '添加全局变量' }}</span>
+        </tiny-button>
       </div>
       <data-source-list
         :modelValue="Object.keys(state.dataSource)"
@@ -82,7 +82,6 @@ import {
   META_APP,
   META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
-import { iconPlus } from '@opentiny/vue-icon'
 import { getCommentByKey } from '@opentiny/tiny-engine-common/js/comment'
 import { iconSearch } from '@opentiny/vue-icon'
 import { CloseIcon, LinkButton } from '@opentiny/tiny-engine-common'
@@ -104,8 +103,7 @@ export default {
     TinyTabItem: TabItem,
     CreateStore,
     LinkButton,
-    TinyIconSearch: iconSearch(),
-    IconPlus: iconPlus()
+    TinyIconSearch: iconSearch()
   },
   setup(props, { emit }) {
     const variableRef = ref(null)
@@ -165,7 +163,7 @@ export default {
     }
 
     const add = (name, variable) => {
-      const { getSchema } = useCanvas().canvasApi.value
+      const { getSchema } = useCanvas()
 
       if (getSchema()) {
         if (updateKey.value !== name && flag.value === OPTION_TYPE.UPDATE) {
@@ -193,7 +191,7 @@ export default {
 
     const confirm = () => {
       const { name } = state.createData
-      const { setState, setGlobalState } = useCanvas().canvasApi.value
+      const { getSchema, updateSchema } = useCanvas()
 
       if (!name || errorMessage.value) {
         notifySaveError('变量名未填写或名称不符合规范，请按照提示修改后重试。')
@@ -216,8 +214,9 @@ export default {
         isPanelShow.value = false
         setSaved(false)
 
-        // 触发画布渲染
-        setState({ [name]: variable })
+        const schema = getSchema()
+        updateSchema({ state: { ...(schema.state || {}), [name]: variable } })
+
         useHistory().addHistory()
       } else {
         const validateResult = validateMonacoEditorData(storeRef.value.getEditor(), 'state字段', { required: true })
@@ -248,7 +247,7 @@ export default {
         const { id } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
         updateGlobalState(id, { global_state: storeList }).then((res) => {
           isPanelShow.value = false
-          setGlobalState(res.global_state || [])
+          useResource().appSchemaState.globalState = res.global_state || []
         })
       }
       openCommon()
@@ -263,11 +262,13 @@ export default {
     }
 
     const remove = (key) => {
-      const { deleteState, getSchema } = useCanvas().canvasApi.value
+      const { getSchema, updateSchema } = useCanvas()
 
       delete state.dataSource[key]
-      // 删除变量也需要同步触发画布渲染
-      deleteState(key)
+
+      const schema = getSchema()
+      let { lifeCycles } = schema
+      const { [key]: deletedKey, ...restState } = schema.state
 
       if (key.startsWith('datasource')) {
         const pageSchema = getSchema()
@@ -280,8 +281,10 @@ export default {
          */
         const pattern = new RegExp(`([\\s\\n]*\\/\\*\\* ${start} \\*\\/[\\s\\S]*\\/\\*\\* ${end} \\*\\/)`)
 
-        pageSchema.lifeCycles.setup.value = pageSchema.lifeCycles.setup.value.replace(pattern, '')
+        lifeCycles.setup.value = pageSchema.lifeCycles.setup.value.replace(pattern, '')
       }
+
+      updateSchema({ state: restState, lifeCycles })
 
       // 如果删除的是当前编辑的状态变量，则需要关闭二级面板
       if (state.createData.name === key) {
@@ -292,8 +295,7 @@ export default {
     }
 
     const setGlobalStateToDataSource = () => {
-      const { getGlobalState } = useCanvas().canvasApi.value
-      const globalState = getGlobalState()
+      const globalState = useResource().appSchemaState.globalState
 
       if (!globalState) {
         state.dataSource = {}
@@ -301,20 +303,19 @@ export default {
         return
       }
 
-      state.dataSource = getGlobalState().reduce((acc, store) => ({ ...acc, [store.id]: store }), {})
+      state.dataSource = globalState.reduce((acc, store) => ({ ...acc, [store.id]: store }), {})
     }
 
     const removeStore = (key) => {
-      const storeListt = [...useResource().resState.globalState] || []
-      const index = storeListt.findIndex((store) => store.id === key)
-      const { setGlobalState } = useCanvas().canvasApi.value
+      const storeList = [...useResource().appSchemaState.globalState] || []
+      const index = storeList.findIndex((store) => store.id === key)
 
       if (index !== -1) {
         const { id } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
 
-        storeListt.splice(index, 1)
-        updateGlobalState(id, { global_state: storeListt }).then((res) => {
-          setGlobalState(res.global_state)
+        storeList.splice(index, 1)
+        updateGlobalState(id, { global_state: storeList }).then((res) => {
+          useResource().appSchemaState.globalState = res.global_state || []
           setGlobalStateToDataSource()
         })
 
@@ -330,15 +331,14 @@ export default {
     }
 
     const initDataSource = (tabsName = activeName.value) => {
-      const { getSchema } = useCanvas().canvasApi.value
+      const { getSchema } = useCanvas()
 
       if (tabsName === STATE.GLOBAL_STATE) {
         setGlobalStateToDataSource()
       } else {
         const pageSchema = getSchema() || {}
 
-        pageSchema.state = pageSchema?.state || {}
-        state.dataSource = pageSchema.state
+        state.dataSource = pageSchema.state || {}
       }
     }
 
@@ -400,11 +400,20 @@ export default {
       width: 100%;
       .tiny-button {
         width: 100%;
-        border-color: var(--ti-lowcode-data-source-border-color);
+        border-color: var(--te-common-border-default);
+        &:hover {
+          border-color: var(--te-common-border-hover);
+        }
       }
-      .icon-plus {
+      .add-btn-icon {
         margin-right: 4px;
+        font-size: 16px;
         stroke: var(--ti-lowcode-chat-model-button-text);
+        color: var(--te-common-icon-secondary);
+        vertical-align: sub;
+      }
+      .add-btn-text {
+        display: inline-block;
       }
     }
 
@@ -421,7 +430,7 @@ export default {
     }
 
     .left-filter {
-      margin-top: 12px;
+      margin-top: 4px;
       padding: 0 10px;
     }
 
@@ -445,6 +454,7 @@ export default {
     height: 100%;
     border-right: 1px solid var(--ti-lowcode-toolbar-border-color);
     background: var(--ti-lowcode-common-component-bg);
+    box-shadow: 6px 0px 3px 0px var(--te-base-box-shadow-rgba-3);
     position: absolute;
     left: var(--base-left-panel-width);
     top: 0;
@@ -457,7 +467,7 @@ export default {
       padding: 0 12px;
       font-size: 12px;
       font-weight: 700;
-      color: var(--ti-lowcode-data-source-color);
+      color: var(--te-common-text-primary);
       background: var(--ti-lowcode-common-component-bg);
       border-bottom: 1px solid var(--ti-lowcode-data-header-border-bottom-color);
       .options-wrap {

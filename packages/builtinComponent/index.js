@@ -1,4 +1,6 @@
 export { default as CanvasCol } from './src/components/CanvasCol.vue'
 export { default as CanvasRow } from './src/components/CanvasRow.vue'
 export { default as CanvasRowColContainer } from './src/components/CanvasRowColContainer.vue'
+export { default as CanvasFlexBox } from './src/components/CanvasFlexBox.vue'
+export { default as CanvasSection } from './src/components/CanvasSection.vue'
 export { default as meta } from './src/meta'

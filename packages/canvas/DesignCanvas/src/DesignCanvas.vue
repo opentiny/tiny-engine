@@ -26,12 +26,13 @@ import {
   useMaterial,
   useHistory,
   useModal,
-  useMessage,
   getMergeRegistry,
   getMergeMeta,
   getOptions,
   getMetaApi,
-  META_SERVICE
+  META_SERVICE,
+  useMessage,
+  useNotify
 } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 import * as ast from '@opentiny/tiny-engine-common/js/ast'
@@ -75,7 +76,7 @@ export default {
 
     const removeNode = (node) => {
       const { pageState } = useCanvas()
-      footData.value = useCanvas().canvasApi.value.getNodePath(node?.id)
+      footData.value = useCanvas().getNodePath(node?.id)
       pageState.currentSchema = {}
       pageState.properties = null
     }
@@ -103,10 +104,11 @@ export default {
         // 1. 页面或区块状态是未保存状态（尝试编辑）
         // 2. 页面刷新或第一次进入页面(含从别的页面或区块切换到别的页面或区块)
         // 3. 页面上已经有弹窗，不允许重复弹窗
+        // 4. 当前历史堆栈为0，且当前未保存状态和上一次未保存状态不一致，不重复弹窗
 
         const showConfirm = !isSaved || pageSchema !== oldPageSchema
 
-        if (!showConfirm || showModal) {
+        if (!showConfirm || showModal || (useHistory().historyState?.index === 0 && isSaved !== oldIsSaved)) {
           return
         }
 
@@ -130,7 +132,6 @@ export default {
         useModal().confirm({
           title: '提示',
           message: renderMsg,
-          status: 'info',
           exec: callback,
           cancel: callback,
           hide: () => {
@@ -140,19 +141,21 @@ export default {
       }
     )
 
-    const nodeSelected = (node, parent, type) => {
+    const nodeSelected = (node, parent, type, id) => {
       const { toolbars } = useLayout().layoutState
       if (type !== 'clickTree') {
         useLayout().closePlugin()
       }
 
-      const { getSchema, getNodePath } = useCanvas().canvasApi.value
+      const { getSchema, getNodePath } = useCanvas()
+      const schemaItem = useCanvas().getNodeById(id)
 
-      const schema = getSchema()
+      const pageSchema = getSchema()
+
       // 如果选中的节点是画布，就设置成默认选中最外层schema
-      useProperties().getProps(node || schema, parent)
-      useCanvas().setCurrentSchema(node || schema)
-      footData.value = getNodePath(node?.id)
+      useProperties().getProps(schemaItem || pageSchema, parent)
+      useCanvas().setCurrentSchema(schemaItem || pageSchema)
+      footData.value = getNodePath(schemaItem?.id)
       toolbars.visiblePopover = false
     }
 
@@ -190,9 +193,12 @@ export default {
         // 需要在canvas/render或内置组件里使用的方法
         getMaterial: useMaterial().getMaterial,
         addHistory: useHistory().addHistory,
-        registerBlock: useMaterial().registerBlock,
         request: getMetaApi(META_SERVICE.Http).getHttp(),
-        ast
+        ast,
+        getBlockByName: useMaterial().getBlockByName,
+        useModal,
+        useMessage,
+        useNotify
       },
       CanvasLayout,
       canvasRef,

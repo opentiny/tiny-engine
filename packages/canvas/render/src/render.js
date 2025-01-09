@@ -10,17 +10,22 @@
  *
  */
 
-import { h, provide, reactive } from 'vue'
-import { isHTMLTag, hyphenate } from '@vue/shared'
+import { defineAsyncComponent, h, provide, reactive, Suspense } from 'vue'
+import { isHTMLTag } from '@vue/shared'
 import { useBroadcastChannel } from '@vueuse/core'
-import { constants, utils } from '@opentiny/tiny-engine-utils'
+import { constants } from '@opentiny/tiny-engine-utils'
 import babelPluginJSX from '@vue/babel-plugin-jsx'
 import { transformSync } from '@babel/core'
 import i18nHost from '@opentiny/tiny-engine-i18n-host'
-import { CanvasRow, CanvasCol, CanvasRowColContainer } from '@opentiny/tiny-engine-builtin-component'
-
+import {
+  CanvasRow,
+  CanvasCol,
+  CanvasRowColContainer,
+  CanvasFlexBox,
+  CanvasSection
+} from '@opentiny/tiny-engine-builtin-component'
 import { NODE_UID as DESIGN_UIDKEY, NODE_TAG as DESIGN_TAGKEY, NODE_LOOP as DESIGN_LOOPID } from '../../common'
-import { context, conditions, setNode, getDesignMode, DESIGN_MODE } from './context'
+import { context, conditions, getDesignMode, DESIGN_MODE } from './context'
 import {
   CanvasBox,
   CanvasCollection,
@@ -30,10 +35,10 @@ import {
   CanvasImg,
   CanvasPlaceholder
 } from './builtin'
+import BlockLoadError from './BlockLoadError.vue'
+import BlockLoading from './BlockLoading.vue'
 
 const { BROADCAST_CHANNEL } = constants
-const { hyphenateRE } = utils
-const customElements = {}
 
 const transformJSX = (code) => {
   const res = transformSync(code, {
@@ -41,8 +46,7 @@ const transformJSX = (code) => {
       [
         babelPluginJSX,
         {
-          pragma: 'h',
-          isCustomElement: (name) => customElements[name]
+          pragma: 'h'
         }
       ]
     ]
@@ -66,6 +70,8 @@ const Mapper = {
   slot: CanvasSlot,
   Template: CanvasBox,
   Img: CanvasImg,
+  CanvasSection,
+  CanvasFlexBox,
   CanvasRow,
   CanvasCol,
   CanvasRowColContainer,
@@ -76,8 +82,6 @@ const { post } = useBroadcastChannel({ name: BROADCAST_CHANNEL.Notify })
 
 // 此处向外层window传递notify配置参数
 export const globalNotify = (options) => post(options)
-
-export const collectionMethodsMap = {}
 
 const getNative = (name) => {
   return window.TinyLowcodeComponent?.[name]
@@ -197,43 +201,38 @@ const parseJSSlot = (data, scope) => {
 export const generateFn = (innerFn, context) => {
   return (...args) => {
     // 如果有数据源标识，则表格的fetchData返回数据源的静态数据
-    const sourceId = collectionMethodsMap[innerFn.realName || innerFn.name]
-    if (sourceId) {
-      return innerFn.call(context, ...args)
-    } else {
-      let result = null
+    let result = null
 
-      // 这里是为了兼容用户写法报错导致画布异常，但无法捕获promise内部的异常
-      try {
-        result = innerFn.call(context, ...args)
-      } catch (error) {
-        globalNotify({
-          type: 'warning',
-          title: `函数:${innerFn.name}执行报错`,
-          message: error?.message || `函数:${innerFn.name}执行报错，请检查语法`
-        })
-      }
+    // 这里是为了兼容用户写法报错导致画布异常，但无法捕获promise内部的异常
+    try {
+      result = innerFn.call(context, ...args)
+    } catch (error) {
+      globalNotify({
+        type: 'warning',
+        title: `函数:${innerFn.name}执行报错`,
+        message: error?.message || `函数:${innerFn.name}执行报错，请检查语法`
+      })
+    }
 
-      // 这里注意如果innerFn返回的是一个promise则需要捕获异常，重新返回默认一条空数据
-      if (result.then) {
-        result = new Promise((resolve) => {
-          result.then(resolve).catch((error) => {
-            globalNotify({
-              type: 'warning',
-              title: '异步函数执行报错',
-              message: error?.message || '异步函数执行报错，请检查语法'
-            })
-            // 这里需要至少返回一条空数据，方便用户使用表格默认插槽
-            resolve({
-              result: [{}],
-              page: { total: 1 }
-            })
+    // 这里注意如果innerFn返回的是一个promise则需要捕获异常，重新返回默认一条空数据
+    if (result?.then) {
+      result = new Promise((resolve) => {
+        result.then(resolve).catch((error) => {
+          globalNotify({
+            type: 'warning',
+            title: '异步函数执行报错',
+            message: error?.message || '异步函数执行报错，请检查语法'
+          })
+          // 这里需要至少返回一条空数据，方便用户使用表格默认插槽
+          resolve({
+            result: [{}],
+            page: { total: 1 }
           })
         })
-      }
-
-      return result
+      })
     }
+
+    return result
   }
 }
 
@@ -255,105 +254,62 @@ const parseFunctionString = (fnStr) => {
   return null
 }
 
-const getPlainProps = (object = {}) => {
-  const { slot, ...rest } = object
-  const props = {}
+const blockComponentsBlobUrlMap = new Map()
 
-  if (slot) {
-    rest.slot = slot.name || slot
+// TODO: 这里的全局 getter 方法名，可以做成配置化
+const loadBlockComponent = async (name) => {
+  try {
+    if (blockComponentsBlobUrlMap.has(name)) {
+      return import(/* @vite-ignore */ blockComponentsBlobUrlMap.get(name))
+    }
+
+    const blocksBlob = await getController().getBlockByName(name)
+
+    for (const [fileName, value] of Object.entries(blocksBlob)) {
+      blockComponentsBlobUrlMap.set(fileName, value.blobURL)
+
+      if (!value.style) {
+        continue
+      }
+
+      // 注册 CSS，以区块为维度
+      const stylesheet = document.querySelector(`#${fileName}`)
+
+      if (stylesheet) {
+        stylesheet.innerHTML = value.style
+      } else {
+        const newStylesheet = document.createElement('style')
+        newStylesheet.innerHTML = value.style
+        newStylesheet.setAttribute('id', fileName)
+        document.head.appendChild(newStylesheet)
+      }
+    }
+
+    return import(/* @vite-ignore */ blockComponentsBlobUrlMap.get(name))
+  } catch (error) {
+    // 加载错误提示
+    return h(BlockLoadError, { name })
   }
+}
 
-  Object.entries(rest).forEach(([key, value]) => {
-    let renderKey = key
+window.loadBlockComponent = loadBlockComponent
 
-    // html 标签属性会忽略大小写，所以传递包含大写的 props 需要转换为 kebab 形式的 props
-    if (!/on[A-Z]/.test(renderKey) && hyphenateRE.test(renderKey)) {
-      renderKey = hyphenate(renderKey)
-    }
+const getBlockComponent = (name) => {
+  return defineAsyncComponent(() => loadBlockComponent(name))
+}
 
-    if (['boolean', 'string', 'number'].includes(typeof value)) {
-      props[renderKey] = value
-    } else {
-      // 如果传给webcomponent标签的是对象或者数组需要使用.prop修饰符，转化成h函数就是如下写法
-      props[`.${renderKey}`] = value
-    }
+// 移除区块缓存
+export const removeBlockCompsCache = () => {
+  blockComponentsBlobUrlMap.forEach((_, fileName) => {
+    const stylesheet = document.querySelector(`#${fileName}`)
+    stylesheet?.remove?.()
   })
-  return props
-}
 
-const generateCollection = (schema) => {
-  if (schema.componentName === 'Collection' && schema.props?.dataSource && schema.children) {
-    schema.children.forEach((item) => {
-      const fetchData = item.props?.fetchData
-      const methodMatch = fetchData?.value?.match(/this\.(.+?)}/)
-      if (fetchData && methodMatch?.[1]) {
-        const methodName = methodMatch[1].trim()
-        // 缓存表格fetchData对应的数据源信息
-        collectionMethodsMap[methodName] = schema.props.dataSource
-      }
-    })
-  }
-}
-
-const generateBlockContent = (schema) => {
-  if (schema?.componentName === 'Collection') {
-    generateCollection(schema)
-  }
-  if (Array.isArray(schema?.children)) {
-    schema.children.forEach((item) => {
-      generateBlockContent(item)
-    })
-  }
-}
-
-const registerBlock = (componentName) => {
-  getController()
-    .registerBlock?.(componentName)
-    .then((res) => {
-      const blockSchema = res.content
-
-      // 拿到区块数据，建立区块中数据源的映射关系
-      generateBlockContent(blockSchema)
-
-      // 如果区块的根节点有百分比高度，则需要特殊处理，把高度百分比传递下去,适配大屏应用
-      if (/height:\s*?[\d|.]+?%/.test(blockSchema?.props?.style)) {
-        const blockDoms = document.querySelectorAll(hyphenate(componentName))
-        blockDoms.forEach((item) => {
-          item.style.height = '100%'
-        })
-      }
-    })
-}
-
-export const wrapCustomElement = (componentName) => {
-  const material = getController().getMaterial(componentName)
-
-  if (!Object.keys(material).length) {
-    registerBlock(componentName)
-  }
-
-  customElements[componentName] = {
-    name: componentName + '.ce',
-    render() {
-      return h(
-        hyphenate(componentName),
-        window.parent.TinyGlobalConfig.dslMode === 'Vue' ? getPlainProps(this.$attrs) : this.$attrs,
-        this.$slots.default?.()
-      )
-    }
-  }
-
-  return customElements[componentName]
+  blockComponentsBlobUrlMap.clear()
 }
 
 export const getComponent = (name) => {
-  return (
-    Mapper[name] ||
-    getNative(name) ||
-    getBlock(name) ||
-    customElements[name] ||
-    (isHTMLTag(name) ? name : wrapCustomElement(name))
-  )
+  return Mapper[name] || getNative(name) || getBlock(name) || (isHTMLTag(name) ? name : getBlockComponent(name))
 }
 
 // 解析JSX字符串为可执行函数
@@ -505,7 +461,7 @@ const stopEvent = (event) => {
   return false
 }
 
-const generateSlotGroup = (children, isCustomElm, schema) => {
+const generateSlotGroup = (children, schema) => {
   const slotGroup = {}
 
   children.forEach((child) => {
@@ -513,7 +469,6 @@ const generateSlotGroup = (children, isCustomElm, schema) => {
     const slot = child.slot || props?.slot?.name || props?.slot || 'default'
     const isNotEmptyTemplate = componentName === 'Template' && children.length
 
-    isCustomElm && (child.props.slot = 'slot') // CE下需要给子节点加上slot标识
     slotGroup[slot] = slotGroup[slot] || {
       value: [],
       params,
@@ -526,9 +481,9 @@ const generateSlotGroup = (children, isCustomElm, schema) => {
   return slotGroup
 }
 
-const renderSlot = (children, scope, schema, isCustomElm) => {
+const renderSlot = (children, scope, schema) => {
   if (children.some((a) => a.componentName === 'Template')) {
-    const slotGroup = generateSlotGroup(children, isCustomElm, schema)
+    const slotGroup = generateSlotGroup(children, schema)
     const slots = {}
 
     Object.keys(slotGroup).forEach((slotName) => {
@@ -617,7 +572,7 @@ const injectPlaceHolder = (componentName, children) => {
   return children
 }
 
-const renderGroup = (children, scope, parent) => {
+const renderGroup = (children, scope) => {
   return children.map?.((schema) => {
     const { componentName, children, loop, loopArgs, condition, id } = schema
     const loopList = parseData(loop, scope)
@@ -629,8 +584,6 @@ const renderGroup = (children, scope, parent) => {
         item,
         loopArgs
       })
-
-      setNode(schema, parent)
 
       if (conditions[id] === false || !parseCondition(condition, mergeScope)) {
         return null
@@ -657,20 +610,22 @@ const getChildren = (schema, mergeScope) => {
 
   const component = getComponent(componentName)
   const isNative = typeof component === 'string'
-  const isCustomElm = customElements[componentName]
   const isGroup = checkGroup(componentName)
 
   if (Array.isArray(renderChildren)) {
-    if (isNative || isCustomElm) {
-      return renderDefault(renderChildren, mergeScope, schema)
-    } else {
-      return isGroup
-        ? renderGroup(renderChildren, mergeScope, schema)
-        : renderSlot(renderChildren, mergeScope, schema, isCustomElm)
+    // children 空的场景，不能返回空数组，因为有部分组件会误以为使用了自定义插槽，从而无法渲染默认插槽内容，比如 TinyTree 组件
+    if (!renderChildren.length) {
+      return null
     }
-  } else {
-    return parseData(renderChildren, mergeScope)
+
+    if (isNative) {
+      return renderDefault(renderChildren, mergeScope, schema)
+    }
+
+    return isGroup ? renderGroup(renderChildren, mergeScope) : renderSlot(renderChildren, mergeScope, schema)
   }
+
+  return parseData(renderChildren, mergeScope)
 }
 
 export const renderer = {
@@ -687,15 +642,11 @@ export const renderer = {
     const { scope, schema, parent } = this
     const { componentName, loop, loopArgs, condition } = schema
 
-    // 处理数据源和表格fetchData的映射关系
-    generateCollection(schema)
-
     if (!componentName) {
       return parseData(schema, scope)
     }
 
     const component = getComponent(componentName)
-
     const loopList = parseData(loop, scope)
 
     const renderElement = (item, index) => {
@@ -716,14 +667,31 @@ export const renderer = {
         mergeScope = mergeScope ? { ...mergeScope, ...slotData } : slotData
       }
 
-      // 给每个节点设置schema.id，并缓存起来
-      setNode(schema, parent)
-
       if (conditions[schema.id] === false || !parseCondition(condition, mergeScope)) {
         return null
       }
 
-      return h(component, getBindProps(schema, mergeScope), getChildren(schema, mergeScope))
+      const children = getChildren(schema, mergeScope)
+
+      const Ele = h(
+        component,
+        getBindProps(schema, mergeScope),
+        Array.isArray(children) && !children.length ? null : children
+      )
+
+      // 区块加上 suspense 渲染，就可以在网络延时的时候显示加载中的字样或者动画，优化体验
+      if (schema.componentType === 'Block') {
+        return h(
+          Suspense,
+          {},
+          {
+            default: () => Ele,
+            fallback: () => h(BlockLoading, { name: componentName })
+          }
+        )
+      }
+
+      return Ele
     }
 
     return loopList?.length ? loopList.map(renderElement) : renderElement()

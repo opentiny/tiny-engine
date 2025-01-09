@@ -118,7 +118,7 @@ export default {
 .input-select {
   display: flex;
   align-items: center;
-  background-color: var(--ti-lowcode-tabs-bg);
+  background-color: var(--te-common-bg-default);
   border-radius: 3px;
   transition: 0.3s;
   &.focus {

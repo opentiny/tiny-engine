@@ -12,7 +12,7 @@
         <template #reference>
           <tiny-button class="bind-event-btn">
             <span>绑定事件</span>
-            <icon-chevron-down class="icon-chevron-down"></icon-chevron-down>
+            <icon-chevron-down class="icon-chevron-down bind-event-btn-icon"></icon-chevron-down>
           </tiny-button>
         </template>
         <ul class="bind-event-list">
@@ -319,24 +319,15 @@ export default {
       }
     }
     .add-custom-event-button {
-      padding: 0 16px;
-      font-size: 12px;
       margin-right: 0;
-      .custom-event-button-text {
-        display: inline-block;
-        vertical-align: middle;
-      }
-      .custom-event-button-icon {
-        display: inline-block;
-        vertical-align: middle;
-        color: var(--ti-lowcode-events-custom-icon-color);
-        font-size: 13px;
-      }
     }
     .bind-event-btn {
       padding: 0 16px;
-      font-size: 12px;
       width: 100%;
+      .bind-event-btn-icon {
+        margin-right: 0;
+        margin-left: 4px;
+      }
     }
   }
   .empty-action {

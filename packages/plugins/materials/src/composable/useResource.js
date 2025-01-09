@@ -10,7 +10,7 @@
  *
  */
 
-import { reactive } from 'vue'
+import { reactive, toRaw } from 'vue'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { getCanvasStatus } from '@opentiny/tiny-engine-common/js/canvas'
 import {
@@ -28,7 +28,7 @@ import {
 
 const { COMPONENT_NAME, DEFAULT_INTERCEPTOR } = constants
 
-const resState = reactive({
+const appSchemaState = reactive({
   dataSource: [],
   pageTree: [],
   langs: {},
@@ -104,13 +104,13 @@ const initPageOrBlock = async () => {
   }
 
   // url 没有 pageid 或 blockid，到页面首页或第一页
-  const pageInfo = resState.pageTree.find((page) => page?.meta?.isHome) ||
-    resState.pageTree.find(
+  const pageInfo = appSchemaState.pageTree.find((page) => page?.meta?.isHome) ||
+    appSchemaState.pageTree.find(
       (page) => page.componentName === COMPONENT_NAME.Page && page?.meta?.group !== 'publicPages'
     ) || {
       componentName: COMPONENT_NAME.Page
     }
-  initPage(pageInfo)
+  initPage(toRaw(pageInfo))
 }
 
 const handlePopStateEvent = async () => {
@@ -122,22 +122,20 @@ const handlePopStateEvent = async () => {
   await useTranslate().initI18n({ host: id, hostType: type })
 }
 
-const fetchResource = async ({ isInit = true } = {}) => {
-  const { id, type } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
-  useMessage().publish({ topic: 'app_id_changed', data: id })
+const fetchAppState = async () => {
+  const { id } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
   const appData = await getMetaApi(META_SERVICE.Http).get(`/app-center/v1/api/apps/schema/${id}`)
-  resState.pageTree = appData.componentsTree
-  resState.dataSource = appData.dataSource?.list
-  resState.dataHandler = appData.dataSource?.dataHandler || DEFAULT_INTERCEPTOR.dataHandler
-  resState.willFetch = appData.dataSource?.willFetch || DEFAULT_INTERCEPTOR.willFetch
-  resState.errorHandler = appData.dataSource?.errorHandler || DEFAULT_INTERCEPTOR.errorHandler
+  appSchemaState.pageTree = appData.componentsTree
+  appSchemaState.componentsMap = appData.componentsMap
+  appSchemaState.dataSource = appData.dataSource?.list
+  appSchemaState.dataHandler = appData.dataSource?.dataHandler || DEFAULT_INTERCEPTOR.dataHandler
+  appSchemaState.willFetch = appData.dataSource?.willFetch || DEFAULT_INTERCEPTOR.willFetch
+  appSchemaState.errorHandler = appData.dataSource?.errorHandler || DEFAULT_INTERCEPTOR.errorHandler
 
-  resState.bridge = appData.bridge
-  resState.utils = appData.utils
-  resState.isDemo = appData.meta?.is_demo
-  resState.globalState = appData?.meta.global_state
-
-  useMaterial().initMaterial({ isInit, appData })
+  appSchemaState.bridge = appData.bridge
+  appSchemaState.utils = appData.utils
+  appSchemaState.isDemo = appData.meta?.is_demo
+  appSchemaState.globalState = appData?.meta.global_state
 
   // 词条语言为空时使用默认的语言
   const defaultLocales = [
@@ -147,10 +145,22 @@ const fetchResource = async ({ isInit = true } = {}) => {
   const locales = Object.keys(appData.i18n).length
     ? Object.keys(appData.i18n).map((key) => ({ lang: key, label: key }))
     : defaultLocales
-  resState.langs = {
+
+  appSchemaState.langs = {
     locales,
     messages: appData.i18n
   }
+
+  return appData
+}
+
+const fetchResource = async ({ isInit = true } = {}) => {
+  const { id, type } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
+  useMessage().publish({ topic: 'app_id_changed', data: id })
+
+  const appData = await fetchAppState()
+
+  useMaterial().initMaterial({ isInit, appData })
 
   try {
     await useMaterial().fetchMaterial()
@@ -167,9 +177,10 @@ const fetchResource = async ({ isInit = true } = {}) => {
 
 export default function () {
   return {
-    resState,
+    appSchemaState,
     fetchResource,
     initPageOrBlock,
-    handlePopStateEvent
+    handlePopStateEvent,
+    fetchAppState
   }
 }

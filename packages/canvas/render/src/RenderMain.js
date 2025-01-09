@@ -10,25 +10,19 @@
  *
  */
 
-import { h, provide, inject, nextTick, shallowReactive, reactive, ref, watch, watchEffect } from 'vue'
+import { h, provide, inject, nextTick, shallowReactive, reactive, ref, watch, watchEffect, onUnmounted } from 'vue'
 import { I18nInjectionKey } from 'vue-i18n'
-import { useBroadcastChannel } from '@vueuse/core'
+import { useBroadcastChannel, useThrottleFn } from '@vueuse/core'
 import { constants, utils as commonUtils } from '@opentiny/tiny-engine-utils'
-import renderer, { parseData, setConfigure, setController, globalNotify, isStateAccessor } from './render'
-import {
-  getNode as getNodeById,
-  clearNodes,
-  getRoot,
-  setContext,
-  getContext,
-  setCondition,
-  getCondition,
-  getConditions,
-  context,
-  setNode,
-  getDesignMode,
-  setDesignMode
-} from './context'
+import renderer, {
+  parseData,
+  setConfigure,
+  setController,
+  globalNotify,
+  isStateAccessor,
+  removeBlockCompsCache
+} from './render'
+import { setContext, getContext, setCondition, context, getDesignMode, setDesignMode } from './context'
 import CanvasEmpty from './CanvasEmpty.vue'
 
 const { BROADCAST_CHANNEL } = constants
@@ -56,7 +50,7 @@ watchEffect(() => {
     const computedGetters = Object.keys(getters).reduce(
       (acc, key) => ({
         ...acc,
-        [key]: parseData(getters[key], state, acc)
+        [key]: parseData(getters[key], null, acc)?.call?.(acc, state)
       }),
       {}
     )
@@ -65,11 +59,27 @@ watchEffect(() => {
   })
 })
 
+const getDeletedKeys = (objA, objB) => {
+  const keyA = Object.keys(objA)
+  const keyB = new Set(Object.keys(objB))
+
+  return keyA.filter((item) => !keyB.has(item))
+}
+
 const getUtils = () => utils
 
-const setUtils = async (data, clear, isForceRefresh) => {
-  if (clear) {
-    reset(utils)
+const setUtils = async (data) => {
+  if (!Array.isArray(data)) {
+    return
+  }
+
+  // 筛选出来已经被删除的 key
+  const newKeys = new Set(data.map(({ name }) => name))
+  const currentKeys = Object.keys(utils)
+  const deletedUtilsKeys = currentKeys.filter((item) => !newKeys.has(item))
+
+  for (const key of deletedUtilsKeys) {
+    delete utils[key]
   }
 
   const utilsCollection = {}
@@ -103,32 +113,8 @@ const setUtils = async (data, clear, isForceRefresh) => {
   Object.assign(utils, utilsCollection)
 
   // 因为工具类并不具有响应式行为，所以需要通过修改key来强制刷新画布
-  if (isForceRefresh) {
-    refreshKey.value++
-  }
+  refreshKey.value++
 }
-
-const updateUtils = (data) => {
-  setUtils(data, false, true)
-}
-
-const deleteUtils = (data) => {
-  data?.forEach((item) => {
-    if (utils[item.name]) {
-      delete utils[item.name]
-    }
-  })
-  setUtils([], false, true)
-}
-
-const setBridge = (data, clear) => {
-  clear && reset(bridge)
-  Object.assign(bridge, data)
-}
-
-const getBridge = () => bridge
-
-const getMethods = () => methods
 
 const setMethods = (data = {}, clear) => {
   clear && reset(methods)
@@ -142,12 +128,6 @@ const setMethods = (data = {}, clear) => {
     )
   )
   setContext(methods)
-}
-
-const getState = () => state
-
-const deleteState = (variable) => {
-  delete state[variable]
 }
 
 const generateAccessor = (type, accessor, property) => {
@@ -186,10 +166,16 @@ const generateStateAccessors = (type, accessor, key) => {
   )
 }
 
-const setState = (data, clear) => {
-  clear && reset(state)
-  if (!schema.state) {
-    schema.state = data
+const setState = (data) => {
+  if (typeof data !== 'object' || data === null) {
+    return
+  }
+
+  const deletedKeys = getDeletedKeys(state, data)
+
+  // 同步删除的 key
+  for (const key of deletedKeys) {
+    delete state[key]
   }
 
   Object.assign(state, parseData(data, {}, getContext()) || {})
@@ -232,10 +218,10 @@ const setDataSourceMap = (list) => {
 
     return dMap
   }, {})
-}
 
-const getGlobalState = () => {
-  return globalState.value
+  Object.defineProperty(context, 'dataSourceMap', {
+    get: getDataSourceMap
+  })
 }
 
 const setGlobalState = (data = []) => {
@@ -246,8 +232,6 @@ const setProps = (data, clear) => {
   clear && reset(props)
   Object.assign(props, data)
 }
-
-const getProps = () => props
 
 const initProps = (properties = []) => {
   const props = {}
@@ -275,9 +259,7 @@ const initProps = (properties = []) => {
   return accessorFunctions
 }
 
-const getSchema = () => schema
-
-const setPagecss = (css = '') => {
+const setPageCss = (css = '') => {
   const id = 'page-css'
   let element = document.getElementById(id)
   const head = document.querySelector('head')
@@ -336,9 +318,9 @@ const setSchema = async (data) => {
 
   // 这里setState（会触发画布渲染），是因为状态管理里面的变量会用到props、utils、bridge、stores、methods
   setState(newSchema.state, true)
-  clearNodes()
+
   await nextTick()
-  setPagecss(data.css)
+  setPageCss(data.css)
   Object.assign(schema, newSchema)
 
   // 当上下文环境设置完成之后再去处理区块属性访问器的watchEffect
@@ -363,13 +345,12 @@ const setSchema = async (data) => {
   return schema
 }
 
-const getNode = (id, parent) => (id ? getNodeById(id, parent) : schema)
-
 let canvasRenderer = null
 
 const defaultRenderer = function () {
   // 渲染画布增加根节点，与出码和预览保持一致
   const rootChildrenSchema = {
+    id: 0,
     componentName: 'div',
     // 手动添加一个唯一的属性，后续在画布选中此节点时方便处理额外的逻辑。由于没有修改schema，不会影响出码
     props: { ...schema.props, 'data-id': 'root-container' },
@@ -377,6 +358,7 @@ const defaultRenderer = function () {
   }
 
   return h(
+    // TODO: 这里顶层的 i18n-host 在不支持 webComponent 的区块之后，应该也不需要webComponent 的 i18n provider 了
     'tiny-i18n-host',
     {
       locale: 'zh_CN',
@@ -394,24 +376,41 @@ const setRenderer = (fn) => {
   canvasRenderer = fn
 }
 
+const updateCanvas = () => {
+  refreshKey.value++
+}
+const throttleUpdateSchema = useThrottleFn(
+  () => {
+    window.host.patchLatestSchema(schema)
+  },
+  100,
+  true
+)
+
 export default {
   setup() {
     provide('rootSchema', schema)
 
     const { locale } = inject(I18nInjectionKey).global
     const { data } = useBroadcastChannel({ name: BROADCAST_CHANNEL.CanvasLang })
-    const { post } = useBroadcastChannel({ name: BROADCAST_CHANNEL.SchemaLength })
+
+    window.host.subscribe({
+      topic: 'schemaChange',
+      subscriber: 'canvasRenderer',
+      callback: throttleUpdateSchema
+    })
+
+    window.host.subscribe({
+      topic: 'schemaImport',
+      subscriber: 'canvasRenderer',
+      callback: () => {
+        setSchema(window.host.getSchema())
+      }
+    })
 
     watch(data, () => {
       locale.value = data.value
     })
-
-    watch(
-      () => schema?.children?.length,
-      (length) => {
-        post(length)
-      }
-    )
 
     // 这里监听schema.methods，为了保证methods上下文环境始终为最新
     watch(
@@ -423,44 +422,95 @@ export default {
         deep: true
       }
     )
+
+    watch(
+      () => schema.css,
+      (value) => {
+        setPageCss(value)
+      }
+    )
+
+    watch(
+      () => schema.state,
+      (value) => {
+        setState(value)
+      },
+      {
+        deep: true
+      }
+    )
+
+    const utilsWatchCanceler = window.host.watch(
+      () => window.host.appSchema?.utils,
+      (data) => {
+        setUtils(data)
+      },
+      {
+        immediate: true,
+        deep: true
+      }
+    )
+
+    const dataSourceWatchCanceler = window.host.watch(
+      () => window.host.appSchema?.dataSource,
+      (data) => {
+        setDataSourceMap(data)
+      },
+      {
+        immediate: true,
+        deep: true
+      }
+    )
+
+    const globalStateWatchCanceler = window.host.watch(
+      () => window.host.appSchema?.globalState,
+      (data) => {
+        setGlobalState(data)
+      },
+      {
+        immediate: true,
+        deep: true
+      }
+    )
+
+    onUnmounted(() => {
+      window.host.unsubscribe({
+        topic: 'schemaChange',
+        subscriber: 'canvasRenderer'
+      })
+
+      window.host.unsubscribe({
+        topic: 'schemaImport',
+        subscriber: 'canvasRenderer'
+      })
+
+      utilsWatchCanceler()
+      dataSourceWatchCanceler()
+      globalStateWatchCanceler()
+    })
   },
+
   render() {
     return getRenderer().call(this)
   }
 }
 
 export const api = {
+  // 用于 lowcode.js 获取 utils 工具类
   getUtils,
-  setUtils,
-  updateUtils,
-  deleteUtils,
-  getBridge,
-  setBridge,
-  getMethods,
-  setMethods,
-  setController,
-  setConfigure,
-  getSchema,
-  setSchema,
-  getState,
-  deleteState,
-  setState,
-  getProps,
-  setProps,
-  getContext,
-  getNode,
-  getRoot,
-  setPagecss,
-  setCondition,
-  getCondition,
-  getConditions,
-  getGlobalState,
   getDataSourceMap,
-  setDataSourceMap,
-  setGlobalState,
-  setNode,
+
+  // 用于调用区块获取、注册、以及 CanvasCollection 的相关逻辑调用
+  setController,
+  // 设置物料
+  setConfigure,
+
+  // 用于大纲树临时性隐藏
+  setCondition,
   getRenderer,
   setRenderer,
   getDesignMode,
-  setDesignMode
+  setDesignMode,
+  removeBlockCompsCache,
+  updateCanvas
 }

@@ -2,7 +2,7 @@
   <div class="life-cycle">
     <tiny-popover v-model="state.showPopover" placement="bottom-end" trigger="hover" popperClass="option-popper">
       <template #reference>
-        <tiny-button class="life-cycle-btn"><icon-plus class="icon-plus"></icon-plus>添加页面生命周期 </tiny-button>
+        <tiny-button class="life-cycle-btn"><svg-icon name="add"></svg-icon>添加页面生命周期 </tiny-button>
       </template>
       <div class="popover-list">
         <ul>
@@ -21,13 +21,18 @@
   <div class="life-cycle-tips">{{ lifeCycleTips }}</div>
   <meta-list-items :optionsList="Object.keys(state.bindLifeCycles)" :draggable="false">
     <template #content="{ data }">
-      <div>
+      <div class="life-cycle-content-item">
         {{ data }}
       </div>
     </template>
     <template #operate="{ data }">
-      <svg-button name="setting-outline" tips="编辑" placement="top" @click="openLifeCyclesPanel(data)"></svg-button>
-      <svg-button name="delete" tips="删除" placement="top" @click="deleteLifeCycle(data)"></svg-button>
+      <svg-button
+        class="opt-button"
+        :hoverBgColor="false"
+        name="text-source-setting"
+        @click="openLifeCyclesPanel(data)"
+      ></svg-button>
+      <svg-button class="opt-button" :hoverBgColor="false" name="delete" @click="deleteLifeCycle(data)"></svg-button>
     </template>
   </meta-list-items>
   <tiny-dialog-box v-model:visible="state.showLifeCyclesDialog" fullscreen :title="state.title" :append-to-body="true">
@@ -72,7 +77,7 @@ import { Button, DialogBox, Popover, Search } from '@opentiny/vue'
 import { useModal, usePage, useNotify, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import MetaListItems from './MetaListItems.vue'
-import { iconYes, iconPlus } from '@opentiny/vue-icon'
+import { iconYes } from '@opentiny/vue-icon'
 import VueMonaco from './VueMonaco.vue'
 import { initCompletion } from '../js/completion'
 import { initLinter, lint } from '../js/linter'
@@ -87,8 +92,7 @@ export default {
     MonacoEditor: VueMonaco,
     SvgButton,
     MetaListItems,
-    IconYes: iconYes(),
-    IconPlus: iconPlus()
+    IconYes: iconYes()
   },
 
   props: {
@@ -132,7 +136,7 @@ export default {
     }
 
     const syncLifeCycle = () => {
-      const currentSchema = useCanvas().canvasApi.value?.getSchema?.()
+      const currentSchema = useCanvas().getSchema()
       const pageContent = getPageContent()
       const { id, fileName } = pageContent
       if (id === currentSchema.id || fileName === currentSchema.fileName) {
@@ -155,8 +159,7 @@ export default {
 
     const openLifeCyclesPanel = (item) => {
       state.title = item
-      const bindLifeCycleSource =
-        props.bindLifeCycles?.[item] || useCanvas().canvasApi.value?.getSchema?.()?.lifeCycles?.[item]
+      const bindLifeCycleSource = props.bindLifeCycles?.[item] || useCanvas().getSchema()?.lifeCycles?.[item]
       state.editorValue =
         bindLifeCycleSource?.value ||
         `function ${item} (${item === 'setup' ? '{ props, state, watch, onMounted }' : ''}) {} `
@@ -270,12 +273,20 @@ export default {
   margin-left: 20px;
   margin-right: 20px;
 }
+.life-cycle-content-item {
+  color: var(--te-common-text-primary);
+}
+.opt-button {
+  width: auto;
+  &:last-child {
+    margin-right: var(--te-base-space-3x);
+  }
+}
 
 .popover-list {
-  margin: 8px 0;
   li {
     padding: 0 12px;
-    margin: 0 -8px;
+    margin: 0 -16px;
     line-height: 24px;
     cursor: pointer;
     &:hover {

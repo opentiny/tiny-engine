@@ -4,25 +4,48 @@
       <div class="block-filters-item-label">{{ filter.name }}</div>
       <div class="block-filters-item-value">
         <tiny-checkbox-group
-          v-model="state.checkGroup"
+          v-if="!filter.usingSelect"
+          v-model="state.checkGroup[filter.id]"
           type="checkbox"
-          @change="getFilters(filter.id, filter.children)"
+          @change="getFilters($event, filter.id)"
         >
-          <tiny-checkbox v-for="item in filter.children" :key="item.name" :label="item.name"></tiny-checkbox>
+          <tiny-checkbox
+            v-for="item in selectOptions[filter.id]"
+            :key="item.value"
+            :text="item.name"
+            :label="item.value"
+          ></tiny-checkbox>
         </tiny-checkbox-group>
+        <tiny-select
+          v-else
+          v-model="state.checkGroup[filter.id]"
+          size="mini"
+          multiple
+          is-drop-inherit-width
+          @change="getFilters($event, filter.id)"
+        >
+          <tiny-option
+            v-for="item in selectOptions[filter.id]"
+            :key="item.value"
+            :label="item.name"
+            :value="item.value"
+          ></tiny-option>
+        </tiny-select>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { reactive } from 'vue'
-import { CheckboxGroup, Checkbox } from '@opentiny/vue'
+import { computed, reactive } from 'vue'
+import { CheckboxGroup, Checkbox, Select, Option } from '@opentiny/vue'
 
 export default {
   components: {
     TinyCheckboxGroup: CheckboxGroup,
-    TinyCheckbox: Checkbox
+    TinyCheckbox: Checkbox,
+    TinySelect: Select,
+    TinyOption: Option
   },
   props: {
     filters: {
@@ -33,25 +56,38 @@ export default {
   setup(props, { emit }) {
     const filters = {}
     const state = reactive({
-      checkGroup: []
+      checkGroup: props.filters.reduce(
+        (result, filter) => ({
+          ...result,
+          [filter.id]: []
+        }),
+        {}
+      )
     })
 
-    const getFilters = (id, child) => {
-      filters[id] = []
-      if (id === 'tag') {
-        filters[id] = state.checkGroup
-      } else {
-        child.forEach((item) => {
-          if (state.checkGroup.includes(item.name)) {
-            filters[id].push(item.id)
-          }
-        })
-      }
+    // 不同的filter，值所在的字段可能是id或者name。这里把实际的值都映射到value字段
+    const selectOptions = computed(() => {
+      return props.filters.reduce(
+        (result, filter) => ({
+          ...result,
+          [filter.id]: filter.children.map((item) => ({
+            ...item,
+            value: item.id || item.name
+          }))
+        }),
+        {}
+      )
+    })
+
+    const getFilters = (checked, id) => {
+      filters[id] = checked
+
       emit('search', null, filters)
     }
 
     return {
       state,
+      selectOptions,
       getFilters
     }
   }
@@ -61,6 +97,12 @@ export default {
 <style lang="less" scoped>
 .block-add-filters {
   color: var(--ti-lowcode-materials-block-filter-text-color);
+  & > div {
+    min-height: 24px;
+  }
+  & > div + div {
+    margin-top: 12px;
+  }
 
   .block-add-filters-item {
     display: flex;
@@ -73,13 +115,11 @@ export default {
       align-items: center;
       justify-content: flex-start;
       width: 76px;
-      height: 28px;
       color: var(--te-common-text-secondary);
       border-radius: 2px;
     }
 
     .block-filters-item-value {
-      align-items: center;
       flex: 1;
       color: var(--te-common-text-primary);
       .block-filters-value-item {
@@ -92,6 +132,12 @@ export default {
         margin-bottom: 5px;
         &.is-empty {
           display: none;
+        }
+      }
+      :deep(.tiny-select.tiny-select .tiny-select__tags) {
+        max-width: calc(100% - 24px) !important;
+        .tiny-tag {
+          background-color: var(--te-common-bg-disabled);
         }
       }
     }

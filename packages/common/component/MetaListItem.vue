@@ -16,7 +16,8 @@
                 :popper-class="['option-popper', { 'fixed-left': expand }]"
                 :visible-arrow="!expand"
                 title=""
-                width="267"
+                width="295"
+                height="auto"
                 trigger="manual"
                 @hide="hide(item)"
               >
@@ -295,14 +296,21 @@ export default {
     }
   }
 }
+
 .tiny-popover {
+  position: relative;
   .icon-close {
-    float: right;
+    position: absolute;
+    top: 6px;
+    right: 6px;
   }
 }
 .add-options {
   overflow-y: scroll;
-  height: 100%;
+  padding: 20px 0 20px 2px;
+  &.top {
+    margin-bottom: 0;
+  }
   &::-webkit-scrollbar-track-piece {
     background: var(--ti-lowcode-toolbar-bg);
   }

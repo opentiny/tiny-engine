@@ -151,13 +151,15 @@ const CONSTANTS = {
 }
 
 const getJsSlot = () => {
-  const { getNode, getCurrent } = useCanvas().canvasApi.value || {}
+  const { getCurrent } = useCanvas().canvasApi.value || {}
 
-  if (!getNode || !getCurrent) {
+  if (!getCurrent) {
     return [false, {}]
   }
 
-  const jsSlot = getNode(getCurrent()?.parent?.id, true)?.parent
+  const { getNodeWithParentById } = useCanvas()
+
+  const jsSlot = getNodeWithParentById(getCurrent()?.parent?.id, true)?.parent
 
   return [jsSlot?.type === 'JSSlot', jsSlot]
 }
@@ -397,7 +399,7 @@ export default {
     const confirm = () => {
       let variableContent = state.isEditorEditMode ? editor.value?.getEditor().getValue() : state.variable
 
-      const { setSaved, canvasApi } = useCanvas()
+      const { setSaved, getSchema, updateSchema } = useCanvas()
       // 如果新旧值不一样就显示未保存状态
       if (oldValue !== variableContent) {
         setSaved(false)
@@ -409,14 +411,11 @@ export default {
 
       if (variableContent) {
         if (state.bindPrefix === CONSTANTS.DATASOUCEPREFIX) {
-          const pageSchema = canvasApi.value.getSchema()
+          const pageSchema = getSchema()
           const stateName = state.variable.replace(`${CONSTANTS.STATE}`, '')
           const staticData = state.variableContent.map(({ _id, ...other }) => other)
 
-          pageSchema.state[stateName] = staticData
-
-          // 设置画布上下文环境，让画布触发更新渲染
-          canvasApi.value.setState({ [stateName]: staticData })
+          updateSchema({ ...pageSchema.state, [stateName]: staticData })
 
           // 这里在setup生命周期函数内部处理用户真实环境中的数据源请求
           genRemoteMethodToLifeSetup(stateName, state.dataSouce, pageSchema)
@@ -451,7 +450,7 @@ export default {
       state.isVisible = true
       state.variableName = bindKey.value
       state.variable = getInitVariable()
-      state.variables = useCanvas().canvasApi.value.getSchema()?.state || {}
+      state.variables = useCanvas().getSchema()?.state || {}
       state.bindPrefix = CONSTANTS.STATE
       state.variableContent = state.variables[bindKey.value]
       nextTick(() => window.dispatchEvent(new Event('resize')))
@@ -459,7 +458,7 @@ export default {
 
     const selectItem = (item) => {
       state.active = item.id
-      const { canvasApi } = useCanvas()
+      const { getSchema } = useCanvas()
 
       if (item.id === 'function') {
         state.bindPrefix = CONSTANTS.THIS
@@ -468,14 +467,14 @@ export default {
       } else if (item.id === 'bridge' || item.id === 'utils') {
         state.bindPrefix = `${CONSTANTS.THIS}${item.id}.`
         const bridge = {}
-        useResource().resState[item.id]?.forEach((res) => {
+        useResource().appSchemaState[item.id]?.forEach((res) => {
           bridge[res.name] = `${item.id}.${res.content.exportName}`
         })
 
         state.variables = bridge
       } else if (item.id === 'props') {
         state.bindPrefix = CONSTANTS.PROPS
-        const properties = canvasApi.value.getSchema()?.schema?.properties
+        const properties = getSchema()?.schema?.properties
         const bindProperties = {}
         properties?.forEach(({ content }) => {
           content.forEach(({ property }) => {
@@ -503,7 +502,7 @@ export default {
         state.bindPrefix = CONSTANTS.STORE
         state.variables = {}
 
-        const stores = canvasApi.value.getGlobalState()
+        const stores = useResource().appSchemaState.globalState
         stores.forEach(({ id, state: storeState = {}, getters = {} }) => {
           const loadProp = (prop) => {
             const propBinding = `${id}.${prop}`
@@ -524,7 +523,7 @@ export default {
         state.variables = params.reduce((variables, param) => ({ ...variables, [param]: param }), {})
       } else {
         state.bindPrefix = CONSTANTS.STATE
-        state.variables = canvasApi.value.getSchema()?.[item.id]
+        state.variables = getSchema()?.[item.id]
       }
     }
 

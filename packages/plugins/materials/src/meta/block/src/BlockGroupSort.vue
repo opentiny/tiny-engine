@@ -78,11 +78,11 @@ export default {
 
 <style lang="less" scoped>
 .sort-text {
-  color: var(--ti-lowcode-toolbar-breadcrumb-color);
+  color: var(--te-common-text-secondary);
   margin-right: 6px;
 }
 .sort-caret {
-  color: var(--ti-lowcode-toolbar-breadcrumb-color);
+  color: var(--te-common-text-secondary);
   cursor: pointer;
 }
 

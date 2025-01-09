@@ -75,6 +75,10 @@ export const BLOCK_OPENNESS = {
   Special: 2
 }
 
+export const OPEN_DELAY = {
+  Default: 500
+}
+
 /**
  * 当前浏览器标签页中 BroadcastChannel 的唯一 id
  * 为了避免在同一个浏览器下打开不同设计器应用造成的消息错乱
@@ -89,8 +93,7 @@ if (typeof sessionStorage !== 'undefined') {
 
 export const BROADCAST_CHANNEL = {
   CanvasLang: `tiny-lowcode-canvas-lang-${CHANNEL_UID}`,
-  Notify: `global-notify-${CHANNEL_UID}`,
-  SchemaLength: `schema-length-${CHANNEL_UID}`
+  Notify: `global-notify-${CHANNEL_UID}`
 }
 
 export const STORAGE_KEY_FIXED_PANELS = `tiny-engine-fixed-panels-${CHANNEL_UID}`

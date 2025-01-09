@@ -15,7 +15,7 @@
 </template>
 <script>
 import { reactive, computed } from 'vue'
-import { useProperties } from '@opentiny/tiny-engine-meta-register'
+import { useProperties, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import InputConfigurator from '../input-configurator/InputConfigurator.vue'
 
 export default {
@@ -44,12 +44,20 @@ export default {
 
     const triggerType = (item, index) => {
       state.active = index
-      useProperties().getSchema().componentName = item.toLowerCase()
+      const { operateNode } = useCanvas()
+      const schema = useProperties().getSchema()
+
+      if (schema) {
+        operateNode({ type: 'updateAttributes', id: schema.id, value: { componentName: item.toLowerCase() } })
+      }
     }
 
     const change = (value) => {
-      if (useProperties().getSchema()) {
-        useProperties().getSchema().children = value
+      const { operateNode } = useCanvas()
+      const schema = useProperties().getSchema()
+
+      if (schema) {
+        operateNode({ type: 'updateAttributes', id: schema.id, value: { children: value } })
       }
     }
 

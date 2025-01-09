@@ -146,7 +146,7 @@ export default {
     const selectedModel = ref(AIModelOptions[0])
     const { confirm } = useModal()
 
-    const { pageSettingState, DEFAULT_PAGE } = usePage()
+    const { pageSettingState, getDefaultPage } = usePage()
     const ROOT_ID = pageSettingState.ROOT_ID
     const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
     watchEffect(() => {
@@ -174,7 +174,7 @@ export default {
         pageSettingState.isNew = true
         pageSettingState.isAIPage = true
         pageSettingState.currentPageData = {
-          ...DEFAULT_PAGE,
+          ...getDefaultPage(),
           parentId: ROOT_ID,
           route: 'temporaryPage',
           name: 'TemporaryPage',

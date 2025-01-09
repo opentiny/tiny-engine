@@ -6,9 +6,8 @@
 </template>
 
 <script lang="jsx">
-import { ref, watch, getCurrentInstance } from 'vue'
-import { Modal } from '@opentiny/vue'
-import { useCanvas, useLayout } from '@opentiny/tiny-engine-meta-register'
+import { ref, watch } from 'vue'
+import { useCanvas, useLayout, useModal } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 
@@ -24,10 +23,9 @@ export default {
     }
   },
   setup() {
-    const app = getCurrentInstance()
-    const SvgIcon = app.appContext.components.SvgIcon
     const { pageState, clearCanvas } = useCanvas()
     const isLock = ref(pageState.isLock)
+    const { confirm } = useModal()
 
     watch(
       () => pageState.isLock,
@@ -41,22 +39,20 @@ export default {
       }
 
       if (!isLock.value) {
-        Modal.confirm({
+        confirm({
           title: '提示',
           message: () => {
             return [
               <div class="modal-content">
                 {
                   <div class="wrap">
-                    <SvgIcon name="warning"></SvgIcon>
                     <span>{`您确定要清除屏幕吗？`}</span>
                   </div>
                 }
               </div>
             ]
-          }
-        }).then((res) => {
-          if (res === 'confirm') {
+          },
+          exec: () => {
             clearCanvas()
           }
         })

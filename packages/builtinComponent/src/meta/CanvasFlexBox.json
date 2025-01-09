@@ -1,0 +1,221 @@
+{
+  "component": {
+    "icon": "Box",
+    "name": {
+      "zh_CN": "弹性容器"
+    },
+    "component": "CanvasFlexBox",
+    "schema": {
+      "slots": {},
+      "properties": [
+        {
+          "label": {
+            "zh_CN": "基础信息"
+          },
+          "description": {
+            "zh_CN": "基础信息"
+          },
+          "collapse": {
+            "number": 6,
+            "text": {
+              "zh_CN": "显示更多"
+            }
+          },
+          "content": [
+            {
+              "property": "flexDirection",
+              "type": "String",
+              "defaultValue": "row",
+              "bindState": true,
+              "label": {
+                "text": {
+                  "zh_CN": "排列方向"
+                }
+              },
+              "cols": 12,
+              "rules": [],
+              "widget": {
+                "component": "SelectConfigurator",
+                "props": {
+                  "options": [
+                    {
+                      "label": "水平,起点在左端",
+                      "value": "row"
+                    },
+                    {
+                      "label": "水平,起点在右端",
+                      "value": "row-reverse"
+                    },
+                    {
+                      "label": "垂直,起点在上沿",
+                      "value": "column"
+                    },
+                    {
+                      "label": "垂直,起点在下沿",
+                      "value": "column-reverse"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "property": "gap",
+              "defaultValue": "8px",
+              "label": {
+                "text": {
+                  "zh_CN": "间距"
+                }
+              },
+              "widget": {
+                "component": "InputConfigurator"
+              },
+              "description": {
+                "zh_CN": "控制容器内水平和垂直的间距"
+              },
+              "labelPosition": "left"
+            },
+            {
+              "property": "padding",
+              "defaultValue": "8px",
+              "label": {
+                "text": {
+                  "zh_CN": "内边距"
+                }
+              },
+              "widget": {
+                "component": "InputConfigurator"
+              },
+              "labelPosition": "left"
+            },
+            {
+              "property": "justifyContent",
+              "type": "String",
+              "defaultValue": "flex-start",
+              "bindState": true,
+              "label": {
+                "text": {
+                  "zh_CN": "水平对齐方式"
+                }
+              },
+              "cols": 12,
+              "rules": [],
+              "widget": {
+                "component": "SelectConfigurator",
+                "props": {
+                  "options": [
+                    {
+                      "label": "左对齐",
+                      "value": "flex-start"
+                    },
+                    {
+                      "label": "右对齐",
+                      "value": "flex-end"
+                    },
+                    {
+                      "label": "居中",
+                      "value": "center"
+                    },
+                    {
+                      "label": "两端对齐,子元素间隔相等",
+                      "value": "space-between"
+                    },
+                    {
+                      "label": "子元素两侧间隔相等",
+                      "value": "space-around"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "property": "alignItems",
+              "type": "String",
+              "defaultValue": "center",
+              "bindState": true,
+              "label": {
+                "text": {
+                  "zh_CN": "垂直对齐方式"
+                }
+              },
+              "cols": 12,
+              "rules": [],
+              "widget": {
+                "component": "SelectConfigurator",
+                "props": {
+                  "options": [
+                    {
+                      "label": "交叉轴的中点对齐",
+                      "value": "center"
+                    },
+                    {
+                      "label": "交叉轴的起点对齐",
+                      "value": "flex-start"
+                    },
+                    {
+                      "label": "交叉轴的终点对齐",
+                      "value": "flex-end"
+                    },
+                    {
+                      "label": "以子元素第一行文字的基线对齐",
+                      "value": "baseline"
+                    },
+                    {
+                      "label": "占满容器高度",
+                      "value": "stretch"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "events": {
+        "onClick": {
+          "label": {
+            "zh_CN": "点击事件"
+          },
+          "description": {
+            "zh_CN": "点击时触发的回调函数"
+          },
+          "type": "event",
+          "functionInfo": {
+            "params": [],
+            "returns": {}
+          },
+          "defaultValue": ""
+        }
+      },
+      "shortcuts": {
+        "properties": []
+      },
+      "contentMenu": {
+        "actions": []
+      }
+    },
+    "configure": {
+      "loop": true,
+      "isContainer": true,
+      "nestingRule": {
+        "childWhitelist": [],
+        "descendantBlacklist": []
+      }
+    }
+  },
+  "snippet": {
+    "name": {
+      "zh_CN": "弹性容器"
+    },
+    "screenshot": "",
+    "snippetName": "CanvasFlexBox",
+    "icon": "Box",
+    "schema": {
+      "componentName": "CanvasFlexBox",
+      "props": {
+        "flexDirection": "row",
+        "gap": "8px",
+        "padding": "8px"
+      }
+    }
+  }
+}

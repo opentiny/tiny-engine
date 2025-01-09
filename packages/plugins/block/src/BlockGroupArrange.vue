@@ -47,26 +47,24 @@ export default {
 
 <style lang="less" scoped>
 .footer-toolbar {
+  border-radius: 4px;
+  background-color: var(--te-common-bg-container);
   .icon-wrap {
-    width: 20px;
-    height: 20px;
-    color: var(--ti-lowcode-text-color);
+    width: 24px;
+    height: 24px;
+    color: var(--te-common-text-weaken);
     font-size: 16px;
-    border-radius: 2px;
     cursor: pointer;
     display: inline-flex;
     justify-content: center;
     align-items: center;
     transition: 0.3s;
-    &:hover {
-      color: var(--ti-lowcode-common-primary-color);
-    }
     &.active {
-      color: var(--ti-lowcode-common-primary-color);
+      border: 1px solid var(--te-common-border-active);
+      color: var(--te-common-text-primary);
+      border-radius: 4px;
+      background-color: var(--te-common-bg-default);
     }
-  }
-  .icon-wrap + .icon-wrap {
-    margin-left: 8px;
   }
 }
 </style>

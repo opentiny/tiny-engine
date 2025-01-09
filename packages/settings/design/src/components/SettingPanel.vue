@@ -257,30 +257,30 @@ export default {
       font-size: 12px;
       flex-shrink: 0;
       margin-right: 10px;
-      color: var(--ti-lowcode-common-text-main-color);
+      color: var(--te-common-text-secondary);
     }
   }
 
   h5 {
     font-size: 13px;
-    color: var(--ti-lowcode-title-color);
+    color: var(--te-common-text-primary);
     margin: 20px 0;
   }
   .array-config-item {
     width: 100%;
     :deep(.list-group) {
       .option-item {
-        border-top: 1px solid var(--ti-lowcode-common-border-color);
+        border-top: 1px solid var(--te-common-border-default);
       }
       .option-item:last-child {
-        border-bottom: 1px solid var(--ti-lowcode-common-border-color);
+        border-bottom: 1px solid var(--te-common-border-default);
       }
       .item-icon {
-        color: var(--ti-lowcode-design-plugin-color);
+        color: var(--ti-lowcode-setting-plugin-icon-color);
         fill: currentColor;
       }
       .item-text {
-        color: var(--ti-lowcode-title-color);
+        color: var(--te-common-text-primary);
       }
     }
     .operate-tips-item + .operate-tips-item {
@@ -288,7 +288,7 @@ export default {
     }
     .add-item {
       cursor: pointer;
-      color: var(--ti-lowcode-common-primary-color);
+      color: var(--te-common-text-emphasize);
       margin-top: 8px;
       .icon {
         margin-right: 4px;
@@ -310,7 +310,7 @@ export default {
       .item-label {
         width: 38%;
         word-break: break-all;
-        color: var(--ti-lowcode-toolbar-breadcrumb-color);
+        color: var(--te-common-text-secondary);
       }
       .component-wrap {
         flex: 1;
@@ -382,7 +382,7 @@ export default {
         border-color: transparent;
         padding: 6px 10px;
         &:hover {
-          background-color: var(--ti-lowcode-common-primary-color);
+          background-color: var(--te-common-bg-primary-checked);
         }
       }
     }

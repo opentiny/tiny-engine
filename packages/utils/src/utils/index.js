@@ -381,3 +381,68 @@ export const string2Obj = (string) => {
 
   return obj
 }
+
+/**
+ * 指定-转化为驼峰命名
+ * @param {*} string
+ * @returns
+ */
+
+export const toCamelCase = (str) => {
+  return str.replace(/[-\s]+(.)?/g, (match, group1) => (group1 ? group1.toUpperCase() : ''))
+}
+
+/**
+ * 驼峰转化为连字符形式
+ * @param {*} string
+ * @returns
+ */
+
+export const convertCamelToKebab = (string) => {
+  return string
+    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2')
+    .replace(/([a-z])([A-Z])/g, '$1-$2')
+    .toLowerCase()
+}
+
+/**
+ * 样式字符串转对象
+ * @param {*} string
+ * @returns
+ */
+
+export const styleString2Obj = (styleString) => {
+  if (!styleString || typeof styleString !== 'string') {
+    return {}
+  }
+
+  const styles = styleString.trim().split(';')
+  const styleObject = styles.reduce((obj, pair) => {
+    const colonIndex = pair.indexOf(':')
+    if (colonIndex === -1) return obj
+    const key = pair.slice(0, colonIndex)
+    const value = pair.slice(colonIndex + 1)
+    if (key && value) {
+      obj[toCamelCase(key.trim())] = value.trim()
+    }
+    return obj
+  }, {})
+  return styleObject
+}
+
+/**
+ * 对象转样式字符串
+ * @param {*} string
+ * @returns
+ */
+
+export const obj2StyleString = (obj) => {
+  if (!obj || typeof obj !== 'object') {
+    return ''
+  }
+
+  return Object.entries(obj)
+    .filter(([, value]) => value != null)
+    .map(([key, value]) => `${convertCamelToKebab(key)}: ${value}`)
+    .join('; ')
+}

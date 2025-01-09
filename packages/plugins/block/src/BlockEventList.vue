@@ -1,6 +1,6 @@
 <template>
   <div class="add-button">
-    <tiny-button @click="addEvent"> <icon-plus class="icon-plus"></icon-plus>添加</tiny-button>
+    <tiny-button @click="addEvent"> <svg-icon name="add"></svg-icon>添加</tiny-button>
   </div>
   <meta-list-items class="list" :optionsList="list" :draggable="false">
     <template #content="{ data }">
@@ -9,8 +9,8 @@
       </div>
     </template>
     <template #operate="{ data }">
-      <svg-button name="to-edit" tips="编辑" placement="top" @click="setEdit(data)"></svg-button>
-      <svg-button name="delete" tips="删除" placement="top" @click="delBlockEvent(data.name)"></svg-button>
+      <svg-button class="opt-button" :hoverBgColor="false" name="to-edit" @click="setEdit(data)"></svg-button>
+      <svg-button class="opt-button" :hoverBgColor="false" name="delete" @click="delBlockEvent(data.name)"></svg-button>
     </template>
   </meta-list-items>
 </template>
@@ -18,7 +18,6 @@
 <script>
 import { computed } from 'vue'
 import { Button as TinyButton } from '@opentiny/vue'
-import { iconPlus } from '@opentiny/vue-icon'
 import { MetaListItems, SvgButton } from '@opentiny/tiny-engine-common'
 import {
   getEditBlockEvents,
@@ -33,8 +32,7 @@ export default {
   components: {
     TinyButton,
     MetaListItems,
-    SvgButton,
-    IconPlus: iconPlus()
+    SvgButton
   },
   setup() {
     const list = computed(() => Object.entries(getEditBlockEvents() || {}).map(([name, event]) => ({ name, event })))
@@ -68,6 +66,7 @@ export default {
 
 .item-text {
   flex: 1;
+  color: var(--te-common-text-primary);
 }
 .item-text.active {
   font-weight: 700;
@@ -84,6 +83,12 @@ export default {
   .icon-plus {
     margin-right: 6px;
     stroke: var(--te-common-text-weaken);
+  }
+}
+.opt-button {
+  width: auto;
+  &:last-child {
+    margin-right: var(--te-base-space-3x);
   }
 }
 </style>

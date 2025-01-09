@@ -34,26 +34,22 @@
             <tiny-input ref="editFormItemRef" v-model="state.groupNameModel.value" placeholder="请输入新的分组名称">
               <template #suffix>
                 <div class="confirm-btns">
-                  <tiny-tooltip class="action-item" effect="dark" content="确定" placement="bottom" :open-delay="500">
-                    <tiny-button
-                      type="text"
-                      size="mini"
-                      :icon="TinyIconYes"
-                      id="confirmChangeGroupName"
-                      class="confirm-btns-item"
-                      @click.stop="handleChangeGroupName(item.value)"
-                    ></tiny-button>
-                  </tiny-tooltip>
-                  <tiny-tooltip class="action-item" effect="dark" content="取消" placement="bottom" :open-delay="500">
-                    <tiny-button
-                      type="text"
-                      size="mini"
-                      :icon="TinyIconClose"
-                      id="cancelChangeGroupName"
-                      class="confirm-btns-item"
-                      @click.stop="state.currentEditId = null"
-                    ></tiny-button>
-                  </tiny-tooltip>
+                  <tiny-button
+                    type="text"
+                    size="mini"
+                    :icon="TinyIconYes"
+                    id="confirmChangeGroupName"
+                    class="confirm-btns-item"
+                    @click.stop="handleChangeGroupName(item.value)"
+                  ></tiny-button>
+                  <tiny-button
+                    type="text"
+                    size="mini"
+                    :icon="TinyIconClose"
+                    id="cancelChangeGroupName"
+                    class="confirm-btns-item"
+                    @click.stop="state.currentEditId = null"
+                  ></tiny-button>
                 </div>
               </template>
             </tiny-input>
@@ -66,7 +62,7 @@
               id="updateGroupName"
               class="option-btn"
               name="to-edit"
-              tips="编辑"
+              :hoverBgColor="false"
               @click.stop="updateGroup(item.value)"
             ></svg-button>
             <tiny-popover
@@ -105,7 +101,7 @@
                   id="deleteGroup"
                   class="option-btn"
                   name="delete"
-                  tips="删除"
+                  :hoverBgColor="false"
                   @click.stop="handleShowDeleteModal(item.value.groupId)"
                 ></svg-button>
               </template>
@@ -138,7 +134,6 @@ import {
   FormItem as TinyFormItem,
   DialogBox,
   Button,
-  Tooltip,
   Notify,
   Popover
 } from '@opentiny/vue'
@@ -159,7 +154,6 @@ export default {
     SvgButton,
     TinyDialogBox: DialogBox,
     TinyButton: Button,
-    TinyTooltip: Tooltip,
     TinyPopover: Popover
   },
   props: {
@@ -168,6 +162,7 @@ export default {
       default: () => []
     }
   },
+  emits: ['changeGroup'],
   setup(props) {
     const validateIcon = iconError()
     const panelState = inject('panelState', {})
@@ -428,6 +423,7 @@ export default {
     border-bottom: 1px solid var(--ti-lowcode-materials-block-group-item-border-color);
     :deep(.tiny-input__inner) {
       border-color: transparent;
+      width: 180px;
     }
   }
   .confirm-btns {
@@ -436,6 +432,9 @@ export default {
     }
     :deep(svg) {
       color: var(--ti-lowcode-component-svg-button-color);
+    }
+    :deep(.tiny-button) {
+      padding: 0 2px;
     }
   }
   &.show-underline {
@@ -453,6 +452,12 @@ export default {
   }
   .option-right {
     display: none;
+  }
+  .option-label {
+    width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 .tiny-form .tiny-form-item.edit-form-item {

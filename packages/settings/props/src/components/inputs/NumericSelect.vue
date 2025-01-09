@@ -118,7 +118,6 @@ export default {
         font-size: 14px;
         text-align: center;
         &:hover {
-          color: var(--ti-lowcode-tootip-input-colorf);
           background: var(--ti-lowcode-icon-hover-bg);
         }
       }

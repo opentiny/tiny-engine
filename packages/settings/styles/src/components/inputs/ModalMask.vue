@@ -92,7 +92,7 @@ export default {
     left: 16px;
     z-index: 1000;
     padding: 8px;
-    color: var(--ti-lowcode-toolbar-breadcrumb-color);
+    color: var(--te-common-text-secondary);
     border: 1px solid var(--ti-lowcode-tabs-border-color);
     box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
     border-radius: 8px;

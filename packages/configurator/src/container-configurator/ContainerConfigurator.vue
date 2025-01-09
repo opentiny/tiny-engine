@@ -4,7 +4,7 @@
       <template #content="{ data }">
         <div class="item-text">
           <div class="tiny-input">
-            <input v-model="data.props.title" class="tiny-input__inner" />
+            <tiny-input v-model="data.props.title" @update:modelValue="onTitleUpdate(data)" />
           </div>
         </div>
       </template>
@@ -20,16 +20,18 @@
   </div>
 </template>
 <script>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { Input } from '@opentiny/vue'
 import { MetaListItems } from '@opentiny/tiny-engine-common'
-import { useProperties, useMaterial, useHistory } from '@opentiny/tiny-engine-meta-register'
+import { useProperties, useMaterial, useHistory, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { iconDel } from '@opentiny/vue-icon'
 
 export default {
   components: {
     MetaListItems,
-    IconDel: iconDel()
+    IconDel: iconDel(),
+    TinyInput: Input
   },
   setup() {
     const { children: schemaChildren, componentName } = useProperties().getSchema()
@@ -37,33 +39,62 @@ export default {
     const childComponentName =
       configureMap[componentName]?.nestingRule?.childWhitelist?.[0] || schemaChildren?.[0]?.componentName
 
-    schemaChildren.forEach((item) => {
-      if (!item.props) {
-        item.props = {
-          title: '选项卡',
-          name: ''
+    const updateChildrenToValid = () => {
+      const schema = useProperties().getSchema()
+      const schemaChildren = schema.children || []
+      let hasUpdate = false
+
+      const newChildren = schemaChildren.map((item) => {
+        if (!item.props) {
+          hasUpdate = true
+
+          item.props = {
+            title: '选项卡',
+            name: ''
+          }
         }
+
+        return item
+      })
+
+      const { operateNode } = useCanvas()
+
+      if (hasUpdate) {
+        operateNode({ type: 'updateAttributes', id: schema.id, value: { children: newChildren } })
       }
+    }
+
+    onMounted(() => {
+      updateChildrenToValid()
     })
 
     const children = ref(schemaChildren)
     const addChildren = () => {
       const name = utils.guid()
-
-      schemaChildren.push({
+      const schema = useProperties().getSchema()
+      const newNodeData = {
         componentName: childComponentName,
         props: {
           title: '选项卡',
           name
         },
         children: [{ componentName: 'div' }]
-      })
+      }
+
+      const { operateNode } = useCanvas()
+
+      operateNode({ type: 'insert', parentId: schema.id, newNodeData, position: 'after' })
+
       children.value = [...schemaChildren]
     }
 
     const delChildren = (data) => {
-      schemaChildren.splice(children.value.indexOf(data), 1)
+      const { operateNode } = useCanvas()
+
+      operateNode({ type: 'delete', id: data.id })
+
       children.value = [...schemaChildren]
+
       useHistory().addHistory()
     }
 
@@ -74,14 +105,34 @@ export default {
         return
       }
 
-      const list = schemaChildren
-      const spliceItem = list.splice(oldIndex, 1)
+      const schema = useProperties().getSchema()
+      const schemaChildren = schema.children
 
-      list.splice(newIndex, 0, ...spliceItem)
-      children.value = [...list]
+      const { operateNode } = useCanvas()
+
+      const newNodeData = schemaChildren[oldIndex]
+      const referTargetNodeId = schemaChildren[newIndex].id
+
+      operateNode({ type: 'delete', id: schemaChildren[oldIndex].id })
+      operateNode({
+        type: 'insert',
+        parentId: schema.id,
+        newNodeData,
+        position: newIndex < oldIndex ? 'before' : 'after',
+        referTargetNodeId
+      })
+
+      children.value = [...schemaChildren]
     }
 
-    return { children, addChildren, delChildren, dragEnd }
+    const onTitleUpdate = (value) => {
+      const { operateNode } = useCanvas()
+      const id = value.id
+
+      operateNode({ type: 'changeProps', id, value: { props: value.props } })
+    }
+
+    return { children, addChildren, delChildren, dragEnd, onTitleUpdate }
   }
 }
 </script>

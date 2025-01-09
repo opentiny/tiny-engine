@@ -18,7 +18,9 @@
         </tiny-input>
       </div>
       <div class="btn-box">
-        <tiny-button @click="openEditor($event, {})"><icon-plus class="btn-icon"></icon-plus>添加词条</tiny-button>
+        <tiny-button @click="openEditor($event, {})">
+          <svg-icon name="add" class="btn-icon"></svg-icon>添加词条
+        </tiny-button>
         <tiny-button class="middle-btn" @click="batchDelete" :disabled="!selectedRowLength"
           ><svg-icon class="btn-icon" name="delete"></svg-icon>删除</tiny-button
         >
@@ -76,14 +78,12 @@
           <tiny-grid-column width="90" field="operation" title="操作">
             <template v-slot="data">
               <div v-if="editingRow !== data.row" class="i18n-opera">
-                <tiny-tooltip class="item" effect="dark" placement="bottom" content="编辑" :open-delay="500">
-                  <span class="icon">
-                    <svg-icon name="to-edit" @click.stop="openEditor($event, data.row)"></svg-icon>
-                  </span>
-                </tiny-tooltip>
-                <tiny-tooltip class="item" effect="dark" placement="bottom" :open-delay="500">
+                <span class="icon">
+                  <svg-icon name="to-edit" @click.stop="openEditor($event, data.row)"></svg-icon>
+                </span>
+                <tiny-tooltip class="item" effect="dark" placement="bottom" :open-delay="OPEN_DELAY.Default">
                   <template #content>
-                    <div style="padding: 10px 20px">
+                    <div>
                       复制键值（唯一标识）<br />
                       {{ data.row.key }}
                     </div>
@@ -102,17 +102,15 @@
                     </template>
                   </tiny-popover>
                 </tiny-tooltip>
-                <tiny-tooltip class="item" effect="dark" placement="bottom" content="删除" :open-delay="500">
-                  <span class="icon">
-                    <svg-icon name="delete" @click="openDeletePopover(data.row)"></svg-icon>
-                  </span>
-                </tiny-tooltip>
+                <span class="icon">
+                  <svg-icon name="delete" @click="openDeletePopover(data.row)"></svg-icon>
+                </span>
               </div>
             </template>
           </tiny-grid-column>
           <template #empty>
             <div v-if="isLoading" id="empty-loading-box" class="i18n-loading"></div>
-            <search-empty isShow="!isLoading" />
+            <search-empty v-else />
           </template>
         </tiny-grid>
       </div>
@@ -121,15 +119,16 @@
 </template>
 
 <script lang="jsx">
-import { computed, ref, watchEffect, reactive, onMounted, nextTick, resolveComponent } from 'vue'
+import { computed, ref, watchEffect, reactive, onMounted, nextTick, resolveComponent, watch } from 'vue'
 import useClipboard from 'vue-clipboard3'
 import { Grid, GridColumn, Input, Popover, Button, FileUpload, Loading, Tooltip, Select } from '@opentiny/vue'
-import { iconLoadingShadow, iconPlus, iconUpload } from '@opentiny/vue-icon'
+import { iconLoadingShadow, iconUpload } from '@opentiny/vue-icon'
 import { PluginPanel, SearchEmpty } from '@opentiny/tiny-engine-common'
 import { useTranslate, useModal, useHelp, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
-import { utils } from '@opentiny/tiny-engine-utils'
+import { utils, constants } from '@opentiny/tiny-engine-utils'
 import { BASE_URL } from '@opentiny/tiny-engine-common/js/environments'
+const { OPEN_DELAY } = constants
 
 export default {
   components: {
@@ -143,7 +142,6 @@ export default {
     TinySelect: Select,
     TinyFileUpload: FileUpload,
     SearchEmpty,
-    IconPlus: iconPlus(),
     IconUpload: iconUpload()
   },
   setup() {
@@ -243,13 +241,16 @@ export default {
       }
     }
 
-    watchEffect(() => {
-      langList.value = fullLangList.value.filter((item) => {
-        const reg = new RegExp(searchKey.value, 'i')
-        return reg.test(item?.zh_CN) || reg.test(item?.en_US) || reg.test(item?.key)
-      })
-      sortTypeChanges(currentSearchType.value)
-    })
+    watch(
+      () => [fullLangList.value, currentSearchType.value, searchKey.value],
+      () => {
+        langList.value = fullLangList.value.filter((item) => {
+          const reg = new RegExp(searchKey.value, 'i')
+          return reg.test(item?.zh_CN) || reg.test(item?.en_US) || reg.test(item?.key)
+        })
+        sortTypeChanges(currentSearchType.value)
+      }
+    )
 
     watchEffect(() => {
       if (i18nResource.locales.length) {
@@ -281,7 +282,6 @@ export default {
       confirm({
         title: '批量删除',
         message: `您确定删除 ${i18nData.length} 条数据吗？`,
-        status: 'warning',
         exec: () => {
           const keys = i18nData.map(({ key }) => key)
           useTranslate().removeI18n(keys)
@@ -327,9 +327,9 @@ export default {
       copyRowIndex.value = rowIndex
       try {
         await toClipboard(row.key)
-        copyTipContent.value = '复制成功！'
+        copyTipContent.value = '复制成功'
       } catch (e) {
-        copyTipContent.value = '复制失败！'
+        copyTipContent.value = '复制失败'
       } finally {
         setTimeout(() => {
           copyRowIndex.value = ''
@@ -425,13 +425,17 @@ export default {
       isEditMode,
       editingRow,
       batchDelete,
-      docsUrl
+      docsUrl,
+      OPEN_DELAY
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
+.plugin-panel-i18n {
+  box-shadow: 6px 0px 3px 0px var(--te-base-box-shadow-rgba-3);
+}
 .stripe-tiny-grid {
   word-wrap: break-word;
   #empty-loading-box {
@@ -468,6 +472,14 @@ export default {
   .tiny-select {
     width: 210px;
   }
+  :deep(.tiny-input) {
+    .tiny-input__prefix {
+      line-height: 1;
+    }
+    &.tiny-input-prefix .tiny-input__inner {
+      padding: 0 8px 0 26px;
+    }
+  }
 }
 
 .btn-box {
@@ -478,22 +490,12 @@ export default {
   display: flex;
   align-items: center;
   .btn-icon {
-    margin-right: 6px;
-    color: var(--ti-lowcode-i18n-icon-color);
+    font-size: 16px;
+    color: var(--te-common-icon-secondary);
+    margin-right: 4px;
   }
   .middle-btn {
     margin-left: 0;
-  }
-  :deep(.tiny-file-upload) {
-    margin-right: 8px;
-  }
-  :deep(.tiny-button--default) {
-    height: 24px;
-    line-height: 24px;
-    display: flex;
-    align-items: center;
-    border: 1px solid var(--ti-lowcode-i18n-button-border-color);
-    border-radius: 4px;
   }
   span {
     padding-left: 12px;
@@ -510,7 +512,7 @@ export default {
   }
   .download-btn {
     cursor: pointer;
-    text-decoration: underline;
+    text-decoration: none;
     display: inline-block;
     font-size: 12px;
     text-align: left;
@@ -522,6 +524,9 @@ export default {
     .tiny-button.tiny-button--text {
       color: var(--ti-lowcode-base-text-color);
     }
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 
@@ -531,6 +536,12 @@ export default {
   padding: 12px;
   border-top: 1px solid var(--ti-lowcode-i18n-border-color);
   overflow-y: scroll;
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--te-common-border-default);
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: var(--te-common-border-hover);
+  }
 
   .operation-column {
     display: flex;
@@ -574,6 +585,7 @@ export default {
     display: flex;
     justify-content: space-between;
     :deep(.icon) {
+      color: var(--te-common-icon-secondary);
       svg {
         font-size: 16px;
       }

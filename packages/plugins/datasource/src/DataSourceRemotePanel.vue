@@ -251,7 +251,6 @@ export default {
       color: var(--ti-lowcode-datasource-toolbar-breadcrumb-color);
     }
     .send {
-      margin-bottom: 14px;
     }
     .tip-dot {
       padding-left: 4px;
@@ -271,16 +270,11 @@ export default {
     :deep(.send-service) {
       text-align: right;
       border-top: 1px solid var(--ti-lowcode-datasource-tabs-border-color);
-      padding: 20px 10px;
-      margin-bottom: 10px;
+      padding: 12px 0px 0px;
 
       .use-service {
         text-align: left;
         padding-top: 5px;
-
-        div {
-          margin-bottom: 5px;
-        }
       }
 
       .title {
@@ -301,23 +295,28 @@ export default {
       overflow-y: scroll;
       :deep(.tiny-tabs.tiny-tabs--button-card .tiny-tabs__item) {
         border-radius: 4px;
+        &:hover {
+          color: var(--te-common-text-primary);
+        }
       }
       :deep(.tiny-tabs__content) {
         margin: 12px 0;
       }
       :deep(.is-active) {
         .tiny-tabs__item__title {
-          color: var(--ti-lowcode-datasource-tabs-bottom-border-color);
+          color: var(--te-common-text-primary);
         }
       }
-      :deep(.tiny-tabs__item__title) {
-        font-size: 14px;
-      }
     }
-    :deep(.tiny-tabs__item__title) {
-      margin-right: 20px;
-      margin-left: 15px;
-      color: var(--ti-lowcode-datasource-label-color);
+    :deep(.tiny-collapse) {
+      .tiny-collapse-item:first-child {
+        border-top: 0;
+      }
+      .tiny-collapse-item__header {
+        .tiny-collapse-item__word-overflow {
+          margin: var(--te-common-vertical-item-spacing-normal) 0px 0;
+        }
+      }
     }
   }
 }

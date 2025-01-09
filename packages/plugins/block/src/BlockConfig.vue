@@ -24,12 +24,12 @@
         ></tiny-input>
       </div>
     </tiny-form-item>
-    <tiny-form-item label="区块分类" prop="categoryId">
+    <tiny-form-item :label="groupLabels.select" prop="categoryId">
       <tiny-select
         ref="groupSelect"
         v-model="formData.categoryId"
         popper-class="block-popper"
-        placeholder="默认分类"
+        :placeholder="groupLabels.selectPlaceholder"
         :options="categoryList"
         filterable
         :filter-method="categoryFilter"
@@ -122,7 +122,7 @@ export default {
     TinyOption: Option
   },
   setup() {
-    const { getCategoryList } = useBlock()
+    const { getCategoryList, shouldReplaceCategoryWithGroup } = useBlock()
     const nameCn = 'name_cn'
     const state = reactive({
       inputVisible: false,
@@ -247,6 +247,16 @@ export default {
       }
     }
 
+    const groupLabels = shouldReplaceCategoryWithGroup()
+      ? {
+          select: '区块分组',
+          selectPlaceholder: '默认分组'
+        }
+      : {
+          select: '区块分类',
+          selectPlaceholder: '默认分类'
+        }
+
     return {
       isVsCodeEnv,
       state,
@@ -265,7 +275,8 @@ export default {
       clearValidateForm,
       blockForm,
       categoryFilter,
-      changeBlockProperty
+      changeBlockProperty,
+      groupLabels
     }
   }
 }

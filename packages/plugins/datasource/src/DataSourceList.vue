@@ -14,6 +14,7 @@
           <div class="item-handler">
             <svg-button
               class="set-page"
+              :hoverBgColor="false"
               tips="编辑静态数据"
               name="data-edit"
               @mousedown.stop.prevent="openRecordListPanel(item, index)"
@@ -21,6 +22,7 @@
             </svg-button>
             <svg-button
               class="set-page"
+              :hoverBgColor="false"
               tips="设置数据源"
               name="text-source-setting"
               @mousedown.stop.prevent="openDataSourceForm(item, index)"
@@ -34,12 +36,13 @@
   <data-source-record-list
     :data="state.currentData"
     @edit="openDataSourceForm(dataSourceList[activeIndex], activeIndex)"
+    @refresh="refresh()"
   ></data-source-record-list>
 </template>
 
 <script>
 import { onMounted, reactive, ref } from 'vue'
-import { useDataSource, useResource, useCanvas, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { useDataSource, useResource, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { close as closeRemotePanel } from './DataSourceRemotePanel.vue'
 import { close as closeDataSourceForm } from './DataSourceForm.vue'
 import DataSourceRecordList, { open as openRecordList } from './DataSourceRecordList.vue'
@@ -56,7 +59,8 @@ export const refresh = () => {
   const selectedId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id || url.get('id')
   fetchDataSourceList(selectedId).then((data) => {
     dataSourceList.value = data
-    useCanvas().canvasApi.value.setDataSourceMap(data)
+
+    useResource().appSchemaState.dataSource = data
   })
 }
 
@@ -78,7 +82,7 @@ export default {
     const { dataSourceState, saveDataSource } = useDataSource()
 
     onMounted(() => {
-      dataSourceList.value = useResource().resState.dataSource
+      dataSourceList.value = useResource().appSchemaState.dataSource
     })
 
     // 打开新增数据面板
@@ -110,7 +114,8 @@ export default {
       openRecordListPanel,
       openDataSourceForm,
       dataSourceList,
-      activeIndex
+      activeIndex,
+      refresh
     }
   }
 }
@@ -127,7 +132,7 @@ export default {
   .datasource-list {
     flex-grow: 1;
     padding-top: 12px;
-    border-top: 1px solid var(--ti-lowcode-data-source-border-color);
+    border-top: 1px solid var(--ti-lowcode-datasource-border-color);
   }
   .datasource-list-item {
     box-shadow: var(--ti-lowcode-datasource-tabs-border-color) 0, -1px;
@@ -152,7 +157,7 @@ export default {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      color: var(--ti-lowcode-base-gray-90);
+      color: var(--te-common-text-primary);
       .item-name {
         display: flex;
         align-items: center;
@@ -171,6 +176,9 @@ export default {
         height: 16px;
         margin-top: 6px;
         color: var(--ti-lowcode-datasource-toolbar-more-hover-color);
+        &:hover {
+          color: var(--ti-lowcode-toolbar-icon-color);
+        }
       }
     }
   }

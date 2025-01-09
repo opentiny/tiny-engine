@@ -14,7 +14,7 @@
       <div>
         <tiny-checkbox v-model="state.repeat" @change="changeRepeat">Repeat</tiny-checkbox>
       </div>
-      <span><svg-icon name="clock-small"></svg-icon></span>
+      <span><svg-icon name="restart"></svg-icon></span>
     </div>
     <div class="color">
       <label for="">Color</label>

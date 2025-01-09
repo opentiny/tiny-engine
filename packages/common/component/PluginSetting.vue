@@ -9,15 +9,14 @@
       </slot>
       <div class="button-group-wrap">
         <slot name="header">
-          <div v-if="showIfFullScreen" class="cursor" @click="fullScreen">
-            <icon-fullscreen v-if="!state.isFullScreen" class="icon-fullscreen"></icon-fullscreen>
-            <icon-minscreen v-if="state.isFullScreen" class="icon-minscreen"></icon-minscreen>
-            <span class="full-screen-label">{{ getFullScreenLabel(state.isFullScreen) }}</span>
-          </div>
           <tiny-button v-if="!isIconButton" type="info" @click="$emit('save')" class="plugin-save">保存</tiny-button>
           <tiny-button v-if="isIconButton" :icon="icon" type="info" @click="$emit('add')">
             {{ iconButtonText }}
           </tiny-button>
+          <div v-if="showIfFullScreen" class="cursor" @click="fullScreen">
+            <svg-icon v-if="!state.isFullScreen" name="full-screen"></svg-icon>
+            <svg-icon v-if="state.isFullScreen" name="cancel-full-screen"></svg-icon>
+          </div>
           <icon-close class="icon-close close" @click="$emit('cancel')"></icon-close>
         </slot>
       </div>
@@ -32,7 +31,7 @@
 <script>
 import { reactive, watchEffect } from 'vue'
 import { Button } from '@opentiny/vue'
-import { iconPlus, iconFullscreen, iconMinscreen, iconClose } from '@opentiny/vue-icon'
+import { iconPlus, iconClose } from '@opentiny/vue-icon'
 
 const EVENTS = {
   FULL_SCREEN_CHANGE: 'fullScreenChange',
@@ -45,8 +44,6 @@ const EVENTS = {
 export default {
   components: {
     TinyButton: Button,
-    IconFullscreen: iconFullscreen(),
-    IconMinscreen: iconMinscreen(),
     IconClose: iconClose()
   },
   props: {
@@ -114,8 +111,6 @@ export default {
       state,
       fullScreen,
       getFullScreenLabel,
-      IconFullscreen: iconFullscreen(),
-      IconMinscreen: iconMinscreen(),
       IconClose: iconClose()
     }
   }
@@ -125,7 +120,7 @@ export default {
 <style lang="less" scoped>
 .plugin-setting {
   position: absolute;
-  left: calc(var(--base-left-panel-width) - 6px);
+  left: var(--base-left-panel-width);
   top: 0;
   width: var(--base-collection-panel-width);
   height: 100%;
@@ -134,8 +129,9 @@ export default {
   overflow: hidden;
   border-left: 1px solid var(--ti-lowcode-plugin-panel-header-border-bottom-color);
   &:not(.second-panel) {
-    box-shadow: 6px 0px 3px 0px rgba(0, 0, 0, 0.05);
+    box-shadow: 6px 0px 3px 0px var(--te-base-box-shadow-rgba-3);
     border-right: none;
+    border-left: none;
   }
   &.full-screen {
     width: var(--base-collection-panel-full-screen-width);
@@ -154,11 +150,12 @@ export default {
   }
 
   .cursor {
+    margin-left: 12px;
     cursor: pointer;
   }
 
   .close {
-    margin-left: 16px;
+    margin-left: 12px;
     cursor: pointer;
   }
 
@@ -176,6 +173,10 @@ export default {
     .plugin-setting-header-title {
       font-size: 12px;
       font-weight: 700;
+      margin-right: 20px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     :deep(.svg-button + .svg-button) {
       margin: 0;

@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-plugin-materials",
-  "version": "2.0.0-rc.4",
+  "version": "2.1.0",
   "publishConfig": {
     "access": "public"
   },
@@ -25,6 +25,7 @@
   "license": "MIT",
   "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
+    "@opentiny/tiny-engine-block-compiler": "workspace:*",
     "@opentiny/tiny-engine-builtin-component": "workspace:*",
     "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-meta-register": "workspace:*",

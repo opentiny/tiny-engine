@@ -4,13 +4,14 @@
       <template #suffix>
         <tiny-popover
           ref="popoverRef"
-          width="260"
+          width="340"
           trigger="click"
           :visible-arrow="false"
-          popper-class="lowcode"
+          popper-class="i18n-input-popover"
           @hide="onHide"
         >
           <div class="popover-content">
+            <h3 class="title">绑定国际化</h3>
             <icon-close class="icon-close" @click="closePopover"></icon-close>
             <bind-i18n
               ref="addI1i8nRef"
@@ -25,7 +26,7 @@
           </div>
 
           <template #reference>
-            <icon-language :class="['icon-language', { isBind }]"></icon-language>
+            <svg-icon name="internationalization" :class="['icon-language', { isBind }]"></svg-icon>
           </template>
         </tiny-popover>
       </template>
@@ -37,7 +38,7 @@
 import { computed, ref, watchEffect } from 'vue'
 import { useTranslate } from '@opentiny/tiny-engine-meta-register'
 import { Input, Popover } from '@opentiny/vue'
-import { IconClose, IconLanguage } from '@opentiny/vue-icon'
+import { IconClose } from '@opentiny/vue-icon'
 import BindI18n from './BindI18n.vue'
 
 export default {
@@ -46,8 +47,7 @@ export default {
     TinyInput: Input,
     BindI18n,
     TinyPopover: Popover,
-    IconClose: IconClose(),
-    IconLanguage: IconLanguage()
+    IconClose: IconClose()
   },
   inheritAttrs: false,
   props: {
@@ -124,9 +124,27 @@ export default {
   }
 }
 .popover-content {
-  text-align: right;
-  .icon-close {
-    margin-right: 5px;
+  position: relative;
+
+  .title {
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-size: 14px;
+    line-height: 20px;
   }
+  .icon-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+}
+.icon-language {
+  color: var(--te-common-icon-secondary);
+}
+</style>
+
+<style>
+.tiny-popover.tiny-popover.tiny-popper[x-placement].i18n-input-popover {
+  padding: 20px;
 }
 </style>

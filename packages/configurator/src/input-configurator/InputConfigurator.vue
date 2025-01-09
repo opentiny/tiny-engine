@@ -66,7 +66,7 @@ export default {
   font-size: 16px;
   &:hover {
     cursor: pointer;
-    color: var(--ti-lowcode-dialog-font-color);
+    color: var(--te-common-text-primary);
   }
 }
 </style>

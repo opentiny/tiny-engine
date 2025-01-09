@@ -48,10 +48,10 @@ export default {
   },
   setup(props) {
     const { confirm } = useModal()
-    const { pageState, canvasApi } = useCanvas()
+    const { pageState, canvasApi, getSchema } = useCanvas()
     const { addBlockProperty, removePropertyLink, getCurrentBlock, editBlockProperty } = useBlock()
     const { PLUGIN_NAME, activePlugin } = useLayout()
-    const { schema } = canvasApi.value.getSchema?.() || {}
+    const { schema } = getSchema?.() || {}
 
     const state = reactive({
       newPropertyName: ''

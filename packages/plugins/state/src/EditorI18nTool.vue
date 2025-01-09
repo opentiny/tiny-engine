@@ -28,7 +28,7 @@
     </div>
 
     <template #reference>
-      <tiny-tooltip content="插入国际化词条" placement="top">
+      <tiny-tooltip content="插入国际化词条" placement="top" :open-delay="OPEN_DELAY.Default">
         <svg-icon name="internationalization" @click="openPopover"></svg-icon>
       </tiny-tooltip>
     </template>
@@ -41,6 +41,8 @@ import { Button, Popover, Tooltip } from '@opentiny/vue'
 import { iconClose } from '@opentiny/vue-icon'
 import { BindI18n } from '@opentiny/tiny-engine-common'
 import { useTranslate } from '@opentiny/tiny-engine-meta-register'
+import { constants } from '@opentiny/tiny-engine-utils'
+const { OPEN_DELAY } = constants
 
 export default {
   components: {
@@ -115,7 +117,8 @@ export default {
       onClosePopover,
       createI18n,
       handleChooseI18n,
-      handleConfirm
+      handleConfirm,
+      OPEN_DELAY
     }
   }
 }

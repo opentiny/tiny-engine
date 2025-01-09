@@ -227,6 +227,9 @@ export default {
     :deep(.tiny-tabs__nav.is-show-active-bar) .tiny-tabs__item {
       margin-right: 0;
     }
+    :deep(.tiny-tabs.tiny-tabs .tiny-tabs__header .tiny-tabs__nav-wrap-not-separator::after) {
+      background-color: transparent;
+    }
   }
 }
 
@@ -302,6 +305,13 @@ export default {
 
       svg {
         font-size: 18px;
+      }
+      .public-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 26px;
+        height: 26px;
       }
     }
   }

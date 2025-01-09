@@ -36,7 +36,7 @@ import { reactive, watch, ref } from 'vue'
 import { Grid, GridColumn, Button } from '@opentiny/vue'
 import { format } from '@opentiny/vue-renderless/common/date'
 import { PluginSetting, CloseIcon, SearchEmpty } from '@opentiny/tiny-engine-common'
-import { useBlock, useModal } from '@opentiny/tiny-engine-meta-register'
+import { useBlock, useModal, useMaterial, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { fetchBlockById, requestGroupBlockVersion } from './http'
 import { useVersionSelectPanel } from './js/usePanel'
 
@@ -67,7 +67,7 @@ export default {
           state.backupList = data.histories?.reverse?.() || []
         })
         .catch((error) => {
-          message({ message: `获取区块版本失败: ${error.message || error}`, status: 'error' })
+          message({ message: `获取区块版本失败: ${error.message || error}`, title: '区块版本获取失败' })
         })
     }
 
@@ -87,18 +87,15 @@ export default {
               .then(() => {
                 isRefresh.value = true
                 closePanel()
-                confirm({
-                  title: '切换区块版本成功',
-                  message: `${selectedBlock.value.label}区块，已切换为${selectedRow.version}版本，修改版本后需要刷新页面才生效，是否刷新页面？`,
-                  exec: () => {
-                    window.location.reload()
-                  }
-                })
+                // 刷新缓存
+                useMaterial().updateBlockCompileCache()
+                // 刷新画布
+                useCanvas().canvasApi.value?.updateCanvas()
               })
               .catch((error) => {
                 message({
-                  message: `${selectedBlock.value.label}区块切换版本失败：${error.message || error}`,
-                  status: 'error'
+                  title: '切换区块版本失败',
+                  message: `${selectedBlock.value.label}区块切换版本失败：${error.message || error}`
                 })
               })
           }

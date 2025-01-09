@@ -39,14 +39,12 @@ export default {
 <style lang="less" scoped>
 .request-load {
   display: flex;
-  margin-bottom: 15px;
-  margin-top: -10px;
+  margin-bottom: 12px;
+  margin-top: 12px;
 
   .use-service {
-    color: var(--ti-lowcode-data-source-color);
+    color: var(--ti-lowcode-datasource-color);
     font-size: 12px;
-    margin-top: 2px;
-    padding-left: 8px;
 
     span {
       color: var(--ti-lowcode-datasource-description-warning-color);

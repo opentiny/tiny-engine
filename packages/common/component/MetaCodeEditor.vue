@@ -255,7 +255,8 @@ export default {
         minimap: {
           enabled: false
         }
-      }
+      },
+      locale
     }
   }
 }
@@ -302,8 +303,9 @@ export default {
   width: 100%;
   height: 24px;
   padding: 4px;
+  padding-left: 10px;
   border: 1px solid var(--ti-lowcode-meta-codeEditor-border-color);
-  border-radius: 6px;
+  border-radius: var(--te-base-border-radius-1);
 
   &:hover {
     border-color: var(--ti-lowcode-meta-codeEditor-border-hover-color);

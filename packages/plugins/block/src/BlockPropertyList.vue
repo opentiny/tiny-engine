@@ -1,7 +1,7 @@
 <template>
   <div class="add-button">
     <tiny-button @click="addProperty">
-      <icon-plus class="icon-plus"></icon-plus>
+      <svg-icon name="add"></svg-icon>
       <span>添加</span>
     </tiny-button>
   </div>
@@ -12,8 +12,8 @@
       </div>
     </template>
     <template #operate="{ data }">
-      <svg-button name="to-edit" tips="编辑" placement="top" @click="handleEdit(data)"></svg-button>
-      <svg-button name="delete" tips="删除" placement="top" @click="del(data)"></svg-button>
+      <svg-button name="to-edit" class="opt-button" :hoverBgColor="false" @click="handleEdit(data)"></svg-button>
+      <svg-button name="delete" class="opt-button" :hoverBgColor="false" @click="del(data)"></svg-button>
     </template>
   </meta-list-items>
 </template>
@@ -21,7 +21,6 @@
 <script>
 import { computed } from 'vue'
 import { Button as TinyButton } from '@opentiny/vue'
-import { iconPlus } from '@opentiny/vue-icon'
 import { remove } from '@opentiny/vue-renderless/common/array'
 import { MetaListItems, SvgButton } from '@opentiny/tiny-engine-common'
 import {
@@ -36,8 +35,7 @@ export default {
   components: {
     TinyButton,
     SvgButton,
-    MetaListItems,
-    IconPlus: iconPlus()
+    MetaListItems
   },
   setup() {
     const list = computed(() => getEditBlockPropertyList() || [])
@@ -105,6 +103,13 @@ export default {
   .icon-plus {
     margin-right: 6px;
     stroke: var(--te-common-text-weaken);
+  }
+}
+.opt-button {
+  color: var(--te-common-icon-secondary);
+  width: auto;
+  &:last-child {
+    margin-right: var(--te-base-space-3x);
   }
 }
 </style>

@@ -4,22 +4,22 @@
       <tiny-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id"> </tiny-option>
     </tiny-select>
     <tiny-tooltip class="item" effect="dark" content="刷新数据源" placement="top">
-      <icon-conment-refresh @click="refreshData"></icon-conment-refresh>
+      <icon-common-refresh @click="refreshData"></icon-common-refresh>
     </tiny-tooltip>
   </div>
 </template>
 
 <script lang="jsx">
-import { useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
-import { Option, Select, Tooltip } from '@opentiny/vue'
-import { IconConmentRefresh } from '@opentiny/vue-icon'
 import { nextTick, ref } from 'vue'
+import { Option, Select, Tooltip } from '@opentiny/vue'
+import { iconConmentRefresh as iconCommonRefresh } from '@opentiny/vue-icon'
+import { useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
     TinySelect: Select,
     TinyOption: Option,
-    IconConmentRefresh: IconConmentRefresh(),
+    IconCommonRefresh: iconCommonRefresh(),
     TinyTooltip: Tooltip
   },
   props: {
@@ -48,6 +48,8 @@ export default {
     const fetchDataSourceList = (appId) => getMetaApi(META_SERVICE.Http).get(`/app-center/api/sources/list/${appId}`)
 
     const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
+
+    // 获取数据源列表
     fetchDataSourceList(appId).then((data) => {
       options.value = data
     })

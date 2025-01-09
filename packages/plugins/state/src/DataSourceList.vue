@@ -9,9 +9,9 @@
             <span class="name">{{ key }}</span>
           </div>
           <div class="item-head-right">
-            <svg-button name="to-edit" tips="编辑" @click="openPanel(OPTION_TYPE.UPDATE, key)"></svg-button>
-            <svg-button name="copy" tips="复制" @click="openPanel(OPTION_TYPE.COPY, key)"></svg-button>
-            <svg-button name="delete" tips="删除" @click="confirmClick(key)"></svg-button>
+            <svg-button name="to-edit" :hoverBgColor="false" @click="openPanel(OPTION_TYPE.UPDATE, key)"></svg-button>
+            <svg-button name="copy" :hoverBgColor="false" @click="openPanel(OPTION_TYPE.COPY, key)"></svg-button>
+            <svg-button name="delete" :hoverBgColor="false" @click="confirmClick(key)"></svg-button>
           </div>
         </div>
       </li>
@@ -68,7 +68,7 @@ export default {
     }
 
     const removeStoreConfirm = (key) => {
-      const appPages = useResource().resState.pageTree.filter(
+      const appPages = useResource().appSchemaState.pageTree.filter(
         (page) => page.componentName === COMPONENT_NAME.Page && page?.meta?.group !== 'publicPages'
       )
       const expression = `stores.${key}`
@@ -117,7 +117,7 @@ export default {
 <style lang="less" scoped>
 .data-source-list {
   padding-top: 12px;
-  border-top: 1px solid var(--ti-lowcode-data-source-border-color);
+  border-top: 1px solid var(--te-common-border-divider);
   overflow-y: scroll;
   .data-source-list-blank {
     font-size: 12px;

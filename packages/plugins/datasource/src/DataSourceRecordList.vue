@@ -12,7 +12,7 @@
     <template #content>
       <div class="actions">
         <tiny-button plain :disabled="!allowCreate" @click.stop="insertNewData"
-          ><icon-plus class="btn-icon"></icon-plus>新增静态数据</tiny-button
+          ><svg-icon name="add" class="btn-icon"></svg-icon>新增静态数据</tiny-button
         >
         <tiny-button plain :disabled="state.isBatchDeleteDisable" @click.stop="batchDelete"
           ><svg-icon class="btn-icon" name="delete"></svg-icon>删除</tiny-button
@@ -81,7 +81,7 @@
 import { reactive, ref, watchEffect, watch, computed } from 'vue'
 import { camelize, capitalize } from '@vue/shared'
 import { Grid, Pager, Input, Numeric, DatePicker, Switch, Slider, Link, Button } from '@opentiny/vue'
-import { iconPlus, iconUpload } from '@opentiny/vue-icon'
+import { iconUpload } from '@opentiny/vue-icon'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { useModal, useLayout, useNotify, useCanvas } from '@opentiny/tiny-engine-meta-register'
@@ -108,7 +108,6 @@ export default {
     DataSourceRecordUpload,
     TinyLink: Link,
     TinyButton: Button,
-    IconPlus: iconPlus(),
     IconUpload: iconUpload()
   },
   props: {
@@ -119,7 +118,7 @@ export default {
     }
   },
   emits: ['edit'],
-  setup(props) {
+  setup(props, { emit }) {
     const grid = ref(null)
     const { confirm } = useModal()
     const { toClipboard } = useClipboard()
@@ -289,6 +288,8 @@ export default {
       return getGridData({ page: state.pagerConfig, forceUseRemoteData }).then(({ result, page }) => {
         state.tableData = result
         state.pagerConfig.total = page.total
+        // 通知刷新mock数据到 appSchemaState
+        emit('refresh')
       })
     }
 
@@ -420,7 +421,7 @@ export default {
         }
 
         const key = `datasource${capitalize(camelize(name))}`
-        const pageSchema = useCanvas().canvasApi.value.getSchema()
+        const pageSchema = useCanvas().getSchema()
 
         if (pageSchema.state[key]) {
           pageSchema.state[key] = data.map(({ _id, ...other }) => other)
@@ -595,27 +596,16 @@ export default {
       font-size: 14px;
     }
   }
-  :deep(.tiny-button--default) {
-    height: 24px;
-    line-height: 24px;
-    display: flex;
-    align-items: center;
-    border: 1px solid var(--ti-lowcode-i18n-button-border-color);
-    border-radius: 4px;
-  }
-  .btn-icon {
-    margin-right: 6px;
-    color: var(--ti-lowcode-datasource-tip-color);
-    font-size: 12px;
-  }
   .download {
-    margin: 0 12px;
-    text-decoration: underline;
+    text-decoration: none;
     display: inline-block;
     font-size: 12px;
     text-align: left;
     padding: 0;
-    color: var(--ti-lowcode-base-text-color);
+    &:hover {
+      text-decoration: underline;
+    }
+    color: var(--te-common-text-primary);
     .icon-download {
       margin: 0 1px 4px 0;
       font-size: 16px;
@@ -631,10 +621,9 @@ export default {
   .empty-icon {
     width: 50px;
     height: 50px;
-    color: var(--ti-lowcode-datasource-common-empty-color);
   }
   .add-column {
-    color: var(--ti-lowcode-datasource-json-border-colorr);
+    color: var(--ti-lowcode-datasource-json-border-color);
     cursor: pointer;
   }
 }
@@ -646,6 +635,7 @@ export default {
     align-items: center;
     .svg-icon {
       margin-right: 10px;
+      color: var(--te-common-icon-secondary);
     }
   }
 }

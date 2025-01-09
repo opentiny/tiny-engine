@@ -50,8 +50,7 @@ export default {
       if (pageStatus.state === PAGE_STATUS.Lock) {
         const username = pageStatus.data?.username || ''
         message({
-          message: `您点击的页面被${username}锁定，暂时无法编辑，请联系解锁`,
-          status: 'info'
+          message: `您点击的页面被${username}锁定，暂时无法编辑，请联系解锁`
         })
         return
       }

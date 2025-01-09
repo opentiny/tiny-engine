@@ -16,7 +16,7 @@
           ref="groupSelect"
           v-model="state.categoryId"
           popper-class="block-popper"
-          placeholder="默认展示全部分类"
+          :placeholder="groupLabels.selectPlaceholder"
           filterable
           :filter-method="categoryFilter"
           clearable
@@ -37,7 +37,12 @@
             <div class="block-item">
               <span>{{ item.name }}</span>
               <div class="item-btns">
-                <svg-button class="item-icon" name="to-edit" title="编辑" @click.stop="editCategory(item)"></svg-button>
+                <svg-button
+                  class="item-icon"
+                  name="to-edit"
+                  :hoverBgColor="false"
+                  @click.stop="editCategory(item)"
+                ></svg-button>
                 <tiny-popover
                   :modelValue="state.currentDeleteGroupId === item.id"
                   placement="right"
@@ -48,7 +53,7 @@
                   <div class="popper-confirm" @mousedown.stop="">
                     <div class="popper-confirm-header">
                       <svg-icon class="icon" name="warning"></svg-icon>
-                      <span class="title">您确定删除该区块分类吗？</span>
+                      <span class="title">{{ groupLabels.deletePrompt }}</span>
                     </div>
                     <div class="popper-confirm-footer">
                       <tiny-button class="confirm-btn" size="small" type="primary" @click="delCategory(item.id)"
@@ -64,7 +69,7 @@
                       v-if="!item.blocks.length"
                       class="item-icon"
                       name="delete"
-                      title="删除"
+                      :hoverBgColor="false"
                       @click.stop="handleShowDeleteModal(item.id)"
                     ></svg-button>
                   </template>
@@ -328,8 +333,20 @@ export default {
       }
     }
 
+    const groupLabels = useBlock().shouldReplaceCategoryWithGroup()
+      ? {
+          selectPlaceholder: '默认展示全部分组',
+          deletePrompt: '您确定删除该区块分组吗？',
+          deleteTitle: '删除分组'
+        }
+      : {
+          selectPlaceholder: '默认展示全部分类',
+          deletePrompt: '您确定删除该区块分类吗？',
+          deleteTitle: '删除分类'
+        }
+
     const changeCategory = (val) => {
-      let params = { categoryId: val }
+      let params = useBlock().shouldReplaceCategoryWithGroup() ? { groupId: val } : { categoryId: val }
 
       if (!val) {
         params = {}
@@ -350,7 +367,7 @@ export default {
 
     const deleteItem = (item) => {
       confirm({
-        title: '删除分类',
+        title: groupLabels.deleteTitle,
         status: 'custom',
         message: {
           render() {
@@ -424,7 +441,8 @@ export default {
       handleChangeDeletePopoverVisible,
       handleSelectVisibleChange,
       externalBlock,
-      docsUrl
+      docsUrl,
+      groupLabels
     }
   }
 }
@@ -487,11 +505,25 @@ export default {
   bottom: 0;
   left: -6px;
   right: 0;
-  padding: 10px 16px;
+  padding: 8px 16px;
   background-color: var(--ti-lowcode-component-search-bg);
+  border-top: 1px solid var(--te-common-border-divider);
   color: var(--ti-lowcode-component-block-list-item-color);
   display: flex;
   justify-content: space-between;
+  :deep(.tiny-dropdown) {
+    color: var(--te-common-text-primary);
+    .tiny-dropdown__trigger:not(.tiny-dropdown__caret-button):not(.is-disabled):hover {
+      color: var(--te-common-text-primary);
+    }
+    .tiny-dropdown__suffix-inner {
+      color: var(--te-common-icon-secondary);
+      height: 10px;
+    }
+  }
+  :deep(.tiny-dropdown-menu) {
+    padding: var(--te-common-vertical-form-label-spacing) 0;
+  }
   .footer-layout {
     font-size: 12px;
     color: var(--ti-lowcode-component-block-list-item-color);
@@ -511,6 +543,17 @@ export default {
   border-radius: 4px;
   height: 24px;
   line-height: 24px;
+}
+:deep(.tiny-dropdown-item) {
+  &:not(.is-disabled):active,
+  &:not(.is-disabled):hover,
+  &:focus {
+    background-color: var(--te-common-bg-container);
+    color: var(--te-common-text-primary);
+  }
+}
+:deep(.tiny-dropdown-menu.tiny-popper[x-placement^='top']) {
+  padding: var(--te-common-vertical-form-label-spacing) 0;
 }
 </style>
 
@@ -551,5 +594,8 @@ export default {
     text-align: center;
     margin-top: 22px;
   }
+}
+.tiny-dropdown-menu.tiny-dropdown-menu {
+  padding: var(--te-common-vertical-form-label-spacing) 0;
 }
 </style>

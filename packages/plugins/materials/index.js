@@ -26,7 +26,16 @@ export default {
   options: {
     defaultTabId: 'engine.plugins.materials.component',
     displayComponentIds: ['engine.plugins.materials.component', 'engine.plugins.materials.block'],
-    basePropertyOptions
+    basePropertyOptions,
+    useBaseStyle: true,
+    blockBaseStyle: {
+      className: 'block-base-style',
+      style: 'margin: 16px;'
+    },
+    componentBaseStyle: {
+      className: 'component-base-style',
+      style: 'margin: 8px;'
+    }
   },
   components: {
     header: MaterialHeader

@@ -111,7 +111,7 @@ import { formatString } from '@opentiny/tiny-engine-common/js/ast'
 import useStyle, { updateGlobalStyleStr } from '../../js/useStyle'
 import { stringify, getSelectorArr } from '../../js/parser'
 
-const { getSchema, propsUpdateKey } = useProperties()
+const { getSchema, propsUpdateKey, setProp } = useProperties()
 
 const stateOptions = [
   { label: 'None', value: '' },
@@ -171,20 +171,25 @@ watch(
 )
 
 const setSelectorProps = (type, value) => {
-  const { getSchema: getCanvasPageSchema } = useCanvas().canvasApi.value
-  const schema = getSchema() || getCanvasPageSchema()
+  const schema = getSchema()
 
-  if (!schema.props) {
-    schema.props = {}
+  if (schema) {
+    setProp(type, value)
+    propsUpdateKey.value++
+
+    return
   }
 
-  schema.props[type] = value
+  const { getSchema: getCanvasPageSchema, updateSchema } = useCanvas()
+  const pageSchema = getCanvasPageSchema()
+
+  updateSchema({ props: { ...(pageSchema.props || {}), [type]: value } })
   propsUpdateKey.value++
 }
 
 // 编辑 className 新增、删除、或修改
 const editClassName = (curClassName, optionType = OPTION_TYPE.ADD, oldSelector = '') => {
-  const { getSchema: getCanvasPageSchema } = useCanvas().canvasApi.value
+  const { getSchema: getCanvasPageSchema } = useCanvas()
   const schema = getSchema() || getCanvasPageSchema()
   let type = ''
 
@@ -441,12 +446,11 @@ watchEffect(() => {
 
 const save = ({ content }) => {
   const cssString = formatString(content.replace(/"/g, "'"), 'css')
-  const { getPageSchema } = useCanvas()
   const { addHistory } = useHistory()
-  const { updateRect, setPageCss, getSchema: getCanvasPageSchema } = useCanvas().canvasApi.value
-  getPageSchema().css = cssString
-  getCanvasPageSchema().css = cssString
-  setPageCss(cssString)
+  const { updateRect } = useCanvas().canvasApi.value
+  const { updateSchema } = useCanvas()
+
+  updateSchema({ css: cssString })
   state.schemaUpdateKey++
 
   addHistory()
@@ -480,7 +484,7 @@ const handleDeleteCurSelector = () => {
 .title {
   margin: 0;
   font-size: 12px;
-  color: var(--ti-lowcode-className-selector-title-color);
+  color: var(--te-common-text-secondary);
   font-weight: normal;
   .help-link {
     vertical-align: middle;
@@ -516,7 +520,7 @@ const handleDeleteCurSelector = () => {
     display: flex;
     padding: 3px;
     border: 1px solid var(--ti-lowcode-className-selector-container-border-color);
-    border-radius: 6px;
+    border-radius: var(--te-base-border-radius-1);
     cursor: pointer;
   }
 
@@ -528,7 +532,7 @@ const handleDeleteCurSelector = () => {
     min-width: 0;
     padding: 1px 10px;
     border: 1px solid var(--ti-lowcode-className-selector-container-border-color);
-    border-radius: 6px;
+    border-radius: var(--te-base-border-radius-1);
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     font-size: 12px;
@@ -670,7 +674,7 @@ const handleDeleteCurSelector = () => {
     flex: 4;
     min-width: 84px;
     border: 1px solid var(--ti-lowcode-className-selector-container-border-color);
-    border-radius: 6px;
+    border-radius: var(--te-base-border-radius-1);
     border-left: none;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;

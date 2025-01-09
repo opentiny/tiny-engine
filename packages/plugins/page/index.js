@@ -19,6 +19,12 @@ export default {
   ...metaData,
   apis: api,
   entry,
+  options: {
+    pageBaseStyle: {
+      className: 'page-base-style',
+      style: 'padding: 24px;background: #FFFFFF;'
+    }
+  },
   components: {
     PageGeneral
   },

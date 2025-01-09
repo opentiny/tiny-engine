@@ -13,12 +13,12 @@
 
 <style lang="less" scoped>
 .tips {
-  font-size: 11px;
+  font-size: 12px;
   line-height: 18px;
   margin-top: 8px;
   border-radius: 4px;
   padding: 8px 14px;
-  background: var(--ti-lowcode-data-source-box-bg);
-  color: var(--ti-lowcode-datasource-tip-color);
+  background: var(--te-common-bg-container);
+  color: var(--te-common-text-weaken);
 }
 </style>

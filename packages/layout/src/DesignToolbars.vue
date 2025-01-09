@@ -36,20 +36,15 @@
       ></toolbar-collapse>
     </div>
   </div>
-  <div class="progress">
-    <progress-bar v-if="state.showDeployBlock"></progress-bar>
-  </div>
 </template>
 
 <script>
-import { reactive, nextTick } from 'vue'
+import { reactive } from 'vue'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
-import { ProgressBar } from '@opentiny/tiny-engine-common'
 import ToolbarCollapse from './ToolbarCollapse.vue'
 
 export default {
   components: {
-    ProgressBar,
     ToolbarCollapse
   },
   props: {
@@ -60,15 +55,10 @@ export default {
   },
   setup(props) {
     const state = reactive({
-      showDeployBlock: false,
       leftBar: props.layoutRegistry?.options?.toolbars?.left,
       rightBar: props.layoutRegistry?.options?.toolbars?.right,
       centerBar: props.layoutRegistry?.options?.toolbars?.center,
       collapseBar: props.layoutRegistry?.options?.toolbars?.collapse
-    })
-
-    nextTick(() => {
-      state.showDeployBlock = true
     })
 
     return {

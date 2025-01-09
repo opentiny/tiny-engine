@@ -1,6 +1,6 @@
 <template>
   <toolbar-base
-    content="画布中英文切换"
+    content="中英文切换"
     :icon="options.icon.default || options.icon"
     :options="options"
     @click-api="changeLang"

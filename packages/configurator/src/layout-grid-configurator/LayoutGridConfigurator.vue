@@ -36,7 +36,7 @@
 <script>
 import { reactive, ref, computed } from 'vue'
 import { SplitPanes, Pane } from '@opentiny/tiny-engine-common'
-import { useProperties } from '@opentiny/tiny-engine-meta-register'
+import { useProperties, useCanvas } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
@@ -195,6 +195,18 @@ export default {
       const spans = item.split(':')
       mode.value = item
 
+      const { operateNode } = useCanvas()
+      const schema = useProperties().getSchema()
+
+      if (!schema) {
+        // eslint-disable-next-line no-console
+        console.error('Error! There is no node selected. 错误！当前没有节点被选中。')
+
+        return
+      }
+
+      const cols = [...(schema?.children || [])]
+
       spans.forEach((span, index) => {
         if (cols[index]) {
           cols[index].props.span = span
@@ -217,7 +229,7 @@ export default {
         }
       })
 
-      cols.length = spans.length
+      operateNode({ type: 'updateAttributes', id: schema.id, value: { children: cols.slice(0, spans.length) } })
     }
 
     const modeClick = (index, item) => {
@@ -268,7 +280,7 @@ export default {
       box-sizing: border-box;
       width: 48px;
       border: 1px solid var(--ti-lowcode-tabs-border-color);
-      background: var(--ti-lowcode-canvas-wrap-bg);
+      background: var(--te-common-bg-container);
       border-radius: 4px;
       padding: 4px;
       margin: 0 4px 4px 4px;
@@ -313,13 +325,13 @@ export default {
     justify-content: center;
     align-items: center;
     display: flex;
-    background: var(--ti-lowcode-canvas-wrap-bg);
-    color: var(--ti-lowcode-toolbar-breadcrumb-color);
+    background: var(--te-common-bg-container);
+    color: var(--te-common-text-secondary);
     transition: none;
   }
 
   :deep(.splitpanes__splitter) {
-    background: var(--ti-lowcode-toolbar-view-hover-bg);
+    background: var(--te-common-bg-container);
     border-left: var(--ti-lowcode-tabs-border-color);
   }
 
@@ -328,7 +340,7 @@ export default {
 
     .customize {
       margin-bottom: 8px;
-      color: var(--ti-lowcode-toolbar-breadcrumb-color);
+      color: var(--te-common-text-secondary);
     }
   }
 }

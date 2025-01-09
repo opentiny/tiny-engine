@@ -1,6 +1,5 @@
 <template>
   <plugin-block-list
-    class="block-list-wrap"
     ref="blockRef"
     :data="blockList"
     :show-add-button="state.showAddButton"
@@ -16,6 +15,8 @@
     @openVersionPanel="openVersionPanel"
     @add="setBlockPanelVisible(true)"
     @deleteBlock="deleteBlock"
+    @checkAll="(items) => checkAll(items)"
+    @cancelCheckAll="cancelCheckAll"
   ></plugin-block-list>
 </template>
 
@@ -72,9 +73,9 @@ export default {
       default: 2
     }
   },
-  emits: ['check', 'close'],
+  emits: ['check', 'close', 'checkAll', 'cancelCheckAll'],
   setup(props, { emit }) {
-    const { generateNode, registerBlock } = useMaterial()
+    const { generateNode, getBlockByName } = useMaterial()
     const { isDefaultGroupId, isAllGroupId, selectedBlock, selectedGroup, isRefresh, getBlockAssetsByVersion } =
       useBlock()
     const blockRef = ref(null)
@@ -114,17 +115,19 @@ export default {
 
       block.assets = getBlockAssetsByVersion(block, block.current_version)
 
-      registerBlock(block).then(() => {
-        const blockName = block.component || block.blockName
-        const node = generateNode({ type: 'block', component: blockName })
-        const { addComponent, dragStart } = useCanvas().canvasApi.value
-        if (isShortcutPanel) {
-          emitEvent('close')
-          addComponent(node, isShortcutPanel)
-        } else {
-          dragStart(node)
-        }
-      })
+      // 获取 区块、子区块详情，并编译
+      getBlockByName(block.label)
+
+      const blockName = block.component || block.blockName || block.label
+      const node = generateNode({ type: 'block', component: blockName })
+      const { addComponent, dragStart } = useCanvas().canvasApi.value
+
+      if (isShortcutPanel) {
+        emitEvent('close')
+        addComponent(node, isShortcutPanel)
+      } else {
+        dragStart(node)
+      }
     }
 
     const openDetail = ({ item, index }) => {
@@ -166,8 +169,7 @@ export default {
       const groupId = id || selectedGroup.value.groupId
       const groupName = name || selectedGroup.value.groupName
 
-      const title = `删除区块${label}`
-      const status = 'error'
+      const title = `移除区块${label}`
       const messageRender = {
         render: () => (
           <span>
@@ -190,10 +192,18 @@ export default {
             })
           })
           .catch((error) => {
-            message({ message: `删除区块失败: ${error.message || error}`, status: 'error' })
+            message({ message: `移除区块失败: ${error.message || error}`, status: 'error' })
           })
       }
-      confirm({ title, status, message: messageRender, exec })
+      confirm({ title, message: messageRender, exec })
+    }
+
+    const checkAll = (items) => {
+      emit('checkAll', items)
+    }
+
+    const cancelCheckAll = () => {
+      emit('cancelCheckAll')
     }
 
     return {
@@ -204,7 +214,9 @@ export default {
       closeDetail,
       setBlockPanelVisible,
       openVersionPanel,
-      deleteBlock
+      deleteBlock,
+      checkAll,
+      cancelCheckAll
     }
   }
 }

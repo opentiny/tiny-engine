@@ -121,7 +121,7 @@ export default {
   setup(props, { emit }) {
     const { requestCreatePage, requestDeletePage } = http
     const {
-      DEFAULT_PAGE,
+      getDefaultPage,
       pageSettingState,
       changeTreeData,
       isCurrentDataSame,
@@ -161,7 +161,7 @@ export default {
     }
 
     const createPage = async () => {
-      const { page_content, ...other } = DEFAULT_PAGE
+      const { page_content, ...other } = getDefaultPage()
       const { page_content: page_content_state, ...pageSettingStateOther } = pageSettingState.currentPageData
       const createParams = {
         ...other,

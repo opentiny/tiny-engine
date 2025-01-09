@@ -1,6 +1,13 @@
 <template>
   <div class="block-add-transfer">
     <div class="block-add-transfer-footer">
+      <select-all
+        v-if="state.displayType === 'grid'"
+        class="block-select-all"
+        :allItems="state.blockList"
+        :selected="selectedBlockArray"
+        @select-all="handleSelectAll"
+      ></select-all>
       <slot name="search"></slot>
       <tiny-select v-model="state.selectedSort" class="transfer-order-select" placeholder="请选择">
         <tiny-option v-for="item in state.sortList" :key="item.id" :label="item.text" :value="item.id"></tiny-option>
@@ -18,6 +25,8 @@
         :checked="selectedBlockArray"
         :grid-columns="6"
         @check="checkBlock"
+        @checkAll="checkAll"
+        @cancelCheckAll="cancelCheckAll"
       ></block-list>
     </div>
   </div>
@@ -26,6 +35,7 @@
 <script>
 import { computed, onMounted, provide, reactive, watch } from 'vue'
 import { useBlock, useModal } from '@opentiny/tiny-engine-meta-register'
+import { SelectAll } from '@opentiny/tiny-engine-common'
 import BlockList from './BlockList.vue'
 import BlockGroupArrange from './BlockGroupArrange.vue'
 import { Select, Option } from '@opentiny/vue'
@@ -35,6 +45,7 @@ export default {
   components: {
     BlockList,
     BlockGroupArrange,
+    SelectAll,
     TinySelect: Select,
     TinyOption: Option
   },
@@ -45,7 +56,7 @@ export default {
     }
   },
   setup(props) {
-    const { cancelCheck, check, selectedBlockArray, sort } = useBlock()
+    const { check, cancelCheck, checkAll, cancelCheckAll, selectedBlockArray, sort } = useBlock()
 
     const sortList = [
       {
@@ -136,10 +147,21 @@ export default {
       blockSort(state.selectedSort)
     })
 
+    const handleSelectAll = (items) => {
+      if (Array.isArray(items)) {
+        checkAll(items)
+      } else {
+        cancelCheckAll()
+      }
+    }
+
     return {
       state,
       selectedBlockArray,
-      checkBlock
+      checkBlock,
+      checkAll,
+      cancelCheckAll,
+      handleSelectAll
     }
   }
 }
@@ -164,6 +186,9 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    .block-select-all {
+      margin-right: 20px;
+    }
     .transfer-order-select {
       width: 120px;
       margin-left: 8px;
