@@ -11,7 +11,7 @@
  */
 
 import { reactive } from 'vue'
-import { useResource, useNotify, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { useResource, useNotify, useMaterial, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import {
   fetchResourceList,
@@ -175,55 +175,50 @@ const generateBridgeUtil = (...args) => {
   }
 }
 
-export const saveResource = (data, callback, emit) => {
-  if (getActionType() === ACTION_TYPE.Edit) {
+export const saveResource = async (data, callback, emit) => {
+  const isEdit = getActionType() === ACTION_TYPE.Edit
+
+  if (isEdit) {
     data.id = state.resource.id
-    requestUpdateReSource(data).then((result) => {
-      if (result) {
-        const index = useResource().appSchemaState[data.category].findIndex((item) => item.name === result.name)
+    const result = await requestUpdateReSource(data)
 
-        if (index === -1) {
-          useNotify({
-            type: 'error',
-            message: '修改失败'
-          })
+    if (result) {
+      const index = useResource().appSchemaState[data.category].findIndex((item) => item.name === result.name)
 
-          return
-        }
-
-        useResource().appSchemaState[data.category][index] = result
-
-        // 更新画布工具函数环境，保证渲染最新工具类返回值, 并触发画布的强制刷新
-
-        generateBridgeUtil(getAppId())
-
+      if (index === -1) {
         useNotify({
-          type: 'success',
-          message: '修改成功'
+          type: 'error',
+          message: '修改失败'
         })
 
-        emit('refresh', state.type)
-        state.refresh = true
-        callback()
+        return
       }
-    })
+
+      useResource().appSchemaState[data.category][index] = result
+    }
   } else {
-    requestAddReSource(data).then((result) => {
-      if (result) {
-        useResource().appSchemaState[data.category].push(result)
+    const result = await requestAddReSource(data)
 
-        // 更新画布工具函数环境，保证渲染最新工具类返回值, 并触发画布的强制刷新
-        generateBridgeUtil(getAppId())
-        useNotify({
-          type: 'success',
-          message: '创建成功'
-        })
-        emit('refresh', state.type)
-        state.refresh = true
-        callback()
-      }
-    })
+    if (result) {
+      useResource().appSchemaState[data.category].push(result)
+    }
   }
+
+  // 更新画布工具函数环境，保证渲染最新工具类返回值, 并触发画布的强制刷新
+  generateBridgeUtil(getAppId())
+
+  if (data.type === 'npm') {
+    // 更新画布import并刷新画布
+    useMaterial().setCanvasDeps()
+  }
+
+  useNotify({
+    type: 'success',
+    message: `${isEdit ? '修改' : '创建'}成功`
+  })
+  emit('refresh', state.type)
+  state.refresh = true
+  callback()
 }
 
 export const deleteData = (name, callback, emit) => {
