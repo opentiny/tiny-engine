@@ -283,7 +283,7 @@ const addComponentSnippets = (componentSnippets, snippetsData) => {
  * @returns
  */
 const getUtilsDependencies = () => {
-  const { utils } = useResource().resState
+  const { utils } = useResource().appSchemaState
 
   return utils
     .filter((item) => item.type === 'npm' && item.content.cdnLink)
@@ -302,7 +302,7 @@ const getUtilsDependencies = () => {
  * 组装画布的依赖，通知画布初始化或更新importmap
  */
 const setCanvasDeps = () => {
-  const { scripts, styles } = useResource().resState.canvasDeps
+  const { scripts, styles } = useResource().appSchemaState.canvasDeps
 
   // 将utils依赖添加到canvasDeps中
   getUtilsDependencies().forEach((util) => {
@@ -323,7 +323,7 @@ const setCanvasDeps = () => {
 const parseMaterialsDependencies = (materialBundle) => {
   const { packages, components } = materialBundle
 
-  const { scripts: scriptsDeps, styles: stylesDeps } = useResource().resState.canvasDeps
+  const { scripts: scriptsDeps, styles: stylesDeps } = useResource().appSchemaState.canvasDeps
 
   packages?.forEach((pkg) => {
     if (scriptsDeps.find((item) => item.package === pkg.package)) {

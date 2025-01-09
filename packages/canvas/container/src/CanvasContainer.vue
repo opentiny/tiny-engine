@@ -113,7 +113,7 @@ export default {
     const beforeCanvasReady = () => {
       if (iframe.value) {
         const win = iframe.value.contentWindow
-        win.componentsDeps = useResource().resState.canvasDeps.scripts.filter((item) => item.components)
+        win.componentsDeps = useResource().appSchemaState.canvasDeps.scripts.filter((item) => item.components)
 
         const { subscribe, unsubscribe } = useMessage()
         const { getSchemaDiff, patchLatestSchema, getSchema, getNode } = useCanvas()

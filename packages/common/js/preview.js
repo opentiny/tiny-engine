@@ -26,7 +26,7 @@ const open = (params = {}) => {
   params.app = paramsMap.get('id')
   params.tenant = paramsMap.get('tenant')
 
-  const { scripts, styles } = useResource().resState.canvasDeps
+  const { scripts, styles } = useResource().appSchemaState.canvasDeps
   params.scripts = {}
 
   scripts
