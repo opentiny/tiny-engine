@@ -337,7 +337,7 @@ const parseMaterialsDependencies = (materialBundle) => {
     }
 
     if (Array.isArray(pkg.css)) {
-      pkg.css.map(stylesDeps.add)
+      pkg.css.forEach((item) => stylesDeps.add(item))
     } else {
       stylesDeps.add(pkg.css)
     }
@@ -359,7 +359,7 @@ const parseMaterialsDependencies = (materialBundle) => {
   }
 
   if (Array.isArray(styles)) {
-    styles.map(stylesDeps.add)
+    styles.forEach((item) => stylesDeps.add(item))
   } else {
     stylesDeps.add(styles)
   }
