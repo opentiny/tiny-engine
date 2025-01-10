@@ -10,7 +10,8 @@
       <div class="block-add-content">
         <div class="block-add-content-title">区块列表</div>
         <block-group-filters
-          ref="groupFiltersRef"
+          v-if="panel.show"
+          :key="selectedGroupId"
           :filters="state.filters"
           @search="searchBlocks"
         ></block-group-filters>
@@ -33,7 +34,7 @@
   </plugin-setting>
 </template>
 <script>
-import { nextTick, reactive, watch, provide, inject, ref } from 'vue'
+import { reactive, watch, provide, inject, ref } from 'vue'
 import { Search } from '@opentiny/vue'
 import { iconSearch } from '@opentiny/vue-icon'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
@@ -114,16 +115,24 @@ export default {
       filterValues: {}
     })
 
-    const groupFiltersRef = ref(null)
+    const selectedGroupId = ref(selectedGroup.value.groupId)
+
+    watch(
+      () => selectedGroup.value.groupId,
+      (groupId) => {
+        if (groupId && !isDefaultGroupId(groupId)) {
+          selectedGroupId.value = groupId
+        }
+      }
+    )
 
     const clearSearchParams = () => {
       state.searchValue = ''
       state.filterValues = {}
-      groupFiltersRef.value?.clearFilters()
     }
 
     const addBlocks = () => {
-      const groupId = selectedGroup.value.groupId
+      const groupId = selectedGroupId.value
       fetchGroupBlocksById({ groupId })
         .then((data) => {
           const resData =
@@ -195,25 +204,24 @@ export default {
 
     const searchBlocks = (filters) => {
       state.filterValues = filters
-      nextTick(() => {
-        const params = {
-          groupId: selectedGroup.value.groupId,
-          label_contains: state.searchValue.trim(),
-          tag: filters?.tag,
-          publicType: filters?.publicType,
-          author: filters?.author
-        }
-        fetchAvailableBlocks(params)
-          .then((data) => {
-            state.blockList = selectedBlockFilter(data)
+
+      const params = {
+        groupId: selectedGroupId.value,
+        label_contains: state.searchValue.trim(),
+        tag: filters?.tag,
+        publicType: filters?.publicType,
+        author: filters?.author
+      }
+      fetchAvailableBlocks(params)
+        .then((data) => {
+          state.blockList = selectedBlockFilter(data)
+        })
+        .catch((error) => {
+          message({
+            message: `区块搜索失败: ${error.message || error}`,
+            status: 'error'
           })
-          .catch((error) => {
-            message({
-              message: `区块搜索失败: ${error.message || error}`,
-              status: 'error'
-            })
-          })
-      })
+        })
     }
 
     const fetchBlocks = (groupId) => {
@@ -255,12 +263,8 @@ export default {
       })
     }
 
-    watch([() => panel.show, () => selectedGroup.value.groupId], ([show, groupId]) => {
+    watch([() => panel.show, selectedGroupId], ([show, groupId]) => {
       if (!show) {
-        return
-      }
-
-      if (!groupId || isDefaultGroupId(groupId)) {
         return
       }
 
@@ -272,8 +276,8 @@ export default {
 
     return {
       selectedGroup,
+      selectedGroupId,
       state,
-      groupFiltersRef,
       panel,
       closeGroupPanel,
       addBlocks,

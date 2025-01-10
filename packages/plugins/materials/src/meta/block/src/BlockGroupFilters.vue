@@ -87,15 +87,10 @@ export default {
       emit('search', state.filterValues)
     }
 
-    const clearFilters = () => {
-      state.filterValues = initFilterValues()
-    }
-
     return {
       state,
       selectOptions,
-      handleValueChange,
-      clearFilters
+      handleValueChange
     }
   }
 }
