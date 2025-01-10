@@ -1,17 +1,11 @@
 <template>
-  <plugin-setting
-    v-if="panel.created"
-    v-show="panel.show"
-    :title="selectedGroup.groupName"
-    @cancel="closeGroupPanel"
-    @save="addBlocks"
-  >
+  <plugin-setting v-if="panel.show" :title="validGroup.groupName" @cancel="closeGroupPanel" @save="addBlocks">
     <template #content>
       <div class="block-add-content">
         <div class="block-add-content-title">区块列表</div>
         <block-group-filters
           v-if="panel.show"
-          :key="selectedGroupId"
+          :key="validGroup.groupId"
           :filters="state.filters"
           @search="searchBlocks"
         ></block-group-filters>
@@ -82,7 +76,15 @@ export default {
     TinyIconSearch: iconSearch()
   },
   setup() {
-    const { isDefaultGroupId, isRefresh, selectedGroup, selectedBlockArray, getGroupList, cancelCheckAll } = useBlock()
+    const {
+      isAllGroupId,
+      isDefaultGroupId,
+      isRefresh,
+      selectedGroup,
+      selectedBlockArray,
+      getGroupList,
+      cancelCheckAll
+    } = useBlock()
     const { panel, closePanel } = useGroupPanel()
     const { message } = useModal()
     const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
@@ -115,13 +117,13 @@ export default {
       filterValues: {}
     })
 
-    const selectedGroupId = ref(selectedGroup.value.groupId)
+    const validGroup = ref({ ...selectedGroup.value })
 
     watch(
       () => selectedGroup.value.groupId,
       (groupId) => {
-        if (groupId && !isDefaultGroupId(groupId)) {
-          selectedGroupId.value = groupId
+        if (groupId && !isAllGroupId(groupId) && !isDefaultGroupId(groupId)) {
+          validGroup.value = { ...selectedGroup.value }
         }
       }
     )
@@ -132,7 +134,7 @@ export default {
     }
 
     const addBlocks = () => {
-      const groupId = selectedGroupId.value
+      const groupId = validGroup.value.groupId
       fetchGroupBlocksById({ groupId })
         .then((data) => {
           const resData =
@@ -206,7 +208,7 @@ export default {
       state.filterValues = filters
 
       const params = {
-        groupId: selectedGroupId.value,
+        groupId: validGroup.value.groupId,
         label_contains: state.searchValue.trim(),
         tag: filters?.tag,
         publicType: filters?.publicType,
@@ -263,7 +265,7 @@ export default {
       })
     }
 
-    watch([() => panel.show, selectedGroupId], ([show, groupId]) => {
+    watch([() => panel.show, () => validGroup.value.groupId], ([show, groupId]) => {
       if (!show) {
         return
       }
@@ -275,8 +277,7 @@ export default {
     })
 
     return {
-      selectedGroup,
-      selectedGroupId,
+      validGroup,
       state,
       panel,
       closeGroupPanel,
