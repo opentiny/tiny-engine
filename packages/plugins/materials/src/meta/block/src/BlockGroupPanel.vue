@@ -198,7 +198,7 @@ export default {
       nextTick(() => {
         const params = {
           groupId: selectedGroup.value.groupId,
-          label_contains: state.searchValue,
+          label_contains: state.searchValue.trim(),
           tag: filters?.tag,
           publicType: filters?.publicType,
           author: filters?.author
