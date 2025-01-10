@@ -44,6 +44,7 @@
           </tiny-grid-column>
         </tiny-grid>
       </div>
+      <draggable-tree :data="state.pageSchema" label-key="componentName"></draggable-tree>
     </template>
   </plugin-panel>
 </template>
@@ -57,6 +58,7 @@ import { IconChevronDown, iconEyeopen, iconEyeclose } from '@opentiny/vue-icon'
 import { useCanvas, useMaterial, useLayout, useMessage } from '@opentiny/tiny-engine-meta-register'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { typeOf } from '@opentiny/vue-renderless/common/type'
+import DraggableTree from './DraggableTree.vue'
 
 const { PAGE_STATUS } = constants
 export default {
@@ -65,6 +67,7 @@ export default {
     TinyGridColumn: GridColumn,
     PluginPanel,
     SvgButton,
+    DraggableTree,
     IconEyeopen: iconEyeopen(),
     IconEyeclose: iconEyeclose()
   },
@@ -99,7 +102,7 @@ export default {
         return data
       }
 
-      return [{ ...translateChild([extend(true, {}, data)])[0], componentName: 'body' }]
+      return [{ ...translateChild([extend(true, {}, data)])[0], componentName: 'body', id: 'root' }]
     }
     const state = reactive({
       pageSchema: [],
@@ -117,6 +120,14 @@ export default {
         indicator: true
       }
     })
+
+    watch(
+      () => state.pageSchema,
+      (value) => {
+        // eslint-disable-next-line no-console
+        console.log(value)
+      }
+    )
 
     const { subscribe, unsubscribe } = useMessage()
 
@@ -149,6 +160,7 @@ export default {
       }
     )
 
+    // TODO 未使用到的功能
     const toggleTree = () => {
       state.expandAll = !state.expandAll
     }
