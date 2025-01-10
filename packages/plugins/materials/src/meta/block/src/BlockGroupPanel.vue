@@ -14,7 +14,7 @@
           :filters="state.filters"
           @search="searchBlocks"
         ></block-group-filters>
-        <block-group-transfer v-model:blockList="state.blockList">
+        <block-group-transfer :blockList="state.blockList">
           <template #search>
             <tiny-search
               class="transfer-order-search"

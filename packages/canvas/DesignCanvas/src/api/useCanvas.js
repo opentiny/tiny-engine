@@ -560,6 +560,7 @@ export default function () {
     setSaved,
     clearCanvas,
     getPageSchema,
+    resetCanvasState,
     resetPageCanvasState,
     resetBlockCanvasState,
     clearCurrentState,
