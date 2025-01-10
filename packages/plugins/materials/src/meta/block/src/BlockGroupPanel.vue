@@ -4,7 +4,6 @@
       <div class="block-add-content">
         <div class="block-add-content-title">区块列表</div>
         <block-group-filters
-          v-if="panel.show"
           :key="validGroup.groupId"
           :filters="state.filters"
           @search="searchBlocks"
