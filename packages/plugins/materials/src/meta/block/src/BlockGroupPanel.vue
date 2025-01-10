@@ -299,6 +299,7 @@ export default {
     flex: 1;
   }
 }
+
 :deep(.plugin-setting-header) {
   .tiny-button {
     width: 40px;
