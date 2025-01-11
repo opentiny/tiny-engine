@@ -209,7 +209,7 @@ export const saveResource = async (data, callback, emit) => {
 
   if (data.type === 'npm') {
     // 更新画布import并刷新画布
-    useMaterial().setCanvasDeps()
+    useMaterial().updateCanvasDeps()
   }
 
   useNotify({

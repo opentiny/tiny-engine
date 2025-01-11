@@ -298,24 +298,23 @@ const getUtilsDependencies = () => {
     })
 }
 
+const getCanvasDeps = () => {
+  const { scripts, styles } = useResource().appSchemaState.materialsDeps
+  const utilsScripts = getUtilsDependencies()
+
+  return {
+    scripts: [...scripts, ...utilsScripts].filter((item) => item.script),
+    styles: [...styles]
+  }
+}
+
 /**
  * 组装画布的依赖，通知画布初始化或更新importmap
  */
-const setCanvasDeps = () => {
-  const { scripts, styles } = useResource().appSchemaState.canvasDeps
-
-  // 将utils依赖添加到canvasDeps中
-  getUtilsDependencies().forEach((util) => {
-    if (scripts.find((item) => util.package === item.package)) {
-      return
-    }
-
-    scripts.push(util)
-  })
-
+const updateCanvasDeps = () => {
   useMessage().publish({
     topic: 'init_canvas_deps',
-    data: { scripts: scripts, styles: [...styles] }
+    data: getCanvasDeps()
   })
 }
 
@@ -323,7 +322,7 @@ const setCanvasDeps = () => {
 const parseMaterialsDependencies = (materialBundle) => {
   const { packages, components } = materialBundle
 
-  const { scripts: scriptsDeps, styles: stylesDeps } = useResource().appSchemaState.canvasDeps
+  const { scripts: scriptsDeps, styles: stylesDeps } = useResource().appSchemaState.materialsDeps
 
   packages?.forEach((pkg) => {
     if (scriptsDeps.find((item) => item.package === pkg.package)) {
@@ -452,7 +451,7 @@ const fetchMaterial = async () => {
     }
   })
 
-  setCanvasDeps()
+  updateCanvasDeps()
 }
 
 /**
@@ -537,7 +536,8 @@ export default function () {
     addMaterials, // 添加多个物料
     registerBlock, // 注册新的区块
     updateCanvasDependencies, //传入新的区块，获取新增区块的依赖，更新画布中的组件依赖
-    setCanvasDeps, // 设置画布依赖，包含物料的依赖和工具类的依赖。同时通知画布刷新
+    getCanvasDeps, // 组装画布依赖，包含物料和工具类的依赖。
+    updateCanvasDeps, // 通知画布更新依赖
     getConfigureMap, // 获取物料组件的配置信息
     getBlockByName,
     getBlockCompileRes,

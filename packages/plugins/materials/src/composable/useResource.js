@@ -34,7 +34,7 @@ const appSchemaState = reactive({
   langs: {},
   utils: {},
   globalState: [],
-  canvasDeps: { scripts: [], styles: new Set() }
+  materialsDeps: { scripts: [], styles: new Set() }
 })
 
 const initPage = (pageInfo) => {

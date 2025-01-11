@@ -113,7 +113,8 @@ export default {
     const beforeCanvasReady = () => {
       if (iframe.value) {
         const win = iframe.value.contentWindow
-        win.componentsDeps = useResource().appSchemaState.canvasDeps.scripts.filter((item) => item.components)
+        // 用于画布初始化组件依赖
+        win.componentsDeps = useResource().appSchemaState.materialsDeps.scripts.filter((item) => item.components)
 
         const { subscribe, unsubscribe } = useMessage()
         const { getSchemaDiff, patchLatestSchema, getSchema, getNode } = useCanvas()

@@ -32,7 +32,7 @@ export function getImportMapData(overrideVersions = {}, canvasDeps = { scripts: 
     }
   }
 
-  const materialRequire = canvasDeps.scripts.reduce((imports, { package: pkg, script }) => {
+  const materialsAndUtilsRequire = canvasDeps.scripts.reduce((imports, { package: pkg, script }) => {
     imports[pkg] = script
 
     return imports
@@ -44,7 +44,7 @@ export function getImportMapData(overrideVersions = {}, canvasDeps = { scripts: 
       'vue-i18n': `${VITE_CDN_DOMAIN}/vue-i18n@${importMapVersions.vueI18n}/dist/vue-i18n.esm-browser.js`,
       ...blockRequire.imports,
       ...tinyVueRequire.imports,
-      ...materialRequire
+      ...materialsAndUtilsRequire
     }
   }
 
