@@ -29,7 +29,7 @@ const open = (params = {}) => {
   const { scripts, styles } = useMaterial().getCanvasDeps()
 
   params.scripts = scripts.reduce((res, item) => {
-    res[item.package] = item.version
+    res[item.package] = item.script
 
     return res
   }, {})
