@@ -19,6 +19,7 @@
           :active="state.currentNodeData.id"
           :filter-value="state.pageSearchValue"
           :root-id="pageSettingState.ROOT_ID"
+          :draggable="groupItem.groupId === STATIC_PAGE_GROUP_ID"
           @click-row="handleClickRow"
           @move-node="handleMoveNode"
         >
@@ -369,7 +370,8 @@ export default {
       handleClickRow,
       handleMoveNode,
       isPageLocked,
-      handleClickPageSettings
+      handleClickPageSettings,
+      STATIC_PAGE_GROUP_ID
     }
   }
 }

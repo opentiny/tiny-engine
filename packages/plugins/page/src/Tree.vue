@@ -17,7 +17,7 @@
         }
       ]"
       :key="node.id"
-      draggable="true"
+      :draggable="draggable ? 'true' : undefined"
       @dragstart="handleDragStart($event, node)"
       @dragover="handleDragOver($event, node)"
       @dragenter="handleDragOver($event, node)"
@@ -68,6 +68,10 @@ const props = defineProps({
   rootId: {
     type: [String, Number],
     default: 'root'
+  },
+  draggable: {
+    type: Boolean,
+    default: false
   }
 })
 
