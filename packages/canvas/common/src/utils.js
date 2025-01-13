@@ -68,7 +68,7 @@ const getImportMapKeys = () => {
     }
 
     const importMaps = importMapElement.textContent
-    const importMapObject = JSON.parse(importMaps)
+    const importMapObject = JSON.parse(importMaps || '{}') || {}
 
     return Object.keys(importMapObject.imports)
   } catch (error) {

@@ -327,7 +327,8 @@ const parseMaterialsDependencies = (materialBundle) => {
   scripts.forEach((item) => {
     const dep = scriptsDeps.find((dep) => dep.package === item.package)
 
-    if (dep) {
+    if (dep && item.components) {
+      // 合并组件
       dep.components = { ...dep.components, ...item.components }
     }
   })
@@ -454,7 +455,9 @@ const getBlockDeps = (dependencies = {}) => {
       }
     })
 
-  styles?.forEach((item) => materialState.componentsDepsMap.styles.add(item))
+  if (Array.isArray(styles)) {
+    styles.forEach((item) => materialState.componentsDepsMap.styles.add(item))
+  }
 }
 
 const initBuiltinMaterial = () => {

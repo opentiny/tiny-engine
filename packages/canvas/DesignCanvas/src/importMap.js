@@ -33,7 +33,9 @@ export function getImportMapData(overrideVersions = {}, canvasDeps = { scripts: 
   }
 
   const materialsAndUtilsRequire = canvasDeps.scripts.reduce((imports, { package: pkg, script }) => {
-    imports[pkg] = script
+    if (pkg && script) {
+      imports[pkg] = script
+    }
 
     return imports
   }, {})

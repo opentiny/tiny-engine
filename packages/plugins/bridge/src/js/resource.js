@@ -178,41 +178,48 @@ const generateBridgeUtil = (...args) => {
 export const saveResource = async (data, callback, emit) => {
   const isEdit = getActionType() === ACTION_TYPE.Edit
 
-  if (isEdit) {
-    data.id = state.resource.id
-    const result = await requestUpdateReSource(data)
+  try {
+    if (isEdit) {
+      data.id = state.resource.id
+      const result = await requestUpdateReSource(data)
 
-    if (result) {
-      const index = useResource().appSchemaState[data.category].findIndex((item) => item.name === result.name)
+      if (result) {
+        const index = useResource().appSchemaState[data.category].findIndex((item) => item.name === result.name)
 
-      if (index === -1) {
-        useNotify({
-          type: 'error',
-          message: '修改失败'
-        })
+        if (index === -1) {
+          useNotify({
+            type: 'error',
+            message: '修改失败'
+          })
 
-        return
+          return
+        }
+
+        useResource().appSchemaState[data.category][index] = result
       }
+    } else {
+      const result = await requestAddReSource(data)
 
-      useResource().appSchemaState[data.category][index] = result
+      if (result) {
+        useResource().appSchemaState[data.category].push(result)
+      }
     }
-  } else {
-    const result = await requestAddReSource(data)
 
-    if (result) {
-      useResource().appSchemaState[data.category].push(result)
-    }
+    // 更新画布工具函数环境，保证渲染最新工具类返回值, 并触发画布的强制刷新
+    generateBridgeUtil(getAppId())
+    useNotify({
+      type: 'success',
+      message: `${isEdit ? '修改' : '创建'}成功`
+    })
+    emit('refresh', state.type)
+    state.refresh = true
+    callback()
+  } catch (error) {
+    useNotify({
+      type: 'error',
+      message: `工具类${isEdit ? '修改' : '创建'}失败：${error.message}`
+    })
   }
-
-  // 更新画布工具函数环境，保证渲染最新工具类返回值, 并触发画布的强制刷新
-  generateBridgeUtil(getAppId())
-  useNotify({
-    type: 'success',
-    message: `${isEdit ? '修改' : '创建'}成功`
-  })
-  emit('refresh', state.type)
-  state.refresh = true
-  callback()
 }
 
 export const deleteData = (name, callback, emit) => {
