@@ -92,6 +92,7 @@ const dynamicImportComponentLib = async ({ pkg, script }) => {
   try {
     // 优先从importmap导入，兼容npm.script字段定义的cdn地址
     const importMapKeys = getImportMapKeys()
+
     if (importMapKeys.includes(pkg)) {
       modules = await import(/* @vite-ignore */ pkg)
     } else if (script) {

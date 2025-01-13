@@ -11,7 +11,7 @@
  */
 
 import { reactive } from 'vue'
-import { useResource, useNotify, useMaterial, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { useResource, useNotify, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import {
   fetchResourceList,
@@ -206,12 +206,6 @@ export const saveResource = async (data, callback, emit) => {
 
   // 更新画布工具函数环境，保证渲染最新工具类返回值, 并触发画布的强制刷新
   generateBridgeUtil(getAppId())
-
-  if (data.type === 'npm') {
-    // 更新画布import并刷新画布
-    useMaterial().updateCanvasDeps()
-  }
-
   useNotify({
     type: 'success',
     message: `${isEdit ? '修改' : '创建'}成功`

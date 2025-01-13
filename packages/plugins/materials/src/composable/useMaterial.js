@@ -278,32 +278,11 @@ const addComponentSnippets = (componentSnippets, snippetsData) => {
   return snippetsData
 }
 
-/**
- * 解析工具类依赖
- * @returns
- */
-const getUtilsDependencies = () => {
-  const { utils } = useResource().appSchemaState
-
-  return utils
-    .filter((item) => item.type === 'npm' && item.content.cdnLink)
-    .map((item) => {
-      const { package: pkg, version, cdnLink } = item.content
-
-      return {
-        package: pkg,
-        version,
-        script: cdnLink
-      }
-    })
-}
-
 const getCanvasDeps = () => {
   const { scripts, styles } = useResource().appSchemaState.materialsDeps
-  const utilsScripts = getUtilsDependencies()
 
   return {
-    scripts: [...scripts, ...utilsScripts].filter((item) => item.script),
+    scripts: [...scripts].filter((item) => item.script),
     styles: [...styles]
   }
 }
@@ -325,7 +304,7 @@ const parseMaterialsDependencies = (materialBundle) => {
   const { scripts: scriptsDeps, styles: stylesDeps } = useResource().appSchemaState.materialsDeps
 
   packages?.forEach((pkg) => {
-    if (scriptsDeps.find((item) => item.package === pkg.package)) {
+    if (!pkg.script || scriptsDeps.find((item) => item.package === pkg.package)) {
       return
     }
 
@@ -342,7 +321,7 @@ const parseMaterialsDependencies = (materialBundle) => {
     }
   })
 
-  // 解析组件npm字段
+  // 解析组件npm字段（兼容旧的物料协议）
   const { scripts, styles } = generateThirdPartyDeps(components)
   // 合并到canvasDeps中
   scripts.forEach((item) => {

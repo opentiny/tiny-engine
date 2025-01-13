@@ -92,7 +92,7 @@ const setUtils = async (data) => {
     })
 
   const npmUtils = data.filter((item) => item.type === 'npm' && item.content.cdnLink)
-  const results = await Promise.allSettled(npmUtils.map((item) => import(/* @vite-ignore */ item.content.package)))
+  const results = await Promise.allSettled(npmUtils.map((item) => import(/* @vite-ignore */ item.content.cdnLink)))
 
   results.forEach((res, index) => {
     if (res.status !== 'fulfilled') {
