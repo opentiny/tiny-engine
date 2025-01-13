@@ -126,9 +126,11 @@ export default {
         callback: (data) => {
           if (data.pageId) {
             state.currentNodeData = { id: data.pageId }
+          } else if (isBlock()) {
+            state.currentNodeData = {}
           }
         },
-        subscriber: 'routeBar'
+        subscriber: 'pageTree'
       })
     })
 

@@ -5,7 +5,7 @@
       :class="[
         'row',
         {
-          active: active === node.id,
+          active: String(active) === String(node.id),
           ['hover-border']: hoveringNodeId === node.id
         }
       ]"
