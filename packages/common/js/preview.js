@@ -12,7 +12,7 @@
 
 import { constants } from '@opentiny/tiny-engine-utils'
 import { isDevelopEnv } from './environments'
-import { useMaterial } from '@opentiny/tiny-engine-meta-register'
+import { useMaterial, useResource } from '@opentiny/tiny-engine-meta-register'
 // prefer old unicode hacks for backward compatibility
 
 const { COMPONENT_NAME } = constants
@@ -27,8 +27,9 @@ const open = (params = {}) => {
   params.tenant = paramsMap.get('tenant')
 
   const { scripts, styles } = useMaterial().getCanvasDeps()
+  const utilsDeps = useResource().getUtilsDeps()
 
-  params.scripts = scripts.reduce((res, item) => {
+  params.scripts = [...scripts, ...utilsDeps].reduce((res, item) => {
     res[item.package] = item.script
 
     return res
