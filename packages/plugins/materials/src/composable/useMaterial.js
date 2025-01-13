@@ -288,7 +288,7 @@ const getCanvasDeps = () => {
 }
 
 /**
- * 组装画布的依赖，通知画布初始化或更新importmap
+ * 组装画布的依赖，通知画布重新构建importmap
  */
 const updateCanvasDeps = () => {
   useMessage().publish({
