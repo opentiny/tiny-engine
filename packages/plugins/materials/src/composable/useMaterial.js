@@ -304,7 +304,7 @@ const parseMaterialsDependencies = (materialBundle) => {
   const { scripts: scriptsDeps, styles: stylesDeps } = useResource().appSchemaState.materialsDeps
 
   packages?.forEach((pkg) => {
-    if (!pkg.script || scriptsDeps.find((item) => item.package === pkg.package)) {
+    if (!pkg.script || !pkg.package || scriptsDeps.find((item) => item.package === pkg.package)) {
       return
     }
 

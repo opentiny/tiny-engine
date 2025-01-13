@@ -177,13 +177,15 @@ const fetchResource = async ({ isInit = true } = {}) => {
 
 // 获取工具类的依赖，用于预览加载。格式和物料依赖一致，便于处理
 const getUtilsDeps = () => {
-  return appSchemaState.utils.map((item) => {
-    return {
-      ...item,
-      package: item.content.package,
-      script: item.content.cdnLink
-    }
-  })
+  return appSchemaState.utils
+    .filter((item) => item.type === 'npm')
+    .map((item) => {
+      return {
+        ...item,
+        package: item.content?.package,
+        script: item.content?.cdnLink
+      }
+    })
 }
 
 export default function () {
