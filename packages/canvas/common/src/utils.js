@@ -91,7 +91,8 @@ const dynamicImportComponentLib = async ({ pkg, script }) => {
 
   try {
     // 优先从importmap导入，兼容npm.script字段定义的cdn地址
-    if (getImportMapKeys().includes(pkg)) {
+    const importMapKeys = getImportMapKeys()
+    if (importMapKeys.includes(pkg)) {
       modules = await import(/* @vite-ignore */ pkg)
     } else if (script) {
       modules = await import(/* @vite-ignore */ script)
@@ -120,20 +121,4 @@ export const getComponents = async ({ package: pkg, script, components }) => {
       window.TinyLowcodeComponent[componentId] = modules[exportName]
     }
   })
-}
-
-/**
- * 更新区块/组件依赖
- * @param {object} param0 依赖的CDN信息
- */
-export const updateDependencies = ({ detail }) => {
-  const { scripts = [], styles = [] } = detail || {}
-  const { styles: canvasStyles } = window.componentsDepsMap
-  const newStyles = [...styles].filter((item) => !canvasStyles.has(item))
-
-  newStyles.forEach((item) => canvasStyles.add(item))
-
-  const promises = [...newStyles].map((src) => addStyle(src)).concat(scripts.map(getComponents))
-
-  Promise.allSettled(promises)
 }

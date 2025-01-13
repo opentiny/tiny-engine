@@ -478,20 +478,6 @@ const getBlockDeps = (dependencies = {}) => {
   styles?.forEach((item) => materialState.componentsDepsMap.styles.add(item))
 }
 
-/**
- * 获取新增区块的依赖，更新画布中的组件依赖
- * @param {array} blocks 新增的区块列表
- */
-const updateCanvasDependencies = (blocks) => {
-  blocks.forEach((block) => {
-    if (!block.content.dependencies) return
-
-    getBlockDeps(block.content.dependencies)
-  })
-
-  useCanvas().canvasApi.value?.canvasDispatch('updateDependencies', { detail: materialState.componentsDepsMap })
-}
-
 const initBuiltinMaterial = () => {
   const { Builtin } = useCanvas().canvasApi.value
   // 添加画布物料
@@ -535,7 +521,6 @@ export default function () {
     setMaterial, // 设置单个物料 (property) setMaterial: (name: string, data: Material) => void
     addMaterials, // 添加多个物料
     registerBlock, // 注册新的区块
-    updateCanvasDependencies, //传入新的区块，获取新增区块的依赖，更新画布中的组件依赖
     getCanvasDeps, // 组装画布依赖，包含物料和工具类的依赖。
     updateCanvasDeps, // 通知画布更新依赖
     getConfigureMap, // 获取物料组件的配置信息

@@ -11,7 +11,7 @@
  */
 
 import { createApp } from 'vue'
-import { addScript, addStyle, getComponents, updateDependencies } from '../../common'
+import { addScript, addStyle, getComponents } from '../../common'
 import TinyI18nHost, { I18nInjectionKey } from '@opentiny/tiny-engine-common/js/i18n'
 import Main, { api } from './RenderMain'
 import lowcode from './lowcode'
@@ -27,8 +27,6 @@ const initRenderContext = () => {
 
   window.TinyLowcodeComponent = {}
   window.TinyComponentLibs = {}
-
-  document.addEventListener('updateDependencies', updateDependencies)
 }
 
 let App = null
