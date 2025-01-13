@@ -2,8 +2,8 @@
   <div>
     <div>
       <tiny-grid
-        :editConfig="{ trigger: 'click', mode: 'cell', showStatus: true }"
         :columns="state.columns"
+        :editConfig="{ trigger: 'click', mode: 'cell', showStatus: true }"
         :data="[
           {
             id: '1',
