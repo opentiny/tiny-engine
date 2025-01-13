@@ -253,7 +253,6 @@ export default {
 
     const findParentHasClass = (target) => {
       let parent = target.parentNode
-      let flag = false
 
       if (parent.className === undefined) {
         return false
@@ -267,9 +266,7 @@ export default {
         return true
       }
 
-      flag = findParentHasClass(parent)
-
-      return flag
+      return findParentHasClass(parent)
     }
 
     const onMousedown = (event, horizontal, vertical) => {
