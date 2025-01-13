@@ -256,7 +256,8 @@ const getPageList = async (appId) => {
   })
 
   const firstGroupTreeData = generateTree(firstGroupData.data)
-  pageSettingState.treeDataMapping = firstGroupTreeData
+  const secondGroupTreeData = generateTree(secondGroupData.data)
+  pageSettingState.treeDataMapping = { ...firstGroupTreeData, ...secondGroupTreeData }
   firstGroupData.data = firstGroupTreeData[pageSettingState.ROOT_ID].children
   pageSettingState.pages = [firstGroupData, secondGroupData]
   return pageSettingState.pages

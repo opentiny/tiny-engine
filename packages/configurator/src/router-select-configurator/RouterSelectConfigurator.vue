@@ -37,9 +37,11 @@ watch(
   }
 )
 
-const { pageSettingState, getPageList, STATIC_PAGE_GROUP_ID } = usePage()
+const { pageSettingState, getPageList, STATIC_PAGE_GROUP_ID, COMMON_PAGE_GROUP_ID } = usePage()
 
-const pages = computed(() => pageSettingState.pages[STATIC_PAGE_GROUP_ID].data)
+const pages = computed(() =>
+  pageSettingState.pages[STATIC_PAGE_GROUP_ID].data.concat(pageSettingState.pages[COMMON_PAGE_GROUP_ID].data)
+)
 
 if (!Array.isArray(pages.value)) {
   getPageList()
