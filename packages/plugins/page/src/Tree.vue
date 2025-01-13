@@ -1,12 +1,19 @@
 <template>
-  <div class="draggable-tree">
+  <div
+    :class="['draggable-tree', 'border-transparent', { 'hover-border-color': hoveringNodeId === rootId }]"
+    @dragover="handleContainerDragOver"
+    @dragenter="handleContainerDragOver"
+    @dragleave="handleContainerDragLeave"
+    @drop="handleDrop($event, { id: rootId })"
+  >
     <div
       v-for="(node, rowIndex) of filteredNodesWithAncestors"
       :class="[
         'row',
+        'border-transparent',
         {
           active: String(active) === String(node.id),
-          ['hover-border']: hoveringNodeId === node.id
+          ['hover-border-color']: hoveringNodeId === node.id
         }
       ]"
       :key="node.id"
@@ -176,6 +183,8 @@ const handleDragOver = (event, node) => {
     // 阻止默认行为以允许放置
     event.preventDefault()
     hoveringNodeId.value = node.id
+  } else {
+    hoveringNodeId.value = null
   }
 }
 
@@ -199,10 +208,28 @@ const handleDrop = (event, node) => {
 const handleDragEnd = () => {
   hoveringNodeId.value = null
 }
+
+const handleContainerDragOver = (event) => {
+  if (event.target !== event.currentTarget) {
+    return
+  }
+  event.preventDefault()
+  // 拖拽到根节点
+  hoveringNodeId.value = props.rootId
+}
+
+const handleContainerDragLeave = (event) => {
+  if (event.target !== event.currentTarget) {
+    return
+  }
+  // drag时光标超出了drag zone，清除悬停框
+  hoveringNodeId.value = null
+}
 </script>
 
 <style lang="less" scoped>
 .draggable-tree {
+  padding: 6px 0;
   .row {
     height: 24px;
     padding: 0 12px;
@@ -246,9 +273,12 @@ const handleDragEnd = () => {
         color: var(--te-common-bg-primary-checked);
       }
     }
-    &.hover-border {
-      border: 1px solid var(--te-common-border-checked);
-    }
   }
+}
+.border-transparent {
+  border: 1px solid transparent;
+}
+.hover-border-color {
+  border-color: var(--te-common-border-checked);
 }
 </style>
