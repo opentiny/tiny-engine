@@ -180,7 +180,7 @@ const getUtilsDeps = () => {
   return appSchemaState.utils.map((item) => {
     return {
       ...item,
-      package: item.name,
+      package: item.content.package,
       script: item.content.cdnLink
     }
   })
