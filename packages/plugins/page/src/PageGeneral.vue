@@ -166,18 +166,15 @@ export default {
     const pageToTreeData = (page) => {
       const { id, name, isPage, children } = page
 
-      if (!Array.isArray(children)) {
-        return { id, name, isPage }
-      }
+      const result = { id: String(id), name, isPage }
 
-      return {
-        id,
-        name,
-        isPage,
-        children: children
+      if (Array.isArray(children)) {
+        result.children = children
           .filter((page) => page.id !== pageSettingState.currentPageData.id)
           .map((page) => pageToTreeData(page))
       }
+
+      return result
     }
 
     const getNodeIcon = (data) => {
