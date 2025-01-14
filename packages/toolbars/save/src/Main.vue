@@ -131,13 +131,10 @@ export default {
     }
     const saveSetTimeout = () => {
       clearTimeout(state.preservationTime)
-      state.preservationTime = setTimeout(
-        () => {
-          openApi()
-          saveSetTimeout()
-        },
-        state.timeValue * 60 * 1000
-      )
+      state.preservationTime = setTimeout(() => {
+        openApi()
+        saveSetTimeout()
+      }, state.timeValue * 60 * 1000)
     }
     const saveConfig = () => {
       setAutoSaveStatus(state.checked)

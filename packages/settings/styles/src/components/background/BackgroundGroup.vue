@@ -444,22 +444,8 @@ export default {
       border-bottom: 1px solid var(--te-common-border-divider);
       pointer-events: all;
       font-size: 11px;
-      font-family:
-        Inter,
-        -apple-system,
-        BlinkMacSystemFont,
-        'Segoe UI',
-        Roboto,
-        Oxygen-Sans,
-        Ubuntu,
-        Cantarell,
-        'Helvetica Neue',
-        Helvetica,
-        Arial,
-        'Apple Color Emoji',
-        'Segoe UI Emoji',
-        'Segoe UI Symbol',
-        sans-serif;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell,
+        'Helvetica Neue', Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
       line-height: 16px;
       font-weight: 400;
       cursor: default;

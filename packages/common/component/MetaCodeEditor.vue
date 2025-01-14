@@ -380,9 +380,7 @@ export default {
       }
 
       code {
-        font-family:
-          Microsoft YaHei,
-          Microsoft YaHei-Normal;
+        font-family: Microsoft YaHei, Microsoft YaHei-Normal;
         color: var(--te-common-text-weaken);
       }
     }

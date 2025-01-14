@@ -77,8 +77,8 @@
                         item.role === 'user'
                           ? 'chat-content-user'
                           : connectedFailed
-                            ? 'chat-content-ai-unconnected'
-                            : 'chat-content-ai'
+                          ? 'chat-content-ai-unconnected'
+                          : 'chat-content-ai'
                       ]"
                     >
                       <span>{{ item.content }}</span>

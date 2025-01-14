@@ -177,9 +177,7 @@ export default {
   border-radius: 10px;
   box-sizing: border-box;
   background-color: var(--te-common-bg-switch);
-  transition:
-    border-color 0.3s,
-    background-color 0.3s;
+  transition: border-color 0.3s, background-color 0.3s;
   vertical-align: middle;
 }
 

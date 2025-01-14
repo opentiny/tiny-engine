@@ -423,18 +423,8 @@ export default {
 
     .title {
       padding: 10px;
-      font-family:
-        Inter,
-        -apple-system,
-        BlinkMacSystemFont,
-        'Segoe UI',
-        Roboto,
-        Oxygen,
-        Ubuntu,
-        Cantarell,
-        'Open Sans',
-        'Helvetica Neue',
-        sans-serif;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
+        'Helvetica Neue', sans-serif;
       color: var(--ti-lowcode-plugin-panel-title-color);
       font-weight: var(--ti-lowcode-plugin-panel-title-font-weight);
       border-bottom: 1px solid var(--ti-lowcode-data-header-border-bottom-color);

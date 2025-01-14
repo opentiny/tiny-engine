@@ -84,18 +84,8 @@ export default {
     align-items: center;
     font-size: 12px;
     font-weight: var(--ti-lowcode-plugin-panel-title-font-weight);
-    font-family:
-      Inter,
-      -apple-system,
-      BlinkMacSystemFont,
-      'Segoe UI',
-      Roboto,
-      Oxygen,
-      Ubuntu,
-      Cantarell,
-      'Open Sans',
-      'Helvetica Neue',
-      sans-serif;
+    font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
+      'Helvetica Neue', sans-serif;
     padding: 12px;
     color: var(--ti-lowcode-plugin-panel-title-color);
     font-weight: var(--ti-lowcode-plugin-panel-title-font-weight);
