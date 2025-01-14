@@ -189,11 +189,8 @@ export default {
     justify-content: space-between;
     align-items: center;
     .tiny-button {
-      width: 40px;
-      padding: 0;
-      min-width: 40px;
-      margin-right: 2px;
       border: 1px solid var(--ti-lowcode-datasource-color);
+      margin-right: 0px;
     }
   }
 

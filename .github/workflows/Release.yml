@@ -1,0 +1,77 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    if: github.repository == 'opentiny/tiny-engine'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'pnpm'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run Build
+        run: pnpm run build:plugin && pnpm run build:alpha > build-alpha.log 2>&1
+
+      - name: Upload build logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-alpha-log
+          path: build-alpha.log
+
+      - name: Parse Publish tag
+        id: parse_tag
+        run: |
+          tag_name="${GITHUB_REF#refs/tags/}"
+          if [[ "$tag_name" == *alpha* ]]; then
+            echo "dist_tag=alpha" >> "$GITHUB_OUTPUT"
+          elif [[ "$tag_name" == *beta* ]]; then
+            echo "dist_tag=beta" >> "$GITHUB_OUTPUT"
+          elif [[ "$tag_name" == *rc* ]]; then
+            echo "dist_tag=rc" >> "$GITHUB_OUTPUT"
+          else
+            echo "dist_tag=latest" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Verify clean working directory
+        run: |
+          if [[ -n "$(git status --porcelain)" ]]; then
+            echo "Working directory is not clean"
+            exit 1
+          fi
+
+      - name: Verify package version match tag
+        run: |
+          tag_name="${GITHUB_REF#refs/tags/}"
+          package_version=$(pnpm lerna list --scope=@opentiny/tiny-engine --json | jq -r '.[0].version')
+          if [[ "$tag_name" != "v$package_version" ]]; then
+            echo "Tag name $tag_name does not match package version $package_version"
+            exit 1
+          fi
+
+      - name: Publish package to npm
+        run: pnpm lerna publish from-package --dist-tag ${{steps.parse_tag.outputs.dist_tag}} --yes
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

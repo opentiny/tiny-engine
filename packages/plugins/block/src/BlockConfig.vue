@@ -1,5 +1,12 @@
 <template>
-  <tiny-form ref="blockForm" class="block-setting-content" label-position="top" :model="formData" :rules="rules">
+  <tiny-form
+    ref="blockForm"
+    class="block-setting-content"
+    label-position="top"
+    :model="formData"
+    :rules="rules"
+    validate-type="text"
+  >
     <tiny-form-item label="区块名称" prop="name_cn">
       <div>
         <tiny-input
@@ -59,7 +66,7 @@
         >
         </tiny-input>
         <tiny-button v-show="!state.inputVisible" class="button-new-tag" size="small" @click="addTag">
-          + 标签
+          <svg-icon name="add"></svg-icon>标签
         </tiny-button>
       </div>
       <div class="global-desc-info">区块的功能以及特性标签，例如表格、购买页、过滤等</div>
@@ -174,12 +181,10 @@ export default {
     }
 
     const validateForm = () => {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         blockForm.value.validate((valid) => {
           if (valid) {
             resolve()
-          } else {
-            reject(new Error('校验失败'))
           }
         })
       })
@@ -284,9 +289,6 @@ export default {
 
 <style lang="less" scoped>
 .block-setting-content {
-  :deep(.tiny-form-item__error) {
-    display: none;
-  }
   :deep(.tiny-form-item) {
     margin-bottom: 10px;
   }
@@ -299,7 +301,7 @@ export default {
     font-size: 12px;
   }
   .global-desc-info {
-    font-size: 11px;
+    font-size: 12px;
   }
 }
 

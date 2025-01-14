@@ -200,7 +200,7 @@ export default {
       () => isCollapsed.value,
       () => {
         if (isCollapsed.value) {
-          activeNames.value = [styleCategoryGroup[0]]
+          activeNames.value = []
         } else {
           activeNames.value = styleCategoryGroup
         }

@@ -33,6 +33,8 @@ const getTemplate = (schema, str) => {
   })
 }
 
+const isBrowser = typeof window !== 'undefined' && typeof window.document !== 'undefined'
+
 /**
  * 图片的 base64 转 Blob 对象，用于生成本地图片
  * @param {*} base64 String
@@ -54,7 +56,11 @@ const base64ToBlob = (base64Data) => {
   let raw
 
   try {
-    raw = window.atob(arr[1])
+    if (isBrowser) {
+      raw = window.atob(arr[1])
+    } else {
+      raw = Buffer.from(arr[1], 'base64').toString('binary')
+    }
   } catch (e) {
     throw new Error('Failed to decode base64 string')
   }
@@ -160,21 +166,18 @@ export function generateTemplate(schema) {
     }
   ]
 
-  // FIXME: vitest 测试的时候得到的并不是 base64data，所以这里需要跳过文件的出码
-  if (process.env?.NODE_ENV !== 'test') {
-    try {
-      const faviconData = base64ToBlob(logoImage)
+  try {
+    const faviconData = base64ToBlob(logoImage)
 
-      res.push({
-        fileType: 'image/x-icon',
-        fileName: 'favicon.ico',
-        path: './public',
-        fileContent: faviconData
-      })
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('generate favicon.ico error', error)
-    }
+    res.push({
+      fileType: 'image/x-icon',
+      fileName: 'favicon.ico',
+      path: './public',
+      fileContent: faviconData
+    })
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('generate favicon.ico error', error)
   }
 
   return res

@@ -69,16 +69,14 @@ export default {
   setup(props, { emit }) {
     const state = reactive({
       style: {},
-      styleComponent: 'ImageSetting',
+      styleComponent: 'ColorOverlay',
       typeLists: [
         {
-          content: '背景图',
-          icon: 'background-image',
+          content: '颜色叠加',
+          icon: 'background-color',
           value: {
-            styleComponent: 'ImageSetting',
-            imageUrl: 'img/bgcModal.png',
-            position: '0px 0px',
-            size: 'auto'
+            styleComponent: 'ColorOverlay',
+            imageUrl: 'linear-gradient(#000, #000)'
           }
         },
         {
@@ -98,11 +96,13 @@ export default {
           }
         },
         {
-          content: '颜色叠加',
-          icon: 'background-color',
+          content: '背景图',
+          icon: 'image',
           value: {
-            styleComponent: 'ColorOverlay',
-            imageUrl: 'linear-gradient(#000, #000)'
+            styleComponent: 'ImageSetting',
+            imageUrl: 'img/bgcModal.png',
+            position: '0px 0px',
+            size: 'auto'
           }
         }
       ]

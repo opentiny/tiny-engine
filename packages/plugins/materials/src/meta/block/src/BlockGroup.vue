@@ -73,11 +73,18 @@
               @update:modelValue="handleChangeDeletePopoverVisible"
             >
               <div class="popper-confirm" @mousedown.stop="">
-                <div class="popper-confirm-header">
-                  <svg-icon class="icon" name="warning"></svg-icon>
+                <div class="popper-confirm-header">删除</div>
+                <div class="popper-confirm-content">
                   <span class="title">您确定删除该分组吗？</span>
                 </div>
                 <div class="popper-confirm-footer">
+                  <tiny-button
+                    id="cancelDeleteGroupName"
+                    size="small"
+                    class="cancel-btn"
+                    @click="handleCancelDeleteGroup"
+                    >取消</tiny-button
+                  >
                   <tiny-button
                     id="confirmDeleteGroupName"
                     class="confirm-btn"
@@ -87,13 +94,6 @@
                   >
                     确定
                   </tiny-button>
-                  <tiny-button
-                    id="cancelDeleteGroupName"
-                    size="small"
-                    class="cancel-btn"
-                    @click="handleCancelDeleteGroup"
-                    >取消</tiny-button
-                  >
                 </div>
               </div>
               <template #reference>
@@ -486,25 +486,26 @@ export default {
     }
   }
 
-  .popper-confirm {
-    padding: 20px;
-  }
-
   .popper-confirm-header {
+    font-size: var(--te-base-font-size-1);
+    color: var(--te-common-text-primary);
+    font-weight: var(--te-base-font-weight-7);
+    margin-bottom: 12px;
+  }
+  .popper-confirm-content {
     font-size: 12px;
-    color: var(--ti-lowcode-materials-block-group-delete-popover-title-color);
-    .icon {
-      color: var(--ti-lowcode-warning-color);
-      width: 16px;
-      height: 16px;
-    }
-    .title {
-      margin-left: 4px;
-    }
+    color: var(--te-common-text-secondary);
   }
   .popper-confirm-footer {
-    text-align: center;
-    margin-top: 22px;
+    text-align: right;
+    margin-top: 16px;
+    .tiny-button {
+      min-width: 40px;
+      margin-right: 0;
+      & + .tiny-button {
+        margin-left: 8px;
+      }
+    }
   }
 }
 </style>

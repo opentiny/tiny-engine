@@ -285,14 +285,16 @@ export default {
     const openBackgroundImageModal = (event, { isAdd, index }) => {
       if (isAdd) {
         const styleObj = {
-          [BACKGROUND_PROPERTY.BackgroundImage]: 'url(img/bgcModal.png)',
-          [BACKGROUND_PROPERTY.BackgroundPosition]: '0px 0px',
-          [BACKGROUND_PROPERTY.BackgroundSize]: 'auto'
+          [BACKGROUND_PROPERTY.BackgroundImage]: 'linear-gradient(#000, #000)',
+          [BACKGROUND_PROPERTY.BackgroundPosition]: null,
+          [BACKGROUND_PROPERTY.BackgroundSize]: null,
+          [BACKGROUND_PROPERTY.BackgroundRepeat]: null,
+          [BACKGROUND_PROPERTY.BackgroundAttachment]: null
         }
 
         state.backgroundImageList.unshift({
-          type: 'ImageSetting',
-          text: 'background-image.svg',
+          type: 'ColorOverlay',
+          text: '#000',
           styleObj
         })
       }

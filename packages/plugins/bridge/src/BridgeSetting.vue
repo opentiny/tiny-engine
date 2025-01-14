@@ -6,11 +6,11 @@
       </div>
     </template>
     <template #header>
-      <div class="header-wrap">
+      <button-group>
         <tiny-button class="save-btn" type="primary" @click="save">保存</tiny-button>
-        <svg-button v-show="state.status" class="delete-btn" name="delete" @click="deleteReSource"></svg-button>
+        <svg-button v-if="state.status" class="delete-btn" name="delete" @click="deleteReSource"></svg-button>
         <svg-button class="close-btn" name="close" @click="closePanel"></svg-button>
-      </div>
+      </button-group>
     </template>
     <template #content>
       <tiny-form
@@ -111,7 +111,7 @@ import {
   getActionType,
   getResourceNamesByType
 } from './js/resource'
-import { VueMonaco as MonacoEditor, PluginSetting, SvgButton } from '@opentiny/tiny-engine-common'
+import { VueMonaco as MonacoEditor, PluginSetting, SvgButton, ButtonGroup } from '@opentiny/tiny-engine-common'
 import { useModal, useNotify, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 
@@ -137,7 +137,8 @@ export default {
     MonacoEditor,
     TinyRadioGroup: RadioGroup,
     TinyRadio: Radio,
-    SvgButton
+    SvgButton,
+    ButtonGroup
   },
   setup(props, { emit }) {
     const monacoOptions = {
@@ -220,11 +221,6 @@ export default {
 
       resourceForm.value.validate((valid) => {
         if (!valid) {
-          useNotify({
-            type: 'error',
-            message: '请检查必填项'
-          })
-
           return
         }
 

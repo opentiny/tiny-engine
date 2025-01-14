@@ -20,7 +20,7 @@
               </tiny-select>
             </div>
             <div class="save-button-group">
-              <tiny-button type="primary" @click="autoSave">设置并保存</tiny-button>
+              <tiny-button type="primary" @click="saveConfig">设置并保存</tiny-button>
             </div>
           </div>
         </tiny-popover>
@@ -55,13 +55,13 @@
 </template>
 
 <script>
-import { reactive, ref, onUnmounted } from 'vue'
+import { reactive, ref, onUnmounted, onMounted } from 'vue'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
 import { Button, Popover, DialogBox, Checkbox, Select } from '@opentiny/vue'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import { openCommon, saveCommon } from './js/index'
-import { isLoading } from './js/index'
+import { isLoading, setAutoSaveStatus, getAutoSaveStatus } from './js/index'
 import { constants } from '@opentiny/tiny-engine-utils'
 const { OPEN_DELAY } = constants
 
@@ -136,13 +136,21 @@ export default {
         saveSetTimeout()
       }, state.timeValue * 60 * 1000)
     }
-    const autoSave = () => {
+    const saveConfig = () => {
+      setAutoSaveStatus(state.checked)
       if (state.checked) {
         saveSetTimeout()
       } else {
         clearTimeout(state.preservationTime)
       }
     }
+
+    onMounted(() => {
+      state.checked = getAutoSaveStatus()
+      if (state.checked) {
+        saveSetTimeout()
+      }
+    })
 
     onUnmounted(() => {
       clearTimeout(state.preservationTime)
@@ -158,7 +166,7 @@ export default {
       openApi,
       saveApi,
       delayOptions,
-      autoSave,
+      saveConfig,
       OPEN_DELAY
     }
   }
@@ -194,10 +202,6 @@ export default {
     border-radius: 4px;
     &:not(.disabled):hover {
       background-color: var(--ti-lowcode-toolbar-button-bg);
-    }
-
-    .save-title {
-      margin: 0 6px;
     }
   }
 

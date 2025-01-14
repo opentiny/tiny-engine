@@ -11,7 +11,7 @@
           @click="copyPage"
         ></svg-button>
         <svg-button v-if="!pageSettingState.isNew" name="delete" tips="删除页面" @click="deletePage"></svg-button>
-        <svg-button class="close-plugin-setting-icon" name="close" @click="cancelPageSetting"></svg-button>
+        <svg-button name="close" @click="cancelPageSetting"></svg-button>
       </button-group>
     </template>
 
@@ -293,7 +293,6 @@ export default {
 
     const createHistoryMessage = () => {
       const title = '创建历史备份信息'
-      const status = 'custom'
       const messageRender = {
         render: () => <Input placeholder="历史备份信息" v-model={state.historyMessage}></Input>
       }
@@ -309,7 +308,7 @@ export default {
         state.historyMessage = ''
       }
 
-      confirm({ title, status, message: messageRender, exec })
+      confirm({ title, message: messageRender, exec })
     }
 
     const savePageSetting = () => {
@@ -408,18 +407,6 @@ export default {
 .page-plugin-setting {
   :deep(.plugin-setting-header) {
     border: 0;
-    .button-group {
-      column-gap: 2px;
-      .tiny-button {
-        width: 40px;
-        padding: 0;
-        min-width: 40px;
-        margin-right: 2px;
-      }
-    }
-    .close-plugin-setting-icon {
-      margin-left: 4px;
-    }
   }
 
   :deep(.plugin-setting-content) {
@@ -429,10 +416,6 @@ export default {
   :deep(.tiny-collapse) {
     border-bottom: 0;
   }
-}
-
-.life-cycles-container {
-  padding: 0 0 12px 0;
 }
 
 .page-setting-collapse {
@@ -447,6 +430,9 @@ export default {
     .svg-icon {
       margin-right: 6px;
     }
+  }
+  :deep(.tiny-collapse-item__content) {
+    padding: 0 12px 12px;
   }
 }
 </style>

@@ -9,15 +9,17 @@
       </slot>
       <div class="button-group-wrap">
         <slot name="header">
-          <tiny-button v-if="!isIconButton" type="info" @click="$emit('save')" class="plugin-save">保存</tiny-button>
-          <tiny-button v-if="isIconButton" :icon="icon" type="info" @click="$emit('add')">
-            {{ iconButtonText }}
-          </tiny-button>
-          <div v-if="showIfFullScreen" class="cursor" @click="fullScreen">
-            <svg-icon v-if="!state.isFullScreen" name="full-screen"></svg-icon>
-            <svg-icon v-if="state.isFullScreen" name="cancel-full-screen"></svg-icon>
-          </div>
-          <icon-close class="icon-close close" @click="$emit('cancel')"></icon-close>
+          <button-group>
+            <tiny-button v-if="!isIconButton" type="info" @click="$emit('save')" class="plugin-save">保存</tiny-button>
+            <tiny-button v-if="isIconButton" :icon="icon" type="info" @click="$emit('add')">
+              {{ iconButtonText }}
+            </tiny-button>
+            <div v-if="showIfFullScreen" class="cursor" @click="fullScreen">
+              <svg-button v-if="!state.isFullScreen" name="full-screen"></svg-button>
+              <svg-button v-if="state.isFullScreen" name="cancel-full-screen"></svg-button>
+            </div>
+            <svg-button name="close" @click="$emit('cancel')"></svg-button>
+          </button-group>
         </slot>
       </div>
     </div>
@@ -31,7 +33,9 @@
 <script>
 import { reactive, watchEffect } from 'vue'
 import { Button } from '@opentiny/vue'
-import { iconPlus, iconClose } from '@opentiny/vue-icon'
+import { iconPlus } from '@opentiny/vue-icon'
+import ButtonGroup from './ButtonGroup.vue'
+import SvgButton from './SvgButton.vue'
 
 const EVENTS = {
   FULL_SCREEN_CHANGE: 'fullScreenChange',
@@ -44,7 +48,8 @@ const EVENTS = {
 export default {
   components: {
     TinyButton: Button,
-    IconClose: iconClose()
+    SvgButton,
+    ButtonGroup
   },
   props: {
     /**
@@ -110,8 +115,7 @@ export default {
     return {
       state,
       fullScreen,
-      getFullScreenLabel,
-      IconClose: iconClose()
+      getFullScreenLabel
     }
   }
 }
@@ -138,7 +142,7 @@ export default {
   }
 
   &.second-panel {
-    left: calc(var(--base-left-panel-width) + var(--base-collection-panel-width) - 6px);
+    left: calc(var(--base-left-panel-width) + var(--base-collection-panel-width));
     z-index: 1;
   }
 
@@ -150,7 +154,7 @@ export default {
   }
 
   .cursor {
-    margin-left: 12px;
+    margin-left: 8px;
     cursor: pointer;
   }
 
@@ -180,6 +184,9 @@ export default {
     }
     :deep(.svg-button + .svg-button) {
       margin: 0;
+    }
+    :deep(.tiny-button.tiny-button) {
+      margin-right: 0;
     }
   }
 

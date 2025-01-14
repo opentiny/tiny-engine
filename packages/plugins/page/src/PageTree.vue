@@ -53,6 +53,7 @@ import { constants } from '@opentiny/tiny-engine-utils'
 import { closePageSettingPanel } from './PageSetting.vue'
 import { closeFolderSettingPanel } from './PageFolderSetting.vue'
 import http from './http.js'
+import { SvgButton } from '@opentiny/tiny-engine-common'
 
 const { ELEMENT_TAG, PAGE_STATUS, COMPONENT_NAME } = constants
 
@@ -281,18 +282,22 @@ export default {
           <span class="label">{node.label}</span>
           <span class="icons">
             {data.isPage && isPageLocked ? (
-              <SvgIcon
+              <SvgButton
                 class="page-edit-icon"
                 name="locked"
+                hoverBgColor={false}
                 onMousedown={(e) => openSettingPanel(e, node, isPageLocked)}
-              ></SvgIcon>
+              ></SvgButton>
             ) : null}
-            {data.isHome ? <SvgIcon class="page-edit-icon" name="text-page-home"></SvgIcon> : null}
-            <SvgIcon
+            {data.isHome ? (
+              <SvgButton class="page-edit-icon" hoverBgColor={false} name="text-page-home"></SvgButton>
+            ) : null}
+            <SvgButton
               name="setting"
               class="setting page-edit-icon"
+              hoverBgColor={false}
               onMousedown={(e) => openSettingPanel(e, node, isPageLocked)}
-            ></SvgIcon>
+            ></SvgButton>
           </span>
         </span>
       )
@@ -345,7 +350,8 @@ export default {
       getPageTreeRefs,
       IconFolderOpened: IconFolderOpened(),
       IconFolderClosed: IconFolderClosed(),
-      nullIcon
+      nullIcon,
+      SvgButton
     }
   }
 }
@@ -374,9 +380,6 @@ export default {
         border: none;
       }
     }
-    .title {
-      margin-left: 6px;
-    }
   }
   :deep(.tiny-collapse-item) {
     border-left: 0;
@@ -394,40 +397,33 @@ export default {
 }
 
 .app-manage-tree {
-  :deep(.tiny-tree) {
+  :deep(.tiny-tree.tiny-tree.tiny-tree) {
+    .tiny-tree-node__content-left {
+      padding: 0;
+      .tiny-tree-node__content-box {
+        padding: 0 12px;
+      }
+    }
     .tiny-tree-node__label {
       font-size: 12px;
       display: flex;
       align-items: center;
       flex: 1;
 
-      & > .svg-icon {
-        margin-right: 4px;
-      }
-      .svg-icon {
-        color: var(--te-common-icon-secondary);
-      }
       & .label {
         font-size: 12px;
         flex: 1;
+      }
+      .icon-page,
+      .folder-icon {
+        color: var(--te-common-icon-secondary);
+        margin-right: 8px;
       }
     }
 
     .tree-node-icon {
       margin-right: 0;
     }
-
-    .svg-icon {
-      width: 14px;
-      height: 14px;
-    }
-
-    .icons {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
     .tiny-tree-node.is-leaf .tiny-tree-node__content {
       padding-left: 0;
     }

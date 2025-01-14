@@ -1,10 +1,14 @@
 <template>
   <plugin-setting v-if="panel.created" v-show="panel.show" :title="state.title" class="version-list-panel">
     <template #header>
-      <close-icon class="close-icon" @click="closePanel"></close-icon>
+      <button-group>
+        <tiny-button type="primary" @click="handleConfirm">确定</tiny-button>
+        <svg-button name="close" @click="closePanel"></svg-button>
+      </button-group>
     </template>
     <template #content>
       <tiny-grid ref="versionGrid" :data="state.backupList" :highlight-hover-row="false">
+        <tiny-grid-column type="radio" width="40"></tiny-grid-column>
         <tiny-grid-column field="version" title="版本号"></tiny-grid-column>
         <tiny-grid-column title="发布时间">
           <template v-slot="{ row }">
@@ -12,17 +16,6 @@
           </template>
         </tiny-grid-column>
         <tiny-grid-column field="message" title="发布描述"></tiny-grid-column>
-        <tiny-grid-column title="操作">
-          <template v-slot="{ row }">
-            <tiny-button
-              type="text"
-              text="回退"
-              class="fallback-btn"
-              :disabled="isCurrentVersion(row)"
-              @click="handleChangeVersion(row)"
-            ></tiny-button
-          ></template>
-        </tiny-grid-column>
         <template #empty>
           <search-empty :isShow="true" />
         </template>
@@ -35,7 +28,7 @@
 import { reactive, watch, ref } from 'vue'
 import { Grid, GridColumn, Button } from '@opentiny/vue'
 import { format } from '@opentiny/vue-renderless/common/date'
-import { PluginSetting, CloseIcon, SearchEmpty } from '@opentiny/tiny-engine-common'
+import { PluginSetting, SearchEmpty, ButtonGroup, SvgButton } from '@opentiny/tiny-engine-common'
 import { useBlock, useModal, useMaterial, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { fetchBlockById, requestGroupBlockVersion } from './http'
 import { useVersionSelectPanel } from './js/usePanel'
@@ -46,8 +39,9 @@ export default {
     TinyGridColumn: GridColumn,
     TinyButton: Button,
     PluginSetting,
-    CloseIcon,
-    SearchEmpty
+    SearchEmpty,
+    ButtonGroup,
+    SvgButton
   },
   setup() {
     const { confirm } = useModal()
@@ -65,6 +59,11 @@ export default {
       fetchBlockById(selectedBlock.value.id)
         .then((data) => {
           state.backupList = data.histories?.reverse?.() || []
+          state.backupList.forEach((item, index) => {
+            if (item.version === selectedBlock.value.current_version) {
+              versionGrid.value?.setRadioRow(state.backupList[index])
+            }
+          })
         })
         .catch((error) => {
           message({ message: `获取区块版本失败: ${error.message || error}`, title: '区块版本获取失败' })
@@ -103,6 +102,18 @@ export default {
       }
     }
 
+    const handleConfirm = () => {
+      const selectVersion = versionGrid.value?.getRadioRow()
+      if (!selectVersion) {
+        message({
+          title: '版本选择',
+          message: '请选择要切换的版本'
+        })
+        return
+      }
+      handleChangeVersion(selectVersion)
+    }
+
     watch([() => panel.show, () => selectedBlock.value], ([panelShow]) => {
       if (panelShow) {
         state.title = `选择版本(${selectedBlock.value.label})`
@@ -123,7 +134,8 @@ export default {
       closePanel,
       format,
       isCurrentVersion,
-      handleChangeVersion
+      handleChangeVersion,
+      handleConfirm
     }
   }
 }

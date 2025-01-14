@@ -21,6 +21,7 @@
           type="info"
           description="你可以通过点击左侧区域变量列表绑定变量或处理函数，也可以在右边输入模式输入复杂的表达式。"
           class="header-alert"
+          :closable="false"
         ></tiny-alert>
       </div>
       <div class="bind-dialog-content">
@@ -85,7 +86,7 @@
               </div>
             </div>
             <div class="bottom lowcode-scrollbar-thin">
-              <h3>用法</h3>
+              <span class="bottom-title">用法</span>
               <div class="bottom-demo">
                 <p>
                   你可以通过点击左侧区域绑定变量或处理函数，或者点击右边的铅笔按钮切换到输入模式，输入复杂的表达式。
@@ -554,7 +555,6 @@ export default {
   .header-alert {
     margin-top: 0;
     margin-bottom: 12px;
-    color: var(--ti-lowcode-meta-bind-variable-header-alert-color);
   }
   .bind-dialog-content {
     display: flex;
@@ -565,11 +565,11 @@ export default {
       width: 38%;
 
       .content-left__title {
-        color: var(--ti-lowcode-meta-bind-variable-content-left-title-color);
+        color: var(--te-common-text-primary);
       }
 
       .list-wrap {
-        border: 1px solid var(--ti-lowcode-meta-bind-variable-list-wrap-border-color);
+        border: 1px solid var(--te-common-border-divider);
         border-radius: 4px;
         height: 300px;
         margin-top: 8px;
@@ -578,8 +578,8 @@ export default {
 
       .content-left__list {
         width: 120px;
-        color: var(--ti-lowcode-meta-bind-variable-content-left-list-color);
-        border-right: 1px solid var(--ti-lowcode-meta-bind-variable-content-left-list-border-right-color);
+        color: var(--te-common-text-secondary);
+        border-right: 1px solid var(--te-common-border-divider);
       }
 
       .content-left__list-item {
@@ -588,21 +588,23 @@ export default {
         transition: background 0.3s;
         &.active,
         &:hover {
-          background: var(--ti-lowcode-meta-bind-variable-list-item-hover-bg-color);
+          background: var(--te-common-bg-container);
+          color: var(--te-common-text-primary);
         }
       }
 
       .item-selected {
-        background-color: var(--ti-lowcode-meta-bind-variable-item-selected-bg-color);
+        background-color: var(--te-common-bg-container);
       }
 
       .item-text {
         padding: 8px 12px;
         cursor: pointer;
-        color: var(--ti-lowcode-meta-bind-variable-item-text-color);
+        color: var(--te-common-text-secondary);
 
         &:hover {
-          background-color: var(--ti-lowcode-meta-bind-variable-item-hover-bg-color);
+          background-color: var(--te-common-bg-container);
+          color: var(--te-common-text-primary);
         }
       }
 
@@ -635,7 +637,7 @@ export default {
       }
 
       .content-right__title {
-        color: var(--ti-lowcode-meta-bind-variable-content-right-title-color);
+        color: var(--te-common-text-primary);
         font-weight: 600;
         margin-right: 5px;
       }
@@ -658,8 +660,8 @@ export default {
           height: 54%;
           border-radius: 4px;
           padding: 12px 8px;
-          color: var(--ti-lowcode-meta-bind-variable-top-color);
-          border: 1px solid var(--ti-lowcode-meta-bind-variable-top-border-color);
+          color: var(--te-common-text-primary);
+          border: 1px solid var(--te-common-border-divider);
           box-sizing: border-box;
           & > div {
             height: 100%;
@@ -695,10 +697,14 @@ export default {
           border-radius: 4px;
           box-sizing: border-box;
           overflow: auto;
-          color: var(--ti-lowcode-meta-bind-variable-bottom-color);
-          border: 1px solid var(--ti-lowcode-meta-bind-variable-bottom-border-color);
+          color: var(--te-common-text-secondary);
+          border: 1px solid var(--te-common-border-divider);
           pre {
             font-family: consolas;
+          }
+          .bottom-title {
+            font-weight: var(--te-base-font-weight-6);
+            color: var(--te-common-text-primary);
           }
         }
       }
@@ -709,6 +715,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
   }
 }
 </style>

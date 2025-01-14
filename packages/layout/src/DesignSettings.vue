@@ -36,7 +36,7 @@ export default {
     const activating = computed(() => layoutState.settings.activating)
     const showMask = ref(true)
     const isCollapsed = ref(false)
-    const settingIcon = computed(() => (isCollapsed.value ? 'style-panel-collapsed' : 'style-panel-expand'))
+    const settingIcon = computed(() => (isCollapsed.value ? 'collapse_all' : 'expand_all'))
 
     provide('isCollapsed', isCollapsed)
 

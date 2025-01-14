@@ -25,7 +25,7 @@ import { constants } from '@opentiny/tiny-engine-utils'
 import { handlePageUpdate } from '@opentiny/tiny-engine-common/js/http'
 import meta from '../../meta'
 
-const { PAGE_STATUS } = constants
+const { PAGE_STATUS, AUTO_SAVED } = constants
 const state = reactive({
   visible: false,
   code: '',
@@ -174,4 +174,22 @@ export const openCommon = async () => {
       }
     }
   })
+}
+
+export const getAutoSaveStatus = () => {
+  try {
+    const value = localStorage.getItem(AUTO_SAVED)
+    return JSON.parse(value) ?? false
+  } catch {
+    return false
+  }
+}
+
+export const setAutoSaveStatus = (status) => {
+  try {
+    localStorage.setItem(AUTO_SAVED, JSON.stringify(status))
+    return true
+  } catch {
+    return false
+  }
 }

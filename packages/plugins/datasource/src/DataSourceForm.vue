@@ -3,11 +3,9 @@
     <template #header>
       <button-group>
         <tiny-button class="field-save" type="primary" @click="save">保存</tiny-button>
-        <div class="field-handler" @click="deleteDataSource" v-if="editable" tips="删除">
-          <svg-button name="delete"></svg-button>
-        </div>
+        <svg-button name="delete" v-if="editable" @click="deleteDataSource"></svg-button>
+        <svg-button name="close" @click="closeAllPanel"></svg-button>
       </button-group>
-      <svg-button class="close-plugin-setting-icon" name="close" @click="closeAllPanel"></svg-button>
     </template>
     <template #content>
       <tiny-form label-width="0">
@@ -254,19 +252,6 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.data-source-form {
-  .button-group {
-    column-gap: 6px;
-    .tiny-button {
-      width: 40px;
-      padding: 0;
-      min-width: 40px;
-    }
-  }
-  .close-plugin-setting-icon {
-    margin-left: 4px;
-  }
-}
 .datasource-form-footer {
   padding: 12px;
   .tiny-svg {

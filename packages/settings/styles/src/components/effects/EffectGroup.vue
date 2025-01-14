@@ -11,7 +11,6 @@
         :modelValue="state.opacity"
         :controls="false"
         :showUnit="true"
-        :disabled="true"
         @update:modelValue="updateOpacity"
       ></slider-configurator>
     </div>

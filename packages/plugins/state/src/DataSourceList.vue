@@ -4,7 +4,7 @@
       <li v-for="key in filteredKey" :key="key" :class="['data-source-list-item', { selected: key === selectedKey }]">
         <div class="item-head">
           <div class="item-head-left">
-            <svg-button name="plugin-icon-var"></svg-button>
+            <svg-icon name="plugin-icon-var" class="item-head-left-icon"></svg-icon>
             <span class="protocal"> {{ stateScope === STATE.CURRENT_STATE ? 'state.' : 'stores.' }}</span>
             <span class="name">{{ key }}</span>
           </div>
@@ -130,19 +130,6 @@ export default {
         display: flex;
         justify-content: flex-end;
         width: 30%;
-        .svg-button {
-          color: var(--ti-lowcode-toolbar-breadcrumb-color);
-          font-size: 14px;
-          cursor: pointer;
-
-          &:not(:last-child) {
-            margin-right: 4px;
-          }
-
-          &:hover {
-            color: var(--ti-lowcode-toolbar-icon-color);
-          }
-        }
       }
     }
   }
@@ -186,6 +173,10 @@ export default {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+      }
+      .item-head-left-icon {
+        color: var(--te-common-icon-secondary);
+        margin-right: 8px;
       }
     }
 

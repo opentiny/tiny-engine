@@ -115,7 +115,10 @@ export default {
     z-index: 9999;
     .tiny-button {
       border-radius: 4px;
-      border-color: var(--te-common-border-default);
+      border-color: var(--te-common-border-secondary);
+      & + .tiny-button {
+        margin-left: 4px;
+      }
     }
   }
 

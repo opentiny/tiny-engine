@@ -1,6 +1,6 @@
 <template>
   <tiny-form
-    ref="createData"
+    ref="createDataForm"
     label-position="top"
     class="create-form"
     :model="state.createData"
@@ -28,6 +28,7 @@
             :showFormatBtn="true"
             :options="state.editorOptions"
             @editorDidMount="editorDidMount"
+            @fullscreenChange="fullscreenChange"
           >
             <template #buttons>
               <editor-i18n-tool ref="i18nToolRef" @confirm="insertContent"></editor-i18n-tool>
@@ -278,7 +279,7 @@ export default {
       state.errorMessage = ''
 
       if (!name) {
-        state.errorMessage = 'state 属性名称未定义'
+        state.errorMessage = '输入内容不能为空'
       } else if (!verifyJsVarName(name)) {
         state.errorMessage = ' state 属性名称只能以字母或下划线开头且仅包含数字字母及下划线'
       } else if (
@@ -340,6 +341,10 @@ export default {
       }
     }
 
+    const fullscreenChange = () => {
+      i18nToolRef.value.state.showPopover = false
+    }
+
     onBeforeUnmount(() => {
       state.completionProvider?.forEach((provider) => {
         provider.dispose()
@@ -363,6 +368,22 @@ export default {
 
     const cancel = () => {
       emit('close')
+    }
+
+    const createDataForm = ref(null)
+
+    const validateForm = () => {
+      return new Promise((resolve) => {
+        createDataForm.value.validate((valid) => {
+          if (valid) {
+            resolve()
+          }
+        })
+      })
+    }
+
+    const clearValidateForm = () => {
+      createDataForm.value?.clearValidate()
     }
 
     const options = {
@@ -398,7 +419,11 @@ export default {
       validate,
       getFormData,
       insertContent,
-      cancel
+      fullscreenChange,
+      cancel,
+      validateForm,
+      createDataForm,
+      clearValidateForm
     }
   }
 }

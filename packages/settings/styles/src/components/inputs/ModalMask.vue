@@ -54,8 +54,13 @@ export default {
     const modalContent = ref(null)
 
     const calculateTopStyle = (modalContent) => {
+      const innnerHeight = window.getComputedStyle(document.body).height
       if (isAlignBody && modalContent) {
-        return modal.top < modalContent.offsetHeight ? 40 : modal.top - modalContent.offsetHeight + 40
+        return modal.top < modalContent.offsetHeight
+          ? 40
+          : modal.top > parseInt(innnerHeight) - 400
+          ? modal.top - 364
+          : modal.top - modalContent.offsetHeight + 40
       }
       return modal.top - 34
     }
