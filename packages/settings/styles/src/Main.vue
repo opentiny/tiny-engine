@@ -104,13 +104,7 @@ export default {
     TinyCollapseItem: CollapseItem,
     TinyInput: Input
   },
-  props: {
-    isCollapsed: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props) {
+  setup() {
     const CodeConfigurator = getConfigurator('CodeConfigurator')
     const VariableConfigurator = getConfigurator('VariableConfigurator')
     const styleCategoryGroup = [
