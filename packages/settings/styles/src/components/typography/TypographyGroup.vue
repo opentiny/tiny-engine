@@ -55,7 +55,7 @@
             filterable
             default-first-option
           ></select-configurator>
-          PX
+          px
         </div>
       </div>
 

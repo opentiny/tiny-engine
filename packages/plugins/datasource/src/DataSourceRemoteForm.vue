@@ -113,7 +113,8 @@ export default {
     }
     :deep(.border-input) {
       input {
-        border-radius: 0;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
         border-left: none;
       }
     }

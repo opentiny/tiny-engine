@@ -521,6 +521,7 @@ const handleDeleteCurSelector = () => {
     padding: 3px;
     border: 1px solid var(--ti-lowcode-className-selector-container-border-color);
     border-radius: var(--te-base-border-radius-1);
+    color: var(--te-common-text-weaken);
     cursor: pointer;
   }
 

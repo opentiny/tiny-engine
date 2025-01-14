@@ -1,26 +1,31 @@
 <template>
-  <ul>
-    <li v-for="item in history" :key="item.id" class="item">
-      <block-history-template :blockHistory="item" :is-block-manage="isBlockManage"></block-history-template>
-      <span class="item-icon">
-        <span @click="$emit('preview', item)"
-          ><svg-button class="svg-item-icon" name="text-page-review"></svg-button><span>预览</span></span
-        >
-        <span v-if="!isBlockManage" @click="$emit('restore', item)"
-          ><svg-button class="svg-item-icon" name="text-page-revert"></svg-button><span>还原</span></span
-        >
-      </span>
-    </li>
-  </ul>
+  <tiny-grid v-if="history.length" :data="history" height="300">
+    <tiny-grid-column v-if="isBlockManage" field="version" title="版本号">
+      <template v-slot="data">
+        {{ data.row.version }}
+        <span v-if="data.row.version === lastVersion.versions" class="version-v">最新</span>
+      </template>
+    </tiny-grid-column>
+    <tiny-grid-column field="updated_at" title="发布时间">
+      <template v-slot="data">
+        {{ format(data.row.updated_at, 'yyyy/MM/dd hh:mm:ss') }}
+      </template>
+    </tiny-grid-column>
+    <tiny-grid-column field="message" title="描述"></tiny-grid-column>
+    <tiny-grid-column width="90" field="operation" title="操作">
+      <template v-slot="data">
+        <span class="operation-text" @click="$emit('preview', data.row)">预览</span>
+        <span v-if="!isBlockManage" class="operation-text" @click="$emit('restore', data.row)">还原</span>
+      </template>
+    </tiny-grid-column>
+  </tiny-grid>
   <div v-if="!history.length" class="empty">暂无数据</div>
 </template>
 
 <script setup>
 import { defineEmits, defineProps } from 'vue'
-import { SvgButton } from '../index'
-
-// 引入组件在template上使用
-import BlockHistoryTemplate from './BlockHistoryTemplate.vue'
+import { format } from '@opentiny/vue-renderless/common/date'
+import { Grid as TinyGrid, GridColumn as TinyGridColumn } from '@opentiny/vue'
 
 defineProps({
   history: {
@@ -30,6 +35,10 @@ defineProps({
   isBlockManage: {
     type: Boolean,
     default: false
+  },
+  lastVersion: {
+    type: Object,
+    default: () => ({})
   }
 })
 
@@ -37,60 +46,22 @@ defineEmits(['preview', 'restore'])
 </script>
 
 <style lang="less" scoped>
-.item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0px 16px;
-
-  &:not(:last-child) {
-    border-bottom: 1px solid
-      var(--ti-lowcode-component-block-history-list-item-border-color, --ti-lowcode-tabs-border-color);
-  }
-
-  &:hover {
-    background-color: var(--ti-lowcode-component-block-history-list-item-hover-bg);
-    .item-icon {
-      display: block;
-    }
-  }
+.version-v {
+  font-size: 12px;
+  padding: 2px 8px;
+  margin-left: 5px;
+  background-color: var(--te-common-bg-tag);
+  color: var(--te-common-color-success);
+  border-radius: var(--te-base-border-radius-1);
 }
-
-.item-icon {
-  display: none;
-  > span {
-    border: 1px solid var(--ti-lowcode-component-block-history-list-item-btn-border-color);
-    height: 28px;
-    color: var(--ti-lowcode-component-block-history-list-item-btn-color);
-    font-size: 12px;
-    border-radius: 2px;
-    cursor: pointer;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    transition: 0.3s;
-    padding: 0 10px;
-    .svg-item-icon {
-      color: var(--ti-lowcode-component-block-history-list-item-btn-color);
-    }
-    .svg-item-icon:hover {
-      color: var(--ti-lowcode-component-block-history-list-item-btn-hover-color);
-    }
-    &:hover {
-      color: var(--ti-lowcode-component-block-history-list-item-btn-hover-color);
-      background: var(--ti-lowcode-component-block-history-list-item-btn-hover-bg);
-    }
-
-    &:last-child {
-      margin-left: 4px;
-    }
-    > span {
-      margin-left: 4px;
-    }
+.operation-text {
+  color: var(--te-common-text-emphasize);
+  & + .operation-text {
+    margin-left: 8px;
   }
 }
 
 .empty {
-  color: var(--ti-lowcode-common-empty-text-color);
+  color: var(--te-common-text-weaken);
 }
 </style>

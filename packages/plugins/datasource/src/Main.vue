@@ -5,13 +5,13 @@
       <svg-button
         class="set-data-source"
         tips="全局设置"
-        name="text-source-setting"
+        name="global-setting"
         @click="openGlobalDataHanderPanel"
       ></svg-button>
       <svg-button
         class="refresh-data-source"
         tips="刷新数据源"
-        name="text-source-list-ref"
+        name="flow-refresh"
         @click="refreshDataSource"
       ></svg-button>
     </template>
@@ -146,12 +146,6 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.set-data-source,
-.refresh-data-source {
-  width: 16px;
-  margin-right: 6px !important;
-  color: var(--ti-lowcode-datasource-btn-click-color);
-}
 .add-data-source {
   margin: 0 12px 12px 12px;
 }

@@ -30,31 +30,33 @@
     </vue-draggable-next>
   </template>
   <template v-else>
-    <div v-for="(item, index) in optionsList" :key="index" class="option-item not-draggable">
-      <meta-list-item
-        :item="item"
-        :index="index"
-        :itemClick="itemClick"
-        :dataScource="listItemOption"
-        @changeItem="changeItem"
-        @deleteItem="deleteItem"
-        @editItem="editItem"
-      >
-        <template #content>
-          <slot name="content" :data="item">
-            <span>{{ item[textField] || formatName(item) }}</span>
-          </slot>
-        </template>
-        <template #operate>
-          <slot name="operate" :data="item"></slot>
-        </template>
-        <template #metaForm>
-          <slot name="form" :data="item"></slot>
-        </template>
-        <template #footer>
-          <slot name="footer" :data="item"></slot>
-        </template>
-      </meta-list-item>
+    <div>
+      <div v-for="(item, index) in optionsList" :key="index" class="option-item not-draggable">
+        <meta-list-item
+          :item="item"
+          :index="index"
+          :itemClick="itemClick"
+          :dataScource="listItemOption"
+          @changeItem="changeItem"
+          @deleteItem="deleteItem"
+          @editItem="editItem"
+        >
+          <template #content>
+            <slot name="content" :data="item">
+              <span>{{ item[textField] || formatName(item) }}</span>
+            </slot>
+          </template>
+          <template #operate>
+            <slot name="operate" :data="item"></slot>
+          </template>
+          <template #metaForm>
+            <slot name="form" :data="item"></slot>
+          </template>
+          <template #footer>
+            <slot name="footer" :data="item"></slot>
+          </template>
+        </meta-list-item>
+      </div>
     </div>
   </template>
 </template>

@@ -50,7 +50,7 @@ import { HttpService } from './src/composable'
 export default {
   root: {
     id: 'engine.root',
-    metas: [HttpService, GenerateCodeService, GlobalService]
+    metas: [HttpService, GenerateCodeService, GlobalService] // GlobalService 依赖 HttpService，HttpService需要在前面处理
   },
   config: engineConfig,
   layout: {

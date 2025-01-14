@@ -1,43 +1,35 @@
 <!--录入数据的字符范围-->
 <template>
   <div class="collection-field-num">
-    <tiny-row gutter="0">
-      <tiny-col :span="6">
-        <div class="collection-field-item">
-          <tiny-form-item
-            prop="format.min"
-            :label="type === 'string' ? '最少输入字符数（包含空格）' : '最小值'"
-            label-width="300px"
-          >
-            <tiny-numeric v-model="formData.format.min" controls-position="right"></tiny-numeric>
-          </tiny-form-item>
-        </div>
-      </tiny-col>
-      <tiny-col :span="6">
-        <div class="collection-field-item">
-          <tiny-form-item
-            prop="format.max"
-            :label="type === 'string' ? '最多输入字符数（包含空格）' : '最大值'"
-            label-width="300px"
-          >
-            <tiny-numeric v-model="formData.format.max" controls-position="right"></tiny-numeric>
-          </tiny-form-item>
-        </div>
-      </tiny-col>
-    </tiny-row>
+    <div class="collection-field-item">
+      <tiny-form-item
+        prop="format.min"
+        :label="type === 'string' ? '最少输入字符数（包含空格）' : '最小值'"
+        label-width="300px"
+      >
+        <tiny-numeric v-model="formData.format.min" controls-position="right"></tiny-numeric>
+      </tiny-form-item>
+    </div>
+    <div class="collection-field-item">
+      <tiny-form-item
+        prop="format.max"
+        :label="type === 'string' ? '最多输入字符数（包含空格）' : '最大值'"
+        label-width="300px"
+      >
+        <tiny-numeric v-model="formData.format.max" controls-position="right"></tiny-numeric>
+      </tiny-form-item>
+    </div>
   </div>
 </template>
 
 <script>
 import { inject } from 'vue'
-import { Numeric, FormItem, Row, Col } from '@opentiny/vue'
+import { Numeric, FormItem } from '@opentiny/vue'
 import { formDataInjectionSymbols } from './DataSourceFieldForm.vue'
 export default {
   components: {
     TinyNumeric: Numeric,
-    TinyFormItem: FormItem,
-    TinyRow: Row,
-    TinyCol: Col
+    TinyFormItem: FormItem
   },
   props: {
     type: {
@@ -57,6 +49,7 @@ export default {
 
 <style lang="less" scoped>
 .collection-field-item {
+  width: 50%;
   .field-item-tip {
     padding-left: 5px;
     color: var(--ti-lowcode-datasource-description-error-color);
@@ -72,6 +65,7 @@ export default {
   color: var(--ti-lowcode-datasource-dialog-font-color);
 }
 .collection-field-num {
+  display: flex;
   align-items: center;
   justify-content: space-between;
 }

@@ -108,7 +108,10 @@ export default {
       align-items: center;
 
       :deep(.svg-button + .svg-button) {
-        margin: 0;
+        margin-left: 4px;
+      }
+      :deep(.svg-button + .icon-wrap) {
+        margin-left: 4px;
       }
     }
   }

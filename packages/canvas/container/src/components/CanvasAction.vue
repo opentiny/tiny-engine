@@ -253,7 +253,6 @@ export default {
 
     const findParentHasClass = (target) => {
       let parent = target.parentNode
-      let flag = false
 
       if (parent.className === undefined) {
         return false
@@ -261,13 +260,13 @@ export default {
 
       let name = JSON.stringify(parent.className)
 
-      if (name && name.indexOf('short-cut-set') === -1 && name.indexOf('tiny-dialog-box') === -1) {
-        flag = findParentHasClass(parent)
-      } else {
-        flag = true
+      const preventClassNameList = ['short-cut-set', 'tiny-dialog-box', 'icon-popover', 'i18n-input-popover']
+
+      if (preventClassNameList.some((item) => name?.includes(item))) {
+        return true
       }
 
-      return flag
+      return findParentHasClass(parent)
     }
 
     const onMousedown = (event, horizontal, vertical) => {

@@ -29,7 +29,7 @@
                 @mouseleave="mouseleave(data.row)"
                 @click="checkElement(data.row)"
               >
-                <span class="tree-content">
+                <span class="tree-content" :class="{ 'node-isblock': data.row?.componentType === 'Block' }">
                   <!-- <span class="node-icon">
                     <component :is="getIcon(data.row)" style="width: 1em; height: 1em"></component>
                   </span> -->
@@ -311,12 +311,9 @@ export default {
     border-top: 1px solid var(--ti-lowcode-tree-border-color);
 
     .tree-handle {
+      font-size: var(--te-base-font-size-2);
       svg {
-        color: var(--ti-lowcode-tree-icon-color);
-
-        &:hover {
-          color: var(--ti-lowcode-tree-hover-icon-color);
-        }
+        color: var(--te-common-icon-secondary);
       }
     }
   }
@@ -341,11 +338,6 @@ export default {
         }
       }
     }
-    .high-light-node {
-      .tree-handle svg {
-        color: var(--ti-lowcode-tree-selected-color);
-      }
-    }
   }
 
   :deep(.tiny-grid .tiny-grid__body-wrapper .tiny-grid-body__row) {
@@ -364,27 +356,23 @@ export default {
     line-height: inherit;
   }
   :deep(.high-light-node) {
-    background: var(--ti-lowcode-tree-selected-bg) !important;
+    background: var(--te-common-bg-container) !important;
 
     :deep(.eyeOpen) {
       display: block !important;
     }
   }
   :deep(.tiny-grid .tiny-grid__body-wrapper .tiny-grid-body__column) {
-    color: var(--ti-lowcode-tree-color);
+    color: var(--te-common-text-primary);
     padding: 0 12px;
     height: 24px !important;
     line-height: 24px;
     .tree-content {
       font-size: 12px;
     }
-  }
-  :deep(.tiny-grid .tiny-grid__body-wrapper .high-light-node .tiny-grid-body__column) {
-    color: var(--ti-lowcode-tree-selected-color);
-    font-weight: bold;
-  }
-  :deep(.tiny-grid .tiny-grid__body-wrapper .high-light-node .tiny-grid-body__column .tiny-grid-tree__node-btn) {
-    color: var(--ti-lowcode-tree-selected-color);
+    .node-isblock {
+      color: var(--te-common-color-prompt-secondary);
+    }
   }
 }
 </style>

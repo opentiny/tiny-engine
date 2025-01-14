@@ -12,6 +12,12 @@
       font-size: var(--te-base-font-size-1);
       color: var(--te-common-text-weaken);
     }
+    .tiny-input__suffix {
+      top: 50%;
+    }
+    .tiny-input__inner {
+      padding-right: 30px;
+    }
   }
   .tiny-select__tags {
     .tiny-tag {
@@ -38,8 +44,11 @@
     margin: 8px 12px 4px 12px;
     > div {
       color: var(--te-common-text-emphasize);
-      font-size: var(--te-base-font-size-1);
+      font-size: var(--te-base-font-size-base);
     }
+  }
+  .tiny-select-dropdown__empty {
+    font-size: var(--te-base-font-size-base);
   }
   // 下拉选项框
   .tiny-select-dropdown__item {
@@ -103,6 +112,10 @@
     color: var(--te-common-text-disabled);
     font-size: var(--te-base-font-size-base);
   }
+  input::-webkit-input-placeholder {
+    color: var(--te-common-text-weaken);
+    font-size: var(--te-base-font-size-base);
+  }
 }
 
 // 3、折叠框
@@ -120,7 +133,7 @@
     border-bottom-style: none;
 
     .tiny-collapse-item__word-overflow {
-      margin: var(--te-common-vertical-item-spacing-normal) 0px var(--te-common-vertical-form-label-spacing);
+      margin: var(--te-common-vertical-item-spacing-normal) 0px;
       width: 100%;
       line-height: var(--te-base-line-height-4);
     }
@@ -303,10 +316,21 @@
     }
     .tiny-button--danger {
       margin-right: 8px;
+      border-color: var(--te-common-color-error);
+      color: var(--te-common-color-error);
+      background-color: transparent;
+      &:hover {
+        border-color: var(--te-common-border-error-hover);
+        color: var(--te-common-color-error);
+        background-color: transparent;
+      }
     }
     .tiny-button--primary,
     .tiny-button--info {
-      margin-left: 8px;
+      margin-left: 4px;
+    }
+    .tiny-button--default.tiny-button--default {
+      border-color: var(--te-common-border-secondary);
     }
   }
 }
@@ -337,7 +361,7 @@
     background-color: var(--te-common-bg-primary);
     color: var(--te-common-text-inverse);
     border: 1px solid var(--te-common-border-active);
-    &:hover {
+    &:not(.is-disabled):hover {
       border: 1px solid var(--te-common-border-hover);
       background-color: var(--te-common-bg-secondary);
     }
@@ -347,7 +371,7 @@
     border-color: var(--te-common-border-active);
     background-color: var(--te-common-bg-primary);
 
-    &:hover {
+    &:not(.is-disabled):hover {
       border-color: var(--te-common-border-secondary);
     }
   }
@@ -361,6 +385,7 @@
   &.is-disabled {
     background-color: var(--te-common-bg-disabled);
     color: var(--te-common-text-disabled);
+    border-color: var(--te-common-border-disabled);
     .btn-icon {
       color: var(--te-common-icon-disabled);
     }
@@ -498,7 +523,7 @@
   }
   &.is-controls-right {
     .tiny-numeric__input-inner {
-      padding: 0 42px 0 12px;
+      padding: 0 20px 0 12px;
     }
     //加减按钮
     .tiny-numeric__decrease,
@@ -510,6 +535,12 @@
     .tiny-numeric__increase {
       border-bottom-color: var(--te-common-border-default);
     }
+    .tiny-numeric__decrease {
+      height: calc(50% - 0.5px);
+      svg {
+        transform: scale(0.8) translateY(1px);
+      }
+    }
   }
   .tiny-numeric-base .is-disabled {
     background: var(--te-common-bg-disabled);
@@ -519,7 +550,7 @@
     background-color: var(--te-common-bg-default);
     border-color: var(--te-common-border-default);
     &.has-unit .tiny-numeric__input-inner {
-      padding: 0 42px 0 12px;
+      padding: 0 20px 0 12px;
     }
   }
   .tiny-numeric__unit {
@@ -528,17 +559,18 @@
     border: 0;
     width: 14px;
     margin-right: 4px;
+    height: auto;
   }
 }
 
 // 12、popover气泡卡片
 .tiny-popover.tiny-popover.tiny-popper[x-placement] {
-  padding: 0px 8px;
+  padding: 12px 16px;
   font-size: var(--te-base-font-size-base);
   color: var(--te-common-text-primary);
   background-color: var(--te-common-bg-popover);
   border: 0;
-  box-shadow: 0 8px 24px 0 var(--te-base-box-shadow-rgba-2);
+  box-shadow: 0 -2px 12px 0 var(--te-base-box-shadow-rgba-2);
 
   height: auto;
 }
@@ -688,12 +720,12 @@
   &.tiny-tooltip__popper {
     background: var(--te-common-bg-popover);
     color: var(--te-common-text-primary);
-    box-shadow: 0 0 20px 0 var(--te-base-box-shadow-rgba-2);
+    box-shadow: 0 -2px 12px 0 var(--te-base-box-shadow-rgba-2);
     &[class*='is-'] {
       background: var(--te-common-bg-popover);
       color: var(--te-common-text-primary);
       font-size: var(--te-base-font-size-base);
-      padding: 12px;
+      padding: 12px 16px;
       &[x-placement^='top'] {
         .popper__arrow {
           border-top-color: var(--te-common-bg-popover);
@@ -731,7 +763,7 @@
 }
 
 // 18、表单
-.tiny-form.tiny-form {
+.tiny-form.tiny-form.tiny-form {
   .tiny-form-item {
     margin-bottom: 12px;
     &:last-of-type {
@@ -748,14 +780,52 @@
   }
   .tiny-form-item.is-text.is-no-asterisk.tiny-form-item--default {
     margin-bottom: 12px;
+    &:last-of-type {
+      margin-bottom: 0px;
+    }
   }
   .tiny-form-item__error--block {
     padding-top: 4px;
   }
   .tiny-form-item__error {
     font-size: var(--te-base-font-size-base);
+    color: var(--te-common-color-error);
+  }
+  .tiny-form-item.is-error .tiny-input__inner,
+  .tiny-form-item.is-error .tiny-input__inner:focus,
+  .tiny-form-item.is-error .tiny-textarea,
+  .tiny-form-item.is-error .tiny-textarea:focus,
+  .tiny-form-item.is-error .tiny-textarea__inner,
+  .tiny-form-item.is-error .tiny-textarea__inner:focus {
+    border-color: var(--te-common-color-error);
+    background-color: var(--te-common-bg-error);
   }
 }
+.tiny-form--label-left.label-align .tiny-form-item.is-required .tiny-form-item__label.tiny-form-item__label {
+  padding-left: 0;
+}
+.tiny-form--label-left.label-align
+  .tiny-form-item.is-required
+  ~ .tiny-form-item
+  .tiny-form-item__label.tiny-form-item__label {
+  padding-left: 0;
+}
+.tiny-form-item__label.tiny-form-item__label {
+  padding-right: 16px;
+}
+.tiny-form--label-left.label-align .tiny-form-item.is-required .tiny-form-item__label.tiny-form-item__label {
+  padding-left: 0;
+}
+.tiny-form--label-left.label-align
+  .tiny-form-item.is-required
+  ~ .tiny-form-item
+  .tiny-form-item__label.tiny-form-item__label {
+  padding-left: 0;
+}
+.tiny-form-item__label.tiny-form-item__label {
+  padding-right: 16px;
+}
+.tiny-form--label-left.has-required .tiny-form-item__label,
 .tiny-form--label-left.label-align .tiny-form-item.is-required .tiny-form-item__label.tiny-form-item__label {
   padding-left: 0;
 }
@@ -776,6 +846,9 @@
     background-color: var(--te-common-bg-default);
     color: var(--te-common-text-primary);
     cursor: pointer;
+    th.fixed__column {
+      background-color: var(--te-common-bg-container);
+    }
     .tiny-grid__header-wrapper {
       background-color: var(--te-common-bg-container);
       .tiny-grid__header {
@@ -845,6 +918,9 @@
           }
           &:hover {
             background-color: var(--te-common-bg-container);
+            .fixed__column {
+              background-color: var(--te-common-bg-container);
+            }
           }
           .tiny-grid-default-input {
             height: 24px;
@@ -943,5 +1019,13 @@
     .shepherd-arrow:before {
       background-color: var(--te-common-bg-popover);
     }
+  }
+}
+
+.tiny-alert {
+  &.tiny-alert--info {
+    background: var(--te-common-bg-info);
+    border-color: transparent;
+    color: var(--te-common-text-primary);
   }
 }

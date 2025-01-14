@@ -8,12 +8,13 @@
       >
         <div class="item-label">
           <div class="item-name">
-            <svg-button name="plugin-icon-data" class="plugin-icon-data"> </svg-button>
+            <svg-icon name="plugin-icon-data" class="plugin-icon-data"> </svg-icon>
             {{ item.name }}
           </div>
           <div class="item-handler">
             <svg-button
               class="set-page"
+              :hoverBgColor="false"
               tips="编辑静态数据"
               name="data-edit"
               @mousedown.stop.prevent="openRecordListPanel(item, index)"
@@ -21,8 +22,9 @@
             </svg-button>
             <svg-button
               class="set-page"
+              :hoverBgColor="false"
               tips="设置数据源"
-              name="text-source-setting"
+              name="setting"
               @mousedown.stop.prevent="openDataSourceForm(item, index)"
             >
             </svg-button>
@@ -161,23 +163,14 @@ export default {
         align-items: center;
       }
       .plugin-icon-data {
+        color: var(--te-common-icon-secondary);
         margin-right: 8px;
-        width: 18px;
       }
     }
     .item-handler {
       height: 24px;
       line-height: 24px;
       display: none;
-      .svg-button {
-        width: 16px;
-        height: 16px;
-        margin-top: 6px;
-        color: var(--ti-lowcode-datasource-toolbar-more-hover-color);
-        &:hover {
-          color: var(--ti-lowcode-toolbar-icon-color);
-        }
-      }
     }
   }
 }

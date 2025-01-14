@@ -25,7 +25,7 @@ import {
 import meta from '../../meta'
 import { getBlockCompileRes, getBlockByName, updateBlockCompileCache } from './block-compile'
 
-const { camelize, capitalize } = utils
+const { camelize, capitalize, deepClone } = utils
 const { MATERIAL_TYPE } = constants
 
 // 这里存放所有TinyVue组件、原生HTML、内置组件的缓存，包含了物料插件面板里所有显示的组件，也包含了没显示的一些联动组件
@@ -113,13 +113,17 @@ const patchBaseProps = (schemaProperties) => {
     })
 
     if (group) {
+      const targetInsertContent = basePropGroup.content.filter(
+        (item) => !group.content.some((prop) => prop.property === item.property)
+      )
+
       if (insertPosition === 'start') {
-        group.content.splice(0, 0, ...basePropGroup.content)
+        group.content.splice(0, 0, ...deepClone(targetInsertContent))
       } else {
-        group.content.push(...basePropGroup.content)
+        group.content.push(...deepClone(targetInsertContent))
       }
     } else {
-      schemaProperties.push(basePropGroup)
+      schemaProperties.push(deepClone(basePropGroup))
     }
   }
 }

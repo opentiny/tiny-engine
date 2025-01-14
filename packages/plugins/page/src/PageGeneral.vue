@@ -249,10 +249,6 @@ export default {
         font-size: 12px;
         color: var(--ti-lowcode-page-manage-text-color);
       }
-      .tiny-form-item__error {
-        font-size: 14px;
-        color: var(--ti-lowcode-page-manage-error-color);
-      }
     }
   }
   .tip {

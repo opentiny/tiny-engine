@@ -96,10 +96,11 @@ export default {
         // 1. 页面或区块状态是未保存状态（尝试编辑）
         // 2. 页面刷新或第一次进入页面(含从别的页面或区块切换到别的页面或区块)
         // 3. 页面上已经有弹窗，不允许重复弹窗
+        // 4. 当前历史堆栈为0，且当前未保存状态和上一次未保存状态不一致，不重复弹窗
 
         const showConfirm = !isSaved || pageSchema !== oldPageSchema
 
-        if (!showConfirm || showModal) {
+        if (!showConfirm || showModal || (useHistory().historyState?.index === 0 && isSaved !== oldIsSaved)) {
           return
         }
 

@@ -1,5 +1,5 @@
 <template>
-  <span class="svg-button" @click="$emit('click', $event)">
+  <span class="svg-button" :class="{ 'svg-button-hover': hoverBgColor }" @click="$emit('click', $event)">
     <tiny-tooltip effect="dark" :content="tips" :placement="placement">
       <component :is="name" v-if="isTinyIcon" />
       <svg-icon v-else :name="name"></svg-icon>
@@ -27,6 +27,10 @@ export default {
     name: {
       type: String,
       default: 'add'
+    },
+    hoverBgColor: {
+      type: Boolean,
+      default: true
     }
   },
   emits: ['click'],
@@ -45,7 +49,7 @@ export default {
   width: 24px;
   height: 24px;
   font-size: 16px;
-  color: var(--ti-lowcode-component-svg-button-color);
+  color: var(--te-common-icon-secondary);
   border: 1px solid transparent;
   border-radius: 4px;
   display: inline-flex;
@@ -53,19 +57,22 @@ export default {
   align-items: center;
   cursor: pointer;
   &:hover {
-    color: var(--ti-lowcode-component-svg-button-hover-color);
-    background-color: var(--ti-lowcode-component-svg-button-hover-bg-color);
+    color: var(--te-common-icon-hover);
   }
   &.active {
     color: var(--ti-lowcode-component-svg-button-active-color);
     background-color: var(--ti-lowcode-component-svg-button-active-bg-color);
   }
 
-  & + .svg-button {
-    margin-left: 8px;
-  }
   .svg-icon {
     outline: none;
+  }
+}
+.svg-button-hover {
+  color: var(--te-common-icon-primary);
+  &:hover {
+    color: var(--te-common-icon-primary);
+    background-color: var(--te-common-bg-prompt);
   }
 }
 </style>

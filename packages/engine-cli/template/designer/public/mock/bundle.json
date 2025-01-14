@@ -4829,6 +4829,113 @@
           }
         },
         {
+          "icon": "row",
+          "name": {
+            "zh_CN": "row"
+          },
+          "component": "TinyLayout",
+          "description": "定义 Layout 的行配置信息",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "package": "@opentiny/vue",
+            "exportName": "Layout",
+            "version": "3.14.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+          },
+          "group": "component",
+          "priority": 5,
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "content": [
+                  {
+                    "property": "cols",
+                    "label": {
+                      "text": {
+                        "zh_CN": "总栅格数"
+                      }
+                    },
+                    "cols": 12,
+                    "widget": {
+                      "component": "ButtonGroupConfigurator",
+                      "props": {
+                        "options": [
+                          {
+                            "label": "12",
+                            "value": 12
+                          },
+                          {
+                            "label": "24",
+                            "value": 24
+                          }
+                        ]
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "选择总栅格数"
+                    },
+                    "labelPosition": "none"
+                  },
+                  {
+                    "property": "tag",
+                    "label": {
+                      "text": {
+                        "zh_CN": "layout渲染的标签"
+                      }
+                    },
+                    "required": false,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "InputConfigurator",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": "定义Layout元素渲染后的标签，默认为 div"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": true,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": ["TinyRow", "TinyCol"],
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": ["disabled"]
+            },
+            "contextMenu": {
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
+            }
+          }
+        },
+        {
           "icon": "form",
           "name": {
             "zh_CN": "表单"
@@ -9613,7 +9720,7 @@
                     "required": true,
                     "readOnly": false,
                     "disabled": false,
-                    "onChange": "this.delProp('data')",
+                    "onChange": "function () { this.delProp('data') } ",
                     "cols": 12,
                     "widget": {
                       "component": "CodeConfigurator",

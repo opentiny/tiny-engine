@@ -8,10 +8,10 @@
         <div class="bind-chatgpt" id="bind-chatgpt">
           <section>
             <div class="chat-title-icons">
-              <svg-icon name="close" class="common-svg" @click="robotVisible = false"></svg-icon>
+              <svg-icon name="close" class="common-svg opt-button" @click="robotVisible = false"></svg-icon>
               <svg-icon
                 :name="chatWindowOpened ? 'chat-maximize' : 'chat-minimize'"
-                class="common-svg"
+                class="common-svg opt-button"
                 @click="resizeChatWindow"
               ></svg-icon>
             </div>
@@ -40,12 +40,18 @@
               <div class="robot-dialog-content-top-title">我是你的开发小助手</div>
               <span class="robot-dialog-content-top-icon"><svg-icon name="AI" class="icon-ai"></svg-icon>智能对话</span>
               <article class="chat-tips">
-                <span>需要一个注册表单？</span>
+                <span @click="sendContent('需要一个注册表单？', true)">需要一个注册表单？</span>
                 <span @click="sendContent('如何将表单嵌进我的网站？', true)">如何将表单嵌进我的网站？</span>
-                <span>需要一个注册表单？</span>
               </article>
             </div>
-            <article class="chat-window lowcode-scrollbar-hide" id="chatgpt-window">
+            <article
+              :class="[
+                'chat-window',
+                'lowcode-scrollbar-hide',
+                chatWindowOpened ? 'max-chat-window' : 'min-chat-window'
+              ]"
+              id="chatgpt-window"
+            >
               <tiny-layout>
                 <tiny-row
                   v-for="(item, index) in activeMessages"
@@ -55,7 +61,12 @@
                   :justify="item.role === 'user' ? 'end' : 'start'"
                   class="chat-message-row"
                 >
-                  <tiny-col :span="1" :no="1" class="chat-avatar-wrap">
+                  <tiny-col
+                    :span="1"
+                    :no="1"
+                    class="chat-avatar-wrap"
+                    :class="{ 'chat-avatar-wrap-ai': item.role !== 'user' }"
+                  >
                     <svg-icon v-if="item.role !== 'user'" class="chat-avatar chat-avatar-ai" name="AI"></svg-icon>
                     <svg-icon v-else class="chat-avatar" name="user-head"></svg-icon>
                   </tiny-col>
@@ -63,7 +74,6 @@
                     <div
                       :class="[
                         'chat-content',
-                        chatWindowOpened ? '' : 'hidden-text',
                         item.role === 'user'
                           ? 'chat-content-user'
                           : connectedFailed
@@ -88,9 +98,7 @@
                   <svg-icon name="chat-send" class="common-svg" @click="sendContent(inputContent, false)"></svg-icon>
                 </template>
               </tiny-input>
-              <tiny-button @click="endContent"
-                ><icon-plus class="icon-plus"></icon-plus><span>新对话</span></tiny-button
-              >
+              <tiny-button @click="endContent"><svg-icon name="add"></svg-icon><span>新对话</span></tiny-button>
             </footer>
           </div>
         </div>
@@ -114,7 +122,7 @@ import {
   DropdownItem as TinyDropdownItem
 } from '@opentiny/vue'
 import { useCanvas, useHistory, usePage, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
-import { iconChevronDown, iconPlus } from '@opentiny/vue-icon'
+import { iconChevronDown } from '@opentiny/vue-icon'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { getBlockContent, initBlockList, AIModelOptions } from './js/robotSetting'
 
@@ -128,8 +136,7 @@ export default {
     TinyDropdown,
     TinyDropdownMenu,
     TinyDropdownItem,
-    IconChevronDown: iconChevronDown(),
-    IconPlus: iconPlus()
+    IconChevronDown: iconChevronDown()
   },
   emits: ['close-chat'],
   setup() {
@@ -255,7 +262,7 @@ export default {
     }
 
     const resetContent = async () => {
-      activeMessages.value = chatWindowOpened.value ? messages.value : [messages.value[messages.value.length - 1]]
+      activeMessages.value = messages.value
       await scrollContent()
     }
 
@@ -400,7 +407,7 @@ export default {
 
 .robot-dialog {
   position: fixed;
-  width: 600px;
+  width: 450px;
   z-index: 5;
   right: 40px;
   bottom: 40px;
@@ -410,7 +417,7 @@ export default {
     var(--ti-lowcode-chat-bg-bottom-color)
   );
   box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.15);
-  padding: 16px 16px 30px 16px;
+  padding: 16px;
   border-radius: 12px;
 }
 .common-svg {
@@ -418,16 +425,19 @@ export default {
 }
 
 .chat-title-icons {
-  font-size: 16px;
-  height: 16px;
+  font-size: 20px;
+  height: 20px;
   margin-bottom: 20px;
   svg {
     float: right;
-    margin: 0 4px;
+    margin: 0 6px;
     cursor: pointer;
-    color: var(--ti-lowcode-chat-model-text);
+    color: var(--te-common-icon-primary);
     &:hover {
       opacity: 0.8;
+    }
+    &:first-child {
+      margin-right: 0;
     }
   }
 }
@@ -449,6 +459,7 @@ export default {
     font-size: 16px;
   }
   .ml8 {
+    color: var(--te-common-icon-secondary);
     margin-left: 10px;
   }
 }
@@ -494,7 +505,6 @@ export default {
   }
 }
 .chat-window {
-  max-height: 400px;
   overflow: scroll;
   .chat-avatar-wrap {
     width: 40px;
@@ -508,14 +518,16 @@ export default {
       border: none;
     }
   }
+  .chat-avatar-wrap-ai {
+    padding-left: 0;
+  }
   .chat-content {
-    max-width: 568px;
+    max-width: 465px;
     border-radius: 8px;
     font-size: 12px;
     font-weight: normal;
-    line-height: 36px;
-    height: 36px;
-    padding: 0 12px;
+    line-height: 20px;
+    padding: 12px;
 
     &.chat-content-user {
       background-color: var(--ti-lowcode-chat-model-user-text-bg);
@@ -524,6 +536,12 @@ export default {
   }
   .chat-message-row {
     margin-bottom: 20px;
+  }
+  &.max-chat-window {
+    height: 520px;
+  }
+  &.min-chat-window {
+    height: 80px;
   }
 }
 
@@ -550,6 +568,7 @@ export default {
       height: 40px;
       border: 2px solid var(--ti-lowcode-chat-model-input-border);
       border-radius: 8px;
+      padding-right: 44px;
     }
     .tiny-input__inner:hover {
       border-color: var(--ti-lowcode-chat-model-input-border);
@@ -557,13 +576,17 @@ export default {
     .tiny-input__inner:focus {
       border-color: var(--ti-lowcode-chat-model-input-border);
     }
+    .tiny-input__prefix,
+    .tiny-input__suffix {
+      padding-right: 8px;
+    }
     clip-path: inset(0 0 round 2px);
     svg {
       font-size: 16px;
     }
   }
 
-  .tiny-button {
+  .tiny-button.tiny-button.tiny-button {
     margin-left: 12px;
     background-image: linear-gradient(
       to bottom right,
@@ -581,8 +604,9 @@ export default {
     float: right;
     padding: 0;
     transition: all 0.1s linear;
-    .icon-plus {
-      stroke: var(--ti-lowcode-chat-model-button-text);
+    .svg-icon {
+      color: var(--ti-lowcode-chat-model-button-text);
+      margin-right: 0;
     }
     span {
       display: none;
@@ -590,7 +614,7 @@ export default {
     &:hover {
       transform: scale(1);
       border-radius: 8px;
-      width: 100px;
+      width: 105px;
       padding: 0 12px;
       span {
         display: inline-block;
@@ -611,18 +635,20 @@ export default {
 .chat-loading .tiny-loading__spinner .tiny-loading__text {
   color: var(--ti-lowcode-chat-loading-text-color);
 }
-.chat-model-popover {
-  background-color: var(--ti-lowcode-chat-model-popover-bg);
+.chat-model-popover.chat-model-popover {
+  width: 220px;
+  background-color: var(--te-common-bg-default);
   .tiny-dropdown-item {
-    color: var(--ti-lowcode-chat-model-popover-color);
+    color: var(--te-common-text-primary);
+    max-width: 220px;
     &:hover {
-      color: var(--ti-lowcode-chat-model-popover-active-color);
-      background-color: var(--ti-lowcode-chat-model-popover-active-bg);
+      color: var(--te-common-text-primary);
+      background-color: var(--te-common-bg-container);
     }
   }
   .selected-model {
-    color: var(--ti-lowcode-chat-model-popover-active-color);
-    background-color: var(--ti-lowcode-chat-model-popover-active-bg);
+    color: var(--te-common-text-primary);
+    background-color: var(--te-common-bg-container);
   }
 }
 </style>

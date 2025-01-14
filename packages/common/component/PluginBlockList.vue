@@ -53,14 +53,14 @@
           <div class="setting-menu" @mouseover.stop="handleSettingMouseOver" @mouseleave="handleBlockItemLeave">
             <ul class="list">
               <li class="list-item" @mousedown.stop.left="editBlock({ event: $event, item, index })">
-                <svg-button class="list-item-svg" name="to-edit"> </svg-button>
+                <svg-button class="list-item-svg" :hoverBgColor="false" name="to-edit"> </svg-button>
               </li>
               <li
                 class="list-item"
                 @mouseover.stop="iconSettingMove"
                 @mousedown.stop.prevent="iconClick({ event: $event, item, index })"
               >
-                <svg-button class="list-item-svg" name="text-source-setting"> </svg-button>
+                <svg-button class="list-item-svg" :hoverBgColor="false" name="setting"> </svg-button>
               </li>
             </ul>
           </div>
@@ -74,12 +74,12 @@
             <ul class="list">
               <tiny-tooltip content="版本列表" placement="top">
                 <li class="list-item" @click.stop="$emit('openVersionPanel', { item, index })">
-                  <svg-button class="list-item-svg" name="versions"> </svg-button>
+                  <svg-button class="list-item-svg" :hoverBgColor="false" name="versions"> </svg-button>
                 </li>
               </tiny-tooltip>
               <tiny-tooltip content="移除" placement="top">
                 <li class="list-item" @click.stop="$emit('deleteBlock', item)">
-                  <svg-button class="list-item-svg" name="remove"> </svg-button>
+                  <svg-button class="list-item-svg" :hoverBgColor="false" name="remove"> </svg-button>
                 </li>
               </tiny-tooltip>
             </ul>
@@ -205,7 +205,7 @@ export default {
   emits: ['click', 'iconClick', 'add', 'deleteBlock', 'openVersionPanel', 'editBlock', 'checkAll', 'cancelCheckAll'],
   setup(props, { emit }) {
     const panelState = inject('panelState', {})
-    const blockUsers = inject('blockUsers')
+    const blockUsers = inject('blockUsers', [])
     const state = reactive({
       activeIndex: -1,
       data: computed(() => props.data),
@@ -741,18 +741,11 @@ export default {
     box-sizing: border-box;
     cursor: pointer;
     &:hover {
-      background-color: var(--ti-lowcode-component-block-setting-item-hover-bg);
       color: var(--ti-lowcode-common-primary-text-color);
     }
     .list-item-icon {
       font-size: 14px;
       color: var(--te-common-icon-secondary);
-    }
-    .list-item-svg {
-      color: var(--te-common-icon-secondary);
-    }
-    .list-item-svg:hover {
-      background-color: var(--ti-lowcode-component-block-setting-item-hover-bg);
     }
   }
 }

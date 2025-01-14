@@ -1,7 +1,7 @@
 <template>
   <div id="help-plugin">
     <tiny-popover
-      :offset="50"
+      :offset="-100"
       placement="right"
       width="208"
       trigger="click"
@@ -81,7 +81,7 @@ export default {
 
     const tinyGuideRef = ref()
     const toolTipContent = '点击这里，再次查看新手指引'
-    const helpTitle = '帮助'
+    const helpTitle = '帮助与指引'
     const questionTitle = '常见问题'
     const courseUrl = 'https://opentiny.design/tiny-engine#/help-center/course/engine'
     const questionList = [
@@ -340,7 +340,7 @@ div.tiny-guide.shepherd-element {
   cursor: auto;
   background-color: var(--ti-lowcode-help-box-bg-color);
   border-radius: 6px;
-  padding: 16px 0;
+  padding: 4px 0;
   &-top {
     text-align: right;
   }
@@ -349,13 +349,12 @@ div.tiny-guide.shepherd-element {
     font-size: 12px;
     font-weight: 600;
     line-height: 18px;
-    margin: 0 8px 8px 8px;
+    margin: 0 0 8px;
   }
   &-body {
     padding-bottom: 8px;
   }
   &-item {
-    padding: 0 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -363,7 +362,9 @@ div.tiny-guide.shepherd-element {
     height: 28px;
     line-height: 28px;
     font-size: 12px;
-    color: var(--ti-lowcode-help-box-item-text-color);
+    margin: 0 -16px;
+    padding: 0 16px;
+    color: var(--te-common-text-primary);
     span {
       display: flex;
       align-items: center;
@@ -374,7 +375,6 @@ div.tiny-guide.shepherd-element {
   }
   &-item:hover {
     background: var(--ti-lowcode-help-box-item-hover-bg-color);
-    color: var(--ti-lowcode-help-box-title-text-color);
   }
 
   &-ques {

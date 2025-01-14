@@ -193,7 +193,9 @@ export default {
     .tiny-collapse-item.is-active + .tiny-collapse-item {
       margin-top: 0;
     }
-
+    :deep(.tiny-collapse-item__header .tiny-collapse-item__word-overflow) {
+      margin: var(--te-common-vertical-item-spacing-normal) 0px var(--te-common-vertical-form-label-spacing);
+    }
     .components-items {
       .item {
         cursor: pointer;

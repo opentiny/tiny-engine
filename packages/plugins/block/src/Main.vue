@@ -37,7 +37,12 @@
             <div class="block-item">
               <span>{{ item.name }}</span>
               <div class="item-btns">
-                <svg-button class="item-icon" name="to-edit" title="编辑" @click.stop="editCategory(item)"></svg-button>
+                <svg-button
+                  class="item-icon"
+                  name="to-edit"
+                  :hoverBgColor="false"
+                  @click.stop="editCategory(item)"
+                ></svg-button>
                 <tiny-popover
                   :modelValue="state.currentDeleteGroupId === item.id"
                   placement="right"
@@ -46,16 +51,16 @@
                   @update:modelValue="handleChangeDeletePopoverVisible"
                 >
                   <div class="popper-confirm" @mousedown.stop="">
-                    <div class="popper-confirm-header">
-                      <svg-icon class="icon" name="warning"></svg-icon>
+                    <div class="popper-confirm-header">删除</div>
+                    <div class="popper-confirm-content">
                       <span class="title">{{ groupLabels.deletePrompt }}</span>
                     </div>
                     <div class="popper-confirm-footer">
-                      <tiny-button class="confirm-btn" size="small" type="primary" @click="delCategory(item.id)"
-                        >确定</tiny-button
-                      >
                       <tiny-button class="cancel-btn" size="small" @click="handleShowDeleteModal(null)"
                         >取消</tiny-button
+                      >
+                      <tiny-button class="confirm-btn" size="small" type="primary" @click="delCategory(item.id)"
+                        >确定</tiny-button
                       >
                     </div>
                   </div>
@@ -64,7 +69,7 @@
                       v-if="!item.blocks.length"
                       class="item-icon"
                       name="delete"
-                      title="删除"
+                      :hoverBgColor="false"
                       @click.stop="handleShowDeleteModal(item.id)"
                     ></svg-button>
                   </template>
@@ -500,9 +505,9 @@ export default {
   bottom: 0;
   left: -6px;
   right: 0;
-  padding: 10px 16px;
+  padding: 8px 16px;
   background-color: var(--ti-lowcode-component-search-bg);
-  box-shadow: 0 -2px 12px 0 var(--te-base-box-shadow-rgba-2);
+  border-top: 1px solid var(--te-common-border-divider);
   color: var(--ti-lowcode-component-block-list-item-color);
   display: flex;
   justify-content: space-between;
@@ -569,25 +574,26 @@ export default {
     }
   }
 
-  .popper-confirm {
-    padding: 20px;
-  }
-
   .popper-confirm-header {
+    font-size: var(--te-base-font-size-1);
+    color: var(--te-common-text-primary);
+    font-weight: var(--te-base-font-weight-7);
+    margin-bottom: 12px;
+  }
+  .popper-confirm-content {
     font-size: 12px;
-    color: var(--ti-lowcode-materials-block-group-delete-popover-title-color);
-    .icon {
-      color: var(--ti-lowcode-warning-color);
-      width: 16px;
-      height: 16px;
-    }
-    .title {
-      margin-left: 4px;
-    }
+    color: var(--te-common-text-secondary);
   }
   .popper-confirm-footer {
-    text-align: center;
-    margin-top: 22px;
+    text-align: right;
+    margin-top: 16px;
+    .tiny-button {
+      min-width: 40px;
+      margin-right: 0;
+      & + .tiny-button {
+        margin-left: 8px;
+      }
+    }
   }
 }
 .tiny-dropdown-menu.tiny-dropdown-menu {

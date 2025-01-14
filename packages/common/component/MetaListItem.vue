@@ -61,9 +61,6 @@
     @update:visible="isShow = $event"
   >
     <span class="switch-tip">
-      <span>
-        <svg-icon name="warning"></svg-icon>
-      </span>
       <span>确定删除吗？</span>
     </span>
     <template #footer>
@@ -292,6 +289,7 @@ export default {
       &.right {
         float: left;
         text-align: right;
+        margin-right: 8px;
       }
     }
   }
@@ -302,20 +300,14 @@ export default {
   .icon-close {
     position: absolute;
     top: 6px;
-    right: 6px;
+    right: 10px;
   }
 }
 .add-options {
-  overflow-y: scroll;
-  padding: 20px 0 20px 2px;
+  overflow-y: auto;
+  max-height: calc(100vh - 94px); // 94为头部高度和底部高度
   &.top {
     margin-bottom: 0;
-  }
-  &::-webkit-scrollbar-track-piece {
-    background: var(--ti-lowcode-toolbar-bg);
-  }
-  &::-webkit-scrollbar {
-    width: 5px;
   }
 }
 </style>

@@ -822,8 +822,8 @@ export const canvasApi = {
   getDocument,
   canvasDispatch,
   Builtin,
-  removeBlockCompsCacheByName: (...args) => {
-    return canvasState.renderer.removeBlockCompsCacheByName(...args)
+  removeBlockCompsCache: (...args) => {
+    return canvasState.renderer.removeBlockCompsCache(...args)
   },
   updateCanvas: (...args) => {
     return canvasState.renderer.updateCanvas(...args)

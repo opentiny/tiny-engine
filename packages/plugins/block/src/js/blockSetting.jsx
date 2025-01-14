@@ -419,10 +419,19 @@ export const refreshBlockData = async (block = {}) => {
       if (newBlock?.public_scope_tenants?.length) {
         newBlock.public_scope_tenants = newBlock.public_scope_tenants.map((e) => e.id)
       }
-      Object.assign(block, newBlock)
-      useLayout().layoutState.pageStatus = getCanvasStatus(newBlock?.occupier)
 
-      useHistory().addHistory(block.content)
+      Object.assign(block, newBlock)
+
+      // 与当前正在画布编辑态的区块相同，需要同步更新
+      if (useBlock().getCurrentBlock()?.id === block.id) {
+        useLayout().layoutState.pageStatus = getCanvasStatus(newBlock?.occupier)
+        useHistory().addHistory(block.content)
+        Object.assign(useBlock().getCurrentBlock(), newBlock)
+      }
+      // 与当前区块管理面板的区块相同，需要同步更新
+      if (getEditBlock()?.id === block.id) {
+        Object.assign(getEditBlock(), newBlock)
+      }
     }
   }
 }
@@ -637,6 +646,10 @@ const updateBlock = (block = {}) => {
  * @returns
  */
 const generateBlockDeps = (children, deps = { scripts: [], styles: new Set() }) => {
+  if (!Array.isArray(children)) {
+    return
+  }
+
   children.forEach((child) => {
     const component = useMaterial().getMaterial(child.componentName)
 
@@ -727,15 +740,25 @@ export const getBlockById = async (id) => {
 
 export const createOrUpdateCategory = async ({ categoryId, ...params }, isEdit) => {
   const appId = getAppId()
-  params.app = Number(appId)
   const replaceCategoryWithGroup = useBlock().shouldReplaceCategoryWithGroup()
-  let requestFunc = replaceCategoryWithGroup ? updateGroup : updateCategory
+  let requestFunc
+
+  if (replaceCategoryWithGroup) {
+    params.app = appId
+    requestFunc = updateGroup
+  } else {
+    params.app = Number(appId)
+    requestFunc = updateCategory
+  }
 
   if (!isEdit) {
-    if (!replaceCategoryWithGroup) {
+    // 替换成创建接口
+    if (replaceCategoryWithGroup) {
+      requestFunc = createGroup
+    } else {
+      requestFunc = createCategory
       params.category_id = categoryId
     }
-    requestFunc = replaceCategoryWithGroup ? createGroup : createCategory
   }
 
   const res = await requestFunc(params)

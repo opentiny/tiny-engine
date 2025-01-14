@@ -58,6 +58,15 @@ export default {
       minimap: {
         enabled: false
       },
+      placeholder: `// ✅ 函数声明可以保存
+      \n function topLevelFunction(){ \n
+      \u200B \u200B const message = 'hello tiny-engine.' \n
+      \u200B \u200B console.log(message) 
+      \n }
+      \n 
+      // ❌ 顶层/常规 变量声明 \n const someVariable = 42 \n
+      // ❌ 表达式 \n const result = someVariable + 10`,
+
       // 禁用滚动条边边一直显示的边框
       overviewRulerBorder: false,
       renderLineHighlightOnlyWhenFocus: true
@@ -102,7 +111,7 @@ export default {
   width: 50vw;
   height: 100%;
   background: var(--ti-lowcode-plugin-js-bg);
-  box-shadow: 6px 0px 3px 0px rgba(0, 0, 0, 0.05);
+  box-shadow: 6px 0px 3px 0px var(--te-base-box-shadow-rgba-3);
   position: absolute;
   left: 0;
   top: 0;
@@ -142,24 +151,19 @@ export default {
       align-items: center;
 
       .save-btn {
-        width: 40px;
-        padding: 0;
         min-width: 40px;
-        margin-right: 12px;
+        margin-right: 8px;
         height: 24px;
         line-height: 24px;
         .dots {
-          width: 10px;
-          height: 10px;
-          background: var(--ti-lowcode-warning-color-1);
+          width: 6px;
+          height: 6px;
+          background: var(--ti-lowcode-common-error-color);
           border-radius: 50%;
           position: absolute;
-          top: 5px;
-          right: 40px;
+          top: 9px;
+          right: 34px;
         }
-      }
-      .icon-wrap {
-        width: auto;
       }
     }
   }

@@ -21,7 +21,7 @@ export const defaultGenPropsHook = (schema) => {
 
   properties.forEach(({ content = [] }) => {
     content.forEach(({ property, type, defaultValue }) => {
-      let propType = capitalize(type)
+      let propType = type && capitalize(type)
       let propValue = defaultValue
 
       if (propType === 'String') {

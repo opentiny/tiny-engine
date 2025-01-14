@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import { computed, watch } from 'vue'
+import { watch, inject, ref } from 'vue'
 import { Collapse, CollapseItem, Input } from '@opentiny/vue'
 import { useHistory, useCanvas, useProperties, getConfigurator } from '@opentiny/tiny-engine-meta-register'
 import {
@@ -123,7 +123,8 @@ export default {
       'borders',
       'effects'
     ]
-    const activeNames = computed(() => (props.isCollapsed ? [styleCategoryGroup[0]] : styleCategoryGroup))
+    const isCollapsed = inject('isCollapsed')
+    const activeNames = ref(styleCategoryGroup)
     const { getCurrentSchema } = useCanvas()
     // 获取当前节点 style 对象
     const { state, updateStyle } = useStyle() // updateStyle
@@ -131,7 +132,7 @@ export default {
     const { getSchema, setProp } = useProperties()
 
     const handoverGroup = (actives) => {
-      if (props.isCollapsed) {
+      if (isCollapsed.value) {
         activeNames.value = actives.length > 1 ? actives.shift() : actives
       }
     }
@@ -201,6 +202,17 @@ export default {
       }
     )
 
+    watch(
+      () => isCollapsed.value,
+      () => {
+        if (isCollapsed.value) {
+          activeNames.value = []
+        } else {
+          activeNames.value = styleCategoryGroup
+        }
+      }
+    )
+
     return {
       CodeConfigurator,
       VariableConfigurator,
@@ -212,7 +224,8 @@ export default {
       save,
       close,
       updateStyle,
-      setConfig
+      setConfig,
+      isCollapsed
     }
   }
 }

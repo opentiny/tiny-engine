@@ -16,7 +16,7 @@
       </div>
     </div>
 
-    <div class="advnce-config">
+    <div class="advnce-config loop-data-item">
       <label class="text-ellipsis-multiple">循环数据</label>
       <div class="advanced-config-form-item">
         <code-configurator
@@ -135,7 +135,7 @@ export default {
       }
 
       const isNumber = Number(value).toString() !== 'NaN'
-      let newPropsKey = schema.props.key
+      let newPropsKey = schema.props?.key
 
       if (value && !isNumber) {
         newPropsKey = {
@@ -298,6 +298,12 @@ export default {
       .advance-item {
         width: 100%;
       }
+    }
+  }
+  .loop-data-item {
+    display: block;
+    label {
+      margin-bottom: 5px;
     }
   }
 }

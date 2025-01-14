@@ -1,6 +1,5 @@
 <template>
   <plugin-block-list
-    class="block-list-wrap"
     ref="blockRef"
     :data="blockList"
     :show-add-button="state.showAddButton"

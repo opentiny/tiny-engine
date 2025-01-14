@@ -479,7 +479,6 @@ export default {
   }
 }
 .media-content {
-  padding: 12px 8px;
   line-height: 18px;
   .media-title {
     font-weight: 600;
@@ -493,7 +492,6 @@ export default {
 }
 
 .content-wrap {
-  padding: 20px 12px;
   .title {
     font-weight: 600;
     margin-bottom: 16px;

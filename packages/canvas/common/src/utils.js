@@ -62,7 +62,8 @@ export const copyObject = (node) => {
  */
 export const dynamicImportComponents = async ({ package: pkg, script, components }) => {
   if (!script) return
-  const scriptUrl = script.startsWith('.') ? new URL(script, location.href).href : script
+  const href = window.parent.location.href || location.href; // 这里要取父窗口的地址，因为在iframe中href是about:srcdoc
+  const scriptUrl = script.startsWith('.') ? new URL(script, href).href : script
 
   if (!window.TinyComponentLibs[pkg]) {
     const modules = await import(/* @vite-ignore */ scriptUrl)

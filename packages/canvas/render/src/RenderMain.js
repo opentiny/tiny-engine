@@ -22,7 +22,7 @@ import renderer, {
   setController,
   globalNotify,
   isStateAccessor,
-  removeBlockCompsCacheByName
+  removeBlockCompsCache
 } from './render'
 import { setContext, getContext, setCondition, context, getDesignMode, setDesignMode } from './context'
 import CanvasEmpty from './CanvasEmpty.vue'
@@ -505,6 +505,6 @@ export const api = {
   setRenderer,
   getDesignMode,
   setDesignMode,
-  removeBlockCompsCacheByName,
+  removeBlockCompsCache,
   updateCanvas
 }

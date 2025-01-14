@@ -1,22 +1,20 @@
 <template>
-  <plugin-setting
-    v-if="panel.created"
-    v-show="panel.show"
-    :title="selectedGroup.groupName"
-    @cancel="closeGroupPanel"
-    @save="addBlocks"
-  >
+  <plugin-setting v-if="panel.show" :title="validGroup.groupName" @cancel="closeGroupPanel" @save="addBlocks">
     <template #content>
       <div class="block-add-content">
         <div class="block-add-content-title">区块列表</div>
-        <block-group-filters :filters="state.filters" @search="searchBlocks"></block-group-filters>
-        <block-group-transfer v-model:blockList="state.blockList">
+        <block-group-filters
+          :key="validGroup.groupId"
+          :filters="state.filters"
+          @search="searchBlocks"
+        ></block-group-filters>
+        <block-group-transfer :blockList="state.blockList">
           <template #search>
             <tiny-search
               class="transfer-order-search"
               v-model="state.searchValue"
               placeholder="请输入关键词"
-              @update:modelValue="searchBlocks"
+              @update:modelValue="searchBlocks(state.filterValues)"
             >
               <template #prefix>
                 <tiny-icon-search />
@@ -29,7 +27,7 @@
   </plugin-setting>
 </template>
 <script>
-import { nextTick, reactive, watch, provide, inject, ref } from 'vue'
+import { reactive, watch, provide, inject, ref } from 'vue'
 import { Search } from '@opentiny/vue'
 import { iconSearch } from '@opentiny/vue-icon'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
@@ -77,7 +75,15 @@ export default {
     TinyIconSearch: iconSearch()
   },
   setup() {
-    const { isDefaultGroupId, isRefresh, selectedGroup, selectedBlockArray, getGroupList, cancelCheckAll } = useBlock()
+    const {
+      isAllGroupId,
+      isDefaultGroupId,
+      isRefresh,
+      selectedGroup,
+      selectedBlockArray,
+      getGroupList,
+      cancelCheckAll
+    } = useBlock()
     const { panel, closePanel } = useGroupPanel()
     const { message } = useModal()
     const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
@@ -106,11 +112,28 @@ export default {
           children: [],
           usingSelect: true
         }
-      ]
+      ],
+      filterValues: {}
     })
 
+    const validGroup = ref({ ...selectedGroup.value })
+
+    watch(
+      () => selectedGroup.value.groupId,
+      (groupId) => {
+        if (groupId && !isAllGroupId(groupId) && !isDefaultGroupId(groupId)) {
+          validGroup.value = { ...selectedGroup.value }
+        }
+      }
+    )
+
+    const clearSearchParams = () => {
+      state.searchValue = ''
+      state.filterValues = {}
+    }
+
     const addBlocks = () => {
-      const groupId = selectedGroup.value.groupId
+      const groupId = validGroup.value.groupId
       fetchGroupBlocksById({ groupId })
         .then((data) => {
           const resData =
@@ -142,7 +165,7 @@ export default {
             useMaterial().updateCanvasDependencies(addedBlocks)
 
             isRefresh.value = true
-            state.searchValue = ''
+            clearSearchParams()
             selectedBlockArray.value.length = 0
             useResource().fetchResource({ isInit: false }) // 添加区块分组，不需要重新init页面或者区块。
             useNotify({
@@ -165,7 +188,7 @@ export default {
     }
 
     const closeGroupPanel = () => {
-      state.searchValue = ''
+      clearSearchParams()
       selectedBlockArray.value.length = 0
       panelState.isBlockGroupPanel = false
       closePanel()
@@ -180,32 +203,29 @@ export default {
       return blocks.filter((block) => !isInBlockGroup(block) && !isSelectedBlock(block))
     }
 
-    const searchBlocks = (value, filters) => {
-      nextTick(() => {
-        const params = {
-          groupId: selectedGroup.value.groupId,
-          label_contains: state.searchValue,
-          tag: filters?.tag,
-          publicType: filters?.publicType,
-          author: filters?.author
-        }
-        fetchAvailableBlocks(params)
-          .then((data) => {
-            state.blockList = selectedBlockFilter(data)
+    const searchBlocks = (filters) => {
+      state.filterValues = filters
+
+      const params = {
+        groupId: validGroup.value.groupId,
+        label_contains: state.searchValue.trim(),
+        tag: filters?.tag,
+        publicType: filters?.publicType,
+        author: filters?.author
+      }
+      fetchAvailableBlocks(params)
+        .then((data) => {
+          state.blockList = selectedBlockFilter(data)
+        })
+        .catch((error) => {
+          message({
+            message: `区块搜索失败: ${error.message || error}`,
+            status: 'error'
           })
-          .catch((error) => {
-            message({
-              message: `区块搜索失败: ${error.message || error}`,
-              status: 'error'
-            })
-          })
-      })
+        })
     }
 
-    const fetchBlocks = () => {
-      const groupId = selectedGroup.value.groupId
-      if (!groupId || isDefaultGroupId(groupId)) return
-
+    const fetchBlocks = (groupId) => {
       fetchAvailableBlocks({ groupId })
         .then((data) => {
           initGruopBlockMap(getGroupList())
@@ -220,10 +240,6 @@ export default {
     }
 
     const getFilters = () => {
-      const groupId = selectedGroup.value.groupId
-      if (!groupId || isDefaultGroupId(groupId)) {
-        return
-      }
       Promise.allSettled([fetchTenants(), fetchUsers(), fetchTags()]).then((results) => {
         state.filters[0].children = [
           {
@@ -248,16 +264,19 @@ export default {
       })
     }
 
-    watch([() => panel.show, () => selectedGroup.value.groupId], (values) => {
-      if (values[0]) {
-        panelState.isBlockGroupPanel = true
-        fetchBlocks()
-        getFilters()
+    watch([() => panel.show, () => validGroup.value.groupId], ([show, groupId]) => {
+      if (!show) {
+        return
       }
+
+      panelState.isBlockGroupPanel = true
+      clearSearchParams()
+      fetchBlocks(groupId)
+      getFilters()
     })
 
     return {
-      selectedGroup,
+      validGroup,
       state,
       panel,
       closeGroupPanel,
@@ -280,6 +299,7 @@ export default {
     flex: 1;
   }
 }
+
 :deep(.plugin-setting-header) {
   .tiny-button {
     width: 40px;

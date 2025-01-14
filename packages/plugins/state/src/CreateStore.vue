@@ -1,6 +1,6 @@
 <template>
   <tiny-form
-    ref="storeData"
+    ref="storeDataForm"
     class="store-form"
     :model="storeData"
     label-position="top"
@@ -138,7 +138,7 @@ export default {
       let errorMessage = ''
       let isSameState = Object.keys(props.dataSource).includes(name)
       if (!name) {
-        errorMessage = 'store 属性名称未定义'
+        errorMessage = '输入内容不能为空'
       }
 
       if (!verifyJsVarName(name)) {
@@ -154,7 +154,7 @@ export default {
     }
     const rules = {
       name: { validator: validateName, required: true },
-      state: { required: true }
+      STATE: { required: true }
     }
     const editorCode = computed(() => {
       const { state: storeState } = state.storeData.variable || {}
@@ -224,6 +224,22 @@ export default {
       emit('close')
     }
 
+    const storeDataForm = ref(null)
+
+    const validateForm = () => {
+      return new Promise((resolve) => {
+        storeDataForm.value.validate((valid) => {
+          if (valid) {
+            resolve()
+          }
+        })
+      })
+    }
+
+    const clearValidateForm = () => {
+      storeDataForm.value?.clearValidate()
+    }
+
     return {
       STATE,
       GETTERS,
@@ -242,7 +258,10 @@ export default {
       editorDidMount,
       variableEditor,
       actions,
-      cancel
+      cancel,
+      validateForm,
+      storeDataForm,
+      clearValidateForm
     }
   }
 }
@@ -261,7 +280,7 @@ export default {
   :deep(.toolbar) {
     position: absolute;
     z-index: 99;
-    right: 20px;
+    right: 12px;
   }
   .stores {
     padding: 12px;
@@ -277,6 +296,15 @@ export default {
   .label-left-wrap {
     color: var(--ti-lowcode-toolbar-icon-color);
     display: flex;
+  }
+  :deep(.tiny-collapse-item__wrap) {
+    padding: 0 12px;
+    .tiny-collapse-item__content {
+      padding: 0;
+      .tiny-form-item:first-child {
+        padding-bottom: 12px;
+      }
+    }
   }
 }
 

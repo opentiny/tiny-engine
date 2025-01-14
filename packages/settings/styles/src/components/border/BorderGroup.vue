@@ -38,7 +38,7 @@
         <numeric-select
           :name="getProperty(BORDER_RADIUS_PROPERTY.BorderTopLeftRadius).name"
           :numericalText="borderRadius.BorderTopLeftRadius"
-          :placeholder="0"
+          placeholder="0"
           @update="updateStyle"
         />
       </div>
@@ -51,7 +51,7 @@
         <numeric-select
           :name="getProperty(BORDER_RADIUS_PROPERTY.BorderTopRightRadius).name"
           :numericalText="borderRadius.BorderTopRightRadius"
-          :placeholder="0"
+          placeholder="0"
           @update="updateStyle"
         />
       </div>
@@ -64,7 +64,7 @@
         <numeric-select
           :name="getProperty(BORDER_RADIUS_PROPERTY.BorderBottomLeftRadius).name"
           :numericalText="borderRadius.BorderBottomLeftRadius"
-          :placeholder="0"
+          placeholder="0"
           @update="updateStyle"
         />
       </div>
@@ -76,7 +76,7 @@
         </tiny-tooltip>
         <numeric-select
           :name="getProperty(BORDER_RADIUS_PROPERTY.BorderBottomRightRadius).name"
-          :placeholder="0"
+          placeholder="0"
           :numericalText="borderRadius.BorderBottomRightRadius"
           @update="updateStyle"
         />

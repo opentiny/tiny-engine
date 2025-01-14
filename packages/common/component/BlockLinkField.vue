@@ -65,7 +65,6 @@ export default {
 
       confirm({
         title: '属性名称',
-        status: 'custom',
         message: {
           render() {
             return (

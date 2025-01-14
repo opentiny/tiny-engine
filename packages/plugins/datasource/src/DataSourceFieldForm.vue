@@ -189,11 +189,8 @@ export default {
     justify-content: space-between;
     align-items: center;
     .tiny-button {
-      width: 40px;
-      padding: 0;
-      min-width: 40px;
-      margin-right: 2px;
       border: 1px solid var(--ti-lowcode-datasource-color);
+      margin-right: 0px;
     }
   }
 
@@ -209,7 +206,7 @@ export default {
     .field-cell-name {
       margin-left: 5px;
       font-weight: bold;
-      font-size: 15px;
+      font-size: var(--te-base-font-size-base);
       .description {
         color: var(--ti-lowcode-datasource-input-icon-color);
         margin-left: 5px;

@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-block-compiler",
-  "version": "2.0.0-rc.2",
+  "version": "2.1.0",
   "publishConfig": {
     "access": "public"
   },
@@ -27,7 +27,6 @@
   "author": "OpenTiny Team",
   "license": "MIT",
   "homepage": "https://opentiny.design/tiny-engine",
-  "dependencies": {},
   "devDependencies": {
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
@@ -43,7 +42,7 @@
   "peerDependencies": {
     "@babel/core": "^7.26.0",
     "@vue/babel-plugin-jsx": "^1.2.5",
-    "vue": "^3.4.15",
-    "@vue/compiler-sfc": "^3.4.15"
+    "@vue/compiler-sfc": "^3.4.15",
+    "vue": "^3.4.15"
   }
 }

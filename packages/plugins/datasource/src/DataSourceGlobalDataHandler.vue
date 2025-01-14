@@ -112,8 +112,11 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
-}
-.is-active {
-  flex-grow: 2;
+  .tiny-collapse-item:first-child {
+    border-top: 0;
+  }
+  :deep(.tiny-collapse-item__content) {
+    padding: 0 0 12px;
+  }
 }
 </style>
