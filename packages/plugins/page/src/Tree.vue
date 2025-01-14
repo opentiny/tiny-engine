@@ -176,11 +176,19 @@ const draggedNode = ref(null)
 const hoveringNodeId = ref(null)
 
 const handleDragStart = (event, node) => {
+  if (!props.draggable) {
+    return
+  }
+
   draggedNode.value = node
 }
 
 // dragover和dragenter事件回调函数都为handleDragOver。跨行拖动时，禁止拖拽图标可能会闪一下，所以将dragenter事件也加上回调函数
 const handleDragOver = (event, node) => {
+  if (!props.draggable) {
+    return
+  }
+
   const isDescendant = getAncestorIds(node.id).includes(draggedNode.value.id)
 
   if (!isDescendant) {
@@ -214,6 +222,10 @@ const handleDragEnd = () => {
 }
 
 const handleContainerDragOver = (event) => {
+  if (!props.draggable) {
+    return
+  }
+
   if (event.target !== event.currentTarget) {
     return
   }
@@ -223,6 +235,10 @@ const handleContainerDragOver = (event) => {
 }
 
 const handleContainerDragLeave = (event) => {
+  if (!props.draggable) {
+    return
+  }
+
   if (event.target !== event.currentTarget) {
     return
   }
@@ -237,7 +253,7 @@ const handleContainerDragLeave = (event) => {
   .row {
     height: 24px;
     padding: 0 12px;
-    margin: 0;
+    margin: 0 -1px;
     display: flex;
     align-items: center;
     &,
@@ -284,5 +300,6 @@ const handleContainerDragLeave = (event) => {
 }
 .hover-border-color {
   border-color: var(--te-common-border-checked);
+  overflow: hidden;
 }
 </style>
