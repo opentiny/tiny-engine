@@ -63,7 +63,7 @@ watch(
       routes.value = []
       return
     }
-    const ancestors = await getAncestors(value, true)
+    const ancestors = (await getAncestors(value, true)) || []
 
     routes.value = ancestors.concat(value).map((id) => {
       const { route, isPage } = pageSettingState.treeDataMapping[id]

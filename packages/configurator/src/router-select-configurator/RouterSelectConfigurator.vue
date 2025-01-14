@@ -15,11 +15,11 @@
 <script setup lang="jsx">
 import { usePage } from '@opentiny/tiny-engine-meta-register'
 import { Select as TinySelect } from '@opentiny/vue'
-import { computed, defineEmits, defineProps, reactive, watch } from 'vue'
+import { computed, defineEmits, defineProps, onMounted, reactive, watch } from 'vue'
 
 const props = defineProps({
   modelValue: {
-    type: [String, Array],
+    type: String,
     default: () => ''
   }
 })
@@ -43,9 +43,11 @@ const pages = computed(() =>
   pageSettingState.pages[STATIC_PAGE_GROUP_ID].data.concat(pageSettingState.pages[COMMON_PAGE_GROUP_ID].data)
 )
 
-if (!Array.isArray(pages.value)) {
-  getPageList()
-}
+onMounted(() => {
+  if (!Array.isArray(pages.value)) {
+    getPageList()
+  }
+})
 
 const pageToTreeData = (page) => {
   const { id, name, isPage, children } = page

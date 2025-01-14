@@ -13,7 +13,7 @@
         <span class="title">{{ groupItem.groupName }}</span>
       </template>
       <div class="app-manage-tree">
-        <draggble-tree
+        <draggable-tree
           :data="groupItem.data"
           label-key="name"
           :active="state.currentNodeData.id"
@@ -49,7 +49,7 @@
               </tiny-popover>
             </div>
           </template>
-        </draggble-tree>
+        </draggable-tree>
       </div>
     </tiny-collapse-item>
   </tiny-collapse>
@@ -75,7 +75,7 @@ import { constants } from '@opentiny/tiny-engine-utils'
 import { closePageSettingPanel } from './PageSetting.vue'
 import { closeFolderSettingPanel } from './PageFolderSetting.vue'
 import http from './http.js'
-import DraggbleTree from './Tree.vue'
+import DraggableTree from './Tree.vue'
 import { SvgButton } from '@opentiny/tiny-engine-common'
 
 const { PAGE_STATUS } = constants
@@ -87,7 +87,7 @@ export default {
     TinyCollapseItem: CollapseItem,
     TinyIconSearch: IconSearch(),
     TinyPopover: Popover,
-    DraggbleTree,
+    DraggableTree,
     SvgButton
   },
   props: {
@@ -316,18 +316,26 @@ export default {
         changeTreeData(newParent.id, dragged.parentId)
         resetPageData()
         // TODO 页面更换父节点后，原来每次变更需要填写变更信息
-        fetchPageDetail(dragged.id).then((pageDetail) => {
-          pageDetail.parentId = newParent.id
-          if (pageDetail.isPage) {
-            updatePage(pageDetail)
-          } else {
-            updateFolder(pageDetail)
-          }
-        })
+        fetchPageDetail(dragged.id)
+          .then((pageDetail) => {
+            pageDetail.parentId = newParent.id
+            if (pageDetail.isPage) {
+              updatePage(pageDetail)
+            } else {
+              updateFolder(pageDetail)
+            }
+          })
+          .catch((error) => {
+            useNotify({
+              type: 'error',
+              title: '移动页面文件/文件夹失败',
+              message: JSON.stringify(error?.message || error)
+            })
+          })
       } else {
         confirm({
           title: '提示',
-          message: '更改关未保存，是否要放弃这些更改？',
+          message: '更改尚未保存，是否要放弃这些更改？',
           exec: () => {
             if (!pageSettingState.isNew) {
               changeTreeData(pageSettingState.oldParentId, pageSettingState.currentPageData.parentId)
