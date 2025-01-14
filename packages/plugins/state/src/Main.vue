@@ -54,6 +54,7 @@
         :createData="state.createData"
         @nameInput="updateName"
         @close="cancel"
+        @mouseleave="onMouseLeaveVariable"
       />
       <create-store
         v-if="activeName === STATE.GLOBAL_STATE"
@@ -64,6 +65,7 @@
         :storeData="state.createData"
         @nameInput="validName"
         @close="cancel"
+        @mouseleave="onMouseLeaveStore"
       />
     </div>
   </div>
@@ -193,64 +195,58 @@ export default {
       const { name } = state.createData
       const { getSchema, updateSchema } = useCanvas()
 
-      if (!name || errorMessage.value) {
-        notifySaveError('变量名未填写或名称不符合规范，请按照提示修改后重试。')
-        return
-      }
-
       if (activeName.value === STATE.CURRENT_STATE) {
         // 校验
-        const validateResult = variableRef.value.validate()
-        if (!validateResult.success) {
-          notifySaveError(validateResult.message)
-          return
-        }
+        variableRef.value.validateForm().then(() => {
+          // 获取数据
+          let variable = variableRef.value.getFormData()
 
-        // 获取数据
-        let variable = variableRef.value.getFormData()
-
-        // 保存数据
-        add(name, variable)
-        isPanelShow.value = false
-        setSaved(false)
-
-        const schema = getSchema()
-        updateSchema({ state: { ...(schema.state || {}), [name]: variable } })
-
-        useHistory().addHistory()
-      } else {
-        const validateResult = validateMonacoEditorData(storeRef.value.getEditor(), 'state字段', { required: true })
-        if (!validateResult.success) {
-          notifySaveError(validateResult.message)
-          return
-        }
-
-        const storeState = storeRef.value.getEditor().getValue()
-        const getters = storeRef.value.saveMethods('gettersEditor')
-        const actions = storeRef.value.saveMethods('actionsEditor')
-        const store = {
-          [name]: {
-            id: name,
-            state: storeState,
-            getters,
-            actions
-          }
-        }
-
-        if (updateKey.value !== name && flag.value === OPTION_TYPE.UPDATE) {
-          delete state.dataSource[updateKey.value]
-        }
-
-        Object.assign(state.dataSource, store)
-        const storeList = Object.values(state.dataSource)
-
-        const { id } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
-        updateGlobalState(id, { global_state: storeList }).then((res) => {
+          // 保存数据
+          add(name, variable)
           isPanelShow.value = false
-          useResource().appSchemaState.globalState = res.global_state || []
+          setSaved(false)
+
+          const schema = getSchema()
+          updateSchema({ state: { ...(schema.state || {}), [name]: variable } })
+
+          useHistory().addHistory()
+          openCommon()
+        })
+      } else {
+        storeRef.value.validateForm().then(() => {
+          const validateResult = validateMonacoEditorData(storeRef.value.getEditor(), 'state字段', { required: true })
+          if (!validateResult.success) {
+            notifySaveError(validateResult.message)
+            return
+          }
+
+          const storeState = storeRef.value.getEditor().getValue()
+          const getters = storeRef.value.saveMethods('gettersEditor')
+          const actions = storeRef.value.saveMethods('actionsEditor')
+          const store = {
+            [name]: {
+              id: name,
+              state: storeState,
+              getters,
+              actions
+            }
+          }
+
+          if (updateKey.value !== name && flag.value === OPTION_TYPE.UPDATE) {
+            delete state.dataSource[updateKey.value]
+          }
+
+          Object.assign(state.dataSource, store)
+          const storeList = Object.values(state.dataSource)
+
+          const { id } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
+          updateGlobalState(id, { global_state: storeList }).then((res) => {
+            isPanelShow.value = false
+            useResource().appSchemaState.globalState = res.global_state || []
+          })
+          openCommon()
         })
       }
-      openCommon()
     }
 
     const search = (value) => {
@@ -347,6 +343,12 @@ export default {
       query.value = ''
       initDataSource()
     }
+    const onMouseLeaveVariable = () => {
+      variableRef.value?.clearValidateForm()
+    }
+    const onMouseLeaveStore = () => {
+      storeRef.value?.clearValidateForm()
+    }
 
     onActivated(() => {
       initDataSource()
@@ -378,7 +380,9 @@ export default {
       storeRef,
       OPTION_TYPE,
       open,
-      docsUrl
+      docsUrl,
+      onMouseLeaveVariable,
+      onMouseLeaveStore
     }
   }
 }
@@ -472,7 +476,7 @@ export default {
       border-bottom: 1px solid var(--ti-lowcode-data-header-border-bottom-color);
       .options-wrap {
         display: flex;
-        column-gap: 16px;
+        column-gap: 8px;
         align-items: center;
         :deep(button.tiny-button.tiny-button--primary) {
           display: flex;
@@ -480,7 +484,6 @@ export default {
           min-width: 40px;
           justify-content: center;
           height: 24px;
-          padding: 0;
           border-radius: 4px;
         }
       }

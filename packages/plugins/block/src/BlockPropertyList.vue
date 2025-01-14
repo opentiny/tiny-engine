@@ -5,15 +5,15 @@
       <span>添加</span>
     </tiny-button>
   </div>
-  <meta-list-items class="property-list" :optionsList="list">
+  <meta-list-items :class="{ 'property-list': list.length }" :optionsList="list">
     <template #content="{ data }">
       <div :class="{ 'item-text': true }">
         {{ data.property }}
       </div>
     </template>
     <template #operate="{ data }">
-      <svg-button name="to-edit" class="opt-button" :hoverBgColor="false" @click="handleEdit(data)"></svg-button>
-      <svg-button name="delete" class="opt-button" :hoverBgColor="false" @click="del(data)"></svg-button>
+      <svg-button name="to-edit" :hoverBgColor="false" @click="handleEdit(data)"></svg-button>
+      <svg-button name="delete" :hoverBgColor="false" @click="del(data)"></svg-button>
     </template>
   </meta-list-items>
 </template>
@@ -69,7 +69,7 @@ export default {
   max-height: 222px;
   overflow-y: auto;
   padding: 1px 0; // 解决因为子元素加上了border之后，在高度小于222px之前高度永远>property-list, 导致滚动条一直出现的问题
-  margin-bottom: 8px;
+  margin-top: 12px;
 }
 
 .item-text {
@@ -86,7 +86,6 @@ export default {
 
 .add-button {
   display: flex;
-  padding-bottom: 16px;
   :deep(.tiny-button) {
     padding: 0 12px;
     width: 66px;

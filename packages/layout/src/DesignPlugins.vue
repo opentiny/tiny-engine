@@ -257,7 +257,7 @@ export default {
 
     &.bottom {
       flex: 1;
-      padding-bottom: 20px;
+      padding-bottom: 28px;
     }
 
     .list-item {

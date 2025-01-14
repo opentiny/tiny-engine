@@ -61,7 +61,8 @@ const push = (schema) => {
 
 const go = (addend, valid) => {
   historyState.index = historyState.index + addend
-  useCanvas().importSchema(string2Schema(list[historyState.index]))
+  const { pageState, resetCanvasState } = useCanvas()
+  resetCanvasState({ ...pageState, pageSchema: string2Schema(list[historyState.index]) })
 
   // 不是锁定状态，撤销操作后，传递第二个标识位，将 list 的长度减一，置灰 undoredo 操作按钮
   if (typeof valid === 'boolean') {

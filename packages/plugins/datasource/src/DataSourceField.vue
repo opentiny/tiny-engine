@@ -157,6 +157,9 @@ export default {
       text-decoration: underline;
       font-weight: normal;
     }
+    .tiny-button + .tiny-button {
+      margin-left: 4px;
+    }
   }
 
   .section {

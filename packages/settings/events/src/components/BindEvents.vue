@@ -358,7 +358,6 @@ export default {
   }
 }
 .bind-event-list {
-  padding: var(--te-common-vertical-item-spacing-normal) 0;
   color: var(--ti-lowcode-events-bind-event-list-color);
 }
 .bind-event-list-item-notallow {
@@ -367,7 +366,8 @@ export default {
   color: var(--ti-lowcode-events-bind-event-list-item-disabled-color);
 }
 .bind-event-list-item {
-  padding: 0 12px;
+  padding: 0 16px;
+  margin: 0 -16px;
   line-height: 24px;
   &:hover {
     cursor: pointer;

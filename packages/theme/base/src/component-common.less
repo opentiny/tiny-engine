@@ -47,6 +47,9 @@
       font-size: var(--te-base-font-size-base);
     }
   }
+  .tiny-select-dropdown__empty {
+    font-size: var(--te-base-font-size-base);
+  }
   // 下拉选项框
   .tiny-select-dropdown__item {
     padding: 0px 12px;
@@ -109,6 +112,10 @@
     color: var(--te-common-text-disabled);
     font-size: var(--te-base-font-size-base);
   }
+  input::-webkit-input-placeholder {
+    color: var(--te-common-text-weaken);
+    font-size: var(--te-base-font-size-base);
+  }
 }
 
 // 3、折叠框
@@ -126,7 +133,7 @@
     border-bottom-style: none;
 
     .tiny-collapse-item__word-overflow {
-      margin: var(--te-common-vertical-item-spacing-normal) 0px var(--te-common-vertical-form-label-spacing);
+      margin: var(--te-common-vertical-item-spacing-normal) 0px;
       width: 100%;
       line-height: var(--te-base-line-height-4);
     }
@@ -309,10 +316,21 @@
     }
     .tiny-button--danger {
       margin-right: 8px;
+      border-color: var(--te-common-color-error);
+      color: var(--te-common-color-error);
+      background-color: transparent;
+      &:hover {
+        border-color: var(--te-common-border-error-hover);
+        color: var(--te-common-color-error);
+        background-color: transparent;
+      }
     }
     .tiny-button--primary,
     .tiny-button--info {
-      margin-left: 8px;
+      margin-left: 4px;
+    }
+    .tiny-button--default.tiny-button--default {
+      border-color: var(--te-common-border-secondary);
     }
   }
 }
@@ -343,7 +361,7 @@
     background-color: var(--te-common-bg-primary);
     color: var(--te-common-text-inverse);
     border: 1px solid var(--te-common-border-active);
-    &:hover {
+    &:not(.is-disabled):hover {
       border: 1px solid var(--te-common-border-hover);
       background-color: var(--te-common-bg-secondary);
     }
@@ -353,7 +371,7 @@
     border-color: var(--te-common-border-active);
     background-color: var(--te-common-bg-primary);
 
-    &:hover {
+    &:not(.is-disabled):hover {
       border-color: var(--te-common-border-secondary);
     }
   }
@@ -367,6 +385,7 @@
   &.is-disabled {
     background-color: var(--te-common-bg-disabled);
     color: var(--te-common-text-disabled);
+    border-color: var(--te-common-border-disabled);
     .btn-icon {
       color: var(--te-common-icon-disabled);
     }
@@ -516,6 +535,12 @@
     .tiny-numeric__increase {
       border-bottom-color: var(--te-common-border-default);
     }
+    .tiny-numeric__decrease {
+      height: calc(50% - 0.5px);
+      svg {
+        transform: scale(0.8) translateY(1px);
+      }
+    }
   }
   .tiny-numeric-base .is-disabled {
     background: var(--te-common-bg-disabled);
@@ -534,6 +559,7 @@
     border: 0;
     width: 14px;
     margin-right: 4px;
+    height: auto;
   }
 }
 
@@ -772,7 +798,7 @@
   .tiny-form-item.is-error .tiny-textarea__inner,
   .tiny-form-item.is-error .tiny-textarea__inner:focus {
     border-color: var(--te-common-color-error);
-    background-color: var(--te-base-red-10);
+    background-color: var(--te-common-bg-error);
   }
 }
 .tiny-form--label-left.label-align .tiny-form-item.is-required .tiny-form-item__label.tiny-form-item__label {
@@ -787,6 +813,19 @@
 .tiny-form-item__label.tiny-form-item__label {
   padding-right: 16px;
 }
+.tiny-form--label-left.label-align .tiny-form-item.is-required .tiny-form-item__label.tiny-form-item__label {
+  padding-left: 0;
+}
+.tiny-form--label-left.label-align
+  .tiny-form-item.is-required
+  ~ .tiny-form-item
+  .tiny-form-item__label.tiny-form-item__label {
+  padding-left: 0;
+}
+.tiny-form-item__label.tiny-form-item__label {
+  padding-right: 16px;
+}
+.tiny-form--label-left.has-required .tiny-form-item__label,
 .tiny-form--label-left.label-align .tiny-form-item.is-required .tiny-form-item__label.tiny-form-item__label {
   padding-left: 0;
 }
@@ -980,5 +1019,13 @@
     .shepherd-arrow:before {
       background-color: var(--te-common-bg-popover);
     }
+  }
+}
+
+.tiny-alert {
+  &.tiny-alert--info {
+    background: var(--te-common-bg-info);
+    border-color: transparent;
+    color: var(--te-common-text-primary);
   }
 }

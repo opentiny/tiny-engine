@@ -5,9 +5,9 @@
       <div class="block-filters-item-value">
         <tiny-checkbox-group
           v-if="!filter.usingSelect"
-          v-model="state.checkGroup[filter.id]"
+          v-model="state.filterValues[filter.id]"
           type="checkbox"
-          @change="getFilters($event, filter.id)"
+          @change="handleValueChange"
         >
           <tiny-checkbox
             v-for="item in selectOptions[filter.id]"
@@ -18,11 +18,11 @@
         </tiny-checkbox-group>
         <tiny-select
           v-else
-          v-model="state.checkGroup[filter.id]"
+          v-model="state.filterValues[filter.id]"
           size="mini"
           multiple
           is-drop-inherit-width
-          @change="getFilters($event, filter.id)"
+          @change="handleValueChange"
         >
           <tiny-option
             v-for="item in selectOptions[filter.id]"
@@ -54,15 +54,19 @@ export default {
     }
   },
   setup(props, { emit }) {
-    const filters = {}
-    const state = reactive({
-      checkGroup: props.filters.reduce(
+    const initFilterValues = () => {
+      return props.filters.reduce(
         (result, filter) => ({
           ...result,
           [filter.id]: []
         }),
         {}
       )
+    }
+
+    const state = reactive({
+      // filterValues 是一个对象。key 为 filter id，value 为选中的值，是一个数组
+      filterValues: initFilterValues()
     })
 
     // 不同的filter，值所在的字段可能是id或者name。这里把实际的值都映射到value字段
@@ -79,16 +83,14 @@ export default {
       )
     })
 
-    const getFilters = (checked, id) => {
-      filters[id] = checked
-
-      emit('search', null, filters)
+    const handleValueChange = () => {
+      emit('search', state.filterValues)
     }
 
     return {
       state,
       selectOptions,
-      getFilters
+      handleValueChange
     }
   }
 }

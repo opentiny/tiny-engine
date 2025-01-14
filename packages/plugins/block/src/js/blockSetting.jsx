@@ -646,6 +646,10 @@ const updateBlock = (block = {}) => {
  * @returns
  */
 const generateBlockDeps = (children, deps = { scripts: [], styles: new Set() }) => {
+  if (!Array.isArray(children)) {
+    return
+  }
+
   children.forEach((child) => {
     const component = useMaterial().getMaterial(child.componentName)
 

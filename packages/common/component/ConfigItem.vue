@@ -600,6 +600,11 @@ export default {
     :deep(.tiny-select .tiny-input__inner) {
       padding-right: 26px;
     }
+    :deep(.tiny-input-suffix) {
+      .tiny-input__inner {
+        padding-right: 28px;
+      }
+    }
   }
 
   .prop-description {

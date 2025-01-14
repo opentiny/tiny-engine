@@ -69,6 +69,7 @@
           <block-history-list
             :is-block-manage="true"
             :history="state.backupList"
+            :lastVersion="state.lastVersion"
             @preview="previewHistory"
           ></block-history-list>
         </tiny-collapse-item>
@@ -154,6 +155,7 @@ export default {
     const state = reactive({
       activeName: ['base', 'attribute', 'event', 'lifeCycle', 'history'],
       backupList: [],
+      lastVersion: {},
       showDeployBlock: false,
       bindLifeCycles: {},
       showAttributeGuide: false,
@@ -174,6 +176,7 @@ export default {
 
         if (block?.id) {
           state.backupList = block.histories
+          state.lastVersion = block.last_build_info
         }
       }
     )
@@ -292,21 +295,9 @@ export default {
 .plugin-block-setting {
   :deep(.plugin-setting-header) {
     border: 0;
-    .button-group {
-      column-gap: 2px;
-    }
-    .tiny-button {
-      width: 40px;
-      padding: 0;
-      min-width: 40px;
-      margin-right: 2px;
-    }
     .close-plugin-setting-icon {
       margin-left: 4px;
     }
-  }
-  .publish-btn {
-    margin-right: 8px;
   }
 
   .video-close {
@@ -335,10 +326,6 @@ export default {
         height: auto;
       }
     }
-  }
-
-  .life-cycles-container {
-    padding: 0 0 12px 0;
   }
 
   .block-attribute,
@@ -376,6 +363,9 @@ export default {
 
       color: var(--ti-lowcode-block-video-tip-color);
     }
+  }
+  :deep(.tiny-collapse-item__content) {
+    padding: 0 12px 12px;
   }
 }
 </style>

@@ -31,7 +31,7 @@
     "@opentiny/tiny-engine-meta-register": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
     "@vue/shared": "^3.3.4",
-    "monaco-editor": "0.33.0",
+    "monaco-editor": "0.51.0",
     "vue-draggable-next": "2.1.0"
   },
   "publishConfig": {

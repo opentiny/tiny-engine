@@ -1,21 +1,7 @@
 <template>
   <div class="background-row line">
-    <label class="image-label top">背景图</label>
-    <div class="image-content">
-      <div class="image-wrap">
-        <div class="image-inner"></div>
-      </div>
-      <div class="text-wrap">
-        <span class="size">background-image.svg</span>
-        <span class="size">250 * 250 3.4 KB</span>
-        <span>
-          <tiny-checkbox v-model="state.checked" @change="imageSizeChange">@2x</tiny-checkbox>
-        </span>
-      </div>
-      <div class="choose-image">
-        <span>选择图片</span>
-      </div>
-    </div>
+    <label class="image-label">背景图</label>
+    <tiny-input v-model="state.imgUrl" placeholder="请输入图片URL" @change="handleChangeImg"></tiny-input>
   </div>
   <div class="background-row line">
     <label class="size-label">大小</label>
@@ -73,7 +59,7 @@
 
 <script setup>
 import { reactive, defineProps, defineEmits, onMounted } from 'vue'
-import { Checkbox as TinyCheckbox } from '@opentiny/vue'
+import { Input as TinyInput } from '@opentiny/vue'
 import { TabsGroupConfigurator } from '@opentiny/tiny-engine-configurator'
 import PositionOrigin from './PositionOrigin.vue'
 import InputSelect from '../inputs/InputSelect.vue'
@@ -104,6 +90,7 @@ const emit = defineEmits(['updateStyle'])
 
 const state = reactive({
   checked: false,
+  imgUrl: '',
   sizeSelected: 'custom',
   repeat: 'no-repeat',
   fixedSelected: 'scroll',
@@ -117,14 +104,9 @@ const updateStyle = (property) => {
   emit('updateStyle', property)
 }
 
-const imageSizeChange = (val) => {
-  state.width = val ? '125' : 'Auto'
-  state.widthSuffix = val ? 'px' : 'auto'
-  state.height = 'Auto'
-  state.heightSuffix = 'auto'
-  val
-    ? updateStyle({ [BACKGROUND_PROPERTY.BackgroundSize]: '125px' })
-    : updateStyle({ [BACKGROUND_PROPERTY.BackgroundSize]: null })
+const handleChangeImg = (value) => {
+  state.imgUrl = value
+  updateStyle({ [BACKGROUND_PROPERTY.BackgroundImage]: `url(${value})` })
 }
 
 const selectSize = (value) => {
@@ -199,6 +181,8 @@ const selectFixed = (value) => {
 
 onMounted(() => {
   const { styleObj } = props.style
+  const backgroundImageStr = styleObj[BACKGROUND_PROPERTY.BackgroundImage]
+  state.imgUrl = backgroundImageStr ? backgroundImageStr.substring(4, backgroundImageStr.length - 1) : ''
   state.fixedSelected = styleObj[BACKGROUND_PROPERTY.BackgroundAttachment]
   state.repeat = styleObj[BACKGROUND_PROPERTY.BackgroundRepeat]
   const sizeKeyword = ['cover', 'contain']

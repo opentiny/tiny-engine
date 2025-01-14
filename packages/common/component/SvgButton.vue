@@ -56,14 +56,14 @@ export default {
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  &:hover {
+    color: var(--te-common-icon-hover);
+  }
   &.active {
     color: var(--ti-lowcode-component-svg-button-active-color);
     background-color: var(--ti-lowcode-component-svg-button-active-bg-color);
   }
 
-  & + .svg-button {
-    margin-left: 8px;
-  }
   .svg-icon {
     outline: none;
   }

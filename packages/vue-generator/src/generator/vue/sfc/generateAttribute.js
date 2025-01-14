@@ -377,6 +377,74 @@ export const handleTinyIconPropsHook = (schemaData, globalHooks, config) => {
   })
 }
 
+// 生成 watchEffect
+const genStateAccessor = (value, globalHooks) => {
+  if (isSetter(value?.accessor) && value.accessor.setter?.value) {
+    globalHooks.addStatement({
+      position: INSERT_POSITION.AFTER_METHODS,
+      value: `vue.watchEffect(wrap(${value.accessor.setter.value}))`
+    })
+  }
+
+  if (isGetter(value?.accessor) && value.accessor.getter?.value) {
+    globalHooks.addStatement({
+      position: INSERT_POSITION.AFTER_METHODS,
+      value: `vue.watchEffect(wrap(${value.accessor.getter.value}))`
+    })
+  }
+}
+
+const transformObjValue = (renderKey, value, globalHooks, config, transformObjType) => {
+  const result = { shouldBindToState: false, res: null }
+
+  if (typeof value === 'string') {
+    result.res = `${renderKey}"${value.replaceAll("'", "\\'").replaceAll(/"/g, "'")}"`
+
+    return result
+  }
+
+  if (typeof value !== 'object' || value === null) {
+    result.res = `${renderKey}${value}`
+
+    return result
+  }
+
+  if (specialTypeHandler[value?.type]) {
+    const specialVal = specialTypeHandler[value.type](value, globalHooks, config)?.value || ''
+    result.res = `${renderKey}${specialVal}`
+
+    if (specialTypes.includes(value.type)) {
+      result.shouldBindToState = true
+    }
+
+    return result
+  }
+
+  if (hasAccessor(value?.accessor)) {
+    // 递归处理其他类型
+    genStateAccessor(value, globalHooks)
+
+    const { res } = transformObjValue(renderKey, value.defaultValue, globalHooks, config, transformObjType)
+
+    if (typeof res === 'string') {
+      result.res = res
+
+      return result
+    } else {
+      const { res: tempRes, shouldBindToState: tempShouldBindToState } =
+        transformObjType(value.defaultValue, globalHooks, config) || {}
+
+      result.res = `${renderKey}${tempRes}`
+
+      if (tempShouldBindToState) {
+        result.shouldBindToState = true
+      }
+    }
+  }
+
+  return result
+}
+
 export const transformObjType = (obj, globalHooks, config) => {
   if (!obj || typeof obj !== 'object') {
     return {
@@ -391,60 +459,24 @@ export const transformObjType = (obj, globalHooks, config) => {
   for (const [key, value] of Object.entries(obj)) {
     let renderKey = shouldRenderKey ? `${key}: ` : ''
 
-    if (typeof value === 'string') {
-      resStr.push(`${renderKey}"${value.replaceAll("'", "\\'").replaceAll(/"/g, "'")}"`)
+    const { res, shouldBindToState: tmpShouldBindToState } = transformObjValue(
+      renderKey,
+      value,
+      globalHooks,
+      config,
+      transformObjType
+    )
 
+    if (tmpShouldBindToState) {
+      shouldBindToState = true
+    }
+
+    if (typeof res === 'string') {
+      resStr.push(res)
       continue
     }
 
-    if (typeof value !== 'object' || value === null) {
-      resStr.push(`${renderKey}${value}`)
-
-      continue
-    }
-
-    if (specialTypeHandler[value?.type]) {
-      const specialVal = specialTypeHandler[value.type](value, globalHooks, config)?.value || ''
-      resStr.push(`${renderKey}${specialVal}`)
-
-      if (specialTypes.includes(value.type)) {
-        shouldBindToState = true
-      }
-
-      continue
-    }
-
-    if (hasAccessor(value?.accessor)) {
-      if (typeof value.defaultValue === 'string') {
-        resStr.push(`${renderKey}"${value.defaultValue.replaceAll("'", "\\'").replaceAll(/"/g, "'")}"`)
-      } else {
-        const { res: tempRes, shouldBindToState: tempShouldBindToState } =
-          transformObjType(value.defaultValue, globalHooks, config) || {}
-
-        resStr.push(`${renderKey}${tempRes}`)
-
-        if (tempShouldBindToState) {
-          shouldBindToState = true
-        }
-      }
-
-      if (isSetter(value?.accessor)) {
-        globalHooks.addStatement({
-          position: INSERT_POSITION.AFTER_METHODS,
-          value: `vue.watchEffect(wrap(${value.accessor.setter?.value ?? ''}))`
-        })
-      }
-
-      if (isGetter(value?.accessor)) {
-        globalHooks.addStatement({
-          position: INSERT_POSITION.AFTER_METHODS,
-          value: `vue.watchEffect(wrap(${value.accessor.getter?.value ?? ''}))`
-        })
-      }
-
-      continue
-    }
-
+    // 复杂的 object 类型，需要递归处理
     const { res: tempRes, shouldBindToState: tempShouldBindToState } =
       transformObjType(value, globalHooks, config) || {}
 
