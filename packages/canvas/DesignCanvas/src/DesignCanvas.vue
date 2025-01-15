@@ -69,6 +69,7 @@ export default {
 
     useMessage().subscribe({
       topic: 'init_canvas_deps',
+      subscriber: 'canvas_design_canvas',
       callback: (deps) => {
         if (canvasSrc) {
           return
@@ -239,6 +240,11 @@ export default {
     })
     onUnmounted(() => {
       window.removeEventListener('popstate', postUrlChanged)
+
+      useMessage().subscribe({
+        topic: 'init_canvas_deps',
+        subscriber: 'canvas_design_canvas'
+      })
     })
 
     return {
