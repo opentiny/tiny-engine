@@ -241,7 +241,7 @@ export default {
     onUnmounted(() => {
       window.removeEventListener('popstate', postUrlChanged)
 
-      useMessage().subscribe({
+      useMessage().unsubscribe({
         topic: 'init_canvas_deps',
         subscriber: 'canvas_design_canvas'
       })
