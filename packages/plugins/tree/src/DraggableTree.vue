@@ -1,9 +1,36 @@
 <template>
-  <div class="draggable-tree"></div>
+  <div class="draggable-tree">
+    <div
+      v-for="row in rows"
+      :key="row.id"
+      class="tree-row flex-center"
+      :draggable="draggable ? 'true' : undefined"
+      @mouseenter="handleMouseEnterRow(row)"
+      @dragover="handleDragOver($event, row)"
+      @dragenter="handleDragOver($event, row)"
+    >
+      <span v-for="n in row.level" :key="n" class="gap"></span>
+      <div class="content flex-center">
+        <span v-if="!row.hasChildren" class="expand-icon"></span>
+        <svg-icon
+          v-if="row.hasChildren"
+          name="dropdown"
+          :class="['expand-icon', { rotate: collapseMap[row.id] }]"
+          @click="switchCollapse(row.id)"
+        ></svg-icon>
+        <slot name="content">
+          <div class="slot-content flex-center">
+            <label>{{ row.label }}</label>
+            <svg-icon name="eye"></svg-icon>
+          </div>
+        </slot>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
-import { computed, defineProps, watch } from 'vue'
+import { computed, defineEmits, defineProps, ref } from 'vue'
 
 const props = defineProps({
   data: {
@@ -21,6 +48,10 @@ const props = defineProps({
   childrenKey: {
     type: String,
     default: 'children'
+  },
+  draggable: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -63,12 +94,24 @@ const normalizeData = (data) => {
 
 const normalizedData = computed(() => normalizeData(props.data))
 
+const useCollapseMap = () => {
+  const collapseMap = ref({})
+  const switchCollapse = (id) => {
+    collapseMap.value[id] = !collapseMap.value[id]
+  }
+
+  return [collapseMap, switchCollapse]
+}
+
+const [collapseMap, switchCollapse] = useCollapseMap()
+
 /**
  * @typedef {Object} ListItem
  * @property {string} id
  * @property {string} label
  * @property {number} level level 为 0 表示顶层节点
  * @property {string} [parentId]
+ * @property {boolean} hasChildren
  * @property {any} rawData
  */
 
@@ -82,11 +125,14 @@ const normalizedData = computed(() => normalizeData(props.data))
 const flatternNode = (node, parentId, level = 0) => {
   const { children, ...rest } = node
 
-  const childNodes = (children || [])
-    .map((child) => flatternNode(child, node.id, level + 1))
-    .reduce((acc, current) => acc.concat(current), [])
+  const childNodes =
+    !collapseMap.value[node.id] && Array.isArray(children)
+      ? children
+          .map((child) => flatternNode(child, node.id, level + 1))
+          .reduce((acc, current) => acc.concat(current), [])
+      : []
 
-  const listItem = { ...rest, parentId, level }
+  const listItem = { ...rest, parentId, level, hasChildren: children?.length > 0 }
 
   return [listItem].concat(childNodes)
 }
@@ -101,21 +147,82 @@ const flatternNodes = (nodes) => {
   return flatternNode(dummyNode, null, -1).slice(1)
 }
 
-const listItems = computed(() => flatternNodes(normalizedData.value))
+const rows = computed(() => flatternNodes(normalizedData.value))
 
-watch(
-  listItems,
-  (value) => {
-    // eslint-disable-next-line no-console
-    console.log(value)
-  },
-  {
-    immediate: true
+const emit = defineEmits(['mouseEnterItem'])
+
+const handleMouseEnterRow = (row) => {
+  emit('mouseEnterItem', row.id)
+}
+
+const handleDragOver = (event) => {
+  if (!props.draggable) {
+    return
   }
-)
+
+  event.preventDefault()
+}
 </script>
 
 <style lang="less" scoped>
 .draggable-tree {
+  .tree-row {
+    height: 24px;
+    padding: 0 6px;
+    &,
+    * {
+      cursor: pointer;
+    }
+    &:hover {
+      background-color: var(--te-common-bg-container);
+      // border: 1px solid; // TODO
+    }
+  }
+  .gap {
+    width: 8px;
+  }
+  .content {
+    flex: 1;
+    height: 100%;
+    padding: 0 6px;
+    &:hover {
+      // border: 1px solid; // TODO
+    }
+  }
+
+  .rotate {
+    transform: rotate(-90deg);
+  }
+  .expand-icon {
+    font-size: 16px;
+    width: 16px;
+    margin-right: 8px;
+  }
+  .slot-content {
+    flex: 1;
+    height: 100%;
+    label {
+      flex: 1;
+      font-size: 12px;
+      line-height: 20px;
+    }
+  }
+
+  svg.icon-eye {
+    display: none;
+  }
+  .tree-row:hover svg.icon-eye {
+    display: unset;
+  }
+}
+svg {
+  color: var(--te-common-icon-secondary);
+  &:hover {
+    color: var(--te-common-icon-hover);
+  }
+}
+.flex-center {
+  display: flex;
+  align-items: center;
 }
 </style>

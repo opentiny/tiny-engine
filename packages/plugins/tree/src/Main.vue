@@ -44,7 +44,7 @@
           </tiny-grid-column>
         </tiny-grid>
       </div>
-      <draggable-tree :data="state.pageSchema" label-key="componentName"></draggable-tree>
+      <draggable-tree :data="state.pageSchema" label-key="componentName" :draggable="true"></draggable-tree>
     </template>
   </plugin-panel>
 </template>
