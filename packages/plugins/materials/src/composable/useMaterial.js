@@ -327,9 +327,11 @@ const parseMaterialsDependencies = (materialBundle) => {
   scripts.forEach((item) => {
     const dep = scriptsDeps.find((dep) => dep.package === item.package)
 
-    if (dep && item.components) {
+    if (dep) {
       // 合并组件
-      dep.components = { ...dep.components, ...item.components }
+      dep.components = { ...dep.components, ...(item.components || {}) }
+    } else {
+      scriptsDeps.push(item)
     }
   })
 
