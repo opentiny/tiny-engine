@@ -14,6 +14,7 @@ import {
   Breadcrumb,
   Fullscreen,
   Lang,
+  ViewSetting,
   Logo,
   Lock,
   Media,
@@ -70,7 +71,8 @@ export default {
         collapse: [
           ['engine.toolbars.collaboration'],
           ['engine.toolbars.refresh', 'engine.toolbars.fullscreen'],
-          ['engine.toolbars.lang']
+          ['engine.toolbars.lang'],
+          ['engine.toolbars.viewSetting']
         ]
       }
     }
@@ -96,9 +98,23 @@ export default {
     GenerateCode,
     Save,
     Fullscreen,
-    Lang
+    Lang,
+    ViewSetting
   ],
-  plugins: [Materials, Tree, Page, Block, Datasource, Bridge, I18n, Script, State, Schema, Help, Robot],
+  plugins: [
+    Materials,
+    Tree,
+    Page,
+    [Block, { options: { ...Block.options, mergeCategoriesAndGroups: true } }],
+    Datasource,
+    Bridge,
+    I18n,
+    Script,
+    State,
+    Schema,
+    Help,
+    Robot
+  ],
   dsls: [{ id: 'engine.dsls.dslvue' }],
   settings: [Props, Styles, Events],
   canvas: Canvas

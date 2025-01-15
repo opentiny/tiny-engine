@@ -30,6 +30,9 @@ import {
   getOptions,
   META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
+import { useMessage } from '@opentiny/tiny-engine-meta-register'
+const { publish } = useMessage()
+const postLocationHistoryChanged = (data) => publish({ topic: 'locationHistoryChanged', data })
 import meta from '../../meta'
 
 const { SORT_TYPE, SCHEMA_DATA_TYPE, BLOCK_OPENNESS } = constants
@@ -735,6 +738,7 @@ export default function () {
     NODE_TYPE_PAGE,
     DEFAULT_GROUP_ID,
     DEFAULT_GROUP_NAME,
+    postLocationHistoryChanged,
     selectedGroup,
     selectedBlock,
     selectedBlockArray,

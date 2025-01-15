@@ -5,14 +5,17 @@ import { INSERT_POSITION } from '@/constant'
 import { transformObjType } from './generateAttribute'
 import { hasJsx } from '@/utils/hasJsx'
 
-export const defaultGenImportHook = (schema, globalHooks) => {
+export const defaultGenImportHook = (schema, globalHooks, config, nextPage) => {
   const dependenciesMap = globalHooks.getImport() || {}
+  const importContent = Object.entries(dependenciesMap).map(([key, value]) => {
+    return generateImportByPkgName({ pkgName: key, imports: value }) || ''
+  })
 
-  return Object.entries(dependenciesMap)
-    .map(([key, value]) => {
-      return generateImportByPkgName({ pkgName: key, imports: value }) || ''
-    })
-    .join('\n')
+  if (nextPage) {
+    importContent.push(`import ${nextPage} from "./${nextPage}.vue"`)
+  }
+
+  return importContent.join('\n')
 }
 
 export const defaultGenPropsHook = (schema) => {
@@ -162,7 +165,7 @@ export const GEN_SCRIPT_HOOKS = {
   GEN_LIFECYCLE: 'GEN_LIFECYCLE'
 }
 
-export const genScriptByHook = (schema, globalHooks, config) => {
+export const genScriptByHook = (schema, globalHooks, config, nextPage) => {
   const hooks = config.hooks || {}
   const { parseScript = [], genScript = {} } = hooks
 
@@ -206,7 +209,7 @@ export const genScriptByHook = (schema, globalHooks, config) => {
     statementGroupByPosition[AFTER_METHODS].push(statement?.value)
   })
 
-  const importStr = genScript[GEN_SCRIPT_HOOKS.GEN_IMPORT]?.(schema, globalHooks, config) || ''
+  const importStr = genScript[GEN_SCRIPT_HOOKS.GEN_IMPORT]?.(schema, globalHooks, config, nextPage) || ''
   const propsStr = genScript[GEN_SCRIPT_HOOKS.GEN_PROPS]?.(schema, globalHooks, config) || ''
   const emitStr = genScript[GEN_SCRIPT_HOOKS.GEN_EMIT]?.(schema, globalHooks, config) || ''
   const stateStr = genScript[GEN_SCRIPT_HOOKS.GEN_STATE]?.(schema, globalHooks, config) || ''

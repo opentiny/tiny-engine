@@ -31,10 +31,7 @@
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
     "@types/babel__core": "^7.20.5",
-    "@typescript-eslint/eslint-plugin": "^8.14.0",
-    "@typescript-eslint/parser": "^8.14.0",
     "@vitejs/plugin-vue": "^5.1.2",
-    "eslint": "^8.38.0",
     "typescript": "~5.4.2",
     "vite": "^5.4.2",
     "vite-plugin-dts": "^4.3.0"

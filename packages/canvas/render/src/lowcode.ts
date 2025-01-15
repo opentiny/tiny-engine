@@ -10,18 +10,18 @@
  *
  */
 
-import { getCurrentInstance, nextTick, provide, inject } from 'vue'
+import { getCurrentInstance, nextTick, provide, inject, Ref } from 'vue'
 import { I18nInjectionKey } from 'vue-i18n'
 import { api } from './RenderMain'
-import { generateFn, globalNotify } from './render'
-import { context as renderContext } from './context'
+import { globalNotify } from './canvas-function'
+import { generateFn } from './data-function'
 
 export const lowcodeWrap = (props, context) => {
-  const global = {}
+  const global: Record<string, any> = {}
   const instance = getCurrentInstance()
   const router = ''
   const route = ''
-  const { t, locale } = inject(I18nInjectionKey).global
+  const { t, locale } = inject(I18nInjectionKey).global as any
   const emit = context.emit
   const ref = (ref) => instance.refs[ref]
 
@@ -64,6 +64,7 @@ export const lowcodeWrap = (props, context) => {
       if (fnString.includes('return this')) {
         return () => global
       } else if (/this\.dataSourceMap\.[0-9a-zA-Z_]+\.load\(\)/.test(fnString)) {
+        const renderContext = (inject('pageContext') as Ref<any>).value
         return generateFn(fn, renderContext)
       } else if (fn.name === 'setter' || fn.name === 'getter') {
         // 这里需要保证在消费区块时，区块中的访问器函数可以正常执行

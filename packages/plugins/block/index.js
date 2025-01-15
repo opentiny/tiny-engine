@@ -21,7 +21,7 @@ export default {
   entry,
   metas: [BlockService],
   options: {
-    mergeCategoriesAndGroups: false
+    mergeCategoriesAndGroups: true
   },
   components: {
     SaveNewBlock

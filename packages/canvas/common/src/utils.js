@@ -56,27 +56,6 @@ export const copyObject = (node) => {
 }
 
 /**
- * 从页面importmap中获取模块的名称
- * @returns importmap中模块的名称集合
- */
-const getImportMapKeys = () => {
-  try {
-    const importMapElement = document.querySelector('script[type="importmap"]')
-
-    if (!importMapElement) {
-      return []
-    }
-
-    const importMaps = importMapElement.textContent
-    const importMapObject = JSON.parse(importMaps || '{}') || {}
-
-    return Object.keys(importMapObject.imports)
-  } catch (error) {
-    return []
-  }
-}
-
-/**
  * 动态导入获取组件库模块
  * @param {*} pkg 模块名称
  * @param {*} script 模块的cdn地址
@@ -87,24 +66,20 @@ const dynamicImportComponentLib = async ({ pkg, script }) => {
     return window.TinyComponentLibs[pkg]
   }
 
-  let modules = {}
-
-  try {
-    // 优先从importmap导入，兼容npm.script字段定义的cdn地址
-    const importMapKeys = getImportMapKeys()
-
-    if (importMapKeys.includes(pkg)) {
-      modules = await import(/* @vite-ignore */ pkg)
-    } else if (script) {
-      modules = await import(/* @vite-ignore */ script)
-    }
-  } catch (error) {
-    modules = {}
+  if (!script) {
+    return {}
   }
 
-  window.TinyComponentLibs[pkg] = modules
+  const href = window.parent.location.href || location.href // 这里要取父窗口的地址，因为在iframe中href是about:srcdoc
+  const scriptUrl = script.startsWith('.') ? new URL(script, href).href : script
 
-  return modules
+  if (!window.TinyComponentLibs[pkg]) {
+    const modules = await import(/* @vite-ignore */ scriptUrl)
+
+    window.TinyComponentLibs[pkg] = modules
+  }
+
+  return window.TinyComponentLibs[pkg]
 }
 
 /**

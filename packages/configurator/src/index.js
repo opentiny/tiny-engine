@@ -20,6 +20,7 @@ import RadioConfigurator from './radio-configurator/RadioConfigurator.vue'
 import RadioGroupConfigurator from './radio-group-configurator/RadioGroupConfigurator.vue'
 import RelatedColumnsConfigurator from './related-columns-configurator/RelatedColumnsConfigurator.vue'
 import RelatedEditorConfigurator from './related-editor-configurator/RelatedEditorConfigurator.vue'
+import RouterSelectConfigurator from './router-select-configurator/RouterSelectConfigurator.vue'
 import SelectConfigurator from './select-configurator/SelectConfigurator.vue'
 import SelectIconConfigurator from './select-icon-configurator/SelectIconConfigurator.vue'
 import SliderConfigurator from './slider-configurator/SliderConfigurator.vue'
@@ -54,6 +55,7 @@ export {
   RadioGroupConfigurator,
   RelatedColumnsConfigurator,
   RelatedEditorConfigurator,
+  RouterSelectConfigurator,
   SelectConfigurator,
   SelectIconConfigurator,
   SliderConfigurator,

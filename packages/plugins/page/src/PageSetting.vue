@@ -338,6 +338,15 @@ export default {
     }
 
     const deletePage = () => {
+      if (pageSettingState.treeDataMapping[pageSettingState.currentPageData.id]?.children?.length) {
+        useNotify({
+          type: 'error',
+          message: '此页面存在子页面或子文件夹，不能删除！'
+        })
+
+        return
+      }
+
       confirm({
         title: '提示',
         message: '您是否要删除页面?',

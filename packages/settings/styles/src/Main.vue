@@ -3,7 +3,8 @@
     <div class="line-style">
       <span class="line-text"> 行内样式 </span>
       <div class="inline-style">
-        <code-configurator
+        <component
+          :is="CodeConfigurator"
           v-if="state.lineStyleDisable"
           :buttonShowContent="true"
           :modelValue="state.styleContent"
@@ -12,17 +13,18 @@
           language="css"
           single
           @save="save"
-        />
+        ></component>
         <div v-if="!state.lineStyleDisable">
           <tiny-input v-model="state.propertiesList" class="inline-bind-style"> </tiny-input>
         </div>
-        <variable-configurator
+        <component
+          :is="VariableConfigurator"
           ref="bindVariable"
           :model-value="state.bindModelValue"
           name="advance"
           @update:modelValue="setConfig"
         >
-        </variable-configurator>
+        </component>
       </div>
     </div>
   </div>
@@ -67,8 +69,7 @@
 <script>
 import { watch, inject, ref } from 'vue'
 import { Collapse, CollapseItem, Input } from '@opentiny/vue'
-import { useHistory, useCanvas, useProperties } from '@opentiny/tiny-engine-meta-register'
-import { CodeConfigurator, VariableConfigurator } from '@opentiny/tiny-engine-configurator'
+import { useHistory, useCanvas, useProperties, getConfigurator } from '@opentiny/tiny-engine-meta-register'
 import {
   SizeGroup,
   LayoutGroup,
@@ -88,7 +89,6 @@ import { styleStrRemoveRoot } from './js/cssConvert'
 
 export default {
   components: {
-    CodeConfigurator,
     SizeGroup,
     LayoutGroup,
     FlexBox,
@@ -102,11 +102,11 @@ export default {
     ClassNamesContainer,
     TinyCollapse: Collapse,
     TinyCollapseItem: CollapseItem,
-    TinyInput: Input,
-    VariableConfigurator
+    TinyInput: Input
   },
-  props: {},
   setup() {
+    const CodeConfigurator = getConfigurator('CodeConfigurator')
+    const VariableConfigurator = getConfigurator('VariableConfigurator')
     const styleCategoryGroup = [
       'layout',
       'spacing',
@@ -208,6 +208,8 @@ export default {
     )
 
     return {
+      CodeConfigurator,
+      VariableConfigurator,
       state,
       activeNames,
       CSS_TYPE,

@@ -1,5 +1,5 @@
 <template>
-  <p class="empty-text">从左侧面板拖入组件，以构建页面</p>
+  <p class="empty-text">{{ props.placeholderText || '从左侧面板拖入组件，以构建页面' }}</p>
 </template>
 
 <style lang="less" scoped>
@@ -12,3 +12,8 @@
   font-size: 12px;
 }
 </style>
+<script setup>
+const props = defineProps({
+  placeholderText: String
+})
+</script>

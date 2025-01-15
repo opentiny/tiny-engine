@@ -16,14 +16,18 @@ import TinyI18nHost, { I18nInjectionKey } from '@opentiny/tiny-engine-common/js/
 import Main, { api } from './RenderMain'
 import lowcode from './lowcode'
 
-const dispatch = (name, data) => {
+type ITinyI18nHostI18nHost = typeof TinyI18nHost
+interface IExtendsTinyI18nHost extends ITinyI18nHostI18nHost {
+  lowcode: typeof lowcode
+}
+
+const dispatch = (name: string, data?: { detail: any }) => {
   window.parent.document.dispatchEvent(new CustomEvent(name, data))
 }
 
 const initRenderContext = () => {
-  dispatch('beforeCanvasReady')
-
-  TinyI18nHost.lowcode = lowcode
+  dispatch('beforeCanvasReady', null)
+  ;(TinyI18nHost as IExtendsTinyI18nHost).lowcode = lowcode
 
   window.TinyLowcodeComponent = {}
   window.TinyComponentLibs = {}
@@ -67,7 +71,7 @@ const create = async (config) => {
   App.mount(document.querySelector('#app'))
 
   new ResizeObserver(() => {
-    dispatch('canvasResize')
+    dispatch('canvasResize', null)
   }).observe(document.body)
 
   App.config.errorHandler = () => {}

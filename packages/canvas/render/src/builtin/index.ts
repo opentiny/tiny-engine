@@ -17,5 +17,17 @@ import CanvasIcon from './CanvasIcon.vue'
 import CanvasSlot from './CanvasSlot.vue'
 import CanvasImg from './CanvasImg.vue'
 import CanvasPlaceholder from './CanvasPlaceholder.vue'
+import CanvasRouterView from './CanvasRouterView.vue'
+import CanvasRouterLink from './CanvasRouterLink.vue'
 
-export { CanvasText, CanvasBox, CanvasCollection, CanvasIcon, CanvasSlot, CanvasImg, CanvasPlaceholder }
+export {
+  CanvasText,
+  CanvasBox,
+  CanvasCollection,
+  CanvasIcon,
+  CanvasSlot,
+  CanvasImg,
+  CanvasPlaceholder,
+  CanvasRouterView,
+  CanvasRouterLink
+}

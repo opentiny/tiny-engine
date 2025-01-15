@@ -1,5 +1,8 @@
 <template>
   <component :is="CanvasLayout">
+    <template #header>
+      <component v-if="!isBlock()" :is="CanvasRouteBar"></component>
+    </template>
     <template #container>
       <component
         :is="CanvasContainer.entry"
@@ -9,7 +12,8 @@
         :canvas-src-doc="canvasSrcDoc"
         @remove="removeNode"
         @selected="nodeSelected"
-      ></component>
+      >
+      </component>
     </template>
     <template #footer>
       <component :is="CanvasBreadcrumb" :data="footData"></component>
@@ -18,7 +22,7 @@
 </template>
 
 <script>
-import { ref, watch, onUnmounted } from 'vue'
+import { ref, watch, onUnmounted, onMounted } from 'vue'
 import {
   useProperties,
   useCanvas,
@@ -26,12 +30,14 @@ import {
   useMaterial,
   useHistory,
   useModal,
+  usePage,
+  useMessage,
   getMergeRegistry,
   getMergeMeta,
   getOptions,
   getMetaApi,
   META_SERVICE,
-  useMessage,
+  META_APP,
   useNotify
 } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
@@ -51,7 +57,7 @@ export default {
   setup() {
     const registry = getMergeRegistry('canvas')
     const materialsPanel = getMergeMeta('engine.plugins.materials')?.entry
-    const { CanvasBreadcrumb } = registry.components
+    const { CanvasRouteBar, CanvasBreadcrumb } = registry.components
     const CanvasLayout = registry.layout.entry
     const [CanvasContainer] = registry.metas
     const footData = ref([])
@@ -80,6 +86,8 @@ export default {
       pageState.currentSchema = {}
       pageState.properties = null
     }
+
+    const isBlock = useCanvas().isBlock
 
     watch(
       [() => useCanvas().isSaved(), () => useLayout().layoutState.pageStatus, () => useCanvas().getPageSchema()],
@@ -181,6 +189,58 @@ export default {
       canvasResizeObserver?.disconnect?.()
     })
 
+    const { addToCallbackFns: addHistoryDataChangedCallback } = (function () {
+      const callbackFns = new Set()
+
+      const { subscribe, unsubscribe } = useMessage()
+      let sub
+
+      onMounted(() => {
+        sub = subscribe({
+          topic: 'locationHistoryChanged',
+          subscriber: 'canvas_design_canvas_controller',
+          callback: (value) => callbackFns.forEach((cb) => cb(value))
+        })
+      })
+
+      onUnmounted(() => {
+        if (sub) {
+          unsubscribe(sub)
+        }
+      })
+
+      function addToCallbackFns(cb) {
+        callbackFns.add(cb)
+        return () => callbackFns.delete(cb)
+      }
+      return {
+        addToCallbackFns
+      }
+    })()
+
+    // TODO: 待挪到 getBaseInfo
+    const baseInfoKeys = Object.keys(getMetaApi(META_SERVICE.GlobalService).getBaseInfo())
+    function replaceKey(key) {
+      const existingKey = baseInfoKeys.find((eKey) => eKey.toLowerCase() === key.toLowerCase())
+      if (existingKey) {
+        return existingKey
+      }
+      return key
+    }
+    const postUrlChanged = () => {
+      usePage().postLocationHistoryChanged(
+        Object.fromEntries(
+          Array.from(new URLSearchParams(window.location.search)).map(([key, value]) => [replaceKey(key), value])
+        )
+      )
+    }
+    onMounted(() => {
+      window.addEventListener('popstate', postUrlChanged)
+    })
+    onUnmounted(() => {
+      window.removeEventListener('popstate', postUrlChanged)
+    })
+
     return {
       removeNode,
       canvasSrc,
@@ -194,15 +254,21 @@ export default {
         getMaterial: useMaterial().getMaterial,
         addHistory: useHistory().addHistory,
         request: getMetaApi(META_SERVICE.Http).getHttp(),
+        getPageById: getMetaApi(META_APP.AppManage).getPageById,
+        getPageAncestors: usePage().getAncestors,
+        getBaseInfo: () => getMetaApi(META_SERVICE.GlobalService).getBaseInfo(),
+        addHistoryDataChangedCallback,
         ast,
         getBlockByName: useMaterial().getBlockByName,
         useModal,
         useMessage,
         useNotify
       },
+      isBlock,
       CanvasLayout,
       canvasRef,
       CanvasContainer,
+      CanvasRouteBar,
       CanvasBreadcrumb
     }
   }
