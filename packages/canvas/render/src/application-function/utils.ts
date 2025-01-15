@@ -2,6 +2,7 @@ import { ref } from 'vue'
 import TinyVue from '@opentiny/vue'
 import * as TinyVueIcon from '@opentiny/vue-icon'
 import { generateFunction } from '../data-utils'
+import { globalNotify } from '../canvas-function'
 
 export interface IUtil {
   name: string
@@ -18,7 +19,7 @@ export function useUtils(context: Record<string, any>) {
   const utils: Record<string, Function | any> = {}
   const getUtils = () => utils
 
-  const setUtils = (data: Array<IUtil>) => {
+  const setUtils = async (data: Array<IUtil>) => {
     if (!Array.isArray(data)) {
       return
     }
@@ -52,6 +53,29 @@ export function useUtils(context: Record<string, any>) {
         utilsCollection[item.name] = generateFunction(item.content.value, context) || defaultFn
       }
     })
+
+    const npmUtilsImports = data
+      .filter((item) => item.type === 'npm' && item.content.cdnLink)
+      .map((item) => import(/* @vite-ignore */ item.content.cdnLink))
+    const npmUtils = await Promise.allSettled(npmUtilsImports)
+
+    npmUtils.forEach((res, index) => {
+      const { name, content } = data[index]
+      const { exportName, destructuring, cdnLink } = content
+
+      if (res.status !== 'fulfilled') {
+        globalNotify({
+          type: 'error',
+          message: `加载工具类“${name}”失败，请检查cdn链接是否正确，${cdnLink}`
+        })
+
+        return
+      }
+
+      const module = res.value
+      utilsCollection[name] = destructuring ? module[exportName] : module.default
+    })
+
     Object.assign(utils, utilsCollection)
 
     refreshKey.value++
