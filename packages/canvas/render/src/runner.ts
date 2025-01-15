@@ -81,9 +81,10 @@ export const createRender = (config) => {
   initRenderContext()
 
   const { styles = [], scripts = [] } = config.canvasDependencies
+  const componentsDeps = window.componentsDeps || []
 
   Promise.all([
-    ...window.componentsDeps.map(getComponents),
+    ...componentsDeps.map(getComponents),
     ...scripts.map((src) => addScript(src)).concat(styles.map((src) => addStyle(src)))
   ]).finally(() => create(config))
 }

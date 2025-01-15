@@ -10,5 +10,10 @@ export declare global {
     TinyGlobalConfig: Record<string, any>
     loadBlockComponent: (blockName: string) => Promise<any>
     host: any
+    componentsDeps: Array<{
+      script: string
+      package: string
+      components: Record<string, string>
+    }>
   }
 }
