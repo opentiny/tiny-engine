@@ -67,7 +67,7 @@ export default {
           handleRouteHomeUpdate(id, params)
             .then(() => {
               pageSettingState.updateTreeData()
-              openSettingPanel({ data: pageSettingState.currentPageData })
+              openSettingPanel(pageSettingState.currentPageData)
               pageSettingState.isNew = false
               if (isVsCodeEnv) {
                 generateRouter({

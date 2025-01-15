@@ -1,6 +1,7 @@
 <template>
   <canvas-action
     :hoverState="hoverState"
+    :inactiveHoverState="inactiveHoverState"
     :selectState="selectState"
     :lineState="lineState"
     :windowGetClickEventTarget="target"
@@ -8,6 +9,7 @@
     @select-slot="selectSlot"
     @setting="settingModel"
   ></canvas-action>
+  <canvas-router-jumper :hoverState="hoverState" :inactiveHoverState="inactiveHoverState"></canvas-router-jumper>
   <canvas-divider :selectState="selectState"></canvas-divider>
   <canvas-resize-border :iframe="iframe"></canvas-resize-border>
   <canvas-resize>
@@ -31,11 +33,12 @@
 <script>
 import { onMounted, ref, computed, onUnmounted, watch, watchEffect } from 'vue'
 import { iframeMonitoring } from '@opentiny/tiny-engine-common/js/monitor'
-import { useTranslate, useCanvas, useMaterial, useMessage, useResource } from '@opentiny/tiny-engine-meta-register'
+import { useTranslate, useCanvas, useMessage, useResource } from '@opentiny/tiny-engine-meta-register'
 import { NODE_UID, NODE_LOOP, DESIGN_MODE } from '../../common'
 import { registerHostkeyEvent, removeHostkeyEvent } from './keyboard'
 import CanvasMenu, { closeMenu, openMenu } from './components/CanvasMenu.vue'
 import CanvasAction from './components/CanvasAction.vue'
+import CanvasRouterJumper from './components/CanvasRouterJumper.vue'
 import CanvasResize from './components/CanvasResize.vue'
 import CanvasDivider from './components/CanvasDivider.vue'
 import CanvasResizeBorder from './components/CanvasResizeBorder.vue'
@@ -45,6 +48,7 @@ import {
   dragMove,
   dragState,
   hoverState,
+  inactiveHoverState,
   selectState,
   lineState,
   removeNodeById,
@@ -60,7 +64,7 @@ import {
 } from './container'
 
 export default {
-  components: { CanvasAction, CanvasResize, CanvasMenu, CanvasDivider, CanvasResizeBorder },
+  components: { CanvasAction, CanvasResize, CanvasMenu, CanvasDivider, CanvasResizeBorder, CanvasRouterJumper },
   props: {
     controller: Object,
     canvasSrc: String,
@@ -113,7 +117,8 @@ export default {
     const beforeCanvasReady = () => {
       if (iframe.value) {
         const win = iframe.value.contentWindow
-        win.thirdPartyDeps = useMaterial().materialState.thirdPartyDeps
+        // 用于画布初始化组件依赖
+        win.componentsDeps = useResource().appSchemaState.materialsDeps.scripts.filter((item) => item.components)
 
         const { subscribe, unsubscribe } = useMessage()
         const { getSchemaDiff, patchLatestSchema, getSchema, getNode } = useCanvas()
@@ -266,6 +271,7 @@ export default {
       iframe,
       dragState,
       hoverState,
+      inactiveHoverState,
       selectState,
       lineState,
       removeNodeById,

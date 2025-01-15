@@ -1,6 +1,6 @@
 <template>
   <div class="app-manage-search">
-    <tiny-search v-model="state.pageSearchValue" clearable placeholder="搜索" @update:modelValue="searchPageData">
+    <tiny-search v-model="state.pageSearchValue" clearable placeholder="搜索">
       <template #prefix>
         <tiny-icon-search />
       </template>
@@ -13,57 +13,82 @@
         <span class="title">{{ groupItem.groupName }}</span>
       </template>
       <div class="app-manage-tree">
-        <tiny-tree
-          :ref="getPageTreeRefs"
-          :key="pageSettingState.pageTreeKey"
+        <draggable-tree
           :data="groupItem.data"
-          :props="{
-            children: 'children',
-            label: 'name'
-          }"
-          default-expand-all
-          :filter-node-method="filterPageTreeData"
-          :render-content="renderContent"
-          :expand-on-click-node="false"
-          :icon="nullIcon"
-          node-key="id"
-        ></tiny-tree>
+          label-key="name"
+          :active="state.currentNodeData.id"
+          :filter-value="state.pageSearchValue"
+          :root-id="pageSettingState.ROOT_ID"
+          :draggable="groupItem.groupId === STATIC_PAGE_GROUP_ID"
+          @click-row="handleClickRow"
+          @move-node="handleMoveNode"
+        >
+          <template #row-suffix="{ node }">
+            <div :class="['actions']">
+              <svg-button v-if="isPageLocked(node.rawData)" name="locked" :hoverBgColor="false"></svg-button>
+              <svg-button v-if="node.rawData.isHome" name="home" :hoverBgColor="false"></svg-button>
+              <tiny-popover
+                :ref="(el) => setPopoverRef(el, node.id)"
+                placement="bottom-start"
+                :visible-arrow="false"
+                popper-class="page-tree-row-operation-list"
+              >
+                <div class="operation-list">
+                  <div
+                    v-for="(operation, index) in getRowOperations(groupItem.groupId, node)"
+                    :key="index"
+                    :class="[operation.type === 'divider' ? 'divider' : 'item'].concat(operation.class || [])"
+                    @click="operation.action?.(node)"
+                  >
+                    {{ operation.label }}
+                  </div>
+                </div>
+                <template #reference>
+                  <svg-button name="ellipsis" class="auto-hidden" :hoverBgColor="false"></svg-button>
+                </template>
+              </tiny-popover>
+            </div>
+          </template>
+        </draggable-tree>
       </div>
     </tiny-collapse-item>
   </tiny-collapse>
 </template>
 
 <script lang="jsx">
-import { reactive, ref, nextTick, onUnmounted } from 'vue'
-import { Search, Tree, Collapse, CollapseItem } from '@opentiny/vue'
+import { reactive, onMounted, onUnmounted } from 'vue'
+import { Search, Collapse, CollapseItem, Popover } from '@opentiny/vue'
 import { IconFolderOpened, IconFolderClosed, IconSearch } from '@opentiny/vue-icon'
 import {
   useCanvas,
   useModal,
   usePage,
-  useBreadcrumb,
-  useLayout,
+  useNotify,
   useMessage,
   getMetaApi,
   META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
 import { isEqual } from '@opentiny/vue-renderless/common/object'
 import { getCanvasStatus } from '@opentiny/tiny-engine-common/js/canvas'
+import { handlePageUpdate } from '@opentiny/tiny-engine-common/js/http'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { closePageSettingPanel } from './PageSetting.vue'
 import { closeFolderSettingPanel } from './PageFolderSetting.vue'
 import http from './http.js'
+import DraggableTree from './Tree.vue'
 import { SvgButton } from '@opentiny/tiny-engine-common'
 
-const { ELEMENT_TAG, PAGE_STATUS, COMPONENT_NAME } = constants
+const { PAGE_STATUS } = constants
 
 export default {
   components: {
     TinySearch: Search,
-    TinyTree: Tree,
     TinyCollapse: Collapse,
     TinyCollapseItem: CollapseItem,
-    TinyIconSearch: IconSearch()
+    TinyIconSearch: IconSearch(),
+    TinyPopover: Popover,
+    DraggableTree,
+    SvgButton
   },
   props: {
     isFolder: {
@@ -71,91 +96,57 @@ export default {
       default: false
     }
   },
-  emits: ['openSettingPanel', 'add'],
+  emits: ['openSettingPanel', 'add', 'createPage', 'createFolder'],
   setup(props, { emit }) {
     const { confirm } = useModal()
-    const { initData, pageState, isBlock, isSaved } = useCanvas()
-    const { pageSettingState, changeTreeData, isCurrentDataSame, STATIC_PAGE_GROUP_ID, COMMON_PAGE_GROUP_ID } =
-      usePage()
-    const { fetchPageList, fetchPageDetail } = http
-    const { setBreadcrumbPage } = useBreadcrumb()
-    const pageTreeRefs = ref([])
-    const ROOT_ID = pageSettingState.ROOT_ID
+    const { pageState, isBlock, isSaved } = useCanvas()
+    const {
+      pageSettingState,
+      changeTreeData,
+      isCurrentDataSame,
+      getPageList,
+      resetPageData,
+      STATIC_PAGE_GROUP_ID,
+      COMMON_PAGE_GROUP_ID,
+      switchPage: switchPageById
+    } = usePage()
+    const { fetchPageDetail, requestUpdatePage } = http
     const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
 
     const state = reactive({
       pageSearchValue: '',
       collapseValue: [STATIC_PAGE_GROUP_ID, COMMON_PAGE_GROUP_ID],
-      currentNodeData: {}
+      currentNodeData: { id: getMetaApi(META_SERVICE.GlobalService).getBaseInfo().pageId }
     })
-    const formatTreeData = (data, parentId, id) => {
-      const originObj = { [ROOT_ID]: { id: ROOT_ID, name: '站点根目录', children: [] } }
-      const treeArr = []
 
-      data.forEach((item) => {
-        originObj[item[id]] = item
-        if (item.parentId === ROOT_ID) {
-          originObj[ROOT_ID].children.push(item)
-        }
+    const { subscribe, unsubscribe } = useMessage()
+
+    let subscriber = null
+
+    onMounted(() => {
+      subscriber = subscribe({
+        topic: 'locationHistoryChanged',
+        callback: (data) => {
+          if (data.pageId) {
+            state.currentNodeData = { id: data.pageId }
+          } else if (isBlock()) {
+            state.currentNodeData = {}
+          }
+        },
+        subscriber: 'pageTree'
       })
+    })
 
-      data.forEach((item) => {
-        let parentObj = originObj[item[parentId]]
-        if (parentObj && parentObj.id !== ROOT_ID) {
-          parentObj.children = parentObj.children || []
-          parentObj.children.push(item)
-        } else if (parentObj && parentObj.id === ROOT_ID) {
-          treeArr.push(item)
-        }
-      })
-
-      pageSettingState.treeDataMapping = originObj
-
-      return pageSettingState.treeDataMapping
-    }
-
-    const searchPageData = (value) => {
-      if (Array.isArray(pageTreeRefs?.value)) {
-        nextTick(() => {
-          pageTreeRefs.value.forEach((item) => {
-            item?.filter(value)
-          })
-        })
+    onUnmounted(() => {
+      if (subscriber) {
+        unsubscribe(subscriber)
       }
-    }
+    })
 
-    const refreshPageList = async (appId, data) => {
-      const pagesData = data ? data : await fetchPageList(appId)
+    const refreshPageList = async (appId) => {
+      const pages = await getPageList(appId)
 
-      const firstGroupData = { groupName: '静态页面', groupId: STATIC_PAGE_GROUP_ID, data: [] }
-      const secondGroupData = { groupName: '公共页面', groupId: COMMON_PAGE_GROUP_ID, data: [] }
-
-      pagesData.forEach((item) => {
-        const namedNode = item.name ? item : { ...item, name: item.folderName, group: 'staticPages' }
-        const node = item.meta
-          ? {
-              ...item,
-              ...item.meta,
-              name: item.fileName,
-              isPage: true,
-              isBody: item.meta.rootElement === ELEMENT_TAG.Body
-            }
-          : namedNode
-
-        const { children, ...other } = node
-
-        if (node.group === 'staticPages') {
-          firstGroupData.data.push(other)
-        } else {
-          secondGroupData.data.push(other)
-        }
-      })
-
-      const firstGroupTreeData = formatTreeData([...firstGroupData.data], 'parentId', 'id')
-      firstGroupData.data = firstGroupTreeData[ROOT_ID].children
-      pageSettingState.pages = [firstGroupData, secondGroupData]
-      searchPageData(state.pageSearchValue)
-      return pageSettingState.pages
+      return pages
     }
 
     pageSettingState.updateTreeData = async () => {
@@ -163,63 +154,19 @@ export default {
       return pageList
     }
 
-    const clearCurrentState = () => {
-      pageState.currentVm = null
-      pageState.hoverVm = null
-      pageState.properties = {}
-      pageState.pageSchema = null
-    }
+    const switchPage = (data) => {
+      state.currentNodeData = data
 
-    const updateUrlPageId = (id) => {
-      const url = new URL(window.location)
-
-      url.searchParams.delete('blockid')
-      url.searchParams.set('pageid', id)
-      window.history.pushState({}, '', url)
-    }
-
-    const getPageDetail = (pageId) => {
-      // pageId !== 0 防止 pageId 为 0 的时候判断不出来
-      if (pageId !== 0 && !pageId) {
-        updateUrlPageId('')
-        initData({ componentName: COMPONENT_NAME.Page }, {})
-        useLayout().layoutState.pageStatus = {
-          state: 'empty',
-          data: {}
-        }
-
-        return
-      }
-
-      fetchPageDetail(pageId).then((data) => {
-        updateUrlPageId(pageId)
+      switchPageById(data.id).then(() => {
         closePageSettingPanel()
         closeFolderSettingPanel()
-        useLayout().closePlugin()
-        useLayout().layoutState.pageStatus = getCanvasStatus(data.occupier)
-        initData(data['page_content'], data)
       })
     }
 
-    const switchPage = (data) => {
-      pageState.hoverVm = null
-      state.currentNodeData = data
+    const nodeClick = (e, pageData) => {
+      e?.stopPropagation()
 
-      let pageName = ''
-      if (data.isPage) {
-        pageName = data?.name || ''
-      }
-      setBreadcrumbPage([pageName])
-
-      // 切换页面时清空 选中节点信息状态
-      clearCurrentState()
-      getPageDetail(data.id)
-    }
-
-    const nodeClick = (e, node) => {
-      e.stopPropagation()
-
-      const { id, isPage } = node.data
+      const { id, isPage } = pageData
 
       // 区块切换回页面需要重新加载页面
       if ((!isBlock() && id === state?.currentNodeData?.id) || !isPage) {
@@ -227,7 +174,7 @@ export default {
       }
 
       if (isSaved() && isCurrentDataSame()) {
-        switchPage(node.data)
+        switchPage(pageData)
       } else {
         confirm({
           title: '提示',
@@ -235,17 +182,17 @@ export default {
           exec: () => {
             changeTreeData(pageSettingState.oldParentId, pageSettingState.currentPageData.parentId)
             Object.assign(pageSettingState.currentPageData, pageSettingState.currentPageDataCopy)
-            switchPage(node.data)
+            switchPage(pageData)
           }
         })
       }
     }
 
-    const openSettingPanel = (e, node, isPageLocked) => {
-      e.stopPropagation()
+    const openSettingPanel = (e, pageData, isPageLocked) => {
+      e?.stopPropagation()
 
-      if (isPageLocked && node.data.isPage) {
-        const username = node.data.occupier?.username || ''
+      if (isPageLocked && pageData.isPage) {
+        const username = pageData.occupier?.username || ''
 
         useModal().message({
           message: `您点击的页面被${username}锁定，暂时无法编辑，请联系解锁`
@@ -255,7 +202,7 @@ export default {
       }
 
       if (isEqual(pageSettingState.currentPageData, pageSettingState.currentPageDataCopy)) {
-        emit('openSettingPanel', node)
+        emit('openSettingPanel', pageData)
       } else {
         confirm({
           title: '提示',
@@ -263,44 +210,141 @@ export default {
           exec: () => {
             changeTreeData(pageSettingState.oldParentId, pageSettingState.currentPageData.parentId)
             Object.assign(pageSettingState.currentPageData, pageSettingState.currentPageDataCopy)
-            emit('openSettingPanel', node)
+            emit('openSettingPanel', pageData)
           }
         })
       }
     }
 
-    const renderContent = (h, { node, data }) => {
-      const isPageLocked = getCanvasStatus(data.occupier).state === PAGE_STATUS.Lock
+    const popoverRefs = {}
+    const setPopoverRef = (el, nodeId) => {
+      popoverRefs[nodeId] = el
+    }
 
-      return (
-        <span class="tiny-tree-node__label" onMousedown={(e) => nodeClick(e, node)}>
-          {data.isPage ? (
-            <SvgIcon name="text-page-common" class="icon-page"></SvgIcon>
-          ) : (
-            <SvgIcon name="text-page-folder-closed" class="folder-icon"></SvgIcon>
-          )}
-          <span class="label">{node.label}</span>
-          <span class="icons">
-            {data.isPage && isPageLocked ? (
-              <SvgButton
-                class="page-edit-icon"
-                name="locked"
-                hoverBgColor={false}
-                onMousedown={(e) => openSettingPanel(e, node, isPageLocked)}
-              ></SvgButton>
-            ) : null}
-            {data.isHome ? (
-              <SvgButton class="page-edit-icon" hoverBgColor={false} name="text-page-home"></SvgButton>
-            ) : null}
-            <SvgButton
-              name="setting"
-              class="setting page-edit-icon"
-              hoverBgColor={false}
-              onMousedown={(e) => openSettingPanel(e, node, isPageLocked)}
-            ></SvgButton>
-          </span>
-        </span>
-      )
+    const handleClickRow = (node) => {
+      nodeClick(null, node.rawData)
+    }
+
+    const isPageLocked = (pageData) => {
+      return getCanvasStatus(pageData.occupier).state === PAGE_STATUS.Lock
+    }
+
+    const handleClickPageSettings = (node) => {
+      openSettingPanel(null, node.rawData, isPageLocked(node.rawData))
+    }
+
+    const createPage = (node) => {
+      emit('createPage', 'staticPages', node.id)
+    }
+
+    const createFolder = (node) => {
+      emit('createFolder', node.id)
+    }
+
+    const rowOperations = [
+      { type: 'settings', label: '设置', action: handleClickPageSettings },
+      { type: 'divider' },
+      { type: 'createPage', label: '新建子页面', action: createPage },
+      { type: 'createFolder', label: '新建子文件夹', action: createFolder }
+      // TODO 复制和删除的逻辑耦合在其他组件内，暂时屏蔽
+      // { type: 'divider' },
+      // { type: 'copy', label: '复制页面', action: copyPage },
+      // { type: 'delete', label: '删除', class: ['danger'], action: deleteNode }
+    ].map((item) => ({
+      ...item,
+      action: (node) => {
+        item.action?.(node)
+        // 点击 action 后，关闭 popover 弹窗
+        popoverRefs[node.id]?.doClose?.()
+      }
+    }))
+
+    const getRowOperations = (groupId, node) => {
+      if (groupId === COMMON_PAGE_GROUP_ID) {
+        return rowOperations.slice(0, 1)
+      }
+      if (!node.rawData.isPage) {
+        return rowOperations.filter((item) => item.type !== 'copy')
+      }
+      return rowOperations
+    }
+
+    const updatePage = (pageDetail) => {
+      const { id, name, page_content } = pageDetail
+      const params = {
+        ...pageDetail,
+        page_content: {
+          ...page_content,
+          fileName: name
+        }
+      }
+
+      const isCurEditPage = pageState?.currentPage?.id === id
+
+      return handlePageUpdate(id, params, false, isCurEditPage)
+    }
+
+    const updateFolder = (pageDetail) => {
+      const { id } = pageDetail
+
+      // requestUpdatePage加了then和catch回调函数，而handlePageUpdate没有加，是因为handlePageUpdate内部都已经有了类似逻辑
+      return requestUpdatePage(id, { ...pageDetail, page_content: null })
+        .then(() => {
+          useNotify({
+            type: 'success',
+            message: '更新文件夹成功!'
+          })
+        })
+        .catch((error) => {
+          useNotify({
+            type: 'error',
+            title: '更新文件夹失败',
+            message: JSON.stringify(error?.message || error)
+          })
+        })
+        .finally(() => {
+          pageSettingState.updateTreeData()
+          pageSettingState.isNew = false
+        })
+    }
+
+    const handleMoveNode = (dragged, newParent) => {
+      if (isEqual(pageSettingState.currentPageData, pageSettingState.currentPageDataCopy)) {
+        closePageSettingPanel()
+        closeFolderSettingPanel()
+        pageSettingState.currentPageData.id = dragged.id
+        changeTreeData(newParent.id, dragged.parentId)
+        resetPageData()
+        // TODO 页面更换父节点后，原来每次变更需要填写变更信息
+        fetchPageDetail(dragged.id)
+          .then((pageDetail) => {
+            pageDetail.parentId = newParent.id
+            if (pageDetail.isPage) {
+              updatePage(pageDetail)
+            } else {
+              updateFolder(pageDetail)
+            }
+          })
+          .catch((error) => {
+            useNotify({
+              type: 'error',
+              title: '移动页面文件/文件夹失败',
+              message: JSON.stringify(error?.message || error)
+            })
+          })
+      } else {
+        confirm({
+          title: '提示',
+          message: '更改尚未保存，是否要放弃这些更改？',
+          exec: () => {
+            if (!pageSettingState.isNew) {
+              changeTreeData(pageSettingState.oldParentId, pageSettingState.currentPageData.parentId)
+              Object.assign(pageSettingState.currentPageData, pageSettingState.currentPageDataCopy)
+            }
+            closePageSettingPanel()
+          }
+        })
+      }
     }
 
     useMessage().subscribe({
@@ -311,25 +355,11 @@ export default {
       }
     })
 
-    const filterPageTreeData = (value, data) => {
-      if (!value) return true
-
-      return data.name?.toLowerCase().indexOf(value?.toLowerCase()) !== -1
-    }
-
-    const getPageTreeRefs = (el) => {
-      if (el) {
-        pageTreeRefs.value.push(el)
-      }
-    }
-
     const createPublicPage = (e) => {
       e.stopPropagation()
       e.preventDefault()
       emit('add')
     }
-
-    const nullIcon = <span></span>
 
     onUnmounted(() => {
       useMessage().unsubscribe({
@@ -343,15 +373,15 @@ export default {
       state,
       switchPage,
       pageSettingState,
-      searchPageData,
-      renderContent,
-      refreshPageList,
-      filterPageTreeData,
-      getPageTreeRefs,
+      setPopoverRef,
       IconFolderOpened: IconFolderOpened(),
       IconFolderClosed: IconFolderClosed(),
-      nullIcon,
-      SvgButton
+      getRowOperations,
+      handleClickRow,
+      handleMoveNode,
+      isPageLocked,
+      handleClickPageSettings,
+      STATIC_PAGE_GROUP_ID
     }
   }
 }
@@ -397,43 +427,58 @@ export default {
 }
 
 .app-manage-tree {
-  :deep(.tiny-tree.tiny-tree.tiny-tree) {
-    .tiny-tree-node__content-left {
-      padding: 0;
-      .tiny-tree-node__content-box {
-        padding: 0 12px;
-      }
+  .actions {
+    display: flex;
+    align-items: center;
+    svg {
+      color: var(--te-common-icon-secondary);
+      outline: none;
     }
-    .tiny-tree-node__label {
+    .auto-hidden {
+      display: none;
+    }
+  }
+  .row:hover .actions .auto-hidden {
+    display: unset;
+  }
+}
+</style>
+
+<style lang="less">
+.tiny-popover.tiny-popper[x-placement].page-tree-row-operation-list {
+  padding: 0;
+  margin-top: 4px;
+  .operation-list {
+    min-width: 110px;
+    padding: 8px 0;
+    & > div {
+      padding: 0 12px;
+    }
+    .item {
+      height: 24px;
       font-size: 12px;
+      line-height: 18px;
+      cursor: pointer;
       display: flex;
       align-items: center;
-      flex: 1;
-
-      & .label {
-        font-size: 12px;
-        flex: 1;
-      }
-      .icon-page,
-      .folder-icon {
-        color: var(--te-common-icon-secondary);
-        margin-right: 8px;
+      &:hover {
+        background-color: var(--te-common-bg-container);
       }
     }
-
-    .tree-node-icon {
-      margin-right: 0;
-    }
-    .tiny-tree-node.is-leaf .tiny-tree-node__content {
-      padding-left: 0;
-    }
-
-    .tiny-tree-node.is-current {
-      & > .tiny-tree-node__content {
-        & > div > .tiny-tree-node__content-box {
-          background-color: var(--te-common-bg-container);
-        }
+    .divider {
+      height: 8px;
+      display: flex;
+      align-items: center;
+      &::after {
+        content: '';
+        display: block;
+        width: 100%;
+        height: 1px;
+        background-color: var(--te-common-border-divider);
       }
+    }
+    .danger {
+      color: var(--te-common-color-error);
     }
   }
 }

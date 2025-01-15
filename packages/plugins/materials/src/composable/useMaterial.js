@@ -19,6 +19,8 @@ import {
   useNotify,
   useCanvas,
   useBlock,
+  useMessage,
+  useResource,
   getMetaApi,
   META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
@@ -37,7 +39,8 @@ const blockResource = new Map()
 const materialState = reactive({
   components: [], // 这里存放的是物料插件面板里所有显示的组件
   blocks: [],
-  thirdPartyDeps: { scripts: [], styles: new Set() }
+  componentsDepsMap: { scripts: [], styles: new Set() }, //
+  packages: [] // 物料依赖的包
 })
 
 const componentState = reactive({
@@ -217,7 +220,7 @@ const clearMaterials = () => {
 const clearBlockResources = () => blockResource.clear()
 
 /**
- * 收集第三方组件库依赖
+ * 生成组件依赖映射
  * @param {array} components 组件物料列表
  */
 const generateThirdPartyDeps = (components) => {
@@ -254,16 +257,6 @@ const generateThirdPartyDeps = (components) => {
 }
 
 /**
- * 设置第三方组件库依赖
- * @param {array} components 组件物料列表
- */
-const setThirdPartyDeps = (components) => {
-  const { scripts = [], styles = [] } = generateThirdPartyDeps(components)
-  materialState.thirdPartyDeps.scripts.push(...scripts)
-  styles.forEach((item) => materialState.thirdPartyDeps.styles.add(item))
-}
-
-/**
  * 添加组件snippets(分组相同则合并)
  * @param {*} componentsSnippets 待添加的组件snippets
  * @param {*} snippetsData 当前snippets
@@ -285,6 +278,74 @@ const addComponentSnippets = (componentSnippets, snippetsData) => {
   return snippetsData
 }
 
+const getCanvasDeps = () => {
+  const { scripts, styles } = useResource().appSchemaState.materialsDeps
+
+  return {
+    scripts: [...scripts].filter((item) => item.script),
+    styles: [...styles]
+  }
+}
+
+/**
+ * 组装画布的依赖，通知画布更新docsrc
+ */
+const updateCanvasDeps = () => {
+  useMessage().publish({
+    topic: 'init_canvas_deps',
+    data: getCanvasDeps()
+  })
+}
+
+//
+const parseMaterialsDependencies = (materialBundle) => {
+  const { packages, components } = materialBundle
+
+  const { scripts: scriptsDeps, styles: stylesDeps } = useResource().appSchemaState.materialsDeps
+
+  packages?.forEach((pkg) => {
+    if (!pkg.script || !pkg.package || scriptsDeps.find((item) => item.package === pkg.package)) {
+      return
+    }
+
+    scriptsDeps.push(pkg)
+
+    if (!pkg.css) {
+      return
+    }
+
+    if (Array.isArray(pkg.css)) {
+      pkg.css.forEach((item) => stylesDeps.add(item))
+    } else {
+      stylesDeps.add(pkg.css)
+    }
+  })
+
+  // 解析组件npm字段（兼容旧的物料协议）
+  const { scripts, styles } = generateThirdPartyDeps(components)
+  // 合并到canvasDeps中
+  scripts.forEach((item) => {
+    const dep = scriptsDeps.find((dep) => dep.package === item.package)
+
+    if (dep) {
+      // 合并组件
+      dep.components = { ...dep.components, ...(item.components || {}) }
+    } else {
+      scriptsDeps.push(item)
+    }
+  })
+
+  if (!styles) {
+    return
+  }
+
+  if (Array.isArray(styles)) {
+    styles.forEach((item) => stylesDeps.add(item))
+  } else {
+    stylesDeps.add(styles)
+  }
+}
+
 /**
  * 添加物料Bundle文件中的组件类型物料
  * @param {*} materialBundle 物料包Bundle.json文件对象
@@ -292,8 +353,8 @@ const addComponentSnippets = (componentSnippets, snippetsData) => {
  */
 const addComponents = (materialBundle) => {
   const { snippets, components } = materialBundle
-  // 解析组件三方依赖
-  setThirdPartyDeps(components)
+  // 解析物料依赖
+  parseMaterialsDependencies(materialBundle)
   // 注册组件到map中
   components.forEach(registerComponentToResource)
   // 添加组件snippets
@@ -371,6 +432,8 @@ const fetchMaterial = async () => {
       addMaterials(response.value.materials)
     }
   })
+
+  updateCanvasDeps()
 }
 
 /**
@@ -383,10 +446,10 @@ const getBlockDeps = (dependencies = {}) => {
   scripts.length &&
     scripts.forEach((npm) => {
       const { package: pkg, script, css, components } = npm
-      const npmInfo = materialState.thirdPartyDeps.scripts.find((item) => item.package === pkg)
+      const npmInfo = materialState.componentsDepsMap.scripts.find((item) => item.package === pkg)
 
       if (!npmInfo || !npmInfo.script) {
-        materialState.thirdPartyDeps.scripts.push({ package: pkg, script, css, components })
+        materialState.componentsDepsMap.scripts.push({ package: pkg, script, css, components })
       } else {
         const components = npmInfo.components || {}
 
@@ -394,21 +457,9 @@ const getBlockDeps = (dependencies = {}) => {
       }
     })
 
-  styles?.forEach((item) => materialState.thirdPartyDeps.styles.add(item))
-}
-
-/**
- * 获取新增区块的依赖，更新画布中的组件依赖
- * @param {array} blocks 新增的区块列表
- */
-const updateCanvasDependencies = (blocks) => {
-  blocks.forEach((block) => {
-    if (!block.content.dependencies) return
-
-    getBlockDeps(block.content.dependencies)
-  })
-
-  useCanvas().canvasApi.value?.canvasDispatch('updateDependencies', { detail: materialState.thirdPartyDeps })
+  if (Array.isArray(styles)) {
+    styles.forEach((item) => materialState.componentsDepsMap.styles.add(item))
+  }
 }
 
 const initBuiltinMaterial = () => {
@@ -454,7 +505,8 @@ export default function () {
     setMaterial, // 设置单个物料 (property) setMaterial: (name: string, data: Material) => void
     addMaterials, // 添加多个物料
     registerBlock, // 注册新的区块
-    updateCanvasDependencies, //传入新的区块，获取新增区块的依赖，更新画布中的组件依赖
+    getCanvasDeps, // 组装画布依赖，包含物料和工具类的依赖。
+    updateCanvasDeps, // 通知画布更新依赖
     getConfigureMap, // 获取物料组件的配置信息
     getBlockByName,
     getBlockCompileRes,

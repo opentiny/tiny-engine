@@ -99,6 +99,11 @@
     </div>
     <div v-show="hoverState.configure?.isContainer" class="corner-mark-bottom-right">拖放元素到容器内</div>
   </div>
+  <div v-show="inactiveHoverState.height && inactiveHoverState.width" class="canvas-rect inactive-hover">
+    <div class="corner-mark-left">
+      {{ inactiveHoverState.componentName }}
+    </div>
+  </div>
   <div v-show="lineState.height && lineState.width" class="canvas-rect line">
     <div :class="['hover-line', lineState.position, { forbidden: lineState.forbidden }]">
       <div v-if="lineState.position === 'in' && hoverState.configure" class="choose-slots"></div>
@@ -161,6 +166,10 @@ export default {
   },
   props: {
     hoverState: {
+      type: Object,
+      default: () => ({})
+    },
+    inactiveHoverState: {
       type: Object,
       default: () => ({})
     },
@@ -531,6 +540,22 @@ export default {
       top: -14px;
       padding-left: 0;
       font-size: 12px;
+    }
+  }
+  &.inactive-hover {
+    border-style: dashed;
+    top: v-bind("inactiveHoverState.top + 'px'");
+    left: v-bind("inactiveHoverState.left + 'px'");
+    height: v-bind("inactiveHoverState.height + 'px'");
+    width: v-bind("inactiveHoverState.width + 'px'");
+    border-color: var(--te-common-border-hover);
+
+    .corner-mark-left {
+      height: 14px;
+      top: -14px;
+      padding-left: 0;
+      font-size: 12px;
+      color: var(--te-common-text-weaken);
     }
   }
   &.line {

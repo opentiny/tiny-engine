@@ -5,30 +5,100 @@ const defaultOption = {
   path: './src/router'
 }
 
-const parseSchema = (schema) => {
-  const { pageSchema } = schema
+const flattenRoutes = (routes, parentPath = '') => {
+  return routes.reduce((acc, route) => {
+    const fullPath = `${parentPath}${route.path}`
 
-  const routes = pageSchema.map(({ meta: { isHome = false, router = '' } = {}, fileName, path }) => ({
-    filePath: `@/views${path ? `/${path}` : ''}/${fileName}.vue`,
-    fileName,
-    isHome,
-    path: router?.startsWith?.('/') ? router : `/${router}`
-  }))
+    if (route.path !== '') {
+      if (route.component) {
+        // 如果存在 component，则直接添加路由
+        const newRoute = {
+          name: `${route.name}`,
+          path: fullPath,
+          component: route.component,
+          children: flattenRoutes(route.children)
+        }
+        const redirectChild = route.children.find((item) => item.isDefault)
 
-  const hasRoot = routes.some(({ path }) => path === '/')
+        if (route.children && redirectChild) {
+          newRoute.redirect = { name: `${redirectChild.name}` }
+        }
 
-  if (!hasRoot && routes.length) {
-    const { path: homePath } = routes.find(({ isHome }) => isHome) || { path: routes[0].path }
+        acc.push(newRoute)
+      } else if (route.children && route.children.length > 0) {
+        // 如果不存在 component 但有 children，则递归处理 children
+        const children = flattenRoutes(route.children, fullPath + '/')
+        // 将处理后的 children 合并到上一层存在 component 的路由中
+        acc.push(...children)
+      }
+      // 如果既没有 component 也没有 children，则不做任何处理
+    } else {
+      acc.push(route)
+    }
 
-    routes.unshift({ path: '/', redirect: homePath })
-  }
-
-  return routes
+    return acc
+  }, [])
 }
 
+const convertToNestedRoutes = (schema) => {
+  const pageSchema = (schema.pageSchema || []).sort((a, b) => a.meta?.router?.length - b.meta?.router?.length)
+  const result = []
+  let home = {}
+  let isGetHome = false
+
+  pageSchema.forEach((item) => {
+    if ((item.meta?.isHome || item.meta?.isDefault) && !isGetHome) {
+      home = {
+        path: '',
+        redirect: { name: `${item.meta.id}` }
+      }
+      isGetHome = true
+    }
+
+    const parts = item.meta?.router?.split('/').filter(Boolean)
+    let currentLevel = result
+
+    parts.forEach((part, index) => {
+      let found = false
+
+      for (let i = 0; i < currentLevel.length; i++) {
+        if (currentLevel[i].path === part) {
+          // 如果已经存在该路径部分，则进入下一层级
+          currentLevel = currentLevel[i].children
+          found = true
+          break
+        }
+      }
+
+      if (!found) {
+        // 如果不存在该路径部分，创建一个新节点
+        const newNode = {
+          path: part,
+          children: []
+        }
+        // 如果路径是最后一步，则设置组件和属性
+        if (index === parts.length - 1) {
+          newNode.component = `() => import('@/views${item.path ? `/${item.path}` : ''}/${item.fileName}.vue')`
+          newNode.isDefault = item.meta.isDefault
+          newNode.name = item.meta.id
+        }
+
+        currentLevel.push(newNode)
+        currentLevel = newNode.children
+      }
+    })
+  })
+
+  if (home.redirect) {
+    result.unshift(home)
+  }
+
+  return flattenRoutes(result)
+}
+
+// 示例路由数组
 function genRouterPlugin(options = {}) {
   const realOptions = mergeOptions(defaultOption, options)
-
   const { path, fileName } = realOptions
 
   return {
@@ -40,34 +110,21 @@ function genRouterPlugin(options = {}) {
      * @returns
      */
     run(schema) {
-      const routesList = parseSchema(schema)
+      const routesList = convertToNestedRoutes(schema)
+      const resultStr = JSON.stringify(routesList, null, 2).replace(
+        /("component":\s*)"(.*?)"/g,
+        (match, p1, p2) => p1 + p2
+      )
 
       // TODO: 支持 hash 模式、history 模式
       const importSnippet = "import { createRouter, createWebHashHistory } from 'vue-router'"
       const exportSnippet = `
-export default createRouter({
-  history: createWebHashHistory(),
-  routes
-})`
-      const routes = routesList.map(({ fileName, path, redirect, filePath }) => {
-        let pathAttr = `path: '${path}'`
-        let redirectAttr = ''
-        let componentAttr = ''
+      export default createRouter({
+        history: createWebHashHistory(),
+        routes: [{path: '/',children: routes}]
+      })`
 
-        if (redirect) {
-          redirectAttr = `redirect: '${redirect}'`
-        }
-
-        if (fileName) {
-          componentAttr = `component: () => import('${filePath}')`
-        }
-
-        const res = [pathAttr, redirectAttr, componentAttr].filter((item) => Boolean(item)).join(',')
-
-        return `{${res}}`
-      })
-
-      const routeSnippets = `const routes = [${routes.join(',')}]`
+      const routeSnippets = `const routes = ${resultStr}`
 
       const res = {
         fileType: 'js',

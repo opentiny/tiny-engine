@@ -1,6 +1,6 @@
 import { VITE_CDN_DOMAIN } from '@opentiny/tiny-engine-common/js/environments'
 
-export function getImportMapData(overrideVersions = {}) {
+export function getImportMapData(overrideVersions = {}, canvasDeps = { scripts: [], styles: [] }) {
   const importMapVersions = Object.assign(
     {
       vue: '3.4.23',
@@ -32,16 +32,25 @@ export function getImportMapData(overrideVersions = {}) {
     }
   }
 
+  const materialsAndUtilsRequire = canvasDeps.scripts.reduce((imports, { package: pkg, script }) => {
+    if (pkg && script) {
+      imports[pkg] = script
+    }
+
+    return imports
+  }, {})
+
   const importMap = {
     imports: {
       vue: `${VITE_CDN_DOMAIN}/vue@${importMapVersions.vue}/dist/vue.runtime.esm-browser.prod.js`,
       'vue-i18n': `${VITE_CDN_DOMAIN}/vue-i18n@${importMapVersions.vueI18n}/dist/vue-i18n.esm-browser.js`,
       ...blockRequire.imports,
-      ...tinyVueRequire.imports
+      ...tinyVueRequire.imports,
+      ...materialsAndUtilsRequire
     }
   }
 
-  const importStyles = [...blockRequire.importStyles]
+  const importStyles = [...blockRequire.importStyles, ...canvasDeps.styles]
 
   return {
     importMap,

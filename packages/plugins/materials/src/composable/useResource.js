@@ -23,7 +23,8 @@ import {
   getMetaApi,
   META_APP,
   useMessage,
-  META_SERVICE
+  META_SERVICE,
+  usePage
 } from '@opentiny/tiny-engine-meta-register'
 
 const { COMPONENT_NAME, DEFAULT_INTERCEPTOR } = constants
@@ -33,7 +34,8 @@ const appSchemaState = reactive({
   pageTree: [],
   langs: {},
   utils: {},
-  globalState: []
+  globalState: [],
+  materialsDeps: { scripts: [], styles: new Set() }
 })
 
 const initPage = (pageInfo) => {
@@ -52,6 +54,12 @@ const initPage = (pageInfo) => {
     pageInfo.id = pageInfo.meta?.id
   } catch (error) {
     console.log(error) // eslint-disable-line
+  } finally {
+    const url = new URL(window.location)
+
+    url.searchParams.set('pageid', pageInfo.id)
+    window.history.pushState({}, '', url)
+    usePage().postLocationHistoryChanged({ pageId: pageInfo.id })
   }
 
   const { id, meta, ...pageSchema } = pageInfo
@@ -174,9 +182,23 @@ const fetchResource = async ({ isInit = true } = {}) => {
   }
 }
 
+// 获取工具类的依赖，用于预览加载。格式和物料依赖一致，便于处理
+const getUtilsDeps = () => {
+  return appSchemaState.utils
+    .filter((item) => item.type === 'npm')
+    .map((item) => {
+      return {
+        ...item,
+        package: item.content?.package,
+        script: item.content?.cdnLink
+      }
+    })
+}
+
 export default function () {
   return {
     appSchemaState,
+    getUtilsDeps,
     fetchResource,
     initPageOrBlock,
     handlePopStateEvent,

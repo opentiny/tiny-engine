@@ -102,7 +102,7 @@ const jsonDiffPatchInstance = jsonDiffPatch.create({
     diffMatchPatch: DiffMatchPatch,
     minLength: 60
   },
-  // eslint-disable-next-line no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   propertyFilter: function (name, context) {
     return name.slice(0, 1) !== '$'
   },

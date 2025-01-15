@@ -2,7 +2,7 @@
   <div v-show="menuState.show" ref="menuDom" class="context-menu" :style="menuState.position">
     <ul class="menu-item">
       <li
-        v-for="(item, index) in menus"
+        v-for="(item, index) in filteredMenus"
         :key="index"
         :class="{
           'li-item': item.items,
@@ -32,9 +32,9 @@
 </template>
 
 <script lang="jsx">
-import { ref, reactive, nextTick } from 'vue'
+import { ref, reactive, nextTick, computed } from 'vue'
 import { canvasState, getConfigure, getController, getCurrent, copyNode, removeNodeById } from '../container'
-import { useLayout, useModal, useCanvas, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
+import { useLayout, useModal, useCanvas, usePage, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { iconRight } from '@opentiny/vue-icon'
 
 const menuState = reactive({
@@ -121,6 +121,25 @@ export default {
       menus.value.push({ name: '新建区块', code: 'createBlock' })
     }
 
+    menus.value.unshift({
+      name: '路由跳转',
+      code: 'route',
+      show: () => getCurrent()?.schema?.componentName === 'RouterLink',
+      check: () => {
+        const targetPageId = getCurrent().schema.props?.to?.name
+        return typeof targetPageId === 'number' || targetPageId
+      }
+    })
+
+    const filteredMenus = computed(() =>
+      menus.value.filter((item) => {
+        if (typeof item.show === 'function') {
+          return item.show()
+        }
+        return true
+      })
+    )
+
     const boxVisibility = ref(false)
 
     // 计算上下文菜单位置，右键时显示，否则关闭
@@ -205,10 +224,19 @@ export default {
             status: 'error'
           })
         }
+      },
+      route() {
+        // check中验证过了 targetPageId 是有效值
+        const targetPageId = getCurrent().schema.props.to.name
+        usePage().switchPageWithConfirm(targetPageId)
       }
     }
 
     const actionDisabled = (actionItem) => {
+      if (typeof actionItem.check === 'function' && !actionItem.check()) {
+        return true
+      }
+
       const actions = ['del', 'copy', 'addParent']
       return actions.includes(actionItem.code) && !getCurrent().schema?.id
     }
@@ -221,7 +249,7 @@ export default {
       boxVisibility.value = false
     }
     const doOperation = (item) => {
-      if ((item.check && !item.check?.()) || actionDisabled(item)) {
+      if (actionDisabled(item)) {
         return
       }
 
@@ -234,7 +262,7 @@ export default {
     return {
       SaveNewBlock,
       menuState,
-      menus,
+      filteredMenus,
       doOperation,
       boxVisibility,
       close,
