@@ -65,16 +65,20 @@ watch(
     }
     const ancestors = (await getAncestors(value, true)) || []
 
-    routes.value = ancestors.concat(value).map((id) => {
-      const { route, isPage } = pageSettingState.treeDataMapping[id]
-      return {
-        id,
-        route: route
-          .replace(/\/+/g, '/') // 替换连续的 '/' 为单个 '/'
-          .replace(/^\/|\/$/g, ''), // 去掉开头和结尾的 '/'
-        isPage
-      }
-    })
+    routes.value = ancestors
+      .concat(value)
+      .map((id) => pageSettingState.treeDataMapping[id])
+      .filter((item) => Boolean(item))
+      .map((pageData) => {
+        const { id, route, isPage } = pageData
+        return {
+          id,
+          route: route
+            .replace(/\/+/g, '/') // 替换连续的 '/' 为单个 '/'
+            .replace(/^\/|\/$/g, ''), // 去掉开头和结尾的 '/'
+          isPage
+        }
+      })
   },
   { immediate: true }
 )
