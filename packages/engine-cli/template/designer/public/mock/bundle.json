@@ -19,10 +19,6 @@
           "dev_mode": "proCode",
           "npm": {
             "package": "element-plus",
-            "version": "2.4.2",
-            "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
-            "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css",
-            "dependencies": null,
             "exportName": "ElInput"
           },
           "group": "表单组件",
@@ -299,10 +295,6 @@
           "dev_mode": "proCode",
           "npm": {
             "package": "element-plus",
-            "version": "2.4.2",
-            "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
-            "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css",
-            "dependencies": null,
             "exportName": "ElButton"
           },
           "group": "基础组件",
@@ -620,10 +612,6 @@
           "dev_mode": "proCode",
           "npm": {
             "package": "element-plus",
-            "version": "2.4.2",
-            "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
-            "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css",
-            "dependencies": null,
             "exportName": "ElForm"
           },
           "group": "表单组件",
@@ -1075,10 +1063,6 @@
           "dev_mode": "proCode",
           "npm": {
             "package": "element-plus",
-            "version": "2.4.2",
-            "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
-            "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css",
-            "dependencies": null,
             "exportName": "ElFormItem"
           },
           "group": "表单组件",
@@ -1424,10 +1408,6 @@
           "dev_mode": "proCode",
           "npm": {
             "package": "element-plus",
-            "version": "2.4.2",
-            "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
-            "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css",
-            "dependencies": null,
             "exportName": "ElTable"
           },
           "group": "数据展示",
@@ -2661,10 +2641,6 @@
           "dev_mode": "proCode",
           "npm": {
             "package": "element-plus",
-            "version": "2.4.2",
-            "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
-            "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css",
-            "dependencies": null,
             "exportName": "ElTableColumn"
           },
           "group": "表单组件",
@@ -2727,11 +2703,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "CarouselItem",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "CarouselItem"
           },
           "group": "component",
           "category": "容器组件",
@@ -2860,11 +2832,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Carousel",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Carousel"
           },
           "group": "component",
           "category": "容器组件",
@@ -4534,11 +4502,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "ButtonGroup",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "ButtonGroup"
           },
           "group": "component",
           "category": "general",
@@ -4692,11 +4656,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Row",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Row"
           },
           "group": "component",
           "priority": 5,
@@ -4949,11 +4909,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Form",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Form"
           },
           "group": "component",
           "priority": 5,
@@ -5303,11 +5259,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "FormItem",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "FormItem"
           },
           "group": "component",
           "priority": 12,
@@ -5435,11 +5387,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Col",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Col"
           },
           "group": "component",
           "priority": 2,
@@ -5713,11 +5661,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Button",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Button"
           },
           "group": "component",
           "priority": 2,
@@ -6052,11 +5996,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Input",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Input"
           },
           "group": "component",
           "priority": 1,
@@ -6466,11 +6406,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Radio",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Radio"
           },
           "group": "component",
           "priority": 3,
@@ -6703,11 +6639,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Select",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Select"
           },
           "group": "component",
           "priority": 8,
@@ -7108,11 +7040,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Switch",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Switch"
           },
           "group": "component",
           "priority": 9,
@@ -7307,11 +7235,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Search",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Search"
           },
           "group": "component",
           "priority": 2,
@@ -7582,11 +7506,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Checkbox",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Checkbox"
           },
           "group": "component",
           "priority": 4,
@@ -7841,11 +7761,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "CheckboxButton",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "CheckboxButton"
           },
           "group": "component",
           "priority": 1,
@@ -8029,11 +7945,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "CheckboxGroup",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "CheckboxGroup"
           },
           "group": "component",
           "priority": 2,
@@ -8238,11 +8150,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "DialogBox",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "DialogBox"
           },
           "group": "component",
           "priority": 4,
@@ -8516,11 +8424,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Tabs",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Tabs"
           },
           "group": "component",
           "priority": 10,
@@ -8797,11 +8701,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "TabItem",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "TabItem"
           },
           "group": "component",
           "priority": 2,
@@ -8906,11 +8806,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Breadcrumb",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Breadcrumb"
           },
           "group": "component",
           "priority": 1,
@@ -9045,11 +8941,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "BreadcrumbItem",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "BreadcrumbItem"
           },
           "group": "component",
           "priority": 1,
@@ -9134,11 +9026,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Collapse",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Collapse"
           },
           "group": "component",
           "priority": 3,
@@ -9261,11 +9149,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "CollapseItem",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "CollapseItem"
           },
           "group": "component",
           "priority": 2,
@@ -9372,11 +9256,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Grid",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Grid"
           },
           "group": "component",
           "priority": 2,
@@ -10286,11 +10166,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Pager",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Pager"
           },
           "group": "component",
           "priority": 1,
@@ -10519,11 +10395,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Popeditor",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Popeditor"
           },
           "group": "component",
           "priority": 6,
@@ -10882,11 +10754,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Tree",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Tree"
           },
           "group": "component",
           "priority": 12,
@@ -11217,11 +11085,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "TimeLine",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "TimeLine"
           },
           "group": "component",
           "priority": 3,
@@ -11424,11 +11288,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Tooltip",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Tooltip"
           },
           "group": "component",
           "priority": 11,
@@ -11645,11 +11505,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Popover",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Popover"
           },
           "group": "component",
           "priority": 7,
@@ -12140,11 +11996,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "DatePicker",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "DatePicker"
           },
           "group": "component",
           "priority": 1,
@@ -12555,11 +12407,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Numeric",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Numeric"
           },
           "group": "component",
           "priority": 1,
@@ -14186,6 +14034,23 @@
               }
             }
           ]
+        }
+      ],
+      "packages": [
+        {
+          "name": "TinyVue组件库",
+          "package": "@opentiny/vue",
+          "version": "3.14.0",
+          "destructuring": true,
+          "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
+          "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+        },
+        {
+          "name": "element-plus组件库",
+          "package": "element-plus",
+          "version": "2.4.2",
+          "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
+          "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css"
         }
       ]
     }
