@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import { reactive, watch, computed, onActivated, onDeactivated } from 'vue'
+import { reactive, watch, computed, onActivated, onDeactivated, nextTick } from 'vue'
 import { Grid, GridColumn } from '@opentiny/vue'
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
 import { constants } from '@opentiny/tiny-engine-utils'
@@ -229,9 +229,33 @@ export default {
     }
 
     const handleDrop = ({ dragged, target, position }) => {
-      const dropTo = position === 'center' ? target : target.parent
-      // eslint-disable-next-line no-console
-      console.log({ dragged, dropTo })
+      // dragged和target相同，无需操作
+      if (dragged.id === target.id) {
+        return
+      }
+      // 如果target节点为dragged节点的父节点，无需操作
+      if (position === 'center' && target.rawData.children.some((item) => item.id === dragged.id)) {
+        return
+      }
+      // 如果相邻节点位置仍然不变，无需操作
+      if (position !== 'center') {
+        const targetParentChildren = target.parent.rawData.children
+        const targetIndex = targetParentChildren.findIndex((item) => item.id === target.id)
+        const node = targetParentChildren[position === 'top' ? targetIndex - 1 : targetIndex + 1]
+        if (dragged.id === node?.id) {
+          return
+        }
+      }
+
+      const { insertNode, removeNode, selectNode } = useCanvas().canvasApi.value
+      removeNode(dragged.id)
+      insertNode(
+        { data: dragged.rawData, node: target.rawData, parent: target.parent.rawData },
+        position === 'center' ? 'in' : position
+      )
+      nextTick(() => {
+        selectNode(dragged.id, 'clickTree')
+      })
     }
 
     const handleClickRow = (row) => {
