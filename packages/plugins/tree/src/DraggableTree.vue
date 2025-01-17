@@ -1,41 +1,64 @@
 <template>
-  <div class="draggable-tree">
+  <div class="draggable-tree" @dragleave="handleDragLeaveContainer">
     <div
       v-for="row in rows"
       :key="row.id"
-      class="tree-row flex-center"
+      v-show="!row.collapsed"
+      :class="[
+        'tree-row',
+        ' flex-center',
+        {
+          active: active === row.id,
+          dragging: draggingState.hovering?.id === row.id,
+          'border-all': draggingState.hovering?.id === row.id && draggingState.position === 'center',
+          forbid: draggingState.forbidInsert
+        }
+      ]"
       :draggable="draggable ? 'true' : undefined"
+      @click="handleClickRow(row)"
       @mouseenter="handleMouseEnterRow(row)"
+      @dragstart="handleDragStart($event, row)"
       @dragover="handleDragOver($event, row)"
       @dragenter="handleDragOver($event, row)"
+      @drop="handleDrop"
+      @dragend="handleDragEnd"
     >
       <span v-for="n in row.level" :key="n" class="gap"></span>
-      <div class="content flex-center">
+      <div :class="['content', 'flex-center']">
         <span v-if="!row.hasChildren" class="expand-icon"></span>
         <svg-icon
           v-if="row.hasChildren"
           name="dropdown"
           :class="['expand-icon', { rotate: collapseMap[row.id] }]"
-          @click="switchCollapse(row.id)"
+          @click.stop="switchCollapse(row.id)"
         ></svg-icon>
-        <slot name="content">
-          <div class="slot-content flex-center">
-            <label>{{ row.label }}</label>
-            <svg-icon name="eye"></svg-icon>
-          </div>
-        </slot>
+        <div
+          :class="[
+            'slot-content',
+            'flex-center',
+            {
+              [draggingState.borderClass]: draggingState.hovering?.id === row.id && draggingState.position !== 'center',
+              forbid: draggingState.forbidInsert
+            }
+          ]"
+        >
+          <slot name="content" v-bind="row"></slot>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed, defineEmits, defineProps, ref } from 'vue'
+import { computed, defineEmits, defineProps, reactive, ref } from 'vue'
 
 const props = defineProps({
   data: {
     type: Array,
     default: () => []
+  },
+  active: {
+    type: String
   },
   idKey: {
     type: String,
@@ -52,6 +75,10 @@ const props = defineProps({
   draggable: {
     type: Boolean,
     default: false
+  },
+  disallowDrop: {
+    type: Function,
+    default: () => false
   }
 })
 
@@ -96,51 +123,68 @@ const normalizedData = computed(() => normalizeData(props.data))
 
 const useCollapseMap = () => {
   const collapseMap = ref({})
+
+  const setCollapse = (id, value) => {
+    collapseMap.value[id] = value
+  }
+
   const switchCollapse = (id) => {
     collapseMap.value[id] = !collapseMap.value[id]
   }
 
-  return [collapseMap, switchCollapse]
+  return { collapseMap, setCollapse, switchCollapse }
 }
 
-const [collapseMap, switchCollapse] = useCollapseMap()
+const { collapseMap, setCollapse, switchCollapse } = useCollapseMap()
 
 /**
- * @typedef {Object} ListItem
+ * @typedef {Object} RowItem
  * @property {string} id
  * @property {string} label
  * @property {number} level level 为 0 表示顶层节点
  * @property {string} [parentId]
+ * @property {RowItem} parent
  * @property {boolean} hasChildren
+ * @property {collapsed} boolean
  * @property {any} rawData
  */
 
 /**
  *
  * @param {Node} node
- * @param {string} [parentId]
- * @param {number} level
- * @returns {ListItem[]}
+ * @param parentId
+ * @param level
+ * @param collapsed
+ * @returns {RowItem[]}
  */
-const flatternNode = (node, parentId, level = 0) => {
+const flatternNode = (node, parentId, level = 0, collapsed = false) => {
   const { children, ...rest } = node
 
-  const childNodes =
-    !collapseMap.value[node.id] && Array.isArray(children)
-      ? children
-          .map((child) => flatternNode(child, node.id, level + 1))
-          .reduce((acc, current) => acc.concat(current), [])
-      : []
+  const descendantNodes = (children || [])
+    .map((child) => flatternNode(child, node.id, level + 1, collapsed || collapseMap.value[node.id]))
+    .reduce((acc, current) => acc.concat(current), [])
 
-  const listItem = { ...rest, parentId, level, hasChildren: children?.length > 0 }
+  const rowItem = {
+    ...rest,
+    parentId,
+    level,
+    hasChildren: children?.length > 0,
+    collapsed
+  }
 
-  return [listItem].concat(childNodes)
+  descendantNodes.forEach((node) => {
+    if (!node.parent) {
+      node.parent = rowItem
+    }
+  })
+
+  return [rowItem].concat(descendantNodes)
 }
 
 /**
  *
  * @param {Node[]} nodes
- * @returns {ListItem[]}
+ * @returns {RowItem[]}
  */
 const flatternNodes = (nodes) => {
   const dummyNode = { children: nodes }
@@ -149,18 +193,118 @@ const flatternNodes = (nodes) => {
 
 const rows = computed(() => flatternNodes(normalizedData.value))
 
-const emit = defineEmits(['mouseEnterItem'])
+const emit = defineEmits(['click', 'mouseenter', 'drop'])
 
-const handleMouseEnterRow = (row) => {
-  emit('mouseEnterItem', row.id)
+const handleClickRow = (row) => {
+  emit('click', row)
 }
 
-const handleDragOver = (event) => {
+const handleMouseEnterRow = (row) => {
+  emit('mouseenter', row)
+}
+
+const useDraggingState = () => {
+  /**
+   * @type {{dragged?: RowItem, hovering?: RowItem, position: string, borderClass: string, forbidInsert: boolean}}
+   */
+  const initialState = { dragged: null, hovering: null, position: '', borderClass: '', forbidInsert: false }
+  const draggingState = reactive({ ...initialState })
+  const resetDraggingState = () => {
+    Object.assign(draggingState, initialState)
+  }
+  return { draggingState, resetDraggingState }
+}
+
+const { draggingState, resetDraggingState } = useDraggingState()
+
+const handleDragStart = (event, row) => {
   if (!props.draggable) {
     return
   }
 
+  // 去掉ghost image
+  event.dataTransfer.setDragImage(new Image(), 0, 0)
+
+  draggingState.dragged = row
+
+  // 收起有子节点的节点
+  if (row.hasChildren) {
+    setCollapse(row.id, true)
+  }
+}
+
+const getPositionData = (event) => {
+  const rect = event.currentTarget.getBoundingClientRect()
+  const offsetY = event.clientY - rect.top
+
+  // 判断鼠标的位置并设置边框样式
+  const threshold = 8
+  if (offsetY <= threshold) {
+    // 顶部边框
+    return { position: 'top', borderClass: 'border-top' }
+  }
+
+  if (offsetY >= rect.height - threshold) {
+    // 顶部边框
+    return { position: 'bottom', borderClass: 'border-bottom' }
+  }
+
+  return { position: 'center', borderClass: 'border-all' }
+}
+
+const handleDragOver = (event, row) => {
+  if (!props.draggable) {
+    return
+  }
+
+  const data = getPositionData(event)
+
+  // 无法将拖拽节点设置为根节点的兄弟节点
+  if (row.id === rows.value[0].id && data.position !== 'center') {
+    event.preventDefault()
+    return
+  }
+
+  if (props.disallowDrop({ dragged: draggingState.dragged, target: row, position: data.position })) {
+    Object.assign(draggingState, { ...data, hovering: row, forbidInsert: true })
+    return
+  }
+
   event.preventDefault()
+
+  Object.assign(draggingState, { ...data, hovering: row, forbidInsert: false })
+}
+
+const handleDrop = () => {
+  if (!props.draggable) {
+    return
+  }
+
+  const { dragged, hovering, position } = draggingState
+
+  emit('drop', { dragged, target: hovering, position })
+}
+
+const handleDragEnd = () => {
+  resetDraggingState()
+}
+
+const handleDragLeaveContainer = (event) => {
+  if (!props.draggable) {
+    return
+  }
+
+  const rect = event.currentTarget.getBoundingClientRect()
+  const threshold = 4
+  // 如果拖拽时，拖拽到其他元素上，可能触发dragleave事件，所以再加个坐标判断
+  if (
+    event.clientX <= rect.left + threshold ||
+    event.clientX >= rect.right - threshold ||
+    event.clientY <= rect.top + threshold ||
+    event.clientY >= rect.bottom - threshold
+  ) {
+    Object.assign(draggingState, { hovering: null })
+  }
 }
 </script>
 
@@ -168,26 +312,29 @@ const handleDragOver = (event) => {
 .draggable-tree {
   .tree-row {
     height: 24px;
-    padding: 0 6px;
+    padding: 0 8px;
+
     &,
     * {
       cursor: pointer;
     }
-    &:hover {
+    &:hover,
+    &.active {
       background-color: var(--te-common-bg-container);
-      // border: 1px solid; // TODO
+    }
+    &.dragging {
+      background-color: var(--te-common-bg-info);
+      &.forbid {
+        background-color: var(--te-common-bg-error);
+      }
     }
   }
   .gap {
-    width: 8px;
+    width: 12px;
   }
   .content {
     flex: 1;
     height: 100%;
-    padding: 0 6px;
-    &:hover {
-      // border: 1px solid; // TODO
-    }
   }
 
   .rotate {
@@ -196,23 +343,32 @@ const handleDragOver = (event) => {
   .expand-icon {
     font-size: 16px;
     width: 16px;
-    margin-right: 8px;
+    margin-right: 4px;
   }
   .slot-content {
     flex: 1;
     height: 100%;
-    label {
-      flex: 1;
-      font-size: 12px;
-      line-height: 20px;
-    }
+    padding: 0 4px;
   }
 
-  svg.icon-eye {
-    display: none;
+  .border-top {
+    box-shadow: inset 0 2px 0 0 var(--te-common-text-checked);
+    &.forbid {
+      box-shadow: inset 0 2px 0 0 var(--te-common-color-error);
+    }
   }
-  .tree-row:hover svg.icon-eye {
-    display: unset;
+  .border-bottom {
+    box-shadow: inset 0 -2px 0 0 var(--te-common-text-checked);
+    &.forbid {
+      box-shadow: inset 0 -2px 0 0 var(--te-common-color-error);
+    }
+  }
+  .border-all {
+    outline: 1px solid var(--te-common-text-checked);
+    outline-offset: -1px;
+    &.forbid {
+      outline: 1px solid var(--te-common-color-error);
+    }
   }
 }
 svg {

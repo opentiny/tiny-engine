@@ -874,6 +874,8 @@ export const canvasApi = {
   setDesignMode,
   getDocument,
   canvasDispatch,
+  getConfigure,
+  allowInsert,
   Builtin,
   removeBlockCompsCache: (...args) => {
     return canvasState.renderer.removeBlockCompsCache(...args)

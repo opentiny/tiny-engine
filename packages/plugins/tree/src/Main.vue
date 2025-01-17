@@ -11,13 +11,11 @@
     <template #content>
       <div class="tree-wrap lowcode-scrollbar">
         <tiny-grid
-          ref="gridRef"
           :data="state.pageSchema"
           :tree-config="{ children: 'children', expandAll: state.expandAll, renderIcon: renderIconFn }"
           :show-header="false"
           :highlight-hover-row="false"
           :auto-resize="true"
-          :row-class-name="getClassName"
         >
           <tiny-grid-column field="componentName" tree-node>
             <template #default="data">
@@ -27,7 +25,7 @@
                 :type="data.row.componentName"
                 @mouseover="mouseover(data.row)"
                 @mouseleave="mouseleave(data.row)"
-                @click="checkElement(data.row)"
+                @click="handleClickRow(data.row)"
               >
                 <span class="tree-content" :class="{ 'node-isblock': data.row?.componentType === 'Block' }">
                   <!-- <span class="node-icon">
@@ -44,13 +42,34 @@
           </tiny-grid-column>
         </tiny-grid>
       </div>
-      <draggable-tree :data="state.pageSchema" label-key="componentName" :draggable="true"></draggable-tree>
+      <draggable-tree
+        label-key="componentName"
+        :data="state.pageSchema"
+        :draggable="!state.isLock"
+        :active="pageState.currentSchema?.id"
+        :disallow-drop="disallowDrop"
+        class="outline-tree"
+        @click="handleClickRow"
+        @mouseenter="handleMouseEnterRow"
+        @drop="handleDrop"
+      >
+        <template #content="row">
+          <div class="row-content">
+            <svg-icon v-if="getIconName(row)" :name="getIconName(row)"></svg-icon>
+            <label :class="{ 'node-isblock': row.rawData.componentType === 'Block' }">{{ row.label }}</label>
+            <template v-if="row.id !== 'body'">
+              <svg-icon v-if="eyeOpen(row.id)" name="eye" @mouseup="showNode(row.rawData)"></svg-icon>
+              <svg-icon v-if="!eyeOpen(row.id)" name="eye-invisible" @mouseup="showNode(row.rawData)"></svg-icon>
+            </template>
+          </div>
+        </template>
+      </draggable-tree>
     </template>
   </plugin-panel>
 </template>
 
 <script>
-import { reactive, watch, ref, computed, onActivated, onDeactivated } from 'vue'
+import { reactive, watch, computed, onActivated, onDeactivated } from 'vue'
 import { Grid, GridColumn } from '@opentiny/vue'
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
 import { constants } from '@opentiny/tiny-engine-utils'
@@ -78,7 +97,7 @@ export default {
   },
   emits: ['close', 'fix-panel'],
   setup(props) {
-    const { pageState, getInstance } = useCanvas()
+    const { pageState } = useCanvas()
     const { getMaterial } = useMaterial()
     const { PLUGIN_NAME } = useLayout()
 
@@ -102,12 +121,11 @@ export default {
         return data
       }
 
-      return [{ ...translateChild([extend(true, {}, data)])[0], componentName: 'body', id: 'root' }]
+      return [{ ...translateChild([extend(true, {}, data)])[0], componentName: 'body', id: 'body' }]
     }
     const state = reactive({
       pageSchema: [],
       expandAll: true,
-      initSchema: [],
       isLock: computed(
         () => ![PAGE_STATUS.Occupy, PAGE_STATUS.Guest].includes(useLayout().layoutState.pageStatus.state)
       ),
@@ -120,14 +138,6 @@ export default {
         indicator: true
       }
     })
-
-    watch(
-      () => state.pageSchema,
-      (value) => {
-        // eslint-disable-next-line no-console
-        console.log(value)
-      }
-    )
 
     const { subscribe, unsubscribe } = useMessage()
 
@@ -160,9 +170,8 @@ export default {
       }
     )
 
-    // TODO 未使用到的功能
-    const toggleTree = () => {
-      state.expandAll = !state.expandAll
+    const eyeOpen = (id) => {
+      return pageState.nodesStatus[id] !== false
     }
 
     const showNode = (data) => {
@@ -173,12 +182,6 @@ export default {
 
       getRenderer().setCondition(data.id, data.show)
       clearSelect()
-    }
-
-    const getIcon = (node) => {
-      if (!node.componentName) return undefined
-      const component = getMaterial(node.componentName)
-      return component.icon || 'IconAssociation'
     }
 
     const mouseover = (data) => {
@@ -192,6 +195,16 @@ export default {
       data.showEye = true
     }
 
+    const handleMouseEnterRow = (row) => {
+      if (state.isLock) {
+        return
+      }
+
+      const { hoverNode } = useCanvas().canvasApi.value
+
+      hoverNode(row.id)
+    }
+
     const mouseleave = (data) => {
       if (data && !data.show) {
         return
@@ -199,94 +212,41 @@ export default {
       data.showEye = false
     }
 
-    const checkElement = (row) => {
+    const disallowDrop = ({ dragged, target, position }) => {
+      if (dragged.id === 'body') {
+        return true
+      }
+
+      const dropTo = position === 'center' ? target : target.parent
+
+      if (dropTo.id === 'body') {
+        return false
+      }
+
+      const { getConfigure, allowInsert } = useCanvas().canvasApi.value
+
+      return !allowInsert(getConfigure(dropTo.rawData.componentName), dragged.rawData)
+    }
+
+    const handleDrop = ({ dragged, target, position }) => {
+      const dropTo = position === 'center' ? target : target.parent
+      // eslint-disable-next-line no-console
+      console.log({ dragged, dropTo })
+    }
+
+    const handleClickRow = (row) => {
       if (state.isLock) {
         return
       }
 
       const { selectNode } = useCanvas().canvasApi.value
-      selectNode(row?.id, 'clickTree')
+      selectNode(row.id, 'clickTree')
     }
 
-    const gridRef = ref(null)
-
-    const rowDrop = () => {}
-
-    const getClassName = ({ row }) => {
-      const hightLight = pageState?.currentSchema?.id === row.id ? 'high-light-node' : ''
-      return 'nav-tree ' + hightLight
+    const getIconName = (row) => {
+      const iconName = getMaterial(row.rawData.componentName).icon || 'plugin-icon-page'
+      return iconName.toLowerCase()
     }
-
-    const rowDropMove = (event, originalEvent) => {
-      event.dragged.classList.remove('nodrag')
-      const { clientY } = originalEvent
-      const bottom = event.draggedRect.bottom
-      const distance = Math.abs(clientY - bottom)
-
-      const dragType = event.dragged.querySelector('.tree-box').getAttribute('type')
-      const dragId = event.dragged.querySelector('.tree-box').getAttribute('schemaId')
-      const dragSchema = getInstance(dragId)
-
-      state.dragState.dragSchema = dragSchema
-
-      const relateType = event.related.querySelector('.tree-box').getAttribute('type')
-      const relateId = event.related.querySelector('.tree-box').getAttribute('schemaId')
-      const relateSchema = getInstance(relateId)
-
-      pageState.hoverVm = relateSchema
-
-      const isRelateContainer = dragSchema?.componentName?.container
-      const relateParent = relateSchema?.parent.schema.componentName
-
-      if (dragType === 'col' && isRelateContainer && relateType !== 'col') {
-        state.dragState.indicator = false
-      } else if (dragType === 'col' && !isRelateContainer && relateParent !== 'row') {
-        state.dragState.indicator = false
-      } else if (dragType !== 'col' && isRelateContainer && relateType === 'row') {
-        state.dragState.indicator = false
-      } else if (!relateSchema) {
-        state.dragState.indicator = false
-      } else {
-        state.dragState.indicator = true
-      }
-
-      if (!state.dragState.indicator) {
-        event.dragged.classList.add('nodrag')
-        state.dragState.allowDrop = false
-      } else {
-        event.dragged.classList.remove('nodrag')
-        state.dragState.allowDrop = true
-      }
-
-      const el = originalEvent.target
-
-      if (
-        distance < 4 &&
-        distance > 1 &&
-        isRelateContainer &&
-        (!relateSchema.schema.children || relateSchema.schema.children.length === 0)
-      ) {
-        state.dragState.parentNode = el
-        el.querySelector('.tiny-grid-tree-wrapper').innerHTML =
-          '<i class="tiny-grid-tree__node-btn tiny-grid-icon__caret-right"></i>'
-      }
-
-      if (
-        state.dragState.parentNode &&
-        state.dragState.parentNode.getAttribute('data-rowid') !== el.getAttribute('data-rowid')
-      ) {
-        state.dragState.parentNode.querySelector('.tiny-grid-tree-wrapper').innerHTML = ''
-        state.dragState.parentNode = null
-      }
-    }
-
-    watch(
-      () => pageState.isLock,
-      (value) => {
-        setTimeout(rowDrop, 1000)
-        state.isLock = value
-      }
-    )
 
     const renderIconFn = (h, { isActive }) =>
       h(IconChevronDown(), {
@@ -295,18 +255,19 @@ export default {
 
     return {
       panelFixed,
-      checkElement,
       mouseover,
       mouseleave,
+      eyeOpen,
       showNode,
       state,
-      getIcon,
-      rowDropMove,
-      gridRef,
-      toggleTree,
-      getClassName,
       PLUGIN_NAME,
-      renderIconFn
+      renderIconFn,
+      pageState,
+      getIconName,
+      handleClickRow,
+      handleMouseEnterRow,
+      disallowDrop,
+      handleDrop
     }
   }
 }
@@ -317,7 +278,7 @@ export default {
   height: 100%;
   overflow: hidden;
   .tree-wrap {
-    height: calc(100% - 38px);
+    flex: 1;
     overflow-y: scroll;
     padding-top: 12px;
     border-top: 1px solid var(--ti-lowcode-tree-border-color);
@@ -385,6 +346,37 @@ export default {
     .node-isblock {
       color: var(--te-common-color-prompt-secondary);
     }
+  }
+}
+.outline-tree {
+  flex: 1;
+  overflow-y: scroll;
+  label {
+    flex: 1;
+    font-size: 12px;
+    line-height: 20px;
+  }
+  svg {
+    color: var(--te-common-icon-secondary);
+    &:hover {
+      color: var(--te-common-icon-hover);
+    }
+  }
+  svg.icon-eye {
+    display: none;
+  }
+  .tree-row:hover svg.icon-eye {
+    display: unset;
+  }
+  .row-content {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .node-isblock {
+    color: var(--te-common-color-prompt-secondary);
   }
 }
 </style>
