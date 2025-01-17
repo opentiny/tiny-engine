@@ -30,7 +30,8 @@ export const POSITION = Object.freeze({
   BOTTOM: 'bottom',
   LEFT: 'left',
   RIGHT: 'right',
-  IN: 'in'
+  IN: 'in',
+  OUT: 'out'
 })
 
 const initialDragState = {
@@ -271,7 +272,7 @@ const getRect = (element) => {
   return element.getBoundingClientRect()
 }
 
-const inserAfter = ({ parent, node, data }) => {
+const insertAfter = ({ parent, node, data }) => {
   if (!data.id) {
     data.id = utils.guid()
   }
@@ -316,6 +317,21 @@ export const removeNode = (id) => {
   useCanvas().operateNode({
     type: 'delete',
     id
+  })
+}
+
+// 添加外部容器
+const insertContainer = ({ parent, node, data }) => {
+  if (!data.id) {
+    data.id = utils.guid()
+  }
+
+  useCanvas().operateNode({
+    type: 'insert',
+    parentId: parent.id,
+    newNodeData: data,
+    position: POSITION.OUT,
+    referTargetNodeId: node.id
   })
 }
 
@@ -735,10 +751,13 @@ export const insertNode = (node, position = POSITION.IN, select = true) => {
         break
       case POSITION.BOTTOM:
       case POSITION.RIGHT:
-        inserAfter(node)
+        insertAfter(node)
         break
       case POSITION.IN:
         insertInner(node)
+        break
+      case POSITION.OUT:
+        insertContainer(node)
         break
       default:
         insertInner(node)
@@ -764,7 +783,7 @@ export const copyNode = (id) => {
 
   const { node, parent } = useCanvas().getNodeWithParentById(id)
 
-  inserAfter({ parent, node, data: copyObject(node) })
+  insertAfter({ parent, node, data: copyObject(node) })
   getController().addHistory()
 }
 

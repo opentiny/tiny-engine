@@ -29,6 +29,15 @@
   <div v-if="insertPosition" ref="insertPanel" class="insert-panel">
     <component :is="materialsPanel" :shortcut="insertPosition" @close="insertPosition = false"></component>
   </div>
+  <!-- 【添加父级容器】快捷选择物料面板 -->
+  <div v-if="insertContainer" ref="containerPanel" class="insert-panel">
+    <component
+      :is="materialsPanel"
+      :shortcut="insertContainer"
+      groupName="layout"
+      @close="insertContainer = false"
+    ></component>
+  </div>
 </template>
 
 <script>
@@ -90,6 +99,9 @@ export default {
     let showSettingModel = ref(false)
     let target = ref(null)
     const srcAttrName = computed(() => (props.canvasSrc ? 'src' : 'srcdoc'))
+
+    const containerPanel = ref(null)
+    const insertContainer = ref(false)
 
     const setCurrentNode = async (event) => {
       const { clientX, clientY } = event
@@ -183,6 +195,7 @@ export default {
             }
 
             insertPosition.value = false
+            insertContainer.value = false
             setCurrentNode(event)
             target.value = event.target
           })
@@ -198,6 +211,7 @@ export default {
           }
 
           insertPosition.value = false
+          insertContainer.value = false
           setCurrentNode(event)
           target.value = event.target
         })
@@ -247,6 +261,7 @@ export default {
       // 以下是外部window需要监听的事件
       window.addEventListener('mousedown', (e) => {
         insertPosition.value = insertPanel.value?.contains(e.target)
+        insertContainer.value = containerPanel.value?.contains(e.target)
         target.value = e.target
       })
 
@@ -259,6 +274,10 @@ export default {
     }
 
     const insertComponent = (position) => {
+      if (position === 'out') {
+        insertContainer.value = position
+        return
+      }
       insertPosition.value = position
     }
 
@@ -289,10 +308,12 @@ export default {
       canvasState,
       insertComponent,
       insertPanel,
+      containerPanel,
       settingModel,
       target,
       showSettingModel,
       insertPosition,
+      insertContainer,
       loading,
       srcAttrName
     }

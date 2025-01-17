@@ -294,57 +294,62 @@ const operationTypeMap = {
   insert: (operation) => {
     const { parentId, newNodeData, position, referTargetNodeId } = operation
     const parentNode = getNode(parentId) || pageState.pageSchema
-
+    // 1. 确认是否存在 ParentNode
     if (!parentNode) {
       return {}
     }
 
     parentNode.children = parentNode.children || []
 
+    // 2. 确保 newNodeData 有唯一 ID, 如果没有，则生成新 ID
     if (!newNodeData.id) {
       newNodeData.id = utils.guid()
     }
 
+    // 3. 查找参考节点
+    let referenceNode = null
     if (referTargetNodeId) {
-      const referenceNode = getNode(referTargetNodeId)
-      let index = parentNode.children.indexOf(referenceNode)
-
-      if (index === -1) {
-        index = 0
-      }
-
-      index = position === 'before' ? index : index + 1
-
-      parentNode.children.splice(index, 0, newNodeData)
-
-      setNode(newNodeData, parentNode)
-
-      // 递归构建 nodeMap
-      if (Array.isArray(newNodeData?.children) && newNodeData.children.length) {
-        const newNode = getNode(newNodeData.id)
-        generateNodesMap(newNodeData.children, newNode)
-      }
-
-      return {
-        current: newNodeData,
-        previous: undefined
+      referenceNode = getNode(referTargetNodeId)
+      if (!referenceNode) {
+        throw new Error(`Reference node with ID ${referTargetNodeId} not found`)
       }
     }
 
-    if (position === 'before') {
-      parentNode.children.unshift(newNodeData)
-    } else {
-      parentNode.children.push(newNodeData)
+    // 4. 根据position参数选择插入位置
+    let index = parentNode.children.indexOf(referenceNode)
+    if (index === -1 && referTargetNodeId) {
+      index = parentNode.children.length
+    }
+
+    // 5. 插入节点的逻辑
+    const childrenNode = toRaw(referenceNode)
+    switch (position) {
+      case 'before':
+        parentNode.children.unshift(newNodeData)
+        break
+      case 'out':
+        if (childrenNode) {
+          newNodeData.children = Array.isArray(childrenNode) ? [...childrenNode] : [childrenNode]
+          parentNode.children.splice(index, 1, newNodeData)
+        }
+        break
+      case 'bottom':
+        parentNode.children.splice(index + 1, 0, newNodeData)
+        break
+      default:
+        parentNode.children.push(newNodeData)
+        break
     }
 
     setNode(newNodeData, parentNode)
 
-    // 递归构建 nodeMap
-    if (Array.isArray(newNodeData?.children) && newNodeData.children.length) {
+    // 6. 如果新节点有子节点，递归构建 nodeMap
+    if (Array.isArray(newNodeData?.children) && newNodeData.children.length > 0) {
       const newNode = getNode(newNodeData.id)
       generateNodesMap(newNodeData.children, newNode)
     }
 
+    // 7. 返回插入结果
     return {
       current: newNodeData,
       previous: undefined
@@ -376,7 +381,7 @@ const operationTypeMap = {
         const nodeItem = getNode(item.id)
         nodesMap.value.delete(item.id)
 
-        if (Array.isArray(nodeItem.children) && nodeItem.children.length) {
+        if (Array.isArray(nodeItem?.children) && nodeItem?.children.length) {
           children.push(...nodeItem.children)
         }
       })

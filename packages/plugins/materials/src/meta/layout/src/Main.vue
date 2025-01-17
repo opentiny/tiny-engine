@@ -40,6 +40,10 @@ export default {
     registryData: {
       type: Object,
       default: () => ({})
+    },
+    groupName: {
+      type: String,
+      default: ''
     }
   },
   emits: ['close', 'fix-panel'],
@@ -48,6 +52,7 @@ export default {
       isShortcutPanel: props.shortcut,
       isBlockGroupPanel: false,
       isBlockList: false,
+      materialGroup: props.groupName,
       emitEvent: emit
     })
     provide('panelState', panelState) // 使用provide传给子组件,后续可能会有调整，先暂定
