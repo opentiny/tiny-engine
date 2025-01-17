@@ -9,39 +9,6 @@
       ></svg-button>
     </template>
     <template #content>
-      <div class="tree-wrap lowcode-scrollbar">
-        <tiny-grid
-          :data="state.pageSchema"
-          :tree-config="{ children: 'children', expandAll: state.expandAll, renderIcon: renderIconFn }"
-          :show-header="false"
-          :highlight-hover-row="false"
-          :auto-resize="true"
-        >
-          <tiny-grid-column field="componentName" tree-node>
-            <template #default="data">
-              <span
-                class="tree-box"
-                :schemaId="data.row?.id"
-                :type="data.row.componentName"
-                @mouseover="mouseover(data.row)"
-                @mouseleave="mouseleave(data.row)"
-                @click="handleClickRow(data.row)"
-              >
-                <span class="tree-content" :class="{ 'node-isblock': data.row?.componentType === 'Block' }">
-                  <!-- <span class="node-icon">
-                    <component :is="getIcon(data.row)" style="width: 1em; height: 1em"></component>
-                  </span> -->
-                  <span>{{ data.row.componentName }}</span>
-                </span>
-                <span v-show="data.row.showEye" class="tree-handle" @mouseup="showNode(data.row)">
-                  <icon-eyeopen v-show="data.row.show"></icon-eyeopen>
-                  <icon-eyeclose v-show="!data.row.show"></icon-eyeclose>
-                </span>
-              </span>
-            </template>
-          </tiny-grid-column>
-        </tiny-grid>
-      </div>
       <draggable-tree
         label-key="componentName"
         :data="state.pageSchema"
@@ -70,10 +37,8 @@
 
 <script>
 import { reactive, watch, computed, onActivated, onDeactivated, nextTick } from 'vue'
-import { Grid, GridColumn } from '@opentiny/vue'
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { IconChevronDown, iconEyeopen, iconEyeclose } from '@opentiny/vue-icon'
 import { useCanvas, useMaterial, useLayout, useMessage } from '@opentiny/tiny-engine-meta-register'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { typeOf } from '@opentiny/vue-renderless/common/type'
@@ -82,13 +47,9 @@ import DraggableTree from './DraggableTree.vue'
 const { PAGE_STATUS } = constants
 export default {
   components: {
-    TinyGrid: Grid,
-    TinyGridColumn: GridColumn,
     PluginPanel,
     SvgButton,
-    DraggableTree,
-    IconEyeopen: iconEyeopen(),
-    IconEyeclose: iconEyeclose()
+    DraggableTree
   },
   props: {
     fixedPanels: {
@@ -125,18 +86,9 @@ export default {
     }
     const state = reactive({
       pageSchema: [],
-      expandAll: true,
       isLock: computed(
         () => ![PAGE_STATUS.Occupy, PAGE_STATUS.Guest].includes(useLayout().layoutState.pageStatus.state)
-      ),
-      dragState: {
-        allowDrop: true,
-        dragSchema: null,
-        hoverVm: null,
-        currentVm: null,
-        parentNode: null,
-        indicator: true
-      }
+      )
     })
 
     const { subscribe, unsubscribe } = useMessage()
@@ -184,17 +136,6 @@ export default {
       clearSelect()
     }
 
-    const mouseover = (data) => {
-      if (state.isLock) {
-        return
-      }
-
-      const { hoverNode } = useCanvas().canvasApi.value
-
-      hoverNode(data.id)
-      data.showEye = true
-    }
-
     const handleMouseEnterRow = (row) => {
       if (state.isLock) {
         return
@@ -203,13 +144,6 @@ export default {
       const { hoverNode } = useCanvas().canvasApi.value
 
       hoverNode(row.id)
-    }
-
-    const mouseleave = (data) => {
-      if (data && !data.show) {
-        return
-      }
-      data.showEye = false
     }
 
     const disallowDrop = ({ dragged, target, position }) => {
@@ -272,20 +206,12 @@ export default {
       return iconName.toLowerCase()
     }
 
-    const renderIconFn = (h, { isActive }) =>
-      h(IconChevronDown(), {
-        class: ['tiny-grid-tree__node-btn', { is__active: isActive }]
-      })
-
     return {
       panelFixed,
-      mouseover,
-      mouseleave,
       eyeOpen,
       showNode,
       state,
       PLUGIN_NAME,
-      renderIconFn,
       pageState,
       getIconName,
       handleClickRow,
@@ -301,76 +227,6 @@ export default {
 .outlinebox {
   height: 100%;
   overflow: hidden;
-  .tree-wrap {
-    flex: 1;
-    overflow-y: scroll;
-    padding-top: 12px;
-    border-top: 1px solid var(--ti-lowcode-tree-border-color);
-
-    .tree-handle {
-      font-size: var(--te-base-font-size-2);
-      svg {
-        color: var(--te-common-icon-secondary);
-      }
-    }
-  }
-  :deep(.tiny-grid) {
-    background-color: unset;
-    .tree-box {
-      display: flex;
-      width: 200px;
-      justify-content: space-between;
-    }
-
-    .tiny-grid-tree-wrapper {
-      margin-right: 8px;
-
-      .tiny-grid-tree__node-btn {
-        width: 14px;
-        height: 14px;
-        margin-bottom: 2px;
-
-        &:hover {
-          color: var(--ti-lowcode-tree-icon-hover-color);
-        }
-      }
-    }
-  }
-
-  :deep(.tiny-grid .tiny-grid__body-wrapper .tiny-grid-body__row) {
-    background-color: var(--ti-lowcode-common-component-bg);
-    &:hover {
-      background-color: var(--ti-lowcode-common-component-hover-bg);
-    }
-  }
-  :deep(.tiny-grid .tiny-grid__body-wrapper .tiny-grid-body__row:not(.row__hover):nth-child(2n)) {
-    background-color: var(--ti-lowcode-common-component-bg);
-    &:hover {
-      background-color: var(--ti-lowcode-common-component-hover-bg);
-    }
-  }
-  :deep(.tiny-grid-body__row.nav-tree .tiny-grid-cell) {
-    line-height: inherit;
-  }
-  :deep(.high-light-node) {
-    background: var(--te-common-bg-container) !important;
-
-    :deep(.eyeOpen) {
-      display: block !important;
-    }
-  }
-  :deep(.tiny-grid .tiny-grid__body-wrapper .tiny-grid-body__column) {
-    color: var(--te-common-text-primary);
-    padding: 0 12px;
-    height: 24px !important;
-    line-height: 24px;
-    .tree-content {
-      font-size: 12px;
-    }
-    .node-isblock {
-      color: var(--te-common-color-prompt-secondary);
-    }
-  }
 }
 .outline-tree {
   flex: 1;
