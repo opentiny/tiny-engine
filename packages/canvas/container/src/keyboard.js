@@ -21,10 +21,11 @@ import {
   clearHover,
   hoverState
 } from './container'
-import { useHistory, useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { useHistory, useCanvas, getMetaApi, META_APP } from '@opentiny/tiny-engine-meta-register'
 import { copyObject } from '../../common'
 import { getClipboardSchema, setClipboardSchema } from './utils'
 
+const KEY_S = 83
 const KEY_Y = 89
 const KEY_Z = 90
 const KEY_RIGHT = 39
@@ -77,13 +78,24 @@ const handlerArrow = (keyCode) => {
   }
 }
 
-const handlerCtrl = (keyCode) => {
+const handleSaveEvent = (event) => {
+  const { openCommon } = getMetaApi(META_APP.Save)
+  event.preventDefault()
+  openCommon()
+}
+
+const handlerCtrl = (event) => {
+  const keyCode = event.keyCode
+
   switch (keyCode) {
     case KEY_Y:
       useHistory().forward()
       break
     case KEY_Z:
       useHistory().back()
+      break
+    case KEY_S:
+      handleSaveEvent(event)
       break
     default:
       break
@@ -99,6 +111,8 @@ const handleClipboardCut = (event, schema) => {
 const handleClipboardPaste = (node, schema, parent) => {
   if (node?.componentName && schema?.componentName && allowInsert(getConfigure(schema.componentName), node)) {
     insertNode({ parent, node: schema, data: { ...node } }, POSITION.IN)
+  } else {
+    insertNode({ parent, node: schema, data: { ...node } }, POSITION.BOTTOM)
   }
 }
 
@@ -122,21 +136,21 @@ const handlerClipboardEvent = (event) => {
 
 const keyboardHandler = (event) => {
   if (event.ctrlKey) {
-    getCurrent()?.schema && handlerCtrl(event.keyCode)
+    handlerCtrl(event)
   }
 
   handlerArrow(event.keyCode)
 }
 
-const removeHostkeyEvent = (dom) => {
+const removeHotkeyEvent = (dom) => {
   dom.removeEventListener('keydown', keyboardHandler)
   dom.removeEventListener('copy', handlerClipboardEvent)
   dom.removeEventListener('cut', handlerClipboardEvent)
   dom.removeEventListener('paste', handlerClipboardEvent)
 }
 
-const registerHostkeyEvent = (dom) => {
-  removeHostkeyEvent(dom)
+const registerHotkeyEvent = (dom) => {
+  removeHotkeyEvent(dom)
 
   dom.addEventListener('keydown', keyboardHandler)
   dom.addEventListener('copy', handlerClipboardEvent)
@@ -144,4 +158,4 @@ const registerHostkeyEvent = (dom) => {
   dom.addEventListener('paste', handlerClipboardEvent)
 }
 
-export { registerHostkeyEvent, removeHostkeyEvent }
+export { registerHotkeyEvent, removeHotkeyEvent }
