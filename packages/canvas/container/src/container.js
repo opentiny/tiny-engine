@@ -123,6 +123,108 @@ export const lineState = reactive({
   ...initialLineState
 })
 
+// 获取多选节点
+export const getMultiState = (element, doc) => {
+  const { top, left, width, height } = element.getBoundingClientRect()
+  const nodeTag = element?.getAttribute(NODE_TAG)
+  const nodeId = element?.getAttribute(NODE_UID)
+
+  const { node, parent } = useCanvas().getNodeWithParentById(nodeId) || {}
+
+  if (node && parent) {
+    return {
+      id: nodeId,
+      componentName: nodeTag,
+      doc,
+      top,
+      left,
+      width,
+      height,
+      schema: toRaw(node),
+      parent: toRaw(parent)
+    }
+  }
+}
+
+// 设置多选节点
+export function setMultiState(multiSelectedStates, node, append = false) {
+  if (!node || typeof node !== 'object') {
+    multiSelectedStates.value = []
+    return
+  }
+
+  if (append) {
+    const nodeIds = new Set(multiSelectedStates.value.map((state) => state.id))
+    if (!nodeIds.has(node.id)) {
+      multiSelectedStates.value = [...toRaw(multiSelectedStates.value), node]
+    }
+  } else {
+    if (Array.isArray(node)) {
+      multiSelectedStates.value = node
+    } else {
+      multiSelectedStates.value = [node]
+    }
+  }
+}
+
+// 获取所有子节点的 ID（包括嵌套的子节点）
+function getAllChildIdsAndFilter(children) {
+  let childIds = []
+
+  function traverse(children) {
+    children.forEach((child) => {
+      childIds.push(child.id)
+      if (Array.isArray(child.children)) {
+        traverse(child.children)
+      }
+    })
+  }
+
+  traverse(children)
+
+  return childIds
+}
+
+// 处理嵌套节点
+function handleNestedStates(multiSelectedStates, selectState) {
+  if (Array.isArray(selectState?.schema.children)) {
+    const selectedNodeIds = multiSelectedStates.value.map((state) => state.id)
+
+    const childIds = getAllChildIdsAndFilter(selectState.schema.children)
+
+    const someSelectedInChildren = selectedNodeIds.some((id) => childIds.includes(id))
+
+    if (someSelectedInChildren) {
+      multiSelectedStates.value = multiSelectedStates.value.filter((state) => {
+        return !childIds.includes(state.id)
+      })
+
+      multiSelectedStates.value.push(selectState)
+    }
+
+    return true
+  }
+
+  return false
+}
+
+// 处理多选节点
+export function handleMultiState(multiSelectedStates, selectState) {
+  const hasNestedNode = handleNestedStates(multiSelectedStates, selectState)
+
+  if (!hasNestedNode) {
+    const nodeId = selectState?.id
+    const isExistNode = multiSelectedStates.value.map((state) => state.id).includes(nodeId)
+
+    if (nodeId && isExistNode) {
+      const exList = multiSelectedStates.value.filter((state) => state.id !== nodeId)
+      setMultiState(multiSelectedStates, exList)
+    } else {
+      setMultiState(multiSelectedStates, selectState, true)
+    }
+  }
+}
+
 export const clearHover = () => {
   Object.assign(hoverState, initialRectState, { slot: null })
   Object.assign(inactiveHoverState, initialRectState, { slot: null })

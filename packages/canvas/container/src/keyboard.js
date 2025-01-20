@@ -24,6 +24,7 @@ import {
 import { useHistory, useCanvas, getMetaApi, META_APP } from '@opentiny/tiny-engine-meta-register'
 import { copyObject } from '../../common'
 import { getClipboardSchema, setClipboardSchema } from './utils'
+import { ref } from 'vue'
 
 const KEY_S = 83
 const KEY_Y = 89
@@ -33,6 +34,11 @@ const KEY_LEFT = 37
 const KEY_UP = 38
 const KEY_DOWN = 40
 const KEY_DEL = 46
+const KEY_CTRL = 17
+
+//  多选节点
+const multiSelectedStates = ref([])
+const isCtrlPressed = ref(false)
 
 function handlerLeft({ parent }) {
   selectNode(parent?.id)
@@ -42,11 +48,11 @@ function handlerRight({ schema }) {
   id && selectNode(id)
 }
 function handlerUp({ index, parent }) {
-  const id = (parent.children[index - 1] || parent)?.id
+  const id = (parent?.children[index - 1] || parent)?.id
   id && selectNode(id)
 }
 function handlerDown({ index, parent }) {
-  const id = parent.children[index + 1]?.id
+  const id = parent?.children[index + 1]?.id
   id && selectNode(id)
 }
 function handlerDelete({ schema }) {
@@ -86,7 +92,7 @@ const handleSaveEvent = (event) => {
 
 const handlerCtrl = (event) => {
   const keyCode = event.keyCode
-
+  isCtrlPressed.value = true
   switch (keyCode) {
     case KEY_Y:
       useHistory().forward()
@@ -142,8 +148,15 @@ const keyboardHandler = (event) => {
   handlerArrow(event.keyCode)
 }
 
+const handleKeyupEvent = (event) => {
+  if (event.keyCode === KEY_CTRL) {
+    isCtrlPressed.value = false
+  }
+}
+
 const removeHotkeyEvent = (dom) => {
   dom.removeEventListener('keydown', keyboardHandler)
+  dom.removeEventListener('keyup', handleKeyupEvent)
   dom.removeEventListener('copy', handlerClipboardEvent)
   dom.removeEventListener('cut', handlerClipboardEvent)
   dom.removeEventListener('paste', handlerClipboardEvent)
@@ -153,9 +166,10 @@ const registerHotkeyEvent = (dom) => {
   removeHotkeyEvent(dom)
 
   dom.addEventListener('keydown', keyboardHandler)
+  dom.addEventListener('keyup', handleKeyupEvent)
   dom.addEventListener('copy', handlerClipboardEvent)
   dom.addEventListener('cut', handlerClipboardEvent)
   dom.addEventListener('paste', handlerClipboardEvent)
 }
 
-export { registerHotkeyEvent, removeHotkeyEvent }
+export { registerHotkeyEvent, removeHotkeyEvent, multiSelectedStates, isCtrlPressed }

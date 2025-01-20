@@ -1,14 +1,17 @@
 <template>
-  <canvas-action
-    :hoverState="hoverState"
-    :inactiveHoverState="inactiveHoverState"
-    :selectState="selectState"
-    :lineState="lineState"
-    :windowGetClickEventTarget="target"
-    :resize="canvasState.type === 'absolute'"
-    @select-slot="selectSlot"
-    @setting="settingModel"
-  ></canvas-action>
+  <div v-for="multiState in multiSelectedStates" :key="multiState.id">
+    <canvas-action
+      :hoverState="hoverState"
+      :inactiveHoverState="inactiveHoverState"
+      :selectState="multiStateLength > 1 ? multiState : selectState"
+      :lineState="lineState"
+      :windowGetClickEventTarget="target"
+      :resize="canvasState.type === 'absolute'"
+      :multiStateLength="multiStateLength"
+      @select-slot="selectSlot"
+      @setting="settingModel"
+    ></canvas-action>
+  </div>
   <canvas-router-jumper :hoverState="hoverState" :inactiveHoverState="inactiveHoverState"></canvas-router-jumper>
   <canvas-viewer-switcher :hoverState="hoverState" :inactiveHoverState="inactiveHoverState"></canvas-viewer-switcher>
   <canvas-divider :selectState="selectState"></canvas-divider>
@@ -45,7 +48,7 @@ import { onMounted, ref, computed, onUnmounted, watch, watchEffect } from 'vue'
 import { iframeMonitoring } from '@opentiny/tiny-engine-common/js/monitor'
 import { useTranslate, useCanvas, useMessage, useResource } from '@opentiny/tiny-engine-meta-register'
 import { NODE_UID, NODE_LOOP, DESIGN_MODE } from '../../common'
-import { registerHotkeyEvent, removeHotkeyEvent } from './keyboard'
+import { registerHotkeyEvent, removeHotkeyEvent, multiSelectedStates, isCtrlPressed } from './keyboard'
 import CanvasMenu, { closeMenu, openMenu } from './components/CanvasMenu.vue'
 import CanvasAction from './components/CanvasAction.vue'
 import CanvasRouterJumper from './components/CanvasRouterJumper.vue'
@@ -71,7 +74,10 @@ import {
   clearLineState,
   querySelectById,
   getCurrent,
-  canvasApi
+  canvasApi,
+  getMultiState,
+  setMultiState,
+  handleMultiState
 } from './container'
 
 export default {
@@ -103,7 +109,9 @@ export default {
     const containerPanel = ref(null)
     const insertContainer = ref(false)
 
-    const setCurrentNode = async (event) => {
+    const multiStateLength = computed(() => multiSelectedStates.value.length)
+
+    const setCurrentNode = async (event, doc = null) => {
       const { clientX, clientY } = event
       const element = getElement(event.target)
       closeMenu()
@@ -113,6 +121,9 @@ export default {
         const currentElement = querySelectById(getCurrent().schema?.id)
 
         if (!currentElement?.contains(element) || event.button === 0) {
+          const selectedState = getMultiState(element, doc)
+          setMultiState(multiSelectedStates, selectedState)
+
           const loopId = element.getAttribute(NODE_LOOP)
           if (loopId) {
             node = await selectNode(element.getAttribute(NODE_UID), `loop-id=${loopId}`)
@@ -194,9 +205,23 @@ export default {
               return
             }
 
+            const element = getElement(event.target)
+            if (!element) {
+              return
+            }
+
+            // 多选组合键触发
+            if (element) {
+              const selectedState = getMultiState(element, doc)
+              if (event.buttons === 1 && isCtrlPressed.value) {
+                handleMultiState(multiSelectedStates, selectedState)
+                return
+              }
+            }
+
             insertPosition.value = false
             insertContainer.value = false
-            setCurrentNode(event)
+            setCurrentNode(event, doc)
             target.value = event.target
           })
         })
@@ -285,6 +310,21 @@ export default {
       hoverState.slot = slotName
     }
 
+    watch(
+      () => multiStateLength.value,
+      (newVal) => {
+        if (newVal > 1) {
+          // 清空属性面板
+          selectNode(null)
+        }
+
+        if (newVal === 1) {
+          const node = multiSelectedStates.value[0]
+          selectNode(node.id)
+        }
+      }
+    )
+
     onMounted(() => run(iframe))
     onUnmounted(() => {
       if (iframe.value?.contentDocument) {
@@ -303,6 +343,8 @@ export default {
       inactiveHoverState,
       selectState,
       lineState,
+      multiSelectedStates,
+      multiStateLength,
       removeNodeById,
       selectSlot,
       canvasState,
