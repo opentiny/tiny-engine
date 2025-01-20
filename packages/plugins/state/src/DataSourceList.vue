@@ -119,13 +119,10 @@ export default {
   padding-top: 12px;
   border-top: 1px solid var(--te-common-border-divider);
   overflow-y: scroll;
-  .data-source-list-blank {
-    font-size: 12px;
-  }
   .data-source-list-item {
     &.selected,
     &:hover {
-      background: var(--ti-lowcode-common-component-hover-bg);
+      background: var(--te-common-bg-container);
       .item-head-right {
         display: flex;
         justify-content: flex-end;
@@ -194,18 +191,13 @@ export default {
     p span {
       &:first-child {
         font-size: 14;
-        color: var(--ti-lowcode-toolbar-breadcrumb-color);
+        color: var(--te-common-text-secondary);
       }
 
       &:last-child {
-        color: var(--ti-lowcode-dialog-font-color);
+        color: var(--te-common-text-primary);
       }
     }
-  }
-  &-blank {
-    color: var(--ti-lowcode-state-management-query-color);
-    text-align: center;
-    padding-top: 30px;
   }
 }
 </style>

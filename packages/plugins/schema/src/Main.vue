@@ -174,7 +174,7 @@ export default {
   position: fixed;
   top: var(--base-top-panel-height);
   left: 41px;
-  background: var(--ti-lowcode-common-component-bg);
+  background: var(--te-common-bg-default);
   box-shadow: 6px 0px 3px 0px var(--te-base-box-shadow-rgba-3);
   z-index: 1000;
   .source-code-header {
@@ -219,7 +219,7 @@ export default {
   }
   .source-code-content {
     height: calc(100% - 42px);
-    border: 1px solid var(--ti-lowcode-base-gray-101);
+    border: 1px solid var(--te-common-border-divider);
     border-radius: 4px;
     margin: 0 12px;
   }

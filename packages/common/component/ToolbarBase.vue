@@ -67,7 +67,7 @@ export default {
 </script>
 <style scoped>
 .split-line {
-  color: var(--ti-lowcode-toolbar-border-color);
+  color: var(--te-common-border-default);
   margin: 0 4px;
   font-size: 14px;
 }

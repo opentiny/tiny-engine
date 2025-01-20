@@ -249,7 +249,7 @@ export default {
   border-right: none;
   background: var(--ti-lowcode-meta-list-item-bg-color);
   margin-bottom: -1px;
-  color: var(--ti-lowcode-toolbar-breadcrumb-color);
+  color: var(--te-common-text-primary);
   &.active-item {
     background-color: var(--te-common-bg-container);
   }
@@ -264,7 +264,7 @@ export default {
         margin-right: 5px;
         font-size: 12px;
         opacity: 0.4;
-        color: var(--ti-lowcode-toolbar-breadcrumb-color);
+        color: var(--te-common-text-primary);
         &:hover {
           cursor: pointer;
           opacity: 1;

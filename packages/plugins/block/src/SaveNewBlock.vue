@@ -136,6 +136,6 @@ export default {
 
 <style scoped lang="less">
 .block-tip {
-  color: var(--ti-lowcode-error-tip-color);
+  color: var(--te-common-color-error);
 }
 </style>

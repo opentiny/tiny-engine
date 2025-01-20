@@ -201,7 +201,7 @@ export default {
   width: var(--base-left-panel-width);
   height: calc(100vh - var(--base-top-panel-height));
   border-right: 1px solid var(--ti-lowcode-plugin-panel-border-right-color);
-  background: var(--ti-lowcode-common-component-bg);
+  background: var(--te-common-bg-default);
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -239,7 +239,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background: var(--ti-lowcode-common-layout-bg);
+  background: var(--te-common-bg-default);
   box-sizing: border-box;
   z-index: 1000;
   border-right: 1px solid var(--ti-lowcode-plugin-panel-border-right-color);
@@ -285,7 +285,7 @@ export default {
         position: relative;
 
         .item-icon {
-          color: var(--ti-lowcode-common-primary-color);
+          color: var(--te-common-text-checked);
         }
       }
 

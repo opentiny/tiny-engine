@@ -221,21 +221,3 @@ export default {
   }
 }
 </script>
-
-<style lang="less" scoped>
-.block-detail-popover {
-  position: fixed;
-  z-index: 20;
-  .arrow {
-    width: 0;
-    height: 0;
-    border: 10px solid transparent;
-    border-bottom-color: var(--ti-lowcode-toolbar-view-hover-bg);
-    display: inline-block;
-    position: absolute;
-    top: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-}
-</style>

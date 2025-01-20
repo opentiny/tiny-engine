@@ -69,7 +69,7 @@ export default {
   width: 100%;
   height: var(--base-top-panel-height);
   text-align: center;
-  background-color: var(--ti-lowcode-common-layout-bg);
+  background-color: var(--te-common-bg-default);
   position: relative;
   z-index: 1001;
   border-bottom: 1px solid var(--ti-lowcode-toolbar-border-bottom-color);

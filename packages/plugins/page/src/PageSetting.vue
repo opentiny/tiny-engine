@@ -401,12 +401,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.tiny-search {
-  padding: 10px;
-  border-top: 1px solid var(--ti-lowcode-page-manage-tip-border-color);
-  border-bottom: 1px solid var(--ti-lowcode-page-manage-tip-border-color);
-}
-
 .block-add-content {
   display: flex;
   flex-direction: column;

@@ -428,7 +428,7 @@ onUnmounted(() => {
       }
 
       &:hover {
-        background: var(--ti-lowcode-toolbar-view-hover-bg);
+        background: var(--te-common-bg-container);
       }
     }
   }

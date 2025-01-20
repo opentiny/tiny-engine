@@ -481,7 +481,7 @@ export default {
     .popper__arrow {
       &,
       &::after {
-        border-right-color: var(--ti-lowcode-common-component-hover-bg);
+        border-right-color: var(--te-common-bg-container);
       }
     }
   }

@@ -83,10 +83,10 @@ export default {
     align-items: center;
     transition: 0.3s;
     &:hover {
-      color: var(--ti-lowcode-common-primary-color);
+      color: var(--te-common-text-checked);
     }
     &.active {
-      color: var(--ti-lowcode-common-primary-color);
+      color: var(--te-common-text-checked);
     }
   }
   .icon-wrap + .icon-wrap {

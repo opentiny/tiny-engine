@@ -153,7 +153,7 @@ export default {
   right: var(--base-right-panel-width);
   z-index: 100;
   padding: 10px 16px 16px 16px;
-  background-color: var(--ti-lowcode-common-component-bg);
+  background-color: var(--te-common-bg-default);
   height: auto !important;
 }
 

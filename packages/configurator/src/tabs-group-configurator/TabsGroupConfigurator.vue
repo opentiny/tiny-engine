@@ -176,8 +176,8 @@ const change = (item) => {
       color: var(--te-common-text-weaken);
 
       &:hover {
-        background-color: var(--ti-lowcode-base-gray-101);
-        color: var(--te-common-text-primary);
+        background-color: var(--te-common-bg-prompt);
+        color: var(--te-common-text-secondary);
         border-radius: 4px;
         .svg-icon {
           color: var(--te-common-text-primary);
@@ -185,8 +185,8 @@ const change = (item) => {
       }
 
       &.selected {
-        background-color: var(--ti-lowcode-base-gray-101);
-        color: var(--te-common-text-primary);
+        background-color: var(--te-common-bg-prompt);
+        color: var(--te-common-text-secondary);
         border-radius: 4px;
         .svg-icon {
           color: var(--te-common-text-primary);

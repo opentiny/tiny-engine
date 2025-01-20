@@ -315,7 +315,7 @@ export default {
     color: var(--te-common-text-primary);
     .help-link {
       display: inline-block;
-      color: var(--ti-lowcode-common-primary-color);
+      color: var(--te-common-text-link);
       font-size: 12px;
       margin-left: 16px;
       &:hover {
@@ -350,7 +350,7 @@ export default {
     }
 
     .del:hover {
-      background-color: var(--ti-lowcode-delete-button-hover-bg);
+      background-color: var(--te-common-color-error);
     }
   }
   .cdn-label-wrap {

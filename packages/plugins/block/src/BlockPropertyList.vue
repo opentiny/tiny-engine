@@ -90,7 +90,7 @@ export default {
     padding: 0 12px;
     width: 66px;
     margin-right: 5px;
-    border: 1px solid var(--ti-lowcode-base-default-button-border-disable-color);
+    border: 1px solid var(--te-common-border-default);
   }
   .plus-icon {
     width: 16px;

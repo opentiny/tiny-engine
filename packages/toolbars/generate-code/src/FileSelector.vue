@@ -120,27 +120,27 @@ export default {
 <style lang="less" scoped>
 .dialog-box {
   :deep(.tiny-dialog-box__content) {
-    background-color: var(--ti-lowcode-common-component-bg);
+    background-color: var(--te-common-bg-default);
 
     .tiny-dialog-box__header {
-      background-color: var(--ti-lowcode-common-component-bg);
+      background-color: var(--te-common-bg-default);
 
       .tiny-dialog-box__title {
-        color: var(--ti-lowcode-toolbar-breadcrumb-color);
+        color: var(--te-common-text-secondary);
       }
 
       .tiny-dialog-box__headerbtn .tiny-dialog-box__close {
-        fill: var(--ti-lowcode-toolbar-breadcrumb-color) !important;
+        fill: var(--te-common-text-secondary) !important;
 
         &:hover {
-          fill: var(--ti-lowcode-common-primary-text-color) !important;
+          fill: var(--te-common-text-primary) !important;
         }
       }
     }
 
     .tiny-dialog-box__footer {
       .tiny-button--primary {
-        background-color: var(--ti-lowcode-common-danger-color, #191919;);
+        background-color: var(--te-common-bg-primary);
         border: none;
       }
     }
@@ -163,24 +163,19 @@ export default {
 
     :deep(.tiny-grid) {
       .tiny-grid__header-wrapper {
-        background-color: var(--ti-lowcode-toolbar-view-hover-bg);
-
         .tiny-grid-header__column {
-          color: var(--ti-lowcode-toolbar-breadcrumb-color);
+          color: var(--te-common-text-secondary);
           height: 30px;
 
           .tiny-grid-resizable.is__line:before {
-            background-color: var(--ti-lowcode-common-component-bg);
+            background-color: var(--te-common-bg-default);
           }
         }
 
-        .tiny-grid__repair {
-          border-color: var(--ti-lowcode-tabs-border-color);
-        }
-
-        .tiny-grid-checkbox__icon {
+        .tiny-grid-checkbox__icon,
+        .icon-checked-sur {
           svg {
-            color: var(--ti-lowcode-common-primary-color);
+            color: var(--te-common-border-checked) !important;
           }
         }
       }
@@ -205,30 +200,14 @@ export default {
         }
 
         .tiny-grid-body__row {
-          background-color: var(--ti-lowcode-common-component-bg);
-        }
-
-        .tiny-grid-body__row,
-        .tiny-grid-body__row:not(.row__hover):nth-child(2n) {
-          background-image: linear-gradient(
-            -180deg,
-            var(--ti-lowcode-new-table-row-sepline-background),
-            var(--ti-lowcode-new-table-row-sepline-background)
-          );
-          background-repeat: no-repeat;
-          background-size: 100% 1px;
-          background-position: 100% 100%;
-
-          &.row__current {
-            background-color: var(--ti-lowcode-toolbar-view-hover-bg);
-          }
+          background-color: var(--te-common-bg-default);
         }
 
         .tiny-grid-body__row {
           &.row__selected {
             .tiny-grid-checkbox__icon {
               svg {
-                color: var(--ti-lowcode-common-primary-color);
+                color: var(--te-common-border-checked);
                 width: 100%;
                 height: 100%;
               }
@@ -238,7 +217,7 @@ export default {
       }
 
       .tiny-grid__empty-text {
-        color: var(--ti-lowcode-toolbar-breadcrumb-color);
+        color: var(--te-common-text-secondary);
       }
     }
   }

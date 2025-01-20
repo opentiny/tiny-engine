@@ -310,7 +310,7 @@ export default {
 
 .create-content-description {
   font-size: 12px;
-  color: var(--ti-lowcode-common-primary-color);
+  color: var(--te-common-text-emphasize);
   margin-left: 8px;
   cursor: pointer;
 }

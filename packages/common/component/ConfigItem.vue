@@ -678,7 +678,7 @@ export default {
     display: flex;
     align-items: center;
     margin-top: 8px;
-    color: var(--ti-lowcode-common-error-color);
+    color: var(--te-common-color-error);
     font-size: 12px;
     .failure-icon {
       width: 16px;

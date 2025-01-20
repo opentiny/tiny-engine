@@ -77,7 +77,7 @@ export default {
 }
 .add-button {
   :deep(.tiny-button) {
-    border: 1px solid var(--ti-lowcode-base-default-button-border-disable-color);
+    border: 1px solid var(--te-common-border-default);
   }
   .icon-plus {
     margin-right: 6px;

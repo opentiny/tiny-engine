@@ -173,7 +173,7 @@ export default {
     height: calc(100% - 54px);
 
     & > div {
-      border: 1px solid var(--ti-lowcode-base-gray-101);
+      border: 1px solid var(--te-common-border-divider);
       border-radius: 4px;
       height: 100%;
     }

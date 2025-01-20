@@ -128,7 +128,7 @@ export default {
     margin-top: 12px;
   }
   .edit-btn-icon {
-    color: var(--ti-lowcode-common-text-main-color);
+    color: var(--te-common-text-secondary);
     margin-right: 6px;
   }
   :deep(.edit-btn) {

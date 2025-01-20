@@ -507,7 +507,7 @@ export default {
       margin-top: 13px;
     }
     :deep(.path) {
-      stroke: var(--ti-lowcode-toolbar-breadcrumb-color);
+      stroke: var(--te-common-text-secondary);
     }
   }
   .download-btn {
@@ -517,12 +517,12 @@ export default {
     font-size: 12px;
     text-align: left;
     padding: 0;
-    color: var(--ti-lowcode-base-text-color);
+    color: var(--te-common-text-primary);
     svg {
       font-size: 16px;
     }
     .tiny-button.tiny-button--text {
-      color: var(--ti-lowcode-base-text-color);
+      color: var(--te-common-text-primary);
     }
     &:hover {
       text-decoration: underline;
@@ -558,7 +558,7 @@ export default {
   padding: 20px;
   svg {
     font-size: 20px;
-    color: var(--ti-lowcode-warning-color);
+    color: var(--te-common-color-warning);
   }
   .delete-tip {
     margin-left: 5px;

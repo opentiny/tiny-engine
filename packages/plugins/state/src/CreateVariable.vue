@@ -514,7 +514,7 @@ export default {
 
 .create-content-description {
   font-size: 12px;
-  color: var(--ti-lowcode-common-primary-color);
+  color: var(--te-common-text-emphasize);
   margin-left: 8px;
   cursor: pointer;
 }
@@ -529,27 +529,6 @@ export default {
   &:hover {
     color: var(--ti-lowcode-data-advanced-text-hover-color);
     cursor: pointer;
-  }
-}
-</style>
-
-<style lang="less">
-.tiny-popover.tiny-popper.state-data-example-tips {
-  background-color: var(--ti-lowcode-data-example-bg-color);
-  color: var(--ti-lowcode-data-example-color);
-
-  &[x-placement^='bottom'] .popper__arrow {
-    &,
-    &::after {
-      border-bottom-color: var(--ti-lowcode-data-example-bg-color);
-    }
-  }
-
-  &[x-placement^='top'] .popper__arrow {
-    &,
-    &::after {
-      border-top-color: var(--ti-lowcode-data-example-bg-color);
-    }
   }
 }
 </style>

@@ -325,7 +325,7 @@ export default {
     margin-left: 4px;
     flex-shrink: 0;
     cursor: pointer;
-    color: var(--ti-lowcode-common-text-main-color);
+    color: var(--te-common-text-secondary);
   }
 }
 
