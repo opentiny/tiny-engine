@@ -335,6 +335,7 @@ const handleDragLeaveContainer = (event) => {
   .content {
     flex: 1;
     height: 100%;
+    overflow: hidden;
   }
 
   .rotate {
@@ -349,6 +350,7 @@ const handleDragLeaveContainer = (event) => {
     flex: 1;
     height: 100%;
     padding: 0 4px;
+    overflow: hidden;
   }
 
   .border-top {

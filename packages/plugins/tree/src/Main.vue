@@ -23,7 +23,9 @@
         <template #content="row">
           <div class="row-content">
             <svg-icon v-if="getIconName(row)" :name="getIconName(row)"></svg-icon>
-            <label :class="{ 'node-isblock': row.rawData.componentType === 'Block' }">{{ row.label }}</label>
+            <span :class="['row-label', { 'node-isblock': row.rawData.componentType === 'Block' }]">{{
+              row.label
+            }}</span>
             <template v-if="row.id !== 'body'">
               <svg-icon v-if="eyeOpen(row.id)" name="eye" @mouseup="showNode(row.rawData)"></svg-icon>
               <svg-icon v-if="!eyeOpen(row.id)" name="eye-invisible" @mouseup="showNode(row.rawData)"></svg-icon>
@@ -231,10 +233,12 @@ export default {
 .outline-tree {
   flex: 1;
   overflow-y: scroll;
-  label {
+  .row-label {
     flex: 1;
     font-size: 12px;
     line-height: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   svg {
     color: var(--te-common-icon-secondary);
@@ -254,6 +258,7 @@ export default {
     display: flex;
     align-items: center;
     gap: 4px;
+    overflow: hidden;
   }
   .node-isblock {
     color: var(--te-common-color-prompt-secondary);
