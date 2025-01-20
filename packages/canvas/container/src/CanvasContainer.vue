@@ -317,11 +317,6 @@ export default {
           // 清空属性面板
           selectNode(null)
         }
-
-        if (newVal === 1) {
-          const node = multiSelectedStates.value[0]
-          selectNode(node.id)
-        }
       }
     )
 
