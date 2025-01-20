@@ -54,7 +54,7 @@ export default {
   setup() {
     const COMPONENT_PANEL_COLUMNS = '1fr 1fr 1fr'
     const SHORTCUT_PANEL_COLUMNS = '1fr 1fr 1fr 1fr 1fr 1fr'
-    const { generateNode, materialState, getComponents } = useMaterial()
+    const { generateNode, materialState, getComponentsByGroup } = useMaterial()
     const gridTemplateColumns = ref(COMPONENT_PANEL_COLUMNS)
     const panelState = inject('panelState', {})
     const { components } = materialState
@@ -91,7 +91,7 @@ export default {
     const initComponents = () => {
       const groupName = panelState.materialGroup
       if (groupName) {
-        return getComponents(components, groupName)
+        return getComponentsByGroup(components, groupName)
       }
 
       return components

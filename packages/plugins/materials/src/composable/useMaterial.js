@@ -489,7 +489,7 @@ const initMaterial = ({ isInit = true, appData = {} } = {}) => {
  * @param {String} groupName 组件分组名
  * @returns
  */
-const getComponents = (components, groupName) => {
+const getComponentsByGroup = (components, groupName) => {
   if (!Array.isArray(components)) return []
   return components.filter((item) => item.group === groupName)
 }
@@ -523,6 +523,6 @@ export default function () {
     getBlockCompileRes,
     addBlockResources,
     updateBlockCompileCache,
-    getComponents
+    getComponentsByGroup
   }
 }

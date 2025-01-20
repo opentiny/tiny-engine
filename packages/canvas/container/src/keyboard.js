@@ -10,21 +10,11 @@
  *
  */
 
-import {
-  getCurrent,
-  insertNode,
-  selectNode,
-  POSITION,
-  removeNodeById,
-  allowInsert,
-  getConfigure,
-  clearHover,
-  hoverState
-} from './container'
+import { getCurrent, insertNode, selectNode, POSITION, removeNodeById, allowInsert, getConfigure } from './container'
 import { useHistory, useCanvas, getMetaApi, META_APP } from '@opentiny/tiny-engine-meta-register'
 import { copyObject } from '../../common'
 import { getClipboardSchema, setClipboardSchema } from './utils'
-import { ref } from 'vue'
+import { ref, toRaw } from 'vue'
 
 const KEY_S = 83
 const KEY_Y = 89
@@ -55,11 +45,12 @@ function handlerDown({ index, parent }) {
   const id = parent?.children[index + 1]?.id
   id && selectNode(id)
 }
-function handlerDelete({ schema }) {
-  if (hoverState.id === schema.id) {
-    clearHover()
-  }
-  removeNodeById(schema.id)
+function handlerDelete() {
+  multiSelectedStates.value.forEach(({ id: schemaId }) => {
+    removeNodeById(schemaId)
+  })
+
+  multiSelectedStates.value = []
 }
 
 const handlerArrow = (keyCode) => {
@@ -122,6 +113,21 @@ const handleClipboardPaste = (node, schema, parent) => {
   }
 }
 
+const handleMultiNodesPaste = (node, schema, parent) => {
+  if (multiSelectedStates.value.length === 1) {
+    handleClipboardPaste(node, schema, parent)
+    return
+  }
+
+  const selectedStates = multiSelectedStates.value.map(({ schema, parent }) => {
+    return { node: copyObject(schema), schema: toRaw(schema), parent: toRaw(parent) }
+  })
+
+  selectedStates.forEach(({ node, schema, parent }) => {
+    handleClipboardPaste(node, schema, parent)
+  })
+}
+
 const handlerClipboardEvent = (event) => {
   const { schema, parent } = getCurrent()
   const node = getClipboardSchema(event)
@@ -130,7 +136,7 @@ const handlerClipboardEvent = (event) => {
       setClipboardSchema(event, copyObject(schema))
       break
     case 'paste':
-      handleClipboardPaste(node, schema, parent)
+      handleMultiNodesPaste(node, schema, parent)
       break
     case 'cut':
       handleClipboardCut(event, schema)

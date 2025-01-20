@@ -167,61 +167,16 @@ export function setMultiState(multiSelectedStates, node, append = false) {
   }
 }
 
-// 获取所有子节点的 ID（包括嵌套的子节点）
-function getAllChildIdsAndFilter(children) {
-  let childIds = []
-
-  function traverse(children) {
-    children.forEach((child) => {
-      childIds.push(child.id)
-      if (Array.isArray(child.children)) {
-        traverse(child.children)
-      }
-    })
-  }
-
-  traverse(children)
-
-  return childIds
-}
-
-// 处理嵌套节点
-function handleNestedStates(multiSelectedStates, selectState) {
-  if (Array.isArray(selectState?.schema.children)) {
-    const selectedNodeIds = multiSelectedStates.value.map((state) => state.id)
-
-    const childIds = getAllChildIdsAndFilter(selectState.schema.children)
-
-    const someSelectedInChildren = selectedNodeIds.some((id) => childIds.includes(id))
-
-    if (someSelectedInChildren) {
-      multiSelectedStates.value = multiSelectedStates.value.filter((state) => {
-        return !childIds.includes(state.id)
-      })
-
-      multiSelectedStates.value.push(selectState)
-    }
-
-    return true
-  }
-
-  return false
-}
-
 // 处理多选节点
 export function handleMultiState(multiSelectedStates, selectState) {
-  const hasNestedNode = handleNestedStates(multiSelectedStates, selectState)
+  const nodeId = selectState?.id
+  const isExistNode = multiSelectedStates.value.map((state) => state.id).includes(nodeId)
 
-  if (!hasNestedNode) {
-    const nodeId = selectState?.id
-    const isExistNode = multiSelectedStates.value.map((state) => state.id).includes(nodeId)
-
-    if (nodeId && isExistNode) {
-      const exList = multiSelectedStates.value.filter((state) => state.id !== nodeId)
-      setMultiState(multiSelectedStates, exList)
-    } else {
-      setMultiState(multiSelectedStates, selectState, true)
-    }
+  if (nodeId && isExistNode) {
+    const exList = multiSelectedStates.value.filter((state) => state.id !== nodeId)
+    setMultiState(multiSelectedStates, exList)
+  } else {
+    setMultiState(multiSelectedStates, selectState, true)
   }
 }
 
