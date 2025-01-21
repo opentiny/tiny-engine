@@ -48,7 +48,7 @@ import { onMounted, ref, computed, onUnmounted, watch, watchEffect } from 'vue'
 import { iframeMonitoring } from '@opentiny/tiny-engine-common/js/monitor'
 import { useTranslate, useCanvas, useMessage, useResource } from '@opentiny/tiny-engine-meta-register'
 import { NODE_UID, NODE_LOOP, DESIGN_MODE } from '../../common'
-import { registerHotkeyEvent, removeHotkeyEvent, multiSelectedStates, isCtrlPressed } from './keyboard'
+import { registerHotkeyEvent, removeHotkeyEvent, multiSelectedStates } from './keyboard'
 import CanvasMenu, { closeMenu, openMenu } from './components/CanvasMenu.vue'
 import CanvasAction from './components/CanvasAction.vue'
 import CanvasRouterJumper from './components/CanvasRouterJumper.vue'
@@ -213,7 +213,7 @@ export default {
             // 多选组合键触发
             if (element) {
               const selectedState = getMultiState(element, doc)
-              if (event.buttons === 1 && isCtrlPressed.value) {
+              if (event.ctrlKey && event.button === 0) {
                 handleMultiState(multiSelectedStates, selectedState)
                 return
               }

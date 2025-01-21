@@ -24,11 +24,9 @@ const KEY_LEFT = 37
 const KEY_UP = 38
 const KEY_DOWN = 40
 const KEY_DEL = 46
-const KEY_CTRL = 17
 
 //  多选节点
 const multiSelectedStates = ref([])
-const isCtrlPressed = ref(false)
 
 function handlerLeft({ parent }) {
   selectNode(parent?.id)
@@ -83,7 +81,6 @@ const handleSaveEvent = (event) => {
 
 const handlerCtrl = (event) => {
   const keyCode = event.keyCode
-  isCtrlPressed.value = true
   switch (keyCode) {
     case KEY_Y:
       useHistory().forward()
@@ -154,15 +151,8 @@ const keyboardHandler = (event) => {
   handlerArrow(event.keyCode)
 }
 
-const handleKeyupEvent = (event) => {
-  if (event.keyCode === KEY_CTRL) {
-    isCtrlPressed.value = false
-  }
-}
-
 const removeHotkeyEvent = (dom) => {
   dom.removeEventListener('keydown', keyboardHandler)
-  dom.removeEventListener('keyup', handleKeyupEvent)
   dom.removeEventListener('copy', handlerClipboardEvent)
   dom.removeEventListener('cut', handlerClipboardEvent)
   dom.removeEventListener('paste', handlerClipboardEvent)
@@ -172,10 +162,9 @@ const registerHotkeyEvent = (dom) => {
   removeHotkeyEvent(dom)
 
   dom.addEventListener('keydown', keyboardHandler)
-  dom.addEventListener('keyup', handleKeyupEvent)
   dom.addEventListener('copy', handlerClipboardEvent)
   dom.addEventListener('cut', handlerClipboardEvent)
   dom.addEventListener('paste', handlerClipboardEvent)
 }
 
-export { registerHotkeyEvent, removeHotkeyEvent, multiSelectedStates, isCtrlPressed }
+export { registerHotkeyEvent, removeHotkeyEvent, multiSelectedStates }
