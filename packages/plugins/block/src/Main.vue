@@ -140,6 +140,7 @@ import BlockGroupArrange from './BlockGroupArrange.vue'
 import CategoryEdit from './CategoryEdit.vue'
 import SaveNewBlock from './SaveNewBlock.vue'
 import {
+  setCurrentCategory,
   saveBlock,
   initEditBlock,
   mountedHook,
@@ -347,13 +348,8 @@ export default {
         }
 
     const changeCategory = (val) => {
-      let params = useBlock().shouldReplaceCategoryWithGroup() ? { groupId: val } : { categoryId: val }
-
-      if (!val) {
-        params = {}
-      }
-
-      updateBlockList(params)
+      setCurrentCategory(val)
+      updateBlockList()
     }
 
     const editCategory = (category) => {
