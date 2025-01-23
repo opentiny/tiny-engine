@@ -425,6 +425,7 @@ export const delBlock = (closePanel) => () => {
         remove(getBlockList(), block)
         message({ message: '删除区块成功！', status: 'success' })
         updateBlockList()
+        useBlock().isRefresh.value = true
         closePanel()
       })
       .catch((error) => {

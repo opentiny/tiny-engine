@@ -166,6 +166,7 @@ export default {
               message: '添加区块成功',
               type: 'success'
             })
+            useBlock().isRefresh.value = true
           })
         })
         .catch((error) => {
