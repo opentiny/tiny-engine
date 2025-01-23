@@ -356,6 +356,34 @@ const operationTypeMap = {
       previous: node
     }
   },
+  /**
+   * move node in canvas
+   * @param {object} operation
+   * @param {object} operation.id - node id to move
+   * @param {object} operation.parentId - target parent node id
+   * @param {object} operation.referTargetNodeId - target parent node's child node id
+   * @param {string} operation.position - position to insert(before/after)
+   */
+  move: (operation) => {
+    const { id, parentId, position, referTargetNodeId } = operation
+    const targetNode = getNode(id, true)
+    if (!targetNode) {
+      return
+    }
+    /**
+     * delete node from parent
+     */
+    operationTypeMap.delete({ id })
+    /**
+     * add node to new parent
+     */
+    operationTypeMap.insert({
+      parentId,
+      position,
+      referTargetNodeId,
+      newNodeData: targetNode.node
+    })
+  },
   changeProps: (operation) => {
     const { id, value, option: changeOption } = operation
     let { node } = getNode(id, true) || {}

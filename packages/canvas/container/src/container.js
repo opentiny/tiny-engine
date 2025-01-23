@@ -271,7 +271,7 @@ const getRect = (element) => {
   return element.getBoundingClientRect()
 }
 
-const inserAfter = ({ parent, node, data }) => {
+const insertAfter = ({ parent, node, data }) => {
   if (!data.id) {
     data.id = utils.guid()
   }
@@ -317,6 +317,34 @@ export const removeNode = (id) => {
     type: 'delete',
     id
   })
+}
+
+export const moveChildNode = (parent, selected, addend) => {
+  const { children: list } = parent || {}
+  if (!list || list.length < 2) {
+    return
+  }
+
+  const index = list.indexOf(selected)
+
+  if (index > -1) {
+    const toIndex = index + addend
+
+    if (toIndex > -1 && toIndex < list.length) {
+      const copyList = [...list]
+      // eslint-disable-next-line no-extra-semi
+      ;[copyList[index], copyList[toIndex]] = [copyList[toIndex], copyList[index]]
+      const position = copyList[toIndex - 1] ? 'after' : 'before'
+      const referTargetNodeId = copyList[toIndex - 1] ? copyList[toIndex - 1].id : copyList[toIndex + 1].id
+      useCanvas().operateNode({
+        type: 'move',
+        id: selected.id,
+        parentId: parent.id,
+        position,
+        referTargetNodeId
+      })
+    }
+  }
 }
 
 export const removeNodeById = (id) => {
@@ -735,7 +763,7 @@ export const insertNode = (node, position = POSITION.IN, select = true) => {
         break
       case POSITION.BOTTOM:
       case POSITION.RIGHT:
-        inserAfter(node)
+        insertAfter(node)
         break
       case POSITION.IN:
         insertInner(node)
@@ -764,7 +792,7 @@ export const copyNode = (id) => {
 
   const { node, parent } = useCanvas().getNodeWithParentById(id)
 
-  inserAfter({ parent, node, data: copyObject(node) })
+  insertAfter({ parent, node, data: copyObject(node) })
   getController().addHistory()
 }
 
@@ -863,6 +891,7 @@ export const canvasApi = {
   hoverNode,
   insertNode,
   removeNode,
+  moveChildNode,
   addComponent,
   addScript,
   addStyle,

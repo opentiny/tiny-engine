@@ -24,7 +24,7 @@
 <script>
 import { reactive, watch } from 'vue'
 import { extend } from '@opentiny/vue-renderless/common/object'
-import { getCurrent, updateRect } from '../container'
+import { POSITION, getCurrent, insertNode, removeNode } from '../container'
 
 const LEGAL_DIVIDER_COMPONENT = ['CanvasRow', 'CanvasCol']
 
@@ -82,21 +82,28 @@ export default {
 
     const handleSplit = () => {
       const { parent, schema } = getCurrent()
-
-      const index = parent.children.findIndex(({ id }) => id === schema.id)
-
-      parent.children.splice(index + 1, 0, extend(true, {}, COL_SNIPPET))
-      updateRect()
+      insertNode(
+        {
+          parent: parent,
+          node: schema,
+          data: extend(true, {}, COL_SNIPPET)
+        },
+        POSITION.RIGHT
+      )
     }
 
     const handleSplitRow = () => {
       const { parent, schema } = getCurrent()
 
-      const index = parent.children.findIndex(({ id }) => id === schema.id)
-
       if (schema.componentName === 'CanvasRow') {
-        parent.children.splice(index + 1, 0, extend(true, {}, ROW_SNIPPET))
-
+        insertNode(
+          {
+            parent: parent,
+            node: schema,
+            data: extend(true, {}, ROW_SNIPPET)
+          },
+          POSITION.RIGHT
+        )
         return
       }
 
@@ -104,10 +111,25 @@ export default {
       if (schema.componentName === 'CanvasCol') {
         // 当前组件为空组件，直接切成两行
         if (!schema.children?.length) {
-          schema.children = [extend(true, {}, ROW_SNIPPET), extend(true, {}, ROW_SNIPPET)]
+          insertNode(
+            {
+              parent,
+              node: schema,
+              data: extend(true, {}, ROW_SNIPPET)
+            },
+            POSITION.IN
+          )
+          insertNode(
+            {
+              parent,
+              node: schema,
+              data: extend(true, {}, ROW_SNIPPET)
+            },
+            POSITION.IN
+          )
         } else if (schema.children[0].componentName !== 'CanvasRow') {
           // 当前组件不为空组件且第一个孩子不为 row，则是第一次切割，切割成两行，需要将原来有的 children 放置到第一个 row 的 col
-          schema.children = [
+          const children = [
             {
               ...extend(true, {}, ROW_SNIPPET),
               children: [
@@ -119,13 +141,35 @@ export default {
             },
             extend(true, {}, ROW_SNIPPET)
           ]
+          const index = parent.children.findIndex(({ id }) => {
+            return id === schema.id
+          })
+          const node = index - 1 > -1 ? parent.children[index - 1] : parent.children[index + 1]
+          const position = index - 1 > -1 ? POSITION.RIGHT : POSITION.LEFT
+          removeNode(schema.id)
+          insertNode(
+            {
+              parent: parent,
+              node: node,
+              data: {
+                ...schema,
+                children
+              }
+            },
+            position
+          )
         } else {
           // 已经切割过了，直接加一行
-          schema.children.push(extend(true, {}, ROW_SNIPPET))
+          insertNode(
+            {
+              parent,
+              node: schema,
+              data: extend(true, {}, ROW_SNIPPET)
+            },
+            POSITION.IN
+          )
         }
       }
-
-      updateRect()
     }
 
     watch(

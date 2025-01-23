@@ -128,6 +128,7 @@ import {
   selectNode,
   updateRect,
   copyNode,
+  moveChildNode,
   getRenderer,
   dragStart,
   getCurrentElement
@@ -193,33 +194,14 @@ export default {
       removeNodeById(getCurrent().schema?.id)
     }
 
-    const moveChild = (list, selected, addend) => {
-      if (!list || list.length < 2) {
-        return
-      }
-
-      const index = list.indexOf(selected)
-
-      if (index > -1) {
-        const toIndex = index + addend
-
-        if (toIndex > -1 && toIndex < list.length) {
-          // eslint-disable-next-line no-extra-semi
-          ;[list[index], list[toIndex]] = [list[toIndex], list[index]]
-
-          updateRect()
-        }
-      }
-    }
-
     const moveUp = () => {
       const { parent, schema } = getCurrent()
-      moveChild(parent?.children, schema, -1)
+      moveChildNode(parent, schema, -1)
     }
 
     const moveDown = () => {
       const { parent, schema } = getCurrent()
-      moveChild(parent?.children, schema, 1)
+      moveChildNode(parent, schema, 1)
     }
 
     const selectParent = () => {
