@@ -359,9 +359,9 @@ const operationTypeMap = {
   /**
    * move node in canvas
    * @param {object} operation
-   * @param {object} operation.id - node id to move
-   * @param {object} operation.parentId - target parent node id
-   * @param {object} operation.referTargetNodeId - target parent node's child node id
+   * @param {string} operation.id - node id to move
+   * @param {string} operation.parentId - target parent node id
+   * @param {string} operation.referTargetNodeId - target parent node's child node id
    * @param {string} operation.position - position to insert(before/after)
    */
   move: (operation) => {
