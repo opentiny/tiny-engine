@@ -81,7 +81,7 @@
                 <span class="icon">
                   <svg-icon name="to-edit" @click.stop="openEditor($event, data.row)"></svg-icon>
                 </span>
-                <tiny-tooltip class="item" effect="dark" placement="bottom" :open-delay="OPEN_DELAY.Default">
+                <tiny-tooltip class="item" effect="light" placement="bottom" :open-delay="OPEN_DELAY.Default">
                   <template #content>
                     <div>
                       复制键值（唯一标识）<br />
@@ -489,6 +489,7 @@ export default {
   padding: 0 12px;
   display: flex;
   align-items: center;
+  column-gap: 8px;
   .btn-icon {
     font-size: 16px;
     color: var(--te-common-icon-secondary);

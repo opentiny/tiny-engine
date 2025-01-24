@@ -75,6 +75,7 @@
                 <tiny-tooltip
                   placement="top"
                   content="定时更新开启后，页面运行时将会定期请求远程数据源，实现数据定时更新。"
+                  effect="light"
                   ><span>定时更新：</span></tiny-tooltip
                 >
                 <tiny-switch v-model="state.isPoll"></tiny-switch>

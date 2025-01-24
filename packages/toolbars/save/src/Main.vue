@@ -238,7 +238,6 @@ export default {
 
       :deep(.tiny-input__suffix) {
         width: 12px;
-        top: 12px;
       }
     }
   }

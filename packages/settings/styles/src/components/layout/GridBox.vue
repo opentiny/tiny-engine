@@ -64,7 +64,7 @@
               @change="denseChange"
             />
             <label for="dense">Dense</label>
-            <tiny-tooltip :open-delay="500" content="dense 表示尽可能紧密填满，尽量不出现空格">
+            <tiny-tooltip :open-delay="500" content="dense 表示尽可能紧密填满，尽量不出现空格" effect="light">
               <icon-help-solid></icon-help-solid>
             </tiny-tooltip>
           </div>
@@ -81,12 +81,12 @@
                 <span class="text">{{ data.text }}</span>
               </template>
               <template #operate="{ data }">
-                <tiny-tooltip class="item" effect="dark" :open-delay="500" content="复制" placement="top">
+                <tiny-tooltip class="item" effect="light" :open-delay="500" content="复制" placement="top">
                   <span class="item-icon">
                     <icon-copy @click="copyItem(item.list, data)"></icon-copy>
                   </span>
                 </tiny-tooltip>
-                <tiny-tooltip class="item" effect="dark" :open-delay="500" content="删除" placement="top">
+                <tiny-tooltip class="item" effect="light" :open-delay="500" content="删除" placement="top">
                   <span class="item-icon">
                     <icon-del @click="deleteItem(item.list, data)"></icon-del>
                   </span>

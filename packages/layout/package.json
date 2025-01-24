@@ -26,13 +26,7 @@
     "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-meta-register": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
-    "@opentiny/vue": "~3.14.0",
-    "@opentiny/vue-design-smb": "~3.14.0",
-    "@opentiny/vue-icon": "~3.14.0",
-    "@opentiny/vue-renderless": "~3.14.0",
-    "@opentiny/vue-theme": "~3.14.0",
-    "@vueuse/core": "^9.6.0",
-    "vue": "3.2.45"
+    "@vueuse/core": "^9.6.0"
   },
   "devDependencies": {
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
@@ -40,5 +34,13 @@
     "@vitejs/plugin-vue-jsx": "^4.0.1",
     "less": "^4.2.0",
     "vite": "^5.4.2"
+  },
+  "peerDependencies": {
+    "@opentiny/vue": "^3.20.0",
+    "@opentiny/vue-design-smb": "^3.20.0",
+    "@opentiny/vue-icon": "^3.20.0",
+    "@opentiny/vue-renderless": "^3.20.0",
+    "@opentiny/vue-theme": "^3.20.0",
+    "vue": "^3.4.23"
   }
 }

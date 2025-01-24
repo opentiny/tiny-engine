@@ -16,7 +16,7 @@ import importMapJSON from './importMap.json'
 
 const importMap = {}
 
-const opentinyVueVersion = '~3.14'
+const opentinyVueVersion = '~3.20'
 
 function replacePlaceholder(v) {
   return v.replace('${VITE_CDN_DOMAIN}', useEnv().VITE_CDN_DOMAIN).replace('${opentinyVueVersion}', opentinyVueVersion)

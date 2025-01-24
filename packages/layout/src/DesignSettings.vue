@@ -7,7 +7,7 @@
       </tiny-tab-item>
     </tiny-tabs>
     <div v-if="layoutState.settings.render === 'style'" class="tabs-setting">
-      <tiny-tooltip effect="dark" :content="isCollapsed ? '展开' : '折叠'" placement="top" :visible-arrow="false">
+      <tiny-tooltip effect="light" :content="isCollapsed ? '展开' : '折叠'" placement="top" :visible-arrow="false">
         <template #default> <svg-icon :name="settingIcon" @click="isCollapsed = !isCollapsed"></svg-icon> </template>
       </tiny-tooltip>
     </div>

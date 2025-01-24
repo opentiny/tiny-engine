@@ -1,6 +1,12 @@
 <template>
   <ul>
-    <tiny-tooltip v-for="(item, index) in props.options" :key="index" :content="item.tip" placement="top">
+    <tiny-tooltip
+      v-for="(item, index) in props.options"
+      :key="index"
+      :content="item.tip"
+      placement="top"
+      effect="light"
+    >
       <li :data-active="item.value === value ? '' : undefined" @click="handleClick(item.value)">
         <span v-if="item.icon" class="icon-wrap">
           <svg-icon v-if="item.icon" :name="item.icon"></svg-icon>

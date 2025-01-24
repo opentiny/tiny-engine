@@ -72,12 +72,12 @@
         >
           <div class="setting-menu" @mouseover.stop="handleSettingMouseOver" @mouseleave="handleBlockItemLeave">
             <ul class="list">
-              <tiny-tooltip content="版本列表" placement="top">
+              <tiny-tooltip content="版本列表" placement="top" effect="light">
                 <li class="list-item" @click.stop="$emit('openVersionPanel', { item, index })">
                   <svg-button class="list-item-svg" :hoverBgColor="false" name="versions"> </svg-button>
                 </li>
               </tiny-tooltip>
-              <tiny-tooltip content="移除" placement="top">
+              <tiny-tooltip content="移除" placement="top" effect="light">
                 <li class="list-item" @click.stop="$emit('deleteBlock', item)">
                   <svg-button class="list-item-svg" :hoverBgColor="false" name="remove"> </svg-button>
                 </li>

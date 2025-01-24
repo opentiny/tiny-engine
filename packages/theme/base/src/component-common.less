@@ -12,9 +12,6 @@
       font-size: var(--te-base-font-size-1);
       color: var(--te-common-text-weaken);
     }
-    .tiny-input__suffix {
-      top: 50%;
-    }
     .tiny-input__inner {
       padding-right: 30px;
     }
@@ -250,7 +247,6 @@
     border-color: var(--te-common-border-active);
   }
   .tiny-search__input {
-    padding: 0 8px 0 4px;
     color: var(--te-common-text-primary);
   }
   .tiny-search__input-btn {
@@ -285,11 +281,11 @@
     color: var(--te-common-text-primary);
     padding: 0;
     .tiny-dialog-box__close {
-      font-size: var(--ti-common-font-size-2);
+      font-size: var(--te-base-font-size-1);
       color: var(--te-common-icon-secondary);
       position: absolute;
-      top: -4px;
-      right: -4px;
+      top: 4px;
+      right: 4px;
       &:hover {
         color: var(--te-common-icon-primary);
       }
@@ -350,7 +346,6 @@
     border: 1px solid var(--te-common-border-default);
     color: var(--te-common-text-primary);
     background-color: var(--te-common-bg-default);
-    margin-right: 8px;
     &:not(.is-disabled):hover {
       color: var(--te-common-text-primary);
       border-color: var(--te-common-border-hover);
@@ -439,51 +434,52 @@
 }
 
 // 9、modal模态框
-.tiny-modal__box.tiny-modal__box.tiny-modal__box {
-  padding: 20px;
-  border-radius: var(--te-base-border-radius-1);
-  box-shadow: 0 0 10px 0 var(--te-base-box-shadow-rgba-1);
-  .tiny-modal__header {
-    padding: 0;
-    font-size: var(--te-base-font-size-1);
-    color: var(--te-common-text-primary);
-    font-weight: var(--te-base-font-weight-4);
-    .tiny-modal__title {
-      font-weight: var(--te-base-font-weight-bold);
+.tiny-modal__wrapper.tiny-modal__wrapper {
+  .tiny-modal__box.tiny-modal__box {
+    padding: 20px;
+    border-radius: var(--te-base-border-radius-1);
+    box-shadow: 0 0 10px 0 var(--te-base-box-shadow-rgba-1);
+    .tiny-modal__header {
+      padding: 0;
+      font-size: var(--te-base-font-size-1);
+      color: var(--te-common-text-primary);
+      font-weight: var(--te-base-font-weight-4);
+      position: relative;
+      .tiny-modal__title {
+        font-weight: var(--te-base-font-weight-bold);
+      }
+      .tiny-modal__close-btn {
+        top: -4px;
+        right: -4px;
+        &:hover {
+          color: var(--te-common-icon-primary);
+        }
+      }
     }
-  }
-  .tiny-modal__close-btn,
-  .tiny-modal__zoom-btn {
-    width: 16px;
-    height: 16px;
-    top: 0px;
-    right: 0;
-    color: var(--te-common-text-weaken);
-  }
-  .tiny-modal__close-btn {
-    top: -4px;
-    right: -4px;
-    &:hover {
-      color: var(--te-common-icon-primary);
+    .tiny-modal__close-btn,
+    .tiny-modal__zoom-btn {
+      width: 16px;
+      height: 16px;
+      top: 0px;
+      right: 0;
+      color: var(--te-common-text-weaken);
     }
-  }
-  .tiny-modal__body {
-    margin-top: 12px;
-    font-size: var(--te-base-font-size-base);
-    color: var(--te-common-text-secondary);
-    padding: 0;
-    .tiny-modal__text {
+    .tiny-modal__body {
+      margin-top: 12px;
       font-size: var(--te-base-font-size-base);
       color: var(--te-common-text-secondary);
+      padding: 0;
+      .tiny-modal__text {
+        font-size: var(--te-base-font-size-base);
+        color: var(--te-common-text-secondary);
+      }
     }
-  }
-  .tiny-modal__footer {
-    padding: 0;
-    margin-top: 16px;
-    display: flex;
-    flex-direction: row-reverse;
-    .tiny-button {
-      min-width: 48px;
+    .tiny-modal__footer {
+      padding: 0;
+      margin-top: 16px;
+      .tiny-button {
+        min-width: 48px;
+      }
     }
   }
 }
@@ -632,13 +628,12 @@
   .tiny-checkbox__input {
     &.is-checked .tiny-checkbox__inner,
     &.is-indeterminate .tiny-checkbox__inner {
+      color: var(--te-common-bg-primary-checked);
       background-color: var(--te-common-bg-primary-checked);
       border-color: var(--te-common-border-checked);
     }
     .tiny-checkbox__inner {
       border-radius: var(--te-base-border-radius-1);
-      border: 1px solid var(--te-common-border-hover);
-      line-height: 24px;
     }
   }
   .tiny-checkbox__label {
@@ -718,10 +713,7 @@
 // 17、tooltip文字提示
 .tiny-tooltip.tiny-tooltip {
   &.tiny-tooltip__popper {
-    background: var(--te-common-bg-popover);
-    color: var(--te-common-text-primary);
-    box-shadow: 0 -2px 12px 0 var(--te-base-box-shadow-rgba-2);
-    &[class*='is-'] {
+    &[class*='is-light'] {
       background: var(--te-common-bg-popover);
       color: var(--te-common-text-primary);
       font-size: var(--te-base-font-size-base);

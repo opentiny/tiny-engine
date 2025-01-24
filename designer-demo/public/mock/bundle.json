@@ -4803,10 +4803,10 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "Layout",
-            "version": "3.14.0",
+            "version": "3.20.0",
             "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "script": "https://unpkg.com/@opentiny/vue-runtime@~3.20/dist3/tiny-vue-pc.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.20/index.css"
           },
           "group": "component",
           "priority": 5,
@@ -14040,10 +14040,10 @@
         {
           "name": "TinyVue组件库",
           "package": "@opentiny/vue",
-          "version": "3.14.0",
+          "version": "3.20.0",
           "destructuring": true,
-          "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-          "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+          "script": "https://unpkg.com/@opentiny/vue-runtime@~3.20/dist3/tiny-vue-pc.mjs",
+          "css": "https://unpkg.com/@opentiny/vue-theme@~3.20/index.css"
         },
         {
           "name": "element-plus组件库",

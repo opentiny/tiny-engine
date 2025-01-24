@@ -18,7 +18,14 @@
             :value="optionItem"
           ></tiny-option>
         </tiny-select>
-        <tiny-tooltip v-else class="item" effect="dark" :content="item.tip || ''" placement="top" :disbaled="!item.tip">
+        <tiny-tooltip
+          v-else
+          class="item"
+          effect="light"
+          :content="item.tip || ''"
+          placement="top"
+          :disabled="!item.tip"
+        >
           <tiny-input v-model="state.ipArray[index]" :disabled="item.disabled" @update:modelValue="ipChange">
           </tiny-input>
         </tiny-tooltip>

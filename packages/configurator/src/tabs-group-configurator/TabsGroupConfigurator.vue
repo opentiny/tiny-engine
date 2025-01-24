@@ -227,6 +227,7 @@ const change = (item) => {
       .tiny-dropdown__title {
         margin: 0;
         line-height: 12px;
+        font-size: var(--te-base-font-size-base);
         .selected-option {
           text-align: center;
         }

@@ -8,7 +8,7 @@
         >
           <span>背景图 & 渐变</span>
         </label>
-        <tiny-tooltip effect="dark" placement="top" content="添加背景图，线性渐变，径向渐变等">
+        <tiny-tooltip effect="light" placement="top" content="添加背景图，线性渐变，径向渐变等">
           <div class="background-image-icon" @click="openBackgroundImageModal($event, { isAdd: true })">
             <icon-plus></icon-plus>
           </div>

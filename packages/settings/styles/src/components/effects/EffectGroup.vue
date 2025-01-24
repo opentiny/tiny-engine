@@ -27,7 +27,7 @@
         :options="outlineOptions"
         :modelValue="state.activedType"
         label-width="52"
-        effect="dark"
+        effect="light"
         placement="top"
         @update:modelValue="selectOutlineStyle"
       ></tabs-group-configurator>

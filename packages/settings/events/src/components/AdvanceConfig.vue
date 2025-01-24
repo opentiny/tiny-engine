@@ -59,7 +59,7 @@
     <div class="advnce-config">
       <label class="text-ellipsis-multiple">key</label>
       <div class="advanced-config-form-item">
-        <tiny-tooltip content="建议填写循环项中的唯一值（如item.id），如果填写为数字将不保存">
+        <tiny-tooltip content="建议填写循环项中的唯一值（如item.id），如果填写为数字将不保存" effect="light">
           <input-configurator
             v-model="state.loopKey"
             :placeholder="`默认为索引名：${getIndexName()}`"

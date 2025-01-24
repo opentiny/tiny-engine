@@ -20,7 +20,7 @@
           <tiny-tooltip
             v-for="(item, index) in positionOptions"
             :key="index"
-            effect="dark"
+            effect="light"
             placement="top"
             :open-delay="500"
             :content="item.tip"

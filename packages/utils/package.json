@@ -35,7 +35,7 @@
     "jszip": "^3.10.1"
   },
   "peerDependencies": {
-    "@opentiny/vue-renderless": "^3.14.0",
+    "@opentiny/vue-renderless": "^3.20.0",
     "vue": "^3.4.15"
   }
 }

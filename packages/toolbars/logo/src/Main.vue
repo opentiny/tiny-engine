@@ -55,7 +55,7 @@
                 </tiny-switch>
                 <tiny-tooltip
                   class="item"
-                  effect="dark"
+                  effect="light"
                   content="分支不存在的时候创建分支。若不开启，分支不存在时发布应用会失败。"
                   placement="top"
                   popper-class="help-tooltip"
@@ -76,7 +76,7 @@
                 </tiny-switch>
                 <tiny-tooltip
                   class="item"
-                  effect="dark"
+                  effect="light"
                   content="是否生成工程默认配置，如package.json等文件。如选择为否，只生成页面对应代码，不生成配置文件。"
                   placement="top"
                   popper-class="help-tooltip"

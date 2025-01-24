@@ -1,6 +1,6 @@
 <template>
   <span class="svg-button" :class="{ 'svg-button-hover': hoverBgColor }" @click="$emit('click', $event)">
-    <tiny-tooltip effect="dark" :content="tips" :placement="placement">
+    <tiny-tooltip effect="light" :content="tips" :placement="placement">
       <component :is="name" v-if="isTinyIcon" />
       <svg-icon v-else :name="name"></svg-icon>
     </tiny-tooltip>

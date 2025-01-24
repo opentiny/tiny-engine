@@ -21,7 +21,7 @@
       >
         <shortCutPopover v-if="showPopover" @active="activeSetting('props')"></shortCutPopover>
         <template #reference>
-          <icon-setting class="icon-setting" @click.stop="showPopover = !showPopover"></icon-setting>
+          <icon-setting class="icon-setting svg-currentcolor" @click.stop="showPopover = !showPopover"></icon-setting>
         </template>
       </TinyPopover>
     </div>
@@ -71,25 +71,25 @@
     <div v-if="showAction" ref="optionRef" class="corner-mark-right" :style="fixStyle">
       <template v-if="!isModal">
         <div v-if="showToParent" title="选择父级">
-          <icon-chevron-left @click.stop="selectParent"></icon-chevron-left>
+          <icon-chevron-left class="svg-currentcolor" @click.stop="selectParent"></icon-chevron-left>
         </div>
         <div title="向上移动">
-          <icon-arrow-up @click.stop="moveUp"></icon-arrow-up>
+          <icon-arrow-up class="svg-currentcolor" @click.stop="moveUp"></icon-arrow-up>
         </div>
         <div title="向下移动">
-          <icon-arrow-down @click.stop="moveDown"></icon-arrow-down>
+          <icon-arrow-down class="svg-currentcolor" @click.stop="moveDown"></icon-arrow-down>
         </div>
         <div title="复制">
-          <icon-copy @click.stop="copy"></icon-copy>
+          <icon-copy class="svg-currentcolor" @click.stop="copy"></icon-copy>
         </div>
       </template>
       <template v-else>
         <div title="隐藏">
-          <icon-eyeclose @click.stop="hide"></icon-eyeclose>
+          <icon-eyeclose class="svg-currentcolor" @click.stop="hide"></icon-eyeclose>
         </div>
       </template>
       <div title="删除">
-        <icon-del @click.stop="remove"></icon-del>
+        <icon-del class="svg-currentcolor" @click.stop="remove"></icon-del>
       </div>
     </div>
   </div>

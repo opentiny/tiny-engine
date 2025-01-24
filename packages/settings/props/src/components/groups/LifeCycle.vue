@@ -18,10 +18,10 @@
   <ul class="bind-life-cycle-list">
     <li v-for="(value, name, index) in state.bindLifeCycles" :key="index" class="life-cycle-item">
       <div>
-        <tiny-tooltip class="item" effect="dark" content="编辑" placement="top">
+        <tiny-tooltip class="item" effect="light" content="编辑" placement="top">
           <icon-setting class="icon" @click="openDialog(name)"></icon-setting>
         </tiny-tooltip>
-        <tiny-tooltip class="item" effect="dark" content="删除" placement="top">
+        <tiny-tooltip class="item" effect="light" content="删除" placement="top">
           <icon-del class="icon" @click="confirmClick(name)"></icon-del>
         </tiny-tooltip>
       </div>

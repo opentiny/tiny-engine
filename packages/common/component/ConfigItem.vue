@@ -82,7 +82,7 @@
             @update:modelValue="onModelUpdate"
           >
             <template #default>
-              <tiny-tooltip class="item" effect="dark" content="源码编辑" placement="left">
+              <tiny-tooltip class="item" effect="light" content="源码编辑" placement="left">
                 <icon-writing class="code-icon" @click="editorModalRef?.open && editorModalRef.open()"></icon-writing>
               </tiny-tooltip>
             </template>
