@@ -164,6 +164,11 @@ const changeTreeData = (newParentId, oldParentId) => {
   if (newParentId && oldParentId && String(newParentId) !== String(oldParentId)) {
     const folderData = getParentNode(newParentId)
     const parentData = getParentNode(oldParentId)
+
+    if (!folderData || !parentData) {
+      return
+    }
+
     const currentPageDataId = pageSettingState.currentPageData.id
     const curDataIndex = parentData.children?.findIndex?.(({ id }) => id === currentPageDataId)
 
