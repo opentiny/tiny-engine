@@ -152,7 +152,7 @@ const isCurrentDataSame = () => {
 }
 
 const changeTreeData = (newParentId, oldParentId) => {
-  if (newParentId && oldParentId && newParentId !== oldParentId) {
+  if (newParentId && oldParentId && String(newParentId) !== String(oldParentId)) {
     const folderData = pageSettingState.treeDataMapping[newParentId]
     const parentData = pageSettingState.treeDataMapping[oldParentId]
     const currentPageDataId = pageSettingState.currentPageData.id

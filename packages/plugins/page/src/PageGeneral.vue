@@ -32,7 +32,7 @@
         prop="parentId"
       >
         <tiny-select
-          v-model="pageSettingState.currentPageData.parentId"
+          v-model="pageParentId"
           value-field="id"
           render-type="tree"
           :tree-op="treeFolderOp"
@@ -94,7 +94,17 @@ export default {
   setup() {
     const { pageSettingState, changeTreeData, STATIC_PAGE_GROUP_ID } = usePage()
     const ROOT_ID = pageSettingState.ROOT_ID
-    const oldParentId = ref(pageSettingState.currentPageData.parentId)
+
+    const pageParentId = computed({
+      get() {
+        return String(pageSettingState.currentPageData.parentId)
+      },
+      set(value) {
+        pageSettingState.currentPageData.parentId = value
+      }
+    })
+
+    const oldParentId = ref(pageParentId.value)
 
     watchEffect(() => {
       oldParentId.value = pageSettingState.oldParentId
@@ -102,7 +112,7 @@ export default {
 
     const currentRoute = computed(() => {
       let route = pageSettingState.currentPageData.route || ''
-      let parentId = pageSettingState.currentPageData.parentId
+      let parentId = pageParentId
 
       while (parentId !== ROOT_ID) {
         const parent = pageSettingState.treeDataMapping[parentId]
@@ -233,6 +243,7 @@ export default {
       pageRules,
       folderRules,
       pageSettingState,
+      pageParentId,
       generalForm,
       validGeneralForm,
       treeFolderOp,
