@@ -23,6 +23,7 @@
 
 <script>
 import { reactive, watch } from 'vue'
+import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { getCurrent, updateRect } from '../container'
 
@@ -86,6 +87,12 @@ export default {
       const index = parent.children.findIndex(({ id }) => id === schema.id)
 
       parent.children.splice(index + 1, 0, extend(true, {}, COL_SNIPPET))
+
+      useCanvas().operateNode({
+        type: 'updateAttributes',
+        id: parent.id,
+        value: { children: parent.children }
+      })
       updateRect()
     }
 
@@ -96,6 +103,12 @@ export default {
 
       if (schema.componentName === 'CanvasRow') {
         parent.children.splice(index + 1, 0, extend(true, {}, ROW_SNIPPET))
+
+        useCanvas().operateNode({
+          type: 'updateAttributes',
+          id: parent.id,
+          value: { children: parent.children }
+        })
 
         return
       }
@@ -123,6 +136,12 @@ export default {
           // 已经切割过了，直接加一行
           schema.children.push(extend(true, {}, ROW_SNIPPET))
         }
+
+        useCanvas().operateNode({
+          type: 'updateAttributes',
+          id: parent.id,
+          value: { children: parent.children }
+        })
       }
 
       updateRect()
