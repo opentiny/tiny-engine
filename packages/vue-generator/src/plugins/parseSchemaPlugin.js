@@ -14,7 +14,17 @@ function parseSchema() {
       const { pageSchema } = schema
       const pagesMap = {}
       const resPageTree = []
-      schema.componentsMap = [...schema.componentsMap, ...BUILTIN_COMPONENTS_MAP]
+
+      for (const builtInComp of BUILTIN_COMPONENTS_MAP) {
+        if (
+          !schema.componentsMap.find(
+            ({ componentName, package: packageName }) =>
+              componentName === builtInComp.componentName && packageName === builtInComp.package
+          )
+        ) {
+          schema.componentsMap.push(builtInComp)
+        }
+      }
 
       for (const componentItem of pageSchema) {
         pagesMap[componentItem.meta.id] = componentItem
