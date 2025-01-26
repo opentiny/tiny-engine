@@ -57,10 +57,12 @@ export function useUtils(context: Record<string, any>) {
     const npmUtilPromises = data
       .filter((item) => item.type === 'npm' && item.content.cdnLink)
       .map(async (item) => {
-        const promise = import(/* @vite-ignore */ item.content.cdnLink)
-        const results = await Promise.allSettled([promise])
-
-        return { ...item, cdnResult: results[0] }
+        try {
+          const module = await import(/* @vite-ignore */ item.content.cdnLink)
+          return { ...item, cdnResult: { status: 'fulfilled', value: module } }
+        } catch (error) {
+          return { ...item, cdnResult: { status: 'rejected', reason: error } }
+        }
       })
 
     Promise.all(npmUtilPromises).then((resolvedItems) => {
