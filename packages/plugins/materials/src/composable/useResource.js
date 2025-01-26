@@ -38,12 +38,25 @@ const appSchemaState = reactive({
   materialsDeps: { scripts: [], styles: new Set() }
 })
 
+function goPage(pageId) {
+  if (!pageId) {
+    return
+  }
+
+  const url = new URL(window.location)
+
+  url.searchParams.set('pageid', pageId)
+  window.history.pushState({}, '', url)
+  usePage().postLocationHistoryChanged({ pageId })
+}
+
 const initPage = (pageInfo) => {
   try {
     if (pageInfo.meta) {
       const { occupier } = pageInfo.meta
 
       useLayout().layoutState.pageStatus = getCanvasStatus(occupier)
+      goPage(pageInfo.meta?.id)
     } else {
       useLayout().layoutState.pageStatus = {
         state: 'empty',
@@ -54,12 +67,6 @@ const initPage = (pageInfo) => {
     pageInfo.id = pageInfo.meta?.id
   } catch (error) {
     console.log(error) // eslint-disable-line
-  } finally {
-    const url = new URL(window.location)
-
-    url.searchParams.set('pageid', pageInfo.id)
-    window.history.pushState({}, '', url)
-    usePage().postLocationHistoryChanged({ pageId: pageInfo.id })
   }
 
   const { id, meta, ...pageSchema } = pageInfo

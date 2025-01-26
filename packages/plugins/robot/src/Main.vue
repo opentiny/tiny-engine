@@ -231,11 +231,8 @@ export default {
         .post('/app-center/api/ai/chat', getSendSeesionProcess(), { timeout: 600000 })
         .then((res) => {
           const { originalResponse, schema, replyWithoutCode } = res
-          const responseMessage = getAiRespMessage(
-            originalResponse.choices?.[0]?.message.role,
-            originalResponse.choices?.[0]?.message.content
-          )
-          const respDisplayMessage = getAiRespMessage(originalResponse.choices?.[0]?.message.role, replyWithoutCode)
+          const responseMessage = getAiRespMessage(originalResponse.role, originalResponse.content)
+          const respDisplayMessage = getAiRespMessage(originalResponse.role, replyWithoutCode)
           sessionProcess.messages.push(responseMessage)
           sessionProcess.displayMessages.push(respDisplayMessage)
           messages.value[messages.value.length - 1].content = replyWithoutCode
