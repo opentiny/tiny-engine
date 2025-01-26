@@ -54,26 +54,31 @@ export function useUtils(context: Record<string, any>) {
       }
     })
 
-    const npmUtilsImports = data
+    const npmUtilPromises = data
       .filter((item) => item.type === 'npm' && item.content.cdnLink)
-      .map((item) => import(/* @vite-ignore */ item.content.cdnLink))
-    const npmUtils = await Promise.allSettled(npmUtilsImports)
+      .map(async (item) => {
+        const promise = import(/* @vite-ignore */ item.content.cdnLink)
+        const results = await Promise.allSettled([promise])
 
-    npmUtils.forEach((res, index) => {
-      const { name, content } = data[index]
-      const { exportName, destructuring, cdnLink } = content
+        return { ...item, cdnResult: results[0] }
+      })
 
-      if (res.status !== 'fulfilled') {
-        globalNotify({
-          type: 'error',
-          message: `加载工具类“${name}”失败，请检查cdn链接是否正确，${cdnLink}`
-        })
+    Promise.all(npmUtilPromises).then((resolvedItems) => {
+      resolvedItems.forEach(({ name, content, cdnResult }) => {
+        const { exportName, destructuring, cdnLink } = content
+        const { status, value } = cdnResult
 
-        return
-      }
+        if (status !== 'fulfilled') {
+          globalNotify({
+            type: 'error',
+            message: `加载工具类“${name}”失败，请检查cdn链接是否正确：${cdnLink}`
+          })
+          return
+        }
 
-      const module = res.value
-      utilsCollection[name] = destructuring ? module[exportName] : module.default
+        const module = value
+        utilsCollection[name] = destructuring ? module[exportName] : module.default
+      })
     })
 
     Object.assign(utils, utilsCollection)
