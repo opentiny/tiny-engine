@@ -189,7 +189,7 @@ export default {
     const upload = ref('upload')
     const i18nTable = ref(null)
     const selectedRowLength = computed(() => {
-      return i18nTable.value?.getSelectRecords().length
+      return i18nTable.value?.getAllSelection().length
     })
     const notEmpty = computed(() => langList.value.length > 0)
     const current = ref({
