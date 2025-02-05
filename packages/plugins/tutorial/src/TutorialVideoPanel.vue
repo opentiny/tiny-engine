@@ -95,13 +95,13 @@ export default {
   }
 
   .content {
-    color: var(--te-common-text-secondary);
+    color: var(--te-tutorial-primary-text-color);
     line-height: 25px;
     text-indent: 24px;
     padding-top: 20px;
   }
   :deep(.md) {
-    color: var(--te-common-text-secondary);
+    color: var(--te-tutorial-primary-text-color);
     ul {
       padding-left: 20px;
     }
