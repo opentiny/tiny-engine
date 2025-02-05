@@ -454,9 +454,12 @@ export default {
   }
   .chat-title-label,
   .ml8 {
-    color: var(--te-chat-model-dropdown-icon);
+    color: var(--te-chat-model-text);
     font-weight: 700;
     font-size: 16px;
+  }
+  .ml8 {
+    color: var(--te-chat-model-dropdown-icon);
     margin-left: 10px;
   }
 }
