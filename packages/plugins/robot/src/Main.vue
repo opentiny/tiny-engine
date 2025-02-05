@@ -412,16 +412,16 @@ export default {
   right: 40px;
   bottom: 40px;
   background-image: linear-gradient(
-    var(--ti-lowcode-chat-bg-top-color),
-    var(--ti-lowcode-chat-bg-mid-color),
-    var(--ti-lowcode-chat-bg-bottom-color)
+    var(--te-chat-bg-top-color),
+    var(--te-chat-bg-mid-color),
+    var(--te-chat-bg-bottom-color)
   );
   box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.15);
   padding: 16px;
   border-radius: 12px;
 }
 .common-svg {
-  color: var(--ti-lowcode-chat-model-common-icon);
+  color: var(--te-chat-model-common-icon);
 }
 
 .chat-title-icons {
@@ -432,7 +432,7 @@ export default {
     float: right;
     margin: 0 6px;
     cursor: pointer;
-    color: var(--ti-lowcode-chat-model-icon);
+    color: var(--te-chat-model-icon);
     &:hover {
       opacity: 0.8;
     }
@@ -446,7 +446,7 @@ export default {
   top: 16px;
   left: 28px;
   font-weight: bold;
-  color: var(--ti-lowcode-chat-model-text);
+  color: var(--te-chat-model-text);
   .chat-title-dropdown {
     display: flex;
     align-items: center;
@@ -454,7 +454,7 @@ export default {
   }
   .chat-title-label,
   .ml8 {
-    color: var(--ti-lowcode-chat-model-text);
+    color: var(--te-chat-model-text);
     font-weight: 700;
     font-size: 16px;
   }
@@ -465,18 +465,18 @@ export default {
 }
 
 .robot-dialog-content {
-  background: var(--ti-lowcode-chat-model-bg);
+  background: var(--te-chat-model-bg);
   border-radius: 6px;
   padding: 16px;
   &-top {
     margin-bottom: 30px;
     &-title {
-      color: var(--ti-lowcode-chat-model-helper-text);
+      color: var(--te-chat-model-helper-text);
       font-size: 12px;
       margin-bottom: 12px;
     }
     &-icon {
-      color: var(--ti-lowcode-chat-model-text);
+      color: var(--te-chat-model-text);
     }
     .icon-ai {
       width: 16px;
@@ -487,7 +487,7 @@ export default {
       text-align: left;
       font-size: 12px;
       margin-top: 10px;
-      color: var(--ti-lowcode-chat-model-tips-text);
+      color: var(--te-chat-model-tips-text);
       span {
         display: inline-block;
         height: 28px;
@@ -495,10 +495,10 @@ export default {
         padding: 0 8px;
         margin-right: 8px;
         border-radius: 4px;
-        background: var(--ti-lowcode-chat-model-tips-bg);
+        background: var(--te-chat-model-tips-bg);
         cursor: pointer;
         &:hover {
-          border-color: var(--ti-lowcode-chat-model-text);
+          border-color: var(--te-chat-model-text);
         }
       }
     }
@@ -508,7 +508,7 @@ export default {
   overflow: scroll;
   .chat-avatar-wrap {
     width: 40px;
-    color: var(--ti-lowcode-chat-model-avatar-border);
+    color: var(--te-chat-model-avatar-border);
     .chat-avatar {
       width: 24px;
       height: 24px;
@@ -530,8 +530,8 @@ export default {
     padding: 12px;
 
     &.chat-content-user {
-      background-color: var(--ti-lowcode-chat-model-user-text-bg);
-      color: var(--ti-lowcode-chat-model-user-text);
+      background-color: var(--te-chat-model-user-text-bg);
+      color: var(--te-chat-model-user-text);
     }
   }
   .chat-message-row {
@@ -546,15 +546,15 @@ export default {
 }
 
 .chat-content-ai {
-  background-color: var(--ti-lowcode-chat-model-ai-text-bg);
-  border: 1px solid var(--ti-lowcode-chat-model-ai-text-border);
-  color: var(--ti-lowcode-chat-model-ai-text);
+  background-color: var(--te-chat-model-ai-text-bg);
+  border: 1px solid var(--te-chat-model-ai-text-border);
+  color: var(--te-chat-model-ai-text);
 }
 
 .chat-content-ai-unconnected {
-  background-color: var(--ti-lowcode-chat-model-ai-fail-text-bg);
-  border: 1px solid var(--ti-lowcode-chat-model-ai-fail-text-border);
-  color: var(--ti-lowcode-chat-model-ai-fail-text);
+  background-color: var(--te-chat-model-ai-fail-text-bg);
+  border: 1px solid var(--te-chat-model-ai-fail-text-border);
+  color: var(--te-chat-model-ai-fail-text);
 }
 
 .chat-submit {
@@ -564,17 +564,17 @@ export default {
   .tiny-input {
     .tiny-input__inner {
       padding-left: 12px;
-      color: var(--ti-lowcode-chat-model-helper-text);
+      color: var(--te-chat-model-helper-text);
       height: 40px;
-      border: 2px solid var(--ti-lowcode-chat-model-input-border);
+      border: 2px solid var(--te-chat-model-input-border);
       border-radius: 8px;
       padding-right: 44px;
     }
     .tiny-input__inner:hover {
-      border-color: var(--ti-lowcode-chat-model-input-border);
+      border-color: var(--te-chat-model-input-border);
     }
     .tiny-input__inner:focus {
-      border-color: var(--ti-lowcode-chat-model-input-border);
+      border-color: var(--te-chat-model-input-border);
     }
     .tiny-input__prefix,
     .tiny-input__suffix {
@@ -590,12 +590,12 @@ export default {
     margin-left: 12px;
     background-image: linear-gradient(
       to bottom right,
-      var(--ti-lowcode-chat-model-button-bg-1),
-      var(--ti-lowcode-chat-model-button-bg-2),
-      var(--ti-lowcode-chat-model-button-bg-3)
+      var(--te-chat-model-button-bg-1),
+      var(--te-chat-model-button-bg-2),
+      var(--te-chat-model-button-bg-3)
     );
     border: none;
-    color: var(--ti-lowcode-chat-model-button-text) !important;
+    color: var(--te-chat-model-button-text) !important;
     font-size: 14px;
     height: 40px;
     width: 40px;
@@ -605,7 +605,7 @@ export default {
     padding: 0;
     transition: all 0.1s linear;
     .svg-icon {
-      fill: var(--ti-lowcode-chat-model-button-text);
+      fill: var(--te-chat-model-button-text);
       margin-right: 0;
     }
     span {
@@ -630,10 +630,10 @@ export default {
 }
 
 .chat-loading .tiny-loading__spinner svg {
-  fill: var(--ti-lowcode-chat-loading-svg-color);
+  fill: var(--te-chat-loading-svg-color);
 }
 .chat-loading .tiny-loading__spinner .tiny-loading__text {
-  color: var(--ti-lowcode-chat-loading-text-color);
+  color: var(--te-chat-loading-text-color);
 }
 .chat-model-popover.chat-model-popover {
   width: 220px;
