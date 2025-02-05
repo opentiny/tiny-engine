@@ -1,5 +1,15 @@
 <template>
-  <div ref="colRef" class="canvas-col">
+  <div
+    ref="colRef"
+    class="canvas-col"
+    :style="{
+      flex: styles.flex,
+      'row-gap': styles.rowGap,
+      'column-gap': styles.colGap,
+      'align-items': styles.align,
+      'justify-content': styles.justAlign
+    }"
+  >
     <slot></slot>
   </div>
 </template>
@@ -65,12 +75,7 @@ const styles = computed(() => ({
 <style lang="less" scoped>
 .canvas-col {
   display: flex;
-  flex: v-bind('styles.flex');
   flex-direction: column;
   flex-wrap: nowrap;
-  row-gap: v-bind('styles.rowGap');
-  column-gap: v-bind('styles.colGap');
-  align-items: v-bind('styles.align');
-  justify-content: v-bind('styles.justAlign');
 }
 </style>

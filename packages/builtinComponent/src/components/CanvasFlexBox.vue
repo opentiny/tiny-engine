@@ -1,5 +1,14 @@
 <template>
-  <div class="canvas-flex-box">
+  <div
+    class="canvas-flex-box"
+    :styles="{
+      'flex-direction': styles.flexDirection,
+      gap: styles.gap,
+      padding: styles.padding,
+      'align-items': styles.alignItems,
+      'justify-content': styles.justifyContent
+    }"
+  >
     <slot> </slot>
   </div>
 </template>
@@ -43,11 +52,6 @@ const styles = computed(() => ({
 .canvas-flex-box {
   display: flex;
   flex: 1 1 0px;
-  flex-direction: v-bind('styles.flexDirection');
-  gap: v-bind('styles.gap');
-  padding: v-bind('styles.padding');
-  align-items: v-bind('styles.alignItems');
-  justify-content: v-bind('styles.justifyContent');
   :deep(.canvas-container) {
     width: 100%;
   }

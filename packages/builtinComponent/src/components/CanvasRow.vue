@@ -1,5 +1,14 @@
 <template>
-  <div class="canvas-row">
+  <div
+    class="canvas-row"
+    :style="{
+      'min-height': styles.minHeight,
+      'row-gap': styles.rowGap,
+      'column-gap': styles.colGap,
+      'align-items': styles.align,
+      'justify-content': styles.justAlign
+    }"
+  >
     <slot></slot>
   </div>
 </template>
@@ -45,10 +54,5 @@ const styles = computed(() => ({
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  justify-content: v-bind('styles.justAlign');
-  align-items: v-bind('styles.align');
-  column-gap: v-bind('styles.rowGap');
-  row-gap: v-bind('styles.colGap');
-  min-height: v-bind('styles.minHeight');
 }
 </style>

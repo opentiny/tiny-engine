@@ -1,5 +1,10 @@
 <template>
-  <div class="row-col-container">
+  <div
+    class="row-col-container"
+    :style="{
+      'row-gap': styles.rowGap
+    }"
+  >
     <slot> </slot>
   </div>
 </template>
@@ -24,6 +29,5 @@ const styles = computed(() => ({
 .row-col-container {
   display: flex;
   flex-direction: column;
-  row-gap: v-bind('styles.rowGap');
 }
 </style>
