@@ -454,12 +454,9 @@ export default {
   }
   .chat-title-label,
   .ml8 {
-    color: var(--te-chat-model-text);
+    color: var(--te-chat-model-dropdown-icon);
     font-weight: 700;
     font-size: 16px;
-  }
-  .ml8 {
-    color: var(--te-common-icon-secondary);
     margin-left: 10px;
   }
 }
@@ -637,18 +634,18 @@ export default {
 }
 .chat-model-popover.chat-model-popover {
   width: 220px;
-  background-color: var(--te-common-bg-default);
+  background-color: var(--te-chat-model-popover-bg);
   .tiny-dropdown-item {
-    color: var(--te-common-text-primary);
+    color: var(--te-chat-model-popover-color);
     max-width: 220px;
     &:hover {
-      color: var(--te-common-text-primary);
-      background-color: var(--te-common-bg-container);
+      color: var(--te-chat-model-popover-color);
+      background-color: var(--te-chat-model-popover-active-bg);
     }
   }
   .selected-model {
-    color: var(--te-common-text-primary);
-    background-color: var(--te-common-bg-container);
+    color: var(--te-chat-model-popover-color);
+    background-color: var(--te-chat-model-popover-active-bg);
   }
 }
 </style>
