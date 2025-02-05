@@ -460,6 +460,7 @@ export default {
   }
   .ml8 {
     color: var(--te-chat-model-dropdown-icon);
+    fill: var(--te-chat-model-dropdown-icon);
     margin-left: 10px;
   }
 }
