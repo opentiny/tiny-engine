@@ -86,6 +86,7 @@ export default {
     const treeWidth = computed(() => `${Math.max(maxDepth.value * 16 + 120, 280)}px`)
 
     const filterSchema = (data) => {
+      maxDepth.value = 0
       const translateChild = (data, depth = 0) => {
         let tempMaxDepth = depth
         data.forEach((item) => {
@@ -96,7 +97,7 @@ export default {
             delete item.children
           } else {
             if (item.children.length) {
-              const { maxDepth: curDepth } = translateChild(item.children)
+              const { maxDepth: curDepth } = translateChild(item.children, depth + 1)
 
               if (curDepth > maxDepth.value) {
                 maxDepth.value = curDepth
