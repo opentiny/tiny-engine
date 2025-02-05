@@ -18,6 +18,7 @@
           :highlight-hover-row="false"
           :auto-resize="true"
           :row-class-name="getClassName"
+          :style="{ width: treeWidth }"
         >
           <tiny-grid-column field="componentName" tree-node>
             <template #default="data">
@@ -80,9 +81,12 @@ export default {
     const { PLUGIN_NAME } = useLayout()
 
     const panelFixed = computed(() => props.fixedPanels?.includes(PLUGIN_NAME.OutlineTree))
+    const maxDepth = ref(1)
+    const treeWidth = computed(() => `${maxDepth.value * 16 + 120}px`)
 
     const filterSchema = (data) => {
-      const translateChild = (data) => {
+      const translateChild = (data, depth = 0) => {
+        let tempMaxDepth = depth
         data.forEach((item) => {
           item.show = pageState.nodesStatus[item.id] !== false
           item.showEye = !item.show
@@ -91,12 +95,19 @@ export default {
             delete item.children
           } else {
             if (item.children.length) {
-              translateChild(item.children)
+              const { maxDepth: curDepth } = translateChild(item.children)
+
+              if (curDepth > maxDepth.value) {
+                maxDepth.value = curDepth
+              }
             }
           }
         })
 
-        return data
+        return {
+          data,
+          maxDepth: tempMaxDepth
+        }
       }
 
       return [{ ...translateChild([extend(true, {}, data)])[0], componentName: 'body' }]
@@ -294,7 +305,8 @@ export default {
       toggleTree,
       getClassName,
       PLUGIN_NAME,
-      renderIconFn
+      renderIconFn,
+      treeWidth
     }
   }
 }
