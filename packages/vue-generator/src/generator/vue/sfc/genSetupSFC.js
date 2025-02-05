@@ -270,18 +270,7 @@ export const genSFCWithDefaultPlugin = (schema, componentsMap, config = {}, next
   }
 
   // 兼容单独调用的场景，单独调用时，这里会默认加上 builtInComponents
-  const compsMapWithBuiltIn = [...componentsMap]
-
-  for (const builtInComp of BUILTIN_COMPONENTS_MAP) {
-    if (
-      !compsMapWithBuiltIn.find(
-        ({ componentName, package: packageName }) =>
-          componentName === builtInComp.componentName && packageName === builtInComp.package
-      )
-    ) {
-      compsMapWithBuiltIn.push(builtInComp)
-    }
-  }
+  const compsMapWithBuiltIn = [...componentsMap, ...BUILTIN_COMPONENTS_MAP]
 
   return generateSFCFile(schema, compsMapWithBuiltIn, newConfig, nextPage)
 }
