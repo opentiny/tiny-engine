@@ -82,6 +82,7 @@ export default {
 
     const panelFixed = computed(() => props.fixedPanels?.includes(PLUGIN_NAME.OutlineTree))
     const maxDepth = ref(1)
+    // 树宽度：最大深度 * 16 + 120，其中 16 为每层缩进的宽度(tiny-grid 默认的缩进宽度)，120 为树的最小宽度
     const treeWidth = computed(() => `${maxDepth.value * 16 + 120}px`)
 
     const filterSchema = (data) => {
