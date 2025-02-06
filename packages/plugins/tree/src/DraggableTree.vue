@@ -157,11 +157,11 @@ const { collapseMap, setCollapse, switchCollapse } = useCollapseMap()
  * @param collapsed
  * @returns {RowItem[]}
  */
-const flatternNode = (node, parentId, level = 0, collapsed = false) => {
+const flattenNode = (node, parentId, level = 0, collapsed = false) => {
   const { children, ...rest } = node
 
   const descendantNodes = (children || [])
-    .map((child) => flatternNode(child, node.id, level + 1, collapsed || collapseMap.value[node.id]))
+    .map((child) => flattenNode(child, node.id, level + 1, collapsed || collapseMap.value[node.id]))
     .reduce((acc, current) => acc.concat(current), [])
 
   const rowItem = {
@@ -186,12 +186,12 @@ const flatternNode = (node, parentId, level = 0, collapsed = false) => {
  * @param {Node[]} nodes
  * @returns {RowItem[]}
  */
-const flatternNodes = (nodes) => {
+const flattenNodes = (nodes) => {
   const dummyNode = { children: nodes }
-  return flatternNode(dummyNode, null, -1).slice(1)
+  return flattenNode(dummyNode, null, -1).slice(1)
 }
 
-const rows = computed(() => flatternNodes(normalizedData.value))
+const rows = computed(() => flattenNodes(normalizedData.value))
 
 const emit = defineEmits(['click', 'mouseenter', 'drop'])
 
