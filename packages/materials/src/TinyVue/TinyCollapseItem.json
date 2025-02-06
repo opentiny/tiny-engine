@@ -1,0 +1,108 @@
+{
+  "icon": "collapseitem",
+  "name": {
+    "zh_CN": "折叠面板项"
+  },
+  "component": "TinyCollapseItem",
+  "description": "内容区可指定动态页面或自定义 html 等，支持展开收起操作",
+  "docUrl": "",
+  "screenshot": "",
+  "tags": "",
+  "keywords": "",
+  "devMode": "proCode",
+  "npm": {
+    "package": "@opentiny/vue",
+    "exportName": "CollapseItem",
+    "destructuring": true
+  },
+  "group": "component",
+  "priority": 2,
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "content": [
+          {
+            "property": "name",
+            "label": {
+              "text": {
+                "zh_CN": "唯一标识符"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "唯一标识符： String | Number"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "title",
+            "label": {
+              "text": {
+                "zh_CN": "标题"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "面板标题"
+            },
+            "labelPosition": "left"
+          }
+        ]
+      }
+    ],
+    "events": {},
+    "slots": {
+      "title": {
+        "label": {
+          "zh_CN": "标题"
+        },
+        "description": {
+          "zh_CN": "自定义标题"
+        }
+      }
+    }
+  },
+  "configure": {
+    "loop": true,
+    "condition": true,
+    "styles": true,
+    "isContainer": true,
+    "isModal": false,
+    "nestingRule": {
+      "childWhitelist": "",
+      "parentWhitelist": "",
+      "descendantBlacklist": "",
+      "ancestorWhitelist": ""
+    },
+    "isNullNode": false,
+    "isLayout": false,
+    "rootSelector": "",
+    "shortcuts": {
+      "properties": ["label-width", "disabled"]
+    },
+    "contextMenu": {
+      "actions": ["create symbol"],
+      "disable": ["copy", "remove"]
+    }
+  }
+}

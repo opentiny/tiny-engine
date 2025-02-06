@@ -1,10 +1,10 @@
 {
   "name": {
-    "zh_CN": "输入框"
+    "zh_CN": "日期选择"
   },
-  "component": "TinyInput",
-  "icon": "input",
-  "description": "通过鼠标或键盘输入字符",
+  "component": "TinyDatePicker",
+  "icon": "datepick",
+  "description": "用于输入或选择日期",
   "docUrl": "",
   "screenshot": "",
   "tags": "",
@@ -12,7 +12,7 @@
   "devMode": "proCode",
   "npm": {
     "package": "@opentiny/vue",
-    "exportName": "Input",
+    "exportName": "DatePicker",
     "destructuring": true
   },
   "group": "component",
@@ -59,37 +59,30 @@
               "props": {
                 "options": [
                   {
-                    "label": "textarea",
-                    "value": "textarea"
+                    "label": "日期",
+                    "value": "date"
                   },
                   {
-                    "label": "text",
-                    "value": "text"
+                    "label": "日期时间",
+                    "value": "datetime"
                   },
                   {
-                    "label": "password",
-                    "value": "password"
+                    "label": "周",
+                    "value": "week"
+                  },
+                  {
+                    "label": "月份",
+                    "value": "month"
+                  },
+                  {
+                    "label": "年份",
+                    "value": "year"
                   }
                 ]
               }
             },
             "description": {
-              "zh_CN": "设置input框的type属性"
-            },
-            "labelPosition": "left"
-          },
-          {
-            "property": "rows",
-            "label": {
-              "text": {
-                "zh_CN": "行数"
-              }
-            },
-            "widget": {
-              "component": "NumberConfigurator"
-            },
-            "description": {
-              "zh_CN": "输入框行数，只对 type='textarea' 有效"
+              "zh_CN": "设置日期框的type属性"
             },
             "labelPosition": "left"
           },
@@ -140,7 +133,7 @@
                 "zh_CN": "禁用"
               }
             },
-            "required": true,
+            "required": false,
             "readOnly": false,
             "disabled": false,
             "cols": 12,
@@ -150,6 +143,26 @@
             },
             "description": {
               "zh_CN": "是否禁用"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "readonly",
+            "label": {
+              "text": {
+                "zh_CN": "只读"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否只读"
             },
             "labelPosition": "left"
           },
@@ -184,7 +197,7 @@
               }
             },
             "description": {
-              "zh_CN": "输入框尺寸。该属性的可选值为 medium / small / mini"
+              "zh_CN": "日期框尺寸。该属性的可选值为 medium / small / mini"
             },
             "labelPosition": "left"
           }
@@ -200,7 +213,7 @@
             "property": "maxlength",
             "label": {
               "text": {
-                "zh_CN": "最大输入长度"
+                "zh_CN": "输入最大长度"
               }
             },
             "required": true,
@@ -219,7 +232,7 @@
             "property": "autofocus",
             "label": {
               "text": {
-                "zh_CN": "自动聚焦"
+                "zh_CN": "聚焦"
               }
             },
             "required": true,
@@ -371,25 +384,13 @@
         },
         "defaultValue": ""
       }
-    },
-    "slots": {
-      "prefix": {
-        "label": {
-          "zh_CN": "前置内容"
-        }
-      },
-      "suffix": {
-        "label": {
-          "zh_CN": "后置内容"
-        }
-      }
     }
   },
   "configure": {
     "loop": true,
     "condition": true,
     "styles": true,
-    "isContainer": false,
+    "isContainer": true,
     "isModal": false,
     "nestingRule": {
       "childWhitelist": "",
@@ -411,13 +412,13 @@
   "snippets": [
     {
       "name": {
-        "zh_CN": "输入框"
+        "zh_CN": "日期选择"
       },
-      "icon": "input",
+      "icon": "datepick",
       "screenshot": "",
-      "snippetName": "TinyInput",
+      "snippetName": "TinyDatePicker",
       "schema": {
-        "componentName": "TinyInput",
+        "componentName": "TinyDatePicker",
         "props": {
           "placeholder": "请输入",
           "modelValue": ""

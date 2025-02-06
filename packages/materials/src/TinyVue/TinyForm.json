@@ -1,10 +1,10 @@
 {
+  "icon": "form",
   "name": {
-    "zh_CN": "输入框"
+    "zh_CN": "表单"
   },
-  "component": "TinyInput",
-  "icon": "input",
-  "description": "通过鼠标或键盘输入字符",
+  "component": "TinyForm",
+  "description": "由按钮、输入框、选择器、单选框、多选框等控件组成，用以收集、校验、提交数据",
   "docUrl": "",
   "screenshot": "",
   "tags": "",
@@ -12,11 +12,11 @@
   "devMode": "proCode",
   "npm": {
     "package": "@opentiny/vue",
-    "exportName": "Input",
+    "exportName": "Form",
     "destructuring": true
   },
   "group": "component",
-  "priority": 1,
+  "priority": 5,
   "schema": {
     "properties": [
       {
@@ -27,112 +27,6 @@
           "zh_CN": "基础信息"
         },
         "content": [
-          {
-            "property": "modelValue",
-            "label": {
-              "text": {
-                "zh_CN": "绑定值"
-              }
-            },
-            "required": true,
-            "readOnly": false,
-            "disabled": false,
-            "cols": 12,
-            "widget": {
-              "component": "I18nConfigurator",
-              "props": {}
-            },
-            "description": {
-              "zh_CN": "双向绑定值"
-            },
-            "labelPosition": "left"
-          },
-          {
-            "property": "type",
-            "label": {
-              "text": {
-                "zh_CN": "类型"
-              }
-            },
-            "widget": {
-              "component": "SelectConfigurator",
-              "props": {
-                "options": [
-                  {
-                    "label": "textarea",
-                    "value": "textarea"
-                  },
-                  {
-                    "label": "text",
-                    "value": "text"
-                  },
-                  {
-                    "label": "password",
-                    "value": "password"
-                  }
-                ]
-              }
-            },
-            "description": {
-              "zh_CN": "设置input框的type属性"
-            },
-            "labelPosition": "left"
-          },
-          {
-            "property": "rows",
-            "label": {
-              "text": {
-                "zh_CN": "行数"
-              }
-            },
-            "widget": {
-              "component": "NumberConfigurator"
-            },
-            "description": {
-              "zh_CN": "输入框行数，只对 type='textarea' 有效"
-            },
-            "labelPosition": "left"
-          },
-          {
-            "property": "placeholder",
-            "label": {
-              "text": {
-                "zh_CN": "占位文本"
-              }
-            },
-            "required": true,
-            "readOnly": false,
-            "disabled": false,
-            "cols": 12,
-            "widget": {
-              "component": "I18nConfigurator",
-              "props": {}
-            },
-            "description": {
-              "zh_CN": "输入框占位文本"
-            },
-            "labelPosition": "left"
-          },
-          {
-            "property": "clearable",
-            "label": {
-              "text": {
-                "zh_CN": "清除按钮"
-              }
-            },
-            "required": true,
-            "readOnly": false,
-            "disabled": false,
-            "cols": 12,
-            "widget": {
-              "component": "CheckBoxConfigurator",
-              "props": {}
-            },
-            "description": {
-              "zh_CN": "是否显示清除按钮"
-            },
-            "labelPosition": "left"
-          },
           {
             "property": "disabled",
             "label": {
@@ -154,10 +48,10 @@
             "labelPosition": "left"
           },
           {
-            "property": "size",
+            "property": "label-width",
             "label": {
               "text": {
-                "zh_CN": "尺寸"
+                "zh_CN": "标签宽度"
               }
             },
             "required": true,
@@ -165,61 +59,19 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "SelectConfigurator",
-              "props": {
-                "options": [
-                  {
-                    "label": "medium",
-                    "value": "medium"
-                  },
-                  {
-                    "label": "small",
-                    "value": "small"
-                  },
-                  {
-                    "label": "mini",
-                    "value": "mini"
-                  }
-                ]
-              }
-            },
-            "description": {
-              "zh_CN": "输入框尺寸。该属性的可选值为 medium / small / mini"
-            },
-            "labelPosition": "left"
-          }
-        ]
-      },
-      {
-        "name": "1",
-        "label": {
-          "zh_CN": "其他"
-        },
-        "content": [
-          {
-            "property": "maxlength",
-            "label": {
-              "text": {
-                "zh_CN": "最大输入长度"
-              }
-            },
-            "required": true,
-            "readOnly": false,
-            "disabled": false,
-            "cols": 12,
-            "widget": {
-              "component": "NumberConfigurator",
+              "component": "InputConfigurator",
               "props": {}
             },
             "description": {
-              "zh_CN": "设置 input 框的maxLength"
-            }
+              "zh_CN": "表单中标签占位宽度，默认为 80px"
+            },
+            "labelPosition": "left"
           },
           {
-            "property": "autofocus",
+            "property": "inline",
             "label": {
               "text": {
-                "zh_CN": "自动聚焦"
+                "zh_CN": "行内布局"
               }
             },
             "required": true,
@@ -231,9 +83,132 @@
               "props": {}
             },
             "description": {
-              "zh_CN": "自动获取焦点"
+              "zh_CN": "行内布局模式，默认为 false"
             },
             "labelPosition": "left"
+          },
+          {
+            "property": "label-align",
+            "label": {
+              "text": {
+                "zh_CN": "必填标识占位"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "必填标识 * 是否占位"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "label-suffix",
+            "label": {
+              "text": {
+                "zh_CN": "标签后缀"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "表单中标签后缀"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "label-position",
+            "label": {
+              "text": {
+                "zh_CN": "标签位置"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "SelectConfigurator",
+              "props": {
+                "options": [
+                  {
+                    "label": "right",
+                    "value": "right"
+                  },
+                  {
+                    "label": "left ",
+                    "value": "left "
+                  },
+                  {
+                    "label": "top",
+                    "value": "top"
+                  }
+                ]
+              }
+            },
+            "description": {
+              "zh_CN": "表单中标签的布局位置"
+            },
+            "labelPosition": "left"
+          }
+        ]
+      },
+      {
+        "name": "1",
+        "label": {
+          "zh_CN": "校验属性"
+        },
+        "content": [
+          {
+            "property": "model",
+            "label": {
+              "text": {
+                "zh_CN": "数据对象"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CodeConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "表单数据对象"
+            },
+            "labelPosition": "top"
+          },
+          {
+            "property": "rules",
+            "label": {
+              "text": {
+                "zh_CN": "校验规则"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CodeConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "表单验证规则"
+            },
+            "labelPosition": "top"
           }
         ],
         "description": {
@@ -242,22 +217,22 @@
       }
     ],
     "events": {
-      "onChange": {
+      "onValidate": {
         "label": {
-          "zh_CN": "值改变时触发"
+          "zh_CN": "表单项被校验后触发"
         },
         "description": {
-          "zh_CN": "在 Input 值改变时触发"
+          "zh_CN": "表单项被校验后触发"
         },
         "type": "event",
         "functionInfo": {
           "params": [
             {
-              "name": "value",
-              "type": "string",
-              "defaultValue": "",
+              "name": "function",
+              "type": "Function",
+              "defaultValue": "(valid) => {}",
               "description": {
-                "zh_CN": "输入框改变后的值"
+                "zh_CN": "校验回调函数"
               }
             }
           ],
@@ -281,29 +256,6 @@
               "defaultValue": "",
               "description": {
                 "zh_CN": "输入框输入的值"
-              }
-            }
-          ],
-          "returns": {}
-        },
-        "defaultValue": ""
-      },
-      "onUpdate:modelValue": {
-        "label": {
-          "zh_CN": "双向绑定的值改变时触发"
-        },
-        "description": {
-          "zh_CN": "在 Input 输入值改变时触发"
-        },
-        "type": "event",
-        "functionInfo": {
-          "params": [
-            {
-              "name": "value",
-              "type": "string",
-              "defaultValue": "",
-              "description": {
-                "zh_CN": "双向绑定的值"
               }
             }
           ],
@@ -371,18 +323,6 @@
         },
         "defaultValue": ""
       }
-    },
-    "slots": {
-      "prefix": {
-        "label": {
-          "zh_CN": "前置内容"
-        }
-      },
-      "suffix": {
-        "label": {
-          "zh_CN": "后置内容"
-        }
-      }
     }
   },
   "configure": {
@@ -392,7 +332,7 @@
     "isContainer": false,
     "isModal": false,
     "nestingRule": {
-      "childWhitelist": "",
+      "childWhitelist": [],
       "parentWhitelist": "",
       "descendantBlacklist": "",
       "ancestorWhitelist": ""
@@ -401,7 +341,7 @@
     "isLayout": false,
     "rootSelector": "",
     "shortcuts": {
-      "properties": ["value", "disabled"]
+      "properties": ["label-width", "disabled"]
     },
     "contextMenu": {
       "actions": ["create symbol"],
@@ -411,17 +351,73 @@
   "snippets": [
     {
       "name": {
-        "zh_CN": "输入框"
+        "zh_CN": "表单"
       },
-      "icon": "input",
       "screenshot": "",
-      "snippetName": "TinyInput",
+      "snippetName": "tiny-form",
+      "icon": "form",
       "schema": {
-        "componentName": "TinyInput",
+        "componentName": "TinyForm",
         "props": {
-          "placeholder": "请输入",
-          "modelValue": ""
-        }
+          "labelWidth": "80px",
+          "labelPosition": "top"
+        },
+        "children": [
+          {
+            "componentName": "TinyFormItem",
+            "props": {
+              "label": "人员"
+            },
+            "children": [
+              {
+                "componentName": "TinyInput",
+                "props": {
+                  "placeholder": "请输入",
+                  "modelValue": ""
+                }
+              }
+            ]
+          },
+          {
+            "componentName": "TinyFormItem",
+            "props": {
+              "label": "密码"
+            },
+            "children": [
+              {
+                "componentName": "TinyInput",
+                "props": {
+                  "placeholder": "请输入",
+                  "modelValue": "",
+                  "type": "password"
+                }
+              }
+            ]
+          },
+          {
+            "componentName": "TinyFormItem",
+            "props": {
+              "label": ""
+            },
+            "children": [
+              {
+                "componentName": "TinyButton",
+                "props": {
+                  "text": "提交",
+                  "type": "primary",
+                  "style": "margin-right: 10px"
+                }
+              },
+              {
+                "componentName": "TinyButton",
+                "props": {
+                  "text": "重置",
+                  "type": "primary"
+                }
+              }
+            ]
+          }
+        ]
       }
     }
   ],

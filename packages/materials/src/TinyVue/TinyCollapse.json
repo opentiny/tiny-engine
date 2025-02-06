@@ -1,0 +1,179 @@
+{
+  "icon": "collapse",
+  "name": {
+    "zh_CN": "折叠面板"
+  },
+  "component": "TinyCollapse",
+  "description": "内容区可指定动态页面或自定义 html 等，支持展开收起操作",
+  "docUrl": "",
+  "screenshot": "",
+  "tags": "",
+  "keywords": "",
+  "devMode": "proCode",
+  "npm": {
+    "package": "@opentiny/vue",
+    "exportName": "Collapse",
+    "destructuring": true
+  },
+  "group": "component",
+  "priority": 3,
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "content": [
+          {
+            "property": "modelValue",
+            "label": {
+              "text": {
+                "zh_CN": "当前激活面板"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "双向绑定当前激活的面板"
+            }
+          }
+        ]
+      }
+    ],
+    "events": {
+      "onChange": {
+        "label": {
+          "zh_CN": "激活面板改变时触发"
+        },
+        "description": {
+          "zh_CN": "当前激活面板改变时触发(如果是手风琴模式，参数 activeNames 类型为string，否则为array)"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "data",
+              "type": "string",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "当前激活面板的值"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      },
+      "onUpdate:modelValue": {
+        "label": {
+          "zh_CN": "双向绑定的值改变时触发"
+        },
+        "description": {
+          "zh_CN": "当前激活面板的值改变时触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "value",
+              "type": "string",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "双向绑定的值"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      }
+    }
+  },
+  "configure": {
+    "loop": true,
+    "condition": true,
+    "styles": true,
+    "isContainer": false,
+    "isModal": false,
+    "nestingRule": {
+      "childWhitelist": "",
+      "parentWhitelist": "",
+      "descendantBlacklist": "",
+      "ancestorWhitelist": ""
+    },
+    "isNullNode": false,
+    "isLayout": false,
+    "rootSelector": "",
+    "shortcuts": {
+      "properties": ["label-width", "disabled"]
+    },
+    "contextMenu": {
+      "actions": ["create symbol"],
+      "disable": ["copy", "remove"]
+    }
+  },
+  "snippets": [
+    {
+      "name": {
+        "zh_CN": "折叠面板"
+      },
+      "screenshot": "",
+      "snippetName": "TinyCollapse",
+      "icon": "collapse",
+      "schema": {
+        "componentName": "TinyCollapse",
+        "props": {
+          "modelValue": "collapse1"
+        },
+        "children": [
+          {
+            "componentName": "TinyCollapseItem",
+            "props": {
+              "name": "collapse1",
+              "title": "折叠项1"
+            },
+            "children": [
+              {
+                "componentName": "div"
+              }
+            ]
+          },
+          {
+            "componentName": "TinyCollapseItem",
+            "props": {
+              "name": "collapse2",
+              "title": "折叠项2"
+            },
+            "children": [
+              {
+                "componentName": "div"
+              }
+            ]
+          },
+          {
+            "componentName": "TinyCollapseItem",
+            "props": {
+              "name": "collapse3",
+              "title": "折叠项3"
+            },
+            "children": [
+              {
+                "componentName": "div"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "category": "data-display"
+}

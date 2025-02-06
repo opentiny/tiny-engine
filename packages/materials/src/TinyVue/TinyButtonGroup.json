@@ -1,0 +1,185 @@
+{
+  "name": {
+    "zh_CN": "按钮组"
+  },
+  "component": "TinyButtonGroup",
+  "icon": "buttonGroup",
+  "description": "以按钮组的方式出现，常用于多项类似操作",
+  "docUrl": "",
+  "screenshot": "",
+  "tags": "",
+  "keywords": "",
+  "devMode": "proCode",
+  "npm": {
+    "package": "@opentiny/vue",
+    "exportName": "ButtonGroup",
+    "destructuring": true
+  },
+  "group": "component",
+  "category": "basic",
+  "priority": 2,
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "content": [
+          {
+            "property": "data",
+            "label": {
+              "text": {
+                "zh_CN": "数据"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CodeConfigurator",
+              "props": {
+                "language": "json"
+              }
+            },
+            "description": {
+              "zh_CN": "配置按钮组数据"
+            }
+          },
+          {
+            "property": "size",
+            "label": {
+              "text": {
+                "zh_CN": "大小"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "SelectConfigurator",
+              "props": {
+                "options": [
+                  {
+                    "label": "mini",
+                    "value": "mini"
+                  },
+                  {
+                    "label": "small",
+                    "value": "small"
+                  },
+                  {
+                    "label": "medium",
+                    "value": "medium"
+                  }
+                ]
+              }
+            },
+            "description": {
+              "zh_CN": "组件大小"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "plain",
+            "label": {
+              "text": {
+                "zh_CN": "朴素按钮"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否是朴素按钮"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "disabled",
+            "label": {
+              "text": {
+                "zh_CN": "禁用"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否禁用"
+            },
+            "labelPosition": "left"
+          }
+        ]
+      }
+    ],
+    "events": {}
+  },
+  "configure": {
+    "loop": true,
+    "condition": true,
+    "styles": true,
+    "isContainer": false,
+    "isModal": false,
+    "nestingRule": {
+      "childWhitelist": [],
+      "parentWhitelist": "",
+      "descendantBlacklist": "",
+      "ancestorWhitelist": ""
+    },
+    "isNullNode": false,
+    "isLayout": false,
+    "rootSelector": "",
+    "shortcuts": {
+      "properties": ["disabled", "size"]
+    },
+    "contextMenu": {
+      "actions": ["create symbol"],
+      "disable": ["copy", "remove"]
+    }
+  },
+  "snippets": [
+    {
+      "name": {
+        "zh_CN": "互斥按钮组"
+      },
+      "icon": "buttons",
+      "snippetName": "TinyButtonGroup",
+      "screenshot": "",
+      "schema": {
+        "componentName": "TinyButtonGroup",
+        "props": {
+          "data": [
+            {
+              "text": "Button1",
+              "value": "1"
+            },
+            {
+              "text": "Button2",
+              "value": "2"
+            },
+            {
+              "text": "Button3",
+              "value": "3"
+            }
+          ],
+          "modelValue": "1"
+        }
+      }
+    }
+  ]
+}

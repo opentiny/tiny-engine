@@ -13,7 +13,6 @@
   "npm": {
     "package": "@opentiny/vue",
     "exportName": "Button",
-    "version": "3.14",
     "destructuring": true
   },
   "group": "component",
@@ -26,12 +25,6 @@
         },
         "description": {
           "zh_CN": "基础信息"
-        },
-        "collapse": {
-          "number": 6,
-          "text": {
-            "zh_CN": "显示更多"
-          }
         },
         "content": [
           {
@@ -49,12 +42,13 @@
             "readOnly": false,
             "disabled": false,
             "widget": {
-              "component": "MetaBindI18n",
+              "component": "I18nConfigurator",
               "props": {}
             },
             "description": {
-              "zh_CN": ""
-            }
+              "zh_CN": "按钮文字"
+            },
+            "labelPosition": "left"
           },
           {
             "property": "size",
@@ -71,7 +65,7 @@
             "readOnly": false,
             "disabled": false,
             "widget": {
-              "component": "MetaSelect",
+              "component": "SelectConfigurator",
               "props": {
                 "options": [
                   {
@@ -94,8 +88,9 @@
               }
             },
             "description": {
-              "zh_CN": ""
-            }
+              "zh_CN": "按钮大小"
+            },
+            "labelPosition": "left"
           },
           {
             "property": "disabled",
@@ -109,7 +104,7 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "MetaSwitch",
+              "component": "CheckBoxConfigurator",
               "props": {}
             },
             "description": {
@@ -129,7 +124,7 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "MetaSelect",
+              "component": "SelectConfigurator",
               "props": {
                 "options": [
                   {
@@ -184,7 +179,7 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "MetaSwitch",
+              "component": "CheckBoxConfigurator",
               "props": {}
             },
             "description": {
@@ -204,7 +199,7 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "MetaSwitch",
+              "component": "CheckBoxConfigurator",
               "props": {}
             },
             "description": {
@@ -224,18 +219,19 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "MetaNumber",
+              "component": "NumberConfigurator",
               "props": {}
             },
             "description": {
               "zh_CN": "设置禁用时间，防止重复提交，单位毫秒"
-            }
+            },
+            "labelPosition": "left"
           },
           {
             "property": "circle",
             "label": {
               "text": {
-                "zh_CN": "圆角"
+                "zh_CN": "圆形按钮"
               }
             },
             "required": true,
@@ -243,7 +239,7 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "MetaSwitch",
+              "component": "CheckBoxConfigurator",
               "props": {}
             },
             "description": {
@@ -255,7 +251,7 @@
             "property": "autofocus",
             "label": {
               "text": {
-                "zh_CN": "聚焦"
+                "zh_CN": "自动聚焦"
               }
             },
             "required": true,
@@ -263,7 +259,7 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "MetaSwitch",
+              "component": "CheckBoxConfigurator",
               "props": {}
             },
             "description": {
@@ -275,7 +271,7 @@
             "property": "loading",
             "label": {
               "text": {
-                "zh_CN": "加载中"
+                "zh_CN": "加载中样式"
               }
             },
             "required": true,
@@ -283,7 +279,7 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "MetaSwitch",
+              "component": "CheckBoxConfigurator",
               "props": {}
             },
             "description": {
@@ -353,5 +349,5 @@
       }
     }
   ],
-  "category": "general"
+  "category": "basic"
 }

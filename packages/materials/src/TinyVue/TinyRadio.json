@@ -1,0 +1,252 @@
+{
+  "icon": "radio",
+  "name": {
+    "zh_CN": "单选"
+  },
+  "component": "TinyRadio",
+  "description": "用于配置不同场景的选项，在一组备选项中进行单选",
+  "docUrl": "",
+  "screenshot": "",
+  "tags": "",
+  "keywords": "",
+  "devMode": "proCode",
+  "npm": {
+    "package": "@opentiny/vue",
+    "exportName": "Radio",
+    "destructuring": true
+  },
+  "group": "component",
+  "priority": 3,
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "content": [
+          {
+            "property": "text",
+            "label": {
+              "text": {
+                "zh_CN": "文本内容"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "单选框文本内容"
+            }
+          },
+          {
+            "property": "label",
+            "label": {
+              "text": {
+                "zh_CN": "选中值"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "radio 选中时的值"
+            }
+          },
+          {
+            "property": "modelValue",
+            "label": {
+              "text": {
+                "zh_CN": "绑定值"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "双向绑定的当前选中值"
+            }
+          },
+          {
+            "property": "disabled",
+            "label": {
+              "text": {
+                "zh_CN": "禁用"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否禁用"
+            },
+            "labelPosition": "left"
+          }
+        ]
+      },
+      {
+        "label": {
+          "zh_CN": "其他"
+        },
+        "description": {
+          "zh_CN": ""
+        },
+        "content": [
+          {
+            "property": "border",
+            "label": {
+              "text": {
+                "zh_CN": "显示边框"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否显示边框"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "size",
+            "label": {
+              "text": {
+                "zh_CN": "尺寸"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "单选框的尺寸，仅在 border 为true时有效"
+            }
+          },
+          {
+            "property": "name",
+            "label": {
+              "text": {
+                "zh_CN": "原生name属性"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "原生 name 属性"
+            }
+          }
+        ]
+      }
+    ],
+    "events": {
+      "onChange": {
+        "label": {
+          "zh_CN": "值变化事件"
+        },
+        "description": {
+          "zh_CN": "绑定值变化时触发的事件"
+        }
+      },
+      "onUpdate:modelValue": {
+        "label": {
+          "zh_CN": "双向绑定的值改变时触发"
+        },
+        "description": {
+          "zh_CN": "当前选中的值改变时触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "value",
+              "type": "string",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "双向绑定的当前选中值"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      }
+    }
+  },
+  "configure": {
+    "loop": true,
+    "condition": true,
+    "styles": true,
+    "isContainer": false,
+    "isModal": false,
+    "nestingRule": {
+      "childWhitelist": "",
+      "parentWhitelist": "",
+      "descendantBlacklist": "",
+      "ancestorWhitelist": ""
+    },
+    "isNullNode": false,
+    "isLayout": false,
+    "rootSelector": "",
+    "shortcuts": {
+      "properties": ["visible", "width"]
+    },
+    "contextMenu": {
+      "actions": ["create symbol"],
+      "disable": ["copy", "remove"]
+    }
+  },
+  "snippets": [
+    {
+      "name": {
+        "zh_CN": "单选"
+      },
+      "icon": "radio",
+      "screenshot": "",
+      "snippetName": "TinyRadio",
+      "schema": {
+        "componentName": "TinyRadio",
+        "props": {
+          "label": "1",
+          "text": "单选文本"
+        }
+      }
+    }
+  ],
+  "category": "form"
+}

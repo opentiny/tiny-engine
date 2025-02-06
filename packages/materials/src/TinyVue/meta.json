@@ -6,5 +6,43 @@
     "destructuring": true,
     "script": "https://unpkg.com/@opentiny/vue-runtime@~3.20/dist3/tiny-vue-pc.mjs",
     "css": "https://unpkg.com/@opentiny/vue-theme@~3.20/index.css"
-  }
+  },
+  "snippets": [
+    {
+      "group": "layout",
+      "label": {
+        "zh_CN": "布局与容器"
+      }
+    },
+    {
+      "group": "basic",
+      "label": {
+        "zh_CN": "基础元素"
+      }
+    },
+    {
+      "group": "form",
+      "label": {
+        "zh_CN": "表单类型"
+      }
+    },
+    {
+      "group": "table",
+      "label": {
+        "zh_CN": "表格类型"
+      }
+    },
+    {
+      "group": "data-display",
+      "label": {
+        "zh_CN": "数据展示类"
+      }
+    },
+    {
+      "group": "navigation",
+      "label": {
+        "zh_CN": "导航类型"
+      }
+    }
+  ]
 }

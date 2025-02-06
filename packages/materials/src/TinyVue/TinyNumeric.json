@@ -1,9 +1,9 @@
 {
   "name": {
-    "zh_CN": "输入框"
+    "zh_CN": "数字输入框"
   },
-  "component": "TinyInput",
-  "icon": "input",
+  "component": "TinyNumeric",
+  "icon": "numeric",
   "description": "通过鼠标或键盘输入字符",
   "docUrl": "",
   "screenshot": "",
@@ -12,7 +12,7 @@
   "devMode": "proCode",
   "npm": {
     "package": "@opentiny/vue",
-    "exportName": "Input",
+    "exportName": "Numeric",
     "destructuring": true
   },
   "group": "component",
@@ -37,59 +37,12 @@
             "required": true,
             "readOnly": false,
             "disabled": false,
-            "cols": 12,
             "widget": {
               "component": "I18nConfigurator",
               "props": {}
             },
             "description": {
               "zh_CN": "双向绑定值"
-            },
-            "labelPosition": "left"
-          },
-          {
-            "property": "type",
-            "label": {
-              "text": {
-                "zh_CN": "类型"
-              }
-            },
-            "widget": {
-              "component": "SelectConfigurator",
-              "props": {
-                "options": [
-                  {
-                    "label": "textarea",
-                    "value": "textarea"
-                  },
-                  {
-                    "label": "text",
-                    "value": "text"
-                  },
-                  {
-                    "label": "password",
-                    "value": "password"
-                  }
-                ]
-              }
-            },
-            "description": {
-              "zh_CN": "设置input框的type属性"
-            },
-            "labelPosition": "left"
-          },
-          {
-            "property": "rows",
-            "label": {
-              "text": {
-                "zh_CN": "行数"
-              }
-            },
-            "widget": {
-              "component": "NumberConfigurator"
-            },
-            "description": {
-              "zh_CN": "输入框行数，只对 type='textarea' 有效"
             },
             "labelPosition": "left"
           },
@@ -114,10 +67,10 @@
             "labelPosition": "left"
           },
           {
-            "property": "clearable",
+            "property": "allow-empty",
             "label": {
               "text": {
-                "zh_CN": "清除按钮"
+                "zh_CN": "内容可清空"
               }
             },
             "required": true,
@@ -129,7 +82,7 @@
               "props": {}
             },
             "description": {
-              "zh_CN": "是否显示清除按钮"
+              "zh_CN": "是否内容可清空"
             },
             "labelPosition": "left"
           },
@@ -140,7 +93,7 @@
                 "zh_CN": "禁用"
               }
             },
-            "required": true,
+            "required": false,
             "readOnly": false,
             "disabled": false,
             "cols": 12,
@@ -187,42 +140,15 @@
               "zh_CN": "输入框尺寸。该属性的可选值为 medium / small / mini"
             },
             "labelPosition": "left"
-          }
-        ]
-      },
-      {
-        "name": "1",
-        "label": {
-          "zh_CN": "其他"
-        },
-        "content": [
-          {
-            "property": "maxlength",
-            "label": {
-              "text": {
-                "zh_CN": "最大输入长度"
-              }
-            },
-            "required": true,
-            "readOnly": false,
-            "disabled": false,
-            "cols": 12,
-            "widget": {
-              "component": "NumberConfigurator",
-              "props": {}
-            },
-            "description": {
-              "zh_CN": "设置 input 框的maxLength"
-            }
           },
           {
-            "property": "autofocus",
+            "property": "controls",
             "label": {
               "text": {
-                "zh_CN": "自动聚焦"
+                "zh_CN": "加减按钮"
               }
             },
-            "required": true,
+            "required": false,
             "readOnly": false,
             "disabled": false,
             "cols": 12,
@@ -231,14 +157,129 @@
               "props": {}
             },
             "description": {
-              "zh_CN": "自动获取焦点"
+              "zh_CN": "是否使用加减按钮"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "controls-position",
+            "label": {
+              "text": {
+                "zh_CN": "加减按钮位置"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "SelectConfigurator",
+              "props": {
+                "options": [
+                  {
+                    "label": "左右两侧",
+                    "value": ""
+                  },
+                  {
+                    "label": "只在右侧",
+                    "value": "right"
+                  }
+                ]
+              }
+            },
+            "description": {
+              "zh_CN": "加减按钮位置"
+            }
+          },
+          {
+            "property": "precision",
+            "label": {
+              "text": {
+                "zh_CN": "精度"
+              }
+            },
+            "required": false,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "NumberConfigurator",
+              "props": {
+                "allowEmpty": true
+              }
+            },
+            "description": {
+              "zh_CN": "数值精度"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "step",
+            "label": {
+              "text": {
+                "zh_CN": "步长"
+              }
+            },
+            "required": false,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "NumberConfigurator",
+              "props": {
+                "allowEmpty": true
+              }
+            },
+            "description": {
+              "zh_CN": "步长"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "max",
+            "label": {
+              "text": {
+                "zh_CN": "最大数值"
+              }
+            },
+            "required": false,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "NumberConfigurator",
+              "props": {
+                "allowEmpty": true
+              }
+            },
+            "description": {
+              "zh_CN": "可输入的最大数值"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "min",
+            "label": {
+              "text": {
+                "zh_CN": "最小数值"
+              }
+            },
+            "required": false,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "NumberConfigurator",
+              "props": {
+                "allowEmpty": true
+              }
+            },
+            "description": {
+              "zh_CN": "可输入的最大数值"
             },
             "labelPosition": "left"
           }
-        ],
-        "description": {
-          "zh_CN": ""
-        }
+        ]
       }
     ],
     "events": {
@@ -371,25 +412,13 @@
         },
         "defaultValue": ""
       }
-    },
-    "slots": {
-      "prefix": {
-        "label": {
-          "zh_CN": "前置内容"
-        }
-      },
-      "suffix": {
-        "label": {
-          "zh_CN": "后置内容"
-        }
-      }
     }
   },
   "configure": {
     "loop": true,
     "condition": true,
     "styles": true,
-    "isContainer": false,
+    "isContainer": true,
     "isModal": false,
     "nestingRule": {
       "childWhitelist": "",
@@ -411,16 +440,18 @@
   "snippets": [
     {
       "name": {
-        "zh_CN": "输入框"
+        "zh_CN": "数字输入框"
       },
-      "icon": "input",
+      "icon": "numeric",
       "screenshot": "",
-      "snippetName": "TinyInput",
+      "snippetName": "TinyNumeric",
       "schema": {
-        "componentName": "TinyInput",
+        "componentName": "TinyNumeric",
         "props": {
+          "allow-empty": true,
           "placeholder": "请输入",
-          "modelValue": ""
+          "controlsPosition": "right",
+          "step": 1
         }
       }
     }

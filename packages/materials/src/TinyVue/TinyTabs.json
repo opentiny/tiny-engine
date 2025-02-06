@@ -1,0 +1,328 @@
+{
+  "icon": "tabs",
+  "name": {
+    "zh_CN": "标签页"
+  },
+  "component": "TinyTabs",
+  "description": "分隔内容上有关联但属于不同类别的数据集合",
+  "docUrl": "",
+  "screenshot": "",
+  "tags": "",
+  "keywords": "",
+  "devMode": "proCode",
+  "npm": {
+    "package": "@opentiny/vue",
+    "exportName": "Tabs",
+    "destructuring": true
+  },
+  "group": "component",
+  "priority": 10,
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "content": [
+          {
+            "property": "showEditIcon",
+            "label": {
+              "text": {
+                "zh_CN": "显示编辑图标"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否显示标题后编辑 ICON"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "tabs",
+            "label": {
+              "text": {
+                "zh_CN": "选项卡"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "defaultValue": "",
+            "cols": 12,
+            "bindState": false,
+            "widget": {
+              "component": "ContainerConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "tabs 选项卡"
+            },
+            "labelPosition": "none"
+          },
+          {
+            "property": "modelValue",
+            "label": {
+              "text": {
+                "zh_CN": "绑定值"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "绑定值，选中选项卡的 name"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "with-add",
+            "label": {
+              "text": {
+                "zh_CN": "标签新增"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "标签是否可增加"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "with-close",
+            "label": {
+              "text": {
+                "zh_CN": "可关闭"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "标签是否可关闭"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "tab-style",
+            "label": {
+              "text": {
+                "zh_CN": "标签页样式"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "SelectConfigurator",
+              "props": {
+                "options": [
+                  {
+                    "label": "card",
+                    "value": "card"
+                  },
+                  {
+                    "label": "border-card",
+                    "value": "border-card"
+                  }
+                ]
+              }
+            },
+            "description": {
+              "zh_CN": "标签页样式"
+            },
+            "labelPosition": "left"
+          }
+        ]
+      }
+    ],
+    "events": {
+      "onClick": {
+        "label": {
+          "zh_CN": "点击页签时触发事件"
+        },
+        "description": {
+          "zh_CN": "在 Input 值改变时触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "component",
+              "type": "Object",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "当前点击的页签对象"
+              }
+            },
+            {
+              "name": "event",
+              "type": "Object",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "原生 event"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      },
+      "onEdit": {
+        "label": {
+          "zh_CN": "点击新增按钮或关闭按钮或者编辑按钮后触发"
+        },
+        "description": {
+          "zh_CN": "点击新增按钮或关闭按钮或者编辑按钮后触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "tab",
+              "type": "Object",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "当前操作的页签对象"
+              }
+            },
+            {
+              "name": "type",
+              "type": "String",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "当前操作的类型（remove || add || edit）"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      },
+      "onClose": {
+        "label": {
+          "zh_CN": "关闭页签时触发"
+        },
+        "description": {
+          "zh_CN": "关闭页签时触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "name",
+              "type": "String",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "页签名称"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      }
+    }
+  },
+  "configure": {
+    "loop": true,
+    "condition": true,
+    "styles": true,
+    "isContainer": true,
+    "clickCapture": false,
+    "isModal": false,
+    "nestingRule": {
+      "childWhitelist": ["TinyTabItem"],
+      "parentWhitelist": [],
+      "descendantBlacklist": [],
+      "ancestorWhitelist": []
+    },
+    "isNullNode": false,
+    "isLayout": false,
+    "rootSelector": "",
+    "shortcuts": {
+      "properties": ["size", "tab-style"]
+    },
+    "contextMenu": {
+      "actions": ["create symbol"],
+      "disable": ["copy", "remove"]
+    }
+  },
+  "snippets": [
+    {
+      "name": {
+        "zh_CN": "标签页"
+      },
+      "icon": "tabs",
+      "screenshot": "",
+      "group": true,
+      "snippetName": "TinyTabs",
+      "schema": {
+        "componentName": "TinyTabs",
+        "props": {
+          "modelValue": "first"
+        },
+        "children": [
+          {
+            "componentName": "TinyTabItem",
+            "props": {
+              "title": "标签页1",
+              "name": "first"
+            },
+            "children": [
+              {
+                "componentName": "div",
+                "props": {
+                  "style": "margin:10px 0 0 30px"
+                }
+              }
+            ]
+          },
+          {
+            "componentName": "TinyTabItem",
+            "props": {
+              "title": "标签页2",
+              "name": "second"
+            },
+            "children": [
+              {
+                "componentName": "div",
+                "props": {
+                  "style": "margin:10px 0 0 30px"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "category": "navigation"
+}

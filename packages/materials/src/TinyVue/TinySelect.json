@@ -1,10 +1,10 @@
 {
+  "icon": "select",
   "name": {
-    "zh_CN": "输入框"
+    "zh_CN": "下拉框"
   },
-  "component": "TinyInput",
-  "icon": "input",
-  "description": "通过鼠标或键盘输入字符",
+  "component": "TinySelect",
+  "description": "Select 选择器是一种通过点击弹出下拉列表展示数据并进行选择的 UI 组件",
   "docUrl": "",
   "screenshot": "",
   "tags": "",
@@ -12,11 +12,11 @@
   "devMode": "proCode",
   "npm": {
     "package": "@opentiny/vue",
-    "exportName": "Input",
+    "exportName": "Select",
     "destructuring": true
   },
   "group": "component",
-  "priority": 1,
+  "priority": 8,
   "schema": {
     "properties": [
       {
@@ -39,57 +39,11 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "I18nConfigurator",
+              "component": "InputConfigurator",
               "props": {}
             },
             "description": {
-              "zh_CN": "双向绑定值"
-            },
-            "labelPosition": "left"
-          },
-          {
-            "property": "type",
-            "label": {
-              "text": {
-                "zh_CN": "类型"
-              }
-            },
-            "widget": {
-              "component": "SelectConfigurator",
-              "props": {
-                "options": [
-                  {
-                    "label": "textarea",
-                    "value": "textarea"
-                  },
-                  {
-                    "label": "text",
-                    "value": "text"
-                  },
-                  {
-                    "label": "password",
-                    "value": "password"
-                  }
-                ]
-              }
-            },
-            "description": {
-              "zh_CN": "设置input框的type属性"
-            },
-            "labelPosition": "left"
-          },
-          {
-            "property": "rows",
-            "label": {
-              "text": {
-                "zh_CN": "行数"
-              }
-            },
-            "widget": {
-              "component": "NumberConfigurator"
-            },
-            "description": {
-              "zh_CN": "输入框行数，只对 type='textarea' 有效"
+              "zh_CN": "双向绑定的当前选中值"
             },
             "labelPosition": "left"
           },
@@ -105,7 +59,7 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "I18nConfigurator",
+              "component": "InputConfigurator",
               "props": {}
             },
             "description": {
@@ -134,6 +88,26 @@
             "labelPosition": "left"
           },
           {
+            "property": "searchable",
+            "label": {
+              "text": {
+                "zh_CN": "下拉可搜索"
+              }
+            },
+            "required": false,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "下拉面板是否可搜索"
+            },
+            "labelPosition": "left"
+          },
+          {
             "property": "disabled",
             "label": {
               "text": {
@@ -154,10 +128,10 @@
             "labelPosition": "left"
           },
           {
-            "property": "size",
+            "property": "options",
             "label": {
               "text": {
-                "zh_CN": "尺寸"
+                "zh_CN": "选项数据"
               }
             },
             "required": true,
@@ -165,26 +139,33 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "SelectConfigurator",
+              "component": "CodeConfigurator",
               "props": {
-                "options": [
-                  {
-                    "label": "medium",
-                    "value": "medium"
-                  },
-                  {
-                    "label": "small",
-                    "value": "small"
-                  },
-                  {
-                    "label": "mini",
-                    "value": "mini"
-                  }
-                ]
+                "language": "json"
               }
             },
             "description": {
-              "zh_CN": "输入框尺寸。该属性的可选值为 medium / small / mini"
+              "zh_CN": "配置 Select 下拉数据项"
+            },
+            "labelPosition": "top"
+          },
+          {
+            "property": "multiple",
+            "label": {
+              "text": {
+                "zh_CN": "多选"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否允许输入框输入或选择多个项"
             },
             "labelPosition": "left"
           }
@@ -197,10 +178,10 @@
         },
         "content": [
           {
-            "property": "maxlength",
+            "property": "multiple-limit",
             "label": {
               "text": {
-                "zh_CN": "最大输入长度"
+                "zh_CN": "最大可选值"
               }
             },
             "required": true,
@@ -212,14 +193,35 @@
               "props": {}
             },
             "description": {
-              "zh_CN": "设置 input 框的maxLength"
-            }
+              "zh_CN": "多选时用户最多可以选择的项目数，为 0 则不限制"
+            },
+            "labelPosition": "left"
           },
           {
-            "property": "autofocus",
+            "property": "popper-class",
             "label": {
               "text": {
-                "zh_CN": "自动聚焦"
+                "zh_CN": "下拉框类名"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "设置下拉框自定义的类名"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "collapse-tags",
+            "label": {
+              "text": {
+                "zh_CN": "多选展示"
               }
             },
             "required": true,
@@ -231,7 +233,7 @@
               "props": {}
             },
             "description": {
-              "zh_CN": "自动获取焦点"
+              "zh_CN": "多选时是否将选中值按文字的形式展示"
             },
             "labelPosition": "left"
           }
@@ -247,7 +249,7 @@
           "zh_CN": "值改变时触发"
         },
         "description": {
-          "zh_CN": "在 Input 值改变时触发"
+          "zh_CN": "在下拉框值改变时触发"
         },
         "type": "event",
         "functionInfo": {
@@ -257,30 +259,7 @@
               "type": "string",
               "defaultValue": "",
               "description": {
-                "zh_CN": "输入框改变后的值"
-              }
-            }
-          ],
-          "returns": {}
-        },
-        "defaultValue": ""
-      },
-      "onInput": {
-        "label": {
-          "zh_CN": "输入值改变时触发"
-        },
-        "description": {
-          "zh_CN": "在 Input 输入值改变时触发"
-        },
-        "type": "event",
-        "functionInfo": {
-          "params": [
-            {
-              "name": "value",
-              "type": "string",
-              "defaultValue": "",
-              "description": {
-                "zh_CN": "输入框输入的值"
+                "zh_CN": "下拉框选中项的值"
               }
             }
           ],
@@ -293,7 +272,7 @@
           "zh_CN": "双向绑定的值改变时触发"
         },
         "description": {
-          "zh_CN": "在 Input 输入值改变时触发"
+          "zh_CN": "当前选中的值改变时触发"
         },
         "type": "event",
         "functionInfo": {
@@ -303,7 +282,7 @@
               "type": "string",
               "defaultValue": "",
               "description": {
-                "zh_CN": "双向绑定的值"
+                "zh_CN": "双向绑定的当前选中值"
               }
             }
           ],
@@ -370,20 +349,32 @@
           "returns": {}
         },
         "defaultValue": ""
+      },
+      "onRemoveTag": {
+        "label": {
+          "zh_CN": "多选模式下移除tag时触发"
+        },
+        "description": {
+          "zh_CN": "多选模式下移除tag时触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "value",
+              "type": "Object",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "被移除Tag对应数据项的值字段"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
       }
     },
-    "slots": {
-      "prefix": {
-        "label": {
-          "zh_CN": "前置内容"
-        }
-      },
-      "suffix": {
-        "label": {
-          "zh_CN": "后置内容"
-        }
-      }
-    }
+    "onBeforeMount": "console.log('table on load'); this.options = source.data"
   },
   "configure": {
     "loop": true,
@@ -401,7 +392,7 @@
     "isLayout": false,
     "rootSelector": "",
     "shortcuts": {
-      "properties": ["value", "disabled"]
+      "properties": ["multiple", "options"]
     },
     "contextMenu": {
       "actions": ["create symbol"],
@@ -411,16 +402,26 @@
   "snippets": [
     {
       "name": {
-        "zh_CN": "输入框"
+        "zh_CN": "下拉框"
       },
-      "icon": "input",
+      "icon": "select",
       "screenshot": "",
-      "snippetName": "TinyInput",
+      "snippetName": "TinySelect",
       "schema": {
-        "componentName": "TinyInput",
+        "componentName": "TinySelect",
         "props": {
-          "placeholder": "请输入",
-          "modelValue": ""
+          "modelValue": "",
+          "placeholder": "请选择",
+          "options": [
+            {
+              "value": "1",
+              "label": "黄金糕"
+            },
+            {
+              "value": "2",
+              "label": "双皮奶"
+            }
+          ]
         }
       }
     }

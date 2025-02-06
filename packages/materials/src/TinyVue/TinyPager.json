@@ -1,0 +1,250 @@
+{
+  "name": {
+    "zh_CN": "分页"
+  },
+  "component": "TinyPager",
+  "icon": "pager",
+  "description": "当数据量过多时，使用分页分解数据，常用于 Grid 和 Repeater 组件",
+  "docUrl": "",
+  "screenshot": "",
+  "tags": "",
+  "keywords": "",
+  "devMode": "proCode",
+  "npm": {
+    "package": "@opentiny/vue",
+    "exportName": "Pager",
+    "destructuring": true
+  },
+  "group": "component",
+  "priority": 1,
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "content": [
+          {
+            "property": "currentPage",
+            "label": {
+              "text": {
+                "zh_CN": "当前页数"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "NumberConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "当前页数，支持 .sync 修饰符"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "pageSize",
+            "label": {
+              "text": {
+                "zh_CN": "每页条数"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "NumberConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "每页显示条目个数"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "pageSizes",
+            "label": {
+              "text": {
+                "zh_CN": "可选每页条数"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CodeConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "设置可选择的每页显示条数"
+            }
+          },
+          {
+            "property": "total",
+            "label": {
+              "text": {
+                "zh_CN": "总条数"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "NumberConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "数据总条数"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "layout",
+            "label": {
+              "text": {
+                "zh_CN": "布局"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "defaultValue": "total,sizes,prev, pager, next",
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {
+                "type": "textarea"
+              }
+            },
+            "description": {
+              "zh_CN": "组件布局，子组件名用逗号分隔"
+            },
+            "labelPosition": "left"
+          }
+        ]
+      }
+    ],
+    "events": {
+      "onCurrentChange ": {
+        "label": {
+          "zh_CN": "切换页码时触发"
+        },
+        "description": {
+          "zh_CN": "切换页码时触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "value",
+              "type": "string",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "当前页的值"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      },
+      "onPrevClick ": {
+        "label": {
+          "zh_CN": "点击上一页按钮时触发"
+        },
+        "description": {
+          "zh_CN": "点击上一页按钮时触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "page",
+              "type": "String",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "当前页的页码值"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      },
+      "onNextClick": {
+        "label": {
+          "zh_CN": "点击下一页按钮时触发"
+        },
+        "description": {
+          "zh_CN": "点击上一页按钮时触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "page",
+              "type": "String",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "当前页的页码值"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      }
+    }
+  },
+  "configure": {
+    "loop": true,
+    "condition": true,
+    "styles": true,
+    "isContainer": false,
+    "isModal": false,
+    "nestingRule": {
+      "childWhitelist": "",
+      "parentWhitelist": "",
+      "descendantBlacklist": "",
+      "ancestorWhitelist": ""
+    },
+    "isNullNode": false,
+    "isLayout": false,
+    "rootSelector": "",
+    "shortcuts": {
+      "properties": ["currentPage", "total"]
+    },
+    "contextMenu": {
+      "actions": ["create symbol"],
+      "disable": ["copy", "remove"]
+    }
+  },
+  "snippets": [
+    {
+      "name": {
+        "zh_CN": "分页"
+      },
+      "icon": "pager",
+      "screenshot": "",
+      "snippetName": "TinyPager",
+      "schema": {
+        "componentName": "TinyPager",
+        "props": {
+          "layout": "total, sizes, prev, pager, next",
+          "total": 100,
+          "pageSize": 10,
+          "currentPage": 1
+        }
+      }
+    }
+  ],
+  "category": "table"
+}

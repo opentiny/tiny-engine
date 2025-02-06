@@ -1,0 +1,166 @@
+{
+  "icon": "breadcrumb",
+  "name": {
+    "zh_CN": "面包屑"
+  },
+  "component": "TinyBreadcrumb",
+  "description": "告诉访问者他们目前在网站中的位置以及如何返回",
+  "docUrl": "",
+  "screenshot": "",
+  "tags": "",
+  "keywords": "",
+  "devMode": "proCode",
+  "npm": {
+    "package": "@opentiny/vue",
+    "exportName": "Breadcrumb",
+    "destructuring": true
+  },
+  "group": "component",
+  "priority": 1,
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "content": [
+          {
+            "property": "separator",
+            "label": {
+              "text": {
+                "zh_CN": "分隔符"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "自定义分隔符"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "options",
+            "label": {
+              "text": {
+                "zh_CN": "配置数据"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CodeConfigurator",
+              "props": {
+                "language": "json"
+              }
+            },
+            "description": {
+              "zh_CN": "单独使用 Breadcrumb，通过 option 配置生成面包屑"
+            },
+            "labelPosition": "top"
+          },
+          {
+            "property": "textField",
+            "label": {
+              "text": {
+                "zh_CN": "键值"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "指定面包屑的显示键值，结合 options 使用"
+            },
+            "labelPosition": "left"
+          }
+        ]
+      }
+    ],
+    "events": {
+      "onSelect": {
+        "label": {
+          "zh_CN": "选择 breadcrumb 时触发"
+        },
+        "description": {
+          "zh_CN": "选择 breadcrumb 时触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [],
+          "returns": {}
+        },
+        "defaultValue": ""
+      }
+    }
+  },
+  "configure": {
+    "loop": true,
+    "condition": true,
+    "styles": true,
+    "isContainer": false,
+    "clickCapture": false,
+    "isModal": false,
+    "nestingRule": {
+      "childWhitelist": ["TinyBreadcrumbItem"],
+      "parentWhitelist": [],
+      "descendantBlacklist": [],
+      "ancestorWhitelist": []
+    },
+    "isNullNode": false,
+    "isLayout": false,
+    "rootSelector": "",
+    "shortcuts": {
+      "properties": ["separator"]
+    },
+    "contextMenu": {
+      "actions": ["create symbol"],
+      "disable": ["copy", "remove"]
+    }
+  },
+  "snippets": [
+    {
+      "name": {
+        "zh_CN": "面包屑"
+      },
+      "icon": "breadcrumb",
+      "screenshot": "",
+      "snippetName": "TinyBreadcrumb",
+      "schema": {
+        "componentName": "TinyBreadcrumb",
+        "props": {
+          "options": [
+            {
+              "to": "{ path: '/' }",
+              "label": "首页"
+            },
+            {
+              "to": "{ path: '/breadcrumb' }",
+              "label": "产品"
+            },
+            {
+              "replace": "true",
+              "label": "软件"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "category": "navigation"
+}
