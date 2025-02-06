@@ -43,6 +43,7 @@ const validateComponent = (file, component) => {
 
 const generateComponents = async (entry) => {
   const files = await fg('*.json', { cwd: entry })
+
   if (!files.length) {
     return
   }
@@ -50,10 +51,26 @@ const generateComponents = async (entry) => {
   const bundle = {
     componentsMap: [],
     components: [],
-    snippets: []
+    snippets: [],
+    packages: []
   }
 
-  files.forEach((file) => {
+  const metaInfo = fsExtra.readJsonSync(path.resolve(entry, 'meta.json'), { throws: false })
+
+  if (metaInfo?.package) {
+    bundle.packages.push(metaInfo.package)
+  }
+
+  const componentFiles = files.filter((fileName) => {
+    if (fileName === 'meta.json') {
+      return false
+    }
+
+    // 下划线开头的组件文件不导出
+    return !fileName.startsWith('_')
+  })
+
+  componentFiles.forEach((file) => {
     const material = fsExtra.readJsonSync(path.resolve(entry, file), { throws: false })
 
     if (!material) {
@@ -127,7 +144,8 @@ const buildComponents = async (config = {}) => {
     const allBundles = {
       components: [],
       snippets: [],
-      componentsMap: []
+      componentsMap: [],
+      packages: []
     }
 
     for (const entry of entries) {
@@ -139,6 +157,7 @@ const buildComponents = async (config = {}) => {
         allBundles.components = allBundles.components.concat(res.components)
         allBundles.snippets = allBundles.snippets.concat(res.snippets)
         allBundles.componentsMap = allBundles.componentsMap.concat(res.componentsMap)
+        allBundles.packages = allBundles.packages.concat(res.packages)
       }
     }
 
