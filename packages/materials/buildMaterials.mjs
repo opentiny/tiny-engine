@@ -49,11 +49,11 @@ const generateComponents = async (entry) => {
   }
 
   const bundle = {
-    componentsMap: [],
     components: [],
     snippets: [],
     packages: []
   }
+  const componentsMap = []
 
   const metaInfo = fsExtra.readJsonSync(path.resolve(entry, 'meta.json'), { throws: false })
 
@@ -121,11 +121,14 @@ const generateComponents = async (entry) => {
     }
 
     if (npmInfo.package) {
-      bundle.componentsMap.push(mapItem)
+      componentsMap.push(mapItem)
     }
   })
 
-  return bundle
+  return {
+    bundle,
+    componentsMap
+  }
 }
 
 const getFrameworkWithData = (data) => {
@@ -150,9 +153,9 @@ const buildComponents = async (config = {}) => {
     const allBundles = {
       components: [],
       snippets: [],
-      componentsMap: [],
       packages: []
     }
+    let allComponentsMap = []
 
     for (const entry of entries) {
       const res = await generateComponents(path.resolve(materialsDir, `${entry}`))
@@ -161,13 +164,14 @@ const buildComponents = async (config = {}) => {
         continue
       }
 
-      fsExtra.outputJSONSync(path.resolve(__dirname, `./dist/${entry}.json`), getFrameworkWithData(res), { spaces: 2 })
+      fsExtra.outputJSONSync(path.resolve(__dirname, `./dist/${entry}.json`), getFrameworkWithData(res.bundle), { spaces: 2 })
+      fsExtra.outputJSONSync(path.resolve(__dirname, `./dist/${entry}.compsMap.json`), res.componentsMap, { spaces: 2 })
 
-      allBundles.components = allBundles.components.concat(res.components)
-      allBundles.componentsMap = allBundles.componentsMap.concat(res.componentsMap)
-      allBundles.packages = allBundles.packages.concat(res.packages)
+      allBundles.components = allBundles.components.concat(res.bundle.components)
+      allComponentsMap = allComponentsMap.concat(res.componentsMap)
+      allBundles.packages = allBundles.packages.concat(res.bundle.packages)
 
-      for (const snippetItem of res.snippets) {
+      for (const snippetItem of res.bundle.snippets) {
         const snippet = allBundles.snippets.find((item) => item.group === snippetItem.group)
 
         if (snippet) {
@@ -184,6 +188,7 @@ const buildComponents = async (config = {}) => {
 
     if (buildCombine) {
       fsExtra.outputJSONSync(path.resolve(__dirname, `./dist/index.json`), getFrameworkWithData(allBundles), { spaces: 2 })
+      fsExtra.outputJSONSync(path.resolve(__dirname, `./dist/index.compsMap.json`), allComponentsMap, { spaces: 2 })
     }
 
     logger.success('物料资产包构建成功')
