@@ -23,12 +23,6 @@
         "description": {
           "zh_CN": "基础信息"
         },
-        "collapse": {
-          "number": 6,
-          "text": {
-            "zh_CN": "显示更多"
-          }
-        },
         "content": [
           {
             "property": "type",
@@ -42,7 +36,7 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "MetaSelect",
+              "component": "SelectConfigurator",
               "props": {
                 "options": [
                   {
@@ -129,7 +123,7 @@
               }
             },
             "description": {
-              "zh_CN": ""
+              "zh_CN": "类型"
             }
           },
           {
@@ -144,11 +138,11 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "MetaInput",
+              "component": "InputConfigurator",
               "props": {}
             },
             "description": {
-              "zh_CN": ""
+              "zh_CN": "占位符"
             }
           },
           {
@@ -163,11 +157,11 @@
             "disabled": false,
             "cols": 12,
             "widget": {
-              "component": "MetaHtmlAttributes",
+              "component": "HtmlAttributesConfigurator",
               "props": {}
             },
             "description": {
-              "zh_CN": ""
+              "zh_CN": "原生属性"
             },
             "labelPosition": "none"
           }
@@ -268,22 +262,5 @@
       "actions": ["create symbol"],
       "disable": ["copy", "remove"]
     }
-  },
-  "snippets": [
-    {
-      "name": {
-        "zh_CN": "输入框"
-      },
-      "icon": "input",
-      "screenshot": "",
-      "snippetName": "input",
-      "schema": {
-        "componentName": "input",
-        "props": {
-          "type": "text",
-          "placeholder": "请输入"
-        }
-      }
-    }
-  ]
+  }
 }
