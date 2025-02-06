@@ -154,7 +154,7 @@ export default {
       background: var(--te-common-bg-default);
 
       &:hover {
-        background: var(--ti-lowcode-material-component-list-hover-bg);
+        background: var(--te-common-bg-container);
         border-radius: 4px;
       }
 

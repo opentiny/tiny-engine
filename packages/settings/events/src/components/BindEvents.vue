@@ -50,15 +50,11 @@
               name="plugin-icon-page-schema"
               tips="定位到代码"
               placement="top"
+              :hoverBgColor="false"
               @click="openCodePanel(action)"
             ></svg-button>
-            <svg-button
-              name="setting"
-              tips="设置"
-              placement="top"
-              @click="openActionDialog(action, false)"
-            ></svg-button>
-            <svg-button name="delete" tips="删除" placement="top" @click="delEvent(action)"></svg-button>
+            <svg-button name="setting" :hoverBgColor="false" @click="openActionDialog(action, false)"></svg-button>
+            <svg-button name="delete" :hoverBgColor="false" @click="delEvent(action)"></svg-button>
           </div>
         </div>
       </li>
@@ -303,7 +299,6 @@ export default {
       }
 
       .linked {
-        background-color: var(--ti-lowcode-events-bind-action-item-linked-bg-color);
         color: var(--ti-lowcode-events-bind-action-item-linked-color);
       }
     }
@@ -351,10 +346,6 @@ export default {
     .text {
       margin-top: 12px;
     }
-
-    .empty-bind-event-tip {
-      color: var(--ti-lowcode-events-empty-action-tips-strong-color);
-    }
   }
 }
 .bind-event-list {
@@ -372,13 +363,6 @@ export default {
   &:hover {
     cursor: pointer;
     background: var(--lowcode-events-bind-event-list-item-hover-bg-color);
-  }
-}
-
-.add-custom-event-tip {
-  color: var(--ti-lowcode-events-add-custom-event-tips-color);
-  .event-tip-highlight {
-    color: var(--ti-lowcode-event-add-custom-event-tips-highlight-color);
   }
 }
 </style>

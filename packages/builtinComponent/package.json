@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-builtin-component",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "",
   "main": "dist/index.mjs",
   "module": "dist/index.mjs",

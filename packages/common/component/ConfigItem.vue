@@ -82,7 +82,7 @@
             @update:modelValue="onModelUpdate"
           >
             <template #default>
-              <tiny-tooltip class="item" effect="dark" content="源码编辑" placement="left">
+              <tiny-tooltip class="item" effect="light" content="源码编辑" placement="left">
                 <icon-writing class="code-icon" @click="editorModalRef?.open && editorModalRef.open()"></icon-writing>
               </tiny-tooltip>
             </template>
@@ -551,6 +551,7 @@ export default {
       .binding-state {
         color: var(--ti-lowcode-meta-config-item-bind-color);
         background: var(--ti-lowcode-meta-config-item-bind-bg);
+        border: 1px solid var(--ti-lowcode-meta-config-item-bind-border);
         padding: 4px 12px;
         overflow: hidden;
         text-overflow: ellipsis;

@@ -101,7 +101,7 @@ export default {
 
 <style lang="less" scoped>
 .input-or-output {
-  color: var(--ti-lowcode-page-manage-icon-text-color);
+  color: var(--te-common-text-secondary);
   .life-cycle-alert {
     color: var(--ti-lowcode-life-cycle-alert-color);
     height: 28px;

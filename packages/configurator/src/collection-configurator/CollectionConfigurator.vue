@@ -3,7 +3,7 @@
     <tiny-select v-model="selected" placeholder="请选择" @change="sourceChange">
       <tiny-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id"> </tiny-option>
     </tiny-select>
-    <tiny-tooltip class="item" effect="dark" content="刷新数据源" placement="top">
+    <tiny-tooltip class="item" effect="light" content="刷新数据源" placement="top">
       <icon-common-refresh @click="refreshData"></icon-common-refresh>
     </tiny-tooltip>
   </div>

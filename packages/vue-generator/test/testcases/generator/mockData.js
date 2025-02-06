@@ -1875,6 +1875,178 @@ export const appSchemaDemo01 = {
         isHome: false,
         _id: 'NTJ4MjvqoVj8OVsc'
       }
+    },
+    {
+      state: {
+        dataDisk: [1, 2, 3]
+      },
+      methods: {},
+      componentName: 'Page',
+      css: 'body {\r\n  background-color:#eef0f5 ;\r\n  margin-bottom: 80px;\r\n}',
+      props: {},
+      children: [
+        {
+          componentName: 'CanvasRowColContainer',
+          props: {
+            rowGap: '20px'
+          },
+          children: [
+            {
+              componentName: 'CanvasRow',
+              props: {
+                rowGap: '20px',
+                colGap: '20px'
+              },
+              children: [
+                {
+                  componentName: 'CanvasCol',
+                  props: {
+                    rowGap: '20px',
+                    colGap: '20px',
+                    grow: true,
+                    shrink: true,
+                    widthType: 'auto'
+                  },
+                  id: '4514b344'
+                },
+                {
+                  componentName: 'CanvasCol',
+                  props: {
+                    rowGap: '20px',
+                    colGap: '20px',
+                    grow: true,
+                    shrink: true,
+                    widthType: 'auto'
+                  },
+                  children: [],
+                  id: '3664a254'
+                }
+              ],
+              id: '63553246'
+            },
+            {
+              componentName: 'CanvasRow',
+              props: {
+                rowGap: '20px',
+                colGap: '20px'
+              },
+              children: [
+                {
+                  componentName: 'CanvasCol',
+                  props: {
+                    rowGap: '20px',
+                    colGap: '20px',
+                    grow: true,
+                    shrink: true,
+                    widthType: 'auto'
+                  },
+                  id: '2c13444f',
+                  children: [
+                    {
+                      componentName: 'CanvasRow',
+                      props: {
+                        rowGap: '20px',
+                        colGap: '20px'
+                      },
+                      children: [
+                        {
+                          componentName: 'CanvasCol',
+                          props: {
+                            rowGap: '20px',
+                            colGap: '20px',
+                            grow: true,
+                            shrink: true,
+                            widthType: 'auto'
+                          },
+                          children: [],
+                          id: '24256327'
+                        }
+                      ],
+                      id: '56453426'
+                    },
+                    {
+                      componentName: 'CanvasRow',
+                      props: {
+                        rowGap: '20px',
+                        colGap: '20px'
+                      },
+                      children: [
+                        {
+                          componentName: 'CanvasCol',
+                          props: {
+                            rowGap: '20px',
+                            colGap: '20px',
+                            grow: true,
+                            shrink: true,
+                            widthType: 'auto'
+                          },
+                          id: '5451f224'
+                        }
+                      ],
+                      id: '26364626'
+                    },
+                    {
+                      componentName: 'CanvasRow',
+                      props: {
+                        rowGap: '20px',
+                        colGap: '20px'
+                      },
+                      children: [
+                        {
+                          componentName: 'CanvasCol',
+                          props: {
+                            rowGap: '20px',
+                            colGap: '20px',
+                            grow: true,
+                            shrink: true,
+                            widthType: 'auto'
+                          },
+                          children: [],
+                          id: '26232436'
+                        }
+                      ],
+                      id: '52555445'
+                    }
+                  ]
+                },
+                {
+                  componentName: 'CanvasCol',
+                  props: {
+                    rowGap: '20px',
+                    colGap: '20px',
+                    grow: true,
+                    shrink: true,
+                    widthType: 'auto'
+                  },
+                  children: [],
+                  id: '53553563'
+                }
+              ],
+              id: '53b5fe13'
+            }
+          ],
+          id: '25452c43'
+        }
+      ],
+      fileName: 'testCanvasRowCol',
+      meta: {
+        name: 'testCanvasRowCol',
+        id: 1737797330916,
+        app: '918',
+        router: 'testCanvasRowCol',
+        tenant: 1,
+        isBody: false,
+        parentId: '0',
+        group: 'staticPages',
+        depth: 0,
+        isPage: true,
+        isDefault: false,
+        occupier: {
+          id: 86,
+          username: '开发者'
+        },
+        isHome: false
+      }
     }
   ],
   componentsMap: [

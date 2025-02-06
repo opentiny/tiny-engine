@@ -7,6 +7,7 @@ function defaultRenderer(schema, refreshKey, entry, active, isPage = true) {
   const rootChildrenSchema = {
     id: 0,
     componentName: 'div',
+    componentType: 'PageSection',
     // 手动添加一个唯一的属性，后续在画布选中此节点时方便处理额外的逻辑。由于没有修改schema，不会影响出码
     props: { ...schema.props, 'data-id': 'root-container', 'data-page-active': active },
     children: schema.children

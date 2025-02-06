@@ -400,7 +400,7 @@ export default {
     flex-direction: column;
     .add-btn {
       margin: 12px 0;
-      padding: 0 10px;
+      padding: 0 8px;
       width: 100%;
       .tiny-button {
         width: 100%;
@@ -435,7 +435,7 @@ export default {
 
     .left-filter {
       margin-top: 4px;
-      padding: 0 10px;
+      padding: 0 8px;
     }
 
     & > span {

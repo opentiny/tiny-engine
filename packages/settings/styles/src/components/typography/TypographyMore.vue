@@ -96,7 +96,7 @@ export default {
     },
     effect: {
       type: String,
-      default: 'dark'
+      default: 'light'
     },
     placement: {
       type: String,

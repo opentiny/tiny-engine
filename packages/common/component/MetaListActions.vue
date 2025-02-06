@@ -1,6 +1,6 @@
 <template lang="">
   <span v-for="(actionsItem, index) in actions" :key="index" class="actionsItem" @click="actionsEvents(actionsItem)">
-    <tiny-tooltip class="item" effect="dark" :content="actionsItem.title" placement="top">
+    <tiny-tooltip class="item" effect="light" :content="actionsItem.title" placement="top">
       <component :is="actionsItem.icon"></component>
     </tiny-tooltip>
   </span>

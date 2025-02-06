@@ -19,7 +19,8 @@
         :expand-config="{ expandAll: true }"
         :auto-resize="true"
       >
-        <tiny-grid-column type="selection" width="60" tree-node></tiny-grid-column>
+        <tiny-grid-column width="40" tree-node></tiny-grid-column>
+        <tiny-grid-column type="selection" width="60"></tiny-grid-column>
         <tiny-grid-column field="fileType" title="文件类型" width="100"></tiny-grid-column>
         <tiny-grid-column field="filePath" title="文件路径" width="250"></tiny-grid-column>
         <tiny-grid-column field="fileContent" title="文件内容" show-overflow="ellipsis"></tiny-grid-column>
@@ -147,17 +148,12 @@ export default {
   }
 
   .dialog-grid {
-    :deep(.tiny-grid-tree__indent) {
-      width: 0 !important;
-    }
-
     :deep(.tiny-grid-cell) {
       position: relative;
     }
 
     :deep(.tiny-grid-tree-wrapper) {
       position: relative;
-      right: -35px;
       top: 2px;
     }
 
@@ -189,14 +185,8 @@ export default {
           background: unset;
         }
 
-        .tiny-grid-tree-wrapper {
-          margin-left: -13px;
-          padding-right: 5px;
-        }
-
         .tiny-grid-body__column {
           height: 32px;
-          padding-left: 11px;
         }
 
         .tiny-grid-body__row {
@@ -208,6 +198,7 @@ export default {
             .tiny-grid-checkbox__icon {
               svg {
                 color: var(--te-common-border-checked);
+                fill: currentColor;
                 width: 100%;
                 height: 100%;
               }

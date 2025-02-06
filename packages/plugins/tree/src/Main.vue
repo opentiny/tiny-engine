@@ -235,7 +235,7 @@ export default {
   overflow-y: scroll;
   .row-label {
     flex: 1;
-    font-size: 12px;
+    font-size: var(--te-base-font-size-base);
     line-height: 20px;
     overflow: hidden;
     text-overflow: ellipsis;

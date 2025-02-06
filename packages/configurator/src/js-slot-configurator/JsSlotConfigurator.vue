@@ -5,7 +5,7 @@
       <div v-for="(slot, index) in slotList" :key="slot.name" class="use-slot">
         <div class="use-slot-item-name">
           {{ slot.name }}
-          <tiny-tooltip effect="dark" :content="state.currentComponent?.content" placement="bottom" width="260">
+          <tiny-tooltip effect="light" :content="state.currentComponent?.content" placement="bottom" width="260">
             <span class="item-icon">
               <component :is="state.currentComponent?.icon"></component>
             </span>

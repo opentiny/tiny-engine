@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-dsl-vue",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "publishConfig": {
     "access": "public"
   },
@@ -53,8 +53,8 @@
     "winston": "^3.10.0"
   },
   "peerDependencies": {
-    "@babel/parser": "^7.18.13",
     "@babel/generator": "^7.18.13",
+    "@babel/parser": "^7.18.13",
     "@babel/traverse": "^7.18.13"
   }
 }

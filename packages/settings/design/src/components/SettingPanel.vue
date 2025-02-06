@@ -93,12 +93,12 @@
               </div>
             </template>
             <template #operate="{ data }">
-              <tiny-tooltip class="item operate-tips-item" effect="dark" content="编辑" placement="top">
+              <tiny-tooltip class="item operate-tips-item" effect="light" content="编辑" placement="top">
                 <span class="item-icon">
                   <svg-icon name="to-edit" @click.stop="handleEdit(data)"></svg-icon>
                 </span>
               </tiny-tooltip>
-              <tiny-tooltip class="item operate-tips-item" effect="dark" content="删除" placement="top">
+              <tiny-tooltip class="item operate-tips-item" effect="light" content="删除" placement="top">
                 <span class="item-icon">
                   <svg-icon name="delete" @click.stop="handleDelete(data)"></svg-icon>
                 </span>

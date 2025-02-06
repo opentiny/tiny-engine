@@ -140,6 +140,7 @@ import BlockGroupArrange from './BlockGroupArrange.vue'
 import CategoryEdit from './CategoryEdit.vue'
 import SaveNewBlock from './SaveNewBlock.vue'
 import {
+  setCurrentCategory,
   saveBlock,
   initEditBlock,
   mountedHook,
@@ -347,13 +348,8 @@ export default {
         }
 
     const changeCategory = (val) => {
-      let params = useBlock().shouldReplaceCategoryWithGroup() ? { groupId: val } : { categoryId: val }
-
-      if (!val) {
-        params = {}
-      }
-
-      updateBlockList(params)
+      setCurrentCategory(val)
+      updateBlockList()
     }
 
     const editCategory = (category) => {
@@ -456,18 +452,6 @@ export default {
   display: flex;
   .search-select {
     flex: 1;
-  }
-  .add-group-btn {
-    display: flex;
-    align-items: center;
-    text-align: center;
-    margin-left: 8px;
-    border-color: transparent;
-    background-color: var(--ti-lowcode-component-block-list-add-group-btn-bg);
-    width: 30px;
-    height: 30px;
-    border: var(--ti-lowcode-component-block-list-add-group-btn-border);
-    border-radius: var(--ti-lowcode-component-block-list-add-group-btn-border-radius);
   }
 }
 .app-manage-search {

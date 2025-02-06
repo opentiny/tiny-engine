@@ -23,6 +23,7 @@
 
 <script>
 import { reactive, watch } from 'vue'
+import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { getCurrent, updateRect } from '../container'
 
@@ -86,6 +87,12 @@ export default {
       const index = parent.children.findIndex(({ id }) => id === schema.id)
 
       parent.children.splice(index + 1, 0, extend(true, {}, COL_SNIPPET))
+
+      useCanvas().operateNode({
+        type: 'updateAttributes',
+        id: parent.id,
+        value: { children: parent.children }
+      })
       updateRect()
     }
 
@@ -96,6 +103,12 @@ export default {
 
       if (schema.componentName === 'CanvasRow') {
         parent.children.splice(index + 1, 0, extend(true, {}, ROW_SNIPPET))
+
+        useCanvas().operateNode({
+          type: 'updateAttributes',
+          id: parent.id,
+          value: { children: parent.children }
+        })
 
         return
       }
@@ -123,6 +136,12 @@ export default {
           // 已经切割过了，直接加一行
           schema.children.push(extend(true, {}, ROW_SNIPPET))
         }
+
+        useCanvas().operateNode({
+          type: 'updateAttributes',
+          id: parent.id,
+          value: { children: parent.children }
+        })
       }
 
       updateRect()
@@ -201,7 +220,7 @@ export default {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background-color: var(--ti-lowcode-common-text-color-3);
+  background-color: var(--te-common-bg-default);
   cursor: pointer;
   z-index: 3;
   &.divider-vertical {
@@ -223,7 +242,7 @@ export default {
   .divider {
     width: 12px;
     height: 12px;
-    color: var(--ti-lowcode-common-text-color-3);
+    color: var(--te-base-gray-0);
     background-size: contain;
     background-repeat: no-repeat;
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAGKADAAQAAAABAAAAGAAAAADiNXWtAAACO0lEQVRIDa2Uy6tNURzHN7cwMUAmHncot0QeV5QiBgZKmWEgzDDx+ANu5soMcUkxIY+iEFIKEZnIyMC9GZAMrke6hXt9Pvus1VnntPbZ53B/9dnrt36P7zpr7bVPUTRtD+5j+Arv4QwshDpbTIG1o2CvGmq12CVmk/ADnsGnMHccgCpbRiLWjuA/BTXUUrM0VzNwD+aVkcbjIMNveJnEUrePyWuYgP1JYi6+WmqWO3FLrpqKMy3tHE8LtzemLc99ITfcEm1MXERNtYsxcGs520nQBV61JWcyHw253W25OFVzbDqPj1D1MheF6tWM24LvcAD6w7yqdwF5tYvT4K90y6m5zQ/wE37BC9Bmw2f4Ah6DNdamFo/vlEHP3pvwB87CLjgGNrrwEbgY/K2MQ8E/zHg0+NbaY68aaqmpdmlLeT4HBSPf8RXQloA3ylvzDTx/34OmsLWxz9Hdqtlivo/l4NXy1syB1C4ziSK547THXjXU6tk20uECnn1fz91dNJynJu5gUxf1PZV4nr6DdzABj2BK7Rpq/votcDX4GxinxNagovjDoOZLdBcPwvy/h/souMDaROlGiK1PYv/kbg5C19u6V4b43bZ4z1M/GF/uQKbzFjF3NpjJdRXaEQQuVFQr7AK3K/Idw36Jb2Ec+jtU3iHnIqs61GRTe4naeDKbbQbXhbqbzVC9N4OSEfAPbD7UmbfMa7uirjDmD+H464/HQM3oB2f9lVxd7l9vFoVv4ESuIRN7QkzxaZlc8RcdnI7tMHZBlAAAAABJRU5ErkJggg==);

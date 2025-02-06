@@ -106,13 +106,13 @@ export default {
   }
 
   .tip {
-    color: var(--ti-lowcode-page-manage-btn-text-color);
+    color: var(--te-common-text-weaken);
     margin-top: 4px;
     margin-bottom: 12px;
     font-size: 11px;
     line-height: 16px;
     span {
-      color: var(--ti-lowcode-page-manage-btn-text-color);
+      color: var(--te-common-text-weaken);
     }
     .home-page {
       display: inline-block;

@@ -26,20 +26,19 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
         run: pnpm install
 
       - name: Run Build
-        run: pnpm run build:plugin && pnpm run build:alpha > build-alpha.log 2>&1
+        run: pnpm run build:plugin && pnpm run build:alpha > /tmp/build-alpha.log 2>&1
 
       - name: Upload build logs
         uses: actions/upload-artifact@v4
         with:
           name: build-alpha-log
-          path: build-alpha.log
+          path: /tmp/build-alpha.log
 
       - name: Parse Publish tag
         id: parse_tag
@@ -74,4 +73,4 @@ jobs:
       - name: Publish package to npm
         run: pnpm lerna publish from-package --dist-tag ${{steps.parse_tag.outputs.dist_tag}} --yes
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

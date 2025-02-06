@@ -7,7 +7,7 @@
       </tiny-tab-item>
     </tiny-tabs>
     <div v-if="layoutState.settings.render === 'style'" class="tabs-setting">
-      <tiny-tooltip effect="dark" :content="isCollapsed ? '展开' : '折叠'" placement="top" :visible-arrow="false">
+      <tiny-tooltip effect="light" :content="isCollapsed ? '展开' : '折叠'" placement="top" :visible-arrow="false">
         <template #default> <svg-icon :name="settingIcon" @click="isCollapsed = !isCollapsed"></svg-icon> </template>
       </tiny-tooltip>
     </div>
@@ -77,6 +77,7 @@ export default {
     flex-direction: column;
     .tiny-tabs__header .tiny-tabs__nav {
       width: 60%;
+      background-color: var(--te-common-bg-default);
     }
     .tiny-tabs__nav-scroll {
       margin-left: 12px;
@@ -105,6 +106,7 @@ export default {
       }
       &.is-active {
         color: var(--ti-lowcode-setting-panel-tabs-item-title-active-color);
+        border: none;
       }
 
       .tiny-tabs__item__title {

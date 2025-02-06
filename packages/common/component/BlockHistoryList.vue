@@ -1,5 +1,5 @@
 <template>
-  <tiny-grid v-if="history.length" :data="history" height="300">
+  <tiny-grid v-if="history.length" :data="history" row-id="id" height="300">
     <tiny-grid-column v-if="isBlockManage" field="version" title="版本号">
       <template v-slot="data">
         {{ data.row.version }}

@@ -22,17 +22,9 @@
             <span><svg-icon class="svg-icon" name="user-guide"></svg-icon>使用手册</span
             ><icon-fillet-external-link class="icon-fillet-external-link" />
           </a>
-          <tiny-tooltip v-model="state.showTooltip" :manual="true" effect="light" placement="right-end">
-            <template #content>
-              <div>
-                <span>{{ toolTipContent }}</span>
-                <svg-icon name="close" class="help-plugin-tooltip-close" @click="closeToolTip"></svg-icon>
-              </div>
-            </template>
-            <div class="help-plugin-box-item" @click="toShowStep">
-              <span><svg-icon class="svg-icon" name="beginner-guide"></svg-icon>新手引导</span>
-            </div>
-          </tiny-tooltip>
+          <div class="help-plugin-box-item" @click="toShowStep">
+            <span><svg-icon class="svg-icon" name="beginner-guide"></svg-icon>新手引导</span>
+          </div>
         </div>
         <div class="help-plugin-box-ques">
           <div class="help-plugin-box-title help-plugin-box-ques-title">{{ questionTitle }}</div>
@@ -61,7 +53,7 @@
 
 <script>
 import { reactive, onMounted, ref } from 'vue'
-import { Guide, Tooltip, Popover } from '@opentiny/vue'
+import { Guide, Popover } from '@opentiny/vue'
 import { IconFilletExternalLink } from '@opentiny/vue-icon'
 import { useLayout, META_APP } from '@opentiny/tiny-engine-meta-register'
 
@@ -70,7 +62,6 @@ const GUIDE_STORAGE_KEY = 'tinyengine_guide'
 
 export default {
   components: {
-    TinyTooltip: Tooltip,
     TinyGuide: Guide,
     TinyPopover: Popover,
     IconFilletExternalLink: IconFilletExternalLink()
@@ -80,7 +71,6 @@ export default {
     const pluginState = getPluginState()
 
     const tinyGuideRef = ref()
-    const toolTipContent = '点击这里，再次查看新手指引'
     const helpTitle = '帮助与指引'
     const questionTitle = '常见问题'
     const courseUrl = 'https://opentiny.design/tiny-engine#/help-center/course/engine'
@@ -102,25 +92,8 @@ export default {
     const state = reactive({
       showStep: false,
       guideWidth: '360',
-      showTooltip: false,
       helpBox: false
     })
-
-    let toolTipTimer
-
-    const closeToolTip = () => {
-      state.showTooltip = false
-    }
-
-    const showToolTip = () => {
-      state.showTooltip = true
-
-      // 定时关闭toolTip
-      clearTimeout(toolTipTimer)
-      toolTipTimer = setTimeout(() => {
-        closeToolTip()
-      }, 8000)
-    }
     const closeHelpBox = () => {
       state.helpBox = false
     }
@@ -152,7 +125,6 @@ export default {
         beforeShow: () => {
           closeHelpBox()
           activePlugin(META_APP.Materials)
-          closeToolTip()
           pluginState.pluginEvent = 'none'
         }
       },
@@ -226,7 +198,6 @@ export default {
         },
         destroy: () => {
           pluginState.pluginEvent = 'all'
-          showToolTip()
           window.localStorage.setItem(GUIDE_STORAGE_KEY, GUIDE_VERSION)
         }
       }
@@ -243,14 +214,12 @@ export default {
 
     return {
       tinyGuideRef,
-      toolTipContent,
       helpTitle,
       questionTitle,
       questionList,
       courseUrl,
       domData,
       state,
-      closeToolTip,
       closeHelpBox,
       openHelpBox,
       toShowStep
@@ -260,10 +229,6 @@ export default {
 </script>
 
 <style scoped lang="less">
-.help-plugin-tooltip-close {
-  margin-left: 20px;
-  cursor: pointer;
-}
 .help-plugin-reference {
   display: flex;
 }
@@ -331,14 +296,8 @@ div.tiny-guide.shepherd-element {
   }
 }
 
-// 引导遮罩层
-.shepherd-modal-overlay-container.shepherd-modal-is-visible {
-  fill: var(--ti-lowcode-help-guide-mask-bg-color);
-}
-
 .help-plugin-box {
   cursor: auto;
-  background-color: var(--ti-lowcode-help-box-bg-color);
   border-radius: 6px;
   padding: 4px 0;
   &-top {
@@ -365,6 +324,7 @@ div.tiny-guide.shepherd-element {
     margin: 0 -16px;
     padding: 0 16px;
     color: var(--te-common-text-primary);
+    fill: var(--te-common-icon-primary);
     span {
       display: flex;
       align-items: center;

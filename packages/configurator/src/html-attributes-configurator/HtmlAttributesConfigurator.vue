@@ -26,7 +26,7 @@
       </div>
 
       <template #reference>
-        <tiny-tooltip class="item" effect="dark" content="新增原生属性" placement="top">
+        <tiny-tooltip class="item" effect="light" content="新增原生属性" placement="top">
           <span class="icon-wrap"><IconPlus @click="addAttr"></IconPlus></span>
         </tiny-tooltip>
       </template>

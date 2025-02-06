@@ -396,18 +396,6 @@ export default {
   display: flex;
   justify-content: space-between;
   padding: 12px;
-
-  .add-group-btn {
-    font-size: 16px;
-    width: 32px;
-    height: 32px;
-    border-radius: 6px;
-    border-color: var(--ti-lowcode-materials-border-icon-border-color);
-    background-color: var(--ti-lowcode-materials-border-icon-bg-color);
-    &:hover {
-      border-color: var(--ti-lowcode-materials-border-icon-border-color-hover);
-    }
-  }
 }
 
 .blocks-header-option {

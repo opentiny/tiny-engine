@@ -10,7 +10,7 @@
  *
  */
 
-import { reactive, readonly, onMounted } from 'vue'
+import { ref, reactive, readonly, onMounted } from 'vue'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { remove } from '@opentiny/vue-renderless/common/array'
 import {
@@ -53,6 +53,8 @@ import { generateBlock } from '@opentiny/tiny-engine-common/js/vscodeGenerateFil
 const { HOST_TYPE } = constants
 
 const STRING_SLOT = ['Slot', 'slot']
+
+const currentCategory = ref('')
 
 // 区块暴露属性和事件的类型
 export const META_TYPES = {
@@ -275,6 +277,10 @@ const state = reactive({
   arrayConfig: []
 })
 
+export const setCurrentCategory = (categoryId) => {
+  currentCategory.value = categoryId
+}
+
 export const getMaterialHistory = () => state.materialHistory
 
 export const setMaterialHistory = (value) => {
@@ -360,6 +366,8 @@ export const renameBlockEventName = (name, oldName) => {
   delete events[oldName]
 }
 
+const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
+
 export const initEditBlock = (block) => {
   const currentBlock = useBlock().getCurrentBlock()
   // 如果当前点击的区块和画布中的区块是同一区块，则直接获取最新的区块数据
@@ -391,6 +399,20 @@ export const getBlockBase64 = () => {
     })
 }
 
+export const updateBlockList = () => {
+  let params = useBlock().shouldReplaceCategoryWithGroup()
+    ? { groupId: currentCategory.value }
+    : { categoryId: currentCategory.value }
+  if (!currentCategory.value) {
+    params = {}
+  }
+  const appId = getAppId()
+  fetchBlockList({ appId, ...params }).then((data) => {
+    const blockListDescByUpdateAt = data.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
+    useBlock().setBlockList(blockListDescByUpdateAt)
+  })
+}
+
 export const delBlock = (closePanel) => () => {
   const { getBlockList } = useBlock()
   const { message } = useModal()
@@ -403,6 +425,8 @@ export const delBlock = (closePanel) => () => {
         // data:后台删除成功返回的是被删除的数据
         remove(getBlockList(), block)
         message({ message: '删除区块成功！', status: 'success' })
+        updateBlockList()
+        useBlock().isRefresh.value = true
         closePanel()
       })
       .catch((error) => {
@@ -511,14 +535,14 @@ export const publishBlock = (params) => {
       .then(() => {
         refreshBlockData(block)
         useNotify({ message: '区块发布成功!', type: 'success' })
+        updateBlockList()
+        useBlock().isRefresh.value = true
       })
       .catch((error) => {
         useModal().message({ message: error.message, status: 'error' })
       })
   }
 }
-
-const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
 
 const getCategories = () => {
   const appId = getAppId()
@@ -633,6 +657,7 @@ const updateBlock = (block = {}) => {
       }
       // 更新区块分类数据，分类下区块不为空的不能删除
       getCategories()
+      useBlock().isRefresh.value = true
     })
     .catch((error) => {
       useModal().message({ message: error.message, status: 'error' })
@@ -697,15 +722,8 @@ export const saveBlock = async (block) => {
 
     const actionPromise = block.id ? updateBlock(block) : createBlock(block)
     await actionPromise
+    updateBlockList()
   }
-}
-
-export const updateBlockList = (params) => {
-  const appId = getAppId()
-  fetchBlockList({ appId, ...params }).then((data) => {
-    const blockListDescByUpdateAt = data.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
-    useBlock().setBlockList(blockListDescByUpdateAt)
-  })
 }
 
 export const fetchMaterialId = () => {

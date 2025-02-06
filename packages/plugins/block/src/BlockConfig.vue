@@ -38,6 +38,7 @@
         popper-class="block-popper"
         :placeholder="groupLabels.selectPlaceholder"
         :options="categoryList"
+        :multiple="shouldReplaceCategoryWithGroup()"
         filterable
         :filter-method="categoryFilter"
         clearable
@@ -166,8 +167,12 @@ export default {
       }
       Object.assign(formData, block)
       formData[nameCn] = block[nameCn] ?? block.label
-      const [id] = block.categories || []
-      formData.categoryId = id || ''
+      if (shouldReplaceCategoryWithGroup()) {
+        formData.categoryId = (block.groups || []).map((group) => group.id)
+      } else {
+        const [id] = block.categories || []
+        formData.categoryId = id || ''
+      }
     })
 
     const rules = {
@@ -238,9 +243,10 @@ export default {
       const block = getEditBlock()
 
       if (block) {
-        const { category_id } = categoryList.value.find((item) => item.id === value) ?? {}
-        block.path = category_id
-        block.categories = [value]
+        const idKey = shouldReplaceCategoryWithGroup() ? 'id' : 'category_id'
+        const selectedCategory = categoryList.value.find((item) => item.id === value) ?? {}
+        block.path = selectedCategory[idKey]
+        block.categories = Array.isArray(value) ? value : value || ''
       }
     }
 
@@ -281,6 +287,7 @@ export default {
       blockForm,
       categoryFilter,
       changeBlockProperty,
+      shouldReplaceCategoryWithGroup,
       groupLabels
     }
   }
@@ -309,10 +316,17 @@ export default {
   .tag-button {
     color: var(--ti-lowcode-block-config-tag-color);
     background-color: var(--ti-lowcode-block-config-tag-bg);
+    border: none;
     height: 28px;
+    :deep(.tiny-tag__close) {
+      fill: var(--ti-lowcode-block-config-tag-close-color);
+    }
     &:hover {
       color: var(--ti-lowcode-block-config-tag-hover-color);
       background-color: var(--ti-lowcode-block-config-tag-hover-bg);
+      :deep(.tiny-tag__close) {
+        fill: var(--ti-lowcode-block-config-tag-close-hover-color);
+      }
     }
   }
 

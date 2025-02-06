@@ -98,7 +98,6 @@ export default {
 <style lang="less">
 :root {
   --ti-lowcode-common-secondary-text-color: #adb0b8;
-  --ti-lowcode-common-border-color: #dfe1e6;
   --ti-lowcode-common-hover-bg-color: #f2f5fc;
   --ti-lowcode-mask-bg: #fafafa;
   --max-height: calc(65vh - 70px);

@@ -59,7 +59,7 @@
     <div class="advnce-config">
       <label class="text-ellipsis-multiple">key</label>
       <div class="advanced-config-form-item">
-        <tiny-tooltip content="建议填写循环项中的唯一值（如item.id），如果填写为数字将不保存">
+        <tiny-tooltip content="建议填写循环项中的唯一值（如item.id），如果填写为数字将不保存" effect="light">
           <input-configurator
             v-model="state.loopKey"
             :placeholder="`默认为索引名：${getIndexName()}`"
@@ -286,6 +286,7 @@ export default {
       box-sizing: border-box;
       background: var(--ti-lowcode-events-advanced-binding-state-bg-color);
       color: var(--ti-lowcode-events-advanced-binding-state-color);
+      border: 1px solid var(--ti-lowcode-events-advanced-binding-state-border-color);
       font-size: 12px;
       height: 30px;
       line-height: 22px;

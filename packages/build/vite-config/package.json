@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-vite-config",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "",
   "type": "module",
   "main": "./index.js",

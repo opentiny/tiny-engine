@@ -231,11 +231,8 @@ export default {
         .post('/app-center/api/ai/chat', getSendSeesionProcess(), { timeout: 600000 })
         .then((res) => {
           const { originalResponse, schema, replyWithoutCode } = res
-          const responseMessage = getAiRespMessage(
-            originalResponse.choices?.[0]?.message.role,
-            originalResponse.choices?.[0]?.message.content
-          )
-          const respDisplayMessage = getAiRespMessage(originalResponse.choices?.[0]?.message.role, replyWithoutCode)
+          const responseMessage = getAiRespMessage(originalResponse.role, originalResponse.content)
+          const respDisplayMessage = getAiRespMessage(originalResponse.role, replyWithoutCode)
           sessionProcess.messages.push(responseMessage)
           sessionProcess.displayMessages.push(respDisplayMessage)
           messages.value[messages.value.length - 1].content = replyWithoutCode
@@ -432,7 +429,7 @@ export default {
     float: right;
     margin: 0 6px;
     cursor: pointer;
-    color: var(--te-common-icon-primary);
+    color: var(--ti-lowcode-chat-model-icon);
     &:hover {
       opacity: 0.8;
     }
@@ -605,7 +602,7 @@ export default {
     padding: 0;
     transition: all 0.1s linear;
     .svg-icon {
-      color: var(--ti-lowcode-chat-model-button-text);
+      fill: var(--ti-lowcode-chat-model-button-text);
       margin-right: 0;
     }
     span {

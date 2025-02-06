@@ -19,7 +19,8 @@
     "pub:prerelease": "pnpm run build:plugin && pnpm run build:alpha && pnpm lerna version prerelease --preid beta --no-push --yes && lerna publish from-package --pre-dist-tag beta --yes",
     "setup": "node ./scripts/setup.js",
     "splitMaterials": "node ./scripts/splitMaterials.mjs",
-    "buildMaterials": "node ./scripts/buildMaterials.mjs"
+    "buildMaterials": "node ./scripts/buildMaterials.mjs",
+    "updateTemplate": "node ./scripts/updateTemplate.mjs"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.21.3",

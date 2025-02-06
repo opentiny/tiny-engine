@@ -75,6 +75,9 @@ const isTemporaryPage = reactive({
   saved: false
 })
 
+const STATIC_PAGE_GROUP_ID = 0
+const COMMON_PAGE_GROUP_ID = 1
+
 const generateCssString = (pageOptions, materialsOptions) => {
   if (!pageOptions?.pageBaseStyle?.className || !pageOptions?.pageBaseStyle?.style) {
     return ''
@@ -151,10 +154,21 @@ const isCurrentDataSame = () => {
   return isEqual
 }
 
+const getParentNode = (parentId) => {
+  return parentId === pageSettingState.ROOT_ID
+    ? { id: pageSettingState.ROOT_ID, children: pageSettingState.pages[STATIC_PAGE_GROUP_ID].data }
+    : pageSettingState.treeDataMapping[parentId]
+}
+
 const changeTreeData = (newParentId, oldParentId) => {
-  if (newParentId && oldParentId && newParentId !== oldParentId) {
-    const folderData = pageSettingState.treeDataMapping[newParentId]
-    const parentData = pageSettingState.treeDataMapping[oldParentId]
+  if (newParentId && oldParentId && String(newParentId) !== String(oldParentId)) {
+    const folderData = getParentNode(newParentId)
+    const parentData = getParentNode(oldParentId)
+
+    if (!folderData || !parentData) {
+      return
+    }
+
     const currentPageDataId = pageSettingState.currentPageData.id
     const curDataIndex = parentData.children?.findIndex?.(({ id }) => id === currentPageDataId)
 
@@ -186,9 +200,6 @@ const resetPageData = () => {
 
 // 判断当前页面内容是否有修改
 const isChangePageData = () => !isEqual(pageSettingState.currentPageData, pageSettingState.currentPageDataCopy)
-
-const STATIC_PAGE_GROUP_ID = 0
-const COMMON_PAGE_GROUP_ID = 1
 
 /**
  *

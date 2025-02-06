@@ -129,7 +129,7 @@ export default {
   width: var(--base-collection-panel-width);
   height: 100%;
   border-right: 1px solid var(--te-common-border-default);
-  background: var(--ti-lowcode-plugin-setting-panel-bg, --ti-lowcode-toolbar-bg);
+  background: var(--te-common-bg-default);
   overflow: hidden;
   border-left: 1px solid var(--ti-lowcode-plugin-panel-header-border-bottom-color);
   &:not(.second-panel) {

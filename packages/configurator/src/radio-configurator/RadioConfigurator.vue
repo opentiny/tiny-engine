@@ -7,6 +7,7 @@
       :disabled="disabled"
       :content="option.tip"
       placement="top"
+      effect="light"
     >
       <label :class="['radio-button', { active: option.value === value }]">
         <input v-model="picked" type="radio" name="radio-buttons" :value="option.value" @click="change" />

@@ -268,33 +268,6 @@ onMounted(() => {
     }
   }
 }
-.text-wrap {
-  display: flex;
-  flex-direction: column;
-  font-size: 12px;
-  color: var(--te-common-text-secondary);
-  margin-left: 8px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  & > span {
-    display: inline-block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    &:first-child {
-      margin-bottom: 4px;
-    }
-    &:last-child {
-      display: flex;
-      align-items: center;
-      margin-top: 2px;
-    }
-  }
-  .size {
-    color: var(--te-common-text-secondary);
-  }
-}
 .choose-image {
   border-color: var(--te-common-border-default);
   outline: 0px;

@@ -287,10 +287,10 @@ const handleContainerDragLeave = (event) => {
       }
     }
     &.active {
-      background-color: var(--te-base-blue-20);
-      color: var(--te-common-bg-primary-checked);
+      background-color: var(--te-common-bg-container);
+      color: var(--te-common-text-primary);
       svg {
-        color: var(--te-common-bg-primary-checked);
+        color: var(--te-common-icon-secondary);
       }
     }
   }

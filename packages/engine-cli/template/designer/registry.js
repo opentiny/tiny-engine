@@ -101,7 +101,20 @@ export default {
     Lang,
     ViewSetting
   ],
-  plugins: [Materials, Tree, Page, Block, Datasource, Bridge, I18n, Script, State, Schema, Help, Robot],
+  plugins: [
+    Materials,
+    Tree,
+    Page,
+    [Block, { options: { ...Block.options, mergeCategoriesAndGroups: true } }],
+    Datasource,
+    Bridge,
+    I18n,
+    Script,
+    State,
+    Schema,
+    Help,
+    Robot
+  ],
   dsls: [{ id: 'engine.dsls.dslvue' }],
   settings: [Props, Styles, Events],
   canvas: Canvas

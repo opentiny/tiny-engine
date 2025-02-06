@@ -6,21 +6,28 @@
         <div class="toolbar-start">
           <slot name="toolbarStart"></slot>
         </div>
-        <div :class="['buttons', { 'engine-fullscreen': fullscreen }]" id="icon-buttons">
+        <div :class="['buttons', { 'monaco-btn-fullscreen': fullscreen }]" id="icon-buttons">
           <slot name="buttons"></slot>
           <tiny-tooltip
             v-if="showFormatBtn && options.language === 'json'"
             content="格式化"
             placement="top"
             :open-delay="OPEN_DELAY.Default"
+            effect="light"
           >
             <public-icon name="json" @click="formatCode"></public-icon>
           </tiny-tooltip>
           <span v-if="showFullScreenBtn">
-            <tiny-tooltip v-if="!fullscreen" content="全屏" placement="top" :open-delay="OPEN_DELAY.Default">
+            <tiny-tooltip
+              v-if="!fullscreen"
+              effect="light"
+              content="全屏"
+              placement="top"
+              :open-delay="OPEN_DELAY.Default"
+            >
               <public-icon name="full-screen" @click="switchFullScreen(true)"></public-icon>
             </tiny-tooltip>
-            <tiny-tooltip v-else content="退出全屏" placement="top" :open-delay="OPEN_DELAY.Default">
+            <tiny-tooltip v-else content="退出全屏" effect="light" placement="top" :open-delay="OPEN_DELAY.Default">
               <public-icon name="cancel-full-screen" @click="switchFullScreen(false)"></public-icon>
             </tiny-tooltip>
           </span>
@@ -174,7 +181,7 @@ export default {
       color: var(--te-common-icon-secondary);
     }
   }
-  .engine-fullscreen {
+  .monaco-btn-fullscreen {
     display: flex;
     margin-right: 20px;
   }

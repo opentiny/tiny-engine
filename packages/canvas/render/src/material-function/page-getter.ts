@@ -50,6 +50,7 @@ export const wrapPageComponent = (pageId: string) => {
         () => active.value,
         (activeValue) => {
           if (!activeValue) {
+            asyncData.value = null
             updateSchema()
           }
         }

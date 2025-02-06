@@ -72,12 +72,12 @@
         >
           <div class="setting-menu" @mouseover.stop="handleSettingMouseOver" @mouseleave="handleBlockItemLeave">
             <ul class="list">
-              <tiny-tooltip content="版本列表" placement="top">
+              <tiny-tooltip content="版本列表" placement="top" effect="light">
                 <li class="list-item" @click.stop="$emit('openVersionPanel', { item, index })">
                   <svg-button class="list-item-svg" :hoverBgColor="false" name="versions"> </svg-button>
                 </li>
               </tiny-tooltip>
-              <tiny-tooltip content="移除" placement="top">
+              <tiny-tooltip content="移除" placement="top" effect="light">
                 <li class="list-item" @click.stop="$emit('deleteBlock', item)">
                   <svg-button class="list-item-svg" :hoverBgColor="false" name="remove"> </svg-button>
                 </li>
@@ -358,7 +358,7 @@ export default {
   padding: 12px;
   background: var(--ti-lowcode-component-block-list-shortcut-bg);
   border-radius: 5px;
-  border: 1px solid var(--ti-lowcode-common-border-color-4);
+  border: 1px solid var(--te-common-border-default);
   top: v-bind('state.top');
   .block-shortcut-title {
     color: var(--ti-lowcode-component-block-list-shortcut-title-color);
@@ -486,14 +486,6 @@ export default {
         position: static;
         margin-left: 4px;
         z-index: 9;
-        .block-detail-icon {
-          color: var(--ti-lowcode-component-block-list-setting-btn-color);
-          display: block;
-          &:hover {
-            cursor: pointer;
-            color: var(--ti-lowcode-component-block-list-setting-btn-hover-color);
-          }
-        }
       }
       &:hover {
         background-color: var(--te-common-bg-container);
@@ -598,14 +590,6 @@ export default {
       z-index: 9;
       &.is-current-visible-icon {
         visibility: visible;
-      }
-
-      .block-detail-icon {
-        color: var(--te-common-icon-secondary);
-        &:hover {
-          cursor: pointer;
-          color: var(--ti-lowcode-component-block-list-setting-btn-hover-color);
-        }
       }
     }
     .block-setting {
@@ -741,7 +725,7 @@ export default {
     box-sizing: border-box;
     cursor: pointer;
     &:hover {
-      color: var(--ti-lowcode-common-primary-text-color);
+      color: var(--te-common-text-primary);
     }
     .list-item-icon {
       font-size: 14px;

@@ -113,7 +113,7 @@ export default {
   color: var(--te-common-text-primary);
   padding: 7px 7px;
   list-style: none;
-  border: 1px solid var(--ti-lowcode-common-border-color);
+  border: 1px solid var(--te-common-border-divider);
 
   &:hover {
     background: var(--ti-lowcode-common-hover-bg-color);
