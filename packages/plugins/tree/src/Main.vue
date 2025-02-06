@@ -88,7 +88,10 @@ export default {
     const filterSchema = (data) => {
       maxDepth.value = 0
       const translateChild = (data, depth = 0) => {
-        let tempMaxDepth = depth
+        if (depth > maxDepth.value) {
+          maxDepth.value = depth
+        }
+
         data.forEach((item) => {
           item.show = pageState.nodesStatus[item.id] !== false
           item.showEye = !item.show
@@ -97,22 +100,15 @@ export default {
             delete item.children
           } else {
             if (item.children.length) {
-              const { maxDepth: curDepth } = translateChild(item.children, depth + 1)
-
-              if (curDepth > maxDepth.value) {
-                maxDepth.value = curDepth
-              }
+              translateChild(item.children, depth + 1)
             }
           }
         })
 
-        return {
-          data,
-          maxDepth: tempMaxDepth
-        }
+        return data
       }
 
-      return [{ ...translateChild([extend(true, {}, data)]).data[0], componentName: 'body' }]
+      return [{ ...translateChild([extend(true, {}, data)])[0], componentName: 'body' }]
     }
     const state = reactive({
       pageSchema: [],
