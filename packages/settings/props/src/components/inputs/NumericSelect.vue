@@ -104,7 +104,7 @@ export default {
     right: 32px;
     transform: translateY(-50%);
     span {
-      color: var(--ti-lowcode-text-color);
+      color: var(--te-props-common-text-color);
       font-size: 14px;
       padding: 4px;
     }
@@ -112,13 +112,13 @@ export default {
       width: 25px;
       float: right;
       .tiny-input__inner {
-        color: var(--ti-lowcode-text-color);
+        color: var(--te-props-common-text-color);
         padding: 2px;
         border: none;
         font-size: 14px;
         text-align: center;
         &:hover {
-          background: var(--ti-lowcode-icon-hover-bg);
+          background: var(--te-props-common-hover-bg-color);
         }
       }
       .tiny-input__suffix {

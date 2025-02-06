@@ -4,7 +4,7 @@
 <style type="text/css">
 	.st0{fill:none;}
 	.st1{fill-rule:evenodd;clip-rule:evenodd;fill:#C2C2C2;}
-	.st2{fill-rule:evenodd;clip-rule:evenodd;fill:#191919;}
+	.st2{fill-rule:evenodd;clip-rule:evenodd;fill:currentColor;}
 </style>
 <rect id="size" class="st0" width="132" height="132"/>
 <path id="矩形_15__x28_边框_x29_" class="st1" d="M115.5,54c-2.3,0-4.1-1.8-4.1-4.1V21.2H82.7c-2.3,0-4.1-1.8-4.1-4.1

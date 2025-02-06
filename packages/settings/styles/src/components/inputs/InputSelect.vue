@@ -118,11 +118,11 @@ export default {
 .input-select {
   display: flex;
   align-items: center;
-  background-color: var(--te-common-bg-default);
+  background-color: var(--te-styles-common-bg-color);
   border-radius: 3px;
   transition: 0.3s;
   &.focus {
-    border-color: var(--ti-lowcode-canvas-handle-hover-bg);
+    border-color: var(--te-styles-common-canvas-handle-hover-bg);
   }
 
   &.is-disabled {
@@ -142,7 +142,7 @@ export default {
     }
     :deep(.tiny-select) {
       .tiny-input__inner:hover {
-        color: var(--ti-lowcode-text-color);
+        color: var(--te-styles-common-text-color);
         background: transparent;
       }
       .tiny-input.is-disabled .tiny-input__inner {
@@ -164,7 +164,7 @@ export default {
     width: auto;
     max-width: 30px;
     .tiny-input__inner {
-      color: var(--ti-lowcode-text-color);
+      color: var(--te-styles-common-text-color);
       padding: 2px 0;
       font-size: 12px;
       border: none;
@@ -173,7 +173,7 @@ export default {
       box-sizing: border-box;
       cursor: pointer;
       &:hover {
-        background: var(--ti-lowcode-icon-hover-bg);
+        background: var(--te-styles-common-hover-bg-color);
       }
     }
     .tiny-input__suffix {
