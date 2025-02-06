@@ -312,6 +312,8 @@ const handleDragLeaveContainer = (event) => {
 .draggable-tree {
   .tree-row {
     height: 24px;
+    width: fit-content;
+    min-width: 100%;
     padding: 0 8px;
 
     &,
@@ -328,6 +330,10 @@ const handleDragLeaveContainer = (event) => {
         background-color: var(--te-common-bg-error);
       }
     }
+
+    & > * {
+      flex-shrink: 0;
+    }
   }
   .gap {
     width: 12px;
@@ -335,7 +341,6 @@ const handleDragLeaveContainer = (event) => {
   .content {
     flex: 1;
     height: 100%;
-    overflow: hidden;
   }
 
   .rotate {
@@ -350,7 +355,6 @@ const handleDragLeaveContainer = (event) => {
     flex: 1;
     height: 100%;
     padding: 0 4px;
-    overflow: hidden;
   }
 
   .border-top {

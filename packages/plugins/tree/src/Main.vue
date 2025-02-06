@@ -232,25 +232,24 @@ export default {
 }
 .outline-tree {
   flex: 1;
-  overflow-y: scroll;
+  overflow: auto;
   .row-label {
     flex: 1;
     font-size: var(--te-base-font-size-base);
     line-height: 20px;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
   svg {
     color: var(--te-common-icon-secondary);
+    flex-shrink: 0;
     &:hover {
       color: var(--te-common-icon-hover);
     }
   }
   svg.icon-eye {
-    display: none;
+    visibility: hidden;
   }
   .tree-row:hover svg.icon-eye {
-    display: unset;
+    visibility: unset;
   }
   .row-content {
     flex: 1;
@@ -258,7 +257,6 @@ export default {
     display: flex;
     align-items: center;
     gap: 4px;
-    overflow: hidden;
   }
   .node-isblock {
     color: var(--te-common-color-prompt-secondary);
