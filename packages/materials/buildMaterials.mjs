@@ -60,6 +60,9 @@ const generateComponents = async (entry) => {
   if (metaInfo?.package) {
     bundle.packages.push(metaInfo.package)
   }
+  if (metaInfo?.snippets) {
+    bundle.snippets = metaInfo.snippets
+  }
 
   const componentFiles = files.filter((fileName) => {
     if (fileName === 'meta.json') {
@@ -92,8 +95,12 @@ const generateComponents = async (entry) => {
     const snippet = bundle.snippets.find((item) => item.group === category)
 
     if (snippet) {
-      componentSnippets && snippet.children.push(componentSnippets[0])
-    } else if (category && componentInfo) {
+      if (!snippet.children) {
+        snippet.children = []
+      }
+
+      componentSnippets && snippet.children.push(...componentSnippets)
+    } else if (category && componentInfo && componentSnippets) {
       bundle.snippets.push({
         group: category,
         children: componentSnippets || []
@@ -101,12 +108,11 @@ const generateComponents = async (entry) => {
     }
 
     const npmInfo = componentInfo.npm
-    const { package: packageName = '', version = '', exportName = '' } = npmInfo
+    const { package: packageName = '', exportName = '' } = npmInfo
 
     const mapItem = {
       componentName: componentInfo.component,
       package: packageName,
-      version,
       exportName
     }
 
@@ -151,18 +157,33 @@ const buildComponents = async (config = {}) => {
     for (const entry of entries) {
       const res = await generateComponents(path.resolve(materialsDir, `${entry}`))
 
-      if (res) {
-        fsExtra.outputJSONSync(path.resolve(__dirname, `./dist/${entry}.json`), getFrameworkWithData(res), { spaces: 2 })
+      if (!res) {
+        continue
+      }
 
-        allBundles.components = allBundles.components.concat(res.components)
-        allBundles.snippets = allBundles.snippets.concat(res.snippets)
-        allBundles.componentsMap = allBundles.componentsMap.concat(res.componentsMap)
-        allBundles.packages = allBundles.packages.concat(res.packages)
+      fsExtra.outputJSONSync(path.resolve(__dirname, `./dist/${entry}.json`), getFrameworkWithData(res), { spaces: 2 })
+
+      allBundles.components = allBundles.components.concat(res.components)
+      allBundles.componentsMap = allBundles.componentsMap.concat(res.componentsMap)
+      allBundles.packages = allBundles.packages.concat(res.packages)
+
+      for (const snippetItem of res.snippets) {
+        const snippet = allBundles.snippets.find((item) => item.group === snippetItem.group)
+
+        if (snippet) {
+          if (!snippet.children) {
+            snippet.children = []
+          }
+
+          snippet.children.push(...snippetItem.children)
+        } else {
+          allBundles.snippets.push(snippetItem)
+        }
       }
     }
 
     if (buildCombine) {
-      fsExtra.outputJSONSync(path.resolve(__dirname, `./dist/all.json`), getFrameworkWithData(allBundles), { spaces: 2 })
+      fsExtra.outputJSONSync(path.resolve(__dirname, `./dist/index.json`), getFrameworkWithData(allBundles), { spaces: 2 })
     }
 
     logger.success('物料资产包构建成功')

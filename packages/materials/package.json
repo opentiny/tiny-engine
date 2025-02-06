@@ -2,8 +2,8 @@
   "name": "@opentiny/tiny-engine-materials",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/all.json",
-  "module": "dist/all.json",
+  "main": "dist/index.json",
+  "module": "dist/index.json",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
