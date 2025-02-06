@@ -14,10 +14,6 @@
   "dev_mode": "proCode",
   "npm": {
     "package": "element-plus",
-    "version": "2.4.2",
-    "script": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.full.mjs",
-    "css": "https://npm.onmicrosoft.cn/element-plus@2.4.2/dist/index.css",
-    "dependencies": null,
     "exportName": "ElInput",
     "destructuring": true
   },
@@ -62,7 +58,7 @@
             "property": "modelValue",
             "label": {
               "text": {
-                "zh_CN": "modelValue"
+                "zh_CN": "绑定值"
               }
             },
             "description": {
@@ -72,10 +68,10 @@
             "readOnly": false,
             "disabled": false,
             "cols": 12,
-            "labelPosition": "top",
+            "labelPosition": "left",
             "type": "string",
             "widget": {
-              "component": "MetaInput",
+              "component": "InputConfigurator",
               "props": {}
             }
           },
@@ -83,7 +79,7 @@
             "property": "size",
             "label": {
               "text": {
-                "zh_CN": "size"
+                "zh_CN": "尺寸"
               }
             },
             "description": {
@@ -93,11 +89,11 @@
             "readOnly": false,
             "disabled": false,
             "cols": 12,
-            "labelPosition": "top",
+            "labelPosition": "left",
             "type": "string",
             "defaultValue": "default",
             "widget": {
-              "component": "MetaSelect",
+              "component": "SelectConfigurator",
               "props": {
                 "options": [
                   {
@@ -120,7 +116,7 @@
             "property": "type",
             "label": {
               "text": {
-                "zh_CN": "type"
+                "zh_CN": "类型"
               }
             },
             "description": {
@@ -130,10 +126,10 @@
             "readOnly": false,
             "disabled": false,
             "cols": 12,
-            "labelPosition": "top",
+            "labelPosition": "left",
             "type": "string",
             "widget": {
-              "component": "MetaInput",
+              "component": "InputConfigurator",
               "props": {}
             }
           },
@@ -141,7 +137,7 @@
             "property": "placeholder",
             "label": {
               "text": {
-                "zh_CN": "placeholder"
+                "zh_CN": "占位文本"
               }
             },
             "description": {
@@ -151,10 +147,10 @@
             "readOnly": false,
             "disabled": false,
             "cols": 12,
-            "labelPosition": "top",
+            "labelPosition": "left",
             "type": "string",
             "widget": {
-              "component": "MetaBindI18n",
+              "component": "I18nConfigurator",
               "props": {}
             },
             "device": []
@@ -163,7 +159,7 @@
             "property": "maxlength",
             "label": {
               "text": {
-                "zh_CN": "maxlength"
+                "zh_CN": "最大长度"
               }
             },
             "description": {
@@ -173,10 +169,10 @@
             "readOnly": false,
             "disabled": false,
             "cols": 12,
-            "labelPosition": "top",
+            "labelPosition": "left",
             "type": "number",
             "widget": {
-              "component": "MetaNumberic",
+              "component": "NumberConfigurator",
               "props": {}
             },
             "device": []
@@ -185,7 +181,7 @@
             "property": "disabled",
             "label": {
               "text": {
-                "zh_CN": "disabled"
+                "zh_CN": "是否禁用"
               }
             },
             "description": {
@@ -195,11 +191,11 @@
             "readOnly": false,
             "disabled": false,
             "cols": 12,
-            "labelPosition": "top",
+            "labelPosition": "left",
             "defaultValue": false,
             "type": "boolean",
             "widget": {
-              "component": "MetaSwitch",
+              "component": "CheckBoxConfigurator",
               "props": {}
             },
             "device": []

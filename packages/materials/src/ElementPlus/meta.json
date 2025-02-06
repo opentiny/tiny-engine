@@ -5,5 +5,13 @@
     "version": "2.4.2",
     "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
     "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css"
-  }
+  },
+  "snippets": [
+    {
+      "group": "element-plus",
+      "label": {
+        "zh_CN": "Element Plus组件"
+      }
+    }
+  ]
 }

@@ -2,11 +2,11 @@
   "id": 1,
   "version": "2.4.2",
   "name": {
-    "zh_CN": "按钮"
+    "zh_CN": "表单子项"
   },
-  "component": "ElButton",
-  "icon": "button",
-  "description": "常用的操作按钮",
+  "component": "ElFormItem",
+  "icon": "formItem",
+  "description": "表单包含 输入框, 单选框, 下拉选择, 多选框 等用户输入的组件。 使用表单，您可以收集、验证和提交数据。",
   "doc_url": "",
   "screenshot": "",
   "tags": "",
@@ -14,10 +14,10 @@
   "dev_mode": "proCode",
   "npm": {
     "package": "element-plus",
-    "exportName": "ElButton",
+    "exportName": "ElFormItem",
     "destructuring": true
   },
-  "group": "基础组件",
+  "group": "表单组件",
   "category": "element-plus",
   "configure": {
     "loop": true,
@@ -36,7 +36,7 @@
     "isLayout": false,
     "rootSelector": "",
     "shortcuts": {
-      "properties": ["type", "size"]
+      "properties": ["inline", "label-width"]
     },
     "contextMenu": {
       "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
@@ -55,6 +55,175 @@
         },
         "content": [
           {
+            "property": "prop",
+            "label": {
+              "text": {
+                "zh_CN": "键名"
+              }
+            },
+            "description": {
+              "zh_CN": "model 的键名。 它可以是一个属性的值(如 a.b.0 或 [a', 'b', '0'])。 在定义了 validate、resetFields 的方法时，该属性是必填的"
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "labelPosition": "left",
+            "type": "string",
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            }
+          },
+          {
+            "property": "label",
+            "label": {
+              "text": {
+                "zh_CN": "标签文本"
+              }
+            },
+            "description": {
+              "zh_CN": "标签文本"
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "labelPosition": "left",
+            "type": "string",
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            }
+          },
+          {
+            "property": "label-width",
+            "label": {
+              "text": {
+                "zh_CN": "标签宽度"
+              }
+            },
+            "description": {
+              "zh_CN": "标签宽度，例如 '50px'。 可以使用 auto"
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "labelPosition": "left",
+            "type": "string",
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            }
+          },
+          {
+            "property": "required",
+            "label": {
+              "text": {
+                "zh_CN": "必填项"
+              }
+            },
+            "description": {
+              "zh_CN": "是否为必填项，如不设置，则会根据校验规则确认"
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "labelPosition": "left",
+            "type": "boolean",
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            }
+          },
+          {
+            "property": "rules",
+            "label": {
+              "text": {
+                "zh_CN": "验证规则"
+              }
+            },
+            "description": {
+              "zh_CN": "表单验证规则, 更多内容可以参考async-validator"
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "labelPosition": "top",
+            "widget": {
+              "component": "CodeConfigurator",
+              "props": {
+                "language": "json"
+              }
+            }
+          },
+          {
+            "property": "error",
+            "label": {
+              "text": {
+                "zh_CN": "错误信息"
+              }
+            },
+            "description": {
+              "zh_CN": "表单域验证错误时的提示信息。设置该值会导致表单验证状态变为 error，并显示该错误信息"
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "labelPosition": "left",
+            "type": "string",
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            }
+          },
+          {
+            "property": "show-message",
+            "label": {
+              "text": {
+                "zh_CN": "显示错误信息"
+              }
+            },
+            "description": {
+              "zh_CN": "是否显示校验错误信息"
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "labelPosition": "left",
+            "type": "boolean",
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            }
+          },
+          {
+            "property": "inline-message",
+            "label": {
+              "text": {
+                "zh_CN": "行内显示错误信息"
+              }
+            },
+            "description": {
+              "zh_CN": "是否在行内显示校验信息"
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "labelPosition": "left",
+            "type": "boolean",
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            }
+          },
+          {
             "property": "size",
             "label": {
               "text": {
@@ -62,7 +231,7 @@
               }
             },
             "description": {
-              "zh_CN": "尺寸"
+              "zh_CN": "用于控制该表单内组件的尺寸"
             },
             "required": true,
             "readOnly": false,
@@ -92,14 +261,14 @@
             }
           },
           {
-            "property": "type",
+            "property": "for",
             "label": {
               "text": {
-                "zh_CN": "类型"
+                "zh_CN": "for"
               }
             },
             "description": {
-              "zh_CN": "类型"
+              "zh_CN": "和原生标签相同能力"
             },
             "required": true,
             "readOnly": false,
@@ -113,14 +282,14 @@
             }
           },
           {
-            "property": "plain",
+            "property": "validate-status",
             "label": {
               "text": {
-                "zh_CN": "朴素按钮"
+                "zh_CN": "校验状态"
               }
             },
             "description": {
-              "zh_CN": "是否为朴素按钮"
+              "zh_CN": "formItem 校验的状态"
             },
             "required": true,
             "readOnly": false,
@@ -129,165 +298,24 @@
             "labelPosition": "left",
             "type": "string",
             "widget": {
-              "component": "CheckBoxConfigurator",
-              "props": {}
-            },
-            "device": []
-          },
-          {
-            "property": "text",
-            "label": {
-              "text": {
-                "zh_CN": "文字按钮"
+              "component": "SelectConfigurator",
+              "props": {
+                "options": [
+                  {
+                    "label": "error",
+                    "value": "error"
+                  },
+                  {
+                    "label": "validating",
+                    "value": "validating"
+                  },
+                  {
+                    "label": "success",
+                    "value": "success"
+                  }
+                ]
               }
-            },
-            "description": {
-              "zh_CN": "是否为文字按钮"
-            },
-            "required": true,
-            "readOnly": false,
-            "disabled": false,
-            "cols": 12,
-            "labelPosition": "left",
-            "type": "string",
-            "widget": {
-              "component": "CheckBoxConfigurator",
-              "props": {}
-            },
-            "device": []
-          },
-          {
-            "property": "bg",
-            "label": {
-              "text": {
-                "zh_CN": "背景颜色"
-              }
-            },
-            "description": {
-              "zh_CN": "是否显示文字按钮背景颜色"
-            },
-            "required": true,
-            "readOnly": false,
-            "disabled": false,
-            "cols": 12,
-            "labelPosition": "left",
-            "type": "string",
-            "widget": {
-              "component": "CheckBoxConfigurator",
-              "props": {}
-            },
-            "device": []
-          },
-          {
-            "property": "link",
-            "label": {
-              "text": {
-                "zh_CN": "链接按钮"
-              }
-            },
-            "description": {
-              "zh_CN": "是否为链接按钮"
-            },
-            "required": true,
-            "readOnly": false,
-            "disabled": false,
-            "cols": 12,
-            "labelPosition": "left",
-            "type": "string",
-            "widget": {
-              "component": "CheckBoxConfigurator",
-              "props": {}
-            },
-            "device": []
-          },
-          {
-            "property": "round",
-            "label": {
-              "text": {
-                "zh_CN": "圆角按钮"
-              }
-            },
-            "description": {
-              "zh_CN": "是否为圆角按钮"
-            },
-            "required": true,
-            "readOnly": false,
-            "disabled": false,
-            "cols": 12,
-            "labelPosition": "left",
-            "type": "string",
-            "widget": {
-              "component": "CheckBoxConfigurator",
-              "props": {}
-            },
-            "device": []
-          },
-          {
-            "property": "circle",
-            "label": {
-              "text": {
-                "zh_CN": "圆形按钮"
-              }
-            },
-            "description": {
-              "zh_CN": "是否为圆形按钮"
-            },
-            "required": true,
-            "readOnly": false,
-            "disabled": false,
-            "cols": 12,
-            "labelPosition": "left",
-            "type": "string",
-            "widget": {
-              "component": "CheckBoxConfigurator",
-              "props": {}
-            },
-            "device": []
-          },
-          {
-            "property": "loading",
-            "label": {
-              "text": {
-                "zh_CN": "加载中状态"
-              }
-            },
-            "description": {
-              "zh_CN": "是否为加载中状态"
-            },
-            "required": true,
-            "readOnly": false,
-            "disabled": false,
-            "cols": 12,
-            "labelPosition": "left",
-            "type": "string",
-            "widget": {
-              "component": "CheckBoxConfigurator",
-              "props": {}
-            },
-            "device": []
-          },
-          {
-            "property": "disabled",
-            "label": {
-              "text": {
-                "zh_CN": "禁用"
-              }
-            },
-            "description": {
-              "zh_CN": "是否禁用"
-            },
-            "required": true,
-            "readOnly": false,
-            "disabled": false,
-            "cols": 12,
-            "labelPosition": "left",
-            "defaultValue": false,
-            "type": "boolean",
-            "widget": {
-              "component": "CheckBoxConfigurator",
-              "props": {}
-            },
-            "device": []
+            }
           }
         ],
         "description": {
@@ -297,42 +325,22 @@
     ],
     "events": {},
     "slots": {
-      "default": {
+      "label": {
         "label": {
-          "zh_CN": "default"
+          "zh_CN": "label"
         },
         "description": {
-          "zh_CN": "自定义默认内容"
+          "zh_CN": "标签位置显示的内容"
         }
       },
-      "loading": {
+      "error": {
         "label": {
-          "zh_CN": "loading"
+          "zh_CN": "error"
         },
         "description": {
-          "zh_CN": "自定义加载中组件"
+          "zh_CN": "验证错误信息的显示内容"
         }
       }
     }
-  },
-  "snippets": [
-    {
-      "name": {
-        "zh_CN": "按钮"
-      },
-      "icon": "button",
-      "screenshot": "",
-      "snippetName": "ElButton",
-      "schema": {
-        "children": [
-          {
-            "componentName": "Text",
-            "props": {
-              "text": "按钮文本"
-            }
-          }
-        ]
-      }
-    }
-  ]
+  }
 }
