@@ -73,6 +73,37 @@ const rootSchema = ref([
   }
 ])
 
+const handleTinyGridColumnsSlots = (node) => {
+  for (const columnItem of node.props?.columns || []) {
+    if (!columnItem?.slots) {
+      continue
+    }
+
+    for (const slotItem of Object.values(columnItem.slots)) {
+      if (Array.isArray(slotItem?.value)) {
+        slotItem.value.forEach((item) => {
+          if (!item.id) {
+            item.id = utils.guid()
+          }
+
+          nodesMap.value.set(item.id, { node: item, parent: node })
+
+          if (Array.isArray(item.children)) {
+            // eslint-disable-next-line no-use-before-define
+            generateNodesMap(item.children, item)
+          }
+        })
+      }
+    }
+  }
+}
+
+const handleNodesInProps = (node) => {
+  if (node.componentName === 'TinyGrid') {
+    handleTinyGridColumnsSlots(node)
+  }
+}
+
 const generateNodesMap = (nodes, parent) => {
   nodes.forEach((nodeItem) => {
     if (!nodeItem.id) {
@@ -83,6 +114,8 @@ const generateNodesMap = (nodes, parent) => {
       node: nodeItem,
       parent
     })
+
+    handleNodesInProps(nodeItem)
 
     if (Array.isArray(nodeItem.children) && nodeItem.children.length) {
       generateNodesMap(nodeItem.children, nodeItem)
