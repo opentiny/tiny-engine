@@ -1,7 +1,9 @@
+import material from '@opentiny/tiny-engine-materials'
+
 export default {
   id: 'engine.config',
   theme: 'light',
-  material: ['/mock/bundle.json'],
+  material: [material],
   scripts: [],
   styles: []
 }

@@ -133,10 +133,8 @@ const generateComponents = async (entry) => {
 
 const getFrameworkWithData = (data) => {
   return {
-    data: {
-      framework: 'Vue',
-      materials: data
-    }
+    framework: 'Vue',
+    materials: data
   }
 }
 
