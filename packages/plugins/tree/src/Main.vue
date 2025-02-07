@@ -12,7 +12,7 @@
       <draggable-tree
         label-key="componentName"
         :data="state.pageSchema"
-        :draggable="!state.isLock"
+        :draggable="true"
         :active="pageState.currentSchema?.id"
         :disallow-drop="disallowDrop"
         class="outline-tree"
