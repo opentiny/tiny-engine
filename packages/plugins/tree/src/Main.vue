@@ -259,7 +259,7 @@ export default {
     gap: 4px;
   }
   .node-isblock {
-    color: var(--te-common-color-prompt-secondary);
+    color: var(--te-base-purple-50);
   }
 }
 </style>

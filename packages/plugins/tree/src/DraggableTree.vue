@@ -6,7 +6,7 @@
       v-show="!row.collapsed"
       :class="[
         'tree-row',
-        ' flex-center',
+        'flex-center',
         {
           active: active === row.id,
           dragging: draggingState.hovering?.id === row.id,
@@ -23,8 +23,7 @@
       @drop="handleDrop"
       @dragend="handleDragEnd"
     >
-      <span v-for="n in row.level" :key="n" class="gap"></span>
-      <div :class="['content', 'flex-center']">
+      <div class="content flex-center" :style="{ paddingLeft: `${12 * row.level}px` }">
         <span v-if="!row.hasChildren" class="expand-icon"></span>
         <svg-icon
           v-if="row.hasChildren"
@@ -162,7 +161,7 @@ const flattenNode = (node, parentId, level = 0, collapsed = false) => {
 
   const descendantNodes = (children || [])
     .map((child) => flattenNode(child, node.id, level + 1, collapsed || collapseMap.value[node.id]))
-    .reduce((acc, current) => acc.concat(current), [])
+    .flat()
 
   const rowItem = {
     ...rest,
@@ -276,7 +275,7 @@ const handleDragOver = (event, row) => {
 }
 
 const handleDrop = () => {
-  if (!props.draggable) {
+  if (!props.draggable || draggingState.forbidInsert) {
     return
   }
 
@@ -334,9 +333,6 @@ const handleDragLeaveContainer = (event) => {
     & > * {
       flex-shrink: 0;
     }
-  }
-  .gap {
-    width: 12px;
   }
   .content {
     flex: 1;
