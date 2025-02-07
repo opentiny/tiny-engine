@@ -177,7 +177,7 @@ export default {
 .dots {
   width: 6px;
   height: 6px;
-  background: var(--ti-lowcode-toolbar-dot-color);
+  background: var(--te-toolbars-save-dot-color);
   border-radius: 50%;
   display: inline-block;
   position: absolute;
@@ -192,7 +192,7 @@ export default {
     margin-right: var(--te-base-space-0);
   }
   .save-button {
-    background-color: var(--ti-lowcode-toolbar-button-bg);
+    background-color: var(--te-toolbars-save-button-bg-color);
     border: none;
     min-width: 70px;
     height: 26px;
@@ -201,7 +201,7 @@ export default {
     padding: 0 8px;
     border-radius: 4px;
     &:not(.disabled):hover {
-      background-color: var(--ti-lowcode-toolbar-button-bg);
+      background-color: var(--te-toolbars-save-button-bg-color);
     }
   }
 
@@ -229,7 +229,7 @@ export default {
     display: flex;
     .save-time-label {
       width: 60px;
-      color: var(--te-common-text-secondary);
+      color: var(--te-toolbars-save-text-color);
     }
 
     .tiny-select {
@@ -249,10 +249,10 @@ export default {
 
 #saving {
   cursor: not-allowed;
-  color: var(--ti-lowcode-disabled-color);
+  color: var(--te-toolbars-save-disabled-color);
 
   :deep(svg) {
-    color: var(--ti-lowcode-disabled-color);
+    color: var(--te-toolbars-save-disabled-color);
   }
 }
 
@@ -275,7 +275,7 @@ export default {
 
 <style>
 .changeRole a {
-  color: var(--ti-lowcode-canvas-handle-hover-bg);
+  color: var(--te-toolbars-save-canvas-handle-hover-bg-color);
   padding: 0 5px;
 }
 .save-style .save-time .tiny-input__inner {

@@ -61,19 +61,3 @@ export default {
   }
 }
 </script>
-
-<style scoped lang="less">
-.change-lang-box {
-  svg {
-    color: var(--ti-lowcode-toolbar-title-color);
-    width: 18px;
-    height: 18px;
-    &:hover {
-      opacity: 0.75;
-    }
-  }
-}
-.icon {
-  color: var(--ti-lowcode-toolbar-title-color);
-}
-</style>
