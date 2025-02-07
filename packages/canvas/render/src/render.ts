@@ -144,7 +144,7 @@ const getLoopScope = ({ scope, index, item, loopArgs }) => {
 const injectPlaceHolder = (componentName, children) => {
   const isEmptyArr = Array.isArray(children) && !children.length
 
-  if (configure[componentName]?.isContainer && (!children || isEmptyArr)) {
+  if ((configure[componentName]?.isContainer || componentName === 'Template') && (!children || isEmptyArr)) {
     return [
       {
         componentName: 'CanvasPlaceholder'
