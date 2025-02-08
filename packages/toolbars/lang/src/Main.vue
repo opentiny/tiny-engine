@@ -61,3 +61,18 @@ export default {
   }
 }
 </script>
+<style scoped lang="less">
+.change-lang-box {
+  svg {
+    color: var(--te-toolbars-lang-color);
+    width: 18px;
+    height: 18px;
+    &:hover {
+      opacity: 0.75;
+    }
+  }
+}
+.icon {
+  color: var(--te-toolbars-lang-icon-color);
+}
+</style>
