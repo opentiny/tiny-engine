@@ -58,7 +58,11 @@ export default {
           id: item.page,
           history: item.id,
           framework: getMergeMeta('engine.config')?.dslMode,
-          platform: getMergeMeta('engine.config')?.platformId
+          platform: getMergeMeta('engine.config')?.platformId,
+          pageInfo: {
+            name: item.name
+          },
+          ancestors: [item]
         })
     }
 
