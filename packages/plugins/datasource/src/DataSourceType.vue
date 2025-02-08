@@ -53,6 +53,13 @@ export default {
     const dataSourceType = ref(props.modelValue)
 
     watch(
+      () => props.modelValue,
+      (newVal) => {
+        dataSourceType.value = newVal
+      }
+    )
+
+    watch(
       () => dataSourceType.value,
       (newVal) => {
         emit('update:modelValue', newVal)
