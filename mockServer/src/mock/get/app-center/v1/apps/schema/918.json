@@ -1905,6 +1905,13 @@
         "version": "0.1.16"
       },
       {
+        "componentName": "TinyGridColumn",
+        "package": "@opentiny/vue",
+        "exportName": "TinyGridColumn",
+        "destructuring": true,
+        "version": "0.1.16"
+      },
+      {
         "componentName": "TinyNumeric",
         "package": "@opentiny/vue",
         "exportName": "Numeric",
