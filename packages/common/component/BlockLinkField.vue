@@ -156,6 +156,7 @@ export default {
   top: 0;
   left: 0;
   transform: translate(-50%, -50%);
+  color: var(--te-component-common-block-add-color);
 
   .svg-icon {
     font-size: 14px;
@@ -188,21 +189,21 @@ export default {
   flex-direction: column;
   .menu-item {
     line-height: 18px;
-    color: var(--ti-lowcode-attr-popover-menu-item-color);
+    color: var(--te-component-common-color);
     display: flex;
     align-items: center;
     gap: 4px;
     padding: 4px 12px;
     cursor: pointer;
     &:hover {
-      background: var(--ti-lowcode-attr-popover-menu-item-hover-bg-color);
+      background: var(--te-component-common-hover-bg-color);
     }
     &.property {
       justify-content: space-between;
     }
     .link-item {
       cursor: pointer;
-      color: var(--te-common-text-emphasize);
+      color: var(--te-component-common-emphasize-color);
     }
   }
 

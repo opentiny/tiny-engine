@@ -66,7 +66,7 @@ const handleCheck = (v) => {
   width: 100%;
   flex: 1;
   border-radius: 4px;
-  background-color: var(--ti-lowcode-component-block-list-item-active-bg);
+  background-color: var(--te-component-block-bg-color);
 
   .top-left {
     display: flex;
@@ -89,7 +89,7 @@ const handleCheck = (v) => {
 .item-default-img {
   width: 84px;
   height: 50px;
-  color: var(--te-common-bg-default);
+  color: var(--te-component-common-bg-color);
 }
 
 .block-item-small-list .item-image {

@@ -26,7 +26,7 @@
     margin-left: 8px;
   }
   :deep(.tiny-button.tiny-button.tiny-button--default) {
-    border-color: var(--te-common-border-secondary);
+    border-color: var(--te-component-common-button-border-color);
   }
 }
 </style>

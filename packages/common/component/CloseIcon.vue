@@ -29,7 +29,7 @@ export default {
 .icon-wrap {
   width: 24px;
   height: 24px;
-  color: var(--te-common-icon-primary);
+  color: var(--te-component-common-primary-icon-color);
   font-size: 16px;
   border-radius: 4px;
   cursor: pointer;
@@ -39,12 +39,12 @@ export default {
   transition: 0.3s;
 
   &:hover {
-    color: var(--te-common-icon-primary);
-    background-color: var(--te-common-bg-prompt);
+    color: var(--te-component-common-primary-icon-color);
+    background-color: var(--te-component-close-icon-hover-bg-color);
   }
   &.active {
-    color: var(--te-common-icon-primary);
-    background-color: var(--te-common-bg-prompt);
+    color: var(--te-component-common-primary-icon-color);
+    background-color: var(--te-component-close-icon-active-bg-color);
   }
 }
 </style>
