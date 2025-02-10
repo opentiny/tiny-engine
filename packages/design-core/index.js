@@ -47,3 +47,5 @@ export {
 export { default as defaultRegistry } from './registry'
 
 export * from '@opentiny/tiny-engine-meta-register'
+
+export { addons } from './config/addons'

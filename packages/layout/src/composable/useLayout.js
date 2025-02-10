@@ -11,10 +11,24 @@
  */
 
 import { reactive, nextTick } from 'vue'
+import { useStorage } from '@vueuse/core'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { META_APP as PLUGIN_NAME, getMetaApi } from '@opentiny/tiny-engine-meta-register'
 
 const { PAGE_STATUS } = constants
+
+const PLUGIN_POSITION = {
+  leftTop: 'leftTop',
+  leftBottom: 'leftBottom',
+  independence: 'independence',
+  rightTop: 'rightTop',
+  rightBottom: 'rightBottom',
+  fixed: 'fixed'
+}
+
+const pluginState = reactive({
+  pluginEvent: 'all'
+})
 
 const layoutState = reactive({
   dimension: {
@@ -26,11 +40,17 @@ const layoutState = reactive({
     height: '100%'
   },
   plugins: {
+    isShow: true,
     fixedPanels: [PLUGIN_NAME.Materials],
     render: null,
-    pluginEvent: 'all'
+    pluginEvent: 'all',
+    api: {}, // 插件需要注册交互API到这里
+    activating: false, // 右侧面版激活提示状态
+    showDesignSettings: true
   },
   settings: {
+    isShow: true,
+    fixedPanels: [],
     render: 'props',
     api: null,
     activating: false, // 右侧面版激活提示状态
@@ -41,6 +61,39 @@ const layoutState = reactive({
   },
   pageStatus: ''
 })
+const getMoveDragBarState = () => {
+  return layoutState.isMoveDragBar
+}
+const changeMoveDragBarState = (state) => {
+  layoutState.isMoveDragBar = state
+}
+const leftMenuShownStorage = useStorage('leftMenuShown', layoutState.plugins.isShow)
+const rightMenuShownStorage = useStorage('rightMenuShown', layoutState.settings.isShow)
+const changeMenuShown = (menuName) => {
+  switch (menuName) {
+    case 'left': {
+      leftMenuShownStorage.value = !leftMenuShownStorage.value
+      break
+    }
+    case 'right': {
+      rightMenuShownStorage.value = !rightMenuShownStorage.value
+      break
+    }
+  }
+}
+const leftFixedPanelsStorage = useStorage('leftPanels', layoutState.plugins.fixedPanels)
+const rightFixedPanelsStorage = useStorage('rightPanels', layoutState.settings.fixedPanels)
+
+const changeLeftFixedPanels = (pluginName) => {
+  leftFixedPanelsStorage.value = leftFixedPanelsStorage.value?.includes(pluginName)
+    ? leftFixedPanelsStorage.value?.filter((item) => item !== pluginName)
+    : [...leftFixedPanelsStorage.value, pluginName]
+}
+const changeRightFixedPanels = (pluginName) => {
+  rightFixedPanelsStorage.value = rightFixedPanelsStorage.value?.includes(pluginName)
+    ? rightFixedPanelsStorage.value?.filter((item) => item !== pluginName)
+    : [...rightFixedPanelsStorage.value, pluginName]
+}
 
 const getScale = () => layoutState.dimension.scale
 
@@ -90,8 +143,122 @@ const closePlugin = (forceClose) => {
 const isEmptyPage = () => layoutState.pageStatus?.state === PAGE_STATUS.Empty
 
 export default () => {
+  let plugin = ''
+  const pluginStorage = localStorage.getItem('plugin')
+  if (pluginStorage) {
+    plugin = pluginStorage
+  }
+
+  try {
+    plugin = JSON.parse(plugin)
+  } catch (error) {
+    throw new Error(error)
+  }
+
+  const pluginStorageReactive = useStorage('plugin', plugin)
+
+  // 获取插件宽度
+  const getPluginWidth = (name) => pluginStorageReactive.value[name]?.width || 300
+
+  // 修改插件宽度
+  const changePluginWidth = (name, width) => {
+    if (Object.prototype.hasOwnProperty.call(pluginStorageReactive.value, name)) {
+      pluginStorageReactive.value[name].width = width
+    } else {
+      pluginStorageReactive.value[name] = {
+        width
+      }
+    }
+  }
+
+  // 获取插件布局
+  const getPluginByLayout = (name) => pluginStorageReactive.value[name]?.align || 'leftTop'
+
+  // 获取某个布局（左上/左下/右上/右下）的插件名称列表
+  const getPluginsByLayout = (layout = 'all') => {
+    // 筛选出符合布局条件的插件名称
+    const pluginNames = Object.keys(pluginStorageReactive.value).filter(
+      (key) => pluginStorageReactive.value[key].align === layout || layout === 'all'
+    )
+
+    pluginNames.sort((a, b) => pluginStorageReactive.value[a].index - pluginStorageReactive.value[b].index)
+
+    return pluginNames
+  }
+
+  // 修改某个插件的布局
+  const changePluginLayout = (name, layout) => {
+    if (pluginStorageReactive.value[name]) {
+      pluginStorageReactive.value[name].align = layout
+    }
+  }
+
+  //拖拽后改变插件位置
+  const dragPluginLayout = (from, to, oldIndex, newIndex) => {
+    if (from === to && oldIndex === newIndex) return
+
+    const items = Object.values(pluginStorageReactive.value)
+    // 记录拖拽项
+    const movedItem = items.find((item) => item.align === from && item.index === oldIndex)
+
+    // 同一列表中的拖拽
+    if (from === to) {
+      if (oldIndex < newIndex) {
+        //往后移动
+        items.forEach((item) => {
+          if (item !== movedItem && item.align === from && item.index > oldIndex && item.index <= newIndex) {
+            item.index -= 1
+          }
+        })
+      } else {
+        //往前移动
+        items.forEach((item) => {
+          if (item !== movedItem && item.align === from && item.index >= newIndex && item.index < oldIndex) {
+            item.index += 1
+          }
+        })
+      }
+    } else {
+      // 跨列表拖拽
+      items.forEach((item) => {
+        if (item !== movedItem && item.align === from && item.index > oldIndex) {
+          item.index -= 1
+        }
+        if (item !== movedItem && item.align === to && item.index >= newIndex) {
+          item.index += 1
+        }
+      })
+    }
+
+    // 更新拖拽项的位置
+    if (movedItem) {
+      movedItem.align = to
+      movedItem.index = newIndex
+    }
+  }
+
+  //判断是否在同一侧
+  const isSameSide = (from, to) => {
+    const leftSide = [PLUGIN_POSITION.leftTop, PLUGIN_POSITION.leftBottom]
+    const rightSide = [PLUGIN_POSITION.rightTop, PLUGIN_POSITION.rightBottom]
+
+    const isLeft = leftSide.includes(from) && leftSide.includes(to)
+    const isRight = rightSide.includes(from) && rightSide.includes(to)
+
+    return isLeft || isRight
+  }
+
+  //获取插件显示状态
+  const getPluginShown = (name) => pluginStorageReactive.value[name]?.isShow
+
+  //修改插件显示状态
+  const changePluginShown = (name) => {
+    pluginStorageReactive.value[name].isShow = !pluginStorageReactive.value[name].isShow
+  }
+
   return {
     PLUGIN_NAME,
+    PLUGIN_POSITION,
     activeSetting,
     activePlugin,
     closePlugin,
@@ -99,7 +266,26 @@ export default () => {
     getScale,
     setDimension,
     getDimension,
+    pluginState,
     getPluginState,
-    isEmptyPage
+    isEmptyPage,
+    getPluginWidth,
+    changePluginWidth,
+    leftFixedPanelsStorage,
+    rightFixedPanelsStorage,
+    leftMenuShownStorage,
+    rightMenuShownStorage,
+    changeLeftFixedPanels,
+    changeRightFixedPanels,
+    getPluginsByLayout,
+    changePluginLayout,
+    getPluginByLayout,
+    dragPluginLayout,
+    isSameSide,
+    getPluginShown,
+    changePluginShown,
+    changeMenuShown,
+    getMoveDragBarState,
+    changeMoveDragBarState
   }
 }

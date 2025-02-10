@@ -31,6 +31,7 @@ import DesignToolbars from './DesignToolbars.vue'
 import DesignPlugins from './DesignPlugins.vue'
 import DesignSettings from './DesignSettings.vue'
 import meta from '../meta'
+import { addons } from '@opentiny/tiny-engine'
 
 export default {
   name: 'TinyLowCode',
@@ -53,6 +54,37 @@ export default {
     const layoutRegistry = getMergeRegistry(meta.type)
     const configProvider = layoutRegistry.options.configProvider
     const configProviderDesign = layoutRegistry.options.configProviderDesign
+
+    // Step 1: 收集插件的 align 信息
+    const alignGroups = {}
+    const pluginList = addons.plugins
+
+    pluginList.forEach((item) => {
+      if (item.id) {
+        const align = item.options?.align || 'leftTop'
+        if (!alignGroups[align]) {
+          alignGroups[align] = []
+        }
+        alignGroups[align].push(item.id)
+      }
+    })
+
+    // Step 2: 为每个插件分配 index 值
+    const plugin = {}
+    pluginList.forEach((item) => {
+      if (item.id) {
+        const align = item.options?.align || 'leftTop'
+        const index = alignGroups[align].indexOf(item.id)
+
+        plugin[item.id] = {
+          width: item.options?.width || 300,
+          align: align,
+          index: index,
+          isShow: true
+        }
+      }
+    })
+    localStorage.setItem('plugin', JSON.stringify(plugin))
 
     const { layoutState } = useLayout()
     const { plugins } = layoutState
