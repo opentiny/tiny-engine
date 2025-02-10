@@ -59,6 +59,42 @@ const fetchAppList = (platformId) => getMetaApi(META_SERVICE.Http).get(`/app-cen
 
 const { subscribe, publish } = useMessage()
 
+const postLocationHistoryChanged = (data) => publish({ topic: 'locationHistoryChanged', data })
+
+const updatePageId = (pageId) => {
+  const url = new URL(window.location.href)
+  url.searchParams.delete('blockid')
+  url.searchParams.set('pageid', pageId)
+  window.history.pushState({}, '', url)
+  postLocationHistoryChanged({ pageId })
+}
+
+const updateBlockId = (blockId) => {
+  const url = new URL(window.location.href)
+  url.searchParams.delete('pageid')
+  url.searchParams.set('blockid', blockId)
+  window.history.pushState({}, '', url)
+  postLocationHistoryChanged({ blockId })
+}
+
+const updatePreviewId = (previewId, replace = false) => {
+  const url = new URL(window.location.href)
+  if (previewId) {
+    if (previewId === url.searchParams.get('previewid')) {
+      return
+    }
+    url.searchParams.set('previewid', previewId)
+  } else {
+    url.searchParams.delete('previewid')
+  }
+  if (replace) {
+    window.history.replaceState({}, '', url)
+  } else {
+    window.history.pushState({}, '', url)
+  }
+  postLocationHistoryChanged({ previewId })
+}
+
 export default defineService({
   id: META_SERVICE.GlobalService,
   type: 'MetaService',
@@ -121,6 +157,10 @@ export default defineService({
   },
   apis: ({ state }) => ({
     getBaseInfo,
-    isAdmin: () => state.userInfo.resetPasswordToken === 'p_webcenter'
+    isAdmin: () => state.userInfo.resetPasswordToken === 'p_webcenter',
+    postLocationHistoryChanged,
+    updatePageId,
+    updateBlockId,
+    updatePreviewId
   })
 })
