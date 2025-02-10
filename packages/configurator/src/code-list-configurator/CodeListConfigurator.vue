@@ -265,10 +265,10 @@ export default {
       padding-left: 4px;
       padding-right: 12px;
       position: relative;
-      color: var(--ti-lowcode-toolbar-more-hover-color);
+      color: var(--te-configurator-common-icon-color);
       height: 38px;
-      border-bottom: 1px solid var(--ti-lowcode-tabs-border-color);
-      box-shadow: var(--ti-lowcode-tabs-border-color) 0, -1px;
+      border-bottom: 1px solid var(--te-configurator-common-default-border-color);
+      box-shadow: var(--te-configurator-common-default-border-color) 0, -1px;
       font-size: 13px;
       font-weight: 600;
     }
@@ -279,7 +279,7 @@ export default {
         color: rbg(217, 217, 217);
       }
       &:hover {
-        background: var(--ti-lowcode-toolbar-bg);
+        background: var(--te-configurator-common-hover-bg-color);
       }
     }
   }

@@ -214,9 +214,9 @@ export default {
     width: 24px;
     height: 24px;
     font-size: 16px;
-    color: var(--te-common-text-secondary);
-    background: var(--te-common-bg-container);
-    border: 1px solid var(--ti-lowcode-left-button-border-color);
+    color: var(--te-configurator-common-text-color);
+    background: var(--te-configurator-html-attributes-bg-color);
+    border: 1px solid var(--te-configurator-common-border-color);
     border-radius: 2px;
     display: inline-flex;
     justify-content: center;
@@ -239,10 +239,10 @@ export default {
 
 .attr-list {
   .list-item {
-    border: 1px solid var(--ti-lowcode-optionitem-border-color);
-    background: var(--ti-lowcode-optionitem-background-color);
+    border: 1px solid var(--te-configurator-common-default-border-color);
+    background: var(--te-configurator-common-bg-color);
     margin-bottom: -1px;
-    color: var(--te-common-text-secondary);
+    color: var(--te-configurator-common-text-color);
     padding: 7px;
     display: grid;
     grid-template-columns: 3fr auto;
