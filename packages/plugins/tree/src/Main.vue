@@ -1,13 +1,11 @@
 <template>
-  <plugin-panel class="outlinebox" title="大纲树" @close="$emit('close')">
-    <template #header>
-      <svg-button
-        class="item icon-sidebar"
-        :name="panelFixed ? 'fixed-solid' : 'fixed'"
-        :tips="panelFixed ? '解除固定面板' : '固定面板'"
-        @click="$emit('fix-panel', PLUGIN_NAME.OutlineTree)"
-      ></svg-button>
-    </template>
+  <plugin-panel
+    class="outlinebox"
+    title="大纲树"
+    :fixed-name="PLUGIN_NAME.OutlineTree"
+    :fixedPanels="fixedPanels"
+    @close="$emit('close')"
+  >
     <template #content>
       <draggable-tree
         label-key="componentName"
@@ -38,8 +36,8 @@
 </template>
 
 <script>
-import { reactive, watch, computed, onActivated, onDeactivated, nextTick } from 'vue'
-import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
+import { reactive, watch, computed, onActivated, onDeactivated, provide, nextTick } from 'vue'
+import { PluginPanel } from '@opentiny/tiny-engine-common'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { useCanvas, useMaterial, useLayout, useMessage } from '@opentiny/tiny-engine-meta-register'
 import { extend } from '@opentiny/vue-renderless/common/object'
@@ -50,7 +48,6 @@ const { PAGE_STATUS } = constants
 export default {
   components: {
     PluginPanel,
-    SvgButton,
     DraggableTree
   },
   props: {
@@ -59,12 +56,17 @@ export default {
     }
   },
   emits: ['close', 'fix-panel'],
-  setup(props) {
+  setup(props, { emit }) {
     const { pageState } = useCanvas()
     const { getMaterial } = useMaterial()
     const { PLUGIN_NAME } = useLayout()
 
     const panelFixed = computed(() => props.fixedPanels?.includes(PLUGIN_NAME.OutlineTree))
+
+    const panelState = reactive({
+      emitEvent: emit
+    })
+    provide('panelState', panelState)
 
     const filterSchema = (data) => {
       const translateChild = (data) => {

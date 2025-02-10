@@ -1,5 +1,5 @@
 <template>
-  <plugin-panel title="数据源">
+  <plugin-panel title="数据源" :fixed-name="PLUGIN_NAME.Collections" :fixedPanels="fixedPanels">
     <template #header>
       <link-button :href="docsUrl"></link-button>
       <svg-button
@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { reactive, watch } from 'vue'
+import { reactive, watch, provide } from 'vue'
 import { Button } from '@opentiny/vue'
 import DataSourceList, { refresh as refreshDataSourceList, clearActive } from './DataSourceList.vue'
 import DataSourceRemotePanel, {
@@ -54,7 +54,7 @@ import DataSourceForm, { open as openDataSourceForm, close as closeDataSourceFor
 import { close as closeRecordList } from './DataSourceRecordList.vue'
 import { close as closeRecordForm } from './DataSourceRecordForm.vue'
 import DataSourceRemoteMapping, { isOpen as isOpenSourceRemoteMapping } from './DataSourceRemoteMapping.vue'
-import { useDataSource, useHelp } from '@opentiny/tiny-engine-meta-register'
+import { useDataSource, useHelp, useLayout } from '@opentiny/tiny-engine-meta-register'
 import { requestUpdateDataSource } from './js/http'
 import DataSourceGlobalDataHandler, {
   open as openGlobalDataHander,
@@ -73,7 +73,12 @@ export default {
     SvgButton,
     LinkButton
   },
-  setup() {
+  props: {
+    fixedPanels: {
+      type: Array
+    }
+  },
+  setup(props, { emit }) {
     const docsUrl = useHelp().getDocsUrl('datasource')
     const state = reactive({
       editable: true,
@@ -81,6 +86,14 @@ export default {
       remoteFields: [],
       remoteResponData: {}
     })
+
+    const { PLUGIN_NAME } = useLayout()
+
+    const panelState = reactive({
+      emitEvent: emit
+    })
+
+    provide('panelState', panelState)
 
     const { dataSourceState, saveDataSource } = useDataSource()
 
@@ -132,6 +145,7 @@ export default {
     }
 
     return {
+      PLUGIN_NAME,
       state,
       open,
       isOpenRemotePanel,

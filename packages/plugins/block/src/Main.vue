@@ -2,6 +2,8 @@
   <plugin-panel
     class="block-manage"
     title="区块管理"
+    :fixed-name="PLUGIN_NAME.BlockManage"
+    :fixedPanels="fixedPanels"
     :docsUrl="docsUrl"
     :isShowDocsIcon="true"
     :isCloseLeft="false"
@@ -121,7 +123,7 @@
 </template>
 
 <script lang="jsx">
-import { ref, reactive, computed, watch } from 'vue'
+import { ref, reactive, computed, watch, provide } from 'vue'
 import {
   Search as TinySearch,
   Select as TinySelect,
@@ -215,8 +217,12 @@ export default {
     TinyButton,
     TinyIconSearch: IconSearch()
   },
-
-  setup() {
+  props: {
+    fixedPanels: {
+      type: Array
+    }
+  },
+  setup(props, { emit }) {
     const docsUrl = useHelp().getDocsUrl('block')
     const { getBlockList, sort } = useBlock()
     const { isSaved } = useCanvas()
@@ -263,6 +269,14 @@ export default {
     })
 
     const groupSelect = ref(null)
+
+    const { PLUGIN_NAME } = useLayout()
+
+    const panelState = reactive({
+      emitEvent: emit
+    })
+
+    provide('panelState', panelState)
 
     watch(
       () => [getBlockList(), state.searchKey, state.publishFilterType],
@@ -421,6 +435,7 @@ export default {
     }
 
     return {
+      PLUGIN_NAME,
       state,
       groupSelect,
       categoryList,
