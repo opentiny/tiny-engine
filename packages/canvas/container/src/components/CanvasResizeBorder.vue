@@ -209,7 +209,7 @@ export default {
   &::after {
     content: '';
     display: block;
-    border: 1px solid var(--te-common-border-checked);
+    border: 1px solid var(--te-canvas-container-checked-border-color);
   }
   &.resize-vertical {
     cursor: ns-resize;
