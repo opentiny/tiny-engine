@@ -9,6 +9,12 @@
       </div>
       <div class="plugin-panel-icon">
         <slot name="header"></slot>
+        <svg-button
+          class="item icon-sidebar"
+          :name="fixedPanels?.includes(fixedName) ? 'fixed-solid' : 'fixed'"
+          :tips="!fixedPanels?.includes(fixedName) ? '固定面板' : '解除固定面板'"
+          @click="fixPanel"
+        ></svg-button>
         <close-icon v-if="!isCloseLeft" :name="name" @close="closePanel"></close-icon>
       </div>
     </div>
@@ -24,13 +30,15 @@
 <script>
 import { inject, ref } from 'vue'
 import { useLayout } from '@opentiny/tiny-engine-meta-register'
+import { SvgButton } from '@opentiny/tiny-engine-common'
 import LinkButton from './LinkButton.vue'
 import CloseIcon from './CloseIcon.vue'
 
 export default {
   components: {
     LinkButton,
-    CloseIcon
+    CloseIcon,
+    SvgButton
   },
   props: {
     /**
