@@ -10,6 +10,12 @@
     @setting="settingModel"
   ></canvas-action>
   <canvas-router-jumper :hoverState="hoverState" :inactiveHoverState="inactiveHoverState"></canvas-router-jumper>
+  <canvas-viewer-switcher
+    :hoverState="hoverState"
+    :inactiveHoverState="inactiveHoverState"
+    :componentWhitelist="['RouterView']"
+    title="切换预览页面"
+  ></canvas-viewer-switcher>
   <canvas-divider :selectState="selectState"></canvas-divider>
   <canvas-resize-border :iframe="iframe"></canvas-resize-border>
   <canvas-resize>
@@ -39,6 +45,7 @@ import { registerHostkeyEvent, removeHostkeyEvent } from './keyboard'
 import CanvasMenu, { closeMenu, openMenu } from './components/CanvasMenu.vue'
 import CanvasAction from './components/CanvasAction.vue'
 import CanvasRouterJumper from './components/CanvasRouterJumper.vue'
+import CanvasViewerSwitcher from './components/CanvasViewerSwitcher.vue'
 import CanvasResize from './components/CanvasResize.vue'
 import CanvasDivider from './components/CanvasDivider.vue'
 import CanvasResizeBorder from './components/CanvasResizeBorder.vue'
@@ -64,7 +71,15 @@ import {
 } from './container'
 
 export default {
-  components: { CanvasAction, CanvasResize, CanvasMenu, CanvasDivider, CanvasResizeBorder, CanvasRouterJumper },
+  components: {
+    CanvasAction,
+    CanvasResize,
+    CanvasMenu,
+    CanvasDivider,
+    CanvasResizeBorder,
+    CanvasRouterJumper,
+    CanvasViewerSwitcher
+  },
   props: {
     controller: Object,
     canvasSrc: String,

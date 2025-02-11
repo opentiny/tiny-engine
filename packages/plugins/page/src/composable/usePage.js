@@ -307,6 +307,52 @@ const getAncestors = async (id, withFolders) => {
   return ancestors.filter(predicate).map((item) => item.id)
 }
 
+/**
+ * 打平数组内的文件夹，确保返回的数组每个都是页面而不是文件夹
+ * @param {Array<{isPage: boolean, children?: any[]} & Record<string, any>} pagesOrFolders 页面或者文件夹数组
+ * @returns
+ */
+const flatternFolder = (pagesOrFolders) => {
+  // 页面数组中没有文件夹，无需处理
+  if (pagesOrFolders.every((item) => item.isPage)) {
+    return pagesOrFolders
+  }
+
+  const flattened = pagesOrFolders
+    .map((page) => {
+      if (page.isPage) {
+        return page
+      }
+      // 如果是文件夹，返回子节点数组，后面flat会打平这一层
+      return (page.children || []).map((child) => ({
+        ...child,
+        routePath: `${page.routePath || page.route}/${child.route}`
+      }))
+    })
+    .flat()
+
+  return flatternFolder(flattened)
+}
+
+/**
+ * 获取所有的页面直接子节点，如果子节点是文件夹，则文件夹下的节点也算直接子节点
+ * @param {string | number} id
+ * @returns
+ */
+const getPageChildren = async (id) => {
+  if (pageSettingState.pages.length === 0) {
+    await getPageList()
+  }
+
+  const pageNode = pageSettingState.treeDataMapping[id]
+
+  if (!Array.isArray(pageNode?.children)) {
+    return []
+  }
+
+  return flatternFolder(pageNode.children)
+}
+
 const clearCurrentState = () => {
   const { pageState } = useCanvas()
 
@@ -431,6 +477,7 @@ export default () => {
     switchPage,
     switchPageWithConfirm,
     getFamily,
+    getPageChildren,
     STATIC_PAGE_GROUP_ID,
     COMMON_PAGE_GROUP_ID
   }
