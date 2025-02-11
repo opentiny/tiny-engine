@@ -276,7 +276,6 @@ export default {
       div {
         font-size: 10px;
         font-weight: normal;
-        color: rbg(217, 217, 217);
       }
       &:hover {
         background: var(--te-configurator-common-hover-bg-color);
