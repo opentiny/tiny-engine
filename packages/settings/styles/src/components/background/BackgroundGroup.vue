@@ -432,7 +432,7 @@ export default {
     gap: 1px;
     border-radius: 2px;
     border-top: 1px solid var(--te-styles-background-border-color);
-    background-color: var(--te-common-bg-default);
+    background-color: var(--te-styles-common-bg-color);
     margin: 12px 0;
     .image-list-item {
       display: grid;
@@ -469,7 +469,6 @@ export default {
           right: 0;
           top: 0;
           bottom: 0;
-          background-color: var(--ti-lowcode-setting-style-drag-bar-bg);
         }
       }
       &.image-list-item-invisible {
@@ -484,12 +483,11 @@ export default {
         width: 100%;
         height: 3px;
         border-radius: 3px;
-        background-color: var(--ti-lowcode-setting-style-drag-bar-bg);
       }
     }
     .dragger-icon {
       display: inline-flex;
-      color: var(--te-common-icon-secondary);
+      color: var(--te-styles-common-icon-color);
       cursor: grab;
       width: 12px;
       opacity: 0;
