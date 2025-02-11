@@ -240,6 +240,9 @@ export default {
         width: 12px;
       }
     }
+    :deep(.tiny-select.is-disabled .tiny-input__suffix) {
+      display: flex;
+    }
   }
 
   .save-button-group {
