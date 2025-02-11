@@ -31,6 +31,7 @@ const pluginState = reactive({
 })
 
 const layoutState = reactive({
+  isMoveDragBar: false,
   dimension: {
     deviceType: 'desktop',
     width: '',

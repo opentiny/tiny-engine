@@ -52,21 +52,24 @@
     </ul>
   </div>
 
-  <div
-    v-show="renderPanel && components[renderPanel]"
-    id="tiny-engine-left-panel"
-    :class="[renderPanel, { 'is-fixed': pluginState.fixedPanels.includes(renderPanel) }]"
-  >
-    <div class="left-panel-wrap">
-      <keep-alive>
-        <component
-          :is="components[renderPanel]"
-          ref="pluginRef"
-          :fixed-panels="pluginState.fixedPanels"
-          @close="close"
-          @fixPanel="fixPanel"
-        ></component>
-      </keep-alive>
+  <div :class="{ 'not-selected': getMoveDragBarState() }">
+    <!-- 插件面板 -->
+    <div
+      v-show="renderPanel && components[renderPanel]"
+      id="tiny-engine-left-panel"
+      :class="[renderPanel, { 'is-fixed': pluginState.fixedPanels.includes(renderPanel) }]"
+    >
+      <div class="left-panel-wrap">
+        <keep-alive>
+          <component
+            :is="components[renderPanel]"
+            ref="pluginRef"
+            :fixed-panels="pluginState.fixedPanels"
+            @close="close"
+            @fixPanel="fixPanel"
+          ></component>
+        </keep-alive>
+      </div>
     </div>
   </div>
 </template>
@@ -103,6 +106,8 @@ export default {
     const { isTemporaryPage } = usePage()
     const { message } = useModal()
     const pluginState = useLayout().getPluginState()
+
+    const { getMoveDragBarState } = useLayout()
 
     props.plugins.forEach(({ id, entry, icon }) => {
       components[id] = entry
@@ -190,6 +195,7 @@ export default {
       fixPanel,
       pluginState,
       components,
+      getMoveDragBarState,
       iconComponents
     }
   }
@@ -198,7 +204,7 @@ export default {
 
 <style lang="less" scoped>
 #tiny-engine-left-panel {
-  width: var(--base-left-panel-width);
+  width: auto !important;
   height: calc(100vh - var(--base-top-panel-height));
   border-right: 1px solid var(--te-layout-common-border-color);
   background: var(--te-layout-common-bg-color);
@@ -208,10 +214,6 @@ export default {
   top: var(--base-top-panel-height);
   left: var(--base-nav-panel-width);
   z-index: 999;
-
-  &[class~='engine.plugins.i18n'] {
-    width: auto;
-  }
 
   &.is-fixed {
     position: relative;
@@ -323,5 +325,10 @@ export default {
 
 :deep(.svg-icon.icon-plugin-icon-plugin-help) {
   font-size: 18px;
+}
+
+.not-selected {
+  pointer-events: none;
+  user-select: none;
 }
 </style>
