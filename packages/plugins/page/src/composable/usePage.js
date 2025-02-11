@@ -27,9 +27,6 @@ import http from '../http'
 
 const { ELEMENT_TAG, COMPONENT_NAME } = constants
 
-import { useMessage } from '@opentiny/tiny-engine-meta-register'
-const { publish } = useMessage()
-const postLocationHistoryChanged = (data) => publish({ topic: 'locationHistoryChanged', data })
 import { getOptions } from '@opentiny/tiny-engine-meta-register'
 
 const DEFAULT_PAGE = {
@@ -319,22 +316,13 @@ const clearCurrentState = () => {
   pageState.pageSchema = null
 }
 
-const updateUrlPageId = (id) => {
-  const url = new URL(window.location)
-
-  url.searchParams.delete('blockid')
-  url.searchParams.set('pageid', id)
-  window.history.pushState({}, '', url)
-  postLocationHistoryChanged({ pageId: id })
-}
-
 const switchPage = (pageId) => {
   // 切换页面时清空 选中节点信息状态
   clearCurrentState()
 
   // pageId !== 0 防止 pageId 为 0 的时候判断不出来
   if (pageId !== 0 && !pageId) {
-    updateUrlPageId('')
+    getMetaApi(META_SERVICE.GlobalService).updatePageId('')
     useCanvas().initData({ componentName: COMPONENT_NAME.Page }, {})
     useLayout().layoutState.pageStatus = {
       state: 'empty',
@@ -352,7 +340,7 @@ const switchPage = (pageId) => {
         useBreadcrumb().setBreadcrumbPage([data.name])
       }
 
-      updateUrlPageId(pageId)
+      getMetaApi(META_SERVICE.GlobalService).updatePageId(pageId)
       useLayout().closePlugin()
       useLayout().layoutState.pageStatus = getCanvasStatus(data.occupier)
       useCanvas().initData(data['page_content'], data)
@@ -428,7 +416,6 @@ const getFamily = async (id) => {
 
 export default () => {
   return {
-    postLocationHistoryChanged,
     getDefaultPage,
     selectedTemplateCard,
     pageSettingState,
