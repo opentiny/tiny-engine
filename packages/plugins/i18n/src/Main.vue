@@ -41,7 +41,7 @@
           <span id="boxeight" class="i18n-loading"></span><span>正在导入，请稍后...</span>
         </p>
       </div>
-      <div class="language-plugin-table">
+      <div class="language-plugin-table lowcode-scrollbar">
         <tiny-grid
           ref="i18nTable"
           :data="langList"
@@ -537,12 +537,6 @@ export default {
   padding: 12px;
   border-top: 1px solid var(--te-i18n-border-color);
   overflow-y: scroll;
-  &::-webkit-scrollbar-thumb {
-    background-color: var(--te-i18n-grid-scroll-bg-color);
-  }
-  &::-webkit-scrollbar-thumb:hover {
-    background-color: var(--te-i18n-grid-scroll-bg-hover-color);
-  }
 
   .operation-column {
     display: flex;
