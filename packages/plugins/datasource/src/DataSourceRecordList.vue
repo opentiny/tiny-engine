@@ -307,7 +307,7 @@ export default {
       const messageSaved = {
         render: () => (
           <span>
-            <span style="color:var(--te-datasource-modal-text-color)">{'您确定要删除该条数据吗?'}</span>
+            <span style="color:var(--te-datasource-modal-text-color)">您确定要删除该条数据吗?</span>
           </span>
         )
       }
