@@ -467,7 +467,7 @@ export default {
 <style lang="less" scoped>
 .app-manage-type {
   padding: 0 10px;
-  margin: 12px 0;
+  margin-bottom: 12px;
   display: flex;
   .search-select {
     flex: 1;

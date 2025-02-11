@@ -1,36 +1,40 @@
 <template>
-  <div class="plugin-page-js-container">
-    <div class="code-edit-head">
-      <div class="head-left">
-        <span class="title">页面 JS</span>
-        <link-button :href="docsUrl"></link-button>
+  <plugin-panel
+    title="页面 JS"
+    :fixed-name="PLUGIN_NAME.Page"
+    :fixedPanels="fixedPanels"
+    :docsUrl="docsUrl"
+    :isShowDocsIcon="true"
+    :isCloseLeft="false"
+    @close="$emit('close')"
+    class="plugin-page-js-container"
+  >
+    <template #header>
+      <span class="icon-wrap">
+        <i v-show="state.isChanged" class="red"></i>
+        <tiny-button type="primary" @click="saveMethods">保存</tiny-button>
+      </span>
+    </template>
+    <template #content>
+      <div class="code-edit-content">
+        <monaco-editor
+          ref="monaco"
+          :value="state.script"
+          :options="options"
+          @change="change"
+          @editorDidMount="editorDidMount"
+          @shortcutSave="saveMethods"
+        ></monaco-editor>
       </div>
-      <div class="head-right">
-        <tiny-button type="primary" class="save-btn" @click="saveMethods">
-          <span>保存</span>
-          <span v-show="state.isChanged" class="dots"></span>
-        </tiny-button>
-        <close-icon @close="close"></close-icon>
-      </div>
-    </div>
-    <div class="code-edit-content">
-      <monaco-editor
-        ref="monaco"
-        :value="state.script"
-        :options="options"
-        @change="change"
-        @editorDidMount="editorDidMount"
-        @shortcutSave="saveMethods"
-      ></monaco-editor>
-    </div>
-  </div>
+    </template>
+  </plugin-panel>
 </template>
 
 <script>
-import { onBeforeUnmount } from 'vue'
+import { onBeforeUnmount, reactive, provide } from 'vue'
 import { Button } from '@opentiny/vue'
-import { VueMonaco, CloseIcon, LinkButton } from '@opentiny/tiny-engine-common'
-import { useHelp } from '@opentiny/tiny-engine-meta-register'
+import { VueMonaco, PluginPanel } from '@opentiny/tiny-engine-common'
+import { useHelp, useLayout } from '@opentiny/tiny-engine-meta-register'
 import { initCompletion } from '@opentiny/tiny-engine-common/js/completion'
 import { initLinter } from '@opentiny/tiny-engine-common/js/linter'
 import useMethod, { saveMethod, highlightMethod, getMethodNameList, getMethods } from './js/method'
@@ -46,13 +50,24 @@ export default {
   components: {
     MonacoEditor: VueMonaco,
     TinyButton: Button,
-    CloseIcon,
-    LinkButton
+    PluginPanel
   },
-  emits: ['close'],
+  props: {
+    fixedPanels: {
+      type: Array
+    }
+  },
+  emits: ['close', 'fix-panel'],
   setup(props, { emit }) {
     const docsUrl = useHelp().getDocsUrl('script')
     const { state, monaco, change, close, saveMethods } = useMethod({ emit })
+
+    const { PLUGIN_NAME } = useLayout()
+
+    const panelState = reactive({
+      emitEvent: emit
+    })
+    provide('panelState', panelState)
 
     const options = {
       language: 'javascript',
@@ -93,6 +108,7 @@ export default {
     })
 
     return {
+      PLUGIN_NAME,
       state,
       monaco,
       options,
@@ -118,49 +134,33 @@ export default {
   z-index: 999;
   box-sizing: border-box;
 
-  .code-edit-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid var(--te-plugin-js-common-border-color);
-    padding: 12px 0;
+  .icon-wrap {
+    position: relative;
+    margin-right: 6px;
 
-    .head-left {
-      padding-left: 12px;
-      display: flex;
-      align-items: center;
-      .title {
-        color: var(--te-plugin-js-panel-title-text-color);
-        font-weight: var(--te-base-font-weight-bold);
-      }
+    .tiny-button {
+      min-width: 40px;
+      margin-right: 2px;
+      height: 24px;
+      line-height: 24px;
     }
 
-    .head-right {
-      margin-right: 12px;
-      display: flex;
-      align-items: center;
-
-      .save-btn {
-        min-width: 40px;
-        margin-right: 8px;
-        height: 24px;
-        line-height: 24px;
-        .dots {
-          width: 6px;
-          height: 6px;
-          background: var(--te-plugin-js-dot-color);
-          border-radius: 50%;
-          position: absolute;
-          top: 9px;
-          right: 34px;
-        }
-      }
+    .red {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--te-common-color-error);
+      display: block;
+      z-index: 100;
+      position: absolute;
+      top: -3px;
+      right: -1px;
     }
   }
 
   .code-edit-content {
-    padding: 12px;
-    height: calc(100% - 54px);
+    padding: 0 12px;
+    height: calc(100% - 12px);
 
     & > div {
       border: 1px solid var(--te-plugin-js-common-border-color);
@@ -169,6 +169,7 @@ export default {
     }
   }
 }
+
 :deep(.help-box) {
   height: auto;
   #help-icon {

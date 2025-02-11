@@ -1,7 +1,12 @@
 <template>
-  <plugin-panel title="数据源" :fixed-name="PLUGIN_NAME.Collections" :fixedPanels="fixedPanels">
+  <plugin-panel
+    title="数据源"
+    :fixed-name="PLUGIN_NAME.Collections"
+    :fixedPanels="fixedPanels"
+    :docsUrl="docsUrl"
+    :isShowDocsIcon="true"
+  >
     <template #header>
-      <link-button :href="docsUrl"></link-button>
       <svg-button
         class="set-data-source"
         tips="全局设置"
@@ -49,7 +54,7 @@ import DataSourceRemotePanel, {
   close as closeRemotePanel,
   isOpen as isOpenRemotePanel
 } from './DataSourceRemotePanel.vue'
-import { PluginPanel, SvgButton, LinkButton } from '@opentiny/tiny-engine-common'
+import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
 import DataSourceForm, { open as openDataSourceForm, close as closeDataSourceForm } from './DataSourceForm.vue'
 import { close as closeRecordList } from './DataSourceRecordList.vue'
 import { close as closeRecordForm } from './DataSourceRecordForm.vue'
@@ -70,8 +75,7 @@ export default {
     DataSourceGlobalDataHandler,
     PluginPanel,
     DataSourceForm,
-    SvgButton,
-    LinkButton
+    SvgButton
   },
   props: {
     fixedPanels: {
@@ -162,6 +166,7 @@ export default {
 <style lang="less" scoped>
 .add-data-source {
   margin: 0 12px 12px 12px;
+  width: calc(100% - 24px);
 }
 :deep(.help-box) {
   position: absolute;
