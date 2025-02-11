@@ -183,7 +183,7 @@ td {
   .source-code {
     --ti-lowcode-toolbar-bg: var(--ti-lowcode-mask-bg);
     .tiny-button {
-      --ti-button-info-normal-bg-color: var(--te-common-color-info);
+      --ti-button-info-normal-bg-color: #1476ff;
     }
   }
 }

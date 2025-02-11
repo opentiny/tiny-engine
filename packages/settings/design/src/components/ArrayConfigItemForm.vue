@@ -197,7 +197,7 @@ export default {
   cursor: pointer;
   display: flex;
   align-items: center;
-  color: var(--te-common-text-primary);
+  color: #191919;
   .config-title {
     margin-left: 6px;
   }
@@ -205,12 +205,12 @@ export default {
 .config-item-form {
   :deep(.tiny-form-item) {
     .tiny-form-item__label {
-      color: var(--te-common-text-secondary);
+      color: #595959;
     }
     .tiny-form-item__content {
       .editor-warp {
-        --ti-lowcode-meta-codeEditor-border-color: var(--te-common-text-secondary);
-        --ti-lowcode-meta-codeEditor-color: var(--te-common-text-secondary);
+        --ti-lowcode-meta-codeEditor-border-color: #595959;
+        --ti-lowcode-meta-codeEditor-color: #595959;
       }
     }
   }

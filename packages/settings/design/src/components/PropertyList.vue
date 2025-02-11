@@ -110,10 +110,10 @@ export default {
   padding: 5px 10px;
   cursor: pointer;
   margin-bottom: 5px;
-  color: var(--te-common-text-primary);
+  color: #191919;
   padding: 7px 7px;
   list-style: none;
-  border: 1px solid var(--te-common-border-divider);
+  border: 1px solid #e6e6e6;
 
   &:hover {
     background: var(--ti-lowcode-common-hover-bg-color);
