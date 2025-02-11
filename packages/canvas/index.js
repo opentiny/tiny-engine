@@ -16,6 +16,7 @@ import { CanvasBreadcrumb } from './breadcrumb'
 import CanvasContainer from './container'
 import CanvasLayout from './layout'
 import DesignCanvas from './DesignCanvas'
+import './styles/vars.less'
 
 export { CanvasContainer, CanvasLayout, DesignCanvas }
 
