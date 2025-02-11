@@ -1,8 +1,8 @@
 <template>
   <div id="canvas-route-bar" :style="sizeStyle">
     <div class="address-bar">
-      <template v-for="(route, index) in routes" :key="route.id">
-        <span v-if="index > 0" class="slash">/</span>
+      <template v-for="route in routes" :key="route.id">
+        <span class="slash">/</span>
         <span
           :class="[
             { route: route.isPage && route.id !== pageId, current: route.id === pageId, 'is-preview': route.isPreview }
@@ -31,8 +31,9 @@ const sizeStyle = computed(() => {
 
 const { pageSettingState, getAncestors, switchPageWithConfirm } = usePage()
 
-const pageId = ref(getMetaApi(META_SERVICE.GlobalService).getBaseInfo().pageId)
-const previewId = ref(getMetaApi(META_SERVICE.GlobalService).getBaseInfo().previewId)
+const baseInfo = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
+const pageId = ref(baseInfo.pageId)
+const previewId = ref(baseInfo.previewId)
 const existsPreview = ref(false)
 
 const { subscribe, unsubscribe } = useMessage()
@@ -124,7 +125,7 @@ const handleClickRoute = (route) => {
 }
 
 const handleClearPreview = () => {
-  // TODO
+  getMetaApi(META_SERVICE.GlobalService).updatePreviewId('')
 }
 </script>
 
@@ -160,7 +161,7 @@ const handleClearPreview = () => {
   }
 }
 .slash {
-  margin: 0 4px;
+  margin: 0 2px;
 }
 .current {
   font-weight: bold;
