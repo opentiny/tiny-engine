@@ -359,7 +359,7 @@ div.tiny-guide.shepherd-element {
     margin: 0 -16px;
     padding: 0 16px;
     color: var(--te-help-box-item-text-color);
-    fill: var(--te-help-box-item-text-color);
+    fill: currentColor;
     span {
       display: flex;
       align-items: center;
