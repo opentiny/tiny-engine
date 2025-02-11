@@ -54,33 +54,26 @@ export function useUtils(context: Record<string, any>) {
       }
     })
 
-    const npmUtilPromises = data
-      .filter((item) => item.type === 'npm' && item.content.cdnLink)
-      .map(async (item) => {
-        try {
-          const module = await import(/* @vite-ignore */ item.content.cdnLink)
-          return { ...item, cdnResult: { status: 'fulfilled', value: module } }
-        } catch (error) {
-          return { ...item, cdnResult: { status: 'rejected', reason: error } }
-        }
-      })
+    const validNPMUtils = data.filter((item) => item.type === 'npm' && item.content.cdnLink)
 
-    Promise.all(npmUtilPromises).then((resolvedItems) => {
-      resolvedItems.forEach(({ name, content, cdnResult }) => {
-        const { exportName, destructuring, cdnLink } = content
-        const { status, value } = cdnResult
+    const npmUtilsImports = validNPMUtils.map((item) => import(/* @vite-ignore */ item.content.cdnLink))
+    const npmUtils = await Promise.allSettled(npmUtilsImports)
 
-        if (status !== 'fulfilled') {
-          globalNotify({
-            type: 'error',
-            message: `加载工具类“${name}”失败，请检查cdn链接是否正确：${cdnLink}`
-          })
-          return
-        }
+    npmUtils.forEach((res, index) => {
+      const { name, content } = validNPMUtils[index]
+      const { exportName, destructuring, cdnLink } = content
 
-        const module = value
-        utilsCollection[name] = destructuring ? module[exportName] : module.default
-      })
+      if (res.status !== 'fulfilled') {
+        globalNotify({
+          type: 'error',
+          message: `加载工具类“${name}”失败，请检查cdn链接是否正确，${cdnLink}`
+        })
+
+        return
+      }
+
+      const module = res.value
+      utilsCollection[name] = destructuring ? module[exportName] : module.default
     })
 
     Object.assign(utils, utilsCollection)
