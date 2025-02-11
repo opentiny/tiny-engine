@@ -406,13 +406,13 @@ export default {
         width: 100%;
         border-color: var(--te-state-add-btn-border-color);
         &:hover {
-          border-color: var(--te-state-add-btn--hover-border-color);
+          border-color: var(--te-state-add-btn-hover-border-color);
         }
       }
       .add-btn-icon {
         margin-right: 4px;
         font-size: 16px;
-        color: var(--te-state-add-btn--icon-color);
+        color: var(--te-state-add-btn-icon-color);
         vertical-align: sub;
       }
       .add-btn-text {

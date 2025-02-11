@@ -122,7 +122,7 @@ export default {
   .data-source-list-item {
     &.selected,
     &:hover {
-      background: var(--te-state-common--hover-bg-color);
+      background: var(--te-state-common-hover-bg-color);
       .item-head-right {
         display: flex;
         justify-content: flex-end;
