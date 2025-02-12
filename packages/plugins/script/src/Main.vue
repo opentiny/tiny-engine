@@ -124,15 +124,8 @@ export default {
 
 <style lang="less" scoped>
 .plugin-page-js-container {
-  width: 50vw;
-  height: 100%;
-  background: var(--te-plugin-js-panel-bg-color);
-  box-shadow: 6px 0px 3px 0px var(--te-plugin-js-panel-shadow-color);
-  position: absolute;
-  left: 0;
-  top: 0;
+  box-shadow: 6px 0px 3px 0px var(--te-base-box-shadow-rgba-3);
   z-index: 999;
-  box-sizing: border-box;
 
   .icon-wrap {
     position: relative;

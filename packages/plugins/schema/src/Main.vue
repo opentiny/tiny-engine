@@ -185,13 +185,7 @@ export default {
 
 <style lang="less" scoped>
 .plugin-page-schema-container {
-  width: 50vw;
-  height: calc(100% - var(--base-top-panel-height));
-  position: fixed;
-  top: var(--base-top-panel-height);
-  left: 41px;
-  background: var(--te-schema-panel-bg-color);
-  box-shadow: 6px 0px 3px 0px var(--te-schema-panel-shadow-color);
+  box-shadow: 6px 0px 3px 0px var(--te-base-box-shadow-rgba-3);
   z-index: 1000;
 
   .icon-wrap {
