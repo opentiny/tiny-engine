@@ -245,7 +245,6 @@ export default {
       if (block) {
         const idKey = shouldReplaceCategoryWithGroup() ? 'id' : 'category_id'
         const selectedCategory = categoryList.value.find((item) => item.id === value) ?? {}
-
         block.path = selectedCategory[idKey]
         block.categories = Array.isArray(value) ? value : value || ''
       }
@@ -317,10 +316,17 @@ export default {
   .tag-button {
     color: var(--ti-lowcode-block-config-tag-color);
     background-color: var(--ti-lowcode-block-config-tag-bg);
+    border: none;
     height: 28px;
+    :deep(.tiny-tag__close) {
+      fill: var(--ti-lowcode-block-config-tag-close-color);
+    }
     &:hover {
       color: var(--ti-lowcode-block-config-tag-hover-color);
       background-color: var(--ti-lowcode-block-config-tag-hover-bg);
+      :deep(.tiny-tag__close) {
+        fill: var(--ti-lowcode-block-config-tag-close-hover-color);
+      }
     }
   }
 

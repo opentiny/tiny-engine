@@ -8,7 +8,6 @@
           <li v-for="item in filteredMethodList" :key="item.name" @click="selectMethod(item)">
             <div :class="['action-name', { active: item.name === context.bindMethodInfo.name }]">
               {{ item.title || item.name }}
-              <icon-yes v-if="item.name === context.bindMethodInfo.name" class="action-selected-icon"></icon-yes>
             </div>
           </li>
         </ul>
@@ -20,14 +19,12 @@
 <script>
 import { getMetaApi, META_APP } from '@opentiny/tiny-engine-meta-register'
 import { Search } from '@opentiny/vue'
-import { iconYes } from '@opentiny/vue-icon'
 import { inject, ref, watchEffect } from 'vue'
 import { INVALID_VARNAME_CHAR_RE, NEW_METHOD_TYPE } from './constants'
 
 export default {
   components: {
-    TinySearch: Search,
-    IconYes: iconYes()
+    TinySearch: Search
   },
   props: {
     eventBinding: {
@@ -134,11 +131,6 @@ export default {
         color: var(--ti-lowcode-bind-event-dialog-color);
         &.active {
           background: var(--ti-lowcode-bind-event-dialog-content-left-list-item-active-bg-color);
-        }
-
-        .action-selected-icon {
-          font-size: 14px;
-          color: var(--ti-lowcode-bind-event-dialog-action-selected-icon-color);
         }
       }
     }

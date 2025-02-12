@@ -17,16 +17,31 @@ export function generateImportStatement(config) {
 
 export function generateImportByPkgName(config) {
   const { pkgName, imports } = config
-
+  const seen = new Set()
   const importStatements = imports
     .filter(({ destructuring }) => destructuring)
     .map(({ componentName, exportName }) => {
       if (componentName === exportName) {
-        return componentName
+        if (!seen.has(componentName)) {
+          seen.add(componentName)
+
+          return componentName
+        }
+
+        return ''
       }
 
-      return `${exportName} as ${componentName}`
+      const alias = `${exportName} as ${componentName}`
+
+      if (!seen.has(alias)) {
+        seen.add(alias)
+
+        return alias
+      }
+
+      return ''
     })
+    .filter((item) => Boolean(item))
 
   // 默认导出如果存在，应该只有一个
   let defaultImports = imports.find(({ destructuring }) => !destructuring)

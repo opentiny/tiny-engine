@@ -1,7 +1,7 @@
 :root {
   // MetaListItem
   --ti-lowcode-meta-list-item-bg-color: var(--te-common-bg-default);
-  --ti-lowcode-meta-list-item-border-color: var(--te-common-border-default);
+  --ti-lowcode-meta-list-item-border-color: var(--te-common-border-divider);
   //
   --ti-lowcode-meta-list-top-color: var(--te-common-text-secondary);
   // MetaJsSlot
@@ -11,7 +11,7 @@
   --ti-lowcode-meta-codeEditor-color: var(--te-common-text-primary);
   --ti-lowcode-meta-codeEditor-hover-color: var(--te-common-text-primary);
   --ti-lowcode-meta-codeEditor-border-color: var(--te-common-border-default);
-  --ti-lowcode-meta-codeEditor-border-hover-color: var(--te-common-border-active);
+  --ti-lowcode-meta-codeEditor-border-hover-color: var(--te-common-border-divider);
   --ti-lowcode-meta-codeEditor-icon-color: var(--te-common-text-weaken);
 }
 
@@ -24,13 +24,29 @@
 // configItem
 .properties-item {
   --ti-lowcode-meta-config-item-error-tips-color: var(--te-common-color-error);
-  --ti-lowcode-meta-config-item-bind-color: var(--te-common-text-dark-inverse);
-  --ti-lowcode-meta-config-item-bind-bg: var(--te-common-bg-primary-checked);
+  --ti-lowcode-meta-config-item-label-color: var(--te-common-text-primary);
+  --ti-lowcode-meta-config-item-bind-color: var(--te-common-text-emphasize);
+  --ti-lowcode-meta-config-item-bind-bg: var(--te-common-bg-info);
+  --ti-lowcode-meta-config-item-bind-border: var(--te-common-border-info);
   --ti-lowcode-meta-config-item-active-bg: var(--te-common-bg-container);
+  --ti-lowcode-meta-config-item-link-color: var(--te-common-text-emphasize);
+}
+
+// MetaBindVariable
+.meta-bind-variable-dialog-box {
+  --ti-lowcode-meta-bind-variable-icon-color: var(--te-common-icon-primary);
+  --ti-lowcode-meta-bind-variable-content-left-title-color: var(--te-common-text-primary);
+  --ti-lowcode-meta-bind-variable-content-right-title-color: var(--te-common-text-primary);
+  --ti-lowcode-meta-bind-variable-bottom-color: var(--te-common-text-secondary);
+  --ti-lowcode-meta-bind-variable-content-left-list-color: var(--te-common-text-primary);
+  --ti-lowcode-meta-bind-variable-item-text-color: var(--te-common-text-primary);
+  --ti-lowcode-meta-bind-variable-header-alert-color: var(--te-common-text-primary);
+  --ti-lowcode-meta-bind-variable-top-color: var(--te-common-text-primary);
 }
 
 // MetaCodeEditor
 .meta-code-editor-dialog-box {
   --ti-lowcode-meta-code-editor-header-tips-container-color: var(--te-common-text-primary);
+  --ti-lowcode-meta-code-editor-header-tips-demo-color: var(--te-common-text-primary);
   --ti-lowcode-meta-code-editor-err-msg-color: var(--te-common-color-error);
 }

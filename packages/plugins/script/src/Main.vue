@@ -59,12 +59,11 @@ export default {
         enabled: false
       },
       placeholder: `// ✅ 函数声明可以保存
-      \n function topLevelFunction(){ \n
-      \u200B \u200B const message = 'hello tiny-engine.' \n
+       function topLevelFunction(){ 
+      \u200B \u200B const message = 'hello tiny-engine.' 
       \u200B \u200B console.log(message) 
-      \n }
-      \n 
-      // ❌ 顶层/常规 变量声明 \n const someVariable = 42 \n
+      } \n 
+      // ❌ 顶层/常规 变量声明 \n const someVariable = 42 
       // ❌ 表达式 \n const result = someVariable + 10`,
 
       // 禁用滚动条边边一直显示的边框
@@ -133,16 +132,6 @@ export default {
         color: var(--ti-lowcode-plugin-panel-title-color);
         font-weight: var(--ti-lowcode-plugin-panel-title-font-weight);
       }
-
-      .help-link {
-        display: inline-block;
-        margin-left: 20px;
-        cursor: pointer;
-        color: var(--ti-lowcode-plugin-js-help-link-color);
-        &:hover {
-          text-decoration: underline;
-        }
-      }
     }
 
     .head-right {
@@ -184,5 +173,9 @@ export default {
   #help-icon {
     margin-left: 5px;
   }
+}
+
+:deep(.monaco-editor .editorPlaceholder) {
+  font-size: 12px !important;
 }
 </style>

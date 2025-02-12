@@ -429,7 +429,7 @@ export default {
     float: right;
     margin: 0 6px;
     cursor: pointer;
-    color: var(--te-common-icon-primary);
+    color: var(--ti-lowcode-chat-model-icon);
     &:hover {
       opacity: 0.8;
     }
@@ -602,7 +602,7 @@ export default {
     padding: 0;
     transition: all 0.1s linear;
     .svg-icon {
-      color: var(--ti-lowcode-chat-model-button-text);
+      fill: var(--ti-lowcode-chat-model-button-text);
       margin-right: 0;
     }
     span {

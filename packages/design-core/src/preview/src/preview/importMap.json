@@ -10,7 +10,7 @@
     "axios": "${VITE_CDN_DOMAIN}/axios@1.0.0/dist/esm/axios.js",
     "@opentiny/tiny-engine-webcomponent-core": "${VITE_CDN_DOMAIN}/@opentiny/tiny-engine-webcomponent-core@1/dist/tiny-engine-webcomponent-core.es.js",
     "@opentiny/tiny-engine-i18n-host": "${VITE_CDN_DOMAIN}/@opentiny/tiny-engine-i18n-host@1/dist/lowcode-design-i18n-host.es.js",
-    "@opentiny/tiny-engine-builtin-component": "${VITE_CDN_DOMAIN}/@opentiny/tiny-engine-builtin-component@^2.0.0/dist/index.js",
+    "@opentiny/tiny-engine-builtin-component": "${VITE_CDN_DOMAIN}/@opentiny/tiny-engine-builtin-component@^2.0.0/dist/index.mjs",
     "vue-demi": "${VITE_CDN_DOMAIN}/vue-demi@0.13.11/lib/index.mjs",
     "pinia": "${VITE_CDN_DOMAIN}/pinia@2.0.22/dist/pinia.esm-browser.js",
     "@opentiny/vue": "${VITE_CDN_DOMAIN}/@opentiny/vue-runtime@${opentinyVueVersion}/dist3/tiny-vue-pc.mjs",

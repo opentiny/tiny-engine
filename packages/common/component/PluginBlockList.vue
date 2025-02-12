@@ -486,14 +486,6 @@ export default {
         position: static;
         margin-left: 4px;
         z-index: 9;
-        .block-detail-icon {
-          color: var(--ti-lowcode-component-block-list-setting-btn-color);
-          display: block;
-          &:hover {
-            cursor: pointer;
-            color: var(--ti-lowcode-component-block-list-setting-btn-hover-color);
-          }
-        }
       }
       &:hover {
         background-color: var(--te-common-bg-container);
@@ -598,14 +590,6 @@ export default {
       z-index: 9;
       &.is-current-visible-icon {
         visibility: visible;
-      }
-
-      .block-detail-icon {
-        color: var(--te-common-icon-secondary);
-        &:hover {
-          cursor: pointer;
-          color: var(--ti-lowcode-component-block-list-setting-btn-hover-color);
-        }
       }
     }
     .block-setting {

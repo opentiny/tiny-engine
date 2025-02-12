@@ -2,13 +2,10 @@
   <div class="right-item">
     <tiny-form label-position="top">
       <tiny-form-item prop="name" label="数据源类型">
-        <tiny-radio-group v-model="state.value" @change="handleChange">
-          <tiny-radio
-            v-for="item in state.dataType"
-            :key="item.value"
-            :label="item.name"
-            :disabled="editable"
-          ></tiny-radio>
+        <tiny-radio-group v-model="dataSourceType">
+          <div v-for="{ name, value } in RADIO_GROUP" :key="value">
+            <tiny-radio :text="name" :label="value" :disabled="editable" />
+          </div>
         </tiny-radio-group>
       </tiny-form-item>
     </tiny-form>
@@ -16,7 +13,7 @@
 </template>
 
 <script>
-import { reactive, watchEffect } from 'vue'
+import { watch, ref } from 'vue'
 import { Form, FormItem, RadioGroup, Radio } from '@opentiny/vue'
 
 export default {
@@ -38,46 +35,29 @@ export default {
   },
   emits: ['update:modelValue'],
   setup(props, { emit }) {
-    const state = reactive({
-      checkedIndex: 0,
-      value: '对象数组',
-      dataType: [
-        {
-          name: '对象数组',
-          icon: 'json',
-          value: 'array'
-        },
-        {
-          name: '树结构',
-          icon: 'tree-shape',
-          value: 'tree'
-        }
-      ]
-    })
-
-    watchEffect(() => {
-      const index = state.dataType.findIndex(({ value }) => value === props.modelValue)
-      state.checkedIndex = index > -1 ? index : 0
-    })
-
-    const handleChange = () => {
-      if (props.editable) {
-        return
+    const RADIO_GROUP = [
+      {
+        name: '对象数组',
+        value: 'array'
+      },
+      {
+        name: '树结构',
+        value: 'tree'
       }
-      emit('update:modelValue', state.value)
-    }
-    const selectDataType = (item, index) => {
-      if (props.editable) {
-        return
+    ]
+
+    const dataSourceType = ref(props.modelValue)
+
+    watch(
+      () => dataSourceType.value,
+      (newVal) => {
+        emit('update:modelValue', newVal)
       }
-      state.checkedIndex = index
-      emit('update:modelValue', item.value)
-    }
+    )
 
     return {
-      state,
-      selectDataType,
-      handleChange
+      RADIO_GROUP,
+      dataSourceType
     }
   }
 }

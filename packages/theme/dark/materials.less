@@ -1,22 +1,24 @@
 :root {
-  // 带边框的图标按钮边框颜色
-  --ti-lowcode-materials-border-icon-border-color: transparent;
-  // 带边框的图标按钮悬浮边框颜色
-  --ti-lowcode-materials-border-icon-border-color-hover: transparent;
-  // 带边框的图标按钮背景颜色
-  --ti-lowcode-materials-border-icon-bg-color: var(--te-common-bg-default);
   // 区块分组下拉选项下边框颜色
-  --ti-lowcode-materials-block-group-item-border-color: var(--te-common-border-checked); // 暗色和亮色不同，需注意
+  --ti-lowcode-materials-block-group-item-border-color: var(--te-common-border-active);
   // 添加区块筛选模块字体颜色
-  --ti-lowcode-materials-block-filter-text-color: var(--te-common-text-primary);
+  --ti-lowcode-materials-block-filter-text-color: var(--te-common-text-secondary);
   // 添加区块穿梭框面板背景颜色
-  --ti-lowcode-materials-block-transfer-bg-color: var(--te-common-bg-default);
+  --ti-lowcode-materials-block-transfer-bg-color: var(
+    --te-common-bg-default
+  ); // BlockGroupTransferPanel文件暂未有地方引用
   // 添加区块穿梭框面板头部字体颜色
-  --ti-lowcode-materials-block-transfer-header-text-color: var(--te-common-text-primary);
+  --ti-lowcode-materials-block-transfer-header-text-color: var(
+    --te-common-text-primary
+  ); // BlockGroupTransferPanel文件暂未有地方引用
   // 添加区块穿梭框面板头部背景颜色
-  --ti-lowcode-materials-block-transfer-header-bg-color: var(--te-common-bg-default); // 暗色和亮色不同，需注意
+  --ti-lowcode-materials-block-transfer-header-bg-color: var(
+    --te-common-bg-container
+  ); // BlockGroupTransferPanel文件暂未有地方引用
   // 组件列表  组件名称颜色
-  --ti-lowcode-materials-component-list-color: var(--te-common-text-secondary);
+  --ti-lowcode-materials-component-list-color: var(--te-common-text-primary);
   // 删除区块分组气泡弹窗背景色
   --ti-lowcode-materials-block-group-delete-popover-bg-color: var(--te-common-bg-popover);
+  // 删除区块分组气泡弹窗标题色
+  --ti-lowcode-materials-block-group-delete-popover-title-color: var(--te-common-text-primary);
 }

@@ -1,10 +1,14 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 const routes = [
-  { path: '/', redirect: '/demopage' },
-  { path: '/demopage', component: () => import('@/views/DemoPage.vue') }
+  {
+    name: '5bhD7p5FUsUOTFRN',
+    path: 'demopage',
+    component: () => import('@/views/DemoPage.vue'),
+    children: []
+  }
 ]
 
 export default createRouter({
   history: createWebHashHistory(),
-  routes
+  routes: [{ path: '/', children: routes }]
 })

@@ -126,7 +126,6 @@ export default {
       .monaco-editor {
         width: 100%;
         height: 216px;
-        padding: 12px 8px;
         color: var(--te-common-text-secondary);
       }
       .mark {
@@ -135,7 +134,6 @@ export default {
         position: absolute;
         z-index: 1;
         top: 0;
-        background-color: var(--ti-lowcode-bind-event-dialog-mark-bg-color);
       }
     }
 

@@ -286,6 +286,7 @@ export default {
       box-sizing: border-box;
       background: var(--ti-lowcode-events-advanced-binding-state-bg-color);
       color: var(--ti-lowcode-events-advanced-binding-state-color);
+      border: 1px solid var(--ti-lowcode-events-advanced-binding-state-border-color);
       font-size: 12px;
       height: 30px;
       line-height: 22px;

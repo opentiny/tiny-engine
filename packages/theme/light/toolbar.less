@@ -1,12 +1,17 @@
-.tiny-engine-toolbar {
+:root {
   // 头部工具栏
   --ti-lowcode-toolbar-border-bottom-color: var(--te-common-border-divider);
   --ti-lowcode-toolbar-title-color: var(--te-common-text-primary);
+  --ti-lowcode-toolbar-sub-title-color: var(--te-common-text-secondary);
   --ti-lowcode-toolbar-hover-color: var(--te-common-bg-container);
-  --ti-lowcode-toolbar-view-active-bg: var(--te-common-bg-prompt);
-  --ti-lowcode-toolbar-left-icon-bg-hover: var(--te-common-icon-primary);
-  --ti-lowcode-toolbar-active-color: var(--te-common-text-secondary);
-  --ti-lowcode-toolbar-user-img-border-color: var(--te-common-border-divider);
+  --ti-lowcode-toolbar-view-active-bg: var(--te-common-bg-prompt); // 相当于 规范中定义的 #191919 透明度5%
+  --ti-lowcode-toolbar-left-icon-bg-hover: var(--te-common-bg-disabled);
+  --ti-lowcode-toolbar-active-color: var(--te-common-bg-disabled);
+  --ti-lowcode-toolbar-user-img-border-color: var(--te-common-border-default);
   --ti-lowcode-toolbar-dot-color: var(--te-common-color-error);
-  --ti-lowcode-toolbar-right-line: var(--te-common-bg-prompt);
+  --ti-lowcode-toolbar-right-line: var(--te-common-border-divider);
+  // 顶部按钮显示背景色
+  --ti-lowcode-toolbar-button-bg: var(--te-common-bg-prompt);
+  // 顶部隐藏导航栏按钮hover颜色
+  --ti-lowcode-toolbar-ellipsis-hover-bg: var(--te-common-bg-container);
 }

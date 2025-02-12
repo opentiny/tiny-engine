@@ -144,7 +144,7 @@ const getLoopScope = ({ scope, index, item, loopArgs }) => {
 const injectPlaceHolder = (componentName, children) => {
   const isEmptyArr = Array.isArray(children) && !children.length
 
-  if (configure[componentName]?.isContainer && (!children || isEmptyArr)) {
+  if ((configure[componentName]?.isContainer || componentName === 'Template') && (!children || isEmptyArr)) {
     return [
       {
         componentName: 'CanvasPlaceholder'
@@ -212,11 +212,13 @@ const getChildren = (schema, mergeScope, pageContext) => {
 }
 function getRenderPageId(currentPageId, isPageStart) {
   const pagePathFromRoot = (inject('page-ancestors') as Ref<any[]>).value
+  const pagePreviewFromCurrentPageChild = (inject('page-preview') as Ref<any[]>).value
+  const fullPath = [...pagePathFromRoot, ...pagePreviewFromCurrentPageChild]
 
   function getNextChild(currentPageId) {
-    const index = pagePathFromRoot.indexOf(currentPageId)
-    if (index > -1 && index + 1 < pagePathFromRoot.length) {
-      return pagePathFromRoot[index + 1]
+    const index = fullPath.indexOf(currentPageId)
+    if (index > -1 && index + 1 < fullPath.length) {
+      return fullPath[index + 1]
     }
     return null
   }
@@ -256,7 +258,13 @@ export const renderer = defineComponent({
       if (renderPageId) {
         return h(getPage(renderPageId), {
           key: ancestors,
-          [DESIGN_TAGKEY]: `${componentName}`
+          [DESIGN_TAGKEY]: `${componentName}`,
+          ...(pageContext.active && !isPageStart
+            ? {
+                [DESIGN_UIDKEY]: schema.id,
+                draggable: true
+              }
+            : {})
         })
       }
     }

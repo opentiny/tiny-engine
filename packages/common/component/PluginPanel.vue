@@ -73,7 +73,7 @@ export default {
 .plugin-panel {
   width: 100%;
   height: 100%;
-  background: var(--ti-lowcode-plugin-panel-bg, --ti-lowcode-toolbar-bg);
+  background: var(--te-common-bg-default);
   display: flex;
   flex-direction: column;
   position: relative;

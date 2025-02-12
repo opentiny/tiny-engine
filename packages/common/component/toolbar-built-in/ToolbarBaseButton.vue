@@ -33,7 +33,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .toolbar-button {
-  background-color: var(--ti-lowcode-toolbar-button-bg) !important;
+  background-color: var(--te-common-bg-prompt) !important;
   border: none !important;
   min-width: 70px;
   height: 26px;

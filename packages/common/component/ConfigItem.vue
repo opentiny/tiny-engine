@@ -551,6 +551,7 @@ export default {
       .binding-state {
         color: var(--ti-lowcode-meta-config-item-bind-color);
         background: var(--ti-lowcode-meta-config-item-bind-bg);
+        border: 1px solid var(--ti-lowcode-meta-config-item-bind-border);
         padding: 4px 12px;
         overflow: hidden;
         text-overflow: ellipsis;

@@ -8,7 +8,7 @@
 
 <script>
 import { reactive, watch } from 'vue'
-import { useLayout } from '@opentiny/tiny-engine-meta-register'
+import { useLayout, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { getCurrent, updateRect, selectState, querySelectById } from '../container'
 
 export default {
@@ -54,10 +54,6 @@ export default {
 
       const { parent, schema } = getCurrent()
 
-      if (!schema.props) {
-        schema.props = {}
-      }
-
       if (state.direction === 'horizontal') {
         let dis = state.startPosition.x - clientX
 
@@ -75,18 +71,32 @@ export default {
         // 最小宽度32
         newWidth = Math.max(newWidth, 32)
 
-        schema.props.flexBasis = `${newWidth}px`
-        schema.props.widthType = 'fixed'
+        useCanvas().operateNode({
+          type: 'changeProps',
+          id: schema.id,
+          value: {
+            props: {
+              flexBasis: `${newWidth}px`,
+              widthType: 'fixed'
+            }
+          }
+        })
       }
 
       if (state.direction === 'vertical') {
         let target = schema.componentName === 'CanvasRow' ? schema : parent
-        if (!target.props) {
-          target.props = {}
-        }
         const dis = clientY - state.startPosition.y
         const minHeight = state.startPosition.height + dis
-        target.props.minHeight = `${minHeight}px`
+
+        useCanvas().operateNode({
+          type: 'changeProps',
+          id: target.id,
+          value: {
+            props: {
+              minHeight: `${minHeight}px`
+            }
+          }
+        })
       }
 
       updateRect()
