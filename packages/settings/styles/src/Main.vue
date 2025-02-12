@@ -238,7 +238,7 @@ export default {
       display: block;
       margin-bottom: 8px;
       font-size: 12px;
-      color: var(--te-styles-common-text-color);
+      color: var(--te-styles-common-text-color-secondary);
     }
   }
   .inline-style {
@@ -251,11 +251,11 @@ export default {
         border-radius: 8px;
         width: 216px;
         text-align: left;
-        color: var(--te-styles-common-color);
+        color: var(--te-styles-common-text-color-primary);
       }
       .tiny-button:hover {
         background: none;
-        border-color: var(--te-styles-common-default-border-color);
+        border-color: var(--te-styles-common-border-color);
       }
     }
     .inline-bind-style {
@@ -263,7 +263,7 @@ export default {
         width: 216px;
         pointer-events: none;
         background: var(--te-styles-editor-bg-color);
-        color: var(--te-styles-editor-font-color);
+        color: var(--te-styles-editor-font-text-color);
         border-color: var(--te-styles-editor-border-color);
       }
     }

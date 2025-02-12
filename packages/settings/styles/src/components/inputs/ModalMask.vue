@@ -97,8 +97,8 @@ export default {
     left: 16px;
     z-index: 1000;
     padding: 8px;
-    color: var(--te-styles-common-text-color);
-    border: 1px solid var(--te-styles-common-default-border-color);
+    color: var(--te-styles-common-text-color-secondary);
+    border: 1px solid var(--te-styles-common-border-color);
     box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
     background-color: var(--te-styles-common-bg-color);

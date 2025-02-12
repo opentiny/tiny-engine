@@ -470,7 +470,7 @@ span {
       flex: 0 0 52px;
       margin-right: 2px;
       line-height: 28px;
-      color: var(--te-styles-common-text-color);
+      color: var(--te-styles-common-text-color-secondary);
     }
   }
 }
@@ -485,14 +485,14 @@ span {
   .overflow-label {
     flex: 0 0 54px;
     line-height: 24px;
-    color: var(--te-styles-common-text-color);
+    color: var(--te-styles-common-text-color-secondary);
   }
 }
 
 .selected-label {
   cursor: pointer;
   border-radius: 2px;
-  color: var(--te-styles-common-setting-color);
+  color: var(--te-styles-common-setting-text-color);
   background-color: var(--te-styles-common-setting-bg-color);
 }
 
@@ -523,7 +523,7 @@ span {
         .size-label {
           padding-right: 5px;
           display: inline-block;
-          color: var(--te-styles-common-text-color);
+          color: var(--te-styles-common-text-color-secondary);
         }
 
         :deep(.tiny-input) {
@@ -544,7 +544,7 @@ span {
   .fit-label {
     flex: 0 0 54px;
     line-height: 28px;
-    color: var(--te-styles-common-text-color);
+    color: var(--te-styles-common-text-color-secondary);
     span {
       padding: 2px;
     }
@@ -561,11 +561,11 @@ span {
     width: 20px;
     height: 20px;
     font-size: 18px;
-    color: var(--te-styles-common-text-color);
+    color: var(--te-styles-common-text-color-secondary);
     margin-left: 4px;
     border-radius: 2px;
     &.selected {
-      background: var(--te-styles-common-selected-bg-color);
+      background: var(--te-styles-common-bg-color-active);
       &.is-setting {
         .selected-label();
       }

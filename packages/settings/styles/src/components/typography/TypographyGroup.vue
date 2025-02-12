@@ -530,7 +530,7 @@ export default {
 <style lang="less" scoped>
 .typography-wrap {
   span {
-    color: var(--te-styles-common-text-color);
+    color: var(--te-styles-common-text-color-secondary);
     padding: 2px;
   }
   .typography-row {
@@ -617,7 +617,7 @@ export default {
     .font-size {
       display: flex;
       font-size: 12px;
-      color: var(--te-styles-common-text-weaken-color);
+      color: var(--te-styles-common-text-color-weaken);
       align-items: center;
       gap: 4px;
     }
@@ -652,7 +652,7 @@ export default {
     grid-template-columns: 15px 1fr;
     align-items: center;
     margin-bottom: 8px;
-    color: var(--te-styles-common-text-color);
+    color: var(--te-styles-common-text-color-secondary);
 
     .style-left {
       display: grid;
@@ -676,13 +676,13 @@ export default {
   }
 
   .typography-label {
-    color: var(--te-styles-common-text-color);
+    color: var(--te-styles-common-text-color-secondary);
   }
   .is-setting {
     span {
       cursor: pointer;
       border-radius: 2px;
-      color: var(--te-styles-common-setting-color);
+      color: var(--te-styles-common-setting-text-color);
       background-color: var(--te-styles-common-setting-bg-color);
     }
   }

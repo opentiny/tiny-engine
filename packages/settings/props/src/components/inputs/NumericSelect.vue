@@ -104,7 +104,7 @@ export default {
     right: 32px;
     transform: translateY(-50%);
     span {
-      color: var(--te-props-common-text-color);
+      color: var(--te-props-common-text-color-secondary);
       font-size: 14px;
       padding: 4px;
     }
@@ -112,13 +112,13 @@ export default {
       width: 25px;
       float: right;
       .tiny-input__inner {
-        color: var(--te-props-common-text-color);
+        color: var(--te-props-common-text-color-secondary);
         padding: 2px;
         border: none;
         font-size: 14px;
         text-align: center;
         &:hover {
-          background: var(--te-props-common-hover-bg-color);
+          background: var(--te-props-common-bg-color-hover);
         }
       }
       .tiny-input__suffix {

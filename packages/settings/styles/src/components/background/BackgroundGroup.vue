@@ -400,7 +400,7 @@ export default {
     padding: 2px;
   }
   .background-label {
-    color: var(--te-styles-common-text-color);
+    color: var(--te-styles-common-text-color-secondary);
   }
   .background-color,
   .background-clip {
@@ -453,7 +453,7 @@ export default {
       position: relative;
       overflow: visible;
       &:hover {
-        background-color: var(--te-styles-common-hover-bg-color);
+        background-color: var(--te-styles-common-bg-color-hover);
         .icon-wrap {
           opacity: 1;
         }
@@ -499,7 +499,7 @@ export default {
       height: 10px;
       border-radius: 1px;
       margin: 1px;
-      box-shadow: var(--te-styles-common-default-border-color) 0px 0px 0px 1px;
+      box-shadow: var(--te-styles-common-border-color) 0px 0px 0px 1px;
       align-self: center;
       overflow: hidden;
       .image {
@@ -553,7 +553,7 @@ export default {
     span {
       cursor: pointer;
       border-radius: 2px;
-      color: var(--te-styles-common-setting-color);
+      color: var(--te-styles-common-setting-text-color);
       background-color: var(--te-styles-common-setting-bg-color);
     }
   }
@@ -567,7 +567,7 @@ export default {
 
   span {
     font-weight: 600;
-    color: var(--te-styles-common-color);
+    color: var(--te-styles-common-text-color-primary);
   }
 
   .svg-icon {

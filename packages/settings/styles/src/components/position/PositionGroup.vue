@@ -463,7 +463,7 @@ export default {
   }
 
   .position-label {
-    color: var(--te-styles-common-text-color);
+    color: var(--te-styles-common-text-color-secondary);
   }
   .position-dropdown {
     grid-column: 1 / -1;
@@ -509,7 +509,7 @@ export default {
       line-height: 10px;
       letter-spacing: -0.2px;
       display: flex;
-      color: var(--te-styles-common-color);
+      color: var(--te-styles-common-text-color-primary);
       background: transparent;
       padding: 2px;
       margin-left: -2px;
@@ -550,10 +550,10 @@ export default {
     height: 20px;
     font-size: 16px;
     &:hover {
-      background-color: var(--te-styles-common-hover-bg-color);
+      background-color: var(--te-styles-common-bg-color-hover);
     }
     &.selected {
-      background-color: var(--te-styles-common-selected-bg-color);
+      background-color: var(--te-styles-common-bg-color-active);
     }
   }
   .relative-wrap {
@@ -566,7 +566,7 @@ export default {
     .target {
       height: 28px;
       background-color: var(--te-styles-position-relative-bg-color);
-      color: var(--te-styles-common-color);
+      color: var(--te-styles-common-text-color-primary);
       grid-column: 2 / span 2;
       align-items: center;
       display: grid;
@@ -601,7 +601,7 @@ export default {
     span {
       cursor: pointer;
       border-radius: 2px;
-      color: var(--te-styles-common-setting-color);
+      color: var(--te-styles-common-setting-text-color);
       background-color: var(--te-styles-common-setting-bg-color);
     }
   }
@@ -609,7 +609,7 @@ export default {
     color: var(--te-styles-position-relative-lr-bg-color);
     cursor: default;
     &:hover {
-      color: var(--te-styles-position-relative-lr-hover-bg-color);
+      color: var(--te-styles-position-relative-lr-bg-color-hover);
     }
   }
 
@@ -617,7 +617,7 @@ export default {
     color: var(--te-styles-position-relative-tb-bg-color);
     cursor: default;
     &:hover {
-      color: var(--te-styles-position-relative-tb-hover-bg-color);
+      color: var(--te-styles-position-relative-tb-bg-color-hover);
     }
   }
 

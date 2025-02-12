@@ -114,7 +114,7 @@ export default {
   .content-right-top {
     .new-action-tip {
       margin: 8px 0;
-      color: var(--te-bind-event-dialog-tip-color);
+      color: var(--te-bind-event-dialog-tip-text-color);
     }
   }
   .content-right-bottom {
@@ -126,7 +126,7 @@ export default {
       .monaco-editor {
         width: 100%;
         height: 216px;
-        color: var(--te-bind-event-dialog-content-right-monaco-color);
+        color: var(--te-bind-event-dialog-content-right-monaco-text-color);
       }
       .mark {
         width: 100%;
@@ -139,7 +139,7 @@ export default {
 
     .params-tip {
       margin: 8px 0;
-      color: var(--te-bind-event-dialog-danger-tip-color);
+      color: var(--te-bind-event-dialog-danger-tip-text-color);
     }
   }
   .content-right-top .content-right-title,
@@ -148,7 +148,7 @@ export default {
     .set-params-tip {
       margin-top: 6px;
       font-weight: 400;
-      color: var(--te-bind-event-dialog-tip-color);
+      color: var(--te-bind-event-dialog-tip-text-color);
     }
   }
 
@@ -158,7 +158,7 @@ export default {
     }
     .params-tip,
     .new-action-tip {
-      color: var(--te-bind-event-dialog-danger-tip-color);
+      color: var(--te-bind-event-dialog-danger-tip-text-color);
     }
   }
 }

@@ -199,7 +199,7 @@ export default {
     border-width: 1px;
     box-sizing: border-box;
     border-style: solid;
-    border-color: var(--te-styles-common-default-border-color);
+    border-color: var(--te-styles-common-border-color);
     border-radius: 4px;
     gap: 0px;
     grid-template-columns: 1fr 1fr 1fr;
@@ -212,7 +212,7 @@ export default {
     font-size: 14px;
     &:hover,
     &.selected {
-      color: var(--te-styles-background-primary-icon-color);
+      color: var(--te-styles-background-icon-color-primary);
     }
   }
   .input-wrap {

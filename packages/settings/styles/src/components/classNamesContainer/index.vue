@@ -484,7 +484,7 @@ const handleDeleteCurSelector = () => {
 .title {
   margin: 0;
   font-size: 12px;
-  color: var(--te-styles-common-text-color);
+  color: var(--te-styles-common-text-color-secondary);
   font-weight: normal;
   .help-link {
     vertical-align: middle;
@@ -495,7 +495,7 @@ const handleDeleteCurSelector = () => {
   display: flex;
   margin-top: 10px;
   height: 24px;
-  color: var(--te-styles-common-color);
+  color: var(--te-styles-common-text-color-primary);
 
   .selector-right-container {
     display: flex;
@@ -519,9 +519,9 @@ const handleDeleteCurSelector = () => {
   .edit-global-css {
     display: flex;
     padding: 3px;
-    border: 1px solid var(--te-styles-common-default-border-color);
+    border: 1px solid var(--te-styles-common-border-color);
     border-radius: var(--te-base-border-radius-1);
-    color: var(--te-styles-common-text-weaken-color);
+    color: var(--te-styles-common-text-color-weaken);
     cursor: pointer;
   }
 
@@ -532,17 +532,17 @@ const handleDeleteCurSelector = () => {
     max-width: 180px;
     min-width: 0;
     padding: 1px 10px;
-    border: 1px solid var(--te-styles-common-default-border-color);
+    border: 1px solid var(--te-styles-common-border-color);
     border-radius: var(--te-base-border-radius-1);
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     font-size: 12px;
     &:hover {
-      border-color: var(--te-styles-className-selector-container-hover-border-color);
+      border-color: var(--te-styles-className-selector-container-border-color-hover);
     }
     &.has-error {
-      border-color: var(--te-styles-className-selector-container-error-border-color);
-      background-color: var(--te-styles-className-selector-container-error-bg-color);
+      border-color: var(--te-styles-className-selector-container-border-color-error);
+      background-color: var(--te-styles-className-selector-container-bg-color-error);
     }
     &:has(.selector-input:focus) {
       .empty-tips {
@@ -551,7 +551,7 @@ const handleDeleteCurSelector = () => {
     }
     .empty-tips {
       position: absolute;
-      color: var(--te-styles-className-selector-container-empty-tips-color);
+      color: var(--te-styles-className-selector-container-empty-tips-text-color);
       z-index: 0;
     }
     .current-selector {
@@ -560,7 +560,7 @@ const handleDeleteCurSelector = () => {
         display: flex;
         align-items: center;
         background-color: var(--te-styles-common-setting-bg-color);
-        color: var(--te-styles-common-setting-color);
+        color: var(--te-styles-common-setting-text-color);
         padding: 0 4px;
         border-radius: 4px;
         line-height: 18px;
@@ -587,14 +587,14 @@ const handleDeleteCurSelector = () => {
         }
         .edit-btn,
         .delete-btn {
-          color: var(--te-styles-className-selector-container-option-btn-color);
+          color: var(--te-styles-className-selector-container-option-btn-text-color);
           margin-left: 4px;
           cursor: pointer;
         }
       }
     }
     .selector-input {
-      color: var(--te-styles-common-color);
+      color: var(--te-styles-common-text-color-primary);
       min-width: 0;
       flex: 0 0 0;
       line-height: 24px;
@@ -615,7 +615,7 @@ const handleDeleteCurSelector = () => {
     align-items: center;
     margin-top: 8px;
     font-size: 12px;
-    color: var(--te-styles-className-selector-container-error-tips-color);
+    color: var(--te-styles-className-selector-container-tips-text-color-error);
     .error-tips-text {
       margin-left: 4px;
     }
@@ -642,7 +642,7 @@ const handleDeleteCurSelector = () => {
       font-size: 12px;
       padding: 0 10px;
       line-height: 24px;
-      color: var(--te-styles-common-text-weaken-color);
+      color: var(--te-styles-common-text-color-weaken);
     }
 
     .selector-dropdown-list-tips + .selector-dropdown-list-tips {
@@ -665,8 +665,8 @@ const handleDeleteCurSelector = () => {
       }
       &.active,
       &:hover {
-        background-color: var(--te-styles-className-selector-container-dropdown-list-item-active-bg-color);
-        color: var(--te-styles-common-color);
+        background-color: var(--te-styles-className-selector-container-dropdown-list-item-bg-color-active);
+        color: var(--te-styles-common-text-color-primary);
       }
     }
   }
@@ -674,7 +674,7 @@ const handleDeleteCurSelector = () => {
   .state-selector {
     flex: 4;
     min-width: 84px;
-    border: 1px solid var(--te-styles-common-default-border-color);
+    border: 1px solid var(--te-styles-common-border-color);
     border-radius: var(--te-base-border-radius-1);
     border-left: none;
     border-top-left-radius: 0;

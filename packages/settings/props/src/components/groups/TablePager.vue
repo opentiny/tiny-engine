@@ -62,12 +62,12 @@ export default {
 .colums {
   width: 100%;
   .top {
-    color: var(--te-props-common-text-color);
+    color: var(--te-props-common-text-color-secondary);
     display: flex;
     justify-content: space-between;
     margin-bottom: 5px;
     .tiny-svg {
-      color: var(--te-props-common-icon-primary-color);
+      color: var(--te-props-common-icon-color-primary);
       margin-right: 5px;
       font-size: 16px;
       &:hover {

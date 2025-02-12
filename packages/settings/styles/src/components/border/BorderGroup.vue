@@ -547,7 +547,7 @@ export default {
     padding: 5px 0;
 
     .border-label {
-      color: var(--te-styles-common-text-color);
+      color: var(--te-styles-common-text-color-secondary);
       flex: 0 0 40px;
       padding-left: 2px;
       margin-right: 2px;
@@ -575,7 +575,7 @@ export default {
   .radius-label {
     flex: 0 0 48px;
     line-height: 24px;
-    color: var(--te-styles-common-text-color);
+    color: var(--te-styles-common-text-color-secondary);
   }
 
   .radius-content {
@@ -591,9 +591,9 @@ export default {
     .radius-content-svg {
       &:hover,
       &.selected {
-        color: var(--te-styles-border-icon-active-color);
+        color: var(--te-styles-border-icon-color-active);
         svg {
-          color: var(--te-styles-border-icon-active-color);
+          color: var(--te-styles-border-icon-color-active);
         }
       }
 
@@ -652,7 +652,7 @@ export default {
 }
 
 .border-label {
-  color: var(--te-styles-common-text-color);
+  color: var(--te-styles-common-text-color-secondary);
   flex-shrink: 0;
 }
 .border-container {
@@ -692,7 +692,7 @@ export default {
       grid-area: 3 / 2;
     }
     &.selected {
-      background-color: var(--te-styles-border-selected-bg-color);
+      background-color: var(--te-styles-border-bg-color-active);
       border-radius: 4px;
     }
   }
@@ -718,7 +718,7 @@ export default {
 .is-setting {
   span {
     border-radius: 2px;
-    color: var(--te-styles-common-setting-color);
+    color: var(--te-styles-common-setting-text-color);
     background: var(--te-styles-common-setting-bg-color);
     cursor: pointer;
   }

@@ -128,9 +128,9 @@ export default {
         justify-content: space-between;
         padding: 8px 12px;
         cursor: pointer;
-        color: var(--te-bind-event-dialog-color);
+        color: var(--te-bind-event-dialog-text-color);
         &.active {
-          background: var(--te-bind-event-dialog-content-left-list-item-active-bg-color);
+          background: var(--te-bind-event-dialog-content-left-list-item-bg-color-active);
         }
       }
     }

@@ -511,9 +511,9 @@ export default {
       align-self: center;
       height: 24px;
       padding: 0px 4px;
-      border: 1px solid var(--te-styles-common-default-border-color);
+      border: 1px solid var(--te-styles-common-border-color);
       border-radius: 2px;
-      color: var(--te-styles-common-color);
+      color: var(--te-styles-common-text-color-primary);
       background: var(--te-styles-common-bg-color);
       outline: 0px;
       cursor: pointer;
@@ -545,7 +545,7 @@ export default {
       line-height: 24px;
       padding-left: 3px;
       width: 54px;
-      color: var(--te-styles-common-text-color);
+      color: var(--te-styles-common-text-color-secondary);
     }
     .radio-wrap {
       display: grid;
@@ -553,7 +553,7 @@ export default {
     }
   }
   .is-setting {
-    color: var(--te-styles-common-setting-color);
+    color: var(--te-styles-common-setting-text-color);
     background-color: var(--te-styles-common-setting-bg-color);
   }
   :deep(.reference-wrapper) {

@@ -140,10 +140,10 @@ export default {
         }
 
         &:hover {
-          color: var(--te-styles-common-color);
+          color: var(--te-styles-common-text-color-primary);
 
           svg {
-            color: var(--te-styles-common-color);
+            color: var(--te-styles-common-text-color-primary);
           }
         }
       }
@@ -171,7 +171,7 @@ export default {
       gap: 8px;
       grid-template-columns: 1fr auto;
       padding-bottom: 8px;
-      border-bottom: 1px solid var(--te-styles-common-default-border-color);
+      border-bottom: 1px solid var(--te-styles-common-border-color);
     }
 
     .item-col {
@@ -184,27 +184,27 @@ export default {
       .item-btn {
         flex: auto;
         display: flex;
-        border: 1px solid var(--te-styles-common-default-border-color);
+        border: 1px solid var(--te-styles-common-border-color);
 
         .icon {
           flex: 1;
           padding: 4px 0;
           font-size: 16px;
-          color: var(--te-styles-common-text-color);
+          color: var(--te-styles-common-text-color-secondary);
           background: var(--te-styles-typography-bg-color);
           position: relative;
           display: flex;
           justify-content: center;
 
           &:hover {
-            color: var(--te-styles-common-color);
+            color: var(--te-styles-common-text-color-primary);
           }
 
           &:not(:last-child)::after {
             content: '';
             width: 1px;
             height: 100%;
-            background: var(--te-styles-typography-hover-bg-color);
+            background: var(--te-styles-typography-bg-color-hover);
             display: inline-block;
             position: absolute;
             top: 0;
@@ -228,7 +228,7 @@ export default {
 
       svg {
         font-size: 14px;
-        color: var(--te-styles-common-text-color);
+        color: var(--te-styles-common-text-color-secondary);
       }
     }
   }

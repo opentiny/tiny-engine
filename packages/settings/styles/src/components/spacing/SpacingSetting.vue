@@ -142,14 +142,14 @@ export default {
       height: 60px;
       line-height: 60px;
       text-align: center;
-      border: 1px solid var(--te-styles-common-default-border-color);
+      border: 1px solid var(--te-styles-common-border-color);
       background: var(--te-styles-spacing-setting-bg-color);
       cursor: pointer;
       box-sizing: border-box;
 
       &:hover,
       &.active {
-        color: var(--te-styles-common-setting-color);
+        color: var(--te-styles-common-setting-text-color);
         background: var(--te-styles-common-setting-bg-color);
       }
     }
@@ -178,7 +178,7 @@ export default {
         line-height: 26px;
         margin-left: 3%;
         text-align: center;
-        border: 1px solid var(--te-styles-common-default-border-color);
+        border: 1px solid var(--te-styles-common-border-color);
         background: var(--te-styles-spacing-setting-bg-color);
         cursor: pointer;
         transition: 0.3s;
@@ -186,7 +186,7 @@ export default {
 
         &:hover,
         &.active {
-          color: var(--te-styles-common-setting-color);
+          color: var(--te-styles-common-setting-text-color);
           background: var(--te-styles-common-setting-bg-color);
         }
       }

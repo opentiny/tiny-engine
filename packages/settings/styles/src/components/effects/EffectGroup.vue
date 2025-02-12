@@ -530,14 +530,14 @@ export default {
   .opacity-label,
   .outline-label,
   .cursor-label {
-    color: var(--te-styles-common-text-color);
+    color: var(--te-styles-common-text-color-secondary);
   }
 
   .is-setting {
     span {
       cursor: pointer;
       border-radius: 2px;
-      color: var(--te-styles-common-setting-color);
+      color: var(--te-styles-common-setting-text-color);
       background-color: var(--te-styles-common-setting-bg-color);
     }
   }
@@ -550,7 +550,7 @@ export default {
 
   .outline-content {
     display: flex;
-    color: var(--te-styles-common-text-color);
+    color: var(--te-styles-common-text-color-secondary);
     .outline-content-svg {
       flex: 1;
       padding: 4px;
@@ -562,7 +562,7 @@ export default {
       &:hover,
       &.selected {
         svg {
-          color: var(--te-styles-effect-group-active-color);
+          color: var(--te-styles-effect-group-icon-color-active);
         }
       }
     }
@@ -601,7 +601,7 @@ export default {
     .outline-label {
       margin-right: -16px;
       line-height: 16px;
-      color: var(--te-styles-common-text-color);
+      color: var(--te-styles-common-text-color-secondary);
       span {
         padding: 2px;
       }

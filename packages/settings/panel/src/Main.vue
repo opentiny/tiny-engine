@@ -73,12 +73,12 @@ export default {
       margin: 0;
     }
     .tiny-tabs__item {
-      color: var(--te-settings-panel-common-text-color);
+      color: var(--te-settings-panel-common-text-color-secondary);
       &:hover {
-        color: var(--te-settings-panel-common-color);
+        color: var(--te-settings-panel-common-text-color-primary);
       }
       &.is-active {
-        color: var(--te-settings-panel-common-color);
+        color: var(--te-settings-panel-common-text-color-primary);
       }
     }
   }
@@ -99,10 +99,10 @@ export default {
 
 @keyframes glow {
   0% {
-    box-shadow: inset 0px 0px 4px var(--te-settings-panel-active-bg-color);
+    box-shadow: inset 0px 0px 4px var(--te-settings-panel-bg-color-active);
   }
   100% {
-    box-shadow: inset 0px 0px 14px var(--te-settings-panel-active-bg-color);
+    box-shadow: inset 0px 0px 14px var(--te-settings-panel-bg-color-active);
   }
 }
 </style>
