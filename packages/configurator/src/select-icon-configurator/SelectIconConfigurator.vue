@@ -108,14 +108,14 @@ export default {
   width: 136px;
   cursor: pointer;
   background: var(--te-configurator-select-icon-bg-color);
-  color: var(--te-configurator-common-text-color);
-  border: 1px solid var(--te-configurator-common-border-color);
+  color: var(--te-configurator-common-text-color-secondary);
+  border: 1px solid var(--te-configurator-common-border-color-divider);
   border-radius: 3px;
   .icon-box {
-    border-right: 1px solid var(--te-configurator-common-border-color);
+    border-right: 1px solid var(--te-configurator-common-border-color-divider);
     padding: 4px 8px;
     .tiny-svg {
-      color: var(--te-configurator-common-text-color);
+      color: var(--te-configurator-common-text-color-secondary);
       font-size: 14px;
     }
   }
@@ -161,13 +161,13 @@ export default {
 
     li {
       width: 40px;
-      color: var(--te-configurator-common-text-color);
+      color: var(--te-configurator-common-text-color-secondary);
       cursor: pointer;
       text-align: center;
       .tiny-svg {
         font-size: 24px;
         &:hover {
-          color: var(--te-configurator-common-color);
+          color: var(--te-configurator-common-text-color-primary);
         }
       }
     }

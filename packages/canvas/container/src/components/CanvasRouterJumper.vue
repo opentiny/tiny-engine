@@ -89,15 +89,15 @@ export default {
   transform: translateX(-80%) translateY(-20%);
   top: v-bind('state.top');
   left: v-bind('state.left');
-  border: 1px solid var(--te-canvas-container-hover-border-color);
+  border: 1px solid var(--te-canvas-container-border-color-hover);
   &.disabled {
     opacity: 0.3;
   }
   &:not(.disabled):hover {
-    border-color: var(--te-canvas-container-checked-border-color);
-    background-color: var(--te-canvas-container-checked-bg-color);
+    border-color: var(--te-canvas-container-border-color-checked);
+    background-color: var(--te-canvas-container-bg-color-checked);
     .jumper {
-      color: var(--te-canvas-container-router-jumper-color);
+      color: var(--te-canvas-container-router-jumper-text-color);
     }
   }
   .jumper {

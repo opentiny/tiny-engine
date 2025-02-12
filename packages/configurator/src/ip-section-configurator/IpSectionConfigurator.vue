@@ -160,13 +160,13 @@ export default {
   }
   .proposal {
     margin-top: 6px;
-    color: var(--te-configurator-common-weaken-text-color);
+    color: var(--te-configurator-common-text-color-weaken);
     font-size: 12px;
     .proposal-item {
       line-height: 20px;
       height: 20px;
       .proposal-select {
-        color: var(--te-configurator-common-weaken-text-color);
+        color: var(--te-configurator-common-text-color-weaken);
         cursor: pointer;
       }
     }

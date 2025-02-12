@@ -111,7 +111,7 @@ const handleClickRoute = (route) => {
   display: flex;
   align-items: center;
   gap: 2px;
-  background-color: var(--te-canvas-route-default-bg-color);
+  background-color: var(--te-canvas-route-address-bg-color);
   height: 20px;
   width: 100%;
   border-radius: 999px;
@@ -122,7 +122,7 @@ const handleClickRoute = (route) => {
   cursor: pointer;
   &:hover {
     text-decoration: underline;
-    color: var(--te-canvas-route-link-color);
+    color: var(--te-canvas-route-text-color-link);
   }
 }
 </style>

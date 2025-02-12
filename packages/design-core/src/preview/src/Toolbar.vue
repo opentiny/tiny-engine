@@ -81,7 +81,7 @@ export default {
   gap: 12px;
 }
 .toolbar-button-text {
-  color: var(--te-preview-common-color);
+  color: var(--te-preview-common-text-color);
   margin-left: 4px;
   font-size: 12px;
 }

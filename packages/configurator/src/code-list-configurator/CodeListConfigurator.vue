@@ -211,7 +211,7 @@ export default {
   padding: 0 16px;
   margin: auto;
   border-radius: 4px;
-  border: 1px solid var(--te-configurator-common-border-color);
+  border: 1px solid var(--te-configurator-common-border-color-divider);
   background-color: var(--te-configurator-code-list-bg-color);
   box-shadow: rgb(0 0 0 / 30%) 0px 1px 15px 0px;
 
@@ -220,7 +220,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     padding: 10px 0;
-    color: var(--te-configurator-common-text-color);
+    color: var(--te-configurator-common-text-color-secondary);
 
     .header-title {
       font-size: 14px;
@@ -238,8 +238,8 @@ export default {
       align-items: center;
       transition: 0.3s;
       &:hover {
-        color: var(--te-configurator-common-hover-icon-color);
-        background: var(--te-configurator-common-hover-bg-color);
+        color: var(--te-configurator-common-icon-color-hover);
+        background: var(--te-configurator-common-bg-color-hover);
       }
     }
   }
@@ -267,8 +267,8 @@ export default {
       position: relative;
       color: var(--te-configurator-common-icon-color);
       height: 38px;
-      border-bottom: 1px solid var(--te-configurator-common-default-border-color);
-      box-shadow: var(--te-configurator-common-default-border-color) 0, -1px;
+      border-bottom: 1px solid var(--te-configurator-common-border-color);
+      box-shadow: var(--te-configurator-common-border-color) 0, -1px;
       font-size: 13px;
       font-weight: 600;
     }
@@ -278,7 +278,7 @@ export default {
         font-weight: normal;
       }
       &:hover {
-        background: var(--te-configurator-common-hover-bg-color);
+        background: var(--te-configurator-common-bg-color-hover);
       }
     }
   }

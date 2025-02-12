@@ -96,7 +96,7 @@ export default {
 
   .icon-setting {
     font-size: 16px;
-    fill: var(--te-canvas-container-text-color, #d9d9d9);
+    fill: var(--te-canvas-container-text-color-secondary, #d9d9d9);
   }
 
   .icon-wrap {
@@ -111,8 +111,8 @@ export default {
     align-items: center;
     transition: 0.3s;
     &:hover {
-      fill: var(--te-canvas-container-primary-icon-color, #fff);
-      background: var(--te-canvas-container-hover-bg-color, rgba(255, 255, 255, 0.1));
+      fill: var(--te-canvas-container-icon-color-primary, #fff);
+      background: var(--te-canvas-container-bg-color-hover, rgba(255, 255, 255, 0.1));
     }
   }
 }
@@ -171,7 +171,7 @@ export default {
     align-items: center;
   }
   svg {
-    fill: var(--te-canvas-container-text-color, #d9d9d9);
+    fill: var(--te-canvas-container-text-color-secondary, #d9d9d9);
     margin-left: 4px;
   }
 }

@@ -140,7 +140,7 @@ export default {
   }
   .slot-name {
     width: 30%;
-    color: var(--te-configurator-common-color);
+    color: var(--te-configurator-common-text-color-primary);
     font-size: 12px;
     display: flex;
     justify-content: space-between;
@@ -194,7 +194,7 @@ export default {
 }
 
 .e__switch.e_is-checked .e__switch-core {
-  background-color: var(--te-configurator-common-switch-checked-bg-color);
+  background-color: var(--te-configurator-common-switch-bg-color-checked);
 }
 
 .e__switch.e_is-checked .e__switch-core::after {

@@ -81,16 +81,16 @@ input[type='radio'] {
 
 .radio-button {
   display: table-cell;
-  color: var(--te-configurator-common-text-color);
+  color: var(--te-configurator-common-text-color-secondary);
   padding: 4px;
   text-align: center;
   &:not(:last-child) {
   }
   &.active {
-    color: var(--te-configurator-common-emphasize-color);
+    color: var(--te-configurator-common-text-color-emphasize);
   }
   &:not(.active):hover {
-    color: var(--te-configurator-common-text-color);
+    color: var(--te-configurator-common-text-color-secondary);
   }
   &:first-child {
     border-top-left-radius: 2px;

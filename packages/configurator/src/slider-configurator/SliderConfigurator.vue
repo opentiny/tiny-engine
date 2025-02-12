@@ -103,7 +103,7 @@ export default {
       border-radius: 50%;
       border: none;
       cursor: ew-resize;
-      background-color: var(--te-configurator-common-text-color);
+      background-color: var(--te-configurator-common-text-color-secondary);
       box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 1px, rgba(0, 0, 0, 0.3) 0px 0px 0px 0.5px;
     }
     .tiny-slider__range {
@@ -114,7 +114,7 @@ export default {
     }
 
     .tiny-slider__tips {
-      color: var(--te-configurator-common-weaken-text-color);
+      color: var(--te-configurator-common-text-color-weaken);
       background: var(--te-configurator-common-bg-color);
       padding: 4px 6px;
       border-radius: 2px;
@@ -133,7 +133,7 @@ export default {
     padding: 0;
     cursor: pointer;
     border: 0;
-    background-color: var(--te-configurator-slider-border-bg-divider-color);
+    background-color: var(--te-configurator-slider-border-bg-color-divider);
     position: relative;
     outline: 0;
     -webkit-appearance: none;
@@ -147,7 +147,7 @@ export default {
     border-radius: 50%;
     border: 0;
     background-color: var(--te-configurator-common-bg-color);
-    box-shadow: 0 0 2px 0 var(--te-configurator-common-default-border-color);
+    box-shadow: 0 0 2px 0 var(--te-configurator-common-border-color);
     -webkit-transition: border-color 0.15s, background-color 0.15s;
     transition: border-color 0.15s, background-color 0.15s;
     cursor: pointer;

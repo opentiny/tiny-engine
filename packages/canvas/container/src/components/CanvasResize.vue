@@ -144,7 +144,7 @@ export default {
         left: -3px;
         width: 4px;
         height: 100%;
-        background: var(--te-canvas-container-checked-bg-color);
+        background: var(--te-canvas-container-bg-color-checked);
         display: none;
       }
 
@@ -154,7 +154,7 @@ export default {
 
       &:hover {
         .tab-handle {
-          background: var(--te-canvas-container-checked-bg-color);
+          background: var(--te-canvas-container-bg-color-checked);
         }
 
         .tab-handle:before,
@@ -179,7 +179,7 @@ export default {
         width: 14px;
         height: 38px;
         margin-top: -19px;
-        background: var(--te-canvas-container-iframe-scrollbar-thumb-color);
+        background: var(--te-canvas-container-canvas-size-tab-bg-color);
         cursor: col-resize;
         pointer-events: all;
         border-top-right-radius: 3px;

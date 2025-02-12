@@ -173,23 +173,23 @@ const change = (item) => {
       line-height: 14px;
       min-width: 20px;
       background-color: var(--te-configurator-tabs-group-bg-color);
-      color: var(--te-configurator-common-weaken-text-color);
+      color: var(--te-configurator-common-text-color-weaken);
 
       &:hover {
-        background-color: var(--te-configurator-tabs-group-hover-bg-color);
-        color: var(--te-configurator-common-text-color);
+        background-color: var(--te-configurator-tabs-group-bg-color-hover);
+        color: var(--te-configurator-common-text-color-secondary);
         border-radius: 4px;
         .svg-icon {
-          color: var(--te-configurator-common-primary-icon-color);
+          color: var(--te-configurator-common-icon-color-primary);
         }
       }
 
       &.selected {
-        background-color: var(--te-configurator-tabs-group-selected-bg-color);
-        color: var(--te-configurator-common-text-color);
+        background-color: var(--te-configurator-tabs-group-bg-color-active);
+        color: var(--te-configurator-common-text-color-secondary);
         border-radius: 4px;
         .svg-icon {
-          color: var(--te-configurator-common-primary-icon-color);
+          color: var(--te-configurator-common-icon-color-primary);
         }
       }
     }
@@ -212,16 +212,16 @@ const change = (item) => {
       justify-content: center;
       align-items: center;
       height: 24px;
-      color: var(--te-configurator-common-weaken-text-color);
+      color: var(--te-configurator-common-text-color-weaken);
 
       &:hover {
-        background-color: var(--te-configurator-tabs-group-hover-bg-color);
+        background-color: var(--te-configurator-tabs-group-bg-color-hover);
         border-radius: 4px;
-        color: var(--te-configurator-common-color);
+        color: var(--te-configurator-common-text-color-primary);
       }
       &.selected {
-        background-color: var(--te-configurator-tabs-group-selected-bg-color);
-        color: var(--te-configurator-common-color);
+        background-color: var(--te-configurator-tabs-group-bg-color-active);
+        color: var(--te-configurator-common-text-color-primary);
         border-radius: 4px;
       }
       .tiny-dropdown__title {
@@ -241,7 +241,7 @@ const change = (item) => {
         }
       }
       .tiny-dropdown__trigger:hover {
-        color: var(--te-configurator-common-color);
+        color: var(--te-configurator-common-text-color-primary);
       }
     }
   }
@@ -255,22 +255,22 @@ const change = (item) => {
   margin-left: 20px;
   border-radius: 4px;
   background-color: var(--te-configurator-common-bg-color);
-  color: var(--te-configurator-common-weaken-text-color);
+  color: var(--te-configurator-common-text-color-weaken);
   z-index: 9999;
-  box-shadow: 0 0 10px 0 var(--te-configurator-common-default-border-color);
+  box-shadow: 0 0 10px 0 var(--te-configurator-common-border-color);
 
   :deep(.focusing) {
     background-color: var(--te-configurator-common-bg-color);
   }
 
   :deep(.tiny-dropdown-item) {
-    color: var(--te-configurator-common-weaken-text-color);
+    color: var(--te-configurator-common-text-color-weaken);
     background-color: var(--te-configurator-common-bg-color);
 
     &:hover,
     &:active {
-      background-color: var(--te-configurator-common-hover-bg-color);
-      color: var(--te-configurator-common-color);
+      background-color: var(--te-configurator-common-bg-color-hover);
+      color: var(--te-configurator-common-text-color-primary);
     }
   }
 
@@ -281,6 +281,6 @@ const change = (item) => {
 .border-right {
   display: inline-block;
   height: 12px;
-  border-right: 1px solid var(--te-configurator-common-default-border-color);
+  border-right: 1px solid var(--te-configurator-common-border-color);
 }
 </style>

@@ -295,9 +295,9 @@ export default {
   }
   .li-item-disabled {
     cursor: not-allowed;
-    color: var(--te-canvas-container-disabled-color);
+    color: var(--te-canvas-container-text-color-disabled);
     svg {
-      fill: var(--te-canvas-container-disabled-color);
+      fill: var(--te-canvas-container-text-color-disabled);
     }
   }
   li {
@@ -307,19 +307,19 @@ export default {
       justify-content: space-between;
     }
     font-size: 12px;
-    color: var(--te-canvas-container-color);
+    color: var(--te-canvas-container-text-color-primary);
     svg {
-      fill: var(--te-canvas-container-color);
+      fill: var(--te-canvas-container-text-color-primary);
     }
     padding: 6px 15px;
     &:not(.menu-item-disabled):hover {
-      background: var(--te-canvas-container-hover-bg-color);
+      background: var(--te-canvas-container-bg-color-hover);
     }
     position: relative;
 
     &.menu-item-disabled {
       cursor: not-allowed;
-      color: var(--te-canvas-container-disabled-color);
+      color: var(--te-canvas-container-text-color-disabled);
     }
   }
   &.sub-menu {

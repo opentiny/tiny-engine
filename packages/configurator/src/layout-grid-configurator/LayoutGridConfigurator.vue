@@ -279,7 +279,7 @@ export default {
     .li-item {
       box-sizing: border-box;
       width: 48px;
-      border: 1px solid var(--te-configurator-common-default-border-color);
+      border: 1px solid var(--te-configurator-common-border-color);
       background: var(--te-configurator-layout-grid-bg-color);
       border-radius: 4px;
       padding: 4px;
@@ -326,13 +326,13 @@ export default {
     align-items: center;
     display: flex;
     background: var(--te-configurator-layout-grid-bg-color);
-    color: var(--te-configurator-common-text-color);
+    color: var(--te-configurator-common-text-color-secondary);
     transition: none;
   }
 
   :deep(.splitpanes__splitter) {
     background: var(--te-configurator-layout-grid-bg-color);
-    border-left: var(--te-configurator-common-default-border-color);
+    border-left: var(--te-configurator-common-border-color);
   }
 
   .layout-splitpanes {
@@ -340,7 +340,7 @@ export default {
 
     .customize {
       margin-bottom: 8px;
-      color: var(--te-configurator-common-text-color);
+      color: var(--te-configurator-common-text-color-secondary);
     }
   }
 }

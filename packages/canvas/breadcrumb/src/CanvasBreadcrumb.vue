@@ -45,7 +45,7 @@ export default {
   border-top: 1px solid var(--te-canvas-breadcrumb-border-color);
   .content {
     .tip {
-      color: var(--te-canvas-breadcrumb-weaken-color);
+      color: var(--te-canvas-breadcrumb-text-color);
       line-height: 30px;
       height: 30px;
       padding-left: 10px;
@@ -57,14 +57,14 @@ export default {
         .label {
           padding: 0 3px 0 16px;
           border-top: 0;
-          color: var(--te-canvas-breadcrumb-weaken-color);
+          color: var(--te-canvas-breadcrumb-text-color);
           transition: 0.3s;
           border: none;
           &:hover {
             cursor: pointer;
-            background-color: var(--te-canvas-breadcrumb-hover-bg-color);
+            background-color: var(--te-canvas-breadcrumb-bg-color-hover);
             &::after {
-              border-left-color: var(--te-canvas-breadcrumb-hover-bg-color);
+              border-left-color: var(--te-canvas-breadcrumb-bg-color-hover);
             }
           }
           &::after {

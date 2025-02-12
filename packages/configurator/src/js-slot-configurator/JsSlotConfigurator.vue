@@ -197,7 +197,7 @@ export default {
 <style lang="less" scoped>
 .meta-slot-container {
   text-align: left;
-  color: var(--te-configurator-common-text-color);
+  color: var(--te-configurator-common-text-color-secondary);
 }
 
 .slot-form {
@@ -285,7 +285,7 @@ export default {
 }
 
 .e__switch.e_is-checked .e__switch-core {
-  background-color: var(--te-configurator-common-switch-checked-bg-color);
+  background-color: var(--te-configurator-common-switch-bg-color-checked);
 }
 
 .e__switch.e_is-checked .e__switch-core::after {

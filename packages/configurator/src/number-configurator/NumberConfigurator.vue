@@ -170,7 +170,7 @@ export default {
       text-align: left;
     }
     :deep(.is-disabled) {
-      background-color: var(--te-configurator-common-disabled-bg-color);
+      background-color: var(--te-configurator-common-bg-color-disabled);
     }
     &.is-without-controls {
       :deep(.tiny-numeric__input-inner) {
@@ -187,7 +187,7 @@ export default {
     top: 2px;
     height: calc(100% - 2px);
     span {
-      color: var(--te-configurator-common-color);
+      color: var(--te-configurator-common-text-color-primary);
       font-size: 14px;
       padding: 4px;
     }
@@ -195,7 +195,7 @@ export default {
       width: 100%;
       .tiny-input__inner {
         height: 100%;
-        color: var(--te-configurator-common-color);
+        color: var(--te-configurator-common-text-color-primary);
         padding: 2px;
         border: none;
         font-size: 14px;
