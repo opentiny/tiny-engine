@@ -5,13 +5,17 @@
         <span class="slash">/</span>
         <span
           :class="[
-            { route: route.isPage && route.id !== pageId, current: route.id === pageId, 'is-preview': route.isPreview }
+            {
+              route: route.isPage && route.id !== pageId,
+              current: route.id === pageId && existsPreview,
+              'is-preview': route.isPreview
+            }
           ]"
           @click="handleClickRoute(route)"
           >{{ route.route }}</span
         >
       </template>
-      <tiny-tooltip v-if="existsPreview" type="normal" content="清除预览路径">
+      <tiny-tooltip v-if="existsPreview" type="normal" content="重置预览路径">
         <svg-button name="cross" class="clear-preview" @click="handleClearPreview"></svg-button>
       </tiny-tooltip>
     </div>
@@ -80,10 +84,10 @@ watch(
       return
     }
 
-    let ancestors = ((await getAncestors(pageId, true)) || []).concat(pageId)
+    let ancestors = ((await getAncestors(pageId, true)) || []).concat(pageId).map((id) => String(id))
 
     if (previewId) {
-      const previewAncestors = ((await getAncestors(previewId, true)) || []).concat(previewId)
+      const previewAncestors = ((await getAncestors(previewId, true)) || []).concat(previewId).map((id) => String(id))
 
       // previewId是pageId的子孙，那么previewId才有效
       if (previewAncestors.includes(pageId)) {
