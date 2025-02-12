@@ -269,7 +269,6 @@ export default {
     color: var(--te-component-common-color);
     border-color: var(--te-component-common-default-border-color);
     &:hover {
-      color: var(--te-component-common-color);
       border-color: var(--te-component-common-hover-border-color);
     }
   }
