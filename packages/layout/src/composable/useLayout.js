@@ -144,16 +144,21 @@ const closePlugin = (forceClose) => {
 const isEmptyPage = () => layoutState.pageStatus?.state === PAGE_STATUS.Empty
 
 export default () => {
-  let plugin = ''
-  const pluginStorage = localStorage.getItem('plugin')
-  if (pluginStorage) {
-    plugin = pluginStorage
-  }
+  let plugin = []
 
   try {
-    plugin = JSON.parse(plugin)
+    const storedPlugin = localStorage.getItem('plugin')
+
+    if (storedPlugin) {
+      plugin = JSON.parse(storedPlugin)
+    }
   } catch (error) {
     throw new Error(error)
+  }
+
+  // 如果 plugin 不是一个数组，则将其重置为默认值
+  if (!Array.isArray(plugin)) {
+    plugin = []
   }
 
   const pluginStorageReactive = useStorage('plugin', plugin)
