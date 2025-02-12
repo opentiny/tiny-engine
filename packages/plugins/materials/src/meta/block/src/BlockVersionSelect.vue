@@ -78,7 +78,7 @@ export default {
           exec: () => {
             const params = {
               groupId: selectedBlock.value.groupId,
-              blockId: selectedRow.block_id,
+              blockId: selectedRow.block_id ?? selectedRow.refId,
               blockVersion: selectedRow.version
             }
 
