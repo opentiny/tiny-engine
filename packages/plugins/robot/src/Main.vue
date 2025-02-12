@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="robot">
     <div title="AI对话框" class="robot-img">
       <svg-icon name="AI" @click="openAIRobot"></svg-icon>
     </div>

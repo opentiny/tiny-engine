@@ -258,6 +258,7 @@ export default {
 .property-title {
   margin-bottom: 12px;
   cursor: pointer;
+  fill: currentColor;
 }
 
 .property-form {

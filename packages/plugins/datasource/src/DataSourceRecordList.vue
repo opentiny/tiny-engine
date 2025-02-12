@@ -602,6 +602,7 @@ export default {
     font-size: 12px;
     text-align: left;
     padding: 0;
+    margin-left: 8px;
     &:hover {
       text-decoration: underline;
     }
