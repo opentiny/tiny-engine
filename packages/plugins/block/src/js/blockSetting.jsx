@@ -561,7 +561,7 @@ const createBlock = (block = {}) => {
   const extraParams = {}
 
   if (useBlock().shouldReplaceCategoryWithGroup()) {
-    extraParams.groups = categories
+    extraParams.groups = categories || []
   } else {
     extraParams.categories = categories
   }
@@ -607,6 +607,7 @@ const updateBlock = (block = {}) => {
     public_scope_tenants,
     public: publicType,
     tags,
+    groups,
     categories,
     description,
     label
@@ -615,7 +616,7 @@ const updateBlock = (block = {}) => {
 
   const extraParams = {}
   if (useBlock().shouldReplaceCategoryWithGroup()) {
-    extraParams.groups = categories
+    extraParams.groups = categories || (groups || []).map(({ id }) => id)
   } else {
     extraParams.categories = categories
   }
