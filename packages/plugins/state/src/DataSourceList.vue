@@ -1,5 +1,5 @@
 <template>
-  <div class="data-source-list">
+  <div class="data-source-list lowcode-scrollbar">
     <ul>
       <li v-for="key in filteredKey" :key="key" :class="['data-source-list-item', { selected: key === selectedKey }]">
         <div class="item-head">

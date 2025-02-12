@@ -1,5 +1,5 @@
 <template>
-  <plugin-panel title="TinyEngine 教程">
+  <plugin-panel title="TinyEngine 教程" class="tutorial">
     <template #header>
       <svg-button
         class="item icon-sidebar"
