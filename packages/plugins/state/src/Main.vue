@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import { reactive, ref, computed, onActivated, watch, provide } from 'vue'
+import { reactive, ref, computed, onActivated, watch, provide, watchEffect, nextTick } from 'vue'
 import { Button, Search, Tabs, TabItem } from '@opentiny/vue'
 import {
   useCanvas,
@@ -144,13 +144,23 @@ export default {
     })
     const selectedKey = ref(null)
 
-    const { PLUGIN_NAME } = useLayout()
+    const { PLUGIN_NAME, getSettingPanelOffset } = useLayout()
 
     const panelState = reactive({
       emitEvent: emit
     })
 
     provide('panelState', panelState)
+
+    watchEffect(() => {
+      if (isPanelShow.value) {
+        const offsetMargin = getSettingPanelOffset(PLUGIN_NAME.State)
+        nextTick(() => {
+          const dom = document?.querySelector('.data-source-right-panel')
+          dom.setAttribute('style', `margin-left: ${offsetMargin}`)
+        })
+      }
+    })
 
     watch(activeName, () => {
       selectedKey.value = null

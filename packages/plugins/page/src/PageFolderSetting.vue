@@ -1,5 +1,10 @@
 <template>
-  <plugin-setting v-if="isShow" :title="state.title" class="pageFolder-plugin-setting">
+  <plugin-setting
+    v-if="isShow"
+    :fixed-name="PLUGIN_NAME.AppManage"
+    :title="state.title"
+    class="pageFolder-plugin-setting"
+  >
     <template #header>
       <button-group>
         <tiny-button type="primary" @click="saveFolderSetting">保存</tiny-button>
@@ -32,6 +37,7 @@ import { Button, Collapse, CollapseItem } from '@opentiny/vue'
 import { PluginSetting, SvgButton, ButtonGroup } from '@opentiny/tiny-engine-common'
 import {
   usePage,
+  useLayout,
   useModal,
   useNotify,
   getMergeRegistry,
@@ -82,6 +88,8 @@ export default {
     const registry = getMergeRegistry(meta.type, meta.id)
     const pageGeneral = registry.components.PageGeneral
     const folderGeneralRef = ref(null)
+
+    const { PLUGIN_NAME } = useLayout()
 
     const closeFolderSetting = () => {
       if (isEqual(pageSettingState.currentPageData, pageSettingState.currentPageDataCopy)) {
@@ -197,6 +205,7 @@ export default {
     }
 
     return {
+      PLUGIN_NAME,
       saveFolderSetting,
       deleteFolder: throttle(5000, true, deleteFolder),
       pageGeneral,

@@ -162,9 +162,10 @@ export default () => {
   const getPluginWidth = (name) => pluginStorageReactive.value[name]?.width || 300
 
   // 修改插件宽度
-  const changePluginWidth = (name, width) => {
+  const changePluginWidth = (name, width, offset) => {
     if (Object.prototype.hasOwnProperty.call(pluginStorageReactive.value, name)) {
       pluginStorageReactive.value[name].width = width
+      pluginStorageReactive.value[name].offset = offset
     } else {
       pluginStorageReactive.value[name] = {
         width
@@ -257,6 +258,12 @@ export default () => {
     pluginStorageReactive.value[name].isShow = !pluginStorageReactive.value[name].isShow
   }
 
+  // 获取二级面板偏移量
+  const getSettingPanelOffset = (name) => {
+    const offsetMargin = pluginStorageReactive.value[name]?.offset
+    return offsetMargin ? `${offsetMargin + 20}px` : '20px'
+  }
+
   return {
     PLUGIN_NAME,
     PLUGIN_POSITION,
@@ -287,6 +294,7 @@ export default () => {
     changePluginShown,
     changeMenuShown,
     getMoveDragBarState,
-    changeMoveDragBarState
+    changeMoveDragBarState,
+    getSettingPanelOffset
   }
 }

@@ -109,13 +109,15 @@ export default {
     const onMouseMoveRight = (event) => {
       const newWidth = startWidth + (event.clientX - startX)
       panelWidth.value = Math.max(MIN_WIDTH, Math.min(newWidth, MAX_WIDTH))
-      changePluginWidth(props.fixedName, panelWidth.value)
+      const offset = panelWidth.value - MIN_WIDTH
+      changePluginWidth(props.fixedName, panelWidth.value, offset)
     }
 
     const onMouseMoveLeft = (event) => {
       const newWidth = startWidth - (event.clientX - startX)
       panelWidth.value = Math.max(MIN_WIDTH, Math.min(newWidth, MAX_WIDTH))
-      changePluginWidth(props.fixedName, panelWidth.value)
+      const offset = panelWidth.value - MIN_WIDTH
+      changePluginWidth(props.fixedName, panelWidth.value, offset)
     }
 
     //节流

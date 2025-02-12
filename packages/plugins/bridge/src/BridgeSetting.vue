@@ -1,5 +1,5 @@
 <template>
-  <plugin-setting v-if="isOpen">
+  <plugin-setting v-if="isOpen" :fixed-name="PLUGIN_NAME.Bridge">
     <template #title>
       <div class="title-wrap">
         <span>{{ state.title }}</span>
@@ -112,7 +112,7 @@ import {
   getResourceNamesByType
 } from './js/resource'
 import { VueMonaco as MonacoEditor, PluginSetting, SvgButton, ButtonGroup } from '@opentiny/tiny-engine-common'
-import { useModal, useNotify, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { useLayout, useModal, useNotify, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 
 const isOpen = ref(false)
@@ -150,6 +150,8 @@ export default {
       renderLineHighlightOnlyWhenFocus: true
     }
     const { confirm } = useModal()
+
+    const { PLUGIN_NAME } = useLayout()
 
     const state = reactive({
       resource: computed(() => getResource()),
@@ -273,6 +275,7 @@ export default {
     }
 
     return {
+      PLUGIN_NAME,
       rules,
       resourceForm,
       editor,

@@ -3,6 +3,7 @@
     v-if="isOpen"
     :is-icon-button="false"
     :showIfFullScreen="true"
+    :fixed-name="PLUGIN_NAME.Collections"
     title="静态数据管理"
     class="datasource-record-list"
     @cancel="closeRecordList"
@@ -122,7 +123,7 @@ export default {
     const grid = ref(null)
     const { confirm } = useModal()
     const { toClipboard } = useClipboard()
-    const { layoutState } = useLayout()
+    const { layoutState, PLUGIN_NAME } = useLayout()
 
     const state = reactive({
       totalData: [],
@@ -559,6 +560,7 @@ export default {
     }
 
     return {
+      PLUGIN_NAME,
       isOpen,
       state,
       grid,
