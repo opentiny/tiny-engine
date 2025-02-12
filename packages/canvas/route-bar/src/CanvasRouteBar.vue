@@ -106,7 +106,7 @@ watch(
       .map((pageData, index) => {
         const { id, route, isPage } = pageData
         return {
-          id,
+          id: String(id),
           route: route
             .replace(/\/+/g, '/') // 替换连续的 '/' 为单个 '/'
             .replace(/^\/|\/$/g, ''), // 去掉开头和结尾的 '/'
