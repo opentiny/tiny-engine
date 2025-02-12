@@ -51,9 +51,5 @@
     "node": ">=16",
     "pnpm": ">=8"
   },
-  "pnpm": {
-    "patchedDependencies": {
-      "@vue/repl@2.9.0": "patches/@vue__repl@2.9.0.patch"
-    }
-  }
+  "pnpm": {}
 }

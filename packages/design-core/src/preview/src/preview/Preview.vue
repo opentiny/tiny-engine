@@ -3,19 +3,19 @@
     <Repl
       :editor="editorComponent"
       :store="store"
-      :sfcOptions="sfcOptions"
       :showCompileOutput="false"
       :showTsConfig="false"
       :showImportMap="true"
       :clearConsole="false"
       :autoResize="false"
     />
+    <!-- :sfcOptions="sfcOptions" -->
   </div>
 </template>
 
 <script>
-import { defineComponent, computed, defineAsyncComponent } from 'vue'
-import { Repl, ReplStore } from '@vue/repl'
+import { defineComponent, computed, defineAsyncComponent, ref } from 'vue'
+import { Repl, useStore, useVueImportMap } from '@vue/repl'
 import vueJsx from '@vue/babel-plugin-jsx'
 import { transformSync } from '@babel/core'
 import { getMetaApi } from '@opentiny/tiny-engine-meta-register'
@@ -42,23 +42,52 @@ export default {
   setup() {
     const debugSwitch = injectDebugSwitch()
     const editorComponent = computed(() => (debugSwitch?.value ? Monaco : EmptyEditor))
-    const store = new ReplStore()
-    const { getAllNestedBlocksSchema, generatePageCode } = getMetaApi('engine.service.generateCode')
-    const ROOT_ID = '0'
+    const {
+      importMap: builtinImportMap,
+      vueVersion,
+      productionMode
+    } = useVueImportMap({
+      runtimeDev: 'https://unpkg.com/vue@3.5.13/dist/vue.runtime.esm-browser.js',
+      runtimeProd: 'https://unpkg.com/vue@3.5.13/dist/vue.runtime.esm-browser.prod.js',
+      serverRenderer: 'https://unpkg.com/@vue/server-renderer@3.5.13/dist/server-renderer.esm-browser.js'
+    })
 
-    const sfcOptions = {
+    const sfcOptions = ref({
       script: {
         // scirpt setup 编译后注入 import { * } from "vue"
         inlineTemplate: false
       }
+    })
+
+    const currentImportMap = ref({
+      imports: {
+        ...builtinImportMap.value.imports
+        // 'vue': vueVersion
+      }
+    })
+
+    const store = useStore({
+      builtinImportMap: currentImportMap,
+      vueVersion,
+      showOutput: false,
+      outputMode: 'preview',
+      sfcOptions
+    })
+    const { getAllNestedBlocksSchema, generatePageCode } = getMetaApi('engine.service.generateCode')
+    const ROOT_ID = '0'
+
+    const setImportMap = (newImportMap) => {
+      console.log('newImportMap', newImportMap)
+      currentImportMap.value = newImportMap
     }
 
     // 相比store.setFiles，只要少了state.activeFile = state.files[filename]，因为改变activeFile会触发多余的文件解析
     const setFiles = async (newFiles, mainFileName) => {
+      console.log('mainFileName', mainFileName)
       await store.setFiles(newFiles, mainFileName)
       // 强制更新 codeSandbox
-      store.state.resetFlip = !store.state.resetFlip
-      store['initTsConfig']() // 触发获取组件d.ts方便调试
+      // store.state.resetFlip = !store.state.resetFlip
+      // store['initTsConfig']() // 触发获取组件d.ts方便调试
     }
 
     const queryParams = getSearchParams()
@@ -121,11 +150,12 @@ export default {
     const promiseList = [
       fetchAppSchema(queryParams?.app),
       fetchMetaData(queryParams),
-      setFiles(srcFiles, 'src/Main.vue'),
+      setFiles(srcFiles, 'src/App.vue'),
       getImportMap()
     ]
     Promise.all(promiseList).then(async ([appData, metaData, _void, importMapData]) => {
-      store.setImportMap(importMapData)
+      // store.setImportMap(importMapData)
+      setImportMap(importMapData)
 
       const blocks = await getAllNestedBlocksSchema(queryParams.pageInfo?.schema, fetchBlockSchema)
 
@@ -161,39 +191,39 @@ export default {
           panelName = 'Main.vue'
         }
 
-        const newPanelValue = panelValue.replace(/<script\s*setup\s*>([\s\S]*)<\/script>/, (match, p1) => {
-          if (!p1) {
-            // eslint-disable-next-line no-useless-escape
-            return '<script setup><\/script>'
-          }
+        // const newPanelValue = panelValue.replace(/<script\s*setup\s*>([\s\S]*)<\/script>/, (match, p1) => {
+        //   if (!p1) {
+        //     // eslint-disable-next-line no-useless-escape
+        //     return '<script setup><\/script>'
+        //   }
 
-          const transformedScript = transformSync(p1, {
-            babelrc: false,
-            plugins: [[vueJsx, { pragma: 'h' }]],
-            sourceMaps: false,
-            configFile: false
-          })
+        //   const transformedScript = transformSync(p1, {
+        //     babelrc: false,
+        //     plugins: [[vueJsx, { pragma: 'h' }]],
+        //     sourceMaps: false,
+        //     configFile: false
+        //   })
 
-          const res = `<script setup>${transformedScript.code}`
-          // eslint-disable-next-line no-useless-escape
-          const endTag = '<\/script>'
+        //   const res = `<script setup>${transformedScript.code}`
+        //   // eslint-disable-next-line no-useless-escape
+        //   const endTag = '<\/script>'
 
-          return `${res}${endTag}`
-        })
+        //   return `${res}${endTag}`
+        // })
 
-        newFiles[panelName] = newPanelValue
+        newFiles[panelName] = panelValue
       }
 
       const appJsCode = processAppJsCode(newFiles['app.js'], queryParams.styles)
 
       newFiles['app.js'] = appJsCode
 
-      pageCode.map(fixScriptLang).forEach(assignFiles)
+      pageCode.forEach(assignFiles)
 
       const metaFiles = generateMetaFiles(metaData)
       Object.assign(newFiles, metaFiles)
 
-      setFiles(newFiles)
+      setFiles(newFiles, 'src/App.vue')
       return PreviewTips.READY_FOR_PREVIEW
     })
 
