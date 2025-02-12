@@ -63,7 +63,7 @@ export default {
   .tips {
     margin-bottom: 16px;
     font-size: 12px;
-    color: var(--te-datasource-toolbar-breadcrumb-color);
+    color: var(--te-datasource-toolbar-breadcrumb-text-color);
     span {
       &::before {
         content: '';
@@ -103,13 +103,13 @@ export default {
     }
 
     .tiny-button {
-      color: var(--te-datasource-toolbar-breadcrumb-color);
+      color: var(--te-datasource-toolbar-breadcrumb-text-color);
       &.tiny-button--primary {
-        border-color: var(--te-datasource-common-border-primary-color);
+        border-color: var(--te-datasource-common-border-color-primary);
       }
 
       &.tiny-button--success {
-        border-color: var(--te-datasource-success-border-color);
+        border-color: var(--te-datasource-common-border-color-success);
       }
       &:hover {
         color: var(--te-datasource-toolbar-icon-color);

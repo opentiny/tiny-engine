@@ -93,10 +93,10 @@ export default {
 
     .life-cycle-alert {
       font-size: var(--te-base-font-size-base);
-      color: var(--te-datasource-common-tip-color);
+      color: var(--te-datasource-common-tip-text-color);
     }
     .title {
-      color: var(--te-datasource-toolbar-breadcrumb-color);
+      color: var(--te-datasource-toolbar-breadcrumb-text-color);
       display: inline-block;
       border-bottom: 1px solid var(--te-datasource-tabs-border-color);
       width: 100%;
@@ -125,7 +125,7 @@ export default {
   .monaco-editor {
     height: 120px;
     margin-top: 8px;
-    border: 1px solid var(--te-datasource-common-border-color);
+    border: 1px solid var(--te-datasource-common-border-color-divider);
     border-radius: 4px;
   }
 }

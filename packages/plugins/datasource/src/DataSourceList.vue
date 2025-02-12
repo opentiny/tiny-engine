@@ -132,7 +132,7 @@ export default {
   .datasource-list {
     flex-grow: 1;
     padding-top: 12px;
-    border-top: 1px solid var(--te-datasource-border-color);
+    border-top: 1px solid var(--te-datasource-common-border-color);
   }
   .datasource-list-item {
     box-shadow: var(--te-datasource-tabs-border-color) 0, -1px;
@@ -142,11 +142,11 @@ export default {
     display: grid;
     padding: 0 12px;
     position: relative;
-    color: var(--te-datasource-common-text-main-color);
+    color: var(--te-datasource-list-main-text-color);
     cursor: pointer;
     &:hover,
     &.active {
-      background: var(--te-datasource-list-hover-color);
+      background: var(--te-datasource-list-text-color-hover);
       .item-handler {
         display: inline-block;
       }

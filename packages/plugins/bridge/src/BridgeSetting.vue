@@ -300,7 +300,7 @@ export default {
       font-size: 11px;
       line-height: 18px;
       margin-top: 8px;
-      color: var(--te-bridge-setting-tip-color);
+      color: var(--te-bridge-setting-tip-text-color);
     }
     :deep(.tiny-form-item__label) {
       .cdn-tips-icon {
@@ -312,10 +312,10 @@ export default {
   .title-wrap {
     font-size: 12px;
     font-weight: 700;
-    color: var(--te-bridge-setting-title-color);
+    color: var(--te-bridge-setting-title-text-color);
     .help-link {
       display: inline-block;
-      color: var(--te-bridge-setting-link-color);
+      color: var(--te-bridge-setting-link-text-color);
       font-size: 12px;
       margin-left: 16px;
       &:hover {
@@ -351,7 +351,7 @@ export default {
   font-size: 12px;
   line-height: 20px;
   background: var(--te-bridge-setting-code-bg-color);
-  color: var(--te-bridge-setting-code-color);
+  color: var(--te-bridge-setting-code-text-color);
   border-radius: 4px;
 
   & .pre-title {

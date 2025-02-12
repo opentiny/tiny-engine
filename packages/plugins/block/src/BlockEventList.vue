@@ -66,7 +66,7 @@ export default {
 
 .item-text {
   flex: 1;
-  color: var(--te-block-event-list-color);
+  color: var(--te-block-event-list-text-color);
 }
 .item-text.active {
   font-weight: 700;

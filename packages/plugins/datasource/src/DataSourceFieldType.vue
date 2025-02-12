@@ -67,7 +67,7 @@ export default {
 
 <style lang="less" scoped>
 .step-select-first {
-  border: 1px solid var(--te-datasource-border-color);
+  border: 1px solid var(--te-datasource-common-border-color);
   border-radius: 4px;
   padding: 12px;
   margin-bottom: 46px;
@@ -104,7 +104,7 @@ export default {
     }
   }
   .btn {
-    color: var(--te-datasource-color);
+    color: var(--te-datasource-common-text-color-primary);
     font-size: 12px;
     cursor: pointer;
   }
@@ -123,9 +123,9 @@ export default {
     justify-content: space-between;
     flex-direction: column;
     cursor: pointer;
-    background-color: var(--te-datasource-box-bg);
+    background-color: var(--te-datasource-box-bg-color);
     border-radius: 4px;
-    color: var(--te-datasource-dialog-font-color);
+    color: var(--te-datasource-dialog-font-text-color);
     .type-icon {
       font-size: 20px;
     }

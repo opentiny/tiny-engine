@@ -453,7 +453,7 @@ export default {
   .i18n-loading {
     :deep(.tiny-loading__spinner) {
       svg {
-        color: var(--te-i18n-loading-svg-color);
+        color: var(--te-i18n-loading-icon-color);
       }
     }
     :deep(.tiny-loading__text) {
@@ -483,7 +483,7 @@ export default {
 }
 
 .btn-box {
-  color: var(--te-i18n-button-color);
+  color: var(--te-i18n-button-text-color);
   font-size: 12px;
   margin-bottom: 12px;
   padding: 0 12px;
@@ -518,12 +518,12 @@ export default {
     font-size: 12px;
     text-align: left;
     padding: 0;
-    color: var(--te-i18n-button-color);
+    color: var(--te-i18n-button-text-color);
     svg {
       font-size: 16px;
     }
     .tiny-button.tiny-button--text {
-      color: var(--te-i18n-button-color);
+      color: var(--te-i18n-button-text-color);
     }
     &:hover {
       text-decoration: underline;

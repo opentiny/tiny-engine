@@ -43,7 +43,7 @@ export default {
 .monaco-editor {
   height: 180px;
   margin-top: 8px;
-  border: 1px solid var(--te-datasource-common-border-color);
+  border: 1px solid var(--te-datasource-common-border-color-divider);
   border-radius: 4px;
 }
 </style>

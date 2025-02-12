@@ -58,7 +58,7 @@ export default {
   font-size: var(--te-base-font-size-base);
 
   div {
-    color: var(--te-datasource-common-primary-text-color);
+    color: var(--te-datasource-common-text-color-primary);
   }
 
   .icon-del {
@@ -70,7 +70,7 @@ export default {
 .monaco-editor {
   min-height: 120px;
   height: 100%;
-  border: 1px solid var(--te-datasource-common-border-color);
+  border: 1px solid var(--te-datasource-common-border-color-divider);
   border-radius: 4px;
 }
 </style>

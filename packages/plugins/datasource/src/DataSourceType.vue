@@ -96,7 +96,7 @@ export default {
     line-height: 22px;
     font-weight: normal;
     margin-bottom: 10px;
-    color: var(--te-datasource-label-color);
+    color: var(--te-datasource-label-text-color);
   }
 
   .item-type {
@@ -115,9 +115,9 @@ export default {
     }
 
     &.is-checked {
-      color: var(--te-datasource-toolbar-breadcrumb-color);
+      color: var(--te-datasource-toolbar-breadcrumb-text-color);
       .svg-icon {
-        color: var(--te-datasource-common-border-primary-color);
+        color: var(--te-datasource-common-border-color-primary);
       }
     }
     .svg-icon {

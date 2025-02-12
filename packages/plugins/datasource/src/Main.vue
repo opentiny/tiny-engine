@@ -1,5 +1,5 @@
 <template>
-  <plugin-panel title="数据源" class="datasource">
+  <plugin-panel title="数据源">
     <template #header>
       <link-button :href="docsUrl"></link-button>
       <svg-button

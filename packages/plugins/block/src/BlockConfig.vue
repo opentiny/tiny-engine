@@ -307,18 +307,18 @@ export default {
 
 .block-tag-create {
   .tag-button {
-    color: var(--te-block-config-tag-color);
-    background-color: var(--te-block-config-tag-bg);
+    color: var(--te-block-config-tag-text-color);
+    background-color: var(--te-block-config-tag-bg-color);
     border: none;
     height: 28px;
     :deep(.tiny-tag__close) {
-      fill: var(--te-block-config-tag-close-color);
+      fill: var(--te-block-config-tag-close-icon-color);
     }
     &:hover {
-      color: var(--te-block-config-tag-hover-color);
-      background-color: var(--te-block-config-tag-hover-bg);
+      color: var(--te-block-config-tag-color-hover);
+      background-color: var(--te-block-config-tag-bg-hover);
       :deep(.tiny-tag__close) {
-        fill: var(--te-block-config-tag-close-hover-color);
+        fill: var(--te-block-config-tag-close-icon-color-hover);
       }
     }
   }

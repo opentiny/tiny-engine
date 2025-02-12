@@ -248,7 +248,7 @@ export default {
 .record-form-content {
   padding: 24px 10px 12px;
   .dot-tip {
-    color: var(--te-datasource-description-error-color);
+    color: var(--te-datasource-description-text-color-error);
     margin-right: 4px;
     vertical-align: middle;
   }
@@ -260,7 +260,7 @@ export default {
     }
 
     .del:hover {
-      background-color: var(--te-datasource-delete-button-hover-bg);
+      background-color: var(--te-datasource-delete-button-bg-color-hover);
     }
   }
 }

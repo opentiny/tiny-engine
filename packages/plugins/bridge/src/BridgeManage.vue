@@ -158,7 +158,7 @@ export default {
     align-items: center;
     padding: 0 12px;
     position: relative;
-    color: var(--te-bridge-list-color);
+    color: var(--te-bridge-list-text-color);
     cursor: pointer;
     font-size: 12px;
 

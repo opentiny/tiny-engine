@@ -151,7 +151,7 @@ export default {
     line-height: 22px;
     font-weight: normal;
     margin-bottom: 10px;
-    color: var(--te-datasource-label-color);
+    color: var(--te-datasource-label-text-color);
 
     :deep(.tiny-button--text:hover) {
       text-decoration: underline;

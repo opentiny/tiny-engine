@@ -271,7 +271,7 @@ export default {
   display: inline-block;
   margin-top: 6px;
   font-size: 12px;
-  color: var(--te-block-property-add-item-color);
+  color: var(--te-block-property-add-item-text-color);
   cursor: pointer;
 
   .text {

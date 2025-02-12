@@ -460,7 +460,7 @@ export default {
 }
 .app-manage-search {
   padding: 0 10px 12px 10px;
-  border-bottom: 1px solid var(--te-block-panel-header-border-bottom-color);
+  border-bottom: 1px solid var(--te-block-panel-header-border-color);
 }
 .block-popper {
   .block-group-option-item {
@@ -497,7 +497,7 @@ export default {
   padding: 8px 16px;
   border-top: 1px solid var(--te-block-panel-footer-border-color);
   background-color: var(--te-block-panel-footer-bg-color);
-  color: var(--te-block-panel-footer-color);
+  color: var(--te-block-panel-footer-text-color);
   display: flex;
   justify-content: space-between;
   :deep(.tiny-dropdown) {
@@ -520,7 +520,7 @@ export default {
       cursor: pointer;
       margin-left: 8px;
       &.active {
-        color: var(--te-block-panel-footer-icon-bind-color);
+        color: var(--te-block-panel-footer-bind-icon-color);
       }
     }
   }
@@ -537,7 +537,7 @@ export default {
   &:not(.is-disabled):active,
   &:not(.is-disabled):hover,
   &:focus {
-    background-color: var(--te-block-panel-footer-active-bg-color);
+    background-color: var(--te-block-panel-footer-bg-color-active);
     color: var(--te-block-panel-footer-text-color);
   }
 }
@@ -555,13 +555,13 @@ export default {
 
   .popper-confirm-header {
     font-size: var(--te-base-font-size-1);
-    color: var(--te-block-popper-title-color);
+    color: var(--te-block-popper-title-text-color);
     font-weight: var(--te-base-font-weight-7);
     margin-bottom: 12px;
   }
   .popper-confirm-content {
     font-size: 12px;
-    color: var(--te-block-popper-content-color);
+    color: var(--te-block-popper-content-text-color);
   }
   .popper-confirm-footer {
     text-align: right;

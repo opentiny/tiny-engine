@@ -60,10 +60,10 @@ export default {
     align-items: center;
     transition: 0.3s;
     &.active {
-      border: 1px solid var(--te-block-panel-footer-btn-avtive-border-color);
-      color: var(--te-block-panel-footer-btn-avtive-color);
+      border: 1px solid var(--te-block-panel-footer-btn-border-color-active);
+      color: var(--te-block-panel-footer-btn-color-active);
       border-radius: 4px;
-      background-color: var(--te-block-panel-footer-btn-avtive-bg-color);
+      background-color: var(--te-block-panel-footer-btn-bg-color-active);
     }
   }
 }

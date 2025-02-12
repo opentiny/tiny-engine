@@ -606,7 +606,7 @@ export default {
     &:hover {
       text-decoration: underline;
     }
-    color: var(--te-datasource-common-primary-text-color);
+    color: var(--te-datasource-common-text-color-primary);
     .icon-download {
       margin: 0 1px 4px 0;
       font-size: 16px;
@@ -618,7 +618,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: var(--te-datasource-common-text-color-5);
+  color: var(--te-datasource-common-text-color-weaken);
   .empty-icon {
     width: 50px;
     height: 50px;
@@ -649,22 +649,22 @@ export default {
     padding-right: 8px;
     .tiny-pager__pages {
       li.is-active {
-        background-color: var(--te-datasource-dialog-demo-border-color);
+        background-color: var(--te-datasource-list-pager-bg-color);
       }
       li {
         &:not(.dot):not(.is-active):hover {
-          background-color: var(--te-datasource-common-hover-bg-1);
-          color: var(--te-datasource-common-primary-text-color);
+          background-color: var(--te-datasource-common-bg-color-hover);
+          color: var(--te-datasource-common-text-color-primary);
         }
       }
     }
     .tiny-pager__pull-left {
-      color: var(--te-datasource-toolbar-breadcrumb-color);
+      color: var(--te-datasource-toolbar-breadcrumb-text-color);
     }
     .tiny-pager__btn-next,
     .tiny-pager__btn-prev {
       &:not([disabled]):hover {
-        background-color: var(--te-datasource-icon-hover-bg);
+        background-color: var(--te-datasource-icon-bg-color-hover);
 
         svg {
           color: var(--te-datasource-toolbar-icon-color);

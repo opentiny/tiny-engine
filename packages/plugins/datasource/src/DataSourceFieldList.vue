@@ -138,10 +138,10 @@ export default {
     .field-cell-name {
       margin-left: 5px;
       .field-name {
-        color: var(--te-datasource-color);
+        color: var(--te-datasource-common-text-color-primary);
       }
       .description {
-        color: var(--te-datasource-tip-color);
+        color: var(--te-datasource-tip-text-color);
         margin-left: 5px;
       }
     }
@@ -159,7 +159,7 @@ export default {
   }
 }
 .form-item-border:hover {
-  background: var(--te-datasource-box-bg);
+  background: var(--te-datasource-box-bg-color);
   .field-operation {
     display: flex;
     justify-content: space-between;

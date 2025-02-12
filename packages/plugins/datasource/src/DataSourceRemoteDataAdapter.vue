@@ -110,7 +110,7 @@ export default {
   }
   .life-cycle-alert {
     font-size: var(--te-base-font-size-base);
-    color: var(--te-datasource-common-tip-color);
+    color: var(--te-datasource-common-tip-text-color);
   }
 }
 </style>

@@ -375,7 +375,7 @@ div.tiny-guide.shepherd-element {
   &-ques {
     &-title {
       padding-top: 8px;
-      border-top: 1px solid var(--te-help-box-question-border-top);
+      border-top: 1px solid var(--te-help-box-question-border-color);
     }
   }
 
