@@ -103,9 +103,8 @@ export default {
   }
 
   &.border {
-    border-top: 1px solid var(--te-component-common-default-border-color);
-    border-right: 1px solid var(--te-component-common-default-border-color);
-    border-bottom: 1px solid var(--te-component-common-default-border-color);
+    border: 1px solid var(--te-component-common-default-border-color);
+    border-left: none;
   }
   .content {
     color: var(--te-component-common-text-color);
