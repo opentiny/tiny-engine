@@ -48,11 +48,11 @@ onMounted(() => {
   subscriber = subscribe({
     topic: 'locationHistoryChanged',
     callback: (data) => {
-      if (data.pageId) {
-        pageId.value = data.pageId
+      if (String(data.pageId)) {
+        pageId.value = String(data.pageId)
       }
       if ('previewId' in data) {
-        previewId.value = data.previewId
+        previewId.value = String(data.previewId)
       }
     },
     subscriber: 'routeBar'
