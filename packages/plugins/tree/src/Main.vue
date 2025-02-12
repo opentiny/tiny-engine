@@ -340,7 +340,7 @@ export default {
     line-height: inherit;
   }
   :deep(.high-light-node) {
-    background: var(--te-tree-active-bg-color) !important;
+    background: var(--te-tree-bg-color-active) !important;
 
     :deep(.eyeOpen) {
       display: block !important;

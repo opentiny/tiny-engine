@@ -406,7 +406,7 @@ export default {
         width: 100%;
         border-color: var(--te-state-add-btn-border-color);
         &:hover {
-          border-color: var(--te-state-add-btn-hover-border-color);
+          border-color: var(--te-state-add-btn-border-color-hover);
         }
       }
       .add-btn-icon {
@@ -426,7 +426,7 @@ export default {
         'Helvetica Neue', sans-serif;
       color: var(--te-state-common-text-color);
       font-weight: var(--te-base-font-weight-bold);
-      border-bottom: 1px solid var(--te-state-common-border-color);
+      border-bottom: 1px solid var(--te-state-common-border-color-divider);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -456,7 +456,7 @@ export default {
     width: 492px;
     height: 100%;
     box-shadow: 6px 0px 3px 0px var(--te-state-panel-shadow-color);
-    border-right: 1px solid var(--te-state-common-border-color);
+    border-right: 1px solid var(--te-state-common-border-color-divider);
     background: var(--te-state-common-bg-color);
     position: absolute;
     left: var(--base-left-panel-width);
@@ -472,7 +472,7 @@ export default {
       font-weight: 700;
       color: var(--te-state-common-text-color);
       background: var(--te-state-common-bg-color);
-      border-bottom: 1px solid var(--te-state-common-border-color);
+      border-bottom: 1px solid var(--te-state-common-border-color-divider);
       .options-wrap {
         display: flex;
         column-gap: 8px;

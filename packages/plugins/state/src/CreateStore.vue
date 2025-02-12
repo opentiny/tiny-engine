@@ -310,7 +310,7 @@ export default {
 
 .create-content-description {
   font-size: 12px;
-  color: var(--te-state-common-emphasize-text-color);
+  color: var(--te-state-common-text-color-emphasize);
   margin-left: 8px;
   cursor: pointer;
 }

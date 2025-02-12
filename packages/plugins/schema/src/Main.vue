@@ -186,7 +186,7 @@ export default {
     padding: 0 12px 12px;
   }
   .title {
-    color: var(--te-schema-panel-title-color);
+    color: var(--te-schema-panel-title-text-color);
     font-weight: var(--te-base-font-weight-bold);
   }
   .header-title {

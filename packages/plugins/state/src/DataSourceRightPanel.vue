@@ -113,7 +113,7 @@ export default {
 .data-source-right-panel {
   width: 442px;
   height: 100%;
-  border-right: 1px solid var(--te-state-common-border-color);
+  border-right: 1px solid var(--te-state-common-border-color-divider);
   background: var(--te-state-right-panel-bg-color);
   position: absolute;
   left: calc(var(--base-left-panel-width) - 6px);
@@ -127,7 +127,7 @@ export default {
     padding: 0 12px;
     color: var(--te-state-right-panel-icon-color);
     background: var(--te-state-right-panel-bg-color);
-    border-bottom: 1px solid var(--te-state-common-border-color);
+    border-bottom: 1px solid var(--te-state-common-border-color-divider);
   }
 }
 </style>

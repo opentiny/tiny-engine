@@ -117,12 +117,12 @@ export default {
 <style lang="less" scoped>
 .data-source-list {
   padding-top: 12px;
-  border-top: 1px solid var(--te-state-common-border-color);
+  border-top: 1px solid var(--te-state-common-border-color-divider);
   overflow-y: scroll;
   .data-source-list-item {
     &.selected,
     &:hover {
-      background: var(--te-state-common-hover-bg-color);
+      background: var(--te-state-common-bg-color-hover);
       .item-head-right {
         display: flex;
         justify-content: flex-end;
@@ -134,7 +134,7 @@ export default {
   .item-head {
     height: 24px;
     padding: 0 10px;
-    color: var(--te-state-data-list-color);
+    color: var(--te-state-data-list-text-color);
     display: flex;
     justify-content: space-between;
     align-items: center;

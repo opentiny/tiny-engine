@@ -19,6 +19,6 @@
   border-radius: 4px;
   padding: 8px 14px;
   background: var(--te-state-tip-bg-color);
-  color: var(--te-state-tip-color);
+  color: var(--te-state-tip-text-color);
 }
 </style>

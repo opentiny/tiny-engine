@@ -127,13 +127,13 @@ export default {
 }
 .video-item {
   .video-item-content {
-    color: var(--te-tutorial-primary-text-color);
+    color: var(--te-tutorial-text-color);
     .video-item-content-tutorial {
       padding: 0 8px;
       display: grid;
       grid-template-columns: 20px 1fr 20px;
       column-gap: 4px;
-      background: var(--te-tutorial-primary-bg-color);
+      background: var(--te-tutorial-bg-color);
       height: 32px;
       line-height: 32px;
       align-items: center;
@@ -144,7 +144,7 @@ export default {
 
       &.active,
       &:hover {
-        background: var(--te-tutorial-hover-bg-color);
+        background: var(--te-tutorial-bg-color-hover);
         cursor: pointer;
 
         svg.icon-chevron {

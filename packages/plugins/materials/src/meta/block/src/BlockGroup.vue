@@ -419,7 +419,7 @@ export default {
       margin-left: 0;
     }
     :deep(svg) {
-      color: var(--te-materials-block-group-svg-color);
+      color: var(--te-materials-block-group-icon-color);
     }
     :deep(.tiny-button) {
       padding: 0 2px;
@@ -466,13 +466,13 @@ export default {
 
   .popper-confirm-header {
     font-size: var(--te-base-font-size-1);
-    color: var(--te-materials-block-group-popper-title-color);
+    color: var(--te-materials-block-group-popper-title-text-color);
     font-weight: var(--te-base-font-weight-7);
     margin-bottom: 12px;
   }
   .popper-confirm-content {
     font-size: 12px;
-    color: var(--te-materials-block-group-popper-content-color);
+    color: var(--te-materials-block-group-popper-content-text-color);
   }
   .popper-confirm-footer {
     text-align: right;

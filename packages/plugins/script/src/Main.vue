@@ -129,7 +129,7 @@ export default {
       display: flex;
       align-items: center;
       .title {
-        color: var(--te-plugin-js-panel-title-color);
+        color: var(--te-plugin-js-panel-title-text-color);
         font-weight: var(--te-base-font-weight-bold);
       }
     }

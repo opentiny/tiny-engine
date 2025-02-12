@@ -440,7 +440,7 @@ export default {
     border-radius: 4px;
     padding: 8px 14px;
     background: var(--te-state-tip-bg-color);
-    color: var(--te-state-tip-color);
+    color: var(--te-state-tip-text-color);
     & > pre {
       font-family: Consolas, 'Courier New', monospace;
     }
@@ -481,7 +481,7 @@ export default {
 
 .create-content-description {
   font-size: 12px;
-  color: var(--te-state-common-emphasize-text-color);
+  color: var(--te-state-common-text-color-emphasize);
   margin-left: 8px;
   cursor: pointer;
 }

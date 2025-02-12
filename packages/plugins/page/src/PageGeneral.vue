@@ -289,7 +289,7 @@ export default {
       color: var(--te-page-manage-tip-text-color);
     }
     .text-dim {
-      color: var(--te-page-manage-tip-text-dim-color);
+      color: var(--te-page-manage-tip-dim-text-color);
     }
   }
 }
@@ -303,7 +303,7 @@ export default {
         padding: 0;
         background-color: var(--te-page-manage-tree-node-bg-color);
         &:hover {
-          background-color: var(--te-page-manage-tree-node-hover-bg-color);
+          background-color: var(--te-page-manage-tree-node-bg-color-hover);
         }
         // 移除子节点的的背景色，才能保证鼠标hover到.tiny-tree-node__content节点任意位置时，整行都有hover状态的背景色
         .tiny-tree-node__content-left,

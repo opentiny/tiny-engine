@@ -83,10 +83,10 @@ export default {
     align-items: center;
     transition: 0.3s;
     &:hover {
-      color: var(--te-materials-block-group-arrange-icon-hover-color);
+      color: var(--te-materials-block-group-arrange-icon-color-hover);
     }
     &.active {
-      color: var(--te-materials-block-group-arrange-icon-active-color);
+      color: var(--te-materials-block-group-arrange-icon-color-active);
     }
   }
   .icon-wrap + .icon-wrap {

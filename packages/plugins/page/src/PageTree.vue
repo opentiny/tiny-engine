@@ -462,7 +462,7 @@ export default {
       display: flex;
       align-items: center;
       &:hover {
-        background-color: var(--te-page-manage-operation-list-item-hover-bg-color);
+        background-color: var(--te-page-manage-operation-list-item-bg-color-hover);
       }
     }
     .divider {
@@ -474,11 +474,11 @@ export default {
         display: block;
         width: 100%;
         height: 1px;
-        background-color: var(--te-page-manage-operation-list-item-divider-color);
+        background-color: var(--te-page-manage-operation-list-item-border-color-divider);
       }
     }
     .danger {
-      color: var(--te-page-manage-operation-list-danger-text-color);
+      color: var(--te-page-manage-operation-list-text-color-error);
     }
   }
 }

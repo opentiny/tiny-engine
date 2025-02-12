@@ -58,7 +58,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 8px 12px;
-  background: var(--te-state-common-hover-bg-color);
+  background: var(--te-state-common-bg-color-hover);
   color: var(--te-state-remote-icon-color);
   margin-top: 12px;
 

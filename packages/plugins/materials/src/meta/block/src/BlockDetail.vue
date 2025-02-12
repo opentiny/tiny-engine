@@ -141,8 +141,8 @@ export default {
       right: 10px;
 
       &:hover {
-        color: var(--te-materials-block-detail-icon-hover-color);
-        background: var(--te-materials-block-detail-icon-hover-bg-color);
+        color: var(--te-materials-block-detail-icon-color-hover);
+        background: var(--te-materials-block-detail-icon-bg-color-hover);
       }
     }
   }
@@ -171,7 +171,7 @@ export default {
     }
 
     .block-detail-show-more {
-      color: var(--te-materials-block-detail-text-emphasize-color);
+      color: var(--te-materials-block-detail-text-color-emphasize);
       cursor: pointer;
     }
 

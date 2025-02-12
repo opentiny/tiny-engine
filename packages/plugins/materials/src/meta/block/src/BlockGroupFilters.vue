@@ -123,7 +123,7 @@ export default {
 
     .block-filters-item-value {
       flex: 1;
-      color: var(--te-materials-block-filter-value-color);
+      color: var(--te-materials-block-filter-value-text-color);
       .block-filters-value-item {
         cursor: pointer;
         display: inline-block;

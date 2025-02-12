@@ -103,7 +103,7 @@ export default {
 .input-or-output {
   color: var(--te-page-manage-input-or-output-text-color);
   .life-cycle-alert {
-    color: var(--te-page-manage-life-cycle-alert-color);
+    color: var(--te-page-manage-life-cycle-alert-text-color);
     height: 28px;
     padding: 6px;
     border: 0;
@@ -116,7 +116,7 @@ export default {
 
   .input-output-tips,
   .input-output-div {
-    color: var(--te-page-manage-life-cycle-alert-color);
+    color: var(--te-page-manage-life-cycle-alert-text-color);
     margin-top: 4px;
     height: 16px;
     line-height: 16px;

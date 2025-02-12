@@ -143,7 +143,7 @@ export default {
   .component-group {
     display: grid;
     width: 100%;
-    color: var(--te-materials-component-list-color);
+    color: var(--te-materials-component-list-text-color);
 
     .component-item {
       padding: var(--te-common-vertical-form-label-spacing) 0 var(--te-common-vertical-form-label-spacing);
@@ -154,7 +154,7 @@ export default {
       background: var(--te-materials-component-list-item-bg-color);
 
       &:hover {
-        background: var(--te-materials-component-list-item-hover-bg-color);
+        background: var(--te-materials-component-list-item-bg-color-hover);
         border-radius: 4px;
       }
 

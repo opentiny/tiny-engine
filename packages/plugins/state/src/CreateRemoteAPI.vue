@@ -240,8 +240,8 @@ export default {
     align-items: center;
     padding: 8px 12px;
     background: var(--te-state-tip-bg-color);
-    border-top: 1px solid var(--te-state-common-default-border-color);
-    border-bottom: 1px solid var(--te-state-common-default-border-color);
+    border-top: 1px solid var(--te-state-common-border-color);
+    border-bottom: 1px solid var(--te-state-common-border-color);
     color: var(--te-state-common-label-text-color);
   }
 
@@ -257,7 +257,7 @@ export default {
 
   .send-service {
     text-align: right;
-    border-top: 1px solid var(--te-state-common-default-border-color);
+    border-top: 1px solid var(--te-state-common-border-color);
     padding: 20px 10px;
     margin-bottom: 10px;
 
@@ -308,8 +308,8 @@ export default {
       transition: 0.3s;
 
       &:hover {
-        color: var(--te-state-common-hover-icon-color);
-        background: var(--te-state-common-hover-bg-color);
+        color: var(--te-state-common-icon-color-hover);
+        background: var(--te-state-common-bg-color-hover);
       }
     }
   }

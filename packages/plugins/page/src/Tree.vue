@@ -261,7 +261,7 @@ const handleContainerDragLeave = (event) => {
       cursor: pointer;
     }
     &:hover {
-      background-color: var(--te-page-manage-draggable-row-hover-bg-color);
+      background-color: var(--te-page-manage-draggable-row-bg-color-hover);
     }
 
     .content {
@@ -287,7 +287,7 @@ const handleContainerDragLeave = (event) => {
       }
     }
     &.active {
-      background-color: var(--te-page-manage-draggable-row-hover-bg-color);
+      background-color: var(--te-page-manage-draggable-row-bg-color-hover);
       color: var(--te-page-manage-draggable-text-color);
       svg {
         color: var(--te-page-manage-draggable-icon-color);
