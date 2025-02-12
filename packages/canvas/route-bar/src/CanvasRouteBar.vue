@@ -48,7 +48,7 @@ onMounted(() => {
   subscriber = subscribe({
     topic: 'locationHistoryChanged',
     callback: (data) => {
-      if (String(data.pageId)) {
+      if (data.pageId) {
         pageId.value = String(data.pageId)
       }
       if ('previewId' in data) {
