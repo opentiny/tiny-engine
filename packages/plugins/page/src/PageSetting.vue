@@ -1,5 +1,5 @@
 <template>
-  <plugin-setting v-if="isShow" :title="state.title" class="page-plugin-setting">
+  <plugin-setting v-if="isShow" :fixed-name="PLUGIN_NAME.AppManage" :title="state.title" class="page-plugin-setting">
     <template #header>
       <button-group>
         <tiny-button type="primary" @click="savePageSetting">保存</tiny-button>
@@ -135,6 +135,8 @@ export default {
     const pageGeneral = registry.components.PageGeneral
     const beforeCreatePage = registry?.options?.beforeCreatePage
     const pageGeneralRef = ref(null)
+
+    const { PLUGIN_NAME } = useLayout()
 
     const state = reactive({
       activeName: Object.values(PAGE_SETTING_SESSION),
@@ -398,6 +400,7 @@ export default {
     }
 
     return {
+      PLUGIN_NAME,
       state,
       isShow,
       savePageSetting,

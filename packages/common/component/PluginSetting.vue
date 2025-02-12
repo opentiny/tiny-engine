@@ -1,5 +1,6 @@
 <template>
   <div
+    id="panel-setting"
     :class="['plugin-setting', { 'second-panel': isSecond }, { 'full-screen': state.isFullScreen }]"
     @click="$emit('click')"
   >
@@ -31,11 +32,12 @@
 </template>
 
 <script>
-import { reactive, watchEffect } from 'vue'
+import { nextTick, reactive, watchEffect } from 'vue'
 import { Button } from '@opentiny/vue'
 import { iconPlus } from '@opentiny/vue-icon'
 import ButtonGroup from './ButtonGroup.vue'
 import SvgButton from './SvgButton.vue'
+import { useLayout } from '@opentiny/tiny-engine-meta-register'
 
 const EVENTS = {
   FULL_SCREEN_CHANGE: 'fullScreenChange',
@@ -91,12 +93,26 @@ export default {
     icon: {
       type: Object,
       default: iconPlus()
+    },
+    fixedName: {
+      type: String,
+      default: ''
     }
   },
   emits: [EVENTS.FULL_SCREEN_CHANGE, EVENTS.SAVE, EVENTS.CANCEL, EVENTS.ADD, EVENTS.CLICK],
   setup(props, { emit }) {
     const state = reactive({
       isFullScreen: false
+    })
+
+    const { getSettingPanelOffset } = useLayout()
+
+    watchEffect(() => {
+      const offsetMargin = getSettingPanelOffset(props.fixedName)
+      nextTick(() => {
+        const dom = document?.getElementById('panel-setting')
+        dom.setAttribute('style', `margin-left: ${offsetMargin}`)
+      })
     })
 
     watchEffect(() => {

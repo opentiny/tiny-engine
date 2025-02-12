@@ -3,6 +3,7 @@
     v-if="isOpen"
     class="plugin-block-setting"
     title="区块设置"
+    :fixed-name="PLUGIN_NAME.BlockManage"
     @mouseleave="onMouseLeave"
     @click="handleClick"
   >
@@ -86,7 +87,14 @@
 <script lang="jsx">
 import { reactive, ref, watch, watchEffect, computed } from 'vue'
 import { Button as TinyButton, Collapse as TinyCollapse, CollapseItem as TinyCollapseItem } from '@opentiny/vue'
-import { useModal, getMergeMeta, useBlock, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import {
+  useLayout,
+  useModal,
+  getMergeMeta,
+  useBlock,
+  getMetaApi,
+  META_SERVICE
+} from '@opentiny/tiny-engine-meta-register'
 import { BlockHistoryList, PluginSetting, CloseIcon, SvgButton, ButtonGroup } from '@opentiny/tiny-engine-common'
 import { previewBlock } from '@opentiny/tiny-engine-common/js/preview'
 import { LifeCycles } from '@opentiny/tiny-engine-common'
@@ -151,6 +159,8 @@ export default {
       return currentEditBlock
     })
     const blockConfigForm = ref(null)
+
+    const { PLUGIN_NAME } = useLayout()
 
     const state = reactive({
       activeName: ['base', 'attribute', 'event', 'lifeCycle', 'history'],
@@ -277,6 +287,7 @@ export default {
     }
 
     return {
+      PLUGIN_NAME,
       state,
       isOpen,
       showDeployBlockDialog,
