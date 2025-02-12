@@ -43,6 +43,7 @@ export const handleTinyIcon = (nameObj, globalHooks) => {
   }
 
   // 增加 svg 颜色属性，使编辑模式与出码模式一致
+  debugger
   nameObj.schema.props['fill'] = 'currentColor'
 
   const iconName = name.startsWith(TINY_ICON) ? name : `Tiny${name}`
