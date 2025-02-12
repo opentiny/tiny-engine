@@ -13,7 +13,7 @@
             <tiny-search
               class="transfer-order-search"
               v-model="state.searchValue"
-              placeholder="请输入关键词"
+              placeholder="请输入名称或ID搜索"
               @update:modelValue="searchBlocks(state.filterValues)"
             >
               <template #prefix>
