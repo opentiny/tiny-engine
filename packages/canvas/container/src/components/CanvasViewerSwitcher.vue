@@ -93,7 +93,7 @@ export default {
       const children = await usePage().getPageChildren(pageId)
 
       state.previewOptions = [{ id: '', label: '重置预览页面' }].concat(
-        children.map(({ id, route, routePath }) => ({ id, label: routePath || route }))
+        children.map(({ id, route, routePath }) => ({ id: String(id), label: routePath || route }))
       )
     }
 
