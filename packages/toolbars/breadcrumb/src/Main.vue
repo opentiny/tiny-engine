@@ -133,7 +133,7 @@ export default {
     user-select: none;
 
     :deep(.tiny-breadcrumb__inner) {
-      color: var(--te-toolbars-breadcrumb-color);
+      color: var(--te-toolbars-breadcrumb-text-color);
       text-decoration: none;
       cursor: pointer;
     }
@@ -145,7 +145,7 @@ export default {
 
     &:last-child :deep(.tiny-breadcrumb__inner) {
       font-weight: normal;
-      color: var(--te-toolbars-breadcrumb-color);
+      color: var(--te-toolbars-breadcrumb-text-color);
     }
   }
 
@@ -153,16 +153,16 @@ export default {
     background-color: var(--te-toolbars-breadcrumb-block-bg-color);
     .tiny-breadcrumb__item {
       :deep(.tiny-breadcrumb__inner) {
-        color: var(--te-toolbars-breadcrumb-block-color);
+        color: var(--te-toolbars-breadcrumb-block-text-color);
       }
       &:last-child :deep(.tiny-breadcrumb__inner) {
-        color: var(--te-toolbars-breadcrumb-block-color);
+        color: var(--te-toolbars-breadcrumb-block-text-color);
       }
     }
   }
 
   &-title-block:hover {
-    background-color: var(--te-toolbars-breadcrumb-block-hover-bg-color);
+    background-color: var(--te-toolbars-breadcrumb-block-bg-color-hover);
   }
 
   .publish {

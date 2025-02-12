@@ -109,7 +109,7 @@ export default {
       svg {
         cursor: pointer;
         font-size: 20px;
-        color: var(--te-layout-common-color);
+        color: var(--te-layout-common-text-color);
       }
     }
   }
@@ -122,7 +122,7 @@ export default {
         font-size: 16px;
       }
       &:not(.disabled):hover {
-        background: var(--te-layout-common-icon-bg-hover);
+        background: var(--te-layout-common-icon-bg-color-hover);
       }
     }
   }
@@ -137,7 +137,7 @@ export default {
         background: var(--te-layout-common-active-bg);
       }
       &.active {
-        color: var(--te-layout-common-checked-text-bg);
+        color: var(--te-layout-common-text-color-secondary-checked);
       }
       &.disabled {
         cursor: not-allowed;
@@ -171,7 +171,7 @@ export default {
       justify-content: center;
       align-items: center;
       :deep(span) {
-        color: var(--te-layout-common-text-color);
+        color: var(--te-layout-common-text-color-secondary);
         opacity: 0.4;
       }
 

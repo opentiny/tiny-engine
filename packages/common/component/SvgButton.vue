@@ -63,10 +63,10 @@ export default {
   align-items: center;
   cursor: pointer;
   &:hover {
-    color: var(--te-component-common-hover-icon-color);
+    color: var(--te-component-common-icon-color-hover);
   }
   &.active {
-    color: var(--te-component-common-hover-icon-color);
+    color: var(--te-component-common-icon-color-hover);
   }
 
   .svg-icon {
@@ -74,14 +74,14 @@ export default {
   }
 }
 .svg-button-hover {
-  color: var(--te-component-common-primary-icon-color);
+  color: var(--te-component-common-icon-color-primary);
   &:hover {
-    color: var(--te-component-common-primary-icon-color);
-    background-color: var(--te-component-svg-button-hover-bg-color);
+    color: var(--te-component-common-icon-color-primary);
+    background-color: var(--te-component-svg-button-bg-color-hover);
   }
   &.active {
-    color: var(--te-component-common-primary-icon-color);
-    background-color: var(--te-component-svg-button-active-bg-color);
+    color: var(--te-component-common-icon-color-primary);
+    background-color: var(--te-component-svg-button-bg-color-active);
   }
 }
 </style>

@@ -114,7 +114,7 @@ export default {
     padding: 0 16px;
     margin: auto;
     border-radius: 4px;
-    border: 1px solid var(--te-component-common-default-border-color);
+    border: 1px solid var(--te-component-common-border-color);
     background-color: var(--te-component-meta-modal-bg-color);
     box-shadow: rgb(0 0 0 / 30%) 0px 1px 15px 0px;
 
@@ -123,7 +123,7 @@ export default {
       justify-content: space-between;
       align-items: center;
       padding: 10px 0;
-      color: var(--te-component-common-text-color);
+      color: var(--te-component-common-text-color-secondary);
 
       .header-title {
         font-size: 14px;
@@ -141,8 +141,8 @@ export default {
         align-items: center;
         transition: 0.3s;
         &:hover {
-          color: var(--te-component-common-hover-icon-color);
-          background: var(--te-component-common-hover-bg-color);
+          color: var(--te-component-common-icon-color-hover);
+          background: var(--te-component-common-bg-color-hover);
         }
       }
     }

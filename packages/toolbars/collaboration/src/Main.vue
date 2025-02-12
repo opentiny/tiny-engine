@@ -120,7 +120,7 @@ export default {
     width: 100%;
     font-size: 14px;
     padding: 12px 20px;
-    color: var(--te-toolbars-collaboration-text-color);
+    color: var(--te-toolbars-collaboration-text-color-secondary);
     line-height: 18px;
     font-weight: 600;
   }
@@ -131,7 +131,7 @@ export default {
     align-items: center;
 
     &:hover {
-      background: var(--te-toolbars-collaboration-hover-bg-color);
+      background: var(--te-toolbars-collaboration-bg-color-hover);
     }
 
     .user-item-head {
@@ -142,7 +142,7 @@ export default {
 
     .user-item-name {
       font-size: 14px;
-      color: var(--te-toolbars-collaboration-color);
+      color: var(--te-toolbars-collaboration-text-color-primary);
       line-height: 16px;
       font-weight: 400;
       margin: 0 4px 0 8px;

@@ -156,7 +156,7 @@ export default {
   top: 0;
   left: 0;
   transform: translate(-50%, -50%);
-  color: var(--te-component-common-block-add-color);
+  color: var(--te-component-common-block-add-text-color);
 
   .svg-icon {
     font-size: 14px;
@@ -189,21 +189,21 @@ export default {
   flex-direction: column;
   .menu-item {
     line-height: 18px;
-    color: var(--te-component-common-color);
+    color: var(--te-component-common-text-color-primary);
     display: flex;
     align-items: center;
     gap: 4px;
     padding: 4px 12px;
     cursor: pointer;
     &:hover {
-      background: var(--te-component-common-hover-bg-color);
+      background: var(--te-component-common-bg-color-hover);
     }
     &.property {
       justify-content: space-between;
     }
     .link-item {
       cursor: pointer;
-      color: var(--te-component-common-emphasize-color);
+      color: var(--te-component-common-text-color-emphasize);
     }
   }
 

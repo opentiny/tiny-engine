@@ -55,7 +55,7 @@ export default {
     gap: 4px;
     cursor: pointer;
     .svg-icon {
-      color: var(--te-component-common-block-add-color);
+      color: var(--te-component-common-block-add-text-color);
     }
   }
 

@@ -86,7 +86,7 @@ export default {
     font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
       'Helvetica Neue', sans-serif;
     padding: 12px;
-    color: var(--te-component-common-color);
+    color: var(--te-component-common-text-color-primary);
     font-weight: var(--te-base-font-weight-7);
     .plugin-panel-title {
       display: flex;

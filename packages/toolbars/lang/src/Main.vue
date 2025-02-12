@@ -64,7 +64,7 @@ export default {
 <style scoped lang="less">
 .change-lang-box {
   svg {
-    color: var(--te-toolbars-lang-color);
+    color: var(--te-toolbars-lang-text-color);
     width: 18px;
     height: 18px;
     &:hover {

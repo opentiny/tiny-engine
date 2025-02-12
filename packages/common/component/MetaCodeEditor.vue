@@ -268,16 +268,16 @@ export default {
   display: flex;
   text-align: center;
   .tiny-button.tiny-button.edit-btn {
-    color: var(--te-component-common-color);
-    border-color: var(--te-component-common-default-border-color);
+    color: var(--te-component-common-text-color-primary);
+    border-color: var(--te-component-common-border-color);
     flex: 1;
     text-align: center;
     margin-right: 0;
     &:hover {
-      border-color: var(--te-component-common-active-border-color);
+      border-color: var(--te-component-common-border-color-active);
     }
     &:focus {
-      border-color: var(--te-component-common-active-border-color);
+      border-color: var(--te-component-common-border-color-active);
     }
     .edit-btn-icon {
       font-size: 14px;
@@ -306,11 +306,11 @@ export default {
   padding: 4px;
   padding-left: 10px;
   padding-right: 12px;
-  border: 1px solid var(--te-component-common-default-border-color);
+  border: 1px solid var(--te-component-common-border-color);
   border-radius: var(--te-base-border-radius-1);
 
   &:hover {
-    border-color: var(--te-component-common-border-color);
+    border-color: var(--te-component-common-border-color-divider);
   }
 
   .text-content {
@@ -318,14 +318,14 @@ export default {
   }
 
   &.empty-color {
-    color: var(--te-component-common-weaken-text-color);
+    color: var(--te-component-common-text-color-weaken);
   }
 
   .edit-icon {
     margin-left: 4px;
     flex-shrink: 0;
     cursor: pointer;
-    color: var(--te-component-common-text-color);
+    color: var(--te-component-common-text-color-secondary);
   }
 }
 
@@ -349,10 +349,10 @@ export default {
     display: flex;
     height: 17px;
     margin-bottom: 10px;
-    color: var(--te-component-common-color);
+    color: var(--te-component-common-text-color-primary);
 
     .header-tips-title {
-      color: var(--te-component-common-weaken-text-color);
+      color: var(--te-component-common-text-color-weaken);
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
@@ -381,7 +381,7 @@ export default {
 
       code {
         font-family: Microsoft YaHei, Microsoft YaHei-Normal;
-        color: var(--te-component-common-weaken-text-color);
+        color: var(--te-component-common-text-color-weaken);
       }
     }
   }

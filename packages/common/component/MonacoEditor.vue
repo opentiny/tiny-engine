@@ -173,12 +173,12 @@ export default {
   .buttons {
     display: flex;
     gap: 8px;
-    color: var(--te-component-common-color);
+    color: var(--te-component-common-text-color-primary);
     cursor: pointer;
   }
   #icon-buttons {
     :deep(.svg-icon) {
-      color: var(--te-component-common-text-color);
+      color: var(--te-component-common-text-color-secondary);
     }
   }
   .monaco-btn-fullscreen {
@@ -195,7 +195,7 @@ export default {
 .editor {
   flex: 1;
   overflow: hidden;
-  border: 1px solid var(--te-component-common-hover-border-color);
+  border: 1px solid var(--te-component-common-border-color-hover);
   border-radius: 6px;
 }
 </style>

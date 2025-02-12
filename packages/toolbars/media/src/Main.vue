@@ -427,7 +427,7 @@ export default {
     height: var(--base-top-panel-height);
     line-height: var(--base-top-panel-height);
     padding: 0 7px;
-    color: var(--te-toolbars-media-text-color);
+    color: var(--te-toolbars-media-text-color-secondary);
     display: inline-block;
 
     & > span {
@@ -452,7 +452,7 @@ export default {
 
       svg {
         cursor: pointer;
-        color: var(--te-toolbars-media-color);
+        color: var(--te-toolbars-media-text-color-primary);
         outline: none;
         width: 18px;
         height: 18px;
@@ -461,11 +461,11 @@ export default {
 
       &.active,
       &:hover {
-        background: var(--te-toolbars-media-active-bg-color);
+        background: var(--te-toolbars-media-bg-color-active);
       }
       &.active {
         svg {
-          color: var(--te-toolbars-media-checked-color);
+          color: var(--te-toolbars-media-text-color-checked);
         }
       }
     }
@@ -484,7 +484,7 @@ export default {
     font-weight: 600;
   }
   .content {
-    color: var(--te-toolbars-media-text-color);
+    color: var(--te-toolbars-media-text-color-secondary);
   }
 }
 .setting-content {
@@ -506,7 +506,7 @@ export default {
       align-items: center;
       justify-content: space-between;
       label {
-        color: var(--te-toolbars-media-text-color);
+        color: var(--te-toolbars-media-text-color-secondary);
         min-width: 64px;
       }
       &:last-child {

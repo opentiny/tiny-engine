@@ -83,7 +83,7 @@ export default {
       margin-left: 12px;
       .tiny-tabs__active-bar {
         height: 3px;
-        background-color: var(--te-layout-common-active-color);
+        background-color: var(--te-layout-common-text-color-active);
       }
     }
 
@@ -99,13 +99,13 @@ export default {
     .tiny-tabs__item {
       flex: 1;
       background-color: var(--te-layout-common-bg-color);
-      color: var(--te-layout-common-text-color);
+      color: var(--te-layout-common-text-color-secondary);
       margin-right: 5px;
       &:hover {
-        color: var(--te-layout-common-hover-color);
+        color: var(--te-layout-common-text-color-hover);
       }
       &.is-active {
-        color: var(--te-layout-common-active-color);
+        color: var(--te-layout-common-text-color-active);
         border: none;
       }
 
@@ -135,10 +135,10 @@ export default {
 
 @keyframes glow {
   0% {
-    box-shadow: inset 0px 0px 4px var(--te-layout-setting-canvas-handle-hover-bg);
+    box-shadow: inset 0px 0px 4px var(--te-layout-setting-bg-color-hover);
   }
   100% {
-    box-shadow: inset 0px 0px 14px var(--te-layout-setting-canvas-handle-hover-bg);
+    box-shadow: inset 0px 0px 14px var(--te-layout-setting-bg-color-hover);
   }
 }
 </style>

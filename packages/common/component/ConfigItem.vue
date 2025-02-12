@@ -523,11 +523,11 @@ export default {
     padding-bottom: 0;
   }
   &.active {
-    background: var(--te-component-common-active-bg-color);
+    background: var(--te-component-common-bg-color-active);
   }
 
   .item-label {
-    color: var(--te-component-common-text-color);
+    color: var(--te-component-common-text-color-secondary);
     font-size: 12px;
     display: flex;
     line-height: 18px;
@@ -549,7 +549,7 @@ export default {
       overflow: hidden;
 
       .binding-state {
-        color: var(--te-component-common-emphasize-color);
+        color: var(--te-component-common-text-color-emphasize);
         background: var(--te-component-config-item-bind-bg-color);
         border: 1px solid var(--te-component-config-item-bind-border-color);
         padding: 4px 12px;
@@ -565,20 +565,20 @@ export default {
           &,
           &:focus {
             border-color: var(--te-component-common-error-color);
-            background-color: var(--te-component-common-error-bg-color);
+            background-color: var(--te-component-common-bg-color-error);
           }
         }
         :deep(.tiny-textarea__inner) {
           &,
           &:focus {
-            background-color: var(--te-component-common-error-bg-color);
+            background-color: var(--te-component-common-bg-color-error);
           }
         }
         :deep(.tiny-textarea) {
           &,
           &:focus {
             border-color: var(--te-component-common-error-color);
-            background-color: var(--te-component-common-error-bg-color);
+            background-color: var(--te-component-common-bg-color-error);
           }
         }
       }
@@ -610,7 +610,7 @@ export default {
 
   .prop-description {
     margin-top: 8px;
-    color: var(--te-component-common-weaken-text-color);
+    color: var(--te-component-common-text-color-weaken);
   }
   .label-tip {
     padding: 2px 0;
@@ -635,8 +635,8 @@ export default {
       }
     }
     &.multiType {
-      border-bottom: 1px solid var(--te-component-common--border-transparent);
-      border-top: 1px solid var(--te-component-common--border-transparent);
+      border-bottom: 1px solid var(--te-component-common-border-color-transparent);
+      border-top: 1px solid var(--te-component-common-border-color-transparent);
     }
     &.auto {
       flex-wrap: wrap;
@@ -714,11 +714,11 @@ export default {
         font-size: 16px;
         font-weight: bold;
         margin-bottom: 8px;
-        color: var(--te-component-common-color);
+        color: var(--te-component-common-text-color-primary);
       }
       .prop-description {
         font-size: 12px;
-        color: var(--te-component-common-text-color);
+        color: var(--te-component-common-text-color-secondary);
         line-height: 18px;
         display: -webkit-box;
         -webkit-box-orient: vertical;

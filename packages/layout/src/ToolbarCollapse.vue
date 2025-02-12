@@ -73,7 +73,7 @@ export default {
       padding: 0 16px;
 
       &:hover {
-        background-color: var(--te-layout-common-hover-bg);
+        background-color: var(--te-layout-common-bg-color-hover);
         cursor: pointer;
       }
     }
@@ -85,7 +85,7 @@ export default {
 
     .icon-hides {
       margin-right: 8px;
-      color: var(--te-layout-common-primary-icon-color);
+      color: var(--te-layout-common-icon-color-primary);
     }
   }
 }

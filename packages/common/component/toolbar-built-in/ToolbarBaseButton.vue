@@ -57,7 +57,7 @@ export default {
     z-index: 100;
   }
   .svg-icon.svg-icon.svg-icon {
-    color: var(--te-component-common-primary-icon-color);
+    color: var(--te-component-common-icon-color-primary);
   }
 }
 </style>

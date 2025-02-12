@@ -128,10 +128,10 @@ export default {
   top: 0;
   width: var(--base-collection-panel-width);
   height: 100%;
-  border-right: 1px solid var(--te-component-common-default-border-color);
+  border-right: 1px solid var(--te-component-common-border-color);
   background: var(--te-component-common-bg-color);
   overflow: hidden;
-  border-left: 1px solid var(--te-component-common-border-color);
+  border-left: 1px solid var(--te-component-common-border-color-divider);
   &:not(.second-panel) {
     box-shadow: 6px 0px 3px 0px var(--te-component-common-shadow-color);
     border-right: none;
@@ -164,9 +164,9 @@ export default {
     line-height: 40px;
     font-size: 14px;
     line-height: 18px;
-    color: var(--te-component-common-color);
+    color: var(--te-component-common-text-color-primary);
     padding: 0 12px;
-    border-bottom: 1px solid var(--te-component-common-border-color);
+    border-bottom: 1px solid var(--te-component-common-border-color-divider);
     .plugin-setting-header-title {
       font-size: 12px;
       font-weight: 700;

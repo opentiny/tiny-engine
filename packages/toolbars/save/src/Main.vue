@@ -252,10 +252,10 @@ export default {
 
 #saving {
   cursor: not-allowed;
-  color: var(--te-toolbars-save-disabled-color);
+  color: var(--te-toolbars-save-text-color-disabled);
 
   :deep(svg) {
-    color: var(--te-toolbars-save-disabled-color);
+    color: var(--te-toolbars-save-text-color-disabled);
   }
 }
 
@@ -278,7 +278,7 @@ export default {
 
 <style>
 .changeRole a {
-  color: var(--te-toolbars-save-canvas-handle-hover-bg-color);
+  color: var(--te-toolbars-save-text-color-link);
   padding: 0 5px;
 }
 .save-style .save-time .tiny-input__inner {

@@ -92,7 +92,7 @@ export default {
   padding-block: 4px;
   padding-inline: 11px 8px;
   width: auto;
-  color: var(--te-component-common-text-color);
+  color: var(--te-component-common-text-color-secondary);
   background-color: var(--te-component-meta-description-bg-color);
   box-shadow: 0px 0px 6px 2px rgba(0, 0, 0, 0.3);
   &.warning {
@@ -103,22 +103,22 @@ export default {
   }
 
   &.border {
-    border: 1px solid var(--te-component-common-default-border-color);
+    border: 1px solid var(--te-component-common-border-color);
     border-left: none;
   }
   .content {
-    color: var(--te-component-common-text-color);
+    color: var(--te-component-common-text-color-secondary);
   }
   .footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: var(--te-component-common-text-color);
+    color: var(--te-component-common-text-color-secondary);
     .footer-text {
       cursor: pointer;
       &.link {
         display: block;
-        color: var(--te-component-common-link-color);
+        color: var(--te-component-common-text-color-link);
         &:hover {
           text-decoration: underline;
         }

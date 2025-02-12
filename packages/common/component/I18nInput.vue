@@ -133,10 +133,10 @@ export default {
   outline: none;
   &:hover {
     cursor: pointer;
-    color: var(--te-component-common-hover-icon-color);
+    color: var(--te-component-common-icon-color-hover);
   }
   &.isBind {
-    color: var(--te-component-common-primary-icon-color);
+    color: var(--te-component-common-icon-color-primary);
   }
 }
 </style>

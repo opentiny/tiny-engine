@@ -134,14 +134,14 @@ export default {
         fill: var(--te-toolbars-generate-code-icon-color) !important;
 
         &:hover {
-          fill: var(--te-toolbars-generate-code-primary-icon-color) !important;
+          fill: var(--te-toolbars-generate-code-icon-color-primary) !important;
         }
       }
     }
 
     .tiny-dialog-box__footer {
       .tiny-button--primary {
-        background-color: var(--te-toolbars-generate-code-primary-bg-color);
+        background-color: var(--te-toolbars-generate-code-bg-color-primary);
         border: none;
       }
     }
@@ -171,7 +171,7 @@ export default {
         .tiny-grid-checkbox__icon,
         .icon-checked-sur {
           svg {
-            color: var(--te-toolbars-generate-code-checked-border-color) !important;
+            color: var(--te-toolbars-generate-code-border-color-checked) !important;
           }
         }
       }
@@ -197,7 +197,7 @@ export default {
           &.row__selected {
             .tiny-grid-checkbox__icon {
               svg {
-                color: var(--te-toolbars-generate-code-checked-border-color);
+                color: var(--te-toolbars-generate-code-border-color-checked);
                 fill: currentColor;
                 width: 100%;
                 height: 100%;

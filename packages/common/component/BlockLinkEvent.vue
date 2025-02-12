@@ -188,7 +188,7 @@ export default {
   color: #fff;
   border-radius: 50%;
   line-height: 14px;
-  background-color: var(--te-component-common-block-add-color);
+  background-color: var(--te-component-common-block-add-text-color);
   &:hover {
     cursor: pointer;
     transform: scale(1.3);
@@ -203,17 +203,17 @@ export default {
     font-size: 12px;
     display: flex;
     justify-content: space-between;
-    color: var(--te-component-common-color);
+    color: var(--te-component-common-text-color-primary);
     padding: 4px 16px;
     margin: 0 -16px;
     &:hover {
-      color: var(--te-component-common-color);
-      background: var(--te-component-common-hover-bg-color);
+      color: var(--te-component-common-text-color-primary);
+      background: var(--te-component-common-bg-color-hover);
     }
 
     .link-item {
       cursor: pointer;
-      background-color: var(--te-component-common-checked-color);
+      background-color: var(--te-component-common-text-color-checked);
       padding: 2px 5px;
     }
     &.add-event {

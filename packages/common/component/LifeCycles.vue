@@ -266,15 +266,15 @@ export default {
     outline: none;
   }
   .life-cycle-btn {
-    color: var(--te-component-common-color);
-    border-color: var(--te-component-common-default-border-color);
+    color: var(--te-component-common-text-color-primary);
+    border-color: var(--te-component-common-border-color);
     &:hover {
-      border-color: var(--te-component-common-hover-border-color);
+      border-color: var(--te-component-common-border-color-hover);
     }
   }
 }
 .life-cycle-tips {
-  color: var(--te-component-common-weaken-text-color);
+  color: var(--te-component-common-text-color-weaken);
   margin: 4px 0 0;
   height: 16px;
   line-height: 16px;
@@ -283,12 +283,12 @@ export default {
   margin-top: 12px;
 }
 .life-cycle-alert {
-  color: var(--te-component-common-weaken-text-color);
+  color: var(--te-component-common-text-color-weaken);
   margin-left: 20px;
   margin-right: 20px;
 }
 .life-cycle-content-item {
-  color: var(--te-component-common-color);
+  color: var(--te-component-common-text-color-primary);
 }
 .opt-button {
   &:last-child {
@@ -303,13 +303,13 @@ export default {
     line-height: 24px;
     cursor: pointer;
     &:hover {
-      background: var(--te-component-common-hover-bg-color);
+      background: var(--te-component-common-bg-color-hover);
     }
   }
   .existed {
     cursor: not-allowed;
     pointer-events: none;
-    color: var(--te-component-common-disabled-text-color);
+    color: var(--te-component-common-text-color-disabled);
   }
 }
 
@@ -338,7 +338,7 @@ export default {
       transition: 0.3s;
 
       &.life-cycle-selected {
-        background: var(--te-component-common-active-bg-color);
+        background: var(--te-component-common-bg-color-active);
       }
 
       .life-cycle-selected__icon {
@@ -350,7 +350,7 @@ export default {
       }
 
       &:hover {
-        background: var(--te-component-common-hover-bg-color);
+        background: var(--te-component-common-bg-color-hover);
       }
     }
   }
@@ -358,7 +358,7 @@ export default {
   .dialog-content-right {
     flex: 1;
     .life-cycle-editor {
-      border: 1px solid var(--te-component-common-border-color);
+      border: 1px solid var(--te-component-common-border-color-divider);
       height: 100%;
       box-sizing: border-box;
     }
@@ -377,7 +377,7 @@ export default {
   align-items: center;
   width: 100%;
   .bind-dialog-text {
-    color: var(--te-component-common-color);
+    color: var(--te-component-common-text-color-primary);
     font-size: var(--te-base-font-size-1);
   }
   .bind-dialog-btn {

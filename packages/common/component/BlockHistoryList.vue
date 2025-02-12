@@ -51,17 +51,17 @@ defineEmits(['preview', 'restore'])
   padding: 2px 8px;
   margin-left: 5px;
   background-color: var(--te-component-block-history-list-tag-bg-color);
-  color: var(--te-component-block-history-list-tag-color);
+  color: var(--te-component-block-history-list-tag-text-color);
   border-radius: var(--te-base-border-radius-1);
 }
 .operation-text {
-  color: var(--te-component-common-emphasize-color);
+  color: var(--te-component-common-text-color-emphasize);
   & + .operation-text {
     margin-left: 8px;
   }
 }
 
 .empty {
-  color: var(--te-component-common-weaken-text-color);
+  color: var(--te-component-common-text-color-weaken);
 }
 </style>

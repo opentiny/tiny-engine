@@ -67,7 +67,7 @@ export default {
 </script>
 <style scoped>
 .split-line {
-  color: var(--te-component-common-default-border-color);
+  color: var(--te-component-common-border-color);
   margin: 0 4px;
   font-size: 14px;
 }

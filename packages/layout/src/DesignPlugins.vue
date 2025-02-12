@@ -276,7 +276,7 @@ export default {
       &:hover,
       &.active {
         .item-icon {
-          background: var(--te-layout-common-hover-bg);
+          background: var(--te-layout-common-bg-color-hover);
           border-radius: 4px;
         }
       }
@@ -285,7 +285,7 @@ export default {
         position: relative;
 
         .item-icon {
-          color: var(--te-layout-common-checked-text-bg);
+          color: var(--te-layout-common-text-color-secondary-checked);
         }
       }
 
@@ -298,7 +298,7 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
-      color: var(--te-layout-common-color);
+      color: var(--te-layout-common-text-color);
       font-size: 22px;
       width: 26px;
       height: 26px;

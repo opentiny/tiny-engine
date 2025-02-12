@@ -358,15 +358,15 @@ export default {
   padding: 12px;
   background: var(--te-component-common-bg-color);
   border-radius: 5px;
-  border: 1px solid var(--te-component-common-default-border-color);
+  border: 1px solid var(--te-component-common-border-color);
   top: v-bind('state.top');
   .block-shortcut-title {
-    color: var(--te-component-common-color);
+    color: var(--te-component-common-text-color-primary);
     font-weight: 600;
     margin-bottom: 8px;
   }
   .block-shortcut-description {
-    color: var(--te-component-common-text-color);
+    color: var(--te-component-common-text-color-secondary);
     margin-bottom: 20px;
     font-size: 12px;
   }
@@ -385,7 +385,7 @@ export default {
   align-items: center;
   height: 24px;
   background-color: var(--te-component-block-bg-color);
-  color: var(--te-component-common-text-color);
+  color: var(--te-component-common-text-color-secondary);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -404,7 +404,7 @@ export default {
     transform: translateY(-50%);
     width: 1px;
     height: 10px;
-    background-color: var(--te-component-common-default-border-color);
+    background-color: var(--te-component-common-border-color);
   }
 }
 
@@ -437,7 +437,7 @@ export default {
   gap: 12px;
   overflow-y: auto;
   overflow-x: hidden;
-  color: var(--te-component-common-text-color);
+  color: var(--te-component-common-text-color-secondary);
 
   .block-item {
     display: flex;
@@ -456,7 +456,7 @@ export default {
       top: 4px;
       text-align: center;
       display: block;
-      color: var(--te-component-common-color);
+      color: var(--te-component-common-text-color-primary);
       font-size: 12px;
       background-color: var(--te-component-block-publish-flag-bg-color);
       padding: 2px 4px;
@@ -466,7 +466,7 @@ export default {
     }
 
     &.block-item-small-list {
-      color: var(--te-component-common-color);
+      color: var(--te-component-common-text-color-primary);
       gap: 0;
       &:deep(.block-item-img) {
         width: 54px;
@@ -488,7 +488,7 @@ export default {
         z-index: 9;
       }
       &:hover {
-        background-color: var(--te-component-common-hover-bg-color);
+        background-color: var(--te-component-common-bg-color-hover);
       }
     }
     &:nth-child(even) {
@@ -511,7 +511,7 @@ export default {
     }
 
     &.is-active {
-      background: var(--te-component-common-active-bg-color);
+      background: var(--te-component-common-bg-color-active);
     }
 
     &.is-disabled {
@@ -541,7 +541,7 @@ export default {
         align-items: center;
         width: 100%;
         height: 86px;
-        border: 1px dashed var(--te-component-common-hover-border-color);
+        border: 1px dashed var(--te-component-common-border-color-hover);
         border-radius: 4px;
       }
       .item-text {
@@ -549,12 +549,12 @@ export default {
       }
       .svg-icon {
         font-size: 24px;
-        color: var(--te-component-common-color);
+        color: var(--te-component-common-text-color-primary);
       }
 
       &:hover {
         cursor: pointer;
-        color: var(--te-component-common-color);
+        color: var(--te-component-common-text-color-primary);
       }
     }
 
@@ -565,7 +565,7 @@ export default {
     }
 
     .item-text {
-      color: var(--te-component-common-text-color);
+      color: var(--te-component-common-text-color-secondary);
       text-align: center;
       font-size: 12px;
       line-height: 1.5;
@@ -686,7 +686,7 @@ export default {
         line-height: 16px;
       }
       .item-description {
-        color: var(--te-component-common-color);
+        color: var(--te-component-common-text-color-primary);
         font-size: 12px;
       }
     }
@@ -705,7 +705,7 @@ export default {
 }
 .setting-menu {
   font-size: 12px;
-  color: var(--te-component-common-color);
+  color: var(--te-component-common-text-color-primary);
   .list {
     display: flex;
   }
@@ -713,7 +713,7 @@ export default {
     box-sizing: border-box;
     cursor: pointer;
     &:hover {
-      color: var(--te-component-common-color);
+      color: var(--te-component-common-text-color-primary);
     }
     .list-item-icon {
       font-size: 14px;
