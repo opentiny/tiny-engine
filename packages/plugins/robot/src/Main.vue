@@ -460,7 +460,7 @@ export default {
   }
   .ml8 {
     color: var(--te-chat-model-dropdown-icon);
-    fill: currentColor;
+    fill: currentcolor;
     margin-left: 10px;
   }
 }
