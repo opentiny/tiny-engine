@@ -17,23 +17,28 @@
             </div>
           </section>
           <header class="chat-title">
-            <tiny-dropdown trigger="click" :show-icon="false">
-              <span class="chat-title-dropdown">
-                <span class="chat-title-label">{{ selectedModel.label }}</span>
-                <icon-chevron-down class="ml8"></icon-chevron-down>
-              </span>
-              <template #dropdown>
-                <tiny-dropdown-menu popper-class="chat-model-popover" placement="bottom" :visible-arrow="false">
-                  <tiny-dropdown-item
-                    v-for="item in AIModelOptions"
-                    :key="item.label"
-                    :class="{ 'selected-model': selectedModel.value === item.value }"
-                    @click="changeModel(item)"
-                    >{{ item.label }}</tiny-dropdown-item
-                  >
-                </tiny-dropdown-menu>
+            <tiny-popover
+              ref="popoverRef"
+              width="270"
+              trigger="manual"
+              v-model="showPopover"
+              :visible-arrow="false"
+              popper-class="chat-popover"
+            >
+              <robotSettingPopover
+                v-if="showPopover"
+                :typeValue="selectedModel"
+                @changeType="changeModel"
+                :tokenValue="tokenValue"
+                @active="activeSetting('props')"
+              ></robotSettingPopover>
+              <template #reference>
+                <span class="chat-title-dropdown">
+                  <span class="chat-title-label">{{ selectedModel.label }}</span>
+                  <svg-icon name="setting" class="ml8" @click.stop="showPopover = true"> </svg-icon>
+                </span>
               </template>
-            </tiny-dropdown>
+            </tiny-popover>
           </header>
           <div class="robot-dialog-content">
             <div class="robot-dialog-content-top">
@@ -109,21 +114,10 @@
 
 <script>
 import { ref, onMounted, watchEffect } from 'vue'
-import {
-  Layout,
-  Row,
-  Col,
-  Button,
-  Input,
-  Notify,
-  Loading,
-  Dropdown as TinyDropdown,
-  DropdownMenu as TinyDropdownMenu,
-  DropdownItem as TinyDropdownItem
-} from '@opentiny/vue'
+import { Layout, Row, Col, Button, Input, Notify, Loading, Popover as TinyPopover } from '@opentiny/vue'
 import { useCanvas, useHistory, usePage, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
-import { iconChevronDown } from '@opentiny/vue-icon'
 import { extend } from '@opentiny/vue-renderless/common/object'
+import robotSettingPopover from './robotSettingPopover.vue'
 import { getBlockContent, initBlockList, AIModelOptions } from './js/robotSetting'
 
 export default {
@@ -133,10 +127,8 @@ export default {
     TinyRow: Row,
     TinyCol: Col,
     TinyInput: Input,
-    TinyDropdown,
-    TinyDropdownMenu,
-    TinyDropdownItem,
-    IconChevronDown: iconChevronDown()
+    TinyPopover,
+    robotSettingPopover
   },
   emits: ['close-chat'],
   setup() {
@@ -152,6 +144,8 @@ export default {
     const inProcesing = ref(false)
     const selectedModel = ref(AIModelOptions[0])
     const { confirm } = useModal()
+    let tokenValue = ref('')
+    let showPopover = ref(false)
 
     const { pageSettingState, getDefaultPage } = usePage()
     const ROOT_ID = pageSettingState.ROOT_ID
@@ -168,7 +162,8 @@ export default {
           : JSON.stringify({
               foundationModel: {
                 manufacturer: selectedModel.value.manufacturer,
-                model: selectedModel.value.value
+                model: selectedModel.value.value,
+                token: tokenValue.value
               },
               messages: [],
               displayMessages: [] // 专门用来进行展示的消息，非原始消息，仅作为展示但是不作为请求的发送
@@ -319,6 +314,7 @@ export default {
     const initCurrentModel = (aiSession) => {
       const currentModelValue = JSON.parse(aiSession)?.foundationModel?.model
       selectedModel.value = AIModelOptions.find((item) => item.value === currentModelValue)
+      tokenValue = JSON.parse(aiSession)?.foundationModel?.token
     }
 
     const initChat = () => {
@@ -354,20 +350,26 @@ export default {
     }
 
     const changeModel = (model) => {
-      if (selectedModel.value.value !== model.value) {
+      tokenValue.value = model.tokenVal
+      if (selectedModel.value.value !== model.type) {
         confirm({
           title: '切换AI大模型',
           message: '切换AI大模型将导致当前会话被清空，重新开启新会话，是否继续？',
           exec() {
-            selectedModel.value = model
+            selectedModel.value = AIModelOptions.find((item) => (item.value = model.type))
             endContent()
           }
         })
       }
+      endContent()
     }
 
     const openAIRobot = () => {
       robotVisible.value = !robotVisible.value
+    }
+
+    const activeSetting = () => {
+      showPopover.value = false
     }
 
     return {
@@ -383,7 +385,10 @@ export default {
       AIModelOptions,
       selectedModel,
       changeModel,
-      openAIRobot
+      openAIRobot,
+      activeSetting,
+      tokenValue,
+      showPopover
     }
   }
 }
@@ -456,9 +461,8 @@ export default {
     font-size: 16px;
   }
   .ml8 {
-    color: var(--te-chat-model-dropdown-icon);
-    fill: currentcolor;
-    margin-left: 10px;
+    margin-left: 8px;
+    outline: none;
   }
 }
 
