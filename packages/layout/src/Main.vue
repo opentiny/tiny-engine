@@ -31,7 +31,7 @@ import DesignToolbars from './DesignToolbars.vue'
 import DesignPlugins from './DesignPlugins.vue'
 import DesignSettings from './DesignSettings.vue'
 import meta from '../meta'
-import { addons } from '@opentiny/tiny-engine'
+import { META_APP as PLUGIN_NAME } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   name: 'TinyLowCode',
@@ -57,9 +57,11 @@ export default {
 
     // Step 1: 收集插件的 align 信息
     const alignGroups = {}
-    const pluginList = addons.plugins
+    const pluginIDList = Object.values(PLUGIN_NAME)
+      .filter((item) => item.includes('plugins'))
+      .map((value) => ({ id: value }))
 
-    pluginList.forEach((item) => {
+    pluginIDList.forEach((item) => {
       if (item.id) {
         const align = item.options?.align || 'leftTop'
         if (!alignGroups[align]) {
@@ -71,7 +73,7 @@ export default {
 
     // Step 2: 为每个插件分配 index 值
     const plugin = {}
-    pluginList.forEach((item) => {
+    pluginIDList.forEach((item) => {
       if (item.id) {
         const align = item.options?.align || 'leftTop'
         const index = alignGroups[align].indexOf(item.id)
