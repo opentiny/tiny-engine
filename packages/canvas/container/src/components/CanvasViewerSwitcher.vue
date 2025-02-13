@@ -100,7 +100,7 @@ export default {
       const pageId = state.usedHoverState.element.getAttribute('data-te-page-id')
       const children = await usePage().getPageChildren(pageId)
 
-      state.previewOptions = [{ id: '', label: '路由子页面占位符' }].concat(
+      state.previewOptions = [{ id: pageId, label: '路由子页面占位符' }].concat(
         children.map(({ id, route, routePath }) => ({ id: String(id), label: routePath || route }))
       )
     }
