@@ -64,7 +64,7 @@ export default {
             cursor: pointer;
             background-color: var(--te-canvas-breadcrumb-bg-color-hover);
             &::after {
-              border-left-color: var(--te-canvas-breadcrumb-bg-color-hover);
+              border-left-color: var(--te-canvas-breadcrumb-arrow-border-color-hover);
             }
           }
           &::after {
