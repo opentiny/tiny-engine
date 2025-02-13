@@ -15,7 +15,7 @@
           >{{ route.route }}</span
         >
       </template>
-      <tiny-tooltip v-if="existsPreview" type="normal" content="重置路由视图显示页面">
+      <tiny-tooltip v-if="existsPreview" type="normal" content="重置路由视图为占位符">
         <svg-button name="cross" class="clear-preview" @click="handleClearPreview"></svg-button>
       </tiny-tooltip>
     </div>
