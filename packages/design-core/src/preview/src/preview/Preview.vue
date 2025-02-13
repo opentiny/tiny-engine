@@ -9,21 +9,18 @@
       :clearConsole="false"
       :autoResize="false"
     />
-    <!-- :sfcOptions="sfcOptions" -->
   </div>
 </template>
 
 <script>
 import { defineComponent, computed, defineAsyncComponent, ref } from 'vue'
 import { Repl, useStore, useVueImportMap } from '@vue/repl'
-import vueJsx from '@vue/babel-plugin-jsx'
-import { transformSync } from '@babel/core'
 import { getMetaApi } from '@opentiny/tiny-engine-meta-register'
 import { getImportMap as getInitImportMap } from './importMap'
 import srcFiles from './srcFiles'
 import generateMetaFiles, { processAppJsCode } from './generate'
 import { getSearchParams, fetchMetaData, fetchImportMap, fetchAppSchema, fetchBlockSchema } from './http'
-import { PanelType, PreviewTips } from '../constant'
+import { PreviewTips } from '../constant'
 import { injectDebugSwitch } from './debugSwitch'
 import '@vue/repl/style.css'
 
@@ -42,11 +39,7 @@ export default {
   setup() {
     const debugSwitch = injectDebugSwitch()
     const editorComponent = computed(() => (debugSwitch?.value ? Monaco : EmptyEditor))
-    const {
-      importMap: builtinImportMap,
-      vueVersion,
-      productionMode
-    } = useVueImportMap({
+    const { importMap: builtinImportMap, vueVersion } = useVueImportMap({
       runtimeDev: 'https://unpkg.com/vue@3.5.13/dist/vue.runtime.esm-browser.js',
       runtimeProd: 'https://unpkg.com/vue@3.5.13/dist/vue.runtime.esm-browser.prod.js',
       serverRenderer: 'https://unpkg.com/@vue/server-renderer@3.5.13/dist/server-renderer.esm-browser.js'
@@ -62,7 +55,6 @@ export default {
     const currentImportMap = ref({
       imports: {
         ...builtinImportMap.value.imports
-        // 'vue': vueVersion
       }
     })
 
@@ -77,13 +69,11 @@ export default {
     const ROOT_ID = '0'
 
     const setImportMap = (newImportMap) => {
-      console.log('newImportMap', newImportMap)
       currentImportMap.value = newImportMap
     }
 
     // 相比store.setFiles，只要少了state.activeFile = state.files[filename]，因为改变activeFile会触发多余的文件解析
     const setFiles = async (newFiles, mainFileName) => {
-      console.log('mainFileName', mainFileName)
       await store.setFiles(newFiles, mainFileName)
       // 强制更新 codeSandbox
       // store.state.resetFlip = !store.state.resetFlip
@@ -172,44 +162,12 @@ export default {
         })
       ]
 
-      // [@vue/repl] `Only lang="ts" is supported for <script> blocks.`
-      const langReg = /lang="jsx"/
-      const fixScriptLang = (generatedCode) => {
-        const fixedCode = { ...generatedCode }
-
-        if (generatedCode.panelType === PanelType.VUE) {
-          fixedCode.panelValue = generatedCode.panelValue.replace(langReg, '')
-        }
-
-        return fixedCode
-      }
-
       const newFiles = store.getFiles()
 
       const assignFiles = ({ panelName, panelValue, index }) => {
         if (index) {
           panelName = 'Main.vue'
         }
-
-        // const newPanelValue = panelValue.replace(/<script\s*setup\s*>([\s\S]*)<\/script>/, (match, p1) => {
-        //   if (!p1) {
-        //     // eslint-disable-next-line no-useless-escape
-        //     return '<script setup><\/script>'
-        //   }
-
-        //   const transformedScript = transformSync(p1, {
-        //     babelrc: false,
-        //     plugins: [[vueJsx, { pragma: 'h' }]],
-        //     sourceMaps: false,
-        //     configFile: false
-        //   })
-
-        //   const res = `<script setup>${transformedScript.code}`
-        //   // eslint-disable-next-line no-useless-escape
-        //   const endTag = '<\/script>'
-
-        //   return `${res}${endTag}`
-        // })
 
         newFiles[panelName] = panelValue
       }
