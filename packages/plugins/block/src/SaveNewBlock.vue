@@ -25,7 +25,7 @@
           <TinyInput v-model="formData.label" placeholder="请输入区块ID"></TinyInput>
         </tiny-form-item>
         <tiny-form-item :label="shouldReplaceCategoryWithGroup() ? '区块分组' : '区块分类'" prop="group">
-          <tiny-select v-model="formData.group" :options="categoryList" placeholder="请选择" @change="changeCategory">
+          <tiny-select v-model="formData.group" :multiple="shouldReplaceCategoryWithGroup()" :options="categoryList" placeholder="请选择" @change="changeCategory">
           </tiny-select>
         </tiny-form-item>
         <p v-show="fromCanvas" class="block-tip">
