@@ -78,14 +78,14 @@ export default {
       left: 0,
       top: 0,
       previewOptions: [],
-      hoverStateIsValid: false,
+      usedHoverState: null,
       viewMode: getCacheValue()
     })
 
     watch(
-      () => [state.hoverStateIsValid, state.viewMode],
-      ([hoverStateIsValid, viewMode]) => {
-        state.show = hoverStateIsValid && viewMode === 'embedded'
+      () => [state.usedHoverState, state.viewMode],
+      ([usedHoverState, viewMode]) => {
+        state.show = usedHoverState && viewMode === 'embedded'
       },
       { immediate: true }
     )
@@ -97,10 +97,10 @@ export default {
         return
       }
 
-      const pageId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().pageId
+      const pageId = state.usedHoverState.element.getAttribute('data-te-page-id')
       const children = await usePage().getPageChildren(pageId)
 
-      state.previewOptions = [{ id: '', label: '重置显示页面' }].concat(
+      state.previewOptions = [{ id: '', label: '路由子页面占位符' }].concat(
         children.map(({ id, route, routePath }) => ({ id: String(id), label: routePath || route }))
       )
     }
@@ -114,20 +114,18 @@ export default {
     watch(
       () => [props.hoverState, props.inactiveHoverState],
       ([hoverState, inactiveHoverState]) => {
-        // TODO 是否有inactive的RouteView？
-        const usedHoverState = [hoverState, inactiveHoverState].find(
+        state.usedHoverState = [inactiveHoverState, hoverState].find(
           ({ componentName, element }) =>
-            COMPONENT_WHITELIST.includes(componentName) && element.getAttribute('data-page-active') !== 'true'
+            COMPONENT_WHITELIST.includes(componentName) &&
+            element.ownerDocument.querySelector('div[data-page-active="true"]')?.contains(element) && // 确保不是已激活的页面上游
+            element.getAttribute('data-page-active') !== 'true' // 确保不是已激活页面自己的页面框
         )
 
-        if (!usedHoverState) {
-          state.hoverStateIsValid = false
+        if (!state.usedHoverState) {
           return
         }
 
-        state.hoverStateIsValid = true
-
-        const { width, left, top } = usedHoverState
+        const { width, left, top } = state.usedHoverState
         state.left = `${left + width}px`
         state.top = `${top}px`
       },

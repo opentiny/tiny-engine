@@ -240,7 +240,7 @@ export const getInactiveElement = (element) => {
     element === element.ownerDocument.body ||
     element === element.ownerDocument.documentElement ||
     // 如果当前元素是RouterView, 则有可能是激活元素处于非激活元素里面，需要排除
-    element.getAttribute(NODE_TAG) === 'RouterView'
+    (element.getAttribute(NODE_TAG) === 'RouterView' && element.getAttribute(NODE_UID))
   ) {
     return undefined
   }
