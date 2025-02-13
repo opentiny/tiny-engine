@@ -259,6 +259,7 @@ export const renderer = defineComponent({
         return h(getPage(renderPageId), {
           key: ancestors,
           [DESIGN_TAGKEY]: `${componentName}`,
+          'data-page-id': renderPageId,
           ...(pageContext.active && !isPageStart
             ? {
                 [DESIGN_UIDKEY]: schema.id,

@@ -10,12 +10,7 @@
     @setting="settingModel"
   ></canvas-action>
   <canvas-router-jumper :hoverState="hoverState" :inactiveHoverState="inactiveHoverState"></canvas-router-jumper>
-  <canvas-viewer-switcher
-    :hoverState="hoverState"
-    :inactiveHoverState="inactiveHoverState"
-    :componentWhitelist="['RouterView']"
-    title="切换预览页面"
-  ></canvas-viewer-switcher>
+  <canvas-viewer-switcher :hoverState="hoverState" :inactiveHoverState="inactiveHoverState"></canvas-viewer-switcher>
   <canvas-divider :selectState="selectState"></canvas-divider>
   <canvas-resize-border :iframe="iframe"></canvas-resize-border>
   <canvas-resize>

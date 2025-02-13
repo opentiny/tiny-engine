@@ -1,5 +1,4 @@
 <template>
-  <!-- TODO 基于 CanvasRouterJumper 组件改造，后续需要抽取公共组件 -->
   <tiny-popover
     :visible-arrow="false"
     trigger="click"
@@ -15,18 +14,18 @@
           'action-wrapper': true,
           disabled: state.disabled
         }"
-        :title="state.disabled ? disabledTitle || title : title"
+        title="显示为"
         @click="handleClick"
       >
         <div class="action">
           <slot>
-            <!-- TODO 更换图标 -->
-            <svg-icon name="jump"></svg-icon>
+            <svg-icon name="eye"></svg-icon>
           </slot>
         </div>
       </div>
     </template>
     <div class="options">
+      <div class="title">显示为</div>
       <div
         class="option"
         v-for="option in state.previewOptions"
@@ -41,8 +40,14 @@
 
 <script>
 import { getMetaApi, META_SERVICE, useCanvas, usePage } from '@opentiny/tiny-engine-meta-register'
+import { constants } from '@opentiny/tiny-engine-utils'
 import { Popover } from '@opentiny/vue'
+import { useBroadcastChannel } from '@vueuse/core'
 import { reactive, ref, watch } from 'vue'
+
+const { BROADCAST_CHANNEL, CANVAS_ROUTER_VIEW_SETTING_VIEW_MODE_KEY } = constants
+
+const COMPONENT_WHITELIST = ['RouterView']
 
 export default {
   components: {
@@ -56,32 +61,35 @@ export default {
     inactiveHoverState: {
       type: Object,
       default: () => ({})
-    },
-    componentWhitelist: {
-      type: Array,
-      default: () => []
-    },
-    title: {
-      type: String,
-      default: ''
-    },
-    disabledTitle: {
-      type: String,
-      default: ''
-    },
-    disableFn: {
-      type: Function,
-      default: () => false
     }
   },
   setup(props) {
+    function getCacheValue() {
+      const value = localStorage.getItem(CANVAS_ROUTER_VIEW_SETTING_VIEW_MODE_KEY)
+      if (!['embedded', 'standalone'].includes(value)) {
+        return 'embedded'
+      }
+      return value
+    }
+
     const state = reactive({
       show: false,
       disabled: false,
       left: 0,
       top: 0,
-      previewOptions: []
+      previewOptions: [],
+      hoverStateIsValid: false,
+      viewMode: getCacheValue()
     })
+
+    watch(
+      () => [state.hoverStateIsValid, state.viewMode],
+      ([hoverStateIsValid, viewMode]) => {
+        state.show = hoverStateIsValid && viewMode === 'embedded'
+      },
+      { immediate: true }
+    )
+
     const popoverRef = ref()
 
     const handleClick = async () => {
@@ -92,7 +100,7 @@ export default {
       const pageId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().pageId
       const children = await usePage().getPageChildren(pageId)
 
-      state.previewOptions = [{ id: '', label: '重置预览页面' }].concat(
+      state.previewOptions = [{ id: '', label: '重置显示页面' }].concat(
         children.map(({ id, route, routePath }) => ({ id: String(id), label: routePath || route }))
       )
     }
@@ -106,23 +114,31 @@ export default {
     watch(
       () => [props.hoverState, props.inactiveHoverState],
       ([hoverState, inactiveHoverState]) => {
-        const usedHoverState = [hoverState, inactiveHoverState].find(({ componentName }) =>
-          props.componentWhitelist.includes(componentName)
+        // TODO 是否有inactive的RouteView？
+        const usedHoverState = [hoverState, inactiveHoverState].find(
+          ({ componentName, element }) =>
+            COMPONENT_WHITELIST.includes(componentName) && element.getAttribute('data-page-active') !== 'true'
         )
 
         if (!usedHoverState) {
-          state.show = false
+          state.hoverStateIsValid = false
           return
         }
 
+        state.hoverStateIsValid = true
+
         const { width, left, top } = usedHoverState
-        state.show = true
         state.left = `${left + width}px`
         state.top = `${top}px`
-        state.disabled = props.disableFn(usedHoverState)
       },
       { deep: true }
     )
+
+    const { data } = useBroadcastChannel({ name: BROADCAST_CHANNEL.CanvasRouterViewSetting })
+
+    watch(data, (value) => {
+      state.viewMode = value.viewMode
+    })
 
     return {
       popoverRef,
@@ -167,9 +183,10 @@ export default {
 }
 .options {
   width: 200px;
-  font-size: 12px;
-  cursor: pointer;
   .option {
+    font-size: 12px;
+    line-height: 24px;
+    cursor: pointer;
     display: flex;
     align-items: center;
     height: 24px;
@@ -177,6 +194,14 @@ export default {
     &:hover {
       background-color: var(--te-common-bg-container);
     }
+  }
+  .title {
+    font-size: 14px;
+    line-height: 20px;
+    padding: 4px 12px;
+    font-weight: bold;
+    cursor: default;
+    border-bottom: 1px solid var(--te-common-border-default);
   }
 }
 </style>
