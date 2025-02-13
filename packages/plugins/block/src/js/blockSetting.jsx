@@ -590,6 +590,7 @@ const createBlock = (block = {}) => {
       if (isVsCodeEnv) {
         generateBlock({ schema: data.content, blockPath: data.path })
       }
+      updateBlockList()
       // 更新区块分类数据，分类下区块不为空的不能删除
       getCategories()
     })
@@ -655,6 +656,7 @@ const updateBlock = (block = {}) => {
       if (isVsCodeEnv) {
         generateBlock({ schema: data.content, blockPath: data.path })
       }
+      updateBlockList()
       // 更新区块分类数据，分类下区块不为空的不能删除
       getCategories()
       useBlock().isRefresh.value = true
@@ -722,7 +724,6 @@ export const saveBlock = async (block) => {
 
     const actionPromise = block.id ? updateBlock(block) : createBlock(block)
     await actionPromise
-    updateBlockList()
   }
 }
 
