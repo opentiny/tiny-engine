@@ -3,7 +3,7 @@
     <div class="header">设置</div>
     <tiny-form ref="robotSettingForm" label-position="top" :rules="formRules" :model="formData" validate-type="text">
       <tiny-form-item prop="type" label="大模型类型" label-width="150px">
-        <tiny-select v-model="formData.type" placeholder="请选择">
+        <tiny-select v-model="formData.type" placeholder="请选择" @change="changeModelType">
           <tiny-option v-for="item in AIModelOptions" :key="item.label" :label="item.label" :value="item.value">
           </tiny-option>
         </tiny-select>
@@ -68,6 +68,10 @@ export default {
       emit('active', 'props')
     }
 
+    const changeModelType = () => {
+      formData.tokenVal = ''
+    }
+
     const confirm = () => {
       robotSettingForm.value.validate((valid) => {
         if (!valid) {
@@ -87,7 +91,8 @@ export default {
       formData,
       helpTip:
         'API Token是访问大模型API的密钥，需要登录平台(如OpenAI、百度智能云)控制台，【API管理】或【安全设置】页面点击“生成新Token”生成。示例：sk-xxxxxxxxxx。',
-      formRules
+      formRules,
+      changeModelType
     }
   }
 }

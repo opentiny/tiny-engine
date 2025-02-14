@@ -304,6 +304,11 @@ export default {
         }
         await scrollContent()
         await sleep(1000)
+        if (!tokenValue.value) {
+          messages.value.push({ role: 'assistant', content: '当前会话未设置API Token，请设置后再试！', name: 'AI' })
+          inProcesing.value = false
+          return
+        }
         messages.value.push({ role: 'assistant', content: '好的，正在执行相关操作，请稍等片刻...', name: 'AI' })
         await scrollContent()
         sendRequest()
@@ -349,19 +354,28 @@ export default {
       initChat()
     }
 
+    const changeTokenValue = () => {
+      localStorage.removeItem('aiChat')
+      sessionProcess = null
+      setContextSession()
+      sessionProcess = JSON.parse(localStorage.getItem('aiChat'))
+    }
+
     const changeModel = (model) => {
-      tokenValue.value = model.tokenVal
       if (selectedModel.value.value !== model.type) {
         confirm({
           title: '切换AI大模型',
           message: '切换AI大模型将导致当前会话被清空，重新开启新会话，是否继续？',
           exec() {
-            selectedModel.value = AIModelOptions.find((item) => (item.value = model.type))
+            selectedModel.value = AIModelOptions.find((item) => item.value === model.type)
+            tokenValue.value = model.tokenVal
             endContent()
           }
         })
+      } else if (tokenValue.value !== model.tokenVal && selectedModel.value.value === model.type) {
+        tokenValue.value = model.tokenVal
+        changeTokenValue()
       }
-      endContent()
     }
 
     const openAIRobot = () => {
@@ -381,6 +395,7 @@ export default {
       connectedFailed,
       sendContent,
       endContent,
+      changeTokenValue,
       resizeChatWindow,
       AIModelOptions,
       selectedModel,
