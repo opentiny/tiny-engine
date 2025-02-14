@@ -362,13 +362,17 @@ const clearCurrentState = () => {
   pageState.pageSchema = null
 }
 
-const switchPage = (pageId) => {
+const switchPage = (pageId, clearPreview = false) => {
   // 切换页面时清空 选中节点信息状态
   clearCurrentState()
 
   // pageId !== 0 防止 pageId 为 0 的时候判断不出来
   if (pageId !== 0 && !pageId) {
-    getMetaApi(META_SERVICE.GlobalService).updatePageId('')
+    if (clearPreview) {
+      getMetaApi(META_SERVICE.GlobalService).updateParams({ pageId: '', previewId: '' })
+    } else {
+      getMetaApi(META_SERVICE.GlobalService).updatePageId('')
+    }
     useCanvas().initData({ componentName: COMPONENT_NAME.Page }, {})
     useLayout().layoutState.pageStatus = {
       state: 'empty',
@@ -386,7 +390,11 @@ const switchPage = (pageId) => {
         useBreadcrumb().setBreadcrumbPage([data.name])
       }
 
-      getMetaApi(META_SERVICE.GlobalService).updatePageId(pageId)
+      if (clearPreview) {
+        getMetaApi(META_SERVICE.GlobalService).updateParams({ pageId, previewId: '' })
+      } else {
+        getMetaApi(META_SERVICE.GlobalService).updatePageId(pageId)
+      }
       useLayout().closePlugin()
       useLayout().layoutState.pageStatus = getCanvasStatus(data.occupier)
       useCanvas().initData(data['page_content'], data)
@@ -399,7 +407,7 @@ const switchPage = (pageId) => {
     })
 }
 
-const switchPageWithConfirm = (pageId) => {
+const switchPageWithConfirm = (pageId, clearPreview = false) => {
   const checkPageSaved = () => {
     const { isSaved, isBlock } = useCanvas()
 
@@ -424,7 +432,7 @@ const switchPageWithConfirm = (pageId) => {
 
   checkPageSaved().then((proceed) => {
     if (proceed) {
-      switchPage(pageId)
+      switchPage(pageId, clearPreview)
     }
   })
 }

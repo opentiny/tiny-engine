@@ -42,7 +42,7 @@ export default {
 
     const routerPageJump = () => {
       if (state.targetPageId) {
-        switchPage(state.targetPageId)
+        switchPage(state.targetPageId, true)
       }
     }
 

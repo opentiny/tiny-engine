@@ -228,7 +228,7 @@ export default {
       route() {
         // check中验证过了 targetPageId 是有效值
         const targetPageId = getCurrent().schema.props.to.name
-        usePage().switchPageWithConfirm(targetPageId)
+        usePage().switchPageWithConfirm(targetPageId, true)
       }
     }
 
