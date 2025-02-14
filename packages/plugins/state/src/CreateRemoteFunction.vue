@@ -58,13 +58,13 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 8px 12px;
-  background: var(--ti-lowcode-toolbar-bg);
-  color: var(--ti-lowcode-toolbar-icon-color);
+  background: var(--te-state-common-bg-color-hover);
+  color: var(--te-state-remote-icon-color);
   margin-top: 12px;
 
   .icon-del {
     cursor: pointer;
-    color: var(--ti-lowcode-toolbar-icon-color);
+    color: var(--te-state-remote-icon-color);
   }
 }
 

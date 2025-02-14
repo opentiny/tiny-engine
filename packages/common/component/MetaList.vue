@@ -21,7 +21,7 @@
 .options {
   width: 100%;
   .top {
-    color: var(--ti-lowcode-meta-list-top-color);
+    color: var(--te-component-common-text-color-secondary);
     overflow: hidden;
     .title {
       float: left;
@@ -30,7 +30,7 @@
     }
     .actions {
       float: right;
-      border: 1px solid var(--ti-lowcode-optionitem-border-color);
+      border: 1px solid var(--te-component-common-border-color);
       overflow: hidden;
       border-radius: 4px 4px 0 0;
     }

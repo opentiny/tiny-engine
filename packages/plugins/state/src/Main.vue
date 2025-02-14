@@ -54,6 +54,7 @@
         :createData="state.createData"
         @nameInput="updateName"
         @close="cancel"
+        @mouseleave="onMouseLeaveVariable"
       />
       <create-store
         v-if="activeName === STATE.GLOBAL_STATE"
@@ -64,6 +65,7 @@
         :storeData="state.createData"
         @nameInput="validName"
         @close="cancel"
+        @mouseleave="onMouseLeaveStore"
       />
     </div>
   </div>
@@ -193,64 +195,58 @@ export default {
       const { name } = state.createData
       const { getSchema, updateSchema } = useCanvas()
 
-      if (!name || errorMessage.value) {
-        notifySaveError('变量名未填写或名称不符合规范，请按照提示修改后重试。')
-        return
-      }
-
       if (activeName.value === STATE.CURRENT_STATE) {
         // 校验
-        const validateResult = variableRef.value.validate()
-        if (!validateResult.success) {
-          notifySaveError(validateResult.message)
-          return
-        }
+        variableRef.value.validateForm().then(() => {
+          // 获取数据
+          let variable = variableRef.value.getFormData()
 
-        // 获取数据
-        let variable = variableRef.value.getFormData()
-
-        // 保存数据
-        add(name, variable)
-        isPanelShow.value = false
-        setSaved(false)
-
-        const schema = getSchema()
-        updateSchema({ state: { ...(schema.state || {}), [name]: variable } })
-
-        useHistory().addHistory()
-      } else {
-        const validateResult = validateMonacoEditorData(storeRef.value.getEditor(), 'state字段', { required: true })
-        if (!validateResult.success) {
-          notifySaveError(validateResult.message)
-          return
-        }
-
-        const storeState = storeRef.value.getEditor().getValue()
-        const getters = storeRef.value.saveMethods('gettersEditor')
-        const actions = storeRef.value.saveMethods('actionsEditor')
-        const store = {
-          [name]: {
-            id: name,
-            state: storeState,
-            getters,
-            actions
-          }
-        }
-
-        if (updateKey.value !== name && flag.value === OPTION_TYPE.UPDATE) {
-          delete state.dataSource[updateKey.value]
-        }
-
-        Object.assign(state.dataSource, store)
-        const storeList = Object.values(state.dataSource)
-
-        const { id } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
-        updateGlobalState(id, { global_state: storeList }).then((res) => {
+          // 保存数据
+          add(name, variable)
           isPanelShow.value = false
-          useResource().appSchemaState.globalState = res.global_state || []
+          setSaved(false)
+
+          const schema = getSchema()
+          updateSchema({ state: { ...(schema.state || {}), [name]: variable } })
+
+          useHistory().addHistory()
+          openCommon()
+        })
+      } else {
+        storeRef.value.validateForm().then(() => {
+          const validateResult = validateMonacoEditorData(storeRef.value.getEditor(), 'state字段', { required: true })
+          if (!validateResult.success) {
+            notifySaveError(validateResult.message)
+            return
+          }
+
+          const storeState = storeRef.value.getEditor().getValue()
+          const getters = storeRef.value.saveMethods('gettersEditor')
+          const actions = storeRef.value.saveMethods('actionsEditor')
+          const store = {
+            [name]: {
+              id: name,
+              state: storeState,
+              getters,
+              actions
+            }
+          }
+
+          if (updateKey.value !== name && flag.value === OPTION_TYPE.UPDATE) {
+            delete state.dataSource[updateKey.value]
+          }
+
+          Object.assign(state.dataSource, store)
+          const storeList = Object.values(state.dataSource)
+
+          const { id } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
+          updateGlobalState(id, { global_state: storeList }).then((res) => {
+            isPanelShow.value = false
+            useResource().appSchemaState.globalState = res.global_state || []
+          })
+          openCommon()
         })
       }
-      openCommon()
     }
 
     const search = (value) => {
@@ -347,6 +343,12 @@ export default {
       query.value = ''
       initDataSource()
     }
+    const onMouseLeaveVariable = () => {
+      variableRef.value?.clearValidateForm()
+    }
+    const onMouseLeaveStore = () => {
+      storeRef.value?.clearValidateForm()
+    }
 
     onActivated(() => {
       initDataSource()
@@ -378,7 +380,9 @@ export default {
       storeRef,
       OPTION_TYPE,
       open,
-      docsUrl
+      docsUrl,
+      onMouseLeaveVariable,
+      onMouseLeaveStore
     }
   }
 }
@@ -396,20 +400,19 @@ export default {
     flex-direction: column;
     .add-btn {
       margin: 12px 0;
-      padding: 0 10px;
+      padding: 0 8px;
       width: 100%;
       .tiny-button {
         width: 100%;
-        border-color: var(--te-common-border-default);
+        border-color: var(--te-state-add-btn-border-color);
         &:hover {
-          border-color: var(--te-common-border-hover);
+          border-color: var(--te-state-add-btn-border-color-hover);
         }
       }
       .add-btn-icon {
         margin-right: 4px;
         font-size: 16px;
-        stroke: var(--ti-lowcode-chat-model-button-text);
-        color: var(--te-common-icon-secondary);
+        color: var(--te-state-add-btn-icon-color);
         vertical-align: sub;
       }
       .add-btn-text {
@@ -421,9 +424,9 @@ export default {
       padding: 10px;
       font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
         'Helvetica Neue', sans-serif;
-      color: var(--ti-lowcode-plugin-panel-title-color);
-      font-weight: var(--ti-lowcode-plugin-panel-title-font-weight);
-      border-bottom: 1px solid var(--ti-lowcode-data-header-border-bottom-color);
+      color: var(--te-state-common-text-color);
+      font-weight: var(--te-base-font-weight-bold);
+      border-bottom: 1px solid var(--te-state-common-border-color-divider);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -431,7 +434,7 @@ export default {
 
     .left-filter {
       margin-top: 4px;
-      padding: 0 10px;
+      padding: 0 8px;
     }
 
     & > span {
@@ -452,8 +455,9 @@ export default {
   .data-source-right-panel {
     width: 492px;
     height: 100%;
-    border-right: 1px solid var(--ti-lowcode-toolbar-border-color);
-    background: var(--ti-lowcode-common-component-bg);
+    box-shadow: 6px 0px 3px 0px var(--te-state-panel-shadow-color);
+    border-right: 1px solid var(--te-state-common-border-color-divider);
+    background: var(--te-state-common-bg-color);
     position: absolute;
     left: var(--base-left-panel-width);
     top: 0;
@@ -466,12 +470,12 @@ export default {
       padding: 0 12px;
       font-size: 12px;
       font-weight: 700;
-      color: var(--te-common-text-primary);
-      background: var(--ti-lowcode-common-component-bg);
-      border-bottom: 1px solid var(--ti-lowcode-data-header-border-bottom-color);
+      color: var(--te-state-common-text-color);
+      background: var(--te-state-common-bg-color);
+      border-bottom: 1px solid var(--te-state-common-border-color-divider);
       .options-wrap {
         display: flex;
-        column-gap: 16px;
+        column-gap: 8px;
         align-items: center;
         :deep(button.tiny-button.tiny-button--primary) {
           display: flex;
@@ -479,7 +483,6 @@ export default {
           min-width: 40px;
           justify-content: center;
           height: 24px;
-          padding: 0;
           border-radius: 4px;
         }
       }
@@ -504,21 +507,12 @@ export default {
   :deep(.tiny-tabs__item) {
     flex: 1 1 auto;
     text-align: center;
-    color: var(--ti-lowcode-common-primary-text-color);
-    &:not(.is-active) {
-      background-color: var(--ti-lowcode-data-radio-group-bg);
-    }
   }
 
   :deep(.tiny-tabs__nav) {
     float: none;
     display: flex;
     flex-wrap: wrap;
-    .tiny-tabs__item {
-      &.is-active {
-        background-color: var(--ti-lowcode-data-radio-group-active-bg);
-      }
-    }
   }
 
   :deep(.tiny-tabs__content) {

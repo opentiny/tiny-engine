@@ -12,6 +12,7 @@
 
 import entry from './src/Main.vue'
 import metaData from './meta.js'
+import './src/styles/vars.less'
 
 export default {
   ...metaData,

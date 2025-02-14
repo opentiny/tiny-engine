@@ -34,26 +34,22 @@
             <tiny-input ref="editFormItemRef" v-model="state.groupNameModel.value" placeholder="请输入新的分组名称">
               <template #suffix>
                 <div class="confirm-btns">
-                  <tiny-tooltip class="action-item" effect="dark" content="确定" placement="bottom" :open-delay="500">
-                    <tiny-button
-                      type="text"
-                      size="mini"
-                      :icon="TinyIconYes"
-                      id="confirmChangeGroupName"
-                      class="confirm-btns-item"
-                      @click.stop="handleChangeGroupName(item.value)"
-                    ></tiny-button>
-                  </tiny-tooltip>
-                  <tiny-tooltip class="action-item" effect="dark" content="取消" placement="bottom" :open-delay="500">
-                    <tiny-button
-                      type="text"
-                      size="mini"
-                      :icon="TinyIconClose"
-                      id="cancelChangeGroupName"
-                      class="confirm-btns-item"
-                      @click.stop="state.currentEditId = null"
-                    ></tiny-button>
-                  </tiny-tooltip>
+                  <tiny-button
+                    type="text"
+                    size="mini"
+                    :icon="TinyIconYes"
+                    id="confirmChangeGroupName"
+                    class="confirm-btns-item"
+                    @click.stop="handleChangeGroupName(item.value)"
+                  ></tiny-button>
+                  <tiny-button
+                    type="text"
+                    size="mini"
+                    :icon="TinyIconClose"
+                    id="cancelChangeGroupName"
+                    class="confirm-btns-item"
+                    @click.stop="state.currentEditId = null"
+                  ></tiny-button>
                 </div>
               </template>
             </tiny-input>
@@ -66,7 +62,7 @@
               id="updateGroupName"
               class="option-btn"
               name="to-edit"
-              tips="编辑"
+              :hoverBgColor="false"
               @click.stop="updateGroup(item.value)"
             ></svg-button>
             <tiny-popover
@@ -77,11 +73,18 @@
               @update:modelValue="handleChangeDeletePopoverVisible"
             >
               <div class="popper-confirm" @mousedown.stop="">
-                <div class="popper-confirm-header">
-                  <svg-icon class="icon" name="warning"></svg-icon>
+                <div class="popper-confirm-header">删除</div>
+                <div class="popper-confirm-content">
                   <span class="title">您确定删除该分组吗？</span>
                 </div>
                 <div class="popper-confirm-footer">
+                  <tiny-button
+                    id="cancelDeleteGroupName"
+                    size="small"
+                    class="cancel-btn"
+                    @click="handleCancelDeleteGroup"
+                    >取消</tiny-button
+                  >
                   <tiny-button
                     id="confirmDeleteGroupName"
                     class="confirm-btn"
@@ -91,13 +94,6 @@
                   >
                     确定
                   </tiny-button>
-                  <tiny-button
-                    id="cancelDeleteGroupName"
-                    size="small"
-                    class="cancel-btn"
-                    @click="handleCancelDeleteGroup"
-                    >取消</tiny-button
-                  >
                 </div>
               </div>
               <template #reference>
@@ -105,7 +101,7 @@
                   id="deleteGroup"
                   class="option-btn"
                   name="delete"
-                  tips="删除"
+                  :hoverBgColor="false"
                   @click.stop="handleShowDeleteModal(item.value.groupId)"
                 ></svg-button>
               </template>
@@ -138,7 +134,6 @@ import {
   FormItem as TinyFormItem,
   DialogBox,
   Button,
-  Tooltip,
   Notify,
   Popover
 } from '@opentiny/vue'
@@ -159,7 +154,6 @@ export default {
     SvgButton,
     TinyDialogBox: DialogBox,
     TinyButton: Button,
-    TinyTooltip: Tooltip,
     TinyPopover: Popover
   },
   props: {
@@ -168,6 +162,7 @@ export default {
       default: () => []
     }
   },
+  emits: ['changeGroup'],
   setup(props) {
     const validateIcon = iconError()
     const panelState = inject('panelState', {})
@@ -401,18 +396,6 @@ export default {
   display: flex;
   justify-content: space-between;
   padding: 12px;
-
-  .add-group-btn {
-    font-size: 16px;
-    width: 32px;
-    height: 32px;
-    border-radius: 6px;
-    border-color: var(--ti-lowcode-materials-border-icon-border-color);
-    background-color: var(--ti-lowcode-materials-border-icon-bg-color);
-    &:hover {
-      border-color: var(--ti-lowcode-materials-border-icon-border-color-hover);
-    }
-  }
 }
 
 .blocks-header-option {
@@ -425,9 +408,10 @@ export default {
   }
   &.block-editing-option {
     padding: 0;
-    border-bottom: 1px solid var(--ti-lowcode-materials-block-group-item-border-color);
+    border-bottom: 1px solid var(--te-materials-block-group-item-border-color);
     :deep(.tiny-input__inner) {
       border-color: transparent;
+      width: 180px;
     }
   }
   .confirm-btns {
@@ -435,11 +419,14 @@ export default {
       margin-left: 0;
     }
     :deep(svg) {
-      color: var(--ti-lowcode-component-svg-button-color);
+      color: var(--te-materials-block-group-icon-color);
+    }
+    :deep(.tiny-button) {
+      padding: 0 2px;
     }
   }
   &.show-underline {
-    border-bottom: 1px solid var(--ti-lowcode-materials-block-group-item-border-color);
+    border-bottom: 1px solid var(--te-materials-block-group-item-border-color);
   }
   .block-option-content {
     display: flex;
@@ -453,6 +440,12 @@ export default {
   }
   .option-right {
     display: none;
+  }
+  .option-label {
+    width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 .tiny-form .tiny-form-item.edit-form-item {
@@ -469,37 +462,28 @@ export default {
   width: 220px;
   height: 108px;
   box-sizing: border-box;
-  background-color: var(--ti-lowcode-materials-block-group-delete-popover-bg-color);
   padding: 6px;
 
-  &[x-placement^='right'] {
-    .popper__arrow {
-      &,
-      &::after {
-        border-right-color: var(--ti-lowcode-common-component-hover-bg);
-      }
-    }
-  }
-
-  .popper-confirm {
-    padding: 20px;
-  }
-
   .popper-confirm-header {
+    font-size: var(--te-base-font-size-1);
+    color: var(--te-materials-block-group-popper-title-text-color);
+    font-weight: var(--te-base-font-weight-7);
+    margin-bottom: 12px;
+  }
+  .popper-confirm-content {
     font-size: 12px;
-    color: var(--ti-lowcode-materials-block-group-delete-popover-title-color);
-    .icon {
-      color: var(--ti-lowcode-warning-color);
-      width: 16px;
-      height: 16px;
-    }
-    .title {
-      margin-left: 4px;
-    }
+    color: var(--te-materials-block-group-popper-content-text-color);
   }
   .popper-confirm-footer {
-    text-align: center;
-    margin-top: 22px;
+    text-align: right;
+    margin-top: 16px;
+    .tiny-button {
+      min-width: 40px;
+      margin-right: 0;
+      & + .tiny-button {
+        margin-left: 8px;
+      }
+    }
   }
 }
 </style>

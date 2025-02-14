@@ -128,7 +128,7 @@ export default {
   .display-label {
     flex: 0 0 50px;
     line-height: 24px;
-    color: var(--te-common-text-secondary);
+    color: var(--te-styles-common-text-color-secondary);
     span {
       padding: 2px;
     }
@@ -136,8 +136,8 @@ export default {
       span {
         cursor: pointer;
         border-radius: 2px;
-        color: var(--te-common-text-emphasize);
-        background-color: var(--te-common-bg-text-emphasize);
+        color: var(--te-styles-common-setting-text-color);
+        background-color: var(--te-styles-common-setting-bg-color);
       }
     }
   }

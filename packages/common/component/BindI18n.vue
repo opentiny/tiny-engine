@@ -10,7 +10,12 @@
         :filter-method="filterMethod"
         @change="selectI18n"
       >
-        <tiny-option v-for="item in langData" :key="item.key" :label="item.key + item[currentLang]" :value="item.key">
+        <tiny-option
+          v-for="item in langData"
+          :key="item.key"
+          :label="`${item[currentLang]} (${item.key})`"
+          :value="item.key"
+        >
         </tiny-option>
       </tiny-select>
       <div v-if="paramsForm.length" class="params-form">

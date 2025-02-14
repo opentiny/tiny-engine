@@ -175,10 +175,14 @@ const generateBridgeUtil = (...args) => {
   }
 }
 
-export const saveResource = (data, callback, emit) => {
-  if (getActionType() === ACTION_TYPE.Edit) {
-    data.id = state.resource.id
-    requestUpdateReSource(data).then((result) => {
+export const saveResource = async (data, callback, emit) => {
+  const isEdit = getActionType() === ACTION_TYPE.Edit
+
+  try {
+    if (isEdit) {
+      data.id = state.resource.id
+      const result = await requestUpdateReSource(data)
+
       if (result) {
         const index = useResource().appSchemaState[data.category].findIndex((item) => item.name === result.name)
 
@@ -192,36 +196,28 @@ export const saveResource = (data, callback, emit) => {
         }
 
         useResource().appSchemaState[data.category][index] = result
-
-        // 更新画布工具函数环境，保证渲染最新工具类返回值, 并触发画布的强制刷新
-
-        generateBridgeUtil(getAppId())
-
-        useNotify({
-          type: 'success',
-          message: '修改成功'
-        })
-
-        emit('refresh', state.type)
-        state.refresh = true
-        callback()
       }
-    })
-  } else {
-    requestAddReSource(data).then((result) => {
+    } else {
+      const result = await requestAddReSource(data)
+
       if (result) {
         useResource().appSchemaState[data.category].push(result)
-
-        // 更新画布工具函数环境，保证渲染最新工具类返回值, 并触发画布的强制刷新
-        generateBridgeUtil(getAppId())
-        useNotify({
-          type: 'success',
-          message: '创建成功'
-        })
-        emit('refresh', state.type)
-        state.refresh = true
-        callback()
       }
+    }
+
+    // 更新画布工具函数环境，保证渲染最新工具类返回值, 并触发画布的强制刷新
+    generateBridgeUtil(getAppId())
+    useNotify({
+      type: 'success',
+      message: `${isEdit ? '修改' : '创建'}成功`
+    })
+    emit('refresh', state.type)
+    state.refresh = true
+    callback()
+  } catch (error) {
+    useNotify({
+      type: 'error',
+      message: `工具类${isEdit ? '修改' : '创建'}失败：${error.message}`
     })
   }
 }

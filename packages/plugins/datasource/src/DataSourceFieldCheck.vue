@@ -61,7 +61,7 @@ export default {
 <style scoped lang="less">
 .collection-field-item {
   .tiny-checkbox {
-    color: var(--ti-lowcode-datasource-dialog-font-color);
+    color: var(--te-datasource-dialog-font-text-color);
   }
 }
 </style>

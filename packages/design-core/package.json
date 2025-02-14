@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine",
-  "version": "2.0.0",
+  "version": "2.2.0",
   "type": "module",
   "description": "TinyEngine enables developers to customize low-code platforms, build low-bit platforms online in real time, and support secondary development or integration of low-bit platform capabilities.",
   "homepage": "https://opentiny.design/tiny-engine",
@@ -88,6 +88,7 @@
     "@opentiny/tiny-engine-toolbar-refresh": "workspace:*",
     "@opentiny/tiny-engine-toolbar-save": "workspace:*",
     "@opentiny/tiny-engine-toolbar-setting": "workspace:*",
+    "@opentiny/tiny-engine-toolbar-view-setting": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
     "@opentiny/tiny-engine-webcomponent-core": "workspace:*",
@@ -99,7 +100,7 @@
     "eslint-linter-browserify": "8.57.0",
     "file-saver": "^2.0.5",
     "html2canvas": "^1.4.1",
-    "monaco-editor": "0.33.0",
+    "monaco-editor": "0.51.0",
     "prettier": "2.7.1",
     "sortablejs": "^1.14.0",
     "vue-i18n": "^9.9.0"
@@ -122,12 +123,13 @@
     "vite": "^5.4.2"
   },
   "peerDependencies": {
-    "@opentiny/vue": "^3.14.0",
-    "@opentiny/vue-design-smb": "^3.14.0",
-    "@opentiny/vue-icon": "^3.14.0",
-    "@opentiny/vue-locale": "^3.14.0",
-    "@opentiny/vue-renderless": "^3.14.0",
-    "@opentiny/vue-theme": "^3.14.0",
+    "@opentiny/vue": "^3.20.0",
+    "@opentiny/vue-design-smb": "^3.20.0",
+    "@opentiny/vue-icon": "^3.20.0",
+    "@opentiny/vue-locale": "^3.20.0",
+    "@opentiny/vue-renderless": "^3.20.0",
+    "@opentiny/vue-runtime": "^3.20.0",
+    "@opentiny/vue-theme": "^3.20.0",
     "vue": "^3.4.23"
   },
   "browserslist": [

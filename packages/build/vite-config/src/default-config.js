@@ -29,7 +29,7 @@ const getDefaultConfig = (engineConfig) => {
     base: './',
     publicDir: path.resolve(root, './public'),
     resolve: {
-      extensions: ['.js', '.jsx', '.vue'],
+      extensions: ['.js', '.jsx', '.vue', '.ts', '.tsx'],
       alias: {}
     },
     server: {

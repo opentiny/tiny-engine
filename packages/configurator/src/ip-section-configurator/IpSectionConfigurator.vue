@@ -18,7 +18,14 @@
             :value="optionItem"
           ></tiny-option>
         </tiny-select>
-        <tiny-tooltip v-else class="item" effect="dark" :content="item.tip || ''" placement="top" :disbaled="!item.tip">
+        <tiny-tooltip
+          v-else
+          class="item"
+          effect="light"
+          :content="item.tip || ''"
+          placement="top"
+          :disabled="!item.tip"
+        >
           <tiny-input v-model="state.ipArray[index]" :disabled="item.disabled" @update:modelValue="ipChange">
           </tiny-input>
         </tiny-tooltip>
@@ -153,13 +160,13 @@ export default {
   }
   .proposal {
     margin-top: 6px;
-    color: var(--ti-lowcode-flowchart-ip-proposal-color);
+    color: var(--te-configurator-common-text-color-weaken);
     font-size: 12px;
     .proposal-item {
       line-height: 20px;
       height: 20px;
       .proposal-select {
-        color: var(--ti-lowcode-flowchart-ip-proposal-select);
+        color: var(--te-configurator-common-text-color-weaken);
         cursor: pointer;
       }
     }

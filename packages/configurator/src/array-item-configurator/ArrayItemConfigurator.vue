@@ -175,7 +175,7 @@ export default {
 .add {
   display: flex;
   align-items: center;
-  color: var(--te-common-text-emphasize);
+  color: var(--te-configurator-common-text-color-emphasize);
   &:hover {
     cursor: pointer;
   }

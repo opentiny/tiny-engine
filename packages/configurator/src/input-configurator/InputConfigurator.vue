@@ -66,7 +66,7 @@ export default {
   font-size: 16px;
   &:hover {
     cursor: pointer;
-    color: var(--te-common-text-primary);
+    color: var(--te-configurator-common-text-color-primary);
   }
 }
 </style>

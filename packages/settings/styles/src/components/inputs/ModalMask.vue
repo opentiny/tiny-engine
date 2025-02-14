@@ -54,8 +54,13 @@ export default {
     const modalContent = ref(null)
 
     const calculateTopStyle = (modalContent) => {
+      const innnerHeight = window.getComputedStyle(document.body).height
       if (isAlignBody && modalContent) {
-        return modal.top < modalContent.offsetHeight ? 40 : modal.top - modalContent.offsetHeight + 40
+        return modal.top < modalContent.offsetHeight
+          ? 40
+          : modal.top > parseInt(innnerHeight) - 400
+          ? modal.top - 364
+          : modal.top - modalContent.offsetHeight + 40
       }
       return modal.top - 34
     }
@@ -92,11 +97,11 @@ export default {
     left: 16px;
     z-index: 1000;
     padding: 8px;
-    color: var(--te-common-text-secondary);
-    border: 1px solid var(--ti-lowcode-tabs-border-color);
+    color: var(--te-styles-common-text-color-secondary);
+    border: 1px solid var(--te-styles-common-border-color);
     box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
-    background-color: var(--te-common-bg-default);
+    background-color: var(--te-styles-common-bg-color);
     overflow: auto;
     max-height: 100%;
     box-sizing: border-box;

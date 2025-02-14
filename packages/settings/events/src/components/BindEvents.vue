@@ -50,15 +50,11 @@
               name="plugin-icon-page-schema"
               tips="定位到代码"
               placement="top"
+              :hoverBgColor="false"
               @click="openCodePanel(action)"
             ></svg-button>
-            <svg-button
-              name="setting"
-              tips="设置"
-              placement="top"
-              @click="openActionDialog(action, false)"
-            ></svg-button>
-            <svg-button name="delete" tips="删除" placement="top" @click="delEvent(action)"></svg-button>
+            <svg-button name="setting" :hoverBgColor="false" @click="openActionDialog(action, false)"></svg-button>
+            <svg-button name="delete" :hoverBgColor="false" @click="delEvent(action)"></svg-button>
           </div>
         </div>
       </li>
@@ -286,25 +282,24 @@ export default {
       }
     }
     .event-bind {
-      color: var(--ti-lowcode-events-event-bind-color);
+      color: var(--te-events-event-bind-text-color);
     }
     .bind-action-item {
       display: flex;
       justify-content: space-between;
       padding: 8px 12px;
       cursor: pointer;
-      color: var(--ti-lowcode-events-bind-action-item-color);
-      border-bottom: 1px solid var(--ti-lowcode-events-bind-action-item-border-color);
+      color: var(--te-events-bind-action-item-text-color);
+      border-bottom: 1px solid var(--te-events-bind-action-item-border-color);
       &:first-child {
-        border-top: 1px solid var(--ti-lowcode-events-bind-action-item-border-color);
+        border-top: 1px solid var(--te-events-bind-action-item-border-color);
       }
       &:hover {
-        background: var(--ti-lowcode-events-bind-action-item-hover-bg-color);
+        background: var(--te-events-bind-action-item-bg-color-hover);
       }
 
       .linked {
-        background-color: var(--ti-lowcode-events-bind-action-item-linked-bg-color);
-        color: var(--ti-lowcode-events-bind-action-item-linked-color);
+        color: var(--te-events-bind-action-item-text-color-link);
       }
     }
   }
@@ -334,8 +329,8 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: var(--ti-lowcode-events-empty-action-bg-color);
-    color: var(--ti-lowcode-events-empty-action-color);
+    background-color: var(--te-events-empty-action-bg-color);
+    color: var(--te-events-empty-action-text-color);
     padding: 24px 18px;
     margin-top: var(--te-common-vertical-item-spacing-normal);
     .empty-action-icon {
@@ -351,34 +346,23 @@ export default {
     .text {
       margin-top: 12px;
     }
-
-    .empty-bind-event-tip {
-      color: var(--ti-lowcode-events-empty-action-tips-strong-color);
-    }
   }
 }
 .bind-event-list {
-  padding: var(--te-common-vertical-item-spacing-normal) 0;
-  color: var(--ti-lowcode-events-bind-event-list-color);
+  color: var(--te-events-bind-event-list-text-color);
 }
 .bind-event-list-item-notallow {
   cursor: not-allowed;
   pointer-events: none;
-  color: var(--ti-lowcode-events-bind-event-list-item-disabled-color);
+  color: var(--te-events-bind-event-list-item-text-color-disabled);
 }
 .bind-event-list-item {
-  padding: 0 12px;
+  padding: 0 16px;
+  margin: 0 -16px;
   line-height: 24px;
   &:hover {
     cursor: pointer;
-    background: var(--lowcode-events-bind-event-list-item-hover-bg-color);
-  }
-}
-
-.add-custom-event-tip {
-  color: var(--ti-lowcode-events-add-custom-event-tips-color);
-  .event-tip-highlight {
-    color: var(--ti-lowcode-event-add-custom-event-tips-highlight-color);
+    background: var(--te-events-bind-event-list-item-bg-color-hover);
   }
 }
 </style>

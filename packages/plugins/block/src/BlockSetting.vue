@@ -69,20 +69,24 @@
           <block-history-list
             :is-block-manage="true"
             :history="state.backupList"
+            :lastVersion="state.lastVersion"
             @preview="previewHistory"
           ></block-history-list>
         </tiny-collapse-item>
       </tiny-collapse>
     </template>
   </plugin-setting>
-  <block-deploy-dialog v-model:visible="state.showDeployBlock" :nextVersion="nextVersion"></block-deploy-dialog>
+  <block-deploy-dialog
+    v-model:visible="state.showDeployBlock"
+    :block="publishBlock"
+    @changeSchema="handleChangeSchema"
+  ></block-deploy-dialog>
 </template>
 
 <script lang="jsx">
 import { reactive, ref, watch, watchEffect, computed } from 'vue'
 import { Button as TinyButton, Collapse as TinyCollapse, CollapseItem as TinyCollapseItem } from '@opentiny/vue'
-import { useModal } from '@opentiny/tiny-engine-meta-register'
-import { getMergeMeta, useBlock } from '@opentiny/tiny-engine-meta-register'
+import { useModal, getMergeMeta, useBlock } from '@opentiny/tiny-engine-meta-register'
 import { BlockHistoryList, PluginSetting, CloseIcon, SvgButton, ButtonGroup } from '@opentiny/tiny-engine-common'
 import { previewBlock } from '@opentiny/tiny-engine-common/js/preview'
 import { LifeCycles } from '@opentiny/tiny-engine-common'
@@ -136,11 +140,22 @@ export default {
   setup() {
     const { confirm } = useModal()
     const editBlock = computed(getEditBlock)
+    const publishBlock = computed(() => {
+      const currentBlock = useBlock().getCurrentBlock()
+      const currentEditBlock = getEditBlock()
+
+      if (currentBlock?.id === currentEditBlock?.id) {
+        return currentBlock
+      }
+
+      return currentEditBlock
+    })
     const blockConfigForm = ref(null)
 
     const state = reactive({
       activeName: ['base', 'attribute', 'event', 'lifeCycle', 'history'],
       backupList: [],
+      lastVersion: {},
       showDeployBlock: false,
       bindLifeCycles: {},
       showAttributeGuide: false,
@@ -149,24 +164,6 @@ export default {
 
     watchEffect(() => {
       state.bindLifeCycles = getEditBlock()?.content?.lifeCycles || {}
-    })
-
-    // 按时间最新提交的版本的修订版本号+1, 提示输入的下一个版本
-    const nextVersion = computed(() => {
-      const backupList = state.backupList || []
-
-      let latestVersion = '1.0.0'
-      let latestTime = 0
-      backupList.forEach((v) => {
-        const vTime = new Date(v.created_at).getTime()
-
-        if (vTime > latestTime) {
-          latestTime = vTime
-          latestVersion = v.version
-        }
-      })
-      // version 符合X.Y.Z的字符结构
-      return latestVersion.replace(/\d+$/, (match) => Number(match) + 1)
     })
 
     watch(
@@ -179,6 +176,7 @@ export default {
 
         if (block?.id) {
           state.backupList = block.histories
+          state.lastVersion = block.last_build_info
         }
       }
     )
@@ -264,10 +262,16 @@ export default {
       setConfigItemVisible(false)
     }
 
+    const handleChangeSchema = (newSchema) => {
+      // 如果是当前正在画布编辑的区块，需要重新 importSchema
+      if (getEditBlock()?.id === useBlock().getCurrentBlock()?.id) {
+        useBlock().initBlock({ ...useBlock().getCurrentBlock(), content: newSchema })
+      }
+    }
+
     return {
       state,
       isOpen,
-      nextVersion,
       showDeployBlockDialog,
       closePanel,
       deleteBlock,
@@ -279,7 +283,9 @@ export default {
       globalConfig: getMergeMeta('engine.config'),
       onMouseLeave,
       handleClick,
-      handleShowGuide
+      handleShowGuide,
+      handleChangeSchema,
+      publishBlock
     }
   }
 }
@@ -289,21 +295,9 @@ export default {
 .plugin-block-setting {
   :deep(.plugin-setting-header) {
     border: 0;
-    .button-group {
-      column-gap: 2px;
-    }
-    .tiny-button {
-      width: 40px;
-      padding: 0;
-      min-width: 40px;
-      margin-right: 2px;
-    }
     .close-plugin-setting-icon {
       margin-left: 4px;
     }
-  }
-  .publish-btn {
-    margin-right: 8px;
   }
 
   .video-close {
@@ -332,10 +326,6 @@ export default {
         height: auto;
       }
     }
-  }
-
-  .life-cycles-container {
-    padding: 0 0 12px 0;
   }
 
   .block-attribute,
@@ -371,8 +361,11 @@ export default {
         margin-right: 3px;
       }
 
-      color: var(--ti-lowcode-block-video-tip-color);
+      color: var(--te-block-video-tip-text-color);
     }
+  }
+  :deep(.tiny-collapse-item__content) {
+    padding: 0 12px 12px;
   }
 }
 </style>

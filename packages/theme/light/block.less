@@ -1,54 +1,19 @@
 :root {
-  // 历史备份列表
-  --ti-lowcode-component-block-history-list-item-border-color: var(--ti-lowcode-common-border-color-1); // 组件边框色
-  --ti-lowcode-component-block-history-list-item-hover-bg: var(
-    --ti-lowcode-common-component-hover-bg
-  ); // 组件 hover 背景 色
-  --ti-lowcode-component-block-history-list-item-btn-color: var(
-    --ti-lowcode-common-secondary-text-color
-  ); // 预览还原按钮文字色
-  --ti-lowcode-component-block-history-list-item-btn-hover-color: var(
-    --ti-lowcode-common-text-main-color
-  ); // 预览还原 hover 颜色
-  --ti-lowcode-component-block-history-list-item-btn-hover-bg: var(--ti-lowcode-common-hover-bg-1); // 预览还原背景色
-  --ti-lowcode-component-block-history-list-item-btn-border-color: var(
-    --ti-lowcode-common-secondary-text-color
-  ); // 预览还原边框色
-
   // 区块列表
-  --ti-lowcode-component-block-list-item-color: var(--ti-lowcode-common-text-main-color); // 区块列表颜色
-  --ti-lowcode-component-block-list-shortcut-title-color: var(--ti-lowcode-common-primary-text-color); // 快照标题颜色
-  --ti-lowcode-component-block-list-shortcut-bg: var(--ti-lowcode-common-component-bg); // 快照标题颜色
-  --ti-lowcode-component-block-list-border-color: var(--ti-lowcode-common-border-color-4); // 快照标题颜色
-  --ti-lowcode-component-block-list-item-active-bg: #f5f5f5; // 区块 active 背景色
-  --ti-lowcode-component-block-version-list-item-border-color: var(--ti-lowcode-base-gray-20);
-  --ti-lowcode-component-block-version-list-item-bg: var(--ti-lowcode-base-gray-0);
-  --ti-lowcode-component-block-version-list-version-bg: #1476ff1a;
-  --ti-lowcode-component-block-version-list-version-color: var(--ti-lowcode-common-primary-color);
-  --ti-lowcode-component-block-version-list-panel-title-color: var(--ti-lowcode-common-text-title-color);
-  --ti-lowcode-component-block-version-list-time-color: var(--ti-lowcode-common-text-title-color);
-  --ti-lowcode-component-block-version-list-desc-color: var(--te-common-text-weaken);
-  --ti-lowcode-component-block-version-list-current-version-color: var(--ti-lowcode-base-text-color-2);
-  --ti-lowcode-component-block-setting-popover-bg: var(--ti-lowcode-base-gray-0);
-  --ti-lowcode-component-block-setting-item-hover-bg: var(--ti-lowcode-base-bg-2);
-  --ti-lowcode-component-block-setting-item-text-color: var(--ti-lowcode-base-text-color);
-  // 区块管理 - 添加分类
-  --ti-lowcode-component-block-list-add-group-btn-bg: transparent;
-  --ti-lowcode-component-block-list-add-group-btn-border: 1px solid var(--ti-lowcode-base-default-button-border-color);
-  --ti-lowcode-component-block-list-setting-btn-color: var(--ti-lowcode-base-default-button-border-hover-color);
-  --ti-lowcode-component-block-list-setting-btn-hover-color: var(--ti-lowcode-base-default-button-border-hover-color);
-  --ti-lowcode-component-block-list-add-group-btn-border-radius: 6px;
-}
-
-.block-setting-content {
-  --ti-lowcode-block-config-form-item-color: var(--ti-lowcode-base-text-color);
+  --ti-lowcode-component-block-list-item-color: var(--te-common-text-secondary); // 区块列表颜色
+  --ti-lowcode-component-block-list-shortcut-title-color: var(--te-common-text-primary); // 快照标题颜色
+  --ti-lowcode-component-block-list-shortcut-bg: var(--te-common-bg-default); // 快照标题颜色
+  --ti-lowcode-component-block-list-item-active-bg: var(--te-common-bg-container); // 区块 active 背景色
+  --ti-lowcode-component-block-setting-popover-bg: var(--te-common-bg-default);
+  --ti-lowcode-component-block-setting-item-text-color: var(--te-common-text-primary);
 }
 
 // 区块设置 - 标签
 .block-tag-create {
-  --ti-lowcode-block-config-tag-color: var(--ti-lowcode-base-text-color);
-  --ti-lowcode-block-config-tag-bg: var(--ti-lowcode-input-bg);
-  --ti-lowcode-block-config-tag-hover-color: var(--ti-lowcode-base-text-color);
-  --ti-lowcode-block-config-tag-hover-bg: #f2f2f2;
-  --ti-lowcode-block-config-tag-close-color: var(--ti-lowcode-toolbar-icon-color);
+  --ti-lowcode-block-config-tag-color: var(--te-common-text-primary);
+  --ti-lowcode-block-config-tag-bg: var(--te-common-bg-disabled);
+  --ti-lowcode-block-config-tag-hover-color: var(--te-common-text-primary);
+  --ti-lowcode-block-config-tag-hover-bg: var(--te-common-bg-disabled);
+  --ti-lowcode-block-config-tag-close-color: var(--te-common-icon-secondary);
+  --ti-lowcode-block-config-tag-close-hover-color: var(--te-common-icon-primary);
 }

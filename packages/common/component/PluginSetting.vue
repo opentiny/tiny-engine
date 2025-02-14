@@ -9,16 +9,17 @@
       </slot>
       <div class="button-group-wrap">
         <slot name="header">
-          <div v-if="showIfFullScreen" class="cursor" @click="fullScreen">
-            <icon-fullscreen v-if="!state.isFullScreen" class="icon-fullscreen"></icon-fullscreen>
-            <icon-minscreen v-if="state.isFullScreen" class="icon-minscreen"></icon-minscreen>
-            <span class="full-screen-label">{{ getFullScreenLabel(state.isFullScreen) }}</span>
-          </div>
-          <tiny-button v-if="!isIconButton" type="info" @click="$emit('save')" class="plugin-save">保存</tiny-button>
-          <tiny-button v-if="isIconButton" :icon="icon" type="info" @click="$emit('add')">
-            {{ iconButtonText }}
-          </tiny-button>
-          <icon-close class="icon-close close" @click="$emit('cancel')"></icon-close>
+          <button-group>
+            <tiny-button v-if="!isIconButton" type="info" @click="$emit('save')" class="plugin-save">保存</tiny-button>
+            <tiny-button v-if="isIconButton" :icon="icon" type="info" @click="$emit('add')">
+              {{ iconButtonText }}
+            </tiny-button>
+            <div v-if="showIfFullScreen" class="cursor" @click="fullScreen">
+              <svg-button v-if="!state.isFullScreen" name="full-screen"></svg-button>
+              <svg-button v-if="state.isFullScreen" name="cancel-full-screen"></svg-button>
+            </div>
+            <svg-button name="close" @click="$emit('cancel')"></svg-button>
+          </button-group>
         </slot>
       </div>
     </div>
@@ -32,7 +33,9 @@
 <script>
 import { reactive, watchEffect } from 'vue'
 import { Button } from '@opentiny/vue'
-import { iconPlus, iconFullscreen, iconMinscreen, iconClose } from '@opentiny/vue-icon'
+import { iconPlus } from '@opentiny/vue-icon'
+import ButtonGroup from './ButtonGroup.vue'
+import SvgButton from './SvgButton.vue'
 
 const EVENTS = {
   FULL_SCREEN_CHANGE: 'fullScreenChange',
@@ -45,9 +48,8 @@ const EVENTS = {
 export default {
   components: {
     TinyButton: Button,
-    IconFullscreen: iconFullscreen(),
-    IconMinscreen: iconMinscreen(),
-    IconClose: iconClose()
+    SvgButton,
+    ButtonGroup
   },
   props: {
     /**
@@ -113,10 +115,7 @@ export default {
     return {
       state,
       fullScreen,
-      getFullScreenLabel,
-      IconFullscreen: iconFullscreen(),
-      IconMinscreen: iconMinscreen(),
-      IconClose: iconClose()
+      getFullScreenLabel
     }
   }
 }
@@ -125,40 +124,35 @@ export default {
 <style lang="less" scoped>
 .plugin-setting {
   position: absolute;
-  left: calc(var(--base-left-panel-width) - 6px);
+  left: var(--base-left-panel-width);
   top: 0;
   width: var(--base-collection-panel-width);
   height: 100%;
-  border-right: 1px solid var(--ti-lowcode-toolbar-border-color);
-  background: var(--ti-lowcode-plugin-setting-panel-bg, --ti-lowcode-toolbar-bg);
+  border-right: 1px solid var(--te-component-common-border-color);
+  background: var(--te-component-common-bg-color);
   overflow: hidden;
-  border-left: 1px solid var(--ti-lowcode-plugin-panel-header-border-bottom-color);
+  border-left: 1px solid var(--te-component-common-border-color-divider);
   &:not(.second-panel) {
-    box-shadow: 6px 0px 3px 0px rgba(0, 0, 0, 0.05);
+    box-shadow: 6px 0px 3px 0px var(--te-component-common-shadow-color);
     border-right: none;
+    border-left: none;
   }
   &.full-screen {
     width: var(--base-collection-panel-full-screen-width);
   }
 
   &.second-panel {
-    left: calc(var(--base-left-panel-width) + var(--base-collection-panel-width) - 6px);
+    left: calc(var(--base-left-panel-width) + var(--base-collection-panel-width));
     z-index: 1;
   }
 
-  .full-screen-label {
-    margin: 0 8px 0 4px;
-    color: var(--ti-common-color-text-weaken);
-    font-size: 12px;
-    line-height: 12px;
-  }
-
   .cursor {
+    margin-left: 8px;
     cursor: pointer;
   }
 
   .close {
-    margin-left: 16px;
+    margin-left: 12px;
     cursor: pointer;
   }
 
@@ -170,15 +164,22 @@ export default {
     line-height: 40px;
     font-size: 14px;
     line-height: 18px;
-    color: var(--ti-lowcode-plugin-panel-title-color);
+    color: var(--te-component-common-text-color-primary);
     padding: 0 12px;
-    border-bottom: 1px solid var(--ti-lowcode-plugin-panel-header-border-bottom-color);
+    border-bottom: 1px solid var(--te-component-common-border-color-divider);
     .plugin-setting-header-title {
       font-size: 12px;
       font-weight: 700;
+      margin-right: 20px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     :deep(.svg-button + .svg-button) {
       margin: 0;
+    }
+    :deep(.tiny-button.tiny-button) {
+      margin-right: 0;
     }
   }
 

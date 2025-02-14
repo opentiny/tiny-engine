@@ -1,15 +1,14 @@
 <template>
-  <tiny-button v-bind="extendAttrs" class="toolbar-button">
-    <span class="svg-wrap">
+  <div class="svg-wrap">
+    <span v-if="options?.showDots" class="dot"></span>
+    <tiny-button class="toolbar-button">
       <svg-icon v-if="icon" :name="icon"></svg-icon>
-      <span v-if="options?.showDots" class="dots"></span>
-    </span>
-    <span class="save-title">{{ content }}</span>
-    <slot></slot>
-  </tiny-button>
+      <span class="save-title">{{ content }}</span>
+      <slot></slot>
+    </tiny-button>
+  </div>
 </template>
 <script>
-import { inject } from 'vue'
 import { Button } from '@opentiny/vue'
 
 export default {
@@ -29,18 +28,12 @@ export default {
       type: Object,
       default: () => ({})
     }
-  },
-  setup() {
-    const extendAttrs = inject('extend-attributes') || {}
-    return {
-      extendAttrs
-    }
   }
 }
 </script>
 <style lang="less" scoped>
 .toolbar-button {
-  background-color: var(--ti-lowcode-toolbar-button-bg) !important;
+  background-color: var(--te-component-toolbar-base-button-bg-color) !important;
   border: none !important;
   min-width: 70px;
   height: 26px;
@@ -52,20 +45,19 @@ export default {
 
 .svg-wrap {
   position: relative;
-  .dots {
+
+  .dot {
+    position: absolute;
     width: 6px;
     height: 6px;
-    background: var(--ti-lowcode-toolbar-dot-color);
+    background: var(--te-component-common-error-color);
     border-radius: 50%;
-    display: inline-block;
-    position: absolute;
-    top: -2px;
-    right: -2px;
+    top: -3px;
+    right: 2px;
     z-index: 100;
   }
-}
-
-.save-title {
-  margin: 0 6px;
+  .svg-icon.svg-icon.svg-icon {
+    color: var(--te-component-common-icon-color-primary);
+  }
 }
 </style>

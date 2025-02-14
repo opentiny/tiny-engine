@@ -42,6 +42,9 @@ export const handleTinyIcon = (nameObj, globalHooks) => {
     return
   }
 
+  // 增加 svg 颜色属性，使编辑模式与出码模式一致
+  nameObj.schema.props['fill'] = 'currentColor'
+
   const iconName = name.startsWith(TINY_ICON) ? name : `Tiny${name}`
   const exportName = name.replace(TINY_ICON, 'icon')
 
@@ -200,7 +203,7 @@ export const validEmptyTemplateHook = (schema = {}) => {
 
 // TODO: 支持物料中自定义出码关联片段
 
-export const recursiveGenTemplateByHook = (schemaWithRes, globalHooks, config = {}) => {
+export const recursiveGenTemplateByHook = (schemaWithRes, globalHooks, config = {}, nextPage) => {
   const schemaChildren = schemaWithRes?.schema?.children || []
   const { hooks = {}, isJSX } = config
   // 自定义 hooks
@@ -208,7 +211,6 @@ export const recursiveGenTemplateByHook = (schemaWithRes, globalHooks, config = 
 
   if (!Array.isArray(schemaChildren)) {
     schemaWithRes.children.push(schemaChildren || '')
-
     return
   }
 
@@ -223,7 +225,11 @@ export const recursiveGenTemplateByHook = (schemaWithRes, globalHooks, config = 
       return schemaItem || ''
     }
 
-    const { componentName, component } = schemaItem
+    let { componentName, component } = schemaItem
+
+    if (nextPage) {
+      componentName = componentName === 'RouterView' ? nextPage : componentName
+    }
 
     const optionData = {
       schema: schemaItem,
@@ -236,7 +242,7 @@ export const recursiveGenTemplateByHook = (schemaWithRes, globalHooks, config = 
     }
 
     for (const hookItem of [...genTemplateHooks, recursiveGenTemplateByHook]) {
-      hookItem(optionData, globalHooks, config)
+      hookItem(optionData, globalHooks, config, nextPage)
     }
 
     const startTag = generateTag(optionData.componentName, {
@@ -258,13 +264,13 @@ ${optionData.prefix.join('')}${startTag}${optionData.children.join('')}${endTag}
   schemaWithRes.children = schemaWithRes.children.concat(resArr)
 }
 
-export const genTemplateByHook = (schema, globalHooks, config) => {
+export const genTemplateByHook = (schema, globalHooks, config, nextPage) => {
   const parsedSchema = {
     children: [],
     schema: structuredClone({ children: [{ ...schema, componentName: 'div' }] })
   }
 
-  recursiveGenTemplateByHook(parsedSchema, globalHooks, config)
+  recursiveGenTemplateByHook(parsedSchema, globalHooks, config, nextPage)
 
   return `<template>${parsedSchema.children.join('')}</template>`
 }

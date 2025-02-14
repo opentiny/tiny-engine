@@ -1,5 +1,5 @@
 <template>
-  <plugin-panel title="TinyEngine 教程">
+  <plugin-panel title="TinyEngine 教程" class="tutorial">
     <template #header>
       <svg-button
         class="item icon-sidebar"
@@ -127,13 +127,13 @@ export default {
 }
 .video-item {
   .video-item-content {
-    color: var(--ti-lowcode-tutorial-primary-text-color);
+    color: var(--te-tutorial-text-color);
     .video-item-content-tutorial {
       padding: 0 8px;
       display: grid;
       grid-template-columns: 20px 1fr 20px;
       column-gap: 4px;
-      background: var(--ti-lowcode-tutorial-primary-bg-color);
+      background: var(--te-tutorial-bg-color);
       height: 32px;
       line-height: 32px;
       align-items: center;
@@ -144,7 +144,7 @@ export default {
 
       &.active,
       &:hover {
-        background: var(--ti-lowcode-tutorial-hover-bg-color);
+        background: var(--te-tutorial-bg-color-hover);
         cursor: pointer;
 
         svg.icon-chevron {

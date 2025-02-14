@@ -86,7 +86,7 @@ export default {
   display: flex;
   align-items: center;
   padding: 0 10px;
-  border-bottom: 1px solid var(--te-common-border-default, #333);
+  border-bottom: 1px solid var(--te-canvas-container-border-color);
   height: 36px;
 
   div {
@@ -96,13 +96,13 @@ export default {
 
   .icon-setting {
     font-size: 16px;
-    fill: var(--te-common-text-secondary, #d9d9d9);
+    fill: var(--te-canvas-container-text-color-secondary);
   }
 
   .icon-wrap {
     width: 20px;
     height: 20px;
-    fill: var(--ti-lowcode-text-color, #6a6a6a);
+    fill: var(--te-canvas-container-icon-color);
     font-size: 16px;
     border-radius: 2px;
     cursor: pointer;
@@ -111,8 +111,8 @@ export default {
     align-items: center;
     transition: 0.3s;
     &:hover {
-      fill: var(--te-common-icon-primary, #fff);
-      background: var(--ti-lowcode-icon-hover-bg, rgba(255, 255, 255, 0.1));
+      fill: var(--te-canvas-container-icon-color-primary);
+      background: var(--te-canvas-container-bg-color-hover);
     }
   }
 }
@@ -164,14 +164,14 @@ export default {
     width: 100%;
     padding: 4px 0;
     display: inline-block;
-    background: var(--te-common-bg-container, #4d4d4d);
+    background: var(--te-canvas-container-short-cut-bg-color);
     border-radius: 2px;
     display: flex;
     justify-content: center;
     align-items: center;
   }
   svg {
-    fill: var(--te-common-text-secondary, #d9d9d9);
+    fill: var(--te-canvas-container-text-color-secondary);
     margin-left: 4px;
   }
 }

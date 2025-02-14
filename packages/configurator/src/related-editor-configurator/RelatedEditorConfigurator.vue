@@ -130,7 +130,7 @@ export default {
   justify-content: space-between;
 }
 .meta-binding-state {
-  background: var(--ti-lowcode-icon-bind-color);
+  background: var(--te-configurator-common-text-color-checked);
   padding: 0 4px;
   overflow: hidden;
   text-overflow: ellipsis;

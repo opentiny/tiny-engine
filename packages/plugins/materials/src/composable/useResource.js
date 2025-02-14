@@ -33,8 +33,17 @@ const appSchemaState = reactive({
   pageTree: [],
   langs: {},
   utils: {},
-  globalState: []
+  globalState: [],
+  materialsDeps: { scripts: [], styles: new Set() }
 })
+
+function goPage(pageId) {
+  if (!pageId) {
+    return
+  }
+
+  getMetaApi(META_SERVICE.GlobalService).updatePageId(pageId)
+}
 
 const initPage = (pageInfo) => {
   try {
@@ -42,6 +51,7 @@ const initPage = (pageInfo) => {
       const { occupier } = pageInfo.meta
 
       useLayout().layoutState.pageStatus = getCanvasStatus(occupier)
+      goPage(pageInfo.meta?.id)
     } else {
       useLayout().layoutState.pageStatus = {
         state: 'empty',
@@ -174,9 +184,23 @@ const fetchResource = async ({ isInit = true } = {}) => {
   }
 }
 
+// 获取工具类的依赖，用于预览加载。格式和物料依赖一致，便于处理
+const getUtilsDeps = () => {
+  return appSchemaState.utils
+    .filter((item) => item.type === 'npm')
+    .map((item) => {
+      return {
+        ...item,
+        package: item.content?.package,
+        script: item.content?.cdnLink
+      }
+    })
+}
+
 export default function () {
   return {
     appSchemaState,
+    getUtilsDeps,
     fetchResource,
     initPageOrBlock,
     handlePopStateEvent,

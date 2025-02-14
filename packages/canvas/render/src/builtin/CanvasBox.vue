@@ -1,17 +1,11 @@
 <template>
   <component :is="tag" v-bind="$attrs">
-    <slot>
-      <canvas-placeholder :placeholder="$attrs.placeholder"></canvas-placeholder>
-    </slot>
+    <slot> </slot>
   </component>
 </template>
 
-<script>
-import CanvasPlaceholder from './CanvasPlaceholder.vue'
+<script lang="ts">
 export default {
-  components: {
-    CanvasPlaceholder
-  },
   props: {
     tag: {
       type: String,

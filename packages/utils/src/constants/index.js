@@ -75,9 +75,14 @@ export const BLOCK_OPENNESS = {
   Special: 2
 }
 
+
 export const PREVIEW_SANDBOX = {
   Web: 'Web',
   CodeSandbox: 'CodeSandbox'
+}
+
+export const OPEN_DELAY = {
+  Default: 500
 }
 
 /**
@@ -94,10 +99,14 @@ if (typeof sessionStorage !== 'undefined') {
 
 export const BROADCAST_CHANNEL = {
   CanvasLang: `tiny-lowcode-canvas-lang-${CHANNEL_UID}`,
-  Notify: `global-notify-${CHANNEL_UID}`
+  Notify: `global-notify-${CHANNEL_UID}`,
+  CanvasRouterViewSetting: `tiny-lowcode-canvas-router-view-setting-${CHANNEL_UID}`
 }
 
 export const STORAGE_KEY_FIXED_PANELS = `tiny-engine-fixed-panels-${CHANNEL_UID}`
+export const CANVAS_ROUTER_VIEW_SETTING_VIEW_MODE_KEY = `tiny-engine-canvas-router-view-setting-view-mode`
+
+export const AUTO_SAVED = 'tiny-engine-auto-saved'
 
 export const TYPES = {
   ErrorType: 'error',

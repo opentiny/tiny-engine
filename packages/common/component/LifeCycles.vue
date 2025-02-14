@@ -1,8 +1,16 @@
 <template>
   <div class="life-cycle">
-    <tiny-popover v-model="state.showPopover" placement="bottom-end" trigger="hover" popperClass="option-popper">
+    <tiny-popover
+      v-model="state.showPopover"
+      placement="bottom-end"
+      trigger="hover"
+      popperClass="option-popper"
+      :open-delay="OPEN_DELAY.Default"
+    >
       <template #reference>
-        <tiny-button class="life-cycle-btn"><svg-icon name="add"></svg-icon>添加页面生命周期 </tiny-button>
+        <tiny-button class="life-cycle-btn"
+          ><svg-icon name="add"></svg-icon>{{ isPage ? '添加页面生命周期' : '添加区块生命周期' }}
+        </tiny-button>
       </template>
       <div class="popover-list">
         <ul>
@@ -19,18 +27,33 @@
     </tiny-popover>
   </div>
   <div class="life-cycle-tips">{{ lifeCycleTips }}</div>
-  <meta-list-items :optionsList="Object.keys(state.bindLifeCycles)" :draggable="false">
+  <meta-list-items
+    :optionsList="Object.keys(state.bindLifeCycles)"
+    :draggable="false"
+    :class="{ 'life-cycle-content-list': Object.keys(state.bindLifeCycles).length }"
+  >
     <template #content="{ data }">
-      <div>
+      <div class="life-cycle-content-item">
         {{ data }}
       </div>
     </template>
     <template #operate="{ data }">
-      <svg-button name="setting-outline" tips="编辑" placement="top" @click="openLifeCyclesPanel(data)"></svg-button>
-      <svg-button name="delete" tips="删除" placement="top" @click="deleteLifeCycle(data)"></svg-button>
+      <svg-button :hoverBgColor="false" name="setting" @click="openLifeCyclesPanel(data)"></svg-button>
+      <svg-button :hoverBgColor="false" name="delete" @click="deleteLifeCycle(data)"></svg-button>
     </template>
   </meta-list-items>
-  <tiny-dialog-box v-model:visible="state.showLifeCyclesDialog" fullscreen :title="state.title" :append-to-body="true">
+  <tiny-dialog-box v-model:visible="state.showLifeCyclesDialog" fullscreen :show-close="false" :append-to-body="true">
+    <template #title>
+      <div class="bind-dialog-title">
+        <div class="bind-dialog-text">
+          {{ isPage ? '添加页面生命周期' : '添加区块生命周期' }}
+        </div>
+        <div class="bind-dialog-btn">
+          <tiny-button type="info" @click="editorConfirm">保存</tiny-button>
+          <svg-button name="close" @click="state.showLifeCyclesDialog = false"></svg-button>
+        </div>
+      </div>
+    </template>
     <div v-if="state.showLifeCyclesDialog" class="dialog-content">
       <div class="dialog-content-left">
         <tiny-search placeholder="搜索" @update:modelValue="searchLifeCyclesList"></tiny-search>
@@ -57,12 +80,7 @@
       </div>
     </div>
 
-    <template #footer>
-      <div class="bind-dialog-footer">
-        <tiny-button @click="state.showLifeCyclesDialog = false">取 消</tiny-button>
-        <tiny-button type="info" @click="editorConfirm">确 定</tiny-button>
-      </div>
-    </template>
+    <template #footer> </template>
   </tiny-dialog-box>
 </template>
 
@@ -77,6 +95,8 @@ import VueMonaco from './VueMonaco.vue'
 import { initCompletion } from '../js/completion'
 import { initLinter, lint } from '../js/linter'
 import { SvgButton } from '../index'
+import { constants } from '@opentiny/tiny-engine-utils'
+const { OPEN_DELAY } = constants
 
 export default {
   components: {
@@ -232,7 +252,8 @@ export default {
       deleteLifeCycle,
       editorConfirm,
       editorDidMount,
-      handleEditorChange
+      handleEditorChange,
+      OPEN_DELAY
     }
   }
 }
@@ -245,45 +266,50 @@ export default {
     outline: none;
   }
   .life-cycle-btn {
-    color: var(--ti-lowcode-meta-codeEditor-color);
-    border-color: var(--ti-lowcode-meta-codeEditor-border-color);
+    color: var(--te-component-common-text-color-primary);
+    border-color: var(--te-component-common-border-color);
     &:hover {
-      color: var(--ti-lowcode-meta-codeEditor-hover-color);
-      border-color: var(--ti-lowcode-meta-codeEditor-border-hover-color);
-    }
-    .icon-plus {
-      margin-right: 6px;
-      stroke: var(--ti-lowcode-meta-codeEditor-icon-color);
+      border-color: var(--te-component-common-border-color-hover);
     }
   }
 }
 .life-cycle-tips {
-  color: var(--ti-lowcode-life-cycle-alert-color);
-  margin: 4px 0 12px 0;
+  color: var(--te-component-common-text-color-weaken);
+  margin: 4px 0 0;
   height: 16px;
   line-height: 16px;
 }
+.life-cycle-content-list {
+  margin-top: 12px;
+}
 .life-cycle-alert {
-  color: var(--ti-lowcode-life-cycle-alert-color);
+  color: var(--te-component-common-text-color-weaken);
   margin-left: 20px;
   margin-right: 20px;
 }
+.life-cycle-content-item {
+  color: var(--te-component-common-text-color-primary);
+}
+.opt-button {
+  &:last-child {
+    margin-right: var(--te-base-space-2x);
+  }
+}
 
 .popover-list {
-  margin: 8px 0;
   li {
     padding: 0 12px;
-    margin: 0 -8px;
+    margin: 0 -16px;
     line-height: 24px;
     cursor: pointer;
     &:hover {
-      background: var(--ti-lowcode-life-cycle-item-hover-bg);
+      background: var(--te-component-common-bg-color-hover);
     }
   }
   .existed {
     cursor: not-allowed;
     pointer-events: none;
-    color: var(--ti-lowcode-life-cycle-item-disable-color);
+    color: var(--te-component-common-text-color-disabled);
   }
 }
 
@@ -312,7 +338,7 @@ export default {
       transition: 0.3s;
 
       &.life-cycle-selected {
-        background: var(--ti-lowcode-life-cycle-item-hover-bg);
+        background: var(--te-component-common-bg-color-active);
       }
 
       .life-cycle-selected__icon {
@@ -324,7 +350,7 @@ export default {
       }
 
       &:hover {
-        background: var(--ti-lowcode-life-cycle-item-hover-bg);
+        background: var(--te-component-common-bg-color-hover);
       }
     }
   }
@@ -332,7 +358,7 @@ export default {
   .dialog-content-right {
     flex: 1;
     .life-cycle-editor {
-      border: 1px solid var(--ti-lowcode-life-cycle-editor-border);
+      border: 1px solid var(--te-component-common-border-color-divider);
       height: 100%;
       box-sizing: border-box;
     }
@@ -344,5 +370,23 @@ export default {
   justify-content: flex-end;
   align-items: center;
   margin-top: 20px;
+}
+.bind-dialog-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  .bind-dialog-text {
+    color: var(--te-component-common-text-color-primary);
+    font-size: var(--te-base-font-size-1);
+  }
+  .bind-dialog-btn {
+    display: flex;
+    align-items: center;
+    .tiny-button {
+      margin-right: 8px;
+      min-width: 40px;
+    }
+  }
 }
 </style>

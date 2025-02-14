@@ -35,7 +35,7 @@ export default defineConfig({
     lib: {
       entry: {
         index: path.resolve(__dirname, './index.js'),
-        render: path.resolve(__dirname, './render/index.js')
+        render: path.resolve(__dirname, './render/index.ts')
       },
       formats: ['es']
     },

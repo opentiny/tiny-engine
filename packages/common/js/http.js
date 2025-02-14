@@ -41,7 +41,6 @@ export const handlePageUpdate = (pageId, params, routerChange, isCurEditPage) =>
   return getMetaApi(META_SERVICE.Http)
     .post(`/app-center/api/pages/update/${pageId}`, params)
     .then((res) => {
-      const { pageSettingState } = usePage()
       const { setSaved } = useCanvas()
       if (isVsCodeEnv) {
         generatePage({
@@ -58,9 +57,6 @@ export const handlePageUpdate = (pageId, params, routerChange, isCurEditPage) =>
         }
       }
 
-      // 更新页面管理的列表，如果不存在，说明还没有打开过页面管理面板
-      pageSettingState.updateTreeData?.()
-      pageSettingState.isNew = false
       useNotify({ message: '保存成功!', type: 'success' })
 
       // 更新 页面状态 标志
@@ -75,5 +71,11 @@ export const handlePageUpdate = (pageId, params, routerChange, isCurEditPage) =>
     })
     .catch((err) => {
       useNotify({ title: '保存失败', message: `${err?.message || ''}`, type: 'error' })
+    })
+    .finally(() => {
+      const { pageSettingState } = usePage()
+      // 更新页面管理的列表，如果不存在，说明还没有打开过页面管理面板
+      pageSettingState.updateTreeData?.()
+      pageSettingState.isNew = false
     })
 }

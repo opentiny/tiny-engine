@@ -89,6 +89,6 @@ export default {
 .linked-info {
   margin-top: 10px;
   padding: 15px 0px;
-  border-top: 1px solid var(--ti-lowcode-tabs-border-color);
+  border-top: 1px solid var(--te-block-event-link-border-color);
 }
 </style>

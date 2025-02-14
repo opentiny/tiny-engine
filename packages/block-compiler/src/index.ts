@@ -58,7 +58,7 @@ export interface IResultMap {
   [key: string]: compiledItem
 }
 
-const resolveRelativeImport = (code: string, globalGetterName = 'getBlockComponentBlobUrl') => {
+const resolveRelativeImport = (code: string, globalGetterName = 'loadBlockComponent') => {
   const magicStr = new MagicString(code)
   const ast = babelParse(code, { sourceType: 'module', plugins: ['jsx'] }).program.body
 
@@ -86,7 +86,7 @@ const resolveRelativeImport = (code: string, globalGetterName = 'getBlockCompone
         // 声明异步组件 const Block = defineAsyncComponent(() => import(getBlockUrl(Block)))
         magicStr.appendLeft(
           node.start!,
-          `const ${defaultImportId} = defineAsyncComponent(() => import(window.${globalGetterName}('${fileName}')))`
+          `const ${defaultImportId} = defineAsyncComponent(() => window.${globalGetterName}('${fileName}'))`
         )
 
         // 移除 import Block from './Block.vue' 语句

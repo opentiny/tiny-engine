@@ -14,6 +14,7 @@ import entry, { api } from './src/Main.vue'
 import metaData from './meta.js'
 import { PageService } from './src/composable'
 import PageGeneral from './src/PageGeneral.vue'
+import './src/styles/vars.less'
 
 export default {
   ...metaData,

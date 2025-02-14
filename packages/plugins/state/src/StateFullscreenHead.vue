@@ -31,7 +31,7 @@ export default {
 <style lang="less" scoped>
 .fullscreen-head-content {
   font-size: 12px;
-  color: var(--te-common-text-primary);
+  color: var(--te-state-common-text-color);
   height: 30px;
   line-height: 20px;
   width: 100%;
@@ -39,7 +39,7 @@ export default {
   justify-content: space-between;
   .title {
     font-size: var(--te-base-font-size-base);
-    color: var(--te-common-text-primary);
+    color: var(--te-state-common-text-color);
     font-weight: var(--te-base-font-weight-7);
   }
 }

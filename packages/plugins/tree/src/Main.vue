@@ -29,7 +29,7 @@
                 @mouseleave="mouseleave(data.row)"
                 @click="checkElement(data.row)"
               >
-                <span class="tree-content">
+                <span class="tree-content" :class="{ 'node-isblock': data.row?.componentType === 'Block' }">
                   <!-- <span class="node-icon">
                     <component :is="getIcon(data.row)" style="width: 1em; height: 1em"></component>
                   </span> -->
@@ -308,15 +308,12 @@ export default {
     height: calc(100% - 38px);
     overflow-y: scroll;
     padding-top: 12px;
-    border-top: 1px solid var(--ti-lowcode-tree-border-color);
+    border-top: 1px solid var(--te-tree-border-color);
 
     .tree-handle {
+      font-size: var(--te-base-font-size-2);
       svg {
-        color: var(--ti-lowcode-tree-icon-color);
-
-        &:hover {
-          color: var(--ti-lowcode-tree-hover-icon-color);
-        }
+        fill: var(--te-tree-icon-color);
       }
     }
   }
@@ -335,56 +332,31 @@ export default {
         width: 14px;
         height: 14px;
         margin-bottom: 2px;
-
-        &:hover {
-          color: var(--ti-lowcode-tree-icon-hover-color);
-        }
-      }
-    }
-    .high-light-node {
-      .tree-handle svg {
-        color: var(--ti-lowcode-tree-selected-color);
       }
     }
   }
 
-  :deep(.tiny-grid .tiny-grid__body-wrapper .tiny-grid-body__row) {
-    background-color: var(--ti-lowcode-common-component-bg);
-    &:hover {
-      background-color: var(--ti-lowcode-common-component-hover-bg);
-    }
-  }
-  :deep(.tiny-grid .tiny-grid__body-wrapper .tiny-grid-body__row:not(.row__hover):nth-child(2n)) {
-    background-color: var(--ti-lowcode-common-component-bg);
-    &:hover {
-      background-color: var(--ti-lowcode-common-component-hover-bg);
-    }
-  }
   :deep(.tiny-grid-body__row.nav-tree .tiny-grid-cell) {
     line-height: inherit;
   }
   :deep(.high-light-node) {
-    background: var(--ti-lowcode-tree-selected-bg) !important;
+    background: var(--te-tree-bg-color-active) !important;
 
     :deep(.eyeOpen) {
       display: block !important;
     }
   }
   :deep(.tiny-grid .tiny-grid__body-wrapper .tiny-grid-body__column) {
-    color: var(--ti-lowcode-tree-color);
+    color: var(--te-tree-text-color);
     padding: 0 12px;
     height: 24px !important;
     line-height: 24px;
     .tree-content {
       font-size: 12px;
     }
-  }
-  :deep(.tiny-grid .tiny-grid__body-wrapper .high-light-node .tiny-grid-body__column) {
-    color: var(--ti-lowcode-tree-selected-color);
-    font-weight: bold;
-  }
-  :deep(.tiny-grid .tiny-grid__body-wrapper .high-light-node .tiny-grid-body__column .tiny-grid-tree__node-btn) {
-    color: var(--ti-lowcode-tree-selected-color);
+    .node-isblock {
+      color: var(--te-tree-block-text-color);
+    }
   }
 }
 </style>

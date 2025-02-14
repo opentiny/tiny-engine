@@ -3,6 +3,7 @@ import metaData from './meta'
 import { LayoutService } from './src/composable'
 import designSmbConfig from '@opentiny/vue-design-smb'
 import { ConfigProvider as TinyConfigProvider } from '@opentiny/vue'
+import './src/styles/vars.less'
 
 export default {
   ...metaData,
@@ -23,7 +24,8 @@ export default {
       collapse: [
         ['engine.toolbars.collaboration'],
         ['engine.toolbars.refresh', 'engine.toolbars.fullscreen'],
-        ['engine.toolbars.lang']
+        ['engine.toolbars.lang'],
+        ['engine.toolbars.viewSetting']
       ]
     }
   },

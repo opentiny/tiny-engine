@@ -1,6 +1,6 @@
 <template>
   <tiny-form
-    ref="createData"
+    ref="createDataForm"
     label-position="top"
     class="create-form"
     :model="state.createData"
@@ -28,6 +28,7 @@
             :showFormatBtn="true"
             :options="state.editorOptions"
             @editorDidMount="editorDidMount"
+            @fullscreenChange="fullscreenChange"
           >
             <template #buttons>
               <editor-i18n-tool ref="i18nToolRef" @confirm="insertContent"></editor-i18n-tool>
@@ -278,7 +279,7 @@ export default {
       state.errorMessage = ''
 
       if (!name) {
-        state.errorMessage = 'state 属性名称未定义'
+        state.errorMessage = '输入内容不能为空'
       } else if (!verifyJsVarName(name)) {
         state.errorMessage = ' state 属性名称只能以字母或下划线开头且仅包含数字字母及下划线'
       } else if (
@@ -340,6 +341,10 @@ export default {
       }
     }
 
+    const fullscreenChange = () => {
+      i18nToolRef.value.state.showPopover = false
+    }
+
     onBeforeUnmount(() => {
       state.completionProvider?.forEach((provider) => {
         provider.dispose()
@@ -363,6 +368,22 @@ export default {
 
     const cancel = () => {
       emit('close')
+    }
+
+    const createDataForm = ref(null)
+
+    const validateForm = () => {
+      return new Promise((resolve) => {
+        createDataForm.value.validate((valid) => {
+          if (valid) {
+            resolve()
+          }
+        })
+      })
+    }
+
+    const clearValidateForm = () => {
+      createDataForm.value?.clearValidate()
     }
 
     const options = {
@@ -398,7 +419,11 @@ export default {
       validate,
       getFormData,
       insertContent,
-      cancel
+      fullscreenChange,
+      cancel,
+      validateForm,
+      createDataForm,
+      clearValidateForm
     }
   }
 }
@@ -414,8 +439,8 @@ export default {
     margin-top: 8px;
     border-radius: 4px;
     padding: 8px 14px;
-    background: var(--te-common-bg-container);
-    color: var(--te-common-text-weaken);
+    background: var(--te-state-tip-bg-color);
+    color: var(--te-state-tip-text-color);
     & > pre {
       font-family: Consolas, 'Courier New', monospace;
     }
@@ -423,7 +448,7 @@ export default {
   :deep(.toolbar) {
     position: absolute;
     z-index: 99;
-    right: 20px;
+    right: 12px;
   }
   .var {
     padding: 12px 12px 0 12px;
@@ -436,11 +461,11 @@ export default {
   }
 
   :deep(.tiny-form-item__label) {
-    color: var(--ti-lowcode-toolbar-icon-color);
+    color: var(--te-state-common-label-text-color);
   }
 
   .label-left-wrap {
-    color: var(--ti-lowcode-toolbar-icon-color);
+    color: var(--te-state-common-label-text-color);
     display: flex;
   }
   :deep(.tiny-collapse-item__wrap) {
@@ -454,77 +479,14 @@ export default {
   }
 }
 
-.tips-content {
-  padding: 12px;
-  .create-content-head {
-    display: flex;
-    flex: 1;
-    font-size: 12px;
-
-    .icon-info-circle {
-      font-size: 14px;
-      margin-right: 4px;
-      color: var(--ti-lowcode-toolbar-icon-color);
-    }
-  }
-  .create-content-tip {
-    font-size: 14px;
-  }
-
-  .create-content-demo {
-    font-size: 14px;
-    .ml20 {
-      margin-left: 20px;
-    }
-    li {
-      margin-top: 8px;
-    }
-  }
-  .create-content-foot {
-    margin-top: 4px;
-    font-size: 14px;
-    line-height: 22px;
-  }
-}
-
 .create-content-description {
   font-size: 12px;
-  color: var(--ti-lowcode-common-primary-color);
+  color: var(--te-state-common-text-color-emphasize);
   margin-left: 8px;
   cursor: pointer;
 }
 
 .variable-editor {
   height: 270px;
-}
-
-.show-advanced {
-  font-size: 12px;
-  color: var(--ti-lowcode-data-advanced-text-color);
-  &:hover {
-    color: var(--ti-lowcode-data-advanced-text-hover-color);
-    cursor: pointer;
-  }
-}
-</style>
-
-<style lang="less">
-.tiny-popover.tiny-popper.state-data-example-tips {
-  background-color: var(--ti-lowcode-data-example-bg-color);
-  color: var(--ti-lowcode-data-example-color);
-
-  &[x-placement^='bottom'] .popper__arrow {
-    &,
-    &::after {
-      border-bottom-color: var(--ti-lowcode-data-example-bg-color);
-    }
-  }
-
-  &[x-placement^='top'] .popper__arrow {
-    &,
-    &::after {
-      border-top-color: var(--ti-lowcode-data-example-bg-color);
-    }
-  }
 }
 </style>

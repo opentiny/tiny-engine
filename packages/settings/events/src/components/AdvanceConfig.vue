@@ -16,7 +16,7 @@
       </div>
     </div>
 
-    <div class="advnce-config">
+    <div class="advnce-config loop-data-item">
       <label class="text-ellipsis-multiple">循环数据</label>
       <div class="advanced-config-form-item">
         <code-configurator
@@ -59,7 +59,7 @@
     <div class="advnce-config">
       <label class="text-ellipsis-multiple">key</label>
       <div class="advanced-config-form-item">
-        <tiny-tooltip content="建议填写循环项中的唯一值（如item.id），如果填写为数字将不保存">
+        <tiny-tooltip content="建议填写循环项中的唯一值（如item.id），如果填写为数字将不保存" effect="light">
           <input-configurator
             v-model="state.loopKey"
             :placeholder="`默认为索引名：${getIndexName()}`"
@@ -135,7 +135,7 @@ export default {
       }
 
       const isNumber = Number(value).toString() !== 'NaN'
-      let newPropsKey = schema.props.key
+      let newPropsKey = schema.props?.key
 
       if (value && !isNumber) {
         newPropsKey = {
@@ -268,12 +268,12 @@ export default {
     align-items: center;
     display: flex;
     column-gap: 12px;
-    color: var(--ti-lowcode-events-advanced-config-color);
+    color: var(--te-events-advanced-config-text-color);
 
     label {
       width: 80px;
       word-break: keep-all;
-      color: var(--ti-lowcode-events-advanced-label-color);
+      color: var(--te-events-advanced-label-text-color);
       flex-shrink: 0;
     }
 
@@ -284,8 +284,9 @@ export default {
     }
     .binding-state {
       box-sizing: border-box;
-      background: var(--ti-lowcode-events-advanced-binding-state-bg-color);
-      color: var(--ti-lowcode-events-advanced-binding-state-color);
+      background: var(--te-events-advanced-binding-state-bg-color);
+      color: var(--te-events-advanced-binding-state-text-color);
+      border: 1px solid var(--te-events-advanced-binding-state-border-color);
       font-size: 12px;
       height: 30px;
       line-height: 22px;
@@ -298,6 +299,12 @@ export default {
       .advance-item {
         width: 100%;
       }
+    }
+  }
+  .loop-data-item {
+    display: block;
+    label {
+      margin-bottom: 5px;
     }
   }
 }

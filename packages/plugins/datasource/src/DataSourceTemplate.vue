@@ -57,13 +57,13 @@ export default {
 <style lang="less" scoped>
 .right-item {
   padding: 16px 12px;
-  color: var(--ti-lowcode-datasource-toolbar-icon-color);
-  border-bottom: 1px solid var(--ti-lowcode-datasource-tabs-border-color);
+  color: var(--te-datasource-toolbar-icon-color);
+  border-bottom: 1px solid var(--te-datasource-tabs-border-color);
 
   .tips {
     margin-bottom: 16px;
     font-size: 12px;
-    color: var(--ti-lowcode-datasource-toolbar-breadcrumb-color);
+    color: var(--te-datasource-toolbar-breadcrumb-text-color);
     span {
       &::before {
         content: '';
@@ -79,11 +79,11 @@ export default {
       }
     }
     .blue::before {
-      border: 1px solid var(--ti-lowcode-datasource-json-border-color);
+      border: 1px solid var(--te-datasource-json-border-color);
     }
 
     .green::before {
-      border: 1px solid var(--ti-lowcode-datasource-tree-border-color);
+      border: 1px solid var(--te-datasource-tree-border-color);
     }
   }
   .title {
@@ -103,16 +103,16 @@ export default {
     }
 
     .tiny-button {
-      color: var(--ti-lowcode-datasource-toolbar-breadcrumb-color);
+      color: var(--te-datasource-toolbar-breadcrumb-text-color);
       &.tiny-button--primary {
-        border-color: var(--ti-lowcode-datasource-common-border-primary-color);
+        border-color: var(--te-datasource-common-border-color-primary);
       }
 
       &.tiny-button--success {
-        border-color: var(--ti-lowcode-datasource-success-border-color);
+        border-color: var(--te-datasource-common-border-color-success);
       }
       &:hover {
-        color: var(--ti-lowcode-datasource-toolbar-icon-color);
+        color: var(--te-datasource-toolbar-icon-color);
         background-color: transparent;
       }
     }

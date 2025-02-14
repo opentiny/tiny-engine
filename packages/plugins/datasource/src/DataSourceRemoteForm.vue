@@ -84,12 +84,12 @@ export default {
 <style lang="less" scoped>
 .create-form {
   .error-tip {
-    color: var(--ti-lowcode-datasource-error-tip-color);
+    color: var(--te-datasource-error-text-color);
     margin-top: 4px;
     font-size: 12px;
   }
   :deep(.tiny-form-item__label) {
-    color: var(--ti-lowcode-datasource-label-color);
+    color: var(--te-datasource-label-text-color);
   }
   .textarea-warp {
     display: flex;
@@ -109,11 +109,12 @@ export default {
     }
     :deep(.tiny-input-group__append) {
       border: none;
-      background: var(--ti-lowcode-datasource-respones-color-bg);
+      background: var(--te-datasource-respones-bg-color);
     }
     :deep(.border-input) {
       input {
-        border-radius: 0;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
         border-left: none;
       }
     }

@@ -102,7 +102,7 @@ const jsonDiffPatchInstance = jsonDiffPatch.create({
     diffMatchPatch: DiffMatchPatch,
     minLength: 60
   },
-  // eslint-disable-next-line no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   propertyFilter: function (name, context) {
     return name.slice(0, 1) !== '$'
   },
@@ -140,6 +140,7 @@ const resetCanvasState = async (state = {}) => {
 
   const diffPatch = jsonDiffPatchInstance.diff(previousSchema, pageState.pageSchema)
 
+  canvasApi.value?.clearSelect?.()
   publish({ topic: 'schemaImport', data: { current: pageState.pageSchema, previous: previousSchema, diffPatch } })
 }
 
@@ -297,15 +298,18 @@ const operationTypeMap = {
       }
     }
 
-    if (position === 'after') {
+    if (position === 'before') {
+      parentNode.children.unshift(newNodeData)
+    } else {
       parentNode.children.push(newNodeData)
-      setNode(newNodeData, parentNode)
+    }
 
-      // 递归构建 nodeMap
-      if (Array.isArray(newNodeData?.children) && newNodeData.children.length) {
-        const newNode = getNode(newNodeData.id)
-        generateNodesMap(newNodeData.children, newNode)
-      }
+    setNode(newNodeData, parentNode)
+
+    // 递归构建 nodeMap
+    if (Array.isArray(newNodeData?.children) && newNodeData.children.length) {
+      const newNode = getNode(newNodeData.id)
+      generateNodesMap(newNodeData.children, newNode)
     }
 
     return {
@@ -555,6 +559,7 @@ export default function () {
     setSaved,
     clearCanvas,
     getPageSchema,
+    resetCanvasState,
     resetPageCanvasState,
     resetBlockCanvasState,
     clearCurrentState,

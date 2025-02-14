@@ -211,8 +211,8 @@ export default {
   padding: 0 16px;
   margin: auto;
   border-radius: 4px;
-  border: 1px solid var(--ti-lowcode-tabs-border-color);
-  background-color: var(--ti-lowcode-toolbar-bg);
+  border: 1px solid var(--te-configurator-common-border-color-divider);
+  background-color: var(--te-configurator-code-list-bg-color);
   box-shadow: rgb(0 0 0 / 30%) 0px 1px 15px 0px;
 
   .source-code-header {
@@ -220,7 +220,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     padding: 10px 0;
-    color: var(--te-common-text-secondary);
+    color: var(--te-configurator-common-text-color-secondary);
 
     .header-title {
       font-size: 14px;
@@ -229,7 +229,7 @@ export default {
     .icon-wrap {
       width: 20px;
       height: 20px;
-      color: var(--ti-lowcode-text-color);
+      color: var(--te-configurator-common-icon-color);
       font-size: 16px;
       border-radius: 2px;
       cursor: pointer;
@@ -238,8 +238,8 @@ export default {
       align-items: center;
       transition: 0.3s;
       &:hover {
-        color: var(--ti-lowcode-toolbar-icon-color);
-        background: var(--ti-lowcode-icon-hover-bg);
+        color: var(--te-configurator-common-icon-color-hover);
+        background: var(--te-configurator-common-bg-color-hover);
       }
     }
   }
@@ -265,10 +265,10 @@ export default {
       padding-left: 4px;
       padding-right: 12px;
       position: relative;
-      color: var(--ti-lowcode-toolbar-more-hover-color);
+      color: var(--te-configurator-common-icon-color);
       height: 38px;
-      border-bottom: 1px solid var(--ti-lowcode-tabs-border-color);
-      box-shadow: var(--ti-lowcode-tabs-border-color) 0, -1px;
+      border-bottom: 1px solid var(--te-configurator-common-border-color);
+      box-shadow: var(--te-configurator-common-border-color) 0, -1px;
       font-size: 13px;
       font-weight: 600;
     }
@@ -276,10 +276,9 @@ export default {
       div {
         font-size: 10px;
         font-weight: normal;
-        color: rbg(217, 217, 217);
       }
       &:hover {
-        background: var(--ti-lowcode-toolbar-bg);
+        background: var(--te-configurator-common-bg-color-hover);
       }
     }
   }

@@ -8,7 +8,10 @@
     @hide="onClosePopover"
   >
     <div class="popover-content">
-      <icon-close class="icon-close" @click="state.showPopover = false"></icon-close>
+      <div class="content-header">
+        <span class="content-header-title">国际化管理</span>
+        <icon-close class="icon-close" @click="state.showPopover = false"></icon-close>
+      </div>
       <bind-i18n
         ref="bindI18nRef"
         v-model="i18nValue"
@@ -21,14 +24,14 @@
         <template #suffix>
           <div class="buttons">
             <tiny-button @click="createI18n">新建词条</tiny-button>
-            <tiny-button type="info" :disabled="!i18nData" @click="handleConfirm">插入词条</tiny-button>
+            <tiny-button type="primary" :disabled="!i18nData" @click="handleConfirm">插入词条</tiny-button>
           </div>
         </template>
       </bind-i18n>
     </div>
 
     <template #reference>
-      <tiny-tooltip content="插入国际化词条" placement="top">
+      <tiny-tooltip content="插入国际化词条" effect="light" placement="top" :open-delay="OPEN_DELAY.Default">
         <svg-icon name="internationalization" @click="openPopover"></svg-icon>
       </tiny-tooltip>
     </template>
@@ -41,6 +44,8 @@ import { Button, Popover, Tooltip } from '@opentiny/vue'
 import { iconClose } from '@opentiny/vue-icon'
 import { BindI18n } from '@opentiny/tiny-engine-common'
 import { useTranslate } from '@opentiny/tiny-engine-meta-register'
+import { constants } from '@opentiny/tiny-engine-utils'
+const { OPEN_DELAY } = constants
 
 export default {
   components: {
@@ -115,7 +120,8 @@ export default {
       onClosePopover,
       createI18n,
       handleChooseI18n,
-      handleConfirm
+      handleConfirm,
+      OPEN_DELAY
     }
   }
 }
@@ -123,13 +129,28 @@ export default {
 
 <style lang="less" scoped>
 .popover-content {
+  padding: 8px 4px;
   text-align: right;
   .icon-close {
-    margin-right: 5px;
+    font-size: 16px;
     cursor: pointer;
   }
   .buttons {
-    margin-top: 10px;
+    margin-top: 16px;
+  }
+  .content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .content-header-title {
+      font-size: var(--te-base-font-size-1);
+      font-weight: var(--te-base-font-weight-7);
+    }
+    margin-bottom: 16px;
+  }
+  .tiny-button.tiny-button.tiny-button.tiny-button--default {
+    margin-right: 4px;
+    border-color: var(--te-state-editor-btn-border-color);
   }
 }
 .buttons {

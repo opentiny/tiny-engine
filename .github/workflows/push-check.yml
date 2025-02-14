@@ -4,40 +4,40 @@ on:
   push:
     branches: []
   pull_request:
-    branches: [develop,main, refactor/develop]
+    branches: [develop, main, refactor/develop, release/*]
 
 jobs:
   push-check:
-    runs-on: ubuntu-latest  # windows-latest || macos-latest
-    
+    runs-on: ubuntu-latest # windows-latest || macos-latest
+
     steps:
-    - uses: actions/checkout@v4
-    - name: Install pnpm
-      uses: pnpm/action-setup@v4
-      with:
-        version: 9
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 18
+      - uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
 
-    - name: Install dependencies
-      run: pnpm i
+      - name: Install dependencies
+        run: pnpm i
 
-    - name: Get changed files
-      id: get_changed_files
-      uses: tj-actions/changed-files@v41
-      with:
-        files: |
-              **.js
-              **.vue
-              **.jsx
-    - name: Run ESLint
-      run: npx eslint ${{steps.get_changed_files.outputs.all_changed_files}}
-    - name: Run Build
-      run: pnpm run build:plugin && pnpm run build:alpha > build-alpha.log 2>&1
+      - name: Get changed files
+        id: get_changed_files
+        uses: tj-actions/changed-files@v41
+        with:
+          files: |
+            **.js
+            **.vue
+            **.jsx
+      - name: Run ESLint
+        run: npx eslint ${{steps.get_changed_files.outputs.all_changed_files}}
+      - name: Run Build
+        run: pnpm run build:plugin && pnpm run build:alpha > build-alpha.log 2>&1
 
-    - name: Upload build logs
-      uses: actions/upload-artifact@v4
-      with:
-        name: build-alpha-log
-        path: build-alpha.log
+      - name: Upload build logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-alpha-log
+          path: build-alpha.log

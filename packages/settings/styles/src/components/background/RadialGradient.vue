@@ -130,33 +130,6 @@ onMounted(() => {
   background-repeat: no-repeat;
   background-position: 50% 50%;
 }
-.text-wrap {
-  display: flex;
-  flex-direction: column;
-  font-size: 12px;
-  color: var(--te-common-text-secondary);
-  margin-left: 8px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  & > span {
-    display: inline-block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    &:first-child {
-      margin-bottom: 4px;
-    }
-    &:last-child {
-      display: flex;
-      align-items: center;
-      margin-top: 2px;
-    }
-  }
-  .size {
-    color: var(--ti-lowcode-common-third-text-color);
-  }
-}
 .choose-image {
   border-color: rgb(54, 54, 54);
   outline: 0px;
