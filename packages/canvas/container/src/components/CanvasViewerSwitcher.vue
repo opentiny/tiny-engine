@@ -32,7 +32,8 @@
         :key="option.id"
         @click="handleSwitchPreview(option.id)"
       >
-        {{ option.label }}
+        <svg-icon :name="option.icon"></svg-icon>
+        <span>{{ option.label }}</span>
       </div>
     </div>
   </tiny-popover>
@@ -100,8 +101,12 @@ export default {
       const pageId = state.usedHoverState.element.getAttribute('data-te-page-id')
       const children = await usePage().getPageChildren(pageId)
 
-      state.previewOptions = [{ id: pageId, label: '路由子页面占位符' }].concat(
-        children.map(({ id, route, routePath }) => ({ id: String(id), label: routePath || route }))
+      state.previewOptions = [{ id: pageId, label: '路由子页面占位符', icon: 'box' }].concat(
+        children.map(({ id, name }) => ({
+          id: String(id),
+          label: name,
+          icon: 'text-page-common'
+        }))
       )
     }
 
@@ -183,14 +188,17 @@ export default {
   width: 200px;
   .option {
     font-size: 12px;
-    line-height: 24px;
+    min-height: 24px;
     cursor: pointer;
     display: flex;
     align-items: center;
-    height: 24px;
+    gap: 4px;
     padding: 0 12px;
     &:hover {
       background-color: var(--te-common-bg-container);
+    }
+    svg {
+      flex-shrink: 0;
     }
   }
   .title {
