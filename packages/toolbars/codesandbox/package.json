@@ -27,7 +27,6 @@
   "dependencies": {
     "@opentiny/tiny-engine-canvas": "workspace:*",
     "@opentiny/tiny-engine-common": "workspace:*",
-    "@opentiny/tiny-engine-dsl-vue": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
     "codesandbox": "^2.2.3"
   },

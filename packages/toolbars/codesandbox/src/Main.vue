@@ -12,14 +12,10 @@
 
 <script>
 import { reactive } from 'vue'
-import { useLayout, useNotify } from '@opentiny/tiny-engine-meta-register'
-import SaveLocalService from '@opentiny/tiny-engine-toolbar-generate-code'
-import { generateApp } from '@opentiny/tiny-engine-dsl-vue'
+import { useLayout, useNotify, useSaveLocal } from '@opentiny/tiny-engine-meta-register'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import { getParameters } from 'codesandbox/lib/api/define'
 import { codesandboxFiles } from './codesandboxFiles'
-
-const { getPreGenerateInfo } = SaveLocalService.metas[0].apis
 
 export default {
   components: {
@@ -47,8 +43,7 @@ export default {
       }
 
       try {
-        const instance = generateApp()
-        const [_, fileRes] = await getPreGenerateInfo(instance)
+        const [_, fileRes] = await useSaveLocal().getPreGenerateInfo()
 
         const files = {}
         fileRes.forEach((file) => {
