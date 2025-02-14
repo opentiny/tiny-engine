@@ -33,9 +33,9 @@
                 @active="activeSetting('props')"
               ></robotSettingPopover>
               <template #reference>
-                <span class="chat-title-dropdown">
+                <span class="chat-title-dropdown" @click.stop="showPopover = true">
                   <span class="chat-title-label">{{ selectedModel.label }}</span>
-                  <svg-icon name="setting" class="ml8" @click.stop="showPopover = true"> </svg-icon>
+                  <svg-icon name="setting" class="ml8"> </svg-icon>
                 </span>
               </template>
             </tiny-popover>
