@@ -144,8 +144,8 @@ export default {
     const inProcesing = ref(false)
     const selectedModel = ref(AIModelOptions[0])
     const { confirm } = useModal()
-    let tokenValue = ref('')
-    let showPopover = ref(false)
+    const tokenValue = ref('')
+    const showPopover = ref(false)
 
     const { pageSettingState, getDefaultPage } = usePage()
     const ROOT_ID = pageSettingState.ROOT_ID
@@ -314,7 +314,7 @@ export default {
     const initCurrentModel = (aiSession) => {
       const currentModelValue = JSON.parse(aiSession)?.foundationModel?.model
       selectedModel.value = AIModelOptions.find((item) => item.value === currentModelValue)
-      tokenValue = JSON.parse(aiSession)?.foundationModel?.token
+      tokenValue.value = JSON.parse(aiSession)?.foundationModel?.token
     }
 
     const initChat = () => {
