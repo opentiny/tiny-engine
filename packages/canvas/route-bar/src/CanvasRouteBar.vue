@@ -1,13 +1,13 @@
 <template>
   <div id="canvas-route-bar" :style="sizeStyle">
     <div class="address-bar">
-      <template v-for="route in routes" :key="route.id">
+      <template v-for="(route, index) in routes" :key="route.id">
         <span class="slash">/</span>
         <span
           :class="[
             {
               route: route.isPage && route.id !== pageId,
-              current: route.id === pageId && existsPreview,
+              bold: fontIsBold(route.id, index),
               'is-preview': route.isPreview
             }
           ]"
@@ -118,6 +118,19 @@ watch(
   { immediate: true }
 )
 
+const fontIsBold = (id, index) => {
+  if (existsPreview.value) {
+    return id === pageId.value
+  }
+
+  // 没有previewId时，routes长度大于1，最后一个route path显示高亮
+  if (routes.value.length > 1) {
+    return index === routes.value.length - 1
+  }
+
+  return false
+}
+
 /**
  * @param route {Route}
  */
@@ -167,7 +180,7 @@ const handleClearPreview = () => {
 .slash {
   margin: 0 2px;
 }
-.current {
+.bold {
   font-weight: bold;
 }
 .is-preview {
