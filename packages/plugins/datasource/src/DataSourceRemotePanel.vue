@@ -78,6 +78,12 @@ export const close = () => {
   isOpen.value = false
 }
 
+const saveWatch = ref(0);
+
+export const saveRemoteHandle = () => {
+  saveWatch.value += 1;
+}
+
 export default {
   components: {
     TinyCollapse: Collapse,
@@ -171,6 +177,8 @@ export default {
         }
       })
     }
+    
+    watch(saveWatch, () => saveRemote(), { flush: 'sync' })
 
     const sendRequest = async () => {
       try {

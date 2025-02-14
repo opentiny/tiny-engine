@@ -33,7 +33,7 @@ import { ButtonGroup, PluginSetting, SvgButton } from '@opentiny/tiny-engine-com
 import DataSourceType from './DataSourceType.vue'
 import DataSourceName, { getDataSourceName } from './DataSourceName.vue'
 import DataSourceField from './DataSourceField.vue'
-import { close as closeRemotePanel, open as openRemotePanel } from './DataSourceRemotePanel.vue'
+import { close as closeRemotePanel, open as openRemotePanel, saveRemoteHandle } from './DataSourceRemotePanel.vue'
 import {
   requestUpdateDataSource,
   requestAddDataSource,
@@ -169,9 +169,10 @@ export default {
       getDataSourceName().validate((valid) => {
         if (valid) {
           close()
-          closeRemotePanel()
+          // 通知远程数据源表单保存，并同步Datasource内容
+          saveRemoteHandle()
 
-          const columns = state.dataSource.data.columns.map(({ name, title, type, format, field }) => {
+          const columns = state.dataSource.data?.columns?.map(({ name, title, type, format, field }) => {
             return {
               name,
               title,
