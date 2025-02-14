@@ -369,9 +369,6 @@ export default {
     flex-wrap: wrap;
     width: 100%;
   }
-  :deep(.tiny-switch) {
-    width: var(--ti-switch-width);
-  }
   .setting-radio-group {
     &.setting-layout {
       width: 100%;

@@ -282,7 +282,7 @@ export default {
         padding: 3px 10px;
         cursor: pointer;
         &.active {
-          background-color: var(--ti-lowcode-common-hover-bg-color);
+          background-color: var(--te-setting-design-hover-bg-color);
         }
         .item-input .action-icon {
           display: none;
