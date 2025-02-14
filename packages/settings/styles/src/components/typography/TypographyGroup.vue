@@ -687,8 +687,4 @@ export default {
     }
   }
 }
-
-:deep(.tiny-select .tiny-input .tiny-input__inner) {
-  padding: 0 var(--ti-input-suffix-padding-right) 0 var(--ti-input-suffix-padding-left);
-}
 </style>
