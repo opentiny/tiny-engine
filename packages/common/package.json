@@ -33,6 +33,7 @@
     "@babel/generator": "~7.23.2",
     "@babel/parser": "~7.23.2",
     "@babel/traverse": "~7.23.2",
+    "@eslint/js": "^8.57.1",
     "@opentiny/tiny-engine-dsl-vue": "workspace:*",
     "@opentiny/tiny-engine-i18n-host": "workspace:*",
     "@opentiny/tiny-engine-meta-register": "workspace:*",
