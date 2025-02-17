@@ -70,7 +70,7 @@ export default {
   width: 100%;
   .icon {
     font-size: 20px;
-    color: var(--te-common-text-secondary);
+    color: var(--te-styles-common-text-color-secondary);
     margin-right: 4px;
   }
 }

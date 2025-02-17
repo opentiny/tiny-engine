@@ -259,7 +259,7 @@ export default {
   }
 
   .del:hover {
-    background-color: var(--ti-lowcode-datasource-delete-button-hover-bg);
+    background-color: var(--te-datasource-delete-button-bg-color-hover);
   }
 }
 </style>

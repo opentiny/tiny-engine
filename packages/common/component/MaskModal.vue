@@ -34,7 +34,7 @@ export default {
   left: calc(100% - var(--base-right-panel-width));
   width: var(--base-right-panel-width);
   height: 100%;
-  background-color: var(--ti-lowcode-mask-modal-bg);
+  background-color: var(--te-component-mask-modal-bg-color);
   transition: background-color, 0.2s, ease-in-out;
   z-index: 9;
 }

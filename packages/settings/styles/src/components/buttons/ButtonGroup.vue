@@ -51,10 +51,10 @@ ul {
   width: 100%;
   display: flex;
   border-radius: 4px;
-  background: var(--te-common-bg-container);
+  background: var(--te-styles-button-bg-color);
   li {
-    background: var(--te-common-bg-container);
-    color: var(--te-common-text-secondary);
+    background: var(--te-styles-button-bg-color);
+    color: var(--te-styles-common-text-color-secondary);
     border-radius: 4px;
     flex: 1;
     height: 24px;
@@ -66,15 +66,15 @@ ul {
     position: relative;
   }
   li[data-active] {
-    background: var(--te-common-bg-prompt);
-    color: var(--te-common-text-primary);
+    background: var(--te-styles-button-bg-color-active);
+    color: var(--te-styles-button-text-color-active);
   }
   li:not(:last-child)::after {
     content: '';
     position: absolute;
     width: 1px;
     height: 50%;
-    background-color: var(--te-common-border-default);
+    background-color: var(--te-styles-common-border-color);
     right: 0;
     top: 50%;
     transform: translate(50%, -50%);

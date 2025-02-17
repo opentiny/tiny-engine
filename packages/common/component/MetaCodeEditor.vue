@@ -268,22 +268,22 @@ export default {
   display: flex;
   text-align: center;
   .tiny-button.tiny-button.edit-btn {
-    color: var(--te-common-text-primary);
-    border-color: var(--te-common-border-default);
+    color: var(--te-component-common-text-color-primary);
+    border-color: var(--te-component-common-border-color);
     flex: 1;
     text-align: center;
     margin-right: 0;
     &:hover {
-      border-color: var(--te-common-border-active);
+      border-color: var(--te-component-common-border-color-active);
     }
     &:focus {
-      border-color: var(--te-common-border-active);
+      border-color: var(--te-component-common-border-color-active);
     }
     .edit-btn-icon {
       font-size: 14px;
       margin-right: 4px;
       vertical-align: text-top;
-      color: var(--te-common-icon-secondary);
+      color: var(--te-component-common-icon-color);
     }
   }
 }
@@ -306,11 +306,11 @@ export default {
   padding: 4px;
   padding-left: 10px;
   padding-right: 12px;
-  border: 1px solid var(--ti-lowcode-meta-codeEditor-border-color);
+  border: 1px solid var(--te-component-common-border-color);
   border-radius: var(--te-base-border-radius-1);
 
   &:hover {
-    border-color: var(--ti-lowcode-meta-codeEditor-border-hover-color);
+    border-color: var(--te-component-common-border-color-divider);
   }
 
   .text-content {
@@ -318,14 +318,14 @@ export default {
   }
 
   &.empty-color {
-    color: var(--te-common-text-weaken);
+    color: var(--te-component-common-text-color-weaken);
   }
 
   .edit-icon {
     margin-left: 4px;
     flex-shrink: 0;
     cursor: pointer;
-    color: var(--te-common-text-secondary);
+    color: var(--te-component-common-text-color-secondary);
   }
 }
 
@@ -349,10 +349,10 @@ export default {
     display: flex;
     height: 17px;
     margin-bottom: 10px;
-    color: var(--ti-lowcode-meta-code-editor-header-tips-container-color);
+    color: var(--te-component-common-text-color-primary);
 
     .header-tips-title {
-      color: var(--te-common-text-weaken);
+      color: var(--te-component-common-text-color-weaken);
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
@@ -381,14 +381,14 @@ export default {
 
       code {
         font-family: Microsoft YaHei, Microsoft YaHei-Normal;
-        color: var(--te-common-text-weaken);
+        color: var(--te-component-common-text-color-weaken);
       }
     }
   }
 
   .error-msg {
     margin-top: 8px;
-    color: var(--ti-lowcode-meta-code-editor-err-msg-color);
+    color: var(--te-component-common-error-color);
     font-weight: bold;
   }
 }

@@ -198,7 +198,7 @@ export default {
   justify-content: space-between;
 
   svg {
-    color: var(--ti-lowcode-toolbar-icon-color);
+    color: var(--te-props-common-icon-color-primary);
     outline: none;
   }
 }
@@ -211,7 +211,7 @@ export default {
   li {
     padding: 4px 12px;
     &:hover {
-      background: var(--te-common-bg-container);
+      background: var(--te-props-common-bg-color-hover);
       cursor: pointer;
     }
   }
@@ -225,10 +225,10 @@ export default {
     justify-content: space-between;
     padding: 8px 12px;
     cursor: pointer;
-    color: var(--te-common-text-secondary);
+    color: var(--te-props-common-text-color-secondary);
 
     svg {
-      color: var(--te-common-text-secondary);
+      color: var(--te-props-common-text-color-secondary);
     }
     .icon {
       margin-right: 8px;
@@ -239,7 +239,7 @@ export default {
     }
 
     &:hover {
-      background: var(--te-common-bg-container);
+      background: var(--te-props-common-bg-color-hover);
     }
   }
 }
@@ -252,7 +252,7 @@ export default {
     margin-right: 12px;
 
     .life-cycle-list {
-      border: 1px solid var(--te-common-border-default);
+      border: 1px solid var(--te-props-common-border-color);
       box-shadow: 0 -1px 4px 0 rgba(0, 0, 0, 0.1);
       border-radius: 4px;
       height: 320px;
@@ -268,7 +268,7 @@ export default {
 
       .life-cycle-selected {
         font-size: 14px;
-        color: var(--ti-lowcode-toolbar-icon-color);
+        color: var(--te-props-common-text-color-primary);
         opacity: 0.8;
         position: absolute;
         top: 50%;
@@ -277,8 +277,8 @@ export default {
       }
 
       &:hover {
-        color: var(--ti-lowcode-toolbar-icon-color);
-        background: var(--te-common-bg-container);
+        color: var(--te-props-common-text-color-primary);
+        background: var(--te-props-common-bg-color-hover);
         .life-cycle-selected {
           opacity: 1;
         }

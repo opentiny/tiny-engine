@@ -463,7 +463,7 @@ export default {
   }
 
   .position-label {
-    color: var(--ti-lowcode-component-setting-panel-label-color);
+    color: var(--te-styles-common-text-color-secondary);
   }
   .position-dropdown {
     grid-column: 1 / -1;
@@ -509,7 +509,7 @@ export default {
       line-height: 10px;
       letter-spacing: -0.2px;
       display: flex;
-      color: var(--ti-lowcode-position-direction-color);
+      color: var(--te-styles-common-text-color-primary);
       background: transparent;
       padding: 2px;
       margin-left: -2px;
@@ -522,11 +522,11 @@ export default {
       align-items: center;
       justify-content: center;
       &.is-setting {
-        background-color: var(--te-common-bg-text-emphasize);
+        background-color: var(--te-styles-common-setting-bg-color);
       }
 
       &.is-show {
-        background-color: var(--ti-lowcode-position-direction-bg);
+        background-color: var(--te-styles-position-direction-bg-color);
       }
     }
     .top {
@@ -550,10 +550,10 @@ export default {
     height: 20px;
     font-size: 16px;
     &:hover {
-      background-color: var(--ti-lowcode-position-direction-bg);
+      background-color: var(--te-styles-common-bg-color-hover);
     }
     &.selected {
-      background-color: var(--ti-lowcode-position-selected-bg);
+      background-color: var(--te-styles-common-bg-color-active);
     }
   }
   .relative-wrap {
@@ -565,9 +565,8 @@ export default {
     margin-top: 8px;
     .target {
       height: 28px;
-      border: 1px solid var(--ti-lowcode-position-relative-to-border-color);
-      background-color: var(--ti-lowcode-position-relative-to-bg);
-      color: var(--ti-lowcode-position-relative-to-color);
+      background-color: var(--te-styles-position-relative-bg-color);
+      color: var(--te-styles-common-text-color-primary);
       grid-column: 2 / span 2;
       align-items: center;
       display: grid;
@@ -602,28 +601,28 @@ export default {
     span {
       cursor: pointer;
       border-radius: 2px;
-      color: var(--te-common-text-emphasize);
-      background-color: var(--te-common-bg-text-emphasize);
+      color: var(--te-styles-common-setting-text-color);
+      background-color: var(--te-styles-common-setting-bg-color);
     }
   }
   .lr-path-color {
-    color: var(--ti-lowcode-spacing-lr-color);
+    color: var(--te-styles-position-relative-lr-bg-color);
     cursor: default;
     &:hover {
-      color: var(--ti-lowcode-spacing-lr-hover-color);
+      color: var(--te-styles-position-relative-lr-bg-color-hover);
     }
   }
 
   .tb-path-color {
-    color: var(--ti-lowcode-spacing-tb-color);
+    color: var(--te-styles-position-relative-tb-bg-color);
     cursor: default;
     &:hover {
-      color: var(--ti-lowcode-spacing-tb-hover-color);
+      color: var(--te-styles-position-relative-tb-bg-color-hover);
     }
   }
 
   .stroke {
-    stroke: var(--ti-lowcode-spacing-border-color);
+    stroke: var(--te-styles-position-relative-border-color);
   }
 }
 </style>

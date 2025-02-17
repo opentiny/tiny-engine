@@ -55,7 +55,7 @@ export default {
   width: 24px;
   height: 24px;
   font-size: 16px;
-  color: var(--te-common-icon-secondary);
+  color: var(--te-component-common-icon-color);
   border: 1px solid transparent;
   border-radius: 4px;
   display: inline-flex;
@@ -63,10 +63,10 @@ export default {
   align-items: center;
   cursor: pointer;
   &:hover {
-    color: var(--te-common-icon-hover);
+    color: var(--te-component-common-icon-color-hover);
   }
   &.active {
-    color: var(--te-common-icon-hover);
+    color: var(--te-component-common-icon-color-hover);
   }
 
   .svg-icon {
@@ -74,14 +74,14 @@ export default {
   }
 }
 .svg-button-hover {
-  color: var(--te-common-icon-primary);
+  color: var(--te-component-common-icon-color-primary);
   &:hover {
-    color: var(--te-common-icon-primary);
-    background-color: var(--te-common-bg-prompt);
+    color: var(--te-component-common-icon-color-primary);
+    background-color: var(--te-component-svg-button-bg-color-hover);
   }
   &.active {
-    color: var(--te-common-icon-primary);
-    background-color: var(--te-common-bg-prompt);
+    color: var(--te-component-common-icon-color-primary);
+    background-color: var(--te-component-svg-button-bg-color-active);
   }
 }
 </style>

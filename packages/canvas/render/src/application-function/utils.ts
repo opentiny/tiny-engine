@@ -54,13 +54,13 @@ export function useUtils(context: Record<string, any>) {
       }
     })
 
-    const npmUtilsImports = data
-      .filter((item) => item.type === 'npm' && item.content.cdnLink)
-      .map((item) => import(/* @vite-ignore */ item.content.cdnLink))
+    const validNPMUtils = data.filter((item) => item.type === 'npm' && item.content.cdnLink)
+
+    const npmUtilsImports = validNPMUtils.map((item) => import(/* @vite-ignore */ item.content.cdnLink))
     const npmUtils = await Promise.allSettled(npmUtilsImports)
 
     npmUtils.forEach((res, index) => {
-      const { name, content } = data[index]
+      const { name, content } = validNPMUtils[index]
       const { exportName, destructuring, cdnLink } = content
 
       if (res.status !== 'fulfilled') {

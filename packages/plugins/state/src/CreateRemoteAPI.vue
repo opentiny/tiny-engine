@@ -190,7 +190,7 @@ export default {
   padding: 12px;
 
   .error-tip {
-    color: var(--te-common-color-error);
+    color: var(--te-state-common-error-color);
     margin-top: 4px;
     font-size: 12px;
   }
@@ -239,25 +239,25 @@ export default {
     justify-content: space-between;
     align-items: center;
     padding: 8px 12px;
-    background: var(--ti-lowcode-toolbar-bg);
-    border-top: 1px solid var(--te-common-border-default);
-    border-bottom: 1px solid var(--te-common-border-default);
-    color: var(--te-common-text-secondary);
+    background: var(--te-state-tip-bg-color);
+    border-top: 1px solid var(--te-state-common-border-color);
+    border-bottom: 1px solid var(--te-state-common-border-color);
+    color: var(--te-state-common-label-text-color);
   }
 
   .use-service {
-    color: var(--te-common-text-secondary);
+    color: var(--te-state-common-label-text-color);
     font-size: 12px;
     margin-top: 10px;
 
     span {
-      color: var(--te-common-color-error);
+      color: var(--te-state-common-error-color);
     }
   }
 
   .send-service {
     text-align: right;
-    border-top: 1px solid var(--te-common-border-default);
+    border-top: 1px solid var(--te-state-common-border-color);
     padding: 20px 10px;
     margin-bottom: 10px;
 
@@ -290,14 +290,14 @@ export default {
 
     .icon-plus {
       cursor: pointer;
-      color: var(--ti-lowcode-toolbar-icon-color);
+      color: var(--te-state-remote-icon-color);
       outline: none;
     }
 
     .icon {
       width: 20px;
       height: 20px;
-      color: var(--te-common-text-secondary);
+      color: var(--te-state-common-label-text-color);
       font-size: 16px;
       border-radius: 2px;
       margin-right: 8px;
@@ -308,8 +308,8 @@ export default {
       transition: 0.3s;
 
       &:hover {
-        color: var(--ti-lowcode-toolbar-icon-color);
-        background: var(--ti-lowcode-icon-hover-bg);
+        color: var(--te-state-common-icon-color-hover);
+        background: var(--te-state-common-bg-color-hover);
       }
     }
   }

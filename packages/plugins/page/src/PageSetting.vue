@@ -292,23 +292,22 @@ export default {
     }
 
     const createHistoryMessage = () => {
-      const title = '创建历史备份信息'
-      const messageRender = {
-        render: () => <Input placeholder="历史备份信息" v-model={state.historyMessage}></Input>
-      }
-      const exec = () => {
-        pageSettingState.currentPageData.message = state.historyMessage.trim() || 'Page auto save'
-
-        if (pageSettingState.isNew) {
-          createPage()
-        } else {
+      if (pageSettingState.isNew) {
+        pageSettingState.currentPageData.message = 'Page auto save'
+        createPage()
+      } else {
+        const title = '创建历史备份信息'
+        const messageRender = {
+          render: () => <Input placeholder="历史备份信息" v-model={state.historyMessage}></Input>
+        }
+        const exec = () => {
+          pageSettingState.currentPageData.message = state.historyMessage.trim() || 'Page auto save'
           editPage()
+          state.historyMessage = ''
         }
 
-        state.historyMessage = ''
+        confirm({ title, message: messageRender, exec })
       }
-
-      confirm({ title, message: messageRender, exec })
     }
 
     const savePageSetting = () => {

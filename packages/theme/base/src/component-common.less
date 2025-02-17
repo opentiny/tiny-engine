@@ -397,7 +397,7 @@
       text-decoration: none;
     }
   }
-  &.is-disabled {
+  &.is-disabled.is-disabled.is-disabled.is-disabled.is-disabled {
     background-color: var(--te-common-bg-disabled);
     color: var(--te-common-text-disabled);
     border-color: var(--te-common-border-disabled);
@@ -590,6 +590,9 @@
   box-shadow: 0 -2px 12px 0 var(--te-base-box-shadow-rgba-2);
 
   height: auto;
+  .popper__arrow {
+    background: var(--te-common-bg-popover);
+  }
 }
 
 // 13、tag标签
@@ -895,7 +898,7 @@
           .tiny-grid-resizable.is__line {
             color: var(--te-common-border-hover);
             height: 10px;
-            margin-bottom: 9px;
+            margin-bottom: 11px;
           }
         }
       }

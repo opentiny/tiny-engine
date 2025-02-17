@@ -150,7 +150,7 @@ export default {
   }
   .tiny-button.tiny-button.tiny-button.tiny-button--default {
     margin-right: 4px;
-    border-color: var(--te-common-border-secondary);
+    border-color: var(--te-state-editor-btn-border-color);
   }
 }
 .buttons {

@@ -107,15 +107,15 @@ export default {
   padding-right: 20px;
   width: 136px;
   cursor: pointer;
-  background: var(--te-common-bg-prompt);
-  color: var(--te-common-text-secondary);
-  border: 1px solid var(--ti-lowcode-tabs-active-bg);
+  background: var(--te-configurator-select-icon-bg-color);
+  color: var(--te-configurator-common-text-color-secondary);
+  border: 1px solid var(--te-configurator-common-border-color-divider);
   border-radius: 3px;
   .icon-box {
-    border-right: 1px solid var(--ti-lowcode-tabs-active-bg);
+    border-right: 1px solid var(--te-configurator-common-border-color-divider);
     padding: 4px 8px;
     .tiny-svg {
-      color: var(--te-common-text-secondary);
+      color: var(--te-configurator-common-text-color-secondary);
       font-size: 14px;
     }
   }
@@ -161,13 +161,13 @@ export default {
 
     li {
       width: 40px;
-      color: var(--ti-lowcode-icon-popover-color);
+      color: var(--te-configurator-common-text-color-secondary);
       cursor: pointer;
       text-align: center;
       .tiny-svg {
         font-size: 24px;
         &:hover {
-          color: var(--ti-lowcode-icon-popover-hover-color);
+          color: var(--te-configurator-common-text-color-primary);
         }
       }
     }

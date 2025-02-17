@@ -156,7 +156,7 @@ const change = (item) => {
   .tabs-wrap {
     display: flex;
     justify-content: space-between;
-    background-color: var(--te-common-bg-container);
+    background-color: var(--te-configurator-tabs-group-bg-color);
     border-radius: 4px;
     .tiny-button-group {
       display: flex;
@@ -172,24 +172,24 @@ const change = (item) => {
       border: none;
       line-height: 14px;
       min-width: 20px;
-      background-color: var(--te-common-bg-container);
-      color: var(--te-common-text-weaken);
+      background-color: var(--te-configurator-tabs-group-bg-color);
+      color: var(--te-configurator-common-text-color-weaken);
 
       &:hover {
-        background-color: var(--te-common-bg-prompt);
-        color: var(--te-common-text-secondary);
+        background-color: var(--te-configurator-tabs-group-bg-color-hover);
+        color: var(--te-configurator-common-text-color-secondary);
         border-radius: 4px;
         .svg-icon {
-          color: var(--te-common-text-primary);
+          color: var(--te-configurator-common-icon-color-primary);
         }
       }
 
       &.selected {
-        background-color: var(--te-common-bg-prompt);
-        color: var(--te-common-text-secondary);
+        background-color: var(--te-configurator-tabs-group-bg-color-active);
+        color: var(--te-configurator-common-text-color-secondary);
         border-radius: 4px;
         .svg-icon {
-          color: var(--te-common-text-primary);
+          color: var(--te-configurator-common-icon-color-primary);
         }
       }
     }
@@ -212,16 +212,16 @@ const change = (item) => {
       justify-content: center;
       align-items: center;
       height: 24px;
-      color: var(--te-common-text-weaken);
+      color: var(--te-configurator-common-text-color-weaken);
 
       &:hover {
-        background-color: var(--te-common-bg-prompt);
+        background-color: var(--te-configurator-tabs-group-bg-color-hover);
         border-radius: 4px;
-        color: var(--te-common-text-primary);
+        color: var(--te-configurator-common-text-color-primary);
       }
       &.selected {
-        background-color: var(--te-common-bg-prompt);
-        color: var(--te-common-text-primary);
+        background-color: var(--te-configurator-tabs-group-bg-color-active);
+        color: var(--te-configurator-common-text-color-primary);
         border-radius: 4px;
       }
       .tiny-dropdown__title {
@@ -236,9 +236,12 @@ const change = (item) => {
         width: 20px;
         display: flex;
         justify-content: center;
+        .tiny-svg {
+          fill: var(--te-configurator-common-icon-color);
+        }
       }
       .tiny-dropdown__trigger:hover {
-        color: var(--te-common-text-primary);
+        color: var(--te-configurator-common-text-color-primary);
       }
     }
   }
@@ -251,29 +254,33 @@ const change = (item) => {
   padding: 8px 0px;
   margin-left: 20px;
   border-radius: 4px;
-  background-color: var(--te-common-bg-default);
-  color: var(--te-common-text-weaken);
+  background-color: var(--te-configurator-common-bg-color);
+  color: var(--te-configurator-common-text-color-weaken);
   z-index: 9999;
-  box-shadow: 0 0 10px 0 var(--te-common-border-default);
+  box-shadow: 0 0 10px 0 var(--te-configurator-common-border-color);
 
   :deep(.focusing) {
-    background-color: var(--te-common-bg-default);
+    background-color: var(--te-configurator-common-bg-color);
+  }
+
+  :deep(.tiny-dropdown-item) {
+    color: var(--te-configurator-common-text-color-weaken);
+    background-color: var(--te-configurator-common-bg-color);
+
+    &:hover,
+    &:active {
+      background-color: var(--te-configurator-common-bg-color-hover);
+      color: var(--te-configurator-common-text-color-primary);
+    }
   }
 
   :deep(.tiny-dropdown-item__wrap) {
     padding: 4px 12px;
-    background-color: var(--te-common-bg-default);
-
-    &:hover,
-    &:active {
-      background-color: var(--te-common-bg-container);
-      color: var(--te-common-text-primary);
-    }
   }
 }
 .border-right {
   display: inline-block;
   height: 12px;
-  border-right: 1px solid var(--te-common-border-default);
+  border-right: 1px solid var(--te-configurator-common-border-color);
 }
 </style>

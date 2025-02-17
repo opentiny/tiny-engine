@@ -220,7 +220,7 @@ export default {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background-color: var(--te-common-bg-default);
+  background-color: var(--te-canvas-container-bg-color);
   cursor: pointer;
   z-index: 3;
   &.divider-vertical {
@@ -234,7 +234,7 @@ export default {
     left: v-bind('state.horizontalLeft');
   }
   &:hover {
-    background-color: var(--te-common-bg-primary-checked);
+    background-color: var(--te-canvas-container-bg-color-checked);
     .divider {
       background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAGKADAAQAAAABAAAAGAAAAADiNXWtAAACbElEQVRIDZ2Vu2sVURCH9yZgbCxMsFFjKQkExScREgQtLISAXbS4GDu10fgHiL1gpxKDCLFRfICCCSpCwEiCYiNWFkYsImIRH4jgY/x+xzNy7t29614HvsycmfnN3j1nd5Nl0cysDrPwEV7DRVjn9Vaent7Y+wYvrWbUG/pJTIHsCzyBd1pg8v0NzcmC2kDswdkizIFmyKZCK4F+uWwGelxPfAx+wFPPpZ58JzyHX3DEa8TdoFmyesYf3ZKu+nd40nyJvGzEc+7JjYWK2aTn3JPXRTRzVhdYhjkvpp78KMieNeW7yGnPZYfSmsfktV3LHSSWoNVhro+CbTTvdzH+KGyI61batdSXdAcXQDYWBcGx1m2+ha/wHRZUwK+C9/ABtA3q6W7S+vadl6AH9LT8hAk4CKdAQtlJuBIis3340zE+gR+PsXqlkVYzNEsz/5wrQR/MQ2qfWYzHX72RWE+UnppPoP3vijUNVm9qCyz60rvSnXTAJtBjOwKr0wbWV8GtaDulkVYzdLbtGaLdINPed1ZVt3Mlf/21r8NVL1Cpj1+sM9IZvAK9uY8qCas2MfAGyPbC9RCZDVXVl/YxbHsc+FCNxDpE3cWDUmHVIoPug2yna4hvhYzZLs/9l2fInjjoZjqA3JaYn07zbccM0Qujw839TyB3B2Q72h4sAcIDQW52uWiABsf63aJ6aQ6h3uqX8A38q5nTULsHsq25YlkCweEgMzv3j77B2He7rK+hhmAFLII+YGsaigULevSU6bHdXFDOp2g8DrIz+Wo+Q99Q6Da7lq9mWdG3aCWNL+BskaA5V6vVHpPT8FpzTevfkrgJcwZ0OJIAAAAASUVORK5CYII=);
     }
@@ -242,7 +242,7 @@ export default {
   .divider {
     width: 12px;
     height: 12px;
-    color: var(--te-base-gray-0);
+    color: var(--te-canvas-container-border-color-white);
     background-size: contain;
     background-repeat: no-repeat;
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAGKADAAQAAAABAAAAGAAAAADiNXWtAAACO0lEQVRIDa2Uy6tNURzHN7cwMUAmHncot0QeV5QiBgZKmWEgzDDx+ANu5soMcUkxIY+iEFIKEZnIyMC9GZAMrke6hXt9Pvus1VnntPbZ53B/9dnrt36P7zpr7bVPUTRtD+5j+Arv4QwshDpbTIG1o2CvGmq12CVmk/ADnsGnMHccgCpbRiLWjuA/BTXUUrM0VzNwD+aVkcbjIMNveJnEUrePyWuYgP1JYi6+WmqWO3FLrpqKMy3tHE8LtzemLc99ITfcEm1MXERNtYsxcGs520nQBV61JWcyHw253W25OFVzbDqPj1D1MheF6tWM24LvcAD6w7yqdwF5tYvT4K90y6m5zQ/wE37BC9Bmw2f4Ah6DNdamFo/vlEHP3pvwB87CLjgGNrrwEbgY/K2MQ8E/zHg0+NbaY68aaqmpdmlLeT4HBSPf8RXQloA3ylvzDTx/34OmsLWxz9Hdqtlivo/l4NXy1syB1C4ziSK547THXjXU6tk20uECnn1fz91dNJynJu5gUxf1PZV4nr6DdzABj2BK7Rpq/votcDX4GxinxNagovjDoOZLdBcPwvy/h/souMDaROlGiK1PYv/kbg5C19u6V4b43bZ4z1M/GF/uQKbzFjF3NpjJdRXaEQQuVFQr7AK3K/Idw36Jb2Ec+jtU3iHnIqs61GRTe4naeDKbbQbXhbqbzVC9N4OSEfAPbD7UmbfMa7uirjDmD+H464/HQM3oB2f9lVxd7l9vFoVv4ESuIRN7QkzxaZlc8RcdnI7tMHZBlAAAAABJRU5ErkJggg==);
@@ -251,7 +251,7 @@ export default {
 
 .divider-line {
   position: absolute;
-  border: 1px dashed var(--te-common-border-checked);
+  border: 1px dashed var(--te-canvas-container-border-color-checked);
   z-index: 2;
 }
 </style>

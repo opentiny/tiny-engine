@@ -138,15 +138,15 @@ export default {
     .field-cell-name {
       margin-left: 5px;
       .field-name {
-        color: var(--ti-lowcode-datasource-color);
+        color: var(--te-datasource-common-text-color-primary);
       }
       .description {
-        color: var(--ti-lowcode-datasource-tip-color);
+        color: var(--te-datasource-tip-text-color);
         margin-left: 5px;
       }
     }
     svg {
-      color: var(--ti-lowcode-datasource-toolbar-icon-color);
+      color: var(--te-datasource-toolbar-icon-color);
     }
   }
 }
@@ -159,7 +159,7 @@ export default {
   }
 }
 .form-item-border:hover {
-  background: var(--ti-lowcode-datasource-box-bg);
+  background: var(--te-datasource-box-bg-color);
   .field-operation {
     display: flex;
     justify-content: space-between;

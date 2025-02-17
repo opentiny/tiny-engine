@@ -128,12 +128,12 @@ export default {
   top: 0;
   width: var(--base-collection-panel-width);
   height: 100%;
-  border-right: 1px solid var(--te-common-border-default);
-  background: var(--te-common-bg-default);
+  border-right: 1px solid var(--te-component-common-border-color);
+  background: var(--te-component-common-bg-color);
   overflow: hidden;
-  border-left: 1px solid var(--ti-lowcode-plugin-panel-header-border-bottom-color);
+  border-left: 1px solid var(--te-component-common-border-color-divider);
   &:not(.second-panel) {
-    box-shadow: 6px 0px 3px 0px var(--te-base-box-shadow-rgba-3);
+    box-shadow: 6px 0px 3px 0px var(--te-component-common-shadow-color);
     border-right: none;
     border-left: none;
   }
@@ -144,13 +144,6 @@ export default {
   &.second-panel {
     left: calc(var(--base-left-panel-width) + var(--base-collection-panel-width));
     z-index: 1;
-  }
-
-  .full-screen-label {
-    margin: 0 8px 0 4px;
-    color: var(--ti-common-color-text-weaken);
-    font-size: 12px;
-    line-height: 12px;
   }
 
   .cursor {
@@ -171,9 +164,9 @@ export default {
     line-height: 40px;
     font-size: 14px;
     line-height: 18px;
-    color: var(--ti-lowcode-plugin-panel-title-color);
+    color: var(--te-component-common-text-color-primary);
     padding: 0 12px;
-    border-bottom: 1px solid var(--ti-lowcode-plugin-panel-header-border-bottom-color);
+    border-bottom: 1px solid var(--te-component-common-border-color-divider);
     .plugin-setting-header-title {
       font-size: 12px;
       font-weight: 700;

@@ -194,7 +194,7 @@ export default {
       margin-left: 8px;
     }
     .footer-text {
-      color: var(--te-common-text-secondary);
+      color: var(--te-materials-block-transfer-footer-text-color);
     }
   }
 }

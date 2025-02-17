@@ -52,7 +52,7 @@ export default {
   width: 50%;
   .field-item-tip {
     padding-left: 5px;
-    color: var(--ti-lowcode-datasource-description-error-color);
+    color: var(--te-datasource-description-text-color-error);
     padding-right: 5px;
     padding-top: 5px;
     font-size: 12px;
@@ -62,7 +62,7 @@ export default {
   margin-right: 12px;
 }
 .collection-field-item-label {
-  color: var(--ti-lowcode-datasource-dialog-font-color);
+  color: var(--te-datasource-dialog-font-text-color);
 }
 .collection-field-num {
   display: flex;

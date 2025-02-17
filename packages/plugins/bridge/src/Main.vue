@@ -1,5 +1,5 @@
 <template>
-  <plugin-panel title="资源管理" :isCloseLeft="false" @close="closePanel">
+  <plugin-panel title="资源管理" class="bridge-manage" :isCloseLeft="false" @close="closePanel">
     <template #header>
       <svg-button name="add-utils" placement="left" :tips="tips" @click="addResource('npm')"></svg-button>
     </template>

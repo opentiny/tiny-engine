@@ -44,9 +44,9 @@ export default {
   height: 100%;
   transition: 0.3s linear;
   position: relative;
-  border-left: 1px solid var(--ti-lowcode-plugin-setting-panel-border-left-color);
+  border-left: 1px solid var(--te-settings-panel-border-color);
   padding-top: 20px;
-  background-color: var(--ti-lowcode-setting-panel-bg-color);
+  background-color: var(--te-settings-panel-common-bg-color);
 
   .tiny-tabs {
     height: 100%;
@@ -73,12 +73,12 @@ export default {
       margin: 0;
     }
     .tiny-tabs__item {
-      color: var(--ti-lowcode-setting-panel-tabs-item-title-color);
+      color: var(--te-settings-panel-common-text-color-secondary);
       &:hover {
-        color: var(--ti-lowcode-setting-panel-tabs-item-title-hover-color);
+        color: var(--te-settings-panel-common-text-color-primary);
       }
       &.is-active {
-        color: var(--ti-lowcode-setting-panel-tabs-item-title-active-color);
+        color: var(--te-settings-panel-common-text-color-primary);
       }
     }
   }
@@ -99,10 +99,10 @@ export default {
 
 @keyframes glow {
   0% {
-    box-shadow: inset 0px 0px 4px var(--ti-lowcode-canvas-handle-hover-bg);
+    box-shadow: inset 0px 0px 4px var(--te-settings-panel-bg-color-active);
   }
   100% {
-    box-shadow: inset 0px 0px 14px var(--ti-lowcode-canvas-handle-hover-bg);
+    box-shadow: inset 0px 0px 14px var(--te-settings-panel-bg-color-active);
   }
 }
 </style>

@@ -1,11 +1,13 @@
 <template>
-  <tiny-popover popper-class="quick">
+  <tiny-popover popper-class="quick" :visible-arrow="false">
     <template #reference>
       <span class="link-icon">+</span>
     </template>
     <ul class="context-menu">
       <li v-if="isLinked" class="menu-item" @click="unLink(data.linkedEventName)">取消关联</li>
-      <li v-else class="menu-item" @click="addEvent(data)">+ 新建事件</li>
+      <li v-else class="menu-item add-event" @click="addEvent(data)">
+        <svg-icon name="plus-circle"></svg-icon> 新建事件
+      </li>
       <li class="menu-item" @click="openBlockSetting">管理事件</li>
       <li v-for="item in eventsList" :key="item.name" class="menu-item">
         {{ item.name }}
@@ -186,7 +188,7 @@ export default {
   color: #fff;
   border-radius: 50%;
   line-height: 14px;
-  background-color: var(--ti-lowcode-description-color);
+  background-color: var(--te-component-common-block-add-text-color);
   &:hover {
     cursor: pointer;
     transform: scale(1.3);
@@ -195,31 +197,28 @@ export default {
 
 .context-menu {
   width: 200px;
-  padding: 3px 0;
-  border: 1px solid var(--ti-lowcode-tabs-border-color);
-  border-radius: 3px;
-  background-color: var(--te-common-bg-container);
-  box-shadow: 0 1px 15px 0 rgb(0 0 0 / 20%);
   display: flex;
   flex-direction: column;
   .menu-item {
     font-size: 12px;
     display: flex;
     justify-content: space-between;
-    color: var(--te-common-text-secondary);
-    padding: 6px 15px;
-    &:not(:last-child) {
-      border-bottom: 1px solid var(--ti-lowcode-tabs-border-color);
-    }
+    color: var(--te-component-common-text-color-primary);
+    padding: 4px 16px;
+    margin: 0 -16px;
     &:hover {
-      color: var(--ti-lowcode-toolbar-icon-color);
-      background: var(--te-common-bg-container);
+      color: var(--te-component-common-text-color-primary);
+      background: var(--te-component-common-bg-color-hover);
     }
 
     .link-item {
       cursor: pointer;
-      background-color: var(--ti-lowcode-icon-bind-color);
+      background-color: var(--te-component-common-text-color-checked);
       padding: 2px 5px;
+    }
+    &.add-event {
+      justify-content: start;
+      gap: 4px;
     }
   }
 }

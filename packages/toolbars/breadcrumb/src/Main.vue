@@ -110,7 +110,7 @@ export default {
   &-title {
     height: 28px;
     padding: 0 8px;
-    background-color: var(--ti-lowcode-toolbar-button-bg);
+    background-color: var(--te-toolbars-breadcrumb-bg-color);
     display: flex;
     border-radius: 4px;
     :deep(.reference-wrapper) {
@@ -133,7 +133,7 @@ export default {
     user-select: none;
 
     :deep(.tiny-breadcrumb__inner) {
-      color: var(--ti-lowcode-media-popover-title-color);
+      color: var(--te-toolbars-breadcrumb-text-color);
       text-decoration: none;
       cursor: pointer;
     }
@@ -145,24 +145,24 @@ export default {
 
     &:last-child :deep(.tiny-breadcrumb__inner) {
       font-weight: normal;
-      color: var(--ti-lowcode-media-popover-title-color);
+      color: var(--te-toolbars-breadcrumb-text-color);
     }
   }
 
   &-title-block {
-    background-color: var(--ti-lowcode-toolbar-breadcrumb-bg);
+    background-color: var(--te-toolbars-breadcrumb-block-bg-color);
     .tiny-breadcrumb__item {
       :deep(.tiny-breadcrumb__inner) {
-        color: var(--ti-lowcode-toolbar-breadcrumb-left-color);
+        color: var(--te-toolbars-breadcrumb-block-text-color);
       }
       &:last-child :deep(.tiny-breadcrumb__inner) {
-        color: var(--ti-lowcode-toolbar-breadcrumb-left-color);
+        color: var(--te-toolbars-breadcrumb-block-text-color);
       }
     }
   }
 
   &-title-block:hover {
-    background-color: var(--ti-lowcode-toolbar-breadcrumb-bg-hover);
+    background-color: var(--te-toolbars-breadcrumb-block-bg-color-hover);
   }
 
   .publish {

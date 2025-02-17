@@ -266,10 +266,10 @@ export default {
     height: 26px;
     padding: 0 8px;
     border-radius: 4px;
-    background-color: var(--ti-lowcode-toolbar-button-bg);
+    background-color: var(--te-toolbars-generate-code-button-bg-color);
     border: none;
     &:not(.disabled):hover {
-      background-color: var(--ti-lowcode-toolbar-button-bg);
+      background-color: var(--te-toolbars-generate-code-button-bg-color);
     }
     .button-title {
       margin-left: 4px;

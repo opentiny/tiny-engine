@@ -197,7 +197,7 @@ export default {
 <style lang="less" scoped>
 .meta-slot-container {
   text-align: left;
-  color: var(--lowcode-meta-js-slot-color);
+  color: var(--te-configurator-common-text-color-secondary);
 }
 
 .slot-form {
@@ -267,7 +267,7 @@ export default {
   outline: 0;
   border-radius: 10px;
   box-sizing: border-box;
-  background-color: var(--te-common-bg-switch);
+  background-color: var(--te-configurator-common-switch-bg-color);
   transition: border-color 0.3s, background-color 0.3s;
   vertical-align: middle;
 }
@@ -281,11 +281,11 @@ export default {
   transition: all 0.3s;
   width: 16px;
   height: 16px;
-  background-color: var(--te-common-bg-default);
+  background-color: var(--te-configurator-common-bg-color);
 }
 
 .e__switch.e_is-checked .e__switch-core {
-  background-color: var(--te-common-bg-primary-checked);
+  background-color: var(--te-configurator-common-switch-bg-color-checked);
 }
 
 .e__switch.e_is-checked .e__switch-core::after {

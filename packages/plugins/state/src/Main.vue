@@ -404,16 +404,15 @@ export default {
       width: 100%;
       .tiny-button {
         width: 100%;
-        border-color: var(--te-common-border-default);
+        border-color: var(--te-state-add-btn-border-color);
         &:hover {
-          border-color: var(--te-common-border-hover);
+          border-color: var(--te-state-add-btn-border-color-hover);
         }
       }
       .add-btn-icon {
         margin-right: 4px;
         font-size: 16px;
-        stroke: var(--ti-lowcode-chat-model-button-text);
-        color: var(--te-common-icon-secondary);
+        color: var(--te-state-add-btn-icon-color);
         vertical-align: sub;
       }
       .add-btn-text {
@@ -425,9 +424,9 @@ export default {
       padding: 10px;
       font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
         'Helvetica Neue', sans-serif;
-      color: var(--ti-lowcode-plugin-panel-title-color);
-      font-weight: var(--ti-lowcode-plugin-panel-title-font-weight);
-      border-bottom: 1px solid var(--ti-lowcode-data-header-border-bottom-color);
+      color: var(--te-state-common-text-color);
+      font-weight: var(--te-base-font-weight-bold);
+      border-bottom: 1px solid var(--te-state-common-border-color-divider);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -456,9 +455,9 @@ export default {
   .data-source-right-panel {
     width: 492px;
     height: 100%;
-    box-shadow: 6px 0px 3px 0px var(--te-base-box-shadow-rgba-3);
-    border-right: 1px solid var(--te-common-border-divider);
-    background: var(--te-common-bg-default);
+    box-shadow: 6px 0px 3px 0px var(--te-state-panel-shadow-color);
+    border-right: 1px solid var(--te-state-common-border-color-divider);
+    background: var(--te-state-common-bg-color);
     position: absolute;
     left: var(--base-left-panel-width);
     top: 0;
@@ -471,9 +470,9 @@ export default {
       padding: 0 12px;
       font-size: 12px;
       font-weight: 700;
-      color: var(--te-common-text-primary);
-      background: var(--te-common-bg-default);
-      border-bottom: 1px solid var(--ti-lowcode-data-header-border-bottom-color);
+      color: var(--te-state-common-text-color);
+      background: var(--te-state-common-bg-color);
+      border-bottom: 1px solid var(--te-state-common-border-color-divider);
       .options-wrap {
         display: flex;
         column-gap: 8px;

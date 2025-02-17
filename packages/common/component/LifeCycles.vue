@@ -266,20 +266,15 @@ export default {
     outline: none;
   }
   .life-cycle-btn {
-    color: var(--ti-lowcode-meta-codeEditor-color);
-    border-color: var(--ti-lowcode-meta-codeEditor-border-color);
+    color: var(--te-component-common-text-color-primary);
+    border-color: var(--te-component-common-border-color);
     &:hover {
-      color: var(--ti-lowcode-meta-codeEditor-hover-color);
-      border-color: var(--ti-lowcode-meta-codeEditor-border-hover-color);
-    }
-    .icon-plus {
-      margin-right: 6px;
-      stroke: var(--ti-lowcode-meta-codeEditor-icon-color);
+      border-color: var(--te-component-common-border-color-hover);
     }
   }
 }
 .life-cycle-tips {
-  color: var(--ti-lowcode-life-cycle-alert-color);
+  color: var(--te-component-common-text-color-weaken);
   margin: 4px 0 0;
   height: 16px;
   line-height: 16px;
@@ -288,12 +283,12 @@ export default {
   margin-top: 12px;
 }
 .life-cycle-alert {
-  color: var(--ti-lowcode-life-cycle-alert-color);
+  color: var(--te-component-common-text-color-weaken);
   margin-left: 20px;
   margin-right: 20px;
 }
 .life-cycle-content-item {
-  color: var(--te-common-text-primary);
+  color: var(--te-component-common-text-color-primary);
 }
 .opt-button {
   &:last-child {
@@ -308,13 +303,13 @@ export default {
     line-height: 24px;
     cursor: pointer;
     &:hover {
-      background: var(--ti-lowcode-life-cycle-item-hover-bg);
+      background: var(--te-component-common-bg-color-hover);
     }
   }
   .existed {
     cursor: not-allowed;
     pointer-events: none;
-    color: var(--ti-lowcode-life-cycle-item-disable-color);
+    color: var(--te-component-common-text-color-disabled);
   }
 }
 
@@ -343,7 +338,7 @@ export default {
       transition: 0.3s;
 
       &.life-cycle-selected {
-        background: var(--ti-lowcode-life-cycle-item-hover-bg);
+        background: var(--te-component-common-bg-color-active);
       }
 
       .life-cycle-selected__icon {
@@ -355,7 +350,7 @@ export default {
       }
 
       &:hover {
-        background: var(--ti-lowcode-life-cycle-item-hover-bg);
+        background: var(--te-component-common-bg-color-hover);
       }
     }
   }
@@ -363,7 +358,7 @@ export default {
   .dialog-content-right {
     flex: 1;
     .life-cycle-editor {
-      border: 1px solid var(--ti-lowcode-life-cycle-editor-border);
+      border: 1px solid var(--te-component-common-border-color-divider);
       height: 100%;
       box-sizing: border-box;
     }
@@ -382,7 +377,7 @@ export default {
   align-items: center;
   width: 100%;
   .bind-dialog-text {
-    color: var(--te-common-text-primary);
+    color: var(--te-component-common-text-color-primary);
     font-size: var(--te-base-font-size-1);
   }
   .bind-dialog-btn {

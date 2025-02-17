@@ -28,6 +28,7 @@ import { getPageAncestors } from './material-function/page-getter'
 import CanvasEmpty from './canvas-function/CanvasEmpty.vue'
 import { setCurrentPage } from './canvas-function/page-switcher'
 import { useThrottleFn } from '@vueuse/core'
+import { useRouterPreview } from './canvas-function/router-preview'
 
 // global-context singleton
 const { context: globalContext, setContext: setGlobalContext } = useContext()
@@ -135,7 +136,7 @@ export default defineComponent({
     pageContext.setCssScopeId(props.cssScopeId || `data-te-page-${pageContext.pageId}`)
     if (props.entry) {
       provide('page-ancestors', pageAncestors)
-
+      provide('page-preview', useRouterPreview().previewPath)
       const updatePageAncestor = () => {
         if (routerViewSetting.viewMode === 'standalone') {
           pageAncestors.value = []

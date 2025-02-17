@@ -1,5 +1,5 @@
 <template>
-  <div class="data-source-list">
+  <div class="data-source-list lowcode-scrollbar">
     <ul>
       <li v-for="key in filteredKey" :key="key" :class="['data-source-list-item', { selected: key === selectedKey }]">
         <div class="item-head">
@@ -117,12 +117,12 @@ export default {
 <style lang="less" scoped>
 .data-source-list {
   padding-top: 12px;
-  border-top: 1px solid var(--te-common-border-divider);
+  border-top: 1px solid var(--te-state-common-border-color-divider);
   overflow-y: scroll;
   .data-source-list-item {
     &.selected,
     &:hover {
-      background: var(--te-common-bg-container);
+      background: var(--te-state-common-bg-color-hover);
       .item-head-right {
         display: flex;
         justify-content: flex-end;
@@ -134,7 +134,7 @@ export default {
   .item-head {
     height: 24px;
     padding: 0 10px;
-    color: var(--ti-lowcode-data-list-color);
+    color: var(--te-state-data-list-text-color);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -148,7 +148,7 @@ export default {
         margin-right: 4px;
         cursor: pointer;
         transition: 0.3s;
-        color: var(--ti-lowcode-toolbar-icon-color);
+        color: var(--te-state-data-list-left-icon-color);
         flex-shrink: 0;
 
         &.is-expand {
@@ -172,7 +172,7 @@ export default {
         text-overflow: ellipsis;
       }
       .item-head-left-icon {
-        color: var(--te-common-icon-secondary);
+        color: var(--te-state-data-list-left-icon-color);
         margin-right: 8px;
       }
     }
@@ -191,11 +191,11 @@ export default {
     p span {
       &:first-child {
         font-size: 14;
-        color: var(--te-common-text-secondary);
+        color: var(--te-state-common-label-text-color);
       }
 
       &:last-child {
-        color: var(--te-common-text-primary);
+        color: var(--te-state-common-text-color);
       }
     }
   }

@@ -66,7 +66,7 @@ export default {
 
 .item-text {
   flex: 1;
-  color: var(--te-common-text-primary);
+  color: var(--te-block-event-list-text-color);
 }
 .item-text.active {
   font-weight: 700;
@@ -77,11 +77,11 @@ export default {
 }
 .add-button {
   :deep(.tiny-button) {
-    border: 1px solid var(--te-common-border-default);
+    border: 1px solid var(--te-block-event-list-btn-border-color);
   }
   .icon-plus {
     margin-right: 6px;
-    stroke: var(--te-common-text-weaken);
+    stroke: var(--te-block-event-list-btn-icon-color);
   }
 }
 </style>

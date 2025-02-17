@@ -18,7 +18,7 @@
   margin-top: 8px;
   border-radius: 4px;
   padding: 8px 14px;
-  background: var(--te-common-bg-container);
-  color: var(--te-common-text-weaken);
+  background: var(--te-state-tip-bg-color);
+  color: var(--te-state-tip-text-color);
 }
 </style>

@@ -229,7 +229,7 @@ export default {
       return key
     }
     const postUrlChanged = () => {
-      usePage().postLocationHistoryChanged(
+      getMetaApi(META_SERVICE.GlobalService).postLocationHistoryChanged(
         Object.fromEntries(
           Array.from(new URLSearchParams(window.location.search)).map(([key, value]) => [replaceKey(key), value])
         )
@@ -264,6 +264,7 @@ export default {
         getPageAncestors: usePage().getAncestors,
         getBaseInfo: () => getMetaApi(META_SERVICE.GlobalService).getBaseInfo(),
         addHistoryDataChangedCallback,
+        updatePreviewId: getMetaApi(META_SERVICE.GlobalService).updatePreviewId,
         ast,
         getBlockByName: useMaterial().getBlockByName,
         useModal,

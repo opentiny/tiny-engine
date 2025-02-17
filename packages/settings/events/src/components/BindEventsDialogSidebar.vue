@@ -107,7 +107,7 @@ export default {
   }
 
   .left-list-wrap {
-    border: 1px solid var(--ti-lowcode-bind-event-dialog-content-left-border-color);
+    border: 1px solid var(--te-bind-event-dialog-content-left-border-color);
     border-radius: 4px;
     height: 300px;
     margin-top: var(--te-common-vertical-item-spacing-normal);
@@ -128,9 +128,9 @@ export default {
         justify-content: space-between;
         padding: 8px 12px;
         cursor: pointer;
-        color: var(--ti-lowcode-bind-event-dialog-color);
+        color: var(--te-bind-event-dialog-text-color);
         &.active {
-          background: var(--ti-lowcode-bind-event-dialog-content-left-list-item-active-bg-color);
+          background: var(--te-bind-event-dialog-content-left-list-item-bg-color-active);
         }
       }
     }

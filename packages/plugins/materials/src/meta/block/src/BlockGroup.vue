@@ -408,7 +408,7 @@ export default {
   }
   &.block-editing-option {
     padding: 0;
-    border-bottom: 1px solid var(--ti-lowcode-materials-block-group-item-border-color);
+    border-bottom: 1px solid var(--te-materials-block-group-item-border-color);
     :deep(.tiny-input__inner) {
       border-color: transparent;
       width: 180px;
@@ -419,14 +419,14 @@ export default {
       margin-left: 0;
     }
     :deep(svg) {
-      color: var(--ti-lowcode-component-svg-button-color);
+      color: var(--te-materials-block-group-icon-color);
     }
     :deep(.tiny-button) {
       padding: 0 2px;
     }
   }
   &.show-underline {
-    border-bottom: 1px solid var(--ti-lowcode-materials-block-group-item-border-color);
+    border-bottom: 1px solid var(--te-materials-block-group-item-border-color);
   }
   .block-option-content {
     display: flex;
@@ -462,27 +462,17 @@ export default {
   width: 220px;
   height: 108px;
   box-sizing: border-box;
-  background-color: var(--ti-lowcode-materials-block-group-delete-popover-bg-color);
   padding: 6px;
-
-  &[x-placement^='right'] {
-    .popper__arrow {
-      &,
-      &::after {
-        border-right-color: var(--te-common-bg-container);
-      }
-    }
-  }
 
   .popper-confirm-header {
     font-size: var(--te-base-font-size-1);
-    color: var(--te-common-text-primary);
+    color: var(--te-materials-block-group-popper-title-text-color);
     font-weight: var(--te-base-font-weight-7);
     margin-bottom: 12px;
   }
   .popper-confirm-content {
     font-size: 12px;
-    color: var(--te-common-text-secondary);
+    color: var(--te-materials-block-group-popper-content-text-color);
   }
   .popper-confirm-footer {
     text-align: right;

@@ -101,9 +101,9 @@ export default {
 
 <style lang="less" scoped>
 .input-or-output {
-  color: var(--te-common-text-secondary);
+  color: var(--te-page-manage-input-or-output-text-color);
   .life-cycle-alert {
-    color: var(--ti-lowcode-life-cycle-alert-color);
+    color: var(--te-page-manage-life-cycle-alert-text-color);
     height: 28px;
     padding: 6px;
     border: 0;
@@ -116,7 +116,7 @@ export default {
 
   .input-output-tips,
   .input-output-div {
-    color: var(--ti-lowcode-life-cycle-alert-color);
+    color: var(--te-page-manage-life-cycle-alert-text-color);
     margin-top: 4px;
     height: 16px;
     line-height: 16px;
@@ -128,7 +128,7 @@ export default {
     margin-top: 12px;
   }
   .edit-btn-icon {
-    color: var(--te-common-text-secondary);
+    color: var(--te-page-manage-icon-color);
     margin-right: 6px;
   }
   :deep(.edit-btn) {

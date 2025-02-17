@@ -83,21 +83,21 @@ export default {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background-color: var(--te-common-bg-default);
+  background-color: var(--te-canvas-container-bg-color);
   cursor: pointer;
   z-index: 3;
   transform: translateX(-80%) translateY(-20%);
   top: v-bind('state.top');
   left: v-bind('state.left');
-  border: 1px solid var(--te-common-border-hover);
+  border: 1px solid var(--te-canvas-container-border-color-hover);
   &.disabled {
     opacity: 0.3;
   }
   &:not(.disabled):hover {
-    border-color: var(--te-common-bg-primary-checked);
-    background-color: var(--te-common-bg-primary-checked);
+    border-color: var(--te-canvas-container-border-color-checked);
+    background-color: var(--te-canvas-container-bg-color-checked);
     .jumper {
-      color: var(--te-common-text-dark-inverse);
+      color: var(--te-canvas-container-router-jumper-text-color);
     }
   }
   .jumper {

@@ -165,13 +165,13 @@ export default {
     .row-content {
       flex: auto;
       display: flex;
-      border: 1px solid var(--te-common-border-default);
-      color: var(--te-common-text-primary);
+      border: 1px solid var(--te-styles-common-border-color);
+      color: var(--te-styles-common-text-color-primary);
       .row-content-item {
         flex: 1;
         padding: 4px 0;
-        color: var(--te-common-text-secondary);
-        background: var(--te-common-bg-container);
+        color: var(--te-styles-common-text-color-secondary);
+        background: var(--te-styles-background-dialog-row-item-bg-color);
         position: relative;
         display: flex;
         justify-content: center;
@@ -182,7 +182,7 @@ export default {
           content: '';
           width: 1px;
           height: 100%;
-          background: var(--ti-lowcode-tabs-border-color);
+          background: var(--te-styles-common-border-color);
           display: inline-block;
           position: absolute;
           top: 0;
@@ -190,13 +190,13 @@ export default {
         }
 
         &:hover {
-          color: var(--te-common-text-primary);
-          background-color: var(--te-common-bg-container);
+          color: var(--te-styles-common-text-color-primary);
+          background-color: var(--te-styles-background-dialog-row-item-bg-color);
         }
 
         &.selected {
-          color: var(--te-common-text-primary);
-          background-color: var(--te-common-bg-prompt);
+          color: var(--te-styles-common-text-color-primary);
+          background-color: var(--te-styles-background-dialog-row-item-bg-color-active);
         }
 
         .overflow-svg {
@@ -220,7 +220,7 @@ export default {
       display: inline-block;
       width: calc(100% + 16px);
       height: 1px;
-      background-color: var(--ti-lowcode-optionitem-background-color);
+      background-color: var(--te-styles-background-dialog-line-bg-color);
       position: absolute;
       left: -8px;
       bottom: 0px;

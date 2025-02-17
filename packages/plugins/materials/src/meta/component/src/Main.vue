@@ -143,7 +143,7 @@ export default {
   .component-group {
     display: grid;
     width: 100%;
-    color: var(--ti-lowcode-materials-component-list-color);
+    color: var(--te-materials-component-list-text-color);
 
     .component-item {
       padding: var(--te-common-vertical-form-label-spacing) 0 var(--te-common-vertical-form-label-spacing);
@@ -151,10 +151,10 @@ export default {
       text-align: center;
       user-select: none;
       cursor: move;
-      background: var(--te-common-bg-default);
+      background: var(--te-materials-component-list-item-bg-color);
 
       &:hover {
-        background: var(--te-common-bg-container);
+        background: var(--te-materials-component-list-item-bg-color-hover);
         border-radius: 4px;
       }
 
@@ -164,7 +164,7 @@ export default {
         svg {
           font-size: 40px;
           vertical-align: middle;
-          color: var(--te-common-icon-secondary);
+          color: var(--te-materials-component-list-item-icon-color);
           overflow: hidden;
         }
       }

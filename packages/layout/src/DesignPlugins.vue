@@ -200,8 +200,8 @@ export default {
 #tiny-engine-left-panel {
   width: var(--base-left-panel-width);
   height: calc(100vh - var(--base-top-panel-height));
-  border-right: 1px solid var(--ti-lowcode-plugin-panel-border-right-color);
-  background: var(--te-common-bg-default);
+  border-right: 1px solid var(--te-layout-common-border-color);
+  background: var(--te-layout-common-bg-color);
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -239,10 +239,10 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background: var(--te-common-bg-default);
+  background: var(--te-layout-common-bg-color);
   box-sizing: border-box;
   z-index: 1000;
-  border-right: 1px solid var(--ti-lowcode-plugin-panel-border-right-color);
+  border-right: 1px solid var(--te-layout-common-border-color);
 
   &.completed {
     display: block;
@@ -276,7 +276,7 @@ export default {
       &:hover,
       &.active {
         .item-icon {
-          background: var(--ti-lowcode-left-panel-active-bg);
+          background: var(--te-layout-common-bg-color-hover);
           border-radius: 4px;
         }
       }
@@ -285,12 +285,12 @@ export default {
         position: relative;
 
         .item-icon {
-          color: var(--te-common-text-checked);
+          color: var(--te-layout-common-text-color-secondary-checked);
         }
       }
 
       &.prev {
-        border-bottom-color: var(--ti-lowcode-left-panel-active-border-color);
+        border-bottom-color: var(--te-layout-common-border-color);
       }
     }
 
@@ -298,7 +298,7 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
-      color: var(--ti-lowcode-design-plugin-color);
+      color: var(--te-layout-common-text-color);
       font-size: 22px;
       width: 26px;
       height: 26px;

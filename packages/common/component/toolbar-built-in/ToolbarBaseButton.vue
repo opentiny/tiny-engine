@@ -33,7 +33,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .toolbar-button {
-  background-color: var(--te-common-bg-prompt) !important;
+  background-color: var(--te-component-toolbar-base-button-bg-color) !important;
   border: none !important;
   min-width: 70px;
   height: 26px;
@@ -50,14 +50,14 @@ export default {
     position: absolute;
     width: 6px;
     height: 6px;
-    background: var(--ti-lowcode-toolbar-dot-color);
+    background: var(--te-component-common-error-color);
     border-radius: 50%;
     top: -3px;
     right: 2px;
     z-index: 100;
   }
   .svg-icon.svg-icon.svg-icon {
-    color: var(--te-common-icon-primary);
+    color: var(--te-component-common-icon-color-primary);
   }
 }
 </style>

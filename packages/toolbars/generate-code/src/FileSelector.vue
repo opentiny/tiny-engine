@@ -121,27 +121,27 @@ export default {
 <style lang="less" scoped>
 .dialog-box {
   :deep(.tiny-dialog-box__content) {
-    background-color: var(--te-common-bg-default);
+    background-color: var(--te-toolbars-generate-code-bg-color);
 
     .tiny-dialog-box__header {
-      background-color: var(--te-common-bg-default);
+      background-color: var(--te-toolbars-generate-code-bg-color);
 
       .tiny-dialog-box__title {
-        color: var(--te-common-text-secondary);
+        color: var(--te-toolbars-generate-code-text-color);
       }
 
       .tiny-dialog-box__headerbtn .tiny-dialog-box__close {
-        fill: var(--te-common-text-secondary) !important;
+        fill: var(--te-toolbars-generate-code-icon-color) !important;
 
         &:hover {
-          fill: var(--te-common-text-primary) !important;
+          fill: var(--te-toolbars-generate-code-icon-color-primary) !important;
         }
       }
     }
 
     .tiny-dialog-box__footer {
       .tiny-button--primary {
-        background-color: var(--te-common-bg-primary);
+        background-color: var(--te-toolbars-generate-code-bg-color-primary);
         border: none;
       }
     }
@@ -160,18 +160,18 @@ export default {
     :deep(.tiny-grid) {
       .tiny-grid__header-wrapper {
         .tiny-grid-header__column {
-          color: var(--te-common-text-secondary);
+          color: var(--te-toolbars-generate-code-text-color);
           height: 30px;
 
           .tiny-grid-resizable.is__line:before {
-            background-color: var(--te-common-bg-default);
+            background-color: var(--te-toolbars-generate-code-bg-color);
           }
         }
 
         .tiny-grid-checkbox__icon,
         .icon-checked-sur {
           svg {
-            color: var(--te-common-border-checked) !important;
+            color: var(--te-toolbars-generate-code-border-color-checked) !important;
           }
         }
       }
@@ -190,14 +190,14 @@ export default {
         }
 
         .tiny-grid-body__row {
-          background-color: var(--te-common-bg-default);
+          background-color: var(--te-toolbars-generate-code-bg-color);
         }
 
         .tiny-grid-body__row {
           &.row__selected {
             .tiny-grid-checkbox__icon {
               svg {
-                color: var(--te-common-border-checked);
+                color: var(--te-toolbars-generate-code-border-color-checked);
                 fill: currentColor;
                 width: 100%;
                 height: 100%;
@@ -208,7 +208,7 @@ export default {
       }
 
       .tiny-grid__empty-text {
-        color: var(--te-common-text-secondary);
+        color: var(--te-toolbars-generate-code-text-color);
       }
     }
   }

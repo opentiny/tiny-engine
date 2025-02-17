@@ -58,19 +58,19 @@ export default {
   font-size: var(--te-base-font-size-base);
 
   div {
-    color: var(--te-common-text-primary);
+    color: var(--te-datasource-common-text-color-primary);
   }
 
   .icon-del {
     cursor: pointer;
-    color: var(--ti-lowcode-datasource-toolbar-icon-color);
+    color: var(--te-datasource-toolbar-icon-color);
   }
 }
 
 .monaco-editor {
   min-height: 120px;
   height: 100%;
-  border: 1px solid var(--te-common-border-divider);
+  border: 1px solid var(--te-datasource-common-border-color-divider);
   border-radius: 4px;
 }
 </style>

@@ -33,12 +33,12 @@ export default {
 <style scoped lang="less">
 .tip {
   display: flex;
-  border: 1px solid var(--te-common-border-default);
-  border-left: 2px solid var(--te-common-color-success);
+  border: 1px solid var(--te-component-common-border-color);
+  border-left: 2px solid var(--te-component-empty-tip-border-color);
   border-radius: 0 4px 4px 0;
   align-items: center;
   padding: 8px 12px;
-  background-color: var(--te-common-bg-container);
+  background-color: var(--te-component-empty-tip-bg-color);
 
   .left {
     width: 20px;
@@ -52,9 +52,9 @@ export default {
   }
 }
 .waring {
-  border-left: 2px solid var(--te-common-color-warning);
+  border-left: 2px solid var(--te-component-common-warning-color);
 }
 .error {
-  border-left: 2px solid var(--te-common-color-error);
+  border-left: 2px solid var(--te-component-common-error-color);
 }
 </style>

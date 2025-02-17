@@ -114,24 +114,22 @@ export default {
 <style lang="less" scoped>
 .block-detail-panel {
   width: 228px;
-  background-color: var(--te-common-bg-container);
+  background-color: var(--te-materials-block-detail-bg-color);
   border-radius: 3px;
 
   .block-detail-title {
     font-size: 14px;
-    color: var(--ti-lowcode-toolbar-icon-color);
+    color: var(--te-materials-block-detail-text-color);
     padding: 10px 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--te-common-border-default);
+    border-bottom: 1px solid var(--te-materials-block-detail-border-color);
 
     .block-detail-icon {
       width: 20px;
       height: 20px;
-      color: var(--ti-lowcode-toolbar-title-color);
-      background: var(--te-common-bg-container);
-      border: 1px solid var(--te-common-border-default);
+      color: var(--te-materials-block-detail-icon-color);
       font-size: 12px;
       cursor: pointer;
       display: inline-flex;
@@ -143,15 +141,15 @@ export default {
       right: 10px;
 
       &:hover {
-        color: var(--ti-lowcode-toolbar-icon-color);
-        background: var(--ti-lowcode-icon-hover-bg);
+        color: var(--te-materials-block-detail-icon-color-hover);
+        background: var(--te-materials-block-detail-icon-bg-color-hover);
       }
     }
   }
 
   .block-detail-content {
     &:not(:last-child) {
-      border-bottom: 1px solid var(--te-common-border-default);
+      border-bottom: 1px solid var(--te-materials-block-detail-border-color);
     }
 
     .block-detail-history {
@@ -160,20 +158,20 @@ export default {
 
     .block-detail-item {
       padding: 8px 12px;
-      color: var(--te-common-text-primary);
+      color: var(--te-materials-block-detail-text-color);
       font-size: 12px;
       span {
         margin-right: 4px;
       }
 
       .block-item-history {
-        color: var(--ti-lowcode-toolbar-title-color);
+        color: var(--te-materials-block-detail-text-color);
         margin-top: 4px;
       }
     }
 
     .block-detail-show-more {
-      color: var(--ti-lowcode-node-current-bg);
+      color: var(--te-materials-block-detail-text-color-emphasize);
       cursor: pointer;
     }
 

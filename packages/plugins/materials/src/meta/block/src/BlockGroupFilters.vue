@@ -98,7 +98,7 @@ export default {
 
 <style lang="less" scoped>
 .block-add-filters {
-  color: var(--ti-lowcode-materials-block-filter-text-color);
+  color: var(--te-materials-block-filter-text-color);
   & > div {
     min-height: 24px;
   }
@@ -117,13 +117,13 @@ export default {
       align-items: center;
       justify-content: flex-start;
       width: 76px;
-      color: var(--te-common-text-secondary);
+      color: var(--te-materials-block-filter-text-color);
       border-radius: 2px;
     }
 
     .block-filters-item-value {
       flex: 1;
-      color: var(--te-common-text-primary);
+      color: var(--te-materials-block-filter-value-text-color);
       .block-filters-value-item {
         cursor: pointer;
         display: inline-block;
@@ -139,7 +139,7 @@ export default {
       :deep(.tiny-select.tiny-select .tiny-select__tags) {
         max-width: calc(100% - 24px) !important;
         .tiny-tag {
-          background-color: var(--te-common-bg-disabled);
+          background-color: var(--te-materials-block-filter-tag-bg-color);
         }
       }
     }

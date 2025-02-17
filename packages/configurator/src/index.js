@@ -31,6 +31,7 @@ import TabsGroupConfigurator from './tabs-group-configurator/TabsGroupConfigurat
 import VariableConfigurator from './variable-configurator/VariableConfigurator.vue'
 
 import { I18nInput, MetaCodeEditor } from '@opentiny/tiny-engine-common'
+import './styles/vars.less'
 
 export {
   ArrayItemConfigurator,

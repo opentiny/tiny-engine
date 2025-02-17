@@ -3,9 +3,13 @@
     <tiny-form label-position="top">
       <tiny-form-item prop="name" label="数据源类型">
         <tiny-radio-group v-model="dataSourceType">
-          <div v-for="{ name, value } in RADIO_GROUP" :key="value">
-            <tiny-radio :text="name" :label="value" :disabled="editable" />
-          </div>
+          <tiny-radio
+            v-for="item in RADIO_GROUP"
+            :key="item.value"
+            :text="item.name"
+            :label="item.value"
+            :disabled="editable"
+          />
         </tiny-radio-group>
       </tiny-form-item>
     </tiny-form>
@@ -49,6 +53,13 @@ export default {
     const dataSourceType = ref(props.modelValue)
 
     watch(
+      () => props.modelValue,
+      (newVal) => {
+        dataSourceType.value = newVal
+      }
+    )
+
+    watch(
       () => dataSourceType.value,
       (newVal) => {
         emit('update:modelValue', newVal)
@@ -65,7 +76,7 @@ export default {
 
 <style lang="less" scoped>
 .right-item {
-  color: var(--ti-lowcode-datasource-toolbar-icon-color);
+  color: var(--te-datasource-toolbar-icon-color);
   display: flex;
   flex-direction: column;
   .title {
@@ -76,12 +87,12 @@ export default {
     line-height: 22px;
     font-weight: normal;
     margin-bottom: 10px;
-    color: var(--ti-lowcode-datasource-label-color);
+    color: var(--te-datasource-label-text-color);
   }
 
   .item-type {
     font-size: 12px;
-    color: var(--ti-lowcode-datasource-input-icon-color);
+    color: var(--te-datasource-input-icon-color);
     display: inline-flex;
     align-items: center;
     cursor: pointer;
@@ -95,14 +106,14 @@ export default {
     }
 
     &.is-checked {
-      color: var(--ti-lowcode-datasource-toolbar-breadcrumb-color);
+      color: var(--te-datasource-toolbar-breadcrumb-text-color);
       .svg-icon {
-        color: var(--ti-lowcode-datasource-common-border-primary-color);
+        color: var(--te-datasource-common-border-color-primary);
       }
     }
     .svg-icon {
       font-size: 24px;
-      color: var(--ti-lowcode-datasource-input-icon-color);
+      color: var(--te-datasource-input-icon-color);
       margin-right: 8px;
     }
   }

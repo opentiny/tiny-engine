@@ -73,7 +73,7 @@ export default {
 .plugin-panel {
   width: 100%;
   height: 100%;
-  background: var(--te-common-bg-default);
+  background: var(--te-component-common-bg-color);
   display: flex;
   flex-direction: column;
   position: relative;
@@ -83,12 +83,11 @@ export default {
     justify-content: space-between;
     align-items: center;
     font-size: 12px;
-    font-weight: var(--ti-lowcode-plugin-panel-title-font-weight);
     font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
       'Helvetica Neue', sans-serif;
     padding: 12px;
-    color: var(--ti-lowcode-plugin-panel-title-color);
-    font-weight: var(--ti-lowcode-plugin-panel-title-font-weight);
+    color: var(--te-component-common-text-color-primary);
+    font-weight: var(--te-base-font-weight-7);
     .plugin-panel-title {
       display: flex;
       align-items: center;

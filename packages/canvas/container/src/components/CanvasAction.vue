@@ -523,7 +523,7 @@ export default {
   position: absolute;
   box-sizing: border-box;
   pointer-events: none;
-  border: 1px solid var(--ti-lowcode-canvas-rect-border-color);
+  border: 1px solid var(--te-canvas-container-border-color-checked);
   z-index: 2;
   &.absolute {
     pointer-events: all;
@@ -548,14 +548,14 @@ export default {
     left: v-bind("inactiveHoverState.left + 'px'");
     height: v-bind("inactiveHoverState.height + 'px'");
     width: v-bind("inactiveHoverState.width + 'px'");
-    border-color: var(--te-common-border-hover);
+    border-color: var(--te-canvas-container-border-color-hover);
 
     .corner-mark-left {
       height: 14px;
       top: -14px;
       padding-left: 0;
       font-size: 12px;
-      color: var(--te-common-text-weaken);
+      color: var(--te-canvas-container-text-color-weaken);
     }
   }
   &.line {
@@ -569,41 +569,41 @@ export default {
     &.top {
       width: 100%;
       height: 5px;
-      background: var(--ti-lowcode-icon-bind-color);
+      background: var(--te-canvas-container-text-color-checked);
       position: absolute;
       top: -3px;
     }
     &.left {
       width: 5px;
       height: 100%;
-      background: var(--ti-lowcode-icon-bind-color);
+      background: var(--te-canvas-container-text-color-checked);
       position: absolute;
       left: -3px;
     }
     &.bottom {
       width: 100%;
       height: 5px;
-      background: var(--ti-lowcode-icon-bind-color);
+      background: var(--te-canvas-container-text-color-checked);
       position: absolute;
       bottom: -3px;
     }
     &.right {
       width: 5px;
       height: 100%;
-      background: var(--ti-lowcode-icon-bind-color);
+      background: var(--te-canvas-container-text-color-checked);
       position: absolute;
       right: -3px;
     }
     &.in {
       width: 100%;
       height: 100%;
-      background: var(--ti-lowcode-canvas-hover-line-in-bg-color);
+      background: var(--te-canvas-container-hover-line-in-bg-color);
     }
     &.forbidden:not(.in) {
-      background: var(--ti-lowcode-canvas-hover-line-forbid-bg-color);
+      background: var(--te-canvas-container-hover-line-forbid-bg-color);
     }
     &.forbidden.in {
-      background: var(--ti-lowcode-canvas-hover-line-in-forbid-bg-color);
+      background: var(--te-canvas-container-hover-line-in-forbid-bg-color);
     }
   }
 
@@ -615,8 +615,8 @@ export default {
     & > div {
       pointer-events: all;
       width: 40px;
-      border: 1px solid var(--ti-lowcode-canvas-choose-slot-border-color);
-      color: var(--ti-lowcode-canvas-choose-slot-color);
+      border: 1px solid var(--te-canvas-container-border-color-checked);
+      color: var(--te-canvas-container-choose-slot-text-color);
       overflow: hidden;
       font-size: 10px;
       margin: 2px;
@@ -635,7 +635,7 @@ export default {
     position: absolute;
     top: -24px;
     height: 24px;
-    color: var(--ti-lowcode-canvas-corner-mark-left-color);
+    color: var(--te-canvas-container-corner-mark-left-text-color);
     padding: 0 8px;
 
     .icon-setting {
@@ -648,10 +648,9 @@ export default {
     position: absolute;
     font-size: 12px;
     right: -1px;
-    color: var(--ti-lowcode-canvas-corner-mark-bottom-right-color);
+    color: var(--te-canvas-container-text-color-white);
     bottom: -20px;
-    background: var(--ti-lowcode-canvas-corner-mark-bottom-right-bg-color);
-    border: 1px solid var(--ti-lowcode-canvas-corner-mark-bottom-right-border-color);
+    background: var(--te-canvas-container-bg-color-checked);
     padding: 0 2px;
     overflow: hidden;
     white-space: nowrap;
@@ -664,8 +663,8 @@ export default {
     position: absolute;
     height: 24px;
     padding: 0 4px;
-    color: var(--ti-lowcode-canvas-corner-mark-right-color);
-    background: var(--ti-lowcode-canvas-corner-mark-right-bg-color);
+    color: var(--te-canvas-container-text-color-white);
+    background: var(--te-canvas-container-bg-color-checked);
     pointer-events: all;
     cursor: pointer;
 
@@ -686,8 +685,8 @@ export default {
     .corner-mark-left {
       white-space: nowrap;
       pointer-events: all;
-      color: var(--ti-lowcode-canvas-select-corner-mark-left-color);
-      background: var(--ti-lowcode-canvas-select-corner-mark-left-bg-color);
+      color: var(--te-canvas-container-text-color-white);
+      background: var(--te-canvas-container-bg-color-checked);
       svg {
         cursor: pointer;
       }
@@ -695,7 +694,10 @@ export default {
   }
 }
 .short-cut-set.short-cut-set.tiny-popper.tiny-popover {
-  padding: 10px;
+  .tiny-popover__title {
+    color: var(--te-canvas-container-text-color-primary);
+    font-size: 14px;
+  }
 }
 
 .drag-resize {

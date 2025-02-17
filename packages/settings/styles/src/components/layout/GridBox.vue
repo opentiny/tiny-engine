@@ -511,10 +511,10 @@ export default {
       align-self: center;
       height: 24px;
       padding: 0px 4px;
-      border: 1px solid var(--ti-lowcode-tabs-border-color);
+      border: 1px solid var(--te-styles-common-border-color);
       border-radius: 2px;
-      color: var(--ti-lowcode-grid-edit-color);
-      background: var(--ti-lowcode-grid-edit-bg);
+      color: var(--te-styles-common-text-color-primary);
+      background: var(--te-styles-common-bg-color);
       outline: 0px;
       cursor: pointer;
       user-select: none;
@@ -545,7 +545,7 @@ export default {
       line-height: 24px;
       padding-left: 3px;
       width: 54px;
-      color: var(--te-common-text-secondary);
+      color: var(--te-styles-common-text-color-secondary);
     }
     .radio-wrap {
       display: grid;
@@ -553,8 +553,8 @@ export default {
     }
   }
   .is-setting {
-    color: var(--ti-lowcode-style-setting-label-color);
-    background-color: var(--te-common-bg-text-emphasize);
+    color: var(--te-styles-common-setting-text-color);
+    background-color: var(--te-styles-common-setting-bg-color);
   }
   :deep(.reference-wrapper) {
     width: 100%;

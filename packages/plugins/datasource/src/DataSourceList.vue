@@ -132,21 +132,21 @@ export default {
   .datasource-list {
     flex-grow: 1;
     padding-top: 12px;
-    border-top: 1px solid var(--ti-lowcode-datasource-border-color);
+    border-top: 1px solid var(--te-datasource-common-border-color);
   }
   .datasource-list-item {
-    box-shadow: var(--ti-lowcode-datasource-tabs-border-color) 0, -1px;
+    box-shadow: var(--te-datasource-tabs-border-color) 0, -1px;
     height: 24px;
     line-height: 24px;
     align-items: center;
     display: grid;
     padding: 0 12px;
     position: relative;
-    color: var(--ti-lowcode-datasource-common-text-main-color);
+    color: var(--te-datasource-list-main-text-color);
     cursor: pointer;
     &:hover,
     &.active {
-      background: var(--ti-lowcode-datasource-list-hover-color);
+      background: var(--te-datasource-list-text-color-hover);
       .item-handler {
         display: inline-block;
       }
@@ -157,13 +157,13 @@ export default {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      color: var(--te-common-text-primary);
+      color: var(--te-datasource-list-item-text-color);
       .item-name {
         display: flex;
         align-items: center;
       }
       .plugin-icon-data {
-        color: var(--te-common-icon-secondary);
+        color: var(--te-datasource-list-item-icon-color);
         margin-right: 8px;
       }
     }

@@ -114,19 +114,19 @@ export default {
   .content-right-top {
     .new-action-tip {
       margin: 8px 0;
-      color: var(--ti-lowcode-bind-event-dialog-new-action-tip-color);
+      color: var(--te-bind-event-dialog-tip-text-color);
     }
   }
   .content-right-bottom {
     .content-right-monaco {
-      border: 1px solid var(--ti-lowcode-bind-event-dialog-content-right-monaco-border-color);
+      border: 1px solid var(--te-bind-event-dialog-content-right-monaco-border-color);
       overflow: hidden;
       position: relative;
 
       .monaco-editor {
         width: 100%;
         height: 216px;
-        color: var(--te-common-text-secondary);
+        color: var(--te-bind-event-dialog-content-right-monaco-text-color);
       }
       .mark {
         width: 100%;
@@ -139,7 +139,7 @@ export default {
 
     .params-tip {
       margin: 8px 0;
-      color: var(--te-common-color-error);
+      color: var(--te-bind-event-dialog-danger-tip-text-color);
     }
   }
   .content-right-top .content-right-title,
@@ -148,17 +148,17 @@ export default {
     .set-params-tip {
       margin-top: 6px;
       font-weight: 400;
-      color: var(--te-common-text-weaken);
+      color: var(--te-bind-event-dialog-tip-text-color);
     }
   }
 
   .tip-error {
     .content-right-monaco {
-      border: 1px solid var(--te-common-color-error);
+      border: 1px solid var(--te-bind-event-dialog-danger-border-color);
     }
     .params-tip,
     .new-action-tip {
-      color: var(--te-common-color-error);
+      color: var(--te-bind-event-dialog-danger-tip-text-color);
     }
   }
 }

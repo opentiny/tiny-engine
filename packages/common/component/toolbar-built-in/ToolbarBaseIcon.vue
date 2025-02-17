@@ -44,7 +44,7 @@ export default {
 .dots {
   width: 6px;
   height: 6px;
-  background: var(--ti-lowcode-toolbar-dot-color);
+  background: var(--te-component-common-error-color);
   border-radius: 50%;
   display: inline-block;
   position: absolute;

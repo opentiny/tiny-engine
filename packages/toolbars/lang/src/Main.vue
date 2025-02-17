@@ -61,11 +61,10 @@ export default {
   }
 }
 </script>
-
 <style scoped lang="less">
 .change-lang-box {
   svg {
-    color: var(--ti-lowcode-toolbar-title-color);
+    color: var(--te-toolbars-lang-text-color);
     width: 18px;
     height: 18px;
     &:hover {
@@ -74,6 +73,6 @@ export default {
   }
 }
 .icon {
-  color: var(--ti-lowcode-toolbar-title-color);
+  color: var(--te-toolbars-lang-icon-color);
 }
 </style>

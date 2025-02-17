@@ -40,12 +40,12 @@ export default {
   height: var(--base-bottom-panel-height, 30px);
   bottom: 0;
   position: absolute;
-  background-color: var(--ti-lowcode-breadcrumb-bg);
+  background-color: var(--te-canvas-breadcrumb-bg-color);
   z-index: 90;
-  border-top: 1px solid var(--ti-lowcode-canvas-footer-border-top-color);
+  border-top: 1px solid var(--te-canvas-breadcrumb-border-color);
   .content {
     .tip {
-      color: var(--ti-lowcode-breadcrumb-color);
+      color: var(--te-canvas-breadcrumb-text-color);
       line-height: 30px;
       height: 30px;
       padding-left: 10px;
@@ -53,25 +53,30 @@ export default {
     :deep(.tiny-steps-advanced) {
       li {
         width: unset !important;
-        background: var(--ti-lowcode-breadcrumb-bg);
+        background: var(--te-canvas-breadcrumb-bg-color);
         .label {
           padding: 0 3px 0 16px;
           border-top: 0;
-          color: var(--ti-lowcode-breadcrumb-color);
+          color: var(--te-canvas-breadcrumb-text-color);
           transition: 0.3s;
+          border: none;
           &:hover {
             cursor: pointer;
+            background-color: var(--te-canvas-breadcrumb-bg-color-hover);
             &::after {
-              border-left-color: var(--ti-steps-advanced-li-hover-bg-color);
+              border-left-color: var(--te-canvas-breadcrumb-arrow-border-color-hover);
             }
+          }
+          &::after {
+            border-left-color: var(--te-canvas-breadcrumb-bg-color);
           }
         }
         &:last-child .label {
-          border-right: 0px solid var(--ti-lowcode-breadcrumb-color);
+          border-right: 0px solid var(--te-canvas-breadcrumb-border-color);
           border-radius: 0;
         }
         &:first-child .label {
-          border-right: 0px solid var(--ti-lowcode-breadcrumb-color);
+          border-right: 0px solid var(--te-canvas-breadcrumb-border-color);
           border-radius: 0;
           border-left: unset;
         }

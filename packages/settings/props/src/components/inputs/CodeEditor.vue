@@ -148,7 +148,7 @@ export default {
     align-items: center;
 
     :deep(.tiny-button--default) {
-      background: var(--ti-lowcode-toolbar-bg);
+      background: var(--te-props-common-button-bg-color);
     }
   }
 }

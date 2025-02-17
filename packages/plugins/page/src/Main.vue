@@ -1,5 +1,5 @@
 <template>
-  <plugin-panel :title="title" @close="pluginPanelClosed" :docsUrl="docsUrl" :isShowDocsIcon="true">
+  <plugin-panel :title="title" @close="pluginPanelClosed" :docsUrl="docsUrl" :isShowDocsIcon="true" class="page-manage">
     <template #header>
       <svg-button
         class="add-folder-icon"

@@ -431,7 +431,7 @@ export default {
     display: flex;
     align-items: center;
     svg {
-      color: var(--te-common-icon-secondary);
+      color: var(--te-page-manage-icon-color);
       outline: none;
     }
     .auto-hidden {
@@ -462,7 +462,7 @@ export default {
       display: flex;
       align-items: center;
       &:hover {
-        background-color: var(--te-common-bg-container);
+        background-color: var(--te-page-manage-operation-list-item-bg-color-hover);
       }
     }
     .divider {
@@ -474,11 +474,11 @@ export default {
         display: block;
         width: 100%;
         height: 1px;
-        background-color: var(--te-common-border-divider);
+        background-color: var(--te-page-manage-operation-list-item-border-color-divider);
       }
     }
     .danger {
-      color: var(--te-common-color-error);
+      color: var(--te-page-manage-operation-list-text-color-error);
     }
   }
 }

@@ -282,24 +282,24 @@ export default {
       }
     }
     .event-bind {
-      color: var(--ti-lowcode-events-event-bind-color);
+      color: var(--te-events-event-bind-text-color);
     }
     .bind-action-item {
       display: flex;
       justify-content: space-between;
       padding: 8px 12px;
       cursor: pointer;
-      color: var(--ti-lowcode-events-bind-action-item-color);
-      border-bottom: 1px solid var(--ti-lowcode-events-bind-action-item-border-color);
+      color: var(--te-events-bind-action-item-text-color);
+      border-bottom: 1px solid var(--te-events-bind-action-item-border-color);
       &:first-child {
-        border-top: 1px solid var(--ti-lowcode-events-bind-action-item-border-color);
+        border-top: 1px solid var(--te-events-bind-action-item-border-color);
       }
       &:hover {
-        background: var(--ti-lowcode-events-bind-action-item-hover-bg-color);
+        background: var(--te-events-bind-action-item-bg-color-hover);
       }
 
       .linked {
-        color: var(--ti-lowcode-events-bind-action-item-linked-color);
+        color: var(--te-events-bind-action-item-text-color-link);
       }
     }
   }
@@ -329,8 +329,8 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: var(--ti-lowcode-events-empty-action-bg-color);
-    color: var(--ti-lowcode-events-empty-action-color);
+    background-color: var(--te-events-empty-action-bg-color);
+    color: var(--te-events-empty-action-text-color);
     padding: 24px 18px;
     margin-top: var(--te-common-vertical-item-spacing-normal);
     .empty-action-icon {
@@ -349,12 +349,12 @@ export default {
   }
 }
 .bind-event-list {
-  color: var(--ti-lowcode-events-bind-event-list-color);
+  color: var(--te-events-bind-event-list-text-color);
 }
 .bind-event-list-item-notallow {
   cursor: not-allowed;
   pointer-events: none;
-  color: var(--ti-lowcode-events-bind-event-list-item-disabled-color);
+  color: var(--te-events-bind-event-list-item-text-color-disabled);
 }
 .bind-event-list-item {
   padding: 0 16px;
@@ -362,7 +362,7 @@ export default {
   line-height: 24px;
   &:hover {
     cursor: pointer;
-    background: var(--lowcode-events-bind-event-list-item-hover-bg-color);
+    background: var(--te-events-bind-event-list-item-bg-color-hover);
   }
 }
 </style>

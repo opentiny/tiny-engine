@@ -332,7 +332,7 @@ onUnmounted(() => {
   .logo-wrap {
     margin: 0 0 0 10px;
     cursor: pointer;
-    color: var(--ti-lowcode-toolbar-title-color);
+    color: var(--te-toolbars-logo-text-color-primary);
     &:active,
     &:hover {
       .menu-icon-wrapper .icon-menu {
@@ -346,7 +346,7 @@ onUnmounted(() => {
       display: flex;
       justify-content: center;
       align-items: center;
-      color: var(--ti-lowcode-toolbar-title-color);
+      color: var(--te-toolbars-logo-text-color-primary);
       font-weight: normal;
       .icon-menu {
         font-size: 20px;
@@ -358,19 +358,19 @@ onUnmounted(() => {
     position: absolute;
     top: var(--base-top-panel-height);
     left: 10px;
-    color: var(--ti-lowcode-toolbar-icon-color);
+    color: var(--te-toolbars-logo-text-color-secondary);
     ul {
       min-width: 130px;
       border: 1px solid transparent;
       border-radius: 6px;
-      background-color: var(--ti-lowcode-main-menu-bg);
+      background-color: var(--te-toolbars-logo-bg-color);
       box-shadow: 0 1px 15px 0 rgb(0 0 0 / 20%);
       padding: 8px 0;
       display: flex;
       flex-direction: column;
       li {
         font-size: 14px;
-        color: var(--ti-lowcode-toolbar-title-color);
+        color: var(--te-toolbars-logo-text-color-primary);
         cursor: pointer;
         height: 32px;
         width: 100%;
@@ -382,7 +382,7 @@ onUnmounted(() => {
           font-size: 16px;
         }
         &:hover {
-          background: var(--ti-lowcode-toolbar-hover-color);
+          background: var(--te-toolbars-logo-bg-color-hover);
         }
 
         &:first-child {
@@ -403,7 +403,7 @@ onUnmounted(() => {
 .icon-help {
   cursor: pointer;
   margin-left: 8px;
-  color: var(--ti-lowcode-toolbar-publish-icon-color);
+  fill: var(--te-toolbars-logo-icon-color);
 }
 
 .app-switching-modal {
@@ -428,7 +428,7 @@ onUnmounted(() => {
       }
 
       &:hover {
-        background: var(--te-common-bg-container);
+        background: var(--te-toolbars-logo-bg-color-hover);
       }
     }
   }

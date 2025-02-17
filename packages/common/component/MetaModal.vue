@@ -74,10 +74,10 @@ export default {
 
   .modal-content {
     padding: 8px;
-    color: var(--te-common-text-secondary);
-    border: 1px solid var(--ti-lowcode-tabs-border-color);
+    color: var(--te-component-common-text-color-secondary);
+    border: 1px solid var(--te-component-common-border-color);
     border-radius: 4px;
-    background-color: var(--ti-lowcode-toolbar-bg);
+    background-color: var(--te-component-meta-modal-bg-color);
     overflow: auto;
     max-height: 100%;
   }

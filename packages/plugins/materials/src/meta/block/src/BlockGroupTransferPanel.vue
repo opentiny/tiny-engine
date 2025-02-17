@@ -44,17 +44,17 @@ export default {
 <style lang="less" scoped>
 .block-add-transfer-panel {
   height: 100%;
-  border: 1px solid var(--te-common-border-default);
+  border: 1px solid var(--te-materials-block-transfer-border-color);
   border-radius: 6px;
   overflow: hidden;
-  background-color: var(--ti-lowcode-materials-block-transfer-bg-color);
+  background-color: var(--te-materials-block-transfer-bg-color);
 
   .panel-header {
-    color: var(--ti-lowcode-materials-block-transfer-header-text-color);
+    color: var(--te-materials-block-transfer-header-text-color);
     padding: 10px;
     display: flex;
     justify-content: space-between;
-    background-color: var(--ti-lowcode-materials-block-transfer-header-bg-color);
+    background-color: var(--te-materials-block-transfer-header-bg-color);
   }
 
   .panel-body {

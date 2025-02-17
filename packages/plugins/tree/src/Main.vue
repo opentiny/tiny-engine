@@ -259,7 +259,7 @@ export default {
     gap: 4px;
   }
   .node-isblock {
-    color: var(--te-base-purple-50);
+    color: var(--te-tree-block-text-color);
   }
 }
 </style>

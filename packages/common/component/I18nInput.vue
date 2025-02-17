@@ -112,16 +112,6 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  .tiny-svg {
-    outline: none;
-    &:hover {
-      cursor: pointer;
-      color: var(--ti-lowcode-toolbar-icon-color);
-    }
-    &.isBind {
-      color: var(--ti-lowcode-icon-bind-color);
-    }
-  }
 }
 .popover-content {
   position: relative;
@@ -139,7 +129,15 @@ export default {
   }
 }
 .icon-language {
-  color: var(--te-common-icon-secondary);
+  color: var(--te-component-common-icon-color);
+  outline: none;
+  &:hover {
+    cursor: pointer;
+    color: var(--te-component-common-icon-color-hover);
+  }
+  &.isBind {
+    color: var(--te-component-common-icon-color-primary);
+  }
 }
 </style>
 

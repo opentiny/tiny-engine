@@ -90,25 +90,6 @@ export default {
     padding: 0 12px;
     width: 66px;
     margin-right: 5px;
-    border: 1px solid var(--te-common-border-default);
-  }
-  .plus-icon {
-    width: 16px;
-    height: 16px;
-  }
-  .editorWarp {
-    display: inline-block;
-  }
-  .icon-plus {
-    margin-right: 6px;
-    stroke: var(--te-common-text-weaken);
-  }
-}
-.opt-button {
-  color: var(--te-common-icon-secondary);
-  width: auto;
-  &:last-child {
-    margin-right: var(--te-base-space-3x);
   }
 }
 </style>

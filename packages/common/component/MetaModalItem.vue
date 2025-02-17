@@ -114,8 +114,8 @@ export default {
     padding: 0 16px;
     margin: auto;
     border-radius: 4px;
-    border: 1px solid var(--ti-lowcode-tabs-border-color);
-    background-color: var(--ti-lowcode-toolbar-bg);
+    border: 1px solid var(--te-component-common-border-color);
+    background-color: var(--te-component-meta-modal-bg-color);
     box-shadow: rgb(0 0 0 / 30%) 0px 1px 15px 0px;
 
     .property-item-header {
@@ -123,7 +123,7 @@ export default {
       justify-content: space-between;
       align-items: center;
       padding: 10px 0;
-      color: var(--te-common-text-secondary);
+      color: var(--te-component-common-text-color-secondary);
 
       .header-title {
         font-size: 14px;
@@ -132,7 +132,7 @@ export default {
       .icon-wrap {
         width: 20px;
         height: 20px;
-        color: var(--ti-lowcode-text-color);
+        color: var(--te-component-common-icon-color);
         font-size: 16px;
         border-radius: 2px;
         cursor: pointer;
@@ -141,8 +141,8 @@ export default {
         align-items: center;
         transition: 0.3s;
         &:hover {
-          color: var(--ti-lowcode-toolbar-icon-color);
-          background: var(--ti-lowcode-icon-hover-bg);
+          color: var(--te-component-common-icon-color-hover);
+          background: var(--te-component-common-bg-color-hover);
         }
       }
     }

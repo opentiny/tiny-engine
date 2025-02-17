@@ -257,30 +257,30 @@ export default {
       font-size: 12px;
       flex-shrink: 0;
       margin-right: 10px;
-      color: var(--te-common-text-secondary);
+      color: #595959;
     }
   }
 
   h5 {
     font-size: 13px;
-    color: var(--te-common-text-primary);
+    color: #191919;
     margin: 20px 0;
   }
   .array-config-item {
     width: 100%;
     :deep(.list-group) {
       .option-item {
-        border-top: 1px solid var(--te-common-border-default);
+        border-top: 1px solid #dbdbdb;
       }
       .option-item:last-child {
-        border-bottom: 1px solid var(--te-common-border-default);
+        border-bottom: 1px solid #dbdbdb;
       }
       .item-icon {
-        color: var(--ti-lowcode-setting-plugin-icon-color);
+        color: #808080;
         fill: currentColor;
       }
       .item-text {
-        color: var(--te-common-text-primary);
+        color: #191919;
       }
     }
     .operate-tips-item + .operate-tips-item {
@@ -288,7 +288,7 @@ export default {
     }
     .add-item {
       cursor: pointer;
-      color: var(--te-common-text-emphasize);
+      color: #1476ff;
       margin-top: 8px;
       .icon {
         margin-right: 4px;
@@ -310,7 +310,7 @@ export default {
       .item-label {
         width: 38%;
         word-break: break-all;
-        color: var(--te-common-text-secondary);
+        color: #595959;
       }
       .component-wrap {
         flex: 1;
@@ -382,7 +382,7 @@ export default {
         border-color: transparent;
         padding: 6px 10px;
         &:hover {
-          background-color: var(--te-common-bg-primary-checked);
+          background-color: #1476ff;
         }
       }
     }

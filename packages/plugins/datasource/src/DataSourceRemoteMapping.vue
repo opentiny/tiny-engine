@@ -120,13 +120,13 @@ export default {
       margin-bottom: 10px;
       span {
         display: inline-block;
-        color: var(--ti-lowcode-datasource-toolbar-breadcrumb-color);
+        color: var(--te-datasource-toolbar-breadcrumb-text-color);
       }
       .dot {
         width: 5px;
         height: 5px;
         border-radius: 50%;
-        background: var(--ti-lowcode-datasource-success-border-color);
+        background: var(--te-datasource-common-border-color-success);
         margin-right: 8px;
         line-height: 16px;
       }
@@ -138,11 +138,11 @@ export default {
       grid-template-columns: 3fr 3fr 1.5fr;
       column-gap: 10px;
       :deep(.tiny-input .tiny-input__inner) {
-        color: var(--ti-lowcode-datasource-toolbar-breadcrumb-color);
+        color: var(--te-datasource-toolbar-breadcrumb-text-color);
       }
 
       .tip {
-        color: var(--ti-lowcode-datasource-toolbar-breadcrumb-color);
+        color: var(--te-datasource-toolbar-breadcrumb-text-color);
         padding-left: 3px;
         font-size: 12px;
       }

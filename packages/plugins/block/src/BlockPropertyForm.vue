@@ -258,6 +258,7 @@ export default {
 .property-title {
   margin-bottom: 12px;
   cursor: pointer;
+  fill: currentcolor;
 }
 
 .property-form {
@@ -270,7 +271,7 @@ export default {
   display: inline-block;
   margin-top: 6px;
   font-size: 12px;
-  color: var(--te-common-text-checked);
+  color: var(--te-block-property-add-item-text-color);
   cursor: pointer;
 
   .text {
@@ -296,8 +297,8 @@ export default {
   width: 280px;
   height: 100%;
   padding: 20px;
-  background-color: var(--te-common-bg-default);
-  border-right: 1px solid var(--te-common-border-default);
+  background-color: var(--te-block-property-config-item-bg-color);
+  border-right: 1px solid var(--te-block-property-config-item-border-color);
 }
 
 .config-list {

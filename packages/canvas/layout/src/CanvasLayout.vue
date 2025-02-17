@@ -29,7 +29,7 @@ const siteCanvasStyle = computed(() => {
 
 <style lang="less" scoped>
 #canvas-wrap {
-  background: var(--te-common-bg-container);
+  background: var(--te-canvas-layout-bg-color);
   flex: 1 1 0;
   border: none;
   display: flex;
@@ -37,7 +37,7 @@ const siteCanvasStyle = computed(() => {
   position: relative;
 
   .site-canvas {
-    background: var(--ti-lowcode-breadcrumb-hover-bg);
+    background: var(--te-canvas-layout-content-bg-color);
     position: absolute;
     overflow: hidden;
     margin-bottom: 18px;

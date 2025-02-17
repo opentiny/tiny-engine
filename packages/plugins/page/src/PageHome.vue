@@ -58,10 +58,8 @@ export default {
         message: '是否确定要将此页面设置为主页？您所做的任何未保存的更改都将被丢弃。',
         exec: () => {
           const { id } = pageSettingState.currentPageData
-          const ROOT_ID = pageSettingState.ROOT_ID
           const params = { ...pageSettingState.currentPageData }
 
-          params.parentId = ROOT_ID
           params.isHome = true
 
           handleRouteHomeUpdate(id, params)
@@ -98,7 +96,7 @@ export default {
 
 <style lang="less" scoped>
 .home {
-  color: var(--ti-lowcode-page-manage-text-color);
+  color: var(--te-page-manage-text-color);
   line-height: 24px;
   .homeTitle {
     margin: 10px 0 0 5px;
@@ -106,13 +104,13 @@ export default {
   }
 
   .tip {
-    color: var(--te-common-text-weaken);
+    color: var(--te-page-manage-tip-text-color);
     margin-top: 4px;
     margin-bottom: 12px;
     font-size: 11px;
     line-height: 16px;
     span {
-      color: var(--te-common-text-weaken);
+      color: var(--te-page-manage-tip-text-color);
     }
     .home-page {
       display: inline-block;

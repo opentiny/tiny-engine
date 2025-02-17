@@ -142,7 +142,7 @@ export default {
 <style lang="less" scoped>
 .right-item {
   margin-top: 8px;
-  color: var(--ti-lowcode-datasource-toolbar-icon-color);
+  color: var(--te-datasource-toolbar-icon-color);
 
   .title {
     display: flex;
@@ -151,7 +151,7 @@ export default {
     line-height: 22px;
     font-weight: normal;
     margin-bottom: 10px;
-    color: var(--ti-lowcode-datasource-label-color);
+    color: var(--te-datasource-label-text-color);
 
     :deep(.tiny-button--text:hover) {
       text-decoration: underline;
@@ -165,7 +165,7 @@ export default {
   .section {
     margin-top: 12px;
     svg {
-      color: var(--ti-lowcode-datasource-toolbar-icon-color);
+      color: var(--te-datasource-toolbar-icon-color);
     }
 
     .group {
@@ -189,10 +189,10 @@ export default {
         align-items: center;
 
         &.field-row-add {
-          color: var(--ti-lowcode-datasource-json-border-color);
+          color: var(--te-datasource-json-border-color);
 
           svg {
-            color: var(--ti-lowcode-datasource-json-border-color);
+            color: var(--te-datasource-json-border-color);
           }
         }
       }
@@ -212,7 +212,7 @@ export default {
           margin-left: 5px;
 
           .description {
-            color: var(--ti-lowcode-datasource-input-icon-color);
+            color: var(--te-datasource-input-icon-color);
             margin-left: 5px;
           }
         }

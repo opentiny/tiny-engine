@@ -69,10 +69,10 @@ export default {
   width: 100%;
   height: var(--base-top-panel-height);
   text-align: center;
-  background-color: var(--te-common-bg-default);
+  background-color: var(--te-preview-common-bg-color);
   position: relative;
   z-index: 1001;
-  border-bottom: 1px solid var(--ti-lowcode-toolbar-border-bottom-color);
+  border-bottom: 1px solid var(--te-preview-common-border-color);
 }
 .toolbar-left,
 .toolbar-right {
@@ -81,7 +81,7 @@ export default {
   gap: 12px;
 }
 .toolbar-button-text {
-  color: var(--ti-lowcode-toolbar-title-color);
+  color: var(--te-preview-common-text-color);
   margin-left: 4px;
   font-size: 12px;
 }

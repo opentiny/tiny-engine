@@ -244,14 +244,14 @@ export default {
 
 <style lang="less" scoped>
 .item-content {
-  border: 1px solid var(--ti-lowcode-meta-list-item-border-color);
+  border: 1px solid var(--te-component-common-border-color-divider);
   border-left: none;
   border-right: none;
-  background: var(--ti-lowcode-meta-list-item-bg-color);
+  background: var(--te-component-common-bg-color);
   margin-bottom: -1px;
-  color: var(--te-common-text-primary);
+  color: var(--te-component-common-text-color-primary);
   &.active-item {
-    background-color: var(--te-common-bg-container);
+    background-color: var(--te-component-meta-list-item-bg-color);
   }
   .option-input {
     display: flex;
@@ -264,7 +264,7 @@ export default {
         margin-right: 5px;
         font-size: 12px;
         opacity: 0.4;
-        color: var(--te-common-text-primary);
+        color: var(--te-component-common-text-color-primary);
         &:hover {
           cursor: pointer;
           opacity: 1;

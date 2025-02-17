@@ -314,18 +314,18 @@ export default {
 
 .block-tag-create {
   .tag-button {
-    color: var(--ti-lowcode-block-config-tag-color);
-    background-color: var(--ti-lowcode-block-config-tag-bg);
+    color: var(--te-block-config-tag-text-color);
+    background-color: var(--te-block-config-tag-bg-color);
     border: none;
     height: 28px;
     :deep(.tiny-tag__close) {
-      fill: var(--ti-lowcode-block-config-tag-close-color);
+      fill: var(--te-block-config-tag-close-icon-color);
     }
     &:hover {
-      color: var(--ti-lowcode-block-config-tag-hover-color);
-      background-color: var(--ti-lowcode-block-config-tag-hover-bg);
+      color: var(--te-block-config-tag-color-hover);
+      background-color: var(--te-block-config-tag-bg-hover);
       :deep(.tiny-tag__close) {
-        fill: var(--ti-lowcode-block-config-tag-close-hover-color);
+        fill: var(--te-block-config-tag-close-icon-color-hover);
       }
     }
   }
@@ -335,7 +335,7 @@ export default {
     line-height: 20px;
     padding-top: 0;
     padding-bottom: 0;
-    border: 1px solid var(--te-common-border-default);
+    border: 1px solid var(--te-block-config-new-tag-border-color);
   }
 
   .tiny-input {

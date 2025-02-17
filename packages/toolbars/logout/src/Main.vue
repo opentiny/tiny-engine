@@ -22,7 +22,7 @@ export default {
 
   span,
   a {
-    color: var(--te-common-text-secondary);
+    color: var(--te-toolbars-logout-text-color);
   }
 }
 </style>

@@ -130,7 +130,7 @@ export default {
     align-items: center;
   }
   .tiny-radio {
-    color: var(--ti-lowcode-toolbar-icon-color);
+    color: var(--te-component-common-icon-color);
   }
   .tiny-radio-group {
     width: 100%;

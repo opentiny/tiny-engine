@@ -78,13 +78,13 @@ export default {
       border-bottom-right-radius: 4px;
     }
     li.active button:not(.disabled) {
-      background: var(--te-common-bg-prompt);
-      color: var(--te-common-text-primary);
+      background: var(--te-configurator-button-group-bg-color-active);
+      color: var(--te-configurator-common-text-color-primary);
       outline: 0;
     }
     li button:not(.disabled) {
-      background: var(--te-common-bg-container);
-      color: var(--te-common-text-secondary);
+      background: var(--te-configurator-button-group-bg-color);
+      color: var(--te-configurator-common-text-color-secondary);
     }
     li button {
       min-width: 0px;
@@ -103,7 +103,7 @@ export default {
       position: absolute;
       width: 1px;
       height: 50%;
-      background-color: var(--te-common-border-default);
+      background-color: var(--te-configurator-common-border-color);
       right: 0;
       top: 50%;
       transform: translate(50%, -50%);

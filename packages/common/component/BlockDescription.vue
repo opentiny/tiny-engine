@@ -46,7 +46,7 @@ export default {
     border-radius: 4px;
     display: flex;
     align-items: center;
-    background-color: var(--te-common-bg-container);
+    background-color: var(--te-component-block-bg-color);
   }
 
   .setting-block {
@@ -54,6 +54,9 @@ export default {
     align-items: center;
     gap: 4px;
     cursor: pointer;
+    .svg-icon {
+      color: var(--te-component-common-block-add-text-color);
+    }
   }
 
   .svg-icon {

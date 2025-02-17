@@ -46,7 +46,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .block-alert {
-  color: var(--ti-lowcode-life-cycle-alert-color);
+  color: var(--te-block-alert-text-color);
   height: 28px;
   padding: 6px;
   border: 0;

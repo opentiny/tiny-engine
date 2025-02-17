@@ -258,27 +258,27 @@ export default {
 .general-config {
   .general-config-form {
     .input-head {
-      color: var(--ti-lowcode-page-manage-input-head-text-color);
+      color: var(--te-page-manage-input-head-text-color);
     }
     :deep(.tiny-form-item) {
       margin-bottom: 16px;
       .tiny-input-group__prepend {
-        border: 1px solid var(--te-common-border-default);
-        background: var(--te-common-bg-default);
+        border: 1px solid var(--te-page-manage-input-border-color);
+        background: var(--te-page-manage-input-bg-color);
       }
       .page-type-radio {
-        color: var(--ti-lowcode-page-manage-title-background-text-color);
+        color: var(--te-page-manage-title-text-color);
       }
       .tiny-form-item__label {
         height: 24px;
         line-height: 18px;
         font-size: 12px;
-        color: var(--ti-lowcode-page-manage-text-color);
+        color: var(--te-page-manage-text-color);
       }
     }
   }
   .tip {
-    color: var(--ti-lowcode-page-manage-tip-text-color);
+    color: var(--te-page-manage-tip-color);
     font-size: 12px;
     border-radius: 3px;
     display: flex;
@@ -286,10 +286,10 @@ export default {
     height: 16px;
     margin-top: 4px;
     .text {
-      color: var(--te-common-text-weaken);
+      color: var(--te-page-manage-tip-text-color);
     }
     .text-dim {
-      color: var(--ti-lowcode-plugin-panel-title-color);
+      color: var(--te-page-manage-tip-dim-text-color);
     }
   }
 }
@@ -301,9 +301,9 @@ export default {
     .tiny-tree-node {
       .tiny-tree-node__content {
         padding: 0;
-        background-color: var(--te-common-bg-default);
+        background-color: var(--te-page-manage-tree-node-bg-color);
         &:hover {
-          background-color: var(--te-common-bg-container);
+          background-color: var(--te-page-manage-tree-node-bg-color-hover);
         }
         // 移除子节点的的背景色，才能保证鼠标hover到.tiny-tree-node__content节点任意位置时，整行都有hover状态的背景色
         .tiny-tree-node__content-left,

@@ -90,7 +90,7 @@ export default {
 
 <style lang="less" scoped>
 .title {
-  color: var(--te-common-text-primary);
+  color: var(--te-component-common-text-color-primary);
   padding: 0 10px;
   font-weight: bold;
   margin-bottom: 16px;

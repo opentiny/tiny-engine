@@ -290,11 +290,11 @@ export default {
   }
 
   :deep(.tiny-form-item__label) {
-    color: var(--ti-lowcode-toolbar-icon-color);
+    color: var(--te-state-common-label-text-color);
   }
 
   .label-left-wrap {
-    color: var(--ti-lowcode-toolbar-icon-color);
+    color: var(--te-state-common-label-text-color);
     display: flex;
   }
   :deep(.tiny-collapse-item__wrap) {
@@ -310,7 +310,7 @@ export default {
 
 .create-content-description {
   font-size: 12px;
-  color: var(--te-common-text-emphasize);
+  color: var(--te-state-common-text-color-emphasize);
   margin-left: 8px;
   cursor: pointer;
 }

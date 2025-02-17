@@ -106,9 +106,9 @@ const handleChange = () => {
   .tiny-tree .tiny-tree-node__wrapper .tiny-tree-node {
     .tiny-tree-node__content {
       padding: 0;
-      background-color: var(--te-common-bg-default);
+      background-color: var(--te-configurator-common-bg-color);
       &:hover {
-        background-color: var(--te-common-bg-container);
+        background-color: var(--te-configurator-common-bg-color-hover);
       }
       // 移除子节点的的背景色，才能保证鼠标hover到.tiny-tree-node__content节点任意位置时，整行都有hover状态的背景色
       .tiny-tree-node__content-left,
@@ -135,7 +135,7 @@ const handleChange = () => {
       }
     }
     &.is-disabled > .tiny-tree-node__content .tiny-tree-node__content-box {
-      color: var(--te-common-text-disabled);
+      color: var(--te-configurator-common-text-color-disabled);
     }
   }
 }

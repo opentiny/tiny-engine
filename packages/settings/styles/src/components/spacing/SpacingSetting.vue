@@ -121,7 +121,7 @@ export default {
     align-items: center;
     .icon {
       font-size: 16px;
-      color: var(--te-common-text-secondary);
+      color: var(--te-styles-common-icon-color);
       margin-right: 18px;
     }
 
@@ -142,15 +142,15 @@ export default {
       height: 60px;
       line-height: 60px;
       text-align: center;
-      border: 1px solid var(--te-common-border-default);
-      background: var(--te-common-bg-container);
+      border: 1px solid var(--te-styles-common-border-color);
+      background: var(--te-styles-spacing-setting-bg-color);
       cursor: pointer;
       box-sizing: border-box;
 
       &:hover,
       &.active {
-        color: var(--ti-lowcode-style-setting-label-color);
-        background: var(--te-common-bg-text-emphasize);
+        color: var(--te-styles-common-setting-text-color);
+        background: var(--te-styles-common-setting-bg-color);
       }
     }
 
@@ -178,42 +178,17 @@ export default {
         line-height: 26px;
         margin-left: 3%;
         text-align: center;
-        border: 1px solid var(--te-common-border-default);
-        background: var(--te-common-bg-container);
+        border: 1px solid var(--te-styles-common-border-color);
+        background: var(--te-styles-spacing-setting-bg-color);
         cursor: pointer;
         transition: 0.3s;
         box-sizing: border-box;
 
         &:hover,
         &.active {
-          color: var(--ti-lowcode-style-setting-label-color);
-          background: var(--te-common-bg-text-emphasize);
+          color: var(--te-styles-common-setting-text-color);
+          background: var(--te-styles-common-setting-bg-color);
         }
-      }
-    }
-  }
-
-  :deep(.tiny-slider__input) {
-    display: flex;
-    flex: 1 1 0;
-    border: 1px solid var(--ti-lowcode-dialog-tip-border-color);
-    border-radius: 4px;
-    background-color: var(--ti-lowcode-breadcrumb-hover-bg);
-
-    input {
-      border: none;
-    }
-
-    span {
-      padding: 0 4px;
-      position: relative;
-      &::before {
-        content: 'PX';
-        display: inline-block;
-        background: var(--ti-lowcode-breadcrumb-hover-bg);
-        word-break: keep-all;
-        position: absolute;
-        top: 0;
       }
     }
   }

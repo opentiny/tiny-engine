@@ -439,8 +439,8 @@ export default {
     margin-top: 8px;
     border-radius: 4px;
     padding: 8px 14px;
-    background: var(--te-common-bg-container);
-    color: var(--te-common-text-weaken);
+    background: var(--te-state-tip-bg-color);
+    color: var(--te-state-tip-text-color);
     & > pre {
       font-family: Consolas, 'Courier New', monospace;
     }
@@ -461,11 +461,11 @@ export default {
   }
 
   :deep(.tiny-form-item__label) {
-    color: var(--ti-lowcode-toolbar-icon-color);
+    color: var(--te-state-common-label-text-color);
   }
 
   .label-left-wrap {
-    color: var(--ti-lowcode-toolbar-icon-color);
+    color: var(--te-state-common-label-text-color);
     display: flex;
   }
   :deep(.tiny-collapse-item__wrap) {
@@ -479,56 +479,14 @@ export default {
   }
 }
 
-.tips-content {
-  padding: 12px;
-  .create-content-head {
-    display: flex;
-    flex: 1;
-    font-size: 12px;
-
-    .icon-info-circle {
-      font-size: 14px;
-      margin-right: 4px;
-      color: var(--ti-lowcode-toolbar-icon-color);
-    }
-  }
-  .create-content-tip {
-    font-size: 14px;
-  }
-
-  .create-content-demo {
-    font-size: 14px;
-    .ml20 {
-      margin-left: 20px;
-    }
-    li {
-      margin-top: 8px;
-    }
-  }
-  .create-content-foot {
-    margin-top: 4px;
-    font-size: 14px;
-    line-height: 22px;
-  }
-}
-
 .create-content-description {
   font-size: 12px;
-  color: var(--te-common-text-emphasize);
+  color: var(--te-state-common-text-color-emphasize);
   margin-left: 8px;
   cursor: pointer;
 }
 
 .variable-editor {
   height: 270px;
-}
-
-.show-advanced {
-  font-size: 12px;
-  color: var(--ti-lowcode-data-advanced-text-color);
-  &:hover {
-    color: var(--ti-lowcode-data-advanced-text-hover-color);
-    cursor: pointer;
-  }
 }
 </style>

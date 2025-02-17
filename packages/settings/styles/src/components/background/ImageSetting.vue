@@ -225,7 +225,7 @@ onMounted(() => {
   border-width: 1px;
   box-sizing: border-box;
   border-style: solid;
-  border: 1px dotted var(--te-common-border-default);
+  border: 1px dotted var(--te-styles-common-border-color);
   border-radius: 4px;
 }
 .image-inner {
@@ -257,7 +257,7 @@ onMounted(() => {
       flex: 0 0 55px;
       margin-right: 6px;
       line-height: 28px;
-      color: var(--ti-lowcode-component-setting-panel-label-color);
+      color: var(--te-styles-common-text-color-secondary);
     }
     &:last-child {
       .size-label {
@@ -269,7 +269,7 @@ onMounted(() => {
   }
 }
 .choose-image {
-  border-color: var(--te-common-border-default);
+  border-color: var(--te-styles-common-border-color);
   outline: 0px;
   cursor: default;
   user-select: none;
@@ -284,7 +284,7 @@ onMounted(() => {
   justify-content: center;
   height: 24px;
   border-radius: 4px;
-  color: var(--te-common-text-primary);
+  color: var(--te-styles-common-text-color-primary);
   border-width: 1px;
   border-style: solid;
   align-self: center;

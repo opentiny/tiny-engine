@@ -50,10 +50,10 @@ export default {
 
 <style lang="less" scoped>
 .block-guide {
-  color: var(--te-common-text-secondary);
+  color: var(--te-component-common-text-color-secondary);
   line-height: 2;
   border: none;
-  border-color: var(--ti-lowcode-block-video-tip-color);
+  border-color: var(--te-component-common-text-color-link);
   margin-bottom: 20px;
   .guide-video {
     width: 250px;

@@ -261,7 +261,7 @@ const handleContainerDragLeave = (event) => {
       cursor: pointer;
     }
     &:hover {
-      background-color: var(--te-common-bg-container);
+      background-color: var(--te-page-manage-draggable-row-bg-color-hover);
     }
 
     .content {
@@ -283,14 +283,14 @@ const handleContainerDragLeave = (event) => {
       align-items: center;
       margin-right: 8px;
       svg {
-        color: var(--te-common-icon-secondary);
+        color: var(--te-page-manage-draggable-icon-color);
       }
     }
     &.active {
-      background-color: var(--te-common-bg-container);
-      color: var(--te-common-text-primary);
+      background-color: var(--te-page-manage-draggable-row-bg-color-hover);
+      color: var(--te-page-manage-draggable-text-color);
       svg {
-        color: var(--te-common-icon-secondary);
+        color: var(--te-page-manage-draggable-icon-color);
       }
     }
   }
@@ -299,7 +299,7 @@ const handleContainerDragLeave = (event) => {
   border: 1px solid transparent;
 }
 .hover-border-color {
-  border-color: var(--te-common-border-checked);
+  border-color: var(--te-page-manage-draggable-border-color);
   overflow: hidden;
 }
 </style>

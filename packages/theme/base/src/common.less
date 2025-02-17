@@ -17,6 +17,7 @@
   --te-common-text-dark-inverse: var(--te-base-gray-0); // 深色背景下按钮上的文本色 #fff
   --te-common-text-emphasize: var(--te-base-blue-70); // 强调性文字 #1476ff
   --te-common-text-checked: var(--te-base-blue-70); // 选中或者hover文字 #1476ff
+  --te-common-text-purple: var(--te-base-indigo-50); // 区块文本色 #6e51e0
 
   --te-common-icon-primary: var(--te-base-gray-125); // 重要图标色 #191919
   --te-common-icon-hover: var(--te-base-gray-80); // 图标悬浮色 #595959
@@ -35,6 +36,7 @@
   --te-common-border-checked: var(--te-base-blue-70); // 线条 选中色 #1476ff
   --te-common-border-error-hover: var(--te-base-red-30); // 线条 红色按钮边框hover色 #faa7a3
   --te-common-border-info: var(--te-base-blue-70); // 输入框提示色 #1476ff
+  --te-common-border-arrow-hover: var(--te-base-gray-10); // 三角箭头边框hover色 #f5f5f5
 
   --te-common-bg-primary: var(--te-base-gray-125); // 主要按钮-背景色 #191919
   --te-common-bg-primary-checked: var(--te-base-blue-70); // 主色-背景色  选中和hover等颜色 #1476ff
@@ -45,6 +47,7 @@
   --te-common-bg-container: var(
     --te-base-gray-10
   ); // 列表悬浮色/表格悬浮色/顶部导航按钮悬浮色/选块背景色/提示背景色 #f5f5f5
+  --te-common-bg-gray-hover: var(--te-base-gray-40); // 灰色背景hover色 #dbdbdb
   --te-common-bg-container-weaken: var(--te-base-gray-5); // 浅编辑代码--背景色 #fafafa
   --te-common-bg-tag: var(--te-base-green-10); // tag标签-背景色 #e4f7e9
   --te-common-bg-default: var(--te-base-gray-0); // 白色背景-输入框背景/面板背景色 #fff
@@ -54,7 +57,13 @@
   --te-common-bg-popover: var(--te-base-gray-0); // 对话框/tooltip/popover背景 #fff
   --te-common-bg-text-emphasize: var(--te-base-blue-150); // 强调性文字背景色 rgba(20, 118, 255, 0.1)
   --te-common-bg-info: var(--te-base-blue-20); // 提示框info背景色 #deecff
+  --te-common-bg-scroll: var(--te-base-gray-40); // 滚动条默认背景色#dbdbdb
+  --te-common-bg-scroll-hover: var(--te-base-gray-50); // 滚动条默认背景色#c2c2c2
 
+  --te-common-shadow-panel: var(--te-base-box-shadow-rgba-3); // 面板阴影 rgba(0, 0, 0, 0.1)
+  --te-common-bg-purple-hover: var(--te-base-indigo-20); // 紫背景hover色 #e2d9fc
+
+  --te-common-mask: var(--te-base-gray-140); // 蒙层色 rgba(0, 0, 0, 0.2)
   // 通用间距
   --te-common-vertical-item-spacing-normal: 12px; // 表单元素之间的距离，标题和列表之间的距离、一个独立元素的padding等等
   --te-common-vertical-form-label-spacing: 8px; // 上下布局时，表单label与表单元素的间隔
@@ -77,6 +86,7 @@
   --te-common-text-dark-inverse: var(--te-base-gray-130); // 深色背景下按钮上的文本色 #000
   --te-common-text-emphasize: var(--te-base-blue-60); // 强调性文字 #317AF7
   --te-common-text-checked: var(--te-base-blue-60); // 选中或者hover文字 #317AF7
+  --te-common-text-purple: var(--te-base-indigo-130); // 区块文本色 #716acc
 
   --te-common-icon-primary: var(--te-base-gray-30); // 重要图标色 #E6E6E6
   --te-common-icon-hover: var(--te-base-gray-60); //  图标悬浮色 #B3B3B3
@@ -95,6 +105,7 @@
   --te-common-border-checked: var(--te-base-blue-60); // 线条 选中色 #317AF7
   --te-common-border-error-hover: var(--te-base-red-130); // 线条 红色按钮边框hover色 #B6332A
   --te-common-border-info: var(--te-base-blue-60); // 输入框提示色 #317AF7
+  --te-common-border-arrow-hover: var(--te-base-gray-110); // 三角箭头边框hover色 #262626
 
   --te-common-bg-primary: var(--te-base-gray-30); // 主要按钮-背景色 #E6E6E6
   --te-common-bg-primary-checked: var(--te-base-blue-60); // 主色-背景色 选中和hover等颜色 #317AF7
@@ -104,6 +115,7 @@
   --te-common-bg-container: var(
     --te-base-gray-110
   ); // 列表悬浮色/表格悬浮色/顶部导航按钮悬浮色/选块背景色/提示背景色 #262626
+  --te-common-bg-gray-hover: var(--te-base-gray-90); // 灰色背景hover色 #4D4D4D
   --te-common-bg-container-weaken: var(--te-base-gray-110); // 浅编辑代码--背景色 #262626
   --te-common-bg-tag: var(--te-base-green-120); // tag标签-背景色 #273726
   --te-common-bg-default: var(--te-base-gray-120); // 深色背景-输入框背景/面板背景色 #1A1A1A
@@ -113,7 +125,13 @@
   --te-common-bg-popover: var(--te-base-gray-100); // 对话框/tooltip/popover背景 #333333
   --te-common-bg-text-emphasize: var(--te-base-blue-160); // 强调性文字背景色 rgba(49, 122, 247, 0.1)
   --te-common-bg-info: var(--te-base-blue-120); // 提示框info背景色 #0A1831
+  --te-common-bg-scroll: var(--te-base-gray-110); // 滚动条默认背景色#262626
+  --te-common-bg-scroll-hover: var(--te-base-gray-100); // 滚动条默认背景色#333333
 
+  --te-common-shadow-panel: var(--te-base-box-shadow-rgba-4); // 面板阴影 rgba(0, 0, 0, 0.2)
+  --te-common-bg-purple-hover: var(--te-base-indigo-120); // 紫背景hover色 #302e47
+
+  --te-common-mask: var(--te-base-gray-140); // 蒙层色 rgba(0, 0, 0, 0.2)
   // 通用间距
   --te-common-vertical-item-spacing-normal: 12px; // 表单元素之间的距离，标题和列表之间的距离、一个独立元素的padding等等
   --te-common-vertical-form-label-spacing: 8px; // 上下布局时，表单label与表单元素的间隔

@@ -113,8 +113,8 @@ export default {
 .data-source-right-panel {
   width: 442px;
   height: 100%;
-  border-right: 1px solid var(--te-common-border-divider);
-  background: var(--ti-lowcode-toolbar-bg);
+  border-right: 1px solid var(--te-state-common-border-color-divider);
+  background: var(--te-state-right-panel-bg-color);
   position: absolute;
   left: calc(var(--base-left-panel-width) - 6px);
   top: 0;
@@ -125,9 +125,9 @@ export default {
     align-items: center;
     height: 45px;
     padding: 0 12px;
-    color: var(--ti-lowcode-toolbar-icon-color);
-    background: var(--te-common-bg-container);
-    border-bottom: 1px solid var(--te-common-border-divider);
+    color: var(--te-state-right-panel-icon-color);
+    background: var(--te-state-right-panel-bg-color);
+    border-bottom: 1px solid var(--te-state-common-border-color-divider);
   }
 }
 </style>

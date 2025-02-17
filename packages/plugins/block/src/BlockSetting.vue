@@ -361,7 +361,7 @@ export default {
         margin-right: 3px;
       }
 
-      color: var(--ti-lowcode-block-video-tip-color);
+      color: var(--te-block-video-tip-text-color);
     }
   }
   :deep(.tiny-collapse-item__content) {

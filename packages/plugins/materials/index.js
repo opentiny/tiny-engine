@@ -18,6 +18,7 @@ import MaterialBlock from './src/meta/block'
 import MaterialComponent from './src/meta/component'
 import MaterialHeader from './src/components/header/Main.vue'
 import { basePropertyOptions } from './src/js/options'
+import './src/styles/vars.less'
 
 export default {
   ...metaData,

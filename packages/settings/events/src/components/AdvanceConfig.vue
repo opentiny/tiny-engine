@@ -268,12 +268,12 @@ export default {
     align-items: center;
     display: flex;
     column-gap: 12px;
-    color: var(--ti-lowcode-events-advanced-config-color);
+    color: var(--te-events-advanced-config-text-color);
 
     label {
       width: 80px;
       word-break: keep-all;
-      color: var(--ti-lowcode-events-advanced-label-color);
+      color: var(--te-events-advanced-label-text-color);
       flex-shrink: 0;
     }
 
@@ -284,9 +284,9 @@ export default {
     }
     .binding-state {
       box-sizing: border-box;
-      background: var(--ti-lowcode-events-advanced-binding-state-bg-color);
-      color: var(--ti-lowcode-events-advanced-binding-state-color);
-      border: 1px solid var(--ti-lowcode-events-advanced-binding-state-border-color);
+      background: var(--te-events-advanced-binding-state-bg-color);
+      color: var(--te-events-advanced-binding-state-text-color);
+      border: 1px solid var(--te-events-advanced-binding-state-border-color);
       font-size: 12px;
       height: 30px;
       line-height: 22px;

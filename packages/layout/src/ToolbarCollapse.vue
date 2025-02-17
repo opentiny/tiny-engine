@@ -58,7 +58,7 @@ export default {
   margin-left: 4px;
 
   &:hover {
-    background: var(--ti-lowcode-toolbar-view-active-bg);
+    background: var(--te-layout-common-active-bg);
   }
 }
 
@@ -73,19 +73,19 @@ export default {
       padding: 0 16px;
 
       &:hover {
-        background-color: var(--ti-lowcode-toolbar-ellipsis-hover-bg);
+        background-color: var(--te-layout-common-bg-color-hover);
         cursor: pointer;
       }
     }
 
     .empty-line {
       margin: 4px 0px;
-      border-top: 1px solid var(--te-common-bg-container);
+      border-top: 1px solid var(--te-layout-common-border-color);
     }
 
     .icon-hides {
       margin-right: 8px;
-      color: var(--te-common-icon-primary);
+      color: var(--te-layout-common-icon-color-primary);
     }
   }
 }

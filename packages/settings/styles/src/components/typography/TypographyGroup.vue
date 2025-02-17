@@ -530,7 +530,7 @@ export default {
 <style lang="less" scoped>
 .typography-wrap {
   span {
-    color: var(--te-common-text-secondary);
+    color: var(--te-styles-common-text-color-secondary);
     padding: 2px;
   }
   .typography-row {
@@ -566,39 +566,6 @@ export default {
 
       .font-weight-col {
         width: 84px;
-      }
-    }
-
-    .typography-content {
-      flex: auto;
-      display: flex;
-
-      .typography-content-item {
-        padding: 0 5px;
-        font-size: 16px;
-        color: var(--ti-lowcode-component-setting-panel-icon-color);
-        position: relative;
-        display: flex;
-        justify-content: center;
-
-        &:hover {
-          color: var(--ti-lowcode-property-hover-color);
-        }
-
-        &.selected {
-          color: var(--ti-lowcode-property-active-color);
-        }
-
-        .overflow-svg {
-          margin: auto;
-        }
-
-        .overflow-auto {
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          text-align: center;
-        }
       }
     }
 
@@ -650,7 +617,7 @@ export default {
     .font-size {
       display: flex;
       font-size: 12px;
-      color: var(--te-common-text-weaken);
+      color: var(--te-styles-common-text-color-weaken);
       align-items: center;
       gap: 4px;
     }
@@ -685,7 +652,7 @@ export default {
     grid-template-columns: 15px 1fr;
     align-items: center;
     margin-bottom: 8px;
-    color: var(--ti-lowcode-component-setting-panel-label-color);
+    color: var(--te-styles-common-text-color-secondary);
 
     .style-left {
       display: grid;
@@ -709,14 +676,14 @@ export default {
   }
 
   .typography-label {
-    color: var(--te-common-text-secondary);
+    color: var(--te-styles-common-text-color-secondary);
   }
   .is-setting {
     span {
       cursor: pointer;
       border-radius: 2px;
-      color: var(--te-common-text-emphasize);
-      background-color: var(--te-common-bg-text-emphasize);
+      color: var(--te-styles-common-setting-text-color);
+      background-color: var(--te-styles-common-setting-bg-color);
     }
   }
 }

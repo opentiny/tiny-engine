@@ -144,7 +144,7 @@ export default {
 
   .list {
     flex: 1;
-    border-top: 1px solid var(--ti-lowcode-tabs-border-color);
+    border-top: 1px solid var(--te-bridge-list-border-color);
     overflow: auto;
     padding: 12px 0;
   }
@@ -158,13 +158,13 @@ export default {
     align-items: center;
     padding: 0 12px;
     position: relative;
-    color: var(--ti-lowcode-bridge-list-color);
+    color: var(--te-bridge-list-text-color);
     cursor: pointer;
     font-size: 12px;
 
     &:hover,
     &.active {
-      background: var(--ti-lowcode-bridge-list-bg);
+      background: var(--te-bridge-list-bg-color);
       .setting-icon {
         display: grid;
       }
@@ -174,7 +174,7 @@ export default {
       display: none;
     }
     .list-item-icon {
-      color: var(--te-common-icon-secondary);
+      color: var(--te-bridge-list-icon-color);
       margin-right: 8px;
     }
   }

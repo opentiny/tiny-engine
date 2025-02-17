@@ -23,8 +23,7 @@ import {
   getMetaApi,
   META_APP,
   useMessage,
-  META_SERVICE,
-  usePage
+  META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
 
 const { COMPONENT_NAME, DEFAULT_INTERCEPTOR } = constants
@@ -43,11 +42,7 @@ function goPage(pageId) {
     return
   }
 
-  const url = new URL(window.location)
-
-  url.searchParams.set('pageid', pageId)
-  window.history.pushState({}, '', url)
-  usePage().postLocationHistoryChanged({ pageId })
+  getMetaApi(META_SERVICE.GlobalService).updatePageId(pageId)
 }
 
 const initPage = (pageInfo) => {

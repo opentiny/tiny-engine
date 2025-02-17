@@ -566,11 +566,11 @@ export default {
       width: 38%;
 
       .content-left__title {
-        color: var(--te-common-text-primary);
+        color: var(--te-configurator-common-text-color-primary);
       }
 
       .list-wrap {
-        border: 1px solid var(--te-common-border-divider);
+        border: 1px solid var(--te-configurator-common-border-color-divider);
         border-radius: 4px;
         height: 300px;
         margin-top: 8px;
@@ -579,8 +579,8 @@ export default {
 
       .content-left__list {
         width: 120px;
-        color: var(--te-common-text-secondary);
-        border-right: 1px solid var(--te-common-border-divider);
+        color: var(--te-configurator-common-text-color-secondary);
+        border-right: 1px solid var(--te-configurator-common-border-color-divider);
       }
 
       .content-left__list-item {
@@ -589,23 +589,23 @@ export default {
         transition: background 0.3s;
         &.active,
         &:hover {
-          background: var(--te-common-bg-container);
-          color: var(--te-common-text-primary);
+          background: var(--te-configurator-common-bg-color-hover);
+          color: var(--te-configurator-common-text-color-primary);
         }
       }
 
       .item-selected {
-        background-color: var(--te-common-bg-container);
+        background-color: var(--te-configurator-common-bg-color-active);
       }
 
       .item-text {
         padding: 8px 12px;
         cursor: pointer;
-        color: var(--te-common-text-secondary);
+        color: var(--te-configurator-common-text-color-secondary);
 
         &:hover {
-          background-color: var(--te-common-bg-container);
-          color: var(--te-common-text-primary);
+          background-color: var(--te-configurator-common-bg-color-hover);
+          color: var(--te-configurator-common-text-color-primary);
         }
       }
 
@@ -638,7 +638,7 @@ export default {
       }
 
       .content-right__title {
-        color: var(--te-common-text-primary);
+        color: var(--te-configurator-common-text-color-primary);
         font-weight: 600;
         margin-right: 5px;
       }
@@ -661,8 +661,8 @@ export default {
           height: 54%;
           border-radius: 4px;
           padding: 12px 8px;
-          color: var(--te-common-text-primary);
-          border: 1px solid var(--te-common-border-divider);
+          color: var(--te-configurator-common-text-color-primary);
+          border: 1px solid var(--te-configurator-common-border-color-divider);
           box-sizing: border-box;
           & > div {
             height: 100%;
@@ -698,14 +698,14 @@ export default {
           border-radius: 4px;
           box-sizing: border-box;
           overflow: auto;
-          color: var(--te-common-text-secondary);
-          border: 1px solid var(--te-common-border-divider);
+          color: var(--te-configurator-common-text-color-secondary);
+          border: 1px solid var(--te-configurator-common-border-color-divider);
           pre {
             font-family: consolas;
           }
           .bottom-title {
             font-weight: var(--te-base-font-weight-6);
-            color: var(--te-common-text-primary);
+            color: var(--te-configurator-common-text-color-primary);
           }
         }
       }

@@ -300,7 +300,7 @@ export default {
       font-size: 11px;
       line-height: 18px;
       margin-top: 8px;
-      color: var(--ti-lowcode-datasource-tip-color);
+      color: var(--te-bridge-setting-tip-text-color);
     }
     :deep(.tiny-form-item__label) {
       .cdn-tips-icon {
@@ -312,10 +312,10 @@ export default {
   .title-wrap {
     font-size: 12px;
     font-weight: 700;
-    color: var(--te-common-text-primary);
+    color: var(--te-bridge-setting-title-text-color);
     .help-link {
       display: inline-block;
-      color: var(--te-common-text-link);
+      color: var(--te-bridge-setting-link-text-color);
       font-size: 12px;
       margin-left: 16px;
       &:hover {
@@ -339,19 +339,7 @@ export default {
   .monaco-editor {
     height: 500px;
     margin-top: 8px;
-    border: 1px solid var(--ti-lowcode-birdge-editor-border-color);
-  }
-
-  .resource-form-footer {
-    padding: 12px 0 12px 80px;
-
-    .tiny-svg {
-      margin-right: 6px;
-    }
-
-    .del:hover {
-      background-color: var(--te-common-color-error);
-    }
+    border: 1px solid var(--te-bridge-editor-border-color);
   }
   .cdn-label-wrap {
     display: flex;
@@ -362,8 +350,8 @@ export default {
 .code-preview {
   font-size: 12px;
   line-height: 20px;
-  background: var(--te-common-bg-container);
-  color: var(--te-common-text-weaken);
+  background: var(--te-bridge-setting-code-bg-color);
+  color: var(--te-bridge-setting-code-text-color);
   border-radius: 4px;
 
   & .pre-title {

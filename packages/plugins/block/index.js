@@ -14,6 +14,7 @@ import entry, { api } from './src/Main.vue'
 import metaData from './meta.js'
 import { BlockService } from './src/composable'
 import SaveNewBlock from './src/SaveNewBlock.vue'
+import './src/styles/vars.less'
 
 export default {
   ...metaData,

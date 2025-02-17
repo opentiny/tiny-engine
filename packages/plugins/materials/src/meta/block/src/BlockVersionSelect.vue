@@ -140,23 +140,3 @@ export default {
   }
 }
 </script>
-
-<style lang="less" scoped>
-.version-list-panel {
-  :deep(.plugin-setting-header) {
-    color: var(--ti-lowcode-component-block-version-list-panel-title-color);
-  }
-}
-.close-icon {
-  margin-left: 16px;
-}
-.tiny-button.tiny-button {
-  &.fallback-btn {
-    min-width: unset;
-    padding: 0;
-  }
-  &.tiny-button--text.is-disabled {
-    color: var(--ti-button-text-color-disabled);
-  }
-}
-</style>

@@ -109,8 +109,8 @@ export default {
 .plugin-page-js-container {
   width: 50vw;
   height: 100%;
-  background: var(--ti-lowcode-plugin-js-bg);
-  box-shadow: 6px 0px 3px 0px var(--te-base-box-shadow-rgba-3);
+  background: var(--te-plugin-js-panel-bg-color);
+  box-shadow: 6px 0px 3px 0px var(--te-plugin-js-panel-shadow-color);
   position: absolute;
   left: 0;
   top: 0;
@@ -121,7 +121,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--te-common-border-divider);
+    border-bottom: 1px solid var(--te-plugin-js-common-border-color);
     padding: 12px 0;
 
     .head-left {
@@ -129,8 +129,8 @@ export default {
       display: flex;
       align-items: center;
       .title {
-        color: var(--ti-lowcode-plugin-panel-title-color);
-        font-weight: var(--ti-lowcode-plugin-panel-title-font-weight);
+        color: var(--te-plugin-js-panel-title-text-color);
+        font-weight: var(--te-base-font-weight-bold);
       }
     }
 
@@ -147,7 +147,7 @@ export default {
         .dots {
           width: 6px;
           height: 6px;
-          background: var(--te-common-color-error);
+          background: var(--te-plugin-js-dot-color);
           border-radius: 50%;
           position: absolute;
           top: 9px;
@@ -162,7 +162,7 @@ export default {
     height: calc(100% - 54px);
 
     & > div {
-      border: 1px solid var(--te-common-border-divider);
+      border: 1px solid var(--te-plugin-js-common-border-color);
       border-radius: 4px;
       height: 100%;
     }
