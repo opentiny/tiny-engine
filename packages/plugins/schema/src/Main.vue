@@ -185,7 +185,7 @@ export default {
 
 <style lang="less" scoped>
 .plugin-page-schema-container {
-  box-shadow: 6px 0px 3px 0px var(--te-base-box-shadow-rgba-3);
+  box-shadow: 6px 0px 3px 0px var(--te-schema-panel-shadow-color);
   z-index: 1000;
 
   .icon-wrap {
@@ -203,7 +203,7 @@ export default {
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background-color: var(--te-common-color-error);
+      background-color: var(--te-schema-dot-color);
       display: block;
       z-index: 100;
       position: absolute;
@@ -214,7 +214,7 @@ export default {
 
   .source-code-content {
     height: calc(100% - 12px);
-    border: 1px solid var(--te-common-border-divider);
+    border: 1px solid var(--te-schema-common-border-color);
     border-radius: 4px;
     margin: 0 12px;
   }

@@ -136,7 +136,7 @@ export default {
 
 <style lang="less" scoped>
 .plugin-page-js-container {
-  box-shadow: 6px 0px 3px 0px var(--te-base-box-shadow-rgba-3);
+  box-shadow: 6px 0px 3px 0px var(--te-plugin-js-panel-shadow-color);
   z-index: 999;
 
   .icon-wrap {
@@ -154,7 +154,7 @@ export default {
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background-color: var(--te-common-color-error);
+      background: var(--te-plugin-js-dot-color);
       display: block;
       z-index: 100;
       position: absolute;
