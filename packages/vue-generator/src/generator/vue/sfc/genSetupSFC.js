@@ -5,6 +5,7 @@ import {
   handleComponentNameHook,
   handleTinyGrid,
   handleTinyIcon,
+  handleIconifyIcon,
   handleExpressionChildren,
   validEmptyTemplateHook,
   handleSlotParams
@@ -29,6 +30,7 @@ import {
   parsePropsHook,
   parseReactiveStateHook,
   addDefaultVueImport,
+  addPreviewIconImport,
   addDefaultVueI18nImport,
   handleProvideStatesContextHook,
   handleContextInjectHook,
@@ -216,7 +218,7 @@ const generateSFCFile = (schema, componentsMap, config = {}, nextPage) => {
 
 export const genSFCWithDefaultPlugin = (schema, componentsMap, config = {}, nextPage) => {
   const { templateItemValidate = [], genTemplate = [], parseScript = [], genScript = {} } = config.hooks || {}
-  const defaultComponentHooks = [handleComponentNameHook, handleTinyIcon]
+  const defaultComponentHooks = [handleComponentNameHook, handleTinyIcon, handleIconifyIcon]
 
   const defaultAttributeHook = [
     handleSlotParams,
@@ -245,6 +247,11 @@ export const genSFCWithDefaultPlugin = (schema, componentsMap, config = {}, next
     handleProvideStatesContextHook,
     handleContextInjectHook
   ]
+
+  // 区分是构建还是预览
+  if (config.addPreviewIconImport) {
+    defaultParseScriptHook.push(addPreviewIconImport)
+  }
 
   const { GEN_IMPORT, GEN_PROPS, GEN_EMIT, GEN_STATE, GEN_METHOD, GEN_LIFECYCLE } = GEN_SCRIPT_HOOKS
   const defaultGenScriptHooks = {

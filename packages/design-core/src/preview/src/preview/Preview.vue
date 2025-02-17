@@ -22,7 +22,7 @@ import { getMetaApi } from '@opentiny/tiny-engine-meta-register'
 import { getImportMap as getInitImportMap } from './importMap'
 import srcFiles from './srcFiles'
 import generateMetaFiles, { processAppJsCode } from './generate'
-import { getSearchParams, fetchMetaData, fetchImportMap, fetchAppSchema, fetchBlockSchema } from './http'
+import { getSearchParams, fetchMetaData, fetchImportMap, fetchAppSchema, fetchBlockSchema, fetchIcons } from './http'
 import { PanelType, PreviewTips } from '../constant'
 import { injectDebugSwitch } from './debugSwitch'
 import '@vue/repl/style.css'
@@ -91,7 +91,8 @@ export default {
               ancestors[i].page_content,
               appData?.componentsMap || [],
               {
-                blockRelativePath: './'
+                blockRelativePath: './',
+                addPreviewIconImport: true
               },
               nextPage
             ) || '',
@@ -120,9 +121,10 @@ export default {
       fetchAppSchema(queryParams?.app),
       fetchMetaData(queryParams),
       setFiles(srcFiles, 'src/Main.vue'),
-      getImportMap()
+      getImportMap(),
+      fetchIcons()
     ]
-    Promise.all(promiseList).then(async ([appData, metaData, _void, importMapData]) => {
+    Promise.all(promiseList).then(async ([appData, metaData, _void, importMapData, iconSets]) => {
       store.setImportMap(importMapData)
 
       const blocks = await getAllNestedBlocksSchema(queryParams.pageInfo?.schema, fetchBlockSchema)
@@ -134,7 +136,11 @@ export default {
         ...(blocks || []).map((blockSchema) => {
           return {
             panelName: `${blockSchema.fileName}.vue`,
-            panelValue: generatePageCode(blockSchema, appData?.componentsMap || [], { blockRelativePath: './' }) || '',
+            panelValue:
+              generatePageCode(blockSchema, appData?.componentsMap || [], {
+                blockRelativePath: './',
+                addPreviewIconImport: true
+              }) || '',
             panelType: 'vue'
           }
         })
@@ -159,7 +165,7 @@ export default {
           panelName = 'Main.vue'
         }
 
-        const newPanelValue = panelValue.replace(/<script\s*setup\s*>([\s\S]*)<\/script>/, (match, p1) => {
+        const newPanelValue = panelValue?.replace(/<script\s*setup\s*>([\s\S]*)<\/script>/, (match, p1) => {
           if (!p1) {
             // eslint-disable-next-line no-useless-escape
             return '<script setup><\/script>'
@@ -185,6 +191,7 @@ export default {
       const appJsCode = processAppJsCode(newFiles['app.js'], queryParams.styles)
 
       newFiles['app.js'] = appJsCode
+      newFiles['icons.json'] = JSON.stringify(iconSets || [])
 
       pageCode.map(fixScriptLang).forEach(assignFiles)
 

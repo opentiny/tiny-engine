@@ -37,6 +37,7 @@ const resource = new Map()
 const blockResource = new Map()
 
 const materialState = reactive({
+  icons: [],
   components: [], // 这里存放的是物料插件面板里所有显示的组件
   blocks: [],
   componentsDepsMap: { scripts: [], styles: new Set() }, //
@@ -60,7 +61,7 @@ const getSnippet = (component) => {
   return schema
 }
 
-const generateNode = ({ type, component }) => {
+const generateNode = ({ type, component, props }) => {
   const snippet = getSnippet(component) || {}
 
   const schema = {
@@ -70,6 +71,10 @@ const generateNode = ({ type, component }) => {
       ...snippet.props,
       className: getOptions(meta.id).useBaseStyle ? getOptions(meta.id).componentBaseStyle.className : ''
     }
+  }
+
+  if (props) {
+    schema.props = Object.assign({}, schema.props, props)
   }
 
   if (type === 'block') {
@@ -212,6 +217,7 @@ const registerBlock = async (data, notFetchResouce) => {
 }
 
 const clearMaterials = () => {
+  materialState.icons = []
   materialState.components = []
   materialState.blocks = []
   resource.clear()
@@ -426,6 +432,12 @@ export const getMaterialsRes = async () => {
 
 const fetchMaterial = async () => {
   const materials = await getMaterialsRes()
+
+  const iconCollections = await getMetaApi(META_SERVICE.Http).post(`/app-center/api/icons/list`)
+
+  window.localStorage.setItem('icons', JSON.stringify(iconCollections || []))
+
+  materialState.icons = iconCollections || []
 
   materials.forEach((response) => {
     if (response.status === 'fulfilled' && response.value.materials) {

@@ -36,6 +36,7 @@
   "type": "module",
   "dependencies": {
     "@babel/core": "7.18.13",
+    "@iconify/vue": "^4.1.2",
     "@opentiny/tiny-engine-builtin-component": "workspace:*",
     "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-dsl-vue": "workspace:*",

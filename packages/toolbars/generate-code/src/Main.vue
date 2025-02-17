@@ -86,6 +86,23 @@ export default {
 
     const { getAllNestedBlocksSchema, generateAppCode } = getMetaApi('engine.service.generateCode')
 
+    /* 获得图表库资源列表 */
+    const getIconCollections = async () => {
+      const iconsMap = {}
+      const icons = await getMetaApi(META_SERVICE.Http).post(`/app-center/api/icons/list`)
+      Array.isArray(icons) &&
+        icons.forEach((collection) => {
+          for (let name in collection.icons) {
+            iconsMap[`${collection.name}:${name}`] = {
+              body: collection.icons[name].body,
+              width: collection.width,
+              height: collection.height
+            }
+          }
+        })
+      return iconsMap
+    }
+
     const getAllPageDetails = async (pageList) => {
       const detailPromise = pageList.map(({ id }) => getMetaApi(META_APP.AppManage).getPageById(id))
       const detailList = await Promise.allSettled(detailPromise)
@@ -120,6 +137,8 @@ export default {
       const list = pageDetailList.map((page) => getAllNestedBlocksSchema(page.page_content, fetchBlockSchema, blockSet))
       const blocks = await Promise.allSettled(list)
 
+      const iconsMap = await getIconCollections()
+
       const blockSchema = []
       blocks.forEach((item) => {
         if (item.status === 'fulfilled' && Array.isArray(item.value)) {
@@ -145,6 +164,7 @@ export default {
         blockSchema,
         // 物料数据
         componentsMap: [...(appData.componentsMap || [])],
+        iconsMap,
         // 物料依赖
         packages: [...(appData.packages || [])],
         meta: {

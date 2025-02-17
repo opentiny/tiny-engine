@@ -15,6 +15,8 @@ import injectGlobalJS from './srcFiles/injectGlobal.js?raw'
 import constantJS from './srcFiles/constant/index.js?raw'
 import appJS from './srcFiles/app.js?raw'
 import mainVue from './srcFiles/Main.vue?raw'
+import iconVue from './srcFiles/icon.vue?raw'
+import iconsJson from './srcFiles/icons.json?raw'
 import lowcodeJS from './srcFiles/lowcode.js?raw'
 import dataSourceMapJS from './srcFiles/dataSourceMap.js?raw'
 import dataSourceJS from './srcFiles/dataSource.js?raw'
@@ -28,6 +30,8 @@ const srcFiles = {}
 
 srcFiles['App.vue'] = appVue
 srcFiles['Main.vue'] = mainVue
+srcFiles['Icon.vue'] = iconVue
+srcFiles['icons.json'] = iconsJson
 srcFiles['constant.js'] = constantJS
 srcFiles['app.js'] = appJS.replace(/VITE_CDN_DOMAIN/g, import.meta.env.VITE_CDN_DOMAIN)
 srcFiles['injectGlobal.js'] = injectGlobalJS
@@ -46,6 +50,11 @@ export const genPreviewTemplate = () => {
       fileName: 'App.vue',
       path: '',
       fileContent: appVue
+    },
+    {
+      fileName: 'icon.vue',
+      path: '',
+      fileContent: iconVue
     },
     {
       fileName: 'constant.js',

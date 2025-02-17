@@ -155,6 +155,13 @@ export const addDefaultVueI18nImport = (schema, globalHooks) => {
     componentName: 'I18nInjectionKey'
   })
 }
+export const addPreviewIconImport = (schema, globalHooks) => {
+  globalHooks.addImport('./Icon.vue', {
+    destructuring: false,
+    exportName: '',
+    componentName: 'Icon'
+  })
+}
 
 export const GEN_SCRIPT_HOOKS = {
   GEN_IMPORT: 'GEN_IMPORT',

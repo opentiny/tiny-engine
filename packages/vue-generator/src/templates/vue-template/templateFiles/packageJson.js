@@ -22,7 +22,10 @@ export default (schema) => {
       vue: '^3.3.9',
       'vue-i18n': '^9.2.0-beta.3',
       'vue-router': '^4.2.5',
-      pinia: '^2.1.7'
+      pinia: '^2.1.7',
+      '@iconify/json': '^2.2.266',
+      'unplugin-icons': 'latest',
+      'unplugin-vue-components': '^0.27.3'
     },
     devDependencies: {
       '@vitejs/plugin-vue': '^5.1.2',

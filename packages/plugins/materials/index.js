@@ -16,6 +16,7 @@ import { ResourceService, MaterialService } from './src/composable'
 import MaterialLayout from './src/meta/layout'
 import MaterialBlock from './src/meta/block'
 import MaterialComponent from './src/meta/component'
+import MaterialIcon from './src/meta/icon'
 import MaterialHeader from './src/components/header/Main.vue'
 import { basePropertyOptions } from './src/js/options'
 import './src/styles/vars.less'
@@ -26,7 +27,11 @@ export default {
   layout: MaterialLayout,
   options: {
     defaultTabId: 'engine.plugins.materials.component',
-    displayComponentIds: ['engine.plugins.materials.component', 'engine.plugins.materials.block'],
+    displayComponentIds: [
+      'engine.plugins.materials.component',
+      'engine.plugins.materials.block',
+      'engine.plugins.materials.icon'
+    ],
     basePropertyOptions,
     useBaseStyle: true,
     blockBaseStyle: {
@@ -42,7 +47,7 @@ export default {
     header: MaterialHeader
   },
   apis: { ...MaterialBlock.apis },
-  metas: [MaterialBlock, MaterialComponent, ResourceService, MaterialService]
+  metas: [MaterialBlock, MaterialComponent, MaterialIcon, ResourceService, MaterialService]
 }
 
 export { entry, ResourceService, MaterialService }

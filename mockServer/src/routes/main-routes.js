@@ -224,4 +224,26 @@ router.post('block-history/create', async (ctx) => {
   ctx.body = await mockService.blockHistoryService.create(ctx.request.body)
 })
 
+/* 图标库 */
+
+router.post('/app-center/api/icons/list', async (ctx) => {
+  ctx.body = await mockService.iconService.collectionList(ctx.request.body)
+})
+router.post('/app-center/api/icons/create', async (ctx) => {
+  ctx.body = await mockService.iconService.collectionCreate(ctx.request.body)
+})
+router.post('/app-center/api/icons/import', async (ctx) => {
+  ctx.body = await mockService.iconService.collectionImport(ctx.request.body)
+})
+router.post('/app-center/api/icons/remove', async (ctx) => {
+  ctx.body = await mockService.iconService.collectionRemove(ctx.request.body)
+})
+router.post('/app-center/api/icon/import', async (ctx) => {
+  ctx.body = await mockService.iconService.iconImport(ctx.request.body)
+})
+router.post('/app-center/api/icon/remove', async (ctx) => {
+  ctx.body = await mockService.iconService.iconRemove(ctx.request.body)
+})
+
+
 export default router

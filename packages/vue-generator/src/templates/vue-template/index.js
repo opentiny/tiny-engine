@@ -91,7 +91,7 @@ export function generateTemplate(schema) {
       fileType: 'js',
       fileName: 'vite.config.js',
       path: '.',
-      fileContent: genViteConfig(schema)
+      fileContent: genViteConfig(schema, ['test', 'test2'])
     },
     {
       fileType: 'json',

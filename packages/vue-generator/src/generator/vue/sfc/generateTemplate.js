@@ -38,7 +38,8 @@ export const handleTinyIcon = (nameObj, globalHooks) => {
 
   const name = nameObj.schema.props.name
 
-  if (!name) {
+  if (!name || name.includes(':')) {
+    // 预览时不做处理，使用 <Icon></Icon>
     return
   }
 
@@ -67,6 +68,17 @@ export const handleTinyIcon = (nameObj, globalHooks) => {
 
   nameObj.componentName = iconName
   delete nameObj.schema.props.name
+}
+
+export const handleIconifyIcon = (nameObj) => {
+  const name = nameObj.schema.props.name
+  if (!name) {
+    return
+  }
+  if (name.includes(':')) {
+    // Icon 出码时 转换格式 {prefix}-{collection}-{icon}
+    nameObj.componentName = `i-${name.replace(':', '-')}`
+  }
 }
 
 const handleTinyGridSlots = (value, globalHooks, config) => {

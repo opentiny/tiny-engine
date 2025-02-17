@@ -57,3 +57,4 @@ export const fetchImportMap = async () => {
 export const fetchAppSchema = async (id) => getMetaApi(META_SERVICE.Http).get(`/app-center/v1/api/apps/schema/${id}`)
 export const fetchBlockSchema = async (blockName) =>
   getMetaApi(META_SERVICE.Http).get(`/material-center/api/block?label=${blockName}`)
+export const fetchIcons = async () => getMetaApi(META_SERVICE.Http).post(`/app-center/api/icons/list`)

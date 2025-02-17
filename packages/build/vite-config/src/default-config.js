@@ -52,6 +52,11 @@ const getDefaultConfig = (engineConfig) => {
         '/platform-center/api': {
           target: origin,
           changeOrigin: true
+        },
+        '/iconify/api': {
+          target: 'https://api.iconify.design/',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/iconify\/api/, '')
         }
       }
     },

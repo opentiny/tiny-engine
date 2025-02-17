@@ -46,7 +46,7 @@ const preResponse = (res) => {
     return Promise.reject(res.data.error)
   }
 
-  return res.data?.data
+  return res.data?.data ?? res.data
 }
 
 const openLogin = () => {

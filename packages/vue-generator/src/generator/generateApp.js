@@ -10,7 +10,8 @@ import {
   formatCodePlugin,
   parseSchemaPlugin,
   genGlobalState,
-  appendElePlusStylePlugin
+  appendElePlusStylePlugin,
+  addIconAssetsPlugin
 } from '../plugins'
 import CodeGenerator from './codeGenerator'
 
@@ -67,6 +68,10 @@ export function generateApp(config = {}) {
   // 默认支持 element-plus 注入样式
   if (config?.customContext?.injectElementPlusStyle !== false) {
     transformEnd.push(appendElePlusStylePlugin(config?.customContext?.injectElementPlusStyle || {}))
+  }
+
+  if (config?.customContext?.useIconifyIcon !== false) {
+    transform.push(addIconAssetsPlugin())
   }
 
   const codeGenInstance = new CodeGenerator({

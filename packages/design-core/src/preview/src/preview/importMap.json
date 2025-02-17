@@ -13,6 +13,7 @@
     "@opentiny/tiny-engine-builtin-component": "${VITE_CDN_DOMAIN}/@opentiny/tiny-engine-builtin-component@^2.0.0/dist/index.mjs",
     "vue-demi": "${VITE_CDN_DOMAIN}/vue-demi@0.13.11/lib/index.mjs",
     "pinia": "${VITE_CDN_DOMAIN}/pinia@2.0.22/dist/pinia.esm-browser.js",
+    "@iconify/vue": "${VITE_CDN_DOMAIN}/@iconify/vue@4.1.1/dist/iconify.mjs",
     "@opentiny/vue": "${VITE_CDN_DOMAIN}/@opentiny/vue-runtime@${opentinyVueVersion}/dist3/tiny-vue-pc.mjs",
     "@opentiny/vue-icon": "${VITE_CDN_DOMAIN}/@opentiny/vue-runtime@${opentinyVueVersion}/dist3/tiny-vue-icon.mjs",
     "@opentiny/vue-common": "${VITE_CDN_DOMAIN}/@opentiny/vue-runtime@${opentinyVueVersion}/dist3/tiny-vue-common.mjs",

@@ -53,11 +53,11 @@ export default {
       iconSearchValue: '',
       icon: {
         name: props.modelValue,
-        component: props.modelValue && SvgICons[props.modelValue]()
+        component: props.modelValue && SvgICons[props.modelValue]?.()
       },
       defaultIcon: {
         name: props.modelValue,
-        component: props.modelValue && SvgICons[props.modelValue]()
+        component: props.modelValue && SvgICons[props.modelValue]?.()
       }
     })
 

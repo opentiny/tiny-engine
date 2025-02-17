@@ -351,26 +351,32 @@ export const handleTinyIconPropsHook = (schemaData, globalHooks, config) => {
 
   Object.entries(props).forEach(([key, value]) => {
     if (value?.componentName === 'Icon' && value?.props?.name) {
+      // TinyIcon
       const name = value.props.name
-      const iconName = name.startsWith(TINY_ICON) ? name : `Tiny${name}`
-      const exportName = name.replace(TINY_ICON, 'icon')
-      const success = globalHooks.addImport('@opentiny/vue-icon', {
-        componentName: exportName,
-        exportName: exportName,
-        package: '@opentiny/vue-icon',
-        version: '^3.10.0',
-        destructuring: true
-      })
 
-      if (success) {
-        globalHooks.addStatement({
-          position: INSERT_POSITION.BEFORE_PROPS,
-          value: `const ${iconName} = ${exportName}()`,
-          key: iconName
+      if (name.includes(':')) {
+        // 略过iconify图标
+      } else {
+        const iconName = name.startsWith(TINY_ICON) ? name : `Tiny${name}`
+        const exportName = name.replace(TINY_ICON, 'icon')
+        const success = globalHooks.addImport('@opentiny/vue-icon', {
+          componentName: exportName,
+          exportName: exportName,
+          package: '@opentiny/vue-icon',
+          version: '^3.10.0',
+          destructuring: true
         })
-      }
 
-      attributes.push(isJSX ? `icon={${iconName}}` : `:icon="${iconName}"`)
+        if (success) {
+          globalHooks.addStatement({
+            position: INSERT_POSITION.BEFORE_PROPS,
+            value: `const ${iconName} = ${exportName}()`,
+            key: iconName
+          })
+        }
+
+        attributes.push(isJSX ? `icon={${iconName}}` : `:icon="${iconName}"`)
+      }
 
       delete props[key]
     }

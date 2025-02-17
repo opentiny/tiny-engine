@@ -10,6 +10,7 @@
  *
  */
 import PageService from './pages'
+import IconService from './icons'
 import AppService from './app'
 import BlockService from './block'
 import SourceService from './source'
@@ -19,6 +20,7 @@ import Schema2CodeServcice from './schema2code'
 export default class MockService {
   schema2codeService
   pageService
+  iconService
   appService
   blockService
   sourceService
@@ -28,6 +30,7 @@ export default class MockService {
   constructor() {
     this.schema2codeService = new Schema2CodeServcice()
     this.pageService = new PageService()
+    this.iconService = new IconService()
     this.appService = new AppService()
     this.blockService = new BlockService()
     this.sourceService = new SourceService()
