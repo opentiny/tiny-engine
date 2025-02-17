@@ -23,8 +23,8 @@ export default {
   },
   props: {
     options: {
-      type: String,
-      default: ''
+      type: Object,
+      default: () => ({})
     }
   },
   setup() {

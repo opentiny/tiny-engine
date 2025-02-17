@@ -10,7 +10,7 @@ export default () => {
   
   export default defineConfig({
     server: {
-      allowedHosts: true
+      allowedHosts: ['localhost', '.csb.app']
     },
     resolve: {
       alias: {
