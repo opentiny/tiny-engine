@@ -6,7 +6,6 @@
     :disabled="state.disabled"
     popper-class="preview-switcher-popover"
     ref="popoverRef"
-    :key="key"
   >
     <template #reference>
       <div
@@ -93,7 +92,6 @@ export default {
     )
 
     const popoverRef = ref()
-    const key = ref(0)
 
     const handleClick = async () => {
       if (state.disabled) {
@@ -111,9 +109,8 @@ export default {
         }))
       )
 
-      // 重新渲染popover。如果不重新渲染popover，在popover已经弹出的情况下，再去另一个位置点击触发弹出，会导致popover闪现（打开后立即关闭）
-      key.value++
-
+      // 在popover已经弹出的情况下，再去另一个位置点击触发弹出，会导致popover闪现（打开后立即关闭），是因为popover关闭时会播放动画，导致延迟关闭
+      // 加上setTimeout，稍后重新打开popover
       setTimeout(() => {
         popoverRef.value?.doShow()
       }, 0)
@@ -155,7 +152,6 @@ export default {
     return {
       popoverRef,
       state,
-      key,
       handleClick,
       handleSwitchPreview
     }
