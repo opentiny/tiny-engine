@@ -12,6 +12,7 @@ export { default as Redoundo, HistoryService } from '@opentiny/tiny-engine-toolb
 export { default as Save } from '@opentiny/tiny-engine-toolbar-save'
 export { default as Clean } from '@opentiny/tiny-engine-toolbar-clean'
 export { default as Preview } from '@opentiny/tiny-engine-toolbar-preview'
+export { default as Codesandbox } from '@opentiny/tiny-engine-toolbar-codesandbox'
 export { default as GenerateCode, SaveLocalService } from '@opentiny/tiny-engine-toolbar-generate-code'
 export { default as Refresh } from '@opentiny/tiny-engine-toolbar-refresh'
 export { default as Collaboration } from '@opentiny/tiny-engine-toolbar-collaboration'

@@ -9,6 +9,9 @@ export default () => {
   import vueJsx from '@vitejs/plugin-vue-jsx'
   
   export default defineConfig({
+    server: {
+      allowedHosts: ['localhost', '.csb.app']
+    },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, 'src')

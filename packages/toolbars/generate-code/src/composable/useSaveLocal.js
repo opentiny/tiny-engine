@@ -11,7 +11,16 @@
  */
 
 import { Modal } from '@opentiny/vue'
-import { useCanvas, getMergeMeta, useEnv } from '@opentiny/tiny-engine-meta-register'
+import { fetchMetaData, fetchPageList, fetchBlockSchema } from '../http'
+import {
+  useBlock,
+  useCanvas,
+  getMergeMeta,
+  getMetaApi,
+  useEnv,
+  META_SERVICE,
+  META_APP
+} from '@opentiny/tiny-engine-meta-register'
 
 // 获取当前页面的全量信息
 
@@ -76,9 +85,133 @@ const savePageLocal = async () => {
   })
 }
 
+const getParams = () => {
+  const { getSchema } = useCanvas()
+  const { isBlock, getCurrentPage } = useCanvas()
+  const { getCurrentBlock } = useBlock()
+
+  const params = {
+    framework: getMergeMeta('engine.config')?.dslMode,
+    platform: getMergeMeta('engine.config')?.platformId,
+    pageInfo: {
+      schema: getSchema()
+    }
+  }
+
+  const paramsMap = new URLSearchParams(location.search)
+  params.app = paramsMap.get('id')
+  params.tenant = paramsMap.get('tenant')
+
+  if (isBlock()) {
+    const block = getCurrentBlock()
+    params.id = block?.id
+    params.pageInfo.name = block?.label
+    params.type = 'Block'
+  } else {
+    const page = getCurrentPage()
+    params.id = page?.id
+    params.pageInfo.name = page?.name
+    params.type = 'Page'
+  }
+
+  return params
+}
+
+const getAllPageDetails = async (pageList) => {
+  const detailPromise = pageList.map(({ id }) => getMetaApi(META_APP.AppManage).getPageById(id))
+  const detailList = await Promise.allSettled(detailPromise)
+
+  return detailList
+    .map((item) => {
+      if (item.status === 'fulfilled' && item.value) {
+        return item.value
+      }
+    })
+    .filter((item) => Boolean(item))
+}
+
+const getPreGenerateInfo = async () => {
+  const params = getParams()
+  const { id } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
+  const { getAllNestedBlocksSchema, generateAppCode } = getMetaApi('engine.service.generateCode')
+
+  const promises = [
+    getMetaApi(META_SERVICE.Http).get(`/app-center/v1/api/apps/schema/${id}`),
+    fetchMetaData(params),
+    fetchPageList(params.app)
+  ]
+
+  const [appData, metaData, pageList, dirHandle] = await Promise.all(promises)
+  const pageDetailList = await getAllPageDetails(pageList)
+
+  // 这里需要手动传入 blockSet 的原因是多页面可能会存在重复的区块
+  const blockSet = new Set()
+  const list = pageDetailList.map((page) => getAllNestedBlocksSchema(page.page_content, fetchBlockSchema, blockSet))
+  const blocks = await Promise.allSettled(list)
+
+  const blockSchema = []
+  blocks.forEach((item) => {
+    if (item.status === 'fulfilled' && Array.isArray(item.value)) {
+      blockSchema.push(...item.value)
+    }
+  })
+
+  const appSchema = {
+    // metaData 包含dataSource、utils、i18n、globalState
+    ...metaData,
+    // 页面 schema
+    pageSchema: pageDetailList.map((item) => {
+      const { page_content, ...meta } = item
+
+      return {
+        ...page_content,
+        meta: {
+          ...meta,
+          router: meta.route
+        }
+      }
+    }),
+    blockSchema,
+    // 物料数据
+    componentsMap: [...(appData.componentsMap || [])],
+
+    meta: {
+      ...(appData.meta || {})
+    }
+  }
+
+  const res = await generateAppCode(appSchema)
+
+  const { genResult = [] } = res || {}
+  const fileRes = genResult.map(({ fileContent, fileName, path, fileType }) => {
+    const slash = path.endsWith('/') || path === '.' ? '' : '/'
+    let filePath = `${path}${slash}`
+    if (filePath.startsWith('./')) {
+      filePath = filePath.slice(2)
+    }
+    if (filePath.startsWith('.')) {
+      filePath = filePath.slice(1)
+    }
+
+    if (filePath.startsWith('/')) {
+      filePath = filePath.slice(1)
+    }
+
+    return {
+      fileContent,
+      filePath: `${filePath}${fileName}`,
+      fileType
+    }
+  })
+
+  return [dirHandle, fileRes]
+}
+
 export default () => {
   return {
+    getPreGenerateInfo,
     confirmSaveLocal,
-    savePageLocal
+    savePageLocal,
+    getParams
   }
 }

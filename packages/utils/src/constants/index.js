@@ -75,6 +75,12 @@ export const BLOCK_OPENNESS = {
   Special: 2
 }
 
+
+export const PREVIEW_SANDBOX = {
+  Web: 'Web',
+  CodeSandbox: 'CodeSandbox'
+}
+
 export const OPEN_DELAY = {
   Default: 500
 }
