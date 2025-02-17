@@ -145,7 +145,7 @@ const { collapseMap, setCollapse, switchCollapse } = useCollapseMap()
  * @property {string} [parentId]
  * @property {RowItem} parent
  * @property {boolean} hasChildren
- * @property {collapsed} boolean
+ * @property {boolean} collapsed
  * @property {any} rawData
  */
 
@@ -245,7 +245,7 @@ const getPositionData = (event) => {
   }
 
   if (offsetY >= rect.height - threshold) {
-    // 顶部边框
+    // 底部边框
     return { position: 'bottom', borderClass: 'border-bottom' }
   }
 
