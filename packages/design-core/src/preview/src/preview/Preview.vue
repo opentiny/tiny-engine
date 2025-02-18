@@ -14,7 +14,7 @@
 
 <script>
 import { defineComponent, computed, defineAsyncComponent, ref } from 'vue'
-import { Repl, useStore, useVueImportMap } from '@vue/repl'
+import { Repl, useStore } from '@vue/repl'
 import { getMetaApi } from '@opentiny/tiny-engine-meta-register'
 import { getImportMap as getInitImportMap } from './importMap'
 import srcFiles from './srcFiles'
@@ -39,11 +39,6 @@ export default {
   setup() {
     const debugSwitch = injectDebugSwitch()
     const editorComponent = computed(() => (debugSwitch?.value ? Monaco : EmptyEditor))
-    const { importMap: builtinImportMap, vueVersion } = useVueImportMap({
-      runtimeDev: 'https://unpkg.com/vue@3.5.13/dist/vue.runtime.esm-browser.js',
-      runtimeProd: 'https://unpkg.com/vue@3.5.13/dist/vue.runtime.esm-browser.prod.js',
-      serverRenderer: 'https://unpkg.com/@vue/server-renderer@3.5.13/dist/server-renderer.esm-browser.js'
-    })
 
     const sfcOptions = ref({
       script: {
@@ -53,14 +48,11 @@ export default {
     })
 
     const currentImportMap = ref({
-      imports: {
-        ...builtinImportMap.value.imports
-      }
+      imports: {}
     })
 
     const store = useStore({
       builtinImportMap: currentImportMap,
-      vueVersion,
       showOutput: false,
       outputMode: 'preview',
       sfcOptions
@@ -72,12 +64,8 @@ export default {
       currentImportMap.value = newImportMap
     }
 
-    // 相比store.setFiles，只要少了state.activeFile = state.files[filename]，因为改变activeFile会触发多余的文件解析
     const setFiles = async (newFiles, mainFileName) => {
       await store.setFiles(newFiles, mainFileName)
-      // 强制更新 codeSandbox
-      // store.state.resetFlip = !store.state.resetFlip
-      // store['initTsConfig']() // 触发获取组件d.ts方便调试
     }
 
     const queryParams = getSearchParams()
@@ -137,19 +125,14 @@ export default {
       return familyPages
     }
 
-    const promiseList = [
-      fetchAppSchema(queryParams?.app),
-      fetchMetaData(queryParams),
-      setFiles(srcFiles, 'src/App.vue'),
-      getImportMap()
-    ]
-    Promise.all(promiseList).then(async ([appData, metaData, _void, importMapData]) => {
-      // store.setImportMap(importMapData)
+    const promiseList = [fetchAppSchema(queryParams?.app), fetchMetaData(queryParams), getImportMap()]
+
+    Promise.all(promiseList).then(async ([appData, metaData, importMapData]) => {
       setImportMap(importMapData)
+      await setFiles(srcFiles, 'App.vue')
 
       const blocks = await getAllNestedBlocksSchema(queryParams.pageInfo?.schema, fetchBlockSchema)
 
-      // TODO: 需要验证级联生成 block schema
       // TODO: 物料内置 block 需要如何处理？
       const pageCode = [
         ...getFamilyPages(appData),
@@ -181,13 +164,12 @@ export default {
       const metaFiles = generateMetaFiles(metaData)
       Object.assign(newFiles, metaFiles)
 
-      setFiles(newFiles, 'src/App.vue')
+      setFiles(newFiles, 'App.vue')
       return PreviewTips.READY_FOR_PREVIEW
     })
 
     return {
       store,
-      sfcOptions,
       editorComponent,
       debugSwitch
     }
