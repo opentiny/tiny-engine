@@ -45,7 +45,7 @@
     </template>
   </plugin-panel>
 
-  <div v-if="isPanelShow" class="data-source-right-panel">
+  <div v-if="isPanelShow" class="data-source-right-panel data-source">
     <div class="header">
       <span>{{ addDataSource }}</span>
       <span class="options-wrap">

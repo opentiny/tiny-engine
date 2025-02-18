@@ -1,6 +1,7 @@
 <template>
   <plugin-panel
     title="资源管理"
+    class="bridge-manage"
     :fixed-name="PLUGIN_NAME.Bridge"
     :fixedPanels="fixedPanels"
     :isCloseLeft="false"
