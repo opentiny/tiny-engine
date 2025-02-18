@@ -4,5 +4,8 @@ export default {
   name: 'style',
   type: 'setting',
   align: 'left',
-  icon: ''
+  icon: 'display-inline',
+  options: {
+    align: 'rightTop'
+  }
 }
