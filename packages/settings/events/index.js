@@ -20,9 +20,7 @@ import './src/styles/vars.less'
 export default {
   ...metaData,
   entry,
-  options: {
-    commonEvents
-  },
+  options: Object.assign({}, commonEvents, metaData.options),
   components: {
     BindEventsDialogSidebar,
     BindEventsDialogContent

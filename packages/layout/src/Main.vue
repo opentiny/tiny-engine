@@ -16,6 +16,7 @@
         <div class="tiny-engine-right-wrap">
           <design-settings
             :settings="registry.settings"
+            :render-panel="settings.render"
             v-show="layoutState.settings.showDesignSettings"
             ref="right"
           ></design-settings>
@@ -31,7 +32,6 @@ import DesignToolbars from './DesignToolbars.vue'
 import DesignPlugins from './DesignPlugins.vue'
 import DesignSettings from './DesignSettings.vue'
 import meta from '../meta'
-import { META_APP as PLUGIN_NAME } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   name: 'TinyLowCode',
@@ -50,18 +50,26 @@ export default {
       type: Object
     }
   },
-  setup() {
+  setup(props) {
     const layoutRegistry = getMergeRegistry(meta.type)
     const configProvider = layoutRegistry.options.configProvider
     const configProviderDesign = layoutRegistry.options.configProviderDesign
 
-    // Step 1: 收集插件的 align 信息
-    const alignGroups = {}
-    const pluginIDList = Object.values(PLUGIN_NAME)
-      .filter((item) => item.includes('plugins'))
-      .map((value) => ({ id: value }))
+    const { layoutState } = useLayout()
+    const { plugins, settings } = layoutState
 
-    pluginIDList.forEach((item) => {
+    const toggleNav = ({ item }) => {
+      if (!item.id) return
+      plugins.render = plugins.render === item.id ? null : item.id
+    }
+
+    // 收集插件的 align 信息
+    const alignGroups = {}
+
+    // 合并插件和设置列表
+    const pluginList = [...props.registry.plugins, ...props.registry.settings]
+
+    pluginList.forEach((item) => {
       if (item.id) {
         const align = item.options?.align || 'leftTop'
         if (!alignGroups[align]) {
@@ -73,7 +81,7 @@ export default {
 
     // Step 2: 为每个插件分配 index 值
     const plugin = {}
-    pluginIDList.forEach((item) => {
+    pluginList.forEach((item) => {
       if (item.id) {
         const align = item.options?.align || 'leftTop'
         const index = alignGroups[align].indexOf(item.id)
@@ -88,19 +96,12 @@ export default {
     })
     localStorage.setItem('plugin', JSON.stringify(plugin))
 
-    const { layoutState } = useLayout()
-    const { plugins } = layoutState
-
-    const toggleNav = ({ item }) => {
-      if (!item.id) return
-      plugins.render = plugins.render === item.id ? null : item.id
-    }
-
     return {
       layoutRegistry,
       configProvider,
       configProviderDesign,
       plugins,
+      settings,
       toggleNav,
       layoutState
     }
@@ -132,7 +133,8 @@ export default {
     }
   }
   .tiny-engine-right-wrap {
-    position: relative;
+    display: flex;
+    flex-flow: row nowrap;
     z-index: 4;
   }
   :deep(.monaco-editor .suggest-widget) {

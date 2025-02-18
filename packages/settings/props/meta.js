@@ -4,5 +4,8 @@ export default {
   type: 'setting',
   align: 'left',
   name: 'props',
-  icon: ''
+  icon: 'form',
+  options: {
+    align: 'rightTop'
+  }
 }

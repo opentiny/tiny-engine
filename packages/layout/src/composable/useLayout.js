@@ -52,7 +52,7 @@ const layoutState = reactive({
   settings: {
     isShow: true,
     fixedPanels: [],
-    render: 'props',
+    render: 'engine.setting.props',
     api: null,
     activating: false, // 右侧面版激活提示状态
     showDesignSettings: true
@@ -96,6 +96,26 @@ const changeRightFixedPanels = (pluginName) => {
     : [...rightFixedPanelsStorage.value, pluginName]
 }
 
+const registerPluginApi = (api) => {
+  Object.assign(layoutState.plugins.api, api)
+}
+
+const getPluginApi = (pluginName) => {
+  const { plugins } = layoutState
+
+  return plugins.api[pluginName] || plugins.api
+}
+
+export const getPlugin = (pluginName) => {
+  // TODO: 暂时先这样，明天优化
+  return pluginName
+}
+
+export const getPluginById = (pluginId) => {
+  // TODO: 暂时先这样，明天优化
+  return pluginId
+}
+
 const getScale = () => layoutState.dimension.scale
 
 const getPluginState = () => layoutState.plugins
@@ -118,6 +138,13 @@ const activeSetting = (name) => {
       settings.activating = false
     }, 1000)
   })
+}
+
+const closeSetting = (forceClose) => {
+  const { settings } = layoutState
+  if (!settings.fixedPanels.includes(settings.render) || forceClose) {
+    settings.render = null
+  }
 }
 
 // 激活plugin面板并返回当前插件注册的Api
@@ -273,12 +300,17 @@ export default () => {
     PLUGIN_NAME,
     PLUGIN_POSITION,
     activeSetting,
+    closeSetting,
     activePlugin,
     closePlugin,
     layoutState,
     getScale,
     setDimension,
     getDimension,
+    registerPluginApi,
+    getPlugin,
+    getPluginById,
+    getPluginApi,
     pluginState,
     getPluginState,
     isEmptyPage,

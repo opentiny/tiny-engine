@@ -4,5 +4,8 @@ export default {
   type: 'setting',
   align: 'left',
   name: 'event',
-  icon: ''
+  icon: 'target',
+  options: {
+    align: 'rightTop'
+  }
 }
