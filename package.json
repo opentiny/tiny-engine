@@ -39,6 +39,7 @@
     "lint-staged": "^13.2.0",
     "mysql": "^2.18.1",
     "picocolors": "^1.0.0",
+    "prettier": "^2.7.1",
     "vue-eslint-parser": "^8.0.1"
   },
   "browserslist": [
