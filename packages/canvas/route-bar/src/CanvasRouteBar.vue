@@ -7,7 +7,7 @@
           :class="[
             {
               route: route.isPage && route.id !== pageId,
-              bold: fontIsBold(route.id, index),
+              bold: shouldHighlight(route.id, index),
               'is-preview': route.isPreview
             }
           ]"
@@ -118,7 +118,7 @@ watch(
   { immediate: true }
 )
 
-const fontIsBold = (id, index) => {
+const shouldHighlight = (id, index) => {
   if (existsPreview.value) {
     return id === pageId.value
   }
@@ -181,16 +181,16 @@ const handleClearPreview = () => {
   margin: 0 2px;
 }
 .bold {
-  font-weight: bold;
+  font-weight: var(--te-base-font-weight-bold);
 }
 .is-preview {
   color: var(--te-common-text-weaken);
 }
 #canvas-route-bar:hover .clear-preview {
-  visibility: unset;
+  visibility: visible;
 }
 .clear-preview {
-  border-radius: 999px;
+  border-radius: 50%;
   visibility: hidden;
   margin-left: 2px;
   width: 16px;
