@@ -14,6 +14,7 @@ function parseSchema() {
       const { pageSchema } = schema
       const pagesMap = {}
       const resPageTree = []
+
       schema.componentsMap = [...schema.componentsMap, ...BUILTIN_COMPONENTS_MAP]
 
       for (const componentItem of pageSchema) {
@@ -25,9 +26,7 @@ function parseSchema() {
           continue
         }
 
-        const newComponentItem = {
-          ...componentItem
-        }
+        const newComponentItem = structuredClone(componentItem)
         let path = ''
         let curParentId = componentItem.meta.parentId
         let depth = 0

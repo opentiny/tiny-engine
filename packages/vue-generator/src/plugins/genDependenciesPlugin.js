@@ -22,9 +22,23 @@ const getComponentsSet = (schema) => {
 }
 
 const parseSchema = (schema) => {
-  const { utils = [], componentsMap = [] } = schema
-
+  const { utils = [], componentsMap = [], packages = [] } = schema
   const resDeps = {}
+  const componentsSet = getComponentsSet(schema)
+
+  for (const { package: packageName, version, componentName } of componentsMap) {
+    if (packageName && !resDeps[packageName] && componentsSet.has(componentName)) {
+      resDeps[packageName] = version || 'latest'
+    }
+  }
+
+  packages.forEach((item) => {
+    const { package: packageName, version } = item
+
+    if (packageName && !resDeps[packageName]) {
+      resDeps[packageName] = version || 'latest'
+    }
+  })
 
   for (const {
     type,
@@ -35,14 +49,6 @@ const parseSchema = (schema) => {
     }
 
     resDeps[packageName] = version || 'latest'
-  }
-
-  const componentsSet = getComponentsSet(schema)
-
-  for (const { package: packageName, version, componentName } of componentsMap) {
-    if (packageName && !resDeps[packageName] && componentsSet.has(componentName)) {
-      resDeps[packageName] = version || 'latest'
-    }
   }
 
   // 处理内置 Icon，如果使用了 tinyvue 组件，则默认添加 @opentiny/vue-icon 依赖，且依赖与 @opentiny/vue 依赖版本一致

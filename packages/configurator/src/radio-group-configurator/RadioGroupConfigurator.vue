@@ -75,4 +75,10 @@ export default {
 }
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.meta-radio-group-container {
+  :deep(.tiny-radio-button__inner.tiny-radio-button__inner.tiny-radio-button__inner) {
+    padding: 5px 16px;
+  }
+}
+</style>

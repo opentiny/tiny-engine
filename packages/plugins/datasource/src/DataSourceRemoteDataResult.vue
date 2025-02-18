@@ -89,17 +89,16 @@ export default {
 .response-data {
   position: relative;
   .resonse-header {
-    padding: 10px;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 
     .life-cycle-alert {
-      font-size: 11px;
-      color: var(--ti-lowcode-datasource-tip-color);
+      font-size: var(--te-base-font-size-base);
+      color: var(--te-datasource-common-tip-text-color);
     }
     .title {
-      color: var(--ti-lowcode-datasource-toolbar-breadcrumb-color);
+      color: var(--te-datasource-toolbar-breadcrumb-text-color);
       display: inline-block;
-      border-bottom: 1px solid var(--ti-lowcode-datasource-tabs-border-color);
+      border-bottom: 1px solid var(--te-datasource-tabs-border-color);
       width: 100%;
       padding-bottom: 8px;
     }
@@ -116,14 +115,17 @@ export default {
     z-index: 9999;
     .tiny-button {
       border-radius: 4px;
-      border-color: var(--te-common-border-default);
+      border-color: var(--te-datasource-common-btn-border-color);
+      & + .tiny-button {
+        margin-left: 4px;
+      }
     }
   }
 
   .monaco-editor {
     height: 120px;
     margin-top: 8px;
-    border: 1px solid var(--te-common-border-divider);
+    border: 1px solid var(--te-datasource-common-border-color-divider);
     border-radius: 4px;
   }
 }

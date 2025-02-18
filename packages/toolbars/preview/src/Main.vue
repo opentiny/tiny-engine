@@ -12,8 +12,17 @@
 
 <script>
 import { previewPage, previewBlock } from '@opentiny/tiny-engine-common/js/preview'
-import { useBlock, useCanvas, useLayout, useNotify } from '@opentiny/tiny-engine-meta-register'
-import { getMergeMeta, getOptions } from '@opentiny/tiny-engine-meta-register'
+import {
+  useBlock,
+  useCanvas,
+  useLayout,
+  useNotify,
+  usePage,
+  getMergeMeta,
+  getOptions,
+  META_SERVICE,
+  getMetaApi
+} from '@opentiny/tiny-engine-meta-register'
 import meta from '../meta'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 
@@ -30,6 +39,7 @@ export default {
   setup() {
     const { isBlock, getCurrentPage, getSchema } = useCanvas()
     const { getCurrentBlock } = useBlock()
+    const { getFamily } = usePage()
 
     const preview = async () => {
       const { beforePreview, previewMethod, afterPreview } = getOptions(meta.id)
@@ -77,8 +87,11 @@ export default {
         previewBlock(params)
       } else {
         const page = getCurrentPage()
+        const theme = getMetaApi(META_SERVICE.ThemeSwitch)?.getThemeState()?.theme
         params.id = page?.id
         params.pageInfo.name = page?.name
+        params.ancestors = await getFamily(params)
+        params.theme = theme
         previewPage(params)
       }
 

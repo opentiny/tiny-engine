@@ -54,25 +54,23 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 12px;
-  margin-top: 12px;
-  font-size: 12px;
+  padding: 12px 0;
+  font-size: var(--te-base-font-size-base);
 
   div {
-    color: var(--te-common-text-secondary);
+    color: var(--te-datasource-common-text-color-primary);
   }
 
   .icon-del {
     cursor: pointer;
-    color: var(--ti-lowcode-datasource-toolbar-icon-color);
+    color: var(--te-datasource-toolbar-icon-color);
   }
 }
 
 .monaco-editor {
   min-height: 120px;
   height: 100%;
-  margin-top: 8px;
-  border: 1px solid var(--te-common-border-divider);
+  border: 1px solid var(--te-datasource-common-border-color-divider);
   border-radius: 4px;
 }
 </style>

@@ -15,7 +15,6 @@ import { registry } from './defineEntry.js'
 import { init } from '@opentiny/tiny-engine'
 import { configurators } from './configurators/'
 import 'virtual:svg-icons-register'
-import '@opentiny/tiny-engine-theme'
 
 init({
   registry,

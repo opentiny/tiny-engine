@@ -10,6 +10,7 @@ import {
 import { generateTag, HTML_DEFAULT_VOID_ELEMENTS } from './generateTag'
 import { specialTypeHandler } from './generateAttribute'
 import { thisPropsBindRe, thisRegexp } from '@/utils'
+import { getImportMap } from './parseImport'
 
 export const handleComponentNameHook = (optionData) => {
   const { componentName, schema } = optionData
@@ -42,6 +43,9 @@ export const handleTinyIcon = (nameObj, globalHooks) => {
     return
   }
 
+  // 增加 svg 颜色属性，使编辑模式与出码模式一致
+  nameObj.schema.props['fill'] = 'currentColor'
+
   const iconName = name.startsWith(TINY_ICON) ? name : `Tiny${name}`
   const exportName = name.replace(TINY_ICON, 'icon')
 
@@ -66,37 +70,60 @@ export const handleTinyIcon = (nameObj, globalHooks) => {
   delete nameObj.schema.props.name
 }
 
-const handleTinyGridSlots = (value, globalHooks, config) => {
-  if (!Array.isArray(value)) {
+const transformSlots = (slots) => {
+  if (!slots || typeof slots !== 'object') {
+    return []
+  }
+
+  const res = Object.entries(slots).map(([key, value]) => {
+    return {
+      componentName: 'template',
+      props: {
+        slot: {
+          name: key,
+          params: value?.params || ''
+        }
+      },
+      children: value?.value
+    }
+  })
+
+  return res
+}
+
+const transformColumnToChildren = (columns) => {
+  if (!Array.isArray(columns)) {
     return
   }
 
-  value.forEach((slotItem) => {
-    const name = slotItem.componentName
+  const res = columns.map((item) => {
+    const { slots, ...restItem } = item
 
-    if (!name) {
-      return
+    let children = []
+
+    if (slots) {
+      children = transformSlots(slots)
     }
 
-    if (slotItem.componentType === 'Block') {
-      const importPath = `${config.blockRelativePath}${name}${config.blockSuffix}`
-
-      globalHooks.addImport(importPath, {
-        exportName: name,
-        componentName: name,
-        package: importPath
-      })
-    } else if (name?.startsWith?.('Tiny')) {
-      globalHooks.addImport('@opentiny/vue', {
-        destructuring: true,
-        exportName: name.slice(4),
-        componentName: name,
-        package: '@opentiny/vue'
-      })
+    return {
+      componentName: 'TinyGridColumn',
+      props: restItem,
+      children
     }
-
-    handleTinyGridSlots(slotItem.children, globalHooks, config)
   })
+
+  return res
+}
+
+// 检测 tinyGrid 表格列是否有插槽配置
+const columnHasSlots = (columns) => {
+  for (const columnItem of columns) {
+    if (columnItem.slots && typeof columnItem.slots === 'object' && Object.keys(columnItem.slots).length > 0) {
+      return true
+    }
+  }
+
+  return false
 }
 
 export const handleTinyGrid = (schemaData, globalHooks, config) => {
@@ -129,11 +156,26 @@ export const handleTinyGrid = (schemaData, globalHooks, config) => {
         value: name
       }
     }
-
-    if (typeof item.slots === 'object') {
-      Object.values(item.slots).forEach((slotItem) => handleTinyGridSlots(slotItem?.value, globalHooks, config))
-    }
   })
+
+  const hasSlots = columnHasSlots(props.columns)
+
+  // 存在 slots，将表格列转化成 children 的配置
+  if (hasSlots) {
+    schemaData.schema.children = schemaData.schema.children || []
+    schemaData.schema.children.push(...transformColumnToChildren(props.columns))
+
+    // 解析 slot 中的 依赖
+    const { pkgMap = {}, blockPkgMap = {} } = getImportMap(schemaData.schema, config.componentsMap, config)
+
+    Object.entries({ ...pkgMap, ...blockPkgMap }).forEach(([key, value]) => {
+      value.forEach((valueItem) => {
+        globalHooks.addImport(key, valueItem)
+      })
+    })
+
+    delete props.columns
+  }
 }
 
 /**
@@ -200,7 +242,7 @@ export const validEmptyTemplateHook = (schema = {}) => {
 
 // TODO: 支持物料中自定义出码关联片段
 
-export const recursiveGenTemplateByHook = (schemaWithRes, globalHooks, config = {}) => {
+export const recursiveGenTemplateByHook = (schemaWithRes, globalHooks, config = {}, nextPage) => {
   const schemaChildren = schemaWithRes?.schema?.children || []
   const { hooks = {}, isJSX } = config
   // 自定义 hooks
@@ -208,7 +250,6 @@ export const recursiveGenTemplateByHook = (schemaWithRes, globalHooks, config = 
 
   if (!Array.isArray(schemaChildren)) {
     schemaWithRes.children.push(schemaChildren || '')
-
     return
   }
 
@@ -223,7 +264,11 @@ export const recursiveGenTemplateByHook = (schemaWithRes, globalHooks, config = 
       return schemaItem || ''
     }
 
-    const { componentName, component } = schemaItem
+    let { componentName, component } = schemaItem
+
+    if (nextPage) {
+      componentName = componentName === 'RouterView' ? nextPage : componentName
+    }
 
     const optionData = {
       schema: schemaItem,
@@ -236,7 +281,7 @@ export const recursiveGenTemplateByHook = (schemaWithRes, globalHooks, config = 
     }
 
     for (const hookItem of [...genTemplateHooks, recursiveGenTemplateByHook]) {
-      hookItem(optionData, globalHooks, config)
+      hookItem(optionData, globalHooks, config, nextPage)
     }
 
     const startTag = generateTag(optionData.componentName, {
@@ -258,13 +303,13 @@ ${optionData.prefix.join('')}${startTag}${optionData.children.join('')}${endTag}
   schemaWithRes.children = schemaWithRes.children.concat(resArr)
 }
 
-export const genTemplateByHook = (schema, globalHooks, config) => {
+export const genTemplateByHook = (schema, globalHooks, config, nextPage) => {
   const parsedSchema = {
     children: [],
     schema: structuredClone({ children: [{ ...schema, componentName: 'div' }] })
   }
 
-  recursiveGenTemplateByHook(parsedSchema, globalHooks, config)
+  recursiveGenTemplateByHook(parsedSchema, globalHooks, config, nextPage)
 
   return `<template>${parsedSchema.children.join('')}</template>`
 }

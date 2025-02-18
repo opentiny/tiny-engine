@@ -97,10 +97,9 @@ export default {
 
 <style lang="less">
 :root {
-  --ti-lowcode-common-secondary-text-color: #adb0b8;
-  --ti-lowcode-common-border-color: #dfe1e6;
-  --ti-lowcode-common-hover-bg-color: #f2f5fc;
-  --ti-lowcode-mask-bg: #fafafa;
+  --te-setting-design-secondary-text-color: #adb0b8;
+  --te-setting-design-hover-bg-color: #f2f5fc;
+  --te-lowcode-mask-bg: #fafafa;
   --max-height: calc(65vh - 70px);
 }
 html {
@@ -182,9 +181,8 @@ td {
 }
 .mask {
   .source-code {
-    --ti-lowcode-toolbar-bg: var(--ti-lowcode-mask-bg);
     .tiny-button {
-      --ti-button-info-normal-bg-color: var(--te-common-color-info);
+      background-color: #1476ff;
     }
   }
 }
@@ -213,7 +211,7 @@ td {
   }
 
   .canvas {
-    background: var(--ti-lowcode-common-hover-bg-color);
+    background: var(--te-setting-design-hover-bg-color);
     padding: 20px;
     margin: 0 20px;
   }

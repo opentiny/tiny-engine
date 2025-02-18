@@ -40,10 +40,10 @@ export default {
         transition: 0.3s;
 
         &:hover {
-          color: var(--ti-lowcode-toolbar-icon-color);
+          color: var(--te-component-common-icon-color-primary);
 
           svg {
-            color: var(--ti-lowcode-toolbar-icon-color);
+            color: var(--te-component-common-icon-color-primary);
           }
         }
       }

@@ -39,7 +39,7 @@ export default {
   width: 100%;
   .sep-line {
     position: absolute;
-    background-color: var(--ti-lowcode-toolbar-active-bg);
+    background-color: var(--te-configurator-common-bg-color-transparent);
     height: 1px;
     width: 272px;
     left: -16px;

@@ -20,11 +20,19 @@
       <div class="toolbar-right-content">
         <div class="toolbar-right-item" v-for="(item, idx) in state.rightBar" :key="idx">
           <div v-if="typeof item === 'string'">
-            <component :is="getMergeMeta(item)?.entry" :options="getMergeMeta(item)?.options"></component>
+            <component
+              :is="getMergeMeta(item)?.entry"
+              :options="getMergeMeta(item)?.options"
+              position="right"
+            ></component>
           </div>
           <div class="toolbar-right-item-arr" v-if="Array.isArray(item)">
             <div class="toolbar-right-item-comp" v-for="comp in item" :key="comp">
-              <component :is="getMergeMeta(comp)?.entry" :options="getMergeMeta(comp)?.options"></component>
+              <component
+                :is="getMergeMeta(comp)?.entry"
+                :options="getMergeMeta(comp)?.options"
+                position="right"
+              ></component>
             </div>
             <span class="toolbar-right-line" v-if="layoutRegistry.options?.isShowLine">|</span>
           </div>
@@ -79,10 +87,10 @@ export default {
   width: 100%;
   height: var(--base-top-panel-height);
   text-align: center;
-  background-color: var(--ti-lowcode-common-layout-bg);
+  background-color: var(--te-layout-common-bg-color);
   position: relative;
   z-index: 1001;
-  border-bottom: 1px solid var(--ti-lowcode-toolbar-border-bottom-color);
+  border-bottom: 1px solid var(--te-layout-common-border-color);
 
   .toolbar-left,
   .toolbar-center,
@@ -109,7 +117,7 @@ export default {
       svg {
         cursor: pointer;
         font-size: 20px;
-        color: var(--ti-lowcode-toolbar-title-color);
+        color: var(--te-layout-common-text-color);
       }
     }
   }
@@ -117,12 +125,12 @@ export default {
   .toolbar-left {
     margin: 0 1px;
     :deep(.icon) {
-      background: var(--ti-lowcode-toolbar-view-active-bg);
+      background: var(--te-layout-common-active-bg);
       svg {
         font-size: 16px;
       }
       &:not(.disabled):hover {
-        background: var(--ti-lowcode-toolbar-left-icon-bg-hover);
+        background: var(--te-layout-common-icon-bg-color-hover);
       }
     }
   }
@@ -134,10 +142,10 @@ export default {
     :deep(.icon) {
       margin-right: 0;
       &:not(.disabled):hover {
-        background: var(--ti-lowcode-toolbar-view-active-bg);
+        background: var(--te-layout-common-active-bg);
       }
       &.active {
-        color: var(--ti-lowcode-common-primary-color);
+        color: var(--te-layout-common-text-color-secondary-checked);
       }
       &.disabled {
         cursor: not-allowed;
@@ -160,7 +168,7 @@ export default {
     }
 
     .toolbar-right-line {
-      color: var(--ti-lowcode-toolbar-right-line);
+      color: var(--te-layout-common-border-color);
       margin: 0 6px;
     }
     .tiny-locales {
@@ -171,7 +179,7 @@ export default {
       justify-content: center;
       align-items: center;
       :deep(span) {
-        color: var(--ti-lowcode-toolbar-icon-color);
+        color: var(--te-layout-common-text-color-secondary);
         opacity: 0.4;
       }
 

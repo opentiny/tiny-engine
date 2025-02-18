@@ -73,6 +73,37 @@ const rootSchema = ref([
   }
 ])
 
+const handleTinyGridColumnsSlots = (node) => {
+  for (const columnItem of node.props?.columns || []) {
+    if (!columnItem?.slots) {
+      continue
+    }
+
+    for (const slotItem of Object.values(columnItem.slots)) {
+      if (Array.isArray(slotItem?.value)) {
+        slotItem.value.forEach((item) => {
+          if (!item.id) {
+            item.id = utils.guid()
+          }
+
+          nodesMap.value.set(item.id, { node: item, parent: node })
+
+          if (Array.isArray(item.children)) {
+            // eslint-disable-next-line no-use-before-define
+            generateNodesMap(item.children, item)
+          }
+        })
+      }
+    }
+  }
+}
+
+const handleNodesInProps = (node) => {
+  if (node.componentName === 'TinyGrid') {
+    handleTinyGridColumnsSlots(node)
+  }
+}
+
 const generateNodesMap = (nodes, parent) => {
   nodes.forEach((nodeItem) => {
     if (!nodeItem.id) {
@@ -83,6 +114,8 @@ const generateNodesMap = (nodes, parent) => {
       node: nodeItem,
       parent
     })
+
+    handleNodesInProps(nodeItem)
 
     if (Array.isArray(nodeItem.children) && nodeItem.children.length) {
       generateNodesMap(nodeItem.children, nodeItem)
@@ -102,7 +135,7 @@ const jsonDiffPatchInstance = jsonDiffPatch.create({
     diffMatchPatch: DiffMatchPatch,
     minLength: 60
   },
-  // eslint-disable-next-line no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   propertyFilter: function (name, context) {
     return name.slice(0, 1) !== '$'
   },
@@ -140,6 +173,7 @@ const resetCanvasState = async (state = {}) => {
 
   const diffPatch = jsonDiffPatchInstance.diff(previousSchema, pageState.pageSchema)
 
+  canvasApi.value?.clearSelect?.()
   publish({ topic: 'schemaImport', data: { current: pageState.pageSchema, previous: previousSchema, diffPatch } })
 }
 
@@ -297,15 +331,18 @@ const operationTypeMap = {
       }
     }
 
-    if (position === 'after') {
+    if (position === 'before') {
+      parentNode.children.unshift(newNodeData)
+    } else {
       parentNode.children.push(newNodeData)
-      setNode(newNodeData, parentNode)
+    }
 
-      // 递归构建 nodeMap
-      if (Array.isArray(newNodeData?.children) && newNodeData.children.length) {
-        const newNode = getNode(newNodeData.id)
-        generateNodesMap(newNodeData.children, newNode)
-      }
+    setNode(newNodeData, parentNode)
+
+    // 递归构建 nodeMap
+    if (Array.isArray(newNodeData?.children) && newNodeData.children.length) {
+      const newNode = getNode(newNodeData.id)
+      generateNodesMap(newNodeData.children, newNode)
     }
 
     return {
@@ -555,6 +592,7 @@ export default function () {
     setSaved,
     clearCanvas,
     getPageSchema,
+    resetCanvasState,
     resetPageCanvasState,
     resetBlockCanvasState,
     clearCurrentState,

@@ -103,7 +103,11 @@ export default {
         componentName: pageState.pageSchema.componentName
       }
 
-      useCanvas().importSchema(value)
+      const { importSchema, setSaved } = useCanvas()
+
+      importSchema(value)
+      setSaved(false)
+
       // TODO: 历史堆栈
       // useHistory().addHistory()
       state.pageData = ''
@@ -171,44 +175,43 @@ export default {
   position: fixed;
   top: var(--base-top-panel-height);
   left: 41px;
-  background: var(--ti-lowcode-common-component-bg);
-  box-shadow: 6px 0px 3px 0px rgba(0, 0, 0, 0.05);
+  background: var(--te-schema-panel-bg-color);
+  box-shadow: 6px 0px 3px 0px var(--te-schema-panel-shadow-color);
   z-index: 1000;
   .source-code-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--te-common-border-divider);
+    border-bottom: 1px solid var(--te-schema-common-border-color);
     margin-bottom: 12px;
     padding: 0 12px 12px;
   }
   .title {
-    color: var(--ti-lowcode-plugin-panel-title-color);
-    font-weight: var(--ti-lowcode-plugin-panel-title-font-weight);
+    color: var(--te-schema-panel-title-text-color);
+    font-weight: var(--te-base-font-weight-bold);
   }
   .header-title {
     display: flex;
     justify-content: flex-end;
     align-items: center;
     .icon-wrap {
+      position: relative;
       .tiny-button {
-        width: 40px;
-        padding: 0;
         min-width: 40px;
         margin-right: 2px;
         height: 24px;
         line-height: 24px;
       }
       .red {
-        width: 5px;
-        height: 5px;
-        border-radius: 3px;
-        background-color: #f00;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background-color: var(--te-schema-dot-color);
         display: block;
         z-index: 100;
         position: absolute;
-        top: 1px;
-        right: 1px;
+        top: -3px;
+        right: -4px;
       }
     }
     & > span:not(:last-child) {
@@ -217,7 +220,7 @@ export default {
   }
   .source-code-content {
     height: calc(100% - 42px);
-    border: 1px solid var(--ti-lowcode-base-gray-101);
+    border: 1px solid var(--te-schema-common-border-color);
     border-radius: 4px;
     margin: 0 12px;
   }
@@ -232,8 +235,8 @@ export default {
       padding: 12px;
       border: none;
       border-radius: 4px;
-      color: var(--ti-lowcode-toolbar-icon-color);
-      background: var(--ti-lowcode-icon-bind-color);
+      color: var(--te-schema-btn-color);
+      background: var(--te-schema-btn-bg-color);
       cursor: pointer;
     }
   }

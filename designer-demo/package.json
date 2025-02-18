@@ -1,24 +1,22 @@
 {
   "name": "designer-demo",
   "private": true,
-  "version": "2.0.0",
+  "version": "2.2.0",
   "type": "module",
   "scripts": {
-    "dev": "cross-env VITE_THEME=light vite",
-    "build:alpha": "cross-env NODE_OPTIONS=--max-old-space-size=8192 VITE_THEME=light vite build --mode alpha",
-    "build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 VITE_THEME=light vite build"
+    "dev": "cross-env vite",
+    "build:alpha": "cross-env NODE_OPTIONS=--max-old-space-size=8192 vite build --mode alpha",
+    "build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 vite build"
   },
   "dependencies": {
     "@opentiny/tiny-engine": "workspace:^",
-    "@opentiny/tiny-engine-theme-dark": "workspace:*",
-    "@opentiny/tiny-engine-theme-light": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
-    "@opentiny/vue": "~3.14.0",
-    "@opentiny/vue-design-smb": "~3.14.0",
-    "@opentiny/vue-icon": "~3.14.0",
-    "@opentiny/vue-locale": "~3.14.0",
-    "@opentiny/vue-renderless": "~3.14.0",
-    "@opentiny/vue-theme": "~3.14.0",
+    "@opentiny/vue": "~3.20.0",
+    "@opentiny/vue-design-smb": "~3.20.0",
+    "@opentiny/vue-icon": "~3.20.0",
+    "@opentiny/vue-locale": "~3.20.0",
+    "@opentiny/vue-renderless": "~3.20.0",
+    "@opentiny/vue-theme": "~3.20.0",
     "@vueuse/core": "^9.6.0",
     "vue": "^3.4.21"
   },

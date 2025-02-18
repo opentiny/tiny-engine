@@ -9,18 +9,21 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
+import { CanvasRouteBar } from './route-bar'
 import { CanvasBreadcrumb } from './breadcrumb'
 
 // meta app
 import CanvasContainer from './container'
 import CanvasLayout from './layout'
 import DesignCanvas from './DesignCanvas'
+import './styles/vars.less'
 
 export { CanvasContainer, CanvasLayout, DesignCanvas }
 
 export default {
   ...DesignCanvas,
   components: {
+    CanvasRouteBar,
     CanvasBreadcrumb
   },
   layout: CanvasLayout,

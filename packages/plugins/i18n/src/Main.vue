@@ -41,7 +41,7 @@
           <span id="boxeight" class="i18n-loading"></span><span>正在导入，请稍后...</span>
         </p>
       </div>
-      <div class="language-plugin-table">
+      <div class="language-plugin-table lowcode-scrollbar">
         <tiny-grid
           ref="i18nTable"
           :data="langList"
@@ -78,14 +78,12 @@
           <tiny-grid-column width="90" field="operation" title="操作">
             <template v-slot="data">
               <div v-if="editingRow !== data.row" class="i18n-opera">
-                <tiny-tooltip class="item" effect="dark" placement="bottom" content="编辑" :open-delay="500">
-                  <span class="icon">
-                    <svg-icon name="to-edit" @click.stop="openEditor($event, data.row)"></svg-icon>
-                  </span>
-                </tiny-tooltip>
-                <tiny-tooltip class="item" effect="dark" placement="bottom" :open-delay="500">
+                <span class="icon">
+                  <svg-icon name="to-edit" @click.stop="openEditor($event, data.row)"></svg-icon>
+                </span>
+                <tiny-tooltip class="item" effect="light" placement="bottom" :open-delay="OPEN_DELAY.Default">
                   <template #content>
-                    <div style="padding: 10px 20px">
+                    <div>
                       复制键值（唯一标识）<br />
                       {{ data.row.key }}
                     </div>
@@ -104,17 +102,15 @@
                     </template>
                   </tiny-popover>
                 </tiny-tooltip>
-                <tiny-tooltip class="item" effect="dark" placement="bottom" content="删除" :open-delay="500">
-                  <span class="icon">
-                    <svg-icon name="delete" @click="openDeletePopover(data.row)"></svg-icon>
-                  </span>
-                </tiny-tooltip>
+                <span class="icon">
+                  <svg-icon name="delete" @click="openDeletePopover(data.row)"></svg-icon>
+                </span>
               </div>
             </template>
           </tiny-grid-column>
           <template #empty>
             <div v-if="isLoading" id="empty-loading-box" class="i18n-loading"></div>
-            <search-empty isShow="!isLoading" />
+            <search-empty v-else />
           </template>
         </tiny-grid>
       </div>
@@ -123,15 +119,16 @@
 </template>
 
 <script lang="jsx">
-import { computed, ref, watchEffect, reactive, onMounted, nextTick, resolveComponent } from 'vue'
+import { computed, ref, watchEffect, reactive, onMounted, nextTick, resolveComponent, watch } from 'vue'
 import useClipboard from 'vue-clipboard3'
 import { Grid, GridColumn, Input, Popover, Button, FileUpload, Loading, Tooltip, Select } from '@opentiny/vue'
 import { iconLoadingShadow, iconUpload } from '@opentiny/vue-icon'
 import { PluginPanel, SearchEmpty } from '@opentiny/tiny-engine-common'
 import { useTranslate, useModal, useHelp, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
-import { utils } from '@opentiny/tiny-engine-utils'
+import { utils, constants } from '@opentiny/tiny-engine-utils'
 import { BASE_URL } from '@opentiny/tiny-engine-common/js/environments'
+const { OPEN_DELAY } = constants
 
 export default {
   components: {
@@ -192,7 +189,7 @@ export default {
     const upload = ref('upload')
     const i18nTable = ref(null)
     const selectedRowLength = computed(() => {
-      return i18nTable.value?.getSelectRecords().length
+      return i18nTable.value?.getAllSelection().length
     })
     const notEmpty = computed(() => langList.value.length > 0)
     const current = ref({
@@ -244,13 +241,16 @@ export default {
       }
     }
 
-    watchEffect(() => {
-      langList.value = fullLangList.value.filter((item) => {
-        const reg = new RegExp(searchKey.value, 'i')
-        return reg.test(item?.zh_CN) || reg.test(item?.en_US) || reg.test(item?.key)
-      })
-      sortTypeChanges(currentSearchType.value)
-    })
+    watch(
+      () => [fullLangList.value, currentSearchType.value, searchKey.value],
+      () => {
+        langList.value = fullLangList.value.filter((item) => {
+          const reg = new RegExp(searchKey.value, 'i')
+          return reg.test(item?.zh_CN) || reg.test(item?.en_US) || reg.test(item?.key)
+        })
+        sortTypeChanges(currentSearchType.value)
+      }
+    )
 
     watchEffect(() => {
       if (i18nResource.locales.length) {
@@ -327,9 +327,9 @@ export default {
       copyRowIndex.value = rowIndex
       try {
         await toClipboard(row.key)
-        copyTipContent.value = '复制成功！'
+        copyTipContent.value = '复制成功'
       } catch (e) {
-        copyTipContent.value = '复制失败！'
+        copyTipContent.value = '复制失败'
       } finally {
         setTimeout(() => {
           copyRowIndex.value = ''
@@ -425,7 +425,8 @@ export default {
       isEditMode,
       editingRow,
       batchDelete,
-      docsUrl
+      docsUrl,
+      OPEN_DELAY
     }
   }
 }
@@ -433,7 +434,7 @@ export default {
 
 <style lang="less" scoped>
 .plugin-panel-i18n {
-  box-shadow: 6px 0px 3px 0px rgba(0, 0, 0, 0.05);
+  box-shadow: 6px 0px 3px 0px var(--te-i18n-panel-shadow-color);
 }
 .stripe-tiny-grid {
   word-wrap: break-word;
@@ -452,11 +453,11 @@ export default {
   .i18n-loading {
     :deep(.tiny-loading__spinner) {
       svg {
-        color: var(--ti-lowcode-i18n-loading-svg-color);
+        color: var(--te-i18n-loading-icon-color);
       }
     }
     :deep(.tiny-loading__text) {
-      color: var(--ti-lowcode-i18n-loading-text-color);
+      color: var(--te-i18n-loading-text-color);
     }
   }
 }
@@ -482,15 +483,16 @@ export default {
 }
 
 .btn-box {
-  color: var(--ti-lowcode-i18n-button-color);
+  color: var(--te-i18n-button-text-color);
   font-size: 12px;
   margin-bottom: 12px;
   padding: 0 12px;
   display: flex;
   align-items: center;
+  column-gap: 8px;
   .btn-icon {
     font-size: 16px;
-    color: var(--te-common-icon-secondary);
+    color: var(--te-i18n-button-icon-color);
     margin-right: 4px;
   }
   .middle-btn {
@@ -506,7 +508,7 @@ export default {
       margin-top: 13px;
     }
     :deep(.path) {
-      stroke: var(--ti-lowcode-toolbar-breadcrumb-color);
+      stroke: var(--te-i18n-common-tip-text-color);
     }
   }
   .download-btn {
@@ -516,12 +518,12 @@ export default {
     font-size: 12px;
     text-align: left;
     padding: 0;
-    color: var(--ti-lowcode-base-text-color);
+    color: var(--te-i18n-button-text-color);
     svg {
       font-size: 16px;
     }
     .tiny-button.tiny-button--text {
-      color: var(--ti-lowcode-base-text-color);
+      color: var(--te-i18n-button-text-color);
     }
     &:hover {
       text-decoration: underline;
@@ -533,14 +535,8 @@ export default {
   height: calc(100% - 48px);
   flex: 1;
   padding: 12px;
-  border-top: 1px solid var(--ti-lowcode-i18n-border-color);
+  border-top: 1px solid var(--te-i18n-border-color);
   overflow-y: scroll;
-  &::-webkit-scrollbar-thumb {
-    background-color: var(--te-common-border-default);
-  }
-  &::-webkit-scrollbar-thumb:hover {
-    background-color: var(--te-common-border-hover);
-  }
 
   .operation-column {
     display: flex;
@@ -553,38 +549,12 @@ export default {
   }
 }
 
-.delete-popover-container {
-  padding: 20px;
-  svg {
-    font-size: 20px;
-    color: var(--ti-lowcode-warning-color);
-  }
-  .delete-tip {
-    margin-left: 5px;
-  }
-  .i18n-item {
-    display: flex;
-    margin-bottom: 10px;
-    align-items: center;
-
-    label {
-      width: 80px;
-    }
-
-    display: flex;
-  }
-
-  .i18n-btns {
-    margin-top: 24px;
-    text-align: center;
-  }
-}
 .stripe-tiny-grid {
   .i18n-opera {
     display: flex;
     justify-content: space-between;
     :deep(.icon) {
-      color: var(--te-common-icon-secondary);
+      color: var(--te-i18n-grid-opt-icon-color);
       svg {
         font-size: 16px;
       }

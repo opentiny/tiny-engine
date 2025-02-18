@@ -67,12 +67,12 @@ export default {
 
 <style lang="less" scoped>
 .step-select-first {
-  border: 1px solid var(--ti-lowcode-datasource-border-color);
+  border: 1px solid var(--te-datasource-common-border-color);
   border-radius: 4px;
   padding: 12px;
   margin-bottom: 46px;
   svg {
-    color: var(--ti-lowcode-datasource-toolbar-icon-color);
+    color: var(--te-datasource-toolbar-icon-color);
   }
 }
 .field-row {
@@ -81,7 +81,7 @@ export default {
   margin-bottom: 12px;
   -webkit-box-shadow: none;
   box-shadow: none;
-  border-bottom: 2px solid var(--ti-lowcode-datasource-dialog-demo-border-color);
+  border-bottom: 2px solid var(--te-datasource-dialog-demo-border-color);
   justify-content: space-between;
   align-items: center;
   &.field-row-border-bottom-none {
@@ -98,13 +98,13 @@ export default {
     .field-cell-name {
       margin-left: 5px;
       .description {
-        color: var(--ti-lowcode-datasource-input-icon-color);
+        color: var(--te-datasource-input-icon-color);
         margin-left: 5px;
       }
     }
   }
   .btn {
-    color: var(--ti-lowcode-datasource-color);
+    color: var(--te-datasource-common-text-color-primary);
     font-size: 12px;
     cursor: pointer;
   }
@@ -123,9 +123,9 @@ export default {
     justify-content: space-between;
     flex-direction: column;
     cursor: pointer;
-    background-color: var(--ti-lowcode-datasource-box-bg);
+    background-color: var(--te-datasource-box-bg-color);
     border-radius: 4px;
-    color: var(--ti-lowcode-datasource-dialog-font-color);
+    color: var(--te-datasource-dialog-font-text-color);
     .type-icon {
       font-size: 20px;
     }

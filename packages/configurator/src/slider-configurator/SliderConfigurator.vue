@@ -95,7 +95,7 @@ export default {
     height: 3px;
     width: 100%;
     border-radius: 2px;
-    background-color: var(--te-common-bg-container);
+    background-color: var(--te-configurator-slider-bg-color);
     .tiny-slider__handle {
       width: 10px;
       height: 10px;
@@ -103,26 +103,26 @@ export default {
       border-radius: 50%;
       border: none;
       cursor: ew-resize;
-      background-color: var(--te-common-text-secondary);
+      background-color: var(--te-configurator-common-text-color-secondary);
       box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 1px, rgba(0, 0, 0, 0.3) 0px 0px 0px 0.5px;
     }
     .tiny-slider__range {
       height: 3px;
       border-radius: 3px;
       margin-top: 0;
-      background: var(--te-common-bg-container);
+      background: var(--te-configurator-slider-bg-color);
     }
 
     .tiny-slider__tips {
-      color: var(--ti-lowcode-breadcrumb-color);
-      background: var(--ti-lowcode-breadcrumb-bg);
+      color: var(--te-configurator-common-text-color-weaken);
+      background: var(--te-configurator-common-bg-color);
       padding: 4px 6px;
       border-radius: 2px;
       box-shadow: rgb(0 0 0 / 15%) 0px 5px 10px;
       margin-top: -8px;
       &::before,
       &::after {
-        border-color: var(--ti-lowcode-breadcrumb-bg) transparent;
+        border-color: var(--te-configurator-common-bg-color) transparent;
       }
     }
   }
@@ -133,7 +133,7 @@ export default {
     padding: 0;
     cursor: pointer;
     border: 0;
-    background-color: var(--te-common-border-bg-divider);
+    background-color: var(--te-configurator-slider-border-bg-color-divider);
     position: relative;
     outline: 0;
     -webkit-appearance: none;
@@ -146,8 +146,8 @@ export default {
     height: 10px;
     border-radius: 50%;
     border: 0;
-    background-color: var(--te-common-bg-default);
-    box-shadow: 0 0 2px 0 var(--te-common-border-default);
+    background-color: var(--te-configurator-common-bg-color);
+    box-shadow: 0 0 2px 0 var(--te-configurator-common-border-color);
     -webkit-transition: border-color 0.15s, background-color 0.15s;
     transition: border-color 0.15s, background-color 0.15s;
     cursor: pointer;
@@ -159,7 +159,7 @@ export default {
   }
   input[type='range']::-webkit-slider-thumb:active {
     border: 0;
-    background-color: var(--te-common-bg-default);
+    background-color: var(--te-configurator-common-bg-color);
   }
 }
 </style>

@@ -26,7 +26,7 @@
           </div>
 
           <template #reference>
-            <icon-language :class="['icon-language', { isBind }]"></icon-language>
+            <svg-icon name="internationalization" :class="['icon-language', { isBind }]"></svg-icon>
           </template>
         </tiny-popover>
       </template>
@@ -38,7 +38,7 @@
 import { computed, ref, watchEffect } from 'vue'
 import { useTranslate } from '@opentiny/tiny-engine-meta-register'
 import { Input, Popover } from '@opentiny/vue'
-import { IconClose, IconLanguage } from '@opentiny/vue-icon'
+import { IconClose } from '@opentiny/vue-icon'
 import BindI18n from './BindI18n.vue'
 
 export default {
@@ -47,8 +47,7 @@ export default {
     TinyInput: Input,
     BindI18n,
     TinyPopover: Popover,
-    IconClose: IconClose(),
-    IconLanguage: IconLanguage()
+    IconClose: IconClose()
   },
   inheritAttrs: false,
   props: {
@@ -113,16 +112,6 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  .tiny-svg {
-    outline: none;
-    &:hover {
-      cursor: pointer;
-      color: var(--ti-lowcode-toolbar-icon-color);
-    }
-    &.isBind {
-      color: var(--ti-lowcode-icon-bind-color);
-    }
-  }
 }
 .popover-content {
   position: relative;
@@ -137,6 +126,17 @@ export default {
     position: absolute;
     top: 0;
     right: 0;
+  }
+}
+.icon-language {
+  color: var(--te-component-common-icon-color);
+  outline: none;
+  &:hover {
+    cursor: pointer;
+    color: var(--te-component-common-icon-color-hover);
+  }
+  &.isBind {
+    color: var(--te-component-common-icon-color-primary);
   }
 }
 </style>

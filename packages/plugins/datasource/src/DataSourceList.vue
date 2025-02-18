@@ -8,12 +8,13 @@
       >
         <div class="item-label">
           <div class="item-name">
-            <svg-button name="plugin-icon-data" class="plugin-icon-data"> </svg-button>
+            <svg-icon name="plugin-icon-data" class="plugin-icon-data"> </svg-icon>
             {{ item.name }}
           </div>
           <div class="item-handler">
             <svg-button
               class="set-page"
+              :hoverBgColor="false"
               tips="编辑静态数据"
               name="data-edit"
               @mousedown.stop.prevent="openRecordListPanel(item, index)"
@@ -21,8 +22,9 @@
             </svg-button>
             <svg-button
               class="set-page"
+              :hoverBgColor="false"
               tips="设置数据源"
-              name="text-source-setting"
+              name="setting"
               @mousedown.stop.prevent="openDataSourceForm(item, index)"
             >
             </svg-button>
@@ -130,21 +132,21 @@ export default {
   .datasource-list {
     flex-grow: 1;
     padding-top: 12px;
-    border-top: 1px solid var(--ti-lowcode-datasource-border-color);
+    border-top: 1px solid var(--te-datasource-common-border-color);
   }
   .datasource-list-item {
-    box-shadow: var(--ti-lowcode-datasource-tabs-border-color) 0, -1px;
+    box-shadow: var(--te-datasource-tabs-border-color) 0, -1px;
     height: 24px;
     line-height: 24px;
     align-items: center;
     display: grid;
     padding: 0 12px;
     position: relative;
-    color: var(--ti-lowcode-datasource-common-text-main-color);
+    color: var(--te-datasource-list-main-text-color);
     cursor: pointer;
     &:hover,
     &.active {
-      background: var(--ti-lowcode-datasource-list-hover-color);
+      background: var(--te-datasource-list-text-color-hover);
       .item-handler {
         display: inline-block;
       }
@@ -155,29 +157,20 @@ export default {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      color: var(--te-common-text-primary);
+      color: var(--te-datasource-list-item-text-color);
       .item-name {
         display: flex;
         align-items: center;
       }
       .plugin-icon-data {
+        color: var(--te-datasource-list-item-icon-color);
         margin-right: 8px;
-        width: 18px;
       }
     }
     .item-handler {
       height: 24px;
       line-height: 24px;
       display: none;
-      .svg-button {
-        width: 16px;
-        height: 16px;
-        margin-top: 6px;
-        color: var(--ti-lowcode-datasource-toolbar-more-hover-color);
-        &:hover {
-          color: var(--ti-lowcode-toolbar-icon-color);
-        }
-      }
     }
   }
 }

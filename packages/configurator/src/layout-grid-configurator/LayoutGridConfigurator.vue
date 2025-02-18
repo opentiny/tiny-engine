@@ -279,8 +279,8 @@ export default {
     .li-item {
       box-sizing: border-box;
       width: 48px;
-      border: 1px solid var(--ti-lowcode-tabs-border-color);
-      background: var(--te-common-bg-container);
+      border: 1px solid var(--te-configurator-common-border-color);
+      background: var(--te-configurator-layout-grid-bg-color);
       border-radius: 4px;
       padding: 4px;
       margin: 0 4px 4px 4px;
@@ -293,7 +293,7 @@ export default {
     }
     .col-span {
       height: 28px;
-      background: var(--ti-lowcode-breadcrumb-bg);
+      background: var(--te-configurator-common-bg-color);
       &.span-12 {
         width: 100%;
       }
@@ -325,14 +325,14 @@ export default {
     justify-content: center;
     align-items: center;
     display: flex;
-    background: var(--te-common-bg-container);
-    color: var(--te-common-text-secondary);
+    background: var(--te-configurator-layout-grid-bg-color);
+    color: var(--te-configurator-common-text-color-secondary);
     transition: none;
   }
 
   :deep(.splitpanes__splitter) {
-    background: var(--te-common-bg-container);
-    border-left: var(--ti-lowcode-tabs-border-color);
+    background: var(--te-configurator-layout-grid-bg-color);
+    border-left: var(--te-configurator-common-border-color);
   }
 
   .layout-splitpanes {
@@ -340,7 +340,7 @@ export default {
 
     .customize {
       margin-bottom: 8px;
-      color: var(--te-common-text-secondary);
+      color: var(--te-configurator-common-text-color-secondary);
     }
   }
 }

@@ -1,0 +1,42 @@
+{
+  "name": "@opentiny/tiny-engine-toolbar-theme-switch",
+  "version": "2.2.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "vite build"
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/opentiny/tiny-engine",
+    "directory": "packages/toolbars/themeSwitch"
+  },
+  "bugs": {
+    "url": "https://github.com/opentiny/tiny-engine/issues"
+  },
+  "author": "OpenTiny Team",
+  "license": "MIT",
+  "homepage": "https://opentiny.design/tiny-engine",
+  "dependencies": {
+    "@opentiny/tiny-engine-common": "workspace:*",
+    "@opentiny/tiny-engine-meta-register": "workspace:*",
+    "@opentiny/tiny-engine-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
+    "@vitejs/plugin-vue": "^5.1.2",
+    "@vitejs/plugin-vue-jsx": "^4.0.1",
+    "vite": "^5.4.2"
+  },
+  "peerDependencies": {
+    "@opentiny/vue": "^3.20.0",
+    "vue": "^3.4.15"
+  }
+}

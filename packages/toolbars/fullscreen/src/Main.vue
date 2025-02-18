@@ -1,6 +1,6 @@
 <template>
   <toolbar-base
-    :content="!isFullscreen ? '全屏' : '退出全屏'"
+    :content="!isFullscreen ? '切换全屏' : '退出全屏'"
     :icon="iconName"
     :options="options"
     @click-api="fullscreen"

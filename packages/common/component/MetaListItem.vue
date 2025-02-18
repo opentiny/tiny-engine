@@ -61,9 +61,6 @@
     @update:visible="isShow = $event"
   >
     <span class="switch-tip">
-      <span>
-        <svg-icon name="warning"></svg-icon>
-      </span>
       <span>确定删除吗？</span>
     </span>
     <template #footer>
@@ -247,14 +244,14 @@ export default {
 
 <style lang="less" scoped>
 .item-content {
-  border: 1px solid var(--ti-lowcode-meta-list-item-border-color);
+  border: 1px solid var(--te-component-common-border-color-divider);
   border-left: none;
   border-right: none;
-  background: var(--ti-lowcode-meta-list-item-bg-color);
+  background: var(--te-component-common-bg-color);
   margin-bottom: -1px;
-  color: var(--ti-lowcode-toolbar-breadcrumb-color);
+  color: var(--te-component-common-text-color-primary);
   &.active-item {
-    background-color: var(--te-common-bg-container);
+    background-color: var(--te-component-meta-list-item-bg-color);
   }
   .option-input {
     display: flex;
@@ -267,7 +264,7 @@ export default {
         margin-right: 5px;
         font-size: 12px;
         opacity: 0.4;
-        color: var(--ti-lowcode-toolbar-breadcrumb-color);
+        color: var(--te-component-common-text-color-primary);
         &:hover {
           cursor: pointer;
           opacity: 1;
@@ -292,6 +289,7 @@ export default {
       &.right {
         float: left;
         text-align: right;
+        margin-right: 8px;
       }
     }
   }
@@ -302,20 +300,14 @@ export default {
   .icon-close {
     position: absolute;
     top: 6px;
-    right: 6px;
+    right: 10px;
   }
 }
 .add-options {
-  overflow-y: scroll;
-  padding: 20px 0 20px 2px;
+  overflow-y: auto;
+  max-height: calc(100vh - 94px); // 94为头部高度和底部高度
   &.top {
     margin-bottom: 0;
-  }
-  &::-webkit-scrollbar-track-piece {
-    background: var(--ti-lowcode-toolbar-bg);
-  }
-  &::-webkit-scrollbar {
-    width: 5px;
   }
 }
 </style>

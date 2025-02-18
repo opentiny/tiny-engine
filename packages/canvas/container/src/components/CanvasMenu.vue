@@ -2,7 +2,7 @@
   <div v-show="menuState.show" ref="menuDom" class="context-menu" :style="menuState.position">
     <ul class="menu-item">
       <li
-        v-for="(item, index) in menus"
+        v-for="(item, index) in filteredMenus"
         :key="index"
         :class="{
           'li-item': item.items,
@@ -32,9 +32,9 @@
 </template>
 
 <script lang="jsx">
-import { ref, reactive, nextTick } from 'vue'
+import { ref, reactive, nextTick, computed } from 'vue'
 import { canvasState, getConfigure, getController, getCurrent, copyNode, removeNodeById } from '../container'
-import { useLayout, useModal, useCanvas, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
+import { useLayout, useModal, useCanvas, usePage, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { iconRight } from '@opentiny/vue-icon'
 
 const menuState = reactive({
@@ -121,6 +121,25 @@ export default {
       menus.value.push({ name: '新建区块', code: 'createBlock' })
     }
 
+    menus.value.unshift({
+      name: '路由跳转',
+      code: 'route',
+      show: () => getCurrent()?.schema?.componentName === 'RouterLink',
+      check: () => {
+        const targetPageId = getCurrent().schema.props?.to?.name
+        return typeof targetPageId === 'number' || targetPageId
+      }
+    })
+
+    const filteredMenus = computed(() =>
+      menus.value.filter((item) => {
+        if (typeof item.show === 'function') {
+          return item.show()
+        }
+        return true
+      })
+    )
+
     const boxVisibility = ref(false)
 
     // 计算上下文菜单位置，右键时显示，否则关闭
@@ -205,10 +224,19 @@ export default {
             status: 'error'
           })
         }
+      },
+      route() {
+        // check中验证过了 targetPageId 是有效值
+        const targetPageId = getCurrent().schema.props.to.name
+        usePage().switchPageWithConfirm(targetPageId, true)
       }
     }
 
     const actionDisabled = (actionItem) => {
+      if (typeof actionItem.check === 'function' && !actionItem.check()) {
+        return true
+      }
+
       const actions = ['del', 'copy', 'addParent']
       return actions.includes(actionItem.code) && !getCurrent().schema?.id
     }
@@ -221,7 +249,7 @@ export default {
       boxVisibility.value = false
     }
     const doOperation = (item) => {
-      if ((item.check && !item.check?.()) || actionDisabled(item)) {
+      if (actionDisabled(item)) {
         return
       }
 
@@ -234,7 +262,7 @@ export default {
     return {
       SaveNewBlock,
       menuState,
-      menus,
+      filteredMenus,
       doOperation,
       boxVisibility,
       close,
@@ -258,16 +286,19 @@ export default {
   line-height: 20px;
   border-radius: 6px;
   padding: 8px 0;
-  background-color: var(--ti-lowcode-canvas-menu-bg);
+  background-color: var(--te-canvas-container-bg-color);
   box-shadow: 0 1px 15px 0 rgb(0 0 0 / 20%);
   display: flex;
   flex-direction: column;
   .li-item {
-    border-bottom: 1px solid var(--ti-lowcode-canvas-menu-border-color);
+    border-bottom: 1px solid var(--te-canvas-container-border-color);
   }
   .li-item-disabled {
     cursor: not-allowed;
-    color: var(--ti-lowcode-canvas-menu-item-disabled-color);
+    color: var(--te-canvas-container-text-color-disabled);
+    svg {
+      fill: var(--te-canvas-container-text-color-disabled);
+    }
   }
   li {
     & > div {
@@ -276,16 +307,19 @@ export default {
       justify-content: space-between;
     }
     font-size: 12px;
-    color: var(--ti-lowcode-canvas-menu-item-color);
+    color: var(--te-canvas-container-text-color-primary);
+    svg {
+      fill: var(--te-canvas-container-text-color-primary);
+    }
     padding: 6px 15px;
     &:not(.menu-item-disabled):hover {
-      background: var(--ti-lowcode-canvas-menu-item-hover-bg-color);
+      background: var(--te-canvas-container-bg-color-hover);
     }
     position: relative;
 
     &.menu-item-disabled {
       cursor: not-allowed;
-      color: var(--ti-lowcode-canvas-menu-item-disabled-color);
+      color: var(--te-canvas-container-text-color-disabled);
     }
   }
   &.sub-menu {

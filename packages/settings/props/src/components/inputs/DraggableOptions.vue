@@ -176,12 +176,12 @@ export default {
 .options {
   width: 100%;
   .top {
-    color: var(--te-common-text-secondary);
+    color: var(--te-props-common-text-color-secondary);
     display: flex;
     justify-content: space-between;
     margin-bottom: 5px;
     .tiny-svg {
-      color: var(--ti-lowcode-toolbar-icon-color);
+      color: var(--te-props-common-icon-color-primary);
       margin-right: 5px;
       font-size: 16px;
       &:hover {
@@ -197,7 +197,7 @@ export default {
     font-weight: bold;
   }
   .format-rules {
-    border: 1px solid #adb0b8;
+    border: 1px solid var(--te-props-common-border-color-divider);
 
     .rulesItem {
       height: 40px;
@@ -205,7 +205,7 @@ export default {
       padding: 0 10px;
       display: flex;
       &:first-child {
-        border-bottom: 1px solid #adb0b8;
+        border-bottom: 1px solid var(--te-props-common-border-color-divider);
       }
       > span {
         flex: 1;

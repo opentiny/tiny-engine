@@ -8,7 +8,7 @@
         >
           <span>背景图 & 渐变</span>
         </label>
-        <tiny-tooltip effect="dark" placement="top" content="添加背景图，线性渐变，径向渐变等">
+        <tiny-tooltip effect="light" placement="top" content="添加背景图，线性渐变，径向渐变等">
           <div class="background-image-icon" @click="openBackgroundImageModal($event, { isAdd: true })">
             <icon-plus></icon-plus>
           </div>
@@ -285,14 +285,16 @@ export default {
     const openBackgroundImageModal = (event, { isAdd, index }) => {
       if (isAdd) {
         const styleObj = {
-          [BACKGROUND_PROPERTY.BackgroundImage]: 'url(img/bgcModal.png)',
-          [BACKGROUND_PROPERTY.BackgroundPosition]: '0px 0px',
-          [BACKGROUND_PROPERTY.BackgroundSize]: 'auto'
+          [BACKGROUND_PROPERTY.BackgroundImage]: 'linear-gradient(#000, #000)',
+          [BACKGROUND_PROPERTY.BackgroundPosition]: null,
+          [BACKGROUND_PROPERTY.BackgroundSize]: null,
+          [BACKGROUND_PROPERTY.BackgroundRepeat]: null,
+          [BACKGROUND_PROPERTY.BackgroundAttachment]: null
         }
 
         state.backgroundImageList.unshift({
-          type: 'ImageSetting',
-          text: 'background-image.svg',
+          type: 'ColorOverlay',
+          text: '#000',
           styleObj
         })
       }
@@ -398,7 +400,7 @@ export default {
     padding: 2px;
   }
   .background-label {
-    color: var(--te-common-text-secondary);
+    color: var(--te-styles-common-text-color-secondary);
   }
   .background-color,
   .background-clip {
@@ -417,7 +419,7 @@ export default {
       display: inline-block;
       width: calc(100% + 16px);
       height: 1px;
-      background-color: var(--ti-lowcode-optionitem-background-color);
+      background-color: var(--te-styles-common-bg-color);
       position: absolute;
       left: -8px;
       bottom: 0px;
@@ -429,8 +431,8 @@ export default {
     place-items: stretch;
     gap: 1px;
     border-radius: 2px;
-    border-top: 1px solid var(--te-common-border-divider);
-    background-color: var(--te-common-bg-default);
+    border-top: 1px solid var(--te-styles-background-border-color);
+    background-color: var(--te-styles-common-bg-color);
     margin: 12px 0;
     .image-list-item {
       display: grid;
@@ -438,8 +440,8 @@ export default {
       gap: 8px 4px;
       height: 24px;
       align-items: center;
-      background-color: var(--te-common-bg-default);
-      border-bottom: 1px solid var(--te-common-border-divider);
+      background-color: var(--te-styles-common-bg-color);
+      border-bottom: 1px solid var(--te-styles-background-border-color);
       pointer-events: all;
       font-size: 11px;
       font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell,
@@ -451,8 +453,7 @@ export default {
       position: relative;
       overflow: visible;
       &:hover {
-        background-color: var(--te-common-bg-container);
-        .dragger-icon,
+        background-color: var(--te-styles-common-bg-color-hover);
         .icon-wrap {
           opacity: 1;
         }
@@ -468,7 +469,6 @@ export default {
           right: 0;
           top: 0;
           bottom: 0;
-          background-color: var(--ti-lowcode-setting-style-drag-bar-bg);
         }
       }
       &.image-list-item-invisible {
@@ -483,12 +483,11 @@ export default {
         width: 100%;
         height: 3px;
         border-radius: 3px;
-        background-color: var(--ti-lowcode-setting-style-drag-bar-bg);
       }
     }
     .dragger-icon {
       display: inline-flex;
-      color: var(--te-common-icon-secondary);
+      color: var(--te-styles-common-icon-color);
       cursor: grab;
       width: 12px;
       opacity: 0;
@@ -500,7 +499,7 @@ export default {
       height: 10px;
       border-radius: 1px;
       margin: 1px;
-      box-shadow: var(--te-common-border-default) 0px 0px 0px 1px;
+      box-shadow: var(--te-styles-common-border-color) 0px 0px 0px 1px;
       align-self: center;
       overflow: hidden;
       .image {
@@ -525,7 +524,7 @@ export default {
         width: 16px;
         max-height: 16px;
         border-width: 0px;
-        color: var(--te-common-icon-secondary);
+        color: var(--te-styles-common-icon-color);
         background-color: transparent;
         border-radius: 2px;
         padding-left: 0px;
@@ -544,7 +543,8 @@ export default {
       font-size: 16px;
       padding: 4px;
       &:hover svg {
-        color: var(--te-common-icon-secondary);
+        color: var(--te-styles-common-icon-color);
+        fill: var(--te-styles-common-icon-color);
       }
     }
   }
@@ -553,8 +553,8 @@ export default {
     span {
       cursor: pointer;
       border-radius: 2px;
-      color: var(--te-common-text-emphasize);
-      background-color: var(--te-common-bg-text-emphasize);
+      color: var(--te-styles-common-setting-text-color);
+      background-color: var(--te-styles-common-setting-bg-color);
     }
   }
 }
@@ -567,7 +567,7 @@ export default {
 
   span {
     font-weight: 600;
-    color: var(--te-common-text-primary);
+    color: var(--te-styles-common-text-color-primary);
   }
 
   .svg-icon {

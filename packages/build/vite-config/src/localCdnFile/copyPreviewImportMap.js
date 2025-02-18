@@ -16,7 +16,7 @@ export function extraPreviewImport(filename, originCdnPrefix) {
   const result = []
   const importMap = readJsonSync(filename)
   Object.entries(importMap.imports)?.forEach(([_key, location]) => {
-    const url = location.replace('${VITE_CDN_DOMAIN}', originCdnPrefix).replace('${opentinyVueVersion}', '~3.14')
+    const url = location.replace('${VITE_CDN_DOMAIN}', originCdnPrefix).replace('${opentinyVueVersion}', '~3.20')
     if (url?.startsWith(originCdnPrefix) && !result.includes(url)) {
       result.push(url)
     }
@@ -29,7 +29,7 @@ export function replacePreviewImport(importMap, fileMap, originCdnPrefix) {
     imports: Object.fromEntries(
       Object.entries(importMap.imports)?.map(([key, location]) => {
         // 这里的替换占位符规则等同于packages/design-core/src/preview/src/preview/importMap.js, 两边修改需要同步
-        const url = location.replace('${VITE_CDN_DOMAIN}', originCdnPrefix).replace('${opentinyVueVersion}', '~3.14')
+        const url = location.replace('${VITE_CDN_DOMAIN}', originCdnPrefix).replace('${opentinyVueVersion}', '~3.20')
         const matchRule = fileMap.find((rule) => url === rule.originUrl)
         if (matchRule) {
           return [key, matchRule.newUrl]

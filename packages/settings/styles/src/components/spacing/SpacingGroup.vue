@@ -541,7 +541,7 @@ export default {
     line-height: 10px;
     letter-spacing: -0.2px;
     display: flex;
-    color: var(--te-common-text-primary);
+    color: var(--te-styles-common-text-color-primary);
     background: transparent;
     padding: 2px 4px;
     margin-left: -2px;
@@ -555,11 +555,11 @@ export default {
     justify-content: center;
 
     &.is-setting {
-      background-color: var(--te-common-bg-text-emphasize);
+      background-color: var(--te-styles-common-setting-bg-color);
     }
 
     &.is-show {
-      background-color: var(--ti-lowcode-setting-style-spacing-bg);
+      background-color: var(--te-styles-spacing-bg-color);
     }
 
     &.margin-top,
@@ -589,14 +589,14 @@ export default {
 
   .margin-color {
     cursor: pointer;
-    color: var(--ti-lowcode-spacing-margin-color);
+    color: var(--te-styles-spacing-margin-bg-color);
   }
   .padding-color {
     cursor: pointer;
-    color: var(--ti-lowcode-spacing-padding-color);
+    color: var(--te-styles-spacing-padding-bg-color);
   }
   .inner-color {
-    color: var(--te-common-bg-default);
+    color: var(--te-styles-spacing-inner-bg-color);
   }
 }
 </style>

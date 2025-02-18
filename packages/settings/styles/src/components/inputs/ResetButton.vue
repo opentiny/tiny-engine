@@ -34,13 +34,13 @@ export default {
   display: block;
   max-width: 100%;
   border: 0;
-  color: var(--te-common-text-primary);
-  border: 1px solid var(--te-common-border-active);
+  color: var(--te-styles-common-text-color-primary);
+  border: 1px solid var(--te-styles-common-border-color-active);
 }
 .reset-desc {
   display: block;
   padding: 8px 4px;
   text-align: center;
-  color: var(--te-common-text-secondary);
+  color: var(--te-styles-common-text-color-secondary);
 }
 </style>

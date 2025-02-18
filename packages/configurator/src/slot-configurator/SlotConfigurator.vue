@@ -94,7 +94,6 @@ export default {
         useModal().confirm({
           title: '提示',
           message: '关闭后插槽内的内容将被清空，是否继续？',
-          status: 'info',
           exec: () => {
             slotList.value[i].bind = !slotList.value[i].bind
 
@@ -141,7 +140,7 @@ export default {
   }
   .slot-name {
     width: 30%;
-    color: var(--te-common-text-primary);
+    color: var(--te-configurator-common-text-color-primary);
     font-size: 12px;
     display: flex;
     justify-content: space-between;
@@ -177,7 +176,7 @@ export default {
   outline: 0;
   border-radius: 10px;
   box-sizing: border-box;
-  background-color: var(--te-common-bg-switch);
+  background-color: var(--te-configurator-common-switch-bg-color);
   transition: border-color 0.3s, background-color 0.3s;
   vertical-align: middle;
 }
@@ -191,11 +190,11 @@ export default {
   transition: all 0.3s;
   width: 16px;
   height: 16px;
-  background-color: var(--te-common-bg-default);
+  background-color: var(--te-configurator-common-bg-color);
 }
 
 .e__switch.e_is-checked .e__switch-core {
-  background-color: var(--te-common-bg-primary-checked);
+  background-color: var(--te-configurator-common-switch-bg-color-checked);
 }
 
 .e__switch.e_is-checked .e__switch-core::after {

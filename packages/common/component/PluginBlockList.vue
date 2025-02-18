@@ -53,14 +53,14 @@
           <div class="setting-menu" @mouseover.stop="handleSettingMouseOver" @mouseleave="handleBlockItemLeave">
             <ul class="list">
               <li class="list-item" @mousedown.stop.left="editBlock({ event: $event, item, index })">
-                <svg-button class="list-item-svg" name="to-edit"> </svg-button>
+                <svg-button class="list-item-svg" :hoverBgColor="false" name="to-edit"> </svg-button>
               </li>
               <li
                 class="list-item"
                 @mouseover.stop="iconSettingMove"
                 @mousedown.stop.prevent="iconClick({ event: $event, item, index })"
               >
-                <svg-button class="list-item-svg" name="text-source-setting"> </svg-button>
+                <svg-button class="list-item-svg" :hoverBgColor="false" name="setting"> </svg-button>
               </li>
             </ul>
           </div>
@@ -72,14 +72,14 @@
         >
           <div class="setting-menu" @mouseover.stop="handleSettingMouseOver" @mouseleave="handleBlockItemLeave">
             <ul class="list">
-              <tiny-tooltip content="版本列表" placement="top">
+              <tiny-tooltip content="版本列表" placement="top" effect="light">
                 <li class="list-item" @click.stop="$emit('openVersionPanel', { item, index })">
-                  <svg-button class="list-item-svg" name="versions"> </svg-button>
+                  <svg-button class="list-item-svg" :hoverBgColor="false" name="versions"> </svg-button>
                 </li>
               </tiny-tooltip>
-              <tiny-tooltip content="移除" placement="top">
+              <tiny-tooltip content="移除" placement="top" effect="light">
                 <li class="list-item" @click.stop="$emit('deleteBlock', item)">
-                  <svg-button class="list-item-svg" name="remove"> </svg-button>
+                  <svg-button class="list-item-svg" :hoverBgColor="false" name="remove"> </svg-button>
                 </li>
               </tiny-tooltip>
             </ul>
@@ -205,7 +205,7 @@ export default {
   emits: ['click', 'iconClick', 'add', 'deleteBlock', 'openVersionPanel', 'editBlock', 'checkAll', 'cancelCheckAll'],
   setup(props, { emit }) {
     const panelState = inject('panelState', {})
-    const blockUsers = inject('blockUsers')
+    const blockUsers = inject('blockUsers', [])
     const state = reactive({
       activeIndex: -1,
       data: computed(() => props.data),
@@ -356,17 +356,17 @@ export default {
   max-width: 500px;
   max-height: 136px;
   padding: 12px;
-  background: var(--ti-lowcode-component-block-list-shortcut-bg);
+  background: var(--te-component-common-bg-color);
   border-radius: 5px;
-  border: 1px solid var(--ti-lowcode-common-border-color-4);
+  border: 1px solid var(--te-component-common-border-color);
   top: v-bind('state.top');
   .block-shortcut-title {
-    color: var(--ti-lowcode-component-block-list-shortcut-title-color);
+    color: var(--te-component-common-text-color-primary);
     font-weight: 600;
     margin-bottom: 8px;
   }
   .block-shortcut-description {
-    color: var(--ti-lowcode-component-block-list-item-color);
+    color: var(--te-component-common-text-color-secondary);
     margin-bottom: 20px;
     font-size: 12px;
   }
@@ -384,8 +384,8 @@ export default {
   display: flex;
   align-items: center;
   height: 24px;
-  background-color: var(--te-common-bg-container);
-  color: var(--te-common-text-secondary);
+  background-color: var(--te-component-block-bg-color);
+  color: var(--te-component-common-text-color-secondary);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -404,7 +404,7 @@ export default {
     transform: translateY(-50%);
     width: 1px;
     height: 10px;
-    background-color: var(--te-common-border-default);
+    background-color: var(--te-component-common-border-color);
   }
 }
 
@@ -437,7 +437,7 @@ export default {
   gap: 12px;
   overflow-y: auto;
   overflow-x: hidden;
-  color: var(--ti-lowcode-common-secondary-text-color);
+  color: var(--te-component-common-text-color-secondary);
 
   .block-item {
     display: flex;
@@ -456,9 +456,9 @@ export default {
       top: 4px;
       text-align: center;
       display: block;
-      color: var(--te-common-text-primary);
+      color: var(--te-component-common-text-color-primary);
       font-size: 12px;
-      background-color: var(--te-common-bg-prompt);
+      background-color: var(--te-component-block-publish-flag-bg-color);
       padding: 2px 4px;
       border-radius: 2px;
       transform: scale(0.9);
@@ -466,7 +466,7 @@ export default {
     }
 
     &.block-item-small-list {
-      color: var(--te-common-text-primary);
+      color: var(--te-component-common-text-color-primary);
       gap: 0;
       &:deep(.block-item-img) {
         width: 54px;
@@ -486,17 +486,9 @@ export default {
         position: static;
         margin-left: 4px;
         z-index: 9;
-        .block-detail-icon {
-          color: var(--ti-lowcode-component-block-list-setting-btn-color);
-          display: block;
-          &:hover {
-            cursor: pointer;
-            color: var(--ti-lowcode-component-block-list-setting-btn-hover-color);
-          }
-        }
       }
       &:hover {
-        background-color: var(--te-common-bg-container);
+        background-color: var(--te-component-common-bg-color-hover);
       }
     }
     &:nth-child(even) {
@@ -519,7 +511,7 @@ export default {
     }
 
     &.is-active {
-      background: var(--ti-lowcode-component-block-list-item-active-bg, --ti-lowcode-canvas-wrap-bg);
+      background: var(--te-component-common-bg-color-active);
     }
 
     &.is-disabled {
@@ -549,7 +541,7 @@ export default {
         align-items: center;
         width: 100%;
         height: 86px;
-        border: 1px dashed var(--te-common-border-hover);
+        border: 1px dashed var(--te-component-common-border-color-hover);
         border-radius: 4px;
       }
       .item-text {
@@ -557,23 +549,23 @@ export default {
       }
       .svg-icon {
         font-size: 24px;
-        color: var(--ti-lowcode-component-svg-button-color);
+        color: var(--te-component-common-text-color-primary);
       }
 
       &:hover {
         cursor: pointer;
-        color: var(--ti-lowcode-component-svg-button-hover-color);
+        color: var(--te-component-common-text-color-primary);
       }
     }
 
     .item-default-img {
       width: 84px;
       height: 50px;
-      color: var(--te-common-bg-default);
+      color: var(--te-component-common-bg-color);
     }
 
     .item-text {
-      color: var(--te-common-text-secondary);
+      color: var(--te-component-common-text-color-secondary);
       text-align: center;
       font-size: 12px;
       line-height: 1.5;
@@ -599,31 +591,11 @@ export default {
       &.is-current-visible-icon {
         visibility: visible;
       }
-
-      .block-detail-icon {
-        color: var(--ti-lowcode-base-gray-50);
-        &:hover {
-          cursor: pointer;
-          color: var(--ti-lowcode-component-block-list-setting-btn-hover-color);
-        }
-      }
     }
     .block-setting {
       right: 0px;
       top: 0;
     }
-  }
-  .deploy {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    width: 114px;
-    color: var(--ti-lowcode-toolbar-icon-color);
-    font-weight: bold;
-    vertical-align: middle;
-    text-align: center;
-    margin: -10px -11px;
-    padding: 40px 10px;
   }
 
   .loading {
@@ -714,7 +686,7 @@ export default {
         line-height: 16px;
       }
       .item-description {
-        color: var(--ti-lowcode-toolbar-title-color);
+        color: var(--te-component-common-text-color-primary);
         font-size: 12px;
       }
     }
@@ -733,7 +705,7 @@ export default {
 }
 .setting-menu {
   font-size: 12px;
-  color: var(--ti-lowcode-component-block-setting-item-text-color);
+  color: var(--te-component-common-text-color-primary);
   .list {
     display: flex;
   }
@@ -741,32 +713,12 @@ export default {
     box-sizing: border-box;
     cursor: pointer;
     &:hover {
-      background-color: var(--ti-lowcode-component-block-setting-item-hover-bg);
-      color: var(--ti-lowcode-common-primary-text-color);
+      color: var(--te-component-common-text-color-primary);
     }
     .list-item-icon {
       font-size: 14px;
-      color: var(--te-common-icon-secondary);
+      color: var(--te-component-common-icon-color);
     }
-    .list-item-svg {
-      color: var(--te-common-icon-secondary);
-    }
-    .list-item-svg:hover {
-      background-color: var(--ti-lowcode-component-block-setting-item-hover-bg);
-    }
-  }
-}
-</style>
-
-<style lang="less">
-.tiny-popover.tiny-popper.popper-options.block-setting-popover {
-  background-color: var(--ti-lowcode-component-block-setting-popover-bg);
-  display: flex;
-  flex-direction: column;
-  padding: 0;
-  .popper__arrow,
-  .popper__arrow::after {
-    border-bottom-color: var(--ti-lowcode-component-block-setting-popover-bg);
   }
 }
 </style>

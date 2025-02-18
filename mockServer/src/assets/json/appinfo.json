@@ -26957,6 +26957,54 @@
         }
       },
       {
+        "icon": "grid",
+        "name": {
+          "zh_CN": "表格行"
+        },
+        "component": "TinyGridColumn",
+        "description": "提供了非常强大数据表格功能，可以展示数据列表，可以对数据列表进行选择、编辑等",
+        "docUrl": "",
+        "screenshot": "",
+        "tags": "",
+        "keywords": "",
+        "devMode": "proCode",
+        "npm": {
+          "package": "@opentiny/vue",
+          "exportName": "TinyGridColumn"
+        },
+        "group": "component",
+        "priority": 2,
+        "schema": {
+          "properties": [],
+          "events": {},
+          "shortcuts": {},
+          "contentMenu": {
+            "actions": ["create symbol"]
+          }
+        },
+        "configure": {
+          "loop": true,
+          "condition": true,
+          "styles": true,
+          "isContainer": false,
+          "isModal": false,
+          "nestingRule": {
+            "childWhitelist": "",
+            "parentWhitelist": "",
+            "descendantBlacklist": "",
+            "ancestorWhitelist": ""
+          },
+          "isNullNode": false,
+          "isLayout": false,
+          "rootSelector": "",
+          "shortcuts": {},
+          "contextMenu": {
+            "actions": ["create symbol"],
+            "disable": ["copy", "remove"]
+          }
+        }
+      },
+      {
         "name": {
           "zh_CN": "分页"
         },

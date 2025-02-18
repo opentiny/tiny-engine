@@ -3,7 +3,8 @@
     <div class="line-style">
       <span class="line-text"> 行内样式 </span>
       <div class="inline-style">
-        <code-configurator
+        <component
+          :is="CodeConfigurator"
           v-if="state.lineStyleDisable"
           :buttonShowContent="true"
           :modelValue="state.styleContent"
@@ -12,17 +13,18 @@
           language="css"
           single
           @save="save"
-        />
+        ></component>
         <div v-if="!state.lineStyleDisable">
           <tiny-input v-model="state.propertiesList" class="inline-bind-style"> </tiny-input>
         </div>
-        <variable-configurator
+        <component
+          :is="VariableConfigurator"
           ref="bindVariable"
           :model-value="state.bindModelValue"
           name="advance"
           @update:modelValue="setConfig"
         >
-        </variable-configurator>
+        </component>
       </div>
     </div>
   </div>
@@ -65,10 +67,9 @@
 </template>
 
 <script>
-import { computed, watch } from 'vue'
+import { watch, inject, ref } from 'vue'
 import { Collapse, CollapseItem, Input } from '@opentiny/vue'
-import { useHistory, useCanvas, useProperties } from '@opentiny/tiny-engine-meta-register'
-import { CodeConfigurator, VariableConfigurator } from '@opentiny/tiny-engine-configurator'
+import { useHistory, useCanvas, useProperties, getConfigurator } from '@opentiny/tiny-engine-meta-register'
 import {
   SizeGroup,
   LayoutGroup,
@@ -88,7 +89,6 @@ import { styleStrRemoveRoot } from './js/cssConvert'
 
 export default {
   components: {
-    CodeConfigurator,
     SizeGroup,
     LayoutGroup,
     FlexBox,
@@ -102,16 +102,11 @@ export default {
     ClassNamesContainer,
     TinyCollapse: Collapse,
     TinyCollapseItem: CollapseItem,
-    TinyInput: Input,
-    VariableConfigurator
+    TinyInput: Input
   },
-  props: {
-    isCollapsed: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props) {
+  setup() {
+    const CodeConfigurator = getConfigurator('CodeConfigurator')
+    const VariableConfigurator = getConfigurator('VariableConfigurator')
     const styleCategoryGroup = [
       'layout',
       'spacing',
@@ -122,7 +117,8 @@ export default {
       'borders',
       'effects'
     ]
-    const activeNames = computed(() => (props.isCollapsed ? [styleCategoryGroup[0]] : styleCategoryGroup))
+    const isCollapsed = inject('isCollapsed')
+    const activeNames = ref(styleCategoryGroup)
     const { getCurrentSchema } = useCanvas()
     // 获取当前节点 style 对象
     const { state, updateStyle } = useStyle() // updateStyle
@@ -130,7 +126,7 @@ export default {
     const { getSchema, setProp } = useProperties()
 
     const handoverGroup = (actives) => {
-      if (props.isCollapsed) {
+      if (isCollapsed.value) {
         activeNames.value = actives.length > 1 ? actives.shift() : actives
       }
     }
@@ -200,7 +196,20 @@ export default {
       }
     )
 
+    watch(
+      () => isCollapsed.value,
+      () => {
+        if (isCollapsed.value) {
+          activeNames.value = []
+        } else {
+          activeNames.value = styleCategoryGroup
+        }
+      }
+    )
+
     return {
+      CodeConfigurator,
+      VariableConfigurator,
       state,
       activeNames,
       CSS_TYPE,
@@ -209,7 +218,8 @@ export default {
       save,
       close,
       updateStyle,
-      setConfig
+      setConfig,
+      isCollapsed
     }
   }
 }
@@ -228,7 +238,7 @@ export default {
       display: block;
       margin-bottom: 8px;
       font-size: 12px;
-      color: var(--te-common-text-secondary);
+      color: var(--te-styles-common-text-color-secondary);
     }
   }
   .inline-style {
@@ -241,20 +251,20 @@ export default {
         border-radius: 8px;
         width: 216px;
         text-align: left;
-        color: var(--ti-lowcode-setting-style-btn-font-color);
+        color: var(--te-styles-common-text-color-primary);
       }
       .tiny-button:hover {
         background: none;
-        border-color: var(--ti-lowcode-setting-style-btn-border-color);
+        border-color: var(--te-styles-common-border-color);
       }
     }
     .inline-bind-style {
       :deep(.tiny-input__inner) {
         width: 216px;
         pointer-events: none;
-        background: var(--ti-lowcode-setting-style-input-bg);
-        color: var(--ti-lowcode-setting-style-input-font-color);
-        border-color: var(--ti-lowcode-setting-style-input-bg);
+        background: var(--te-styles-editor-bg-color);
+        color: var(--te-styles-editor-font-text-color);
+        border-color: var(--te-styles-editor-border-color);
       }
     }
   }
@@ -264,7 +274,7 @@ export default {
   display: inline-block;
   margin-left: 4px;
   vertical-align: middle;
-  border: 2px solid var(--te-common-border-checked);
+  border: 2px solid var(--te-styles-editor-border-color);
   border-radius: 2px;
 }
 </style>

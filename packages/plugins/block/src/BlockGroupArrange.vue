@@ -48,11 +48,11 @@ export default {
 <style lang="less" scoped>
 .footer-toolbar {
   border-radius: 4px;
-  background-color: var(--te-common-bg-container);
+  background-color: var(--te-block-panel-footer-btn-bg-color);
   .icon-wrap {
     width: 24px;
     height: 24px;
-    color: var(--te-common-text-weaken);
+    color: var(--te-block-panel-footer-btn-icon-color);
     font-size: 16px;
     cursor: pointer;
     display: inline-flex;
@@ -60,10 +60,10 @@ export default {
     align-items: center;
     transition: 0.3s;
     &.active {
-      border: 1px solid var(--te-common-border-active);
-      color: var(--te-common-text-primary);
+      border: 1px solid var(--te-block-panel-footer-btn-border-color-active);
+      color: var(--te-block-panel-footer-btn-color-active);
       border-radius: 4px;
-      background-color: var(--te-common-bg-default);
+      background-color: var(--te-block-panel-footer-btn-bg-color-active);
     }
   }
 }

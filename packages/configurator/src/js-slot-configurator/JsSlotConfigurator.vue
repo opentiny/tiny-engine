@@ -5,7 +5,7 @@
       <div v-for="(slot, index) in slotList" :key="slot.name" class="use-slot">
         <div class="use-slot-item-name">
           {{ slot.name }}
-          <tiny-tooltip effect="dark" :content="state.currentComponent?.content" placement="bottom" width="260">
+          <tiny-tooltip effect="light" :content="state.currentComponent?.content" placement="bottom" width="260">
             <span class="item-icon">
               <component :is="state.currentComponent?.icon"></component>
             </span>
@@ -120,7 +120,6 @@ export default {
         useModal().confirm({
           title: '提示',
           message: '关闭后插槽内的内容将被清空，是否继续？',
-          status: 'info',
           exec: () => {
             slotList.value[idx].bind = false
             operateNode({ type: 'delete', id: slotData[name].value[0].id })
@@ -198,7 +197,7 @@ export default {
 <style lang="less" scoped>
 .meta-slot-container {
   text-align: left;
-  color: var(--lowcode-meta-js-slot-color);
+  color: var(--te-configurator-common-text-color-secondary);
 }
 
 .slot-form {
@@ -268,7 +267,7 @@ export default {
   outline: 0;
   border-radius: 10px;
   box-sizing: border-box;
-  background-color: var(--te-common-bg-switch);
+  background-color: var(--te-configurator-common-switch-bg-color);
   transition: border-color 0.3s, background-color 0.3s;
   vertical-align: middle;
 }
@@ -282,11 +281,11 @@ export default {
   transition: all 0.3s;
   width: 16px;
   height: 16px;
-  background-color: var(--te-common-bg-default);
+  background-color: var(--te-configurator-common-bg-color);
 }
 
 .e__switch.e_is-checked .e__switch-core {
-  background-color: var(--te-common-bg-primary-checked);
+  background-color: var(--te-configurator-common-switch-bg-color-checked);
 }
 
 .e__switch.e_is-checked .e__switch-core::after {

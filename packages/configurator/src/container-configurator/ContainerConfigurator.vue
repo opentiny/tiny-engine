@@ -9,7 +9,7 @@
         </div>
       </template>
       <template #operate="{ data }">
-        <tiny-tooltip class="item" effect="dark" content="删除" placement="top">
+        <tiny-tooltip class="item" effect="light" content="删除" placement="top">
           <span class="item-icon">
             <icon-del @click="delChildren(data)"></icon-del>
           </span>

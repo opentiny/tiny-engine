@@ -36,7 +36,7 @@ export default {
 
 <style lang="less" scoped>
 .empty-tips {
-  color: var(--te-common-text-weaken);
+  color: var(--te-props-common-text-color-weaken);
   text-align: center;
   margin-top: 50px;
   font-size: 12px;

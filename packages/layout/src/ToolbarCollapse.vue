@@ -1,5 +1,5 @@
 <template>
-  <tiny-popover :visible-arrow="false" width="140" trigger="hover">
+  <tiny-popover :visible-arrow="false" width="248" trigger="click" :open-delay="OPEN_DELAY.Default">
     <template #reference>
       <span class="toolbar-ellipsis">
         <svg-icon name="ellipsis"></svg-icon>
@@ -8,11 +8,19 @@
     <div class="collapse-content">
       <div class="empty-bar" v-for="(item, idx) in collapseBar" :key="idx">
         <div class="toolbar-list-button" v-if="typeof item === 'string'">
-          <component :is="getMergeMeta(item)?.entry" :options="getMergeMeta(comp).options"></component>
+          <component
+            :is="getMergeMeta(item)?.entry"
+            :options="getMergeMeta(item).options"
+            position="collapse"
+          ></component>
         </div>
         <div v-if="Array.isArray(item)">
           <div class="toolbar-list-button" v-for="comp in item" :key="comp">
-            <component :is="getMergeMeta(comp)?.entry" :options="getMergeMeta(comp).options"></component>
+            <component
+              :is="getMergeMeta(comp)?.entry"
+              :options="getMergeMeta(comp).options"
+              position="collapse"
+            ></component>
           </div>
           <div class="empty-line"></div>
         </div>
@@ -25,6 +33,8 @@
 import { Popover } from '@opentiny/vue'
 import { IconPopup } from '@opentiny/vue-icon'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
+import { constants } from '@opentiny/tiny-engine-utils'
+const { OPEN_DELAY } = constants
 
 export default {
   components: {
@@ -39,7 +49,8 @@ export default {
   },
   setup() {
     return {
-      getMergeMeta
+      getMergeMeta,
+      OPEN_DELAY
     }
   }
 }
@@ -55,39 +66,38 @@ export default {
   margin-left: 4px;
 
   &:hover {
-    background: var(--ti-lowcode-toolbar-view-active-bg);
+    background: var(--te-layout-common-active-bg);
   }
 }
 
 .collapse-content {
-  margin: 8px 4px;
   .empty-bar {
     font-size: 12px;
 
     .toolbar-list-button {
-      height: 24px;
       line-height: 24px;
+      margin: 0 -16px;
+      padding: 0 16px;
 
       &:hover {
-        background-color: var(--ti-lowcode-toolbar-ellipsis-hover-bg);
+        background-color: var(--te-layout-common-bg-color-hover);
         cursor: pointer;
       }
     }
 
     .empty-line {
       margin: 4px 0px;
-      border-top: 1px solid var(--ti-lowcode-canvas-wrap-bg);
+      border-top: 1px solid var(--te-layout-common-border-color);
     }
 
     .icon-hides {
       margin-right: 8px;
-      color: var(--te-common-icon-secondary);
+      color: var(--te-layout-common-icon-color-primary);
     }
   }
 }
 
 .collapse-content .empty-bar:last-child {
-  margin-bottom: 4px;
   .empty-line {
     display: none;
   }

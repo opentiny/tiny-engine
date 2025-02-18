@@ -176,7 +176,7 @@ export default {
 
 <style lang="less" scoped>
 .step-select-second {
-  border: 1px solid var(--ti-lowcode-datasource-border-color);
+  border: 1px solid var(--te-datasource-common-border-color);
   border-radius: 4px;
   padding: 12px;
   margin-bottom: 16px;
@@ -189,11 +189,8 @@ export default {
     justify-content: space-between;
     align-items: center;
     .tiny-button {
-      width: 40px;
-      padding: 0;
-      min-width: 40px;
-      margin-right: 2px;
-      border: 1px solid var(--ti-lowcode-datasource-color);
+      border: 1px solid var(--te-datasource-common-text-color-primary);
+      margin-right: 0px;
     }
   }
 
@@ -209,22 +206,22 @@ export default {
     .field-cell-name {
       margin-left: 5px;
       font-weight: bold;
-      font-size: 15px;
+      font-size: var(--te-base-font-size-base);
       .description {
-        color: var(--ti-lowcode-datasource-input-icon-color);
+        color: var(--te-datasource-input-icon-color);
         margin-left: 5px;
       }
     }
   }
   svg {
-    color: var(--ti-lowcode-datasource-toolbar-icon-color);
+    color: var(--te-datasource-toolbar-icon-color);
   }
 }
 #default-item {
   height: 24px;
   padding: 0;
   border: none;
-  border-top: 1px solid var(--ti-lowcode-datasource-border-color);
+  border-top: 1px solid var(--te-datasource-common-border-color);
   margin-bottom: 0;
   border-radius: 0;
   .field-row {
@@ -237,6 +234,6 @@ export default {
 }
 
 #default-item:last-child {
-  border-bottom: 1px solid var(--ti-lowcode-datasource-border-color);
+  border-bottom: 1px solid var(--te-datasource-common-border-color);
 }
 </style>

@@ -186,6 +186,6 @@ export default {
   margin-left: 10px;
 }
 .confirm {
-  color: var(--ti-lowcode-datasource-common-error-color);
+  color: var(--te-datasource-common-color-error);
 }
 </style>

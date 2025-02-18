@@ -29,7 +29,7 @@ export default {
   }
   .empty-text {
     font-size: 12px;
-    color: var(--te-common-text-weaken);
+    color: var(--te-component-common-text-color-weaken);
   }
 }
 </style>

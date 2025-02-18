@@ -12,6 +12,7 @@
 
 import metaData from './meta.js'
 import { HelpService } from './src/composable'
+import './src/styles/vars.less'
 
 export default {
   ...metaData,

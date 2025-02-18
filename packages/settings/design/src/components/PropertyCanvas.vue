@@ -21,12 +21,12 @@
         <div class="title-wrap">
           <h6>{{ titleProps.group.label?.zh_CN || '' }}</h6>
           <div>
-            <tiny-tooltip class="option-tips" effect="dark" content="编辑分组信息" placement="top">
+            <tiny-tooltip class="option-tips" effect="light" content="编辑分组信息" placement="top">
               <span class="item-icon">
                 <svg-icon name="to-edit" class="option-icon" @click.stop="handleEditGroup(titleProps.group)"></svg-icon>
               </span>
             </tiny-tooltip>
-            <tiny-tooltip class="option-tips" effect="dark" content="删除分组" placement="top">
+            <tiny-tooltip class="option-tips" effect="light" content="删除分组" placement="top">
               <span class="item-icon">
                 <svg-icon
                   name="delete"
@@ -177,7 +177,7 @@ export default {
   .empty-group-tips {
     margin-top: 100px;
     text-align: center;
-    color: var(--te-common-text-weaken);
+    color: #808080;
     font-size: 12px;
     .empty-data-icon {
       width: 100px;
@@ -236,7 +236,7 @@ export default {
     .tiny-collapse-item {
       &.is-active {
         .tiny-collapse-item__header {
-          border-bottom: 1px solid var(--ti-lowcode-common-border-color);
+          border-bottom: 1px solid #e6e6e6;
           height: 36px;
         }
       }
@@ -246,11 +246,11 @@ export default {
         align-items: center;
         justify-content: space-between;
         h6 {
-          color: var(--te-common-text-primary);
+          color: #191919;
         }
         .option-icon {
           display: inline-block;
-          color: var(--ti-lowcode-setting-plugin-icon-color);
+          color: #808080;
         }
         .option-tips + .option-tips {
           margin-left: 8px;
@@ -259,12 +259,12 @@ export default {
     }
 
     .tiny-collapse-item__header {
-      color: var(--te-common-text-secondary);
-      background-color: var(--te-common-bg-prompt);
+      color: #595959;
+      background-color: #e6e6e6;
       font-weight: 600;
 
       svg {
-        color: var(--te-common-text-secondary);
+        color: #595959;
         margin-right: 4px;
       }
     }
@@ -273,16 +273,16 @@ export default {
       display: flex;
       flex-wrap: wrap;
       padding: 0;
-      background: var(--ti-lowcode-tabs-active-bg);
+      background: #f3f3f3;
       border-top: none;
-      border-bottom: 1px solid var(--ti-lowcode-tabs-border-color);
-      color: var(--te-common-text-secondary);
+      border-bottom: 1px solid #dbdbdb;
+      color: #595959;
 
       .properties-item {
         padding: 3px 10px;
         cursor: pointer;
         &.active {
-          background-color: var(--ti-lowcode-common-hover-bg-color);
+          background-color: var(--te-setting-design-hover-bg-color);
         }
         .item-input .action-icon {
           display: none;
@@ -293,7 +293,7 @@ export default {
         .item-input {
           .meta-array-wrap {
             .top {
-              color: var(--te-common-text-secondary);
+              color: #595959;
             }
             .actions {
               display: none;
@@ -303,7 +303,7 @@ export default {
       }
       .item-container {
         .empty {
-          color: var(--te-common-text-secondary);
+          color: #595959;
         }
       }
     }

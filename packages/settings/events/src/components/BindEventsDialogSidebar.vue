@@ -8,7 +8,6 @@
           <li v-for="item in filteredMethodList" :key="item.name" @click="selectMethod(item)">
             <div :class="['action-name', { active: item.name === context.bindMethodInfo.name }]">
               {{ item.title || item.name }}
-              <icon-yes v-if="item.name === context.bindMethodInfo.name" class="action-selected-icon"></icon-yes>
             </div>
           </li>
         </ul>
@@ -20,14 +19,12 @@
 <script>
 import { getMetaApi, META_APP } from '@opentiny/tiny-engine-meta-register'
 import { Search } from '@opentiny/vue'
-import { iconYes } from '@opentiny/vue-icon'
 import { inject, ref, watchEffect } from 'vue'
 import { INVALID_VARNAME_CHAR_RE, NEW_METHOD_TYPE } from './constants'
 
 export default {
   components: {
-    TinySearch: Search,
-    IconYes: iconYes()
+    TinySearch: Search
   },
   props: {
     eventBinding: {
@@ -110,7 +107,7 @@ export default {
   }
 
   .left-list-wrap {
-    border: 1px solid var(--ti-lowcode-bind-event-dialog-content-left-border-color);
+    border: 1px solid var(--te-bind-event-dialog-content-left-border-color);
     border-radius: 4px;
     height: 300px;
     margin-top: var(--te-common-vertical-item-spacing-normal);
@@ -131,14 +128,9 @@ export default {
         justify-content: space-between;
         padding: 8px 12px;
         cursor: pointer;
-        color: var(--ti-lowcode-bind-event-dialog-color);
+        color: var(--te-bind-event-dialog-text-color);
         &.active {
-          background: var(--ti-lowcode-bind-event-dialog-content-left-list-item-active-bg-color);
-        }
-
-        .action-selected-icon {
-          font-size: 14px;
-          color: var(--ti-lowcode-bind-event-dialog-action-selected-icon-color);
+          background: var(--te-bind-event-dialog-content-left-list-item-bg-color-active);
         }
       }
     }

@@ -11,7 +11,6 @@
  */
 
 import { computed } from 'vue'
-import { extend } from '@opentiny/vue-renderless/common/object'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { useBlock } from '@opentiny/tiny-engine-meta-register'
 
@@ -26,7 +25,7 @@ const addPropertyLinks = ({ linked, propertyName, componentProperties }) => {
       const property = propertyList[j]
 
       if (property.property === propertyName) {
-        propertyList[j] = extend(true, {}, property, {
+        Object.assign(property, {
           linked,
           widget: {
             props: {

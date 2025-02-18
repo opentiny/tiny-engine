@@ -192,27 +192,27 @@ export default {
     grid-row: 1 / span 3;
     width: 68px;
     height: 68px;
-    background: var(--ti-lowcode-fit-coordinate-bg);
+    background: var(--te-styles-common-bg-color);
     display: inline-grid;
     overflow: hidden;
     justify-items: center;
     border-width: 1px;
     box-sizing: border-box;
     border-style: solid;
-    border-color: var(--ti-lowcode-fit-coordinate-border-color);
+    border-color: var(--te-styles-common-border-color);
     border-radius: 4px;
     gap: 0px;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
   }
   .coordinate-origin {
-    background-color: var(--ti-lowcode-fit-coordinate-bg);
+    background-color: var(--te-styles-common-bg-color);
     transition: color 0.1s ease 0s;
-    color: var(--ti-lowcode-fit-coordinate-origin-color);
+    color: var(--te-styles-common-icon-color);
     font-size: 14px;
     &:hover,
     &.selected {
-      color: var(--ti-lowcode-fit-label-color);
+      color: var(--te-styles-background-icon-color-primary);
     }
   }
   .input-wrap {
