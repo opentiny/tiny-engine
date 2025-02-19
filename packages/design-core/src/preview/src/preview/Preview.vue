@@ -14,7 +14,7 @@
 
 <script>
 import { defineComponent, computed, defineAsyncComponent, ref } from 'vue'
-import { Repl, useStore } from '@vue/repl'
+import { Repl, useStore, useVueImportMap } from '@vue/repl'
 import { getMetaApi } from '@opentiny/tiny-engine-meta-register'
 import { getImportMap as getInitImportMap } from './importMap'
 import srcFiles from './srcFiles'
@@ -22,7 +22,6 @@ import generateMetaFiles, { processAppJsCode } from './generate'
 import { getSearchParams, fetchMetaData, fetchImportMap, fetchAppSchema, fetchBlockSchema } from './http'
 import { PreviewTips } from '../constant'
 import { injectDebugSwitch } from './debugSwitch'
-import '@vue/repl/style.css'
 
 const Monaco = defineAsyncComponent(() => import('@vue/repl/monaco-editor')) // 异步组件实现懒加载，打开debug后再加载
 
@@ -46,9 +45,12 @@ export default {
         inlineTemplate: false
       }
     })
+    const { importMap: builtinImportMap } = useVueImportMap()
 
     const currentImportMap = ref({
-      imports: {}
+      imports: {
+        ...builtinImportMap.value.imports
+      }
     })
 
     const store = useStore({
