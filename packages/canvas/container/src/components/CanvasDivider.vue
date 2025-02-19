@@ -220,7 +220,7 @@ export default {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background-color: var(--te-canvas-container-bg-color);
+  background-color: var(--te-canvas-container-bg-color-white);
   cursor: pointer;
   z-index: 3;
   &.divider-vertical {

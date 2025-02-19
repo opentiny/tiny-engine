@@ -484,6 +484,17 @@ const initMaterial = ({ isInit = true, appData = {} } = {}) => {
 }
 
 /**
+ * 根据组名获取指定分组组件
+ * @param {Array} components 所有组件
+ * @param {String} groupName 组件分组名
+ * @returns
+ */
+const getComponentsByGroup = (components, groupName) => {
+  if (!Array.isArray(components)) return []
+  return components.filter((item) => item.group === groupName)
+}
+
+/**
  * 增加区块缓存
  * @param {String} id 区块 id，也就是 label 字段
  * @param {Object} resource 区块信息，区块详情中的 content 字段
@@ -511,6 +522,7 @@ export default function () {
     getBlockByName,
     getBlockCompileRes,
     addBlockResources,
-    updateBlockCompileCache
+    updateBlockCompileCache,
+    getComponentsByGroup
   }
 }

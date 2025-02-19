@@ -26,6 +26,7 @@
         :value="state.pageData"
         :options="options"
         @change="editorChange"
+        @shortcutSave="saveSchema"
       ></monaco-editor>
     </div>
     <div class="source-code-footer">

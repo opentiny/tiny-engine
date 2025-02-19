@@ -6,7 +6,7 @@
       </template>
     </component>
     <slot></slot>
-    <span v-if="state.options?.collapsed">{{ state.content }}</span>
+    <span v-if="state.options?.collapsed && content">{{ state.content }}</span>
   </span>
 </template>
 
@@ -31,7 +31,7 @@ export default {
     },
     options: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     }
   },
   emits: ['click-api'],
@@ -47,14 +47,13 @@ export default {
     }
 
     const getRender = () => {
-      switch (props.options.renderType) {
-        case 'button':
-          return ToolbarBaseButton
-        case 'icon':
-          return ToolbarBaseIcon
-        default:
-          return false
+      if (props.options.renderType === 'button') {
+        return ToolbarBaseButton
       }
+      if (props.options.renderType === 'icon') {
+        return ToolbarBaseIcon
+      }
+      return false
     }
 
     return {

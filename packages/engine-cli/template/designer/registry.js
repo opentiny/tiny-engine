@@ -21,6 +21,7 @@ import {
   Redoundo,
   Save,
   Clean,
+  ThemeSwitch,
   Preview,
   GenerateCode,
   Refresh,
@@ -43,7 +44,8 @@ import {
   Layout,
   Canvas,
   GenerateCodeService,
-  GlobalService
+  GlobalService,
+  ThemeSwitchService
 } from '@opentiny/tiny-engine'
 import engineConfig from './engine.config'
 import { HttpService } from './src/composable'
@@ -51,7 +53,7 @@ import { HttpService } from './src/composable'
 export default {
   root: {
     id: 'engine.root',
-    metas: [HttpService, GenerateCodeService, GlobalService] // GlobalService 依赖 HttpService，HttpService需要在前面处理
+    metas: [HttpService, GenerateCodeService, GlobalService, ThemeSwitchService] // GlobalService 依赖 HttpService，HttpService需要在前面处理
   },
   config: engineConfig,
   layout: {
@@ -64,7 +66,7 @@ export default {
         left: ['engine.toolbars.breadcrumb', 'engine.toolbars.lock', 'engine.toolbars.logo'],
         center: ['engine.toolbars.media'],
         right: [
-          ['engine.toolbars.redoundo', 'engine.toolbars.clean'],
+          ['engine.toolbars.themeSwitch', 'engine.toolbars.redoundo', 'engine.toolbars.clean'],
           ['engine.toolbars.preview'],
           ['engine.toolbars.generate-code', 'engine.toolbars.save']
         ],
@@ -86,6 +88,7 @@ export default {
     }
   ],
   toolbars: [
+    ThemeSwitch,
     Logo,
     Breadcrumb,
     Lock,

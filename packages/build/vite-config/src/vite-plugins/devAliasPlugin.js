@@ -47,11 +47,10 @@ const getDevAlias = (useSourceAlias) => {
     '@opentiny/tiny-engine-toolbar-refresh': path.resolve(basePath, 'packages/toolbars/refresh/index.js'),
     '@opentiny/tiny-engine-toolbar-redoundo': path.resolve(basePath, 'packages/toolbars/redoundo/index.js'),
     '@opentiny/tiny-engine-toolbar-clean': path.resolve(basePath, 'packages/toolbars/clean/index.js'),
+    '@opentiny/tiny-engine-toolbar-theme-switch': path.resolve(basePath, 'packages/toolbars/themeSwitch/index.js'),
     '@opentiny/tiny-engine-toolbar-save': path.resolve(basePath, 'packages/toolbars/save/index.js'),
     '@opentiny/tiny-engine-toolbar-setting': path.resolve(basePath, 'packages/toolbars/setting/index.js'),
     '@opentiny/tiny-engine-toolbar-collaboration': path.resolve(basePath, 'packages/toolbars/collaboration/index.js'),
-    '@opentiny/tiny-engine-theme-dark': path.resolve(basePath, 'packages/theme/dark/index.less'),
-    '@opentiny/tiny-engine-theme-light': path.resolve(basePath, 'packages/theme/light/index.less'),
     '@opentiny/tiny-engine-theme-base': path.resolve(basePath, 'packages/theme/base/src/index.js'),
     '@opentiny/tiny-engine-svgs': path.resolve(basePath, 'packages/svgs/index.js'),
     '@opentiny/tiny-engine-canvas/render': path.resolve(basePath, 'packages/canvas/render/index.ts'),
@@ -65,19 +64,6 @@ const getDevAlias = (useSourceAlias) => {
     '@opentiny/tiny-engine-configurator': path.resolve(basePath, 'packages/configurator/src/index.js'),
     '@opentiny/tiny-engine-block-compiler': path.resolve(basePath, 'packages/block-compiler/src/index.ts')
   }
-}
-
-const getThemePath = (theme, useSourceAlias) => {
-  if (!['light', 'dark'].includes(theme)) {
-    return ''
-  }
-
-  if (useSourceAlias) {
-    const basePath = useSourceAlias.basePath || path.resolve(process.cwd(), '..')
-    return path.resolve(basePath, `packages/theme/${theme}/index.less`)
-  }
-
-  return path.resolve(process.cwd(), `./node_modules/@opentiny/tiny-engine-theme-${theme}/dist/style.css`)
 }
 
 /**
@@ -95,8 +81,7 @@ export const devAliasPlugin = (env, useSourceAlias) => {
         return {
           resolve: {
             alias: {
-              ...getDevAlias(useSourceAlias),
-              '@opentiny/tiny-engine-theme': getThemePath(env.VITE_THEME, useSourceAlias)
+              ...getDevAlias(useSourceAlias)
             }
           }
         }
@@ -107,7 +92,6 @@ export const devAliasPlugin = (env, useSourceAlias) => {
           resolve: {
             alias: {
               // 构建不使用 alias
-              '@opentiny/tiny-engine-theme': getThemePath(env.VITE_THEME, false)
             }
           }
         }

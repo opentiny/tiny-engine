@@ -9,32 +9,28 @@ const flattenRoutes = (routes, parentPath = '') => {
   return routes.reduce((acc, route) => {
     const fullPath = `${parentPath}${route.path}`
 
-    if (route.path !== '') {
-      if (route.component) {
-        // 如果存在 component，则直接添加路由
-        const newRoute = {
-          name: `${route.name}`,
-          path: fullPath,
-          component: route.component,
-          children: flattenRoutes(route.children)
-        }
-        const redirectChild = route.children.find((item) => item.isDefault)
-
-        if (route.children && redirectChild) {
-          newRoute.redirect = { name: `${redirectChild.name}` }
-        }
-
-        acc.push(newRoute)
-      } else if (route.children && route.children.length > 0) {
-        // 如果不存在 component 但有 children，则递归处理 children
-        const children = flattenRoutes(route.children, fullPath + '/')
-        // 将处理后的 children 合并到上一层存在 component 的路由中
-        acc.push(...children)
+    if (route.component) {
+      // 如果存在 component，则直接添加路由
+      const newRoute = {
+        name: `${route.name}`,
+        path: fullPath,
+        component: route.component,
+        children: flattenRoutes(route.children)
       }
-      // 如果既没有 component 也没有 children，则不做任何处理
-    } else {
-      acc.push(route)
+      const redirectChild = route.children.find((item) => item.isDefault)
+
+      if (route.children && redirectChild) {
+        newRoute.redirect = { name: `${redirectChild.name}` }
+      }
+
+      acc.push(newRoute)
+    } else if (route.children && route.children.length > 0) {
+      // 如果不存在 component 但有 children，则递归处理 children
+      const children = flattenRoutes(route.children, fullPath + '/')
+      // 将处理后的 children 合并到上一层存在 component 的路由中
+      acc.push(...children)
     }
+    // 如果既没有 component 也没有 children，则不做任何处理
 
     return acc
   }, [])
@@ -43,15 +39,14 @@ const flattenRoutes = (routes, parentPath = '') => {
 const convertToNestedRoutes = (schema) => {
   const pageSchema = (schema.pageSchema || []).sort((a, b) => a.meta?.router?.length - b.meta?.router?.length)
   const result = []
-  let home = {}
+  let home = {
+    path: '/'
+  }
   let isGetHome = false
 
   pageSchema.forEach((item) => {
     if ((item.meta?.isHome || item.meta?.isDefault) && !isGetHome) {
-      home = {
-        path: '',
-        redirect: { name: `${item.meta.id}` }
-      }
+      home.redirect = { name: `${item.meta.id}` }
       isGetHome = true
     }
 
@@ -89,11 +84,8 @@ const convertToNestedRoutes = (schema) => {
     })
   })
 
-  if (home.redirect) {
-    result.unshift(home)
-  }
-
-  return flattenRoutes(result)
+  home.children = flattenRoutes(result)
+  return [home]
 }
 
 // 示例路由数组
@@ -121,7 +113,7 @@ function genRouterPlugin(options = {}) {
       const exportSnippet = `
       export default createRouter({
         history: createWebHashHistory(),
-        routes: [{path: '/',children: routes}]
+        routes
       })`
 
       const routeSnippets = `const routes = ${resultStr}`

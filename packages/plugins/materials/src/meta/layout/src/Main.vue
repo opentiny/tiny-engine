@@ -2,6 +2,7 @@
   <plugin-panel :title="shortcut ? '' : title" @close="$emit('close')">
     <template #header>
       <component
+        v-if="!onlyShowDefault"
         :is="registryData?.components?.header"
         :fixedPanels="fixedPanels"
         @fix-panel="(id) => $emit('fix-panel', id)"
@@ -20,7 +21,7 @@
 </template>
 
 <script>
-import { reactive, provide, ref } from 'vue'
+import { reactive, provide, ref, computed } from 'vue'
 import { Tabs, TabItem } from '@opentiny/vue'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { PluginPanel } from '@opentiny/tiny-engine-common'
@@ -40,6 +41,10 @@ export default {
     registryData: {
       type: Object,
       default: () => ({})
+    },
+    groupName: {
+      type: String,
+      default: ''
     }
   },
   emits: ['close', 'fix-panel'],
@@ -48,18 +53,24 @@ export default {
       isShortcutPanel: props.shortcut,
       isBlockGroupPanel: false,
       isBlockList: false,
+      materialGroup: props.groupName,
       emitEvent: emit
     })
     provide('panelState', panelState) // 使用provide传给子组件,后续可能会有调整，先暂定
 
     const rightPanelRef = ref(null)
     const displayComponentIds = props.registryData?.options?.displayComponentIds || []
-    const onlyShowDefault = ref(displayComponentIds.length === 1)
+    const onlyShowDefault = ref(displayComponentIds.length === 1 || props.groupName !== '')
+
     const activeTabId =
       displayComponentIds.find((item) => item === props.registryData?.options?.defaultTabId) || displayComponentIds[0]
 
     const activeName = ref(activeTabId)
-    const defaultComponent = getMergeMeta(activeName.value)?.entry
+    const defaultComponent = computed(() => {
+      const defaultComponentID = props.registryData?.options?.defaultTabId
+      const activeTabId = onlyShowDefault.value ? defaultComponentID : activeName.value
+      return getMergeMeta(activeTabId)?.entry
+    })
     const tabComponents = displayComponentIds.map((id) => {
       const itemMeta = getMergeMeta(id)
       return {

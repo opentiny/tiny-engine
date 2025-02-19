@@ -9,64 +9,49 @@
       ></svg-button>
     </template>
     <template #content>
-      <div class="tree-wrap lowcode-scrollbar">
-        <tiny-grid
-          ref="gridRef"
-          :data="state.pageSchema"
-          :tree-config="{ children: 'children', expandAll: state.expandAll, renderIcon: renderIconFn }"
-          :show-header="false"
-          :highlight-hover-row="false"
-          :auto-resize="true"
-          :row-class-name="getClassName"
-        >
-          <tiny-grid-column field="componentName" tree-node>
-            <template #default="data">
-              <span
-                class="tree-box"
-                :schemaId="data.row?.id"
-                :type="data.row.componentName"
-                @mouseover="mouseover(data.row)"
-                @mouseleave="mouseleave(data.row)"
-                @click="checkElement(data.row)"
-              >
-                <span class="tree-content" :class="{ 'node-isblock': data.row?.componentType === 'Block' }">
-                  <!-- <span class="node-icon">
-                    <component :is="getIcon(data.row)" style="width: 1em; height: 1em"></component>
-                  </span> -->
-                  <span>{{ data.row.componentName }}</span>
-                </span>
-                <span v-show="data.row.showEye" class="tree-handle" @mouseup="showNode(data.row)">
-                  <icon-eyeopen v-show="data.row.show"></icon-eyeopen>
-                  <icon-eyeclose v-show="!data.row.show"></icon-eyeclose>
-                </span>
-              </span>
+      <draggable-tree
+        label-key="componentName"
+        :data="state.pageSchema"
+        :draggable="true"
+        :active="pageState.currentSchema?.id"
+        :disallow-drop="disallowDrop"
+        class="outline-tree"
+        @click="handleClickRow"
+        @mouseenter="handleMouseEnterRow"
+        @drop="handleDrop"
+      >
+        <template #content="row">
+          <div class="row-content">
+            <svg-icon v-if="getIconName(row)" :name="getIconName(row)"></svg-icon>
+            <span :class="['row-label', { 'node-isblock': row.rawData.componentType === 'Block' }]">{{
+              row.label
+            }}</span>
+            <template v-if="row.id !== 'body'">
+              <svg-icon v-if="eyeOpen(row.id)" name="eye" @mouseup="showNode(row.rawData)"></svg-icon>
+              <svg-icon v-if="!eyeOpen(row.id)" name="eye-invisible" @mouseup="showNode(row.rawData)"></svg-icon>
             </template>
-          </tiny-grid-column>
-        </tiny-grid>
-      </div>
+          </div>
+        </template>
+      </draggable-tree>
     </template>
   </plugin-panel>
 </template>
 
 <script>
-import { reactive, watch, ref, computed, onActivated, onDeactivated } from 'vue'
-import { Grid, GridColumn } from '@opentiny/vue'
+import { reactive, watch, computed, onActivated, onDeactivated, nextTick } from 'vue'
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { IconChevronDown, iconEyeopen, iconEyeclose } from '@opentiny/vue-icon'
 import { useCanvas, useMaterial, useLayout, useMessage } from '@opentiny/tiny-engine-meta-register'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { typeOf } from '@opentiny/vue-renderless/common/type'
+import DraggableTree from './DraggableTree.vue'
 
 const { PAGE_STATUS } = constants
 export default {
   components: {
-    TinyGrid: Grid,
-    TinyGridColumn: GridColumn,
     PluginPanel,
     SvgButton,
-    IconEyeopen: iconEyeopen(),
-    IconEyeclose: iconEyeclose()
+    DraggableTree
   },
   props: {
     fixedPanels: {
@@ -75,7 +60,7 @@ export default {
   },
   emits: ['close', 'fix-panel'],
   setup(props) {
-    const { pageState, getInstance } = useCanvas()
+    const { pageState } = useCanvas()
     const { getMaterial } = useMaterial()
     const { PLUGIN_NAME } = useLayout()
 
@@ -99,23 +84,13 @@ export default {
         return data
       }
 
-      return [{ ...translateChild([extend(true, {}, data)])[0], componentName: 'body' }]
+      return [{ ...translateChild([extend(true, {}, data)])[0], componentName: 'body', id: 'body' }]
     }
     const state = reactive({
       pageSchema: [],
-      expandAll: true,
-      initSchema: [],
       isLock: computed(
         () => ![PAGE_STATUS.Occupy, PAGE_STATUS.Guest].includes(useLayout().layoutState.pageStatus.state)
-      ),
-      dragState: {
-        allowDrop: true,
-        dragSchema: null,
-        hoverVm: null,
-        currentVm: null,
-        parentNode: null,
-        indicator: true
-      }
+      )
     })
 
     const { subscribe, unsubscribe } = useMessage()
@@ -149,8 +124,8 @@ export default {
       }
     )
 
-    const toggleTree = () => {
-      state.expandAll = !state.expandAll
+    const eyeOpen = (id) => {
+      return pageState.nodesStatus[id] !== false
     }
 
     const showNode = (data) => {
@@ -163,138 +138,88 @@ export default {
       clearSelect()
     }
 
-    const getIcon = (node) => {
-      if (!node.componentName) return undefined
-      const component = getMaterial(node.componentName)
-      return component.icon || 'IconAssociation'
-    }
-
-    const mouseover = (data) => {
+    const handleMouseEnterRow = (row) => {
       if (state.isLock) {
         return
       }
 
       const { hoverNode } = useCanvas().canvasApi.value
 
-      hoverNode(data.id)
-      data.showEye = true
+      hoverNode(row.id)
     }
 
-    const mouseleave = (data) => {
-      if (data && !data.show) {
+    const disallowDrop = ({ dragged, target, position }) => {
+      if (dragged.id === 'body') {
+        return true
+      }
+
+      const dropTo = position === 'center' ? target : target.parent
+
+      if (dropTo.id === 'body') {
+        return false
+      }
+
+      const { getConfigure, allowInsert } = useCanvas().canvasApi.value
+
+      return !allowInsert(getConfigure(dropTo.rawData.componentName), dragged.rawData)
+    }
+
+    const handleDrop = ({ dragged, target, position }) => {
+      // dragged和target相同，无需操作
+      if (dragged.id === target.id) {
         return
       }
-      data.showEye = false
+      // 如果target节点为dragged节点的父节点，无需操作
+      if (position === 'center' && target.rawData.children.some((item) => item.id === dragged.id)) {
+        return
+      }
+      // 如果相邻节点位置仍然不变，无需操作
+      if (position !== 'center') {
+        const targetParentChildren = target.parent.rawData.children
+        const targetIndex = targetParentChildren.findIndex((item) => item.id === target.id)
+        const node = targetParentChildren[position === 'top' ? targetIndex - 1 : targetIndex + 1]
+        if (dragged.id === node?.id) {
+          return
+        }
+      }
+
+      const { insertNode, removeNode, selectNode } = useCanvas().canvasApi.value
+      removeNode(dragged.id)
+      insertNode(
+        { data: dragged.rawData, node: target.rawData, parent: target.parent.rawData },
+        position === 'center' ? 'in' : position
+      )
+      nextTick(() => {
+        selectNode(dragged.id, 'clickTree')
+      })
     }
 
-    const checkElement = (row) => {
+    const handleClickRow = (row) => {
       if (state.isLock) {
         return
       }
 
       const { selectNode } = useCanvas().canvasApi.value
-      selectNode(row?.id, 'clickTree')
+      selectNode(row.id, 'clickTree')
     }
 
-    const gridRef = ref(null)
-
-    const rowDrop = () => {}
-
-    const getClassName = ({ row }) => {
-      const hightLight = pageState?.currentSchema?.id === row.id ? 'high-light-node' : ''
-      return 'nav-tree ' + hightLight
+    const getIconName = (row) => {
+      const iconName = getMaterial(row.rawData.componentName).icon || 'plugin-icon-page'
+      return iconName.toLowerCase()
     }
-
-    const rowDropMove = (event, originalEvent) => {
-      event.dragged.classList.remove('nodrag')
-      const { clientY } = originalEvent
-      const bottom = event.draggedRect.bottom
-      const distance = Math.abs(clientY - bottom)
-
-      const dragType = event.dragged.querySelector('.tree-box').getAttribute('type')
-      const dragId = event.dragged.querySelector('.tree-box').getAttribute('schemaId')
-      const dragSchema = getInstance(dragId)
-
-      state.dragState.dragSchema = dragSchema
-
-      const relateType = event.related.querySelector('.tree-box').getAttribute('type')
-      const relateId = event.related.querySelector('.tree-box').getAttribute('schemaId')
-      const relateSchema = getInstance(relateId)
-
-      pageState.hoverVm = relateSchema
-
-      const isRelateContainer = dragSchema?.componentName?.container
-      const relateParent = relateSchema?.parent.schema.componentName
-
-      if (dragType === 'col' && isRelateContainer && relateType !== 'col') {
-        state.dragState.indicator = false
-      } else if (dragType === 'col' && !isRelateContainer && relateParent !== 'row') {
-        state.dragState.indicator = false
-      } else if (dragType !== 'col' && isRelateContainer && relateType === 'row') {
-        state.dragState.indicator = false
-      } else if (!relateSchema) {
-        state.dragState.indicator = false
-      } else {
-        state.dragState.indicator = true
-      }
-
-      if (!state.dragState.indicator) {
-        event.dragged.classList.add('nodrag')
-        state.dragState.allowDrop = false
-      } else {
-        event.dragged.classList.remove('nodrag')
-        state.dragState.allowDrop = true
-      }
-
-      const el = originalEvent.target
-
-      if (
-        distance < 4 &&
-        distance > 1 &&
-        isRelateContainer &&
-        (!relateSchema.schema.children || relateSchema.schema.children.length === 0)
-      ) {
-        state.dragState.parentNode = el
-        el.querySelector('.tiny-grid-tree-wrapper').innerHTML =
-          '<i class="tiny-grid-tree__node-btn tiny-grid-icon__caret-right"></i>'
-      }
-
-      if (
-        state.dragState.parentNode &&
-        state.dragState.parentNode.getAttribute('data-rowid') !== el.getAttribute('data-rowid')
-      ) {
-        state.dragState.parentNode.querySelector('.tiny-grid-tree-wrapper').innerHTML = ''
-        state.dragState.parentNode = null
-      }
-    }
-
-    watch(
-      () => pageState.isLock,
-      (value) => {
-        setTimeout(rowDrop, 1000)
-        state.isLock = value
-      }
-    )
-
-    const renderIconFn = (h, { isActive }) =>
-      h(IconChevronDown(), {
-        class: ['tiny-grid-tree__node-btn', { is__active: isActive }]
-      })
 
     return {
       panelFixed,
-      checkElement,
-      mouseover,
-      mouseleave,
+      eyeOpen,
       showNode,
       state,
-      getIcon,
-      rowDropMove,
-      gridRef,
-      toggleTree,
-      getClassName,
       PLUGIN_NAME,
-      renderIconFn
+      pageState,
+      getIconName,
+      handleClickRow,
+      handleMouseEnterRow,
+      disallowDrop,
+      handleDrop
     }
   }
 }
@@ -304,59 +229,37 @@ export default {
 .outlinebox {
   height: 100%;
   overflow: hidden;
-  .tree-wrap {
-    height: calc(100% - 38px);
-    overflow-y: scroll;
-    padding-top: 12px;
-    border-top: 1px solid var(--te-tree-border-color);
-
-    .tree-handle {
-      font-size: var(--te-base-font-size-2);
-      svg {
-        fill: var(--te-tree-icon-color);
-      }
+}
+.outline-tree {
+  flex: 1;
+  overflow: auto;
+  .row-label {
+    flex: 1;
+    font-size: var(--te-base-font-size-base);
+    line-height: 20px;
+  }
+  svg {
+    color: var(--te-common-icon-secondary);
+    flex-shrink: 0;
+    &:hover {
+      color: var(--te-common-icon-hover);
     }
   }
-  :deep(.tiny-grid) {
-    background-color: unset;
-    .tree-box {
-      display: flex;
-      width: 200px;
-      justify-content: space-between;
-    }
-
-    .tiny-grid-tree-wrapper {
-      margin-right: 8px;
-
-      .tiny-grid-tree__node-btn {
-        width: 14px;
-        height: 14px;
-        margin-bottom: 2px;
-      }
-    }
+  svg.icon-eye {
+    visibility: hidden;
   }
-
-  :deep(.tiny-grid-body__row.nav-tree .tiny-grid-cell) {
-    line-height: inherit;
+  .tree-row:hover svg.icon-eye {
+    visibility: unset;
   }
-  :deep(.high-light-node) {
-    background: var(--te-tree-bg-color-active) !important;
-
-    :deep(.eyeOpen) {
-      display: block !important;
-    }
+  .row-content {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 4px;
   }
-  :deep(.tiny-grid .tiny-grid__body-wrapper .tiny-grid-body__column) {
-    color: var(--te-tree-text-color);
-    padding: 0 12px;
-    height: 24px !important;
-    line-height: 24px;
-    .tree-content {
-      font-size: 12px;
-    }
-    .node-isblock {
-      color: var(--te-tree-block-text-color);
-    }
+  .node-isblock {
+    color: var(--te-tree-block-text-color);
   }
 }
 </style>

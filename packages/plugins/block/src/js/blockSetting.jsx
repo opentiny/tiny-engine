@@ -53,7 +53,6 @@ import { generateBlock } from '@opentiny/tiny-engine-common/js/vscodeGenerateFil
 const { HOST_TYPE } = constants
 
 const STRING_SLOT = ['Slot', 'slot']
-
 const currentCategory = ref('')
 
 // 区块暴露属性和事件的类型
@@ -562,7 +561,7 @@ const createBlock = (block = {}) => {
   const extraParams = {}
 
   if (useBlock().shouldReplaceCategoryWithGroup()) {
-    extraParams.groups = categories
+    extraParams.groups = categories || []
   } else {
     extraParams.categories = categories
   }
@@ -591,6 +590,7 @@ const createBlock = (block = {}) => {
       if (isVsCodeEnv) {
         generateBlock({ schema: data.content, blockPath: data.path })
       }
+      updateBlockList()
       // 更新区块分类数据，分类下区块不为空的不能删除
       getCategories()
     })
@@ -608,6 +608,7 @@ const updateBlock = (block = {}) => {
     public_scope_tenants,
     public: publicType,
     tags,
+    groups,
     categories,
     description,
     label
@@ -616,7 +617,7 @@ const updateBlock = (block = {}) => {
 
   const extraParams = {}
   if (useBlock().shouldReplaceCategoryWithGroup()) {
-    extraParams.groups = categories
+    extraParams.groups = categories || (groups || []).map(({ id }) => id)
   } else {
     extraParams.categories = categories
   }
@@ -655,6 +656,7 @@ const updateBlock = (block = {}) => {
       if (isVsCodeEnv) {
         generateBlock({ schema: data.content, blockPath: data.path })
       }
+      updateBlockList()
       // 更新区块分类数据，分类下区块不为空的不能删除
       getCategories()
       useBlock().isRefresh.value = true
@@ -722,7 +724,6 @@ export const saveBlock = async (block) => {
 
     const actionPromise = block.id ? updateBlock(block) : createBlock(block)
     await actionPromise
-    updateBlockList()
   }
 }
 

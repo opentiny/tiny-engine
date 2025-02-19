@@ -1872,7 +1872,7 @@ export const appSchemaDemo01 = {
           confirmationToken: 'dfb2c162-351f-4f44-ad5f-8998',
           is_admin: true
         },
-        isHome: false,
+        isHome: true,
         _id: 'NTJ4MjvqoVj8OVsc'
       }
     },

@@ -38,7 +38,26 @@
       <tiny-grid :columns="state.columns" :fetchData="{ api: getTableData }"></tiny-grid>
     </div>
     <div dataSource="a5f6ef4f">
-      <tiny-grid :fetchData="{ api: getTableData }" :columns="state.columns6cio"></tiny-grid>
+      <tiny-grid :fetchData="{ api: getTableData }">
+        <tiny-grid-column type="index" :width="60" title=""></tiny-grid-column>
+        <tiny-grid-column type="selection" :width="60"></tiny-grid-column>
+        <tiny-grid-column field="employees" title="员工数">
+          <template #default="{ row, rowIndex }"> <tiny-input></tiny-input></template
+        ></tiny-grid-column>
+        <tiny-grid-column field="city" title="城市"></tiny-grid-column>
+        <tiny-grid-column title="产品">
+          <template #default="{ row }">
+            <div>
+              <tiny-switch modelValue=""></tiny-switch></div></template
+        ></tiny-grid-column>
+        <tiny-grid-column title="操作">
+          <template #default="">
+            <tiny-button
+              text="删除"
+              :icon="TinyIconDel"
+              @click="(...eventArgs) => emit(eventArgs, row)"
+            ></tiny-button></template></tiny-grid-column
+      ></tiny-grid>
     </div>
     <div :style="{ width: props.quotePopWidth }">循环渲染：</div>
     <tiny-icon-help-circle v-if="false"></tiny-icon-help-circle>
@@ -72,6 +91,7 @@ import {
   Grid as TinyGrid,
   Input as TinyInput,
   Select as TinySelect,
+  GridColumn as TinyGridColumn,
   Switch as TinySwitch
 } from '@opentiny/vue'
 import { IconSearch, IconDel, iconHelpCircle, IconEdit } from '@opentiny/vue-icon'
@@ -97,30 +117,6 @@ const { utils } = wrap(function () {
   return this
 })()
 const state = vue.reactive({
-  columns6cio: [
-    { type: 'index', width: 60, title: '' },
-    { type: 'selection', width: 60 },
-    { field: 'employees', title: '员工数', slots: { default: ({ row, rowIndex }, h) => <TinyInput></TinyInput> } },
-    { field: 'city', title: '城市' },
-    {
-      title: '产品',
-      slots: {
-        default: ({ row }, h) => (
-          <div>
-            <TinySwitch modelValue=""></TinySwitch>
-          </div>
-        )
-      }
-    },
-    {
-      title: '操作',
-      slots: {
-        default: ({ row }, h) => (
-          <TinyButton text="删除" icon={TinyIconDel} onClick={(...eventArgs) => emit(eventArgs, row)}></TinyButton>
-        )
-      }
-    }
-  ],
   IconPlusSquare: utils.IconPlusSquare(),
   theme: "{   'id': 22,   'name': '@cloud/tinybuilder-theme-dark',   'description': '黑暗主题' }",
   companyName: '',

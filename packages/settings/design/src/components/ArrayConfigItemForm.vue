@@ -209,8 +209,8 @@ export default {
     }
     .tiny-form-item__content {
       .editor-warp {
-        --ti-lowcode-meta-codeEditor-border-color: #595959;
-        --ti-lowcode-meta-codeEditor-color: #595959;
+        border-color: #595959;
+        color: #595959;
       }
     }
   }

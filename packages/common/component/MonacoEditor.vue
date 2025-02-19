@@ -40,6 +40,7 @@
         :options="editorOptions"
         language="javascript"
         @editorDidMount="$emit('editorDidMount', $event)"
+        @shortcutSave="$emit('shortcutSave', $event)"
         @change="$emit('change', $event)"
       ></monaco-editor>
     </div>
@@ -75,7 +76,7 @@ export default {
       default: true
     }
   },
-  emits: ['editorDidMount', 'change', 'fullscreenChange'],
+  emits: ['editorDidMount', 'change', 'fullscreenChange', 'shortcutSave'],
   setup(props, { emit }) {
     const editor = ref(null)
     const fullscreen = ref(false)

@@ -107,12 +107,13 @@ export default {
     box-sizing: border-box;
   }
   .modal-padding {
-    padding: var(--ti-modal-padding-y, 14px) var(--ti-modal-padding-x, 20px);
+    padding: var(--te-styles-modal-padding-y) var(--te-styles-modal-padding-x);
   }
   .align-body {
-    right: var(--modal-right-offset, 280px);
+    right: var(--te-styles-modal-right-offset-first);
     left: calc(
-      100% - var(--modal-right-offset, 287px) - var(--modal-right-offset, 280px) - var(--modal-spaceing, 16px)
+      100% - var(--te-styles-modal-right-offset-first) - var(--te-styles-modal-right-offset-second) -
+        var(--te-styles-modal-spacing)
     );
   }
 }

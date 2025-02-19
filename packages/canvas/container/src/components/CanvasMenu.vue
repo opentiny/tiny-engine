@@ -106,7 +106,8 @@ export default {
         name: '添加父级',
         items: [
           { name: '文字提示', code: 'wrap', value: 'TinyTooltip' },
-          { name: '弹出框', code: 'wrap', value: 'TinyPopover' }
+          { name: '弹出框', code: 'wrap', value: 'TinyPopover' },
+          { name: '容器', code: 'insert', value: 'out' }
         ],
         code: 'addParent'
       },
@@ -228,7 +229,7 @@ export default {
       route() {
         // check中验证过了 targetPageId 是有效值
         const targetPageId = getCurrent().schema.props.to.name
-        usePage().switchPageWithConfirm(targetPageId)
+        usePage().switchPageWithConfirm(targetPageId, true)
       }
     }
 

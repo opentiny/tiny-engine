@@ -216,11 +216,10 @@ const generateSFCFile = (schema, componentsMap, config = {}, nextPage) => {
 
 export const genSFCWithDefaultPlugin = (schema, componentsMap, config = {}, nextPage) => {
   const { templateItemValidate = [], genTemplate = [], parseScript = [], genScript = {} } = config.hooks || {}
-  const defaultComponentHooks = [handleComponentNameHook, handleTinyIcon]
+  const defaultComponentHooks = [handleComponentNameHook, handleTinyIcon, handleTinyGrid]
 
   const defaultAttributeHook = [
     handleSlotParams,
-    handleTinyGrid,
     handleJsxModelValueUpdate,
     handleConditionAttrHook,
     handleLoopAttrHook,

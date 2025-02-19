@@ -8,7 +8,7 @@ export const generateConfig = (options = {}) => {
   const configContent = `
 export default {
   id: 'engine.config',
-  theme: import.meta.env.VITE_THEME || '${theme}',
+  theme: '${theme}',
   material: ${JSON.stringify(material)},
   scripts: ${JSON.stringify(scripts)},
   styles: ${JSON.stringify(styles)},
@@ -24,18 +24,6 @@ export const generatePackageJson = (name, options, templatePath) => {
   const templatePackageJson = fs.readJSONSync(path.resolve(templatePath, 'package.json'))
 
   templatePackageJson.name = name
-  templatePackageJson.scripts['serve:frontend'] = templatePackageJson.scripts['serve:frontend'].replace(
-    /VITE_THEME=[^\s]+/,
-    `VITE_THEME=${options.theme}`
-  )
-  templatePackageJson.scripts.build = templatePackageJson.scripts.build.replace(
-    /VITE_THEME=[^\s]+/,
-    `VITE_THEME=${options.theme}`
-  )
-  templatePackageJson.scripts['build:alpha'] = templatePackageJson.scripts['build:alpha'].replace(
-    /VITE_THEME=[^\s]+/,
-    `VITE_THEME=${options.theme}`
-  )
 
   return templatePackageJson
 }

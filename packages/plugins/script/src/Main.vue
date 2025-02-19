@@ -20,6 +20,7 @@
         :options="options"
         @change="change"
         @editorDidMount="editorDidMount"
+        @shortcutSave="saveMethods"
       ></monaco-editor>
     </div>
   </div>

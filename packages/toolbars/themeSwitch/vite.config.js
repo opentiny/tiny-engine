@@ -12,18 +12,24 @@
 
 import { defineConfig } from 'vite'
 import path from 'path'
+import vue from '@vitejs/plugin-vue'
+import vueJsx from '@vitejs/plugin-vue-jsx'
 import generateComment from '@opentiny/tiny-engine-vite-plugin-meta-comments'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [generateComment()],
+  plugins: [generateComment(), vue(), vueJsx()],
   publicDir: false,
+  resolve: {},
   build: {
     lib: {
-      entry: path.resolve(__dirname, './index.less'),
-      name: 'theme-light',
+      entry: path.resolve(__dirname, './index.js'),
+      name: 'toolbar-theme',
       fileName: () => 'index.js',
       formats: ['es']
+    },
+    rollupOptions: {
+      external: ['vue', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/]
     }
   }
 })

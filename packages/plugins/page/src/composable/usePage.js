@@ -307,6 +307,52 @@ const getAncestors = async (id, withFolders) => {
   return ancestors.filter(predicate).map((item) => item.id)
 }
 
+/**
+ * 打平数组内的文件夹，确保返回的数组每个都是页面而不是文件夹
+ * @param {Array<{isPage: boolean, children?: any[]} & Record<string, any>} pagesOrFolders 页面或者文件夹数组
+ * @returns
+ */
+const flatternFolder = (pagesOrFolders) => {
+  // 页面数组中没有文件夹，无需处理
+  if (pagesOrFolders.every((item) => item.isPage)) {
+    return pagesOrFolders
+  }
+
+  const flattened = pagesOrFolders
+    .map((page) => {
+      if (page.isPage) {
+        return page
+      }
+      // 如果是文件夹，返回子节点数组，后面flat会打平这一层
+      return (page.children || []).map((child) => ({
+        ...child,
+        routePath: `${page.routePath || page.route}/${child.route}`
+      }))
+    })
+    .flat()
+
+  return flatternFolder(flattened)
+}
+
+/**
+ * 获取所有的页面直接子节点，如果子节点是文件夹，则文件夹下的节点也算直接子节点
+ * @param {string | number} id
+ * @returns
+ */
+const getPageChildren = async (id) => {
+  if (pageSettingState.pages.length === 0) {
+    await getPageList()
+  }
+
+  const pageNode = pageSettingState.treeDataMapping[id]
+
+  if (!Array.isArray(pageNode?.children)) {
+    return []
+  }
+
+  return flatternFolder(pageNode.children)
+}
+
 const clearCurrentState = () => {
   const { pageState } = useCanvas()
 
@@ -316,13 +362,17 @@ const clearCurrentState = () => {
   pageState.pageSchema = null
 }
 
-const switchPage = (pageId) => {
+const switchPage = (pageId, clearPreview = false) => {
   // 切换页面时清空 选中节点信息状态
   clearCurrentState()
 
   // pageId !== 0 防止 pageId 为 0 的时候判断不出来
   if (pageId !== 0 && !pageId) {
-    getMetaApi(META_SERVICE.GlobalService).updatePageId('')
+    if (clearPreview) {
+      getMetaApi(META_SERVICE.GlobalService).updateParams({ pageId: '', previewId: '' })
+    } else {
+      getMetaApi(META_SERVICE.GlobalService).updatePageId('')
+    }
     useCanvas().initData({ componentName: COMPONENT_NAME.Page }, {})
     useLayout().layoutState.pageStatus = {
       state: 'empty',
@@ -340,7 +390,11 @@ const switchPage = (pageId) => {
         useBreadcrumb().setBreadcrumbPage([data.name])
       }
 
-      getMetaApi(META_SERVICE.GlobalService).updatePageId(pageId)
+      if (clearPreview) {
+        getMetaApi(META_SERVICE.GlobalService).updateParams({ pageId, previewId: '' })
+      } else {
+        getMetaApi(META_SERVICE.GlobalService).updatePageId(pageId)
+      }
       useLayout().closePlugin()
       useLayout().layoutState.pageStatus = getCanvasStatus(data.occupier)
       useCanvas().initData(data['page_content'], data)
@@ -353,7 +407,7 @@ const switchPage = (pageId) => {
     })
 }
 
-const switchPageWithConfirm = (pageId) => {
+const switchPageWithConfirm = (pageId, clearPreview = false) => {
   const checkPageSaved = () => {
     const { isSaved, isBlock } = useCanvas()
 
@@ -378,38 +432,58 @@ const switchPageWithConfirm = (pageId) => {
 
   checkPageSaved().then((proceed) => {
     if (proceed) {
-      switchPage(pageId)
+      switchPage(pageId, clearPreview)
     }
   })
 }
 
-const handlePageDetail = async (pages) => {
-  const ROOT_ID = '0'
+const updatePageContent = (page, currentPage) => {
+  if (currentPage.id && currentPage.pageInfo?.schema && page.id === currentPage.id) {
+    page.page_content = currentPage.pageInfo?.schema
+  }
+}
 
-  if (pages.length > 0) {
-    for (let i = 0; i < pages.length; i++) {
-      if (!pages[i].page_content) {
-        const pageDetail = await http.fetchPageDetail(pages[i].id)
-        pages[i].page_content = pageDetail.page_content
-      }
-
-      if (pages[i].parentId !== ROOT_ID && !pages.find((item) => item.id === pages[i].parentId)) {
-        pages[i].parentId = pages[i - 1]?.id ? pages[i - 1].id : ROOT_ID
-      }
+const fetchPageDetailIfNeeded = async (page) => {
+  if (!page.page_content) {
+    try {
+      const pageDetail = await http.fetchPageDetail(page.id)
+      page.page_content = pageDetail.page_content
+    } catch (error) {
+      page.page_content = {}
     }
   }
 }
 
-const getFamily = async (id) => {
+const updateParentId = (page, pages, index, ROOT_ID) => {
+  if (page.parentId !== ROOT_ID && !pages.find((item) => item.id === page.parentId)) {
+    page.parentId = pages[index - 1]?.id ? pages[index - 1].id : ROOT_ID
+  }
+}
+
+const handlePageDetail = async (pages, currentPage) => {
+  const { ROOT_ID } = pageSettingState
+
+  if (pages.length > 0) {
+    await Promise.all(
+      pages.map(async (page, index) => {
+        updatePageContent(page, currentPage)
+        await fetchPageDetailIfNeeded(page)
+        updateParentId(page, pages, index, ROOT_ID)
+      })
+    )
+  }
+}
+
+const getFamily = async (previewParams) => {
   if (pageSettingState.pages.length === 0) {
     await getPageList()
   }
 
-  const familyPages = getAncestorsRecursively(id)
+  const familyPages = getAncestorsRecursively(previewParams.id)
     .filter((item) => item.isPage)
     .reverse()
 
-  await handlePageDetail(familyPages)
+  await handlePageDetail(familyPages, previewParams)
 
   return familyPages
 }
@@ -431,6 +505,7 @@ export default () => {
     switchPage,
     switchPageWithConfirm,
     getFamily,
+    getPageChildren,
     STATIC_PAGE_GROUP_ID,
     COMMON_PAGE_GROUP_ID
   }

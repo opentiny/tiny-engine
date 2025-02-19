@@ -30,7 +30,8 @@ export const POSITION = Object.freeze({
   BOTTOM: 'bottom',
   LEFT: 'left',
   RIGHT: 'right',
-  IN: 'in'
+  IN: 'in',
+  OUT: 'out'
 })
 
 const initialDragState = {
@@ -121,6 +122,63 @@ export const inactiveHoverState = reactive({
 export const lineState = reactive({
   ...initialLineState
 })
+
+// 获取多选节点
+export const getMultiState = (element, doc) => {
+  const { top, left, width, height } = element.getBoundingClientRect()
+  const nodeTag = element?.getAttribute(NODE_TAG)
+  const nodeId = element?.getAttribute(NODE_UID)
+
+  const { node, parent } = useCanvas().getNodeWithParentById(nodeId) || {}
+
+  if (node && parent) {
+    return {
+      id: nodeId,
+      componentName: nodeTag,
+      doc,
+      top,
+      left,
+      width,
+      height,
+      schema: toRaw(node),
+      parent: toRaw(parent)
+    }
+  }
+}
+
+// 设置多选节点
+export function setMultiState(multiSelectedStates, node, append = false) {
+  if (!node || typeof node !== 'object') {
+    multiSelectedStates.value = []
+    return
+  }
+
+  if (append) {
+    const nodeIds = new Set(multiSelectedStates.value.map((state) => state.id))
+    if (!nodeIds.has(node.id)) {
+      multiSelectedStates.value = [...toRaw(multiSelectedStates.value), node]
+    }
+  } else {
+    if (Array.isArray(node)) {
+      multiSelectedStates.value = node
+    } else {
+      multiSelectedStates.value = [node]
+    }
+  }
+}
+
+// 处理多选节点
+export function handleMultiState(multiSelectedStates, selectState) {
+  const nodeId = selectState?.id
+  const isExistNode = multiSelectedStates.value.map((state) => state.id).includes(nodeId)
+
+  if (nodeId && isExistNode) {
+    const exList = multiSelectedStates.value.filter((state) => state.id !== nodeId)
+    setMultiState(multiSelectedStates, exList)
+  } else {
+    setMultiState(multiSelectedStates, selectState, true)
+  }
+}
 
 export const clearHover = () => {
   Object.assign(hoverState, initialRectState, { slot: null })
@@ -240,7 +298,7 @@ export const getInactiveElement = (element) => {
     element === element.ownerDocument.body ||
     element === element.ownerDocument.documentElement ||
     // 如果当前元素是RouterView, 则有可能是激活元素处于非激活元素里面，需要排除
-    element.getAttribute(NODE_TAG) === 'RouterView'
+    (element.getAttribute(NODE_TAG) === 'RouterView' && element.getAttribute(NODE_UID))
   ) {
     return undefined
   }
@@ -271,7 +329,7 @@ const getRect = (element) => {
   return element.getBoundingClientRect()
 }
 
-const inserAfter = ({ parent, node, data }) => {
+const insertAfter = ({ parent, node, data }) => {
   if (!data.id) {
     data.id = utils.guid()
   }
@@ -316,6 +374,21 @@ export const removeNode = (id) => {
   useCanvas().operateNode({
     type: 'delete',
     id
+  })
+}
+
+// 添加外部容器
+const insertContainer = ({ parent, node, data }) => {
+  if (!data.id) {
+    data.id = utils.guid()
+  }
+
+  useCanvas().operateNode({
+    type: 'insert',
+    parentId: parent.id,
+    newNodeData: data,
+    position: POSITION.OUT,
+    referTargetNodeId: node.id
   })
 }
 
@@ -735,10 +808,13 @@ export const insertNode = (node, position = POSITION.IN, select = true) => {
         break
       case POSITION.BOTTOM:
       case POSITION.RIGHT:
-        inserAfter(node)
+        insertAfter(node)
         break
       case POSITION.IN:
         insertInner(node)
+        break
+      case POSITION.OUT:
+        insertContainer(node)
         break
       default:
         insertInner(node)
@@ -764,7 +840,7 @@ export const copyNode = (id) => {
 
   const { node, parent } = useCanvas().getNodeWithParentById(id)
 
-  inserAfter({ parent, node, data: copyObject(node) })
+  insertAfter({ parent, node, data: copyObject(node) })
   getController().addHistory()
 }
 
@@ -874,6 +950,8 @@ export const canvasApi = {
   setDesignMode,
   getDocument,
   canvasDispatch,
+  getConfigure,
+  allowInsert,
   Builtin,
   removeBlockCompsCache: (...args) => {
     return canvasState.renderer.removeBlockCompsCache(...args)

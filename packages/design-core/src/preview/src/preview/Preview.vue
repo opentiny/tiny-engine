@@ -62,6 +62,8 @@ export default {
     }
 
     const queryParams = getSearchParams()
+    document.documentElement?.setAttribute?.('data-theme', queryParams.theme || 'light')
+
     const getImportMap = async () => {
       if (import.meta.env.VITE_LOCAL_BUNDLE_DEPS === 'true') {
         const mapJSON = await fetchImportMap()

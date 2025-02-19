@@ -10,20 +10,14 @@
  *
  */
 
-import { defineConfig } from 'vite'
-import path from 'path'
-import generateComment from '@opentiny/tiny-engine-vite-plugin-meta-comments'
+import entry from './src/Main.vue'
+import metaData from './meta'
+import { default as ThemeSwitchService } from './src/composable'
+import './src/styles/vars.less'
 
-// https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [generateComment()],
-  publicDir: false,
-  build: {
-    lib: {
-      entry: path.resolve(__dirname, './index.less'),
-      name: 'theme-dark',
-      fileName: () => 'index.js',
-      formats: ['es']
-    }
-  }
-})
+export default {
+  ...metaData,
+  entry
+}
+
+export { ThemeSwitchService }

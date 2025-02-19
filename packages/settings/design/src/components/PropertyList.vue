@@ -94,7 +94,7 @@ export default {
 }
 .property-list-tips {
   font-size: 12px;
-  color: var(--ti-lowcode-common-secondary-text-color);
+  color: var(--te-setting-design-secondary-text-color);
 }
 .help-icon {
   margin-left: 3px;
@@ -116,7 +116,7 @@ export default {
   border: 1px solid #e6e6e6;
 
   &:hover {
-    background: var(--ti-lowcode-common-hover-bg-color);
+    background: var(--te-setting-design-hover-bg-color);
   }
 }
 </style>
