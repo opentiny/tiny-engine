@@ -11,8 +11,8 @@
     "serve:mock": "node node_modules/@opentiny/tiny-engine-mock/dist/app.js"
   },
   "dependencies": {
-    "@opentiny/tiny-engine": "2.2.0",
-    "@opentiny/tiny-engine-utils": "2.2.0",
+    "@opentiny/tiny-engine": "2.3.0-rc.0",
+    "@opentiny/tiny-engine-utils": "2.3.0-rc.0",
     "@opentiny/vue": "~3.20.0",
     "@opentiny/vue-design-smb": "~3.20.0",
     "@opentiny/vue-icon": "~3.20.0",
@@ -23,8 +23,8 @@
     "vue": "^3.4.21"
   },
   "devDependencies": {
-    "@opentiny/tiny-engine-mock": "2.2.0",
-    "@opentiny/tiny-engine-vite-config": "2.2.0",
+    "@opentiny/tiny-engine-mock": "2.3.0-rc.0",
+    "@opentiny/tiny-engine-vite-config": "2.3.0-rc.0",
     "@vitejs/plugin-vue": "^5.1.2",
     "cross-env": "^7.0.3",
     "vite": "^5.4.2",

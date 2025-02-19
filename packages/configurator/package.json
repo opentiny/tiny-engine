@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-configurator",
-  "version": "2.2.0",
+  "version": "2.3.0-rc.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.js",

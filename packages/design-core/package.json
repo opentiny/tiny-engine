@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine",
-  "version": "2.2.0",
+  "version": "2.3.0-rc.0",
   "type": "module",
   "description": "TinyEngine enables developers to customize low-code platforms, build low-bit platforms online in real time, and support secondary development or integration of low-bit platform capabilities.",
   "homepage": "https://opentiny.design/tiny-engine",
@@ -70,7 +70,6 @@
     "@opentiny/tiny-engine-theme-base": "workspace:*",
     "@opentiny/tiny-engine-toolbar-breadcrumb": "workspace:*",
     "@opentiny/tiny-engine-toolbar-clean": "workspace:*",
-    "@opentiny/tiny-engine-toolbar-theme-switch": "workspace:*",
     "@opentiny/tiny-engine-toolbar-collaboration": "workspace:*",
     "@opentiny/tiny-engine-toolbar-fullscreen": "workspace:*",
     "@opentiny/tiny-engine-toolbar-generate-code": "workspace:*",
@@ -85,6 +84,7 @@
     "@opentiny/tiny-engine-toolbar-refresh": "workspace:*",
     "@opentiny/tiny-engine-toolbar-save": "workspace:*",
     "@opentiny/tiny-engine-toolbar-setting": "workspace:*",
+    "@opentiny/tiny-engine-toolbar-theme-switch": "workspace:*",
     "@opentiny/tiny-engine-toolbar-view-setting": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",

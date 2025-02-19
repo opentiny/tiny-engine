@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-plugin-state",
-  "version": "2.2.0",
+  "version": "2.3.0-rc.0",
   "publishConfig": {
     "access": "public"
   },
