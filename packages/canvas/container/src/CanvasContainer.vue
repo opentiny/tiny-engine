@@ -213,7 +213,7 @@ export default {
             // 多选组合键触发
             if (element) {
               const selectedState = getMultiState(element, doc)
-              if (event.ctrlKey && event.button === 0) {
+              if ((event.ctrlKey && event.button === 0) || event.metaKey) {
                 handleMultiState(multiSelectedStates, selectedState)
                 return
               }
