@@ -1,5 +1,6 @@
 <template>
   <plugin-panel
+    id="source-code"
     title="页面 Schema"
     :fixed-name="PLUGIN_NAME.Schema"
     :fixedPanels="fixedPanels"

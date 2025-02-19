@@ -17,6 +17,7 @@
           <design-settings
             :settings="registry.settings"
             :render-panel="settings.render"
+            :plugin-list="pluginList"
             v-show="layoutState.settings.showDesignSettings"
             ref="right"
           ></design-settings>
@@ -97,6 +98,7 @@ export default {
     localStorage.setItem('plugin', JSON.stringify(plugin))
 
     return {
+      pluginList,
       layoutRegistry,
       configProvider,
       configProviderDesign,

@@ -2,6 +2,7 @@
   <div
     id="panel-setting"
     :class="['plugin-setting', { 'second-panel': isSecond }, { 'full-screen': state.isFullScreen }]"
+    :style="{ left: `${firstPanelOffset}px` }"
     @click="$emit('click')"
   >
     <div class="plugin-setting-header">
@@ -32,7 +33,7 @@
 </template>
 
 <script>
-import { nextTick, reactive, watchEffect } from 'vue'
+import { nextTick, reactive, watchEffect, computed } from 'vue'
 import { Button } from '@opentiny/vue'
 import { iconPlus } from '@opentiny/vue-icon'
 import ButtonGroup from './ButtonGroup.vue'
@@ -97,6 +98,10 @@ export default {
     fixedName: {
       type: String,
       default: ''
+    },
+    align: {
+      type: String,
+      default: 'leftTop'
     }
   },
   emits: [EVENTS.FULL_SCREEN_CHANGE, EVENTS.SAVE, EVENTS.CANCEL, EVENTS.ADD, EVENTS.CLICK],
@@ -105,13 +110,17 @@ export default {
       isFullScreen: false
     })
 
-    const { getSettingPanelOffset } = useLayout()
+    const { getPluginWidth } = useLayout()
+
+    const firstPanelOffset = computed(() => {
+      return getPluginWidth(props.fixedName)
+    })
 
     watchEffect(() => {
-      const offsetMargin = getSettingPanelOffset(props.fixedName)
+      // 处理二级面板偏移量
+      const secondPanelOffset = document.querySelector('.plugin-setting')?.clientWidth + firstPanelOffset.value
       nextTick(() => {
-        const dom = document?.getElementById('panel-setting')
-        dom.setAttribute('style', `margin-left: ${offsetMargin}`)
+        document.querySelector('.second-panel')?.style.setProperty('left', `${secondPanelOffset}px`)
       })
     })
 
@@ -129,6 +138,7 @@ export default {
     }
 
     return {
+      firstPanelOffset,
       state,
       fullScreen,
       getFullScreenLabel
@@ -148,11 +158,13 @@ export default {
   background: var(--te-component-common-bg-color);
   overflow: hidden;
   border-left: 1px solid var(--te-component-common-border-color-divider);
+
   &:not(.second-panel) {
     box-shadow: 6px 0px 3px 0px var(--te-component-common-shadow-color);
     border-right: none;
     border-left: none;
   }
+
   &.full-screen {
     width: var(--base-collection-panel-full-screen-width);
   }
@@ -183,6 +195,7 @@ export default {
     color: var(--te-component-common-text-color-primary);
     padding: 0 12px;
     border-bottom: 1px solid var(--te-component-common-border-color-divider);
+
     .plugin-setting-header-title {
       font-size: 12px;
       font-weight: 700;
@@ -191,9 +204,11 @@ export default {
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+
     :deep(.svg-button + .svg-button) {
       margin: 0;
     }
+
     :deep(.tiny-button.tiny-button) {
       margin-right: 0;
     }
@@ -210,5 +225,9 @@ export default {
     display: flex;
     align-items: center;
   }
+}
+
+.align-right {
+  right: 0;
 }
 </style>
