@@ -144,7 +144,8 @@ const handlerClipboardEvent = (event) => {
 }
 
 const keyboardHandler = (event) => {
-  if (event.ctrlKey) {
+  // 处理 Ctrl 或 Command 键
+  if (event.ctrlKey || event.metaKey) {
     handlerCtrl(event)
   }
 
