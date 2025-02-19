@@ -1,6 +1,6 @@
 <template>
   <div class="plugin-panel" ref="panel" :style="{ width: panelWidth + 'px' }">
-    <div class="plugin-panel-header">
+    <div class="plugin-panel-header" :style="{ marginBottom: headerMarginBottom + 'px' }">
       <div class="plugin-panel-title">
         <span class="title"
           >{{ title }}<link-button class="link" v-if="isShowDocsIcon" :href="docsUrl"></link-button
@@ -78,6 +78,13 @@ export default {
      */
     fixedName: {
       type: String
+    },
+    /**
+     * 自定义标题下边距
+     */
+    headerMarginBottom: {
+      type: Number,
+      default: 12
     }
   },
   emits: ['close'],
@@ -109,15 +116,13 @@ export default {
     const onMouseMoveRight = (event) => {
       const newWidth = startWidth + (event.clientX - startX)
       panelWidth.value = Math.max(MIN_WIDTH, Math.min(newWidth, MAX_WIDTH))
-      const offset = panelWidth.value - MIN_WIDTH
-      changePluginWidth(props.fixedName, panelWidth.value, offset)
+      changePluginWidth(props.fixedName, panelWidth.value)
     }
 
     const onMouseMoveLeft = (event) => {
       const newWidth = startWidth - (event.clientX - startX)
       panelWidth.value = Math.max(MIN_WIDTH, Math.min(newWidth, MAX_WIDTH))
-      const offset = panelWidth.value - MIN_WIDTH
-      changePluginWidth(props.fixedName, panelWidth.value, offset)
+      changePluginWidth(props.fixedName, panelWidth.value)
     }
 
     //节流

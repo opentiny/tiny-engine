@@ -43,7 +43,7 @@ const layoutState = reactive({
   plugins: {
     isShow: true,
     fixedPanels: [PLUGIN_NAME.Materials],
-    render: null,
+    render: PLUGIN_NAME.Materials,
     pluginEvent: 'all',
     api: {}, // 插件需要注册交互API到这里
     activating: false, // 右侧面版激活提示状态
@@ -51,8 +51,8 @@ const layoutState = reactive({
   },
   settings: {
     isShow: true,
-    fixedPanels: [],
-    render: 'engine.setting.props',
+    fixedPanels: [PLUGIN_NAME.Props],
+    render: PLUGIN_NAME.Props,
     api: null,
     activating: false, // 右侧面版激活提示状态
     showDesignSettings: true
@@ -104,16 +104,6 @@ const getPluginApi = (pluginName) => {
   const { plugins } = layoutState
 
   return plugins.api[pluginName] || plugins.api
-}
-
-export const getPlugin = (pluginName) => {
-  // TODO: 暂时先这样，明天优化
-  return pluginName
-}
-
-export const getPluginById = (pluginId) => {
-  // TODO: 暂时先这样，明天优化
-  return pluginId
 }
 
 const getScale = () => layoutState.dimension.scale
@@ -220,6 +210,10 @@ export default () => {
     return pluginNames
   }
 
+  const getPluginByName = (pluginList, pluginName) => {
+    return pluginList.find((item) => item.id === pluginName)
+  }
+
   // 修改某个插件的布局
   const changePluginLayout = (name, layout) => {
     if (pluginStorageReactive.value[name]) {
@@ -290,12 +284,6 @@ export default () => {
     pluginStorageReactive.value[name].isShow = !pluginStorageReactive.value[name].isShow
   }
 
-  // 获取二级面板偏移量
-  const getSettingPanelOffset = (name) => {
-    const offsetMargin = pluginStorageReactive.value[name]?.offset
-    return offsetMargin ? `${offsetMargin + 20}px` : '20px'
-  }
-
   return {
     PLUGIN_NAME,
     PLUGIN_POSITION,
@@ -308,8 +296,7 @@ export default () => {
     setDimension,
     getDimension,
     registerPluginApi,
-    getPlugin,
-    getPluginById,
+    getPluginByName,
     getPluginApi,
     pluginState,
     getPluginState,
@@ -331,7 +318,6 @@ export default () => {
     changePluginShown,
     changeMenuShown,
     getMoveDragBarState,
-    changeMoveDragBarState,
-    getSettingPanelOffset
+    changeMoveDragBarState
   }
 }

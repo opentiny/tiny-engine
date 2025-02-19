@@ -1,5 +1,11 @@
 <template>
-  <plugin-panel title="属性" :fixed-panels="fixedPanels" :fixed-name="PLUGIN_NAME.Props" @close="$emit('close')">
+  <plugin-panel
+    title="属性"
+    :fixed-panels="fixedPanels"
+    :fixed-name="PLUGIN_NAME.Props"
+    :header-margin-bottom="0"
+    @close="$emit('close')"
+  >
     <template #content>
       <config-render :data="properties">
         <template #prefix="{ data }">

@@ -46,7 +46,7 @@
     </template>
   </plugin-panel>
 
-  <div v-if="isPanelShow" class="data-source-right-panel data-source">
+  <div v-if="isPanelShow" class="data-source-right-panel data-source" :style="{ left: `${firstPanelOffset}px` }">
     <div class="header">
       <span>{{ addDataSource }}</span>
       <span class="options-wrap">
@@ -80,7 +80,7 @@
 </template>
 
 <script>
-import { reactive, ref, computed, onActivated, watch, provide, watchEffect, nextTick } from 'vue'
+import { reactive, ref, computed, onActivated, watch, provide } from 'vue'
 import { Button, Search, Tabs, TabItem } from '@opentiny/vue'
 import {
   useCanvas,
@@ -145,23 +145,17 @@ export default {
     })
     const selectedKey = ref(null)
 
-    const { PLUGIN_NAME, getSettingPanelOffset } = useLayout()
+    const { PLUGIN_NAME, getPluginWidth } = useLayout()
+
+    const firstPanelOffset = computed(() => {
+      return getPluginWidth(PLUGIN_NAME.State)
+    })
 
     const panelState = reactive({
       emitEvent: emit
     })
 
     provide('panelState', panelState)
-
-    watchEffect(() => {
-      if (isPanelShow.value) {
-        const offsetMargin = getSettingPanelOffset(PLUGIN_NAME.State)
-        nextTick(() => {
-          const dom = document?.querySelector('.data-source-right-panel')
-          dom.setAttribute('style', `margin-left: ${offsetMargin}`)
-        })
-      }
-    })
 
     watch(activeName, () => {
       selectedKey.value = null
@@ -387,6 +381,7 @@ export default {
     })
 
     return {
+      firstPanelOffset,
       PLUGIN_NAME,
       isBlock,
       isPanelShow,

@@ -62,6 +62,10 @@ export default {
     },
     renderPanel: {
       type: String
+    },
+    pluginList: {
+      type: Array,
+      default: () => []
     }
   },
   setup(props, { emit }) {
@@ -69,6 +73,8 @@ export default {
     const iconComponents = {}
 
     const {
+      getPluginsByLayout,
+      getPluginByName,
       PLUGIN_POSITION,
       rightFixedPanelsStorage,
       registerPluginApi,
@@ -90,17 +96,25 @@ export default {
       }
     }
 
-    const settingPlugins = ref(props.settings)
+    const settingPlugins = ref(
+      getPluginsByLayout(PLUGIN_POSITION.rightTop).map((pluginName) => getPluginByName(props.pluginList, pluginName))
+    )
 
-    settingPlugins.value.forEach(({ id, entry, api, icon }) => {
-      components[id] = entry
-      iconComponents[id] = icon
-      if (api) {
-        registerPluginApi({
-          [id]: api
+    watch(
+      () => settingPlugins.value.length,
+      () => {
+        settingPlugins.value.forEach(({ id, entry, api, icon }) => {
+          components[id] = entry
+          iconComponents[id] = icon
+          if (api) {
+            registerPluginApi({
+              [id]: api
+            })
+          }
         })
-      }
-    })
+      },
+      { immediate: true }
+    )
 
     const close = () => {
       useLayout().closeSetting(true)

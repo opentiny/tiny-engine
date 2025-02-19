@@ -1,7 +1,15 @@
+<!-- 左侧插件栏-->
 <template>
   <div id="tiny-engine-nav-panel" :style="{ 'pointer-events': pluginState.pluginEvent }">
-    <ul class="nav-panel-lists top">
-      <li
+    <vue-draggable-next
+      v-model="state.topNavLists"
+      filter="EditorHelp"
+      class="nav-panel-lists top"
+      id="leftTop"
+      group="plugins"
+      @end="onEnd"
+    >
+      <div
         v-for="(item, index) in state.topNavLists"
         :key="index"
         :class="{
@@ -12,6 +20,7 @@
         }"
         :title="item.title"
         @click="clickMenu({ item, index })"
+        @contextmenu.prevent="showContextMenu($event, true, item, index, PLUGIN_POSITION.leftTop)"
       >
         <div>
           <span class="item-icon">
@@ -23,8 +32,8 @@
             <component v-else :is="iconComponents[item.id]" class="panel-icon"></component>
           </span>
         </div>
-      </li>
-    </ul>
+      </div>
+    </vue-draggable-next>
     <ul class="nav-panel-lists bottom">
       <li style="flex: 1" class="list-item"></li>
       <li
@@ -77,6 +86,7 @@
 <script>
 import { reactive, ref, watch } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
+import { VueDraggableNext } from 'vue-draggable-next'
 import { useLayout, usePage, useModal, META_APP } from '@opentiny/tiny-engine-meta-register'
 import { PublicIcon } from '@opentiny/tiny-engine-common'
 import { constants } from '@opentiny/tiny-engine-utils'
@@ -85,6 +95,7 @@ const { STORAGE_KEY_FIXED_PANELS } = constants
 
 export default {
   components: {
+    VueDraggableNext,
     TinyPopover: Popover,
     TinyTooltip: Tooltip,
     PublicIcon
@@ -107,7 +118,7 @@ export default {
     const { message } = useModal()
     const pluginState = useLayout().getPluginState()
 
-    const { getMoveDragBarState } = useLayout()
+    const { getMoveDragBarState, isSameSide, dragPluginLayout } = useLayout()
 
     props.plugins.forEach(({ id, entry, icon }) => {
       components[id] = entry
@@ -187,7 +198,14 @@ export default {
 
     restoreFixedPanels()
 
+    //监听拖拽结束事件
+    const onEnd = (e) => {
+      if (!isSameSide(e.from.id, e.to.id)) close()
+      dragPluginLayout(e.from.id, e.to.id, e.oldIndex, e.newIndex)
+    }
+
     return {
+      onEnd,
       state,
       clickMenu,
       pluginRef,
