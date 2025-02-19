@@ -49,7 +49,9 @@ const GetComponentByDomNode = {
   install: (Vue) => {
     Vue.mixin({
       mounted() {
-        this.$el.__vueComponent = this
+        // console.log('this', this)
+        // console.log('this?._', this?._)
+        this.$el.__vueComponent = this?._
       }
     })
   }

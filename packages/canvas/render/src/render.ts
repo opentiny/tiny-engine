@@ -98,7 +98,7 @@ const getBindProps = (schema, scope, context, pageContext) => {
   }
 
   if (getDesignMode() === DESIGN_MODE.DESIGN && active) {
-    bindProps.onMouseover = stopEvent
+    // bindProps.onMouseover = stopEvent
     bindProps.onFocus = stopEvent
   }
 
@@ -154,23 +154,6 @@ const injectPlaceHolder = (componentName, children) => {
 
   return children
 }
-function WrapHocComponent(Component, props, children) {
-  return {
-    mounted() {
-      const ele = this
-      const keys = [DESIGN_UIDKEY, DESIGN_TAGKEY, DESIGN_LOOPID]
-
-      for (const key of keys) {
-        if (props[key]) {
-          ele[key] = props[key]
-        }
-      }
-    },
-    render() {
-      return h(Component, props, children)
-    }
-  }
-}
 
 const renderGroup = (children, scope, pageContext) => {
   return children.map?.((schema) => {
@@ -192,13 +175,11 @@ const renderGroup = (children, scope, pageContext) => {
       const renderChildren = pageContext.active ? injectPlaceHolder(componentName, children) : children
 
       return h(
-        WrapHocComponent(
-          getComponent(componentName),
-          getBindProps(schema, mergeScope, pageContext.context, pageContext),
-          Array.isArray(renderChildren)
-            ? renderSlot(renderChildren, mergeScope, schema)
-            : parseData(renderChildren, mergeScope, pageContext.context)
-        )
+        getComponent(componentName),
+        getBindProps(schema, mergeScope, pageContext.context, pageContext),
+        Array.isArray(renderChildren)
+          ? renderSlot(renderChildren, mergeScope, schema)
+          : parseData(renderChildren, mergeScope, pageContext.context)
       )
     }
 
@@ -317,11 +298,9 @@ export const renderer = defineComponent({
       }
 
       const Ele = h(
-        WrapHocComponent(
-          component,
-          getBindProps(schema, mergeScope, pageContext.context, pageContext),
-          getChildren(schema, mergeScope, pageContext)
-        )
+        component,
+        getBindProps(schema, mergeScope, pageContext.context, pageContext),
+        getChildren(schema, mergeScope, pageContext)
       )
       // 区块加上 suspense 渲染，就可以在网络延时的时候显示加载中的字样或者动画，优化体验
       if (schema.componentType === 'Block') {

@@ -1,4 +1,8 @@
-import { NODE_UID, NODE_LOOP, DESIGN_MODE } from '../../common'
+import { ref } from 'vue'
+import { useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { NODE_UID } from '../../common'
+import { hoverState, getConfigure } from './container'
+
 
 export const getClosedVueElement = (element) => {
   if (!element) {
@@ -26,7 +30,7 @@ export const getElement = (element) => {
   }
 
   while(closedVueEle && !closedVueEle?.[NODE_UID]) {
-    closedVueEle = closedVueEle.$parent
+    closedVueEle = closedVueEle.parent
   }
 
   if (closedVueEle) {
@@ -113,6 +117,7 @@ export const getFragmentRect = (instance) => {
 }
 
 export const getElementRect = (instance) => {
+  // console.log('instance', instance)
   if (instance?.type?.description === 'v-fgt') {
     return getFragmentRect(instance)
   }
@@ -128,4 +133,58 @@ export const getElementRect = (instance) => {
   if (instance.subTree) {
     return getElementRect(instance.subTree)
   }
+}
+
+export let currentHoverInstance = ref(null)
+export let currentHoverRect = ref(null)
+export let currentHoverNode = ref(null)
+
+export const updateHoverNode = (e) => {
+  // 拿到最近的带有 __vueComponent 的vue 实例
+  let instance = getClosedVueElement(e.target)
+
+  if (!instance || instance === e.target.ownerDocument.body) {
+    return
+  }
+
+  let uid = instance?.props?.schema?.id
+  
+  if (!uid) {
+    let closedVueEle = instance
+
+    while(closedVueEle && !closedVueEle?.props?.schema?.id) {
+      closedVueEle = closedVueEle.parent
+    }
+
+    if (!closedVueEle) {
+      return
+    }
+
+    instance = closedVueEle
+    uid = closedVueEle.props.schema.id
+    
+  }
+
+  const rect = getElementRect(instance)
+  const node = useCanvas().getNodeById(uid)
+
+  if (rect) {
+    const { width, height, top, left } = rect
+    const componentName = node?.componentName
+    const configure = getConfigure(componentName)
+
+    Object.assign(hoverState, {
+      width,
+      height,
+      top,
+      left,
+      componentName,
+      configure,
+      element: instance.vnode.el
+    })
+  }
+
+  currentHoverInstance.value = instance
+  currentHoverRect.value = rect
+  currentHoverNode.value = node
 }

@@ -62,6 +62,7 @@ import {
   getCurrent,
   canvasApi
 } from './container'
+import { updateHoverNode, currentHoverNode, currentHoverInstance } from './component-selection'
 
 export default {
   components: { CanvasAction, CanvasResize, CanvasMenu, CanvasDivider, CanvasResizeBorder, CanvasRouterJumper },
@@ -83,27 +84,32 @@ export default {
 
     const setCurrentNode = async (event) => {
       const { clientX, clientY } = event
-      const element = getElement(event.target)
+      // const element = getElement(event.target)
       closeMenu()
-      let node = getCurrent().schema
+      // let node = getCurrent().schema
+      let node = currentHoverNode.value
 
-      if (element) {
+      if (node) {
         // const currentElement = querySelectById(getCurrent().schema?.id)
-        const currentElement = element
+        // const currentElement = element
 
-        if (!currentElement?.contains(element) || event.button === 0) {
-          // const loopId = element.getAttribute(NODE_LOOP)
-          const loopId = element[NODE_LOOP]
-          if (loopId) {
-            node = await selectNode(element.getAttribute(NODE_UID), element, `loop-id=${loopId}`)
-          } else {
-            node = await selectNode(element.getAttribute(NODE_UID), element)
-          }
-        }
+        // const loopId = element[NODE_LOOP]
 
-        if (event.button === 0 && element !== element.ownerDocument.body) {
-          // const { x, y } = element.getBoundingClientRect()
-          // dragStart(node, element, { offsetX: clientX - x, offsetY: clientY - y })
+        // if (loopId) {
+        //   node = await selectNode(element.getAttribute(NODE_UID), element, `loop-id=${loopId}`)
+        // } else {
+        // }
+
+        node = await selectNode(node.id, currentHoverInstance.value)
+
+        // if (!currentElement?.contains(element) || event.button === 0) {
+        //   // const loopId = element.getAttribute(NODE_LOOP)
+        // }
+        const  element = querySelectById(node.id)
+        
+        if (event.button === 0 && element !== element?.ownerDocument?.body) {
+          const { x, y } = element.getBoundingClientRect()
+          dragStart(node, element, { offsetX: clientX - x, offsetY: clientY - y })
         }
 
         // 如果是点击右键则打开右键菜单
@@ -194,6 +200,7 @@ export default {
         })
 
         win.addEventListener('dragover', (ev) => {
+          // console.log('dragover')
           ev.dataTransfer.dropEffect = 'move'
           ev.preventDefault()
           dragMove(ev)
@@ -204,9 +211,16 @@ export default {
           onMouseUp(ev)
         })
 
-        win.addEventListener('mousemove', (ev) => {
+        // win.addEventListener('mousemove', (ev) => {
+        //   handleCanvasEvent(() => {
+        //     dragMove(ev, true)
+        //   })
+        // })
+
+        win.addEventListener('mouseover', (ev) => {
           handleCanvasEvent(() => {
-            dragMove(ev, true)
+            // 更新当前鼠标 hover 的节点
+            updateHoverNode(ev)
           })
         })
 
