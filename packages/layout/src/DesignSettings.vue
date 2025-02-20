@@ -73,11 +73,9 @@ export default {
     const iconComponents = {}
 
     const {
-      getPluginsByLayout,
-      getPluginByName,
+      getPluginsByPosition,
       PLUGIN_POSITION,
       rightFixedPanelsStorage,
-      registerPluginApi,
       changeRightFixedPanels,
       dragPluginLayout,
       isSameSide,
@@ -96,25 +94,12 @@ export default {
       }
     }
 
-    const settingPlugins = ref(
-      getPluginsByLayout(PLUGIN_POSITION.rightTop).map((pluginName) => getPluginByName(props.pluginList, pluginName))
-    )
+    props.pluginList.forEach(({ id, entry, icon }) => {
+      components[id] = entry
+      iconComponents[id] = icon
+    })
 
-    watch(
-      () => settingPlugins.value.length,
-      () => {
-        settingPlugins.value.forEach(({ id, entry, api, icon }) => {
-          components[id] = entry
-          iconComponents[id] = icon
-          if (api) {
-            registerPluginApi({
-              [id]: api
-            })
-          }
-        })
-      },
-      { immediate: true }
-    )
+    const settingPlugins = ref(getPluginsByPosition(PLUGIN_POSITION.rightTop, props.pluginList))
 
     const close = () => {
       useLayout().closeSetting(true)

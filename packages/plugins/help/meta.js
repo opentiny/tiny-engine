@@ -5,5 +5,5 @@ export default {
   title: '',
   type: 'plugins',
   icon: HelpIcon,
-  align: 'bottom'
+  align: 'leftBottom'
 }

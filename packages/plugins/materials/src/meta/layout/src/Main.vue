@@ -5,14 +5,6 @@
     :fixedPanels="fixedPanels"
     @close="$emit('close')"
   >
-    <template #header>
-      <component
-        v-if="!onlyShowDefault"
-        :is="registryData?.components?.header"
-        :fixedPanels="fixedPanels"
-        @fix-panel="(id) => $emit('fix-panel', id)"
-      ></component>
-    </template>
     <template #content>
       <tiny-tabs v-model="activeName" tab-style="button-card" class="full-width-tabs" v-if="!onlyShowDefault">
         <tiny-tab-item :key="item.id" v-for="item in tabComponents" :title="item.title" :name="item.id">

@@ -253,7 +253,7 @@ export default {
 }
 .resizer-right:hover {
   width: 8px;
-  background-color: var(--ti-lowcode-style-setting-label-bg);
+  background-color: var(--te-base-blue-40);
 }
 // 左边拖拽线
 .resizer-left {
@@ -268,7 +268,7 @@ export default {
 }
 .resizer-left:hover {
   width: 8px;
-  background-color: var(--ti-lowcode-style-setting-label-bg);
+  background-color: var(--te-base-blue-40);
 }
 .scroll-content {
   height: 100%;

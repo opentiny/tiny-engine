@@ -214,6 +214,10 @@ export default () => {
     return pluginList.find((item) => item.id === pluginName)
   }
 
+  const getPluginsByPosition = (position, pluginList) => {
+    return getPluginsByLayout(position).map((pluginName) => getPluginByName(pluginList, pluginName))
+  }
+
   // 修改某个插件的布局
   const changePluginLayout = (name, layout) => {
     if (pluginStorageReactive.value[name]) {
@@ -318,6 +322,7 @@ export default () => {
     changePluginShown,
     changeMenuShown,
     getMoveDragBarState,
-    changeMoveDragBarState
+    changeMoveDragBarState,
+    getPluginsByPosition
   }
 }

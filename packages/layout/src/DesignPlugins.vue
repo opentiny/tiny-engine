@@ -107,6 +107,10 @@ export default {
     plugins: {
       type: Array,
       default: () => []
+    },
+    pluginList: {
+      type: Array,
+      default: () => []
     }
   },
   emits: ['click', 'node-click'],
@@ -118,17 +122,17 @@ export default {
     const { message } = useModal()
     const pluginState = useLayout().getPluginState()
 
-    const { getMoveDragBarState, isSameSide, dragPluginLayout } = useLayout()
+    const { PLUGIN_POSITION, getMoveDragBarState, isSameSide, dragPluginLayout, getPluginsByPosition } = useLayout()
 
-    props.plugins.forEach(({ id, entry, icon }) => {
+    props.pluginList.forEach(({ id, entry, icon }) => {
       components[id] = entry
       iconComponents[id] = icon
     })
 
     const state = reactive({
       prevIdex: -2,
-      topNavLists: props.plugins.filter((item) => item.align === 'top'),
-      bottomNavLists: props.plugins.filter((item) => item.align === 'bottom')
+      topNavLists: getPluginsByPosition(PLUGIN_POSITION.leftTop, props.pluginList),
+      bottomNavLists: getPluginsByPosition(PLUGIN_POSITION.leftBottom, props.pluginList)
     })
 
     const clickMenu = ({ item, index }) => {
@@ -143,14 +147,14 @@ export default {
           result &&
           emit('click', {
             item,
-            navLists: item.align === 'top' ? state.topNavLists[index] : state.bottomNavLists[index]
+            navLists: item.align === 'leftTop' ? state.topNavLists[index] : state.bottomNavLists[index]
           })
 
         pluginRef.value?.[lastPlugin.confirm](confirmCallback)
       } else {
         emit('click', {
           item,
-          navLists: item.align === 'top' ? state.topNavLists[index] : state.bottomNavLists[index]
+          navLists: item.align === 'leftTop' ? state.topNavLists[index] : state.bottomNavLists[index]
         })
       }
     }
