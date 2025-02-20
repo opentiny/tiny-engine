@@ -7,6 +7,7 @@
           <div class="tiny-engine-content-wrap">
             <design-plugins
               :plugins="registry.plugins"
+              :plugin-list="pluginList"
               :render-panel="plugins.render"
               @click="toggleNav"
             ></design-plugins>
@@ -64,34 +65,36 @@ export default {
       plugins.render = plugins.render === item.id ? null : item.id
     }
 
-    // 收集插件的 align 信息
-    const alignGroups = {}
-
     // 合并插件和设置列表
     const pluginList = [...props.registry.plugins, ...props.registry.settings]
 
+    // 收集插件的 align 信息
+    const alignGroups = {}
+    const plugin = {}
+
     pluginList.forEach((item) => {
       if (item.id) {
-        const align = item.options?.align || 'leftTop'
+        const align = item?.align || 'leftTop'
+
+        // 初始化 alignGroups[align]
         if (!alignGroups[align]) {
           alignGroups[align] = []
         }
-        alignGroups[align].push(item.id)
-      }
-    })
 
-    // Step 2: 为每个插件分配 index 值
-    const plugin = {}
-    pluginList.forEach((item) => {
-      if (item.id) {
-        const align = item.options?.align || 'leftTop'
+        // 将 item.id 推入对应的 alignGroups
+        alignGroups[align].push(item.id)
+
+        // 为每个插件分配 index 和相关属性
         const index = alignGroups[align].indexOf(item.id)
 
         plugin[item.id] = {
-          width: item.options?.width || 300,
+          width: item?.width || 300,
           align: align,
           index: index,
-          isShow: true
+          isShow: true,
+          entry: item.entry,
+          id: item.id,
+          icon: item.icon
         }
       }
     })

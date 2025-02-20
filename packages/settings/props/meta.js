@@ -2,10 +2,7 @@ export default {
   id: 'engine.setting.props',
   title: '属性',
   type: 'setting',
-  align: 'left',
+  align: 'rightTop',
   name: 'props',
-  icon: 'form',
-  options: {
-    align: 'rightTop'
-  }
+  icon: 'form'
 }
