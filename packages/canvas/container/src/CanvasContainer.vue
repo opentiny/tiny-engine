@@ -105,8 +105,8 @@ export default {
         // if (!currentElement?.contains(element) || event.button === 0) {
         //   // const loopId = element.getAttribute(NODE_LOOP)
         // }
-        const  element = querySelectById(node.id)
-        
+        const element = querySelectById(node.id)
+
         if (event.button === 0 && element !== element?.ownerDocument?.body) {
           const { x, y } = element.getBoundingClientRect()
           dragStart(node, element, { offsetX: clientX - x, offsetY: clientY - y })

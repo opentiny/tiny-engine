@@ -94,9 +94,7 @@
     </div>
   </div>
   <div v-show="hoverState.height && hoverState.width" class="canvas-rect hover">
-    <div class="corner-mark-left">
-      {{ hoverState.componentName }}
-    </div>
+    <div class="corner-mark-left" @click="handleSelectHoverNode">{{ hoverState.componentName }} 点击选中</div>
     <div v-show="hoverState.configure?.isContainer" class="corner-mark-bottom-right">拖放元素到容器内</div>
   </div>
   <div v-show="inactiveHoverState.height && inactiveHoverState.width" class="canvas-rect inactive-hover">
@@ -135,6 +133,7 @@ import {
 import { useLayout, useMaterial, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { Popover } from '@opentiny/vue'
 import shortCutPopover from './shortCutPopover.vue'
+import { currentHoverNode, currentHoverInstance } from '../component-selection'
 
 // 工具操作条高度
 const OPTION_BAR_HEIGHT = 24
@@ -496,6 +495,16 @@ export default {
       fixStyle.value = optionStyleValue
     })
 
+    const handleSelectHoverNode = async () => {
+      const node = currentHoverNode.value
+
+      if (!node) {
+        return
+      }
+
+      await selectNode(node.id, currentHoverInstance.value)
+    }
+
     return {
       remove,
       moveUp,
@@ -512,7 +521,8 @@ export default {
       isModal,
       onMousedown,
       labelStyle,
-      labelRef
+      labelRef,
+      handleSelectHoverNode
     }
   }
 }
@@ -536,10 +546,14 @@ export default {
     width: v-bind("hoverState.width + 'px'");
 
     .corner-mark-left {
-      height: 14px;
+      height: 24px;
       top: -14px;
       padding-left: 0;
       font-size: 12px;
+      // TODO: 交互待优化
+      background-color: var(--te-canvas-container-bg-color-checked);
+      color: #fff;
+      pointer-events: auto;
     }
   }
   &.inactive-hover {

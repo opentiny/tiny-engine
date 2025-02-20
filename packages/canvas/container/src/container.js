@@ -24,10 +24,7 @@ import { useCanvas, useLayout, useTranslate, useMaterial } from '@opentiny/tiny-
 import { utils } from '@opentiny/tiny-engine-utils'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import Builtin from '../../render/src/builtin/builtin.json' //TODO 画布内外应该分开
-import { getElementRect, getElement } from './component-selection'
-import { updateHoverNode } from './component-selection'
-
-export { getElement } from './component-selection'
+import { getElementRect, updateHoverNode } from './component-selection'
 
 export const POSITION = Object.freeze({
   TOP: 'top',
@@ -212,29 +209,29 @@ export const getOffset = (element) => {
   return { x, y, bottom, top }
 }
 
-// export const getElement = (element) => {
-//   // 如果当前元素是body
-//   if (element === element.ownerDocument.body) {
-//     return element
-//   }
+export const getElement = (element) => {
+  // 如果当前元素是body
+  if (element === element.ownerDocument.body) {
+    return element
+  }
 
-//   // 如果当前元素是画布的html，返回画布的body
-//   if (element === element.ownerDocument.documentElement) {
-//     return element.ownerDocument.body
-//   }
+  // 如果当前元素是画布的html，返回画布的body
+  if (element === element.ownerDocument.documentElement) {
+    return element.ownerDocument.body
+  }
 
-//   if (!element || element.nodeType !== 1) {
-//     return undefined
-//   }
+  if (!element || element.nodeType !== 1) {
+    return undefined
+  }
 
-//   if (element.getAttribute(NODE_UID)) {
-//     return element
-//   } else if (element.parentElement) {
-//     return getElement(element.parentElement)
-//   }
+  if (element.getAttribute(NODE_UID)) {
+    return element
+  } else if (element.parentElement) {
+    return getElement(element.parentElement)
+  }
 
-//   return undefined
-// }
+  return undefined
+}
 
 export const getInactiveElement = (element) => {
   if (
@@ -427,7 +424,8 @@ const setSelectRect = (element, instance) => {
     top,
     left,
     componentName,
-    doc: getDocument()
+    doc: getDocument(),
+    schema: getCurrent().schema
   })
 }
 
@@ -522,7 +520,7 @@ const getPosLine = (rect, configure) => {
     type = POSITION.RIGHT
   } else if (configure.isContainer) {
     type = POSITION.IN
-    if (!allowInsert()) {
+    if (!allowInsert(configure)) {
       forbidden = true
     }
   } else {
@@ -545,7 +543,7 @@ const updateLineState = (element, data) => {
     return clearHover()
   }
 
-  console.log('updateLineState element', element)
+  // console.log('updateLineState element', element)
 
   const componentName = element.getAttribute(NODE_TAG)
   const id = element.getAttribute(NODE_UID)
@@ -555,7 +553,7 @@ const updateLineState = (element, data) => {
   const { getSchema, getNodeWithParentById } = useCanvas()
 
   // hoverState.configure = configure
-  console.log('updateLineState', element, data)
+  // console.log('updateLineState', element, data)
   // TODO: 更新拖拽的逻辑
   if (data) {
     let childEle = null
@@ -728,7 +726,7 @@ export const dragMove = (event, isHover) => {
   //   return
   // }
 
-  updateLineState(event.target, dragState.data)
+  updateLineState(getElement(event.target), dragState.data)
 
   if (dragState.draging) {
     // 绝对布局时走的逻辑

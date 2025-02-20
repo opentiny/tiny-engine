@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { NODE_UID } from '../../common'
-import { hoverState, getConfigure } from './container'
+import { hoverState, getConfigure, selectState, clearHover } from './container'
 
 
 export const getClosedVueElement = (element) => {
@@ -167,6 +167,11 @@ export const updateHoverNode = (e) => {
 
   const rect = getElementRect(instance)
   const node = useCanvas().getNodeById(uid)
+
+  if (uid === selectState.schema?.id) {
+    clearHover()
+    return
+  }
 
   if (rect) {
     const { width, height, top, left } = rect
