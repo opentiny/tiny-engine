@@ -17,19 +17,20 @@
 <script>
 import { reactive, watch } from 'vue'
 import { usePage } from '@opentiny/tiny-engine-meta-register'
+import { useHoverNode } from '../component-selection'
 
 const LEGAL_JUMPER_COMPONENT = ['RouterLink']
 
 export default {
   props: {
-    hoverState: {
-      type: Object,
-      default: () => ({})
-    },
-    inactiveHoverState: {
-      type: Object,
-      default: () => ({})
-    }
+    // hoverState: {
+    //   type: Object,
+    //   default: () => ({})
+    // },
+    // inactiveHoverState: {
+    //   type: Object,
+    //   default: () => ({})
+    // }
   },
   setup(props) {
     const switchPage = usePage().switchPageWithConfirm
@@ -46,18 +47,22 @@ export default {
       }
     }
 
-    watch(
-      () => [props.hoverState, props.inactiveHoverState],
-      ([hoverState, inactiveHoverState]) => {
-        const usedHoverState = [hoverState, inactiveHoverState].find(({ componentName }) =>
-          LEGAL_JUMPER_COMPONENT.includes(componentName)
-        )
+    const { curHoverState } = useHoverNode()
 
-        if (!usedHoverState) {
+    watch(
+      () => curHoverState.value.node,
+      (curHoverNode) => {
+        // const usedHoverState = [curHoverNode, inactiveHoverState].find(({ componentName }) =>
+        //   LEGAL_JUMPER_COMPONENT.includes(componentName)
+        // )
+
+        if (!LEGAL_JUMPER_COMPONENT.includes(curHoverNode.componentName)) {
           state.showRouterJumper = false
           return
         }
-        const { width, left, top, element } = usedHoverState
+
+        const { width, left, top } = curHoverState.value.rect
+        const element = curHoverState.value.element
         state.showRouterJumper = true
         state.left = `${left + width}px`
         state.top = `${top}px`

@@ -93,18 +93,24 @@
       </div>
     </div>
   </div>
-  <div v-show="hoverState.height && hoverState.width" class="canvas-rect hover">
-    <div class="corner-mark-left" @click="handleSelectHoverNode">{{ hoverState.componentName }} 点击选中</div>
-    <div v-show="hoverState.configure?.isContainer" class="corner-mark-bottom-right">拖放元素到容器内</div>
+  <div
+    v-show="curHoverState.rect.height && curHoverState.rect.width && !curHoverState.isInactiveNode"
+    class="canvas-rect hover"
+  >
+    <div class="corner-mark-left" @click="handleSelectHoverNode">{{ curHoverState.node?.componentName }} 点击选中</div>
+    <div v-show="curHoverState.configure?.isContainer" class="corner-mark-bottom-right">拖放元素到容器内</div>
   </div>
-  <div v-show="inactiveHoverState.height && inactiveHoverState.width" class="canvas-rect inactive-hover">
+  <div
+    v-show="curHoverState.rect.height && curHoverState.rect.width && curHoverState.isInactiveNode"
+    class="canvas-rect inactive-hover"
+  >
     <div class="corner-mark-left">
-      {{ inactiveHoverState.componentName }}
+      {{ curHoverState.node?.componentName }}
     </div>
   </div>
   <div v-show="lineState.height && lineState.width" class="canvas-rect line">
     <div :class="['hover-line', lineState.position, { forbidden: lineState.forbidden }]">
-      <div v-if="lineState.position === 'in' && hoverState.configure" class="choose-slots"></div>
+      <div v-if="lineState.position === 'in' && curHoverState.configure" class="choose-slots"></div>
     </div>
   </div>
 </template>
@@ -133,7 +139,7 @@ import {
 import { useLayout, useMaterial, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { Popover } from '@opentiny/vue'
 import shortCutPopover from './shortCutPopover.vue'
-import { currentHoverNode, currentHoverInstance } from '../component-selection'
+import { useHoverNode } from '../component-selection'
 
 // 工具操作条高度
 const OPTION_BAR_HEIGHT = 24
@@ -164,14 +170,14 @@ export default {
     TinyPopover: Popover
   },
   props: {
-    hoverState: {
-      type: Object,
-      default: () => ({})
-    },
-    inactiveHoverState: {
-      type: Object,
-      default: () => ({})
-    },
+    // hoverState: {
+    //   type: Object,
+    //   default: () => ({})
+    // },
+    // inactiveHoverState: {
+    //   type: Object,
+    //   default: () => ({})
+    // },
     selectState: {
       type: Object,
       default: () => ({})
@@ -495,14 +501,15 @@ export default {
       fixStyle.value = optionStyleValue
     })
 
+    const { curHoverState } = useHoverNode()
     const handleSelectHoverNode = async () => {
-      const node = currentHoverNode.value
+      const node = curHoverState.value.node
 
       if (!node) {
         return
       }
 
-      await selectNode(node.id, currentHoverInstance.value)
+      await selectNode(node.id, curHoverState.value.instance)
     }
 
     return {
@@ -522,7 +529,8 @@ export default {
       onMousedown,
       labelStyle,
       labelRef,
-      handleSelectHoverNode
+      handleSelectHoverNode,
+      curHoverState
     }
   }
 }
@@ -540,10 +548,10 @@ export default {
   }
   &.hover {
     border-style: dashed;
-    top: v-bind("hoverState.top + 'px'");
-    left: v-bind("hoverState.left + 'px'");
-    height: v-bind("hoverState.height + 'px'");
-    width: v-bind("hoverState.width + 'px'");
+    top: v-bind("curHoverState.rect.top + 'px'");
+    left: v-bind("curHoverState.rect.left + 'px'");
+    height: v-bind("curHoverState.rect.height + 'px'");
+    width: v-bind("curHoverState.rect.width + 'px'");
 
     .corner-mark-left {
       height: 24px;
@@ -558,10 +566,10 @@ export default {
   }
   &.inactive-hover {
     border-style: dashed;
-    top: v-bind("inactiveHoverState.top + 'px'");
-    left: v-bind("inactiveHoverState.left + 'px'");
-    height: v-bind("inactiveHoverState.height + 'px'");
-    width: v-bind("inactiveHoverState.width + 'px'");
+    top: v-bind("curHoverState.rect.top + 'px'");
+    left: v-bind("curHoverState.rect.left + 'px'");
+    height: v-bind("curHoverState.rect.height + 'px'");
+    width: v-bind("curHoverState.rect.width + 'px'");
     border-color: var(--te-canvas-container-border-color-hover);
 
     .corner-mark-left {

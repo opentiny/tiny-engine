@@ -1,7 +1,5 @@
 <template>
   <canvas-action
-    :hoverState="hoverState"
-    :inactiveHoverState="inactiveHoverState"
     :selectState="selectState"
     :lineState="lineState"
     :windowGetClickEventTarget="target"
@@ -9,7 +7,7 @@
     @select-slot="selectSlot"
     @setting="settingModel"
   ></canvas-action>
-  <canvas-router-jumper :hoverState="hoverState" :inactiveHoverState="inactiveHoverState"></canvas-router-jumper>
+  <canvas-router-jumper></canvas-router-jumper>
   <canvas-divider :selectState="selectState"></canvas-divider>
   <canvas-resize-border :iframe="iframe"></canvas-resize-border>
   <canvas-resize>
@@ -47,8 +45,8 @@ import {
   onMouseUp,
   dragMove,
   dragState,
-  hoverState,
-  inactiveHoverState,
+  // hoverState,
+  // inactiveHoverState,
   selectState,
   lineState,
   removeNodeById,
@@ -62,7 +60,7 @@ import {
   getCurrent,
   canvasApi
 } from './container'
-import { updateHoverNode, currentHoverNode, currentHoverInstance } from './component-selection'
+import { useHoverNode } from './component-selection'
 
 export default {
   components: { CanvasAction, CanvasResize, CanvasMenu, CanvasDivider, CanvasResizeBorder, CanvasRouterJumper },
@@ -81,13 +79,14 @@ export default {
     let showSettingModel = ref(false)
     let target = ref(null)
     const srcAttrName = computed(() => (props.canvasSrc ? 'src' : 'srcdoc'))
+    const { curHoverState, updateHoverNode } = useHoverNode()
 
     const setCurrentNode = async (event) => {
       const { clientX, clientY } = event
       // const element = getElement(event.target)
       closeMenu()
       // let node = getCurrent().schema
-      let node = currentHoverNode.value
+      let node = curHoverState.value.node
 
       if (node) {
         // const currentElement = querySelectById(getCurrent().schema?.id)
@@ -100,7 +99,7 @@ export default {
         // } else {
         // }
 
-        node = await selectNode(node.id, currentHoverInstance.value)
+        node = await selectNode(node.id, curHoverState.value.instance)
 
         // if (!currentElement?.contains(element) || event.button === 0) {
         //   // const loopId = element.getAttribute(NODE_LOOP)
@@ -285,8 +284,8 @@ export default {
     return {
       iframe,
       dragState,
-      hoverState,
-      inactiveHoverState,
+      // hoverState,
+      // inactiveHoverState,
       selectState,
       lineState,
       removeNodeById,

@@ -10,6 +10,7 @@
  *
  */
 
+import { useHistory, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import {
   getCurrent,
   insertNode,
@@ -18,12 +19,11 @@ import {
   removeNodeById,
   allowInsert,
   getConfigure,
-  clearHover,
-  hoverState
+  clearHover
 } from './container'
-import { useHistory, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { copyObject } from '../../common'
 import { getClipboardSchema, setClipboardSchema } from './utils'
+import { useHoverNode } from './component-selection'
 
 const KEY_Y = 89
 const KEY_Z = 90
@@ -49,7 +49,9 @@ function handlerDown({ index, parent }) {
   id && selectNode(id)
 }
 function handlerDelete({ schema }) {
-  if (hoverState.id === schema.id) {
+  const { curHoverState } = useHoverNode()
+
+  if (curHoverState.value.node?.id === schema.id) {
     clearHover()
   }
   removeNodeById(schema.id)

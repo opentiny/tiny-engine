@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { NODE_UID } from '../../common'
-import { hoverState, getConfigure, selectState, clearHover } from './container'
+import { getConfigure, selectState } from './container'
 
 
 export const getClosedVueElement = (element) => {
@@ -135,9 +135,34 @@ export const getElementRect = (instance) => {
   }
 }
 
-export let currentHoverInstance = ref(null)
-export let currentHoverRect = ref(null)
-export let currentHoverNode = ref(null)
+const getIsInactiveElement = () => {
+
+}
+
+const initialHoverState = {
+  instance: null,
+  rect: {
+    top: 0,
+    height: 0,
+    width: 0,
+    left: 0,
+  },
+  node: null,
+  configure: null,
+  element: null
+}
+
+const curHoverState = ref({
+  ...initialHoverState,
+  rect: { ...initialHoverState.rect }
+})
+
+const clearHover = () => {
+  curHoverState.value = {
+    ...initialHoverState,
+    rect: { ...initialHoverState.rect }
+  }
+}
 
 export const updateHoverNode = (e) => {
   // 拿到最近的带有 __vueComponent 的vue 实例
@@ -178,18 +203,24 @@ export const updateHoverNode = (e) => {
     const componentName = node?.componentName
     const configure = getConfigure(componentName)
 
-    Object.assign(hoverState, {
-      width,
-      height,
-      top,
-      left,
-      componentName,
+    curHoverState.value = {
+      rect: { width, height, top, left },
+      instance,
+      node,
       configure,
-      element: instance.vnode.el
-    })
+      element: instance.vnode.el,
+      // 无法根据 id 获取到 node，说明是非激活节点
+      isInactiveNode: !!node
+    }
   }
 
-  currentHoverInstance.value = instance
-  currentHoverRect.value = rect
-  currentHoverNode.value = node
+}
+
+export const useHoverNode = () => {
+
+  return {
+    curHoverState,
+    updateHoverNode,
+    clearHover
+  }
 }

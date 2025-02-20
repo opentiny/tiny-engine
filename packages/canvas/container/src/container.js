@@ -24,7 +24,7 @@ import { useCanvas, useLayout, useTranslate, useMaterial } from '@opentiny/tiny-
 import { utils } from '@opentiny/tiny-engine-utils'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import Builtin from '../../render/src/builtin/builtin.json' //TODO 画布内外应该分开
-import { getElementRect, updateHoverNode } from './component-selection'
+import { getElementRect, useHoverNode } from './component-selection'
 
 export const POSITION = Object.freeze({
   TOP: 'top',
@@ -109,24 +109,16 @@ export const selectState = reactive({
   ...initialRectState
 })
 
-// 鼠标移入画布中元素时的状态
-export const hoverState = reactive({
-  ...initialRectState
-})
-
-export const inactiveHoverState = reactive({
-  ...initialRectState
-})
+// export const inactiveHoverState = reactive({
+//   ...initialRectState
+// })
 
 // 拖拽时的位置状态
 export const lineState = reactive({
   ...initialLineState
 })
 
-export const clearHover = () => {
-  Object.assign(hoverState, initialRectState, { slot: null })
-  Object.assign(inactiveHoverState, initialRectState, { slot: null })
-}
+const { clearHover, updateHoverNode } = useHoverNode()
 
 export const clearSelect = () => {
   canvasState.current = null
@@ -463,7 +455,7 @@ export const getConfigure = (targetName) => {
  * @param {*} data 当前插入目标的schame数据
  * @returns
  */
-export const allowInsert = (configure = hoverState.configure || {}, data = dragState.data || {}) => {
+export const allowInsert = (configure = {}, data = dragState.data || {}) => {
   const { nestingRule = {} } = configure
   const { childWhitelist = [], descendantBlacklist = [] } = nestingRule
 
@@ -552,7 +544,6 @@ const updateLineState = (element, data) => {
   const { left, height, top, width } = rect
   const { getSchema, getNodeWithParentById } = useCanvas()
 
-  // hoverState.configure = configure
   // console.log('updateLineState', element, data)
   // TODO: 更新拖拽的逻辑
   if (data) {
@@ -604,42 +595,34 @@ const updateLineState = (element, data) => {
     useLayout().closePlugin()
   }
 
-  // 设置元素hover状态
-  // Object.assign(hoverState, {
-  //   width,
-  //   height,
-  //   top,
-  //   left,
-  //   element,
-  //   componentName
-  // })
   return undefined
 }
 
-const setInactiveHoverRect = (element) => {
-  if (!element) {
-    Object.assign(inactiveHoverState, initialRectState, { slot: null })
-    return
-  }
+// const setInactiveHoverRect = (element) => {
+//   if (!element) {
+//     Object.assign(inactiveHoverState, initialRectState, { slot: null })
+//     return
+//   }
 
-  const componentName = element.getAttribute(NODE_TAG)
-  const id = element.getAttribute(NODE_INACTIVE_UID)
-  const configure = getConfigure(componentName)
-  const rect = getRect(element)
-  const { left, height, top, width } = rect
+//   const componentName = element.getAttribute(NODE_TAG)
+//   const id = element.getAttribute(NODE_INACTIVE_UID)
+//   const configure = getConfigure(componentName)
+//   const rect = getRect(element)
+//   const { left, height, top, width } = rect
 
-  inactiveHoverState.configure = configure
-  // 设置元素hover状态
-  Object.assign(inactiveHoverState, {
-    id,
-    width,
-    height,
-    top,
-    left,
-    element,
-    componentName
-  })
-}
+//   inactiveHoverState.configure = configure
+//   // 设置元素hover状态
+//   Object.assign(inactiveHoverState, {
+//     id,
+//     width,
+//     height,
+//     top,
+//     left,
+//     element,
+//     componentName
+//   })
+// }
+
 let moveUpdateTimer = null
 
 // 绝对布局
