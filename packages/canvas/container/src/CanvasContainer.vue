@@ -32,7 +32,7 @@
 import { onMounted, ref, computed, onUnmounted, watch, watchEffect } from 'vue'
 import { iframeMonitoring } from '@opentiny/tiny-engine-common/js/monitor'
 import { useTranslate, useCanvas, useMessage, useResource } from '@opentiny/tiny-engine-meta-register'
-import { NODE_UID, NODE_LOOP, DESIGN_MODE } from '../../common'
+import { DESIGN_MODE } from '../../common'
 import { registerHostkeyEvent, removeHostkeyEvent } from './keyboard'
 import CanvasMenu, { closeMenu, openMenu } from './components/CanvasMenu.vue'
 import CanvasAction from './components/CanvasAction.vue'
@@ -45,19 +45,15 @@ import {
   onMouseUp,
   dragMove,
   dragState,
-  // hoverState,
-  // inactiveHoverState,
   selectState,
   lineState,
   removeNodeById,
   updateRect,
-  getElement,
   dragStart,
   selectNode,
   initCanvas,
   clearLineState,
   querySelectById,
-  getCurrent,
   canvasApi
 } from './container'
 import { useHoverNode } from './component-selection'
@@ -199,7 +195,6 @@ export default {
         })
 
         win.addEventListener('dragover', (ev) => {
-          // console.log('dragover')
           ev.dataTransfer.dropEffect = 'move'
           ev.preventDefault()
           dragMove(ev)
@@ -284,8 +279,6 @@ export default {
     return {
       iframe,
       dragState,
-      // hoverState,
-      // inactiveHoverState,
       selectState,
       lineState,
       removeNodeById,

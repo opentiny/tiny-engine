@@ -22,16 +22,7 @@ import { useHoverNode } from '../component-selection'
 const LEGAL_JUMPER_COMPONENT = ['RouterLink']
 
 export default {
-  props: {
-    // hoverState: {
-    //   type: Object,
-    //   default: () => ({})
-    // },
-    // inactiveHoverState: {
-    //   type: Object,
-    //   default: () => ({})
-    // }
-  },
+  props: {},
   setup(props) {
     const switchPage = usePage().switchPageWithConfirm
     const state = reactive({
@@ -50,23 +41,20 @@ export default {
     const { curHoverState } = useHoverNode()
 
     watch(
-      () => curHoverState.value.node,
-      (curHoverNode) => {
-        // const usedHoverState = [curHoverNode, inactiveHoverState].find(({ componentName }) =>
-        //   LEGAL_JUMPER_COMPONENT.includes(componentName)
-        // )
-
-        if (!LEGAL_JUMPER_COMPONENT.includes(curHoverNode.componentName)) {
+      () => curHoverState.value.componentName,
+      (curHoverComponentName) => {
+        if (!LEGAL_JUMPER_COMPONENT.includes(curHoverComponentName)) {
           state.showRouterJumper = false
           return
         }
 
         const { width, left, top } = curHoverState.value.rect
         const element = curHoverState.value.element
+
         state.showRouterJumper = true
         state.left = `${left + width}px`
         state.top = `${top}px`
-        state.targetPageId = element.getAttribute('data-router-target-page-id') || null
+        state.targetPageId = element?.getAttribute?.('data-router-target-page-id') || null
       },
       { deep: true }
     )

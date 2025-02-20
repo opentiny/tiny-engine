@@ -18,8 +18,7 @@ import {
   POSITION,
   removeNodeById,
   allowInsert,
-  getConfigure,
-  clearHover
+  getConfigure
 } from './container'
 import { copyObject } from '../../common'
 import { getClipboardSchema, setClipboardSchema } from './utils'
@@ -49,7 +48,7 @@ function handlerDown({ index, parent }) {
   id && selectNode(id)
 }
 function handlerDelete({ schema }) {
-  const { curHoverState } = useHoverNode()
+  const { curHoverState, clearHover } = useHoverNode()
 
   if (curHoverState.value.node?.id === schema.id) {
     clearHover()

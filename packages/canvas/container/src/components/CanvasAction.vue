@@ -97,7 +97,9 @@
     v-show="curHoverState.rect.height && curHoverState.rect.width && !curHoverState.isInactiveNode"
     class="canvas-rect hover"
   >
-    <div class="corner-mark-left" @click="handleSelectHoverNode">{{ curHoverState.node?.componentName }} 点击选中</div>
+    <div class="corner-mark-left" @click="handleSelectHoverNode">
+      {{ curHoverState.componentName }} {{ curHoverState.node && '点击选中' }}
+    </div>
     <div v-show="curHoverState.configure?.isContainer" class="corner-mark-bottom-right">拖放元素到容器内</div>
   </div>
   <div
@@ -105,7 +107,7 @@
     class="canvas-rect inactive-hover"
   >
     <div class="corner-mark-left">
-      {{ curHoverState.node?.componentName }}
+      {{ curHoverState.componentName }}
     </div>
   </div>
   <div v-show="lineState.height && lineState.width" class="canvas-rect line">

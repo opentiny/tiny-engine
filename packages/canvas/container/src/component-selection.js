@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
-import { NODE_UID } from '../../common'
+import { NODE_UID, NODE_TAG } from '../../common'
 import { getConfigure, selectState } from './container'
 
 
@@ -200,7 +200,7 @@ export const updateHoverNode = (e) => {
 
   if (rect) {
     const { width, height, top, left } = rect
-    const componentName = node?.componentName
+    const componentName = node?.componentName || instance.vnode.el.getAttribute(NODE_TAG) || ''
     const configure = getConfigure(componentName)
 
     curHoverState.value = {
@@ -209,8 +209,9 @@ export const updateHoverNode = (e) => {
       node,
       configure,
       element: instance.vnode.el,
+      componentName,
       // 无法根据 id 获取到 node，说明是非激活节点
-      isInactiveNode: !!node
+      isInactiveNode: !node
     }
   }
 
