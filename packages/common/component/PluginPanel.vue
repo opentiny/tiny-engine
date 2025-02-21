@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { inject, ref } from 'vue'
+import { inject, ref, onMounted } from 'vue'
 import { useLayout } from '@opentiny/tiny-engine-meta-register'
 import { SvgButton } from '@opentiny/tiny-engine-common'
 import LinkButton from './LinkButton.vue'
@@ -150,16 +150,15 @@ export default {
     const throttledMouseMoveRight = throttle(onMouseMoveRight, 50)
     const throttledMouseMoveLeft = throttle(onMouseMoveLeft, 50)
 
+    const leftResizer = ref(null)
+    const rightResizer = ref(null)
+
     const onMouseUpRight = () => {
       changeMoveDragBarState(false)
       document.removeEventListener('mousemove', throttledMouseMoveRight)
       document.removeEventListener('mouseup', onMouseUpRight)
-    }
-
-    const onMouseUpLeft = () => {
-      changeMoveDragBarState(false)
-      document.removeEventListener('mousemove', throttledMouseMoveLeft)
-      document.removeEventListener('mouseup', onMouseUpLeft)
+      rightResizer.value.style.cursor = ''
+      rightResizer.value.classList.remove('dragging')
     }
 
     const onMouseDownRight = (event) => {
@@ -168,6 +167,16 @@ export default {
       startWidth = panel.value.offsetWidth
       document.addEventListener('mousemove', throttledMouseMoveRight)
       document.addEventListener('mouseup', onMouseUpRight)
+      rightResizer.value.style.cursor = 'ew-resize'
+      rightResizer.value.classList.add('dragging')
+    }
+
+    const onMouseUpLeft = () => {
+      changeMoveDragBarState(false)
+      document.removeEventListener('mousemove', throttledMouseMoveLeft)
+      document.removeEventListener('mouseup', onMouseUpLeft)
+      leftResizer.value.style.cursor = ''
+      leftResizer.value.classList.remove('dragging')
     }
 
     const onMouseDownLeft = (event) => {
@@ -176,7 +185,18 @@ export default {
       startWidth = panel.value.offsetWidth
       document.addEventListener('mousemove', throttledMouseMoveLeft)
       document.addEventListener('mouseup', onMouseUpLeft)
+      leftResizer.value.style.cursor = 'ew-resize'
+      leftResizer.value.classList.add('dragging')
     }
+
+    const initResizerDOM = () => {
+      leftResizer.value = document.querySelector('.resizer-left')
+      rightResizer.value = document.querySelector('.resizer-right')
+    }
+
+    onMounted(() => {
+      initResizerDOM()
+    })
 
     return {
       closePanel,
@@ -213,12 +233,15 @@ export default {
     padding: 12px;
     color: var(--te-component-common-text-color-primary);
     font-weight: var(--te-base-font-weight-7);
+
     .plugin-panel-title {
       display: flex;
       align-items: center;
+
       .title + .icon-wrap {
         margin-left: 10px;
       }
+
       .title {
         display: flex;
         align-items: center;
@@ -234,6 +257,7 @@ export default {
       :deep(.svg-button + .svg-button) {
         margin-left: 4px;
       }
+
       :deep(.svg-button + .icon-wrap) {
         margin-left: 4px;
       }
@@ -252,10 +276,17 @@ export default {
   background-color: rgba(0, 0, 0, 0.1);
   transition: width 0.3s ease;
 }
+
+.dragging {
+  width: 8px !important;
+  background-color: var(--te-base-blue-40) !important;
+}
+
 .resizer-right:hover {
   width: 8px;
   background-color: var(--te-base-blue-40);
 }
+
 // 左边拖拽线
 .resizer-left {
   position: absolute;
@@ -267,10 +298,12 @@ export default {
   background-color: rgba(0, 0, 0, 0.1);
   transition: width 0.3s ease;
 }
+
 .resizer-left:hover {
   width: 8px;
   background-color: var(--te-base-blue-40);
 }
+
 .scroll-content {
   height: 100%;
   overflow: auto;

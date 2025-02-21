@@ -5,78 +5,76 @@
     :fixedPanels="fixedPanels"
     :docsUrl="docsUrl"
     :isShowDocsIcon="true"
+    id="data-source"
     @close="closePanel"
     class="plugin-state"
   >
     <template #content>
-      <div id="data-source">
-        <div class="data-source-left-panel">
-          <tiny-tabs v-model="activeName" @click="tabClick" tab-style="button-card">
-            <tiny-tab-item :name="STATE.CURRENT_STATE" :title="isBlock ? '区块状态' : '页面状态'"></tiny-tab-item>
-            <tiny-tab-item :name="STATE.GLOBAL_STATE" title="应用状态"></tiny-tab-item>
-          </tiny-tabs>
-          <tiny-search
-            :modelValue="query"
-            class="left-filter"
-            placeholder="请输入搜索条件"
-            clearable
-            @update:modelValue="search"
-          >
-            <template #prefix>
-              <tiny-icon-search />
-            </template>
-          </tiny-search>
-          <div class="add-btn">
-            <tiny-button @click="openPanel(OPTION_TYPE.ADD)">
-              <svg-icon name="add" class="add-btn-icon"></svg-icon>
-              <span class="add-btn-text">{{ activeName === STATE.CURRENT_STATE ? '添加变量' : '添加全局变量' }}</span>
-            </tiny-button>
-          </div>
-          <data-source-list
-            :modelValue="Object.keys(state.dataSource)"
-            :stateScope="activeName"
-            :query="query"
-            :selectedKey="selectedKey"
-            @openPanel="openPanel"
-            @remove="remove"
-            @removeStore="removeStore"
-          />
+      <div class="data-source-left-panel">
+        <tiny-tabs v-model="activeName" @click="tabClick" tab-style="button-card">
+          <tiny-tab-item :name="STATE.CURRENT_STATE" :title="isBlock ? '区块状态' : '页面状态'"></tiny-tab-item>
+          <tiny-tab-item :name="STATE.GLOBAL_STATE" title="应用状态"></tiny-tab-item>
+        </tiny-tabs>
+        <tiny-search
+          :modelValue="query"
+          class="left-filter"
+          placeholder="请输入搜索条件"
+          clearable
+          @update:modelValue="search"
+        >
+          <template #prefix>
+            <tiny-icon-search />
+          </template>
+        </tiny-search>
+        <div class="add-btn">
+          <tiny-button @click="openPanel(OPTION_TYPE.ADD)">
+            <svg-icon name="add" class="add-btn-icon"></svg-icon>
+            <span class="add-btn-text">{{ activeName === STATE.CURRENT_STATE ? '添加变量' : '添加全局变量' }}</span>
+          </tiny-button>
         </div>
+        <data-source-list
+          :modelValue="Object.keys(state.dataSource)"
+          :stateScope="activeName"
+          :query="query"
+          :selectedKey="selectedKey"
+          @openPanel="openPanel"
+          @remove="remove"
+          @removeStore="removeStore"
+        />
+      </div>
+      <div class="data-source-right-panel" v-if="isPanelShow" :style="{ left: `${firstPanelOffset}px` }">
+        <div class="header">
+          <span>{{ addDataSource }}</span>
+          <span class="options-wrap">
+            <tiny-button type="primary" @click="confirm">保存</tiny-button>
+            <close-icon @close="cancel"></close-icon>
+          </span>
+        </div>
+        <create-variable
+          v-if="activeName === STATE.CURRENT_STATE"
+          ref="variableRef"
+          :dataSource="state.dataSource"
+          :flag="flag"
+          :updateKey="updateKey"
+          :createData="state.createData"
+          @nameInput="updateName"
+          @close="cancel"
+          @mouseleave="onMouseLeaveVariable"
+        />
+        <create-store
+          v-if="activeName === STATE.GLOBAL_STATE"
+          ref="storeRef"
+          :dataSource="state.dataSource"
+          :flag="flag"
+          :updateKey="updateKey"
+          :storeData="state.createData"
+          @nameInput="validName"
+          @close="cancel"
+          @mouseleave="onMouseLeaveStore"
+        />
       </div>
     </template>
   </plugin-panel>
-
-  <div v-if="isPanelShow" class="data-source-right-panel data-source" :style="{ left: `${firstPanelOffset}px` }">
-    <div class="header">
-      <span>{{ addDataSource }}</span>
-      <span class="options-wrap">
-        <tiny-button type="primary" @click="confirm">保存</tiny-button>
-        <close-icon @close="cancel"></close-icon>
-      </span>
-    </div>
-    <create-variable
-      v-if="activeName === STATE.CURRENT_STATE"
-      ref="variableRef"
-      :dataSource="state.dataSource"
-      :flag="flag"
-      :updateKey="updateKey"
-      :createData="state.createData"
-      @nameInput="updateName"
-      @close="cancel"
-      @mouseleave="onMouseLeaveVariable"
-    />
-    <create-store
-      v-if="activeName === STATE.GLOBAL_STATE"
-      ref="storeRef"
-      :dataSource="state.dataSource"
-      :flag="flag"
-      :updateKey="updateKey"
-      :storeData="state.createData"
-      @nameInput="validName"
-      @close="cancel"
-      @mouseleave="onMouseLeaveStore"
-    />
-  </div>
 </template>
 
 <script>
