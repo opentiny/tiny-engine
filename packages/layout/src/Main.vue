@@ -6,9 +6,12 @@
         <div class="tiny-engine-left-wrap">
           <div class="tiny-engine-content-wrap">
             <design-plugins
+              v-if="leftMenuShownStorage"
+              ref="left"
               :plugins="registry.plugins"
               :plugin-list="pluginList"
               :render-panel="plugins.render"
+              @changeLeftAlign="changeLeftAlign"
               @click="toggleNav"
             ></design-plugins>
             <component :is="registry.canvas.entry"></component>
@@ -16,11 +19,13 @@
         </div>
         <div class="tiny-engine-right-wrap">
           <design-settings
+            v-if="rightMenuShownStorage"
+            ref="right"
             :settings="registry.settings"
             :render-panel="settings.render"
             :plugin-list="pluginList"
             v-show="layoutState.settings.showDesignSettings"
-            ref="right"
+            @changeRightAlign="changeRightAlign"
           ></design-settings>
         </div>
       </div>
@@ -34,6 +39,7 @@ import DesignToolbars from './DesignToolbars.vue'
 import DesignPlugins from './DesignPlugins.vue'
 import DesignSettings from './DesignSettings.vue'
 import meta from '../meta'
+import { ref } from 'vue'
 
 export default {
   name: 'TinyLowCode',
@@ -57,12 +63,22 @@ export default {
     const configProvider = layoutRegistry.options.configProvider
     const configProviderDesign = layoutRegistry.options.configProviderDesign
 
-    const { layoutState } = useLayout()
+    const { layoutState, leftMenuShownStorage, rightMenuShownStorage } = useLayout()
     const { plugins, settings } = layoutState
 
     const toggleNav = ({ item }) => {
       if (!item.id) return
       plugins.render = plugins.render === item.id ? null : item.id
+    }
+
+    const left = ref(null)
+    const right = ref(null)
+
+    const changeLeftAlign = (pluginId) => {
+      right.value?.changeAlign(pluginId)
+    }
+    const changeRightAlign = (pluginId) => {
+      left.value?.changeAlign(pluginId)
     }
 
     // 合并插件和设置列表
@@ -101,6 +117,12 @@ export default {
     localStorage.setItem('plugin', JSON.stringify(plugin))
 
     return {
+      left,
+      right,
+      changeLeftAlign,
+      changeRightAlign,
+      leftMenuShownStorage,
+      rightMenuShownStorage,
       pluginList,
       layoutRegistry,
       configProvider,

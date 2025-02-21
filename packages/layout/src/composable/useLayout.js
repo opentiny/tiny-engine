@@ -210,12 +210,12 @@ export default () => {
     return pluginNames
   }
 
-  const getPluginByName = (pluginList, pluginName) => {
-    return pluginList.find((item) => item.id === pluginName)
+  const getPluginById = (pluginList, pluginId) => {
+    return pluginList.find((item) => item.id === pluginId)
   }
 
   const getPluginsByPosition = (position, pluginList) => {
-    return getPluginsByLayout(position).map((pluginName) => getPluginByName(pluginList, pluginName))
+    return getPluginsByLayout(position).map((pluginId) => getPluginById(pluginList, pluginId))
   }
 
   // 修改某个插件的布局
@@ -300,7 +300,7 @@ export default () => {
     setDimension,
     getDimension,
     registerPluginApi,
-    getPluginByName,
+    getPluginById,
     getPluginApi,
     pluginState,
     getPluginState,

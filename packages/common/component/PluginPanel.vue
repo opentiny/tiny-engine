@@ -9,6 +9,17 @@
       </div>
       <div class="plugin-panel-icon">
         <slot name="header"></slot>
+        <tiny-tooltip
+          v-if="isShowCollapseIcon"
+          effect="light"
+          :content="isCollapsed ? '展开' : '折叠'"
+          placement="top"
+          :visible-arrow="false"
+        >
+          <template #default>
+            <svg-button :name="settingIcon" @click="clickCollapseIcon"></svg-button>
+          </template>
+        </tiny-tooltip>
         <svg-button
           class="item icon-sidebar"
           :name="fixedPanels?.includes(fixedName) ? 'fixed-solid' : 'fixed'"
@@ -28,14 +39,16 @@
 </template>
 
 <script>
-import { inject, ref, onMounted } from 'vue'
+import { inject, ref, computed, onMounted, provide } from 'vue'
 import { useLayout } from '@opentiny/tiny-engine-meta-register'
 import { SvgButton } from '@opentiny/tiny-engine-common'
 import LinkButton from './LinkButton.vue'
 import CloseIcon from './CloseIcon.vue'
+import { Tooltip } from '@opentiny/vue'
 
 export default {
   components: {
+    TinyTooltip: Tooltip,
     LinkButton,
     CloseIcon,
     SvgButton
@@ -85,9 +98,16 @@ export default {
     headerMarginBottom: {
       type: Number,
       default: 12
+    },
+    /**
+     * 是否展示折叠按钮
+     */
+    isShowCollapseIcon: {
+      type: Boolean,
+      default: false
     }
   },
-  emits: ['close'],
+  emits: ['close', 'updateCollapseStatus'],
   setup(props, { emit }) {
     const closePanel = () => {
       useLayout().closePlugin()
@@ -100,6 +120,11 @@ export default {
     const panel = ref(null)
     let startX = 0
     let startWidth = 0
+
+    const isCollapsed = ref(false)
+    const settingIcon = computed(() => (isCollapsed.value ? 'collapse_all' : 'expand_all'))
+
+    provide('isCollapsed', isCollapsed)
 
     const panelState = inject('panelState')
     const fixPanel = () => {
@@ -194,11 +219,19 @@ export default {
       rightResizer.value = document.querySelector('.resizer-right')
     }
 
+    const clickCollapseIcon = () => {
+      isCollapsed.value = !isCollapsed.value
+      emit('updateCollapseStatus', isCollapsed.value)
+    }
+
     onMounted(() => {
       initResizerDOM()
     })
 
     return {
+      clickCollapseIcon,
+      isCollapsed,
+      settingIcon,
       closePanel,
       fixPanel,
       panel,

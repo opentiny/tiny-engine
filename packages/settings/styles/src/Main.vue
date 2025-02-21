@@ -1,5 +1,12 @@
 <template>
-  <plugin-panel title="样式" :fixed-panels="fixedPanels" :fixed-name="PLUGIN_NAME.Styles" @close="$emit('close')">
+  <plugin-panel
+    title="样式"
+    :fixed-panels="fixedPanels"
+    :fixed-name="PLUGIN_NAME.Styles"
+    :is-show-collapse-icon="true"
+    @updateCollapseStatus="updateCollapseStatus"
+    @close="$emit('close')"
+  >
     <template #content>
       <div class="style-editor">
         <div class="line-style">
@@ -71,7 +78,7 @@
 </template>
 
 <script>
-import { watch, inject, ref, reactive, provide } from 'vue'
+import { watch, ref, reactive, provide } from 'vue'
 import { Collapse, CollapseItem, Input } from '@opentiny/vue'
 import { useLayout, useHistory, useCanvas, useProperties, getConfigurator } from '@opentiny/tiny-engine-meta-register'
 import {
@@ -128,7 +135,7 @@ export default {
       'borders',
       'effects'
     ]
-    const isCollapsed = inject('isCollapsed')
+    const isCollapsed = ref(false)
     const activeNames = ref(styleCategoryGroup)
     const { getCurrentSchema } = useCanvas()
     // 获取当前节点 style 对象
@@ -213,6 +220,10 @@ export default {
       }
     )
 
+    const updateCollapseStatus = (val) => {
+      isCollapsed.value = val
+    }
+
     watch(
       () => isCollapsed.value,
       () => {
@@ -225,6 +236,7 @@ export default {
     )
 
     return {
+      updateCollapseStatus,
       PLUGIN_NAME,
       CodeConfigurator,
       VariableConfigurator,
