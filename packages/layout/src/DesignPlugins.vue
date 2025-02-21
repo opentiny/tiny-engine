@@ -34,31 +34,35 @@
         </div>
       </div>
     </vue-draggable-next>
-    <ul class="nav-panel-lists bottom">
-      <li style="flex: 1" class="list-item"></li>
-      <li
-        v-for="(item, index) in state.bottomNavLists"
-        :key="index"
-        :class="[
-          'list-item',
-          { active: renderPanel === item.id, prev: state.prevIdex - 1 === index, 'first-item': index === 0 }
-        ]"
-        :title="item.title"
-        @click="clickMenu({ item, index })"
-      >
-        <div :class="{ 'is-show': renderPanel }">
-          <span class="item-icon">
-            <public-icon
-              v-if="typeof iconComponents[item.id] === 'string'"
-              :name="iconComponents[item.id]"
-              class="panel-icon"
-              svgClass="panel-svg"
-            ></public-icon>
-            <component v-else :is="iconComponents[item.id]" class="panel-icon"></component>
-          </span>
+
+    <!-- 图标菜单下侧区域（附加icon） -->
+    <div class="nav-panel-lists bottom">
+      <div style="flex: 1" class="list-item" />
+      <vue-draggable-next id="leftBottom" v-model="state.bottomNavLists" group="plugins" @end="onEnd">
+        <div
+          v-for="(item, index) in state.bottomNavLists"
+          :key="index"
+          :class="[
+            'list-item',
+            { active: renderPanel === item.id, prev: state.prevIdex - 1 === index, 'first-item': index === 0 }
+          ]"
+          :title="item.title"
+          @click="clickMenu({ item, index })"
+        >
+          <div :class="{ 'is-show': renderPanel }">
+            <span class="item-icon">
+              <public-icon
+                v-if="typeof iconComponents[item.id] === 'string'"
+                :name="iconComponents[item.id]"
+                class="panel-icon"
+                svgClass="panel-svg"
+              ></public-icon>
+              <component v-else :is="iconComponents[item.id]" class="panel-icon"></component>
+            </span>
+          </div>
         </div>
-      </li>
-    </ul>
+      </vue-draggable-next>
+    </div>
   </div>
 
   <div :class="{ 'not-selected': getMoveDragBarState() }">
