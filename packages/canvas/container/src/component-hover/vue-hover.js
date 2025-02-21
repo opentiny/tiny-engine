@@ -1,7 +1,31 @@
+/**
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
+ *
+ * Use of this source code is governed by an MIT-style license.
+ *
+ * THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
+ * BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
+ * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
+ *
+ */
+
+/**
+ * vue 画布的节点 hover 逻辑，主要包括以下几个步骤：
+ * 1. 通过鼠标事件获取到当前点击节点树最近的带有 __vueComponent 的节点，通过 __vueComponent 获取到 vue 实例
+ * 2. 通过 vue 实例获取到最近的带有 schema.id 的真正 vue 实例，通过 id 获取到对应的 node 节点
+ * 3. 计算真正的 vue 实例的 rect 信息，更新到 hoverState 中。
+ * 
+ * 对比默认的 hover 逻辑，解决了：
+ * 无法挂载 data-uid 等属性到 DOM 节点上，从而导致无法通过 DOM 节点反查到对应的 node 节点的问题。（Fragment 组件、或者是设置了 inherit attr 属性为 false 的组件无法挂载额外的属性到实际的 DOM 节点）
+ * 
+ */
+
 import { ref } from 'vue'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
-import { NODE_TAG } from '../../common'
-import { getConfigure, selectState, getWindow } from './container'
+import { NODE_TAG } from '../../../common'
+import { getConfigure, selectState, getWindow } from '../container'
+import { initialHoverState, clearHover as commonClearHover } from './common'
 
 
 export const getClosedVueElement = (element) => {
@@ -129,30 +153,12 @@ const getWindowRect = () => {
   }
 }
 
-const initialHoverState = {
-  rect: {
-    top: 0,
-    height: 0,
-    width: 0,
-    left: 0,
-  },
-  node: null,
-  configure: null,
-  element: null,
-  componentName: ''
-}
-
 const curHoverState = ref({
   ...initialHoverState,
   rect: { ...initialHoverState.rect }
 })
 
-const clearHover = () => {
-  curHoverState.value = {
-    ...initialHoverState,
-    rect: { ...initialHoverState.rect }
-  }
-}
+const clearHover = () => commonClearHover(curHoverState)
 
 export const updateHoverNode = (e) => {
   // 拿到最近的带有 __vueComponent 的vue 实例
@@ -211,7 +217,6 @@ export const updateHoverNode = (e) => {
       isInactiveNode: !node
     }
   }
-
 }
 
 export const useHoverNode = () => {

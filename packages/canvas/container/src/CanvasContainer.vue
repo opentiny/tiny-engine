@@ -95,7 +95,7 @@ export default {
         // } else {
         // }
 
-        node = await selectNode(node.id, curHoverState.value.instance)
+        node = await selectNode(node.id, curHoverState.value.rect)
 
         // if (!currentElement?.contains(element) || event.button === 0) {
         //   // const loopId = element.getAttribute(NODE_LOOP)

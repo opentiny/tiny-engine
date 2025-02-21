@@ -172,14 +172,6 @@ export default {
     TinyPopover: Popover
   },
   props: {
-    // hoverState: {
-    //   type: Object,
-    //   default: () => ({})
-    // },
-    // inactiveHoverState: {
-    //   type: Object,
-    //   default: () => ({})
-    // },
     selectState: {
       type: Object,
       default: () => ({})
@@ -511,7 +503,7 @@ export default {
         return
       }
 
-      await selectNode(node.id, curHoverState.value.instance)
+      await selectNode(node.id, curHoverState.value.rect)
     }
 
     return {
@@ -556,7 +548,7 @@ export default {
     width: v-bind("curHoverState.rect.width + 'px'");
 
     .corner-mark-left {
-      height: 24px;
+      height: 14px;
       top: -14px;
       padding-left: 0;
       font-size: 12px;

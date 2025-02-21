@@ -24,7 +24,7 @@ import { useCanvas, useLayout, useTranslate, useMaterial } from '@opentiny/tiny-
 import { utils } from '@opentiny/tiny-engine-utils'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import Builtin from '../../render/src/builtin/builtin.json' //TODO 画布内外应该分开
-import { getElementRect, useHoverNode } from './component-selection'
+import { useHoverNode } from './component-selection'
 
 export const POSITION = Object.freeze({
   TOP: 'top',
@@ -108,10 +108,6 @@ const initialLineState = {
 export const selectState = reactive({
   ...initialRectState
 })
-
-// export const inactiveHoverState = reactive({
-//   ...initialRectState
-// })
 
 // 拖拽时的位置状态
 export const lineState = reactive({
@@ -355,7 +351,6 @@ export const scrollToNode = (element) => {
     const container = getDocument().documentElement
     const { clientWidth, clientHeight } = container
     const { left, right, top, bottom, width, height } = element.getBoundingClientRect()
-    // const { left, right, top, bottom, width, height } = getElementRect(element.$)
     const option = {}
 
     if (right < 0) {
@@ -377,7 +372,7 @@ export const scrollToNode = (element) => {
 
   return nextTick()
 }
-const setSelectRect = (element, instance) => {
+const setSelectRect = (element, hoverRect) => {
   let calcElement = element
 
   if (!element && !instance) {
@@ -398,18 +393,18 @@ const setSelectRect = (element, instance) => {
     height = h
   }
 
-  if (instance) {
-    const { left: l, top: t, width: w, height: h } = getElementRect(instance)
+  if (hoverRect) {
+    const { left: l, top: t, width: w, height: h } = hoverRect
     left = l
     top = t
     width = w
     height = h
   }
 
-
-  // const { left, height, top, width } = getRect(element)
   const componentName = getCurrent().schema?.componentName || ''
+
   clearHover()
+
   Object.assign(selectState, {
     width,
     height,
@@ -598,31 +593,6 @@ const updateLineState = (element, data) => {
   return undefined
 }
 
-// const setInactiveHoverRect = (element) => {
-//   if (!element) {
-//     Object.assign(inactiveHoverState, initialRectState, { slot: null })
-//     return
-//   }
-
-//   const componentName = element.getAttribute(NODE_TAG)
-//   const id = element.getAttribute(NODE_INACTIVE_UID)
-//   const configure = getConfigure(componentName)
-//   const rect = getRect(element)
-//   const { left, height, top, width } = rect
-
-//   inactiveHoverState.configure = configure
-//   // 设置元素hover状态
-//   Object.assign(inactiveHoverState, {
-//     id,
-//     width,
-//     height,
-//     top,
-//     left,
-//     element,
-//     componentName
-//   })
-// }
-
 let moveUpdateTimer = null
 
 // 绝对布局
@@ -721,7 +691,7 @@ export const dragMove = (event, isHover) => {
 }
 
 // type == clickTree, 为点击大纲; type == loop-id=xxx ,为点击循环数据
-export const selectNode = async (id, instance, type) => {
+export const selectNode = async (id, hoverRect, type) => {
   if (type && type.indexOf('loop-id') > -1) {
     const loopId = type.split('=')[1]
     canvasState.loopId = loopId
@@ -741,7 +711,7 @@ export const selectNode = async (id, instance, type) => {
 
   await scrollToNode(element)
 
-  setSelectRect(element, instance)
+  setSelectRect(element, hoverRect)
   canvasState.emit('selected', node, parent, type, id)
 
   return node
