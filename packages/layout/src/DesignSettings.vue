@@ -15,11 +15,6 @@
         ></component>
         <div v-show="activating" class="active2" />
       </div>
-      <div v-if="renderPanel === 'engine.setting.styles'" class="tabs-setting">
-        <tiny-tooltip effect="light" :content="isCollapsed ? '展开' : '折叠'" placement="top" :visible-arrow="false">
-          <template #default> <svg-icon :name="settingIcon" @click="isCollapsed = !isCollapsed"></svg-icon> </template>
-        </tiny-tooltip>
-      </div>
     </div>
   </div>
   <div id="tiny-engine-nav-panel">
@@ -40,19 +35,27 @@
       <div style="flex: 1" class="list-item" @contextmenu.prevent="showContextMenu($event, false)"></div>
     </vue-draggable-next>
   </div>
+
+  <plugin-right-menu
+    ref="rightMenu"
+    :list="settingPlugins"
+    :align="PLUGIN_POSITION.rightTop"
+    @switchAlign="switchAlign"
+  />
 </template>
 
 <script>
-import { computed, provide, ref, watch, toRefs } from 'vue'
-import { Tabs, TabItem, Tooltip } from '@opentiny/vue'
+import { computed, ref, watch, toRefs } from 'vue'
+import { Tabs, TabItem } from '@opentiny/vue'
 import { useLayout } from '@opentiny/tiny-engine-meta-register'
 import { VueDraggableNext } from 'vue-draggable-next'
+import { PluginRightMenu } from '@opentiny/tiny-engine-common'
 
 export default {
   components: {
+    PluginRightMenu,
     TinyTabs: Tabs,
     TinyTabItem: TabItem,
-    TinyTooltip: Tooltip,
     VueDraggableNext
   },
   props: {
@@ -74,6 +77,7 @@ export default {
 
     const {
       getPluginsByPosition,
+      getPluginById,
       PLUGIN_POSITION,
       rightFixedPanelsStorage,
       changeRightFixedPanels,
@@ -111,6 +115,11 @@ export default {
       dragPluginLayout(list, align, index, 0)
     }
 
+    const changeAlign = (pluginId) => {
+      const item = getPluginById(props.pluginList, pluginId)
+      settingPlugins.value.unshift(item)
+    }
+
     const setRender = (curId) => {
       settingsState.render = curId
     }
@@ -141,16 +150,11 @@ export default {
 
     const activating = computed(() => settingsState.activating)
     const showMask = ref(true)
-    const isCollapsed = ref(false)
-    const settingIcon = computed(() => (isCollapsed.value ? 'collapse_all' : 'expand_all'))
-
-    provide('isCollapsed', isCollapsed)
 
     return {
+      changeAlign,
       showMask,
-      isCollapsed,
       activating,
-      settingIcon,
       settingsState,
       settingPlugins,
       components,
@@ -201,15 +205,6 @@ export default {
       margin-right: 0;
     }
   }
-}
-
-.tabs-setting {
-  position: absolute;
-  top: 9px;
-  right: 78px;
-  line-height: 26px;
-  color: var(--te-component-common-icon-color-primary);
-  cursor: pointer;
 }
 
 #tiny-engine-nav-panel {

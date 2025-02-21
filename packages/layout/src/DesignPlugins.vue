@@ -22,7 +22,7 @@
         @click="clickMenu({ item, index })"
         @contextmenu.prevent="showContextMenu($event, true, item, index, PLUGIN_POSITION.leftTop)"
       >
-        <div>
+        <div v-if="getPluginShown(item.id)">
           <span class="item-icon">
             <svg-icon
               v-if="typeof iconComponents[item.id] === 'string'"
@@ -37,7 +37,7 @@
 
     <!-- 图标菜单下侧区域（附加icon） -->
     <div class="nav-panel-lists bottom">
-      <div style="flex: 1" class="list-item" />
+      <div style="flex: 1" class="list-item" @contextmenu.prevent="showContextMenu($event, false)" />
       <vue-draggable-next id="leftBottom" v-model="state.bottomNavLists" group="plugins" @end="onEnd">
         <div
           v-for="(item, index) in state.bottomNavLists"
@@ -48,8 +48,9 @@
           ]"
           :title="item.title"
           @click="clickMenu({ item, index })"
+          @contextmenu.prevent="showContextMenu($event, true, item, index, PLUGIN_POSITION.leftBottom)"
         >
-          <div :class="{ 'is-show': renderPanel }">
+          <div :class="{ 'is-show': renderPanel }" v-if="getPluginShown(item.id)">
             <span class="item-icon">
               <public-icon
                 v-if="typeof iconComponents[item.id] === 'string'"
@@ -85,6 +86,13 @@
       </div>
     </div>
   </div>
+
+  <plugin-right-menu
+    ref="rightMenu"
+    :list="[...state.topNavLists, ...state.bottomNavLists]"
+    :align="left"
+    @switchAlign="switchAlign"
+  />
 </template>
 
 <script>
@@ -92,13 +100,14 @@ import { reactive, ref, watch } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
 import { VueDraggableNext } from 'vue-draggable-next'
 import { useLayout, usePage, useModal, META_APP } from '@opentiny/tiny-engine-meta-register'
-import { PublicIcon } from '@opentiny/tiny-engine-common'
+import { PublicIcon, PluginRightMenu } from '@opentiny/tiny-engine-common'
 import { constants } from '@opentiny/tiny-engine-utils'
 
 const { STORAGE_KEY_FIXED_PANELS } = constants
 
 export default {
   components: {
+    PluginRightMenu,
     VueDraggableNext,
     TinyPopover: Popover,
     TinyTooltip: Tooltip,
@@ -126,17 +135,45 @@ export default {
     const { message } = useModal()
     const pluginState = useLayout().getPluginState()
 
-    const { PLUGIN_POSITION, getMoveDragBarState, isSameSide, dragPluginLayout, getPluginsByPosition } = useLayout()
+    const {
+      getPluginById,
+      getPluginShown,
+      PLUGIN_POSITION,
+      getMoveDragBarState,
+      isSameSide,
+      dragPluginLayout,
+      getPluginsByPosition
+    } = useLayout()
 
-    props.pluginList.forEach(({ id, entry, icon }) => {
-      components[id] = entry
-      iconComponents[id] = icon
-    })
+    const rightMenu = ref(null)
+    const showContextMenu = (event, type, item, index, align) => {
+      if (!type) {
+        rightMenu.value.showContextMenu(event.clientX, event.clientY, type)
+      } else {
+        rightMenu.value.showContextMenu(event.clientX, event.clientY, type, item, index, align)
+      }
+    }
 
     const state = reactive({
       prevIdex: -2,
       topNavLists: getPluginsByPosition(PLUGIN_POSITION.leftTop, props.pluginList),
       bottomNavLists: getPluginsByPosition(PLUGIN_POSITION.leftBottom, props.pluginList)
+    })
+
+    const switchAlign = (index, id, list, align) => {
+      list === PLUGIN_POSITION.leftTop ? state.topNavLists.splice(index, 1) : state.bottomNavLists.splice(index, 1)
+      emit('changeLeftAlign', id)
+      dragPluginLayout(list, align, index, 0)
+    }
+
+    const changeAlign = (pluginId) => {
+      const item = getPluginById(props.pluginList, pluginId)
+      state.topNavLists.unshift(item)
+    }
+
+    props.pluginList.forEach(({ id, entry, icon }) => {
+      components[id] = entry
+      iconComponents[id] = icon
     })
 
     const clickMenu = ({ item, index }) => {
@@ -213,6 +250,12 @@ export default {
     }
 
     return {
+      changeAlign,
+      rightMenu,
+      PLUGIN_POSITION,
+      showContextMenu,
+      switchAlign,
+      getPluginShown,
       onEnd,
       state,
       clickMenu,
