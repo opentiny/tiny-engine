@@ -3,5 +3,6 @@ export default {
   theme: import.meta.env.VITE_THEME || 'light',
   material: ['/mock/bundle.json'],
   scripts: [],
-  styles: []
+  styles: [],
+  dslMode: 'Vue'
 }

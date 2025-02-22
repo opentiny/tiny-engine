@@ -1,12 +1,12 @@
 <template>
   <div
-    v-show="selectState.height && selectState.width"
+    v-show="selectState.rect.height && selectState.rect.width"
     class="canvas-rect select"
     :style="{
-      top: selectState.top + 'px',
-      left: selectState.left + 'px',
-      height: selectState.height + 'px',
-      width: selectState.width + 'px'
+      top: selectState.rect.top + 'px',
+      left: selectState.rect.left + 'px',
+      height: selectState.rect.height + 'px',
+      width: selectState.rect.width + 'px'
     }"
   >
     <div v-if="!resize" ref="labelRef" class="corner-mark-left" :style="labelStyle">
@@ -98,7 +98,7 @@
     class="canvas-rect hover"
   >
     <div class="corner-mark-left" @click="handleSelectHoverNode">
-      {{ curHoverState.componentName }} {{ curHoverState.node && '点击选中' }}
+      {{ curHoverState.componentName }}
     </div>
     <div v-show="curHoverState.configure?.isContainer" class="corner-mark-bottom-right">拖放元素到容器内</div>
   </div>
@@ -136,12 +136,13 @@ import {
   copyNode,
   getRenderer,
   dragStart,
-  getCurrentElement
+  getCurrentElement,
+  getDocument
 } from '../container'
 import { useLayout, useMaterial, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { Popover } from '@opentiny/vue'
 import shortCutPopover from './shortCutPopover.vue'
-import { useHoverNode } from '../component-selection'
+import { useHoverNode } from '../interactions'
 
 // 工具操作条高度
 const OPTION_BAR_HEIGHT = 24
@@ -390,7 +391,8 @@ export default {
     }
 
     const getStyleValues = (selectState, canvasSize, labelWidth, optionWidth) => {
-      const { left, top, width, height, doc } = selectState
+      const { left, top, width, height } = selectState
+      const doc = getDocument()
       const { width: canvasWidth, height: canvasHeight } = canvasSize
       // 标签宽度和工具操作条宽度之和加上间距
       const fullRectWidth = labelWidth + optionWidth + OPTION_SPACE
@@ -463,7 +465,7 @@ export default {
     }
 
     watchPostEffect(async () => {
-      const { left, top, width, height, doc } = props.selectState
+      const { left, top, width, height } = props.selectState.rect
 
       // nextTick后ref才能获取到元素。需要把监听的依赖放在await之前，否则无法监听变化
       await nextTick()
@@ -485,7 +487,7 @@ export default {
 
       // canvas容器中，iframe以及iframe之外的元素clientRect的尺寸都是缩放过的，除以scale得到原始大小
       const { labelStyleValue, optionStyleValue } = getStyleValues(
-        { left, top, width, height, doc },
+        { left, top, width, height },
         { width: canvasRect.width / scale, height: canvasRect.height / scale },
         labelWidth / scale,
         optionWidth / scale
@@ -552,9 +554,6 @@ export default {
       top: -14px;
       padding-left: 0;
       font-size: 12px;
-      // TODO: 交互待优化
-      background-color: var(--te-canvas-container-bg-color-checked);
-      color: #fff;
       pointer-events: auto;
     }
   }

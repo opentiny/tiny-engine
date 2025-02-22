@@ -24,7 +24,7 @@ import { useCanvas, useLayout, useTranslate, useMaterial } from '@opentiny/tiny-
 import { utils } from '@opentiny/tiny-engine-utils'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import Builtin from '../../render/src/builtin/builtin.json' //TODO 画布内外应该分开
-import { useHoverNode } from './component-selection'
+import { useHoverNode, useSelectNode } from './interactions'
 
 export const POSITION = Object.freeze({
   TOP: 'top',
@@ -105,21 +105,24 @@ const initialLineState = {
 }
 
 // 选中画布中元素时的状态
-export const selectState = reactive({
-  ...initialRectState
-})
+// export const selectState = reactive({
+//   ...initialRectState
+// })
 
 // 拖拽时的位置状态
 export const lineState = reactive({
   ...initialLineState
 })
 
-const { clearHover, updateHoverNode } = useHoverNode()
+const { clearHover, hoverNodeById } = useHoverNode()
+const { clearSelect: clearSelectNew } = useSelectNode()
 
+// TODO: 需要优化
 export const clearSelect = () => {
   canvasState.current = null
   canvasState.parent = null
-  Object.assign(selectState, initialRectState)
+  // Object.assign(selectState, initialRectState)
+  clearSelectNew()
   // 临时借用 remote 事件出发 currentSchema 更新
   canvasState?.emit?.('remove')
 }
@@ -329,6 +332,7 @@ export const querySelectById = (id) => {
 
   // 根据 id 无法查找到 element，尝试使用 rootSelector 查找
   if (!element && rootSelector) {
+    // TODO: 拖入了多个相同组件的情况下，如何拿到正确的 element
     element = doc.querySelector(rootSelector)
   }
   // TODO: rootSelector + loopId 的处理逻辑
@@ -405,17 +409,18 @@ const setSelectRect = (element, hoverRect) => {
 
   clearHover()
 
-  Object.assign(selectState, {
-    width,
-    height,
-    top,
-    left,
-    componentName,
-    doc: getDocument(),
-    schema: getCurrent().schema
-  })
+  // Object.assign(selectState, {
+  //   width,
+  //   height,
+  //   top,
+  //   left,
+  //   componentName,
+  //   doc: getDocument(),
+  //   schema: getCurrent().schema
+  // })
 }
 
+// TODO:
 export const updateRect = (id) => {
   id = (typeof id === 'string' && id) || getCurrent().schema?.id
   clearHover()
@@ -424,9 +429,9 @@ export const updateRect = (id) => {
     setTimeout(() => setSelectRect(querySelectById(id)))
   } else {
     // 如果选中的是body，不清除选中框
-    if (!selectState.componentName && selectState.width > 0) {
-      return
-    }
+    // if (!selectState.componentName && selectState.width > 0) {
+    //   return
+    // }
     clearSelect()
   }
 }
@@ -661,23 +666,13 @@ export const dragMove = (event, isHover) => {
     return
   }
 
-  // console.log('dragmove', event.target)
   const { x, y, bottom: offsetBottom, top: offsetTop } = getOffset(event.target)
   const { clientX, clientY } = event
   const { element } = dragState
   const absolute = canvasState.type === 'absolute'
 
   dragState.draging = dragState.keydown
-
   dragState.mouse = { x: clientX, y: clientY }
-
-  // 如果仅仅是mouseover事件直接return,并重置拖拽位置状态，优化性能
-  // if (isHover) {
-  //   lineState.position = ''
-  //   // updateLineState(getElement(event.target), null)
-  //   setInactiveHoverRect(getInactiveElement(event.target))
-  //   return
-  // }
 
   updateLineState(getElement(event.target), dragState.data)
 
@@ -711,18 +706,20 @@ export const selectNode = async (id, hoverRect, type) => {
 
   await scrollToNode(element)
 
-  setSelectRect(element, hoverRect)
+  // setSelectRect(element, hoverRect)
+  // TODO: 改成事件通知
   canvasState.emit('selected', node, parent, type, id)
 
   return node
 }
 
-export const hoverNode = (id, data) => {
-  const element = querySelectById(id)
-  // element && updateLineState(element, data)
-  if (element) {
-    updateHoverNode({ target: element })
-  }
+/**
+ * @deprecated 后续废弃，改为使用 hoverNodeById
+ * @param {*} id 
+ * @param {*} data 
+ */
+export const hoverNode = (id) => {
+  hoverNodeById(id)
 }
 
 export const insertNode = (node, position = POSITION.IN, select = true) => {
@@ -862,6 +859,7 @@ export const canvasApi = {
   clearSelect,
   selectNode,
   hoverNode,
+  hoverNodeById,
   insertNode,
   removeNode,
   addComponent,

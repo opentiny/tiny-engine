@@ -9,7 +9,8 @@
 <script>
 import { reactive, watch } from 'vue'
 import { useLayout, useCanvas } from '@opentiny/tiny-engine-meta-register'
-import { getCurrent, updateRect, selectState, querySelectById } from '../container'
+import { getCurrent, updateRect, querySelectById } from '../container'
+import { useSelectNode } from '../interactions'
 
 export default {
   props: {
@@ -117,8 +118,9 @@ export default {
       updateRect()
     }
 
+    const { selectState } = useSelectNode()
     const handleResizeStart = () => {
-      const { top, left, width, height } = selectState
+      const { top, left, width, height } = selectState.value.rect
       const { parent, schema } = getCurrent()
 
       let startX = left
@@ -146,9 +148,10 @@ export default {
     }
 
     watch(
-      () => selectState,
+      () => selectState.value,
       () => {
-        const { top, left, width, height, componentName } = selectState
+        const { top, left, width, height, componentName } = selectState.value.rect
+        const componentName = selectState.value.componentName
         const { parent, schema } = getCurrent()
 
         if (!['CanvasRow', 'CanvasCol'].includes(componentName)) {

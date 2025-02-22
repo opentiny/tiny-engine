@@ -45,7 +45,6 @@ import {
   onMouseUp,
   dragMove,
   dragState,
-  selectState,
   lineState,
   removeNodeById,
   updateRect,
@@ -56,7 +55,7 @@ import {
   querySelectById,
   canvasApi
 } from './container'
-import { useHoverNode } from './component-selection'
+import { useHoverNode, useSelectNode } from './interactions'
 
 export default {
   components: { CanvasAction, CanvasResize, CanvasMenu, CanvasDivider, CanvasResizeBorder, CanvasRouterJumper },
@@ -76,13 +75,16 @@ export default {
     let target = ref(null)
     const srcAttrName = computed(() => (props.canvasSrc ? 'src' : 'srcdoc'))
     const { curHoverState, updateHoverNode } = useHoverNode()
+    const { selectState, updateSelectedNode } = useSelectNode()
 
-    const setCurrentNode = async (event) => {
+    const handleNodeInteractions = async (event) => {
       const { clientX, clientY } = event
       // const element = getElement(event.target)
       closeMenu()
+      // 更新选中的节点
+      updateSelectedNode(event)
       // let node = getCurrent().schema
-      let node = curHoverState.value.node
+      let node = selectState.value.node
 
       if (node) {
         // const currentElement = querySelectById(getCurrent().schema?.id)
@@ -100,7 +102,8 @@ export default {
         // if (!currentElement?.contains(element) || event.button === 0) {
         //   // const loopId = element.getAttribute(NODE_LOOP)
         // }
-        const element = querySelectById(node.id)
+        // const element = querySelectById(node.id)
+        const element = selectState.value.element
 
         if (event.button === 0 && element !== element?.ownerDocument?.body) {
           const { x, y } = element.getBoundingClientRect()
@@ -175,7 +178,18 @@ export default {
             }
 
             insertPosition.value = false
-            setCurrentNode(event)
+            handleNodeInteractions(event)
+            target.value = event.target
+          })
+        })
+        win.addEventListener('contextmenu', (event) => {
+          handleCanvasEvent(() => {
+            if (event.target === doc.documentElement) {
+              return
+            }
+
+            insertPosition.value = false
+            handleNodeInteractions(event)
             target.value = event.target
           })
         })
@@ -184,13 +198,14 @@ export default {
           isScrolling = true
         })
 
+        // TODO: 需要确认下该事件还是否需要
         win.addEventListener('mouseup', (event) => {
           if (event.target !== doc.documentElement || isScrolling) {
             return
           }
 
           insertPosition.value = false
-          setCurrentNode(event)
+          // handleNodeInteractions(event)
           target.value = event.target
         })
 

@@ -22,7 +22,7 @@ import {
 } from './container'
 import { copyObject } from '../../common'
 import { getClipboardSchema, setClipboardSchema } from './utils'
-import { useHoverNode } from './component-selection'
+import { useHoverNode } from './interactions'
 
 const KEY_Y = 89
 const KEY_Z = 90

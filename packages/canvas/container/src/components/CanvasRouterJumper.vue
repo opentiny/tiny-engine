@@ -17,7 +17,7 @@
 <script>
 import { reactive, watch } from 'vue'
 import { usePage } from '@opentiny/tiny-engine-meta-register'
-import { useHoverNode } from '../component-selection'
+import { useHoverNode } from '../interactions'
 
 const LEGAL_JUMPER_COMPONENT = ['RouterLink']
 

@@ -1,4 +1,5 @@
-import { NODE_TAG, NODE_UID } from '../../../common'
+import { NODE_UID } from '../../../common'
+import { getWindow, querySelectById } from '../container'
 
 export const initialHoverState = {
   rect: {
@@ -38,8 +39,27 @@ export const getClosedElementHasUid = (element) => {
   if (element.getAttribute(NODE_UID)) {
     return element
   } else if (element.parentElement) {
-    return getElement(element.parentElement)
+    return getClosedElementHasUid(element.parentElement)
   }
 
   return undefined
+}
+
+export const getWindowRect = () => {
+  const { innerHeight, innerWidth } = getWindow()
+
+  return {
+    top: 0,
+    left: 0,
+    width: innerWidth,
+    height: innerHeight
+  }
+}
+
+export const hoverNodeById = (id, updateHoverNode) => {
+  const element = querySelectById(id)
+
+  if (element) {
+    updateHoverNode({ target: element })
+  }
 }
