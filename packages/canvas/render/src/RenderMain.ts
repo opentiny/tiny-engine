@@ -167,20 +167,6 @@ export default defineComponent({
 
       useLocale()
 
-      window.host.subscribe({
-        topic: 'schemaChange',
-        subscriber: 'canvasRenderer',
-        callback: throttleUpdateSchema
-      })
-
-      window.host.subscribe({
-        topic: 'schemaImport',
-        subscriber: 'canvasRenderer',
-        callback: () => {
-          setSchema(window.host.getSchema())
-        }
-      })
-
       watch(
         () => activeSchema.css,
         (value) => {
@@ -220,6 +206,20 @@ export default defineComponent({
           deep: true
         }
       )
+
+      window.host.subscribe({
+        topic: 'schemaChange',
+        subscriber: 'canvasRenderer',
+        callback: throttleUpdateSchema
+      })
+
+      window.host.subscribe({
+        topic: 'schemaImport',
+        subscriber: 'canvasRenderer',
+        callback: () => {
+          setSchema(window.host.getSchema())
+        }
+      })
 
       onUnmounted(() => {
         window.host.unsubscribe({
