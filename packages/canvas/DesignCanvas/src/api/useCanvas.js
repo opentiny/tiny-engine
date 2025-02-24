@@ -475,13 +475,22 @@ const operationTypeMap = {
     changedChildren.forEach((childItem) => {
       // 新增
       if (!originChildrenSet.has(childItem.id)) {
-        const newChildIndex = newChildren.findIndex((id) => id === childItem.id) - 1
+        let newChildIndex = newChildren.findIndex((id) => id === childItem.id)
+        let position = 'after'
+        let referTargetNodeId = null
+
+        if (newChildIndex === 0) {
+          position = 'before'
+        } else if (newChildIndex !== -1) {
+          position = 'after'
+          referTargetNodeId = newChildren[newChildIndex - 1]?.id
+        }
 
         operationTypeMap.insert({
           parentId: id,
           newNodeData: childItem,
-          position: 'after',
-          referTargetNodeId: newChildIndex <= -1 ? null : newChildren[newChildIndex]?.id
+          position,
+          referTargetNodeId
         })
         return
       }
