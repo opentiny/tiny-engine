@@ -472,14 +472,16 @@ const operationTypeMap = {
     // 筛选出来新增的和修改的
     const changedChildren = newChildren.filter(({ id }) => !deletedIdsSet.has(id))
 
-    changedChildren.forEach((childItem, index) => {
+    changedChildren.forEach((childItem) => {
       // 新增
       if (!originChildrenSet.has(childItem.id)) {
+        const newChildIndex = newChildren.findIndex((id) => id === childItem.id) - 1
+
         operationTypeMap.insert({
           parentId: id,
           newNodeData: childItem,
           position: 'after',
-          referTargetNodeId: changedChildren?.[index]?.id
+          referTargetNodeId: newChildIndex <= -1 ? null : newChildren[newChildIndex]?.id
         })
         return
       }
