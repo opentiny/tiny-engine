@@ -15,19 +15,24 @@
  * 1. 通过鼠标事件获取到当前点击节点树最近的带有 __vueComponent 的节点，通过 __vueComponent 获取到 vue 实例
  * 2. 通过 vue 实例获取到最近的带有 schema.id 的真正 vue 实例，通过 id 获取到对应的 node 节点
  * 3. 计算真正的 vue 实例的 rect 信息，更新到 hoverState 中。
- * 
+ *
  * 对比默认的 hover 逻辑，解决了：
  * 无法挂载 data-uid 等属性到 DOM 节点上，从而导致无法通过 DOM 节点反查到对应的 node 节点的问题。（Fragment 组件、或者是设置了 inherit attr 属性为 false 的组件无法挂载额外的属性到实际的 DOM 节点）
- * 
+ *
  */
 
 import { ref } from 'vue'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { NODE_TAG } from '../../../common'
 import { canvasState, getConfigure, scrollToNode } from '../container'
-import { initialHoverState, clearHover as commonClearHover, getWindowRect, hoverNodeById as commonHoverNodeById, selectNodeById as commonSelectNodeById } from './common'
+import {
+  initialHoverState,
+  clearHover as commonClearHover,
+  getWindowRect,
+  hoverNodeById as commonHoverNodeById,
+  selectNodeById as commonSelectNodeById
+} from './common'
 import { getElementRectByInstance } from './vue-rect'
-
 
 export const getClosedVueElement = (element) => {
   if (!element) {
@@ -63,7 +68,7 @@ const getRectAndNode = (e) => {
   // 拿到最近的带有 __vueComponent 的vue 实例
   let instance = getClosedVueElement(e.target)
 
-  const res = {
+  let res = {
     ...initialHoverState,
     rect: { ...initialHoverState.rect }
   }
@@ -79,11 +84,11 @@ const getRectAndNode = (e) => {
   }
 
   let uid = instance?.props?.schema?.id
-  
+
   if (!uid) {
     let closedVueEle = instance
 
-    while(closedVueEle && !closedVueEle?.props?.schema?.id) {
+    while (closedVueEle && !closedVueEle?.props?.schema?.id) {
       closedVueEle = closedVueEle.parent
     }
 
@@ -93,7 +98,6 @@ const getRectAndNode = (e) => {
 
     instance = closedVueEle
     uid = closedVueEle.props.schema.id
-    
   }
 
   const rect = getElementRectByInstance(instance)
@@ -164,7 +168,6 @@ const selectNodeById = (id, type) => {
 }
 
 export const useHoverNode = () => {
-
   return {
     curHoverState,
     updateHoverNode,
@@ -173,11 +176,22 @@ export const useHoverNode = () => {
   }
 }
 
+const updateSelectedRect = () => {
+  setTimeout(() => {
+    const res = getRectAndNode({ target: selectState.value.element })
+
+    if (res) {
+      selectState.value = res
+    }
+  }, 0)
+}
+
 export const useSelectNode = () => {
   return {
     selectState,
     updateSelectedNode,
     clearSelect,
-    selectNodeById
+    selectNodeById,
+    updateSelectedRect
   }
 }

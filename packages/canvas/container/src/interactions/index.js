@@ -9,11 +9,10 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-
+import { ref } from 'vue'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { useHoverNode as useVueHoverNode, useSelectNode as useVueSelectNode } from './vue-interactions'
 import { useHoverNode as useDefaultHoverNode, useSelectNode as useDefaultSelectNode } from './default-interactions'
-
 
 const interactionHooksMap = {
   vue: {
@@ -39,17 +38,17 @@ const getInteractionFn = () => {
 const interactionsFn = ref(null)
 
 export const useHoverNode = () => {
-  if (!hoverNodeFn.value) {
+  if (!interactionsFn.value) {
     interactionsFn.value = getInteractionFn()
   }
 
-  return hoverNodeFn.value.useHoverNode()
+  return interactionsFn.value.useHoverNode()
 }
 
 export const useSelectNode = () => {
-  if (!hoverNodeFn.value) {
+  if (!interactionsFn.value) {
     interactionsFn.value = getInteractionFn()
   }
 
-  return hoverNodeFn.value.useSelectNode()
+  return interactionsFn.value.useSelectNode()
 }

@@ -114,14 +114,12 @@ export const lineState = reactive({
   ...initialLineState
 })
 
-const { clearHover, hoverNodeById } = useHoverNode()
-const { clearSelect: clearSelectNew, selectNodeById } = useSelectNode()
-
 // TODO: 需要优化
 export const clearSelect = () => {
   canvasState.current = null
   canvasState.parent = null
   // Object.assign(selectState, initialRectState)
+  const { clearSelect: clearSelectNew } = useSelectNode()
   clearSelectNew()
   // 临时借用 remote 事件出发 currentSchema 更新
   canvasState?.emit?.('remove')
@@ -167,6 +165,7 @@ export const dragStart = (
   // 如果element存在表示在iframe内部拖拽
   dragState.element = element
   dragState.offset = { offsetX, offsetY, horizontal, vertical, width, height, x, y }
+  const { clearHover } = useHoverNode()
   clearHover()
 }
 
@@ -322,6 +321,19 @@ export const removeNodeById = (id) => {
   canvasState.emit('remove')
 }
 
+export const getConfigure = (targetName) => {
+  const material = getController().getMaterial(targetName)
+
+  // 这里如果是区块插槽，则返回标识为容器的对象
+  if (targetName === 'Template') {
+    return {
+      isContainer: true
+    }
+  }
+
+  return material?.content?.configure || material.configure || {}
+}
+
 export const querySelectById = (id) => {
   let selector = `[${NODE_UID}="${id}"]`
   const doc = canvasState.iframe.contentDocument
@@ -376,57 +388,18 @@ export const scrollToNode = (element) => {
 
   return nextTick()
 }
-const setSelectRect = (element, hoverRect) => {
-  let calcElement = element
-
-  if (!element && !instance) {
-    calcElement = getDocument().body
-  }
-
-  let left = 0
-  let top = 0
-  let width = 0
-  let height = 0
-
-  if (calcElement) {
-    const { left: l, top: t, width: w, height: h } = getRect(calcElement)
-
-    left = l
-    top = t
-    width = w
-    height = h
-  }
-
-  if (hoverRect) {
-    const { left: l, top: t, width: w, height: h } = hoverRect
-    left = l
-    top = t
-    width = w
-    height = h
-  }
-
-  const componentName = getCurrent().schema?.componentName || ''
-
-  clearHover()
-
-  // Object.assign(selectState, {
-  //   width,
-  //   height,
-  //   top,
-  //   left,
-  //   componentName,
-  //   doc: getDocument(),
-  //   schema: getCurrent().schema
-  // })
-}
 
 // TODO:
 export const updateRect = (id) => {
   id = (typeof id === 'string' && id) || getCurrent().schema?.id
+  const { clearHover } = useHoverNode()
+  const { updateSelectedRect } = useSelectNode()
   clearHover()
 
   if (id) {
-    setTimeout(() => setSelectRect(querySelectById(id)))
+    // TODO:
+    // setTimeout(() => setSelectRect(querySelectById(id)))
+    updateSelectedRect()
   } else {
     // 如果选中的是body，不清除选中框
     // if (!selectState.componentName && selectState.width > 0) {
@@ -434,19 +407,6 @@ export const updateRect = (id) => {
     // }
     clearSelect()
   }
-}
-
-export const getConfigure = (targetName) => {
-  const material = getController().getMaterial(targetName)
-
-  // 这里如果是区块插槽，则返回标识为容器的对象
-  if (targetName === 'Template') {
-    return {
-      isContainer: true
-    }
-  }
-
-  return material?.content?.configure || material.configure || {}
 }
 
 /**
@@ -532,6 +492,8 @@ const isBodyEl = (element) => element.nodeName === 'BODY'
 
 const updateLineState = (element, data) => {
   if (!element) {
+    const { clearHover } = useHoverNode()
+
     return clearHover()
   }
 
@@ -661,7 +623,7 @@ const setDragPosition = ({ clientX, x, clientY, y, offsetBottom, offsetTop }) =>
   dragState.position = { left, top }
 }
 
-export const dragMove = (event, isHover) => {
+export const dragMove = (event) => {
   if (!dragState.draging && dragState.keydown && new Date().getTime() - dragState.timer < 200) {
     return
   }
@@ -688,13 +650,14 @@ export const dragMove = (event, isHover) => {
 // type == clickTree, 为点击大纲; type == loop-id=xxx ,为点击循环数据
 /**
  * @deprecated 后续废弃，改为使用 selectNodeById
- * @param {*} id 
- * @param {*} hoverRect 
- * @param {*} type 
- * @returns 
+ * @param {*} id
+ * @param {*} hoverRect
+ * @param {*} type
+ * @returns
  */
 export const selectNode = async (id, type) => {
-  selectNodeById(id)
+  const { selectNodeById } = useSelectNode()
+  selectNodeById(id, type)
   // if (type && type.indexOf('loop-id') > -1) {
   //   const loopId = type.split('=')[1]
   //   canvasState.loopId = loopId
@@ -723,10 +686,11 @@ export const selectNode = async (id, type) => {
 
 /**
  * @deprecated 后续废弃，改为使用 hoverNodeById
- * @param {*} id 
- * @param {*} data 
+ * @param {*} id
+ * @param {*} data
  */
 export const hoverNode = (id) => {
+  const { hoverNodeById } = useHoverNode()
   hoverNodeById(id)
 }
 
@@ -751,6 +715,8 @@ export const insertNode = (node, position = POSITION.IN, select = true) => {
         break
     }
   }
+
+  const { selectNodeById } = useSelectNode()
 
   select && setTimeout(() => selectNodeById(node.data.id))
 
@@ -866,9 +832,17 @@ export const canvasApi = {
   getRenderer,
   clearSelect,
   selectNode,
-  selectNodeById,
+  selectNodeById: (...args) => {
+    const { selectNodeById } = useSelectNode()
+
+    return selectNodeById(...args)
+  },
   hoverNode,
-  hoverNodeById,
+  hoverNodeById: (...args) => {
+    const { hoverNodeById } = useHoverNode()
+
+    return hoverNodeById(...args)
+  },
   insertNode,
   removeNode,
   addComponent,

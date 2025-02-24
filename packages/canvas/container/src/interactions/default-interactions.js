@@ -10,18 +10,26 @@
  *
  */
 
-
 /**
  * 默认的节点 hover、select 逻辑， HTML 画布通用，主要包括以下几个步骤：
  * 1. 通过鼠标事件获取到当前点击节点树最近的带有 data-uid 的节点，通过 data-uid 获取到对应的 node 节点
  * 2. 计算节点的 rect 信息，更新到 hoverState 中。
- * 
+ *
  * 缺陷：
  * 1. 如果画布无法挂载 data-uid 属性到 DOM 节点上，那么该节点无法反查到对应的 node 节点，导致 hover 、选中等逻辑无法生效。
  */
+import { ref } from 'vue'
+import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { NODE_TAG, NODE_UID } from '../../../common'
-import { getConfigure, scrollToNode } from '../container'
-import { initialHoverState, clearHover as commonClearHover, getClosedElementHasUid, getWindowRect, hoverNodeById as commonHoverNodeById, selectNodeById as commonSelectNodeById } from './common'
+import { getConfigure, scrollToNode, canvasState } from '../container'
+import {
+  initialHoverState,
+  clearHover as commonClearHover,
+  getClosedElementHasUid,
+  getWindowRect,
+  hoverNodeById as commonHoverNodeById,
+  selectNodeById as commonSelectNodeById
+} from './common'
 
 const curHoverState = ref({
   ...initialHoverState,
@@ -37,7 +45,7 @@ const clearHover = () => commonClearHover(curHoverState)
 
 const getRectAndNode = (e) => {
   const element = getClosedElementHasUid(e.target)
-  const res = {
+  let res = {
     ...initialHoverState,
     rect: { ...initialHoverState.rect }
   }
@@ -94,12 +102,18 @@ const hoverNodeById = (id) => {
 }
 
 export const useHoverNode = () => {
-
   return {
     curHoverState,
     updateHoverNode,
     clearHover,
     hoverNodeById
+  }
+}
+
+const clearSelect = () => {
+  selectState.value = {
+    ...initialHoverState,
+    rect: { ...initialHoverState.rect }
   }
 }
 
@@ -117,12 +131,12 @@ const updateSelectedNode = async (e, type) => {
   await scrollToNode(res.element)
 
   const { parent } = useCanvas().getNodeWithParentById(res.node?.id) || {}
-  
+
   canvasState.current = res.node
   canvasState.parent = parent
   selectState.value = res
 
-// TODO: 改成事件通知
+  // TODO: 改成事件通知
   canvasState.emit('selected', res.node, parent, type, res.node?.id)
 }
 
@@ -130,12 +144,22 @@ const selectNodeById = (id, type) => {
   commonSelectNodeById(updateSelectedNode, id, type)
 }
 
-export const useSelectNode = () => {
+const updateSelectedRect = () => {
+  setTimeout(() => {
+    const res = getRectAndNode({ target: selectState.value.element })
 
+    if (res) {
+      selectState.value = res
+    }
+  }, 0)
+}
+
+export const useSelectNode = () => {
   return {
     selectState,
     updateSelectedNode,
     clearSelect,
-    selectNodeById
+    selectNodeById,
+    updateSelectedRect
   }
 }

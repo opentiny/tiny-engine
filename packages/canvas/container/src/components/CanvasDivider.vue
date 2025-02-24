@@ -150,7 +150,7 @@ export default {
     watch(
       () => props.selectState,
       (selectState) => {
-        const { width, height, left, top, componentName } = selectState.rect
+        const { width, height, left, top } = selectState.rect
         const componentName = selectState.componentName
 
         if (!LEGAL_DIVIDER_COMPONENT.includes(componentName)) {

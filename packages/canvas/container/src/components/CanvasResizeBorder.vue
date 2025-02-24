@@ -150,7 +150,7 @@ export default {
     watch(
       () => selectState.value,
       () => {
-        const { top, left, width, height, componentName } = selectState.value.rect
+        const { top, left, width, height } = selectState.value.rect
         const componentName = selectState.value.componentName
         const { parent, schema } = getCurrent()
 
