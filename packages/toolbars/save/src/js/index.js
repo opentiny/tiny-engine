@@ -66,7 +66,7 @@ export const saveCommon = (value) => {
   const { pageSettingState, isTemporaryPage } = usePage()
   const { isBlock, canvasApi, pageState, resetBlockCanvasState, resetPageCanvasState } = useCanvas()
   const pageSchema = JSON.parse(value)
-  const { selectNode } = canvasApi.value
+  const { clearSelect } = canvasApi.value
 
   if (isBlock()) {
     resetBlockCanvasState({ ...pageState, pageSchema })
@@ -89,7 +89,8 @@ export const saveCommon = (value) => {
   }
 
   // 选中画布中的页面，关闭插件、属性配置
-  selectNode(null)
+  // selectNode(null)
+  clearSelect()
 
   return isBlock() ? saveBlock(pageSchema) : savePage(pageSchema)
 }

@@ -131,7 +131,6 @@ import {
   canvasState,
   getCurrent,
   removeNodeById,
-  selectNode,
   updateRect,
   copyNode,
   getRenderer,
@@ -142,7 +141,7 @@ import {
 import { useLayout, useMaterial, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { Popover } from '@opentiny/vue'
 import shortCutPopover from './shortCutPopover.vue'
-import { useHoverNode } from '../interactions'
+import { useHoverNode, useSelectNode } from '../interactions'
 
 // 工具操作条高度
 const OPTION_BAR_HEIGHT = 24
@@ -224,7 +223,8 @@ export default {
 
     const selectParent = () => {
       const parentId = getCurrent().parent?.id
-      parentId && selectNode(parentId)
+      const { selectNodeById } = useSelectNode()
+      parentId && selectNodeById(parentId)
     }
 
     const copy = () => {

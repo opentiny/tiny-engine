@@ -14,7 +14,6 @@ import { useHistory, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import {
   getCurrent,
   insertNode,
-  selectNode,
   POSITION,
   removeNodeById,
   allowInsert,
@@ -22,7 +21,7 @@ import {
 } from './container'
 import { copyObject } from '../../common'
 import { getClipboardSchema, setClipboardSchema } from './utils'
-import { useHoverNode } from './interactions'
+import { useHoverNode, useSelectNode } from './interactions'
 
 const KEY_Y = 89
 const KEY_Z = 90
@@ -33,19 +32,23 @@ const KEY_DOWN = 40
 const KEY_DEL = 46
 
 function handlerLeft({ parent }) {
-  selectNode(parent?.id)
+  const { selectNodeById } = useSelectNode()
+  selectNodeById(parent?.id)
 }
 function handlerRight({ schema }) {
   const id = schema.children?.[0]?.id
-  id && selectNode(id)
+  const { selectNodeById } = useSelectNode()
+  id && selectNodeById(id)
 }
 function handlerUp({ index, parent }) {
   const id = (parent.children[index - 1] || parent)?.id
-  id && selectNode(id)
+  const { selectNodeById } = useSelectNode()
+  id && selectNodeById(id)
 }
 function handlerDown({ index, parent }) {
   const id = parent.children[index + 1]?.id
-  id && selectNode(id)
+  const { selectNodeById } = useSelectNode()
+  id && selectNodeById(id)
 }
 function handlerDelete({ schema }) {
   const { curHoverState, clearHover } = useHoverNode()

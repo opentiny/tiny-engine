@@ -49,10 +49,10 @@ import {
   removeNodeById,
   updateRect,
   dragStart,
-  selectNode,
+  // selectNode,
   initCanvas,
   clearLineState,
-  querySelectById,
+  // querySelectById,
   canvasApi
 } from './container'
 import { useHoverNode, useSelectNode } from './interactions'
@@ -74,7 +74,10 @@ export default {
     let showSettingModel = ref(false)
     let target = ref(null)
     const srcAttrName = computed(() => (props.canvasSrc ? 'src' : 'srcdoc'))
-    const { curHoverState, updateHoverNode } = useHoverNode()
+    const {
+      // curHoverState,
+      updateHoverNode
+    } = useHoverNode()
     const { selectState, updateSelectedNode } = useSelectNode()
 
     const handleNodeInteractions = async (event) => {
@@ -97,7 +100,7 @@ export default {
         // } else {
         // }
 
-        node = await selectNode(node.id, curHoverState.value.rect)
+        // node = await selectNode(node.id, curHoverState.value.rect)
 
         // if (!currentElement?.contains(element) || event.button === 0) {
         //   // const loopId = element.getAttribute(NODE_LOOP)

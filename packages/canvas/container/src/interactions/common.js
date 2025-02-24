@@ -1,5 +1,5 @@
 import { NODE_UID } from '../../../common'
-import { getWindow, querySelectById } from '../container'
+import { getWindow, querySelectById, scrollToNode } from '../container'
 
 export const initialHoverState = {
   rect: {
@@ -61,5 +61,13 @@ export const hoverNodeById = (id, updateHoverNode) => {
 
   if (element) {
     updateHoverNode({ target: element })
+  }
+}
+
+export const selectNodeById = async (updateSelectedNode, id, type) => {
+  const element = querySelectById(id)
+
+  if (element) { 
+    updateSelectedNode({ target: element }, type)
   }
 }

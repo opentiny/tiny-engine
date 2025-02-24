@@ -115,7 +115,7 @@ export const lineState = reactive({
 })
 
 const { clearHover, hoverNodeById } = useHoverNode()
-const { clearSelect: clearSelectNew } = useSelectNode()
+const { clearSelect: clearSelectNew, selectNodeById } = useSelectNode()
 
 // TODO: 需要优化
 export const clearSelect = () => {
@@ -686,31 +686,39 @@ export const dragMove = (event, isHover) => {
 }
 
 // type == clickTree, 为点击大纲; type == loop-id=xxx ,为点击循环数据
-export const selectNode = async (id, hoverRect, type) => {
-  if (type && type.indexOf('loop-id') > -1) {
-    const loopId = type.split('=')[1]
-    canvasState.loopId = loopId
-  }
+/**
+ * @deprecated 后续废弃，改为使用 selectNodeById
+ * @param {*} id 
+ * @param {*} hoverRect 
+ * @param {*} type 
+ * @returns 
+ */
+export const selectNode = async (id, type) => {
+  selectNodeById(id)
+  // if (type && type.indexOf('loop-id') > -1) {
+  //   const loopId = type.split('=')[1]
+  //   canvasState.loopId = loopId
+  // }
 
-  const { node, parent } = useCanvas().getNodeWithParentById(id) || {}
+  // const { node, parent } = useCanvas().getNodeWithParentById(id) || {}
 
-  let element = querySelectById(id, type)
+  // let element = querySelectById(id)
 
-  if (element && node) {
-    const { rootSelector } = getConfigure(node.componentName)
-    element = rootSelector ? element.querySelector(rootSelector) : element
-  }
+  // if (element && node) {
+  //   const { rootSelector } = getConfigure(node.componentName)
+  //   element = rootSelector ? element.querySelector(rootSelector) : element
+  // }
 
-  canvasState.current = node
-  canvasState.parent = parent
+  // canvasState.current = node
+  // canvasState.parent = parent
 
-  await scrollToNode(element)
+  // await scrollToNode(element)
 
-  // setSelectRect(element, hoverRect)
-  // TODO: 改成事件通知
-  canvasState.emit('selected', node, parent, type, id)
+  // // setSelectRect(element, hoverRect)
+  // // TODO: 改成事件通知
+  // canvasState.emit('selected', node, parent, type, id)
 
-  return node
+  // return node
 }
 
 /**
@@ -744,7 +752,7 @@ export const insertNode = (node, position = POSITION.IN, select = true) => {
     }
   }
 
-  select && setTimeout(() => selectNode(node.data.id))
+  select && setTimeout(() => selectNodeById(node.data.id))
 
   getController().addHistory()
 }
@@ -858,6 +866,7 @@ export const canvasApi = {
   getRenderer,
   clearSelect,
   selectNode,
+  selectNodeById,
   hoverNode,
   hoverNodeById,
   insertNode,

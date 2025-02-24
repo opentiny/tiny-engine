@@ -192,8 +192,8 @@ export default {
         return
       }
 
-      const { selectNode } = useCanvas().canvasApi.value
-      selectNode(row?.id, null, 'clickTree')
+      const { selectNodeById } = useCanvas().canvasApi.value
+      selectNodeById(row?.id, 'clickTree')
     }
 
     const gridRef = ref(null)

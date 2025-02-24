@@ -20,8 +20,8 @@
  * 1. 如果画布无法挂载 data-uid 属性到 DOM 节点上，那么该节点无法反查到对应的 node 节点，导致 hover 、选中等逻辑无法生效。
  */
 import { NODE_TAG, NODE_UID } from '../../../common'
-import { getConfigure } from '../container'
-import { initialHoverState, clearHover as commonClearHover, getClosedElementHasUid, getWindowRect, hoverNodeById as commonHoverNodeById } from './common'
+import { getConfigure, scrollToNode } from '../container'
+import { initialHoverState, clearHover as commonClearHover, getClosedElementHasUid, getWindowRect, hoverNodeById as commonHoverNodeById, selectNodeById as commonSelectNodeById } from './common'
 
 const curHoverState = ref({
   ...initialHoverState,
@@ -103,15 +103,31 @@ export const useHoverNode = () => {
   }
 }
 
-const updateSelectedNode = (e) => {
+const updateSelectedNode = async (e, type) => {
   const res = getRectAndNode(e)
 
   if (!res) {
     clearSelect()
+    canvasState.current = null
+    canvasState.parent = null
+
     return
   }
 
+  await scrollToNode(res.element)
+
+  const { parent } = useCanvas().getNodeWithParentById(res.node?.id) || {}
+  
+  canvasState.current = res.node
+  canvasState.parent = parent
   selectState.value = res
+
+// TODO: 改成事件通知
+  canvasState.emit('selected', res.node, parent, type, res.node?.id)
+}
+
+const selectNodeById = (id, type) => {
+  commonSelectNodeById(updateSelectedNode, id, type)
 }
 
 export const useSelectNode = () => {
@@ -119,6 +135,7 @@ export const useSelectNode = () => {
   return {
     selectState,
     updateSelectedNode,
-    clearSelect
+    clearSelect,
+    selectNodeById
   }
 }

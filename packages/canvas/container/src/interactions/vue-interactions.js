@@ -24,8 +24,8 @@
 import { ref } from 'vue'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { NODE_TAG } from '../../../common'
-import { getConfigure } from '../container'
-import { initialHoverState, clearHover as commonClearHover, getWindowRect, hoverNodeById as commonHoverNodeById } from './common'
+import { canvasState, getConfigure, scrollToNode } from '../container'
+import { initialHoverState, clearHover as commonClearHover, getWindowRect, hoverNodeById as commonHoverNodeById, selectNodeById as commonSelectNodeById } from './common'
 import { getElementRectByInstance } from './vue-rect'
 
 
@@ -138,15 +138,29 @@ const hoverNodeById = (id) => {
   commonHoverNodeById(id, updateHoverNode)
 }
 
-const updateSelectedNode = (e) => {
+const updateSelectedNode = async (e, type) => {
   const res = getRectAndNode(e)
 
   if (!res) {
     clearSelect()
+    canvasState.current = null
+    canvasState.parent = null
     return
   }
 
+  await scrollToNode(res.element)
+
+  const { parent } = useCanvas().getNodeWithParentById(res.node?.id) || {}
+
+  canvasState.current = res.node
+  canvasState.parent = parent
   selectState.value = res
+
+  canvasState.emit('selected', res.node, parent, type, res.node.id)
+}
+
+const selectNodeById = (id, type) => {
+  commonSelectNodeById(updateSelectedNode, id, type)
 }
 
 export const useHoverNode = () => {
@@ -163,6 +177,7 @@ export const useSelectNode = () => {
   return {
     selectState,
     updateSelectedNode,
-    clearSelect
+    clearSelect,
+    selectNodeById
   }
 }
