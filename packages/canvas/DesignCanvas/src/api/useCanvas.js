@@ -475,7 +475,7 @@ const operationTypeMap = {
     changedChildren.forEach((childItem) => {
       // 新增
       if (!originChildrenSet.has(childItem.id)) {
-        let newChildIndex = newChildren.findIndex((id) => id === childItem.id)
+        const newChildIndex = newChildren.findIndex(({ id }) => id === childItem.id)
         let position = 'after'
         let referTargetNodeId = null
 
