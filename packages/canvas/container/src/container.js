@@ -17,7 +17,6 @@ import {
   copyObject,
   NODE_UID,
   NODE_TAG,
-  NODE_LOOP,
   NODE_INACTIVE_UID
 } from '../../common'
 import { useCanvas, useLayout, useTranslate, useMaterial } from '@opentiny/tiny-engine-meta-register'
@@ -104,26 +103,10 @@ const initialLineState = {
   doc: null
 }
 
-// 选中画布中元素时的状态
-// export const selectState = reactive({
-//   ...initialRectState
-// })
-
 // 拖拽时的位置状态
 export const lineState = reactive({
   ...initialLineState
 })
-
-// TODO: 需要优化
-export const clearSelect = () => {
-  canvasState.current = null
-  canvasState.parent = null
-  // Object.assign(selectState, initialRectState)
-  const { clearSelect: clearSelectNew } = useSelectNode()
-  clearSelectNew()
-  // 临时借用 remote 事件出发 currentSchema 更新
-  canvasState?.emit?.('remove')
-}
 
 const smoothScroll = {
   timmer: null,
@@ -316,6 +299,7 @@ export const removeNodeById = (id) => {
   }
 
   removeNode(id)
+  const { clearSelect } = useSelectNode()
   clearSelect()
   getController().addHistory()
   canvasState.emit('remove')
@@ -338,20 +322,17 @@ export const querySelectById = (id) => {
   let selector = `[${NODE_UID}="${id}"]`
   const doc = canvasState.iframe.contentDocument
   let element = doc.querySelector(selector)
-  const loopId = element?.getAttribute('loop-id')
   const node = useCanvas().getNodeById(id)
   const { rootSelector } = getConfigure(node?.componentName)
 
   // 根据 id 无法查找到 element，尝试使用 rootSelector 查找
   if (!element && rootSelector) {
     // TODO: 拖入了多个相同组件的情况下，如何拿到正确的 element
-    element = doc.querySelector(rootSelector)
-  }
-  // TODO: rootSelector + loopId 的处理逻辑
-  if (element && loopId) {
-    const currentLoopId = getCurrent().loopId
-    selector = `[${NODE_UID}="${id}"][${NODE_LOOP}="${currentLoopId}"]`
-    element = doc.querySelector(selector)
+    const newElement = doc.querySelector(rootSelector)
+
+    if (newElement) {
+      element = newElement
+    }
   }
 
   return element
@@ -390,23 +371,13 @@ export const scrollToNode = (element) => {
 }
 
 // TODO:
-export const updateRect = (id) => {
-  id = (typeof id === 'string' && id) || getCurrent().schema?.id
-  const { clearHover } = useHoverNode()
+export const updateRect = () => {
+  // const { clearHover } = useHoverNode()
   const { updateSelectedRect } = useSelectNode()
-  clearHover()
+  // TODO: 确认在什么场景下需要 clearHover
+  // clearHover()
 
-  if (id) {
-    // TODO:
-    // setTimeout(() => setSelectRect(querySelectById(id)))
-    updateSelectedRect()
-  } else {
-    // 如果选中的是body，不清除选中框
-    // if (!selectState.componentName && selectState.width > 0) {
-    //   return
-    // }
-    clearSelect()
-  }
+  updateSelectedRect()
 }
 
 /**
@@ -657,31 +628,8 @@ export const dragMove = (event) => {
  */
 export const selectNode = async (id, type) => {
   const { selectNodeById } = useSelectNode()
+
   selectNodeById(id, type)
-  // if (type && type.indexOf('loop-id') > -1) {
-  //   const loopId = type.split('=')[1]
-  //   canvasState.loopId = loopId
-  // }
-
-  // const { node, parent } = useCanvas().getNodeWithParentById(id) || {}
-
-  // let element = querySelectById(id)
-
-  // if (element && node) {
-  //   const { rootSelector } = getConfigure(node.componentName)
-  //   element = rootSelector ? element.querySelector(rootSelector) : element
-  // }
-
-  // canvasState.current = node
-  // canvasState.parent = parent
-
-  // await scrollToNode(element)
-
-  // // setSelectRect(element, hoverRect)
-  // // TODO: 改成事件通知
-  // canvasState.emit('selected', node, parent, type, id)
-
-  // return node
 }
 
 /**
@@ -830,7 +778,11 @@ export const canvasApi = {
   dragMove,
   setLocales,
   getRenderer,
-  clearSelect,
+  clearSelect: (...args) => {
+    const { clearSelect } = useSelectNode()
+
+    return clearSelect(...args)
+  },
   selectNode,
   selectNodeById: (...args) => {
     const { selectNodeById } = useSelectNode()

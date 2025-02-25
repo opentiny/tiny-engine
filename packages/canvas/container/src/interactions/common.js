@@ -1,12 +1,12 @@
-import { NODE_UID } from '../../../common'
-import { getWindow, querySelectById, scrollToNode } from '../container'
+import { NODE_INACTIVE_UID, NODE_UID } from '../../../common'
+import { getWindow, querySelectById } from '../container'
 
 export const initialHoverState = {
   rect: {
     top: 0,
     height: 0,
     width: 0,
-    left: 0,
+    left: 0
   },
   node: null,
   configure: null,
@@ -22,6 +22,11 @@ export const clearHover = (hoverState) => {
 }
 
 export const getClosedElementHasUid = (element) => {
+  // QUESTION: 为什么要判断 node Type?
+  if (!element || element.nodeType !== 1) {
+    return undefined
+  }
+
   // 如果当前元素是body
   if (element === element.ownerDocument.body) {
     return element
@@ -32,11 +37,7 @@ export const getClosedElementHasUid = (element) => {
     return element.ownerDocument.body
   }
 
-  if (!element || element.nodeType !== 1) {
-    return undefined
-  }
-
-  if (element.getAttribute(NODE_UID)) {
+  if (element.getAttribute(NODE_UID) || element.getAttribute(NODE_INACTIVE_UID)) {
     return element
   } else if (element.parentElement) {
     return getClosedElementHasUid(element.parentElement)
@@ -67,7 +68,7 @@ export const hoverNodeById = (id, updateHoverNode) => {
 export const selectNodeById = async (updateSelectedNode, id, type) => {
   const element = querySelectById(id)
 
-  if (element) { 
+  if (element) {
     updateSelectedNode({ target: element }, type)
   }
 }

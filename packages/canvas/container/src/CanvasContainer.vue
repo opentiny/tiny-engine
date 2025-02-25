@@ -49,10 +49,8 @@ import {
   removeNodeById,
   updateRect,
   dragStart,
-  // selectNode,
   initCanvas,
   clearLineState,
-  // querySelectById,
   canvasApi
 } from './container'
 import { useHoverNode, useSelectNode } from './interactions'
@@ -74,38 +72,17 @@ export default {
     let showSettingModel = ref(false)
     let target = ref(null)
     const srcAttrName = computed(() => (props.canvasSrc ? 'src' : 'srcdoc'))
-    const {
-      // curHoverState,
-      updateHoverNode
-    } = useHoverNode()
+    const { updateHoverNode } = useHoverNode()
     const { selectState, updateSelectedNode } = useSelectNode()
 
     const handleNodeInteractions = async (event) => {
       const { clientX, clientY } = event
-      // const element = getElement(event.target)
       closeMenu()
       // 更新选中的节点
       updateSelectedNode(event)
-      // let node = getCurrent().schema
-      let node = selectState.value.node
+      const node = selectState.value.node
 
       if (node) {
-        // const currentElement = querySelectById(getCurrent().schema?.id)
-        // const currentElement = element
-
-        // const loopId = element[NODE_LOOP]
-
-        // if (loopId) {
-        //   node = await selectNode(element.getAttribute(NODE_UID), element, `loop-id=${loopId}`)
-        // } else {
-        // }
-
-        // node = await selectNode(node.id, curHoverState.value.rect)
-
-        // if (!currentElement?.contains(element) || event.button === 0) {
-        //   // const loopId = element.getAttribute(NODE_LOOP)
-        // }
-        // const element = querySelectById(node.id)
         const element = selectState.value.element
 
         if (event.button === 0 && element !== element?.ownerDocument?.body) {
@@ -222,12 +199,6 @@ export default {
           ev.preventDefault()
           onMouseUp(ev)
         })
-
-        // win.addEventListener('mousemove', (ev) => {
-        //   handleCanvasEvent(() => {
-        //     dragMove(ev, true)
-        //   })
-        // })
 
         win.addEventListener('mouseover', (ev) => {
           handleCanvasEvent(() => {

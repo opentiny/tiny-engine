@@ -498,14 +498,21 @@ export default {
     })
 
     const { curHoverState } = useHoverNode()
-    const handleSelectHoverNode = async () => {
+    const handleSelectHoverNode = () => {
       const node = curHoverState.value.node
+      const element = curHoverState.value.element
 
       if (!node) {
         return
       }
 
-      await selectNode(node.id, curHoverState.value.rect)
+      const { selectNodeById, updateSelectedNode } = useSelectNode()
+
+      if (element) {
+        updateSelectedNode({ target: element })
+      } else {
+        selectNodeById(node.id)
+      }
     }
 
     return {

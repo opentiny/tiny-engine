@@ -23,8 +23,8 @@
 
 import { ref } from 'vue'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
-import { NODE_TAG } from '../../../common'
-import { canvasState, getConfigure, scrollToNode } from '../container'
+import { NODE_TAG, NODE_UID } from '../../../common'
+import { canvasState, getConfigure, scrollToNode, getDocument } from '../container'
 import {
   initialHoverState,
   clearHover as commonClearHover,
@@ -73,14 +73,12 @@ const getRectAndNode = (e) => {
     rect: { ...initialHoverState.rect }
   }
 
-  if (instance === e.target.ownerDocument.body) {
-    res.rect = { ...getWindowRect() }
+  const windowRect = getWindowRect()
+
+  if (instance === e.target.ownerDocument.body || !instance) {
+    res.rect = { ...windowRect }
 
     return res
-  }
-
-  if (!instance) {
-    return
   }
 
   let uid = instance?.props?.schema?.id
@@ -88,16 +86,25 @@ const getRectAndNode = (e) => {
   if (!uid) {
     let closedVueEle = instance
 
-    while (closedVueEle && !closedVueEle?.props?.schema?.id) {
+    // TODO: 同步 develop 主干分支后，确认是否仍然需要  closedVueEle?.props?.schema?.id （当前没有的话选不中表格插槽里面的组件）
+    while (
+      closedVueEle &&
+      !(
+        closedVueEle?.props?.schema?.id ||
+        closedVueEle?.attrs?.[NODE_UID] ||
+        closedVueEle?.attrs?.[NODE_TAG] === 'RouterView'
+      )
+    ) {
       closedVueEle = closedVueEle.parent
     }
 
     if (!closedVueEle) {
-      return
+      res.rect = { ...windowRect }
+      return res
     }
 
     instance = closedVueEle
-    uid = closedVueEle.props.schema.id
+    uid = closedVueEle.props.schema.id || closedVueEle?.attrs?.[NODE_UID]
   }
 
   const rect = getElementRectByInstance(instance)
@@ -136,6 +143,12 @@ const clearSelect = () => {
     ...initialHoverState,
     rect: { ...initialHoverState.rect }
   }
+
+  canvasState.current = null
+  canvasState.parent = null
+  // TODO: 改成事件通知
+  // 临时借用 remove 事触发 currentSchema 更新
+  canvasState?.emit?.('remove')
 }
 
 const hoverNodeById = (id) => {
@@ -143,24 +156,33 @@ const hoverNodeById = (id) => {
 }
 
 const updateSelectedNode = async (e, type) => {
-  const res = getRectAndNode(e)
+  let res = getRectAndNode(e)
 
   if (!res) {
     clearSelect()
-    canvasState.current = null
-    canvasState.parent = null
     return
+  }
+
+  if (!res.node && res.isInactiveNode) {
+    res = {
+      rect: { ...getWindowRect() },
+      node: null,
+      configure: null,
+      element: getDocument().body,
+      componentName: '',
+      isInactiveNode: false
+    }
   }
 
   await scrollToNode(res.element)
 
-  const { parent } = useCanvas().getNodeWithParentById(res.node?.id) || {}
+  const { parent, node } = useCanvas().getNodeWithParentById(res.node?.id) || {}
 
-  canvasState.current = res.node
+  canvasState.current = node
   canvasState.parent = parent
   selectState.value = res
 
-  canvasState.emit('selected', res.node, parent, type, res.node.id)
+  canvasState.emit('selected', node, parent, type, node?.id)
 }
 
 const selectNodeById = (id, type) => {
@@ -178,6 +200,11 @@ export const useHoverNode = () => {
 
 const updateSelectedRect = () => {
   setTimeout(() => {
+    // 当前没有选中的节点，或者当前选中的节点是 body, 不需要更新
+    if (!selectState.value.node) {
+      return
+    }
+
     const res = getRectAndNode({ target: selectState.value.element })
 
     if (res) {

@@ -20,8 +20,8 @@
  */
 import { ref } from 'vue'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
-import { NODE_TAG, NODE_UID } from '../../../common'
-import { getConfigure, scrollToNode, canvasState } from '../container'
+import { NODE_TAG, NODE_UID, NODE_INACTIVE_UID } from '../../../common'
+import { getConfigure, scrollToNode, canvasState, getDocument } from '../container'
 import {
   initialHoverState,
   clearHover as commonClearHover,
@@ -45,19 +45,24 @@ const clearHover = () => commonClearHover(curHoverState)
 
 const getRectAndNode = (e) => {
   const element = getClosedElementHasUid(e.target)
+
   let res = {
     ...initialHoverState,
     rect: { ...initialHoverState.rect }
   }
 
+  if (!element) {
+    return res
+  }
+
   // hover 整个页面
-  if (element === element.ownerDocument.body) {
+  if (element === element?.ownerDocument?.body) {
     res.rect = { ...getWindowRect() }
 
     return res
   }
 
-  const uid = element.getAttribute(NODE_UID)
+  const uid = element.getAttribute(NODE_UID) || element.getAttribute(NODE_INACTIVE_UID)
 
   if (!uid) {
     return
@@ -118,7 +123,7 @@ const clearSelect = () => {
 }
 
 const updateSelectedNode = async (e, type) => {
-  const res = getRectAndNode(e)
+  let res = getRectAndNode(e)
 
   if (!res) {
     clearSelect()
@@ -128,16 +133,28 @@ const updateSelectedNode = async (e, type) => {
     return
   }
 
+  // 选中的是非当前编辑页的节点，改为选中顶层节点
+  if (!res.node && res.isInactiveNode) {
+    res = {
+      rect: { ...getWindowRect() },
+      node: null,
+      configure: null,
+      element: getDocument().body,
+      componentName: '',
+      isInactiveNode: false
+    }
+  }
+
   await scrollToNode(res.element)
 
-  const { parent } = useCanvas().getNodeWithParentById(res.node?.id) || {}
+  const { parent, node } = useCanvas().getNodeWithParentById(res.node?.id) || {}
 
-  canvasState.current = res.node
+  canvasState.current = node
   canvasState.parent = parent
   selectState.value = res
 
   // TODO: 改成事件通知
-  canvasState.emit('selected', res.node, parent, type, res.node?.id)
+  canvasState.emit('selected', node, parent, type, node?.id)
 }
 
 const selectNodeById = (id, type) => {
