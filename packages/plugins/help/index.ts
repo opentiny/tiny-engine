@@ -10,7 +10,7 @@
  *
  */
 
-import metaData from './meta.js'
+import metaData from './meta'
 import { HelpService } from './src/composable'
 import './src/styles/vars.less'
 
