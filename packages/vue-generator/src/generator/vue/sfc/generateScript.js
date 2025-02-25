@@ -130,14 +130,13 @@ export const handleContextInjectHook = (schema, globalHooks) => {
 // 提取组件名称处理相关函数
 const componentNameUtils = {
   extractComponents(jsContent) {
-    // Match standalone components and those within namespaces
-    const tagMatches = jsContent.match(/<([A-Z][a-zA-Z0-9]*(\.[A-Z][a-zA-Z0-9]*)*)/g) || []
-    // Extract actual component names (handling both standalone and namespaced)
-    const componentNames = tagMatches.map((comp) => {
-      const withoutBracket = comp.slice(1)
-      // For namespaced components, take the part after the last dot
-      return withoutBracket.includes('.') ? withoutBracket : withoutBracket
-    })
+    if (!jsContent) return []
+    // 匹配以大写字母开头的组件标签，支持命名空间（如 Tiny.Button）
+    const tagMatches = jsContent.match(/<([A-Z][a-zA-Z0-9]*(?:\.[A-Z][a-zA-Z0-9]*)*)/g) || []
+    // 提取组件名称并去重
+    const componentNames = tagMatches
+      .map((tag) => tag.slice(1)) // 移除开头的 < 符号
+      .filter(Boolean) // 过滤掉空值
     return [...new Set(componentNames)]
   }
 }
