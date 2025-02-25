@@ -130,8 +130,15 @@ export const handleContextInjectHook = (schema, globalHooks) => {
 // 提取组件名称处理相关函数
 const componentNameUtils = {
   extractComponents(jsContent) {
-    const matches = jsContent.match(/<[A-Z][a-zA-Z0-9]*/g) || []
-    return [...new Set(matches.map((comp) => comp.slice(1)))]
+    // Match standalone components and those within namespaces
+    const tagMatches = jsContent.match(/<([A-Z][a-zA-Z0-9]*(\.[A-Z][a-zA-Z0-9]*)*)/g) || []
+    // Extract actual component names (handling both standalone and namespaced)
+    const componentNames = tagMatches.map((comp) => {
+      const withoutBracket = comp.slice(1)
+      // For namespaced components, take the part after the last dot
+      return withoutBracket.includes('.') ? withoutBracket : withoutBracket
+    })
+    return [...new Set(componentNames)]
   }
 }
 
@@ -139,29 +146,61 @@ export const handleJSXComponentsHook = (schema, hooks, config) => {
   const componentsMap = config?.componentsMap || []
 
   const processJSXContent = (jsContent) => {
-    const components = componentNameUtils.extractComponents(jsContent)
-    components.forEach((componentName) => {
-      const componentConfig = componentsMap.find((cfg) => cfg.componentName === componentName)
-      if (componentConfig) {
-        const { package: pkgName, destructuring, componentName, exportName } = componentConfig
-        hooks.addImport(pkgName, { destructuring, componentName, exportName })
-      }
-    })
+    if (!jsContent || typeof jsContent !== 'string') {
+      throw new Error('Invalid JSX content:', jsContent)
+    }
+
+    try {
+      const components = componentNameUtils.extractComponents(jsContent)
+      components.forEach((componentName) => {
+        if (!componentName) {
+          throw new Error('Invalid component name detected')
+        }
+
+        const componentConfig = componentsMap.find((cfg) => cfg.componentName === componentName)
+        if (componentConfig) {
+          const { package: pkgName, destructuring, componentName, exportName } = componentConfig
+          if (!pkgName || !componentName) {
+            throw new Error('Invalid component configuration:', componentConfig)
+          }
+          hooks.addImport(pkgName, { destructuring, componentName, exportName })
+        }
+      })
+    } catch (error) {
+      throw new Error('Error processing JSX content:', error, '\nContent:', jsContent)
+    }
   }
 
-  const traverseSchema = (obj) => {
-    if (!obj) return
+  const traverseSchema = (obj, depth = 0) => {
+    const MAX_DEPTH = 100 // 防止无限递归
 
-    Object.values(obj).forEach((value) => {
-      if (value?.type === 'JSFunction') {
-        processJSXContent(value.value)
-      } else if (typeof value === 'object') {
-        traverseSchema(value)
-      }
-    })
+    if (!obj || depth > MAX_DEPTH) {
+      throw new Error('Schema traversal stopped: ', depth > MAX_DEPTH ? 'Max depth exceeded' : 'Invalid object')
+    }
+
+    try {
+      Object.entries(obj).forEach(([key, value]) => {
+        if (!value) return
+
+        if (value.type === 'JSFunction') {
+          if (!value.value) {
+            throw new Error('Invalid JSFunction found:', { key, value })
+          }
+          processJSXContent(value.value)
+        } else if (typeof value === 'object') {
+          traverseSchema(value, depth + 1)
+        }
+      })
+    } catch (error) {
+      throw new Error('Error traversing schema:', error, '\nCurrent object:', obj)
+    }
   }
 
-  traverseSchema(schema)
+  try {
+    traverseSchema(schema)
+  } catch (error) {
+    throw new Error('Fatal error in handleJSXComponentsHook:', error)
+  }
 }
 
 export const addDefaultVueImport = (schema, globalHooks) => {
