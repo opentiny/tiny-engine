@@ -103,6 +103,17 @@ const handleClipboardCut = (event, schema) => {
 }
 
 const handleClipboardPaste = (node, schema, parent) => {
+  const multiSelectedNodes = JSON.parse(localStorage.getItem('multiSelectedNodes') || '[]')
+
+  if (multiSelectedNodes.length > 1) {
+    multiSelectedNodes.forEach(({ node, parent }) => {
+      if (allowInsert(getConfigure(schema.componentName), node)) {
+        insertNode({ parent, data: { ...node }, target: toRaw(schema) }, POSITION.RIGHT)
+      }
+    })
+    return
+  }
+
   if (node?.componentName && schema?.componentName && allowInsert(getConfigure(schema.componentName), node)) {
     insertNode({ parent, node: schema, data: { ...node } }, POSITION.IN)
   } else {
@@ -110,30 +121,33 @@ const handleClipboardPaste = (node, schema, parent) => {
   }
 }
 
-const handleMultiNodesPaste = (node, schema, parent) => {
-  if (multiSelectedStates.value.length === 1) {
-    handleClipboardPaste(node, schema, parent)
+const handleCopyEvent = (event, schema) => {
+  localStorage.setItem('multiSelectedNodes', JSON.stringify([]))
+
+  // 如果是多选状态，处理多个选中的节点
+  if (multiSelectedStates.value.length > 1) {
+    const selectedStates = multiSelectedStates.value.map(({ schema, parent }) => ({
+      node: copyObject(schema),
+      parent: toRaw(parent)
+    }))
+    localStorage.setItem('multiSelectedNodes', JSON.stringify(selectedStates))
     return
   }
 
-  const selectedStates = multiSelectedStates.value.map(({ schema, parent }) => {
-    return { node: copyObject(schema), schema: toRaw(schema), parent: toRaw(parent) }
-  })
-
-  selectedStates.forEach(({ node, schema, parent }) => {
-    handleClipboardPaste(node, schema, parent)
-  })
+  // 仅复制当前选中的单个节点
+  setClipboardSchema(event, copyObject(schema))
 }
 
 const handlerClipboardEvent = (event) => {
   const { schema, parent } = getCurrent()
   const node = getClipboardSchema(event)
+
   switch (event.type) {
     case 'copy':
-      setClipboardSchema(event, copyObject(schema))
+      handleCopyEvent(event, schema)
       break
     case 'paste':
-      handleMultiNodesPaste(node, schema, parent)
+      handleClipboardPaste(node, schema, parent)
       break
     case 'cut':
       handleClipboardCut(event, schema)

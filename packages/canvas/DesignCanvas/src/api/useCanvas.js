@@ -318,14 +318,14 @@ const operationTypeMap = {
     // 4. 根据position参数选择插入位置
     let index = parentNode.children.indexOf(referenceNode)
     if (index === -1 && referTargetNodeId) {
-      index = parentNode.children.length
+      index = 0
     }
 
     // 5. 插入节点的逻辑
     const childrenNode = toRaw(referenceNode)
     switch (position) {
       case 'before':
-        parentNode.children.unshift(newNodeData)
+        referTargetNodeId ? parentNode.children.splice(index, 0, newNodeData) : parentNode.children.unshift(newNodeData)
         break
       case 'out':
         if (childrenNode) {
@@ -337,7 +337,9 @@ const operationTypeMap = {
         parentNode.children.splice(index + 1, 0, newNodeData)
         break
       default:
-        parentNode.children.push(newNodeData)
+        referTargetNodeId
+          ? parentNode.children.splice(index + 1, 0, newNodeData)
+          : parentNode.children.push(newNodeData)
         break
     }
 
