@@ -127,6 +127,42 @@ export const handleContextInjectHook = (schema, globalHooks) => {
     value: `${injectLowcode}\n${injectLowcodeWrap}\n${wrapStoresStatement}`
   })
 }
+// 提取组件名称处理相关函数
+const componentNameUtils = {
+  extractComponents(jsContent) {
+    const matches = jsContent.match(/<[A-Z][a-zA-Z0-9]*/g) || []
+    return [...new Set(matches.map((comp) => comp.slice(1)))]
+  }
+}
+
+export const handleJSXComponentsHook = (schema, hooks, config) => {
+  const componentsMap = config?.componentsMap || []
+
+  const processJSXContent = (jsContent) => {
+    const components = componentNameUtils.extractComponents(jsContent)
+    components.forEach((componentName) => {
+      const componentConfig = componentsMap.find((cfg) => cfg.componentName === componentName)
+      if (componentConfig) {
+        const { package: pkgName, destructuring, componentName, exportName } = componentConfig
+        hooks.addImport(pkgName, { destructuring, componentName, exportName })
+      }
+    })
+  }
+
+  const traverseSchema = (obj) => {
+    if (!obj) return
+
+    Object.values(obj).forEach((value) => {
+      if (value?.type === 'JSFunction') {
+        processJSXContent(value.value)
+      } else if (typeof value === 'object') {
+        traverseSchema(value)
+      }
+    })
+  }
+
+  traverseSchema(schema)
+}
 
 export const addDefaultVueImport = (schema, globalHooks) => {
   globalHooks.addImport('vue', {

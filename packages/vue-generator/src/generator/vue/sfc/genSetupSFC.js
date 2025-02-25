@@ -37,7 +37,8 @@ import {
   defaultGenEmitsHook,
   defaultGenStateHook,
   defaultGenMethodHook,
-  defaultGenLifecycleHook
+  defaultGenLifecycleHook,
+  handleJSXComponentsHook
 } from './generateScript'
 
 const parseConfig = (config = {}) => {
@@ -242,7 +243,8 @@ export const genSFCWithDefaultPlugin = (schema, componentsMap, config = {}, next
     parsePropsHook,
     parseReactiveStateHook,
     handleProvideStatesContextHook,
-    handleContextInjectHook
+    handleContextInjectHook,
+    handleJSXComponentsHook
   ]
 
   const { GEN_IMPORT, GEN_PROPS, GEN_EMIT, GEN_STATE, GEN_METHOD, GEN_LIFECYCLE } = GEN_SCRIPT_HOOKS
