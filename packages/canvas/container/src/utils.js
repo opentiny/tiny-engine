@@ -30,7 +30,7 @@ export const setClipboardSchema = (event, nodeStr) => {
 
 const translateStringToSchema = (clipText) => {
   if (typeof clipText !== 'string' || !clipText.trim()) {
-    return null
+    return []
   }
 
   try {
@@ -39,7 +39,7 @@ const translateStringToSchema = (clipText) => {
     // 如果是数组且每个项都有 componentName
     if (Array.isArray(parsedData) && parsedData.every((item) => item && item.componentName)) {
       return parsedData
-    } else if (!Array.isArray(parsedData)) {
+    } else if (!Array.isArray(parsedData) && parsedData.componentName) {
       // 如果解析结果不是数组，将其转为数组
       return [parsedData]
     }

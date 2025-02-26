@@ -328,26 +328,18 @@ const getRect = (element) => {
   }
   return element.getBoundingClientRect()
 }
-const insertAfter = ({ parent, node, data, target }) => {
+const insertAfter = ({ parent, node, data }) => {
   if (!data.id) {
     data.id = utils.guid()
   }
 
-  const targetParentId = target ? target.id : parent.id
-
-  const operationParams = {
+  useCanvas().operateNode({
     type: 'insert',
-    parentId: targetParentId,
+    parentId: parent.id,
     newNodeData: data,
-    position: 'after'
-  }
-
-  // 如果没有 target 节点，传递 referTargetNodeId 参数
-  if (!target) {
-    operationParams.referTargetNodeId = node.id
-  }
-
-  useCanvas().operateNode(operationParams)
+    position: 'after',
+    referTargetNodeId: node.id
+  })
 }
 
 const insertBefore = ({ parent, node, data }) => {

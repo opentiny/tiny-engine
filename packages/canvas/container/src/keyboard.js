@@ -10,11 +10,11 @@
  *
  */
 
-import { getCurrent, insertNode, selectNode, POSITION, removeNodeById, allowInsert, getConfigure } from './container'
+import { ref } from 'vue'
 import { useHistory, useCanvas, getMetaApi, META_APP } from '@opentiny/tiny-engine-meta-register'
+import { getCurrent, insertNode, selectNode, POSITION, removeNodeById, allowInsert, getConfigure } from './container'
 import { copyObject } from '../../common'
 import { getClipboardSchema, setClipboardSchema } from './utils'
-import { ref } from 'vue'
 
 const KEY_S = 83
 const KEY_Y = 89
@@ -127,7 +127,7 @@ const handlerClipboardEvent = (event) => {
 
   switch (event.type) {
     case 'copy':
-      handleCopyEvent(event, schema)
+      handleCopyEvent(event)
       break
     case 'paste':
       handleClipboardPaste(nodeList, schema, parent)
