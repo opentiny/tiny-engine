@@ -479,6 +479,9 @@ const operationTypeMap = {
         let position = 'after'
         let referTargetNodeId = null
 
+        // 1. 新节点 index === 0 （在最前面），插入位置为 before，插入到第一个
+        // 2. 新节点 index > 0，插入到 index -1 节点的后面。
+        // 3. 默认情况：插入到数组最后一个节点。（position: after，referTargetNodeId: nuLl）
         if (newChildIndex === 0) {
           position = 'before'
         } else if (newChildIndex !== -1) {
