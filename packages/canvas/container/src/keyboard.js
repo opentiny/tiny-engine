@@ -14,7 +14,7 @@ import { getCurrent, insertNode, selectNode, POSITION, removeNodeById, allowInse
 import { useHistory, useCanvas, getMetaApi, META_APP } from '@opentiny/tiny-engine-meta-register'
 import { copyObject } from '../../common'
 import { getClipboardSchema, setClipboardSchema } from './utils'
-import { ref, toRaw } from 'vue'
+import { ref } from 'vue'
 
 const KEY_S = 83
 const KEY_Y = 89
@@ -102,52 +102,35 @@ const handleClipboardCut = (event, schema) => {
   }
 }
 
-const handleClipboardPaste = (node, schema, parent) => {
-  const multiSelectedNodes = JSON.parse(localStorage.getItem('multiSelectedNodes') || '[]')
+const handleClipboardPaste = (nodeList, schema, parent) => {
+  if (nodeList.length === 0) return
 
-  if (multiSelectedNodes.length > 1) {
-    multiSelectedNodes.forEach(({ node, parent }) => {
-      if (allowInsert(getConfigure(schema.componentName), node)) {
-        insertNode({ parent, data: { ...node }, target: toRaw(schema) }, POSITION.RIGHT)
-      }
-    })
-    return
-  }
-
-  if (node?.componentName && schema?.componentName && allowInsert(getConfigure(schema.componentName), node)) {
-    insertNode({ parent, node: schema, data: { ...node } }, POSITION.IN)
-  } else {
-    insertNode({ parent, node: schema, data: { ...node } }, POSITION.BOTTOM)
-  }
+  nodeList.forEach((node) => {
+    if (node?.componentName && schema?.componentName && allowInsert(getConfigure(schema.componentName), node)) {
+      insertNode({ parent, node: schema, data: node }, POSITION.IN)
+    } else {
+      insertNode({ parent, node: schema, data: node }, POSITION.BOTTOM)
+    }
+  })
 }
 
-const handleCopyEvent = (event, schema) => {
-  localStorage.setItem('multiSelectedNodes', JSON.stringify([]))
+const handleCopyEvent = (event) => {
+  const selectedNodes = multiSelectedStates.value.map(({ schema }) => copyObject(schema))
 
-  // 如果是多选状态，处理多个选中的节点
-  if (multiSelectedStates.value.length > 1) {
-    const selectedStates = multiSelectedStates.value.map(({ schema, parent }) => ({
-      node: copyObject(schema),
-      parent: toRaw(parent)
-    }))
-    localStorage.setItem('multiSelectedNodes', JSON.stringify(selectedStates))
-    return
-  }
-
-  // 仅复制当前选中的单个节点
-  setClipboardSchema(event, copyObject(schema))
+  const dataToCopy = JSON.stringify(selectedNodes)
+  setClipboardSchema(event, dataToCopy)
 }
 
 const handlerClipboardEvent = (event) => {
   const { schema, parent } = getCurrent()
-  const node = getClipboardSchema(event)
+  const nodeList = getClipboardSchema(event)
 
   switch (event.type) {
     case 'copy':
       handleCopyEvent(event, schema)
       break
     case 'paste':
-      handleClipboardPaste(node, schema, parent)
+      handleClipboardPaste(nodeList, schema, parent)
       break
     case 'cut':
       handleClipboardCut(event, schema)
