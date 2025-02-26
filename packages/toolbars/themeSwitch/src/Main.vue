@@ -133,7 +133,7 @@ export default {
     }
   }
   .active {
-    background-color: var(--te-toolbar-theme-popover-list-item-bg-color-hover);
+    background-color: var(--te-toolbar-theme-popover-list-item-bg-color-active);
   }
 }
 </style>
