@@ -43,7 +43,6 @@ import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { useCanvas, useMaterial, useLayout, useMessage } from '@opentiny/tiny-engine-meta-register'
 import { extend } from '@opentiny/vue-renderless/common/object'
-import { typeOf } from '@opentiny/vue-renderless/common/type'
 import DraggableTree from './DraggableTree.vue'
 
 const { PAGE_STATUS } = constants
@@ -72,12 +71,8 @@ export default {
           item.show = pageState.nodesStatus[item.id] !== false
           item.showEye = !item.show
           const child = item.children
-          if (typeOf(child) !== 'array') {
-            delete item.children
-          } else {
-            if (item.children.length) {
-              translateChild(item.children)
-            }
+          if (Array.isArray(child)) {
+            translateChild(item.children)
           }
         })
 
