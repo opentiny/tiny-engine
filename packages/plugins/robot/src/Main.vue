@@ -18,20 +18,19 @@
           </section>
           <header class="chat-title">
             <tiny-popover
-              ref="popoverRef"
               width="270"
               trigger="manual"
               v-model="showPopover"
               :visible-arrow="false"
               popper-class="chat-popover"
             >
-              <robotSettingPopover
+              <RobotSettingPopover
                 v-if="showPopover"
                 :typeValue="selectedModel"
                 :tokenValue="tokenValue"
                 @changeType="changeModel"
                 @close="closePanel"
-              ></robotSettingPopover>
+              ></RobotSettingPopover>
               <template #reference>
                 <span class="chat-title-dropdown" @click.stop="showPopover = true">
                   <span class="chat-title-label">{{ selectedModel.label }}</span>
@@ -117,7 +116,7 @@ import { ref, onMounted, watchEffect } from 'vue'
 import { TinyLayout, TinyRow, TinyCol, TinyButton, TinyInput, Notify, Loading, TinyPopover } from '@opentiny/vue'
 import { useCanvas, useHistory, usePage, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { extend } from '@opentiny/vue-renderless/common/object'
-import robotSettingPopover from './robotSettingPopover.vue'
+import RobotSettingPopover from './RobotSettingPopover.vue'
 import { getBlockContent, initBlockList, AIModelOptions } from './js/robotSetting'
 
 export default {
@@ -128,7 +127,7 @@ export default {
     TinyCol,
     TinyInput,
     TinyPopover,
-    robotSettingPopover
+    RobotSettingPopover
   },
   emits: ['close-chat'],
   setup() {
