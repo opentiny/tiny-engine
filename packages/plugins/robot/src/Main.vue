@@ -24,13 +24,13 @@
               :visible-arrow="false"
               popper-class="chat-popover"
             >
-              <RobotSettingPopover
+              <robot-setting-popover
                 v-if="showPopover"
                 :typeValue="selectedModel"
                 :tokenValue="tokenValue"
                 @changeType="changeModel"
                 @close="closePanel"
-              ></RobotSettingPopover>
+              ></robot-setting-popover>
               <template #reference>
                 <span class="chat-title-dropdown" @click.stop="showPopover = true">
                   <span class="chat-title-label">{{ selectedModel.label }}</span>
