@@ -1,6 +1,12 @@
 <template>
   <div v-if="isOpen" class="global-data-handler">
-    <plugin-setting title="全局设置" :fixed-name="PLUGIN_NAME.Collections" @cancel="close" @save="saveGlobalDataHandle">
+    <plugin-setting
+      title="全局设置"
+      :align="align"
+      :fixed-name="PLUGIN_NAME.Collections"
+      @cancel="close"
+      @save="saveGlobalDataHandle"
+    >
       <template #content>
         <tiny-collapse v-model="activeNames">
           <tiny-collapse-item title="请求参数处理函数（willFetch）" name="willFetch">
@@ -20,7 +26,7 @@
 
 <script>
 import DataHandlerEditor from './RemoteDataAdapterForm.vue'
-import { watch, ref, nextTick, reactive } from 'vue'
+import { watch, ref, nextTick, reactive, computed } from 'vue'
 import { requestGlobalDataHandler } from './js/http'
 import { useLayout, useModal, useResource, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
@@ -48,7 +54,8 @@ export default {
   setup() {
     const { confirm } = useModal()
 
-    const { PLUGIN_NAME } = useLayout()
+    const { PLUGIN_NAME, getPluginByLayout } = useLayout()
+    const align = computed(() => getPluginByLayout(PLUGIN_NAME.Collections))
 
     const state = reactive({
       dataHandlerValue: useResource().appSchemaState?.dataHandler?.value,
@@ -88,6 +95,7 @@ export default {
     )
 
     return {
+      align,
       PLUGIN_NAME,
       isOpen,
       close,

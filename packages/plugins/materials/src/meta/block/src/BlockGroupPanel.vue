@@ -1,6 +1,7 @@
 <template>
   <plugin-setting
     v-if="panel.show"
+    :align="align"
     :title="validGroup.groupName"
     :fixed-name="PLUGIN_NAME.Materials"
     @cancel="closeGroupPanel"
@@ -33,7 +34,7 @@
   </plugin-setting>
 </template>
 <script>
-import { reactive, watch, provide, inject, ref } from 'vue'
+import { reactive, watch, provide, inject, ref, computed } from 'vue'
 import { Search } from '@opentiny/vue'
 import { iconSearch } from '@opentiny/vue-icon'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
@@ -124,7 +125,8 @@ export default {
 
     const validGroup = ref({ ...selectedGroup.value })
 
-    const { PLUGIN_NAME } = useLayout()
+    const { PLUGIN_NAME, getPluginByLayout } = useLayout()
+    const align = computed(() => getPluginByLayout(PLUGIN_NAME.Materials))
 
     watch(
       () => selectedGroup.value.groupId,
@@ -280,6 +282,7 @@ export default {
     })
 
     return {
+      align,
       validGroup,
       state,
       panel,

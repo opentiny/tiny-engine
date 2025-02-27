@@ -3,6 +3,7 @@
     v-if="isOpen"
     class="plugin-block-setting"
     title="区块设置"
+    :align="align"
     :fixed-name="PLUGIN_NAME.BlockManage"
     @mouseleave="onMouseLeave"
     @click="handleClick"
@@ -153,7 +154,8 @@ export default {
     })
     const blockConfigForm = ref(null)
 
-    const { PLUGIN_NAME } = useLayout()
+    const { PLUGIN_NAME, getPluginByLayout } = useLayout()
+    const align = computed(() => getPluginByLayout(PLUGIN_NAME.BlockManage))
 
     const state = reactive({
       activeName: ['base', 'attribute', 'event', 'lifeCycle', 'history'],
@@ -273,6 +275,7 @@ export default {
     }
 
     return {
+      align,
       PLUGIN_NAME,
       state,
       isOpen,

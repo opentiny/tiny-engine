@@ -4,6 +4,7 @@
     :is-icon-button="false"
     :showIfFullScreen="true"
     :fixed-name="PLUGIN_NAME.Collections"
+    :align="align"
     title="静态数据管理"
     class="datasource-record-list"
     @cancel="closeRecordList"
@@ -123,7 +124,8 @@ export default {
     const grid = ref(null)
     const { confirm } = useModal()
     const { toClipboard } = useClipboard()
-    const { layoutState, PLUGIN_NAME } = useLayout()
+    const { layoutState, PLUGIN_NAME, getPluginByLayout } = useLayout()
+    const align = computed(() => getPluginByLayout(PLUGIN_NAME.Collections))
 
     const state = reactive({
       totalData: [],
@@ -560,6 +562,7 @@ export default {
     }
 
     return {
+      align,
       PLUGIN_NAME,
       isOpen,
       state,
