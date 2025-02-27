@@ -93,7 +93,25 @@ const generateComponents = () => {
           materials: {
             components: [],
             blocks: [],
-            snippets: []
+            snippets: [],
+            packages: [
+              {
+                name: 'TinyVue组件库',
+                package: '@opentiny/vue',
+                version: '3.20.0',
+                destructuring: true,
+                script: 'https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs',
+                css: 'https://unpkg.com/@opentiny/vue-theme@~3.14/index.css'
+              },
+              {
+                name: 'element-plus组件库',
+                package: 'element-plus',
+                version: '2.4.2',
+                script: 'https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs',
+                css: 'https://unpkg.com/element-plus@2.4.2/dist/index.css'
+              },
+              // 请按照实际业务情况填写所需的第三方组件库
+            ]
           }
         }
       }
@@ -150,13 +168,25 @@ const generateComponents = () => {
 
         componentsMap.push({ component, npm })
 
+        const { package: packageName = '', version = '', exportName = '' } = npm || {}
+
         if (connection.connected) {
+          if (material.npm) {
+            // 给组件添加 npm 来源详细信息
+            const packageItem = packages.find((item) => item.package === packageName)
+
+            if (packageItem) {
+              material.npm.version = packageItem.version
+              material.npm.script = packageItem.script
+              material.npm.css = packageItem.css
+              material.npm.destructuring = packageItem.destructuring
+            }
+          }
+
           connection.initDB(material)
         }
 
         appInfo.materialHistory.components = componentsMap
-
-        const { package: packageName = '', version = '', exportName = '' } = npm || {}
 
         const mapItem = {
           componentName: component,
