@@ -28,9 +28,9 @@
               <robotSettingPopover
                 v-if="showPopover"
                 :typeValue="selectedModel"
-                @changeType="changeModel"
                 :tokenValue="tokenValue"
-                @active="activeSetting('props')"
+                @changeType="changeModel"
+                @close="closePanel"
               ></robotSettingPopover>
               <template #reference>
                 <span class="chat-title-dropdown" @click.stop="showPopover = true">
@@ -114,7 +114,7 @@
 
 <script>
 import { ref, onMounted, watchEffect } from 'vue'
-import { Layout, Row, Col, Button, Input, Notify, Loading, Popover as TinyPopover } from '@opentiny/vue'
+import { TinyLayout, TinyRow, TinyCol, TinyButton, TinyInput, Notify, Loading, TinyPopover } from '@opentiny/vue'
 import { useCanvas, useHistory, usePage, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import robotSettingPopover from './robotSettingPopover.vue'
@@ -122,11 +122,11 @@ import { getBlockContent, initBlockList, AIModelOptions } from './js/robotSettin
 
 export default {
   components: {
-    TinyLayout: Layout,
-    TinyButton: Button,
-    TinyRow: Row,
-    TinyCol: Col,
-    TinyInput: Input,
+    TinyLayout,
+    TinyButton,
+    TinyRow,
+    TinyCol,
+    TinyInput,
     TinyPopover,
     robotSettingPopover
   },
@@ -260,6 +260,7 @@ export default {
 
     const resizeChatWindow = async () => {
       chatWindowOpened.value = !chatWindowOpened.value
+      showPopover.value = showPopover.value && !showPopover.value
       await resetContent()
     }
 
@@ -382,7 +383,7 @@ export default {
       robotVisible.value = !robotVisible.value
     }
 
-    const activeSetting = () => {
+    const closePanel = () => {
       showPopover.value = false
     }
 
@@ -401,7 +402,7 @@ export default {
       selectedModel,
       changeModel,
       openAIRobot,
-      activeSetting,
+      closePanel,
       tokenValue,
       showPopover
     }

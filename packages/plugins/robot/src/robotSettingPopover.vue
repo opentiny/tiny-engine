@@ -3,10 +3,12 @@
     <div class="header">设置</div>
     <tiny-form ref="robotSettingForm" label-position="top" :rules="formRules" :model="formData" validate-type="text">
       <tiny-form-item prop="type" label="大模型类型" label-width="150px">
-        <tiny-select v-model="formData.type" placeholder="请选择" @change="changeModelType">
-          <tiny-option v-for="item in AIModelOptions" :key="item.label" :label="item.label" :value="item.value">
-          </tiny-option>
-        </tiny-select>
+        <tiny-select
+          v-model="formData.type"
+          :options="AIModelOptions"
+          placeholder="请选择"
+          @change="changeModelType"
+        ></tiny-select>
       </tiny-form-item>
       <tiny-form-item prop="tokenVal" label-width="150px">
         <template #label>
@@ -26,18 +28,17 @@
 </template>
 <script>
 import { ref, reactive } from 'vue'
-import { Form, FormItem, Input, Button, Select, Option, Tooltip } from '@opentiny/vue'
+import { TinyForm, TinyFormItem, TinyInput, TinyButton, TinySelect, TinyTooltip } from '@opentiny/vue'
 import { AIModelOptions } from './js/robotSetting'
 
 export default {
   components: {
-    TinyForm: Form,
-    TinyFormItem: FormItem,
-    TinyInput: Input,
-    TinyButton: Button,
-    TinySelect: Select,
-    TinyOption: Option,
-    TinyTooltip: Tooltip
+    TinyForm,
+    TinyFormItem,
+    TinyInput,
+    TinyButton,
+    TinySelect,
+    TinyTooltip
   },
   props: {
     typeValue: {
@@ -58,14 +59,11 @@ export default {
     })
 
     const formRules = {
-      type: [{ required: true, message: '必选', trigger: 'change' }],
-      tokenVal: [{ required: true, message: '必填', trigger: 'blur' }]
+      type: [{ required: true, message: '必选', trigger: 'change' }]
     }
 
-    const active = ref('props')
-
     const closePanel = () => {
-      emit('active', 'props')
+      emit('close')
     }
 
     const changeModelType = () => {
@@ -83,7 +81,6 @@ export default {
     }
 
     return {
-      active,
       confirm,
       closePanel,
       robotSettingForm,
