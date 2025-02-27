@@ -1,5 +1,5 @@
 <template>
-  <plugin-setting v-if="isOpen" :fixed-name="PLUGIN_NAME.Bridge">
+  <plugin-setting v-if="isOpen" :align="align" :fixed-name="PLUGIN_NAME.Bridge">
     <template #title>
       <div class="title-wrap">
         <span>{{ state.title }}</span>
@@ -151,7 +151,8 @@ export default {
     }
     const { confirm } = useModal()
 
-    const { PLUGIN_NAME } = useLayout()
+    const { PLUGIN_NAME, getPluginByLayout } = useLayout()
+    const align = computed(() => getPluginByLayout(PLUGIN_NAME.Bridge))
 
     const state = reactive({
       resource: computed(() => getResource()),
@@ -275,6 +276,7 @@ export default {
     }
 
     return {
+      align,
       PLUGIN_NAME,
       rules,
       resourceForm,

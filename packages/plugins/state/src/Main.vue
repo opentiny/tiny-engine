@@ -42,7 +42,7 @@
           @removeStore="removeStore"
         />
       </div>
-      <div class="data-source-right-panel" v-if="isPanelShow" :style="{ left: `${firstPanelOffset}px` }">
+      <div class="data-source-right-panel" v-if="isPanelShow" :style="alignStyle">
         <div class="header">
           <span>{{ addDataSource }}</span>
           <span class="options-wrap">
@@ -143,10 +143,16 @@ export default {
     })
     const selectedKey = ref(null)
 
-    const { PLUGIN_NAME, getPluginWidth } = useLayout()
+    const { PLUGIN_NAME, getPluginWidth, getPluginByLayout } = useLayout()
 
     const firstPanelOffset = computed(() => {
       return getPluginWidth(PLUGIN_NAME.State)
+    })
+
+    const alignStyle = computed(() => {
+      const panelAlign = getPluginByLayout(PLUGIN_NAME.State)
+      const align = panelAlign.includes('left') ? 'left' : 'right'
+      return `${align}: ${firstPanelOffset.value}px`
     })
 
     const panelState = reactive({
@@ -379,6 +385,7 @@ export default {
     })
 
     return {
+      alignStyle,
       firstPanelOffset,
       PLUGIN_NAME,
       isBlock,
@@ -473,7 +480,6 @@ export default {
     border-right: 1px solid var(--te-state-common-border-color-divider);
     background: var(--te-state-common-bg-color);
     position: absolute;
-    left: var(--base-left-panel-width);
     top: 0;
 
     .header {

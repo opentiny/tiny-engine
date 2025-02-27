@@ -1,5 +1,11 @@
 <template>
-  <plugin-setting v-if="isOpen" title="设置数据源" :fixed-name="PLUGIN_NAME.Collections" class="data-source-form">
+  <plugin-setting
+    v-if="isOpen"
+    title="设置数据源"
+    :fixed-name="PLUGIN_NAME.Collections"
+    :align="align"
+    class="data-source-form"
+  >
     <template #header>
       <button-group>
         <tiny-button class="field-save" type="primary" @click="save">保存</tiny-button>
@@ -27,7 +33,7 @@
 </template>
 
 <script lang="jsx">
-import { reactive, ref, watch } from 'vue'
+import { reactive, ref, watch, computed } from 'vue'
 import { Form, Button } from '@opentiny/vue'
 import { ButtonGroup, PluginSetting, SvgButton } from '@opentiny/tiny-engine-common'
 import DataSourceType from './DataSourceType.vue'
@@ -91,7 +97,8 @@ export default {
       dataSource: {}
     })
 
-    const { PLUGIN_NAME } = useLayout()
+    const { PLUGIN_NAME, getPluginByLayout } = useLayout()
+    const align = computed(() => getPluginByLayout(PLUGIN_NAME.Collections))
 
     watch(
       () => state.dataSource.name,
@@ -249,6 +256,7 @@ export default {
     }
 
     return {
+      align,
       PLUGIN_NAME,
       state,
       isOpen,

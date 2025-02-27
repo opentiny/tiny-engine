@@ -1,8 +1,13 @@
 <template>
   <div
     id="panel-setting"
-    :class="['plugin-setting', { 'second-panel': isSecond }, { 'full-screen': state.isFullScreen }]"
-    :style="{ left: `${firstPanelOffset}px` }"
+    :class="[
+      'plugin-setting',
+      { 'second-panel': isSecond },
+      { 'full-screen': state.isFullScreen },
+      { 'align-right': align.includes('right') }
+    ]"
+    :style="alignStyle"
     @click="$emit('click')"
   >
     <div class="plugin-setting-header">
@@ -116,11 +121,19 @@ export default {
       return getPluginWidth(props.fixedName)
     })
 
+    const secondPanelAlign = computed(() => {
+      return props.align.includes('left') ? 'left' : 'right'
+    })
+
+    const alignStyle = computed(() => {
+      return `${secondPanelAlign.value} : ${firstPanelOffset.value}px`
+    })
+
     watchEffect(() => {
       // 处理二级面板偏移量
       const secondPanelOffset = document.querySelector('.plugin-setting')?.clientWidth + firstPanelOffset.value
       nextTick(() => {
-        document.querySelector('.second-panel')?.style.setProperty('left', `${secondPanelOffset}px`)
+        document.querySelector('.second-panel')?.style.setProperty(secondPanelAlign.value, `${secondPanelOffset}px`)
       })
     })
 
@@ -138,6 +151,7 @@ export default {
     }
 
     return {
+      alignStyle,
       firstPanelOffset,
       state,
       fullScreen,
@@ -150,7 +164,6 @@ export default {
 <style lang="less" scoped>
 .plugin-setting {
   position: absolute;
-  left: var(--base-left-panel-width);
   top: 0;
   width: var(--base-collection-panel-width);
   height: 100%;
@@ -170,7 +183,6 @@ export default {
   }
 
   &.second-panel {
-    left: calc(var(--base-left-panel-width) + var(--base-collection-panel-width));
     z-index: 1;
   }
 

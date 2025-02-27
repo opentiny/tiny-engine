@@ -2,6 +2,7 @@
   <plugin-setting
     v-if="isShow"
     :fixed-name="PLUGIN_NAME.AppManage"
+    :align="align"
     :title="state.title"
     class="pageFolder-plugin-setting"
   >
@@ -32,7 +33,7 @@
 </template>
 
 <script>
-import { reactive, ref } from 'vue'
+import { reactive, ref, computed } from 'vue'
 import { Button, Collapse, CollapseItem } from '@opentiny/vue'
 import { PluginSetting, SvgButton, ButtonGroup } from '@opentiny/tiny-engine-common'
 import {
@@ -89,7 +90,8 @@ export default {
     const pageGeneral = registry.components.PageGeneral
     const folderGeneralRef = ref(null)
 
-    const { PLUGIN_NAME } = useLayout()
+    const { PLUGIN_NAME, getPluginByLayout } = useLayout()
+    const align = computed(() => getPluginByLayout(PLUGIN_NAME.AppManage))
 
     const closeFolderSetting = () => {
       if (isEqual(pageSettingState.currentPageData, pageSettingState.currentPageDataCopy)) {
@@ -205,6 +207,7 @@ export default {
     }
 
     return {
+      align,
       PLUGIN_NAME,
       saveFolderSetting,
       deleteFolder: throttle(5000, true, deleteFolder),

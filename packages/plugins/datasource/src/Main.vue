@@ -5,6 +5,7 @@
     :fixedPanels="fixedPanels"
     :docsUrl="docsUrl"
     :isShowDocsIcon="true"
+    @close="$emit('close')"
   >
     <template #header>
       <svg-button
