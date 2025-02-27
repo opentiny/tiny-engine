@@ -260,7 +260,7 @@ export default {
 
     const resizeChatWindow = async () => {
       chatWindowOpened.value = !chatWindowOpened.value
-      showPopover.value = showPopover.value && !showPopover.value
+      showPopover.value = false
       await resetContent()
     }
 
