@@ -63,7 +63,7 @@ export default {
     const configProvider = layoutRegistry.options.configProvider
     const configProviderDesign = layoutRegistry.options.configProviderDesign
 
-    const { layoutState, leftMenuShownStorage, rightMenuShownStorage } = useLayout()
+    const { layoutState, leftMenuShownStorage, rightMenuShownStorage, initPluginStorageReactive } = useLayout()
     const { plugins, settings } = layoutState
 
     const toggleNav = ({ item }) => {
@@ -115,6 +115,7 @@ export default {
       }
     })
     localStorage.setItem('plugin', JSON.stringify(plugin))
+    initPluginStorageReactive(plugin)
 
     return {
       left,
