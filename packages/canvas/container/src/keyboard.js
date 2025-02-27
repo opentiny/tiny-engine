@@ -10,11 +10,11 @@
  *
  */
 
-import { getCurrent, insertNode, selectNode, POSITION, removeNodeById, allowInsert, getConfigure } from './container'
+import { ref } from 'vue'
 import { useHistory, useCanvas, getMetaApi, META_APP } from '@opentiny/tiny-engine-meta-register'
+import { getCurrent, insertNode, selectNode, POSITION, removeNodeById, allowInsert, getConfigure } from './container'
 import { copyObject } from '../../common'
 import { getClipboardSchema, setClipboardSchema } from './utils'
-import { ref, toRaw } from 'vue'
 
 const KEY_S = 83
 const KEY_Y = 89
@@ -102,38 +102,35 @@ const handleClipboardCut = (event, schema) => {
   }
 }
 
-const handleClipboardPaste = (node, schema, parent) => {
-  if (node?.componentName && schema?.componentName && allowInsert(getConfigure(schema.componentName), node)) {
-    insertNode({ parent, node: schema, data: { ...node } }, POSITION.IN)
-  } else {
-    insertNode({ parent, node: schema, data: { ...node } }, POSITION.BOTTOM)
-  }
+const handleClipboardPaste = (nodeList, schema, parent) => {
+  if (!nodeList.length) return
+
+  nodeList.forEach((node) => {
+    if (node?.componentName && schema?.componentName && allowInsert(getConfigure(schema.componentName), node)) {
+      insertNode({ parent, node: schema, data: node }, POSITION.IN)
+    } else {
+      insertNode({ parent, node: schema, data: node }, POSITION.BOTTOM)
+    }
+  })
 }
 
-const handleMultiNodesPaste = (node, schema, parent) => {
-  if (multiSelectedStates.value.length === 1) {
-    handleClipboardPaste(node, schema, parent)
-    return
-  }
+const handleCopyEvent = (event) => {
+  const selectedNodes = multiSelectedStates.value.map(({ schema }) => copyObject(schema))
 
-  const selectedStates = multiSelectedStates.value.map(({ schema, parent }) => {
-    return { node: copyObject(schema), schema: toRaw(schema), parent: toRaw(parent) }
-  })
-
-  selectedStates.forEach(({ node, schema, parent }) => {
-    handleClipboardPaste(node, schema, parent)
-  })
+  const dataToCopy = JSON.stringify(selectedNodes)
+  setClipboardSchema(event, dataToCopy)
 }
 
 const handlerClipboardEvent = (event) => {
   const { schema, parent } = getCurrent()
-  const node = getClipboardSchema(event)
+  const nodeList = getClipboardSchema(event)
+
   switch (event.type) {
     case 'copy':
-      setClipboardSchema(event, copyObject(schema))
+      handleCopyEvent(event)
       break
     case 'paste':
-      handleMultiNodesPaste(node, schema, parent)
+      handleClipboardPaste(nodeList, schema, parent)
       break
     case 'cut':
       handleClipboardCut(event, schema)

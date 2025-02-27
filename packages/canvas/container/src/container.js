@@ -328,7 +328,6 @@ const getRect = (element) => {
   }
   return element.getBoundingClientRect()
 }
-
 const insertAfter = ({ parent, node, data }) => {
   if (!data.id) {
     data.id = utils.guid()
