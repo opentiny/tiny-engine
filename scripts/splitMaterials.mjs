@@ -9,7 +9,7 @@ const bundlePath = path.join(process.cwd(), '/designer-demo/public/mock/bundle.j
 // 物料文件存放文件夹名称
 const materialsDir = 'materials'
 const bundle = fs.readJSONSync(bundlePath)
-const { components, snippets, blocks } = bundle.data.materials
+const { components, snippets, blocks, packages } = bundle.data.materials
 
 const capitalize = (str) => `${str.charAt(0).toUpperCase()}${str.slice(1)}`
 const toPascalCase = (str) => str.split('-').map(capitalize).join('')
@@ -38,7 +38,12 @@ const splitMaterials = () => {
 
         return false
       })
-
+      // 补全组件的npm 字段
+      const pack = packages.find((child) => child.package === comp.npm?.package);
+      if (pack) {
+        const complete = ['version', 'destructuring', 'script', 'css'];
+        complete.forEach(e => !comp.npm?.[e] && (comp.npm[e] = pack[e]))
+      }
       const fileName = Array.isArray(comp.component) ? comp.component[0] : comp.component
       const componentPath = path.join(process.cwd(), materialsDir, 'components', `${toPascalCase(fileName)}.json`)
 
