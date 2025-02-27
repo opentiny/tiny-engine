@@ -165,7 +165,6 @@ export default () => {
 
   try {
     const storedPlugin = localStorage.getItem('plugin')
-
     if (storedPlugin) {
       plugin = JSON.parse(storedPlugin)
     }
@@ -288,7 +287,13 @@ export default () => {
     pluginStorageReactive.value[name].isShow = !pluginStorageReactive.value[name].isShow
   }
 
+  const initPluginStorageReactive = (pluginList) => {
+    if (Object.keys(pluginStorageReactive.value).length) return
+    pluginStorageReactive.value = pluginList
+  }
+
   return {
+    initPluginStorageReactive,
     PLUGIN_NAME,
     PLUGIN_POSITION,
     activeSetting,

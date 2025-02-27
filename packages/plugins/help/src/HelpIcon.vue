@@ -154,7 +154,7 @@ export default {
       {
         title: '组件设置',
         text: '拖拽至画布中的组件或区块，在这里进行属性、样式、事件绑定等众多高级配置；',
-        domElement: '#tiny-right-panel',
+        domElement: '#rightTop',
         classes: 'lwocode-guide-toolbar-right',
         popPosition: 'left',
         button: [
