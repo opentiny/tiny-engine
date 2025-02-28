@@ -16,8 +16,8 @@ import {
   addStyle as appendStyle,
   copyObject,
   NODE_UID,
-  NODE_TAG,
-  NODE_INACTIVE_UID
+  NODE_TAG
+  // NODE_INACTIVE_UID
 } from '../../common'
 import { useCanvas, useLayout, useTranslate, useMaterial } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
@@ -206,28 +206,6 @@ export const getElement = (element) => {
   return undefined
 }
 
-export const getInactiveElement = (element) => {
-  if (
-    !element ||
-    element.nodeType !== 1 ||
-    // 如果当前元素是body或者html，需要排除
-    element === element.ownerDocument.body ||
-    element === element.ownerDocument.documentElement ||
-    // 如果当前元素是RouterView, 则有可能是激活元素处于非激活元素里面，需要排除
-    element.getAttribute(NODE_TAG) === 'RouterView'
-  ) {
-    return undefined
-  }
-
-  if (element.getAttribute(NODE_INACTIVE_UID)) {
-    return element
-  } else if (element.parentElement) {
-    return getInactiveElement(element.parentElement)
-  }
-
-  return undefined
-}
-
 const getRect = (element) => {
   if (element === getDocument().body) {
     const { innerWidth: width, innerHeight: height } = getWindow()
@@ -344,7 +322,7 @@ export const getCurrentElement = () => querySelectById(getCurrent().schema?.id)
 const SCROLL_MARGIN = 15
 
 export const scrollToNode = (element) => {
-  if (element) {
+  if (element && element.nodeType === 1) {
     const container = getDocument().documentElement
     const { clientWidth, clientHeight } = container
     const { left, right, top, bottom, width, height } = element.getBoundingClientRect()
@@ -372,10 +350,10 @@ export const scrollToNode = (element) => {
 
 // TODO:
 export const updateRect = () => {
-  // const { clearHover } = useHoverNode()
+  const { clearHover } = useHoverNode()
   const { updateSelectedRect } = useSelectNode()
-  // TODO: 确认在什么场景下需要 clearHover
-  // clearHover()
+  // 滚动的时候，清空 hover
+  clearHover()
 
   updateSelectedRect()
 }
@@ -468,8 +446,6 @@ const updateLineState = (element, data) => {
     return clearHover()
   }
 
-  // console.log('updateLineState element', element)
-
   const componentName = element.getAttribute(NODE_TAG)
   const id = element.getAttribute(NODE_UID)
   const configure = getConfigure(componentName)
@@ -477,7 +453,6 @@ const updateLineState = (element, data) => {
   const { left, height, top, width } = rect
   const { getSchema, getNodeWithParentById } = useCanvas()
 
-  // console.log('updateLineState', element, data)
   // TODO: 更新拖拽的逻辑
   if (data) {
     let childEle = null

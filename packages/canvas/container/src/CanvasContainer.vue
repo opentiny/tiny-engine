@@ -79,14 +79,14 @@ export default {
       const { clientX, clientY } = event
       closeMenu()
       // 更新选中的节点
-      updateSelectedNode(event)
+      await updateSelectedNode(event)
       const node = selectState.value.node
 
       if (node) {
         const element = selectState.value.element
 
         if (event.button === 0 && element !== element?.ownerDocument?.body) {
-          const { x, y } = element.getBoundingClientRect()
+          const { left: x, top: y } = selectState.value.rect
           dragStart(node, element, { offsetX: clientX - x, offsetY: clientY - y })
         }
 
@@ -152,10 +152,10 @@ export default {
         win.addEventListener('mousedown', (event) => {
           handleCanvasEvent(() => {
             // html元素使用scroll和mouseup事件处理
-            if (event.target === doc.documentElement) {
-              isScrolling = false
-              return
-            }
+            // if (event.target === doc.documentElement) {
+            //   isScrolling = false
+            //   return
+            // }
 
             insertPosition.value = false
             handleNodeInteractions(event)

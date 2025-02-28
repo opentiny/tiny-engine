@@ -18,17 +18,16 @@
  * 缺陷：
  * 1. 如果画布无法挂载 data-uid 属性到 DOM 节点上，那么该节点无法反查到对应的 node 节点，导致 hover 、选中等逻辑无法生效。
  */
-import { ref } from 'vue'
+import { nextTick, ref } from 'vue'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { NODE_TAG, NODE_UID, NODE_INACTIVE_UID } from '../../../common'
-import { getConfigure, scrollToNode, canvasState, getDocument } from '../container'
+import { getConfigure, scrollToNode, canvasState, getDocument, querySelectById } from '../container'
 import {
   initialHoverState,
   clearHover as commonClearHover,
   getClosedElementHasUid,
   getWindowRect,
-  hoverNodeById as commonHoverNodeById,
-  selectNodeById as commonSelectNodeById
+  hoverNodeById as commonHoverNodeById
 } from './common'
 
 const curHoverState = ref({
@@ -120,6 +119,11 @@ const clearSelect = () => {
     ...initialHoverState,
     rect: { ...initialHoverState.rect }
   }
+  canvasState.current = null
+  canvasState.parent = null
+  // TODO: 改成事件通知
+  // 临时借用 remove 事触发 currentSchema 更新
+  canvasState?.emit?.('remove')
 }
 
 const updateSelectedNode = async (e, type) => {
@@ -157,16 +161,70 @@ const updateSelectedNode = async (e, type) => {
   canvasState.emit('selected', node, parent, type, node?.id)
 }
 
-const selectNodeById = (id, type) => {
-  commonSelectNodeById(updateSelectedNode, id, type)
+const selectNodeById = async (id, type) => {
+  // commonSelectNodeById(updateSelectedNode, id, type)
+  const element = querySelectById(id)
+  const { node, parent } = useCanvas().getNodeWithParentById(id)
+
+  if (!element || !node) {
+    clearSelect()
+
+    return
+  }
+
+  const rect = element.getBoundingClientRect()
+  const componentName = node.componentName
+  const configure = getConfigure(componentName)
+
+  canvasState.current = node
+  canvasState.parent = parent
+  selectState.value = {
+    rect: {
+      top: rect.top,
+      left: rect.left,
+      width: rect.width,
+      height: rect.height
+    },
+    node,
+    configure,
+    element,
+    componentName,
+    isInactiveNode: false
+  }
+
+  // TODO: 改成事件通知
+  canvasState.emit('selected', node, parent, type, node?.id)
+  await nextTick()
+  await scrollToNode(element)
 }
 
 const updateSelectedRect = () => {
   setTimeout(() => {
-    const res = getRectAndNode({ target: selectState.value.element })
+    if (!selectState.value.node) {
+      return
+    }
 
-    if (res) {
+    let res = getRectAndNode({ target: selectState.value.element })
+
+    if (res?.node) {
       selectState.value = res
+      return
+    }
+
+    // 通过节点没法直接计算到 rect，可能是没法挂载 data-uid 属性，需要尝试使用 querySelectById
+    if (!res?.node) {
+      const element = querySelectById(selectState.value.node.id)
+
+      if (element) {
+        const rect = element.getBoundingClientRect()
+
+        selectState.value.rect = {
+          top: rect.top,
+          left: rect.left,
+          width: rect.width,
+          height: rect.height
+        }
+      }
     }
   }, 0)
 }

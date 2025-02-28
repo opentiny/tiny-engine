@@ -104,7 +104,7 @@ const getRectAndNode = (e) => {
     }
 
     instance = closedVueEle
-    uid = closedVueEle.props.schema.id || closedVueEle?.attrs?.[NODE_UID]
+    uid = closedVueEle?.props?.schema?.id || closedVueEle?.attrs?.[NODE_UID]
   }
 
   const rect = getElementRectByInstance(instance)
