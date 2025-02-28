@@ -93,7 +93,24 @@ const generateComponents = () => {
           materials: {
             components: [],
             blocks: [],
-            snippets: []
+            snippets: [],
+            packages: [
+              {
+                name: 'TinyVue组件库',
+                package: '@opentiny/vue',
+                version: '3.20.0',
+                destructuring: true,
+                script: 'https://unpkg.com/@opentiny/vue-runtime@~3.20/dist3/tiny-vue-pc.mjs',
+                css: 'https://unpkg.com/@opentiny/vue-theme@~3.20/index.css'
+              },
+              {
+                name: 'element-plus组件库',
+                package: 'element-plus',
+                version: '2.4.2',
+                script: 'https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs',
+                css: 'https://unpkg.com/element-plus@2.4.2/dist/index.css'
+              }
+            ]
           }
         }
       }
@@ -131,20 +148,23 @@ const generateComponents = () => {
 
         if (!valid) return
 
-        const { snippets: componentSnippets, category, ...componentInfo } = material
+        const { snippets: componentSnippets = [], category, ...componentInfo } = material
 
         components.push(componentInfo)
 
-        const snippet = snippets.find((item) => item.group === category)
+        componentSnippets.forEach((c) => {
+          const componentCategory = c.category || category || '其他'
+          const snippet = snippets.find((item) => item.group === componentCategory)
 
-        if (snippet) {
-          componentSnippets && snippet.children.push(componentSnippets[0])
-        } else if (category && componentInfo) {
-          snippets.push({
-            group: category,
-            children: componentSnippets || []
-          })
-        }
+          if (snippet) {
+            snippet.children.push(c)
+          } else {
+            snippets.push({
+              group: componentCategory,
+              children: [c]
+            })
+          }
+        })
 
         const { component, npm = {} } = componentInfo
 
