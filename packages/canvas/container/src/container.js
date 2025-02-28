@@ -123,29 +123,6 @@ export const lineState = reactive({
   ...initialLineState
 })
 
-// 获取多选节点
-export const getMultiState = (element, doc) => {
-  const { top, left, width, height } = element.getBoundingClientRect()
-  const nodeTag = element?.getAttribute(NODE_TAG)
-  const nodeId = element?.getAttribute(NODE_UID)
-
-  const { node, parent } = useCanvas().getNodeWithParentById(nodeId) || {}
-
-  if (node && parent) {
-    return {
-      id: nodeId,
-      componentName: nodeTag,
-      doc,
-      top,
-      left,
-      width,
-      height,
-      schema: toRaw(node),
-      parent: toRaw(parent)
-    }
-  }
-}
-
 // 设置多选节点
 export function setMultiState(multiSelectedStates, node, append = false) {
   if (!node || typeof node !== 'object') {
@@ -328,6 +305,27 @@ const getRect = (element) => {
   }
   return element.getBoundingClientRect()
 }
+
+// 获取多选节点
+export const getMultiState = (element) => {
+  const { top, left, width, height } = getRect(element)
+  const nodeTag = element?.getAttribute(NODE_TAG)
+  const nodeId = element?.getAttribute(NODE_UID) || 'body'
+
+  const { node } = useCanvas().getNodeWithParentById(nodeId) || {}
+
+  return {
+    id: nodeId,
+    componentName: nodeTag,
+    doc: getDocument(element),
+    top,
+    left,
+    width,
+    height,
+    schema: toRaw(node)
+  }
+}
+
 const insertAfter = ({ parent, node, data }) => {
   if (!data.id) {
     data.id = utils.guid()

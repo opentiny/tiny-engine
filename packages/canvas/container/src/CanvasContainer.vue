@@ -111,7 +111,7 @@ export default {
 
     const multiStateLength = computed(() => multiSelectedStates.value.length)
 
-    const setCurrentNode = async (event, doc = null) => {
+    const setCurrentNode = async (event) => {
       const { clientX, clientY } = event
       const element = getElement(event.target)
       closeMenu()
@@ -121,7 +121,7 @@ export default {
         const currentElement = querySelectById(getCurrent().schema?.id)
 
         if (!currentElement?.contains(element) || event.button === 0) {
-          const selectedState = getMultiState(element, doc)
+          const selectedState = getMultiState(element)
           setMultiState(multiSelectedStates, selectedState)
 
           const loopId = element.getAttribute(NODE_LOOP)
@@ -212,7 +212,7 @@ export default {
 
             // 多选组合键触发
             if (element) {
-              const selectedState = getMultiState(element, doc)
+              const selectedState = getMultiState(element)
               if ((event.ctrlKey || event.metaKey) && event.button === 0) {
                 handleMultiState(multiSelectedStates, selectedState)
                 return
@@ -221,7 +221,7 @@ export default {
 
             insertPosition.value = false
             insertContainer.value = false
-            setCurrentNode(event, doc)
+            setCurrentNode(event)
             target.value = event.target
           })
         })
