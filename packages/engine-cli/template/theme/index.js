@@ -9,6 +9,7 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
+import './src/common.less'
 import './src/styles/vars.less'
 import metaData from './meta.js'
 
