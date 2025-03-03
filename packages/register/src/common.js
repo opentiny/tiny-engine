@@ -9,7 +9,7 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-
+import { isRef } from 'vue'
 import { initHook } from './hooks'
 
 const vueLifeHook = [
@@ -161,7 +161,7 @@ export const preprocessRegistry = (registry) => {
 
 export const generateRegistry = (registry) => {
   Object.entries(registry).forEach(([key, value]) => {
-    if (typeof value === 'object' && value) {
+    if (typeof value === 'object' && value && !isRef(value)) {
       const { id } = value
       // 如果匹配到了id，说明是元服务配置，对元服务配置做读取和写入
       if (id && key !== 'metaData') {
