@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { getMetaApi, META_SERVICE, useCanvas, usePage } from '@opentiny/tiny-engine-meta-register'
+import { getMetaApi, META_SERVICE, useCanvas, usePage, useMessage } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { Popover } from '@opentiny/vue'
 import { useBroadcastChannel } from '@vueuse/core'
@@ -151,6 +151,15 @@ export default {
 
     watch(data, (value) => {
       state.viewMode = value.viewMode
+    })
+
+    const { subscribe } = useMessage()
+
+    subscribe({
+      topic: 'canvas-mousedown',
+      callback: () => {
+        closePopover()
+      }
     })
 
     return {
