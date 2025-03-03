@@ -3,8 +3,10 @@ import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { NODE_TAG, NODE_UID } from '../../../common'
 import { getRect, getDocument } from '../container'
 
+const initMultiState = { id: 'body' }
+
 // 初始化多选节点
-const multiSelectedStates = ref([{ id: 'body', componentName: 'body' }])
+const multiSelectedStates = ref([])
 
 // 节点位置缓存
 let nodeRectCache = new WeakMap()
@@ -24,6 +26,11 @@ export const useMultiSelect = () => {
   const lastSelectedNode = ref(null)
 
   const multiStateLength = computed(() => multiSelectedStates.value.length)
+
+  // 初始化多选节点
+  const initMultiSelect = () => {
+    multiSelectedStates.value = [initMultiState]
+  }
 
   // 设置多选节点
   const setMultiSelection = (node, append = false) => {
@@ -95,6 +102,7 @@ export const useMultiSelect = () => {
   return {
     multiSelectedStates,
     multiStateLength,
+    initMultiSelect,
     setMultiSelection,
     getMultiSelectionState,
     toggleMultiSelection,

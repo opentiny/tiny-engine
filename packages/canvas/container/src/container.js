@@ -24,6 +24,7 @@ import { useCanvas, useLayout, useTranslate, useMaterial } from '@opentiny/tiny-
 import { utils } from '@opentiny/tiny-engine-utils'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import Builtin from '../../render/src/builtin/builtin.json' //TODO 画布内外应该分开
+import { useMultiSelect } from './composables/useMultiSelect'
 
 export const POSITION = Object.freeze({
   TOP: 'top',
@@ -709,11 +710,18 @@ export const dragMove = (event, isHover) => {
   }
 }
 
+const { clearMultiSelection, initMultiSelect } = useMultiSelect()
+
 // type == clickTree, 为点击大纲; type == loop-id=xxx ,为点击循环数据
 export const selectNode = async (id, type) => {
   if (type && type.indexOf('loop-id') > -1) {
     const loopId = type.split('=')[1]
     canvasState.loopId = loopId
+  }
+
+  if (type === 'clickTree') {
+    clearMultiSelection()
+    initMultiSelect()
   }
 
   const { node, parent } = useCanvas().getNodeWithParentById(id) || {}
