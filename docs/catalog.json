@@ -64,8 +64,8 @@
           "title": "开始",
           "name": "development-getting-started",
           "articles": [
-            { "title": "简介", "name": "introduction.md" },
-            { "title": "快速上手", "name": "quick-start.md" }
+            { "title": "简介", "name": "dev-intro.md" },
+            { "title": "快速上手", "name": "dev-quick-start.md" }
           ]
         },
         {
@@ -127,11 +127,11 @@
                 { "title": "应用管理", "name": "app-management.md" },
                 { "title": "区块分类", "name": "block-categories.md" },
                 { "title": "应用工具类管理", "name": "app-utility-management.md" },
-                { "title": "区块管理", "name": "block-management.md" },
+                { "title": "区块管理", "name": "block-management-api.md" },
                 { "title": "数据源管理", "name": "data-source-management.md" },
                 { "title": "DSL代码生成", "name": "dsl-code-generation.md" },
                 { "title": "物料中心", "name": "material-center.md" },
-                { "title": "页面管理", "name": "page-management.md" },
+                { "title": "页面管理", "name": "page-management-api.md" },
                 { "title": "APP服务", "name": "app-services.md" }
               ]
             }
@@ -156,7 +156,7 @@
           "title": "生态中心",
           "name": "ecosystem-center",
           "articles": [
-            { "title": "介绍", "name": "introduction.md" },
+            { "title": "介绍", "name": "ecosystem-intro.md" },
             { "title": "如何导入组件库", "name": "how-to-import-library.md" },
             { "title": "如何发布区块", "name": "how-to-publish-block.md" },
             { "title": "发布其他生态", "name": "publish-other-ecosystems.md" }
@@ -177,7 +177,7 @@
           "title": "关于物料",
           "name": "about-materials",
           "articles": [
-            { "title": "介绍", "name": "introduction.md" },
+            { "title": "介绍", "name": "materials-intro.md" },
             { "title": "创建物料资产包", "name": "create-material-asset-package.md" },
             { "title": "添加组件库和区块", "name": "add-library-and-blocks.md" },
             { "title": "构建物料资产包", "name": "build-material-asset-package.md" }
@@ -187,7 +187,7 @@
           "title": "关于设计器",
           "name": "about-designer",
           "articles": [
-            { "title": "介绍", "name": "introduction.md" },
+            { "title": "介绍", "name": "designer-intro.md" },
             { "title": "创建设计器", "name": "create-designer.md" },
             {
               "title": "定制物料资产包、主题、DSL、工具栏和插件栏",

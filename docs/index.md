@@ -36,8 +36,8 @@
 ## 平台开发指南
 
 - 开始
-  - [简介](./development-getting-started/introduction.md)
-  - [快速上手](./development-getting-started/quick-start.md)
+  - [简介](./development-getting-started/dev-intro.md)
+  - [快速上手](./development-getting-started/dev-quick-start.md)
 - 解决方案
   - [服务端部署方案](./solutions/server-deployment-solution.md)
   - [区块发布方案](./solutions/block-release-solution.md)
@@ -71,11 +71,11 @@
     - [应用管理](./api/backend-api/app-management.md)
     - [区块分类](./api/backend-api/block-categories.md)
     - [应用工具类管理](./api/backend-api/app-utility-management.md)
-    - [区块管理](./api/backend-api/block-management.md)
+    - [区块管理](./api/backend-api/block-management-api.md)
     - [数据源管理](./api/backend-api/data-source-management.md)
     - [DSL代码生成](./api/backend-api/dsl-code-generation.md)
     - [物料中心](./api/backend-api/material-center.md)
-    - [页面管理](./api/backend-api/page-management.md)
+    - [页面管理](./api/backend-api/page-management-api.md)
     - [APP服务](./api/backend-api/app-services.md)
 - 实战案例
   - [PDM元数据审批电子流](./practical-cases/pdm-metadata-approval-workflow.md)
@@ -85,7 +85,7 @@
 ## 网站文档
 
 - 生态中心
-  - [介绍](./ecosystem-center/introduction.md)
+  - [介绍](./ecosystem-center/ecosystem-intro.md)
   - [如何导入组件库](./ecosystem-center/how-to-import-library.md)
   - [如何发布区块](./ecosystem-center/how-to-publish-block.md)
   - [发布其他生态](./ecosystem-center/publish-other-ecosystems.md)
@@ -93,12 +93,12 @@
   - [创建应用（创建空白应用、从模板创建应用）](./about-applications/create-application-blank-or-template.md)
   - [开发应用](./about-applications/develop-application.md)
 - 关于物料
-  - [介绍](./about-materials/introduction.md)
+  - [介绍](./about-materials/materials-intro.md)
   - [创建物料资产包](./about-materials/create-material-asset-package.md)
   - [添加组件库和区块](./about-materials/add-library-and-blocks.md)
   - [构建物料资产包](./about-materials/build-material-asset-package.md)
 - 关于设计器
-  - [介绍](./about-designer/introduction.md)
+  - [介绍](./about-designer/designer-intro.md)
   - [创建设计器](./about-designer/create-designer.md)
   - [定制物料资产包、主题、DSL、工具栏和插件栏](./about-designer/customize-material-package-themes-dsl-toolbar-plugins.md)
   - [定制设计器](./about-designer/customize-designer.md)
