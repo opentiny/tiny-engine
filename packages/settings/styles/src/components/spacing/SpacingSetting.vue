@@ -5,7 +5,14 @@
         <svg-icon v-show="isMargin" name="margin"></svg-icon>
         <svg-icon v-show="isPadding" name="padding"></svg-icon>
       </span>
-      <numeric-select :name="property.name" :numericalText="numericalText" @update="inputChange" />
+      <numeric-select
+        v-if="isMargin"
+        :name="property.name"
+        :numericalText="numericalText"
+        :min="-Infinity"
+        @update="inputChange"
+      />
+      <numeric-select v-if="isPadding" :name="property.name" :numericalText="numericalText" @update="inputChange" />
     </div>
     <div class="content-value">
       <div v-show="isMargin" :class="['auto', { active: 'auto' === propertyValue }]" @click="select('auto')">Auto</div>
