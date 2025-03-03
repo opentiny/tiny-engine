@@ -13,7 +13,11 @@
     ></canvas-action>
   </div>
   <canvas-router-jumper :hoverState="hoverState" :inactiveHoverState="inactiveHoverState"></canvas-router-jumper>
-  <canvas-viewer-switcher :hoverState="hoverState" :inactiveHoverState="inactiveHoverState"></canvas-viewer-switcher>
+  <canvas-viewer-switcher
+    ref="viewerSwitcher"
+    :hoverState="hoverState"
+    :inactiveHoverState="inactiveHoverState"
+  ></canvas-viewer-switcher>
   <canvas-divider :selectState="selectState"></canvas-divider>
   <canvas-resize-border :iframe="iframe"></canvas-resize-border>
   <canvas-resize>
@@ -105,6 +109,7 @@ export default {
     let showSettingModel = ref(false)
     let target = ref(null)
     const srcAttrName = computed(() => (props.canvasSrc ? 'src' : 'srcdoc'))
+    const viewerSwitcher = ref(null)
 
     const containerPanel = ref(null)
     const insertContainer = ref(false)
@@ -115,6 +120,7 @@ export default {
       const { clientX, clientY } = event
       const element = getElement(event.target)
       closeMenu()
+      viewerSwitcher.value?.closePopover()
       let node = getCurrent().schema
 
       if (element) {
@@ -352,7 +358,8 @@ export default {
       insertPosition,
       insertContainer,
       loading,
-      srcAttrName
+      srcAttrName,
+      viewerSwitcher
     }
   }
 }

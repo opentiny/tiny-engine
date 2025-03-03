@@ -116,8 +116,12 @@ export default {
       }, 0)
     }
 
-    const handleSwitchPreview = (previewId) => {
+    const closePopover = () => {
       popoverRef.value?.doClose()
+    }
+
+    const handleSwitchPreview = (previewId) => {
+      closePopover()
       getMetaApi(META_SERVICE.GlobalService).updatePreviewId(previewId)
       useCanvas().canvasApi.value?.clearSelect?.()
     }
@@ -152,6 +156,7 @@ export default {
     return {
       popoverRef,
       state,
+      closePopover,
       handleClick,
       handleSwitchPreview
     }
