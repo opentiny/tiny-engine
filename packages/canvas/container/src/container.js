@@ -123,40 +123,6 @@ export const lineState = reactive({
   ...initialLineState
 })
 
-// 设置多选节点
-export function setMultiState(multiSelectedStates, node, append = false) {
-  if (!node || typeof node !== 'object') {
-    multiSelectedStates.value = []
-    return
-  }
-
-  if (append) {
-    const nodeIds = new Set(multiSelectedStates.value.map((state) => state.id))
-    if (!nodeIds.has(node.id)) {
-      multiSelectedStates.value = [...toRaw(multiSelectedStates.value), node]
-    }
-  } else {
-    if (Array.isArray(node)) {
-      multiSelectedStates.value = node
-    } else {
-      multiSelectedStates.value = [node]
-    }
-  }
-}
-
-// 处理多选节点
-export function handleMultiState(multiSelectedStates, selectState) {
-  const nodeId = selectState?.id
-  const isExistNode = multiSelectedStates.value.map((state) => state.id).includes(nodeId)
-
-  if (nodeId && isExistNode) {
-    const exList = multiSelectedStates.value.filter((state) => state.id !== nodeId)
-    setMultiState(multiSelectedStates, exList)
-  } else {
-    setMultiState(multiSelectedStates, selectState, true)
-  }
-}
-
 export const clearHover = () => {
   Object.assign(hoverState, initialRectState, { slot: null })
   Object.assign(inactiveHoverState, initialRectState, { slot: null })
@@ -289,7 +255,7 @@ export const getInactiveElement = (element) => {
   return undefined
 }
 
-const getRect = (element) => {
+export const getRect = (element) => {
   if (element === getDocument().body) {
     const { innerWidth: width, innerHeight: height } = getWindow()
     return {
@@ -304,26 +270,6 @@ const getRect = (element) => {
     }
   }
   return element.getBoundingClientRect()
-}
-
-// 获取多选节点
-export const getMultiState = (element) => {
-  const { top, left, width, height } = getRect(element)
-  const nodeTag = element?.getAttribute(NODE_TAG)
-  const nodeId = element?.getAttribute(NODE_UID) || 'body'
-
-  const { node } = useCanvas().getNodeWithParentById(nodeId) || {}
-
-  return {
-    id: nodeId,
-    componentName: nodeTag,
-    doc: getDocument(element),
-    top,
-    left,
-    width,
-    height,
-    schema: toRaw(node)
-  }
 }
 
 const insertAfter = ({ parent, node, data }) => {
