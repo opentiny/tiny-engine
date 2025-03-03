@@ -1,7 +1,7 @@
 ### 一、创建引入AI插件的设计器
 
 AI生成页面的能力，以可拔插插件的形式，依附在设计器上。同时，AI生成的页面，也将在设计器的画布中渲染出来。
-所以要使用AI生成页面的能力，需要先创建引入了AI插件的设计器，如下图所示。创建设计器参考[此文档](../about-designer/create-designer.md)
+所以要使用AI生成页面的能力，需要先创建引入了AI插件的设计器，如下图所示。创建设计器参考[此文档](../about-designer/create-designer.md "portal")
 ![引入AI插件](./imgs/addAiPlugin.png)
 
 ### 二、打开AI聊天窗口
