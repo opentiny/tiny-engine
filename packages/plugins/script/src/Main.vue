@@ -57,7 +57,7 @@ export default {
       type: Array
     }
   },
-  emits: ['close', 'fix-panel'],
+  emits: ['close'],
   setup(props, { emit }) {
     const docsUrl = useHelp().getDocsUrl('script')
     const { state, monaco, change, close, saveMethods } = useMethod({ emit })
