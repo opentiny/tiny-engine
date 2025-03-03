@@ -61,7 +61,6 @@ export default {
 <style lang="less" scoped>
 .list {
   margin-top: 12px;
-  overflow: auto;
 }
 
 .item-text {

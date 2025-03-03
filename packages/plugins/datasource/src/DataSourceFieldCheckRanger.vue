@@ -66,7 +66,6 @@ export default {
 }
 .collection-field-num {
   display: flex;
-  align-items: center;
   justify-content: space-between;
 }
 </style>
