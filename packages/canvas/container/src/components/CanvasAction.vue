@@ -132,7 +132,7 @@ import {
   dragStart,
   getCurrentElement
 } from '../container'
-import { useLayout, useMaterial, useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { useLayout, useMaterial, useCanvas, useMessage } from '@opentiny/tiny-engine-meta-register'
 import { Popover } from '@opentiny/vue'
 import shortCutPopover from './shortCutPopover.vue'
 
@@ -211,6 +211,7 @@ export default {
           // eslint-disable-next-line no-extra-semi
           ;[list[index], list[toIndex]] = [list[toIndex], list[index]]
 
+          useMessage().publish({ topic: 'schemaChange', data: {} })
           updateRect()
         }
       }
