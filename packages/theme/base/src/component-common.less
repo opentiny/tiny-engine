@@ -90,7 +90,7 @@
   &.tiny-input-prefix .tiny-input__inner {
     padding: 0 8px 0 30px;
   }
-  .tiny-input__inner {
+  .tiny-input__inner.tiny-input__inner {
     border-radius: var(--te-base-border-radius-1);
     padding: 0 8px 0 12px;
     height: 24px;
@@ -460,6 +460,7 @@
     padding: 20px;
     border-radius: var(--te-base-border-radius-1);
     box-shadow: 0 0 10px 0 var(--te-base-box-shadow-rgba-1);
+    background-color: var(--te-common-bg-container);
     .tiny-modal__header {
       padding: 0;
       font-size: var(--te-base-font-size-1);
@@ -468,12 +469,14 @@
       position: relative;
       .tiny-modal__title {
         font-weight: var(--te-base-font-weight-bold);
+        color: var(--te-common-text-primary);
       }
       .tiny-modal__close-btn {
         top: -4px;
         right: -4px;
+        color: var(--te-common-icon-primary);
         &:hover {
-          color: var(--te-common-icon-primary);
+          fill: var(--te-common-icon-hover);
         }
       }
     }
@@ -1011,6 +1014,7 @@
     border-radius: var(--te-base-border-radius-1);
     border-color: var(--te-common-border-default);
     color: var(--te-common-text-primary);
+    background-color: transparent;
     &:hover {
       border-color: var(--te-common-border-active);
     }
@@ -1022,13 +1026,25 @@
     background: var(--te-common-bg-disabled);
     color: var(--te-common-text-disabled);
   }
+  &::before,
+  &::after {
+    background-color: transparent;
+  }
 }
 // 指引弹窗
 
 .tiny-guide.tiny-guide {
   background-color: var(--te-common-bg-popover);
   .shepherd-content .shepherd-header,
-  .shepherd-arrow:before {
+  .shepherd-arrow::before {
+    background-color: var(--te-common-bg-popover);
+  }
+  .shepherd-content .shepherd-text,
+  .shepherd-arrow::before {
+    background-color: var(--te-common-bg-popover);
+  }
+  .shepherd-content .shepherd-footer,
+  .shepherd-arrow::before {
     background-color: var(--te-common-bg-popover);
   }
   &.shepherd-has-title[data-popper-placement^='bottom'],
