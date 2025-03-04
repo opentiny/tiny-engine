@@ -224,6 +224,8 @@ export default {
             setCurrentNode(event, doc)
             target.value = event.target
           })
+
+          useMessage().publish({ topic: 'canvas-mousedown', data: { event } })
         })
 
         win.addEventListener('scroll', () => {
