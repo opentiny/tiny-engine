@@ -134,10 +134,6 @@ export default {
     }
 
     const handleMouseEnterRow = (row) => {
-      if (state.isLock) {
-        return
-      }
-
       const { hoverNode } = useCanvas().canvasApi.value
 
       hoverNode(row.id)
@@ -190,10 +186,6 @@ export default {
     }
 
     const handleClickRow = (row) => {
-      if (state.isLock) {
-        return
-      }
-
       const { selectNode } = useCanvas().canvasApi.value
       selectNode(row.id, 'clickTree')
     }
