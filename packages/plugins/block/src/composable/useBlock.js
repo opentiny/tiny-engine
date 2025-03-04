@@ -717,8 +717,8 @@ const getBlockAssetsByVersion = (block, version) => {
 
     assets = {
       ...block.assets,
-      scripts: block.assets.scripts.map(replaceUri),
-      styles: block.assets.styles.map(replaceUri)
+      scripts: (block.assets?.scripts || []).map(replaceUri),
+      styles: (block.assets?.styles || []).map(replaceUri)
     }
   }
 
