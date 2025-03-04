@@ -165,7 +165,6 @@ export default {
     return {
       popoverRef,
       state,
-      closePopover,
       handleClick,
       handleSwitchPreview
     }
