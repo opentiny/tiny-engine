@@ -25,7 +25,9 @@ const state = reactive({
   isChanged: false,
   hasError: false,
   editorSelection: null,
-  completionProvider: null
+  completionProvider: null,
+  // 记录当前是否已经有弹窗，防止使用 ctrl + s 的时候重复弹窗
+  hasErrorPopup: false
 })
 
 const monaco = ref(null)
@@ -86,14 +88,18 @@ export const saveMethod = ({ name, content }) => {
 
 const saveMethods = () => {
   const { message } = useModal()
-  if (!state.isChanged) {
+  if (!state.isChanged || state.hasErrorPopup) {
     return false
   }
 
   if (state.hasError) {
+    state.hasErrorPopup = true
     message({
       status: 'error',
-      message: '代码静态检查有错误，请先修改后再保存'
+      message: '代码静态检查有错误，请先修改后再保存',
+      exec: () => {
+        state.hasErrorPopup = false
+      }
     })
 
     return false
