@@ -37,8 +37,18 @@ program
 program
   .command('create-theme <name>')
   .description('create a new tiny-engine theme 创建一个新的 tiny-engine 主题')
-  .action((name) => {
-    createTheme(name)
+  .action(async (name) => {
+    const themeName = await input({
+      message: 'please enter the project name. 请输入主题名称',
+      validate: (inputName) => {
+        if (!inputName) {
+          return 'project name can not be empty. 主题名称不允许为空。'
+        }
+
+        return true
+      }
+    })
+    createTheme(name, themeName)
   })
 
 program
@@ -83,7 +93,21 @@ program
       theme: createTheme
     }
 
-    typeMapper[type](projectName)
+    let themeName = ''
+    if (type === 'theme') {
+      themeName = await input({
+        message: 'please enter the project name. 请输入主题名称',
+        validate: (inputName) => {
+          if (!inputName) {
+            return 'project name can not be empty. 主题名称不允许为空。'
+          }
+
+          return true
+        }
+      })
+    }
+
+    typeMapper[type](projectName, themeName)
   })
 
 program.parse(process.argv)

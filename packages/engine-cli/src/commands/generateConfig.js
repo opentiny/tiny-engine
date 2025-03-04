@@ -27,3 +27,17 @@ export const generatePackageJson = (name, options, templatePath) => {
 
   return templatePackageJson
 }
+
+// 根据参数生成 config 文件内容
+export const generateThemeMeta = (themeName = 'custom') => {
+  const metaContent = `
+    export default {
+      id: 'engine.theme.${themeName}',
+      text: '自定义主题',
+      label: '${themeName}',
+      icon: 'dark'
+    }
+  `
+
+  return metaContent
+}

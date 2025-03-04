@@ -14,7 +14,7 @@ import { cwd } from 'node:process'
 import path from 'node:path'
 import fs from 'fs-extra'
 import chalk from 'chalk'
-import { generateConfig, generatePackageJson } from './generateConfig'
+import { generateConfig, generatePackageJson, generateThemeMeta } from './generateConfig'
 
 const logger = console
 
@@ -63,10 +63,17 @@ export function createPlugin(name) {
   )
 }
 
-export function createTheme(name) {
+export function createTheme(name, themeName) {
   const sourcePath = path.join(__dirname, '../template/theme/')
   const destPath = path.join(cwd(), name)
   fs.copySync(sourcePath, destPath)
+
+  const configContent = generateThemeMeta(themeName)
+
+  fs.outputFileSync(path.resolve(destPath, 'meta.js'), configContent)
+  const content = fs.readFileSync(path.resolve(destPath, 'src/common.less'), 'utf-8')
+  const outputContent = content.replace(/data-theme='custom'/g, `data-theme='${themeName}'`)
+  fs.writeFileSync(path.resolve(destPath, 'src/common.less'), outputContent, 'utf-8')
 
   logger.log(
     chalk.green(`create finish, run the follow command to start project: \ncd ${name} && npm install && npm run dev`)

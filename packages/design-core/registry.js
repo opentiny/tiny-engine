@@ -70,14 +70,14 @@ export default {
   themes: [
     {
       id: 'engine.theme.light',
-      text: '浅色模式',
+      text: '浅色主题',
       label: 'light',
       icon: 'light',
       oppositeTheme: 'dark'
     },
     {
       id: 'engine.theme.dark',
-      text: '深色模式',
+      text: '深色主题',
       label: 'dark',
       icon: 'dark',
       oppositeTheme: 'light'
