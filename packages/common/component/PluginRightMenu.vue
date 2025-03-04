@@ -1,7 +1,7 @@
 <template>
   <ul
     v-if="contextMenu.visible"
-    class="context-menu"
+    class="plugin-context-menu"
     :style="{ left: contextMenu.x + 'px', top: contextMenu.y + 'px' }"
   >
     <li v-if="contextMenu.type" @click="hidePlugin">隐藏 "{{ contextMenu.item.title }}"</li>
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { reactive, onMounted, onBeforeUnmount } from 'vue'
+import { reactive, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { useLayout } from '@opentiny/tiny-engine-meta-register'
 export default {
   props: {
@@ -55,10 +55,26 @@ export default {
     // 显示菜单
     const contextMenuWidth = props.align.includes('right') ? 130 : 0
     const showContextMenu = (x, y, type, item, index, align) => {
+      const windowHeight = window.innerHeight
+
       contextMenu.type = type
       contextMenu.visible = true
-      contextMenu.x = x - contextMenuWidth
-      contextMenu.y = y
+
+      nextTick(() => {
+        const pluginMenuPanel = document.querySelector('.plugin-context-menu')
+        const menuHeight = pluginMenuPanel?.offsetHeight
+
+        const spaceBelow = windowHeight - y - 20
+
+        if (menuHeight && spaceBelow < menuHeight) {
+          contextMenu.y = y - menuHeight
+        } else {
+          contextMenu.y = y
+        }
+
+        contextMenu.x = x - contextMenuWidth
+      })
+
       if (type) {
         contextMenu.item = item
         contextMenu.index = index
@@ -98,7 +114,7 @@ export default {
     }
 
     const handleClickOutside = (event) => {
-      if (!event.target.closest('.context-menu')) {
+      if (!event.target.closest('.plugin-context-menu')) {
         hideContextMenu()
       }
     }
@@ -126,7 +142,7 @@ export default {
 
 <style scoped>
 /* 引入B的CSS样式 */
-.context-menu {
+.plugin-context-menu {
   position: absolute;
   background: white;
   border: 1px solid #ccc;
@@ -136,7 +152,7 @@ export default {
   z-index: 1000;
 }
 
-.context-menu-header {
+.plugin-context-menu-header {
   padding: 8px 12px;
   font-weight: bold;
   cursor: default;
@@ -147,12 +163,12 @@ export default {
   border-bottom: 1px solid #ccc;
 }
 
-.context-menu li {
+.plugin-context-menu li {
   padding: 8px 12px;
   cursor: pointer;
 }
 
-.context-menu li:hover {
+.plugin-context-menu li:hover {
   background: #f0f0f0;
 }
 .menu-item-wrapper {
