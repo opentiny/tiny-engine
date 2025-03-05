@@ -34,11 +34,12 @@ const formatScript = (string) => {
   const options = {
     parser: 'babel',
     plugins: [parserBabel],
-    ...prettierConfig
+    ...prettierConfig,
+    filePath: 'tiny-engine.js'
   }
   try {
     // 低码中的编辑器大多只会输入js值，并不是一个完整的javascript表达式，无法格式化，因此需要特殊处理预格式化该种情形
-    newStr = prettier.format(`!${string}`, options).substring(1).replace(/\n$/, '')
+    newStr = prettier.format(`${string}`, options).replace(/\n$/, '')
   } catch (error) {
     newStr = prettier.format(newStr, options)
   }
