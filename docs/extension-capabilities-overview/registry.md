@@ -62,7 +62,7 @@ const register = {
 ```javascript
 import { defineEntry } from '@opentiny/tiny-engine'
 
-const register = {
+const registry = {
   root: {
     id: 'engine.root',
     metas: [GenerateCodeService, GlobalService]
