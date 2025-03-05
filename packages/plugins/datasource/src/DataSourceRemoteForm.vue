@@ -84,12 +84,12 @@ export default {
 <style lang="less" scoped>
 .create-form {
   .error-tip {
-    color: var(--ti-lowcode-datasource-error-tip-color);
+    color: var(--te-datasource-error-text-color);
     margin-top: 4px;
     font-size: 12px;
   }
   :deep(.tiny-form-item__label) {
-    color: var(--ti-lowcode-datasource-label-color);
+    color: var(--te-datasource-label-text-color);
   }
   .textarea-warp {
     display: flex;
@@ -100,18 +100,6 @@ export default {
       width: 100px;
       border: none;
     }
-    :deep(.tiny-input-group__prepend) {
-      background: var(--ti-lowcode-datasource-respones-select-color-bg);
-      border-color: var(--ti-lowcode-datasource-select-border-color);
-      .tiny-input-suffix {
-        .tiny-input-display-only {
-          .tiny-input__inner {
-            border-color: var(--ti-lowcode-datasource-select-border-right-color-bg);
-            border-left: none;
-          }
-        }
-      }
-    }
     :deep(.tiny-input-suffix) {
       width: 100px;
       .tiny-input__inner {
@@ -121,14 +109,12 @@ export default {
     }
     :deep(.tiny-input-group__append) {
       border: none;
-      background: var(--ti-lowcode-datasource-respones-color-bg);
-    }
-    .requestBtn {
-      color: var(--ti-lowcode-datasource-respones-border-color-bg);
+      background: var(--te-datasource-respones-bg-color);
     }
     :deep(.border-input) {
       input {
-        border-radius: 0;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
         border-left: none;
       }
     }

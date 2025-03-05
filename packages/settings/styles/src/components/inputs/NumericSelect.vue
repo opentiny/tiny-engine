@@ -6,7 +6,7 @@
       controls-position="right"
       :unit="numericalSuffix"
       :empty-value="null"
-      min="0"
+      :min="min"
       allow-empty
       @mouseover="isNumericHover = true"
       @mouseleave="isNumericHover = false"
@@ -41,12 +41,16 @@ export default {
       default: false
     },
     placeholder: {
-      type: [String, Number],
+      type: String,
       default: ''
     },
     suffix: {
       type: String,
-      default: 'PX'
+      default: 'px'
+    },
+    min: {
+      type: Number,
+      default: 0
     }
   },
   emits: useEvent(),
@@ -105,11 +109,11 @@ export default {
 .style-numeric {
   display: flex;
   align-items: center;
-  background-color: var(--ti-lowcode-tabs-bg);
+  background-color: var(--te-styles-common-bg-color);
   border-radius: 3px;
   transition: 0.3s;
   &.focus {
-    border-color: var(--te-common-border-default);
+    border-color: var(--te-styles-common-border-color);
   }
   :deep(.tiny-numeric) {
     width: 100%;
@@ -119,14 +123,14 @@ export default {
 
     .tiny-numeric__unit {
       font-size: 12px;
-      color: var(--te-common-text-weaken);
-      background-color: var(--te-common-bg-default);
+      color: var(--te-styles-common-text-color-weaken);
+      background-color: var(--te-styles-common-bg-color);
     }
   }
   .suffix-wrap {
     .suffix-text {
       font-size: 12px;
-      color: var(--te-common-text-weaken);
+      color: var(--te-styles-common-text-color-weaken);
     }
 
     &:hover {

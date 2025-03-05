@@ -5,7 +5,7 @@
         <svg-icon v-show="isMargin" name="margin"></svg-icon>
         <svg-icon v-show="isPadding" name="padding"></svg-icon>
       </span>
-      <numeric-select :name="property.name" :numericalText="numericalText" @update="inputChange" />
+      <numeric-select :name="property.name" :min="minVal" :numericalText="numericalText" @update="inputChange" />
     </div>
     <div class="content-value">
       <div v-show="isMargin" :class="['auto', { active: 'auto' === propertyValue }]" @click="select('auto')">Auto</div>
@@ -45,7 +45,7 @@ export default {
   emits: useEvent(),
   setup(props, { emit }) {
     let sliderFlag = true
-    const options = [0, 10, 20, 40, 60, 100, 140, 220]
+    const options = [0, 4, 8, 12, 16, 20, 24, 32]
     const isReset = computed(() => Boolean(props.property.value))
     const isMargin = computed(
       () => props.property.type === SPACING_PROPERTY.Margin || props.property.type === POSITION_PROPERTY.Position
@@ -60,6 +60,8 @@ export default {
     const numericalText = computed(() =>
       props.property.value?.indexOf('px') > -1 ? Number.parseInt(props.property.value) : props.property.value
     )
+
+    const minVal = computed(() => (isMargin.value ? -Infinity : 0))
 
     const updateStyle = (value) => {
       emit('update', { [props.property.name]: value })
@@ -105,7 +107,8 @@ export default {
       reset,
       select,
       inputChange,
-      sliderChange
+      sliderChange,
+      minVal
     }
   }
 }
@@ -121,7 +124,7 @@ export default {
     align-items: center;
     .icon {
       font-size: 16px;
-      color: var(--ti-lowcode-toolbar-breadcrumb-color);
+      color: var(--te-styles-common-icon-color);
       margin-right: 18px;
     }
 
@@ -142,15 +145,15 @@ export default {
       height: 60px;
       line-height: 60px;
       text-align: center;
-      border: 1px solid var(--ti-lowcode-toolbar-border-color);
-      background: var(--ti-lowcode-canvas-wrap-bg);
+      border: 1px solid var(--te-styles-common-border-color);
+      background: var(--te-styles-spacing-setting-bg-color);
       cursor: pointer;
       box-sizing: border-box;
 
       &:hover,
       &.active {
-        color: var(--ti-lowcode-style-setting-label-color);
-        background: var(--ti-lowcode-style-setting-label-bg);
+        color: var(--te-styles-common-setting-text-color);
+        background: var(--te-styles-common-setting-bg-color);
       }
     }
 
@@ -178,42 +181,17 @@ export default {
         line-height: 26px;
         margin-left: 3%;
         text-align: center;
-        border: 1px solid var(--ti-lowcode-toolbar-border-color);
-        background: var(--ti-lowcode-canvas-wrap-bg);
+        border: 1px solid var(--te-styles-common-border-color);
+        background: var(--te-styles-spacing-setting-bg-color);
         cursor: pointer;
         transition: 0.3s;
         box-sizing: border-box;
 
         &:hover,
         &.active {
-          color: var(--ti-lowcode-style-setting-label-color);
-          background: var(--ti-lowcode-style-setting-label-bg);
+          color: var(--te-styles-common-setting-text-color);
+          background: var(--te-styles-common-setting-bg-color);
         }
-      }
-    }
-  }
-
-  :deep(.tiny-slider__input) {
-    display: flex;
-    flex: 1 1 0;
-    border: 1px solid var(--ti-lowcode-dialog-tip-border-color);
-    border-radius: 4px;
-    background-color: var(--ti-lowcode-breadcrumb-hover-bg);
-
-    input {
-      border: none;
-    }
-
-    span {
-      padding: 0 4px;
-      position: relative;
-      &::before {
-        content: 'PX';
-        display: inline-block;
-        background: var(--ti-lowcode-breadcrumb-hover-bg);
-        word-break: keep-all;
-        position: absolute;
-        top: 0;
       }
     }
   }

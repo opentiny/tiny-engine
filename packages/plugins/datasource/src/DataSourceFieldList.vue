@@ -20,10 +20,10 @@
     </div>
     <div class="field-operation" v-if="!field.editable">
       <div class="field-handler" @click="openFieldForm(index)">
-        <svg-button name="to-edit" tips="编辑" placement="top" @click="handleEdit(data)"></svg-button>
+        <svg-button name="to-edit" :hoverBgColor="false" @click="handleEdit(data)"></svg-button>
       </div>
       <div class="field-handler" @click="deleteField($event, field)">
-        <svg-button tips="删除" name="text-source-delete"></svg-button>
+        <svg-button :hoverBgColor="false" name="text-source-delete"></svg-button>
       </div>
     </div>
   </data-source-field-form>
@@ -138,15 +138,15 @@ export default {
     .field-cell-name {
       margin-left: 5px;
       .field-name {
-        color: var(--ti-lowcode-data-source-color);
+        color: var(--te-datasource-common-text-color-primary);
       }
       .description {
-        color: var(--ti-lowcode-datasource-tip-color);
+        color: var(--te-datasource-tip-text-color);
         margin-left: 5px;
       }
     }
     svg {
-      color: var(--ti-lowcode-datasource-toolbar-icon-color);
+      color: var(--te-datasource-toolbar-icon-color);
     }
   }
 }
@@ -159,7 +159,7 @@ export default {
   }
 }
 .form-item-border:hover {
-  background: var(--ti-lowcode-data-source-box-bg);
+  background: var(--te-datasource-box-bg-color);
   .field-operation {
     display: flex;
     justify-content: space-between;

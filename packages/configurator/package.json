@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-configurator",
-  "version": "2.0.0-rc.3",
+  "version": "2.2.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -22,8 +22,8 @@
     "vite": "^5.4.2"
   },
   "peerDependencies": {
-    "@opentiny/vue": "^3.14.0",
-    "@opentiny/vue-icon": "^3.14.0",
+    "@opentiny/vue": "^3.20.0",
+    "@opentiny/vue-icon": "^3.20.0",
     "vue": "^3.4.15"
   },
   "dependencies": {
@@ -31,7 +31,7 @@
     "@opentiny/tiny-engine-meta-register": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
     "@vue/shared": "^3.3.4",
-    "monaco-editor": "0.33.0",
+    "monaco-editor": "0.51.0",
     "vue-draggable-next": "2.1.0"
   },
   "publishConfig": {

@@ -49,10 +49,35 @@ const getAllNestedBlocksSchema = async (pageSchema, fetchBlockSchemaApi, blockSe
   const extraList = []
 
   schemaList.forEach((item) => {
-    if (item.status === 'fulfilled' && item.value?.[0]?.content) {
-      res.push(item.value[0].content)
-      extraList.push(getAllNestedBlocksSchema(item.value[0].content, fetchBlockSchemaApi, blockSet))
+    const blockItem = item.value?.[0]
+
+    if (item.status !== 'fulfilled' || !blockItem) {
+      return
     }
+
+    const historyId = blockItem?.current_history
+    const historySchema = blockItem?.histories?.find?.((historyItem) => historyItem?.id === historyId)
+
+    let schemaContent = null
+
+    if (historyId && historySchema?.content) {
+      schemaContent = historySchema.content
+    } else {
+      schemaContent = blockItem?.content
+    }
+
+    if (!schemaContent) {
+      return
+    }
+
+    // 区块 schema 中加上当前版本号，让后续数据支持缓存或更丰富的操作
+    schemaContent.version = historyId || ''
+    // 区块子依赖
+    schemaContent.subBlockDeps = blockNames
+
+    res.push(schemaContent)
+
+    extraList.push(getAllNestedBlocksSchema(schemaContent, fetchBlockSchemaApi, blockSet))
   })
   ;(await Promise.allSettled(extraList)).forEach((item) => {
     if (item.status === 'fulfilled' && item.value) {

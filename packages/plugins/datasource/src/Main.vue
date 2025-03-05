@@ -5,18 +5,20 @@
       <svg-button
         class="set-data-source"
         tips="全局设置"
-        name="text-source-setting"
+        name="global-setting"
         @click="openGlobalDataHanderPanel"
       ></svg-button>
       <svg-button
         class="refresh-data-source"
         tips="刷新数据源"
-        name="text-source-list-ref"
+        name="flow-refresh"
         @click="refreshDataSource"
       ></svg-button>
     </template>
     <template #content>
-      <tiny-button class="add-data-source" @click="openDataSourceFormPanel()"> 添加数据源 </tiny-button>
+      <tiny-button class="add-data-source" @click="openDataSourceFormPanel()">
+        <svg-icon name="add"></svg-icon>添加数据源
+      </tiny-button>
       <data-source-list @edit="openDataSourceFormPanel"></data-source-list>
     </template>
   </plugin-panel>
@@ -144,23 +146,8 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.set-data-source,
-.refresh-data-source {
-  width: 16px;
-  margin-right: 6px !important;
-  color: var(--ti-lowcode-datasource-btn-click-color);
-}
-:deep(button.tiny-button.tiny-button--default) {
-  border-color: var(--ti-lowcode-data-source-border-color);
-}
 .add-data-source {
   margin: 0 12px 12px 12px;
-  color: var(--ti-lowcode-data-source-color);
-
-  &:hover {
-    color: var(--ti-lowcode-meta-codeEditor-hover-color);
-    border-color: var(--ti-lowcode-meta-codeEditor-border-hover-color);
-  }
 }
 :deep(.help-box) {
   position: absolute;

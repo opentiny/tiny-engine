@@ -54,7 +54,7 @@ export default {
   setup() {
     const COMPONENT_PANEL_COLUMNS = '1fr 1fr 1fr'
     const SHORTCUT_PANEL_COLUMNS = '1fr 1fr 1fr 1fr 1fr 1fr'
-    const { generateNode, materialState } = useMaterial()
+    const { generateNode, materialState, getComponentsByGroup } = useMaterial()
     const gridTemplateColumns = ref(COMPONENT_PANEL_COLUMNS)
     const panelState = inject('panelState', {})
     const { components } = materialState
@@ -88,8 +88,17 @@ export default {
       return result
     }
 
+    const initComponents = () => {
+      const groupName = panelState.materialGroup
+      if (groupName) {
+        return getComponentsByGroup(components, groupName)
+      }
+
+      return components
+    }
+
     const state = reactive({
-      components,
+      components: initComponents(),
       activeName: [...Array(components.length).keys()],
       searchValue: ''
     })
@@ -136,20 +145,25 @@ export default {
     padding: 12px;
   }
 
+  :deep(.tiny-collapse-item__content) {
+    padding: 0 var(--te-common-vertical-form-label-spacing) 4px;
+  }
+
   .component-group {
     display: grid;
     width: 100%;
-    color: var(--ti-lowcode-materials-component-list-color);
+    color: var(--te-materials-component-list-text-color);
 
     .component-item {
-      padding: 12px 0;
+      padding: var(--te-common-vertical-form-label-spacing) 0 var(--te-common-vertical-form-label-spacing);
+      margin-bottom: var(--te-common-vertical-form-label-spacing);
       text-align: center;
       user-select: none;
       cursor: move;
-      background: var(--ti-lowcode-common-component-bg);
+      background: var(--te-materials-component-list-item-bg-color);
 
       &:hover {
-        background: var(--ti-lowcode-material-component-list-hover-bg);
+        background: var(--te-materials-component-list-item-bg-color-hover);
         border-radius: 4px;
       }
 
@@ -159,7 +173,7 @@ export default {
         svg {
           font-size: 40px;
           vertical-align: middle;
-          color: var(--ti-lowcode-component-icon-color);
+          color: var(--te-materials-component-list-item-icon-color);
           overflow: hidden;
         }
       }
@@ -188,7 +202,9 @@ export default {
     .tiny-collapse-item.is-active + .tiny-collapse-item {
       margin-top: 0;
     }
-
+    :deep(.tiny-collapse-item__header .tiny-collapse-item__word-overflow) {
+      margin: var(--te-common-vertical-item-spacing-normal) 0px var(--te-common-vertical-form-label-spacing);
+    }
     .components-items {
       .item {
         cursor: pointer;

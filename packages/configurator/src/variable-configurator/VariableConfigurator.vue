@@ -21,6 +21,7 @@
           type="info"
           description="你可以通过点击左侧区域变量列表绑定变量或处理函数，也可以在右边输入模式输入复杂的表达式。"
           class="header-alert"
+          :closable="false"
         ></tiny-alert>
       </div>
       <div class="bind-dialog-content">
@@ -74,6 +75,7 @@
                 <tiny-tooltip
                   placement="top"
                   content="定时更新开启后，页面运行时将会定期请求远程数据源，实现数据定时更新。"
+                  effect="light"
                   ><span>定时更新：</span></tiny-tooltip
                 >
                 <tiny-switch v-model="state.isPoll"></tiny-switch>
@@ -85,7 +87,7 @@
               </div>
             </div>
             <div class="bottom lowcode-scrollbar-thin">
-              <h3>用法</h3>
+              <span class="bottom-title">用法</span>
               <div class="bottom-demo">
                 <p>
                   你可以通过点击左侧区域绑定变量或处理函数，或者点击右边的铅笔按钮切换到输入模式，输入复杂的表达式。
@@ -151,13 +153,15 @@ const CONSTANTS = {
 }
 
 const getJsSlot = () => {
-  const { getNode, getCurrent } = useCanvas().canvasApi.value || {}
+  const { getCurrent } = useCanvas().canvasApi.value || {}
 
-  if (!getNode || !getCurrent) {
+  if (!getCurrent) {
     return [false, {}]
   }
 
-  const jsSlot = getNode(getCurrent()?.parent?.id, true)?.parent
+  const { getNodeWithParentById } = useCanvas()
+
+  const jsSlot = getNodeWithParentById(getCurrent()?.parent?.id, true)?.parent
 
   return [jsSlot?.type === 'JSSlot', jsSlot]
 }
@@ -397,7 +401,7 @@ export default {
     const confirm = () => {
       let variableContent = state.isEditorEditMode ? editor.value?.getEditor().getValue() : state.variable
 
-      const { setSaved, canvasApi } = useCanvas()
+      const { setSaved, getSchema, updateSchema } = useCanvas()
       // 如果新旧值不一样就显示未保存状态
       if (oldValue !== variableContent) {
         setSaved(false)
@@ -409,14 +413,11 @@ export default {
 
       if (variableContent) {
         if (state.bindPrefix === CONSTANTS.DATASOUCEPREFIX) {
-          const pageSchema = canvasApi.value.getSchema()
+          const pageSchema = getSchema()
           const stateName = state.variable.replace(`${CONSTANTS.STATE}`, '')
           const staticData = state.variableContent.map(({ _id, ...other }) => other)
 
-          pageSchema.state[stateName] = staticData
-
-          // 设置画布上下文环境，让画布触发更新渲染
-          canvasApi.value.setState({ [stateName]: staticData })
+          updateSchema({ ...pageSchema.state, [stateName]: staticData })
 
           // 这里在setup生命周期函数内部处理用户真实环境中的数据源请求
           genRemoteMethodToLifeSetup(stateName, state.dataSouce, pageSchema)
@@ -451,7 +452,7 @@ export default {
       state.isVisible = true
       state.variableName = bindKey.value
       state.variable = getInitVariable()
-      state.variables = useCanvas().canvasApi.value.getSchema()?.state || {}
+      state.variables = useCanvas().getSchema()?.state || {}
       state.bindPrefix = CONSTANTS.STATE
       state.variableContent = state.variables[bindKey.value]
       nextTick(() => window.dispatchEvent(new Event('resize')))
@@ -459,7 +460,7 @@ export default {
 
     const selectItem = (item) => {
       state.active = item.id
-      const { canvasApi } = useCanvas()
+      const { getSchema } = useCanvas()
 
       if (item.id === 'function') {
         state.bindPrefix = CONSTANTS.THIS
@@ -468,14 +469,14 @@ export default {
       } else if (item.id === 'bridge' || item.id === 'utils') {
         state.bindPrefix = `${CONSTANTS.THIS}${item.id}.`
         const bridge = {}
-        useResource().resState[item.id]?.forEach((res) => {
+        useResource().appSchemaState[item.id]?.forEach((res) => {
           bridge[res.name] = `${item.id}.${res.content.exportName}`
         })
 
         state.variables = bridge
       } else if (item.id === 'props') {
         state.bindPrefix = CONSTANTS.PROPS
-        const properties = canvasApi.value.getSchema()?.schema?.properties
+        const properties = getSchema()?.schema?.properties
         const bindProperties = {}
         properties?.forEach(({ content }) => {
           content.forEach(({ property }) => {
@@ -503,7 +504,7 @@ export default {
         state.bindPrefix = CONSTANTS.STORE
         state.variables = {}
 
-        const stores = canvasApi.value.getGlobalState()
+        const stores = useResource().appSchemaState.globalState
         stores.forEach(({ id, state: storeState = {}, getters = {} }) => {
           const loadProp = (prop) => {
             const propBinding = `${id}.${prop}`
@@ -524,7 +525,7 @@ export default {
         state.variables = params.reduce((variables, param) => ({ ...variables, [param]: param }), {})
       } else {
         state.bindPrefix = CONSTANTS.STATE
-        state.variables = canvasApi.value.getSchema()?.[item.id]
+        state.variables = getSchema()?.[item.id]
       }
     }
 
@@ -555,7 +556,6 @@ export default {
   .header-alert {
     margin-top: 0;
     margin-bottom: 12px;
-    color: var(--ti-lowcode-meta-bind-variable-header-alert-color);
   }
   .bind-dialog-content {
     display: flex;
@@ -566,11 +566,11 @@ export default {
       width: 38%;
 
       .content-left__title {
-        color: var(--ti-lowcode-meta-bind-variable-content-left-title-color);
+        color: var(--te-configurator-common-text-color-primary);
       }
 
       .list-wrap {
-        border: 1px solid var(--ti-lowcode-meta-bind-variable-list-wrap-border-color);
+        border: 1px solid var(--te-configurator-common-border-color-divider);
         border-radius: 4px;
         height: 300px;
         margin-top: 8px;
@@ -579,8 +579,8 @@ export default {
 
       .content-left__list {
         width: 120px;
-        color: var(--ti-lowcode-meta-bind-variable-content-left-list-color);
-        border-right: 1px solid var(--ti-lowcode-meta-bind-variable-content-left-list-border-right-color);
+        color: var(--te-configurator-common-text-color-secondary);
+        border-right: 1px solid var(--te-configurator-common-border-color-divider);
       }
 
       .content-left__list-item {
@@ -589,21 +589,23 @@ export default {
         transition: background 0.3s;
         &.active,
         &:hover {
-          background: var(--ti-lowcode-meta-bind-variable-list-item-hover-bg-color);
+          background: var(--te-configurator-common-bg-color-hover);
+          color: var(--te-configurator-common-text-color-primary);
         }
       }
 
       .item-selected {
-        background-color: var(--ti-lowcode-meta-bind-variable-item-selected-bg-color);
+        background-color: var(--te-configurator-common-bg-color-active);
       }
 
       .item-text {
         padding: 8px 12px;
         cursor: pointer;
-        color: var(--ti-lowcode-meta-bind-variable-item-text-color);
+        color: var(--te-configurator-common-text-color-secondary);
 
         &:hover {
-          background-color: var(--ti-lowcode-meta-bind-variable-item-hover-bg-color);
+          background-color: var(--te-configurator-common-bg-color-hover);
+          color: var(--te-configurator-common-text-color-primary);
         }
       }
 
@@ -636,7 +638,7 @@ export default {
       }
 
       .content-right__title {
-        color: var(--ti-lowcode-meta-bind-variable-content-right-title-color);
+        color: var(--te-configurator-common-text-color-primary);
         font-weight: 600;
         margin-right: 5px;
       }
@@ -659,8 +661,8 @@ export default {
           height: 54%;
           border-radius: 4px;
           padding: 12px 8px;
-          color: var(--ti-lowcode-meta-bind-variable-top-color);
-          border: 1px solid var(--ti-lowcode-meta-bind-variable-top-border-color);
+          color: var(--te-configurator-common-text-color-primary);
+          border: 1px solid var(--te-configurator-common-border-color-divider);
           box-sizing: border-box;
           & > div {
             height: 100%;
@@ -696,10 +698,14 @@ export default {
           border-radius: 4px;
           box-sizing: border-box;
           overflow: auto;
-          color: var(--ti-lowcode-meta-bind-variable-bottom-color);
-          border: 1px solid var(--ti-lowcode-meta-bind-variable-bottom-border-color);
+          color: var(--te-configurator-common-text-color-secondary);
+          border: 1px solid var(--te-configurator-common-border-color-divider);
           pre {
             font-family: consolas;
+          }
+          .bottom-title {
+            font-weight: var(--te-base-font-weight-6);
+            color: var(--te-configurator-common-text-color-primary);
           }
         }
       }
@@ -710,6 +716,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
   }
 }
 </style>

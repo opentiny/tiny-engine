@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="robot">
     <div title="AI对话框" class="robot-img">
       <svg-icon name="AI" @click="openAIRobot"></svg-icon>
     </div>
@@ -8,44 +8,54 @@
         <div class="bind-chatgpt" id="bind-chatgpt">
           <section>
             <div class="chat-title-icons">
-              <svg-icon name="close" class="common-svg" @click="robotVisible = false"></svg-icon>
+              <svg-icon name="close" class="common-svg opt-button" @click="robotVisible = false"></svg-icon>
               <svg-icon
                 :name="chatWindowOpened ? 'chat-maximize' : 'chat-minimize'"
-                class="common-svg"
+                class="common-svg opt-button"
                 @click="resizeChatWindow"
               ></svg-icon>
             </div>
           </section>
           <header class="chat-title">
-            <tiny-dropdown trigger="click" :show-icon="false">
-              <span class="chat-title-dropdown">
-                <span class="chat-title-label">{{ selectedModel.label }}</span>
-                <icon-chevron-down class="ml8"></icon-chevron-down>
-              </span>
-              <template #dropdown>
-                <tiny-dropdown-menu popper-class="chat-model-popover" placement="bottom" :visible-arrow="false">
-                  <tiny-dropdown-item
-                    v-for="item in AIModelOptions"
-                    :key="item.label"
-                    :class="{ 'selected-model': selectedModel.value === item.value }"
-                    @click="changeModel(item)"
-                    >{{ item.label }}</tiny-dropdown-item
-                  >
-                </tiny-dropdown-menu>
+            <tiny-popover
+              width="270"
+              trigger="manual"
+              v-model="showPopover"
+              :visible-arrow="false"
+              popper-class="chat-popover"
+            >
+              <robot-setting-popover
+                v-if="showPopover"
+                :typeValue="selectedModel"
+                :tokenValue="tokenValue"
+                @changeType="changeModel"
+                @close="closePanel"
+              ></robot-setting-popover>
+              <template #reference>
+                <span class="chat-title-dropdown" @click.stop="showPopover = true">
+                  <span class="chat-title-label">{{ selectedModel.label }}</span>
+                  <svg-icon name="setting" class="ml8"> </svg-icon>
+                </span>
               </template>
-            </tiny-dropdown>
+            </tiny-popover>
           </header>
           <div class="robot-dialog-content">
             <div class="robot-dialog-content-top">
               <div class="robot-dialog-content-top-title">我是你的开发小助手</div>
               <span class="robot-dialog-content-top-icon"><svg-icon name="AI" class="icon-ai"></svg-icon>智能对话</span>
               <article class="chat-tips">
-                <span>需要一个注册表单？</span>
+                <span @click="sendContent('需要一个注册表单？', true)">需要一个注册表单？</span>
                 <span @click="sendContent('如何将表单嵌进我的网站？', true)">如何将表单嵌进我的网站？</span>
-                <span>需要一个注册表单？</span>
               </article>
             </div>
-            <article class="chat-window lowcode-scrollbar-hide" id="chatgpt-window">
+            <article
+              :class="[
+                'chat-window',
+                'lowcode-scrollbar-hide',
+                chatWindowOpened ? 'max-chat-window' : 'min-chat-window'
+              ]"
+              id="chatgpt-window"
+            >
               <tiny-layout>
                 <tiny-row
                   v-for="(item, index) in activeMessages"
@@ -55,7 +65,12 @@
                   :justify="item.role === 'user' ? 'end' : 'start'"
                   class="chat-message-row"
                 >
-                  <tiny-col :span="1" :no="1" class="chat-avatar-wrap">
+                  <tiny-col
+                    :span="1"
+                    :no="1"
+                    class="chat-avatar-wrap"
+                    :class="{ 'chat-avatar-wrap-ai': item.role !== 'user' }"
+                  >
                     <svg-icon v-if="item.role !== 'user'" class="chat-avatar chat-avatar-ai" name="AI"></svg-icon>
                     <svg-icon v-else class="chat-avatar" name="user-head"></svg-icon>
                   </tiny-col>
@@ -63,7 +78,6 @@
                     <div
                       :class="[
                         'chat-content',
-                        chatWindowOpened ? '' : 'hidden-text',
                         item.role === 'user'
                           ? 'chat-content-user'
                           : connectedFailed
@@ -88,9 +102,7 @@
                   <svg-icon name="chat-send" class="common-svg" @click="sendContent(inputContent, false)"></svg-icon>
                 </template>
               </tiny-input>
-              <tiny-button @click="endContent"
-                ><icon-plus class="icon-plus"></icon-plus><span>新对话</span></tiny-button
-              >
+              <tiny-button @click="endContent"><svg-icon name="add"></svg-icon><span>新对话</span></tiny-button>
             </footer>
           </div>
         </div>
@@ -101,35 +113,21 @@
 
 <script>
 import { ref, onMounted, watchEffect } from 'vue'
-import {
-  Layout,
-  Row,
-  Col,
-  Button,
-  Input,
-  Notify,
-  Loading,
-  Dropdown as TinyDropdown,
-  DropdownMenu as TinyDropdownMenu,
-  DropdownItem as TinyDropdownItem
-} from '@opentiny/vue'
+import { TinyLayout, TinyRow, TinyCol, TinyButton, TinyInput, Notify, Loading, TinyPopover } from '@opentiny/vue'
 import { useCanvas, useHistory, usePage, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
-import { iconChevronDown, iconPlus } from '@opentiny/vue-icon'
 import { extend } from '@opentiny/vue-renderless/common/object'
+import RobotSettingPopover from './RobotSettingPopover.vue'
 import { getBlockContent, initBlockList, AIModelOptions } from './js/robotSetting'
 
 export default {
   components: {
-    TinyLayout: Layout,
-    TinyButton: Button,
-    TinyRow: Row,
-    TinyCol: Col,
-    TinyInput: Input,
-    TinyDropdown,
-    TinyDropdownMenu,
-    TinyDropdownItem,
-    IconChevronDown: iconChevronDown(),
-    IconPlus: iconPlus()
+    TinyLayout,
+    TinyButton,
+    TinyRow,
+    TinyCol,
+    TinyInput,
+    TinyPopover,
+    RobotSettingPopover
   },
   emits: ['close-chat'],
   setup() {
@@ -145,8 +143,10 @@ export default {
     const inProcesing = ref(false)
     const selectedModel = ref(AIModelOptions[0])
     const { confirm } = useModal()
+    const tokenValue = ref('')
+    const showPopover = ref(false)
 
-    const { pageSettingState, DEFAULT_PAGE } = usePage()
+    const { pageSettingState, getDefaultPage } = usePage()
     const ROOT_ID = pageSettingState.ROOT_ID
     const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
     watchEffect(() => {
@@ -161,7 +161,8 @@ export default {
           : JSON.stringify({
               foundationModel: {
                 manufacturer: selectedModel.value.manufacturer,
-                model: selectedModel.value.value
+                model: selectedModel.value.value,
+                token: tokenValue.value
               },
               messages: [],
               displayMessages: [] // 专门用来进行展示的消息，非原始消息，仅作为展示但是不作为请求的发送
@@ -174,7 +175,7 @@ export default {
         pageSettingState.isNew = true
         pageSettingState.isAIPage = true
         pageSettingState.currentPageData = {
-          ...DEFAULT_PAGE,
+          ...getDefaultPage(),
           parentId: ROOT_ID,
           route: 'temporaryPage',
           name: 'TemporaryPage',
@@ -224,11 +225,8 @@ export default {
         .post('/app-center/api/ai/chat', getSendSeesionProcess(), { timeout: 600000 })
         .then((res) => {
           const { originalResponse, schema, replyWithoutCode } = res
-          const responseMessage = getAiRespMessage(
-            originalResponse.choices?.[0]?.message.role,
-            originalResponse.choices?.[0]?.message.content
-          )
-          const respDisplayMessage = getAiRespMessage(originalResponse.choices?.[0]?.message.role, replyWithoutCode)
+          const responseMessage = getAiRespMessage(originalResponse.role, originalResponse.content)
+          const respDisplayMessage = getAiRespMessage(originalResponse.role, replyWithoutCode)
           sessionProcess.messages.push(responseMessage)
           sessionProcess.displayMessages.push(respDisplayMessage)
           messages.value[messages.value.length - 1].content = replyWithoutCode
@@ -255,12 +253,13 @@ export default {
     }
 
     const resetContent = async () => {
-      activeMessages.value = chatWindowOpened.value ? messages.value : [messages.value[messages.value.length - 1]]
+      activeMessages.value = messages.value
       await scrollContent()
     }
 
     const resizeChatWindow = async () => {
       chatWindowOpened.value = !chatWindowOpened.value
+      showPopover.value = false
       await resetContent()
     }
 
@@ -305,6 +304,11 @@ export default {
         }
         await scrollContent()
         await sleep(1000)
+        if (!tokenValue.value) {
+          messages.value.push({ role: 'assistant', content: '当前会话未设置API Token，请设置后再试！', name: 'AI' })
+          inProcesing.value = false
+          return
+        }
         messages.value.push({ role: 'assistant', content: '好的，正在执行相关操作，请稍等片刻...', name: 'AI' })
         await scrollContent()
         sendRequest()
@@ -315,6 +319,7 @@ export default {
     const initCurrentModel = (aiSession) => {
       const currentModelValue = JSON.parse(aiSession)?.foundationModel?.model
       selectedModel.value = AIModelOptions.find((item) => item.value === currentModelValue)
+      tokenValue.value = JSON.parse(aiSession)?.foundationModel?.token
     }
 
     const initChat = () => {
@@ -349,21 +354,36 @@ export default {
       initChat()
     }
 
+    const changeTokenValue = () => {
+      localStorage.removeItem('aiChat')
+      sessionProcess = null
+      setContextSession()
+      sessionProcess = JSON.parse(localStorage.getItem('aiChat'))
+    }
+
     const changeModel = (model) => {
-      if (selectedModel.value.value !== model.value) {
+      if (selectedModel.value.value !== model.type) {
         confirm({
           title: '切换AI大模型',
           message: '切换AI大模型将导致当前会话被清空，重新开启新会话，是否继续？',
           exec() {
-            selectedModel.value = model
+            selectedModel.value = AIModelOptions.find((item) => item.value === model.type)
+            tokenValue.value = model.tokenVal
             endContent()
           }
         })
+      } else if (tokenValue.value !== model.tokenVal && selectedModel.value.value === model.type) {
+        tokenValue.value = model.tokenVal
+        changeTokenValue()
       }
     }
 
     const openAIRobot = () => {
       robotVisible.value = !robotVisible.value
+    }
+
+    const closePanel = () => {
+      showPopover.value = false
     }
 
     return {
@@ -375,11 +395,15 @@ export default {
       connectedFailed,
       sendContent,
       endContent,
+      changeTokenValue,
       resizeChatWindow,
       AIModelOptions,
       selectedModel,
       changeModel,
-      openAIRobot
+      openAIRobot,
+      closePanel,
+      tokenValue,
+      showPopover
     }
   }
 }
@@ -400,34 +424,37 @@ export default {
 
 .robot-dialog {
   position: fixed;
-  width: 600px;
+  width: 450px;
   z-index: 5;
   right: 40px;
   bottom: 40px;
   background-image: linear-gradient(
-    var(--ti-lowcode-chat-bg-top-color),
-    var(--ti-lowcode-chat-bg-mid-color),
-    var(--ti-lowcode-chat-bg-bottom-color)
+    var(--te-chat-bg-top-color),
+    var(--te-chat-bg-mid-color),
+    var(--te-chat-bg-bottom-color)
   );
   box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.15);
-  padding: 16px 16px 30px 16px;
+  padding: 16px;
   border-radius: 12px;
 }
 .common-svg {
-  color: var(--ti-lowcode-chat-model-common-icon);
+  color: var(--te-chat-model-common-icon);
 }
 
 .chat-title-icons {
-  font-size: 16px;
-  height: 16px;
+  font-size: 20px;
+  height: 20px;
   margin-bottom: 20px;
   svg {
     float: right;
-    margin: 0 4px;
+    margin: 0 6px;
     cursor: pointer;
-    color: var(--ti-lowcode-chat-model-text);
+    color: var(--te-chat-model-icon);
     &:hover {
       opacity: 0.8;
+    }
+    &:first-child {
+      margin-right: 0;
     }
   }
 }
@@ -436,7 +463,7 @@ export default {
   top: 16px;
   left: 28px;
   font-weight: bold;
-  color: var(--ti-lowcode-chat-model-text);
+  color: var(--te-chat-model-text);
   .chat-title-dropdown {
     display: flex;
     align-items: center;
@@ -444,28 +471,29 @@ export default {
   }
   .chat-title-label,
   .ml8 {
-    color: var(--ti-lowcode-chat-model-text);
+    color: var(--te-chat-model-text);
     font-weight: 700;
     font-size: 16px;
   }
   .ml8 {
-    margin-left: 10px;
+    margin-left: 8px;
+    outline: none;
   }
 }
 
 .robot-dialog-content {
-  background: var(--ti-lowcode-chat-model-bg);
+  background: var(--te-chat-model-bg);
   border-radius: 6px;
   padding: 16px;
   &-top {
     margin-bottom: 30px;
     &-title {
-      color: var(--ti-lowcode-chat-model-helper-text);
+      color: var(--te-chat-model-helper-text);
       font-size: 12px;
       margin-bottom: 12px;
     }
     &-icon {
-      color: var(--ti-lowcode-chat-model-text);
+      color: var(--te-chat-model-text);
     }
     .icon-ai {
       width: 16px;
@@ -476,7 +504,7 @@ export default {
       text-align: left;
       font-size: 12px;
       margin-top: 10px;
-      color: var(--ti-lowcode-chat-model-tips-text);
+      color: var(--te-chat-model-tips-text);
       span {
         display: inline-block;
         height: 28px;
@@ -484,21 +512,20 @@ export default {
         padding: 0 8px;
         margin-right: 8px;
         border-radius: 4px;
-        background: var(--ti-lowcode-chat-model-tips-bg);
+        background: var(--te-chat-model-tips-bg);
         cursor: pointer;
         &:hover {
-          border-color: var(--ti-lowcode-chat-model-text);
+          border-color: var(--te-chat-model-text);
         }
       }
     }
   }
 }
 .chat-window {
-  max-height: 400px;
   overflow: scroll;
   .chat-avatar-wrap {
     width: 40px;
-    color: var(--ti-lowcode-chat-model-avatar-border);
+    color: var(--te-chat-model-avatar-border);
     .chat-avatar {
       width: 24px;
       height: 24px;
@@ -508,35 +535,43 @@ export default {
       border: none;
     }
   }
+  .chat-avatar-wrap-ai {
+    padding-left: 0;
+  }
   .chat-content {
-    max-width: 568px;
+    max-width: 465px;
     border-radius: 8px;
     font-size: 12px;
     font-weight: normal;
-    line-height: 36px;
-    height: 36px;
-    padding: 0 12px;
+    line-height: 20px;
+    padding: 12px;
 
     &.chat-content-user {
-      background-color: var(--ti-lowcode-chat-model-user-text-bg);
-      color: var(--ti-lowcode-chat-model-user-text);
+      background-color: var(--te-chat-model-user-text-bg);
+      color: var(--te-chat-model-user-text);
     }
   }
   .chat-message-row {
     margin-bottom: 20px;
   }
+  &.max-chat-window {
+    height: 520px;
+  }
+  &.min-chat-window {
+    height: 80px;
+  }
 }
 
 .chat-content-ai {
-  background-color: var(--ti-lowcode-chat-model-ai-text-bg);
-  border: 1px solid var(--ti-lowcode-chat-model-ai-text-border);
-  color: var(--ti-lowcode-chat-model-ai-text);
+  background-color: var(--te-chat-model-ai-text-bg);
+  border: 1px solid var(--te-chat-model-ai-text-border);
+  color: var(--te-chat-model-ai-text);
 }
 
 .chat-content-ai-unconnected {
-  background-color: var(--ti-lowcode-chat-model-ai-fail-text-bg);
-  border: 1px solid var(--ti-lowcode-chat-model-ai-fail-text-border);
-  color: var(--ti-lowcode-chat-model-ai-fail-text);
+  background-color: var(--te-chat-model-ai-fail-text-bg);
+  border: 1px solid var(--te-chat-model-ai-fail-text-border);
+  color: var(--te-chat-model-ai-fail-text);
 }
 
 .chat-submit {
@@ -546,16 +581,21 @@ export default {
   .tiny-input {
     .tiny-input__inner {
       padding-left: 12px;
-      color: var(--ti-lowcode-chat-model-helper-text);
+      color: var(--te-chat-model-helper-text);
       height: 40px;
-      border: 2px solid var(--ti-lowcode-chat-model-input-border);
+      border: 2px solid var(--te-chat-model-input-border);
       border-radius: 8px;
+      padding-right: 44px;
     }
     .tiny-input__inner:hover {
-      border-color: var(--ti-lowcode-chat-model-input-border);
+      border-color: var(--te-chat-model-input-border);
     }
     .tiny-input__inner:focus {
-      border-color: var(--ti-lowcode-chat-model-input-border);
+      border-color: var(--te-chat-model-input-border);
+    }
+    .tiny-input__prefix,
+    .tiny-input__suffix {
+      padding-right: 8px;
     }
     clip-path: inset(0 0 round 2px);
     svg {
@@ -563,16 +603,16 @@ export default {
     }
   }
 
-  .tiny-button {
+  .tiny-button.tiny-button.tiny-button {
     margin-left: 12px;
     background-image: linear-gradient(
       to bottom right,
-      var(--ti-lowcode-chat-model-button-bg-1),
-      var(--ti-lowcode-chat-model-button-bg-2),
-      var(--ti-lowcode-chat-model-button-bg-3)
+      var(--te-chat-model-button-bg-1),
+      var(--te-chat-model-button-bg-2),
+      var(--te-chat-model-button-bg-3)
     );
     border: none;
-    color: var(--ti-lowcode-chat-model-button-text) !important;
+    color: var(--te-chat-model-button-text) !important;
     font-size: 14px;
     height: 40px;
     width: 40px;
@@ -581,8 +621,9 @@ export default {
     float: right;
     padding: 0;
     transition: all 0.1s linear;
-    .icon-plus {
-      stroke: var(--ti-lowcode-chat-model-button-text);
+    .svg-icon {
+      fill: var(--te-chat-model-button-text);
+      margin-right: 0;
     }
     span {
       display: none;
@@ -590,7 +631,7 @@ export default {
     &:hover {
       transform: scale(1);
       border-radius: 8px;
-      width: 100px;
+      width: 105px;
       padding: 0 12px;
       span {
         display: inline-block;
@@ -606,23 +647,25 @@ export default {
 }
 
 .chat-loading .tiny-loading__spinner svg {
-  fill: var(--ti-lowcode-chat-loading-svg-color);
+  fill: var(--te-chat-loading-svg-color);
 }
 .chat-loading .tiny-loading__spinner .tiny-loading__text {
-  color: var(--ti-lowcode-chat-loading-text-color);
+  color: var(--te-chat-loading-text-color);
 }
-.chat-model-popover {
-  background-color: var(--ti-lowcode-chat-model-popover-bg);
+.chat-model-popover.chat-model-popover {
+  width: 220px;
+  background-color: var(--te-chat-model-popover-bg);
   .tiny-dropdown-item {
-    color: var(--ti-lowcode-chat-model-popover-color);
+    color: var(--te-chat-model-popover-color);
+    max-width: 220px;
     &:hover {
-      color: var(--ti-lowcode-chat-model-popover-active-color);
-      background-color: var(--ti-lowcode-chat-model-popover-active-bg);
+      color: var(--te-chat-model-popover-color);
+      background-color: var(--te-chat-model-popover-active-bg);
     }
   }
   .selected-model {
-    color: var(--ti-lowcode-chat-model-popover-active-color);
-    background-color: var(--ti-lowcode-chat-model-popover-active-bg);
+    color: var(--te-chat-model-popover-color);
+    background-color: var(--te-chat-model-popover-active-bg);
   }
 }
 </style>

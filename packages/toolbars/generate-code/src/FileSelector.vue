@@ -19,7 +19,8 @@
         :expand-config="{ expandAll: true }"
         :auto-resize="true"
       >
-        <tiny-grid-column type="selection" width="60" tree-node></tiny-grid-column>
+        <tiny-grid-column width="40" tree-node></tiny-grid-column>
+        <tiny-grid-column type="selection" width="60"></tiny-grid-column>
         <tiny-grid-column field="fileType" title="文件类型" width="100"></tiny-grid-column>
         <tiny-grid-column field="filePath" title="文件路径" width="250"></tiny-grid-column>
         <tiny-grid-column field="fileContent" title="文件内容" show-overflow="ellipsis"></tiny-grid-column>
@@ -120,67 +121,57 @@ export default {
 <style lang="less" scoped>
 .dialog-box {
   :deep(.tiny-dialog-box__content) {
-    background-color: var(--ti-lowcode-common-component-bg);
+    background-color: var(--te-toolbars-generate-code-bg-color);
 
     .tiny-dialog-box__header {
-      background-color: var(--ti-lowcode-common-component-bg);
+      background-color: var(--te-toolbars-generate-code-bg-color);
 
       .tiny-dialog-box__title {
-        color: var(--ti-lowcode-toolbar-breadcrumb-color);
+        color: var(--te-toolbars-generate-code-text-color);
       }
 
       .tiny-dialog-box__headerbtn .tiny-dialog-box__close {
-        fill: var(--ti-lowcode-toolbar-breadcrumb-color) !important;
+        fill: var(--te-toolbars-generate-code-icon-color) !important;
 
         &:hover {
-          fill: var(--ti-lowcode-common-primary-text-color) !important;
+          fill: var(--te-toolbars-generate-code-icon-color-primary) !important;
         }
       }
     }
 
     .tiny-dialog-box__footer {
       .tiny-button--primary {
-        background-color: var(--ti-lowcode-common-danger-color, #191919;);
+        background-color: var(--te-toolbars-generate-code-bg-color-primary);
         border: none;
       }
     }
   }
 
   .dialog-grid {
-    :deep(.tiny-grid-tree__indent) {
-      width: 0 !important;
-    }
-
     :deep(.tiny-grid-cell) {
       position: relative;
     }
 
     :deep(.tiny-grid-tree-wrapper) {
       position: relative;
-      right: -35px;
       top: 2px;
     }
 
     :deep(.tiny-grid) {
       .tiny-grid__header-wrapper {
-        background-color: var(--ti-lowcode-toolbar-view-hover-bg);
-
         .tiny-grid-header__column {
-          color: var(--ti-lowcode-toolbar-breadcrumb-color);
+          color: var(--te-toolbars-generate-code-text-color);
           height: 30px;
 
           .tiny-grid-resizable.is__line:before {
-            background-color: var(--ti-lowcode-common-component-bg);
+            background-color: var(--te-toolbars-generate-code-bg-color);
           }
         }
 
-        .tiny-grid__repair {
-          border-color: var(--ti-lowcode-tabs-border-color);
-        }
-
-        .tiny-grid-checkbox__icon {
+        .tiny-grid-checkbox__icon,
+        .icon-checked-sur {
           svg {
-            color: var(--ti-lowcode-common-primary-color);
+            color: var(--te-toolbars-generate-code-border-color-checked) !important;
           }
         }
       }
@@ -194,41 +185,20 @@ export default {
           background: unset;
         }
 
-        .tiny-grid-tree-wrapper {
-          margin-left: -13px;
-          padding-right: 5px;
-        }
-
         .tiny-grid-body__column {
           height: 32px;
-          padding-left: 11px;
         }
 
         .tiny-grid-body__row {
-          background-color: var(--ti-lowcode-common-component-bg);
-        }
-
-        .tiny-grid-body__row,
-        .tiny-grid-body__row:not(.row__hover):nth-child(2n) {
-          background-image: linear-gradient(
-            -180deg,
-            var(--ti-lowcode-new-table-row-sepline-background),
-            var(--ti-lowcode-new-table-row-sepline-background)
-          );
-          background-repeat: no-repeat;
-          background-size: 100% 1px;
-          background-position: 100% 100%;
-
-          &.row__current {
-            background-color: var(--ti-lowcode-toolbar-view-hover-bg);
-          }
+          background-color: var(--te-toolbars-generate-code-bg-color);
         }
 
         .tiny-grid-body__row {
           &.row__selected {
             .tiny-grid-checkbox__icon {
               svg {
-                color: var(--ti-lowcode-common-primary-color);
+                color: var(--te-toolbars-generate-code-border-color-checked);
+                fill: currentColor;
                 width: 100%;
                 height: 100%;
               }
@@ -238,7 +208,7 @@ export default {
       }
 
       .tiny-grid__empty-text {
-        color: var(--ti-lowcode-toolbar-breadcrumb-color);
+        color: var(--te-toolbars-generate-code-text-color);
       }
     }
   }

@@ -3,7 +3,7 @@
     <span class="title">
       <span class="title">数据源字段</span>
       <div class="btn">
-        <tiny-button @click="openNewFieldForm">添加字段</tiny-button>
+        <tiny-button @click="openNewFieldForm"><svg-icon name="add"></svg-icon>添加字段</tiny-button>
         <tiny-button @click="$emit('openRemotePanel')">{{ editable ? '修改远程配置' : '获取远程字段' }}</tiny-button>
       </div>
     </span>
@@ -142,7 +142,7 @@ export default {
 <style lang="less" scoped>
 .right-item {
   margin-top: 8px;
-  color: var(--ti-lowcode-datasource-toolbar-icon-color);
+  color: var(--te-datasource-toolbar-icon-color);
 
   .title {
     display: flex;
@@ -151,18 +151,21 @@ export default {
     line-height: 22px;
     font-weight: normal;
     margin-bottom: 10px;
-    color: var(--ti-lowcode-datasource-label-color);
+    color: var(--te-datasource-label-text-color);
 
     :deep(.tiny-button--text:hover) {
       text-decoration: underline;
       font-weight: normal;
+    }
+    .tiny-button + .tiny-button {
+      margin-left: 4px;
     }
   }
 
   .section {
     margin-top: 12px;
     svg {
-      color: var(--ti-lowcode-datasource-toolbar-icon-color);
+      color: var(--te-datasource-toolbar-icon-color);
     }
 
     .group {
@@ -186,10 +189,10 @@ export default {
         align-items: center;
 
         &.field-row-add {
-          color: var(--ti-lowcode-datasource-json-border-colorr);
+          color: var(--te-datasource-json-border-color);
 
           svg {
-            color: var(--ti-lowcode-datasource-json-border-colorr);
+            color: var(--te-datasource-json-border-color);
           }
         }
       }
@@ -209,7 +212,7 @@ export default {
           margin-left: 5px;
 
           .description {
-            color: var(--ti-lowcode-datasource-input-icon-color);
+            color: var(--te-datasource-input-icon-color);
             margin-left: 5px;
           }
         }

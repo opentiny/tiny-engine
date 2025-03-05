@@ -68,21 +68,21 @@
     "schema": {
       "componentName": "CanvasRowColContainer",
       "props": {
-        "rowGap": "20px"
+        "rowGap": "16px"
       },
       "children": [
         {
           "componentName": "CanvasRow",
           "props": {
-            "rowGap": "20px",
-            "colGap": "20px"
+            "rowGap": "16px",
+            "colGap": "16px"
           },
           "children": [
             {
               "componentName": "CanvasCol",
               "props": {
-                "rowGap": "20px",
-                "colGap": "20px",
+                "rowGap": "16px",
+                "colGap": "16px",
                 "grow": true,
                 "shrink": true,
                 "widthType": "auto"

@@ -3,7 +3,6 @@
 </template>
 
 <script setup>
-import { nextTick } from 'vue'
 import { useProperties, useMaterial, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import ArrayItemConfigurator from '../array-item-configurator/ArrayItemConfigurator.vue'
 
@@ -24,8 +23,7 @@ const updateColumns = (columns) => {
     }
   })
 
-  useProperties().getSchema().children = children
-  nextTick(useCanvas().canvasApi.value.updateRect)
+  useCanvas().operateNode({ type: 'updateAttributes', id: useProperties().getSchema().id, value: { children } })
 }
 
 updateColumns(props?.columns)

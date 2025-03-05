@@ -67,19 +67,19 @@ export default {
     width: 32px;
     border-radius: 6px;
     svg {
-      color: var(--ti-lowcode-toolbar-title-color);
+      color: var(--te-toolbars-redoundo-text-color);
       font-size: 20px;
     }
     &.disabled {
       cursor: not-allowed;
       svg {
-        color: var(--ti-lowcode-disabled-color);
+        color: var(--te-toolbars-redoundo-text-color-disabled);
       }
     }
     &:not(.disabled):hover {
-      background: var(--ti-lowcode-toolbar-view-active-bg);
+      background: var(--te-toolbars-redoundo-bg-color-active);
       svg {
-        color: var(--ti-lowcode-toolbar-active-color);
+        color: var(--te-toolbars-redoundo-icon-color-hover);
       }
     }
     &.redo {

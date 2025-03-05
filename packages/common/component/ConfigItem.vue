@@ -82,7 +82,7 @@
             @update:modelValue="onModelUpdate"
           >
             <template #default>
-              <tiny-tooltip class="item" effect="dark" content="源码编辑" placement="left">
+              <tiny-tooltip class="item" effect="light" content="源码编辑" placement="left">
                 <icon-writing class="code-icon" @click="editorModalRef?.open && editorModalRef.open()"></icon-writing>
               </tiny-tooltip>
             </template>
@@ -265,11 +265,11 @@ export default {
 
     const updateValue = (value) => {
       const { property, type } = props.property
-      const { setProp } = useProperties()
+      const { setProp, getSchema } = useProperties()
 
       // 是否双向绑定
       if (value?.type === SCHEMA_DATA_TYPE.JSExpression) {
-        const currentComponent = useProperties().getSchema().componentName
+        const currentComponent = getSchema().componentName
         const {
           schema: { events = {} }
         } = useMaterial().getMaterial(currentComponent)
@@ -282,13 +282,13 @@ export default {
         }
       }
 
+      const { operateNode, isSaved } = useCanvas()
+
       if (property === 'children') {
-        useProperties().getSchema().children = value
+        const schema = getSchema()
+        operateNode({ type: 'updateAttributes', id: schema.id, value: { children: value } })
       } else {
-        if (
-          !useCanvas().isSaved() &&
-          ![PAGE_STATUS.Guest, PAGE_STATUS.Occupy].includes(useLayout().layoutState.pageStatus.state)
-        ) {
+        if (!isSaved() && ![PAGE_STATUS.Guest, PAGE_STATUS.Occupy].includes(useLayout().layoutState.pageStatus.state)) {
           return
         }
 
@@ -523,11 +523,11 @@ export default {
     padding-bottom: 0;
   }
   &.active {
-    background: var(--ti-lowcode-meta-config-item-active-bg);
+    background: var(--te-component-common-bg-color-active);
   }
 
   .item-label {
-    color: var(--ti-lowcode-meta-config-item-label-color);
+    color: var(--te-component-common-text-color-secondary);
     font-size: 12px;
     display: flex;
     line-height: 18px;
@@ -549,8 +549,9 @@ export default {
       overflow: hidden;
 
       .binding-state {
-        color: var(--ti-lowcode-meta-config-item-bind-color);
-        background: var(--ti-lowcode-meta-config-item-bind-bg);
+        color: var(--te-component-common-text-color-emphasize);
+        background: var(--te-component-config-item-bind-bg-color);
+        border: 1px solid var(--te-component-config-item-bind-border-color);
         padding: 4px 12px;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -563,21 +564,21 @@ export default {
         :deep(.tiny-input .tiny-input__inner) {
           &,
           &:focus {
-            border-color: var(--ti-lowcode-input-error-color);
-            background-color: var(--ti-lowcode-input-error-bg);
+            border-color: var(--te-component-common-error-color);
+            background-color: var(--te-component-common-bg-color-error);
           }
         }
         :deep(.tiny-textarea__inner) {
           &,
           &:focus {
-            background-color: var(--ti-lowcode-input-error-bg);
+            background-color: var(--te-component-common-bg-color-error);
           }
         }
         :deep(.tiny-textarea) {
           &,
           &:focus {
-            border-color: var(--ti-lowcode-input-error-color);
-            background-color: var(--ti-lowcode-input-error-bg);
+            border-color: var(--te-component-common-error-color);
+            background-color: var(--te-component-common-bg-color-error);
           }
         }
       }
@@ -600,11 +601,16 @@ export default {
     :deep(.tiny-select .tiny-input__inner) {
       padding-right: 26px;
     }
+    :deep(.tiny-input-suffix) {
+      .tiny-input__inner {
+        padding-right: 28px;
+      }
+    }
   }
 
   .prop-description {
     margin-top: 8px;
-    color: var(--te-common-text-weaken);
+    color: var(--te-component-common-text-color-weaken);
   }
   .label-tip {
     padding: 2px 0;
@@ -629,8 +635,8 @@ export default {
       }
     }
     &.multiType {
-      border-bottom: 1px solid var(--ti-lowcode-toolbar-active-bg);
-      border-top: 1px solid var(--ti-lowcode-toolbar-active-bg);
+      border-bottom: 1px solid var(--te-component-common-border-color-transparent);
+      border-top: 1px solid var(--te-component-common-border-color-transparent);
     }
     &.auto {
       flex-wrap: wrap;
@@ -673,7 +679,7 @@ export default {
     display: flex;
     align-items: center;
     margin-top: 8px;
-    color: var(--ti-lowcode-common-error-color);
+    color: var(--te-component-common-error-color);
     font-size: 12px;
     .failure-icon {
       width: 16px;
@@ -687,7 +693,7 @@ export default {
 
 .error-tips-container {
   padding: 4px 6px;
-  color: var(--ti-lowcode-meta-config-item-error-tips-color);
+  color: var(--te-component-common-error-color);
   .error-icon {
     flex-shrink: 0;
   }
@@ -708,11 +714,11 @@ export default {
         font-size: 16px;
         font-weight: bold;
         margin-bottom: 8px;
-        color: var(--ti-lowcode-meta-config-item-label-tips-title-color);
+        color: var(--te-component-common-text-color-primary);
       }
       .prop-description {
         font-size: 12px;
-        color: var(--ti-lowcode-meta-config-item-label-tips-desc-color);
+        color: var(--te-component-common-text-color-secondary);
         line-height: 18px;
         display: -webkit-box;
         -webkit-box-orient: vertical;

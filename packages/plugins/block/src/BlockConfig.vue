@@ -1,5 +1,12 @@
 <template>
-  <tiny-form ref="blockForm" class="block-setting-content" label-position="top" :model="formData" :rules="rules">
+  <tiny-form
+    ref="blockForm"
+    class="block-setting-content"
+    label-position="top"
+    :model="formData"
+    :rules="rules"
+    validate-type="text"
+  >
     <tiny-form-item label="区块名称" prop="name_cn">
       <div>
         <tiny-input
@@ -24,13 +31,14 @@
         ></tiny-input>
       </div>
     </tiny-form-item>
-    <tiny-form-item label="区块分类" prop="categoryId">
+    <tiny-form-item :label="groupLabels.select" prop="categoryId">
       <tiny-select
         ref="groupSelect"
         v-model="formData.categoryId"
         popper-class="block-popper"
-        placeholder="默认分类"
+        :placeholder="groupLabels.selectPlaceholder"
         :options="categoryList"
+        :multiple="shouldReplaceCategoryWithGroup()"
         filterable
         :filter-method="categoryFilter"
         clearable
@@ -59,7 +67,7 @@
         >
         </tiny-input>
         <tiny-button v-show="!state.inputVisible" class="button-new-tag" size="small" @click="addTag">
-          + 标签
+          <svg-icon name="add"></svg-icon>标签
         </tiny-button>
       </div>
       <div class="global-desc-info">区块的功能以及特性标签，例如表格、购买页、过滤等</div>
@@ -122,7 +130,7 @@ export default {
     TinyOption: Option
   },
   setup() {
-    const { getCategoryList } = useBlock()
+    const { getCategoryList, shouldReplaceCategoryWithGroup } = useBlock()
     const nameCn = 'name_cn'
     const state = reactive({
       inputVisible: false,
@@ -159,8 +167,12 @@ export default {
       }
       Object.assign(formData, block)
       formData[nameCn] = block[nameCn] ?? block.label
-      const [id] = block.categories || []
-      formData.categoryId = id || ''
+      if (shouldReplaceCategoryWithGroup()) {
+        formData.categoryId = (block.groups || []).map((group) => group.id)
+      } else {
+        const [id] = block.categories || []
+        formData.categoryId = id || ''
+      }
     })
 
     const rules = {
@@ -174,12 +186,10 @@ export default {
     }
 
     const validateForm = () => {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         blockForm.value.validate((valid) => {
           if (valid) {
             resolve()
-          } else {
-            reject(new Error('校验失败'))
           }
         })
       })
@@ -233,9 +243,10 @@ export default {
       const block = getEditBlock()
 
       if (block) {
-        const { category_id } = categoryList.value.find((item) => item.id === value) ?? {}
-        block.path = category_id
-        block.categories = [value]
+        const idKey = shouldReplaceCategoryWithGroup() ? 'id' : 'category_id'
+        const selectedCategory = categoryList.value.find((item) => item.id === value) ?? {}
+        block.path = selectedCategory[idKey]
+        block.categories = Array.isArray(value) ? value : value || ''
       }
     }
 
@@ -246,6 +257,16 @@ export default {
         block[property] = formData[property]
       }
     }
+
+    const groupLabels = shouldReplaceCategoryWithGroup()
+      ? {
+          select: '区块分组',
+          selectPlaceholder: '默认分组'
+        }
+      : {
+          select: '区块分类',
+          selectPlaceholder: '默认分类'
+        }
 
     return {
       isVsCodeEnv,
@@ -265,7 +286,9 @@ export default {
       clearValidateForm,
       blockForm,
       categoryFilter,
-      changeBlockProperty
+      changeBlockProperty,
+      shouldReplaceCategoryWithGroup,
+      groupLabels
     }
   }
 }
@@ -273,9 +296,6 @@ export default {
 
 <style lang="less" scoped>
 .block-setting-content {
-  :deep(.tiny-form-item__error) {
-    display: none;
-  }
   :deep(.tiny-form-item) {
     margin-bottom: 10px;
   }
@@ -288,18 +308,25 @@ export default {
     font-size: 12px;
   }
   .global-desc-info {
-    font-size: 11px;
+    font-size: 12px;
   }
 }
 
 .block-tag-create {
   .tag-button {
-    color: var(--ti-lowcode-block-config-tag-color);
-    background-color: var(--ti-lowcode-block-config-tag-bg);
+    color: var(--te-block-config-tag-text-color);
+    background-color: var(--te-block-config-tag-bg-color);
+    border: none;
     height: 28px;
+    :deep(.tiny-tag__close) {
+      fill: var(--te-block-config-tag-close-icon-color);
+    }
     &:hover {
-      color: var(--ti-lowcode-block-config-tag-hover-color);
-      background-color: var(--ti-lowcode-block-config-tag-hover-bg);
+      color: var(--te-block-config-tag-color-hover);
+      background-color: var(--te-block-config-tag-bg-hover);
+      :deep(.tiny-tag__close) {
+        fill: var(--te-block-config-tag-close-icon-color-hover);
+      }
     }
   }
 
@@ -308,7 +335,7 @@ export default {
     line-height: 20px;
     padding-top: 0;
     padding-bottom: 0;
-    border: 1px solid var(--ti-lowcode-base-default-button-border-disable-color);
+    border: 1px solid var(--te-block-config-new-tag-border-color);
   }
 
   .tiny-input {

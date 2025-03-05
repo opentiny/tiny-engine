@@ -6,11 +6,11 @@
       </div>
     </template>
     <template #header>
-      <div class="header-wrap">
+      <button-group>
         <tiny-button class="save-btn" type="primary" @click="save">保存</tiny-button>
-        <svg-button v-show="state.status" class="delete-btn" name="delete" @click="deleteReSource"></svg-button>
+        <svg-button v-if="state.status" class="delete-btn" name="delete" @click="deleteReSource"></svg-button>
         <svg-button class="close-btn" name="close" @click="closePanel"></svg-button>
-      </div>
+      </button-group>
     </template>
     <template #content>
       <tiny-form
@@ -111,7 +111,7 @@ import {
   getActionType,
   getResourceNamesByType
 } from './js/resource'
-import { VueMonaco as MonacoEditor, PluginSetting, SvgButton } from '@opentiny/tiny-engine-common'
+import { VueMonaco as MonacoEditor, PluginSetting, SvgButton, ButtonGroup } from '@opentiny/tiny-engine-common'
 import { useModal, useNotify, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 
@@ -137,7 +137,8 @@ export default {
     MonacoEditor,
     TinyRadioGroup: RadioGroup,
     TinyRadio: Radio,
-    SvgButton
+    SvgButton,
+    ButtonGroup
   },
   setup(props, { emit }) {
     const monacoOptions = {
@@ -220,11 +221,6 @@ export default {
 
       resourceForm.value.validate((valid) => {
         if (!valid) {
-          useNotify({
-            type: 'error',
-            message: '请检查必填项'
-          })
-
           return
         }
 
@@ -304,7 +300,7 @@ export default {
       font-size: 11px;
       line-height: 18px;
       margin-top: 8px;
-      color: var(--ti-lowcode-datasource-tip-color);
+      color: var(--te-bridge-setting-tip-text-color);
     }
     :deep(.tiny-form-item__label) {
       .cdn-tips-icon {
@@ -316,10 +312,10 @@ export default {
   .title-wrap {
     font-size: 12px;
     font-weight: 700;
-    color: var(--ti-lowcode-data-source-color);
+    color: var(--te-bridge-setting-title-text-color);
     .help-link {
       display: inline-block;
-      color: var(--ti-lowcode-common-primary-color);
+      color: var(--te-bridge-setting-link-text-color);
       font-size: 12px;
       margin-left: 16px;
       &:hover {
@@ -343,19 +339,7 @@ export default {
   .monaco-editor {
     height: 500px;
     margin-top: 8px;
-    border: 1px solid var(--ti-lowcode-birdge-editor-border-color);
-  }
-
-  .resource-form-footer {
-    padding: 12px 0 12px 80px;
-
-    .tiny-svg {
-      margin-right: 6px;
-    }
-
-    .del:hover {
-      background-color: var(--ti-lowcode-delete-button-hover-bg);
-    }
+    border: 1px solid var(--te-bridge-editor-border-color);
   }
   .cdn-label-wrap {
     display: flex;
@@ -364,11 +348,11 @@ export default {
 }
 
 .code-preview {
-  font-size: 14px;
+  font-size: 12px;
   line-height: 20px;
-  color: var(--ti-lowcode-birdge-code-preview-color);
-  background-color: var(--ti-lowcode-birdge-code-preview-bg-color);
-  border-radius: 6px;
+  background: var(--te-bridge-setting-code-bg-color);
+  color: var(--te-bridge-setting-code-text-color);
+  border-radius: 4px;
 
   & .pre-title {
     font-family: Microsoft YaHei;

@@ -14,11 +14,18 @@ import entry, { api } from './src/Main.vue'
 import metaData from './meta.js'
 import { PageService } from './src/composable'
 import PageGeneral from './src/PageGeneral.vue'
+import './src/styles/vars.less'
 
 export default {
   ...metaData,
   apis: api,
   entry,
+  options: {
+    pageBaseStyle: {
+      className: 'page-base-style',
+      style: 'padding: 24px;background: #FFFFFF;'
+    }
+  },
   components: {
     PageGeneral
   },

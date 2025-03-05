@@ -11,7 +11,7 @@
       ref="ruleForm"
       :model="formData"
       :rules="rules"
-      label-width="100px"
+      label-width="80px"
       :inline-message="true"
       validate-type="text"
       label-position="left"
@@ -117,7 +117,7 @@ const addMethod = () => {
 </script>
 
 <style lang="less" scoped>
-.add-custom-event-form {
+.add-custom-event-form.add-custom-event-form {
   :deep(.tiny-form-item__label) {
     padding-left: 0;
   }

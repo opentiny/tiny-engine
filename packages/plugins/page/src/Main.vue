@@ -1,12 +1,12 @@
 <template>
-  <plugin-panel :title="title" @close="pluginPanelClosed" :docsUrl="docsUrl" :isShowDocsIcon="true">
+  <plugin-panel :title="title" @close="pluginPanelClosed" :docsUrl="docsUrl" :isShowDocsIcon="true" class="page-manage">
     <template #header>
       <svg-button
         class="add-folder-icon"
         name="add-folder"
         placement="bottom"
         tips="新建文件夹"
-        @click="createNewFolder"
+        @click="createNewFolder()"
       ></svg-button>
       <svg-button
         class="new-page-icon"
@@ -23,6 +23,8 @@
         :isFolder="state.isFolder"
         @add="createNewPage('publicPages')"
         @openSettingPanel="openSettingPanel"
+        @createPage="createNewPage"
+        @createFolder="createNewFolder"
       ></page-tree>
     </template>
   </plugin-panel>
@@ -69,7 +71,7 @@ export default {
   },
   setup() {
     const { pageState } = useCanvas()
-    const { pageSettingState, DEFAULT_PAGE, isTemporaryPage, initCurrentPageData } = usePage()
+    const { pageSettingState, getDefaultPage, isTemporaryPage, initCurrentPageData } = usePage()
 
     const pageTreeRef = ref(null)
     const ROOT_ID = pageSettingState.ROOT_ID
@@ -79,28 +81,37 @@ export default {
       isFolder: false
     })
 
-    const createNewPage = (group) => {
+    const createNewPage = (group, parentId = ROOT_ID) => {
       closeFolderSettingPanel()
       pageSettingState.isNew = true
-      pageSettingState.currentPageData = {
-        ...DEFAULT_PAGE,
-        parentId: ROOT_ID,
-        route: '',
-        name: 'Untitled',
-        page_content: {
-          lifeCycles: {}
-        },
-        group
+      try {
+        const defaultPage = getDefaultPage()
+        if (!defaultPage) {
+          throw new Error('Failed to get default page configuration')
+        }
+        pageSettingState.currentPageData = {
+          ...getDefaultPage(),
+          ...defaultPage,
+          parentId,
+          route: '',
+          name: 'Untitled',
+          page_content: {
+            lifeCycles: {}
+          },
+          group
+        }
+      } catch (error) {
+        // console.error('Failed to create new page:', error)
       }
       pageSettingState.currentPageDataCopy = extend(true, {}, pageSettingState.currentPageData)
       state.isFolder = false
       openPageSettingPanel()
     }
 
-    const createNewFolder = () => {
+    const createNewFolder = (parentId = ROOT_ID) => {
       closePageSettingPanel()
       pageSettingState.isNew = true
-      pageSettingState.currentPageData = { parentId: ROOT_ID, route: '', name: 'untitled' }
+      pageSettingState.currentPageData = { parentId, route: '', name: 'untitled' }
       pageSettingState.currentPageDataCopy = extend(true, {}, pageSettingState.currentPageData)
       state.isFolder = true
       openFolderSettingPanel()
@@ -112,11 +123,11 @@ export default {
       }
     })
 
-    const openSettingPanel = async (node) => {
-      state.isFolder = !node.data.isPage
+    const openSettingPanel = async (pageData) => {
+      state.isFolder = !pageData.isPage
       pageSettingState.isNew = false
 
-      const isPageChange = node.data.id !== pageSettingState.currentPageData.id
+      const isPageChange = pageData.id !== pageSettingState.currentPageData.id
 
       if (state.isFolder) {
         isPageChange && closePageSettingPanel()
@@ -125,7 +136,7 @@ export default {
         isPageChange && closeFolderSettingPanel()
         openPageSettingPanel()
       }
-      const pageDetail = await fetchPageDetail(node.data?.id)
+      const pageDetail = await fetchPageDetail(pageData?.id)
       initCurrentPageData(pageDetail)
     }
 

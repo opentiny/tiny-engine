@@ -14,12 +14,14 @@ import {
   Breadcrumb,
   Fullscreen,
   Lang,
+  ViewSetting,
   Logo,
   Lock,
   Media,
   Redoundo,
   Save,
   Clean,
+  ThemeSwitch,
   Preview,
   GenerateCode,
   Refresh,
@@ -42,7 +44,8 @@ import {
   Layout,
   Canvas,
   GenerateCodeService,
-  GlobalService
+  GlobalService,
+  ThemeSwitchService
 } from '@opentiny/tiny-engine'
 import engineConfig from './engine.config'
 import { HttpService } from './src/composable'
@@ -50,7 +53,7 @@ import { HttpService } from './src/composable'
 export default {
   root: {
     id: 'engine.root',
-    metas: [HttpService, GenerateCodeService, GlobalService]
+    metas: [HttpService, GenerateCodeService, GlobalService, ThemeSwitchService] // GlobalService 依赖 HttpService，HttpService需要在前面处理
   },
   config: engineConfig,
   layout: {
@@ -63,14 +66,15 @@ export default {
         left: ['engine.toolbars.breadcrumb', 'engine.toolbars.lock', 'engine.toolbars.logo'],
         center: ['engine.toolbars.media'],
         right: [
-          ['engine.toolbars.redoundo', 'engine.toolbars.clean'],
+          ['engine.toolbars.themeSwitch', 'engine.toolbars.redoundo', 'engine.toolbars.clean'],
           ['engine.toolbars.preview'],
           ['engine.toolbars.generate-code', 'engine.toolbars.save']
         ],
         collapse: [
           ['engine.toolbars.collaboration'],
           ['engine.toolbars.refresh', 'engine.toolbars.fullscreen'],
-          ['engine.toolbars.lang']
+          ['engine.toolbars.lang'],
+          ['engine.toolbars.viewSetting']
         ]
       }
     }
@@ -84,6 +88,7 @@ export default {
     }
   ],
   toolbars: [
+    ThemeSwitch,
     Logo,
     Breadcrumb,
     Lock,
@@ -96,9 +101,23 @@ export default {
     GenerateCode,
     Save,
     Fullscreen,
-    Lang
+    Lang,
+    ViewSetting
   ],
-  plugins: [Materials, Tree, Page, Block, Datasource, Bridge, I18n, Script, State, Schema, Help, Robot],
+  plugins: [
+    Materials,
+    Tree,
+    Page,
+    [Block, { options: { ...Block.options, mergeCategoriesAndGroups: true } }],
+    Datasource,
+    Bridge,
+    I18n,
+    Script,
+    State,
+    Schema,
+    Help,
+    Robot
+  ],
   dsls: [{ id: 'engine.dsls.dslvue' }],
   settings: [Props, Styles, Events],
   canvas: Canvas

@@ -5,10 +5,10 @@
       {{ propertyName }}
     </div>
     <tiny-form class="property-form" label-position="left" label-width="110px">
-      <tiny-form-item label="显示值">
+      <tiny-form-item label="属性名(ID)">
         <tiny-input v-model="propertyName"></tiny-input>
       </tiny-form-item>
-      <tiny-form-item label="值类型">
+      <tiny-form-item label="属性值类型">
         <tiny-select v-model="type" :options="typeList" @change="changeType"></tiny-select>
       </tiny-form-item>
       <tiny-form-item label="属性面板组件">
@@ -41,12 +41,12 @@
           </template>
           <template #operate="{ data }">
             <div class="operate-right-container">
-              <tiny-tooltip class="item" effect="dark" content="编辑" placement="top">
+              <tiny-tooltip class="item" effect="light" content="编辑" placement="top">
                 <span class="item-icon" @click.stop="handleEdit(data)">
                   <svg-icon name="to-edit"></svg-icon>
                 </span>
               </tiny-tooltip>
-              <tiny-tooltip class="item" effect="dark" content="删除" placement="top">
+              <tiny-tooltip class="item" effect="light" content="删除" placement="top">
                 <span class="item-icon" @click="del(data)">
                   <svg-icon name="delete"></svg-icon>
                 </span>
@@ -82,7 +82,7 @@
           @update:modelValue="updateDefaultValue"
         ></config-item>
       </tiny-form-item>
-      <tiny-form-item label="描述">
+      <tiny-form-item label="属性显示名">
         <tiny-input v-model="label"></tiny-input>
       </tiny-form-item>
       <tiny-form-item label="获取属性值">
@@ -258,6 +258,7 @@ export default {
 .property-title {
   margin-bottom: 12px;
   cursor: pointer;
+  fill: currentcolor;
 }
 
 .property-form {
@@ -270,7 +271,7 @@ export default {
   display: inline-block;
   margin-top: 6px;
   font-size: 12px;
-  color: var(--ti-lowcode-common-primary-color);
+  color: var(--te-block-property-add-item-text-color);
   cursor: pointer;
 
   .text {
@@ -296,8 +297,8 @@ export default {
   width: 280px;
   height: 100%;
   padding: 20px;
-  background-color: var(--ti-lowcode-common-component-bg);
-  border-right: 1px solid var(--ti-lowcode-toolbar-border-color);
+  background-color: var(--te-block-property-config-item-bg-color);
+  border-right: 1px solid var(--te-block-property-config-item-border-color);
 }
 
 .config-list {

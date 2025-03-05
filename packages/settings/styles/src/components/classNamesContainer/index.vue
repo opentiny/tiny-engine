@@ -111,7 +111,7 @@ import { formatString } from '@opentiny/tiny-engine-common/js/ast'
 import useStyle, { updateGlobalStyleStr } from '../../js/useStyle'
 import { stringify, getSelectorArr } from '../../js/parser'
 
-const { getSchema, propsUpdateKey } = useProperties()
+const { getSchema, propsUpdateKey, setProp } = useProperties()
 
 const stateOptions = [
   { label: 'None', value: '' },
@@ -171,20 +171,25 @@ watch(
 )
 
 const setSelectorProps = (type, value) => {
-  const { getSchema: getCanvasPageSchema } = useCanvas().canvasApi.value
-  const schema = getSchema() || getCanvasPageSchema()
+  const schema = getSchema()
 
-  if (!schema.props) {
-    schema.props = {}
+  if (schema) {
+    setProp(type, value)
+    propsUpdateKey.value++
+
+    return
   }
 
-  schema.props[type] = value
+  const { getSchema: getCanvasPageSchema, updateSchema } = useCanvas()
+  const pageSchema = getCanvasPageSchema()
+
+  updateSchema({ props: { ...(pageSchema.props || {}), [type]: value } })
   propsUpdateKey.value++
 }
 
 // 编辑 className 新增、删除、或修改
 const editClassName = (curClassName, optionType = OPTION_TYPE.ADD, oldSelector = '') => {
-  const { getSchema: getCanvasPageSchema } = useCanvas().canvasApi.value
+  const { getSchema: getCanvasPageSchema } = useCanvas()
   const schema = getSchema() || getCanvasPageSchema()
   let type = ''
 
@@ -441,12 +446,11 @@ watchEffect(() => {
 
 const save = ({ content }) => {
   const cssString = formatString(content.replace(/"/g, "'"), 'css')
-  const { getPageSchema } = useCanvas()
   const { addHistory } = useHistory()
-  const { updateRect, setPageCss, getSchema: getCanvasPageSchema } = useCanvas().canvasApi.value
-  getPageSchema().css = cssString
-  getCanvasPageSchema().css = cssString
-  setPageCss(cssString)
+  const { updateRect } = useCanvas().canvasApi.value
+  const { updateSchema } = useCanvas()
+
+  updateSchema({ css: cssString })
   state.schemaUpdateKey++
 
   addHistory()
@@ -480,7 +484,7 @@ const handleDeleteCurSelector = () => {
 .title {
   margin: 0;
   font-size: 12px;
-  color: var(--ti-lowcode-className-selector-title-color);
+  color: var(--te-styles-common-text-color-secondary);
   font-weight: normal;
   .help-link {
     vertical-align: middle;
@@ -491,7 +495,7 @@ const handleDeleteCurSelector = () => {
   display: flex;
   margin-top: 10px;
   height: 24px;
-  color: var(--ti-lowcode-className-selector-container-color);
+  color: var(--te-styles-common-text-color-primary);
 
   .selector-right-container {
     display: flex;
@@ -515,8 +519,9 @@ const handleDeleteCurSelector = () => {
   .edit-global-css {
     display: flex;
     padding: 3px;
-    border: 1px solid var(--ti-lowcode-className-selector-container-border-color);
-    border-radius: 6px;
+    border: 1px solid var(--te-styles-common-border-color);
+    border-radius: var(--te-base-border-radius-1);
+    color: var(--te-styles-common-text-color-weaken);
     cursor: pointer;
   }
 
@@ -527,17 +532,17 @@ const handleDeleteCurSelector = () => {
     max-width: 180px;
     min-width: 0;
     padding: 1px 10px;
-    border: 1px solid var(--ti-lowcode-className-selector-container-border-color);
-    border-radius: 6px;
+    border: 1px solid var(--te-styles-common-border-color);
+    border-radius: var(--te-base-border-radius-1);
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     font-size: 12px;
     &:hover {
-      border-color: var(--ti-lowcode-className-selector-container-hover-border-color);
+      border-color: var(--te-styles-className-selector-container-border-color-hover);
     }
     &.has-error {
-      border-color: var(--ti-lowcode-className-selector-container-error-border-color);
-      background-color: var(--ti-lowcode-className-selector-container-error-bg-color);
+      border-color: var(--te-styles-className-selector-container-border-color-error);
+      background-color: var(--te-styles-className-selector-container-bg-color-error);
     }
     &:has(.selector-input:focus) {
       .empty-tips {
@@ -546,7 +551,7 @@ const handleDeleteCurSelector = () => {
     }
     .empty-tips {
       position: absolute;
-      color: var(--ti-lowcode-className-selector-container-empty-tips-color);
+      color: var(--te-styles-className-selector-container-empty-tips-text-color);
       z-index: 0;
     }
     .current-selector {
@@ -554,8 +559,8 @@ const handleDeleteCurSelector = () => {
       .current-selector-label {
         display: flex;
         align-items: center;
-        background-color: var(--ti-lowcode-className-selector-container-label-bg-color);
-        color: var(--ti-lowcode-className-selector-container-label-color);
+        background-color: var(--te-styles-common-setting-bg-color);
+        color: var(--te-styles-common-setting-text-color);
         padding: 0 4px;
         border-radius: 4px;
         line-height: 18px;
@@ -582,14 +587,14 @@ const handleDeleteCurSelector = () => {
         }
         .edit-btn,
         .delete-btn {
-          color: var(--ti-lowcode-className-selector-container-option-btn-color);
+          color: var(--te-styles-className-selector-container-option-btn-text-color);
           margin-left: 4px;
           cursor: pointer;
         }
       }
     }
     .selector-input {
-      color: var(--ti-lowcode-className-selector-container-color);
+      color: var(--te-styles-common-text-color-primary);
       min-width: 0;
       flex: 0 0 0;
       line-height: 24px;
@@ -610,7 +615,7 @@ const handleDeleteCurSelector = () => {
     align-items: center;
     margin-top: 8px;
     font-size: 12px;
-    color: var(--ti-lowcode-className-selector-error-tips-color);
+    color: var(--te-styles-className-selector-container-tips-text-color-error);
     .error-tips-text {
       margin-left: 4px;
     }
@@ -625,7 +630,7 @@ const handleDeleteCurSelector = () => {
     top: calc(100% + 10px);
     left: 0;
     padding: 8px 0;
-    background-color: var(--ti-lowcode-className-selector-dropdown-list-bg-color);
+    background-color: var(--te-styles-className-selector-container-dropdown-list-bg-color);
     border: 1px solid transparent;
     border-radius: 6px;
     z-index: 1;
@@ -637,7 +642,7 @@ const handleDeleteCurSelector = () => {
       font-size: 12px;
       padding: 0 10px;
       line-height: 24px;
-      color: var(--ti-lowcode-className-selector-dropdown-list-tips-color);
+      color: var(--te-styles-common-text-color-weaken);
     }
 
     .selector-dropdown-list-tips + .selector-dropdown-list-tips {
@@ -660,8 +665,8 @@ const handleDeleteCurSelector = () => {
       }
       &.active,
       &:hover {
-        background-color: var(--ti-lowcode-className-selector-dropdown-list-item-active-bg-color);
-        color: var(--ti-lowcode-className-selector-dropdown-list-item-color);
+        background-color: var(--te-styles-className-selector-container-dropdown-list-item-bg-color-active);
+        color: var(--te-styles-common-text-color-primary);
       }
     }
   }
@@ -669,8 +674,8 @@ const handleDeleteCurSelector = () => {
   .state-selector {
     flex: 4;
     min-width: 84px;
-    border: 1px solid var(--ti-lowcode-className-selector-container-border-color);
-    border-radius: 6px;
+    border: 1px solid var(--te-styles-common-border-color);
+    border-radius: var(--te-base-border-radius-1);
     border-left: none;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
@@ -680,9 +685,6 @@ const handleDeleteCurSelector = () => {
       font-size: 12px;
       height: 22px;
       border-radius: 6px;
-    }
-    :deep(.tiny-input__suffix) {
-      top: 10px;
     }
   }
 }

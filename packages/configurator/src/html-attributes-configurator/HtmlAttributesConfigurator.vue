@@ -26,7 +26,7 @@
       </div>
 
       <template #reference>
-        <tiny-tooltip class="item" effect="dark" content="新增原生属性" placement="top">
+        <tiny-tooltip class="item" effect="light" content="新增原生属性" placement="top">
           <span class="icon-wrap"><IconPlus @click="addAttr"></IconPlus></span>
         </tiny-tooltip>
       </template>
@@ -48,7 +48,7 @@
 </template>
 <script>
 import { reactive, ref, watchEffect } from 'vue'
-import { useProperties, useMaterial } from '@opentiny/tiny-engine-meta-register'
+import { useProperties, useMaterial, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { IconDel, IconEdit, IconClose, IconPlus } from '@opentiny/vue-icon'
 import { Form, FormItem, Input, Button, Popover, Tooltip } from '@opentiny/vue'
 import { utils } from '@opentiny/tiny-engine-utils'
@@ -95,12 +95,26 @@ export default {
       })
 
       for (const [key, value] of Object.entries(useProperties().getSchema()?.props)) {
-        !properties.includes(key) &&
+        const isExcludedKey = properties.includes(key)
+
+        if (isExcludedKey) {
+          continue
+        }
+
+        const index = attrs.value.findIndex(({ data: { key: attrKey } }) => attrKey === key)
+
+        if (index === -1) {
           attrs.value.push({
             text: `${key} = '${value}'`,
             data: { key, value },
             id: utils.guid()
           })
+        } else {
+          Object.assign(attrs.value[index], {
+            text: `${key} = '${value}'`,
+            data: { key, value }
+          })
+        }
       }
     })
 
@@ -110,7 +124,10 @@ export default {
 
     const updateSchema = () => {
       const mergeProps = {}
-      const { props } = useProperties().getSchema()
+      const { operateNode } = useCanvas()
+      const { getSchema } = useProperties()
+      const { props } = getSchema()
+
       for (const [key, value] of Object.entries(props)) {
         if (properties.includes(key)) {
           mergeProps[key] = value
@@ -121,7 +138,9 @@ export default {
         mergeProps[attr.data.key] = attr.data.value
       })
 
-      useProperties().getSchema().props = mergeProps
+      const schema = useProperties().getSchema()
+
+      operateNode({ type: 'updateAttributes', id: schema.id, value: { props: mergeProps } })
     }
 
     const save = () => {
@@ -195,9 +214,9 @@ export default {
     width: 24px;
     height: 24px;
     font-size: 16px;
-    color: var(--ti-lowcode-toolbar-breadcrumb-color);
-    background: var(--ti-lowcode-canvas-wrap-bg);
-    border: 1px solid var(--ti-lowcode-left-button-border-color);
+    color: var(--te-configurator-common-text-color-secondary);
+    background: var(--te-configurator-html-attributes-bg-color);
+    border: 1px solid var(--te-configurator-common-border-color-divider);
     border-radius: 2px;
     display: inline-flex;
     justify-content: center;
@@ -220,10 +239,10 @@ export default {
 
 .attr-list {
   .list-item {
-    border: 1px solid var(--ti-lowcode-optionitem-border-color);
-    background: var(--ti-lowcode-optionitem-background-color);
+    border: 1px solid var(--te-configurator-common-border-color);
+    background: var(--te-configurator-common-bg-color);
     margin-bottom: -1px;
-    color: var(--ti-lowcode-toolbar-breadcrumb-color);
+    color: var(--te-configurator-common-text-color-secondary);
     padding: 7px;
     display: grid;
     grid-template-columns: 3fr auto;

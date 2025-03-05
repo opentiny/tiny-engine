@@ -70,10 +70,11 @@ export default {
   justify-content: center;
 }
 .footer-toolbar {
+  margin-right: -12px;
   .icon-wrap {
     width: 20px;
     height: 20px;
-    color: var(--ti-lowcode-text-color);
+    color: var(--te-materials-block-group-arrange-icon-color);
     font-size: 16px;
     border-radius: 2px;
     cursor: pointer;
@@ -82,10 +83,10 @@ export default {
     align-items: center;
     transition: 0.3s;
     &:hover {
-      color: var(--ti-lowcode-common-primary-color);
+      color: var(--te-materials-block-group-arrange-icon-color-hover);
     }
     &.active {
-      color: var(--ti-lowcode-common-primary-color);
+      color: var(--te-materials-block-group-arrange-icon-color-active);
     }
   }
   .icon-wrap + .icon-wrap {

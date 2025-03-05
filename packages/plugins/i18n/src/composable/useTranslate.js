@@ -116,10 +116,10 @@ const getI18nData = () => {
 }
 
 const getI18n = async ({ init, local }) => {
-  const { resState } = useResource()
+  const { appSchemaState } = useResource()
 
   if (local) {
-    const locales = resState?.langs?.locales || []
+    const locales = appSchemaState?.langs?.locales || []
     const messages = {}
     const langs = getLangs()
 
@@ -135,7 +135,7 @@ const getI18n = async ({ init, local }) => {
 
     return { locales, messages }
   } else {
-    const i18n = init ? resState.langs : await getI18nData
+    const i18n = init ? appSchemaState.langs : await getI18nData()
 
     return i18n
   }

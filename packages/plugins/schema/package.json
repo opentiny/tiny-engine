@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-plugin-schema",
-  "version": "2.0.0-rc.3",
+  "version": "2.2.0",
   "publishConfig": {
     "access": "public"
   },
@@ -27,7 +27,8 @@
   "dependencies": {
     "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-meta-register": "workspace:*",
-    "@opentiny/tiny-engine-utils": "workspace:*"
+    "@opentiny/tiny-engine-utils": "workspace:*",
+    "@vueuse/core": "^9.6.0"
   },
   "devDependencies": {
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
@@ -36,8 +37,8 @@
     "vite": "^5.4.2"
   },
   "peerDependencies": {
-    "@opentiny/vue": "^3.14.0",
-    "@opentiny/vue-icon": "^3.14.0",
+    "@opentiny/vue": "^3.20.0",
+    "@opentiny/vue-icon": "^3.20.0",
     "vue": "^3.4.15"
   }
 }

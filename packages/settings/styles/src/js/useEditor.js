@@ -15,6 +15,7 @@ import { useHistory, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { obj2StyleStr, styleStrRemoveRoot } from './cssConvert'
 import { CSS_TYPE } from './cssType'
 
+// TODO: 确认是否还有地方引用，没有就删除了
 export default ({ style, pageState }) => {
   const { addHistory } = useHistory()
 
@@ -55,10 +56,9 @@ export default ({ style, pageState }) => {
         addHistory()
       }
     } else if (editor.type === CSS_TYPE.Css) {
-      pageState.pageSchema.css = content
-      const { setPageCss } = useCanvas().canvasApi.value
+      const { updateSchema } = useCanvas()
+      updateSchema({ css: content })
 
-      setPageCss(content)
       addHistory()
     }
   }

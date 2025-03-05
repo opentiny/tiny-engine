@@ -14,6 +14,7 @@ import entry from './src/Main.vue'
 import Components from './src/components'
 import metaData from './meta'
 import { PropertyService, PropertiesService } from './src/composable'
+import './src/styles/vars.less'
 
 export { Components, PropertyService, PropertiesService }
 

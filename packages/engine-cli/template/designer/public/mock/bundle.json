@@ -19,10 +19,6 @@
           "dev_mode": "proCode",
           "npm": {
             "package": "element-plus",
-            "version": "2.4.2",
-            "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
-            "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css",
-            "dependencies": null,
             "exportName": "ElInput"
           },
           "group": "表单组件",
@@ -76,10 +72,10 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
-                      "component": "MyInputConfigurator",
+                      "component": "InputConfigurator",
                       "props": {}
                     }
                   },
@@ -97,7 +93,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "defaultValue": "default",
                     "widget": {
@@ -134,7 +130,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
                       "component": "InputConfigurator",
@@ -155,7 +151,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
                       "component": "I18nConfigurator",
@@ -177,7 +173,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "number",
                     "widget": {
                       "component": "NumberConfigurator",
@@ -199,11 +195,11 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "defaultValue": false,
                     "type": "boolean",
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "device": []
@@ -299,10 +295,6 @@
           "dev_mode": "proCode",
           "npm": {
             "package": "element-plus",
-            "version": "2.4.2",
-            "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
-            "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css",
-            "dependencies": null,
             "exportName": "ElButton"
           },
           "group": "基础组件",
@@ -356,7 +348,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "defaultValue": "default",
                     "widget": {
@@ -393,7 +385,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
                       "component": "InputConfigurator",
@@ -414,10 +406,10 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "device": []
@@ -436,10 +428,10 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "device": []
@@ -458,10 +450,10 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "device": []
@@ -480,10 +472,10 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "device": []
@@ -502,10 +494,10 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "device": []
@@ -524,10 +516,10 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "device": []
@@ -546,10 +538,10 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "device": []
@@ -568,11 +560,11 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "defaultValue": false,
                     "type": "boolean",
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "device": []
@@ -620,10 +612,6 @@
           "dev_mode": "proCode",
           "npm": {
             "package": "element-plus",
-            "version": "2.4.2",
-            "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
-            "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css",
-            "dependencies": null,
             "exportName": "ElForm"
           },
           "group": "表单组件",
@@ -678,7 +666,6 @@
                     "disabled": false,
                     "cols": 12,
                     "labelPosition": "top",
-                    "type": "object",
                     "widget": {
                       "component": "CodeConfigurator",
                       "props": {
@@ -701,7 +688,6 @@
                     "disabled": false,
                     "cols": 12,
                     "labelPosition": "top",
-                    "type": "object",
                     "widget": {
                       "component": "CodeConfigurator",
                       "props": {
@@ -723,10 +709,10 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "boolean",
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     }
                   },
@@ -744,7 +730,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "defaultValue": "right",
                     "widget": {
@@ -781,7 +767,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
                       "component": "InputConfigurator",
@@ -803,7 +789,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
                       "component": "InputConfigurator",
@@ -825,10 +811,10 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "boolean",
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     }
                   },
@@ -846,11 +832,11 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "defaultValue": "left",
                     "widget": {
-                      "component": "SelectConfigurator",
+                      "component": "ButtonGroupConfigurator",
                       "props": {
                         "options": [
                           {
@@ -879,11 +865,11 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "defaultValue": true,
                     "type": "boolean",
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     }
                   },
@@ -901,11 +887,11 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "defaultValue": false,
                     "type": "boolean",
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     }
                   },
@@ -923,11 +909,11 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "defaultValue": false,
                     "type": "boolean",
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     }
                   },
@@ -945,11 +931,11 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "defaultValue": true,
                     "type": "boolean",
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     }
                   },
@@ -967,7 +953,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "defaultValue": "default",
                     "widget": {
@@ -1004,11 +990,11 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "defaultValue": false,
                     "type": "boolean",
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "device": []
@@ -1027,11 +1013,11 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "defaultValue": false,
                     "type": "boolean",
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "device": []
@@ -1077,10 +1063,6 @@
           "dev_mode": "proCode",
           "npm": {
             "package": "element-plus",
-            "version": "2.4.2",
-            "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
-            "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css",
-            "dependencies": null,
             "exportName": "ElFormItem"
           },
           "group": "表单组件",
@@ -1134,7 +1116,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
                       "component": "InputConfigurator",
@@ -1155,7 +1137,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
                       "component": "InputConfigurator",
@@ -1176,7 +1158,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
                       "component": "InputConfigurator",
@@ -1197,10 +1179,10 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "boolean",
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     }
                   },
@@ -1219,7 +1201,6 @@
                     "disabled": false,
                     "cols": 12,
                     "labelPosition": "top",
-                    "type": "object",
                     "widget": {
                       "component": "CodeConfigurator",
                       "props": {
@@ -1241,7 +1222,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
                       "component": "InputConfigurator",
@@ -1262,10 +1243,10 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "boolean",
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     }
                   },
@@ -1283,10 +1264,10 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "boolean",
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     }
                   },
@@ -1304,7 +1285,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "defaultValue": "default",
                     "widget": {
@@ -1341,7 +1322,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
                       "component": "InputConfigurator",
@@ -1362,7 +1343,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
                       "component": "SelectConfigurator",
@@ -1427,10 +1408,6 @@
           "dev_mode": "proCode",
           "npm": {
             "package": "element-plus",
-            "version": "2.4.2",
-            "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
-            "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css",
-            "dependencies": null,
             "exportName": "ElTable"
           },
           "group": "数据展示",
@@ -1485,7 +1462,6 @@
                     "disabled": false,
                     "cols": 12,
                     "labelPosition": "top",
-                    "type": "array",
                     "widget": {
                       "component": "CodeConfigurator",
                       "props": {
@@ -1691,7 +1667,7 @@
                           {
                             "property": "sortable",
                             "type": "boolean",
-                            "labelPosition": "top",
+                            "labelPosition": "left",
                             "label": {
                               "text": {
                                 "zh_CN": "sortable"
@@ -1703,7 +1679,7 @@
                               }
                             },
                             "widget": {
-                              "component": "SwitchConfigurator",
+                              "component": "CheckBoxConfigurator",
                               "props": {}
                             }
                           },
@@ -1771,7 +1747,7 @@
                           {
                             "property": "resizable",
                             "type": "boolean",
-                            "labelPosition": "top",
+                            "labelPosition": "left",
                             "defaultValue": true,
                             "label": {
                               "text": {
@@ -1784,7 +1760,7 @@
                               }
                             },
                             "widget": {
-                              "component": "SwitchConfigurator",
+                              "component": "CheckBoxConfigurator",
                               "props": {}
                             }
                           },
@@ -1813,7 +1789,7 @@
                           {
                             "property": "show-overflow-tooltip",
                             "type": "boolean",
-                            "labelPosition": "top",
+                            "labelPosition": "left",
                             "defaultValue": true,
                             "label": {
                               "text": {
@@ -1826,7 +1802,7 @@
                               }
                             },
                             "widget": {
-                              "component": "SwitchConfigurator",
+                              "component": "CheckBoxConfigurator",
                               "props": {}
                             }
                           },
@@ -1963,7 +1939,7 @@
                           {
                             "property": "reserve-selection",
                             "type": "boolean",
-                            "labelPosition": "top",
+                            "labelPosition": "left",
                             "defaultValue": true,
                             "label": {
                               "text": {
@@ -1976,7 +1952,7 @@
                               }
                             },
                             "widget": {
-                              "component": "SwitchConfigurator",
+                              "component": "CheckBoxConfigurator",
                               "props": {}
                             }
                           },
@@ -2024,7 +2000,7 @@
                           {
                             "property": "filter-multiple",
                             "type": "string",
-                            "labelPosition": "top",
+                            "labelPosition": "left",
                             "defaultValue": true,
                             "label": {
                               "text": {
@@ -2037,7 +2013,7 @@
                               }
                             },
                             "widget": {
-                              "component": "SwitchConfigurator",
+                              "component": "CheckBoxConfigurator",
                               "props": {}
                             }
                           },
@@ -2116,7 +2092,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "number",
                     "widget": {
                       "component": "NumberConfigurator",
@@ -2138,7 +2114,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "widget": {
                       "component": "InputConfigurator",
@@ -2160,11 +2136,11 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "defaultValue": false,
                     "type": "boolean",
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     }
                   },
@@ -2182,11 +2158,11 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "defaultValue": false,
                     "type": "boolean",
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     }
                   },
@@ -2204,7 +2180,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "type": "string",
                     "defaultValue": "default",
                     "widget": {
@@ -2241,11 +2217,11 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "defaultValue": true,
                     "type": "boolean",
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     }
                   },
@@ -2263,11 +2239,11 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "defaultValue": true,
                     "type": "boolean",
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     }
                   },
@@ -2285,11 +2261,11 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "defaultValue": false,
                     "type": "boolean",
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     }
                   },
@@ -2329,7 +2305,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "widget": {
                       "component": "InputConfigurator",
                       "props": {}
@@ -2371,7 +2347,7 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "widget": {
                       "component": "InputConfigurator",
                       "props": {}
@@ -2425,11 +2401,11 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "defaultValue": false,
                     "type": "boolean",
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     }
                   },
@@ -2447,11 +2423,11 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
-                    "labelPosition": "top",
+                    "labelPosition": "left",
                     "defaultValue": false,
                     "type": "boolean",
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     }
                   }
@@ -2665,10 +2641,6 @@
           "dev_mode": "proCode",
           "npm": {
             "package": "element-plus",
-            "version": "2.4.2",
-            "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
-            "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css",
-            "dependencies": null,
             "exportName": "ElTableColumn"
           },
           "group": "表单组件",
@@ -2731,11 +2703,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "CarouselItem",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "CarouselItem"
           },
           "group": "component",
           "category": "容器组件",
@@ -2748,12 +2716,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -2773,7 +2735,8 @@
                     },
                     "description": {
                       "zh_CN": "幻灯片的名字，可用作 setActiveItem 的参数"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "title",
@@ -2792,7 +2755,8 @@
                     },
                     "description": {
                       "zh_CN": "幻灯片的标题"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "indicator-position",
@@ -2806,7 +2770,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SelectConfigurator",
+                      "component": "ButtonGroupConfigurator",
                       "props": {
                         "options": [
                           {
@@ -2822,7 +2786,8 @@
                     },
                     "description": {
                       "zh_CN": "指示器的位置"
-                    }
+                    },
+                    "labelPosition": "left"
                   }
                 ]
               }
@@ -2867,11 +2832,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Carousel",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Carousel"
           },
           "group": "component",
           "category": "容器组件",
@@ -2884,12 +2845,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -2938,12 +2893,13 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "是否自动切换"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "tabs",
@@ -3066,12 +3022,13 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "是否循环显示"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "show-title",
@@ -3085,12 +3042,13 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "是否显示标题"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "trigger",
@@ -3210,12 +3168,6 @@
                 "description": {
                   "zh_CN": "基础信息"
                 },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
-                },
                 "content": [
                   {
                     "property": "children",
@@ -3254,7 +3206,8 @@
                     },
                     "description": {
                       "zh_CN": "指定链接的 URL"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "target",
@@ -3268,7 +3221,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SelectConfigurator",
+                      "component": "ButtonGroupConfigurator",
                       "props": {
                         "options": [
                           {
@@ -3359,12 +3312,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -3463,12 +3410,6 @@
                 "description": {
                   "zh_CN": "基础信息"
                 },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
-                },
                 "content": [
                   {
                     "property": "children",
@@ -3563,12 +3504,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -3836,12 +3771,6 @@
                 "description": {
                   "zh_CN": "基础信息"
                 },
-                "collapse": {
-                  "number": 10,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
-                },
                 "content": [
                   {
                     "property": "src",
@@ -3912,12 +3841,13 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "是否显示控件"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "autoplay",
@@ -3931,12 +3861,13 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "是否马上播放"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "attributes3",
@@ -4010,12 +3941,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -4094,12 +4019,6 @@
                 "description": {
                   "zh_CN": "基础信息"
                 },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
-                },
                 "content": [
                   {
                     "property": "attributes3",
@@ -4174,12 +4093,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -4291,12 +4204,6 @@
                 "description": {
                   "zh_CN": "基础信息"
                 },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
-                },
                 "content": [
                   {
                     "property": "colspan",
@@ -4406,12 +4313,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -4536,12 +4437,6 @@
                 "description": {
                   "zh_CN": "基础信息"
                 },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
-                },
                 "content": [
                   {
                     "property": "for",
@@ -4607,11 +4502,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "ButtonGroup",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "ButtonGroup"
           },
           "group": "component",
           "category": "general",
@@ -4624,12 +4515,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -4685,7 +4570,8 @@
                     },
                     "description": {
                       "zh_CN": "组件大小"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "plain",
@@ -4699,12 +4585,13 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "是否是朴素按钮"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "disabled",
@@ -4718,12 +4605,13 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "是否禁用"
-                    }
+                    },
+                    "labelPosition": "left"
                   }
                 ]
               }
@@ -4768,11 +4656,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Row",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Row"
           },
           "group": "component",
           "priority": 5,
@@ -4784,12 +4668,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -4855,12 +4733,13 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "是否为flex容器"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "gutter",
@@ -4910,6 +4789,113 @@
           }
         },
         {
+          "icon": "row",
+          "name": {
+            "zh_CN": "row"
+          },
+          "component": "TinyLayout",
+          "description": "定义 Layout 的行配置信息",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "package": "@opentiny/vue",
+            "exportName": "Layout",
+            "version": "3.20.0",
+            "destructuring": true,
+            "script": "https://unpkg.com/@opentiny/vue-runtime@~3.20/dist3/tiny-vue-pc.mjs",
+            "css": "https://unpkg.com/@opentiny/vue-theme@~3.20/index.css"
+          },
+          "group": "component",
+          "priority": 5,
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "content": [
+                  {
+                    "property": "cols",
+                    "label": {
+                      "text": {
+                        "zh_CN": "总栅格数"
+                      }
+                    },
+                    "cols": 12,
+                    "widget": {
+                      "component": "ButtonGroupConfigurator",
+                      "props": {
+                        "options": [
+                          {
+                            "label": "12",
+                            "value": 12
+                          },
+                          {
+                            "label": "24",
+                            "value": 24
+                          }
+                        ]
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "选择总栅格数"
+                    },
+                    "labelPosition": "none"
+                  },
+                  {
+                    "property": "tag",
+                    "label": {
+                      "text": {
+                        "zh_CN": "layout渲染的标签"
+                      }
+                    },
+                    "required": false,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "InputConfigurator",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": "定义Layout元素渲染后的标签，默认为 div"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": true,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": ["TinyRow", "TinyCol"],
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": ["disabled"]
+            },
+            "contextMenu": {
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
+            }
+          }
+        },
+        {
           "icon": "form",
           "name": {
             "zh_CN": "表单"
@@ -4923,11 +4909,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Form",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Form"
           },
           "group": "component",
           "priority": 5,
@@ -4939,12 +4921,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -4959,12 +4935,13 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "是否禁用"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "label-width",
@@ -4998,12 +4975,13 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "行内布局模式，默认为 false"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "label-align",
@@ -5017,7 +4995,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -5042,7 +5020,8 @@
                     },
                     "description": {
                       "zh_CN": "表单中标签后缀"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "label-position",
@@ -5076,7 +5055,8 @@
                     },
                     "description": {
                       "zh_CN": "表单中标签的布局位置"
-                    }
+                    },
+                    "labelPosition": "left"
                   }
                 ]
               },
@@ -5104,7 +5084,7 @@
                     "description": {
                       "zh_CN": "表单数据对象"
                     },
-                    "labelPosition": "left"
+                    "labelPosition": "top"
                   },
                   {
                     "property": "rules",
@@ -5123,7 +5103,8 @@
                     },
                     "description": {
                       "zh_CN": "表单验证规则"
-                    }
+                    },
+                    "labelPosition": "top"
                   }
                 ],
                 "description": {
@@ -5278,11 +5259,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "FormItem",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "FormItem"
           },
           "group": "component",
           "priority": 12,
@@ -5294,12 +5271,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -5340,7 +5311,8 @@
                     },
                     "description": {
                       "zh_CN": "表单域 model 字段，在使用 validate、resetFields 方法的情况下，该属性是必填的"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "required",
@@ -5354,7 +5326,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -5415,11 +5387,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Col",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Col"
           },
           "group": "component",
           "priority": 2,
@@ -5431,12 +5399,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -5699,11 +5661,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Button",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Button"
           },
           "group": "component",
           "priority": 2,
@@ -5715,12 +5673,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -5743,7 +5695,8 @@
                     },
                     "description": {
                       "zh_CN": "按钮文字"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "size",
@@ -5784,7 +5737,8 @@
                     },
                     "description": {
                       "zh_CN": "按钮大小"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "disabled",
@@ -5798,7 +5752,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -5873,7 +5827,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -5893,7 +5847,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -5918,7 +5872,8 @@
                     },
                     "description": {
                       "zh_CN": "设置禁用时间，防止重复提交，单位毫秒"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "circle",
@@ -5932,7 +5887,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -5952,7 +5907,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -5972,7 +5927,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -6041,11 +5996,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Input",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Input"
           },
           "group": "component",
           "priority": 1,
@@ -6057,12 +6008,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -6113,7 +6058,8 @@
                     },
                     "description": {
                       "zh_CN": "设置input框的type属性"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "rows",
@@ -6127,7 +6073,8 @@
                     },
                     "description": {
                       "zh_CN": "输入框行数，只对 type='textarea' 有效"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "placeholder",
@@ -6161,7 +6108,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -6181,12 +6128,13 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "是否禁用"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "size",
@@ -6220,7 +6168,8 @@
                     },
                     "description": {
                       "zh_CN": "输入框尺寸。该属性的可选值为 medium / small / mini"
-                    }
+                    },
+                    "labelPosition": "left"
                   }
                 ]
               },
@@ -6247,8 +6196,7 @@
                     },
                     "description": {
                       "zh_CN": "设置 input 框的maxLength"
-                    },
-                    "labelPosition": "left"
+                    }
                   },
                   {
                     "property": "autofocus",
@@ -6262,7 +6210,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -6458,11 +6406,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Radio",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Radio"
           },
           "group": "component",
           "priority": 3,
@@ -6474,12 +6418,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -6550,12 +6488,13 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "是否禁用"
-                    }
+                    },
+                    "labelPosition": "left"
                   }
                 ]
               },
@@ -6579,12 +6518,13 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "是否显示边框"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "size",
@@ -6699,11 +6639,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Select",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Select"
           },
           "group": "component",
           "priority": 8,
@@ -6715,12 +6651,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 10,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -6775,7 +6705,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -6795,7 +6725,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -6815,12 +6745,13 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "是否禁用"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "options",
@@ -6842,7 +6773,7 @@
                     "description": {
                       "zh_CN": "配置 Select 下拉数据项"
                     },
-                    "labelPosition": "left"
+                    "labelPosition": "top"
                   },
                   {
                     "property": "multiple",
@@ -6856,7 +6787,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -6924,7 +6855,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -7109,11 +7040,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Switch",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Switch"
           },
           "group": "component",
           "priority": 9,
@@ -7125,12 +7052,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -7145,7 +7066,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -7170,7 +7091,8 @@
                     },
                     "description": {
                       "zh_CN": "绑定默认值"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "true-value",
@@ -7224,7 +7146,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -7313,11 +7235,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Search",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Search"
           },
           "group": "component",
           "priority": 2,
@@ -7329,12 +7247,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -7369,7 +7281,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -7409,7 +7321,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -7429,7 +7341,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -7457,7 +7369,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -7477,7 +7389,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -7594,11 +7506,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Checkbox",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Checkbox"
           },
           "group": "component",
           "priority": 4,
@@ -7610,12 +7518,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -7650,12 +7552,13 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "是否禁用"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "checked",
@@ -7669,7 +7572,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -7717,12 +7620,13 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "是否显示边框"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "false-label",
@@ -7741,7 +7645,8 @@
                     },
                     "description": {
                       "zh_CN": "没有选中时的值"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "true-label",
@@ -7760,7 +7665,8 @@
                     },
                     "description": {
                       "zh_CN": "选中时的值"
-                    }
+                    },
+                    "labelPosition": "left"
                   }
                 ],
                 "description": {
@@ -7855,11 +7761,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "CheckboxButton",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "CheckboxButton"
           },
           "group": "component",
           "priority": 1,
@@ -7871,12 +7773,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -7911,12 +7807,13 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "是否禁用"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "checked",
@@ -7930,7 +7827,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -8048,11 +7945,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "CheckboxGroup",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "CheckboxGroup"
           },
           "group": "component",
           "priority": 2,
@@ -8064,12 +7957,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -8106,12 +7993,13 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "是否禁用"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "options",
@@ -8138,7 +8026,8 @@
                     },
                     "description": {
                       "zh_CN": "checkbox组件列表"
-                    }
+                    },
+                    "labelPosition": "top"
                   },
                   {
                     "property": "type",
@@ -8152,7 +8041,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SelectConfigurator",
+                      "component": "ButtonGroupConfigurator",
                       "props": {
                         "options": [
                           {
@@ -8261,11 +8150,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "DialogBox",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "DialogBox"
           },
           "group": "component",
           "priority": 4,
@@ -8277,12 +8162,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -8317,7 +8196,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -8357,12 +8236,13 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "是否开启弹窗的拖拽功能，默认值为 false 。"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "center",
@@ -8376,7 +8256,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -8416,7 +8296,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -8436,12 +8316,13 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "是否显示关闭按钮，默认值为 true 。"
-                    }
+                    },
+                    "labelPosition": "left"
                   }
                 ]
               }
@@ -8543,11 +8424,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Tabs",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Tabs"
           },
           "group": "component",
           "priority": 10,
@@ -8559,12 +8436,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -8579,7 +8450,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -8641,7 +8512,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -8661,7 +8532,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -8830,11 +8701,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "TabItem",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "TabItem"
           },
           "group": "component",
           "priority": 2,
@@ -8846,12 +8713,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -8945,11 +8806,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Select",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Breadcrumb"
           },
           "group": "component",
           "priority": 1,
@@ -8961,12 +8818,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -9008,7 +8859,8 @@
                     },
                     "description": {
                       "zh_CN": "单独使用 Breadcrumb，通过 option 配置生成面包屑"
-                    }
+                    },
+                    "labelPosition": "top"
                   },
                   {
                     "property": "textField",
@@ -9027,7 +8879,8 @@
                     },
                     "description": {
                       "zh_CN": "指定面包屑的显示键值，结合 options 使用"
-                    }
+                    },
+                    "labelPosition": "left"
                   }
                 ]
               }
@@ -9088,11 +8941,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "BreadcrumbItem",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "BreadcrumbItem"
           },
           "group": "component",
           "priority": 1,
@@ -9104,12 +8953,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -9183,11 +9026,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Collapse",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Collapse"
           },
           "group": "component",
           "priority": 3,
@@ -9199,12 +9038,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -9224,8 +9057,7 @@
                     },
                     "description": {
                       "zh_CN": "双向绑定当前激活的面板"
-                    },
-                    "labelPosition": "left"
+                    }
                   }
                 ]
               }
@@ -9317,11 +9149,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "CollapseItem",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "CollapseItem"
           },
           "group": "component",
           "priority": 2,
@@ -9333,12 +9161,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -9434,11 +9256,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Grid",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Grid"
           },
           "group": "component",
           "priority": 2,
@@ -9450,12 +9268,6 @@
                 },
                 "description": {
                   "zh_CN": "基础属性"
-                },
-                "collapse": {
-                  "number": 15,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -9478,7 +9290,8 @@
                     "onChange": "this.delProp('fetchData')",
                     "description": {
                       "zh_CN": "设置表格的数据"
-                    }
+                    },
+                    "labelPosition": "top"
                   },
                   {
                     "property": "columns",
@@ -9535,9 +9348,10 @@
                               }
                             },
                             "widget": {
-                              "component": "SwitchConfigurator",
+                              "component": "CheckBoxConfigurator",
                               "props": {}
-                            }
+                            },
+                            "labelPosition": "left"
                           },
                           {
                             "property": "width",
@@ -9698,8 +9512,7 @@
                             },
                             "description": {
                               "zh_CN": "单元格编辑渲染配置项，也可以是函数 Function(h, params)"
-                            },
-                            "labelPosition": "left"
+                            }
                           },
                           {
                             "property": "filter",
@@ -9756,7 +9569,7 @@
                             "description": {
                               "zh_CN": "设置内置列的内容超出部分显示省略号配置，该属性的可选值为 ellipsis（只显示省略号）/ title（显示为原生 title）/ tooltip（显示为 tooltip 提示）"
                             },
-                            "labelPosition": "left"
+                            "labelPosition": "top"
                           }
                         ]
                       }
@@ -9787,7 +9600,7 @@
                     "required": true,
                     "readOnly": false,
                     "disabled": false,
-                    "onChange": "this.delProp('data')",
+                    "onChange": "function () { this.delProp('data') } ",
                     "cols": 12,
                     "widget": {
                       "component": "CodeConfigurator",
@@ -9798,7 +9611,8 @@
                     },
                     "description": {
                       "zh_CN": "服务端数据查询方法"
-                    }
+                    },
+                    "labelPosition": "top"
                   },
                   {
                     "property": "pager",
@@ -9825,7 +9639,8 @@
                     },
                     "description": {
                       "zh_CN": "分页配置，需结合fetchData使用"
-                    }
+                    },
+                    "labelPosition": "top"
                   },
                   {
                     "property": "resizable",
@@ -9839,7 +9654,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -9888,8 +9703,7 @@
                     },
                     "description": {
                       "zh_CN": "表格行数据复选框配置项"
-                    },
-                    "labelPosition": "left"
+                    }
                   },
                   {
                     "property": "edit-rules",
@@ -9909,7 +9723,7 @@
                     "description": {
                       "zh_CN": "表格校验规则配置项"
                     },
-                    "labelPosition": "left"
+                    "labelPosition": "top"
                   },
                   {
                     "property": "edit-config",
@@ -9928,7 +9742,8 @@
                     },
                     "description": {
                       "zh_CN": "表格编辑配置项"
-                    }
+                    },
+                    "labelPosition": "top"
                   },
                   {
                     "property": "expand-config",
@@ -9948,7 +9763,7 @@
                     "description": {
                       "zh_CN": "展开行配置项"
                     },
-                    "labelPosition": "left"
+                    "labelPosition": "top"
                   },
                   {
                     "property": "sortable",
@@ -9962,7 +9777,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -9979,12 +9794,6 @@
                 "description": {
                   "zh_CN": "其他属性"
                 },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
-                },
                 "content": [
                   {
                     "property": "auto-resize",
@@ -9998,7 +9807,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -10018,7 +9827,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -10038,7 +9847,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -10058,7 +9867,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -10078,7 +9887,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -10104,7 +9913,7 @@
                     "description": {
                       "zh_CN": "给行附加 className，也可以是函数 Function({seq, row, rowIndex, $rowIndex})"
                     },
-                    "labelPosition": "left"
+                    "labelPosition": "top"
                   },
                   {
                     "property": "max-height",
@@ -10123,8 +9932,7 @@
                     },
                     "description": {
                       "zh_CN": "设置表格内容区域（不含表格头部，底部）的最大高度。"
-                    },
-                    "labelPosition": "left"
+                    }
                   },
                   {
                     "property": "row-span",
@@ -10144,7 +9952,7 @@
                     "description": {
                       "zh_CN": "设置行合并,该属性仅适用于普通表格，不可与 tree-config 同时使用"
                     },
-                    "labelPosition": "left"
+                    "labelPosition": "top"
                   }
                 ]
               }
@@ -10345,6 +10153,54 @@
           }
         },
         {
+          "icon": "grid",
+          "name": {
+            "zh_CN": "表格行"
+          },
+          "component": "TinyGridColumn",
+          "description": "提供了非常强大数据表格功能，可以展示数据列表，可以对数据列表进行选择、编辑等",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "package": "@opentiny/vue",
+            "exportName": "TinyGridColumn"
+          },
+          "group": "component",
+          "priority": 2,
+          "schema": {
+            "properties": [],
+            "events": {},
+            "shortcuts": {},
+            "contentMenu": {
+              "actions": ["create symbol"]
+            }
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {},
+            "contextMenu": {
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
+            }
+          }
+        },
+        {
           "name": {
             "zh_CN": "分页"
           },
@@ -10358,11 +10214,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Pager",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Pager"
           },
           "group": "component",
           "priority": 1,
@@ -10374,12 +10226,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 10,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -10597,11 +10443,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "PopEditor",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Popeditor"
           },
           "group": "component",
           "priority": 6,
@@ -10613,12 +10455,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -10673,7 +10509,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -10693,12 +10529,13 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "是否禁用"
-                    }
+                    },
+                    "labelPosition": "left"
                   }
                 ]
               },
@@ -10746,7 +10583,7 @@
                     "description": {
                       "zh_CN": "当弹出面板配置的是表格时，设置弹出面板中的过滤条件"
                     },
-                    "labelPosition": "left"
+                    "labelPosition": "top"
                   },
                   {
                     "property": "grid-op",
@@ -10765,8 +10602,7 @@
                     },
                     "description": {
                       "zh_CN": "设置弹出面板中表格组件的配置信息"
-                    },
-                    "labelPosition": "left"
+                    }
                   },
                   {
                     "property": "pager-op",
@@ -10786,7 +10622,7 @@
                     "description": {
                       "zh_CN": "设置弹出编辑框中分页配置"
                     },
-                    "labelPosition": "left"
+                    "labelPosition": "top"
                   },
                   {
                     "property": "multi",
@@ -10800,7 +10636,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -10820,12 +10656,13 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "当 popseletor 为 grid 时才能生效，配置为 true 后还需配置 pagerOp 属性"
-                    }
+                    },
+                    "labelPosition": "left"
                   }
                 ],
                 "description": {
@@ -10965,11 +10802,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Tree",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Tree"
           },
           "group": "component",
           "priority": 12,
@@ -10981,12 +10814,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 10,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -11001,7 +10828,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -11036,7 +10863,8 @@
                     },
                     "description": {
                       "zh_CN": "可配置静态数据源和动态数据源"
-                    }
+                    },
+                    "labelPosition": "top"
                   },
                   {
                     "property": "node-key",
@@ -11092,7 +10920,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -11118,7 +10946,7 @@
                     "description": {
                       "zh_CN": "节点展开图标"
                     },
-                    "labelPosition": "left"
+                    "labelPosition": "top"
                   },
                   {
                     "property": "shrink-icon",
@@ -11138,7 +10966,7 @@
                     "description": {
                       "zh_CN": "节点收缩的图标"
                     },
-                    "labelPosition": "left"
+                    "labelPosition": "top"
                   }
                 ]
               },
@@ -11160,7 +10988,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -11186,7 +11014,7 @@
                     "description": {
                       "zh_CN": "节点筛选函数"
                     },
-                    "labelPosition": "left"
+                    "labelPosition": "top"
                   }
                 ],
                 "description": {
@@ -11305,11 +11133,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "TimeLine",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "TimeLine"
           },
           "group": "component",
           "priority": 3,
@@ -11321,12 +11145,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -11350,12 +11168,13 @@
                     "readOnly": false,
                     "disabled": false,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "节点和文字横向布局"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "vertical",
@@ -11378,12 +11197,13 @@
                     "readOnly": false,
                     "disabled": false,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "节点和文字垂直布局"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "active",
@@ -11439,7 +11259,7 @@
                     "description": {
                       "zh_CN": "时间线步骤条数据"
                     },
-                    "labelPosition": "left"
+                    "labelPosition": "top"
                   }
                 ]
               }
@@ -11516,11 +11336,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Tooltip",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Tooltip"
           },
           "group": "component",
           "priority": 11,
@@ -11532,12 +11348,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 20,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -11629,7 +11439,8 @@
                     },
                     "description": {
                       "zh_CN": "显示的内容，也可以通过 slot#content 传入 DOM"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "render-content",
@@ -11663,12 +11474,13 @@
                     "defaultValue": true,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "状态是否可见"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "manual",
@@ -11679,12 +11491,13 @@
                     },
                     "defaultValue": true,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "手动控制模式，设置为 true 后，mouseenter 和 mouseleave 事件将不会生效"
-                    }
+                    },
+                    "labelPosition": "left"
                   }
                 ]
               }
@@ -11740,11 +11553,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Popover",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Popover"
           },
           "group": "component",
           "priority": 7,
@@ -11756,12 +11565,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -11776,7 +11579,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -11891,7 +11694,8 @@
                     },
                     "description": {
                       "zh_CN": "触发方式，该属性的可选值为 click / focus / hover / manual，该属性的默认值为 click"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "popper-class",
@@ -11925,12 +11729,13 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "是否显示 Tooltip 箭头"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "append-to-body",
@@ -11944,12 +11749,13 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "Popover弹窗是否添加到body上"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "arrow-offset",
@@ -11987,7 +11793,8 @@
                     },
                     "description": {
                       "zh_CN": "触发方式为 hover 时的隐藏延迟，单位为毫秒"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "content",
@@ -12006,7 +11813,8 @@
                     },
                     "description": {
                       "zh_CN": "显示的内容，也可以通过 slot 传入 DOM"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "disabled",
@@ -12020,12 +11828,13 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "Popover 是否可用"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "offset",
@@ -12044,7 +11853,8 @@
                     },
                     "description": {
                       "zh_CN": "出现位置的偏移量"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "open-delay",
@@ -12063,7 +11873,8 @@
                     },
                     "description": {
                       "zh_CN": "触发方式为 hover 时的显示延迟，单位为毫秒"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "popper-options",
@@ -12082,7 +11893,8 @@
                     },
                     "description": {
                       "zh_CN": "popper.js 的参数"
-                    }
+                    },
+                    "labelPosition": "top"
                   },
                   {
                     "property": "title",
@@ -12101,7 +11913,8 @@
                     },
                     "description": {
                       "zh_CN": "提示内容标题"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "transform-origin",
@@ -12115,12 +11928,13 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "组件的旋转中心点,组件的旋转中心点"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "transition",
@@ -12139,7 +11953,8 @@
                     },
                     "description": {
                       "zh_CN": "该属性的默认值为 fade-in-linear"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "width",
@@ -12158,7 +11973,8 @@
                     },
                     "description": {
                       "zh_CN": "宽度"
-                    }
+                    },
+                    "labelPosition": "left"
                   }
                 ]
               }
@@ -12228,11 +12044,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "DatePicker",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "DatePicker"
           },
           "group": "component",
           "priority": 1,
@@ -12244,12 +12056,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -12308,7 +12114,8 @@
                     },
                     "description": {
                       "zh_CN": "设置日期框的type属性"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "placeholder",
@@ -12342,7 +12149,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -12362,12 +12169,13 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "是否禁用"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "readonly",
@@ -12381,12 +12189,13 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "是否只读"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "size",
@@ -12420,7 +12229,8 @@
                     },
                     "description": {
                       "zh_CN": "日期框尺寸。该属性的可选值为 medium / small / mini"
-                    }
+                    },
+                    "labelPosition": "left"
                   }
                 ]
               },
@@ -12447,8 +12257,7 @@
                     },
                     "description": {
                       "zh_CN": "设置 input 框的maxLength"
-                    },
-                    "labelPosition": "left"
+                    }
                   },
                   {
                     "property": "autofocus",
@@ -12462,7 +12271,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -12646,11 +12455,7 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Numeric",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "exportName": "Numeric"
           },
           "group": "component",
           "priority": 1,
@@ -12662,12 +12467,6 @@
                 },
                 "description": {
                   "zh_CN": "基础信息"
-                },
-                "collapse": {
-                  "number": 6,
-                  "text": {
-                    "zh_CN": "显示更多"
-                  }
                 },
                 "content": [
                   {
@@ -12721,7 +12520,7 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
@@ -12741,12 +12540,13 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "是否禁用"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "size",
@@ -12780,7 +12580,8 @@
                     },
                     "description": {
                       "zh_CN": "输入框尺寸。该属性的可选值为 medium / small / mini"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "controls",
@@ -12794,12 +12595,13 @@
                     "disabled": false,
                     "cols": 12,
                     "widget": {
-                      "component": "SwitchConfigurator",
+                      "component": "CheckBoxConfigurator",
                       "props": {}
                     },
                     "description": {
                       "zh_CN": "是否使用加减按钮"
-                    }
+                    },
+                    "labelPosition": "left"
                   },
                   {
                     "property": "controls-position",
@@ -12829,8 +12631,7 @@
                     },
                     "description": {
                       "zh_CN": "加减按钮位置"
-                    },
-                    "labelPosition": "left"
+                    }
                   },
                   {
                     "property": "precision",
@@ -13267,18 +13068,14 @@
                     "props": {
                       "text": "提交",
                       "type": "primary",
-                      "style": {
-                        "margin": "0 5px 0 5px"
-                      }
+                      "style": "margin: 0 5px 0 5px;"
                     }
                   },
                   {
                     "componentName": "TinyButton",
                     "props": {
                       "text": "重置",
-                      "style": {
-                        "margin": "0 5px 0 5px"
-                      }
+                      "style": "margin: 0 5px 0 5px;"
                     }
                   },
                   {
@@ -13689,6 +13486,9 @@
                 "children": [
                   {
                     "componentName": "TinyCarouselItem",
+                    "props": {
+                      "title": "carousel-item-a"
+                    },
                     "children": [
                       {
                         "componentName": "div",
@@ -13700,6 +13500,9 @@
                   },
                   {
                     "componentName": "TinyCarouselItem",
+                    "props": {
+                      "title": "carousel-item-b"
+                    },
                     "children": [
                       {
                         "componentName": "div",
@@ -14279,6 +14082,23 @@
               }
             }
           ]
+        }
+      ],
+      "packages": [
+        {
+          "name": "TinyVue组件库",
+          "package": "@opentiny/vue",
+          "version": "3.20.0",
+          "destructuring": true,
+          "script": "https://unpkg.com/@opentiny/vue-runtime@~3.20/dist3/tiny-vue-pc.mjs",
+          "css": "https://unpkg.com/@opentiny/vue-theme@~3.20/index.css"
+        },
+        {
+          "name": "element-plus组件库",
+          "package": "element-plus",
+          "version": "2.4.2",
+          "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
+          "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css"
         }
       ]
     }

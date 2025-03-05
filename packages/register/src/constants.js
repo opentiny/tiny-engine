@@ -16,7 +16,8 @@ export const META_SERVICE = {
   Translate: 'engine.service.translate',
   Help: 'engine.service.help',
   Property: 'engine.service.property',
-  Properties: 'engine.service.properties'
+  Properties: 'engine.service.properties',
+  ThemeSwitch: 'engine.service.themeSwitch'
 }
 
 export const META_APP = {
@@ -26,6 +27,7 @@ export const META_APP = {
   Media: 'engine.toolbars.media',
   Collaboration: 'engine.toolbars.collaboration',
   Clean: 'engine.toolbars.clean',
+  ThemeSwitch: 'engine.toolbars.themeSwitch',
   Refresh: 'engine.toolbars.refresh',
   Save: 'engine.toolbars.save',
   GenerateCode: 'engine.toolbars.generate-code',

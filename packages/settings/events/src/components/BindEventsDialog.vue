@@ -249,8 +249,8 @@ export default {
 .bind-event-dialog-tip {
   padding: var(--te-common-vertical-item-spacing-normal) 14px;
   margin-bottom: var(--te-common-vertical-item-spacing-normal);
-  background-color: var(--te-common-bg-container);
-  color: var(--te-common-text-weaken);
+  background-color: var(--te-bind-event-dialog-tip-bg-color);
+  color: var(--te-bind-event-dialog-tip-text-color);
 }
 
 .bind-event-dialog-content {

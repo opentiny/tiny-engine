@@ -1,0 +1,71 @@
+{
+  "component": {
+    "icon": "Box",
+    "name": {
+      "zh_CN": "全宽居中布局"
+    },
+    "component": "CanvasSection",
+    "schema": {
+      "slots": {},
+      "properties": [
+        {
+          "label": {
+            "zh_CN": "基础信息"
+          },
+          "description": {
+            "zh_CN": "基础信息"
+          },
+          "collapse": {
+            "number": 6,
+            "text": {
+              "zh_CN": "显示更多"
+            }
+          },
+          "content": []
+        }
+      ],
+      "events": {
+        "onClick": {
+          "label": {
+            "zh_CN": "点击事件"
+          },
+          "description": {
+            "zh_CN": "点击时触发的回调函数"
+          },
+          "type": "event",
+          "functionInfo": {
+            "params": [],
+            "returns": {}
+          },
+          "defaultValue": ""
+        }
+      },
+      "shortcuts": {
+        "properties": []
+      },
+      "contentMenu": {
+        "actions": []
+      }
+    },
+    "configure": {
+      "loop": true,
+      "isContainer": true,
+      "nestingRule": {
+        "childWhitelist": [],
+        "descendantBlacklist": []
+      }
+    }
+  },
+  "snippet": {
+    "name": {
+      "zh_CN": "全宽居中布局"
+    },
+    "screenshot": "",
+    "snippetName": "CanvasSection",
+    "icon": "Box",
+    "schema": {
+      "componentName": "CanvasSection",
+      "props": {}
+    }
+  }
+}

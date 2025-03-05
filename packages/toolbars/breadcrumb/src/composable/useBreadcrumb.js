@@ -23,8 +23,8 @@ const setBreadcrumbPage = (value) => {
   sessionStorage.setItem('pageInfo', value)
 }
 
-const setBreadcrumbBlock = (value, histories = []) => {
-  breadcrumbData.value = [CONSTANTS.BLOCKTEXT, ...value, histories]
+const setBreadcrumbBlock = (value) => {
+  breadcrumbData.value = [CONSTANTS.BLOCKTEXT, ...value]
 }
 
 const getBreadcrumbData = () => breadcrumbData

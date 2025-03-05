@@ -121,6 +121,7 @@ export const fetchAvailableBlocks = ({ groupId, label_contains, author, tag, pub
   getMetaApi(META_SERVICE.Http).get(
     `/material-center/api/block/notgroup/${groupId}${getParams({
       label_contains,
+      name_cn_contains: label_contains,
       createdBy: author,
       tags_contains: tag,
       public: publicType

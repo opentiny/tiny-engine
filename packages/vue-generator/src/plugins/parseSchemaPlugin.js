@@ -7,13 +7,14 @@ function parseSchema() {
 
     /**
      * 解析schema，预处理 schema
-     * @param {tinyEngineDslVue.IAppSchema} schema
+     * @param {import('@opentiny/tiny-engine-dsl-vue').IAppSchema} schema
      * @returns
      */
     run(schema) {
       const { pageSchema } = schema
       const pagesMap = {}
       const resPageTree = []
+
       schema.componentsMap = [...schema.componentsMap, ...BUILTIN_COMPONENTS_MAP]
 
       for (const componentItem of pageSchema) {
@@ -25,9 +26,7 @@ function parseSchema() {
           continue
         }
 
-        const newComponentItem = {
-          ...componentItem
-        }
+        const newComponentItem = structuredClone(componentItem)
         let path = ''
         let curParentId = componentItem.meta.parentId
         let depth = 0

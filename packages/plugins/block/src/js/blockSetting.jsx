@@ -10,7 +10,7 @@
  *
  */
 
-import { reactive, readonly, onMounted } from 'vue'
+import { ref, reactive, readonly, onMounted } from 'vue'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { remove } from '@opentiny/vue-renderless/common/array'
 import {
@@ -33,7 +33,6 @@ import {
   fetchBlockList,
   requestDeleteBlock,
   requestDeployBlock,
-  fetchDeployProgress,
   requestUpdateBlock,
   requestCreateBlock,
   fetchBlockContent,
@@ -42,7 +41,11 @@ import {
   fetchCategories,
   createCategory,
   updateCategory,
-  deleteCategory
+  deleteCategory,
+  fetchGroups,
+  createGroup,
+  updateGroup,
+  deleteGroup
 } from './http'
 import { constants, utils } from '@opentiny/tiny-engine-utils'
 import { generateBlock } from '@opentiny/tiny-engine-common/js/vscodeGenerateFile'
@@ -50,28 +53,7 @@ import { generateBlock } from '@opentiny/tiny-engine-common/js/vscodeGenerateFil
 const { HOST_TYPE } = constants
 
 const STRING_SLOT = ['Slot', 'slot']
-
-// 轮询查询发布进度，目前设置为3s，后续可根据实际业务时间调整
-const INTERVAL_PROGRESS = 3000
-
-// 区块发布的状态
-const DEPLOY_STATUS = readonly({
-  Init: 0,
-  Running: 1, // 发布中
-  Stopped: 2, // 发布失败
-  Finished: 3 // 发布成功
-})
-
-export const DEPLOY_TIPS = {
-  1: '正在发布中',
-  2: '发布失败，请重新发布',
-  3: '发布完成'
-}
-
-const PROGRESS = readonly({
-  Start: 0,
-  End: 100
-})
+const currentCategory = ref('')
 
 // 区块暴露属性和事件的类型
 export const META_TYPES = {
@@ -294,6 +276,10 @@ const state = reactive({
   arrayConfig: []
 })
 
+export const setCurrentCategory = (categoryId) => {
+  currentCategory.value = categoryId
+}
+
 export const getMaterialHistory = () => state.materialHistory
 
 export const setMaterialHistory = (value) => {
@@ -379,6 +365,8 @@ export const renameBlockEventName = (name, oldName) => {
   delete events[oldName]
 }
 
+const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
+
 export const initEditBlock = (block) => {
   const currentBlock = useBlock().getCurrentBlock()
   // 如果当前点击的区块和画布中的区块是同一区块，则直接获取最新的区块数据
@@ -410,6 +398,20 @@ export const getBlockBase64 = () => {
     })
 }
 
+export const updateBlockList = () => {
+  let params = useBlock().shouldReplaceCategoryWithGroup()
+    ? { groupId: currentCategory.value }
+    : { categoryId: currentCategory.value }
+  if (!currentCategory.value) {
+    params = {}
+  }
+  const appId = getAppId()
+  fetchBlockList({ appId, ...params }).then((data) => {
+    const blockListDescByUpdateAt = data.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
+    useBlock().setBlockList(blockListDescByUpdateAt)
+  })
+}
+
 export const delBlock = (closePanel) => () => {
   const { getBlockList } = useBlock()
   const { message } = useModal()
@@ -422,6 +424,8 @@ export const delBlock = (closePanel) => () => {
         // data:后台删除成功返回的是被删除的数据
         remove(getBlockList(), block)
         message({ message: '删除区块成功！', status: 'success' })
+        updateBlockList()
+        useBlock().isRefresh.value = true
         closePanel()
       })
       .catch((error) => {
@@ -435,37 +439,24 @@ export const refreshBlockData = async (block = {}) => {
     const newBlock = await fetchBlockContent(block.id)
 
     if (newBlock) {
-      if (newBlock.public_scope_tenants.length) {
+      if (newBlock?.public_scope_tenants?.length) {
         newBlock.public_scope_tenants = newBlock.public_scope_tenants.map((e) => e.id)
       }
-      Object.assign(block, newBlock)
-      useLayout().layoutState.pageStatus = getCanvasStatus(newBlock?.occupier)
 
-      useHistory().addHistory(block.content)
+      Object.assign(block, newBlock)
+
+      // 与当前正在画布编辑态的区块相同，需要同步更新
+      if (useBlock().getCurrentBlock()?.id === block.id) {
+        useLayout().layoutState.pageStatus = getCanvasStatus(newBlock?.occupier)
+        useHistory().addHistory(block.content)
+        Object.assign(useBlock().getCurrentBlock(), newBlock)
+      }
+      // 与当前区块管理面板的区块相同，需要同步更新
+      if (getEditBlock()?.id === block.id) {
+        Object.assign(getEditBlock(), newBlock)
+      }
     }
   }
-}
-
-const setDeployFailed = (block) => {
-  block.isAnimation = true
-  block.isShowProgress = false
-  block.publishProgress = PROGRESS.Start
-  block.deployStatus = DEPLOY_STATUS.Stopped
-}
-
-const setDeployFinished = (block) => {
-  block.isAnimation = true
-  block.isShowProgress = false
-  block.publishProgress = PROGRESS.Finished
-  block.deployStatus = DEPLOY_STATUS.Finished
-  refreshBlockData(block)
-}
-
-const setDeployStarted = (block) => {
-  block.isAnimation = false
-  block.isShowProgress = true
-  block.publishProgress = PROGRESS.Start
-  block.deployStatus = DEPLOY_STATUS.Running
 }
 
 export const findTree = (schema = {}, find) => {
@@ -522,37 +513,6 @@ const configureSlots = (blockSchema = {}) => {
   return slotsTips
 }
 
-export const getDeployProgress = (taskId, block) => {
-  fetchDeployProgress(taskId).then((data) => {
-    block.deployStatus = data.taskStatus
-    block.publishProgress = data.progress_percent
-    block.taskResult = data.taskResult
-
-    if (block.publishProgress === PROGRESS.End) {
-      block.deployStatus = DEPLOY_STATUS.Finished
-    }
-
-    if (block.deployStatus === DEPLOY_STATUS.Running || block.deployStatus === DEPLOY_STATUS.Init) {
-      setTimeout(() => {
-        getDeployProgress(taskId, block)
-      }, INTERVAL_PROGRESS)
-    } else if (block.deployStatus === DEPLOY_STATUS.Stopped) {
-      useModal().message({
-        title: '异常提示',
-        status: 'error',
-        message: {
-          render: () => <span style="max-height:276px;overflow:auto;">{`区块发布失败: ${block.taskResult}`}</span>
-        },
-        width: '550'
-      })
-      setDeployFailed(block)
-    } else {
-      setDeployFinished(block)
-      useNotify({ message: '区块发布成功!', type: 'success' })
-    }
-  })
-}
-
 const validBlockSlotsName = (block) => {
   const slotsTips = configureSlots(block.content)
   if (slotsTips) {
@@ -570,25 +530,24 @@ export const publishBlock = (params) => {
 
   // 校验区块插槽名称
   if (block && validBlockSlotsName(block)) {
-    // 查询发布进度之前，先将动画状态初始化
-    setDeployStarted(block)
-
     requestDeployBlock(params)
-      .then((data) => {
-        getDeployProgress(data.id, block)
+      .then(() => {
+        refreshBlockData(block)
+        useNotify({ message: '区块发布成功!', type: 'success' })
+        updateBlockList()
+        useBlock().isRefresh.value = true
       })
       .catch((error) => {
         useModal().message({ message: error.message, status: 'error' })
-        setDeployFailed(block)
       })
   }
 }
 
-const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
-
 const getCategories = () => {
   const appId = getAppId()
-  fetchCategories({ appId }).then((res) => {
+  const fetchData = useBlock().shouldReplaceCategoryWithGroup() ? fetchGroups : fetchCategories
+
+  fetchData({ appId }).then((res) => {
     useBlock().setCategoryList(res)
   })
 }
@@ -597,7 +556,17 @@ const getCategories = () => {
 const createBlock = (block = {}) => {
   const { message } = useModal()
   const created_app = getAppId()
-  const params = { ...block, created_app }
+
+  const { categories, ...rest } = block
+  const extraParams = {}
+
+  if (useBlock().shouldReplaceCategoryWithGroup()) {
+    extraParams.groups = categories || []
+  } else {
+    extraParams.categories = categories
+  }
+
+  const params = { ...rest, ...extraParams, created_app }
 
   if (isVsCodeEnv) {
     const id = getMaterialHistory()?.id
@@ -621,6 +590,7 @@ const createBlock = (block = {}) => {
       if (isVsCodeEnv) {
         generateBlock({ schema: data.content, blockPath: data.path })
       }
+      updateBlockList()
       // 更新区块分类数据，分类下区块不为空的不能删除
       getCategories()
     })
@@ -638,11 +608,20 @@ const updateBlock = (block = {}) => {
     public_scope_tenants,
     public: publicType,
     tags,
+    groups,
     categories,
     description,
     label
   } = block
   const nameCn = 'name_cn'
+
+  const extraParams = {}
+  if (useBlock().shouldReplaceCategoryWithGroup()) {
+    extraParams.groups = categories || (groups || []).map(({ id }) => id)
+  } else {
+    extraParams.categories = categories
+  }
+
   requestUpdateBlock(
     id,
     {
@@ -652,9 +631,9 @@ const updateBlock = (block = {}) => {
       public_scope_tenants,
       public: publicType,
       tags,
-      categories: categories.map((category) => category.id),
       description,
-      label
+      label,
+      ...extraParams
     },
     {
       params: {
@@ -664,15 +643,23 @@ const updateBlock = (block = {}) => {
   )
     .then((data) => {
       useCanvas().setSaved(true)
-      useBlock().initBlock(data, {}, true)
+      const currentId = useBlock().getCurrentBlock()?.id
+
+      // 如果是当前正在编辑的区块，需要同步更新画布
+      if (currentId === id) {
+        useBlock().initBlock(data, {}, true)
+      }
+
       // 弹出保存区块成功
       useModal().message({ message: '保存区块成功！', status: 'success' })
       // 本地生成区块服务
       if (isVsCodeEnv) {
         generateBlock({ schema: data.content, blockPath: data.path })
       }
+      updateBlockList()
       // 更新区块分类数据，分类下区块不为空的不能删除
       getCategories()
+      useBlock().isRefresh.value = true
     })
     .catch((error) => {
       useModal().message({ message: error.message, status: 'error' })
@@ -686,6 +673,10 @@ const updateBlock = (block = {}) => {
  * @returns
  */
 const generateBlockDeps = (children, deps = { scripts: [], styles: new Set() }) => {
+  if (!Array.isArray(children)) {
+    return
+  }
+
   children.forEach((child) => {
     const component = useMaterial().getMaterial(child.componentName)
 
@@ -736,14 +727,6 @@ export const saveBlock = async (block) => {
   }
 }
 
-export const updateBlockList = (params) => {
-  const appId = getAppId()
-  fetchBlockList({ appId, ...params }).then((data) => {
-    const blockListDescByUpdateAt = data.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
-    useBlock().setBlockList(blockListDescByUpdateAt)
-  })
-}
-
 export const fetchMaterialId = () => {
   fetchComponentsMap(getAppId()).then((data) => {
     setMaterialHistory(data?.materialHistory)
@@ -776,12 +759,25 @@ export const getBlockById = async (id) => {
 
 export const createOrUpdateCategory = async ({ categoryId, ...params }, isEdit) => {
   const appId = getAppId()
-  params.app = Number(appId)
-  let requestFunc = updateCategory
+  const replaceCategoryWithGroup = useBlock().shouldReplaceCategoryWithGroup()
+  let requestFunc
+
+  if (replaceCategoryWithGroup) {
+    params.app = appId
+    requestFunc = updateGroup
+  } else {
+    params.app = Number(appId)
+    requestFunc = updateCategory
+  }
 
   if (!isEdit) {
-    params.category_id = categoryId
-    requestFunc = createCategory
+    // 替换成创建接口
+    if (replaceCategoryWithGroup) {
+      requestFunc = createGroup
+    } else {
+      requestFunc = createCategory
+      params.category_id = categoryId
+    }
   }
 
   const res = await requestFunc(params)
@@ -792,7 +788,8 @@ export const createOrUpdateCategory = async ({ categoryId, ...params }, isEdit) 
 }
 
 export const delCategory = async (id) => {
-  const res = await deleteCategory(id)
+  const deleteFn = useBlock().shouldReplaceCategoryWithGroup() ? deleteGroup : deleteCategory
+  const res = await deleteFn(id)
 
   if (res) {
     getCategories()

@@ -38,7 +38,7 @@
         <numeric-select
           :name="getProperty(BORDER_RADIUS_PROPERTY.BorderTopLeftRadius).name"
           :numericalText="borderRadius.BorderTopLeftRadius"
-          :placeholder="0"
+          placeholder="0"
           @update="updateStyle"
         />
       </div>
@@ -51,7 +51,7 @@
         <numeric-select
           :name="getProperty(BORDER_RADIUS_PROPERTY.BorderTopRightRadius).name"
           :numericalText="borderRadius.BorderTopRightRadius"
-          :placeholder="0"
+          placeholder="0"
           @update="updateStyle"
         />
       </div>
@@ -64,7 +64,7 @@
         <numeric-select
           :name="getProperty(BORDER_RADIUS_PROPERTY.BorderBottomLeftRadius).name"
           :numericalText="borderRadius.BorderBottomLeftRadius"
-          :placeholder="0"
+          placeholder="0"
           @update="updateStyle"
         />
       </div>
@@ -76,7 +76,7 @@
         </tiny-tooltip>
         <numeric-select
           :name="getProperty(BORDER_RADIUS_PROPERTY.BorderBottomRightRadius).name"
-          :placeholder="0"
+          placeholder="0"
           :numericalText="borderRadius.BorderBottomRightRadius"
           @update="updateStyle"
         />
@@ -90,7 +90,7 @@
       :class="{ 'is-setting': isBorderSetting(), 'set-border-style': true }"
       @click="openSetting(BORDER_PROPERTY.Border, $event)"
     >
-      <span class="border-title">边框</span>
+      <span>边框</span>
     </label>
   </div>
   <div class="border-container">
@@ -245,7 +245,7 @@ export default {
     },
     effect: {
       type: String,
-      default: 'dark'
+      default: 'light'
     },
     placement: {
       type: String,
@@ -547,7 +547,7 @@ export default {
     padding: 5px 0;
 
     .border-label {
-      color: var(--ti-lowcode-component-setting-panel-label-color);
+      color: var(--te-styles-common-text-color-secondary);
       flex: 0 0 40px;
       padding-left: 2px;
       margin-right: 2px;
@@ -555,7 +555,7 @@ export default {
     }
   }
   svg {
-    color: var(--ti-lowcode-toolbar-breadcrumb-color);
+    color: var(--te-styles-border-icon-color);
   }
 }
 .item-row {
@@ -568,15 +568,14 @@ export default {
   position: relative;
   margin-bottom: var(--te-common-vertical-item-spacing-normal);
   svg {
-    color: var(--ti-lowcode-input-icon-color);
+    color: var(--te-styles-border-icon-color);
     font-size: 16px;
   }
 
   .radius-label {
     flex: 0 0 48px;
-    padding: 0 2px;
     line-height: 24px;
-    color: var(--ti-lowcode-component-setting-panel-label-color);
+    color: var(--te-styles-common-text-color-secondary);
   }
 
   .radius-content {
@@ -592,9 +591,9 @@ export default {
     .radius-content-svg {
       &:hover,
       &.selected {
-        color: var(--ti-lowcode-property-active-color);
+        color: var(--te-styles-border-icon-color-active);
         svg {
-          color: var(--ti-lowcode-property-active-color);
+          color: var(--te-styles-border-icon-color-active);
         }
       }
 
@@ -653,12 +652,8 @@ export default {
 }
 
 .border-label {
-  color: var(--te-common-text-secondary);
+  color: var(--te-styles-common-text-color-secondary);
   flex-shrink: 0;
-
-  .border-title {
-    margin-left: 2px;
-  }
 }
 .border-container {
   display: flex;
@@ -667,7 +662,7 @@ export default {
   & .position-selector {
     width: 82px;
     height: 82px;
-    background-color: var(--te-common-bg-container);
+    background-color: var(--te-styles-border-bg-color);
     border-radius: 4px;
     padding: 4px;
     display: grid;
@@ -697,7 +692,7 @@ export default {
       grid-area: 3 / 2;
     }
     &.selected {
-      background-color: var(--te-common-bg-prompt);
+      background-color: var(--te-styles-border-bg-color-active);
       border-radius: 4px;
     }
   }
@@ -723,8 +718,8 @@ export default {
 .is-setting {
   span {
     border-radius: 2px;
-    color: var(--ti-lowcode-style-setting-label-color);
-    background: var(--ti-lowcode-style-setting-label-bg);
+    color: var(--te-styles-common-setting-text-color);
+    background: var(--te-styles-common-setting-bg-color);
     cursor: pointer;
   }
 }

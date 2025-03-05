@@ -18,6 +18,7 @@ import MaterialBlock from './src/meta/block'
 import MaterialComponent from './src/meta/component'
 import MaterialHeader from './src/components/header/Main.vue'
 import { basePropertyOptions } from './src/js/options'
+import './src/styles/vars.less'
 
 export default {
   ...metaData,
@@ -26,7 +27,16 @@ export default {
   options: {
     defaultTabId: 'engine.plugins.materials.component',
     displayComponentIds: ['engine.plugins.materials.component', 'engine.plugins.materials.block'],
-    basePropertyOptions
+    basePropertyOptions,
+    useBaseStyle: true,
+    blockBaseStyle: {
+      className: 'block-base-style',
+      style: 'margin: 16px;'
+    },
+    componentBaseStyle: {
+      className: 'component-base-style',
+      style: 'margin: 8px;'
+    }
   },
   components: {
     header: MaterialHeader

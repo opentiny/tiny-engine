@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-toolbar-logo",
-  "version": "2.0.0-rc.3",
+  "version": "2.2.0",
   "publishConfig": {
     "access": "public"
   },
@@ -35,8 +35,8 @@
     "vite": "^5.4.2"
   },
   "peerDependencies": {
-    "@opentiny/vue": "^3.14.0",
-    "@opentiny/vue-icon": "^3.14.0",
+    "@opentiny/vue": "^3.20.0",
+    "@opentiny/vue-icon": "^3.20.0",
     "vue": "^3.4.15"
   }
 }

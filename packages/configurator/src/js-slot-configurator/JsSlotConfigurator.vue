@@ -5,7 +5,7 @@
       <div v-for="(slot, index) in slotList" :key="slot.name" class="use-slot">
         <div class="use-slot-item-name">
           {{ slot.name }}
-          <tiny-tooltip effect="dark" :content="state.currentComponent?.content" placement="top">
+          <tiny-tooltip effect="light" :content="state.currentComponent?.content" placement="bottom" width="260">
             <span class="item-icon">
               <component :is="state.currentComponent?.icon"></component>
             </span>
@@ -14,18 +14,18 @@
         <div class="use-slot-item-content">
           <div class="use-slot-switch-wrap">
             <div :class="['e__switch', { 'e_is-checked': slot.bind }]">
-              <span class="e__switch-core" @click="toggleSlot(index, slot)"></span>
+              <span class="e__switch-core" @click="updateSlot(index, slot)"></span>
             </div>
           </div>
           <tiny-form-item
             :prop="paramsPropPath(index)"
-            :rules="[{ validator: parmasStringValidator, trigger: 'blur' }]"
+            :rules="[{ validator: paramsStringValidator, trigger: 'blur' }]"
             class="slot-name-form-item"
           >
             <tiny-input
               v-model="slot.params"
               class="use-slot-params"
-              @change="validParmas(slot, paramsPropPath(index))"
+              @change="validParams(slot, paramsPropPath(index))"
             ></tiny-input>
           </tiny-form-item>
         </div>
@@ -74,7 +74,7 @@ export default {
       TinyGrid: {
         content:
           '暴露给插槽使用的变量，为解构的参数，可以使用多个用逗号分隔，如：row(行数据)，column(列数据)，$table(内部表格实例)，seq(序号)，cell(单元格)，columnIndex(列索引),rowIndex(行索引)',
-        icon: SvgICons['IconUnknow']()
+        icon: SvgICons['IconHelpCircle']()
       }
     }
 
@@ -86,15 +86,15 @@ export default {
 
     const paramsPropPath = (index) => `${index}.params`
 
-    const parmasStringValidator = (rule, value, callback) => {
-      if (value && value.split(',').some((parma) => !verifyJsVarName(parma))) {
+    const paramsStringValidator = (rule, value, callback) => {
+      if (value && value.split(',').some((param) => !verifyJsVarName(param))) {
         callback(new Error('仅支持JavaScript中有效的变量名'))
       } else {
         callback()
       }
     }
 
-    const toggleSlot = (idx, { bind, name, params = '' }) => {
+    const updateSlot = (idx, { bind, name, params = '' }, isToggleSlot = true) => {
       const slotInfo = {
         [name]: {
           type: 'JSSlot',
@@ -107,45 +107,68 @@ export default {
       }
 
       const slotData = { ...slotInfo, ...(props.modelValue || {}) }
+      const { setProp } = useProperties()
+      const { setNode, operateNode } = useCanvas()
 
       if (params.length) {
         slotData[name].params = params.split(',')
       } else {
         delete slotData[name].params
       }
-      if (bind) {
+
+      if (bind && isToggleSlot) {
         useModal().confirm({
           title: '提示',
           message: '关闭后插槽内的内容将被清空，是否继续？',
-          status: 'info',
           exec: () => {
             slotList.value[idx].bind = false
+            operateNode({ type: 'delete', id: slotData[name].value[0].id })
+
             delete slotData[name]
             emit('update:modelValue', slotData)
             const [propsName] = path.split('.')
+
             const schema = useProperties().getSchema()
-            schema.props[propsName] = JSON.parse(JSON.stringify(schema.props[propsName]))
-          },
-          cancel: () => {}
+
+            setProp(propsName, schema.props[propsName])
+          }
         })
       } else {
         slotList.value[idx].bind = true
       }
+
       emit('update:modelValue', slotData)
 
       // 更新当前选中组件的根属性，不根新在jsslot中的数据非响应式
       const [propsName] = path.split('.')
       const schema = useProperties().getSchema()
-      schema.props[propsName] = JSON.parse(JSON.stringify(schema.props[propsName]))
+
+      for (const data of Object.values(slotData)) {
+        if (data.value?.[0] && !data.value[0]?.id) {
+          // 手动设置节点
+          setNode(data.value[0], schema)
+        }
+      }
+
+      setProp(propsName, schema.props[propsName])
     }
 
     const setParams = (slot) => {
-      slot.bind && toggleSlot(true, slot)
+      if (slot.bind) {
+        const slotData = props.modelValue
+        const { params, name } = slot
+
+        if (params.length) {
+          slotData[name].params = params.split(',')
+        } else {
+          delete slotData[name].params
+        }
+      }
     }
 
-    const validParmas = (slot, parmasPath) => {
-      slotRef.value.validateField([parmasPath], (tips) => {
-        if (!tips) {
+    const validParams = (slot, paramsPath) => {
+      slotRef.value.validateField([paramsPath], (error) => {
+        if (!error) {
           setParams(slot)
         }
       })
@@ -157,12 +180,12 @@ export default {
     })
 
     return {
-      toggleSlot,
+      updateSlot,
       slotList,
       paramsPropPath,
       slotRef,
-      parmasStringValidator,
-      validParmas,
+      paramsStringValidator,
+      validParams,
       setParams,
       state,
       componentsMap
@@ -174,7 +197,7 @@ export default {
 <style lang="less" scoped>
 .meta-slot-container {
   text-align: left;
-  color: var(--lowcode-meta-js-slot-color);
+  color: var(--te-configurator-common-text-color-secondary);
 }
 
 .slot-form {
@@ -189,6 +212,7 @@ export default {
 
   .use-slot-item-content {
     display: flex;
+    justify-content: space-between;
   }
 
   .use-slot-switch-wrap {
@@ -214,6 +238,7 @@ export default {
 
   .slot-name-form-item {
     margin-bottom: 0;
+    margin-right: 6px;
   }
 
   .item-icon {
@@ -227,6 +252,7 @@ export default {
   position: relative;
   font-size: 14px;
   line-height: 20px;
+  width: 40px;
   height: 20px;
   vertical-align: middle;
   cursor: pointer;
@@ -241,7 +267,7 @@ export default {
   outline: 0;
   border-radius: 10px;
   box-sizing: border-box;
-  background-color: var(--te-common-bg-switch);
+  background-color: var(--te-configurator-common-switch-bg-color);
   transition: border-color 0.3s, background-color 0.3s;
   vertical-align: middle;
 }
@@ -249,17 +275,17 @@ export default {
 .e__switch-core::after {
   content: '';
   position: absolute;
-  top: 1px;
+  top: 2px;
   left: 1px;
   border-radius: 100%;
   transition: all 0.3s;
   width: 16px;
   height: 16px;
-  background-color: var(--te-common-bg-default);
+  background-color: var(--te-configurator-common-bg-color);
 }
 
 .e__switch.e_is-checked .e__switch-core {
-  background-color: var(--te-common-bg-primary-checked);
+  background-color: var(--te-configurator-common-switch-bg-color-checked);
 }
 
 .e__switch.e_is-checked .e__switch-core::after {

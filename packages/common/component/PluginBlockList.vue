@@ -1,6 +1,8 @@
 <template>
-  <div v-if="blockStyle === BlockStyles.Mini" class="header">
-    <div class="col-checkbox"></div>
+  <div v-if="blockStyle === BlockStyles.Mini && showCheckbox" class="header">
+    <div class="col-checkbox">
+      <select-all :allItems="data" :selected="checked" :hidden-label="true" @select-all="handleSelectAll"></select-all>
+    </div>
     <div class="col-name">区块名称</div>
     <div class="col-time">创建时间</div>
     <div class="col-created-by">创建人</div>
@@ -16,7 +18,7 @@
     @mouseleave="state.hover = false"
   >
     <li v-if="showAddButton" class="block-item block-plus" @click="$emit('add')">
-      <span class="block-plus-icon"><icon-plus></icon-plus></span>
+      <span class="block-plus-icon"><svg-icon name="add"></svg-icon></span>
       <div class="item-text">添加区块</div>
     </li>
     <li
@@ -45,41 +47,21 @@
           <div v-if="blockStyle === BlockStyles.List" class="item-description">{{ item.description }}</div>
         </div>
 
-        <div v-if="blockStyle === BlockStyles.Mini" class="cell cell-time">
-          <span>{{ format(item.created_at, 'yyyy/MM/dd hh:mm:ss') }}</span>
-        </div>
-        <div v-if="blockStyle === BlockStyles.Mini" class="cell cell-created-by">
-          <span>{{ users.find((user) => user.id === item.createdBy)?.name || item.id }}</span>
-        </div>
-
-        <div v-if="item.isShowProgress" class="progress-bar">
-          <tiny-progress
-            :text-inside="true"
-            :stroke-width="8"
-            :percentage="item.publishProgress"
-            status="success"
-          ></tiny-progress>
-        </div>
-
         <div v-if="isBlockManage && !item.is_published" class="publish-flag">未发布</div>
 
         <div v-if="isBlockManage" class="block-detail">
           <div class="setting-menu" @mouseover.stop="handleSettingMouseOver" @mouseleave="handleBlockItemLeave">
             <ul class="list">
-              <tiny-tooltip content="编辑" placement="top">
-                <li class="list-item" @mousedown.stop.left="editBlock({ event: $event, item, index })">
-                  <svg-button class="list-item-svg" name="to-edit"> </svg-button>
-                </li>
-              </tiny-tooltip>
-              <tiny-tooltip content="设置" placement="top">
-                <li
-                  class="list-item"
-                  @mouseover.stop="iconSettingMove"
-                  @mousedown.stop.prevent="iconClick({ event: $event, item, index })"
-                >
-                  <svg-button class="list-item-svg" name="text-source-setting"> </svg-button>
-                </li>
-              </tiny-tooltip>
+              <li class="list-item" @mousedown.stop.left="editBlock({ event: $event, item, index })">
+                <svg-button class="list-item-svg" :hoverBgColor="false" name="to-edit"> </svg-button>
+              </li>
+              <li
+                class="list-item"
+                @mouseover.stop="iconSettingMove"
+                @mousedown.stop.prevent="iconClick({ event: $event, item, index })"
+              >
+                <svg-button class="list-item-svg" :hoverBgColor="false" name="setting"> </svg-button>
+              </li>
             </ul>
           </div>
         </div>
@@ -90,31 +72,18 @@
         >
           <div class="setting-menu" @mouseover.stop="handleSettingMouseOver" @mouseleave="handleBlockItemLeave">
             <ul class="list">
-              <tiny-tooltip content="版本列表" placement="top">
+              <tiny-tooltip content="版本列表" placement="top" effect="light">
                 <li class="list-item" @click.stop="$emit('openVersionPanel', { item, index })">
-                  <svg-button class="list-item-svg" name="versions"> </svg-button>
+                  <svg-button class="list-item-svg" :hoverBgColor="false" name="versions"> </svg-button>
                 </li>
               </tiny-tooltip>
-              <tiny-tooltip content="移除" placement="top">
+              <tiny-tooltip content="移除" placement="top" effect="light">
                 <li class="list-item" @click.stop="$emit('deleteBlock', item)">
-                  <svg-button class="list-item-svg" name="remove"> </svg-button>
+                  <svg-button class="list-item-svg" :hoverBgColor="false" name="remove"> </svg-button>
                 </li>
               </tiny-tooltip>
             </ul>
           </div>
-        </div>
-        <div
-          v-if="item.isAnimation"
-          :class="[
-            'deploy',
-            { success: item.deployStatus === taskStatus.FINISHED },
-            {
-              error: item.deployStatus === taskStatus.STOPPED
-            }
-          ]"
-          @mouseover.stop="item.isAnimation = false"
-        >
-          {{ deployTips[item.deployStatus] }}
         </div>
       </slot>
     </li>
@@ -138,11 +107,11 @@
 <script>
 import { computed, watch, inject, reactive } from 'vue'
 import { format } from '@opentiny/vue-renderless/common/date'
-import { iconPlus } from '@opentiny/vue-icon'
-import { Progress, Tooltip } from '@opentiny/vue'
+import { Tooltip } from '@opentiny/vue'
 import PluginBlockItemImg from './PluginBlockItemImg.vue'
 import SearchEmpty from './SearchEmpty.vue'
 import SvgButton from './SvgButton.vue'
+import SelectAll from './SelectAll.vue'
 
 const BlockStyles = {
   Default: 'default',
@@ -155,12 +124,11 @@ const defaultImg =
 
 export default {
   components: {
-    TinyProgress: Progress,
-    IconPlus: iconPlus(),
     TinyTooltip: Tooltip,
     PluginBlockItemImg,
     SvgButton,
-    SearchEmpty
+    SearchEmpty,
+    SelectAll
   },
   props: {
     data: {
@@ -234,10 +202,10 @@ export default {
       default: 2
     }
   },
-  emits: ['click', 'iconClick', 'add', 'deleteBlock', 'openVersionPanel', 'editBlock'],
+  emits: ['click', 'iconClick', 'add', 'deleteBlock', 'openVersionPanel', 'editBlock', 'checkAll', 'cancelCheckAll'],
   setup(props, { emit }) {
     const panelState = inject('panelState', {})
-    const blockUsers = inject('blockUsers')
+    const blockUsers = inject('blockUsers', [])
     const state = reactive({
       activeIndex: -1,
       data: computed(() => props.data),
@@ -298,19 +266,6 @@ export default {
       state.activeIndex = -1
     }
 
-    // 区块发布任务说明
-    const taskStatus = {
-      RUNNING: 1,
-      STOPPED: 2,
-      FINISHED: 3
-    }
-
-    const deployTips = {
-      1: '正在发布中',
-      2: '发布失败，请重新发布',
-      3: '发布完成'
-    }
-
     const iconSettingMove = () => {
       state.hover = false
     }
@@ -361,6 +316,14 @@ export default {
       }
     )
 
+    const handleSelectAll = (items) => {
+      if (Array.isArray(items)) {
+        emit('checkAll', items)
+      } else {
+        emit('cancelCheckAll')
+      }
+    }
+
     return {
       BlockStyles,
       isShortcutPanel: panelState.isShortcutPanel,
@@ -370,8 +333,6 @@ export default {
       blockClick,
       iconClick,
       clearActive,
-      taskStatus,
-      deployTips,
       openBlockShotPanel,
       iconSettingMove,
       defaultImg,
@@ -379,7 +340,8 @@ export default {
       handleSettingMouseOver,
       handleShowVersionMenu,
       editBlock,
-      format
+      format,
+      handleSelectAll
     }
   }
 }
@@ -394,17 +356,17 @@ export default {
   max-width: 500px;
   max-height: 136px;
   padding: 12px;
-  background: var(--ti-lowcode-component-block-list-shortcut-bg);
+  background: var(--te-component-common-bg-color);
   border-radius: 5px;
-  border: 1px solid var(--ti-lowcode-common-border-color-4);
+  border: 1px solid var(--te-component-common-border-color);
   top: v-bind('state.top');
   .block-shortcut-title {
-    color: var(--ti-lowcode-component-block-list-shortcut-title-color);
+    color: var(--te-component-common-text-color-primary);
     font-weight: 600;
     margin-bottom: 8px;
   }
   .block-shortcut-description {
-    color: var(--ti-lowcode-component-block-list-item-color);
+    color: var(--te-component-common-text-color-secondary);
     margin-bottom: 20px;
     font-size: 12px;
   }
@@ -422,8 +384,8 @@ export default {
   display: flex;
   align-items: center;
   height: 24px;
-  background-color: var(--te-common-bg-container);
-  color: var(--te-common-text-secondary);
+  background-color: var(--te-component-block-bg-color);
+  color: var(--te-component-common-text-color-secondary);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -442,10 +404,15 @@ export default {
     transform: translateY(-50%);
     width: 1px;
     height: 10px;
-    background-color: var(--te-common-border-default);
+    background-color: var(--te-component-common-border-color);
   }
 }
 
+.col-checkbox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .col-checkbox,
 .block-item-small-list:deep(.table-selection) {
   width: 40px;
@@ -470,7 +437,7 @@ export default {
   gap: 12px;
   overflow-y: auto;
   overflow-x: hidden;
-  color: var(--ti-lowcode-common-secondary-text-color);
+  color: var(--te-component-common-text-color-secondary);
 
   .block-item {
     display: flex;
@@ -485,20 +452,21 @@ export default {
 
     .publish-flag {
       position: absolute;
-      left: 2px;
-      top: 2px;
+      left: 4px;
+      top: 4px;
       text-align: center;
       display: block;
-      color: var(--ti-lowcode-common-secondary-text-color);
+      color: var(--te-component-common-text-color-primary);
       font-size: 12px;
-      background-color: var(--ti-lowcode-component-block-list-item-tag-bg);
-      padding: 2px;
-      border-radius: 4px 0 4px 0;
+      background-color: var(--te-component-block-publish-flag-bg-color);
+      padding: 2px 4px;
+      border-radius: 2px;
       transform: scale(0.9);
+      min-width: 45px;
     }
 
     &.block-item-small-list {
-      color: var(--te-common-text-primary);
+      color: var(--te-component-common-text-color-primary);
       gap: 0;
       &:deep(.block-item-img) {
         width: 54px;
@@ -507,7 +475,7 @@ export default {
         margin-left: 8px;
       }
       .item-text {
-        width: calc(35% - 62px);
+        width: 50%;
       }
       .publish-flag {
         position: static;
@@ -518,14 +486,9 @@ export default {
         position: static;
         margin-left: 4px;
         z-index: 9;
-        .block-detail-icon {
-          color: var(--ti-lowcode-component-block-list-setting-btn-color);
-          display: block;
-          &:hover {
-            cursor: pointer;
-            color: var(--ti-lowcode-component-block-list-setting-btn-hover-color);
-          }
-        }
+      }
+      &:hover {
+        background-color: var(--te-component-common-bg-color-hover);
       }
     }
     &:nth-child(even) {
@@ -548,7 +511,7 @@ export default {
     }
 
     &.is-active {
-      background: var(--ti-lowcode-component-block-list-item-active-bg, --ti-lowcode-canvas-wrap-bg);
+      background: var(--te-component-common-bg-color-active);
     }
 
     &.is-disabled {
@@ -578,31 +541,31 @@ export default {
         align-items: center;
         width: 100%;
         height: 86px;
-        border: 1px dashed var(--te-common-border-hover);
+        border: 1px dashed var(--te-component-common-border-color-hover);
         border-radius: 4px;
       }
       .item-text {
         font-size: 12px;
       }
-      .tiny-svg {
+      .svg-icon {
         font-size: 24px;
-        color: var(--ti-lowcode-component-svg-button-color);
+        color: var(--te-component-common-text-color-primary);
       }
 
       &:hover {
         cursor: pointer;
-        color: var(--ti-lowcode-component-svg-button-hover-color);
+        color: var(--te-component-common-text-color-primary);
       }
     }
 
     .item-default-img {
       width: 84px;
       height: 50px;
-      color: var(--te-common-bg-default);
+      color: var(--te-component-common-bg-color);
     }
 
     .item-text {
-      color: var(--te-common-text-secondary);
+      color: var(--te-component-common-text-color-secondary);
       text-align: center;
       font-size: 12px;
       line-height: 1.5;
@@ -628,31 +591,11 @@ export default {
       &.is-current-visible-icon {
         visibility: visible;
       }
-
-      .block-detail-icon {
-        color: var(--ti-lowcode-base-gray-50);
-        &:hover {
-          cursor: pointer;
-          color: var(--ti-lowcode-component-block-list-setting-btn-hover-color);
-        }
-      }
     }
     .block-setting {
       right: 0px;
       top: 0;
     }
-  }
-  .deploy {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    width: 114px;
-    color: var(--ti-lowcode-toolbar-icon-color);
-    font-weight: bold;
-    vertical-align: middle;
-    text-align: center;
-    margin: -10px -11px;
-    padding: 40px 10px;
   }
 
   .loading {
@@ -743,7 +686,7 @@ export default {
         line-height: 16px;
       }
       .item-description {
-        color: var(--ti-lowcode-toolbar-title-color);
+        color: var(--te-component-common-text-color-primary);
         font-size: 12px;
       }
     }
@@ -762,7 +705,7 @@ export default {
 }
 .setting-menu {
   font-size: 12px;
-  color: var(--ti-lowcode-component-block-setting-item-text-color);
+  color: var(--te-component-common-text-color-primary);
   .list {
     display: flex;
   }
@@ -770,32 +713,12 @@ export default {
     box-sizing: border-box;
     cursor: pointer;
     &:hover {
-      background-color: var(--ti-lowcode-component-block-setting-item-hover-bg);
-      color: var(--ti-lowcode-common-primary-text-color);
+      color: var(--te-component-common-text-color-primary);
     }
     .list-item-icon {
       font-size: 14px;
-      color: var(--te-common-icon-secondary);
+      color: var(--te-component-common-icon-color);
     }
-    .list-item-svg {
-      color: var(--te-common-icon-secondary);
-    }
-    .list-item-svg:hover {
-      background-color: var(--ti-lowcode-component-block-setting-item-hover-bg);
-    }
-  }
-}
-</style>
-
-<style lang="less">
-.tiny-popover.tiny-popper.popper-options.block-setting-popover {
-  background-color: var(--ti-lowcode-component-block-setting-popover-bg);
-  display: flex;
-  flex-direction: column;
-  padding: 0;
-  .popper__arrow,
-  .popper__arrow::after {
-    border-bottom-color: var(--ti-lowcode-component-block-setting-popover-bg);
   }
 }
 </style>

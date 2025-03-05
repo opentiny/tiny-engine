@@ -2,12 +2,12 @@
   <div id="tiny-right-panel">
     <tiny-tabs v-model="layoutState.settings.render">
       <tiny-tab-item v-for="(setting, index) in settings" :key="index" :title="setting.title" :name="setting.name">
-        <component :is="setting.entry" :is-collapsed="isCollapsed"></component>
+        <component :is="setting.entry"></component>
         <div v-show="activating" class="active"></div>
       </tiny-tab-item>
     </tiny-tabs>
     <div v-if="layoutState.settings.render === 'style'" class="tabs-setting">
-      <tiny-tooltip effect="dark" :content="isCollapsed ? '展开' : '折叠'" placement="top" :visible-arrow="false">
+      <tiny-tooltip effect="light" :content="isCollapsed ? '展开' : '折叠'" placement="top" :visible-arrow="false">
         <template #default> <svg-icon :name="settingIcon" @click="isCollapsed = !isCollapsed"></svg-icon> </template>
       </tiny-tooltip>
     </div>
@@ -15,14 +15,15 @@
 </template>
 
 <script>
-import { computed, ref } from 'vue'
-import { Tabs, TabItem } from '@opentiny/vue'
+import { computed, provide, ref } from 'vue'
+import { Tabs, TabItem, Tooltip } from '@opentiny/vue'
 import { useLayout } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
     TinyTabs: Tabs,
-    TinyTabItem: TabItem
+    TinyTabItem: TabItem,
+    TinyTooltip: Tooltip
   },
   props: {
     settings: {
@@ -35,7 +36,9 @@ export default {
     const activating = computed(() => layoutState.settings.activating)
     const showMask = ref(true)
     const isCollapsed = ref(false)
-    const settingIcon = computed(() => (isCollapsed.value ? 'style-panel-collapsed' : 'style-panel-expand'))
+    const settingIcon = computed(() => (isCollapsed.value ? 'collapse_all' : 'expand_all'))
+
+    provide('isCollapsed', isCollapsed)
 
     return {
       showMask,
@@ -54,16 +57,16 @@ export default {
   height: 100%;
   transition: 0.3s linear;
   position: relative;
-  border-left: 1px solid var(--ti-lowcode-plugin-setting-panel-border-left-color);
+  border-left: 1px solid var(--te-layout-common-border-color);
   padding-top: 12px;
-  background-color: var(--ti-lowcode-setting-panel-bg-color);
+  background-color: var(--te-layout-common-bg-color);
 
   .tabs-setting {
     position: absolute;
     top: 9px;
     right: 18px;
     line-height: 26px;
-    color: var(--te-common-icon-secondary);
+    color: var(--te-layout-common-icon-color);
     cursor: pointer;
   }
   .tiny-tabs {
@@ -74,12 +77,13 @@ export default {
     flex-direction: column;
     .tiny-tabs__header .tiny-tabs__nav {
       width: 60%;
+      background-color: var(--te-layout-common-bg-color);
     }
     .tiny-tabs__nav-scroll {
       margin-left: 12px;
       .tiny-tabs__active-bar {
         height: 3px;
-        background-color: var(--ti-lowcode-setting-panel-tabs-item-title-active-color);
+        background-color: var(--te-layout-common-text-color-active);
       }
     }
 
@@ -94,18 +98,19 @@ export default {
     }
     .tiny-tabs__item {
       flex: 1;
-      background-color: var(--ti-lowcode-setting-panel-bg-color);
-      color: var(--ti-lowcode-setting-panel-tabs-item-title-color);
+      background-color: var(--te-layout-common-bg-color);
+      color: var(--te-layout-common-text-color-secondary);
       margin-right: 5px;
       &:hover {
-        color: var(--ti-lowcode-setting-panel-tabs-item-title-hover-color);
+        color: var(--te-layout-common-text-color-hover);
       }
       &.is-active {
-        color: var(--ti-lowcode-setting-panel-tabs-item-title-active-color);
+        color: var(--te-layout-common-text-color-active);
+        border: none;
       }
 
       .tiny-tabs__item__title {
-        padding-bottom: 2px;
+        padding-bottom: 6px;
       }
     }
 
@@ -130,10 +135,10 @@ export default {
 
 @keyframes glow {
   0% {
-    box-shadow: inset 0px 0px 4px var(--ti-lowcode-canvas-handle-hover-bg);
+    box-shadow: inset 0px 0px 4px var(--te-layout-setting-bg-color-hover);
   }
   100% {
-    box-shadow: inset 0px 0px 14px var(--ti-lowcode-canvas-handle-hover-bg);
+    box-shadow: inset 0px 0px 14px var(--te-layout-setting-bg-color-hover);
   }
 }
 </style>

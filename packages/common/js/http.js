@@ -12,7 +12,7 @@
 
 import { isVsCodeEnv } from './environments'
 import { generateRouter, generatePage } from './vscodeGenerateFile'
-import { usePage, useCanvas, useNotify } from '@opentiny/tiny-engine-meta-register'
+import { usePage, useCanvas, useNotify, useBreadcrumb } from '@opentiny/tiny-engine-meta-register'
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 /**
@@ -37,11 +37,10 @@ export const requestEvent = (url, params) => {
  * @returns { Promise }
  *
  */
-export const handlePageUpdate = (pageId, params, routerChange) => {
+export const handlePageUpdate = (pageId, params, routerChange, isCurEditPage) => {
   return getMetaApi(META_SERVICE.Http)
     .post(`/app-center/api/pages/update/${pageId}`, params)
     .then((res) => {
-      const { pageSettingState } = usePage()
       const { setSaved } = useCanvas()
       if (isVsCodeEnv) {
         generatePage({
@@ -58,17 +57,25 @@ export const handlePageUpdate = (pageId, params, routerChange) => {
         }
       }
 
-      if (routerChange) {
-        pageSettingState.updateTreeData()
-      }
-      pageSettingState.isNew = false
       useNotify({ message: '保存成功!', type: 'success' })
 
       // 更新 页面状态 标志
       setSaved(true)
+
+      if (isCurEditPage) {
+        const { setBreadcrumbPage } = useBreadcrumb()
+        setBreadcrumbPage([params.name])
+      }
+
       return res
     })
     .catch((err) => {
       useNotify({ title: '保存失败', message: `${err?.message || ''}`, type: 'error' })
+    })
+    .finally(() => {
+      const { pageSettingState } = usePage()
+      // 更新页面管理的列表，如果不存在，说明还没有打开过页面管理面板
+      pageSettingState.updateTreeData?.()
+      pageSettingState.isNew = false
     })
 }

@@ -9,7 +9,6 @@
 * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
 *
 */
-
 module.exports = {
   env: {
     browser: true,
@@ -17,16 +16,16 @@ module.exports = {
     node: true,
     jest: true
   },
-  extends: ['eslint:recommended', 'plugin:vue/vue3-essential'],
+  extends: ['eslint:recommended', 'plugin:vue/vue3-essential', '@vue/eslint-config-typescript'],
   parser: 'vue-eslint-parser',
   parserOptions: {
-    parser: '@babel/eslint-parser',
+    parser: '@typescript-eslint/parser',
     ecmaVersion: 'latest',
     sourceType: 'module',
     requireConfigFile: false,
     babelOptions: {
       parserOpts: {
-        plugins: ['jsx']
+        plugins: ['jsx', 'typescript']
       }
     }
   },
@@ -37,6 +36,8 @@ module.exports = {
     'space-before-function-paren': 'off',
     'vue/multi-word-component-names': 'off',
     'no-use-before-define': 'error',
-    'no-unused-vars': ['error', { ignoreRestSiblings: true, varsIgnorePattern: '^_', argsIgnorePattern: '^_' }]
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': ['error', { ignoreRestSiblings: true, varsIgnorePattern: '^_', argsIgnorePattern: '^_' }],
+    'import/no-inner-modules': 'off'
   }
 }

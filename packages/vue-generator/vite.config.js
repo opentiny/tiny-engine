@@ -44,7 +44,7 @@ export default defineConfig({
     },
     sourcemap: true,
     rollupOptions: {
-      external: ['@babel/parser', '@babel/traverse']
+      external: ['@babel/parser', '@babel/traverse', '@babel/generator']
     }
   }
 })

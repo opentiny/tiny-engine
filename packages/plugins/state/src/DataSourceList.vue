@@ -1,17 +1,17 @@
 <template>
-  <div class="data-source-list">
+  <div class="data-source-list lowcode-scrollbar">
     <ul>
       <li v-for="key in filteredKey" :key="key" :class="['data-source-list-item', { selected: key === selectedKey }]">
         <div class="item-head">
           <div class="item-head-left">
-            <svg-button name="plugin-icon-var"></svg-button>
+            <svg-icon name="plugin-icon-var" class="item-head-left-icon"></svg-icon>
             <span class="protocal"> {{ stateScope === STATE.CURRENT_STATE ? 'state.' : 'stores.' }}</span>
             <span class="name">{{ key }}</span>
           </div>
           <div class="item-head-right">
-            <svg-button name="to-edit" tips="编辑" @click="openPanel(OPTION_TYPE.UPDATE, key)"></svg-button>
-            <svg-button name="copy" tips="复制" @click="openPanel(OPTION_TYPE.COPY, key)"></svg-button>
-            <svg-button name="delete" tips="删除" @click="confirmClick(key)"></svg-button>
+            <svg-button name="to-edit" :hoverBgColor="false" @click="openPanel(OPTION_TYPE.UPDATE, key)"></svg-button>
+            <svg-button name="copy" :hoverBgColor="false" @click="openPanel(OPTION_TYPE.COPY, key)"></svg-button>
+            <svg-button name="delete" :hoverBgColor="false" @click="confirmClick(key)"></svg-button>
           </div>
         </div>
       </li>
@@ -68,7 +68,7 @@ export default {
     }
 
     const removeStoreConfirm = (key) => {
-      const appPages = useResource().resState.pageTree.filter(
+      const appPages = useResource().appSchemaState.pageTree.filter(
         (page) => page.componentName === COMPONENT_NAME.Page && page?.meta?.group !== 'publicPages'
       )
       const expression = `stores.${key}`
@@ -117,32 +117,16 @@ export default {
 <style lang="less" scoped>
 .data-source-list {
   padding-top: 12px;
-  border-top: 1px solid var(--ti-lowcode-data-source-border-color);
+  border-top: 1px solid var(--te-state-common-border-color-divider);
   overflow-y: scroll;
-  .data-source-list-blank {
-    font-size: 12px;
-  }
   .data-source-list-item {
     &.selected,
     &:hover {
-      background: var(--ti-lowcode-common-component-hover-bg);
+      background: var(--te-state-common-bg-color-hover);
       .item-head-right {
         display: flex;
         justify-content: flex-end;
         width: 30%;
-        .svg-button {
-          color: var(--ti-lowcode-toolbar-breadcrumb-color);
-          font-size: 14px;
-          cursor: pointer;
-
-          &:not(:last-child) {
-            margin-right: 4px;
-          }
-
-          &:hover {
-            color: var(--ti-lowcode-toolbar-icon-color);
-          }
-        }
       }
     }
   }
@@ -150,7 +134,7 @@ export default {
   .item-head {
     height: 24px;
     padding: 0 10px;
-    color: var(--ti-lowcode-data-list-color);
+    color: var(--te-state-data-list-text-color);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -164,7 +148,7 @@ export default {
         margin-right: 4px;
         cursor: pointer;
         transition: 0.3s;
-        color: var(--ti-lowcode-toolbar-icon-color);
+        color: var(--te-state-data-list-left-icon-color);
         flex-shrink: 0;
 
         &.is-expand {
@@ -187,6 +171,10 @@ export default {
         overflow: hidden;
         text-overflow: ellipsis;
       }
+      .item-head-left-icon {
+        color: var(--te-state-data-list-left-icon-color);
+        margin-right: 8px;
+      }
     }
 
     .item-head-right {
@@ -203,18 +191,13 @@ export default {
     p span {
       &:first-child {
         font-size: 14;
-        color: var(--ti-lowcode-toolbar-breadcrumb-color);
+        color: var(--te-state-common-label-text-color);
       }
 
       &:last-child {
-        color: var(--ti-lowcode-dialog-font-color);
+        color: var(--te-state-common-text-color);
       }
     }
-  }
-  &-blank {
-    color: var(--ti-lowcode-state-management-query-color);
-    text-align: center;
-    padding-top: 30px;
   }
 }
 </style>

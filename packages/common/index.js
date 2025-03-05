@@ -11,6 +11,7 @@
  */
 
 import './i18n'
+import './styles/vars.less'
 
 export * from './component'
 export * from './composable'

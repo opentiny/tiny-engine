@@ -2,34 +2,19 @@
   <div class="tab-container">
     <div class="tabs-wrap">
       <tiny-button-group>
-        <tiny-button
-          v-for="(item, index) in uncollapsedOptions"
-          :key="item.label || item.icon"
-          :style="{ width: getItemWidth() + 'px' }"
-          :class="['tab-item', { selected: picked === (valueKey ? item.value[valueKey] : item.value) }]"
-          @click.stop="change(item)"
-        >
-          <span
-            :class="[
-              'label-text',
-              { 'border-right': collapsedOptions.length || index < uncollapsedOptions.length - 1 }
-            ]"
+        <div class="button-wrap" v-for="(item, index) in uncollapsedOptions" :key="item.label || item.icon">
+          <tiny-button
+            :style="{ width: getItemWidth() + 'px' }"
+            :class="['tab-item', { selected: picked === (valueKey ? item.value[valueKey] : item.value) }]"
+            @click.stop="change(item)"
           >
-            <span v-if="item?.label && !item?.content">{{ item.label }}</span>
-            <tiny-popover
-              v-if="item?.content"
-              :placement="placement"
-              :visible-arrow="false"
-              :content="item.content"
-              trigger="hover"
-            >
-              <template #reference>
-                <span v-if="item?.label">{{ item.label }}</span>
-                <svg-icon v-if="item?.icon" :name="item.icon" class="bem-Svg"></svg-icon>
-              </template>
-            </tiny-popover>
-          </span>
-        </tiny-button>
+            <span class="label-text" :title="item?.content">
+              <span v-if="item?.label">{{ item.label }}</span>
+              <svg-icon v-if="item?.icon" :name="item.icon" class="bem-Svg"></svg-icon>
+            </span>
+          </tiny-button>
+          <span :class="[{ 'border-right': collapsedOptions.length || index < uncollapsedOptions.length - 1 }]"></span>
+        </div>
         <tiny-dropdown
           v-if="collapsedOptions.length"
           trigger="click"
@@ -39,47 +24,29 @@
           ]"
           :style="{ width: getItemWidth(true) + 'px' }"
         >
-          <span class="selected-option" @click.stop="change(selectedCollapsedOption)">
-            <span v-if="selectedCollapsedOption?.label && !selectedCollapsedOption?.content">{{
-              selectedCollapsedOption.label
-            }}</span>
-            <tiny-popover
-              v-if="selectedCollapsedOption?.content"
-              :placement="placement"
-              :visible-arrow="false"
-              :content="selectedCollapsedOption.content"
-              trigger="hover"
-            >
-              <template #reference>
-                <span v-if="selectedCollapsedOption?.label">{{ selectedCollapsedOption.label }}</span>
-                <svg-icon
-                  v-if="selectedCollapsedOption?.icon"
-                  :name="selectedCollapsedOption.icon"
-                  class="bem-Svg"
-                ></svg-icon>
-              </template>
-            </tiny-popover>
+          <span
+            class="selected-option"
+            :title="selectedCollapsedOption?.content"
+            @click.stop="change(selectedCollapsedOption)"
+          >
+            <span v-if="selectedCollapsedOption?.label">{{ selectedCollapsedOption.label }}</span>
+            <svg-icon
+              v-if="selectedCollapsedOption?.icon"
+              :name="selectedCollapsedOption.icon"
+              class="bem-Svg"
+            ></svg-icon>
           </span>
           <template #dropdown>
-            <tiny-dropdown-menu>
+            <tiny-dropdown-menu popper-class="dropdown-menu-list">
               <tiny-dropdown-item
                 v-for="item in foldsOptions"
                 :key="item.label || item.icon"
                 @click.stop="change(item)"
               >
-                <span v-if="item?.label && !item?.content">{{ item.label }}</span>
-                <tiny-popover
-                  v-if="item?.content"
-                  :placement="placement"
-                  :visible-arrow="false"
-                  :content="item.content"
-                  trigger="hover"
-                >
-                  <template #reference>
-                    <span v-if="item?.label">{{ item.label }}</span>
-                    <svg-icon v-if="item?.icon" :name="item.icon" class="bem-Svg"></svg-icon>
-                  </template>
-                </tiny-popover>
+                <span :title="item?.content">
+                  <span v-if="item?.label">{{ item.label }}</span>
+                  <svg-icon v-if="item?.icon" :name="item.icon" class="bem-Svg"></svg-icon>
+                </span>
               </tiny-dropdown-item>
             </tiny-dropdown-menu>
           </template>
@@ -91,7 +58,6 @@
 <script setup>
 import { ref, computed, watch, defineProps, defineEmits } from 'vue'
 import {
-  Popover as TinyPopover,
   ButtonGroup as TinyButtonGroup,
   Button as TinyButton,
   Dropdown as TinyDropdown,
@@ -110,15 +76,10 @@ const props = defineProps({
     type: String,
     default: ''
   },
-  // 提示内容位置
-  placement: {
-    type: String,
-    default: 'top'
-  },
   // tabItem宽度
   labelWidth: {
-    type: Number,
-    default: 63
+    type: [Number, String],
+    default: '63'
   },
   // tab的选项，如果选项中包含collapsed，则会折叠为下拉
   options: {
@@ -195,26 +156,41 @@ const change = (item) => {
   .tabs-wrap {
     display: flex;
     justify-content: space-between;
+    background-color: var(--te-configurator-tabs-group-bg-color);
+    border-radius: 4px;
+    .tiny-button-group {
+      display: flex;
+      .button-wrap {
+        display: flex;
+        align-items: center;
+      }
+    }
+
     .tiny-button.tiny-button.tiny-button--default {
       margin: 0;
       padding: 0;
       border: none;
-      background-color: var(--te-common-bg-container);
       line-height: 14px;
       min-width: 20px;
-      max-width: 80px;
-      color: var(--te-common-text-weaken);
+      background-color: var(--te-configurator-tabs-group-bg-color);
+      color: var(--te-configurator-common-text-color-weaken);
 
       &:hover {
-        background-color: var(--ti-lowcode-base-gray-101);
-        color: var(--te-common-text-primary);
+        background-color: var(--te-configurator-tabs-group-bg-color-hover);
+        color: var(--te-configurator-common-text-color-secondary);
         border-radius: 4px;
+        .svg-icon {
+          color: var(--te-configurator-common-icon-color-primary);
+        }
       }
 
       &.selected {
-        background-color: var(--ti-lowcode-base-gray-101);
-        color: var(--te-common-text-primary);
+        background-color: var(--te-configurator-tabs-group-bg-color-active);
+        color: var(--te-configurator-common-text-color-secondary);
         border-radius: 4px;
+        .svg-icon {
+          color: var(--te-configurator-common-icon-color-primary);
+        }
       }
     }
     .tab-item {
@@ -223,75 +199,88 @@ const change = (item) => {
       text-align: center;
       cursor: pointer;
       position: relative;
-      background-color: var(--te-common-bg-container);
       .label-text {
         width: 100%;
         height: 12px;
-
         .bem-Svg {
           margin-top: -3px;
         }
       }
     }
-    .tiny-dropdown {
+    :deep(.drop-down-options) {
       display: flex;
       justify-content: center;
       align-items: center;
       height: 24px;
-      background-color: var(--ti-lowcode-base-bg-5);
-      color: var(--te-common-text-weaken);
+      color: var(--te-configurator-common-text-color-weaken);
+
+      &:hover {
+        background-color: var(--te-configurator-tabs-group-bg-color-hover);
+        border-radius: 4px;
+        color: var(--te-configurator-common-text-color-primary);
+      }
       &.selected {
-        background-color: var(--ti-lowcode-base-gray-101);
-        color: var(--te-common-text-primary);
+        background-color: var(--te-configurator-tabs-group-bg-color-active);
+        color: var(--te-configurator-common-text-color-primary);
         border-radius: 4px;
       }
-      :deep(.tiny-dropdown__title) {
+      .tiny-dropdown__title {
         margin: 0;
         line-height: 12px;
+        font-size: var(--te-base-font-size-base);
         .selected-option {
           text-align: center;
         }
       }
-
-      :deep(.tiny-dropdown__suffix-inner) {
+      .tiny-dropdown__suffix-inner {
         width: 20px;
         display: flex;
         justify-content: center;
+        .tiny-svg {
+          fill: var(--te-configurator-common-icon-color);
+        }
       }
-
-      &:hover {
-        background-color: var(--ti-lowcode-base-gray-101);
-        border-radius: 4px;
-        color: var(--te-common-text-primary);
+      .tiny-dropdown__trigger:hover {
+        color: var(--te-configurator-common-text-color-primary);
       }
     }
   }
 }
-.tiny-dropdown-menu {
+.dropdown-menu-list.tiny-popper.tiny-dropdown-menu {
+  margin-top: 4px;
+}
+
+.dropdown-menu-list {
   padding: 8px 0px;
-  margin: 0px 0px 0px 20px;
-  background-color: var(--te-common-bg-default);
-  color: var(--te-common-text-weaken);
+  margin-left: 20px;
+  border-radius: 4px;
+  background-color: var(--te-configurator-common-bg-color);
+  color: var(--te-configurator-common-text-color-weaken);
   z-index: 9999;
-  box-shadow: 0 0 10px 0 var(--te-common-border-default);
-  --ti-dropdown-menu-arrow-margin-top: 0;
+  box-shadow: 0 0 10px 0 var(--te-configurator-common-border-color);
 
   :deep(.focusing) {
-    background-color: var(--te-common-bg-default);
+    background-color: var(--te-configurator-common-bg-color);
+  }
+
+  :deep(.tiny-dropdown-item) {
+    color: var(--te-configurator-common-text-color-weaken);
+    background-color: var(--te-configurator-common-bg-color);
+
+    &:hover,
+    &:active {
+      background-color: var(--te-configurator-common-bg-color-hover);
+      color: var(--te-configurator-common-text-color-primary);
+    }
   }
 
   :deep(.tiny-dropdown-item__wrap) {
     padding: 4px 12px;
-    background-color: var(--te-common-bg-default);
-
-    &:hover {
-      background-color: var(--ti-lowcode-base-gray-101);
-      border-radius: 4px;
-      color: var(--te-common-text-primary);
-    }
   }
 }
 .border-right {
-  border-right: 1px solid var(--te-common-border-default);
+  display: inline-block;
+  height: 12px;
+  border-right: 1px solid var(--te-configurator-common-border-color);
 }
 </style>

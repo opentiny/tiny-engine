@@ -1,19 +1,19 @@
 <template>
   <div class="add-button">
     <tiny-button @click="addProperty">
-      <icon-plus class="icon-plus"></icon-plus>
+      <svg-icon name="add"></svg-icon>
       <span>添加</span>
     </tiny-button>
   </div>
-  <meta-list-items class="property-list" :optionsList="list">
+  <meta-list-items :class="{ 'property-list': list.length }" :optionsList="list">
     <template #content="{ data }">
       <div :class="{ 'item-text': true }">
         {{ data.property }}
       </div>
     </template>
     <template #operate="{ data }">
-      <svg-button name="to-edit" tips="编辑" placement="top" @click="handleEdit(data)"></svg-button>
-      <svg-button name="delete" tips="删除" placement="top" @click="del(data)"></svg-button>
+      <svg-button name="to-edit" :hoverBgColor="false" @click="handleEdit(data)"></svg-button>
+      <svg-button name="delete" :hoverBgColor="false" @click="del(data)"></svg-button>
     </template>
   </meta-list-items>
 </template>
@@ -21,7 +21,6 @@
 <script>
 import { computed } from 'vue'
 import { Button as TinyButton } from '@opentiny/vue'
-import { iconPlus } from '@opentiny/vue-icon'
 import { remove } from '@opentiny/vue-renderless/common/array'
 import { MetaListItems, SvgButton } from '@opentiny/tiny-engine-common'
 import {
@@ -36,8 +35,7 @@ export default {
   components: {
     TinyButton,
     SvgButton,
-    MetaListItems,
-    IconPlus: iconPlus()
+    MetaListItems
   },
   setup() {
     const list = computed(() => getEditBlockPropertyList() || [])
@@ -71,7 +69,7 @@ export default {
   max-height: 222px;
   overflow-y: auto;
   padding: 1px 0; // 解决因为子元素加上了border之后，在高度小于222px之前高度永远>property-list, 导致滚动条一直出现的问题
-  margin-bottom: 8px;
+  margin-top: 12px;
 }
 
 .item-text {
@@ -88,23 +86,10 @@ export default {
 
 .add-button {
   display: flex;
-  padding-bottom: 16px;
   :deep(.tiny-button) {
     padding: 0 12px;
     width: 66px;
     margin-right: 5px;
-    border: 1px solid var(--ti-lowcode-base-default-button-border-disable-color);
-  }
-  .plus-icon {
-    width: 16px;
-    height: 16px;
-  }
-  .editorWarp {
-    display: inline-block;
-  }
-  .icon-plus {
-    margin-right: 6px;
-    stroke: var(--te-common-text-weaken);
   }
 }
 </style>

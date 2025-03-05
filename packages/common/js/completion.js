@@ -71,7 +71,7 @@ const getSnippetsSuggestions = (monaco, range, wordContent) =>
     .filter(({ insertText }) => insertText.indexOf(wordContent) === 0)
 
 const getUserWords = () => {
-  const { bridge = [], dataSource = [], utils = [], globalState = [] } = useResource().resState
+  const { bridge = [], dataSource = [], utils = [], globalState = [] } = useResource().appSchemaState
 
   return {
     state: {

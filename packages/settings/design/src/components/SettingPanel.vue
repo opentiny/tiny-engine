@@ -93,12 +93,12 @@
               </div>
             </template>
             <template #operate="{ data }">
-              <tiny-tooltip class="item operate-tips-item" effect="dark" content="编辑" placement="top">
+              <tiny-tooltip class="item operate-tips-item" effect="light" content="编辑" placement="top">
                 <span class="item-icon">
                   <svg-icon name="to-edit" @click.stop="handleEdit(data)"></svg-icon>
                 </span>
               </tiny-tooltip>
-              <tiny-tooltip class="item operate-tips-item" effect="dark" content="删除" placement="top">
+              <tiny-tooltip class="item operate-tips-item" effect="light" content="删除" placement="top">
                 <span class="item-icon">
                   <svg-icon name="delete" @click.stop="handleDelete(data)"></svg-icon>
                 </span>
@@ -257,30 +257,30 @@ export default {
       font-size: 12px;
       flex-shrink: 0;
       margin-right: 10px;
-      color: var(--ti-lowcode-common-text-main-color);
+      color: #595959;
     }
   }
 
   h5 {
     font-size: 13px;
-    color: var(--ti-lowcode-title-color);
+    color: #191919;
     margin: 20px 0;
   }
   .array-config-item {
     width: 100%;
     :deep(.list-group) {
       .option-item {
-        border-top: 1px solid var(--ti-lowcode-common-border-color);
+        border-top: 1px solid #dbdbdb;
       }
       .option-item:last-child {
-        border-bottom: 1px solid var(--ti-lowcode-common-border-color);
+        border-bottom: 1px solid #dbdbdb;
       }
       .item-icon {
-        color: var(--ti-lowcode-design-plugin-color);
+        color: #808080;
         fill: currentColor;
       }
       .item-text {
-        color: var(--ti-lowcode-title-color);
+        color: #191919;
       }
     }
     .operate-tips-item + .operate-tips-item {
@@ -288,7 +288,7 @@ export default {
     }
     .add-item {
       cursor: pointer;
-      color: var(--ti-lowcode-common-primary-color);
+      color: #1476ff;
       margin-top: 8px;
       .icon {
         margin-right: 4px;
@@ -310,7 +310,7 @@ export default {
       .item-label {
         width: 38%;
         word-break: break-all;
-        color: var(--ti-lowcode-toolbar-breadcrumb-color);
+        color: #595959;
       }
       .component-wrap {
         flex: 1;
@@ -369,9 +369,6 @@ export default {
     flex-wrap: wrap;
     width: 100%;
   }
-  :deep(.tiny-switch) {
-    width: var(--ti-switch-width);
-  }
   .setting-radio-group {
     &.setting-layout {
       width: 100%;
@@ -382,7 +379,7 @@ export default {
         border-color: transparent;
         padding: 6px 10px;
         &:hover {
-          background-color: var(--ti-lowcode-common-primary-color);
+          background-color: #1476ff;
         }
       }
     }

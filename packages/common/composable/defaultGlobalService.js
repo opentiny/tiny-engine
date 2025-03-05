@@ -6,6 +6,7 @@ const getBaseInfo = () => {
   const id = paramsMap.get('id')
   const blockId = paramsMap.get('blockid')
   const pageId = paramsMap.get('pageid')
+  const previewId = paramsMap.get('previewid')
   const type = paramsMap.get('type')
   const version = paramsMap.get('version')
 
@@ -13,6 +14,7 @@ const getBaseInfo = () => {
     type: type || 'app',
     id,
     pageId,
+    previewId,
     blockId,
     version
   }
@@ -56,6 +58,93 @@ const fetchAppInfo = (appId) => getMetaApi(META_SERVICE.Http).get(`/app-center/a
 const fetchAppList = (platformId) => getMetaApi(META_SERVICE.Http).get(`/app-center/api/apps/list/${platformId}`)
 
 const { subscribe, publish } = useMessage()
+
+const postLocationHistoryChanged = (data) => publish({ topic: 'locationHistoryChanged', data })
+
+/**
+ * 过滤掉没有变化的URL参数。pageId和blockId互斥，如果同时存在，会去掉blockId
+ * @param {Record<string, any>} params
+ * @returns
+ */
+const filterParams = (params) => {
+  const fieldsMap = ['pageId', 'blockId', 'previewId'].reduce((result, field) => {
+    result[field] = field.toLowerCase()
+    return result
+  }, {})
+
+  const paramFileds = Object.keys(params)
+  const url = new URL(window.location.href)
+  const changedParams = {}
+
+  Object.entries(fieldsMap).forEach(([field, urlParamKey]) => {
+    if (paramFileds.includes(field) && params[field] !== url.searchParams.get(urlParamKey)) {
+      changedParams[field] = params[field]
+    }
+  })
+
+  const changedParamFields = Object.keys(changedParams)
+  // pageId和blockId互斥，如果同时存在，会去掉blockId
+  if (changedParamFields.includes('pageId') && changedParamFields.includes('blockId')) {
+    delete changedParams.blockId
+  }
+
+  return changedParams
+}
+
+/**
+ * 支持pageId, blockId, previewId 批量更新，pageId和blockId互斥，如果同时存在，会去掉blockId
+ * @param {*} params
+ * @param {*} replace
+ * @returns
+ */
+const updateParams = (params, replace = false) => {
+  const changedParams = filterParams(params)
+  const url = new URL(window.location.href)
+
+  const { pageId, blockId, previewId } = changedParams
+  const changedParamFields = Object.keys(changedParams)
+
+  if (changedParamFields.length === 0) {
+    return
+  }
+
+  // pageId 与 blockId 互斥
+  if (changedParamFields.includes('pageId')) {
+    url.searchParams.delete('blockid')
+    url.searchParams.set('pageid', pageId)
+  } else if (changedParamFields.includes('blockId')) {
+    url.searchParams.delete('pageid')
+    url.searchParams.set('blockid', blockId)
+  }
+
+  if (changedParamFields.includes('previewId')) {
+    if (previewId) {
+      url.searchParams.set('previewid', previewId)
+    } else {
+      url.searchParams.delete('previewid')
+    }
+  }
+
+  if (replace) {
+    window.history.replaceState({}, '', url)
+  } else {
+    window.history.pushState({}, '', url)
+  }
+
+  postLocationHistoryChanged(changedParams)
+}
+
+const updatePageId = (pageId) => {
+  updateParams({ pageId })
+}
+
+const updateBlockId = (blockId) => {
+  updateParams({ blockId })
+}
+
+const updatePreviewId = (previewId, replace = false) => {
+  updateParams({ previewId }, replace)
+}
 
 export default defineService({
   id: META_SERVICE.GlobalService,
@@ -119,6 +208,11 @@ export default defineService({
   },
   apis: ({ state }) => ({
     getBaseInfo,
-    isAdmin: () => state.userInfo.resetPasswordToken === 'p_webcenter'
+    isAdmin: () => state.userInfo.resetPasswordToken === 'p_webcenter',
+    postLocationHistoryChanged,
+    updateParams,
+    updatePageId,
+    updateBlockId,
+    updatePreviewId
   })
 })

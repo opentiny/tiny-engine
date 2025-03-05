@@ -200,8 +200,8 @@ export default {
 #tiny-engine-left-panel {
   width: var(--base-left-panel-width);
   height: calc(100vh - var(--base-top-panel-height));
-  border-right: 1px solid var(--ti-lowcode-plugin-panel-border-right-color);
-  background: var(--ti-lowcode-common-component-bg);
+  border-right: 1px solid var(--te-layout-common-border-color);
+  background: var(--te-layout-common-bg-color);
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -227,6 +227,9 @@ export default {
     :deep(.tiny-tabs__nav.is-show-active-bar) .tiny-tabs__item {
       margin-right: 0;
     }
+    :deep(.tiny-tabs.tiny-tabs .tiny-tabs__header .tiny-tabs__nav-wrap-not-separator::after) {
+      background-color: transparent;
+    }
   }
 }
 
@@ -236,10 +239,10 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background: var(--ti-lowcode-common-layout-bg);
+  background: var(--te-layout-common-bg-color);
   box-sizing: border-box;
   z-index: 1000;
-  border-right: 1px solid var(--ti-lowcode-plugin-panel-border-right-color);
+  border-right: 1px solid var(--te-layout-common-border-color);
 
   &.completed {
     display: block;
@@ -254,7 +257,7 @@ export default {
 
     &.bottom {
       flex: 1;
-      padding-bottom: 20px;
+      padding-bottom: 28px;
     }
 
     .list-item {
@@ -273,7 +276,7 @@ export default {
       &:hover,
       &.active {
         .item-icon {
-          background: var(--ti-lowcode-left-panel-active-bg);
+          background: var(--te-layout-common-bg-color-hover);
           border-radius: 4px;
         }
       }
@@ -282,12 +285,12 @@ export default {
         position: relative;
 
         .item-icon {
-          color: var(--ti-lowcode-common-primary-color);
+          color: var(--te-layout-common-text-color-secondary-checked);
         }
       }
 
       &.prev {
-        border-bottom-color: var(--ti-lowcode-left-panel-active-border-color);
+        border-bottom-color: var(--te-layout-common-border-color);
       }
     }
 
@@ -295,13 +298,20 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
-      color: var(--ti-lowcode-design-plugin-color);
+      color: var(--te-layout-common-text-color);
       font-size: 22px;
       width: 26px;
       height: 26px;
 
       svg {
         font-size: 18px;
+      }
+      .public-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 26px;
+        height: 26px;
       }
     }
   }

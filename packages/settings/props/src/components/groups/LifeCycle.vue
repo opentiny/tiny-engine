@@ -18,10 +18,10 @@
   <ul class="bind-life-cycle-list">
     <li v-for="(value, name, index) in state.bindLifeCycles" :key="index" class="life-cycle-item">
       <div>
-        <tiny-tooltip class="item" effect="dark" content="编辑" placement="top">
+        <tiny-tooltip class="item" effect="light" content="编辑" placement="top">
           <icon-setting class="icon" @click="openDialog(name)"></icon-setting>
         </tiny-tooltip>
-        <tiny-tooltip class="item" effect="dark" content="删除" placement="top">
+        <tiny-tooltip class="item" effect="light" content="删除" placement="top">
           <icon-del class="icon" @click="confirmClick(name)"></icon-del>
         </tiny-tooltip>
       </div>
@@ -198,7 +198,7 @@ export default {
   justify-content: space-between;
 
   svg {
-    color: var(--ti-lowcode-toolbar-icon-color);
+    color: var(--te-props-common-icon-color-primary);
     outline: none;
   }
 }
@@ -211,7 +211,7 @@ export default {
   li {
     padding: 4px 12px;
     &:hover {
-      background: var(--ti-lowcode-canvas-wrap-bg);
+      background: var(--te-props-common-bg-color-hover);
       cursor: pointer;
     }
   }
@@ -225,10 +225,10 @@ export default {
     justify-content: space-between;
     padding: 8px 12px;
     cursor: pointer;
-    color: var(--ti-lowcode-toolbar-breadcrumb-color);
+    color: var(--te-props-common-text-color-secondary);
 
     svg {
-      color: var(--ti-lowcode-toolbar-breadcrumb-color);
+      color: var(--te-props-common-text-color-secondary);
     }
     .icon {
       margin-right: 8px;
@@ -239,7 +239,7 @@ export default {
     }
 
     &:hover {
-      background: var(--ti-lowcode-canvas-wrap-bg);
+      background: var(--te-props-common-bg-color-hover);
     }
   }
 }
@@ -252,7 +252,7 @@ export default {
     margin-right: 12px;
 
     .life-cycle-list {
-      border: 1px solid var(--ti-lowcode-collapse-active-border-color);
+      border: 1px solid var(--te-props-common-border-color);
       box-shadow: 0 -1px 4px 0 rgba(0, 0, 0, 0.1);
       border-radius: 4px;
       height: 320px;
@@ -268,7 +268,7 @@ export default {
 
       .life-cycle-selected {
         font-size: 14px;
-        color: var(--ti-lowcode-toolbar-icon-color);
+        color: var(--te-props-common-text-color-primary);
         opacity: 0.8;
         position: absolute;
         top: 50%;
@@ -277,8 +277,8 @@ export default {
       }
 
       &:hover {
-        color: var(--ti-lowcode-toolbar-icon-color);
-        background: var(--ti-lowcode-canvas-wrap-bg);
+        color: var(--te-props-common-text-color-primary);
+        background: var(--te-props-common-bg-color-hover);
         .life-cycle-selected {
           opacity: 1;
         }

@@ -7,6 +7,7 @@
       :disabled="disabled"
       :content="option.tip"
       placement="top"
+      effect="light"
     >
       <label :class="['radio-button', { active: option.value === value }]">
         <input v-model="picked" type="radio" name="radio-buttons" :value="option.value" @click="change" />
@@ -80,16 +81,16 @@ input[type='radio'] {
 
 .radio-button {
   display: table-cell;
-  color: var(--ti-lowcode-toolbar-icon-color);
+  color: var(--te-configurator-common-text-color-secondary);
   padding: 4px;
   text-align: center;
   &:not(:last-child) {
   }
   &.active {
-    color: var(--ti-lowcode-property-active-color);
+    color: var(--te-configurator-common-text-color-emphasize);
   }
   &:not(.active):hover {
-    color: var(--ti-lowcode-property-hover-color);
+    color: var(--te-configurator-common-text-color-secondary);
   }
   &:first-child {
     border-top-left-radius: 2px;

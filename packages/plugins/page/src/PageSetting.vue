@@ -11,7 +11,7 @@
           @click="copyPage"
         ></svg-button>
         <svg-button v-if="!pageSettingState.isNew" name="delete" tips="删除页面" @click="deletePage"></svg-button>
-        <svg-button class="close-plugin-setting-icon" name="close" @click="cancelPageSetting"></svg-button>
+        <svg-button name="close" @click="cancelPageSetting"></svg-button>
       </button-group>
     </template>
 
@@ -121,7 +121,7 @@ export default {
   setup(props, { emit }) {
     const { requestCreatePage, requestDeletePage } = http
     const {
-      DEFAULT_PAGE,
+      getDefaultPage,
       pageSettingState,
       changeTreeData,
       isCurrentDataSame,
@@ -161,7 +161,7 @@ export default {
     }
 
     const createPage = async () => {
-      const { page_content, ...other } = DEFAULT_PAGE
+      const { page_content, ...other } = getDefaultPage()
       const { page_content: page_content_state, ...pageSettingStateOther } = pageSettingState.currentPageData
       const createParams = {
         ...other,
@@ -210,8 +210,9 @@ export default {
 
     const updatePage = (id, params) => {
       const routerChange = pageSettingState.currentPageDataCopy.route !== pageSettingState.currentPageData.route
+      const isCurEditPage = pageState?.currentPage?.id === id
 
-      return handlePageUpdate(id, params, routerChange)
+      return handlePageUpdate(id, params, routerChange, isCurEditPage)
     }
 
     const restorePage = (pageData) => {
@@ -291,24 +292,22 @@ export default {
     }
 
     const createHistoryMessage = () => {
-      const title = '创建历史备份信息'
-      const status = 'custom'
-      const messageRender = {
-        render: () => <Input placeholder="历史备份信息" v-model={state.historyMessage}></Input>
-      }
-      const exec = () => {
-        pageSettingState.currentPageData.message = state.historyMessage.trim() || 'Page auto save'
-
-        if (pageSettingState.isNew) {
-          createPage()
-        } else {
+      if (pageSettingState.isNew) {
+        pageSettingState.currentPageData.message = 'Page auto save'
+        createPage()
+      } else {
+        const title = '创建历史备份信息'
+        const messageRender = {
+          render: () => <Input placeholder="历史备份信息" v-model={state.historyMessage}></Input>
+        }
+        const exec = () => {
+          pageSettingState.currentPageData.message = state.historyMessage.trim() || 'Page auto save'
           editPage()
+          state.historyMessage = ''
         }
 
-        state.historyMessage = ''
+        confirm({ title, message: messageRender, exec })
       }
-
-      confirm({ title, status, message: messageRender, exec })
     }
 
     const savePageSetting = () => {
@@ -338,6 +337,15 @@ export default {
     }
 
     const deletePage = () => {
+      if (pageSettingState.treeDataMapping[pageSettingState.currentPageData.id]?.children?.length) {
+        useNotify({
+          type: 'error',
+          message: '此页面存在子页面或子文件夹，不能删除！'
+        })
+
+        return
+      }
+
       confirm({
         title: '提示',
         message: '您是否要删除页面?',
@@ -392,12 +400,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.tiny-search {
-  padding: 10px;
-  border-top: 1px solid var(--ti-lowcode-page-manage-tip-border-color);
-  border-bottom: 1px solid var(--ti-lowcode-page-manage-tip-border-color);
-}
-
 .block-add-content {
   display: flex;
   flex-direction: column;
@@ -407,18 +409,6 @@ export default {
 .page-plugin-setting {
   :deep(.plugin-setting-header) {
     border: 0;
-    .button-group {
-      column-gap: 2px;
-      .tiny-button {
-        width: 40px;
-        padding: 0;
-        min-width: 40px;
-        margin-right: 2px;
-      }
-    }
-    .close-plugin-setting-icon {
-      margin-left: 4px;
-    }
   }
 
   :deep(.plugin-setting-content) {
@@ -428,10 +418,6 @@ export default {
   :deep(.tiny-collapse) {
     border-bottom: 0;
   }
-}
-
-.life-cycles-container {
-  padding: 0 0 12px 0;
 }
 
 .page-setting-collapse {
@@ -446,6 +432,9 @@ export default {
     .svg-icon {
       margin-right: 6px;
     }
+  }
+  :deep(.tiny-collapse-item__content) {
+    padding: 0 12px 12px;
   }
 }
 </style>

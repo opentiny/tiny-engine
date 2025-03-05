@@ -1,13 +1,19 @@
 <template>
-  <canvas-action
-    :hoverState="hoverState"
-    :selectState="selectState"
-    :lineState="lineState"
-    :windowGetClickEventTarget="target"
-    :resize="canvasState.type === 'absolute'"
-    @select-slot="selectSlot"
-    @setting="settingModel"
-  ></canvas-action>
+  <div v-for="multiState in multiSelectedStates" :key="multiState.id">
+    <canvas-action
+      :hoverState="hoverState"
+      :inactiveHoverState="inactiveHoverState"
+      :selectState="multiStateLength > 1 ? multiState : selectState"
+      :lineState="lineState"
+      :windowGetClickEventTarget="target"
+      :resize="canvasState.type === 'absolute'"
+      :multiStateLength="multiStateLength"
+      @select-slot="selectSlot"
+      @setting="settingModel"
+    ></canvas-action>
+  </div>
+  <canvas-router-jumper :hoverState="hoverState" :inactiveHoverState="inactiveHoverState"></canvas-router-jumper>
+  <canvas-viewer-switcher :hoverState="hoverState" :inactiveHoverState="inactiveHoverState"></canvas-viewer-switcher>
   <canvas-divider :selectState="selectState"></canvas-divider>
   <canvas-resize-border :iframe="iframe"></canvas-resize-border>
   <canvas-resize>
@@ -26,16 +32,27 @@
   <div v-if="insertPosition" ref="insertPanel" class="insert-panel">
     <component :is="materialsPanel" :shortcut="insertPosition" @close="insertPosition = false"></component>
   </div>
+  <!-- 【添加父级容器】快捷选择物料面板 -->
+  <div v-if="insertContainer" ref="containerPanel" class="insert-panel">
+    <component
+      :is="materialsPanel"
+      :shortcut="insertContainer"
+      groupName="layout"
+      @close="insertContainer = false"
+    ></component>
+  </div>
 </template>
 
 <script>
-import { onMounted, ref, computed, onUnmounted } from 'vue'
+import { onMounted, ref, computed, onUnmounted, watch, watchEffect } from 'vue'
 import { iframeMonitoring } from '@opentiny/tiny-engine-common/js/monitor'
-import { useTranslate, useCanvas, useMaterial } from '@opentiny/tiny-engine-meta-register'
+import { useTranslate, useCanvas, useMessage, useResource } from '@opentiny/tiny-engine-meta-register'
 import { NODE_UID, NODE_LOOP, DESIGN_MODE } from '../../common'
-import { registerHostkeyEvent, removeHostkeyEvent } from './keyboard'
+import { registerHotkeyEvent, removeHotkeyEvent, multiSelectedStates } from './keyboard'
 import CanvasMenu, { closeMenu, openMenu } from './components/CanvasMenu.vue'
 import CanvasAction from './components/CanvasAction.vue'
+import CanvasRouterJumper from './components/CanvasRouterJumper.vue'
+import CanvasViewerSwitcher from './components/CanvasViewerSwitcher.vue'
 import CanvasResize from './components/CanvasResize.vue'
 import CanvasDivider from './components/CanvasDivider.vue'
 import CanvasResizeBorder from './components/CanvasResizeBorder.vue'
@@ -45,6 +62,7 @@ import {
   dragMove,
   dragState,
   hoverState,
+  inactiveHoverState,
   selectState,
   lineState,
   removeNodeById,
@@ -56,11 +74,22 @@ import {
   clearLineState,
   querySelectById,
   getCurrent,
-  canvasApi
+  canvasApi,
+  getMultiState,
+  setMultiState,
+  handleMultiState
 } from './container'
 
 export default {
-  components: { CanvasAction, CanvasResize, CanvasMenu, CanvasDivider, CanvasResizeBorder },
+  components: {
+    CanvasAction,
+    CanvasResize,
+    CanvasMenu,
+    CanvasDivider,
+    CanvasResizeBorder,
+    CanvasRouterJumper,
+    CanvasViewerSwitcher
+  },
   props: {
     controller: Object,
     canvasSrc: String,
@@ -77,7 +106,12 @@ export default {
     let target = ref(null)
     const srcAttrName = computed(() => (props.canvasSrc ? 'src' : 'srcdoc'))
 
-    const setCurrentNode = async (event) => {
+    const containerPanel = ref(null)
+    const insertContainer = ref(false)
+
+    const multiStateLength = computed(() => multiSelectedStates.value.length)
+
+    const setCurrentNode = async (event, doc = null) => {
       const { clientX, clientY } = event
       const element = getElement(event.target)
       closeMenu()
@@ -87,6 +121,9 @@ export default {
         const currentElement = querySelectById(getCurrent().schema?.id)
 
         if (!currentElement?.contains(element) || event.button === 0) {
+          const selectedState = getMultiState(element, doc)
+          setMultiState(multiSelectedStates, selectedState)
+
           const loopId = element.getAttribute(NODE_LOOP)
           if (loopId) {
             node = await selectNode(element.getAttribute(NODE_UID), `loop-id=${loopId}`)
@@ -113,7 +150,27 @@ export default {
     const beforeCanvasReady = () => {
       if (iframe.value) {
         const win = iframe.value.contentWindow
-        win.thirdPartyDeps = useMaterial().materialState.thirdPartyDeps
+        // 用于画布初始化组件依赖
+        win.componentsDeps = useResource().appSchemaState.materialsDeps.scripts.filter((item) => item.components)
+
+        const { subscribe, unsubscribe } = useMessage()
+        const { getSchemaDiff, patchLatestSchema, getSchema, getNode } = useCanvas()
+        const { appSchemaState } = useResource()
+
+        iframe.value.contentWindow.host = {
+          unsubscribe,
+          subscribe,
+          getSchemaDiff,
+          patchLatestSchema,
+          watch,
+          watchEffect,
+          getSchema,
+          appSchema: appSchemaState,
+          schemaUtils: {
+            getSchema,
+            getNode
+          }
+        }
       }
     }
 
@@ -148,8 +205,23 @@ export default {
               return
             }
 
+            const element = getElement(event.target)
+            if (!element) {
+              return
+            }
+
+            // 多选组合键触发
+            if (element) {
+              const selectedState = getMultiState(element, doc)
+              if ((event.ctrlKey || event.metaKey) && event.button === 0) {
+                handleMultiState(multiSelectedStates, selectedState)
+                return
+              }
+            }
+
             insertPosition.value = false
-            setCurrentNode(event)
+            insertContainer.value = false
+            setCurrentNode(event, doc)
             target.value = event.target
           })
         })
@@ -164,6 +236,7 @@ export default {
           }
 
           insertPosition.value = false
+          insertContainer.value = false
           setCurrentNode(event)
           target.value = event.target
         })
@@ -190,7 +263,7 @@ export default {
           e.preventDefault()
         }
 
-        registerHostkeyEvent(doc)
+        registerHotkeyEvent(doc)
 
         win.addEventListener('scroll', updateRect, true)
       }
@@ -213,6 +286,7 @@ export default {
       // 以下是外部window需要监听的事件
       window.addEventListener('mousedown', (e) => {
         insertPosition.value = insertPanel.value?.contains(e.target)
+        insertContainer.value = containerPanel.value?.contains(e.target)
         target.value = e.target
       })
 
@@ -225,6 +299,10 @@ export default {
     }
 
     const insertComponent = (position) => {
+      if (position === 'out') {
+        insertContainer.value = position
+        return
+      }
       insertPosition.value = position
     }
 
@@ -232,10 +310,20 @@ export default {
       hoverState.slot = slotName
     }
 
+    watch(
+      () => multiStateLength.value,
+      (newVal) => {
+        if (newVal > 1) {
+          // 清空属性面板
+          selectNode(null)
+        }
+      }
+    )
+
     onMounted(() => run(iframe))
     onUnmounted(() => {
       if (iframe.value?.contentDocument) {
-        removeHostkeyEvent(iframe.value.contentDocument)
+        removeHotkeyEvent(iframe.value.contentDocument)
       }
       window.removeEventListener('message', updateI18n, false)
     })
@@ -247,17 +335,22 @@ export default {
       iframe,
       dragState,
       hoverState,
+      inactiveHoverState,
       selectState,
       lineState,
+      multiSelectedStates,
+      multiStateLength,
       removeNodeById,
       selectSlot,
       canvasState,
       insertComponent,
       insertPanel,
+      containerPanel,
       settingModel,
       target,
       showSettingModel,
       insertPosition,
+      insertContainer,
       loading,
       srcAttrName
     }

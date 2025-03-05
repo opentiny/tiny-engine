@@ -14,9 +14,14 @@
         :class="['list-item', index === state.activeIndex ? 'active' : '']"
         @click.stop="openEdit(item, index)"
       >
-        <svg-icon name="plugin-icon-sresources"></svg-icon>
+        <svg-icon name="plugin-icon-sresources" class="list-item-icon"></svg-icon>
         <div class="item-label">{{ item.name }}</div>
-        <svg-icon class="setting-icon" name="setting" @click.stop="openEdit(item, index)"></svg-icon>
+        <svg-button
+          class="setting-icon"
+          :hoverBgColor="false"
+          name="setting"
+          @click.stop="openEdit(item, index)"
+        ></svg-button>
       </div>
       <search-empty :isShow="!list.length" />
     </div>
@@ -27,7 +32,7 @@
 import { watchEffect, ref, reactive } from 'vue'
 import { Search } from '@opentiny/vue'
 import { iconSearch } from '@opentiny/vue-icon'
-import { SearchEmpty } from '@opentiny/tiny-engine-common'
+import { SearchEmpty, SvgButton } from '@opentiny/tiny-engine-common'
 import {
   RESOURCE_TYPE,
   ACTION_TYPE,
@@ -44,7 +49,8 @@ export default {
   components: {
     TinySearch: Search,
     TinyIconSearch: iconSearch(),
-    SearchEmpty
+    SearchEmpty,
+    SvgButton
   },
   props: {
     name: {
@@ -138,7 +144,7 @@ export default {
 
   .list {
     flex: 1;
-    border-top: 1px solid var(--ti-lowcode-tabs-border-color);
+    border-top: 1px solid var(--te-bridge-list-border-color);
     overflow: auto;
     padding: 12px 0;
   }
@@ -152,21 +158,24 @@ export default {
     align-items: center;
     padding: 0 12px;
     position: relative;
-    color: var(--ti-lowcode-bridge-list-color);
+    color: var(--te-bridge-list-text-color);
     cursor: pointer;
     font-size: 12px;
 
     &:hover,
     &.active {
-      background: var(--ti-lowcode-bridge-list-bg);
+      background: var(--te-bridge-list-bg-color);
       .setting-icon {
-        display: block;
+        display: grid;
       }
     }
 
     .setting-icon {
       display: none;
-      color: var(--ti-lowcode-toolbar-more-hover-color);
+    }
+    .list-item-icon {
+      color: var(--te-bridge-list-icon-color);
+      margin-right: 8px;
     }
   }
 }

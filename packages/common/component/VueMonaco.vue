@@ -43,7 +43,7 @@ export default {
       default: false
     }
   },
-  emits: ['change', 'editorWillMount', 'editorDidMount'],
+  emits: ['change', 'editorWillMount', 'editorDidMount', 'shortcutSave'],
   setup(props, { emit }) {
     const vueMonaco = {
       editor: null,
@@ -94,6 +94,11 @@ export default {
       } else {
         vueMonaco.editor = monaco.editor.create(monacoRef.value, options)
       }
+
+      vueMonaco.editor.addCommand(monacoEditor.KeyMod.CtrlCmd | monacoEditor.KeyCode.KeyS, () => {
+        // 快捷键 ctrl + s 或 command + s 保存
+        emit('shortcutSave')
+      })
 
       const editor2 = getModifiedEditor()
 

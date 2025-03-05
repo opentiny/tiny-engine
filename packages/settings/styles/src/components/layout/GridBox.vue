@@ -64,7 +64,7 @@
               @change="denseChange"
             />
             <label for="dense">Dense</label>
-            <tiny-tooltip :open-delay="500" content="dense 表示尽可能紧密填满，尽量不出现空格">
+            <tiny-tooltip :open-delay="500" content="dense 表示尽可能紧密填满，尽量不出现空格" effect="light">
               <icon-help-solid></icon-help-solid>
             </tiny-tooltip>
           </div>
@@ -81,12 +81,12 @@
                 <span class="text">{{ data.text }}</span>
               </template>
               <template #operate="{ data }">
-                <tiny-tooltip class="item" effect="dark" :open-delay="500" content="复制" placement="top">
+                <tiny-tooltip class="item" effect="light" :open-delay="500" content="复制" placement="top">
                   <span class="item-icon">
                     <icon-copy @click="copyItem(item.list, data)"></icon-copy>
                   </span>
                 </tiny-tooltip>
-                <tiny-tooltip class="item" effect="dark" :open-delay="500" content="删除" placement="top">
+                <tiny-tooltip class="item" effect="light" :open-delay="500" content="删除" placement="top">
                   <span class="item-icon">
                     <icon-del @click="deleteItem(item.list, data)"></icon-del>
                   </span>
@@ -511,10 +511,10 @@ export default {
       align-self: center;
       height: 24px;
       padding: 0px 4px;
-      border: 1px solid var(--ti-lowcode-tabs-border-color);
+      border: 1px solid var(--te-styles-common-border-color);
       border-radius: 2px;
-      color: var(--ti-lowcode-grid-edit-color);
-      background: var(--ti-lowcode-grid-edit-bg);
+      color: var(--te-styles-common-text-color-primary);
+      background: var(--te-styles-common-bg-color);
       outline: 0px;
       cursor: pointer;
       user-select: none;
@@ -527,6 +527,7 @@ export default {
       }
     }
   }
+
   .grid-item-wrap {
     grid-column: 1 / -1;
     grid-row-start: 3;
@@ -544,6 +545,7 @@ export default {
       line-height: 24px;
       padding-left: 3px;
       width: 54px;
+      color: var(--te-styles-common-text-color-secondary);
     }
     .radio-wrap {
       display: grid;
@@ -551,12 +553,16 @@ export default {
     }
   }
   .is-setting {
-    color: var(--ti-lowcode-style-setting-label-color);
-    background-color: var(--ti-lowcode-style-setting-label-bg);
+    color: var(--te-styles-common-setting-text-color);
+    background-color: var(--te-styles-common-setting-bg-color);
   }
   :deep(.reference-wrapper) {
     width: 100%;
     display: inline-block;
   }
+}
+.grid-edit-spacing {
+  padding-top: 12px;
+  padding-bottom: 12px;
 }
 </style>

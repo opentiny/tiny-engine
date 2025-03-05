@@ -45,7 +45,7 @@ export default {
     }
   },
   setup(props) {
-    const { resState } = useResource()
+    const { appSchemaState } = useResource()
 
     const propertyList = computed(() => {
       const properties = JSON.parse(JSON.stringify(props.properties))
@@ -65,9 +65,9 @@ export default {
 
       if (props.values.title && props.values.title.i18nKey) {
         const i18nKey = props.values.title.i18nKey
-        title = resState.langs[i18nKey]
-          ? resState.langs[i18nKey][resState.currentLang]
-          : props.values.title[resState.currentLang]
+        title = appSchemaState.langs[i18nKey]
+          ? appSchemaState.langs[i18nKey][appSchemaState.currentLang]
+          : props.values.title[appSchemaState.currentLang]
       } else {
         title = props.values.title
       }

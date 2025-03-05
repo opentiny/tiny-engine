@@ -12,17 +12,17 @@
         <template #reference>
           <tiny-button class="bind-event-btn">
             <span>绑定事件</span>
-            <icon-chevron-down class="icon-chevron-down"></icon-chevron-down>
+            <icon-chevron-down class="icon-chevron-down bind-event-btn-icon"></icon-chevron-down>
           </tiny-button>
         </template>
         <ul class="bind-event-list">
           <li
-            v-for="(event, name) in state.componentEvents"
+            v-for="(event, name) in renderEventList"
             :key="name"
             :class="['bind-event-list-item', { 'bind-event-list-item-notallow': state.bindActions[name] }]"
             @click="openActionDialog({ eventName: name }, true)"
           >
-            <div>{{ name }}&nbsp; | &nbsp;{{ event?.label?.zh_CN || name }}</div>
+            <div>{{ name }}&nbsp; | &nbsp;{{ event?.label?.[locale] || name }}</div>
           </li>
         </ul>
       </tiny-popover>
@@ -39,7 +39,7 @@
         <div class="action-item bind-action-item">
           <div class="binding-name" @click="openActionDialog(action)">
             <div>
-              {{ action.eventName }}<span>{{ state.componentEvents[action.eventName].label.zh_CN }}</span>
+              {{ action.eventName }}<span>{{ renderEventList[action.eventName]?.label?.[locale] }}</span>
             </div>
             <div :class="{ linked: action.linked }">{{ action.linkedEventName }}</div>
             <span class="event-bind">{{ action.ref }}</span>
@@ -50,15 +50,11 @@
               name="plugin-icon-page-schema"
               tips="定位到代码"
               placement="top"
+              :hoverBgColor="false"
               @click="openCodePanel(action)"
             ></svg-button>
-            <svg-button
-              name="setting"
-              tips="设置"
-              placement="top"
-              @click="openActionDialog(action, false)"
-            ></svg-button>
-            <svg-button name="delete" tips="删除" placement="top" @click="delEvent(action)"></svg-button>
+            <svg-button name="setting" :hoverBgColor="false" @click="openActionDialog(action, false)"></svg-button>
+            <svg-button name="delete" :hoverBgColor="false" @click="delEvent(action)"></svg-button>
           </div>
         </div>
       </li>
@@ -73,7 +69,7 @@
   <bind-events-dialog :eventBinding="state.eventBinding"></bind-events-dialog>
   <add-events-dialog
     :visible="state.showBindEventDialog"
-    :componentEvents="state.componentEvents"
+    :componentEvents="renderEventList"
     @closeDialog="handleToggleAddEventDialog(false)"
     @addEvent="handleAddEvent"
   ></add-events-dialog>
@@ -92,6 +88,7 @@ import {
   getMetaApi,
   META_APP
 } from '@opentiny/tiny-engine-meta-register'
+import i18n from '@opentiny/tiny-engine-common/js/i18n'
 import { BlockLinkEvent, SvgButton } from '@opentiny/tiny-engine-common'
 import { iconChevronDown } from '@opentiny/vue-icon'
 import BindEventsDialog, { open as openDialog } from './BindEventsDialog.vue'
@@ -114,33 +111,32 @@ export default {
     const { getBlockEvents, getCurrentBlock, removeEventLink } = useBlock()
     const { getMaterial } = useMaterial()
     const { confirm } = useModal()
-
+    const locale = i18n.global.locale.value
     const { highlightMethod } = getMetaApi(META_APP.Page)
-
     const { commonEvents = {} } = getMergeMeta('engine.setting.event').options
 
     const state = reactive({
       eventName: '', // 事件名称
       eventBinding: null, // 事件绑定的处理方法对象
       componentEvent: {},
-      componentEvents: commonEvents,
+      customEvents: commonEvents,
       bindActions: {},
       showBindEventDialog: false
     })
 
     const isBlock = computed(() => Boolean(pageState.isBlock))
     const isEmpty = computed(() => Object.keys(state.bindActions).length === 0)
+    const renderEventList = computed(() => ({ ...state.componentEvent, ...state.customEvents }))
 
     watchEffect(() => {
       const componentName = pageState?.currentSchema?.componentName
       const componentSchema = getMaterial(componentName)
       state.componentEvent = componentSchema?.content?.schema?.events || componentSchema?.schema?.events || {}
-      state.componentEvents = { ...commonEvents, ...state.componentEvent }
       const props = pageState?.currentSchema?.props || {}
       const keys = Object.keys(props)
       state.bindActions = {}
       // 遍历组件事件元数据
-      Object.entries(state.componentEvents).forEach(([eventName, componentEvent]) => {
+      Object.entries(renderEventList.value).forEach(([eventName, componentEvent]) => {
         // 查找组件已添加的事件
         if (keys.indexOf(eventName) > -1) {
           const event = props[eventName]
@@ -228,7 +224,7 @@ export default {
     const handleAddEvent = (params) => {
       const { eventName, eventDescription } = params
 
-      Object.assign(state.componentEvents, {
+      Object.assign(state.customEvents, {
         [eventName]: {
           label: {
             zh_CN: eventDescription
@@ -256,7 +252,9 @@ export default {
       openCodePanel,
       openActionDialog,
       handleAddEvent,
-      handleToggleAddEventDialog
+      handleToggleAddEventDialog,
+      renderEventList,
+      locale
     }
   }
 }
@@ -284,25 +282,24 @@ export default {
       }
     }
     .event-bind {
-      color: var(--ti-lowcode-events-event-bind-color);
+      color: var(--te-events-event-bind-text-color);
     }
     .bind-action-item {
       display: flex;
       justify-content: space-between;
       padding: 8px 12px;
       cursor: pointer;
-      color: var(--ti-lowcode-events-bind-action-item-color);
-      border-bottom: 1px solid var(--ti-lowcode-events-bind-action-item-border-color);
+      color: var(--te-events-bind-action-item-text-color);
+      border-bottom: 1px solid var(--te-events-bind-action-item-border-color);
       &:first-child {
-        border-top: 1px solid var(--ti-lowcode-events-bind-action-item-border-color);
+        border-top: 1px solid var(--te-events-bind-action-item-border-color);
       }
       &:hover {
-        background: var(--ti-lowcode-events-bind-action-item-hover-bg-color);
+        background: var(--te-events-bind-action-item-bg-color-hover);
       }
 
       .linked {
-        background-color: var(--ti-lowcode-events-bind-action-item-linked-bg-color);
-        color: var(--ti-lowcode-events-bind-action-item-linked-color);
+        color: var(--te-events-bind-action-item-text-color-link);
       }
     }
   }
@@ -317,32 +314,23 @@ export default {
       }
     }
     .add-custom-event-button {
-      padding: 0 16px;
-      font-size: 12px;
       margin-right: 0;
-      .custom-event-button-text {
-        display: inline-block;
-        vertical-align: middle;
-      }
-      .custom-event-button-icon {
-        display: inline-block;
-        vertical-align: middle;
-        color: var(--ti-lowcode-events-custom-icon-color);
-        font-size: 13px;
-      }
     }
     .bind-event-btn {
       padding: 0 16px;
-      font-size: 12px;
       width: 100%;
+      .bind-event-btn-icon {
+        margin-right: 0;
+        margin-left: 4px;
+      }
     }
   }
   .empty-action {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: var(--ti-lowcode-events-empty-action-bg-color);
-    color: var(--ti-lowcode-events-empty-action-color);
+    background-color: var(--te-events-empty-action-bg-color);
+    color: var(--te-events-empty-action-text-color);
     padding: 24px 18px;
     margin-top: var(--te-common-vertical-item-spacing-normal);
     .empty-action-icon {
@@ -358,34 +346,23 @@ export default {
     .text {
       margin-top: 12px;
     }
-
-    .empty-bind-event-tip {
-      color: var(--ti-lowcode-events-empty-action-tips-strong-color);
-    }
   }
 }
 .bind-event-list {
-  padding: var(--te-common-vertical-item-spacing-normal) 0;
-  color: var(--ti-lowcode-events-bind-event-list-color);
+  color: var(--te-events-bind-event-list-text-color);
 }
 .bind-event-list-item-notallow {
   cursor: not-allowed;
   pointer-events: none;
-  color: var(--ti-lowcode-events-bind-event-list-item-disabled-color);
+  color: var(--te-events-bind-event-list-item-text-color-disabled);
 }
 .bind-event-list-item {
-  padding: 0 12px;
+  padding: 0 16px;
+  margin: 0 -16px;
   line-height: 24px;
   &:hover {
     cursor: pointer;
-    background: var(--lowcode-events-bind-event-list-item-hover-bg-color);
-  }
-}
-
-.add-custom-event-tip {
-  color: var(--ti-lowcode-events-add-custom-event-tips-color);
-  .event-tip-highlight {
-    color: var(--ti-lowcode-event-add-custom-event-tips-highlight-color);
+    background: var(--te-events-bind-event-list-item-bg-color-hover);
   }
 }
 </style>

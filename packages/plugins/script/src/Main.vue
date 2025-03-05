@@ -20,6 +20,7 @@
         :options="options"
         @change="change"
         @editorDidMount="editorDidMount"
+        @shortcutSave="saveMethods"
       ></monaco-editor>
     </div>
   </div>
@@ -58,6 +59,14 @@ export default {
       minimap: {
         enabled: false
       },
+      placeholder: `// ✅ 函数声明可以保存
+       function topLevelFunction(){ 
+      \u200B \u200B const message = 'hello tiny-engine.' 
+      \u200B \u200B console.log(message) 
+      } \n 
+      // ❌ 顶层/常规 变量声明 \n const someVariable = 42 
+      // ❌ 表达式 \n const result = someVariable + 10`,
+
       // 禁用滚动条边边一直显示的边框
       overviewRulerBorder: false,
       renderLineHighlightOnlyWhenFocus: true
@@ -101,8 +110,8 @@ export default {
 .plugin-page-js-container {
   width: 50vw;
   height: 100%;
-  background: var(--ti-lowcode-plugin-js-bg);
-  box-shadow: 6px 0px 3px 0px rgba(0, 0, 0, 0.05);
+  background: var(--te-plugin-js-panel-bg-color);
+  box-shadow: 6px 0px 3px 0px var(--te-plugin-js-panel-shadow-color);
   position: absolute;
   left: 0;
   top: 0;
@@ -113,60 +122,48 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--ti-lowcode-plugin-js-head-border-bottom-color);
-    padding: 10px 0;
+    border-bottom: 1px solid var(--te-plugin-js-common-border-color);
+    padding: 12px 0;
 
     .head-left {
-      padding-left: 15px;
+      padding-left: 12px;
       display: flex;
       align-items: center;
       .title {
-        color: var(--ti-lowcode-plugin-panel-title-color);
-        font-weight: var(--ti-lowcode-plugin-panel-title-font-weight);
-      }
-
-      .help-link {
-        display: inline-block;
-        margin-left: 20px;
-        cursor: pointer;
-        color: var(--ti-lowcode-plugin-js-help-link-color);
-        &:hover {
-          text-decoration: underline;
-        }
+        color: var(--te-plugin-js-panel-title-text-color);
+        font-weight: var(--te-base-font-weight-bold);
       }
     }
 
     .head-right {
-      margin-right: 20px;
+      margin-right: 12px;
       display: flex;
       align-items: center;
 
       .save-btn {
-        width: 40px;
-        padding: 0;
         min-width: 40px;
-        margin-right: 2px;
+        margin-right: 8px;
         height: 24px;
         line-height: 24px;
         .dots {
-          width: 10px;
-          height: 10px;
-          background: var(--ti-lowcode-warning-color-1);
+          width: 6px;
+          height: 6px;
+          background: var(--te-plugin-js-dot-color);
           border-radius: 50%;
           position: absolute;
-          top: 5px;
-          right: 40px;
+          top: 9px;
+          right: 34px;
         }
       }
     }
   }
 
   .code-edit-content {
-    padding: 12px 20px;
+    padding: 12px;
     height: calc(100% - 54px);
 
     & > div {
-      border: 1px solid var(--ti-lowcode-base-gray-101);
+      border: 1px solid var(--te-plugin-js-common-border-color);
       border-radius: 4px;
       height: 100%;
     }
@@ -177,5 +174,9 @@ export default {
   #help-icon {
     margin-left: 5px;
   }
+}
+
+:deep(.monaco-editor .editorPlaceholder) {
+  font-size: 12px !important;
 }
 </style>

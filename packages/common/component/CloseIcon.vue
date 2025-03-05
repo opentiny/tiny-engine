@@ -29,7 +29,7 @@ export default {
 .icon-wrap {
   width: 24px;
   height: 24px;
-  color: var(--ti-lowcode-component-svg-button-color);
+  color: var(--te-component-common-icon-color-primary);
   font-size: 16px;
   border-radius: 4px;
   cursor: pointer;
@@ -39,12 +39,12 @@ export default {
   transition: 0.3s;
 
   &:hover {
-    color: var(--ti-lowcode-component-svg-button-hover-color);
-    background-color: var(--ti-lowcode-component-svg-button-hover-bg-color);
+    color: var(--te-component-common-icon-color-primary);
+    background-color: var(--te-component-close-icon-bg-color-hover);
   }
   &.active {
-    color: var(--ti-lowcode-component-svg-button-active-color);
-    background-color: var(--ti-lowcode-component-svg-button-active-bg-color);
+    color: var(--te-component-common-icon-color-primary);
+    background-color: var(--te-component-close-icon-bg-color-active);
   }
 }
 </style>

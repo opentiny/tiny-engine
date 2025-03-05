@@ -2179,19 +2179,33 @@ export const BUILTIN_COMPONENTS_MAP = [
     componentName: 'CanvasRow',
     exportName: 'CanvasRow',
     package: '@opentiny/tiny-engine-builtin-component',
-    version: '^1.0.1',
+    version: '^2.0.0',
     destructuring: true
   },
   {
     componentName: 'CanvasCol',
     exportName: 'CanvasCol',
     package: '@opentiny/tiny-engine-builtin-component',
-    version: '^1.0.1',
+    version: '^2.0.0',
     destructuring: true
   },
   {
     componentName: 'CanvasRowColContainer',
     exportName: 'CanvasRowColContainer',
+    package: '@opentiny/tiny-engine-builtin-component',
+    version: '^2.0.0',
+    destructuring: true
+  },
+  {
+    componentName: 'CanvasFlexBox',
+    exportName: 'CanvasFlexBox',
+    package: '@opentiny/tiny-engine-builtin-component',
+    version: '^1.0.1',
+    destructuring: true
+  },
+  {
+    componentName: 'CanvasSection',
+    exportName: 'CanvasSection',
     package: '@opentiny/tiny-engine-builtin-component',
     version: '^1.0.1',
     destructuring: true

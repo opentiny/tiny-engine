@@ -32,7 +32,7 @@ export default {
 <style lang="less" scoped>
 .collection-field-item {
   .tiny-radio {
-    color: var(--ti-lowcode-datasource-dialog-font-color);
+    color: var(--te-datasource-dialog-font-text-color);
   }
 }
 </style>

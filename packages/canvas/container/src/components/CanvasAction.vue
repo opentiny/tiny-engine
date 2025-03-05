@@ -9,7 +9,7 @@
       width: selectState.width + 'px'
     }"
   >
-    <div v-if="!resize" ref="labelRef" class="corner-mark-left" :style="labelStyle">
+    <div v-if="showQuickAction" ref="labelRef" class="corner-mark-left" :style="labelStyle">
       <span>{{ selectState.componentName }}</span>
       <TinyPopover
         v-model="showPopover"
@@ -21,49 +21,49 @@
       >
         <shortCutPopover v-if="showPopover" @active="activeSetting('props')"></shortCutPopover>
         <template #reference>
-          <icon-setting class="icon-setting" @click.stop="showPopover = !showPopover"></icon-setting>
+          <icon-setting class="icon-setting svg-currentcolor" @click.stop="showPopover = !showPopover"></icon-setting>
         </template>
       </TinyPopover>
     </div>
     <!-- 绝对定位画布时调节元素大小 -->
     <template v-else>
       <div
-        class="drag-resize resize-top"
+        :class="[showAction && 'drag-resize', 'resize-top']"
         draggable="true"
         @mousedown.stop="onMousedown($event, 'center', 'start')"
       ></div>
       <div
-        class="drag-resize resize-bottom"
+        :class="[showAction && 'drag-resize', 'resize-bottom']"
         draggable="true"
         @mousedown.stop="onMousedown($event, 'center', 'end')"
       ></div>
       <div
-        class="drag-resize resize-left"
+        :class="[showAction && 'drag-resize', 'resize-left']"
         draggable="true"
         @mousedown.stop="onMousedown($event, 'start', 'center')"
       ></div>
       <div
-        class="drag-resize resize-right"
+        :class="[showAction && 'drag-resize', 'resize-right']"
         draggable="true"
         @mousedown.stop="onMousedown($event, 'end', 'center')"
       ></div>
       <div
-        class="drag-resize resize-top-left"
+        :class="[showAction && 'drag-resize', 'resize-left']"
         draggable="true"
         @mousedown.stop="onMousedown($event, 'start', 'start')"
       ></div>
       <div
-        class="drag-resize resize-top-right"
+        :class="[showAction && 'drag-resize', 'resize-top-right']"
         draggable="true"
         @mousedown.stop="onMousedown($event, 'end', 'start')"
       ></div>
       <div
-        class="drag-resize resize-bottom-left"
+        :class="[showAction && 'drag-resize', 'resize-bottom-left']"
         draggable="true"
         @mousedown.stop="onMousedown($event, 'start', 'end')"
       ></div>
       <div
-        class="drag-resize resize-bottom-right"
+        :class="[showAction && 'drag-resize', 'resize-bottom-right']"
         draggable="true"
         @mousedown.stop="onMousedown($event, 'end', 'end')"
       ></div>
@@ -71,25 +71,25 @@
     <div v-if="showAction" ref="optionRef" class="corner-mark-right" :style="fixStyle">
       <template v-if="!isModal">
         <div v-if="showToParent" title="选择父级">
-          <icon-chevron-left @click.stop="selectParent"></icon-chevron-left>
+          <icon-chevron-left class="svg-currentcolor" @click.stop="selectParent"></icon-chevron-left>
         </div>
         <div title="向上移动">
-          <icon-arrow-up @click.stop="moveUp"></icon-arrow-up>
+          <icon-arrow-up class="svg-currentcolor" @click.stop="moveUp"></icon-arrow-up>
         </div>
         <div title="向下移动">
-          <icon-arrow-down @click.stop="moveDown"></icon-arrow-down>
+          <icon-arrow-down class="svg-currentcolor" @click.stop="moveDown"></icon-arrow-down>
         </div>
         <div title="复制">
-          <icon-copy @click.stop="copy"></icon-copy>
+          <icon-copy class="svg-currentcolor" @click.stop="copy"></icon-copy>
         </div>
       </template>
       <template v-else>
         <div title="隐藏">
-          <icon-eyeclose @click.stop="hide"></icon-eyeclose>
+          <icon-eyeclose class="svg-currentcolor" @click.stop="hide"></icon-eyeclose>
         </div>
       </template>
       <div title="删除">
-        <icon-del @click.stop="remove"></icon-del>
+        <icon-del class="svg-currentcolor" @click.stop="remove"></icon-del>
       </div>
     </div>
   </div>
@@ -98,6 +98,11 @@
       {{ hoverState.componentName }}
     </div>
     <div v-show="hoverState.configure?.isContainer" class="corner-mark-bottom-right">拖放元素到容器内</div>
+  </div>
+  <div v-show="inactiveHoverState.height && inactiveHoverState.width" class="canvas-rect inactive-hover">
+    <div class="corner-mark-left">
+      {{ inactiveHoverState.componentName }}
+    </div>
   </div>
   <div v-show="lineState.height && lineState.width" class="canvas-rect line">
     <div :class="['hover-line', lineState.position, { forbidden: lineState.forbidden }]">
@@ -124,11 +129,10 @@ import {
   updateRect,
   copyNode,
   getRenderer,
-  getSchema,
   dragStart,
   getCurrentElement
 } from '../container'
-import { useLayout, useMaterial } from '@opentiny/tiny-engine-meta-register'
+import { useLayout, useMaterial, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { Popover } from '@opentiny/vue'
 import shortCutPopover from './shortCutPopover.vue'
 
@@ -165,6 +169,10 @@ export default {
       type: Object,
       default: () => ({})
     },
+    inactiveHoverState: {
+      type: Object,
+      default: () => ({})
+    },
     selectState: {
       type: Object,
       default: () => ({})
@@ -172,6 +180,10 @@ export default {
     lineState: {
       type: Object,
       default: () => ({})
+    },
+    multiStateLength: {
+      type: Number,
+      default: () => 0
     },
     resize: {
       type: Boolean,
@@ -228,15 +240,23 @@ export default {
       updateRect()
     }
 
+    const isSingleNode = computed(() => {
+      return props.multiStateLength < 2
+    })
+
     const showAction = computed(() => {
       const { schema, parent } = getCurrent()
       if (schema?.props?.['data-id'] === 'root-container') {
         return false
       }
-      return !props.resize && parent && parent?.type !== 'JSSlot'
+      return !props.resize && parent && parent?.type !== 'JSSlot' && isSingleNode.value
     })
 
-    const showToParent = computed(() => getCurrent().parent !== getSchema())
+    const showQuickAction = computed(() => {
+      return !props.resize && isSingleNode.value
+    })
+
+    const showToParent = computed(() => getCurrent().parent !== useCanvas().getSchema())
 
     const isModal = computed(() => {
       const config = useMaterial().getMaterial(props.selectState.componentName)
@@ -254,7 +274,6 @@ export default {
 
     const findParentHasClass = (target) => {
       let parent = target.parentNode
-      let flag = false
 
       if (parent.className === undefined) {
         return false
@@ -262,13 +281,13 @@ export default {
 
       let name = JSON.stringify(parent.className)
 
-      if (name && name.indexOf('short-cut-set') === -1 && name.indexOf('tiny-dialog-box') === -1) {
-        flag = findParentHasClass(parent)
-      } else {
-        flag = true
+      const preventClassNameList = ['short-cut-set', 'tiny-dialog-box', 'icon-popover', 'i18n-input-popover']
+
+      if (preventClassNameList.some((item) => name?.includes(item))) {
+        return true
       }
 
-      return flag
+      return findParentHasClass(parent)
     }
 
     const onMousedown = (event, horizontal, vertical) => {
@@ -398,6 +417,10 @@ export default {
         verticalValue: -LABEL_HEIGHT
       })
 
+      if (!doc) {
+        return {}
+      }
+
       // 是否将操作栏放置到底部，判断当前选中组件底部与页面底部的距离。
       const isOptionAtBottom = canvasHeight - top - height >= OPTION_BAR_HEIGHT
       const optionAlign = new Align({
@@ -499,6 +522,7 @@ export default {
       optionRef,
       fixStyle,
       showAction,
+      showQuickAction,
       showPopover,
       showToParent,
       activeSetting,
@@ -516,7 +540,7 @@ export default {
   position: absolute;
   box-sizing: border-box;
   pointer-events: none;
-  border: 1px solid var(--ti-lowcode-canvas-rect-border-color);
+  border: 1px solid var(--te-canvas-container-border-color-checked);
   z-index: 2;
   &.absolute {
     pointer-events: all;
@@ -535,6 +559,22 @@ export default {
       font-size: 12px;
     }
   }
+  &.inactive-hover {
+    border-style: dashed;
+    top: v-bind("inactiveHoverState.top + 'px'");
+    left: v-bind("inactiveHoverState.left + 'px'");
+    height: v-bind("inactiveHoverState.height + 'px'");
+    width: v-bind("inactiveHoverState.width + 'px'");
+    border-color: var(--te-canvas-container-border-color-hover);
+
+    .corner-mark-left {
+      height: 14px;
+      top: -14px;
+      padding-left: 0;
+      font-size: 12px;
+      color: var(--te-canvas-container-text-color-weaken);
+    }
+  }
   &.line {
     border-color: transparent;
     top: v-bind("lineState.top + 'px'");
@@ -546,41 +586,41 @@ export default {
     &.top {
       width: 100%;
       height: 5px;
-      background: var(--ti-lowcode-icon-bind-color);
+      background: var(--te-canvas-container-text-color-checked);
       position: absolute;
       top: -3px;
     }
     &.left {
       width: 5px;
       height: 100%;
-      background: var(--ti-lowcode-icon-bind-color);
+      background: var(--te-canvas-container-text-color-checked);
       position: absolute;
       left: -3px;
     }
     &.bottom {
       width: 100%;
       height: 5px;
-      background: var(--ti-lowcode-icon-bind-color);
+      background: var(--te-canvas-container-text-color-checked);
       position: absolute;
       bottom: -3px;
     }
     &.right {
       width: 5px;
       height: 100%;
-      background: var(--ti-lowcode-icon-bind-color);
+      background: var(--te-canvas-container-text-color-checked);
       position: absolute;
       right: -3px;
     }
     &.in {
       width: 100%;
       height: 100%;
-      background: var(--ti-lowcode-canvas-hover-line-in-bg-color);
+      background: var(--te-canvas-container-hover-line-in-bg-color);
     }
     &.forbidden:not(.in) {
-      background: var(--ti-lowcode-canvas-hover-line-forbid-bg-color);
+      background: var(--te-canvas-container-hover-line-forbid-bg-color);
     }
     &.forbidden.in {
-      background: var(--ti-lowcode-canvas-hover-line-in-forbid-bg-color);
+      background: var(--te-canvas-container-hover-line-in-forbid-bg-color);
     }
   }
 
@@ -592,8 +632,8 @@ export default {
     & > div {
       pointer-events: all;
       width: 40px;
-      border: 1px solid var(--ti-lowcode-canvas-choose-slot-border-color);
-      color: var(--ti-lowcode-canvas-choose-slot-color);
+      border: 1px solid var(--te-canvas-container-border-color-checked);
+      color: var(--te-canvas-container-choose-slot-text-color);
       overflow: hidden;
       font-size: 10px;
       margin: 2px;
@@ -612,7 +652,7 @@ export default {
     position: absolute;
     top: -24px;
     height: 24px;
-    color: var(--ti-lowcode-canvas-corner-mark-left-color);
+    color: var(--te-canvas-container-corner-mark-left-text-color);
     padding: 0 8px;
 
     .icon-setting {
@@ -625,10 +665,9 @@ export default {
     position: absolute;
     font-size: 12px;
     right: -1px;
-    color: var(--ti-lowcode-canvas-corner-mark-bottom-right-color);
+    color: var(--te-canvas-container-text-color-white);
     bottom: -20px;
-    background: var(--ti-lowcode-canvas-corner-mark-bottom-right-bg-color);
-    border: 1px solid var(--ti-lowcode-canvas-corner-mark-bottom-right-border-color);
+    background: var(--te-canvas-container-bg-color-checked);
     padding: 0 2px;
     overflow: hidden;
     white-space: nowrap;
@@ -641,8 +680,8 @@ export default {
     position: absolute;
     height: 24px;
     padding: 0 4px;
-    color: var(--ti-lowcode-canvas-corner-mark-right-color);
-    background: var(--ti-lowcode-canvas-corner-mark-right-bg-color);
+    color: var(--te-canvas-container-text-color-white);
+    background: var(--te-canvas-container-bg-color-checked);
     pointer-events: all;
     cursor: pointer;
 
@@ -663,29 +702,19 @@ export default {
     .corner-mark-left {
       white-space: nowrap;
       pointer-events: all;
-      color: var(--ti-lowcode-canvas-select-corner-mark-left-color);
-      background: var(--ti-lowcode-canvas-select-corner-mark-left-bg-color);
+      color: var(--te-canvas-container-text-color-white);
+      background: var(--te-canvas-container-bg-color-checked);
       svg {
         cursor: pointer;
       }
     }
   }
 }
-.short-cut-set.tiny-popper.tiny-popover {
-  background: var(--ti-lowcode-toolbar-bg);
-  padding: 10px;
-  .body label,
-  .header {
-    color: var(--ti-lowcode-dialog-font-color);
-    font-size: 12px;
-  }
+.short-cut-set.short-cut-set.tiny-popper.tiny-popover {
   .tiny-popover__title {
-    color: var(--ti-lowcode-dialog-font-color);
+    color: var(--te-canvas-container-text-color-primary);
+    font-size: 14px;
   }
-}
-
-.short-cut-set.tiny-popper.tiny-popover[x-placement^='bottom'] .popper__arrow::after {
-  border-bottom-color: var(--ti-lowcode-toolbar-bg);
 }
 
 .drag-resize {
