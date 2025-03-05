@@ -154,7 +154,7 @@ npm run dev
 
 ## TinyEngine
 
-修改tiny-engine项目 `packages/design-core` 目录下 `vite.config.js` 中**origin**的值为自己本地webService项目的地址端口（webService端口默认为7011）
+修改tiny-engine项目(v1.x分支代码) `packages/design-core` 目录下 `vite.config.js` 中**origin**的值为自己本地webService项目的地址端口（webService端口默认为7011）
 
 ![TinyEngine](./imgs/backend_deploy_5.png)
 

@@ -38,10 +38,12 @@
 - 开始
   - [简介](./development-getting-started/dev-intro.md)
   - [快速上手](./development-getting-started/dev-quick-start.md)
+  - [前后端启动联调(Java服务端)](./development-getting-started/debugging-of-java-backend.md)
 - 解决方案
-  - [服务端部署方案](./solutions/server-deployment-solution.md)
-  - [区块发布方案](./solutions/block-release-solution.md)
-  - [区块局域网发布方案](./solutions/block-lan-release-solution.md)
+  - [Java服务端部署](./solutions/server-deployment-solution-java.md)
+  - [Node.js服务端部署](./solutions/server-deployment-solution.md)
+  - [区块发布方案(Node.js服务端)](./solutions/block-release-solution.md)
+  - [区块局域网发布方案(Node.js服务端)](./solutions/block-lan-release-solution.md)
   - [设计器中引入第三方组件库](./solutions/third-party-library-in-designer.md)
   - [物料同步方案](./solutions/material-sync-solution.md)
 - 扩展能力介绍
@@ -59,13 +61,15 @@
   - [定制插件UI](./extension-capabilities-tutorial/customize-plugin-ui.md)
   - [定制元服务逻辑](./extension-capabilities-tutorial/customize-meta-service-logic.md)
   - [开发设置器组件](./extension-capabilities-tutorial/develop-configurator-components.md)
+  - [AI插件使用前配置](./extension-capabilities-tutorial/ai-plugin-configuration.md)
 - API
   - [API总览](./api/api-overview.md)
-  - [主包API](./api/main-package-api.md)
-  - [画布API](./api/canvas-api.md)
-  - [全局布局API](./api/global-layout-api.md)
-  - [物料API](./api/material-api.md)
-  - [设置面板API](./api/settings-panel-api.md)
+  - 前端API
+    - [主包API](./api/frontend-api/main-package-api.md)
+    - [画布API](./api/frontend-api/canvas-api.md)
+    - [全局布局API](./api/frontend-api/global-layout-api.md)
+    - [物料API](./api/frontend-api/material-api.md)
+    - [设置面板API](./api/frontend-api/settings-panel-api.md)
   - 后端API
     - [AI功能接口](./api/backend-api/ai-function-api.md)
     - [应用管理](./api/backend-api/app-management.md)

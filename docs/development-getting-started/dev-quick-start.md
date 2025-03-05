@@ -28,7 +28,7 @@
 执行engine-cli create，选择platform以创建一个新的设计器
 
 ```sh
-npx @opentiny/tiny-engine-cli@2.0.0 create
+npx @opentiny/tiny-engine-cli@latest create
 ```
 
 执行后首次会提示是否安装`@opentiny/tiny-engine-cli`，输入“Y”并回车
@@ -64,7 +64,7 @@ pnpm dev
 另起一个终端，在当前目录下，输入下面命令，选择创建plugin类型，创建一个新的插件
 
 ```shell
-npx @opentiny/tiny-engine-cli@2.0.0 create
+npx @opentiny/tiny-engine-cli@latest create
 ```
 
 ![cli-create-plugin](./imgs/cli-create-plugin.png)

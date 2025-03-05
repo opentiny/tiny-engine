@@ -65,16 +65,18 @@
           "name": "development-getting-started",
           "articles": [
             { "title": "简介", "name": "dev-intro.md" },
-            { "title": "快速上手", "name": "dev-quick-start.md" }
+            { "title": "快速上手", "name": "dev-quick-start.md" },
+            { "title": "前后端启动联调(Java服务端)", "name": "debugging-of-java-backend.md" }
           ]
         },
         {
           "title": "解决方案",
           "name": "solutions",
           "articles": [
-            { "title": "服务端部署方案", "name": "server-deployment-solution.md" },
-            { "title": "区块发布方案", "name": "block-release-solution.md" },
-            { "title": "区块局域网发布方案", "name": "block-lan-release-solution.md" },
+            { "title": "Java服务端部署", "name": "server-deployment-solution-java.md" },
+            { "title": "Node.js服务端部署", "name": "server-deployment-solution.md" },
+            { "title": "区块发布方案(Node.js服务端)", "name": "block-release-solution.md" },
+            { "title": "区块局域网发布方案(Node.js服务端)", "name": "block-lan-release-solution.md" },
             { "title": "设计器中引入第三方组件库", "name": "third-party-library-in-designer.md" },
             { "title": "物料同步方案", "name": "material-sync-solution.md" }
           ]
@@ -106,7 +108,8 @@
             },
             { "title": "定制插件UI", "name": "customize-plugin-ui.md" },
             { "title": "定制元服务逻辑", "name": "customize-meta-service-logic.md" },
-            { "title": "开发设置器组件", "name": "develop-configurator-components.md" }
+            { "title": "开发设置器组件", "name": "develop-configurator-components.md" },
+            { "title": "AI插件使用前配置", "name": "ai-plugin-configuration.md" }
           ]
         },
         {
@@ -114,11 +117,17 @@
           "name": "api",
           "articles": [
             { "title": "API总览", "name": "api-overview.md" },
-            { "title": "主包API", "name": "main-package-api.md" },
-            { "title": "画布API", "name": "canvas-api.md" },
-            { "title": "全局布局API", "name": "global-layout-api.md" },
-            { "title": "物料API", "name": "material-api.md" },
-            { "title": "设置面板API", "name": "settings-panel-api.md" },
+            {
+              "title": "前端API",
+              "name": "frontend-api",
+              "articles": [
+                { "title": "主包API", "name": "main-package-api.md" },
+                { "title": "画布API", "name": "canvas-api.md" },
+                { "title": "全局布局API", "name": "global-layout-api.md" },
+                { "title": "物料API", "name": "material-api.md" },
+                { "title": "设置面板API", "name": "settings-panel-api.md" }
+              ]
+            },
             {
               "title": "后端API",
               "name": "backend-api",

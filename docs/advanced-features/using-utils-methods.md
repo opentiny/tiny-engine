@@ -58,7 +58,7 @@ export { testUtils }
 
 #### 什么是 cdn 链接？
 
-cdn 链接就是 npm 包在浏览器直接可用的链接，如：[https://unpkg.inhuawei.com/](https://unpkg.inhuawei.com/)，提供了大部分的 cdn 链接，我们可以从上面获取。
+cdn 链接就是 npm 包在浏览器直接可用的链接，如：[https://unpkg.com/](https://unpkg.com/)，提供了大部分的 cdn 链接，我们可以从上面获取。
 在页面预览中，我们并不会对所有代码和依赖进行转译，npm 依赖需要以 cdn 方式进行引入，所以，如果添加了 npm 工具类，在预览失败时，请确保已添加 cdn 链接
 
 **预置的 cdn 链接**
