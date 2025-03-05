@@ -36,7 +36,7 @@ function generateMarkdown(catalog) {
 
 // 写入到 markdown 文件
 function writeToFile(markdown) {
-  const outputPath = path.join(__dirname, 'index.md')
+  const outputPath = path.join(__dirname, 'README.md')
   fs.writeFileSync(outputPath, markdown, 'utf8')
 }
 
