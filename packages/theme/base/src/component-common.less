@@ -35,7 +35,7 @@
 
 .tiny-select-dropdown.tiny-select-dropdown,
 .tiny-select-dropdown.tiny-select-dropdown.is-multiple {
-  background-color: var(--te-common-bg-default);
+  background-color: var(--te-common-bg-popover);
   // 下拉新增列
   .tiny-select__top-create {
     margin: 8px 12px 4px 12px;
@@ -65,7 +65,7 @@
     // 选中状态
     &.selected {
       color: var(--te-common-text-emphasize);
-      background-color: var(--te-common-bg-default);
+      background-color: var(--te-common-bg-popover);
       &:hover {
         background-color: var(--te-common-bg-container);
       }
@@ -120,7 +120,7 @@
 .tiny-collapse.tiny-collapse {
   border-top: 0;
   border-bottom: 0;
-  .tiny-collapse-item__header {
+  .tiny-collapse-item__header.tiny-collapse-item__header {
     flex-direction: row-reverse;
     font-size: var(--te-base-font-size-base);
     color: var(--te-common-text-primary);
@@ -137,9 +137,13 @@
     }
     .tiny-collapse-item__arrow {
       display: flex;
+      color: var(--te-common-icon-secondary);
       svg {
         font-size: var(--te-base-font-size-1);
-        color: var(--te-common-text-weaken);
+        fill: currentcolor;
+      }
+      &:hover {
+        color: var(--te-common-icon-primary);
       }
     }
   }
@@ -352,7 +356,7 @@
 }
 
 // 8、button按钮
-.tiny-button.tiny-button.tiny-button {
+.tiny-button.tiny-button.tiny-button.tiny-button {
   font-size: var(--te-base-font-size-base);
   border-radius: var(--te-base-border-radius-1);
   padding: 0 12px;
@@ -493,7 +497,7 @@
       font-size: var(--te-base-font-size-base);
       color: var(--te-common-text-secondary);
       padding: 0;
-      .tiny-modal__text {
+      .tiny-modal__text.tiny-modal__text {
         font-size: var(--te-base-font-size-base);
         color: var(--te-common-text-secondary);
       }
