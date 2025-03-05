@@ -1,5 +1,5 @@
 <template>
-  <plugin-panel class="outlinebox" title="大纲树" @close="$emit('close')">
+  <plugin-panel class="outlinebox plugin-tree" title="大纲树" @close="$emit('close')">
     <template #header>
       <svg-button
         class="item icon-sidebar"

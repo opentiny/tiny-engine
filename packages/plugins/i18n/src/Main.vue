@@ -1,11 +1,5 @@
 <template>
-  <plugin-panel
-    title="国际化资源"
-    :docsUrl="docsUrl"
-    :isShowDocsIcon="true"
-    :isCloseLeft="false"
-    class="plugin-panel-i18n"
-  >
+  <plugin-panel title="国际化资源" :docsUrl="docsUrl" :isShowDocsIcon="true" :isCloseLeft="false" class="plugin-i18n">
     <template #content>
       <div class="language-search-box">
         <tiny-select v-model="currentSearchType" :options="i18nSearchTypes"></tiny-select>
@@ -433,7 +427,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.plugin-panel-i18n {
+.plugin-i18n {
   box-shadow: 6px 0px 3px 0px var(--te-i18n-panel-shadow-color);
 }
 .stripe-tiny-grid {

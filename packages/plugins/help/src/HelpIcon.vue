@@ -1,5 +1,5 @@
 <template>
-  <div id="help-plugin">
+  <div id="help-plugin" class="plugin-help">
     <tiny-popover
       :offset="-100"
       placement="right"

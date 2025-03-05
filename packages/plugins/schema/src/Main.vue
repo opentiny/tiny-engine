@@ -1,5 +1,5 @@
 <template>
-  <div id="source-code">
+  <div id="source-code" class="plugin-schema">
     <div class="source-code-header">
       <div class="title">页面Schema</div>
       <div class="header-title">

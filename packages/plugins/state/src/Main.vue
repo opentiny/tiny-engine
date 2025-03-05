@@ -1,5 +1,5 @@
 <template>
-  <div id="data-source">
+  <div id="data-source" class="plugin-state">
     <div class="data-source-left-panel">
       <div class="title">
         <span>状态管理</span>

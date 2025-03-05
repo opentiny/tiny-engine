@@ -1,5 +1,5 @@
 <template>
-  <div class="plugin-page-js-container">
+  <div class="plugin-page-js-container plugin-script">
     <div class="code-edit-head">
       <div class="head-left">
         <span class="title">页面 JS</span>

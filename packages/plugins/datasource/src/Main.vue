@@ -1,44 +1,46 @@
 <template>
-  <plugin-panel title="数据源">
-    <template #header>
-      <link-button :href="docsUrl"></link-button>
-      <svg-button
-        class="set-data-source"
-        tips="全局设置"
-        name="global-setting"
-        @click="openGlobalDataHanderPanel"
-      ></svg-button>
-      <svg-button
-        class="refresh-data-source"
-        tips="刷新数据源"
-        name="flow-refresh"
-        @click="refreshDataSource"
-      ></svg-button>
-    </template>
-    <template #content>
-      <tiny-button class="add-data-source" @click="openDataSourceFormPanel()">
-        <svg-icon name="add"></svg-icon>添加数据源
-      </tiny-button>
-      <data-source-list @edit="openDataSourceFormPanel"></data-source-list>
-    </template>
-  </plugin-panel>
-  <data-source-remote-panel
-    v-if="isOpenRemotePanel"
-    v-model="state.currentDataSource.data"
-    :editable="state.editable"
-    @confirm="getRomoteReponseData"
-  ></data-source-remote-panel>
-  <data-source-form
-    v-model="state.currentDataSource"
-    :editable="state.editable"
-    @save="refreshDataSource"
-  ></data-source-form>
-  <data-source-remote-mapping
-    v-if="isOpenSourceRemoteMapping"
-    v-model="state.remoteFields"
-    :data="state.remoteResponData"
-  ></data-source-remote-mapping>
-  <data-source-global-data-handler></data-source-global-data-handler>
+  <div class="plugin-datasource">
+    <plugin-panel title="数据源">
+      <template #header>
+        <link-button :href="docsUrl"></link-button>
+        <svg-button
+          class="set-data-source"
+          tips="全局设置"
+          name="global-setting"
+          @click="openGlobalDataHanderPanel"
+        ></svg-button>
+        <svg-button
+          class="refresh-data-source"
+          tips="刷新数据源"
+          name="flow-refresh"
+          @click="refreshDataSource"
+        ></svg-button>
+      </template>
+      <template #content>
+        <tiny-button class="add-data-source" @click="openDataSourceFormPanel()">
+          <svg-icon name="add"></svg-icon>添加数据源
+        </tiny-button>
+        <data-source-list @edit="openDataSourceFormPanel"></data-source-list>
+      </template>
+    </plugin-panel>
+    <data-source-remote-panel
+      v-if="isOpenRemotePanel"
+      v-model="state.currentDataSource.data"
+      :editable="state.editable"
+      @confirm="getRomoteReponseData"
+    ></data-source-remote-panel>
+    <data-source-form
+      v-model="state.currentDataSource"
+      :editable="state.editable"
+      @save="refreshDataSource"
+    ></data-source-form>
+    <data-source-remote-mapping
+      v-if="isOpenSourceRemoteMapping"
+      v-model="state.remoteFields"
+      :data="state.remoteResponData"
+    ></data-source-remote-mapping>
+    <data-source-global-data-handler></data-source-global-data-handler>
+  </div>
 </template>
 
 <script>
@@ -146,6 +148,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.plugin-datasource {
+  height: 100%;
+}
 .add-data-source {
   margin: 0 12px 12px 12px;
 }
