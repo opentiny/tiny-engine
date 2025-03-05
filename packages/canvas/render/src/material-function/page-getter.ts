@@ -1,4 +1,5 @@
 import { defineComponent, h, onUnmounted, ref, watch } from 'vue'
+import { constants } from '@opentiny/tiny-engine-utils'
 import { getController } from '../canvas-function'
 import RenderMain from '../RenderMain'
 import { handleScopedCss } from './handle-scoped-css'
@@ -32,6 +33,7 @@ export const wrapPageComponent = (pageId: string) => {
   const asyncData = ref(null)
   const updateSchema = () => {
     fetchPageSchema(pageId).then((data) => {
+      localStorage.setItem(constants.PAGE_ORIGIN_SCHEMA, JSON.stringify(data))
       asyncData.value = data
     })
   }

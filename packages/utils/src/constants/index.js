@@ -101,6 +101,7 @@ export const STORAGE_KEY_FIXED_PANELS = `tiny-engine-fixed-panels-${CHANNEL_UID}
 export const CANVAS_ROUTER_VIEW_SETTING_VIEW_MODE_KEY = `tiny-engine-canvas-router-view-setting-view-mode`
 
 export const AUTO_SAVED = 'tiny-engine-auto-saved'
+export const PAGE_ORIGIN_SCHEMA = 'tiny-engine-page-origin-schema'
 
 export const TYPES = {
   ErrorType: 'error',
