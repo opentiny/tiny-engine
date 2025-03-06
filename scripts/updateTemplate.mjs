@@ -63,9 +63,7 @@ async function updatePkgJson() {
   const defaultScripts = {
     dev: "concurrently 'pnpm:serve:mock' 'pnpm:serve:frontend'",
     'serve:frontend': 'cross-env vite',
-    'serve:mock': 'node node_modules/@opentiny/tiny-engine-mock/dist/app.js',
-    'build:alpha': 'cross-env NODE_OPTIONS=--max-old-space-size=8192 vite build --mode alpha',
-    build: 'cross-env NODE_OPTIONS=--max-old-space-size=8192 vite build --mode prod'
+    'serve:mock': 'node node_modules/@opentiny/tiny-engine-mock/dist/app.js'
   }
 
   Object.entries(defaultScripts).forEach(([name, value]) => {
