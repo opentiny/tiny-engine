@@ -12,11 +12,6 @@
   "files": [
     "dist"
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/opentiny/tiny-engine",
-    "directory": "packages/theme/custom"
-  },
   "bugs": {
     "url": "https://github.com/opentiny/tiny-engine/issues"
   },
