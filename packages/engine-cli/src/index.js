@@ -15,12 +15,23 @@ import { createPlatform, createPlugin, createTheme } from './commands/create.js'
 
 const program = new Command()
 
-const setName = async (type) => {
+const messageMap = {
+  theme: {
+    message: 'please enter the theme name. 请输入主题名称',
+    validateMessage: 'theme name can not be empty. 主题名称不允许为空。'
+  },
+  project: {
+    message: 'please enter the project name. 请输入项目名称',
+    validateMessage: 'project name can not be empty. 项目名称不允许为空。'
+  }
+}
+
+const getName = async (type) => {
   return await input({
-    message: `please enter the ${type ? 'theme name' : 'project name'}. 请输入${type ? '主题' : '项目'}名称`,
+    message: type ? messageMap.theme.message : messageMap.project.message,
     validate: (inputName) => {
       if (!inputName) {
-        return `project name can not be empty. ${type ? '主题' : '项目'}名称不允许为空。`
+        return type ? messageMap.theme.validateMessage : messageMap.project.validateMessage
       }
 
       return true
@@ -51,7 +62,7 @@ program
   .command('create-theme <name>')
   .description('create a new tiny-engine theme 创建一个新的 tiny-engine 主题')
   .action(async (name) => {
-    const themeName = await setName('theme')
+    const themeName = await getName('theme')
     createTheme(name, themeName)
   })
 
@@ -80,7 +91,7 @@ program
       ]
     })
 
-    const projectName = await setName()
+    const projectName = await getName()
 
     const typeMapper = {
       platform: createPlatform,
@@ -88,7 +99,7 @@ program
       theme: createTheme
     }
 
-    const themeName = type === 'theme' ? await setName(type) : ''
+    const themeName = type === 'theme' ? await getName(type) : ''
 
     typeMapper[type](projectName, themeName)
   })

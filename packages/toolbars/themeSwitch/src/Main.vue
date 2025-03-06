@@ -24,7 +24,7 @@
               <div class="toolbar-theme-switch-radio-title">主题</div>
               <tiny-radio-group
                 v-model="state.theme"
-                :options="THEME_DATA"
+                :options="radioThemeList"
                 :vertical="themeShowType ? false : true"
                 class="theme-radio-group"
                 @change="themeChange"
@@ -73,6 +73,9 @@ export default {
 
       return options
     })
+    const radioThemeList = computed(() => {
+      return THEME_DATA.map((item) => ({ ...item, label: item.type }))
+    })
     const baseContent = computed(() => (props.position === COLLAPSE ? '' : state.themeLabel))
     const baseIcon = computed(() => (props.position === COLLAPSE ? '' : state.themeIcon))
     const showpopover = ref(false)
@@ -107,6 +110,7 @@ export default {
       THEME_DATA,
       state,
       optionsData,
+      radioThemeList,
       baseContent,
       baseIcon,
       toChangeTheme,
