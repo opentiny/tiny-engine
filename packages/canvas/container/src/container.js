@@ -391,7 +391,10 @@ export const scrollToNode = (element) => {
 
   return nextTick()
 }
-const setSelectRect = (element) => {
+
+const { clearMultiSelection, initMultiSelect, multiSelectedStates, multiStateLength } = useMultiSelect()
+
+const setSelectRect = (element, multiNodeId) => {
   element = element || getDocument().body
 
   const { left, height, top, width } = getRect(element)
@@ -405,6 +408,14 @@ const setSelectRect = (element) => {
     componentName,
     doc: getDocument()
   })
+
+  if (multiNodeId) {
+    multiSelectedStates.value.map((state) => {
+      if (state.id === multiNodeId) {
+        return Object.assign(state, selectState)
+      }
+    })
+  }
 }
 
 export const updateRect = (id) => {
@@ -419,6 +430,18 @@ export const updateRect = (id) => {
       return
     }
     clearSelect()
+  }
+}
+
+export const syncNodeScroll = (id) => {
+  if (multiStateLength.value > 1) {
+    multiSelectedStates.value.forEach((state) => {
+      const multiNodeId = state.id
+      const element = querySelectById(multiNodeId)
+      setTimeout(() => setSelectRect(element, multiNodeId))
+    })
+  } else {
+    updateRect(id)
   }
 }
 
@@ -710,8 +733,6 @@ export const dragMove = (event, isHover) => {
   }
 }
 
-const { clearMultiSelection, initMultiSelect } = useMultiSelect()
-
 // type == clickTree, 为点击大纲; type == loop-id=xxx ,为点击循环数据
 export const selectNode = async (id, type) => {
   if (type && type.indexOf('loop-id') > -1) {
@@ -882,6 +903,7 @@ export const canvasDispatch = (name, data, doc = getDocument()) => {
 export const canvasApi = {
   dragStart,
   updateRect,
+  syncNodeScroll,
   dragMove,
   setLocales,
   getRenderer,

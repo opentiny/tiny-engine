@@ -67,7 +67,7 @@ import {
   selectState,
   lineState,
   removeNodeById,
-  updateRect,
+  syncNodeScroll,
   getElement,
   dragStart,
   selectNode,
@@ -268,7 +268,7 @@ export default {
 
         registerHotkeyEvent(doc)
 
-        win.addEventListener('scroll', updateRect, true)
+        win.addEventListener('scroll', syncNodeScroll, true)
       }
     }
     // 设置弹窗

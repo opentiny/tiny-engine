@@ -33,23 +33,23 @@ export const useMultiSelect = () => {
   }
 
   // 设置多选节点
-  const setMultiSelection = (node, append = false) => {
-    if (!node || typeof node !== 'object') {
-      multiSelectedStates.value = []
-      return
-    }
-
-    if (append) {
-      const nodeIds = new Set(multiSelectedStates.value.map((state) => state.id))
-      if (!nodeIds.has(node.id)) {
-        multiSelectedStates.value.push(node)
-      }
+  const setMultiSelection = (nodes) => {
+    if (Array.isArray(nodes)) {
+      multiSelectedStates.value = nodes
+    } else if (nodes && typeof nodes === 'object') {
+      multiSelectedStates.value = [nodes]
     } else {
-      if (Array.isArray(node)) {
-        multiSelectedStates.value = node
-      } else {
-        multiSelectedStates.value = [node]
-      }
+      multiSelectedStates.value = []
+    }
+  }
+
+  // 添加节点到多选列表
+  const addMultiSelection = (node) => {
+    if (!node || typeof node !== 'object') return
+
+    const nodeIds = multiSelectedStates.value.map((state) => state.id)
+    if (!nodeIds.includes(node.id)) {
+      multiSelectedStates.value.push(node)
     }
   }
 
@@ -62,7 +62,7 @@ export const useMultiSelect = () => {
       const exList = multiSelectedStates.value.filter((state) => state.id !== nodeId)
       setMultiSelection(exList)
     } else {
-      setMultiSelection(selectState, true)
+      addMultiSelection(selectState)
     }
   }
 

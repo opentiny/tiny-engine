@@ -119,8 +119,6 @@ const handleCopyEvent = (event) => {
 
   const dataToCopy = JSON.stringify(selectedNodes)
   setClipboardSchema(event, dataToCopy)
-
-  clearMultiSelection()
 }
 
 const handlerClipboardEvent = (event) => {
