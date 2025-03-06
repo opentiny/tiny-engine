@@ -48,7 +48,7 @@ const formatScript = (string) => {
         .replace(/^!\(?|\)$/g, '')
     } else {
       // 其他类型，不需要特殊处理
-      newStr = prettier.format(string, options).replace(/\n$/, '')
+      newStr = prettier.format(string, options)
     }
   } catch (error) {
     newStr = prettier.format(newStr, options)
