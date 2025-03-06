@@ -1,5 +1,4 @@
 import { defineComponent, h, onUnmounted, ref, watch } from 'vue'
-import { constants } from '@opentiny/tiny-engine-utils'
 import { getController } from '../canvas-function'
 import RenderMain from '../RenderMain'
 import { handleScopedCss } from './handle-scoped-css'
