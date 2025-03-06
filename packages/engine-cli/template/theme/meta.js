@@ -2,6 +2,6 @@
 export default {
   id: 'engine.theme.custom',
   text: '自定义主题',
-  label: 'custom',
+  type: 'custom',
   icon: 'dark'
 }

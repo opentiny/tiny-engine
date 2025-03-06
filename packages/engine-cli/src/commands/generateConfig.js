@@ -34,7 +34,7 @@ export const generateThemeMeta = (themeName = 'custom') => {
     export default {
       id: 'engine.theme.${themeName}',
       text: '自定义主题',
-      label: '${themeName}',
+      type: '${themeName}',
       icon: 'dark'
     }
   `

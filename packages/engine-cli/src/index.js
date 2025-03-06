@@ -15,6 +15,19 @@ import { createPlatform, createPlugin, createTheme } from './commands/create.js'
 
 const program = new Command()
 
+const setName = async (type) => {
+  return await input({
+    message: `please enter the ${type ? 'theme name' : 'project name'}. 请输入${type ? '主题' : '项目'}名称`,
+    validate: (inputName) => {
+      if (!inputName) {
+        return `project name can not be empty. ${type ? '主题' : '项目'}名称不允许为空。`
+      }
+
+      return true
+    }
+  })
+}
+
 program
   .command('create-platform <name>')
   .description('create a new tiny-engine platform 创建一个新的tiny-engine低代码平台')
@@ -38,16 +51,7 @@ program
   .command('create-theme <name>')
   .description('create a new tiny-engine theme 创建一个新的 tiny-engine 主题')
   .action(async (name) => {
-    const themeName = await input({
-      message: 'please enter the project name. 请输入主题名称',
-      validate: (inputName) => {
-        if (!inputName) {
-          return 'project name can not be empty. 主题名称不允许为空。'
-        }
-
-        return true
-      }
-    })
+    const themeName = await setName('theme')
     createTheme(name, themeName)
   })
 
@@ -76,16 +80,7 @@ program
       ]
     })
 
-    const projectName = await input({
-      message: 'please enter the project name. 请输入项目名称',
-      validate: (inputName) => {
-        if (!inputName) {
-          return 'project name can not be empty. 项目名称不允许为空。'
-        }
-
-        return true
-      }
-    })
+    const projectName = await setName()
 
     const typeMapper = {
       platform: createPlatform,
@@ -93,19 +88,7 @@ program
       theme: createTheme
     }
 
-    let themeName = ''
-    if (type === 'theme') {
-      themeName = await input({
-        message: 'please enter the project name. 请输入主题名称',
-        validate: (inputName) => {
-          if (!inputName) {
-            return 'project name can not be empty. 主题名称不允许为空。'
-          }
-
-          return true
-        }
-      })
-    }
+    const themeName = type === 'theme' ? await setName(type) : ''
 
     typeMapper[type](projectName, themeName)
   })

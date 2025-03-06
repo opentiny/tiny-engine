@@ -70,10 +70,11 @@ export function createTheme(name, themeName) {
 
   const configContent = generateThemeMeta(themeName)
 
+  const themePath = path.resolve(destPath, 'src/common.less')
   fs.outputFileSync(path.resolve(destPath, 'meta.js'), configContent)
-  const content = fs.readFileSync(path.resolve(destPath, 'src/common.less'), 'utf-8')
+  const content = fs.readFileSync(themePath, 'utf-8')
   const outputContent = content.replace(/data-theme='custom'/g, `data-theme='${themeName}'`)
-  fs.writeFileSync(path.resolve(destPath, 'src/common.less'), outputContent, 'utf-8')
+  fs.writeFileSync(themePath, outputContent, 'utf-8')
 
   logger.log(
     chalk.green(`create finish, run the follow command to start project: \ncd ${name} && npm install && npm run dev`)

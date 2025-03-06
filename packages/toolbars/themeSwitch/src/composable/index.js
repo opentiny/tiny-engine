@@ -18,11 +18,11 @@ const getThemeData = () => THEME_DATA
 const getThemeState = () => themeState
 
 const getTheme = (theme) => {
-  return THEME_DATA.find((item) => theme === item.label) || DEFAULT_THEME
+  return THEME_DATA.find((item) => theme === item.type) || DEFAULT_THEME
 }
 
 const themeChange = (theme) => {
-  themeState.theme = getTheme(theme).label
+  themeState.theme = getTheme(theme).type
   themeState.themeLabel = getTheme(themeState.theme).text
   themeState.themeIcon = getTheme(themeState.theme).icon
   document.documentElement.setAttribute('data-theme', themeState.theme)
@@ -39,11 +39,11 @@ export default defineService({
   init: () => {
     const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
     const theme =
-      localStorage.getItem(`tiny-engine-theme-${appId}`) || getMergeMeta('engine.config').theme || DEFAULT_THEME.label
+      localStorage.getItem(`tiny-engine-theme-${appId}`) || getMergeMeta('engine.config').theme || DEFAULT_THEME.type
     THEME_DATA = getMergeRegistry('themes')
     DEFAULT_THEME = THEME_DATA[0]
     themeState.value = {
-      theme: DEFAULT_THEME.label,
+      theme: DEFAULT_THEME.type,
       themeIcon: DEFAULT_THEME.icon,
       themeLabel: DEFAULT_THEME.text
     }

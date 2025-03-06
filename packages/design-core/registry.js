@@ -71,14 +71,14 @@ export default {
     {
       id: 'engine.theme.light',
       text: '浅色主题',
-      label: 'light',
+      type: 'light',
       icon: 'light',
       oppositeTheme: 'dark'
     },
     {
       id: 'engine.theme.dark',
       text: '深色主题',
-      label: 'dark',
+      type: 'dark',
       icon: 'dark',
       oppositeTheme: 'light'
     }

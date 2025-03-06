@@ -10,9 +10,9 @@
       <div class="theme-list">
         <div
           v-for="item in THEME_DATA"
-          :key="item.label"
-          :class="['theme-item', { active: state.theme === item.label }]"
-          @click="themeItemChange(item.label)"
+          :key="item.type"
+          :class="['theme-item', { active: state.theme === item.type }]"
+          @click="themeItemChange(item.type)"
         >
           {{ item.text }}
         </div>
@@ -41,14 +41,14 @@
 <script>
 import { computed, ref } from 'vue'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
-import { RadioGroup, Popover } from '@opentiny/vue'
+import { TinyRadioGroup, TinyPopover } from '@opentiny/vue'
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
     ToolbarBase,
-    TinyRadioGroup: RadioGroup,
-    TinyPopover: Popover
+    TinyRadioGroup,
+    TinyPopover
   },
   props: {
     options: {
@@ -78,12 +78,8 @@ export default {
     const showpopover = ref(false)
 
     const themeShowType = computed(() => {
-      let filterList = THEME_DATA.filter((item) => item.label === 'light' || item.label === 'dark') || []
-      if (THEME_DATA.length === filterList.length) {
-        return true
-      } else {
-        return false
-      }
+      let filterList = THEME_DATA.filter((item) => ['light', 'dark'].includes(item.type)) || []
+      return THEME_DATA.length === filterList.length
     })
 
     const toChangeTheme = () => {
