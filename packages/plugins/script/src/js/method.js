@@ -10,7 +10,7 @@
  *
  */
 
-import { ref, reactive, watchEffect, onActivated, nextTick } from 'vue'
+import { ref, reactive, onActivated, nextTick, watch } from 'vue'
 import { useCanvas, useModal, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { string2Ast, ast2String, insertName, formatString } from '@opentiny/tiny-engine-common/js/ast'
 import { constants } from '@opentiny/tiny-engine-utils'
@@ -58,7 +58,11 @@ const getScriptString = () => {
 }
 
 const change = (value) => {
-  state.isChanged = value !== state.script
+  const lineBreakPattern = /\r\n/g
+  // 使用 prettier 格式化之后，换行符会变成 \n
+  // monaco 传入的 value 在 window下，换行符会变成 \r\n
+  // 对比需要抹平换行符带来的差异
+  state.isChanged = value.replace(lineBreakPattern, '\n') !== state.script.replace(lineBreakPattern, '\n')
 
   if (!monaco.value) {
     return
@@ -84,7 +88,7 @@ export const saveMethod = ({ name, content }) => {
   useCanvas().updateSchema({ methods: { ...methods, [name]: methodItem } })
 }
 
-const saveMethods = () => {
+const saveMethods = async () => {
   const { message } = useModal()
   if (!state.isChanged) {
     return false
@@ -126,7 +130,14 @@ const saveMethods = () => {
 
   useCanvas().updateSchema({ methods: newMethods })
   useCanvas().setSaved(false)
+
+  // 这里需要先置空，再设置回来真正的值, 目的是让 monaco 感知到变化, 更新内容。
+  const newScript = getScriptString()
+  state.script = ''
+  await nextTick()
+  state.script = newScript
   state.isChanged = false
+
   useNotify({
     type: 'success',
     message: '保存成功！'
@@ -203,8 +214,8 @@ export const highlightMethod = (name) => {
 }
 
 export default ({ emit }) => {
-  watchEffect(() => {
-    state.script = getScriptString()
+  watch(getScriptString, (newScript) => {
+    state.script = newScript
   })
 
   onActivated(() => {
