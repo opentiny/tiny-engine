@@ -74,7 +74,8 @@ const rootSchema = ref([
 ])
 
 const handleTinyGridColumnsSlots = (node) => {
-  for (const columnItem of node.props?.columns || []) {
+  let columns = Array.isArray(node.props?.columns) ? node.props.columns : []
+  for (const columnItem of columns) {
     if (!columnItem?.slots) {
       continue
     }

@@ -6,7 +6,7 @@
       controls-position="right"
       :unit="numericalSuffix"
       :empty-value="null"
-      min="0"
+      :min="min"
       allow-empty
       @mouseover="isNumericHover = true"
       @mouseleave="isNumericHover = false"
@@ -47,6 +47,10 @@ export default {
     suffix: {
       type: String,
       default: 'px'
+    },
+    min: {
+      type: Number,
+      default: 0
     }
   },
   emits: useEvent(),
