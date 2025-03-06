@@ -30,3 +30,10 @@ npx @opentiny/tiny-engine-cli@latest create-platform my-designer
 ```sh
 npx @opentiny/tiny-engine-cli@latest create-plugin my-plugin
 ```
+
+
+### create a tiny-engine theme
+
+```sh
+npx @opentiny/tiny-engine-cli@latest create-theme my-theme
+```
