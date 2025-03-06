@@ -106,12 +106,12 @@ export default {
 
     const editor = ref(null)
 
-    const { isSaved, setSaved, getSchemaDiff } = useCanvas()
+    const { isSaved, setSaved, getSchema } = useCanvas()
 
     const { subscribe, unsubscribe } = useMessage()
     const subscriber = 'toolbar-save'
 
-    let initSchema = ref(null)
+    const originSchema = ref(null)
 
     onMounted(() => {
       // 订阅页面/区块初始化事件
@@ -119,7 +119,7 @@ export default {
         topic: 'pageOrBlockInit',
         subscriber,
         callback: (schema) => {
-          initSchema.value = JSON.parse(JSON.stringify(schema))
+          originSchema.value = JSON.stringify(schema)
           setSaved(true) // 初始化时标记为已保存
         }
       })
@@ -129,9 +129,9 @@ export default {
         topic: 'schemaChange',
         subscriber,
         callback: () => {
-          if (initSchema.value) {
-            const diff = getSchemaDiff(initSchema.value)
-            setSaved(!diff)
+          if (originSchema.value) {
+            const hasChange = JSON.stringify(getSchema()) === originSchema.value
+            setSaved(hasChange)
           }
         }
       })
@@ -141,9 +141,9 @@ export default {
         topic: 'schemaImport',
         subscriber,
         callback: () => {
-          if (initSchema.value) {
-            const diff = getSchemaDiff(initSchema.value)
-            setSaved(!diff)
+          if (originSchema.value) {
+            const hasChange = JSON.stringify(getSchema()) === originSchema.value
+            setSaved(hasChange)
           }
         }
       })
