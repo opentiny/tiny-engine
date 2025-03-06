@@ -47,8 +47,7 @@ export const useMultiSelect = () => {
   const addMultiSelection = (node) => {
     if (!node || typeof node !== 'object') return
 
-    const nodeIds = multiSelectedStates.value.map((state) => state.id)
-    if (!nodeIds.includes(node.id)) {
+    if (!multiSelectedStates.value.some((state) => state.id === node.id)) {
       multiSelectedStates.value.push(node)
     }
   }
@@ -56,10 +55,10 @@ export const useMultiSelect = () => {
   // 处理多选节点
   const toggleMultiSelection = (selectState) => {
     const nodeId = selectState?.id
-    const isExistNode = multiSelectedStates.value.map((state) => state.id).includes(nodeId)
+    const isExistNode = multiSelectedStates.value.some((state) => state.id === nodeId)
 
     if (nodeId && isExistNode) {
-      const exList = multiSelectedStates.value.filter((state) => state.id !== nodeId)
+      const exList = toRaw(multiSelectedStates.value).filter((state) => state.id !== nodeId)
       setMultiSelection(exList)
     } else {
       addMultiSelection(selectState)
