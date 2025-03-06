@@ -71,7 +71,6 @@ export const saveCommon = (value) => {
   if (isBlock()) {
     resetBlockCanvasState({ ...pageState, pageSchema })
   } else {
-    localStorage.setItem(constants.PAGE_ORIGIN_SCHEMA, JSON.stringify(pageSchema))
     resetPageCanvasState({ ...pageState, pageSchema })
   }
 

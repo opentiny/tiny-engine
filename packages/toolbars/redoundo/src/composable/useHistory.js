@@ -11,7 +11,6 @@
  */
 
 import { reactive, isProxy, toRaw, watch } from 'vue'
-import { constants } from '@opentiny/tiny-engine-utils'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 
 const schema2String = (schema) => {
@@ -92,16 +91,7 @@ const clear = () => {
   })
 }
 
-const toggleSaveBadgeStatus = () => {
-  const { setSaved, getSchemaDiff } = useCanvas()
-  const initSchema = JSON.parse(localStorage.getItem(constants.PAGE_ORIGIN_SCHEMA))
-  const diffContent = initSchema && getSchemaDiff(initSchema)
-
-  setSaved(!diffContent)
-}
-
 const addHistory = (schema) => {
-  toggleSaveBadgeStatus()
   if (!schema) {
     push(useCanvas().getSchema())
   } else {
@@ -115,7 +105,6 @@ const addHistory = (schema) => {
 watch(
   () => historyState.index,
   (value) => {
-    toggleSaveBadgeStatus()
     historyState.back = value > 0
     historyState.forward = value < list.length - 1
   }

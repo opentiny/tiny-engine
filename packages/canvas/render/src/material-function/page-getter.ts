@@ -33,7 +33,6 @@ export const wrapPageComponent = (pageId: string) => {
   const asyncData = ref(null)
   const updateSchema = () => {
     fetchPageSchema(pageId).then((data) => {
-      localStorage.setItem(constants.PAGE_ORIGIN_SCHEMA, JSON.stringify(data))
       asyncData.value = data
     })
   }

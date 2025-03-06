@@ -239,6 +239,11 @@ const initData = (schema = { ...defaultSchema }, currentPage) => {
     })
   }
 
+  publish({
+    topic: 'pageOrBlockInit',
+    data: schema
+  })
+
   useHistory().addHistory(schema)
 }
 
