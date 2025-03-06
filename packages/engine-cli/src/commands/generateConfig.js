@@ -20,7 +20,7 @@ export default {
 }
 
 // 根据参数修改 package.json
-export const generatePackageJson = (name, options, templatePath) => {
+export const generatePackageJson = (name, templatePath) => {
   const templatePackageJson = fs.readJSONSync(path.resolve(templatePath, 'package.json'))
 
   templatePackageJson.name = name

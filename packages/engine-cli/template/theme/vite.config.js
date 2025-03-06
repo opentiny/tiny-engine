@@ -19,7 +19,6 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, './index.js'),
-      name: 'theme-custom',
       fileName: () => 'index.js',
       formats: ['es']
     },
