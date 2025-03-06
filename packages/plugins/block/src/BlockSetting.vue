@@ -86,7 +86,7 @@
 <script lang="jsx">
 import { reactive, ref, watch, watchEffect, computed } from 'vue'
 import { Button as TinyButton, Collapse as TinyCollapse, CollapseItem as TinyCollapseItem } from '@opentiny/vue'
-import { useModal, getMergeMeta, useBlock } from '@opentiny/tiny-engine-meta-register'
+import { useModal, getMergeMeta, useBlock, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { BlockHistoryList, PluginSetting, CloseIcon, SvgButton, ButtonGroup } from '@opentiny/tiny-engine-common'
 import { previewBlock } from '@opentiny/tiny-engine-common/js/preview'
 import { LifeCycles } from '@opentiny/tiny-engine-common'
@@ -241,12 +241,18 @@ export default {
     }
 
     const previewHistory = (item) => {
+      const theme = getMetaApi(META_SERVICE.ThemeSwitch)?.getThemeState()?.theme
       item &&
         previewBlock({
           id: item.blockId,
           history: item.id,
           framework: getMergeMeta('engine.config')?.dslMode,
-          platform: getMergeMeta('engine.config')?.platformId
+          platform: getMergeMeta('engine.config')?.platformId,
+          theme,
+          pageInfo: {
+            name: item.label,
+            schema: item.content
+          }
         })
     }
 

@@ -72,12 +72,14 @@ export default {
         return
       }
 
+      const theme = getMetaApi(META_SERVICE.ThemeSwitch)?.getThemeState()?.theme
       const params = {
         framework: getMergeMeta('engine.config')?.dslMode,
         platform: getMergeMeta('engine.config')?.platformId,
         pageInfo: {
           schema: getSchema?.()
-        }
+        },
+        theme
       }
 
       if (isBlock()) {
@@ -87,11 +89,9 @@ export default {
         previewBlock(params)
       } else {
         const page = getCurrentPage()
-        const theme = getMetaApi(META_SERVICE.ThemeSwitch)?.getThemeState()?.theme
         params.id = page?.id
         params.pageInfo.name = page?.name
         params.ancestors = await getFamily(params)
-        params.theme = theme
         previewPage(params)
       }
 
