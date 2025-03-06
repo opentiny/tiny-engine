@@ -174,4 +174,7 @@ export default {
   height: 24px;
   line-height: 24px;
 }
+.plugin-page {
+  height: 100%;
+}
 </style>
