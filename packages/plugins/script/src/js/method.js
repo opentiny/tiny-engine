@@ -58,7 +58,11 @@ const getScriptString = () => {
 }
 
 const change = (value) => {
-  state.isChanged = value !== state.script
+  const lineBreakPattern = /\r\n/g
+  // 使用 prettier 格式化之后，换行符会变成 \n
+  // monaco 传入的 value 在 window下，换行符会变成 \r\n
+  // 对比需要抹平换行符带来的差异
+  state.isChanged = value.replace(lineBreakPattern, '\n') !== state.script.replace(lineBreakPattern, '\n')
 
   if (!monaco.value) {
     return
