@@ -3,8 +3,6 @@ import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { NODE_TAG, NODE_UID } from '../../../common'
 import { getRect, getDocument } from '../container'
 
-const initMultiState = { id: 'body' }
-
 // 初始化多选节点
 const multiSelectedStates = ref([])
 
@@ -26,11 +24,6 @@ export const useMultiSelect = () => {
   const lastSelectedNode = ref(null)
 
   const multiStateLength = computed(() => multiSelectedStates.value.length)
-
-  // 初始化多选节点
-  const initMultiSelect = () => {
-    multiSelectedStates.value = [initMultiState]
-  }
 
   // 设置多选节点
   const setMultiSelection = (nodes) => {
@@ -91,7 +84,7 @@ export const useMultiSelect = () => {
     const selectState = getMultiSelectionState(element)
 
     if (!selectState) {
-      return false // 如果没有有效的 selectState，返回 false
+      return // 如果没有有效的 selectState，返回 false
     }
 
     const nodeId = selectState?.id
@@ -105,19 +98,16 @@ export const useMultiSelect = () => {
       } else {
         addMultiSelection(selectState)
       }
-      return true
     } else {
       // 没有按住Ctrl或Meta键时，清除所有多选状态并添加当前节点
       clearMultiSelection()
       addMultiSelection(selectState)
-      return false
     }
   }
 
   return {
     multiSelectedStates,
     multiStateLength,
-    initMultiSelect,
     setMultiSelection,
     getMultiSelectionState,
     toggleMultiSelection,
