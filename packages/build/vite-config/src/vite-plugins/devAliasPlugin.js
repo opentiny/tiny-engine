@@ -27,7 +27,7 @@ const getDevAlias = (useSourceAlias) => {
     '@opentiny/tiny-engine-plugin-page': path.resolve(basePath, 'packages/plugins/page/index.js'),
     '@opentiny/tiny-engine-plugin-i18n': path.resolve(basePath, 'packages/plugins/i18n/index.js'),
     '@opentiny/tiny-engine-plugin-bridge': path.resolve(basePath, 'packages/plugins/bridge/index.js'),
-    '@opentiny/tiny-engine-plugin-tutorial': path.resolve(basePath, 'packages/plugins/tutorial/index.js'),
+    '@opentiny/tiny-engine-plugin-tutorial': path.resolve(basePath, 'packages/plugins/tutorial/index.ts'),
     '@opentiny/tiny-engine-plugin-robot': path.resolve(basePath, 'packages/plugins/robot/index.js'),
     '@opentiny/tiny-engine-settings-panel': path.resolve(basePath, 'packages/settings/panel/index.ts'),
     '@opentiny/tiny-engine-setting-events': path.resolve(basePath, 'packages/settings/events/index.ts'),

@@ -16,7 +16,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, ref, watchEffect, onMounted } from 'vue'
 import { PluginSetting, CloseIcon } from '@opentiny/tiny-engine-common'
 import { marked } from 'marked'
