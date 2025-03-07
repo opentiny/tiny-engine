@@ -1,4 +1,4 @@
-import { watchEffect, WatchStopHandle } from 'vue'
+import { watchEffect, type WatchStopHandle } from 'vue'
 import { generateFunction } from '../data-utils'
 import { globalNotify } from '../canvas-function'
 

@@ -10,7 +10,7 @@
  *
  */
 
-import { defineComponent, h, inject, provide, Ref, Suspense } from 'vue'
+import { defineComponent, h, inject, provide, type Ref, Suspense } from 'vue'
 
 import {
   NODE_UID as DESIGN_UIDKEY,
