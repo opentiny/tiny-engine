@@ -63,7 +63,7 @@ export default {
   setup(props) {
     const { getThemeData, getThemeState, themeChange, getTheme } = getMetaApi(META_SERVICE.ThemeSwitch)
     const state = getThemeState()
-    const THEME_DATA = getThemeData().value
+    const THEME_DATA = getThemeData()
     const COLLAPSE = 'collapse'
     const optionsData = computed(() => {
       const options = { ...props.options }
@@ -74,15 +74,15 @@ export default {
       return options
     })
     const radioThemeList = computed(() => {
-      return THEME_DATA.map((item) => ({ ...item, label: item.type }))
+      return THEME_DATA.value.map((item) => ({ ...item, label: item.type }))
     })
     const baseContent = computed(() => (props.position === COLLAPSE ? '' : state.themeLabel))
     const baseIcon = computed(() => (props.position === COLLAPSE ? '' : state.themeIcon))
     const showpopover = ref(false)
 
     const themeShowType = computed(() => {
-      let filterList = THEME_DATA.filter((item) => ['light', 'dark'].includes(item.type)) || []
-      return THEME_DATA.length === filterList.length
+      let filterList = THEME_DATA.value.filter((item) => ['light', 'dark'].includes(item.type)) || []
+      return THEME_DATA.value.length === filterList.length
     })
 
     const toChangeTheme = () => {
