@@ -52,19 +52,6 @@ export const useMultiSelect = () => {
     }
   }
 
-  // 处理多选节点
-  const toggleMultiSelection = (selectState) => {
-    const nodeId = selectState?.id
-    const isExistNode = multiSelectedStates.value.some((state) => state.id === nodeId)
-
-    if (nodeId && isExistNode) {
-      const exList = toRaw(multiSelectedStates.value).filter((state) => state.id !== nodeId)
-      setMultiSelection(exList)
-    } else {
-      addMultiSelection(selectState)
-    }
-  }
-
   // 获取多选节点（带缓存）
   const getMultiSelectionState = (element) => {
     if (!element) {
@@ -96,6 +83,35 @@ export const useMultiSelect = () => {
     multiSelectedStates.value = []
     lastSelectedNode.value = null
     nodeRectCache = new WeakMap() // 清空缓存
+  }
+
+  // 处理多选节点
+  const toggleMultiSelection = (event, element) => {
+    const isCtrlKey = event.ctrlKey || event.metaKey
+    const selectState = getMultiSelectionState(element)
+
+    if (!selectState) {
+      return false // 如果没有有效的 selectState，返回 false
+    }
+
+    const nodeId = selectState?.id
+    const isExistNode = multiSelectedStates.value.some((state) => state.id === nodeId)
+
+    if (isCtrlKey && event.button === 0) {
+      // 按住Ctrl或Meta键时，切换多选状态
+      if (isExistNode && nodeId) {
+        const exList = toRaw(multiSelectedStates.value).filter((state) => state.id !== nodeId)
+        setMultiSelection(exList)
+      } else {
+        addMultiSelection(selectState)
+      }
+      return true
+    } else {
+      // 没有按住Ctrl或Meta键时，清除所有多选状态并添加当前节点
+      clearMultiSelection()
+      addMultiSelection(selectState)
+      return false
+    }
   }
 
   return {
