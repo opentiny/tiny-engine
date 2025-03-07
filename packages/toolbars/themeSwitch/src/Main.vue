@@ -63,7 +63,7 @@ export default {
   setup(props) {
     const { getThemeData, getThemeState, themeChange, getTheme } = getMetaApi(META_SERVICE.ThemeSwitch)
     const state = getThemeState()
-    const THEME_DATA = getThemeData()
+    const THEME_DATA = getThemeData().value
     const COLLAPSE = 'collapse'
     const optionsData = computed(() => {
       const options = { ...props.options }

@@ -17,8 +17,8 @@ const program = new Command()
 
 const messageMap = {
   theme: {
-    message: 'please enter the theme name. 请输入主题名称',
-    validateMessage: 'theme name can not be empty. 主题名称不允许为空。'
+    message: 'please enter the theme type. 请输入主题类型',
+    validateMessage: 'theme type can not be empty. 主题类型不允许为空。'
   },
   project: {
     message: 'please enter the project name. 请输入项目名称',

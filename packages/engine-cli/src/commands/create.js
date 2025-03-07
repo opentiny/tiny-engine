@@ -75,7 +75,7 @@ export function createTheme(name, themeName) {
   const content = fs.readFileSync(themePath, 'utf-8')
   const outputContent = content.replace(/data-theme='custom'/g, `data-theme='${themeName}'`)
   fs.writeFileSync(themePath, outputContent, 'utf-8')
-  const pkgContent = generatePackageJson(themeName, sourcePath)
+  const pkgContent = generatePackageJson(name, sourcePath)
   fs.outputJSONSync(path.resolve(destPath, 'package.json'), pkgContent, { spaces: 2 })
 
   logger.log(

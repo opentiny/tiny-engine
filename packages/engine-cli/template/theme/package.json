@@ -12,12 +12,7 @@
   "files": [
     "dist"
   ],
-  "bugs": {
-    "url": "https://github.com/opentiny/tiny-engine/issues"
-  },
-  "author": "OpenTiny Team",
   "license": "MIT",
-  "homepage": "https://opentiny.design/tiny-engine",
   "devDependencies": {
     "vite": "^5.4.2"
   }

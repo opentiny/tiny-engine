@@ -1,4 +1,4 @@
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import {
   defineService,
   getMetaApi,
@@ -8,7 +8,7 @@ import {
 } from '@opentiny/tiny-engine-meta-register'
 import { setGlobalMonacoEditorTheme } from '@opentiny/tiny-engine-common'
 
-let THEME_DATA = []
+let THEME_DATA = ref([])
 
 let DEFAULT_THEME = null
 
@@ -18,7 +18,7 @@ const getThemeData = () => THEME_DATA
 const getThemeState = () => themeState
 
 const getTheme = (theme) => {
-  return THEME_DATA.find((item) => theme === item.type) || DEFAULT_THEME
+  return THEME_DATA.value.find((item) => theme === item.type) || DEFAULT_THEME
 }
 
 const themeChange = (theme) => {
@@ -40,8 +40,8 @@ export default defineService({
     const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
     const theme =
       localStorage.getItem(`tiny-engine-theme-${appId}`) || getMergeMeta('engine.config').theme || DEFAULT_THEME.type
-    THEME_DATA = getMergeRegistry('themes')
-    DEFAULT_THEME = THEME_DATA[0]
+    THEME_DATA.value = getMergeRegistry('themes')
+    DEFAULT_THEME = THEME_DATA.value[0]
     themeState.value = {
       theme: DEFAULT_THEME.type,
       themeIcon: DEFAULT_THEME.icon,
