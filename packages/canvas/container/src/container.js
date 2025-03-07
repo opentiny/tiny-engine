@@ -392,7 +392,7 @@ export const scrollToNode = (element) => {
   return nextTick()
 }
 
-const { clearMultiSelection, setMultiSelection, multiSelectedStates, multiStateLength } = useMultiSelect()
+const { clearMultiSelection, setMultiSelection, multiSelectedStates } = useMultiSelect()
 
 const setSelectRect = (element, multiNodeId) => {
   element = element || getDocument().body
@@ -412,7 +412,8 @@ const setSelectRect = (element, multiNodeId) => {
   if (multiNodeId) {
     multiSelectedStates.value.map((state) => {
       if (state.id === multiNodeId) {
-        return Object.assign(state, selectState)
+        const { schema, ...rest } = selectState
+        return Object.assign(state, rest)
       }
     })
   }
@@ -433,16 +434,12 @@ export const updateRect = (id) => {
   }
 }
 
-export const syncNodeScroll = (id) => {
-  if (multiStateLength.value > 1) {
-    multiSelectedStates.value.forEach((state) => {
-      const multiNodeId = state.id
-      const element = querySelectById(multiNodeId)
-      setTimeout(() => setSelectRect(element, multiNodeId))
-    })
-  } else {
-    updateRect(id)
-  }
+export const syncNodeScroll = () => {
+  multiSelectedStates.value.forEach((state) => {
+    const multiNodeId = state.id
+    const element = querySelectById(multiNodeId)
+    setTimeout(() => setSelectRect(element, multiNodeId))
+  })
 }
 
 export const getConfigure = (targetName) => {
