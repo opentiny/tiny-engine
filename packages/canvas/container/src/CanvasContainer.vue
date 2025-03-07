@@ -34,8 +34,12 @@
   </div>
   <!-- 【添加父级容器】快捷选择物料面板 -->
   <div v-if="insertContainer" ref="containerPanel" class="insert-panel">
-    <component :is="materialsPanel" :shortcut="insertContainer" groupName="layout" @close="insertContainer = false">
-    </component>
+    <component
+      :is="materialsPanel"
+      :shortcut="insertContainer"
+      groupName="layout"
+      @close="insertContainer = false"
+    ></component>
   </div>
 </template>
 
@@ -354,18 +358,15 @@ export default {
   top: 200px;
   left: 400px;
   width: 480px;
-
   :deep(.components-wrap) {
     & > .tiny-collapse {
       max-height: 300px;
     }
   }
-
   :deep(#pane-blocks) {
     max-height: 400px;
   }
 }
-
 .datainit-tip {
   display: flex;
   height: 100%;
