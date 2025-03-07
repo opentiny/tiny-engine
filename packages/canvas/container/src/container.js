@@ -24,6 +24,7 @@ import { useCanvas, useLayout, useTranslate, useMaterial } from '@opentiny/tiny-
 import { utils } from '@opentiny/tiny-engine-utils'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import Builtin from '../../render/src/builtin/builtin.json' //TODO 画布内外应该分开
+import { useMultiSelect } from './composables/useMultiSelect'
 
 export const POSITION = Object.freeze({
   TOP: 'top',
@@ -122,63 +123,6 @@ export const inactiveHoverState = reactive({
 export const lineState = reactive({
   ...initialLineState
 })
-
-// 获取多选节点
-export const getMultiState = (element, doc) => {
-  const { top, left, width, height } = element.getBoundingClientRect()
-  const nodeTag = element?.getAttribute(NODE_TAG)
-  const nodeId = element?.getAttribute(NODE_UID)
-
-  const { node, parent } = useCanvas().getNodeWithParentById(nodeId) || {}
-
-  if (node && parent) {
-    return {
-      id: nodeId,
-      componentName: nodeTag,
-      doc,
-      top,
-      left,
-      width,
-      height,
-      schema: toRaw(node),
-      parent: toRaw(parent)
-    }
-  }
-}
-
-// 设置多选节点
-export function setMultiState(multiSelectedStates, node, append = false) {
-  if (!node || typeof node !== 'object') {
-    multiSelectedStates.value = []
-    return
-  }
-
-  if (append) {
-    const nodeIds = new Set(multiSelectedStates.value.map((state) => state.id))
-    if (!nodeIds.has(node.id)) {
-      multiSelectedStates.value = [...toRaw(multiSelectedStates.value), node]
-    }
-  } else {
-    if (Array.isArray(node)) {
-      multiSelectedStates.value = node
-    } else {
-      multiSelectedStates.value = [node]
-    }
-  }
-}
-
-// 处理多选节点
-export function handleMultiState(multiSelectedStates, selectState) {
-  const nodeId = selectState?.id
-  const isExistNode = multiSelectedStates.value.map((state) => state.id).includes(nodeId)
-
-  if (nodeId && isExistNode) {
-    const exList = multiSelectedStates.value.filter((state) => state.id !== nodeId)
-    setMultiState(multiSelectedStates, exList)
-  } else {
-    setMultiState(multiSelectedStates, selectState, true)
-  }
-}
 
 export const clearHover = () => {
   Object.assign(hoverState, initialRectState, { slot: null })
@@ -312,7 +256,7 @@ export const getInactiveElement = (element) => {
   return undefined
 }
 
-const getRect = (element) => {
+export const getRect = (element) => {
   if (element === getDocument().body) {
     const { innerWidth: width, innerHeight: height } = getWindow()
     return {
@@ -328,6 +272,7 @@ const getRect = (element) => {
   }
   return element.getBoundingClientRect()
 }
+
 const insertAfter = ({ parent, node, data }) => {
   if (!data.id) {
     data.id = utils.guid()
@@ -446,7 +391,10 @@ export const scrollToNode = (element) => {
 
   return nextTick()
 }
-const setSelectRect = (element) => {
+
+const { clearMultiSelection, initMultiSelect, multiSelectedStates, multiStateLength } = useMultiSelect()
+
+const setSelectRect = (element, multiNodeId) => {
   element = element || getDocument().body
 
   const { left, height, top, width } = getRect(element)
@@ -460,6 +408,14 @@ const setSelectRect = (element) => {
     componentName,
     doc: getDocument()
   })
+
+  if (multiNodeId) {
+    multiSelectedStates.value.map((state) => {
+      if (state.id === multiNodeId) {
+        return Object.assign(state, selectState)
+      }
+    })
+  }
 }
 
 export const updateRect = (id) => {
@@ -474,6 +430,18 @@ export const updateRect = (id) => {
       return
     }
     clearSelect()
+  }
+}
+
+export const syncNodeScroll = (id) => {
+  if (multiStateLength.value > 1) {
+    multiSelectedStates.value.forEach((state) => {
+      const multiNodeId = state.id
+      const element = querySelectById(multiNodeId)
+      setTimeout(() => setSelectRect(element, multiNodeId))
+    })
+  } else {
+    updateRect(id)
   }
 }
 
@@ -772,6 +740,11 @@ export const selectNode = async (id, type) => {
     canvasState.loopId = loopId
   }
 
+  if (type === 'clickTree') {
+    clearMultiSelection()
+    initMultiSelect()
+  }
+
   const { node, parent } = useCanvas().getNodeWithParentById(id) || {}
 
   let element = querySelectById(id, type)
@@ -930,6 +903,7 @@ export const canvasDispatch = (name, data, doc = getDocument()) => {
 export const canvasApi = {
   dragStart,
   updateRect,
+  syncNodeScroll,
   dragMove,
   setLocales,
   getRenderer,

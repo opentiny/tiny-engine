@@ -10,11 +10,11 @@
  *
  */
 
-import { ref } from 'vue'
 import { useHistory, useCanvas, getMetaApi, META_APP } from '@opentiny/tiny-engine-meta-register'
 import { getCurrent, insertNode, selectNode, POSITION, removeNodeById, allowInsert, getConfigure } from './container'
 import { copyObject } from '../../common'
 import { getClipboardSchema, setClipboardSchema } from './utils'
+import { useMultiSelect } from './composables/useMultiSelect'
 
 const KEY_S = 83
 const KEY_Y = 89
@@ -24,9 +24,6 @@ const KEY_LEFT = 37
 const KEY_UP = 38
 const KEY_DOWN = 40
 const KEY_DEL = 46
-
-//  多选节点
-const multiSelectedStates = ref([])
 
 function handlerLeft({ parent }) {
   selectNode(parent?.id)
@@ -43,12 +40,15 @@ function handlerDown({ index, parent }) {
   const id = parent?.children[index + 1]?.id
   id && selectNode(id)
 }
+
+const { multiSelectedStates, clearMultiSelection } = useMultiSelect()
+
 function handlerDelete() {
   multiSelectedStates.value.forEach(({ id: schemaId }) => {
     removeNodeById(schemaId)
   })
 
-  multiSelectedStates.value = []
+  clearMultiSelection()
 }
 
 const handlerArrow = (keyCode) => {
@@ -165,4 +165,4 @@ const registerHotkeyEvent = (dom) => {
   dom.addEventListener('paste', handlerClipboardEvent)
 }
 
-export { registerHotkeyEvent, removeHotkeyEvent, multiSelectedStates }
+export { registerHotkeyEvent, removeHotkeyEvent }
