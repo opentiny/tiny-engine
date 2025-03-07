@@ -1,3 +1,9 @@
+/*
+ * @Description: 
+ * @Date: 2025-03-07 14:29:56
+ * @LastEditors: xiaopang
+ * @LastEditTime: 2025-03-07 14:35:20
+ */
 import fs from 'fs-extra'
 import path from 'node:path'
 import Logger from './logger.mjs'
@@ -11,8 +17,8 @@ const materialsDir = 'materials'
 const bundle = fs.readJSONSync(bundlePath)
 const { components, snippets, blocks } = bundle.data.materials
 
-const capitalize = (str) => `${str.charAt(0).toUpperCase()}${str.slice(1)}`
-const toPascalCase = (str) => str.split('-').map(capitalize).join('')
+const capitalize = (str) => str ? `${str.charAt(0).toUpperCase()}${str.slice(1)}` : ''
+const toPascalCase = (str) => str ? str.split('-').map(capitalize).join('') : ''
 
 /**
  * 将物料资产包拆分为单个组件
@@ -20,24 +26,40 @@ const toPascalCase = (str) => str.split('-').map(capitalize).join('')
 const splitMaterials = () => {
   try {
     components.forEach((comp) => {
-      snippets.some((child) => {
-        const snippet = child.children.find((item) => {
+      const matchedSnippets = [];
+      let category = null;
+      
+      snippets.forEach((child) => {
+        // 修改这里：检查 children 中的 schema.componentName || snippetName
+        const matched = child.children.filter((item) => {
+          const snippetComponentName = item?.schema?.componentName || item.snippetName;
+          if (!snippetComponentName) return false;
+          
           if (Array.isArray(comp.component)) {
-            return toPascalCase(comp.component[0]) === toPascalCase(item.snippetName)
+            return toPascalCase(comp.component[0]) === toPascalCase(snippetComponentName);
           }
+          return toPascalCase(comp.component) === toPascalCase(snippetComponentName);
+        });
 
-          return toPascalCase(comp.component) === toPascalCase(item.snippetName)
-        })
-
-        if (snippet) {
-          comp.snippets = [snippet]
-          comp.category = child.group
-
-          return true
+        if (matched.length > 0) {
+          // 为每个 snippet 添加 category
+          const enrichedSnippets = matched.map(snippet => ({
+            ...snippet,
+            category: child.group,
+          }));
+          
+          matchedSnippets.push(...enrichedSnippets);
+          // 使用第一个匹配的分组作为组件级别的类别
+          if (!category) {
+            category = child.group;
+          }
         }
+      });
 
-        return false
-      })
+      if (matchedSnippets.length > 0) {
+        comp.snippets = matchedSnippets;
+        comp.category = category;
+      }
 
       const fileName = Array.isArray(comp.component) ? comp.component[0] : comp.component
       const componentPath = path.join(process.cwd(), materialsDir, 'components', `${toPascalCase(fileName)}.json`)
