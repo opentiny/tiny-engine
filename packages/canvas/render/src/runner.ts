@@ -50,6 +50,9 @@ const GetComponentByDomNode = {
     Vue.mixin({
       mounted() {
         this.$el.__vueComponent = this?._
+      },
+      updated() {
+        this.$el.__vueComponent = this?._
       }
     })
   }

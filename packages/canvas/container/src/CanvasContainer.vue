@@ -174,8 +174,14 @@ export default {
           })
         })
 
+        let scrollTimeout = null
         win.addEventListener('scroll', () => {
           isScrolling = true
+          clearTimeout(scrollTimeout)
+
+          scrollTimeout = setTimeout(() => {
+            isScrolling = false
+          }, 100)
         })
 
         // TODO: 需要确认下该事件还是否需要
