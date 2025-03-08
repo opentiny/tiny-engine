@@ -58,7 +58,7 @@
 import { reactive, ref, onUnmounted, onMounted } from 'vue'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
 import { Button, Popover, DialogBox, Checkbox, Select } from '@opentiny/vue'
-import { useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { useCanvas, useMessage } from '@opentiny/tiny-engine-meta-register'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import { openCommon, saveCommon } from './js/index'
 import { isLoading, setAutoSaveStatus, getAutoSaveStatus } from './js/index'
@@ -90,8 +90,6 @@ export default {
     }
   },
   setup() {
-    const { isSaved } = useCanvas()
-
     const delayOptions = [
       { value: 5, label: '5分钟' },
       { value: 10, label: '10分钟' },
@@ -101,13 +99,61 @@ export default {
       visible: false,
       code: '',
       originalCode: '',
-      disabled: false,
-      timeValue: 5,
       checked: false,
+      timeValue: 5,
       preservationTime: null
     })
 
     const editor = ref(null)
+
+    const { isSaved, setSaved, getSchema } = useCanvas()
+
+    const { subscribe, unsubscribe } = useMessage()
+    const subscriber = 'toolbar-save'
+
+    const originSchema = ref(null)
+
+    onMounted(() => {
+      // 订阅页面/区块初始化事件
+      subscribe({
+        topic: 'pageOrBlockInit',
+        subscriber,
+        callback: (schema) => {
+          originSchema.value = JSON.stringify(schema)
+          setSaved(true) // 初始化时标记为已保存
+        }
+      })
+
+      // 订阅 schema 变更事件
+      subscribe({
+        topic: 'schemaChange',
+        subscriber,
+        callback: () => {
+          if (originSchema.value) {
+            const hasChange = JSON.stringify(getSchema()) === originSchema.value
+            setSaved(hasChange)
+          }
+        }
+      })
+
+      // 订阅 schema 导入事件
+      subscribe({
+        topic: 'schemaImport',
+        subscriber,
+        callback: () => {
+          if (originSchema.value) {
+            const hasChange = JSON.stringify(getSchema()) === originSchema.value
+            setSaved(hasChange)
+          }
+        }
+      })
+    })
+
+    onUnmounted(() => {
+      unsubscribe({ topic: 'pageOrBlockInit', subscriber })
+      unsubscribe({ topic: 'schemaChange', subscriber })
+      unsubscribe({ topic: 'schemaImport', subscriber })
+    })
 
     const close = () => {
       state.visible = false

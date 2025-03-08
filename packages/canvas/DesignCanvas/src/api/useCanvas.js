@@ -240,6 +240,11 @@ const initData = (schema = { ...defaultSchema }, currentPage) => {
     })
   }
 
+  publish({
+    topic: 'pageOrBlockInit',
+    data: schema
+  })
+
   useHistory().addHistory(schema)
 }
 
@@ -318,15 +323,13 @@ const operationTypeMap = {
 
     // 4. 根据position参数选择插入位置
     let index = parentNode.children.indexOf(referenceNode)
-    if (index === -1 && referTargetNodeId) {
-      index = parentNode.children.length
-    }
 
     // 5. 插入节点的逻辑
     const childrenNode = toRaw(referenceNode)
     switch (position) {
       case 'before':
-        parentNode.children.unshift(newNodeData)
+        index = index === -1 ? 0 : index
+        parentNode.children.splice(index, 0, newNodeData)
         break
       case 'out':
         if (childrenNode) {
@@ -338,7 +341,8 @@ const operationTypeMap = {
         parentNode.children.splice(index + 1, 0, newNodeData)
         break
       default:
-        parentNode.children.push(newNodeData)
+        index = index === -1 ? parentNode.children.length : index + 1
+        parentNode.children.splice(index, 0, newNodeData)
         break
     }
 

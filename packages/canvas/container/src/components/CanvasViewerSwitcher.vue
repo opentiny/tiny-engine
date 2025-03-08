@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { getMetaApi, META_SERVICE, useCanvas, usePage } from '@opentiny/tiny-engine-meta-register'
+import { getMetaApi, META_SERVICE, useCanvas, usePage, useMessage } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { Popover } from '@opentiny/vue'
 import { useBroadcastChannel } from '@vueuse/core'
@@ -116,8 +116,12 @@ export default {
       }, 0)
     }
 
-    const handleSwitchPreview = (previewId) => {
+    const closePopover = () => {
       popoverRef.value?.doClose()
+    }
+
+    const handleSwitchPreview = (previewId) => {
+      closePopover()
       getMetaApi(META_SERVICE.GlobalService).updatePreviewId(previewId)
       useCanvas().canvasApi.value?.clearSelect?.()
     }
@@ -147,6 +151,15 @@ export default {
 
     watch(data, (value) => {
       state.viewMode = value.viewMode
+    })
+
+    const { subscribe } = useMessage()
+
+    subscribe({
+      topic: 'canvas-mousedown',
+      callback: () => {
+        closePopover()
+      }
     })
 
     return {
