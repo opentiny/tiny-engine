@@ -505,14 +505,17 @@ export default {
         state.variables = {}
 
         const stores = useResource().appSchemaState.globalState
-        stores.forEach(({ id, state: storeState = {}, getters = {} }) => {
-          const loadProp = (prop) => {
-            const propBinding = `${id}.${prop}`
-            state.variables[propBinding] = propBinding
-          }
+        stores.forEach(({ id, state: _storeState = {}, _getters = {} }) => {
+          state.variables[id] = id
+          // fix: store 列表错误渲染成子属性列表
+          // store 值处理迁移到 global-state.ts 进行处理
+          // const loadProp = (prop) => {
+          //   const propBinding = `${id}.${prop}`
+          //   state.variables[propBinding] = propBinding
+          // }
 
-          Object.keys(storeState).forEach(loadProp)
-          Object.keys(getters).forEach(loadProp)
+          // Object.keys(storeState).forEach(loadProp)
+          // Object.keys(getters).forEach(loadProp)
         })
       } else if (item.id === 'loop') {
         state.bindPrefix = ''

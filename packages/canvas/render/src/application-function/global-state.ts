@@ -13,14 +13,43 @@ export function useGlobalState() {
   watchEffect(() => {
     reset(stores)
     globalState.value.forEach(({ id, state = {}, getters = {} }) => {
-      const computedGetters = Object.keys(getters).reduce(
-        (acc, key) => ({
-          ...acc,
-          [key]: new Func('return ' + getters[key])().call(acc, state) // parseData(getters[key], null, acc)?.call?.(acc, state)  //理论上不应该走parseData, unibuy代码遗留
-        }),
-        {}
-      )
-      stores[id] = { ...state, ...computedGetters }
+      const hasGetters = Object.keys(getters).length > 0
+
+      if (Array.isArray(state)) {
+        if (!hasGetters) {
+          stores[id] = [...state]
+        } else {
+          const computedGetters = {}
+          Object.keys(getters).forEach((key) => {
+            try {
+              computedGetters[key] = new Func('return ' + getters[key])().call(computedGetters, state)
+            } catch (error) {
+              computedGetters[key] = undefined
+            }
+          })
+
+          const arrayWithGetters = [...state]
+          Object.assign(arrayWithGetters, computedGetters)
+          stores[id] = arrayWithGetters
+        }
+      } else if (typeof state !== 'object' || state === null) {
+        stores[id] = state
+      } else {
+        if (!hasGetters) {
+          stores[id] = { ...state }
+        } else {
+          const computedGetters = {}
+          Object.keys(getters).forEach((key) => {
+            try {
+              computedGetters[key] = new Func('return ' + getters[key])().call(computedGetters, state)
+            } catch (error) {
+              computedGetters[key] = undefined
+            }
+          })
+
+          stores[id] = Object.assign({}, state, computedGetters)
+        }
+      }
     })
   })
   return {
