@@ -26,7 +26,7 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { ref, reactive } from 'vue'
 import { TinyForm, TinyFormItem, TinyInput, TinyButton, TinySelect, TinyTooltip } from '@opentiny/vue'
 import { AIModelOptions } from './js/robotSetting'
