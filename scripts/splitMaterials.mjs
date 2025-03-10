@@ -50,10 +50,10 @@ const splitMaterials = () => {
 
       fs.outputJsonSync(blockPath, block, { spaces: 2 })
     })
-    const packageJsonPath = path.join(process.cwd(), materialsDir, 'packages.json');
+    const packageJsonPath = path.join(process.cwd(), materialsDir, 'packages.json')
     fs.outputJsonSync(packageJsonPath, { 
       packages 
-    }, { spaces: 2 });
+    }, { spaces: 2 })
     logger.success('materials splitted.')
   } catch (error) {
     logger.error(`failed to split materials: ${error}.`)
