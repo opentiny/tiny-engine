@@ -10,8 +10,8 @@
  *
  */
 import entry from './src/Main.vue'
-import metaData from './meta.js'
-import { TranslateService } from './src/composable'
+import metaData from './meta'
+import { TranslateService } from './src/composable/index.js'
 import './src/styles/vars.less'
 
 export default {

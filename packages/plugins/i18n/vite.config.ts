@@ -23,9 +23,9 @@ export default defineConfig({
   resolve: {},
   build: {
     lib: {
-      entry: path.resolve(__dirname, './index.js'),
+      entry: path.resolve(__dirname, './index.ts'),
       name: 'plugin-i18n',
-      fileName: () => 'index.js',
+      fileName: (_format, entryName) => `${entryName}.js`,
       formats: ['es']
     },
     rollupOptions: {
