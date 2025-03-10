@@ -53,14 +53,10 @@
           </span>
         </div>
       </tiny-form-item>
-
       <tiny-form-item v-if="pageSettingState.currentPageData.group !== 'publicPages'" prop="isDefault">
         <tiny-checkbox v-model="pageSettingState.currentPageData.isDefault">设为默认页</tiny-checkbox>
       </tiny-form-item>
     </tiny-form>
-    <page-home
-      v-if="!isFolder && !pageSettingState.isNew && pageSettingState.currentPageData.group !== 'public'"
-    ></page-home>
   </div>
 </template>
 
@@ -69,7 +65,6 @@ import { ref, computed, watchEffect } from 'vue'
 import { Form, FormItem, Input, Select, Radio, Checkbox } from '@opentiny/vue'
 import { usePage } from '@opentiny/tiny-engine-meta-register'
 import { REGEXP_PAGE_NAME, REGEXP_FOLDER_NAME, REGEXP_ROUTE } from '@opentiny/tiny-engine-common/js/verification'
-import PageHome from './PageHome.vue'
 
 export default {
   components: {
@@ -77,7 +72,6 @@ export default {
     TinyFormItem: FormItem,
     TinyInput: Input,
     TinySelect: Select,
-    PageHome,
     TinyRadio: Radio,
     TinyCheckbox: Checkbox
   },
