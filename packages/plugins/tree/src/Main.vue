@@ -37,7 +37,7 @@
   </plugin-panel>
 </template>
 
-<script>
+<script lang="ts">
 import {
   reactive,
   watch,

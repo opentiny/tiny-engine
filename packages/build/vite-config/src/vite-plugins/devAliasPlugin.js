@@ -21,7 +21,7 @@ const getDevAlias = (useSourceAlias) => {
     '@opentiny/tiny-engine-plugin-state': path.resolve(basePath, 'packages/plugins/state/index.ts'),
     '@opentiny/tiny-engine-plugin-datasource': path.resolve(basePath, 'packages/plugins/datasource/index.ts'),
     '@opentiny/tiny-engine-plugin-script': path.resolve(basePath, 'packages/plugins/script/index.ts'),
-    '@opentiny/tiny-engine-plugin-tree': path.resolve(basePath, 'packages/plugins/tree/index.js'),
+    '@opentiny/tiny-engine-plugin-tree': path.resolve(basePath, 'packages/plugins/tree/index.ts'),
     '@opentiny/tiny-engine-plugin-help': path.resolve(basePath, 'packages/plugins/help/index.ts'),
     '@opentiny/tiny-engine-plugin-schema': path.resolve(basePath, 'packages/plugins/schema/index.ts'),
     '@opentiny/tiny-engine-plugin-page': path.resolve(basePath, 'packages/plugins/page/index.js'),

@@ -49,7 +49,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { computed, defineEmits, defineProps, reactive, ref } from 'vue'
 
 const props = defineProps({
