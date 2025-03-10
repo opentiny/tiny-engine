@@ -48,7 +48,7 @@
   <data-source-global-data-handler></data-source-global-data-handler>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, watch, provide } from 'vue'
 import { Button } from '@opentiny/vue'
 import DataSourceList, { refresh as refreshDataSourceList, clearActive } from './DataSourceList.vue'

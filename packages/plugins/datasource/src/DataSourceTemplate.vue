@@ -15,7 +15,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, onMounted } from 'vue'
 import { Button } from '@opentiny/vue'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'

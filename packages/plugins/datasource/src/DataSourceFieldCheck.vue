@@ -16,7 +16,7 @@
   </tiny-form-item>
 </template>
 
-<script>
+<script lang="ts">
 import { computed, inject } from 'vue'
 import DataSourceFieldCheckMultipleLine from './DataSourceFieldCheckMultipleLine.vue'
 import DataSourceFieldCheckRanger from './DataSourceFieldCheckRanger.vue'

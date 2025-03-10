@@ -24,7 +24,7 @@
   </plugin-setting>
 </template>
 
-<script>
+<script lang="ts">
 import DataHandlerEditor from './RemoteDataAdapterForm.vue'
 import { watch, ref, nextTick, reactive, computed } from 'vue'
 import { requestGlobalDataHandler } from './js/http'

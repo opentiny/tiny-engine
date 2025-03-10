@@ -20,7 +20,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, ref } from 'vue'
 import { iconArrowDown } from '@opentiny/vue-icon'
 import fieldTypes from './config'

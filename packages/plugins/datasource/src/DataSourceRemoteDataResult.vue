@@ -21,7 +21,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, watchEffect, ref } from 'vue'
 import { VueMonaco as MonacoEditor } from '@opentiny/tiny-engine-common'
 import { Button as TinyButton } from '@opentiny/vue'
@@ -62,6 +62,7 @@ export default {
       try {
         await toClipboard(state.value)
       } catch (e) {
+        throw new Error(e)
         // do nothing
       }
 

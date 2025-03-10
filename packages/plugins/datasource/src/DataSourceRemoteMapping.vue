@@ -30,7 +30,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, watchEffect, ref } from 'vue'
 import { Input, Select, Checkbox } from '@opentiny/vue'
 import { PluginSetting } from '@opentiny/tiny-engine-common'

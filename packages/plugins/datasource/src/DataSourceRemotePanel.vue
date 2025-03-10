@@ -52,7 +52,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, watch, ref, computed } from 'vue'
 import { Collapse, CollapseItem, Tabs, TabItem, Button } from '@opentiny/vue'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
@@ -183,6 +183,7 @@ export default {
         // await validate() 如果验证不通过会抛出异常，而不是返回 false
         await getServiceForm().validate()
       } catch (error) {
+        throw new Error('请先完成表单验证', error)
         return
       }
 

@@ -32,7 +32,7 @@
   </plugin-setting>
 </template>
 
-<script lang="jsx">
+<script lang="tsx">
 import { reactive, ref, watch, computed } from 'vue'
 import { Form, Button } from '@opentiny/vue'
 import { ButtonGroup, PluginSetting, SvgButton } from '@opentiny/tiny-engine-common'

@@ -48,8 +48,7 @@ const compareData = () => {
 const handleConfirmSave = (dataSourceState, isRecordSame, resolve, isDataSourceSame, callback) => {
   let {
     name,
-    id,
-    data: { data, columns, type }
+    data: { data, columns }
   } = dataSourceState.dataSource
 
   if (!isRecordSame) {
@@ -78,6 +77,11 @@ const handleConfirmSave = (dataSourceState, isRecordSame, resolve, isDataSourceS
     columns = dataSourceState.dataSourceColumn?.columns
     name = dataSourceState.dataSourceColumn?.name
   }
+
+  const {
+    id,
+    data: { type }
+  } = dataSourceState.dataSource
 
   const requestData = { name, data: { columns, data, type } }
 

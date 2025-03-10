@@ -15,7 +15,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, watchEffect, ref } from 'vue'
 import { Form, FormItem, Input } from '@opentiny/vue'
 

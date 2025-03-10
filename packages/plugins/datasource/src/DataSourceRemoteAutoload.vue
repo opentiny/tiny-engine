@@ -5,7 +5,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive } from 'vue'
 import { Checkbox } from '@opentiny/vue'
 
