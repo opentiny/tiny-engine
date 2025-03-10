@@ -205,7 +205,7 @@ export default {
               return
             }
 
-            if (toggleMultiSelection(event, element)) return
+            toggleMultiSelection(event, element)
 
             insertPosition.value = false
             insertContainer.value = false

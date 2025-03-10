@@ -89,13 +89,22 @@ export const useMultiSelect = () => {
 
     const nodeId = selectState?.id
     const isExistNode = multiSelectedStates.value.some((state) => state.id === nodeId)
+    const isBodyState = selectState?.id === 'body'
 
     if (isCtrlKey && event.button === 0) {
+      if (isBodyState) return
       // 按住Ctrl或Meta键时，切换多选状态
       if (isExistNode && nodeId) {
         const exList = toRaw(multiSelectedStates.value).filter((state) => state.id !== nodeId)
+        if (!exList.length) return
         setMultiSelection(exList)
       } else {
+        // 如果是父节点，先移除所有子节点
+        const children = selectState.schema?.children
+        if (Array.isArray(children) && children.length) {
+          const newList = multiSelectedStates.value.filter((state) => !children.some((child) => child.id === state.id))
+          setMultiSelection(newList)
+        }
         addMultiSelection(selectState)
       }
     } else {

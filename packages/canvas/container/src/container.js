@@ -392,7 +392,7 @@ export const scrollToNode = (element) => {
   return nextTick()
 }
 
-const { clearMultiSelection, setMultiSelection, multiSelectedStates } = useMultiSelect()
+const { clearMultiSelection, setMultiSelection, multiSelectedStates, multiStateLength } = useMultiSelect()
 
 const setSelectRect = (element, multiNodeId) => {
   element = element || getDocument().body
@@ -735,6 +735,10 @@ export const selectNode = async (id, type) => {
   if (type && type.indexOf('loop-id') > -1) {
     const loopId = type.split('=')[1]
     canvasState.loopId = loopId
+  }
+
+  if (type !== 'clickTree' && multiStateLength.value === 1) {
+    id = multiSelectedStates.value[0]?.id
   }
 
   const { node, parent } = useCanvas().getNodeWithParentById(id) || {}
