@@ -11,6 +11,7 @@
  */
 
 import { ref, reactive, readonly } from 'vue'
+// eslint-disable-next-line vue/prefer-import-from-vue
 import { hyphenate } from '@vue/shared'
 import { extend, copyArray } from '@opentiny/vue-renderless/common/object'
 import { format } from '@opentiny/vue-renderless/common/date'
@@ -128,7 +129,7 @@ const setSelectedGroup = (selected) => {
 
 const copyCss = (css, classNameList) => {
   classNameList = Array.from(new Set(classNameList)).map((item) => '.' + item)
-  let cssObject = getCssObjectFromStyleStr(css)
+  const cssObject = getCssObjectFromStyleStr(css)
   let styleStr = ''
 
   Object.entries(cssObject).forEach(([key, value]) => {
@@ -144,9 +145,9 @@ const copyCss = (css, classNameList) => {
 const copySchema = (schema, contentList, methods) => {
   const content = schema?.properties?.[0]?.content || []
   let emitList = []
-  let emitListCopies = {}
+  const emitListCopies = {}
   Object.keys(methods).forEach((key) => {
-    let item = JSON.stringify(methods[key].value).match(/emit..*?\)/g)
+    const item = JSON.stringify(methods[key].value).match(/emit..*?\)/g)
 
     if (item?.length) {
       emitList = [...emitList, ...item]
@@ -195,7 +196,7 @@ const copyMethods = (schema) => {
 }
 
 const copyState = (stateObj = {}, methodsObj = {}) => {
-  let stateCopies = {}
+  const stateCopies = {}
   const stateKey = Object.keys(stateObj).map((e) => `state.${e} `)
 
   stateKey.forEach((e) => {
@@ -632,7 +633,7 @@ const getDateFromNow = (timeStamp) => {
     ['更久以前', () => '']
   ])
 
-  for (let [key, value] of dateMap) {
+  for (const [key, value] of dateMap) {
     if (timeStamp >= value()) {
       return key
     }

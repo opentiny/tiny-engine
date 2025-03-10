@@ -36,7 +36,7 @@
   </tiny-dialog-box>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { defineProps, defineEmits, ref, reactive, computed, watch } from 'vue'
 import { pinyin } from 'pinyin-pro'
 import {

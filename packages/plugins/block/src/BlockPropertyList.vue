@@ -18,7 +18,7 @@
   </meta-list-items>
 </template>
 
-<script>
+<script lang="ts">
 import { computed } from 'vue'
 import { Button as TinyButton } from '@opentiny/vue'
 import { remove } from '@opentiny/vue-renderless/common/array'

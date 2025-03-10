@@ -85,7 +85,7 @@
   ></block-deploy-dialog>
 </template>
 
-<script lang="jsx">
+<script lang="tsx">
 import { reactive, ref, watch, watchEffect, computed } from 'vue'
 import { Button as TinyButton, Collapse as TinyCollapse, CollapseItem as TinyCollapseItem } from '@opentiny/vue'
 import {

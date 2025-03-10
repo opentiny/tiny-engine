@@ -121,7 +121,7 @@
   <save-new-block :boxVisibility="boxVisibility" @close="close"></save-new-block>
 </template>
 
-<script lang="jsx">
+<script lang="tsx">
 import { ref, reactive, computed, watch, provide } from 'vue'
 import {
   Search as TinySearch,
