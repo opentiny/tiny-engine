@@ -39,7 +39,7 @@
   </plugin-panel>
 </template>
 
-<script lang="jsx">
+<script lang="tsx">
 import { nextTick, reactive, getCurrentInstance, onActivated, ref, onDeactivated, provide } from 'vue'
 import { Popover, Button } from '@opentiny/vue'
 import { VueMonaco, PluginPanel } from '@opentiny/tiny-engine-common'
