@@ -48,7 +48,7 @@ import { onMounted, ref, computed, onUnmounted, watch, watchEffect } from 'vue'
 import { iframeMonitoring } from '@opentiny/tiny-engine-common/js/monitor'
 import { useTranslate, useCanvas, useMessage, useResource } from '@opentiny/tiny-engine-meta-register'
 import { NODE_UID, NODE_LOOP, DESIGN_MODE } from '../../common'
-import { registerHotkeyEvent, removeHotkeyEvent, multiSelectedStates } from './keyboard'
+import { registerHotkeyEvent, removeHotkeyEvent } from './keyboard'
 import CanvasMenu, { closeMenu, openMenu } from './components/CanvasMenu.vue'
 import CanvasAction from './components/CanvasAction.vue'
 import CanvasRouterJumper from './components/CanvasRouterJumper.vue'
@@ -56,6 +56,7 @@ import CanvasViewerSwitcher from './components/CanvasViewerSwitcher.vue'
 import CanvasResize from './components/CanvasResize.vue'
 import CanvasDivider from './components/CanvasDivider.vue'
 import CanvasResizeBorder from './components/CanvasResizeBorder.vue'
+import { useMultiSelect } from './composables/useMultiSelect'
 import {
   canvasState,
   onMouseUp,
@@ -66,7 +67,7 @@ import {
   selectState,
   lineState,
   removeNodeById,
-  updateRect,
+  syncNodeScroll,
   getElement,
   dragStart,
   selectNode,
@@ -74,10 +75,7 @@ import {
   clearLineState,
   querySelectById,
   getCurrent,
-  canvasApi,
-  getMultiState,
-  setMultiState,
-  handleMultiState
+  canvasApi
 } from './container'
 
 export default {
@@ -109,9 +107,10 @@ export default {
     const containerPanel = ref(null)
     const insertContainer = ref(false)
 
-    const multiStateLength = computed(() => multiSelectedStates.value.length)
+    const { multiSelectedStates, multiStateLength, setMultiSelection, getMultiSelectionState, toggleMultiSelection } =
+      useMultiSelect()
 
-    const setCurrentNode = async (event, doc = null) => {
+    const setCurrentNode = async (event) => {
       const { clientX, clientY } = event
       const element = getElement(event.target)
       closeMenu()
@@ -121,8 +120,10 @@ export default {
         const currentElement = querySelectById(getCurrent().schema?.id)
 
         if (!currentElement?.contains(element) || event.button === 0) {
-          const selectedState = getMultiState(element, doc)
-          setMultiState(multiSelectedStates, selectedState)
+          const selectedState = getMultiSelectionState(element)
+          if (selectedState) {
+            setMultiSelection(selectedState)
+          }
 
           const loopId = element.getAttribute(NODE_LOOP)
           if (loopId) {
@@ -210,20 +211,15 @@ export default {
               return
             }
 
-            // 多选组合键触发
-            if (element) {
-              const selectedState = getMultiState(element, doc)
-              if ((event.ctrlKey || event.metaKey) && event.button === 0) {
-                handleMultiState(multiSelectedStates, selectedState)
-                return
-              }
-            }
+            if (toggleMultiSelection(event, element)) return
 
             insertPosition.value = false
             insertContainer.value = false
-            setCurrentNode(event, doc)
+            setCurrentNode(event)
             target.value = event.target
           })
+
+          useMessage().publish({ topic: 'canvas-mousedown', data: { event } })
         })
 
         win.addEventListener('scroll', () => {
@@ -265,7 +261,7 @@ export default {
 
         registerHotkeyEvent(doc)
 
-        win.addEventListener('scroll', updateRect, true)
+        win.addEventListener('scroll', syncNodeScroll, true)
       }
     }
     // 设置弹窗

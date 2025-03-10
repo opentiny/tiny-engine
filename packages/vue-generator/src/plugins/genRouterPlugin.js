@@ -5,6 +5,26 @@ const defaultOption = {
   path: './src/router'
 }
 
+const setDefaultRoute = (routes) => {
+  return routes.reduce((acc, route) => {
+    const newRoute = {
+      name: route.name,
+      path: route.path,
+      component: route.component,
+      children: setDefaultRoute(route.children)
+    }
+    if (route?.children?.length) {
+      const redirectChild = route.children.find((item) => item.isDefault)
+      if (redirectChild) {
+        newRoute.redirect = { name: `${redirectChild.name}` }
+      }
+    }
+    acc.push(newRoute)
+
+    return acc
+  }, [])
+}
+
 const flattenRoutes = (routes, parentPath = '') => {
   return routes.reduce((acc, route) => {
     const fullPath = `${parentPath}${route.path}`
@@ -15,16 +35,11 @@ const flattenRoutes = (routes, parentPath = '') => {
         name: `${route.name}`,
         path: fullPath,
         component: route.component,
-        children: flattenRoutes(route.children)
+        children: flattenRoutes(route.children),
+        isDefault: route.isDefault
       }
-      const redirectChild = route.children.find((item) => item.isDefault)
-
-      if (route.children && redirectChild) {
-        newRoute.redirect = { name: `${redirectChild.name}` }
-      }
-
       acc.push(newRoute)
-    } else if (route.children && route.children.length > 0) {
+    } else if (route?.children?.length) {
       // 如果不存在 component 但有 children，则递归处理 children
       const children = flattenRoutes(route.children, fullPath + '/')
       // 将处理后的 children 合并到上一层存在 component 的路由中
@@ -84,7 +99,7 @@ const convertToNestedRoutes = (schema) => {
     })
   })
 
-  home.children = flattenRoutes(result)
+  home.children = setDefaultRoute(flattenRoutes(result))
   return [home]
 }
 
