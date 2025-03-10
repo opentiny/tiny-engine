@@ -281,7 +281,7 @@ selectNode(node) // node: 节点 id，传入节点 id，选中组件，返回选
 // 使用
 import { insertNode } from '@opentiny/tiny-engine-canvas';
 
-insertNodde(...参数)
+insertNode(...参数)
 
 interface Node {
     node: NodeSchema; // 父节点的 schema，需要从api中拿到（getCurrent），而不是直接写 schema，如果不传的话，则是插入根节点中

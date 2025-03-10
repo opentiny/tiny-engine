@@ -14,7 +14,7 @@ const customOptionStylePlugin = () => {
   return {
     name: '',
     description: '',
-    run: (schema, context) {
+    run(schema, context) {
       // ... 自定义出码逻辑
       const res = '' // ... 这里自定义 option style 的 vue 文件
 

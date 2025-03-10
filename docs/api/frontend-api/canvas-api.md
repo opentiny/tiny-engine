@@ -72,7 +72,7 @@
   
    setLocales, // 方法函数，重置/补充I18n词条
   
-   setState,,// 转接的方法， 调用render的setState
+   setState,// 转接的方法， 调用render的setState
   
    deleteState, // 转接的方法， 调用render的deleteState
   
