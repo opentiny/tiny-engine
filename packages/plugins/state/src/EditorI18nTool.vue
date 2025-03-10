@@ -38,7 +38,7 @@
   </tiny-popover>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, ref, computed } from 'vue'
 import { Button, Popover, Tooltip } from '@opentiny/vue'
 import { iconClose } from '@opentiny/vue-icon'

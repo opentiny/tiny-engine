@@ -87,7 +87,7 @@
   </tiny-form>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, ref, computed, watch, onBeforeUnmount } from 'vue'
 import {
   Form,

@@ -77,7 +77,7 @@
   </plugin-panel>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, ref, computed, onActivated, watch, provide } from 'vue'
 import { Button, Search, Tabs, TabItem } from '@opentiny/vue'
 import {

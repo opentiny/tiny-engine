@@ -20,7 +20,7 @@
   </div>
 </template>
 
-<script lang="jsx">
+<script lang="tsx">
 import { computed } from 'vue'
 import { useModal, useResource } from '@opentiny/tiny-engine-meta-register'
 import { findExpressionInAppSchema } from '@opentiny/tiny-engine-common/js/ast'

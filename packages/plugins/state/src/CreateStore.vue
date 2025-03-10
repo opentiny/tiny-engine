@@ -66,7 +66,7 @@
   </tiny-form>
 </template>
 
-<script>
+<script lang="ts">
 import { getCurrentInstance, reactive, ref, computed, watch } from 'vue'
 import { Form, FormItem, Input, Collapse as TinyCollapse, CollapseItem as TinyCollapseItem } from '@opentiny/vue'
 import { MonacoEditor } from '@opentiny/tiny-engine-common'

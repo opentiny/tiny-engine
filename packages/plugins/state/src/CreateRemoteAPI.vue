@@ -89,7 +89,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { getCurrentInstance, reactive } from 'vue'
 import { ButtonGroup, Form, FormItem, Input, Popover, Switch, Button } from '@opentiny/vue'
 import { VueMonaco as MonacoEditor, MetaDescription } from '@opentiny/tiny-engine-common'
