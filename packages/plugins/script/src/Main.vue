@@ -29,7 +29,7 @@
   </plugin-panel>
 </template>
 
-<script>
+<script lang="ts">
 import { onBeforeUnmount, reactive, provide } from 'vue'
 import { Button } from '@opentiny/vue'
 import { VueMonaco, PluginPanel } from '@opentiny/tiny-engine-common'
