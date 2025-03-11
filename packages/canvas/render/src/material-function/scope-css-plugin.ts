@@ -1,5 +1,5 @@
 /** @ref {@vue/compiler-sfc@2.7.16/src/stylePlugins/scoped.ts } */
-/* eslint-disable no-use-before-define, prefer-const*/
+/* eslint-disable @typescript-eslint/no-use-before-define, prefer-const*/
 import { type PluginCreator, Rule, AtRule } from 'postcss'
 import selectorParser from 'postcss-selector-parser'
 

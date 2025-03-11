@@ -153,7 +153,7 @@ const state = reactive({
 })
 
 const tipBoxVisibility = ref(false)
-let tipText = ref('发布成功')
+const tipText = ref('发布成功')
 const form = ref(null)
 const menus = ref(
   getMergeMeta('engine.config')?.dslMode === 'Angular' ? [] : [{ name: '应用发布', code: 'publishApp', icon: 'news' }]

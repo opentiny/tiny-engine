@@ -392,7 +392,7 @@ export default {
     }
 
     const reInit = (name) => {
-      let option = state.gridOptions.find((item) => item.title === name)
+      const option = state.gridOptions.find((item) => item.title === name)
       option.align.picked = ''
       option.justify.picked = ''
     }
@@ -402,7 +402,11 @@ export default {
         updateStyle({ [name]: null })
       })
 
-      state.isAlign ? reInit('Align') : reInit('Distribute')
+      if (state.isAlign) {
+        reInit('Align')
+      } else {
+        reInit('Distribute')
+      }
       state.picked = ''
       state.showModal = false
       state.isAlign = false
@@ -459,9 +463,11 @@ export default {
         Object.keys(value).forEach((keys) => {
           state.gridOptions.forEach((item) => {
             if (item.key.includes(keys)) {
-              keys.includes('align')
-                ? (item.align.picked = `${item.align.key}:${value[keys]}`)
-                : (item.justify.picked = `${item.justify.key}:${value[keys]}`)
+              if (keys.includes('align')) {
+                item.align.picked = `${item.align.key}:${value[keys]}`
+              } else {
+                item.justify.picked = `${item.justify.key}:${value[keys]}`
+              }
             } else {
               item.picked = ''
             }

@@ -30,7 +30,7 @@ export default {
     })
 
     const togglePanel = (item, index) => {
-      let curIndex = state.arrActive.indexOf(index)
+      const curIndex = state.arrActive.indexOf(index)
 
       if (curIndex > -1) {
         state.arrActive.splice(curIndex, 1)

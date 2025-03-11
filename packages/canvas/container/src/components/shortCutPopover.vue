@@ -54,7 +54,9 @@ export default {
 
       properties.value.forEach((group) => {
         group.content.forEach((prop) => {
-          shortcuts.includes(prop.property) && quickProps.push(prop)
+          if (shortcuts.includes(prop.property)) {
+            quickProps.push(prop)
+          }
         })
 
         // 如果目标元素的快速设置值没有，则取属性值放置

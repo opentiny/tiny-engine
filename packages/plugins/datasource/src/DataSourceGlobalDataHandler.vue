@@ -80,7 +80,9 @@ export default {
       () => isOpen.value,
       (value) => {
         nextTick(() => {
-          value && window.dispatchEvent(new Event('resize'))
+          if (value) {
+            window.dispatchEvent(new Event('resize'))
+          }
         })
       }
     )

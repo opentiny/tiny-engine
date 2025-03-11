@@ -66,7 +66,7 @@ export default {
       const obj = {}
 
       data?.forEach(({ content }) => {
-        content.length &&
+        if (content.length) {
           content.forEach((item) => {
             const node = item.schema?.length ? getPropsObj(item.schema) : {}
 
@@ -75,6 +75,7 @@ export default {
             }
             obj[item.property] = node
           })
+        }
       })
 
       return obj

@@ -212,7 +212,6 @@ export default {
     const getSendSeesionProcess = () => {
       const sendProcess = { ...sessionProcess }
       const firstMessage = sendProcess.messages[0]
-      firstMessage.content
       sendProcess.messages = [
         { ...firstMessage, content: `${getBlockContent()}\n${codeRules}\n${firstMessage.content}` },
         ...sendProcess.messages.slice(1)
@@ -252,7 +251,7 @@ export default {
     }
     const scrollContent = async () => {
       await sleep(100)
-      let scrollElement = document.getElementById('chatgpt-window')
+      const scrollElement = document.getElementById('chatgpt-window')
       if (scrollElement) {
         scrollElement.scrollTop = scrollElement.scrollHeight
       }

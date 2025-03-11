@@ -53,7 +53,7 @@ export default {
     })
 
     const previewHistory = (item) => {
-      item &&
+      if (item) {
         previewPage({
           id: item.page,
           history: item.id,
@@ -64,6 +64,7 @@ export default {
           },
           ancestors: [item]
         })
+      }
     }
 
     const restoreHistory = (item) => {

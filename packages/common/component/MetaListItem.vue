@@ -130,7 +130,7 @@ export default {
     const isShow = ref(false)
     const isVisible = ref(false)
     const showMask = ref(false)
-    let top = ref(0)
+    const top = ref(0)
 
     const deleteItem = () => {
       isShow.value = true

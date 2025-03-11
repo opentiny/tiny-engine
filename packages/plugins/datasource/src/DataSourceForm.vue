@@ -44,7 +44,7 @@ import {
 import { useModal, useDataSource, useNotify, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { extend } from '@opentiny/vue-renderless/common/object'
 
-let isOpen = ref(false)
+const isOpen = ref(false)
 
 export const open = () => {
   isOpen.value = true

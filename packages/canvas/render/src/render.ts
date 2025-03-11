@@ -26,7 +26,7 @@ import BlockLoading from './BlockLoading.vue'
 
 export const renderDefault = (children, scope, parent) =>
   children.map?.((child) =>
-    // eslint-disable-next-line no-use-before-define
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     h(renderer, {
       schema: child,
       scope,

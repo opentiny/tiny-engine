@@ -50,7 +50,9 @@ const create = async (config) => {
   if (typeof beforeAppCreate === 'function') {
     await beforeAppCreate({ api: renderer })
   }
-  App && App.unmount()
+  if (App) {
+    App.unmount()
+  }
   App = null
 
   document.body.remove()

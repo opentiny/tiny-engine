@@ -33,15 +33,21 @@ function handlerLeft({ parent }) {
 }
 function handlerRight({ schema }) {
   const id = schema.children?.[0]?.id
-  id && selectNode(id)
+  if (id) {
+    selectNode(id)
+  }
 }
 function handlerUp({ index, parent }) {
   const id = (parent?.children[index - 1] || parent)?.id
-  id && selectNode(id)
+  if (id) {
+    selectNode(id)
+  }
 }
 function handlerDown({ index, parent }) {
   const id = parent?.children[index + 1]?.id
-  id && selectNode(id)
+  if (id) {
+    selectNode(id)
+  }
 }
 function handlerDelete() {
   multiSelectedStates.value.forEach(({ id: schemaId }) => {

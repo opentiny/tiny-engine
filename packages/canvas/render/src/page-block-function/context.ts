@@ -15,7 +15,9 @@ import { shallowReactive } from 'vue'
 export function useContext() {
   const context = shallowReactive({})
   const setContext = (ctx, clear) => {
-    clear && Object.keys(context).forEach((key) => delete context[key])
+    if (clear) {
+      Object.keys(context).forEach((key) => delete context[key])
+    }
     Object.assign(context, ctx)
   }
 

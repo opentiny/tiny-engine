@@ -82,13 +82,21 @@ export default {
       }
 
       if (isSaved()) {
-        isBlock() ? refreshBlock() : refreshPage()
+        if (isBlock()) {
+          refreshBlock()
+        } else {
+          refreshPage()
+        }
       } else {
         confirm({
           title: '提示',
           message: `${isBlock() ? '区块' : '页面'}尚未保存，是否要继续刷新?`,
           exec: () => {
-            isBlock() ? refreshBlock() : refreshPage()
+            if (isBlock()) {
+              refreshBlock()
+            } else {
+              refreshPage()
+            }
           }
         })
       }

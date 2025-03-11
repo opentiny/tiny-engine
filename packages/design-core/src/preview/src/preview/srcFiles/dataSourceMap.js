@@ -14,7 +14,7 @@ import dataSources from './dataSource.js'
 
 const dataSourceMap = {}
 
-Array.isArray(dataSources.list) &&
+if (Array.isArray(dataSources.list)) {
   dataSources.list.forEach((config) => {
     const dataSource = { config: config.data }
 
@@ -31,5 +31,6 @@ Array.isArray(dataSources.list) &&
 
     dataSource.load = () => Promise.resolve(result)
   })
+}
 
 export default dataSourceMap

@@ -61,7 +61,7 @@ export default {
 
     const getPropertyByType = (type) => properties.filter((item) => item.name == type)
     const getModelvalue = (type) => getPropertyByType(type)[0].modelValue
-    let optionsList = ref([])
+    const optionsList = ref([])
 
     const actionsOptions = {
       actions: [
@@ -112,7 +112,7 @@ export default {
     }
 
     const addSelectOption = () => {
-      let newOption = reactive({})
+      const newOption = reactive({})
       newOption[itemsOptions.value.valueField] = ''
       newOption[itemsOptions.value.textField] = ''
       optionsList.value.push(newOption)

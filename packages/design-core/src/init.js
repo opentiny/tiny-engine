@@ -59,7 +59,7 @@ const defaultLifeCycles = {
     // import(`./theme/${newRegistry.config.theme}.js`)
 
     const theme = localStorage.getItem(`tiny-engine-theme-${appId}`) || newRegistry.config.theme || 'light'
-    // eslint-disable-next-line no-new
+
     new TinyThemeTool(defaultThemeList[theme], defaultThemeList[theme]?.id)
     document.documentElement?.setAttribute?.('data-theme', theme)
 

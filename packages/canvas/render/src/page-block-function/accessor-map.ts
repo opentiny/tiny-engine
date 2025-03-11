@@ -10,7 +10,7 @@ interface IAccessor {
 
 export function useAccessorMap(context) {
   const generateAccessor = (type: IAccessorType, accessor: IAccessor, property: string) => {
-    const accessorFn = generateFunction(accessor[type].value, context) as Function
+    const accessorFn = generateFunction(accessor[type].value, context) as (...args: any) => any
 
     return { property, accessorFn, type }
   }

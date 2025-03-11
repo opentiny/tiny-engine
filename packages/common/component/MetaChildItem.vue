@@ -67,7 +67,7 @@ export default {
           if (props.type === 'array' && props.arrayIndex > -1) {
             modelValue = modelValue[props.arrayIndex]
           }
-          let model_value_property = modelValue[item.property]
+          const model_value_property = modelValue[item.property]
           item.widget.props.modelValue =
             typeof model_value_property === 'boolean' ? model_value_property : model_value_property || null
         })

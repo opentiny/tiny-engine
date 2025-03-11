@@ -241,13 +241,14 @@ export default {
     }
 
     const previewHistory = (item) => {
-      item &&
+      if (item) {
         previewBlock({
           id: item.blockId,
           history: item.id,
           framework: getMergeMeta('engine.config')?.dslMode,
           platform: getMergeMeta('engine.config')?.platformId
         })
+      }
     }
 
     const onMouseLeave = () => {
