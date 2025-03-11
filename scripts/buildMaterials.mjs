@@ -93,11 +93,12 @@ const generateComponents = () => {
           materials: {
             components: [],
             blocks: [],
-            snippets: []
+            snippets: [],
+            packages: []
           }
         }
       }
-      const { components = [], snippets = [], blocks = [] } = bundle.data.materials
+      const { components = [], snippets = [], blocks = [], packages = [] } = bundle.data.materials
       const componentsMap = []
       const packagesMap = []
       const appInfoBlocksLabels = appInfo.blockHistories.map((item) => item.label)
@@ -124,6 +125,11 @@ const generateComponents = () => {
             appInfo.blockHistories.push(material)
           }
 
+          return
+        }
+        if (file.includes('packages.json')) {
+          const packagesData = fsExtra.readJsonSync(path.join(process.cwd(), file))
+          packages.push(...packagesData.packages)
           return
         }
 

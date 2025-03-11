@@ -73,7 +73,8 @@ const rootSchema = ref([
 ])
 
 const handleTinyGridColumnsSlots = (node) => {
-  for (const columnItem of node.props?.columns || []) {
+  let columns = Array.isArray(node.props?.columns) ? node.props.columns : []
+  for (const columnItem of columns) {
     if (!columnItem?.slots) {
       continue
     }
@@ -238,6 +239,11 @@ const initData = (schema = { ...defaultSchema }, currentPage) => {
     })
   }
 
+  publish({
+    topic: 'pageOrBlockInit',
+    data: schema
+  })
+
   useHistory().addHistory(schema)
 }
 
@@ -316,15 +322,13 @@ const operationTypeMap = {
 
     // 4. 根据position参数选择插入位置
     let index = parentNode.children.indexOf(referenceNode)
-    if (index === -1 && referTargetNodeId) {
-      index = parentNode.children.length
-    }
 
     // 5. 插入节点的逻辑
     const childrenNode = toRaw(referenceNode)
     switch (position) {
       case 'before':
-        parentNode.children.unshift(newNodeData)
+        index = index === -1 ? 0 : index
+        parentNode.children.splice(index, 0, newNodeData)
         break
       case 'out':
         if (childrenNode) {
@@ -336,7 +340,8 @@ const operationTypeMap = {
         parentNode.children.splice(index + 1, 0, newNodeData)
         break
       default:
-        parentNode.children.push(newNodeData)
+        index = index === -1 ? parentNode.children.length : index + 1
+        parentNode.children.splice(index, 0, newNodeData)
         break
     }
 
@@ -471,14 +476,28 @@ const operationTypeMap = {
     // 筛选出来新增的和修改的
     const changedChildren = newChildren.filter(({ id }) => !deletedIdsSet.has(id))
 
-    changedChildren.forEach((childItem, index) => {
+    changedChildren.forEach((childItem) => {
       // 新增
       if (!originChildrenSet.has(childItem.id)) {
+        const newChildIndex = newChildren.findIndex(({ id }) => id === childItem.id)
+        let position = 'after'
+        let referTargetNodeId = null
+
+        // 1. 新节点 index === 0 （在最前面），插入位置为 before，插入到第一个
+        // 2. 新节点 index > 0，插入到 index -1 节点的后面。
+        // 3. 默认情况（index === -1）：插入到数组最后一个节点。（position: after，referTargetNodeId: nuLl）
+        if (newChildIndex === 0) {
+          position = 'before'
+        } else if (newChildIndex !== -1) {
+          position = 'after'
+          referTargetNodeId = newChildren[newChildIndex - 1]?.id
+        }
+
         operationTypeMap.insert({
           parentId: id,
           newNodeData: childItem,
-          position: 'after',
-          referTargetNodeId: changedChildren?.[index]?.id
+          position,
+          referTargetNodeId
         })
         return
       }

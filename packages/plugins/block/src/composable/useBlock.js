@@ -24,6 +24,7 @@ import {
   useTranslate,
   useBreadcrumb,
   useLayout,
+  useMessage,
   getMetaApi,
   META_APP,
   getMergeMeta,
@@ -297,6 +298,11 @@ const initBlock = async (block = {}, _langs = {}, isEdit) => {
     addBlock(block)
     setSaved(false)
   }
+
+  useMessage().publish({
+    topic: 'pageOrBlockInit',
+    data: block.content
+  })
 }
 
 const createBlock = ({ name_cn, label, path, categories }) => {
@@ -717,8 +723,8 @@ const getBlockAssetsByVersion = (block, version) => {
 
     assets = {
       ...block.assets,
-      scripts: block.assets.scripts.map(replaceUri),
-      styles: block.assets.styles.map(replaceUri)
+      scripts: (block.assets?.scripts || []).map(replaceUri),
+      styles: (block.assets?.styles || []).map(replaceUri)
     }
   }
 

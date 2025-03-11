@@ -160,6 +160,9 @@ export default {
       const schemaItem = useCanvas().getNodeById(id)
 
       const pageSchema = getSchema()
+      if (!schemaItem) {
+        pageSchema.id = 'body'
+      }
 
       // 如果选中的节点是画布，就设置成默认选中最外层schema
       useProperties().getProps(schemaItem || pageSchema, parent)

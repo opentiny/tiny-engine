@@ -9,7 +9,7 @@ const bundlePath = path.join(process.cwd(), '/designer-demo/public/mock/bundle.j
 // 物料文件存放文件夹名称
 const materialsDir = 'materials'
 const bundle = fs.readJSONSync(bundlePath)
-const { components, snippets, blocks } = bundle.data.materials
+const { components, snippets, blocks, packages } = bundle.data.materials
 
 const capitalize = (str) => `${str.charAt(0).toUpperCase()}${str.slice(1)}`
 const toPascalCase = (str) => str.split('-').map(capitalize).join('')
@@ -50,7 +50,10 @@ const splitMaterials = () => {
 
       fs.outputJsonSync(blockPath, block, { spaces: 2 })
     })
-
+    const packageJsonPath = path.join(process.cwd(), materialsDir, 'packages.json')
+    fs.outputJsonSync(packageJsonPath, { 
+      packages 
+    }, { spaces: 2 })
     logger.success('materials splitted.')
   } catch (error) {
     logger.error(`failed to split materials: ${error}.`)

@@ -5,7 +5,7 @@
         <svg-icon v-show="isMargin" name="margin"></svg-icon>
         <svg-icon v-show="isPadding" name="padding"></svg-icon>
       </span>
-      <numeric-select :name="property.name" :numericalText="numericalText" @update="inputChange" />
+      <numeric-select :name="property.name" :min="minVal" :numericalText="numericalText" @update="inputChange" />
     </div>
     <div class="content-value">
       <div v-show="isMargin" :class="['auto', { active: 'auto' === propertyValue }]" @click="select('auto')">Auto</div>
@@ -61,6 +61,8 @@ export default {
       props.property.value?.indexOf('px') > -1 ? Number.parseInt(props.property.value) : props.property.value
     )
 
+    const minVal = computed(() => (isMargin.value ? -Infinity : 0))
+
     const updateStyle = (value) => {
       emit('update', { [props.property.name]: value })
     }
@@ -105,7 +107,8 @@ export default {
       reset,
       select,
       inputChange,
-      sliderChange
+      sliderChange,
+      minVal
     }
   }
 }

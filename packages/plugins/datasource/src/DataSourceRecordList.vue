@@ -605,6 +605,7 @@ export default {
     margin-left: 8px;
     &:hover {
       text-decoration: underline;
+      color: var(--te-datasource-common-text-color-primary-hover);
     }
     color: var(--te-datasource-common-text-color-primary);
     .icon-download {

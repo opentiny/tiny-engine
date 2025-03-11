@@ -2047,6 +2047,51 @@ export const appSchemaDemo01 = {
         },
         isHome: false
       }
+    },
+    {
+      componentName: 'Page',
+      css: '.page-base-style {\n  padding: 24px;background: #FFFFFF;\n}\n\n.block-base-style {\n  margin: 16px;\n}\n\n.component-base-style {\n  margin: 8px;\n}\n',
+      props: {
+        className: 'page-base-style'
+      },
+      lifeCycles: {},
+      children: [],
+      dataSource: {
+        list: []
+      },
+      state: {},
+      methods: {},
+      utils: [],
+      bridge: [],
+      inputs: [],
+      outputs: [],
+      fileName: 'UntitledA',
+      meta: {
+        name: 'UntitledA',
+        id: '3sV9KkvL3SuQIufS',
+        app: '918',
+        route: 'UntitledA',
+        tenant: 1,
+        isBody: false,
+        parentId: 'ZaF79dsWf6HPwNfX',
+        depth: 0,
+        isPage: true,
+        isDefault: true,
+        group: 'staticPages',
+        occupier: {
+          id: 86,
+          username: '开发者',
+          email: 'developer@lowcode.com',
+          resetPasswordToken: 'developer',
+          confirmationToken: 'dfb2c162-351f-4f44-ad5f-8998',
+          is_admin: true
+        },
+        isHome: false,
+        message: 'Page auto save',
+        _id: '3sV9KkvL3SuQIufS',
+        router: 'createVm/untitledFA/UntitledA'
+      },
+      path: 'createVm/untitledFA'
     }
   ],
   componentsMap: [
