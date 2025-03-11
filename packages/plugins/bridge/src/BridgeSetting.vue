@@ -87,7 +87,7 @@
   </plugin-setting>
 </template>
 
-<script>
+<script lang="ts">
 import { computed, onMounted, reactive, ref, watchEffect, nextTick, watch } from 'vue'
 import {
   Input as TinyInput,

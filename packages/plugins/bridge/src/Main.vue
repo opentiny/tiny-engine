@@ -16,7 +16,7 @@
   </plugin-panel>
 </template>
 
-<script>
+<script lang="ts">
 import { ref, reactive, computed, provide } from 'vue'
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
 import { useLayout } from '@opentiny/tiny-engine-meta-register'
