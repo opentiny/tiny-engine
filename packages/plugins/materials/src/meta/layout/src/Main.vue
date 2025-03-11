@@ -17,7 +17,7 @@
   </plugin-panel>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, provide, ref, computed } from 'vue'
 import { Tabs, TabItem } from '@opentiny/vue'
 import { META_APP as PLUGIN_NAME, getMergeMeta } from '@opentiny/tiny-engine-meta-register'

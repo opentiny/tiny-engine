@@ -24,7 +24,7 @@
   </plugin-setting>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, watch, ref } from 'vue'
 import { Grid, GridColumn, Button } from '@opentiny/vue'
 import { format } from '@opentiny/vue-renderless/common/date'

@@ -2,7 +2,7 @@
   <component :is="layout.entry" :registryData="registryData" class="plugin-materials"></component>
 </template>
 
-<script>
+<script lang="ts">
 import { getMergeRegistry } from '@opentiny/tiny-engine-meta-register'
 import meta from '../meta'
 export default {

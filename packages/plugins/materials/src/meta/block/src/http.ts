@@ -15,7 +15,7 @@ import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 
 const getParams = (obj) => {
   let result = ''
-  for (let item in obj) {
+  for (const item in obj) {
     if (obj[item] instanceof Array) {
       obj[item].forEach((i) => {
         result += `&${item}=${i}`

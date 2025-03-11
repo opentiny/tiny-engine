@@ -12,7 +12,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, inject } from 'vue'
 import { Tabs, TabItem } from '@opentiny/vue'
 

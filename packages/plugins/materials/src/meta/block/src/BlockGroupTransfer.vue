@@ -32,14 +32,14 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { computed, onMounted, provide, reactive, watch } from 'vue'
 import { useBlock, useModal } from '@opentiny/tiny-engine-meta-register'
 import { SelectAll } from '@opentiny/tiny-engine-common'
 import BlockList from './BlockList.vue'
 import BlockGroupArrange from './BlockGroupArrange.vue'
 import { Select, Option } from '@opentiny/vue'
-import { fetchBlockById } from './http.js'
+import { fetchBlockById } from './http'
 
 export default {
   components: {

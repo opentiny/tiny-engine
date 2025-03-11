@@ -20,7 +20,7 @@
   ></plugin-block-list>
 </template>
 
-<script lang="jsx">
+<script lang="tsx">
 import { computed, inject, reactive, ref } from 'vue'
 import {
   useBlock,

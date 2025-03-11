@@ -17,7 +17,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import BlockList from './BlockList.vue'
 
 export default {

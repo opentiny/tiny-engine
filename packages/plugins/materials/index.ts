@@ -11,11 +11,11 @@
  */
 
 import entry from './src/Main.vue'
-import metaData from './meta.js'
-import { ResourceService, MaterialService } from './src/composable'
-import MaterialLayout from './src/meta/layout'
-import MaterialBlock from './src/meta/block'
-import MaterialComponent from './src/meta/component'
+import metaData from './meta'
+import { ResourceService, MaterialService } from './src/composable/index'
+import MaterialLayout from './src/meta/layout/index'
+import MaterialBlock from './src/meta/block/index'
+import MaterialComponent from './src/meta/component/index'
 import MaterialHeader from './src/components/header/Main.vue'
 import { basePropertyOptions } from './src/js/options'
 import './src/styles/vars.less'

@@ -7,7 +7,7 @@
   ></svg-button>
 </template>
 
-<script>
+<script lang="ts">
 import { computed } from 'vue'
 import { SvgButton } from '@opentiny/tiny-engine-common'
 import { useLayout } from '@opentiny/tiny-engine-meta-register'

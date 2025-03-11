@@ -33,7 +33,7 @@
     </template>
   </plugin-setting>
 </template>
-<script>
+<script lang="ts">
 import { reactive, watch, provide, inject, ref, computed } from 'vue'
 import { Search } from '@opentiny/vue'
 import { iconSearch } from '@opentiny/vue-icon'

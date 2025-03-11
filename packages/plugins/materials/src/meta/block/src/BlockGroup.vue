@@ -124,7 +124,7 @@
   </tiny-dialog-box>
 </template>
 
-<script lang="jsx">
+<script lang="tsx">
 import { inject, reactive, ref, nextTick } from 'vue'
 import {
   Input,

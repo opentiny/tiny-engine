@@ -35,7 +35,7 @@
   </div>
 </template>
 
-<script lang="jsx">
+<script lang="tsx">
 import { Button } from '@opentiny/vue'
 import { IconDel, iconDoubleRight } from '@opentiny/vue-icon'
 import { inject } from 'vue'
