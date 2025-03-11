@@ -398,13 +398,10 @@ const setSelectRect = (element, multiNodeId) => {
   element = element || getDocument().body
 
   const { left, height, top, width } = getRect(element)
+  const elementBounds = { left, top, width, height }
   const componentName = getCurrent().schema?.componentName || ''
   clearHover()
-  Object.assign(selectState, {
-    width,
-    height,
-    top,
-    left,
+  Object.assign(selectState, elementBounds, {
     componentName,
     doc: getDocument()
   })
@@ -412,8 +409,7 @@ const setSelectRect = (element, multiNodeId) => {
   if (multiNodeId) {
     multiSelectedStates.value.map((state) => {
       if (state.id === multiNodeId) {
-        const { schema, ...rest } = selectState
-        return Object.assign(state, rest)
+        return Object.assign(state, elementBounds)
       }
     })
   }

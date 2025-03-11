@@ -84,7 +84,7 @@ export const useMultiSelect = () => {
     const selectState = getMultiSelectionState(element)
 
     if (!selectState) {
-      return // 如果没有有效的 selectState，返回 false
+      return
     }
 
     const nodeId = selectState?.id
