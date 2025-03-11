@@ -40,7 +40,7 @@ const formatScript = (string) => {
   try {
     const ast = string2Ast(string)
     // javascript 在 prettier 格式化的时候，会自动在前面加上逗号“；”，因此该种情形需要特殊处理格式化
-    if (ast.program.body?.[0]?.type === 'ExpressionStatement') {
+    if (ast.program.body?.length === 1 && ast.program.body?.[0]?.type === 'ExpressionStatement') {
       // 将 javascript 表达式 包裹在 "!()" 中，格式化完成之后，再从里面取出来格式化之后的值
       newStr = prettier
         .format(`!(${string})`, options)
