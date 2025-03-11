@@ -11,6 +11,7 @@ export default defineConfigWithVueTs(
   {
     ignores: [
       '.vscode',
+      'docs',
       '**/dist',
       '**/public',
       '**/package-lock.json',
