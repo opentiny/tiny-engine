@@ -81,7 +81,7 @@ import { generatePage } from '@opentiny/tiny-engine-common/js/vscodeGenerateFile
 import PageHistory from './PageHistory.vue'
 import PageInputOutput from './PageInputOutput.vue'
 import meta from '../meta'
-import http from './http.js'
+import http from './http'
 
 const { COMPONENT_NAME } = constants
 const isShow = ref(false)

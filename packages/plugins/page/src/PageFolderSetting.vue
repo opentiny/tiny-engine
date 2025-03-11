@@ -32,7 +32,7 @@
   </plugin-setting>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, ref, computed } from 'vue'
 import { Button, Collapse, CollapseItem } from '@opentiny/vue'
 import { PluginSetting, SvgButton, ButtonGroup } from '@opentiny/tiny-engine-common'
@@ -48,7 +48,7 @@ import {
 import { isEqual } from '@opentiny/vue-renderless/common/object'
 import throttle from '@opentiny/vue-renderless/common/deps/throttle'
 import meta from '../meta'
-import http from './http.js'
+import http from './http'
 
 const isShow = ref(false)
 export const openFolderSettingPanel = () => {

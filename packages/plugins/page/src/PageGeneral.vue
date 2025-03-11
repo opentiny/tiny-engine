@@ -77,7 +77,7 @@
   </div>
 </template>
 
-<script lang="jsx">
+<script lang="tsx">
 import { ref, computed, watchEffect, reactive } from 'vue'
 import { Form, FormItem, Input, Select, Radio } from '@opentiny/vue'
 import { iconFile } from '@opentiny/vue-icon'

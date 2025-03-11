@@ -451,6 +451,7 @@ const fetchPageDetailIfNeeded = async (page) => {
       const pageDetail = await http.fetchPageDetail(page.id)
       page.page_content = pageDetail.page_content
     } catch (error) {
+      throw new Error(error)
       page.page_content = {}
     }
   }

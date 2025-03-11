@@ -55,7 +55,7 @@
   </tiny-collapse>
 </template>
 
-<script lang="jsx">
+<script lang="tsx">
 import { reactive, onMounted, onUnmounted } from 'vue'
 import { Search, Collapse, CollapseItem, Popover } from '@opentiny/vue'
 import { IconFolderOpened, IconFolderClosed, IconSearch } from '@opentiny/vue-icon'
@@ -74,7 +74,7 @@ import { handlePageUpdate } from '@opentiny/tiny-engine-common/js/http'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { closePageSettingPanel } from './PageSetting.vue'
 import { closeFolderSettingPanel } from './PageFolderSetting.vue'
-import http from './http.js'
+import http from './http'
 import DraggableTree from './Tree.vue'
 import { SvgButton } from '@opentiny/tiny-engine-common'
 

@@ -41,7 +41,7 @@
   </div>
 </template>
 
-<script lang="jsx">
+<script lang="tsx">
 import { reactive, ref, watchEffect, provide } from 'vue'
 import { useCanvas, usePage, useHelp, useModal, useNotify, useLayout } from '@opentiny/tiny-engine-meta-register'
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
@@ -121,6 +121,7 @@ export default {
           group
         }
       } catch (error) {
+        throw new Error(error)
         // console.error('Failed to create new page:', error)
       }
       pageSettingState.currentPageDataCopy = extend(true, {}, pageSettingState.currentPageData)
