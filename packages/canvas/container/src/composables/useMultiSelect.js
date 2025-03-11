@@ -99,12 +99,6 @@ export const useMultiSelect = () => {
         if (!exList.length) return
         setMultiSelection(exList)
       } else {
-        // 如果是父节点，先移除所有子节点
-        const children = selectState.schema?.children
-        if (Array.isArray(children) && children.length) {
-          const newList = multiSelectedStates.value.filter((state) => !children.some((child) => child.id === state.id))
-          setMultiSelection(newList)
-        }
         addMultiSelection(selectState)
       }
     } else {
