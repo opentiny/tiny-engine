@@ -81,7 +81,6 @@
 
 <script lang="tsx">
 import { reactive, ref, watchEffect, watch, computed } from 'vue'
-// eslint-disable-next-line vue/prefer-import-from-vue
 import { camelize, capitalize } from '@vue/shared'
 import { Grid, Pager, Input, Numeric, DatePicker, Switch, Slider, Link, Button } from '@opentiny/vue'
 import { iconUpload } from '@opentiny/vue-icon'

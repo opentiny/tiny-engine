@@ -11,7 +11,6 @@
  */
 
 import { ref, reactive, readonly } from 'vue'
-// eslint-disable-next-line vue/prefer-import-from-vue
 import { hyphenate } from '@vue/shared'
 import { extend, copyArray } from '@opentiny/vue-renderless/common/object'
 import { format } from '@opentiny/vue-renderless/common/date'
