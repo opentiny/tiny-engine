@@ -38,16 +38,10 @@ export default defineService({
   type: 'MetaService',
   init: () => {
     const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
-    const theme =
-      localStorage.getItem(`tiny-engine-theme-${appId}`) || getMergeMeta('engine.config').theme || DEFAULT_THEME.type
     THEME_DATA.value = getMergeRegistry('themes')
     DEFAULT_THEME = THEME_DATA.value[0]
-    themeState.value = {
-      theme: DEFAULT_THEME.type,
-      themeIcon: DEFAULT_THEME.icon,
-      themeLabel: DEFAULT_THEME.text
-    }
-
+    const theme =
+      localStorage.getItem(`tiny-engine-theme-${appId}`) || getMergeMeta('engine.config').theme || DEFAULT_THEME.type
     themeChange(theme)
   },
   apis: () => ({
