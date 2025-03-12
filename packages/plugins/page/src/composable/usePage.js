@@ -490,14 +490,6 @@ const getFamily = async (previewParams) => {
   return familyPages
 }
 
-const setDefaultPage = (childPageList, id) => {
-  if (childPageList?.length && id) {
-    pageSettingState.defaultPage = childPageList.find((item) => item.id === id)
-  } else {
-    pageSettingState.defaultPage = null
-  }
-}
-
 export default () => {
   return {
     getDefaultPage,
@@ -517,7 +509,6 @@ export default () => {
     getFamily,
     getPageChildren,
     STATIC_PAGE_GROUP_ID,
-    COMMON_PAGE_GROUP_ID,
-    setDefaultPage
+    COMMON_PAGE_GROUP_ID
   }
 }

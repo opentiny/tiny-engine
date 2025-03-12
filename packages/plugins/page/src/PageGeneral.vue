@@ -95,7 +95,7 @@ export default {
     }
   },
   setup() {
-    const { pageSettingState, changeTreeData, STATIC_PAGE_GROUP_ID, getPageChildren, setDefaultPage } = usePage()
+    const { pageSettingState, changeTreeData, STATIC_PAGE_GROUP_ID, getPageChildren } = usePage()
     const ROOT_ID = pageSettingState.ROOT_ID
 
     const pageParentId = computed({
@@ -122,6 +122,7 @@ export default {
       } else {
         state.childPageList = await getPageChildren(id)
         const defaultPage = state.childPageList?.find((item) => item.isDefault)
+        pageSettingState.defaultPage = defaultPage ? defaultPage : null
         state.defaultPageId = defaultPage ? defaultPage.id : ''
         state.childPageOp = state.childPageList.map((item) => {
           return {
@@ -130,12 +131,11 @@ export default {
             icon: iconFile()
           }
         })
-        setDefaultPage(state.childPageList, state.defaultPageId)
       }
     }
 
     const changeDefaultPage = () => {
-      setDefaultPage(state.childPageList, state.defaultPageId)
+      pageSettingState.defaultPage = state.childPageList.find((item) => item.id === state.defaultPageId)
     }
 
     watchEffect(() => {
