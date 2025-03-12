@@ -12,7 +12,11 @@ let THEME_DATA = ref([])
 
 let DEFAULT_THEME = null
 
-const themeState = reactive({})
+const themeState = reactive({
+  theme: '',
+  themeLabel: '',
+  themeIcon: ''
+})
 
 const getThemeData = () => THEME_DATA
 const getThemeState = () => themeState
