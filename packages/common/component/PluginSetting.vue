@@ -5,7 +5,8 @@
       'plugin-setting',
       { 'second-panel': isSecond },
       { 'full-screen': state.isFullScreen },
-      { 'align-right': align.includes('right') }
+      { 'align-right': align.includes('right') },
+      shadowClass
     ]"
     :style="alignStyle"
     @click="$emit('click')"
@@ -150,8 +151,15 @@ export default {
       return isFullScreen ? '收起' : '全屏查看'
     }
 
+    // 计算属性用于确定阴影类
+    const shadowClass = computed(() => {
+      if (props.isSecond) return ''
+      return props.align.includes('right') ? 'shadow-right' : 'shadow-left'
+    })
+
     return {
       alignStyle,
+      shadowClass,
       firstPanelOffset,
       state,
       fullScreen,
@@ -173,9 +181,15 @@ export default {
   border-left: 1px solid var(--te-component-common-border-color-divider);
 
   &:not(.second-panel) {
-    box-shadow: 6px 0px 3px 0px var(--te-component-common-shadow-color);
-    border-right: none;
-    border-left: none;
+    &.shadow-left {
+      box-shadow: 6px 0px 3px 0px var(--te-component-common-shadow-color);
+      border-right: none;
+    }
+
+    &.shadow-right {
+      box-shadow: -6px 0px 3px 0px var(--te-component-common-shadow-color);
+      border-left: none;
+    }
   }
 
   &.full-screen {

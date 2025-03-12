@@ -22,12 +22,11 @@
       </span>
       <span>{{ item.title }}</span>
     </li>
-    <li @click="hideSidebar">隐藏活动栏</li>
   </ul>
 </template>
 
 <script>
-import { reactive, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { reactive, onMounted, onBeforeUnmount, nextTick, ref } from 'vue'
 import { useLayout } from '@opentiny/tiny-engine-meta-register'
 export default {
   props: {
@@ -41,7 +40,8 @@ export default {
   },
   emits: ['close', 'switchAlign'],
   setup(props, { emit }) {
-    const { PLUGIN_POSITION, getPluginShown, changePluginShown, changeMenuShown } = useLayout()
+    const { getPluginShown, changePluginShown, changeMenuShown } = useLayout()
+    const pluginGroupPosition = ref('')
     const contextMenu = reactive({
       type: true,
       visible: false,
@@ -54,7 +54,7 @@ export default {
 
     // 显示菜单
     const contextMenuWidth = props.align.includes('right') ? 130 : 0
-    const showContextMenu = (x, y, type, item, index, align) => {
+    const showContextMenu = (x, y, type, item, index, position) => {
       const windowHeight = window.innerHeight
 
       contextMenu.type = type
@@ -78,7 +78,7 @@ export default {
       if (type) {
         contextMenu.item = item
         contextMenu.index = index
-        contextMenu.list = align
+        pluginGroupPosition.value = position
       }
     }
 
@@ -97,7 +97,7 @@ export default {
     // 切换组件位置
     const switchAlign = () => {
       emit('close')
-      emit('switchAlign', contextMenu.index, contextMenu.item.id, contextMenu.list, PLUGIN_POSITION.leftTop)
+      emit('switchAlign', contextMenu.index, contextMenu.item.id, pluginGroupPosition.value)
       hideContextMenu()
     }
 
