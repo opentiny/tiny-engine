@@ -294,7 +294,7 @@ export default {
 
     const settingDefaultPage = async () => {
       const params = { ...pageSettingState.defaultPage, isDefault: true }
-      updatePage(pageSettingState.defaultPage?.id, params, false)
+      await updatePage(pageSettingState.defaultPage?.id, params, false)
     }
 
     const createHistoryMessage = () => {
