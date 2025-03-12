@@ -65,7 +65,8 @@ const pageSettingState = reactive({
   isNew: false,
   ROOT_ID: '0', // 根节点ID
   updateTreeData: null,
-  treeDataMapping: {}
+  treeDataMapping: {},
+  defaultPage: null // 当前页设置的默认页
 })
 
 const isTemporaryPage = reactive({
@@ -193,6 +194,7 @@ const resetPageData = () => {
   pageSettingState.currentPageData = {}
   pageSettingState.currentPageDataCopy = {}
   pageSettingState.oldParentId = null
+  pageSettingState.defaultPage = null
 }
 
 // 判断当前页面内容是否有修改
@@ -488,6 +490,12 @@ const getFamily = async (previewParams) => {
   return familyPages
 }
 
+const setDefaultPage = (childPageList, id) => {
+  if (childPageList?.length && id) {
+    pageSettingState.defaultPage = childPageList.find((item) => item.id === id)
+  }
+}
+
 export default () => {
   return {
     getDefaultPage,
@@ -507,6 +515,7 @@ export default () => {
     getFamily,
     getPageChildren,
     STATIC_PAGE_GROUP_ID,
-    COMMON_PAGE_GROUP_ID
+    COMMON_PAGE_GROUP_ID,
+    setDefaultPage
   }
 }

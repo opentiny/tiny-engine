@@ -37,7 +37,7 @@ export const requestEvent = (url, params) => {
  * @returns { Promise }
  *
  */
-export const handlePageUpdate = (pageId, params, routerChange, isCurEditPage) => {
+export const handlePageUpdate = (pageId, params, routerChange, isCurEditPage, isShowNotify = true) => {
   return getMetaApi(META_SERVICE.Http)
     .post(`/app-center/api/pages/update/${pageId}`, params)
     .then((res) => {
@@ -57,7 +57,9 @@ export const handlePageUpdate = (pageId, params, routerChange, isCurEditPage) =>
         }
       }
 
-      useNotify({ message: '保存成功!', type: 'success' })
+      if (isShowNotify) {
+        useNotify({ message: '保存成功!', type: 'success' })
+      }
 
       // 更新 页面状态 标志
       setSaved(true)

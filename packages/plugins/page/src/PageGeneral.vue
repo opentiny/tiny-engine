@@ -53,16 +53,26 @@
           </span>
         </div>
       </tiny-form-item>
-      <tiny-form-item v-if="pageSettingState.currentPageData.group !== 'publicPages'" prop="isDefault">
-        <tiny-checkbox v-model="pageSettingState.currentPageData.isDefault">设为默认页</tiny-checkbox>
+      <tiny-form-item
+        v-if="pageSettingState.currentPageData.group !== 'publicPages' && !isFolder"
+        label="设置默认跳转页"
+        prop="isDefault"
+      >
+        <tiny-select
+          v-model="state.defaultPageId"
+          :options="state.childPageOp"
+          placeholder="请选择默认跳转页"
+          @change="changeDefaultPage"
+        ></tiny-select>
       </tiny-form-item>
     </tiny-form>
   </div>
 </template>
 
 <script lang="jsx">
-import { ref, computed, watchEffect } from 'vue'
-import { Form, FormItem, Input, Select, Radio, Checkbox } from '@opentiny/vue'
+import { ref, computed, watchEffect, reactive } from 'vue'
+import { Form, FormItem, Input, Select, Radio } from '@opentiny/vue'
+import { iconFile } from '@opentiny/vue-icon'
 import { usePage } from '@opentiny/tiny-engine-meta-register'
 import { REGEXP_PAGE_NAME, REGEXP_FOLDER_NAME, REGEXP_ROUTE } from '@opentiny/tiny-engine-common/js/verification'
 
@@ -72,8 +82,7 @@ export default {
     TinyFormItem: FormItem,
     TinyInput: Input,
     TinySelect: Select,
-    TinyRadio: Radio,
-    TinyCheckbox: Checkbox
+    TinyRadio: Radio
   },
   props: {
     modelValue: {
@@ -86,7 +95,7 @@ export default {
     }
   },
   setup() {
-    const { pageSettingState, changeTreeData, STATIC_PAGE_GROUP_ID } = usePage()
+    const { pageSettingState, changeTreeData, STATIC_PAGE_GROUP_ID, getPageChildren, setDefaultPage } = usePage()
     const ROOT_ID = pageSettingState.ROOT_ID
 
     const pageParentId = computed({
@@ -99,9 +108,40 @@ export default {
     })
 
     const oldParentId = ref(pageParentId.value)
+    const state = reactive({
+      childPageList: [],
+      childPageOp: [],
+      defaultPageId: ''
+    })
+
+    const setChildAndDefaultPage = async (id) => {
+      if (pageSettingState.isNew) {
+        state.childPageList = []
+        state.childPageOp = []
+        state.defaultPageId = ''
+      } else {
+        state.childPageList = await getPageChildren(id)
+        if (state.childPageList?.length) {
+          state.defaultPageId = state.childPageList?.find((item) => item.isDefault)?.id
+          state.childPageOp = state.childPageList.map((item) => {
+            return {
+              value: item.id,
+              label: item.name,
+              icon: iconFile()
+            }
+          })
+          setDefaultPage(state.childPageList, state.defaultPageId)
+        }
+      }
+    }
+
+    const changeDefaultPage = () => {
+      setDefaultPage(state.childPageList, state.defaultPageId)
+    }
 
     watchEffect(() => {
       oldParentId.value = pageSettingState.oldParentId
+      setChildAndDefaultPage(pageSettingState.currentPageData?.id)
     })
 
     const currentRoute = computed(() => {
@@ -242,7 +282,9 @@ export default {
       validGeneralForm,
       treeFolderOp,
       currentRoute,
-      changeParentForderId
+      changeParentForderId,
+      state,
+      changeDefaultPage
     }
   }
 }

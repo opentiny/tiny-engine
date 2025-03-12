@@ -136,9 +136,6 @@ export default {
             .catch(() => {
               useNotify({ message: '主页设置失败！', type: 'error' })
             })
-        },
-        cancel: () => {
-          state.checked = false
         }
       })
     }
