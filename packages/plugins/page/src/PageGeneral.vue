@@ -121,17 +121,16 @@ export default {
         state.defaultPageId = ''
       } else {
         state.childPageList = await getPageChildren(id)
-        if (state.childPageList?.length) {
-          state.defaultPageId = state.childPageList?.find((item) => item.isDefault)?.id
-          state.childPageOp = state.childPageList.map((item) => {
-            return {
-              value: item.id,
-              label: item.name,
-              icon: iconFile()
-            }
-          })
-          setDefaultPage(state.childPageList, state.defaultPageId)
-        }
+        const defaultPage = state.childPageList?.find((item) => item.isDefault)
+        state.defaultPageId = defaultPage ? defaultPage.id : ''
+        state.childPageOp = state.childPageList.map((item) => {
+          return {
+            value: item.id,
+            label: item.name,
+            icon: iconFile()
+          }
+        })
+        setDefaultPage(state.childPageList, state.defaultPageId)
       }
     }
 

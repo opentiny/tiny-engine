@@ -493,6 +493,8 @@ const getFamily = async (previewParams) => {
 const setDefaultPage = (childPageList, id) => {
   if (childPageList?.length && id) {
     pageSettingState.defaultPage = childPageList.find((item) => item.id === id)
+  } else {
+    pageSettingState.defaultPage = null
   }
 }
 

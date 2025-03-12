@@ -309,7 +309,9 @@ export default {
         const exec = () => {
           pageSettingState.currentPageData.message = state.historyMessage.trim() || 'Page auto save'
           editPage()
-          settingDefaultPage()
+          if (pageSettingState.defaultPage?.id) {
+            settingDefaultPage()
+          }
           state.historyMessage = ''
         }
 
