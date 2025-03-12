@@ -109,10 +109,11 @@ export default {
       useLayout().closeSetting(true)
     }
 
-    const switchAlign = (index, id, list, align) => {
+    const switchAlign = (index, id, from) => {
       settingPlugins.value.splice(index, 1)
       emit('changeRightAlign', id)
-      dragPluginLayout(list, align, index, 0)
+      if (!isSameSide(index, 0)) close()
+      dragPluginLayout(from, PLUGIN_POSITION.leftTop, index, 0)
     }
 
     const changeAlign = (pluginId) => {

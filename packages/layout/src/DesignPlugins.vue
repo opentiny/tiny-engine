@@ -160,12 +160,6 @@ export default {
       bottomNavLists: getPluginsByPosition(PLUGIN_POSITION.leftBottom, props.pluginList)
     })
 
-    const switchAlign = (index, id, list, align) => {
-      list === PLUGIN_POSITION.leftTop ? state.topNavLists.splice(index, 1) : state.bottomNavLists.splice(index, 1)
-      emit('changeLeftAlign', id)
-      dragPluginLayout(list, align, index, 0)
-    }
-
     const changeAlign = (pluginId) => {
       const item = getPluginById(props.pluginList, pluginId)
       state.topNavLists.unshift(item)
@@ -213,6 +207,23 @@ export default {
     const close = () => {
       state.prevIdex = -2
       useLayout().closePlugin(true)
+    }
+
+    /**
+     * @param index 组件索引
+     * @param id 组件 ID, 类似于 'engine.plugins.*'
+     * @param from 组件来源
+     */
+    const switchAlign = (index, id, from) => {
+      if (from === PLUGIN_POSITION.leftTop) {
+        state.topNavLists.splice(index, 1)
+      } else {
+        state.bottomNavLists.splice(index, 1)
+      }
+      emit('changeLeftAlign', id)
+
+      if (!isSameSide(index, 0)) close()
+      dragPluginLayout(from, PLUGIN_POSITION.rightTop, index, 0)
     }
 
     const fixPanel = (pluginName) => {

@@ -224,7 +224,14 @@ export default () => {
     }
   }
 
-  //拖拽后改变插件位置
+  /**
+   * 拖拽后改变插件位置
+   * @param {*} from 插件的起始位置
+   * @param {*} to  插件的结束位置
+   * @param {*} oldIndex  插件的起始索引
+   * @param {*} newIndex 插件的结束索引
+   * @returns
+   */
   const dragPluginLayout = (from, to, oldIndex, newIndex) => {
     if (from === to && oldIndex === newIndex) return
 
