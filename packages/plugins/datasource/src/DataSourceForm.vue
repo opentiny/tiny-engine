@@ -147,7 +147,8 @@ export default {
 
         dataSourceState.dataSourceColumn = { name, type: type || 'array', columns: filterColumns }
         dataSourceState.dataSourceColumnCopies = extend(true, {}, dataSourceState.dataSourceColumn)
-      }
+      },
+      { immediate: true }
     )
 
     const closeAllPanel = () => {
