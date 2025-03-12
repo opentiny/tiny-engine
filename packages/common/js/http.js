@@ -37,7 +37,7 @@ export const requestEvent = (url, params) => {
  * @returns { Promise }
  *
  */
-export const handlePageUpdate = (pageId, params, routerChange, isCurEditPage, isShowNotify = true) => {
+export const handlePageUpdate = (pageId, params, routerChange, isCurEditPage, isUpdateTree = true) => {
   return getMetaApi(META_SERVICE.Http)
     .post(`/app-center/api/pages/update/${pageId}`, params)
     .then((res) => {
@@ -57,7 +57,7 @@ export const handlePageUpdate = (pageId, params, routerChange, isCurEditPage, is
         }
       }
 
-      if (isShowNotify) {
+      if (isUpdateTree) {
         useNotify({ message: '保存成功!', type: 'success' })
       }
 
@@ -77,7 +77,9 @@ export const handlePageUpdate = (pageId, params, routerChange, isCurEditPage, is
     .finally(() => {
       const { pageSettingState } = usePage()
       // 更新页面管理的列表，如果不存在，说明还没有打开过页面管理面板
-      pageSettingState.updateTreeData?.()
+      if (isUpdateTree) {
+        pageSettingState.updateTreeData?.()
+      }
       pageSettingState.isNew = false
     })
 }
