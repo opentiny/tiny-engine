@@ -133,7 +133,9 @@ const broadcast = ({ topic, data }) => {
 
 export default () => {
   // 新use的message自动广播上次的异步消息
-  lastMessage && publish(lastMessage)
+  if (lastMessage) {
+    publish(lastMessage)
+  }
 
   return {
     subscribe,

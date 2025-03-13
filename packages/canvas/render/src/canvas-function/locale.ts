@@ -1,4 +1,4 @@
-import { inject, watch, WritableComputedRef } from 'vue'
+import { inject, watch, type WritableComputedRef } from 'vue'
 import { I18nInjectionKey } from 'vue-i18n'
 import { useBroadcastChannel } from '@vueuse/core'
 import { constants } from '@opentiny/tiny-engine-utils'

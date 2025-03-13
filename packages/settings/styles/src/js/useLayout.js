@@ -15,7 +15,9 @@ export default ({ style, updateStyle }) => {
   const updateLayout = (layout) => {
     if (typeof layout === 'string') {
       style.value.display = layout
-      typeof updateStyle === 'function' && updateStyle()
+      if (typeof updateStyle === 'function') {
+        updateStyle()
+      }
     }
   }
 

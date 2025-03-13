@@ -242,7 +242,7 @@ export default {
 
     const previewHistory = (item) => {
       const theme = getMetaApi(META_SERVICE.ThemeSwitch)?.getThemeState()?.theme
-      item &&
+      if (item) {
         previewBlock({
           id: item.blockId,
           history: item.id,
@@ -254,6 +254,7 @@ export default {
             schema: item.content
           }
         })
+      }
     }
 
     const onMouseLeave = () => {

@@ -153,14 +153,14 @@ export default {
 
       let text = ''
 
-      let name = computed(() => {
+      const name = computed(() => {
         if (item.type) {
           text = typeDesc[item.type]
         }
 
         if (item[props.textField]) {
           if (item[props.textField].i18nKey) {
-            let i18nKey = item[props.textField].i18nKey
+            const i18nKey = item[props.textField].i18nKey
             text = appSchemaState.langs[i18nKey][appSchemaState.currentLang]
           } else {
             text = item[props.textField]

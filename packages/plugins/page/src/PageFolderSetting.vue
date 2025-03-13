@@ -43,7 +43,7 @@ import throttle from '@opentiny/vue-renderless/common/deps/throttle'
 import meta from '../meta'
 import http from './http.js'
 
-let isShow = ref(false)
+const isShow = ref(false)
 export const openFolderSettingPanel = () => {
   isShow.value = true
 }

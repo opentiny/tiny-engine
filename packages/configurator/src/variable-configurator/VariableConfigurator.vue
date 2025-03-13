@@ -416,9 +416,7 @@ export default {
           const pageSchema = getSchema()
           const stateName = state.variable.replace(`${CONSTANTS.STATE}`, '')
           const staticData = state.variableContent.map(({ _id, ...other }) => other)
-
-          updateSchema({ ...pageSchema.state, [stateName]: staticData })
-
+          updateSchema({ state: { ...pageSchema.state, [stateName]: staticData } })
           // 这里在setup生命周期函数内部处理用户真实环境中的数据源请求
           genRemoteMethodToLifeSetup(stateName, state.dataSouce, pageSchema)
         }

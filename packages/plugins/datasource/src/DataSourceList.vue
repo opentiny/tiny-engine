@@ -1,5 +1,5 @@
 <template>
-  <div class="datasource-manage-body">
+  <div class="datasource-manage-body lowcode-scrollbar">
     <div class="datasource-list">
       <div
         v-for="(item, index) in dataSourceList"

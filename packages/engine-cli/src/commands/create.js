@@ -14,7 +14,7 @@ import { cwd } from 'node:process'
 import path from 'node:path'
 import fs from 'fs-extra'
 import chalk from 'chalk'
-import { generateConfig, generatePackageJson } from './generateConfig'
+import { generateConfig, generatePackageJson, generateThemeMeta } from './generateConfig'
 
 const logger = console
 
@@ -43,7 +43,7 @@ export function createPlatform(name, options = {}) {
   fs.copySync(templatePath, destPath)
 
   const configContent = generateConfig(mergedOptions)
-  const pkgContent = generatePackageJson(name, mergedOptions, templatePath)
+  const pkgContent = generatePackageJson(name, templatePath)
 
   fs.outputFileSync(path.resolve(destPath, 'engine.config.js'), configContent)
   fs.outputJSONSync(path.resolve(destPath, 'package.json'), pkgContent, { spaces: 2 })
@@ -57,6 +57,26 @@ export function createPlugin(name) {
   const sourcePath = path.join(__dirname, '../template/plugin/')
   const destPath = path.join(cwd(), name)
   fs.copySync(sourcePath, destPath)
+
+  logger.log(
+    chalk.green(`create finish, run the follow command to start project: \ncd ${name} && npm install && npm run dev`)
+  )
+}
+
+export function createTheme(name, themeName) {
+  const sourcePath = path.join(__dirname, '../template/theme/')
+  const destPath = path.join(cwd(), name)
+  fs.copySync(sourcePath, destPath)
+
+  const configContent = generateThemeMeta(themeName)
+
+  const themePath = path.resolve(destPath, 'src/common.less')
+  fs.outputFileSync(path.resolve(destPath, 'meta.js'), configContent)
+  const content = fs.readFileSync(themePath, 'utf-8')
+  const outputContent = content.replace(/data-theme='custom'/g, `data-theme='${themeName}'`)
+  fs.writeFileSync(themePath, outputContent, 'utf-8')
+  const pkgContent = generatePackageJson(name, sourcePath)
+  fs.outputJSONSync(path.resolve(destPath, 'package.json'), pkgContent, { spaces: 2 })
 
   logger.log(
     chalk.green(`create finish, run the follow command to start project: \ncd ${name} && npm install && npm run dev`)

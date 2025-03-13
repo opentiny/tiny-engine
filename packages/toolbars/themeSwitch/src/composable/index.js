@@ -1,37 +1,34 @@
-import { reactive } from 'vue'
-import { defineService, getMetaApi, getMergeMeta, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { reactive, ref } from 'vue'
+import {
+  defineService,
+  getMetaApi,
+  getMergeMeta,
+  META_SERVICE,
+  getMergeRegistry
+} from '@opentiny/tiny-engine-meta-register'
 import { setGlobalMonacoEditorTheme } from '@opentiny/tiny-engine-common'
 
-const THEME_DATA = [
-  {
-    text: '浅色模式',
-    label: 'light',
-    oppositeTheme: 'dark'
-  },
-  {
-    text: '深色模式',
-    label: 'dark',
-    oppositeTheme: 'light'
-  }
-]
+let THEME_DATA = ref([])
 
-const DEFAULT_THEME = THEME_DATA[0]
+let DEFAULT_THEME = null
 
 const themeState = reactive({
-  theme: DEFAULT_THEME.label,
-  themeLabel: DEFAULT_THEME.text
+  theme: '',
+  themeLabel: '',
+  themeIcon: ''
 })
 
 const getThemeData = () => THEME_DATA
 const getThemeState = () => themeState
 
 const getTheme = (theme) => {
-  return THEME_DATA.find((item) => theme === item.label) || DEFAULT_THEME
+  return THEME_DATA.value.find((item) => theme === item.type) || DEFAULT_THEME
 }
 
 const themeChange = (theme) => {
-  themeState.theme = getTheme(theme).label
+  themeState.theme = getTheme(theme).type
   themeState.themeLabel = getTheme(themeState.theme).text
+  themeState.themeIcon = getTheme(themeState.theme).icon
   document.documentElement.setAttribute('data-theme', themeState.theme)
 
   const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
@@ -45,9 +42,10 @@ export default defineService({
   type: 'MetaService',
   init: () => {
     const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
+    THEME_DATA.value = getMergeRegistry('themes')
+    DEFAULT_THEME = THEME_DATA.value[0]
     const theme =
-      localStorage.getItem(`tiny-engine-theme-${appId}`) || getMergeMeta('engine.config').theme || DEFAULT_THEME.label
-
+      localStorage.getItem(`tiny-engine-theme-${appId}`) || getMergeMeta('engine.config').theme || DEFAULT_THEME.type
     themeChange(theme)
   },
   apis: () => ({

@@ -92,7 +92,9 @@ const handleBindI18n = (key, value, isJSX) => {
   // TODO: 拿到场景用例
   const i18nParams = JSON.stringify(value.params)
 
-  i18nParams && tArguments.push(i18nParams)
+  if (i18nParams) {
+    tArguments.push(i18nParams)
+  }
 
   if (isJSX) {
     return `${key}={t(${tArguments.join(',')})}`
@@ -188,7 +190,7 @@ export const handleLoopAttrHook = (schemaData = {}, globalHooks, config) => {
   suffix.unshift(`)`)
 
   if (prefix[0] !== '{') {
-    prefix.unshift['{']
+    prefix.unshift('{')
   }
 
   if (suffix.at(-1) !== '}') {

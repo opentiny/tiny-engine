@@ -1,5 +1,5 @@
 <template>
-  <div id="help-plugin">
+  <div id="help-plugin" class="plugin-help">
     <tiny-popover
       :offset="-100"
       placement="right"
@@ -51,7 +51,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, onMounted, ref } from 'vue'
 import { Guide, Popover } from '@opentiny/vue'
 import { IconFilletExternalLink } from '@opentiny/vue-icon'

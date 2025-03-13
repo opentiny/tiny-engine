@@ -1,5 +1,5 @@
 <template>
-  <plugin-panel title="资源管理" class="bridge-manage" :isCloseLeft="false" @close="closePanel">
+  <plugin-panel title="资源管理" class="plugin-bridge" :isCloseLeft="false" @close="closePanel">
     <template #header>
       <svg-button name="add-utils" placement="left" :tips="tips" @click="addResource('npm')"></svg-button>
     </template>
@@ -35,11 +35,11 @@ export default {
     }
 
     const refreshList = (type) => {
-      type == utilsRef.value.refresh(type)
+      utilsRef.value.refresh(type)
     }
 
     const addResource = (type) => {
-      activedName.value == utilsRef.value.add(type)
+      utilsRef.value.add(type)
     }
 
     return {

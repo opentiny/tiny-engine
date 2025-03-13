@@ -289,7 +289,11 @@ export default {
         state.errorMessage = '已存在同名 state 属性'
       }
 
-      state.errorMessage ? callback(new Error(state.errorMessage)) : callback()
+      if (state.errorMessage) {
+        callback(new Error(state.errorMessage))
+      } else {
+        callback()
+      }
     }
 
     const rules = {
@@ -394,9 +398,9 @@ export default {
       renderLineHighlightOnlyWhenFocus: true
     }
     const getterExample =
-      'function getter() {\r\n  // this.state.name = `${this.props.firstName} ${this.props.lastName}`\r\n}' // eslint-disable-line
+      'function getter() {\r\n  // this.state.name = `${this.props.firstName} ${this.props.lastName}`\r\n}'
     const setterExample =
-      "function setter() {\r\n  // const [firstName, lastName] = this.state.name.split(' ')\r\n  // this.emit('update:firstName', firstName)\r\n  // this.emit('update:lastName', lastName)\r\n}" // eslint-disable-line
+      "function setter() {\r\n  // const [firstName, lastName] = this.state.name.split(' ')\r\n  // this.emit('update:firstName', firstName)\r\n  // this.emit('update:lastName', lastName)\r\n}"
 
     return {
       INIT,

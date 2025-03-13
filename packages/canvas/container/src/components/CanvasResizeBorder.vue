@@ -84,7 +84,7 @@ export default {
       }
 
       if (state.direction === 'vertical') {
-        let target = schema.componentName === 'CanvasRow' ? schema : parent
+        const target = schema.componentName === 'CanvasRow' ? schema : parent
         const dis = clientY - state.startPosition.y
         const minHeight = state.startPosition.height + dis
 

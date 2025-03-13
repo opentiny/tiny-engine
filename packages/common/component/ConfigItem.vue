@@ -321,6 +321,7 @@ export default {
     const isEmptyInputValue = (value) => {
       // 通过 value == null 做隐式类型转换
       // 空值约定为 undefined | null | ''
+      // eslint-disable-next-line no-eq-null
       return value == null || (typeOf(value) === TYPES.StringType && value.trim() === '')
     }
     const verifyRequired = (value) => {
@@ -436,7 +437,7 @@ export default {
 
     const showErrorPopup = ref(false)
 
-    let isFocus = ref(false)
+    const isFocus = ref(false)
 
     watch(
       () => [verification.failed, isFocus.value],

@@ -136,7 +136,9 @@ export default {
         state.responseData.dataHandler = dataHandler?.value || ''
         state.responseData.shouldFetch = shouldFetch?.value || ''
         state.responseData.errorHandler = errorHandler?.value || ''
-        columns?.length === 0 && (state.remoteData.result = {})
+        if (columns?.length === 0) {
+          state.remoteData.result = {}
+        }
       },
       { immediate: true }
     )

@@ -84,10 +84,11 @@ export default {
   methods: {
     updateLowCodePaneComponents() {
       this.panes.forEach((item) => {
-        item.update &&
+        if (item.update) {
           item.update({
             [this.horizontal ? 'height' : 'width']: `${this.indexedPanes[item.id].size}%`
           })
+        }
       })
     },
     bindEvents() {
@@ -450,8 +451,8 @@ export default {
     equalize() {
       const equalSpace = 100 / this.panesCount
       let leftLowCodeToAllocate = 0
-      let ungrowableLowCode = []
-      let unshrinkableLowCode = []
+      const ungrowableLowCode = []
+      const unshrinkableLowCode = []
 
       this.panes.forEach((pane) => {
         pane.size = Math.max(Math.min(equalSpace, pane.max), pane.min)
@@ -466,8 +467,8 @@ export default {
 
     initialPanesSizing() {
       let leftLowCodeToAllocate = 100
-      let ungrowableLowCode = []
-      let unshrinkableLowCode = []
+      const ungrowableLowCode = []
+      const unshrinkableLowCode = []
       let definedSizes = 0
       this.panes.forEach((pane) => {
         leftLowCodeToAllocate -= pane.size
@@ -493,8 +494,8 @@ export default {
     equalizeAfterAddOrRemove({ addedPane } = {}) {
       let equalSpace = 100 / this.panesCount
       let leftLowCodeToAllocate = 0
-      let ungrowableLowCode = []
-      let unshrinkableLowCode = []
+      const ungrowableLowCode = []
+      const unshrinkableLowCode = []
 
       if (addedPane && addedPane.givenSize !== null) {
         equalSpace = (100 - addedPane.givenSize) / (this.panesCount - 1)

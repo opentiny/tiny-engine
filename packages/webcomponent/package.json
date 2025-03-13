@@ -8,7 +8,6 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint . --ext .js,.vue --fix",
     "format": "prettier --write **/*{.vue,.js,.ts,.html,.json}",
     "publish:npm": "npm run build && npm publish --verbose"
   },
@@ -34,13 +33,6 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.1.2",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^7.32.0",
-    "eslint-plugin-import": "^2.24.2",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^5.1.0",
-    "eslint-plugin-standard": "^4.0.0",
-    "eslint-plugin-vue": "^7.17.0",
     "prettier": "^2.4.0",
     "vite": "^5.4.2"
   },

@@ -214,7 +214,7 @@ const editClassName = (curClassName, optionType = OPTION_TYPE.ADD, oldSelector =
 
   const editSelectorHandler = () => {
     const oldSelType = oldSelector.startsWith('.') ? SELECTOR_TYPE.CLASS_NAME : SELECTOR_TYPE.ID
-    let oldSelSymbol = oldSelector.slice(1)
+    const oldSelSymbol = oldSelector.slice(1)
     let res = newClassNames
 
     // 前后两种类型不一致，需要将原类型里面的删除，然后在新类型添加

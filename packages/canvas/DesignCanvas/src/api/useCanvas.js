@@ -10,7 +10,6 @@
  *
  */
 
-/* eslint-disable no-new-func */
 import { reactive, ref, toRaw } from 'vue'
 import * as jsonDiffPatch from 'jsondiffpatch'
 import DiffMatchPatch from 'diff-match-patch'
@@ -90,7 +89,7 @@ const handleTinyGridColumnsSlots = (node) => {
           nodesMap.value.set(item.id, { node: item, parent: node })
 
           if (Array.isArray(item.children)) {
-            // eslint-disable-next-line no-use-before-define
+            // eslint-disable-next-line @typescript-eslint/no-use-before-define
             generateNodesMap(item.children, item)
           }
         })
@@ -589,10 +588,12 @@ const getSchema = () => {
 const getNodePath = (id, nodes = []) => {
   const { parent, node } = getNodeWithParentById(id) || {}
 
-  node && nodes.unshift({ name: node.componentName, node: id })
+  if (node) {
+    nodes.unshift({ name: node.componentName, node: id })
+  }
 
   if (parent) {
-    parent && getNodePath(parent.id, nodes)
+    getNodePath(parent.id, nodes)
   } else {
     nodes.unshift({ name: 'BODY', node: id })
   }

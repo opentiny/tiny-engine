@@ -441,8 +441,11 @@ export const obj2StyleString = (obj) => {
     return ''
   }
 
-  return Object.entries(obj)
-    .filter(([, value]) => value != null)
-    .map(([key, value]) => `${convertCamelToKebab(key)}: ${value}`)
-    .join('; ')
+  return (
+    Object.entries(obj)
+      // eslint-disable-next-line no-eq-null
+      .filter(([, value]) => value != null)
+      .map(([key, value]) => `${convertCamelToKebab(key)}: ${value}`)
+      .join('; ')
+  )
 }

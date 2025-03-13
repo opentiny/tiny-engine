@@ -10,7 +10,7 @@
  *
  */
 
-/// <reference path="index.d.ts">
+import './index.d.ts'
 
 export {
   generateCode,

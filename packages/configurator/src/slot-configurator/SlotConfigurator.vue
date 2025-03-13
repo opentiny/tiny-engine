@@ -44,14 +44,15 @@ export default {
 
     watchEffect(() => {
       const slots = {}
-      let children = useProperties().getSchema()?.children
-      Array.isArray(children) &&
+      const children = useProperties().getSchema()?.children
+      if (Array.isArray(children)) {
         children.forEach((child) => {
           if (child.componentName === 'Template' && child.props?.slot) {
             const slotName = child.props.slot?.name || child.props.slot
             slots[slotName] = child.props.slot
           }
         })
+      }
       slotList.value = Object.keys(props.slots).map((name) => {
         const { label, description, params } = props.slots[name] || {}
         return {

@@ -51,7 +51,9 @@ const removeState = (pageSchema, variableName) => {
 
     traverse(ast, {
       ExpressionStatement(path) {
-        path.toString().includes(variableName) && path.remove()
+        if (path.toString().includes(variableName)) {
+          path.remove()
+        }
       }
     })
 

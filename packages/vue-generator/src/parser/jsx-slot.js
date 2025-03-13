@@ -110,7 +110,9 @@ const generateJSXTemplate = (item, description) => {
 
     result.push(`</${component}>`)
   }
-  condition && result.push(' }')
+  if (condition) {
+    result.push(' }')
+  }
 
   return result.join('')
 }

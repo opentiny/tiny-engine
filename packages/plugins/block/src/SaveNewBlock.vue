@@ -88,7 +88,11 @@ export default {
     }
 
     const handleAddBlock = () => {
-      props.fromCanvas ? createBlock(formData) : createEmptyBlock(formData)
+      if (props.fromCanvas) {
+        createBlock(formData)
+      } else {
+        createEmptyBlock(formData)
+      }
       activePlugin(PLUGIN_NAME.Materials) // ?? 疑问：新建区块后，这里为啥要激活物料
       cancel()
     }
