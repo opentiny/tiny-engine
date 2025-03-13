@@ -154,7 +154,9 @@ const smoothScroll = {
       this.timmer = setTimeout(fn, time)
     }
 
-    this.timmer || fn()
+    if (!this.timmer) {
+      fn()
+    }
   },
   stop() {
     clearTimeout(this.timmer)
@@ -764,7 +766,9 @@ export const selectNode = async (id, type) => {
 
 export const hoverNode = (id, data) => {
   const element = querySelectById(id)
-  element && setHoverRect(element, data)
+  if (element) {
+    setHoverRect(element, data)
+  }
 }
 
 export const insertNode = (node, position = POSITION.IN, select = true) => {
@@ -792,7 +796,9 @@ export const insertNode = (node, position = POSITION.IN, select = true) => {
     }
   }
 
-  select && setTimeout(() => selectNode(node.data.id))
+  if (select) {
+    setTimeout(() => selectNode(node.data.id))
+  }
 
   getController().addHistory()
 }

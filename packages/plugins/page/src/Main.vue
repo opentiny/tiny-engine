@@ -132,10 +132,14 @@ export default {
       const isPageChange = pageData.id !== pageSettingState.currentPageData.id
 
       if (state.isFolder) {
-        isPageChange && closePageSettingPanel()
+        if (isPageChange) {
+          closePageSettingPanel()
+        }
         openFolderSettingPanel()
       } else {
-        isPageChange && closeFolderSettingPanel()
+        if (isPageChange) {
+          closeFolderSettingPanel()
+        }
         openPageSettingPanel()
       }
       const pageDetail = await fetchPageDetail(pageData?.id)

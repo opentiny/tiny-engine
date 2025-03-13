@@ -56,9 +56,9 @@ import { useGroupPanel } from './js/usePanel'
 const blockMap = new Map()
 const initGruopBlockMap = (groups = []) => {
   blockMap.clear()
-  for (let group of groups) {
+  for (const group of groups) {
     const groupBlock = group?.blocks || []
-    for (let block of groupBlock) {
+    for (const block of groupBlock) {
       blockMap.set(block.id, block)
     }
   }

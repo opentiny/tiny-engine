@@ -8,7 +8,7 @@ import type { setController } from './controller'
 export interface IApplicationFunctionAPI
   extends Pick<ReturnType<typeof useUtils>, 'getUtils'>,
     Pick<ReturnType<typeof useDataSourceMap>, 'getDataSourceMap'> {}
-export interface IPageContextAPI extends Pick<IPageContext, 'setCondition'> {}
+export type IPageContextAPI = Pick<IPageContext, 'setCondition'>
 export interface ICanvasFunctionAPI extends Pick<ReturnType<typeof useCustomRenderer>, 'getRenderer' | 'setRenderer'> {
   getDesignMode: typeof getDesignMode
   setDesignMode: typeof setDesignMode

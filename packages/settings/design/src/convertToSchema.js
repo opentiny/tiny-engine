@@ -10,6 +10,7 @@
  *
  */
 
+/* eslint-disable @typescript-eslint/no-require-imports */
 const fs = require('fs-extra')
 const path = require('path')
 

@@ -208,7 +208,6 @@ export default {
         const toIndex = index + addend
 
         if (toIndex > -1 && toIndex < list.length) {
-          // eslint-disable-next-line no-extra-semi
           ;[list[index], list[toIndex]] = [list[toIndex], list[index]]
 
           useMessage().publish({ topic: 'schemaChange', data: {} })
@@ -229,7 +228,9 @@ export default {
 
     const selectParent = () => {
       const parentId = getCurrent().parent?.id
-      parentId && selectNode(parentId)
+      if (parentId) {
+        selectNode(parentId)
+      }
     }
 
     const copy = () => {
@@ -267,20 +268,20 @@ export default {
     const optionRef = ref(null)
     const fixStyle = ref('')
 
-    let showPopover = ref(false)
+    const showPopover = ref(false)
 
     const activeSetting = () => {
       showPopover.value = false
     }
 
     const findParentHasClass = (target) => {
-      let parent = target.parentNode
+      const parent = target.parentNode
 
       if (parent.className === undefined) {
         return false
       }
 
-      let name = JSON.stringify(parent.className)
+      const name = JSON.stringify(parent.className)
 
       const preventClassNameList = ['short-cut-set', 'tiny-dialog-box', 'icon-popover', 'i18n-input-popover']
 
@@ -314,7 +315,7 @@ export default {
       () => props.windowGetClickEventTarget,
       (newProps) => {
         if (newProps) {
-          let flag = findParentHasClass(newProps)
+          const flag = findParentHasClass(newProps)
           if (!flag) {
             showPopover.value = false
           }

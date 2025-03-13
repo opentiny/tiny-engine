@@ -39,12 +39,9 @@
   },
   "devDependencies": {
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
-    "@rushstack/eslint-patch": "^1.1.1",
     "@vitest/coverage-v8": "^1.4.0",
-    "@vue/eslint-config-prettier": "^7.0.0",
     "dir-compare": "^4.2.0",
     "eslint": "^8.12.0",
-    "eslint-plugin-vue": "^8.6.0",
     "fs-extra": "^10.0.1",
     "prettier": "^2.6.1",
     "vite": "^5.4.2",

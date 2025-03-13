@@ -35,11 +35,11 @@ export default {
     }
 
     const refreshList = (type) => {
-      type == utilsRef.value.refresh(type)
+      utilsRef.value.refresh(type)
     }
 
     const addResource = (type) => {
-      activedName.value == utilsRef.value.add(type)
+      utilsRef.value.add(type)
     }
 
     return {

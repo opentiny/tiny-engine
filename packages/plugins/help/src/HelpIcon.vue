@@ -51,7 +51,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, onMounted, ref } from 'vue'
 import { Guide, Popover } from '@opentiny/vue'
 import { IconFilletExternalLink } from '@opentiny/vue-icon'

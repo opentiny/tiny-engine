@@ -29,9 +29,11 @@ export default {
     const fullscreen = () => {
       isFullscreen.value = !isFullscreen.value
       iconName.value = isFullscreen.value ? props.options.icon.cancelFullScreen : props.options.icon.fullScreen
-      document.webkitFullscreenElement
-        ? document.webkitExitFullscreen()
-        : document.documentElement.webkitRequestFullScreen()
+      if (document.webkitFullscreenElement) {
+        document.webkitExitFullscreen()
+      } else {
+        document.documentElement.webkitRequestFullScreen()
+      }
     }
 
     return {

@@ -100,8 +100,8 @@ export default {
     const insertPanel = ref(null)
     const insertPosition = ref(false)
     const loading = computed(() => useCanvas().isLoading())
-    let showSettingModel = ref(false)
-    let target = ref(null)
+    const showSettingModel = ref(false)
+    const target = ref(null)
     const srcAttrName = computed(() => (props.canvasSrc ? 'src' : 'srcdoc'))
 
     const containerPanel = ref(null)

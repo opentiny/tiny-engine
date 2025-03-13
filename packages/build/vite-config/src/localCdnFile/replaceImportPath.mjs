@@ -11,7 +11,8 @@ export function relativePathPattern(relativePath) {
 }
 
 export function resolvePath(importPath, currentFilePath) {
-  if (['js', 'mjs'].some(suffix =>importPath.endsWith(suffix))) { // 文件名已经带有.js，.mjs后缀
+  if (['js', 'mjs'].some((suffix) => importPath.endsWith(suffix))) {
+    // 文件名已经带有.js，.mjs后缀
     return importPath
   }
   const parentPath = path.resolve(currentFilePath, '../')
@@ -21,9 +22,9 @@ export function resolvePath(importPath, currentFilePath) {
     const stat = fs.statSync(filePrefix)
     if (stat.isDirectory()) {
       let mainFileName = 'index.js'
-      
+
       const packageFile = path.resolve(filePrefix, 'package.json')
- 
+
       if (fs.existsSync(packageFile)) {
         const packageFileContent = fs.readFileSync(packageFile, { encoding: 'utf-8' })
         const packageJson = JSON.parse(packageFileContent)
@@ -39,7 +40,7 @@ export function resolvePath(importPath, currentFilePath) {
     return importPath
   }
   const possibleSuffix = ['.js', '.mjs']
-  const suffix = possibleSuffix.find(suf => fs.existsSync(filePrefix + suf))
+  const suffix = possibleSuffix.find((suf) => fs.existsSync(filePrefix + suf))
   if (suffix) {
     return relativePathPattern(path.relative(path.resolve(currentFilePath, '../'), filePrefix + suffix))
   }
@@ -62,16 +63,16 @@ export function babelReplaceImportPathWithCertainFileName(content, currentFilePa
         return
       }
       const importPath = node.source.value
-      if(importPath.startsWith('.')) {
+      if (importPath.startsWith('.')) {
         const certainPath = resolvePath(importPath, currentFilePath)
-        if(!certainPath) {
+        if (!certainPath) {
           logger.warn(`File not found: ${importPath} used in ${currentFilePath}`)
           result.error.push(importPath)
         }
-        if(certainPath !== importPath) {
+        if (certainPath !== importPath) {
           node.source.value = certainPath
           fileChangedMark = true
-          result.success.push({before: importPath, after: certainPath})
+          result.success.push({ before: importPath, after: certainPath })
         }
       }
     }
@@ -86,4 +87,3 @@ export function babelReplaceImportPathWithCertainFileName(content, currentFilePa
   }
   return result
 }
-

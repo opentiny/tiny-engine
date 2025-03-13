@@ -22,7 +22,7 @@ import {
 } from './canvas-function'
 import { removeBlockCompsCache, setConfigure } from './material-function'
 import { useUtils, useBridge, useDataSourceMap, useGlobalState } from './application-function'
-import { IPageSchema, useContext, usePageContext, useSchema } from './page-block-function'
+import { type IPageSchema, useContext, usePageContext, useSchema } from './page-block-function'
 import { api, setCurrentApi } from './canvas-function/canvas-api'
 import { getPageAncestors } from './material-function/page-getter'
 import CanvasEmpty from './canvas-function/CanvasEmpty.vue'

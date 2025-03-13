@@ -144,7 +144,9 @@ const generateComponents = () => {
         const snippet = snippets.find((item) => item.group === category)
 
         if (snippet) {
-          componentSnippets && snippet.children.push(componentSnippets[0])
+          if (componentSnippets) {
+            snippet.children.push(componentSnippets[0])
+          }
         } else if (category && componentInfo) {
           snippets.push({
             group: category,

@@ -41,7 +41,9 @@ const confirmSaveLocal = async () => {
 
   const message = savePage.data.isSuccess ? '保存文件到本地成功' : errorMsg
 
-  savePage.data.isSuccess && setSaved(true)
+  if (savePage.data.isSuccess) {
+    setSaved(true)
+  }
 
   Modal.message({ message, status: 'error', duration: '5000', top: 60 })
 }
@@ -72,7 +74,9 @@ const savePageLocal = async () => {
     title: '查询本地文件',
     message: '本地已经存在同名文件，是否覆盖？'
   }).then((res) => {
-    res === 'confirm' && confirmSaveLocal()
+    if (res === 'confirm') {
+      confirmSaveLocal()
+    }
   })
 }
 

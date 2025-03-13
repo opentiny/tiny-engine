@@ -199,7 +199,7 @@ export default {
         // 校验
         variableRef.value.validateForm().then(() => {
           // 获取数据
-          let variable = variableRef.value.getFormData()
+          const variable = variableRef.value.getFormData()
 
           // 保存数据
           add(name, variable)
@@ -263,7 +263,7 @@ export default {
       delete state.dataSource[key]
 
       const schema = getSchema()
-      let { lifeCycles } = schema
+      const { lifeCycles } = schema
       const { [key]: deletedKey, ...restState } = schema.state
 
       if (key.startsWith('datasource')) {

@@ -37,6 +37,7 @@ import {
 
 function recurseChildren(children, state, description, result) {
   if (Array.isArray(children)) {
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     const subTemplate = children.map((child) => generateTemplate(child, state, description)).join('')
     result.push(subTemplate)
   } else if (children?.type === 'JSExpression') {
@@ -177,7 +178,9 @@ function handleBinding(props, attrsArr, description, state) {
       const tArguments = [`'${item.key}'`]
       const i18nParams = JSON.stringify(item.params)?.replace(/"/g, "'")
 
-      i18nParams && tArguments.push(i18nParams)
+      if (i18nParams) {
+        tArguments.push(i18nParams)
+      }
 
       return attrsArr.push(`:${key}="t(${tArguments.join(',')})"`)
     }
@@ -317,6 +320,7 @@ const generateImports = (description, moduleName, type, componentsMap) => {
       } else if (toPath === fromPath) {
         depPath = '.'
       } else {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const path = require('path')
         const relativePath = path?.relative(fromPath, toPath).replace(/\\/g, '/')
         depPath = relativePath.startsWith('.') ? relativePath : `./${relativePath}`

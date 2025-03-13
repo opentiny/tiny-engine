@@ -4,7 +4,9 @@ import { useAccessorMap } from './accessor-map'
 export function useProps(generateAccessor: ReturnType<typeof useAccessorMap>['generateAccessor']) {
   const props = {}
   const setProps = (data: Record<string, any>, clear = false) => {
-    clear && reset(props)
+    if (clear) {
+      reset(props)
+    }
     Object.assign(props, data)
   }
 

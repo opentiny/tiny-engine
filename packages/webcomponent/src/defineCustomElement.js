@@ -192,6 +192,7 @@ class LowcodeVueElement extends BaseLowcodeClass {
     const vnode = createVNode(this._def, extend({}, this._props))
 
     if (!this._instance) {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
       const dom = this
 
       vnode.ce = (instance) => {
@@ -222,6 +223,7 @@ class LowcodeVueElement extends BaseLowcodeClass {
           instance.attrs[key] = value
         }
         instance.domProps = dom._props
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         let parent = this
 
         while ((parent = parent && (parent.parentNode || parent.host))) {

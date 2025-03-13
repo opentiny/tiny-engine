@@ -29,7 +29,7 @@ export default {
 
     watch(
       () => pageState.isLock,
-      // eslint-disable-next-line no-return-assign
+
       (value) => (isLock.value = value)
     )
 

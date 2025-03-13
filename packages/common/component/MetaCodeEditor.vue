@@ -221,7 +221,6 @@ export default {
           if (dataType) {
             value = value === '' ? '' : { type: dataType, value }
           } else if (language === 'json') {
-            // eslint-disable-next-line no-new-func
             value = new Func(`return ${content}`)()
           } else {
             value = typeof props.modelValue === 'string' ? content : JSON.parse(content)

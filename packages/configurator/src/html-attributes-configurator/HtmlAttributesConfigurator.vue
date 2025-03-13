@@ -145,7 +145,7 @@ export default {
 
     const save = () => {
       state.visible = false
-      let data = {}
+      const data = {}
       let index = -1
 
       if (state.currentAttr.id) {

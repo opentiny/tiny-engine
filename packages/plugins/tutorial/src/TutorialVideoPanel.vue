@@ -23,7 +23,7 @@ import { marked } from 'marked'
 
 const rendererMD = new marked.Renderer()
 
-let isOpen = ref(false)
+const isOpen = ref(false)
 
 export const open = () => {
   isOpen.value = true

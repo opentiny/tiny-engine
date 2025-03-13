@@ -90,7 +90,7 @@ import { fetchDataSourceDetail, requestUpdateDataSource } from './js/http'
 import { downloadFn, handleImportedData, overrideOrMergeData, getDataAfterPage } from './js/datasource'
 import DataSourceRecordUpload from './DataSourceRecordUpload.vue'
 
-let isOpen = ref(false)
+const isOpen = ref(false)
 
 export const open = () => {
   isOpen.value = true
@@ -482,8 +482,8 @@ export default {
     const syncDataToTotalData = () => {
       const { insertRecords, updateRecords } = grid.value.getRecordset()
 
-      let updatedData = [...insertRecords, ...updateRecords]
-      let updatedIds = updatedData.filter(({ _id }) => _id)
+      const updatedData = [...insertRecords, ...updateRecords]
+      const updatedIds = updatedData.filter(({ _id }) => _id)
 
       state.totalData = state.totalData.map((item) => {
         if (!updatedIds.includes(item._id)) {
