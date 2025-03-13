@@ -1607,6 +1607,40 @@
       "desc": null,
       "created_at": "2022-07-04T03:04:05.000Z",
       "updated_at": "2022-07-04T03:43:40.000Z"
+    },
+    {
+      "id": 152,
+      "name": "testProxyApi",
+      "data": {
+        "data": [],
+        "type": "array",
+        "columns": [],
+        "options": {
+          "uri": "/mock/41534bc9c0e0000/province?apipost_id=1534d5e9f71002",
+          "method": "GET"
+        },
+        "willFetch": {
+          "type": "JSFunction",
+          "value": "function willFetch(option) {\n  return option \n}"
+        },
+        "dataHandler": {
+          "type": "JSFunction",
+          "value": "function dataHandler(data) { \n return data \n}"
+        },
+        "shouldFetch": {
+          "type": "JSFunction",
+          "value": "function shouldFetch(option) {\n  return true \n}"
+        },
+        "errorHandler": {
+          "type": "JSFunction",
+          "value": "function errorHandler(err) {}"
+        }
+      },
+      "tpl": null,
+      "app": "918",
+      "desc": null,
+      "created_at": "2022-07-04T02:20:07.000Z",
+      "updated_at": "2022-07-04T06:25:29.000Z"
     }
   ],
   "extension": [
@@ -1757,7 +1791,11 @@
       "route": "createVm",
       "page_content": {
         "state": {
-          "dataDisk": [1, 2, 3]
+          "dataDisk": [
+            1,
+            2,
+            3
+          ]
         },
         "methods": {},
         "componentName": "Page",
@@ -2794,7 +2832,11 @@
             "attrs": {
               "currentPage": 1,
               "pageSize": 50,
-              "pageSizes": [10, 20, 50],
+              "pageSizes": [
+                10,
+                20,
+                50
+              ],
               "total": 0,
               "layout": "sizes,total, prev, pager, next, jumper"
             }
@@ -3528,7 +3570,10 @@
                           "value": "this.state.renderb52aeac9"
                         },
                         "condition": true,
-                        "loopArgs": ["item", "idx"]
+                        "loopArgs": [
+                          "item",
+                          "idx"
+                        ]
                       }
                     ]
                   },
@@ -4049,7 +4094,9 @@
         "framework": "Vue",
         "materials": {
           "blocks": [],
-          "snippets": [{}],
+          "snippets": [
+            {}
+          ],
           "components": [
             {
               "name": {
@@ -4089,10 +4136,19 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": [""]
+                  "properties": [
+                    ""
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+                  "actions": [
+                    "copy",
+                    "remove",
+                    "insert",
+                    "updateAttr",
+                    "bindEevent",
+                    "createBlock"
+                  ],
                   "disable": []
                 },
                 "slots": [],
@@ -4205,10 +4261,19 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": [""]
+                  "properties": [
+                    ""
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["remove", "copy", "insert", "updateAttr", "bindEevent", "createBlock"],
+                  "actions": [
+                    "remove",
+                    "copy",
+                    "insert",
+                    "updateAttr",
+                    "bindEevent",
+                    "createBlock"
+                  ],
                   "disable": []
                 },
                 "slots": [],
@@ -4459,10 +4524,19 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": ["show-checkbox"]
+                  "properties": [
+                    "show-checkbox"
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+                  "actions": [
+                    "copy",
+                    "remove",
+                    "insert",
+                    "updateAttr",
+                    "bindEevent",
+                    "createBlock"
+                  ],
                   "disable": []
                 },
                 "framework": "Vue"
@@ -4835,13 +4909,24 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": ["placement", "trigger"]
+                  "properties": [
+                    "placement",
+                    "trigger"
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["createBlock", "copy"],
-                  "disable": ["copy", "remove"]
+                  "actions": [
+                    "createBlock",
+                    "copy"
+                  ],
+                  "disable": [
+                    "copy",
+                    "remove"
+                  ]
                 },
-                "slots": ["reference"],
+                "slots": [
+                  "reference"
+                ],
                 "isPopper": true,
                 "framework": "Vue"
               },
@@ -5384,13 +5469,26 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": ["text", "", "size"]
+                  "properties": [
+                    "text",
+                    "",
+                    "size"
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["createBlock", "copy", "remove", "insert", "updateAttr", "bindEevent"],
+                  "actions": [
+                    "createBlock",
+                    "copy",
+                    "remove",
+                    "insert",
+                    "updateAttr",
+                    "bindEevent"
+                  ],
                   "disable": []
                 },
-                "slots": ["content"],
+                "slots": [
+                  "content"
+                ],
                 "isPopper": true,
                 "framework": "Vue"
               },
@@ -5616,10 +5714,19 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": ["span"]
+                  "properties": [
+                    "span"
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+                  "actions": [
+                    "copy",
+                    "remove",
+                    "insert",
+                    "updateAttr",
+                    "bindEevent",
+                    "createBlock"
+                  ],
                   "disable": []
                 },
                 "framework": "Vue"
@@ -5893,7 +6000,9 @@
               "group": "component",
               "category": "导航组件",
               "priority": 2,
-              "snippets": [{}],
+              "snippets": [
+                {}
+              ],
               "configure": {
                 "loop": true,
                 "condition": true,
@@ -5911,13 +6020,24 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": [""]
+                  "properties": [
+                    ""
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+                  "actions": [
+                    "copy",
+                    "remove",
+                    "insert",
+                    "updateAttr",
+                    "bindEevent",
+                    "createBlock"
+                  ],
                   "disable": []
                 },
-                "invalidity": [""],
+                "invalidity": [
+                  ""
+                ],
                 "clickCapture": true,
                 "framework": "Vue"
               },
@@ -6116,7 +6236,11 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": ["text", "", "size"]
+                  "properties": [
+                    "text",
+                    "",
+                    "size"
+                  ]
                 },
                 "contextMenu": {
                   "actions": [],
@@ -6285,7 +6409,9 @@
                     },
                     "type": "event",
                     "functionInfo": {
-                      "params": [null],
+                      "params": [
+                        null
+                      ],
                       "returns": {}
                     }
                   },
@@ -6298,7 +6424,9 @@
                     },
                     "type": "event",
                     "functionInfo": {
-                      "params": [null],
+                      "params": [
+                        null
+                      ],
                       "returns": {}
                     }
                   }
@@ -6362,13 +6490,25 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": ["text", "size"]
+                  "properties": [
+                    "text",
+                    "size"
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+                  "actions": [
+                    "copy",
+                    "remove",
+                    "insert",
+                    "updateAttr",
+                    "bindEevent",
+                    "createBlock"
+                  ],
                   "disable": []
                 },
-                "invalidity": [""],
+                "invalidity": [
+                  ""
+                ],
                 "clickCapture": true,
                 "framework": "Vue"
               },
@@ -6576,13 +6716,25 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": ["text", "size"]
+                  "properties": [
+                    "text",
+                    "size"
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+                  "actions": [
+                    "copy",
+                    "remove",
+                    "insert",
+                    "updateAttr",
+                    "bindEevent",
+                    "createBlock"
+                  ],
                   "disable": []
                 },
-                "invalidity": [""],
+                "invalidity": [
+                  ""
+                ],
                 "clickCapture": true,
                 "framework": "Vue"
               },
@@ -6797,13 +6949,25 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": ["text", "size"]
+                  "properties": [
+                    "text",
+                    "size"
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+                  "actions": [
+                    "copy",
+                    "remove",
+                    "insert",
+                    "updateAttr",
+                    "bindEevent",
+                    "createBlock"
+                  ],
                   "disable": []
                 },
-                "invalidity": [""],
+                "invalidity": [
+                  ""
+                ],
                 "clickCapture": true,
                 "framework": "Vue"
               },
@@ -6949,13 +7113,25 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": ["text", "size"]
+                  "properties": [
+                    "text",
+                    "size"
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+                  "actions": [
+                    "copy",
+                    "remove",
+                    "insert",
+                    "updateAttr",
+                    "bindEevent",
+                    "createBlock"
+                  ],
                   "disable": []
                 },
-                "invalidity": [""],
+                "invalidity": [
+                  ""
+                ],
                 "clickCapture": true,
                 "framework": "Vue"
               },
@@ -7152,10 +7328,21 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": ["clearable", "", "mini"]
+                  "properties": [
+                    "clearable",
+                    "",
+                    "mini"
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["copy", "remove", "insert", "updateAttr", "createBlock", "bindEevent"],
+                  "actions": [
+                    "copy",
+                    "remove",
+                    "insert",
+                    "updateAttr",
+                    "createBlock",
+                    "bindEevent"
+                  ],
                   "disable": []
                 },
                 "slots": [],
@@ -7441,7 +7628,9 @@
                     },
                     "type": "event",
                     "functionInfo": {
-                      "params": [null],
+                      "params": [
+                        null
+                      ],
                       "returns": {}
                     }
                   },
@@ -7454,7 +7643,9 @@
                     },
                     "type": "event",
                     "functionInfo": {
-                      "params": [null],
+                      "params": [
+                        null
+                      ],
                       "returns": {}
                     }
                   }
@@ -7574,10 +7765,20 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": ["flex", "align"]
+                  "properties": [
+                    "flex",
+                    "align"
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+                  "actions": [
+                    "copy",
+                    "remove",
+                    "insert",
+                    "updateAttr",
+                    "bindEevent",
+                    "createBlock"
+                  ],
                   "disable": []
                 },
                 "slots": [],
@@ -7767,7 +7968,9 @@
               "group": "component",
               "category": "表单组件",
               "priority": 3,
-              "snippets": [{}],
+              "snippets": [
+                {}
+              ],
               "configure": {
                 "loop": true,
                 "condition": true,
@@ -7784,13 +7987,24 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": [""]
+                  "properties": [
+                    ""
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["remove", "insert", "copy", "updateAttr", "bindEevent", "createBlock"],
+                  "actions": [
+                    "remove",
+                    "insert",
+                    "copy",
+                    "updateAttr",
+                    "bindEevent",
+                    "createBlock"
+                  ],
                   "disable": []
                 },
-                "slots": ["label"],
+                "slots": [
+                  "label"
+                ],
                 "framework": "Vue"
               },
               "createdBy": 169,
@@ -7975,13 +8189,25 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": ["type", "size"]
+                  "properties": [
+                    "type",
+                    "size"
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+                  "actions": [
+                    "copy",
+                    "remove",
+                    "insert",
+                    "updateAttr",
+                    "bindEevent",
+                    "createBlock"
+                  ],
                   "disable": []
                 },
-                "invalidity": [""],
+                "invalidity": [
+                  ""
+                ],
                 "clickCapture": true,
                 "framework": "Vue"
               },
@@ -8352,7 +8578,9 @@
                     },
                     "type": "event",
                     "functionInfo": {
-                      "params": [null],
+                      "params": [
+                        null
+                      ],
                       "returns": {}
                     }
                   }
@@ -8414,10 +8642,20 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": ["value", "disabled"]
+                  "properties": [
+                    "value",
+                    "disabled"
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+                  "actions": [
+                    "copy",
+                    "remove",
+                    "insert",
+                    "updateAttr",
+                    "bindEevent",
+                    "createBlock"
+                  ],
                   "disable": []
                 },
                 "slots": [],
@@ -9000,10 +9238,21 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": ["tab-style", "", "size"]
+                  "properties": [
+                    "tab-style",
+                    "",
+                    "size"
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+                  "actions": [
+                    "copy",
+                    "remove",
+                    "insert",
+                    "updateAttr",
+                    "bindEevent",
+                    "createBlock"
+                  ],
                   "disable": []
                 },
                 "slots": [],
@@ -9417,13 +9666,24 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": [""]
+                  "properties": [
+                    ""
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+                  "actions": [
+                    "copy",
+                    "remove",
+                    "insert",
+                    "updateAttr",
+                    "bindEevent",
+                    "createBlock"
+                  ],
                   "disable": []
                 },
-                "invalidity": [""],
+                "invalidity": [
+                  ""
+                ],
                 "clickCapture": true,
                 "framework": "Vue"
               },
@@ -9751,7 +10011,9 @@
                     },
                     "type": "event",
                     "functionInfo": {
-                      "params": [null],
+                      "params": [
+                        null
+                      ],
                       "returns": {}
                     }
                   },
@@ -9764,7 +10026,9 @@
                     },
                     "type": "event",
                     "functionInfo": {
-                      "params": [null],
+                      "params": [
+                        null
+                      ],
                       "returns": {}
                     }
                   },
@@ -9777,7 +10041,9 @@
                     },
                     "type": "event",
                     "functionInfo": {
-                      "params": [null],
+                      "params": [
+                        null
+                      ],
                       "returns": {}
                     }
                   }
@@ -9844,10 +10110,21 @@
                 "isLayout": false,
                 "rootSelector": ".tiny-dialog-box",
                 "shortcuts": {
-                  "properties": ["visible", "", "width"]
+                  "properties": [
+                    "visible",
+                    "",
+                    "width"
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["remove", "insert", "copy", "updateAttr", "bindEevent", "createBlock"],
+                  "actions": [
+                    "remove",
+                    "insert",
+                    "copy",
+                    "updateAttr",
+                    "bindEevent",
+                    "createBlock"
+                  ],
                   "disable": []
                 },
                 "slots": [],
@@ -10222,10 +10499,20 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": ["disabled", "mini"]
+                  "properties": [
+                    "disabled",
+                    "mini"
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+                  "actions": [
+                    "copy",
+                    "remove",
+                    "insert",
+                    "updateAttr",
+                    "bindEevent",
+                    "createBlock"
+                  ],
                   "disable": []
                 },
                 "slots": [],
@@ -10507,10 +10794,21 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": ["horizontal", "", "active"]
+                  "properties": [
+                    "horizontal",
+                    "",
+                    "active"
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+                  "actions": [
+                    "copy",
+                    "remove",
+                    "insert",
+                    "updateAttr",
+                    "bindEevent",
+                    "createBlock"
+                  ],
                   "disable": []
                 },
                 "framework": "Vue"
@@ -10812,10 +11110,20 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": ["name", "title"]
+                  "properties": [
+                    "name",
+                    "title"
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+                  "actions": [
+                    "copy",
+                    "remove",
+                    "insert",
+                    "updateAttr",
+                    "bindEevent",
+                    "createBlock"
+                  ],
                   "disable": []
                 },
                 "slots": [],
@@ -10988,10 +11296,20 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": ["text", "size"]
+                  "properties": [
+                    "text",
+                    "size"
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+                  "actions": [
+                    "copy",
+                    "remove",
+                    "insert",
+                    "updateAttr",
+                    "bindEevent",
+                    "createBlock"
+                  ],
                   "disable": []
                 },
                 "slots": [],
@@ -11356,10 +11674,21 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": ["label-width", "", "disabled"]
+                  "properties": [
+                    "label-width",
+                    "",
+                    "disabled"
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+                  "actions": [
+                    "copy",
+                    "remove",
+                    "insert",
+                    "updateAttr",
+                    "bindEevent",
+                    "createBlock"
+                  ],
                   "disable": []
                 },
                 "slots": [],
@@ -11825,15 +12154,28 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": ["columns", "", "resizable"]
+                  "properties": [
+                    "columns",
+                    "",
+                    "resizable"
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+                  "actions": [
+                    "copy",
+                    "remove",
+                    "insert",
+                    "updateAttr",
+                    "bindEevent",
+                    "createBlock"
+                  ],
                   "disable": []
                 },
                 "slots": [],
                 "framework": "Vue",
-                "invalidity": [""]
+                "invalidity": [
+                  ""
+                ]
               },
               "createdBy": 169,
               "created_at": "2022-05-19T10:41:29.000Z",
@@ -12075,7 +12417,10 @@
                                 "widget": {
                                   "component": "JsSlotConfigurator",
                                   "props": {
-                                    "slots": ["header", "default"]
+                                    "slots": [
+                                      "header",
+                                      "default"
+                                    ]
                                   }
                                 }
                               },
@@ -12591,7 +12936,9 @@
                     },
                     "type": "event",
                     "functionInfo": {
-                      "params": [null],
+                      "params": [
+                        null
+                      ],
                       "returns": {}
                     }
                   },
@@ -12604,7 +12951,9 @@
                     },
                     "type": "event",
                     "functionInfo": {
-                      "params": [null],
+                      "params": [
+                        null
+                      ],
                       "returns": {}
                     }
                   },
@@ -12617,7 +12966,9 @@
                     },
                     "type": "event",
                     "functionInfo": {
-                      "params": ["e"],
+                      "params": [
+                        "e"
+                      ],
                       "returns": {}
                     }
                   }
@@ -12678,13 +13029,25 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": ["value", "size"]
+                  "properties": [
+                    "value",
+                    "size"
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+                  "actions": [
+                    "copy",
+                    "remove",
+                    "insert",
+                    "updateAttr",
+                    "bindEevent",
+                    "createBlock"
+                  ],
                   "disable": []
                 },
-                "invalidity": [""],
+                "invalidity": [
+                  ""
+                ],
                 "clickCapture": true,
                 "framework": "Vue"
               },
@@ -13269,7 +13632,9 @@
                     },
                     "type": "event",
                     "functionInfo": {
-                      "params": [null],
+                      "params": [
+                        null
+                      ],
                       "returns": {}
                     }
                   },
@@ -13282,7 +13647,9 @@
                     },
                     "type": "event",
                     "functionInfo": {
-                      "params": [null],
+                      "params": [
+                        null
+                      ],
                       "returns": {}
                     }
                   },
@@ -13295,7 +13662,9 @@
                     },
                     "type": "event",
                     "functionInfo": {
-                      "params": [null],
+                      "params": [
+                        null
+                      ],
                       "returns": {}
                     }
                   }
@@ -13334,7 +13703,10 @@
                   "schema": {
                     "componentName": "TinyCheckboxGroup",
                     "props": {
-                      "modelValue": ["name1", "name2"],
+                      "modelValue": [
+                        "name1",
+                        "name2"
+                      ],
                       "type": "checkbox",
                       "options": [
                         {
@@ -13395,10 +13767,20 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": ["text", "size"]
+                  "properties": [
+                    "text",
+                    "size"
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+                  "actions": [
+                    "copy",
+                    "remove",
+                    "insert",
+                    "updateAttr",
+                    "bindEevent",
+                    "createBlock"
+                  ],
                   "disable": []
                 },
                 "slots": [],
@@ -13689,10 +14071,21 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": ["multiple", "", "options"]
+                  "properties": [
+                    "multiple",
+                    "",
+                    "options"
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+                  "actions": [
+                    "copy",
+                    "remove",
+                    "insert",
+                    "updateAttr",
+                    "bindEevent",
+                    "createBlock"
+                  ],
                   "disable": []
                 },
                 "slots": [],
@@ -14186,10 +14579,20 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": ["disabled", "size"]
+                  "properties": [
+                    "disabled",
+                    "size"
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+                  "actions": [
+                    "copy",
+                    "remove",
+                    "insert",
+                    "updateAttr",
+                    "bindEevent",
+                    "createBlock"
+                  ],
                   "disable": []
                 },
                 "framework": "Vue"
@@ -14364,7 +14767,9 @@
                     },
                     "type": "event",
                     "functionInfo": {
-                      "params": [null],
+                      "params": [
+                        null
+                      ],
                       "returns": {}
                     }
                   }
@@ -14450,13 +14855,24 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": ["arrow"]
+                  "properties": [
+                    "arrow"
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+                  "actions": [
+                    "copy",
+                    "remove",
+                    "insert",
+                    "updateAttr",
+                    "bindEevent",
+                    "createBlock"
+                  ],
                   "disable": []
                 },
-                "slots": ["default"],
+                "slots": [
+                  "default"
+                ],
                 "framework": "Vue"
               },
               "createdBy": 169,
@@ -14853,10 +15269,20 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": ["placeholder", "show-clear-btn"]
+                  "properties": [
+                    "placeholder",
+                    "show-clear-btn"
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+                  "actions": [
+                    "copy",
+                    "remove",
+                    "insert",
+                    "updateAttr",
+                    "bindEevent",
+                    "createBlock"
+                  ],
                   "disable": []
                 },
                 "slots": [],
@@ -15249,10 +15675,19 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": [""]
+                  "properties": [
+                    ""
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+                  "actions": [
+                    "copy",
+                    "remove",
+                    "insert",
+                    "updateAttr",
+                    "bindEevent",
+                    "createBlock"
+                  ],
                   "disable": []
                 },
                 "invalidity": [],
@@ -15924,13 +16359,25 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": ["size", "trigger"]
+                  "properties": [
+                    "size",
+                    "trigger"
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+                  "actions": [
+                    "copy",
+                    "remove",
+                    "insert",
+                    "updateAttr",
+                    "bindEevent",
+                    "createBlock"
+                  ],
                   "disable": []
                 },
-                "invalidity": [""],
+                "invalidity": [
+                  ""
+                ],
                 "clickCapture": true,
                 "framework": "Vue"
               },
@@ -16278,7 +16725,9 @@
                     },
                     "type": "event",
                     "functionInfo": {
-                      "params": [null],
+                      "params": [
+                        null
+                      ],
                       "returns": {}
                     }
                   },
@@ -16291,7 +16740,9 @@
                     },
                     "type": "event",
                     "functionInfo": {
-                      "params": [null],
+                      "params": [
+                        null
+                      ],
                       "returns": {}
                     }
                   },
@@ -16304,7 +16755,9 @@
                     },
                     "type": "event",
                     "functionInfo": {
-                      "params": [null],
+                      "params": [
+                        null
+                      ],
                       "returns": {}
                     }
                   }
@@ -16344,7 +16797,12 @@
                     "componentName": "TinyChartHistogram",
                     "props": {
                       "data": {
-                        "columns": ["日期", "访问用户", "下单用户", "下单率"],
+                        "columns": [
+                          "日期",
+                          "访问用户",
+                          "下单用户",
+                          "下单率"
+                        ],
                         "rows": [
                           {
                             "日期": "1/1",
@@ -16405,13 +16863,24 @@
                 "isLayout": false,
                 "rootSelector": "",
                 "shortcuts": {
-                  "properties": [""]
+                  "properties": [
+                    ""
+                  ]
                 },
                 "contextMenu": {
-                  "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+                  "actions": [
+                    "copy",
+                    "remove",
+                    "insert",
+                    "updateAttr",
+                    "bindEevent",
+                    "createBlock"
+                  ],
                   "disable": []
                 },
-                "invalidity": [""],
+                "invalidity": [
+                  ""
+                ],
                 "clickCapture": true,
                 "framework": "Vue"
               },
@@ -16669,7 +17138,9 @@
     "createdBy": null,
     "updatedBy": null,
     "assets_url": {
-      "material": ["http://localhost:9090/assets/json/bundle.json"],
+      "material": [
+        "http://localhost:9090/assets/json/bundle.json"
+      ],
       "scripts": [
         "http://localhost:9090/assets/js/1505web-components.es.js",
         "http://localhost:9090/assets/js/1505web-components.umd.js"
@@ -16724,13 +17195,25 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["type", "size"]
+            "properties": [
+              "type",
+              "size"
+            ]
           },
           "contextMenu": {
-            "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+            "actions": [
+              "copy",
+              "remove",
+              "insert",
+              "updateAttr",
+              "bindEevent",
+              "createBlock"
+            ],
             "disable": []
           },
-          "invalidity": [""],
+          "invalidity": [
+            ""
+          ],
           "clickCapture": true,
           "framework": "Vue"
         },
@@ -17004,13 +17487,25 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["type", "size"]
+            "properties": [
+              "type",
+              "size"
+            ]
           },
           "contextMenu": {
-            "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+            "actions": [
+              "copy",
+              "remove",
+              "insert",
+              "updateAttr",
+              "bindEevent",
+              "createBlock"
+            ],
             "disable": []
           },
-          "invalidity": [""],
+          "invalidity": [
+            ""
+          ],
           "clickCapture": true,
           "framework": "Vue"
         },
@@ -17316,7 +17811,9 @@
           "isModal": false,
           "isPopper": false,
           "nestingRule": {
-            "childWhitelist": ["ElFormItem"],
+            "childWhitelist": [
+              "ElFormItem"
+            ],
             "parentWhitelist": "",
             "descendantBlacklist": "",
             "ancestorWhitelist": ""
@@ -17325,13 +17822,25 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["inline", "label-width"]
+            "properties": [
+              "inline",
+              "label-width"
+            ]
           },
           "contextMenu": {
-            "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+            "actions": [
+              "copy",
+              "remove",
+              "insert",
+              "updateAttr",
+              "bindEevent",
+              "createBlock"
+            ],
             "disable": []
           },
-          "invalidity": [""],
+          "invalidity": [
+            ""
+          ],
           "clickCapture": true,
           "framework": "Vue"
         },
@@ -17782,13 +18291,25 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["inline", "label-width"]
+            "properties": [
+              "inline",
+              "label-width"
+            ]
           },
           "contextMenu": {
-            "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+            "actions": [
+              "copy",
+              "remove",
+              "insert",
+              "updateAttr",
+              "bindEevent",
+              "createBlock"
+            ],
             "disable": []
           },
-          "invalidity": [""],
+          "invalidity": [
+            ""
+          ],
           "clickCapture": true,
           "framework": "Vue"
         },
@@ -18123,7 +18644,9 @@
           "isModal": false,
           "isPopper": false,
           "nestingRule": {
-            "childWhitelist": ["ElTableColumn"],
+            "childWhitelist": [
+              "ElTableColumn"
+            ],
             "parentWhitelist": "",
             "descendantBlacklist": "",
             "ancestorWhitelist": ""
@@ -18132,13 +18655,25 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["inline", "label-width"]
+            "properties": [
+              "inline",
+              "label-width"
+            ]
           },
           "contextMenu": {
-            "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+            "actions": [
+              "copy",
+              "remove",
+              "insert",
+              "updateAttr",
+              "bindEevent",
+              "createBlock"
+            ],
             "disable": []
           },
-          "invalidity": [""],
+          "invalidity": [
+            ""
+          ],
           "clickCapture": true,
           "framework": "Vue"
         },
@@ -19368,13 +19903,25 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["inline", "label-width"]
+            "properties": [
+              "inline",
+              "label-width"
+            ]
           },
           "contextMenu": {
-            "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+            "actions": [
+              "copy",
+              "remove",
+              "insert",
+              "updateAttr",
+              "bindEevent",
+              "createBlock"
+            ],
             "disable": []
           },
-          "invalidity": [""],
+          "invalidity": [
+            ""
+          ],
           "clickCapture": true,
           "framework": "Vue"
         },
@@ -19521,11 +20068,19 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["disabled", "size"]
+            "properties": [
+              "disabled",
+              "size"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -19843,7 +20398,9 @@
           "clickCapture": false,
           "isModal": false,
           "nestingRule": {
-            "childWhitelist": ["TinyCarouselItem"],
+            "childWhitelist": [
+              "TinyCarouselItem"
+            ],
             "parentWhitelist": "",
             "descendantBlacklist": "",
             "ancestorWhitelist": ""
@@ -19852,11 +20409,19 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["disabled", "size"]
+            "properties": [
+              "disabled",
+              "size"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -20012,7 +20577,14 @@
         "name": {
           "zh_CN": "标题"
         },
-        "component": ["h1", "h2", "h3", "h4", "h5", "h6"],
+        "component": [
+          "h1",
+          "h2",
+          "h3",
+          "h4",
+          "h5",
+          "h6"
+        ],
         "icon": "h16",
         "description": "标题",
         "docUrl": "",
@@ -20103,11 +20675,19 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["disabled", "size"]
+            "properties": [
+              "disabled",
+              "size"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -20476,11 +21056,19 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["disabled", "size"]
+            "properties": [
+              "disabled",
+              "size"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -20733,7 +21321,9 @@
           ],
           "events": {},
           "shortcuts": {
-            "properties": ["src"]
+            "properties": [
+              "src"
+            ]
           },
           "contentMenu": {
             "actions": []
@@ -21408,11 +21998,19 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["disabled", "size"]
+            "properties": [
+              "disabled",
+              "size"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -21558,11 +22156,19 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["label-width", "disabled"]
+            "properties": [
+              "label-width",
+              "disabled"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -21911,11 +22517,19 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["label-width", "disabled"]
+            "properties": [
+              "label-width",
+              "disabled"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -22038,7 +22652,9 @@
           "isModal": false,
           "nestingRule": {
             "childWhitelist": "",
-            "parentWhitelist": ["TinyForm"],
+            "parentWhitelist": [
+              "TinyForm"
+            ],
             "descendantBlacklist": "",
             "ancestorWhitelist": ""
           },
@@ -22046,11 +22662,19 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["label", "rules"]
+            "properties": [
+              "label",
+              "rules"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -22328,11 +22952,19 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["label", "rules"]
+            "properties": [
+              "label",
+              "rules"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -22668,11 +23300,19 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["text", "size"]
+            "properties": [
+              "text",
+              "size"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -23083,11 +23723,19 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["value", "disabled"]
+            "properties": [
+              "value",
+              "disabled"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -23322,11 +23970,19 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["visible", "width"]
+            "properties": [
+              "visible",
+              "width"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -23730,11 +24386,19 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["multiple", "options"]
+            "properties": [
+              "multiple",
+              "options"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -23932,11 +24596,19 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["disabled", "mini"]
+            "properties": [
+              "disabled",
+              "mini"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -24211,11 +24883,19 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["clearable", "mini"]
+            "properties": [
+              "clearable",
+              "mini"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -24470,11 +25150,19 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["border", "disabled"]
+            "properties": [
+              "border",
+              "disabled"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -24661,11 +25349,19 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["text", "size"]
+            "properties": [
+              "text",
+              "size"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -24872,11 +25568,19 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["disabled", "type"]
+            "properties": [
+              "disabled",
+              "type"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -25152,11 +25856,19 @@
           "isLayout": false,
           "rootSelector": ".tiny-dialog-box",
           "shortcuts": {
-            "properties": ["visible", "width"]
+            "properties": [
+              "visible",
+              "width"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -25428,7 +26140,9 @@
           "clickCapture": false,
           "isModal": false,
           "nestingRule": {
-            "childWhitelist": ["TinyTabItem"],
+            "childWhitelist": [
+              "TinyTabItem"
+            ],
             "parentWhitelist": [],
             "descendantBlacklist": [],
             "ancestorWhitelist": []
@@ -25437,11 +26151,19 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["size", "tab-style"]
+            "properties": [
+              "size",
+              "tab-style"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -25542,7 +26264,9 @@
           "isModal": false,
           "nestingRule": {
             "childWhitelist": "",
-            "parentWhitelist": ["TinyTab"],
+            "parentWhitelist": [
+              "TinyTab"
+            ],
             "descendantBlacklist": "",
             "ancestorWhitelist": ""
           },
@@ -25550,11 +26274,19 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["name", "title"]
+            "properties": [
+              "name",
+              "title"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -25677,7 +26409,9 @@
           "clickCapture": false,
           "isModal": false,
           "nestingRule": {
-            "childWhitelist": ["TinyBreadcrumbItem"],
+            "childWhitelist": [
+              "TinyBreadcrumbItem"
+            ],
             "parentWhitelist": [],
             "descendantBlacklist": [],
             "ancestorWhitelist": []
@@ -25686,11 +26420,18 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["separator"]
+            "properties": [
+              "separator"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -25771,7 +26512,9 @@
           "isModal": false,
           "nestingRule": {
             "childWhitelist": "",
-            "parentWhitelist": ["TinyBreadcrumb"],
+            "parentWhitelist": [
+              "TinyBreadcrumb"
+            ],
             "descendantBlacklist": "",
             "ancestorWhitelist": ""
           },
@@ -25779,11 +26522,18 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["to"]
+            "properties": [
+              "to"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -25911,11 +26661,19 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["label-width", "disabled"]
+            "properties": [
+              "label-width",
+              "disabled"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -26026,11 +26784,19 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["label-width", "disabled"]
+            "properties": [
+              "label-width",
+              "disabled"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -26247,7 +27013,10 @@
                           "widget": {
                             "component": "JsSlotConfigurator",
                             "props": {
-                              "slots": ["header", "default"]
+                              "slots": [
+                                "header",
+                                "default"
+                              ]
                             }
                           }
                         },
@@ -26925,10 +27694,15 @@
             }
           },
           "shortcuts": {
-            "properties": ["sortable", "columns"]
+            "properties": [
+              "sortable",
+              "columns"
+            ]
           },
           "contentMenu": {
-            "actions": ["create symbol"]
+            "actions": [
+              "create symbol"
+            ]
           },
           "onBeforeMount": "console.log('table on load'); this.pager = source.pager; this.fetchData = source.fetchData; this.data = source.data ;this.columns = source.columns"
         },
@@ -26948,11 +27722,19 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["sortable", "columns"]
+            "properties": [
+              "sortable",
+              "columns"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -26979,7 +27761,9 @@
           "events": {},
           "shortcuts": {},
           "contentMenu": {
-            "actions": ["create symbol"]
+            "actions": [
+              "create symbol"
+            ]
           }
         },
         "configure": {
@@ -26999,8 +27783,13 @@
           "rootSelector": "",
           "shortcuts": {},
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -27233,11 +28022,19 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["currentPage", "total"]
+            "properties": [
+              "currentPage",
+              "total"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -27599,11 +28396,19 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["modelValue", "disabled"]
+            "properties": [
+              "modelValue",
+              "disabled"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -27915,11 +28720,19 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["data", "show-checkbox"]
+            "properties": [
+              "data",
+              "show-checkbox"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -28124,11 +28937,19 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["active", "data"]
+            "properties": [
+              "active",
+              "data"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -28324,11 +29145,19 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["disabled", "content"]
+            "properties": [
+              "disabled",
+              "content"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -28810,11 +29639,19 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["visible", "width"]
+            "properties": [
+              "visible",
+              "width"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -29226,11 +30063,19 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["value", "disabled"]
+            "properties": [
+              "value",
+              "disabled"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       },
@@ -29671,11 +30516,19 @@
           "isLayout": false,
           "rootSelector": "",
           "shortcuts": {
-            "properties": ["value", "disabled"]
+            "properties": [
+              "value",
+              "disabled"
+            ]
           },
           "contextMenu": {
-            "actions": ["create symbol"],
-            "disable": ["copy", "remove"]
+            "actions": [
+              "create symbol"
+            ],
+            "disable": [
+              "copy",
+              "remove"
+            ]
           }
         }
       }
@@ -29751,9 +30604,23 @@
     "data_hash": "ae128e37f6bc378f1b9c21d75bd05551",
     "can_associate": true,
     "data_source_global": {
+      "proxy": {
+        "/mock": {
+          "target": "https://mock.apipost.net",
+          "changeOrigin": true
+        }
+      },
+      "willFetch": {
+        "type": "JSFunction",
+        "value": "function willFetch(option) {\n  return option\n}"
+      },
       "dataHandler": {
         "type": "JSFunction",
         "value": "function dataHanlder(res){\n return res;\n}"
+      },
+      "errorHandler": {
+        "type": "JSFunction",
+        "value": "function errorHandler(err) {\n  return Promise.reject(err)\n}"
       }
     }
   }

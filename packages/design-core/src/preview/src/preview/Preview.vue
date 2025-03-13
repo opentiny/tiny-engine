@@ -80,7 +80,7 @@ export default {
     const getFamilyPages = (appData) => {
       const familyPages = []
       const ancestors = queryParams.ancestors
-
+      
       if (queryParams.type === 'Block') {
         familyPages.push({
           panelName: 'Main.vue',
@@ -94,7 +94,7 @@ export default {
 
         return familyPages
       }
-
+      
       if (!ancestors?.length || !appData?.componentsMap) {
         return familyPages
       }
@@ -131,7 +131,6 @@ export default {
 
       return familyPages
     }
-
     const promiseList = [
       fetchAppSchema(queryParams?.app),
       fetchMetaData(queryParams),
@@ -198,8 +197,12 @@ export default {
         newFiles[panelName] = newPanelValue
       }
 
-      const appJsCode = processAppJsCode(newFiles['app.js'], queryParams.styles)
-
+      let appJsCode = processAppJsCode(newFiles['app.js'], queryParams.styles)
+      const {
+        dataSource: { proxy = {} }
+      } = metaData
+      const info = { proxy, app: queryParams.app }
+      appJsCode += '\n' + `window.appInfo = ${JSON.stringify(info, null, 2)}` + '\n'
       newFiles['app.js'] = appJsCode
 
       pageCode.map(fixScriptLang).forEach(assignFiles)

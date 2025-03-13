@@ -1,7 +1,6 @@
-export default () => {
+export default (schema) => {
   // 避免在构建的时候，被 process. env 替换
   const processStr = ['process', 'env']
-
   const res = `
   import { defineConfig } from 'vite'
   import path from 'path'
@@ -9,6 +8,10 @@ export default () => {
   import vueJsx from '@vitejs/plugin-vue-jsx'
   
   export default defineConfig({
+    server: {
+      port: 8080,
+      proxy: ${JSON.stringify(schema.dataSource.proxy || {}, null, 2)},
+    },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, 'src')

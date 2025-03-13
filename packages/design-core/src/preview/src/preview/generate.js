@@ -12,7 +12,27 @@
 
 const generateDefaultExport = (data) =>
   data && typeof data === 'object' ? `export default ${JSON.stringify(data, null, 2)}`.trim() : 'export default {}'
+const generateDataSource = (source) => {
+  const dataSource = source || {}
+  const { dataHandler, errorHandler, willFetch, list } = dataSource
 
+  const data = {
+    list: list.map(({ id, name, data }) => ({ id, name, ...data }))
+  }
+
+  if (dataHandler) {
+    data.dataHandler = dataHandler
+  }
+
+  if (errorHandler) {
+    data.errorHandler = errorHandler
+  }
+
+  if (willFetch) {
+    data.willFetch = willFetch
+  }
+  return generateDefaultExport(data)
+}
 const generateStores = (globalState) => {
   if (!Array.isArray(globalState)) {
     return 'export {}'
@@ -156,7 +176,7 @@ export const processAppJsCode = (code, cssList) => {
 
 export default (data) => {
   const locales = generateDefaultExport(compatibleI18n(data.i18n))
-  const dataSource = generateDefaultExport(data.dataSource)
+  const dataSource = generateDataSource(data.dataSource)
   const stores = generateStores(data.globalState)
   const bridge = generateBridge(data.bridge)
   const utils = generateUtils(data.utils)

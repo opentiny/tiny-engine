@@ -130,6 +130,8 @@ export const ENVIRONMENTS = {
   Development: ['development']
 }
 
+export const DEFAULT_PROXY = {}
+
 // 数据源默认拦截器
 export const DEFAULT_INTERCEPTOR = {
   dataHandler: {

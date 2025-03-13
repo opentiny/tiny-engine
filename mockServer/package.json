@@ -40,7 +40,8 @@
     "koa-compose": "^4.1.0",
     "koa-jwt": "^3.6.0",
     "koa-router": "^8.0.8",
-    "koa-static2": "^0.1.8"
+    "koa-static2": "^0.1.8",
+    "http-proxy-middleware": "^3.0.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",

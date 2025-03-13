@@ -681,11 +681,59 @@
           "desc": null,
           "created_at": "2022-07-04T03:04:05.000Z",
           "updated_at": "2022-07-04T03:43:40.000Z"
+        },
+        {
+          "id": 152,
+          "name": "testProxyApi",
+          "data": {
+            "data": [],
+            "type": "array",
+            "columns": [],
+            "options": {
+              "uri": "/mock/41534bc9c0e0000/province?apipost_id=1534d5e9f71002",
+              "method": "GET"
+            },
+            "willFetch": {
+              "type": "JSFunction",
+              "value": "function willFetch(option) {\n  return option \n}"
+            },
+            "dataHandler": {
+              "type": "JSFunction",
+              "value": "function dataHandler(data) { \n return data \n}"
+            },
+            "shouldFetch": {
+              "type": "JSFunction",
+              "value": "function shouldFetch(option) {\n  return true \n}"
+            },
+            "errorHandler": {
+              "type": "JSFunction",
+              "value": "function errorHandler(err) {}"
+            }
+          },
+          "tpl": null,
+          "app": "918",
+          "desc": null,
+          "created_at": "2022-07-04T02:20:07.000Z",
+          "updated_at": "2022-07-04T06:25:29.000Z"
         }
       ],
       "dataHandler": {
         "type": "JSFunction",
         "value": "function dataHanlder(res){\n return res;\n}"
+      },
+      "proxy": {
+        "/mock": {
+          "target": "https://mock.apipost.net",
+          "changeOrigin": true
+        }
+      },
+      "willFetch": {
+        "type": "JSFunction",
+        "value": "function willFetch(option) {\n  return option\n}"
+      },
+      "errorHandler": {
+        "type": "JSFunction",
+        "value": "function errorHandler(err) {\n  return Promise.reject(err)\n}"
       }
     },
     "i18n": {
@@ -752,7 +800,11 @@
     "componentsTree": [
       {
         "state": {
-          "dataDisk": [1, 2, 3]
+          "dataDisk": [
+            1,
+            2,
+            3
+          ]
         },
         "methods": {},
         "componentName": "Page",

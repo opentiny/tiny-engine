@@ -11,17 +11,18 @@
  */
 
 import axios from 'axios'
+import { read, utils, writeFileXLSX } from 'xlsx'
 import { useResource } from '@opentiny/tiny-engine-meta-register'
+import { isEmptyObject } from '@opentiny/vue-renderless/common/type'
 import { isMock } from '@opentiny/tiny-engine-common/js/environments'
 import { utils as commonUtils, constants } from '@opentiny/tiny-engine-utils'
-import { read, utils, writeFileXLSX } from 'xlsx'
 
 const { DEFAULT_INTERCEPTOR } = constants
 const { parseFunction: generateFunction } = commonUtils
 
 const load = (http, options, dataSource, shouldFetch) => (params, customUrl) => {
   if (!shouldFetch()) {
-    return undefined
+    return Promise.resolve(undefined)
   }
 
   dataSource.status = 'loading'
@@ -32,6 +33,20 @@ const load = (http, options, dataSource, shouldFetch) => (params, customUrl) => 
   const data = params || defaultParams
 
   config.url = customUrl || config.url
+
+  const {
+    appSchemaState: { dataSource: source, proxy }
+  } = useResource()
+  if (!isEmptyObject(proxy)) {
+    const isProxy = Object.keys(proxy).reduce((acc, cur) => acc || config.url.startsWith(cur), false)
+    if (isProxy) {
+      config.url = `/app-proxy/api${config.url}`
+      config.headers = {
+        ...config.headers,
+        proxy_app_id: source?.[0]?.app || 918
+      }
+    }
+  }
 
   if (method.toLowerCase() === 'get') {
     config.params = data
@@ -68,8 +83,6 @@ export const getRequest = (config) => {
 
   const http = axios.create()
 
-  http.interceptors.response.use(globalDataHandle, globalErrorHandler)
-
   const dataSource = { config }
   const shouldFetch = createFn(config.shouldFetch.value)
   const willFetch = createFn(config.willFetch.value)
@@ -92,6 +105,7 @@ export const getRequest = (config) => {
   http.interceptors.request.use(globalWillFetch, globalErrorHandler) // axios对于request拦截器是后注册先执行
 
   http.interceptors.response.use(dataHandler, errorHandler)
+  http.interceptors.response.use(globalDataHandle, globalErrorHandler)
 
   if (isMock) {
     http.mock([

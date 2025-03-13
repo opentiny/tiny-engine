@@ -69,9 +69,23 @@
     "data_hash": "ae128e37f6bc378f1b9c21d75bd05551",
     "can_associate": true,
     "data_source_global": {
+      "proxy": {
+        "/mock": {
+          "target": "https://mock.apipost.net",
+          "changeOrigin": true
+        }
+      },
+      "willFetch": {
+        "type": "JSFunction",
+        "value": "function willFetch(option) {\n  return option\n}"
+      },
       "dataHandler": {
         "type": "JSFunction",
         "value": "function dataHanlder(res){\n return res;\n}"
+      },
+      "errorHandler": {
+        "type": "JSFunction",
+        "value": "function errorHandler(err) {\n  return Promise.reject(err)\n}"
       }
     }
   }

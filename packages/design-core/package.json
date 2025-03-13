@@ -92,6 +92,7 @@
     "@vue/babel-plugin-jsx": "^1.2.5",
     "@vue/repl": "^2.9.0",
     "@vueuse/core": "^9.6.0",
+    "axios": "~0.28.0",
     "element-resize-detector": "^1.2.4",
     "eslint-linter-browserify": "8.57.0",
     "file-saver": "^2.0.5",

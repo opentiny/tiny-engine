@@ -52,6 +52,11 @@ const getDefaultConfig = (engineConfig) => {
         '/platform-center/api': {
           target: origin,
           changeOrigin: true
+        },
+        '/app-proxy/api': {
+          target: origin,
+          changeOrigin: true
+          // rewrite: (path) => path.replace(/^\/app-proxy\/api/, ''),
         }
       }
     },

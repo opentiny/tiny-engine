@@ -11,11 +11,12 @@
  */
 
 import fs from 'fs-extra'
+import path from 'path'
 import * as glob from 'glob'
 import KoaRouter from 'koa-router'
-import path from 'path'
 import MockService from '../services/mockService'
 import { getResponseData } from '../tool/Common'
+import { createProxyMiddleware } from 'http-proxy-middleware'
 
 const router = new KoaRouter()
 export const mockService = new MockService()
@@ -57,6 +58,14 @@ glob.globSync(`${mockPath}/post/**/*.json`).forEach((jpath) => {
 
 router.get('/app-center/api/apps/canvas/lock', async (ctx) => {
   ctx.body = await mockService.appService.lock(ctx.request.query)
+})
+
+router.post('/app-center/api/apps/update/:id', (ctx) => {
+  const { data_source_global, global_state  } = ctx.request.body
+  if (data_source_global) {
+    mockService.sourceService.update(data_source_global)
+  }
+  ctx.body = { "data": [], "locale": "zh-cn" }
 })
 
 router.post('/app-center/api/schema2code', (ctx) => {
@@ -223,5 +232,38 @@ router.get('/block-history', async (ctx) => {
 router.post('block-history/create', async (ctx) => {
   ctx.body = await mockService.blockHistoryService.create(ctx.request.body)
 })
+
+// 定义一个拦截并转发的路由, 
+router.all('/app-proxy/api/*', async (ctx) => {
+    // 通过请求头获取APP-ID 来获取具体应用配置的代理
+    const appId = 918 || ctx.headers.proxy_app_id;
+    const { data } = getJsonPathData(path.resolve(__dirname, `../mock/get/app-center/apps/detail/${appId}.json`))
+    // 修改 ctx, req 路径、请求体, 用于代理
+    // TODO 请求体参数仅处理了body、query；JAVA服务端代码代理需要完整补全
+    ctx.req.url = ctx.url.replace('/app-proxy/api', '')
+    ctx.req.query = ctx.request.query;
+    ctx.req.body = ctx.request.body;
+    const config = data?.data?.data_source_global?.proxy || {}
+    let i = -1;
+    const keys = Object.keys(config);
+    keys.forEach((item, index) => {
+      if (ctx.path.includes(item)) {
+        i = index;
+      }
+    })
+    if (i === -1) {
+      ctx.body = { msg: '无数据', data: [] }
+    } else {
+      const conf = Object.values(config)[i];
+      // 添加拦截逻辑，代理转发接口
+      const proxy = createProxyMiddleware(conf);
+      // 使用代理中间件处理请求
+      await new Promise((resolve, reject) => {
+        proxy(ctx.req, ctx.res, (err) => {
+          err? reject(err) : resolve();
+        });
+      });
+    }
+});
 
 export default router

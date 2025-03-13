@@ -26,7 +26,7 @@ import {
   META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
 
-const { COMPONENT_NAME, DEFAULT_INTERCEPTOR } = constants
+const { COMPONENT_NAME, DEFAULT_INTERCEPTOR, DEFAULT_PROXY } = constants
 
 const appSchemaState = reactive({
   dataSource: [],
@@ -136,15 +136,16 @@ const fetchAppState = async () => {
   const appData = await getMetaApi(META_SERVICE.Http).get(`/app-center/v1/api/apps/schema/${id}`)
   appSchemaState.pageTree = appData.componentsTree
   appSchemaState.componentsMap = appData.componentsMap
-  appSchemaState.dataSource = appData.dataSource?.list
-  appSchemaState.dataHandler = appData.dataSource?.dataHandler || DEFAULT_INTERCEPTOR.dataHandler
   appSchemaState.willFetch = appData.dataSource?.willFetch || DEFAULT_INTERCEPTOR.willFetch
+  appSchemaState.dataHandler = appData.dataSource?.dataHandler || DEFAULT_INTERCEPTOR.globalDataHandler
   appSchemaState.errorHandler = appData.dataSource?.errorHandler || DEFAULT_INTERCEPTOR.errorHandler
+  appSchemaState.proxy = appData.dataSource?.proxy || DEFAULT_PROXY
+  appSchemaState.dataSource = appData.dataSource?.list || []
 
   appSchemaState.bridge = appData.bridge
   appSchemaState.utils = appData.utils
-  appSchemaState.isDemo = appData.meta?.is_demo
-  appSchemaState.globalState = appData?.meta.global_state
+  appSchemaState.isDemo = appData.meta?.isDemo
+  appSchemaState.globalState = appData.meta?.globalState
 
   // 词条语言为空时使用默认的语言
   const defaultLocales = [

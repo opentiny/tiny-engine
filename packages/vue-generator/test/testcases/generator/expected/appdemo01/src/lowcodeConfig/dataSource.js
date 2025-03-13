@@ -14,27 +14,27 @@ import useHttp from '../http'
 import dataSources from './dataSource.json'
 
 const dataSourceMap = {}
-
-// 暂时使用 eval 解析 JSON 数据里的函数
 const createFn = (fnContent) => {
   return (...args) => {
-    // eslint-disable-next-line no-eval
-    window.eval('var fn = ' + fnContent)
-    // eslint-disable-next-line no-undef
+    const fn = new Function(`return ${fnContent}`)()
     return fn.apply(this, args)
   }
 }
 
+const globalWillFetch = dataSources.willFetch ? createFn(dataSources.willFetch.value) : (opt) => opt
 const globalDataHandle = dataSources.dataHandler ? createFn(dataSources.dataHandler.value) : (res) => res
+const globalErrorHandler = dataSources.errorHandler
+  ? createFn(dataSources.errorHandler.value)
+  : (err) => Promise.reject(err)
 
 const load = (http, options, dataSource, shouldFetch) => (params, customUrl) => {
   // 如果没有配置远程请求，则直接返回静态数据，返回前可能会有全局数据处理
   if (!options) {
-    return globalDataHandle(dataSource.config.data)
+    return Promise.resolve(globalDataHandle(dataSource.config.data))
   }
 
   if (!shouldFetch()) {
-    return
+    return Promise.resolve(undefined)
   }
 
   dataSource.status = 'loading'
@@ -56,29 +56,30 @@ const load = (http, options, dataSource, shouldFetch) => (params, customUrl) => 
 }
 
 dataSources.list.forEach((config) => {
-  const http = useHttp(globalDataHandle)
   const dataSource = { config }
-
   dataSourceMap[config.name] = dataSource
 
   const shouldFetch = config.shouldFetch?.value ? createFn(config.shouldFetch.value) : () => true
   const willFetch = config.willFetch?.value ? createFn(config.willFetch.value) : (options) => options
-
   const dataHandler = (res) => {
     const data = config.dataHandler?.value ? createFn(config.dataHandler.value)(res) : res
     dataSource.status = 'loaded'
     dataSource.data = data
     return data
   }
-
   const errorHandler = (error) => {
     config.errorHandler?.value && createFn(config.errorHandler.value)(error)
     dataSource.status = 'error'
     dataSource.error = error
   }
-
-  http.interceptors.request.use(willFetch, errorHandler)
-  http.interceptors.response.use(dataHandler, errorHandler)
+  const http = useHttp({
+    globalWillFetch,
+    globalDataHandle,
+    globalErrorHandler,
+    willFetch,
+    dataHandler,
+    errorHandler
+  })
 
   if (import.meta.env.VITE_APP_MOCK === 'mock') {
     http.mock([

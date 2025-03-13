@@ -31,7 +31,8 @@ export default class AppService {
     // 拼装数据源
     const dataSource = {
       list: source,
-      dataHandler: app.data_handler
+      proxy: app.data_source_global.proxy,
+      dataHandler: app.data_source_global.data_handler
     }
     // 拼装工具类
     const utils = []
