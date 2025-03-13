@@ -392,19 +392,16 @@ export const scrollToNode = (element) => {
   return nextTick()
 }
 
-const { clearMultiSelection, initMultiSelect, multiSelectedStates, multiStateLength } = useMultiSelect()
+const { clearMultiSelection, setMultiSelection, multiSelectedStates, multiStateLength } = useMultiSelect()
 
 const setSelectRect = (element, multiNodeId) => {
   element = element || getDocument().body
 
   const { left, height, top, width } = getRect(element)
+  const elementBounds = { left, top, width, height }
   const componentName = getCurrent().schema?.componentName || ''
   clearHover()
-  Object.assign(selectState, {
-    width,
-    height,
-    top,
-    left,
+  Object.assign(selectState, elementBounds, {
     componentName,
     doc: getDocument()
   })
@@ -412,7 +409,7 @@ const setSelectRect = (element, multiNodeId) => {
   if (multiNodeId) {
     multiSelectedStates.value.map((state) => {
       if (state.id === multiNodeId) {
-        return Object.assign(state, selectState)
+        return Object.assign(state, elementBounds)
       }
     })
   }
@@ -433,16 +430,12 @@ export const updateRect = (id) => {
   }
 }
 
-export const syncNodeScroll = (id) => {
-  if (multiStateLength.value > 1) {
-    multiSelectedStates.value.forEach((state) => {
-      const multiNodeId = state.id
-      const element = querySelectById(multiNodeId)
-      setTimeout(() => setSelectRect(element, multiNodeId))
-    })
-  } else {
-    updateRect(id)
-  }
+export const syncNodeScroll = () => {
+  multiSelectedStates.value.forEach((state) => {
+    const multiNodeId = state.id
+    const element = querySelectById(multiNodeId)
+    setTimeout(() => setSelectRect(element, multiNodeId))
+  })
 }
 
 export const getConfigure = (targetName) => {
@@ -740,9 +733,8 @@ export const selectNode = async (id, type) => {
     canvasState.loopId = loopId
   }
 
-  if (type === 'clickTree') {
-    clearMultiSelection()
-    initMultiSelect()
+  if (type !== 'clickTree' && multiStateLength.value === 1) {
+    id = multiSelectedStates.value[0]?.id
   }
 
   const { node, parent } = useCanvas().getNodeWithParentById(id) || {}
@@ -759,6 +751,12 @@ export const selectNode = async (id, type) => {
 
   await scrollToNode(element)
   setSelectRect(element)
+
+  if (type === 'clickTree') {
+    clearMultiSelection()
+    setMultiSelection(selectState)
+  }
+
   canvasState.emit('selected', node, parent, type, id)
 
   return node
