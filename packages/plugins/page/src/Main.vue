@@ -1,37 +1,39 @@
 <template>
-  <plugin-panel :title="title" @close="pluginPanelClosed" :docsUrl="docsUrl" :isShowDocsIcon="true" class="page-manage">
-    <template #header>
-      <svg-button
-        class="add-folder-icon"
-        name="add-folder"
-        placement="bottom"
-        tips="新建文件夹"
-        @click="createNewFolder()"
-      ></svg-button>
-      <svg-button
-        class="new-page-icon"
-        name="new-page"
-        placement="bottom"
-        tips="新建页面"
-        @click="createNewPage('staticPages')"
-      ></svg-button>
-    </template>
+  <div class="plugin-page">
+    <plugin-panel :title="title" @close="pluginPanelClosed" :docsUrl="docsUrl" :isShowDocsIcon="true">
+      <template #header>
+        <svg-button
+          class="add-folder-icon"
+          name="add-folder"
+          placement="bottom"
+          tips="新建文件夹"
+          @click="createNewFolder()"
+        ></svg-button>
+        <svg-button
+          class="new-page-icon"
+          name="new-page"
+          placement="bottom"
+          tips="新建页面"
+          @click="createNewPage('staticPages')"
+        ></svg-button>
+      </template>
 
-    <template #content>
-      <page-tree
-        ref="pageTreeRef"
-        :isFolder="state.isFolder"
-        @add="createNewPage('publicPages')"
-        @openSettingPanel="openSettingPanel"
-        @createPage="createNewPage"
-        @createFolder="createNewFolder"
-      ></page-tree>
-    </template>
-  </plugin-panel>
+      <template #content>
+        <page-tree
+          ref="pageTreeRef"
+          :isFolder="state.isFolder"
+          @add="createNewPage('publicPages')"
+          @openSettingPanel="openSettingPanel"
+          @createPage="createNewPage"
+          @createFolder="createNewFolder"
+        ></page-tree>
+      </template>
+    </plugin-panel>
 
-  <page-setting :isFolder="state.isFolder" @openNewPage="openNewPage"></page-setting>
+    <page-setting :isFolder="state.isFolder" @openNewPage="openNewPage"></page-setting>
 
-  <page-folder-setting :isFolder="state.isFolder"></page-folder-setting>
+    <page-folder-setting :isFolder="state.isFolder"></page-folder-setting>
+  </div>
 </template>
 
 <script lang="jsx">
@@ -171,5 +173,8 @@ export default {
   border-radius: 4px;
   height: 24px;
   line-height: 24px;
+}
+.plugin-page {
+  height: 100%;
 }
 </style>
