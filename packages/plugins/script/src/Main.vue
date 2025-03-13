@@ -7,7 +7,7 @@
     :isShowDocsIcon="true"
     :isCloseLeft="false"
     @close="$emit('close')"
-    class="plugin-page-js-container"
+    class="plugin-page-js-container plugin-script"
   >
     <template #header>
       <span class="icon-wrap">

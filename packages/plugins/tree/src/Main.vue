@@ -1,10 +1,10 @@
 <template>
   <plugin-panel
-    class="outlinebox"
     title="大纲树"
     :fixed-name="PLUGIN_NAME.OutlineTree"
     :fixedPanels="fixedPanels"
     @close="$emit('close')"
+    class="outlinebox plugin-tree"
   >
     <template #content>
       <draggable-tree
@@ -41,7 +41,6 @@ import { PluginPanel } from '@opentiny/tiny-engine-common'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { useCanvas, useMaterial, useLayout, useMessage } from '@opentiny/tiny-engine-meta-register'
 import { extend } from '@opentiny/vue-renderless/common/object'
-import { typeOf } from '@opentiny/vue-renderless/common/type'
 import DraggableTree from './DraggableTree.vue'
 
 const { PAGE_STATUS } = constants
@@ -74,12 +73,8 @@ export default {
           item.show = pageState.nodesStatus[item.id] !== false
           item.showEye = !item.show
           const child = item.children
-          if (typeOf(child) !== 'array') {
-            delete item.children
-          } else {
-            if (item.children.length) {
-              translateChild(item.children)
-            }
+          if (Array.isArray(child)) {
+            translateChild(item.children)
           }
         })
 
@@ -141,10 +136,6 @@ export default {
     }
 
     const handleMouseEnterRow = (row) => {
-      if (state.isLock) {
-        return
-      }
-
       const { hoverNode } = useCanvas().canvasApi.value
 
       hoverNode(row.id)
@@ -197,10 +188,6 @@ export default {
     }
 
     const handleClickRow = (row) => {
-      if (state.isLock) {
-        return
-      }
-
       const { selectNode } = useCanvas().canvasApi.value
       selectNode(row.id, 'clickTree')
     }

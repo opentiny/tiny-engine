@@ -1,6 +1,6 @@
 <template>
   <plugin-panel
-    class="block-manage"
+    class="plugin-block"
     title="区块管理"
     :fixed-name="PLUGIN_NAME.BlockManage"
     :fixedPanels="fixedPanels"
@@ -465,6 +465,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.plugin-block {
+  width: 100%;
+  height: 100%;
+}
 .app-manage-type {
   padding: 0 10px;
   margin-bottom: 12px;

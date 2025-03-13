@@ -120,10 +120,11 @@ const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
 
 export const getResources = () => {
   const id = getAppId()
-  state.resources.length ||
+  if (!state.resources.length) {
     fetchResourceList(id).then((data) => {
       state.resources = data || TempBridge
     })
+  }
 }
 
 export const getResourceNamesByType = (type) => state.resourceNames[type]

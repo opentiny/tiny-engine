@@ -16,7 +16,17 @@ const routes = [
         name: 'NTJ4MjvqoVj8OVsc',
         path: 'createVm',
         component: () => import('@/views/createVm.vue'),
-        children: []
+        children: [
+          {
+            name: '3sV9KkvL3SuQIufS',
+            path: 'untitledFA/UntitledA',
+            component: () => import('@/views/createVm/untitledFA/UntitledA.vue'),
+            children: []
+          }
+        ],
+        redirect: {
+          name: '3sV9KkvL3SuQIufS'
+        }
       },
       {
         name: '1737797330916',

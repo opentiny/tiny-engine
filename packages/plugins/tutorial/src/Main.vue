@@ -1,42 +1,44 @@
 <template>
-  <plugin-panel title="TinyEngine 教程" class="tutorial">
-    <template #header>
-      <svg-button
-        class="item icon-sidebar"
-        name="fixed"
-        :class="[fixedPanels?.includes(PLUGIN_NAME.Tutorial) && 'active']"
-        :tips="!fixedPanels?.includes(PLUGIN_NAME.Tutorial) ? '固定面板' : '解除固定面板'"
-        @click="$emit('fixPanel', PLUGIN_NAME.Tutorial)"
-      ></svg-button>
-    </template>
-    <template #content>
-      <div class="video-container">
-        <tiny-collapse v-model="state.expandingNames">
-          <tiny-collapse-item
-            v-for="item in state.list"
-            :key="item.id"
-            class="video-item"
-            :name="item.id"
-            :title="item.name"
-          >
-            <div class="video-item-content">
-              <div
-                v-for="tutorial in item.videos"
-                :key="tutorial"
-                :class="['video-item-content-tutorial', state.active === tutorial.id ? 'active' : '']"
-                @mousedown.stop="playVideo(tutorial)"
-              >
-                <svg-icon name="video"></svg-icon>
-                <span class="tutorial-name">{{ tutorial.title }}</span>
-                <IconChevronRight v-if="state.active === tutorial.id" class="icon-chevron"></IconChevronRight>
+  <div class="plugin-tutorial">
+    <plugin-panel title="TinyEngine 教程" class="tutorial">
+      <template #header>
+        <svg-button
+          class="item icon-sidebar"
+          name="fixed"
+          :class="[fixedPanels?.includes(PLUGIN_NAME.Tutorial) && 'active']"
+          :tips="!fixedPanels?.includes(PLUGIN_NAME.Tutorial) ? '固定面板' : '解除固定面板'"
+          @click="$emit('fixPanel', PLUGIN_NAME.Tutorial)"
+        ></svg-button>
+      </template>
+      <template #content>
+        <div class="video-container">
+          <tiny-collapse v-model="state.expandingNames">
+            <tiny-collapse-item
+              v-for="item in state.list"
+              :key="item.id"
+              class="video-item"
+              :name="item.id"
+              :title="item.name"
+            >
+              <div class="video-item-content">
+                <div
+                  v-for="tutorial in item.videos"
+                  :key="tutorial"
+                  :class="['video-item-content-tutorial', state.active === tutorial.id ? 'active' : '']"
+                  @mousedown.stop="playVideo(tutorial)"
+                >
+                  <svg-icon name="video"></svg-icon>
+                  <span class="tutorial-name">{{ tutorial.title }}</span>
+                  <IconChevronRight v-if="state.active === tutorial.id" class="icon-chevron"></IconChevronRight>
+                </div>
               </div>
-            </div>
-          </tiny-collapse-item>
-        </tiny-collapse>
-      </div>
-    </template>
-  </plugin-panel>
-  <tutorial-video-panel v-model="state.video"></tutorial-video-panel>
+            </tiny-collapse-item>
+          </tiny-collapse>
+        </div>
+      </template>
+    </plugin-panel>
+    <tutorial-video-panel v-model="state.video"></tutorial-video-panel>
+  </div>
 </template>
 
 <script>
@@ -121,6 +123,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.plugin-tutorial {
+  height: 100%;
+}
 .video-container {
   height: calc(100% - 76px);
   overflow-y: scroll;

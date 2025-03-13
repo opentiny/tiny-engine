@@ -6,6 +6,7 @@
     @close="pluginPanelClosed"
     :docsUrl="docsUrl"
     :isShowDocsIcon="true"
+    class="plugin-page"
   >
     <template #header>
       <svg-button
@@ -148,10 +149,14 @@ export default {
       const isPageChange = pageData.id !== pageSettingState.currentPageData.id
 
       if (state.isFolder) {
-        isPageChange && closePageSettingPanel()
+        if (isPageChange) {
+          closePageSettingPanel()
+        }
         openFolderSettingPanel()
       } else {
-        isPageChange && closeFolderSettingPanel()
+        if (isPageChange) {
+          closeFolderSettingPanel()
+        }
         openPageSettingPanel()
       }
       const pageDetail = await fetchPageDetail(pageData?.id)
@@ -190,5 +195,8 @@ export default {
   border-radius: 4px;
   height: 24px;
   line-height: 24px;
+}
+.plugin-page {
+  height: 100%;
 }
 </style>

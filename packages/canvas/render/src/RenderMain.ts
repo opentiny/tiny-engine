@@ -22,7 +22,7 @@ import {
 } from './canvas-function'
 import { removeBlockCompsCache, setConfigure } from './material-function'
 import { useUtils, useBridge, useDataSourceMap, useGlobalState } from './application-function'
-import { IPageSchema, useContext, usePageContext, useSchema } from './page-block-function'
+import { type IPageSchema, useContext, usePageContext, useSchema } from './page-block-function'
 import { api, setCurrentApi } from './canvas-function/canvas-api'
 import { getPageAncestors } from './material-function/page-getter'
 import CanvasEmpty from './canvas-function/CanvasEmpty.vue'
@@ -167,20 +167,6 @@ export default defineComponent({
 
       useLocale()
 
-      window.host.subscribe({
-        topic: 'schemaChange',
-        subscriber: 'canvasRenderer',
-        callback: throttleUpdateSchema
-      })
-
-      window.host.subscribe({
-        topic: 'schemaImport',
-        subscriber: 'canvasRenderer',
-        callback: () => {
-          setSchema(window.host.getSchema())
-        }
-      })
-
       watch(
         () => activeSchema.css,
         (value) => {
@@ -220,6 +206,20 @@ export default defineComponent({
           deep: true
         }
       )
+
+      window.host.subscribe({
+        topic: 'schemaChange',
+        subscriber: 'canvasRenderer',
+        callback: throttleUpdateSchema
+      })
+
+      window.host.subscribe({
+        topic: 'schemaImport',
+        subscriber: 'canvasRenderer',
+        callback: () => {
+          setSchema(window.host.getSchema())
+        }
+      })
 
       onUnmounted(() => {
         window.host.unsubscribe({

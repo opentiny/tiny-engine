@@ -98,7 +98,9 @@ export default {
         const data = props?.data?.params || {}
 
         curValue.replace(/\{(.+?)\}/g, (substr, key) => {
-          key && params.push({ name: key, value: data[key] || '' })
+          if (key) {
+            params.push({ name: key, value: data[key] || '' })
+          }
         })
         paramsForm.value = params
       }

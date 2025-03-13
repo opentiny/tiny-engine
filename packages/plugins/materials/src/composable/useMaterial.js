@@ -443,7 +443,7 @@ const fetchMaterial = async () => {
 const getBlockDeps = (dependencies = {}) => {
   const { scripts = [], styles = [] } = dependencies
 
-  scripts.length &&
+  if (scripts.length) {
     scripts.forEach((npm) => {
       const { package: pkg, script, css, components } = npm
       const npmInfo = materialState.componentsDepsMap.scripts.find((item) => item.package === pkg)
@@ -456,6 +456,7 @@ const getBlockDeps = (dependencies = {}) => {
         npmInfo.components = { ...components, ...npm.components }
       }
     })
+  }
 
   if (Array.isArray(styles)) {
     styles.forEach((item) => materialState.componentsDepsMap.styles.add(item))

@@ -23,7 +23,6 @@ export default {
     // 通过 provide ，可以让 tiny-i18n-host 树结构下的 webcomponent 通过 inject(I18nInjectionKey)，获取 i18n 对象
     provide(I18nInjectionKey, i18n)
 
-    // eslint-disable-next-line vue/no-setup-props-destructure
     i18n.global.locale.value = props.locale
 
     watch(

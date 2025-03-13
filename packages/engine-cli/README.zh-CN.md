@@ -33,6 +33,13 @@ npx @opentiny/tiny-engine-cli@latest create-platform my-designer
 npx @opentiny/tiny-engine-cli@latest create-plugin my-tiny-engine-plugin
 ```
 
+### 创建主题
+
+```sh
+# 创建名为 my-tiny-engine-theme 的 tiny-engine 主题
+npx @opentiny/tiny-engine-cli@latest create-theme my-tiny-engine-theme
+```
+
 TODO:
 
 - [ ] 插件开发文档&平台二次开发文档

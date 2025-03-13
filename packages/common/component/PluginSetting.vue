@@ -32,7 +32,7 @@
       </div>
     </div>
     <slot name="progress"></slot>
-    <div class="plugin-setting-content">
+    <div class="plugin-setting-content lowcode-scrollbar">
       <slot name="content"></slot>
     </div>
   </div>

@@ -1,0 +1,253 @@
+# 如何自定义出码插件
+
+## 插件开发相关约定
+
+为了让 CodeGenInstance 实例能够调用用户传入的自定义插件，我们需要做相关的约定：
+
+- 提供 run 函数，不能是箭头函数，否则无法绑定相关上下文
+- 函数名遵守 tinyEngine-generateCode-plugin-xxx 的规则
+- 提供 options 进行配置并且有默认 options
+
+例如：
+
+```javascript
+// 默认配置
+const defaultOptions = {}
+// 如有必要，增加参数 options，增加自定义插件的可复用性
+function customPlugin(options) {
+  const runtimeOptions = merge(defaultOptions, options)
+
+  // 返回对象
+  return {
+    // 插件名
+    name: 'tiny-engine-generate-code-plugin-demo',
+    // 插件相关描述
+    description: 'demo',
+    // run 函数，出码流程会调用
+    run(schema, context) {
+      // 在函数内实现自定义出码
+      console.log('here is a demo plugin')
+    }
+  }
+}
+```
+
+### run 函数参数简要说明
+
+- schema 当前应用的 schema
+- context codeInstance 提供的上下文，包括
+  - config 当前 instance 的配置
+  - genResult 当前出码的文件数组
+  - genLogs 当前出码的日志
+  - ...customContext 用户在 generateApp 实例化函数中自定义传入的上下文
+- this 上下文 在 run 函数中，可以使用 this 访问 codeInstance 提供的上下文
+  - `this.addLog(log): void` 向 genLogs 中增加一条日志
+  - `this.addFile(fileItem: FileItem, override: boolean): boolean`  向 genResult 中增加一个文件
+  - `this.getFile(path, fileName)` 根据 path 和 fileName 在 genResult 中寻找目标文件
+  - `this.replaceFile(fileItem)` 从 genResult 中替换指定文件
+  - `this.deleteFile(fileItem)` 从 genResult 中删除指定文件
+
+详细 api 说明，可查看 [官方出码能力API](./official-code-output-api.md)
+
+## 增加增量插件
+
+在 [如何自定义出码](./how-to-customize-code-output.md)章节中，我们描述了如何替换官方出码插件，但是如果我们并不需要替换官方插件，而是增加插件，则可以往指定的出码阶段增加插件，例如：
+
+```javascript
+generateApp({
+  customPlugins: {
+    // 往 transformStart 阶段，传入自定义插件
+    transformStart: [customPluginItem1, customPluginItem2],
+    // 往 transform 阶段传入自定义插件
+    transform: [customPluginItem3, customPluginItem4],
+    // 往 transformEnd 阶段传入自定义插件
+    transformEnd: [customPluginItem5, customPluginItem6]
+  }
+})
+```
+
+## 对页面出码进行调整
+
+如需对页面出码进行调整，有两种主要方式：
+
+- 自定义页面出码以及区块出码插件，整个页面文件内容可自定转换并且自定义。
+- 对官方当前出码结果进行局部调整，可使用 pluginConfig 往页面出码进行传参，实现局部调整的结果。具体可查看[自定义页面出码插件](./custom-page-code-output-plugin.md)章节
+
+## 相关示例
+
+### 示例一：自定义路由生成插件
+
+当前官方的出码中，默认生成的路由是 hash 路由，假如我们想要生成 history mode 的路由，则可以使用自定义路由插件的方式进行实现。
+
+以下是简要的插件示例：
+
+```javascript
+function genWebHistoryRouter() {
+  return {
+    name: 'tiny-engine-generate-code-plugin-web-history-router',
+    description: 'transform router schema to router code plugin',
+    run(schema, context) {
+      // 与官方路由插件的不同，createWebHashHistory 变成了 createWebHistory
+      const importSnippet = "import { createRouter, createWebHistory } from 'vue-router'"
+      const exportSnippet = `
+export default createRouter({
+  history: createWebHistory(),
+  routes
+})`
+      // 这里省略具体的路由生成逻辑，核心是将页面路由拼接成路由配置文件的字符串，具体可参考官方路由插件
+      const router = '{}' 
+
+      this.addFile({
+        // 文件类型
+        fileType: 'js',
+        // 生成的文件名
+        fileName: 'index.js',
+        // 生成的文件相对于项目根目录的路径
+        path: './src/router',
+        // 文件内容
+        fileContent: `${importSnippet}\n ${routeSnippets} \n ${exportSnippet}`
+      })
+    } 
+  }
+}
+```
+
+替换官方插件：
+
+```javascript
+const instance = generateApp({
+  customPlugins: {
+    // 替换官方路由出码插件
+    router: genWebHistoryRouter()
+  }
+})
+// 出码
+const res = await instance.generate(appSchema)
+```
+
+### 示例二：在 transformStart 阶段增加对 schema 的解析或者预处理
+
+```javascript
+function parseSchema() {
+  return {
+    name: 'tiny-engine-generate-code-plugin-parse-demo',
+    description: 'parseSchema demo',
+    run(schema) {
+      // 对 schema 进行合法性判断
+      if (!isValid(schema)) {
+        throw new Error('schema is not valid')
+      }
+
+      // 这里可以对 schema 进行预处理
+      // 比如，我们提前遍历页面，过滤掉文件夹类型的 pageSchema，避免生成页面插件时遇到文件夹类型的 schema
+      const { pageSchema } = schema
+      const pagesMap = {}
+      const resPageTree = []
+      schema.componentsMap = [...schema.componentsMap, ...BUILTIN_COMPONENTS_MAP]
+
+      for (const componentItem of pageSchema) {
+        pagesMap[componentItem.meta.id] = componentItem
+      }
+
+      for (const componentItem of pageSchema) {
+        if (!componentItem.meta.isPage) {
+          continue
+        }
+
+        const newComponentItem = {
+          ...componentItem
+        }
+        let path = ''
+        let curParentId = componentItem.meta.parentId
+        let depth = 0
+
+        while (curParentId !== '0' && depth < 1000) {
+          const preFolder = pagesMap[curParentId]
+
+          path = `${preFolder.meta.name}${path ? '/' : ''}${path}`
+          newComponentItem.meta.router = `${preFolder.meta.router}/${newComponentItem.meta.router}`
+          curParentId = preFolder.meta.parentId
+          depth++
+        }
+
+        newComponentItem.path = path
+
+        resPageTree.push(newComponentItem)
+      }
+
+      schema.pageSchema = resPageTree
+
+    }
+  }
+}
+```
+
+在 transformStart 阶段增加我们自定义的插件
+
+```javascript
+const instance = generateApp({
+  customPlugins: {
+    // 在 transformStart 增加自定义的插件
+    transformStart: [genWebHistoryRouter()]
+  }
+})
+// 出码
+const res = await instance.generate(appSchema)
+```
+
+### 示例三：在 transformEnd 阶段对已出码文件进行后置处理
+
+在 transformEnd 阶段，我们已经得到了可读高质量的代码，但是由于每个团队的代码风格不同，我们可以在这一阶段增加插件，使用 prettier 等工具完成代码的格式化。
+
+例如：
+
+```javascript
+import prettier from 'prettier'
+import parserHtml from 'prettier/parser-html'
+import parseCss from 'prettier/parser-postcss'
+import parserBabel from 'prettier/parser-babel'
+
+function formatCode() {
+  const parserMap = {
+    json: 'json-stringify',
+    js: 'babel',
+    jsx: 'babel',
+    css: 'css',
+    less: 'less',
+    html: 'html',
+    vue: 'vue'
+  }
+
+  const mergedOption = options
+
+  return {
+    name: 'tiny-engine-generate-code-plugin-format-code',
+    description: 'transform block schema to code',
+    /**
+     * 格式化出码
+     * @param {import('../generator/generateApp').AppSchema} schema
+     * @returns
+     */
+    run(schema, context) {
+      context.genResult.forEach((item) => {
+        const { fileContent, fileName } = item
+        const parser = parserMap[fileName.split('.').at(-1)]
+
+        if (!parser) {
+          return
+        }
+
+        const formattedCode = prettier.format(fileContent, {
+          parser,
+          plugins: [parserBabel, parseCss, parserHtml, ...(mergedOption.customPlugin || [])],
+          ...mergedOption
+        })
+
+        this.replaceFile({ ...item, fileContent: formattedCode })
+      })
+    }
+  }
+}
+```
+
+更进一步的，我们还可以使用 babel 等专业工具对出码进一步处理，进一步满足出码需求。

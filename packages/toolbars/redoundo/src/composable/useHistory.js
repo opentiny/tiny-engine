@@ -73,14 +73,12 @@ const go = (addend, valid) => {
 const back = () => {
   if (historyState.back) {
     go(-1)
-    useCanvas().setSaved(false)
   }
 }
 
 const forward = () => {
   if (historyState.forward) {
     go(1)
-    useCanvas().setSaved(historyState.index === list.length - 1)
   }
 }
 
@@ -95,7 +93,6 @@ const clear = () => {
 
 const addHistory = (schema) => {
   if (!schema) {
-    useCanvas().setSaved(false)
     push(useCanvas().getSchema())
   } else {
     clear()

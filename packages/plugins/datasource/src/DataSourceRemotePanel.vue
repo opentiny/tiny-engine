@@ -2,7 +2,7 @@
   <div class="remote">
     <plugin-setting
       title="获取远程字段"
-      class="remote-setting"
+      class="remote-setting plugin-datasource"
       :isSecond="true"
       :align="align"
       @cancel="closePanel"
@@ -140,7 +140,9 @@ export default {
         state.responseData.dataHandler = dataHandler?.value || ''
         state.responseData.shouldFetch = shouldFetch?.value || ''
         state.responseData.errorHandler = errorHandler?.value || ''
-        columns?.length === 0 && (state.remoteData.result = {})
+        if (columns?.length === 0) {
+          state.remoteData.result = {}
+        }
       },
       { immediate: true }
     )

@@ -144,7 +144,9 @@ export default {
     })
 
     onBeforeUnmount(() => {
-      vueMonaco.editor && vueMonaco.editor.dispose()
+      if (vueMonaco.editor) {
+        vueMonaco.editor.dispose()
+      }
     })
 
     watch(

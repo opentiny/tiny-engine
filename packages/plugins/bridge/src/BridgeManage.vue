@@ -7,7 +7,7 @@
         </template>
       </tiny-search>
     </div>
-    <div class="list">
+    <div class="list lowcode-scrollbar">
       <div
         v-for="(item, index) in list"
         :key="item.name"

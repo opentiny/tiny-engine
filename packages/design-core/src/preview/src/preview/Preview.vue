@@ -81,6 +81,20 @@ export default {
       const familyPages = []
       const ancestors = queryParams.ancestors
 
+      if (queryParams.type === 'Block') {
+        familyPages.push({
+          panelName: 'Main.vue',
+          panelValue:
+            generatePageCode(queryParams.pageInfo?.schema, appData?.componentsMap || [], {
+              blockRelativePath: './'
+            }) || '',
+          panelType: 'vue',
+          index: true
+        })
+
+        return familyPages
+      }
+
       if (!ancestors?.length || !appData?.componentsMap) {
         return familyPages
       }

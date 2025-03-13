@@ -4,7 +4,7 @@
     title="设置数据源"
     :fixed-name="PLUGIN_NAME.Collections"
     :align="align"
-    class="data-source-form"
+    class="data-source-form plugin-datasource"
   >
     <template #header>
       <button-group>
@@ -57,7 +57,7 @@ import {
 } from '@opentiny/tiny-engine-meta-register'
 import { extend } from '@opentiny/vue-renderless/common/object'
 
-let isOpen = ref(false)
+const isOpen = ref(false)
 
 export const open = () => {
   isOpen.value = true

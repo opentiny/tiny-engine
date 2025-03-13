@@ -16,7 +16,7 @@ export interface IUtil {
 
 export function useUtils(context: Record<string, any>) {
   const refreshKey = ref<number>(0)
-  const utils: Record<string, Function | any> = {}
+  const utils: Record<string, (...args: any) => any | any> = {}
   const getUtils = () => utils
 
   const setUtils = async (data: Array<IUtil>) => {

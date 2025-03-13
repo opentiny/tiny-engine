@@ -10,7 +10,6 @@
  *
  */
 
-/* eslint-disable no-new-func */
 import { reactive, ref, toRaw } from 'vue'
 import * as jsonDiffPatch from 'jsondiffpatch'
 import DiffMatchPatch from 'diff-match-patch'
@@ -74,7 +73,8 @@ const rootSchema = ref([
 ])
 
 const handleTinyGridColumnsSlots = (node) => {
-  for (const columnItem of node.props?.columns || []) {
+  let columns = Array.isArray(node.props?.columns) ? node.props.columns : []
+  for (const columnItem of columns) {
     if (!columnItem?.slots) {
       continue
     }
@@ -89,7 +89,7 @@ const handleTinyGridColumnsSlots = (node) => {
           nodesMap.value.set(item.id, { node: item, parent: node })
 
           if (Array.isArray(item.children)) {
-            // eslint-disable-next-line no-use-before-define
+            // eslint-disable-next-line @typescript-eslint/no-use-before-define
             generateNodesMap(item.children, item)
           }
         })
@@ -239,6 +239,11 @@ const initData = (schema = { ...defaultSchema }, currentPage) => {
     })
   }
 
+  publish({
+    topic: 'pageOrBlockInit',
+    data: schema
+  })
+
   useHistory().addHistory(schema)
 }
 
@@ -317,15 +322,13 @@ const operationTypeMap = {
 
     // 4. 根据position参数选择插入位置
     let index = parentNode.children.indexOf(referenceNode)
-    if (index === -1 && referTargetNodeId) {
-      index = parentNode.children.length
-    }
 
     // 5. 插入节点的逻辑
     const childrenNode = toRaw(referenceNode)
     switch (position) {
       case 'before':
-        parentNode.children.unshift(newNodeData)
+        index = index === -1 ? 0 : index
+        parentNode.children.splice(index, 0, newNodeData)
         break
       case 'out':
         if (childrenNode) {
@@ -337,7 +340,8 @@ const operationTypeMap = {
         parentNode.children.splice(index + 1, 0, newNodeData)
         break
       default:
-        parentNode.children.push(newNodeData)
+        index = index === -1 ? parentNode.children.length : index + 1
+        parentNode.children.splice(index, 0, newNodeData)
         break
     }
 
@@ -584,10 +588,12 @@ const getSchema = () => {
 const getNodePath = (id, nodes = []) => {
   const { parent, node } = getNodeWithParentById(id) || {}
 
-  node && nodes.unshift({ name: node.componentName, node: id })
+  if (node) {
+    nodes.unshift({ name: node.componentName, node: id })
+  }
 
   if (parent) {
-    parent && getNodePath(parent.id, nodes)
+    getNodePath(parent.id, nodes)
   } else {
     nodes.unshift({ name: 'BODY', node: id })
   }

@@ -1,12 +1,13 @@
 <template>
   <plugin-panel
+    id="data-source"
     title="状态管理"
     :fixed-name="PLUGIN_NAME.State"
     :fixedPanels="fixedPanels"
     :docsUrl="docsUrl"
     :isShowDocsIcon="true"
-    id="data-source"
     @close="closePanel"
+    class="plugin-state"
   >
     <template #content>
       <div class="data-source-left-panel">
@@ -228,7 +229,7 @@ export default {
         // 校验
         variableRef.value.validateForm().then(() => {
           // 获取数据
-          let variable = variableRef.value.getFormData()
+          const variable = variableRef.value.getFormData()
 
           // 保存数据
           add(name, variable)
@@ -292,7 +293,7 @@ export default {
       delete state.dataSource[key]
 
       const schema = getSchema()
-      let { lifeCycles } = schema
+      const { lifeCycles } = schema
       const { [key]: deletedKey, ...restState } = schema.state
 
       if (key.startsWith('datasource')) {

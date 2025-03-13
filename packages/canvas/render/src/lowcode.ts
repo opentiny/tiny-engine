@@ -10,7 +10,7 @@
  *
  */
 
-import { getCurrentInstance, nextTick, provide, inject, Ref } from 'vue'
+import { getCurrentInstance, nextTick, provide, inject, type Ref } from 'vue'
 import { I18nInjectionKey } from 'vue-i18n'
 import { api } from './RenderMain'
 import { globalNotify } from './canvas-function'

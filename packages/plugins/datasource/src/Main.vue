@@ -1,6 +1,7 @@
 <template>
   <plugin-panel
     title="数据源"
+    class="plugin-datasource"
     :fixed-name="PLUGIN_NAME.Collections"
     :fixedPanels="fixedPanels"
     :docsUrl="docsUrl"
@@ -165,6 +166,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.plugin-datasource {
+  height: 100%;
+}
 .add-data-source {
   margin: 0 12px 12px 12px;
   width: calc(100% - 24px);
