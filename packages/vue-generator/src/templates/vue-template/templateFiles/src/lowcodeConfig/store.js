@@ -4,7 +4,7 @@ const useStores = () => {
   const stores = {}
 
   Object.values({ ...useDefinedStores }).forEach((store) => {
-    stores[store.$id] = store()
+    stores[store.$id] = store().$state
   })
 
   return stores
