@@ -1,5 +1,10 @@
 <template>
-  <plugin-panel :title="shortcut ? '' : title" @close="$emit('close')">
+  <plugin-panel
+    :title="shortcut ? '' : title"
+    :fixed-name="PLUGIN_NAME.Materials"
+    :fixedPanels="fixedPanels"
+    @close="$emit('close')"
+  >
     <template #header>
       <component
         v-if="!onlyShowDefault"
@@ -23,7 +28,7 @@
 <script>
 import { reactive, provide, ref, computed } from 'vue'
 import { Tabs, TabItem } from '@opentiny/vue'
-import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
+import { META_APP as PLUGIN_NAME, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { PluginPanel } from '@opentiny/tiny-engine-common'
 
 export default {
@@ -83,6 +88,7 @@ export default {
     const title = ref(props.registryData?.title)
 
     return {
+      PLUGIN_NAME,
       title,
       activeName,
       defaultComponent,
