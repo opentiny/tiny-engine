@@ -123,6 +123,7 @@ export default {
       let lastFunc
       let lastRan
       return function (...args) {
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         const context = this
         if (!lastRan) {
           func.apply(context, args)
@@ -198,6 +199,8 @@ export default {
     justify-content: space-between;
     align-items: center;
     font-size: 12px;
+    border-bottom: 1px solid var(--te-common-border-divider);
+    margin-bottom: 12px;
     font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
       'Helvetica Neue', sans-serif;
     padding: 12px;

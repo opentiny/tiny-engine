@@ -46,7 +46,7 @@ export const META_APP = {
   Collections: 'engine.plugins.collections',
   Bridge: 'engine.plugins.bridge',
   I18n: 'engine.plugins.i18n',
-  Page: 'engine.plugins.pagecontroller',
+  Page: 'engine.plugins.pagecontroller', // 页面 JS
   State: 'engine.plugins.state',
   Schema: 'engine.plugins.schema',
   Help: 'engine.plugins.editorhelp',
