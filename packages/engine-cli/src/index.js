@@ -11,9 +11,34 @@
  */
 import { Command, Option } from 'commander'
 import { input, select } from '@inquirer/prompts'
-import { createPlatform, createPlugin } from './commands/create.js'
+import { createPlatform, createPlugin, createTheme } from './commands/create.js'
 
 const program = new Command()
+
+const messageMap = {
+  theme: {
+    message:
+      'Please enter the theme ID (used to uniquely identify the theme in code or configuration, such as "custom"). 请输入主题ID（用于代码或配置中唯一标识该主题，如“custom”）',
+    validateMessage: 'theme ID can not be empty. 主题ID不允许为空。'
+  },
+  project: {
+    message: 'please enter the project name. 请输入项目名称',
+    validateMessage: 'project name can not be empty. 项目名称不允许为空。'
+  }
+}
+
+const getName = async (type) => {
+  return await input({
+    message: type ? messageMap.theme.message : messageMap.project.message,
+    validate: (inputName) => {
+      if (!inputName) {
+        return type ? messageMap.theme.validateMessage : messageMap.project.validateMessage
+      }
+
+      return true
+    }
+  })
+}
 
 program
   .command('create-platform <name>')
@@ -35,6 +60,14 @@ program
   })
 
 program
+  .command('create-theme <name>')
+  .description('create a new tiny-engine theme 创建一个新的 tiny-engine 主题')
+  .action(async (name) => {
+    const themeName = await getName('theme')
+    createTheme(name, themeName)
+  })
+
+program
   .command('create')
   .description('create a new tiny-engine platform or plugin by prompt 根据提示创建一个新的 tiny-engine 插件')
   .action(async () => {
@@ -50,27 +83,26 @@ program
           name: 'plugin',
           value: 'plugin',
           description: 'create a new tiny-engine plugin 创建一个新的 tiny-engine 插件'
+        },
+        {
+          name: 'theme',
+          value: 'theme',
+          description: 'create a new tiny-engine theme 创建一个新的 tiny-engine 主题'
         }
       ]
     })
 
-    const projectName = await input({
-      message: 'please enter the project name. 请输入项目名称',
-      validate: (inputName) => {
-        if (!inputName) {
-          return 'project name can not be empty. 项目名称不允许为空。'
-        }
-
-        return true
-      }
-    })
+    const projectName = await getName()
 
     const typeMapper = {
       platform: createPlatform,
-      plugin: createPlugin
+      plugin: createPlugin,
+      theme: createTheme
     }
 
-    typeMapper[type](projectName)
+    const themeName = type === 'theme' ? await getName(type) : ''
+
+    typeMapper[type](projectName, themeName)
   })
 
 program.parse(process.argv)

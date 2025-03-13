@@ -70,11 +70,17 @@ export default {
   themes: [
     {
       id: 'engine.theme.light',
-      title: '亮色主题'
+      text: '浅色主题',
+      type: 'light',
+      icon: 'light',
+      oppositeTheme: 'dark'
     },
     {
       id: 'engine.theme.dark',
-      title: '暗色主题'
+      text: '深色主题',
+      type: 'dark',
+      icon: 'dark',
+      oppositeTheme: 'light'
     }
   ]
 }
