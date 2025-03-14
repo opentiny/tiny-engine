@@ -281,6 +281,9 @@ export default () => {
 
   //修改插件显示状态
   const changePluginShown = (name) => {
+    if (!pluginStorageReactive.value[name]) {
+      pluginStorageReactive.value[name] = { isShow: true }
+    }
     pluginStorageReactive.value[name].isShow = !pluginStorageReactive.value[name].isShow
   }
 
