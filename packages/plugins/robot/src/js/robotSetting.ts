@@ -65,6 +65,6 @@ export const initBlockList = async () => {
     setBlockContent(list)
   } catch (err) {
     // 捕获错误
-    throw new Error('获取block列表失败', err)
+    throw new Error('获取block列表失败', { cause: err })
   }
 }

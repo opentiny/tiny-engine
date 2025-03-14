@@ -349,8 +349,9 @@ export default {
         await toClipboard(row.key)
         copyTipContent.value = '复制成功'
       } catch (e) {
-        throw new Error(e)
         copyTipContent.value = '复制失败'
+        // eslint-disable-next-line no-console
+        console.error('Clipboard operation failed:', e)
       } finally {
         setTimeout(() => {
           copyRowIndex.value = ''
