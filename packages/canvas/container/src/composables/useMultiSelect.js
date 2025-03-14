@@ -36,13 +36,34 @@ export const useMultiSelect = () => {
     }
   }
 
-  // 添加节点到多选列表
-  const addMultiSelection = (node) => {
-    if (!node || typeof node !== 'object') return
-
-    if (!multiSelectedStates.value.some((state) => state.id === node.id)) {
-      multiSelectedStates.value.push(node)
+  /**
+   * 添加state到多选列表
+   * @param {*} selectState
+   * @param {boolean} isMultipleSelect 是否多选
+   * @returns {boolean} 添加成功返回true，否则返回false
+   */
+  const addMultiSelection = (selectState, isMultipleSelect = false) => {
+    if (!selectState || typeof selectState !== 'object') {
+      return false
     }
+
+    // 多选
+    if (isMultipleSelect) {
+      const isExistNode = multiSelectedStates.value.some((state) => state.id === selectState.id)
+      // 如果多选列表已经存在选中的state，则将选中的state移出多选列表
+      if (isExistNode) {
+        multiSelectedStates.value = multiSelectedStates.value.filter((state) => state.id !== selectState.id)
+      } else {
+        multiSelectedStates.value = multiSelectedStates.value.concat(selectState)
+      }
+
+      return !isExistNode
+    }
+
+    // 单选，直接清空多选列表
+    multiSelectedStates.value = [selectState]
+
+    return true
   }
 
   // 获取多选节点（带缓存）
@@ -111,6 +132,7 @@ export const useMultiSelect = () => {
   return {
     multiSelectedStates,
     multiStateLength,
+    addMultiSelection,
     setMultiSelection,
     getMultiSelectionState,
     toggleMultiSelection,

@@ -394,27 +394,28 @@ export const scrollToNode = (element) => {
   return nextTick()
 }
 
-const { clearMultiSelection, setMultiSelection, multiSelectedStates, multiStateLength } = useMultiSelect()
+const { addMultiSelection, multiSelectedStates } = useMultiSelect()
 
-const setSelectRect = (element, multiNodeId) => {
-  element = element || getDocument().body
+const setSelectRect = (id, element, isMultipleSelect = false) => {
+  clearHover()
+
+  element = element || querySelectById(id) || getDocument().body
 
   const { left, height, top, width } = getRect(element)
-  const elementBounds = { left, top, width, height }
   const componentName = getCurrent().schema?.componentName || ''
-  clearHover()
-  Object.assign(selectState, elementBounds, {
-    componentName,
-    doc: getDocument()
-  })
 
-  if (multiNodeId) {
-    multiSelectedStates.value.map((state) => {
-      if (state.id === multiNodeId) {
-        return Object.assign(state, elementBounds)
-      }
-    })
-  }
+  return addMultiSelection(
+    {
+      id,
+      left,
+      height,
+      top,
+      width,
+      componentName,
+      doc: getDocument()
+    },
+    isMultipleSelect
+  )
 }
 
 export const updateRect = (id) => {
@@ -422,7 +423,7 @@ export const updateRect = (id) => {
   clearHover()
 
   if (id) {
-    setTimeout(() => setSelectRect(querySelectById(id)))
+    setTimeout(() => setSelectRect(id))
   } else {
     // 如果选中的是body，不清除选中框
     if (!selectState.componentName && selectState.width > 0) {
@@ -434,9 +435,7 @@ export const updateRect = (id) => {
 
 export const syncNodeScroll = () => {
   multiSelectedStates.value.forEach((state) => {
-    const multiNodeId = state.id
-    const element = querySelectById(multiNodeId)
-    setTimeout(() => setSelectRect(element, multiNodeId))
+    setTimeout(() => setSelectRect(state.id))
   })
 }
 
@@ -729,14 +728,10 @@ export const dragMove = (event, isHover) => {
 }
 
 // type == clickTree, 为点击大纲; type == loop-id=xxx ,为点击循环数据
-export const selectNode = async (id, type) => {
+export const selectNode = async (id, type, isMultipleSelect = false) => {
   if (type && type.indexOf('loop-id') > -1) {
     const loopId = type.split('=')[1]
     canvasState.loopId = loopId
-  }
-
-  if (type !== 'clickTree' && multiStateLength.value === 1) {
-    id = multiSelectedStates.value[0]?.id
   }
 
   const { node, parent } = useCanvas().getNodeWithParentById(id) || {}
@@ -751,12 +746,8 @@ export const selectNode = async (id, type) => {
   canvasState.current = node
   canvasState.parent = parent
 
-  await scrollToNode(element)
-  setSelectRect(element)
-
-  if (type === 'clickTree') {
-    clearMultiSelection()
-    setMultiSelection(selectState)
+  if (setSelectRect(id, element, isMultipleSelect)) {
+    await scrollToNode(element)
   }
 
   canvasState.emit('selected', node, parent, type, id)

@@ -14,8 +14,9 @@
   </div>
   <canvas-router-jumper :hoverState="hoverState" :inactiveHoverState="inactiveHoverState"></canvas-router-jumper>
   <canvas-viewer-switcher :hoverState="hoverState" :inactiveHoverState="inactiveHoverState"></canvas-viewer-switcher>
+  <!-- divider似乎是行列容器用到的，剪刀图标 -->
   <canvas-divider :selectState="selectState"></canvas-divider>
-  <canvas-resize-border :iframe="iframe"></canvas-resize-border>
+  <canvas-resize-border :selectState="selectState" :iframe="iframe"></canvas-resize-border>
   <canvas-resize>
     <template v-if="!loading">
       <iframe
@@ -107,7 +108,7 @@ export default {
     const containerPanel = ref(null)
     const insertContainer = ref(false)
 
-    const { multiSelectedStates, multiStateLength, toggleMultiSelection } = useMultiSelect()
+    const { multiSelectedStates, multiStateLength } = useMultiSelect()
 
     const setCurrentNode = async (event) => {
       const { clientX, clientY } = event
@@ -119,11 +120,12 @@ export default {
         const currentElement = querySelectById(getCurrent().schema?.id)
 
         if (!currentElement?.contains(element) || event.button === 0) {
+          const isCtrlKey = event.ctrlKey || event.metaKey
           const loopId = element.getAttribute(NODE_LOOP)
           if (loopId) {
-            node = await selectNode(element.getAttribute(NODE_UID), `loop-id=${loopId}`)
+            node = await selectNode(element.getAttribute(NODE_UID), `loop-id=${loopId}`, isCtrlKey)
           } else {
-            node = await selectNode(element.getAttribute(NODE_UID))
+            node = await selectNode(element.getAttribute(NODE_UID), undefined, isCtrlKey)
           }
         }
 
@@ -204,8 +206,6 @@ export default {
             if (!element) {
               return
             }
-
-            toggleMultiSelection(event, element)
 
             insertPosition.value = false
             insertContainer.value = false
@@ -299,16 +299,6 @@ export default {
     const selectSlot = (slotName) => {
       hoverState.slot = slotName
     }
-
-    watch(
-      () => multiStateLength.value,
-      (newVal) => {
-        if (newVal > 1) {
-          // 清空属性面板
-          selectNode(null)
-        }
-      }
-    )
 
     onMounted(() => run(iframe))
     onUnmounted(() => {
