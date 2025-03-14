@@ -104,7 +104,7 @@ export default {
         const index = alignGroups[align].indexOf(item.id)
 
         plugin[item.id] = {
-          width: item?.width || 279,
+          width: item?.width || 300,
           align: align,
           index: index,
           isShow: true,
