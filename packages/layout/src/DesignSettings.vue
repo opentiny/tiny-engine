@@ -118,6 +118,11 @@ export default {
 
     const changeAlign = (pluginId) => {
       const item = getPluginById(props.pluginList, pluginId)
+      const existingItemIndex = settingPlugins.value.findIndex((plugin) => plugin.id === item.id)
+
+      if (existingItemIndex !== -1) {
+        settingPlugins.value.splice(existingItemIndex, 1)
+      }
       settingPlugins.value.unshift(item)
     }
 
@@ -327,9 +332,5 @@ export default {
   100% {
     box-shadow: inset 0px 0px 14px var(--ti-lowcode-canvas-handle-hover-bg);
   }
-}
-
-.not-selected {
-  user-select: none;
 }
 </style>

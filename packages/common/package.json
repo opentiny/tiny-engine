@@ -44,7 +44,7 @@
     "eslint-linter-browserify": "8.57.0",
     "monaco-editor": "0.51.0",
     "prettier": "2.7.1",
-    "vue-draggable-next": "2.1.0"
+    "vue-draggable-next": "2.2.1"
   },
   "devDependencies": {
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",

@@ -96,16 +96,6 @@ const changeRightFixedPanels = (pluginName) => {
     : [...rightFixedPanelsStorage.value, pluginName]
 }
 
-const registerPluginApi = (api) => {
-  Object.assign(layoutState.plugins.api, api)
-}
-
-const getPluginApi = (pluginName) => {
-  const { plugins } = layoutState
-
-  return plugins.api[pluginName] || plugins.api
-}
-
 const getScale = () => layoutState.dimension.scale
 
 const getPluginState = () => layoutState.plugins
@@ -180,7 +170,7 @@ export default () => {
   const pluginStorageReactive = useStorage('plugin', plugin)
 
   // 获取插件宽度
-  const getPluginWidth = (name) => pluginStorageReactive.value[name]?.width || 279
+  const getPluginWidth = (name) => pluginStorageReactive.value[name]?.width || 280
 
   // 修改插件宽度
   const changePluginWidth = (name, width, offset) => {
@@ -311,9 +301,7 @@ export default () => {
     getScale,
     setDimension,
     getDimension,
-    registerPluginApi,
     getPluginById,
-    getPluginApi,
     pluginState,
     getPluginState,
     isEmptyPage,

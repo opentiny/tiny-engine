@@ -162,6 +162,12 @@ export default {
 
     const changeAlign = (pluginId) => {
       const item = getPluginById(props.pluginList, pluginId)
+      const existingItemIndex = state.topNavLists.findIndex((plugin) => plugin.id === item.id)
+
+      if (existingItemIndex !== -1) {
+        state.topNavLists.splice(existingItemIndex, 1)
+      }
+
       state.topNavLists.unshift(item)
     }
 
