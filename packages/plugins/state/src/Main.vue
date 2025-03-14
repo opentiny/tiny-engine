@@ -1,13 +1,13 @@
 <template>
   <plugin-panel
+    id="data-source"
     title="状态管理"
+    class="plugin-state"
     :fixed-name="PLUGIN_NAME.State"
     :fixedPanels="fixedPanels"
     :docsUrl="docsUrl"
     :isShowDocsIcon="true"
-    id="data-source"
     @close="closePanel"
-    class="plugin-state"
   >
     <template #content>
       <div class="data-source-left-panel">

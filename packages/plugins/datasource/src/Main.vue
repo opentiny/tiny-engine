@@ -1,6 +1,7 @@
 <template>
   <plugin-panel
     title="数据源"
+    class="plugin-datasource"
     :fixed-name="PLUGIN_NAME.Collections"
     :fixedPanels="fixedPanels"
     :docsUrl="docsUrl"

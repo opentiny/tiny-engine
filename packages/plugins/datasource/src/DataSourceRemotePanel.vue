@@ -2,7 +2,7 @@
   <div class="remote">
     <plugin-setting
       title="获取远程字段"
-      class="remote-setting"
+      class="remote-setting plugin-datasource"
       :isSecond="true"
       :align="align"
       @cancel="closePanel"

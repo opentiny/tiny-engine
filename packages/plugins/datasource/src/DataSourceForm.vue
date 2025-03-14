@@ -2,9 +2,9 @@
   <plugin-setting
     v-if="isOpen"
     title="设置数据源"
+    class="data-source-form plugin-datasource"
     :fixed-name="PLUGIN_NAME.Collections"
     :align="align"
-    class="data-source-form"
   >
     <template #header>
       <button-group>

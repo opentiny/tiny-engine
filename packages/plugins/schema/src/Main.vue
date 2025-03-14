@@ -2,10 +2,10 @@
   <plugin-panel
     id="source-code"
     title="页面 Schema"
+    class="plugin-schema"
     :fixed-name="PLUGIN_NAME.Schema"
     :fixedPanels="fixedPanels"
     @close="close"
-    class="plugin-schema"
   >
     <template #header>
       <span class="icon-wrap">
@@ -185,7 +185,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.plugin-page-schema-container {
+#source-code {
   box-shadow: 6px 0px 3px 0px var(--te-schema-panel-shadow-color);
   z-index: 1000;
 

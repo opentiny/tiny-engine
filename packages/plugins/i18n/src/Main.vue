@@ -1,12 +1,12 @@
 <template>
   <plugin-panel
     title="国际化资源"
+    class="plugin-i18n"
     :fixed-name="PLUGIN_NAME.I18n"
     :fixedPanels="fixedPanels"
     :docsUrl="docsUrl"
     :isShowDocsIcon="true"
     :isCloseLeft="false"
-    class="plugin-panel-i18n"
   >
     <template #content>
       <div class="language-search-box">

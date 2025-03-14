@@ -180,7 +180,7 @@ export default () => {
   const pluginStorageReactive = useStorage('plugin', plugin)
 
   // 获取插件宽度
-  const getPluginWidth = (name) => pluginStorageReactive.value[name]?.width || 300
+  const getPluginWidth = (name) => pluginStorageReactive.value[name]?.width || 279
 
   // 修改插件宽度
   const changePluginWidth = (name, width, offset) => {

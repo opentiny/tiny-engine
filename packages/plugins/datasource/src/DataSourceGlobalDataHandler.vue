@@ -1,27 +1,27 @@
 <template>
-  <div v-if="isOpen" class="global-data-handler">
-    <plugin-setting
-      title="全局设置"
-      :align="align"
-      :fixed-name="PLUGIN_NAME.Collections"
-      @cancel="close"
-      @save="saveGlobalDataHandle"
-    >
-      <template #content>
-        <tiny-collapse v-model="activeNames">
-          <tiny-collapse-item title="请求参数处理函数（willFetch）" name="willFetch">
-            <data-handler-editor v-model="state.willFetchValue"></data-handler-editor>
-          </tiny-collapse-item>
-          <tiny-collapse-item title="请求完成回调函数（dataHandler）" name="dataHandler">
-            <data-handler-editor v-model="state.dataHandlerValue"></data-handler-editor>
-          </tiny-collapse-item>
-          <tiny-collapse-item title="请求失败后的回调函数（errorHandler）" name="errorHandler">
-            <data-handler-editor v-model="state.errorHandlerValue"></data-handler-editor>
-          </tiny-collapse-item>
-        </tiny-collapse>
-      </template>
-    </plugin-setting>
-  </div>
+  <plugin-setting
+    v-if="isOpen"
+    title="全局设置"
+    class="plugin-datasource global-data-handler"
+    :align="align"
+    :fixed-name="PLUGIN_NAME.Collections"
+    @cancel="close"
+    @save="saveGlobalDataHandle"
+  >
+    <template #content>
+      <tiny-collapse v-model="activeNames">
+        <tiny-collapse-item title="请求参数处理函数（willFetch）" name="willFetch">
+          <data-handler-editor v-model="state.willFetchValue"></data-handler-editor>
+        </tiny-collapse-item>
+        <tiny-collapse-item title="请求完成回调函数（dataHandler）" name="dataHandler">
+          <data-handler-editor v-model="state.dataHandlerValue"></data-handler-editor>
+        </tiny-collapse-item>
+        <tiny-collapse-item title="请求失败后的回调函数（errorHandler）" name="errorHandler">
+          <data-handler-editor v-model="state.errorHandlerValue"></data-handler-editor>
+        </tiny-collapse-item>
+      </tiny-collapse>
+    </template>
+  </plugin-setting>
 </template>
 
 <script>

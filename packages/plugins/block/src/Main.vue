@@ -1,7 +1,7 @@
 <template>
   <plugin-panel
-    class="block-manage"
     title="区块管理"
+    class="plugin-block"
     :fixed-name="PLUGIN_NAME.BlockManage"
     :fixedPanels="fixedPanels"
     :docsUrl="docsUrl"
