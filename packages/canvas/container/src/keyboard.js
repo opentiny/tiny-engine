@@ -135,7 +135,7 @@ const handleCopyEvent = (event) => {
 }
 
 const handlerClipboardEvent = (event) => {
-  const { schema, parent } = getCurrent()
+  const { schema, parent } = multiSelectedStates.value.slice(-1)[0]
   const nodeList = getClipboardSchema(event)
 
   switch (event.type) {

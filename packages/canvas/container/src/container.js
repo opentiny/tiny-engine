@@ -391,14 +391,16 @@ export const scrollToNode = (element) => {
   return nextTick()
 }
 
-const setSelectRect = (id, element, isMultiple = false) => {
+const setSelectRect = (id, element, options) => {
+  const { type, isMultiple = false } = options || {}
+
   clearHover()
 
   element = element || querySelectById(id) || getDocument().body
 
   const { left, height, top, width } = getRect(element)
   const componentName = getCurrent().schema?.componentName || ''
-  const { node } = useCanvas().getNodeWithParentById(id) || {}
+  const { node, parent } = useCanvas().getNodeWithParentById(id) || {}
 
   return toggleMultiSelection(
     {
@@ -409,7 +411,9 @@ const setSelectRect = (id, element, isMultiple = false) => {
       width,
       componentName,
       doc: getDocument(),
-      schema: toRaw(node)
+      schema: node,
+      parent,
+      type
     },
     isMultiple
   )
@@ -747,13 +751,29 @@ export const selectNode = async (id, type, isMultiple = false) => {
   canvasState.current = node
   canvasState.parent = parent
 
-  if (setSelectRect(id, element, isMultiple)) {
+  const nodeIsSelected = setSelectRect(id, element, { isMultiple, type })
+  // 执行setSelectRect之后再去判断multiSelectedStates的长度
+  // 没有选中或者有多选，则重置canvasState部份数据
+  if (multiSelectedStates.value.length !== 1) {
+    Object.assign(canvasState, {
+      loopId: null,
+      current: null,
+      parent: null
+    })
+  }
+
+  if (nodeIsSelected) {
     await scrollToNode(element)
   }
 
-  canvasState.emit('selected', node, parent, type, id)
-
-  return node
+  if (multiSelectedStates.value.length === 1) {
+    const { schema: node, parent, type, id } = multiSelectedStates.value[0]
+    canvasState.emit('selected', node, parent, type, id)
+    return node
+  } else {
+    canvasState.emit('selected')
+    return null
+  }
 }
 
 export const hoverNode = (id, data) => {
