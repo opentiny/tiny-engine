@@ -14,7 +14,6 @@
   </div>
   <canvas-router-jumper :hoverState="hoverState" :inactiveHoverState="inactiveHoverState"></canvas-router-jumper>
   <canvas-viewer-switcher :hoverState="hoverState" :inactiveHoverState="inactiveHoverState"></canvas-viewer-switcher>
-  <!-- divider似乎是行列容器用到的，剪刀图标 -->
   <canvas-divider :selectState="computedSelectState"></canvas-divider>
   <canvas-resize-border :selectState="computedSelectState" :iframe="iframe"></canvas-resize-border>
   <canvas-resize>
