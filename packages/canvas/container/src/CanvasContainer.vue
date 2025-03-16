@@ -1,9 +1,9 @@
 <template>
-  <div v-for="multiState in multiSelectedStates" :key="multiState.id">
+  <div v-for="state in multiSelectedStates" :key="state.id">
     <canvas-action
       :hoverState="hoverState"
       :inactiveHoverState="inactiveHoverState"
-      :selectState="multiState"
+      :selectState="state"
       :lineState="lineState"
       :windowGetClickEventTarget="target"
       :resize="canvasState.type === 'absolute'"
@@ -15,8 +15,8 @@
   <canvas-router-jumper :hoverState="hoverState" :inactiveHoverState="inactiveHoverState"></canvas-router-jumper>
   <canvas-viewer-switcher :hoverState="hoverState" :inactiveHoverState="inactiveHoverState"></canvas-viewer-switcher>
   <!-- divider似乎是行列容器用到的，剪刀图标 -->
-  <canvas-divider :selectState="selectState"></canvas-divider>
-  <canvas-resize-border :selectState="selectState" :iframe="iframe"></canvas-resize-border>
+  <canvas-divider :selectState="computedSelectState"></canvas-divider>
+  <canvas-resize-border :selectState="computedSelectState" :iframe="iframe"></canvas-resize-border>
   <canvas-resize>
     <template v-if="!loading">
       <iframe
@@ -63,9 +63,9 @@ import {
   onMouseUp,
   dragMove,
   dragState,
+  initialRectState,
   hoverState,
   inactiveHoverState,
-  selectState,
   lineState,
   removeNodeById,
   syncNodeScroll,
@@ -109,6 +109,14 @@ export default {
     const insertContainer = ref(false)
 
     const { multiSelectedStates, multiStateLength } = useMultiSelect()
+
+    const computedSelectState = computed(() => {
+      if (multiSelectedStates.value.length === 1) {
+        return multiSelectedStates.value[0]
+      }
+
+      return initialRectState
+    })
 
     const setCurrentNode = async (event) => {
       const { clientX, clientY } = event
@@ -316,7 +324,7 @@ export default {
       dragState,
       hoverState,
       inactiveHoverState,
-      selectState,
+      computedSelectState,
       lineState,
       multiSelectedStates,
       multiStateLength,

@@ -105,11 +105,6 @@ const initialLineState = {
   doc: null
 }
 
-// 选中画布中元素时的状态
-export const selectState = reactive({
-  ...initialRectState
-})
-
 // 鼠标移入画布中元素时的状态
 export const hoverState = reactive({
   ...initialRectState
@@ -124,6 +119,8 @@ export const lineState = reactive({
   ...initialLineState
 })
 
+const { multiSelectedStates, toggleMultiSelection, refreshSelectionState, clearMultiSelection } = useMultiSelect()
+
 export const clearHover = () => {
   Object.assign(hoverState, initialRectState, { slot: null })
   Object.assign(inactiveHoverState, initialRectState, { slot: null })
@@ -132,7 +129,7 @@ export const clearHover = () => {
 export const clearSelect = () => {
   canvasState.current = null
   canvasState.parent = null
-  Object.assign(selectState, initialRectState)
+  clearMultiSelection()
   // 临时借用 remote 事件出发 currentSchema 更新
   canvasState?.emit?.('remove')
 }
@@ -394,17 +391,16 @@ export const scrollToNode = (element) => {
   return nextTick()
 }
 
-const { addMultiSelection, multiSelectedStates } = useMultiSelect()
-
-const setSelectRect = (id, element, isMultipleSelect = false) => {
+const setSelectRect = (id, element, isMultiple = false) => {
   clearHover()
 
   element = element || querySelectById(id) || getDocument().body
 
   const { left, height, top, width } = getRect(element)
   const componentName = getCurrent().schema?.componentName || ''
+  const { node } = useCanvas().getNodeWithParentById(id) || {}
 
-  return addMultiSelection(
+  return toggleMultiSelection(
     {
       id,
       left,
@@ -412,9 +408,10 @@ const setSelectRect = (id, element, isMultipleSelect = false) => {
       top,
       width,
       componentName,
-      doc: getDocument()
+      doc: getDocument(),
+      schema: toRaw(node)
     },
-    isMultipleSelect
+    isMultiple
   )
 }
 
@@ -422,21 +419,25 @@ export const updateRect = (id) => {
   id = (typeof id === 'string' && id) || getCurrent().schema?.id
   clearHover()
 
-  if (id) {
+  // 多选场景直接调用 refreshSelectionState
+  if (multiSelectedStates.value.length > 1) {
+    refreshSelectionState()
+    setTimeout(() => refreshSelectionState())
+    return
+  }
+
+  const selectState = multiSelectedStates.value[0] || initialRectState
+  const isBodySelected = !selectState.componentName && selectState.width > 0
+
+  if (id || isBodySelected) {
     setTimeout(() => setSelectRect(id))
   } else {
-    // 如果选中的是body，不清除选中框
-    if (!selectState.componentName && selectState.width > 0) {
-      return
-    }
     clearSelect()
   }
 }
 
 export const syncNodeScroll = () => {
-  multiSelectedStates.value.forEach((state) => {
-    setTimeout(() => setSelectRect(state.id))
-  })
+  refreshSelectionState()
 }
 
 export const getConfigure = (targetName) => {
@@ -728,7 +729,7 @@ export const dragMove = (event, isHover) => {
 }
 
 // type == clickTree, 为点击大纲; type == loop-id=xxx ,为点击循环数据
-export const selectNode = async (id, type, isMultipleSelect = false) => {
+export const selectNode = async (id, type, isMultiple = false) => {
   if (type && type.indexOf('loop-id') > -1) {
     const loopId = type.split('=')[1]
     canvasState.loopId = loopId
@@ -746,7 +747,7 @@ export const selectNode = async (id, type, isMultipleSelect = false) => {
   canvasState.current = node
   canvasState.parent = parent
 
-  if (setSelectRect(id, element, isMultipleSelect)) {
+  if (setSelectRect(id, element, isMultiple)) {
     await scrollToNode(element)
   }
 

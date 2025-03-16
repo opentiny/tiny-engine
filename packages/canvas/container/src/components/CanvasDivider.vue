@@ -181,6 +181,7 @@ export default {
         state.dividerStyle = {
           width: '1px',
           height: `${height}px`,
+          // FIXME verLeft自带了px
           left: `${state.verLeft}px`,
           top: `${top}px`
         }
