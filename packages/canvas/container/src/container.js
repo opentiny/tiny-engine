@@ -392,10 +392,9 @@ export const scrollToNode = (element) => {
 }
 
 const setSelectRect = (id, element, options) => {
-  const { type, isMultiple = false } = options || {}
-
   clearHover()
 
+  const { type, isMultiple = false } = options || {}
   element = element || querySelectById(id) || getDocument().body
 
   const { left, height, top, width } = getRect(element)
