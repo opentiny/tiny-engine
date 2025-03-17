@@ -1,4 +1,9 @@
-import { generateApp, parseRequiredBlocks, genSFCWithDefaultPlugin } from '@opentiny/tiny-engine-dsl-vue'
+import {
+  generateApp,
+  parseRequiredBlocks,
+  genSFCWithDefaultPlugin,
+  type IAppSchema
+} from '@opentiny/tiny-engine-dsl-vue'
 import defaultPrettierConfig from '../../js/config-files/prettierrc'
 
 // 应用出码默认配置
@@ -12,14 +17,14 @@ const defaultOptions = {
 }
 
 // 应用出码
-const generateAppCode = async (appSchema, options = {}) => {
+const generateAppCode = async (appSchema: IAppSchema, options = {}) => {
   const instance = generateApp({ ...defaultOptions, ...options })
 
   return instance.generate(appSchema)
 }
 
 // 页面出码
-const generatePageCode = (...args) => {
+const generatePageCode = (...args: any[]) => {
   return genSFCWithDefaultPlugin(...args)
 }
 
@@ -30,12 +35,12 @@ const generatePageCode = (...args) => {
  * @param {*} blockSet 已经获取的区块 set，默认不需要传
  * @returns
  */
-const getAllNestedBlocksSchema = async (pageSchema, fetchBlockSchemaApi, blockSet = new Set()) => {
-  let res = []
+const getAllNestedBlocksSchema = async (pageSchema: any, fetchBlockSchemaApi: any, blockSet = new Set<string>()) => {
+  const res: any[] = []
 
   const blockNames = parseRequiredBlocks(pageSchema)
   const promiseList = blockNames
-    .filter((name) => {
+    .filter((name: string) => {
       if (blockSet.has(name)) {
         return false
       }
@@ -44,11 +49,11 @@ const getAllNestedBlocksSchema = async (pageSchema, fetchBlockSchemaApi, blockSe
 
       return true
     })
-    .map((name) => fetchBlockSchemaApi(name))
+    .map((name: any) => fetchBlockSchemaApi(name))
   const schemaList = await Promise.allSettled(promiseList)
-  const extraList = []
+  const extraList: any[] = []
 
-  schemaList.forEach((item) => {
+  schemaList.forEach((item: { value: any[]; status: string }) => {
     const blockItem = item.value?.[0]
 
     if (item.status !== 'fulfilled' || !blockItem) {

@@ -25,7 +25,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { Button } from '@opentiny/vue'
 import { iconClose } from '@opentiny/vue-icon'
 import { reactive, computed } from 'vue'
@@ -43,7 +43,7 @@ export default {
       default: () => {}
     }
   },
-  emits: ['save'],
+  emits: ['save', 'close', 'update:modelValue'],
   setup(props, { emit }) {
     const modalState = reactive({
       show: false,
@@ -66,7 +66,7 @@ export default {
       modalState.show = true
     }
 
-    const save = (value) => {
+    const save = (value: any) => {
       emit('update:modelValue', value)
 
       close()

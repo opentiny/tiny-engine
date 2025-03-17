@@ -10,7 +10,7 @@
  *
  */
 
-export const getStyleValue = (value) => {
+export const getStyleValue = (value: string | number) => {
   if (typeof value === 'number' || /^\d+\.?\d*$/.test(value)) {
     return `${value}px`
   }
@@ -22,7 +22,7 @@ export const getStyleValue = (value) => {
   return ''
 }
 
-export const alignMap = {
+export const alignMap: Record<string, string> = {
   'flex-start': 'flex-start',
   'flex-end': 'flex-end',
   center: 'center',
@@ -31,7 +31,7 @@ export const alignMap = {
   end: 'end'
 }
 
-export const justAlignMap = {
+export const justAlignMap: Record<string, string> = {
   'space-between': 'space-between',
   'space-around': 'space-around',
   'space-evenly': 'space-evenly',

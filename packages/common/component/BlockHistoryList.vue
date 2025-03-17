@@ -22,7 +22,7 @@
   <div v-if="!history.length" class="empty">暂无数据</div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { defineEmits, defineProps } from 'vue'
 import { format } from '@opentiny/vue-renderless/common/date'
 import { Grid as TinyGrid, GridColumn as TinyGridColumn } from '@opentiny/vue'

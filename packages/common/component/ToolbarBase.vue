@@ -10,7 +10,7 @@
   </span>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, computed } from 'vue'
 import ToolbarBaseIcon from './toolbar-built-in/ToolbarBaseIcon.vue'
 import ToolbarBaseButton from './toolbar-built-in/ToolbarBaseButton.vue'

@@ -30,7 +30,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, watchEffect } from 'vue'
 import { Button } from '@opentiny/vue'
 import { iconPlus } from '@opentiny/vue-icon'
@@ -108,7 +108,7 @@ export default {
       emit(EVENTS.FULL_SCREEN_CHANGE, state.isFullScreen)
     }
 
-    const getFullScreenLabel = (isFullScreen) => {
+    const getFullScreenLabel = (isFullScreen: boolean) => {
       return isFullScreen ? '收起' : '全屏查看'
     }
 

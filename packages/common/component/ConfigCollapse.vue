@@ -8,7 +8,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { Collapse, CollapseItem } from '@opentiny/vue'
 
 export default {

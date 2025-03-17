@@ -54,7 +54,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, ref, watchEffect } from 'vue'
 import { useLayout, useTranslate } from '@opentiny/tiny-engine-meta-register'
 import { PROP_DATA_TYPE } from '../js/constants'
@@ -86,15 +86,15 @@ export default {
   setup(props, { emit }) {
     const selectValue = ref(props.modelValue)
     const showEditItem = ref(false)
-    const selectRef = ref(null)
-    const editForm = reactive({})
-    const paramsForm = ref([])
+    const selectRef = ref<any>(null)
+    const editForm = reactive<any>({})
+    const paramsForm = ref<any[]>([])
 
     watchEffect(() => {
       selectValue.value = props.modelValue
       if (props.modelValue && props.langData[props.modelValue]) {
         const curValue = props.langData[props.modelValue][props.currentLang] || ''
-        const params = []
+        const params: any[] = []
         const data = props?.data?.params || {}
 
         curValue.replace(/\{(.+?)\}/g, (substr, key) => {
@@ -106,15 +106,15 @@ export default {
       }
     })
 
-    const filterMethod = (value) => {
+    const filterMethod = (value: any) => {
       const options = selectRef.value.state.cachedOptions
 
-      options.forEach((item) => {
+      options.forEach((item: any) => {
         item.state.visible = value ? item.label.indexOf(value) > -1 : true
       })
     }
 
-    const selectI18n = (key) => {
+    const selectI18n = (key: string) => {
       const data = props.langData[key] || {}
 
       emit('bind', { ...data, key })
@@ -137,7 +137,7 @@ export default {
     }
 
     const paramsChange = () => {
-      const params = {}
+      const params: Record<string, any> = {}
 
       paramsForm.value.forEach(({ name, value }) => {
         params[name] = value

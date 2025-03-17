@@ -72,7 +72,7 @@
   <mask-modal :visible="showMask && !expand" @close="closeMask"></mask-modal>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, watchEffect, ref, onMounted } from 'vue'
 import { Tooltip, Input, FormItem, Form, Popover, DialogBox, Button } from '@opentiny/vue'
 import { iconDel, iconEdit, iconMore, iconClose } from '@opentiny/vue-icon'
@@ -126,7 +126,7 @@ export default {
   },
   emits: ['editItem', 'changeItem', 'deleteItem', 'hide'],
   setup(props, { emit }) {
-    const itemData = reactive({})
+    const itemData = reactive<any>({})
     const isShow = ref(false)
     const isVisible = ref(false)
     const showMask = ref(false)
@@ -141,7 +141,7 @@ export default {
       isVisible.value = true
     }
 
-    const btnClick = ($event, action) => {
+    const btnClick = ($event: any, action: any) => {
       switch (action) {
         case 'delete':
           deleteItem()
@@ -185,7 +185,7 @@ export default {
       isVisible.value = false
     }
 
-    const formConfirm = (formData) => {
+    const formConfirm = (formData: any) => {
       emit('changeItem', { data: formData, index: props.index })
       isVisible.value = false
     }

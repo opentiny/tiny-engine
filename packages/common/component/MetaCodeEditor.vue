@@ -74,7 +74,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { computed, nextTick, reactive, ref, watchEffect } from 'vue'
 import { Button, DialogBox, Split } from '@opentiny/vue'
 import VueMonaco from './VueMonaco.vue'
@@ -131,7 +131,7 @@ export default {
       default: () => ({ title: '', demo: '' })
     }
   },
-  emits: ['save', 'open'],
+  emits: ['save', 'open', 'close'],
   setup(props, { emit }) {
     const { locale } = i18n.global
     const editorState = reactive({
@@ -142,7 +142,7 @@ export default {
       splitWidth: props.tips?.demo ? 0.7 : 1
     })
     const value = ref('')
-    const editor = ref(null)
+    const editor = ref<any>(null)
 
     const buttonLabel = computed(() => props.buttonText?.[locale.value] ?? props.buttonText)
 
@@ -182,14 +182,14 @@ export default {
         try {
           jsonData = JSON.parse(content)
           editorState.errorMsg = ''
-        } catch (error) {
+        } catch (error: any) {
           editorState.errorMsg = error
         }
       }
       return jsonData
     }
 
-    const editorDidMount = (monacoInstance) => {
+    const editorDidMount = (monacoInstance: { onDidChangeModelContent: any; getValue: () => any }) => {
       monacoInstance.onDidChangeModelContent(() => {
         const newValue = monacoInstance.getValue()
         parseContent(newValue)

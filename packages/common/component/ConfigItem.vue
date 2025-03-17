@@ -100,7 +100,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { inject, computed, watch, ref, reactive, provide } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
 import { IconWriting, IconHelpCircle, IconPlusCircle } from '@opentiny/vue-icon'
@@ -120,7 +120,7 @@ import { SCHEMA_DATA_TYPE, PAGE_STATUS, TYPES } from '../js/constants'
 
 const { parseFunction: generateFunction } = utils
 
-const hasRule = (required, rules) => {
+const hasRule = (required: any, rules: string | any[]) => {
   if (required) {
     return true
   }
@@ -178,7 +178,7 @@ export default {
       message: '',
       hasRule: computed(() => hasRule(props.property?.required, props.property?.rules))
     })
-    const editorModalRef = ref(null)
+    const editorModalRef = ref<any>(null)
     const currentProperty = inject('currentProperty', null)
     const propsObj = inject('propsObj', null)
     const required = computed(() => props.property?.required || false)
@@ -263,7 +263,7 @@ export default {
       return 'auto'
     })
 
-    const updateValue = (value) => {
+    const updateValue = (value: { type?: any; componentName?: string; props?: { name: any } }) => {
       const { property, type } = props.property
       const { setProp, getSchema } = useProperties()
 
@@ -313,22 +313,22 @@ export default {
       useHistory().addHistory()
     }
 
-    const setVerifyFailed = (result, message) => {
+    const setVerifyFailed = (result: { failed: any; message: any }, message: string) => {
       result.failed = true
       result.message = typeof message === 'string' ? message : message?.[locale.value]
     }
 
-    const isEmptyInputValue = (value) => {
+    const isEmptyInputValue = (value: string | null) => {
       // 通过 value == null 做隐式类型转换
       // 空值约定为 undefined | null | ''
       // eslint-disable-next-line no-eq-null
       return value == null || (typeOf(value) === TYPES.StringType && value.trim() === '')
     }
-    const verifyRequired = (value) => {
+    const verifyRequired = (value: string) => {
       return !isEmptyInputValue(value)
     }
 
-    const verifyValue = (value = '', rules = []) => {
+    const verifyValue = (value = '', rules: any[] = []) => {
       const result = {
         failed: false,
         message: ''
@@ -383,7 +383,7 @@ export default {
       return result
     }
 
-    const executeRelationAction = (value, preValue) => {
+    const executeRelationAction = (value: string | undefined, preValue: any) => {
       const { onChange, rules } = props.property
       const { setProp, delProp } = useProperties()
 
@@ -409,7 +409,7 @@ export default {
       Object.assign(verification, verifyValue(value, rules))
     }
 
-    const onModelUpdate = (data, shouldUpdate = true) => {
+    const onModelUpdate = (data: any, shouldUpdate = true) => {
       const preValue = bindValue.value
       widget.value.props.modelValue = data
       emit('update:modelValue', data)
@@ -468,7 +468,7 @@ export default {
       }
     }
 
-    const isRelatedComponents = (component) =>
+    const isRelatedComponents = (component: string) =>
       ['RelatedEditorConfigurator', 'RelatedColumnsConfigurator'].includes(component)
 
     const showBindState = computed(

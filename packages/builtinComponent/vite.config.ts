@@ -21,9 +21,9 @@ export default defineConfig({
   build: {
     cssCodeSplit: false,
     lib: {
-      entry: path.resolve(__dirname, './index.js'),
+      entry: path.resolve(__dirname, './index.ts'),
       name: 'builtinComponent',
-      fileName: () => 'index.mjs',
+      fileName: (_format, entryName) => `${entryName}.mjs`,
       formats: ['es']
     },
     rollupOptions: {

@@ -61,7 +61,7 @@
   </template>
 </template>
 
-<script>
+<script lang="ts">
 import { computed } from 'vue'
 import { VueDraggableNext } from 'vue-draggable-next'
 import { useResource } from '@opentiny/tiny-engine-meta-register'

@@ -46,35 +46,36 @@ const getUserInfo = () => {
   // 获取登录用户信息
   return getMetaApi(META_SERVICE.Http)
     .get('/platform-center/api/user/me')
-    .catch((error) => {
+    .catch((error: { message: any }) => {
       useModal().message({ message: error.message, status: 'error' })
     })
 }
 
 // 获取当前应用的信息
-const fetchAppInfo = (appId) => getMetaApi(META_SERVICE.Http).get(`/app-center/api/apps/detail/${appId}`)
+const fetchAppInfo = (appId: string) => getMetaApi(META_SERVICE.Http).get(`/app-center/api/apps/detail/${appId}`)
 
 // 获取应用列表
-const fetchAppList = (platformId) => getMetaApi(META_SERVICE.Http).get(`/app-center/api/apps/list/${platformId}`)
+const fetchAppList = (platformId: string) =>
+  getMetaApi(META_SERVICE.Http).get(`/app-center/api/apps/list/${platformId}`)
 
 const { subscribe, publish } = useMessage()
 
-const postLocationHistoryChanged = (data) => publish({ topic: 'locationHistoryChanged', data })
+const postLocationHistoryChanged = (data: any) => publish({ topic: 'locationHistoryChanged', data })
 
 /**
  * 过滤掉没有变化的URL参数。pageId和blockId互斥，如果同时存在，会去掉blockId
  * @param {Record<string, any>} params
  * @returns
  */
-const filterParams = (params) => {
+const filterParams = (params: Record<string, any>) => {
   const fieldsMap = ['pageId', 'blockId', 'previewId'].reduce((result, field) => {
     result[field] = field.toLowerCase()
     return result
-  }, {})
+  }, {} as Record<string, any>)
 
   const paramFileds = Object.keys(params)
   const url = new URL(window.location.href)
-  const changedParams = {}
+  const changedParams: any = {}
 
   Object.entries(fieldsMap).forEach(([field, urlParamKey]) => {
     if (paramFileds.includes(field) && params[field] !== url.searchParams.get(urlParamKey)) {
@@ -94,10 +95,10 @@ const filterParams = (params) => {
 /**
  * 支持pageId, blockId, previewId 批量更新，pageId和blockId互斥，如果同时存在，会去掉blockId
  * @param {*} params
- * @param {*} replace
+ * @param {boolean} replace
  * @returns
  */
-const updateParams = (params, replace = false) => {
+const updateParams = (params: any, replace: boolean = false) => {
   const changedParams = filterParams(params)
   const url = new URL(window.location.href)
 
@@ -134,15 +135,15 @@ const updateParams = (params, replace = false) => {
   postLocationHistoryChanged(changedParams)
 }
 
-const updatePageId = (pageId) => {
+const updatePageId = (pageId: string) => {
   updateParams({ pageId })
 }
 
-const updateBlockId = (blockId) => {
+const updateBlockId = (blockId: string) => {
   updateParams({ blockId })
 }
 
-const updatePreviewId = (previewId, replace = false) => {
+const updatePreviewId = (previewId: string, replace = false) => {
   updateParams({ previewId }, replace)
 }
 
@@ -168,7 +169,7 @@ export default defineService({
 
     subscribe({
       topic: 'app_id_changed',
-      callback: (appId) => {
+      callback: (appId: string) => {
         if (!appId) {
           // eslint-disable-next-line no-console
           console.error('Invalid appId received in app_id_changed event')
@@ -176,7 +177,7 @@ export default defineService({
           return
         }
 
-        fetchAppInfo(appId).then((app) => {
+        fetchAppInfo(appId).then((app: any) => {
           state.appInfo = app
           // 监听应用 ID 变化，根据应用名称设置网页 title
           document.title = `${app.name} —— TinyEditor 前端可视化设计器`
@@ -186,20 +187,20 @@ export default defineService({
 
     subscribe({
       topic: 'platform_id_changed',
-      callback: (platformId) => {
+      callback: (platformId: string) => {
         if (!platformId) {
           // eslint-disable-next-line no-console
           console.error('Received platform_id_changed event with no platformId')
 
           return
         }
-        fetchAppList(platformId).then((list) => {
+        fetchAppList(platformId).then((list: any[]) => {
           state.appList = list
         })
       }
     })
 
-    getUserInfo().then((data) => {
+    getUserInfo().then((data: any) => {
       if (data) {
         state.userInfo = data
       }

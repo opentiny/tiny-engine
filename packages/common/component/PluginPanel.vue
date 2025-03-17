@@ -16,7 +16,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { useLayout } from '@opentiny/tiny-engine-meta-register'
 import LinkButton from './LinkButton.vue'
 import CloseIcon from './CloseIcon.vue'

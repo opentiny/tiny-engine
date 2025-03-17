@@ -19,7 +19,7 @@
   </meta-description>
 </template>
 
-<script>
+<script lang="ts">
 import MetaDescription from './MetaDescription.vue'
 
 export default {

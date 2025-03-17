@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, defineProps } from 'vue'
 import { getStyleValue, alignMap, justAlignMap } from './helper'
 
@@ -22,11 +22,11 @@ const props = defineProps({
     default: ''
   },
   align: {
-    type: [String, Number],
+    type: String,
     default: ''
   },
   justAlign: {
-    type: [String, Number],
+    type: String,
     default: ''
   },
   grow: {
@@ -43,8 +43,8 @@ const props = defineProps({
   }
 })
 
-const getFlex = () => {
-  const { flexBasis, grow, shrink, widthType } = props
+const getFlex = (options: any) => {
+  const { flexBasis, grow, shrink, widthType } = options
 
   if (widthType === 'fixed') {
     return `0 0 ${getStyleValue(flexBasis)}`
@@ -53,13 +53,16 @@ const getFlex = () => {
   return `${Number(grow)} ${Number(shrink)} ${getStyleValue(flexBasis)}`
 }
 
-const styles = computed(() => ({
-  flex: getFlex(props.flexBasis),
-  rowGap: getStyleValue(props.rowGap),
-  colGap: getStyleValue(props.colGap),
-  align: alignMap[props.align] || 'stretch',
-  justAlign: justAlignMap[props.justAlign] || 'flex-start'
-}))
+const styles = computed(() => {
+  const { flexBasis, grow, shrink, widthType } = props
+  return {
+    flex: getFlex({ flexBasis, grow, shrink, widthType }),
+    rowGap: getStyleValue(props.rowGap),
+    colGap: getStyleValue(props.colGap),
+    align: alignMap[props.align] || 'stretch',
+    justAlign: justAlignMap[props.justAlign] || 'flex-start'
+  }
+})
 </script>
 
 <style lang="less" scoped>

@@ -41,11 +41,11 @@ export default defineConfig({
     cssCodeSplit: false,
     lib: {
       entry: {
-        index: path.resolve(__dirname, './index.js'),
+        index: path.resolve(__dirname, './index.ts'),
         ...Object.fromEntries(jsEntries)
       },
       name: 'common',
-      fileName: (format, entryName) => `${entryName}.js`,
+      fileName: (_format, entryName) => `${entryName}.js`,
       formats: ['es']
     },
     rollupOptions: {

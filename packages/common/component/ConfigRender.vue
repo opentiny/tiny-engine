@@ -35,7 +35,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { computed, provide, ref, watchEffect } from 'vue'
 import { Collapse, CollapseItem } from '@opentiny/vue'
 import ConfigGroup from './ConfigGroup.vue'
@@ -58,23 +58,25 @@ export default {
       default: '空'
     }
   },
-  emits: ['selected'],
+  emits: ['selected', 'select-prop', 'select-group'],
   setup(props, { emit }) {
     const activeNames = ref([])
 
-    const getPropsObj = (data) => {
+    const getPropsObj = (data?: Record<string, any> | any[]) => {
       const obj = {}
 
       data?.forEach(({ content }) => {
         if (content.length) {
-          content.forEach((item) => {
-            const node = item.schema?.length ? getPropsObj(item.schema) : {}
+          content.forEach(
+            (item: { schema: string | any[]; widget: { props: { modelValue: any } }; property: string | number }) => {
+              const node: any = item.schema?.length ? getPropsObj(item.schema) : {}
 
-            node.setValue = (value) => {
-              item.widget.props.modelValue = value
+              node.setValue = (value: any) => {
+                item.widget.props.modelValue = value
+              }
+              obj[item.property] = node
             }
-            obj[item.property] = node
-          })
+          )
         }
       })
 
@@ -85,10 +87,11 @@ export default {
 
     provide('propsObj', propsObj)
 
-    const onPropClick = (data) => emit('select-prop', data)
-    const onGroupClick = (data) => emit('select-group', data)
+    const onPropClick = (data: any) => emit('select-prop', data)
+    const onGroupClick = (data: any) => emit('select-group', data)
 
-    const filterActiveGroup = (data) => data?.filter?.((item) => !item.fold)?.map?.((item, index) => index) || []
+    const filterActiveGroup = (data: any[] | Record<string, any>) =>
+      data?.filter?.((item: { fold: any }) => !item.fold)?.map?.((item: any, index: any) => index) || []
 
     watchEffect(() => {
       activeNames.value = filterActiveGroup(props.data)
