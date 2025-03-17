@@ -69,7 +69,19 @@ export default {
 
       // 禁用滚动条边边一直显示的边框
       overviewRulerBorder: false,
-      renderLineHighlightOnlyWhenFocus: true
+      renderLineHighlightOnlyWhenFocus: true,
+      tabSize: 2,
+      insertSpaces: true,
+      formatOnPaste: true,
+      formatOnType: true,
+      autoIndent: 'full',
+      newLineCharacter: '\n',
+      convertTabsToSpaces: true,
+      trimAutoWhitespace: true,
+      wordWrap: 'on',
+      wordWrapColumn: 120,
+      wordWrapMinChars: 10,
+      wordWrapStrategy: 'advanced'
     }
 
     const editorDidMount = (editor) => {
