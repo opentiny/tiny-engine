@@ -115,8 +115,20 @@ const handleClipboardCut = (event) => {
   clearMultiSelection()
 }
 
-const handleClipboardPaste = (nodeList, schema, parent) => {
-  if (!nodeList.length) return
+const handleClipboardPaste = (event) => {
+  const nodeList = getClipboardSchema(event)
+
+  if (!nodeList.length) {
+    return
+  }
+
+  const lastSelected = multiSelectedStates.value.slice(-1)[0]
+
+  if (!lastSelected) {
+    return
+  }
+
+  const { schema, parent } = lastSelected
 
   nodeList.forEach((node) => {
     if (node?.componentName && schema?.componentName && allowInsert(getConfigure(schema.componentName), node)) {
@@ -135,15 +147,12 @@ const handleCopyEvent = (event) => {
 }
 
 const handlerClipboardEvent = (event) => {
-  const { schema, parent } = multiSelectedStates.value.slice(-1)[0]
-  const nodeList = getClipboardSchema(event)
-
   switch (event.type) {
     case 'copy':
       handleCopyEvent(event)
       break
     case 'paste':
-      handleClipboardPaste(nodeList, schema, parent)
+      handleClipboardPaste(event)
       break
     case 'cut':
       handleClipboardCut(event)
