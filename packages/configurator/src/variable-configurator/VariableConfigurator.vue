@@ -414,7 +414,7 @@ export default {
       const editorInstance = editor.value?.getEditor()
       await editorInstance.getAction('editor.action.formatDocument').run()
 
-      let variableContent = state.isEditorEditMode ? editorInstance.getValue() : state.variable
+      const variableContent = state.isEditorEditMode ? editorInstance.getValue() : state.variable
 
       const { setSaved, getSchema, updateSchema } = useCanvas()
       // 如果新旧值不一样就显示未保存状态
