@@ -352,8 +352,7 @@ export const querySelectById = (id) => {
   let element = doc.querySelector(selector)
   const loopId = element?.getAttribute('loop-id')
   if (element && loopId) {
-    const currentLoopId = getCurrent().loopId
-    selector = `[${NODE_UID}="${id}"][${NODE_LOOP}="${currentLoopId}"]`
+    selector = `[${NODE_UID}="${id}"][${NODE_LOOP}="${loopId}"]`
     element = doc.querySelector(selector)
   }
   return element
@@ -394,11 +393,11 @@ export const scrollToNode = (element) => {
 const setSelectRect = (id, element, options) => {
   clearHover()
 
-  const { type, isMultiple = false } = options || {}
+  const { type, schema, isMultiple = false } = options || {}
   element = element || querySelectById(id) || getDocument().body
 
   const { left, height, top, width } = getRect(element)
-  const componentName = getCurrent().schema?.componentName || ''
+  const componentName = (schema || getCurrent().schema)?.componentName || ''
   const { node, parent } = useCanvas().getNodeWithParentById(id) || {}
 
   return toggleMultiSelection(
@@ -733,27 +732,28 @@ export const dragMove = (event, isHover) => {
 
 // type == clickTree, 为点击大纲; type == loop-id=xxx ,为点击循环数据
 export const selectNode = async (id, type, isMultiple = false) => {
-  if (type && type.indexOf('loop-id') > -1) {
-    const loopId = type.split('=')[1]
-    canvasState.loopId = loopId
-  }
+  const { node } = useCanvas().getNodeWithParentById(id) || {}
 
-  const { node, parent } = useCanvas().getNodeWithParentById(id) || {}
-
-  let element = querySelectById(id, type)
+  let element = querySelectById(id)
 
   if (element && node) {
     const { rootSelector } = getConfigure(node.componentName)
     element = rootSelector ? element.querySelector(rootSelector) : element
   }
 
-  canvasState.current = node
-  canvasState.parent = parent
+  const nodeIsSelected = setSelectRect(id, element, { isMultiple, type, schema: node })
 
-  const nodeIsSelected = setSelectRect(id, element, { isMultiple, type })
   // 执行setSelectRect之后再去判断multiSelectedStates的长度
-  // 没有选中或者有多选，则重置canvasState部份数据
-  if (multiSelectedStates.value.length !== 1) {
+  if (multiSelectedStates.value.length === 1) {
+    const { schema: node, parent, type } = multiSelectedStates.value[0]
+    const loopId = type?.includes('loop-id') ? type.split('=')[1] : null
+    Object.assign(canvasState, {
+      loopId,
+      current: node,
+      parent
+    })
+  } else {
+    // 没有选中或者有多选，则重置canvasState部份数据
     Object.assign(canvasState, {
       loopId: null,
       current: null,

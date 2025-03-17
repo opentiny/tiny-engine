@@ -484,6 +484,11 @@ export default {
     watchPostEffect(async () => {
       const { left, top, width, height, doc } = props.selectState
 
+      // template上虽然已经判断了showQuickAction，这里再加上主要是为了watchPostEffect能够监听它，然后刷新action
+      if (!showQuickAction.value) {
+        return
+      }
+
       // nextTick后ref才能获取到元素。需要把监听的依赖放在await之前，否则无法监听变化
       await nextTick()
 
