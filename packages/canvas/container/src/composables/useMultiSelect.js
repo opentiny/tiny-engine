@@ -1,12 +1,10 @@
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { getDocument, getRect, querySelectById } from '../container'
 
 // 初始化多选节点
 const multiSelectedStates = ref([])
 
 export const useMultiSelect = () => {
-  const multiStateLength = computed(() => multiSelectedStates.value.length)
-
   /**
    * 添加state到多选列表
    * @param {*} selectState
@@ -60,7 +58,6 @@ export const useMultiSelect = () => {
 
   return {
     multiSelectedStates,
-    multiStateLength,
     toggleMultiSelection,
     refreshSelectionState,
     clearMultiSelection

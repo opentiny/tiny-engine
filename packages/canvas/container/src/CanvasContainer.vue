@@ -107,7 +107,9 @@ export default {
     const containerPanel = ref(null)
     const insertContainer = ref(false)
 
-    const { multiSelectedStates, multiStateLength } = useMultiSelect()
+    const { multiSelectedStates } = useMultiSelect()
+
+    const multiStateLength = computed(() => multiSelectedStates.value.length)
 
     const computedSelectState = computed(() => {
       if (multiSelectedStates.value.length === 1) {
