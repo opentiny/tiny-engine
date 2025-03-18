@@ -7,7 +7,9 @@ export function useMethods({ getContext, setContext }) {
   const getMethods = () => methods
 
   const setMethods = (data: Record<string, IFuncType> = {}, clear = false) => {
-    clear && reset(methods)
+    if (clear) {
+      reset(methods)
+    }
     // 这里有些方法在画布还是有执行的必要的，比如说表格的renderer和formatText方法，包括一些自定义渲染函数
     Object.assign(
       methods,

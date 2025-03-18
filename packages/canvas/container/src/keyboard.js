@@ -30,15 +30,21 @@ function handlerLeft({ parent }) {
 }
 function handlerRight({ schema }) {
   const id = schema.children?.[0]?.id
-  id && selectNode(id)
+  if (id) {
+    selectNode(id)
+  }
 }
 function handlerUp({ index, parent }) {
   const id = (parent?.children[index - 1] || parent)?.id
-  id && selectNode(id)
+  if (id) {
+    selectNode(id)
+  }
 }
 function handlerDown({ index, parent }) {
   const id = parent?.children[index + 1]?.id
-  id && selectNode(id)
+  if (id) {
+    selectNode(id)
+  }
 }
 
 const { multiSelectedStates, clearMultiSelection } = useMultiSelect()
@@ -96,10 +102,17 @@ const handlerCtrl = (event) => {
   }
 }
 
-const handleClipboardCut = (event, schema) => {
-  if (setClipboardSchema(event, copyObject(schema))) {
-    removeNodeById(schema?.id)
+const handleClipboardCut = (event) => {
+  const selectedNodes = multiSelectedStates.value.map(({ schema }) => copyObject(schema))
+  const dataToCut = JSON.stringify(selectedNodes)
+
+  if (setClipboardSchema(event, dataToCut)) {
+    multiSelectedStates.value.forEach(({ id }) => {
+      removeNodeById(id)
+    })
   }
+
+  clearMultiSelection()
 }
 
 const handleClipboardPaste = (nodeList, schema, parent) => {
@@ -133,7 +146,7 @@ const handlerClipboardEvent = (event) => {
       handleClipboardPaste(nodeList, schema, parent)
       break
     case 'cut':
-      handleClipboardCut(event, schema)
+      handleClipboardCut(event)
       break
     default:
       break

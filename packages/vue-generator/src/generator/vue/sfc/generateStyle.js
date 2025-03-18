@@ -13,5 +13,5 @@ export const generateStyleTag = (schema, config = {}) => {
     langDesc = `lang=${langDesc}`
   }
 
-  return `<style ${langDesc} ${scopedStr}> ${css} </style>`
+  return `<style ${langDesc} ${scopedStr}> ${css || ''} </style>`
 }

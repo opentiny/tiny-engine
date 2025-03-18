@@ -117,7 +117,7 @@ export default {
     const { modal, openModal, closeModal } = useModal()
 
     const add = () => {
-      let newOption = reactive({})
+      const newOption = reactive({})
       newOption[itemsOptions.value.valueField] = ''
       newOption[itemsOptions.value.textField] = ''
 

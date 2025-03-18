@@ -25,7 +25,7 @@ import { reactive, ref } from 'vue'
 import { iconArrowDown } from '@opentiny/vue-icon'
 import fieldTypes from './config'
 
-let isOpen = ref(false)
+const isOpen = ref(false)
 
 export const open = () => {
   isOpen.value = true

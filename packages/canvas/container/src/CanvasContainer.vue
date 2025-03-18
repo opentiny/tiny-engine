@@ -3,7 +3,7 @@
     <canvas-action
       :hoverState="hoverState"
       :inactiveHoverState="inactiveHoverState"
-      :selectState="multiStateLength > 1 ? multiState : selectState"
+      :selectState="multiState"
       :lineState="lineState"
       :windowGetClickEventTarget="target"
       :resize="canvasState.type === 'absolute'"
@@ -100,15 +100,14 @@ export default {
     const insertPanel = ref(null)
     const insertPosition = ref(false)
     const loading = computed(() => useCanvas().isLoading())
-    let showSettingModel = ref(false)
-    let target = ref(null)
+    const showSettingModel = ref(false)
+    const target = ref(null)
     const srcAttrName = computed(() => (props.canvasSrc ? 'src' : 'srcdoc'))
 
     const containerPanel = ref(null)
     const insertContainer = ref(false)
 
-    const { multiSelectedStates, multiStateLength, setMultiSelection, getMultiSelectionState, toggleMultiSelection } =
-      useMultiSelect()
+    const { multiSelectedStates, multiStateLength, toggleMultiSelection } = useMultiSelect()
 
     const setCurrentNode = async (event) => {
       const { clientX, clientY } = event
@@ -120,11 +119,6 @@ export default {
         const currentElement = querySelectById(getCurrent().schema?.id)
 
         if (!currentElement?.contains(element) || event.button === 0) {
-          const selectedState = getMultiSelectionState(element)
-          if (selectedState) {
-            setMultiSelection(selectedState)
-          }
-
           const loopId = element.getAttribute(NODE_LOOP)
           if (loopId) {
             node = await selectNode(element.getAttribute(NODE_UID), `loop-id=${loopId}`)
@@ -211,7 +205,7 @@ export default {
               return
             }
 
-            if (toggleMultiSelection(event, element)) return
+            toggleMultiSelection(event, element)
 
             insertPosition.value = false
             insertContainer.value = false

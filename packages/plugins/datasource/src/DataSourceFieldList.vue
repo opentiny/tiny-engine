@@ -23,7 +23,7 @@
         <svg-button name="to-edit" :hoverBgColor="false" @click="handleEdit(data)"></svg-button>
       </div>
       <div class="field-handler" @click="deleteField($event, field)">
-        <svg-button :hoverBgColor="false" name="text-source-delete"></svg-button>
+        <svg-button :hoverBgColor="false" name="delete"></svg-button>
       </div>
     </div>
   </data-source-field-form>

@@ -1,4 +1,4 @@
 module.exports = {
-  './packages/**/**.{js,vue,jsx}': 'eslint',
-  './packages/**/**.{vue,js,ts,html,json,less}': 'prettier --write'
+  './packages/**/**.{js,mjs,jsx,ts,mts,tsx,vue}': 'eslint',
+  './packages/**/**.{js,mjs,jsx,ts,mts,tsx,vue,html,json,less}': 'prettier --write'
 }

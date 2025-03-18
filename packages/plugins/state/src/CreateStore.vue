@@ -136,7 +136,7 @@ export default {
 
     const validateName = (rule, name, callback) => {
       let errorMessage = ''
-      let isSameState = Object.keys(props.dataSource).includes(name)
+      const isSameState = Object.keys(props.dataSource).includes(name)
       if (!name) {
         errorMessage = '输入内容不能为空'
       }
@@ -149,7 +149,11 @@ export default {
         errorMessage = '已存在同名 store 属性'
       }
 
-      errorMessage ? callback(new Error(errorMessage)) : callback()
+      if (errorMessage) {
+        callback(new Error(errorMessage))
+      } else {
+        callback()
+      }
       emit('nameInput', errorMessage)
     }
     const rules = {
@@ -197,7 +201,7 @@ export default {
 
     const saveMethods = (editor) => {
       const storeEditor = editor === 'gettersEditor' ? gettersEditor : actionsEditor
-      let gettersMap = {}
+      const gettersMap = {}
       const editorContent = storeEditor?.value?.getEditor()?.getValue()
       const ast = string2Ast(editorContent)
 

@@ -127,6 +127,15 @@ export default {
         }
       })
 
+      // 处理 i18n 对象中可能为 null 的情况
+      if (metaData.i18n) {
+        Object.keys(metaData.i18n).forEach((langKey) => {
+          metaData.i18n[langKey] = metaData.i18n[langKey] || {}
+        })
+      } else {
+        metaData.i18n = {}
+      }
+
       const appSchema = {
         // metaData 包含dataSource、utils、i18n、globalState
         ...metaData,

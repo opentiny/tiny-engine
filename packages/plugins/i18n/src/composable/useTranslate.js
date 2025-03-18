@@ -69,12 +69,13 @@ const ensureI18n = (obj, send) => {
   if (send) {
     const exist = langs[key]
 
-    globalParams.host &&
+    if (globalParams.host) {
       getMetaApi(META_SERVICE.Http).post(`${i18nApi}/${exist ? 'update' : 'create'}`, {
         ...globalParams,
         key,
         contents
       })
+    }
 
     locales.forEach((lang) => {
       if (i18nResource[lang]?.[key]) {

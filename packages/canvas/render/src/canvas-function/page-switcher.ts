@@ -1,5 +1,5 @@
 import { reactive } from 'vue'
-import { IPageContext } from '../page-block-function'
+import type { IPageContext } from '../page-block-function'
 
 export interface ICurrentPage {
   pageId: string | number

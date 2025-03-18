@@ -10,6 +10,7 @@
  *
  */
 
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import { parse as parseSFC, compileScript, compileStyle, compileTemplate } from '@vue/compiler-sfc'
 import { generateCodeFrame } from '@vue/shared'
 import { randomString } from '.'
@@ -20,6 +21,7 @@ import { randomString } from '.'
  * @returns {Error[]} 校验出的报错信息
  */
 export function validateByParse(code) {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { parse: parseVue } = require('vue-eslint-parser')
   let errors = []
 

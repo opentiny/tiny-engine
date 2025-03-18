@@ -178,7 +178,7 @@ export default {
       }
 
       let params = 'event'
-      let extraParams = getExtraParams()
+      const extraParams = getExtraParams()
       let formatParams = params
 
       if (!state.isValidParams) {

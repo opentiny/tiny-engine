@@ -10,7 +10,7 @@
  *
  */
 
-import { defineComponent, h, inject, provide, Ref, Suspense } from 'vue'
+import { defineComponent, h, inject, provide, type Ref, Suspense } from 'vue'
 
 import {
   NODE_UID as DESIGN_UIDKEY,
@@ -26,7 +26,7 @@ import BlockLoading from './BlockLoading.vue'
 
 export const renderDefault = (children, scope, parent) =>
   children.map?.((child) =>
-    // eslint-disable-next-line no-use-before-define
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     h(renderer, {
       schema: child,
       scope,

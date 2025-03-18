@@ -68,8 +68,8 @@ const CONSTANTS = {
   MAX_LENGTH_TIP: '长度不大于'
 }
 
-let isOpen = ref(false)
-let recordFormData = reactive({})
+const isOpen = ref(false)
+const recordFormData = reactive({})
 
 export const open = () => {
   isOpen.value = true
@@ -158,10 +158,12 @@ export default {
           const format = item.format
           const fieldRules = []
 
-          !isEmptyObject(format) &&
+          if (!isEmptyObject(format)) {
             Object.keys(format).forEach((key) => {
               if (key === CONSTANTS.REQUIRED) {
-                format[key] && (state.recordMapping[item.name] = format[key])
+                if (format[key]) {
+                  state.recordMapping[item.name] = format[key]
+                }
 
                 fieldRules.push({
                   [key]: format[key],
@@ -187,6 +189,7 @@ export default {
                 }
               }
             })
+          }
 
           state.rules[item.name] = fieldRules
         })

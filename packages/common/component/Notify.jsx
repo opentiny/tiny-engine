@@ -10,7 +10,6 @@ const durationMap = {
 const useNotify = (config) => {
   const { customClass, title, type = 'info', position = 'top-right', ...otherConfig } = config
 
-
   Notify({
     duration: durationMap[type],
     ...otherConfig,
@@ -18,7 +17,7 @@ const useNotify = (config) => {
     title,
     type,
     customClass: `${customClass}`,
-    verticalOffset: 46,
+    verticalOffset: 46
   })
 }
 
