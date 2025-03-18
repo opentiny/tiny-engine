@@ -503,14 +503,8 @@ export default {
         state.variables = {}
 
         const stores = useResource().appSchemaState.globalState
-        stores.forEach(({ id, state: storeState = {}, getters = {} }) => {
-          const loadProp = (prop) => {
-            const propBinding = `${id}.${prop}`
-            state.variables[propBinding] = propBinding
-          }
-
-          Object.keys(storeState).forEach(loadProp)
-          Object.keys(getters).forEach(loadProp)
+        stores.forEach(({ id, state: _storeState = {}, _getters = {} }) => {
+          state.variables[id] = id
         })
       } else if (item.id === 'loop') {
         state.bindPrefix = ''
