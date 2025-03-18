@@ -6,11 +6,11 @@
   </component>
 </template>
 
-<script>
+<script lang="ts">
 import { ref, watch, computed } from 'vue'
 import CanvasPlaceholder from './CanvasPlaceholder.vue'
 import { getController } from '../render'
-import { getHandler } from './CanvasCollection'
+import { getHandler } from './CanvasCollection.ts'
 
 export const fetchDataSourceDetail = (dataSourceId) =>
   getController().request.get(`/app-center/api/sources/detail/${dataSourceId}`) // TODO: 强行耦合了

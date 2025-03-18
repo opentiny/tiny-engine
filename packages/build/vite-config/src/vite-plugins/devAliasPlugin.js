@@ -11,7 +11,7 @@ const getDevAlias = (useSourceAlias) => {
   const defaultBasePath = path.resolve(process.cwd(), '..') // parent path
   const basePath = useSourceAlias.basePath || defaultBasePath
   return {
-    '@opentiny/tiny-engine/canvas': path.resolve(basePath, 'packages/design-core/src/canvas/canvas.js'),
+    '@opentiny/tiny-engine/canvas': path.resolve(basePath, 'packages/design-core/src/canvas/canvas.ts'),
     '@opentiny/tiny-engine': path.resolve(basePath, 'packages/design-core/index.js'),
     '@opentiny/tiny-engine-common/component': path.resolve(basePath, 'packages/common/component'),
     '@opentiny/tiny-engine-common/js': path.resolve(basePath, 'packages/common/js'),
@@ -51,17 +51,17 @@ const getDevAlias = (useSourceAlias) => {
     '@opentiny/tiny-engine-toolbar-save': path.resolve(basePath, 'packages/toolbars/save/index.ts'),
     '@opentiny/tiny-engine-toolbar-setting': path.resolve(basePath, 'packages/toolbars/setting/index.ts'),
     '@opentiny/tiny-engine-toolbar-collaboration': path.resolve(basePath, 'packages/toolbars/collaboration/index.ts'),
-    '@opentiny/tiny-engine-theme-base': path.resolve(basePath, 'packages/theme/base/src/index.js'),
-    '@opentiny/tiny-engine-svgs': path.resolve(basePath, 'packages/svgs/index.js'),
+    '@opentiny/tiny-engine-theme-base': path.resolve(basePath, 'packages/theme/base/src/index.ts'),
+    '@opentiny/tiny-engine-svgs': path.resolve(basePath, 'packages/svgs/index.ts'),
     '@opentiny/tiny-engine-canvas/render': path.resolve(basePath, 'packages/canvas/render/index.ts'),
-    '@opentiny/tiny-engine-canvas': path.resolve(basePath, 'packages/canvas/index.js'),
+    '@opentiny/tiny-engine-canvas': path.resolve(basePath, 'packages/canvas/index.ts'),
     '@opentiny/tiny-engine-utils': path.resolve(basePath, 'packages/utils/src/index.ts'),
     '@opentiny/tiny-engine-webcomponent-core': path.resolve(basePath, 'packages/webcomponent/src/lib.js'),
     '@opentiny/tiny-engine-i18n-host': path.resolve(basePath, 'packages/i18n/src/lib.ts'),
     '@opentiny/tiny-engine-builtin-component': path.resolve(basePath, 'packages/builtinComponent/index.ts'),
     '@opentiny/tiny-engine-meta-register': path.resolve(basePath, 'packages/register/src/index.js'),
     '@opentiny/tiny-engine-layout': path.resolve(basePath, 'packages/layout/index.ts'),
-    '@opentiny/tiny-engine-configurator': path.resolve(basePath, 'packages/configurator/src/index.js'),
+    '@opentiny/tiny-engine-configurator': path.resolve(basePath, 'packages/configurator/src/index.ts'),
     '@opentiny/tiny-engine-block-compiler': path.resolve(basePath, 'packages/block-compiler/src/index.ts')
   }
 }

@@ -1,4 +1,4 @@
-export const addScript = (src, doc = document) => {
+export const addScript = (src: string, doc = document) => {
   return new Promise((resolve, reject) => {
     const script = doc.createElement('script')
 
@@ -10,11 +10,11 @@ export const addScript = (src, doc = document) => {
     script.onload = resolve
     script.onerror = reject
 
-    doc.querySelector('head').appendChild(script)
+    doc.querySelector('head')!.appendChild(script)
   })
 }
 
-export const addStyle = (href, doc = document) => {
+export const addStyle = (href: string, doc = document) => {
   return new Promise((resolve, reject) => {
     const link = doc.createElement('link')
 
@@ -24,11 +24,11 @@ export const addStyle = (href, doc = document) => {
     link.onload = resolve
     link.onerror = reject
 
-    doc.querySelector('head').appendChild(link)
+    doc.querySelector('head')!.appendChild(link)
   })
 }
 
-export const copyObject = (node) => {
+export const copyObject = (node: any[]) => {
   if (typeof node === 'object') {
     if (!node) {
       return node
@@ -61,7 +61,7 @@ export const copyObject = (node) => {
  * @param {*} script 模块的cdn地址
  * @returns
  */
-const dynamicImportComponentLib = async ({ pkg, script }) => {
+const dynamicImportComponentLib = async ({ pkg, script }: any) => {
   if (window.TinyComponentLibs[pkg]) {
     return window.TinyComponentLibs[pkg]
   }
@@ -87,7 +87,7 @@ const dynamicImportComponentLib = async ({ pkg, script }) => {
  * @param {object} param0 组件的依赖： { package： 包名，script：js文件cdn, components：组件id和导出组件名的映射关系}
  * @returns
  */
-export const getComponents = async ({ package: pkg, script, components }) => {
+export const getComponents = async ({ package: pkg, script, components }: any) => {
   if (!pkg) return
 
   const modules = await dynamicImportComponentLib({ pkg, script })

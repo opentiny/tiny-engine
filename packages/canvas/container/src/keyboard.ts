@@ -58,7 +58,8 @@ function handlerDelete() {
 }
 
 const handlerArrow = (keyCode) => {
-  let { schema, parent } = getCurrent()
+  let { schema } = getCurrent()
+  const { parent } = getCurrent()
   let index = null
 
   if (schema) {
@@ -67,7 +68,7 @@ const handlerArrow = (keyCode) => {
     schema = useCanvas().getSchema()
   }
 
-  let obj = {
+  const obj = {
     [KEY_LEFT]: handlerLeft,
     [KEY_RIGHT]: handlerRight,
     [KEY_UP]: handlerUp,

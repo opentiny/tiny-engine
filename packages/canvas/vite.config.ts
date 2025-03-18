@@ -26,7 +26,7 @@ export default defineConfig({
     vueJsx(),
     generateComments(),
     vitePluginBuildEntry({
-      canvas: path.resolve(__dirname, './scripts/canvas-vite.config.js')
+      canvas: path.resolve(__dirname, './scripts/canvas-vite.config.ts')
     })
   ],
   publicDir: false,
@@ -34,7 +34,7 @@ export default defineConfig({
     cssCodeSplit: true,
     lib: {
       entry: {
-        index: path.resolve(__dirname, './index.js'),
+        index: path.resolve(__dirname, './index.ts'),
         render: path.resolve(__dirname, './render/index.ts')
       },
       formats: ['es']

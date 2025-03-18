@@ -12,6 +12,6 @@
 
 import SvgIcon from './src/Main.vue'
 
-export default (app) => {
+export default (app: Record<string, any> & { component: (...args: any[]) => any }) => {
   app.component('SvgIcon', SvgIcon)
 }

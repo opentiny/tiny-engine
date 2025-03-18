@@ -21,8 +21,8 @@ export default defineConfig({
   publicDir: false,
   build: {
     lib: {
-      entry: path.resolve(__dirname, './src/index.js'),
-      fileName: () => 'index.js',
+      entry: path.resolve(__dirname, './src/index.ts'),
+      fileName: (_format, entryName) => `${entryName}.js`,
       formats: ['es']
     },
     rollupOptions: {

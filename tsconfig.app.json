@@ -17,7 +17,7 @@
       "@/*": ["packages/*"],
       "@opentiny/tiny-engine": ["packages/design-core/index.js"],
       "@opentiny/tiny-engine-meta-register": ["packages/register/src/index.js"],
-      "@opentiny/tiny-engine-canvas": ["packages/canvas/src/index.js"],
+      "@opentiny/tiny-engine-canvas": ["packages/canvas/src/index"],
       "@opentiny/tiny-engine-plugin-materials": ["packages/plugins/materials/index"],
       "@opentiny/tiny-engine-plugin-state": ["packages/plugins/state/index"],
       "@opentiny/tiny-engine-plugin-script": ["packages/plugins/script/index"],
