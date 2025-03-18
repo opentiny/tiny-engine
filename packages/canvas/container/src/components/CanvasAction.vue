@@ -1,7 +1,7 @@
 <template>
   <div
     v-show="selectState.height && selectState.width"
-    class="canvas-rect select"
+    :class="['canvas-rect select', { 'multi-select': multiStateLength > 1 }, { dragging: isMultiDragging }]"
     :style="{
       top: selectState.top + 'px',
       left: selectState.left + 'px',
@@ -186,6 +186,10 @@ export default {
       default: () => 0
     },
     resize: {
+      type: Boolean,
+      default: false
+    },
+    isMultiDragging: {
       type: Boolean,
       default: false
     },
@@ -716,7 +720,59 @@ export default {
       }
     }
   }
+
+  &.multi-select {
+    border-color: var(--te-canvas-container-border-color-checked);
+    border-style: solid;
+    border-width: 2px;
+
+    .corner-mark-left {
+      background-color: var(--te-canvas-container-bg-color-checked);
+      color: var(--te-canvas-container-text-color-white);
+    }
+
+    &.dragging {
+      opacity: 0.7;
+      border-color: var(--te-canvas-container-border-color-multi, #1890ff);
+      border-style: dashed;
+      border-width: 2px;
+      background-color: rgba(24, 144, 255, 0.15);
+      box-shadow: 0 0 12px rgba(24, 144, 255, 0.4);
+      transition: all 0.2s ease;
+      animation: pulse-border 1.5s infinite;
+
+      .corner-mark-left {
+        background-color: var(--te-canvas-container-border-color-multi, #1890ff);
+        animation: pulse-bg 1.5s infinite;
+      }
+    }
+  }
 }
+
+@keyframes pulse-border {
+  0% {
+    box-shadow: 0 0 0 0 rgba(24, 144, 255, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(24, 144, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(24, 144, 255, 0);
+  }
+}
+
+@keyframes pulse-bg {
+  0% {
+    background-color: rgba(24, 144, 255, 1);
+  }
+  50% {
+    background-color: rgba(24, 144, 255, 0.7);
+  }
+  100% {
+    background-color: rgba(24, 144, 255, 1);
+  }
+}
+
 .short-cut-set.short-cut-set.tiny-popper.tiny-popover {
   .tiny-popover__title {
     color: var(--te-canvas-container-text-color-primary);

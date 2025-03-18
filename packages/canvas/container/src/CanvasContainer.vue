@@ -8,10 +8,18 @@
       :windowGetClickEventTarget="target"
       :resize="canvasState.type === 'absolute'"
       :multiStateLength="multiStateLength"
+      :isMultiDragging="isMultiDragging()"
       @select-slot="selectSlot"
       @setting="settingModel"
     ></canvas-action>
   </div>
+  <canvas-multi-drag-indicator
+    :lineState="lineState"
+    :multiDragState="multiDragState"
+    :multiStateLength="multiStateLength"
+    :isMultiDragging="isMultiDragging()"
+    :getMultiDragPositionText="getMultiDragPositionText"
+  ></canvas-multi-drag-indicator>
   <canvas-router-jumper :hoverState="hoverState" :inactiveHoverState="inactiveHoverState"></canvas-router-jumper>
   <canvas-viewer-switcher :hoverState="hoverState" :inactiveHoverState="inactiveHoverState"></canvas-viewer-switcher>
   <canvas-divider :selectState="computedSelectState"></canvas-divider>
@@ -62,7 +70,9 @@ import CanvasViewerSwitcher from './components/CanvasViewerSwitcher.vue'
 import CanvasResize from './components/CanvasResize.vue'
 import CanvasDivider from './components/CanvasDivider.vue'
 import CanvasResizeBorder from './components/CanvasResizeBorder.vue'
+import CanvasMultiDragIndicator from './components/CanvasMultiDragIndicator.vue'
 import { useMultiSelect } from './composables/useMultiSelect'
+import { useMultiDrag } from './composables/useMultiDrag'
 import {
   canvasState,
   onMouseUp,
@@ -92,7 +102,8 @@ export default {
     CanvasDivider,
     CanvasResizeBorder,
     CanvasRouterJumper,
-    CanvasViewerSwitcher
+    CanvasViewerSwitcher,
+    CanvasMultiDragIndicator
   },
   props: {
     controller: Object,
@@ -113,9 +124,11 @@ export default {
     const containerPanel = ref(null)
     const insertContainer = ref(false)
 
-    const { multiSelectedStates } = useMultiSelect()
+    const { multiSelectedStates, isMouseDown } = useMultiSelect()
 
     const multiStateLength = computed(() => multiSelectedStates.value.length)
+    const { startMultiDrag, moveMultiDrag, endMultiDrag, isMultiDragging, getMultiDragPositionText, multiDragState } =
+      useMultiDrag()
 
     const computedSelectState = computed(() => {
       if (multiSelectedStates.value.length === 1) {
@@ -129,6 +142,15 @@ export default {
       const { clientX, clientY } = event
       const element = getElement(event.target)
       closeMenu()
+
+      if (!element) return
+
+      // 优先处理右键菜单
+      if (event.button === 2) {
+        openMenu(event)
+        return
+      }
+
       let node = getCurrent().schema
 
       if (element) {
@@ -144,15 +166,17 @@ export default {
           }
         }
 
-        if (event.button === 0 && element !== element.ownerDocument.body) {
-          const { x, y } = element.getBoundingClientRect()
-
-          dragStart(node, element, { offsetX: clientX - x, offsetY: clientY - y })
+        // 处理多选拖拽开始 - 确保在单节点拖拽之前处理
+        if (startMultiDrag(event, element)) {
+          return
         }
 
-        // 如果是点击右键则打开右键菜单
-        if (event.button === 2) {
-          openMenu(event)
+        // 处理单节点拖拽开始
+        if (event.button === 0 && element !== element.ownerDocument.body) {
+          const { x, y } = element.getBoundingClientRect()
+          if (multiStateLength.value === 1) {
+            dragStart(node, element, { offsetX: clientX - x, offsetY: clientY - y })
+          }
         }
       }
     }
@@ -206,9 +230,10 @@ export default {
         const doc = iframe.value.contentDocument
         const win = iframe.value.contentWindow
 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         let isScrolling = false
 
-        // 以下是内部iframe监听的事件
+        // 监听鼠标按下事件
         win.addEventListener('mousedown', (event) => {
           handleCanvasEvent(() => {
             // html元素使用scroll和mouseup事件处理
@@ -221,6 +246,8 @@ export default {
             if (!element) {
               return
             }
+
+            isMouseDown.value = true
 
             insertPosition.value = false
             insertContainer.value = false
@@ -235,32 +262,49 @@ export default {
           isScrolling = true
         })
 
-        win.addEventListener('mouseup', (event) => {
-          if (event.target !== doc.documentElement || isScrolling) {
-            return
-          }
-
-          insertPosition.value = false
-          insertContainer.value = false
-          setCurrentNode(event)
-          target.value = event.target
+        // 监听鼠标移动事件
+        win.addEventListener('mousemove', (ev) => {
+          handleCanvasEvent(() => {
+            // 优先处理多选拖拽移动
+            if (!moveMultiDrag(ev)) {
+              // 如果不是多选拖拽，则处理普通拖拽
+              dragMove(ev, true)
+            }
+          })
         })
 
+        // 监听拖拽结束事件
+        win.addEventListener('mouseup', (ev) => {
+          handleCanvasEvent(() => {
+            if (ev.button === 0 && isMouseDown.value) {
+              isMouseDown.value = false
+            }
+
+            // 优先处理多选拖拽结束
+            if (!endMultiDrag()) {
+              // 如果不是多选拖拽，则处理普通拖拽结束
+              onMouseUp(ev)
+            }
+          })
+        })
+
+        // 监听拖拽过程事件
         win.addEventListener('dragover', (ev) => {
           ev.dataTransfer.dropEffect = 'move'
           ev.preventDefault()
-          dragMove(ev)
+          // 优先处理多选拖拽移动
+          if (!moveMultiDrag(ev)) {
+            dragMove(ev)
+          }
         })
 
+        // 监听放置事件
         win.addEventListener('drop', (ev) => {
           ev.preventDefault()
-          onMouseUp(ev)
-        })
-
-        win.addEventListener('mousemove', (ev) => {
-          handleCanvasEvent(() => {
-            dragMove(ev, true)
-          })
+          // 优先处理多选拖拽结束
+          if (!endMultiDrag()) {
+            onMouseUp(ev)
+          }
         })
 
         // 阻止浏览器默认的右键菜单功能
@@ -327,6 +371,7 @@ export default {
     document.addEventListener('canvasReady', canvasReady)
 
     return {
+      isMouseDown,
       iframe,
       dragState,
       hoverState,
@@ -347,7 +392,10 @@ export default {
       insertPosition,
       insertContainer,
       loading,
-      srcAttrName
+      srcAttrName,
+      isMultiDragging,
+      multiDragState,
+      getMultiDragPositionText
     }
   }
 }

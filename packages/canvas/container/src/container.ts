@@ -47,7 +47,7 @@ export const POSITION = Object.freeze({
   OUT: 'out'
 })
 
-const initialDragState = {
+export const initialDragState = {
   keydown: false,
   draging: false,
   data: null as Node | null,

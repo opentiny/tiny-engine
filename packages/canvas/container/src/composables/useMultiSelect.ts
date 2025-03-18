@@ -18,6 +18,9 @@ export interface MultiSelectedState {
 const multiSelectedStates = ref<MultiSelectedState[]>([])
 
 export const useMultiSelect = () => {
+
+  const isMouseDown = ref(false)
+
   /**
    * 添加state到多选列表
    * @param selectState
@@ -32,8 +35,8 @@ export const useMultiSelect = () => {
     // 多选
     if (isMultiple) {
       const isExistNode = multiSelectedStates.value.some((state) => state.id === selectState.id)
-      // 如果多选列表已经存在选中的state，则将选中的state移出多选列表
-      if (isExistNode) {
+      // 如果多选列表已经存在选中的state且鼠标抬起，则将选中的state移出多选列表
+      if (isExistNode && !isMouseDown.value) {
         multiSelectedStates.value = multiSelectedStates.value.filter((state) => state.id !== selectState.id)
       } else {
         multiSelectedStates.value = multiSelectedStates.value.concat(selectState)
@@ -71,6 +74,7 @@ export const useMultiSelect = () => {
 
   return {
     multiSelectedStates,
+    isMouseDown,
     toggleMultiSelection,
     refreshSelectionState,
     clearMultiSelection
