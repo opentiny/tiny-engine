@@ -76,7 +76,7 @@
       <div class="left-panel-wrap">
         <keep-alive>
           <component
-            :is="components[renderPanel]"
+            :is="currentComponent"
             ref="pluginRef"
             :fixed-panels="pluginState.fixedPanels"
             @close="close"
@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import { reactive, ref, watch } from 'vue'
+import { reactive, ref, watch, computed } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
 import { VueDraggableNext } from 'vue-draggable-next'
 import { useLayout, usePage, useModal, META_APP } from '@opentiny/tiny-engine-meta-register'
@@ -174,6 +174,11 @@ export default {
     props.pluginList.forEach(({ id, entry, icon }) => {
       components[id] = entry
       iconComponents[id] = icon
+    })
+
+    const currentComponent = computed(() => {
+      const isExistedComponent = state.topNavLists.some((item) => item.id === props.renderPanel)
+      return isExistedComponent ? components[props.renderPanel] : null
     })
 
     const clickMenu = ({ item, index }) => {
@@ -267,6 +272,7 @@ export default {
     }
 
     return {
+      currentComponent,
       changeAlign,
       rightMenu,
       PLUGIN_POSITION,

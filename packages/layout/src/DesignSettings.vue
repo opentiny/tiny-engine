@@ -8,7 +8,7 @@
     >
       <div class="right-panel-wrap">
         <component
-          :is="components[renderPanel]"
+          :is="currentComponent"
           :fixed-panels="rightFixedPanelsStorage"
           @close="close"
           @fixPanel="fixPanel"
@@ -105,6 +105,11 @@ export default {
 
     const settingPlugins = ref(getPluginsByPosition(PLUGIN_POSITION.rightTop, props.pluginList))
 
+    const currentComponent = computed(() => {
+      const isExistedComponent = settingPlugins.value.some((item) => item.id === renderPanel.value)
+      return isExistedComponent ? components[renderPanel.value] : null
+    })
+
     const close = () => {
       useLayout().closeSetting(true)
     }
@@ -158,6 +163,7 @@ export default {
     const showMask = ref(true)
 
     return {
+      currentComponent,
       changeAlign,
       showMask,
       activating,
