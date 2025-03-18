@@ -5,7 +5,6 @@
     :fixedPanels="fixedPanels"
     :docsUrl="docsUrl"
     :isShowDocsIcon="true"
-    :isCloseLeft="false"
     @close="$emit('close')"
     class="plugin-page-js-container plugin-script"
   >

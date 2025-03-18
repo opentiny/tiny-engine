@@ -4,7 +4,6 @@
     class="plugin-bridge"
     :fixed-name="PLUGIN_NAME.Bridge"
     :fixedPanels="fixedPanels"
-    :isCloseLeft="false"
     @close="closePanel"
   >
     <template #header>

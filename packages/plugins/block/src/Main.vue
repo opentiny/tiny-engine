@@ -6,8 +6,7 @@
     :fixedPanels="fixedPanels"
     :docsUrl="docsUrl"
     :isShowDocsIcon="true"
-    :isCloseLeft="false"
-    @close="closePanel"
+    @close="close"
   >
     <template #header>
       <svg-button name="add-page" placement="bottom" tips="新建区块" @click="openBlockAdd"></svg-button>
@@ -222,6 +221,7 @@ export default {
       type: Array
     }
   },
+  emits: ['close'],
   setup(props, { emit }) {
     const docsUrl = useHelp().getDocsUrl('block')
     const { getBlockList, sort } = useBlock()
@@ -316,15 +316,15 @@ export default {
     }
     const close = () => {
       boxVisibility.value = false
+      emit('close')
+      closePanel()
     }
+
     const editBlock = async (block) => {
       const isEdit = true
 
       if (isSaved()) {
         await refreshBlockData(block)
-        useBlock().initBlock(block, {}, isEdit)
-        useLayout().closePlugin()
-        closePanel()
         getMetaApi(META_SERVICE.GlobalService).updateBlockId(block.id)
       } else {
         confirm({
@@ -332,8 +332,6 @@ export default {
           exec: async () => {
             await refreshBlockData(block)
             useBlock().initBlock(block, {}, isEdit)
-            useLayout().closePlugin()
-            closePanel()
           }
         })
       }

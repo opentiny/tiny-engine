@@ -79,6 +79,7 @@ export default {
       type: Array
     }
   },
+  emits: ['close'],
   setup(props, { emit }) {
     const { confirm } = useModal()
     const { pageState } = useCanvas()
@@ -187,6 +188,7 @@ export default {
     provide('openSettingPanel', openSettingPanel)
 
     const pluginPanelClosed = () => {
+      emit('close')
       closePageSettingPanel()
       closeFolderSettingPanel()
     }

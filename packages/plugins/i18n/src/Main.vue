@@ -6,7 +6,6 @@
     :fixedPanels="fixedPanels"
     :docsUrl="docsUrl"
     :isShowDocsIcon="true"
-    :isCloseLeft="false"
   >
     <template #content>
       <div class="language-search-box">

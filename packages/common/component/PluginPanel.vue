@@ -111,8 +111,6 @@ export default {
   emits: ['close', 'updateCollapseStatus'],
   setup(props, { emit }) {
     const closePanel = () => {
-      useLayout().closePlugin()
-
       emit('close')
     }
 
