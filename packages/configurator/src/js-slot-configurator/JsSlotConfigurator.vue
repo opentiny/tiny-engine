@@ -39,7 +39,7 @@ import { ref, inject, watchEffect, reactive } from 'vue'
 import { Input, Tooltip, Form, FormItem } from '@opentiny/vue'
 import { useProperties, useCanvas, useModal } from '@opentiny/tiny-engine-meta-register'
 import SvgICons from '@opentiny/vue-icon'
-import { verifyJsVarName } from '@opentiny/tiny-engine-common/js/verification'
+import { verifyJsVarSymbolName } from '@opentiny/tiny-engine-common/js/verification'
 
 export default {
   components: {
@@ -87,7 +87,7 @@ export default {
     const paramsPropPath = (index) => `${index}.params`
 
     const paramsStringValidator = (rule, value, callback) => {
-      if (value && value !== '$rowIndex' && value.split(',').some((param) => !verifyJsVarName(param))) {
+      if (value && value.split(',').some((param) => !verifyJsVarSymbolName(param))) {
         callback(new Error('仅支持JavaScript中有效的变量名'))
       } else {
         callback()
