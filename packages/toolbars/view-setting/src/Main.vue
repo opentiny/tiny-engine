@@ -8,7 +8,7 @@
   </toolbar-base>
 </template>
 
-<script>
+<script lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useBroadcastChannel } from '@vueuse/core'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
@@ -18,13 +18,13 @@ import { constants } from '@opentiny/tiny-engine-utils'
 const { BROADCAST_CHANNEL, CANVAS_ROUTER_VIEW_SETTING_VIEW_MODE_KEY } = constants
 
 function getCacheValue() {
-  const value = localStorage.getItem(CANVAS_ROUTER_VIEW_SETTING_VIEW_MODE_KEY)
+  const value = localStorage.getItem(CANVAS_ROUTER_VIEW_SETTING_VIEW_MODE_KEY) || ''
   if (!['embedded', 'standalone'].includes(value)) {
     return 'embedded'
   }
   return value
 }
-function setCacheValue(value) {
+function setCacheValue(value: string) {
   localStorage.setItem(CANVAS_ROUTER_VIEW_SETTING_VIEW_MODE_KEY, value)
 }
 

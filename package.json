@@ -42,7 +42,7 @@
     "mysql": "^2.18.1",
     "picocolors": "^1.0.0",
     "prettier": "^2.7.1",
-    "typescript": "~5.5.0"
+    "typescript": "~5.4.2"
   },
   "browserslist": [
     "> 1%",

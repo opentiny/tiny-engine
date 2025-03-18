@@ -5,7 +5,7 @@
   </div>
 </template>
 
-<script lang="jsx">
+<script lang="tsx">
 import { ref, watch } from 'vue'
 import { useCanvas, useLayout, useModal } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'

@@ -21,7 +21,7 @@ const getBaseInfo = () => {
 }
 
 const initialState = {
-  userInfo: null,
+  userInfo: null as any,
   // 当前应用
   appInfo: {
     id: '',
@@ -39,7 +39,7 @@ const initialState = {
     editor_url: ''
   },
   // 应用列表
-  appList: []
+  appList: [] as any[]
 }
 
 const getUserInfo = () => {

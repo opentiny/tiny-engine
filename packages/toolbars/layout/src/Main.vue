@@ -9,14 +9,14 @@
   </span>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive } from 'vue'
 
 export default {
   emits: ['click'],
   setup(props, { emit }) {
     const state = reactive({
-      arrActive: [],
+      arrActive: [] as any[],
       media: [
         {
           action: 'toggleLeftColumn',
@@ -29,7 +29,7 @@ export default {
       ]
     })
 
-    const togglePanel = (item, index) => {
+    const togglePanel = (item: any, index: any) => {
       const curIndex = state.arrActive.indexOf(index)
 
       if (curIndex > -1) {

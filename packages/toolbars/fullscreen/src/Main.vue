@@ -8,7 +8,7 @@
   </toolbar-base>
 </template>
 
-<script>
+<script lang="ts">
 import { ref } from 'vue'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 

@@ -9,7 +9,7 @@
   </toolbar-base>
 </template>
 
-<script>
+<script lang="ts">
 import { computed, reactive } from 'vue'
 import { useCanvas, useLayout, useBlock, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
@@ -18,24 +18,24 @@ import { requestBlockPage } from './http'
 
 const { COMPONENT_NAME, PAGE_STATUS } = constants
 
-const componentType = {
+const componentType: Record<string, any> = {
   block: '区块',
   page: '页面'
 }
 
 const statusMessageMap = {
   [PAGE_STATUS.Release]: {
-    message: (type) => `${componentType[type]}解锁成功！`,
+    message: (type: string) => `${componentType[type]}解锁成功！`,
     currentOptName: '解锁',
     nextOptName: '锁定'
   },
   [PAGE_STATUS.Lock]: {
-    message: (type) => `${componentType[type]}解锁成功！`,
+    message: (type: string) => `${componentType[type]}解锁成功！`,
     currentOptName: '解锁',
     nextOptName: '解锁'
   },
   [PAGE_STATUS.Occupy]: {
-    message: (type) => `${componentType[type]}锁定成功`,
+    message: (type: string) => `${componentType[type]}锁定成功`,
     currentOptName: '锁定',
     nextOptName: '解锁'
   }
@@ -74,9 +74,9 @@ export default {
       }
     })
 
-    const lockPage = (id, type, newState) => {
+    const lockPage = (id: any, type: string, newState: string) => {
       requestBlockPage(`id=${id}&state=${newState}&type=${type}`)
-        .then((data) => {
+        .then((data: { operate: string }) => {
           if (data?.operate === 'success') {
             useNotify({
               type: 'success',
@@ -91,7 +91,7 @@ export default {
             })
           }
         })
-        .catch((error) => {
+        .catch((error: { message: any }) => {
           useNotify({
             type: 'error',
             title: `页面${statusMessageMap[newState].currentOptName}失败`,

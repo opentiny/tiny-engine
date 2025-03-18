@@ -33,7 +33,7 @@
   </toolbar-base>
 </template>
 
-<script>
+<script lang="ts">
 import { Popover } from '@opentiny/vue'
 import { useHistory } from '@opentiny/tiny-engine-meta-register'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'

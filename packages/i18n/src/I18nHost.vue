@@ -2,7 +2,7 @@
   <slot></slot>
 </template>
 
-<script>
+<script lang="ts">
 import { provide, watch, watchEffect } from 'vue'
 import { I18nInjectionKey } from 'vue-i18n'
 import i18n from './i18n'

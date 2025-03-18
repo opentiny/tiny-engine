@@ -71,7 +71,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, ref, watch } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
 import { useLayout, usePage, useModal, META_APP } from '@opentiny/tiny-engine-meta-register'
@@ -97,9 +97,9 @@ export default {
   },
   emits: ['click', 'node-click'],
   setup(props, { emit }) {
-    const components = {}
-    const iconComponents = {}
-    const pluginRef = ref(null)
+    const components: any = {}
+    const iconComponents: any = {}
+    const pluginRef = ref<any>(null)
     const { isTemporaryPage } = usePage()
     const { message } = useModal()
     const pluginState = useLayout().getPluginState()

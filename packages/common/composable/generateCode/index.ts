@@ -61,7 +61,7 @@ const getAllNestedBlocksSchema = async (pageSchema: any, fetchBlockSchemaApi: an
     }
 
     const historyId = blockItem?.current_history
-    const historySchema = blockItem?.histories?.find?.((historyItem) => historyItem?.id === historyId)
+    const historySchema = blockItem?.histories?.find?.((historyItem: any) => historyItem?.id === historyId)
 
     let schemaContent = null
 

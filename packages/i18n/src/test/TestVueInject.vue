@@ -4,7 +4,7 @@
   <hr />
 </template>
 
-<script>
+<script lang="ts">
 import { inject } from 'vue'
 import { I18nInjectionKey } from 'vue-i18n'
 
@@ -12,7 +12,7 @@ export default {
   setup() {
     const {
       global: { t }
-    } = inject(I18nInjectionKey)
+    } = inject<any>(I18nInjectionKey)
 
     return { t }
   }

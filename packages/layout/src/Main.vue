@@ -25,7 +25,7 @@
   </component>
 </template>
 
-<script>
+<script lang="ts">
 import { useLayout, getMergeRegistry } from '@opentiny/tiny-engine-meta-register'
 import DesignToolbars from './DesignToolbars.vue'
 import DesignPlugins from './DesignPlugins.vue'
@@ -46,7 +46,8 @@ export default {
   },
   props: {
     registry: {
-      type: Object
+      type: Object,
+      default: () => ({})
     }
   },
   setup() {

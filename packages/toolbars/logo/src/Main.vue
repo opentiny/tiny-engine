@@ -101,7 +101,7 @@
   </toolbar-base>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, reactive, ref, nextTick, onUnmounted, defineProps } from 'vue'
 import {
   DialogBox as TinyDialogBox,
@@ -132,7 +132,7 @@ const IconHelp = iconHelpCircle()
 
 const globalState = getMetaApi(META_SERVICE.GlobalService).getState()
 
-const state = reactive({
+const state: any = reactive({
   hoverState: false,
   showMenu: false,
   show: false,
@@ -154,16 +154,16 @@ const state = reactive({
 
 const tipBoxVisibility = ref(false)
 const tipText = ref('发布成功')
-const form = ref(null)
+const form = ref<any>(null)
 const menus = ref(
   getMergeMeta('engine.config')?.dslMode === 'Angular' ? [] : [{ name: '应用发布', code: 'publishApp', icon: 'news' }]
 )
 
-const repalceTrim = (e) => {
+const repalceTrim = (e: any) => {
   const val = e.target.value.replaceAll(/^\s*/g, '')
   state.formData.commitMsg = val
 }
-const getTargetUrl = (centerName) => {
+const getTargetUrl = (centerName: string) => {
   return `/#/${centerName}/`
 }
 
@@ -190,7 +190,7 @@ const actions = {
   publishApp() {
     state.show = true
     const data = localStorage.getItem('tinyengine_publishMsg')
-      ? JSON.parse(localStorage.getItem('tinyengine_publishMsg'))
+      ? JSON.parse(localStorage.getItem('tinyengine_publishMsg')!)
       : ''
     if (data) {
       state.formData.branch = data.branch
@@ -214,7 +214,7 @@ const actions = {
 const confirm = () => {
   const appId = globalState.appInfo.id
 
-  form.value.validate((valid) => {
+  form.value?.validate((valid: any) => {
     if (valid) {
       if (!state.showPreview) {
         const loading = Loading.service({
@@ -225,7 +225,7 @@ const confirm = () => {
         })
         getMetaApi(META_SERVICE.Http)
           .get(`/app-center/api/apps/save/${appId}?version=${state.formData.version}`)
-          .then((data) => {
+          .then((data: any) => {
             state.show = false
             loading.close()
             if (data) {
@@ -255,7 +255,7 @@ const confirm = () => {
         localStorage.setItem('tinyengine_publishMsg', JSON.stringify(postData))
         getMetaApi(META_SERVICE.Http)
           .post(`/app-center/api/apps/publish/${appId}`, postData)
-          .then((data) => {
+          .then((data: { code: number; error: { message: string } }) => {
             if (data.code === 200) {
               tipText.value = '发布成功'
             } else {
@@ -271,7 +271,7 @@ const confirm = () => {
               tipBoxVisibility.value = false
             }, 5000)
           })
-          .catch((err) => {
+          .catch((err: { error: { message: string } }) => {
             loadingInstance.close()
             tipText.value = err?.error?.message || '发布失败，请重新发布'
             nextTick(() => {

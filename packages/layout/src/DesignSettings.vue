@@ -14,7 +14,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { computed, provide, ref } from 'vue'
 import { Tabs, TabItem, Tooltip } from '@opentiny/vue'
 import { useLayout } from '@opentiny/tiny-engine-meta-register'
