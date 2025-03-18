@@ -42,7 +42,7 @@ import {
   Button as TinyButton,
   DialogBox as TinyDialogBox
 } from '@opentiny/vue'
-import { checkEvent } from '../commonjs/events.js'
+import { checkEvent } from '../commonjs/events'
 
 const props = defineProps({
   visible: {

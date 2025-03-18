@@ -10,15 +10,22 @@
  *
  */
 
-import * as configurator from '@opentiny/tiny-engine-configurator'
-const widgets = {}
-const widgetNames = []
+import { defineConfig } from 'vite'
+import path from 'path'
 
-Object.keys(configurator).forEach((name) => {
-  widgets[name] = configurator[name]
-  widgetNames.push({ label: name, value: name })
+// https://vitejs.dev/config/
+export default defineConfig({
+  publicDir: false,
+  resolve: {},
+  build: {
+    lib: {
+      entry: path.resolve(__dirname, './src/index.ts'),
+      name: 'utils',
+      fileName: (_format, entryName) => `${entryName}.js`,
+      formats: ['es']
+    },
+    rollupOptions: {
+      external: ['vue', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/]
+    }
+  }
 })
-
-export default widgets
-
-export { widgetNames }

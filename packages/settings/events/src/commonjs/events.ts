@@ -181,9 +181,9 @@ const allEvents = [
   'onwheel'
 ]
 
-export const checkEvent = (event) => {
+export const checkEvent = (event: string) => {
   const checkEventList = allEvents.map((e) => {
-    let three = e[2].toUpperCase()
+    const three = e[2].toUpperCase()
     return `${e.substring(0, 2)}${three}${e.substring(3)}`
   })
   if (!checkEventList.includes(event)) {

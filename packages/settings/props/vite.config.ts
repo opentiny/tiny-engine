@@ -11,20 +11,21 @@
  */
 
 import { defineConfig } from 'vite'
-import path from 'node:path'
+import path from 'path'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import generateComment from '@opentiny/tiny-engine-vite-plugin-meta-comments'
 
-/** @type {import('vite').UserConfig} */
+// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [generateComment(), vue(), vueJsx()],
   publicDir: false,
   resolve: {},
   build: {
     lib: {
-      entry: path.resolve(__dirname, './index.js'),
-      fileName: () => 'index.js',
+      entry: path.resolve(__dirname, './index.ts'),
+      name: 'setting-props',
+      fileName: (_format, entryName) => `${entryName}.js`,
       formats: ['es']
     },
     rollupOptions: {

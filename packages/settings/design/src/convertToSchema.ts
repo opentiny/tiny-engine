@@ -41,7 +41,7 @@ const results = {
   events: {}
 }
 
-const widgetMap = {
+const widgetMap: Record<string, string> = {
   object: 'CodeConfigurator',
   array: 'CodeConfigurator',
   enum: 'SelectConfigurator',
@@ -50,7 +50,7 @@ const widgetMap = {
   boolean: 'SwitchConfigurator'
 }
 
-function getWidgetCompoent(value) {
+function getWidgetCompoent(value: any) {
   let componentType = ''
   if (Array.isArray(value.type)) {
     if (value.type.includes('object') || value.type.includes('array')) {
@@ -64,10 +64,10 @@ function getWidgetCompoent(value) {
     componentType = value.type
   }
 
-  const props = {}
+  const props: any = {}
   if (value.enum) {
     props.options = []
-    value.enum.forEach((item, index) => {
+    value.enum.forEach((item: any, index: string | number) => {
       props.options.push({
         label: value.enumNames[index],
         value: item

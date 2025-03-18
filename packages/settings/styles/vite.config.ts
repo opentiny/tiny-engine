@@ -12,19 +12,26 @@
 
 import { defineConfig } from 'vite'
 import path from 'path'
+import vue from '@vitejs/plugin-vue'
+import vueJsx from '@vitejs/plugin-vue-jsx'
+import generateComment from '@opentiny/tiny-engine-vite-plugin-meta-comments'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  plugins: [generateComment(), vue(), vueJsx()],
   publicDir: false,
   resolve: {},
   build: {
     lib: {
-      entry: path.resolve(__dirname, './src/index.js'),
-      name: 'utils',
-      fileName: () => 'index.js',
+      entry: path.resolve(__dirname, './index.ts'),
+      name: 'setting-styles',
+      fileName: (_format, entryName) => `${entryName}.js`,
       formats: ['es']
     },
     rollupOptions: {
+      output: {
+        banner: 'import "./style.css"'
+      },
       external: ['vue', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/]
     }
   }

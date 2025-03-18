@@ -18,7 +18,7 @@ import JSZIP from 'jszip'
  * @param {Blob} blobData 文件二进制数据
  * @param {string} fileName 文件名
  */
-export function saveAs(blobData, fileName) {
+export function saveAs(blobData: Blob | MediaSource, fileName: string) {
   const downloadLink = document.createElement('a')
   downloadLink.download = fileName
   downloadLink.style.display = 'none'
@@ -44,7 +44,7 @@ export const createZip = () => {
  *  {string} zipName 打出来的zip名称
  *  {JSZIP} zipHandle 创建好的zip句柄，可以不传，不传就用新的
  */
-export const writeZip = (filesInfo, { zipHandle, zipName } = {}) => {
+export const writeZip = (filesInfo: Array<any>, { zipHandle, zipName }: any = {}) => {
   let zip = zipHandle
   if (!zipHandle) {
     zip = createZip()
@@ -60,7 +60,7 @@ export const writeZip = (filesInfo, { zipHandle, zipName } = {}) => {
     }
   })
   // 把打包的内容异步转成blob二进制格式
-  return zip.generateAsync({ type: 'blob' }).then((content) => {
+  return zip.generateAsync({ type: 'blob' }).then((content: Blob | MediaSource) => {
     // content就是blob数据
     saveAs(content, `${zipName}.zip`)
   })

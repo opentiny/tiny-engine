@@ -58,12 +58,12 @@ const getCurrentClassSelector = () => {
 }
 
 // 根据当前选中的组件，随机生成一个 css 类名
-export const genRandomClassNames = (componentName) => {
+export const genRandomClassNames = (componentName: any) => {
   return `.${componentName}-${generateRandomLetters(5)}`.toLowerCase()
 }
 
-const getPropsFromExpression = (propValue) => {
-  let res = []
+const getPropsFromExpression = (propValue: { value: string }) => {
+  let res: any[] = []
 
   try {
     const expressRes = parseExpression(propValue?.value)
@@ -93,12 +93,12 @@ const getPropsFromExpression = (propValue) => {
   return res
 }
 
-const parseClassOrIdProps = (propValue) => {
+const parseClassOrIdProps = (propValue: any) => {
   if (typeof propValue === 'string' && propValue) {
     return propValue.split(' ').filter(Boolean)
   }
 
-  let res = []
+  const res = []
 
   if (propValue?.type === EXPRESSION_TYPE.JS_EXPRESSION) {
     return getPropsFromExpression(propValue)
@@ -107,9 +107,9 @@ const parseClassOrIdProps = (propValue) => {
   return res
 }
 
-const getClassNameAndIdList = (schema) => {
-  let classNameList = []
-  let idList = []
+const getClassNameAndIdList = (schema: { props: { className: any; id: any } }) => {
+  let classNameList: any[] = []
+  let idList: any[] = []
 
   if (!schema) {
     return {
@@ -257,14 +257,14 @@ export const initStylePanelWatch = () => {
   )
 }
 
-export const updateGlobalStyleStr = (styleStr) => {
+export const updateGlobalStyleStr = (styleStr: string) => {
   const { updateSchema } = useCanvas()
 
   updateSchema({ css: styleStr })
   state.schemaUpdateKey++
 }
 
-const updateGlobalStyle = (newSelector) => {
+const updateGlobalStyle = (newSelector: string) => {
   let currentSelector = getCurrentClassSelector()
 
   const mouseState = state.className.mouseState
@@ -292,7 +292,7 @@ const updateGlobalStyle = (newSelector) => {
 }
 
 // 更新 style 对象到 schema
-const updateStyle = (properties) => {
+const updateStyle = (properties: any) => {
   const { canvasApi, getSchema: getCanvasPageSchema } = useCanvas()
   const { getSchema } = useProps()
   const { addHistory } = useHistory()
@@ -352,7 +352,7 @@ export default () => {
   }
 }
 
-const getTextOfValue = (value) => {
+const getTextOfValue = (value: string) => {
   const basicValueMap = {
     auto: 'auto',
     none: 'none'
@@ -399,10 +399,10 @@ export const useProperties = ({ names, parseNumber }) => {
     return newProperties
   })
 
-  const getProperty = (styleName) => properties.value[styleName]
-  const getSettingFlag = (styleName) => Boolean(properties.value[styleName]?.setting)
-  const getPropertyText = (styleName) => properties.value[styleName]?.text
-  const getPropertyValue = (styleName) => properties.value[styleName]?.value
+  const getProperty = (styleName: string) => properties.value[styleName]
+  const getSettingFlag = (styleName: string) => Boolean(properties.value[styleName]?.setting)
+  const getPropertyText = (styleName: string) => properties.value[styleName]?.text
+  const getPropertyValue = (styleName: string) => properties.value[styleName]?.value
 
   return {
     properties,

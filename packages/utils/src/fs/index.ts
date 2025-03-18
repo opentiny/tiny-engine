@@ -39,7 +39,7 @@ export const getUserBaseDirHandle = async (options = {}) => {
  * @param {boolean} create true:不存在则创建
  * @returns dirHandle | null
  */
-export async function getDirectoryHandle(baseDirHandle, pathArr = [], { create = false } = {}) {
+export async function getDirectoryHandle(baseDirHandle: any, pathArr: string[] = [], { create = false } = {}) {
   if (!baseDirHandle) {
     return null
   }
@@ -61,7 +61,7 @@ export async function getDirectoryHandle(baseDirHandle, pathArr = [], { create =
  *        {boolean} create true:不存在则创建
  * @returns fileHandle | null
  */
-export async function getFileHandle(baseDirHandle, filePath, { create = false } = {}) {
+export async function getFileHandle(baseDirHandle: any, filePath: string, { create = false } = {}) {
   if (!baseDirHandle || !filePath) {
     return null
   }
@@ -94,7 +94,7 @@ export const getUserFileHandle = async (options = {}) => {
  * @param {*} filePath 文件相对路径(相对根目录)
  * @return {string} 文件内容
  */
-export const readFile = async (baseDirHandle, filePath) => {
+export const readFile = async (baseDirHandle: any, filePath: any): Promise<string | undefined> => {
   if (!baseDirHandle || !filePath) {
     return undefined
   }
@@ -114,7 +114,7 @@ export const readFile = async (baseDirHandle, filePath) => {
  *          Handle.type 类型  'file' | 'directory'
  *          Handle.name 名称
  */
-export const readDir = async (baseDirHandle, dirPath) => {
+export const readDir = async (baseDirHandle: any, dirPath: string): Promise<any[] | undefined> => {
   let dirHandle = baseDirHandle
   if (!baseDirHandle) {
     return undefined
@@ -140,7 +140,7 @@ export const readDir = async (baseDirHandle, dirPath) => {
  *        {string} filePath 文件相对路径(相对根目录)
  *        {string} fileContent 文件内容
  */
-export const writeFile = async (handle, { filePath, fileContent }) => {
+export const writeFile = async (handle: any, { filePath, fileContent }) => {
   let directoryHandle = null
   let fileHandle = null
   let fileName
@@ -176,10 +176,10 @@ export const writeFile = async (handle, { filePath, fileContent }) => {
  *
  */
 export const writeFiles = async (
-  baseDirHandle,
-  filesInfo,
+  baseDirHandle: any,
+  filesInfo: Array<any>,
   zipName = 'tiny-engine-generate-code',
-  supportZipCache = false
+  supportZipCache: boolean = false
 ) => {
   if (!filesInfo?.length) {
     return

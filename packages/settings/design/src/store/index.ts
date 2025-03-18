@@ -14,8 +14,8 @@ import { reactive } from 'vue'
 import meta from '../properties'
 import schemas from '../schemas'
 
-const genTreeData = (properties, keys = []) => {
-  const treeData = []
+const genTreeData = (properties: any[], keys: string[] = []) => {
+  const treeData: any[] = []
 
   Object.entries(properties).forEach(([propertyName, property]) => {
     if (property?.properties) {
@@ -153,7 +153,7 @@ export const DEFAULT_INIT_PROPERTIES = [
   }
 ]
 
-export const removeGroup = (group) => {
+export const removeGroup = (group: any) => {
   if (!group) {
     return
   }
@@ -167,7 +167,7 @@ export const removeGroup = (group) => {
   }
 }
 
-export const addGroup = (index) => {
+export const addGroup = (index: number) => {
   const length = store.currentSchema.length
 
   const group = {
@@ -185,7 +185,7 @@ export const addGroup = (index) => {
   return group
 }
 
-export const addProperty = (group, prop, index = 0) => {
+export const addProperty = (group: { content: any[] }, prop: string | number, index = 0) => {
   const typeMap = {
     string: 'InputConfigurator',
     boolean: 'SwitchConfigurator',
@@ -231,7 +231,7 @@ export const removeProperty = () => {
   }
 }
 
-export const setCurrentGroup = (group) => {
+export const setCurrentGroup = (group: any) => {
   store.currentGroup = group
 }
 
@@ -239,7 +239,7 @@ export const setCurrentGroup = (group) => {
  * 设置当前选中属性，同时将property 更新为当前属性的元数据
  * @param {*} property
  */
-export const setCurrentProperty = (property) => {
+export const setCurrentProperty = (property: any) => {
   if (property === store.currentProperty) {
     return
   }
@@ -250,7 +250,7 @@ export const setCurrentProperty = (property) => {
   setCurrentGroup(findParent({ content: store.currentSchema }, property))
 }
 
-export const getSchemaByComponetName = (name) => {
+export const getSchemaByComponetName = (name: string) => {
   schemas[name] = schemas[name] || {
     component: 'text',
     icon: 'IconText',

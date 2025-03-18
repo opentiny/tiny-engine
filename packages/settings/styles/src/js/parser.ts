@@ -1,6 +1,6 @@
 import postcss from 'postcss'
 
-const handleRules = (node) => {
+const handleRules = (node: any) => {
   const declarations = node.nodes || []
   const style = {}
   let selectors = node.selectors || ''
@@ -31,7 +31,7 @@ const handleRules = (node) => {
   }
 }
 
-const handleAtRules = (node) => {
+const handleAtRules = (node: any) => {
   // 这里我们不处理 at rules(如 @media、@keyframe 等规则), 直接转换成字符串
   const { source = {}, type } = node
   const { start, end, input } = source
@@ -47,7 +47,7 @@ const handleAtRules = (node) => {
   }
 }
 
-const handleComments = (node) => {
+const handleComments = (node: { type: any; text: any }) => {
   const { type, text } = node
 
   return {
@@ -70,7 +70,7 @@ const nodeHandlerMap = {
  * @param {string} css css 字符串
  * @returns
  */
-export const parser = (css) => {
+export const parser = (css: string) => {
   const parseList = []
   const selectors = []
   const styleObject = {}
@@ -146,8 +146,8 @@ export const parser = (css) => {
  * @param {string} selector
  * @returns
  */
-export const getSelectorArr = (selector) => {
-  const res = []
+export const getSelectorArr = (selector: string) => {
+  const res: string[] = []
 
   if (!selector || typeof selector !== 'string') {
     return res
@@ -204,14 +204,14 @@ const getFinalSelector = (config = {}) => {
 
 /**
  * 序列化对象成 css 字符串
- * @param {object} originParseList 原解析对象
- * @param {object} styleObject 可能被编辑过的 styleobject
- * @param {object} config 配置，可以配置替换制定选择器
+ * @param {any} originParseList 原解析对象
+ * @param {any} styleObject 可能被编辑过的 styleobject
+ * @param {any} config 配置，可以配置替换制定选择器
  * @returns string
  */
-export const stringify = (originParseList, styleObject, config = {}) => {
+export const stringify = (originParseList: any, styleObject: any, config: any = {}) => {
   let str = ''
-  const originSelectors = []
+  const originSelectors: any[] = []
   // 配置需要替换的选择器
   const { originSelector, newSelector } = config
 

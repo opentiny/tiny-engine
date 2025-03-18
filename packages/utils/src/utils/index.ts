@@ -21,7 +21,7 @@ export const fun_ctor = Function
  * @param {object} context 调用的上下文
  * @returns any
  */
-export function parseExpression(rawCode, context = {}) {
+export function parseExpression(rawCode: any, context = {}) {
   try {
     return fun_ctor(`return (${rawCode})`).call(context)
   } catch (error) {
@@ -37,7 +37,7 @@ export function parseExpression(rawCode, context = {}) {
  * @param {object} context 需要绑定的函数上下文
  * @returns Function
  */
-export function parseFunction(rawCode, context = {}) {
+export function parseFunction(rawCode: any, context = {}) {
   try {
     return fun_ctor(`return (${rawCode})`).call(context).bind(context)
   } catch (error) {
@@ -54,7 +54,7 @@ export function parseFunction(rawCode, context = {}) {
  * @param {string} value 字符串
  * @returns escape  之后的字符串
  */
-export const escapeRegExp = (value) => {
+export const escapeRegExp = (value: string) => {
   const reg = /[\\^$.*+?()[\]{}|]/g
   const str = String(value)
 
@@ -63,16 +63,16 @@ export const escapeRegExp = (value) => {
 
 // prefer old unicode hacks for backward compatibility
 // https://base64.guru/developers/javascript/examples/unicode-strings
-export const utoa = (string) => btoa(unescape(encodeURIComponent(string)))
+export const utoa = (string: string) => btoa(unescape(encodeURIComponent(string)))
 
-export const atou = (base64) => decodeURIComponent(escape(atob(base64)))
+export const atou = (base64: string) => decodeURIComponent(escape(atob(base64)))
 
 /**
  * Create a cached version of a pure function.
  */
-function cached(fn) {
+function cached(fn: any) {
   const cache = Object.create(null)
-  return function cachedFn(str) {
+  return function cachedFn(str: string) {
     if (!cache[str]) {
       cache[str] = fn(str)
     }
@@ -84,7 +84,7 @@ function cached(fn) {
  * Camelize a hyphen-delimited string.
  */
 const camelizeRE = /-(\w)/g
-export const camelize = cached((str) => {
+export const camelize = cached((str: string) => {
   return str.replace(camelizeRE, (_, c) => {
     return c ? c.toUpperCase() : ''
   })
@@ -93,12 +93,12 @@ export const camelize = cached((str) => {
 /**
  * Capitalize a string.
  */
-export const capitalize = cached((str) => {
+export const capitalize = cached((str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1)
 })
 
 export const hyphenateRE = /\B([A-Z])/g
-export const hyphenate = cached((str) => {
+export const hyphenate = cached((str: string) => {
   return str.replace(hyphenateRE, '-$1').toLowerCase()
 })
 
@@ -114,14 +114,14 @@ export const guid = () => {
   })
 }
 
-export const getEnumData = (item) => {
+export const getEnumData = (item: any) => {
   if (item.enum && item.enumNames) {
     return item.enum.map((value, index) => ({ value, text: item.enumNames[index] }))
   }
   return undefined
 }
 
-export const mapTree = (obj = {}, handler, childName = 'children') => {
+export const mapTree = (obj = {}, handler: any, childName = 'children') => {
   const children = obj[childName]
   const node = handler(obj)
   if (Array.isArray(children)) {
@@ -179,7 +179,7 @@ export function generateRandomLetters(length = 1) {
   return result
 }
 
-export function getRawValue(target) {
+export function getRawValue(target: any) {
   let res = target
 
   if (isRef(res)) {
@@ -193,8 +193,8 @@ export function getRawValue(target) {
   return res
 }
 
-export function getType(val) {
-  let type = typeof val
+export function getType(val: any) {
+  const type = typeof val
 
   if (type !== 'object') {
     return type
@@ -203,8 +203,8 @@ export function getType(val) {
   return Object.prototype.toString.call(val).replace(/\[object (.*)\]/, '$1')
 }
 
-function cloneArray(target, map, _deepClone) {
-  let res = []
+function cloneArray(target: any[], map: any, _deepClone: (arg0: any, arg1: any) => any) {
+  const res: any[] = []
 
   map.set(target, res)
 
@@ -215,8 +215,8 @@ function cloneArray(target, map, _deepClone) {
   return res
 }
 
-function cloneMap(target, map, _deepClone) {
-  let res = new Map()
+function cloneMap(target: any[], map: any, _deepClone: (arg0: any, arg1: any) => any) {
+  const res = new Map()
 
   map.set(target, res)
 
@@ -227,8 +227,8 @@ function cloneMap(target, map, _deepClone) {
   return res
 }
 
-function cloneSet(target, map, _deepClone) {
-  let res = new Set()
+function cloneSet(target: any[], map: any, _deepClone: (arg0: any, arg1: any) => any) {
+  const res = new Set()
 
   map.set(target, res)
 
@@ -239,7 +239,7 @@ function cloneSet(target, map, _deepClone) {
   return res
 }
 
-function cloneObject(target, map, _deepClone) {
+function cloneObject(target: any, map: any, _deepClone: (arg0: any, arg1: any) => any) {
   const res = {}
 
   map.set(target, res)
@@ -251,7 +251,7 @@ function cloneObject(target, map, _deepClone) {
   return res
 }
 
-export function nativeDeepClone(target) {
+export function nativeDeepClone(target: any) {
   try {
     return structuredClone(target)
   } catch (error) {
@@ -267,7 +267,7 @@ export function nativeDeepClone(target) {
  * @param {*} target target to be copy
  * @param {*} callback target copyed
  */
-export function jsonDeepClone(target, callback) {
+export function jsonDeepClone(target: any, callback: () => void) {
   try {
     JSON.parse(JSON.stringify(target))
   } catch (error) {
@@ -284,7 +284,7 @@ const copyMethodMap = {
   Object: cloneObject
 }
 
-function _deepClone(target, map) {
+function _deepClone(target: any, map: WeakMap<any, any>) {
   if (map.has(target)) {
     return map.get(target)
   }
@@ -292,7 +292,7 @@ function _deepClone(target, map) {
   const copyTarget = getRawValue(target)
   const basicType = ['undefined', 'number', 'string', 'boolean', 'function', 'bigint', 'symbol', 'Null']
 
-  let type = getType(copyTarget)
+  const type = getType(copyTarget)
 
   if (basicType.includes(type)) {
     return target
@@ -322,7 +322,7 @@ function _deepClone(target, map) {
  * @param {*} target value to be deep clone
  * @returns * deepCloned target
  */
-export function deepClone(target) {
+export function deepClone(target: any) {
   return _deepClone(target, new WeakMap())
 }
 
@@ -352,7 +352,7 @@ export const objectToArray = (obj, { keyTo = 'id', orderKey = '_order' }) => {
  * @param {*} obj
  * @returns
  */
-export const reactiveObj2String = (obj) => {
+export const reactiveObj2String = (obj: any) => {
   let out = null
 
   try {
@@ -370,7 +370,7 @@ export const reactiveObj2String = (obj) => {
  * @returns
  */
 
-export const string2Obj = (string) => {
+export const string2Obj = (string: string) => {
   let obj = null
 
   try {
@@ -388,7 +388,7 @@ export const string2Obj = (string) => {
  * @returns
  */
 
-export const toCamelCase = (str) => {
+export const toCamelCase = (str: string) => {
   return str.replace(/[-\s]+(.)?/g, (match, group1) => (group1 ? group1.toUpperCase() : ''))
 }
 
@@ -398,7 +398,7 @@ export const toCamelCase = (str) => {
  * @returns
  */
 
-export const convertCamelToKebab = (string) => {
+export const convertCamelToKebab = (string: string) => {
   return string
     .replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2')
     .replace(/([a-z])([A-Z])/g, '$1-$2')
@@ -411,7 +411,7 @@ export const convertCamelToKebab = (string) => {
  * @returns
  */
 
-export const styleString2Obj = (styleString) => {
+export const styleString2Obj = (styleString: string) => {
   if (!styleString || typeof styleString !== 'string') {
     return {}
   }
@@ -436,7 +436,7 @@ export const styleString2Obj = (styleString) => {
  * @returns
  */
 
-export const obj2StyleString = (obj) => {
+export const obj2StyleString = (obj: any) => {
   if (!obj || typeof obj !== 'object') {
     return ''
   }
