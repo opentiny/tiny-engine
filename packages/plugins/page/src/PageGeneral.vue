@@ -54,7 +54,7 @@
         </div>
       </tiny-form-item>
       <tiny-form-item
-        v-if="pageSettingState.currentPageData.group !== 'publicPages' && !isFolder"
+        v-if="pageSettingState.currentPageData.group !== 'publicPages' && !isFolder && state.childPageOp?.length"
         label="设置默认跳转页"
         prop="isDefault"
       >
@@ -64,6 +64,14 @@
           placeholder="请选择默认跳转页"
           @change="changeDefaultPage"
         ></tiny-select>
+        <div v-if="state.defaultPageId" class="tip default-page">
+          <span class="text"
+            >访问<span class="text-dim">/{{ currentRoute }}</span
+            >路由，默认跳转<span class="text-dim"
+              >/{{ currentRoute }}/{{ pageSettingState?.defaultPage?.route }}</span
+            ></span
+          >
+        </div>
       </tiny-form-item>
     </tiny-form>
   </div>
@@ -326,6 +334,10 @@ export default {
     .text-dim {
       color: var(--te-page-manage-tip-dim-text-color);
     }
+  }
+  .default-page {
+    height: auto;
+    line-height: 16px;
   }
 }
 </style>

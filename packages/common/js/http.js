@@ -32,26 +32,28 @@ export const requestEvent = (url, params) => {
 
 /**
  * 页面更新
- * @param { string } pageId 页面ID
+ * @param { string } id 页面ID
  * @param { json } params 页面信息
  * @returns { Promise }
  *
  */
-export const handlePageUpdate = (pageId, params, routerChange, isCurEditPage, isUpdateTree = true) => {
+export const handlePageUpdate = (updateParams) => {
+  const { id, params, routerChange = false, isCurEditPage = true, isUpdateTree = true } = updateParams
+
   return getMetaApi(META_SERVICE.Http)
-    .post(`/app-center/api/pages/update/${pageId}`, params)
+    .post(`/app-center/api/pages/update/${id}`, params)
     .then((res) => {
       const { setSaved } = useCanvas()
       if (isVsCodeEnv) {
         generatePage({
-          id: pageId,
+          id,
           name: params.name,
           page_content: params.page_content
         })
 
         if (routerChange) {
           generateRouter({
-            pageId,
+            id,
             componentsTree: params
           })
         }

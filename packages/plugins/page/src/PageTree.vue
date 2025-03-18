@@ -290,8 +290,13 @@ export default {
       }
 
       const isCurEditPage = pageState?.currentPage?.id === id
+      const updateParams = {
+        id,
+        params,
+        isCurEditPage
+      }
 
-      return handlePageUpdate(id, params, false, isCurEditPage)
+      return handlePageUpdate(updateParams)
     }
 
     const updateFolder = (pageDetail) => {
