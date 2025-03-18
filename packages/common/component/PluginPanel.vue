@@ -39,6 +39,7 @@
 </template>
 
 <script>
+import { useThrottleFn } from '@vueuse/core'
 import { inject, ref, computed, onMounted, provide } from 'vue'
 import { useLayout } from '@opentiny/tiny-engine-meta-register'
 import { SvgButton } from '@opentiny/tiny-engine-common'
@@ -150,30 +151,8 @@ export default {
       changePluginWidth(props.fixedName, panelWidth.value)
     }
 
-    //节流
-    function throttle(func, limit) {
-      let lastFunc
-      let lastRan
-      return function (...args) {
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        const context = this
-        if (!lastRan) {
-          func.apply(context, args)
-          lastRan = Date.now()
-        } else {
-          clearTimeout(lastFunc)
-          lastFunc = setTimeout(function () {
-            if (Date.now() - lastRan >= limit) {
-              func.apply(context, args)
-              lastRan = Date.now()
-            }
-          }, limit - (Date.now() - lastRan))
-        }
-      }
-    }
-
-    const throttledMouseMoveRight = throttle(onMouseMoveRight, 50)
-    const throttledMouseMoveLeft = throttle(onMouseMoveLeft, 50)
+    const throttledMouseMoveRight = useThrottleFn(onMouseMoveRight, 50)
+    const throttledMouseMoveLeft = useThrottleFn(onMouseMoveLeft, 50)
 
     const leftResizer = ref(null)
     const rightResizer = ref(null)

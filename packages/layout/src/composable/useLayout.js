@@ -45,7 +45,6 @@ const layoutState = reactive({
     fixedPanels: [PLUGIN_NAME.Materials],
     render: PLUGIN_NAME.Materials,
     pluginEvent: 'all',
-    api: {}, // 插件需要注册交互API到这里
     activating: false, // 右侧面版激活提示状态
     showDesignSettings: true
   },
