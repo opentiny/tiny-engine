@@ -1,36 +1,27 @@
 import { reactive, readonly } from 'vue'
 import { merge } from 'lodash-es'
 import { metaHashMap } from './common'
+import type { UnwrapNestedRefs, DeepReadonly } from 'vue'
 
-/**
- * @template T
- * @template K
- * @typedef {Object} Context
- * @property {(import 'vue').UnwrapNestedRefs<T>} state
- * @property {K} options
- */
+interface Context<T, K> {
+  state: UnwrapNestedRefs<T>
+  options: K
+}
 
-/**
- * @template T
- * @template K
- * @typedef {Object} ServiceOptions
- * @property {string} id
- * @property {'MetaService'} type
- * @property {T} initialState
- * @property {K} options
- * @property {(context: Context<T, K>) => void} init
- * @property {Record<string, Function> | (context: Context<T, K>) => Record<string, Function>} apis
- */
+interface ServiceOptions<T, K> {
+  id: string
+  type: 'MetaService'
+  initialState: T
+  options: K
+  init: (context: Context<T, K>) => void
+  apis: Record<string, (...args: any[]) => any> | ((context: Context<T, K>) => Record<string, (...args: any[]) => any>)
+}
 
-/**
- * @template T
- * @template K
- * @typedef {()=> (import 'vue').DeepReadonly<(import 'vue').UnwrapNestedRefs<T>>} GetState
- * @typedef {(kv: Partial<T>) => void} SetState
- * @typedef {Pick<ServiceOptions<T, K>, 'id' | 'type' | 'options'> & {
- *   apis: { getState: GetState; setState: SetState } & Record<string, Function>
- * }} Service
- */
+type GetState<T> = () => DeepReadonly<UnwrapNestedRefs<T>>
+type SetState<T> = (kv: Partial<T>) => void
+type Service<T, K> = Pick<ServiceOptions<T, K>, 'id' | 'type' | 'options'> & {
+  apis: { getState: GetState<T>; setState: SetState<T> } & Record<string, (...args: any[]) => any>
+}
 
 /**
  * @template T
@@ -39,13 +30,7 @@ import { metaHashMap } from './common'
  */
 const servicesMap = new WeakMap()
 
-/**
- * @template T
- * @template K
- * @param {ServiceOptions<T, K>} serviceOptions
- * @returns {Service<T, K>}
- */
-export const defineService = (serviceOptions) => {
+export const defineService = <T, K>(serviceOptions: ServiceOptions<T, K>): Service<T, K> => {
   const { id, type, initialState, options, init, apis } = serviceOptions
 
   if (!id || !type) {
@@ -59,14 +44,14 @@ export const defineService = (serviceOptions) => {
   /**
    * @type {Service<T, K>}
    */
-  const resultService = {
+  const resultService: Service<T, K> = {
     id,
     type,
     options,
     apis: {}
   }
 
-  const state = reactive(initialState || {})
+  const state = reactive<any>(initialState || {})
 
   if (typeof apis === 'object' && apis) {
     resultService.apis = apis

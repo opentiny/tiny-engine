@@ -20,9 +20,9 @@ export default defineConfig({
   resolve: {},
   build: {
     lib: {
-      entry: path.resolve(__dirname, './src/index.js'),
+      entry: path.resolve(__dirname, './src/index.ts'),
       name: 'tiny-engine-meta-register',
-      fileName: () => 'index.js',
+      fileName: (_format, entryName) => `${entryName}.js`,
       formats: ['es']
     },
     rollupOptions: {

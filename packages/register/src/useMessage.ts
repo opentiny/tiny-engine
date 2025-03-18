@@ -10,8 +10,8 @@
  *
  */
 
-let lastMessage = null
-const subscribers = { '': {} }
+let lastMessage: any = null
+const subscribers: Record<string, any> = { '': {} }
 
 /**
  * 订阅消息。
@@ -100,7 +100,7 @@ const publish = ({ topic, data } = {}) => {
   }
 
   for (const value of Object.values(subscribers)) {
-    let callbacks = value[topic] || []
+    const callbacks = value[topic] || []
 
     if (callbacks.length) {
       for (const cb of callbacks) {

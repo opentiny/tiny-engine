@@ -29,14 +29,14 @@ const vueLifeHook = [
  *  'engine.plugins.i18n.handleClick': () => { // do something }
  * }
  */
-export const entryHashMap = {}
+export const entryHashMap: Record<string, any> = {}
 /**
  * 自定义模板注册哈希表，形式如下：
  * {
  *  'engine.plugins.status.metas.app': <template></template>
  * }
  */
-export const templateHashMap = {}
+export const templateHashMap: Record<string, any> = {}
 
 /**
  * 自定布局hash，形式如下：
@@ -44,14 +44,14 @@ export const templateHashMap = {}
  *  'engine.plugins.status': customLayout
  * }
  */
-export const layoutHashMap = {}
+export const layoutHashMap: Record<string, any> = {}
 
-export const metaHashMap = {}
+export const metaHashMap: Record<string, any> = {}
 
-export const apisMap = {}
-export const optionsMap = {}
+export const apisMap: Record<string, any> = {}
+export const optionsMap: Record<string, any> = {}
 
-export const getMetaApi = (id, key) => {
+export const getMetaApi = (id: string, key: string) => {
   if (!apisMap[id]) {
     return
   }
@@ -63,11 +63,11 @@ export const getMetaApi = (id, key) => {
   return apisMap[id]
 }
 
-export const getOptions = (id) => {
+export const getOptions = (id: string) => {
   return optionsMap[id]
 }
 
-const handleMethods = (id, methods) => {
+const handleMethods = (id: string, methods: any) => {
   Object.entries(methods).forEach(([fileId, idMethods]) => {
     if (typeof idMethods === 'object' && idMethods) {
       Object.entries(idMethods).forEach(([name, method]) => {
@@ -79,7 +79,7 @@ const handleMethods = (id, methods) => {
   })
 }
 
-const handleVueLifeCycle = (id, value) => {
+const handleVueLifeCycle = (id: string, value: any) => {
   for (const hookName of vueLifeHook) {
     const hookConfig = value[hookName]
     if (!hookConfig) {
@@ -100,7 +100,7 @@ const handleVueLifeCycle = (id, value) => {
   }
 }
 
-const handleLifeCycles = (id, lifeCycles) => {
+const handleLifeCycles = (id: string, lifeCycles: any) => {
   Object.entries(lifeCycles).forEach(([fileId, idLifeCycles]) => {
     const prefix = fileId ? `.${fileId}` : ''
     const lifeCycleId = `${id}${prefix}`
@@ -108,7 +108,7 @@ const handleLifeCycles = (id, lifeCycles) => {
   })
 }
 
-const handleRegistryProp = (id, value) => {
+const handleRegistryProp = (id: string, value: any) => {
   const { layout, overwrite, apis, options, composable } = value
 
   if (layout) {
@@ -142,7 +142,7 @@ const handleRegistryProp = (id, value) => {
   }
 }
 
-export const preprocessRegistry = (registry) => {
+export const preprocessRegistry = (registry: Array<any> | { [s: string]: any }) => {
   // 元应用支持使用长度为2的数组来配置，第一个参数为元应用，第二个参数是额外的自定义配置。此函数判断数组是否属于这种配置格式
   const isArrayFormat = (arr) => Array.isArray(arr) && arr.length === 2 && arr[0].id
 
@@ -159,7 +159,7 @@ export const preprocessRegistry = (registry) => {
     })
 }
 
-export const generateRegistry = (registry) => {
+export const generateRegistry = (registry: any) => {
   Object.entries(registry).forEach(([key, value]) => {
     if (typeof value === 'object' && value) {
       const { id } = value
@@ -176,6 +176,6 @@ export const generateRegistry = (registry) => {
   })
 }
 
-export const getMergeMeta = (id) => {
+export const getMergeMeta = (id: string) => {
   return metaHashMap[id]
 }

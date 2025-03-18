@@ -59,7 +59,7 @@ const getDevAlias = (useSourceAlias) => {
     '@opentiny/tiny-engine-webcomponent-core': path.resolve(basePath, 'packages/webcomponent/src/lib.js'),
     '@opentiny/tiny-engine-i18n-host': path.resolve(basePath, 'packages/i18n/src/lib.ts'),
     '@opentiny/tiny-engine-builtin-component': path.resolve(basePath, 'packages/builtinComponent/index.ts'),
-    '@opentiny/tiny-engine-meta-register': path.resolve(basePath, 'packages/register/src/index.js'),
+    '@opentiny/tiny-engine-meta-register': path.resolve(basePath, 'packages/register/src/index.ts'),
     '@opentiny/tiny-engine-layout': path.resolve(basePath, 'packages/layout/index.ts'),
     '@opentiny/tiny-engine-configurator': path.resolve(basePath, 'packages/configurator/src/index.ts'),
     '@opentiny/tiny-engine-block-compiler': path.resolve(basePath, 'packages/block-compiler/src/index.ts')

@@ -19,7 +19,7 @@ const lowcodeRegistry = { registry: null }
 const { getType } = utils
 
 // 合并子模块注册表(metas字段)
-const getMergedChildMetas = (defaultChildMeta, userChildMeta) => {
+const getMergedChildMetas = (defaultChildMeta: any[], userChildMeta: any[]) => {
   if (!Array.isArray(defaultChildMeta)) {
     return userChildMeta
   }
@@ -36,7 +36,7 @@ const getMergedChildMetas = (defaultChildMeta, userChildMeta) => {
  * @param {*} defaultRegistry 默认设计器注册表
  * @returns registry 合并后的用户自定义注册表
  */
-export const mergeRegistry = (registry, defaultRegistry) => {
+export const mergeRegistry = (registry: any, defaultRegistry: any) => {
   for (const [key, value] of Object.entries(registry)) {
     const defaultConfig = defaultRegistry[key]
     if (Array.isArray(value) && defaultConfig) {
@@ -60,7 +60,7 @@ export const mergeRegistry = (registry, defaultRegistry) => {
   return registry
 }
 
-export const getMergeRegistry = (type, id) => {
+export const getMergeRegistry = (type: string, id: string) => {
   const registry = type ? lowcodeRegistry.registry[type] : lowcodeRegistry.registry
 
   if (!id) {
@@ -75,7 +75,7 @@ export const getMergeRegistry = (type, id) => {
   return registry?.[id] ? registry : null
 }
 
-export const defineEntry = (registry) => {
+export const defineEntry = (registry: any) => {
   if (!registry) {
     throw new Error('请传递正确的注册表')
   }

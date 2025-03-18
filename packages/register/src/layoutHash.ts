@@ -12,7 +12,7 @@
 
 import { layoutHashMap } from './common'
 
-export const getLayoutComponent = (metaData) => {
+export const getLayoutComponent = (metaData: Record<string, any> & { id: string }) => {
   const customLayout = layoutHashMap[metaData.id]
   return customLayout
 }
