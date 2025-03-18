@@ -9,14 +9,14 @@
         'tree-row',
         'flex-center',
         {
-          active: active === row.id,
+          active: activesComputed.includes(row.id),
           dragging: draggingState.hovering?.id === row.id,
           'border-all': draggingState.hovering?.id === row.id && draggingState.position === 'center',
           forbid: draggingState.forbidInsert
         }
       ]"
       :draggable="draggable ? 'true' : undefined"
-      @click="handleClickRow(row)"
+      @click="handleClickRow($event, row)"
       @mouseenter="handleMouseEnterRow(row)"
       @dragstart="handleDragStart($event, row)"
       @dragover="handleDragOver($event, row)"
@@ -60,6 +60,10 @@ const props = defineProps({
   active: {
     type: String
   },
+  actives: {
+    type: Array,
+    default: () => []
+  },
   idKey: {
     type: String,
     default: 'id'
@@ -80,6 +84,15 @@ const props = defineProps({
     type: Function,
     default: () => false
   }
+})
+
+/** @type {import('vue').ComputedRef<string[]>} */
+const activesComputed = computed(() => {
+  if (props.actives.length === 0 && props.active) {
+    return [props.active]
+  }
+
+  return props.actives
 })
 
 /**
@@ -195,8 +208,8 @@ const rows = computed(() => flattenNodes(normalizedData.value))
 
 const emit = defineEmits(['click', 'mouseenter', 'drop'])
 
-const handleClickRow = (row) => {
-  emit('click', row)
+const handleClickRow = (event, row) => {
+  emit('click', event, row)
 }
 
 const handleMouseEnterRow = (row) => {

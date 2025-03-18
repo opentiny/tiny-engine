@@ -166,9 +166,9 @@ const keyboardHandler = (event) => {
   // 处理 Ctrl 或 Command 键
   if (event.ctrlKey || event.metaKey) {
     handlerCtrl(event)
+  } else {
+    handlerArrow(event.keyCode)
   }
-
-  handlerArrow(event.keyCode)
 }
 
 const removeHotkeyEvent = (dom) => {
