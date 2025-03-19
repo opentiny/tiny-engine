@@ -5,6 +5,7 @@
     class="plugin-schema"
     :fixed-name="PLUGIN_NAME.Schema"
     :fixedPanels="fixedPanels"
+    :draggable-enabled="true"
     @close="close"
   >
     <template #header>

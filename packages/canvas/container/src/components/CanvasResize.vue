@@ -92,7 +92,7 @@ export default {
 
     watch(() => useLayout().getDimension().width, setScale, { flush: 'post', immediate: true })
 
-    watch(() => useLayout().getPluginState().fixedPanels, setScale, { flush: 'post' })
+    watch(() => useLayout().leftFixedPanelsStorage.value, setScale, { flush: 'post' })
 
     watch(
       () => useLayout().getPluginState().render,

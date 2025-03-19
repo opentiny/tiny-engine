@@ -33,8 +33,10 @@
       <slot name="content"></slot>
     </div>
 
-    <div class="resizer-right" v-if="isLeftResizer" @mousedown="onMouseDownRight"></div>
-    <div class="resizer-left" v-if="isRightResizer" @mousedown="onMouseDownLeft"></div>
+    <div v-if="draggableEnabled">
+      <div class="resizer-right" v-if="isLeftResizer" @mousedown="onMouseDownRight"></div>
+      <div class="resizer-left" v-if="isRightResizer" @mousedown="onMouseDownLeft"></div>
+    </div>
   </div>
 </template>
 
@@ -104,6 +106,13 @@ export default {
      * 是否展示折叠按钮
      */
     isShowCollapseIcon: {
+      type: Boolean,
+      default: false
+    },
+    /**
+     * 是否拥有拖拽能力
+     */
+    draggableEnabled: {
       type: Boolean,
       default: false
     }
@@ -230,6 +239,7 @@ export default {
   display: flex;
   flex-direction: column;
   position: relative;
+  border-right: 1px solid var(--te-layout-common-border-color);
 
   .plugin-panel-header {
     display: flex;
@@ -288,13 +298,13 @@ export default {
 }
 
 .dragging {
-  width: 8px !important;
-  background-color: var(--te-base-blue-40) !important;
+  width: 2px !important;
+  background-color: var(--te-layout-common-text-color-secondary-checked) !important;
 }
 
 .resizer-right:hover {
-  width: 8px;
-  background-color: var(--te-base-blue-40);
+  width: 2px;
+  background-color: var(--te-layout-common-text-color-secondary-checked);
 }
 
 // 左边拖拽线
@@ -310,8 +320,8 @@ export default {
 }
 
 .resizer-left:hover {
-  width: 8px;
-  background-color: var(--te-base-blue-40);
+  width: 2px;
+  background-color: var(--te-layout-common-text-color-secondary-checked);
 }
 
 .scroll-content {

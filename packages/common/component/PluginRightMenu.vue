@@ -1,9 +1,5 @@
 <template>
-  <ul
-    v-if="contextMenu.visible"
-    class="plugin-context-menu"
-    :style="{ left: contextMenu.x + 'px', top: contextMenu.y + 'px' }"
-  >
+  <ul v-if="false" class="plugin-context-menu" :style="{ left: contextMenu.x + 'px', top: contextMenu.y + 'px' }">
     <li v-if="contextMenu.type" @click="hidePlugin">隐藏 "{{ contextMenu.item.title }}"</li>
     <li v-if="contextMenu.type" class="bottom-li" @click="switchAlign">
       切换到{{ align.includes('right') ? '左侧' : '右侧' }}

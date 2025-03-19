@@ -6,6 +6,7 @@
     class="outlinebox plugin-tree"
     :fixed-name="PLUGIN_NAME.OutlineTree"
     :fixedPanels="fixedPanels"
+    :draggable-enabled="true"
     @close="$emit('close')"
   >
     <template #content>
