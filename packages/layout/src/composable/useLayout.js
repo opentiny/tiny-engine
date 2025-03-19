@@ -120,6 +120,15 @@ const activeSetting = (name) => {
   })
 }
 
+/**
+ * 两侧面板的固定状态
+ */
+const getFixedPanelsStatus = () => {
+  const leftPanelFixed = leftFixedPanelsStorage.value.includes(layoutState.plugins.render)
+  const rightPanelFixed = rightFixedPanelsStorage.value.includes(layoutState.settings.render)
+  return { leftPanelFixed, rightPanelFixed }
+}
+
 const closeSetting = (forceClose) => {
   const { settings } = layoutState
   if (!settings.fixedPanels.includes(settings.render) || forceClose) {
@@ -293,6 +302,7 @@ export default () => {
   }
 
   return {
+    getFixedPanelsStatus,
     initPluginStorageReactive,
     PLUGIN_NAME,
     PLUGIN_POSITION,

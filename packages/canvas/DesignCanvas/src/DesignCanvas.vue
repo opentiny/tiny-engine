@@ -67,7 +67,7 @@ export default {
     const { canvasSrc = '' } = getOptions(meta.id) || {}
     const canvasSrcDoc = ref('')
 
-    const { getMoveDragBarState } = useLayout()
+    const { getMoveDragBarState, getFixedPanelsStatus, closePlugin, closeSetting } = useLayout()
 
     useMessage().subscribe({
       topic: 'init_canvas_deps',
@@ -153,9 +153,17 @@ export default {
     )
 
     const nodeSelected = (node, parent, type, id) => {
+      const { leftPanelFixed, rightPanelFixed } = getFixedPanelsStatus()
+
       const { toolbars } = useLayout().layoutState
       if (type !== 'clickTree') {
-        useLayout().closePlugin()
+        if (!leftPanelFixed) {
+          closePlugin()
+        }
+
+        if (!rightPanelFixed) {
+          closeSetting(true)
+        }
       }
 
       const { getSchema, getNodePath } = useCanvas()
