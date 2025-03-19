@@ -151,7 +151,7 @@ const eventFiltersMap = new WeakMap()
 const handlerClipboardEvent = (event) => {
   const eventFilter = eventFiltersMap.get(event.currentTarget)
   // 如果过滤器返回 false，则阻止处理
-  if (!eventFilter(event)) {
+  if (typeof eventFilter === 'function' && !eventFilter(event)) {
     return
   }
 
@@ -173,7 +173,7 @@ const handlerClipboardEvent = (event) => {
 const keyboardHandler = (event) => {
   const eventFilter = eventFiltersMap.get(event.currentTarget)
   // 如果过滤器返回 false，则阻止处理
-  if (!eventFilter(event)) {
+  if (typeof eventFilter === 'function' && !eventFilter(event)) {
     return
   }
 
