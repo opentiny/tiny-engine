@@ -76,8 +76,8 @@
       <div class="left-panel-wrap">
         <keep-alive>
           <component
-            :is="currentComponent"
             ref="pluginRef"
+            :is="currentComponent"
             :fixed-panels="leftFixedPanelsStorage"
             @close="close"
             @fixPanel="fixPanel"
@@ -175,7 +175,9 @@ export default {
     })
 
     const currentComponent = computed(() => {
-      const isExistedComponent = state.topNavLists.some((item) => item.id === props.renderPanel)
+      const isExistedComponent = [...state.topNavLists, ...state.bottomNavLists].some(
+        (item) => item.id === props.renderPanel
+      )
       return isExistedComponent ? components[props.renderPanel] : null
     })
 

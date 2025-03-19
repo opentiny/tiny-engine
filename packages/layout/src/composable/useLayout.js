@@ -50,7 +50,7 @@ const layoutState = reactive({
   },
   settings: {
     isShow: true,
-    fixedPanels: [PLUGIN_NAME.Props],
+    fixedPanels: [PLUGIN_NAME.Props, PLUGIN_NAME.Styles, PLUGIN_NAME.Event],
     render: PLUGIN_NAME.Props,
     api: null,
     activating: false, // 右侧面版激活提示状态
