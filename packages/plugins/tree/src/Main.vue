@@ -219,15 +219,20 @@ export default {
 
     const panelRef = ref(null)
 
+    // 由于copy，paste等事件需要在document上监听才有效果，这里加了一个事件过滤器。当焦点在大纲树上时才触发热键事件
+    const eventFilter = () => {
+      return panelRef.value.$el.contains(document.activeElement)
+    }
+
     onMounted(() => {
       if (panelRef.value) {
-        registerHotkeyEvent(panelRef.value.$el)
+        registerHotkeyEvent(document, { eventFilter })
       }
     })
 
     onBeforeUnmount(() => {
       if (panelRef.value) {
-        removeHotkeyEvent(panelRef.value.$el)
+        removeHotkeyEvent(document)
       }
     })
 

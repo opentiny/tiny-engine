@@ -146,7 +146,15 @@ const handleCopyEvent = (event) => {
   setClipboardSchema(event, dataToCopy)
 }
 
+const eventFiltersMap = new WeakMap()
+
 const handlerClipboardEvent = (event) => {
+  const eventFilter = eventFiltersMap.get(event.currentTarget)
+  // 如果过滤器返回 false，则阻止处理
+  if (!eventFilter(event)) {
+    return
+  }
+
   switch (event.type) {
     case 'copy':
       handleCopyEvent(event)
@@ -163,6 +171,12 @@ const handlerClipboardEvent = (event) => {
 }
 
 const keyboardHandler = (event) => {
+  const eventFilter = eventFiltersMap.get(event.currentTarget)
+  // 如果过滤器返回 false，则阻止处理
+  if (!eventFilter(event)) {
+    return
+  }
+
   // 处理 Ctrl 或 Command 键
   if (event.ctrlKey || event.metaKey) {
     handlerCtrl(event)
@@ -176,10 +190,18 @@ const removeHotkeyEvent = (dom) => {
   dom.removeEventListener('copy', handlerClipboardEvent)
   dom.removeEventListener('cut', handlerClipboardEvent)
   dom.removeEventListener('paste', handlerClipboardEvent)
+
+  eventFiltersMap.delete(dom)
 }
 
-const registerHotkeyEvent = (dom) => {
+const registerHotkeyEvent = (dom, options) => {
   removeHotkeyEvent(dom)
+
+  const { eventFilter } = options || {}
+
+  if (typeof eventFilter === 'function') {
+    eventFiltersMap.set(dom, eventFilter)
+  }
 
   dom.addEventListener('keydown', keyboardHandler)
   dom.addEventListener('copy', handlerClipboardEvent)
