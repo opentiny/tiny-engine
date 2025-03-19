@@ -190,7 +190,7 @@ export default {
 <style lang="less" scoped>
 #tiny-engine-right-panel {
   height: calc(100vh - var(--base-top-panel-height));
-  border-left: 1px solid var(--ti-lowcode-plugin-panel-border-right-color);
+  border-left: 1px solid var(--te-layout-common-border-color);
   background: var(--ti-lowcode-common-component-bg);
   display: flex;
   flex-direction: column;

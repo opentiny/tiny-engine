@@ -15,7 +15,7 @@ import { useStorage } from '@vueuse/core'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { META_APP as PLUGIN_NAME, getMetaApi } from '@opentiny/tiny-engine-meta-register'
 
-const { PAGE_STATUS, STORAGE_KEY_LEFT_FIXED_PANELS, STORAGE_KEY_RIGHT_FIXED_PANELS } = constants
+const { PAGE_STATUS, STORAGE_KEY_LEFT_FIXED_PANELS, STORAGE_KEY_RIGHT_FIXED_PANELS, PLUGIN_DEFAULT_WIDTH } = constants
 
 const PLUGIN_POSITION = {
   leftTop: 'leftTop',
@@ -179,7 +179,7 @@ export default () => {
   const pluginStorageReactive = useStorage('plugin', plugin)
 
   // 获取插件宽度
-  const getPluginWidth = (name) => pluginStorageReactive.value[name]?.width || 300
+  const getPluginWidth = (name) => pluginStorageReactive.value[name]?.width || PLUGIN_DEFAULT_WIDTH
 
   // 修改插件宽度
   const changePluginWidth = (name, width, offset) => {

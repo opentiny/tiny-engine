@@ -35,6 +35,7 @@
 
 <script>
 import { useLayout, getMergeRegistry } from '@opentiny/tiny-engine-meta-register'
+import { constants } from '@opentiny/tiny-engine-utils'
 import DesignToolbars from './DesignToolbars.vue'
 import DesignPlugins from './DesignPlugins.vue'
 import DesignSettings from './DesignSettings.vue'
@@ -88,6 +89,8 @@ export default {
     const alignGroups = {}
     const plugin = {}
 
+    const { PLUGIN_DEFAULT_WIDTH } = constants
+
     pluginList.forEach((item) => {
       if (item.id) {
         const align = item?.align || 'leftTop'
@@ -104,7 +107,7 @@ export default {
         const index = alignGroups[align].indexOf(item.id)
 
         plugin[item.id] = {
-          width: item?.width || 300,
+          width: item?.width || PLUGIN_DEFAULT_WIDTH,
           align: align,
           index: index,
           isShow: true,

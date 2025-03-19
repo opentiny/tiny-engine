@@ -1,6 +1,6 @@
 <template>
   <div class="plugin-panel" ref="panel" :style="{ width: panelWidth + 'px' }">
-    <div class="plugin-panel-header" :style="{ marginBottom: headerMarginBottom + 'px' }">
+    <div :class="['plugin-panel-header', headerBottomLine]">
       <div class="plugin-panel-title">
         <span class="title"
           >{{ title }}<link-button class="link" v-if="isShowDocsIcon" :href="docsUrl"></link-button
@@ -45,6 +45,7 @@ import { useThrottleFn } from '@vueuse/core'
 import { inject, ref, computed, onMounted, provide } from 'vue'
 import { useLayout } from '@opentiny/tiny-engine-meta-register'
 import { SvgButton } from '@opentiny/tiny-engine-common'
+import { constants } from '@opentiny/tiny-engine-utils'
 import LinkButton from './LinkButton.vue'
 import CloseIcon from './CloseIcon.vue'
 import { Tooltip } from '@opentiny/vue'
@@ -96,11 +97,11 @@ export default {
       type: String
     },
     /**
-     * 自定义标题下边距
+     * 是否展示标题下边线
      */
-    headerMarginBottom: {
-      type: Number,
-      default: 12
+    showBottomBorder: {
+      type: Boolean,
+      default: false
     },
     /**
      * 是否展示折叠按钮
@@ -123,7 +124,9 @@ export default {
       emit('close')
     }
 
-    const MIN_WIDTH = 300 // 固定的最小宽度值
+    const { PLUGIN_DEFAULT_WIDTH } = constants
+
+    const MIN_WIDTH = PLUGIN_DEFAULT_WIDTH // 固定的最小宽度值
     const MAX_WIDTH = 1000 // 固定的最大宽度值
     const panel = ref(null)
     let startX = 0
@@ -138,6 +141,8 @@ export default {
     const fixPanel = () => {
       panelState.emitEvent('fixPanel', props.fixedName)
     }
+
+    const headerBottomLine = computed(() => (props.showBottomBorder ? 'header-bottom-line' : ''))
 
     const { getPluginWidth, changePluginWidth, getPluginByLayout, changeMoveDragBarState } = useLayout()
 
@@ -215,6 +220,7 @@ export default {
     })
 
     return {
+      headerBottomLine,
       clickCollapseIcon,
       isCollapsed,
       settingIcon,
@@ -239,15 +245,12 @@ export default {
   display: flex;
   flex-direction: column;
   position: relative;
-  border-right: 1px solid var(--te-layout-common-border-color);
 
   .plugin-panel-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 12px;
-    border-bottom: 1px solid var(--te-common-border-divider);
-    margin-bottom: 12px;
     font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
       'Helvetica Neue', sans-serif;
     padding: 12px;
@@ -297,14 +300,18 @@ export default {
   transition: width 0.3s ease;
 }
 
+.header-bottom-line {
+  border-bottom: 1px solid var(--te-common-border-divider);
+}
+
 .dragging {
   width: 2px !important;
-  background-color: var(--te-layout-common-text-color-secondary-checked) !important;
+  background-color: var(--te-component-common-resizer-border-color) !important;
 }
 
 .resizer-right:hover {
   width: 2px;
-  background-color: var(--te-layout-common-text-color-secondary-checked);
+  background-color: var(--te-component-common-resizer-border-color);
 }
 
 // 左边拖拽线
@@ -321,7 +328,7 @@ export default {
 
 .resizer-left:hover {
   width: 2px;
-  background-color: var(--te-layout-common-text-color-secondary-checked);
+  background-color: var(--te-component-common-resizer-border-color);
 }
 
 .scroll-content {

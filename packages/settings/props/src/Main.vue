@@ -3,7 +3,7 @@
     title="属性"
     :fixed-panels="fixedPanels"
     :fixed-name="PLUGIN_NAME.Props"
-    :header-margin-bottom="0"
+    :show-bottom-border="showEmptyTips"
     @close="$emit('close')"
   >
     <template #content>

@@ -163,3 +163,6 @@ export const SORT_TYPE = {
   // 字母倒序
   alphabetDesc: 'alphabetDesc'
 }
+
+// 插件面板默认宽度
+export const PLUGIN_DEFAULT_WIDTH = 280

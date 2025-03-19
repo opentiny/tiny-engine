@@ -119,7 +119,7 @@ export default {
     const { getPluginWidth } = useLayout()
 
     const firstPanelOffset = computed(() => {
-      return getPluginWidth(props.fixedName)
+      return getPluginWidth(props.fixedName) + 1
     })
 
     const secondPanelAlign = computed(() => {

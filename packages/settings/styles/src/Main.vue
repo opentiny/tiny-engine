@@ -4,6 +4,7 @@
     :fixed-panels="fixedPanels"
     :fixed-name="PLUGIN_NAME.Styles"
     :is-show-collapse-icon="true"
+    :show-bottom-border="true"
     @updateCollapseStatus="updateCollapseStatus"
     @close="$emit('close')"
   >
@@ -258,6 +259,7 @@ export default {
 <style lang="less" scoped>
 .style-editor {
   justify-content: space-around;
+  margin-top: 12px;
   column-gap: 8px;
   .line-style {
     padding: 0 8px 0 12px;
