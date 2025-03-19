@@ -71,14 +71,14 @@
     <div
       v-show="renderPanel && components[renderPanel]"
       id="tiny-engine-left-panel"
-      :class="[renderPanel, { 'is-fixed': pluginState.fixedPanels.includes(renderPanel) }]"
+      :class="[renderPanel, { 'is-fixed': leftFixedPanelsStorage.includes(renderPanel) }]"
     >
       <div class="left-panel-wrap">
         <keep-alive>
           <component
             :is="currentComponent"
             ref="pluginRef"
-            :fixed-panels="pluginState.fixedPanels"
+            :fixed-panels="leftFixedPanelsStorage"
             @close="close"
             @fixPanel="fixPanel"
           ></component>
@@ -99,11 +99,8 @@
 import { reactive, ref, watch, computed } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
 import { VueDraggableNext } from 'vue-draggable-next'
-import { useLayout, usePage, useModal, META_APP } from '@opentiny/tiny-engine-meta-register'
+import { useLayout, usePage, META_APP } from '@opentiny/tiny-engine-meta-register'
 import { PublicIcon, PluginRightMenu } from '@opentiny/tiny-engine-common'
-import { constants } from '@opentiny/tiny-engine-utils'
-
-const { STORAGE_KEY_FIXED_PANELS } = constants
 
 export default {
   components: {
@@ -132,10 +129,11 @@ export default {
     const iconComponents = {}
     const pluginRef = ref(null)
     const { isTemporaryPage } = usePage()
-    const { message } = useModal()
     const pluginState = useLayout().getPluginState()
 
     const {
+      changeLeftFixedPanels,
+      leftFixedPanelsStorage,
       getPluginById,
       getPluginShown,
       PLUGIN_POSITION,
@@ -238,32 +236,8 @@ export default {
     }
 
     const fixPanel = (pluginName) => {
-      pluginState.fixedPanels = pluginState.fixedPanels?.includes(pluginName)
-        ? pluginState.fixedPanels?.filter((item) => item !== pluginName)
-        : [...pluginState.fixedPanels, pluginName]
-
-      try {
-        localStorage.setItem(STORAGE_KEY_FIXED_PANELS, JSON.stringify(pluginState.fixedPanels))
-      } catch (error) {
-        message({ message: `'存储固定面板数据失败:'${error}`, status: 'error' })
-      }
+      changeLeftFixedPanels(pluginName)
     }
-
-    const restoreFixedPanels = () => {
-      try {
-        const storedPanels = localStorage.getItem(STORAGE_KEY_FIXED_PANELS)
-        pluginState.fixedPanels = storedPanels ? JSON.parse(storedPanels) : []
-
-        if (!Array.isArray(pluginState.fixedPanels)) {
-          pluginState.fixedPanels = []
-        }
-      } catch (error) {
-        message({ message: `'读取固定面板数据失败:'${error}`, status: 'error' })
-        pluginState.fixedPanels = []
-      }
-    }
-
-    restoreFixedPanels()
 
     //监听拖拽结束事件
     const onEnd = (e) => {
@@ -272,6 +246,7 @@ export default {
     }
 
     return {
+      leftFixedPanelsStorage,
       currentComponent,
       changeAlign,
       rightMenu,

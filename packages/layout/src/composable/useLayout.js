@@ -15,7 +15,7 @@ import { useStorage } from '@vueuse/core'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { META_APP as PLUGIN_NAME, getMetaApi } from '@opentiny/tiny-engine-meta-register'
 
-const { PAGE_STATUS } = constants
+const { PAGE_STATUS, STORAGE_KEY_LEFT_FIXED_PANELS, STORAGE_KEY_RIGHT_FIXED_PANELS } = constants
 
 const PLUGIN_POSITION = {
   leftTop: 'leftTop',
@@ -81,8 +81,8 @@ const changeMenuShown = (menuName) => {
     }
   }
 }
-const leftFixedPanelsStorage = useStorage('leftPanels', layoutState.plugins.fixedPanels)
-const rightFixedPanelsStorage = useStorage('rightPanels', layoutState.settings.fixedPanels)
+const leftFixedPanelsStorage = useStorage(STORAGE_KEY_LEFT_FIXED_PANELS, layoutState.plugins.fixedPanels)
+const rightFixedPanelsStorage = useStorage(STORAGE_KEY_RIGHT_FIXED_PANELS, layoutState.settings.fixedPanels)
 
 const changeLeftFixedPanels = (pluginName) => {
   leftFixedPanelsStorage.value = leftFixedPanelsStorage.value?.includes(pluginName)
@@ -98,6 +98,7 @@ const changeRightFixedPanels = (pluginName) => {
 const getScale = () => layoutState.dimension.scale
 
 const getPluginState = () => layoutState.plugins
+const getSettingState = () => layoutState.settings
 
 const getDimension = () => layoutState.dimension
 
@@ -306,6 +307,7 @@ export default () => {
     getPluginById,
     pluginState,
     getPluginState,
+    getSettingState,
     isEmptyPage,
     getPluginWidth,
     changePluginWidth,

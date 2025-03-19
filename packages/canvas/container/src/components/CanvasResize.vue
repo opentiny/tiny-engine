@@ -106,6 +106,20 @@ export default {
       { flush: 'post' }
     )
 
+    watch(() => useLayout().rightFixedPanelsStorage.value, setScale, { flush: 'post' })
+
+    watch(
+      () => useLayout().getSettingState().render,
+      (value) => {
+        const currentFixed = useLayout().rightFixedPanelsStorage.value.includes(value)
+
+        if (!value || currentFixed) {
+          setScale()
+        }
+      },
+      { flush: 'post' }
+    )
+
     watch(
       () => sizeStyle.value,
       () => {
