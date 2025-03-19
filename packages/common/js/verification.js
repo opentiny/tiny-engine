@@ -40,4 +40,8 @@ export const REGEXP_ROUTE = REGEXP_REGULAR_STRING3
 
 export const REGEXP_JS_VAR = /^[a-zA-Z_]\w*$/
 
+export const REGEXP_JS_VAR_SYMBOL = /^[a-zA-Z_$][0-9a-zA-Z_$]*$/
+
 export const verifyJsVarName = (name) => REGEXP_JS_VAR.test(name)
+
+export const verifyJsVarSymbolName = (name) => REGEXP_JS_VAR_SYMBOL.test(name)

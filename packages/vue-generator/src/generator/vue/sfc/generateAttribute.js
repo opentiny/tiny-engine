@@ -255,7 +255,19 @@ export const handleAttrKeyHook = (schemaData) => {
     }
   })
 }
-
+// 提取组件名称处理相关函数
+const componentNameUtils = {
+  extractComponents(jsContent) {
+    if (!jsContent) return []
+    // 匹配以大写字母开头的组件标签，支持命名空间（如 Tiny.Button）
+    const tagMatches = jsContent.match(/<([A-Z][a-zA-Z0-9]*(?:\.[A-Z][a-zA-Z0-9]*)*)/g) || []
+    // 提取组件名称并去重
+    const componentNames = tagMatches
+      .map((tag) => tag.slice(1)) // 移除开头的 < 符号
+      .filter(Boolean) // 过滤掉空值
+    return [...new Set(componentNames)]
+  }
+}
 export const specialTypeHandler = {
   [JS_EXPRESSION]: ({ value, computed }) => {
     if (computed) {
@@ -268,10 +280,20 @@ export const specialTypeHandler = {
       value: value.replace(/this\./g, '')
     }
   },
-  [JS_FUNCTION]: ({ value }) => {
+  [JS_FUNCTION]: ({ value }, globalHooks, config) => {
     const { type, params, body } = getFunctionInfo(value)
     const inlineFunc = `${type} (${params.join(',')}) => { ${body.replace(/this\./g, '')} }`
+    // 处理 JSX 内容中的组件引用
+    const componentsMap = config?.componentsMap || []
+    const components = componentNameUtils.extractComponents(value)
 
+    components.forEach((componentName) => {
+      const componentConfig = componentsMap.find((cfg) => cfg.componentName === componentName)
+      if (componentConfig) {
+        const { package: pkgName, destructuring, componentName, exportName } = componentConfig
+        globalHooks.addImport(pkgName, { destructuring, componentName, exportName })
+      }
+    })
     return {
       value: inlineFunc
     }

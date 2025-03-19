@@ -15,9 +15,9 @@ dotenv.config({ path: `${pathsDotenv}.local` })
 const { SQL_HOST, SQL_PORT, SQL_USER, SQL_PASSWORD, SQL_DATABASE } = process.env
 
 // 组件表名称
-const componentsTableName = 'user_components'
+const componentsTableName = 't_component'
 // 组件关联到物料资产包的id
-const materialHistoryId = 639
+const materialHistoryId = 1
 // 数据库配置
 const mysqlConfig = {
   host: SQL_HOST, // 主机名（服务器地址）
@@ -202,9 +202,10 @@ class MysqlConnection {
 
   /**
    * 新建的组件关联物料资产包
+   * @deprecated 物料资产包已废弃，使用relationMaterialHistory替代
    * @param {number} id 新建的组件id
    */
-  relationMaterialHistory(id) {
+  relationMaterialBlockHistory(id) {
     const uniqSql = `SELECT * FROM \`material_histories_components__user_components_mhs\` WHERE \`material-history_id\`=${materialHistoryId} AND \`user-component_id\`=${id}`
     this.query(uniqSql).then((result) => {
       if (!result.length) {
@@ -214,6 +215,21 @@ class MysqlConnection {
       }
     })
   }
+
+   /**
+   * 新建的组件关联物料资产包
+   * @param {number} id 新建的组件id
+   */
+   relationMaterialHistory(id) {
+    const uniqSql = `SELECT * FROM \`r_material_history_component\` WHERE \`material_history_id\`=${materialHistoryId} AND \`component_id\`=${id}`
+    this.query(uniqSql).then((result) => {
+      if (!result.length) {
+        const sqlContent = `INSERT INTO \`r_material_history_component\` (\`material_history_id\`, \`component_id\`) VALUES (${materialHistoryId}, ${id})`
+        this.query(sqlContent)
+      }
+    })
+  }
+
 
   /**
    * 生成新增组件的sql语句
@@ -282,9 +298,13 @@ class MysqlConnection {
       isOfficial = 0,
       isDefault = 0,
       tiny_reserved = 0,
-      tenant = 1,
-      createBy = 86,
-      updatedBy = 86
+      component_metadata = null,
+      library_id = 1,
+      tenant_id = 1,
+      renter_id = 1,
+      site_id = 1,
+      created_by = 1,
+      last_updated_by = 1
     } = component
     const values = `('${version}',
     '${this.formatSingleQuoteValue(JSON.stringify(name))}',
@@ -308,15 +328,19 @@ class MysqlConnection {
     '${isOfficial}',
     '${isDefault}',
     '${tiny_reserved}',
-    '${tenant}',
-    '${createBy}',
-    '${updatedBy}'
+    '${component_metadata}',
+    '${library_id}',
+    '${tenant_id}',
+    '${renter_id}',
+    '${site_id}',
+    '${created_by}',
+    '${last_updated_by}'
   );`
 
-    const sqlContent = `INSERT INTO ${componentsTableName} (version, name, component, icon, description, doc_url,
+    const sqlContent = `INSERT INTO ${componentsTableName} (version, name, name_en, icon, description, doc_url,
        screenshot, tags, keywords, dev_mode, npm, \`group\`, \`category\`, priority, snippets,
-        schema_fragment, configure, \`public\`, framework, isOfficial, isDefault, tiny_reserved,
-         tenant, createdBy, updatedBy) VALUES ${values}`.replace(/\n/g, '')
+        schema_fragment, configure, \`public\`, framework, is_official, is_default, tiny_reserved,component_metadata,
+         library_id, tenant_id,renter_id,site_id, created_by, last_updated_by) VALUES ${values}`.replace(/\n/g, '')
 
     this.query(sqlContent, componentName)
       .then((result) => {
@@ -335,7 +359,7 @@ class MysqlConnection {
    * @param {object} component 组件数据
    */
   initDB(component) {
-    const selectSqlContent = `SELECT * FROM ${this.config.database}.${componentsTableName} WHERE component = '${component.component}'`
+    const selectSqlContent = `SELECT * FROM ${this.config.database}.${componentsTableName} WHERE name_en = '${component.component}'`
 
     this.query(selectSqlContent)
       .then((result) => {

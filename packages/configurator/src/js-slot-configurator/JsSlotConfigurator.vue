@@ -39,7 +39,7 @@ import { ref, inject, watchEffect, reactive } from 'vue'
 import { Input, Tooltip, Form, FormItem } from '@opentiny/vue'
 import { useProperties, useCanvas, useModal } from '@opentiny/tiny-engine-meta-register'
 import SvgICons from '@opentiny/vue-icon'
-import { verifyJsVarName } from '@opentiny/tiny-engine-common/js/verification'
+import { verifyJsVarSymbolName } from '@opentiny/tiny-engine-common/js/verification'
 
 export default {
   components: {
@@ -73,7 +73,7 @@ export default {
     const componentsMap = {
       TinyGrid: {
         content:
-          '暴露给插槽使用的变量，为解构的参数，可以使用多个用逗号分隔，如：row(行数据)，column(列数据)，$table(内部表格实例)，seq(序号)，cell(单元格)，columnIndex(列索引),rowIndex(行索引)',
+          '暴露给插槽使用的变量，为解构的参数，可以使用多个用逗号分隔，如：row(行数据)，column(列数据)，$table(内部表格实例)，seq(序号)，cell(单元格)，columnIndex(列索引)，$rowIndex(行索引)',
         icon: SvgICons['IconHelpCircle']()
       }
     }
@@ -87,7 +87,7 @@ export default {
     const paramsPropPath = (index) => `${index}.params`
 
     const paramsStringValidator = (rule, value, callback) => {
-      if (value && value.split(',').some((param) => !verifyJsVarName(param))) {
+      if (value && value.split(',').some((param) => !verifyJsVarSymbolName(param))) {
         callback(new Error('仅支持JavaScript中有效的变量名'))
       } else {
         callback()
