@@ -390,14 +390,15 @@ export const scrollToNode = (element) => {
   return nextTick()
 }
 
-const setSelectRect = (id, element, options) => {
+const setSelectRect = (id, element, options = {}) => {
   clearHover()
 
-  const { type, schema, isMultiple = false } = options || {}
+  const { type, isMultiple = false } = options
+  const schema = options.schema || (useCanvas().getNodeWithParentById(id) || {}).node
   element = element || querySelectById(id) || getDocument().body
 
   const { left, height, top, width } = getRect(element)
-  const componentName = (schema || getCurrent().schema)?.componentName || ''
+  const componentName = schema?.componentName || ''
   const { node, parent } = useCanvas().getNodeWithParentById(id) || {}
 
   return toggleMultiSelection(
