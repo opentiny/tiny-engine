@@ -3,7 +3,7 @@
   <div id="tiny-engine-nav-panel" :style="{ 'pointer-events': pluginState.pluginEvent }">
     <vue-draggable-next
       v-model="state.topNavLists"
-      filter="EditorHelp"
+      filter=".panel-icon"
       class="nav-panel-lists top"
       id="leftTop"
       group="plugins"
@@ -38,7 +38,13 @@
     <!-- 图标菜单下侧区域（附加icon） -->
     <div class="nav-panel-lists bottom">
       <div style="flex: 1" class="list-item" @contextmenu.prevent="showContextMenu($event, false)" />
-      <vue-draggable-next id="leftBottom" v-model="state.bottomNavLists" group="plugins" @end="onEnd">
+      <vue-draggable-next
+        id="leftBottom"
+        v-model="state.bottomNavLists"
+        filter=".panel-icon"
+        group="plugins"
+        @end="onEnd"
+      >
         <div
           v-for="(item, index) in state.bottomNavLists"
           :key="index"
