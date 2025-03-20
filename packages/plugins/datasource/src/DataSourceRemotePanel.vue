@@ -183,8 +183,7 @@ export default {
         // await validate() 如果验证不通过会抛出异常，而不是返回 false
         await getServiceForm().validate()
       } catch (error) {
-        throw new Error('请先完成表单验证', error)
-        return
+        throw new Error(`请先完成表单验证: ${error?.message || ''}`)
       }
 
       const options = { ...state.remoteData.options }
