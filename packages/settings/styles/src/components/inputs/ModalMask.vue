@@ -45,7 +45,7 @@ export default {
   props: {
     teleport: {
       type: String,
-      default: '.tiny-engine-right-wrap'
+      default: '.right-panel-wrap'
     }
   },
   setup(props) {
