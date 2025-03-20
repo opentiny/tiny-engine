@@ -94,7 +94,23 @@ export default defineConfig({
           }
         }
       },
-      external: ['vue', 'monaco-editor', 'prettier', /@opentiny\/vue.*/, '@opentiny/tiny-engine-meta-register']
+      external: [
+        'vue',
+        'monaco-editor',
+        'prettier',
+        '@vue/repl/monaco-editor',
+        'element-resize-detector',
+        'eslint-linter-browserify',
+        'file-saver',
+        'html2canvas',
+        'sortablejs',
+        'vue-i18n',
+        /@opentiny\/vue.*/,
+        /@opentiny\/tiny-engine-*/,
+        /@vue\/*/,
+        /@babel\/*/,
+        /@vueuse\/*/
+      ]
     }
   }
 })
