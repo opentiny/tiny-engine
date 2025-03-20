@@ -1,5 +1,5 @@
 <template>
-  <teleport :to="teleport">
+  <teleport :to="targetClass">
     <div class="modal-wrapper">
       <div :class="[isAlignBody ? '' : 'modal-mask']" @click="$emit('close')"></div>
 
@@ -15,7 +15,8 @@
 </template>
 
 <script>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
+import { useLayout } from '@opentiny/tiny-engine-meta-register'
 
 const modal = reactive({
   left: 0,
@@ -53,6 +54,17 @@ export default {
     const topStyle = ref(0)
     const modalContent = ref(null)
 
+    const { PLUGIN_NAME, getPluginByLayout } = useLayout()
+
+    /**
+     * 根据面板所处位置判断目标挂载元素
+     */
+    const targetClass = computed(() => {
+      const layout = getPluginByLayout(PLUGIN_NAME.Styles)
+      // 判断布局中是否包含 'left'，如果包含则挂载左侧面板，否则挂载右侧面板
+      return layout.includes('left') ? '.left-panel-wrap' : '.right-panel-wrap'
+    })
+
     const calculateTopStyle = (modalContent) => {
       const innnerHeight = window.getComputedStyle(document.body).height
       if (isAlignBody && modalContent) {
@@ -70,6 +82,7 @@ export default {
     })
 
     return {
+      targetClass,
       modal,
       modalContent,
       topStyle,
