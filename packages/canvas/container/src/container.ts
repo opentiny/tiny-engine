@@ -84,6 +84,7 @@ export const dragState = reactive({
 })
 
 export const initialRectState = {
+  id: '',
   top: 0,
   height: 0,
   width: 0,
@@ -438,10 +439,6 @@ export const updateRect = (id) => {
   }
 }
 
-export const syncNodeScroll = () => {
-  refreshSelectionState()
-}
-
 export const getConfigure = (targetName) => {
   const material = getController().getMaterial(targetName)
 
@@ -600,6 +597,7 @@ const setHoverRect = (element, data) => {
 
   // 设置元素hover状态
   Object.assign(hoverState, {
+    id,
     width,
     height,
     top,
@@ -608,6 +606,24 @@ const setHoverRect = (element, data) => {
     componentName
   })
   return undefined
+}
+
+const updateHoverRect = (id?: string) => {
+  const element = querySelectById(id || hoverState.id)
+
+  if (!element) {
+    return
+  }
+
+  const rect = getRect(element)
+  const { left, height, top, width } = rect
+
+  Object.assign(hoverState, {
+    width,
+    height,
+    top,
+    left
+  })
 }
 
 const setInactiveHoverRect = (element) => {
@@ -634,6 +650,12 @@ const setInactiveHoverRect = (element) => {
     componentName
   })
 }
+
+export const syncNodeScroll = () => {
+  refreshSelectionState()
+  updateHoverRect()
+}
+
 let moveUpdateTimer = null
 
 // 绝对布局
