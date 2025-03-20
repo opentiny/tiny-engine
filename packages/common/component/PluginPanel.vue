@@ -33,7 +33,7 @@
       <slot name="content"></slot>
     </div>
 
-    <div v-if="draggableEnabled">
+    <div v-if="widthResizable">
       <div class="resizer-right" v-if="isLeftResizer" @mousedown="onMouseDownRight"></div>
       <div class="resizer-left" v-if="isRightResizer" @mousedown="onMouseDownLeft"></div>
     </div>
@@ -111,9 +111,9 @@ export default {
       default: false
     },
     /**
-     * 是否拥有拖拽能力
+     * 是否可以调整宽度
      */
-    draggableEnabled: {
+    widthResizable: {
       type: Boolean,
       default: false
     }
